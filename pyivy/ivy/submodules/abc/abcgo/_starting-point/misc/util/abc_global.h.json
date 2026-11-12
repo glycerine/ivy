@@ -1,0 +1,2015 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h",
+  "SHA256": "dfd90348d4b5e5585008389f6271159f4a0a94b95d3f0849a3ea3416d6a60d54",
+  "Library": [
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 234,
+        "Column": 12,
+        "ByteOffset": 7468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 234,
+        "Column": 74,
+        "ByteOffset": 7530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 234,
+        "Column": 105,
+        "ByteOffset": 7561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 46,
+        "ByteOffset": 8778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Var2Lit(Var int32, c int32) int32 { assert(Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1)); return Var + Var + c;        }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 37,
+        "ByteOffset": 8876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Var(Lit int32) int32 { assert(Lit \u003e= 0); return Lit \u003e\u003e 1;                          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 40,
+        "ByteOffset": 8977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_LitIsCompl(Lit int32) int32 { assert(Lit \u003e= 0); return Lit \u0026 1;                           }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 36,
+        "ByteOffset": 9074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_LitNot(Lit int32) int32 { assert(Lit \u003e= 0); return Lit ^ 1;                           }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 49,
+        "ByteOffset": 9184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_LitNotCond(Lit int32, c int32) int32 { assert(Lit \u003e= 0); return Lit ^ int32((c \u003e 0));                }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 40,
+        "ByteOffset": 9287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_LitRegular(Lit int32) int32 { assert(Lit \u003e= 0); return Lit \u0026 ~01;                         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 51,
+        "ByteOffset": 9399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2LitV(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0); return Abc_Var2Lit( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 51,
+        "ByteOffset": 9541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2LitL(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0); return Abc_LitNotCond( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 49,
+        "ByteOffset": 9955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Var2Lit2(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 2)); return (Var \u003c\u003c 2) + Att; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 38,
+        "ByteOffset": 10040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Var2(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u003e\u003e 2;         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 38,
+        "ByteOffset": 10125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Att2(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u0026 3;          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 49,
+        "ByteOffset": 10221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Var2Lit3(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 3)); return (Var \u003c\u003c 3) + Att; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 38,
+        "ByteOffset": 10306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Var3(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u003e\u003e 3;         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 38,
+        "ByteOffset": 10391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Att3(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u0026 7;          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 49,
+        "ByteOffset": 10487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Var2Lit4(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 4)); return (Var \u003c\u003c 4) + Att; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 38,
+        "ByteOffset": 10572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Var4(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u003e\u003e 4;         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 38,
+        "ByteOffset": 10657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_Lit2Att4(Lit int32) int32 { assert(Lit \u003e= 0);    return Lit \u0026 15;         }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 340,
+        "Column": 60,
+        "ByteOffset": 12081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 345,
+        "Column": 71,
+        "ByteOffset": 12328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((time)))/(float64(CLOCKS_PER_SEC)), (float64((Time)))? 100.0*(float64((time)))/(float64((Time))) : 0.0);;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 384,
+        "Column": 27,
+        "ByteOffset": 13449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 13558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );"
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 389,
+        "Column": 17,
+        "ByteOffset": 13603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 13678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 394,
+        "Column": 70,
+        "ByteOffset": 13813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 32)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 395,
+        "Column": 16,
+        "ByteOffset": 13878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, 1, nFileSize, pFile );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 396,
+        "Column": 5,
+        "ByteOffset": 13921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBuffer + nFileSize, 0, 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 13963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == nFileSize );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 14000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 804
+      },
+      "Directive": "#ifndef ABC_USE_BRIDGE"
+    },
+    {
+      "Location": {
+        "Line": 32,
+        "Column": 1,
+        "ByteOffset": 858
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 33,
+        "Column": 1,
+        "ByteOffset": 872
+      },
+      "Directive": "#ifndef __MINGW32__"
+    },
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 1548
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 45,
+        "Column": 3,
+        "ByteOffset": 1563
+      },
+      "Directive": "#ifdef WIN32_NO_DLL"
+    },
+    {
+      "Location": {
+        "Line": 56,
+        "Column": 1,
+        "ByteOffset": 1827
+      },
+      "Directive": "#ifndef ABC_DLL"
+    },
+    {
+      "Location": {
+        "Line": 60,
+        "Column": 1,
+        "ByteOffset": 1881
+      },
+      "Directive": "#if !defined(___unused)"
+    },
+    {
+      "Location": {
+        "Line": 61,
+        "Column": 1,
+        "ByteOffset": 1905
+      },
+      "Directive": "#if defined(__GNUC__)"
+    },
+    {
+      "Location": {
+        "Line": 84,
+        "Column": 1,
+        "ByteOffset": 2243
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 85,
+        "Column": 3,
+        "ByteOffset": 2258
+      },
+      "Directive": "#ifdef _DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 103,
+        "Column": 1,
+        "ByteOffset": 2840
+      },
+      "Directive": "#ifdef ABC_USE_STDINT_H"
+    },
+    {
+      "Location": {
+        "Line": 110,
+        "Column": 1,
+        "ByteOffset": 3040
+      },
+      "Directive": "#if UINTPTR_MAX == 0xFFFFFFFFFFFFFFFF"
+    },
+    {
+      "Location": {
+        "Line": 112,
+        "Column": 1,
+        "ByteOffset": 3102
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 119,
+        "Column": 1,
+        "ByteOffset": 3212
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 128,
+        "Column": 1,
+        "ByteOffset": 3307
+      },
+      "Directive": "#if ULONG_MAX == 0xFFFFFFFFFFFFFFFF"
+    },
+    {
+      "Location": {
+        "Line": 136,
+        "Column": 1,
+        "ByteOffset": 3462
+      },
+      "Directive": "#if UINT_MAX == 0xFFFFFFFFFFFFFFFF"
+    },
+    {
+      "Location": {
+        "Line": 151,
+        "Column": 1,
+        "ByteOffset": 3820
+      },
+      "Directive": "#if       defined(__ccdoc__)"
+    },
+    {
+      "Location": {
+        "Line": 170,
+        "Column": 1,
+        "ByteOffset": 4424
+      },
+      "Directive": "#if       defined(__ccdoc__)"
+    },
+    {
+      "Location": {
+        "Line": 189,
+        "Column": 1,
+        "ByteOffset": 5050
+      },
+      "Directive": "#if       defined(__ccdoc__)"
+    },
+    {
+      "Location": {
+        "Line": 206,
+        "Column": 1,
+        "ByteOffset": 5487
+      },
+      "Directive": "#if       defined(__ccdoc__)"
+    },
+    {
+      "Location": {
+        "Line": 223,
+        "Column": 1,
+        "ByteOffset": 5931
+      },
+      "Directive": "#if       defined(__ccdoc__)"
+    },
+    {
+      "Location": {
+        "Line": 237,
+        "Column": 1,
+        "ByteOffset": 6359
+      },
+      "Directive": "#ifdef LIN"
+    },
+    {
+      "Location": {
+        "Line": 330,
+        "Column": 1,
+        "ByteOffset": 14374
+      },
+      "Directive": "#if (defined(LIN) || defined(LIN64)) \u0026\u0026 !(__APPLE__ \u0026 __MACH__) \u0026\u0026 !defined(__MINGW32__)"
+    },
+    {
+      "Location": {
+        "Line": 354,
+        "Column": 1,
+        "ByteOffset": 14931
+      },
+      "Directive": "#ifdef ABC_USE_BRIDGE"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_AbsInt",
+      "Start": 8489,
+      "End": 8577,
+      "BodyStart": 8551,
+      "Original": "static inline int      Abc_AbsInt( int a        )             { return a \u003c 0 ? -a : a; }",
+      "Draft": "func Abc_AbsInt(a int32) int32 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }"
+    },
+    {
+      "Name": "Abc_MaxInt",
+      "Start": 8578,
+      "End": 8666,
+      "BodyStart": 8640,
+      "Original": "static inline int      Abc_MaxInt( int a, int b )             { return a \u003e b ?  a : b; }",
+      "Draft": "func Abc_MaxInt(a int32, b int32) int32 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_MinInt",
+      "Start": 8667,
+      "End": 8755,
+      "BodyStart": 8729,
+      "Original": "static inline int      Abc_MinInt( int a, int b )             { return a \u003c b ?  a : b; }",
+      "Draft": "func Abc_MinInt(a int32, b int32) int32 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_MaxWord",
+      "Start": 8756,
+      "End": 8844,
+      "BodyStart": 8818,
+      "Original": "static inline word     Abc_MaxWord( word a, word b )          { return a \u003e b ?  a : b; }",
+      "Draft": "func Abc_MaxWord(a word, b word) word { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_MinWord",
+      "Start": 8845,
+      "End": 8933,
+      "BodyStart": 8907,
+      "Original": "static inline word     Abc_MinWord( word a, word b )          { return a \u003c b ?  a : b; }",
+      "Draft": "func Abc_MinWord(a word, b word) word { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_AbsFloat",
+      "Start": 8934,
+      "End": 9022,
+      "BodyStart": 8996,
+      "Original": "static inline float    Abc_AbsFloat( float a          )       { return a \u003c 0 ? -a : a; }",
+      "Draft": "func Abc_AbsFloat(a float32) float32 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }"
+    },
+    {
+      "Name": "Abc_MaxFloat",
+      "Start": 9023,
+      "End": 9111,
+      "BodyStart": 9085,
+      "Original": "static inline float    Abc_MaxFloat( float a, float b )       { return a \u003e b ?  a : b; }",
+      "Draft": "func Abc_MaxFloat(a float32, b float32) float32 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_MinFloat",
+      "Start": 9112,
+      "End": 9200,
+      "BodyStart": 9174,
+      "Original": "static inline float    Abc_MinFloat( float a, float b )       { return a \u003c b ?  a : b; }",
+      "Draft": "func Abc_MinFloat(a float32, b float32) float32 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_AbsDouble",
+      "Start": 9201,
+      "End": 9289,
+      "BodyStart": 9263,
+      "Original": "static inline double   Abc_AbsDouble( double a           )    { return a \u003c 0 ? -a : a; }",
+      "Draft": "func Abc_AbsDouble(a float64) float64 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }"
+    },
+    {
+      "Name": "Abc_MaxDouble",
+      "Start": 9290,
+      "End": 9378,
+      "BodyStart": 9352,
+      "Original": "static inline double   Abc_MaxDouble( double a, double b )    { return a \u003e b ?  a : b; }",
+      "Draft": "func Abc_MaxDouble(a float64, b float64) float64 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_MinDouble",
+      "Start": 9379,
+      "End": 9467,
+      "BodyStart": 9441,
+      "Original": "static inline double   Abc_MinDouble( double a, double b )    { return a \u003c b ?  a : b; }",
+      "Draft": "func Abc_MinDouble(a float64, b float64) float64 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }"
+    },
+    {
+      "Name": "Abc_Float2Int",
+      "Start": 9469,
+      "End": 9594,
+      "BodyStart": 9531,
+      "Original": "static inline int      Abc_Float2Int( float Val )             { union { int x; float y; } v; v.y = Val; return v.x;         }",
+      "Draft": "func Abc_Float2Int(Val float32) int32 { union { var x int32; var y float32; }\n v; v.y = Val; return v.x;         }"
+    },
+    {
+      "Name": "Abc_Int2Float",
+      "Start": 9595,
+      "End": 9720,
+      "BodyStart": 9657,
+      "Original": "static inline float    Abc_Int2Float( int Num )               { union { int x; float y; } v; v.x = Num; return v.y;         }",
+      "Draft": "func Abc_Int2Float(Num int32) float32 { union { var x int32; var y float32; }\n v; v.x = Num; return v.y;         }"
+    },
+    {
+      "Name": "Abc_Dbl2Word",
+      "Start": 9721,
+      "End": 9846,
+      "BodyStart": 9783,
+      "Original": "static inline word     Abc_Dbl2Word( double Dbl )             { union { word x; double y; } v; v.y = Dbl; return v.x;       }",
+      "Draft": "func Abc_Dbl2Word(Dbl float64) word { union { var x word; var y float64; }\n v; v.y = Dbl; return v.x;       }"
+    },
+    {
+      "Name": "Abc_Word2Dbl",
+      "Start": 9847,
+      "End": 9972,
+      "BodyStart": 9909,
+      "Original": "static inline double   Abc_Word2Dbl( word Num )               { union { word x; double y; } v; v.x = Num; return v.y;       }",
+      "Draft": "func Abc_Word2Dbl(Num word) float64 { union { var x word; var y float64; }\n v; v.x = Num; return v.y;       }"
+    },
+    {
+      "Name": "Abc_Base2Log",
+      "Start": 9973,
+      "End": 10123,
+      "BodyStart": 10035,
+      "Original": "static inline int      Abc_Base2Log( unsigned n )             { int r; if ( n \u003c 2 ) return (int)n; for ( r = 0, n--; n; n \u003e\u003e= 1, r++ ) {}; return r; }",
+      "Draft": "func Abc_Base2Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n \u003e\u003e= 1, r++  {}; return r; }"
+    },
+    {
+      "Name": "Abc_Base10Log",
+      "Start": 10124,
+      "End": 10274,
+      "BodyStart": 10186,
+      "Original": "static inline int      Abc_Base10Log( unsigned n )            { int r; if ( n \u003c 2 ) return (int)n; for ( r = 0, n--; n; n /= 10, r++ ) {}; return r; }",
+      "Draft": "func Abc_Base10Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n /= 10, r++  {}; return r; }"
+    },
+    {
+      "Name": "Abc_Base16Log",
+      "Start": 10275,
+      "End": 10425,
+      "BodyStart": 10337,
+      "Original": "static inline int      Abc_Base16Log( unsigned n )            { int r; if ( n \u003c 2 ) return (int)n; for ( r = 0, n--; n; n /= 16, r++ ) {}; return r; }",
+      "Draft": "func Abc_Base16Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n /= 16, r++  {}; return r; }"
+    },
+    {
+      "Name": "Abc_UtilStrsav",
+      "Start": 10426,
+      "End": 10551,
+      "BodyStart": 10488,
+      "Original": "static inline char *   Abc_UtilStrsav( char * s )             { return s ? strcpy(ABC_ALLOC(char, strlen(s)+1), s) : NULL;  }",
+      "Draft": "func Abc_UtilStrsav(s string) string { if s {\n    // inlining of macro ABC_ALLOC\n    return strcpy(((char *) malloc(sizeof(char) * (size_t)(len(s)+1))), s);\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Abc_BitByteNum",
+      "Start": 10552,
+      "End": 10677,
+      "BodyStart": 10614,
+      "Original": "static inline int      Abc_BitByteNum( int nBits )            { return (nBits\u003e\u003e3) + ((nBits\u00267)  \u003e 0);                       }",
+      "Draft": "func Abc_BitByteNum(nBits int32) int32 { return (nBits\u003e\u003e3) + ((nBits\u00267)  \u003e 0);                       }"
+    },
+    {
+      "Name": "Abc_BitWordNum",
+      "Start": 10678,
+      "End": 10803,
+      "BodyStart": 10740,
+      "Original": "static inline int      Abc_BitWordNum( int nBits )            { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);                       }",
+      "Draft": "func Abc_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);                       }"
+    },
+    {
+      "Name": "Abc_Bit6WordNum",
+      "Start": 10804,
+      "End": 10929,
+      "BodyStart": 10866,
+      "Original": "static inline int      Abc_Bit6WordNum( int nBits )           { return (nBits\u003e\u003e6) + ((nBits\u002663) \u003e 0);                       }",
+      "Draft": "func Abc_Bit6WordNum(nBits int32) int32 { return (nBits\u003e\u003e6) + ((nBits\u002663) \u003e 0);                       }"
+    },
+    {
+      "Name": "Abc_TruthByteNum",
+      "Start": 10930,
+      "End": 11055,
+      "BodyStart": 10992,
+      "Original": "static inline int      Abc_TruthByteNum( int nVars )          { return nVars \u003c= 3 ? 1 : (1 \u003c\u003c (nVars - 3));                 }",
+      "Draft": "func Abc_TruthByteNum(nVars int32) int32 { if nVars \u003c= 3 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 3));\n}                 }"
+    },
+    {
+      "Name": "Abc_TruthWordNum",
+      "Start": 11056,
+      "End": 11181,
+      "BodyStart": 11118,
+      "Original": "static inline int      Abc_TruthWordNum( int nVars )          { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5));                 }",
+      "Draft": "func Abc_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}                 }"
+    },
+    {
+      "Name": "Abc_Truth6WordNum",
+      "Start": 11182,
+      "End": 11307,
+      "BodyStart": 11244,
+      "Original": "static inline int      Abc_Truth6WordNum( int nVars )         { return nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6));                 }",
+      "Draft": "func Abc_Truth6WordNum(nVars int32) int32 { if nVars \u003c= 6 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 6));\n}                 }"
+    },
+    {
+      "Name": "Abc_InfoHasBit",
+      "Start": 11308,
+      "End": 11433,
+      "BodyStart": 11370,
+      "Original": "static inline int      Abc_InfoHasBit( unsigned * p, int i )  { return (p[(i)\u003e\u003e5] \u0026 (unsigned)(1\u003c\u003c((i) \u0026 31))) \u003e 0;         }",
+      "Draft": "func Abc_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 uint32((1\u003c\u003c((i) \u0026 31)))) \u003e 0;         }"
+    },
+    {
+      "Name": "Abc_InfoSetBit",
+      "Start": 11434,
+      "End": 11559,
+      "BodyStart": 11496,
+      "Original": "static inline void     Abc_InfoSetBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] |= (unsigned)(1\u003c\u003c((i) \u0026 31));                     }",
+      "Draft": "func Abc_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= uint32((1\u003c\u003c((i) \u0026 31)));                     }"
+    },
+    {
+      "Name": "Abc_InfoXorBit",
+      "Start": 11560,
+      "End": 11685,
+      "BodyStart": 11622,
+      "Original": "static inline void     Abc_InfoXorBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] ^= (unsigned)(1\u003c\u003c((i) \u0026 31));                     }",
+      "Draft": "func Abc_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= uint32((1\u003c\u003c((i) \u0026 31)));                     }"
+    },
+    {
+      "Name": "Abc_InfoMask",
+      "Start": 11686,
+      "End": 11811,
+      "BodyStart": 11748,
+      "Original": "static inline unsigned Abc_InfoMask( int nVar )               { return (~(unsigned)0) \u003e\u003e (32-nVar);                         }",
+      "Draft": "func Abc_InfoMask(nVar int32) uint32 { return (~uint32(0)) \u003e\u003e (32-nVar);                         }"
+    },
+    {
+      "Name": "Abc_Var2Lit",
+      "Start": 11813,
+      "End": 11938,
+      "BodyStart": 11875,
+      "Original": "static inline int      Abc_Var2Lit( int Var, int c )          { assert(Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1)); return Var + Var + c;        }",
+      "Draft": "func Abc_Var2Lit(Var int32, c int32) int32 { assert(Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1), \"Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1)\"); return Var + Var + c;        }"
+    },
+    {
+      "Name": "Abc_Lit2Var",
+      "Start": 11939,
+      "End": 12064,
+      "BodyStart": 12001,
+      "Original": "static inline int      Abc_Lit2Var( int Lit )                 { assert(Lit \u003e= 0); return Lit \u003e\u003e 1;                          }",
+      "Draft": "func Abc_Lit2Var(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u003e\u003e 1;                          }"
+    },
+    {
+      "Name": "Abc_LitIsCompl",
+      "Start": 12065,
+      "End": 12190,
+      "BodyStart": 12127,
+      "Original": "static inline int      Abc_LitIsCompl( int Lit )              { assert(Lit \u003e= 0); return Lit \u0026 1;                           }",
+      "Draft": "func Abc_LitIsCompl(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u0026 1;                           }"
+    },
+    {
+      "Name": "Abc_LitNot",
+      "Start": 12191,
+      "End": 12316,
+      "BodyStart": 12253,
+      "Original": "static inline int      Abc_LitNot( int Lit )                  { assert(Lit \u003e= 0); return Lit ^ 1;                           }",
+      "Draft": "func Abc_LitNot(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit ^ 1;                           }"
+    },
+    {
+      "Name": "Abc_LitNotCond",
+      "Start": 12317,
+      "End": 12442,
+      "BodyStart": 12379,
+      "Original": "static inline int      Abc_LitNotCond( int Lit, int c )       { assert(Lit \u003e= 0); return Lit ^ (int)(c \u003e 0);                }",
+      "Draft": "func Abc_LitNotCond(Lit int32, c int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit ^ int32((c \u003e 0));                }"
+    },
+    {
+      "Name": "Abc_LitRegular",
+      "Start": 12443,
+      "End": 12568,
+      "BodyStart": 12505,
+      "Original": "static inline int      Abc_LitRegular( int Lit )              { assert(Lit \u003e= 0); return Lit \u0026 ~01;                         }",
+      "Draft": "func Abc_LitRegular(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u0026 ~01;                         }"
+    },
+    {
+      "Name": "Abc_Lit2LitV",
+      "Start": 12569,
+      "End": 12724,
+      "BodyStart": 12631,
+      "Original": "static inline int      Abc_Lit2LitV( int * pMap, int Lit )    { assert(Lit \u003e= 0); return Abc_Var2Lit( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );      }",
+      "Draft": "func Abc_Lit2LitV(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Abc_Var2Lit( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );      }"
+    },
+    {
+      "Name": "Abc_Lit2LitL",
+      "Start": 12725,
+      "End": 12880,
+      "BodyStart": 12787,
+      "Original": "static inline int      Abc_Lit2LitL( int * pMap, int Lit )    { assert(Lit \u003e= 0); return Abc_LitNotCond( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );   }",
+      "Draft": "func Abc_Lit2LitL(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Abc_LitNotCond( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );   }"
+    },
+    {
+      "Name": "Abc_Ptr2Int",
+      "Start": 12882,
+      "End": 12981,
+      "BodyStart": 12944,
+      "Original": "static inline int      Abc_Ptr2Int( void * p )                { return (int)(ABC_PTRINT_T)p;      }",
+      "Draft": "func Abc_Ptr2Int(p any) int32 { return int32((ABC_PTRINT_T))p;      }"
+    },
+    {
+      "Name": "Abc_Int2Ptr",
+      "Start": 12982,
+      "End": 13081,
+      "BodyStart": 13044,
+      "Original": "static inline void *   Abc_Int2Ptr( int i )                   { return (void *)(ABC_PTRINT_T)i;   }",
+      "Draft": "func Abc_Int2Ptr(i int32) any { return (void *)(ABC_PTRINT_T)i;   }"
+    },
+    {
+      "Name": "Abc_Ptr2Wrd",
+      "Start": 13082,
+      "End": 13181,
+      "BodyStart": 13144,
+      "Original": "static inline word     Abc_Ptr2Wrd( void * p )                { return (word)(ABC_PTRUINT_T)p;    }",
+      "Draft": "func Abc_Ptr2Wrd(p any) word { return (word)(ABC_PTRUINT_T)p;    }"
+    },
+    {
+      "Name": "Abc_Wrd2Ptr",
+      "Start": 13182,
+      "End": 13281,
+      "BodyStart": 13244,
+      "Original": "static inline void *   Abc_Wrd2Ptr( word i )                  { return (void *)(ABC_PTRUINT_T)i;  }",
+      "Draft": "func Abc_Wrd2Ptr(i word) any { return (void *)(ABC_PTRUINT_T)i;  }"
+    },
+    {
+      "Name": "Abc_Var2Lit2",
+      "Start": 13283,
+      "End": 13394,
+      "BodyStart": 13345,
+      "Original": "static inline int      Abc_Var2Lit2( int Var, int Att )       { assert(!(Att \u003e\u003e 2)); return (Var \u003c\u003c 2) + Att; }",
+      "Draft": "func Abc_Var2Lit2(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 2), \"!(Att \u003e\u003e 2)\"); return (Var \u003c\u003c 2) + Att; }"
+    },
+    {
+      "Name": "Abc_Lit2Var2",
+      "Start": 13395,
+      "End": 13506,
+      "BodyStart": 13457,
+      "Original": "static inline int      Abc_Lit2Var2( int Lit )                { assert(Lit \u003e= 0);    return Lit \u003e\u003e 2;         }",
+      "Draft": "func Abc_Lit2Var2(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 2;         }"
+    },
+    {
+      "Name": "Abc_Lit2Att2",
+      "Start": 13507,
+      "End": 13618,
+      "BodyStart": 13569,
+      "Original": "static inline int      Abc_Lit2Att2( int Lit )                { assert(Lit \u003e= 0);    return Lit \u0026 3;          }",
+      "Draft": "func Abc_Lit2Att2(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 3;          }"
+    },
+    {
+      "Name": "Abc_Var2Lit3",
+      "Start": 13619,
+      "End": 13730,
+      "BodyStart": 13681,
+      "Original": "static inline int      Abc_Var2Lit3( int Var, int Att )       { assert(!(Att \u003e\u003e 3)); return (Var \u003c\u003c 3) + Att; }",
+      "Draft": "func Abc_Var2Lit3(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 3), \"!(Att \u003e\u003e 3)\"); return (Var \u003c\u003c 3) + Att; }"
+    },
+    {
+      "Name": "Abc_Lit2Var3",
+      "Start": 13731,
+      "End": 13842,
+      "BodyStart": 13793,
+      "Original": "static inline int      Abc_Lit2Var3( int Lit )                { assert(Lit \u003e= 0);    return Lit \u003e\u003e 3;         }",
+      "Draft": "func Abc_Lit2Var3(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 3;         }"
+    },
+    {
+      "Name": "Abc_Lit2Att3",
+      "Start": 13843,
+      "End": 13954,
+      "BodyStart": 13905,
+      "Original": "static inline int      Abc_Lit2Att3( int Lit )                { assert(Lit \u003e= 0);    return Lit \u0026 7;          }",
+      "Draft": "func Abc_Lit2Att3(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 7;          }"
+    },
+    {
+      "Name": "Abc_Var2Lit4",
+      "Start": 13955,
+      "End": 14066,
+      "BodyStart": 14017,
+      "Original": "static inline int      Abc_Var2Lit4( int Var, int Att )       { assert(!(Att \u003e\u003e 4)); return (Var \u003c\u003c 4) + Att; }",
+      "Draft": "func Abc_Var2Lit4(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 4), \"!(Att \u003e\u003e 4)\"); return (Var \u003c\u003c 4) + Att; }"
+    },
+    {
+      "Name": "Abc_Lit2Var4",
+      "Start": 14067,
+      "End": 14178,
+      "BodyStart": 14129,
+      "Original": "static inline int      Abc_Lit2Var4( int Lit )                { assert(Lit \u003e= 0);    return Lit \u003e\u003e 4;         }",
+      "Draft": "func Abc_Lit2Var4(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 4;         }"
+    },
+    {
+      "Name": "Abc_Lit2Att4",
+      "Start": 14179,
+      "End": 14290,
+      "BodyStart": 14241,
+      "Original": "static inline int      Abc_Lit2Att4( int Lit )                { assert(Lit \u003e= 0);    return Lit \u0026 15;         }",
+      "Draft": "func Abc_Lit2Att4(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 15;         }"
+    },
+    {
+      "Name": "Abc_Clock",
+      "Start": 14338,
+      "End": 14760,
+      "BodyStart": 14372,
+      "Original": "static inline abctime Abc_Clock()\n{\n#if (defined(LIN) || defined(LIN64)) \u0026\u0026 !(__APPLE__ \u0026 __MACH__) \u0026\u0026 !defined(__MINGW32__)\n    struct timespec ts;\n    if ( clock_gettime(CLOCK_THREAD_CPUTIME_ID, \u0026ts) \u003c 0 ) \n        return (abctime)-1;\n    abctime res = ((abctime) ts.tv_sec) * CLOCKS_PER_SEC;\n    res += (((abctime) ts.tv_nsec) * CLOCKS_PER_SEC) / 1000000000;\n    return res;\n#else\n    return (abctime) clock();\n#endif\n}",
+      "Draft": "func Abc_Clock() abctime {\n#if (defined(LIN) || defined(LIN64)) \u0026\u0026 !(__APPLE__ \u0026 __MACH__) \u0026\u0026 !defined(__MINGW32__)\n    struct timespec ts;\n    if ( clock_gettime(CLOCK_THREAD_CPUTIME_ID, \u0026ts) \u003c 0 ) \n        return (abctime)-1;\n    abctime res = ((abctime) ts.tv_sec) * CLOCKS_PER_SEC;\n    res += (((abctime) ts.tv_nsec) * CLOCKS_PER_SEC) / 1000000000;\n    return res;\n#else\n    return (abctime) clock();\n#endif\n}"
+    },
+    {
+      "Name": "Abc_PrintInt",
+      "Start": 16630,
+      "End": 17320,
+      "BodyStart": 16671,
+      "Original": "static inline void Abc_PrintInt( int i )\n{\n    double v3 = (double)i/1000;\n    double v6 = (double)i/1000000;\n\n    Abc_Print( 1,  \"  \" );\n\n    if ( i \u003e -1000 \u0026\u0026 i \u003c 1000 )\n        Abc_Print( 1, \" %4d\", i );\n\n    else if ( v3 \u003e -9.995 \u0026\u0026 v3 \u003c 9.995 )\n        Abc_Print( 1, \"%4.2fk\", v3 );\n    else if ( v3 \u003e -99.95 \u0026\u0026 v3 \u003c 99.95 )\n        Abc_Print( 1, \"%4.1fk\", v3 );\n    else if ( v3 \u003e -999.5 \u0026\u0026 v3 \u003c 999.5 )\n        Abc_Print( 1, \"%4.0fk\", v3 );\n\n    else if ( v6 \u003e -9.995 \u0026\u0026 v6 \u003c 9.995 )\n        Abc_Print( 1, \"%4.2fm\", v6 );\n    else if ( v6 \u003e -99.95 \u0026\u0026 v6 \u003c 99.95 )\n        Abc_Print( 1, \"%4.1fm\", v6 );\n    else if ( v6 \u003e -999.5 \u0026\u0026 v6 \u003c 999.5 )\n        Abc_Print( 1, \"%4.0fm\", v6 );\n}",
+      "Draft": "func Abc_PrintInt(i int32) {\n    var v3 float64  = float64(i)/1000;\n    var v6 float64  = float64(i)/1000000;\n\n    Abc_Print( 1,  \"  \" );\n\n    if i \u003e -1000 \u0026\u0026 i \u003c 1000 {\n        Abc_Print( 1, \" %4d\", i );\n\n    } else if v3 \u003e -9.995 \u0026\u0026 v3 \u003c 9.995 {\n        Abc_Print( 1, \"%4.2fk\", v3 );\n    } else if v3 \u003e -99.95 \u0026\u0026 v3 \u003c 99.95 {\n        Abc_Print( 1, \"%4.1fk\", v3 );\n    } else if v3 \u003e -999.5 \u0026\u0026 v3 \u003c 999.5 {\n        Abc_Print( 1, \"%4.0fk\", v3 );\n\n    } else if v6 \u003e -9.995 \u0026\u0026 v6 \u003c 9.995 {\n        Abc_Print( 1, \"%4.2fm\", v6 );\n    } else if v6 \u003e -99.95 \u0026\u0026 v6 \u003c 99.95 {\n        Abc_Print( 1, \"%4.1fm\", v6 );\n    } else if v6 \u003e -999.5 \u0026\u0026 v6 \u003c 999.5 {\n        Abc_Print( 1, \"%4.0fm\", v6 ); }\n}"
+    },
+    {
+      "Name": "Abc_PrintTime",
+      "Start": 17323,
+      "End": 17432,
+      "BodyStart": 17402,
+      "Original": "static inline void Abc_PrintTime( int level, const char * pStr, abctime time )\n{\n    ABC_PRT( pStr, time );\n}",
+      "Draft": "func Abc_PrintTime(level int32, pStr string, time abctime) {\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time)))/(float64(int64(spTime.Second))));;\n}"
+    },
+    {
+      "Name": "Abc_PrintTimeP",
+      "Start": 17434,
+      "End": 17565,
+      "BodyStart": 17528,
+      "Original": "static inline void Abc_PrintTimeP( int level, const char * pStr, abctime time, abctime Time )\n{\n    ABC_PRTP( pStr, time, Time );\n}",
+      "Draft": "func Abc_PrintTimeP(level int32, pStr string, time abctime, Time abctime) {\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((time)))/(float64(int64(spTime.Second))), (float64((Time)))? 100.0*(float64((time)))/(float64((Time))) : 0.0);;\n}"
+    },
+    {
+      "Name": "Abc_PrintMemoryP",
+      "Start": 17567,
+      "End": 17688,
+      "BodyStart": 17653,
+      "Original": "static inline void Abc_PrintMemoryP( int level, const char * pStr, int mem, int Mem )\n{\n    ABC_PRMP( pStr, mem, Mem );\n}",
+      "Draft": "func Abc_PrintMemoryP(level int32, pStr string, mem int32, Mem int32) {\n    // inlining of macro ABC_PRMP\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%10.3f MB (%6.2f %%)\\n\",  (1.0*(float64((mem)))/(1\u003c\u003c20)), ((float64((Mem)))? 100.0*(float64((mem)))/(float64((Mem))) : 0.0) );;\n}"
+    },
+    {
+      "Name": "Abc_PrimeCudd",
+      "Start": 17721,
+      "End": 18182,
+      "BodyStart": 17771,
+      "Original": "static inline int Abc_PrimeCudd( unsigned int p )\n{\n    int i,pn;\n    p--;\n    do {\n        p++;\n        if (p\u00261)\n        {\n            pn = 1;\n            i = 3;\n            while ((unsigned) (i * i) \u003c= p)\n            {\n                if (p % (unsigned)i == 0) {\n                    pn = 0;\n                    break;\n                }\n                i += 2;\n            }\n        }\n        else\n            pn = 0;\n    } while (!pn);\n    return (int)(p);\n\n}",
+      "Draft": "static inline int Abc_PrimeCudd( unsigned int p )\n{\n    var i, pn int32;\n    p--;\n    for {\n        p++;\n        if p\u00261 {\n            pn = 1;\n            i = 3;\n            for uint32( (i * i)) \u003c= p {\n                if p % uint32(i) == 0 {\n                    pn = 0;\n                    break;\n                }\n                i += 2;\n            }\n        \n        } else {\n            pn = 0; }\n    \nif !(!(pn != 0)) { break }\n} \n    return int32((p));\n\n}"
+    },
+    {
+      "Name": "Abc_FileReadContents",
+      "Start": 18279,
+      "End": 18958,
+      "BodyStart": 18359,
+      "Original": "static inline void * Abc_FileReadContents( char * pFileName, int * pnFileSize )\n{\n    int RetValue, nFileSize;\n    char * pBuffer;\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n        return NULL;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    if ( pnFileSize )\n        *pnFileSize = nFileSize;\n    rewind( pFile );\n    // load the contents of the file into memory\n    pBuffer = ABC_ALLOC( char, nFileSize + 32 );\n    RetValue = fread( pBuffer, 1, nFileSize, pFile );\n    memset( pBuffer + nFileSize, 0, 32 );\n    assert( RetValue == nFileSize );\n    fclose( pFile );\n    return (void *)pBuffer;\n}",
+      "Draft": "func Abc_FileReadContents(pFileName string, pnFileSize *int32) any {\n    var RetValue, nFileSize int32;\n    var pBuffer string;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        return nil; }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    if pnFileSize != nil {\n        *pnFileSize = nFileSize; }\n    rewind( pFile );\n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 32)));\n    RetValue = fread( pBuffer, 1, nFileSize, pFile );\n    memset( pBuffer + nFileSize, 0, 32 );\n    assert(RetValue == nFileSize, \"RetValue == nFileSize\");\n    _ = (pFile).Close();\n    return (void *)pBuffer;\n}"
+    },
+    {
+      "Name": "Abc_ReverseOrder",
+      "Start": 18959,
+      "End": 19106,
+      "BodyStart": 19015,
+      "Original": "static inline void Abc_ReverseOrder( int * pA, int nA )\n{\n    int i;\n    for ( i = 0; i \u003c nA/2; i++ )\n        ABC_SWAP( int, pA[i], pA[nA-1-i] );\n}",
+      "Draft": "func Abc_ReverseOrder(pA *int32, nA int32) {\n    var i int32;\n    for  i = 0; i \u003c nA/2; i++  {\n        // inlining of macro ABC_SWAP\n         var t int32  = pA[i]; pA[i] = pA[nA-1-i]; pA[nA-1-i] = t; };\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::union::6253",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 9533,
+      "End": 9538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::union::6379",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 9659,
+      "End": 9664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::union::6505",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 9785,
+      "End": 9790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::union::6631",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 9911,
+      "End": 9916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::sizeof::7290",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10508,
+      "End": 10508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::enum::11275",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 14791,
+      "End": 14795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::do::13176",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17800,
+      "End": 17802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::mechanical::sizeof::14178",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18740,
+      "End": 18740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::pointer-cast::7274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10508,
+      "End": 10508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::pointer-cast::9845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13053,
+      "End": 13061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::pointer-cast::10045",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13253,
+      "End": 13261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::pointer-cast::14162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18740,
+      "End": 18740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::pointer-cast::14386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18940,
+      "End": 18948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_SWAP",
+      "Category": "macro-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6796,
+      "End": 6855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRT",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6857,
+      "End": 6981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRTr",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRTr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6982,
+      "End": 7106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRTn",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRTn",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7107,
+      "End": 7231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRTP",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7232,
+      "End": 7423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRM",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7424,
+      "End": 7534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRMr",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRMr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7535,
+      "End": 7645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRMn",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRMn",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7646,
+      "End": 7756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_PRMP",
+      "Category": "macro-review",
+      "Symbol": "ABC_PRMP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7757,
+      "End": 7938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_ALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7940,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_CALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8021,
+      "End": 8100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_FALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8101,
+      "End": 8225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_FREE",
+      "Category": "macro-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8226,
+      "End": 8306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::macro::ABC_REALLOC",
+      "Category": "macro-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8307,
+      "End": 8487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_AbsInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_AbsInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8489,
+      "End": 8577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MaxInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MaxInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8578,
+      "End": 8666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MinInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MinInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8667,
+      "End": 8755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MaxWord",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MaxWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8756,
+      "End": 8844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MinWord",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MinWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8845,
+      "End": 8933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_AbsFloat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_AbsFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8934,
+      "End": 9022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MaxFloat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MaxFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9023,
+      "End": 9111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MinFloat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MinFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9112,
+      "End": 9200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_AbsDouble",
+      "Category": "semantic-review",
+      "Symbol": "Abc_AbsDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9201,
+      "End": 9289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MaxDouble",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MaxDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9290,
+      "End": 9378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_MinDouble",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MinDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9379,
+      "End": 9467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Float2Int",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Float2Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9469,
+      "End": 9594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Int2Float",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Int2Float",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9595,
+      "End": 9720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Dbl2Word",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Dbl2Word",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9721,
+      "End": 9846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Word2Dbl",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Word2Dbl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9847,
+      "End": 9972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Base2Log",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Base2Log",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9973,
+      "End": 10123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Base10Log",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Base10Log",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10124,
+      "End": 10274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Base16Log",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Base16Log",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10275,
+      "End": 10425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_UtilStrsav",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilStrsav",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10426,
+      "End": 10551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_BitByteNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BitByteNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10552,
+      "End": 10677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_BitWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_BitWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10678,
+      "End": 10803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Bit6WordNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Bit6WordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10804,
+      "End": 10929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_TruthByteNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthByteNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10930,
+      "End": 11055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_TruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11056,
+      "End": 11181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Truth6WordNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Truth6WordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11182,
+      "End": 11307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_InfoHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11308,
+      "End": 11433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_InfoSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11434,
+      "End": 11559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_InfoXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11560,
+      "End": 11685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_InfoMask",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11686,
+      "End": 11811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Var2Lit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Var2Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11813,
+      "End": 11938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Var",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11939,
+      "End": 12064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_LitIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "Abc_LitIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12065,
+      "End": 12190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_LitNot",
+      "Category": "semantic-review",
+      "Symbol": "Abc_LitNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12191,
+      "End": 12316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_LitNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Abc_LitNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12317,
+      "End": 12442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_LitRegular",
+      "Category": "semantic-review",
+      "Symbol": "Abc_LitRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12443,
+      "End": 12568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2LitV",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2LitV",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12569,
+      "End": 12724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2LitL",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2LitL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12725,
+      "End": 12880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::void-pointer::Abc_Ptr2Int",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_Ptr2Int",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12882,
+      "End": 12981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Ptr2Int",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Ptr2Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12882,
+      "End": 12981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::void-pointer::Abc_Int2Ptr",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_Int2Ptr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12982,
+      "End": 13081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Int2Ptr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Int2Ptr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12982,
+      "End": 13081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::void-pointer::Abc_Ptr2Wrd",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_Ptr2Wrd",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13082,
+      "End": 13181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Ptr2Wrd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Ptr2Wrd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13082,
+      "End": 13181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::void-pointer::Abc_Wrd2Ptr",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_Wrd2Ptr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13182,
+      "End": 13281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Wrd2Ptr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Wrd2Ptr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13182,
+      "End": 13281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Var2Lit2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Var2Lit2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13283,
+      "End": 13394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Var2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Var2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13395,
+      "End": 13506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Att2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Att2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13507,
+      "End": 13618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Var2Lit3",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Var2Lit3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13619,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Var3",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Var3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13731,
+      "End": 13842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Att3",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Att3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13843,
+      "End": 13954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Var2Lit4",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Var2Lit4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13955,
+      "End": 14066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Var4",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Var4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14067,
+      "End": 14178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Lit2Att4",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Lit2Att4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14179,
+      "End": 14290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_Clock",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Clock",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14338,
+      "End": 14760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_PrintInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PrintInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16630,
+      "End": 17320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_PrintTime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PrintTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17323,
+      "End": 17432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::ternary::Abc_PrintTimeP",
+      "Category": "ternary-review",
+      "Symbol": "Abc_PrintTimeP",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17434,
+      "End": 17565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_PrintTimeP",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PrintTimeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17434,
+      "End": 17565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::ternary::Abc_PrintMemoryP",
+      "Category": "ternary-review",
+      "Symbol": "Abc_PrintMemoryP",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17567,
+      "End": 17688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_PrintMemoryP",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PrintMemoryP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17567,
+      "End": 17688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_PrimeCudd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PrimeCudd",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 17721,
+      "End": 18182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::void-pointer::Abc_FileReadContents",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_FileReadContents",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 18279,
+      "End": 18958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_FileReadContents",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FileReadContents",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18279,
+      "End": 18958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::Abc_ReverseOrder",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ReverseOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18959,
+      "End": 19106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 804,
+      "End": 856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 858,
+      "End": 1546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1548,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1827,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1881,
+      "End": 2011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2243,
+      "End": 2341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2840,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3820,
+      "End": 4221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4424,
+      "End": 4852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5050,
+      "End": 5445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5487,
+      "End": 5887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5931,
+      "End": 6357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6359,
+      "End": 6481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14374,
+      "End": 14758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/abc_global.h::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14931,
+      "End": 16627
+    }
+  ],
+  "Draft": "package util\n\nimport spTime \"time\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abc_global.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Global declarations.]\n\n  Synopsis    [Global declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Jan 30, 2009.]\n\n  Revision    [$Id: abc_global.h,v 1.00 2009/01/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n#ifndef ABC_USE_BRIDGE\n#define ABC_USE_BRIDGE\n#endif\n\n#ifdef _WIN32\n#ifndef __MINGW32__\n#define inline __inline // compatible with MS VS 6.0\n#pragma warning(disable : 4152) // warning C4152: nonstandard extension, function/data pointer conversion in expression\n#pragma warning(disable : 4200) // warning C4200: nonstandard extension used : zero-sized array in struct/union\n#pragma warning(disable : 4244) // warning C4244: '+=' : conversion from 'int ' to 'unsigned short ', possible loss of data\n#pragma warning(disable : 4514) // warning C4514: 'Vec_StrPop' : unreferenced inline function has been removed\n#pragma warning(disable : 4710) // warning C4710: function 'Vec_PtrGrow' not inlined\n//#pragma warning( disable : 4273 )\n#endif\n#endif\n\n#ifdef WIN32\n  #ifdef WIN32_NO_DLL\n    #define ABC_DLLEXPORT\n    #define ABC_DLLIMPORT\n  #else\n    #define ABC_DLLEXPORT __declspec(dllexport)\n    #define ABC_DLLIMPORT __declspec(dllimport)\n  #endif\n#else  /* defined(WIN32) */\n#define ABC_DLLIMPORT\n#endif /* defined(WIN32) */\n\n#ifndef ABC_DLL\n#define ABC_DLL ABC_DLLIMPORT\n#endif\n\n#if !defined(___unused)\n#if defined(__GNUC__)\n#define ___unused __attribute__ ((__unused__))\n#else\n#define ___unused\n#endif\n#endif\n\n/*\n#ifdef __cplusplus\n#error \"C++ code\"\n#else\n#error \"C code\"\n#endif\n*/\n\n//#include \u003ctime.h\u003e\n//#include \u003cstdarg.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n\n// catch memory leaks in Visual Studio\n#ifdef WIN32\n  #ifdef _DEBUG\n    #define _CRTDBG_MAP_ALLOC\n    #include \u003ccrtdbg.h\u003e\n  #endif\n#endif\n\n//#include \"abc_namespaces.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_STDINT_H\n// If there is stdint.h, assume this is a reasonably-modern platform that\n// would also have stddef.h and limits.h\n#include \u003climits.h\u003e\n#include \u003cstddef.h\u003e\n#include \u003cstdint.h\u003e\n\n#if UINTPTR_MAX == 0xFFFFFFFFFFFFFFFF\n#define SIZEOF_VOID_P 8\n#ifdef _WIN32\n#define NT64\n#else\n#define LIN64\n#endif\n#elif UINTPTR_MAX == 0xFFFFFFFF\n#define SIZEOF_VOID_P 4\n#ifdef _WIN32\n#define NT\n#else\n#define LIN\n#endif\n#else\n   #error unsupported platform\n#endif\n\n#if ULONG_MAX == 0xFFFFFFFFFFFFFFFF\n#define SIZEOF_LONG 8\n#elif ULONG_MAX == 0xFFFFFFFF\n#define SIZEOF_LONG 4\n#else\n   #error unsupported platform\n#endif\n\n#if UINT_MAX == 0xFFFFFFFFFFFFFFFF\n#define SIZEOF_INT 8\n#elif UINT_MAX == 0xFFFFFFFF\n#define SIZEOF_INT 4\n#else\n   #error unsupported platform\n#endif\n\n#endif\n\n/**\n * Pointer difference type; replacement for ptrdiff_t.\n * This is a signed integral type that is the same size as a pointer.\n * NOTE: This type may be different sizes on different platforms.\n */\n#if       defined(__ccdoc__)\ntypedef platform_dependent_type ABC_PTRDIFF_T;\n#elif     defined(ABC_USE_STDINT_H)\ntypedef ptrdiff_t ABC_PTRDIFF_T;\n#elif     defined(LIN64)\ntypedef long ABC_PTRDIFF_T;\n#elif     defined(NT64)\ntypedef long long ABC_PTRDIFF_T;\n#elif     defined(NT) || defined(LIN) || defined(WIN32)\ntypedef int ABC_PTRDIFF_T;\n#else\n   #error unknown platform\n#endif /* defined(PLATFORM) */\n\n/**\n * Unsigned integral type that can contain a pointer.\n * This is an unsigned integral type that is the same size as a pointer.\n * NOTE: This type may be different sizes on different platforms.\n */\n#if       defined(__ccdoc__)\ntypedef platform_dependent_type ABC_PTRUINT_T;\n#elif     defined(ABC_USE_STDINT_H)\ntypedef uintptr_t ABC_PTRUINT_T;\n#elif     defined(LIN64)\ntypedef unsigned long ABC_PTRUINT_T;\n#elif     defined(NT64)\ntypedef unsigned long long ABC_PTRUINT_T;\n#elif     defined(NT) || defined(LIN) || defined(WIN32)\ntypedef unsigned int ABC_PTRUINT_T;\n#else\n   #error unknown platform\n#endif /* defined(PLATFORM) */\n\n/**\n * Signed integral type that can contain a pointer.\n * This is a signed integral type that is the same size as a pointer.\n * NOTE: This type may be different sizes on different platforms.\n */\n#if       defined(__ccdoc__)\ntypedef platform_dependent_type ABC_PTRINT_T;\n#elif     defined(ABC_USE_STDINT_H)\ntypedef intptr_t ABC_PTRINT_T;\n#elif     defined(LIN64)\ntypedef long ABC_PTRINT_T;\n#elif     defined(NT64)\ntypedef long long ABC_PTRINT_T;\n#elif     defined(NT) || defined(LIN) || defined(WIN32)\ntypedef int ABC_PTRINT_T;\n#else\n   #error unknown platform\n#endif /* defined(PLATFORM) */\n\n/**\n * 64-bit signed integral type.\n */\n#if       defined(__ccdoc__)\ntypedef platform_dependent_type ABC_INT64_T;\n#elif     defined(ABC_USE_STDINT_H)\ntypedef int64_t ABC_INT64_T;\n#elif     defined(LIN64)\ntypedef long ABC_INT64_T;\n#elif     defined(NT64) || defined(LIN)\ntypedef long long ABC_INT64_T;\n#elif     defined(WIN32) || defined(NT)\ntypedef signed __int64 ABC_INT64_T;\n#else\n   #error unknown platform\n#endif /* defined(PLATFORM) */\n\n/**\n * 64-bit unsigned integral type.\n */\n#if       defined(__ccdoc__)\ntypedef platform_dependent_type ABC_UINT64_T;\n#elif     defined(ABC_USE_STDINT_H)\ntypedef uint64_t ABC_UINT64_T;\n#elif     defined(LIN64)\ntypedef unsigned long ABC_UINT64_T;\n#elif     defined(NT64) || defined(LIN)\ntypedef unsigned long long ABC_UINT64_T;\n#elif     defined(WIN32) || defined(NT)\ntypedef unsigned __int64 ABC_UINT64_T;\n#else\n   #error unknown platform\n#endif /* defined(PLATFORM) */\n\n#ifdef LIN\n  #define ABC_CONST(number) number ## ULL \n#else // LIN64 and windows\n  #define ABC_CONST(number) number\n#endif\n\ntypedef ABC_UINT64_T word;\ntypedef ABC_INT64_T iword;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n#define ABC_INFINITY    (1000000000)\n\n// Original macro:\n// #define ABC_SWAP(Type, a, b)  { Type t = a; a = b; b = t; }\n\n\n// Original macro:\n// #define ABC_PRT(a,t)    (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%9.2f sec\\n\", 1.0*((double)(t))/((double)CLOCKS_PER_SEC)))\n\n// Original macro:\n// #define ABC_PRTr(a,t)   (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%9.2f sec\\r\", 1.0*((double)(t))/((double)CLOCKS_PER_SEC)))\n\n// Original macro:\n// #define ABC_PRTn(a,t)   (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%9.2f sec  \", 1.0*((double)(t))/((double)CLOCKS_PER_SEC)))\n\n// Original macro:\n// #define ABC_PRTP(a,t,T) (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*((double)(t))/((double)CLOCKS_PER_SEC), ((double)(T))? 100.0*((double)(t))/((double)(T)) : 0.0))\n\n// Original macro:\n// #define ABC_PRM(a,f)    (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%10.3f MB\\n\",    1.0*((double)(f))/(1\u003c\u003c20)))\n\n// Original macro:\n// #define ABC_PRMr(a,f)   (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%10.3f MB\\r\",    1.0*((double)(f))/(1\u003c\u003c20)))\n\n// Original macro:\n// #define ABC_PRMn(a,f)   (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%10.3f MB  \",    1.0*((double)(f))/(1\u003c\u003c20)))\n\n// Original macro:\n// #define ABC_PRMP(a,f,F) (Abc_Print(1, \"%s =\", (a)), Abc_Print(1, \"%10.3f MB (%6.2f %%)\\n\",  (1.0*((double)(f))/(1\u003c\u003c20)), (((double)(F))? 100.0*((double)(f))/((double)(F)) : 0.0) ) )\n\n\n// Original macro:\n// #define ABC_ALLOC(type, num)     ((type *) malloc(sizeof(type) * (size_t)(num)))\n\n// Original macro:\n// #define ABC_CALLOC(type, num)    ((type *) calloc((size_t)(num), sizeof(type)))\n\n// Original macro:\n// #define ABC_FALLOC(type, num)    ((type *) memset(malloc(sizeof(type) * (size_t)(num)), 0xff, sizeof(type) * (size_t)(num)))\n\n// Original macro:\n// #define ABC_FREE(obj)            ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)\n\n// Original macro:\n// #define ABC_REALLOC(type, obj, num) \\\n//         ((obj) ? ((type *) realloc((char *)(obj), sizeof(type) * (size_t)(num))) : \\\n//          ((type *) malloc(sizeof(type) * (size_t)(num))))\n\n\nfunc Abc_AbsInt(a int32) int32 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }\nfunc Abc_MaxInt(a int32, b int32) int32 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_MinInt(a int32, b int32) int32 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_MaxWord(a word, b word) word { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_MinWord(a word, b word) word { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_AbsFloat(a float32) float32 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }\nfunc Abc_MaxFloat(a float32, b float32) float32 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_MinFloat(a float32, b float32) float32 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_AbsDouble(a float64) float64 { if a \u003c 0 {\n    return -a;\n} else {\n    return a;\n} }\nfunc Abc_MaxDouble(a float64, b float64) float64 { if a \u003e b {\n    return a;\n} else {\n    return b;\n} }\nfunc Abc_MinDouble(a float64, b float64) float64 { if a \u003c b {\n    return a;\n} else {\n    return b;\n} }\n\nfunc Abc_Float2Int(Val float32) int32 { union { var x int32; var y float32; }\n v; v.y = Val; return v.x;         }\nfunc Abc_Int2Float(Num int32) float32 { union { var x int32; var y float32; }\n v; v.x = Num; return v.y;         }\nfunc Abc_Dbl2Word(Dbl float64) word { union { var x word; var y float64; }\n v; v.y = Dbl; return v.x;       }\nfunc Abc_Word2Dbl(Num word) float64 { union { var x word; var y float64; }\n v; v.x = Num; return v.y;       }\nfunc Abc_Base2Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n \u003e\u003e= 1, r++  {}; return r; }\nfunc Abc_Base10Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n /= 10, r++  {}; return r; }\nfunc Abc_Base16Log(n uint32) int32 { var r int32; if n \u003c 2 { return int32(n); }\n for  r, n = 0, n-1; (n != 0); n /= 16, r++  {}; return r; }\nfunc Abc_UtilStrsav(s string) string { if s {\n    // inlining of macro ABC_ALLOC\n    return strcpy(((char *) malloc(sizeof(char) * (size_t)(len(s)+1))), s);\n} else {\n    return nil;\n}  }\nfunc Abc_BitByteNum(nBits int32) int32 { return (nBits\u003e\u003e3) + ((nBits\u00267)  \u003e 0);                       }\nfunc Abc_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);                       }\nfunc Abc_Bit6WordNum(nBits int32) int32 { return (nBits\u003e\u003e6) + ((nBits\u002663) \u003e 0);                       }\nfunc Abc_TruthByteNum(nVars int32) int32 { if nVars \u003c= 3 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 3));\n}                 }\nfunc Abc_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}                 }\nfunc Abc_Truth6WordNum(nVars int32) int32 { if nVars \u003c= 6 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 6));\n}                 }\nfunc Abc_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 uint32((1\u003c\u003c((i) \u0026 31)))) \u003e 0;         }\nfunc Abc_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= uint32((1\u003c\u003c((i) \u0026 31)));                     }\nfunc Abc_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= uint32((1\u003c\u003c((i) \u0026 31)));                     }\nfunc Abc_InfoMask(nVar int32) uint32 { return (~uint32(0)) \u003e\u003e (32-nVar);                         }\n\nfunc Abc_Var2Lit(Var int32, c int32) int32 { assert(Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1), \"Var \u003e= 0 \u0026\u0026 !(c \u003e\u003e 1)\"); return Var + Var + c;        }\nfunc Abc_Lit2Var(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u003e\u003e 1;                          }\nfunc Abc_LitIsCompl(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u0026 1;                           }\nfunc Abc_LitNot(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit ^ 1;                           }\nfunc Abc_LitNotCond(Lit int32, c int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit ^ int32((c \u003e 0));                }\nfunc Abc_LitRegular(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Lit \u0026 ~01;                         }\nfunc Abc_Lit2LitV(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Abc_Var2Lit( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );      }\nfunc Abc_Lit2LitL(pMap *int32, Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\"); return Abc_LitNotCond( pMap[Abc_Lit2Var(Lit)], Abc_LitIsCompl(Lit) );   }\n\nfunc Abc_Ptr2Int(p any) int32 { return int32((ABC_PTRINT_T))p;      }\nfunc Abc_Int2Ptr(i int32) any { return (void *)(ABC_PTRINT_T)i;   }\nfunc Abc_Ptr2Wrd(p any) word { return (word)(ABC_PTRUINT_T)p;    }\nfunc Abc_Wrd2Ptr(i word) any { return (void *)(ABC_PTRUINT_T)i;  }\n\nfunc Abc_Var2Lit2(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 2), \"!(Att \u003e\u003e 2)\"); return (Var \u003c\u003c 2) + Att; }\nfunc Abc_Lit2Var2(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 2;         }\nfunc Abc_Lit2Att2(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 3;          }\nfunc Abc_Var2Lit3(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 3), \"!(Att \u003e\u003e 3)\"); return (Var \u003c\u003c 3) + Att; }\nfunc Abc_Lit2Var3(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 3;         }\nfunc Abc_Lit2Att3(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 7;          }\nfunc Abc_Var2Lit4(Var int32, Att int32) int32 { assert(!(Att \u003e\u003e 4), \"!(Att \u003e\u003e 4)\"); return (Var \u003c\u003c 4) + Att; }\nfunc Abc_Lit2Var4(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u003e\u003e 4;         }\nfunc Abc_Lit2Att4(Lit int32) int32 { assert(Lit \u003e= 0, \"Lit \u003e= 0\");    return Lit \u0026 15;         }\n\n// time counting\ntypedef ABC_INT64_T abctime;\nfunc Abc_Clock() abctime {\n#if (defined(LIN) || defined(LIN64)) \u0026\u0026 !(__APPLE__ \u0026 __MACH__) \u0026\u0026 !defined(__MINGW32__)\n    struct timespec ts;\n    if ( clock_gettime(CLOCK_THREAD_CPUTIME_ID, \u0026ts) \u003c 0 ) \n        return (abctime)-1;\n    abctime res = ((abctime) ts.tv_sec) * CLOCKS_PER_SEC;\n    res += (((abctime) ts.tv_nsec) * CLOCKS_PER_SEC) / 1000000000;\n    return res;\n#else\n    return (abctime) clock();\n#endif\n}\n\n\n// misc printing procedures\ntype Abc_VerbLevel int32\nconst \n(\n    ABC_PROMPT Abc_VerbLevel   = -2\n\n    ABC_ERROR Abc_VerbLevel    = -1\n\n    ABC_WARNING Abc_VerbLevel  =  0\n\n    ABC_STANDARD Abc_VerbLevel =  1\n\n    ABC_VERBOSE Abc_VerbLevel  =  2\n\n)\n\n\n\n#ifdef ABC_USE_BRIDGE\n\n// bridge communication\n#define BRIDGE_NETLIST           106\n#define BRIDGE_ABS_NETLIST       107\nextern int Gia_ManToBridgeText( FILE * pFile, int Size, unsigned char * pBuffer );\nextern int Gia_ManToBridgeAbsNetlist( FILE * pFile, void * p, int pkg_type );\n\n// string printing\nextern char * vnsprintf(const char* format, va_list args);\nextern char * nsprintf(const char* format, ...);\n\nstatic inline void Abc_Print( int level, const char * format, ... )\n{\n    extern ABC_DLL int Abc_FrameIsBridgeMode();\n    va_list args;\n    extern unsigned enable_dbg_outs;  \n    if ( !enable_dbg_outs )\n        return;\n\n    if ( ! Abc_FrameIsBridgeMode() ){\n        if ( level == ABC_ERROR )\n            printf( \"Error: \" );\n        else if ( level == ABC_WARNING )\n            printf( \"Warning: \" );\n    }else{\n        if ( level == ABC_ERROR )\n            Gia_ManToBridgeText( stdout, (int)strlen(\"Error: \"), (unsigned char*)\"Error: \" );\n        else if ( level == ABC_WARNING )\n            Gia_ManToBridgeText( stdout, (int)strlen(\"Warning: \"), (unsigned char*)\"Warning: \" );\n    }\n\n    va_start( args, format );\n    if ( Abc_FrameIsBridgeMode() )\n    {\n        char * tmp = vnsprintf( format, args );\n        Gia_ManToBridgeText( stdout, (int)strlen(tmp), (unsigned char*)tmp );\n        free( tmp );\n    }\n    else\n        vprintf( format, args );\n    va_end( args );\n}\n\n#else\n\nstatic inline void Abc_Print( int level, const char * format, ... )\n{\n    va_list args;\n    va_start( args, format );\n    if ( level == ABC_ERROR )\n        printf( \"Error: \" );\n    else if ( level == ABC_WARNING )\n        printf( \"Warning: \" );\n    vprintf( format, args );\n    va_end( args );\n}\n\n#endif\n\n\nfunc Abc_PrintInt(i int32) {\n    var v3 float64  = float64(i)/1000;\n    var v6 float64  = float64(i)/1000000;\n\n    Abc_Print( 1,  \"  \" );\n\n    if i \u003e -1000 \u0026\u0026 i \u003c 1000 {\n        Abc_Print( 1, \" %4d\", i );\n\n    } else if v3 \u003e -9.995 \u0026\u0026 v3 \u003c 9.995 {\n        Abc_Print( 1, \"%4.2fk\", v3 );\n    } else if v3 \u003e -99.95 \u0026\u0026 v3 \u003c 99.95 {\n        Abc_Print( 1, \"%4.1fk\", v3 );\n    } else if v3 \u003e -999.5 \u0026\u0026 v3 \u003c 999.5 {\n        Abc_Print( 1, \"%4.0fk\", v3 );\n\n    } else if v6 \u003e -9.995 \u0026\u0026 v6 \u003c 9.995 {\n        Abc_Print( 1, \"%4.2fm\", v6 );\n    } else if v6 \u003e -99.95 \u0026\u0026 v6 \u003c 99.95 {\n        Abc_Print( 1, \"%4.1fm\", v6 );\n    } else if v6 \u003e -999.5 \u0026\u0026 v6 \u003c 999.5 {\n        Abc_Print( 1, \"%4.0fm\", v6 ); }\n}\n\n\nfunc Abc_PrintTime(level int32, pStr string, time abctime) {\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time)))/(float64(int64(spTime.Second))));;\n}\n\nfunc Abc_PrintTimeP(level int32, pStr string, time abctime, Time abctime) {\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((time)))/(float64(int64(spTime.Second))), (float64((Time)))? 100.0*(float64((time)))/(float64((Time))) : 0.0);;\n}\n\nfunc Abc_PrintMemoryP(level int32, pStr string, mem int32, Mem int32) {\n    // inlining of macro ABC_PRMP\n    Abc_Print(1, \"%s =\", (pStr));\nAbc_Print(1, \"%10.3f MB (%6.2f %%)\\n\",  (1.0*(float64((mem)))/(1\u003c\u003c20)), ((float64((Mem)))? 100.0*(float64((mem)))/(float64((Mem))) : 0.0) );;\n}\n\n// Returns the next prime \u003e= p\nstatic inline int Abc_PrimeCudd( unsigned int p )\n{\n    var i, pn int32;\n    p--;\n    for {\n        p++;\n        if p\u00261 {\n            pn = 1;\n            i = 3;\n            for uint32( (i * i)) \u003c= p {\n                if p % uint32(i) == 0 {\n                    pn = 0;\n                    break;\n                }\n                i += 2;\n            }\n        \n        } else {\n            pn = 0; }\n    \nif !(!(pn != 0)) { break }\n} \n    return int32((p));\n\n} // end of Cudd_Prime \n\n// the returned buffer has 32 unused bytes at the end, filled with zeros\nfunc Abc_FileReadContents(pFileName string, pnFileSize *int32) any {\n    var RetValue, nFileSize int32;\n    var pBuffer string;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        return nil; }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );\n    nFileSize = ftell( pFile );\n    if pnFileSize != nil {\n        *pnFileSize = nFileSize; }\n    rewind( pFile );\n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 32)));\n    RetValue = fread( pBuffer, 1, nFileSize, pFile );\n    memset( pBuffer + nFileSize, 0, 32 );\n    assert(RetValue == nFileSize, \"RetValue == nFileSize\");\n    _ = (pFile).Close();\n    return (void *)pBuffer;\n}\nfunc Abc_ReverseOrder(pA *int32, nA int32) {\n    var i int32;\n    for  i = 0; i \u003c nA/2; i++  {\n        // inlining of macro ABC_SWAP\n         var t int32  = pA[i]; pA[i] = pA[nA-1-i]; pA[nA-1-i] = t; };\n}\n\n\n// sorting\n// extern void   Abc_MergeSort( int * pInput, int nSize );\n\n// extern int *  Abc_MergeSortCost( int * pCosts, int nSize );\n\n// extern void   Abc_QuickSort1( word * pData, int nSize, int fDecrease );\n\n// extern void   Abc_QuickSort2( word * pData, int nSize, int fDecrease );\n\n// extern void   Abc_QuickSort3( word * pData, int nSize, int fDecrease );\n\n// extern void   Abc_QuickSortCostData( int * pCosts, int nSize, int fDecrease, word * pData, int * pResult );\n\n// extern int *  Abc_QuickSortCost( int * pCosts, int nSize, int fDecrease );\n\n\n// extern unsigned Abc_Random( int fReset );\n\n// extern word     Abc_RandomW( int fReset );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

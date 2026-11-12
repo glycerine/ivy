@@ -1,0 +1,1287 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c",
+  "SHA256": "afa73cecb9c061e31642df31442562c4635db40f45514d04bc7ecbb393deeb26",
+  "Library": [
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 163,
+        "Column": 22,
+        "ByteOffset": 6610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 6676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 11 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 171,
+        "Column": 41,
+        "ByteOffset": 6872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 7335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %6d. Total %d-cuts = %d. Cuts per node = %.1f. \", "
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 189,
+        "Column": 43,
+        "ByteOffset": 7601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 189,
+        "Column": 69,
+        "ByteOffset": 7627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 10218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pList );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 13,
+        "ByteOffset": 10413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTemp.pCuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 10510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTemp.pCuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 731,
+        "Column": 5,
+        "ByteOffset": 28047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRoot.pNext == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 861,
+        "Column": 9,
+        "ByteOffset": 31440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", Counter + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 881,
+        "Column": 9,
+        "ByteOffset": 32004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", Counter + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 899,
+        "Column": 5,
+        "ByteOffset": 32440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%3d)  {\", pRoot.Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 902,
+        "Column": 13,
+        "ByteOffset": 32557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %3d\", pCut.ppLeaves[i].Num ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 904,
+        "Column": 5,
+        "ByteOffset": 32609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 928,
+        "Column": 75,
+        "ByteOffset": 33101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_CutTable_t *) malloc(sizeof(Fpga_CutTable_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 929,
+        "Column": 5,
+        "ByteOffset": 33153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fpga_CutTable_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 931,
+        "Column": 78,
+        "ByteOffset": 33330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(p.nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 932,
+        "Column": 5,
+        "ByteOffset": 33385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pBins, 0, sizeof(Fpga_Cut_t *) * p.nBins );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 933,
+        "Column": 69,
+        "ByteOffset": 33507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 934,
+        "Column": 79,
+        "ByteOffset": 33645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 935,
+        "Column": 79,
+        "ByteOffset": 33792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts1 = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 936,
+        "Column": 79,
+        "ByteOffset": 33939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts2 = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 952,
+        "Column": 64,
+        "ByteOffset": 34388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 953,
+        "Column": 64,
+        "ByteOffset": 34500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 954,
+        "Column": 64,
+        "ByteOffset": 34612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 955,
+        "Column": 63,
+        "ByteOffset": 34723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 956,
+        "Column": 63,
+        "ByteOffset": 34832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 957,
+        "Column": 57,
+        "ByteOffset": 34935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1032,
+        "Column": 5,
+        "ByteOffset": 37035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1043,
+        "Column": 5,
+        "ByteOffset": 37351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBins[Place] == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1065,
+        "Column": 9,
+        "ByteOffset": 37987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pBins[ p.pCuts[i] ] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1114,
+        "Column": 5,
+        "ByteOffset": 39246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003c= FPGA_CUTS_MAX_COMPUTE );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 1116,
+        "Column": 5,
+        "ByteOffset": 39313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(void *), "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_MappingCuts",
+      "Start": 6262,
+      "End": 7481,
+      "BodyStart": 6302,
+      "Original": "void Fpga_MappingCuts( Fpga_Man_t * p )\n{\n    ProgressBar * pProgress;\n    Fpga_CutTable_t * pTable;\n    Fpga_Node_t * pNode;\n    int nCuts, nNodes, i;\n    clock_t clk = clock();\n\n    // set the elementary cuts for the PI variables\n    assert( p-\u003enVarsMax \u003e 1 \u0026\u0026 p-\u003enVarsMax \u003c 11 );\n    Fpga_MappingCreatePiCuts( p );\n\n    // compute the cuts for the internal nodes\n    nNodes = p-\u003evAnds-\u003enSize;\n    pProgress = Extra_ProgressBarStart( stdout, nNodes );\n    pTable = Fpga_CutTableStart( p );\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n        pNode = p-\u003evAnds-\u003epArray[i];\n        if ( !Fpga_NodeIsAnd( pNode ) )\n            continue;\n        Fpga_CutCompute( p, pTable, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Fpga_CutTableStop( pTable );\n\n    // report the stats\n    if ( p-\u003efVerbose )\n    {\n        nCuts = Fpga_CutCountAll(p);\n        printf( \"Nodes = %6d. Total %d-cuts = %d. Cuts per node = %.1f. \", \n               p-\u003enNodes, p-\u003enVarsMax, nCuts, ((float)nCuts)/p-\u003enNodes );\n        ABC_PRT( \"Time\", clock() - clk );\n    }\n\n    // print the cuts for the first primary output\n//    Fpga_CutListPrint( p, Fpga_Regular(p-\u003epOutputs[0]) );\n}",
+      "Draft": "func Fpga_MappingCuts(p *Fpga_Man_t) {\n    var pProgress *ProgressBar;\n    var pTable *Fpga_CutTable_t;\n    var pNode *Fpga_Node_t;\n    var nCuts, nNodes, i int32;\n    var clk int64  = time.Now().UnixNano();\n\n    // set the elementary cuts for the PI variables\n    assert(p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 11, \"p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 11\");\n    Fpga_MappingCreatePiCuts( p );\n\n    // compute the cuts for the internal nodes\n    nNodes = p.vAnds.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    pTable = Fpga_CutTableStart( p );\n    for  i = 0; i \u003c nNodes; i++  {\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n        pNode = p.vAnds.pArray[i];\n        if !Fpga_NodeIsAnd( pNode ) {\n            continue; }\n        Fpga_CutCompute( p, pTable, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Fpga_CutTableStop( pTable );\n\n    // report the stats\n    if p.fVerbose {\n        nCuts = Fpga_CutCountAll(p);\n        fmt.Printf(\"Nodes = %6d. Total %d-cuts = %d. Cuts per node = %.1f. \", p.nNodes, p.nVarsMax, nCuts, (float32(nCuts))/p.nNodes);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // print the cuts for the first primary output\n//    Fpga_CutListPrint( p, Fpga_Regular(p-\u003epOutputs[0]) );\n}"
+    },
+    {
+      "Name": "Fpga_MappingCreatePiCuts",
+      "Start": 7768,
+      "End": 8284,
+      "BodyStart": 7816,
+      "Original": "void Fpga_MappingCreatePiCuts( Fpga_Man_t * p )\n{\n    Fpga_Cut_t * pCut;\n    int i;\n\n    // set the elementary cuts for the PI variables\n    for ( i = 0; i \u003c p-\u003enInputs; i++ )\n    {\n        pCut = Fpga_CutAlloc( p );\n        pCut-\u003enLeaves = 1;\n        pCut-\u003eppLeaves[0] = p-\u003epInputs[i];\n        pCut-\u003euSign = (1 \u003c\u003c (i%31));\n        p-\u003epInputs[i]-\u003epCuts   = pCut;\n        p-\u003epInputs[i]-\u003epCutBest = pCut;\n        // set the input arrival times\n//        p-\u003epInputs[i]-\u003epCut[1]-\u003etArrival = p-\u003epInputArrivals[i];\n    }\n}",
+      "Draft": "func Fpga_MappingCreatePiCuts(p *Fpga_Man_t) {\n    var pCut *Fpga_Cut_t;\n    var i int32;\n\n    // set the elementary cuts for the PI variables\n    for  i = 0; i \u003c p.nInputs; i++  {\n        pCut = Fpga_CutAlloc( p );\n        pCut.nLeaves = 1;\n        pCut.ppLeaves[0] = p.pInputs[i];\n        pCut.uSign = (1 \u003c\u003c (i%31));\n        p.pInputs[i].pCuts   = pCut;\n        p.pInputs[i].pCutBest = pCut;\n        // set the input arrival times\n//        p-\u003epInputs[i]-\u003epCut[1]-\u003etArrival = p-\u003epInputArrivals[i];\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutCompute",
+      "Start": 8551,
+      "End": 11162,
+      "BodyStart": 8645,
+      "Original": "Fpga_Cut_t * Fpga_CutCompute( Fpga_Man_t * p, Fpga_CutTable_t * pTable, Fpga_Node_t * pNode )\n{\n    Fpga_Node_t * pTemp;\n    Fpga_Cut_t * pList, * pList1, * pList2;\n    Fpga_Cut_t * pCut;\n    int fTree = 0;\n    int fPivot1 = fTree \u0026\u0026 (Fpga_NodeReadRef(pNode-\u003ep1)\u003e2);\n    int fPivot2 = fTree \u0026\u0026 (Fpga_NodeReadRef(pNode-\u003ep2)\u003e2);\n\n    // if the cuts are computed return them\n    if ( pNode-\u003epCuts )\n        return pNode-\u003epCuts;\n\n    // compute the cuts for the children\n    pList1 = Fpga_Regular(pNode-\u003ep1)-\u003epCuts;\n    pList2 = Fpga_Regular(pNode-\u003ep2)-\u003epCuts;\n    // merge the lists\n    pList = Fpga_CutMergeLists( p, pTable, pList1, pList2, \n        Fpga_IsComplement(pNode-\u003ep1), Fpga_IsComplement(pNode-\u003ep2),\n        fPivot1, fPivot2 );\n    // if there are functionally equivalent nodes, union them with this list\n    assert( pList );\n    // only add to the list of cuts if the node is a representative one\n    if ( pNode-\u003epRepr == NULL )\n    {\n        for ( pTemp = pNode-\u003epNextE; pTemp; pTemp = pTemp-\u003epNextE )\n        {\n            assert( pTemp-\u003epCuts );\n            pList = Fpga_CutUnionLists( pList, pTemp-\u003epCuts );\n            assert( pTemp-\u003epCuts );\n            pList = Fpga_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Fpga_CutAlloc( p );\n    pCut-\u003enLeaves = 1;\n    pCut-\u003eppLeaves[0] = pNode;\n    pCut-\u003euSign = (1 \u003c\u003c (pNode-\u003eNum%31));\n    pCut-\u003efLevel = (float)pCut-\u003eppLeaves[0]-\u003eLevel;\n    // append (it is important that the elementary cut is appended first)\n    pCut-\u003epNext = pList;\n    // set at the node\n    pNode-\u003epCuts = pCut;\n    // remove the dominated cuts\n//    Fpga_CutFilter( p, pNode );\n    // set the phase correctly\n    if ( pNode-\u003epRepr \u0026\u0026 Fpga_NodeComparePhase(pNode, pNode-\u003epRepr) )\n    {\n        Fpga_ListForEachCut( pNode-\u003epCuts, pCut )\n            pCut-\u003ePhase = 1;\n    }\n\n\n/*\n    { \n        Fpga_Cut_t * pPrev;\n        int i, Counter = 0;\n        for ( pCut = pNode-\u003epCuts-\u003epNext, pPrev = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n        {\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                if ( pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel )\n                    break;\n            if ( i != pCut-\u003enLeaves )\n                pPrev-\u003epNext = pCut-\u003epNext;\n            else \n                pPrev = pCut; \n        }\n    }\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n        if ( Counter )\n            printf( \" %d\", Counter );\n    }\n*/\n\n    return pCut;\n}",
+      "Draft": "func Fpga_CutCompute(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pNode *Fpga_Node_t) *Fpga_Cut_t {\n    var pTemp *Fpga_Node_t;\n    var pList, pList1, pList2 *Fpga_Cut_t;\n    var pCut *Fpga_Cut_t;\n    var fTree int32;\n    // inlining of macro Fpga_NodeReadRef\n    // inlining of macro Fpga_Regular\n    var fPivot1 int32  = fTree \u0026\u0026 (((((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ).nRefs)\u003e2);\n    // inlining of macro Fpga_NodeReadRef\n    // inlining of macro Fpga_Regular\n    var fPivot2 int32  = fTree \u0026\u0026 (((((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ).nRefs)\u003e2);\n\n    // if the cuts are computed return them\n    if pNode.pCuts {\n        return pNode.pCuts; }\n\n    // compute the cuts for the children\n    // inlining of macro Fpga_Regular\n    pList1 = ((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pCuts;\n    // inlining of macro Fpga_Regular\n    pList2 = ((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pCuts;\n    // merge the lists\n    pList = Fpga_CutMergeLists( p, pTable, pList1, pList2, \n        // inlining of macro Fpga_IsComplement\n        ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)))), ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)))),\n        fPivot1, fPivot2 );\n    // if there are functionally equivalent nodes, union them with this list\n    assert((pList != nil), \"pList\");\n    // only add to the list of cuts if the node is a representative one\n    if pNode.pRepr == nil {\n        for  pTemp = pNode.pNextE; pTemp; pTemp = pTemp.pNextE  {\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Fpga_CutUnionLists( pList, pTemp.pCuts );\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Fpga_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Fpga_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pCut.uSign = (1 \u003c\u003c (pNode.Num%31));\n    pCut.fLevel = float32(pCut.ppLeaves[0].Level);\n    // append (it is important that the elementary cut is appended first)\n    pCut.pNext = pList;\n    // set at the node\n    pNode.pCuts = pCut;\n    // remove the dominated cuts\n//    Fpga_CutFilter( p, pNode );\n    // set the phase correctly\n    if pNode.pRepr \u0026\u0026 Fpga_NodeComparePhase(pNode, pNode.pRepr) {\n        // inlining of macro Fpga_ListForEachCut\n        for  pCut = pNode.pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            pCut.Phase = 1;\n        }\n    }\n\n\n/*\n    { \n        Fpga_Cut_t * pPrev;\n        int i, Counter = 0;\n        for ( pCut = pNode-\u003epCuts-\u003epNext, pPrev = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n        {\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                if ( pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel )\n                    break;\n            if ( i != pCut-\u003enLeaves )\n                pPrev-\u003epNext = pCut-\u003epNext;\n            else \n                pPrev = pCut; \n        }\n    }\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n        if ( Counter )\n            printf( \" %d\", Counter );\n    }\n*/\n\n    return pCut;\n}"
+    },
+    {
+      "Name": "Fpga_CutFilter",
+      "Start": 11430,
+      "End": 12689,
+      "BodyStart": 11489,
+      "Original": "void Fpga_CutFilter( Fpga_Man_t * p, Fpga_Node_t * pNode )\n{ \n    Fpga_Cut_t * pTemp, * pPrev, * pCut, * pCut2;\n    int i, k, Counter;\n\n    Counter = 0;\n    pPrev = pNode-\u003epCuts;\n    Fpga_ListForEachCutSafe( pNode-\u003epCuts-\u003epNext, pCut, pCut2 )\n    {\n        // go through all the previous cuts up to pCut\n        for ( pTemp = pNode-\u003epCuts-\u003epNext; pTemp != pCut; pTemp = pTemp-\u003epNext )\n        {\n            // check if every node in pTemp is contained in pCut\n            for ( i = 0; i \u003c pTemp-\u003enLeaves; i++ )\n            {\n                for ( k = 0; k \u003c pCut-\u003enLeaves; k++ )\n                    if ( pTemp-\u003eppLeaves[i] == pCut-\u003eppLeaves[k] )\n                        break;\n                if ( k == pCut-\u003enLeaves ) // node i in pTemp is not contained in pCut\n                    break;\n            }\n            if ( i == pTemp-\u003enLeaves ) // every node in pTemp is contained in pCut\n            {\n                Counter++;\n                break;\n            }\n        }\n        if ( pTemp != pCut ) // pTemp contain pCut\n        {\n            pPrev-\u003epNext = pCut-\u003epNext;  // skip pCut\n            // recycle pCut\n            Fpga_CutFree( p, pCut );\n        }\n        else \n            pPrev = pCut; \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}",
+      "Draft": "func Fpga_CutFilter(p *Fpga_Man_t, pNode *Fpga_Node_t) { \n    var pTemp, pPrev, pCut, pCut2 *Fpga_Cut_t;\n    var i, k, Counter int32;\n\n    Counter = 0;\n    pPrev = pNode.pCuts;\n    // inlining of macro Fpga_ListForEachCutSafe\n    for  pCut = pNode.pCuts.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        // go through all the previous cuts up to pCut\n        for  pTemp = pNode.pCuts.pNext; pTemp != pCut; pTemp = pTemp.pNext  {\n            // check if every node in pTemp is contained in pCut\n            for  i = 0; i \u003c pTemp.nLeaves; i++  {\n                for  k = 0; k \u003c pCut.nLeaves; k++  {\n                    if pTemp.ppLeaves[i] == pCut.ppLeaves[k] {\n                        break; }\n                }\n                if k == pCut.nLeaves { // node i in pTemp is not contained in pCut\n                    break; }\n            }\n            if i == pTemp.nLeaves { // every node in pTemp is contained in pCut\n            \n                Counter++;\n                break;\n            }\n        }\n        if pTemp != pCut { // pTemp contain pCut\n        \n            pPrev.pNext = pCut.pNext;  // skip pCut\n            // recycle pCut\n            Fpga_CutFree( p, pCut );\n        \n        } else { \n            pPrev = pCut; } \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}"
+    },
+    {
+      "Name": "Fpga_CutMergeLists",
+      "Start": 12951,
+      "End": 19336,
+      "BodyStart": 13124,
+      "Original": "Fpga_Cut_t * Fpga_CutMergeLists( Fpga_Man_t * p, Fpga_CutTable_t * pTable, \n    Fpga_Cut_t * pList1, Fpga_Cut_t * pList2, int fComp1, int fComp2, int fPivot1, int fPivot2 )\n{\n    Fpga_Node_t * ppNodes[FPGA_MAX_LEAVES];\n    Fpga_Cut_t * pListNew, ** ppListNew, * pLists[FPGA_MAX_LEAVES+1] = { NULL };\n    Fpga_Cut_t * pCut, * pPrev, * pTemp1, * pTemp2;\n    int nNodes, Counter, i;\n    Fpga_Cut_t ** ppArray1, ** ppArray2, ** ppArray3;\n    int nCuts1, nCuts2, nCuts3, k, fComp3;\n\n    ppArray1 = pTable-\u003epCuts1;\n    ppArray2 = pTable-\u003epCuts2;\n    nCuts1 = Fpga_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Fpga_CutList2Array( ppArray2, pList2 );\n    if ( fPivot1 )\n        nCuts1 = 1;\n    if ( fPivot2 )\n        nCuts2 = 1;\n    // swap the lists based on their length\n    if ( nCuts1 \u003e nCuts2 )\n    {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for ( i = 0; i \u003c nCuts1; i++ )\n    {\n        for ( k = 0; k \u003c= i; k++ )\n        {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Fpga_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Fpga_CutNotCond( pTemp2, fComp2 );\n            // create the signature\n            pCut-\u003euSign = pTemp1-\u003euSign | pTemp2-\u003euSign;\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == FPGA_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\n        for ( k = 0; k \u003c i; k++ )\n        {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Fpga_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Fpga_CutNotCond( pTemp2, fComp2 );\n            // create the signature\n            pCut-\u003euSign = pTemp1-\u003euSign | pTemp2-\u003euSign;\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == FPGA_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\n    }\n    // consider the rest of them\n    for ( i = nCuts1; i \u003c nCuts2; i++ )\n        for ( k = 0; k \u003c nCuts1; k++ )\n        {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[2] != pTemp2-\u003eppLeaves[2] )\n                    continue;\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Fpga_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Fpga_CutNotCond( pTemp2, fComp2 );\n            // create the signature\n            pCut-\u003euSign = pTemp1-\u003euSign | pTemp2-\u003euSign;\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == FPGA_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\nQUITS :\n    // combine all the lists into one\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 1; i \u003c= p-\u003enVarsMax; i++ )\n    {\n        if ( pLists[i] == NULL )\n            continue;\n        // find the last entry\n        for ( pPrev = pLists[i], pCut = pPrev-\u003epNext; pCut; \n            pPrev = pCut, pCut = pCut-\u003epNext );\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev-\u003epNext;\n    }\n    *ppListNew = NULL;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}",
+      "Draft": "func Fpga_CutMergeLists(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t, fComp1 int32, fComp2 int32, fPivot1 int32, fPivot2 int32) *Fpga_Cut_t {\n    var ppNodes [FPGA_MAX_LEAVES]*Fpga_Node_t;\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var pLists [FPGA_MAX_LEAVES+1]*Fpga_Cut_t = [FPGA_MAX_LEAVES+1]*Fpga_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Fpga_Cut_t;\n    var nNodes, Counter, i int32;\n    var ppArray1, ppArray2, ppArray3 **Fpga_Cut_t;\n    var nCuts1, nCuts2, nCuts3, k, fComp3 int32;\n\n    ppArray1 = pTable.pCuts1;\n    ppArray2 = pTable.pCuts2;\n    nCuts1 = Fpga_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Fpga_CutList2Array( ppArray2, pList2 );\n    if fPivot1 != 0 {\n        nCuts1 = 1; }\n    if fPivot2 != 0 {\n        nCuts2 = 1; }\n    // swap the lists based on their length\n    if nCuts1 \u003e nCuts2 {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for  i = 0; i \u003c nCuts1; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n        for  k = 0; k \u003c i; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\n    // consider the rest of them\n    for  i = nCuts1; i \u003c nCuts2; i++  {\n        for  k = 0; k \u003c nCuts1; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n                if pTemp1.ppLeaves[2] != pTemp2.ppLeaves[2] {\n                    continue; }\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Fpga_CutMergeLists2",
+      "Start": 19598,
+      "End": 21767,
+      "BodyStart": 19772,
+      "Original": "Fpga_Cut_t * Fpga_CutMergeLists2( Fpga_Man_t * p, Fpga_CutTable_t * pTable, \n    Fpga_Cut_t * pList1, Fpga_Cut_t * pList2, int fComp1, int fComp2, int fPivot1, int fPivot2 )\n{\n    Fpga_Node_t * ppNodes[FPGA_MAX_LEAVES];\n    Fpga_Cut_t * pListNew, ** ppListNew, * pLists[FPGA_MAX_LEAVES+1] = { NULL };\n    Fpga_Cut_t * pCut, * pPrev, * pTemp1, * pTemp2;\n    int nNodes, Counter, i;\n\n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n        {\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Fpga_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Fpga_CutNotCond( pTemp2, fComp2 );\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == FPGA_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\nQUITS :\n    // combine all the lists into one\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 1; i \u003c= p-\u003enVarsMax; i++ )\n    {\n        if ( pLists[i] == NULL )\n            continue;\n        // find the last entry\n        for ( pPrev = pLists[i], pCut = pPrev-\u003epNext; pCut; \n            pPrev = pCut, pCut = pCut-\u003epNext );\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev-\u003epNext;\n    }\n    *ppListNew = NULL;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}",
+      "Draft": "func Fpga_CutMergeLists2(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t, fComp1 int32, fComp2 int32, fPivot1 int32, fPivot2 int32) *Fpga_Cut_t {\n    var ppNodes [FPGA_MAX_LEAVES]*Fpga_Node_t;\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var pLists [FPGA_MAX_LEAVES+1]*Fpga_Cut_t = [FPGA_MAX_LEAVES+1]*Fpga_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Fpga_Cut_t;\n    var nNodes, Counter, i int32;\n\n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for  pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? nil: pTemp1.pNext  {\n        for  pTemp2 = pList2; (pTemp2 != nil); pTemp2 = fPivot2? nil: pTemp2.pNext  {\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Fpga_CutMergeTwo",
+      "Start": 22153,
+      "End": 25353,
+      "BodyStart": 22256,
+      "Original": "int Fpga_CutMergeTwo( Fpga_Cut_t * pCut1, Fpga_Cut_t * pCut2, Fpga_Node_t * ppNodes[], int nNodesMax )\n{\n    Fpga_Node_t * pNodeTemp;\n    int nTotal, i, k, min, Counter;\n    unsigned uSign;\n\n    // use quick prefiltering\n    uSign = pCut1-\u003euSign | pCut2-\u003euSign;\n    Counter = FPGA_COUNT_ONES(uSign);\n    if ( Counter \u003e nNodesMax )\n        return 0;\n/*\n    // check the special case when at least of the cuts is the largest\n    if ( pCut1-\u003enLeaves == nNodesMax )\n    {\n        if ( pCut2-\u003enLeaves == nNodesMax )\n        {\n            // return 0 if the cuts are different\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i] )\n                    return 0;\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n        else if ( pCut2-\u003enLeaves == nNodesMax - 1 ) \n        {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i - fMismatch] )\n                {\n                    if ( fMismatch == 1 )\n                        return 0;\n                    fMismatch = 1;\n                }\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n    }\n    else if ( pCut1-\u003enLeaves == nNodesMax - 1 \u0026\u0026 pCut2-\u003enLeaves == nNodesMax )\n    {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            if ( pCut1-\u003eppLeaves[i - fMismatch] != pCut2-\u003eppLeaves[i] )\n            {\n                if ( fMismatch == 1 )\n                    return 0;\n                fMismatch = 1;\n            }\n        // return nNodesMax if they are the same\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            ppNodes[i] = pCut2-\u003eppLeaves[i];\n        return nNodesMax;\n    }\n*/\n    // count the number of unique entries in pCut2\n    nTotal = pCut1-\u003enLeaves;\n    for ( i = 0; i \u003c pCut2-\u003enLeaves; i++ )\n    {\n        // try to find this entry among the leaves of pCut1\n        for ( k = 0; k \u003c pCut1-\u003enLeaves; k++ )\n            if ( pCut2-\u003eppLeaves[i] == pCut1-\u003eppLeaves[k] )\n                break;\n        if ( k \u003c pCut1-\u003enLeaves ) // found\n            continue;\n        // we found a new entry to add\n        if ( nTotal == nNodesMax )\n            return 0;\n        ppNodes[nTotal++] = pCut2-\u003eppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for ( k = 0; k \u003c pCut1-\u003enLeaves; k++ )\n        ppNodes[k] = pCut1-\u003eppLeaves[k];\n\n    // selection-sort the entries\n    for ( i = 0; i \u003c nTotal - 1; i++ )\n    {\n        min = i;\n        for ( k = i+1; k \u003c nTotal; k++ )\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ( ppNodes[k]-\u003eNum \u003c ppNodes[min]-\u003eNum )\n                min = k;\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}",
+      "Draft": "func Fpga_CutMergeTwo(pCut1 *Fpga_Cut_t, pCut2 *Fpga_Cut_t, ppNodes []*Fpga_Node_t, nNodesMax int32) int32 {\n    var pNodeTemp *Fpga_Node_t;\n    var nTotal, i, k, min, Counter int32;\n    var uSign uint32;\n\n    // use quick prefiltering\n    uSign = pCut1.uSign | pCut2.uSign;\n    // inlining of macro FPGA_COUNT_ONES\n    Counter = (bit_count[(uSign)\u0026255]+bit_count[((uSign)\u003e\u003e8)\u0026255]+bit_count[((uSign)\u003e\u003e16)\u0026255]+bit_count[(uSign)\u003e\u003e24]);\n    if Counter \u003e nNodesMax {\n        return 0; }\n/*\n    // check the special case when at least of the cuts is the largest\n    if ( pCut1-\u003enLeaves == nNodesMax )\n    {\n        if ( pCut2-\u003enLeaves == nNodesMax )\n        {\n            // return 0 if the cuts are different\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i] )\n                    return 0;\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n        else if ( pCut2-\u003enLeaves == nNodesMax - 1 ) \n        {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i - fMismatch] )\n                {\n                    if ( fMismatch == 1 )\n                        return 0;\n                    fMismatch = 1;\n                }\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n    }\n    else if ( pCut1-\u003enLeaves == nNodesMax - 1 \u0026\u0026 pCut2-\u003enLeaves == nNodesMax )\n    {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            if ( pCut1-\u003eppLeaves[i - fMismatch] != pCut2-\u003eppLeaves[i] )\n            {\n                if ( fMismatch == 1 )\n                    return 0;\n                fMismatch = 1;\n            }\n        // return nNodesMax if they are the same\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            ppNodes[i] = pCut2-\u003eppLeaves[i];\n        return nNodesMax;\n    }\n*/\n    // count the number of unique entries in pCut2\n    nTotal = pCut1.nLeaves;\n    for  i = 0; i \u003c pCut2.nLeaves; i++  {\n        // try to find this entry among the leaves of pCut1\n        for  k = 0; k \u003c pCut1.nLeaves; k++  {\n            if pCut2.ppLeaves[i] == pCut1.ppLeaves[k] {\n                break; }\n        }\n        if k \u003c pCut1.nLeaves { // found\n            continue; }\n        // we found a new entry to add\n        if nTotal == nNodesMax {\n            return 0; }\n        ppNodes[nTotal++] = pCut2.ppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for  k = 0; k \u003c pCut1.nLeaves; k++  {\n        ppNodes[k] = pCut1.ppLeaves[k];\n    }\n\n    // selection-sort the entries\n    for  i = 0; i \u003c nTotal - 1; i++  {\n        min = i;\n        for  k = i+1; k \u003c nTotal; k++  {\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ppNodes[k].Num \u003c ppNodes[min].Num {\n                min = k; }\n        }\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}"
+    },
+    {
+      "Name": "Fpga_CutUnionLists",
+      "Start": 25633,
+      "End": 26066,
+      "BodyStart": 25709,
+      "Original": "Fpga_Cut_t * Fpga_CutUnionLists( Fpga_Cut_t * pList1, Fpga_Cut_t * pList2 )\n{\n    Fpga_Cut_t * pTemp, * pRoot;\n    // find the last cut in the first list\n    pRoot = pList1;\n    Fpga_ListForEachCut( pList1, pTemp )\n        pRoot = pTemp;\n    // attach the non-trival part of the second cut to the end of the first\n    assert( pRoot-\u003epNext == NULL );\n    pRoot-\u003epNext = pList2-\u003epNext;   \n    pList2-\u003epNext = NULL;\n    return pList1;\n}",
+      "Draft": "func Fpga_CutUnionLists(pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t) *Fpga_Cut_t {\n    var pTemp, pRoot *Fpga_Cut_t;\n    // find the last cut in the first list\n    pRoot = pList1;\n    // inlining of macro Fpga_ListForEachCut\n    for  pTemp = pList1;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pRoot = pTemp;\n    }\n    // attach the non-trival part of the second cut to the end of the first\n    assert(pRoot.pNext == nil, \"pRoot.pNext == nil\");\n    pRoot.pNext = pList2.pNext;   \n    pList2.pNext = nil;\n    return pList1;\n}"
+    },
+    {
+      "Name": "Fpga_CutBelongsToList",
+      "Start": 26419,
+      "End": 26786,
+      "BodyStart": 26504,
+      "Original": "int Fpga_CutBelongsToList( Fpga_Cut_t * pList, Fpga_Node_t * ppNodes[], int nNodes )\n{\n    Fpga_Cut_t * pTemp;\n    int i;\n    for ( pTemp = pList; pTemp; pTemp = pTemp-\u003epNext )\n    {\n        for ( i = 0; i \u003c nNodes; i++ )\n            if ( pTemp-\u003eppLeaves[i] != ppNodes[i] )\n                break;\n        if ( i == nNodes )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Fpga_CutBelongsToList(pList *Fpga_Cut_t, ppNodes []*Fpga_Node_t, nNodes int32) int32 {\n    var pTemp *Fpga_Cut_t;\n    var i int32;\n    for  pTemp = pList; pTemp; pTemp = pTemp.pNext  {\n        for  i = 0; i \u003c nNodes; i++  {\n            if pTemp.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Fpga_CutCountAll",
+      "Start": 27042,
+      "End": 27607,
+      "BodyStart": 27084,
+      "Original": "int Fpga_CutCountAll( Fpga_Man_t * pMan )\n{\n    Fpga_Node_t * pNode;\n    Fpga_Cut_t * pCut;\n    int i, nCuts;\n    // go through all the nodes in the unique table of the manager\n    nCuts = 0;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pNode = pMan-\u003epBins[i]; pNode; pNode = pNode-\u003epNext )\n            for ( pCut = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n                if ( pCut-\u003enLeaves \u003e 1 ) // skip the elementary cuts\n                {\n//                    Fpga_CutVolume( pCut );\n                    nCuts++;\n                }\n    return nCuts;\n}",
+      "Draft": "func Fpga_CutCountAll(pMan *Fpga_Man_t) int32 {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i, nCuts int32;\n    // go through all the nodes in the unique table of the manager\n    nCuts = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e 1 { // skip the elementary cuts\n                \n//                    Fpga_CutVolume( pCut );\n                    nCuts++;\n                }\n            }\n        }\n    }\n    return nCuts;\n}"
+    },
+    {
+      "Name": "Fpga_CutsCleanSign",
+      "Start": 27865,
+      "End": 28179,
+      "BodyStart": 27910,
+      "Original": "void Fpga_CutsCleanSign( Fpga_Man_t * pMan )\n{\n    Fpga_Node_t * pNode;\n    Fpga_Cut_t * pCut;\n    int i;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pNode = pMan-\u003epBins[i]; pNode; pNode = pNode-\u003epNext )\n            for ( pCut = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n                pCut-\u003euSign = 0;\n}",
+      "Draft": "func Fpga_CutsCleanSign(pMan *Fpga_Man_t) {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i int32;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                pCut.uSign = 0;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutsCleanRoot",
+      "Start": 28436,
+      "End": 28753,
+      "BodyStart": 28481,
+      "Original": "void Fpga_CutsCleanRoot( Fpga_Man_t * pMan )\n{\n    Fpga_Node_t * pNode;\n    Fpga_Cut_t * pCut;\n    int i;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pNode = pMan-\u003epBins[i]; pNode; pNode = pNode-\u003epNext )\n            for ( pCut = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n                pCut-\u003epRoot = NULL;\n}",
+      "Draft": "func Fpga_CutsCleanRoot(pMan *Fpga_Man_t) {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i int32;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                pCut.pRoot = nil;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutListPrint",
+      "Start": 29019,
+      "End": 29313,
+      "BodyStart": 29084,
+      "Original": "void Fpga_CutListPrint( Fpga_Man_t * pMan, Fpga_Node_t * pRoot )\n{\n    Fpga_Cut_t * pTemp;\n    int Counter;\n    for ( Counter = 0, pTemp = pRoot-\u003epCuts; pTemp; pTemp = pTemp-\u003epNext, Counter++ )\n    {\n        printf( \"%2d : \", Counter + 1 );\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}",
+      "Draft": "func Fpga_CutListPrint(pMan *Fpga_Man_t, pRoot *Fpga_Node_t) {\n    var pTemp *Fpga_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutListPrint2",
+      "Start": 29577,
+      "End": 29872,
+      "BodyStart": 29643,
+      "Original": "void Fpga_CutListPrint2( Fpga_Man_t * pMan, Fpga_Node_t * pRoot )\n{\n    Fpga_Cut_t * pTemp;\n    int Counter;\n    for ( Counter = 0, pTemp = pRoot-\u003epCuts; pTemp; pTemp = pTemp-\u003epNext, Counter++ )\n    {\n        printf( \"%2d : \", Counter + 1 );\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}",
+      "Draft": "func Fpga_CutListPrint2(pMan *Fpga_Man_t, pRoot *Fpga_Node_t) {\n    var pTemp *Fpga_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutPrint_",
+      "Start": 30123,
+      "End": 30408,
+      "BodyStart": 30204,
+      "Original": "void Fpga_CutPrint_( Fpga_Man_t * pMan, Fpga_Cut_t * pCut, Fpga_Node_t * pRoot )\n{\n    int i;\n    printf( \"(%3d)  {\", pRoot-\u003eNum );\n    for ( i = 0; i \u003c pMan-\u003enVarsMax; i++ )\n        if ( pCut-\u003eppLeaves[i] )\n            printf( \" %3d\", pCut-\u003eppLeaves[i]-\u003eNum );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Fpga_CutPrint_(pMan *Fpga_Man_t, pCut *Fpga_Cut_t, pRoot *Fpga_Node_t) {\n    var i int32;\n    fmt.Printf(\"(%3d)  {\", pRoot.Num);\n    for  i = 0; i \u003c pMan.nVarsMax; i++  {\n        if pCut.ppLeaves[i] {\n            fmt.Printf(\" %3d\", pCut.ppLeaves[i].Num); }\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Fpga_CutTableStart",
+      "Start": 30692,
+      "End": 31346,
+      "BodyStart": 30750,
+      "Original": "Fpga_CutTable_t * Fpga_CutTableStart( Fpga_Man_t * pMan )\n{\n    Fpga_CutTable_t * p;\n    // allocate the table\n    p = ABC_ALLOC( Fpga_CutTable_t, 1 );\n    memset( p, 0, sizeof(Fpga_CutTable_t) );\n    p-\u003enBins = Abc_PrimeCudd( 10 * FPGA_CUTS_MAX_COMPUTE );\n    p-\u003epBins = ABC_ALLOC( Fpga_Cut_t *, p-\u003enBins );\n    memset( p-\u003epBins, 0, sizeof(Fpga_Cut_t *) * p-\u003enBins );\n    p-\u003epCuts = ABC_ALLOC( int, 2 * FPGA_CUTS_MAX_COMPUTE );\n    p-\u003epArray = ABC_ALLOC( Fpga_Cut_t *, 2 * FPGA_CUTS_MAX_COMPUTE );\n    p-\u003epCuts1 = ABC_ALLOC( Fpga_Cut_t *, 2 * FPGA_CUTS_MAX_COMPUTE );\n    p-\u003epCuts2 = ABC_ALLOC( Fpga_Cut_t *, 2 * FPGA_CUTS_MAX_COMPUTE );\n    return p;\n}",
+      "Draft": "func Fpga_CutTableStart(pMan *Fpga_Man_t) *Fpga_CutTable_t {\n    var p *Fpga_CutTable_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_CutTable_t *) malloc(sizeof(Fpga_CutTable_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_CutTable_t) );\n    p.nBins = Abc_PrimeCudd( 10 * FPGA_CUTS_MAX_COMPUTE );\n    // inlining of macro ABC_ALLOC\n    p.pBins = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(p.nBins)));\n    memset( p.pBins, 0, sizeof(Fpga_Cut_t *) * p.nBins );\n    // inlining of macro ABC_ALLOC\n    p.pCuts = ((int *) malloc(sizeof(int) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pArray = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts1 = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts2 = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    return p;\n}"
+    },
+    {
+      "Name": "Fpga_CutTableStop",
+      "Start": 31603,
+      "End": 31804,
+      "BodyStart": 31649,
+      "Original": "void Fpga_CutTableStop( Fpga_CutTable_t * p )\n{\n    ABC_FREE( p-\u003epCuts1 );\n    ABC_FREE( p-\u003epCuts2 );\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p-\u003epCuts );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fpga_CutTableStop(p *Fpga_CutTable_t) {\n    // inlining of macro ABC_FREE\n    ((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fpga_CutTableHash",
+      "Start": 32075,
+      "End": 32291,
+      "BodyStart": 32141,
+      "Original": "unsigned Fpga_CutTableHash( Fpga_Node_t * ppNodes[], int nNodes )\n{\n    unsigned uRes;\n    int i;\n    uRes = 0;\n    for ( i = 0; i \u003c nNodes; i++ )\n        uRes += s_HashPrimes[i] * ppNodes[i]-\u003eNum;\n    return uRes;\n}",
+      "Draft": "func Fpga_CutTableHash(ppNodes []*Fpga_Node_t, nNodes int32) uint32 {\n    var uRes uint32;\n    var i int32;\n    uRes = 0;\n    for  i = 0; i \u003c nNodes; i++  {\n        uRes += s_HashPrimes[i] * ppNodes[i].Num;\n    }\n    return uRes;\n}"
+    },
+    {
+      "Name": "Fpga_CutTableLookup",
+      "Start": 32689,
+      "End": 33223,
+      "BodyStart": 32773,
+      "Original": "int Fpga_CutTableLookup( Fpga_CutTable_t * p, Fpga_Node_t * ppNodes[], int nNodes )\n{\n    Fpga_Cut_t * pCut;\n    unsigned Key;\n    int b, i;\n\n    Key = Fpga_CutTableHash(ppNodes, nNodes) % p-\u003enBins; \n    for ( b = Key; p-\u003epBins[b]; b = (b+1) % p-\u003enBins )\n    {\n        pCut = p-\u003epBins[b];\n        if ( pCut-\u003enLeaves != nNodes )\n            continue;\n        for ( i = 0; i \u003c nNodes; i++ )\n            if ( pCut-\u003eppLeaves[i] != ppNodes[i] )\n                break;\n        if ( i == nNodes )\n            return -1;\n    }\n    return b;\n}",
+      "Draft": "func Fpga_CutTableLookup(p *Fpga_CutTable_t, ppNodes []*Fpga_Node_t, nNodes int32) int32 {\n    var pCut *Fpga_Cut_t;\n    var Key uint32;\n    var b, i int32;\n\n    Key = Fpga_CutTableHash(ppNodes, nNodes) % p.nBins; \n    for  b = Key; p.pBins[b]; b = (b+1) % p.nBins  {\n        pCut = p.pBins[b];\n        if pCut.nLeaves != nNodes {\n            continue; }\n        for  i = 0; i \u003c nNodes; i++  {\n            if pCut.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return -1; }\n    }\n    return b;\n}"
+    },
+    {
+      "Name": "Fpga_CutTableConsider",
+      "Start": 33549,
+      "End": 34310,
+      "BodyStart": 33663,
+      "Original": "Fpga_Cut_t * Fpga_CutTableConsider( Fpga_Man_t * pMan, Fpga_CutTable_t * p, Fpga_Node_t * ppNodes[], int nNodes )\n{\n    Fpga_Cut_t * pCut;\n    int Place, i;\n    // check the cut\n    Place = Fpga_CutTableLookup( p, ppNodes, nNodes );\n    if ( Place == -1 )\n        return NULL;\n    assert( nNodes \u003e 0 );\n    // create the new cut\n    pCut = Fpga_CutAlloc( pMan );\n    pCut-\u003enLeaves = nNodes;\n    pCut-\u003efLevel = 0.0;\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        pCut-\u003eppLeaves[i] = ppNodes[i];\n        pCut-\u003efLevel += ppNodes[i]-\u003eLevel;\n    }\n    pCut-\u003efLevel /= nNodes;\n    // add the cut to the table\n    assert( p-\u003epBins[Place] == NULL );\n    p-\u003epBins[Place] = pCut;\n    // add the cut to the new list\n    p-\u003epCuts[ p-\u003enCuts++ ] = Place;\n    return pCut;\n}",
+      "Draft": "func Fpga_CutTableConsider(pMan *Fpga_Man_t, p *Fpga_CutTable_t, ppNodes []*Fpga_Node_t, nNodes int32) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    var Place, i int32;\n    // check the cut\n    Place = Fpga_CutTableLookup( p, ppNodes, nNodes );\n    if Place == -1 {\n        return nil; }\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // create the new cut\n    pCut = Fpga_CutAlloc( pMan );\n    pCut.nLeaves = nNodes;\n    pCut.fLevel = 0.0;\n    for  i = 0; i \u003c nNodes; i++  {\n        pCut.ppLeaves[i] = ppNodes[i];\n        pCut.fLevel += ppNodes[i].Level;\n    }\n    pCut.fLevel /= nNodes;\n    // add the cut to the table\n    assert(p.pBins[Place] == nil, \"p.pBins[Place] == nil\");\n    p.pBins[Place] = pCut;\n    // add the cut to the new list\n    p.pCuts[ p.nCuts++ ] = Place;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Fpga_CutTableRestart",
+      "Start": 34690,
+      "End": 34903,
+      "BodyStart": 34739,
+      "Original": "void Fpga_CutTableRestart( Fpga_CutTable_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enCuts; i++ )\n    {\n        assert( p-\u003epBins[ p-\u003epCuts[i] ] );\n        p-\u003epBins[ p-\u003epCuts[i] ] = NULL;\n    }\n    p-\u003enCuts = 0;\n}",
+      "Draft": "func Fpga_CutTableRestart(p *Fpga_CutTable_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        assert(p.pBins[ p.pCuts[i] ], \"p.pBins[ p.pCuts[i] ]\");\n        p.pBins[ p.pCuts[i] ] = nil;\n    }\n    p.nCuts = 0;\n}"
+    },
+    {
+      "Name": "Fpga_CutSortCutsCompare",
+      "Start": 35201,
+      "End": 35542,
+      "BodyStart": 35269,
+      "Original": "int Fpga_CutSortCutsCompare( Fpga_Cut_t ** pC1, Fpga_Cut_t ** pC2 )\n{\n    if ( (*pC1)-\u003enLeaves \u003c (*pC2)-\u003enLeaves )\n        return -1;\n    if ( (*pC1)-\u003enLeaves \u003e (*pC2)-\u003enLeaves )\n        return 1;\n/*\n    if ( (*pC1)-\u003efLevel \u003e (*pC2)-\u003efLevel )\n        return -1;\n    if ( (*pC1)-\u003efLevel \u003c (*pC2)-\u003efLevel )\n        return 1;\n*/\n    return 0;\n}",
+      "Draft": "func Fpga_CutSortCutsCompare(pC1 **Fpga_Cut_t, pC2 **Fpga_Cut_t) int32 {\n    if (*pC1).nLeaves \u003c (*pC2).nLeaves {\n        return -1; }\n    if (*pC1).nLeaves \u003e (*pC2).nLeaves {\n        return 1; }\n/*\n    if ( (*pC1)-\u003efLevel \u003e (*pC2)-\u003efLevel )\n        return -1;\n    if ( (*pC1)-\u003efLevel \u003c (*pC2)-\u003efLevel )\n        return 1;\n*/\n    return 0;\n}"
+    },
+    {
+      "Name": "Fpga_CutSortCuts",
+      "Start": 35817,
+      "End": 36701,
+      "BodyStart": 35909,
+      "Original": "Fpga_Cut_t * Fpga_CutSortCuts( Fpga_Man_t * pMan, Fpga_CutTable_t * p, Fpga_Cut_t * pList )\n{\n    Fpga_Cut_t * pListNew;\n    int nCuts, i;\n    // move the cuts from the list into the array\n    nCuts = Fpga_CutList2Array( p-\u003epCuts1, pList );\n    assert( nCuts \u003c= FPGA_CUTS_MAX_COMPUTE );\n    // sort the cuts\n    qsort( (void *)p-\u003epCuts1, (size_t)nCuts, sizeof(void *), \n            (int (*)(const void *, const void *)) Fpga_CutSortCutsCompare );\n    // move them back into the list\n    if ( nCuts \u003e FPGA_CUTS_MAX_USE - 1 )\n    {\n//        printf( \"*\" );\n        // free the remaining cuts\n        for ( i = FPGA_CUTS_MAX_USE - 1; i \u003c nCuts; i++ )\n            Extra_MmFixedEntryRecycle( pMan-\u003emmCuts, (char *)p-\u003epCuts1[i] );\n        // update the number of cuts\n        nCuts = FPGA_CUTS_MAX_USE - 1;\n    }\n    pListNew = Fpga_CutArray2List( p-\u003epCuts1, nCuts );\n    return pListNew;\n}",
+      "Draft": "func Fpga_CutSortCuts(pMan *Fpga_Man_t, p *Fpga_CutTable_t, pList *Fpga_Cut_t) *Fpga_Cut_t {\n    var pListNew *Fpga_Cut_t;\n    var nCuts, i int32;\n    // move the cuts from the list into the array\n    nCuts = Fpga_CutList2Array( p.pCuts1, pList );\n    assert(nCuts \u003c= FPGA_CUTS_MAX_COMPUTE, \"nCuts \u003c= FPGA_CUTS_MAX_COMPUTE\");\n    // sort the cuts\n    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(void *), \n                (int (*)(void *, void *)) Fpga_CutSortCutsCompare );\n    // move them back into the list\n    if nCuts \u003e FPGA_CUTS_MAX_USE - 1 {\n//        printf( \"*\" );\n        // free the remaining cuts\n        for  i = FPGA_CUTS_MAX_USE - 1; i \u003c nCuts; i++  {\n            Extra_MmFixedEntryRecycle( pMan.mmCuts, (char *)p.pCuts1[i] );\n        }\n        // update the number of cuts\n        nCuts = FPGA_CUTS_MAX_USE - 1;\n    }\n    pListNew = Fpga_CutArray2List( p.pCuts1, nCuts );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Fpga_CutList2Array",
+      "Start": 36982,
+      "End": 37156,
+      "BodyStart": 37049,
+      "Original": "int Fpga_CutList2Array( Fpga_Cut_t ** pArray, Fpga_Cut_t * pList )\n{\n    int i;\n    for ( i = 0; pList; pList = pList-\u003epNext, i++ )\n        pArray[i] = pList;\n    return i;\n}",
+      "Draft": "func Fpga_CutList2Array(pArray **Fpga_Cut_t, pList *Fpga_Cut_t) int32 {\n    var i int32;\n    for  i = 0; (pList != nil); pList, i = pList.pNext, i+1  {\n        pArray[i] = pList;\n    }\n    return i;\n}"
+    },
+    {
+      "Name": "Fpga_CutArray2List",
+      "Start": 37437,
+      "End": 37884,
+      "BodyStart": 37504,
+      "Original": "Fpga_Cut_t * Fpga_CutArray2List( Fpga_Cut_t ** pArray, int nCuts )\n{\n    Fpga_Cut_t * pListNew, ** ppListNew;\n    int i;\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i]-\u003epNext;\n//printf( \" %d(%.2f)\", pArray[i]-\u003enLeaves, pArray[i]-\u003efLevel );\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = NULL;\n    return pListNew;\n}",
+      "Draft": "func Fpga_CutArray2List(pArray **Fpga_Cut_t, nCuts int32) *Fpga_Cut_t {\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var i int32;\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 0; i \u003c nCuts; i++  {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i].pNext;\n//printf( \" %d(%.2f)\", pArray[i]-\u003enLeaves, pArray[i]-\u003efLevel );\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = nil;\n    return pListNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::struct::Fpga_CutTable_t",
+      "Category": "struct-review",
+      "Symbol": "Fpga_CutTable_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 747,
+      "End": 1294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::32881",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30811,
+      "End": 30811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::32940",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30862,
+      "End": 30868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33112",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 30964,
+      "End": 30964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33182",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31026,
+      "End": 31032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33293",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31076,
+      "End": 31076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33432",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31137,
+      "End": 31137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33580",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31207,
+      "End": 31207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::33728",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 31277,
+      "End": 31277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::mechanical::sizeof::39137",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 36170,
+      "End": 36176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::9017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8786,
+      "End": 8786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::9213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8846,
+      "End": 8846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::9480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9031,
+      "End": 9031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::9602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9076,
+      "End": 9076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::16461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15271,
+      "End": 15271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::16591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15331,
+      "End": 15331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::17978",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16648,
+      "End": 16648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::18108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16708,
+      "End": 16708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::19675",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18205,
+      "End": 18205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::19805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18265,
+      "End": 18265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::22339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20729,
+      "End": 20729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::22469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20789,
+      "End": 20789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::32854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30811,
+      "End": 30811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30964,
+      "End": 30964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33118",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30964,
+      "End": 30964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31032,
+      "End": 31046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33278",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31076,
+      "End": 31076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31137,
+      "End": 31137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33438",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31137,
+      "End": 31137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33556",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31207,
+      "End": 31207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31207,
+      "End": 31207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31277,
+      "End": 31277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::33734",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31277,
+      "End": 31277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31655,
+      "End": 31655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31682,
+      "End": 31682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31709,
+      "End": 31709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31736,
+      "End": 31736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31762,
+      "End": 31762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::34740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31788,
+      "End": 31788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::39103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36136,
+      "End": 36144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::39143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36176,
+      "End": 36184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::pointer-cast::39485",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36518,
+      "End": 36526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::macro::FPGA_COUNT_ONES",
+      "Category": "macro-review",
+      "Symbol": "FPGA_COUNT_ONES",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2220,
+      "End": 2335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::macro::Fpga_ListForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Fpga_ListForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4356,
+      "End": 4566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::macro::Fpga_ListForEachCutSafe",
+      "Category": "macro-review",
+      "Symbol": "Fpga_ListForEachCutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4567,
+      "End": 4910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_MappingCuts",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_MappingCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6262,
+      "End": 7481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_MappingCreatePiCuts",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_MappingCreatePiCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7768,
+      "End": 8284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutCompute",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8551,
+      "End": 11162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::ternary::Fpga_CutFilter",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_CutFilter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11430,
+      "End": 12689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutFilter",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11430,
+      "End": 12689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutMergeLists",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutMergeLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12951,
+      "End": 19336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::ternary::Fpga_CutMergeLists2",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_CutMergeLists2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19598,
+      "End": 21767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutMergeLists2",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutMergeLists2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19598,
+      "End": 21767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutMergeTwo",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutMergeTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22153,
+      "End": 25353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutUnionLists",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutUnionLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25633,
+      "End": 26066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutBelongsToList",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutBelongsToList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26419,
+      "End": 26786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutCountAll",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutCountAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27042,
+      "End": 27607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutsCleanSign",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutsCleanSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27865,
+      "End": 28179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutsCleanRoot",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutsCleanRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28436,
+      "End": 28753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutListPrint",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutListPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29019,
+      "End": 29313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutListPrint2",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutListPrint2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29577,
+      "End": 29872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutPrint_",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutPrint_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30123,
+      "End": 30408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableStart",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30692,
+      "End": 31346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::ternary::Fpga_CutTableStop",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_CutTableStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31603,
+      "End": 31804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableStop",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31603,
+      "End": 31804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableHash",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32075,
+      "End": 32291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32689,
+      "End": 33223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableConsider",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableConsider",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33549,
+      "End": 34310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutTableRestart",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutTableRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34690,
+      "End": 34903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutSortCutsCompare",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutSortCutsCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35201,
+      "End": 35542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutSortCuts",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutSortCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35817,
+      "End": 36701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutList2Array",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutList2Array",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36982,
+      "End": 37156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::Fpga_CutArray2List",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutArray2List",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37437,
+      "End": 37884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38131
+    }
+  ],
+  "Draft": "package fpga\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fpgaCut.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaCut.c,v 1.3 2004/07/06 04:55:57 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"fpgaInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Fpga_CutTable_t struct {\n    pBins  **Fpga_Cut_t;        // the table used for linear probing\n    nBins           int32;        // the size of the table\n    pCuts          *int32;        // the array of cuts currently stored \n    nCuts           int32;        // the number of cuts currently stored \n    pArray  **Fpga_Cut_t;       // the temporary array of cuts\n    pCuts1  **Fpga_Cut_t;       // the temporary array of cuts\n    pCuts2  **Fpga_Cut_t;       // the temporary array of cuts\n}\n\n// the largest number of cuts considered\n//#define  FPGA_CUTS_MAX_COMPUTE   500\nconst FPGA_CUTS_MAX_COMPUTE =   2000\n// the largest number of cuts used\n//#define  FPGA_CUTS_MAX_USE       200\nconst FPGA_CUTS_MAX_USE =       1000\n\n// primes used to compute the hash key\nvar s_HashPrimes [10]int32 = [10]int32{ 109, 499, 557, 619, 631, 709, 797, 881, 907, 991 };\n\nvar bit_count [256]int32 = [256]int32{\n  0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,\n};\n\n// Original macro:\n// #define FPGA_COUNT_ONES(u) (bit_count[(u)\u0026255]+bit_count[((u)\u003e\u003e8)\u0026255]+bit_count[((u)\u003e\u003e16)\u0026255]+bit_count[(u)\u003e\u003e24])\n\n\n// static Fpga_Cut_t *      Fpga_CutCompute( Fpga_Man_t * p, Fpga_CutTable_t * pTable, Fpga_Node_t * pNode );\n\n// static void              Fpga_CutFilter( Fpga_Man_t * p, Fpga_Node_t * pNode );\n\n// static Fpga_Cut_t *      Fpga_CutMergeLists( Fpga_Man_t * p, Fpga_CutTable_t * pTable, Fpga_Cut_t * pList1, Fpga_Cut_t * pList2, int fComp1, int fComp2, int fPivot1, int fPivot2 );\n\n// static int               Fpga_CutMergeTwo( Fpga_Cut_t * pCut1, Fpga_Cut_t * pCut2, Fpga_Node_t * ppNodes[], int nNodesMax );\n\n// static Fpga_Cut_t *      Fpga_CutUnionLists( Fpga_Cut_t * pList1, Fpga_Cut_t * pList2 );\n\n// static int               Fpga_CutBelongsToList( Fpga_Cut_t * pList, Fpga_Node_t * ppNodes[], int nNodes );\n\n// extern Fpga_Cut_t *      Fpga_CutAlloc( Fpga_Man_t * p );\n\n// extern int               Fpga_CutCountAll( Fpga_Man_t * pMan );\n\n\n// static void              Fpga_CutListPrint( Fpga_Man_t * pMan, Fpga_Node_t * pRoot );\n\n// static void              Fpga_CutListPrint2( Fpga_Man_t * pMan, Fpga_Node_t * pRoot );\n\n// static void              Fpga_CutPrint_( Fpga_Man_t * pMan, Fpga_Cut_t * pCut, Fpga_Node_t * pRoot );\n\n\n// static Fpga_CutTable_t * Fpga_CutTableStart( Fpga_Man_t * pMan );\n\n// static void              Fpga_CutTableStop( Fpga_CutTable_t * p );\n\n// static unsigned          Fpga_CutTableHash( Fpga_Node_t * ppNodes[], int nNodes );\n\n// static int               Fpga_CutTableLookup( Fpga_CutTable_t * p, Fpga_Node_t * ppNodes[], int nNodes );\n\n// static Fpga_Cut_t *      Fpga_CutTableConsider( Fpga_Man_t * pMan, Fpga_CutTable_t * p, Fpga_Node_t * ppNodes[], int nNodes );\n\n// static void              Fpga_CutTableRestart( Fpga_CutTable_t * p );\n\n\n// static int               Fpga_CutSortCutsCompare( Fpga_Cut_t ** pC1, Fpga_Cut_t ** pC2 );\n\n// static Fpga_Cut_t *      Fpga_CutSortCuts( Fpga_Man_t * pMan, Fpga_CutTable_t * p, Fpga_Cut_t * pList );\n\n// static int               Fpga_CutList2Array( Fpga_Cut_t ** pArray, Fpga_Cut_t * pList );\n\n// static Fpga_Cut_t *      Fpga_CutArray2List( Fpga_Cut_t ** pArray, int nCuts );\n\n\n\n// iterator through all the cuts of the list\n// Original macro:\n// #define Fpga_ListForEachCut( pList, pCut )                \\\n//     for ( pCut = pList;                                   \\\n//           pCut;                                           \\\n//           pCut = pCut-\u003epNext )\n\n// Original macro:\n// #define Fpga_ListForEachCutSafe( pList, pCut, pCut2 )     \\\n//     for ( pCut = pList,                                   \\\n//           pCut2 = pCut? pCut-\u003epNext: NULL;                \\\n//           pCut;                                           \\\n//           pCut = pCut2,                                   \\\n//           pCut2 = pCut? pCut-\u003epNext: NULL )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for each node in the object graph.]\n\n  Description [The cuts are computed in one sweep over the mapping graph. \n  First, the elementary cuts, which include the node itself, are assigned \n  to the PI nodes. The internal nodes are considered in the DFS order.\n  Each node is two-input AND-gate. So to compute the cuts at a node, we\n  need to merge the sets of cuts of its two predecessors. The merged set\n  contains only unique cuts with the number of inputs equal to k or less.\n  Finally, the elementary cut, composed of the node itself, is added to\n  the set of cuts for the node.\n  \n  This procedure is pretty fast for 5-feasible cuts, but it dramatically\n  slows down on some \"dense\" networks when computing 6-feasible cuts.\n  The problem is that there are too many cuts in this case. We should\n  think how to heuristically trim the number of cuts in such cases, \n  to have reasonable runtime.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_MappingCuts(p *Fpga_Man_t) {\n    var pProgress *ProgressBar;\n    var pTable *Fpga_CutTable_t;\n    var pNode *Fpga_Node_t;\n    var nCuts, nNodes, i int32;\n    var clk int64  = time.Now().UnixNano();\n\n    // set the elementary cuts for the PI variables\n    assert(p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 11, \"p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 11\");\n    Fpga_MappingCreatePiCuts( p );\n\n    // compute the cuts for the internal nodes\n    nNodes = p.vAnds.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    pTable = Fpga_CutTableStart( p );\n    for  i = 0; i \u003c nNodes; i++  {\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n        pNode = p.vAnds.pArray[i];\n        if !Fpga_NodeIsAnd( pNode ) {\n            continue; }\n        Fpga_CutCompute( p, pTable, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Fpga_CutTableStop( pTable );\n\n    // report the stats\n    if p.fVerbose {\n        nCuts = Fpga_CutCountAll(p);\n        fmt.Printf(\"Nodes = %6d. Total %d-cuts = %d. Cuts per node = %.1f. \", p.nNodes, p.nVarsMax, nCuts, (float32(nCuts))/p.nNodes);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // print the cuts for the first primary output\n//    Fpga_CutListPrint( p, Fpga_Regular(p-\u003epOutputs[0]) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs technology mapping for variable-size-LUTs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_MappingCreatePiCuts(p *Fpga_Man_t) {\n    var pCut *Fpga_Cut_t;\n    var i int32;\n\n    // set the elementary cuts for the PI variables\n    for  i = 0; i \u003c p.nInputs; i++  {\n        pCut = Fpga_CutAlloc( p );\n        pCut.nLeaves = 1;\n        pCut.ppLeaves[0] = p.pInputs[i];\n        pCut.uSign = (1 \u003c\u003c (i%31));\n        p.pInputs[i].pCuts   = pCut;\n        p.pInputs[i].pCutBest = pCut;\n        // set the input arrival times\n//        p-\u003epInputs[i]-\u003epCut[1]-\u003etArrival = p-\u003epInputArrivals[i];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutCompute(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pNode *Fpga_Node_t) *Fpga_Cut_t {\n    var pTemp *Fpga_Node_t;\n    var pList, pList1, pList2 *Fpga_Cut_t;\n    var pCut *Fpga_Cut_t;\n    var fTree int32;\n    // inlining of macro Fpga_NodeReadRef\n    // inlining of macro Fpga_Regular\n    var fPivot1 int32  = fTree \u0026\u0026 (((((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) ).nRefs)\u003e2);\n    // inlining of macro Fpga_NodeReadRef\n    // inlining of macro Fpga_Regular\n    var fPivot2 int32  = fTree \u0026\u0026 (((((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) ).nRefs)\u003e2);\n\n    // if the cuts are computed return them\n    if pNode.pCuts {\n        return pNode.pCuts; }\n\n    // compute the cuts for the children\n    // inlining of macro Fpga_Regular\n    pList1 = ((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pCuts;\n    // inlining of macro Fpga_Regular\n    pList2 = ((Fpga_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pCuts;\n    // merge the lists\n    pList = Fpga_CutMergeLists( p, pTable, pList1, pList2, \n        // inlining of macro Fpga_IsComplement\n        ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)))), ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)))),\n        fPivot1, fPivot2 );\n    // if there are functionally equivalent nodes, union them with this list\n    assert((pList != nil), \"pList\");\n    // only add to the list of cuts if the node is a representative one\n    if pNode.pRepr == nil {\n        for  pTemp = pNode.pNextE; pTemp; pTemp = pTemp.pNextE  {\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Fpga_CutUnionLists( pList, pTemp.pCuts );\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Fpga_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Fpga_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pCut.uSign = (1 \u003c\u003c (pNode.Num%31));\n    pCut.fLevel = float32(pCut.ppLeaves[0].Level);\n    // append (it is important that the elementary cut is appended first)\n    pCut.pNext = pList;\n    // set at the node\n    pNode.pCuts = pCut;\n    // remove the dominated cuts\n//    Fpga_CutFilter( p, pNode );\n    // set the phase correctly\n    if pNode.pRepr \u0026\u0026 Fpga_NodeComparePhase(pNode, pNode.pRepr) {\n        // inlining of macro Fpga_ListForEachCut\n        for  pCut = pNode.pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            pCut.Phase = 1;\n        }\n    }\n\n\n/*\n    { \n        Fpga_Cut_t * pPrev;\n        int i, Counter = 0;\n        for ( pCut = pNode-\u003epCuts-\u003epNext, pPrev = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n        {\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                if ( pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel )\n                    break;\n            if ( i != pCut-\u003enLeaves )\n                pPrev-\u003epNext = pCut-\u003epNext;\n            else \n                pPrev = pCut; \n        }\n    }\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n        if ( Counter )\n            printf( \" %d\", Counter );\n    }\n*/\n\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Filter the cuts using dominance.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutFilter(p *Fpga_Man_t, pNode *Fpga_Node_t) { \n    var pTemp, pPrev, pCut, pCut2 *Fpga_Cut_t;\n    var i, k, Counter int32;\n\n    Counter = 0;\n    pPrev = pNode.pCuts;\n    // inlining of macro Fpga_ListForEachCutSafe\n    for  pCut = pNode.pCuts.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        // go through all the previous cuts up to pCut\n        for  pTemp = pNode.pCuts.pNext; pTemp != pCut; pTemp = pTemp.pNext  {\n            // check if every node in pTemp is contained in pCut\n            for  i = 0; i \u003c pTemp.nLeaves; i++  {\n                for  k = 0; k \u003c pCut.nLeaves; k++  {\n                    if pTemp.ppLeaves[i] == pCut.ppLeaves[k] {\n                        break; }\n                }\n                if k == pCut.nLeaves { // node i in pTemp is not contained in pCut\n                    break; }\n            }\n            if i == pTemp.nLeaves { // every node in pTemp is contained in pCut\n            \n                Counter++;\n                break;\n            }\n        }\n        if pTemp != pCut { // pTemp contain pCut\n        \n            pPrev.pNext = pCut.pNext;  // skip pCut\n            // recycle pCut\n            Fpga_CutFree( p, pCut );\n        \n        } else { \n            pPrev = pCut; } \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutMergeLists(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t, fComp1 int32, fComp2 int32, fPivot1 int32, fPivot2 int32) *Fpga_Cut_t {\n    var ppNodes [FPGA_MAX_LEAVES]*Fpga_Node_t;\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var pLists [FPGA_MAX_LEAVES+1]*Fpga_Cut_t = [FPGA_MAX_LEAVES+1]*Fpga_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Fpga_Cut_t;\n    var nNodes, Counter, i int32;\n    var ppArray1, ppArray2, ppArray3 **Fpga_Cut_t;\n    var nCuts1, nCuts2, nCuts3, k, fComp3 int32;\n\n    ppArray1 = pTable.pCuts1;\n    ppArray2 = pTable.pCuts2;\n    nCuts1 = Fpga_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Fpga_CutList2Array( ppArray2, pList2 );\n    if fPivot1 != 0 {\n        nCuts1 = 1; }\n    if fPivot2 != 0 {\n        nCuts2 = 1; }\n    // swap the lists based on their length\n    if nCuts1 \u003e nCuts2 {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for  i = 0; i \u003c nCuts1; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n        for  k = 0; k \u003c i; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\n    // consider the rest of them\n    for  i = nCuts1; i \u003c nCuts2; i++  {\n        for  k = 0; k \u003c nCuts1; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n                if pTemp1.ppLeaves[2] != pTemp2.ppLeaves[2] {\n                    continue; }\n            }\n\n\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // create the signature\n            pCut.uSign = pTemp1.uSign | pTemp2.uSign;\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutMergeLists2(p *Fpga_Man_t, pTable *Fpga_CutTable_t, pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t, fComp1 int32, fComp2 int32, fPivot1 int32, fPivot2 int32) *Fpga_Cut_t {\n    var ppNodes [FPGA_MAX_LEAVES]*Fpga_Node_t;\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var pLists [FPGA_MAX_LEAVES+1]*Fpga_Cut_t = [FPGA_MAX_LEAVES+1]*Fpga_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Fpga_Cut_t;\n    var nNodes, Counter, i int32;\n\n    // prepare the manager for the cut computation\n    Fpga_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for  pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? nil: pTemp1.pNext  {\n        for  pTemp2 = pList2; (pTemp2 != nil); pTemp2 = fPivot2? nil: pTemp2.pNext  {\n            // check if k-feasible cut exists\n            nNodes = Fpga_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Fpga_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Fpga_CutNotCond\n            pCut.pOne = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Fpga_CutNotCond\n            pCut.pTwo = ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == FPGA_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // sort the cuts by arrival times and use only the first FPGA_CUTS_MAX_USE\n    pListNew = Fpga_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description [Returns the number of nodes in the resulting cut, or 0 if the\n  cut is infeasible. Returns the resulting nodes in the array ppNodes[].]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutMergeTwo(pCut1 *Fpga_Cut_t, pCut2 *Fpga_Cut_t, ppNodes []*Fpga_Node_t, nNodesMax int32) int32 {\n    var pNodeTemp *Fpga_Node_t;\n    var nTotal, i, k, min, Counter int32;\n    var uSign uint32;\n\n    // use quick prefiltering\n    uSign = pCut1.uSign | pCut2.uSign;\n    // inlining of macro FPGA_COUNT_ONES\n    Counter = (bit_count[(uSign)\u0026255]+bit_count[((uSign)\u003e\u003e8)\u0026255]+bit_count[((uSign)\u003e\u003e16)\u0026255]+bit_count[(uSign)\u003e\u003e24]);\n    if Counter \u003e nNodesMax {\n        return 0; }\n/*\n    // check the special case when at least of the cuts is the largest\n    if ( pCut1-\u003enLeaves == nNodesMax )\n    {\n        if ( pCut2-\u003enLeaves == nNodesMax )\n        {\n            // return 0 if the cuts are different\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i] )\n                    return 0;\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n        else if ( pCut2-\u003enLeaves == nNodesMax - 1 ) \n        {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i - fMismatch] )\n                {\n                    if ( fMismatch == 1 )\n                        return 0;\n                    fMismatch = 1;\n                }\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n    }\n    else if ( pCut1-\u003enLeaves == nNodesMax - 1 \u0026\u0026 pCut2-\u003enLeaves == nNodesMax )\n    {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            if ( pCut1-\u003eppLeaves[i - fMismatch] != pCut2-\u003eppLeaves[i] )\n            {\n                if ( fMismatch == 1 )\n                    return 0;\n                fMismatch = 1;\n            }\n        // return nNodesMax if they are the same\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            ppNodes[i] = pCut2-\u003eppLeaves[i];\n        return nNodesMax;\n    }\n*/\n    // count the number of unique entries in pCut2\n    nTotal = pCut1.nLeaves;\n    for  i = 0; i \u003c pCut2.nLeaves; i++  {\n        // try to find this entry among the leaves of pCut1\n        for  k = 0; k \u003c pCut1.nLeaves; k++  {\n            if pCut2.ppLeaves[i] == pCut1.ppLeaves[k] {\n                break; }\n        }\n        if k \u003c pCut1.nLeaves { // found\n            continue; }\n        // we found a new entry to add\n        if nTotal == nNodesMax {\n            return 0; }\n        ppNodes[nTotal++] = pCut2.ppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for  k = 0; k \u003c pCut1.nLeaves; k++  {\n        ppNodes[k] = pCut1.ppLeaves[k];\n    }\n\n    // selection-sort the entries\n    for  i = 0; i \u003c nTotal - 1; i++  {\n        min = i;\n        for  k = i+1; k \u003c nTotal; k++  {\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ppNodes[k].Num \u003c ppNodes[min].Num {\n                min = k; }\n        }\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the union of the two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutUnionLists(pList1 *Fpga_Cut_t, pList2 *Fpga_Cut_t) *Fpga_Cut_t {\n    var pTemp, pRoot *Fpga_Cut_t;\n    // find the last cut in the first list\n    pRoot = pList1;\n    // inlining of macro Fpga_ListForEachCut\n    for  pTemp = pList1;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pRoot = pTemp;\n    }\n    // attach the non-trival part of the second cut to the end of the first\n    assert(pRoot.pNext == nil, \"pRoot.pNext == nil\");\n    pRoot.pNext = pList2.pNext;   \n    pList2.pNext = nil;\n    return pList1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the given cut belongs to the list.]\n\n  Description [This procedure takes most of the runtime in the cut \n  computation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutBelongsToList(pList *Fpga_Cut_t, ppNodes []*Fpga_Node_t, nNodes int32) int32 {\n    var pTemp *Fpga_Cut_t;\n    var i int32;\n    for  pTemp = pList; pTemp; pTemp = pTemp.pNext  {\n        for  i = 0; i \u003c nNodes; i++  {\n            if pTemp.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts all the cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutCountAll(pMan *Fpga_Man_t) int32 {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i, nCuts int32;\n    // go through all the nodes in the unique table of the manager\n    nCuts = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e 1 { // skip the elementary cuts\n                \n//                    Fpga_CutVolume( pCut );\n                    nCuts++;\n                }\n            }\n        }\n    }\n    return nCuts;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Clean the signatures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutsCleanSign(pMan *Fpga_Man_t) {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i int32;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                pCut.uSign = 0;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clean the signatures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutsCleanRoot(pMan *Fpga_Man_t) {\n    var pNode *Fpga_Node_t;\n    var pCut *Fpga_Cut_t;\n    var i int32;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                pCut.pRoot = nil;\n            }\n        }\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutListPrint(pMan *Fpga_Man_t, pRoot *Fpga_Node_t) {\n    var pTemp *Fpga_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutListPrint2(pMan *Fpga_Man_t, pRoot *Fpga_Node_t) {\n    var pTemp *Fpga_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Fpga_CutPrint_( pMan, pTemp, pRoot );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutPrint_(pMan *Fpga_Man_t, pCut *Fpga_Cut_t, pRoot *Fpga_Node_t) {\n    var i int32;\n    fmt.Printf(\"(%3d)  {\", pRoot.Num);\n    for  i = 0; i \u003c pMan.nVarsMax; i++  {\n        if pCut.ppLeaves[i] {\n            fmt.Printf(\" %3d\", pCut.ppLeaves[i].Num); }\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n\n\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hash table to canonicize cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableStart(pMan *Fpga_Man_t) *Fpga_CutTable_t {\n    var p *Fpga_CutTable_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_CutTable_t *) malloc(sizeof(Fpga_CutTable_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_CutTable_t) );\n    p.nBins = Abc_PrimeCudd( 10 * FPGA_CUTS_MAX_COMPUTE );\n    // inlining of macro ABC_ALLOC\n    p.pBins = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(p.nBins)));\n    memset( p.pBins, 0, sizeof(Fpga_Cut_t *) * p.nBins );\n    // inlining of macro ABC_ALLOC\n    p.pCuts = ((int *) malloc(sizeof(int) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pArray = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts1 = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts2 = ((Fpga_Cut_t * *) malloc(sizeof(Fpga_Cut_t *) * (size_t)(2 * FPGA_CUTS_MAX_COMPUTE)));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableStop(p *Fpga_CutTable_t) {\n    // inlining of macro ABC_FREE\n    ((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the hash value of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableHash(ppNodes []*Fpga_Node_t, nNodes int32) uint32 {\n    var uRes uint32;\n    var i int32;\n    uRes = 0;\n    for  i = 0; i \u003c nNodes; i++  {\n        uRes += s_HashPrimes[i] * ppNodes[i].Num;\n    }\n    return uRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Looks up the table for the available cut.]\n\n  Description [Returns -1 if the same cut is found. Returns the index\n  of the cell where the cut should be added, if it does not exist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableLookup(p *Fpga_CutTable_t, ppNodes []*Fpga_Node_t, nNodes int32) int32 {\n    var pCut *Fpga_Cut_t;\n    var Key uint32;\n    var b, i int32;\n\n    Key = Fpga_CutTableHash(ppNodes, nNodes) % p.nBins; \n    for  b = Key; p.pBins[b]; b = (b+1) % p.nBins  {\n        pCut = p.pBins[b];\n        if pCut.nLeaves != nNodes {\n            continue; }\n        for  i = 0; i \u003c nNodes; i++  {\n            if pCut.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return -1; }\n    }\n    return b;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hash table to canonicize cuts.]\n\n  Description [Considers addition of the cut to the hash table.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableConsider(pMan *Fpga_Man_t, p *Fpga_CutTable_t, ppNodes []*Fpga_Node_t, nNodes int32) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    var Place, i int32;\n    // check the cut\n    Place = Fpga_CutTableLookup( p, ppNodes, nNodes );\n    if Place == -1 {\n        return nil; }\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // create the new cut\n    pCut = Fpga_CutAlloc( pMan );\n    pCut.nLeaves = nNodes;\n    pCut.fLevel = 0.0;\n    for  i = 0; i \u003c nNodes; i++  {\n        pCut.ppLeaves[i] = ppNodes[i];\n        pCut.fLevel += ppNodes[i].Level;\n    }\n    pCut.fLevel /= nNodes;\n    // add the cut to the table\n    assert(p.pBins[Place] == nil, \"p.pBins[Place] == nil\");\n    p.pBins[Place] = pCut;\n    // add the cut to the new list\n    p.pCuts[ p.nCuts++ ] = Place;\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the table to be used with other cuts.]\n\n  Description [Restarts the table by cleaning the info about cuts stored\n  when the previous node was considered.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutTableRestart(p *Fpga_CutTable_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        assert(p.pBins[ p.pCuts[i] ], \"p.pBins[ p.pCuts[i] ]\");\n        p.pBins[ p.pCuts[i] ] = nil;\n    }\n    p.nCuts = 0;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the cuts by the number of leaves and then by delay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutSortCutsCompare(pC1 **Fpga_Cut_t, pC2 **Fpga_Cut_t) int32 {\n    if (*pC1).nLeaves \u003c (*pC2).nLeaves {\n        return -1; }\n    if (*pC1).nLeaves \u003e (*pC2).nLeaves {\n        return 1; }\n/*\n    if ( (*pC1)-\u003efLevel \u003e (*pC2)-\u003efLevel )\n        return -1;\n    if ( (*pC1)-\u003efLevel \u003c (*pC2)-\u003efLevel )\n        return 1;\n*/\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cuts by average arrival time.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutSortCuts(pMan *Fpga_Man_t, p *Fpga_CutTable_t, pList *Fpga_Cut_t) *Fpga_Cut_t {\n    var pListNew *Fpga_Cut_t;\n    var nCuts, i int32;\n    // move the cuts from the list into the array\n    nCuts = Fpga_CutList2Array( p.pCuts1, pList );\n    assert(nCuts \u003c= FPGA_CUTS_MAX_COMPUTE, \"nCuts \u003c= FPGA_CUTS_MAX_COMPUTE\");\n    // sort the cuts\n    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(void *), \n                (int (*)(void *, void *)) Fpga_CutSortCutsCompare );\n    // move them back into the list\n    if nCuts \u003e FPGA_CUTS_MAX_USE - 1 {\n//        printf( \"*\" );\n        // free the remaining cuts\n        for  i = FPGA_CUTS_MAX_USE - 1; i \u003c nCuts; i++  {\n            Extra_MmFixedEntryRecycle( pMan.mmCuts, (char *)p.pCuts1[i] );\n        }\n        // update the number of cuts\n        nCuts = FPGA_CUTS_MAX_USE - 1;\n    }\n    pListNew = Fpga_CutArray2List( p.pCuts1, nCuts );\n    return pListNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the nodes from the list into the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutList2Array(pArray **Fpga_Cut_t, pList *Fpga_Cut_t) int32 {\n    var i int32;\n    for  i = 0; (pList != nil); pList, i = pList.pNext, i+1  {\n        pArray[i] = pList;\n    }\n    return i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the nodes from the array into the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutArray2List(pArray **Fpga_Cut_t, nCuts int32) *Fpga_Cut_t {\n    var pListNew *Fpga_Cut_t;\n    var ppListNew **Fpga_Cut_t;\n    var i int32;\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 0; i \u003c nCuts; i++  {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i].pNext;\n//printf( \" %d(%.2f)\", pArray[i]-\u003enLeaves, pArray[i]-\u003efLevel );\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = nil;\n    return pListNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

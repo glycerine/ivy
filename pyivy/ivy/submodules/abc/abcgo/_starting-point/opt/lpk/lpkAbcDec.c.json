@@ -1,0 +1,331 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c",
+  "SHA256": "573855bd9bc15790295d1b45b5af8e835b5bf98e2ac699dc00f238d82e49ca28",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsComplement(pFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeavesOld \u003c Vec_PtrSize(vLeaves) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 5115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLutK \u003e= 3 \u0026\u0026 p.nLutK \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 5159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003e p.nLutK );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 6032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p2.nVars \u003c= int32(p.nLutK) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pResMux || (pResMux.DelayEst \u003c= int32(p.nDelayLim) \u0026\u0026 pResMux.AreaEst \u003c= int32(p.nAreaLim)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 7048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pResMux == nil || pResDsd == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p2.nVars \u003c= int32(p.nLutK) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 9253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFun.puSupps, puSupps, sizeof(unsigned) * 2 * nLeaves );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_ImplementFun",
+      "Start": 1322,
+      "End": 2480,
+      "BodyStart": 1425,
+      "Original": "Abc_Obj_t * Lpk_ImplementFun( Lpk_Man_t * pMan, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, Lpk_Fun_t * p )\n{\n    extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n    unsigned * pTruth;\n    Abc_Obj_t * pObjNew;\n    int i;\n    if ( p-\u003efMark )\n        pMan-\u003enMuxes++;\n    else\n        pMan-\u003enDsds++;\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pNtk );\n    for ( i = 0; i \u003c (int)p-\u003enVars; i++ )\n        Abc_ObjAddFanin( pObjNew, Abc_ObjRegular((Abc_Obj_t *)Vec_PtrEntry(vLeaves, p-\u003epFanins[i])) );\n    Abc_ObjSetLevel( pObjNew, Abc_ObjLevelNew(pObjNew) );\n    // assign the node's function\n    pTruth = Lpk_FunTruth(p, 0);\n    if ( p-\u003enVars == 0 )\n    {\n        pObjNew-\u003epData = Hop_NotCond( Hop_ManConst1((Hop_Man_t *)pNtk-\u003epManFunc), !(pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    if ( p-\u003enVars == 1 )\n    {\n        pObjNew-\u003epData = Hop_NotCond( Hop_ManPi((Hop_Man_t *)pNtk-\u003epManFunc, 0), (pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    // create the logic function\n    pObjNew-\u003epData = Kit_TruthToHop( (Hop_Man_t *)pNtk-\u003epManFunc, pTruth, p-\u003enVars, NULL );\n    return pObjNew;\n}",
+      "Draft": "func Lpk_ImplementFun(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, p *Lpk_Fun_t) *Abc_Obj_t {\n    extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n    var pTruth *uint32;\n    var pObjNew *Abc_Obj_t;\n    var i int32;\n    if p.fMark {\n        pMan.nMuxes++;\n    } else {\n        pMan.nDsds++; }\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pNtk );\n    for  i = 0; i \u003c int32(p.nVars); i++  {\n        Abc_ObjAddFanin( pObjNew, Abc_ObjRegular((Abc_Obj_t *)Vec_PtrEntry(vLeaves, p.pFanins[i])) );\n    }\n    Abc_ObjSetLevel( pObjNew, Abc_ObjLevelNew(pObjNew) );\n    // assign the node's function\n    pTruth = Lpk_FunTruth(p, 0);\n    if p.nVars == 0 {\n        pObjNew.pData = Hop_NotCond( Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc), !(pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    if p.nVars == 1 {\n        pObjNew.pData = Hop_NotCond( Hop_ManPi((Hop_Man_t *)pNtk.pManFunc, 0), (pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    // create the logic function\n    pObjNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtk.pManFunc, pTruth, p.nVars, nil );\n    return pObjNew;\n}"
+    },
+    {
+      "Name": "Lpk_Implement_rec",
+      "Start": 2784,
+      "End": 3568,
+      "BodyStart": 2891,
+      "Original": "Abc_Obj_t * Lpk_Implement_rec( Lpk_Man_t * pMan, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, Lpk_Fun_t * pFun )\n{\n    Abc_Obj_t * pFanin, * pRes;\n    int i;\n    // prepare the leaves of the function\n    for ( i = 0; i \u003c (int)pFun-\u003enVars; i++ )\n    {\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun-\u003epFanins[i] );\n        if ( !Abc_ObjIsComplement(pFanin) )\n            Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)pFanin );\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun-\u003epFanins[i] );\n        assert( Abc_ObjIsComplement(pFanin) );\n    }\n    // construct the function\n    pRes = Lpk_ImplementFun( pMan, pNtk, vLeaves, pFun );\n    // replace the function\n    Vec_PtrWriteEntry( vLeaves, pFun-\u003eId, Abc_ObjNot(pRes) );\n    Lpk_FunFree( pFun );\n    return pRes;\n}",
+      "Draft": "func Lpk_Implement_rec(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pFun *Lpk_Fun_t) *Abc_Obj_t {\n    var pFanin, pRes *Abc_Obj_t;\n    var i int32;\n    // prepare the leaves of the function\n    for  i = 0; i \u003c int32(pFun.nVars); i++  {\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );\n        if !Abc_ObjIsComplement(pFanin) {\n            Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)pFanin ); }\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );\n        assert(Abc_ObjIsComplement(pFanin), \"Abc_ObjIsComplement(pFanin)\");\n    }\n    // construct the function\n    pRes = Lpk_ImplementFun( pMan, pNtk, vLeaves, pFun );\n    // replace the function\n    Vec_PtrWriteEntry( vLeaves, pFun.Id, Abc_ObjNot(pRes) );\n    Lpk_FunFree( pFun );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Lpk_Implement",
+      "Start": 3872,
+      "End": 4455,
+      "BodyStart": 3973,
+      "Original": "Abc_Obj_t * Lpk_Implement( Lpk_Man_t * pMan, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, int nLeavesOld )\n{\n    Abc_Obj_t * pFanin, * pRes;\n    int i;\n    assert( nLeavesOld \u003c Vec_PtrSize(vLeaves) );\n    // mark implemented nodes\n    Vec_PtrForEachEntryStop( Abc_Obj_t *, vLeaves, pFanin, i, nLeavesOld )\n        Vec_PtrWriteEntry( vLeaves, i, Abc_ObjNot(pFanin) );\n    // recursively construct starting from the first entry\n    pRes = Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)Vec_PtrEntry( vLeaves, nLeavesOld ) );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n    return pRes;\n}",
+      "Draft": "func Lpk_Implement(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, nLeavesOld int32) *Abc_Obj_t {\n    var pFanin, pRes *Abc_Obj_t;\n    var i int32;\n    assert(nLeavesOld \u003c Vec_PtrSize(vLeaves), \"nLeavesOld \u003c Vec_PtrSize(vLeaves)\");\n    // mark implemented nodes\n    Vec_PtrForEachEntryStop( Abc_Obj_t *, vLeaves, pFanin, i, nLeavesOld )\n        Vec_PtrWriteEntry( vLeaves, i, Abc_ObjNot(pFanin) );\n    // recursively construct starting from the first entry\n    pRes = Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)Vec_PtrEntry( vLeaves, nLeavesOld ) );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Lpk_Decompose_rec",
+      "Start": 4911,
+      "End": 7838,
+      "BodyStart": 4968,
+      "Original": "int Lpk_Decompose_rec( Lpk_Man_t * pMan, Lpk_Fun_t * p )\n{\n    Lpk_Res_t * pResMux, * pResDsd;\n    Lpk_Fun_t * p2;\n    abctime clk;\n\n    // is only called for non-trivial blocks\n    assert( p-\u003enLutK \u003e= 3 \u0026\u0026 p-\u003enLutK \u003c= 6 );\n    assert( p-\u003enVars \u003e p-\u003enLutK );\n    // skip if area bound is exceeded\n    if ( Lpk_LutNumLuts(p-\u003enVars, p-\u003enLutK) \u003e (int)p-\u003enAreaLim )\n        return 0;\n    // skip if delay bound is exceeded\n    if ( Lpk_SuppDelay(p-\u003euSupp, p-\u003epDelays) \u003e (int)p-\u003enDelayLim )\n        return 0;\n\n    // compute supports if needed\n    if ( !p-\u003efSupports )\n        Lpk_FunComputeCofSupps( p );\n\n    // check DSD decomposition\nclk = Abc_Clock();\n    pResDsd = Lpk_DsdAnalize( pMan, p, pMan-\u003epPars-\u003enVarsShared );\npMan-\u003etimeEvalDsdAn += Abc_Clock() - clk;\n    if ( pResDsd \u0026\u0026 (pResDsd-\u003enBSVars == (int)p-\u003enLutK || pResDsd-\u003enBSVars == (int)p-\u003enLutK - 1) \u0026\u0026 \n          pResDsd-\u003eAreaEst \u003c= (int)p-\u003enAreaLim \u0026\u0026 pResDsd-\u003eDelayEst \u003c= (int)p-\u003enDelayLim )\n    {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd-\u003epCofVars, pResDsd-\u003enCofVars, pResDsd-\u003eBSVars );\npMan-\u003etimeEvalDsdSp += Abc_Clock() - clk;\n        assert( p2-\u003enVars \u003c= (int)p-\u003enLutK );\n        if ( p-\u003enVars \u003e p-\u003enLutK \u0026\u0026 !Lpk_Decompose_rec( pMan, p ) )\n            return 0;\n        return 1;\n    }\n\n    // check MUX decomposition\nclk = Abc_Clock();\n    pResMux = Lpk_MuxAnalize( pMan, p );\npMan-\u003etimeEvalMuxAn += Abc_Clock() - clk;\n//    pResMux = NULL;\n    assert( !pResMux || (pResMux-\u003eDelayEst \u003c= (int)p-\u003enDelayLim \u0026\u0026 pResMux-\u003eAreaEst \u003c= (int)p-\u003enAreaLim) );\n    // accept MUX decomposition if it is \"good\"\n    if ( pResMux \u0026\u0026 pResMux-\u003enSuppSizeS \u003c= (int)p-\u003enLutK \u0026\u0026 pResMux-\u003enSuppSizeL \u003c= (int)p-\u003enLutK )\n        pResDsd = NULL;\n    else if ( pResMux \u0026\u0026 pResDsd )\n    {\n        // compare two decompositions\n        if ( pResMux-\u003eAreaEst \u003c pResDsd-\u003eAreaEst || \n            (pResMux-\u003eAreaEst == pResDsd-\u003eAreaEst \u0026\u0026 pResMux-\u003enSuppSizeL \u003c pResDsd-\u003enSuppSizeL) || \n            (pResMux-\u003eAreaEst == pResDsd-\u003eAreaEst \u0026\u0026 pResMux-\u003enSuppSizeL == pResDsd-\u003enSuppSizeL \u0026\u0026 pResMux-\u003eDelayEst \u003c pResDsd-\u003eDelayEst) )\n            pResDsd = NULL;\n        else\n            pResMux = NULL;\n    }\n    assert( pResMux == NULL || pResDsd == NULL );\n    if ( pResMux )\n    {\nclk = Abc_Clock();\n        p2 = Lpk_MuxSplit( pMan, p, pResMux-\u003eVariable, pResMux-\u003ePolarity );\npMan-\u003etimeEvalMuxSp += Abc_Clock() - clk;\n        if ( p2-\u003enVars \u003e p-\u003enLutK \u0026\u0026 !Lpk_Decompose_rec( pMan, p2 ) )\n            return 0;\n        if ( p-\u003enVars \u003e p-\u003enLutK \u0026\u0026 !Lpk_Decompose_rec( pMan, p ) )\n            return 0;\n        return 1;\n    }\n    if ( pResDsd )\n    {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd-\u003epCofVars, pResDsd-\u003enCofVars, pResDsd-\u003eBSVars );\npMan-\u003etimeEvalDsdSp += Abc_Clock() - clk;\n        assert( p2-\u003enVars \u003c= (int)p-\u003enLutK );\n        if ( p-\u003enVars \u003e p-\u003enLutK \u0026\u0026 !Lpk_Decompose_rec( pMan, p ) )\n            return 0;\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Lpk_Decompose_rec(pMan *Lpk_Man_t, p *Lpk_Fun_t) int32 {\n    var pResMux, pResDsd *Lpk_Res_t;\n    var p2 *Lpk_Fun_t;\n    var clk abctime;\n\n    // is only called for non-trivial blocks\n    assert(p.nLutK \u003e= 3 \u0026\u0026 p.nLutK \u003c= 6, \"p.nLutK \u003e= 3 \u0026\u0026 p.nLutK \u003c= 6\");\n    assert(p.nVars \u003e p.nLutK, \"p.nVars \u003e p.nLutK\");\n    // skip if area bound is exceeded\n    if Lpk_LutNumLuts(p.nVars, p.nLutK) \u003e int32(p.nAreaLim) {\n        return 0; }\n    // skip if delay bound is exceeded\n    if Lpk_SuppDelay(p.uSupp, p.pDelays) \u003e int32(p.nDelayLim) {\n        return 0; }\n\n    // compute supports if needed\n    if !p.fSupports {\n        Lpk_FunComputeCofSupps( p ); }\n\n    // check DSD decomposition\nclk = Abc_Clock();\n    pResDsd = Lpk_DsdAnalize( pMan, p, pMan.pPars.nVarsShared );\npMan.timeEvalDsdAn += Abc_Clock() - clk;\n    if (pResDsd != nil) \u0026\u0026 (pResDsd.nBSVars == int32(p.nLutK) || pResDsd.nBSVars == int32(p.nLutK) - 1) \u0026\u0026 \n          pResDsd.AreaEst \u003c= int32(p.nAreaLim) \u0026\u0026 pResDsd.DelayEst \u003c= int32(p.nDelayLim) {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );\npMan.timeEvalDsdSp += Abc_Clock() - clk;\n        assert(p2.nVars \u003c= int32(p.nLutK), \"p2.nVars \u003c= int32(p.nLutK)\");\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n\n    // check MUX decomposition\nclk = Abc_Clock();\n    pResMux = Lpk_MuxAnalize( pMan, p );\npMan.timeEvalMuxAn += Abc_Clock() - clk;\n//    pResMux = NULL;\n    assert(!pResMux || (pResMux.DelayEst \u003c= int32(p.nDelayLim) \u0026\u0026 pResMux.AreaEst \u003c= int32(p.nAreaLim)), \"!pResMux || (pResMux.DelayEst \u003c= int32(p.nDelayLim) \u0026\u0026 pResMux.AreaEst \u003c= int32(p.nAreaLim))\");\n    // accept MUX decomposition if it is \"good\"\n    if pResMux \u0026\u0026 pResMux.nSuppSizeS \u003c= int32(p.nLutK) \u0026\u0026 pResMux.nSuppSizeL \u003c= int32(p.nLutK) {\n        pResDsd = nil;\n    } else if pResMux \u0026\u0026 (pResDsd != nil) {\n        // compare two decompositions\n        if pResMux.AreaEst \u003c pResDsd.AreaEst || \n            (pResMux.AreaEst == pResDsd.AreaEst \u0026\u0026 pResMux.nSuppSizeL \u003c pResDsd.nSuppSizeL) || \n            (pResMux.AreaEst == pResDsd.AreaEst \u0026\u0026 pResMux.nSuppSizeL == pResDsd.nSuppSizeL \u0026\u0026 pResMux.DelayEst \u003c pResDsd.DelayEst) {\n            pResDsd = nil;\n        } else {\n            pResMux = nil; }\n    }\n    assert(pResMux == nil || pResDsd == nil, \"pResMux == nil || pResDsd == nil\");\n    if pResMux {\nclk = Abc_Clock();\n        p2 = Lpk_MuxSplit( pMan, p, pResMux.Variable, pResMux.Polarity );\npMan.timeEvalMuxSp += Abc_Clock() - clk;\n        if p2.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p2 ) != 0) {\n            return 0; }\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n    if pResDsd != nil {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );\npMan.timeEvalDsdSp += Abc_Clock() - clk;\n        assert(p2.nVars \u003c= int32(p.nLutK), \"p2.nVars \u003c= int32(p.nLutK)\");\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Lpk_DecomposeClean",
+      "Start": 8124,
+      "End": 8371,
+      "BodyStart": 8187,
+      "Original": "void Lpk_DecomposeClean( Vec_Ptr_t * vLeaves, int nLeavesOld )\n{\n    Lpk_Fun_t * pFunc;\n    int i;\n    Vec_PtrForEachEntryStart( Lpk_Fun_t *, vLeaves, pFunc, i, nLeavesOld )\n        Lpk_FunFree( pFunc );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n}",
+      "Draft": "func Lpk_DecomposeClean(vLeaves *Vec_Ptr_t, nLeavesOld int32) {\n    var pFunc *Lpk_Fun_t;\n    var i int32;\n    Vec_PtrForEachEntryStart( Lpk_Fun_t *, vLeaves, pFunc, i, nLeavesOld )\n        Lpk_FunFree( pFunc );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n}"
+    },
+    {
+      "Name": "Lpk_Decompose",
+      "Start": 8665,
+      "End": 9698,
+      "BodyStart": 8824,
+      "Original": "Abc_Obj_t * Lpk_Decompose( Lpk_Man_t * p, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, unsigned * pTruth, unsigned * puSupps, int nLutK, int AreaLim, int DelayLim )\n{\n    Lpk_Fun_t * pFun;\n    Abc_Obj_t * pObjNew = NULL;\n    int nLeaves = Vec_PtrSize( vLeaves );\n    pFun = Lpk_FunCreate( pNtk, vLeaves, pTruth, nLutK, AreaLim, DelayLim );\n    if ( puSupps[0] || puSupps[1] )\n    {\n/*\n        int i;\n        Lpk_FunComputeCofSupps( pFun );\n        for ( i = 0; i \u003c nLeaves; i++ )\n        {\n            assert( pFun-\u003epuSupps[2*i+0] == puSupps[2*i+0] );\n            assert( pFun-\u003epuSupps[2*i+1] == puSupps[2*i+1] );\n        }\n*/\n        memcpy( pFun-\u003epuSupps, puSupps, sizeof(unsigned) * 2 * nLeaves );\n        pFun-\u003efSupports = 1;\n    }\n    Lpk_FunSuppMinimize( pFun );\n    if ( pFun-\u003enVars \u003c= pFun-\u003enLutK )\n        pObjNew = Lpk_ImplementFun( p, pNtk, vLeaves, pFun );\n    else if ( Lpk_Decompose_rec(p, pFun) )\n        pObjNew = Lpk_Implement( p, pNtk, vLeaves, nLeaves );\n    Lpk_DecomposeClean( vLeaves, nLeaves );\n    return pObjNew;\n}",
+      "Draft": "func Lpk_Decompose(p *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *uint32, puSupps *uint32, nLutK int32, AreaLim int32, DelayLim int32) *Abc_Obj_t {\n    var pFun *Lpk_Fun_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var nLeaves int32  = Vec_PtrSize( vLeaves );\n    pFun = Lpk_FunCreate( pNtk, vLeaves, pTruth, nLutK, AreaLim, DelayLim );\n    if puSupps[0] || puSupps[1] {\n/*\n        int i;\n        Lpk_FunComputeCofSupps( pFun );\n        for ( i = 0; i \u003c nLeaves; i++ )\n        {\n            assert( pFun-\u003epuSupps[2*i+0] == puSupps[2*i+0] );\n            assert( pFun-\u003epuSupps[2*i+1] == puSupps[2*i+1] );\n        }\n*/\n        memcpy( pFun.puSupps, puSupps, sizeof(unsigned) * 2 * nLeaves );\n        pFun.fSupports = 1;\n    }\n    Lpk_FunSuppMinimize( pFun );\n    if pFun.nVars \u003c= pFun.nLutK {\n        pObjNew = Lpk_ImplementFun( p, pNtk, vLeaves, pFun );\n    } else if Lpk_Decompose_rec(p, pFun) != 0 {\n        pObjNew = Lpk_Implement( p, pNtk, vLeaves, nLeaves ); }\n    Lpk_DecomposeClean( vLeaves, nLeaves );\n    return pObjNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::mechanical::sizeof::9326",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9326,
+      "End": 9332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::1831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1831,
+      "End": 1844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::2093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2093,
+      "End": 2106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::2252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2252,
+      "End": 2265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::2404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2404,
+      "End": 2417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::3046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3046,
+      "End": 3059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::3198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3198,
+      "End": 3211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::3238",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3238,
+      "End": 3251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::pointer-cast::4343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4343,
+      "End": 4356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_ImplementFun",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ImplementFun",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1322,
+      "End": 2480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_Implement_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_Implement_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2784,
+      "End": 3568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_Implement",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_Implement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3872,
+      "End": 4455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_Decompose_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_Decompose_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4911,
+      "End": 7838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_DecomposeClean",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_DecomposeClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8124,
+      "End": 8371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::Lpk_Decompose",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_Decompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8665,
+      "End": 9698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::macro-inline::4101",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4101,
+      "End": 4171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDec.c::macro-inline::8227",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8227,
+      "End": 8297
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkAbcDec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    [The new core procedure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkAbcDec.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the function.]\n\n  Description [Returns the node implementing this function.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ImplementFun(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, p *Lpk_Fun_t) *Abc_Obj_t {\n    extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n    var pTruth *uint32;\n    var pObjNew *Abc_Obj_t;\n    var i int32;\n    if p.fMark {\n        pMan.nMuxes++;\n    } else {\n        pMan.nDsds++; }\n    // create the new node\n    pObjNew = Abc_NtkCreateNode( pNtk );\n    for  i = 0; i \u003c int32(p.nVars); i++  {\n        Abc_ObjAddFanin( pObjNew, Abc_ObjRegular((Abc_Obj_t *)Vec_PtrEntry(vLeaves, p.pFanins[i])) );\n    }\n    Abc_ObjSetLevel( pObjNew, Abc_ObjLevelNew(pObjNew) );\n    // assign the node's function\n    pTruth = Lpk_FunTruth(p, 0);\n    if p.nVars == 0 {\n        pObjNew.pData = Hop_NotCond( Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc), !(pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    if p.nVars == 1 {\n        pObjNew.pData = Hop_NotCond( Hop_ManPi((Hop_Man_t *)pNtk.pManFunc, 0), (pTruth[0] \u0026 1) );\n        return pObjNew;\n    }\n    // create the logic function\n    pObjNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtk.pManFunc, pTruth, p.nVars, nil );\n    return pObjNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the function.]\n\n  Description [Returns the node implementing this function.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_Implement_rec(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pFun *Lpk_Fun_t) *Abc_Obj_t {\n    var pFanin, pRes *Abc_Obj_t;\n    var i int32;\n    // prepare the leaves of the function\n    for  i = 0; i \u003c int32(pFun.nVars); i++  {\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );\n        if !Abc_ObjIsComplement(pFanin) {\n            Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)pFanin ); }\n        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );\n        assert(Abc_ObjIsComplement(pFanin), \"Abc_ObjIsComplement(pFanin)\");\n    }\n    // construct the function\n    pRes = Lpk_ImplementFun( pMan, pNtk, vLeaves, pFun );\n    // replace the function\n    Vec_PtrWriteEntry( vLeaves, pFun.Id, Abc_ObjNot(pRes) );\n    Lpk_FunFree( pFun );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the function.]\n\n  Description [Returns the node implementing this function.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_Implement(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, nLeavesOld int32) *Abc_Obj_t {\n    var pFanin, pRes *Abc_Obj_t;\n    var i int32;\n    assert(nLeavesOld \u003c Vec_PtrSize(vLeaves), \"nLeavesOld \u003c Vec_PtrSize(vLeaves)\");\n    // mark implemented nodes\n    Vec_PtrForEachEntryStop( Abc_Obj_t *, vLeaves, pFanin, i, nLeavesOld )\n        Vec_PtrWriteEntry( vLeaves, i, Abc_ObjNot(pFanin) );\n    // recursively construct starting from the first entry\n    pRes = Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)Vec_PtrEntry( vLeaves, nLeavesOld ) );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Decomposes the function using recursive MUX decomposition.]\n\n  Description [Returns the ID of the top-most decomposition node \n  implementing this function, or 0 if there is no decomposition satisfying\n  the constraints on area and delay.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_Decompose_rec(pMan *Lpk_Man_t, p *Lpk_Fun_t) int32 {\n    var pResMux, pResDsd *Lpk_Res_t;\n    var p2 *Lpk_Fun_t;\n    var clk abctime;\n\n    // is only called for non-trivial blocks\n    assert(p.nLutK \u003e= 3 \u0026\u0026 p.nLutK \u003c= 6, \"p.nLutK \u003e= 3 \u0026\u0026 p.nLutK \u003c= 6\");\n    assert(p.nVars \u003e p.nLutK, \"p.nVars \u003e p.nLutK\");\n    // skip if area bound is exceeded\n    if Lpk_LutNumLuts(p.nVars, p.nLutK) \u003e int32(p.nAreaLim) {\n        return 0; }\n    // skip if delay bound is exceeded\n    if Lpk_SuppDelay(p.uSupp, p.pDelays) \u003e int32(p.nDelayLim) {\n        return 0; }\n\n    // compute supports if needed\n    if !p.fSupports {\n        Lpk_FunComputeCofSupps( p ); }\n\n    // check DSD decomposition\nclk = Abc_Clock();\n    pResDsd = Lpk_DsdAnalize( pMan, p, pMan.pPars.nVarsShared );\npMan.timeEvalDsdAn += Abc_Clock() - clk;\n    if (pResDsd != nil) \u0026\u0026 (pResDsd.nBSVars == int32(p.nLutK) || pResDsd.nBSVars == int32(p.nLutK) - 1) \u0026\u0026 \n          pResDsd.AreaEst \u003c= int32(p.nAreaLim) \u0026\u0026 pResDsd.DelayEst \u003c= int32(p.nDelayLim) {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );\npMan.timeEvalDsdSp += Abc_Clock() - clk;\n        assert(p2.nVars \u003c= int32(p.nLutK), \"p2.nVars \u003c= int32(p.nLutK)\");\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n\n    // check MUX decomposition\nclk = Abc_Clock();\n    pResMux = Lpk_MuxAnalize( pMan, p );\npMan.timeEvalMuxAn += Abc_Clock() - clk;\n//    pResMux = NULL;\n    assert(!pResMux || (pResMux.DelayEst \u003c= int32(p.nDelayLim) \u0026\u0026 pResMux.AreaEst \u003c= int32(p.nAreaLim)), \"!pResMux || (pResMux.DelayEst \u003c= int32(p.nDelayLim) \u0026\u0026 pResMux.AreaEst \u003c= int32(p.nAreaLim))\");\n    // accept MUX decomposition if it is \"good\"\n    if pResMux \u0026\u0026 pResMux.nSuppSizeS \u003c= int32(p.nLutK) \u0026\u0026 pResMux.nSuppSizeL \u003c= int32(p.nLutK) {\n        pResDsd = nil;\n    } else if pResMux \u0026\u0026 (pResDsd != nil) {\n        // compare two decompositions\n        if pResMux.AreaEst \u003c pResDsd.AreaEst || \n            (pResMux.AreaEst == pResDsd.AreaEst \u0026\u0026 pResMux.nSuppSizeL \u003c pResDsd.nSuppSizeL) || \n            (pResMux.AreaEst == pResDsd.AreaEst \u0026\u0026 pResMux.nSuppSizeL == pResDsd.nSuppSizeL \u0026\u0026 pResMux.DelayEst \u003c pResDsd.DelayEst) {\n            pResDsd = nil;\n        } else {\n            pResMux = nil; }\n    }\n    assert(pResMux == nil || pResDsd == nil, \"pResMux == nil || pResDsd == nil\");\n    if pResMux {\nclk = Abc_Clock();\n        p2 = Lpk_MuxSplit( pMan, p, pResMux.Variable, pResMux.Polarity );\npMan.timeEvalMuxSp += Abc_Clock() - clk;\n        if p2.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p2 ) != 0) {\n            return 0; }\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n    if pResDsd != nil {\nclk = Abc_Clock();\n        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );\npMan.timeEvalDsdSp += Abc_Clock() - clk;\n        assert(p2.nVars \u003c= int32(p.nLutK), \"p2.nVars \u003c= int32(p.nLutK)\");\n        if p.nVars \u003e p.nLutK \u0026\u0026 !(Lpk_Decompose_rec( pMan, p ) != 0) {\n            return 0; }\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes decomposed nodes from the array of fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_DecomposeClean(vLeaves *Vec_Ptr_t, nLeavesOld int32) {\n    var pFunc *Lpk_Fun_t;\n    var i int32;\n    Vec_PtrForEachEntryStart( Lpk_Fun_t *, vLeaves, pFunc, i, nLeavesOld )\n        Lpk_FunFree( pFunc );\n    Vec_PtrShrink( vLeaves, nLeavesOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Decomposes the function using recursive MUX decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_Decompose(p *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *uint32, puSupps *uint32, nLutK int32, AreaLim int32, DelayLim int32) *Abc_Obj_t {\n    var pFun *Lpk_Fun_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var nLeaves int32  = Vec_PtrSize( vLeaves );\n    pFun = Lpk_FunCreate( pNtk, vLeaves, pTruth, nLutK, AreaLim, DelayLim );\n    if puSupps[0] || puSupps[1] {\n/*\n        int i;\n        Lpk_FunComputeCofSupps( pFun );\n        for ( i = 0; i \u003c nLeaves; i++ )\n        {\n            assert( pFun-\u003epuSupps[2*i+0] == puSupps[2*i+0] );\n            assert( pFun-\u003epuSupps[2*i+1] == puSupps[2*i+1] );\n        }\n*/\n        memcpy( pFun.puSupps, puSupps, sizeof(unsigned) * 2 * nLeaves );\n        pFun.fSupports = 1;\n    }\n    Lpk_FunSuppMinimize( pFun );\n    if pFun.nVars \u003c= pFun.nLutK {\n        pObjNew = Lpk_ImplementFun( p, pNtk, vLeaves, pFun );\n    } else if Lpk_Decompose_rec(p, pFun) != 0 {\n        pObjNew = Lpk_Implement( p, pNtk, vLeaves, nLeaves ); }\n    Lpk_DecomposeClean( vLeaves, nLeaves );\n    return pObjNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

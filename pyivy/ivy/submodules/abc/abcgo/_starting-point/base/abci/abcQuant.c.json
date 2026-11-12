@@ -1,0 +1,502 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c",
+  "SHA256": "44cd5a6e2611d428f3c796ce489fefde38bbf25646d81ca072d16ec89f3b9a97",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtk) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"%s_TR\", pNtk.pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 8291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 9262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 9438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkTransRel: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 10024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 10973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 12511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtkRel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 12551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtkRel) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 5,
+        "ByteOffset": 12596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPiNum(pNtkRel) % 2 == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 13,
+        "ByteOffset": 14128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fixed point is reached!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 13,
+        "ByteOffset": 14864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 389,
+        "Column": 73,
+        "ByteOffset": 15205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 9,
+        "ByteOffset": 15319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reachability analysis stopped after %d iterations.\\n\", nIters ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 394,
+        "Column": 18,
+        "ByteOffset": 15328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reachability analysis stopped after %d iterations.\\n\", nIters ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 15663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 9,
+        "ByteOffset": 15829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkReachability: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkSynthesize",
+      "Start": 1275,
+      "End": 2080,
+      "BodyStart": 1337,
+      "Original": "void Abc_NtkSynthesize( Abc_Ntk_t ** ppNtk, int fMoreEffort )\n{\n    extern Abc_Ntk_t * Abc_NtkIvyFraig( Abc_Ntk_t * pNtk, int nConfLimit, int fDoSparse, int fProve, int fTransfer, int fVerbose );\n\n    Abc_Ntk_t * pNtk, * pNtkTemp;\n\n    pNtk = *ppNtk;\n\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n    Abc_NtkDelete( pNtkTemp );\n\n    if ( fMoreEffort )\n    {\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n\n        pNtk = Abc_NtkIvyFraig( pNtkTemp = pNtk, 100, 1, 0, 0, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n\n    *ppNtk = pNtk;\n}",
+      "Draft": "func Abc_NtkSynthesize(ppNtk **Abc_Ntk_t, fMoreEffort int32) {\n    extern Abc_Ntk_t * Abc_NtkIvyFraig( Abc_Ntk_t * pNtk, int nConfLimit, int fDoSparse, int fProve, int fTransfer, int fVerbose );\n\n    var pNtk, pNtkTemp *Abc_Ntk_t;\n\n    pNtk = *ppNtk;\n\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n    Abc_NtkDelete( pNtkTemp );\n\n    if fMoreEffort != 0 {\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n\n        pNtk = Abc_NtkIvyFraig( pNtkTemp = pNtk, 100, 1, 0, 0, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n\n    *ppNtk = pNtk;\n}"
+    },
+    {
+      "Name": "Abc_NtkQuantify",
+      "Start": 2403,
+      "End": 4759,
+      "BodyStart": 2478,
+      "Original": "int Abc_NtkQuantify( Abc_Ntk_t * pNtk, int fUniv, int iVar, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pNext, * pFanin;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( iVar \u003c Abc_NtkCiNum(pNtk) );\n\n    // collect the internal nodes\n    pObj = Abc_NtkCi( pNtk, iVar );\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n\n    // assign the cofactors of the CI node to be constants\n    pObj-\u003epCopy = Abc_ObjNot( Abc_AigConst1(pNtk) ); \n    pObj-\u003epData = Abc_AigConst1(pNtk); \n\n    // quantify the nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        for ( pNext = pObj? pObj-\u003epCopy : pObj; pObj; pObj = pNext, pNext = pObj? pObj-\u003epCopy : pObj )\n        {\n            pFanin = Abc_ObjFanin0(pObj);\n            if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n            {\n                pFanin-\u003epCopy = pFanin;\n                pFanin-\u003epData = pFanin;\n            }\n            pFanin = Abc_ObjFanin1(pObj);\n            if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n            {\n                pFanin-\u003epCopy = pFanin;\n                pFanin-\u003epData = pFanin;\n            }\n            pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj-\u003epData = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        pFanin = Abc_ObjFanin0(pObj);\n        // get the result of quantification\n        if ( fUniv )\n            pNext = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n        else\n            pNext = Abc_AigOr( (Abc_Aig_t *)pNtk-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n        pNext = Abc_ObjNotCond( pNext, Abc_ObjFaninC0(pObj) );\n        if ( Abc_ObjRegular(pNext) == pFanin )\n            continue;\n        // update the fanins of the CO\n        Abc_ObjPatchFanin( pObj, pFanin, pNext );\n//        if ( Abc_ObjFanoutNum(pFanin) == 0 )\n//            Abc_AigDeleteNode( pNtk-\u003epManFunc, pFanin );\n    }\n\n    // make sure the node has no fanouts\n//    pObj = Abc_NtkCi( pNtk, iVar );\n//    assert( Abc_ObjFanoutNum(pObj) == 0 );\n    return 1;\n}",
+      "Draft": "func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext, pFanin *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(iVar \u003c Abc_NtkCiNum(pNtk), \"iVar \u003c Abc_NtkCiNum(pNtk)\");\n\n    // collect the internal nodes\n    pObj = Abc_NtkCi( pNtk, iVar );\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n\n    // assign the cofactors of the CI node to be constants\n    pObj.pCopy = Abc_ObjNot( Abc_AigConst1(pNtk) ); \n    pObj.pData = Abc_AigConst1(pNtk); \n\n    // quantify the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        for  pNext = pObj? pObj.pCopy : pObj; (pObj != nil); pObj = pNext, pNext = pObj? pObj.pCopy : pObj  {\n            pFanin = Abc_ObjFanin0(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pCopy = pFanin;\n                pFanin.pData = pFanin;\n            }\n            pFanin = Abc_ObjFanin1(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pCopy = pFanin;\n                pFanin.pData = pFanin;\n            }\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        pFanin = Abc_ObjFanin0(pObj);\n        // get the result of quantification\n        if fUniv != 0 {\n            pNext = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n        } else {\n            pNext = Abc_AigOr( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) ); }\n        pNext = Abc_ObjNotCond( pNext, Abc_ObjFaninC0(pObj) );\n        if Abc_ObjRegular(pNext) == pFanin {\n            continue; }\n        // update the fanins of the CO\n        Abc_ObjPatchFanin( pObj, pFanin, pNext );\n//        if ( Abc_ObjFanoutNum(pFanin) == 0 )\n//            Abc_AigDeleteNode( pNtk-\u003epManFunc, pFanin );\n    }\n\n    // make sure the node has no fanouts\n//    pObj = Abc_NtkCi( pNtk, iVar );\n//    assert( Abc_ObjFanoutNum(pObj) == 0 );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkTransRel",
+      "Start": 5030,
+      "End": 8469,
+      "BodyStart": 5105,
+      "Original": "Abc_Ntk_t * Abc_NtkTransRel( Abc_Ntk_t * pNtk, int fInputs, int fVerbose )\n{\n    char Buffer[1000];\n    Vec_Ptr_t * vPairs;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pMiter;\n    int i, nLatches;\n    int fSynthesis = 1;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( Abc_NtkLatchNum(pNtk) );\n    nLatches = Abc_NtkLatchNum(pNtk);\n    // start the network\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    // duplicate the name and the spec\n    sprintf( Buffer, \"%s_TR\", pNtk-\u003epName );\n    pNtkNew-\u003epName = Extra_UtilStrsav(pNtk-\u003epName);\n//    pNtkNew-\u003epSpec = Extra_UtilStrsav(pNtk-\u003epSpec);\n    Abc_NtkCleanCopy( pNtk );\n    // create current state variables\n    Abc_NtkForEachLatchOutput( pNtk, pObj, i )\n    {\n        pObj-\u003epCopy = Abc_NtkCreatePi(pNtkNew);\n        Abc_ObjAssignName( pObj-\u003epCopy, Abc_ObjName(pObj), NULL );\n    }\n    // create next state variables\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n        Abc_ObjAssignName( Abc_NtkCreatePi(pNtkNew), Abc_ObjName(pObj), NULL );\n    // create PI variables\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        Abc_NtkDupObj( pNtkNew, pObj, 1 );\n    // create the PO\n    Abc_NtkCreatePo( pNtkNew );\n    // restrash the nodes (assuming a topological order of the old network)\n    Abc_AigConst1(pNtk)-\u003epCopy = Abc_AigConst1(pNtkNew);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n    // create the function of the primary output\n    assert( Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk) );\n    vPairs = Vec_PtrAlloc( 2*nLatches );\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        Vec_PtrPush( vPairs, Abc_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPairs, Abc_NtkPi(pNtkNew, i+nLatches) );\n    }\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pNtkNew-\u003epManFunc, vPairs, 0 );\n    Vec_PtrFree( vPairs );\n    // add the primary output\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), Abc_ObjNot(pMiter) );\n    Abc_ObjAssignName( Abc_NtkPo(pNtkNew,0), \"rel\", NULL );\n\n    // quantify inputs\n    if ( fInputs )\n    {\n        assert( Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches );\n        for ( i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i-- )\n//        for ( i = 2*nLatches; i \u003c Abc_NtkPiNum(pNtkNew); i++ )\n        {\n            Abc_NtkQuantify( pNtkNew, 0, i, fVerbose );\n//            if ( fSynthesis \u0026\u0026 (i % 3 == 2) )\n            if ( fSynthesis  )\n            {\n                Abc_NtkCleanData( pNtkNew );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNew-\u003epManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNew, 1 );\n            }\n//            printf( \"Var = %3d. Nodes = %6d. \", Abc_NtkPiNum(pNtkNew) - 1 - i, Abc_NtkNodeNum(pNtkNew) );\n//            printf( \"Var = %3d. Nodes = %6d. \", i - 2*nLatches, Abc_NtkNodeNum(pNtkNew) );\n        }\n//        printf( \"\\n\" );\n        Abc_NtkCleanData( pNtkNew );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNew-\u003epManFunc );\n        for ( i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i-- )\n        {\n            pObj = Abc_NtkPi( pNtkNew, i );\n            assert( Abc_ObjFanoutNum(pObj) == 0 );\n            Abc_NtkDeleteObj( pObj );\n        }\n    }\n\n    // check consistency of the network\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkTransRel: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t {\n    var Buffer string // was [1000]byte in C\n\n    var vPairs *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pMiter *Abc_Obj_t;\n    var i, nLatches int32;\n    var fSynthesis int32  = 1;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkLatchNum(pNtk), \"Abc_NtkLatchNum(pNtk)\");\n    nLatches = Abc_NtkLatchNum(pNtk);\n    // start the network\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    // duplicate the name and the spec\n    Buffer = fmt.Sprintf(\"%s_TR\", pNtk.pName);\n    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);\n//    pNtkNew-\u003epSpec = Extra_UtilStrsav(pNtk-\u003epSpec);\n    Abc_NtkCleanCopy( pNtk );\n    // create current state variables\n    // inlining of macro Abc_NtkForEachLatchOutput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanout0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        pObj.pCopy = Abc_NtkCreatePi(pNtkNew);\n        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );\n    }\n    }\n    // create next state variables\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_ObjAssignName( Abc_NtkCreatePi(pNtkNew), Abc_ObjName(pObj), nil ); }\n    }\n    // create PI variables\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 1 );\n    }\n    // create the PO\n    Abc_NtkCreatePo( pNtkNew );\n    // restrash the nodes (assuming a topological order of the old network)\n    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) ); }\n    }\n    // create the function of the primary output\n    assert(Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk), \"Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk)\");\n    vPairs = Vec_PtrAlloc( 2*nLatches );\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Vec_PtrPush( vPairs, Abc_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPairs, Abc_NtkPi(pNtkNew, i+nLatches) );\n    }\n    }\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pNtkNew.pManFunc, vPairs, 0 );\n    Vec_PtrFree( vPairs );\n    // add the primary output\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), Abc_ObjNot(pMiter) );\n    Abc_ObjAssignName( Abc_NtkPo(pNtkNew,0), \"rel\", nil );\n\n    // quantify inputs\n    if fInputs != 0 {\n        assert(Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches, \"Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches\");\n        for  i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i--  {\n//        for ( i = 2*nLatches; i \u003c Abc_NtkPiNum(pNtkNew); i++ )\n        \n            Abc_NtkQuantify( pNtkNew, 0, i, fVerbose );\n//            if ( fSynthesis \u0026\u0026 (i % 3 == 2) )\n            if fSynthesis != 0 {\n                Abc_NtkCleanData( pNtkNew );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNew.pManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNew, 1 );\n            }\n//            printf( \"Var = %3d. Nodes = %6d. \", Abc_NtkPiNum(pNtkNew) - 1 - i, Abc_NtkNodeNum(pNtkNew) );\n//            printf( \"Var = %3d. Nodes = %6d. \", i - 2*nLatches, Abc_NtkNodeNum(pNtkNew) );\n        }\n//        printf( \"\\n\" );\n        Abc_NtkCleanData( pNtkNew );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNew.pManFunc );\n        for  i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i--  {\n            pObj = Abc_NtkPi( pNtkNew, i );\n            assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n            Abc_NtkDeleteObj( pObj );\n        }\n    }\n\n    // check consistency of the network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkTransRel: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkInitialState",
+      "Start": 8737,
+      "End": 9352,
+      "BodyStart": 8789,
+      "Original": "Abc_Ntk_t * Abc_NtkInitialState( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pMiter;\n    int i, nVars = Abc_NtkPiNum(pNtk)/2;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // compute the all-zero state in terms of the CS variables\n    pMiter = Abc_AigConst1(pNtkNew);\n    for ( i = 0; i \u003c nVars; i++ )\n        pMiter = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, pMiter, Abc_ObjNot( Abc_NtkPi(pNtkNew, i) ) );\n    // add the PO\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pMiter *Abc_Obj_t;\n    var i int32;\n    var nVars int32 = Abc_NtkPiNum(pNtk)/2;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // compute the all-zero state in terms of the CS variables\n    pMiter = Abc_AigConst1(pNtkNew);\n    for  i = 0; i \u003c nVars; i++  {\n        pMiter = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pMiter, Abc_ObjNot( Abc_NtkPi(pNtkNew, i) ) );\n    }\n    // add the PO\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkSwapVariables",
+      "Start": 9633,
+      "End": 10509,
+      "BodyStart": 9686,
+      "Original": "Abc_Ntk_t * Abc_NtkSwapVariables( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pMiter, * pObj, * pObj0, * pObj1;\n    int i, nVars = Abc_NtkPiNum(pNtk)/2;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // update the PIs\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        pObj0 = Abc_NtkPi( pNtk, i );\n        pObj1 = Abc_NtkPi( pNtk, i+nVars );\n        pMiter = pObj0-\u003epCopy;\n        pObj0-\u003epCopy = pObj1-\u003epCopy;\n        pObj1-\u003epCopy = pMiter;\n    }\n    // restrash\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n    // add the PO\n    pMiter = Abc_ObjChild0Copy( Abc_NtkPo(pNtk,0) );\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pMiter, pObj, pObj0, pObj1 *Abc_Obj_t;\n    var i int32;\n    var nVars int32 = Abc_NtkPiNum(pNtk)/2;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // update the PIs\n    for  i = 0; i \u003c nVars; i++  {\n        pObj0 = Abc_NtkPi( pNtk, i );\n        pObj1 = Abc_NtkPi( pNtk, i+nVars );\n        pMiter = pObj0.pCopy;\n        pObj0.pCopy = pObj1.pCopy;\n        pObj1.pCopy = pMiter;\n    }\n    // restrash\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) ); }\n    }\n    // add the PO\n    pMiter = Abc_ObjChild0Copy( Abc_NtkPo(pNtk,0) );\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkReachability",
+      "Start": 10826,
+      "End": 14578,
+      "BodyStart": 10907,
+      "Original": "Abc_Ntk_t * Abc_NtkReachability( Abc_Ntk_t * pNtkRel, int nIters, int fVerbose )\n{\n    Abc_Obj_t * pObj;\n    Abc_Ntk_t * pNtkFront, * pNtkReached, * pNtkNext, * pNtkTemp;\n    int i, v, nVars, nNodesOld, nNodesNew, nNodesPrev;\n    int fFixedPoint = 0;\n    int fSynthesis  = 1;\n    int fMoreEffort = 1;\n    abctime clk;\n\n    assert( Abc_NtkIsStrash(pNtkRel) );\n    assert( Abc_NtkLatchNum(pNtkRel) == 0 );\n    assert( Abc_NtkPiNum(pNtkRel) % 2 == 0 );\n\n    // compute the network composed of the initial states\n    pNtkFront = Abc_NtkInitialState( pNtkRel );\n    pNtkReached = Abc_NtkDup( pNtkFront );\n//Abc_NtkShow( pNtkReached, 0, 0, 0 );\n\n//    if ( fVerbose )\n//        printf( \"Transition relation = %6d.\\n\", Abc_NtkNodeNum(pNtkRel) );\n\n    // perform iterations of reachability analysis\n    nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    nVars = Abc_NtkPiNum(pNtkRel)/2;\n    for ( i = 0; i \u003c nIters; i++ )\n    {\n        clk = Abc_Clock();\n        // get the set of next states\n        pNtkNext = Abc_NtkMiterAnd( pNtkRel, pNtkFront, 0, 0 );\n        Abc_NtkDelete( pNtkFront );\n        // quantify the current state variables\n        for ( v = 0; v \u003c nVars; v++ )\n        {\n            Abc_NtkQuantify( pNtkNext, 0, v, fVerbose );\n            if ( fSynthesis \u0026\u0026 (v % 3 == 2) )\n            {\n                Abc_NtkCleanData( pNtkNext );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNext-\u003epManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNext, fMoreEffort );\n            }\n        }\n        Abc_NtkCleanData( pNtkNext );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNext-\u003epManFunc );\n        if ( fSynthesis )\n            Abc_NtkSynthesize( \u0026pNtkNext, 1 );\n        // map the next states into the current states\n        pNtkNext = Abc_NtkSwapVariables( pNtkTemp = pNtkNext );\n        Abc_NtkDelete( pNtkTemp );\n        // check the termination condition\n        if ( Abc_ObjFanin0(Abc_NtkPo(pNtkNext,0)) == Abc_AigConst1(pNtkNext) )\n        {\n            fFixedPoint = 1;\n            printf( \"Fixed point is reached!\\n\" );\n            Abc_NtkDelete( pNtkNext );\n            break;\n        }\n        // compute new front\n        pNtkFront = Abc_NtkMiterAnd( pNtkNext, pNtkReached, 0, 1 );\n        Abc_NtkDelete( pNtkNext );\n        // add the reached states\n        pNtkReached = Abc_NtkMiterAnd( pNtkTemp = pNtkReached, pNtkFront, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n        // compress the size of Front\n        nNodesOld = Abc_NtkNodeNum(pNtkFront);\n        if ( fSynthesis )\n        {\n            Abc_NtkSynthesize( \u0026pNtkFront, fMoreEffort );\n            Abc_NtkSynthesize( \u0026pNtkReached, fMoreEffort );\n        }\n        nNodesNew = Abc_NtkNodeNum(pNtkFront);\n        // print statistics\n        if ( fVerbose )\n        {\n            printf( \"I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   \", \n                i + 1, Abc_NtkNodeNum(pNtkReached), nNodesOld, nNodesNew, 100.0*(nNodesNew-nNodesPrev)/nNodesPrev );\n            ABC_PRT( \"T\", Abc_Clock() - clk );\n        }\n        nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    }\n    if ( !fFixedPoint )\n        fprintf( stdout, \"Reachability analysis stopped after %d iterations.\\n\", nIters );\n\n    // complement the output to represent the set of unreachable states\n    Abc_ObjXorFaninC( Abc_NtkPo(pNtkReached,0), 0 );\n\n    // remove next state variables\n    for ( i = 2*nVars - 1; i \u003e= nVars; i-- )\n    {\n        pObj = Abc_NtkPi( pNtkReached, i );\n        assert( Abc_ObjFanoutNum(pObj) == 0 );\n        Abc_NtkDeleteObj( pObj );\n    }\n\n    // check consistency of the network\n    if ( !Abc_NtkCheck( pNtkReached ) )\n    {\n        printf( \"Abc_NtkReachability: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkReached );\n        return NULL;\n    }\n    return pNtkReached;\n}",
+      "Draft": "func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_Ntk_t {\n    var pObj *Abc_Obj_t;\n    var pNtkFront, pNtkReached, pNtkNext, pNtkTemp *Abc_Ntk_t;\n    var i, v, nVars, nNodesOld, nNodesNew, nNodesPrev int32;\n    var fFixedPoint int32;\n    var fSynthesis int32   = 1;\n    var fMoreEffort int32  = 1;\n    var clk abctime;\n\n    assert(Abc_NtkIsStrash(pNtkRel), \"Abc_NtkIsStrash(pNtkRel)\");\n    assert(Abc_NtkLatchNum(pNtkRel) == 0, \"Abc_NtkLatchNum(pNtkRel) == 0\");\n    assert(Abc_NtkPiNum(pNtkRel) % 2 == 0, \"Abc_NtkPiNum(pNtkRel) % 2 == 0\");\n\n    // compute the network composed of the initial states\n    pNtkFront = Abc_NtkInitialState( pNtkRel );\n    pNtkReached = Abc_NtkDup( pNtkFront );\n//Abc_NtkShow( pNtkReached, 0, 0, 0 );\n\n//    if ( fVerbose )\n//        printf( \"Transition relation = %6d.\\n\", Abc_NtkNodeNum(pNtkRel) );\n\n    // perform iterations of reachability analysis\n    nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    nVars = Abc_NtkPiNum(pNtkRel)/2;\n    for  i = 0; i \u003c nIters; i++  {\n        clk = Abc_Clock();\n        // get the set of next states\n        pNtkNext = Abc_NtkMiterAnd( pNtkRel, pNtkFront, 0, 0 );\n        Abc_NtkDelete( pNtkFront );\n        // quantify the current state variables\n        for  v = 0; v \u003c nVars; v++  {\n            Abc_NtkQuantify( pNtkNext, 0, v, fVerbose );\n            if (fSynthesis != 0) \u0026\u0026 (v % 3 == 2) {\n                Abc_NtkCleanData( pNtkNext );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNext.pManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNext, fMoreEffort );\n            }\n        }\n        Abc_NtkCleanData( pNtkNext );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNext.pManFunc );\n        if fSynthesis != 0 {\n            Abc_NtkSynthesize( \u0026pNtkNext, 1 ); }\n        // map the next states into the current states\n        pNtkNext = Abc_NtkSwapVariables( pNtkTemp = pNtkNext );\n        Abc_NtkDelete( pNtkTemp );\n        // check the termination condition\n        if Abc_ObjFanin0(Abc_NtkPo(pNtkNext,0)) == Abc_AigConst1(pNtkNext) {\n            fFixedPoint = 1;\n            fmt.Printf(\"Fixed point is reached!\\n\");\n            Abc_NtkDelete( pNtkNext );\n            break;\n        }\n        // compute new front\n        pNtkFront = Abc_NtkMiterAnd( pNtkNext, pNtkReached, 0, 1 );\n        Abc_NtkDelete( pNtkNext );\n        // add the reached states\n        pNtkReached = Abc_NtkMiterAnd( pNtkTemp = pNtkReached, pNtkFront, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n        // compress the size of Front\n        nNodesOld = Abc_NtkNodeNum(pNtkFront);\n        if fSynthesis != 0 {\n            Abc_NtkSynthesize( \u0026pNtkFront, fMoreEffort );\n            Abc_NtkSynthesize( \u0026pNtkReached, fMoreEffort );\n        }\n        nNodesNew = Abc_NtkNodeNum(pNtkFront);\n        // print statistics\n        if fVerbose != 0 {\n            fmt.Printf(\"I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   \", i + 1, Abc_NtkNodeNum(pNtkReached), nNodesOld, nNodesNew, 100.0*(nNodesNew-nNodesPrev)/nNodesPrev);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    }\n    if !(fFixedPoint != 0) {\n        fmt.Fprintf(os.Stdout, \"Reachability analysis stopped after %d iterations.\\n\", nIters); }\n\n    // complement the output to represent the set of unreachable states\n    Abc_ObjXorFaninC( Abc_NtkPo(pNtkReached,0), 0 );\n\n    // remove next state variables\n    for  i = 2*nVars - 1; i \u003e= nVars; i--  {\n        pObj = Abc_NtkPi( pNtkReached, i );\n        assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n        Abc_NtkDeleteObj( pObj );\n    }\n\n    // check consistency of the network\n    if !Abc_NtkCheck( pNtkReached ) {\n        fmt.Printf(\"Abc_NtkReachability: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkReached );\n        return nil;\n    }\n    return pNtkReached;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::3053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2945,
+      "End": 2945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::3663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3558,
+      "End": 3571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::3782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3677,
+      "End": 3690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::4286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4080,
+      "End": 4093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::4411",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4205,
+      "End": 4218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::7358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6418,
+      "End": 6431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::8025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6856,
+      "End": 6869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::8746",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7577,
+      "End": 7590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::9142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7973,
+      "End": 7986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::10350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9181,
+      "End": 9194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::11623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10280,
+      "End": 10293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::13538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12195,
+      "End": 12208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::pointer-cast::13720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12377,
+      "End": 12390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkSynthesize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSynthesize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1275,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::ternary::Abc_NtkQuantify",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkQuantify",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2403,
+      "End": 4759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkQuantify",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkQuantify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2403,
+      "End": 4759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkTransRel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTransRel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5030,
+      "End": 8469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkInitialState",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInitialState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8737,
+      "End": 9352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkSwapVariables",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSwapVariables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9633,
+      "End": 10509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::Abc_NtkReachability",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkReachability",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10826,
+      "End": 14578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcQuant.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14825
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcQuant.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [AIG-based variable quantification.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcQuant.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fast synthesis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSynthesize(ppNtk **Abc_Ntk_t, fMoreEffort int32) {\n    extern Abc_Ntk_t * Abc_NtkIvyFraig( Abc_Ntk_t * pNtk, int nConfLimit, int fDoSparse, int fProve, int fTransfer, int fVerbose );\n\n    var pNtk, pNtkTemp *Abc_Ntk_t;\n\n    pNtk = *ppNtk;\n\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n    Abc_NtkDelete( pNtkTemp );\n\n    if fMoreEffort != 0 {\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n\n        pNtk = Abc_NtkIvyFraig( pNtkTemp = pNtk, 100, 1, 0, 0, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n\n    *ppNtk = pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Existentially quantifies one variable.]\n\n  Description []\n               \n  SideEffects [This procedure creates dangling nodes in the AIG.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext, pFanin *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(iVar \u003c Abc_NtkCiNum(pNtk), \"iVar \u003c Abc_NtkCiNum(pNtk)\");\n\n    // collect the internal nodes\n    pObj = Abc_NtkCi( pNtk, iVar );\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n\n    // assign the cofactors of the CI node to be constants\n    pObj.pCopy = Abc_ObjNot( Abc_AigConst1(pNtk) ); \n    pObj.pData = Abc_AigConst1(pNtk); \n\n    // quantify the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        for  pNext = pObj? pObj.pCopy : pObj; (pObj != nil); pObj = pNext, pNext = pObj? pObj.pCopy : pObj  {\n            pFanin = Abc_ObjFanin0(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pCopy = pFanin;\n                pFanin.pData = pFanin;\n            }\n            pFanin = Abc_ObjFanin1(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pCopy = pFanin;\n                pFanin.pData = pFanin;\n            }\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        pFanin = Abc_ObjFanin0(pObj);\n        // get the result of quantification\n        if fUniv != 0 {\n            pNext = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n        } else {\n            pNext = Abc_AigOr( (Abc_Aig_t *)pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) ); }\n        pNext = Abc_ObjNotCond( pNext, Abc_ObjFaninC0(pObj) );\n        if Abc_ObjRegular(pNext) == pFanin {\n            continue; }\n        // update the fanins of the CO\n        Abc_ObjPatchFanin( pObj, pFanin, pNext );\n//        if ( Abc_ObjFanoutNum(pFanin) == 0 )\n//            Abc_AigDeleteNode( pNtk-\u003epManFunc, pFanin );\n    }\n\n    // make sure the node has no fanouts\n//    pObj = Abc_NtkCi( pNtk, iVar );\n//    assert( Abc_ObjFanoutNum(pObj) == 0 );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the transition relation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t {\n    var Buffer string // was [1000]byte in C\n\n    var vPairs *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pMiter *Abc_Obj_t;\n    var i, nLatches int32;\n    var fSynthesis int32  = 1;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkLatchNum(pNtk), \"Abc_NtkLatchNum(pNtk)\");\n    nLatches = Abc_NtkLatchNum(pNtk);\n    // start the network\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    // duplicate the name and the spec\n    Buffer = fmt.Sprintf(\"%s_TR\", pNtk.pName);\n    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);\n//    pNtkNew-\u003epSpec = Extra_UtilStrsav(pNtk-\u003epSpec);\n    Abc_NtkCleanCopy( pNtk );\n    // create current state variables\n    // inlining of macro Abc_NtkForEachLatchOutput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanout0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        pObj.pCopy = Abc_NtkCreatePi(pNtkNew);\n        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );\n    }\n    }\n    // create next state variables\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_ObjAssignName( Abc_NtkCreatePi(pNtkNew), Abc_ObjName(pObj), nil ); }\n    }\n    // create PI variables\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 1 );\n    }\n    // create the PO\n    Abc_NtkCreatePo( pNtkNew );\n    // restrash the nodes (assuming a topological order of the old network)\n    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) ); }\n    }\n    // create the function of the primary output\n    assert(Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk), \"Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk)\");\n    vPairs = Vec_PtrAlloc( 2*nLatches );\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Vec_PtrPush( vPairs, Abc_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPairs, Abc_NtkPi(pNtkNew, i+nLatches) );\n    }\n    }\n    pMiter = Abc_AigMiter( (Abc_Aig_t *)pNtkNew.pManFunc, vPairs, 0 );\n    Vec_PtrFree( vPairs );\n    // add the primary output\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), Abc_ObjNot(pMiter) );\n    Abc_ObjAssignName( Abc_NtkPo(pNtkNew,0), \"rel\", nil );\n\n    // quantify inputs\n    if fInputs != 0 {\n        assert(Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches, \"Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) + 2*nLatches\");\n        for  i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i--  {\n//        for ( i = 2*nLatches; i \u003c Abc_NtkPiNum(pNtkNew); i++ )\n        \n            Abc_NtkQuantify( pNtkNew, 0, i, fVerbose );\n//            if ( fSynthesis \u0026\u0026 (i % 3 == 2) )\n            if fSynthesis != 0 {\n                Abc_NtkCleanData( pNtkNew );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNew.pManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNew, 1 );\n            }\n//            printf( \"Var = %3d. Nodes = %6d. \", Abc_NtkPiNum(pNtkNew) - 1 - i, Abc_NtkNodeNum(pNtkNew) );\n//            printf( \"Var = %3d. Nodes = %6d. \", i - 2*nLatches, Abc_NtkNodeNum(pNtkNew) );\n        }\n//        printf( \"\\n\" );\n        Abc_NtkCleanData( pNtkNew );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNew.pManFunc );\n        for  i = Abc_NtkPiNum(pNtkNew) - 1; i \u003e= 2*nLatches; i--  {\n            pObj = Abc_NtkPi( pNtkNew, i );\n            assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n            Abc_NtkDeleteObj( pObj );\n        }\n    }\n\n    // check consistency of the network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkTransRel: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one image computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pMiter *Abc_Obj_t;\n    var i int32;\n    var nVars int32 = Abc_NtkPiNum(pNtk)/2;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // compute the all-zero state in terms of the CS variables\n    pMiter = Abc_AigConst1(pNtkNew);\n    for  i = 0; i \u003c nVars; i++  {\n        pMiter = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pMiter, Abc_ObjNot( Abc_NtkPi(pNtkNew, i) ) );\n    }\n    // add the PO\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Swaps current state and next state variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pMiter, pObj, pObj0, pObj1 *Abc_Obj_t;\n    var i int32;\n    var nVars int32 = Abc_NtkPiNum(pNtk)/2;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the new network \n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // update the PIs\n    for  i = 0; i \u003c nVars; i++  {\n        pObj0 = Abc_NtkPi( pNtk, i );\n        pObj1 = Abc_NtkPi( pNtk, i+nVars );\n        pMiter = pObj0.pCopy;\n        pObj0.pCopy = pObj1.pCopy;\n        pObj1.pCopy = pMiter;\n    }\n    // restrash\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) ); }\n    }\n    // add the PO\n    pMiter = Abc_ObjChild0Copy( Abc_NtkPo(pNtk,0) );\n    Abc_ObjAddFanin( Abc_NtkPo(pNtkNew,0), pMiter );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs reachability analisys.]\n\n  Description [Assumes that the input is the transition relation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_Ntk_t {\n    var pObj *Abc_Obj_t;\n    var pNtkFront, pNtkReached, pNtkNext, pNtkTemp *Abc_Ntk_t;\n    var i, v, nVars, nNodesOld, nNodesNew, nNodesPrev int32;\n    var fFixedPoint int32;\n    var fSynthesis int32   = 1;\n    var fMoreEffort int32  = 1;\n    var clk abctime;\n\n    assert(Abc_NtkIsStrash(pNtkRel), \"Abc_NtkIsStrash(pNtkRel)\");\n    assert(Abc_NtkLatchNum(pNtkRel) == 0, \"Abc_NtkLatchNum(pNtkRel) == 0\");\n    assert(Abc_NtkPiNum(pNtkRel) % 2 == 0, \"Abc_NtkPiNum(pNtkRel) % 2 == 0\");\n\n    // compute the network composed of the initial states\n    pNtkFront = Abc_NtkInitialState( pNtkRel );\n    pNtkReached = Abc_NtkDup( pNtkFront );\n//Abc_NtkShow( pNtkReached, 0, 0, 0 );\n\n//    if ( fVerbose )\n//        printf( \"Transition relation = %6d.\\n\", Abc_NtkNodeNum(pNtkRel) );\n\n    // perform iterations of reachability analysis\n    nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    nVars = Abc_NtkPiNum(pNtkRel)/2;\n    for  i = 0; i \u003c nIters; i++  {\n        clk = Abc_Clock();\n        // get the set of next states\n        pNtkNext = Abc_NtkMiterAnd( pNtkRel, pNtkFront, 0, 0 );\n        Abc_NtkDelete( pNtkFront );\n        // quantify the current state variables\n        for  v = 0; v \u003c nVars; v++  {\n            Abc_NtkQuantify( pNtkNext, 0, v, fVerbose );\n            if (fSynthesis != 0) \u0026\u0026 (v % 3 == 2) {\n                Abc_NtkCleanData( pNtkNext );\n                Abc_AigCleanup( (Abc_Aig_t *)pNtkNext.pManFunc );\n                Abc_NtkSynthesize( \u0026pNtkNext, fMoreEffort );\n            }\n        }\n        Abc_NtkCleanData( pNtkNext );\n        Abc_AigCleanup( (Abc_Aig_t *)pNtkNext.pManFunc );\n        if fSynthesis != 0 {\n            Abc_NtkSynthesize( \u0026pNtkNext, 1 ); }\n        // map the next states into the current states\n        pNtkNext = Abc_NtkSwapVariables( pNtkTemp = pNtkNext );\n        Abc_NtkDelete( pNtkTemp );\n        // check the termination condition\n        if Abc_ObjFanin0(Abc_NtkPo(pNtkNext,0)) == Abc_AigConst1(pNtkNext) {\n            fFixedPoint = 1;\n            fmt.Printf(\"Fixed point is reached!\\n\");\n            Abc_NtkDelete( pNtkNext );\n            break;\n        }\n        // compute new front\n        pNtkFront = Abc_NtkMiterAnd( pNtkNext, pNtkReached, 0, 1 );\n        Abc_NtkDelete( pNtkNext );\n        // add the reached states\n        pNtkReached = Abc_NtkMiterAnd( pNtkTemp = pNtkReached, pNtkFront, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n        // compress the size of Front\n        nNodesOld = Abc_NtkNodeNum(pNtkFront);\n        if fSynthesis != 0 {\n            Abc_NtkSynthesize( \u0026pNtkFront, fMoreEffort );\n            Abc_NtkSynthesize( \u0026pNtkReached, fMoreEffort );\n        }\n        nNodesNew = Abc_NtkNodeNum(pNtkFront);\n        // print statistics\n        if fVerbose != 0 {\n            fmt.Printf(\"I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   \", i + 1, Abc_NtkNodeNum(pNtkReached), nNodesOld, nNodesNew, 100.0*(nNodesNew-nNodesPrev)/nNodesPrev);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        nNodesPrev = Abc_NtkNodeNum(pNtkFront);\n    }\n    if !(fFixedPoint != 0) {\n        fmt.Fprintf(os.Stdout, \"Reachability analysis stopped after %d iterations.\\n\", nIters); }\n\n    // complement the output to represent the set of unreachable states\n    Abc_ObjXorFaninC( Abc_NtkPo(pNtkReached,0), 0 );\n\n    // remove next state variables\n    for  i = 2*nVars - 1; i \u003e= nVars; i--  {\n        pObj = Abc_NtkPi( pNtkReached, i );\n        assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n        Abc_NtkDeleteObj( pObj );\n    }\n\n    // check consistency of the network\n    if !Abc_NtkCheck( pNtkReached ) {\n        fmt.Printf(\"Abc_NtkReachability: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkReached );\n        return nil;\n    }\n    return pNtkReached;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

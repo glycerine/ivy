@@ -1,0 +1,479 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c",
+  "SHA256": "45a184533fad6f845ac31536feb2c26fb71cdc2ff82789542d5a89a5a56f8a55",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 13,
+        "ByteOffset": 1870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_ObjIsCi(pObjFrames) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 13,
+        "ByteOffset": 1917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObjFrames.fMarkB == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFrames.pFanData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 66,
+        "ByteOffset": 3695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pFrames.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pFrames, iFanout) : Aig_ObjFanout0Int(p.pFrames, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pFrames, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRepr != pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pReprFrames != pObjFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 6788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 7683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(pObjFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 7731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsCi(pObjFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 8297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Aig_IsComplement(pObjFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 8349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_ObjIsCi(pObjFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 14469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vSimInfo == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 395,
+        "Column": 40,
+        "ByteOffset": 14769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p.pAig) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 439,
+        "Column": 13,
+        "ByteOffset": 16925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.nPatterns == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ManLabelPiNodes",
+      "Start": 1335,
+      "End": 1856,
+      "BodyStart": 1377,
+      "Original": "void Ssw_ManLabelPiNodes( Ssw_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pObjFrames;\n    int f, i;\n    Aig_ManConst1( p-\u003epFrames )-\u003efMarkA = 1;\n    Aig_ManConst1( p-\u003epFrames )-\u003efMarkB = 1;\n    for ( f = 0; f \u003c p-\u003enFrames; f++ )\n    {\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        {\n            pObjFrames = Ssw_ObjFrame( p, pObj, f );\n            assert( Aig_ObjIsCi(pObjFrames) );\n            assert( pObjFrames-\u003efMarkB == 0 );\n            pObjFrames-\u003efMarkA = 1;\n            pObjFrames-\u003efMarkB = 1;\n        }\n    }\n}",
+      "Draft": "func Ssw_ManLabelPiNodes(p *Ssw_Man_t) {\n    var pObj, pObjFrames *Aig_Obj_t;\n    var f, i int32;\n    Aig_ManConst1( p.pFrames ).fMarkA = 1;\n    Aig_ManConst1( p.pFrames ).fMarkB = 1;\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjFrames = Ssw_ObjFrame( p, pObj, f );\n            assert(Aig_ObjIsCi(pObjFrames), \"Aig_ObjIsCi(pObjFrames)\");\n            assert(pObjFrames.fMarkB == 0, \"pObjFrames.fMarkB == 0\");\n            pObjFrames.fMarkA = 1;\n            pObjFrames.fMarkB = 1;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_ManCollectPis_rec",
+      "Start": 2123,
+      "End": 2543,
+      "BodyStart": 2191,
+      "Original": "void Ssw_ManCollectPis_rec( Aig_Obj_t * pObj, Vec_Ptr_t * vNewPis )\n{\n    assert( !Aig_IsComplement(pObj) );\n    if ( pObj-\u003efMarkA )\n        return;\n    pObj-\u003efMarkA = 1;\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        Vec_PtrPush( vNewPis, pObj );\n        return;\n    }\n    assert( Aig_ObjIsNode(pObj) );\n    Ssw_ManCollectPis_rec( Aig_ObjFanin0(pObj), vNewPis );\n    Ssw_ManCollectPis_rec( Aig_ObjFanin1(pObj), vNewPis );\n}",
+      "Draft": "func Ssw_ManCollectPis_rec(pObj *Aig_Obj_t, vNewPis *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vNewPis, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Ssw_ManCollectPis_rec( Aig_ObjFanin0(pObj), vNewPis );\n    Ssw_ManCollectPis_rec( Aig_ObjFanin1(pObj), vNewPis );\n}"
+    },
+    {
+      "Name": "Ssw_ManCollectPos_rec",
+      "Start": 2795,
+      "End": 3582,
+      "BodyStart": 2878,
+      "Original": "void Ssw_ManCollectPos_rec( Ssw_Man_t * p, Aig_Obj_t * pObj, Vec_Int_t * vNewPos )\n{\n    Aig_Obj_t * pFanout;\n    int iFanout = -1, i;\n    assert( !Aig_IsComplement(pObj) );\n    if ( pObj-\u003efMarkB )\n        return;\n    pObj-\u003efMarkB = 1;\n    if ( pObj-\u003eId \u003e p-\u003enSRMiterMaxId )\n        return;\n    if ( Aig_ObjIsCo(pObj) )\n    {\n        // skip if it is a register input PO\n        if ( Aig_ObjCioId(pObj) \u003e= Aig_ManCoNum(p-\u003epFrames)-Aig_ManRegNum(p-\u003epAig) )\n            return;\n        // add the number of this constraint\n        Vec_IntPush( vNewPos, Aig_ObjCioId(pObj)/2 );\n        return;\n    }\n    // visit the fanouts\n    assert( p-\u003epFrames-\u003epFanData != NULL );\n    Aig_ObjForEachFanout( p-\u003epFrames, pObj, pFanout, iFanout, i )\n        Ssw_ManCollectPos_rec( p, pFanout, vNewPos );\n}",
+      "Draft": "func Ssw_ManCollectPos_rec(p *Ssw_Man_t, pObj *Aig_Obj_t, vNewPos *Vec_Int_t) {\n    var pFanout *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.fMarkB {\n        return; }\n    pObj.fMarkB = 1;\n    if pObj.Id \u003e p.nSRMiterMaxId {\n        return; }\n    if Aig_ObjIsCo(pObj) {\n        // skip if it is a register input PO\n        if Aig_ObjCioId(pObj) \u003e= Aig_ManCoNum(p.pFrames)-Aig_ManRegNum(p.pAig) {\n            return; }\n        // add the number of this constraint\n        Vec_IntPush( vNewPos, Aig_ObjCioId(pObj)/2 );\n        return;\n    }\n    // visit the fanouts\n    assert(p.pFrames.pFanData != nil, \"p.pFrames.pFanData != nil\");\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFrames.pFanData, \"p.pFrames.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pFrames, iFanout) : Aig_ObjFanout0Int(p.pFrames, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pFrames, iFanout\u003e\u003e1)), 1); i++  {\n        Ssw_ManCollectPos_rec( p, pFanout, vNewPos );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_ManLoadSolver",
+      "Start": 4057,
+      "End": 6214,
+      "BodyStart": 4134,
+      "Original": "void Ssw_ManLoadSolver( Ssw_Man_t * p, Aig_Obj_t * pRepr, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pObjFrames, * pReprFrames;\n    Aig_Obj_t * pTemp, * pObj0, * pObj1;\n    int i, iConstr, RetValue;\n\n    assert( pRepr != pObj );\n    // get the corresponding frames nodes\n    pReprFrames = Aig_Regular( Ssw_ObjFrame( p, pRepr, p-\u003epPars-\u003enFramesK ) );\n    pObjFrames  = Aig_Regular( Ssw_ObjFrame( p, pObj,  p-\u003epPars-\u003enFramesK ) );\n    assert( pReprFrames != pObjFrames );\n /*\n    // compute the AIG support\n    Vec_PtrClear( p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pRepr, p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pObj,  p-\u003evNewLos );\n    // add logic cones for register outputs\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evNewLos, pTemp, i )\n    {\n        pObj0 = Aig_Regular( Ssw_ObjFrame( p, pTemp, p-\u003epPars-\u003enFramesK ) );\n        Ssw_CnfNodeAddToSolver( p-\u003epMSat, pObj0 );\n    }\n*/\n    // add cones for the nodes\n    Ssw_CnfNodeAddToSolver( p-\u003epMSat, pReprFrames );\n    Ssw_CnfNodeAddToSolver( p-\u003epMSat, pObjFrames );\n\n    // compute the frames support\n    Vec_PtrClear( p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pReprFrames, p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pObjFrames,  p-\u003evNewLos );\n    // these nodes include both nodes corresponding to PIs and LOs\n    // (the nodes corresponding to PIs should be labeled with fMarkB!)\n\n    // collect the related constraint POs\n    Vec_IntClear( p-\u003evNewPos );\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evNewLos, pTemp, i )\n        Ssw_ManCollectPos_rec( p, pTemp, p-\u003evNewPos );\n    // check if the corresponding pairs are added\n    Vec_IntForEachEntry( p-\u003evNewPos, iConstr, i )\n    {\n        pObj0 = Aig_ManCo( p-\u003epFrames, 2*iConstr   );\n        pObj1 = Aig_ManCo( p-\u003epFrames, 2*iConstr+1 );\n//        if ( pObj0-\u003efMarkB \u0026\u0026 pObj1-\u003efMarkB )\n        if ( pObj0-\u003efMarkB || pObj1-\u003efMarkB )\n        {\n            pObj0-\u003efMarkB = 1;\n            pObj1-\u003efMarkB = 1;\n            Ssw_NodesAreConstrained( p, Aig_ObjChild0(pObj0), Aig_ObjChild0(pObj1) );\n        }\n    }\n    if ( p-\u003epMSat-\u003epSat-\u003eqtail != p-\u003epMSat-\u003epSat-\u003eqhead )\n    {\n        RetValue = sat_solver_simplify(p-\u003epMSat-\u003epSat);\n        assert( RetValue != 0 );\n    }\n}",
+      "Draft": "func Ssw_ManLoadSolver(p *Ssw_Man_t, pRepr *Aig_Obj_t, pObj *Aig_Obj_t) {\n    var pObjFrames, pReprFrames *Aig_Obj_t;\n    var pTemp, pObj0, pObj1 *Aig_Obj_t;\n    var i, iConstr, RetValue int32;\n\n    assert(pRepr != pObj, \"pRepr != pObj\");\n    // get the corresponding frames nodes\n    pReprFrames = Aig_Regular( Ssw_ObjFrame( p, pRepr, p.pPars.nFramesK ) );\n    pObjFrames  = Aig_Regular( Ssw_ObjFrame( p, pObj,  p.pPars.nFramesK ) );\n    assert(pReprFrames != pObjFrames, \"pReprFrames != pObjFrames\");\n /*\n    // compute the AIG support\n    Vec_PtrClear( p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pRepr, p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pObj,  p-\u003evNewLos );\n    // add logic cones for register outputs\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evNewLos, pTemp, i )\n    {\n        pObj0 = Aig_Regular( Ssw_ObjFrame( p, pTemp, p-\u003epPars-\u003enFramesK ) );\n        Ssw_CnfNodeAddToSolver( p-\u003epMSat, pObj0 );\n    }\n*/\n    // add cones for the nodes\n    Ssw_CnfNodeAddToSolver( p.pMSat, pReprFrames );\n    Ssw_CnfNodeAddToSolver( p.pMSat, pObjFrames );\n\n    // compute the frames support\n    Vec_PtrClear( p.vNewLos );\n    Ssw_ManCollectPis_rec( pReprFrames, p.vNewLos );\n    Ssw_ManCollectPis_rec( pObjFrames,  p.vNewLos );\n    // these nodes include both nodes corresponding to PIs and LOs\n    // (the nodes corresponding to PIs should be labeled with fMarkB!)\n\n    // collect the related constraint POs\n    Vec_IntClear( p.vNewPos );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNewLos)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vNewLos, i)), 1); i++  {\n        Ssw_ManCollectPos_rec( p, pTemp, p.vNewPos );\n    }\n    // check if the corresponding pairs are added\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vNewPos)) \u0026\u0026 (((iConstr) = Vec_IntEntry(p.vNewPos, i)), 1); i++  {\n        pObj0 = Aig_ManCo( p.pFrames, 2*iConstr   );\n        pObj1 = Aig_ManCo( p.pFrames, 2*iConstr+1 );\n//        if ( pObj0-\u003efMarkB \u0026\u0026 pObj1-\u003efMarkB )\n        if pObj0.fMarkB || pObj1.fMarkB {\n            pObj0.fMarkB = 1;\n            pObj1.fMarkB = 1;\n            Ssw_NodesAreConstrained( p, Aig_ObjChild0(pObj0), Aig_ObjChild0(pObj1) );\n        }\n    }\n    if p.pMSat.pSat.qtail != p.pMSat.pSat.qhead {\n        RetValue = sat_solver_simplify(p.pMSat.pSat);\n        assert(RetValue != 0, \"RetValue != 0\");\n    }\n}"
+    },
+    {
+      "Name": "Ssw_ManSweepTransferDyn",
+      "Start": 6485,
+      "End": 7829,
+      "BodyStart": 6531,
+      "Original": "void Ssw_ManSweepTransferDyn( Ssw_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pObjFraig;\n    unsigned * pInfo;\n    int i, f, nFrames;\n\n    // transfer simulation information\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n    {\n        pObjFraig = Ssw_ObjFrame( p, pObj, 0 );\n        if ( pObjFraig == Aig_ManConst0(p-\u003epFrames) )\n        {\n            Ssw_SmlObjAssignConst( p-\u003epSml, pObj, 0, 0 );\n            continue;\n        }\n        assert( !Aig_IsComplement(pObjFraig) );\n        assert( Aig_ObjIsCi(pObjFraig) );\n        pInfo = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjCioId(pObjFraig) );\n        Ssw_SmlObjSetWord( p-\u003epSml, pObj, pInfo[0], 0, 0 );\n    }\n    // set random simulation info for the second frame\n    for ( f = 1; f \u003c p-\u003enFrames; f++ )\n    {\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        {\n            pObjFraig = Ssw_ObjFrame( p, pObj, f );\n            assert( !Aig_IsComplement(pObjFraig) );\n            assert( Aig_ObjIsCi(pObjFraig) );\n            pInfo = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjCioId(pObjFraig) );\n            Ssw_SmlObjSetWord( p-\u003epSml, pObj, pInfo[0], 0, f );\n        }\n    }\n    // create random info\n    nFrames = Ssw_SmlNumFrames( p-\u003epSml );\n    for ( ; f \u003c nFrames; f++ )\n    {\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n            Ssw_SmlAssignRandomFrame( p-\u003epSml, pObj, f );\n    }\n}",
+      "Draft": "func Ssw_ManSweepTransferDyn(p *Ssw_Man_t) {\n    var pObj, pObjFraig *Aig_Obj_t;\n    var pInfo *uint32;\n    var i, f, nFrames int32;\n\n    // transfer simulation information\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObjFraig = Ssw_ObjFrame( p, pObj, 0 );\n        if pObjFraig == Aig_ManConst0(p.pFrames) {\n            Ssw_SmlObjAssignConst( p.pSml, pObj, 0, 0 );\n            continue;\n        }\n        assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n        assert(Aig_ObjIsCi(pObjFraig), \"Aig_ObjIsCi(pObjFraig)\");\n        pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObjFraig) );\n        Ssw_SmlObjSetWord( p.pSml, pObj, pInfo[0], 0, 0 );\n    }\n    // set random simulation info for the second frame\n    for  f = 1; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjFraig = Ssw_ObjFrame( p, pObj, f );\n            assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n            assert(Aig_ObjIsCi(pObjFraig), \"Aig_ObjIsCi(pObjFraig)\");\n            pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObjFraig) );\n            Ssw_SmlObjSetWord( p.pSml, pObj, pInfo[0], 0, f );\n        }\n    }\n    // create random info\n    nFrames = Ssw_SmlNumFrames( p.pSml );\n    for  ; f \u003c nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandomFrame( p.pSml, pObj, f );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_ManSweepResimulateDyn",
+      "Start": 8105,
+      "End": 8840,
+      "BodyStart": 8159,
+      "Original": "int Ssw_ManSweepResimulateDyn( Ssw_Man_t * p, int f )\n{\n    int RetValue1, RetValue2;\n    abctime clk = Abc_Clock();\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n    Ssw_SmlSimulateOne( p-\u003epSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p-\u003evSimInfo, 0, 1 );\n    p-\u003enPatterns = 0;\n    p-\u003enSimRounds++;\np-\u003etimeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}",
+      "Draft": "func Ssw_ManSweepResimulateDyn(p *Ssw_Man_t, f int32) int32 {\n    var RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n    Ssw_SmlSimulateOne( p.pSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p.ppClasses, 1 );\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n    p.nPatterns = 0;\n    p.nSimRounds++;\np.timeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}"
+    },
+    {
+      "Name": "Ssw_ManSweepResimulateDynLocal",
+      "Start": 9116,
+      "End": 11709,
+      "BodyStart": 9175,
+      "Original": "int Ssw_ManSweepResimulateDynLocal( Ssw_Man_t * p, int f )\n{\n    Aig_Obj_t * pObj, * pRepr, ** ppClass;\n    int i, k, nSize, RetValue1, RetValue2;\n    abctime clk = Abc_Clock();\n    p-\u003enSimRounds++;\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // determine const1 cands and classes to be simulated\n    Vec_PtrClear( p-\u003evResimConsts );\n    Vec_PtrClear( p-\u003evResimClasses );\n    Aig_ManIncrementTravId( p-\u003epAig );\n    for ( i = p-\u003eiNodeStart; i \u003c p-\u003eiNodeLast + p-\u003epPars-\u003enResimDelta; i++ )\n    {\n        if ( i \u003e= Aig_ManObjNumMax( p-\u003epAig ) )\n            break;\n        pObj = Aig_ManObj( p-\u003epAig, i );\n        if ( pObj == NULL )\n            continue;\n        if ( Ssw_ObjIsConst1Cand(p-\u003epAig, pObj) )\n        {\n            Vec_PtrPush( p-\u003evResimConsts, pObj );\n            continue;\n        }\n        pRepr = Aig_ObjRepr(p-\u003epAig, pObj);\n        if ( pRepr == NULL )\n            continue;\n        if ( Aig_ObjIsTravIdCurrent(p-\u003epAig, pRepr) )\n            continue;\n        Aig_ObjSetTravIdCurrent(p-\u003epAig, pRepr);\n        Vec_PtrPush( p-\u003evResimClasses, pRepr );\n    }\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n//    Ssw_SmlSimulateOne( p-\u003epSml );\n    // resimulate dynamically\n//    Aig_ManIncrementTravId( p-\u003epAig );\n//    Aig_ObjIsTravIdCurrent( p-\u003epAig, Aig_ManConst1(p-\u003epAig) );\n    p-\u003enVisCounter++;\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evResimConsts, pObj, i )\n        Ssw_SmlSimulateOneDyn_rec( p-\u003epSml, pObj, p-\u003enFrames-1, p-\u003epVisited, p-\u003enVisCounter );\n    // resimulate the cone of influence of the cand classes\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evResimClasses, pRepr, i )\n    {\n        ppClass = Ssw_ClassesReadClass( p-\u003eppClasses, pRepr, \u0026nSize );\n        for ( k = 0; k \u003c nSize; k++ )\n            Ssw_SmlSimulateOneDyn_rec( p-\u003epSml, ppClass[k], p-\u003enFrames-1, p-\u003epVisited, p-\u003enVisCounter );\n    }\n\n    // check equivalence classes\n//    RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n//    RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n    // refine these nodes\n    RetValue1 = Ssw_ClassesRefineConst1Group( p-\u003eppClasses, p-\u003evResimConsts, 1 );\n    RetValue2 = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evResimClasses, pRepr, i )\n        RetValue2 += Ssw_ClassesRefineOneClass( p-\u003eppClasses, pRepr, 1 );\n\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p-\u003evSimInfo, 0, 1 );\n    p-\u003enPatterns = 0;\n    p-\u003enSimRounds++;\np-\u003etimeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}",
+      "Draft": "func Ssw_ManSweepResimulateDynLocal(p *Ssw_Man_t, f int32) int32 {\n    var pObj *Aig_Obj_t;\n    var pRepr *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, k, nSize, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    p.nSimRounds++;\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // determine const1 cands and classes to be simulated\n    Vec_PtrClear( p.vResimConsts );\n    Vec_PtrClear( p.vResimClasses );\n    Aig_ManIncrementTravId( p.pAig );\n    for  i = p.iNodeStart; i \u003c p.iNodeLast + p.pPars.nResimDelta; i++  {\n        if i \u003e= Aig_ManObjNumMax( p.pAig ) {\n            break; }\n        pObj = Aig_ManObj( p.pAig, i );\n        if pObj == nil {\n            continue; }\n        if Ssw_ObjIsConst1Cand(p.pAig, pObj) {\n            Vec_PtrPush( p.vResimConsts, pObj );\n            continue;\n        }\n        pRepr = Aig_ObjRepr(p.pAig, pObj);\n        if pRepr == nil {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p.pAig, pRepr) {\n            continue; }\n        Aig_ObjSetTravIdCurrent(p.pAig, pRepr);\n        Vec_PtrPush( p.vResimClasses, pRepr );\n    }\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n//    Ssw_SmlSimulateOne( p-\u003epSml );\n    // resimulate dynamically\n//    Aig_ManIncrementTravId( p-\u003epAig );\n//    Aig_ObjIsTravIdCurrent( p-\u003epAig, Aig_ManConst1(p-\u003epAig) );\n    p.nVisCounter++;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimConsts)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimConsts, i)), 1); i++  {\n        Ssw_SmlSimulateOneDyn_rec( p.pSml, pObj, p.nFrames-1, p.pVisited, p.nVisCounter );\n    }\n    // resimulate the cone of influence of the cand classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimClasses)) \u0026\u0026 (((pRepr) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimClasses, i)), 1); i++  {\n        ppClass = Ssw_ClassesReadClass( p.ppClasses, pRepr, \u0026nSize );\n        for  k = 0; k \u003c nSize; k++  {\n            Ssw_SmlSimulateOneDyn_rec( p.pSml, ppClass[k], p.nFrames-1, p.pVisited, p.nVisCounter );\n        }\n    }\n\n    // check equivalence classes\n//    RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n//    RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n    // refine these nodes\n    RetValue1 = Ssw_ClassesRefineConst1Group( p.ppClasses, p.vResimConsts, 1 );\n    RetValue2 = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimClasses)) \u0026\u0026 (((pRepr) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimClasses, i)), 1); i++  {\n        RetValue2 += Ssw_ClassesRefineOneClass( p.ppClasses, pRepr, 1 );\n    }\n\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n    p.nPatterns = 0;\n    p.nSimRounds++;\np.timeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}"
+    },
+    {
+      "Name": "Ssw_ManSweepDyn",
+      "Start": 11971,
+      "End": 15894,
+      "BodyStart": 12008,
+      "Original": "int Ssw_ManSweepDyn( Ssw_Man_t * p )\n{\n    Bar_Progress_t * pProgress = NULL;\n    Aig_Obj_t * pObj, * pObjNew;\n    int i, f;\n    abctime clk;\n\n    // perform speculative reduction\nclk = Abc_Clock();\n    // create timeframes\n    p-\u003epFrames = Ssw_FramesWithClasses( p );\n    Aig_ManFanoutStart( p-\u003epFrames );\n    p-\u003enSRMiterMaxId = Aig_ManObjNumMax( p-\u003epFrames );\n\n    // map constants and PIs of the last frame\n    f = p-\u003epPars-\u003enFramesK;\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p-\u003epAig), f, Aig_ManConst1(p-\u003epFrames) );\n    Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        Ssw_ObjSetFrame( p, pObj, f, Aig_ObjCreateCi(p-\u003epFrames) );\n    Aig_ManSetCioIds( p-\u003epFrames );\n    // label nodes corresponding to primary inputs\n    Ssw_ManLabelPiNodes( p );\np-\u003etimeReduce += Abc_Clock() - clk;\n\n    // prepare simulation info\n    assert( p-\u003evSimInfo == NULL );\n    p-\u003evSimInfo = Vec_PtrAllocSimInfo( Aig_ManCiNum(p-\u003epFrames), 1 );\n    Vec_PtrCleanSimInfo( p-\u003evSimInfo, 0, 1 );\n\n    // sweep internal nodes\n    p-\u003efRefined = 0;\n    Ssw_ClassesClearRefined( p-\u003eppClasses );\n    if ( p-\u003epPars-\u003efVerbose )\n        pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p-\u003epAig) );\n    p-\u003eiNodeStart = 0;\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n    {\n        if ( p-\u003eiNodeStart == 0 )\n            p-\u003eiNodeStart = i;\n        if ( p-\u003epPars-\u003efVerbose )\n            Bar_ProgressUpdate( pProgress, i, NULL );\n        if ( Saig_ObjIsLo(p-\u003epAig, pObj) )\n            p-\u003efRefined |= Ssw_ManSweepNode( p, pObj, f, 0, NULL );\n        else if ( Aig_ObjIsNode(pObj) )\n        {\n            pObjNew = Aig_And( p-\u003epFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            p-\u003efRefined |= Ssw_ManSweepNode( p, pObj, f, 0, NULL );\n        }\n        // check if it is time to recycle the solver\n        if ( p-\u003epMSat-\u003epSat == NULL ||\n            (p-\u003epPars-\u003enSatVarMax2 \u0026\u0026\n             p-\u003epMSat-\u003enSatVars \u003e p-\u003epPars-\u003enSatVarMax2 \u0026\u0026\n             p-\u003enRecycleCalls \u003e p-\u003epPars-\u003enRecycleCalls2) )\n        {\n            // resimulate\n            if ( p-\u003enPatterns \u003e 0 )\n            {\n                p-\u003eiNodeLast = i;\n                if ( p-\u003epPars-\u003efLocalSim )\n                    Ssw_ManSweepResimulateDynLocal( p, f );\n                else\n                    Ssw_ManSweepResimulateDyn( p, f );\n                p-\u003eiNodeStart = i+1;\n            }\n//                Abc_Print( 1, \"Recycling SAT solver with %d vars and %d calls.\\n\", \n//                    p-\u003epMSat-\u003enSatVars, p-\u003enRecycleCalls );\n//            Aig_ManCleanMarkAB( p-\u003epAig );\n            Aig_ManCleanMarkAB( p-\u003epFrames );\n            // label nodes corresponding to primary inputs\n            Ssw_ManLabelPiNodes( p );\n            // replace the solver\n            if ( p-\u003epMSat )\n            {\n                p-\u003enVarsMax  = Abc_MaxInt( p-\u003enVarsMax,  p-\u003epMSat-\u003enSatVars );\n                p-\u003enCallsMax = Abc_MaxInt( p-\u003enCallsMax, p-\u003epMSat-\u003enSolverCalls );\n                Ssw_SatStop( p-\u003epMSat );\n                p-\u003enRecycles++;\n                p-\u003enRecyclesTotal++;\n                p-\u003enRecycleCalls = 0;\n            }\n            p-\u003epMSat = Ssw_SatStart( 0 );\n            assert( p-\u003enPatterns == 0 );\n        }\n        // resimulate\n        if ( p-\u003enPatterns == 32 )\n        {\n            p-\u003eiNodeLast = i;\n            if ( p-\u003epPars-\u003efLocalSim )\n                Ssw_ManSweepResimulateDynLocal( p, f );\n            else\n                Ssw_ManSweepResimulateDyn( p, f );\n            p-\u003eiNodeStart = i+1;\n        }\n    }\n    // resimulate\n    if ( p-\u003enPatterns \u003e 0 )\n    {\n        p-\u003eiNodeLast = i;\n        if ( p-\u003epPars-\u003efLocalSim )\n            Ssw_ManSweepResimulateDynLocal( p, f );\n        else\n            Ssw_ManSweepResimulateDyn( p, f );\n    }\n    // collect stats\n    if ( p-\u003epPars-\u003efVerbose )\n        Bar_ProgressStop( pProgress );\n\n    // cleanup\n//    Ssw_ClassesCheck( p-\u003eppClasses );\n    return p-\u003efRefined;\n}",
+      "Draft": "func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {\n    var pProgress *Bar_Progress_t  = nil;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, f int32;\n    var clk abctime;\n\n    // perform speculative reduction\nclk = Abc_Clock();\n    // create timeframes\n    p.pFrames = Ssw_FramesWithClasses( p );\n    Aig_ManFanoutStart( p.pFrames );\n    p.nSRMiterMaxId = Aig_ManObjNumMax( p.pFrames );\n\n    // map constants and PIs of the last frame\n    f = p.pPars.nFramesK;\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, f, Aig_ObjCreateCi(p.pFrames) );\n    }\n    Aig_ManSetCioIds( p.pFrames );\n    // label nodes corresponding to primary inputs\n    Ssw_ManLabelPiNodes( p );\np.timeReduce += Abc_Clock() - clk;\n\n    // prepare simulation info\n    assert(p.vSimInfo == nil, \"p.vSimInfo == nil\");\n    p.vSimInfo = Vec_PtrAllocSimInfo( Aig_ManCiNum(p.pFrames), 1 );\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n\n    // sweep internal nodes\n    p.fRefined = 0;\n    Ssw_ClassesClearRefined( p.ppClasses );\n    if p.pPars.fVerbose {\n        pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAig) ); }\n    p.iNodeStart = 0;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if p.iNodeStart == 0 {\n            p.iNodeStart = i; }\n        if p.pPars.fVerbose {\n            Bar_ProgressUpdate( pProgress, i, nil ); }\n        if Saig_ObjIsLo(p.pAig, pObj) {\n            p.fRefined |= Ssw_ManSweepNode( p, pObj, f, 0, nil );\n        } else if Aig_ObjIsNode(pObj) {\n            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            p.fRefined |= Ssw_ManSweepNode( p, pObj, f, 0, nil );\n        }\n        // check if it is time to recycle the solver\n        if p.pMSat.pSat == nil ||\n            (p.pPars.nSatVarMax2 \u0026\u0026\n             p.pMSat.nSatVars \u003e p.pPars.nSatVarMax2 \u0026\u0026\n             p.nRecycleCalls \u003e p.pPars.nRecycleCalls2) {\n            // resimulate\n            if p.nPatterns \u003e 0 {\n                p.iNodeLast = i;\n                if p.pPars.fLocalSim {\n                    Ssw_ManSweepResimulateDynLocal( p, f );\n                } else {\n                    Ssw_ManSweepResimulateDyn( p, f ); }\n                p.iNodeStart = i+1;\n            }\n//                Abc_Print( 1, \"Recycling SAT solver with %d vars and %d calls.\\n\", \n//                    p-\u003epMSat-\u003enSatVars, p-\u003enRecycleCalls );\n//            Aig_ManCleanMarkAB( p-\u003epAig );\n            Aig_ManCleanMarkAB( p.pFrames );\n            // label nodes corresponding to primary inputs\n            Ssw_ManLabelPiNodes( p );\n            // replace the solver\n            if p.pMSat {\n                p.nVarsMax  = Abc_MaxInt( p.nVarsMax,  p.pMSat.nSatVars );\n                p.nCallsMax = Abc_MaxInt( p.nCallsMax, p.pMSat.nSolverCalls );\n                Ssw_SatStop( p.pMSat );\n                p.nRecycles++;\n                p.nRecyclesTotal++;\n                p.nRecycleCalls = 0;\n            }\n            p.pMSat = Ssw_SatStart( 0 );\n            assert(p.nPatterns == 0, \"p.nPatterns == 0\");\n        }\n        // resimulate\n        if p.nPatterns == 32 {\n            p.iNodeLast = i;\n            if p.pPars.fLocalSim {\n                Ssw_ManSweepResimulateDynLocal( p, f );\n            } else {\n                Ssw_ManSweepResimulateDyn( p, f ); }\n            p.iNodeStart = i+1;\n        }\n    }\n    }\n    // resimulate\n    if p.nPatterns \u003e 0 {\n        p.iNodeLast = i;\n        if p.pPars.fLocalSim {\n            Ssw_ManSweepResimulateDynLocal( p, f );\n        } else {\n            Ssw_ManSweepResimulateDyn( p, f ); }\n    }\n    // collect stats\n    if p.pPars.fVerbose {\n        Bar_ProgressStop( pProgress ); }\n\n    // cleanup\n//    Ssw_ClassesCheck( p-\u003eppClasses );\n    return p.fRefined;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::1740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1572,
+      "End": 1572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::6025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5460,
+      "End": 5460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::7494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6657,
+      "End": 6657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::7864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7008,
+      "End": 7020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::8272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7248,
+      "End": 7248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::8508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7466,
+      "End": 7478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::8936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7726,
+      "End": 7726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::11905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10560,
+      "End": 10560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::12241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10780,
+      "End": 10780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::12928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11352,
+      "End": 11352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::14233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12493,
+      "End": 12493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::pointer-cast::15090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13163,
+      "End": 13163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManLabelPiNodes",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManLabelPiNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1335,
+      "End": 1856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManCollectPis_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManCollectPis_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2123,
+      "End": 2543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::ternary::Ssw_ManCollectPos_rec",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_ManCollectPos_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2795,
+      "End": 3582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManCollectPos_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManCollectPos_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2795,
+      "End": 3582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManLoadSolver",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManLoadSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4057,
+      "End": 6214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManSweepTransferDyn",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSweepTransferDyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6485,
+      "End": 7829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManSweepResimulateDyn",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSweepResimulateDyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8105,
+      "End": 8840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManSweepResimulateDynLocal",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSweepResimulateDynLocal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9116,
+      "End": 11709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::Ssw_ManSweepDyn",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManSweepDyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11971,
+      "End": 15894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswDyn.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16140
+    }
+  ],
+  "Draft": "package ssw\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [sswDyn.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Dynamic loading of constraints.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswDyn.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n//#include \"misc/bar/bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Label PIs nodes of the frames corresponding to PIs of AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManLabelPiNodes(p *Ssw_Man_t) {\n    var pObj, pObjFrames *Aig_Obj_t;\n    var f, i int32;\n    Aig_ManConst1( p.pFrames ).fMarkA = 1;\n    Aig_ManConst1( p.pFrames ).fMarkB = 1;\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjFrames = Ssw_ObjFrame( p, pObj, f );\n            assert(Aig_ObjIsCi(pObjFrames), \"Aig_ObjIsCi(pObjFrames)\");\n            assert(pObjFrames.fMarkB == 0, \"pObjFrames.fMarkB == 0\");\n            pObjFrames.fMarkA = 1;\n            pObjFrames.fMarkB = 1;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects new POs in p-\u003evNewPos.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManCollectPis_rec(pObj *Aig_Obj_t, vNewPis *Vec_Ptr_t) {\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    if Aig_ObjIsCi(pObj) {\n        Vec_PtrPush( vNewPis, pObj );\n        return;\n    }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Ssw_ManCollectPis_rec( Aig_ObjFanin0(pObj), vNewPis );\n    Ssw_ManCollectPis_rec( Aig_ObjFanin1(pObj), vNewPis );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects new POs in p-\u003evNewPos.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManCollectPos_rec(p *Ssw_Man_t, pObj *Aig_Obj_t, vNewPos *Vec_Int_t) {\n    var pFanout *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.fMarkB {\n        return; }\n    pObj.fMarkB = 1;\n    if pObj.Id \u003e p.nSRMiterMaxId {\n        return; }\n    if Aig_ObjIsCo(pObj) {\n        // skip if it is a register input PO\n        if Aig_ObjCioId(pObj) \u003e= Aig_ManCoNum(p.pFrames)-Aig_ManRegNum(p.pAig) {\n            return; }\n        // add the number of this constraint\n        Vec_IntPush( vNewPos, Aig_ObjCioId(pObj)/2 );\n        return;\n    }\n    // visit the fanouts\n    assert(p.pFrames.pFanData != nil, \"p.pFrames.pFanData != nil\");\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pFrames.pFanData, \"p.pFrames.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pFrames, iFanout) : Aig_ObjFanout0Int(p.pFrames, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pFrames, iFanout\u003e\u003e1)), 1); i++  {\n        Ssw_ManCollectPos_rec( p, pFanout, vNewPos );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Loads logic cones and relevant constraints.]\n\n  Description [Both pRepr and pObj are objects of the AIG.\n  The result is the current SAT solver loaded with the logic cones\n  for pRepr and pObj corresponding to them in the frames,\n  as well as all the relevant constraints.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManLoadSolver(p *Ssw_Man_t, pRepr *Aig_Obj_t, pObj *Aig_Obj_t) {\n    var pObjFrames, pReprFrames *Aig_Obj_t;\n    var pTemp, pObj0, pObj1 *Aig_Obj_t;\n    var i, iConstr, RetValue int32;\n\n    assert(pRepr != pObj, \"pRepr != pObj\");\n    // get the corresponding frames nodes\n    pReprFrames = Aig_Regular( Ssw_ObjFrame( p, pRepr, p.pPars.nFramesK ) );\n    pObjFrames  = Aig_Regular( Ssw_ObjFrame( p, pObj,  p.pPars.nFramesK ) );\n    assert(pReprFrames != pObjFrames, \"pReprFrames != pObjFrames\");\n /*\n    // compute the AIG support\n    Vec_PtrClear( p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pRepr, p-\u003evNewLos );\n    Ssw_ManCollectPis_rec( pObj,  p-\u003evNewLos );\n    // add logic cones for register outputs\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evNewLos, pTemp, i )\n    {\n        pObj0 = Aig_Regular( Ssw_ObjFrame( p, pTemp, p-\u003epPars-\u003enFramesK ) );\n        Ssw_CnfNodeAddToSolver( p-\u003epMSat, pObj0 );\n    }\n*/\n    // add cones for the nodes\n    Ssw_CnfNodeAddToSolver( p.pMSat, pReprFrames );\n    Ssw_CnfNodeAddToSolver( p.pMSat, pObjFrames );\n\n    // compute the frames support\n    Vec_PtrClear( p.vNewLos );\n    Ssw_ManCollectPis_rec( pReprFrames, p.vNewLos );\n    Ssw_ManCollectPis_rec( pObjFrames,  p.vNewLos );\n    // these nodes include both nodes corresponding to PIs and LOs\n    // (the nodes corresponding to PIs should be labeled with fMarkB!)\n\n    // collect the related constraint POs\n    Vec_IntClear( p.vNewPos );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNewLos)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vNewLos, i)), 1); i++  {\n        Ssw_ManCollectPos_rec( p, pTemp, p.vNewPos );\n    }\n    // check if the corresponding pairs are added\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vNewPos)) \u0026\u0026 (((iConstr) = Vec_IntEntry(p.vNewPos, i)), 1); i++  {\n        pObj0 = Aig_ManCo( p.pFrames, 2*iConstr   );\n        pObj1 = Aig_ManCo( p.pFrames, 2*iConstr+1 );\n//        if ( pObj0-\u003efMarkB \u0026\u0026 pObj1-\u003efMarkB )\n        if pObj0.fMarkB || pObj1.fMarkB {\n            pObj0.fMarkB = 1;\n            pObj1.fMarkB = 1;\n            Ssw_NodesAreConstrained( p, Aig_ObjChild0(pObj0), Aig_ObjChild0(pObj1) );\n        }\n    }\n    if p.pMSat.pSat.qtail != p.pMSat.pSat.qhead {\n        RetValue = sat_solver_simplify(p.pMSat.pSat);\n        assert(RetValue != 0, \"RetValue != 0\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tranfers simulation information from FRAIG to AIG.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSweepTransferDyn(p *Ssw_Man_t) {\n    var pObj, pObjFraig *Aig_Obj_t;\n    var pInfo *uint32;\n    var i, f, nFrames int32;\n\n    // transfer simulation information\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObjFraig = Ssw_ObjFrame( p, pObj, 0 );\n        if pObjFraig == Aig_ManConst0(p.pFrames) {\n            Ssw_SmlObjAssignConst( p.pSml, pObj, 0, 0 );\n            continue;\n        }\n        assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n        assert(Aig_ObjIsCi(pObjFraig), \"Aig_ObjIsCi(pObjFraig)\");\n        pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObjFraig) );\n        Ssw_SmlObjSetWord( p.pSml, pObj, pInfo[0], 0, 0 );\n    }\n    // set random simulation info for the second frame\n    for  f = 1; f \u003c p.nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjFraig = Ssw_ObjFrame( p, pObj, f );\n            assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n            assert(Aig_ObjIsCi(pObjFraig), \"Aig_ObjIsCi(pObjFraig)\");\n            pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObjFraig) );\n            Ssw_SmlObjSetWord( p.pSml, pObj, pInfo[0], 0, f );\n        }\n    }\n    // create random info\n    nFrames = Ssw_SmlNumFrames( p.pSml );\n    for  ; f \u003c nFrames; f++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Ssw_SmlAssignRandomFrame( p.pSml, pObj, f );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one round of simulation with counter-examples.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSweepResimulateDyn(p *Ssw_Man_t, f int32) int32 {\n    var RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n    Ssw_SmlSimulateOne( p.pSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p.ppClasses, 1 );\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n    p.nPatterns = 0;\n    p.nSimRounds++;\np.timeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one round of simulation with counter-examples.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSweepResimulateDynLocal(p *Ssw_Man_t, f int32) int32 {\n    var pObj *Aig_Obj_t;\n    var pRepr *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, k, nSize, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    p.nSimRounds++;\n    // transfer PI simulation information from storage\n//    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    Ssw_ManSweepTransferDyn( p );\n    // determine const1 cands and classes to be simulated\n    Vec_PtrClear( p.vResimConsts );\n    Vec_PtrClear( p.vResimClasses );\n    Aig_ManIncrementTravId( p.pAig );\n    for  i = p.iNodeStart; i \u003c p.iNodeLast + p.pPars.nResimDelta; i++  {\n        if i \u003e= Aig_ManObjNumMax( p.pAig ) {\n            break; }\n        pObj = Aig_ManObj( p.pAig, i );\n        if pObj == nil {\n            continue; }\n        if Ssw_ObjIsConst1Cand(p.pAig, pObj) {\n            Vec_PtrPush( p.vResimConsts, pObj );\n            continue;\n        }\n        pRepr = Aig_ObjRepr(p.pAig, pObj);\n        if pRepr == nil {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p.pAig, pRepr) {\n            continue; }\n        Aig_ObjSetTravIdCurrent(p.pAig, pRepr);\n        Vec_PtrPush( p.vResimClasses, pRepr );\n    }\n    // simulate internal nodes\n//    Ssw_SmlSimulateOneFrame( p-\u003epSml );\n//    Ssw_SmlSimulateOne( p-\u003epSml );\n    // resimulate dynamically\n//    Aig_ManIncrementTravId( p-\u003epAig );\n//    Aig_ObjIsTravIdCurrent( p-\u003epAig, Aig_ManConst1(p-\u003epAig) );\n    p.nVisCounter++;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimConsts)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimConsts, i)), 1); i++  {\n        Ssw_SmlSimulateOneDyn_rec( p.pSml, pObj, p.nFrames-1, p.pVisited, p.nVisCounter );\n    }\n    // resimulate the cone of influence of the cand classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimClasses)) \u0026\u0026 (((pRepr) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimClasses, i)), 1); i++  {\n        ppClass = Ssw_ClassesReadClass( p.ppClasses, pRepr, \u0026nSize );\n        for  k = 0; k \u003c nSize; k++  {\n            Ssw_SmlSimulateOneDyn_rec( p.pSml, ppClass[k], p.nFrames-1, p.pVisited, p.nVisCounter );\n        }\n    }\n\n    // check equivalence classes\n//    RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n//    RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n    // refine these nodes\n    RetValue1 = Ssw_ClassesRefineConst1Group( p.ppClasses, p.vResimConsts, 1 );\n    RetValue2 = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vResimClasses)) \u0026\u0026 (((pRepr) = (Aig_Obj_t *)Vec_PtrEntry(p.vResimClasses, i)), 1); i++  {\n        RetValue2 += Ssw_ClassesRefineOneClass( p.ppClasses, pRepr, 1 );\n    }\n\n    // prepare simulation info for the next round\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n    p.nPatterns = 0;\n    p.nSimRounds++;\np.timeSimSat += Abc_Clock() - clk;\n    return RetValue1 \u003e 0 || RetValue2 \u003e 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for the internal nodes.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {\n    var pProgress *Bar_Progress_t  = nil;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, f int32;\n    var clk abctime;\n\n    // perform speculative reduction\nclk = Abc_Clock();\n    // create timeframes\n    p.pFrames = Ssw_FramesWithClasses( p );\n    Aig_ManFanoutStart( p.pFrames );\n    p.nSRMiterMaxId = Aig_ManObjNumMax( p.pFrames );\n\n    // map constants and PIs of the last frame\n    f = p.pPars.nFramesK;\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, f, Aig_ObjCreateCi(p.pFrames) );\n    }\n    Aig_ManSetCioIds( p.pFrames );\n    // label nodes corresponding to primary inputs\n    Ssw_ManLabelPiNodes( p );\np.timeReduce += Abc_Clock() - clk;\n\n    // prepare simulation info\n    assert(p.vSimInfo == nil, \"p.vSimInfo == nil\");\n    p.vSimInfo = Vec_PtrAllocSimInfo( Aig_ManCiNum(p.pFrames), 1 );\n    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );\n\n    // sweep internal nodes\n    p.fRefined = 0;\n    Ssw_ClassesClearRefined( p.ppClasses );\n    if p.pPars.fVerbose {\n        pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAig) ); }\n    p.iNodeStart = 0;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if p.iNodeStart == 0 {\n            p.iNodeStart = i; }\n        if p.pPars.fVerbose {\n            Bar_ProgressUpdate( pProgress, i, nil ); }\n        if Saig_ObjIsLo(p.pAig, pObj) {\n            p.fRefined |= Ssw_ManSweepNode( p, pObj, f, 0, nil );\n        } else if Aig_ObjIsNode(pObj) {\n            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            p.fRefined |= Ssw_ManSweepNode( p, pObj, f, 0, nil );\n        }\n        // check if it is time to recycle the solver\n        if p.pMSat.pSat == nil ||\n            (p.pPars.nSatVarMax2 \u0026\u0026\n             p.pMSat.nSatVars \u003e p.pPars.nSatVarMax2 \u0026\u0026\n             p.nRecycleCalls \u003e p.pPars.nRecycleCalls2) {\n            // resimulate\n            if p.nPatterns \u003e 0 {\n                p.iNodeLast = i;\n                if p.pPars.fLocalSim {\n                    Ssw_ManSweepResimulateDynLocal( p, f );\n                } else {\n                    Ssw_ManSweepResimulateDyn( p, f ); }\n                p.iNodeStart = i+1;\n            }\n//                Abc_Print( 1, \"Recycling SAT solver with %d vars and %d calls.\\n\", \n//                    p-\u003epMSat-\u003enSatVars, p-\u003enRecycleCalls );\n//            Aig_ManCleanMarkAB( p-\u003epAig );\n            Aig_ManCleanMarkAB( p.pFrames );\n            // label nodes corresponding to primary inputs\n            Ssw_ManLabelPiNodes( p );\n            // replace the solver\n            if p.pMSat {\n                p.nVarsMax  = Abc_MaxInt( p.nVarsMax,  p.pMSat.nSatVars );\n                p.nCallsMax = Abc_MaxInt( p.nCallsMax, p.pMSat.nSolverCalls );\n                Ssw_SatStop( p.pMSat );\n                p.nRecycles++;\n                p.nRecyclesTotal++;\n                p.nRecycleCalls = 0;\n            }\n            p.pMSat = Ssw_SatStart( 0 );\n            assert(p.nPatterns == 0, \"p.nPatterns == 0\");\n        }\n        // resimulate\n        if p.nPatterns == 32 {\n            p.iNodeLast = i;\n            if p.pPars.fLocalSim {\n                Ssw_ManSweepResimulateDynLocal( p, f );\n            } else {\n                Ssw_ManSweepResimulateDyn( p, f ); }\n            p.iNodeStart = i+1;\n        }\n    }\n    }\n    // resimulate\n    if p.nPatterns \u003e 0 {\n        p.iNodeLast = i;\n        if p.pPars.fLocalSim {\n            Ssw_ManSweepResimulateDynLocal( p, f );\n        } else {\n            Ssw_ManSweepResimulateDyn( p, f ); }\n    }\n    // collect stats\n    if p.pPars.fVerbose {\n        Bar_ProgressStop( pProgress ); }\n\n    // cleanup\n//    Ssw_ClassesCheck( p-\u003eppClasses );\n    return p.fRefined;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

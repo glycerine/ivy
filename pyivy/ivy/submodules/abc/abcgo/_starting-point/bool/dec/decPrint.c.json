@@ -1,0 +1,439 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c",
+  "SHA256": "0a6b5769942f96e64297b0aca2fe53b256d9c245f12f4c4229cc60faf70fb445",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 72,
+        "Column": 22,
+        "ByteOffset": 2302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        LitSizeCur = strlen(pNamesIn[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Constant %d\", !Dec_GraphIsComplement(pGraph) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 13,
+        "ByteOffset": 4171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 13,
+        "ByteOffset": 4329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 13,
+        "ByteOffset": 4674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 13,
+        "ByteOffset": 4832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" + \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 6522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 13,
+        "ByteOffset": 6683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" # \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 6849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 9,
+        "ByteOffset": 6955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 7108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" + \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 7266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 7588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 8040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Dec_GraphPrintGetLeafName_Buffer, \"%s%s\", fCompl? \"!\" : \"\", pNamesIn[iLeaf] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 8141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", spStatic_Dec_GraphPrintGetLeafName_Buffer );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 235,
+        "Column": 12,
+        "ByteOffset": 8219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strlen( spStatic_Dec_GraphPrintGetLeafName_Buffer );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 8659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 8722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 9170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%6s = \", pNameOut );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dec_GraphPrint",
+      "Start": 1691,
+      "End": 3195,
+      "BodyStart": 1785,
+      "Original": "void Dec_GraphPrint( FILE * pFile, Dec_Graph_t * pGraph, char * pNamesIn[], char * pNameOut )\n{\n    Vec_Ptr_t * vNamesIn = NULL;\n    int LitSizeMax, LitSizeCur, Pos, i;\n\n    // create the names if not given by the user\n    if ( pNamesIn == NULL )\n    {\n        vNamesIn = Abc_NodeGetFakeNames( Dec_GraphLeaveNum(pGraph) );\n        pNamesIn = (char **)vNamesIn-\u003epArray;\n    }\n    if ( pNameOut == NULL )\n        pNameOut = \"F\";\n\n    // get the size of the longest literal\n    LitSizeMax = 0;\n    for ( i = 0; i \u003c Dec_GraphLeaveNum(pGraph); i++ )\n    {\n        LitSizeCur = strlen(pNamesIn[i]);\n        if ( LitSizeMax \u003c LitSizeCur )\n            LitSizeMax = LitSizeCur;\n    }\n    if ( LitSizeMax \u003e 50 )\n        LitSizeMax = 20;\n\n    // write the decomposition graph (factored form)\n    if ( Dec_GraphIsConst(pGraph) ) // constant\n    {\n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        fprintf( pFile, \"Constant %d\", !Dec_GraphIsComplement(pGraph) );\n    }\n    else if ( Dec_GraphIsVar(pGraph) ) // literal\n    {\n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrintGetLeafName( pFile, Dec_GraphVarInt(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn );\n    }\n    else\n    {\n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrint_rec( pFile, pGraph, Dec_GraphNodeLast(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn, \u0026Pos, LitSizeMax );\n    }\n    fprintf( pFile, \"\\n\" );\n\n    if ( vNamesIn )\n        Abc_NodeFreeNames( vNamesIn );\n}",
+      "Draft": "func Dec_GraphPrint(pFile *os.File, pGraph *Dec_Graph_t, pNamesIn []string, pNameOut string) {\n    var vNamesIn *Vec_Ptr_t  = nil;\n    var LitSizeMax, LitSizeCur, Pos, i int32;\n\n    // create the names if not given by the user\n    if pNamesIn == nil {\n        vNamesIn = Abc_NodeGetFakeNames( Dec_GraphLeaveNum(pGraph) );\n        pNamesIn = (char **)vNamesIn.pArray;\n    }\n    if pNameOut == nil {\n        pNameOut = \"F\"; }\n\n    // get the size of the longest literal\n    LitSizeMax = 0;\n    for  i = 0; i \u003c Dec_GraphLeaveNum(pGraph); i++  {\n        LitSizeCur = len(pNamesIn[i]);\n        if LitSizeMax \u003c LitSizeCur {\n            LitSizeMax = LitSizeCur; }\n    }\n    if LitSizeMax \u003e 50 {\n        LitSizeMax = 20; }\n\n    // write the decomposition graph (factored form)\n    if Dec_GraphIsConst(pGraph) { // constant\n    \n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        fmt.Fprintf(pFile, \"Constant %d\", !Dec_GraphIsComplement(pGraph));\n    \n    } else if Dec_GraphIsVar(pGraph) { // literal\n    \n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrintGetLeafName( pFile, Dec_GraphVarInt(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn );\n    \n    } else {\n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrint_rec( pFile, pGraph, Dec_GraphNodeLast(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn, \u0026Pos, LitSizeMax );\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    if vNamesIn != nil {\n        Abc_NodeFreeNames( vNamesIn ); }\n}"
+    },
+    {
+      "Name": "Dec_GraphPrint2_rec",
+      "Start": 3431,
+      "End": 5305,
+      "BodyStart": 3573,
+      "Original": "void Dec_GraphPrint2_rec( FILE * pFile, Dec_Graph_t * pGraph, Dec_Node_t * pNode, int fCompl, char * pNamesIn[], int * pPos, int LitSizeMax )\n{\n    Dec_Node_t * pNode0, * pNode1;\n    pNode0 = Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node);\n    if ( Dec_GraphNodeIsVar(pGraph, pNode) ) // FT_NODE_LEAF )\n    {\n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if ( !pNode-\u003efNodeOr ) // FT_NODE_AND )\n    {\n        if ( !pNode0-\u003efNodeOr ) // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode-\u003efCompl0, pNamesIn, pPos, LitSizeMax );\n        else\n        {\n            fprintf( pFile, \"(\" );\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode-\u003efCompl0, pNamesIn, pPos, LitSizeMax );\n            fprintf( pFile, \")\" );\n            (*pPos)++;\n        }\n        fprintf( pFile, \" \" );\n        (*pPos)++;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        if ( !pNode1-\u003efNodeOr ) // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode-\u003efCompl1, pNamesIn, pPos, LitSizeMax );\n        else\n        {\n            fprintf( pFile, \"(\" );\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode-\u003efCompl1, pNamesIn, pPos, LitSizeMax );\n            fprintf( pFile, \")\" );\n            (*pPos)++;\n        }\n        return;\n    }\n    if ( pNode-\u003efNodeOr ) // FT_NODE_OR )\n    {\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode-\u003efCompl0, pNamesIn, pPos, LitSizeMax );\n        fprintf( pFile, \" + \" );\n        (*pPos) += 3;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode-\u003efCompl1, pNamesIn, pPos, LitSizeMax );\n        return;\n    }\n    assert( 0 );\n}",
+      "Draft": "func Dec_GraphPrint2_rec(pFile *os.File, pGraph *Dec_Graph_t, pNode *Dec_Node_t, fCompl int32, pNamesIn []string, pPos *int32, LitSizeMax int32) {\n    var pNode0, pNode1 *Dec_Node_t;\n    pNode0 = Dec_GraphNode(pGraph, pNode.eEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode.eEdge1.Node);\n    if Dec_GraphNodeIsVar(pGraph, pNode) { // FT_NODE_LEAF )\n    \n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if !pNode.fNodeOr { // FT_NODE_AND )\n    \n        if !pNode0.fNodeOr { // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n        }\n        fmt.Fprintf(pFile, \" \");\n        (*pPos)++;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        if !pNode1.fNodeOr { // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n        }\n        return;\n    }\n    if pNode.fNodeOr { // FT_NODE_OR )\n    \n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \" + \");\n        (*pPos) += 3;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n        return;\n    }\n    assert(false, \"0\");\n}"
+    },
+    {
+      "Name": "Dec_GraphPrint_rec",
+      "Start": 5541,
+      "End": 7684,
+      "BodyStart": 5682,
+      "Original": "void Dec_GraphPrint_rec( FILE * pFile, Dec_Graph_t * pGraph, Dec_Node_t * pNode, int fCompl, char * pNamesIn[], int * pPos, int LitSizeMax )\n{\n    Dec_Node_t * pNode0, * pNode1;\n    Dec_Node_t * pNode00, * pNode01, * pNode10, * pNode11;\n    pNode0 = Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node);\n    if ( Dec_GraphNodeIsVar(pGraph, pNode) ) // FT_NODE_LEAF )\n    {\n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if ( !Dec_GraphNodeIsVar(pGraph, pNode0) \u0026\u0026 !Dec_GraphNodeIsVar(pGraph, pNode1) )\n    {\n        pNode00 = Dec_GraphNode(pGraph, pNode0-\u003eeEdge0.Node);\n        pNode01 = Dec_GraphNode(pGraph, pNode0-\u003eeEdge1.Node);\n        pNode10 = Dec_GraphNode(pGraph, pNode1-\u003eeEdge0.Node);\n        pNode11 = Dec_GraphNode(pGraph, pNode1-\u003eeEdge1.Node);\n        if ( (pNode00 == pNode10 || pNode00 == pNode11) \u0026\u0026 (pNode01 == pNode10 || pNode01 == pNode11) )\n        {\n            fprintf( pFile, \"(\" );\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode00, pNode00-\u003efCompl0, pNamesIn, pPos, LitSizeMax );\n            fprintf( pFile, \" # \" );\n            (*pPos) += 3;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode01, pNode01-\u003efCompl1, pNamesIn, pPos, LitSizeMax );\n            fprintf( pFile, \")\" );\n            (*pPos)++;\n            return;\n        }\n    }\n    if ( fCompl )\n    {\n        fprintf( pFile, \"(\" );\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, !pNode-\u003eeEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        fprintf( pFile, \" + \" );\n        (*pPos) += 3;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, !pNode-\u003eeEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fprintf( pFile, \")\" );\n        (*pPos)++;\n    }\n    else\n    {\n        fprintf( pFile, \"(\" );\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode-\u003eeEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode-\u003eeEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fprintf( pFile, \")\" );\n        (*pPos)++;\n    }\n}",
+      "Draft": "func Dec_GraphPrint_rec(pFile *os.File, pGraph *Dec_Graph_t, pNode *Dec_Node_t, fCompl int32, pNamesIn []string, pPos *int32, LitSizeMax int32) {\n    var pNode0, pNode1 *Dec_Node_t;\n    var pNode00, pNode01, pNode10, pNode11 *Dec_Node_t;\n    pNode0 = Dec_GraphNode(pGraph, pNode.eEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode.eEdge1.Node);\n    if Dec_GraphNodeIsVar(pGraph, pNode) { // FT_NODE_LEAF )\n    \n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if !Dec_GraphNodeIsVar(pGraph, pNode0) \u0026\u0026 !Dec_GraphNodeIsVar(pGraph, pNode1) {\n        pNode00 = Dec_GraphNode(pGraph, pNode0.eEdge0.Node);\n        pNode01 = Dec_GraphNode(pGraph, pNode0.eEdge1.Node);\n        pNode10 = Dec_GraphNode(pGraph, pNode1.eEdge0.Node);\n        pNode11 = Dec_GraphNode(pGraph, pNode1.eEdge1.Node);\n        if (pNode00 == pNode10 || pNode00 == pNode11) \u0026\u0026 (pNode01 == pNode10 || pNode01 == pNode11) {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode00, pNode00.fCompl0, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \" # \");\n            (*pPos) += 3;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode01, pNode01.fCompl1, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n            return;\n        }\n    }\n    if fCompl != 0 {\n        fmt.Fprintf(pFile, \"(\");\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, !pNode.eEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \" + \");\n        (*pPos) += 3;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, !pNode.eEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \")\");\n        (*pPos)++;\n    \n    } else {\n        fmt.Fprintf(pFile, \"(\");\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.eEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.eEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \")\");\n        (*pPos)++;\n    }\n}"
+    },
+    {
+      "Name": "Dec_GraphPrintGetLeafName",
+      "Start": 7920,
+      "End": 8171,
+      "BodyStart": 8008,
+      "Original": "int Dec_GraphPrintGetLeafName( FILE * pFile, int iLeaf, int fCompl, char * pNamesIn[] )\n{\n    static char Buffer[100];\n    sprintf( Buffer, \"%s%s\", fCompl? \"!\" : \"\", pNamesIn[iLeaf] );\n    fprintf( pFile, \"%s\", Buffer );\n    return strlen( Buffer );\n}",
+      "Draft": "func Dec_GraphPrintGetLeafName(pFile *os.File, iLeaf int32, fCompl int32, pNamesIn []string) int32 {\n    \n    spStatic_Dec_GraphPrintGetLeafName_Buffer = fmt.Sprintf(\"%s%s\", fCompl? \"!\" : \"\", pNamesIn[iLeaf]);\n    fprintf( pFile, \"%s\", spStatic_Dec_GraphPrintGetLeafName_Buffer );\n    return strlen( spStatic_Dec_GraphPrintGetLeafName_Buffer );\n}"
+    },
+    {
+      "Name": "Dec_GraphPrintUpdatePos",
+      "Start": 8407,
+      "End": 8651,
+      "BodyStart": 8480,
+      "Original": "void Dec_GraphPrintUpdatePos( FILE * pFile, int * pPos, int LitSizeMax )\n{\n    int i;\n    if ( *pPos + LitSizeMax \u003c 77 )\n        return;\n    fprintf( pFile, \"\\n\" );\n    for ( i = 0; i \u003c 10; i++ )\n        fprintf( pFile, \" \" );\n    *pPos = 10;\n}",
+      "Draft": "func Dec_GraphPrintUpdatePos(pFile *os.File, pPos *int32, LitSizeMax int32) {\n    var i int32;\n    if *pPos + LitSizeMax \u003c 77 {\n        return; }\n    fmt.Fprintf(pFile, \"\\n\");\n    for  i = 0; i \u003c 10; i++  {\n        fmt.Fprintf(pFile, \" \");\n    }\n    *pPos = 10;\n}"
+    },
+    {
+      "Name": "Dec_GraphPrintOutputName",
+      "Start": 8933,
+      "End": 9101,
+      "BodyStart": 8995,
+      "Original": "int Dec_GraphPrintOutputName( FILE * pFile, char * pNameOut )\n{\n    if ( pNameOut == NULL )\n        return 0;\n    fprintf( pFile, \"%6s = \", pNameOut );\n    return 10;\n}",
+      "Draft": "func Dec_GraphPrintOutputName(pFile *os.File, pNameOut string) int32 {\n    if pNameOut == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%6s = \", pNameOut);\n    return 10;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::mechanical::static::8014",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8014,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::pointer-cast::2033",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2033,
+      "End": 2042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrint",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1691,
+      "End": 3195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrint2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrint2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3431,
+      "End": 5305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5541,
+      "End": 7684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::ternary::Dec_GraphPrintGetLeafName",
+      "Category": "ternary-review",
+      "Symbol": "Dec_GraphPrintGetLeafName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7920,
+      "End": 8171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrintGetLeafName",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrintGetLeafName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7920,
+      "End": 8171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrintUpdatePos",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrintUpdatePos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8407,
+      "End": 8651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::Dec_GraphPrintOutputName",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphPrintOutputName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8933,
+      "End": 9101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decPrint.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9348
+    }
+  ],
+  "Draft": "package dec\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [decPrint.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures to print the decomposition graphs (factored forms).]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: decPrint.c,v 1.1 2003/05/22 19:20:05 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"dec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void   Dec_GraphPrint_rec( FILE * pFile, Dec_Graph_t * pGraph, Dec_Node_t * pNode, int fCompl, char * pNamesIn[], int * pPos, int LitSizeMax );\n\n// static int    Dec_GraphPrintGetLeafName( FILE * pFile, int iLeaf, int fCompl, char * pNamesIn[] );\n\n// static void   Dec_GraphPrintUpdatePos( FILE * pFile, int * pPos, int LitSizeMax );\n\n// static int    Dec_GraphPrintOutputName( FILE * pFile, char * pNameOut );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the decomposition graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphPrint(pFile *os.File, pGraph *Dec_Graph_t, pNamesIn []string, pNameOut string) {\n    var vNamesIn *Vec_Ptr_t  = nil;\n    var LitSizeMax, LitSizeCur, Pos, i int32;\n\n    // create the names if not given by the user\n    if pNamesIn == nil {\n        vNamesIn = Abc_NodeGetFakeNames( Dec_GraphLeaveNum(pGraph) );\n        pNamesIn = (char **)vNamesIn.pArray;\n    }\n    if pNameOut == nil {\n        pNameOut = \"F\"; }\n\n    // get the size of the longest literal\n    LitSizeMax = 0;\n    for  i = 0; i \u003c Dec_GraphLeaveNum(pGraph); i++  {\n        LitSizeCur = len(pNamesIn[i]);\n        if LitSizeMax \u003c LitSizeCur {\n            LitSizeMax = LitSizeCur; }\n    }\n    if LitSizeMax \u003e 50 {\n        LitSizeMax = 20; }\n\n    // write the decomposition graph (factored form)\n    if Dec_GraphIsConst(pGraph) { // constant\n    \n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        fmt.Fprintf(pFile, \"Constant %d\", !Dec_GraphIsComplement(pGraph));\n    \n    } else if Dec_GraphIsVar(pGraph) { // literal\n    \n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrintGetLeafName( pFile, Dec_GraphVarInt(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn );\n    \n    } else {\n        Pos = Dec_GraphPrintOutputName( pFile, pNameOut );\n        Dec_GraphPrint_rec( pFile, pGraph, Dec_GraphNodeLast(pGraph), Dec_GraphIsComplement(pGraph), pNamesIn, \u0026Pos, LitSizeMax );\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    if vNamesIn != nil {\n        Abc_NodeFreeNames( vNamesIn ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphPrint2_rec(pFile *os.File, pGraph *Dec_Graph_t, pNode *Dec_Node_t, fCompl int32, pNamesIn []string, pPos *int32, LitSizeMax int32) {\n    var pNode0, pNode1 *Dec_Node_t;\n    pNode0 = Dec_GraphNode(pGraph, pNode.eEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode.eEdge1.Node);\n    if Dec_GraphNodeIsVar(pGraph, pNode) { // FT_NODE_LEAF )\n    \n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if !pNode.fNodeOr { // FT_NODE_AND )\n    \n        if !pNode0.fNodeOr { // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n        }\n        fmt.Fprintf(pFile, \" \");\n        (*pPos)++;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        if !pNode1.fNodeOr { // != FT_NODE_OR )\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n        }\n        return;\n    }\n    if pNode.fNodeOr { // FT_NODE_OR )\n    \n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.fCompl0, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \" + \");\n        (*pPos) += 3;\n\n        Dec_GraphPrintUpdatePos( pFile, pPos, LitSizeMax );\n\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.fCompl1, pNamesIn, pPos, LitSizeMax );\n        return;\n    }\n    assert(false, \"0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphPrint_rec(pFile *os.File, pGraph *Dec_Graph_t, pNode *Dec_Node_t, fCompl int32, pNamesIn []string, pPos *int32, LitSizeMax int32) {\n    var pNode0, pNode1 *Dec_Node_t;\n    var pNode00, pNode01, pNode10, pNode11 *Dec_Node_t;\n    pNode0 = Dec_GraphNode(pGraph, pNode.eEdge0.Node);\n    pNode1 = Dec_GraphNode(pGraph, pNode.eEdge1.Node);\n    if Dec_GraphNodeIsVar(pGraph, pNode) { // FT_NODE_LEAF )\n    \n        (*pPos) += Dec_GraphPrintGetLeafName( pFile, Dec_GraphNodeInt(pGraph,pNode), fCompl, pNamesIn );\n        return;\n    }\n    if !Dec_GraphNodeIsVar(pGraph, pNode0) \u0026\u0026 !Dec_GraphNodeIsVar(pGraph, pNode1) {\n        pNode00 = Dec_GraphNode(pGraph, pNode0.eEdge0.Node);\n        pNode01 = Dec_GraphNode(pGraph, pNode0.eEdge1.Node);\n        pNode10 = Dec_GraphNode(pGraph, pNode1.eEdge0.Node);\n        pNode11 = Dec_GraphNode(pGraph, pNode1.eEdge1.Node);\n        if (pNode00 == pNode10 || pNode00 == pNode11) \u0026\u0026 (pNode01 == pNode10 || pNode01 == pNode11) {\n            fmt.Fprintf(pFile, \"(\");\n            (*pPos)++;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode00, pNode00.fCompl0, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \" # \");\n            (*pPos) += 3;\n            Dec_GraphPrint_rec( pFile, pGraph, pNode01, pNode01.fCompl1, pNamesIn, pPos, LitSizeMax );\n            fmt.Fprintf(pFile, \")\");\n            (*pPos)++;\n            return;\n        }\n    }\n    if fCompl != 0 {\n        fmt.Fprintf(pFile, \"(\");\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, !pNode.eEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \" + \");\n        (*pPos) += 3;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, !pNode.eEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \")\");\n        (*pPos)++;\n    \n    } else {\n        fmt.Fprintf(pFile, \"(\");\n        (*pPos)++;\n        Dec_GraphPrint_rec( pFile, pGraph, pNode0, pNode.eEdge0.fCompl, pNamesIn, pPos, LitSizeMax );\n        Dec_GraphPrint_rec( pFile, pGraph, pNode1, pNode.eEdge1.fCompl, pNamesIn, pPos, LitSizeMax );\n        fmt.Fprintf(pFile, \")\");\n        (*pPos)++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Dec_GraphPrintGetLeafName_Buffer string // was [100]byte in C\n\nfunc Dec_GraphPrintGetLeafName(pFile *os.File, iLeaf int32, fCompl int32, pNamesIn []string) int32 {\n    \n    spStatic_Dec_GraphPrintGetLeafName_Buffer = fmt.Sprintf(\"%s%s\", fCompl? \"!\" : \"\", pNamesIn[iLeaf]);\n    fprintf( pFile, \"%s\", spStatic_Dec_GraphPrintGetLeafName_Buffer );\n    return strlen( spStatic_Dec_GraphPrintGetLeafName_Buffer );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphPrintUpdatePos(pFile *os.File, pPos *int32, LitSizeMax int32) {\n    var i int32;\n    if *pPos + LitSizeMax \u003c 77 {\n        return; }\n    fmt.Fprintf(pFile, \"\\n\");\n    for  i = 0; i \u003c 10; i++  {\n        fmt.Fprintf(pFile, \" \");\n    }\n    *pPos = 10;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the printout for a decomposition graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphPrintOutputName(pFile *os.File, pNameOut string) int32 {\n    if pNameOut == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%6s = \", pNameOut);\n    return 10;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

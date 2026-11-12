@@ -1,0 +1,259 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c",
+  "SHA256": "e07e7b668487132a9192170f7f2f058053122e6675364f83509c3b37a617aa6d",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 35,
+        "Column": 29,
+        "ByteOffset": 741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var nodesFile *os.File  = fopen(filename, \"w\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 37,
+        "Column": 5,
+        "ByteOffset": 785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .nodes file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 38,
+        "Column": 5,
+        "ByteOffset": 836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 51,
+        "Column": 3,
+        "ByteOffset": 1050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fprintf(nodesFile, \"UCLA nodes 1.0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 52,
+        "Column": 3,
+        "ByteOffset": 1092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fprintf(nodesFile, \"NumNodes : %d\\n\", numNodes);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 3,
+        "ByteOffset": 1143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fprintf(nodesFile, \"NumTerminals : %d\\n\", numTerms);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(nodesFile, \"CELL%d %f %f %s\\n\", "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 64,
+        "Column": 3,
+        "ByteOffset": 1549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(nodesFile);  "
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 76,
+        "Column": 26,
+        "ByteOffset": 1828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var plFile *os.File  = fopen(filename, \"w\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 1869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: Could not open .pl file\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 1917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 3,
+        "ByteOffset": 1933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fprintf(plFile, \"UCLA pl 1.0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(plFile, \"CELL%d %f %f : N %s\\n\", "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 92,
+        "Column": 3,
+        "ByteOffset": 2285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  fclose(plFile);  "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "writeBookshelfNodes",
+      "Start": 576,
+      "End": 1521,
+      "BodyStart": 623,
+      "Original": "void writeBookshelfNodes(const char *filename) {\n  \n  int c = 0;\n  int numNodes, numTerms;\n\n  FILE *nodesFile = fopen(filename, \"w\");\n  if (!nodesFile) {\n    printf(\"ERROR: Could not open .nodes file\\n\");\n    exit(1);\n  }\n\n  numNodes = numTerms = 0;\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      numNodes++;\n      if (g_place_concreteCells[c]-\u003em_parent-\u003em_pad)\n        numTerms++;\n    }\n\n\n\n  fprintf(nodesFile, \"UCLA nodes 1.0\\n\");\n  fprintf(nodesFile, \"NumNodes : %d\\n\", numNodes);\n  fprintf(nodesFile, \"NumTerminals : %d\\n\", numTerms);\n\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n    fprintf(nodesFile, \"CELL%d %f %f %s\\n\", \n            g_place_concreteCells[c]-\u003em_id,\n            g_place_concreteCells[c]-\u003em_parent-\u003em_width,\n            g_place_concreteCells[c]-\u003em_parent-\u003em_height,\n            (g_place_concreteCells[c]-\u003em_parent-\u003em_pad ? \" terminal\" : \"\"));\n  }\n\n  fclose(nodesFile);  \n}",
+      "Draft": "func writeBookshelfNodes(filename string) {\n  \n  var c int32;\n  var numNodes, numTerms int32;\n\n  var nodesFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(nodesFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nodes file\\n\");\n    os.Exit(int(1));\n  }\n\n  numNodes = numTerms = 0;\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n      numNodes++;\n      if g_place_concreteCells[c].m_parent.m_pad {\n        numTerms++; }\n    }\n  }\n\n\n\n  fmt.Fprintf(nodesFile, \"UCLA nodes 1.0\\n\");\n  fmt.Fprintf(nodesFile, \"NumNodes : %d\\n\", numNodes);\n  fmt.Fprintf(nodesFile, \"NumTerminals : %d\\n\", numTerms);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    fmt.Fprintf(nodesFile, \"CELL%d %f %f %s\\n\", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_parent.m_width, g_place_concreteCells[c].m_parent.m_height, (g_place_concreteCells[c].m_parent.m_pad ? \" terminal\" : \"\"));\n  }\n  }\n\n  _ = (nodesFile).Close();  \n}"
+    },
+    {
+      "Name": "writeBookshelfPl",
+      "Start": 1693,
+      "End": 2253,
+      "BodyStart": 1737,
+      "Original": "void writeBookshelfPl(const char *filename) {\n  \n  int c = 0;\n\n  FILE *plFile = fopen(filename, \"w\");\n  if (!plFile) {\n    printf(\"ERROR: Could not open .pl file\\n\");\n    exit(1);\n  }\n\n  fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for(c=0; c\u003cg_place_numCells; c++)  if (g_place_concreteCells[c]) {\n    fprintf(plFile, \"CELL%d %f %f : N %s\\n\", \n            g_place_concreteCells[c]-\u003em_id,\n            g_place_concreteCells[c]-\u003em_x,\n            g_place_concreteCells[c]-\u003em_y,\n            (g_place_concreteCells[c]-\u003em_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n\n  fclose(plFile);  \n\n}",
+      "Draft": "func writeBookshelfPl(filename string) {\n  \n  var c int32;\n\n  var plFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n\n  fmt.Fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for c=0; c\u003cg_place_numCells; c++ {  if g_place_concreteCells[c] {\n    fmt.Fprintf(plFile, \"CELL%d %f %f : N %s\\n\", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_x, g_place_concreteCells[c].m_y, (g_place_concreteCells[c].m_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n  }\n\n  _ = (plFile).Close();  \n\n}"
+    },
+    {
+      "Name": "writeBookshelf",
+      "Start": 2423,
+      "End": 2534,
+      "BodyStart": 2465,
+      "Original": "void writeBookshelf(const char *filename) {\n  writeBookshelfNodes(\"out.nodes\");\n  writeBookshelfPl(\"out.pl\");\n}",
+      "Draft": "func writeBookshelf(filename string) {\n  writeBookshelfNodes(\"out.nodes\");\n  writeBookshelfPl(\"out.pl\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::ternary::writeBookshelfNodes",
+      "Category": "ternary-review",
+      "Symbol": "writeBookshelfNodes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 576,
+      "End": 1521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::writeBookshelfNodes",
+      "Category": "semantic-review",
+      "Symbol": "writeBookshelfNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 576,
+      "End": 1521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::ternary::writeBookshelfPl",
+      "Category": "ternary-review",
+      "Symbol": "writeBookshelfPl",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1693,
+      "End": 2253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::writeBookshelfPl",
+      "Category": "semantic-review",
+      "Symbol": "writeBookshelfPl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1693,
+      "End": 2253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::writeBookshelf",
+      "Category": "semantic-review",
+      "Symbol": "writeBookshelf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2423,
+      "End": 2534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_io.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2559
+    }
+  ],
+  "Draft": "package place\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*===================================================================*/\n//  \n//     place_io.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdio.h\u003e\n\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n// --------------------------------------------------------------------\n// writeBookshelfNodes()\n//\n// --------------------------------------------------------------------\nfunc writeBookshelfNodes(filename string) {\n  \n  var c int32;\n  var numNodes, numTerms int32;\n\n  var nodesFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(nodesFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .nodes file\\n\");\n    os.Exit(int(1));\n  }\n\n  numNodes = numTerms = 0;\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n      numNodes++;\n      if g_place_concreteCells[c].m_parent.m_pad {\n        numTerms++; }\n    }\n  }\n\n\n\n  fmt.Fprintf(nodesFile, \"UCLA nodes 1.0\\n\");\n  fmt.Fprintf(nodesFile, \"NumNodes : %d\\n\", numNodes);\n  fmt.Fprintf(nodesFile, \"NumTerminals : %d\\n\", numTerms);\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    fmt.Fprintf(nodesFile, \"CELL%d %f %f %s\\n\", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_parent.m_width, g_place_concreteCells[c].m_parent.m_height, (g_place_concreteCells[c].m_parent.m_pad ? \" terminal\" : \"\"));\n  }\n  }\n\n  _ = (nodesFile).Close();  \n}\n\n\n// --------------------------------------------------------------------\n// writeBookshelfPl()\n//\n// --------------------------------------------------------------------\nfunc writeBookshelfPl(filename string) {\n  \n  var c int32;\n\n  var plFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n  if !(plFile != nil) {\n    fmt.Printf(\"ERROR: Could not open .pl file\\n\");\n    os.Exit(int(1));\n  }\n\n  fmt.Fprintf(plFile, \"UCLA pl 1.0\\n\");\n  for c=0; c\u003cg_place_numCells; c++ {  if g_place_concreteCells[c] {\n    fmt.Fprintf(plFile, \"CELL%d %f %f : N %s\\n\", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_x, g_place_concreteCells[c].m_y, (g_place_concreteCells[c].m_fixed ? \"\\\\FIXED\" : \"\"));\n  }\n  }\n\n  _ = (plFile).Close();  \n\n}\n\n\n// --------------------------------------------------------------------\n// writeBookshelf()\n//\n// --------------------------------------------------------------------\nfunc writeBookshelf(filename string) {\n  writeBookshelfNodes(\"out.nodes\");\n  writeBookshelfPl(\"out.pl\");\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

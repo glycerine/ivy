@@ -1,0 +1,791 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c",
+  "SHA256": "d8dfaac5a06fbd6d84feb328d792781262c06de4c9501a8b5bde441874c40daa",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 11036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == 1 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 280,
+        "Column": 75,
+        "ByteOffset": 11506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)(p.nObjsAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 12210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abstraction refinement runtime statistics:\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 297,
+        "Column": 76,
+        "ByteOffset": 12436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 299,
+        "Column": 76,
+        "ByteOffset": 12711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 301,
+        "Column": 76,
+        "ByteOffset": 12986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 303,
+        "Column": 76,
+        "ByteOffset": 13261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 305,
+        "Column": 78,
+        "ByteOffset": 13538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 13655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 320,
+        "Column": 63,
+        "ByteOffset": 14225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 321,
+        "Column": 57,
+        "ByteOffset": 14328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 9,
+        "ByteOffset": 15388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 15917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 16552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 16585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pObj.Value) == Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 13,
+        "ByteOffset": 17882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 17,
+        "ByteOffset": 18133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObj.Value \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 18435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 13,
+        "ByteOffset": 18572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !pRnm.fPPi );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 436,
+        "Column": 13,
+        "ByteOffset": 19155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 19889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 20019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output value is incorrect.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 475,
+        "Column": 5,
+        "ByteOffset": 20677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRnm.fVisit == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 20874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pRnm.Prio) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 21488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 510,
+        "Column": 9,
+        "ByteOffset": 22061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 9,
+        "ByteOffset": 23130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pRnm.Prio) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 586,
+        "Column": 22,
+        "ByteOffset": 25243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 589,
+        "Column": 14,
+        "ByteOffset": 25286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 677,
+        "Column": 38,
+        "ByteOffset": 28555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pObjs = ((Rnm_Obj_t *) realloc((char *)(p.pObjs), sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 679,
+        "Column": 38,
+        "ByteOffset": 28702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pObjs = ((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 681,
+        "Column": 5,
+        "ByteOffset": 28791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pObjs, 0, sizeof(Rnm_Obj_t) * p.nObjs );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rnm_ManStart",
+      "Start": 10950,
+      "End": 11625,
+      "BodyStart": 10995,
+      "Original": "Rnm_Man_t * Rnm_ManStart( Gia_Man_t * pGia )\n{\n    Rnm_Man_t * p;\n    assert( Gia_ManPoNum(pGia) == 1 );\n    p = ABC_CALLOC( Rnm_Man_t, 1 );\n    p-\u003epGia = pGia;\n    p-\u003evObjs = Vec_IntAlloc( 100 );\n    p-\u003evCounts = Vec_StrStart( Gia_ManObjNum(pGia) );\n    p-\u003evFanins = Vec_IntAlloc( 1000 );\n//    p-\u003evSatVars = Vec_IntAlloc( 0 );\n//    p-\u003evSat2Ids = Vec_IntAlloc( 1000 );\n//    p-\u003evIsopMem  = Vec_IntAlloc( 0 );\n    p-\u003enObjsAlloc = 10000;\n    p-\u003epObjs = ABC_ALLOC( Rnm_Obj_t, p-\u003enObjsAlloc );\n    if ( p-\u003epGia-\u003evFanout == NULL )\n        Gia_ManStaticFanoutStart( p-\u003epGia );\n    Gia_ManCleanValue(pGia);\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}",
+      "Draft": "func Rnm_ManStart(pGia *Gia_Man_t) *Rnm_Man_t {\n    \n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Rnm_Man_t{};\n    p.pGia = pGia;\n    p.vObjs = Vec_IntAlloc( 100 );\n    p.vCounts = Vec_StrStart( Gia_ManObjNum(pGia) );\n    p.vFanins = Vec_IntAlloc( 1000 );\n//    p-\u003evSatVars = Vec_IntAlloc( 0 );\n//    p-\u003evSat2Ids = Vec_IntAlloc( 1000 );\n//    p-\u003evIsopMem  = Vec_IntAlloc( 0 );\n    p.nObjsAlloc = 10000;\n    // inlining of macro ABC_ALLOC\n    p.pObjs = ((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)(p.nObjsAlloc)));\n    if p.pGia.vFanout == nil {\n        Gia_ManStaticFanoutStart( p.pGia ); }\n    Gia_ManCleanValue(pGia);\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}"
+    },
+    {
+      "Name": "Rnm_ManStop",
+      "Start": 11626,
+      "End": 13054,
+      "BodyStart": 11674,
+      "Original": "void Rnm_ManStop( Rnm_Man_t * p, int fProfile )\n{\n    if ( !p ) return;\n    // print runtime statistics\n    if ( fProfile \u0026\u0026 p-\u003enCalls )\n    {\n        double MemGia = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p-\u003epGia-\u003enObjsAlloc + sizeof(int) * p-\u003epGia-\u003enTravIdsAlloc;\n        double MemOther = sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p-\u003enObjsAlloc + sizeof(int) * Vec_IntCap(p-\u003evObjs);\n        abctime timeOther = p-\u003etimeTotal - p-\u003etimeFwd - p-\u003etimeBwd - p-\u003etimeVer;\n        printf( \"Abstraction refinement runtime statistics:\\n\" );\n        ABC_PRTP( \"Sensetization\", p-\u003etimeFwd,   p-\u003etimeTotal );\n        ABC_PRTP( \"Justification\", p-\u003etimeBwd,   p-\u003etimeTotal );\n        ABC_PRTP( \"Verification \", p-\u003etimeVer,   p-\u003etimeTotal );\n        ABC_PRTP( \"Other        \", timeOther,    p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL        \", p-\u003etimeTotal, p-\u003etimeTotal );\n        printf( \"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", \n            p-\u003enCalls, 1.0*p-\u003enRefines/p-\u003enCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20) );\n    }\n\n    Gia_ManCleanMark0(p-\u003epGia);\n    Gia_ManCleanMark1(p-\u003epGia);\n    Gia_ManStaticFanoutStop(p-\u003epGia);\n//    Gia_ManSetPhase(p-\u003epGia);\n//    Vec_IntFree( p-\u003evIsopMem );\n//    Vec_IntFree( p-\u003evSatVars );\n//    Vec_IntFree( p-\u003evSat2Ids );\n    Vec_StrFree( p-\u003evCounts );\n    Vec_IntFree( p-\u003evFanins );\n    Vec_IntFree( p-\u003evObjs );\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Rnm_ManStop(p *Rnm_Man_t, fProfile int32) {\n    if !p { return; }\n    // print runtime statistics\n    if (fProfile != 0) \u0026\u0026 p.nCalls {\n        var MemGia float64  = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p.pGia.nObjsAlloc + sizeof(int) * p.pGia.nTravIdsAlloc;\n        var MemOther float64  = sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs);\n        var timeOther abctime  = p.timeTotal - p.timeFwd - p.timeBwd - p.timeVer;\n        fmt.Printf(\"Abstraction refinement runtime statistics:\\n\");\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sensetization\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Justification\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Verification \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n        fmt.Printf(\"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", p.nCalls, 1.0*p.nRefines/p.nCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20));\n    }\n\n    Gia_ManCleanMark0(p.pGia);\n    Gia_ManCleanMark1(p.pGia);\n    Gia_ManStaticFanoutStop(p.pGia);\n//    Gia_ManSetPhase(p-\u003epGia);\n//    Vec_IntFree( p-\u003evIsopMem );\n//    Vec_IntFree( p-\u003evSatVars );\n//    Vec_IntFree( p-\u003evSat2Ids );\n    Vec_StrFree( p.vCounts );\n    Vec_IntFree( p.vFanins );\n    Vec_IntFree( p.vObjs );\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Rnm_ManMemoryUsage",
+      "Start": 13055,
+      "End": 13214,
+      "BodyStart": 13098,
+      "Original": "double Rnm_ManMemoryUsage( Rnm_Man_t * p )\n{\n    return (double)(sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p-\u003enObjsAlloc + sizeof(int) * Vec_IntCap(p-\u003evObjs));\n}",
+      "Draft": "func Rnm_ManMemoryUsage(p *Rnm_Man_t) float64 {\n    return float64((sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs)));\n}"
+    },
+    {
+      "Name": "Rnm_ManCollect_rec",
+      "Start": 13570,
+      "End": 14195,
+      "BodyStart": 13660,
+      "Original": "void Rnm_ManCollect_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vObjs, int nAddOn )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCo(pObj) )\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n        Rnm_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs, nAddOn );\n    }\n    else if ( !Gia_ObjIsRo(p, pObj) )\n        assert( 0 );\n    pObj-\u003eValue = Vec_IntSize(vObjs) + nAddOn;\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Rnm_ManCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vObjs *Vec_Int_t, nAddOn int32) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCo(pObj) {\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n    } else if Gia_ObjIsAnd(pObj) {\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n        Rnm_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs, nAddOn );\n    \n    } else if !Gia_ObjIsRo(p, pObj) {\n        assert(false, \"0\"); }\n    pObj.Value = Vec_IntSize(vObjs) + nAddOn;\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Rnm_ManCollect",
+      "Start": 14196,
+      "End": 15153,
+      "BodyStart": 14233,
+      "Original": "void Rnm_ManCollect( Rnm_Man_t * p )\n{\n    Gia_Obj_t * pObj = NULL;\n    int i;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p-\u003epGia );\n    Gia_ObjSetTravIdCurrent( p-\u003epGia, Gia_ManConst0(p-\u003epGia) );\n    Gia_ManConst0(p-\u003epGia)-\u003eValue = 0;\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n    {\n        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n        Gia_ObjSetTravIdCurrent( p-\u003epGia, pObj );\n        pObj-\u003eValue = 1 + i;\n    }\n    // collect objects\n    Vec_IntClear( p-\u003evObjs );\n    Rnm_ManCollect_rec( p-\u003epGia, Gia_ManPo(p-\u003epGia, 0), p-\u003evObjs, 1 + Vec_IntSize(p-\u003evMap) );\n    Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            Rnm_ManCollect_rec( p-\u003epGia, Gia_ObjRoToRi(p-\u003epGia, pObj), p-\u003evObjs, 1 + Vec_IntSize(p-\u003evMap) );\n    // the last object should be a CO\n    assert( Gia_ObjIsCo(pObj) );\n    assert( (int)pObj-\u003eValue == Vec_IntSize(p-\u003evMap) + Vec_IntSize(p-\u003evObjs) );\n}",
+      "Draft": "func Rnm_ManCollect(p *Rnm_Man_t) {\n    var pObj *Gia_Obj_t  = nil;\n    var i int32;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrent( p.pGia, Gia_ManConst0(p.pGia) );\n    Gia_ManConst0(p.pGia).Value = 0;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n        pObj.Value = 1 + i;\n    }\n    // collect objects\n    Vec_IntClear( p.vObjs );\n    Rnm_ManCollect_rec( p.pGia, Gia_ManPo(p.pGia, 0), p.vObjs, 1 + Vec_IntSize(p.vMap) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            Rnm_ManCollect_rec( p.pGia, Gia_ObjRoToRi(p.pGia, pObj), p.vObjs, 1 + Vec_IntSize(p.vMap) ); }\n    }\n    // the last object should be a CO\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    assert(int32(pObj.Value) == Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs), \"int32(pObj.Value) == Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs)\");\n}"
+    },
+    {
+      "Name": "Rnm_ManCleanValues",
+      "Start": 15154,
+      "End": 15390,
+      "BodyStart": 15195,
+      "Original": "void Rnm_ManCleanValues( Rnm_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        pObj-\u003eValue = 0;\n    Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        pObj-\u003eValue = 0;\n}",
+      "Draft": "func Rnm_ManCleanValues(p *Rnm_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        pObj.Value = 0;\n    }\n}"
+    },
+    {
+      "Name": "Rnm_ManSensitize",
+      "Start": 15658,
+      "End": 18191,
+      "BodyStart": 15696,
+      "Original": "int Rnm_ManSensitize( Rnm_Man_t * p )\n{\n    Rnm_Obj_t * pRnm, * pRnm0, * pRnm1;\n    Gia_Obj_t * pObj;\n    int f, i, iBit = p-\u003epCex-\u003enRegs;\n    // const0 is initialized automatically in all timeframes\n    for ( f = 0; f \u003c= p-\u003epCex-\u003eiFrame; f++, iBit += p-\u003epCex-\u003enPis )\n    {\n        Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n            pRnm = Rnm_ManObj( p, pObj, f );\n            pRnm-\u003eValue = Abc_InfoHasBit( p-\u003epCex-\u003epData, iBit + i );\n            if ( !Gia_ObjIsPi(p-\u003epGia, pObj) ) // this is PPI\n            {\n                assert( pObj-\u003eValue \u003e 0 );\n                pRnm-\u003ePrio = pObj-\u003eValue;\n                pRnm-\u003efPPi = 1;\n            }\n        }\n        Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsRo(p-\u003epGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) );\n            pRnm = Rnm_ManObj( p, pObj, f );\n            assert( !pRnm-\u003efPPi );\n            if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            {\n                if ( f == 0 )\n                    continue;\n                pRnm0 = Rnm_ManObj( p, Gia_ObjRoToRi(p-\u003epGia, pObj), f-1 );\n                pRnm-\u003eValue = pRnm0-\u003eValue;\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n                continue;\n            }\n            if ( Gia_ObjIsCo(pObj) )\n            {\n                pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm-\u003eValue = (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj));\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n                continue;\n            }\n            assert( Gia_ObjIsAnd(pObj) );\n            pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm-\u003eValue = (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj));\n            if ( pRnm-\u003eValue == 1 )\n                pRnm-\u003ePrio  = Abc_MaxInt( pRnm0-\u003ePrio, pRnm1-\u003ePrio );\n            else if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj)) == 0 )\n                pRnm-\u003ePrio  = Abc_MinInt( pRnm0-\u003ePrio, pRnm1-\u003ePrio ); // choice\n            else if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 )\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n            else \n                pRnm-\u003ePrio  = pRnm1-\u003ePrio;\n        }\n    }\n    assert( iBit == p-\u003epCex-\u003enBits );\n    pRnm = Rnm_ManObj( p, Gia_ManPo(p-\u003epGia, 0), p-\u003epCex-\u003eiFrame );\n    if ( pRnm-\u003eValue != 1 )\n        printf( \"Output value is incorrect.\\n\" );\n    return pRnm-\u003ePrio;\n}",
+      "Draft": "func Rnm_ManSensitize(p *Rnm_Man_t) int32 {\n    var pRnm, pRnm0, pRnm1 *Rnm_Obj_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // const0 is initialized automatically in all timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pRnm = Rnm_ManObj( p, pObj, f );\n            pRnm.Value = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                assert(pObj.Value \u003e 0, \"pObj.Value \u003e 0\");\n                pRnm.Prio = pObj.Value;\n                pRnm.fPPi = 1;\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj)\");\n            pRnm = Rnm_ManObj( p, pObj, f );\n            assert(!pRnm.fPPi, \"!pRnm.fPPi\");\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    continue; }\n                pRnm0 = Rnm_ManObj( p, Gia_ObjRoToRi(p.pGia, pObj), f-1 );\n                pRnm.Value = pRnm0.Value;\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj));\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj));\n            if pRnm.Value == 1 {\n                pRnm.Prio  = Abc_MaxInt( pRnm0.Prio, pRnm1.Prio );\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                pRnm.Prio  = Abc_MinInt( pRnm0.Prio, pRnm1.Prio ); // choice\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                pRnm.Prio  = pRnm0.Prio;\n            } else { \n                pRnm.Prio  = pRnm1.Prio; }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    pRnm = Rnm_ManObj( p, Gia_ManPo(p.pGia, 0), p.pCex.iFrame );\n    if pRnm.Value != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return pRnm.Prio;\n}"
+    },
+    {
+      "Name": "Rnm_ManJustifyPropFanout_rec",
+      "Start": 18489,
+      "End": 20607,
+      "BodyStart": 18586,
+      "Original": "void Rnm_ManJustifyPropFanout_rec( Rnm_Man_t * p, Gia_Obj_t * pObj, int f, Vec_Int_t * vSelect )\n{\n    Rnm_Obj_t * pRnm0, * pRnm1, * pRnm = Rnm_ManObj( p, pObj, f );\n    Gia_Obj_t * pFanout = NULL;\n    int i, k;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    assert( pRnm-\u003efVisit == 0 );\n    pRnm-\u003efVisit = 1;\n    if ( Rnm_ManObj( p, pObj, 0 )-\u003efVisitJ == 0 )\n    {\n        Rnm_ManObj( p, pObj, 0 )-\u003efVisitJ = 1;\n        p-\u003enVisited++;\n    }\n    if ( pRnm-\u003efPPi )\n    {\n        assert( (int)pRnm-\u003ePrio \u003e 0 );\n        for ( i = p-\u003epCex-\u003eiFrame; i \u003e= 0; i-- )\n            if ( !Rnm_ManObj(p, pObj, i)-\u003efVisit )\n                Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect );\n        Vec_IntPush( vSelect, Gia_ObjId(p-\u003epGia, pObj) );\n        return;\n    }\n    if ( (Gia_ObjIsCo(pObj) \u0026\u0026 f == p-\u003epCex-\u003eiFrame) || Gia_ObjIsPo(p-\u003epGia, pObj) )\n        return;\n    if ( Gia_ObjIsRi(p-\u003epGia, pObj) )\n    {\n        pFanout = Gia_ObjRiToRo(p-\u003epGia, pObj);\n        if ( !Rnm_ManObj(p, pFanout, f+1)-\u003efVisit )\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f+1, vSelect );\n        return;\n    }\n    assert( Gia_ObjIsRo(p-\u003epGia, pObj) || Gia_ObjIsAnd(pObj) );\n    Gia_ObjForEachFanoutStatic( p-\u003epGia, pObj, pFanout, k )\n    {\n        Rnm_Obj_t * pRnmF;\n        if ( pFanout-\u003eValue == 0 )\n            continue;\n        pRnmF = Rnm_ManObj(p, pFanout, f);\n        if ( pRnmF-\u003efPPi || pRnmF-\u003efVisit )\n            continue;\n        if ( Gia_ObjIsCo(pFanout) )\n        {\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect );\n            continue;\n        } \n        assert( Gia_ObjIsAnd(pFanout) );\n        pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pFanout), f );\n        pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pFanout), f );\n        if ( ((pRnm0-\u003eValue ^ Gia_ObjFaninC0(pFanout)) == 0 \u0026\u0026 pRnm0-\u003efVisit) ||\n             ((pRnm1-\u003eValue ^ Gia_ObjFaninC1(pFanout)) == 0 \u0026\u0026 pRnm1-\u003efVisit) || \n           ( ((pRnm0-\u003eValue ^ Gia_ObjFaninC0(pFanout)) == 1 \u0026\u0026 pRnm0-\u003efVisit) \u0026\u0026 \n             ((pRnm1-\u003eValue ^ Gia_ObjFaninC1(pFanout)) == 1 \u0026\u0026 pRnm1-\u003efVisit) ) )\n           Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect );\n    }\n}",
+      "Draft": "func Rnm_ManJustifyPropFanout_rec(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32, vSelect *Vec_Int_t) {\n    var pRnm0 *Rnm_Obj_t;\n    var pRnm1 *Rnm_Obj_t;\n    var pRnm *Rnm_Obj_t = Rnm_ManObj( p, pObj, f );\n    var pFanout *Gia_Obj_t  = nil;\n    var i, k int32;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    assert(pRnm.fVisit == 0, \"pRnm.fVisit == 0\");\n    pRnm.fVisit = 1;\n    if Rnm_ManObj( p, pObj, 0 ).fVisitJ == 0 {\n        Rnm_ManObj( p, pObj, 0 ).fVisitJ = 1;\n        p.nVisited++;\n    }\n    if pRnm.fPPi {\n        assert(int32(pRnm.Prio) \u003e 0, \"int32(pRnm.Prio) \u003e 0\");\n        for  i = p.pCex.iFrame; i \u003e= 0; i--  {\n            if !Rnm_ManObj(p, pObj, i).fVisit {\n                Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect ); }\n        }\n        Vec_IntPush( vSelect, Gia_ObjId(p.pGia, pObj) );\n        return;\n    }\n    if (Gia_ObjIsCo(pObj) \u0026\u0026 f == p.pCex.iFrame) || Gia_ObjIsPo(p.pGia, pObj) {\n        return; }\n    if Gia_ObjIsRi(p.pGia, pObj) {\n        pFanout = Gia_ObjRiToRo(p.pGia, pObj);\n        if !Rnm_ManObj(p, pFanout, f+1).fVisit {\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f+1, vSelect ); }\n        return;\n    }\n    assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_ObjForEachFanoutStatic\n    for  k = 0; (k \u003c Gia_ObjFanoutNum(p.pGia, pObj))   \u0026\u0026 (((pFanout) = Gia_ObjFanout(p.pGia, pObj, k)), 1); k++  {\n        var pRnmF *Rnm_Obj_t;\n        if pFanout.Value == 0 {\n            continue; }\n        pRnmF = Rnm_ManObj(p, pFanout, f);\n        if pRnmF.fPPi || pRnmF.fVisit {\n            continue; }\n        if Gia_ObjIsCo(pFanout) {\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect );\n            continue;\n        } \n        assert(Gia_ObjIsAnd(pFanout), \"Gia_ObjIsAnd(pFanout)\");\n        pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pFanout), f );\n        pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pFanout), f );\n        if ((pRnm0.Value ^ Gia_ObjFaninC0(pFanout)) == 0 \u0026\u0026 pRnm0.fVisit) ||\n             ((pRnm1.Value ^ Gia_ObjFaninC1(pFanout)) == 0 \u0026\u0026 pRnm1.fVisit) || \n           ( ((pRnm0.Value ^ Gia_ObjFaninC0(pFanout)) == 1 \u0026\u0026 pRnm0.fVisit) \u0026\u0026 \n             ((pRnm1.Value ^ Gia_ObjFaninC1(pFanout)) == 1 \u0026\u0026 pRnm1.fVisit) ) {\n           Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect ); }\n    }\n}"
+    },
+    {
+      "Name": "Rnm_ManJustify_rec",
+      "Start": 20608,
+      "End": 23423,
+      "BodyStart": 20695,
+      "Original": "void Rnm_ManJustify_rec( Rnm_Man_t * p, Gia_Obj_t * pObj, int f, Vec_Int_t * vSelect )\n{ \n    Rnm_Obj_t * pRnm = Rnm_ManObj( p, pObj, f );\n    int i;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    if ( pRnm-\u003efVisit )\n        return;\n    if ( p-\u003efPropFanout )\n        Rnm_ManJustifyPropFanout_rec( p, pObj, f, vSelect );\n    else\n    {\n        pRnm-\u003efVisit = 1;\n        if ( Rnm_ManObj( p, pObj, 0 )-\u003efVisitJ == 0 )\n        {\n            Rnm_ManObj( p, pObj, 0 )-\u003efVisitJ = 1;\n            p-\u003enVisited++;\n        }\n    }\n    if ( pRnm-\u003efPPi )\n    {\n        assert( (int)pRnm-\u003ePrio \u003e 0 );\n        if ( p-\u003efPropFanout )\n        {\n            for ( i = p-\u003epCex-\u003eiFrame; i \u003e= 0; i-- )\n                if ( !Rnm_ManObj(p, pObj, i)-\u003efVisit )\n                    Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect );\n        }\n        else\n        {\n            Vec_IntPush( vSelect, Gia_ObjId(p-\u003epGia, pObj) );\n//            for ( i = p-\u003epCex-\u003eiFrame; i \u003e= 0; i-- )\n//                Rnm_ManObj(p, pObj, i)-\u003efVisit = 1;\n        }\n        return;\n    }\n    if ( Gia_ObjIsPi(p-\u003epGia, pObj) || Gia_ObjIsConst0(pObj) )\n        return;\n    if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n    {\n        if ( f \u003e 0 )\n            Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ObjRoToRi(p-\u003epGia, pObj)), f-1, vSelect );\n        return;\n    }\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Rnm_Obj_t * pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n        Rnm_Obj_t * pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n        if ( pRnm-\u003eValue == 1 )\n        {\n            if ( pRnm0-\u003ePrio \u003e 0 )\n                Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect );\n            if ( pRnm1-\u003ePrio \u003e 0 )\n                Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect );\n        }\n        else // select one value\n        {\n            if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj)) == 0 )\n            {\n                if ( pRnm0-\u003ePrio \u003c= pRnm1-\u003ePrio ) // choice\n                {\n                    if ( pRnm0-\u003ePrio \u003e 0 )\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect );\n                }\n                else\n                {\n                    if ( pRnm1-\u003ePrio \u003e 0 )\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect );\n                }\n            }\n            else if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 )\n            {\n                if ( pRnm0-\u003ePrio \u003e 0 )\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect );\n            }\n            else if ( (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj)) == 0 )\n            {\n                if ( pRnm1-\u003ePrio \u003e 0 )\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect );\n            }\n            else assert( 0 );\n        }\n    }\n    else assert( 0 );\n}",
+      "Draft": "func Rnm_ManJustify_rec(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32, vSelect *Vec_Int_t) { \n    var pRnm *Rnm_Obj_t  = Rnm_ManObj( p, pObj, f );\n    var i int32;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    if pRnm.fVisit {\n        return; }\n    if p.fPropFanout {\n        Rnm_ManJustifyPropFanout_rec( p, pObj, f, vSelect );\n    } else {\n        pRnm.fVisit = 1;\n        if Rnm_ManObj( p, pObj, 0 ).fVisitJ == 0 {\n            Rnm_ManObj( p, pObj, 0 ).fVisitJ = 1;\n            p.nVisited++;\n        }\n    }\n    if pRnm.fPPi {\n        assert(int32(pRnm.Prio) \u003e 0, \"int32(pRnm.Prio) \u003e 0\");\n        if p.fPropFanout {\n            for  i = p.pCex.iFrame; i \u003e= 0; i--  {\n                if !Rnm_ManObj(p, pObj, i).fVisit {\n                    Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect ); }\n            }\n        \n        } else {\n            Vec_IntPush( vSelect, Gia_ObjId(p.pGia, pObj) );\n//            for ( i = p-\u003epCex-\u003eiFrame; i \u003e= 0; i-- )\n//                Rnm_ManObj(p, pObj, i)-\u003efVisit = 1;\n        }\n        return;\n    }\n    if Gia_ObjIsPi(p.pGia, pObj) || Gia_ObjIsConst0(pObj) {\n        return; }\n    if Gia_ObjIsRo(p.pGia, pObj) {\n        if f \u003e 0 {\n            Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ObjRoToRi(p.pGia, pObj)), f-1, vSelect ); }\n        return;\n    }\n    if Gia_ObjIsAnd(pObj) {\n        var pRnm0 *Rnm_Obj_t  = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n        var pRnm1 *Rnm_Obj_t  = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n        if pRnm.Value == 1 {\n            if pRnm0.Prio \u003e 0 {\n                Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n            if pRnm1.Prio \u003e 0 {\n                Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n        \n        } else { // select one value\n        \n            if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                if pRnm0.Prio \u003c= pRnm1.Prio { // choice\n                \n                    if pRnm0.Prio \u003e 0 {\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n                \n                } else {\n                    if pRnm1.Prio \u003e 0 {\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n                }\n            \n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                if pRnm0.Prio \u003e 0 {\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n            \n            } else if (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                if pRnm1.Prio \u003e 0 {\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n            \n            } else { assert(false, \"0\"); }\n        }\n    \n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Rnm_ManVerifyUsingTerSim",
+      "Start": 23679,
+      "End": 25136,
+      "BodyStart": 23799,
+      "Original": "void Rnm_ManVerifyUsingTerSim( Gia_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, Vec_Int_t * vObjs, Vec_Int_t * vRes )\n{\n    Gia_Obj_t * pObj;\n    int i, f, iBit = pCex-\u003enRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++, iBit += pCex-\u003enPis )\n    {\n        Gia_ManForEachObjVec( vMap, p, pObj, i )\n        {\n            pObj-\u003eValue = Abc_InfoHasBit( pCex-\u003epData, iBit + i );\n            if ( !Gia_ObjIsPi(p, pObj) )\n                Gia_ObjTerSimSetX( pObj );\n            else if ( pObj-\u003eValue )\n                Gia_ObjTerSimSet1( pObj );\n            else\n                Gia_ObjTerSimSet0( pObj );\n        }\n        Gia_ManForEachObjVec( vRes, p, pObj, i ) // vRes is subset of vMap\n        {\n            if ( pObj-\u003eValue )\n                Gia_ObjTerSimSet1( pObj );\n            else\n                Gia_ObjTerSimSet0( pObj );\n        }\n        Gia_ManForEachObjVec( vObjs, p, pObj, i )\n        {\n            if ( Gia_ObjIsCo(pObj) )\n                Gia_ObjTerSimCo( pObj );\n            else if ( Gia_ObjIsAnd(pObj) )\n                Gia_ObjTerSimAnd( pObj );\n            else if ( f == 0 )\n                Gia_ObjTerSimSet0( pObj );\n            else\n                Gia_ObjTerSimRo( p, pObj );\n        }\n    }\n    Gia_ManForEachObjVec( vMap, p, pObj, i )\n        pObj-\u003eValue = 0;\n    pObj = Gia_ManPo( p, 0 );\n    if ( !Gia_ObjTerSimGet1(pObj) )\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" );\n}",
+      "Draft": "func Rnm_ManVerifyUsingTerSim(p *Gia_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, vObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var iBit int32 = pCex.nRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for  f = 0; f \u003c= pCex.iFrame; f++, iBit += pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n            pObj.Value = Abc_InfoHasBit( pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p, pObj) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRes,i))); i++  { // vRes is subset of vMap\n        \n            if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n            if Gia_ObjIsCo(pObj) {\n                Gia_ObjTerSimCo( pObj );\n            } else if Gia_ObjIsAnd(pObj) {\n                Gia_ObjTerSimAnd( pObj );\n            } else if f == 0 {\n                Gia_ObjTerSimSet0( pObj );\n            } else {\n                Gia_ObjTerSimRo( p, pObj ); }\n        }\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    pObj = Gia_ManPo( p, 0 );\n    if !Gia_ObjTerSimGet1(pObj) {\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" ); }\n}"
+    },
+    {
+      "Name": "Rnm_ManRefine",
+      "Start": 25424,
+      "End": 28128,
+      "BodyStart": 25554,
+      "Original": "Vec_Int_t * Rnm_ManRefine( Rnm_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, int fPropFanout, int fNewRefinement, int fVerbose )\n{\n    int fVerify = 1;\n    Vec_Int_t * vGoodPPis, * vNewPPis;\n    abctime clk, clk2 = Abc_Clock();\n    int RetValue;\n    p-\u003enCalls++;\n//    Gia_ManCleanValue( p-\u003epGia );\n    // initialize\n    p-\u003epCex = pCex;\n    p-\u003evMap = vMap;\n    p-\u003efPropFanout = fPropFanout;\n    p-\u003efVerbose    = fVerbose;\n    // collects used objects\n    Rnm_ManCollect( p );\n    // initialize datastructure\n    p-\u003enObjsFrame = 1 + Vec_IntSize(vMap) + Vec_IntSize(p-\u003evObjs);\n    p-\u003enObjs = p-\u003enObjsFrame * (pCex-\u003eiFrame + 1);\n    if ( p-\u003enObjs \u003e p-\u003enObjsAlloc )\n        p-\u003epObjs = ABC_REALLOC( Rnm_Obj_t, p-\u003epObjs, (p-\u003enObjsAlloc = p-\u003enObjs + 10000) );\n    memset( p-\u003epObjs, 0, sizeof(Rnm_Obj_t) * p-\u003enObjs );\n    // propagate priorities\n    clk = Abc_Clock();\n    vGoodPPis = Vec_IntAlloc( 100 );\n    if ( Rnm_ManSensitize( p ) ) // the CEX is not a true CEX\n    {\n        p-\u003etimeFwd += Abc_Clock() - clk;\n        // select refinement\n        clk = Abc_Clock();\n        p-\u003enVisited = 0;\n        Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ManPo(p-\u003epGia, 0)), pCex-\u003eiFrame, vGoodPPis );\n        RetValue = Vec_IntUniqify( vGoodPPis );\n//        assert( RetValue == 0 );\n        p-\u003etimeBwd += Abc_Clock() - clk;\n    }\n\n    // verify (empty) refinement\n    // (only works when post-processing is not applied)\n    if ( fVerify )\n    {\n        clk = Abc_Clock();\n        Rnm_ManVerifyUsingTerSim( p-\u003epGia, p-\u003epCex, p-\u003evMap, p-\u003evObjs, vGoodPPis );\n        p-\u003etimeVer += Abc_Clock() - clk;\n    }\n\n    // at this point array vGoodPPis contains the set of important PPIs\n    if ( Vec_IntSize(vGoodPPis) \u003e 0 ) // spurious CEX resulting in a non-trivial refinement \n    {\n        // filter selected set\n        if ( !fNewRefinement )  // default \n            vNewPPis = Rnm_ManFilterSelected( p, vGoodPPis );\n        else // this is enabled when \u0026gla is called with -r (\u0026gla -r)\n            vNewPPis = Rnm_ManFilterSelectedNew( p, vGoodPPis );\n\n        // replace the PPI array if necessary\n        if ( Vec_IntSize(vNewPPis) \u003e 0 ) // something to select, replace current refinement \n            Vec_IntFree( vGoodPPis ), vGoodPPis = vNewPPis;\n        else // if there is nothing to select, do not change the current refinement array\n            Vec_IntFree( vNewPPis );\n    }\n\n    // clean values\n    // we cannot do this before, because we need to remember what objects\n    // belong to the abstraction when we do Rnm_ManFilterSelected()\n    Rnm_ManCleanValues( p );\n\n//    Vec_IntReverseOrder( vGoodPPis );\n    p-\u003etimeTotal += Abc_Clock() - clk2;\n    p-\u003enRefines += Vec_IntSize(vGoodPPis);\n    return vGoodPPis;\n}",
+      "Draft": "func Rnm_ManRefine(p *Rnm_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, fPropFanout int32, fNewRefinement int32, fVerbose int32) *Vec_Int_t {\n    var fVerify int32  = 1;\n    var vGoodPPis, vNewPPis *Vec_Int_t;\n    var clk abctime;\n    var clk2 abctime = Abc_Clock();\n    var RetValue int32;\n    p.nCalls++;\n//    Gia_ManCleanValue( p-\u003epGia );\n    // initialize\n    p.pCex = pCex;\n    p.vMap = vMap;\n    p.fPropFanout = fPropFanout;\n    p.fVerbose    = fVerbose;\n    // collects used objects\n    Rnm_ManCollect( p );\n    // initialize datastructure\n    p.nObjsFrame = 1 + Vec_IntSize(vMap) + Vec_IntSize(p.vObjs);\n    p.nObjs = p.nObjsFrame * (pCex.iFrame + 1);\n    if p.nObjs \u003e p.nObjsAlloc {\n        // inlining of macro ABC_REALLOC\n        \n        if p.pObjs {\n            p.pObjs = ((Rnm_Obj_t *) realloc((char *)(p.pObjs), sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));\n        } else {\n            p.pObjs = ((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));\n        } }\n    memset( p.pObjs, 0, sizeof(Rnm_Obj_t) * p.nObjs );\n    // propagate priorities\n    clk = Abc_Clock();\n    vGoodPPis = Vec_IntAlloc( 100 );\n    if Rnm_ManSensitize( p ) != 0 { // the CEX is not a true CEX\n    \n        p.timeFwd += Abc_Clock() - clk;\n        // select refinement\n        clk = Abc_Clock();\n        p.nVisited = 0;\n        Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ManPo(p.pGia, 0)), pCex.iFrame, vGoodPPis );\n        RetValue = Vec_IntUniqify( vGoodPPis );\n//        assert( RetValue == 0 );\n        p.timeBwd += Abc_Clock() - clk;\n    }\n\n    // verify (empty) refinement\n    // (only works when post-processing is not applied)\n    if fVerify != 0 {\n        clk = Abc_Clock();\n        Rnm_ManVerifyUsingTerSim( p.pGia, p.pCex, p.vMap, p.vObjs, vGoodPPis );\n        p.timeVer += Abc_Clock() - clk;\n    }\n\n    // at this point array vGoodPPis contains the set of important PPIs\n    if Vec_IntSize(vGoodPPis) \u003e 0 { // spurious CEX resulting in a non-trivial refinement \n    \n        // filter selected set\n        if !(fNewRefinement != 0) {  // default \n            vNewPPis = Rnm_ManFilterSelected( p, vGoodPPis );\n        } else { // this is enabled when \u0026gla is called with -r (\u0026gla -r)\n            vNewPPis = Rnm_ManFilterSelectedNew( p, vGoodPPis ); }\n\n        // replace the PPI array if necessary\n        if Vec_IntSize(vNewPPis) \u003e 0 { // something to select, replace current refinement \n            Vec_IntFree( vGoodPPis );\nvGoodPPis = vNewPPis;\n        } else { // if there is nothing to select, do not change the current refinement array\n            Vec_IntFree( vNewPPis ); }\n    }\n\n    // clean values\n    // we cannot do this before, because we need to remember what objects\n    // belong to the abstraction when we do Rnm_ManFilterSelected()\n    Rnm_ManCleanValues( p );\n\n//    Vec_IntReverseOrder( vGoodPPis );\n    p.timeTotal += Abc_Clock() - clk2;\n    p.nRefines += Vec_IntSize(vGoodPPis);\n    return vGoodPPis;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::11144",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11063,
+      "End": 11063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::11544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11403,
+      "End": 11403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::11942",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11793,
+      "End": 11799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::11962",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11813,
+      "End": 11819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::12004",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11855,
+      "End": 11861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::12068",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11919,
+      "End": 11925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::12088",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11939,
+      "End": 11945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::12124",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11975,
+      "End": 11981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::14479",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13120,
+      "End": 13126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::14499",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13140,
+      "End": 13146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::14535",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13176,
+      "End": 13182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::28801",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26106,
+      "End": 26106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::28901",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26106,
+      "End": 26106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::mechanical::sizeof::28995",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26203,
+      "End": 26209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::11110",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11063,
+      "End": 11063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::11523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11403,
+      "End": 11403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::14277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13012,
+      "End": 13012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::14382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13038,
+      "End": 13038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::28759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26106,
+      "End": 26106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::28781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26106,
+      "End": 26106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::pointer-cast::28880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26106,
+      "End": 26106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10950,
+      "End": 11625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::ternary::Rnm_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Rnm_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11626,
+      "End": 13054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11626,
+      "End": 13054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManMemoryUsage",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManMemoryUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13055,
+      "End": 13214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13570,
+      "End": 14195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManCollect",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14196,
+      "End": 15153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManCleanValues",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManCleanValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15154,
+      "End": 15390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManSensitize",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManSensitize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15658,
+      "End": 18191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManJustifyPropFanout_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManJustifyPropFanout_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18489,
+      "End": 20607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManJustify_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManJustify_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20608,
+      "End": 23423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManVerifyUsingTerSim",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManVerifyUsingTerSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23679,
+      "End": 25136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::Rnm_ManRefine",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25424,
+      "End": 28128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 28375
+    }
+  ],
+  "Draft": "package abs\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [absRef.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Refinement manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absRef.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sat/bsat/satSolver2.h\"\n//#include \"abs.h\"\n//#include \"absRef.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*\n    Description of the refinement manager\n\n    This refinement manager should be \n    * started by calling Rnm_ManStart()\n       this procedure takes one argument, the user's seq miter as a GIA manager\n       - the manager should have only one property output\n       - this manager should not change while the refinement manager is alive\n       - it cannot be used by external applications for any purpose\n       - when the refinement manager stop, GIA manager is the same as at the beginning\n       - in the meantime, it will have some data-structures attached to its nodes...\n    * stopped by calling Rnm_ManStop()\n    * between starting and stopping, refinements are obtained by calling Rnm_ManRefine()\n\n    Procedure Rnm_ManRefine() takes the following arguments:\n    * the refinement manager previously started by Rnm_ManStart()\n    * counter-example (CEX) obtained by abstracting some logic of GIA\n    * mapping (vMap) of inputs of the CEX into the object IDs of the GIA manager\n       - only PI, flop outputs, and internal AND nodes can be used in vMap\n       - the ordering of objects in vMap is not important\n       - however, the index of a non-PI object in vMap is used as its priority\n         (the smaller the index, the more likely this non-PI object apears in a refinement)\n       - only the logic between PO and the objects listed in vMap is traversed by the manager\n         (as a result, GIA can be arbitrarily large, but only objects used in the abstraction\n         and the pseudo-PI, that is, objects in the cut, will be visited by the manager)\n    * flag fPropFanout defines whether value propagation is done through the fanout\n       - it this flag is enabled, theoretically refinement should be better (the result smaller)\n    * flag fVerbose may print some statistics\n\n    The refinement manager returns a minimal-size array of integer IDs of GIA objects\n    which should be added to the abstraction to possibly prevent the given counter-example\n       - only flop output and internal AND nodes from vMap may appear in the resulting array\n       - if the resulting array is empty, the CEX is a true CEX \n         (in other words, non-PI objects are not needed to set the PO value to 1)\n\n    Verification of the selected refinement is performed by \n       - initializing all PI objects in vMap to value 0 or 1 they have in the CEX\n       - initializing all remaining objects in vMap to value X\n       - initializing objects used in the refiment to value 0 or 1 they have in the CEX\n       - simulating through as many timeframes as required by the CEX\n       - if the PO value in the last frame is 1, the refinement is correct\n         (however, the minimality of the refinement is not currently checked)\n        \n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\nstatic inline int         Rnm_ObjSatVar( Rnm_Man_t * p, Gia_Obj_t * pObj )          { return Vec_IntEntry( p-\u003evSatVars, Gia_ObjId(p-\u003epGia, pObj) );                                                 }\nstatic inline void        Rnm_ObjSetSatVar( Rnm_Man_t * p, Gia_Obj_t * pObj, int c) { Vec_IntWriteEntry( p-\u003evSatVars, Gia_ObjId(p-\u003epGia, pObj), c );                                                }\nstatic inline int         Rnm_ObjFindOrAddSatVar( Rnm_Man_t * p, Gia_Obj_t * pObj)  { if ( Rnm_ObjSatVar(p, pObj) == 0 ) { Rnm_ObjSetSatVar(p, pObj, Vec_IntSize(p-\u003evSat2Ids)); Vec_IntPush(p-\u003evSat2Ids, Gia_ObjId(p-\u003epGia, pObj)); }; return 2*Rnm_ObjSatVar(p, pObj); }\n*/\n// extern void               Ga2_ManCnfAddStatic( sat_solver2 * pSat, Vec_Int_t * vCnf0, Vec_Int_t * vCnf1, int * pLits, int iLitOut, int ProofId );\n\n// extern Vec_Int_t *        Ga2_ManCnfCompute( unsigned uTruth, int nVars, Vec_Int_t * vCover );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n      \n\n                                                                        \n\n                                                     \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                                          \n \n                        \n                       \n          \n                                          \n               \n                                     \n                            \n     \n                                   \n                                                      \n               \n     \n                                 \n                                       \n                                                 \n                                                                \n                                                \n \n\n                                                                      \n \n                               \n                                             \n                                                          \n                               \n                                                                \n                                                                      \n                                                  \n                                          \n     \n                                              \n                             \n                                       \n     \n                                                  \n                                 \n                                   \n                                      \n                                                   \n                                                                        \n                                                                        \n                                          \n                                      \n                              \n                                \n                                                                                        \n                           \n                                                    \n                                          \n                             \n                                                      \n     \n                                                 \n                                                           \n                                                           \n                                                                                                     \n                                                                                                     \n                                                                                                                                \n                             \n                             \n     \n\n                     \n\n                                    \n                                                                                                    \n\n                                                        \n                                \n                                     \n                                                                   \n     \n                                                   \n                              \n                                                       \n         \n                                                                                       \n                                                                                            \n         \n\n                                                      \n                     \n                                                            \n                                                                           \n                                                                                               \n   \n                                                        \n                                \n                                                      \n                                                                \n                      \n                                     \n                                    \n            \n  \n\n                                                                                                                                                        \n                                \n                     \n                                                      \n                                    \n                                \n                                           \n\n                                     \n                                \n                             \n     \n                                     \n                                 \n                         \n                                    \n                                  \n                   \n\n                                   \n                                               \n     \n                                                        \n                                                                            \n                                                                             \n     \n                                          \n                                                   \n                                         \n                                                                \n                                 \n\n                     \n                            \n                                 \n\n                     \n\n                                 \n                                                      \n     \n                                       \n                                                 \n                                                           \n                                             \n     \n                          \n                            \n                            \n                      \n \n\n      \n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManStart(pGia *Gia_Man_t) *Rnm_Man_t {\n    \n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Rnm_Man_t{};\n    p.pGia = pGia;\n    p.vObjs = Vec_IntAlloc( 100 );\n    p.vCounts = Vec_StrStart( Gia_ManObjNum(pGia) );\n    p.vFanins = Vec_IntAlloc( 1000 );\n//    p-\u003evSatVars = Vec_IntAlloc( 0 );\n//    p-\u003evSat2Ids = Vec_IntAlloc( 1000 );\n//    p-\u003evIsopMem  = Vec_IntAlloc( 0 );\n    p.nObjsAlloc = 10000;\n    // inlining of macro ABC_ALLOC\n    p.pObjs = ((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)(p.nObjsAlloc)));\n    if p.pGia.vFanout == nil {\n        Gia_ManStaticFanoutStart( p.pGia ); }\n    Gia_ManCleanValue(pGia);\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}\nfunc Rnm_ManStop(p *Rnm_Man_t, fProfile int32) {\n    if !p { return; }\n    // print runtime statistics\n    if (fProfile != 0) \u0026\u0026 p.nCalls {\n        var MemGia float64  = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p.pGia.nObjsAlloc + sizeof(int) * p.pGia.nTravIdsAlloc;\n        var MemOther float64  = sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs);\n        var timeOther abctime  = p.timeTotal - p.timeFwd - p.timeBwd - p.timeVer;\n        fmt.Printf(\"Abstraction refinement runtime statistics:\\n\");\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sensetization\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Justification\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Verification \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n        fmt.Printf(\"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", p.nCalls, 1.0*p.nRefines/p.nCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20));\n    }\n\n    Gia_ManCleanMark0(p.pGia);\n    Gia_ManCleanMark1(p.pGia);\n    Gia_ManStaticFanoutStop(p.pGia);\n//    Gia_ManSetPhase(p-\u003epGia);\n//    Vec_IntFree( p-\u003evIsopMem );\n//    Vec_IntFree( p-\u003evSatVars );\n//    Vec_IntFree( p-\u003evSat2Ids );\n    Vec_StrFree( p.vCounts );\n    Vec_IntFree( p.vFanins );\n    Vec_IntFree( p.vObjs );\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Rnm_ManMemoryUsage(p *Rnm_Man_t) float64 {\n    return float64((sizeof(Rnm_Man_t) + sizeof(Rnm_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs)));\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collect internal objects to be used in value propagation.]\n\n  Description [Resulting array vObjs contains RO, AND, PO/RI in a topo order.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vObjs *Vec_Int_t, nAddOn int32) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCo(pObj) {\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n    } else if Gia_ObjIsAnd(pObj) {\n        Rnm_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs, nAddOn );\n        Rnm_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs, nAddOn );\n    \n    } else if !Gia_ObjIsRo(p, pObj) {\n        assert(false, \"0\"); }\n    pObj.Value = Vec_IntSize(vObjs) + nAddOn;\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}\nfunc Rnm_ManCollect(p *Rnm_Man_t) {\n    var pObj *Gia_Obj_t  = nil;\n    var i int32;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrent( p.pGia, Gia_ManConst0(p.pGia) );\n    Gia_ManConst0(p.pGia).Value = 0;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n        pObj.Value = 1 + i;\n    }\n    // collect objects\n    Vec_IntClear( p.vObjs );\n    Rnm_ManCollect_rec( p.pGia, Gia_ManPo(p.pGia, 0), p.vObjs, 1 + Vec_IntSize(p.vMap) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            Rnm_ManCollect_rec( p.pGia, Gia_ObjRoToRi(p.pGia, pObj), p.vObjs, 1 + Vec_IntSize(p.vMap) ); }\n    }\n    // the last object should be a CO\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    assert(int32(pObj.Value) == Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs), \"int32(pObj.Value) == Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs)\");\n}\nfunc Rnm_ManCleanValues(p *Rnm_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        pObj.Value = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs sensitization analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManSensitize(p *Rnm_Man_t) int32 {\n    var pRnm, pRnm0, pRnm1 *Rnm_Obj_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // const0 is initialized automatically in all timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pRnm = Rnm_ManObj( p, pObj, f );\n            pRnm.Value = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                assert(pObj.Value \u003e 0, \"pObj.Value \u003e 0\");\n                pRnm.Prio = pObj.Value;\n                pRnm.fPPi = 1;\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj)\");\n            pRnm = Rnm_ManObj( p, pObj, f );\n            assert(!pRnm.fPPi, \"!pRnm.fPPi\");\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    continue; }\n                pRnm0 = Rnm_ManObj( p, Gia_ObjRoToRi(p.pGia, pObj), f-1 );\n                pRnm.Value = pRnm0.Value;\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj));\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj));\n            if pRnm.Value == 1 {\n                pRnm.Prio  = Abc_MaxInt( pRnm0.Prio, pRnm1.Prio );\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                pRnm.Prio  = Abc_MinInt( pRnm0.Prio, pRnm1.Prio ); // choice\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                pRnm.Prio  = pRnm0.Prio;\n            } else { \n                pRnm.Prio  = pRnm1.Prio; }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    pRnm = Rnm_ManObj( p, Gia_ManPo(p.pGia, 0), p.pCex.iFrame );\n    if pRnm.Value != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return pRnm.Prio;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Drive implications of the given node towards primary outputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManJustifyPropFanout_rec(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32, vSelect *Vec_Int_t) {\n    var pRnm0 *Rnm_Obj_t;\n    var pRnm1 *Rnm_Obj_t;\n    var pRnm *Rnm_Obj_t = Rnm_ManObj( p, pObj, f );\n    var pFanout *Gia_Obj_t  = nil;\n    var i, k int32;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    assert(pRnm.fVisit == 0, \"pRnm.fVisit == 0\");\n    pRnm.fVisit = 1;\n    if Rnm_ManObj( p, pObj, 0 ).fVisitJ == 0 {\n        Rnm_ManObj( p, pObj, 0 ).fVisitJ = 1;\n        p.nVisited++;\n    }\n    if pRnm.fPPi {\n        assert(int32(pRnm.Prio) \u003e 0, \"int32(pRnm.Prio) \u003e 0\");\n        for  i = p.pCex.iFrame; i \u003e= 0; i--  {\n            if !Rnm_ManObj(p, pObj, i).fVisit {\n                Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect ); }\n        }\n        Vec_IntPush( vSelect, Gia_ObjId(p.pGia, pObj) );\n        return;\n    }\n    if (Gia_ObjIsCo(pObj) \u0026\u0026 f == p.pCex.iFrame) || Gia_ObjIsPo(p.pGia, pObj) {\n        return; }\n    if Gia_ObjIsRi(p.pGia, pObj) {\n        pFanout = Gia_ObjRiToRo(p.pGia, pObj);\n        if !Rnm_ManObj(p, pFanout, f+1).fVisit {\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f+1, vSelect ); }\n        return;\n    }\n    assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_ObjForEachFanoutStatic\n    for  k = 0; (k \u003c Gia_ObjFanoutNum(p.pGia, pObj))   \u0026\u0026 (((pFanout) = Gia_ObjFanout(p.pGia, pObj, k)), 1); k++  {\n        var pRnmF *Rnm_Obj_t;\n        if pFanout.Value == 0 {\n            continue; }\n        pRnmF = Rnm_ManObj(p, pFanout, f);\n        if pRnmF.fPPi || pRnmF.fVisit {\n            continue; }\n        if Gia_ObjIsCo(pFanout) {\n            Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect );\n            continue;\n        } \n        assert(Gia_ObjIsAnd(pFanout), \"Gia_ObjIsAnd(pFanout)\");\n        pRnm0 = Rnm_ManObj( p, Gia_ObjFanin0(pFanout), f );\n        pRnm1 = Rnm_ManObj( p, Gia_ObjFanin1(pFanout), f );\n        if ((pRnm0.Value ^ Gia_ObjFaninC0(pFanout)) == 0 \u0026\u0026 pRnm0.fVisit) ||\n             ((pRnm1.Value ^ Gia_ObjFaninC1(pFanout)) == 0 \u0026\u0026 pRnm1.fVisit) || \n           ( ((pRnm0.Value ^ Gia_ObjFaninC0(pFanout)) == 1 \u0026\u0026 pRnm0.fVisit) \u0026\u0026 \n             ((pRnm1.Value ^ Gia_ObjFaninC1(pFanout)) == 1 \u0026\u0026 pRnm1.fVisit) ) {\n           Rnm_ManJustifyPropFanout_rec( p, pFanout, f, vSelect ); }\n    }\n}\nfunc Rnm_ManJustify_rec(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32, vSelect *Vec_Int_t) { \n    var pRnm *Rnm_Obj_t  = Rnm_ManObj( p, pObj, f );\n    var i int32;//, Id = Gia_ObjId(p-\u003epGia, pObj);\n    if pRnm.fVisit {\n        return; }\n    if p.fPropFanout {\n        Rnm_ManJustifyPropFanout_rec( p, pObj, f, vSelect );\n    } else {\n        pRnm.fVisit = 1;\n        if Rnm_ManObj( p, pObj, 0 ).fVisitJ == 0 {\n            Rnm_ManObj( p, pObj, 0 ).fVisitJ = 1;\n            p.nVisited++;\n        }\n    }\n    if pRnm.fPPi {\n        assert(int32(pRnm.Prio) \u003e 0, \"int32(pRnm.Prio) \u003e 0\");\n        if p.fPropFanout {\n            for  i = p.pCex.iFrame; i \u003e= 0; i--  {\n                if !Rnm_ManObj(p, pObj, i).fVisit {\n                    Rnm_ManJustifyPropFanout_rec( p, pObj, i, vSelect ); }\n            }\n        \n        } else {\n            Vec_IntPush( vSelect, Gia_ObjId(p.pGia, pObj) );\n//            for ( i = p-\u003epCex-\u003eiFrame; i \u003e= 0; i-- )\n//                Rnm_ManObj(p, pObj, i)-\u003efVisit = 1;\n        }\n        return;\n    }\n    if Gia_ObjIsPi(p.pGia, pObj) || Gia_ObjIsConst0(pObj) {\n        return; }\n    if Gia_ObjIsRo(p.pGia, pObj) {\n        if f \u003e 0 {\n            Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ObjRoToRi(p.pGia, pObj)), f-1, vSelect ); }\n        return;\n    }\n    if Gia_ObjIsAnd(pObj) {\n        var pRnm0 *Rnm_Obj_t  = Rnm_ManObj( p, Gia_ObjFanin0(pObj), f );\n        var pRnm1 *Rnm_Obj_t  = Rnm_ManObj( p, Gia_ObjFanin1(pObj), f );\n        if pRnm.Value == 1 {\n            if pRnm0.Prio \u003e 0 {\n                Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n            if pRnm1.Prio \u003e 0 {\n                Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n        \n        } else { // select one value\n        \n            if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                if pRnm0.Prio \u003c= pRnm1.Prio { // choice\n                \n                    if pRnm0.Prio \u003e 0 {\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n                \n                } else {\n                    if pRnm1.Prio \u003e 0 {\n                        Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n                }\n            \n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                if pRnm0.Prio \u003e 0 {\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin0(pObj), f, vSelect ); }\n            \n            } else if (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                if pRnm1.Prio \u003e 0 {\n                    Rnm_ManJustify_rec( p, Gia_ObjFanin1(pObj), f, vSelect ); }\n            \n            } else { assert(false, \"0\"); }\n        }\n    \n    } else { assert(false, \"0\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs refinement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManVerifyUsingTerSim(p *Gia_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, vObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var iBit int32 = pCex.nRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for  f = 0; f \u003c= pCex.iFrame; f++, iBit += pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n            pObj.Value = Abc_InfoHasBit( pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p, pObj) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRes,i))); i++  { // vRes is subset of vMap\n        \n            if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n            if Gia_ObjIsCo(pObj) {\n                Gia_ObjTerSimCo( pObj );\n            } else if Gia_ObjIsAnd(pObj) {\n                Gia_ObjTerSimAnd( pObj );\n            } else if f == 0 {\n                Gia_ObjTerSimSet0( pObj );\n            } else {\n                Gia_ObjTerSimRo( p, pObj ); }\n        }\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    pObj = Gia_ManPo( p, 0 );\n    if !Gia_ObjTerSimGet1(pObj) {\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the refinement for a given counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManRefine(p *Rnm_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, fPropFanout int32, fNewRefinement int32, fVerbose int32) *Vec_Int_t {\n    var fVerify int32  = 1;\n    var vGoodPPis, vNewPPis *Vec_Int_t;\n    var clk abctime;\n    var clk2 abctime = Abc_Clock();\n    var RetValue int32;\n    p.nCalls++;\n//    Gia_ManCleanValue( p-\u003epGia );\n    // initialize\n    p.pCex = pCex;\n    p.vMap = vMap;\n    p.fPropFanout = fPropFanout;\n    p.fVerbose    = fVerbose;\n    // collects used objects\n    Rnm_ManCollect( p );\n    // initialize datastructure\n    p.nObjsFrame = 1 + Vec_IntSize(vMap) + Vec_IntSize(p.vObjs);\n    p.nObjs = p.nObjsFrame * (pCex.iFrame + 1);\n    if p.nObjs \u003e p.nObjsAlloc {\n        // inlining of macro ABC_REALLOC\n        \n        if p.pObjs {\n            p.pObjs = ((Rnm_Obj_t *) realloc((char *)(p.pObjs), sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));\n        } else {\n            p.pObjs = ((Rnm_Obj_t *) malloc(sizeof(Rnm_Obj_t) * (size_t)((p.nObjsAlloc = p.nObjs + 10000))));\n        } }\n    memset( p.pObjs, 0, sizeof(Rnm_Obj_t) * p.nObjs );\n    // propagate priorities\n    clk = Abc_Clock();\n    vGoodPPis = Vec_IntAlloc( 100 );\n    if Rnm_ManSensitize( p ) != 0 { // the CEX is not a true CEX\n    \n        p.timeFwd += Abc_Clock() - clk;\n        // select refinement\n        clk = Abc_Clock();\n        p.nVisited = 0;\n        Rnm_ManJustify_rec( p, Gia_ObjFanin0(Gia_ManPo(p.pGia, 0)), pCex.iFrame, vGoodPPis );\n        RetValue = Vec_IntUniqify( vGoodPPis );\n//        assert( RetValue == 0 );\n        p.timeBwd += Abc_Clock() - clk;\n    }\n\n    // verify (empty) refinement\n    // (only works when post-processing is not applied)\n    if fVerify != 0 {\n        clk = Abc_Clock();\n        Rnm_ManVerifyUsingTerSim( p.pGia, p.pCex, p.vMap, p.vObjs, vGoodPPis );\n        p.timeVer += Abc_Clock() - clk;\n    }\n\n    // at this point array vGoodPPis contains the set of important PPIs\n    if Vec_IntSize(vGoodPPis) \u003e 0 { // spurious CEX resulting in a non-trivial refinement \n    \n        // filter selected set\n        if !(fNewRefinement != 0) {  // default \n            vNewPPis = Rnm_ManFilterSelected( p, vGoodPPis );\n        } else { // this is enabled when \u0026gla is called with -r (\u0026gla -r)\n            vNewPPis = Rnm_ManFilterSelectedNew( p, vGoodPPis ); }\n\n        // replace the PPI array if necessary\n        if Vec_IntSize(vNewPPis) \u003e 0 { // something to select, replace current refinement \n            Vec_IntFree( vGoodPPis );\nvGoodPPis = vNewPPis;\n        } else { // if there is nothing to select, do not change the current refinement array\n            Vec_IntFree( vNewPPis ); }\n    }\n\n    // clean values\n    // we cannot do this before, because we need to remember what objects\n    // belong to the abstraction when we do Rnm_ManFilterSelected()\n    Rnm_ManCleanValues( p );\n\n//    Vec_IntReverseOrder( vGoodPPis );\n    p.timeTotal += Abc_Clock() - clk2;\n    p.nRefines += Vec_IntSize(vGoodPPis);\n    return vGoodPPis;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

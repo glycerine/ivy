@@ -1,0 +1,840 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c",
+  "SHA256": "21a4ebf283c8801f502d728f4467ad04cc09207680bf077d0f8cad14b0a58bb5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 2006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 2042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNode.pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 2474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanin.iTemp != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 13,
+        "ByteOffset": 3927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjIsLatch(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 13,
+        "ByteOffset": 3972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 13,
+        "ByteOffset": 4041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 17,
+        "ByteOffset": 4311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Abc_ObjIsNet(Abc_ObjFanin0(pTerm)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 17,
+        "ByteOffset": 5393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Abc_ObjIsNet(Abc_ObjFanout0(pTerm)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 6134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 7486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Hierarchy reader flattened %d instances of logic boxes.\\n\", Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 10675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 10868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d const (out of %d) and %d shared (out of %d) barbufs with fanout.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 11465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsBuf(pObjBuf) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 11502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 367,
+        "Column": 9,
+        "ByteOffset": 15090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsLatch(pBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 16194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 9,
+        "ByteOffset": 16259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPiNum(pModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 9,
+        "ByteOffset": 16793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsBox(pBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 16964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 9,
+        "ByteOffset": 17030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPoNum(pModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 17487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 18216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 19494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Hierarchy reader flattened %d instances of boxes and added %d barbufs (out of %d).\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 501,
+        "Column": 5,
+        "ByteOffset": 20869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjNtk(pObj) == pNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 5,
+        "ByteOffset": 21543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkHasMapping(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 516,
+        "Column": 5,
+        "ByteOffset": 21583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 21804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 13,
+        "ByteOffset": 22289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 547,
+        "Column": 5,
+        "ByteOffset": 23587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 556,
+        "Column": 5,
+        "ByteOffset": 23893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 557,
+        "Column": 5,
+        "ByteOffset": 23949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 5,
+        "ByteOffset": 24005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 559,
+        "Column": 5,
+        "ByteOffset": 24061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 5,
+        "ByteOffset": 24117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 561,
+        "Column": 5,
+        "ByteOffset": 24177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(pGia) == pNew.nBarBufs2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeStrashToGia_rec",
+      "Start": 1289,
+      "End": 1765,
+      "BodyStart": 1356,
+      "Original": "void Abc_NodeStrashToGia_rec( Gia_Man_t * pNew, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin0(pObj) ); \n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin1(pObj) );\n    pObj-\u003eiData = Gia_ManHashAnd( pNew, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_NodeStrashToGia_rec(pNew *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin0(pObj) ); \n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( pNew, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_NodeStrashToGia",
+      "Start": 1766,
+      "End": 2686,
+      "BodyStart": 1829,
+      "Original": "int Abc_NodeStrashToGia( Gia_Man_t * pNew, Abc_Obj_t * pNode )\n{\n    Hop_Man_t * pMan = (Hop_Man_t *)pNode-\u003epNtk-\u003epManFunc;\n    Hop_Obj_t * pRoot = (Hop_Obj_t *)pNode-\u003epData;\n    Abc_Obj_t * pFanin;  int i;\n    assert( Abc_ObjIsNode(pNode) );\n    assert( Abc_NtkHasAig(pNode-\u003epNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode-\u003epNtk) );\n    // check the constant case\n    if ( Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) )\n        return Abc_LitNotCond( 1, Hop_IsComplement(pRoot) );\n    // set elementary variables\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        assert( pFanin-\u003eiTemp != -1 );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Hop_IthVar(pMan, i)-\u003eiData = pFanin-\u003eiTemp;\n    // strash the AIG of this node\n    Abc_NodeStrashToGia_rec( pNew, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Abc_LitNotCond( Hop_Regular(pRoot)-\u003eiData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Abc_NodeStrashToGia(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var pMan *Hop_Man_t  = (Hop_Man_t *)pNode.pNtk.pManFunc;\n    var pRoot *Hop_Obj_t  = (Hop_Obj_t *)pNode.pData;\n    var pFanin *Abc_Obj_t;  var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(Abc_NtkHasAig(pNode.pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkHasAig(pNode.pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode.pNtk)\");\n    // check the constant case\n    if Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return Abc_LitNotCond( 1, Hop_IsComplement(pRoot) ); }\n    // set elementary variables\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        assert(pFanin.iTemp != -1, \"pFanin.iTemp != -1\");\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Hop_IthVar(pMan, i).iData = pFanin.iTemp;\n    }\n    // strash the AIG of this node\n    Abc_NodeStrashToGia_rec( pNew, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Abc_LitNotCond( Hop_Regular(pRoot).iData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenHierarchyGia2_rec",
+      "Start": 2967,
+      "End": 5095,
+      "BodyStart": 3077,
+      "Original": "void Abc_NtkFlattenHierarchyGia2_rec( Gia_Man_t * pNew, Abc_Ntk_t * pNtk, int * pCounter, Vec_Int_t * vBufs )\n{\n    Vec_Ptr_t * vDfs = (Vec_Ptr_t *)pNtk-\u003epData;\n    Abc_Obj_t * pObj, * pTerm; \n    int i, k; (*pCounter)++;\n    //printf( \"[%d:%d] \", Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vDfs, pObj, i )\n    {\n        if ( Abc_ObjIsNode(pObj) )\n            Abc_ObjFanout0(pObj)-\u003eiTemp = Abc_NodeStrashToGia( pNew, pObj );\n        else\n        {\n            int iBufStart = Gia_ManBufNum(pNew);\n            Abc_Ntk_t * pModel = (Abc_Ntk_t *)pObj-\u003epData;\n            assert( !Abc_ObjIsLatch(pObj) );\n            assert( Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj) );\n            assert( Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj) );\n            Abc_NtkFillTemp( pModel );\n            Abc_ObjForEachFanin( pObj, pTerm, k )\n            {\n                assert( Abc_ObjIsNet(Abc_ObjFanin0(pTerm)) );\n                Abc_ObjFanout0(Abc_NtkPi(pModel, k))-\u003eiTemp = Abc_ObjFanin0(pTerm)-\u003eiTemp;\n            }\n            if ( vBufs )\n                Abc_ObjForEachFanin( pObj, pTerm, k )\n                    Abc_ObjFanout0(Abc_NtkPi(pModel, k))-\u003eiTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanout0(Abc_NtkPi(pModel, k))-\u003eiTemp );\n            Abc_NtkFlattenHierarchyGia2_rec( pNew, pModel, pCounter, vBufs );\n            if ( vBufs )\n                Abc_ObjForEachFanout( pObj, pTerm, k )\n                    Abc_ObjFanin0(Abc_NtkPo(pModel, k))-\u003eiTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(Abc_NtkPo(pModel, k))-\u003eiTemp );\n            Abc_ObjForEachFanout( pObj, pTerm, k )\n            {\n                assert( Abc_ObjIsNet(Abc_ObjFanout0(pTerm)) );\n                Abc_ObjFanout0(pTerm)-\u003eiTemp = Abc_ObjFanin0(Abc_NtkPo(pModel, k))-\u003eiTemp;\n            }\n            // save buffers\n            if ( vBufs == NULL )\n                continue;\n            Vec_IntPush( vBufs, iBufStart );\n            Vec_IntPush( vBufs, Abc_NtkPiNum(pModel) );\n            Vec_IntPush( vBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pModel) );\n            Vec_IntPush( vBufs, Abc_NtkPoNum(pModel) );\n        }\n    }\n}",
+      "Draft": "func Abc_NtkFlattenHierarchyGia2_rec(pNew *Gia_Man_t, pNtk *Abc_Ntk_t, pCounter *int32, vBufs *Vec_Int_t) {\n    var vDfs *Vec_Ptr_t  = (Vec_Ptr_t *)pNtk.pData;\n    var pObj, pTerm *Abc_Obj_t; \n    var i, k int32; (*pCounter)++;\n    //printf( \"[%d:%d] \", Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDfs)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vDfs, i)), 1); i++  {\n        if Abc_ObjIsNode(pObj) {\n            Abc_ObjFanout0(pObj).iTemp = Abc_NodeStrashToGia( pNew, pObj );\n        } else {\n            var iBufStart int32  = Gia_ManBufNum(pNew);\n            var pModel *Abc_Ntk_t  = (Abc_Ntk_t *)pObj.pData;\n            assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n            assert(Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj), \"Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj)\");\n            assert(Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj), \"Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj)\");\n            Abc_NtkFillTemp( pModel );\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                assert(Abc_ObjIsNet(Abc_ObjFanin0(pTerm)), \"Abc_ObjIsNet(Abc_ObjFanin0(pTerm))\");\n                Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Abc_ObjFanin0(pTerm).iTemp;\n            }\n            if vBufs != nil {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                    Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp );\n                } }\n            Abc_NtkFlattenHierarchyGia2_rec( pNew, pModel, pCounter, vBufs );\n            if vBufs != nil {\n                // inlining of macro Abc_ObjForEachFanout\n                for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                    Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp );\n                } }\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                assert(Abc_ObjIsNet(Abc_ObjFanout0(pTerm)), \"Abc_ObjIsNet(Abc_ObjFanout0(pTerm))\");\n                Abc_ObjFanout0(pTerm).iTemp = Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp;\n            }\n            // save buffers\n            if vBufs == nil {\n                continue; }\n            Vec_IntPush( vBufs, iBufStart );\n            Vec_IntPush( vBufs, Abc_NtkPiNum(pModel) );\n            Vec_IntPush( vBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pModel) );\n            Vec_IntPush( vBufs, Abc_NtkPoNum(pModel) );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenHierarchyGia2",
+      "Start": 5096,
+      "End": 7399,
+      "BodyStart": 5156,
+      "Original": "Gia_Man_t * Abc_NtkFlattenHierarchyGia2( Abc_Ntk_t * pNtk )\n{\n    int fUseBufs = 1;\n    int fUseInter = 0;\n    Gia_Man_t * pNew, * pTemp; \n    Abc_Ntk_t * pModel;\n    Abc_Obj_t * pTerm;\n    int i, Counter = -1;\n    assert( Abc_NtkIsNetlist(pNtk) );\n//    Abc_NtkPrintBoxInfo( pNtk );\n    Abc_NtkFillTemp( pNtk );\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew-\u003epName = Abc_UtilStrsav(pNtk-\u003epName);\n    pNew-\u003epSpec = Abc_UtilStrsav(pNtk-\u003epSpec);\n    if ( fUseBufs )\n        pNew-\u003evBarBufs = Vec_IntAlloc( 1000 );\n\n    // create PIs and buffers\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        pTerm-\u003eiTemp = Gia_ManAppendCi( pNew );\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        Abc_ObjFanout0(pTerm)-\u003eiTemp = fUseInter ? Gia_ManAppendBuf(pNew, pTerm-\u003eiTemp) : pTerm-\u003eiTemp;\n\n    // create DFS order of nets\n    if ( !pNtk-\u003epDesign )\n        pNtk-\u003epData = Abc_NtkDfsWithBoxes( pNtk );\n    else\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n            pModel-\u003epData = Abc_NtkDfsWithBoxes( pModel );\n\n    // call recursively\n    Gia_ManHashAlloc( pNew );\n    Abc_NtkFlattenHierarchyGia2_rec( pNew, pNtk, \u0026Counter, pNew-\u003evBarBufs );\n    Gia_ManHashStop( pNew );\n    printf( \"Hierarchy reader flattened %d instances of logic boxes.\\n\", Counter );\n\n    // delete DFS order of nets\n    if ( !pNtk-\u003epDesign )\n        Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pNtk-\u003epData );\n    else\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n            Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pModel-\u003epData );\n\n    // create buffers and POs\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n        pTerm-\u003eiTemp = fUseInter ? Gia_ManAppendBuf(pNew, Abc_ObjFanin0(pTerm)-\u003eiTemp) : Abc_ObjFanin0(pTerm)-\u003eiTemp;\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n        Gia_ManAppendCo( pNew, pTerm-\u003eiTemp );\n\n    // save buffers\n    if ( fUseInter )\n    {\n        Vec_IntPush( pNew-\u003evBarBufs, 0 );\n        Vec_IntPush( pNew-\u003evBarBufs, Abc_NtkPiNum(pNtk) );\n        Vec_IntPush( pNew-\u003evBarBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pNtk) );\n        Vec_IntPush( pNew-\u003evBarBufs, Abc_NtkPoNum(pNtk) );\n    }\n    if ( fUseBufs )\n        Vec_IntPrint( pNew-\u003evBarBufs );\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Abc_NtkFlattenHierarchyGia2(pNtk *Abc_Ntk_t) *Gia_Man_t {\n    var fUseBufs int32  = 1;\n    var fUseInter int32;\n    var pNew, pTemp *Gia_Man_t; \n    var pModel *Abc_Ntk_t;\n    var pTerm *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = -1;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n    Abc_NtkFillTemp( pNtk );\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n    if fUseBufs != 0 {\n        pNew.vBarBufs = Vec_IntAlloc( 1000 ); }\n\n    // create PIs and buffers\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iTemp = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_ObjFanout0(pTerm).iTemp = fUseInter ? Gia_ManAppendBuf(pNew, pTerm.iTemp) : pTerm.iTemp;\n    }\n\n    // create DFS order of nets\n    if !pNtk.pDesign {\n        pNtk.pData = Abc_NtkDfsWithBoxes( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            pModel.pData = Abc_NtkDfsWithBoxes( pModel );\n        } }\n\n    // call recursively\n    Gia_ManHashAlloc( pNew );\n    Abc_NtkFlattenHierarchyGia2_rec( pNew, pNtk, \u0026Counter, pNew.vBarBufs );\n    Gia_ManHashStop( pNew );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes.\\n\", Counter);\n\n    // delete DFS order of nets\n    if !pNtk.pDesign {\n        Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pNtk.pData );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pModel.pData );\n        } }\n\n    // create buffers and POs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if fUseInter != 0 {\n            pTerm.iTemp = Gia_ManAppendBuf(pNew, Abc_ObjFanin0(pTerm).iTemp);\n        } else {\n            pTerm.iTemp = Abc_ObjFanin0(pTerm).iTemp;\n        }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, pTerm.iTemp );\n    }\n\n    // save buffers\n    if fUseInter != 0 {\n        Vec_IntPush( pNew.vBarBufs, 0 );\n        Vec_IntPush( pNew.vBarBufs, Abc_NtkPiNum(pNtk) );\n        Vec_IntPush( pNew.vBarBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pNtk) );\n        Vec_IntPush( pNew.vBarBufs, Abc_NtkPoNum(pNtk) );\n    }\n    if fUseBufs != 0 {\n        Vec_IntPrint( pNew.vBarBufs ); }\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManPrintBarBufDrivers",
+      "Start": 7635,
+      "End": 9368,
+      "BodyStart": 7683,
+      "Original": "void Gia_ManPrintBarBufDrivers( Gia_Man_t * p )\n{\n    Vec_Int_t * vMap, * vFan, * vCrits;\n    Gia_Obj_t * pObj;\n    int i, iFanin, CountCrit[2] = {0}, CountFans[2] = {0};\n    // map barbuf drivers into barbuf literals of the first barbuf driven by them\n    vMap = Vec_IntStart( Gia_ManObjNum(p) );\n    vFan = Vec_IntStart( Gia_ManObjNum(p) );\n    vCrits = Vec_IntAlloc( 100 );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        // count fanouts\n        if ( Gia_ObjIsBuf(pObj) || Gia_ObjIsCo(pObj) )\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n        else if ( Gia_ObjIsAnd(pObj) )\n        {\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId1(pObj, i), 1 );\n        }\n        // count critical barbufs\n        if ( Gia_ObjIsBuf(pObj) )\n        {\n            iFanin = Gia_ObjFaninId0( pObj, i );\n            if ( iFanin == 0 || Vec_IntEntry(vMap, iFanin) != 0 )\n            {\n                CountCrit[(int)(iFanin != 0)]++;\n                Vec_IntPush( vCrits, i );\n                continue;\n            }\n            Vec_IntWriteEntry( vMap, iFanin, Abc_Var2Lit(i, Gia_ObjFaninC0(pObj)) );\n        }\n    }\n    // check fanouts of the critical barbufs\n    Gia_ManForEachObjVec( vCrits, p, pObj, i )\n    {\n        assert( Gia_ObjIsBuf(pObj) );\n        if ( Vec_IntEntry(vFan, i) == 0 )\n            continue;\n        iFanin = Gia_ObjFaninId0p( p, pObj );\n        CountFans[(int)(iFanin != 0)]++;\n    }\n    printf( \"Detected %d const (out of %d) and %d shared (out of %d) barbufs with fanout.\\n\", \n        CountFans[0], CountCrit[0], CountFans[1], CountCrit[1] );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vFan );\n    Vec_IntFree( vCrits );\n}",
+      "Draft": "func Gia_ManPrintBarBufDrivers(p *Gia_Man_t) {\n    var vMap, vFan, vCrits *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iFanin int32;\n    var CountCrit [2]int32 ;\n    var CountFans [2]int32 ;\n    // map barbuf drivers into barbuf literals of the first barbuf driven by them\n    vMap = Vec_IntStart( Gia_ManObjNum(p) );\n    vFan = Vec_IntStart( Gia_ManObjNum(p) );\n    vCrits = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        // count fanouts\n        if Gia_ObjIsBuf(pObj) || Gia_ObjIsCo(pObj) {\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n        } else if Gia_ObjIsAnd(pObj) {\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId1(pObj, i), 1 );\n        }\n        // count critical barbufs\n        if Gia_ObjIsBuf(pObj) {\n            iFanin = Gia_ObjFaninId0( pObj, i );\n            if iFanin == 0 || Vec_IntEntry(vMap, iFanin) != 0 {\n                CountCrit[int32((iFanin != 0))]++;\n                Vec_IntPush( vCrits, i );\n                continue;\n            }\n            Vec_IntWriteEntry( vMap, iFanin, Abc_Var2Lit(i, Gia_ObjFaninC0(pObj)) );\n        }\n    }\n    // check fanouts of the critical barbufs\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCrits)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCrits,i))); i++  {\n        assert(Gia_ObjIsBuf(pObj), \"Gia_ObjIsBuf(pObj)\");\n        if Vec_IntEntry(vFan, i) == 0 {\n            continue; }\n        iFanin = Gia_ObjFaninId0p( p, pObj );\n        CountFans[int32((iFanin != 0))]++;\n    }\n    fmt.Printf(\"Detected %d const (out of %d) and %d shared (out of %d) barbufs with fanout.\\n\", CountFans[0], CountCrit[0], CountFans[1], CountCrit[1]);\n    Vec_IntFree( vMap );\n    Vec_IntFree( vFan );\n    Vec_IntFree( vCrits );\n}"
+    },
+    {
+      "Name": "Gia_ManPatchBufDriver",
+      "Start": 9604,
+      "End": 9984,
+      "BodyStart": 9685,
+      "Original": "static inline void Gia_ManPatchBufDriver( Gia_Man_t * p, int iBuf, int iLit0 )  \n{\n    Gia_Obj_t * pObjBuf  = Gia_ManObj( p, iBuf );\n    assert( Gia_ObjIsBuf(pObjBuf) );\n    assert( Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0) );\n    pObjBuf-\u003eiDiff1  = pObjBuf-\u003eiDiff0  = Gia_ObjId(p, pObjBuf) - Abc_Lit2Var(iLit0);\n    pObjBuf-\u003efCompl1 = pObjBuf-\u003efCompl0 = Abc_LitIsCompl(iLit0);\n}",
+      "Draft": "func Gia_ManPatchBufDriver(p *Gia_Man_t, iBuf int32, iLit0 int32) {\n    var pObjBuf *Gia_Obj_t   = Gia_ManObj( p, iBuf );\n    assert(Gia_ObjIsBuf(pObjBuf), \"Gia_ObjIsBuf(pObjBuf)\");\n    assert(Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0), \"Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0)\");\n    pObjBuf.iDiff1  = pObjBuf.iDiff0  = Gia_ObjId(p, pObjBuf) - Abc_Lit2Var(iLit0);\n    pObjBuf.fCompl1 = pObjBuf.fCompl0 = Abc_LitIsCompl(iLit0);\n}"
+    },
+    {
+      "Name": "Gia_ManSweepHierarchy",
+      "Start": 10220,
+      "End": 12337,
+      "BodyStart": 10271,
+      "Original": "Gia_Man_t * Gia_ManSweepHierarchy( Gia_Man_t * p )\n{\n    Vec_Int_t * vMap = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pObjNew, * pObjNewR;\n    int i, iFanin, CountReals[2] = {0};\n\n    // duplicate AIG while propagating constants and equivalences \n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(pObj-\u003eValue) );\n            iFanin = Gia_ObjFaninId0p( pNew, pObjNew );\n            if ( iFanin == 0 )\n            {\n                pObj-\u003eValue = Gia_ObjFaninC0(pObjNew);\n                CountReals[0]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            }\n            else if ( Vec_IntEntry(vMap, iFanin) )\n            {\n                pObjNewR = Gia_ManObj( pNew, Vec_IntEntry(vMap, iFanin) );\n                pObj-\u003eValue = Abc_Var2Lit( Vec_IntEntry(vMap, iFanin), Gia_ObjFaninC0(pObjNewR) ^ Gia_ObjFaninC0(pObjNew) );\n                CountReals[1]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            }\n            else\n                Vec_IntWriteEntry( vMap, iFanin, Gia_ObjId(pNew, pObjNew) );\n        }\n        else if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    printf( \"Updated %d const and %d shared.\\n\", CountReals[0], CountReals[1] );\n    Vec_IntFree( vMap );\n    return pNew;\n}",
+      "Draft": "func Gia_ManSweepHierarchy(p *Gia_Man_t) *Gia_Man_t {\n    var vMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjNew, pObjNewR *Gia_Obj_t;\n    var i int32;\n    var iFanin int32;\n    var CountReals [2]int32 ;\n\n    // duplicate AIG while propagating constants and equivalences \n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );\n            iFanin = Gia_ObjFaninId0p( pNew, pObjNew );\n            if iFanin == 0 {\n                pObj.Value = Gia_ObjFaninC0(pObjNew);\n                CountReals[0]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            \n            } else if Vec_IntEntry(vMap, iFanin) {\n                pObjNewR = Gia_ManObj( pNew, Vec_IntEntry(vMap, iFanin) );\n                pObj.Value = Abc_Var2Lit( Vec_IntEntry(vMap, iFanin), Gia_ObjFaninC0(pObjNewR) ^ Gia_ObjFaninC0(pObjNew) );\n                CountReals[1]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            \n            } else {\n                Vec_IntWriteEntry( vMap, iFanin, Gia_ObjId(pNew, pObjNew) ); }\n        \n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    printf( \"Updated %d const and %d shared.\\n\", CountReals[0], CountReals[1] );\n    Vec_IntFree( vMap );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManFlattenLogicPrepare",
+      "Start": 12667,
+      "End": 13223,
+      "BodyStart": 12718,
+      "Original": "int Gia_ManFlattenLogicPrepare( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pTerm, * pBox; \n    int i, k;\n    Abc_NtkFillTemp( pNtk );\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        pTerm-\u003eiData = i;\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n        pTerm-\u003eiData = i;\n    Abc_NtkForEachBox( pNtk, pBox, i )\n    {\n        assert( !Abc_ObjIsLatch(pBox) );\n        Abc_ObjForEachFanin( pBox, pTerm, k )\n            pTerm-\u003eiData = k;\n        Abc_ObjForEachFanout( pBox, pTerm, k )\n            pTerm-\u003eiData = k;\n    }\n    return Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n}",
+      "Draft": "func Gia_ManFlattenLogicPrepare(pNtk *Abc_Ntk_t) int32 {\n    var pTerm, pBox *Abc_Obj_t; \n    var i, k int32;\n    Abc_NtkFillTemp( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iData = i;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pTerm.iData = i;\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        assert(!Abc_ObjIsLatch(pBox), \"!Abc_ObjIsLatch(pBox)\");\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            pTerm.iData = k;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pTerm.iData = k;\n        }\n    }\n    return Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenHierarchyGia_rec",
+      "Start": 13224,
+      "End": 15369,
+      "BodyStart": 13340,
+      "Original": "int Abc_NtkFlattenHierarchyGia_rec( Gia_Man_t * pNew, Vec_Ptr_t * vSupers, Abc_Obj_t * pObj, Vec_Ptr_t * vBuffers )\n{\n    Abc_Ntk_t * pModel;\n    Abc_Obj_t * pBox, * pFanin;  \n    int iLit, i;\n    if ( pObj-\u003eiTemp != -1 )\n        return pObj-\u003eiTemp;\n    if ( Abc_ObjIsNet(pObj) || Abc_ObjIsPo(pObj) || Abc_ObjIsBi(pObj) )\n        return (pObj-\u003eiTemp = Abc_NtkFlattenHierarchyGia_rec(pNew, vSupers, Abc_ObjFanin0(pObj), vBuffers));\n    if ( Abc_ObjIsPi(pObj) )\n    {\n        pBox   = (Abc_Obj_t *)Vec_PtrPop( vSupers );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"   Exiting %s\\n\", Abc_NtkName(pModel) );\n        assert( Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel) );\n        assert( pObj-\u003eiData \u003e= 0 \u0026\u0026 pObj-\u003eiData \u003c Abc_NtkPiNum(pModel) );\n        pFanin = Abc_ObjFanin( pBox, pObj-\u003eiData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPush( vSupers, pBox );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pFanin ); // save BI\n        if ( vBuffers ) Vec_PtrPush( vBuffers, pObj );   // save PI\n        return (pObj-\u003eiTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    if ( Abc_ObjIsBo(pObj) )\n    {\n        pBox   = Abc_ObjFanin0(pObj);\n        assert( Abc_ObjIsBox(pBox) );\n        Vec_PtrPush( vSupers, pBox );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"Entering %s\\n\", Abc_NtkName(pModel) );\n        assert( Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel) );\n        assert( pObj-\u003eiData \u003e= 0 \u0026\u0026 pObj-\u003eiData \u003c Abc_NtkPoNum(pModel) );\n        pFanin = Abc_NtkPo( pModel, pObj-\u003eiData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPop( vSupers );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pObj );   // save BO\n        if ( vBuffers ) Vec_PtrPush( vBuffers, pFanin ); // save PO\n        return (pObj-\u003eiTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    assert( Abc_ObjIsNode(pObj) );\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n    return (pObj-\u003eiTemp = Abc_NodeStrashToGia( pNew, pObj ));\n}",
+      "Draft": "func Abc_NtkFlattenHierarchyGia_rec(pNew *Gia_Man_t, vSupers *Vec_Ptr_t, pObj *Abc_Obj_t, vBuffers *Vec_Ptr_t) int32 {\n    var pModel *Abc_Ntk_t;\n    var pBox, pFanin *Abc_Obj_t;  \n    var iLit, i int32;\n    if pObj.iTemp != -1 {\n        return pObj.iTemp; }\n    if Abc_ObjIsNet(pObj) || Abc_ObjIsPo(pObj) || Abc_ObjIsBi(pObj) {\n        return (pObj.iTemp = Abc_NtkFlattenHierarchyGia_rec(pNew, vSupers, Abc_ObjFanin0(pObj), vBuffers)); }\n    if Abc_ObjIsPi(pObj) {\n        pBox   = (Abc_Obj_t *)Vec_PtrPop( vSupers );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"   Exiting %s\\n\", Abc_NtkName(pModel) );\n        assert(Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel), \"Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel)\");\n        assert(pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPiNum(pModel), \"pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPiNum(pModel)\");\n        pFanin = Abc_ObjFanin( pBox, pObj.iData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPush( vSupers, pBox );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pFanin ); // save BI\n        if vBuffers != nil { Vec_PtrPush( vBuffers, pObj ); }   // save PI\n        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    if Abc_ObjIsBo(pObj) {\n        pBox   = Abc_ObjFanin0(pObj);\n        assert(Abc_ObjIsBox(pBox), \"Abc_ObjIsBox(pBox)\");\n        Vec_PtrPush( vSupers, pBox );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"Entering %s\\n\", Abc_NtkName(pModel) );\n        assert(Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel), \"Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel)\");\n        assert(pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPoNum(pModel), \"pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPoNum(pModel)\");\n        pFanin = Abc_NtkPo( pModel, pObj.iData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPop( vSupers );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pObj );   // save BO\n        if vBuffers != nil { Vec_PtrPush( vBuffers, pFanin ); } // save PO\n        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n    }\n    return (pObj.iTemp = Abc_NodeStrashToGia( pNew, pObj ));\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenHierarchyGia",
+      "Start": 15370,
+      "End": 17297,
+      "BodyStart": 15467,
+      "Original": "Gia_Man_t * Abc_NtkFlattenHierarchyGia( Abc_Ntk_t * pNtk, Vec_Ptr_t ** pvBuffers, int fVerbose )\n{\n    int fUseBufs = 1;\n    Gia_Man_t * pNew, * pTemp; \n    Abc_Ntk_t * pModel;\n    Abc_Obj_t * pTerm;\n    Vec_Ptr_t * vSupers;\n    Vec_Ptr_t * vBuffers = fUseBufs ? Vec_PtrAlloc(1000) : NULL;\n    int i, Counter = 0; \n    assert( Abc_NtkIsNetlist(pNtk) );\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // set the PI/PO numbers\n    Counter -= Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n    if ( !pNtk-\u003epDesign )\n        Counter += Gia_ManFlattenLogicPrepare( pNtk );\n    else\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n            Counter += Gia_ManFlattenLogicPrepare( pModel );\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew-\u003epName = Abc_UtilStrsav(pNtk-\u003epName);\n    pNew-\u003epSpec = Abc_UtilStrsav(pNtk-\u003epSpec);\n\n    // create PIs and buffers\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        pTerm-\u003eiTemp = Gia_ManAppendCi( pNew );\n\n    // call recursively\n    vSupers = Vec_PtrAlloc( 100 );\n    Gia_ManHashAlloc( pNew );\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pTerm, vBuffers );\n    Gia_ManHashStop( pNew );\n    Vec_PtrFree( vSupers );\n    printf( \"Hierarchy reader flattened %d instances of boxes and added %d barbufs (out of %d).\\n\", \n        pNtk-\u003epDesign ? Vec_PtrSize(pNtk-\u003epDesign-\u003evModules)-1 : 0, Vec_PtrSize(vBuffers), Counter );\n\n    // create buffers and POs\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n        Gia_ManAppendCo( pNew, pTerm-\u003eiTemp );\n\n    if ( pvBuffers )\n        *pvBuffers = vBuffers;\n    else\n        Vec_PtrFreeP( \u0026vBuffers );\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    pNew = Gia_ManSweepHierarchy( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}",
+      "Draft": "func Abc_NtkFlattenHierarchyGia(pNtk *Abc_Ntk_t, pvBuffers **Vec_Ptr_t, fVerbose int32) *Gia_Man_t {\n    var fUseBufs int32  = 1;\n    var pNew, pTemp *Gia_Man_t; \n    var pModel *Abc_Ntk_t;\n    var pTerm *Abc_Obj_t;\n    var vSupers *Vec_Ptr_t;\n    var vBuffers *Vec_Ptr_t;\n    if fUseBufs != 0 {\n        vBuffers = Vec_PtrAlloc(1000);\n    } else {\n        vBuffers = nil;\n    }\n    var i, Counter int32; \n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // set the PI/PO numbers\n    Counter -= Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n    if !pNtk.pDesign {\n        Counter += Gia_ManFlattenLogicPrepare( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Counter += Gia_ManFlattenLogicPrepare( pModel );\n        } }\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n\n    // create PIs and buffers\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iTemp = Gia_ManAppendCi( pNew );\n    }\n\n    // call recursively\n    vSupers = Vec_PtrAlloc( 100 );\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pTerm, vBuffers );\n    }\n    Gia_ManHashStop( pNew );\n    Vec_PtrFree( vSupers );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of boxes and added %d barbufs (out of %d).\\n\", pNtk.pDesign ? Vec_PtrSize(pNtk.pDesign.vModules)-1 : 0, Vec_PtrSize(vBuffers), Counter);\n\n    // create buffers and POs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, pTerm.iTemp );\n    }\n\n    if pvBuffers {\n        *pvBuffers = vBuffers;\n    } else {\n        Vec_PtrFreeP( \u0026vBuffers ); }\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    pNew = Gia_ManSweepHierarchy( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManInsertOne_rec",
+      "Start": 17689,
+      "End": 18229,
+      "BodyStart": 17778,
+      "Original": "Abc_Obj_t * Gia_ManInsertOne_rec( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNew, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanin;  int i;\n    if ( pObj == NULL )\n        return Abc_NtkCreateNodeConst0( pNtk );\n    assert( Abc_ObjNtk(pObj) == pNew );\n    if ( pObj-\u003epCopy )\n        return pObj-\u003epCopy;\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Gia_ManInsertOne_rec( pNtk, pNew, pFanin );\n    pObj-\u003epCopy = Abc_NtkDupObj( pNtk, pObj, 0 );\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_ObjAddFanin( pObj, pFanin );\n    return pObj-\u003epCopy;\n}",
+      "Draft": "func Gia_ManInsertOne_rec(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFanin *Abc_Obj_t;  var i int32;\n    if pObj == nil {\n        return Abc_NtkCreateNodeConst0( pNtk ); }\n    assert(Abc_ObjNtk(pObj) == pNew, \"Abc_ObjNtk(pObj) == pNew\");\n    if pObj.pCopy {\n        return pObj.pCopy; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Gia_ManInsertOne_rec( pNtk, pNew, pFanin );\n    }\n    pObj.pCopy = Abc_NtkDupObj( pNtk, pObj, 0 );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_ObjAddFanin( pObj, pFanin );\n    }\n    return pObj.pCopy;\n}"
+    },
+    {
+      "Name": "Gia_ManInsertOne",
+      "Start": 18230,
+      "End": 19589,
+      "BodyStart": 18290,
+      "Original": "void Gia_ManInsertOne( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNew )\n{\n    Abc_Obj_t * pObj, * pBox;  int i, k;\n    assert( !Abc_NtkHasMapping(pNtk) );\n    assert( Abc_NtkHasMapping(pNew) );\n    // check that PIs point to barbufs\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        assert( !pObj-\u003epCopy || Abc_ObjNtk(pObj-\u003epCopy) == pNew );\n    // make barbufs point to box outputs\n    Abc_NtkForEachBox( pNtk, pBox, i )\n        Abc_ObjForEachFanout( pBox, pObj, k )\n        {\n            pObj-\u003epCopy = Abc_NtkPo(Abc_ObjModel(pBox), k)-\u003epCopy;\n            assert( !pObj-\u003epCopy || Abc_ObjNtk(pObj-\u003epCopy) == pNew );\n        }\n    // remove internal nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_NtkDeleteObj( pObj );\n    // start traversal from box inputs\n    Abc_NtkForEachBox( pNtk, pBox, i )\n        Abc_ObjForEachFanin( pBox, pObj, k )\n            if ( Abc_ObjFaninNum(pObj) == 0 )\n                Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, Abc_NtkPi(Abc_ObjModel(pBox), k)-\u003epCopy) );\n    // start traversal from primary outputs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        if ( Abc_ObjFaninNum(pObj) == 0 )\n            Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, pObj-\u003epCopy) );\n    // update the functionality manager\n    pNtk-\u003epManFunc = pNew-\u003epManFunc;\n    pNtk-\u003entkFunc  = pNew-\u003entkFunc;\n    assert( Abc_NtkHasMapping(pNtk) );\n}",
+      "Draft": "func Gia_ManInsertOne(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t) {\n    var pObj, pBox *Abc_Obj_t;  var i, k int32;\n    assert(!Abc_NtkHasMapping(pNtk), \"!Abc_NtkHasMapping(pNtk)\");\n    assert(Abc_NtkHasMapping(pNew), \"Abc_NtkHasMapping(pNew)\");\n    // check that PIs point to barbufs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, \"!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew\");\n    }\n    // make barbufs point to box outputs\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pObj.pCopy = Abc_NtkPo(Abc_ObjModel(pBox), k).pCopy;\n            assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, \"!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew\");\n        }\n    }\n    // remove internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDeleteObj( pObj ); }\n    }\n    // start traversal from box inputs\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            if Abc_ObjFaninNum(pObj) == 0 {\n                Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, Abc_NtkPi(Abc_ObjModel(pBox), k).pCopy) ); }\n        }\n    }\n    // start traversal from primary outputs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if Abc_ObjFaninNum(pObj) == 0 {\n            Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, pObj.pCopy) ); }\n    }\n    // update the functionality manager\n    pNtk.pManFunc = pNew.pManFunc;\n    pNtk.ntkFunc  = pNew.ntkFunc;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n}"
+    },
+    {
+      "Name": "Abc_NtkInsertHierarchyGia",
+      "Start": 19590,
+      "End": 21057,
+      "BodyStart": 19673,
+      "Original": "void Abc_NtkInsertHierarchyGia( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNew, int fVerbose )\n{\n    Vec_Ptr_t * vBuffers;\n    Gia_Man_t * pGia = Abc_NtkFlattenHierarchyGia( pNtk, \u0026vBuffers, 0 );\n    Abc_Ntk_t * pModel;  \n    Abc_Obj_t * pObj; \n    int i, k = 0;\n\n    assert( Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk) );\n    assert( Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew) );\n    assert( Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk) );\n    assert( Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew) );\n    assert( Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers) );\n    assert( Gia_ManBufNum(pGia) == pNew-\u003enBarBufs2 );\n    Gia_ManStop( pGia );\n\n    // clean the networks\n    if ( !pNtk-\u003epDesign )\n        Abc_NtkCleanCopy( pNtk );\n    else\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n            Abc_NtkCleanCopy( pModel );\n\n    // annotate PIs and POs of each network with barbufs\n    Abc_NtkForEachPi( pNew, pObj, i )\n        Abc_NtkPi(pNtk, i)-\u003epCopy = pObj;\n    Abc_NtkForEachPo( pNew, pObj, i )\n        Abc_NtkPo(pNtk, i)-\u003epCopy = pObj;\n    Abc_NtkForEachBarBuf( pNew, pObj, i )\n        ((Abc_Obj_t *)Vec_PtrEntry(vBuffers, k++))-\u003epCopy = pObj;\n    Vec_PtrFree( vBuffers );\n\n    // connect each model\n    Abc_NtkCleanCopy( pNew );\n    Gia_ManInsertOne( pNtk, pNew );\n    if ( pNtk-\u003epDesign )\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n            if ( pModel != pNtk )\n                Gia_ManInsertOne( pModel, pNew );\n}",
+      "Draft": "func Abc_NtkInsertHierarchyGia(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, fVerbose int32) {\n    var vBuffers *Vec_Ptr_t;\n    var pGia *Gia_Man_t  = Abc_NtkFlattenHierarchyGia( pNtk, \u0026vBuffers, 0 );\n    var pModel *Abc_Ntk_t;  \n    var pObj *Abc_Obj_t; \n    var i, k int32;\n\n    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk), \"Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk)\");\n    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew), \"Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew)\");\n    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk), \"Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk)\");\n    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew), \"Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew)\");\n    assert(Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers), \"Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers)\");\n    assert(Gia_ManBufNum(pGia) == pNew.nBarBufs2, \"Gia_ManBufNum(pGia) == pNew.nBarBufs2\");\n    Gia_ManStop( pGia );\n\n    // clean the networks\n    if !pNtk.pDesign {\n        Abc_NtkCleanCopy( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Abc_NtkCleanCopy( pModel );\n        } }\n\n    // annotate PIs and POs of each network with barbufs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNew)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNew, i)), 1); i++  {\n        Abc_NtkPi(pNtk, i).pCopy = pObj;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNew)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNew, i)), 1); i++  {\n        Abc_NtkPo(pNtk, i).pCopy = pObj;\n    }\n    // inlining of macro Abc_NtkForEachBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pNew).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNew, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsBarBuf(pObj) {} else {\n        ((Abc_Obj_t *)Vec_PtrEntry(vBuffers, k++)).pCopy = pObj; }\n    }\n    Vec_PtrFree( vBuffers );\n\n    // connect each model\n    Abc_NtkCleanCopy( pNew );\n    Gia_ManInsertOne( pNtk, pNew );\n    if pNtk.pDesign {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            if pModel != pNtk {\n                Gia_ManInsertOne( pModel, pNew ); }\n        } }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::1854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1854,
+      "End": 1867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::1914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1914,
+      "End": 1927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::3318",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3102,
+      "End": 3115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::3583",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3261,
+      "End": 3261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::3853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3534,
+      "End": 3547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::7115",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6035,
+      "End": 6035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::7566",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6491,
+      "End": 6505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::7740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6538,
+      "End": 6538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::7832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6635,
+      "End": 6649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::15920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13707,
+      "End": 13720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::18389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15942,
+      "End": 15942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::24209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20309,
+      "End": 20309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::24962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20689,
+      "End": 20702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::pointer-cast::25301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20901,
+      "End": 20901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NodeStrashToGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashToGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1289,
+      "End": 1765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NodeStrashToGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1766,
+      "End": 2686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NtkFlattenHierarchyGia2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2967,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::ternary::Abc_NtkFlattenHierarchyGia2",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5096,
+      "End": 7399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NtkFlattenHierarchyGia2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5096,
+      "End": 7399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManPrintBarBufDrivers",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintBarBufDrivers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7635,
+      "End": 9368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManPatchBufDriver",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPatchBufDriver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9604,
+      "End": 9984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManSweepHierarchy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSweepHierarchy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10220,
+      "End": 12337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManFlattenLogicPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFlattenLogicPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12667,
+      "End": 13223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::ternary::Abc_NtkFlattenHierarchyGia_rec",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13224,
+      "End": 15369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NtkFlattenHierarchyGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13224,
+      "End": 15369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::ternary::Abc_NtkFlattenHierarchyGia",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15370,
+      "End": 17297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NtkFlattenHierarchyGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenHierarchyGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15370,
+      "End": 17297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManInsertOne_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManInsertOne_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17689,
+      "End": 18229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Gia_ManInsertOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManInsertOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18230,
+      "End": 19589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::Abc_NtkInsertHierarchyGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInsertHierarchyGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19590,
+      "End": 21057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHieGia.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21304
+    }
+  ],
+  "Draft": "package abc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcHieGia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures to handle hierarchy.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcHieGia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the AIG from one manager into another.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeStrashToGia_rec(pNew *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin0(pObj) ); \n    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( pNew, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\nfunc Abc_NodeStrashToGia(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var pMan *Hop_Man_t  = (Hop_Man_t *)pNode.pNtk.pManFunc;\n    var pRoot *Hop_Obj_t  = (Hop_Obj_t *)pNode.pData;\n    var pFanin *Abc_Obj_t;  var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(Abc_NtkHasAig(pNode.pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkHasAig(pNode.pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNode.pNtk)\");\n    // check the constant case\n    if Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return Abc_LitNotCond( 1, Hop_IsComplement(pRoot) ); }\n    // set elementary variables\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        assert(pFanin.iTemp != -1, \"pFanin.iTemp != -1\");\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Hop_IthVar(pMan, i).iData = pFanin.iTemp;\n    }\n    // strash the AIG of this node\n    Abc_NodeStrashToGia_rec( pNew, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Abc_LitNotCond( Hop_Regular(pRoot).iData, Hop_IsComplement(pRoot) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Flattens the logic hierarchy of the netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFlattenHierarchyGia2_rec(pNew *Gia_Man_t, pNtk *Abc_Ntk_t, pCounter *int32, vBufs *Vec_Int_t) {\n    var vDfs *Vec_Ptr_t  = (Vec_Ptr_t *)pNtk.pData;\n    var pObj, pTerm *Abc_Obj_t; \n    var i, k int32; (*pCounter)++;\n    //printf( \"[%d:%d] \", Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDfs)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vDfs, i)), 1); i++  {\n        if Abc_ObjIsNode(pObj) {\n            Abc_ObjFanout0(pObj).iTemp = Abc_NodeStrashToGia( pNew, pObj );\n        } else {\n            var iBufStart int32  = Gia_ManBufNum(pNew);\n            var pModel *Abc_Ntk_t  = (Abc_Ntk_t *)pObj.pData;\n            assert(!Abc_ObjIsLatch(pObj), \"!Abc_ObjIsLatch(pObj)\");\n            assert(Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj), \"Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj)\");\n            assert(Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj), \"Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj)\");\n            Abc_NtkFillTemp( pModel );\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                assert(Abc_ObjIsNet(Abc_ObjFanin0(pTerm)), \"Abc_ObjIsNet(Abc_ObjFanin0(pTerm))\");\n                Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Abc_ObjFanin0(pTerm).iTemp;\n            }\n            if vBufs != nil {\n                // inlining of macro Abc_ObjForEachFanin\n                for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                    Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp );\n                } }\n            Abc_NtkFlattenHierarchyGia2_rec( pNew, pModel, pCounter, vBufs );\n            if vBufs != nil {\n                // inlining of macro Abc_ObjForEachFanout\n                for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                    Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp );\n                } }\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n                assert(Abc_ObjIsNet(Abc_ObjFanout0(pTerm)), \"Abc_ObjIsNet(Abc_ObjFanout0(pTerm))\");\n                Abc_ObjFanout0(pTerm).iTemp = Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp;\n            }\n            // save buffers\n            if vBufs == nil {\n                continue; }\n            Vec_IntPush( vBufs, iBufStart );\n            Vec_IntPush( vBufs, Abc_NtkPiNum(pModel) );\n            Vec_IntPush( vBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pModel) );\n            Vec_IntPush( vBufs, Abc_NtkPoNum(pModel) );\n        }\n    }\n}\nfunc Abc_NtkFlattenHierarchyGia2(pNtk *Abc_Ntk_t) *Gia_Man_t {\n    var fUseBufs int32  = 1;\n    var fUseInter int32;\n    var pNew, pTemp *Gia_Man_t; \n    var pModel *Abc_Ntk_t;\n    var pTerm *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = -1;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n    Abc_NtkFillTemp( pNtk );\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n    if fUseBufs != 0 {\n        pNew.vBarBufs = Vec_IntAlloc( 1000 ); }\n\n    // create PIs and buffers\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iTemp = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_ObjFanout0(pTerm).iTemp = fUseInter ? Gia_ManAppendBuf(pNew, pTerm.iTemp) : pTerm.iTemp;\n    }\n\n    // create DFS order of nets\n    if !pNtk.pDesign {\n        pNtk.pData = Abc_NtkDfsWithBoxes( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            pModel.pData = Abc_NtkDfsWithBoxes( pModel );\n        } }\n\n    // call recursively\n    Gia_ManHashAlloc( pNew );\n    Abc_NtkFlattenHierarchyGia2_rec( pNew, pNtk, \u0026Counter, pNew.vBarBufs );\n    Gia_ManHashStop( pNew );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes.\\n\", Counter);\n\n    // delete DFS order of nets\n    if !pNtk.pDesign {\n        Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pNtk.pData );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Vec_PtrFreeP( (Vec_Ptr_t **)\u0026pModel.pData );\n        } }\n\n    // create buffers and POs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if fUseInter != 0 {\n            pTerm.iTemp = Gia_ManAppendBuf(pNew, Abc_ObjFanin0(pTerm).iTemp);\n        } else {\n            pTerm.iTemp = Abc_ObjFanin0(pTerm).iTemp;\n        }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, pTerm.iTemp );\n    }\n\n    // save buffers\n    if fUseInter != 0 {\n        Vec_IntPush( pNew.vBarBufs, 0 );\n        Vec_IntPush( pNew.vBarBufs, Abc_NtkPiNum(pNtk) );\n        Vec_IntPush( pNew.vBarBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pNtk) );\n        Vec_IntPush( pNew.vBarBufs, Abc_NtkPoNum(pNtk) );\n    }\n    if fUseBufs != 0 {\n        Vec_IntPrint( pNew.vBarBufs ); }\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPrintBarBufDrivers(p *Gia_Man_t) {\n    var vMap, vFan, vCrits *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iFanin int32;\n    var CountCrit [2]int32 ;\n    var CountFans [2]int32 ;\n    // map barbuf drivers into barbuf literals of the first barbuf driven by them\n    vMap = Vec_IntStart( Gia_ManObjNum(p) );\n    vFan = Vec_IntStart( Gia_ManObjNum(p) );\n    vCrits = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        // count fanouts\n        if Gia_ObjIsBuf(pObj) || Gia_ObjIsCo(pObj) {\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n        } else if Gia_ObjIsAnd(pObj) {\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );\n            Vec_IntAddToEntry( vFan, Gia_ObjFaninId1(pObj, i), 1 );\n        }\n        // count critical barbufs\n        if Gia_ObjIsBuf(pObj) {\n            iFanin = Gia_ObjFaninId0( pObj, i );\n            if iFanin == 0 || Vec_IntEntry(vMap, iFanin) != 0 {\n                CountCrit[int32((iFanin != 0))]++;\n                Vec_IntPush( vCrits, i );\n                continue;\n            }\n            Vec_IntWriteEntry( vMap, iFanin, Abc_Var2Lit(i, Gia_ObjFaninC0(pObj)) );\n        }\n    }\n    // check fanouts of the critical barbufs\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCrits)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCrits,i))); i++  {\n        assert(Gia_ObjIsBuf(pObj), \"Gia_ObjIsBuf(pObj)\");\n        if Vec_IntEntry(vFan, i) == 0 {\n            continue; }\n        iFanin = Gia_ObjFaninId0p( p, pObj );\n        CountFans[int32((iFanin != 0))]++;\n    }\n    fmt.Printf(\"Detected %d const (out of %d) and %d shared (out of %d) barbufs with fanout.\\n\", CountFans[0], CountCrit[0], CountFans[1], CountCrit[1]);\n    Vec_IntFree( vMap );\n    Vec_IntFree( vFan );\n    Vec_IntFree( vCrits );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPatchBufDriver(p *Gia_Man_t, iBuf int32, iLit0 int32) {\n    var pObjBuf *Gia_Obj_t   = Gia_ManObj( p, iBuf );\n    assert(Gia_ObjIsBuf(pObjBuf), \"Gia_ObjIsBuf(pObjBuf)\");\n    assert(Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0), \"Gia_ObjId(p, pObjBuf) \u003e Abc_Lit2Var(iLit0)\");\n    pObjBuf.iDiff1  = pObjBuf.iDiff0  = Gia_ObjId(p, pObjBuf) - Abc_Lit2Var(iLit0);\n    pObjBuf.fCompl1 = pObjBuf.fCompl0 = Abc_LitIsCompl(iLit0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSweepHierarchy(p *Gia_Man_t) *Gia_Man_t {\n    var vMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjNew, pObjNewR *Gia_Obj_t;\n    var i int32;\n    var iFanin int32;\n    var CountReals [2]int32 ;\n\n    // duplicate AIG while propagating constants and equivalences \n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );\n            iFanin = Gia_ObjFaninId0p( pNew, pObjNew );\n            if iFanin == 0 {\n                pObj.Value = Gia_ObjFaninC0(pObjNew);\n                CountReals[0]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            \n            } else if Vec_IntEntry(vMap, iFanin) {\n                pObjNewR = Gia_ManObj( pNew, Vec_IntEntry(vMap, iFanin) );\n                pObj.Value = Abc_Var2Lit( Vec_IntEntry(vMap, iFanin), Gia_ObjFaninC0(pObjNewR) ^ Gia_ObjFaninC0(pObjNew) );\n                CountReals[1]++;\n                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );\n            \n            } else {\n                Vec_IntWriteEntry( vMap, iFanin, Gia_ObjId(pNew, pObjNew) ); }\n        \n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    printf( \"Updated %d const and %d shared.\\n\", CountReals[0], CountReals[1] );\n    Vec_IntFree( vMap );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Flattens the logic hierarchy of the netlist.]\n\n  Description [This procedure requires that models are uniqified.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFlattenLogicPrepare(pNtk *Abc_Ntk_t) int32 {\n    var pTerm, pBox *Abc_Obj_t; \n    var i, k int32;\n    Abc_NtkFillTemp( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iData = i;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pTerm.iData = i;\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        assert(!Abc_ObjIsLatch(pBox), \"!Abc_ObjIsLatch(pBox)\");\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            pTerm.iData = k;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pTerm.iData = k;\n        }\n    }\n    return Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n}\nfunc Abc_NtkFlattenHierarchyGia_rec(pNew *Gia_Man_t, vSupers *Vec_Ptr_t, pObj *Abc_Obj_t, vBuffers *Vec_Ptr_t) int32 {\n    var pModel *Abc_Ntk_t;\n    var pBox, pFanin *Abc_Obj_t;  \n    var iLit, i int32;\n    if pObj.iTemp != -1 {\n        return pObj.iTemp; }\n    if Abc_ObjIsNet(pObj) || Abc_ObjIsPo(pObj) || Abc_ObjIsBi(pObj) {\n        return (pObj.iTemp = Abc_NtkFlattenHierarchyGia_rec(pNew, vSupers, Abc_ObjFanin0(pObj), vBuffers)); }\n    if Abc_ObjIsPi(pObj) {\n        pBox   = (Abc_Obj_t *)Vec_PtrPop( vSupers );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"   Exiting %s\\n\", Abc_NtkName(pModel) );\n        assert(Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel), \"Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel)\");\n        assert(pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPiNum(pModel), \"pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPiNum(pModel)\");\n        pFanin = Abc_ObjFanin( pBox, pObj.iData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPush( vSupers, pBox );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pFanin ); // save BI\n        if vBuffers != nil { Vec_PtrPush( vBuffers, pObj ); }   // save PI\n        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    if Abc_ObjIsBo(pObj) {\n        pBox   = Abc_ObjFanin0(pObj);\n        assert(Abc_ObjIsBox(pBox), \"Abc_ObjIsBox(pBox)\");\n        Vec_PtrPush( vSupers, pBox );\n        pModel = Abc_ObjModel(pBox);\n        //printf( \"Entering %s\\n\", Abc_NtkName(pModel) );\n        assert(Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel), \"Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel)\");\n        assert(pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPoNum(pModel), \"pObj.iData \u003e= 0 \u0026\u0026 pObj.iData \u003c Abc_NtkPoNum(pModel)\");\n        pFanin = Abc_NtkPo( pModel, pObj.iData );\n        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n        Vec_PtrPop( vSupers );\n        //if ( vBuffers ) Vec_PtrPush( vBuffers, pObj );   // save BO\n        if vBuffers != nil { Vec_PtrPush( vBuffers, pFanin ); } // save PO\n        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));\n    }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );\n    }\n    return (pObj.iTemp = Abc_NodeStrashToGia( pNew, pObj ));\n}\nfunc Abc_NtkFlattenHierarchyGia(pNtk *Abc_Ntk_t, pvBuffers **Vec_Ptr_t, fVerbose int32) *Gia_Man_t {\n    var fUseBufs int32  = 1;\n    var pNew, pTemp *Gia_Man_t; \n    var pModel *Abc_Ntk_t;\n    var pTerm *Abc_Obj_t;\n    var vSupers *Vec_Ptr_t;\n    var vBuffers *Vec_Ptr_t;\n    if fUseBufs != 0 {\n        vBuffers = Vec_PtrAlloc(1000);\n    } else {\n        vBuffers = nil;\n    }\n    var i, Counter int32; \n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // set the PI/PO numbers\n    Counter -= Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);\n    if !pNtk.pDesign {\n        Counter += Gia_ManFlattenLogicPrepare( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Counter += Gia_ManFlattenLogicPrepare( pModel );\n        } }\n\n    // start the manager\n    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n\n    // create PIs and buffers\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pTerm.iTemp = Gia_ManAppendCi( pNew );\n    }\n\n    // call recursively\n    vSupers = Vec_PtrAlloc( 100 );\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pTerm, vBuffers );\n    }\n    Gia_ManHashStop( pNew );\n    Vec_PtrFree( vSupers );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of boxes and added %d barbufs (out of %d).\\n\", pNtk.pDesign ? Vec_PtrSize(pNtk.pDesign.vModules)-1 : 0, Vec_PtrSize(vBuffers), Counter);\n\n    // create buffers and POs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, pTerm.iTemp );\n    }\n\n    if pvBuffers {\n        *pvBuffers = vBuffers;\n    } else {\n        Vec_PtrFreeP( \u0026vBuffers ); }\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    pNew = Gia_ManSweepHierarchy( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the result of mapping into logic hierarchy.]\n\n  Description [When this procedure is called PIs/POs of pNtk\n  point to the corresponding nodes in network with barbufs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManInsertOne_rec(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pFanin *Abc_Obj_t;  var i int32;\n    if pObj == nil {\n        return Abc_NtkCreateNodeConst0( pNtk ); }\n    assert(Abc_ObjNtk(pObj) == pNew, \"Abc_ObjNtk(pObj) == pNew\");\n    if pObj.pCopy {\n        return pObj.pCopy; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Gia_ManInsertOne_rec( pNtk, pNew, pFanin );\n    }\n    pObj.pCopy = Abc_NtkDupObj( pNtk, pObj, 0 );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_ObjAddFanin( pObj, pFanin );\n    }\n    return pObj.pCopy;\n}\nfunc Gia_ManInsertOne(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t) {\n    var pObj, pBox *Abc_Obj_t;  var i, k int32;\n    assert(!Abc_NtkHasMapping(pNtk), \"!Abc_NtkHasMapping(pNtk)\");\n    assert(Abc_NtkHasMapping(pNew), \"Abc_NtkHasMapping(pNew)\");\n    // check that PIs point to barbufs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, \"!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew\");\n    }\n    // make barbufs point to box outputs\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pObj.pCopy = Abc_NtkPo(Abc_ObjModel(pBox), k).pCopy;\n            assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, \"!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew\");\n        }\n    }\n    // remove internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDeleteObj( pObj ); }\n    }\n    // start traversal from box inputs\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            if Abc_ObjFaninNum(pObj) == 0 {\n                Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, Abc_NtkPi(Abc_ObjModel(pBox), k).pCopy) ); }\n        }\n    }\n    // start traversal from primary outputs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if Abc_ObjFaninNum(pObj) == 0 {\n            Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, pObj.pCopy) ); }\n    }\n    // update the functionality manager\n    pNtk.pManFunc = pNew.pManFunc;\n    pNtk.ntkFunc  = pNew.ntkFunc;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n}\nfunc Abc_NtkInsertHierarchyGia(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, fVerbose int32) {\n    var vBuffers *Vec_Ptr_t;\n    var pGia *Gia_Man_t  = Abc_NtkFlattenHierarchyGia( pNtk, \u0026vBuffers, 0 );\n    var pModel *Abc_Ntk_t;  \n    var pObj *Abc_Obj_t; \n    var i, k int32;\n\n    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk), \"Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk)\");\n    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew), \"Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew)\");\n    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk), \"Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk)\");\n    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew), \"Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew)\");\n    assert(Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers), \"Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers)\");\n    assert(Gia_ManBufNum(pGia) == pNew.nBarBufs2, \"Gia_ManBufNum(pGia) == pNew.nBarBufs2\");\n    Gia_ManStop( pGia );\n\n    // clean the networks\n    if !pNtk.pDesign {\n        Abc_NtkCleanCopy( pNtk );\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            Abc_NtkCleanCopy( pModel );\n        } }\n\n    // annotate PIs and POs of each network with barbufs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNew)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNew, i)), 1); i++  {\n        Abc_NtkPi(pNtk, i).pCopy = pObj;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNew)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNew, i)), 1); i++  {\n        Abc_NtkPo(pNtk, i).pCopy = pObj;\n    }\n    // inlining of macro Abc_NtkForEachBarBuf\n    for  i = 0; (i \u003c Vec_PtrSize((pNew).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNew, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsBarBuf(pObj) {} else {\n        ((Abc_Obj_t *)Vec_PtrEntry(vBuffers, k++)).pCopy = pObj; }\n    }\n    Vec_PtrFree( vBuffers );\n\n    // connect each model\n    Abc_NtkCleanCopy( pNew );\n    Gia_ManInsertOne( pNtk, pNew );\n    if pNtk.pDesign {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            if pModel != pNtk {\n                Gia_ManInsertOne( pModel, pNew ); }\n        } }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

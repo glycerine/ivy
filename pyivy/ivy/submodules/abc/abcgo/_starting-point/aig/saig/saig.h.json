@@ -1,0 +1,412 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h",
+  "SHA256": "64d301aa387dc165a573cbe866d499f14193717a05cb1ebcefe76898f85ec525",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 65,
+        "ByteOffset": 3615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Saig_ObjLoToLi(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(Saig_ObjIsLo(p, pObj)); return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Saig_ManPoNum(p)+Aig_ObjCioId(pObj)-Saig_ManPiNum(p));   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 65,
+        "ByteOffset": 3810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Saig_ObjLiToLo(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(Saig_ObjIsLi(p, pObj)); return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Saig_ManPiNum(p)+Aig_ObjCioId(pObj)-Saig_ManPoNum(p));   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 82,
+        "ByteOffset": 4153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": " if Saig_ObjIsLi(p, pObj) { return Aig_ObjCioId(pObj)-Saig_ManPoNum(p); } else { assert(0); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManPiNum",
+      "Start": 2401,
+      "End": 2522,
+      "BodyStart": 2479,
+      "Original": "static inline int          Saig_ManPiNum( Aig_Man_t * p )                     { return p-\u003enTruePis;                     }",
+      "Draft": "func Saig_ManPiNum(p *Aig_Man_t) int32 { return p.nTruePis;                     }"
+    },
+    {
+      "Name": "Saig_ManPoNum",
+      "Start": 2523,
+      "End": 2644,
+      "BodyStart": 2601,
+      "Original": "static inline int          Saig_ManPoNum( Aig_Man_t * p )                     { return p-\u003enTruePos;                     }",
+      "Draft": "func Saig_ManPoNum(p *Aig_Man_t) int32 { return p.nTruePos;                     }"
+    },
+    {
+      "Name": "Saig_ManCiNum",
+      "Start": 2645,
+      "End": 2766,
+      "BodyStart": 2723,
+      "Original": "static inline int          Saig_ManCiNum( Aig_Man_t * p )                     { return p-\u003enTruePis + p-\u003enRegs;          }",
+      "Draft": "func Saig_ManCiNum(p *Aig_Man_t) int32 { return p.nTruePis + p.nRegs;          }"
+    },
+    {
+      "Name": "Saig_ManCoNum",
+      "Start": 2767,
+      "End": 2888,
+      "BodyStart": 2845,
+      "Original": "static inline int          Saig_ManCoNum( Aig_Man_t * p )                     { return p-\u003enTruePos + p-\u003enRegs;          }",
+      "Draft": "func Saig_ManCoNum(p *Aig_Man_t) int32 { return p.nTruePos + p.nRegs;          }"
+    },
+    {
+      "Name": "Saig_ManRegNum",
+      "Start": 2889,
+      "End": 3010,
+      "BodyStart": 2967,
+      "Original": "static inline int          Saig_ManRegNum( Aig_Man_t * p )                    { return p-\u003enRegs;                        }",
+      "Draft": "func Saig_ManRegNum(p *Aig_Man_t) int32 { return p.nRegs;                        }"
+    },
+    {
+      "Name": "Saig_ManConstrNum",
+      "Start": 3011,
+      "End": 3132,
+      "BodyStart": 3089,
+      "Original": "static inline int          Saig_ManConstrNum( Aig_Man_t * p )                 { return p-\u003enConstrs;                     }",
+      "Draft": "func Saig_ManConstrNum(p *Aig_Man_t) int32 { return p.nConstrs;                     }"
+    },
+    {
+      "Name": "Saig_ManLo",
+      "Start": 3133,
+      "End": 3279,
+      "BodyStart": 3211,
+      "Original": "static inline Aig_Obj_t *  Saig_ManLo( Aig_Man_t * p, int i )                 { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCis, Saig_ManPiNum(p)+i);   }",
+      "Draft": "func Saig_ManLo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Saig_ManPiNum(p)+i);   }"
+    },
+    {
+      "Name": "Saig_ManLi",
+      "Start": 3280,
+      "End": 3426,
+      "BodyStart": 3358,
+      "Original": "static inline Aig_Obj_t *  Saig_ManLi( Aig_Man_t * p, int i )                 { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCos, Saig_ManPoNum(p)+i);   }",
+      "Draft": "func Saig_ManLi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Saig_ManPoNum(p)+i);   }"
+    },
+    {
+      "Name": "Saig_ObjIsPi",
+      "Start": 3428,
+      "End": 3576,
+      "BodyStart": 3506,
+      "Original": "static inline int          Saig_ObjIsPi( Aig_Man_t * p, Aig_Obj_t * pObj )    { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPiNum(p); }",
+      "Draft": "func Saig_ObjIsPi(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPiNum(p); }"
+    },
+    {
+      "Name": "Saig_ObjIsPo",
+      "Start": 3577,
+      "End": 3725,
+      "BodyStart": 3655,
+      "Original": "static inline int          Saig_ObjIsPo( Aig_Man_t * p, Aig_Obj_t * pObj )    { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPoNum(p); }",
+      "Draft": "func Saig_ObjIsPo(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPoNum(p); }"
+    },
+    {
+      "Name": "Saig_ObjIsLo",
+      "Start": 3726,
+      "End": 3875,
+      "BodyStart": 3804,
+      "Original": "static inline int          Saig_ObjIsLo( Aig_Man_t * p, Aig_Obj_t * pObj )    { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPiNum(p); }",
+      "Draft": "func Saig_ObjIsLo(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPiNum(p); }"
+    },
+    {
+      "Name": "Saig_ObjIsLi",
+      "Start": 3876,
+      "End": 4025,
+      "BodyStart": 3954,
+      "Original": "static inline int          Saig_ObjIsLi( Aig_Man_t * p, Aig_Obj_t * pObj )    { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPoNum(p); }",
+      "Draft": "func Saig_ObjIsLi(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPoNum(p); }"
+    },
+    {
+      "Name": "Saig_ObjLoToLi",
+      "Start": 4026,
+      "End": 4237,
+      "BodyStart": 4104,
+      "Original": "static inline Aig_Obj_t *  Saig_ObjLoToLi( Aig_Man_t * p, Aig_Obj_t * pObj )  { assert(Saig_ObjIsLo(p, pObj)); return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCos, Saig_ManPoNum(p)+Aig_ObjCioId(pObj)-Saig_ManPiNum(p));   }",
+      "Draft": "func Saig_ObjLoToLi(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert((Saig_ObjIsLo(p, pObj) != 0), \"Saig_ObjIsLo(p, pObj)\"); return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Saig_ManPoNum(p)+Aig_ObjCioId(pObj)-Saig_ManPiNum(p));   }"
+    },
+    {
+      "Name": "Saig_ObjLiToLo",
+      "Start": 4238,
+      "End": 4449,
+      "BodyStart": 4316,
+      "Original": "static inline Aig_Obj_t *  Saig_ObjLiToLo( Aig_Man_t * p, Aig_Obj_t * pObj )  { assert(Saig_ObjIsLi(p, pObj)); return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCis, Saig_ManPiNum(p)+Aig_ObjCioId(pObj)-Saig_ManPoNum(p));   }",
+      "Draft": "func Saig_ObjLiToLo(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert((Saig_ObjIsLi(p, pObj) != 0), \"Saig_ObjIsLi(p, pObj)\"); return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Saig_ManPiNum(p)+Aig_ObjCioId(pObj)-Saig_ManPoNum(p));   }"
+    },
+    {
+      "Name": "Saig_ObjRegId",
+      "Start": 4450,
+      "End": 4705,
+      "BodyStart": 4528,
+      "Original": "static inline int          Saig_ObjRegId( Aig_Man_t * p, Aig_Obj_t * pObj )   { if ( Saig_ObjIsLo(p, pObj) ) return Aig_ObjCioId(pObj)-Saig_ManPiNum(p); if ( Saig_ObjIsLi(p, pObj) ) return Aig_ObjCioId(pObj)-Saig_ManPoNum(p); else assert(0);  return -1; }",
+      "Draft": "func Saig_ObjRegId(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { if Saig_ObjIsLo(p, pObj) != 0 { return Aig_ObjCioId(pObj)-Saig_ManPiNum(p); }\n if Saig_ObjIsLi(p, pObj) != 0 { return Aig_ObjCioId(pObj)-Saig_ManPoNum(p); } else { assert(false, \"0\"); }\n  return -1; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::struct::Sec_MtrStatus_t",
+      "Category": "struct-review",
+      "Symbol": "Sec_MtrStatus_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1280,
+      "End": 1776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::struct::Saig_ParBbr_t",
+      "Category": "struct-review",
+      "Symbol": "Saig_ParBbr_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1780,
+      "End": 2178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::pointer-cast::3220",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3220,
+      "End": 3233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::pointer-cast::3367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3367,
+      "End": 3380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::pointer-cast::4144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4144,
+      "End": 4157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::pointer-cast::4356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4356,
+      "End": 4369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::macro::Saig_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4751,
+      "End": 4913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::macro::Saig_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4914,
+      "End": 5076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::macro::Saig_ManForEachLo",
+      "Category": "macro-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5119,
+      "End": 5324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::macro::Saig_ManForEachLi",
+      "Category": "macro-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5325,
+      "End": 5530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::macro::Saig_ManForEachLiLo",
+      "Category": "macro-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5576,
+      "End": 5794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2401,
+      "End": 2522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2523,
+      "End": 2644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2645,
+      "End": 2766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2767,
+      "End": 2888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2889,
+      "End": 3010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManConstrNum",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManConstrNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3011,
+      "End": 3132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManLo",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3133,
+      "End": 3279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ManLi",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3280,
+      "End": 3426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3428,
+      "End": 3576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3577,
+      "End": 3725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjIsLo",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjIsLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3726,
+      "End": 3875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjIsLi",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjIsLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3876,
+      "End": 4025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjLoToLi",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjLoToLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4026,
+      "End": 4237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjLiToLo",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjLiToLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4238,
+      "End": 4449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::Saig_ObjRegId",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjRegId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4450,
+      "End": 4705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saig.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13342
+    }
+  ],
+  "Draft": "package saig\n\n/**CFile****************************************************************\n\n  FileName    [saig.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saig.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/aig/aig.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Sec_MtrStatus_t struct {\n    nInputs         int32;      // the total number of inputs\n    nNodes         int32;       // the total number of nodes\n    nOutputs         int32;     // the total number of outputs\n    nUnsat         int32;       // the number of UNSAT outputs\n    nSat         int32;         // the number of SAT outputs\n    nUndec         int32;       // the number of undecided outputs\n    iOut         int32;         // the satisfied output\n} \n \n   \ntype Saig_ParBbr_t struct {\n    TimeLimit         int32;\n    nBddMax         int32;\n    nIterMax         int32;\n    fPartition         int32;\n    fReorder         int32;\n    fReorderImage         int32;\n    fVerbose         int32;\n    fSilent         int32;\n    fSkipOutCheck         int32;// skip output checking\n    iFrame         int32;       // explored up to this frame\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Saig_ManPiNum(p *Aig_Man_t) int32 { return p.nTruePis;                     }\nfunc Saig_ManPoNum(p *Aig_Man_t) int32 { return p.nTruePos;                     }\nfunc Saig_ManCiNum(p *Aig_Man_t) int32 { return p.nTruePis + p.nRegs;          }\nfunc Saig_ManCoNum(p *Aig_Man_t) int32 { return p.nTruePos + p.nRegs;          }\nfunc Saig_ManRegNum(p *Aig_Man_t) int32 { return p.nRegs;                        }\nfunc Saig_ManConstrNum(p *Aig_Man_t) int32 { return p.nConstrs;                     }\nfunc Saig_ManLo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Saig_ManPiNum(p)+i);   }\nfunc Saig_ManLi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Saig_ManPoNum(p)+i);   }\n\nfunc Saig_ObjIsPi(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPiNum(p); }\nfunc Saig_ObjIsPo(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003c Saig_ManPoNum(p); }\nfunc Saig_ObjIsLo(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCi(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPiNum(p); }\nfunc Saig_ObjIsLi(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return Aig_ObjIsCo(pObj) \u0026\u0026 Aig_ObjCioId(pObj) \u003e= Saig_ManPoNum(p); }\nfunc Saig_ObjLoToLi(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert((Saig_ObjIsLo(p, pObj) != 0), \"Saig_ObjIsLo(p, pObj)\"); return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Saig_ManPoNum(p)+Aig_ObjCioId(pObj)-Saig_ManPiNum(p));   }\nfunc Saig_ObjLiToLo(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert((Saig_ObjIsLi(p, pObj) != 0), \"Saig_ObjIsLi(p, pObj)\"); return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Saig_ManPiNum(p)+Aig_ObjCioId(pObj)-Saig_ManPoNum(p));   }\nfunc Saig_ObjRegId(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { if Saig_ObjIsLo(p, pObj) != 0 { return Aig_ObjCioId(pObj)-Saig_ManPiNum(p); }\n if Saig_ObjIsLi(p, pObj) != 0 { return Aig_ObjCioId(pObj)-Saig_ManPoNum(p); } else { assert(false, \"0\"); }\n  return -1; }\n\n// iterator over the primary inputs/outputs\n// Original macro:\n// #define Saig_ManForEachPi( p, pObj, i )                                           \\\n//     Vec_PtrForEachEntryStop( Aig_Obj_t *, p-\u003evCis, pObj, i, Saig_ManPiNum(p) )\n\n// Original macro:\n// #define Saig_ManForEachPo( p, pObj, i )                                           \\\n//     Vec_PtrForEachEntryStop( Aig_Obj_t *, p-\u003evCos, pObj, i, Saig_ManPoNum(p) )\n\n// iterator over the latch inputs/outputs\n// Original macro:\n// #define Saig_ManForEachLo( p, pObj, i )                                           \\\n//     for ( i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCis, i+Saig_ManPiNum(p))), 1); i++ )\n\n// Original macro:\n// #define Saig_ManForEachLi( p, pObj, i )                                           \\\n//     for ( i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCos, i+Saig_ManPoNum(p))), 1); i++ )\n\n// iterator over the latch input and outputs\n// Original macro:\n// #define Saig_ManForEachLiLo( p, pObjLi, pObjLo, i )                               \\\n//     for ( i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)    \\\n//         \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== saigCone.c ==========================================================*/\n// extern void              Saig_ManPrintCones( Aig_Man_t * p );\n\n/*=== saigConstr.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDupUnfoldConstrs( Aig_Man_t * pAig );\n\n// extern Aig_Man_t *       Saig_ManDupFoldConstrs( Aig_Man_t * pAig, Vec_Int_t * vConstrs );\n\n// extern int               Saig_ManDetectConstrTest( Aig_Man_t * p );\n\n// extern void              Saig_ManDetectConstrFuncTest( Aig_Man_t * p, int nFrames, int nConfs, int nProps, int fOldAlgo, int fVerbose );\n\n/*=== saigConstr2.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDupFoldConstrsFunc( Aig_Man_t * pAig, int fCompl, int fVerbose );\n\n// extern Aig_Man_t *       Saig_ManDupUnfoldConstrsFunc( Aig_Man_t * pAig, int nFrames, int nConfs, int nProps, int fOldAlgo, int fVerbose );\n\n// -- jlong -- begin\n// extern Aig_Man_t *       Saig_ManDupFoldConstrsFunc2( Aig_Man_t * pAig, int fCompl, int fVerbose, int typeII_cnt );\n\n// extern Aig_Man_t *       Saig_ManDupUnfoldConstrsFunc2( Aig_Man_t * pAig, int nFrames, int nConfs, int nProps, int fOldAlgo, int fVerbose , int * typeII_cnt);\n\n// --jlong -- end\n\n/*=== saigDual.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDupDual( Aig_Man_t * pAig, Vec_Int_t * vDcFlops, int nDualPis, int fDualFfs, int fMiterFfs, int fComplPo, int fCheckZero, int fCheckOne );\n\n// extern void              Saig_ManBlockPo( Aig_Man_t * pAig, int nCycles );\n\n/*=== saigDup.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDupOrpos( Aig_Man_t * p );\n\n// extern Aig_Man_t *       Saig_ManCreateEquivMiter( Aig_Man_t * pAig, Vec_Int_t * vPairs, int fAddOuts );\n\n// extern Aig_Man_t *       Saig_ManDupAbstraction( Aig_Man_t * pAig, Vec_Int_t * vFlops );\n\n// extern int               Saig_ManVerifyCex( Aig_Man_t * pAig, Abc_Cex_t * p );\n\n// extern Abc_Cex_t *       Saig_ManExtendCex( Aig_Man_t * pAig, Abc_Cex_t * p );\n\n// extern int               Saig_ManFindFailedPoCex( Aig_Man_t * pAig, Abc_Cex_t * p );\n\n// extern Aig_Man_t *       Saig_ManDupWithPhase( Aig_Man_t * pAig, Vec_Int_t * vInit );\n\n// extern Aig_Man_t *       Saig_ManDupCones( Aig_Man_t * pAig, int * pPos, int nPos );\n\n/*=== saigHaig.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManHaigRecord( Aig_Man_t * p, int nIters, int nSteps, int fRetimingOnly, int fAddBugs, int fUseCnf, int fVerbose );\n\n/*=== saigInd.c ==========================================================*/\n// extern int               Saig_ManInduction( Aig_Man_t * p, int nTimeOut, int nFramesMax, int nConfMax, int fUnique, int fUniqueAll, int fGetCex, int fVerbose, int fVeryVerbose );\n\n/*=== saigIoa.c ==========================================================*/\n// extern void              Saig_ManDumpBlif( Aig_Man_t * p, char * pFileName );\n\n// extern Aig_Man_t *       Saig_ManReadBlif( char * pFileName );\n\n/*=== saigIso.c ==========================================================*/\n// extern Vec_Int_t *       Saig_ManFindIsoPerm( Aig_Man_t * pAig, int fVerbose );\n\n// extern Aig_Man_t *       Saig_ManDupIsoCanonical( Aig_Man_t * pAig, int fVerbose );\n\n// extern Aig_Man_t *       Saig_ManIsoReduce( Aig_Man_t * pAig, Vec_Ptr_t ** pvCosEquivs, int fVerbose );\n\n/*=== saigIsoFast.c ==========================================================*/\n// extern Vec_Vec_t *       Saig_IsoDetectFast( Aig_Man_t * pAig );\n\n/*=== saigMiter.c ==========================================================*/\n// extern Sec_MtrStatus_t   Sec_MiterStatus( Aig_Man_t * p );\n\n// extern Aig_Man_t *       Saig_ManCreateMiter( Aig_Man_t * p1, Aig_Man_t * p2, int Oper );\n\n// extern Aig_Man_t *       Saig_ManCreateMiterComb( Aig_Man_t * p1, Aig_Man_t * p2, int Oper );\n\n// extern Aig_Man_t *       Saig_ManDualRail( Aig_Man_t * p, int fMiter );\n\n// extern Aig_Man_t *       Saig_ManCreateMiterTwo( Aig_Man_t * pOld, Aig_Man_t * pNew, int nFrames );\n\n// extern int               Saig_ManDemiterSimple( Aig_Man_t * p, Aig_Man_t ** ppAig0, Aig_Man_t ** ppAig1 );\n\n// extern int               Saig_ManDemiterSimpleDiff( Aig_Man_t * p, Aig_Man_t ** ppAig0, Aig_Man_t ** ppAig1 );\n\n// extern int               Saig_ManDemiterDual( Aig_Man_t * p, Aig_Man_t ** ppAig0, Aig_Man_t ** ppAig1 );\n\n// extern int               Ssw_SecSpecialMiter( Aig_Man_t * p0, Aig_Man_t * p1, int nFrames, int fVerbose );\n\n// extern int               Saig_ManDemiterNew( Aig_Man_t * pMan );\n\n/*=== saigOutdec.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDecPropertyOutput( Aig_Man_t * pAig, int nLits, int fVerbose );\n\n/*=== saigPhase.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManPhaseAbstract( Aig_Man_t * p, Vec_Int_t * vInits, int nFrames, int nPref, int fIgnore, int fPrint, int fVerbose );\n\n/*=== saigRetFwd.c ==========================================================*/\n// extern void              Saig_ManMarkAutonomous( Aig_Man_t * p );\n\n// extern Aig_Man_t *       Saig_ManRetimeForward( Aig_Man_t * p, int nMaxIters, int fVerbose );\n\n/*=== saigRetMin.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManRetimeDupForward( Aig_Man_t * p, Vec_Ptr_t * vCut );\n\n// extern Aig_Man_t *       Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\n\n/*=== saigRetStep.c ==========================================================*/\n// extern int               Saig_ManRetimeSteps( Aig_Man_t * p, int nSteps, int fForward, int fAddBugs );\n\n/*=== saigScl.c ==========================================================*/\n// extern void              Saig_ManReportUselessRegisters( Aig_Man_t * pAig );\n\n/*=== saigSimMv.c ==========================================================*/\n// extern Vec_Ptr_t *       Saig_MvManSimulate( Aig_Man_t * pAig, int nFramesSymb, int nFramesSatur, int fVerbose, int fVeryVerbose );\n\n/*=== saigStrSim.c ==========================================================*/\n// extern Vec_Int_t *       Saig_StrSimPerformMatching( Aig_Man_t * p0, Aig_Man_t * p1, int nDist, int fVerbose, Aig_Man_t ** ppMiter );\n\n/*=== saigSwitch.c ==========================================================*/\n// extern Vec_Int_t *       Saig_ManComputeSwitchProb2s( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n\n/*=== saigSynch.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManDupInitZero( Aig_Man_t * p );\n\n/*=== saigTrans.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManTimeframeSimplify( Aig_Man_t * pAig, int nFrames, int nFramesMax, int fInit, int fVerbose );\n\n/*=== saigWnd.c ==========================================================*/\n// extern Aig_Man_t *       Saig_ManWindowExtract( Aig_Man_t * p, Aig_Obj_t * pObj, int nDist );\n\n// extern Aig_Man_t *       Saig_ManWindowInsert( Aig_Man_t * p, Aig_Obj_t * pObj, int nDist, Aig_Man_t * pWnd );\n\n// extern Aig_Obj_t *       Saig_ManFindPivot( Aig_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

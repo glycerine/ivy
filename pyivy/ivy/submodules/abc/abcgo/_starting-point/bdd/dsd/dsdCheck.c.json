@@ -1,0 +1,353 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c",
+  "SHA256": "748bf3a7dc443cf860cce3ba0fe12286df69bf0791581bc59cbffdfb2abc22cc",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 67,
+        "Column": 14,
+        "ByteOffset": 1788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCache = ABC_ALLOC( Dds_Cache_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCache, 0, sizeof(Dds_Cache_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 25,
+        "ByteOffset": 2264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCache.pTable = ABC_ALLOC( Dsd_Entry_t, nRequested );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 2783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCache.pTable );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 2814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCache );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bC1 != b0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 4461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( bC2 != b0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dsd_CheckCacheAllocate",
+      "Start": 1687,
+      "End": 2473,
+      "BodyStart": 1731,
+      "Original": "void Dsd_CheckCacheAllocate( int nEntries )\n{\n    int nRequested;\n\n    pCache = ABC_ALLOC( Dds_Cache_t, 1 );\n    memset( pCache, 0, sizeof(Dds_Cache_t) );\n\n    // check what is the size of the current cache\n    nRequested = Abc_PrimeCudd( nEntries );\n    if ( pCache-\u003enTableSize != nRequested )\n    { // the current size is different\n        // deallocate the old, allocate the new\n        if ( pCache-\u003enTableSize )\n            Dsd_CheckCacheDeallocate();\n        // allocate memory for the hash table\n        pCache-\u003enTableSize = nRequested;\n        pCache-\u003epTable = ABC_ALLOC( Dsd_Entry_t, nRequested );\n    }\n    // otherwise, there is no need to allocate, just clean\n    Dsd_CheckCacheClear();\n//  printf( \"\\nThe number of allocated cache entries = %d.\\n\\n\", pCache-\u003enTableSize );\n}",
+      "Draft": "func Dsd_CheckCacheAllocate(nEntries int32) {\n    var nRequested int32;\n\n    pCache = new(Dds_Cache_t);\n    *pCache = Dds_Cache_t{};\n\n    // check what is the size of the current cache\n    nRequested = Abc_PrimeCudd( nEntries );\n    if pCache.nTableSize != nRequested { // the current size is different\n        // deallocate the old, allocate the new\n        if pCache.nTableSize {\n            Dsd_CheckCacheDeallocate(); }\n        // allocate memory for the hash table\n        pCache.nTableSize = nRequested;\n        pCache.pTable = ABC_ALLOC( Dsd_Entry_t, nRequested );\n    }\n    // otherwise, there is no need to allocate, just clean\n    Dsd_CheckCacheClear();\n//  printf( \"\\nThe number of allocated cache entries = %d.\\n\\n\", pCache-\u003enTableSize );\n}"
+    },
+    {
+      "Name": "Dsd_CheckCacheDeallocate",
+      "Start": 2736,
+      "End": 2827,
+      "BodyStart": 2768,
+      "Original": "void Dsd_CheckCacheDeallocate()\n{\n    ABC_FREE( pCache-\u003epTable );\n    ABC_FREE( pCache );\n}",
+      "Draft": "func Dsd_CheckCacheDeallocate() {\n    ABC_FREE( pCache.pTable );\n    ABC_FREE( pCache );\n}"
+    },
+    {
+      "Name": "Dsd_CheckCacheClear",
+      "Start": 3085,
+      "End": 3213,
+      "BodyStart": 3112,
+      "Original": "void Dsd_CheckCacheClear()\n{\n    int i;\n    for ( i = 0; i \u003c pCache-\u003enTableSize; i++ )\n        pCache-\u003epTable[0].bX[0] = NULL;\n}",
+      "Draft": "func Dsd_CheckCacheClear() {\n    var i int32;\n    for  i = 0; i \u003c pCache.nTableSize; i++  {\n        pCache.pTable[0].bX[0] = nil;\n    }\n}"
+    },
+    {
+      "Name": "Dsd_CheckRootFunctionIdentity",
+      "Start": 3505,
+      "End": 3876,
+      "BodyStart": 3613,
+      "Original": "int Dsd_CheckRootFunctionIdentity( DdManager * dd, DdNode * bF1, DdNode * bF2, DdNode * bC1, DdNode * bC2 )\n{\n    int RetValue;\n//  pCache-\u003enSuccess = 0;\n//  pCache-\u003enFailure = 0;\n    RetValue = Dsd_CheckRootFunctionIdentity_rec(dd, bF1, bF2, bC1, bC2);\n//  printf( \"Cache success = %d. Cache failure = %d.\\n\", pCache-\u003enSuccess, pCache-\u003enFailure );\n    return RetValue;\n}",
+      "Draft": "func Dsd_CheckRootFunctionIdentity(dd *DdManager, bF1 *DdNode, bF2 *DdNode, bC1 *DdNode, bC2 *DdNode) int32 {\n    var RetValue int32;\n//  pCache-\u003enSuccess = 0;\n//  pCache-\u003enFailure = 0;\n    RetValue = Dsd_CheckRootFunctionIdentity_rec(dd, bF1, bF2, bC1, bC2);\n//  printf( \"Cache success = %d. Cache failure = %d.\\n\", pCache-\u003enSuccess, pCache-\u003enFailure );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Dsd_CheckRootFunctionIdentity_rec",
+      "Start": 4174,
+      "End": 9722,
+      "BodyStart": 4286,
+      "Original": "int Dsd_CheckRootFunctionIdentity_rec( DdManager * dd, DdNode * bF1, DdNode * bF2, DdNode * bC1, DdNode * bC2 )\n{\n    unsigned HKey;\n\n    // if either bC1 or bC2 is zero, the test is true\n//  if ( bC1 == b0 || bC2 == b0 )  return 1;\n    assert( bC1 != b0 );\n    assert( bC2 != b0 );\n\n    // if both bC1 and bC2 are one - perform comparison\n    if ( bC1 == b1 \u0026\u0026 bC2 == b1 )  return (int)( bF1 == bF2 );\n\n    if ( bF1 == b0 )\n        return Cudd_bddLeq( dd, bC2, Cudd_Not(bF2) );\n\n    if ( bF1 == b1 )\n        return Cudd_bddLeq( dd, bC2, bF2 );\n\n    if ( bF2 == b0 )\n        return Cudd_bddLeq( dd, bC1, Cudd_Not(bF1) );\n\n    if ( bF2 == b1 )\n        return Cudd_bddLeq( dd, bC1, bF1 );\n\n    // otherwise, keep expanding\n\n    // check cache\n//  HKey = _Hash( ((unsigned)bF1), ((unsigned)bF2), ((unsigned)bC1), ((unsigned)bC2) );\n    HKey = hashKey4( bF1, bF2, bC1, bC2, pCache-\u003enTableSize );\n    if ( pCache-\u003epTable[HKey].bX[0] == bF1 \u0026\u0026 \n         pCache-\u003epTable[HKey].bX[1] == bF2 \u0026\u0026 \n         pCache-\u003epTable[HKey].bX[2] == bC1 \u0026\u0026 \n         pCache-\u003epTable[HKey].bX[3] == bC2 )\n    {\n        pCache-\u003enSuccess++;\n        return (int)(ABC_PTRUINT_T)pCache-\u003epTable[HKey].bX[4]; // the last bit records the result (yes/no)\n    }\n    else\n    {\n\n        // determine the top variables\n        int RetValue;\n        DdNode * bA[4]  = { bF1, bF2, bC1, bC2 }; // arguments\n        DdNode * bAR[4] = { Cudd_Regular(bF1), Cudd_Regular(bF2), Cudd_Regular(bC1), Cudd_Regular(bC2) }; // regular arguments\n        int CurLevel[4] = { cuddI(dd,bAR[0]-\u003eindex), cuddI(dd,bAR[1]-\u003eindex), cuddI(dd,bAR[2]-\u003eindex), cuddI(dd,bAR[3]-\u003eindex) };\n        int TopLevel = CUDD_CONST_INDEX;\n        int i;\n        DdNode * bE[4], * bT[4];\n        DdNode * bF1next, * bF2next, * bC1next, * bC2next;\n\n        pCache-\u003enFailure++;\n\n        // determine the top level\n        for ( i = 0; i \u003c 4; i++ )\n            if ( TopLevel \u003e CurLevel[i] )\n                 TopLevel = CurLevel[i];\n\n        // compute the cofactors\n        for ( i = 0; i \u003c 4; i++ )\n        if ( TopLevel == CurLevel[i] )\n        {\n            if ( bA[i] != bAR[i] ) // complemented\n            {\n                bE[i] = Cudd_Not(cuddE(bAR[i]));\n                bT[i] = Cudd_Not(cuddT(bAR[i]));\n            }\n            else\n            {\n                bE[i] = cuddE(bAR[i]);\n                bT[i] = cuddT(bAR[i]);\n            }\n        }\n        else\n            bE[i] = bT[i] = bA[i];\n\n        // solve subproblems\n        // three cases are possible\n\n        // (1) the top var belongs to both C1 and C2\n        //     in this case, any cofactor of F1 and F2 will do, \n        //     as long as the corresponding cofactor of C1 and C2 is not equal to 0\n        if ( TopLevel == CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] ) \n        {\n            if ( bE[2] != b0 ) // C1\n            {\n                bF1next = bE[0];\n                bC1next = bE[2];\n            }\n            else\n            {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            if ( bE[3] != b0 ) // C2\n            {\n                bF2next = bE[1];\n                bC2next = bE[3];\n            }\n            else\n            {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bF2next, bC1next, bC2next );\n        }\n        // (2) the top var belongs to either C1 or C2\n        //     in this case normal splitting of cofactors\n        else if ( TopLevel == CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] ) \n        {\n            if ( bE[2] != b0 ) // C1\n            {\n                bF1next = bE[0];\n                bC1next = bE[2];\n            }\n            else\n            {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bE[1], bC1next, bE[3] );\n            if ( RetValue == 1 ) // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bT[1], bC1next, bT[3] );\n        }\n        else if ( TopLevel != CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] ) \n        {\n            if ( bE[3] != b0 ) // C2\n            {\n                bF2next = bE[1];\n                bC2next = bE[3];\n            }\n            else\n            {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bF2next, bE[2], bC2next );\n            if ( RetValue == 1 ) // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bF2next, bT[2], bC2next );\n        }\n        // (3) the top var does not belong to C1 and C2\n        //     in this case normal splitting of cofactors\n        else // if ( TopLevel != CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] )\n        {\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bE[1], bE[2], bE[3] );\n            if ( RetValue == 1 ) // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bT[1], bT[2], bT[3] );\n        }\n\n        // set cache\n        for ( i = 0; i \u003c 4; i++ )\n            pCache-\u003epTable[HKey].bX[i] = bA[i];\n        pCache-\u003epTable[HKey].bX[4] = (DdNode*)(ABC_PTRUINT_T)RetValue;\n\n        return RetValue;\n    }\n}",
+      "Draft": "func Dsd_CheckRootFunctionIdentity_rec(dd *DdManager, bF1 *DdNode, bF2 *DdNode, bC1 *DdNode, bC2 *DdNode) int32 {\n    var HKey uint32;\n\n    // if either bC1 or bC2 is zero, the test is true\n//  if ( bC1 == b0 || bC2 == b0 )  return 1;\n    assert(bC1 != b0, \"bC1 != b0\");\n    assert(bC2 != b0, \"bC2 != b0\");\n\n    // if both bC1 and bC2 are one - perform comparison\n    if bC1 == b1 \u0026\u0026 bC2 == b1 {  return int32(( bF1 == bF2 )); }\n\n    if bF1 == b0 {\n        // inlining of macro Cudd_Not\n        return Cudd_bddLeq( dd, bC2, ((DdNode *)((ptrint)(bF2) ^ 01)) ); }\n\n    if bF1 == b1 {\n        return Cudd_bddLeq( dd, bC2, bF2 ); }\n\n    if bF2 == b0 {\n        // inlining of macro Cudd_Not\n        return Cudd_bddLeq( dd, bC1, ((DdNode *)((ptrint)(bF1) ^ 01)) ); }\n\n    if bF2 == b1 {\n        return Cudd_bddLeq( dd, bC1, bF1 ); }\n\n    // otherwise, keep expanding\n\n    // check cache\n//  HKey = _Hash( ((unsigned)bF1), ((unsigned)bF2), ((unsigned)bC1), ((unsigned)bC2) );\n    // inlining of macro hashKey4\n    HKey = ((((((ABC_PTRUINT_T)(bF1) + (ABC_PTRUINT_T)(bF2)) * DD_P1 + (ABC_PTRUINT_T)(bC1)) * DD_P2 +    (ABC_PTRUINT_T)(bC2)) * DD_P3) % pCache.nTableSize);\n    if pCache.pTable[HKey].bX[0] == bF1 \u0026\u0026 \n         pCache.pTable[HKey].bX[1] == bF2 \u0026\u0026 \n         pCache.pTable[HKey].bX[2] == bC1 \u0026\u0026 \n         pCache.pTable[HKey].bX[3] == bC2 {\n        pCache.nSuccess++;\n        return int32((ABC_PTRUINT_T))pCache.pTable[HKey].bX[4]; // the last bit records the result (yes/no)\n    \n    } else {\n\n        // determine the top variables\n        var RetValue int32;\n        var bA [4]*DdNode = [4]*DdNode{ bF1, bF2, bC1, bC2 }; // arguments\n        // inlining of macro Cudd_Regular\n        DdNode * bAR[4] = { ((DdNode *)((ptruint)(bF1) \u0026 ~01)), ((DdNode *)((ptruint)(bF2) \u0026 ~01)), ((DdNode *)((ptruint)(bC1) \u0026 ~01)), ((DdNode *)((ptruint)(bC2) \u0026 ~01)) }; // regular arguments\n        // inlining of macro cuddI\n        int CurLevel[4] = { (((bAR[0].index)==CUDD_CONST_INDEX)?int32((bAR[0].index)):(dd).perm[(bAR[0].index)]), (((bAR[1].index)==CUDD_CONST_INDEX)?int32((bAR[1].index)):(dd).perm[(bAR[1].index)]), (((bAR[2].index)==CUDD_CONST_INDEX)?int32((bAR[2].index)):(dd).perm[(bAR[2].index)]), (((bAR[3].index)==CUDD_CONST_INDEX)?int32((bAR[3].index)):(dd).perm[(bAR[3].index)]) };\n        var TopLevel int32  = CUDD_CONST_INDEX;\n        var i int32;\n        var bE, bT [4]*DdNode;\n        var bF1next, bF2next, bC1next, bC2next *DdNode;\n\n        pCache.nFailure++;\n\n        // determine the top level\n        for  i = 0; i \u003c 4; i++  {\n            if TopLevel \u003e CurLevel[i] {\n                 TopLevel = CurLevel[i]; }\n        }\n\n        // compute the cofactors\n        for  i = 0; i \u003c 4; i++  {\n        if TopLevel == CurLevel[i] {\n            if bA[i] != bAR[i] { // complemented\n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bE[i] = ((DdNode *)((ptrint)(((bAR[i]).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bT[i] = ((DdNode *)((ptrint)(((bAR[i]).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bE[i] = ((bAR[i]).type.kids.E);\n                // inlining of macro cuddT\n                bT[i] = ((bAR[i]).type.kids.T);\n            }\n        \n        } else {\n            bE[i] = bT[i] = bA[i]; }\n        }\n\n        // solve subproblems\n        // three cases are possible\n\n        // (1) the top var belongs to both C1 and C2\n        //     in this case, any cofactor of F1 and F2 will do, \n        //     as long as the corresponding cofactor of C1 and C2 is not equal to 0\n        if TopLevel == CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] {\n            if bE[2] != b0 { // C1\n            \n                bF1next = bE[0];\n                bC1next = bE[2];\n            \n            } else {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            if bE[3] != b0 { // C2\n            \n                bF2next = bE[1];\n                bC2next = bE[3];\n            \n            } else {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bF2next, bC1next, bC2next );\n        \n        // (2) the top var belongs to either C1 or C2\n        //     in this case normal splitting of cofactors\n        } else if TopLevel == CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] {\n            if bE[2] != b0 { // C1\n            \n                bF1next = bE[0];\n                bC1next = bE[2];\n            \n            } else {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bE[1], bC1next, bE[3] );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bT[1], bC1next, bT[3] ); }\n        \n        } else if TopLevel != CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] {\n            if bE[3] != b0 { // C2\n            \n                bF2next = bE[1];\n                bC2next = bE[3];\n            \n            } else {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bF2next, bE[2], bC2next );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bF2next, bT[2], bC2next ); }\n        \n        // (3) the top var does not belong to C1 and C2\n        //     in this case normal splitting of cofactors\n        } else { // if ( TopLevel != CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] )\n        \n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bE[1], bE[2], bE[3] );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bT[1], bT[2], bT[3] ); }\n        }\n\n        // set cache\n        for  i = 0; i \u003c 4; i++  {\n            pCache.pTable[HKey].bX[i] = bA[i];\n        }\n        pCache.pTable[HKey].bX[4] = (DdNode*)(ABC_PTRUINT_T)RetValue;\n\n        return RetValue;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::struct::Dsd_Cache_t_",
+      "Category": "struct-review",
+      "Symbol": "Dsd_Cache_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 853,
+      "End": 1005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::struct::Dsd_Entry_t_::DdNode * bX[5];",
+      "Category": "struct-field-review",
+      "Symbol": "Dsd_Entry_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1028,
+      "End": 1048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::struct::Dsd_Entry_t_",
+      "Category": "struct-review",
+      "Symbol": "Dsd_Entry_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1007,
+      "End": 1051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::mechanical::sizeof::1819",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1819,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::4681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4636,
+      "End": 4636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::4886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4778,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::5883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5567,
+      "End": 5567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::5967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5586,
+      "End": 5586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::6051",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5605,
+      "End": 5605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::6135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5624,
+      "End": 5624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::7320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6332,
+      "End": 6332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::7483",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6381,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::pointer-cast::10928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9655,
+      "End": 9664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::Dsd_CheckCacheAllocate",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_CheckCacheAllocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1687,
+      "End": 2473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::Dsd_CheckCacheDeallocate",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_CheckCacheDeallocate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2736,
+      "End": 2827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::Dsd_CheckCacheClear",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_CheckCacheClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3085,
+      "End": 3213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::Dsd_CheckRootFunctionIdentity",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_CheckRootFunctionIdentity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3505,
+      "End": 3876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::ternary::Dsd_CheckRootFunctionIdentity_rec",
+      "Category": "ternary-review",
+      "Symbol": "Dsd_CheckRootFunctionIdentity_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4174,
+      "End": 9722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::Dsd_CheckRootFunctionIdentity_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_CheckRootFunctionIdentity_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4174,
+      "End": 9722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::macro-inline::1767",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1767,
+      "End": 1794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::macro-inline::2255",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2255,
+      "End": 2291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::macro-inline::2774",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2774,
+      "End": 2800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdCheck.c::macro-inline::2806",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2806,
+      "End": 2824
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsdCheck.c]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [Procedures to check the identity of root functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsdCheck.c,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dsdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Dds_Cache_t =  Dsd_Cache_t_;\ntype Dsd_Entry_t =  Dsd_Entry_t_;\n\ntype Dsd_Cache_t_ struct {\n    pTable      *Dsd_Entry_t;\n    nTableSize               int32;\n    nSuccess               int32;\n    nFailure               int32;\n}\n\ntype Dsd_Entry_t_ struct {\n    DdNode * bX[5];\n}\n\nvar pCache *Dds_Cache_t;\n\n// static int Dsd_CheckRootFunctionIdentity_rec( DdManager * dd, DdNode * bF1, DdNode * bF2, DdNode * bC1, DdNode * bC2 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function********************************************************************\n\n  Synopsis    [(Re)allocates the local cache.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Dsd_CheckCacheAllocate(nEntries int32) {\n    var nRequested int32;\n\n    pCache = new(Dds_Cache_t);\n    *pCache = Dds_Cache_t{};\n\n    // check what is the size of the current cache\n    nRequested = Abc_PrimeCudd( nEntries );\n    if pCache.nTableSize != nRequested { // the current size is different\n        // deallocate the old, allocate the new\n        if pCache.nTableSize {\n            Dsd_CheckCacheDeallocate(); }\n        // allocate memory for the hash table\n        pCache.nTableSize = nRequested;\n        pCache.pTable = ABC_ALLOC( Dsd_Entry_t, nRequested );\n    }\n    // otherwise, there is no need to allocate, just clean\n    Dsd_CheckCacheClear();\n//  printf( \"\\nThe number of allocated cache entries = %d.\\n\\n\", pCache-\u003enTableSize );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Deallocates the local cache.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Dsd_CheckCacheDeallocate() {\n    ABC_FREE( pCache.pTable );\n    ABC_FREE( pCache );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Clears the local cache.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Dsd_CheckCacheClear() {\n    var i int32;\n    for  i = 0; i \u003c pCache.nTableSize; i++  {\n        pCache.pTable[0].bX[0] = nil;\n    }\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether it is true that bF1(bC1=0) == bF2(bC2=0).]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Dsd_CheckRootFunctionIdentity(dd *DdManager, bF1 *DdNode, bF2 *DdNode, bC1 *DdNode, bC2 *DdNode) int32 {\n    var RetValue int32;\n//  pCache-\u003enSuccess = 0;\n//  pCache-\u003enFailure = 0;\n    RetValue = Dsd_CheckRootFunctionIdentity_rec(dd, bF1, bF2, bC1, bC2);\n//  printf( \"Cache success = %d. Cache failure = %d.\\n\", pCache-\u003enSuccess, pCache-\u003enFailure );\n    return RetValue;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Dsd_CheckRootFunctionIdentity().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Dsd_CheckRootFunctionIdentity_rec(dd *DdManager, bF1 *DdNode, bF2 *DdNode, bC1 *DdNode, bC2 *DdNode) int32 {\n    var HKey uint32;\n\n    // if either bC1 or bC2 is zero, the test is true\n//  if ( bC1 == b0 || bC2 == b0 )  return 1;\n    assert(bC1 != b0, \"bC1 != b0\");\n    assert(bC2 != b0, \"bC2 != b0\");\n\n    // if both bC1 and bC2 are one - perform comparison\n    if bC1 == b1 \u0026\u0026 bC2 == b1 {  return int32(( bF1 == bF2 )); }\n\n    if bF1 == b0 {\n        // inlining of macro Cudd_Not\n        return Cudd_bddLeq( dd, bC2, ((DdNode *)((ptrint)(bF2) ^ 01)) ); }\n\n    if bF1 == b1 {\n        return Cudd_bddLeq( dd, bC2, bF2 ); }\n\n    if bF2 == b0 {\n        // inlining of macro Cudd_Not\n        return Cudd_bddLeq( dd, bC1, ((DdNode *)((ptrint)(bF1) ^ 01)) ); }\n\n    if bF2 == b1 {\n        return Cudd_bddLeq( dd, bC1, bF1 ); }\n\n    // otherwise, keep expanding\n\n    // check cache\n//  HKey = _Hash( ((unsigned)bF1), ((unsigned)bF2), ((unsigned)bC1), ((unsigned)bC2) );\n    // inlining of macro hashKey4\n    HKey = ((((((ABC_PTRUINT_T)(bF1) + (ABC_PTRUINT_T)(bF2)) * DD_P1 + (ABC_PTRUINT_T)(bC1)) * DD_P2 +    (ABC_PTRUINT_T)(bC2)) * DD_P3) % pCache.nTableSize);\n    if pCache.pTable[HKey].bX[0] == bF1 \u0026\u0026 \n         pCache.pTable[HKey].bX[1] == bF2 \u0026\u0026 \n         pCache.pTable[HKey].bX[2] == bC1 \u0026\u0026 \n         pCache.pTable[HKey].bX[3] == bC2 {\n        pCache.nSuccess++;\n        return int32((ABC_PTRUINT_T))pCache.pTable[HKey].bX[4]; // the last bit records the result (yes/no)\n    \n    } else {\n\n        // determine the top variables\n        var RetValue int32;\n        var bA [4]*DdNode = [4]*DdNode{ bF1, bF2, bC1, bC2 }; // arguments\n        // inlining of macro Cudd_Regular\n        DdNode * bAR[4] = { ((DdNode *)((ptruint)(bF1) \u0026 ~01)), ((DdNode *)((ptruint)(bF2) \u0026 ~01)), ((DdNode *)((ptruint)(bC1) \u0026 ~01)), ((DdNode *)((ptruint)(bC2) \u0026 ~01)) }; // regular arguments\n        // inlining of macro cuddI\n        int CurLevel[4] = { (((bAR[0].index)==CUDD_CONST_INDEX)?int32((bAR[0].index)):(dd).perm[(bAR[0].index)]), (((bAR[1].index)==CUDD_CONST_INDEX)?int32((bAR[1].index)):(dd).perm[(bAR[1].index)]), (((bAR[2].index)==CUDD_CONST_INDEX)?int32((bAR[2].index)):(dd).perm[(bAR[2].index)]), (((bAR[3].index)==CUDD_CONST_INDEX)?int32((bAR[3].index)):(dd).perm[(bAR[3].index)]) };\n        var TopLevel int32  = CUDD_CONST_INDEX;\n        var i int32;\n        var bE, bT [4]*DdNode;\n        var bF1next, bF2next, bC1next, bC2next *DdNode;\n\n        pCache.nFailure++;\n\n        // determine the top level\n        for  i = 0; i \u003c 4; i++  {\n            if TopLevel \u003e CurLevel[i] {\n                 TopLevel = CurLevel[i]; }\n        }\n\n        // compute the cofactors\n        for  i = 0; i \u003c 4; i++  {\n        if TopLevel == CurLevel[i] {\n            if bA[i] != bAR[i] { // complemented\n            \n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bE[i] = ((DdNode *)((ptrint)(((bAR[i]).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bT[i] = ((DdNode *)((ptrint)(((bAR[i]).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bE[i] = ((bAR[i]).type.kids.E);\n                // inlining of macro cuddT\n                bT[i] = ((bAR[i]).type.kids.T);\n            }\n        \n        } else {\n            bE[i] = bT[i] = bA[i]; }\n        }\n\n        // solve subproblems\n        // three cases are possible\n\n        // (1) the top var belongs to both C1 and C2\n        //     in this case, any cofactor of F1 and F2 will do, \n        //     as long as the corresponding cofactor of C1 and C2 is not equal to 0\n        if TopLevel == CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] {\n            if bE[2] != b0 { // C1\n            \n                bF1next = bE[0];\n                bC1next = bE[2];\n            \n            } else {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            if bE[3] != b0 { // C2\n            \n                bF2next = bE[1];\n                bC2next = bE[3];\n            \n            } else {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bF2next, bC1next, bC2next );\n        \n        // (2) the top var belongs to either C1 or C2\n        //     in this case normal splitting of cofactors\n        } else if TopLevel == CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] {\n            if bE[2] != b0 { // C1\n            \n                bF1next = bE[0];\n                bC1next = bE[2];\n            \n            } else {\n                bF1next = bT[0];\n                bC1next = bT[2];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bE[1], bC1next, bE[3] );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bF1next, bT[1], bC1next, bT[3] ); }\n        \n        } else if TopLevel != CurLevel[2] \u0026\u0026 TopLevel == CurLevel[3] {\n            if bE[3] != b0 { // C2\n            \n                bF2next = bE[1];\n                bC2next = bE[3];\n            \n            } else {\n                bF2next = bT[1];\n                bC2next = bT[3];\n            }\n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bF2next, bE[2], bC2next );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bF2next, bT[2], bC2next ); }\n        \n        // (3) the top var does not belong to C1 and C2\n        //     in this case normal splitting of cofactors\n        } else { // if ( TopLevel != CurLevel[2] \u0026\u0026 TopLevel != CurLevel[3] )\n        \n            // split around this variable\n            RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bE[0], bE[1], bE[2], bE[3] );\n            if RetValue == 1 { // test another branch; otherwise, there is no need to test\n                RetValue = Dsd_CheckRootFunctionIdentity_rec( dd, bT[0], bT[1], bT[2], bT[3] ); }\n        }\n\n        // set cache\n        for  i = 0; i \u003c 4; i++  {\n            pCache.pTable[HKey].bX[i] = bA[i];\n        }\n        pCache.pTable[HKey].bX[4] = (DdNode*)(ABC_PTRUINT_T)RetValue;\n\n        return RetValue;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

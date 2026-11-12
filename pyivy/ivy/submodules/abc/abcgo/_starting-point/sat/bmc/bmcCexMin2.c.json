@@ -1,0 +1,406 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c",
+  "SHA256": "90dfb5ca40864b69d6502fa988c6bac8710508e5299875703177fab5bfce6128",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vTruths == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 4531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 4668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example is invalid.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 17,
+        "ByteOffset": 5846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Value == (Value0 \u0026 Value1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 17,
+        "ByteOffset": 6387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 17,
+        "ByteOffset": 6585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 22,
+        "ByteOffset": 6752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 7980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex.iFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 22,
+        "ByteOffset": 12176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 12815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Gia_ManGetTwo(p, pCex.iFrame, pObj) \u003e\u003e 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 12873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 13493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nPis == Gia_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 13586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.iPo \u003c Gia_ManPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 13648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex.iFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 13738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRealPis \u003c Gia_ManPiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 9,
+        "ByteOffset": 13981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : \", iFrameStart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 14331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : \", f );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_InfoGet2Bits",
+      "Start": 808,
+      "End": 1035,
+      "BodyStart": 899,
+      "Original": "static inline int  Abc_InfoGet2Bits( Vec_Int_t * vData, int nWords, int iFrame, int iObj )\n{\n    unsigned * pInfo = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    return 3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Abc_InfoGet2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32) int32 {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    return 3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Abc_InfoSet2Bits",
+      "Start": 1036,
+      "End": 1333,
+      "BodyStart": 1138,
+      "Original": "static inline void Abc_InfoSet2Bits( Vec_Int_t * vData, int nWords, int iFrame, int iObj, int Value )\n{\n    unsigned * pInfo = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    Value ^= (3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1)));\n    pInfo[iObj \u003e\u003e 4] ^= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Abc_InfoSet2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32, Value int32) {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    Value ^= (3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1)));\n    pInfo[iObj \u003e\u003e 4] ^= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Abc_InfoAdd2Bits",
+      "Start": 1334,
+      "End": 1570,
+      "BodyStart": 1436,
+      "Original": "static inline void Abc_InfoAdd2Bits( Vec_Int_t * vData, int nWords, int iFrame, int iObj, int Value )\n{\n    unsigned * pInfo = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    pInfo[iObj \u003e\u003e 4] |= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Abc_InfoAdd2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32, Value int32) {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    pInfo[iObj \u003e\u003e 4] |= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Gia_ManGetTwo",
+      "Start": 1572,
+      "End": 1748,
+      "BodyStart": 1665,
+      "Original": "static inline int  Gia_ManGetTwo( Gia_Man_t * p, int iFrame, Gia_Obj_t * pObj )              { return Abc_InfoGet2Bits( p-\u003evTruths, p-\u003enTtWords, iFrame, Gia_ObjId(p, pObj) ); }",
+      "Draft": "func Gia_ManGetTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t) int32 { return Abc_InfoGet2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj) ); }"
+    },
+    {
+      "Name": "Gia_ManSetTwo",
+      "Start": 1749,
+      "End": 1925,
+      "BodyStart": 1842,
+      "Original": "static inline void Gia_ManSetTwo( Gia_Man_t * p, int iFrame, Gia_Obj_t * pObj, int Value )   { Abc_InfoSet2Bits( p-\u003evTruths, p-\u003enTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }",
+      "Draft": "func Gia_ManSetTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t, Value int32) { Abc_InfoSet2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }"
+    },
+    {
+      "Name": "Gia_ManAddTwo",
+      "Start": 1926,
+      "End": 2102,
+      "BodyStart": 2019,
+      "Original": "static inline void Gia_ManAddTwo( Gia_Man_t * p, int iFrame, Gia_Obj_t * pObj, int Value )   { Abc_InfoAdd2Bits( p-\u003evTruths, p-\u003enTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }",
+      "Draft": "func Gia_ManAddTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t, Value int32) { Abc_InfoAdd2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }"
+    },
+    {
+      "Name": "Gia_ManAnnotateUnrolling",
+      "Start": 2783,
+      "End": 6664,
+      "BodyStart": 2861,
+      "Original": "int Gia_ManAnnotateUnrolling( Gia_Man_t * p, Abc_Cex_t * pCex, int fJustMax )\n{\n    Gia_Obj_t * pObj, * pObjRi, * pObjRo;\n    int RetValue, f, k, Value, Value0, Value1, iBit;\n    // start storage for internal info\n    assert( p-\u003evTruths == NULL );\n    p-\u003enTtWords = Abc_BitWordNum( 2 * Gia_ManObjNum(p) );\n    p-\u003evTruths  = Vec_IntStart( (pCex-\u003eiFrame + 1) * p-\u003enTtWords );\n    // assign values to all objects (const0 and RO in frame0 are assigned 0)\n    Gia_ManCleanMark0(p);\n    for ( f = 0, iBit = pCex-\u003enRegs; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n        Gia_ManForEachPi( p, pObj, k )\n            if ( (pObj-\u003efMark0 = Abc_InfoHasBit(pCex-\u003epData, iBit++)) )\n                Gia_ManAddTwo( p, f, pObj, 1 );\n        Gia_ManForEachAnd( p, pObj, k )\n            if ( (pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj))) )\n                Gia_ManAddTwo( p, f, pObj, 1 );\n        Gia_ManForEachCo( p, pObj, k )\n            if ( (pObj-\u003efMark0 = Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) )\n                Gia_ManAddTwo( p, f, pObj, 1 );\n        if ( f == pCex-\u003eiFrame )\n            break;\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, k )\n            if ( (pObjRo-\u003efMark0 = pObjRi-\u003efMark0) )\n                Gia_ManAddTwo( p, f+1, pObjRo, 1 );\n    }\n    assert( iBit == pCex-\u003enBits );\n    // check the output value\n    RetValue = Gia_ManPo(p, pCex-\u003eiPo)-\u003efMark0;\n    if ( RetValue != 1 )\n        printf( \"Counter-example is invalid.\\n\" );\n    // assign justification to nodes\n    Gia_ManCleanMark0(p);\n    pObj = Gia_ManPo(p, pCex-\u003eiPo);\n    pObj-\u003efMark0 = 1;\n    Gia_ManAddTwo( p, pCex-\u003eiFrame, pObj, 2 );\n    for ( f = pCex-\u003eiFrame; f \u003e= 0; f-- )\n    {\n        // transfer to CO drivers\n        Gia_ManForEachCo( p, pObj, k )\n            if ( (Gia_ObjFanin0(pObj)-\u003efMark0 = pObj-\u003efMark0) )\n            {\n                pObj-\u003efMark0 = 0;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            }\n        // compute justification\n        Gia_ManForEachAndReverse( p, pObj, k )\n        {\n            if ( !pObj-\u003efMark0 ) \n                continue;\n            pObj-\u003efMark0 = 0;\n            Value = (1 \u0026 Gia_ManGetTwo(p, f, pObj));\n            Value0 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin0(pObj))) ^ Gia_ObjFaninC0(pObj);\n            Value1 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin1(pObj))) ^ Gia_ObjFaninC1(pObj);\n            if ( Value0 == Value1 )\n            {\n                assert( Value == (Value0 \u0026 Value1) );\n                if ( fJustMax || Value == 1 )\n                {\n                    Gia_ObjFanin0(pObj)-\u003efMark0 = Gia_ObjFanin1(pObj)-\u003efMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n                }\n                else\n                {\n                    Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                }\n            }\n            else if ( Value0 == 0 )\n            {\n                assert( Value == 0 );\n                Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            }\n            else if ( Value1 == 0 )\n            {\n                assert( Value == 0 );\n                Gia_ObjFanin1(pObj)-\u003efMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n            }\n            else assert( 0 );\n        }\n        if ( f == 0 )\n            break;\n        // transfer to RIs\n        Gia_ManForEachPi( p, pObj, k )\n            pObj-\u003efMark0 = 0;\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, k )\n            if ( (pObjRi-\u003efMark0 = pObjRo-\u003efMark0) )\n            {\n                pObjRo-\u003efMark0 = 0;\n                Gia_ManAddTwo( p, f-1, pObjRi, 2 );\n            }\n    }\n    Gia_ManCleanMark0(p);\n    return RetValue;\n}",
+      "Draft": "func Gia_ManAnnotateUnrolling(p *Gia_Man_t, pCex *Abc_Cex_t, fJustMax int32) int32 {\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var RetValue, f, k, Value, Value0, Value1, iBit int32;\n    // start storage for internal info\n    assert(p.vTruths == nil, \"p.vTruths == nil\");\n    p.nTtWords = Abc_BitWordNum( 2 * Gia_ManObjNum(p) );\n    p.vTruths  = Vec_IntStart( (pCex.iFrame + 1) * p.nTtWords );\n    // assign values to all objects (const0 and RO in frame0 are assigned 0)\n    Gia_ManCleanMark0(p);\n    for  f, iBit = 0, pCex.nRegs; f \u003c= pCex.iFrame; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            if pObj.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else\n            if pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            if pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if pObjRo.fMark0 = pObjRi.fMark0 {\n                Gia_ManAddTwo( p, f+1, pObjRo, 1 ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    // check the output value\n    RetValue = Gia_ManPo(p, pCex.iPo).fMark0;\n    if RetValue != 1 {\n        fmt.Printf(\"Counter-example is invalid.\\n\"); }\n    // assign justification to nodes\n    Gia_ManCleanMark0(p);\n    pObj = Gia_ManPo(p, pCex.iPo);\n    pObj.fMark0 = 1;\n    Gia_ManAddTwo( p, pCex.iFrame, pObj, 2 );\n    for  f = pCex.iFrame; f \u003e= 0; f--  {\n        // transfer to CO drivers\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            if Gia_ObjFanin0(pObj).fMark0 = pObj.fMark0 {\n                pObj.fMark0 = 0;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            }\n        }\n        // compute justification\n        // inlining of macro Gia_ManForEachAndReverse\n        for  k = p.nObjs - 1; (k \u003e 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k--  {  if !Gia_ObjIsAnd(pObj) {} else {\n            if !pObj.fMark0 { \n                continue; }\n            pObj.fMark0 = 0;\n            Value = (1 \u0026 Gia_ManGetTwo(p, f, pObj));\n            Value0 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin0(pObj))) ^ Gia_ObjFaninC0(pObj);\n            Value1 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin1(pObj))) ^ Gia_ObjFaninC1(pObj);\n            if Value0 == Value1 {\n                assert(Value == (Value0 \u0026 Value1), \"Value == (Value0 \u0026 Value1)\");\n                if (fJustMax != 0) || Value == 1 {\n                    Gia_ObjFanin0(pObj).fMark0 = Gia_ObjFanin1(pObj).fMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n                \n                } else {\n                    Gia_ObjFanin0(pObj).fMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                }\n            \n            } else if Value0 == 0 {\n                assert(Value == 0, \"Value == 0\");\n                Gia_ObjFanin0(pObj).fMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            \n            } else if Value1 == 0 {\n                assert(Value == 0, \"Value == 0\");\n                Gia_ObjFanin1(pObj).fMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n            \n            } else { assert(false, \"0\"); }\n        }\n        }\n        if f == 0 {\n            break; }\n        // transfer to RIs\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            pObj.fMark0 = 0;\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if pObjRi.fMark0 = pObjRo.fMark0 {\n                pObjRo.fMark0 = 0;\n                Gia_ManAddTwo( p, f-1, pObjRi, 2 );\n            }\n        }\n    }\n    Gia_ManCleanMark0(p);\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Gia_ManCreateUnate",
+      "Start": 6981,
+      "End": 11585,
+      "BodyStart": 7093,
+      "Original": "Gia_Man_t * Gia_ManCreateUnate( Gia_Man_t * p, Abc_Cex_t * pCex, int iFrame, int nRealPis, int fUseAllObjects )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pObjRo, * pObjRi;\n    int f, k, Value;\n    assert( iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex-\u003eiFrame );\n    pNew = Gia_ManStart( 1000 );\n    pNew-\u003epName = Abc_UtilStrsav( \"unate\" );\n    Gia_ManCleanValue( p );\n    // set flop outputs\n    if ( nRealPis \u003c 0 ) // CEX min\n    {\n        Gia_ManForEachRo( p, pObj, k )\n        {\n            if ( fUseAllObjects )\n            {\n                int Value = Gia_ManAppendCi(pNew);\n                if ( (Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1) ) // in the path\n                    pObj-\u003eValue = Value;\n            }\n            else if ( (Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1) ) // in the path\n                pObj-\u003eValue = Gia_ManAppendCi(pNew);\n        }\n    }\n    else\n    {\n        Gia_ManForEachRo( p, pObj, k )\n            pObj-\u003eValue = (Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1);\n    }\n    Gia_ManHashAlloc( pNew );\n    for ( f = iFrame; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n/*\n        printf( \"  F%03d \", f );\n        Gia_ManForEachRo( p, pObj, k )\n            printf( \"%d\", pObj-\u003eValue \u003e 0 );\n        printf( \"\\n\" );\n*/\n        // set const0 to const1 if present\n        pObj = Gia_ManConst0(p);\n        pObj-\u003eValue = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n        // set primary inputs \n        if ( nRealPis \u003c 0 ) // CEX min\n        {\n            Gia_ManForEachPi( p, pObj, k )\n                pObj-\u003eValue = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n        }\n        else\n        {\n            Gia_ManForEachPi( p, pObj, k )\n            {\n                pObj-\u003eValue = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n                if ( k \u003e= nRealPis )\n                {\n                    if ( fUseAllObjects )\n                    {\n                        int Value = Gia_ManAppendCi(pNew);\n                        if ( (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1) ) // in the path\n                            pObj-\u003eValue = Value;\n                    }\n                    else if ( (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1) ) // in the path\n                        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n                }\n            }\n        }\n        // traverse internal nodes\n        Gia_ManForEachAnd( p, pObj, k )\n        { \n            pObj-\u003eValue = 0;\n            Value = Gia_ManGetTwo(p, f, pObj);\n            if ( !(Value \u003e\u003e 1) ) // not in the path\n                continue;\n            if ( Gia_ObjFanin0(pObj)-\u003eValue \u0026\u0026 Gia_ObjFanin1(pObj)-\u003eValue )\n            {\n                if ( 1 \u0026 Gia_ManGetTwo(p, f, pObj) ) // value 1\n                {\n                    if ( Gia_ObjFanin0(pObj)-\u003eValue \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue );\n                    else if ( Gia_ObjFanin0(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n                    else if ( Gia_ObjFanin1(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ObjFanin1(pObj)-\u003eValue;\n                    else \n                        pObj-\u003eValue = 1;\n                }\n                else // value 0\n                {\n                    if ( Gia_ObjFanin0(pObj)-\u003eValue \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ManHashOr( pNew, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue );\n                    else if ( Gia_ObjFanin0(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n                    else if ( Gia_ObjFanin1(pObj)-\u003eValue \u003e 1 )\n                        pObj-\u003eValue = Gia_ObjFanin1(pObj)-\u003eValue;\n                    else \n                        pObj-\u003eValue = 1;\n                }\n            }\n            else if ( Gia_ObjFanin0(pObj)-\u003eValue )\n                pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n            else if ( Gia_ObjFanin1(pObj)-\u003eValue )\n                pObj-\u003eValue = Gia_ObjFanin1(pObj)-\u003eValue;\n            else assert( 0 );\n        }\n        Gia_ManForEachCo( p, pObj, k )\n            pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n        if ( f == pCex-\u003eiFrame )\n            break;\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, k )\n            pObjRo-\u003eValue = pObjRi-\u003eValue;\n    }\n    Gia_ManHashStop( pNew );\n    // create primary output\n    pObj = Gia_ManPo(p, pCex-\u003eiPo);\n    assert( (Gia_ManGetTwo(p, pCex-\u003eiFrame, pObj) \u003e\u003e 1) );\n    assert( pObj-\u003eValue );\n    Gia_ManAppendCo( pNew, pObj-\u003eValue );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManCreateUnate(p *Gia_Man_t, pCex *Abc_Cex_t, iFrame int32, nRealPis int32, fUseAllObjects int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjRo, pObjRi *Gia_Obj_t;\n    var f, k, Value int32;\n    assert(iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex.iFrame, \"iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex.iFrame\");\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( \"unate\" );\n    Gia_ManCleanValue( p );\n    // set flop outputs\n    if nRealPis \u003c 0 { // CEX min\n    \n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if fUseAllObjects != 0 {\n                var Value int32  = Gia_ManAppendCi(pNew);\n                if Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1 { // in the path\n                    pObj.Value = Value; }\n            \n            } else if Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1 { // in the path\n                pObj.Value = Gia_ManAppendCi(pNew); }\n        }\n    \n    } else {\n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObj.Value = (Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1);\n        }\n    }\n    Gia_ManHashAlloc( pNew );\n    for  f = iFrame; f \u003c= pCex.iFrame; f++  {\n/*\n        printf( \"  F%03d \", f );\n        Gia_ManForEachRo( p, pObj, k )\n            printf( \"%d\", pObj-\u003eValue \u003e 0 );\n        printf( \"\\n\" );\n*/\n        // set const0 to const1 if present\n        pObj = Gia_ManConst0(p);\n        pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n        // set primary inputs \n        if nRealPis \u003c 0 { // CEX min\n        \n            // inlining of macro Gia_ManForEachPi\n            for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n                pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n            }\n        \n        } else {\n            // inlining of macro Gia_ManForEachPi\n            for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n                pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n                if k \u003e= nRealPis {\n                    if fUseAllObjects != 0 {\n                        var Value int32  = Gia_ManAppendCi(pNew);\n                        if Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1 { // in the path\n                            pObj.Value = Value; }\n                    \n                    } else if Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1 { // in the path\n                        pObj.Value = Gia_ManAppendCi(pNew); }\n                }\n            }\n        }\n        // traverse internal nodes\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else { \n            pObj.Value = 0;\n            Value = Gia_ManGetTwo(p, f, pObj);\n            if !(Value \u003e\u003e 1) { // not in the path\n                continue; }\n            if Gia_ObjFanin0(pObj).Value \u0026\u0026 Gia_ObjFanin1(pObj).Value {\n                if 1 \u0026 Gia_ManGetTwo(p, f, pObj) { // value 1\n                \n                    if Gia_ObjFanin0(pObj).Value \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n                    } else if Gia_ObjFanin0(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin0(pObj).Value;\n                    } else if Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin1(pObj).Value;\n                    } else { \n                        pObj.Value = 1; }\n                \n                } else { // value 0\n                \n                    if Gia_ObjFanin0(pObj).Value \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ManHashOr( pNew, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n                    } else if Gia_ObjFanin0(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin0(pObj).Value;\n                    } else if Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin1(pObj).Value;\n                    } else { \n                        pObj.Value = 1; }\n                }\n            \n            } else if Gia_ObjFanin0(pObj).Value {\n                pObj.Value = Gia_ObjFanin0(pObj).Value;\n            } else if Gia_ObjFanin1(pObj).Value {\n                pObj.Value = Gia_ObjFanin1(pObj).Value;\n            } else { assert(false, \"0\"); }\n        }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n        }\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObjRo.Value = pObjRi.Value;\n        }\n    }\n    Gia_ManHashStop( pNew );\n    // create primary output\n    pObj = Gia_ManPo(p, pCex.iPo);\n    assert((Gia_ManGetTwo(p, pCex.iFrame, pObj) \u003e\u003e 1), \"(Gia_ManGetTwo(p, pCex.iFrame, pObj) \u003e\u003e 1)\");\n    assert(pObj.Value, \"pObj.Value\");\n    Gia_ManAppendCo( pNew, pObj.Value );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCexMin",
+      "Start": 11822,
+      "End": 13153,
+      "BodyStart": 11955,
+      "Original": "Abc_Cex_t * Gia_ManCexMin( Gia_Man_t * p, Abc_Cex_t * pCex, int iFrameStart, int nRealPis, int fJustMax, int fUseAll, int fVerbose )\n{\n    Gia_Man_t * pNew;\n    int f, RetValue;\n    // check CEX\n    assert( pCex-\u003enPis == Gia_ManPiNum(p) );\n//    assert( pCex-\u003enRegs == Gia_ManRegNum(p) );\n    assert( pCex-\u003eiPo \u003c Gia_ManPoNum(p) );\n    // check frames\n    assert( iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex-\u003eiFrame );\n    // check primary inputs\n    assert( nRealPis \u003c Gia_ManPiNum(p) );\n    // prepare\n    RetValue = Gia_ManAnnotateUnrolling( p, pCex, fJustMax );\n    if ( nRealPis \u003e= 0 ) // refinement\n    {\n        pNew = Gia_ManCreateUnate( p, pCex, iFrameStart, nRealPis, fUseAll );\n        printf( \"%3d : \", iFrameStart );\n        Gia_ManPrintStats( pNew, NULL );\n        if ( fVerbose )\n            Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 );\n        Gia_ManStop( pNew );\n    }\n    else // CEX min\n    {\n        for ( f = pCex-\u003eiFrame; f \u003e= iFrameStart; f-- )\n        {\n            pNew = Gia_ManCreateUnate( p, pCex, f, -1, fUseAll );\n            printf( \"%3d : \", f );\n            Gia_ManPrintStats( pNew, NULL );\n            if ( fVerbose )\n                Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 );\n            Gia_ManStop( pNew );\n        }\n    }\n    Vec_IntFreeP( \u0026p-\u003evTruths );\n    p-\u003enTtWords = 0;\n    return NULL;\n}",
+      "Draft": "func Gia_ManCexMin(p *Gia_Man_t, pCex *Abc_Cex_t, iFrameStart int32, nRealPis int32, fJustMax int32, fUseAll int32, fVerbose int32) *Abc_Cex_t {\n    var pNew *Gia_Man_t;\n    var f, RetValue int32;\n    // check CEX\n    assert(pCex.nPis == Gia_ManPiNum(p), \"pCex.nPis == Gia_ManPiNum(p)\");\n//    assert( pCex-\u003enRegs == Gia_ManRegNum(p) );\n    assert(pCex.iPo \u003c Gia_ManPoNum(p), \"pCex.iPo \u003c Gia_ManPoNum(p)\");\n    // check frames\n    assert(iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex.iFrame, \"iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex.iFrame\");\n    // check primary inputs\n    assert(nRealPis \u003c Gia_ManPiNum(p), \"nRealPis \u003c Gia_ManPiNum(p)\");\n    // prepare\n    RetValue = Gia_ManAnnotateUnrolling( p, pCex, fJustMax );\n    if nRealPis \u003e= 0 { // refinement\n    \n        pNew = Gia_ManCreateUnate( p, pCex, iFrameStart, nRealPis, fUseAll );\n        fmt.Printf(\"%3d : \", iFrameStart);\n        Gia_ManPrintStats( pNew, nil );\n        if fVerbose != 0 {\n            Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 ); }\n        Gia_ManStop( pNew );\n    \n    } else { // CEX min\n    \n        for  f = pCex.iFrame; f \u003e= iFrameStart; f--  {\n            pNew = Gia_ManCreateUnate( p, pCex, f, -1, fUseAll );\n            fmt.Printf(\"%3d : \", f);\n            Gia_ManPrintStats( pNew, nil );\n            if fVerbose != 0 {\n                Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 ); }\n            Gia_ManStop( pNew );\n        }\n    }\n    Vec_IntFreeP( \u0026p.vTruths );\n    p.nTtWords = 0;\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::pointer-cast::924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 924,
+      "End": 936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::pointer-cast::1163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1163,
+      "End": 1175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::pointer-cast::1461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1461,
+      "End": 1473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Abc_InfoGet2Bits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoGet2Bits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 808,
+      "End": 1035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Abc_InfoSet2Bits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoSet2Bits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1036,
+      "End": 1333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Abc_InfoAdd2Bits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_InfoAdd2Bits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1334,
+      "End": 1570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManGetTwo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManGetTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1572,
+      "End": 1748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManSetTwo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSetTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1749,
+      "End": 1925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManAddTwo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAddTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1926,
+      "End": 2102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManAnnotateUnrolling",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAnnotateUnrolling",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2783,
+      "End": 6664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManCreateUnate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCreateUnate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6981,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::Gia_ManCexMin",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCexMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11822,
+      "End": 13153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcCexMin2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13400
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcCexMin2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [CEX minimization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcCexMin2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/gia/gia.h\"\n//#include \"bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Abc_InfoGet2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32) int32 {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    return 3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1));\n}\nfunc Abc_InfoSet2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32, Value int32) {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    Value ^= (3 \u0026 (pInfo[iObj \u003e\u003e 4] \u003e\u003e ((iObj \u0026 15) \u003c\u003c 1)));\n    pInfo[iObj \u003e\u003e 4] ^= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}\nfunc Abc_InfoAdd2Bits(vData *Vec_Int_t, nWords int32, iFrame int32, iObj int32, Value int32) {\n    var pInfo *uint32  = (unsigned *)Vec_IntEntryP( vData, nWords * iFrame );\n    pInfo[iObj \u003e\u003e 4] |= (Value \u003c\u003c ((iObj \u0026 15) \u003c\u003c 1));\n}\n\nfunc Gia_ManGetTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t) int32 { return Abc_InfoGet2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj) ); }\nfunc Gia_ManSetTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t, Value int32) { Abc_InfoSet2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }\nfunc Gia_ManAddTwo(p *Gia_Man_t, iFrame int32, pObj *Gia_Obj_t, Value int32) { Abc_InfoAdd2Bits( p.vTruths, p.nTtWords, iFrame, Gia_ObjId(p, pObj), Value ); }\n\n/*\n    For CEX minimization, all terminals (const0, PI, RO in frame0) have equal priority.\n    For abstraction refinement, all terminals, except PPis, have higher priority.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Annotates the unrolling with CEX value/priority.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAnnotateUnrolling(p *Gia_Man_t, pCex *Abc_Cex_t, fJustMax int32) int32 {\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var RetValue, f, k, Value, Value0, Value1, iBit int32;\n    // start storage for internal info\n    assert(p.vTruths == nil, \"p.vTruths == nil\");\n    p.nTtWords = Abc_BitWordNum( 2 * Gia_ManObjNum(p) );\n    p.vTruths  = Vec_IntStart( (pCex.iFrame + 1) * p.nTtWords );\n    // assign values to all objects (const0 and RO in frame0 are assigned 0)\n    Gia_ManCleanMark0(p);\n    for  f, iBit = 0, pCex.nRegs; f \u003c= pCex.iFrame; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            if pObj.fMark0 = Abc_InfoHasBit(pCex.pData, iBit++) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else\n            if pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            if pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj) {\n                Gia_ManAddTwo( p, f, pObj, 1 ); }\n        }\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if pObjRo.fMark0 = pObjRi.fMark0 {\n                Gia_ManAddTwo( p, f+1, pObjRo, 1 ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    // check the output value\n    RetValue = Gia_ManPo(p, pCex.iPo).fMark0;\n    if RetValue != 1 {\n        fmt.Printf(\"Counter-example is invalid.\\n\"); }\n    // assign justification to nodes\n    Gia_ManCleanMark0(p);\n    pObj = Gia_ManPo(p, pCex.iPo);\n    pObj.fMark0 = 1;\n    Gia_ManAddTwo( p, pCex.iFrame, pObj, 2 );\n    for  f = pCex.iFrame; f \u003e= 0; f--  {\n        // transfer to CO drivers\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            if Gia_ObjFanin0(pObj).fMark0 = pObj.fMark0 {\n                pObj.fMark0 = 0;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            }\n        }\n        // compute justification\n        // inlining of macro Gia_ManForEachAndReverse\n        for  k = p.nObjs - 1; (k \u003e 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k--  {  if !Gia_ObjIsAnd(pObj) {} else {\n            if !pObj.fMark0 { \n                continue; }\n            pObj.fMark0 = 0;\n            Value = (1 \u0026 Gia_ManGetTwo(p, f, pObj));\n            Value0 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin0(pObj))) ^ Gia_ObjFaninC0(pObj);\n            Value1 = (1 \u0026 Gia_ManGetTwo(p, f, Gia_ObjFanin1(pObj))) ^ Gia_ObjFaninC1(pObj);\n            if Value0 == Value1 {\n                assert(Value == (Value0 \u0026 Value1), \"Value == (Value0 \u0026 Value1)\");\n                if (fJustMax != 0) || Value == 1 {\n                    Gia_ObjFanin0(pObj).fMark0 = Gia_ObjFanin1(pObj).fMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n                \n                } else {\n                    Gia_ObjFanin0(pObj).fMark0 = 1;\n                    Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n                }\n            \n            } else if Value0 == 0 {\n                assert(Value == 0, \"Value == 0\");\n                Gia_ObjFanin0(pObj).fMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin0(pObj), 2 );\n            \n            } else if Value1 == 0 {\n                assert(Value == 0, \"Value == 0\");\n                Gia_ObjFanin1(pObj).fMark0 = 1;\n                Gia_ManAddTwo( p, f, Gia_ObjFanin1(pObj), 2 );\n            \n            } else { assert(false, \"0\"); }\n        }\n        }\n        if f == 0 {\n            break; }\n        // transfer to RIs\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            pObj.fMark0 = 0;\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if pObjRi.fMark0 = pObjRo.fMark0 {\n                pObjRo.fMark0 = 0;\n                Gia_ManAddTwo( p, f-1, pObjRi, 2 );\n            }\n        }\n    }\n    Gia_ManCleanMark0(p);\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computing AIG characterizing all justifying assignments.]\n\n  Description [Used in CEX minimization.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCreateUnate(p *Gia_Man_t, pCex *Abc_Cex_t, iFrame int32, nRealPis int32, fUseAllObjects int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pObjRo, pObjRi *Gia_Obj_t;\n    var f, k, Value int32;\n    assert(iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex.iFrame, \"iFrame \u003e= 0 \u0026\u0026 iFrame \u003c= pCex.iFrame\");\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( \"unate\" );\n    Gia_ManCleanValue( p );\n    // set flop outputs\n    if nRealPis \u003c 0 { // CEX min\n    \n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            if fUseAllObjects != 0 {\n                var Value int32  = Gia_ManAppendCi(pNew);\n                if Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1 { // in the path\n                    pObj.Value = Value; }\n            \n            } else if Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1 { // in the path\n                pObj.Value = Gia_ManAppendCi(pNew); }\n        }\n    \n    } else {\n        // inlining of macro Gia_ManForEachRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObj.Value = (Gia_ManGetTwo(p, iFrame, pObj) \u003e\u003e 1);\n        }\n    }\n    Gia_ManHashAlloc( pNew );\n    for  f = iFrame; f \u003c= pCex.iFrame; f++  {\n/*\n        printf( \"  F%03d \", f );\n        Gia_ManForEachRo( p, pObj, k )\n            printf( \"%d\", pObj-\u003eValue \u003e 0 );\n        printf( \"\\n\" );\n*/\n        // set const0 to const1 if present\n        pObj = Gia_ManConst0(p);\n        pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n        // set primary inputs \n        if nRealPis \u003c 0 { // CEX min\n        \n            // inlining of macro Gia_ManForEachPi\n            for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n                pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n            }\n        \n        } else {\n            // inlining of macro Gia_ManForEachPi\n            for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n                pObj.Value = (Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1);\n                if k \u003e= nRealPis {\n                    if fUseAllObjects != 0 {\n                        var Value int32  = Gia_ManAppendCi(pNew);\n                        if Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1 { // in the path\n                            pObj.Value = Value; }\n                    \n                    } else if Gia_ManGetTwo(p, f, pObj) \u003e\u003e 1 { // in the path\n                        pObj.Value = Gia_ManAppendCi(pNew); }\n                }\n            }\n        }\n        // traverse internal nodes\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else { \n            pObj.Value = 0;\n            Value = Gia_ManGetTwo(p, f, pObj);\n            if !(Value \u003e\u003e 1) { // not in the path\n                continue; }\n            if Gia_ObjFanin0(pObj).Value \u0026\u0026 Gia_ObjFanin1(pObj).Value {\n                if 1 \u0026 Gia_ManGetTwo(p, f, pObj) { // value 1\n                \n                    if Gia_ObjFanin0(pObj).Value \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n                    } else if Gia_ObjFanin0(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin0(pObj).Value;\n                    } else if Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin1(pObj).Value;\n                    } else { \n                        pObj.Value = 1; }\n                \n                } else { // value 0\n                \n                    if Gia_ObjFanin0(pObj).Value \u003e 1 \u0026\u0026 Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ManHashOr( pNew, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n                    } else if Gia_ObjFanin0(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin0(pObj).Value;\n                    } else if Gia_ObjFanin1(pObj).Value \u003e 1 {\n                        pObj.Value = Gia_ObjFanin1(pObj).Value;\n                    } else { \n                        pObj.Value = 1; }\n                }\n            \n            } else if Gia_ObjFanin0(pObj).Value {\n                pObj.Value = Gia_ObjFanin0(pObj).Value;\n            } else if Gia_ObjFanin1(pObj).Value {\n                pObj.Value = Gia_ObjFanin1(pObj).Value;\n            } else { assert(false, \"0\"); }\n        }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n        }\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObjRo.Value = pObjRi.Value;\n        }\n    }\n    Gia_ManHashStop( pNew );\n    // create primary output\n    pObj = Gia_ManPo(p, pCex.iPo);\n    assert((Gia_ManGetTwo(p, pCex.iFrame, pObj) \u003e\u003e 1), \"(Gia_ManGetTwo(p, pCex.iFrame, pObj) \u003e\u003e 1)\");\n    assert(pObj.Value, \"pObj.Value\");\n    Gia_ManAppendCo( pNew, pObj.Value );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCexMin(p *Gia_Man_t, pCex *Abc_Cex_t, iFrameStart int32, nRealPis int32, fJustMax int32, fUseAll int32, fVerbose int32) *Abc_Cex_t {\n    var pNew *Gia_Man_t;\n    var f, RetValue int32;\n    // check CEX\n    assert(pCex.nPis == Gia_ManPiNum(p), \"pCex.nPis == Gia_ManPiNum(p)\");\n//    assert( pCex-\u003enRegs == Gia_ManRegNum(p) );\n    assert(pCex.iPo \u003c Gia_ManPoNum(p), \"pCex.iPo \u003c Gia_ManPoNum(p)\");\n    // check frames\n    assert(iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex.iFrame, \"iFrameStart \u003e= 0 \u0026\u0026 iFrameStart \u003c= pCex.iFrame\");\n    // check primary inputs\n    assert(nRealPis \u003c Gia_ManPiNum(p), \"nRealPis \u003c Gia_ManPiNum(p)\");\n    // prepare\n    RetValue = Gia_ManAnnotateUnrolling( p, pCex, fJustMax );\n    if nRealPis \u003e= 0 { // refinement\n    \n        pNew = Gia_ManCreateUnate( p, pCex, iFrameStart, nRealPis, fUseAll );\n        fmt.Printf(\"%3d : \", iFrameStart);\n        Gia_ManPrintStats( pNew, nil );\n        if fVerbose != 0 {\n            Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 ); }\n        Gia_ManStop( pNew );\n    \n    } else { // CEX min\n    \n        for  f = pCex.iFrame; f \u003e= iFrameStart; f--  {\n            pNew = Gia_ManCreateUnate( p, pCex, f, -1, fUseAll );\n            fmt.Printf(\"%3d : \", f);\n            Gia_ManPrintStats( pNew, nil );\n            if fVerbose != 0 {\n                Gia_AigerWrite( pNew, \"temp.aig\", 0, 0, 0 ); }\n            Gia_ManStop( pNew );\n        }\n    }\n    Vec_IntFreeP( \u0026p.vTruths );\n    p.nTtWords = 0;\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

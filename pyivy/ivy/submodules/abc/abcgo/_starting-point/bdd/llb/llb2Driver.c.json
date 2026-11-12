@@ -1,0 +1,173 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c",
+  "SHA256": "f21878f7254de01f2dcd5220c73c7715bded2b941c9994e196a1267e963c5f12",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 3816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_DriverCountRefs",
+      "Start": 1548,
+      "End": 1829,
+      "BodyStart": 1597,
+      "Original": "Vec_Int_t * Llb_DriverCountRefs( Aig_Man_t * p )\n{\n    Vec_Int_t * vCounts;\n    Aig_Obj_t * pObj;\n    int i;\n    vCounts = Vec_IntStart( Aig_ManObjNumMax(p) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntAddToEntry( vCounts, Aig_ObjFaninId0(pObj), 1 );\n    return vCounts;\n}",
+      "Draft": "func Llb_DriverCountRefs(p *Aig_Man_t) *Vec_Int_t {\n    var vCounts *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCounts = Vec_IntStart( Aig_ManObjNumMax(p) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntAddToEntry( vCounts, Aig_ObjFaninId0(pObj), 1 );\n    return vCounts;\n}"
+    },
+    {
+      "Name": "Llb_DriverCollectNs",
+      "Start": 2095,
+      "End": 2620,
+      "BodyStart": 2169,
+      "Original": "Vec_Int_t * Llb_DriverCollectNs( Aig_Man_t * pAig, Vec_Int_t * vDriRefs )\n{\n    Vec_Int_t * vVars;\n    Aig_Obj_t * pObj, * pDri;\n    int i;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pDri = Aig_ObjFanin0(pObj);\n        if ( Vec_IntEntry( vDriRefs, Aig_ObjId(pDri) ) != 1 || Saig_ObjIsPi(pAig, pDri) || Aig_ObjIsConst1(pDri) )\n            Vec_IntPush( vVars, Aig_ObjId(pObj) );\n        else\n            Vec_IntPush( vVars, Aig_ObjId(pDri) );\n    }\n    return vVars;\n}",
+      "Draft": "func Llb_DriverCollectNs(pAig *Aig_Man_t, vDriRefs *Vec_Int_t) *Vec_Int_t {\n    var vVars *Vec_Int_t;\n    var pObj, pDri *Aig_Obj_t;\n    var i int32;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pDri = Aig_ObjFanin0(pObj);\n        if Vec_IntEntry( vDriRefs, Aig_ObjId(pDri) ) != 1 || Saig_ObjIsPi(pAig, pDri) || Aig_ObjIsConst1(pDri) {\n            Vec_IntPush( vVars, Aig_ObjId(pObj) );\n        } else {\n            Vec_IntPush( vVars, Aig_ObjId(pDri) ); }\n    }\n    return vVars;\n}"
+    },
+    {
+      "Name": "Llb_DriverCollectCs",
+      "Start": 2886,
+      "End": 3150,
+      "BodyStart": 2938,
+      "Original": "Vec_Int_t * Llb_DriverCollectCs( Aig_Man_t * pAig )\n{\n    Vec_Int_t * vVars;\n    Aig_Obj_t * pObj;\n    int i;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( vVars, Aig_ObjId(pObj) );\n    return vVars;\n}",
+      "Draft": "func Llb_DriverCollectCs(pAig *Aig_Man_t) *Vec_Int_t {\n    var vVars *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( vVars, Aig_ObjId(pObj) );\n    return vVars;\n}"
+    },
+    {
+      "Name": "Llb_DriverPhaseCube",
+      "Start": 3417,
+      "End": 4221,
+      "BodyStart": 3504,
+      "Original": "DdNode * Llb_DriverPhaseCube( Aig_Man_t * pAig, Vec_Int_t * vDriRefs, DdManager * dd )\n{\n    DdNode * bCube, * bVar, * bTemp;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime TimeStop;\n    TimeStop = dd-\u003eTimeStop; dd-\u003eTimeStop = 0;\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        assert( Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1 );\n        if ( Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) != 1 )\n            continue;\n        if ( !Aig_ObjFaninC0(pObj) )\n            continue;\n        bVar  = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    dd-\u003eTimeStop = TimeStop;\n    return bCube;\n}",
+      "Draft": "func Llb_DriverPhaseCube(pAig *Aig_Man_t, vDriRefs *Vec_Int_t, dd *DdManager) *DdNode {\n    var bCube, bVar, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        assert(Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1, \"Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1\");\n        if Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) != 1 {\n            continue; }\n        if !Aig_ObjFaninC0(pObj) {\n            continue; }\n        bVar  = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    dd.TimeStop = TimeStop;\n    return bCube;\n}"
+    },
+    {
+      "Name": "Llb_DriverLastPartition",
+      "Start": 4484,
+      "End": 6377,
+      "BodyStart": 4578,
+      "Original": "DdManager * Llb_DriverLastPartition( Aig_Man_t * p, Vec_Int_t * vVarsNs, abctime TimeTarget )\n{\n//    int fVerbose = 1;\n    DdManager * dd;\n    DdNode * bVar1, * bVar2, * bProd, * bRes, * bTemp;\n    Aig_Obj_t * pObj;\n    int i;\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    dd-\u003eTimeStop = TimeTarget;\n    bRes = Cudd_ReadOne(dd);                                   Cudd_Ref( bRes );\n\n    // mark the duplicated flop inputs\n    Aig_ManForEachObjVec( vVarsNs, p, pObj, i )\n    {\n        if ( !Saig_ObjIsLi(p, pObj) )\n            continue;\n        bVar1 = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n        bVar2 = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        if ( Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) )\n            bVar2 = Cudd_ReadOne(dd);\n        bVar2 = Cudd_NotCond( bVar2, Aig_ObjFaninC0(pObj) );\n        bProd = Cudd_bddXnor( dd, bVar1, bVar2 );              Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );        Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if ( bRes == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bProd );\n            return NULL;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n/*\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%d \", Aig_ObjId(pObj) );\n    printf( \"\\n\" );\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%c%d \", Aig_ObjFaninC0(pObj)? '-':'+', Aig_ObjFaninId0(pObj) );\n    printf( \"\\n\" );\n*/\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd-\u003ebFunc = bRes;\n    dd-\u003eTimeStop = 0;\n    return dd;\n}",
+      "Draft": "func Llb_DriverLastPartition(p *Aig_Man_t, vVarsNs *Vec_Int_t, TimeTarget abctime) *DdManager {\n//    int fVerbose = 1;\n    var dd *DdManager;\n    var bVar1, bVar2, bProd, bRes, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    dd.TimeStop = TimeTarget;\n    bRes = Cudd_ReadOne(dd);                                   Cudd_Ref( bRes );\n\n    // mark the duplicated flop inputs\n    Aig_ManForEachObjVec( vVarsNs, p, pObj, i )\n    {\n        if !Saig_ObjIsLi(p, pObj) {\n            continue; }\n        bVar1 = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n        bVar2 = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {\n            bVar2 = Cudd_ReadOne(dd); }\n        // inlining of macro Cudd_NotCond\n        bVar2 = ((DdNode *)((ptrint)(bVar2) ^ (Aig_ObjFaninC0(pObj))));\n        bProd = Cudd_bddXnor( dd, bVar1, bVar2 );              Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );        Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if bRes == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bProd );\n            return nil;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n/*\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%d \", Aig_ObjId(pObj) );\n    printf( \"\\n\" );\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%c%d \", Aig_ObjFaninC0(pObj)? '-':'+', Aig_ObjFaninId0(pObj) );\n    printf( \"\\n\" );\n*/\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd.bFunc = bRes;\n    dd.TimeStop = 0;\n    return dd;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::pointer-cast::5389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5340,
+      "End": 5340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::Llb_DriverCountRefs",
+      "Category": "semantic-review",
+      "Symbol": "Llb_DriverCountRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1548,
+      "End": 1829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::Llb_DriverCollectNs",
+      "Category": "semantic-review",
+      "Symbol": "Llb_DriverCollectNs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2095,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::Llb_DriverCollectCs",
+      "Category": "semantic-review",
+      "Symbol": "Llb_DriverCollectCs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2886,
+      "End": 3150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::Llb_DriverPhaseCube",
+      "Category": "semantic-review",
+      "Symbol": "Llb_DriverPhaseCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3417,
+      "End": 4221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::Llb_DriverLastPartition",
+      "Category": "semantic-review",
+      "Symbol": "Llb_DriverLastPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4484,
+      "End": 6377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::macro-inline::1712",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1712,
+      "End": 1743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::macro-inline::2288",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2288,
+      "End": 2322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::macro-inline::3049",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3049,
+      "End": 3083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::macro-inline::3701",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3701,
+      "End": 3735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Driver.c::macro-inline::5008",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5008,
+      "End": 5051
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb2Driver.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Procedures working with flop drivers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Driver.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// driver issue:arises when creating\n// - driver ref-counter array\n// - Ns2Glo maps\n// - final partition\n// - change-phase cube\n\n// LI variable is used when\n// - driver drives more than one LI\n// - driver is a PI\n// - driver is a constant\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of times each flop driver is referenced.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_DriverCountRefs(p *Aig_Man_t) *Vec_Int_t {\n    var vCounts *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCounts = Vec_IntStart( Aig_ManObjNumMax(p) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntAddToEntry( vCounts, Aig_ObjFaninId0(pObj), 1 );\n    return vCounts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns array of NS variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_DriverCollectNs(pAig *Aig_Man_t, vDriRefs *Vec_Int_t) *Vec_Int_t {\n    var vVars *Vec_Int_t;\n    var pObj, pDri *Aig_Obj_t;\n    var i int32;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pDri = Aig_ObjFanin0(pObj);\n        if Vec_IntEntry( vDriRefs, Aig_ObjId(pDri) ) != 1 || Saig_ObjIsPi(pAig, pDri) || Aig_ObjIsConst1(pDri) {\n            Vec_IntPush( vVars, Aig_ObjId(pObj) );\n        } else {\n            Vec_IntPush( vVars, Aig_ObjId(pDri) ); }\n    }\n    return vVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns array of CS variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_DriverCollectCs(pAig *Aig_Man_t) *Vec_Int_t {\n    var vVars *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( vVars, Aig_ObjId(pObj) );\n    return vVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create cube for phase swapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_DriverPhaseCube(pAig *Aig_Man_t, vDriRefs *Vec_Int_t, dd *DdManager) *DdNode {\n    var bCube, bVar, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        assert(Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1, \"Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) \u003e= 1\");\n        if Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) != 1 {\n            continue; }\n        if !Aig_ObjFaninC0(pObj) {\n            continue; }\n        bVar  = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bCube );\n    dd.TimeStop = TimeStop;\n    return bCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the last partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_DriverLastPartition(p *Aig_Man_t, vVarsNs *Vec_Int_t, TimeTarget abctime) *DdManager {\n//    int fVerbose = 1;\n    var dd *DdManager;\n    var bVar1, bVar2, bProd, bRes, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    dd.TimeStop = TimeTarget;\n    bRes = Cudd_ReadOne(dd);                                   Cudd_Ref( bRes );\n\n    // mark the duplicated flop inputs\n    Aig_ManForEachObjVec( vVarsNs, p, pObj, i )\n    {\n        if !Saig_ObjIsLi(p, pObj) {\n            continue; }\n        bVar1 = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n        bVar2 = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {\n            bVar2 = Cudd_ReadOne(dd); }\n        // inlining of macro Cudd_NotCond\n        bVar2 = ((DdNode *)((ptrint)(bVar2) ^ (Aig_ObjFaninC0(pObj))));\n        bProd = Cudd_bddXnor( dd, bVar1, bVar2 );              Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );        Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if bRes == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bProd );\n            return nil;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n\n/*\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%d \", Aig_ObjId(pObj) );\n    printf( \"\\n\" );\n    Saig_ManForEachLi( p, pObj, i )\n        printf( \"%c%d \", Aig_ObjFaninC0(pObj)? '-':'+', Aig_ObjFaninId0(pObj) );\n    printf( \"\\n\" );\n*/\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd.bFunc = bRes;\n    dd.TimeStop = 0;\n    return dd;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

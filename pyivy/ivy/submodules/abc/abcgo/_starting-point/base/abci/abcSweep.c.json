@@ -1,0 +1,1229 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c",
+  "SHA256": "31dd53ba6040e0c2f7f5e927d5649e69464cf0698fe148eb12f2d82d537920ef",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 3786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Warning: Networks has no EXDC.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraigSweep: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNtk.pExdc );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 13,
+        "ByteOffset": 8282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Class %2d : {\", c );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 17,
+        "ByteOffset": 8425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %s\", Abc_ObjName(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 17,
+        "ByteOffset": 8478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"(%c)\", pNode.fPhase? '-' : '+' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 17,
+        "ByteOffset": 8537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"(%d)\", pNode.Level );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 13,
+        "ByteOffset": 8594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 9,
+        "ByteOffset": 8687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sweeping stats for network \\\"%s\\\":\\n\", pNtk.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 8757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Internal nodes = %d. Different functions (up to compl) = %d.\\n\", Abc_NtkNodeNum(pNtk), stmm_count(tStrash2Net) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 8888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Non-trivial classes = %d. Nodes in non-trivial classes = %d.\\n\", stmm_count(tResult), Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pChain );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 10509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pChain.pNext );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 13350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pChain );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 13372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pChain.pNext );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 5,
+        "ByteOffset": 15617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 15806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cleanup removed %d dangling nodes.\\n\", Counter ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 16386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 9,
+        "ByteOffset": 16939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cleanup removed %d dangling nodes.\\n\", Counter ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 5,
+        "ByteOffset": 17487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 545,
+        "Column": 9,
+        "ByteOffset": 18012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCleanup: The network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 573,
+        "Column": 9,
+        "ByteOffset": 18666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"These nodes will be deleted: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 17,
+        "ByteOffset": 18820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"    \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 577,
+        "Column": 31,
+        "ByteOffset": 18868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Abc_ObjPrint( stdout, pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 5,
+        "ByteOffset": 19599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pObj) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 629,
+        "Column": 9,
+        "ByteOffset": 20298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 20780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 734,
+        "Column": 13,
+        "ByteOffset": 23919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjIsLatch(pFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 769,
+        "Column": 5,
+        "ByteOffset": 25085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 9,
+        "ByteOffset": 25341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cleanup removed %4d dangling objects.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 781,
+        "Column": 13,
+        "ByteOffset": 25556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cleanup removed %4d redundant latches.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 790,
+        "Column": 13,
+        "ByteOffset": 25887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cleanup added   %4d additional PIs.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 794,
+        "Column": 13,
+        "ByteOffset": 26081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cleanup removed %4d autonomous objects.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 798,
+        "Column": 9,
+        "ByteOffset": 26205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCleanupSeq: The network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 820,
+        "Column": 5,
+        "ByteOffset": 26774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 823,
+        "Column": 9,
+        "ByteOffset": 26889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to SOP has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 823,
+        "Column": 18,
+        "ByteOffset": 26898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to SOP has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 862,
+        "Column": 9,
+        "ByteOffset": 28453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Removed %d single input nodes.\\n\", Counter ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 598
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 565,
+        "Column": 1,
+        "ByteOffset": 18092
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkFraigSweep",
+      "Start": 2334,
+      "End": 4588,
+      "BodyStart": 2432,
+      "Original": "int Abc_NtkFraigSweep( Abc_Ntk_t * pNtk, int fUseInv, int fExdc, int fVerbose, int fVeryVerbose )\n{\n    Fraig_Params_t Params;\n    Abc_Ntk_t * pNtkAig;\n    Fraig_Man_t * pMan;\n    stmm_table * tEquiv;\n    Abc_Obj_t * pObj;\n    int i, fUseTrick;\n\n    assert( !Abc_NtkIsStrash(pNtk) );\n\n    // save gate assignments\n    fUseTrick = 0;\n    if ( Abc_NtkIsMappedLogic(pNtk) )\n    {\n        fUseTrick = 1;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj-\u003epNext = (Abc_Obj_t *)pObj-\u003epData;\n    }\n    // derive the AIG\n    pNtkAig = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    // reconstruct gate assignments\n    if ( fUseTrick )\n    {\n//        extern void * Abc_FrameReadLibGen(); \n        Hop_ManStop( (Hop_Man_t *)pNtk-\u003epManFunc );\n        pNtk-\u003epManFunc = Abc_FrameReadLibGen();\n        pNtk-\u003entkFunc = ABC_FUNC_MAP;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj-\u003epData = pObj-\u003epNext, pObj-\u003epNext = NULL;\n    }\n\n    // perform fraiging of the AIG\n    Fraig_ParamsSetDefault( \u0026Params );\n    Params.fInternal = 1;\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtkAig, \u0026Params, 0, 0 );   \n    // cannot use EXDC with FRAIG because it can create classes of equivalent FRAIG nodes\n    // with representative nodes that do not correspond to the nodes with the current network\n\n    // update FRAIG using EXDC\n    if ( fExdc )\n    {\n        if ( pNtk-\u003epExdc == NULL )\n            printf( \"Warning: Networks has no EXDC.\\n\" );\n        else\n            Abc_NtkFraigSweepUsingExdc( pMan, pNtk );\n    }\n    // assign levels to the nodes of the network\n    Abc_NtkLevel( pNtk );\n\n    // collect the classes of equivalent nets\n    tEquiv = Abc_NtkFraigEquiv( pNtk, fUseInv, fVerbose, fVeryVerbose );\n\n    // transform the network into the equivalent one\n    Abc_NtkFraigTransform( pNtk, tEquiv, fUseInv, fVerbose );\n    stmm_free_table( tEquiv );\n\n    // free the manager\n    Fraig_ManFree( pMan );\n    Abc_NtkDelete( pNtkAig );\n\n    // cleanup the dangling nodes\n    if ( Abc_NtkHasMapping(pNtk) )\n        Abc_NtkCleanup( pNtk, fVerbose );\n    else\n        Abc_NtkSweep( pNtk, fVerbose );\n\n    // check\n    if ( !Abc_NtkCheck( pNtk ) )\n    {\n        printf( \"Abc_NtkFraigSweep: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkFraigSweep(pNtk *Abc_Ntk_t, fUseInv int32, fExdc int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var Params Fraig_Params_t;\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Fraig_Man_t;\n    var tEquiv *stmm_table;\n    var pObj *Abc_Obj_t;\n    var i, fUseTrick int32;\n\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n\n    // save gate assignments\n    fUseTrick = 0;\n    if Abc_NtkIsMappedLogic(pNtk) {\n        fUseTrick = 1;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj.pNext = (Abc_Obj_t *)pObj.pData;\n    }\n    // derive the AIG\n    pNtkAig = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    // reconstruct gate assignments\n    if fUseTrick != 0 {\n//        extern void * Abc_FrameReadLibGen(); \n        Hop_ManStop( (Hop_Man_t *)pNtk.pManFunc );\n        pNtk.pManFunc = Abc_FrameReadLibGen();\n        pNtk.ntkFunc = ABC_FUNC_MAP;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj.pData = pObj.pNext;\npObj.pNext = nil;\n    }\n\n    // perform fraiging of the AIG\n    Fraig_ParamsSetDefault( \u0026Params );\n    Params.fInternal = 1;\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtkAig, \u0026Params, 0, 0 );   \n    // cannot use EXDC with FRAIG because it can create classes of equivalent FRAIG nodes\n    // with representative nodes that do not correspond to the nodes with the current network\n\n    // update FRAIG using EXDC\n    if fExdc != 0 {\n        if pNtk.pExdc == nil {\n            fmt.Printf(\"Warning: Networks has no EXDC.\\n\");\n        } else {\n            Abc_NtkFraigSweepUsingExdc( pMan, pNtk ); }\n    }\n    // assign levels to the nodes of the network\n    Abc_NtkLevel( pNtk );\n\n    // collect the classes of equivalent nets\n    tEquiv = Abc_NtkFraigEquiv( pNtk, fUseInv, fVerbose, fVeryVerbose );\n\n    // transform the network into the equivalent one\n    Abc_NtkFraigTransform( pNtk, tEquiv, fUseInv, fVerbose );\n    stmm_free_table( tEquiv );\n\n    // free the manager\n    Fraig_ManFree( pMan );\n    Abc_NtkDelete( pNtkAig );\n\n    // cleanup the dangling nodes\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkCleanup( pNtk, fVerbose );\n    } else {\n        Abc_NtkSweep( pNtk, fVerbose ); }\n\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkFraigSweep: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigSweepUsingExdc",
+      "Start": 4853,
+      "End": 6028,
+      "BodyStart": 4925,
+      "Original": "void Abc_NtkFraigSweepUsingExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk )\n{\n    Fraig_Node_t * gNodeExdc, * gNode, * gNodeRes;\n    Abc_Obj_t * pNode, * pNodeAig;\n    int i;\n    extern Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkExdc );\n\n    assert( pNtk-\u003epExdc );\n    // derive FRAIG node representing don't-cares in the EXDC network\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk-\u003epExdc );\n    // update the node pointers\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // skip the constant input nodes\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            continue;\n        // get the strashed node\n        pNodeAig = pNode-\u003epCopy;\n        // skip the dangling nodes\n        if ( pNodeAig == NULL )\n            continue;\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig)-\u003epCopy, (int)Abc_ObjIsComplement(pNodeAig) );\n        // perform ANDing with EXDC\n        gNodeRes = Fraig_NodeAnd( pMan, gNode, Fraig_Not(gNodeExdc) );\n        // write the node back\n        Abc_ObjRegular(pNodeAig)-\u003epCopy = (Abc_Obj_t *)Fraig_NotCond( gNodeRes, (int)Abc_ObjIsComplement(pNodeAig) );\n    }\n}",
+      "Draft": "func Abc_NtkFraigSweepUsingExdc(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) {\n    var gNodeExdc, gNode, gNodeRes *Fraig_Node_t;\n    var pNode, pNodeAig *Abc_Obj_t;\n    var i int32;\n    extern Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkExdc );\n\n    assert(pNtk.pExdc, \"pNtk.pExdc\");\n    // derive FRAIG node representing don't-cares in the EXDC network\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk.pExdc );\n    // update the node pointers\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // skip the constant input nodes\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        // get the strashed node\n        pNodeAig = pNode.pCopy;\n        // skip the dangling nodes\n        if pNodeAig == nil {\n            continue; }\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig).pCopy, int32(Abc_ObjIsComplement(pNodeAig)) );\n        // perform ANDing with EXDC\n        gNodeRes = Fraig_NodeAnd( pMan, gNode, Fraig_Not(gNodeExdc) );\n        // write the node back\n        Abc_ObjRegular(pNodeAig).pCopy = (Abc_Obj_t *)Fraig_NotCond( gNodeRes, int32(Abc_ObjIsComplement(pNodeAig)) );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigEquiv",
+      "Start": 6316,
+      "End": 9001,
+      "BodyStart": 6412,
+      "Original": "stmm_table * Abc_NtkFraigEquiv( Abc_Ntk_t * pNtk, int fUseInv, int fVerbose, int fVeryVerbose )\n{\n    Abc_Obj_t * pList, * pNode, * pNodeAig;\n    Fraig_Node_t * gNode;\n    Abc_Obj_t ** ppSlot;\n    stmm_table * tStrash2Net;\n    stmm_table * tResult;\n    stmm_generator * gen;\n    int c, Counter;\n\n    // create mapping of strashed nodes into the corresponding network nodes\n    tStrash2Net = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    Abc_NtkForEachNode( pNtk, pNode, c )\n    {\n        // skip the constant input nodes\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            continue;\n        // get the strashed node\n        pNodeAig = pNode-\u003epCopy;\n        // skip the dangling nodes\n        if ( pNodeAig == NULL )\n            continue;\n        // skip the nodes that fanout into COs\n        if ( Abc_NodeFindCoFanout(pNode) )\n            continue;\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig)-\u003epCopy, (int)Abc_ObjIsComplement(pNodeAig) );\n        if ( !stmm_find_or_add( tStrash2Net, (char *)Fraig_Regular(gNode), (char ***)\u0026ppSlot ) )\n            *ppSlot = NULL;\n        // add the node to the list\n        pNode-\u003epNext = *ppSlot;\n        *ppSlot = pNode;\n        // mark the node if it is complemented\n        pNode-\u003efPhase = Fraig_IsComplement(gNode);\n    }\n\n    // print the classes\n    c = 0;\n    Counter = 0;\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    stmm_foreach_item( tStrash2Net, gen, (char **)\u0026gNode, (char **)\u0026pList )\n    {\n        // skip the trival classes\n        if ( pList == NULL || pList-\u003epNext == NULL )\n            continue;\n        // add the non-trival class\n        stmm_insert( tResult, (char *)pList, NULL );\n        // count nodes in the non-trival classes\n        for ( pNode = pList; pNode; pNode = pNode-\u003epNext )\n            Counter++;\n\n        if ( fVeryVerbose )\n        {\n            printf( \"Class %2d : {\", c );\n            for ( pNode = pList; pNode; pNode = pNode-\u003epNext )\n            {\n                pNode-\u003epCopy = NULL;\n                printf( \" %s\", Abc_ObjName(pNode) );\n                printf( \"(%c)\", pNode-\u003efPhase? '-' : '+' );\n                printf( \"(%d)\", pNode-\u003eLevel );\n            }\n            printf( \" }\\n\" );\n            c++;\n        }\n    }\n    if ( fVerbose || fVeryVerbose )\n    {\n        printf( \"Sweeping stats for network \\\"%s\\\":\\n\", pNtk-\u003epName );\n        printf( \"Internal nodes = %d. Different functions (up to compl) = %d.\\n\", Abc_NtkNodeNum(pNtk), stmm_count(tStrash2Net) );\n        printf( \"Non-trivial classes = %d. Nodes in non-trivial classes = %d.\\n\", stmm_count(tResult), Counter );\n    }\n    stmm_free_table( tStrash2Net );\n    return tResult;\n}",
+      "Draft": "func Abc_NtkFraigEquiv(pNtk *Abc_Ntk_t, fUseInv int32, fVerbose int32, fVeryVerbose int32) *stmm_table {\n    var pList, pNode, pNodeAig *Abc_Obj_t;\n    var gNode *Fraig_Node_t;\n    var ppSlot **Abc_Obj_t;\n    var tStrash2Net *stmm_table;\n    var tResult *stmm_table;\n    var gen *stmm_generator;\n    var c, Counter int32;\n\n    // create mapping of strashed nodes into the corresponding network nodes\n    tStrash2Net = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    Abc_NtkForEachNode( pNtk, pNode, c )\n    {\n        // skip the constant input nodes\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        // get the strashed node\n        pNodeAig = pNode.pCopy;\n        // skip the dangling nodes\n        if pNodeAig == nil {\n            continue; }\n        // skip the nodes that fanout into COs\n        if Abc_NodeFindCoFanout(pNode) {\n            continue; }\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig).pCopy, int32(Abc_ObjIsComplement(pNodeAig)) );\n        if !stmm_find_or_add( tStrash2Net, (char *)Fraig_Regular(gNode), (char ***)\u0026ppSlot ) {\n            *ppSlot = nil; }\n        // add the node to the list\n        pNode.pNext = *ppSlot;\n        *ppSlot = pNode;\n        // mark the node if it is complemented\n        pNode.fPhase = Fraig_IsComplement(gNode);\n    }\n\n    // print the classes\n    c = 0;\n    Counter = 0;\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    stmm_foreach_item( tStrash2Net, gen, (char **)\u0026gNode, (char **)\u0026pList )\n    {\n        // skip the trival classes\n        if pList == nil || pList.pNext == nil {\n            continue; }\n        // add the non-trival class\n        stmm_insert( tResult, (char *)pList, nil );\n        // count nodes in the non-trival classes\n        for  pNode = pList; (pNode != nil); pNode = pNode.pNext  {\n            Counter++;\n        }\n\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"Class %2d : {\", c);\n            for  pNode = pList; (pNode != nil); pNode = pNode.pNext  {\n                pNode.pCopy = nil;\n                fmt.Printf(\" %s\", Abc_ObjName(pNode));\n                fmt.Printf(\"(%c)\", pNode.fPhase? '-' : '+');\n                fmt.Printf(\"(%d)\", pNode.Level);\n            }\n            fmt.Printf(\" }\\n\");\n            c++;\n        }\n    }\n    if (fVerbose != 0) || (fVeryVerbose != 0) {\n        fmt.Printf(\"Sweeping stats for network \\\"%s\\\":\\n\", pNtk.pName);\n        fmt.Printf(\"Internal nodes = %d. Different functions (up to compl) = %d.\\n\", Abc_NtkNodeNum(pNtk), stmm_count(tStrash2Net));\n        fmt.Printf(\"Non-trivial classes = %d. Nodes in non-trivial classes = %d.\\n\", stmm_count(tResult), Counter);\n    }\n    stmm_free_table( tStrash2Net );\n    return tResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigTransform",
+      "Start": 9301,
+      "End": 9928,
+      "BodyStart": 9396,
+      "Original": "void Abc_NtkFraigTransform( Abc_Ntk_t * pNtk, stmm_table * tEquiv, int fUseInv, int fVerbose )\n{\n    stmm_generator * gen;\n    Abc_Obj_t * pList;\n    if ( stmm_count(tEquiv) == 0 )\n        return;\n    // merge nodes in the classes\n    if ( Abc_NtkHasMapping( pNtk ) )\n    {\n        Abc_NtkDelayTrace( pNtk, NULL, NULL, 0 );\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, NULL )\n            Abc_NtkFraigMergeClassMapped( pNtk, pList, fUseInv, fVerbose );\n    }\n    else \n    {\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, NULL )\n            Abc_NtkFraigMergeClass( pNtk, pList, fUseInv, fVerbose );\n    }\n}",
+      "Draft": "func Abc_NtkFraigTransform(pNtk *Abc_Ntk_t, tEquiv *stmm_table, fUseInv int32, fVerbose int32) {\n    var gen *stmm_generator;\n    var pList *Abc_Obj_t;\n    if stmm_count(tEquiv) == 0 {\n        return; }\n    // merge nodes in the classes\n    if Abc_NtkHasMapping( pNtk ) {\n        Abc_NtkDelayTrace( pNtk, nil, nil, 0 );\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, nil )\n            Abc_NtkFraigMergeClassMapped( pNtk, pList, fUseInv, fVerbose );\n    \n    } else {\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, nil )\n            Abc_NtkFraigMergeClass( pNtk, pList, fUseInv, fVerbose );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigMergeClassMapped",
+      "Start": 10215,
+      "End": 12773,
+      "BodyStart": 10316,
+      "Original": "void Abc_NtkFraigMergeClassMapped( Abc_Ntk_t * pNtk, Abc_Obj_t * pChain, int fUseInv, int fVerbose )\n{\n    Abc_Obj_t * pListDir, * pListInv;\n    Abc_Obj_t * pNodeMin, * pNode, * pNext;\n    float Arrival1, Arrival2;\n\n    assert( pChain );\n    assert( pChain-\u003epNext );\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = NULL;\n    for ( pNode = pChain, pNext = pChain-\u003epNext; \n          pNode; \n          pNode = pNext, pNext = pNode? pNode-\u003epNext : NULL )\n    {\n        // check to which class the node belongs\n        if ( pNode-\u003efPhase == 1 )\n        {\n            pNode-\u003epNext = pListDir;\n            pListDir = pNode;\n        }\n        else\n        {\n            pNode-\u003epNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListDir;\n    for ( pNode = pListDir; pNode; pNode = pNode-\u003epNext )\n    {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if (  Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin-\u003eLevel \u003e  pNode-\u003eLevel) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin-\u003eLevel == pNode-\u003eLevel \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode))  )\n            pNodeMin = pNode;\n    }\n\n    // move the fanouts of the direct nodes\n    for ( pNode = pListDir; pNode; pNode = pNode-\u003epNext )\n        if ( pNode != pNodeMin )\n            Abc_ObjTransferFanout( pNode, pNodeMin );\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListInv;\n    for ( pNode = pListInv; pNode; pNode = pNode-\u003epNext )\n    {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if (  Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin-\u003eLevel \u003e  pNode-\u003eLevel) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin-\u003eLevel == pNode-\u003eLevel \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode))  )\n            pNodeMin = pNode;\n    }\n\n    // move the fanouts of the direct nodes\n    for ( pNode = pListInv; pNode; pNode = pNode-\u003epNext )\n        if ( pNode != pNodeMin )\n            Abc_ObjTransferFanout( pNode, pNodeMin );\n}",
+      "Draft": "func Abc_NtkFraigMergeClassMapped(pNtk *Abc_Ntk_t, pChain *Abc_Obj_t, fUseInv int32, fVerbose int32) {\n    var pListDir, pListInv *Abc_Obj_t;\n    var pNodeMin, pNode, pNext *Abc_Obj_t;\n    var Arrival1, Arrival2 float32;\n\n    assert((pChain != nil), \"pChain\");\n    assert(pChain.pNext, \"pChain.pNext\");\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = nil;\n    for  pNode, pNext = pChain, pChain.pNext; \n          (pNode != nil); \n          pNode = pNext, pNext = pNode? pNode.pNext : nil  {\n        // check to which class the node belongs\n        if pNode.fPhase == 1 {\n            pNode.pNext = pListDir;\n            pListDir = pNode;\n        \n        } else {\n            pNode.pNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListDir;\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level \u003e  pNode.Level) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level == pNode.Level \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode)) {\n            pNodeMin = pNode; }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        if pNode != pNodeMin {\n            Abc_ObjTransferFanout( pNode, pNodeMin ); }\n    }\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListInv;\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level \u003e  pNode.Level) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level == pNode.Level \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode)) {\n            pNodeMin = pNode; }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        if pNode != pNodeMin {\n            Abc_ObjTransferFanout( pNode, pNodeMin ); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigMergeClass",
+      "Start": 13132,
+      "End": 14854,
+      "BodyStart": 13227,
+      "Original": "void Abc_NtkFraigMergeClass( Abc_Ntk_t * pNtk, Abc_Obj_t * pChain, int fUseInv, int fVerbose )\n{\n    Abc_Obj_t * pListDir, * pListInv;\n    Abc_Obj_t * pNodeMin, * pNodeMinInv;\n    Abc_Obj_t * pNode, * pNext;\n\n    assert( pChain );\n    assert( pChain-\u003epNext );\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pChain;\n    for ( pNode = pChain-\u003epNext; pNode; pNode = pNode-\u003epNext )\n        if (  pNodeMin-\u003eLevel \u003e  pNode-\u003eLevel || \n            ( pNodeMin-\u003eLevel == pNode-\u003eLevel \u0026\u0026 \n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode) ) )\n            pNodeMin = pNode;\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = NULL;\n    for ( pNode = pChain, pNext = pChain-\u003epNext; \n          pNode; \n          pNode = pNext, pNext = pNode? pNode-\u003epNext : NULL )\n    {\n        if ( pNode == pNodeMin )\n            continue;\n        // check to which class the node belongs\n        if ( pNodeMin-\u003efPhase == pNode-\u003efPhase )\n        {\n            pNode-\u003epNext = pListDir;\n            pListDir = pNode;\n        }\n        else\n        {\n            pNode-\u003epNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // move the fanouts of the direct nodes\n    for ( pNode = pListDir; pNode; pNode = pNode-\u003epNext )\n        Abc_ObjTransferFanout( pNode, pNodeMin );\n\n    // skip if there are no inverted nodes\n    if ( pListInv == NULL )\n        return;\n\n    // add the invertor\n    pNodeMinInv = Abc_NtkCreateNodeInv( pNtk, pNodeMin );\n   \n    // move the fanouts of the inverted nodes\n    for ( pNode = pListInv; pNode; pNode = pNode-\u003epNext )\n        Abc_ObjTransferFanout( pNode, pNodeMinInv );\n}",
+      "Draft": "func Abc_NtkFraigMergeClass(pNtk *Abc_Ntk_t, pChain *Abc_Obj_t, fUseInv int32, fVerbose int32) {\n    var pListDir, pListInv *Abc_Obj_t;\n    var pNodeMin, pNodeMinInv *Abc_Obj_t;\n    var pNode, pNext *Abc_Obj_t;\n\n    assert((pChain != nil), \"pChain\");\n    assert(pChain.pNext, \"pChain.pNext\");\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pChain;\n    for  pNode = pChain.pNext; (pNode != nil); pNode = pNode.pNext  {\n        if pNodeMin.Level \u003e  pNode.Level || \n            ( pNodeMin.Level == pNode.Level \u0026\u0026 \n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode) ) {\n            pNodeMin = pNode; }\n    }\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = nil;\n    for  pNode, pNext = pChain, pChain.pNext; \n          (pNode != nil); \n          pNode = pNext, pNext = pNode? pNode.pNext : nil  {\n        if pNode == pNodeMin {\n            continue; }\n        // check to which class the node belongs\n        if pNodeMin.fPhase == pNode.fPhase {\n            pNode.pNext = pListDir;\n            pListDir = pNode;\n        \n        } else {\n            pNode.pNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        Abc_ObjTransferFanout( pNode, pNodeMin );\n    }\n\n    // skip if there are no inverted nodes\n    if pListInv == nil {\n        return; }\n\n    // add the invertor\n    pNodeMinInv = Abc_NtkCreateNodeInv( pNtk, pNodeMin );\n   \n    // move the fanouts of the inverted nodes\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        Abc_ObjTransferFanout( pNode, pNodeMinInv );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeDroppingCost",
+      "Start": 15157,
+      "End": 15221,
+      "BodyStart": 15203,
+      "Original": "int Abc_NodeDroppingCost( Abc_Obj_t * pNode )\n{ \n    return 1;\n}",
+      "Draft": "func Abc_NodeDroppingCost(pNode *Abc_Obj_t) int32 { \n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCleanup",
+      "Start": 15520,
+      "End": 15918,
+      "BodyStart": 15573,
+      "Original": "int Abc_NtkCleanup( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    int Counter;\n    assert( Abc_NtkIsLogic(pNtk) );\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if ( fVerbose )\n        printf( \"Cleanup removed %d dangling nodes.\\n\", Counter );\n    Vec_PtrFree( vNodes );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkCleanup(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %d dangling nodes.\\n\", Counter); }\n    Vec_PtrFree( vNodes );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkCleanupNodes",
+      "Start": 16213,
+      "End": 17036,
+      "BodyStart": 16291,
+      "Original": "int Abc_NtkCleanupNodes( Abc_Ntk_t * pNtk, Vec_Ptr_t * vRoots, int fVerbose )\n{\n    Vec_Ptr_t * vNodes, * vStarts;\n    Abc_Obj_t * pObj;\n    int i, Counter;\n    assert( Abc_NtkIsLogic(pNtk) );\n    // collect starting nodes into one array\n    vStarts = Vec_PtrAlloc( 1000 );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vStarts, pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pObj, i )\n        if ( pObj )\n            Vec_PtrPush( vStarts, pObj );\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)Vec_PtrArray(vStarts), Vec_PtrSize(vStarts) );\n    Vec_PtrFree( vStarts );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if ( fVerbose )\n        printf( \"Cleanup removed %d dangling nodes.\\n\", Counter );\n    Vec_PtrFree( vNodes );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkCleanupNodes(pNtk *Abc_Ntk_t, vRoots *Vec_Ptr_t, fVerbose int32) int32 {\n    var vNodes, vStarts *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // collect starting nodes into one array\n    vStarts = Vec_PtrAlloc( 1000 );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vStarts, pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pObj, i )\n        if ( pObj )\n            Vec_PtrPush( vStarts, pObj );\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)Vec_PtrArray(vStarts), Vec_PtrSize(vStarts) );\n    Vec_PtrFree( vStarts );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %d dangling nodes.\\n\", Counter); }\n    Vec_PtrFree( vNodes );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkReduceNodes",
+      "Start": 17351,
+      "End": 18087,
+      "BodyStart": 17414,
+      "Original": "int Abc_NtkReduceNodes( Abc_Ntk_t * pNtk, Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pNode;\n    int i, Counter;\n    assert( Abc_NtkIsLogic(pNtk) );\n    // mark the nodes reachable from the POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode-\u003efMarkA = 1;\n    // remove the non-marked nodes\n    Counter = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003efMarkA == 0 )\n        {\n            Abc_NtkDeleteObj( pNode );\n            Counter++;\n        }\n    // unmark the remaining nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode-\u003efMarkA = 0;\n    // check\n    if ( !Abc_NtkCheck( pNtk ) )\n        printf( \"Abc_NtkCleanup: The network check has failed.\\n\" );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkReduceNodes(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode.fMarkA = 1;\n    // remove the non-marked nodes\n    Counter = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if pNode.fMarkA == 0 {\n            Abc_NtkDeleteObj( pNode );\n            Counter++;\n        }\n    // unmark the remaining nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode.fMarkA = 0;\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkCleanup: The network check has failed.\\n\"); }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeRemoveNonCurrentObjects",
+      "Start": 22694,
+      "End": 23385,
+      "BodyStart": 22750,
+      "Original": "int Abc_NodeRemoveNonCurrentObjects( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int Counter, i;\n    int fVerbose = 0;\n\n    // report on the nodes to be deleted\n    if ( fVerbose )\n    {\n        printf( \"These nodes will be deleted: \\n\" );\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            if ( !Abc_NodeIsTravIdCurrent( pObj ) )\n            {\n                printf( \"    \" );\n                Abc_ObjPrint( stdout, pObj );\n            }\n    }\n    \n    // delete the nodes    \n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NodeIsTravIdCurrent( pObj ) )\n        {\n            Abc_NtkDeleteObj( pObj );\n            Counter++;\n        }\n    return Counter;\n}",
+      "Draft": "func Abc_NodeRemoveNonCurrentObjects(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var Counter, i int32;\n    var fVerbose int32;\n\n    // report on the nodes to be deleted\n    if fVerbose != 0 {\n        fmt.Printf(\"These nodes will be deleted: \\n\");\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            if !Abc_NodeIsTravIdCurrent( pObj ) {\n                fmt.Printf(\"    \");\n                Abc_ObjPrint( os.Stdout, pObj );\n            }\n    }\n    \n    // delete the nodes    \n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if !Abc_NodeIsTravIdCurrent( pObj ) {\n            Abc_NtkDeleteObj( pObj );\n            Counter++;\n        }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkSetTravId_rec",
+      "Start": 23714,
+      "End": 23948,
+      "BodyStart": 23760,
+      "Original": "void Abc_NtkSetTravId_rec( Abc_Obj_t * pObj )\n{\n    Abc_NodeSetTravIdCurrent(pObj);\n    if ( Abc_ObjFaninNum(pObj) == 0 )\n        return;\n    assert( Abc_ObjFaninNum(pObj) == 1 );\n    Abc_NtkSetTravId_rec( Abc_ObjFanin0(pObj) );    \n}",
+      "Draft": "func Abc_NtkSetTravId_rec(pObj *Abc_Obj_t) {\n    Abc_NodeSetTravIdCurrent(pObj);\n    if Abc_ObjFaninNum(pObj) == 0 {\n        return; }\n    assert(Abc_ObjFaninNum(pObj) == 1, \"Abc_ObjFaninNum(pObj) == 1\");\n    Abc_NtkSetTravId_rec( Abc_ObjFanin0(pObj) );    \n}"
+    },
+    {
+      "Name": "Abc_NtkCheckConstant_rec",
+      "Start": 24277,
+      "End": 25071,
+      "BodyStart": 24326,
+      "Original": "int Abc_NtkCheckConstant_rec( Abc_Obj_t * pObj )\n{\n    if ( Abc_ObjFaninNum(pObj) == 0 )\n    {\n        if ( !Abc_ObjIsNode(pObj) )\n            return -1;\n        if ( Abc_NodeIsConst0(pObj) )\n            return 0;\n        if ( Abc_NodeIsConst1(pObj) )\n            return 1;\n        assert( 0 );\n        return -1;\n    }\n    if ( Abc_ObjIsLatch(pObj) || Abc_ObjFaninNum(pObj) \u003e 1 )\n        return -1;\n    if ( !Abc_ObjIsNode(pObj) || Abc_NodeIsBuf(pObj) )\n        return Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) );\n    if ( Abc_NodeIsInv(pObj) )\n    {\n        int RetValue = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) );\n        if ( RetValue == 0 )\n            return 1;\n        if ( RetValue == 1 )\n            return 0;\n        return RetValue;\n    }\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Abc_NtkCheckConstant_rec(pObj *Abc_Obj_t) int32 {\n    if Abc_ObjFaninNum(pObj) == 0 {\n        if !Abc_ObjIsNode(pObj) {\n            return -1; }\n        if Abc_NodeIsConst0(pObj) {\n            return 0; }\n        if Abc_NodeIsConst1(pObj) {\n            return 1; }\n        assert(false, \"0\");\n        return -1;\n    }\n    if Abc_ObjIsLatch(pObj) || Abc_ObjFaninNum(pObj) \u003e 1 {\n        return -1; }\n    if !Abc_ObjIsNode(pObj) || Abc_NodeIsBuf(pObj) {\n        return Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) ); }\n    if Abc_NodeIsInv(pObj) {\n        var RetValue int32  = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) );\n        if RetValue == 0 {\n            return 1; }\n        if RetValue == 1 {\n            return 0; }\n        return RetValue;\n    }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Abc_NtkLatchSweep",
+      "Start": 25560,
+      "End": 26879,
+      "BodyStart": 25602,
+      "Original": "int Abc_NtkLatchSweep( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pFanin, * pLatch, * pLatchPivot = NULL;\n    int Counter, RetValue, i;\n    Counter = 0;\n    // go through the latches\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        // check if the latch has constant input\n        RetValue = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pLatch) );\n        if ( RetValue == -1 )\n            continue;\n        // found a latch with constant fanin\n        if ( (RetValue == 1 \u0026\u0026 Abc_LatchIsInit0(pLatch)) ||\n             (RetValue == 0 \u0026\u0026 Abc_LatchIsInit1(pLatch)) )\n        {\n            // fanin constant differs from the latch init value\n            if ( pLatchPivot == NULL )\n            {\n                pLatchPivot = pLatch;\n                continue;\n            }\n            if ( Abc_LatchInit(pLatch) != Abc_LatchInit(pLatchPivot) ) // add inverter\n                pFanin = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanout0(pLatchPivot) );\n            else\n                pFanin = Abc_ObjFanout0(pLatchPivot);\n        }\n        else\n            pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n        // replace latch\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pFanin );\n        // delete the extra nodes\n        Abc_NtkDeleteObj_rec( Abc_ObjFanout0(pLatch), 0 );\n        Counter++;\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NtkLatchSweep(pNtk *Abc_Ntk_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pLatch *Abc_Obj_t;\n    var pLatchPivot *Abc_Obj_t = nil;\n    var Counter, RetValue, i int32;\n    Counter = 0;\n    // go through the latches\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        // check if the latch has constant input\n        RetValue = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pLatch) );\n        if RetValue == -1 {\n            continue; }\n        // found a latch with constant fanin\n        if (RetValue == 1 \u0026\u0026 Abc_LatchIsInit0(pLatch)) ||\n             (RetValue == 0 \u0026\u0026 Abc_LatchIsInit1(pLatch)) {\n            // fanin constant differs from the latch init value\n            if pLatchPivot == nil {\n                pLatchPivot = pLatch;\n                continue;\n            }\n            if Abc_LatchInit(pLatch) != Abc_LatchInit(pLatchPivot) { // add inverter\n                pFanin = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanout0(pLatchPivot) );\n            } else {\n                pFanin = Abc_ObjFanout0(pLatchPivot); }\n        \n        } else {\n            pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch)); }\n        // replace latch\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pFanin );\n        // delete the extra nodes\n        Abc_NtkDeleteObj_rec( Abc_ObjFanout0(pLatch), 0 );\n        Counter++;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkReplaceAutonomousLogic",
+      "Start": 27223,
+      "End": 28705,
+      "BodyStart": 27277,
+      "Original": "int Abc_NtkReplaceAutonomousLogic( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode, * pFanin;\n    Vec_Ptr_t * vNodes;\n    int i, k, Counter;\n    // collect the nodes that feed into the reachable logic\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        // skip non-visited fanins\n        if ( !Abc_NodeIsTravIdCurrent(pNode) )\n            continue;\n        // look for non-visited fanins\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            // skip visited fanins\n            if ( Abc_NodeIsTravIdCurrent(pFanin) )\n                continue;\n            // skip constants and latches fed by constants\n            if ( Abc_NtkCheckConstant_rec(pFanin) != -1 ||\n                 (Abc_ObjIsBo(pFanin) \u0026\u0026 Abc_NtkCheckConstant_rec(Abc_ObjFanin0(Abc_ObjFanin0(pFanin))) != -1) )\n            {\n                Abc_NtkSetTravId_rec( pFanin );\n                continue;\n            }\n            assert( !Abc_ObjIsLatch(pFanin) );\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    Vec_PtrUniqify( vNodes, (int (*)(void))Abc_ObjPointerCompare );\n    // replace these nodes by the PIs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pFanin = Abc_NtkCreatePi(pNtk);\n        Abc_ObjAssignName( pFanin, Abc_ObjName(pFanin), NULL );\n        Abc_NodeSetTravIdCurrent( pFanin );\n        Abc_ObjTransferFanout( pNode, pFanin );\n    }\n    Counter = Vec_PtrSize(vNodes);\n    Vec_PtrFree( vNodes );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkReplaceAutonomousLogic(pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, Counter int32;\n    // collect the nodes that feed into the reachable logic\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        // skip non-visited fanins\n        if !Abc_NodeIsTravIdCurrent(pNode) {\n            continue; }\n        // look for non-visited fanins\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            // skip visited fanins\n            if Abc_NodeIsTravIdCurrent(pFanin) {\n                continue; }\n            // skip constants and latches fed by constants\n            if Abc_NtkCheckConstant_rec(pFanin) != -1 ||\n                 (Abc_ObjIsBo(pFanin) \u0026\u0026 Abc_NtkCheckConstant_rec(Abc_ObjFanin0(Abc_ObjFanin0(pFanin))) != -1) {\n                Abc_NtkSetTravId_rec( pFanin );\n                continue;\n            }\n            assert(!Abc_ObjIsLatch(pFanin), \"!Abc_ObjIsLatch(pFanin)\");\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    Vec_PtrUniqify( vNodes, (int (*)(void))Abc_ObjPointerCompare );\n    // replace these nodes by the PIs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pFanin = Abc_NtkCreatePi(pNtk);\n        Abc_ObjAssignName( pFanin, Abc_ObjName(pFanin), nil );\n        Abc_NodeSetTravIdCurrent( pFanin );\n        Abc_ObjTransferFanout( pNode, pFanin );\n    }\n    Counter = Vec_PtrSize(vNodes);\n    Vec_PtrFree( vNodes );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkCleanupSeq",
+      "Start": 29169,
+      "End": 30522,
+      "BodyStart": 29258,
+      "Original": "int Abc_NtkCleanupSeq( Abc_Ntk_t * pNtk, int fLatchSweep, int fAutoSweep, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    int Counter;\n    assert( Abc_NtkIsLogic(pNtk) );\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsSeq( pNtk );\n    Vec_PtrFree( vNodes );\n    // remove the non-marked nodes\n    Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n    if ( fVerbose )\n        printf( \"Cleanup removed %4d dangling objects.\\n\", Counter );\n    // check if some of the latches can be removed\n    if ( fLatchSweep )\n    {\n        Counter = Abc_NtkLatchSweep( pNtk );\n        if ( fVerbose )\n            printf( \"Cleanup removed %4d redundant latches.\\n\", Counter );\n    }\n    // detect the autonomous components\n    if ( fAutoSweep )\n    {\n        vNodes = Abc_NtkDfsSeqReverse( pNtk );\n        Vec_PtrFree( vNodes );\n        // replace them by PIs\n        Counter = Abc_NtkReplaceAutonomousLogic( pNtk );\n        if ( fVerbose )\n            printf( \"Cleanup added   %4d additional PIs.\\n\", Counter );\n        // remove the non-marked nodes\n        Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n        if ( fVerbose )\n            printf( \"Cleanup removed %4d autonomous objects.\\n\", Counter );\n    }\n    // check\n    if ( !Abc_NtkCheck( pNtk ) )\n        printf( \"Abc_NtkCleanupSeq: The network check has failed.\\n\" );\n    return 1;\n}",
+      "Draft": "func Abc_NtkCleanupSeq(pNtk *Abc_Ntk_t, fLatchSweep int32, fAutoSweep int32, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsSeq( pNtk );\n    Vec_PtrFree( vNodes );\n    // remove the non-marked nodes\n    Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %4d dangling objects.\\n\", Counter); }\n    // check if some of the latches can be removed\n    if fLatchSweep != 0 {\n        Counter = Abc_NtkLatchSweep( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup removed %4d redundant latches.\\n\", Counter); }\n    }\n    // detect the autonomous components\n    if fAutoSweep != 0 {\n        vNodes = Abc_NtkDfsSeqReverse( pNtk );\n        Vec_PtrFree( vNodes );\n        // replace them by PIs\n        Counter = Abc_NtkReplaceAutonomousLogic( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup added   %4d additional PIs.\\n\", Counter); }\n        // remove the non-marked nodes\n        Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup removed %4d autonomous objects.\\n\", Counter); }\n    }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkCleanupSeq: The network check has failed.\\n\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkSweepBufsInvs",
+      "Start": 30796,
+      "End": 32732,
+      "BodyStart": 30855,
+      "Original": "int Abc_NtkSweepBufsInvs( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Hop_Man_t * pMan;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, fChanges = 1, Counter = 0;\n    assert( Abc_NtkIsLogic(pNtk) ); \n    // convert network to BDD representation\n    if ( !Abc_NtkToAig(pNtk) )\n    {\n        fprintf( stdout, \"Converting to SOP has failed.\\n\" );\n        return 1;\n    }\n    // get AIG manager\n    pMan = (Hop_Man_t *)pNtk-\u003epManFunc;\n    // label selected nodes\n    Abc_NtkIncrementTravId( pNtk );\n    // iterate till no improvement\n    while ( fChanges )\n    {\n        fChanges = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n        {\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n            {\n                // do not eliminate marked fanins\n                if ( Abc_NodeIsTravIdCurrent(pFanin) )\n                    continue;\n                // do not eliminate constant nodes\n                if ( !Abc_ObjIsNode(pFanin) || Abc_ObjFaninNum(pFanin) != 1 )\n                    continue;\n                // do not eliminate inverters into COs\n                if ( Abc_ObjIsCo(pObj) \u0026\u0026 Abc_NodeIsInv(pFanin) )\n                    continue;\n                // do not eliminate buffers connecting PIs and POs \n//                if ( Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsCi(Abc_ObjFanin0(pFanin)) )\n//                    continue;\n                fChanges = 1;\n                Counter++;\n                // update function of the node\n                if ( Abc_NodeIsInv(pFanin) )\n                    pObj-\u003epData = Hop_Compose( pMan, (Hop_Obj_t *)pObj-\u003epData, Hop_Not(Hop_IthVar(pMan, k)), k );\n                // update the fanin\n                Abc_ObjPatchFanin( pObj, pFanin, Abc_ObjFanin0(pFanin) );\n                if ( Abc_ObjFanoutNum(pFanin) == 0 )\n                    Abc_NtkDeleteObj(pFanin);            \n            }\n        }\n    }\n    if ( fVerbose )\n        printf( \"Removed %d single input nodes.\\n\", Counter );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkSweepBufsInvs(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var pMan *Hop_Man_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var fChanges int32 = 1;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\"); \n    // convert network to BDD representation\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to SOP has failed.\\n\");\n        return 1;\n    }\n    // get AIG manager\n    pMan = (Hop_Man_t *)pNtk.pManFunc;\n    // label selected nodes\n    Abc_NtkIncrementTravId( pNtk );\n    // iterate till no improvement\n    for  fChanges != 0  {\n        fChanges = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n        {\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n            {\n                // do not eliminate marked fanins\n                if Abc_NodeIsTravIdCurrent(pFanin) {\n                    continue; }\n                // do not eliminate constant nodes\n                if !Abc_ObjIsNode(pFanin) || Abc_ObjFaninNum(pFanin) != 1 {\n                    continue; }\n                // do not eliminate inverters into COs\n                if Abc_ObjIsCo(pObj) \u0026\u0026 Abc_NodeIsInv(pFanin) {\n                    continue; }\n                // do not eliminate buffers connecting PIs and POs \n//                if ( Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsCi(Abc_ObjFanin0(pFanin)) )\n//                    continue;\n                fChanges = 1;\n                Counter++;\n                // update function of the node\n                if Abc_NodeIsInv(pFanin) {\n                    pObj.pData = Hop_Compose( pMan, (Hop_Obj_t *)pObj.pData, Hop_Not(Hop_IthVar(pMan, k)), k ); }\n                // update the fanin\n                Abc_ObjPatchFanin( pObj, pFanin, Abc_ObjFanin0(pFanin) );\n                if Abc_ObjFanoutNum(pFanin) == 0 {\n                    Abc_NtkDeleteObj(pFanin); }            \n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Removed %d single input nodes.\\n\", Counter); }\n    return Counter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::2819",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2804,
+      "End": 2817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::3051",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3036,
+      "End": 3049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::3389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3374,
+      "End": 3389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::5960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5945,
+      "End": 5958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::7362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7347,
+      "End": 7355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::7392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7377,
+      "End": 7387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::7791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7776,
+      "End": 7785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::7808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7793,
+      "End": 7802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::8008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7993,
+      "End": 8001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::9680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9665,
+      "End": 9674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::9842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9827,
+      "End": 9836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::16777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16762,
+      "End": 16776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::26964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31191,
+      "End": 31204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::pointer-cast::28089",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32316,
+      "End": 32329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigSweep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2334,
+      "End": 4588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigSweepUsingExdc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigSweepUsingExdc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4853,
+      "End": 6028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::ternary::Abc_NtkFraigEquiv",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFraigEquiv",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6316,
+      "End": 9001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6316,
+      "End": 9001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigTransform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigTransform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9301,
+      "End": 9928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::ternary::Abc_NtkFraigMergeClassMapped",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFraigMergeClassMapped",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10215,
+      "End": 12773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigMergeClassMapped",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigMergeClassMapped",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10215,
+      "End": 12773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::ternary::Abc_NtkFraigMergeClass",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFraigMergeClass",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13132,
+      "End": 14854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkFraigMergeClass",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigMergeClass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13132,
+      "End": 14854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NodeDroppingCost",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDroppingCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15157,
+      "End": 15221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkCleanup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15520,
+      "End": 15918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkCleanupNodes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCleanupNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16213,
+      "End": 17036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkReduceNodes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkReduceNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17351,
+      "End": 18087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NodeRemoveNonCurrentObjects",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeRemoveNonCurrentObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22694,
+      "End": 23385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkSetTravId_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetTravId_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23714,
+      "End": 23948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkCheckConstant_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckConstant_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24277,
+      "End": 25071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkLatchSweep",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLatchSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25560,
+      "End": 26879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkReplaceAutonomousLogic",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkReplaceAutonomousLogic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27223,
+      "End": 28705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkCleanupSeq",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCleanupSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29169,
+      "End": 30522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::Abc_NtkSweepBufsInvs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSweepBufsInvs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30796,
+      "End": 32732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 598,
+      "End": 657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18092,
+      "End": 22408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::2742",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2742,
+      "End": 2777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::3161",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3161,
+      "End": 3196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::5329",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5329,
+      "End": 5365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::5679",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_NotCond",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5679,
+      "End": 5763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::5848",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5848,
+      "End": 5868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::5958",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_NotCond",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5958,
+      "End": 6019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::6754",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6754,
+      "End": 6790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::7216",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_NotCond",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7216,
+      "End": 7300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::7355",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_Regular",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7355,
+      "End": 7375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::7591",
+      "Category": "macro-inline-review",
+      "Symbol": "Fraig_IsComplement",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7591,
+      "End": 7616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::7739",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7739,
+      "End": 7810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::8797",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_count",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8797,
+      "End": 8820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::8906",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_count",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8906,
+      "End": 8925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::9456",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_count",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9456,
+      "End": 9474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::9633",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9633,
+      "End": 9688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::9795",
+      "Category": "macro-inline-review",
+      "Symbol": "stmm_foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9795,
+      "End": 9850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::16491",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16491,
+      "End": 16524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::16567",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16567,
+      "End": 16618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::17544",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17544,
+      "End": 17596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::17680",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17680,
+      "End": 17716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::17871",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17871,
+      "End": 17923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::22945",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22945,
+      "End": 22979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::23200",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23200,
+      "End": 23234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::25741",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25741,
+      "End": 25779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::27457",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27457,
+      "End": 27492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::27650",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27650,
+      "End": 27689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::28361",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28361,
+      "End": 28413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::31378",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31378,
+      "End": 31412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSweep.c::macro-inline::31435",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31435,
+      "End": 31473
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcDsd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Technology dependent sweep.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcDsd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"proof/fraig/fraig.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void           Abc_NtkFraigSweepUsingExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n// static stmm_table *   Abc_NtkFraigEquiv( Abc_Ntk_t * pNtk, int fUseInv, int fVerbose, int fVeryVerbose );\n\n// static void           Abc_NtkFraigTransform( Abc_Ntk_t * pNtk, stmm_table * tEquiv, int fUseInv, int fVerbose );\n\n// static void           Abc_NtkFraigMergeClassMapped( Abc_Ntk_t * pNtk, Abc_Obj_t * pChain, int fUseInv, int fVerbose );\n\n// static void           Abc_NtkFraigMergeClass( Abc_Ntk_t * pNtk, Abc_Obj_t * pChain, int fUseInv, int fVerbose );\n\n// static int            Abc_NodeDroppingCost( Abc_Obj_t * pNode );\n\n\n// static int            Abc_NtkReduceNodes( Abc_Ntk_t * pNtk, Vec_Ptr_t * vNodes );\n\n// static void           Abc_NodeSweep( Abc_Obj_t * pNode, int fVerbose );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sweping functionally equivalence nodes.]\n\n  Description [Removes gates with equivalent functionality. Works for \n  both technology-independent and mapped networks. If the flag is set, \n  allows adding inverters at the gate outputs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigSweep(pNtk *Abc_Ntk_t, fUseInv int32, fExdc int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var Params Fraig_Params_t;\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Fraig_Man_t;\n    var tEquiv *stmm_table;\n    var pObj *Abc_Obj_t;\n    var i, fUseTrick int32;\n\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n\n    // save gate assignments\n    fUseTrick = 0;\n    if Abc_NtkIsMappedLogic(pNtk) {\n        fUseTrick = 1;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj.pNext = (Abc_Obj_t *)pObj.pData;\n    }\n    // derive the AIG\n    pNtkAig = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    // reconstruct gate assignments\n    if fUseTrick != 0 {\n//        extern void * Abc_FrameReadLibGen(); \n        Hop_ManStop( (Hop_Man_t *)pNtk.pManFunc );\n        pNtk.pManFunc = Abc_FrameReadLibGen();\n        pNtk.ntkFunc = ABC_FUNC_MAP;\n        Abc_NtkForEachNode( pNtk, pObj, i )\n            pObj.pData = pObj.pNext;\npObj.pNext = nil;\n    }\n\n    // perform fraiging of the AIG\n    Fraig_ParamsSetDefault( \u0026Params );\n    Params.fInternal = 1;\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtkAig, \u0026Params, 0, 0 );   \n    // cannot use EXDC with FRAIG because it can create classes of equivalent FRAIG nodes\n    // with representative nodes that do not correspond to the nodes with the current network\n\n    // update FRAIG using EXDC\n    if fExdc != 0 {\n        if pNtk.pExdc == nil {\n            fmt.Printf(\"Warning: Networks has no EXDC.\\n\");\n        } else {\n            Abc_NtkFraigSweepUsingExdc( pMan, pNtk ); }\n    }\n    // assign levels to the nodes of the network\n    Abc_NtkLevel( pNtk );\n\n    // collect the classes of equivalent nets\n    tEquiv = Abc_NtkFraigEquiv( pNtk, fUseInv, fVerbose, fVeryVerbose );\n\n    // transform the network into the equivalent one\n    Abc_NtkFraigTransform( pNtk, tEquiv, fUseInv, fVerbose );\n    stmm_free_table( tEquiv );\n\n    // free the manager\n    Fraig_ManFree( pMan );\n    Abc_NtkDelete( pNtkAig );\n\n    // cleanup the dangling nodes\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkCleanup( pNtk, fVerbose );\n    } else {\n        Abc_NtkSweep( pNtk, fVerbose ); }\n\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkFraigSweep: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sweep the network using EXDC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigSweepUsingExdc(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) {\n    var gNodeExdc, gNode, gNodeRes *Fraig_Node_t;\n    var pNode, pNodeAig *Abc_Obj_t;\n    var i int32;\n    extern Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkExdc );\n\n    assert(pNtk.pExdc, \"pNtk.pExdc\");\n    // derive FRAIG node representing don't-cares in the EXDC network\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk.pExdc );\n    // update the node pointers\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // skip the constant input nodes\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        // get the strashed node\n        pNodeAig = pNode.pCopy;\n        // skip the dangling nodes\n        if pNodeAig == nil {\n            continue; }\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig).pCopy, int32(Abc_ObjIsComplement(pNodeAig)) );\n        // perform ANDing with EXDC\n        gNodeRes = Fraig_NodeAnd( pMan, gNode, Fraig_Not(gNodeExdc) );\n        // write the node back\n        Abc_ObjRegular(pNodeAig).pCopy = (Abc_Obj_t *)Fraig_NotCond( gNodeRes, int32(Abc_ObjIsComplement(pNodeAig)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects equivalence classes of node in the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigEquiv(pNtk *Abc_Ntk_t, fUseInv int32, fVerbose int32, fVeryVerbose int32) *stmm_table {\n    var pList, pNode, pNodeAig *Abc_Obj_t;\n    var gNode *Fraig_Node_t;\n    var ppSlot **Abc_Obj_t;\n    var tStrash2Net *stmm_table;\n    var tResult *stmm_table;\n    var gen *stmm_generator;\n    var c, Counter int32;\n\n    // create mapping of strashed nodes into the corresponding network nodes\n    tStrash2Net = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    Abc_NtkForEachNode( pNtk, pNode, c )\n    {\n        // skip the constant input nodes\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        // get the strashed node\n        pNodeAig = pNode.pCopy;\n        // skip the dangling nodes\n        if pNodeAig == nil {\n            continue; }\n        // skip the nodes that fanout into COs\n        if Abc_NodeFindCoFanout(pNode) {\n            continue; }\n        // get the FRAIG node\n        gNode = Fraig_NotCond( Abc_ObjRegular(pNodeAig).pCopy, int32(Abc_ObjIsComplement(pNodeAig)) );\n        if !stmm_find_or_add( tStrash2Net, (char *)Fraig_Regular(gNode), (char ***)\u0026ppSlot ) {\n            *ppSlot = nil; }\n        // add the node to the list\n        pNode.pNext = *ppSlot;\n        *ppSlot = pNode;\n        // mark the node if it is complemented\n        pNode.fPhase = Fraig_IsComplement(gNode);\n    }\n\n    // print the classes\n    c = 0;\n    Counter = 0;\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    stmm_foreach_item( tStrash2Net, gen, (char **)\u0026gNode, (char **)\u0026pList )\n    {\n        // skip the trival classes\n        if pList == nil || pList.pNext == nil {\n            continue; }\n        // add the non-trival class\n        stmm_insert( tResult, (char *)pList, nil );\n        // count nodes in the non-trival classes\n        for  pNode = pList; (pNode != nil); pNode = pNode.pNext  {\n            Counter++;\n        }\n\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"Class %2d : {\", c);\n            for  pNode = pList; (pNode != nil); pNode = pNode.pNext  {\n                pNode.pCopy = nil;\n                fmt.Printf(\" %s\", Abc_ObjName(pNode));\n                fmt.Printf(\"(%c)\", pNode.fPhase? '-' : '+');\n                fmt.Printf(\"(%d)\", pNode.Level);\n            }\n            fmt.Printf(\" }\\n\");\n            c++;\n        }\n    }\n    if (fVerbose != 0) || (fVeryVerbose != 0) {\n        fmt.Printf(\"Sweeping stats for network \\\"%s\\\":\\n\", pNtk.pName);\n        fmt.Printf(\"Internal nodes = %d. Different functions (up to compl) = %d.\\n\", Abc_NtkNodeNum(pNtk), stmm_count(tStrash2Net));\n        fmt.Printf(\"Non-trivial classes = %d. Nodes in non-trivial classes = %d.\\n\", stmm_count(tResult), Counter);\n    }\n    stmm_free_table( tStrash2Net );\n    return tResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the network using the equivalence relation on nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigTransform(pNtk *Abc_Ntk_t, tEquiv *stmm_table, fUseInv int32, fVerbose int32) {\n    var gen *stmm_generator;\n    var pList *Abc_Obj_t;\n    if stmm_count(tEquiv) == 0 {\n        return; }\n    // merge nodes in the classes\n    if Abc_NtkHasMapping( pNtk ) {\n        Abc_NtkDelayTrace( pNtk, nil, nil, 0 );\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, nil )\n            Abc_NtkFraigMergeClassMapped( pNtk, pList, fUseInv, fVerbose );\n    \n    } else {\n        stmm_foreach_item( tEquiv, gen, (char **)\u0026pList, nil )\n            Abc_NtkFraigMergeClass( pNtk, pList, fUseInv, fVerbose );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the list of one-phase equivalent nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigMergeClassMapped(pNtk *Abc_Ntk_t, pChain *Abc_Obj_t, fUseInv int32, fVerbose int32) {\n    var pListDir, pListInv *Abc_Obj_t;\n    var pNodeMin, pNode, pNext *Abc_Obj_t;\n    var Arrival1, Arrival2 float32;\n\n    assert((pChain != nil), \"pChain\");\n    assert(pChain.pNext, \"pChain.pNext\");\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = nil;\n    for  pNode, pNext = pChain, pChain.pNext; \n          (pNode != nil); \n          pNode = pNext, pNext = pNode? pNode.pNext : nil  {\n        // check to which class the node belongs\n        if pNode.fPhase == 1 {\n            pNode.pNext = pListDir;\n            pListDir = pNode;\n        \n        } else {\n            pNode.pNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListDir;\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level \u003e  pNode.Level) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level == pNode.Level \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode)) {\n            pNodeMin = pNode; }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        if pNode != pNodeMin {\n            Abc_ObjTransferFanout( pNode, pNodeMin ); }\n    }\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pListInv;\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        Arrival1 = Abc_NodeReadArrivalWorst(pNodeMin);\n        Arrival2 = Abc_NodeReadArrivalWorst(pNode   );\n//        assert( Abc_ObjIsCi(pNodeMin) || Arrival1 \u003e 0 );\n//        assert( Abc_ObjIsCi(pNode)    || Arrival2 \u003e 0 );\n        if Arrival1 \u003e Arrival2 ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level \u003e  pNode.Level) ||\n              (Arrival1 == Arrival2 \u0026\u0026 pNodeMin.Level == pNode.Level \u0026\u0026\n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode)) {\n            pNodeMin = pNode; }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        if pNode != pNodeMin {\n            Abc_ObjTransferFanout( pNode, pNodeMin ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Process one equivalence class of nodes.]\n\n  Description [This function does not remove the nodes. It only switches \n  around the connections.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigMergeClass(pNtk *Abc_Ntk_t, pChain *Abc_Obj_t, fUseInv int32, fVerbose int32) {\n    var pListDir, pListInv *Abc_Obj_t;\n    var pNodeMin, pNodeMinInv *Abc_Obj_t;\n    var pNode, pNext *Abc_Obj_t;\n\n    assert((pChain != nil), \"pChain\");\n    assert(pChain.pNext, \"pChain.pNext\");\n\n    // find the node with the smallest number of logic levels\n    pNodeMin = pChain;\n    for  pNode = pChain.pNext; (pNode != nil); pNode = pNode.pNext  {\n        if pNodeMin.Level \u003e  pNode.Level || \n            ( pNodeMin.Level == pNode.Level \u0026\u0026 \n              Abc_NodeDroppingCost(pNodeMin) \u003c Abc_NodeDroppingCost(pNode) ) {\n            pNodeMin = pNode; }\n    }\n\n    // divide the nodes into two parts: \n    // those that need the invertor and those that don't need\n    pListDir = pListInv = nil;\n    for  pNode, pNext = pChain, pChain.pNext; \n          (pNode != nil); \n          pNode = pNext, pNext = pNode? pNode.pNext : nil  {\n        if pNode == pNodeMin {\n            continue; }\n        // check to which class the node belongs\n        if pNodeMin.fPhase == pNode.fPhase {\n            pNode.pNext = pListDir;\n            pListDir = pNode;\n        \n        } else {\n            pNode.pNext = pListInv;\n            pListInv = pNode;\n        }\n    }\n\n    // move the fanouts of the direct nodes\n    for  pNode = pListDir; (pNode != nil); pNode = pNode.pNext  {\n        Abc_ObjTransferFanout( pNode, pNodeMin );\n    }\n\n    // skip if there are no inverted nodes\n    if pListInv == nil {\n        return; }\n\n    // add the invertor\n    pNodeMinInv = Abc_NtkCreateNodeInv( pNtk, pNodeMin );\n   \n    // move the fanouts of the inverted nodes\n    for  pNode = pListInv; (pNode != nil); pNode = pNode.pNext  {\n        Abc_ObjTransferFanout( pNode, pNodeMinInv );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of literals saved if this node becomes useless.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDroppingCost(pNode *Abc_Obj_t) int32 { \n    return 1;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Removes dangling nodes.]\n\n  Description [Returns the number of nodes removed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCleanup(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %d dangling nodes.\\n\", Counter); }\n    Vec_PtrFree( vNodes );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes dangling nodes.]\n\n  Description [Returns the number of nodes removed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCleanupNodes(pNtk *Abc_Ntk_t, vRoots *Vec_Ptr_t, fVerbose int32) int32 {\n    var vNodes, vStarts *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // collect starting nodes into one array\n    vStarts = Vec_PtrAlloc( 1000 );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vStarts, pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pObj, i )\n        if ( pObj )\n            Vec_PtrPush( vStarts, pObj );\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)Vec_PtrArray(vStarts), Vec_PtrSize(vStarts) );\n    Vec_PtrFree( vStarts );\n    Counter = Abc_NtkReduceNodes( pNtk, vNodes );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %d dangling nodes.\\n\", Counter); }\n    Vec_PtrFree( vNodes );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Preserves the nodes collected in the array.]\n\n  Description [Returns the number of nodes removed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkReduceNodes(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode.fMarkA = 1;\n    // remove the non-marked nodes\n    Counter = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if pNode.fMarkA == 0 {\n            Abc_NtkDeleteObj( pNode );\n            Counter++;\n        }\n    // unmark the remaining nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        pNode.fMarkA = 0;\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkCleanup: The network check has failed.\\n\"); }\n    return Counter;\n}\n\n\n\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the local function by its cofactor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NodeConstantInput( Abc_Obj_t * pNode, Abc_Obj_t * pFanin, int fConst0 )\n{\n    DdManager * dd = (DdManager *)pNode-\u003epNtk-\u003epManFunc;\n    DdNode * bVar, * bTemp;\n    int iFanin;\n    assert( Abc_NtkIsBddLogic(pNode-\u003epNtk) ); \n    if ( (iFanin = Vec_IntFind( \u0026pNode-\u003evFanins, pFanin-\u003eId )) == -1 )\n    {\n        printf( \"Node %s should be among\", Abc_ObjName(pFanin) );\n        printf( \" the fanins of node %s...\\n\", Abc_ObjName(pNode) );\n        return;\n    }\n    bVar = Cudd_NotCond( Cudd_bddIthVar(dd, iFanin), fConst0 );\n    pNode-\u003epData = Cudd_Cofactor( dd, bTemp = (DdNode *)pNode-\u003epData, bVar );   Cudd_Ref( (DdNode *)pNode-\u003epData );\n    Cudd_RecursiveDeref( dd, bTemp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tranditional sweep of the network.]\n\n  Description [Propagates constant and single-input node, removes dangling nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NtkSweep( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pFanout, * pDriver;\n    int i, nNodesOld;\n    assert( Abc_NtkIsLogic(pNtk) ); \n    // convert network to BDD representation\n    if ( !Abc_NtkToBdd(pNtk) )\n    {\n        fprintf( stdout, \"Converting to BDD has failed.\\n\" );\n        return 1;\n    }\n    // perform cleanup\n    nNodesOld = Abc_NtkNodeNum(pNtk);\n    Abc_NtkCleanup( pNtk, 0 );\n    // prepare nodes for sweeping\n    Abc_NtkRemoveDupFanins(pNtk);\n    Abc_NtkMinimumBase(pNtk);\n    // collect sweepable nodes\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( Abc_ObjFaninNum(pNode) \u003c 2 )\n            Vec_PtrPush( vNodes, pNode );\n    // sweep the nodes\n    while ( Vec_PtrSize(vNodes) \u003e 0 )\n    {\n        // get any sweepable node\n        pNode = (Abc_Obj_t *)Vec_PtrPop(vNodes);\n        if ( !Abc_ObjIsNode(pNode) )\n            continue;\n        // get any non-CO fanout of this node\n        pFanout = Abc_NodeFindNonCoFanout(pNode);\n        if ( pFanout == NULL )\n            continue;\n        assert( Abc_ObjIsNode(pFanout) );\n        // transform the function of the fanout\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            Abc_NodeConstantInput( pFanout, pNode, Abc_NodeIsConst0(pNode) );\n        else \n        {\n            assert( Abc_ObjFaninNum(pNode) == 1 );\n            pDriver = Abc_ObjFanin0(pNode);\n            if ( Abc_NodeIsInv(pNode) )\n                Abc_NodeComplementInput( pFanout, pNode );\n            Abc_ObjPatchFanin( pFanout, pNode, pDriver );\n        }\n        Abc_NodeRemoveDupFanins( pFanout );\n        Abc_NodeMinimumBase( pFanout );\n        // check if the fanout should be added\n        if ( Abc_ObjFaninNum(pFanout) \u003c 2 )\n            Vec_PtrPush( vNodes, pFanout );\n        // check if the node has other fanouts\n        if ( Abc_ObjFanoutNum(pNode) \u003e 0 )\n            Vec_PtrPush( vNodes, pNode );\n        else\n            Abc_NtkDeleteObj_rec( pNode, 1 );\n    }\n    Vec_PtrFree( vNodes );\n    // sweep a node into its CO fanout if all of this is true:\n    // (a) this node is a single-input node\n    // (b) the driver of the node has only one fanout (this node)\n    // (c) the driver is a node\n    Abc_NtkForEachCo( pNtk, pFanout, i )\n    {\n        pNode = Abc_ObjFanin0(pFanout);\n        if ( Abc_ObjFaninNum(pNode) != 1 )\n            continue;\n        pDriver = Abc_ObjFanin0(pNode);\n        if ( !(Abc_ObjFanoutNum(pDriver) == 1 \u0026\u0026 Abc_ObjIsNode(pDriver)) )\n            continue;\n        // trasform this CO\n        if ( Abc_NodeIsInv(pNode) )\n            pDriver-\u003epData = Cudd_Not(pDriver-\u003epData);\n        Abc_ObjPatchFanin( pFanout, pNode, pDriver );\n    }\n    // perform cleanup\n    Abc_NtkCleanup( pNtk, 0 );\n    // report\n    if ( fVerbose )\n        printf( \"Sweep removed %d nodes.\\n\", nNodesOld - Abc_NtkNodeNum(pNtk) );\n    return nNodesOld - Abc_NtkNodeNum(pNtk);\n}\n\n\n#else\n\nint Abc_NtkSweep( Abc_Ntk_t * pNtk, int fVerbose ) { return 1; }\n\n#endif\n\n\n/**Function*************************************************************\n\n  Synopsis    [Removes all objects whose trav ID is not current.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeRemoveNonCurrentObjects(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var Counter, i int32;\n    var fVerbose int32;\n\n    // report on the nodes to be deleted\n    if fVerbose != 0 {\n        fmt.Printf(\"These nodes will be deleted: \\n\");\n        Abc_NtkForEachObj( pNtk, pObj, i )\n            if !Abc_NodeIsTravIdCurrent( pObj ) {\n                fmt.Printf(\"    \");\n                Abc_ObjPrint( os.Stdout, pObj );\n            }\n    }\n    \n    // delete the nodes    \n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if !Abc_NodeIsTravIdCurrent( pObj ) {\n            Abc_NtkDeleteObj( pObj );\n            Counter++;\n        }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the fanin of this latch is a constant.]\n\n  Description [Returns 0/1 if constant; -1 if not a constant.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSetTravId_rec(pObj *Abc_Obj_t) {\n    Abc_NodeSetTravIdCurrent(pObj);\n    if Abc_ObjFaninNum(pObj) == 0 {\n        return; }\n    assert(Abc_ObjFaninNum(pObj) == 1, \"Abc_ObjFaninNum(pObj) == 1\");\n    Abc_NtkSetTravId_rec( Abc_ObjFanin0(pObj) );    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the fanin of this latch is a constant.]\n\n  Description [Returns 0/1 if constant; -1 if not a constant.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckConstant_rec(pObj *Abc_Obj_t) int32 {\n    if Abc_ObjFaninNum(pObj) == 0 {\n        if !Abc_ObjIsNode(pObj) {\n            return -1; }\n        if Abc_NodeIsConst0(pObj) {\n            return 0; }\n        if Abc_NodeIsConst1(pObj) {\n            return 1; }\n        assert(false, \"0\");\n        return -1;\n    }\n    if Abc_ObjIsLatch(pObj) || Abc_ObjFaninNum(pObj) \u003e 1 {\n        return -1; }\n    if !Abc_ObjIsNode(pObj) || Abc_NodeIsBuf(pObj) {\n        return Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) ); }\n    if Abc_NodeIsInv(pObj) {\n        var RetValue int32  = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pObj) );\n        if RetValue == 0 {\n            return 1; }\n        if RetValue == 1 {\n            return 0; }\n        return RetValue;\n    }\n    assert(false, \"0\");\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes redundant latches.]\n\n  Description [The redundant latches are of two types:\n  - Latches fed by a constant which matches the init value of the latch.\n  - Latches fed by a constant which does not match the init value of the latch\n  can be all replaced by one latch.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLatchSweep(pNtk *Abc_Ntk_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var pLatch *Abc_Obj_t;\n    var pLatchPivot *Abc_Obj_t = nil;\n    var Counter, RetValue, i int32;\n    Counter = 0;\n    // go through the latches\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        // check if the latch has constant input\n        RetValue = Abc_NtkCheckConstant_rec( Abc_ObjFanin0(pLatch) );\n        if RetValue == -1 {\n            continue; }\n        // found a latch with constant fanin\n        if (RetValue == 1 \u0026\u0026 Abc_LatchIsInit0(pLatch)) ||\n             (RetValue == 0 \u0026\u0026 Abc_LatchIsInit1(pLatch)) {\n            // fanin constant differs from the latch init value\n            if pLatchPivot == nil {\n                pLatchPivot = pLatch;\n                continue;\n            }\n            if Abc_LatchInit(pLatch) != Abc_LatchInit(pLatchPivot) { // add inverter\n                pFanin = Abc_NtkCreateNodeInv( pNtk, Abc_ObjFanout0(pLatchPivot) );\n            } else {\n                pFanin = Abc_ObjFanout0(pLatchPivot); }\n        \n        } else {\n            pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch)); }\n        // replace latch\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pFanin );\n        // delete the extra nodes\n        Abc_NtkDeleteObj_rec( Abc_ObjFanout0(pLatch), 0 );\n        Counter++;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces autonumnous logic by free inputs.]\n\n  Description [Assumes that non-autonomous logic is marked with\n  the current ID.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkReplaceAutonomousLogic(pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k, Counter int32;\n    // collect the nodes that feed into the reachable logic\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        // skip non-visited fanins\n        if !Abc_NodeIsTravIdCurrent(pNode) {\n            continue; }\n        // look for non-visited fanins\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n        {\n            // skip visited fanins\n            if Abc_NodeIsTravIdCurrent(pFanin) {\n                continue; }\n            // skip constants and latches fed by constants\n            if Abc_NtkCheckConstant_rec(pFanin) != -1 ||\n                 (Abc_ObjIsBo(pFanin) \u0026\u0026 Abc_NtkCheckConstant_rec(Abc_ObjFanin0(Abc_ObjFanin0(pFanin))) != -1) {\n                Abc_NtkSetTravId_rec( pFanin );\n                continue;\n            }\n            assert(!Abc_ObjIsLatch(pFanin), \"!Abc_ObjIsLatch(pFanin)\");\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    Vec_PtrUniqify( vNodes, (int (*)(void))Abc_ObjPointerCompare );\n    // replace these nodes by the PIs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pFanin = Abc_NtkCreatePi(pNtk);\n        Abc_ObjAssignName( pFanin, Abc_ObjName(pFanin), nil );\n        Abc_NodeSetTravIdCurrent( pFanin );\n        Abc_ObjTransferFanout( pNode, pFanin );\n    }\n    Counter = Vec_PtrSize(vNodes);\n    Vec_PtrFree( vNodes );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sequential cleanup.]\n\n  Description [Performs three tasks:\n  - Removes logic that does not feed into POs.\n  - Removes latches driven by constant values equal to the initial state.\n  - Replaces the autonomous components by additional PI variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCleanupSeq(pNtk *Abc_Ntk_t, fLatchSweep int32, fAutoSweep int32, fVerbose int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // mark the nodes reachable from the POs\n    vNodes = Abc_NtkDfsSeq( pNtk );\n    Vec_PtrFree( vNodes );\n    // remove the non-marked nodes\n    Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n    if fVerbose != 0 {\n        fmt.Printf(\"Cleanup removed %4d dangling objects.\\n\", Counter); }\n    // check if some of the latches can be removed\n    if fLatchSweep != 0 {\n        Counter = Abc_NtkLatchSweep( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup removed %4d redundant latches.\\n\", Counter); }\n    }\n    // detect the autonomous components\n    if fAutoSweep != 0 {\n        vNodes = Abc_NtkDfsSeqReverse( pNtk );\n        Vec_PtrFree( vNodes );\n        // replace them by PIs\n        Counter = Abc_NtkReplaceAutonomousLogic( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup added   %4d additional PIs.\\n\", Counter); }\n        // remove the non-marked nodes\n        Counter = Abc_NodeRemoveNonCurrentObjects( pNtk );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cleanup removed %4d autonomous objects.\\n\", Counter); }\n    }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkCleanupSeq: The network check has failed.\\n\"); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sweep to remove buffers and inverters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSweepBufsInvs(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var pMan *Hop_Man_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var fChanges int32 = 1;\n    var Counter int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\"); \n    // convert network to BDD representation\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to SOP has failed.\\n\");\n        return 1;\n    }\n    // get AIG manager\n    pMan = (Hop_Man_t *)pNtk.pManFunc;\n    // label selected nodes\n    Abc_NtkIncrementTravId( pNtk );\n    // iterate till no improvement\n    for  fChanges != 0  {\n        fChanges = 0;\n        Abc_NtkForEachObj( pNtk, pObj, i )\n        {\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n            {\n                // do not eliminate marked fanins\n                if Abc_NodeIsTravIdCurrent(pFanin) {\n                    continue; }\n                // do not eliminate constant nodes\n                if !Abc_ObjIsNode(pFanin) || Abc_ObjFaninNum(pFanin) != 1 {\n                    continue; }\n                // do not eliminate inverters into COs\n                if Abc_ObjIsCo(pObj) \u0026\u0026 Abc_NodeIsInv(pFanin) {\n                    continue; }\n                // do not eliminate buffers connecting PIs and POs \n//                if ( Abc_ObjIsCo(pObj) \u0026\u0026 Abc_ObjIsCi(Abc_ObjFanin0(pFanin)) )\n//                    continue;\n                fChanges = 1;\n                Counter++;\n                // update function of the node\n                if Abc_NodeIsInv(pFanin) {\n                    pObj.pData = Hop_Compose( pMan, (Hop_Obj_t *)pObj.pData, Hop_Not(Hop_IthVar(pMan, k)), k ); }\n                // update the fanin\n                Abc_ObjPatchFanin( pObj, pFanin, Abc_ObjFanin0(pFanin) );\n                if Abc_ObjFanoutNum(pFanin) == 0 {\n                    Abc_NtkDeleteObj(pFanin); }            \n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Removed %d single input nodes.\\n\", Counter); }\n    return Counter;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

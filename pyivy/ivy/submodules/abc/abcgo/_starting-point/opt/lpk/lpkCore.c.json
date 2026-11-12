@@ -1,0 +1,847 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c",
+  "SHA256": "fd908209a36fa82781f7e3eb1fe1e64efca74661a95e4010b721901aa5d25d1c",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 2015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 61,
+        "Column": 18,
+        "ByteOffset": 2024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pIfMan == nil );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 126,
+        "Column": 13,
+        "ByteOffset": 4123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPars = ABC_ALLOC( If_Par_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(If_Par_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 32,
+        "ByteOffset": 5140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pIfMan.pPars.pTimesArr = ABC_ALLOC( float, 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 8871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 5,
+        "ByteOffset": 11007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node %5d : Mffc size = %5d. Cuts = %5d.\\n\", p.pObj.Id, p.nMffc, p.nEvals ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 13046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 384,
+        "Column": 27,
+        "ByteOffset": 13234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Kit_DsdPrint( stdout, pDsdNtk );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 15602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 13,
+        "ByteOffset": 17836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 17,
+        "ByteOffset": 18082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%c=%d \", 'a'+k, Abc_ObjLevel(pLeaf) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 520,
+        "Column": 13,
+        "ByteOffset": 18142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 13,
+        "ByteOffset": 18229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 541,
+        "Column": 13,
+        "ByteOffset": 19248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjLevel(pObjNew) \u003c= Required );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 17,
+        "ByteOffset": 19606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Performed resynthesis: Gain = %2d. Level = %2d. Req = %2d.\\n\", nGain, Abc_ObjLevel(pObjNew), Required ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 583,
+        "Column": 5,
+        "ByteOffset": 20561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 608,
+        "Column": 9,
+        "ByteOffset": 21440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 615,
+        "Column": 9,
+        "ByteOffset": 21708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to BDD has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 615,
+        "Column": 18,
+        "ByteOffset": 21717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to BDD has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 5,
+        "ByteOffset": 21790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasAig(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 654,
+        "Column": 49,
+        "ByteOffset": 22973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pProgress = Extra_ProgressBarStart( stdout, nNodes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 708,
+        "Column": 9,
+        "ByteOffset": 24656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node gain = %5d. (%.2f %%)  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 710,
+        "Column": 9,
+        "ByteOffset": 24801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Edge gain = %5d. (%.2f %%)  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 712,
+        "Column": 9,
+        "ByteOffset": 24941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Muxes = %4d. Dsds = %4d.\", p.nMuxes, p.nDsds );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 713,
+        "Column": 9,
+        "ByteOffset": 25006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 714,
+        "Column": 9,
+        "ByteOffset": 25030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 717,
+        "Column": 9,
+        "ByteOffset": 25235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Non-DSD:\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 720,
+        "Column": 17,
+        "ByteOffset": 25351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d=%d\", i, p.nBlocks[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 722,
+        "Column": 9,
+        "ByteOffset": 25408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 9,
+        "ByteOffset": 26449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Lpk_Resynthesize: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkDecFromTruth",
+      "Start": 1310,
+      "End": 2111,
+      "BodyStart": 1384,
+      "Original": "Abc_Ntk_t * Abc_NtkDecFromTruth( word * pTruth, int nVars, int nLutSize )\n{\n    extern Abc_Ntk_t * Abc_NtkLutmin( Abc_Ntk_t * pNtk, int nLutSize, int fVerbose );\n    Vec_Int_t * vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Abc_Ntk_t * pTemp = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    char * pSopCover = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pTemp-\u003epManFunc, nVars, pTruth, vCover );\n    Abc_Ntk_t * pNtk = Abc_NtkCreateWithNode( pSopCover );\n    Abc_Ntk_t * pNew = Abc_NtkLutmin( pNtk, nLutSize, 0 );\n    Abc_NtkDelete( pTemp );\n    Abc_NtkDelete( pNtk );\n    Vec_IntFree( vCover );\n    if ( !Abc_NtkToAig(pNew) )\n    {\n        Abc_NtkDelete( pNew );\n        fprintf( stdout, \"Converting to AIG has failed.\\n\" );\n        return NULL;\n    }\n    assert( Abc_NtkHasAig(pNew) );\n    return pNew;\n}",
+      "Draft": "func Abc_NtkDecFromTruth(pTruth *word, nVars int32, nLutSize int32) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkLutmin( Abc_Ntk_t * pNtk, int nLutSize, int fVerbose );\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    var pTemp *Abc_Ntk_t  = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    var pSopCover string  = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pTemp.pManFunc, nVars, pTruth, vCover );\n    var pNtk *Abc_Ntk_t  = Abc_NtkCreateWithNode( pSopCover );\n    var pNew *Abc_Ntk_t  = Abc_NtkLutmin( pNtk, nLutSize, 0 );\n    Abc_NtkDelete( pTemp );\n    Abc_NtkDelete( pNtk );\n    Vec_IntFree( vCover );\n    if !Abc_NtkToAig(pNew) {\n        Abc_NtkDelete( pNew );\n        fmt.Fprintf(os.Stdout, \"Converting to AIG has failed.\\n\");\n        return nil;\n    }\n    assert(Abc_NtkHasAig(pNew), \"Abc_NtkHasAig(pNew)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkLutMinDecompose",
+      "Start": 2112,
+      "End": 3692,
+      "BodyStart": 2231,
+      "Original": "Abc_Obj_t * Abc_NtkLutMinDecompose( Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, word * pTruth, int nLutSize, int Required )\n{\n    Abc_Obj_t * pObj = NULL, * pFanin; int i, k;\n    Abc_Ntk_t * pNew = Abc_NtkDecFromTruth( pTruth, Vec_PtrSize(vLeaves), nLutSize );\n    Vec_Ptr_t * vNodes = Abc_NtkDfs( pNew, 0 );\n    assert( Abc_NtkHasAig(pNtk) );\n    // levels\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i )-\u003eLevel = pObj-\u003eLevel;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj-\u003eLevel = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pObj-\u003eLevel \u003c pFanin-\u003eLevel )\n                pObj-\u003eLevel = pFanin-\u003eLevel;\n        pObj-\u003eLevel++;\n    }\n    if ( (int)pObj-\u003eLevel \u003e Required )\n    {\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNew );\n        return NULL;\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i )-\u003epCopy = pObj;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_NtkDupObj( pNtk, pObj, 0 );\n        pObj-\u003epCopy-\u003eLevel = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n            if ( pObj-\u003epCopy-\u003eLevel \u003c pFanin-\u003epCopy-\u003eLevel )\n                pObj-\u003epCopy-\u003eLevel = pFanin-\u003epCopy-\u003eLevel;\n        }\n        pObj-\u003epCopy-\u003eLevel++;\n    }\n    //printf( \"Decomposed %d-input function, resulting in %d nodes.\\n\", Vec_PtrSize(vLeaves), Vec_PtrSize(vNodes) );\n    pObj = pObj-\u003epCopy;\n    Vec_PtrFree( vNodes );\n    Abc_NtkDelete( pNew );\n    return pObj;\n}",
+      "Draft": "func Abc_NtkLutMinDecompose(pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *word, nLutSize int32, Required int32) *Abc_Obj_t {\n    var pObj *Abc_Obj_t = nil;\n    var pFanin *Abc_Obj_t; var i, k int32;\n    var pNew *Abc_Ntk_t  = Abc_NtkDecFromTruth( pTruth, Vec_PtrSize(vLeaves), nLutSize );\n    var vNodes *Vec_Ptr_t  = Abc_NtkDfs( pNew, 0 );\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n    // levels\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i ).Level = pObj.Level;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.Level = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pObj.Level \u003c pFanin.Level )\n                pObj.Level = pFanin.Level;\n        pObj.Level++;\n    }\n    if int32(pObj.Level) \u003e Required {\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNew );\n        return nil;\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i ).pCopy = pObj;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_NtkDupObj( pNtk, pObj, 0 );\n        pObj.pCopy.Level = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n            if pObj.pCopy.Level \u003c pFanin.pCopy.Level {\n                pObj.pCopy.Level = pFanin.pCopy.Level; }\n        }\n        pObj.pCopy.Level++;\n    }\n    //printf( \"Decomposed %d-input function, resulting in %d nodes.\\n\", Vec_PtrSize(vLeaves), Vec_PtrSize(vNodes) );\n    pObj = pObj.pCopy;\n    Vec_PtrFree( vNodes );\n    Abc_NtkDelete( pNew );\n    return pObj;\n}"
+    },
+    {
+      "Name": "Lpk_IfManStart",
+      "Start": 3958,
+      "End": 5157,
+      "BodyStart": 3995,
+      "Original": "void Lpk_IfManStart( Lpk_Man_t * p )\n{\n    If_Par_t * pPars;\n    assert( p-\u003epIfMan == NULL );\n    // set defaults\n    pPars = ABC_ALLOC( If_Par_t, 1 );\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n    pPars-\u003enLutSize    =  p-\u003epPars-\u003enLutSize;\n    pPars-\u003enCutsMax    = 16;\n    pPars-\u003enFlowIters  =  0; // 1\n    pPars-\u003enAreaIters  =  0; // 1 \n    pPars-\u003eDelayTarget = -1;\n    pPars-\u003eEpsilon     =  (float)0.005;\n    pPars-\u003efPreprocess =  0;\n    pPars-\u003efArea       =  1;\n    pPars-\u003efFancy      =  0;\n    pPars-\u003efExpRed     =  0; //\n    pPars-\u003efLatchPaths =  0;\n    pPars-\u003efVerbose    =  0;\n    // internal parameters\n    pPars-\u003efTruth      =  1;\n    pPars-\u003efUsePerm    =  0; \n    pPars-\u003enLatchesCi  =  0;\n    pPars-\u003enLatchesCo  =  0;\n    pPars-\u003epLutLib     =  NULL; // Abc_FrameReadLibLut();\n    pPars-\u003epTimesArr   =  NULL; \n    pPars-\u003epTimesArr   =  NULL;   \n    pPars-\u003efUseBdds    =  0;\n    pPars-\u003efUseSops    =  0;\n    pPars-\u003efUseCnfs    =  0;\n    pPars-\u003efUseMv      =  0;\n    // start the mapping manager and set its parameters\n    p-\u003epIfMan = If_ManStart( pPars );\n    If_ManSetupSetAll( p-\u003epIfMan, 1000 );\n    p-\u003epIfMan-\u003epPars-\u003epTimesArr = ABC_ALLOC( float, 32 );\n}",
+      "Draft": "func Lpk_IfManStart(p *Lpk_Man_t) {\n    var pPars *If_Par_t;\n    assert(p.pIfMan == nil, \"p.pIfMan == nil\");\n    // set defaults\n    pPars = new(If_Par_t);\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n    pPars.nLutSize    =  p.pPars.nLutSize;\n    pPars.nCutsMax    = 16;\n    pPars.nFlowIters  =  0; // 1\n    pPars.nAreaIters  =  0; // 1 \n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  0;\n    pPars.fArea       =  1;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  0; //\n    pPars.fLatchPaths =  0;\n    pPars.fVerbose    =  0;\n    // internal parameters\n    pPars.fTruth      =  1;\n    pPars.fUsePerm    =  0; \n    pPars.nLatchesCi  =  0;\n    pPars.nLatchesCo  =  0;\n    pPars.pLutLib     =  nil; // Abc_FrameReadLibLut();\n    pPars.pTimesArr   =  nil; \n    pPars.pTimesArr   =  nil;   \n    pPars.fUseBdds    =  0;\n    pPars.fUseSops    =  0;\n    pPars.fUseCnfs    =  0;\n    pPars.fUseMv      =  0;\n    // start the mapping manager and set its parameters\n    p.pIfMan = If_ManStart( pPars );\n    If_ManSetupSetAll( p.pIfMan, 1000 );\n    p.pIfMan.pPars.pTimesArr = ABC_ALLOC( float, 32 );\n}"
+    },
+    {
+      "Name": "Lpk_NodeHasChanged",
+      "Start": 5437,
+      "End": 6098,
+      "BodyStart": 5488,
+      "Original": "int Lpk_NodeHasChanged( Lpk_Man_t * p, int iNode )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pTemp, * pTemp2;\n    int i;\n    vNodes = Vec_VecEntry( p-\u003evVisited, iNode );\n    if ( Vec_PtrSize(vNodes) == 0 )\n        return 1;\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pTemp, pTemp2, i )\n    {\n        // check if the node has changed\n        pTemp = Abc_NtkObj( p-\u003epNtk, (int)(ABC_PTRUINT_T)pTemp );\n        if ( pTemp == NULL )\n            return 1;\n        // check if the number of fanouts has changed\n//        if ( Abc_ObjFanoutNum(pTemp) != (int)Vec_PtrEntry(vNodes, i+1) )\n//            return 1;\n//        i++;\n    }\n    return 0;\n}",
+      "Draft": "func Lpk_NodeHasChanged(p *Lpk_Man_t, iNode int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pTemp, pTemp2 *Abc_Obj_t;\n    var i int32;\n    vNodes = Vec_VecEntry( p.vVisited, iNode );\n    if Vec_PtrSize(vNodes) == 0 {\n        return 1; }\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pTemp, pTemp2, i )\n    {\n        // check if the node has changed\n        pTemp = Abc_NtkObj( p.pNtk, int32((ABC_PTRUINT_T))pTemp );\n        if pTemp == nil {\n            return 1; }\n        // check if the number of fanouts has changed\n//        if ( Abc_ObjFanoutNum(pTemp) != (int)Vec_PtrEntry(vNodes, i+1) )\n//            return 1;\n//        i++;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Lpk_ExploreCut",
+      "Start": 6363,
+      "End": 10069,
+      "BodyStart": 6438,
+      "Original": "int Lpk_ExploreCut( Lpk_Man_t * p, Lpk_Cut_t * pCut, Kit_DsdNtk_t * pNtk )\n{\n    extern Abc_Obj_t * Abc_NodeFromIf_rec( Abc_Ntk_t * pNtkNew, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Int_t * vCover );\n    Kit_DsdObj_t * pRoot;\n    If_Obj_t * pDriver, * ppLeaves[16];\n    Abc_Obj_t * pLeaf, * pObjNew;\n    int nGain, i;\n    abctime clk;\n    int nNodesBef;\n//    int nOldShared;\n\n    // check special cases\n    pRoot = Kit_DsdNtkRoot( pNtk );\n    if ( pRoot-\u003eType == KIT_DSD_CONST1 )\n    {\n        if ( Abc_LitIsCompl(pNtk-\u003eRoot) )\n            pObjNew = Abc_NtkCreateNodeConst0( p-\u003epNtk );\n        else\n            pObjNew = Abc_NtkCreateNodeConst1( p-\u003epNtk );\n        Abc_NtkUpdate( p-\u003epObj, pObjNew, p-\u003evLevels );\n        p-\u003enGainTotal += pCut-\u003enNodes - pCut-\u003enNodesDup;\n        return 1;\n    }\n    if ( pRoot-\u003eType == KIT_DSD_VAR )\n    {\n        pObjNew = Abc_NtkObj( p-\u003epNtk, pCut-\u003epLeaves[ Abc_Lit2Var(pRoot-\u003epFans[0]) ] );\n        if ( Abc_LitIsCompl(pNtk-\u003eRoot) ^ Abc_LitIsCompl(pRoot-\u003epFans[0]) )\n            pObjNew = Abc_NtkCreateNodeInv( p-\u003epNtk, pObjNew );\n        Abc_NtkUpdate( p-\u003epObj, pObjNew, p-\u003evLevels );\n        p-\u003enGainTotal += pCut-\u003enNodes - pCut-\u003enNodesDup;\n        return 1;\n    }\n    assert( pRoot-\u003eType == KIT_DSD_AND || pRoot-\u003eType == KIT_DSD_XOR || pRoot-\u003eType == KIT_DSD_PRIME );\n\n    // start the mapping manager\n    if ( p-\u003epIfMan == NULL )\n        Lpk_IfManStart( p );\n\n    // prepare the mapping manager\n    If_ManRestart( p-\u003epIfMan );\n    // create the PI variables\n    for ( i = 0; i \u003c p-\u003epPars-\u003enVarsMax; i++ )\n        ppLeaves[i] = If_ManCreateCi( p-\u003epIfMan );\n    // set the arrival times\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pLeaf, i )\n        p-\u003epIfMan-\u003epPars-\u003epTimesArr[i] = (float)pLeaf-\u003eLevel;\n    // prepare the PI cuts\n    If_ManSetupCiCutSets( p-\u003epIfMan );\n    // create the internal nodes\n    p-\u003efCalledOnce = 0;\n    p-\u003enCalledSRed = 0;\n    pDriver = Lpk_MapTree_rec( p, pNtk, ppLeaves, pNtk-\u003eRoot, NULL );\n    if ( pDriver == NULL )\n        return 0;\n    // create the PO node\n    If_ManCreateCo( p-\u003epIfMan, If_Regular(pDriver) );\n\n    // perform mapping\n    p-\u003epIfMan-\u003epPars-\u003efAreaOnly = 1;\nclk = Abc_Clock();\n    If_ManPerformMappingComb( p-\u003epIfMan );\np-\u003etimeMap += Abc_Clock() - clk;\n\n    // compute the gain in area\n    nGain = pCut-\u003enNodes - pCut-\u003enNodesDup - (int)p-\u003epIfMan-\u003eAreaGlo;\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\\n\", \n            pCut-\u003enNodes - pCut-\u003enNodesDup, (int)p-\u003epIfMan-\u003eAreaGlo, nGain, (int)p-\u003epIfMan-\u003eRequiredGlo - (int)p-\u003epObj-\u003eLevel, p-\u003enCalledSRed );\n\n    // quit if there is no gain\n    if ( !(nGain \u003e 0 || (p-\u003epPars-\u003efZeroCost \u0026\u0026 nGain == 0)) )\n        return 0;\n\n    // quit if depth increases too much\n    if ( (int)p-\u003epIfMan-\u003eRequiredGlo \u003e Abc_ObjRequiredLevel(p-\u003epObj) )\n        return 0;\n\n    // perform replacement\n    p-\u003enGainTotal += nGain;\n    p-\u003enChanges++;\n    if ( p-\u003enCalledSRed )\n        p-\u003enBenefited++;\n\n    nNodesBef = Abc_NtkNodeNum(p-\u003epNtk);\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( p-\u003epIfMan );\n    If_ManCleanCutData( p-\u003epIfMan );\n    // set the PIs of the cut\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pLeaf, i )\n        If_ObjSetCopy( If_ManCi(p-\u003epIfMan, i), pLeaf );\n    // get the area of mapping\n    pObjNew = Abc_NodeFromIf_rec( p-\u003epNtk, p-\u003epIfMan, If_Regular(pDriver), p-\u003evCover );\n    pObjNew-\u003epData = Hop_NotCond( (Hop_Obj_t *)pObjNew-\u003epData, If_IsComplement(pDriver) );\n    // perform replacement\n    Abc_NtkUpdate( p-\u003epObj, pObjNew, p-\u003evLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n    return 1;\n}",
+      "Draft": "func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {\n    extern Abc_Obj_t * Abc_NodeFromIf_rec( Abc_Ntk_t * pNtkNew, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Int_t * vCover );\n    var pRoot *Kit_DsdObj_t;\n    var pDriver *If_Obj_t;\n    var ppLeaves [16]*If_Obj_t;\n    var pLeaf, pObjNew *Abc_Obj_t;\n    var nGain, i int32;\n    var clk abctime;\n    var nNodesBef int32;\n//    int nOldShared;\n\n    // check special cases\n    pRoot = Kit_DsdNtkRoot( pNtk );\n    if pRoot.Type == KIT_DSD_CONST1 {\n        if Abc_LitIsCompl(pNtk.Root) {\n            pObjNew = Abc_NtkCreateNodeConst0( p.pNtk );\n        } else {\n            pObjNew = Abc_NtkCreateNodeConst1( p.pNtk ); }\n        Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n        p.nGainTotal += pCut.nNodes - pCut.nNodesDup;\n        return 1;\n    }\n    if pRoot.Type == KIT_DSD_VAR {\n        pObjNew = Abc_NtkObj( p.pNtk, pCut.pLeaves[ Abc_Lit2Var(pRoot.pFans[0]) ] );\n        if Abc_LitIsCompl(pNtk.Root) ^ Abc_LitIsCompl(pRoot.pFans[0]) {\n            pObjNew = Abc_NtkCreateNodeInv( p.pNtk, pObjNew ); }\n        Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n        p.nGainTotal += pCut.nNodes - pCut.nNodesDup;\n        return 1;\n    }\n    assert(pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME, \"pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME\");\n\n    // start the mapping manager\n    if p.pIfMan == nil {\n        Lpk_IfManStart( p ); }\n\n    // prepare the mapping manager\n    If_ManRestart( p.pIfMan );\n    // create the PI variables\n    for  i = 0; i \u003c p.pPars.nVarsMax; i++  {\n        ppLeaves[i] = If_ManCreateCi( p.pIfMan );\n    }\n    // set the arrival times\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pLeaf) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        p.pIfMan.pPars.pTimesArr[i] = float32(pLeaf.Level);\n    }\n    // prepare the PI cuts\n    If_ManSetupCiCutSets( p.pIfMan );\n    // create the internal nodes\n    p.fCalledOnce = 0;\n    p.nCalledSRed = 0;\n    pDriver = Lpk_MapTree_rec( p, pNtk, ppLeaves, pNtk.Root, nil );\n    if pDriver == nil {\n        return 0; }\n    // create the PO node\n    If_ManCreateCo( p.pIfMan, If_Regular(pDriver) );\n\n    // perform mapping\n    p.pIfMan.pPars.fAreaOnly = 1;\nclk = Abc_Clock();\n    If_ManPerformMappingComb( p.pIfMan );\np.timeMap += Abc_Clock() - clk;\n\n    // compute the gain in area\n    nGain = pCut.nNodes - pCut.nNodesDup - int32(p.pIfMan.AreaGlo);\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\\n\", pCut.nNodes - pCut.nNodesDup, int32(p.pIfMan.AreaGlo), nGain, int32(p.pIfMan.RequiredGlo) - int32(p.pObj.Level), p.nCalledSRed); }\n\n    // quit if there is no gain\n    if !(nGain \u003e 0 || (p.pPars.fZeroCost \u0026\u0026 nGain == 0)) {\n        return 0; }\n\n    // quit if depth increases too much\n    if int32(p.pIfMan.RequiredGlo) \u003e Abc_ObjRequiredLevel(p.pObj) {\n        return 0; }\n\n    // perform replacement\n    p.nGainTotal += nGain;\n    p.nChanges++;\n    if p.nCalledSRed {\n        p.nBenefited++; }\n\n    nNodesBef = Abc_NtkNodeNum(p.pNtk);\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( p.pIfMan );\n    If_ManCleanCutData( p.pIfMan );\n    // set the PIs of the cut\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pLeaf) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        If_ObjSetCopy( If_ManCi(p.pIfMan, i), pLeaf );\n    }\n    // get the area of mapping\n    pObjNew = Abc_NodeFromIf_rec( p.pNtk, p.pIfMan, If_Regular(pDriver), p.vCover );\n    pObjNew.pData = Hop_NotCond( (Hop_Obj_t *)pObjNew.pData, If_IsComplement(pDriver) );\n    // perform replacement\n    Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_ResynthesizeNode",
+      "Start": 10339,
+      "End": 13531,
+      "BodyStart": 10381,
+      "Original": "int Lpk_ResynthesizeNode( Lpk_Man_t * p )\n{\n//    static int Count = 0;\n    Kit_DsdNtk_t * pDsdNtk;\n    Lpk_Cut_t * pCut;\n    unsigned * pTruth;\n    int i, k, nSuppSize, nCutNodes, RetValue;\n    abctime clk;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if ( !Lpk_NodeCuts( p ) )\n    {\np-\u003etimeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np-\u003etimeCuts += Abc_Clock() - clk;\n\n//return 0;\n\n    if ( p-\u003epPars-\u003efVeryVerbose )\n    printf( \"Node %5d : Mffc size = %5d. Cuts = %5d.\\n\", p-\u003epObj-\u003eId, p-\u003enMffc, p-\u003enEvals );\n    // try the good cuts\n    p-\u003enCutsTotal  += p-\u003enCuts;\n    p-\u003enCutsUseful += p-\u003enEvals;\n    for ( i = 0; i \u003c p-\u003enEvals; i++ )\n    {\n        // get the cut\n        pCut = p-\u003epCuts + p-\u003epEvals[i];\n        if ( p-\u003epPars-\u003efFirst \u0026\u0026 i == 1 )\n            break;\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            Abc_NtkObj(p-\u003epNtk, pCut-\u003epLeaves[k])-\u003evFanouts.nSize++;\n        nCutNodes = Abc_NodeMffcLabel(p-\u003epObj, NULL);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            Abc_NtkObj(p-\u003epNtk, pCut-\u003epLeaves[k])-\u003evFanouts.nSize--;\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if ( nCutNodes != (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup )\n            continue;\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\n        nSuppSize = Extra_TruthSupportSize(pTruth, pCut-\u003enLeaves);\np-\u003etimeTruth += Abc_Clock() - clk;\n\n        pDsdNtk = Kit_DsdDecompose( pTruth, pCut-\u003enLeaves ); \n//        Kit_DsdVerify( pDsdNtk, pTruth, pCut-\u003enLeaves ); \n        // skip 16-input non-DSD because ISOP will not work\n        if ( Kit_DsdNtkRoot(pDsdNtk)-\u003enFans == 16 ) \n        {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        // if DSD has nodes that require splitting to fit them into LUTs\n        // we can skip those cuts that cannot lead to improvement\n        // (a full DSD network requires  V = Nmin * (K-1) + 1 for improvement)\n        if ( Kit_DsdNonDsdSizeMax(pDsdNtk) \u003e p-\u003epPars-\u003enLutSize \u0026\u0026 \n             nSuppSize \u003e= ((int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup - 1) * (p-\u003epPars-\u003enLutSize - 1) + 1 )\n        {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        if ( p-\u003epPars-\u003efVeryVerbose )\n        {\n//            char * pFileName;\n            printf( \"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", \n                i, pCut-\u003enLeaves, nSuppSize, pCut-\u003enNodes, pCut-\u003enNodesDup, pCut-\u003enLuts, pCut-\u003eWeight );\n            Kit_DsdPrint( stdout, pDsdNtk );\n            Kit_DsdPrintFromTruth( pTruth, pCut-\u003enLeaves );\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\nclk = Abc_Clock();\n        RetValue = Lpk_ExploreCut( p, pCut, pDsdNtk );\np-\u003etimeEval += Abc_Clock() - clk;\n        Kit_DsdNtkFree( pDsdNtk );\n        if ( RetValue )\n            break;\n    }\n    return 1;\n}",
+      "Draft": "func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {\n//    static int Count = 0;\n    var pDsdNtk *Kit_DsdNtk_t;\n    var pCut *Lpk_Cut_t;\n    var pTruth *uint32;\n    var i, k, nSuppSize, nCutNodes, RetValue int32;\n    var clk abctime;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if !Lpk_NodeCuts( p ) {\np.timeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np.timeCuts += Abc_Clock() - clk;\n\n//return 0;\n\n    if p.pPars.fVeryVerbose {\n    fmt.Printf(\"Node %5d : Mffc size = %5d. Cuts = %5d.\\n\", p.pObj.Id, p.nMffc, p.nEvals); }\n    // try the good cuts\n    p.nCutsTotal  += p.nCuts;\n    p.nCutsUseful += p.nEvals;\n    for  i = 0; i \u003c p.nEvals; i++  {\n        // get the cut\n        pCut = p.pCuts + p.pEvals[i];\n        if p.pPars.fFirst \u0026\u0026 i == 1 {\n            break; }\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++;\n        }\n        nCutNodes = Abc_NodeMffcLabel(p.pObj, nil);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--;\n        }\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if nCutNodes != int32(pCut.nNodes) - int32(pCut.nNodesDup) {\n            continue; }\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\n        nSuppSize = Extra_TruthSupportSize(pTruth, pCut.nLeaves);\np.timeTruth += Abc_Clock() - clk;\n\n        pDsdNtk = Kit_DsdDecompose( pTruth, pCut.nLeaves ); \n//        Kit_DsdVerify( pDsdNtk, pTruth, pCut-\u003enLeaves ); \n        // skip 16-input non-DSD because ISOP will not work\n        if Kit_DsdNtkRoot(pDsdNtk).nFans == 16 {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        // if DSD has nodes that require splitting to fit them into LUTs\n        // we can skip those cuts that cannot lead to improvement\n        // (a full DSD network requires  V = Nmin * (K-1) + 1 for improvement)\n        if Kit_DsdNonDsdSizeMax(pDsdNtk) \u003e p.pPars.nLutSize \u0026\u0026 \n             nSuppSize \u003e= (int32(pCut.nNodes) - int32(pCut.nNodesDup) - 1) * (p.pPars.nLutSize - 1) + 1 {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        if p.pPars.fVeryVerbose {\n//            char * pFileName;\n            fmt.Printf(\"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight);\n            Kit_DsdPrint( os.Stdout, pDsdNtk );\n            Kit_DsdPrintFromTruth( pTruth, pCut.nLeaves );\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\nclk = Abc_Clock();\n        RetValue = Lpk_ExploreCut( p, pCut, pDsdNtk );\np.timeEval += Abc_Clock() - clk;\n        Kit_DsdNtkFree( pDsdNtk );\n        if RetValue != 0 {\n            break; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_ComputeSupports",
+      "Start": 13879,
+      "End": 14498,
+      "BodyStart": 13958,
+      "Original": "void Lpk_ComputeSupports( Lpk_Man_t * p, Lpk_Cut_t * pCut, unsigned * pTruth )\n{\n    unsigned * pTruthInv;\n    int RetValue1, RetValue2;\n    pTruthInv = Lpk_CutTruth( p, pCut, 1 );\n    RetValue1 = Kit_CreateCloudFromTruth( p-\u003epDsdMan-\u003edd, pTruth, pCut-\u003enLeaves, p-\u003evBddDir );\n    RetValue2 = Kit_CreateCloudFromTruth( p-\u003epDsdMan-\u003edd, pTruthInv, pCut-\u003enLeaves, p-\u003evBddInv );\n    if ( RetValue1 \u0026\u0026 RetValue2 \u0026\u0026 Vec_IntSize(p-\u003evBddDir) \u003e 1 \u0026\u0026 Vec_IntSize(p-\u003evBddInv) \u003e 1 )\n        Kit_TruthCofSupports( p-\u003evBddDir, p-\u003evBddInv, pCut-\u003enLeaves, p-\u003evMemory, p-\u003epuSupps ); \n    else\n        p-\u003epuSupps[0] = p-\u003epuSupps[1] = 0;\n}",
+      "Draft": "func Lpk_ComputeSupports(p *Lpk_Man_t, pCut *Lpk_Cut_t, pTruth *uint32) {\n    var pTruthInv *uint32;\n    var RetValue1, RetValue2 int32;\n    pTruthInv = Lpk_CutTruth( p, pCut, 1 );\n    RetValue1 = Kit_CreateCloudFromTruth( p.pDsdMan.dd, pTruth, pCut.nLeaves, p.vBddDir );\n    RetValue2 = Kit_CreateCloudFromTruth( p.pDsdMan.dd, pTruthInv, pCut.nLeaves, p.vBddInv );\n    if RetValue1 \u0026\u0026 (RetValue2 != 0) \u0026\u0026 Vec_IntSize(p.vBddDir) \u003e 1 \u0026\u0026 Vec_IntSize(p.vBddInv) \u003e 1 {\n        Kit_TruthCofSupports( p.vBddDir, p.vBddInv, pCut.nLeaves, p.vMemory, p.puSupps ); \n    } else {\n        p.puSupps[0] = p.puSupps[1] = 0; }\n}"
+    },
+    {
+      "Name": "Lpk_ResynthesizeNodeNew",
+      "Start": 14768,
+      "End": 19792,
+      "BodyStart": 14813,
+      "Original": "int Lpk_ResynthesizeNodeNew( Lpk_Man_t * p )\n{\n//    static int Count = 0;\n    int NodeCounts[16] = { 0, 0, 0, 0, 1, 3, 6, 14, 26, 57, 106, 230, 425, 1000000, 1000000, 1000000 };\n    Abc_Obj_t * pObjNew, * pLeaf;\n    Lpk_Cut_t * pCut;\n    unsigned * pTruth;\n    int nNodesBef, nNodesAft, nCutNodes;\n    int i, k;\n    abctime clk;\n    int Required = Abc_ObjRequiredLevel(p-\u003epObj);\n//    CloudNode * pFun2;//, * pFun1;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if ( !Lpk_NodeCuts( p ) )\n    {\np-\u003etimeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np-\u003etimeCuts += Abc_Clock() - clk;\n\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\\n\", \n            p-\u003epObj-\u003eId, p-\u003enMffc, p-\u003enEvals, p-\u003epObj-\u003eLevel, Required );\n    // try the good cuts\n    p-\u003enCutsTotal  += p-\u003enCuts;\n    p-\u003enCutsUseful += p-\u003enEvals;\n    for ( i = 0; i \u003c p-\u003enEvals; i++ )\n    {\n        // get the cut\n        pCut = p-\u003epCuts + p-\u003epEvals[i];\n        if ( p-\u003epPars-\u003efFirst \u0026\u0026 i == 1 )\n            break;\n//        if ( pCut-\u003eWeight \u003c 1.05 )\n//            continue;\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            Abc_NtkObj(p-\u003epNtk, pCut-\u003epLeaves[k])-\u003evFanouts.nSize++;\n        nCutNodes = Abc_NodeMffcLabel(p-\u003epObj, NULL);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            Abc_NtkObj(p-\u003epNtk, pCut-\u003epLeaves[k])-\u003evFanouts.nSize--;\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if ( nCutNodes != (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup )\n            continue;\n\n        // collect nodes into the array\n        Vec_PtrClear( p-\u003evLeaves );\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            Vec_PtrPush( p-\u003evLeaves, Abc_NtkObj(p-\u003epNtk, pCut-\u003epLeaves[k]) );\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\np-\u003etimeTruth += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Lpk_ComputeSupports( p, pCut, pTruth );        \np-\u003etimeSupps += Abc_Clock() - clk;\n//clk = Abc_Clock();\n//        pFun1 = Lpk_CutTruthBdd( p, pCut );\n//p-\u003etimeTruth2 += Abc_Clock() - clk;\n/*\nclk = Abc_Clock();\n        Cloud_Restart( p-\u003epDsdMan-\u003edd );\n        pFun2 = Kit_TruthToCloud( p-\u003epDsdMan-\u003edd, pTruth, pCut-\u003enLeaves );\n        RetValue = Kit_CreateCloud( p-\u003epDsdMan-\u003edd, pFun2, p-\u003evBddNodes );\np-\u003etimeTruth3 += Abc_Clock() - clk;\n*/\n//        if ( pFun1 != pFun2 )\n//            printf( \"Truth tables do not agree!\\n\" );\n//        else\n//            printf( \"Fine!\\n\" );\n\n        if ( p-\u003epPars-\u003efVeryVerbose )\n        {\n//            char * pFileName;\n            int nSuppSize = Extra_TruthSupportSize( pTruth, pCut-\u003enLeaves );\n            printf( \"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", \n                i, pCut-\u003enLeaves, nSuppSize, pCut-\u003enNodes, pCut-\u003enNodesDup, pCut-\u003enLuts, pCut-\u003eWeight );\n            Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evLeaves, pLeaf, k )\n                printf( \"%c=%d \", 'a'+k, Abc_ObjLevel(pLeaf) );\n            printf( \"\\n\" );\n            Kit_DsdPrintFromTruth( pTruth, pCut-\u003enLeaves );\n            printf( \"\\n\" );\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\n        nNodesBef = Abc_NtkNodeNum(p-\u003epNtk);\nclk = Abc_Clock();\n        pObjNew = Lpk_Decompose( p, p-\u003epNtk, p-\u003evLeaves, pTruth, p-\u003epuSupps, p-\u003epPars-\u003enLutSize,\n            (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup - 1 + (int)(p-\u003epPars-\u003efZeroCost \u003e 0), Required );\n        if ( pObjNew == NULL \u0026\u0026 p-\u003epPars-\u003enLutSize == 4 \u0026\u0026 (int)pCut-\u003enNodes \u003e NodeCounts[Vec_PtrSize(p-\u003evLeaves)] + !p-\u003epPars-\u003efZeroCost )\n            pObjNew = Abc_NtkLutMinDecompose( p-\u003epNtk, p-\u003evLeaves, (word *)pTruth, p-\u003epPars-\u003enLutSize, Required );\np-\u003etimeEval += Abc_Clock() - clk;\n        nNodesAft = Abc_NtkNodeNum(p-\u003epNtk);\n\n        // perform replacement\n        if ( pObjNew )\n        {\n            int nGain = (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup - (nNodesAft - nNodesBef);\n            //assert( nGain \u003e= 1 - p-\u003epPars-\u003efZeroCost );\n            assert( Abc_ObjLevel(pObjNew) \u003c= Required );\n/*\n            if ( nGain \u003c= 0 )\n            {\n                int x = 0;\n            }\n            if ( Abc_ObjLevel(pObjNew) \u003e Required )\n            {\n                int x = 0;\n            }\n*/\n            p-\u003enGainTotal += nGain;\n            p-\u003enChanges++;\n            if ( p-\u003epPars-\u003efVeryVerbose )\n                printf( \"Performed resynthesis: Gain = %2d. Level = %2d. Req = %2d.\\n\", nGain, Abc_ObjLevel(pObjNew), Required );\n            Abc_NtkUpdate( p-\u003epObj, pObjNew, p-\u003evLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n            break;\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {\n//    static int Count = 0;\n    var NodeCounts [16]int32 = [16]int32{ 0, 0, 0, 0, 1, 3, 6, 14, 26, 57, 106, 230, 425, 1000000, 1000000, 1000000 };\n    var pObjNew, pLeaf *Abc_Obj_t;\n    var pCut *Lpk_Cut_t;\n    var pTruth *uint32;\n    var nNodesBef, nNodesAft, nCutNodes int32;\n    var i, k int32;\n    var clk abctime;\n    var Required int32  = Abc_ObjRequiredLevel(p.pObj);\n//    CloudNode * pFun2;//, * pFun1;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if !Lpk_NodeCuts( p ) {\np.timeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np.timeCuts += Abc_Clock() - clk;\n\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\\n\", p.pObj.Id, p.nMffc, p.nEvals, p.pObj.Level, Required); }\n    // try the good cuts\n    p.nCutsTotal  += p.nCuts;\n    p.nCutsUseful += p.nEvals;\n    for  i = 0; i \u003c p.nEvals; i++  {\n        // get the cut\n        pCut = p.pCuts + p.pEvals[i];\n        if p.pPars.fFirst \u0026\u0026 i == 1 {\n            break; }\n//        if ( pCut-\u003eWeight \u003c 1.05 )\n//            continue;\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++;\n        }\n        nCutNodes = Abc_NodeMffcLabel(p.pObj, nil);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--;\n        }\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if nCutNodes != int32(pCut.nNodes) - int32(pCut.nNodesDup) {\n            continue; }\n\n        // collect nodes into the array\n        Vec_PtrClear( p.vLeaves );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Vec_PtrPush( p.vLeaves, Abc_NtkObj(p.pNtk, pCut.pLeaves[k]) );\n        }\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\np.timeTruth += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Lpk_ComputeSupports( p, pCut, pTruth );        \np.timeSupps += Abc_Clock() - clk;\n//clk = Abc_Clock();\n//        pFun1 = Lpk_CutTruthBdd( p, pCut );\n//p-\u003etimeTruth2 += Abc_Clock() - clk;\n/*\nclk = Abc_Clock();\n        Cloud_Restart( p-\u003epDsdMan-\u003edd );\n        pFun2 = Kit_TruthToCloud( p-\u003epDsdMan-\u003edd, pTruth, pCut-\u003enLeaves );\n        RetValue = Kit_CreateCloud( p-\u003epDsdMan-\u003edd, pFun2, p-\u003evBddNodes );\np-\u003etimeTruth3 += Abc_Clock() - clk;\n*/\n//        if ( pFun1 != pFun2 )\n//            printf( \"Truth tables do not agree!\\n\" );\n//        else\n//            printf( \"Fine!\\n\" );\n\n        if p.pPars.fVeryVerbose {\n//            char * pFileName;\n            var nSuppSize int32  = Extra_TruthSupportSize( pTruth, pCut.nLeaves );\n            fmt.Printf(\"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight);\n            Vec_PtrForEachEntry( Abc_Obj_t *, p.vLeaves, pLeaf, k )\n                fmt.Printf(\"%c=%d \", 'a'+k, Abc_ObjLevel(pLeaf));\n            fmt.Printf(\"\\n\");\n            Kit_DsdPrintFromTruth( pTruth, pCut.nLeaves );\n            fmt.Printf(\"\\n\");\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\n        nNodesBef = Abc_NtkNodeNum(p.pNtk);\nclk = Abc_Clock();\n        pObjNew = Lpk_Decompose( p, p.pNtk, p.vLeaves, pTruth, p.puSupps, p.pPars.nLutSize,\n            int32(pCut.nNodes) - int32(pCut.nNodesDup) - 1 + int32((p.pPars.fZeroCost \u003e 0)), Required );\n        if pObjNew == nil \u0026\u0026 p.pPars.nLutSize == 4 \u0026\u0026 int32(pCut.nNodes) \u003e NodeCounts[Vec_PtrSize(p.vLeaves)] + !p.pPars.fZeroCost {\n            pObjNew = Abc_NtkLutMinDecompose( p.pNtk, p.vLeaves, (word *)pTruth, p.pPars.nLutSize, Required ); }\np.timeEval += Abc_Clock() - clk;\n        nNodesAft = Abc_NtkNodeNum(p.pNtk);\n\n        // perform replacement\n        if pObjNew != nil {\n            var nGain int32  = int32(pCut.nNodes) - int32(pCut.nNodesDup) - (nNodesAft - nNodesBef);\n            //assert( nGain \u003e= 1 - p-\u003epPars-\u003efZeroCost );\n            assert(Abc_ObjLevel(pObjNew) \u003c= Required, \"Abc_ObjLevel(pObjNew) \u003c= Required\");\n/*\n            if ( nGain \u003c= 0 )\n            {\n                int x = 0;\n            }\n            if ( Abc_ObjLevel(pObjNew) \u003e Required )\n            {\n                int x = 0;\n            }\n*/\n            p.nGainTotal += nGain;\n            p.nChanges++;\n            if p.pPars.fVeryVerbose {\n                fmt.Printf(\"Performed resynthesis: Gain = %2d. Level = %2d. Req = %2d.\\n\", nGain, Abc_ObjLevel(pObjNew), Required); }\n            Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n            break;\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_Resynthesize",
+      "Start": 20065,
+      "End": 26527,
+      "BodyStart": 20125,
+      "Original": "int Lpk_Resynthesize( Abc_Ntk_t * pNtk, Lpk_Par_t * pPars )\n{\n    ProgressBar * pProgress = NULL; // Suppress \"might be used uninitialized\"\n    Lpk_Man_t * p;\n    Abc_Obj_t * pObj;\n    double Delta;\n//    int * pnFanouts, nObjMax;\n    int i, Iter, nNodes, nNodesPrev;\n    abctime clk = Abc_Clock();\n    assert( Abc_NtkIsLogic(pNtk) );\n \n    // sweep dangling nodes as a preprocessing step\n    Abc_NtkSweep( pNtk, 0 );\n\n    // get the number of inputs\n    if ( Abc_FrameReadLibLut() )\n        pPars-\u003enLutSize = ((If_LibLut_t *)Abc_FrameReadLibLut())-\u003eLutMax;\n    else\n        pPars-\u003enLutSize = Abc_NtkGetFaninMax( pNtk );\n    if ( pPars-\u003enLutSize \u003e 6 )\n        pPars-\u003enLutSize = 6;\n    if ( pPars-\u003enLutSize \u003c 3 )\n        pPars-\u003enLutSize = 3;\n    // adjust the number of crossbars based on LUT size\n    if ( pPars-\u003enVarsShared \u003e pPars-\u003enLutSize - 2 )\n        pPars-\u003enVarsShared = pPars-\u003enLutSize - 2;\n    // get the max number of LUTs tried\n    pPars-\u003enVarsMax = pPars-\u003enLutsMax * (pPars-\u003enLutSize - 1) + 1; // V = N * (K-1) + 1\n    while ( pPars-\u003enVarsMax \u003e 16 )\n    {\n        pPars-\u003enLutsMax--;\n        pPars-\u003enVarsMax = pPars-\u003enLutsMax * (pPars-\u003enLutSize - 1) + 1;\n\n    }\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\\n\",\n            pPars-\u003enLutsMax, pPars-\u003enLutSize, pPars-\u003enLutsOver, pPars-\u003enVarsShared, pPars-\u003enVarsMax );\n    }\n \n\n    // convert into the AIG\n    if ( !Abc_NtkToAig(pNtk) )\n    {\n        fprintf( stdout, \"Converting to BDD has failed.\\n\" );\n        return 0;\n    }\n    assert( Abc_NtkHasAig(pNtk) );\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars-\u003enGrowthLevel );\n\n    // start the manager\n    p = Lpk_ManStart( pPars );\n    p-\u003epNtk = pNtk;\n    p-\u003enNodesTotal = Abc_NtkNodeNum(pNtk);\n    p-\u003evLevels = Vec_VecStart( pNtk-\u003eLevelMax ); \n    if ( p-\u003epPars-\u003efSatur )\n        p-\u003evVisited = Vec_VecStart( 0 );\n    if ( pPars-\u003efVerbose )\n    {\n        p-\u003enTotalNets = Abc_NtkGetTotalFanins(pNtk);\n        p-\u003enTotalNodes = Abc_NtkNodeNum(pNtk);\n    }\n/*\n    // save the number of fanouts of all objects\n    nObjMax = Abc_NtkObjNumMax( pNtk );\n    pnFanouts = ABC_ALLOC( int, nObjMax );\n    memset( pnFanouts, 0, sizeof(int) * nObjMax );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pnFanouts[pObj-\u003eId] = Abc_ObjFanoutNum(pObj);\n*/\n\n    // iterate over the network\n    nNodesPrev = p-\u003enNodesTotal;\n    for ( Iter = 1; ; Iter++ )\n    {\n        // expand storage for changed nodes\n        if ( p-\u003epPars-\u003efSatur )\n            Vec_VecExpand( p-\u003evVisited, Abc_NtkObjNumMax(pNtk) + 1 );\n\n        // consider all nodes\n        nNodes = Abc_NtkObjNumMax(pNtk);\n        if ( !pPars-\u003efVeryVerbose )\n            pProgress = Extra_ProgressBarStart( stdout, nNodes );\n        Abc_NtkForEachNode( pNtk, pObj, i )\n        {\n            // skip all except the final node\n            if ( pPars-\u003efFirst )\n            {\n                if ( !Abc_ObjIsCo(Abc_ObjFanout0(pObj)) )\n                    continue;\n            }\n            if ( i \u003e= nNodes )\n                break;\n            if ( !pPars-\u003efVeryVerbose )\n                Extra_ProgressBarUpdate( pProgress, i, NULL );\n            // skip the nodes that did not change\n            if ( p-\u003epPars-\u003efSatur \u0026\u0026 !Lpk_NodeHasChanged(p, pObj-\u003eId) )\n                continue;\n            // resynthesize\n            p-\u003epObj = pObj;\n            if ( p-\u003epPars-\u003efOldAlgo )\n                Lpk_ResynthesizeNode( p );\n            else\n                Lpk_ResynthesizeNodeNew( p );\n        }\n        if ( !pPars-\u003efVeryVerbose )\n            Extra_ProgressBarStop( pProgress );\n\n        // check the increase\n        Delta = 100.00 * (nNodesPrev - Abc_NtkNodeNum(pNtk)) / p-\u003enNodesTotal;\n        if ( Delta \u003c 0.05 )\n            break;\n        nNodesPrev = Abc_NtkNodeNum(pNtk);\n        if ( !p-\u003epPars-\u003efSatur )\n            break;\n\n        if ( pPars-\u003efFirst )\n            break;\n    }\n    Abc_NtkStopReverseLevels( pNtk );\n/*\n    // report the fanout changes\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( i \u003e= nObjMax )\n            continue;\n        if ( Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] == 0 )\n            continue;\n        printf( \"%d \", Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] );\n    }\n    printf( \"\\n\" );\n*/\n\n    if ( pPars-\u003efVerbose )\n    {\n//        Cloud_PrintInfo( p-\u003epDsdMan-\u003edd );\n        p-\u003enTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n        p-\u003enTotalNodes2 = Abc_NtkNodeNum(pNtk);\n        printf( \"Node gain = %5d. (%.2f %%)  \", \n            p-\u003enTotalNodes-p-\u003enTotalNodes2, 100.0*(p-\u003enTotalNodes-p-\u003enTotalNodes2)/p-\u003enTotalNodes );\n        printf( \"Edge gain = %5d. (%.2f %%)  \", \n            p-\u003enTotalNets-p-\u003enTotalNets2, 100.0*(p-\u003enTotalNets-p-\u003enTotalNets2)/p-\u003enTotalNets );\n        printf( \"Muxes = %4d. Dsds = %4d.\", p-\u003enMuxes, p-\u003enDsds );\n        printf( \"\\n\" );\n        printf( \"Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\\n\", \n            p-\u003enNodesTotal, p-\u003enNodesOver, p-\u003enCutsTotal, p-\u003enCutsUseful, p-\u003enChanges, Iter, p-\u003enBenefited );\n\n        printf( \"Non-DSD:\" );\n        for ( i = 3; i \u003c= pPars-\u003enVarsMax; i++ )\n            if ( p-\u003enBlocks[i] )\n                printf( \" %d=%d\", i, p-\u003enBlocks[i] );\n        printf( \"\\n\" );\n\n        p-\u003etimeTotal = Abc_Clock() - clk;\n        p-\u003etimeEval  = p-\u003etimeEval  - p-\u003etimeMap;\n        p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeCuts - p-\u003etimeTruth - p-\u003etimeEval - p-\u003etimeMap;\n        ABC_PRTP( \"Cuts  \", p-\u003etimeCuts,  p-\u003etimeTotal );\n        ABC_PRTP( \"Truth \", p-\u003etimeTruth, p-\u003etimeTotal );\n        ABC_PRTP( \"CSupps\", p-\u003etimeSupps, p-\u003etimeTotal );\n        ABC_PRTP( \"Eval  \", p-\u003etimeEval,  p-\u003etimeTotal );\n        ABC_PRTP( \" MuxAn\", p-\u003etimeEvalMuxAn, p-\u003etimeEval );\n        ABC_PRTP( \" MuxSp\", p-\u003etimeEvalMuxSp, p-\u003etimeEval );\n        ABC_PRTP( \" DsdAn\", p-\u003etimeEvalDsdAn, p-\u003etimeEval );\n        ABC_PRTP( \" DsdSp\", p-\u003etimeEvalDsdSp, p-\u003etimeEval );\n        ABC_PRTP( \" Other\", p-\u003etimeEval-p-\u003etimeEvalMuxAn-p-\u003etimeEvalMuxSp-p-\u003etimeEvalDsdAn-p-\u003etimeEvalDsdSp, p-\u003etimeEval );\n        ABC_PRTP( \"Map   \", p-\u003etimeMap,   p-\u003etimeTotal );\n        ABC_PRTP( \"Other \", p-\u003etimeOther, p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL \", p-\u003etimeTotal, p-\u003etimeTotal );\n    }\n\n    Lpk_ManStop( p );\n    // check the resulting network\n    if ( !Abc_NtkCheck( pNtk ) )\n    {\n        printf( \"Lpk_Resynthesize: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {\n    var pProgress *ProgressBar  = nil; // Suppress \"might be used uninitialized\"\n    var p *Lpk_Man_t;\n    var pObj *Abc_Obj_t;\n    var Delta float64;\n//    int * pnFanouts, nObjMax;\n    var i, Iter, nNodes, nNodesPrev int32;\n    var clk abctime  = Abc_Clock();\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n \n    // sweep dangling nodes as a preprocessing step\n    Abc_NtkSweep( pNtk, 0 );\n\n    // get the number of inputs\n    if Abc_FrameReadLibLut() {\n        pPars.nLutSize = ((If_LibLut_t *)Abc_FrameReadLibLut()).LutMax;\n    } else {\n        pPars.nLutSize = Abc_NtkGetFaninMax( pNtk ); }\n    if pPars.nLutSize \u003e 6 {\n        pPars.nLutSize = 6; }\n    if pPars.nLutSize \u003c 3 {\n        pPars.nLutSize = 3; }\n    // adjust the number of crossbars based on LUT size\n    if pPars.nVarsShared \u003e pPars.nLutSize - 2 {\n        pPars.nVarsShared = pPars.nLutSize - 2; }\n    // get the max number of LUTs tried\n    pPars.nVarsMax = pPars.nLutsMax * (pPars.nLutSize - 1) + 1; // V = N * (K-1) + 1\n    for  pPars.nVarsMax \u003e 16  {\n        pPars.nLutsMax--;\n        pPars.nVarsMax = pPars.nLutsMax * (pPars.nLutSize - 1) + 1;\n\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\\n\", pPars.nLutsMax, pPars.nLutSize, pPars.nLutsOver, pPars.nVarsShared, pPars.nVarsMax);\n    }\n \n\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to BDD has failed.\\n\");\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // start the manager\n    p = Lpk_ManStart( pPars );\n    p.pNtk = pNtk;\n    p.nNodesTotal = Abc_NtkNodeNum(pNtk);\n    p.vLevels = Vec_VecStart( pNtk.LevelMax ); \n    if p.pPars.fSatur {\n        p.vVisited = Vec_VecStart( 0 ); }\n    if pPars.fVerbose {\n        p.nTotalNets = Abc_NtkGetTotalFanins(pNtk);\n        p.nTotalNodes = Abc_NtkNodeNum(pNtk);\n    }\n/*\n    // save the number of fanouts of all objects\n    nObjMax = Abc_NtkObjNumMax( pNtk );\n    pnFanouts = ABC_ALLOC( int, nObjMax );\n    memset( pnFanouts, 0, sizeof(int) * nObjMax );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pnFanouts[pObj-\u003eId] = Abc_ObjFanoutNum(pObj);\n*/\n\n    // iterate over the network\n    nNodesPrev = p.nNodesTotal;\n    for  Iter = 1; ; Iter++  {\n        // expand storage for changed nodes\n        if p.pPars.fSatur {\n            Vec_VecExpand( p.vVisited, Abc_NtkObjNumMax(pNtk) + 1 ); }\n\n        // consider all nodes\n        nNodes = Abc_NtkObjNumMax(pNtk);\n        if !pPars.fVeryVerbose {\n            pProgress = Extra_ProgressBarStart( os.Stdout, nNodes ); }\n        Abc_NtkForEachNode( pNtk, pObj, i )\n        {\n            // skip all except the final node\n            if pPars.fFirst {\n                if !Abc_ObjIsCo(Abc_ObjFanout0(pObj)) {\n                    continue; }\n            }\n            if i \u003e= nNodes {\n                break; }\n            if !pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, i, nil ); }\n            // skip the nodes that did not change\n            if p.pPars.fSatur \u0026\u0026 !(Lpk_NodeHasChanged(p, pObj.Id) != 0) {\n                continue; }\n            // resynthesize\n            p.pObj = pObj;\n            if p.pPars.fOldAlgo {\n                Lpk_ResynthesizeNode( p );\n            } else {\n                Lpk_ResynthesizeNodeNew( p ); }\n        }\n        if !pPars.fVeryVerbose {\n            Extra_ProgressBarStop( pProgress ); }\n\n        // check the increase\n        Delta = 100.00 * (nNodesPrev - Abc_NtkNodeNum(pNtk)) / p.nNodesTotal;\n        if Delta \u003c 0.05 {\n            break; }\n        nNodesPrev = Abc_NtkNodeNum(pNtk);\n        if !p.pPars.fSatur {\n            break; }\n\n        if pPars.fFirst {\n            break; }\n    }\n    Abc_NtkStopReverseLevels( pNtk );\n/*\n    // report the fanout changes\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( i \u003e= nObjMax )\n            continue;\n        if ( Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] == 0 )\n            continue;\n        printf( \"%d \", Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] );\n    }\n    printf( \"\\n\" );\n*/\n\n    if pPars.fVerbose {\n//        Cloud_PrintInfo( p-\u003epDsdMan-\u003edd );\n        p.nTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n        p.nTotalNodes2 = Abc_NtkNodeNum(pNtk);\n        fmt.Printf(\"Node gain = %5d. (%.2f %%)  \", p.nTotalNodes-p.nTotalNodes2, 100.0*(p.nTotalNodes-p.nTotalNodes2)/p.nTotalNodes);\n        fmt.Printf(\"Edge gain = %5d. (%.2f %%)  \", p.nTotalNets-p.nTotalNets2, 100.0*(p.nTotalNets-p.nTotalNets2)/p.nTotalNets);\n        fmt.Printf(\"Muxes = %4d. Dsds = %4d.\", p.nMuxes, p.nDsds);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\\n\", p.nNodesTotal, p.nNodesOver, p.nCutsTotal, p.nCutsUseful, p.nChanges, Iter, p.nBenefited);\n\n        fmt.Printf(\"Non-DSD:\");\n        for  i = 3; i \u003c= pPars.nVarsMax; i++  {\n            if p.nBlocks[i] {\n                fmt.Printf(\" %d=%d\", i, p.nBlocks[i]); }\n        }\n        fmt.Printf(\"\\n\");\n\n        p.timeTotal = Abc_Clock() - clk;\n        p.timeEval  = p.timeEval  - p.timeMap;\n        p.timeOther = p.timeTotal - p.timeCuts - p.timeTruth - p.timeEval - p.timeMap;\n        ABC_PRTP( \"Cuts  \", p.timeCuts,  p.timeTotal );\n        ABC_PRTP( \"Truth \", p.timeTruth, p.timeTotal );\n        ABC_PRTP( \"CSupps\", p.timeSupps, p.timeTotal );\n        ABC_PRTP( \"Eval  \", p.timeEval,  p.timeTotal );\n        ABC_PRTP( \" MuxAn\", p.timeEvalMuxAn, p.timeEval );\n        ABC_PRTP( \" MuxSp\", p.timeEvalMuxSp, p.timeEval );\n        ABC_PRTP( \" DsdAn\", p.timeEvalDsdAn, p.timeEval );\n        ABC_PRTP( \" DsdSp\", p.timeEvalDsdSp, p.timeEval );\n        ABC_PRTP( \" Other\", p.timeEval-p.timeEvalMuxAn-p.timeEvalMuxSp-p.timeEvalDsdAn-p.timeEvalDsdSp, p.timeEval );\n        ABC_PRTP( \"Map   \", p.timeMap,   p.timeTotal );\n        ABC_PRTP( \"Other \", p.timeOther, p.timeTotal );\n        ABC_PRTP( \"TOTAL \", p.timeTotal, p.timeTotal );\n    }\n\n    Lpk_ManStop( p );\n    // check the resulting network\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Lpk_Resynthesize: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::mechanical::sizeof::4132",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4132,
+      "End": 4138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::pointer-cast::1645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1645,
+      "End": 1659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::pointer-cast::10021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9791,
+      "End": 9804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::pointer-cast::18953",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18723,
+      "End": 18731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::pointer-cast::20806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20576,
+      "End": 20591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Abc_NtkDecFromTruth",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDecFromTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1310,
+      "End": 2111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Abc_NtkLutMinDecompose",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLutMinDecompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2112,
+      "End": 3692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_IfManStart",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_IfManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3958,
+      "End": 5157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_NodeHasChanged",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeHasChanged",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5437,
+      "End": 6098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_ExploreCut",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ExploreCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6363,
+      "End": 10069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_ResynthesizeNode",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ResynthesizeNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10339,
+      "End": 13531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_ComputeSupports",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComputeSupports",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13879,
+      "End": 14498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_ResynthesizeNodeNew",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ResynthesizeNodeNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14768,
+      "End": 19792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::Lpk_Resynthesize",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_Resynthesize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20065,
+      "End": 26527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::2469",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2469,
+      "End": 2521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::2577",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2577,
+      "End": 2628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::2668",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2668,
+      "End": 2706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::2966",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2966,
+      "End": 3018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::3067",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3067,
+      "End": 3118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::3205",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3205,
+      "End": 3243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::4084",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4084,
+      "End": 4108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::5132",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5132,
+      "End": 5154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::5665",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5665,
+      "End": 5744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::17819",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17819,
+      "End": 17875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::22883",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22883,
+      "End": 22918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25548",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25548,
+      "End": 25596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25606",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25606,
+      "End": 25654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25664",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25664,
+      "End": 25712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25722",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25722,
+      "End": 25770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25780",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25780,
+      "End": 25831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25841",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25841,
+      "End": 25892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25902",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25902,
+      "End": 25953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::25963",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25963,
+      "End": 26014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::26024",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26024,
+      "End": 26138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::26148",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26148,
+      "End": 26196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::26206",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26206,
+      "End": 26254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCore.c::macro-inline::26264",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26264,
+      "End": 26312
+    }
+  ],
+  "Draft": "package lpk\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [lpkCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkCore.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"lpkInt.h\"\n//#include \"bool/kit/cloud.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDecFromTruth(pTruth *word, nVars int32, nLutSize int32) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkLutmin( Abc_Ntk_t * pNtk, int nLutSize, int fVerbose );\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    var pTemp *Abc_Ntk_t  = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    var pSopCover string  = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pTemp.pManFunc, nVars, pTruth, vCover );\n    var pNtk *Abc_Ntk_t  = Abc_NtkCreateWithNode( pSopCover );\n    var pNew *Abc_Ntk_t  = Abc_NtkLutmin( pNtk, nLutSize, 0 );\n    Abc_NtkDelete( pTemp );\n    Abc_NtkDelete( pNtk );\n    Vec_IntFree( vCover );\n    if !Abc_NtkToAig(pNew) {\n        Abc_NtkDelete( pNew );\n        fmt.Fprintf(os.Stdout, \"Converting to AIG has failed.\\n\");\n        return nil;\n    }\n    assert(Abc_NtkHasAig(pNew), \"Abc_NtkHasAig(pNew)\");\n    return pNew;\n}\nfunc Abc_NtkLutMinDecompose(pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *word, nLutSize int32, Required int32) *Abc_Obj_t {\n    var pObj *Abc_Obj_t = nil;\n    var pFanin *Abc_Obj_t; var i, k int32;\n    var pNew *Abc_Ntk_t  = Abc_NtkDecFromTruth( pTruth, Vec_PtrSize(vLeaves), nLutSize );\n    var vNodes *Vec_Ptr_t  = Abc_NtkDfs( pNew, 0 );\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n    // levels\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i ).Level = pObj.Level;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.Level = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pObj.Level \u003c pFanin.Level )\n                pObj.Level = pFanin.Level;\n        pObj.Level++;\n    }\n    if int32(pObj.Level) \u003e Required {\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNew );\n        return nil;\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        Abc_NtkCi( pNew, i ).pCopy = pObj;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_NtkDupObj( pNtk, pObj, 0 );\n        pObj.pCopy.Level = 0;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n            if pObj.pCopy.Level \u003c pFanin.pCopy.Level {\n                pObj.pCopy.Level = pFanin.pCopy.Level; }\n        }\n        pObj.pCopy.Level++;\n    }\n    //printf( \"Decomposed %d-input function, resulting in %d nodes.\\n\", Vec_PtrSize(vLeaves), Vec_PtrSize(vNodes) );\n    pObj = pObj.pCopy;\n    Vec_PtrFree( vNodes );\n    Abc_NtkDelete( pNew );\n    return pObj;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_IfManStart(p *Lpk_Man_t) {\n    var pPars *If_Par_t;\n    assert(p.pIfMan == nil, \"p.pIfMan == nil\");\n    // set defaults\n    pPars = new(If_Par_t);\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n    pPars.nLutSize    =  p.pPars.nLutSize;\n    pPars.nCutsMax    = 16;\n    pPars.nFlowIters  =  0; // 1\n    pPars.nAreaIters  =  0; // 1 \n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  0;\n    pPars.fArea       =  1;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  0; //\n    pPars.fLatchPaths =  0;\n    pPars.fVerbose    =  0;\n    // internal parameters\n    pPars.fTruth      =  1;\n    pPars.fUsePerm    =  0; \n    pPars.nLatchesCi  =  0;\n    pPars.nLatchesCo  =  0;\n    pPars.pLutLib     =  nil; // Abc_FrameReadLibLut();\n    pPars.pTimesArr   =  nil; \n    pPars.pTimesArr   =  nil;   \n    pPars.fUseBdds    =  0;\n    pPars.fUseSops    =  0;\n    pPars.fUseCnfs    =  0;\n    pPars.fUseMv      =  0;\n    // start the mapping manager and set its parameters\n    p.pIfMan = If_ManStart( pPars );\n    If_ManSetupSetAll( p.pIfMan, 1000 );\n    p.pIfMan.pPars.pTimesArr = ABC_ALLOC( float, 32 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if at least one entry has changed.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeHasChanged(p *Lpk_Man_t, iNode int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pTemp, pTemp2 *Abc_Obj_t;\n    var i int32;\n    vNodes = Vec_VecEntry( p.vVisited, iNode );\n    if Vec_PtrSize(vNodes) == 0 {\n        return 1; }\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pTemp, pTemp2, i )\n    {\n        // check if the node has changed\n        pTemp = Abc_NtkObj( p.pNtk, int32((ABC_PTRUINT_T))pTemp );\n        if pTemp == nil {\n            return 1; }\n        // check if the number of fanouts has changed\n//        if ( Abc_ObjFanoutNum(pTemp) != (int)Vec_PtrEntry(vNodes, i+1) )\n//            return 1;\n//        i++;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {\n    extern Abc_Obj_t * Abc_NodeFromIf_rec( Abc_Ntk_t * pNtkNew, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Int_t * vCover );\n    var pRoot *Kit_DsdObj_t;\n    var pDriver *If_Obj_t;\n    var ppLeaves [16]*If_Obj_t;\n    var pLeaf, pObjNew *Abc_Obj_t;\n    var nGain, i int32;\n    var clk abctime;\n    var nNodesBef int32;\n//    int nOldShared;\n\n    // check special cases\n    pRoot = Kit_DsdNtkRoot( pNtk );\n    if pRoot.Type == KIT_DSD_CONST1 {\n        if Abc_LitIsCompl(pNtk.Root) {\n            pObjNew = Abc_NtkCreateNodeConst0( p.pNtk );\n        } else {\n            pObjNew = Abc_NtkCreateNodeConst1( p.pNtk ); }\n        Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n        p.nGainTotal += pCut.nNodes - pCut.nNodesDup;\n        return 1;\n    }\n    if pRoot.Type == KIT_DSD_VAR {\n        pObjNew = Abc_NtkObj( p.pNtk, pCut.pLeaves[ Abc_Lit2Var(pRoot.pFans[0]) ] );\n        if Abc_LitIsCompl(pNtk.Root) ^ Abc_LitIsCompl(pRoot.pFans[0]) {\n            pObjNew = Abc_NtkCreateNodeInv( p.pNtk, pObjNew ); }\n        Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n        p.nGainTotal += pCut.nNodes - pCut.nNodesDup;\n        return 1;\n    }\n    assert(pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME, \"pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME\");\n\n    // start the mapping manager\n    if p.pIfMan == nil {\n        Lpk_IfManStart( p ); }\n\n    // prepare the mapping manager\n    If_ManRestart( p.pIfMan );\n    // create the PI variables\n    for  i = 0; i \u003c p.pPars.nVarsMax; i++  {\n        ppLeaves[i] = If_ManCreateCi( p.pIfMan );\n    }\n    // set the arrival times\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pLeaf) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        p.pIfMan.pPars.pTimesArr[i] = float32(pLeaf.Level);\n    }\n    // prepare the PI cuts\n    If_ManSetupCiCutSets( p.pIfMan );\n    // create the internal nodes\n    p.fCalledOnce = 0;\n    p.nCalledSRed = 0;\n    pDriver = Lpk_MapTree_rec( p, pNtk, ppLeaves, pNtk.Root, nil );\n    if pDriver == nil {\n        return 0; }\n    // create the PO node\n    If_ManCreateCo( p.pIfMan, If_Regular(pDriver) );\n\n    // perform mapping\n    p.pIfMan.pPars.fAreaOnly = 1;\nclk = Abc_Clock();\n    If_ManPerformMappingComb( p.pIfMan );\np.timeMap += Abc_Clock() - clk;\n\n    // compute the gain in area\n    nGain = pCut.nNodes - pCut.nNodesDup - int32(p.pIfMan.AreaGlo);\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\\n\", pCut.nNodes - pCut.nNodesDup, int32(p.pIfMan.AreaGlo), nGain, int32(p.pIfMan.RequiredGlo) - int32(p.pObj.Level), p.nCalledSRed); }\n\n    // quit if there is no gain\n    if !(nGain \u003e 0 || (p.pPars.fZeroCost \u0026\u0026 nGain == 0)) {\n        return 0; }\n\n    // quit if depth increases too much\n    if int32(p.pIfMan.RequiredGlo) \u003e Abc_ObjRequiredLevel(p.pObj) {\n        return 0; }\n\n    // perform replacement\n    p.nGainTotal += nGain;\n    p.nChanges++;\n    if p.nCalledSRed {\n        p.nBenefited++; }\n\n    nNodesBef = Abc_NtkNodeNum(p.pNtk);\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( p.pIfMan );\n    If_ManCleanCutData( p.pIfMan );\n    // set the PIs of the cut\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pLeaf) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        If_ObjSetCopy( If_ManCi(p.pIfMan, i), pLeaf );\n    }\n    // get the area of mapping\n    pObjNew = Abc_NodeFromIf_rec( p.pNtk, p.pIfMan, If_Regular(pDriver), p.vCover );\n    pObjNew.pData = Hop_NotCond( (Hop_Obj_t *)pObjNew.pData, If_IsComplement(pDriver) );\n    // perform replacement\n    Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resynthesis for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {\n//    static int Count = 0;\n    var pDsdNtk *Kit_DsdNtk_t;\n    var pCut *Lpk_Cut_t;\n    var pTruth *uint32;\n    var i, k, nSuppSize, nCutNodes, RetValue int32;\n    var clk abctime;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if !Lpk_NodeCuts( p ) {\np.timeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np.timeCuts += Abc_Clock() - clk;\n\n//return 0;\n\n    if p.pPars.fVeryVerbose {\n    fmt.Printf(\"Node %5d : Mffc size = %5d. Cuts = %5d.\\n\", p.pObj.Id, p.nMffc, p.nEvals); }\n    // try the good cuts\n    p.nCutsTotal  += p.nCuts;\n    p.nCutsUseful += p.nEvals;\n    for  i = 0; i \u003c p.nEvals; i++  {\n        // get the cut\n        pCut = p.pCuts + p.pEvals[i];\n        if p.pPars.fFirst \u0026\u0026 i == 1 {\n            break; }\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++;\n        }\n        nCutNodes = Abc_NodeMffcLabel(p.pObj, nil);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--;\n        }\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if nCutNodes != int32(pCut.nNodes) - int32(pCut.nNodesDup) {\n            continue; }\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\n        nSuppSize = Extra_TruthSupportSize(pTruth, pCut.nLeaves);\np.timeTruth += Abc_Clock() - clk;\n\n        pDsdNtk = Kit_DsdDecompose( pTruth, pCut.nLeaves ); \n//        Kit_DsdVerify( pDsdNtk, pTruth, pCut-\u003enLeaves ); \n        // skip 16-input non-DSD because ISOP will not work\n        if Kit_DsdNtkRoot(pDsdNtk).nFans == 16 {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        // if DSD has nodes that require splitting to fit them into LUTs\n        // we can skip those cuts that cannot lead to improvement\n        // (a full DSD network requires  V = Nmin * (K-1) + 1 for improvement)\n        if Kit_DsdNonDsdSizeMax(pDsdNtk) \u003e p.pPars.nLutSize \u0026\u0026 \n             nSuppSize \u003e= (int32(pCut.nNodes) - int32(pCut.nNodesDup) - 1) * (p.pPars.nLutSize - 1) + 1 {\n            Kit_DsdNtkFree( pDsdNtk );\n            continue;\n        }\n\n        if p.pPars.fVeryVerbose {\n//            char * pFileName;\n            fmt.Printf(\"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight);\n            Kit_DsdPrint( os.Stdout, pDsdNtk );\n            Kit_DsdPrintFromTruth( pTruth, pCut.nLeaves );\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\nclk = Abc_Clock();\n        RetValue = Lpk_ExploreCut( p, pCut, pDsdNtk );\np.timeEval += Abc_Clock() - clk;\n        Kit_DsdNtkFree( pDsdNtk );\n        if RetValue != 0 {\n            break; }\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes supports of the cofactors of the function.]\n\n  Description [This procedure should be called after Lpk_CutTruth(p,pCut,0)]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ComputeSupports(p *Lpk_Man_t, pCut *Lpk_Cut_t, pTruth *uint32) {\n    var pTruthInv *uint32;\n    var RetValue1, RetValue2 int32;\n    pTruthInv = Lpk_CutTruth( p, pCut, 1 );\n    RetValue1 = Kit_CreateCloudFromTruth( p.pDsdMan.dd, pTruth, pCut.nLeaves, p.vBddDir );\n    RetValue2 = Kit_CreateCloudFromTruth( p.pDsdMan.dd, pTruthInv, pCut.nLeaves, p.vBddInv );\n    if RetValue1 \u0026\u0026 (RetValue2 != 0) \u0026\u0026 Vec_IntSize(p.vBddDir) \u003e 1 \u0026\u0026 Vec_IntSize(p.vBddInv) \u003e 1 {\n        Kit_TruthCofSupports( p.vBddDir, p.vBddInv, pCut.nLeaves, p.vMemory, p.puSupps ); \n    } else {\n        p.puSupps[0] = p.puSupps[1] = 0; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resynthesis for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {\n//    static int Count = 0;\n    var NodeCounts [16]int32 = [16]int32{ 0, 0, 0, 0, 1, 3, 6, 14, 26, 57, 106, 230, 425, 1000000, 1000000, 1000000 };\n    var pObjNew, pLeaf *Abc_Obj_t;\n    var pCut *Lpk_Cut_t;\n    var pTruth *uint32;\n    var nNodesBef, nNodesAft, nCutNodes int32;\n    var i, k int32;\n    var clk abctime;\n    var Required int32  = Abc_ObjRequiredLevel(p.pObj);\n//    CloudNode * pFun2;//, * pFun1;\n\n    // compute the cuts\nclk = Abc_Clock();\n    if !Lpk_NodeCuts( p ) {\np.timeCuts += Abc_Clock() - clk;\n        return 0;\n    }\np.timeCuts += Abc_Clock() - clk;\n\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\\n\", p.pObj.Id, p.nMffc, p.nEvals, p.pObj.Level, Required); }\n    // try the good cuts\n    p.nCutsTotal  += p.nCuts;\n    p.nCutsUseful += p.nEvals;\n    for  i = 0; i \u003c p.nEvals; i++  {\n        // get the cut\n        pCut = p.pCuts + p.pEvals[i];\n        if p.pPars.fFirst \u0026\u0026 i == 1 {\n            break; }\n//        if ( pCut-\u003eWeight \u003c 1.05 )\n//            continue;\n\n        // skip bad cuts        \n//        printf( \"Mffc size = %d.  \", Abc_NodeMffcLabel(p-\u003epObj) );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++;\n        }\n        nCutNodes = Abc_NodeMffcLabel(p.pObj, nil);\n//        printf( \"Mffc with cut = %d.  \", nCutNodes );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--;\n        }\n//        printf( \"Mffc cut = %d.  \", (int)pCut-\u003enNodes - (int)pCut-\u003enNodesDup );\n//        printf( \"\\n\" );\n        if nCutNodes != int32(pCut.nNodes) - int32(pCut.nNodesDup) {\n            continue; }\n\n        // collect nodes into the array\n        Vec_PtrClear( p.vLeaves );\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            Vec_PtrPush( p.vLeaves, Abc_NtkObj(p.pNtk, pCut.pLeaves[k]) );\n        }\n\n        // compute the truth table\nclk = Abc_Clock();\n        pTruth = Lpk_CutTruth( p, pCut, 0 );\np.timeTruth += Abc_Clock() - clk;\nclk = Abc_Clock();\n        Lpk_ComputeSupports( p, pCut, pTruth );        \np.timeSupps += Abc_Clock() - clk;\n//clk = Abc_Clock();\n//        pFun1 = Lpk_CutTruthBdd( p, pCut );\n//p-\u003etimeTruth2 += Abc_Clock() - clk;\n/*\nclk = Abc_Clock();\n        Cloud_Restart( p-\u003epDsdMan-\u003edd );\n        pFun2 = Kit_TruthToCloud( p-\u003epDsdMan-\u003edd, pTruth, pCut-\u003enLeaves );\n        RetValue = Kit_CreateCloud( p-\u003epDsdMan-\u003edd, pFun2, p-\u003evBddNodes );\np-\u003etimeTruth3 += Abc_Clock() - clk;\n*/\n//        if ( pFun1 != pFun2 )\n//            printf( \"Truth tables do not agree!\\n\" );\n//        else\n//            printf( \"Fine!\\n\" );\n\n        if p.pPars.fVeryVerbose {\n//            char * pFileName;\n            var nSuppSize int32  = Extra_TruthSupportSize( pTruth, pCut.nLeaves );\n            fmt.Printf(\"  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  \", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight);\n            Vec_PtrForEachEntry( Abc_Obj_t *, p.vLeaves, pLeaf, k )\n                fmt.Printf(\"%c=%d \", 'a'+k, Abc_ObjLevel(pLeaf));\n            fmt.Printf(\"\\n\");\n            Kit_DsdPrintFromTruth( pTruth, pCut.nLeaves );\n            fmt.Printf(\"\\n\");\n//            pFileName = Kit_TruthDumpToFile( pTruth, pCut-\u003enLeaves, Count++ );\n//            printf( \"Saved truth table in file \\\"%s\\\".\\n\", pFileName );\n        }\n\n        // update the network\n        nNodesBef = Abc_NtkNodeNum(p.pNtk);\nclk = Abc_Clock();\n        pObjNew = Lpk_Decompose( p, p.pNtk, p.vLeaves, pTruth, p.puSupps, p.pPars.nLutSize,\n            int32(pCut.nNodes) - int32(pCut.nNodesDup) - 1 + int32((p.pPars.fZeroCost \u003e 0)), Required );\n        if pObjNew == nil \u0026\u0026 p.pPars.nLutSize == 4 \u0026\u0026 int32(pCut.nNodes) \u003e NodeCounts[Vec_PtrSize(p.vLeaves)] + !p.pPars.fZeroCost {\n            pObjNew = Abc_NtkLutMinDecompose( p.pNtk, p.vLeaves, (word *)pTruth, p.pPars.nLutSize, Required ); }\np.timeEval += Abc_Clock() - clk;\n        nNodesAft = Abc_NtkNodeNum(p.pNtk);\n\n        // perform replacement\n        if pObjNew != nil {\n            var nGain int32  = int32(pCut.nNodes) - int32(pCut.nNodesDup) - (nNodesAft - nNodesBef);\n            //assert( nGain \u003e= 1 - p-\u003epPars-\u003efZeroCost );\n            assert(Abc_ObjLevel(pObjNew) \u003c= Required, \"Abc_ObjLevel(pObjNew) \u003c= Required\");\n/*\n            if ( nGain \u003c= 0 )\n            {\n                int x = 0;\n            }\n            if ( Abc_ObjLevel(pObjNew) \u003e Required )\n            {\n                int x = 0;\n            }\n*/\n            p.nGainTotal += nGain;\n            p.nChanges++;\n            if p.pPars.fVeryVerbose {\n                fmt.Printf(\"Performed resynthesis: Gain = %2d. Level = %2d. Req = %2d.\\n\", nGain, Abc_ObjLevel(pObjNew), Required); }\n            Abc_NtkUpdate( p.pObj, pObjNew, p.vLevels );\n//printf( \"%3d : %d-%d=%d(%d) \\n\", p-\u003enChanges, nNodesBef, Abc_NtkNodeNum(p-\u003epNtk), nNodesBef-Abc_NtkNodeNum(p-\u003epNtk), nGain );\n            break;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resynthesis for one network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {\n    var pProgress *ProgressBar  = nil; // Suppress \"might be used uninitialized\"\n    var p *Lpk_Man_t;\n    var pObj *Abc_Obj_t;\n    var Delta float64;\n//    int * pnFanouts, nObjMax;\n    var i, Iter, nNodes, nNodesPrev int32;\n    var clk abctime  = Abc_Clock();\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n \n    // sweep dangling nodes as a preprocessing step\n    Abc_NtkSweep( pNtk, 0 );\n\n    // get the number of inputs\n    if Abc_FrameReadLibLut() {\n        pPars.nLutSize = ((If_LibLut_t *)Abc_FrameReadLibLut()).LutMax;\n    } else {\n        pPars.nLutSize = Abc_NtkGetFaninMax( pNtk ); }\n    if pPars.nLutSize \u003e 6 {\n        pPars.nLutSize = 6; }\n    if pPars.nLutSize \u003c 3 {\n        pPars.nLutSize = 3; }\n    // adjust the number of crossbars based on LUT size\n    if pPars.nVarsShared \u003e pPars.nLutSize - 2 {\n        pPars.nVarsShared = pPars.nLutSize - 2; }\n    // get the max number of LUTs tried\n    pPars.nVarsMax = pPars.nLutsMax * (pPars.nLutSize - 1) + 1; // V = N * (K-1) + 1\n    for  pPars.nVarsMax \u003e 16  {\n        pPars.nLutsMax--;\n        pPars.nVarsMax = pPars.nLutsMax * (pPars.nLutSize - 1) + 1;\n\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\\n\", pPars.nLutsMax, pPars.nLutSize, pPars.nLutsOver, pPars.nVarsShared, pPars.nVarsMax);\n    }\n \n\n    // convert into the AIG\n    if !Abc_NtkToAig(pNtk) {\n        fmt.Fprintf(os.Stdout, \"Converting to BDD has failed.\\n\");\n        return 0;\n    }\n    assert(Abc_NtkHasAig(pNtk), \"Abc_NtkHasAig(pNtk)\");\n\n    // set the number of levels\n    Abc_NtkLevel( pNtk );\n    Abc_NtkStartReverseLevels( pNtk, pPars.nGrowthLevel );\n\n    // start the manager\n    p = Lpk_ManStart( pPars );\n    p.pNtk = pNtk;\n    p.nNodesTotal = Abc_NtkNodeNum(pNtk);\n    p.vLevels = Vec_VecStart( pNtk.LevelMax ); \n    if p.pPars.fSatur {\n        p.vVisited = Vec_VecStart( 0 ); }\n    if pPars.fVerbose {\n        p.nTotalNets = Abc_NtkGetTotalFanins(pNtk);\n        p.nTotalNodes = Abc_NtkNodeNum(pNtk);\n    }\n/*\n    // save the number of fanouts of all objects\n    nObjMax = Abc_NtkObjNumMax( pNtk );\n    pnFanouts = ABC_ALLOC( int, nObjMax );\n    memset( pnFanouts, 0, sizeof(int) * nObjMax );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pnFanouts[pObj-\u003eId] = Abc_ObjFanoutNum(pObj);\n*/\n\n    // iterate over the network\n    nNodesPrev = p.nNodesTotal;\n    for  Iter = 1; ; Iter++  {\n        // expand storage for changed nodes\n        if p.pPars.fSatur {\n            Vec_VecExpand( p.vVisited, Abc_NtkObjNumMax(pNtk) + 1 ); }\n\n        // consider all nodes\n        nNodes = Abc_NtkObjNumMax(pNtk);\n        if !pPars.fVeryVerbose {\n            pProgress = Extra_ProgressBarStart( os.Stdout, nNodes ); }\n        Abc_NtkForEachNode( pNtk, pObj, i )\n        {\n            // skip all except the final node\n            if pPars.fFirst {\n                if !Abc_ObjIsCo(Abc_ObjFanout0(pObj)) {\n                    continue; }\n            }\n            if i \u003e= nNodes {\n                break; }\n            if !pPars.fVeryVerbose {\n                Extra_ProgressBarUpdate( pProgress, i, nil ); }\n            // skip the nodes that did not change\n            if p.pPars.fSatur \u0026\u0026 !(Lpk_NodeHasChanged(p, pObj.Id) != 0) {\n                continue; }\n            // resynthesize\n            p.pObj = pObj;\n            if p.pPars.fOldAlgo {\n                Lpk_ResynthesizeNode( p );\n            } else {\n                Lpk_ResynthesizeNodeNew( p ); }\n        }\n        if !pPars.fVeryVerbose {\n            Extra_ProgressBarStop( pProgress ); }\n\n        // check the increase\n        Delta = 100.00 * (nNodesPrev - Abc_NtkNodeNum(pNtk)) / p.nNodesTotal;\n        if Delta \u003c 0.05 {\n            break; }\n        nNodesPrev = Abc_NtkNodeNum(pNtk);\n        if !p.pPars.fSatur {\n            break; }\n\n        if pPars.fFirst {\n            break; }\n    }\n    Abc_NtkStopReverseLevels( pNtk );\n/*\n    // report the fanout changes\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( i \u003e= nObjMax )\n            continue;\n        if ( Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] == 0 )\n            continue;\n        printf( \"%d \", Abc_ObjFanoutNum(pObj) - pnFanouts[pObj-\u003eId] );\n    }\n    printf( \"\\n\" );\n*/\n\n    if pPars.fVerbose {\n//        Cloud_PrintInfo( p-\u003epDsdMan-\u003edd );\n        p.nTotalNets2 = Abc_NtkGetTotalFanins(pNtk);\n        p.nTotalNodes2 = Abc_NtkNodeNum(pNtk);\n        fmt.Printf(\"Node gain = %5d. (%.2f %%)  \", p.nTotalNodes-p.nTotalNodes2, 100.0*(p.nTotalNodes-p.nTotalNodes2)/p.nTotalNodes);\n        fmt.Printf(\"Edge gain = %5d. (%.2f %%)  \", p.nTotalNets-p.nTotalNets2, 100.0*(p.nTotalNets-p.nTotalNets2)/p.nTotalNets);\n        fmt.Printf(\"Muxes = %4d. Dsds = %4d.\", p.nMuxes, p.nDsds);\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\\n\", p.nNodesTotal, p.nNodesOver, p.nCutsTotal, p.nCutsUseful, p.nChanges, Iter, p.nBenefited);\n\n        fmt.Printf(\"Non-DSD:\");\n        for  i = 3; i \u003c= pPars.nVarsMax; i++  {\n            if p.nBlocks[i] {\n                fmt.Printf(\" %d=%d\", i, p.nBlocks[i]); }\n        }\n        fmt.Printf(\"\\n\");\n\n        p.timeTotal = Abc_Clock() - clk;\n        p.timeEval  = p.timeEval  - p.timeMap;\n        p.timeOther = p.timeTotal - p.timeCuts - p.timeTruth - p.timeEval - p.timeMap;\n        ABC_PRTP( \"Cuts  \", p.timeCuts,  p.timeTotal );\n        ABC_PRTP( \"Truth \", p.timeTruth, p.timeTotal );\n        ABC_PRTP( \"CSupps\", p.timeSupps, p.timeTotal );\n        ABC_PRTP( \"Eval  \", p.timeEval,  p.timeTotal );\n        ABC_PRTP( \" MuxAn\", p.timeEvalMuxAn, p.timeEval );\n        ABC_PRTP( \" MuxSp\", p.timeEvalMuxSp, p.timeEval );\n        ABC_PRTP( \" DsdAn\", p.timeEvalDsdAn, p.timeEval );\n        ABC_PRTP( \" DsdSp\", p.timeEvalDsdSp, p.timeEval );\n        ABC_PRTP( \" Other\", p.timeEval-p.timeEvalMuxAn-p.timeEvalMuxSp-p.timeEvalDsdAn-p.timeEvalDsdSp, p.timeEval );\n        ABC_PRTP( \"Map   \", p.timeMap,   p.timeTotal );\n        ABC_PRTP( \"Other \", p.timeOther, p.timeTotal );\n        ABC_PRTP( \"TOTAL \", p.timeTotal, p.timeTotal );\n    }\n\n    Lpk_ManStop( p );\n    // check the resulting network\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Lpk_Resynthesize: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

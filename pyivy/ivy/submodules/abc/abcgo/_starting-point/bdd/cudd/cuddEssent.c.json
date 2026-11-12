@@ -1,0 +1,1746 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c",
+  "SHA256": "8c591d2b35a66c4efedc2a5b4a3e232e4fb97010d31d62c95eb07bde198e156b",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 24,
+        "ByteOffset": 14612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(ifp, \"%s%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 24,
+        "ByteOffset": 14796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(ifp, \"%s%s | %s%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 24,
+        "ByteOffset": 15161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(ifp, \"%s%d\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 24,
+        "ByteOffset": 15346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(ifp, \"%s%d | %s%d\\n\","
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 24,
+        "ByteOffset": 16126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if t.vars != nil { ABC_FREE(t.vars); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 26,
+        "ByteOffset": 16171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if t.phases != nil { ABC_FREE(t.phases); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 16197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(t);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 603,
+        "Column": 5,
+        "ByteOffset": 23312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!/*__starting_point_inline_macro:cuddIsConstant__*/((F).index == CUDD_CONST_INDEX));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 24,
+        "ByteOffset": 25104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            res.vars = ABC_ALLOC(DdHalfWord,4);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 17,
+        "ByteOffset": 25178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 17,
+        "ByteOffset": 25331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res.vars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 17,
+        "ByteOffset": 25367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 24,
+        "ByteOffset": 27040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            res.vars = ABC_ALLOC(DdHalfWord,4);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 676,
+        "Column": 17,
+        "ByteOffset": 27114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 17,
+        "ByteOffset": 27267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res.vars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 682,
+        "Column": 17,
+        "ByteOffset": 27303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(res);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 717,
+        "Column": 9,
+        "ByteOffset": 28796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(res);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 791,
+        "Column": 25,
+        "ByteOffset": 32281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 806,
+        "Column": 29,
+        "ByteOffset": 32998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 821,
+        "Column": 33,
+        "ByteOffset": 33727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 836,
+        "Column": 29,
+        "ByteOffset": 34352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 851,
+        "Column": 33,
+        "ByteOffset": 35081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 868,
+        "Column": 17,
+        "ByteOffset": 35668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 876,
+        "Column": 17,
+        "ByteOffset": 35910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 895,
+        "Column": 33,
+        "ByteOffset": 36760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 913,
+        "Column": 13,
+        "ByteOffset": 37484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(tclauses);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 920,
+        "Column": 33,
+        "ByteOffset": 37785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    newclause = ABC_ALLOC(TlClause,1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 938,
+        "Column": 13,
+        "ByteOffset": 38509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(eclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 944,
+        "Column": 9,
+        "ByteOffset": 38665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(tclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 949,
+        "Column": 9,
+        "ByteOffset": 38807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(eclauses);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 956,
+        "Column": 11,
+        "ByteOffset": 39061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vcv = ABC_ALLOC(DdHalfWord, 2*(cv+1));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 980,
+        "Column": 13,
+        "ByteOffset": 39886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(iclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 988,
+        "Column": 13,
+        "ByteOffset": 40188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(nclauses);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 992,
+        "Column": 5,
+        "ByteOffset": 40263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(cv == 0);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1000,
+        "Column": 9,
+        "ByteOffset": 40439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(iclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1005,
+        "Column": 9,
+        "ByteOffset": 40581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(nclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1010,
+        "Column": 9,
+        "ByteOffset": 40723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(tclauses);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1015,
+        "Column": 9,
+        "ByteOffset": 40865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(eclauses);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1059,
+        "Column": 11,
+        "ByteOffset": 42522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vcv = ABC_ALLOC(DdHalfWord,i+4);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1089,
+        "Column": 21,
+        "ByteOffset": 43371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if Vcv != nil { ABC_FREE(Vcv); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 1113,
+        "Column": 12,
+        "ByteOffset": 43960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    eset = ABC_ALLOC(DdTlcInfo,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1115,
+        "Column": 17,
+        "ByteOffset": 44036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    eset.vars = ABC_ALLOC(DdHalfWord,2);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1117,
+        "Column": 9,
+        "ByteOffset": 44095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(eset);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1261,
+        "Column": 14,
+        "ByteOffset": 49010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vector = ABC_ALLOC(BitVector, allocSize);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1264,
+        "Column": 12,
+        "ByteOffset": 49125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) memset(vector, 0, allocSize * sizeof(BitVector));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1292,
+        "Column": 12,
+        "ByteOffset": 49982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) memset(vector, 0, allocSize * sizeof(BitVector));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1310,
+        "Column": 5,
+        "ByteOffset": 50410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vector);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 1377,
+        "Column": 27,
+        "ByteOffset": 52129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var res *DdTlcInfo  = ABC_ALLOC(DdTlcInfo,1);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 86,
+        "Column": 1,
+        "ByteOffset": 3335
+      },
+      "Directive": "#if SIZEOF_LONG == 8"
+    },
+    {
+      "Location": {
+        "Line": 149,
+        "Column": 1,
+        "ByteOffset": 5966
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_FindEssential",
+      "Start": 8907,
+      "End": 9119,
+      "BodyStart": 8968,
+      "Original": "DdNode *\nCudd_FindEssential(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = ddFindEssentialRecur(dd,f);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_FindEssential(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = ddFindEssentialRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddIsVarEssential",
+      "Start": 9665,
+      "End": 9942,
+      "BodyStart": 9755,
+      "Original": "int\nCudd_bddIsVarEssential(\n  DdManager * manager,\n  DdNode * f,\n  int  id,\n  int  phase)\n{\n    DdNode      *var;\n    int         res;\n\n    var = Cudd_bddIthVar(manager, id);\n\n    var = Cudd_NotCond(var,phase == 0);\n\n    res = Cudd_bddLeq(manager, f, var);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_bddIsVarEssential(manager *DdManager, f *DdNode, id int32, phase int32) int32 {\n    var var *DdNode;\n    var res int32;\n\n    var = Cudd_bddIthVar(manager, id);\n\n    // inlining of macro Cudd_NotCond\n    var = ((DdNode *)((ptrint)(var) ^ (phase == 0)));\n\n    res = Cudd_bddLeq(manager, f, var);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_FindTwoLiteralClauses",
+      "Start": 10754,
+      "End": 12319,
+      "BodyStart": 10826,
+      "Original": "DdTlcInfo *\nCudd_FindTwoLiteralClauses(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdTlcInfo *res;\n    st__table *table;\n    st__generator *gen;\n    DdTlcInfo *tlc;\n    DdNode *node;\n    int size = dd-\u003esize;\n\n    if (Cudd_IsConstant(f)) {\n        res = emptyClauseSet();\n        return(res);\n    }\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if (table == NULL) return(NULL);\n    Tolv = bitVectorAlloc(size);\n    if (Tolv == NULL) {\n        st__free_table(table);\n        return(NULL);\n    }\n    Tolp = bitVectorAlloc(size);\n    if (Tolp == NULL) {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        return(NULL);\n    }\n    Eolv = bitVectorAlloc(size);\n    if (Eolv == NULL) {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        return(NULL);\n    }\n    Eolp = bitVectorAlloc(size);\n    if (Eolp == NULL) {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        bitVectorFree(Eolv);\n        return(NULL);\n    }\n\n    res = ddFindTwoLiteralClausesRecur(dd,f,table);\n    /* Dispose of table contents and free table. */\n    st__foreach_item(table, gen, (const char **)\u0026node, (char **)\u0026tlc) {\n        if (node != f) {\n            Cudd_tlcInfoFree(tlc);\n        }\n    }\n    st__free_table(table);\n    bitVectorFree(Tolv);\n    bitVectorFree(Tolp);\n    bitVectorFree(Eolv);\n    bitVectorFree(Eolp);\n\n    if (res != NULL) {\n        int i;\n        for (i = 0; !sentinelp(res-\u003evars[i], res-\u003evars[i+1]); i += 2);\n        res-\u003ecnt = i \u003e\u003e 1;\n    }\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_FindTwoLiteralClauses(dd *DdManager, f *DdNode) *DdTlcInfo {\n    var res *DdTlcInfo;\n    var table *st__table;\n    var gen *st__generator;\n    var tlc *DdTlcInfo;\n    var node *DdNode;\n    var size int32  = dd.size;\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        res = emptyClauseSet();\n        return(res);\n    }\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(nil); }\n    Tolv = bitVectorAlloc(size);\n    if Tolv == nil {\n        st__free_table(table);\n        return(nil);\n    }\n    Tolp = bitVectorAlloc(size);\n    if Tolp == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        return(nil);\n    }\n    Eolv = bitVectorAlloc(size);\n    if Eolv == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        return(nil);\n    }\n    Eolp = bitVectorAlloc(size);\n    if Eolp == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        bitVectorFree(Eolv);\n        return(nil);\n    }\n\n    res = ddFindTwoLiteralClausesRecur(dd,f,table);\n    /* Dispose of table contents and free table. */\n    // inlining of macro st__foreach_item\n    for gen= st__init_gen(table); st__gen(gen,(char **)\u0026node,(char **)\u0026tlc) || ( st__free_gen(gen),0); {\n        if node != f {\n            Cudd_tlcInfoFree(tlc);\n        }\n    }\n    st__free_table(table);\n    bitVectorFree(Tolv);\n    bitVectorFree(Tolp);\n    bitVectorFree(Eolv);\n    bitVectorFree(Eolp);\n\n    if res != nil {\n        var i int32;\n        for i = 0; !(sentinelp(res.vars[i], res.vars[i+1]) != 0); i += 2 {}\n        res.cnt = i \u003e\u003e 1;\n    }\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_ReadIthClause",
+      "Start": 12875,
+      "End": 13329,
+      "BodyStart": 12997,
+      "Original": "int\nCudd_ReadIthClause(\n  DdTlcInfo * tlc,\n  int i,\n  DdHalfWord *var1,\n  DdHalfWord *var2,\n  int *phase1,\n  int *phase2)\n{\n    if (tlc == NULL) return(0);\n    if (tlc-\u003evars == NULL || tlc-\u003ephases == NULL) return(0);\n    if (i \u003c 0 || (unsigned) i \u003e= tlc-\u003ecnt) return(0);\n    *var1 = tlc-\u003evars[2*i];\n    *var2 = tlc-\u003evars[2*i+1];\n    *phase1 = (int) bitVectorRead(tlc-\u003ephases, 2*i);\n    *phase2 = (int) bitVectorRead(tlc-\u003ephases, 2*i+1);\n    return(1);\n\n}",
+      "Draft": "func Cudd_ReadIthClause(tlc *DdTlcInfo, i int32, var1 *DdHalfWord, var2 *DdHalfWord, phase1 *int32, phase2 *int32) int32 {\n    if tlc == nil { return(0); }\n    if tlc.vars == nil || tlc.phases == nil { return(0); }\n    if i \u003c 0 || uint32( i) \u003e= tlc.cnt { return(0); }\n    *var1 = tlc.vars[2*i];\n    *var2 = tlc.vars[2*i+1];\n    *phase1 = int32( bitVectorRead(tlc.phases, 2*i));\n    *phase2 = int32( bitVectorRead(tlc.phases, 2*i+1));\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_PrintTwoLiteralClauses",
+      "Start": 13831,
+      "End": 15392,
+      "BodyStart": 13924,
+      "Original": "int\nCudd_PrintTwoLiteralClauses(\n  DdManager * dd,\n  DdNode * f,\n  char **names,\n  FILE *fp)\n{\n    DdHalfWord *vars;\n    BitVector *phases;\n    int i;\n    DdTlcInfo *res = Cudd_FindTwoLiteralClauses(dd, f);\n    FILE *ifp = fp == NULL ? dd-\u003eout : fp;\n\n    if (res == NULL) return(0);\n    vars = res-\u003evars;\n    phases = res-\u003ephases;\n    for (i = 0; !sentinelp(vars[i], vars[i+1]); i += 2) {\n        if (names != NULL) {\n            if (vars[i+1] == CUDD_MAXINDEX) {\n                (void) fprintf(ifp, \"%s%s\\n\",\n                               bitVectorRead(phases, i) ? \"~\" : \" \",\n                               names[vars[i]]);\n            } else {\n                (void) fprintf(ifp, \"%s%s | %s%s\\n\",\n                               bitVectorRead(phases, i) ? \"~\" : \" \",\n                               names[vars[i]],\n                               bitVectorRead(phases, i+1) ? \"~\" : \" \",\n                               names[vars[i+1]]);\n            }\n        } else {\n            if (vars[i+1] == CUDD_MAXINDEX) {\n                (void) fprintf(ifp, \"%s%d\\n\",\n                               bitVectorRead(phases, i) ? \"~\" : \" \",\n                               (int) vars[i]);\n            } else {\n                (void) fprintf(ifp, \"%s%d | %s%d\\n\",\n                               bitVectorRead(phases, i) ? \"~\" : \" \",\n                               (int) vars[i],\n                               bitVectorRead(phases, i+1) ? \"~\" : \" \",\n                               (int) vars[i+1]);\n            }\n        }\n    }\n    Cudd_tlcInfoFree(res);\n\n    return(1);\n\n}",
+      "Draft": "func Cudd_PrintTwoLiteralClauses(dd *DdManager, f *DdNode, names *string, fp *os.File) int32 {\n    var vars *DdHalfWord;\n    var phases *BitVector;\n    var i int32;\n    var res *DdTlcInfo  = Cudd_FindTwoLiteralClauses(dd, f);\n    var ifp *os.File  = fp == nil ? dd.out : fp;\n\n    if res == nil { return(0); }\n    vars = res.vars;\n    phases = res.phases;\n    for i = 0; !(sentinelp(vars[i], vars[i+1]) != 0); i += 2 {\n        if names != nil {\n            if vars[i+1] == CUDD_MAXINDEX {\n                (void) fmt.Fprintf(ifp, \"%s%s\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", names[vars[i]]);\n            } else {\n                (void) fmt.Fprintf(ifp, \"%s%s | %s%s\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", names[vars[i]], bitVectorRead(phases, i+1) ? \"~\" : \" \", names[vars[i+1]]);\n            }\n        } else {\n            if vars[i+1] == CUDD_MAXINDEX {\n                (void) fmt.Fprintf(ifp, \"%s%d\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", int32( vars[i]));\n            } else {\n                (void) fmt.Fprintf(ifp, \"%s%d | %s%d\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", int32( vars[i]), bitVectorRead(phases, i+1) ? \"~\" : \" \", int32( vars[i+1]));\n            }\n        }\n    }\n    Cudd_tlcInfoFree(res);\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_tlcInfoFree",
+      "Start": 15767,
+      "End": 15920,
+      "BodyStart": 15807,
+      "Original": "void\nCudd_tlcInfoFree(\n  DdTlcInfo * t)\n{\n    if (t-\u003evars != NULL) ABC_FREE(t-\u003evars);\n    if (t-\u003ephases != NULL) ABC_FREE(t-\u003ephases);\n    ABC_FREE(t);\n\n}",
+      "Draft": "func Cudd_tlcInfoFree(t *DdTlcInfo) {\n    if t.vars != nil { ABC_FREE(t.vars); }\n    if t.phases != nil { ABC_FREE(t.phases); }\n    ABC_FREE(t);\n\n}"
+    },
+    {
+      "Name": "ddFindEssentialRecur",
+      "Start": 16827,
+      "End": 20552,
+      "BodyStart": 16897,
+      "Original": "static DdNode *\nddFindEssentialRecur(\n  DdManager * dd,\n  DdNode * f)\n{\n    DdNode      *T, *E, *F;\n    DdNode      *essT, *essE, *res;\n    int         index;\n    DdNode      *one, *lzero, *azero;\n\n    one = DD_ONE(dd);\n    F = Cudd_Regular(f);\n    /* If f is constant the set of essential variables is empty. */\n    if (cuddIsConstant(F)) return(one);\n\n    res = cuddCacheLookup1(dd,Cudd_FindEssential,f);\n    if (res != NULL) {\n        return(res);\n    }\n\n    lzero = Cudd_Not(one);\n    azero = DD_ZERO(dd);\n    /* Find cofactors: here f is non-constant. */\n    T = cuddT(F);\n    E = cuddE(F);\n    if (Cudd_IsComplement(f)) {\n        T = Cudd_Not(T); E = Cudd_Not(E);\n    }\n\n    index = F-\u003eindex;\n    if (Cudd_IsConstant(T) \u0026\u0026 T != lzero \u0026\u0026 T != azero) {\n        /* if E is zero, index is essential, otherwise there are no\n        ** essentials, because index is not essential and no other variable\n        ** can be, since setting index = 1 makes the function constant and\n        ** different from 0.\n        */\n        if (E == lzero || E == azero) {\n            res = dd-\u003evars[index];\n        } else {\n            res = one;\n        }\n    } else if (T == lzero || T == azero) {\n        if (Cudd_IsConstant(E)) { /* E cannot be zero here */\n            res = Cudd_Not(dd-\u003evars[index]);\n        } else { /* E == non-constant */\n            /* find essentials in the else branch */\n            essE = ddFindEssentialRecur(dd,E);\n            if (essE == NULL) {\n                return(NULL);\n            }\n            cuddRef(essE);\n\n            /* add index to the set with negative phase */\n            res = cuddUniqueInter(dd,index,one,Cudd_Not(essE));\n            if (res == NULL) {\n                Cudd_RecursiveDeref(dd,essE);\n                return(NULL);\n            }\n            res = Cudd_Not(res);\n            cuddDeref(essE);\n        }\n    } else { /* T == non-const */\n        if (E == lzero || E == azero) {\n            /* find essentials in the then branch */\n            essT = ddFindEssentialRecur(dd,T);\n            if (essT == NULL) {\n                return(NULL);\n            }\n            cuddRef(essT);\n\n            /* add index to the set with positive phase */\n            /* use And because essT may be complemented */\n            res = cuddBddAndRecur(dd,dd-\u003evars[index],essT);\n            if (res == NULL) {\n                Cudd_RecursiveDeref(dd,essT);\n                return(NULL);\n            }\n            cuddDeref(essT);\n        } else if (!Cudd_IsConstant(E)) {\n            /* if E is a non-zero constant there are no essentials\n            ** because T is non-constant.\n            */\n            essT = ddFindEssentialRecur(dd,T);\n            if (essT == NULL) {\n                return(NULL);\n            }\n            if (essT == one) {\n                res = one;\n            } else {\n                cuddRef(essT);\n                essE = ddFindEssentialRecur(dd,E);\n                if (essE == NULL) {\n                    Cudd_RecursiveDeref(dd,essT);\n                    return(NULL);\n                }\n                cuddRef(essE);\n\n                /* res = intersection(essT, essE) */\n                res = cuddBddLiteralSetIntersectionRecur(dd,essT,essE);\n                if (res == NULL) {\n                    Cudd_RecursiveDeref(dd,essT);\n                    Cudd_RecursiveDeref(dd,essE);\n                    return(NULL);\n                }\n                cuddRef(res);\n                Cudd_RecursiveDeref(dd,essT);\n                Cudd_RecursiveDeref(dd,essE);\n                cuddDeref(res);\n            }\n        } else {        /* E is a non-zero constant */\n            res = one;\n        }\n    }\n\n    cuddCacheInsert1(dd,Cudd_FindEssential, f, res);\n    return(res);\n\n}",
+      "Draft": "func ddFindEssentialRecur(dd *DdManager, f *DdNode) *DdNode {\n    var T, E, F *DdNode;\n    var essT, essE, res *DdNode;\n    var index int32;\n    var one, lzero, azero *DdNode;\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    /* If f is constant the set of essential variables is empty. */\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(one); }\n\n    res = cuddCacheLookup1(dd,Cudd_FindEssential,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro Cudd_Not\n    lzero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ZERO\n    azero = ((dd).zero);\n    /* Find cofactors: here f is non-constant. */\n    // inlining of macro cuddT\n    T = ((F).type.kids.T);\n    // inlining of macro cuddE\n    E = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));\n    }\n\n    index = F.index;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(T) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 T != lzero \u0026\u0026 T != azero {\n        /* if E is zero, index is essential, otherwise there are no\n        ** essentials, because index is not essential and no other variable\n        ** can be, since setting index = 1 makes the function constant and\n        ** different from 0.\n        */\n        if E == lzero || E == azero {\n            res = dd.vars[index];\n        } else {\n            res = one;\n        }\n    } else if T == lzero || T == azero {\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX { /* E cannot be zero here */\n            // inlining of macro Cudd_Not\n            res = ((DdNode *)((ptrint)(dd.vars[index]) ^ 01));\n        } else { /* E == non-constant */\n            /* find essentials in the else branch */\n            essE = ddFindEssentialRecur(dd,E);\n            if essE == nil {\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(essE).ref);\n\n            /* add index to the set with negative phase */\n            // inlining of macro Cudd_Not\n            res = cuddUniqueInter(dd,index,one,((DdNode *)((ptrint)(essE) ^ 01)));\n            if res == nil {\n                Cudd_RecursiveDeref(dd,essE);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            res = ((DdNode *)((ptrint)(res) ^ 01));\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(essE).ref);\n        }\n    } else { /* T == non-const */\n        if E == lzero || E == azero {\n            /* find essentials in the then branch */\n            essT = ddFindEssentialRecur(dd,T);\n            if essT == nil {\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(essT).ref);\n\n            /* add index to the set with positive phase */\n            /* use And because essT may be complemented */\n            res = cuddBddAndRecur(dd,dd.vars[index],essT);\n            if res == nil {\n                Cudd_RecursiveDeref(dd,essT);\n                return(nil);\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(essT).ref);\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        } else if !((((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* if E is a non-zero constant there are no essentials\n            ** because T is non-constant.\n            */\n            essT = ddFindEssentialRecur(dd,T);\n            if essT == nil {\n                return(nil);\n            }\n            if essT == one {\n                res = one;\n            } else {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(essT).ref);\n                essE = ddFindEssentialRecur(dd,E);\n                if essE == nil {\n                    Cudd_RecursiveDeref(dd,essT);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(essE).ref);\n\n                /* res = intersection(essT, essE) */\n                res = cuddBddLiteralSetIntersectionRecur(dd,essT,essE);\n                if res == nil {\n                    Cudd_RecursiveDeref(dd,essT);\n                    Cudd_RecursiveDeref(dd,essE);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(res).ref);\n                Cudd_RecursiveDeref(dd,essT);\n                Cudd_RecursiveDeref(dd,essE);\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(res).ref);\n            }\n        } else {        /* E is a non-zero constant */\n            res = one;\n        }\n    }\n\n    cuddCacheInsert1(dd,Cudd_FindEssential, f, res);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "ddFindTwoLiteralClausesRecur",
+      "Start": 21092,
+      "End": 25894,
+      "BodyStart": 21193,
+      "Original": "static DdTlcInfo *\nddFindTwoLiteralClausesRecur(\n  DdManager * dd,\n  DdNode * f,\n  st__table *table)\n{\n    DdNode *T, *E, *F;\n    DdNode *one, *lzero, *azero;\n    DdTlcInfo *res, *Tres, *Eres;\n    DdHalfWord index;\n\n    F = Cudd_Regular(f);\n\n    assert(!cuddIsConstant(F));\n\n    /* Check computed table.  Separate entries are necessary for\n    ** a node and its complement.  We should update the counter here. */\n    if ( st__lookup(table, (const char *)f, (char **)\u0026res)) {\n        return(res);\n    }\n\n    /* Easy access to the constants for BDDs and ADDs. */\n    one = DD_ONE(dd);\n    lzero = Cudd_Not(one);\n    azero = DD_ZERO(dd);\n\n    /* Find cofactors and variable labeling the top node. */\n    T = cuddT(F); E = cuddE(F);\n    if (Cudd_IsComplement(f)) {\n        T = Cudd_Not(T); E = Cudd_Not(E);\n    }\n    index = F-\u003eindex;\n\n    if (Cudd_IsConstant(T) \u0026\u0026 T != lzero \u0026\u0026 T != azero) {\n        /* T is a non-zero constant.  If E is zero, then this node's index\n        ** is a one-literal clause.  Otherwise, if E is a non-zero\n        ** constant, there are no clauses for this node.  Finally,\n        ** if E is not constant, we recursively compute its clauses, and then\n        ** merge using the empty set for T. */\n        if (E == lzero || E == azero) {\n            /* Create the clause (index + 0). */\n            res = tlcInfoAlloc();\n            if (res == NULL) return(NULL);\n            res-\u003evars = ABC_ALLOC(DdHalfWord,4);\n            if (res-\u003evars == NULL) {\n                ABC_FREE(res);\n                return(NULL);\n            }\n            res-\u003ephases = bitVectorAlloc(2);\n            if (res-\u003ephases == NULL) {\n                ABC_FREE(res-\u003evars);\n                ABC_FREE(res);\n                return(NULL);\n            }\n            res-\u003evars[0] = index;\n            res-\u003evars[1] = CUDD_MAXINDEX;\n            res-\u003evars[2] = 0;\n            res-\u003evars[3] = 0;\n            bitVectorSet(res-\u003ephases, 0, 0); /* positive phase */\n            bitVectorSet(res-\u003ephases, 1, 1); /* negative phase */\n        } else if (Cudd_IsConstant(E)) {\n            /* If E is a non-zero constant, no clauses. */\n            res = emptyClauseSet();\n        } else {\n            /* E is non-constant */\n            Tres = emptyClauseSet();\n            if (Tres == NULL) return(NULL);\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if (Eres == NULL) {\n                Cudd_tlcInfoFree(Tres);\n                return(NULL);\n            }\n            res = computeClauses(Tres, Eres, index, dd-\u003esize);\n            Cudd_tlcInfoFree(Tres);\n        }\n    } else if (T == lzero || T == azero) {\n        /* T is zero.  If E is a non-zero constant, then the\n        ** complement of this node's index is a one-literal clause.\n        ** Otherwise, if E is not constant, we recursively compute its\n        ** clauses, and then merge using the universal set for T. */\n        if (Cudd_IsConstant(E)) { /* E cannot be zero here */\n            /* Create the clause (!index + 0). */\n            res = tlcInfoAlloc();\n            if (res == NULL) return(NULL);\n            res-\u003evars = ABC_ALLOC(DdHalfWord,4);\n            if (res-\u003evars == NULL) {\n                ABC_FREE(res);\n                return(NULL);\n            }\n            res-\u003ephases = bitVectorAlloc(2);\n            if (res-\u003ephases == NULL) {\n                ABC_FREE(res-\u003evars);\n                ABC_FREE(res);\n                return(NULL);\n            }\n            res-\u003evars[0] = index;\n            res-\u003evars[1] = CUDD_MAXINDEX;\n            res-\u003evars[2] = 0;\n            res-\u003evars[3] = 0;\n            bitVectorSet(res-\u003ephases, 0, 1); /* negative phase */\n            bitVectorSet(res-\u003ephases, 1, 1); /* negative phase */\n        } else { /* E == non-constant */\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if (Eres == NULL) return(NULL);\n            res = computeClausesWithUniverse(Eres, index, 1);\n        }\n    } else { /* T == non-const */\n        Tres = ddFindTwoLiteralClausesRecur(dd, T, table);\n        if (Tres == NULL) return(NULL);\n        if (Cudd_IsConstant(E)) {\n            if (E == lzero || E == azero) {\n                res = computeClausesWithUniverse(Tres, index, 0);\n            } else {\n                Eres = emptyClauseSet();\n                if (Eres == NULL) return(NULL);\n                res = computeClauses(Tres, Eres, index, dd-\u003esize);\n                Cudd_tlcInfoFree(Eres);\n            }\n        } else {\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if (Eres == NULL) return(NULL);\n            res = computeClauses(Tres, Eres, index, dd-\u003esize);\n        }\n    }\n\n    /* Cache results. */\n    if ( st__add_direct(table, (char *)f, (char *)res) == st__OUT_OF_MEM) {\n        ABC_FREE(res);\n        return(NULL);\n    }\n    return(res);\n\n}",
+      "Draft": "func ddFindTwoLiteralClausesRecur(dd *DdManager, f *DdNode, table *st__table) *DdTlcInfo {\n    var T, E, F *DdNode;\n    var one, lzero, azero *DdNode;\n    var res, Tres, Eres *DdTlcInfo;\n    var index DdHalfWord;\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    assert(!((F).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:cuddIsConstant__*/((F).index == CUDD_CONST_INDEX)\");\n\n    /* Check computed table.  Separate entries are necessary for\n    ** a node and its complement.  We should update the counter here. */\n    if st__lookup(table, (char *)f, (char **)\u0026res) {\n        return(res);\n    }\n\n    /* Easy access to the constants for BDDs and ADDs. */\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro Cudd_Not\n    lzero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ZERO\n    azero = ((dd).zero);\n\n    /* Find cofactors and variable labeling the top node. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    T = ((F).type.kids.T); E = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));\n    }\n    index = F.index;\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(T) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 T != lzero \u0026\u0026 T != azero {\n        /* T is a non-zero constant.  If E is zero, then this node's index\n        ** is a one-literal clause.  Otherwise, if E is a non-zero\n        ** constant, there are no clauses for this node.  Finally,\n        ** if E is not constant, we recursively compute its clauses, and then\n        ** merge using the empty set for T. */\n        if E == lzero || E == azero {\n            /* Create the clause (index + 0). */\n            res = tlcInfoAlloc();\n            if res == nil { return(nil); }\n            res.vars = ABC_ALLOC(DdHalfWord,4);\n            if res.vars == nil {\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.phases = bitVectorAlloc(2);\n            if res.phases == nil {\n                ABC_FREE(res.vars);\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.vars[0] = index;\n            res.vars[1] = CUDD_MAXINDEX;\n            res.vars[2] = 0;\n            res.vars[3] = 0;\n            bitVectorSet(res.phases, 0, 0); /* positive phase */\n            bitVectorSet(res.phases, 1, 1); /* negative phase */\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        } else if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            /* If E is a non-zero constant, no clauses. */\n            res = emptyClauseSet();\n        } else {\n            /* E is non-constant */\n            Tres = emptyClauseSet();\n            if Tres == nil { return(nil); }\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil {\n                Cudd_tlcInfoFree(Tres);\n                return(nil);\n            }\n            res = computeClauses(Tres, Eres, index, dd.size);\n            Cudd_tlcInfoFree(Tres);\n        }\n    } else if T == lzero || T == azero {\n        /* T is zero.  If E is a non-zero constant, then the\n        ** complement of this node's index is a one-literal clause.\n        ** Otherwise, if E is not constant, we recursively compute its\n        ** clauses, and then merge using the universal set for T. */\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX { /* E cannot be zero here */\n            /* Create the clause (!index + 0). */\n            res = tlcInfoAlloc();\n            if res == nil { return(nil); }\n            res.vars = ABC_ALLOC(DdHalfWord,4);\n            if res.vars == nil {\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.phases = bitVectorAlloc(2);\n            if res.phases == nil {\n                ABC_FREE(res.vars);\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.vars[0] = index;\n            res.vars[1] = CUDD_MAXINDEX;\n            res.vars[2] = 0;\n            res.vars[3] = 0;\n            bitVectorSet(res.phases, 0, 1); /* negative phase */\n            bitVectorSet(res.phases, 1, 1); /* negative phase */\n        } else { /* E == non-constant */\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil { return(nil); }\n            res = computeClausesWithUniverse(Eres, index, 1);\n        }\n    } else { /* T == non-const */\n        Tres = ddFindTwoLiteralClausesRecur(dd, T, table);\n        if Tres == nil { return(nil); }\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            if E == lzero || E == azero {\n                res = computeClausesWithUniverse(Tres, index, 0);\n            } else {\n                Eres = emptyClauseSet();\n                if Eres == nil { return(nil); }\n                res = computeClauses(Tres, Eres, index, dd.size);\n                Cudd_tlcInfoFree(Eres);\n            }\n        } else {\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil { return(nil); }\n            res = computeClauses(Tres, Eres, index, dd.size);\n        }\n    }\n\n    /* Cache results. */\n    if st__add_direct(table, (char *)f, (char *)res) == st__OUT_OF_MEM {\n        ABC_FREE(res);\n        return(nil);\n    }\n    return(res);\n\n}"
+    },
+    {
+      "Name": "computeClauses",
+      "Start": 26428,
+      "End": 38041,
+      "BodyStart": 26683,
+      "Original": "static DdTlcInfo *\ncomputeClauses(\n  DdTlcInfo *Tres /* list of clauses for T child */,\n  DdTlcInfo *Eres /* list of clauses for E child */,\n  DdHalfWord label /* variable labeling the current node */,\n  int size /* number of variables in the manager */)\n{\n    DdHalfWord *Tcv = Tres-\u003evars; /* variables of clauses for the T child */\n    BitVector *Tcp = Tres-\u003ephases; /* phases of clauses for the T child */\n    DdHalfWord *Ecv = Eres-\u003evars; /* variables of clauses for the E child */\n    BitVector *Ecp = Eres-\u003ephases; /* phases of clauses for the E child */\n    DdHalfWord *Vcv = NULL; /* pointer to variables of the clauses for v */\n    BitVector *Vcp = NULL; /* pointer to phases of the clauses for v */\n    DdTlcInfo *res = NULL; /* the set of clauses to be returned */\n    int pt = 0; /* index in the list of clauses of T */\n    int pe = 0; /* index in the list of clauses of E */\n    int cv = 0; /* counter of the clauses for this node */\n    TlClause *iclauses = NULL; /* list of inherited clauses */\n    TlClause *tclauses = NULL; /* list of 1-literal clauses of T */\n    TlClause *eclauses = NULL; /* list of 1-literal clauses of E */\n    TlClause *nclauses = NULL; /* list of new (non-inherited) clauses */\n    TlClause *lnclause = NULL; /* pointer to last new clause */\n    TlClause *newclause; /* temporary pointer to new clauses */\n\n    /* Initialize sets of one-literal clauses.  The one-literal clauses\n    ** are stored redundantly.  These sets allow constant-time lookup, which\n    ** we need when we check for implication of a two-literal clause by a\n    ** one-literal clause.  The linked lists allow fast sequential\n    ** processing. */\n    bitVectorClear(Tolv, size);\n    bitVectorClear(Tolp, size);\n    bitVectorClear(Eolv, size);\n    bitVectorClear(Eolp, size);\n\n    /* Initialize result structure. */\n    res = tlcInfoAlloc();\n    if (res == NULL) goto cleanup;\n\n    /* Scan the two input list.  Extract inherited two-literal clauses\n    ** and set aside one-literal clauses from each list.  The incoming lists\n    ** are sorted in the order defined by beforep.  The three linked list\n    ** produced by this loop are sorted in the reverse order because we\n    ** always append to the front of the lists.\n    ** The inherited clauses are those clauses (both one- and two-literal)\n    ** that are common to both children; and the two-literal clauses of\n    ** one child that are implied by a one-literal clause of the other\n    ** child. */\n    while (!sentinelp(Tcv[pt], Tcv[pt+1]) || !sentinelp(Ecv[pe], Ecv[pe+1])) {\n        if (equalp(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1))) {\n            /* Add clause to inherited list. */\n            newclause = ABC_ALLOC(TlClause,1);\n            if (newclause == NULL) goto cleanup;\n            newclause-\u003ev1 = Tcv[pt];\n            newclause-\u003ev2 = Tcv[pt+1];\n            newclause-\u003ep1 = bitVectorRead(Tcp, pt);\n            newclause-\u003ep2 = bitVectorRead(Tcp, pt+1);\n            newclause-\u003enext = iclauses;\n            iclauses = newclause;\n            pt += 2; pe += 2; cv++;\n        } else if (beforep(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1))) {\n            if (oneliteralp(Tcv[pt+1])) {\n                /* Add this one-literal clause to the T set. */\n                newclause = ABC_ALLOC(TlClause,1);\n                if (newclause == NULL) goto cleanup;\n                newclause-\u003ev1 = Tcv[pt];\n                newclause-\u003ev2 = CUDD_MAXINDEX;\n                newclause-\u003ep1 = bitVectorRead(Tcp, pt);\n                newclause-\u003ep2 = 1;\n                newclause-\u003enext = tclauses;\n                tclauses = newclause;\n                bitVectorSet(Tolv, Tcv[pt], 1);\n                bitVectorSet(Tolp, Tcv[pt], bitVectorRead(Tcp, pt));\n            } else {\n                if (impliedp(Tcv[pt], bitVectorRead(Tcp, pt),\n                             Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                             Eolv, Eolp)) {\n                    /* Add clause to inherited list. */\n                    newclause = ABC_ALLOC(TlClause,1);\n                    if (newclause == NULL) goto cleanup;\n                    newclause-\u003ev1 = Tcv[pt];\n                    newclause-\u003ev2 = Tcv[pt+1];\n                    newclause-\u003ep1 = bitVectorRead(Tcp, pt);\n                    newclause-\u003ep2 = bitVectorRead(Tcp, pt+1);\n                    newclause-\u003enext = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pt += 2;\n        } else { /* !beforep() */\n            if (oneliteralp(Ecv[pe+1])) {\n                /* Add this one-literal clause to the E set. */\n                newclause = ABC_ALLOC(TlClause,1);\n                if (newclause == NULL) goto cleanup;\n                newclause-\u003ev1 = Ecv[pe];\n                newclause-\u003ev2 = CUDD_MAXINDEX;\n                newclause-\u003ep1 = bitVectorRead(Ecp, pe);\n                newclause-\u003ep2 = 1;\n                newclause-\u003enext = eclauses;\n                eclauses = newclause;\n                bitVectorSet(Eolv, Ecv[pe], 1);\n                bitVectorSet(Eolp, Ecv[pe], bitVectorRead(Ecp, pe));\n            } else {\n                if (impliedp(Ecv[pe], bitVectorRead(Ecp, pe),\n                             Ecv[pe+1], bitVectorRead(Ecp, pe+1),\n                             Tolv, Tolp)) {\n                    /* Add clause to inherited list. */\n                    newclause = ABC_ALLOC(TlClause,1);\n                    if (newclause == NULL) goto cleanup;\n                    newclause-\u003ev1 = Ecv[pe];\n                    newclause-\u003ev2 = Ecv[pe+1];\n                    newclause-\u003ep1 = bitVectorRead(Ecp, pe);\n                    newclause-\u003ep2 = bitVectorRead(Ecp, pe+1);\n                    newclause-\u003enext = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pe += 2;\n        }\n    }\n\n    /* Add one-literal clauses for the label variable to the front of\n    ** the two lists. */\n    newclause = ABC_ALLOC(TlClause,1);\n    if (newclause == NULL) goto cleanup;\n    newclause-\u003ev1 = label;\n    newclause-\u003ev2 = CUDD_MAXINDEX;\n    newclause-\u003ep1 = 0;\n    newclause-\u003ep2 = 1;\n    newclause-\u003enext = tclauses;\n    tclauses = newclause;\n    newclause = ABC_ALLOC(TlClause,1);\n    if (newclause == NULL) goto cleanup;\n    newclause-\u003ev1 = label;\n    newclause-\u003ev2 = CUDD_MAXINDEX;\n    newclause-\u003ep1 = 1;\n    newclause-\u003ep2 = 1;\n    newclause-\u003enext = eclauses;\n    eclauses = newclause;\n\n    /* Produce the non-inherited clauses.  We preserve the \"reverse\"\n    ** order of the two input lists by appending to the end of the\n    ** list.  In this way, iclauses and nclauses are consistent. */\n    while (tclauses != NULL \u0026\u0026 eclauses != NULL) {\n        if (beforep(eclauses-\u003ev1, eclauses-\u003ep1, eclauses-\u003ev2, eclauses-\u003ep2,\n                    tclauses-\u003ev1, tclauses-\u003ep1, tclauses-\u003ev2, tclauses-\u003ep2)) {\n            TlClause *nextclause = tclauses-\u003enext;\n            TlClause *otherclauses = eclauses;\n            while (otherclauses != NULL) {\n                if (tclauses-\u003ev1 != otherclauses-\u003ev1) {\n                    newclause = ABC_ALLOC(TlClause,1);\n                    if (newclause == NULL) goto cleanup;\n                    newclause-\u003ev1 = tclauses-\u003ev1;\n                    newclause-\u003ev2 = otherclauses-\u003ev1;\n                    newclause-\u003ep1 = tclauses-\u003ep1;\n                    newclause-\u003ep2 = otherclauses-\u003ep1;\n                    newclause-\u003enext = NULL;\n                    if (nclauses == NULL) {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause-\u003enext = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses-\u003enext;\n            }\n            ABC_FREE(tclauses);\n            tclauses = nextclause;\n        } else {\n            TlClause *nextclause = eclauses-\u003enext;\n            TlClause *otherclauses = tclauses;\n            while (otherclauses != NULL) {\n                if (eclauses-\u003ev1 != otherclauses-\u003ev1) {\n                    newclause = ABC_ALLOC(TlClause,1);\n                    if (newclause == NULL) goto cleanup;\n                    newclause-\u003ev1 = eclauses-\u003ev1;\n                    newclause-\u003ev2 = otherclauses-\u003ev1;\n                    newclause-\u003ep1 = eclauses-\u003ep1;\n                    newclause-\u003ep2 = otherclauses-\u003ep1;\n                    newclause-\u003enext = NULL;\n                    if (nclauses == NULL) {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause-\u003enext = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses-\u003enext;\n            }\n            ABC_FREE(eclauses);\n            eclauses = nextclause;\n        }\n    }\n    while (tclauses != NULL) {\n        TlClause *nextclause = tclauses-\u003enext;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    while (eclauses != NULL) {\n        TlClause *nextclause = eclauses-\u003enext;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    /* Merge inherited and non-inherited clauses.  Now that we know the\n    ** total number, we allocate the arrays, and we fill them bottom-up\n    ** to restore the proper ordering. */\n    Vcv = ABC_ALLOC(DdHalfWord, 2*(cv+1));\n    if (Vcv == NULL) goto cleanup;\n    if (cv \u003e 0) {\n        Vcp = bitVectorAlloc(2*cv);\n        if (Vcp == NULL) goto cleanup;\n    } else {\n        Vcp = NULL;\n    }\n    res-\u003evars = Vcv;\n    res-\u003ephases = Vcp;\n    /* Add sentinel. */\n    Vcv[2*cv] = 0;\n    Vcv[2*cv+1] = 0;\n    while (iclauses != NULL || nclauses != NULL) {\n        TlClause *nextclause;\n        cv--;\n        if (nclauses == NULL || (iclauses != NULL \u0026\u0026\n            beforep(nclauses-\u003ev1, nclauses-\u003ep1, nclauses-\u003ev2, nclauses-\u003ep2,\n                    iclauses-\u003ev1, iclauses-\u003ep1, iclauses-\u003ev2, iclauses-\u003ep2))) {\n            Vcv[2*cv] = iclauses-\u003ev1;\n            Vcv[2*cv+1] = iclauses-\u003ev2;\n            bitVectorSet(Vcp, 2*cv, iclauses-\u003ep1);\n            bitVectorSet(Vcp, 2*cv+1, iclauses-\u003ep2);\n            nextclause = iclauses-\u003enext;\n            ABC_FREE(iclauses);\n            iclauses = nextclause;\n        } else {\n            Vcv[2*cv] = nclauses-\u003ev1;\n            Vcv[2*cv+1] = nclauses-\u003ev2;\n            bitVectorSet(Vcp, 2*cv, nclauses-\u003ep1);\n            bitVectorSet(Vcp, 2*cv+1, nclauses-\u003ep2);\n            nextclause = nclauses-\u003enext;\n            ABC_FREE(nclauses);\n            nclauses = nextclause;\n        }\n    }\n    assert(cv == 0);\n\n    return(res);\n\n cleanup:\n    if (res != NULL) Cudd_tlcInfoFree(res);\n    while (iclauses != NULL) {\n        TlClause *nextclause = iclauses-\u003enext;\n        ABC_FREE(iclauses);\n        iclauses = nextclause;\n    }\n    while (nclauses != NULL) {\n        TlClause *nextclause = nclauses-\u003enext;\n        ABC_FREE(nclauses);\n        nclauses = nextclause;\n    }\n    while (tclauses != NULL) {\n        TlClause *nextclause = tclauses-\u003enext;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    while (eclauses != NULL) {\n        TlClause *nextclause = eclauses-\u003enext;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "static DdTlcInfo *\ncomputeClauses(\n  DdTlcInfo *Tres /* list of clauses for T child */,\n  DdTlcInfo *Eres /* list of clauses for E child */,\n  DdHalfWord label /* variable labeling the current node */,\n  int size /* number of variables in the manager */)\n{\n    var Tcv *DdHalfWord  = Tres.vars; /* variables of clauses for the T child */\n    var Tcp *BitVector  = Tres.phases; /* phases of clauses for the T child */\n    var Ecv *DdHalfWord  = Eres.vars; /* variables of clauses for the E child */\n    var Ecp *BitVector  = Eres.phases; /* phases of clauses for the E child */\n    var Vcv *DdHalfWord  = nil; /* pointer to variables of the clauses for v */\n    var Vcp *BitVector  = nil; /* pointer to phases of the clauses for v */\n    var res *DdTlcInfo  = nil; /* the set of clauses to be returned */\n    var pt int32; /* index in the list of clauses of T */\n    var pe int32; /* index in the list of clauses of E */\n    var cv int32; /* counter of the clauses for this node */\n    var iclauses *TlClause  = nil; /* list of inherited clauses */\n    var tclauses *TlClause  = nil; /* list of 1-literal clauses of T */\n    var eclauses *TlClause  = nil; /* list of 1-literal clauses of E */\n    var nclauses *TlClause  = nil; /* list of new (non-inherited) clauses */\n    var lnclause *TlClause  = nil; /* pointer to last new clause */\n    var newclause *TlClause; /* temporary pointer to new clauses */\n\n    /* Initialize sets of one-literal clauses.  The one-literal clauses\n    ** are stored redundantly.  These sets allow constant-time lookup, which\n    ** we need when we check for implication of a two-literal clause by a\n    ** one-literal clause.  The linked lists allow fast sequential\n    ** processing. */\n    bitVectorClear(Tolv, size);\n    bitVectorClear(Tolp, size);\n    bitVectorClear(Eolv, size);\n    bitVectorClear(Eolp, size);\n\n    /* Initialize result structure. */\n    res = tlcInfoAlloc();\n    if res == nil { goto cleanup; }\n\n    /* Scan the two input list.  Extract inherited two-literal clauses\n    ** and set aside one-literal clauses from each list.  The incoming lists\n    ** are sorted in the order defined by beforep.  The three linked list\n    ** produced by this loop are sorted in the reverse order because we\n    ** always append to the front of the lists.\n    ** The inherited clauses are those clauses (both one- and two-literal)\n    ** that are common to both children; and the two-literal clauses of\n    ** one child that are implied by a one-literal clause of the other\n    ** child. */\n    for !(sentinelp(Tcv[pt], Tcv[pt+1]) != 0) || !(sentinelp(Ecv[pe], Ecv[pe+1]) != 0) {\n        if equalp(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1)) != 0 {\n            /* Add clause to inherited list. */\n            newclause = new(TlClause);\n            if newclause == nil { goto cleanup; }\n            newclause.v1 = Tcv[pt];\n            newclause.v2 = Tcv[pt+1];\n            newclause.p1 = bitVectorRead(Tcp, pt);\n            newclause.p2 = bitVectorRead(Tcp, pt+1);\n            newclause.next = iclauses;\n            iclauses = newclause;\n            pt += 2; pe += 2; cv++;\n        } else if beforep(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1)) != 0 {\n            if oneliteralp(Tcv[pt+1]) != 0 {\n                /* Add this one-literal clause to the T set. */\n                newclause = new(TlClause);\n                if newclause == nil { goto cleanup; }\n                newclause.v1 = Tcv[pt];\n                newclause.v2 = CUDD_MAXINDEX;\n                newclause.p1 = bitVectorRead(Tcp, pt);\n                newclause.p2 = 1;\n                newclause.next = tclauses;\n                tclauses = newclause;\n                bitVectorSet(Tolv, Tcv[pt], 1);\n                bitVectorSet(Tolp, Tcv[pt], bitVectorRead(Tcp, pt));\n            } else {\n                if impliedp(Tcv[pt], bitVectorRead(Tcp, pt),\n                             Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                             Eolv, Eolp) != 0 {\n                    /* Add clause to inherited list. */\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = Tcv[pt];\n                    newclause.v2 = Tcv[pt+1];\n                    newclause.p1 = bitVectorRead(Tcp, pt);\n                    newclause.p2 = bitVectorRead(Tcp, pt+1);\n                    newclause.next = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pt += 2;\n        } else { /* !beforep() */\n            if oneliteralp(Ecv[pe+1]) != 0 {\n                /* Add this one-literal clause to the E set. */\n                newclause = new(TlClause);\n                if newclause == nil { goto cleanup; }\n                newclause.v1 = Ecv[pe];\n                newclause.v2 = CUDD_MAXINDEX;\n                newclause.p1 = bitVectorRead(Ecp, pe);\n                newclause.p2 = 1;\n                newclause.next = eclauses;\n                eclauses = newclause;\n                bitVectorSet(Eolv, Ecv[pe], 1);\n                bitVectorSet(Eolp, Ecv[pe], bitVectorRead(Ecp, pe));\n            } else {\n                if impliedp(Ecv[pe], bitVectorRead(Ecp, pe),\n                             Ecv[pe+1], bitVectorRead(Ecp, pe+1),\n                             Tolv, Tolp) != 0 {\n                    /* Add clause to inherited list. */\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = Ecv[pe];\n                    newclause.v2 = Ecv[pe+1];\n                    newclause.p1 = bitVectorRead(Ecp, pe);\n                    newclause.p2 = bitVectorRead(Ecp, pe+1);\n                    newclause.next = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pe += 2;\n        }\n    }\n\n    /* Add one-literal clauses for the label variable to the front of\n    ** the two lists. */\n    newclause = new(TlClause);\n    if newclause == nil { goto cleanup; }\n    newclause.v1 = label;\n    newclause.v2 = CUDD_MAXINDEX;\n    newclause.p1 = 0;\n    newclause.p2 = 1;\n    newclause.next = tclauses;\n    tclauses = newclause;\n    newclause = new(TlClause);\n    if newclause == nil { goto cleanup; }\n    newclause.v1 = label;\n    newclause.v2 = CUDD_MAXINDEX;\n    newclause.p1 = 1;\n    newclause.p2 = 1;\n    newclause.next = eclauses;\n    eclauses = newclause;\n\n    /* Produce the non-inherited clauses.  We preserve the \"reverse\"\n    ** order of the two input lists by appending to the end of the\n    ** list.  In this way, iclauses and nclauses are consistent. */\n    for tclauses != nil \u0026\u0026 eclauses != nil {\n        if beforep(eclauses.v1, eclauses.p1, eclauses.v2, eclauses.p2,\n                    tclauses.v1, tclauses.p1, tclauses.v2, tclauses.p2) != 0 {\n            var nextclause *TlClause  = tclauses.next;\n            var otherclauses *TlClause  = eclauses;\n            for otherclauses != nil {\n                if tclauses.v1 != otherclauses.v1 {\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = tclauses.v1;\n                    newclause.v2 = otherclauses.v1;\n                    newclause.p1 = tclauses.p1;\n                    newclause.p2 = otherclauses.p1;\n                    newclause.next = nil;\n                    if nclauses == nil {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause.next = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses.next;\n            }\n            ABC_FREE(tclauses);\n            tclauses = nextclause;\n        } else {\n            var nextclause *TlClause  = eclauses.next;\n            var otherclauses *TlClause  = tclauses;\n            for otherclauses != nil {\n                if eclauses.v1 != otherclauses.v1 {\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = eclauses.v1;\n                    newclause.v2 = otherclauses.v1;\n                    newclause.p1 = eclauses.p1;\n                    newclause.p2 = otherclauses.p1;\n                    newclause.next = nil;\n                    if nclauses == nil {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause.next = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses.next;\n            }\n            ABC_FREE(eclauses);\n            eclauses = nextclause;\n        }\n    }\n    for tclauses != nil {\n        var nextclause *TlClause  = tclauses.next;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    for eclauses != nil {\n        var nextclause *TlClause  = eclauses.next;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    /* Merge inherited and non-inherited clauses.  Now that we know the\n    ** total number, we allocate the arrays, and we fill them bottom-up\n    ** to restore the proper ordering. */\n    Vcv = ABC_ALLOC(DdHalfWord, 2*(cv+1));\n    if Vcv == nil { goto cleanup; }\n    if cv \u003e 0 {\n        Vcp = bitVectorAlloc(2*cv);\n        if Vcp == nil { goto cleanup; }\n    } else {\n        Vcp = nil;\n    }\n    res.vars = Vcv;\n    res.phases = Vcp;\n    /* Add sentinel. */\n    Vcv[2*cv] = 0;\n    Vcv[2*cv+1] = 0;\n    for iclauses != nil || nclauses != nil {\n        var nextclause *TlClause;\n        cv--;\n        if nclauses == nil || (iclauses != nil \u0026\u0026\n            (beforep(nclauses.v1, nclauses.p1, nclauses.v2, nclauses.p2,\n                    iclauses.v1, iclauses.p1, iclauses.v2, iclauses.p2) != 0)) {\n            Vcv[2*cv] = iclauses.v1;\n            Vcv[2*cv+1] = iclauses.v2;\n            bitVectorSet(Vcp, 2*cv, iclauses.p1);\n            bitVectorSet(Vcp, 2*cv+1, iclauses.p2);\n            nextclause = iclauses.next;\n            ABC_FREE(iclauses);\n            iclauses = nextclause;\n        } else {\n            Vcv[2*cv] = nclauses.v1;\n            Vcv[2*cv+1] = nclauses.v2;\n            bitVectorSet(Vcp, 2*cv, nclauses.p1);\n            bitVectorSet(Vcp, 2*cv+1, nclauses.p2);\n            nextclause = nclauses.next;\n            ABC_FREE(nclauses);\n            nclauses = nextclause;\n        }\n    }\n    assert(cv == 0, \"cv == 0\");\n\n    return(res);\n\n cleanup:\n    if res != nil { Cudd_tlcInfoFree(res); }\n    for iclauses != nil {\n        var nextclause *TlClause  = iclauses.next;\n        ABC_FREE(iclauses);\n        iclauses = nextclause;\n    }\n    for nclauses != nil {\n        var nextclause *TlClause  = nclauses.next;\n        ABC_FREE(nclauses);\n        nclauses = nextclause;\n    }\n    for tclauses != nil {\n        var nextclause *TlClause  = tclauses.next;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    for eclauses != nil {\n        var nextclause *TlClause  = eclauses.next;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "computeClausesWithUniverse",
+      "Start": 38573,
+      "End": 40526,
+      "BodyStart": 38796,
+      "Original": "static DdTlcInfo *\ncomputeClausesWithUniverse(\n  DdTlcInfo *Cres /* list of clauses for child */,\n  DdHalfWord label /* variable labeling the current node */,\n  short phase /* 0 if E child is zero; 1 if T child is zero */)\n{\n    DdHalfWord *Ccv = Cres-\u003evars; /* variables of clauses for child */\n    BitVector *Ccp = Cres-\u003ephases; /* phases of clauses for child */\n    DdHalfWord *Vcv = NULL; /* pointer to the variables of the clauses for v */\n    BitVector *Vcp = NULL; /* pointer to the phases of the clauses for v */\n    DdTlcInfo *res = NULL; /* the set of clauses to be returned */\n    int i;\n\n    /* Initialize result. */\n    res = tlcInfoAlloc();\n    if (res == NULL) goto cleanup;\n    /* Count entries for new list and allocate accordingly. */\n    for (i = 0; !sentinelp(Ccv[i], Ccv[i+1]); i += 2);\n    /* At this point, i is twice the number of clauses in the child's\n    ** list.  We need four more entries for this node: 2 for the one-literal\n    ** clause for the label, and 2 for the sentinel. */\n    Vcv = ABC_ALLOC(DdHalfWord,i+4);\n    if (Vcv == NULL) goto cleanup;\n    Vcp = bitVectorAlloc(i+4);\n    if (Vcp == NULL) goto cleanup;\n    res-\u003evars = Vcv;\n    res-\u003ephases = Vcp;\n    /* Copy old list into new. */\n    for (i = 0; !sentinelp(Ccv[i], Ccv[i+1]); i += 2) {\n        Vcv[i] = Ccv[i];\n        Vcv[i+1] = Ccv[i+1];\n        bitVectorSet(Vcp, i, bitVectorRead(Ccp, i));\n        bitVectorSet(Vcp, i+1, bitVectorRead(Ccp, i+1));\n    }\n    /* Add clause corresponding to label. */\n    Vcv[i] = label;\n    bitVectorSet(Vcp, i, phase);\n    i++;\n    Vcv[i] = CUDD_MAXINDEX;\n    bitVectorSet(Vcp, i, 1);\n    i++;\n    /* Add sentinel. */\n    Vcv[i] = 0;\n    Vcv[i+1] = 0;\n    bitVectorSet(Vcp, i, 0);\n    bitVectorSet(Vcp, i+1, 0);\n\n    return(res);\n\n cleanup:\n    /* Vcp is guaranteed to be NULL here.  Hence, we do not try to free it. */\n    if (Vcv != NULL) ABC_FREE(Vcv);\n    if (res != NULL) Cudd_tlcInfoFree(res);\n\n    return(NULL);\n\n}",
+      "Draft": "static DdTlcInfo *\ncomputeClausesWithUniverse(\n  DdTlcInfo *Cres /* list of clauses for child */,\n  DdHalfWord label /* variable labeling the current node */,\n  short phase /* 0 if E child is zero; 1 if T child is zero */)\n{\n    var Ccv *DdHalfWord  = Cres.vars; /* variables of clauses for child */\n    var Ccp *BitVector  = Cres.phases; /* phases of clauses for child */\n    var Vcv *DdHalfWord  = nil; /* pointer to the variables of the clauses for v */\n    var Vcp *BitVector  = nil; /* pointer to the phases of the clauses for v */\n    var res *DdTlcInfo  = nil; /* the set of clauses to be returned */\n    var i int32;\n\n    /* Initialize result. */\n    res = tlcInfoAlloc();\n    if res == nil { goto cleanup; }\n    /* Count entries for new list and allocate accordingly. */\n    for i = 0; !(sentinelp(Ccv[i], Ccv[i+1]) != 0); i += 2 {}\n    /* At this point, i is twice the number of clauses in the child's\n    ** list.  We need four more entries for this node: 2 for the one-literal\n    ** clause for the label, and 2 for the sentinel. */\n    Vcv = ABC_ALLOC(DdHalfWord,i+4);\n    if Vcv == nil { goto cleanup; }\n    Vcp = bitVectorAlloc(i+4);\n    if Vcp == nil { goto cleanup; }\n    res.vars = Vcv;\n    res.phases = Vcp;\n    /* Copy old list into new. */\n    for i = 0; !(sentinelp(Ccv[i], Ccv[i+1]) != 0); i += 2 {\n        Vcv[i] = Ccv[i];\n        Vcv[i+1] = Ccv[i+1];\n        bitVectorSet(Vcp, i, bitVectorRead(Ccp, i));\n        bitVectorSet(Vcp, i+1, bitVectorRead(Ccp, i+1));\n    }\n    /* Add clause corresponding to label. */\n    Vcv[i] = label;\n    bitVectorSet(Vcp, i, phase);\n    i++;\n    Vcv[i] = CUDD_MAXINDEX;\n    bitVectorSet(Vcp, i, 1);\n    i++;\n    /* Add sentinel. */\n    Vcv[i] = 0;\n    Vcv[i+1] = 0;\n    bitVectorSet(Vcp, i, 0);\n    bitVectorSet(Vcp, i+1, 0);\n\n    return(res);\n\n cleanup:\n    /* Vcp is guaranteed to be NULL here.  Hence, we do not try to free it. */\n    if Vcv != nil { ABC_FREE(Vcv); }\n    if res != nil { Cudd_tlcInfoFree(res); }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "emptyClauseSet",
+      "Start": 40961,
+      "End": 41371,
+      "BodyStart": 41001,
+      "Original": "static DdTlcInfo *\nemptyClauseSet(void)\n{\n    DdTlcInfo *eset;\n\n    eset = ABC_ALLOC(DdTlcInfo,1);\n    if (eset == NULL) return(NULL);\n    eset-\u003evars = ABC_ALLOC(DdHalfWord,2);\n    if (eset-\u003evars == NULL) {\n        ABC_FREE(eset);\n        return(NULL);\n    }\n    /* Sentinel */\n    eset-\u003evars[0] = 0;\n    eset-\u003evars[1] = 0;\n    eset-\u003ephases = NULL; /* does not matter */\n    eset-\u003ecnt = 0;\n    return(eset);\n\n}",
+      "Draft": "func emptyClauseSet() *DdTlcInfo {\n    var eset *DdTlcInfo;\n\n    eset = new(DdTlcInfo);\n    if eset == nil { return(nil); }\n    eset.vars = ABC_ALLOC(DdHalfWord,2);\n    if eset.vars == nil {\n        ABC_FREE(eset);\n        return(nil);\n    }\n    /* Sentinel */\n    eset.vars[0] = 0;\n    eset.vars[1] = 0;\n    eset.phases = nil; /* does not matter */\n    eset.cnt = 0;\n    return(eset);\n\n}"
+    },
+    {
+      "Name": "sentinelp",
+      "Start": 41796,
+      "End": 41896,
+      "BodyStart": 41856,
+      "Original": "static int\nsentinelp(\n  DdHalfWord var1,\n  DdHalfWord var2)\n{\n    return(var1 == 0 \u0026\u0026 var2 == 0);\n\n}",
+      "Draft": "func sentinelp(var1 DdHalfWord, var2 DdHalfWord) int32 {\n    return(var1 == 0 \u0026\u0026 var2 == 0);\n\n}"
+    },
+    {
+      "Name": "equalp",
+      "Start": 42367,
+      "End": 42639,
+      "BodyStart": 42534,
+      "Original": "static int\nequalp(\n  DdHalfWord var1a,\n  short phase1a,\n  DdHalfWord var1b,\n  short phase1b,\n  DdHalfWord var2a,\n  short phase2a,\n  DdHalfWord var2b,\n  short phase2b)\n{\n    return(var1a == var2a \u0026\u0026 phase1a == phase2a \u0026\u0026\n           var1b == var2b \u0026\u0026 phase1b == phase2b);\n\n}",
+      "Draft": "func equalp(var1a DdHalfWord, phase1a int16, var1b DdHalfWord, phase1b int16, var2a DdHalfWord, phase2a int16, var2b DdHalfWord, phase2b int16) int32 {\n    return(var1a == var2a \u0026\u0026 phase1a == phase2a \u0026\u0026\n           var1b == var2b \u0026\u0026 phase1b == phase2b);\n\n}"
+    },
+    {
+      "Name": "beforep",
+      "Start": 43458,
+      "End": 43807,
+      "BodyStart": 43626,
+      "Original": "static int\nbeforep(\n  DdHalfWord var1a,\n  short phase1a,\n  DdHalfWord var1b,\n  short phase1b,\n  DdHalfWord var2a,\n  short phase2a,\n  DdHalfWord var2b,\n  short phase2b)\n{\n    return(var1a \u003e var2a || (var1a == var2a \u0026\u0026\n           (phase1a \u003c phase2a || (phase1a == phase2a \u0026\u0026\n            (var1b \u003e var2b || (var1b == var2b \u0026\u0026 phase1b \u003c phase2b))))));\n\n}",
+      "Draft": "func beforep(var1a DdHalfWord, phase1a int16, var1b DdHalfWord, phase1b int16, var2a DdHalfWord, phase2a int16, var2b DdHalfWord, phase2b int16) int32 {\n    return(var1a \u003e var2a || (var1a == var2a \u0026\u0026\n           (phase1a \u003c phase2a || (phase1a == phase2a \u0026\u0026\n            (var1b \u003e var2b || (var1b == var2b \u0026\u0026 phase1b \u003c phase2b))))));\n\n}"
+    },
+    {
+      "Name": "oneliteralp",
+      "Start": 44325,
+      "End": 44405,
+      "BodyStart": 44367,
+      "Original": "static int\noneliteralp(\n  DdHalfWord var)\n{\n    return(var == CUDD_MAXINDEX);\n\n}",
+      "Draft": "func oneliteralp(var DdHalfWord) int32 {\n    return(var == CUDD_MAXINDEX);\n\n}"
+    },
+    {
+      "Name": "impliedp",
+      "Start": 44909,
+      "End": 45221,
+      "BodyStart": 45036,
+      "Original": "static int\nimpliedp(\n  DdHalfWord var1,\n  short phase1,\n  DdHalfWord var2,\n  short phase2,\n  BitVector *olv,\n  BitVector *olp)\n{\n    return((bitVectorRead(olv, var1) \u0026\u0026\n            bitVectorRead(olp, var1) == phase1) ||\n           (bitVectorRead(olv, var2) \u0026\u0026\n            bitVectorRead(olp, var2) == phase2));\n\n}",
+      "Draft": "func impliedp(var1 DdHalfWord, phase1 int16, var2 DdHalfWord, phase2 int16, olv *BitVector, olp *BitVector) int32 {\n    return((bitVectorRead(olv, var1) \u0026\u0026\n            bitVectorRead(olp, var1) == phase1) ||\n           (bitVectorRead(olv, var2) \u0026\u0026\n            bitVectorRead(olp, var2) == phase2));\n\n}"
+    },
+    {
+      "Name": "bitVectorAlloc",
+      "Start": 45761,
+      "End": 46333,
+      "BodyStart": 45808,
+      "Original": "static BitVector *\nbitVectorAlloc(\n  int size)\n{\n    int allocSize;\n    BitVector *vector;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    vector = ABC_ALLOC(BitVector, allocSize);\n    if (vector == NULL) return(NULL);\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return(vector);\n\n}",
+      "Draft": "func bitVectorAlloc(size int32) *BitVector {\n    var allocSize int32;\n    var vector *BitVector;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    vector = ABC_ALLOC(BitVector, allocSize);\n    if vector == nil { return(nil); }\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return(vector);\n\n}"
+    },
+    {
+      "Name": "bitVectorClear",
+      "Start": 46713,
+      "End": 47184,
+      "BodyStart": 46774,
+      "Original": "static void\nbitVectorClear(\n  BitVector *vector,\n  int size)\n{\n    int allocSize;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return;\n\n}",
+      "Draft": "func bitVectorClear(vector *BitVector, size int32) {\n    var allocSize int32;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return;\n\n}"
+    },
+    {
+      "Name": "bitVectorFree",
+      "Start": 47504,
+      "End": 47578,
+      "BodyStart": 47552,
+      "Original": "static void\nbitVectorFree(\n  BitVector *vector)\n{\n    ABC_FREE(vector);\n\n}",
+      "Draft": "func bitVectorFree(vector *BitVector) {\n    ABC_FREE(vector);\n\n}"
+    },
+    {
+      "Name": "bitVectorRead",
+      "Start": 47945,
+      "End": 48209,
+      "BodyStart": 48003,
+      "Original": "static short\nbitVectorRead(\n  BitVector *vector,\n  int i)\n{\n    int word, bit;\n    short result;\n\n    if (vector == NULL) return((short) 0);\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    result = (short) ((vector[word] \u003e\u003e bit) \u0026 1L);\n    return(result);\n\n}",
+      "Draft": "func bitVectorRead(vector *BitVector, i int32) int16 {\n    var word, bit int32;\n    var result int16;\n\n    if vector == nil { return(int16( 0)); }\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    result = int16( ((vector[word] \u003e\u003e bit) \u0026 int64(1)));\n    return(result);\n\n}"
+    },
+    {
+      "Name": "bitVectorSet",
+      "Start": 48593,
+      "End": 48813,
+      "BodyStart": 48663,
+      "Original": "static void\nbitVectorSet(\n  BitVector * vector,\n  int i,\n  short val)\n{\n    int word, bit;\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    vector[word] \u0026= ~(1L \u003c\u003c bit);\n    vector[word] |= (((long) val) \u003c\u003c bit);\n\n}",
+      "Draft": "func bitVectorSet(vector *BitVector, i int32, val int16) {\n    var word, bit int32;\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    vector[word] \u0026= ~(int64(1) \u003c\u003c bit);\n    vector[word] |= ((int64( val)) \u003c\u003c bit);\n\n}"
+    },
+    {
+      "Name": "tlcInfoAlloc",
+      "Start": 49202,
+      "End": 49405,
+      "BodyStart": 49240,
+      "Original": "static DdTlcInfo *\ntlcInfoAlloc(void)\n{\n    DdTlcInfo *res = ABC_ALLOC(DdTlcInfo,1);\n    if (res == NULL) return(NULL);\n    res-\u003evars = NULL;\n    res-\u003ephases = NULL;\n    res-\u003ecnt = 0;\n    return(res);\n\n}",
+      "Draft": "func tlcInfoAlloc() *DdTlcInfo {\n    var res *DdTlcInfo  = new(DdTlcInfo);\n    if res == nil { return(nil); }\n    res.vars = nil;\n    res.phases = nil;\n    res.cnt = 0;\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::struct::DdTlcInfo",
+      "Category": "struct-review",
+      "Symbol": "DdTlcInfo",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4973,
+      "End": 5054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::struct::TlClause::DdHalfWord v1, v2;",
+      "Category": "struct-field-review",
+      "Symbol": "TlClause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5352,
+      "End": 5375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::struct::TlClause::short p1, p2;",
+      "Category": "struct-field-review",
+      "Symbol": "TlClause",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5375,
+      "End": 5393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::struct::TlClause",
+      "Category": "struct-review",
+      "Symbol": "TlClause",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 5335,
+      "End": 5423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::mechanical::do::8932",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 8992,
+      "End": 8994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::mechanical::sizeof::49195",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 46104,
+      "End": 46110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::mechanical::sizeof::49382",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 46291,
+      "End": 46297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::mechanical::sizeof::50138",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 47047,
+      "End": 47053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::mechanical::sizeof::50241",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 47150,
+      "End": 47156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::9840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9851,
+      "End": 9851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::11070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10966,
+      "End": 10966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::12146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11885,
+      "End": 11885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::17385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17055,
+      "End": 17055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::17753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17297,
+      "End": 17297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::18192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17467,
+      "End": 17467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::18272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17484,
+      "End": 17484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::18442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17534,
+      "End": 17534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::19075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18023,
+      "End": 18023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::19230",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18091,
+      "End": 18091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::19736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18469,
+      "End": 18469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::19955",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18625,
+      "End": 18625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::20950",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19305,
+      "End": 19305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::23312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21316,
+      "End": 21316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::23626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21549,
+      "End": 21558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::23852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21687,
+      "End": 21687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::24299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21865,
+      "End": 21865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::24379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21882,
+      "End": 21882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::24549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21932,
+      "End": 21932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::25887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23126,
+      "End": 23126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::26894",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23989,
+      "End": 23989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::28205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25156,
+      "End": 25156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::28870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25779,
+      "End": 25787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::pointer-cast::28881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25790,
+      "End": 25798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_FindEssential",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_FindEssential",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8907,
+      "End": 9119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_bddIsVarEssential",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddIsVarEssential",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9665,
+      "End": 9942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_FindTwoLiteralClauses",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_FindTwoLiteralClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10754,
+      "End": 12319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_ReadIthClause",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ReadIthClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12875,
+      "End": 13329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::ternary::Cudd_PrintTwoLiteralClauses",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_PrintTwoLiteralClauses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13831,
+      "End": 15392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_PrintTwoLiteralClauses",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_PrintTwoLiteralClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13831,
+      "End": 15392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::Cudd_tlcInfoFree",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_tlcInfoFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15767,
+      "End": 15920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::ddFindEssentialRecur",
+      "Category": "semantic-review",
+      "Symbol": "ddFindEssentialRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16827,
+      "End": 20552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::ddFindTwoLiteralClausesRecur",
+      "Category": "semantic-review",
+      "Symbol": "ddFindTwoLiteralClausesRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21092,
+      "End": 25894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::computeClauses",
+      "Category": "semantic-review",
+      "Symbol": "computeClauses",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 26428,
+      "End": 38041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::computeClausesWithUniverse",
+      "Category": "semantic-review",
+      "Symbol": "computeClausesWithUniverse",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 38573,
+      "End": 40526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::emptyClauseSet",
+      "Category": "semantic-review",
+      "Symbol": "emptyClauseSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40961,
+      "End": 41371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::sentinelp",
+      "Category": "semantic-review",
+      "Symbol": "sentinelp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41796,
+      "End": 41896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::equalp",
+      "Category": "semantic-review",
+      "Symbol": "equalp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 42367,
+      "End": 42639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::beforep",
+      "Category": "semantic-review",
+      "Symbol": "beforep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 43458,
+      "End": 43807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::oneliteralp",
+      "Category": "semantic-review",
+      "Symbol": "oneliteralp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 44325,
+      "End": 44405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::impliedp",
+      "Category": "semantic-review",
+      "Symbol": "impliedp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 44909,
+      "End": 45221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::bitVectorAlloc",
+      "Category": "semantic-review",
+      "Symbol": "bitVectorAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 45761,
+      "End": 46333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::bitVectorClear",
+      "Category": "semantic-review",
+      "Symbol": "bitVectorClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 46713,
+      "End": 47184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::bitVectorFree",
+      "Category": "semantic-review",
+      "Symbol": "bitVectorFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 47504,
+      "End": 47578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::bitVectorRead",
+      "Category": "semantic-review",
+      "Symbol": "bitVectorRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 47945,
+      "End": 48209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::bitVectorSet",
+      "Category": "semantic-review",
+      "Symbol": "bitVectorSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 48593,
+      "End": 48813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::tlcInfoAlloc",
+      "Category": "semantic-review",
+      "Symbol": "tlcInfoAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 49202,
+      "End": 49405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 49458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3335,
+      "End": 3432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5966,
+      "End": 6077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::15834",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15834,
+      "End": 15851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::15880",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15880,
+      "End": 15899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::15905",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15905,
+      "End": 15916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::18347",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18347,
+      "End": 18360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::18652",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18652,
+      "End": 18667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::18941",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18941,
+      "End": 18954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::19268",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19268,
+      "End": 19283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::19669",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19669,
+      "End": 19682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::19889",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19889,
+      "End": 19902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::20233",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20233,
+      "End": 20245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::20355",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20355,
+      "End": 20369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::22506",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22506,
+      "End": 22529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::22584",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22584,
+      "End": 22597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::22743",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22743,
+      "End": 22762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::22780",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22780,
+      "End": 22793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::24190",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24190,
+      "End": 24213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::24268",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24268,
+      "End": 24281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::24427",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24427,
+      "End": 24446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::24464",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24464,
+      "End": 24477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::25832",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25832,
+      "End": 25845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::29265",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29265,
+      "End": 29286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::29990",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29990,
+      "End": 30011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::30725",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30725,
+      "End": 30746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::31356",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31356,
+      "End": 31377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::32091",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32091,
+      "End": 32112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::32682",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32682,
+      "End": 32703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::32928",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32928,
+      "End": 32949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::33798",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33798,
+      "End": 33819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::34536",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34536,
+      "End": 34554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::34837",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34837,
+      "End": 34858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::35575",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35575,
+      "End": 35593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::35732",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35732,
+      "End": 35750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::35875",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35875,
+      "End": 35893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::36129",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36129,
+      "End": 36160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::36976",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36976,
+      "End": 36994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::37283",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37283,
+      "End": 37301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::37534",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37534,
+      "End": 37552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::37677",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37677,
+      "End": 37695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::37820",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37820,
+      "End": 37838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::37963",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37963,
+      "End": 37981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::39594",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39594,
+      "End": 39619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::40446",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40446,
+      "End": 40459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::41036",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 41036,
+      "End": 41058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::41113",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 41113,
+      "End": 41136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::41176",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 41176,
+      "End": 41190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::46146",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 46146,
+      "End": 46177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::47558",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 47558,
+      "End": 47574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddEssent.c::macro-inline::49263",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 49263,
+      "End": 49285
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddEssent.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for the detection of essential variables.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_FindEssential()\n                \u003cli\u003e Cudd_bddIsVarEssential()\n                \u003cli\u003e Cudd_FindTwoLiteralClauses()\n                \u003cli\u003e Cudd_ReadIthClause()\n                \u003cli\u003e Cudd_PrintTwoLiteralClauses()\n                \u003cli\u003e Cudd_tlcInfoFree()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e ddFindEssentialRecur()\n                \u003cli\u003e ddFindTwoLiteralClausesRecur()\n                \u003cli\u003e computeClauses()\n                \u003cli\u003e computeClausesWithUniverse()\n                \u003cli\u003e emptyClauseSet()\n                \u003cli\u003e sentinelp()\n                \u003cli\u003e equalp()\n                \u003cli\u003e beforep()\n                \u003cli\u003e oneliteralp()\n                \u003cli\u003e impliedp()\n                \u003cli\u003e bitVectorAlloc()\n                \u003cli\u003e bitVectorClear()\n                \u003cli\u003e bitVectorFree()\n                \u003cli\u003e bitVectorRead()\n                \u003cli\u003e bitVectorSet()\n                \u003cli\u003e tlcInfoAlloc()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/* These definitions are for the bit vectors. */\n#if SIZEOF_LONG == 8\n#define BPL 64\n#define LOGBPL 6\n#else\n#define BPL 32\n#define LOGBPL 5\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/* This structure holds the set of clauses for a node.  Each clause consists\n** of two literals.  For one-literal clauses, the second lietral is FALSE.\n** Each literal is composed of a variable and a phase.  A variable is a node\n** index, and requires sizeof(DdHalfWord) bytes.  The constant literals use\n** CUDD_MAXINDEX as variable indicator.  Each phase is a bit: 0 for positive\n** phase, and 1 for negative phase.\n** Variables and phases are stored separately for the sake of compactness.\n** The variables are stored in an array of DdHalfWord's terminated by a\n** sentinel (a pair of zeroes).  The phases are stored in a bit vector.\n** The cnt field holds, at the end, the number of clauses.\n** The clauses of the set are kept sorted.  For each clause, the first literal\n** is the one of least index.  So, the clause with literals +2 and -4 is stored\n** as (+2,-4).  A one-literal clause with literal +3 is stored as\n** (+3,-CUDD_MAXINDEX).  Clauses are sorted in decreasing order as follows:\n**      (+5,-7)\n**      (+5,+6)\n**      (-5,+7)\n**      (-4,FALSE)\n**      (-4,+8)\n**      ...\n** That is, one first looks at the variable of the first literal, then at the\n** phase of the first litral, then at the variable of the second literal,\n** and finally at the phase of the second literal.\n*/\ntype DdTlcInfo struct {\n    vars *DdHalfWord;\n    phases *long;\n    cnt DdHalfWord;\n}\n\n/* This structure is for temporary representation of sets of clauses.  It is\n** meant to be used in link lists, when the number of clauses is not yet\n** known. The encoding of a clause is the same as in DdTlcInfo, though\n** the phase information is not stored in a bit array. */\ntype TlClause struct {\n    DdHalfWord v1, v2;\n    p1, p2 int16;\n    next  *TlClause;\n}\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\ntypedef long BitVector;\n   \n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddEssent.c,v 1.24 2009/02/21 18:24:10 fabio Exp $\";\n#endif\n\nvar Tolv *BitVector;\nvar Tolp *BitVector;\nvar Eolv *BitVector;\nvar Eolp *BitVector;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * ddFindEssentialRecur (DdManager *dd, DdNode *f);\n\n// static DdTlcInfo * ddFindTwoLiteralClausesRecur (DdManager * dd, DdNode * f, st__table *table);\n\n// static DdTlcInfo * computeClauses (DdTlcInfo *Tres, DdTlcInfo *Eres, DdHalfWord label, int size);\n\n// static DdTlcInfo * computeClausesWithUniverse (DdTlcInfo *Cres, DdHalfWord label, short phase);\n\n// static DdTlcInfo * emptyClauseSet (void);\n\n// static int sentinelp (DdHalfWord var1, DdHalfWord var2);\n\n// static int equalp (DdHalfWord var1a, short phase1a, DdHalfWord var1b, short phase1b, DdHalfWord var2a, short phase2a, DdHalfWord var2b, short phase2b);\n\n// static int beforep (DdHalfWord var1a, short phase1a, DdHalfWord var1b, short phase1b, DdHalfWord var2a, short phase2a, DdHalfWord var2b, short phase2b);\n\n// static int oneliteralp (DdHalfWord var);\n\n// static int impliedp (DdHalfWord var1, short phase1, DdHalfWord var2, short phase2, BitVector *olv, BitVector *olp);\n\n// static BitVector * bitVectorAlloc (int size);\n\nDD_INLINE static void bitVectorClear (BitVector *vector, int size);\n// static void bitVectorFree (BitVector *vector);\n\nDD_INLINE static short bitVectorRead (BitVector *vector, int i);\nDD_INLINE static void bitVectorSet (BitVector * vector, int i, short val);\n// static DdTlcInfo * tlcInfoAlloc (void);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the essential variables of a DD.]\n\n  Description [Returns the cube of the essential variables. A positive\n  literal means that the variable must be set to 1 for the function to be\n  1. A negative literal means that the variable must be set to 0 for the\n  function to be 1. Returns a pointer to the cube BDD if successful;\n  NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddIsVarEssential]\n\n******************************************************************************/\nfunc Cudd_FindEssential(dd *DdManager, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = ddFindEssentialRecur(dd,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_FindEssential */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines whether a given variable is essential with a\n  given phase in a BDD.]\n\n  Description [Determines whether a given variable is essential with a\n  given phase in a BDD. Uses Cudd_bddIteConstant. Returns 1 if phase == 1\n  and f--\u003ex_id, or if phase == 0 and f--\u003ex_id'.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_FindEssential]\n\n******************************************************************************/\nfunc Cudd_bddIsVarEssential(manager *DdManager, f *DdNode, id int32, phase int32) int32 {\n    var var *DdNode;\n    var res int32;\n\n    var = Cudd_bddIthVar(manager, id);\n\n    // inlining of macro Cudd_NotCond\n    var = ((DdNode *)((ptrint)(var) ^ (phase == 0)));\n\n    res = Cudd_bddLeq(manager, f, var);\n\n    return(res);\n\n} /* end of Cudd_bddIsVarEssential */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the two literal clauses of a DD.]\n\n  Description [Returns the one- and two-literal clauses of a DD.\n  Returns a pointer to the structure holding the clauses if\n  successful; NULL otherwise.  For a constant DD, the empty set of clauses\n  is returned.  This is obviously correct for a non-zero constant.  For the\n  constant zero, it is based on the assumption that only those clauses\n  containing variables in the support of the function are considered.  Since\n  the support of a constant function is empty, no clauses are returned.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_FindEssential]\n\n******************************************************************************/\nfunc Cudd_FindTwoLiteralClauses(dd *DdManager, f *DdNode) *DdTlcInfo {\n    var res *DdTlcInfo;\n    var table *st__table;\n    var gen *st__generator;\n    var tlc *DdTlcInfo;\n    var node *DdNode;\n    var size int32  = dd.size;\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        res = emptyClauseSet();\n        return(res);\n    }\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(nil); }\n    Tolv = bitVectorAlloc(size);\n    if Tolv == nil {\n        st__free_table(table);\n        return(nil);\n    }\n    Tolp = bitVectorAlloc(size);\n    if Tolp == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        return(nil);\n    }\n    Eolv = bitVectorAlloc(size);\n    if Eolv == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        return(nil);\n    }\n    Eolp = bitVectorAlloc(size);\n    if Eolp == nil {\n        st__free_table(table);\n        bitVectorFree(Tolv);\n        bitVectorFree(Tolp);\n        bitVectorFree(Eolv);\n        return(nil);\n    }\n\n    res = ddFindTwoLiteralClausesRecur(dd,f,table);\n    /* Dispose of table contents and free table. */\n    // inlining of macro st__foreach_item\n    for gen= st__init_gen(table); st__gen(gen,(char **)\u0026node,(char **)\u0026tlc) || ( st__free_gen(gen),0); {\n        if node != f {\n            Cudd_tlcInfoFree(tlc);\n        }\n    }\n    st__free_table(table);\n    bitVectorFree(Tolv);\n    bitVectorFree(Tolp);\n    bitVectorFree(Eolv);\n    bitVectorFree(Eolp);\n\n    if res != nil {\n        var i int32;\n        for i = 0; !(sentinelp(res.vars[i], res.vars[i+1]) != 0); i += 2 {}\n        res.cnt = i \u003e\u003e 1;\n    }\n\n    return(res);\n\n} /* end of Cudd_FindTwoLiteralClauses */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Accesses the i-th clause of a DD.]\n\n  Description [Accesses the i-th clause of a DD given the clause set which\n  must be already computed.  Returns 1 if successful; 0 if i is out of range,\n  or in case of error.]\n\n  SideEffects [the four components of a clause are returned as side effects.]\n\n  SeeAlso     [Cudd_FindTwoLiteralClauses]\n\n******************************************************************************/\nfunc Cudd_ReadIthClause(tlc *DdTlcInfo, i int32, var1 *DdHalfWord, var2 *DdHalfWord, phase1 *int32, phase2 *int32) int32 {\n    if tlc == nil { return(0); }\n    if tlc.vars == nil || tlc.phases == nil { return(0); }\n    if i \u003c 0 || uint32( i) \u003e= tlc.cnt { return(0); }\n    *var1 = tlc.vars[2*i];\n    *var2 = tlc.vars[2*i+1];\n    *phase1 = int32( bitVectorRead(tlc.phases, 2*i));\n    *phase2 = int32( bitVectorRead(tlc.phases, 2*i+1));\n    return(1);\n\n} /* end of Cudd_ReadIthClause */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the two literal clauses of a DD.]\n\n  Description [Prints the one- and two-literal clauses. Returns 1 if\n  successful; 0 otherwise.  The argument \"names\" can be NULL, in which case\n  the variable indices are printed.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_FindTwoLiteralClauses]\n\n******************************************************************************/\nfunc Cudd_PrintTwoLiteralClauses(dd *DdManager, f *DdNode, names *string, fp *os.File) int32 {\n    var vars *DdHalfWord;\n    var phases *BitVector;\n    var i int32;\n    var res *DdTlcInfo  = Cudd_FindTwoLiteralClauses(dd, f);\n    var ifp *os.File  = fp == nil ? dd.out : fp;\n\n    if res == nil { return(0); }\n    vars = res.vars;\n    phases = res.phases;\n    for i = 0; !(sentinelp(vars[i], vars[i+1]) != 0); i += 2 {\n        if names != nil {\n            if vars[i+1] == CUDD_MAXINDEX {\n                (void) fmt.Fprintf(ifp, \"%s%s\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", names[vars[i]]);\n            } else {\n                (void) fmt.Fprintf(ifp, \"%s%s | %s%s\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", names[vars[i]], bitVectorRead(phases, i+1) ? \"~\" : \" \", names[vars[i+1]]);\n            }\n        } else {\n            if vars[i+1] == CUDD_MAXINDEX {\n                (void) fmt.Fprintf(ifp, \"%s%d\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", int32( vars[i]));\n            } else {\n                (void) fmt.Fprintf(ifp, \"%s%d | %s%d\\n\", bitVectorRead(phases, i) ? \"~\" : \" \", int32( vars[i]), bitVectorRead(phases, i+1) ? \"~\" : \" \", int32( vars[i+1]));\n            }\n        }\n    }\n    Cudd_tlcInfoFree(res);\n\n    return(1);\n\n} /* end of Cudd_PrintTwoLiteralClauses */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Frees a DdTlcInfo Structure.]\n\n  Description [Frees a DdTlcInfo Structure as well as the memory pointed\n  by it.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_tlcInfoFree(t *DdTlcInfo) {\n    if t.vars != nil { ABC_FREE(t.vars); }\n    if t.phases != nil { ABC_FREE(t.phases); }\n    ABC_FREE(t);\n\n} /* end of Cudd_tlcInfoFree */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_FindEssential.]\n\n  Description [Implements the recursive step of Cudd_FindEssential.\n  Returns a pointer to the cube BDD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddFindEssentialRecur(dd *DdManager, f *DdNode) *DdNode {\n    var T, E, F *DdNode;\n    var essT, essE, res *DdNode;\n    var index int32;\n    var one, lzero, azero *DdNode;\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    /* If f is constant the set of essential variables is empty. */\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(one); }\n\n    res = cuddCacheLookup1(dd,Cudd_FindEssential,f);\n    if res != nil {\n        return(res);\n    }\n\n    // inlining of macro Cudd_Not\n    lzero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ZERO\n    azero = ((dd).zero);\n    /* Find cofactors: here f is non-constant. */\n    // inlining of macro cuddT\n    T = ((F).type.kids.T);\n    // inlining of macro cuddE\n    E = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));\n    }\n\n    index = F.index;\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(T) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 T != lzero \u0026\u0026 T != azero {\n        /* if E is zero, index is essential, otherwise there are no\n        ** essentials, because index is not essential and no other variable\n        ** can be, since setting index = 1 makes the function constant and\n        ** different from 0.\n        */\n        if E == lzero || E == azero {\n            res = dd.vars[index];\n        } else {\n            res = one;\n        }\n    } else if T == lzero || T == azero {\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX { /* E cannot be zero here */\n            // inlining of macro Cudd_Not\n            res = ((DdNode *)((ptrint)(dd.vars[index]) ^ 01));\n        } else { /* E == non-constant */\n            /* find essentials in the else branch */\n            essE = ddFindEssentialRecur(dd,E);\n            if essE == nil {\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(essE).ref);\n\n            /* add index to the set with negative phase */\n            // inlining of macro Cudd_Not\n            res = cuddUniqueInter(dd,index,one,((DdNode *)((ptrint)(essE) ^ 01)));\n            if res == nil {\n                Cudd_RecursiveDeref(dd,essE);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            res = ((DdNode *)((ptrint)(res) ^ 01));\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(essE).ref);\n        }\n    } else { /* T == non-const */\n        if E == lzero || E == azero {\n            /* find essentials in the then branch */\n            essT = ddFindEssentialRecur(dd,T);\n            if essT == nil {\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(essT).ref);\n\n            /* add index to the set with positive phase */\n            /* use And because essT may be complemented */\n            res = cuddBddAndRecur(dd,dd.vars[index],essT);\n            if res == nil {\n                Cudd_RecursiveDeref(dd,essT);\n                return(nil);\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(essT).ref);\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        } else if !((((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* if E is a non-zero constant there are no essentials\n            ** because T is non-constant.\n            */\n            essT = ddFindEssentialRecur(dd,T);\n            if essT == nil {\n                return(nil);\n            }\n            if essT == one {\n                res = one;\n            } else {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(essT).ref);\n                essE = ddFindEssentialRecur(dd,E);\n                if essE == nil {\n                    Cudd_RecursiveDeref(dd,essT);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(essE).ref);\n\n                /* res = intersection(essT, essE) */\n                res = cuddBddLiteralSetIntersectionRecur(dd,essT,essE);\n                if res == nil {\n                    Cudd_RecursiveDeref(dd,essT);\n                    Cudd_RecursiveDeref(dd,essE);\n                    return(nil);\n                }\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(res).ref);\n                Cudd_RecursiveDeref(dd,essT);\n                Cudd_RecursiveDeref(dd,essE);\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(res).ref);\n            }\n        } else {        /* E is a non-zero constant */\n            res = one;\n        }\n    }\n\n    cuddCacheInsert1(dd,Cudd_FindEssential, f, res);\n    return(res);\n\n} /* end of ddFindEssentialRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_FindTwoLiteralClauses.]\n\n  Description [Implements the recursive step of\n  Cudd_FindTwoLiteralClauses.  The DD node is assumed to be not\n  constant.  Returns a pointer to a set of clauses if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_FindTwoLiteralClauses]\n\n******************************************************************************/\nfunc ddFindTwoLiteralClausesRecur(dd *DdManager, f *DdNode, table *st__table) *DdTlcInfo {\n    var T, E, F *DdNode;\n    var one, lzero, azero *DdNode;\n    var res, Tres, Eres *DdTlcInfo;\n    var index DdHalfWord;\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n\n    // inlining of macro cuddIsConstant\n    assert(!((F).index == CUDD_CONST_INDEX), \"!/*__starting_point_inline_macro:cuddIsConstant__*/((F).index == CUDD_CONST_INDEX)\");\n\n    /* Check computed table.  Separate entries are necessary for\n    ** a node and its complement.  We should update the counter here. */\n    if st__lookup(table, (char *)f, (char **)\u0026res) {\n        return(res);\n    }\n\n    /* Easy access to the constants for BDDs and ADDs. */\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    // inlining of macro Cudd_Not\n    lzero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro DD_ZERO\n    azero = ((dd).zero);\n\n    /* Find cofactors and variable labeling the top node. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    T = ((F).type.kids.T); E = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        T = ((DdNode *)((ptrint)(T) ^ 01)); E = ((DdNode *)((ptrint)(E) ^ 01));\n    }\n    index = F.index;\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(T) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 T != lzero \u0026\u0026 T != azero {\n        /* T is a non-zero constant.  If E is zero, then this node's index\n        ** is a one-literal clause.  Otherwise, if E is a non-zero\n        ** constant, there are no clauses for this node.  Finally,\n        ** if E is not constant, we recursively compute its clauses, and then\n        ** merge using the empty set for T. */\n        if E == lzero || E == azero {\n            /* Create the clause (index + 0). */\n            res = tlcInfoAlloc();\n            if res == nil { return(nil); }\n            res.vars = ABC_ALLOC(DdHalfWord,4);\n            if res.vars == nil {\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.phases = bitVectorAlloc(2);\n            if res.phases == nil {\n                ABC_FREE(res.vars);\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.vars[0] = index;\n            res.vars[1] = CUDD_MAXINDEX;\n            res.vars[2] = 0;\n            res.vars[3] = 0;\n            bitVectorSet(res.phases, 0, 0); /* positive phase */\n            bitVectorSet(res.phases, 1, 1); /* negative phase */\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        } else if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            /* If E is a non-zero constant, no clauses. */\n            res = emptyClauseSet();\n        } else {\n            /* E is non-constant */\n            Tres = emptyClauseSet();\n            if Tres == nil { return(nil); }\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil {\n                Cudd_tlcInfoFree(Tres);\n                return(nil);\n            }\n            res = computeClauses(Tres, Eres, index, dd.size);\n            Cudd_tlcInfoFree(Tres);\n        }\n    } else if T == lzero || T == azero {\n        /* T is zero.  If E is a non-zero constant, then the\n        ** complement of this node's index is a one-literal clause.\n        ** Otherwise, if E is not constant, we recursively compute its\n        ** clauses, and then merge using the universal set for T. */\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX { /* E cannot be zero here */\n            /* Create the clause (!index + 0). */\n            res = tlcInfoAlloc();\n            if res == nil { return(nil); }\n            res.vars = ABC_ALLOC(DdHalfWord,4);\n            if res.vars == nil {\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.phases = bitVectorAlloc(2);\n            if res.phases == nil {\n                ABC_FREE(res.vars);\n                ABC_FREE(res);\n                return(nil);\n            }\n            res.vars[0] = index;\n            res.vars[1] = CUDD_MAXINDEX;\n            res.vars[2] = 0;\n            res.vars[3] = 0;\n            bitVectorSet(res.phases, 0, 1); /* negative phase */\n            bitVectorSet(res.phases, 1, 1); /* negative phase */\n        } else { /* E == non-constant */\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil { return(nil); }\n            res = computeClausesWithUniverse(Eres, index, 1);\n        }\n    } else { /* T == non-const */\n        Tres = ddFindTwoLiteralClausesRecur(dd, T, table);\n        if Tres == nil { return(nil); }\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if (((DdNode *)((ptruint)(E) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            if E == lzero || E == azero {\n                res = computeClausesWithUniverse(Tres, index, 0);\n            } else {\n                Eres = emptyClauseSet();\n                if Eres == nil { return(nil); }\n                res = computeClauses(Tres, Eres, index, dd.size);\n                Cudd_tlcInfoFree(Eres);\n            }\n        } else {\n            Eres = ddFindTwoLiteralClausesRecur(dd, E, table);\n            if Eres == nil { return(nil); }\n            res = computeClauses(Tres, Eres, index, dd.size);\n        }\n    }\n\n    /* Cache results. */\n    if st__add_direct(table, (char *)f, (char *)res) == st__OUT_OF_MEM {\n        ABC_FREE(res);\n        return(nil);\n    }\n    return(res);\n\n} /* end of ddFindTwoLiteralClausesRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the two-literal clauses for a node.]\n\n  Description [Computes the two-literal clauses for a node given the\n  clauses for its children and the label of the node.  Returns a\n  pointer to a TclInfo structure if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [computeClausesWithUniverse]\n\n******************************************************************************/\nstatic DdTlcInfo *\ncomputeClauses(\n  DdTlcInfo *Tres /* list of clauses for T child */,\n  DdTlcInfo *Eres /* list of clauses for E child */,\n  DdHalfWord label /* variable labeling the current node */,\n  int size /* number of variables in the manager */)\n{\n    var Tcv *DdHalfWord  = Tres.vars; /* variables of clauses for the T child */\n    var Tcp *BitVector  = Tres.phases; /* phases of clauses for the T child */\n    var Ecv *DdHalfWord  = Eres.vars; /* variables of clauses for the E child */\n    var Ecp *BitVector  = Eres.phases; /* phases of clauses for the E child */\n    var Vcv *DdHalfWord  = nil; /* pointer to variables of the clauses for v */\n    var Vcp *BitVector  = nil; /* pointer to phases of the clauses for v */\n    var res *DdTlcInfo  = nil; /* the set of clauses to be returned */\n    var pt int32; /* index in the list of clauses of T */\n    var pe int32; /* index in the list of clauses of E */\n    var cv int32; /* counter of the clauses for this node */\n    var iclauses *TlClause  = nil; /* list of inherited clauses */\n    var tclauses *TlClause  = nil; /* list of 1-literal clauses of T */\n    var eclauses *TlClause  = nil; /* list of 1-literal clauses of E */\n    var nclauses *TlClause  = nil; /* list of new (non-inherited) clauses */\n    var lnclause *TlClause  = nil; /* pointer to last new clause */\n    var newclause *TlClause; /* temporary pointer to new clauses */\n\n    /* Initialize sets of one-literal clauses.  The one-literal clauses\n    ** are stored redundantly.  These sets allow constant-time lookup, which\n    ** we need when we check for implication of a two-literal clause by a\n    ** one-literal clause.  The linked lists allow fast sequential\n    ** processing. */\n    bitVectorClear(Tolv, size);\n    bitVectorClear(Tolp, size);\n    bitVectorClear(Eolv, size);\n    bitVectorClear(Eolp, size);\n\n    /* Initialize result structure. */\n    res = tlcInfoAlloc();\n    if res == nil { goto cleanup; }\n\n    /* Scan the two input list.  Extract inherited two-literal clauses\n    ** and set aside one-literal clauses from each list.  The incoming lists\n    ** are sorted in the order defined by beforep.  The three linked list\n    ** produced by this loop are sorted in the reverse order because we\n    ** always append to the front of the lists.\n    ** The inherited clauses are those clauses (both one- and two-literal)\n    ** that are common to both children; and the two-literal clauses of\n    ** one child that are implied by a one-literal clause of the other\n    ** child. */\n    for !(sentinelp(Tcv[pt], Tcv[pt+1]) != 0) || !(sentinelp(Ecv[pe], Ecv[pe+1]) != 0) {\n        if equalp(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1)) != 0 {\n            /* Add clause to inherited list. */\n            newclause = new(TlClause);\n            if newclause == nil { goto cleanup; }\n            newclause.v1 = Tcv[pt];\n            newclause.v2 = Tcv[pt+1];\n            newclause.p1 = bitVectorRead(Tcp, pt);\n            newclause.p2 = bitVectorRead(Tcp, pt+1);\n            newclause.next = iclauses;\n            iclauses = newclause;\n            pt += 2; pe += 2; cv++;\n        } else if beforep(Tcv[pt], bitVectorRead(Tcp, pt),\n                   Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                   Ecv[pe], bitVectorRead(Ecp, pe),\n                   Ecv[pe+1], bitVectorRead(Ecp, pe+1)) != 0 {\n            if oneliteralp(Tcv[pt+1]) != 0 {\n                /* Add this one-literal clause to the T set. */\n                newclause = new(TlClause);\n                if newclause == nil { goto cleanup; }\n                newclause.v1 = Tcv[pt];\n                newclause.v2 = CUDD_MAXINDEX;\n                newclause.p1 = bitVectorRead(Tcp, pt);\n                newclause.p2 = 1;\n                newclause.next = tclauses;\n                tclauses = newclause;\n                bitVectorSet(Tolv, Tcv[pt], 1);\n                bitVectorSet(Tolp, Tcv[pt], bitVectorRead(Tcp, pt));\n            } else {\n                if impliedp(Tcv[pt], bitVectorRead(Tcp, pt),\n                             Tcv[pt+1], bitVectorRead(Tcp, pt+1),\n                             Eolv, Eolp) != 0 {\n                    /* Add clause to inherited list. */\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = Tcv[pt];\n                    newclause.v2 = Tcv[pt+1];\n                    newclause.p1 = bitVectorRead(Tcp, pt);\n                    newclause.p2 = bitVectorRead(Tcp, pt+1);\n                    newclause.next = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pt += 2;\n        } else { /* !beforep() */\n            if oneliteralp(Ecv[pe+1]) != 0 {\n                /* Add this one-literal clause to the E set. */\n                newclause = new(TlClause);\n                if newclause == nil { goto cleanup; }\n                newclause.v1 = Ecv[pe];\n                newclause.v2 = CUDD_MAXINDEX;\n                newclause.p1 = bitVectorRead(Ecp, pe);\n                newclause.p2 = 1;\n                newclause.next = eclauses;\n                eclauses = newclause;\n                bitVectorSet(Eolv, Ecv[pe], 1);\n                bitVectorSet(Eolp, Ecv[pe], bitVectorRead(Ecp, pe));\n            } else {\n                if impliedp(Ecv[pe], bitVectorRead(Ecp, pe),\n                             Ecv[pe+1], bitVectorRead(Ecp, pe+1),\n                             Tolv, Tolp) != 0 {\n                    /* Add clause to inherited list. */\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = Ecv[pe];\n                    newclause.v2 = Ecv[pe+1];\n                    newclause.p1 = bitVectorRead(Ecp, pe);\n                    newclause.p2 = bitVectorRead(Ecp, pe+1);\n                    newclause.next = iclauses;\n                    iclauses = newclause;\n                    cv++;\n                }\n            }\n            pe += 2;\n        }\n    }\n\n    /* Add one-literal clauses for the label variable to the front of\n    ** the two lists. */\n    newclause = new(TlClause);\n    if newclause == nil { goto cleanup; }\n    newclause.v1 = label;\n    newclause.v2 = CUDD_MAXINDEX;\n    newclause.p1 = 0;\n    newclause.p2 = 1;\n    newclause.next = tclauses;\n    tclauses = newclause;\n    newclause = new(TlClause);\n    if newclause == nil { goto cleanup; }\n    newclause.v1 = label;\n    newclause.v2 = CUDD_MAXINDEX;\n    newclause.p1 = 1;\n    newclause.p2 = 1;\n    newclause.next = eclauses;\n    eclauses = newclause;\n\n    /* Produce the non-inherited clauses.  We preserve the \"reverse\"\n    ** order of the two input lists by appending to the end of the\n    ** list.  In this way, iclauses and nclauses are consistent. */\n    for tclauses != nil \u0026\u0026 eclauses != nil {\n        if beforep(eclauses.v1, eclauses.p1, eclauses.v2, eclauses.p2,\n                    tclauses.v1, tclauses.p1, tclauses.v2, tclauses.p2) != 0 {\n            var nextclause *TlClause  = tclauses.next;\n            var otherclauses *TlClause  = eclauses;\n            for otherclauses != nil {\n                if tclauses.v1 != otherclauses.v1 {\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = tclauses.v1;\n                    newclause.v2 = otherclauses.v1;\n                    newclause.p1 = tclauses.p1;\n                    newclause.p2 = otherclauses.p1;\n                    newclause.next = nil;\n                    if nclauses == nil {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause.next = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses.next;\n            }\n            ABC_FREE(tclauses);\n            tclauses = nextclause;\n        } else {\n            var nextclause *TlClause  = eclauses.next;\n            var otherclauses *TlClause  = tclauses;\n            for otherclauses != nil {\n                if eclauses.v1 != otherclauses.v1 {\n                    newclause = new(TlClause);\n                    if newclause == nil { goto cleanup; }\n                    newclause.v1 = eclauses.v1;\n                    newclause.v2 = otherclauses.v1;\n                    newclause.p1 = eclauses.p1;\n                    newclause.p2 = otherclauses.p1;\n                    newclause.next = nil;\n                    if nclauses == nil {\n                        nclauses = newclause;\n                        lnclause = newclause;\n                    } else {\n                        lnclause.next = newclause;\n                        lnclause = newclause;\n                    }\n                    cv++;\n                }\n                otherclauses = otherclauses.next;\n            }\n            ABC_FREE(eclauses);\n            eclauses = nextclause;\n        }\n    }\n    for tclauses != nil {\n        var nextclause *TlClause  = tclauses.next;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    for eclauses != nil {\n        var nextclause *TlClause  = eclauses.next;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    /* Merge inherited and non-inherited clauses.  Now that we know the\n    ** total number, we allocate the arrays, and we fill them bottom-up\n    ** to restore the proper ordering. */\n    Vcv = ABC_ALLOC(DdHalfWord, 2*(cv+1));\n    if Vcv == nil { goto cleanup; }\n    if cv \u003e 0 {\n        Vcp = bitVectorAlloc(2*cv);\n        if Vcp == nil { goto cleanup; }\n    } else {\n        Vcp = nil;\n    }\n    res.vars = Vcv;\n    res.phases = Vcp;\n    /* Add sentinel. */\n    Vcv[2*cv] = 0;\n    Vcv[2*cv+1] = 0;\n    for iclauses != nil || nclauses != nil {\n        var nextclause *TlClause;\n        cv--;\n        if nclauses == nil || (iclauses != nil \u0026\u0026\n            (beforep(nclauses.v1, nclauses.p1, nclauses.v2, nclauses.p2,\n                    iclauses.v1, iclauses.p1, iclauses.v2, iclauses.p2) != 0)) {\n            Vcv[2*cv] = iclauses.v1;\n            Vcv[2*cv+1] = iclauses.v2;\n            bitVectorSet(Vcp, 2*cv, iclauses.p1);\n            bitVectorSet(Vcp, 2*cv+1, iclauses.p2);\n            nextclause = iclauses.next;\n            ABC_FREE(iclauses);\n            iclauses = nextclause;\n        } else {\n            Vcv[2*cv] = nclauses.v1;\n            Vcv[2*cv+1] = nclauses.v2;\n            bitVectorSet(Vcp, 2*cv, nclauses.p1);\n            bitVectorSet(Vcp, 2*cv+1, nclauses.p2);\n            nextclause = nclauses.next;\n            ABC_FREE(nclauses);\n            nclauses = nextclause;\n        }\n    }\n    assert(cv == 0, \"cv == 0\");\n\n    return(res);\n\n cleanup:\n    if res != nil { Cudd_tlcInfoFree(res); }\n    for iclauses != nil {\n        var nextclause *TlClause  = iclauses.next;\n        ABC_FREE(iclauses);\n        iclauses = nextclause;\n    }\n    for nclauses != nil {\n        var nextclause *TlClause  = nclauses.next;\n        ABC_FREE(nclauses);\n        nclauses = nextclause;\n    }\n    for tclauses != nil {\n        var nextclause *TlClause  = tclauses.next;\n        ABC_FREE(tclauses);\n        tclauses = nextclause;\n    }\n    for eclauses != nil {\n        var nextclause *TlClause  = eclauses.next;\n        ABC_FREE(eclauses);\n        eclauses = nextclause;\n    }\n\n    return(nil);\n\n} /* end of computeClauses */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the two-literal clauses for a node.]\n\n  Description [Computes the two-literal clauses for a node with a zero\n  child, given the clauses for its other child and the label of the\n  node.  Returns a pointer to a TclInfo structure if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [computeClauses]\n\n******************************************************************************/\nstatic DdTlcInfo *\ncomputeClausesWithUniverse(\n  DdTlcInfo *Cres /* list of clauses for child */,\n  DdHalfWord label /* variable labeling the current node */,\n  short phase /* 0 if E child is zero; 1 if T child is zero */)\n{\n    var Ccv *DdHalfWord  = Cres.vars; /* variables of clauses for child */\n    var Ccp *BitVector  = Cres.phases; /* phases of clauses for child */\n    var Vcv *DdHalfWord  = nil; /* pointer to the variables of the clauses for v */\n    var Vcp *BitVector  = nil; /* pointer to the phases of the clauses for v */\n    var res *DdTlcInfo  = nil; /* the set of clauses to be returned */\n    var i int32;\n\n    /* Initialize result. */\n    res = tlcInfoAlloc();\n    if res == nil { goto cleanup; }\n    /* Count entries for new list and allocate accordingly. */\n    for i = 0; !(sentinelp(Ccv[i], Ccv[i+1]) != 0); i += 2 {}\n    /* At this point, i is twice the number of clauses in the child's\n    ** list.  We need four more entries for this node: 2 for the one-literal\n    ** clause for the label, and 2 for the sentinel. */\n    Vcv = ABC_ALLOC(DdHalfWord,i+4);\n    if Vcv == nil { goto cleanup; }\n    Vcp = bitVectorAlloc(i+4);\n    if Vcp == nil { goto cleanup; }\n    res.vars = Vcv;\n    res.phases = Vcp;\n    /* Copy old list into new. */\n    for i = 0; !(sentinelp(Ccv[i], Ccv[i+1]) != 0); i += 2 {\n        Vcv[i] = Ccv[i];\n        Vcv[i+1] = Ccv[i+1];\n        bitVectorSet(Vcp, i, bitVectorRead(Ccp, i));\n        bitVectorSet(Vcp, i+1, bitVectorRead(Ccp, i+1));\n    }\n    /* Add clause corresponding to label. */\n    Vcv[i] = label;\n    bitVectorSet(Vcp, i, phase);\n    i++;\n    Vcv[i] = CUDD_MAXINDEX;\n    bitVectorSet(Vcp, i, 1);\n    i++;\n    /* Add sentinel. */\n    Vcv[i] = 0;\n    Vcv[i+1] = 0;\n    bitVectorSet(Vcp, i, 0);\n    bitVectorSet(Vcp, i+1, 0);\n\n    return(res);\n\n cleanup:\n    /* Vcp is guaranteed to be NULL here.  Hence, we do not try to free it. */\n    if Vcv != nil { ABC_FREE(Vcv); }\n    if res != nil { Cudd_tlcInfoFree(res); }\n\n    return(nil);\n\n} /* end of computeClausesWithUniverse */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns an enpty set of clauses.]\n\n  Description [Returns a pointer to an empty set of clauses if\n  successful; NULL otherwise.  No bit vector for the phases is\n  allocated.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc emptyClauseSet() *DdTlcInfo {\n    var eset *DdTlcInfo;\n\n    eset = new(DdTlcInfo);\n    if eset == nil { return(nil); }\n    eset.vars = ABC_ALLOC(DdHalfWord,2);\n    if eset.vars == nil {\n        ABC_FREE(eset);\n        return(nil);\n    }\n    /* Sentinel */\n    eset.vars[0] = 0;\n    eset.vars[1] = 0;\n    eset.phases = nil; /* does not matter */\n    eset.cnt = 0;\n    return(eset);\n\n} /* end of emptyClauseSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns true iff the argument is the sentinel clause.]\n\n  Description [Returns true iff the argument is the sentinel clause.\n  A sentinel clause has both variables equal to 0.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc sentinelp(var1 DdHalfWord, var2 DdHalfWord) int32 {\n    return(var1 == 0 \u0026\u0026 var2 == 0);\n\n} /* end of sentinelp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns true iff the two arguments are identical clauses.]\n\n  Description [Returns true iff the two arguments are identical\n  clauses.  Since literals are sorted, we only need to compare\n  literals in the same position.]\n\n  SideEffects [None]\n\n  SeeAlso     [beforep]\n\n******************************************************************************/\nfunc equalp(var1a DdHalfWord, phase1a int16, var1b DdHalfWord, phase1b int16, var2a DdHalfWord, phase2a int16, var2b DdHalfWord, phase2b int16) int32 {\n    return(var1a == var2a \u0026\u0026 phase1a == phase2a \u0026\u0026\n           var1b == var2b \u0026\u0026 phase1b == phase2b);\n\n} /* end of equalp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns true iff the first argument precedes the second in\n  the clause order.]\n\n  Description [Returns true iff the first argument precedes the second\n  in the clause order.  A clause precedes another if its first lieral\n  precedes the first literal of the other, or if the first literals\n  are the same, and its second literal precedes the second literal of\n  the other clause.  A literal precedes another if it has a higher\n  index, of if it has the same index, but it has lower phase.  Phase 0\n  is the positive phase, and it is lower than Phase 1 (negative\n  phase).]\n\n  SideEffects [None]\n\n  SeeAlso     [equalp]\n\n******************************************************************************/\nfunc beforep(var1a DdHalfWord, phase1a int16, var1b DdHalfWord, phase1b int16, var2a DdHalfWord, phase2a int16, var2b DdHalfWord, phase2b int16) int32 {\n    return(var1a \u003e var2a || (var1a == var2a \u0026\u0026\n           (phase1a \u003c phase2a || (phase1a == phase2a \u0026\u0026\n            (var1b \u003e var2b || (var1b == var2b \u0026\u0026 phase1b \u003c phase2b))))));\n\n} /* end of beforep */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns true iff the argument is a one-literal clause.]\n\n  Description [Returns true iff the argument is a one-literal clause.\n  A one-litaral clause has the constant FALSE as second literal.\n  Since the constant TRUE is never used, it is sufficient to test for\n  a constant.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc oneliteralp(var DdHalfWord) int32 {\n    return(var == CUDD_MAXINDEX);\n\n} /* end of oneliteralp */\n\n\n/**Function********************************************************************\n\n  Synopsis [Returns true iff either literal of a clause is in a set of\n  literals.]\n\n  Description [Returns true iff either literal of a clause is in a set\n  of literals.  The first four arguments specify the clause.  The\n  remaining two arguments specify the literal set.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc impliedp(var1 DdHalfWord, phase1 int16, var2 DdHalfWord, phase2 int16, olv *BitVector, olp *BitVector) int32 {\n    return((bitVectorRead(olv, var1) \u0026\u0026\n            bitVectorRead(olp, var1) == phase1) ||\n           (bitVectorRead(olv, var2) \u0026\u0026\n            bitVectorRead(olp, var2) == phase2));\n\n} /* end of impliedp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates a bit vector.]\n\n  Description [Allocates a bit vector.  The parameter size gives the\n  number of bits.  This procedure allocates enough long's to hold the\n  specified number of bits.  Returns a pointer to the allocated vector\n  if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [bitVectorClear bitVectorFree]\n\n******************************************************************************/\nfunc bitVectorAlloc(size int32) *BitVector {\n    var allocSize int32;\n    var vector *BitVector;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    vector = ABC_ALLOC(BitVector, allocSize);\n    if vector == nil { return(nil); }\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return(vector);\n\n} /* end of bitVectorAlloc */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Clears a bit vector.]\n\n  Description [Clears a bit vector.  The parameter size gives the\n  number of bits.]\n\n  SideEffects [None]\n\n  SeeAlso     [bitVectorAlloc]\n\n******************************************************************************/\n//DD_INLINE\nfunc bitVectorClear(vector *BitVector, size int32) {\n    var allocSize int32;\n\n    /* Find out how many long's we need.\n    ** There are sizeof(long) * 8 bits in a long.\n    ** The ceiling of the ratio of two integers m and n is given\n    ** by ((n-1)/m)+1.  Putting all this together, we get... */\n    allocSize = ((size - 1) / (sizeof(BitVector) * 8)) + 1;\n    /* Clear the whole array. */\n    (void) memset(vector, 0, allocSize * sizeof(BitVector));\n    return;\n\n} /* end of bitVectorClear */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Frees a bit vector.]\n\n  Description [Frees a bit vector.]\n\n  SideEffects [None]\n\n  SeeAlso     [bitVectorAlloc]\n\n******************************************************************************/\nfunc bitVectorFree(vector *BitVector) {\n    ABC_FREE(vector);\n\n} /* end of bitVectorFree */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the i-th entry of a bit vector.]\n\n  Description [Returns the i-th entry of a bit vector.]\n\n  SideEffects [None]\n\n  SeeAlso     [bitVectorSet]\n\n******************************************************************************/\n//DD_INLINE\nfunc bitVectorRead(vector *BitVector, i int32) int16 {\n    var word, bit int32;\n    var result int16;\n\n    if vector == nil { return(int16( 0)); }\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    result = int16( ((vector[word] \u003e\u003e bit) \u0026 int64(1)));\n    return(result);\n\n} /* end of bitVectorRead */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sets the i-th entry of a bit vector to a value.]\n\n  Description [Sets the i-th entry of a bit vector to a value.]\n\n  SideEffects [None]\n\n  SeeAlso     [bitVectorRead]\n\n******************************************************************************/\n//DD_INLINE\nfunc bitVectorSet(vector *BitVector, i int32, val int16) {\n    var word, bit int32;\n\n    word = i \u003e\u003e LOGBPL;\n    bit = i \u0026 (BPL - 1);\n    vector[word] \u0026= ~(int64(1) \u003c\u003c bit);\n    vector[word] |= ((int64( val)) \u003c\u003c bit);\n\n} /* end of bitVectorSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates a DdTlcInfo Structure.]\n\n  Description [Returns a pointer to a DdTlcInfo Structure if successful;\n  NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_tlcInfoFree]\n\n******************************************************************************/\nfunc tlcInfoAlloc() *DdTlcInfo {\n    var res *DdTlcInfo  = new(DdTlcInfo);\n    if res == nil { return(nil); }\n    res.vars = nil;\n    res.phases = nil;\n    res.cnt = 0;\n    return(res);\n\n} /* end of tlcInfoAlloc */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

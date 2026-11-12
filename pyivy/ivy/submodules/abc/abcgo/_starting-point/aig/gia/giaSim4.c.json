@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim4.c",
+  "SHA256": "f7a940649db7b3336b265b20b721a09cd23fd499ccb3809b8da340c9eda034c9",
+  "Functions": [
+    {
+      "Name": "Gia_Sim4Try",
+      "Start": 1204,
+      "End": 1419,
+      "BodyStart": 1402,
+      "Original": "int Gia_Sim4Try( char * pFileName0, char * pFileName1, char * pFileName2, int nTimeout, int nWords, int nBeam, int LevL, int LevU, int fOrder, int fFancy, int fUseBuf, int fSkipMffc, int fVerbose )\n{\n    return 0;\n}",
+      "Draft": "func Gia_Sim4Try(pFileName0 string, pFileName1 string, pFileName2 string, nTimeout int32, nWords int32, nBeam int32, LevL int32, LevU int32, fOrder int32, fFancy int32, fUseBuf int32, fSkipMffc int32, fVerbose int32) int32 {\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim4.c::Gia_Sim4Try",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Sim4Try",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1204,
+      "End": 1419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim4.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1666
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaSim4.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Simulation engine.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSim4.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Sim4Try(pFileName0 string, pFileName1 string, pFileName2 string, nTimeout int32, nWords int32, nBeam int32, LevL int32, LevU int32, fOrder int32, fFancy int32, fUseBuf int32, fSkipMffc int32, fVerbose int32) int32 {\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

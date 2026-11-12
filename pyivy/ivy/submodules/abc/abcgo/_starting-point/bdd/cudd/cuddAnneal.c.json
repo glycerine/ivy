@@ -1,0 +1,727 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c",
+  "SHA256": "ce60bb49355211a82deb8b5e79c3748cf23de3dd8b96b3038b9fecafd1d93561",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 17,
+        "ByteOffset": 6989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    BestOrder = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 17,
+        "ByteOffset": 9015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(BestOrder);"
+    },
+    {
+      "Name": "log",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 263,
+        "Column": 29,
+        "ByteOffset": 9505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            maxGen = int32((log(NewTemp) / log(temp) * maxGen));"
+    },
+    {
+      "Name": "log",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 263,
+        "Column": 44,
+        "ByteOffset": 9520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            maxGen = int32((log(NewTemp) / log(temp) * maxGen));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 9757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(BestOrder);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 16,
+        "ByteOffset": 17692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err,\"Unexpected condition in ddJumping\\n\");"
+    },
+    {
+      "Name": "exp",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 668,
+        "Column": 21,
+        "ByteOffset": 22763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        threshold = exp(-(float64((table.keys - table.isolated - size)))/temp);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 98,
+        "Column": 1,
+        "ByteOffset": 3719
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 3832
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 178,
+        "Column": 1,
+        "ByteOffset": 6830
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 204,
+        "Column": 1,
+        "ByteOffset": 7439
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 271,
+        "Column": 1,
+        "ByteOffset": 9756
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 281,
+        "Column": 1,
+        "ByteOffset": 10033
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 522,
+        "Column": 1,
+        "ByteOffset": 16858
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 722,
+        "Column": 1,
+        "ByteOffset": 22352
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 727,
+        "Column": 1,
+        "ByteOffset": 22506
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 803,
+        "Column": 1,
+        "ByteOffset": 24259
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddAnnealing",
+      "Start": 6374,
+      "End": 10284,
+      "BodyStart": 6442,
+      "Original": "int\ncuddAnnealing(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int         nvars;\n    int         size;\n    int         x,y;\n    int         result;\n    int         c1, c2, c3, c4;\n    int         BestCost;\n    int         *BestOrder;\n    double      NewTemp, temp;\n    double      rand1;\n    int         innerloop, maxGen;\n    int         ecount, ucount, dcount;\n   \n    nvars = upper - lower + 1;\n\n    result = cuddSifting(table,lower,upper);\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    if (result == 0) return(0);\n\n    size = table-\u003ekeys - table-\u003eisolated;\n\n    /* Keep track of the best order. */\n    BestCost = size;\n    BestOrder = ABC_ALLOC(int,nvars);\n    if (BestOrder == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    copyOrder(table,BestOrder,lower,upper);\n\n    temp = BETA * size;\n    maxGen = (int) (MAXGEN_RATIO * nvars);\n\n    c1 = size + 10;\n    c2 = c1 + 10;\n    c3 = size;\n    c4 = c2 + 10;\n    ecount = ucount = dcount = 0;\n \n    while (!stopping_criterion(c1, c2, c3, c4, temp)) {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"temp=%f\\tsize=%d\\tgen=%d\\t\",\n                       temp,size,maxGen);\n        tosses = acceptances = 0;\n#endif\n        for (innerloop = 0; innerloop \u003c maxGen; innerloop++) {\n            /* Choose x, y  randomly. */\n            x = (int) Cudd_Random() % nvars;\n            do {\n                y = (int) Cudd_Random() % nvars;\n            } while (x == y);\n            x += lower;\n            y += lower;\n            if (x \u003e y) {\n                int tmp = x;\n                x = y;\n                y = tmp;\n            }\n\n            /* Choose move with roulette wheel. */\n            rand1 = random_generator();\n            if (rand1 \u003c EXC_PROB) {\n                result = ddExchange(table,x,y,temp);       /* exchange */\n                ecount++;\n#if 0\n                (void) fprintf(table-\u003eout,\n                               \"Exchange of %d and %d: size = %d\\n\",\n                               x,y,table-\u003ekeys - table-\u003eisolated);\n#endif\n            } else if (rand1 \u003c EXC_PROB + JUMP_UP_PROB) {\n                result = ddJumpingAux(table,y,x,y,temp); /* jumping_up */\n                ucount++;\n#if 0\n                (void) fprintf(table-\u003eout,\n                               \"Jump up of %d to %d: size = %d\\n\",\n                               y,x,table-\u003ekeys - table-\u003eisolated);\n#endif\n            } else {\n                result = ddJumpingAux(table,x,x,y,temp); /* jumping_down */\n                dcount++;\n#if 0\n                (void) fprintf(table-\u003eout,\n                               \"Jump down of %d to %d: size = %d\\n\",\n                               x,y,table-\u003ekeys - table-\u003eisolated);\n#endif\n            }\n\n            if (!result) {\n                ABC_FREE(BestOrder);\n                return(0);\n            }\n\n            size = table-\u003ekeys - table-\u003eisolated;       /* keep current size */\n            if (size \u003c BestCost) {                      /* update best order */\n                BestCost = size;\n                copyOrder(table,BestOrder,lower,upper);\n            }\n        }\n        c1 = c2;\n        c2 = c3;\n        c3 = c4;\n        c4 = size;\n        NewTemp = ALPHA * temp;\n        if (NewTemp \u003e= 1.0) {\n            maxGen = (int)(log(NewTemp) / log(temp) * maxGen);\n        }\n        temp = NewTemp;                 /* control variable */\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"uphill = %d\\taccepted = %d\\n\",\n                       tosses,acceptances);\n        fflush(table-\u003eout);\n#endif\n    }\n\n    result = restoreOrder(table,BestOrder,lower,upper);\n    ABC_FREE(BestOrder);\n    if (!result) return(0);\n#ifdef DD_STATS\n    fprintf(table-\u003eout,\"#:N_EXCHANGE %8d : total exchanges\\n\",ecount);\n    fprintf(table-\u003eout,\"#:N_JUMPUP   %8d : total jumps up\\n\",ucount);\n    fprintf(table-\u003eout,\"#:N_JUMPDOWN %8d : total jumps down\",dcount);\n#endif\n    return(1);\n\n}",
+      "Draft": "func cuddAnnealing(table *DdManager, lower int32, upper int32) int32 {\n    var nvars int32;\n    var size int32;\n    var x, y int32;\n    var result int32;\n    var c1, c2, c3, c4 int32;\n    var BestCost int32;\n    var BestOrder *int32;\n    var NewTemp, temp float64;\n    var rand1 float64;\n    var innerloop, maxGen int32;\n    var ecount, ucount, dcount int32;\n   \n    nvars = upper - lower + 1;\n\n    result = cuddSifting(table,lower,upper);\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    if result == 0 { return(0); }\n\n    size = table.keys - table.isolated;\n\n    /* Keep track of the best order. */\n    BestCost = size;\n    BestOrder = ABC_ALLOC(int,nvars);\n    if BestOrder == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    copyOrder(table,BestOrder,lower,upper);\n\n    temp = BETA * size;\n    maxGen = int32( (MAXGEN_RATIO * nvars));\n\n    c1 = size + 10;\n    c2 = c1 + 10;\n    c3 = size;\n    c4 = c2 + 10;\n    ecount = ucount = dcount = 0;\n \n    for !(stopping_criterion(c1, c2, c3, c4, temp) != 0) {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"temp=%f\\tsize=%d\\tgen=%d\\t\",\n                       temp,size,maxGen);\n        tosses = acceptances = 0;\n#endif\n        for innerloop = 0; innerloop \u003c maxGen; innerloop++ {\n            /* Choose x, y  randomly. */\n            x = int32( Cudd_Random()) % nvars;\n            for {\n                y = int32( Cudd_Random()) % nvars;\n            \nif !(x == y) { break }\n} \n            x += lower;\n            y += lower;\n            if x \u003e y {\n                var tmp int32  = x;\n                x = y;\n                y = tmp;\n            }\n\n            /* Choose move with roulette wheel. */\n            rand1 = random_generator();\n            if rand1 \u003c EXC_PROB {\n                result = ddExchange(table,x,y,temp);       /* exchange */\n                ecount++;\n     \n                                          \n                                                                    \n                                                                  \n      \n            } else if rand1 \u003c EXC_PROB + JUMP_UP_PROB {\n                result = ddJumpingAux(table,y,x,y,temp); /* jumping_up */\n                ucount++;\n     \n                                          \n                                                                  \n                                                                  \n      \n            } else {\n                result = ddJumpingAux(table,x,x,y,temp); /* jumping_down */\n                dcount++;\n     \n                                          \n                                                                    \n                                                                  \n      \n            }\n\n            if !(result != 0) {\n                ABC_FREE(BestOrder);\n                return(0);\n            }\n\n            size = table.keys - table.isolated;       /* keep current size */\n            if size \u003c BestCost {                      /* update best order */\n                BestCost = size;\n                copyOrder(table,BestOrder,lower,upper);\n            }\n        }\n        c1 = c2;\n        c2 = c3;\n        c3 = c4;\n        c4 = size;\n        NewTemp = ALPHA * temp;\n        if NewTemp \u003e= 1.0 {\n            maxGen = int32((math.Log(float64(NewTemp)) / math.Log(float64(temp)) * maxGen));\n        }\n        temp = NewTemp;                 /* control variable */\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"uphill = %d\\taccepted = %d\\n\",\n                       tosses,acceptances);\n        fflush(table-\u003eout);\n#endif\n    }\n\n    result = restoreOrder(table,BestOrder,lower,upper);\n    ABC_FREE(BestOrder);\n    if !(result != 0) { return(0); }\n#ifdef DD_STATS\n    fprintf(table-\u003eout,\"#:N_EXCHANGE %8d : total exchanges\\n\",ecount);\n    fprintf(table-\u003eout,\"#:N_JUMPUP   %8d : total jumps up\\n\",ucount);\n    fprintf(table-\u003eout,\"#:N_JUMPDOWN %8d : total jumps down\",dcount);\n#endif\n    return(1);\n\n}"
+    },
+    {
+      "Name": "stopping_criterion",
+      "Start": 10956,
+      "End": 11212,
+      "BodyStart": 11047,
+      "Original": "static int\nstopping_criterion(\n  int  c1,\n  int  c2,\n  int  c3,\n  int  c4,\n  double  temp)\n{\n    if (STOP_TEMP \u003c temp) {\n        return(0);\n    } else if ((c1 == c2) \u0026\u0026 (c1 == c3) \u0026\u0026 (c1 == c4)) {\n        return(1);\n    } else {\n        return(0);\n    }\n\n}",
+      "Draft": "func stopping_criterion(c1 int32, c2 int32, c3 int32, c4 int32, temp float64) int32 {\n    if STOP_TEMP \u003c temp {\n        return(0);\n    } else if (c1 == c2) \u0026\u0026 (c1 == c3) \u0026\u0026 (c1 == c4) {\n        return(1);\n    } else {\n        return(0);\n    }\n\n}"
+    },
+    {
+      "Name": "random_generator",
+      "Start": 11561,
+      "End": 11654,
+      "BodyStart": 11598,
+      "Original": "static double\nrandom_generator(void)\n{\n    return((double)(Cudd_Random() / 2147483561.0));\n\n}",
+      "Draft": "func random_generator() float64 {\n    return(float64((Cudd_Random() / 2147483561.0)));\n\n}"
+    },
+    {
+      "Name": "ddExchange",
+      "Start": 12104,
+      "End": 16110,
+      "BodyStart": 12184,
+      "Original": "static int\nddExchange(\n  DdManager * table,\n  int  x,\n  int  y,\n  double  temp)\n{\n    Move       *move,*moves;\n    int        tmp;\n    int        x_ref,y_ref;\n    int        x_next,y_next;\n    int        size, result;\n    int        initial_size, limit_size;\n\n    x_ref = x;\n    y_ref = y;\n\n    x_next = cuddNextHigh(table,x);\n    y_next = cuddNextLow(table,y);\n    moves = NULL;\n    initial_size = limit_size = table-\u003ekeys - table-\u003eisolated;\n\n    for (;;) {\n        if (x_next == y_next) {\n            size = cuddSwapInPlace(table,x,x_next);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = x_next;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = y_next;\n            move-\u003ey = y;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,x,x_next);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = x_next;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else if (x == y_next) {\n            size = cuddSwapInPlace(table,x,x_next);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = x_next;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else {\n            size = cuddSwapInPlace(table,x,x_next);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = x_next;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if (size == 0) goto ddExchangeOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddExchangeOutOfMem;\n            move-\u003ex = y_next;\n            move-\u003ey = y;\n            move-\u003esize = size;\n            move-\u003enext = moves;\n            moves = move;\n            x = x_next;\n            y = y_next;\n        }\n\n        x_next = cuddNextHigh(table,x);\n        y_next = cuddNextLow(table,y);\n        if (x_next \u003e y_ref) break;\n\n        if ((double) size \u003e DD_MAX_REORDER_GROWTH * (double) limit_size) {\n            break;\n        } else if (size \u003c limit_size) {\n            limit_size = size;\n        }\n    }\n\n    if (y_next\u003e=x_ref) {\n        size = cuddSwapInPlace(table,y_next,y);\n        if (size == 0) goto ddExchangeOutOfMem;\n        move = (Move *)cuddDynamicAllocNode(table);\n        if (move == NULL) goto ddExchangeOutOfMem;\n        move-\u003ex = y_next;\n        move-\u003ey = y;\n        move-\u003esize = size;\n        move-\u003enext = moves;\n        moves = move;\n    }\n\n    /* move backward and stop at best position or accept uphill move */\n    result = siftBackwardProb(table,moves,initial_size,temp);\n    if (!result) goto ddExchangeOutOfMem;\n\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(1);\n\nddExchangeOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(0);\n\n}",
+      "Draft": "func ddExchange(table *DdManager, x int32, y int32, temp float64) int32 {\n    var move, moves *Move;\n    var tmp int32;\n    var x_ref, y_ref int32;\n    var x_next, y_next int32;\n    var size, result int32;\n    var initial_size, limit_size int32;\n\n    x_ref = x;\n    y_ref = y;\n\n    x_next = cuddNextHigh(table,x);\n    y_next = cuddNextLow(table,y);\n    moves = nil;\n    initial_size = limit_size = table.keys - table.isolated;\n\n    for {\n        if x_next == y_next {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = y_next;\n            move.y = y;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else if x == y_next {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = y_next;\n            move.y = y;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            x = x_next;\n            y = y_next;\n        }\n\n        x_next = cuddNextHigh(table,x);\n        y_next = cuddNextLow(table,y);\n        if x_next \u003e y_ref { break; }\n\n        if float64( size) \u003e DD_MAX_REORDER_GROWTH * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n    }\n\n    if y_next\u003e=x_ref {\n        size = cuddSwapInPlace(table,y_next,y);\n        if size == 0 { goto ddExchangeOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddExchangeOutOfMem; }\n        move.x = y_next;\n        move.y = y;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n    }\n\n    /* move backward and stop at best position or accept uphill move */\n    result = siftBackwardProb(table,moves,initial_size,temp);\n    if !(result != 0) { goto ddExchangeOutOfMem; }\n\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(1);\n\nddExchangeOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "ddJumpingAux",
+      "Start": 16579,
+      "End": 18258,
+      "BodyStart": 16680,
+      "Original": "static int\nddJumpingAux(\n  DdManager * table,\n  int  x,\n  int  x_low,\n  int  x_high,\n  double  temp)\n{\n    Move       *move;\n    Move       *moves;        /* list of moves */\n    int        initial_size;\n    int        result;\n\n    initial_size = table-\u003ekeys - table-\u003eisolated;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtables[x].keys \u003e 0);\n#endif\n\n    moves = NULL;\n\n    if (cuddNextLow(table,x) \u003c x_low) {\n        if (cuddNextHigh(table,x) \u003e x_high) return(1);\n        moves = ddJumpingDown(table,x,x_high,initial_size);\n        /* after that point x --\u003e x_high unless early termination */\n        if (moves == NULL) goto ddJumpingAuxOutOfMem;\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if (!result) goto ddJumpingAuxOutOfMem;\n    } else if (cuddNextHigh(table,x) \u003e x_high) {\n        moves = ddJumpingUp(table,x,x_low,initial_size);\n        /* after that point x --\u003e x_low unless early termination */\n        if (moves == NULL) goto ddJumpingAuxOutOfMem;\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if (!result) goto ddJumpingAuxOutOfMem;\n    } else {\n        (void) fprintf(table-\u003eerr,\"Unexpected condition in ddJumping\\n\");\n        goto ddJumpingAuxOutOfMem;\n    }\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(1);\n\nddJumpingAuxOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(0);\n\n}",
+      "Draft": "func ddJumpingAux(table *DdManager, x int32, x_low int32, x_high int32, temp float64) int32 {\n    var move *Move;\n    var moves *Move;        /* list of moves */\n    var initial_size int32;\n    var result int32;\n\n    initial_size = table.keys - table.isolated;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtables[x].keys \u003e 0);\n#endif\n\n    moves = nil;\n\n    if cuddNextLow(table,x) \u003c x_low {\n        if cuddNextHigh(table,x) \u003e x_high { return(1); }\n        moves = ddJumpingDown(table,x,x_high,initial_size);\n        /* after that point x --\u003e x_high unless early termination */\n        if moves == nil { goto ddJumpingAuxOutOfMem; }\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if !(result != 0) { goto ddJumpingAuxOutOfMem; }\n    } else if cuddNextHigh(table,x) \u003e x_high {\n        moves = ddJumpingUp(table,x,x_low,initial_size);\n        /* after that point x --\u003e x_low unless early termination */\n        if moves == nil { goto ddJumpingAuxOutOfMem; }\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if !(result != 0) { goto ddJumpingAuxOutOfMem; }\n    } else {\n        (void) fmt.Fprintf(table.err, \"Unexpected condition in ddJumping\\n\");\n        goto ddJumpingAuxOutOfMem;\n    }\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(1);\n\nddJumpingAuxOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "ddJumpingUp",
+      "Start": 18705,
+      "End": 19724,
+      "BodyStart": 18798,
+      "Original": "static Move *\nddJumpingUp(\n  DdManager * table,\n  int  x,\n  int  x_low,\n  int  initial_size)\n{\n    Move       *moves;\n    Move       *move;\n    int        y;\n    int        size;\n    int        limit_size = initial_size;\n\n    moves = NULL;\n    y = cuddNextLow(table,x);\n    while (y \u003e= x_low) {\n        size = cuddSwapInPlace(table,y,x);\n        if (size == 0) goto ddJumpingUpOutOfMem;\n        move = (Move *)cuddDynamicAllocNode(table);\n        if (move == NULL) goto ddJumpingUpOutOfMem;\n        move-\u003ex = y;\n        move-\u003ey = x;\n        move-\u003esize = size;\n        move-\u003enext = moves;\n        moves = move;\n        if ((double) size \u003e table-\u003emaxGrowth * (double) limit_size) {\n            break;\n        } else if (size \u003c limit_size) {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(moves);\n\nddJumpingUpOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func ddJumpingUp(table *DdManager, x int32, x_low int32, initial_size int32) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limit_size int32  = initial_size;\n\n    moves = nil;\n    y = cuddNextLow(table,x);\n    for y \u003e= x_low {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 { goto ddJumpingUpOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddJumpingUpOutOfMem; }\n        move.x = y;\n        move.y = x;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n        if float64( size) \u003e table.maxGrowth * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(moves);\n\nddJumpingUpOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "ddJumpingDown",
+      "Start": 20174,
+      "End": 21205,
+      "BodyStart": 20270,
+      "Original": "static Move *\nddJumpingDown(\n  DdManager * table,\n  int  x,\n  int  x_high,\n  int  initial_size)\n{\n    Move       *moves;\n    Move       *move;\n    int        y;\n    int        size;\n    int        limit_size = initial_size;\n\n    moves = NULL;\n    y = cuddNextHigh(table,x);\n    while (y \u003c= x_high) {\n        size = cuddSwapInPlace(table,x,y);\n        if (size == 0) goto ddJumpingDownOutOfMem;\n        move = (Move *)cuddDynamicAllocNode(table);\n        if (move == NULL) goto ddJumpingDownOutOfMem;\n        move-\u003ex = x;\n        move-\u003ey = y;\n        move-\u003esize = size;\n        move-\u003enext = moves;\n        moves = move;\n        if ((double) size \u003e table-\u003emaxGrowth * (double) limit_size) {\n            break;\n        } else if (size \u003c limit_size) {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextHigh(table,x);\n    }\n    return(moves);\n\nddJumpingDownOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func ddJumpingDown(table *DdManager, x int32, x_high int32, initial_size int32) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limit_size int32  = initial_size;\n\n    moves = nil;\n    y = cuddNextHigh(table,x);\n    for y \u003c= x_high {\n        size = cuddSwapInPlace(table,x,y);\n        if size == 0 { goto ddJumpingDownOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddJumpingDownOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n        if float64( size) \u003e table.maxGrowth * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextHigh(table,x);\n    }\n    return(moves);\n\nddJumpingDownOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "siftBackwardProb",
+      "Start": 21722,
+      "End": 22975,
+      "BodyStart": 21817,
+      "Original": "static int\nsiftBackwardProb(\n  DdManager * table,\n  Move * moves,\n  int  size,\n  double  temp)\n{\n    Move   *move;\n    int    res;\n    int    best_size = size;\n    double coin, threshold;\n\n    /* Look for best size during the last sifting */\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (move-\u003esize \u003c best_size) {\n            best_size = move-\u003esize;\n        }\n    }\n    \n    /* If best_size equals size, the last sifting did not produce any\n    ** improvement. We now toss a coin to decide whether to retain\n    ** this change or not.\n    */\n    if (best_size == size) {\n        coin = random_generator();\n#ifdef DD_STATS\n        tosses++;\n#endif\n        threshold = exp(-((double)(table-\u003ekeys - table-\u003eisolated - size))/temp);\n        if (coin \u003c threshold) {\n#ifdef DD_STATS\n            acceptances++;\n#endif\n            return(1);\n        }\n    }\n\n    /* Either there was improvement, or we have decided not to\n    ** accept the uphill move. Go to best position.\n    */\n    res = table-\u003ekeys - table-\u003eisolated;\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (res == best_size) return(1);\n        res = cuddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n        if (!res) return(0);\n    }\n\n    return(1);\n\n}",
+      "Draft": "func siftBackwardProb(table *DdManager, moves *Move, size int32, temp float64) int32 {\n    var move *Move;\n    var res int32;\n    var best_size int32  = size;\n    var coin, threshold float64;\n\n    /* Look for best size during the last sifting */\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c best_size {\n            best_size = move.size;\n        }\n    }\n    \n    /* If best_size equals size, the last sifting did not produce any\n    ** improvement. We now toss a coin to decide whether to retain\n    ** this change or not.\n    */\n    if best_size == size {\n        coin = random_generator();\n#ifdef DD_STATS\n        tosses++;\n#endif\n        threshold = math.Exp(float64(-(float64((table.keys - table.isolated - size)))/temp));\n        if coin \u003c threshold {\n#ifdef DD_STATS\n            acceptances++;\n#endif\n            return(1);\n        }\n    }\n\n    /* Either there was improvement, or we have decided not to\n    ** accept the uphill move. Go to best position.\n    */\n    res = table.keys - table.isolated;\n    for move = moves; move != nil; move = move.next {\n        if res == best_size { return(1); }\n        res = cuddSwapInPlace(table,int32(move.x),int32(move.y));\n        if !(res != 0) { return(0); }\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "copyOrder",
+      "Start": 23377,
+      "End": 23610,
+      "BodyStart": 23464,
+      "Original": "static void\ncopyOrder(\n  DdManager * table,\n  int * array,\n  int  lower,\n  int  upper)\n{\n    int i;\n    int nvars;\n\n    nvars = upper - lower + 1;\n    for (i = 0; i \u003c nvars; i++) {\n        array[i] = table-\u003einvperm[i+lower];\n    }\n\n}",
+      "Draft": "func copyOrder(table *DdManager, array *int32, lower int32, upper int32) {\n    var i int32;\n    var nvars int32;\n\n    nvars = upper - lower + 1;\n    for i = 0; i \u003c nvars; i++ {\n        array[i] = table.invperm[i+lower];\n    }\n\n}"
+    },
+    {
+      "Name": "restoreOrder",
+      "Start": 24040,
+      "End": 24563,
+      "BodyStart": 24129,
+      "Original": "static int\nrestoreOrder(\n  DdManager * table,\n  int * array,\n  int  lower,\n  int  upper)\n{\n    int i, x, y, size;\n    int nvars = upper - lower + 1;\n\n    for (i = 0; i \u003c nvars; i++) {\n        x = table-\u003eperm[array[i]];\n#ifdef DD_DEBUG\n    assert(x \u003e= lower \u0026\u0026 x \u003c= upper);\n#endif\n        y = cuddNextLow(table,x);\n        while (y \u003e= i + lower) {\n            size = cuddSwapInPlace(table,y,x);\n            if (size == 0) return(0);\n            x = y;\n            y = cuddNextLow(table,x);\n        }\n    }\n\n    return(1);\n\n}",
+      "Draft": "func restoreOrder(table *DdManager, array *int32, lower int32, upper int32) int32 {\n    var i, x, y, size int32;\n    var nvars int32  = upper - lower + 1;\n\n    for i = 0; i \u003c nvars; i++ {\n        x = table.perm[array[i]];\n#ifdef DD_DEBUG\n    assert(x \u003e= lower \u0026\u0026 x \u003c= upper);\n#endif\n        y = cuddNextLow(table,x);\n        for y \u003e= i + lower {\n            size = cuddSwapInPlace(table,y,x);\n            if size == 0 { return(0); }\n            x = y;\n            y = cuddNextLow(table,x);\n        }\n    }\n\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::mechanical::do::7581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7763,
+      "End": 7765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::12291",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12718,
+      "End": 12726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::12650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13077,
+      "End": 13085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::13009",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13436,
+      "End": 13444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::13464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13891,
+      "End": 13899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::13901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14328,
+      "End": 14336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::14260",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14687,
+      "End": 14695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::14988",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15415,
+      "End": 15423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15875,
+      "End": 15875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15875,
+      "End": 15875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15604",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15875,
+      "End": 15875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16034,
+      "End": 16034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16034,
+      "End": 16034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::15908",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16034,
+      "End": 16034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::17946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18021,
+      "End": 18021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::17980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18021,
+      "End": 18021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::18050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18021,
+      "End": 18021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::18252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18182,
+      "End": 18182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::18286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18182,
+      "End": 18182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::18356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18182,
+      "End": 18182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::19270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19107,
+      "End": 19115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::19860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19645,
+      "End": 19645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::19894",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19645,
+      "End": 19645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::19964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19645,
+      "End": 19645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::20891",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20583,
+      "End": 20591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::21486",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21126,
+      "End": 21126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::21520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21126,
+      "End": 21126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::pointer-cast::21590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21126,
+      "End": 21126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::cuddAnnealing",
+      "Category": "semantic-review",
+      "Symbol": "cuddAnnealing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6374,
+      "End": 10284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::stopping_criterion",
+      "Category": "semantic-review",
+      "Symbol": "stopping_criterion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10956,
+      "End": 11212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::random_generator",
+      "Category": "semantic-review",
+      "Symbol": "random_generator",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11561,
+      "End": 11654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::ddExchange",
+      "Category": "semantic-review",
+      "Symbol": "ddExchange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12104,
+      "End": 16110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::ddJumpingAux",
+      "Category": "semantic-review",
+      "Symbol": "ddJumpingAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16579,
+      "End": 18258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::ddJumpingUp",
+      "Category": "semantic-review",
+      "Symbol": "ddJumpingUp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18705,
+      "End": 19724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::ddJumpingDown",
+      "Category": "semantic-review",
+      "Symbol": "ddJumpingDown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20174,
+      "End": 21205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::siftBackwardProb",
+      "Category": "semantic-review",
+      "Symbol": "siftBackwardProb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21722,
+      "End": 22975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::copyOrder",
+      "Category": "semantic-review",
+      "Symbol": "copyOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23377,
+      "End": 23610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::restoreOrder",
+      "Category": "semantic-review",
+      "Symbol": "restoreOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24040,
+      "End": 24563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3719,
+      "End": 3830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3832,
+      "End": 3978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6830,
+      "End": 6889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7439,
+      "End": 7601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9756,
+      "End": 9916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10033,
+      "End": 10266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16858,
+      "End": 16922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 22352,
+      "End": 22392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 22506,
+      "End": 22555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24259,
+      "End": 24319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::macro-inline::7043",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7043,
+      "End": 7063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::macro-inline::9152",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9152,
+      "End": 9171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAnneal.c::macro-inline::9984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9984,
+      "End": 10003
+    }
+  ],
+  "Draft": "package cudd\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAnneal.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Reordering of DDs based on simulated annealing]\n\n  Description [Internal procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e cuddAnnealing()\n                \u003c/ul\u003e\n               Static procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e stopping_criterion()\n                \u003cli\u003e random_generator()\n                \u003cli\u003e ddExchange()\n                \u003cli\u003e ddJumpingAux()\n                \u003cli\u003e ddJumpingUp()\n                \u003cli\u003e ddJumpingDown()\n                \u003cli\u003e siftBackwardProb()\n                \u003cli\u003e copyOrder()\n                \u003cli\u003e restoreOrder()\n                \u003c/ul\u003e\n                ]\n\n  SeeAlso     []\n\n  Author      [Jae-Young Jang, Jorgen Sivesind]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/* Annealing parameters */\nconst BETA = 0.6 \nconst ALPHA = 0.90\nconst EXC_PROB = 0.4 \nconst JUMP_UP_PROB = 0.36\nconst MAXGEN_RATIO = 15.0\nconst STOP_TEMP = 1.0\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAnneal.c,v 1.14 2004/08/13 18:04:46 fabio Exp $\";\n#endif\n\n#ifdef DD_STATS\nextern  int     ddTotalNumberSwapping;\nextern  int     ddTotalNISwaps;\nstatic  int     tosses;\nstatic  int     acceptances;\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int stopping_criterion (int c1, int c2, int c3, int c4, double temp);\n\n// static double random_generator (void);\n\n// static int ddExchange (DdManager *table, int x, int y, double temp);\n\n// static int ddJumpingAux (DdManager *table, int x, int x_low, int x_high, double temp);\n\n// static Move * ddJumpingUp (DdManager *table, int x, int x_low, int initial_size);\n\n// static Move * ddJumpingDown (DdManager *table, int x, int x_high, int initial_size);\n\n// static int siftBackwardProb (DdManager *table, Move *moves, int size, double temp);\n\n// static void copyOrder (DdManager *table, int *array, int lower, int upper);\n\n// static int restoreOrder (DdManager *table, int *array, int lower, int upper);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Get new variable-order by simulated annealing algorithm.]\n\n  Description [Get x, y by random selection. Choose either\n  exchange or jump randomly. In case of jump, choose between jump_up\n  and jump_down randomly. Do exchange or jump and get optimal case.\n  Loop until there is no improvement or temperature reaches\n  minimum. Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddAnnealing(table *DdManager, lower int32, upper int32) int32 {\n    var nvars int32;\n    var size int32;\n    var x, y int32;\n    var result int32;\n    var c1, c2, c3, c4 int32;\n    var BestCost int32;\n    var BestOrder *int32;\n    var NewTemp, temp float64;\n    var rand1 float64;\n    var innerloop, maxGen int32;\n    var ecount, ucount, dcount int32;\n   \n    nvars = upper - lower + 1;\n\n    result = cuddSifting(table,lower,upper);\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    if result == 0 { return(0); }\n\n    size = table.keys - table.isolated;\n\n    /* Keep track of the best order. */\n    BestCost = size;\n    BestOrder = ABC_ALLOC(int,nvars);\n    if BestOrder == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    copyOrder(table,BestOrder,lower,upper);\n\n    temp = BETA * size;\n    maxGen = int32( (MAXGEN_RATIO * nvars));\n\n    c1 = size + 10;\n    c2 = c1 + 10;\n    c3 = size;\n    c4 = c2 + 10;\n    ecount = ucount = dcount = 0;\n \n    for !(stopping_criterion(c1, c2, c3, c4, temp) != 0) {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"temp=%f\\tsize=%d\\tgen=%d\\t\",\n                       temp,size,maxGen);\n        tosses = acceptances = 0;\n#endif\n        for innerloop = 0; innerloop \u003c maxGen; innerloop++ {\n            /* Choose x, y  randomly. */\n            x = int32( Cudd_Random()) % nvars;\n            for {\n                y = int32( Cudd_Random()) % nvars;\n            \nif !(x == y) { break }\n} \n            x += lower;\n            y += lower;\n            if x \u003e y {\n                var tmp int32  = x;\n                x = y;\n                y = tmp;\n            }\n\n            /* Choose move with roulette wheel. */\n            rand1 = random_generator();\n            if rand1 \u003c EXC_PROB {\n                result = ddExchange(table,x,y,temp);       /* exchange */\n                ecount++;\n     \n                                          \n                                                                    \n                                                                  \n      \n            } else if rand1 \u003c EXC_PROB + JUMP_UP_PROB {\n                result = ddJumpingAux(table,y,x,y,temp); /* jumping_up */\n                ucount++;\n     \n                                          \n                                                                  \n                                                                  \n      \n            } else {\n                result = ddJumpingAux(table,x,x,y,temp); /* jumping_down */\n                dcount++;\n     \n                                          \n                                                                    \n                                                                  \n      \n            }\n\n            if !(result != 0) {\n                ABC_FREE(BestOrder);\n                return(0);\n            }\n\n            size = table.keys - table.isolated;       /* keep current size */\n            if size \u003c BestCost {                      /* update best order */\n                BestCost = size;\n                copyOrder(table,BestOrder,lower,upper);\n            }\n        }\n        c1 = c2;\n        c2 = c3;\n        c3 = c4;\n        c4 = size;\n        NewTemp = ALPHA * temp;\n        if NewTemp \u003e= 1.0 {\n            maxGen = int32((math.Log(float64(NewTemp)) / math.Log(float64(temp)) * maxGen));\n        }\n        temp = NewTemp;                 /* control variable */\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"uphill = %d\\taccepted = %d\\n\",\n                       tosses,acceptances);\n        fflush(table-\u003eout);\n#endif\n    }\n\n    result = restoreOrder(table,BestOrder,lower,upper);\n    ABC_FREE(BestOrder);\n    if !(result != 0) { return(0); }\n#ifdef DD_STATS\n    fprintf(table-\u003eout,\"#:N_EXCHANGE %8d : total exchanges\\n\",ecount);\n    fprintf(table-\u003eout,\"#:N_JUMPUP   %8d : total jumps up\\n\",ucount);\n    fprintf(table-\u003eout,\"#:N_JUMPDOWN %8d : total jumps down\",dcount);\n#endif\n    return(1);\n\n} /* end of cuddAnnealing */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Checks termination condition.]\n\n  Description [If temperature is STOP_TEMP or there is no improvement\n  then terminates. Returns 1 if the termination criterion is met; 0\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc stopping_criterion(c1 int32, c2 int32, c3 int32, c4 int32, temp float64) int32 {\n    if STOP_TEMP \u003c temp {\n        return(0);\n    } else if (c1 == c2) \u0026\u0026 (c1 == c3) \u0026\u0026 (c1 == c4) {\n        return(1);\n    } else {\n        return(0);\n    }\n\n} /* end of stopping_criterion */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Random number generator.]\n\n  Description [Returns a double precision value between 0.0 and 1.0.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc random_generator() float64 {\n    return(float64((Cudd_Random() / 2147483561.0)));\n\n} /* end of random_generator */\n\n\n/**Function********************************************************************\n\n  Synopsis    [This function is for exchanging two variables, x and y.]\n\n  Description [This is the same funcion as ddSwapping except for\n  comparison expression.  Use probability function, exp(-size_change/temp).]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddExchange(table *DdManager, x int32, y int32, temp float64) int32 {\n    var move, moves *Move;\n    var tmp int32;\n    var x_ref, y_ref int32;\n    var x_next, y_next int32;\n    var size, result int32;\n    var initial_size, limit_size int32;\n\n    x_ref = x;\n    y_ref = y;\n\n    x_next = cuddNextHigh(table,x);\n    y_next = cuddNextLow(table,y);\n    moves = nil;\n    initial_size = limit_size = table.keys - table.isolated;\n\n    for {\n        if x_next == y_next {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = y_next;\n            move.y = y;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else if x == y_next {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            tmp = x;\n            x = y;\n            y = tmp;\n        } else {\n            size = cuddSwapInPlace(table,x,x_next);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = x;\n            move.y = x_next;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            size = cuddSwapInPlace(table,y_next,y);\n            if size == 0 { goto ddExchangeOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto ddExchangeOutOfMem; }\n            move.x = y_next;\n            move.y = y;\n            move.size = size;\n            move.next = moves;\n            moves = move;\n            x = x_next;\n            y = y_next;\n        }\n\n        x_next = cuddNextHigh(table,x);\n        y_next = cuddNextLow(table,y);\n        if x_next \u003e y_ref { break; }\n\n        if float64( size) \u003e DD_MAX_REORDER_GROWTH * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n    }\n\n    if y_next\u003e=x_ref {\n        size = cuddSwapInPlace(table,y_next,y);\n        if size == 0 { goto ddExchangeOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddExchangeOutOfMem; }\n        move.x = y_next;\n        move.y = y;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n    }\n\n    /* move backward and stop at best position or accept uphill move */\n    result = siftBackwardProb(table,moves,initial_size,temp);\n    if !(result != 0) { goto ddExchangeOutOfMem; }\n\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(1);\n\nddExchangeOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(0);\n\n} /* end of ddExchange */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Moves a variable to a specified position.]\n\n  Description [If x==x_low, it executes jumping_down. If x==x_high, it\n  executes jumping_up. This funcion is similar to ddSiftingAux. Returns\n  1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddJumpingAux(table *DdManager, x int32, x_low int32, x_high int32, temp float64) int32 {\n    var move *Move;\n    var moves *Move;        /* list of moves */\n    var initial_size int32;\n    var result int32;\n\n    initial_size = table.keys - table.isolated;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtables[x].keys \u003e 0);\n#endif\n\n    moves = nil;\n\n    if cuddNextLow(table,x) \u003c x_low {\n        if cuddNextHigh(table,x) \u003e x_high { return(1); }\n        moves = ddJumpingDown(table,x,x_high,initial_size);\n        /* after that point x --\u003e x_high unless early termination */\n        if moves == nil { goto ddJumpingAuxOutOfMem; }\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if !(result != 0) { goto ddJumpingAuxOutOfMem; }\n    } else if cuddNextHigh(table,x) \u003e x_high {\n        moves = ddJumpingUp(table,x,x_low,initial_size);\n        /* after that point x --\u003e x_low unless early termination */\n        if moves == nil { goto ddJumpingAuxOutOfMem; }\n        /* move backward and stop at best position or accept uphill move */\n        result = siftBackwardProb(table,moves,initial_size,temp);\n        if !(result != 0) { goto ddJumpingAuxOutOfMem; }\n    } else {\n        (void) fmt.Fprintf(table.err, \"Unexpected condition in ddJumping\\n\");\n        goto ddJumpingAuxOutOfMem;\n    }\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(1);\n\nddJumpingAuxOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(0);\n\n} /* end of ddJumpingAux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [This function is for jumping up.]\n\n  Description [This is a simplified version of ddSiftingUp. It does not\n  use lower bounding. Returns the set of moves in case of success; NULL\n  if memory is full.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddJumpingUp(table *DdManager, x int32, x_low int32, initial_size int32) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limit_size int32  = initial_size;\n\n    moves = nil;\n    y = cuddNextLow(table,x);\n    for y \u003e= x_low {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 { goto ddJumpingUpOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddJumpingUpOutOfMem; }\n        move.x = y;\n        move.y = x;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n        if float64( size) \u003e table.maxGrowth * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(moves);\n\nddJumpingUpOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(nil);\n\n} /* end of ddJumpingUp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [This function is for jumping down.]\n\n  Description [This is a simplified version of ddSiftingDown. It does not\n  use lower bounding. Returns the set of moves in case of success; NULL\n  if memory is full.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddJumpingDown(table *DdManager, x int32, x_high int32, initial_size int32) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limit_size int32  = initial_size;\n\n    moves = nil;\n    y = cuddNextHigh(table,x);\n    for y \u003c= x_high {\n        size = cuddSwapInPlace(table,x,y);\n        if size == 0 { goto ddJumpingDownOutOfMem; }\n        move = (Move *)cuddDynamicAllocNode(table);\n        if move == nil { goto ddJumpingDownOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.size = size;\n        move.next = moves;\n        moves = move;\n        if float64( size) \u003e table.maxGrowth * float64( limit_size) {\n            break;\n        } else if size \u003c limit_size {\n            limit_size = size;\n        }\n        x = y;\n        y = cuddNextHigh(table,x);\n    }\n    return(moves);\n\nddJumpingDownOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return(nil);\n\n} /* end of ddJumpingDown */\n\n\n/**Function********************************************************************\n\n  Synopsis [Returns the DD to the best position encountered during\n  sifting if there was improvement.]\n\n  Description [Otherwise, \"tosses a coin\" to decide whether to keep\n  the current configuration or return the DD to the original\n  one. Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc siftBackwardProb(table *DdManager, moves *Move, size int32, temp float64) int32 {\n    var move *Move;\n    var res int32;\n    var best_size int32  = size;\n    var coin, threshold float64;\n\n    /* Look for best size during the last sifting */\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c best_size {\n            best_size = move.size;\n        }\n    }\n    \n    /* If best_size equals size, the last sifting did not produce any\n    ** improvement. We now toss a coin to decide whether to retain\n    ** this change or not.\n    */\n    if best_size == size {\n        coin = random_generator();\n#ifdef DD_STATS\n        tosses++;\n#endif\n        threshold = math.Exp(float64(-(float64((table.keys - table.isolated - size)))/temp));\n        if coin \u003c threshold {\n#ifdef DD_STATS\n            acceptances++;\n#endif\n            return(1);\n        }\n    }\n\n    /* Either there was improvement, or we have decided not to\n    ** accept the uphill move. Go to best position.\n    */\n    res = table.keys - table.isolated;\n    for move = moves; move != nil; move = move.next {\n        if res == best_size { return(1); }\n        res = cuddSwapInPlace(table,int32(move.x),int32(move.y));\n        if !(res != 0) { return(0); }\n    }\n\n    return(1);\n\n} /* end of sift_backward_prob */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Copies the current variable order to array.]\n\n  Description [Copies the current variable order to array.\n  At the same time inverts the permutation.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc copyOrder(table *DdManager, array *int32, lower int32, upper int32) {\n    var i int32;\n    var nvars int32;\n\n    nvars = upper - lower + 1;\n    for i = 0; i \u003c nvars; i++ {\n        array[i] = table.invperm[i+lower];\n    }\n\n} /* end of copyOrder */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Restores the variable order in array by a series of sifts up.]\n\n  Description [Restores the variable order in array by a series of sifts up.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc restoreOrder(table *DdManager, array *int32, lower int32, upper int32) int32 {\n    var i, x, y, size int32;\n    var nvars int32  = upper - lower + 1;\n\n    for i = 0; i \u003c nvars; i++ {\n        x = table.perm[array[i]];\n#ifdef DD_DEBUG\n    assert(x \u003e= lower \u0026\u0026 x \u003c= upper);\n#endif\n        y = cuddNextLow(table,x);\n        for y \u003e= i + lower {\n            size = cuddSwapInPlace(table,y,x);\n            if size == 0 { return(0); }\n            x = y;\n            y = cuddNextLow(table,x);\n        }\n    }\n\n    return(1);\n\n} /* end of restoreOrder */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

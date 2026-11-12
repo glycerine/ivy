@@ -1,0 +1,691 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c",
+  "SHA256": "3a37a1f4108cb3a1ddfc0cacb4bc429632fa4bbeaba2d1821407414ae578b05c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p1) == Aig_ManCiNum(p2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p1) == Aig_ManCoNum(p2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 8239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Class \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 8317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ClassNumber != 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 306,
+        "Column": 69,
+        "ByteOffset": 13194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMiter.pReprs) ? (free((char *) (pMiter.pReprs)), (pMiter.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 307,
+        "Column": 84,
+        "ByteOffset": 13336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMiter.pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(pMiter)), sizeof(Aig_Obj_t *)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 70,
+        "ByteOffset": 13611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(pGia, i)), k = Gia_ObjNext(pGia, i); k \u003e 0; k = Gia_ObjNext(pGia, k)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 14764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 14803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 379,
+        "Column": 9,
+        "ByteOffset": 16213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Class %5d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 16250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Num =%5d    \", Vec_IntSize(vClass) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 16462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d%c%d \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 9,
+        "ByteOffset": 16649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 18658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total number of equiv classes                = %7d.\\n\", Vec_PtrSize(vRes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 18748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Participating nodes from both networks       = %7d.\\n\", NegAll[0]+PosAll[0]+NegAll[1]+PosAll[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 5,
+        "ByteOffset": 18860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Participating nodes from the first network   = %7d. (%7.2f %% of nodes)\\n\", NegAll[0]+PosAll[0], 100.0*(NegAll[0]+PosAll[0])/(nNodes0+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 19013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Participating nodes from the second network  = %7d. (%7.2f %% of nodes)\\n\", NegAll[1]+PosAll[1], 100.0*(NegAll[1]+PosAll[1])/(nNodes1+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 19166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node pairs (any polarity)                    = %7d. (%7.2f %% of names can be moved)\\n\", PairsAll, 100.0*PairsAll/(nNodes0+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 19308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node pairs (same polarity)                   = %7d. (%7.2f %% of names can be moved)\\n\", PairsOne, 100.0*PairsOne/(nNodes0+1) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 444,
+        "Column": 60,
+        "ByteOffset": 19593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Time)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 498,
+        "Column": 9,
+        "ByteOffset": 21562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjEquivId2ObjId",
+      "Start": 2089,
+      "End": 2159,
+      "BodyStart": 2129,
+      "Original": "int Abc_ObjEquivId2ObjId( int EquivId ) { return  EquivId \u003e\u003e 2;      }",
+      "Draft": "func Abc_ObjEquivId2ObjId(EquivId int32) int32 { return  EquivId \u003e\u003e 2;      }"
+    },
+    {
+      "Name": "Abc_ObjEquivId2Polar",
+      "Start": 2160,
+      "End": 2230,
+      "BodyStart": 2200,
+      "Original": "int Abc_ObjEquivId2Polar( int EquivId ) { return (EquivId \u003e\u003e 1) \u0026 1; }",
+      "Draft": "func Abc_ObjEquivId2Polar(EquivId int32) int32 { return (EquivId \u003e\u003e 1) \u0026 1; }"
+    },
+    {
+      "Name": "Abc_ObjEquivId2NtkId",
+      "Start": 2231,
+      "End": 2301,
+      "BodyStart": 2271,
+      "Original": "int Abc_ObjEquivId2NtkId( int EquivId ) { return  EquivId       \u0026 1; }",
+      "Draft": "func Abc_ObjEquivId2NtkId(EquivId int32) int32 { return  EquivId       \u0026 1; }"
+    },
+    {
+      "Name": "Aig_ManCreateDualOutputMiter",
+      "Start": 3175,
+      "End": 4313,
+      "BodyStart": 3250,
+      "Original": "Aig_Man_t * Aig_ManCreateDualOutputMiter( Aig_Man_t * p1, Aig_Man_t * p2 )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManCiNum(p1) == Aig_ManCiNum(p2) );\n    assert( Aig_ManCoNum(p1) == Aig_ManCoNum(p2) );\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p1) + Aig_ManObjNumMax(p2) );\n    // add first AIG\n    Aig_ManConst1(p1)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p1, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    Aig_ManForEachNode( p1, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add second AIG\n    Aig_ManConst1(p2)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p2, pObj, i )\n        pObj-\u003epData = Aig_ManCi( pNew, i );\n    Aig_ManForEachNode( p2, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add the outputs\n    for ( i = 0; i \u003c Aig_ManCoNum(p1); i++ )\n    {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1, i)) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p2, i)) );\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}",
+      "Draft": "func Aig_ManCreateDualOutputMiter(p1 *Aig_Man_t, p2 *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCiNum(p1) == Aig_ManCiNum(p2), \"Aig_ManCiNum(p1) == Aig_ManCiNum(p2)\");\n    assert(Aig_ManCoNum(p1) == Aig_ManCoNum(p2), \"Aig_ManCoNum(p1) == Aig_ManCoNum(p2)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p1) + Aig_ManObjNumMax(p2) );\n    // add first AIG\n    Aig_ManConst1(p1).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p1.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p1.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add second AIG\n    Aig_ManConst1(p2).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p2.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ManCi( pNew, i );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p2.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add the outputs\n    for  i = 0; i \u003c Aig_ManCoNum(p1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1, i)) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p2, i)) );\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkDressMapSetPolarity",
+      "Start": 4603,
+      "End": 5024,
+      "BodyStart": 4655,
+      "Original": "void Abc_NtkDressMapSetPolarity( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pAnd;\n    int i;\n    // each node refers to the the strash copy whose polarity is set\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( (pAnd = Abc_ObjRegular(pObj-\u003epCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE ) // strashed object is present and legal\n            pObj-\u003efPhase = pAnd-\u003efPhase ^ Abc_ObjIsComplement(pObj-\u003epCopy);\n    }\n}",
+      "Draft": "func Abc_NtkDressMapSetPolarity(pNtk *Abc_Ntk_t) {\n    var pObj, pAnd *Abc_Obj_t;\n    var i int32;\n    // each node refers to the the strash copy whose polarity is set\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if (pAnd = Abc_ObjRegular(pObj.pCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE { // strashed object is present and legal\n            pObj.fPhase = pAnd.fPhase ^ Abc_ObjIsComplement(pObj.pCopy); }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkDressMapClasses",
+      "Start": 5324,
+      "End": 6510,
+      "BodyStart": 5399,
+      "Original": "Vec_Int_t * Abc_NtkDressMapClasses( Aig_Man_t * pMiter, Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vId2Lit;\n    Abc_Obj_t * pObj, * pAnd;\n    Aig_Obj_t * pObjMan, * pObjMiter, * pObjRepr;\n    int i;\n    vId2Lit = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Lit, Abc_NtkObjNumMax(pNtk), -1 );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        // get the pointer to the miter node corresponding to pObj\n        if ( (pAnd = Abc_ObjRegular(pObj-\u003epCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE \u0026\u0026          // strashed node is present and legal\n             (pObjMan = Aig_Regular((Aig_Obj_t *)pAnd-\u003epCopy)) \u0026\u0026 Aig_ObjType(pObjMan) != AIG_OBJ_NONE \u0026\u0026       // AIG node is present and legal\n             (pObjMiter = Aig_Regular((Aig_Obj_t *)pObjMan-\u003epData)) \u0026\u0026 Aig_ObjType(pObjMiter) != AIG_OBJ_NONE ) // miter node is present and legal\n        {\n            // get the representative of the miter node\n            pObjRepr = Aig_ObjRepr( pMiter, pObjMiter );\n            pObjRepr = pObjRepr? pObjRepr : pObjMiter;\n            // map pObj (whose ID is i) into the repr node ID (i.e. equiv class)\n            Vec_IntWriteEntry( vId2Lit, i, Aig_ObjId(pObjRepr) );\n        }\n    }\n    return vId2Lit;\n}",
+      "Draft": "func Abc_NtkDressMapClasses(pMiter *Aig_Man_t, pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vId2Lit *Vec_Int_t;\n    var pObj, pAnd *Abc_Obj_t;\n    var pObjMan, pObjMiter, pObjRepr *Aig_Obj_t;\n    var i int32;\n    vId2Lit = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Lit, Abc_NtkObjNumMax(pNtk), -1 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // get the pointer to the miter node corresponding to pObj\n        if (pAnd = Abc_ObjRegular(pObj.pCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE \u0026\u0026          // strashed node is present and legal\n             (pObjMan = Aig_Regular((Aig_Obj_t *)pAnd.pCopy)) \u0026\u0026 Aig_ObjType(pObjMan) != AIG_OBJ_NONE \u0026\u0026       // AIG node is present and legal\n             (pObjMiter = Aig_Regular((Aig_Obj_t *)pObjMan.pData)) \u0026\u0026 Aig_ObjType(pObjMiter) != AIG_OBJ_NONE { // miter node is present and legal\n        \n            // get the representative of the miter node\n            pObjRepr = Aig_ObjRepr( pMiter, pObjMiter );\n            if pObjRepr != nil {\n                pObjRepr = pObjRepr;\n            } else {\n                pObjRepr = pObjMiter;\n            }\n            // map pObj (whose ID is i) into the repr node ID (i.e. equiv class)\n            Vec_IntWriteEntry( vId2Lit, i, Aig_ObjId(pObjRepr) );\n        }\n    }\n    }\n    return vId2Lit;\n}"
+    },
+    {
+      "Name": "Abc_ObjDressClass",
+      "Start": 6803,
+      "End": 7310,
+      "BodyStart": 6888,
+      "Original": "Vec_Int_t * Abc_ObjDressClass( Vec_Ptr_t * vRes, Vec_Int_t * vClass2Num, int Class )\n{\n    int ClassNumber;\n    assert( Class \u003e 0 );\n    ClassNumber = Vec_IntEntry( vClass2Num, Class );\n    assert( ClassNumber != 0 );\n    if ( ClassNumber \u003e 0 )\n        return (Vec_Int_t *)Vec_PtrEntry( vRes, ClassNumber ); // previous class\n    // create new class\n    Vec_IntWriteEntry( vClass2Num, Class, Vec_PtrSize(vRes) );\n    Vec_PtrPush( vRes, Vec_IntAlloc(4) );\n    return (Vec_Int_t *)Vec_PtrEntryLast( vRes ); \n}",
+      "Draft": "func Abc_ObjDressClass(vRes *Vec_Ptr_t, vClass2Num *Vec_Int_t, Class int32) *Vec_Int_t {\n    var ClassNumber int32;\n    assert(Class \u003e 0, \"Class \u003e 0\");\n    ClassNumber = Vec_IntEntry( vClass2Num, Class );\n    assert(ClassNumber != 0, \"ClassNumber != 0\");\n    if ClassNumber \u003e 0 {\n        return (Vec_Int_t *)Vec_PtrEntry( vRes, ClassNumber ); } // previous class\n    // create new class\n    Vec_IntWriteEntry( vClass2Num, Class, Vec_PtrSize(vRes) );\n    Vec_PtrPush( vRes, Vec_IntAlloc(4) );\n    return (Vec_Int_t *)Vec_PtrEntryLast( vRes ); \n}"
+    },
+    {
+      "Name": "Abc_ObjDressMakeId",
+      "Start": 7764,
+      "End": 7903,
+      "BodyStart": 7828,
+      "Original": "int Abc_ObjDressMakeId( Abc_Ntk_t * pNtk, int ObjId, int iNtk )\n{\n    return (ObjId \u003c\u003c 2) | (Abc_NtkObj(pNtk,ObjId)-\u003efPhase \u003c\u003c 1) | iNtk;\n}",
+      "Draft": "func Abc_ObjDressMakeId(pNtk *Abc_Ntk_t, ObjId int32, iNtk int32) int32 {\n    return (ObjId \u003c\u003c 2) | (Abc_NtkObj(pNtk,ObjId).fPhase \u003c\u003c 1) | iNtk;\n}"
+    },
+    {
+      "Name": "Abc_NtkDressMapIds",
+      "Start": 8217,
+      "End": 10512,
+      "BodyStart": 8308,
+      "Original": "Vec_Ptr_t * Abc_NtkDressMapIds( Aig_Man_t * pMiter, Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2 )\n{\n    Vec_Ptr_t * vRes;\n    Vec_Int_t * vId2Lit1, * vId2Lit2, * vCounts0, * vCounts1, * vClassC, * vClass2Num;\n    int i, Class;\n    // start the classes\n    vRes = Vec_PtrAlloc( 1000 );\n    // set polarity of the nodes\n    Abc_NtkDressMapSetPolarity( pNtk1 );\n    Abc_NtkDressMapSetPolarity( pNtk2 );\n    // create mapping of node IDs of pNtk1/pNtk2 into the IDs of equiv classes of pMiter\n    vId2Lit1 = Abc_NtkDressMapClasses( pMiter, pNtk1 );\n    vId2Lit2 = Abc_NtkDressMapClasses( pMiter, pNtk2 );\n    // count the number of nodes in each equivalence class\n    vCounts0 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    Vec_IntForEachEntry( vId2Lit1, Class, i )\n        if ( Class \u003e= 0 )\n            Vec_IntAddToEntry( vCounts0, Class, 1 );\n    vCounts1 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    Vec_IntForEachEntry( vId2Lit2, Class, i )\n        if ( Class \u003e= 0 )\n            Vec_IntAddToEntry( vCounts1, Class, 1 );\n    // get the costant class\n    vClassC = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vId2Lit1, Class, i )\n        if ( Class == 0 )\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk1, i, 0) );\n    Vec_IntForEachEntry( vId2Lit2, Class, i )\n        if ( Class == 0 )\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk2, i, 1) );\n    Vec_PtrPush( vRes, vClassC );\n    // map repr node IDs into class numbers\n    vClass2Num = Vec_IntAlloc( 0 );\n    Vec_IntFill( vClass2Num, Aig_ManObjNumMax(pMiter), -1 );\n    // keep classes having at least one element from pNtk1 and one from pNtk2\n    Vec_IntForEachEntry( vId2Lit1, Class, i )\n        if ( Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) )\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk1, i, 0) );\n    Vec_IntForEachEntry( vId2Lit2, Class, i )\n        if ( Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) )\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk2, i, 1) );\n    // package them accordingly\n    Vec_IntFree( vClass2Num );\n    Vec_IntFree( vCounts0 );\n    Vec_IntFree( vCounts1 );\n    Vec_IntFree( vId2Lit1 );\n    Vec_IntFree( vId2Lit2 );\n    return vRes;\n}",
+      "Draft": "func Abc_NtkDressMapIds(pMiter *Aig_Man_t, pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t) *Vec_Ptr_t {\n    var vRes *Vec_Ptr_t;\n    var vId2Lit1, vId2Lit2, vCounts0, vCounts1, vClassC, vClass2Num *Vec_Int_t;\n    var i, Class int32;\n    // start the classes\n    vRes = Vec_PtrAlloc( 1000 );\n    // set polarity of the nodes\n    Abc_NtkDressMapSetPolarity( pNtk1 );\n    Abc_NtkDressMapSetPolarity( pNtk2 );\n    // create mapping of node IDs of pNtk1/pNtk2 into the IDs of equiv classes of pMiter\n    vId2Lit1 = Abc_NtkDressMapClasses( pMiter, pNtk1 );\n    vId2Lit2 = Abc_NtkDressMapClasses( pMiter, pNtk2 );\n    // count the number of nodes in each equivalence class\n    vCounts0 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class \u003e= 0 {\n            Vec_IntAddToEntry( vCounts0, Class, 1 ); }\n    }\n    vCounts1 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class \u003e= 0 {\n            Vec_IntAddToEntry( vCounts1, Class, 1 ); }\n    }\n    // get the costant class\n    vClassC = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class == 0 {\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk1, i, 0) ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class == 0 {\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk2, i, 1) ); }\n    }\n    Vec_PtrPush( vRes, vClassC );\n    // map repr node IDs into class numbers\n    vClass2Num = Vec_IntAlloc( 0 );\n    Vec_IntFill( vClass2Num, Aig_ManObjNumMax(pMiter), -1 );\n    // keep classes having at least one element from pNtk1 and one from pNtk2\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) {\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk1, i, 0) ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) {\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk2, i, 1) ); }\n    }\n    // package them accordingly\n    Vec_IntFree( vClass2Num );\n    Vec_IntFree( vCounts0 );\n    Vec_IntFree( vCounts1 );\n    Vec_IntFree( vId2Lit1 );\n    Vec_IntFree( vId2Lit2 );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Dch_ComputeEquivalences2",
+      "Start": 10788,
+      "End": 11400,
+      "BodyStart": 10860,
+      "Original": "void Dch_ComputeEquivalences2( Aig_Man_t * pMiter, Dch_Pars_t * pPars )\n{\n    extern Gia_Man_t * Cec4_ManSimulateTest3( Gia_Man_t * p, int nBTLimit, int fVerbose );\n    Gia_Man_t * pGia = Gia_ManFromAigSimple(pMiter);\n    Gia_Man_t * pNew = Cec4_ManSimulateTest3( pGia, pPars-\u003enBTLimit, pPars-\u003efVerbose );\n    int i, k;\n    ABC_FREE( pMiter-\u003epReprs );\n    pMiter-\u003epReprs = ABC_CALLOC( Aig_Obj_t *, Aig_ManObjNumMax(pMiter) );\n    Gia_ManForEachClass( pGia, i )\n        Gia_ClassForEachObj1( pGia, i, k )\n            pMiter-\u003epReprs[k] = Aig_ManObj( pMiter, i );\n    Gia_ManStop( pGia );\n    Gia_ManStop( pNew );\n}",
+      "Draft": "func Dch_ComputeEquivalences2(pMiter *Aig_Man_t, pPars *Dch_Pars_t) {\n    extern Gia_Man_t * Cec4_ManSimulateTest3( Gia_Man_t * p, int nBTLimit, int fVerbose );\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple(pMiter);\n    var pNew *Gia_Man_t  = Cec4_ManSimulateTest3( pGia, pPars.nBTLimit, pPars.fVerbose );\n    var i, k int32;\n    // inlining of macro ABC_FREE\n    ((pMiter.pReprs) ? (free((char *) (pMiter.pReprs)), (pMiter.pReprs) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    pMiter.pReprs = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(pMiter)), sizeof(Aig_Obj_t *)));\n    // inlining of macro Gia_ManForEachClass\n    for  i = 1; i \u003c Gia_ManObjNum(pGia); i++  { if !Gia_ObjIsHead(pGia, i) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(pGia, i), \"Gia_ObjIsHead(pGia, i)\"), k = Gia_ObjNext(pGia, i); k \u003e 0; k = Gia_ObjNext(pGia, k)  {\n            pMiter.pReprs[k] = Aig_ManObj( pMiter, i );\n        } }\n    }\n    Gia_ManStop( pGia );\n    Gia_ManStop( pNew );\n}"
+    },
+    {
+      "Name": "Abc_NtkDressComputeEquivs",
+      "Start": 12054,
+      "End": 13209,
+      "BodyStart": 12166,
+      "Original": "Vec_Ptr_t * Abc_NtkDressComputeEquivs( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nConflictLimit, int fVerbose )\n{\n    Dch_Pars_t Pars, * pPars = \u0026Pars;\n    Abc_Ntk_t * pAig1, * pAig2;\n    Aig_Man_t * pMan1, * pMan2, * pMiter;\n    Vec_Ptr_t * vRes;\n    assert( !Abc_NtkIsStrash(pNtk1) );\n    assert( !Abc_NtkIsStrash(pNtk2) );\n    // convert network into AIG\n    pAig1 = Abc_NtkStrash( pNtk1, 1, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 1, 1, 0 );\n    pMan1 = Abc_NtkToDar( pAig1, 0, 0 );\n    pMan2 = Abc_NtkToDar( pAig2, 0, 0 );\n    // derive the miter\n    pMiter = Aig_ManCreateDualOutputMiter( pMan1, pMan2 );\n    // set up parameters for SAT sweeping\n    Dch_ManSetDefaultParams( pPars );\n    pPars-\u003enBTLimit = nConflictLimit;\n    pPars-\u003efVerbose = fVerbose;\n    // perform SAT sweeping\n    Dch_ComputeEquivalences2( pMiter, pPars );\n    // now, pMiter is annotated with the equivl class info\n    // convert this info into the resulting array\n    vRes = Abc_NtkDressMapIds( pMiter, pNtk1, pNtk2 );\n    Aig_ManStop( pMiter );\n    Aig_ManStop( pMan1 );\n    Aig_ManStop( pMan2 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n    return vRes;\n}",
+      "Draft": "func Abc_NtkDressComputeEquivs(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConflictLimit int32, fVerbose int32) *Vec_Ptr_t {\n    var Pars Dch_Pars_t;\n    var pPars *Dch_Pars_t = \u0026Pars;\n    var pAig1, pAig2 *Abc_Ntk_t;\n    var pMan1, pMan2, pMiter *Aig_Man_t;\n    var vRes *Vec_Ptr_t;\n    assert(!Abc_NtkIsStrash(pNtk1), \"!Abc_NtkIsStrash(pNtk1)\");\n    assert(!Abc_NtkIsStrash(pNtk2), \"!Abc_NtkIsStrash(pNtk2)\");\n    // convert network into AIG\n    pAig1 = Abc_NtkStrash( pNtk1, 1, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 1, 1, 0 );\n    pMan1 = Abc_NtkToDar( pAig1, 0, 0 );\n    pMan2 = Abc_NtkToDar( pAig2, 0, 0 );\n    // derive the miter\n    pMiter = Aig_ManCreateDualOutputMiter( pMan1, pMan2 );\n    // set up parameters for SAT sweeping\n    Dch_ManSetDefaultParams( pPars );\n    pPars.nBTLimit = nConflictLimit;\n    pPars.fVerbose = fVerbose;\n    // perform SAT sweeping\n    Dch_ComputeEquivalences2( pMiter, pPars );\n    // now, pMiter is annotated with the equivl class info\n    // convert this info into the resulting array\n    vRes = Abc_NtkDressMapIds( pMiter, pNtk1, pNtk2 );\n    Aig_ManStop( pMiter );\n    Aig_ManStop( pMan1 );\n    Aig_ManStop( pMan2 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_NtkDressPrintEquivs",
+      "Start": 13488,
+      "End": 13998,
+      "BodyStart": 13537,
+      "Original": "void Abc_NtkDressPrintEquivs( Vec_Ptr_t * vRes )\n{\n    Vec_Int_t * vClass;\n    int i, k, Entry;\n    Vec_PtrForEachEntry( Vec_Int_t *, vRes, vClass, i )\n    {\n        printf( \"Class %5d : \", i );\n        printf( \"Num =%5d    \", Vec_IntSize(vClass) );\n        Vec_IntForEachEntry( vClass, Entry, k )\n            printf( \"%5d%c%d \", \n                Abc_ObjEquivId2ObjId(Entry), \n                Abc_ObjEquivId2Polar(Entry)? '-':'+', \n                Abc_ObjEquivId2NtkId(Entry) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Abc_NtkDressPrintEquivs(vRes *Vec_Ptr_t) {\n    var vClass *Vec_Int_t;\n    var i, k, Entry int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        fmt.Printf(\"Class %5d : \", i);\n        fmt.Printf(\"Num =%5d    \", Vec_IntSize(vClass));\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            fmt.Printf(\"%5d%c%d \", Abc_ObjEquivId2ObjId(Entry), Abc_ObjEquivId2Polar(Entry)? '-':'+', Abc_ObjEquivId2NtkId(Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkDressPrintStats",
+      "Start": 14277,
+      "End": 16595,
+      "BodyStart": 14365,
+      "Original": "void Abc_NtkDressPrintStats( Vec_Ptr_t * vRes, int nNodes0, int nNodes1, abctime Time )\n{\n    Vec_Int_t * vClass;\n    int i, k, Entry;\n    int NegAll[2] = {0}, PosAll[2] = {0}, PairsAll = 0, PairsOne = 0;\n    int Pos[2], Neg[2];\n    // count the number of equivalences in each class\n    Vec_PtrForEachEntry( Vec_Int_t *, vRes, vClass, i )\n    {\n        Pos[0] = Pos[1] = 0;\n        Neg[0] = Neg[1] = 0;\n        Vec_IntForEachEntry( vClass, Entry, k )\n        {\n            if ( Abc_ObjEquivId2NtkId(Entry) )\n            {\n                if ( Abc_ObjEquivId2Polar(Entry) )\n                    Neg[1]++; // negative polarity in network 1\n                else\n                    Pos[1]++; // positive polarity in network 1\n            }\n            else\n            {\n                if ( Abc_ObjEquivId2Polar(Entry) )\n                    Neg[0]++; // negative polarity in network 0\n                else\n                    Pos[0]++; // positive polarity in network 0\n            }\n        }\n        PosAll[0] += Pos[0]; // total positive polarity in network 0\n        PosAll[1] += Pos[1]; // total positive polarity in network 1\n        NegAll[0] += Neg[0]; // total negative polarity in network 0\n        NegAll[1] += Neg[1]; // total negative polarity in network 1\n\n        // assuming that the name can be transferred to only one node\n        PairsAll += Abc_MinInt(Neg[0] + Pos[0], Neg[1] + Pos[1]);\n        PairsOne += Abc_MinInt(Neg[0], Neg[1]) + Abc_MinInt(Pos[0], Pos[1]);\n    }\n    printf( \"Total number of equiv classes                = %7d.\\n\", Vec_PtrSize(vRes) );\n    printf( \"Participating nodes from both networks       = %7d.\\n\", NegAll[0]+PosAll[0]+NegAll[1]+PosAll[1] );\n    printf( \"Participating nodes from the first network   = %7d. (%7.2f %% of nodes)\\n\", NegAll[0]+PosAll[0], 100.0*(NegAll[0]+PosAll[0])/(nNodes0+1) );\n    printf( \"Participating nodes from the second network  = %7d. (%7.2f %% of nodes)\\n\", NegAll[1]+PosAll[1], 100.0*(NegAll[1]+PosAll[1])/(nNodes1+1) );\n    printf( \"Node pairs (any polarity)                    = %7d. (%7.2f %% of names can be moved)\\n\", PairsAll, 100.0*PairsAll/(nNodes0+1) );\n    printf( \"Node pairs (same polarity)                   = %7d. (%7.2f %% of names can be moved)\\n\", PairsOne, 100.0*PairsOne/(nNodes0+1) );\n    ABC_PRT( \"Total runtime\", Time );\n}",
+      "Draft": "func Abc_NtkDressPrintStats(vRes *Vec_Ptr_t, nNodes0 int32, nNodes1 int32, Time abctime) {\n    var vClass *Vec_Int_t;\n    var i, k, Entry int32;\n    var NegAll [2]int32 ;\n    var PosAll [2]int32 ;\n    var PairsAll int32;\n    var PairsOne int32;\n    var Pos, Neg [2]int32;\n    // count the number of equivalences in each class\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        Pos[0] = Pos[1] = 0;\n        Neg[0] = Neg[1] = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if Abc_ObjEquivId2NtkId(Entry) != 0 {\n                if Abc_ObjEquivId2Polar(Entry) != 0 {\n                    Neg[1]++; // negative polarity in network 1\n                } else {\n                    Pos[1]++; } // positive polarity in network 1\n            \n            } else {\n                if Abc_ObjEquivId2Polar(Entry) != 0 {\n                    Neg[0]++; // negative polarity in network 0\n                } else {\n                    Pos[0]++; } // positive polarity in network 0\n            }\n        }\n        PosAll[0] += Pos[0]; // total positive polarity in network 0\n        PosAll[1] += Pos[1]; // total positive polarity in network 1\n        NegAll[0] += Neg[0]; // total negative polarity in network 0\n        NegAll[1] += Neg[1]; // total negative polarity in network 1\n\n        // assuming that the name can be transferred to only one node\n        PairsAll += Abc_MinInt(Neg[0] + Pos[0], Neg[1] + Pos[1]);\n        PairsOne += Abc_MinInt(Neg[0], Neg[1]) + Abc_MinInt(Pos[0], Pos[1]);\n    }\n    fmt.Printf(\"Total number of equiv classes                = %7d.\\n\", Vec_PtrSize(vRes));\n    fmt.Printf(\"Participating nodes from both networks       = %7d.\\n\", NegAll[0]+PosAll[0]+NegAll[1]+PosAll[1]);\n    fmt.Printf(\"Participating nodes from the first network   = %7d. (%7.2f %% of nodes)\\n\", NegAll[0]+PosAll[0], 100.0*(NegAll[0]+PosAll[0])/(nNodes0+1));\n    fmt.Printf(\"Participating nodes from the second network  = %7d. (%7.2f %% of nodes)\\n\", NegAll[1]+PosAll[1], 100.0*(NegAll[1]+PosAll[1])/(nNodes1+1));\n    fmt.Printf(\"Node pairs (any polarity)                    = %7d. (%7.2f %% of names can be moved)\\n\", PairsAll, 100.0*PairsAll/(nNodes0+1));\n    fmt.Printf(\"Node pairs (same polarity)                   = %7d. (%7.2f %% of names can be moved)\\n\", PairsOne, 100.0*PairsOne/(nNodes0+1));\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Time)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Abc_NtkDress2Transfer",
+      "Start": 16891,
+      "End": 18549,
+      "BodyStart": 16990,
+      "Original": "void Abc_NtkDress2Transfer( Abc_Ntk_t * pNtk0, Abc_Ntk_t * pNtk1, Vec_Ptr_t * vRes, int fVerbose )\n{\n    Vec_Int_t * vClass;\n    Abc_Obj_t * pObj0, * pObj1;\n    int i, k, fComp0, fComp1, Entry;\n    int CounterInv = 0, Counter = 0;\n    char * pName;\n    Vec_PtrForEachEntry( Vec_Int_t *, vRes, vClass, i )\n    {\n        pObj0 = pObj1 = NULL;\n        fComp0 = fComp1 = 0;\n        Vec_IntForEachEntry( vClass, Entry, k )\n        {\n            if ( Abc_ObjEquivId2NtkId(Entry) )\n            {\n                pObj1 = Abc_NtkObj( pNtk1, Abc_ObjEquivId2ObjId(Entry) );\n                fComp1 = Abc_ObjEquivId2Polar(Entry);\n            }\n            else\n            {\n                pObj0 = Abc_NtkObj( pNtk0, Abc_ObjEquivId2ObjId(Entry) );\n                fComp0 = Abc_ObjEquivId2Polar(Entry);\n            }\n        }\n        if ( pObj0 == NULL || pObj1 == NULL )\n            continue;\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk0-\u003epManName, pObj0-\u003eId );\n        if ( pName != NULL )\n            continue;\n        // if the other node has no name, quit\n        pName = Nm_ManFindNameById( pNtk1-\u003epManName, pObj1-\u003eId );\n        if ( pName == NULL )\n            continue;\n        // assign name\n        if ( fComp0 ^ fComp1 )\n        {\n            Abc_ObjAssignName( pObj0, pName, \"_inv\" );\n            CounterInv++;\n        }\n        else\n        {\n            Abc_ObjAssignName( pObj0, pName, NULL );\n            Counter++;\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", \n            Counter + CounterInv, Counter, CounterInv );\n    }\n}",
+      "Draft": "func Abc_NtkDress2Transfer(pNtk0 *Abc_Ntk_t, pNtk1 *Abc_Ntk_t, vRes *Vec_Ptr_t, fVerbose int32) {\n    var vClass *Vec_Int_t;\n    var pObj0, pObj1 *Abc_Obj_t;\n    var i, k, fComp0, fComp1, Entry int32;\n    var CounterInv, Counter int32;\n    var pName string;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        pObj0 = pObj1 = nil;\n        fComp0 = fComp1 = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if Abc_ObjEquivId2NtkId(Entry) != 0 {\n                pObj1 = Abc_NtkObj( pNtk1, Abc_ObjEquivId2ObjId(Entry) );\n                fComp1 = Abc_ObjEquivId2Polar(Entry);\n            \n            } else {\n                pObj0 = Abc_NtkObj( pNtk0, Abc_ObjEquivId2ObjId(Entry) );\n                fComp0 = Abc_ObjEquivId2Polar(Entry);\n            }\n        }\n        if pObj0 == nil || pObj1 == nil {\n            continue; }\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk0.pManName, pObj0.Id );\n        if pName != nil {\n            continue; }\n        // if the other node has no name, quit\n        pName = Nm_ManFindNameById( pNtk1.pManName, pObj1.Id );\n        if pName == nil {\n            continue; }\n        // assign name\n        if fComp0 ^ fComp1 {\n            Abc_ObjAssignName( pObj0, pName, \"_inv\" );\n            CounterInv++;\n        \n        } else {\n            Abc_ObjAssignName( pObj0, pName, nil );\n            Counter++;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", Counter + CounterInv, Counter, CounterInv);\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkDress2",
+      "Start": 18928,
+      "End": 19394,
+      "BodyStart": 19021,
+      "Original": "void Abc_NtkDress2( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nConflictLimit, int fVerbose )\n{\n    Vec_Ptr_t * vRes;\n    abctime clk = Abc_Clock();\n    vRes = Abc_NtkDressComputeEquivs( pNtk1, pNtk2, nConflictLimit, fVerbose );\n//    Abc_NtkDressPrintEquivs( vRes );\n    Abc_NtkDressPrintStats( vRes, Abc_NtkNodeNum(pNtk1), Abc_NtkNodeNum(pNtk1), Abc_Clock() - clk );\n    Abc_NtkDress2Transfer( pNtk1, pNtk2, vRes, fVerbose );\n    Vec_VecFree( (Vec_Vec_t *)vRes );\n}",
+      "Draft": "func Abc_NtkDress2(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConflictLimit int32, fVerbose int32) {\n    var vRes *Vec_Ptr_t;\n    var clk abctime  = Abc_Clock();\n    vRes = Abc_NtkDressComputeEquivs( pNtk1, pNtk2, nConflictLimit, fVerbose );\n//    Abc_NtkDressPrintEquivs( vRes );\n    Abc_NtkDressPrintStats( vRes, Abc_NtkNodeNum(pNtk1), Abc_NtkNodeNum(pNtk1), Abc_Clock() - clk );\n    Abc_NtkDress2Transfer( pNtk1, pNtk2, vRes, fVerbose );\n    Vec_VecFree( (Vec_Vec_t *)vRes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::mechanical::sizeof::13168",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11161,
+      "End": 11161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::3722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3560,
+      "End": 3560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::3989",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3643,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::4424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3844,
+      "End": 3844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::4688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3924,
+      "End": 3924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::7053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5892,
+      "End": 5905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::7200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6039,
+      "End": 6052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::8224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7063,
+      "End": 7076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::8430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7269,
+      "End": 7282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::12985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11112,
+      "End": 11112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::13109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11161,
+      "End": 11161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::13174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11161,
+      "End": 11161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::15899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13588,
+      "End": 13588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::17083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14564,
+      "End": 14564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::19999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17144,
+      "End": 17144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::pointer-cast::22327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19372,
+      "End": 19385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_ObjEquivId2ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjEquivId2ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2089,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_ObjEquivId2Polar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjEquivId2Polar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2160,
+      "End": 2230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_ObjEquivId2NtkId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjEquivId2NtkId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2231,
+      "End": 2301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Aig_ManCreateDualOutputMiter",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCreateDualOutputMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3175,
+      "End": 4313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressMapSetPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressMapSetPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4603,
+      "End": 5024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressMapClasses",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressMapClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5324,
+      "End": 6510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_ObjDressClass",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjDressClass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6803,
+      "End": 7310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_ObjDressMakeId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjDressMakeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7764,
+      "End": 7903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressMapIds",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressMapIds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8217,
+      "End": 10512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::ternary::Dch_ComputeEquivalences2",
+      "Category": "ternary-review",
+      "Symbol": "Dch_ComputeEquivalences2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10788,
+      "End": 11400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Dch_ComputeEquivalences2",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ComputeEquivalences2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10788,
+      "End": 11400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressComputeEquivs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressComputeEquivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12054,
+      "End": 13209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::ternary::Abc_NtkDressPrintEquivs",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkDressPrintEquivs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13488,
+      "End": 13998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressPrintEquivs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressPrintEquivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13488,
+      "End": 13998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDressPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14277,
+      "End": 16595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDress2Transfer",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDress2Transfer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16891,
+      "End": 18549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::Abc_NtkDress2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDress2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18928,
+      "End": 19394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19641
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcDressw.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Transfers names from one netlist to the other.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcDressw.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"proof/dch/dch.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n  Procedure Abc_NtkDressComputeEquivs() implemented in this file computes \n  equivalence classes of objects of the two networks (pNtk1 and pNtk2).\n\n  It is possible that pNtk1 is the network before synthesis and pNtk2 is the\n  network after synthesis.  The equiv classes of nodes from these networks \n  can be used to transfer the names from pNtk1 to pNtk2, or vice versa. \n\n  The above procedure returns the array (Vec_Ptr_t) of integer arrays (Vec_Int_t).\n  Each of the integer arrays contains entries of one equivalence class.\n  Each entry (EquivId) contains the following information: \n  (1) object ID, which is a number 'num', such that 0 \u003c= 'num' \u003c MaxId \n      where MaxId is the largest ID of nodes in a network\n  (2) the polarity of the node, which is a binary number, 0 or 1, giving\n      the node's value when pattern (000...0) is applied to the inputs\n  (3) the number of the network, 0 or 1, which stands for pNtk1 and pNtk2, respectively\n  The first array in the array of arrays is empty, or contains nodes that \n  are equivalent to a constant (if such nodes appear in the network).\n\n  Given EquivID defined above, use the APIs below to get its components.\n*/\n\n// declarations to be added to the application code\n// extern int Abc_ObjEquivId2ObjId( int EquivId );\n\n// extern int Abc_ObjEquivId2Polar( int EquivId );\n\n// extern int Abc_ObjEquivId2NtkId( int EquivId );\n\n\n// definition that may remain in this file\nfunc Abc_ObjEquivId2ObjId(EquivId int32) int32 { return  EquivId \u003e\u003e 2;      }\nfunc Abc_ObjEquivId2Polar(EquivId int32) int32 { return (EquivId \u003e\u003e 1) \u0026 1; }\nfunc Abc_ObjEquivId2NtkId(EquivId int32) int32 { return  EquivId       \u0026 1; }\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Aig_Man_t *  Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n// extern void         Dch_ComputeEquivalences( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the dual-output miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCreateDualOutputMiter(p1 *Aig_Man_t, p2 *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCiNum(p1) == Aig_ManCiNum(p2), \"Aig_ManCiNum(p1) == Aig_ManCiNum(p2)\");\n    assert(Aig_ManCoNum(p1) == Aig_ManCoNum(p2), \"Aig_ManCoNum(p1) == Aig_ManCoNum(p2)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p1) + Aig_ManObjNumMax(p2) );\n    // add first AIG\n    Aig_ManConst1(p1).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p1.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p1.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p1.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add second AIG\n    Aig_ManConst1(p2).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p2.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ManCi( pNew, i );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p2.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p2.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add the outputs\n    for  i = 0; i \u003c Aig_ManCoNum(p1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p1, i)) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(Aig_ManCo(p2, i)) );\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets polarity attribute of each object in the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressMapSetPolarity(pNtk *Abc_Ntk_t) {\n    var pObj, pAnd *Abc_Obj_t;\n    var i int32;\n    // each node refers to the the strash copy whose polarity is set\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if (pAnd = Abc_ObjRegular(pObj.pCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE { // strashed object is present and legal\n            pObj.fPhase = pAnd.fPhase ^ Abc_ObjIsComplement(pObj.pCopy); }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create mapping of node IDs of pNtk into equiv classes of pMiter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressMapClasses(pMiter *Aig_Man_t, pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vId2Lit *Vec_Int_t;\n    var pObj, pAnd *Abc_Obj_t;\n    var pObjMan, pObjMiter, pObjRepr *Aig_Obj_t;\n    var i int32;\n    vId2Lit = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Lit, Abc_NtkObjNumMax(pNtk), -1 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // get the pointer to the miter node corresponding to pObj\n        if (pAnd = Abc_ObjRegular(pObj.pCopy)) \u0026\u0026 Abc_ObjType(pAnd) != ABC_OBJ_NONE \u0026\u0026          // strashed node is present and legal\n             (pObjMan = Aig_Regular((Aig_Obj_t *)pAnd.pCopy)) \u0026\u0026 Aig_ObjType(pObjMan) != AIG_OBJ_NONE \u0026\u0026       // AIG node is present and legal\n             (pObjMiter = Aig_Regular((Aig_Obj_t *)pObjMan.pData)) \u0026\u0026 Aig_ObjType(pObjMiter) != AIG_OBJ_NONE { // miter node is present and legal\n        \n            // get the representative of the miter node\n            pObjRepr = Aig_ObjRepr( pMiter, pObjMiter );\n            if pObjRepr != nil {\n                pObjRepr = pObjRepr;\n            } else {\n                pObjRepr = pObjMiter;\n            }\n            // map pObj (whose ID is i) into the repr node ID (i.e. equiv class)\n            Vec_IntWriteEntry( vId2Lit, i, Aig_ObjId(pObjRepr) );\n        }\n    }\n    }\n    return vId2Lit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the vector of given equivalence class of objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjDressClass(vRes *Vec_Ptr_t, vClass2Num *Vec_Int_t, Class int32) *Vec_Int_t {\n    var ClassNumber int32;\n    assert(Class \u003e 0, \"Class \u003e 0\");\n    ClassNumber = Vec_IntEntry( vClass2Num, Class );\n    assert(ClassNumber != 0, \"ClassNumber != 0\");\n    if ClassNumber \u003e 0 {\n        return (Vec_Int_t *)Vec_PtrEntry( vRes, ClassNumber ); } // previous class\n    // create new class\n    Vec_IntWriteEntry( vClass2Num, Class, Vec_PtrSize(vRes) );\n    Vec_PtrPush( vRes, Vec_IntAlloc(4) );\n    return (Vec_Int_t *)Vec_PtrEntryLast( vRes ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the ID of a node in an equivalence class.]\n\n  Description [The ID is composed of three parts: object ID, followed\n  by one bit telling the phase of this node, followed by one bit\n  telling the network to which this node belongs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjDressMakeId(pNtk *Abc_Ntk_t, ObjId int32, iNtk int32) int32 {\n    return (ObjId \u003c\u003c 2) | (Abc_NtkObj(pNtk,ObjId).fPhase \u003c\u003c 1) | iNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes equivalence classes of objects in pNtk1 and pNtk2.]\n\n  Description [Internal procedure.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressMapIds(pMiter *Aig_Man_t, pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t) *Vec_Ptr_t {\n    var vRes *Vec_Ptr_t;\n    var vId2Lit1, vId2Lit2, vCounts0, vCounts1, vClassC, vClass2Num *Vec_Int_t;\n    var i, Class int32;\n    // start the classes\n    vRes = Vec_PtrAlloc( 1000 );\n    // set polarity of the nodes\n    Abc_NtkDressMapSetPolarity( pNtk1 );\n    Abc_NtkDressMapSetPolarity( pNtk2 );\n    // create mapping of node IDs of pNtk1/pNtk2 into the IDs of equiv classes of pMiter\n    vId2Lit1 = Abc_NtkDressMapClasses( pMiter, pNtk1 );\n    vId2Lit2 = Abc_NtkDressMapClasses( pMiter, pNtk2 );\n    // count the number of nodes in each equivalence class\n    vCounts0 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class \u003e= 0 {\n            Vec_IntAddToEntry( vCounts0, Class, 1 ); }\n    }\n    vCounts1 = Vec_IntStart( Aig_ManObjNumMax(pMiter) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class \u003e= 0 {\n            Vec_IntAddToEntry( vCounts1, Class, 1 ); }\n    }\n    // get the costant class\n    vClassC = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class == 0 {\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk1, i, 0) ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class == 0 {\n            Vec_IntPush( vClassC, Abc_ObjDressMakeId(pNtk2, i, 1) ); }\n    }\n    Vec_PtrPush( vRes, vClassC );\n    // map repr node IDs into class numbers\n    vClass2Num = Vec_IntAlloc( 0 );\n    Vec_IntFill( vClass2Num, Aig_ManObjNumMax(pMiter), -1 );\n    // keep classes having at least one element from pNtk1 and one from pNtk2\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit1)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit1, i)), 1); i++  {\n        if Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) {\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk1, i, 0) ); }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vId2Lit2)) \u0026\u0026 (((Class) = Vec_IntEntry(vId2Lit2, i)), 1); i++  {\n        if Class \u003e 0 \u0026\u0026 Vec_IntEntry(vCounts0, Class) \u0026\u0026 Vec_IntEntry(vCounts1, Class) {\n            Vec_IntPush( Abc_ObjDressClass(vRes, vClass2Num, Class), Abc_ObjDressMakeId(pNtk2, i, 1) ); }\n    }\n    // package them accordingly\n    Vec_IntFree( vClass2Num );\n    Vec_IntFree( vCounts0 );\n    Vec_IntFree( vCounts1 );\n    Vec_IntFree( vId2Lit1 );\n    Vec_IntFree( vId2Lit2 );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Alternative way to compute equivalences.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ComputeEquivalences2(pMiter *Aig_Man_t, pPars *Dch_Pars_t) {\n    extern Gia_Man_t * Cec4_ManSimulateTest3( Gia_Man_t * p, int nBTLimit, int fVerbose );\n    var pGia *Gia_Man_t  = Gia_ManFromAigSimple(pMiter);\n    var pNew *Gia_Man_t  = Cec4_ManSimulateTest3( pGia, pPars.nBTLimit, pPars.fVerbose );\n    var i, k int32;\n    // inlining of macro ABC_FREE\n    ((pMiter.pReprs) ? (free((char *) (pMiter.pReprs)), (pMiter.pReprs) = 0) : 0);\n    // inlining of macro ABC_CALLOC\n    pMiter.pReprs = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(pMiter)), sizeof(Aig_Obj_t *)));\n    // inlining of macro Gia_ManForEachClass\n    for  i = 1; i \u003c Gia_ManObjNum(pGia); i++  { if !Gia_ObjIsHead(pGia, i) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(pGia, i), \"Gia_ObjIsHead(pGia, i)\"), k = Gia_ObjNext(pGia, i); k \u003e 0; k = Gia_ObjNext(pGia, k)  {\n            pMiter.pReprs[k] = Aig_ManObj( pMiter, i );\n        } }\n    }\n    Gia_ManStop( pGia );\n    Gia_ManStop( pNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes equivalence classes of objects in pNtk1 and pNtk2.]\n\n  Description [Returns the array (Vec_Ptr_t) of integer arrays (Vec_Int_t).\n  Each of the integer arrays contains entries of one equivalence class.\n  Each entry contains the following information: the network number (0/1),\n  the polarity (0/1) and the object ID in the the network (0 \u003c= num \u003c MaxId)\n  where MaxId is the largest number of an ID of an object in that network.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressComputeEquivs(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConflictLimit int32, fVerbose int32) *Vec_Ptr_t {\n    var Pars Dch_Pars_t;\n    var pPars *Dch_Pars_t = \u0026Pars;\n    var pAig1, pAig2 *Abc_Ntk_t;\n    var pMan1, pMan2, pMiter *Aig_Man_t;\n    var vRes *Vec_Ptr_t;\n    assert(!Abc_NtkIsStrash(pNtk1), \"!Abc_NtkIsStrash(pNtk1)\");\n    assert(!Abc_NtkIsStrash(pNtk2), \"!Abc_NtkIsStrash(pNtk2)\");\n    // convert network into AIG\n    pAig1 = Abc_NtkStrash( pNtk1, 1, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 1, 1, 0 );\n    pMan1 = Abc_NtkToDar( pAig1, 0, 0 );\n    pMan2 = Abc_NtkToDar( pAig2, 0, 0 );\n    // derive the miter\n    pMiter = Aig_ManCreateDualOutputMiter( pMan1, pMan2 );\n    // set up parameters for SAT sweeping\n    Dch_ManSetDefaultParams( pPars );\n    pPars.nBTLimit = nConflictLimit;\n    pPars.fVerbose = fVerbose;\n    // perform SAT sweeping\n    Dch_ComputeEquivalences2( pMiter, pPars );\n    // now, pMiter is annotated with the equivl class info\n    // convert this info into the resulting array\n    vRes = Abc_NtkDressMapIds( pMiter, pNtk1, pNtk2 );\n    Aig_ManStop( pMiter );\n    Aig_ManStop( pMan1 );\n    Aig_ManStop( pMan2 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints information about node equivalences.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressPrintEquivs(vRes *Vec_Ptr_t) {\n    var vClass *Vec_Int_t;\n    var i, k, Entry int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        fmt.Printf(\"Class %5d : \", i);\n        fmt.Printf(\"Num =%5d    \", Vec_IntSize(vClass));\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            fmt.Printf(\"%5d%c%d \", Abc_ObjEquivId2ObjId(Entry), Abc_ObjEquivId2Polar(Entry)? '-':'+', Abc_ObjEquivId2NtkId(Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints information about node equivalences.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressPrintStats(vRes *Vec_Ptr_t, nNodes0 int32, nNodes1 int32, Time abctime) {\n    var vClass *Vec_Int_t;\n    var i, k, Entry int32;\n    var NegAll [2]int32 ;\n    var PosAll [2]int32 ;\n    var PairsAll int32;\n    var PairsOne int32;\n    var Pos, Neg [2]int32;\n    // count the number of equivalences in each class\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        Pos[0] = Pos[1] = 0;\n        Neg[0] = Neg[1] = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if Abc_ObjEquivId2NtkId(Entry) != 0 {\n                if Abc_ObjEquivId2Polar(Entry) != 0 {\n                    Neg[1]++; // negative polarity in network 1\n                } else {\n                    Pos[1]++; } // positive polarity in network 1\n            \n            } else {\n                if Abc_ObjEquivId2Polar(Entry) != 0 {\n                    Neg[0]++; // negative polarity in network 0\n                } else {\n                    Pos[0]++; } // positive polarity in network 0\n            }\n        }\n        PosAll[0] += Pos[0]; // total positive polarity in network 0\n        PosAll[1] += Pos[1]; // total positive polarity in network 1\n        NegAll[0] += Neg[0]; // total negative polarity in network 0\n        NegAll[1] += Neg[1]; // total negative polarity in network 1\n\n        // assuming that the name can be transferred to only one node\n        PairsAll += Abc_MinInt(Neg[0] + Pos[0], Neg[1] + Pos[1]);\n        PairsOne += Abc_MinInt(Neg[0], Neg[1]) + Abc_MinInt(Pos[0], Pos[1]);\n    }\n    fmt.Printf(\"Total number of equiv classes                = %7d.\\n\", Vec_PtrSize(vRes));\n    fmt.Printf(\"Participating nodes from both networks       = %7d.\\n\", NegAll[0]+PosAll[0]+NegAll[1]+PosAll[1]);\n    fmt.Printf(\"Participating nodes from the first network   = %7d. (%7.2f %% of nodes)\\n\", NegAll[0]+PosAll[0], 100.0*(NegAll[0]+PosAll[0])/(nNodes0+1));\n    fmt.Printf(\"Participating nodes from the second network  = %7d. (%7.2f %% of nodes)\\n\", NegAll[1]+PosAll[1], 100.0*(NegAll[1]+PosAll[1])/(nNodes1+1));\n    fmt.Printf(\"Node pairs (any polarity)                    = %7d. (%7.2f %% of names can be moved)\\n\", PairsAll, 100.0*PairsAll/(nNodes0+1));\n    fmt.Printf(\"Node pairs (same polarity)                   = %7d. (%7.2f %% of names can be moved)\\n\", PairsOne, 100.0*PairsOne/(nNodes0+1));\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Time)))/(float64(int64(time.Second))));;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers IDs from pNtk1 to pNtk2 using equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDress2Transfer(pNtk0 *Abc_Ntk_t, pNtk1 *Abc_Ntk_t, vRes *Vec_Ptr_t, fVerbose int32) {\n    var vClass *Vec_Int_t;\n    var pObj0, pObj1 *Abc_Obj_t;\n    var i, k, fComp0, fComp1, Entry int32;\n    var CounterInv, Counter int32;\n    var pName string;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRes)) \u0026\u0026 (((vClass) = (Vec_Int_t *)Vec_PtrEntry(vRes, i)), 1); i++  {\n        pObj0 = pObj1 = nil;\n        fComp0 = fComp1 = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if Abc_ObjEquivId2NtkId(Entry) != 0 {\n                pObj1 = Abc_NtkObj( pNtk1, Abc_ObjEquivId2ObjId(Entry) );\n                fComp1 = Abc_ObjEquivId2Polar(Entry);\n            \n            } else {\n                pObj0 = Abc_NtkObj( pNtk0, Abc_ObjEquivId2ObjId(Entry) );\n                fComp0 = Abc_ObjEquivId2Polar(Entry);\n            }\n        }\n        if pObj0 == nil || pObj1 == nil {\n            continue; }\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk0.pManName, pObj0.Id );\n        if pName != nil {\n            continue; }\n        // if the other node has no name, quit\n        pName = Nm_ManFindNameById( pNtk1.pManName, pObj1.Id );\n        if pName == nil {\n            continue; }\n        // assign name\n        if fComp0 ^ fComp1 {\n            Abc_ObjAssignName( pObj0, pName, \"_inv\" );\n            CounterInv++;\n        \n        } else {\n            Abc_ObjAssignName( pObj0, pName, nil );\n            Counter++;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", Counter + CounterInv, Counter, CounterInv);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers names from pNtk1 to pNtk2.]\n\n  Description [Internally calls new procedure for mapping node IDs of\n  both networks into the shared equivalence classes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDress2(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConflictLimit int32, fVerbose int32) {\n    var vRes *Vec_Ptr_t;\n    var clk abctime  = Abc_Clock();\n    vRes = Abc_NtkDressComputeEquivs( pNtk1, pNtk2, nConflictLimit, fVerbose );\n//    Abc_NtkDressPrintEquivs( vRes );\n    Abc_NtkDressPrintStats( vRes, Abc_NtkNodeNum(pNtk1), Abc_NtkNodeNum(pNtk1), Abc_Clock() - clk );\n    Abc_NtkDress2Transfer( pNtk1, pNtk2, vRes, fVerbose );\n    Vec_VecFree( (Vec_Vec_t *)vRes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

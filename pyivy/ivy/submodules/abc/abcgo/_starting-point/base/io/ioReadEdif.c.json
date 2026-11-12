@@ -1,0 +1,977 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c",
+  "SHA256": "11d66193396e5d01939617b69b58854e20ea9707bff0f834bd1cfa1c7827d6ec",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Currently this parser does not work!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 1994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadEdif: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 97,
+        "Column": 8,
+        "ByteOffset": 2713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( (char *)vTokens.pArray[0], \"edif\" ) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 2772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 107,
+        "Column": 41,
+        "ByteOffset": 3079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 113,
+        "Column": 12,
+        "ByteOffset": 3383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( (char *)vTokens.pArray[0], \"instance\" ) == 0 { "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 119,
+        "Column": 16,
+        "ByteOffset": 3746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strncmp( pGateName, \"Flip\", 4 ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 130,
+        "Column": 19,
+        "ByteOffset": 4197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strcmp( (char *)vTokens.pArray[0], \"net\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 132,
+        "Column": 16,
+        "ByteOffset": 4312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 132,
+        "Column": 49,
+        "ByteOffset": 4345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 134,
+        "Column": 16,
+        "ByteOffset": 4423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pNetName + strlen(pNetName) - 4, \"_out\" ) == 0 {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 134,
+        "Column": 35,
+        "ByteOffset": 4442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pNetName + strlen(pNetName) - 4, \"_out\" ) == 0 {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 135,
+        "Column": 26,
+        "ByteOffset": 4505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                pNetName[strlen(pNetName) - 4] = 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 13,
+        "ByteOffset": 4599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNet );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 141,
+        "Column": 18,
+        "ByteOffset": 4827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for  strcmp( (char *)vTokens.pArray[0], \"portRef\" ) == 0  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 142,
+        "Column": 20,
+        "ByteOffset": 4901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pNetName, (char *)vTokens.pArray[3] ) != 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 150,
+        "Column": 19,
+        "ByteOffset": 5262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strcmp( (char *)vTokens.pArray[0], \"library\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 156,
+        "Column": 18,
+        "ByteOffset": 5658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for  strcmp( (char *)vTokens.pArray[0], \"port\" ) == 0  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 158,
+        "Column": 20,
+        "ByteOffset": 5783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 158,
+        "Column": 53,
+        "ByteOffset": 5816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 162,
+        "Column": 20,
+        "ByteOffset": 5991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pNetName + strlen(pNetName) - 3, \"_PO\" ) == 0 {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 162,
+        "Column": 39,
+        "ByteOffset": 6010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( pNetName + strlen(pNetName) - 3, \"_PO\" ) == 0 {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 163,
+        "Column": 30,
+        "ByteOffset": 6076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    pNetName[strlen(pNetName) - 3] = 0; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 164,
+        "Column": 20,
+        "ByteOffset": 6124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( (char *)vTokens.pArray[3], \"INPUT\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 166,
+        "Column": 27,
+        "ByteOffset": 6274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp( (char *)vTokens.pArray[3], \"OUTPUT\" ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 21,
+        "ByteOffset": 6444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%s (line %d): Wrong interface specification.\\n\", Extra_FileReaderGetFileName(p), iLine );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 176,
+        "Column": 19,
+        "ByteOffset": 6746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strcmp( (char *)vTokens.pArray[0], \"design\" ) == 0 {"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 177,
+        "Column": 74,
+        "ByteOffset": 6872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pNtk.pName) ? (free((char *) (pNtk.pName)), (pNtk.pName) = 0) : 0); "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 186,
+        "Column": 12,
+        "ByteOffset": 7333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( (char *)pObj.pData, \"And\", 3 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 188,
+        "Column": 19,
+        "ByteOffset": 7509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Or\", 2 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 190,
+        "Column": 19,
+        "ByteOffset": 7683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Nand\", 4 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 192,
+        "Column": 19,
+        "ByteOffset": 7856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Nor\", 3 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 194,
+        "Column": 19,
+        "ByteOffset": 8027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Exor\", 4 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 196,
+        "Column": 19,
+        "ByteOffset": 8199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Exnor\", 5 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 198,
+        "Column": 19,
+        "ByteOffset": 8373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Inv\", 3 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 200,
+        "Column": 19,
+        "ByteOffset": 8521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)pObj.pData, \"Buf\", 3 ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 13,
+        "ByteOffset": 8680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s: Unknown gate type \\\"%s\\\".\\n\", Extra_FileReaderGetFileName(p), (char*)pObj.pData );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadEdif",
+      "Start": 1397,
+      "End": 2111,
+      "BodyStart": 1453,
+      "Original": "Abc_Ntk_t * Io_ReadEdif( char * pFileName, int fCheck )\n{\n    Extra_FileReader_t * p;\n    Abc_Ntk_t * pNtk;\n\n    printf( \"Currently this parser does not work!\\n\" );\n    return NULL;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t()\" );\n    if ( p == NULL )\n        return NULL;\n\n    // read the network\n    pNtk = Io_ReadEdifNetwork( p );\n    Extra_FileReaderFree( p );\n    if ( pNtk == NULL )\n        return NULL;\n\n    // make sure that everything is okay with the network structure\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pNtk ) )\n    {\n        printf( \"Io_ReadEdif: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtk );\n        return NULL;\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_ReadEdif(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    fmt.Printf(\"Currently this parser does not work!\\n\");\n    return nil;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t()\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadEdifNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadEdif: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_ReadEdifNetwork",
+      "Start": 2346,
+      "End": 9080,
+      "BodyStart": 2403,
+      "Original": "Abc_Ntk_t * Io_ReadEdifNetwork( Extra_FileReader_t * p )\n{\n    ProgressBar * pProgress;\n    Vec_Ptr_t * vTokens;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNet, * pObj, * pFanout;\n    char * pGateName, * pNetName;\n    int fTokensReady, iLine, i;\n\n    // read the first line\n    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n    if ( strcmp( (char *)vTokens-\u003epArray[0], \"edif\" ) != 0 )\n    {\n        printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );\n        return NULL;\n    }\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n\n    // go through the lines of the file\n    fTokensReady = 0;\n    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );\n    for ( iLine = 1; fTokensReady || (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++ )\n    {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), NULL );\n\n        // get the type of the line\n        fTokensReady = 0;\n        if ( strcmp( (char *)vTokens-\u003epArray[0], \"instance\" ) == 0 )\n        { \n            pNetName = (char *)vTokens-\u003epArray[1];\n            pNet = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            pGateName = (char *)vTokens-\u003epArray[1];\n            if ( strncmp( pGateName, \"Flip\", 4 ) == 0 )\n            {\n                pObj = Abc_NtkCreateLatch( pNtk );\n                Abc_LatchSetInit0( pObj );\n            }\n            else\n            {\n                pObj = Abc_NtkCreateNode( pNtk );\n//                pObj-\u003epData = Abc_NtkRegisterName( pNtk, pGateName );\n                pObj-\u003epData = Extra_UtilStrsav( pGateName ); // memory leak!!!\n            }\n            Abc_ObjAddFanin( pNet, pObj );\n        }\n        else if ( strcmp( (char *)vTokens-\u003epArray[0], \"net\" ) == 0 )\n        {\n            pNetName = (char *)vTokens-\u003epArray[1];\n            if ( strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 )\n                continue;\n            if ( strcmp( pNetName + strlen(pNetName) - 4, \"_out\" ) == 0 )\n                pNetName[strlen(pNetName) - 4] = 0;\n            pNet = Abc_NtkFindNet( pNtk, pNetName );\n            assert( pNet );\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            while ( strcmp( (char *)vTokens-\u003epArray[0], \"portRef\" ) == 0 )\n            {\n                if ( strcmp( pNetName, (char *)vTokens-\u003epArray[3] ) != 0 )\n                {\n                    pFanout = Abc_NtkFindNet( pNtk, (char *)vTokens-\u003epArray[3] );\n                    Abc_ObjAddFanin( Abc_ObjFanin0(pFanout), pNet );\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n            fTokensReady = 1;\n        }\n        else if ( strcmp( (char *)vTokens-\u003epArray[0], \"library\" ) == 0 )\n        {\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            while ( strcmp( (char *)vTokens-\u003epArray[0], \"port\" ) == 0 )\n            {\n                pNetName = (char *)vTokens-\u003epArray[1];\n                if ( strcmp( pNetName, \"CK\" ) == 0 || strcmp( pNetName, \"RESET\" ) == 0 )\n                {\n                    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n                    continue;\n                }\n                if ( strcmp( pNetName + strlen(pNetName) - 3, \"_PO\" ) == 0 )\n                    pNetName[strlen(pNetName) - 3] = 0;\n                if ( strcmp( (char *)vTokens-\u003epArray[3], \"INPUT\" ) == 0 )\n                    Io_ReadCreatePi( pNtk, (char *)vTokens-\u003epArray[1] );\n                else if ( strcmp( (char *)vTokens-\u003epArray[3], \"OUTPUT\" ) == 0 )\n                    Io_ReadCreatePo( pNtk, (char *)vTokens-\u003epArray[1] );\n                else\n                {\n                    printf( \"%s (line %d): Wrong interface specification.\\n\", Extra_FileReaderGetFileName(p), iLine );\n                    Abc_NtkDelete( pNtk );\n                    return NULL;\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n        }\n        else if ( strcmp( (char *)vTokens-\u003epArray[0], \"design\" ) == 0 )\n        {\n            ABC_FREE( pNtk-\u003epName ); \n            pNtk-\u003epName = (char *)Extra_UtilStrsav( (char *)vTokens-\u003epArray[3] );\n            break;\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // assign logic functions\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( strncmp( (char *)pObj-\u003epData, \"And\", 3 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateAnd((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj), NULL) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Or\", 2 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateOr((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj), NULL) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Nand\", 4 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateNand((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj)) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Nor\", 3 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateNor((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj)) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Exor\", 4 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateXor((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj)) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Exnor\", 5 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateNxor((Mem_Flex_t *)pNtk-\u003epManFunc, Abc_ObjFaninNum(pObj)) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Inv\", 3 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateInv((Mem_Flex_t *)pNtk-\u003epManFunc) );\n        else if ( strncmp( (char *)pObj-\u003epData, \"Buf\", 3 ) == 0 )\n            Abc_ObjSetData( pObj, Abc_SopCreateBuf((Mem_Flex_t *)pNtk-\u003epManFunc) );\n        else\n        {\n            printf( \"%s: Unknown gate type \\\"%s\\\".\\n\", Extra_FileReaderGetFileName(p), (char*)pObj-\u003epData );\n            Abc_NtkDelete( pNtk );\n            return NULL;\n        }\n    }\n    // check if constants have been added\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"VDD\" ) )\n//        Io_ReadCreateConst( pNtk, \"VDD\", 1 );\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"GND\" ) )\n//        Io_ReadCreateConst( pNtk, \"GND\", 0 );\n\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}",
+      "Draft": "func Io_ReadEdifNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNet, pObj, pFanout *Abc_Obj_t;\n    var pGateName, pNetName string;\n    var fTokensReady, iLine, i int32;\n\n    // read the first line\n    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n    if int32(strings.Compare((char *)vTokens.pArray[0], \"edif\")) != 0 {\n        fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n        return nil;\n    }\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n\n    // go through the lines of the file\n    fTokensReady = 0;\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 1; fTokensReady || (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        // get the type of the line\n        fTokensReady = 0;\n        if int32(strings.Compare((char *)vTokens.pArray[0], \"instance\")) == 0 { \n            pNetName = (char *)vTokens.pArray[1];\n            pNet = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            pGateName = (char *)vTokens.pArray[1];\n            if strncmp( pGateName, \"Flip\", 4 ) == 0 {\n                pObj = Abc_NtkCreateLatch( pNtk );\n                Abc_LatchSetInit0( pObj );\n            \n            } else {\n                pObj = Abc_NtkCreateNode( pNtk );\n//                pObj-\u003epData = Abc_NtkRegisterName( pNtk, pGateName );\n                pObj.pData = Extra_UtilStrsav( pGateName ); // memory leak!!!\n            }\n            Abc_ObjAddFanin( pNet, pObj );\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"net\")) == 0 {\n            pNetName = (char *)vTokens.pArray[1];\n            if int32(strings.Compare(pNetName, \"CK\")) == 0 || int32(strings.Compare(pNetName, \"RESET\")) == 0 {\n                continue; }\n            if int32(strings.Compare(pNetName + len(pNetName) - 4, \"_out\")) == 0 {\n                pNetName[len(pNetName) - 4] = 0; }\n            pNet = Abc_NtkFindNet( pNtk, pNetName );\n            assert(pNet, \"pNet\");\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            for  int32(strings.Compare((char *)vTokens.pArray[0], \"portRef\")) == 0  {\n                if int32(strings.Compare(pNetName, (char *)vTokens.pArray[3])) != 0 {\n                    pFanout = Abc_NtkFindNet( pNtk, (char *)vTokens.pArray[3] );\n                    Abc_ObjAddFanin( Abc_ObjFanin0(pFanout), pNet );\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n            fTokensReady = 1;\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"library\")) == 0 {\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            for  int32(strings.Compare((char *)vTokens.pArray[0], \"port\")) == 0  {\n                pNetName = (char *)vTokens.pArray[1];\n                if int32(strings.Compare(pNetName, \"CK\")) == 0 || int32(strings.Compare(pNetName, \"RESET\")) == 0 {\n                    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n                    continue;\n                }\n                if int32(strings.Compare(pNetName + len(pNetName) - 3, \"_PO\")) == 0 {\n                    pNetName[len(pNetName) - 3] = 0; }\n                if int32(strings.Compare((char *)vTokens.pArray[3], \"INPUT\")) == 0 {\n                    Io_ReadCreatePi( pNtk, (char *)vTokens.pArray[1] );\n                } else if int32(strings.Compare((char *)vTokens.pArray[3], \"OUTPUT\")) == 0 {\n                    Io_ReadCreatePo( pNtk, (char *)vTokens.pArray[1] );\n                } else {\n                    fmt.Printf(\"%s (line %d): Wrong interface specification.\\n\", Extra_FileReaderGetFileName(p), iLine);\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"design\")) == 0 {\n            // inlining of macro ABC_FREE\n            ((pNtk.pName) ? (free((char *) (pNtk.pName)), (pNtk.pName) = 0) : 0); \n            pNtk.pName = (char *)Extra_UtilStrsav( (char *)vTokens.pArray[3] );\n            break;\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // assign logic functions\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if strncmp( (char *)pObj.pData, \"And\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateAnd((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj), nil) );\n        } else if strncmp( (char *)pObj.pData, \"Or\", 2 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateOr((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj), nil) );\n        } else if strncmp( (char *)pObj.pData, \"Nand\", 4 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNand((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Nor\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Exor\", 4 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateXor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Exnor\", 5 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNxor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Inv\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n        } else if strncmp( (char *)pObj.pData, \"Buf\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n        } else {\n            fmt.Printf(\"%s: Unknown gate type \\\"%s\\\".\\n\", Extra_FileReaderGetFileName(p), (char*)pObj.pData);\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n    }\n    }\n    // check if constants have been added\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"VDD\" ) )\n//        Io_ReadCreateConst( pNtk, \"VDD\", 1 );\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"GND\" ) )\n//        Io_ReadCreateConst( pNtk, \"GND\", 0 );\n\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::2630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2630,
+      "End": 2643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::2690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2690,
+      "End": 2698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3146,
+      "End": 3159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3377,
+      "End": 3385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3459",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3459,
+      "End": 3467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3570,
+      "End": 3583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3635,
+      "End": 3648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::3702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3702,
+      "End": 3710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4233,
+      "End": 4241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4309,
+      "End": 4317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4677,
+      "End": 4690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4742,
+      "End": 4755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4807,
+      "End": 4820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4878",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4878,
+      "End": 4886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::4978",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4978,
+      "End": 4986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5084,
+      "End": 5092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5227,
+      "End": 5240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5350,
+      "End": 5358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5429,
+      "End": 5442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5494,
+      "End": 5507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5559,
+      "End": 5572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5624,
+      "End": 5637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5689,
+      "End": 5702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5760,
+      "End": 5768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::5845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5845,
+      "End": 5853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6010,
+      "End": 6023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6263,
+      "End": 6271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6351,
+      "End": 6359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6415,
+      "End": 6423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6504,
+      "End": 6512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6812,
+      "End": 6825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::6905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6905,
+      "End": 6913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6973,
+      "End": 6973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7117",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7025,
+      "End": 7033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7051,
+      "End": 7059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7255,
+      "End": 7263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7611",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7345,
+      "End": 7359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7434,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7522,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7611,
+      "End": 7619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::7969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7703,
+      "End": 7717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7786,
+      "End": 7794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7876,
+      "End": 7890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7959,
+      "End": 7967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8050,
+      "End": 8064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8133,
+      "End": 8141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8492",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8226,
+      "End": 8240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8309,
+      "End": 8317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8665",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8399,
+      "End": 8413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8459,
+      "End": 8467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8815",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8549,
+      "End": 8563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::pointer-cast::8958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8692,
+      "End": 8699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::Io_ReadEdif",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEdif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1397,
+      "End": 2111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::ternary::Io_ReadEdifNetwork",
+      "Category": "ternary-review",
+      "Symbol": "Io_ReadEdifNetwork",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2346,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::Io_ReadEdifNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadEdifNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2346,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadEdif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9328
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ioReadEdif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedure to read ISCAS benchmarks in EDIF.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadEdif.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Abc_Ntk_t * Io_ReadEdifNetwork( Extra_FileReader_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the network from an EDIF file.]\n\n  Description [Works only for the ISCAS benchmarks.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEdif(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    fmt.Printf(\"Currently this parser does not work!\\n\");\n    return nil;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t()\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadEdifNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadEdif: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadEdifNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNet, pObj, pFanout *Abc_Obj_t;\n    var pGateName, pNetName string;\n    var fTokensReady, iLine, i int32;\n\n    // read the first line\n    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n    if int32(strings.Compare((char *)vTokens.pArray[0], \"edif\")) != 0 {\n        fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n        return nil;\n    }\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n\n    // go through the lines of the file\n    fTokensReady = 0;\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 1; fTokensReady || (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        // get the type of the line\n        fTokensReady = 0;\n        if int32(strings.Compare((char *)vTokens.pArray[0], \"instance\")) == 0 { \n            pNetName = (char *)vTokens.pArray[1];\n            pNet = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            pGateName = (char *)vTokens.pArray[1];\n            if strncmp( pGateName, \"Flip\", 4 ) == 0 {\n                pObj = Abc_NtkCreateLatch( pNtk );\n                Abc_LatchSetInit0( pObj );\n            \n            } else {\n                pObj = Abc_NtkCreateNode( pNtk );\n//                pObj-\u003epData = Abc_NtkRegisterName( pNtk, pGateName );\n                pObj.pData = Extra_UtilStrsav( pGateName ); // memory leak!!!\n            }\n            Abc_ObjAddFanin( pNet, pObj );\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"net\")) == 0 {\n            pNetName = (char *)vTokens.pArray[1];\n            if int32(strings.Compare(pNetName, \"CK\")) == 0 || int32(strings.Compare(pNetName, \"RESET\")) == 0 {\n                continue; }\n            if int32(strings.Compare(pNetName + len(pNetName) - 4, \"_out\")) == 0 {\n                pNetName[len(pNetName) - 4] = 0; }\n            pNet = Abc_NtkFindNet( pNtk, pNetName );\n            assert(pNet, \"pNet\");\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            for  int32(strings.Compare((char *)vTokens.pArray[0], \"portRef\")) == 0  {\n                if int32(strings.Compare(pNetName, (char *)vTokens.pArray[3])) != 0 {\n                    pFanout = Abc_NtkFindNet( pNtk, (char *)vTokens.pArray[3] );\n                    Abc_ObjAddFanin( Abc_ObjFanin0(pFanout), pNet );\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n            fTokensReady = 1;\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"library\")) == 0 {\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            for  int32(strings.Compare((char *)vTokens.pArray[0], \"port\")) == 0  {\n                pNetName = (char *)vTokens.pArray[1];\n                if int32(strings.Compare(pNetName, \"CK\")) == 0 || int32(strings.Compare(pNetName, \"RESET\")) == 0 {\n                    vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n                    continue;\n                }\n                if int32(strings.Compare(pNetName + len(pNetName) - 3, \"_PO\")) == 0 {\n                    pNetName[len(pNetName) - 3] = 0; }\n                if int32(strings.Compare((char *)vTokens.pArray[3], \"INPUT\")) == 0 {\n                    Io_ReadCreatePi( pNtk, (char *)vTokens.pArray[1] );\n                } else if int32(strings.Compare((char *)vTokens.pArray[3], \"OUTPUT\")) == 0 {\n                    Io_ReadCreatePo( pNtk, (char *)vTokens.pArray[1] );\n                } else {\n                    fmt.Printf(\"%s (line %d): Wrong interface specification.\\n\", Extra_FileReaderGetFileName(p), iLine);\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p);\n            }\n        \n        } else if int32(strings.Compare((char *)vTokens.pArray[0], \"design\")) == 0 {\n            // inlining of macro ABC_FREE\n            ((pNtk.pName) ? (free((char *) (pNtk.pName)), (pNtk.pName) = 0) : 0); \n            pNtk.pName = (char *)Extra_UtilStrsav( (char *)vTokens.pArray[3] );\n            break;\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // assign logic functions\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if strncmp( (char *)pObj.pData, \"And\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateAnd((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj), nil) );\n        } else if strncmp( (char *)pObj.pData, \"Or\", 2 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateOr((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj), nil) );\n        } else if strncmp( (char *)pObj.pData, \"Nand\", 4 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNand((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Nor\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Exor\", 4 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateXor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Exnor\", 5 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateNxor((Mem_Flex_t *)pNtk.pManFunc, Abc_ObjFaninNum(pObj)) );\n        } else if strncmp( (char *)pObj.pData, \"Inv\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n        } else if strncmp( (char *)pObj.pData, \"Buf\", 3 ) == 0 {\n            Abc_ObjSetData( pObj, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n        } else {\n            fmt.Printf(\"%s: Unknown gate type \\\"%s\\\".\\n\", Extra_FileReaderGetFileName(p), (char*)pObj.pData);\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n    }\n    }\n    // check if constants have been added\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"VDD\" ) )\n//        Io_ReadCreateConst( pNtk, \"VDD\", 1 );\n//    if ( pNet = Abc_NtkFindNet( pNtk, \"GND\" ) )\n//        Io_ReadCreateConst( pNtk, \"GND\", 0 );\n\n    Abc_NtkFinalizeRead( pNtk );\n    return pNtk;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

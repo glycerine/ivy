@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucose.h",
+  "SHA256": "b9f1b243c12d257febe48e69522b816d34e22513e4d8389fcccf81d404744673",
+  "Functions": [
+    {
+      "Name": "Glucose_CreatePars",
+      "Start": 1616,
+      "End": 1833,
+      "BodyStart": 1696,
+      "Original": "static inline Glucose_Pars Glucose_CreatePars(int p, int v, int c, int nConfls)\n{\n    Glucose_Pars pars;\n    pars.pre     = p;\n    pars.verb    = v;\n    pars.cust    = c;\n    pars.nConfls = nConfls;\n    return pars;\n}",
+      "Draft": "func Glucose_CreatePars(p int32, v int32, c int32, nConfls int32) Glucose_Pars {\n    var pars Glucose_Pars;\n    pars.pre     = p;\n    pars.verb    = v;\n    pars.cust    = c;\n    pars.nConfls = nConfls;\n    return pars;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucose.h::struct::Glucose_Pars",
+      "Category": "struct-review",
+      "Symbol": "Glucose_Pars",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1399,
+      "End": 1614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucose.h::Glucose_CreatePars",
+      "Category": "semantic-review",
+      "Symbol": "Glucose_CreatePars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1616,
+      "End": 1833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/AbcGlucose.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5759
+    }
+  ],
+  "Draft": "package glucose\n\n/**CFile****************************************************************\n\n  FileName    [AbcGlucose.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver Glucose 3.0 by Gilles Audemard and Laurent Simon.]\n\n  Synopsis    [Interface to Glucose.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 6, 2017.]\n\n  Revision    [$Id: AbcGlucose.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\nconst GLUCOSE_UNSAT = -1\nconst GLUCOSE_SAT =    1\nconst GLUCOSE_UNDEC =  0\n\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Glucose_Pars struct {\n    pre int32;     // preprocessing\n    verb int32;    // verbosity\n    cust int32;    // customizable\n    nConfls int32; // conflict limit (0 = no limit)\n}\n\nfunc Glucose_CreatePars(p int32, v int32, c int32, nConfls int32) Glucose_Pars {\n    var pars Glucose_Pars;\n    pars.pre     = p;\n    pars.verb    = v;\n    pars.cust    = c;\n    pars.nConfls = nConfls;\n    return pars;\n}\n\ntypedef void bmcg_sat_solver;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// extern bmcg_sat_solver * bmcg_sat_solver_start();\n\n// extern void              bmcg_sat_solver_stop( bmcg_sat_solver* s );\n\n// extern void              bmcg_sat_solver_reset( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_addclause( bmcg_sat_solver* s, int * plits, int nlits );\n\n// extern void              bmcg_sat_solver_setcallback( bmcg_sat_solver* s, void * pman, int(*pfunc)(void*, int, int*) );\n\n// extern int               bmcg_sat_solver_solve( bmcg_sat_solver* s, int * plits, int nlits );\n\n// extern int               bmcg_sat_solver_final( bmcg_sat_solver* s, int ** ppArray );\n\n// extern int               bmcg_sat_solver_addvar( bmcg_sat_solver* s );\n\n// extern void              bmcg_sat_solver_set_nvars( bmcg_sat_solver* s, int nvars );\n\n// extern int               bmcg_sat_solver_eliminate( bmcg_sat_solver* s, int turn_off_elim );\n\n// extern int               bmcg_sat_solver_var_is_elim( bmcg_sat_solver* s, int v );\n\n// extern void              bmcg_sat_solver_var_set_frozen( bmcg_sat_solver* s, int v, int freeze );\n\n// extern int               bmcg_sat_solver_elim_varnum(bmcg_sat_solver* s);\n\n// extern int *             bmcg_sat_solver_read_cex( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_read_cex_varvalue( bmcg_sat_solver* s, int );\n\n// extern void              bmcg_sat_solver_set_stop( bmcg_sat_solver* s, int * pstop );\n\n// extern abctime           bmcg_sat_solver_set_runtime_limit( bmcg_sat_solver* s, abctime Limit );\n\n// extern void              bmcg_sat_solver_set_conflict_budget( bmcg_sat_solver* s, int Limit );\n\n// extern int               bmcg_sat_solver_varnum( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_clausenum( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_learntnum( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_conflictnum( bmcg_sat_solver* s );\n\n// extern int               bmcg_sat_solver_minimize_assumptions( bmcg_sat_solver * s, int * plits, int nlits, int pivot );\n\n// extern int               bmcg_sat_solver_add_and( bmcg_sat_solver * s, int iVar, int iVar0, int iVar1, int fCompl0, int fCompl1, int fCompl );\n\n// extern int               bmcg_sat_solver_add_xor( bmcg_sat_solver * s, int iVarA, int iVarB, int iVarC, int fCompl );\n\n// extern int               bmcg_sat_solver_quantify( bmcg_sat_solver * s[], Gia_Man_t * p, int iLit, int fHash, int(*pFuncCiToKeep)(void *, int), void * pData, Vec_Int_t * vDLits );\n\n// extern int               bmcg_sat_solver_equiv_overlap_check( bmcg_sat_solver * s, Gia_Man_t * p, int iLit0, int iLit1, int fEquiv );\n\n// extern Vec_Str_t *       bmcg_sat_solver_sop( Gia_Man_t * p, int CubeLimit );\n\n// extern int               bmcg_sat_solver_jftr( bmcg_sat_solver * s );\n\n// extern void              bmcg_sat_solver_set_jftr( bmcg_sat_solver * s, int jftr );\n\n// extern void              bmcg_sat_solver_set_var_fanin_lit( bmcg_sat_solver * s, int var, int lit0, int lit1 );\n\n// extern void              bmcg_sat_solver_start_new_round( bmcg_sat_solver * s );\n\n// extern void              bmcg_sat_solver_mark_cone( bmcg_sat_solver * s, int var );\n\n\n\n// extern void              Glucose_SolveCnf( char * pFilename, Glucose_Pars * pPars );\n\n// extern int               Glucose_SolveAig( Gia_Man_t * p, Glucose_Pars * pPars );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

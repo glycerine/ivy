@@ -1,0 +1,817 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c",
+  "SHA256": "511041140c5e1549bb9db162a499d2bdad246b321130d5903f97b19256bb1916",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pLib.pGenlib == nil );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 65,
+        "Column": 13,
+        "ByteOffset": 2086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 2141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 100,
+        "Column": 10,
+        "ByteOffset": 3026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 2000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 16,
+        "ByteOffset": 3353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLibName = strtok( pTemp, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 110,
+        "Column": 8,
+        "ByteOffset": 3388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( pLibName, \"GATE\" ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The input file \\\"%s\\\" looks like a genlib file and not a supergate library file.\\n\", pLib.pName );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 114,
+        "Column": 16,
+        "ByteOffset": 3577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFileGen = fopen( pLibName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 3634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open the genlib file \\\"%s\\\".\\n\", pLibName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFileGen );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot read genlib file \\\"%s\\\".\\n\", pLibName );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 16,
+        "ByteOffset": 4004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fscanf( pFile, \"%d\\n\", \u0026pLib.nVarsMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Suspicious number of variables (%d).\\n\", pLib.nVarsMax );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 16,
+        "ByteOffset": 4241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fscanf( pFile, \"%d\\n\", \u0026nGatesTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 4339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Suspicious number of gates (%d).\\n\", nGatesTotal );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 144,
+        "Column": 41,
+        "ByteOffset": 4505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nGatesTotal );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 145,
+        "Column": 10,
+        "ByteOffset": 4537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 5000, pFile ) != nil  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pGate.Num == nCounter + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Map_LibraryTruthVerify(pLib, pGate) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 5681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of gates read (%d) is different what the file says (%d).\\n\", nGatesTotal, nCounter ); }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGate, 0, sizeof(Map_Super_t) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 6381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( pBuffer, \" \" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 195,
+        "Column": 17,
+        "ByteOffset": 6421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGate.Num = atoi(pTemp);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 6473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( nil, \" \" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 6791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( nil, \" \" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 211,
+        "Column": 36,
+        "ByteOffset": 6846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGate.tDelayMax.Rise = float32(atof(pTemp));"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 17,
+        "ByteOffset": 6993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = strtok( nil, \" \" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 217,
+        "Column": 42,
+        "ByteOffset": 7054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pGate.tDelaysR[i].Rise = float32(atof(pTemp));"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 13,
+        "ByteOffset": 7165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( nil, \" \" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 223,
+        "Column": 26,
+        "ByteOffset": 7210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGate.Area = float32(atof(pTemp));"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 7270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( nil, \" \\r\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 227,
+        "Column": 8,
+        "ByteOffset": 7301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strlen(pTemp) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 7330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"A gate name is empty.\\n\" ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 231,
+        "Column": 60,
+        "ByteOffset": 7455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGate.pFormula = Extra_MmFlexEntryFetch( pLib.mmForms, strlen(pTemp) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pGate.pFormula, pTemp );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 13,
+        "ByteOffset": 7559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( nil, \" \\n\\0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 7613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The following trailing symbols found \\\"%s\\\".\\n\", pTemp ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 8369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 8598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPar1 == '(' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 8899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CountPars == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 8960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPar2 == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 9485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pCur == ',' );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 10776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( Buffer, pFormula );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 11863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pGateName[0] - 'a' \u003c pLib.nVarsMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 12358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"A supergate contains gate \\\"%s\\\" that is not in \\\"%s\\\".\\n\", pGateName, Mio_LibraryReadName(pLib.pGenlib) ); } "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 12924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d : \",  pGate.nUsed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 12962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d   \",  pGate.Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 12998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"A = %5.2f   \",  pGate.Area );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 13041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"D = %5.2f/%5.2f/%5.2f   \", pGate.tDelayMax.Rise, pGate.tDelayMax.Fall, pGate.tDelayMax.Worst );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 403,
+        "Column": 5,
+        "ByteOffset": 13150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s\",    pGate.pFormula );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 13189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_LibraryRead",
+      "Start": 1829,
+      "End": 2289,
+      "BodyStart": 1892,
+      "Original": "int Map_LibraryRead( Map_SuperLib_t * pLib, char * pFileName )\n{\n    FILE * pFile;\n    int Status;\n    // read the beginning of the file\n    assert( pLib-\u003epGenlib == NULL );\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open input file \\\"%s\\\".\\n\", pFileName );\n        return 0;\n    }\n    Status = Map_LibraryReadFile( pLib, pFile );\n    fclose( pFile );\n//    Map_LibraryPrintClasses( pLib );\n    return Status;\n}",
+      "Draft": "func Map_LibraryRead(pLib *Map_SuperLib_t, pFileName string) int32 {\n    var pFile *os.File;\n    var Status int32;\n    // read the beginning of the file\n    assert(pLib.pGenlib == nil, \"pLib.pGenlib == nil\");\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return 0;\n    }\n    Status = Map_LibraryReadFile( pLib, pFile );\n    _ = (pFile).Close();\n//    Map_LibraryPrintClasses( pLib );\n    return Status;\n}"
+    },
+    {
+      "Name": "Map_LibraryReadFile",
+      "Start": 2549,
+      "End": 5769,
+      "BodyStart": 2612,
+      "Original": "int Map_LibraryReadFile( Map_SuperLib_t * pLib, FILE * pFile )\n{\n    ProgressBar * pProgress;\n    char pBuffer[5000];\n    FILE * pFileGen;\n    Map_Super_t * pGate;\n    char * pTemp = NULL; // Suppress \"might be used uninitialized\"\n    char * pLibName;\n    int nCounter, nGatesTotal;\n    unsigned uCanon[2];\n    int RetValue;\n\n    // skip empty and comment lines\n    while ( fgets( pBuffer, 2000, pFile ) != NULL )\n    {\n        // skip leading spaces\n        for ( pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++ );\n        // skip comment lines and empty lines\n        if ( *pTemp != 0 \u0026\u0026 *pTemp != '#' )\n            break;\n    }\n\n    // get the genlib file name\n    pLibName = strtok( pTemp, \" \\t\\r\\n\" );\n    if ( strcmp( pLibName, \"GATE\" ) == 0 )\n    {\n        printf( \"The input file \\\"%s\\\" looks like a genlib file and not a supergate library file.\\n\", pLib-\u003epName );\n        return 0;\n    }\n    pFileGen = fopen( pLibName, \"r\" );\n    if ( pFileGen == NULL )\n    {\n        printf( \"Cannot open the genlib file \\\"%s\\\".\\n\", pLibName );\n        return 0;\n    }\n    fclose( pFileGen );\n\n    // read the genlib library\n    pLib-\u003epGenlib = Mio_LibraryRead( pLibName, NULL, 0, 0 );\n    if ( pLib-\u003epGenlib == NULL )\n    {\n        printf( \"Cannot read genlib file \\\"%s\\\".\\n\", pLibName );\n        return 0;\n    }\n\n    // read the number of variables\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026pLib-\u003enVarsMax );\n    if ( pLib-\u003enVarsMax \u003c 2 || pLib-\u003enVarsMax \u003e 10 )\n    {\n        printf( \"Suspicious number of variables (%d).\\n\", pLib-\u003enVarsMax );\n        return 0;\n    }\n\n    // read the number of gates\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026nGatesTotal );\n    if ( nGatesTotal \u003c 1 || nGatesTotal \u003e 10000000 )\n    {\n        printf( \"Suspicious number of gates (%d).\\n\", nGatesTotal );\n        return 0;\n    }\n\n    // read the lines\n    nCounter = 0;\n    pProgress = Extra_ProgressBarStart( stdout, nGatesTotal );\n    while ( fgets( pBuffer, 5000, pFile ) != NULL )\n    {\n        for ( pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++ );\n        if ( pTemp[0] == '\\0' )\n            continue;\n        // get the gate\n        pGate = Map_LibraryReadGate( pLib, pTemp, pLib-\u003enVarsMax );\n        assert( pGate-\u003eNum == nCounter + 1 );\n        // count the number of parentheses in the formula - this is the number of gates\n        for ( pTemp = pGate-\u003epFormula; *pTemp; pTemp++ )\n            pGate-\u003enGates += (*pTemp == '(');\n        // verify the truth table\n        assert( Map_LibraryTruthVerify(pLib, pGate) );\n\n        // find the N-canonical form of this supergate\n        pGate-\u003enPhases = Map_CanonComputeSlow( pLib-\u003euTruths, pLib-\u003enVarsMax, pLib-\u003enVarsMax, pGate-\u003euTruth, pGate-\u003euPhases, uCanon );\n        // add the supergate into the table by its N-canonical table\n        Map_SuperTableInsertC( pLib-\u003etTableC, uCanon, pGate );\n        // update the progress bar\n        Extra_ProgressBarUpdate( pProgress, ++nCounter, NULL );\n    }\n    Extra_ProgressBarStop( pProgress );\n    pLib-\u003enSupersAll = nCounter;\n    if ( nCounter != nGatesTotal )\n        printf( \"The number of gates read (%d) is different what the file says (%d).\\n\", nGatesTotal, nCounter );\n    return 1;\n}",
+      "Draft": "func Map_LibraryReadFile(pLib *Map_SuperLib_t, pFile *os.File) int32 {\n    var pProgress *ProgressBar;\n    var pBuffer [5000]byte;\n    var pFileGen *os.File;\n    var pGate *Map_Super_t;\n    var pTemp string  = nil; // Suppress \"might be used uninitialized\"\n    var pLibName string;\n    var nCounter, nGatesTotal int32;\n    var uCanon [2]uint32;\n    var RetValue int32;\n\n    // skip empty and comment lines\n    for  fgets( pBuffer, 2000, pFile ) != nil  {\n        // skip leading spaces\n        for  pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++  {}\n        // skip comment lines and empty lines\n        if *pTemp != 0 \u0026\u0026 *pTemp != '#' {\n            break; }\n    }\n\n    // get the genlib file name\n    pLibName = strtok( pTemp, \" \\t\\r\\n\" );\n    if int32(strings.Compare(pLibName, \"GATE\")) == 0 {\n        fmt.Printf(\"The input file \\\"%s\\\" looks like a genlib file and not a supergate library file.\\n\", pLib.pName);\n        return 0;\n    }\n    pFileGen = os.Open(pLibName);\n    if pFileGen == nil {\n        fmt.Printf(\"Cannot open the genlib file \\\"%s\\\".\\n\", pLibName);\n        return 0;\n    }\n    _ = (pFileGen).Close();\n\n    // read the genlib library\n    pLib.pGenlib = Mio_LibraryRead( pLibName, nil, 0, 0 );\n    if pLib.pGenlib == nil {\n        fmt.Printf(\"Cannot read genlib file \\\"%s\\\".\\n\", pLibName);\n        return 0;\n    }\n\n    // read the number of variables\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026pLib.nVarsMax );\n    if pLib.nVarsMax \u003c 2 || pLib.nVarsMax \u003e 10 {\n        fmt.Printf(\"Suspicious number of variables (%d).\\n\", pLib.nVarsMax);\n        return 0;\n    }\n\n    // read the number of gates\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026nGatesTotal );\n    if nGatesTotal \u003c 1 || nGatesTotal \u003e 10000000 {\n        fmt.Printf(\"Suspicious number of gates (%d).\\n\", nGatesTotal);\n        return 0;\n    }\n\n    // read the lines\n    nCounter = 0;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nGatesTotal );\n    for  fgets( pBuffer, 5000, pFile ) != nil  {\n        for  pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++  {}\n        if pTemp[0] == '\\0' {\n            continue; }\n        // get the gate\n        pGate = Map_LibraryReadGate( pLib, pTemp, pLib.nVarsMax );\n        assert(pGate.Num == nCounter + 1, \"pGate.Num == nCounter + 1\");\n        // count the number of parentheses in the formula - this is the number of gates\n        for  pTemp = pGate.pFormula; *pTemp; pTemp++  {\n            pGate.nGates += (*pTemp == '(');\n        }\n        // verify the truth table\n        assert((Map_LibraryTruthVerify(pLib, pGate) != 0), \"Map_LibraryTruthVerify(pLib, pGate)\");\n\n        // find the N-canonical form of this supergate\n        pGate.nPhases = Map_CanonComputeSlow( pLib.uTruths, pLib.nVarsMax, pLib.nVarsMax, pGate.uTruth, pGate.uPhases, uCanon );\n        // add the supergate into the table by its N-canonical table\n        Map_SuperTableInsertC( pLib.tTableC, uCanon, pGate );\n        // update the progress bar\n        Extra_ProgressBarUpdate( pProgress, ++nCounter, nil );\n    }\n    Extra_ProgressBarStop( pProgress );\n    pLib.nSupersAll = nCounter;\n    if nCounter != nGatesTotal {\n        fmt.Printf(\"The number of gates read (%d) is different what the file says (%d).\\n\", nGatesTotal, nCounter); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Map_LibraryReadGate",
+      "Start": 6005,
+      "End": 7685,
+      "BodyStart": 6091,
+      "Original": "Map_Super_t * Map_LibraryReadGate( Map_SuperLib_t * pLib, char * pBuffer, int nVars )\n{\n    Map_Super_t * pGate;\n    char * pTemp;\n    int i;\n\n    // start and clean the gate\n    pGate = (Map_Super_t *)Extra_MmFixedEntryFetch( pLib-\u003emmSupers );\n    memset( pGate, 0, sizeof(Map_Super_t) );\n\n    // read the number\n    pTemp = strtok( pBuffer, \" \" );\n    pGate-\u003eNum = atoi(pTemp);\n\n    // read the signature\n    pTemp = strtok( NULL, \" \" );\n    if ( pLib-\u003enVarsMax \u003c 6 )\n    {\n        pGate-\u003euTruth[0] = Extra_ReadBinary(pTemp);\n        pGate-\u003euTruth[1] = 0;\n    }\n    else\n    {\n        pGate-\u003euTruth[0] = Extra_ReadBinary(pTemp+32);\n        pTemp[32] = 0;\n        pGate-\u003euTruth[1] = Extra_ReadBinary(pTemp);\n    }\n\n    // read the max delay\n    pTemp = strtok( NULL, \" \" );\n    pGate-\u003etDelayMax.Rise = (float)atof(pTemp);\n    pGate-\u003etDelayMax.Fall = pGate-\u003etDelayMax.Rise;\n\n    // read the pin-to-pin delay\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        pTemp = strtok( NULL, \" \" );\n        pGate-\u003etDelaysR[i].Rise = (float)atof(pTemp);\n        pGate-\u003etDelaysF[i].Fall = pGate-\u003etDelaysR[i].Rise;\n    }\n\n    // read the area\n    pTemp = strtok( NULL, \" \" );\n    pGate-\u003eArea = (float)atof(pTemp);\n\n    // the rest is the gate name\n    pTemp = strtok( NULL, \" \\r\\n\" );\n    if ( strlen(pTemp) == 0 )\n        printf( \"A gate name is empty.\\n\" );\n\n    // save the gate name\n    pGate-\u003epFormula = Extra_MmFlexEntryFetch( pLib-\u003emmForms, strlen(pTemp) + 1 );\n    strcpy( pGate-\u003epFormula, pTemp );\n\n    // the rest is the gate name\n    pTemp = strtok( NULL, \" \\n\\0\" );\n    if ( pTemp != NULL )\n        printf( \"The following trailing symbols found \\\"%s\\\".\\n\", pTemp );\n    return pGate;\n}",
+      "Draft": "func Map_LibraryReadGate(pLib *Map_SuperLib_t, pBuffer string, nVars int32) *Map_Super_t {\n    var pGate *Map_Super_t;\n    var pTemp string;\n    var i int32;\n\n    // start and clean the gate\n    pGate = (Map_Super_t *)Extra_MmFixedEntryFetch( pLib.mmSupers );\n    memset( pGate, 0, sizeof(Map_Super_t) );\n\n    // read the number\n    pTemp = strtok( pBuffer, \" \" );\n    pGate.Num = strconv.Atoi(pTemp);\n\n    // read the signature\n    pTemp = strtok( nil, \" \" );\n    if pLib.nVarsMax \u003c 6 {\n        pGate.uTruth[0] = Extra_ReadBinary(pTemp);\n        pGate.uTruth[1] = 0;\n    \n    } else {\n        pGate.uTruth[0] = Extra_ReadBinary(pTemp+32);\n        pTemp[32] = 0;\n        pGate.uTruth[1] = Extra_ReadBinary(pTemp);\n    }\n\n    // read the max delay\n    pTemp = strtok( nil, \" \" );\n    pGate.tDelayMax.Rise = float32(atof(pTemp));\n    pGate.tDelayMax.Fall = pGate.tDelayMax.Rise;\n\n    // read the pin-to-pin delay\n    for  i = 0; i \u003c nVars; i++  {\n        pTemp = strtok( nil, \" \" );\n        pGate.tDelaysR[i].Rise = float32(atof(pTemp));\n        pGate.tDelaysF[i].Fall = pGate.tDelaysR[i].Rise;\n    }\n\n    // read the area\n    pTemp = strtok( nil, \" \" );\n    pGate.Area = float32(atof(pTemp));\n\n    // the rest is the gate name\n    pTemp = strtok( nil, \" \\r\\n\" );\n    if len(pTemp) == 0 {\n        fmt.Printf(\"A gate name is empty.\\n\"); }\n\n    // save the gate name\n    pGate.pFormula = Extra_MmFlexEntryFetch( pLib.mmForms, len(pTemp) + 1 );\n    strcpy( pGate.pFormula, pTemp );\n\n    // the rest is the gate name\n    pTemp = strtok( nil, \" \\n\\0\" );\n    if pTemp != nil {\n        fmt.Printf(\"The following trailing symbols found \\\"%s\\\".\\n\", pTemp); }\n    return pGate;\n}"
+    },
+    {
+      "Name": "Map_LibraryReadFormulaStep",
+      "Start": 8085,
+      "End": 9612,
+      "BodyStart": 8174,
+      "Original": "char * Map_LibraryReadFormulaStep( char * pFormula, char * pStrings[], int * pnStrings )\n{\n    char * pName, * pPar1, * pPar2, * pCur;\n    int nStrings, CountPars;\n\n    // skip leading spaces\n    for ( pName = pFormula; *pName \u0026\u0026 *pName == ' '; pName++ );\n    assert( *pName );\n    // find the first opening parenthesis\n    for ( pPar1 = pName; *pPar1 \u0026\u0026 *pPar1 != '('; pPar1++ );\n    if ( *pPar1 == 0 )\n    {\n        *pnStrings = 0;\n        return pName;\n    }\n    // overwrite it with space\n    assert( *pPar1 == '(' );\n    *pPar1 = 0;\n    // find the corresponding closing parenthesis\n    for ( CountPars = 1, pPar2 = pPar1 + 1; *pPar2 \u0026\u0026 CountPars; pPar2++ )\n        if ( *pPar2 == '(' )\n            CountPars++;\n        else if ( *pPar2 == ')' )\n            CountPars--;\n    pPar2--;\n    assert( CountPars == 0 );\n    // overwrite it with space\n    assert( *pPar2 == ')' );\n    *pPar2 = 0;\n    // save the intervals between the commas\n    nStrings = 0;\n    pCur = pPar1 + 1;\n    while ( 1 )\n    {\n        // save the current string\n        pStrings[ nStrings++ ] = pCur;\n        // find the beginning of the next string\n        for ( CountPars = 0; *pCur \u0026\u0026 (CountPars || *pCur != ','); pCur++ )\n            if ( *pCur == '(' )\n                CountPars++;\n            else if ( *pCur == ')' )\n                CountPars--;\n        if ( *pCur == 0 )\n            break;\n        assert( *pCur == ',' );\n        *pCur = 0;\n        pCur++;\n    }\n    // save the results and return\n    *pnStrings = nStrings;\n    return pName;\n}",
+      "Draft": "func Map_LibraryReadFormulaStep(pFormula string, pStrings []string, pnStrings *int32) string {\n    var pName, pPar1, pPar2, pCur string;\n    var nStrings, CountPars int32;\n\n    // skip leading spaces\n    for  pName = pFormula; *pName \u0026\u0026 *pName == ' '; pName++  {}\n    assert(*pName, \"*pName\");\n    // find the first opening parenthesis\n    for  pPar1 = pName; *pPar1 \u0026\u0026 *pPar1 != '('; pPar1++  {}\n    if *pPar1 == 0 {\n        *pnStrings = 0;\n        return pName;\n    }\n    // overwrite it with space\n    assert(*pPar1 == '(', \"*pPar1 == '('\");\n    *pPar1 = 0;\n    // find the corresponding closing parenthesis\n    for  CountPars, pPar2 = 1, pPar1 + 1; *pPar2 \u0026\u0026 (CountPars != 0); pPar2++  {\n        if *pPar2 == '(' {\n            CountPars++;\n        } else if *pPar2 == ')' {\n            CountPars--; }\n    }\n    pPar2--;\n    assert(CountPars == 0, \"CountPars == 0\");\n    // overwrite it with space\n    assert(*pPar2 == ')', \"*pPar2 == ')'\");\n    *pPar2 = 0;\n    // save the intervals between the commas\n    nStrings = 0;\n    pCur = pPar1 + 1;\n    for {\n        // save the current string\n        pStrings[ nStrings++ ] = pCur;\n        // find the beginning of the next string\n        for  CountPars = 0; *pCur \u0026\u0026 ((CountPars != 0) || *pCur != ','); pCur++  {\n            if *pCur == '(' {\n                CountPars++;\n            } else if *pCur == ')' {\n                CountPars--; }\n        }\n        if *pCur == 0 {\n            break; }\n        assert(*pCur == ',', \"*pCur == ','\");\n        *pCur = 0;\n        pCur++;\n    }\n    // save the results and return\n    *pnStrings = nStrings;\n    return pName;\n}"
+    },
+    {
+      "Name": "Map_LibraryTruthVerify",
+      "Start": 9891,
+      "End": 10171,
+      "BodyStart": 9964,
+      "Original": "int Map_LibraryTruthVerify( Map_SuperLib_t * pLib, Map_Super_t * pGate )\n{\n    unsigned uTruthRes[2];\n    Map_LibraryComputeTruth( pLib, pGate-\u003epFormula, uTruthRes );\n    if ( uTruthRes[0] != pGate-\u003euTruth[0] || uTruthRes[1] != pGate-\u003euTruth[1] )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Map_LibraryTruthVerify(pLib *Map_SuperLib_t, pGate *Map_Super_t) int32 {\n    var uTruthRes [2]uint32;\n    Map_LibraryComputeTruth( pLib, pGate.pFormula, uTruthRes );\n    if uTruthRes[0] != pGate.uTruth[0] || uTruthRes[1] != pGate.uTruth[1] {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Map_LibraryComputeTruth",
+      "Start": 10634,
+      "End": 10860,
+      "BodyStart": 10727,
+      "Original": "void Map_LibraryComputeTruth( Map_SuperLib_t * pLib, char * pFormula, unsigned uTruthRes[] )\n{\n    char Buffer[1000];\n    strcpy( Buffer, pFormula );\n    Map_LibraryComputeTruth_rec( pLib, Buffer, pLib-\u003euTruths, uTruthRes );\n}",
+      "Draft": "func Map_LibraryComputeTruth(pLib *Map_SuperLib_t, pFormula string, uTruthRes []uint32) {\n    var Buffer [1000]byte;\n    strcpy( Buffer, pFormula );\n    Map_LibraryComputeTruth_rec( pLib, Buffer, pLib.uTruths, uTruthRes );\n}"
+    },
+    {
+      "Name": "Map_LibraryComputeTruth_rec",
+      "Start": 11322,
+      "End": 12594,
+      "BodyStart": 11444,
+      "Original": "void Map_LibraryComputeTruth_rec( Map_SuperLib_t * pLib, char * pFormula, unsigned uTruthsIn[][2], unsigned uTruthRes[] )\n{\n    Mio_Gate_t * pMioGate;\n    char * pGateName, * pStrings[6];\n    unsigned uTruthsFanins[6][2];\n    int nStrings, i;\n\n    // perform one step parsing of the formula\n    // detect the root gate name, the next-step strings, and their number\n    pGateName = Map_LibraryReadFormulaStep( pFormula, pStrings, \u0026nStrings );\n    if ( nStrings == 0 ) // elementary variable\n    {\n        assert( pGateName[0] - 'a' \u003c pLib-\u003enVarsMax );\n        uTruthRes[0] = uTruthsIn[pGateName[0] - 'a'][0];\n        uTruthRes[1] = uTruthsIn[pGateName[0] - 'a'][1];\n        return;\n    }\n    // derive the functionality of the fanins\n    for ( i = 0; i \u003c nStrings; i++ )\n        Map_LibraryComputeTruth_rec( pLib, pStrings[i], uTruthsIn, uTruthsFanins[i] );\n    // get the root supergate\n    pMioGate = Mio_LibraryReadGateByName( pLib-\u003epGenlib, pGateName, NULL );\n    if ( pMioGate == NULL )\n        printf( \"A supergate contains gate \\\"%s\\\" that is not in \\\"%s\\\".\\n\", pGateName, Mio_LibraryReadName(pLib-\u003epGenlib) ); \n    // derive the functionality of the output of the supergate\n    Mio_DeriveTruthTable( pMioGate, uTruthsFanins, nStrings, pLib-\u003enVarsMax, uTruthRes );\n}",
+      "Draft": "func Map_LibraryComputeTruth_rec(pLib *Map_SuperLib_t, pFormula string, uTruthsIn [][2]uint32, uTruthRes []uint32) {\n    var pMioGate *Mio_Gate_t;\n    var pGateName string;\n    var pStrings [6]string;\n    var uTruthsFanins [6][2]uint32;\n    var nStrings, i int32;\n\n    // perform one step parsing of the formula\n    // detect the root gate name, the next-step strings, and their number\n    pGateName = Map_LibraryReadFormulaStep( pFormula, pStrings, \u0026nStrings );\n    if nStrings == 0 { // elementary variable\n    \n        assert(pGateName[0] - 'a' \u003c pLib.nVarsMax, \"pGateName[0] - 'a' \u003c pLib.nVarsMax\");\n        uTruthRes[0] = uTruthsIn[pGateName[0] - 'a'][0];\n        uTruthRes[1] = uTruthsIn[pGateName[0] - 'a'][1];\n        return;\n    }\n    // derive the functionality of the fanins\n    for  i = 0; i \u003c nStrings; i++  {\n        Map_LibraryComputeTruth_rec( pLib, pStrings[i], uTruthsIn, uTruthsFanins[i] );\n    }\n    // get the root supergate\n    pMioGate = Mio_LibraryReadGateByName( pLib.pGenlib, pGateName, nil );\n    if pMioGate == nil {\n        fmt.Printf(\"A supergate contains gate \\\"%s\\\" that is not in \\\"%s\\\".\\n\", pGateName, Mio_LibraryReadName(pLib.pGenlib)); } \n    // derive the functionality of the output of the supergate\n    Mio_DeriveTruthTable( pMioGate, uTruthsFanins, nStrings, pLib.nVarsMax, uTruthRes );\n}"
+    },
+    {
+      "Name": "Map_LibraryPrintSupergate",
+      "Start": 12830,
+      "End": 13179,
+      "BodyStart": 12884,
+      "Original": "void Map_LibraryPrintSupergate( Map_Super_t * pGate )\n{\n    printf( \"%5d : \",  pGate-\u003enUsed );\n    printf( \"%5d   \",  pGate-\u003eNum );\n    printf( \"A = %5.2f   \",  pGate-\u003eArea );\n    printf( \"D = %5.2f/%5.2f/%5.2f   \", pGate-\u003etDelayMax.Rise, pGate-\u003etDelayMax.Fall, pGate-\u003etDelayMax.Worst );\n    printf( \"%s\",    pGate-\u003epFormula );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Map_LibraryPrintSupergate(pGate *Map_Super_t) {\n    fmt.Printf(\"%5d : \", pGate.nUsed);\n    fmt.Printf(\"%5d   \", pGate.Num);\n    fmt.Printf(\"A = %5.2f   \", pGate.Area);\n    fmt.Printf(\"D = %5.2f/%5.2f/%5.2f   \", pGate.tDelayMax.Rise, pGate.tDelayMax.Fall, pGate.tDelayMax.Worst);\n    fmt.Printf(\"%s\", pGate.pFormula);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Map_LibraryPrintClasses",
+      "Start": 13447,
+      "End": 14128,
+      "BodyStart": 13498,
+      "Original": "void Map_LibraryPrintClasses( Map_SuperLib_t * p )\n{\n/*\n    st__generator * gen;\n    Map_Super_t * pSuper, * pSuper2;\n    unsigned Key, uTruth;\n    int Counter = 0;\n    // copy all the supergates into one array\n    st__foreach_item( p-\u003etSuplib, gen, (char **)\u0026Key, (char **)\u0026pSuper )\n    {\n        for ( pSuper2 = pSuper; pSuper2; pSuper2 = pSuper2-\u003epNext )\n        {\n            uTruth = pSuper2-\u003ePhase;\n            Extra_PrintBinary( stdout, \u0026uTruth, 5 );\n            printf( \"  %5d   \",  pSuper2-\u003eNum );\n            printf( \"%s\",    pSuper2-\u003epFormula );\n            printf( \"\\n\" );\n        }\n        printf( \"\\n\" );\n        if ( ++ Counter == 100 )\n            break;\n    }\n*/\n}",
+      "Draft": "func Map_LibraryPrintClasses(p *Map_SuperLib_t) {\n/*\n    st__generator * gen;\n    Map_Super_t * pSuper, * pSuper2;\n    unsigned Key, uTruth;\n    int Counter = 0;\n    // copy all the supergates into one array\n    st__foreach_item( p-\u003etSuplib, gen, (char **)\u0026Key, (char **)\u0026pSuper )\n    {\n        for ( pSuper2 = pSuper; pSuper2; pSuper2 = pSuper2-\u003epNext )\n        {\n            uTruth = pSuper2-\u003ePhase;\n            Extra_PrintBinary( stdout, \u0026uTruth, 5 );\n            printf( \"  %5d   \",  pSuper2-\u003eNum );\n            printf( \"%s\",    pSuper2-\u003epFormula );\n            printf( \"\\n\" );\n        }\n        printf( \"\\n\" );\n        if ( ++ Counter == 100 )\n            break;\n    }\n*/\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::mechanical::sizeof::6272",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6272,
+      "End": 6278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::pointer-cast::6192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6192,
+      "End": 6207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryRead",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1829,
+      "End": 2289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryReadFile",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryReadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2549,
+      "End": 5769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryReadGate",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryReadGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6005,
+      "End": 7685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryReadFormulaStep",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryReadFormulaStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8085,
+      "End": 9612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryTruthVerify",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryTruthVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9891,
+      "End": 10171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10634,
+      "End": 10860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryComputeTruth_rec",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryComputeTruth_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11322,
+      "End": 12594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryPrintSupergate",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryPrintSupergate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12830,
+      "End": 13179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::Map_LibraryPrintClasses",
+      "Category": "semantic-review",
+      "Symbol": "Map_LibraryPrintClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13447,
+      "End": 14128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSuper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14375
+    }
+  ],
+  "Draft": "package mapper\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mapperSuper.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperSuper.c,v 1.6 2005/01/23 06:59:44 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int           Map_LibraryReadFile( Map_SuperLib_t * pLib, FILE * pFile );\n\n// static Map_Super_t * Map_LibraryReadGate( Map_SuperLib_t * pLib, char * pBuffer, int nVars );\n\n// static int           Map_LibraryTruthVerify( Map_SuperLib_t * pLib, Map_Super_t * pGate );\n\n// static void          Map_LibraryComputeTruth( Map_SuperLib_t * pLib, char * pFormula, unsigned uTruthRes[] );\n\n// static void          Map_LibraryComputeTruth_rec( Map_SuperLib_t * pLib, char * pFormula, unsigned uTruthsIn[][2], unsigned uTruthRes[] );\n\n// static void          Map_LibraryPrintClasses( Map_SuperLib_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the supergate library from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryRead(pLib *Map_SuperLib_t, pFileName string) int32 {\n    var pFile *os.File;\n    var Status int32;\n    // read the beginning of the file\n    assert(pLib.pGenlib == nil, \"pLib.pGenlib == nil\");\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file \\\"%s\\\".\\n\", pFileName);\n        return 0;\n    }\n    Status = Map_LibraryReadFile( pLib, pFile );\n    _ = (pFile).Close();\n//    Map_LibraryPrintClasses( pLib );\n    return Status;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the library file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryReadFile(pLib *Map_SuperLib_t, pFile *os.File) int32 {\n    var pProgress *ProgressBar;\n    var pBuffer [5000]byte;\n    var pFileGen *os.File;\n    var pGate *Map_Super_t;\n    var pTemp string  = nil; // Suppress \"might be used uninitialized\"\n    var pLibName string;\n    var nCounter, nGatesTotal int32;\n    var uCanon [2]uint32;\n    var RetValue int32;\n\n    // skip empty and comment lines\n    for  fgets( pBuffer, 2000, pFile ) != nil  {\n        // skip leading spaces\n        for  pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++  {}\n        // skip comment lines and empty lines\n        if *pTemp != 0 \u0026\u0026 *pTemp != '#' {\n            break; }\n    }\n\n    // get the genlib file name\n    pLibName = strtok( pTemp, \" \\t\\r\\n\" );\n    if int32(strings.Compare(pLibName, \"GATE\")) == 0 {\n        fmt.Printf(\"The input file \\\"%s\\\" looks like a genlib file and not a supergate library file.\\n\", pLib.pName);\n        return 0;\n    }\n    pFileGen = os.Open(pLibName);\n    if pFileGen == nil {\n        fmt.Printf(\"Cannot open the genlib file \\\"%s\\\".\\n\", pLibName);\n        return 0;\n    }\n    _ = (pFileGen).Close();\n\n    // read the genlib library\n    pLib.pGenlib = Mio_LibraryRead( pLibName, nil, 0, 0 );\n    if pLib.pGenlib == nil {\n        fmt.Printf(\"Cannot read genlib file \\\"%s\\\".\\n\", pLibName);\n        return 0;\n    }\n\n    // read the number of variables\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026pLib.nVarsMax );\n    if pLib.nVarsMax \u003c 2 || pLib.nVarsMax \u003e 10 {\n        fmt.Printf(\"Suspicious number of variables (%d).\\n\", pLib.nVarsMax);\n        return 0;\n    }\n\n    // read the number of gates\n    RetValue = fscanf( pFile, \"%d\\n\", \u0026nGatesTotal );\n    if nGatesTotal \u003c 1 || nGatesTotal \u003e 10000000 {\n        fmt.Printf(\"Suspicious number of gates (%d).\\n\", nGatesTotal);\n        return 0;\n    }\n\n    // read the lines\n    nCounter = 0;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nGatesTotal );\n    for  fgets( pBuffer, 5000, pFile ) != nil  {\n        for  pTemp = pBuffer; *pTemp == ' ' || *pTemp == '\\r' || *pTemp == '\\n'; pTemp++  {}\n        if pTemp[0] == '\\0' {\n            continue; }\n        // get the gate\n        pGate = Map_LibraryReadGate( pLib, pTemp, pLib.nVarsMax );\n        assert(pGate.Num == nCounter + 1, \"pGate.Num == nCounter + 1\");\n        // count the number of parentheses in the formula - this is the number of gates\n        for  pTemp = pGate.pFormula; *pTemp; pTemp++  {\n            pGate.nGates += (*pTemp == '(');\n        }\n        // verify the truth table\n        assert((Map_LibraryTruthVerify(pLib, pGate) != 0), \"Map_LibraryTruthVerify(pLib, pGate)\");\n\n        // find the N-canonical form of this supergate\n        pGate.nPhases = Map_CanonComputeSlow( pLib.uTruths, pLib.nVarsMax, pLib.nVarsMax, pGate.uTruth, pGate.uPhases, uCanon );\n        // add the supergate into the table by its N-canonical table\n        Map_SuperTableInsertC( pLib.tTableC, uCanon, pGate );\n        // update the progress bar\n        Extra_ProgressBarUpdate( pProgress, ++nCounter, nil );\n    }\n    Extra_ProgressBarStop( pProgress );\n    pLib.nSupersAll = nCounter;\n    if nCounter != nGatesTotal {\n        fmt.Printf(\"The number of gates read (%d) is different what the file says (%d).\\n\", nGatesTotal, nCounter); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryReadGate(pLib *Map_SuperLib_t, pBuffer string, nVars int32) *Map_Super_t {\n    var pGate *Map_Super_t;\n    var pTemp string;\n    var i int32;\n\n    // start and clean the gate\n    pGate = (Map_Super_t *)Extra_MmFixedEntryFetch( pLib.mmSupers );\n    memset( pGate, 0, sizeof(Map_Super_t) );\n\n    // read the number\n    pTemp = strtok( pBuffer, \" \" );\n    pGate.Num = strconv.Atoi(pTemp);\n\n    // read the signature\n    pTemp = strtok( nil, \" \" );\n    if pLib.nVarsMax \u003c 6 {\n        pGate.uTruth[0] = Extra_ReadBinary(pTemp);\n        pGate.uTruth[1] = 0;\n    \n    } else {\n        pGate.uTruth[0] = Extra_ReadBinary(pTemp+32);\n        pTemp[32] = 0;\n        pGate.uTruth[1] = Extra_ReadBinary(pTemp);\n    }\n\n    // read the max delay\n    pTemp = strtok( nil, \" \" );\n    pGate.tDelayMax.Rise = float32(atof(pTemp));\n    pGate.tDelayMax.Fall = pGate.tDelayMax.Rise;\n\n    // read the pin-to-pin delay\n    for  i = 0; i \u003c nVars; i++  {\n        pTemp = strtok( nil, \" \" );\n        pGate.tDelaysR[i].Rise = float32(atof(pTemp));\n        pGate.tDelaysF[i].Fall = pGate.tDelaysR[i].Rise;\n    }\n\n    // read the area\n    pTemp = strtok( nil, \" \" );\n    pGate.Area = float32(atof(pTemp));\n\n    // the rest is the gate name\n    pTemp = strtok( nil, \" \\r\\n\" );\n    if len(pTemp) == 0 {\n        fmt.Printf(\"A gate name is empty.\\n\"); }\n\n    // save the gate name\n    pGate.pFormula = Extra_MmFlexEntryFetch( pLib.mmForms, len(pTemp) + 1 );\n    strcpy( pGate.pFormula, pTemp );\n\n    // the rest is the gate name\n    pTemp = strtok( nil, \" \\n\\0\" );\n    if pTemp != nil {\n        fmt.Printf(\"The following trailing symbols found \\\"%s\\\".\\n\", pTemp); }\n    return pGate;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one step of parsing the formula into parts.]\n\n  Description [This function will eventually be replaced when the\n  tree-supergate library representation will become standard.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryReadFormulaStep(pFormula string, pStrings []string, pnStrings *int32) string {\n    var pName, pPar1, pPar2, pCur string;\n    var nStrings, CountPars int32;\n\n    // skip leading spaces\n    for  pName = pFormula; *pName \u0026\u0026 *pName == ' '; pName++  {}\n    assert(*pName, \"*pName\");\n    // find the first opening parenthesis\n    for  pPar1 = pName; *pPar1 \u0026\u0026 *pPar1 != '('; pPar1++  {}\n    if *pPar1 == 0 {\n        *pnStrings = 0;\n        return pName;\n    }\n    // overwrite it with space\n    assert(*pPar1 == '(', \"*pPar1 == '('\");\n    *pPar1 = 0;\n    // find the corresponding closing parenthesis\n    for  CountPars, pPar2 = 1, pPar1 + 1; *pPar2 \u0026\u0026 (CountPars != 0); pPar2++  {\n        if *pPar2 == '(' {\n            CountPars++;\n        } else if *pPar2 == ')' {\n            CountPars--; }\n    }\n    pPar2--;\n    assert(CountPars == 0, \"CountPars == 0\");\n    // overwrite it with space\n    assert(*pPar2 == ')', \"*pPar2 == ')'\");\n    *pPar2 = 0;\n    // save the intervals between the commas\n    nStrings = 0;\n    pCur = pPar1 + 1;\n    for {\n        // save the current string\n        pStrings[ nStrings++ ] = pCur;\n        // find the beginning of the next string\n        for  CountPars = 0; *pCur \u0026\u0026 ((CountPars != 0) || *pCur != ','); pCur++  {\n            if *pCur == '(' {\n                CountPars++;\n            } else if *pCur == ')' {\n                CountPars--; }\n        }\n        if *pCur == 0 {\n            break; }\n        assert(*pCur == ',', \"*pCur == ','\");\n        *pCur = 0;\n        pCur++;\n    }\n    // save the results and return\n    *pnStrings = nStrings;\n    return pName;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the truth table of the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryTruthVerify(pLib *Map_SuperLib_t, pGate *Map_Super_t) int32 {\n    var uTruthRes [2]uint32;\n    Map_LibraryComputeTruth( pLib, pGate.pFormula, uTruthRes );\n    if uTruthRes[0] != pGate.uTruth[0] || uTruthRes[1] != pGate.uTruth[1] {\n        return 0; }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the functionality of the supergate.]\n\n  Description [This procedure is useful for verification the supergate \n  library. The truth table derived by this procedure should be the same\n  as the one contained in the original supergate file.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryComputeTruth(pLib *Map_SuperLib_t, pFormula string, uTruthRes []uint32) {\n    var Buffer [1000]byte;\n    strcpy( Buffer, pFormula );\n    Map_LibraryComputeTruth_rec( pLib, Buffer, pLib.uTruths, uTruthRes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the functionality of the supergate.]\n\n  Description [This procedure is useful for verification the supergate \n  library. The truth table derived by this procedure should be the same\n  as the one contained in the original supergate file.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryComputeTruth_rec(pLib *Map_SuperLib_t, pFormula string, uTruthsIn [][2]uint32, uTruthRes []uint32) {\n    var pMioGate *Mio_Gate_t;\n    var pGateName string;\n    var pStrings [6]string;\n    var uTruthsFanins [6][2]uint32;\n    var nStrings, i int32;\n\n    // perform one step parsing of the formula\n    // detect the root gate name, the next-step strings, and their number\n    pGateName = Map_LibraryReadFormulaStep( pFormula, pStrings, \u0026nStrings );\n    if nStrings == 0 { // elementary variable\n    \n        assert(pGateName[0] - 'a' \u003c pLib.nVarsMax, \"pGateName[0] - 'a' \u003c pLib.nVarsMax\");\n        uTruthRes[0] = uTruthsIn[pGateName[0] - 'a'][0];\n        uTruthRes[1] = uTruthsIn[pGateName[0] - 'a'][1];\n        return;\n    }\n    // derive the functionality of the fanins\n    for  i = 0; i \u003c nStrings; i++  {\n        Map_LibraryComputeTruth_rec( pLib, pStrings[i], uTruthsIn, uTruthsFanins[i] );\n    }\n    // get the root supergate\n    pMioGate = Mio_LibraryReadGateByName( pLib.pGenlib, pGateName, nil );\n    if pMioGate == nil {\n        fmt.Printf(\"A supergate contains gate \\\"%s\\\" that is not in \\\"%s\\\".\\n\", pGateName, Mio_LibraryReadName(pLib.pGenlib)); } \n    // derive the functionality of the output of the supergate\n    Mio_DeriveTruthTable( pMioGate, uTruthsFanins, nStrings, pLib.nVarsMax, uTruthRes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryPrintSupergate(pGate *Map_Super_t) {\n    fmt.Printf(\"%5d : \", pGate.nUsed);\n    fmt.Printf(\"%5d   \", pGate.Num);\n    fmt.Printf(\"A = %5.2f   \", pGate.Area);\n    fmt.Printf(\"D = %5.2f/%5.2f/%5.2f   \", pGate.tDelayMax.Rise, pGate.tDelayMax.Fall, pGate.tDelayMax.Worst);\n    fmt.Printf(\"%s\", pGate.pFormula);\n    fmt.Printf(\"\\n\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints N-classes of supergates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_LibraryPrintClasses(p *Map_SuperLib_t) {\n/*\n    st__generator * gen;\n    Map_Super_t * pSuper, * pSuper2;\n    unsigned Key, uTruth;\n    int Counter = 0;\n    // copy all the supergates into one array\n    st__foreach_item( p-\u003etSuplib, gen, (char **)\u0026Key, (char **)\u0026pSuper )\n    {\n        for ( pSuper2 = pSuper; pSuper2; pSuper2 = pSuper2-\u003epNext )\n        {\n            uTruth = pSuper2-\u003ePhase;\n            Extra_PrintBinary( stdout, \u0026uTruth, 5 );\n            printf( \"  %5d   \",  pSuper2-\u003eNum );\n            printf( \"%s\",    pSuper2-\u003epFormula );\n            printf( \"\\n\" );\n        }\n        printf( \"\\n\" );\n        if ( ++ Counter == 100 )\n            break;\n    }\n*/\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

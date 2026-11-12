@@ -1,0 +1,309 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c",
+  "SHA256": "6287569bea46bc3b88398bba131ae4f9305930e25fd19f2589ada348e8ba508a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 66,
+        "ByteOffset": 2231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(pAig.pFanData), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 17,
+        "ByteOffset": 7997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Clock gate candidate is invalid!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 8542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 8849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gated transitions = %5.2f %%. \", Cgt_ManComputeCoverage(pAig, vGates) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 231,
+        "Column": 73,
+        "ByteOffset": 9086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 11391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 11548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Complete gates = %6d. Gated transitions = %5.2f %%. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 290,
+        "Column": 73,
+        "ByteOffset": 11845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cgt_ManCollectFanoutPos_rec",
+      "Start": 1775,
+      "End": 2241,
+      "BodyStart": 1867,
+      "Original": "void Cgt_ManCollectFanoutPos_rec( Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Ptr_t * vFanout )\n{\n    Aig_Obj_t * pFanout;\n    int f, iFanout = -1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if ( Aig_ObjIsCo(pObj) )\n    {\n        Vec_PtrPush( vFanout, pObj );\n        return;\n    }\n    Aig_ObjForEachFanout( pAig, pObj, pFanout, iFanout, f )\n        Cgt_ManCollectFanoutPos_rec( pAig, pFanout, vFanout );\n}",
+      "Draft": "func Cgt_ManCollectFanoutPos_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var f int32;\n    var iFanout int32 = -1;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsCo(pObj) {\n        Vec_PtrPush( vFanout, pObj );\n        return;\n    }\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n        Cgt_ManCollectFanoutPos_rec( pAig, pFanout, vFanout );\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ManCollectFanoutPos",
+      "Start": 2515,
+      "End": 2727,
+      "BodyStart": 2603,
+      "Original": "void Cgt_ManCollectFanoutPos( Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Ptr_t * vFanout )\n{\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManCollectFanoutPos_rec( pAig, pObj, vFanout );\n}",
+      "Draft": "func Cgt_ManCollectFanoutPos(pAig *Aig_Man_t, pObj *Aig_Obj_t, vFanout *Vec_Ptr_t) {\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManCollectFanoutPos_rec( pAig, pObj, vFanout );\n}"
+    },
+    {
+      "Name": "Cgt_ManCheckGateComplete",
+      "Start": 3014,
+      "End": 3501,
+      "BodyStart": 3126,
+      "Original": "int Cgt_ManCheckGateComplete( Aig_Man_t * pAig, Vec_Vec_t * vGatesAll, Aig_Obj_t * pGate, Vec_Ptr_t * vFanout )\n{\n    Vec_Ptr_t * vGates;\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vFanout, pObj, i )\n    {\n        if ( Saig_ObjIsPo(pAig, pObj) )\n            return 0;\n        vGates = Vec_VecEntry( vGatesAll, Aig_ObjCioId(pObj) - Saig_ManPoNum(pAig) );\n        if ( Vec_PtrFind( vGates, pGate ) == -1 )\n            return 0;            \n    }\n    return 1;\n}",
+      "Draft": "func Cgt_ManCheckGateComplete(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, pGate *Aig_Obj_t, vFanout *Vec_Ptr_t) int32 {\n    var vGates *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        if Saig_ObjIsPo(pAig, pObj) {\n            return 0; }\n        vGates = Vec_VecEntry( vGatesAll, Aig_ObjCioId(pObj) - Saig_ManPoNum(pAig) );\n        if Vec_PtrFind( vGates, pGate ) == -1 {\n            return 0; }            \n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cgt_ManCompleteGates",
+      "Start": 3778,
+      "End": 4571,
+      "BodyStart": 3881,
+      "Original": "Vec_Ptr_t * Cgt_ManCompleteGates( Aig_Man_t * pAig, Vec_Vec_t * vGatesAll, int nOdcMax, int fVerbose )\n{\n    Vec_Ptr_t * vFanout, * vGatesFull;\n    Aig_Obj_t * pGate, * pGateR;\n    int i, k;\n    vFanout    = Vec_PtrAlloc( 100 );\n    vGatesFull = Vec_PtrAlloc( 100 );\n    Vec_VecForEachEntry( Aig_Obj_t *, vGatesAll, pGate, i, k )\n    {\n        pGateR = Aig_Regular(pGate);\n        if ( pGateR-\u003efMarkA )\n            continue;\n        pGateR-\u003efMarkA = 1;\n        Cgt_ManCollectFanoutPos( pAig, pGateR, vFanout );\n        if ( Cgt_ManCheckGateComplete( pAig, vGatesAll, pGate, vFanout ) )\n            Vec_PtrPush( vGatesFull, pGate );\n    }\n    Vec_PtrFree( vFanout );\n    Vec_VecForEachEntry( Aig_Obj_t *, vGatesAll, pGate, i, k )\n        Aig_Regular(pGate)-\u003efMarkA = 0;\n    return vGatesFull;\n}",
+      "Draft": "func Cgt_ManCompleteGates(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Ptr_t {\n    var vFanout, vGatesFull *Vec_Ptr_t;\n    var pGate, pGateR *Aig_Obj_t;\n    var i, k int32;\n    vFanout    = Vec_PtrAlloc( 100 );\n    vGatesFull = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  {\n        pGateR = Aig_Regular(pGate);\n        if pGateR.fMarkA {\n            continue; }\n        pGateR.fMarkA = 1;\n        Cgt_ManCollectFanoutPos( pAig, pGateR, vFanout );\n        if Cgt_ManCheckGateComplete( pAig, vGatesAll, pGate, vFanout ) != 0 {\n            Vec_PtrPush( vGatesFull, pGate ); }\n    }\n    }\n    Vec_PtrFree( vFanout );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  { \n        Aig_Regular(pGate).fMarkA = 0;\n    }\n    }\n    return vGatesFull;\n}"
+    },
+    {
+      "Name": "Cgt_ManComputeCoverage",
+      "Start": 4827,
+      "End": 5283,
+      "BodyStart": 4896,
+      "Original": "float Cgt_ManComputeCoverage( Aig_Man_t * pAig, Vec_Vec_t * vGates )\n{\n    int nFrames = 32;\n    int nWords  =  1;\n    Ssw_Sml_t * pSml;\n    Vec_Ptr_t * vOne;\n    int i, nTransSaved = 0;\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    Vec_VecForEachLevel( vGates, vOne, i )\n        nTransSaved += Ssw_SmlNodeCountOnesRealVec( pSml, vOne );\n    Ssw_SmlStop( pSml );\n    return (float)100.0*nTransSaved/32/nFrames/nWords/Vec_VecSize(vGates);\n}",
+      "Draft": "func Cgt_ManComputeCoverage(pAig *Aig_Man_t, vGates *Vec_Vec_t) float32 {\n    var nFrames int32  = 32;\n    var nWords int32   =  1;\n    var pSml *Ssw_Sml_t;\n    var vOne *Vec_Ptr_t;\n    var i, nTransSaved int32;\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGates)) \u0026\u0026 (((vOne) = Vec_VecEntry(vGates, i)), 1); i++  {\n        nTransSaved += Ssw_SmlNodeCountOnesRealVec( pSml, vOne );\n    }\n    Ssw_SmlStop( pSml );\n    return float32(100.0)*nTransSaved/32/nFrames/nWords/Vec_VecSize(vGates);\n}"
+    },
+    {
+      "Name": "Cgt_ManDecideSimple",
+      "Start": 5685,
+      "End": 7851,
+      "BodyStart": 5787,
+      "Original": "Vec_Vec_t * Cgt_ManDecideSimple( Aig_Man_t * pAig, Vec_Vec_t * vGatesAll, int nOdcMax, int fVerbose )\n{\n    int nFrames = 32;\n    int nWords  =  1;\n    Ssw_Sml_t * pSml;\n    Vec_Vec_t * vGates;\n    Vec_Ptr_t * vCands;\n    Aig_Obj_t * pObjLi, * pObjLo, * pCand, * pCandBest;\n    int i, k, nHitsCur, nHitsMax, Counter = 0;\n    abctime clk = Abc_Clock();\n    int nTransTotal = 0, nTransSaved = 0;\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        nHitsMax = 0;\n        pCandBest = NULL;\n        vCands = Vec_VecEntry( vGatesAll, i );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vCands, pCand, k )\n        {\n            // check if this is indeed a clock-gate\n            if ( nOdcMax == 0 \u0026\u0026 !Ssw_SmlCheckXorImplication( pSml, pObjLi, pObjLo, pCand ) )\n                printf( \"Clock gate candidate is invalid!\\n\" );\n            // find its characteristic number\n            nHitsCur = Ssw_SmlNodeCountOnesReal( pSml, pCand );\n            if ( nHitsMax \u003c nHitsCur )\n            {\n                nHitsMax = nHitsCur;\n                pCandBest = pCand;\n            }\n        }\n        if ( pCandBest != NULL )\n        {\n            Vec_VecPush( vGates, i, pCandBest );\n            Counter++;\n            nTransSaved += nHitsMax;\n        }\n        nTransTotal += 32 * nFrames * nWords;\n    }\n    Ssw_SmlStop( pSml );\n    if ( fVerbose )\n    {\n        printf( \"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", \n            Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig) );\n//        printf( \"Gated transitions = %5.2f %%. (%5.2f %%.) \", \n//            100.0*nTransSaved/nTransTotal, Cgt_ManComputeCoverage(pAig, vGates) );\n        printf( \"Gated transitions = %5.2f %%. \", Cgt_ManComputeCoverage(pAig, vGates) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n/*\n    {\n        Vec_Ptr_t * vCompletes;\n        vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n        printf( \"Complete gates = %d. \\n\", Vec_PtrSize(vCompletes) );\n        Vec_PtrFree( vCompletes );\n    }\n*/\n    return vGates;\n}",
+      "Draft": "func Cgt_ManDecideSimple(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Vec_t {\n    var nFrames int32  = 32;\n    var nWords int32   =  1;\n    var pSml *Ssw_Sml_t;\n    var vGates *Vec_Vec_t;\n    var vCands *Vec_Ptr_t;\n    var pObjLi, pObjLo, pCand, pCandBest *Aig_Obj_t;\n    var i, k, nHitsCur, nHitsMax, Counter int32;\n    var clk abctime  = Abc_Clock();\n    var nTransTotal, nTransSaved int32;\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        nHitsMax = 0;\n        pCandBest = nil;\n        vCands = Vec_VecEntry( vGatesAll, i );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pCand) = (Aig_Obj_t *)Vec_PtrEntry(vCands, k)), 1); k++  {\n            // check if this is indeed a clock-gate\n            if nOdcMax == 0 \u0026\u0026 !Ssw_SmlCheckXorImplication( pSml, pObjLi, pObjLo, pCand ) {\n                fmt.Printf(\"Clock gate candidate is invalid!\\n\"); }\n            // find its characteristic number\n            nHitsCur = Ssw_SmlNodeCountOnesReal( pSml, pCand );\n            if nHitsMax \u003c nHitsCur {\n                nHitsMax = nHitsCur;\n                pCandBest = pCand;\n            }\n        }\n        if pCandBest != nil {\n            Vec_VecPush( vGates, i, pCandBest );\n            Counter++;\n            nTransSaved += nHitsMax;\n        }\n        nTransTotal += 32 * nFrames * nWords;\n    }\n    Ssw_SmlStop( pSml );\n    if fVerbose != 0 {\n        fmt.Printf(\"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig));\n//        printf( \"Gated transitions = %5.2f %%. (%5.2f %%.) \", \n//            100.0*nTransSaved/nTransTotal, Cgt_ManComputeCoverage(pAig, vGates) );\n        fmt.Printf(\"Gated transitions = %5.2f %%. \", Cgt_ManComputeCoverage(pAig, vGates));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n/*\n    {\n        Vec_Ptr_t * vCompletes;\n        vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n        printf( \"Complete gates = %d. \\n\", Vec_PtrSize(vCompletes) );\n        Vec_PtrFree( vCompletes );\n    }\n*/\n    return vGates;\n}"
+    },
+    {
+      "Name": "Cgt_ManDecideArea",
+      "Start": 8128,
+      "End": 9629,
+      "BodyStart": 8228,
+      "Original": "Vec_Vec_t * Cgt_ManDecideArea( Aig_Man_t * pAig, Vec_Vec_t * vGatesAll, int nOdcMax, int fVerbose )\n{\n    Vec_Vec_t * vGates;\n    Vec_Ptr_t * vCompletes, * vOne;\n    Aig_Obj_t * pGate;\n    int i, k, Counter = 0;\n    abctime clk = Abc_Clock();\n    // derive and label complete gates\n    vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n    // label complete gates\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCompletes, pGate, i )\n        Aig_Regular(pGate)-\u003efMarkA = 1;\n    // select only complete gates\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    Vec_VecForEachEntry( Aig_Obj_t *, vGatesAll, pGate, i, k )\n        if ( Aig_Regular(pGate)-\u003efMarkA )\n            Vec_VecPush( vGates, i, pGate );\n    // unlabel complete gates\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCompletes, pGate, i )\n        Aig_Regular(pGate)-\u003efMarkA = 0;\n    // count the number of gated flops\n    Vec_VecForEachLevel( vGates, vOne, i )\n    {\n        Counter += (int)(Vec_PtrSize(vOne) \u003e 0);\n//        printf( \"%d \", Vec_PtrSize(vOne) );\n    }\n//    printf( \"\\n\" );\n    if ( fVerbose )\n    {\n        printf( \"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", \n            Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig) );\n        printf( \"Complete gates = %6d. Gated transitions = %5.2f %%. \", \n            Vec_PtrSize(vCompletes), Cgt_ManComputeCoverage(pAig, vGates) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    Vec_PtrFree( vCompletes );\n    return vGates;\n}",
+      "Draft": "func Cgt_ManDecideArea(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Vec_t {\n    var vGates *Vec_Vec_t;\n    var vCompletes, vOne *Vec_Ptr_t;\n    var pGate *Aig_Obj_t;\n    var i, k, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // derive and label complete gates\n    vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n    // label complete gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCompletes)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vCompletes, i)), 1); i++  {\n        Aig_Regular(pGate).fMarkA = 1;\n    }\n    // select only complete gates\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  { \n        if Aig_Regular(pGate).fMarkA {\n            Vec_VecPush( vGates, i, pGate ); }\n    }\n    }\n    // unlabel complete gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCompletes)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vCompletes, i)), 1); i++  {\n        Aig_Regular(pGate).fMarkA = 0;\n    }\n    // count the number of gated flops\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGates)) \u0026\u0026 (((vOne) = Vec_VecEntry(vGates, i)), 1); i++  {\n        Counter += int32((Vec_PtrSize(vOne) \u003e 0));\n//        printf( \"%d \", Vec_PtrSize(vOne) );\n    }\n//    printf( \"\\n\" );\n    if fVerbose != 0 {\n        fmt.Printf(\"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig));\n        fmt.Printf(\"Complete gates = %6d. Gated transitions = %5.2f %%. \", Vec_PtrSize(vCompletes), Cgt_ManComputeCoverage(pAig, vGates));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    Vec_PtrFree( vCompletes );\n    return vGates;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::3546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3189,
+      "End": 3189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::4689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4049,
+      "End": 4049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::5385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4448,
+      "End": 4448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::7657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::10064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8519,
+      "End": 8519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::10532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8705,
+      "End": 8705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::pointer-cast::10836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8885,
+      "End": 8885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::ternary::Cgt_ManCollectFanoutPos_rec",
+      "Category": "ternary-review",
+      "Symbol": "Cgt_ManCollectFanoutPos_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1775,
+      "End": 2241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManCollectFanoutPos_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCollectFanoutPos_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1775,
+      "End": 2241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManCollectFanoutPos",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCollectFanoutPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2515,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManCheckGateComplete",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCheckGateComplete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3014,
+      "End": 3501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManCompleteGates",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCompleteGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3778,
+      "End": 4571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManComputeCoverage",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManComputeCoverage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4827,
+      "End": 5283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManDecideSimple",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDecideSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5685,
+      "End": 7851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::Cgt_ManDecideArea",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDecideArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8128,
+      "End": 9629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtDecide.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9876
+    }
+  ],
+  "Draft": "package cgt\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cgtMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Clock gating package.]\n\n  Synopsis    [Decide what gate to use for what flop.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cgtMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cgtInt.h\"\n//#include \"proof/ssw/sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Ssw_SmlCheckXorImplication( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo, Aig_Obj_t * pCand );\n\n// extern int Ssw_SmlCountXorImplication( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo, Aig_Obj_t * pCand );\n\n// extern int Ssw_SmlCountEqual( Ssw_Sml_t * p, Aig_Obj_t * pObjLi, Aig_Obj_t * pObjLo );\n\n// extern int Ssw_SmlNodeCountOnesReal( Ssw_Sml_t * p, Aig_Obj_t * pObj );\n\n// extern int Ssw_SmlNodeCountOnesRealVec( Ssw_Sml_t * p, Vec_Ptr_t * vObjs );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects POs in the transitive fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCollectFanoutPos_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var f int32;\n    var iFanout int32 = -1;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsCo(pObj) {\n        Vec_PtrPush( vFanout, pObj );\n        return;\n    }\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n        Cgt_ManCollectFanoutPos_rec( pAig, pFanout, vFanout );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects POs in the transitive fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCollectFanoutPos(pAig *Aig_Man_t, pObj *Aig_Obj_t, vFanout *Vec_Ptr_t) {\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManCollectFanoutPos_rec( pAig, pObj, vFanout );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if all PO fanouts can be gated by this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCheckGateComplete(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, pGate *Aig_Obj_t, vFanout *Vec_Ptr_t) int32 {\n    var vGates *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        if Saig_ObjIsPo(pAig, pObj) {\n            return 0; }\n        vGates = Vec_VecEntry( vGatesAll, Aig_ObjCioId(pObj) - Saig_ManPoNum(pAig) );\n        if Vec_PtrFind( vGates, pGate ) == -1 {\n            return 0; }            \n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of complete clock gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCompleteGates(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Ptr_t {\n    var vFanout, vGatesFull *Vec_Ptr_t;\n    var pGate, pGateR *Aig_Obj_t;\n    var i, k int32;\n    vFanout    = Vec_PtrAlloc( 100 );\n    vGatesFull = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  {\n        pGateR = Aig_Regular(pGate);\n        if pGateR.fMarkA {\n            continue; }\n        pGateR.fMarkA = 1;\n        Cgt_ManCollectFanoutPos( pAig, pGateR, vFanout );\n        if Cgt_ManCheckGateComplete( pAig, vGatesAll, pGate, vFanout ) != 0 {\n            Vec_PtrPush( vGatesFull, pGate ); }\n    }\n    }\n    Vec_PtrFree( vFanout );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  { \n        Aig_Regular(pGate).fMarkA = 0;\n    }\n    }\n    return vGatesFull;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Calculates coverage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManComputeCoverage(pAig *Aig_Man_t, vGates *Vec_Vec_t) float32 {\n    var nFrames int32  = 32;\n    var nWords int32   =  1;\n    var pSml *Ssw_Sml_t;\n    var vOne *Vec_Ptr_t;\n    var i, nTransSaved int32;\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGates)) \u0026\u0026 (((vOne) = Vec_VecEntry(vGates, i)), 1); i++  {\n        nTransSaved += Ssw_SmlNodeCountOnesRealVec( pSml, vOne );\n    }\n    Ssw_SmlStop( pSml );\n    return float32(100.0)*nTransSaved/32/nFrames/nWords/Vec_VecSize(vGates);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Chooses what clock-gate to use for this register.]\n\n  Description [Currently uses the naive approach: For each register, \n  choose the clock gate, which covers most of the transitions.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDecideSimple(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Vec_t {\n    var nFrames int32  = 32;\n    var nWords int32   =  1;\n    var pSml *Ssw_Sml_t;\n    var vGates *Vec_Vec_t;\n    var vCands *Vec_Ptr_t;\n    var pObjLi, pObjLo, pCand, pCandBest *Aig_Obj_t;\n    var i, k, nHitsCur, nHitsMax, Counter int32;\n    var clk abctime  = Abc_Clock();\n    var nTransTotal, nTransSaved int32;\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    pSml = Ssw_SmlSimulateSeq( pAig, 0, nFrames, nWords );\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        nHitsMax = 0;\n        pCandBest = nil;\n        vCands = Vec_VecEntry( vGatesAll, i );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pCand) = (Aig_Obj_t *)Vec_PtrEntry(vCands, k)), 1); k++  {\n            // check if this is indeed a clock-gate\n            if nOdcMax == 0 \u0026\u0026 !Ssw_SmlCheckXorImplication( pSml, pObjLi, pObjLo, pCand ) {\n                fmt.Printf(\"Clock gate candidate is invalid!\\n\"); }\n            // find its characteristic number\n            nHitsCur = Ssw_SmlNodeCountOnesReal( pSml, pCand );\n            if nHitsMax \u003c nHitsCur {\n                nHitsMax = nHitsCur;\n                pCandBest = pCand;\n            }\n        }\n        if pCandBest != nil {\n            Vec_VecPush( vGates, i, pCandBest );\n            Counter++;\n            nTransSaved += nHitsMax;\n        }\n        nTransTotal += 32 * nFrames * nWords;\n    }\n    Ssw_SmlStop( pSml );\n    if fVerbose != 0 {\n        fmt.Printf(\"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig));\n//        printf( \"Gated transitions = %5.2f %%. (%5.2f %%.) \", \n//            100.0*nTransSaved/nTransTotal, Cgt_ManComputeCoverage(pAig, vGates) );\n        fmt.Printf(\"Gated transitions = %5.2f %%. \", Cgt_ManComputeCoverage(pAig, vGates));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n/*\n    {\n        Vec_Ptr_t * vCompletes;\n        vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n        printf( \"Complete gates = %d. \\n\", Vec_PtrSize(vCompletes) );\n        Vec_PtrFree( vCompletes );\n    }\n*/\n    return vGates;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of complete clock gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDecideArea(pAig *Aig_Man_t, vGatesAll *Vec_Vec_t, nOdcMax int32, fVerbose int32) *Vec_Vec_t {\n    var vGates *Vec_Vec_t;\n    var vCompletes, vOne *Vec_Ptr_t;\n    var pGate *Aig_Obj_t;\n    var i, k, Counter int32;\n    var clk abctime  = Abc_Clock();\n    // derive and label complete gates\n    vCompletes = Cgt_ManCompleteGates( pAig, vGatesAll, nOdcMax, fVerbose );\n    // label complete gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCompletes)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vCompletes, i)), 1); i++  {\n        Aig_Regular(pGate).fMarkA = 1;\n    }\n    // select only complete gates\n    vGates = Vec_VecStart( Saig_ManRegNum(pAig) );\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGatesAll); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGatesAll, i))) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGatesAll, i), k)), 1); k++  { \n        if Aig_Regular(pGate).fMarkA {\n            Vec_VecPush( vGates, i, pGate ); }\n    }\n    }\n    // unlabel complete gates\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCompletes)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vCompletes, i)), 1); i++  {\n        Aig_Regular(pGate).fMarkA = 0;\n    }\n    // count the number of gated flops\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGates)) \u0026\u0026 (((vOne) = Vec_VecEntry(vGates, i)), 1); i++  {\n        Counter += int32((Vec_PtrSize(vOne) \u003e 0));\n//        printf( \"%d \", Vec_PtrSize(vOne) );\n    }\n//    printf( \"\\n\" );\n    if fVerbose != 0 {\n        fmt.Printf(\"Gating signals = %6d. Gated flops = %6d. (Total flops = %6d.)\\n\", Vec_VecSizeSize(vGatesAll), Counter, Saig_ManRegNum(pAig));\n        fmt.Printf(\"Complete gates = %6d. Gated transitions = %5.2f %%. \", Vec_PtrSize(vCompletes), Cgt_ManComputeCoverage(pAig, vGates));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    Vec_PtrFree( vCompletes );\n    return vGates;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

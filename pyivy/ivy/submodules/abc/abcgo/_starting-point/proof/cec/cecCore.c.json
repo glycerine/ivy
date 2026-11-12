@@ -1,0 +1,467 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c",
+  "SHA256": "9319bb54711d91b664d579917375cf1e1b514a19463effa092962f9508b32e4b",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParSat_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParSim_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParSmf_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParFra_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 6069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParCec_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 6918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParCor_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 8182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cec_ParChc_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 11517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nLitsOld == nLitsNew );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 12825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Simulating %d words for %d rounds. SAT solving with %d conflicts.\\n\", pPars.nWords, pPars.nRounds, pPars.nBTLimit ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 460,
+        "Column": 58,
+        "ByteOffset": 17043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if p.pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/CLOCKS_PER_SEC \u003e= p.pPars.TimeLimit {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 498,
+        "Column": 9,
+        "ByteOffset": 18684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performed %d SAT calls: P = %d  D = %d  F = %d\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 521,
+        "Column": 97,
+        "ByteOffset": 20178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Abc_Print( 1, \"Timed out after %d seconds.\\n\", int32((float64(Abc_Clock()) - clkTotal))/CLOCKS_PER_SEC ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 527,
+        "Column": 79,
+        "ByteOffset": 20414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pTemp { /*__starting_point_inline_macro:ABC_FREE__*/((pTemp.pReprs) ? (free((char *) (pTemp.pReprs)), (pTemp.pReprs) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 528,
+        "Column": 79,
+        "ByteOffset": 20551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pTemp { /*__starting_point_inline_macro:ABC_FREE__*/((pTemp.pNexts) ? (free((char *) (pTemp.pNexts)), (pTemp.pNexts) = 0) : 0); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ManSatSetDefaultParams",
+      "Start": 1275,
+      "End": 2040,
+      "BodyStart": 1327,
+      "Original": "void Cec_ManSatSetDefaultParams( Cec_ParSat_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParSat_t) );\n    p-\u003eSolverType     =      -1;  // SAT solver type\n    p-\u003enBTLimit       =     100;  // conflict limit at a node\n    p-\u003enSatVarMax     =    2000;  // the max number of SAT variables\n    p-\u003enCallsRecycle  =     200;  // calls to perform before recycling SAT solver\n    p-\u003efNonChrono     =       1;  // use non-chronological backtracling (for circuit SAT only)\n    p-\u003efPolarFlip     =       1;  // flops polarity of variables\n    p-\u003efCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efLearnCls      =       0;  // perform clause learning\n    p-\u003efVerbose       =       0;  // verbose stats\n}",
+      "Draft": "func Cec_ManSatSetDefaultParams(p *Cec_ParSat_t) {\n    memset( p, 0, sizeof(Cec_ParSat_t) );\n    p.SolverType     =      -1;  // SAT solver type\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nSatVarMax     =    2000;  // the max number of SAT variables\n    p.nCallsRecycle  =     200;  // calls to perform before recycling SAT solver\n    p.fNonChrono     =       1;  // use non-chronological backtracling (for circuit SAT only)\n    p.fPolarFlip     =       1;  // flops polarity of variables\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fLearnCls      =       0;  // perform clause learning\n    p.fVerbose       =       0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Cec_ManSimSetDefaultParams",
+      "Start": 2319,
+      "End": 3199,
+      "BodyStart": 2371,
+      "Original": "void Cec_ManSimSetDefaultParams( Cec_ParSim_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParSim_t) );\n    p-\u003enWords         =      31;  // the number of simulation words\n    p-\u003enFrames        =     100;  // the number of simulation frames\n    p-\u003enRounds        =      20;  // the max number of simulation rounds\n    p-\u003enNonRefines    =       3;  // the max number of rounds without refinement\n    p-\u003eTimeLimit      =       0;  // the runtime limit in seconds\n    p-\u003efCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efDualOut       =       0;  // miter with separate outputs\n    p-\u003efConstCorr     =       0;  // consider only constants\n    p-\u003efSeqSimulate   =       0;  // performs sequential simulation\n    p-\u003efVeryVerbose   =       0;  // verbose stats\n    p-\u003efVerbose       =       0;  // verbose stats\n}",
+      "Draft": "func Cec_ManSimSetDefaultParams(p *Cec_ParSim_t) {\n    memset( p, 0, sizeof(Cec_ParSim_t) );\n    p.nWords         =      31;  // the number of simulation words\n    p.nFrames        =     100;  // the number of simulation frames\n    p.nRounds        =      20;  // the max number of simulation rounds\n    p.nNonRefines    =       3;  // the max number of rounds without refinement\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fConstCorr     =       0;  // consider only constants\n    p.fSeqSimulate   =       0;  // performs sequential simulation\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Cec_ManSmfSetDefaultParams",
+      "Start": 3477,
+      "End": 4300,
+      "BodyStart": 3529,
+      "Original": "void Cec_ManSmfSetDefaultParams( Cec_ParSmf_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParSmf_t) );\n    p-\u003enWords         =      31;  // the number of simulation words\n    p-\u003enRounds        =     200;  // the number of simulation rounds\n    p-\u003enFrames        =     200;  // the max number of time frames\n    p-\u003enNonRefines    =       3;  // the max number of rounds without refinement\n    p-\u003enMinOutputs    =       0;  // the min outputs to accumulate\n    p-\u003enBTLimit       =     100;  // conflict limit at a node\n    p-\u003eTimeLimit      =       0;  // the runtime limit in seconds\n    p-\u003efDualOut       =       0;  // miter with separate outputs\n    p-\u003efCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efVerbose       =       0;  // verbose stats\n}",
+      "Draft": "func Cec_ManSmfSetDefaultParams(p *Cec_ParSmf_t) {\n    memset( p, 0, sizeof(Cec_ParSmf_t) );\n    p.nWords         =      31;  // the number of simulation words\n    p.nRounds        =     200;  // the number of simulation rounds\n    p.nFrames        =     200;  // the max number of time frames\n    p.nNonRefines    =       3;  // the max number of rounds without refinement\n    p.nMinOutputs    =       0;  // the min outputs to accumulate\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fVerbose       =       0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Cec_ManFraSetDefaultParams",
+      "Start": 4578,
+      "End": 5779,
+      "BodyStart": 4630,
+      "Original": "void Cec_ManFraSetDefaultParams( Cec_ParFra_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParFra_t) );\n    p-\u003enWords         =      15;  // the number of simulation words\n    p-\u003enRounds        =      15;  // the number of simulation rounds\n    p-\u003eTimeLimit      =       0;  // the runtime limit in seconds\n    p-\u003enItersMax      =      10;  // the maximum number of iterations of SAT sweeping\n    p-\u003enBTLimit       =     100;  // conflict limit at a node\n    p-\u003enLevelMax      =       0;  // restriction on the level of nodes to be swept\n    p-\u003enDepthMax      =       1;  // the depth in terms of steps of speculative reduction\n    p-\u003efRewriting     =       0;  // enables AIG rewriting\n    p-\u003efCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efDualOut       =       0;  // miter with separate outputs\n    p-\u003efColorDiff     =       0;  // miter with separate outputs\n    p-\u003efSatSweeping   =       0;  // enable SAT sweeping\n    p-\u003efUseCones      =       0;  // use cones\n    p-\u003efVeryVerbose   =       0;  // verbose stats\n    p-\u003efVerbose       =       0;  // verbose stats\n    p-\u003eiOutFail       =      -1;  // the failed output\n}",
+      "Draft": "func Cec_ManFraSetDefaultParams(p *Cec_ParFra_t) {\n    memset( p, 0, sizeof(Cec_ParFra_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.nItersMax      =      10;  // the maximum number of iterations of SAT sweeping\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nLevelMax      =       0;  // restriction on the level of nodes to be swept\n    p.nDepthMax      =       1;  // the depth in terms of steps of speculative reduction\n    p.fRewriting     =       0;  // enables AIG rewriting\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fColorDiff     =       0;  // miter with separate outputs\n    p.fSatSweeping   =       0;  // enable SAT sweeping\n    p.fUseCones      =       0;  // use cones\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n    p.iOutFail       =      -1;  // the failed output\n}"
+    },
+    {
+      "Name": "Cec_ManCecSetDefaultParams",
+      "Start": 6055,
+      "End": 6637,
+      "BodyStart": 6107,
+      "Original": "void Cec_ManCecSetDefaultParams( Cec_ParCec_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParCec_t) );\n    p-\u003enBTLimit       =    1000;  // conflict limit at a node\n    p-\u003eTimeLimit      =       0;  // the runtime limit in seconds\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efUseSmartCnf   =       0;  // use smart CNF computation\n    p-\u003efRewriting     =       0;  // enables AIG rewriting\n    p-\u003efVeryVerbose   =       0;  // verbose stats\n    p-\u003efVerbose       =       0;  // verbose stats\n    p-\u003eiOutFail       =      -1;  // the number of failed output\n}",
+      "Draft": "func Cec_ManCecSetDefaultParams(p *Cec_ParCec_t) {\n    memset( p, 0, sizeof(Cec_ParCec_t) );\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fUseSmartCnf   =       0;  // use smart CNF computation\n    p.fRewriting     =       0;  // enables AIG rewriting\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n    p.iOutFail       =      -1;  // the number of failed output\n}"
+    },
+    {
+      "Name": "Cec_ManCorSetDefaultParams",
+      "Start": 6914,
+      "End": 7917,
+      "BodyStart": 6966,
+      "Original": "void Cec_ManCorSetDefaultParams( Cec_ParCor_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParCor_t) );\n    p-\u003enWords         =      15;  // the number of simulation words\n    p-\u003enRounds        =      15;  // the number of simulation rounds\n    p-\u003enFrames        =       1;  // the number of time frames\n    p-\u003enBTLimit       =     100;  // conflict limit at a node\n    p-\u003enLevelMax      =      -1;  // (scorr only) the max number of levels\n    p-\u003enStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p-\u003efLatchCorr     =       0;  // consider only latch outputs\n    p-\u003efConstCorr     =       0;  // consider only constants\n    p-\u003efUseRings      =       1;  // combine classes into rings\n    p-\u003efUseCSat       =       1;  // use circuit-based solver\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p-\u003efUseSmartCnf   =       0;  // use smart CNF computation\n    p-\u003efVeryVerbose   =       0;  // verbose stats\n    p-\u003efVerbose       =       0;  // verbose stats\n}",
+      "Draft": "func Cec_ManCorSetDefaultParams(p *Cec_ParCor_t) {\n    memset( p, 0, sizeof(Cec_ParCor_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.nFrames        =       1;  // the number of time frames\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nLevelMax      =      -1;  // (scorr only) the max number of levels\n    p.nStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p.fLatchCorr     =       0;  // consider only latch outputs\n    p.fConstCorr     =       0;  // consider only constants\n    p.fUseRings      =       1;  // combine classes into rings\n    p.fUseCSat       =       1;  // use circuit-based solver\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fUseSmartCnf   =       0;  // use smart CNF computation\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Cec_ManChcSetDefaultParams",
+      "Start": 8194,
+      "End": 8701,
+      "BodyStart": 8246,
+      "Original": "void Cec_ManChcSetDefaultParams( Cec_ParChc_t * p )\n{\n    memset( p, 0, sizeof(Cec_ParChc_t) );\n    p-\u003enWords         =      15;  // the number of simulation words\n    p-\u003enRounds        =      15;  // the number of simulation rounds\n    p-\u003enBTLimit       =    1000;  // conflict limit at a node\n    p-\u003efUseRings      =       1;  // use rings\n    p-\u003efUseCSat       =       0;  // use circuit-based solver\n    p-\u003efVeryVerbose   =       0;  // verbose stats\n    p-\u003efVerbose       =       0;  // verbose stats\n}",
+      "Draft": "func Cec_ManChcSetDefaultParams(p *Cec_ParChc_t) {\n    memset( p, 0, sizeof(Cec_ParChc_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.fUseRings      =       1;  // use rings\n    p.fUseCSat       =       0;  // use circuit-based solver\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Cec_ManSatSolving",
+      "Start": 8971,
+      "End": 9508,
+      "BodyStart": 9057,
+      "Original": "Gia_Man_t * Cec_ManSatSolving( Gia_Man_t * pAig, Cec_ParSat_t * pPars, int f0Proved )\n{\n    Gia_Man_t * pNew;\n    Cec_ManPat_t * pPat;\n    pPat = Cec_ManPatStart();\n    if ( pPars-\u003eSolverType == -1 )\n        Cec_ManSatSolve( pPat, pAig, pPars, NULL, NULL, NULL, f0Proved );\n    else\n        CecG_ManSatSolve( pPat, pAig, pPars, f0Proved );\n//    pNew = Gia_ManDupDfsSkip( pAig );\n    pNew = Gia_ManCleanup( pAig );\n    Cec_ManPatStop( pPat );\n    pNew-\u003evSeqModelVec = pAig-\u003evSeqModelVec;\n    pAig-\u003evSeqModelVec = NULL;\n    return pNew;\n}",
+      "Draft": "func Cec_ManSatSolving(pAig *Gia_Man_t, pPars *Cec_ParSat_t, f0Proved int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pPat *Cec_ManPat_t;\n    pPat = Cec_ManPatStart();\n    if pPars.SolverType == -1 {\n        Cec_ManSatSolve( pPat, pAig, pPars, nil, nil, nil, f0Proved );\n    } else {\n        CecG_ManSatSolve( pPat, pAig, pPars, f0Proved ); }\n//    pNew = Gia_ManDupDfsSkip( pAig );\n    pNew = Gia_ManCleanup( pAig );\n    Cec_ManPatStop( pPat );\n    pNew.vSeqModelVec = pAig.vSeqModelVec;\n    pAig.vSeqModelVec = nil;\n    return pNew;\n}"
+    },
+    {
+      "Name": "Cec_ManSimulationOne",
+      "Start": 9811,
+      "End": 10477,
+      "BodyStart": 9878,
+      "Original": "int Cec_ManSimulationOne( Gia_Man_t * pAig, Cec_ParSim_t * pPars )\n{\n    Cec_ManSim_t * pSim;\n    int RetValue = 0;\n    abctime clkTotal = Abc_Clock();\n    pSim = Cec_ManSimStart( pAig, pPars );\n    if ( (pAig-\u003epReprs == NULL \u0026\u0026 (RetValue = Cec_ManSimClassesPrepare( pSim, -1 ))) ||\n         (RetValue == 0 \u0026\u0026        (RetValue = Cec_ManSimClassesRefine( pSim ))) )\n        Abc_Print( 1, \"The number of failed outputs of the miter = %6d. (Words = %4d. Frames = %4d.)\\n\", \n            pSim-\u003enOuts, pPars-\u003enWords, pPars-\u003enFrames );\n    if ( pPars-\u003efVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManSimulationOne(pAig *Gia_Man_t, pPars *Cec_ParSim_t) int32 {\n    var pSim *Cec_ManSim_t;\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    pSim = Cec_ManSimStart( pAig, pPars );\n    if (pAig.pReprs == nil \u0026\u0026 (RetValue = Cec_ManSimClassesPrepare( pSim, -1 ))) ||\n         (RetValue == 0 \u0026\u0026        (RetValue = Cec_ManSimClassesRefine( pSim ))) {\n        Abc_Print( 1, \"The number of failed outputs of the miter = %6d. (Words = %4d. Frames = %4d.)\\n\", \n            pSim.nOuts, pPars.nWords, pPars.nFrames ); }\n    if pPars.fVerbose {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal ); }\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManSimulation",
+      "Start": 10743,
+      "End": 12126,
+      "BodyStart": 10808,
+      "Original": "void Cec_ManSimulation( Gia_Man_t * pAig, Cec_ParSim_t * pPars )\n{\n    int r, nLitsOld, nLitsNew, nCountNoRef = 0, fStop = 0;\n    Gia_ManRandom( 1 );\n    if ( pPars-\u003efSeqSimulate )\n        Abc_Print( 1, \"Performing rounds of random simulation of %d frames with %d words.\\n\", \n            pPars-\u003enRounds, pPars-\u003enFrames, pPars-\u003enWords );\n    nLitsOld = Gia_ManEquivCountLits( pAig );\n    for ( r = 0; r \u003c pPars-\u003enRounds; r++ )\n    {\n        if ( Cec_ManSimulationOne( pAig, pPars ) )\n        {\n            fStop = 1;\n            break;\n        }\n        // decide when to stop\n        nLitsNew = Gia_ManEquivCountLits( pAig );\n        if ( nLitsOld == 0 || nLitsOld \u003e nLitsNew )\n        {\n            nLitsOld = nLitsNew;\n            nCountNoRef = 0;\n        }\n        else if ( ++nCountNoRef == pPars-\u003enNonRefines )\n        {\n            r++;\n            break;\n        }\n        assert( nLitsOld == nLitsNew );\n    }\n//    if ( pPars-\u003efVerbose )\n    if ( r == pPars-\u003enRounds || fStop )\n        Abc_Print( 1, \"Random simulation is stopped after %d rounds.\\n\", r );\n    else\n        Abc_Print( 1, \"Random simulation saturated after %d rounds.\\n\", r );\n    if ( pPars-\u003efCheckMiter )\n    {\n        int nNonConsts = Cec_ManCountNonConstOutputs( pAig );\n        if ( nNonConsts )\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts );\n    }\n}",
+      "Draft": "func Cec_ManSimulation(pAig *Gia_Man_t, pPars *Cec_ParSim_t) {\n    var r, nLitsOld, nLitsNew, nCountNoRef, fStop int32;\n    Gia_ManRandom( 1 );\n    if pPars.fSeqSimulate {\n        Abc_Print( 1, \"Performing rounds of random simulation of %d frames with %d words.\\n\", \n            pPars.nRounds, pPars.nFrames, pPars.nWords ); }\n    nLitsOld = Gia_ManEquivCountLits( pAig );\n    for  r = 0; r \u003c pPars.nRounds; r++  {\n        if Cec_ManSimulationOne( pAig, pPars ) != 0 {\n            fStop = 1;\n            break;\n        }\n        // decide when to stop\n        nLitsNew = Gia_ManEquivCountLits( pAig );\n        if nLitsOld == 0 || nLitsOld \u003e nLitsNew {\n            nLitsOld = nLitsNew;\n            nCountNoRef = 0;\n        \n        } else if nCountNoRef++; nCountNoRef == pPars.nNonRefines {\n            r++;\n            break;\n        }\n        assert(nLitsOld == nLitsNew, \"nLitsOld == nLitsNew\");\n    }\n//    if ( pPars-\u003efVerbose )\n    if r == pPars.nRounds || (fStop != 0) {\n        Abc_Print( 1, \"Random simulation is stopped after %d rounds.\\n\", r );\n    } else {\n        Abc_Print( 1, \"Random simulation saturated after %d rounds.\\n\", r ); }\n    if pPars.fCheckMiter {\n        var nNonConsts int32  = Cec_ManCountNonConstOutputs( pAig );\n        if nNonConsts != 0 {\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts ); }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSatSweeping",
+      "Start": 12394,
+      "End": 20874,
+      "BodyStart": 12480,
+      "Original": "Gia_Man_t * Cec_ManSatSweeping( Gia_Man_t * pAig, Cec_ParFra_t * pPars, int fSilent )\n{\n    int fOutputResult = 0;\n    Cec_ParSat_t ParsSat, * pParsSat = \u0026ParsSat;\n    Cec_ParSim_t ParsSim, * pParsSim = \u0026ParsSim;\n    Gia_Man_t * pIni, * pSrm, * pTemp;\n    Cec_ManFra_t * p;\n    Cec_ManSim_t * pSim;\n    Cec_ManPat_t * pPat;\n    int i, fTimeOut = 0, nMatches = 0;\n    abctime clk, clk2, clkTotal = Abc_Clock();\n    if ( pPars-\u003efVerbose )\n        printf( \"Simulating %d words for %d rounds. SAT solving with %d conflicts.\\n\", pPars-\u003enWords, pPars-\u003enRounds, pPars-\u003enBTLimit );\n\n    // duplicate AIG and transfer equivalence classes\n    Gia_ManRandom( 1 );\n    pIni = Gia_ManDup(pAig);\n    pIni-\u003epReprs = pAig-\u003epReprs; pAig-\u003epReprs = NULL;\n    pIni-\u003epNexts = pAig-\u003epNexts; pAig-\u003epNexts = NULL;\n    if ( pPars-\u003efUseOrigIds )\n    {\n        Gia_ManOrigIdsInit( pIni );\n        Vec_IntFreeP( \u0026pAig-\u003evIdsEquiv );\n        pAig-\u003evIdsEquiv = Vec_IntAlloc( 1000 );\n    }\n    if ( pAig-\u003evSimsPi )\n    {\n        pIni-\u003evSimsPi = Vec_WrdDup(pAig-\u003evSimsPi); \n        pIni-\u003enSimWords = pAig-\u003enSimWords;\n    }\n\n    // prepare the managers\n    // SAT sweeping\n    p = Cec_ManFraStart( pIni, pPars );\n    if ( pPars-\u003efDualOut )\n        pPars-\u003efColorDiff = 1;\n    // simulation\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim-\u003enWords      = Abc_MaxInt(2*pAig-\u003enSimWords, pPars-\u003enWords);\n    pParsSim-\u003enFrames     = pPars-\u003enRounds;\n    pParsSim-\u003efCheckMiter = pPars-\u003efCheckMiter;\n    pParsSim-\u003efDualOut    = pPars-\u003efDualOut;\n    pParsSim-\u003efVerbose    = pPars-\u003efVerbose;\n    pSim = Cec_ManSimStart( pIni, pParsSim );\n    // SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat-\u003enBTLimit = pPars-\u003enBTLimit;\n    pParsSat-\u003efVerbose = pPars-\u003efVeryVerbose;\n    // simulation patterns\n    pPat = Cec_ManPatStart();\n    //pPat-\u003efVerbose = pPars-\u003efVeryVerbose;\n\n    // start equivalence classes\nclk = Abc_Clock();\n    if ( p-\u003epAig-\u003epReprs == NULL )\n    {\n        if ( Cec_ManSimClassesPrepare(pSim, -1) || (!p-\u003epAig-\u003enSimWords \u0026\u0026 Cec_ManSimClassesRefine(pSim)) )\n        {\n            Gia_ManStop( p-\u003epAig );\n            p-\u003epAig = NULL;\n            goto finalize;\n        }\n    }\np-\u003etimeSim += Abc_Clock() - clk;\n    // perform solving\n    for ( i = 1; i \u003c= pPars-\u003enItersMax; i++ )\n    {\n        clk2 = Abc_Clock();\n        nMatches = 0;\n        if ( pPars-\u003efDualOut )\n        {\n            nMatches = Gia_ManEquivSetColors( p-\u003epAig, pPars-\u003efVeryVerbose );\n//            p-\u003epAig-\u003epIso = Cec_ManDetectIsomorphism( p-\u003epAig );\n//            Gia_ManEquivTransform( p-\u003epAig, 1 );\n        }\n        pSrm = Cec_ManFraSpecReduction( p ); \n\n//        Gia_AigerWrite( pSrm, \"gia_srm.aig\", 0, 0, 0 );\n\n        if ( pPars-\u003efVeryVerbose )\n            Gia_ManPrintStats( pSrm, NULL );\n        if ( Gia_ManCoNum(pSrm) == 0 )\n        {\n            Gia_ManStop( pSrm );\n            if ( p-\u003epPars-\u003efVerbose )\n                Abc_Print( 1, \"Considered all available candidate equivalences.\\n\" );\n            if ( pPars-\u003efDualOut \u0026\u0026 Gia_ManAndNum(p-\u003epAig) \u003e 0 )\n            {\n                if ( pPars-\u003efColorDiff )\n                {\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Abc_Print( 1, \"Switching into reduced mode.\\n\" );\n                    pPars-\u003efColorDiff = 0;\n                }\n                else\n                {\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Abc_Print( 1, \"Switching into normal mode.\\n\" );\n                    pPars-\u003efDualOut = 0;\n                }\n                continue;\n            }\n            break;\n        }\nclk = Abc_Clock();\n        if ( pPars-\u003efRunCSat )\n            Cec_ManSatSolveCSat( pPat, pSrm, pParsSat ); \n        else\n            Cec_ManSatSolve( pPat, pSrm, pParsSat, p-\u003epAig-\u003evIdsOrig, p-\u003evXorNodes, pAig-\u003evIdsEquiv, 0 ); \np-\u003etimeSat += Abc_Clock() - clk;\n        if ( Cec_ManFraClassesUpdate( p, pSim, pPat, pSrm ) )\n        {\n            Gia_ManStop( pSrm );\n            Gia_ManStop( p-\u003epAig );\n            p-\u003epAig = NULL;\n            goto finalize;\n        }\n        Gia_ManStop( pSrm );\n\n        // update the manager\n        pSim-\u003epAig = p-\u003epAig = Gia_ManEquivReduceAndRemap( pTemp = p-\u003epAig, 0, pParsSim-\u003efDualOut );\n        if ( p-\u003epAig == NULL )\n        {\n            p-\u003epAig = pTemp;\n            break;\n        }\n        Gia_ManStop( pTemp );\n        if ( p-\u003epPars-\u003efVerbose )\n        {\n            Abc_Print( 1, \"%3d : P =%7d. D =%7d. F =%6d. M = %7d. And =%8d. \", \n                i, p-\u003enAllProved, p-\u003enAllDisproved, p-\u003enAllFailed, nMatches, Gia_ManAndNum(p-\u003epAig) );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        if ( Gia_ManAndNum(p-\u003epAig) == 0 )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Abc_Print( 1, \"Network after reduction is empty.\\n\" );\n            break;\n        }\n        // check resource limits\n        if ( p-\u003epPars-\u003eTimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/CLOCKS_PER_SEC \u003e= p-\u003epPars-\u003eTimeLimit )\n        {\n            fTimeOut = 1;\n            break;\n        }\n//        if ( p-\u003enAllFailed \u0026\u0026 !p-\u003enAllProved \u0026\u0026 !p-\u003enAllDisproved )\n        if ( p-\u003enAllFailed \u003e p-\u003enAllProved + p-\u003enAllDisproved )\n        {\n            if ( pParsSat-\u003enBTLimit \u003e= 10001 )\n                break;\n            if ( pPars-\u003efSatSweeping )\n            {\n                if ( p-\u003epPars-\u003efVerbose )\n                    Abc_Print( 1, \"Exceeded the limit on the number of conflicts (%d).\\n\", pParsSat-\u003enBTLimit );\n                break;\n            }\n            pParsSat-\u003enBTLimit *= 10;\n            if ( p-\u003epPars-\u003efVerbose )\n            {\n                if ( p-\u003epPars-\u003efVerbose )\n                    Abc_Print( 1, \"Increasing conflict limit to %d.\\n\", pParsSat-\u003enBTLimit );\n                if ( fOutputResult )\n                {\n                    Gia_AigerWrite( p-\u003epAig, \"gia_cec_temp.aig\", 0, 0, 0 );\n                    Abc_Print( 1,\"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_temp.aig\" );\n                }\n            }\n        }\n        if ( pPars-\u003efDualOut \u0026\u0026 pPars-\u003efColorDiff \u0026\u0026 (Gia_ManAndNum(p-\u003epAig) \u003c 100000 || p-\u003enAllProved + p-\u003enAllDisproved \u003c 10) )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Abc_Print( 1, \"Switching into reduced mode.\\n\" );\n            pPars-\u003efColorDiff = 0;\n        }\n//        if ( pPars-\u003efDualOut \u0026\u0026 Gia_ManAndNum(p-\u003epAig) \u003c 20000 )\n        else if ( pPars-\u003efDualOut \u0026\u0026 (Gia_ManAndNum(p-\u003epAig) \u003c 20000 || p-\u003enAllProved + p-\u003enAllDisproved \u003c 10) )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Abc_Print( 1, \"Switching into normal mode.\\n\" );\n            pPars-\u003efColorDiff = 0;\n            pPars-\u003efDualOut = 0;\n        }\n    }\nfinalize:\n    if ( pPars-\u003efVerbose )\n        printf( \"Performed %d SAT calls: P = %d  D = %d  F = %d\\n\", \n            p-\u003enAllProvedS + p-\u003enAllDisprovedS + p-\u003enAllFailedS, p-\u003enAllProvedS, p-\u003enAllDisprovedS, p-\u003enAllFailedS );\n    if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003epAig )\n    {\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(p-\u003epAig), \n            100.0*(Gia_ManAndNum(pAig)-Gia_ManAndNum(p-\u003epAig))/(Gia_ManAndNum(pAig)?Gia_ManAndNum(pAig):1), \n            Gia_ManRegNum(pAig), Gia_ManRegNum(p-\u003epAig), \n            100.0*(Gia_ManRegNum(pAig)-Gia_ManRegNum(p-\u003epAig))/(Gia_ManRegNum(pAig)?Gia_ManRegNum(pAig):1) );\n        Abc_PrintTimeP( 1, \"Sim \", p-\u003etimeSim, Abc_Clock() - (int)clkTotal );\n        Abc_PrintTimeP( 1, \"Sat \", p-\u003etimeSat-pPat-\u003etimeTotalSave, Abc_Clock() - (int)clkTotal );\n        Abc_PrintTimeP( 1, \"Pat \", p-\u003etimePat+pPat-\u003etimeTotalSave, Abc_Clock() - (int)clkTotal );\n        Abc_PrintTime( 1, \"Time\", (int)(Abc_Clock() - clkTotal) );\n    }\n\n    pTemp = p-\u003epAig; p-\u003epAig = NULL;\n    if ( pTemp == NULL \u0026\u0026 pSim-\u003eiOut \u003e= 0 )\n    {\n        if ( !fSilent )\n        Abc_Print( 1, \"Disproved at least one output of the miter (zero-based number %d).\\n\", pSim-\u003eiOut );\n        pPars-\u003eiOutFail = pSim-\u003eiOut;\n    }\n    else if ( pSim-\u003epCexes \u0026\u0026 !fSilent )\n        Abc_Print( 1, \"Disproved %d outputs of the miter.\\n\", pSim-\u003enOuts );\n    if ( fTimeOut \u0026\u0026 !fSilent )\n        Abc_Print( 1, \"Timed out after %d seconds.\\n\", (int)((double)Abc_Clock() - clkTotal)/CLOCKS_PER_SEC );\n\n    pAig-\u003epCexComb = pSim-\u003epCexComb; pSim-\u003epCexComb = NULL;\n    Cec_ManSimStop( pSim );\n    Cec_ManPatStop( pPat );\n    Cec_ManFraStop( p );\n    if ( pTemp ) ABC_FREE( pTemp-\u003epReprs );\n    if ( pTemp ) ABC_FREE( pTemp-\u003epNexts );\n    return pTemp;\n}",
+      "Draft": "func Cec_ManSatSweeping(pAig *Gia_Man_t, pPars *Cec_ParFra_t, fSilent int32) *Gia_Man_t {\n    var fOutputResult int32;\n    var ParsSat Cec_ParSat_t;\n    var pParsSat *Cec_ParSat_t = \u0026ParsSat;\n    var ParsSim Cec_ParSim_t;\n    var pParsSim *Cec_ParSim_t = \u0026ParsSim;\n    var pIni, pSrm, pTemp *Gia_Man_t;\n    var p *Cec_ManFra_t;\n    var pSim *Cec_ManSim_t;\n    var pPat *Cec_ManPat_t;\n    var i, fTimeOut, nMatches int32;\n    var clk abctime;\n    var clk2 abctime;\n    var clkTotal abctime = Abc_Clock();\n    if pPars.fVerbose {\n        fmt.Printf(\"Simulating %d words for %d rounds. SAT solving with %d conflicts.\\n\", pPars.nWords, pPars.nRounds, pPars.nBTLimit); }\n\n    // duplicate AIG and transfer equivalence classes\n    Gia_ManRandom( 1 );\n    pIni = Gia_ManDup(pAig);\n    pIni.pReprs = pAig.pReprs; pAig.pReprs = nil;\n    pIni.pNexts = pAig.pNexts; pAig.pNexts = nil;\n    if pPars.fUseOrigIds {\n        Gia_ManOrigIdsInit( pIni );\n        Vec_IntFreeP( \u0026pAig.vIdsEquiv );\n        pAig.vIdsEquiv = Vec_IntAlloc( 1000 );\n    }\n    if pAig.vSimsPi {\n        pIni.vSimsPi = Vec_WrdDup(pAig.vSimsPi); \n        pIni.nSimWords = pAig.nSimWords;\n    }\n\n    // prepare the managers\n    // SAT sweeping\n    p = Cec_ManFraStart( pIni, pPars );\n    if pPars.fDualOut {\n        pPars.fColorDiff = 1; }\n    // simulation\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim.nWords      = Abc_MaxInt(2*pAig.nSimWords, pPars.nWords);\n    pParsSim.nFrames     = pPars.nRounds;\n    pParsSim.fCheckMiter = pPars.fCheckMiter;\n    pParsSim.fDualOut    = pPars.fDualOut;\n    pParsSim.fVerbose    = pPars.fVerbose;\n    pSim = Cec_ManSimStart( pIni, pParsSim );\n    // SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat.nBTLimit = pPars.nBTLimit;\n    pParsSat.fVerbose = pPars.fVeryVerbose;\n    // simulation patterns\n    pPat = Cec_ManPatStart();\n    //pPat-\u003efVerbose = pPars-\u003efVeryVerbose;\n\n    // start equivalence classes\nclk = Abc_Clock();\n    if p.pAig.pReprs == nil {\n        if Cec_ManSimClassesPrepare(pSim, -1) || (!p.pAig.nSimWords \u0026\u0026 Cec_ManSimClassesRefine(pSim)) {\n            Gia_ManStop( p.pAig );\n            p.pAig = nil;\n            goto finalize;\n        }\n    }\np.timeSim += Abc_Clock() - clk;\n    // perform solving\n    for  i = 1; i \u003c= pPars.nItersMax; i++  {\n        clk2 = Abc_Clock();\n        nMatches = 0;\n        if pPars.fDualOut {\n            nMatches = Gia_ManEquivSetColors( p.pAig, pPars.fVeryVerbose );\n//            p-\u003epAig-\u003epIso = Cec_ManDetectIsomorphism( p-\u003epAig );\n//            Gia_ManEquivTransform( p-\u003epAig, 1 );\n        }\n        pSrm = Cec_ManFraSpecReduction( p ); \n\n//        Gia_AigerWrite( pSrm, \"gia_srm.aig\", 0, 0, 0 );\n\n        if pPars.fVeryVerbose {\n            Gia_ManPrintStats( pSrm, nil ); }\n        if Gia_ManCoNum(pSrm) == 0 {\n            Gia_ManStop( pSrm );\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Considered all available candidate equivalences.\\n\" ); }\n            if pPars.fDualOut \u0026\u0026 Gia_ManAndNum(p.pAig) \u003e 0 {\n                if pPars.fColorDiff {\n                    if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Switching into reduced mode.\\n\" ); }\n                    pPars.fColorDiff = 0;\n                \n                } else {\n                    if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Switching into normal mode.\\n\" ); }\n                    pPars.fDualOut = 0;\n                }\n                continue;\n            }\n            break;\n        }\nclk = Abc_Clock();\n        if pPars.fRunCSat {\n            Cec_ManSatSolveCSat( pPat, pSrm, pParsSat ); \n        } else {\n            Cec_ManSatSolve( pPat, pSrm, pParsSat, p.pAig.vIdsOrig, p.vXorNodes, pAig.vIdsEquiv, 0 ); } \np.timeSat += Abc_Clock() - clk;\n        if Cec_ManFraClassesUpdate( p, pSim, pPat, pSrm ) {\n            Gia_ManStop( pSrm );\n            Gia_ManStop( p.pAig );\n            p.pAig = nil;\n            goto finalize;\n        }\n        Gia_ManStop( pSrm );\n\n        // update the manager\n        pSim.pAig = p.pAig = Gia_ManEquivReduceAndRemap( pTemp = p.pAig, 0, pParsSim.fDualOut );\n        if p.pAig == nil {\n            p.pAig = pTemp;\n            break;\n        }\n        Gia_ManStop( pTemp );\n        if p.pPars.fVerbose {\n            Abc_Print( 1, \"%3d : P =%7d. D =%7d. F =%6d. M = %7d. And =%8d. \", \n                i, p.nAllProved, p.nAllDisproved, p.nAllFailed, nMatches, Gia_ManAndNum(p.pAig) );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        if Gia_ManAndNum(p.pAig) == 0 {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Network after reduction is empty.\\n\" ); }\n            break;\n        }\n        // check resource limits\n        if p.pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/int64(time.Second) \u003e= p.pPars.TimeLimit {\n            fTimeOut = 1;\n            break;\n        }\n//        if ( p-\u003enAllFailed \u0026\u0026 !p-\u003enAllProved \u0026\u0026 !p-\u003enAllDisproved )\n        if p.nAllFailed \u003e p.nAllProved + p.nAllDisproved {\n            if pParsSat.nBTLimit \u003e= 10001 {\n                break; }\n            if pPars.fSatSweeping {\n                if p.pPars.fVerbose {\n                    Abc_Print( 1, \"Exceeded the limit on the number of conflicts (%d).\\n\", pParsSat.nBTLimit ); }\n                break;\n            }\n            pParsSat.nBTLimit *= 10;\n            if p.pPars.fVerbose {\n                if p.pPars.fVerbose {\n                    Abc_Print( 1, \"Increasing conflict limit to %d.\\n\", pParsSat.nBTLimit ); }\n                if fOutputResult != 0 {\n                    Gia_AigerWrite( p.pAig, \"gia_cec_temp.aig\", 0, 0, 0 );\n                    Abc_Print( 1,\"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_temp.aig\" );\n                }\n            }\n        }\n        if pPars.fDualOut \u0026\u0026 pPars.fColorDiff \u0026\u0026 (Gia_ManAndNum(p.pAig) \u003c 100000 || p.nAllProved + p.nAllDisproved \u003c 10) {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Switching into reduced mode.\\n\" ); }\n            pPars.fColorDiff = 0;\n        \n//        if ( pPars-\u003efDualOut \u0026\u0026 Gia_ManAndNum(p-\u003epAig) \u003c 20000 )\n        } else if pPars.fDualOut \u0026\u0026 (Gia_ManAndNum(p.pAig) \u003c 20000 || p.nAllProved + p.nAllDisproved \u003c 10) {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Switching into normal mode.\\n\" ); }\n            pPars.fColorDiff = 0;\n            pPars.fDualOut = 0;\n        }\n    }\nfinalize:\n    if pPars.fVerbose {\n        fmt.Printf(\"Performed %d SAT calls: P = %d  D = %d  F = %d\\n\", p.nAllProvedS + p.nAllDisprovedS + p.nAllFailedS, p.nAllProvedS, p.nAllDisprovedS, p.nAllFailedS); }\n    if p.pPars.fVerbose \u0026\u0026 p.pAig {\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(p.pAig), \n            100.0*(Gia_ManAndNum(pAig)-Gia_ManAndNum(p.pAig))/(Gia_ManAndNum(pAig)?Gia_ManAndNum(pAig):1), \n            Gia_ManRegNum(pAig), Gia_ManRegNum(p.pAig), \n            100.0*(Gia_ManRegNum(pAig)-Gia_ManRegNum(p.pAig))/(Gia_ManRegNum(pAig)?Gia_ManRegNum(pAig):1) );\n        Abc_PrintTimeP( 1, \"Sim \", p.timeSim, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTimeP( 1, \"Sat \", p.timeSat-pPat.timeTotalSave, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTimeP( 1, \"Pat \", p.timePat+pPat.timeTotalSave, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTime( 1, \"Time\", int32((Abc_Clock() - clkTotal)) );\n    }\n\n    pTemp = p.pAig; p.pAig = nil;\n    if pTemp == nil \u0026\u0026 pSim.iOut \u003e= 0 {\n        if !(fSilent != 0) {\n        Abc_Print( 1, \"Disproved at least one output of the miter (zero-based number %d).\\n\", pSim.iOut ); }\n        pPars.iOutFail = pSim.iOut;\n    \n    } else if pSim.pCexes \u0026\u0026 !(fSilent != 0) {\n        Abc_Print( 1, \"Disproved %d outputs of the miter.\\n\", pSim.nOuts ); }\n    if fTimeOut \u0026\u0026 !(fSilent != 0) {\n        Abc_Print( 1, \"Timed out after %d seconds.\\n\", int32((float64(Abc_Clock()) - clkTotal))/int64(time.Second) ); }\n\n    pAig.pCexComb = pSim.pCexComb; pSim.pCexComb = nil;\n    Cec_ManSimStop( pSim );\n    Cec_ManPatStop( pPat );\n    Cec_ManFraStop( p );\n    // inlining of macro ABC_FREE\n    if pTemp != nil { ((pTemp.pReprs) ? (free((char *) (pTemp.pReprs)), (pTemp.pReprs) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if pTemp != nil { ((pTemp.pNexts) ? (free((char *) (pTemp.pNexts)), (pTemp.pNexts) = 0) : 0); }\n    return pTemp;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::1347",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1347,
+      "End": 1353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::2391",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2391,
+      "End": 2397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::3549",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3549,
+      "End": 3555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::4650",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4650,
+      "End": 4656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::6127",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6127,
+      "End": 6133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::6986",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6986,
+      "End": 6992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::mechanical::sizeof::8266",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8266,
+      "End": 8272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::pointer-cast::20853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20784,
+      "End": 20784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::pointer-cast::20993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20828,
+      "End": 20828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSatSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1275,
+      "End": 2040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSimSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2319,
+      "End": 3199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSmfSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSmfSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3477,
+      "End": 4300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManFraSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManFraSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4578,
+      "End": 5779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManCecSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCecSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6055,
+      "End": 6637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManCorSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCorSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6914,
+      "End": 7917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManChcSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManChcSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8194,
+      "End": 8701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSatSolving",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatSolving",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8971,
+      "End": 9508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSimulationOne",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimulationOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9811,
+      "End": 10477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSimulation",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSimulation",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10743,
+      "End": 12126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::ternary::Cec_ManSatSweeping",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSatSweeping",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12394,
+      "End": 20874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::Cec_ManSatSweeping",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSatSweeping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12394,
+      "End": 20874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21122
+    }
+  ],
+  "Draft": "package cec\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cecCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Cec_ManSatSetDefaultParams(p *Cec_ParSat_t) {\n    memset( p, 0, sizeof(Cec_ParSat_t) );\n    p.SolverType     =      -1;  // SAT solver type\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nSatVarMax     =    2000;  // the max number of SAT variables\n    p.nCallsRecycle  =     200;  // calls to perform before recycling SAT solver\n    p.fNonChrono     =       1;  // use non-chronological backtracling (for circuit SAT only)\n    p.fPolarFlip     =       1;  // flops polarity of variables\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fLearnCls      =       0;  // perform clause learning\n    p.fVerbose       =       0;  // verbose stats\n}  \n\n/**Function************  *************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimSetDefaultParams(p *Cec_ParSim_t) {\n    memset( p, 0, sizeof(Cec_ParSim_t) );\n    p.nWords         =      31;  // the number of simulation words\n    p.nFrames        =     100;  // the number of simulation frames\n    p.nRounds        =      20;  // the max number of simulation rounds\n    p.nNonRefines    =       3;  // the max number of rounds without refinement\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fConstCorr     =       0;  // consider only constants\n    p.fSeqSimulate   =       0;  // performs sequential simulation\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n} \n\n/**Function************  *************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSmfSetDefaultParams(p *Cec_ParSmf_t) {\n    memset( p, 0, sizeof(Cec_ParSmf_t) );\n    p.nWords         =      31;  // the number of simulation words\n    p.nRounds        =     200;  // the number of simulation rounds\n    p.nFrames        =     200;  // the max number of time frames\n    p.nNonRefines    =       3;  // the max number of rounds without refinement\n    p.nMinOutputs    =       0;  // the min outputs to accumulate\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fVerbose       =       0;  // verbose stats\n} \n\n/**Function************  *************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManFraSetDefaultParams(p *Cec_ParFra_t) {\n    memset( p, 0, sizeof(Cec_ParFra_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n    p.nItersMax      =      10;  // the maximum number of iterations of SAT sweeping\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nLevelMax      =       0;  // restriction on the level of nodes to be swept\n    p.nDepthMax      =       1;  // the depth in terms of steps of speculative reduction\n    p.fRewriting     =       0;  // enables AIG rewriting\n    p.fCheckMiter    =       0;  // the circuit is the miter\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fDualOut       =       0;  // miter with separate outputs\n    p.fColorDiff     =       0;  // miter with separate outputs\n    p.fSatSweeping   =       0;  // enable SAT sweeping\n    p.fUseCones      =       0;  // use cones\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n    p.iOutFail       =      -1;  // the failed output\n} \n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCecSetDefaultParams(p *Cec_ParCec_t) {\n    memset( p, 0, sizeof(Cec_ParCec_t) );\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.TimeLimit      =       0;  // the runtime limit in seconds\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fUseSmartCnf   =       0;  // use smart CNF computation\n    p.fRewriting     =       0;  // enables AIG rewriting\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n    p.iOutFail       =      -1;  // the number of failed output\n}  \n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCorSetDefaultParams(p *Cec_ParCor_t) {\n    memset( p, 0, sizeof(Cec_ParCor_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.nFrames        =       1;  // the number of time frames\n    p.nBTLimit       =     100;  // conflict limit at a node\n    p.nLevelMax      =      -1;  // (scorr only) the max number of levels\n    p.nStepsMax      =      -1;  // (scorr only) the max number of induction steps\n    p.fLatchCorr     =       0;  // consider only latch outputs\n    p.fConstCorr     =       0;  // consider only constants\n    p.fUseRings      =       1;  // combine classes into rings\n    p.fUseCSat       =       1;  // use circuit-based solver\n//    p-\u003efFirstStop     =       0;  // stop on the first sat output\n    p.fUseSmartCnf   =       0;  // use smart CNF computation\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n}  \n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManChcSetDefaultParams(p *Cec_ParChc_t) {\n    memset( p, 0, sizeof(Cec_ParChc_t) );\n    p.nWords         =      15;  // the number of simulation words\n    p.nRounds        =      15;  // the number of simulation rounds\n    p.nBTLimit       =    1000;  // conflict limit at a node\n    p.fUseRings      =       1;  // use rings\n    p.fUseCSat       =       0;  // use circuit-based solver\n    p.fVeryVerbose   =       0;  // verbose stats\n    p.fVerbose       =       0;  // verbose stats\n}  \n\n/**Function*************************************************************\n\n  Synopsis    [Core procedure for SAT sweeping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSatSolving(pAig *Gia_Man_t, pPars *Cec_ParSat_t, f0Proved int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pPat *Cec_ManPat_t;\n    pPat = Cec_ManPatStart();\n    if pPars.SolverType == -1 {\n        Cec_ManSatSolve( pPat, pAig, pPars, nil, nil, nil, f0Proved );\n    } else {\n        CecG_ManSatSolve( pPat, pAig, pPars, f0Proved ); }\n//    pNew = Gia_ManDupDfsSkip( pAig );\n    pNew = Gia_ManCleanup( pAig );\n    Cec_ManPatStop( pPat );\n    pNew.vSeqModelVec = pAig.vSeqModelVec;\n    pAig.vSeqModelVec = nil;\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Core procedure for simulation.]\n\n  Description [Returns 1 if refinement has happened.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimulationOne(pAig *Gia_Man_t, pPars *Cec_ParSim_t) int32 {\n    var pSim *Cec_ManSim_t;\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    pSim = Cec_ManSimStart( pAig, pPars );\n    if (pAig.pReprs == nil \u0026\u0026 (RetValue = Cec_ManSimClassesPrepare( pSim, -1 ))) ||\n         (RetValue == 0 \u0026\u0026        (RetValue = Cec_ManSimClassesRefine( pSim ))) {\n        Abc_Print( 1, \"The number of failed outputs of the miter = %6d. (Words = %4d. Frames = %4d.)\\n\", \n            pSim.nOuts, pPars.nWords, pPars.nFrames ); }\n    if pPars.fVerbose {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal ); }\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Core procedure for simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSimulation(pAig *Gia_Man_t, pPars *Cec_ParSim_t) {\n    var r, nLitsOld, nLitsNew, nCountNoRef, fStop int32;\n    Gia_ManRandom( 1 );\n    if pPars.fSeqSimulate {\n        Abc_Print( 1, \"Performing rounds of random simulation of %d frames with %d words.\\n\", \n            pPars.nRounds, pPars.nFrames, pPars.nWords ); }\n    nLitsOld = Gia_ManEquivCountLits( pAig );\n    for  r = 0; r \u003c pPars.nRounds; r++  {\n        if Cec_ManSimulationOne( pAig, pPars ) != 0 {\n            fStop = 1;\n            break;\n        }\n        // decide when to stop\n        nLitsNew = Gia_ManEquivCountLits( pAig );\n        if nLitsOld == 0 || nLitsOld \u003e nLitsNew {\n            nLitsOld = nLitsNew;\n            nCountNoRef = 0;\n        \n        } else if nCountNoRef++; nCountNoRef == pPars.nNonRefines {\n            r++;\n            break;\n        }\n        assert(nLitsOld == nLitsNew, \"nLitsOld == nLitsNew\");\n    }\n//    if ( pPars-\u003efVerbose )\n    if r == pPars.nRounds || (fStop != 0) {\n        Abc_Print( 1, \"Random simulation is stopped after %d rounds.\\n\", r );\n    } else {\n        Abc_Print( 1, \"Random simulation saturated after %d rounds.\\n\", r ); }\n    if pPars.fCheckMiter {\n        var nNonConsts int32  = Cec_ManCountNonConstOutputs( pAig );\n        if nNonConsts != 0 {\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Core procedure for SAT sweeping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSatSweeping(pAig *Gia_Man_t, pPars *Cec_ParFra_t, fSilent int32) *Gia_Man_t {\n    var fOutputResult int32;\n    var ParsSat Cec_ParSat_t;\n    var pParsSat *Cec_ParSat_t = \u0026ParsSat;\n    var ParsSim Cec_ParSim_t;\n    var pParsSim *Cec_ParSim_t = \u0026ParsSim;\n    var pIni, pSrm, pTemp *Gia_Man_t;\n    var p *Cec_ManFra_t;\n    var pSim *Cec_ManSim_t;\n    var pPat *Cec_ManPat_t;\n    var i, fTimeOut, nMatches int32;\n    var clk abctime;\n    var clk2 abctime;\n    var clkTotal abctime = Abc_Clock();\n    if pPars.fVerbose {\n        fmt.Printf(\"Simulating %d words for %d rounds. SAT solving with %d conflicts.\\n\", pPars.nWords, pPars.nRounds, pPars.nBTLimit); }\n\n    // duplicate AIG and transfer equivalence classes\n    Gia_ManRandom( 1 );\n    pIni = Gia_ManDup(pAig);\n    pIni.pReprs = pAig.pReprs; pAig.pReprs = nil;\n    pIni.pNexts = pAig.pNexts; pAig.pNexts = nil;\n    if pPars.fUseOrigIds {\n        Gia_ManOrigIdsInit( pIni );\n        Vec_IntFreeP( \u0026pAig.vIdsEquiv );\n        pAig.vIdsEquiv = Vec_IntAlloc( 1000 );\n    }\n    if pAig.vSimsPi {\n        pIni.vSimsPi = Vec_WrdDup(pAig.vSimsPi); \n        pIni.nSimWords = pAig.nSimWords;\n    }\n\n    // prepare the managers\n    // SAT sweeping\n    p = Cec_ManFraStart( pIni, pPars );\n    if pPars.fDualOut {\n        pPars.fColorDiff = 1; }\n    // simulation\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim.nWords      = Abc_MaxInt(2*pAig.nSimWords, pPars.nWords);\n    pParsSim.nFrames     = pPars.nRounds;\n    pParsSim.fCheckMiter = pPars.fCheckMiter;\n    pParsSim.fDualOut    = pPars.fDualOut;\n    pParsSim.fVerbose    = pPars.fVerbose;\n    pSim = Cec_ManSimStart( pIni, pParsSim );\n    // SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat.nBTLimit = pPars.nBTLimit;\n    pParsSat.fVerbose = pPars.fVeryVerbose;\n    // simulation patterns\n    pPat = Cec_ManPatStart();\n    //pPat-\u003efVerbose = pPars-\u003efVeryVerbose;\n\n    // start equivalence classes\nclk = Abc_Clock();\n    if p.pAig.pReprs == nil {\n        if Cec_ManSimClassesPrepare(pSim, -1) || (!p.pAig.nSimWords \u0026\u0026 Cec_ManSimClassesRefine(pSim)) {\n            Gia_ManStop( p.pAig );\n            p.pAig = nil;\n            goto finalize;\n        }\n    }\np.timeSim += Abc_Clock() - clk;\n    // perform solving\n    for  i = 1; i \u003c= pPars.nItersMax; i++  {\n        clk2 = Abc_Clock();\n        nMatches = 0;\n        if pPars.fDualOut {\n            nMatches = Gia_ManEquivSetColors( p.pAig, pPars.fVeryVerbose );\n//            p-\u003epAig-\u003epIso = Cec_ManDetectIsomorphism( p-\u003epAig );\n//            Gia_ManEquivTransform( p-\u003epAig, 1 );\n        }\n        pSrm = Cec_ManFraSpecReduction( p ); \n\n//        Gia_AigerWrite( pSrm, \"gia_srm.aig\", 0, 0, 0 );\n\n        if pPars.fVeryVerbose {\n            Gia_ManPrintStats( pSrm, nil ); }\n        if Gia_ManCoNum(pSrm) == 0 {\n            Gia_ManStop( pSrm );\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Considered all available candidate equivalences.\\n\" ); }\n            if pPars.fDualOut \u0026\u0026 Gia_ManAndNum(p.pAig) \u003e 0 {\n                if pPars.fColorDiff {\n                    if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Switching into reduced mode.\\n\" ); }\n                    pPars.fColorDiff = 0;\n                \n                } else {\n                    if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Switching into normal mode.\\n\" ); }\n                    pPars.fDualOut = 0;\n                }\n                continue;\n            }\n            break;\n        }\nclk = Abc_Clock();\n        if pPars.fRunCSat {\n            Cec_ManSatSolveCSat( pPat, pSrm, pParsSat ); \n        } else {\n            Cec_ManSatSolve( pPat, pSrm, pParsSat, p.pAig.vIdsOrig, p.vXorNodes, pAig.vIdsEquiv, 0 ); } \np.timeSat += Abc_Clock() - clk;\n        if Cec_ManFraClassesUpdate( p, pSim, pPat, pSrm ) {\n            Gia_ManStop( pSrm );\n            Gia_ManStop( p.pAig );\n            p.pAig = nil;\n            goto finalize;\n        }\n        Gia_ManStop( pSrm );\n\n        // update the manager\n        pSim.pAig = p.pAig = Gia_ManEquivReduceAndRemap( pTemp = p.pAig, 0, pParsSim.fDualOut );\n        if p.pAig == nil {\n            p.pAig = pTemp;\n            break;\n        }\n        Gia_ManStop( pTemp );\n        if p.pPars.fVerbose {\n            Abc_Print( 1, \"%3d : P =%7d. D =%7d. F =%6d. M = %7d. And =%8d. \", \n                i, p.nAllProved, p.nAllDisproved, p.nAllFailed, nMatches, Gia_ManAndNum(p.pAig) );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk2 );\n        }\n        if Gia_ManAndNum(p.pAig) == 0 {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Network after reduction is empty.\\n\" ); }\n            break;\n        }\n        // check resource limits\n        if p.pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/int64(time.Second) \u003e= p.pPars.TimeLimit {\n            fTimeOut = 1;\n            break;\n        }\n//        if ( p-\u003enAllFailed \u0026\u0026 !p-\u003enAllProved \u0026\u0026 !p-\u003enAllDisproved )\n        if p.nAllFailed \u003e p.nAllProved + p.nAllDisproved {\n            if pParsSat.nBTLimit \u003e= 10001 {\n                break; }\n            if pPars.fSatSweeping {\n                if p.pPars.fVerbose {\n                    Abc_Print( 1, \"Exceeded the limit on the number of conflicts (%d).\\n\", pParsSat.nBTLimit ); }\n                break;\n            }\n            pParsSat.nBTLimit *= 10;\n            if p.pPars.fVerbose {\n                if p.pPars.fVerbose {\n                    Abc_Print( 1, \"Increasing conflict limit to %d.\\n\", pParsSat.nBTLimit ); }\n                if fOutputResult != 0 {\n                    Gia_AigerWrite( p.pAig, \"gia_cec_temp.aig\", 0, 0, 0 );\n                    Abc_Print( 1,\"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_temp.aig\" );\n                }\n            }\n        }\n        if pPars.fDualOut \u0026\u0026 pPars.fColorDiff \u0026\u0026 (Gia_ManAndNum(p.pAig) \u003c 100000 || p.nAllProved + p.nAllDisproved \u003c 10) {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Switching into reduced mode.\\n\" ); }\n            pPars.fColorDiff = 0;\n        \n//        if ( pPars-\u003efDualOut \u0026\u0026 Gia_ManAndNum(p-\u003epAig) \u003c 20000 )\n        } else if pPars.fDualOut \u0026\u0026 (Gia_ManAndNum(p.pAig) \u003c 20000 || p.nAllProved + p.nAllDisproved \u003c 10) {\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"Switching into normal mode.\\n\" ); }\n            pPars.fColorDiff = 0;\n            pPars.fDualOut = 0;\n        }\n    }\nfinalize:\n    if pPars.fVerbose {\n        fmt.Printf(\"Performed %d SAT calls: P = %d  D = %d  F = %d\\n\", p.nAllProvedS + p.nAllDisprovedS + p.nAllFailedS, p.nAllProvedS, p.nAllDisprovedS, p.nAllFailedS); }\n    if p.pPars.fVerbose \u0026\u0026 p.pAig {\n        Abc_Print( 1, \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(p.pAig), \n            100.0*(Gia_ManAndNum(pAig)-Gia_ManAndNum(p.pAig))/(Gia_ManAndNum(pAig)?Gia_ManAndNum(pAig):1), \n            Gia_ManRegNum(pAig), Gia_ManRegNum(p.pAig), \n            100.0*(Gia_ManRegNum(pAig)-Gia_ManRegNum(p.pAig))/(Gia_ManRegNum(pAig)?Gia_ManRegNum(pAig):1) );\n        Abc_PrintTimeP( 1, \"Sim \", p.timeSim, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTimeP( 1, \"Sat \", p.timeSat-pPat.timeTotalSave, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTimeP( 1, \"Pat \", p.timePat+pPat.timeTotalSave, Abc_Clock() - int32(clkTotal) );\n        Abc_PrintTime( 1, \"Time\", int32((Abc_Clock() - clkTotal)) );\n    }\n\n    pTemp = p.pAig; p.pAig = nil;\n    if pTemp == nil \u0026\u0026 pSim.iOut \u003e= 0 {\n        if !(fSilent != 0) {\n        Abc_Print( 1, \"Disproved at least one output of the miter (zero-based number %d).\\n\", pSim.iOut ); }\n        pPars.iOutFail = pSim.iOut;\n    \n    } else if pSim.pCexes \u0026\u0026 !(fSilent != 0) {\n        Abc_Print( 1, \"Disproved %d outputs of the miter.\\n\", pSim.nOuts ); }\n    if fTimeOut \u0026\u0026 !(fSilent != 0) {\n        Abc_Print( 1, \"Timed out after %d seconds.\\n\", int32((float64(Abc_Clock()) - clkTotal))/int64(time.Second) ); }\n\n    pAig.pCexComb = pSim.pCexComb; pSim.pCexComb = nil;\n    Cec_ManSimStop( pSim );\n    Cec_ManPatStop( pPat );\n    Cec_ManFraStop( p );\n    // inlining of macro ABC_FREE\n    if pTemp != nil { ((pTemp.pReprs) ? (free((char *) (pTemp.pReprs)), (pTemp.pReprs) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if pTemp != nil { ((pTemp.pNexts) ? (free((char *) (pTemp.pNexts)), (pTemp.pNexts) = 0) : 0); }\n    return pTemp;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

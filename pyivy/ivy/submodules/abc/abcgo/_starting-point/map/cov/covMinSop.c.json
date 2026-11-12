@@ -1,0 +1,380 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c",
+  "SHA256": "d3215d711562f4a755d2b888d54174a59d190364fe6f4a2f8bd79255109ea172",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube == p.pBubble );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube != p.pBubble \u0026\u0026 pThis != p.pBubble );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 5593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( v00 != v10 \u0026\u0026 v01 != v11 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( v00 != 3   || v01 != 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 9,
+        "ByteOffset": 5679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( v10 != 3   || v11 != 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 13,
+        "ByteOffset": 6027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v00 == (v10 ^ 3) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 13,
+        "ByteOffset": 6067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v01 == (v11 ^ 3) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 13,
+        "ByteOffset": 8211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v10 == 3 || v11 == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 13,
+        "ByteOffset": 8496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v01 == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 8773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v01 != 3 \u0026\u0026 v10 != 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 21,
+        "ByteOffset": 10238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( pCube == p.ppStore[pCube.nLits] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 13,
+        "ByteOffset": 10912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 5,
+        "ByteOffset": 15555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Min_CubeCheck( pCube ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 420,
+        "Column": 5,
+        "ByteOffset": 15593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube != p.pBubble );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 5,
+        "ByteOffset": 15627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCube.nLits) == Min_CubeCountLits(pCube) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 13,
+        "ByteOffset": 18409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCube.nLits == pCube2.nLits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 13,
+        "ByteOffset": 18602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCubeNew.nLits == pCube.nLits - 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Min_SopMinimize",
+      "Start": 1286,
+      "End": 1685,
+      "BodyStart": 1324,
+      "Original": "void Min_SopMinimize( Min_Man_t * p )\n{\n    int nCubesInit, nCubesOld, nIter;\n    if ( p-\u003enCubes \u003c 3 )\n        return;\n    nIter = 0;\n    nCubesInit = p-\u003enCubes;\n    do {\n        nCubesOld = p-\u003enCubes;\n        Min_SopRewrite( p );\n        nIter++;\n//    printf( \"%d:%d-\u003e%d \", nIter, nCubesInit, p-\u003enCubes );\n    }\n    while ( 100.0*(nCubesOld - p-\u003enCubes)/nCubesOld \u003e 3.0 );\n//    printf( \"\\n\" );\n\n}",
+      "Draft": "func Min_SopMinimize(p *Min_Man_t) {\n    var nCubesInit, nCubesOld, nIter int32;\n    if p.nCubes \u003c 3 {\n        return; }\n    nIter = 0;\n    nCubesInit = p.nCubes;\n    for {\n        nCubesOld = p.nCubes;\n        Min_SopRewrite( p );\n        nIter++;\n//    printf( \"%d:%d-\u003e%d \", nIter, nCubesInit, p-\u003enCubes );\n    \nif !( 100.0*(nCubesOld - p.nCubes)/nCubesOld \u003e 3.0 ) { break }\n}\n    \n//    printf( \"\\n\" );\n\n}"
+    },
+    {
+      "Name": "Min_SopRewrite",
+      "Start": 1921,
+      "End": 11467,
+      "BodyStart": 1958,
+      "Original": "void Min_SopRewrite( Min_Man_t * p )\n{\n    Min_Cube_t * pCube, ** ppPrev;\n    Min_Cube_t * pThis, ** ppPrevT;\n    Min_Cube_t * pTemp;\n    int v00, v01, v10, v11, Var0, Var1, Index, fCont0, fCont1, nCubesOld;\n    int nPairs = 0;\n/*    \n    {\n        Min_Cube_t * pCover;\n        pCover = Min_CoverCollect( p, p-\u003enVars );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCover );\n        Min_CoverExpand( p, pCover );\n    }\n*/\n\n    // insert the bubble before the first cube\n    p-\u003epBubble-\u003epNext = p-\u003eppStore[0];\n    p-\u003eppStore[0] = p-\u003epBubble;\n    p-\u003epBubble-\u003enLits = 0;\n\n    // go through the cubes\n    while ( 1 )\n    {\n        // get the index of the bubble\n        Index = p-\u003epBubble-\u003enLits;\n\n        // find the bubble\n        Min_CoverForEachCubePrev( p-\u003eppStore[Index], pCube, ppPrev )\n            if ( pCube == p-\u003epBubble )\n                break;\n        assert( pCube == p-\u003epBubble );\n\n        // remove the bubble, get the next cube after the bubble\n        *ppPrev = p-\u003epBubble-\u003epNext;\n        pCube = p-\u003epBubble-\u003epNext;\n        if ( pCube == NULL )\n            for ( Index++; Index \u003c= p-\u003enVars; Index++ )\n                if ( p-\u003eppStore[Index] )\n                {\n                    ppPrev = \u0026(p-\u003eppStore[Index]);\n                    pCube = p-\u003eppStore[Index];\n                    break;\n                }\n        // stop if there is no more cubes\n        if ( pCube == NULL )\n            break;\n\n        // find the first dist2 cube\n        Min_CoverForEachCubePrev( pCube-\u003epNext, pThis, ppPrevT )\n            if ( Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) )\n                break;\n        if ( pThis == NULL \u0026\u0026 Index \u003c p-\u003enVars )\n        Min_CoverForEachCubePrev( p-\u003eppStore[Index+1], pThis, ppPrevT )\n            if ( Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) )\n                break;\n        // continue if there is no dist2 cube\n        if ( pThis == NULL )\n        {\n            // insert the bubble after the cube\n            p-\u003epBubble-\u003epNext = pCube-\u003epNext;\n            pCube-\u003epNext = p-\u003epBubble;\n            p-\u003epBubble-\u003enLits = pCube-\u003enLits;\n            continue;\n        }\n        nPairs++;\n/*\nprintf( \"\\n\" );\nMin_CubeWrite( stdout, pCube );\nMin_CubeWrite( stdout, pThis );\n*/\n        // remove the cubes, insert the bubble instead of pCube\n        *ppPrevT = pThis-\u003epNext;\n        *ppPrev = p-\u003epBubble;\n        p-\u003epBubble-\u003epNext = pCube-\u003epNext;\n        p-\u003epBubble-\u003enLits = pCube-\u003enLits;\n        p-\u003enCubes -= 2;\n\n        assert( pCube != p-\u003epBubble \u0026\u0026 pThis != p-\u003epBubble );\n\n\n        // save the dist2 parameters\n        v00 = Min_CubeGetVar( pCube, Var0 );\n        v01 = Min_CubeGetVar( pCube, Var1 );\n        v10 = Min_CubeGetVar( pThis, Var0 );\n        v11 = Min_CubeGetVar( pThis, Var1 );\n        assert( v00 != v10 \u0026\u0026 v01 != v11 );\n        assert( v00 != 3   || v01 != 3 );\n        assert( v10 != 3   || v11 != 3 );\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n        // consider the case when both cubes have non-empty literals\n        if ( v00 != 3 \u0026\u0026 v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3 )\n        {\n            assert( v00 == (v10 ^ 3) );\n            assert( v01 == (v11 ^ 3) );\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            Min_CubeXorVar( pCube, Var1, 3 );\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n            // check if this cube is contained\n            fCont1 = Min_CoverContainsCube( p, pCube );\n            // undo the change\n            Min_CubeXorVar( pCube, Var1, 3 );\n\n            // check if the cubes can be overwritten\n            if ( fCont0 \u0026\u0026 fCont1 )\n            {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube-\u003enLits -= 2;\n                Min_SopAddCube( p, pCube );\n            }\n            else if ( fCont0 )\n            {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                pCube-\u003enLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis-\u003enLits--;\n                Min_SopAddCube( p, pThis );\n            }\n            else if ( fCont1 )\n            {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube-\u003enLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var0, v10 ^ 3 );\n                pThis-\u003enLits--;\n                Min_SopAddCube( p, pThis );\n            }\n            else\n            {\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n            // otherwise, no change is possible\n            continue;\n        }\n\n        // if one of them does not have DC lit, move it\n        if ( v00 != 3 \u0026\u0026 v01 != 3 )\n        {\n            assert( v10 == 3 || v11 == 3 );\n            pTemp = pCube; pCube = pThis; pThis = pTemp;\n            Index = v00; v00 = v10; v10 = Index;\n            Index = v01; v01 = v11; v11 = Index;\n        }\n\n        // make sure the first cube has first var DC\n        if ( v00 != 3 )\n        {\n            assert( v01 == 3 );\n            Index = Var0; Var0 = Var1; Var1 = Index;\n            Index = v00; v00 = v01; v01 = Index;\n            Index = v10; v10 = v11; v11 = Index;\n        }\n\n        // consider both cases: both have DC lit\n        if ( v00 == 3 \u0026\u0026 v11 == 3 )\n        {\n            assert( v01 != 3 \u0026\u0026 v10 != 3 );\n            // try the remaining minterm\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube-\u003enLits++;\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // undo the cube transformations\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube-\u003enLits--;\n            // check the case when both are covered\n            if ( fCont0 )\n            {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube-\u003enLits--;\n                Min_SopAddCube( p, pCube );\n            }\n            else\n            {\n                // try two reduced cubes\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube-\u003enLits++;\n                // remember the cubes\n                nCubesOld = p-\u003enCubes;\n                Min_SopAddCube( p, pCube );\n                // check if the cube is absorbed\n                if ( p-\u003enCubes \u003c nCubesOld + 1 )\n                { // absorbed - add the second cube\n                    Min_SopAddCube( p, pThis );\n                }\n                else\n                { // remove this cube, and try another one\n                    assert( pCube == p-\u003eppStore[pCube-\u003enLits] );\n                    p-\u003eppStore[pCube-\u003enLits] = pCube-\u003epNext;\n                    p-\u003enCubes--;\n\n                    // return the cube to the previous state\n                    Min_CubeXorVar( pCube, Var0, v10 );\n                    pCube-\u003enLits--;\n\n                    // generate another reduced cube\n                    Min_CubeXorVar( pThis, Var1, v01 );\n                    pThis-\u003enLits++;\n\n                    // add both cubes\n                    Min_SopAddCube( p, pCube );\n                    Min_SopAddCube( p, pThis );\n                }\n            }\n        }\n        else // the first cube has DC lit\n        {\n            assert( v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3 );\n            // try the remaining minterm\n            // create the temporary cube equal to the minterm\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pThis );\n            // undo the cube transformations\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check the case when both are covered\n            if ( fCont0 )\n            {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube-\u003enLits--;\n                Min_SopAddCube( p, pCube );\n            }\n            else\n            {\n                // try reshaping the cubes\n                // reduce the first cube\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube-\u003enLits++;\n                // expand the second cube\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis-\u003enLits--;\n                // add both cubes\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n        }\n    }\n//    printf( \"Pairs = %d  \", nPairs );\n}",
+      "Draft": "func Min_SopRewrite(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var pThis *Min_Cube_t;\n    var ppPrevT **Min_Cube_t;\n    var pTemp *Min_Cube_t;\n    var v00, v01, v10, v11, Var0, Var1, Index, fCont0, fCont1, nCubesOld int32;\n    var nPairs int32;\n/*    \n    {\n        Min_Cube_t * pCover;\n        pCover = Min_CoverCollect( p, p-\u003enVars );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCover );\n        Min_CoverExpand( p, pCover );\n    }\n*/\n\n    // insert the bubble before the first cube\n    p.pBubble.pNext = p.ppStore[0];\n    p.ppStore[0] = p.pBubble;\n    p.pBubble.nLits = 0;\n\n    // go through the cubes\n    for {\n        // get the index of the bubble\n        Index = p.pBubble.nLits;\n\n        // find the bubble\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube = p.ppStore[Index],                                                 ppPrev = \u0026(p.ppStore[Index]);                                             (pCube != nil);                                                          ppPrev = \u0026pCube.pNext,                                         pCube = pCube.pNext  {\n            if pCube == p.pBubble {\n                break; }\n        }\n        assert(pCube == p.pBubble, \"pCube == p.pBubble\");\n\n        // remove the bubble, get the next cube after the bubble\n        *ppPrev = p.pBubble.pNext;\n        pCube = p.pBubble.pNext;\n        if pCube == nil {\n            for  Index++; Index \u003c= p.nVars; Index++  {\n                if p.ppStore[Index] {\n                    ppPrev = \u0026(p.ppStore[Index]);\n                    pCube = p.ppStore[Index];\n                    break;\n                }\n            } }\n        // stop if there is no more cubes\n        if pCube == nil {\n            break; }\n\n        // find the first dist2 cube\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pThis = pCube.pNext,                                                 ppPrevT = \u0026(pCube.pNext);                                             (pThis != nil);                                                          ppPrevT = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n            if Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) {\n                break; }\n        }\n        if pThis == nil \u0026\u0026 Index \u003c p.nVars {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pThis = p.ppStore[Index+1],                                                 ppPrevT = \u0026(p.ppStore[Index+1]);                                             (pThis != nil);                                                          ppPrevT = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n            if Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) {\n                break; }\n        } }\n        // continue if there is no dist2 cube\n        if pThis == nil {\n            // insert the bubble after the cube\n            p.pBubble.pNext = pCube.pNext;\n            pCube.pNext = p.pBubble;\n            p.pBubble.nLits = pCube.nLits;\n            continue;\n        }\n        nPairs++;\n/*\nprintf( \"\\n\" );\nMin_CubeWrite( stdout, pCube );\nMin_CubeWrite( stdout, pThis );\n*/\n        // remove the cubes, insert the bubble instead of pCube\n        *ppPrevT = pThis.pNext;\n        *ppPrev = p.pBubble;\n        p.pBubble.pNext = pCube.pNext;\n        p.pBubble.nLits = pCube.nLits;\n        p.nCubes -= 2;\n\n        assert(pCube != p.pBubble \u0026\u0026 pThis != p.pBubble, \"pCube != p.pBubble \u0026\u0026 pThis != p.pBubble\");\n\n\n        // save the dist2 parameters\n        v00 = Min_CubeGetVar( pCube, Var0 );\n        v01 = Min_CubeGetVar( pCube, Var1 );\n        v10 = Min_CubeGetVar( pThis, Var0 );\n        v11 = Min_CubeGetVar( pThis, Var1 );\n        assert(v00 != v10 \u0026\u0026 v01 != v11, \"v00 != v10 \u0026\u0026 v01 != v11\");\n        assert(v00 != 3   || v01 != 3, \"v00 != 3   || v01 != 3\");\n        assert(v10 != 3   || v11 != 3, \"v10 != 3   || v11 != 3\");\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n        // consider the case when both cubes have non-empty literals\n        if v00 != 3 \u0026\u0026 v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3 {\n            assert(v00 == (v10 ^ 3), \"v00 == (v10 ^ 3)\");\n            assert(v01 == (v11 ^ 3), \"v01 == (v11 ^ 3)\");\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            Min_CubeXorVar( pCube, Var1, 3 );\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n            // check if this cube is contained\n            fCont1 = Min_CoverContainsCube( p, pCube );\n            // undo the change\n            Min_CubeXorVar( pCube, Var1, 3 );\n\n            // check if the cubes can be overwritten\n            if fCont0 \u0026\u0026 fCont1 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits -= 2;\n                Min_SopAddCube( p, pCube );\n            \n            } else if fCont0 {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis.nLits--;\n                Min_SopAddCube( p, pThis );\n            \n            } else if fCont1 {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var0, v10 ^ 3 );\n                pThis.nLits--;\n                Min_SopAddCube( p, pThis );\n            \n            } else {\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n            // otherwise, no change is possible\n            continue;\n        }\n\n        // if one of them does not have DC lit, move it\n        if v00 != 3 \u0026\u0026 v01 != 3 {\n            assert(v10 == 3 || v11 == 3, \"v10 == 3 || v11 == 3\");\n            pTemp = pCube; pCube = pThis; pThis = pTemp;\n            Index = v00; v00 = v10; v10 = Index;\n            Index = v01; v01 = v11; v11 = Index;\n        }\n\n        // make sure the first cube has first var DC\n        if v00 != 3 {\n            assert(v01 == 3, \"v01 == 3\");\n            Index = Var0; Var0 = Var1; Var1 = Index;\n            Index = v00; v00 = v01; v01 = Index;\n            Index = v10; v10 = v11; v11 = Index;\n        }\n\n        // consider both cases: both have DC lit\n        if v00 == 3 \u0026\u0026 v11 == 3 {\n            assert(v01 != 3 \u0026\u0026 v10 != 3, \"v01 != 3 \u0026\u0026 v10 != 3\");\n            // try the remaining minterm\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube.nLits++;\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // undo the cube transformations\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube.nLits--;\n            // check the case when both are covered\n            if fCont0 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n            \n            } else {\n                // try two reduced cubes\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube.nLits++;\n                // remember the cubes\n                nCubesOld = p.nCubes;\n                Min_SopAddCube( p, pCube );\n                // check if the cube is absorbed\n                if p.nCubes \u003c nCubesOld + 1 { // absorbed - add the second cube\n                    Min_SopAddCube( p, pThis );\n                \n                } else { // remove this cube, and try another one\n                    assert(pCube == p.ppStore[pCube.nLits], \"pCube == p.ppStore[pCube.nLits]\");\n                    p.ppStore[pCube.nLits] = pCube.pNext;\n                    p.nCubes--;\n\n                    // return the cube to the previous state\n                    Min_CubeXorVar( pCube, Var0, v10 );\n                    pCube.nLits--;\n\n                    // generate another reduced cube\n                    Min_CubeXorVar( pThis, Var1, v01 );\n                    pThis.nLits++;\n\n                    // add both cubes\n                    Min_SopAddCube( p, pCube );\n                    Min_SopAddCube( p, pThis );\n                }\n            }\n        \n        } else { // the first cube has DC lit\n        \n            assert(v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3, \"v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3\");\n            // try the remaining minterm\n            // create the temporary cube equal to the minterm\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pThis );\n            // undo the cube transformations\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check the case when both are covered\n            if fCont0 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n            \n            } else {\n                // try reshaping the cubes\n                // reduce the first cube\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube.nLits++;\n                // expand the second cube\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis.nLits--;\n                // add both cubes\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n        }\n    }\n//    printf( \"Pairs = %d  \", nPairs );\n}"
+    },
+    {
+      "Name": "Min_SopAddCubeInt",
+      "Start": 11875,
+      "End": 13593,
+      "BodyStart": 11934,
+      "Original": "int Min_SopAddCubeInt( Min_Man_t * p, Min_Cube_t * pCube )\n{\n    Min_Cube_t * pThis, * pThis2, ** ppPrev;\n    int i;\n    // try to find the identical cube\n    Min_CoverForEachCube( p-\u003eppStore[pCube-\u003enLits], pThis )\n    {\n        if ( Min_CubesAreEqual( pCube, pThis ) )\n        {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    // try to find a containing cube\n    for ( i = 0; i \u003c (int)pCube-\u003enLits; i++ )\n    Min_CoverForEachCube( p-\u003eppStore[i], pThis )\n    {\n        if ( pThis != p-\u003epBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) )\n        {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    // try to find distance one in the same bin\n    Min_CoverForEachCubePrev( p-\u003eppStore[pCube-\u003enLits], pThis, ppPrev )\n    {\n        if ( Min_CubesDistOne( pCube, pThis, NULL ) )\n        {\n            *ppPrev = pThis-\u003epNext;\n            Min_CubesTransformOr( pCube, pThis );\n            pCube-\u003enLits--;\n            Min_CubeRecycle( p, pThis );\n            p-\u003enCubes--;\n            return 1;\n        }\n    }\n\n    // clean the other cubes using this one\n    for ( i = pCube-\u003enLits + 1; i \u003c= (int)pCube-\u003enVars; i++ )\n    {\n        ppPrev = \u0026p-\u003eppStore[i];\n        Min_CoverForEachCubeSafe( p-\u003eppStore[i], pThis, pThis2 )\n        {\n            if ( pThis != p-\u003epBubble \u0026\u0026 Min_CubeIsContained( pCube, pThis ) )\n            {\n                *ppPrev = pThis-\u003epNext;\n                Min_CubeRecycle( p, pThis );\n                p-\u003enCubes--;\n            }\n            else\n                ppPrev = \u0026pThis-\u003epNext;\n        }\n    }\n\n    // add the cube\n    pCube-\u003epNext = p-\u003eppStore[pCube-\u003enLits];\n    p-\u003eppStore[pCube-\u003enLits] = pCube;\n    p-\u003enCubes++;\n    return 0;\n}",
+      "Draft": "func Min_SopAddCubeInt(p *Min_Man_t, pCube *Min_Cube_t) int32 {\n    var pThis *Min_Cube_t;\n    var pThis2 *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var i int32;\n    // try to find the identical cube\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[pCube.nLits];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        if Min_CubesAreEqual( pCube, pThis ) {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    // try to find a containing cube\n    for  i = 0; i \u003c int32(pCube.nLits); i++  {\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    }\n    // try to find distance one in the same bin\n    // inlining of macro Min_CoverForEachCubePrev\n    for  pThis = p.ppStore[pCube.nLits],                                                 ppPrev = \u0026(p.ppStore[pCube.nLits]);                                             (pThis != nil);                                                          ppPrev = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n        if Min_CubesDistOne( pCube, pThis, nil ) {\n            *ppPrev = pThis.pNext;\n            Min_CubesTransformOr( pCube, pThis );\n            pCube.nLits--;\n            Min_CubeRecycle( p, pThis );\n            p.nCubes--;\n            return 1;\n        }\n    }\n\n    // clean the other cubes using this one\n    for  i = pCube.nLits + 1; i \u003c= int32(pCube.nVars); i++  {\n        ppPrev = \u0026p.ppStore[i];\n        // inlining of macro Min_CoverForEachCubeSafe\n        for  pThis = p.ppStore[i],                                                 pThis2 = pThis? pThis.pNext: nil;                             (pThis != nil);                                                          pThis = pThis2,                                                 pThis2 = pThis? pThis.pNext: nil  {\n            if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pCube, pThis ) {\n                *ppPrev = pThis.pNext;\n                Min_CubeRecycle( p, pThis );\n                p.nCubes--;\n            \n            } else {\n                ppPrev = \u0026pThis.pNext; }\n        }\n    }\n\n    // add the cube\n    pCube.pNext = p.ppStore[pCube.nLits];\n    p.ppStore[pCube.nLits] = pCube;\n    p.nCubes++;\n    return 0;\n}"
+    },
+    {
+      "Name": "Min_SopAddCube",
+      "Start": 13854,
+      "End": 14093,
+      "BodyStart": 13911,
+      "Original": "void Min_SopAddCube( Min_Man_t * p, Min_Cube_t * pCube )\n{\n    assert( Min_CubeCheck( pCube ) );\n    assert( pCube != p-\u003epBubble );\n    assert( (int)pCube-\u003enLits == Min_CubeCountLits(pCube) );\n    while ( Min_SopAddCubeInt( p, pCube ) );\n}",
+      "Draft": "func Min_SopAddCube(p *Min_Man_t, pCube *Min_Cube_t) {\n    assert(Min_CubeCheck( pCube ), \"Min_CubeCheck( pCube )\");\n    assert(pCube != p.pBubble, \"pCube != p.pBubble\");\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  Min_SopAddCubeInt( p, pCube ) != 0  {; }\n}"
+    },
+    {
+      "Name": "Min_SopContain",
+      "Start": 14333,
+      "End": 15124,
+      "BodyStart": 14370,
+      "Original": "void Min_SopContain( Min_Man_t * p )\n{\n    Min_Cube_t * pCube, * pCube2, ** ppPrev;\n    int i, k;\n    for ( i = 0; i \u003c= p-\u003enVars; i++ )\n    {\n        Min_CoverForEachCube( p-\u003eppStore[i], pCube )\n        Min_CoverForEachCubePrev( pCube-\u003epNext, pCube2, ppPrev )\n        {\n            if ( !Min_CubesAreEqual( pCube, pCube2 ) )\n                continue;\n            *ppPrev = pCube2-\u003epNext;\n            Min_CubeRecycle( p, pCube2 );\n            p-\u003enCubes--;\n        }\n        for ( k = i + 1; k \u003c= p-\u003enVars; k++ )\n        Min_CoverForEachCubePrev( p-\u003eppStore[k], pCube2, ppPrev )\n        {\n            if ( !Min_CubeIsContained( pCube, pCube2 ) )\n                continue;\n            *ppPrev = pCube2-\u003epNext;\n            Min_CubeRecycle( p, pCube2 );\n            p-\u003enCubes--;\n        }\n    }\n}",
+      "Draft": "func Min_SopContain(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var pCube2 *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var i, k int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube2 = pCube.pNext,                                                 ppPrev = \u0026(pCube.pNext);                                             (pCube2 != nil);                                                          ppPrev = \u0026pCube2.pNext,                                         pCube2 = pCube2.pNext  {\n            if !Min_CubesAreEqual( pCube, pCube2 ) {\n                continue; }\n            *ppPrev = pCube2.pNext;\n            Min_CubeRecycle( p, pCube2 );\n            p.nCubes--;\n        }\n        }\n        for  k = i + 1; k \u003c= p.nVars; k++  {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube2 = p.ppStore[k],                                                 ppPrev = \u0026(p.ppStore[k]);                                             (pCube2 != nil);                                                          ppPrev = \u0026pCube2.pNext,                                         pCube2 = pCube2.pNext  {\n            if !Min_CubeIsContained( pCube, pCube2 ) {\n                continue; }\n            *ppPrev = pCube2.pNext;\n            Min_CubeRecycle( p, pCube2 );\n            p.nCubes--;\n        }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Min_SopDist1Merge",
+      "Start": 15360,
+      "End": 16027,
+      "BodyStart": 15400,
+      "Original": "void Min_SopDist1Merge( Min_Man_t * p )\n{\n    Min_Cube_t * pCube, * pCube2, * pCubeNew;\n    int i;\n    for ( i = p-\u003enVars; i \u003e= 0; i-- )\n    {\n        Min_CoverForEachCube( p-\u003eppStore[i], pCube )\n        Min_CoverForEachCube( pCube-\u003epNext, pCube2 )\n        {\n            assert( pCube-\u003enLits == pCube2-\u003enLits );\n            if ( !Min_CubesDistOne( pCube, pCube2, NULL ) )\n                continue;\n            pCubeNew = Min_CubesXor( p, pCube, pCube2 );\n            assert( pCubeNew-\u003enLits == pCube-\u003enLits - 1 );\n            pCubeNew-\u003epNext = p-\u003eppStore[pCubeNew-\u003enLits];\n            p-\u003eppStore[pCubeNew-\u003enLits] = pCubeNew;\n            p-\u003enCubes++;\n        }\n    }\n}",
+      "Draft": "func Min_SopDist1Merge(p *Min_Man_t) {\n    var pCube, pCube2, pCubeNew *Min_Cube_t;\n    var i int32;\n    for  i = p.nVars; i \u003e= 0; i--  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube2 = pCube.pNext;                                                 (pCube2 != nil);                                                          pCube2 = pCube2.pNext  {\n            assert(pCube.nLits == pCube2.nLits, \"pCube.nLits == pCube2.nLits\");\n            if !Min_CubesDistOne( pCube, pCube2, nil ) {\n                continue; }\n            pCubeNew = Min_CubesXor( p, pCube, pCube2 );\n            assert(pCubeNew.nLits == pCube.nLits - 1, \"pCubeNew.nLits == pCube.nLits - 1\");\n            pCubeNew.pNext = p.ppStore[pCubeNew.nLits];\n            p.ppStore[pCubeNew.nLits] = pCubeNew;\n            p.nCubes++;\n        }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Min_SopComplement",
+      "Start": 16263,
+      "End": 17873,
+      "BodyStart": 16332,
+      "Original": "Min_Cube_t * Min_SopComplement( Min_Man_t * p, Min_Cube_t * pSharp )\n{\n     Vec_Int_t * vVars;\n     Min_Cube_t * pCover, * pCube, * pNext, * pReady, * pThis, ** ppPrev;\n     int Num, Value, i;\n\n     // get the variables\n     vVars = Vec_IntAlloc( 100 );\n    // create the tautology cube\n     pCover = Min_CubeAlloc( p );\n     // sharp it with all cubes\n     Min_CoverForEachCube( pSharp, pCube )\n     Min_CoverForEachCubePrev( pCover, pThis, ppPrev )\n     {\n        if ( Min_CubesDisjoint( pThis, pCube ) )\n            continue;\n        // remember the next pointer\n        pNext = pThis-\u003epNext;\n        // get the variables, in which pThis is '-' while pCube is fixed\n        Min_CoverGetDisjVars( pThis, pCube, vVars );\n        // generate the disjoint cubes\n        pReady = pThis;\n        Vec_IntForEachEntryReverse( vVars, Num, i )\n        {\n            // correct the literal\n            Min_CubeXorVar( pReady, vVars-\u003epArray[i], 3 );\n            if ( i == 0 )\n                break;\n            // create the new cube and clean this value\n            Value = Min_CubeGetVar( pReady, vVars-\u003epArray[i] );\n            pReady = Min_CubeDup( p, pReady );\n            Min_CubeXorVar( pReady, vVars-\u003epArray[i], 3 ^ Value );\n            // add to the cover\n            *ppPrev = pReady;\n            ppPrev = \u0026pReady-\u003epNext;\n        }\n        pThis = pReady;\n        pThis-\u003epNext = pNext;\n     }\n     Vec_IntFree( vVars );\n\n     // perform dist-1 merge and contain\n     Min_CoverExpandRemoveEqual( p, pCover );\n     Min_SopDist1Merge( p );\n     Min_SopContain( p );\n     return Min_CoverCollect( p, p-\u003enVars );\n}",
+      "Draft": "func Min_SopComplement(p *Min_Man_t, pSharp *Min_Cube_t) *Min_Cube_t {\n     var vVars *Vec_Int_t;\n     var pCover *Min_Cube_t;\n     var pCube *Min_Cube_t;\n     var pNext *Min_Cube_t;\n     var pReady *Min_Cube_t;\n     var pThis *Min_Cube_t;\n     var ppPrev **Min_Cube_t;\n     var Num, Value, i int32;\n\n     // get the variables\n     vVars = Vec_IntAlloc( 100 );\n    // create the tautology cube\n     pCover = Min_CubeAlloc( p );\n     // sharp it with all cubes\n     // inlining of macro Min_CoverForEachCube\n     for  pCube = pSharp;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n     // inlining of macro Min_CoverForEachCubePrev\n     for  pThis = pCover,                                                 ppPrev = \u0026(pCover);                                             (pThis != nil);                                                          ppPrev = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n        if Min_CubesDisjoint( pThis, pCube ) {\n            continue; }\n        // remember the next pointer\n        pNext = pThis.pNext;\n        // get the variables, in which pThis is '-' while pCube is fixed\n        Min_CoverGetDisjVars( pThis, pCube, vVars );\n        // generate the disjoint cubes\n        pReady = pThis;\n        // inlining of macro Vec_IntForEachEntryReverse\n        for  i = Vec_IntSize(vVars) - 1; (i \u003e= 0) \u0026\u0026 (((Num) = Vec_IntEntry(vVars, i)), 1); i--  {\n            // correct the literal\n            Min_CubeXorVar( pReady, vVars.pArray[i], 3 );\n            if i == 0 {\n                break; }\n            // create the new cube and clean this value\n            Value = Min_CubeGetVar( pReady, vVars.pArray[i] );\n            pReady = Min_CubeDup( p, pReady );\n            Min_CubeXorVar( pReady, vVars.pArray[i], 3 ^ Value );\n            // add to the cover\n            *ppPrev = pReady;\n            ppPrev = \u0026pReady.pNext;\n        }\n        pThis = pReady;\n        pThis.pNext = pNext;\n     }\n     }\n     Vec_IntFree( vVars );\n\n     // perform dist-1 merge and contain\n     Min_CoverExpandRemoveEqual( p, pCover );\n     Min_SopDist1Merge( p );\n     Min_SopContain( p );\n     return Min_CoverCollect( p, p.nVars );\n}"
+    },
+    {
+      "Name": "Min_SopCheck",
+      "Start": 18109,
+      "End": 18891,
+      "BodyStart": 18143,
+      "Original": "int Min_SopCheck( Min_Man_t * p )\n{\n    Min_Cube_t * pCube, * pThis;\n    int i;\n\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, 2*0+1 );\n    Min_CubeXorBit( pCube, 2*1+1 );\n    Min_CubeXorBit( pCube, 2*2+0 );\n    Min_CubeXorBit( pCube, 2*3+0 );\n    Min_CubeXorBit( pCube, 2*4+0 );\n    Min_CubeXorBit( pCube, 2*5+1 );\n    Min_CubeXorBit( pCube, 2*6+1 );\n    pCube-\u003enLits = 7;\n\n//    Min_CubeWrite( stdout, pCube );\n\n    // check that the cubes contain it\n    for ( i = 0; i \u003c= p-\u003enVars; i++ )\n        Min_CoverForEachCube( p-\u003eppStore[i], pThis )\n            if ( pThis != p-\u003epBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) )\n            {\n                Min_CubeRecycle( p, pCube );\n                return 1;\n            }\n    Min_CubeRecycle( p, pCube );\n    return 0;\n}",
+      "Draft": "func Min_SopCheck(p *Min_Man_t) int32 {\n    var pCube, pThis *Min_Cube_t;\n    var i int32;\n\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, 2*0+1 );\n    Min_CubeXorBit( pCube, 2*1+1 );\n    Min_CubeXorBit( pCube, 2*2+0 );\n    Min_CubeXorBit( pCube, 2*3+0 );\n    Min_CubeXorBit( pCube, 2*4+0 );\n    Min_CubeXorBit( pCube, 2*5+1 );\n    Min_CubeXorBit( pCube, 2*6+1 );\n    pCube.nLits = 7;\n\n//    Min_CubeWrite( stdout, pCube );\n\n    // check that the cubes contain it\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n            if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) {\n                Min_CubeRecycle( p, pCube );\n                return 1;\n            }\n        }\n    }\n    Min_CubeRecycle( p, pCube );\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::mechanical::do::1452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1452,
+      "End": 1454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1286,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1921,
+      "End": 11467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::ternary::Min_SopAddCubeInt",
+      "Category": "ternary-review",
+      "Symbol": "Min_SopAddCubeInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11875,
+      "End": 13593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopAddCubeInt",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopAddCubeInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11875,
+      "End": 13593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopAddCube",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopAddCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13854,
+      "End": 14093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopContain",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopContain",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14333,
+      "End": 15124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopDist1Merge",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopDist1Merge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15360,
+      "End": 16027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopComplement",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16263,
+      "End": 17873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::Min_SopCheck",
+      "Category": "semantic-review",
+      "Symbol": "Min_SopCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18109,
+      "End": 18891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinSop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19138
+    }
+  ],
+  "Draft": "package cov\n\n/**CFile****************************************************************\n\n  FileName    [covMinSop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [SOP manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covMinSop.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"covInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Min_SopRewrite( Min_Man_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopMinimize(p *Min_Man_t) {\n    var nCubesInit, nCubesOld, nIter int32;\n    if p.nCubes \u003c 3 {\n        return; }\n    nIter = 0;\n    nCubesInit = p.nCubes;\n    for {\n        nCubesOld = p.nCubes;\n        Min_SopRewrite( p );\n        nIter++;\n//    printf( \"%d:%d-\u003e%d \", nIter, nCubesInit, p-\u003enCubes );\n    \nif !( 100.0*(nCubesOld - p.nCubes)/nCubesOld \u003e 3.0 ) { break }\n}\n    \n//    printf( \"\\n\" );\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopRewrite(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var pThis *Min_Cube_t;\n    var ppPrevT **Min_Cube_t;\n    var pTemp *Min_Cube_t;\n    var v00, v01, v10, v11, Var0, Var1, Index, fCont0, fCont1, nCubesOld int32;\n    var nPairs int32;\n/*    \n    {\n        Min_Cube_t * pCover;\n        pCover = Min_CoverCollect( p, p-\u003enVars );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCover );\n        Min_CoverExpand( p, pCover );\n    }\n*/\n\n    // insert the bubble before the first cube\n    p.pBubble.pNext = p.ppStore[0];\n    p.ppStore[0] = p.pBubble;\n    p.pBubble.nLits = 0;\n\n    // go through the cubes\n    for {\n        // get the index of the bubble\n        Index = p.pBubble.nLits;\n\n        // find the bubble\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube = p.ppStore[Index],                                                 ppPrev = \u0026(p.ppStore[Index]);                                             (pCube != nil);                                                          ppPrev = \u0026pCube.pNext,                                         pCube = pCube.pNext  {\n            if pCube == p.pBubble {\n                break; }\n        }\n        assert(pCube == p.pBubble, \"pCube == p.pBubble\");\n\n        // remove the bubble, get the next cube after the bubble\n        *ppPrev = p.pBubble.pNext;\n        pCube = p.pBubble.pNext;\n        if pCube == nil {\n            for  Index++; Index \u003c= p.nVars; Index++  {\n                if p.ppStore[Index] {\n                    ppPrev = \u0026(p.ppStore[Index]);\n                    pCube = p.ppStore[Index];\n                    break;\n                }\n            } }\n        // stop if there is no more cubes\n        if pCube == nil {\n            break; }\n\n        // find the first dist2 cube\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pThis = pCube.pNext,                                                 ppPrevT = \u0026(pCube.pNext);                                             (pThis != nil);                                                          ppPrevT = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n            if Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) {\n                break; }\n        }\n        if pThis == nil \u0026\u0026 Index \u003c p.nVars {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pThis = p.ppStore[Index+1],                                                 ppPrevT = \u0026(p.ppStore[Index+1]);                                             (pThis != nil);                                                          ppPrevT = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n            if Min_CubesDistTwo( pCube, pThis, \u0026Var0, \u0026Var1 ) {\n                break; }\n        } }\n        // continue if there is no dist2 cube\n        if pThis == nil {\n            // insert the bubble after the cube\n            p.pBubble.pNext = pCube.pNext;\n            pCube.pNext = p.pBubble;\n            p.pBubble.nLits = pCube.nLits;\n            continue;\n        }\n        nPairs++;\n/*\nprintf( \"\\n\" );\nMin_CubeWrite( stdout, pCube );\nMin_CubeWrite( stdout, pThis );\n*/\n        // remove the cubes, insert the bubble instead of pCube\n        *ppPrevT = pThis.pNext;\n        *ppPrev = p.pBubble;\n        p.pBubble.pNext = pCube.pNext;\n        p.pBubble.nLits = pCube.nLits;\n        p.nCubes -= 2;\n\n        assert(pCube != p.pBubble \u0026\u0026 pThis != p.pBubble, \"pCube != p.pBubble \u0026\u0026 pThis != p.pBubble\");\n\n\n        // save the dist2 parameters\n        v00 = Min_CubeGetVar( pCube, Var0 );\n        v01 = Min_CubeGetVar( pCube, Var1 );\n        v10 = Min_CubeGetVar( pThis, Var0 );\n        v11 = Min_CubeGetVar( pThis, Var1 );\n        assert(v00 != v10 \u0026\u0026 v01 != v11, \"v00 != v10 \u0026\u0026 v01 != v11\");\n        assert(v00 != 3   || v01 != 3, \"v00 != 3   || v01 != 3\");\n        assert(v10 != 3   || v11 != 3, \"v10 != 3   || v11 != 3\");\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n\n        // consider the case when both cubes have non-empty literals\n        if v00 != 3 \u0026\u0026 v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3 {\n            assert(v00 == (v10 ^ 3), \"v00 == (v10 ^ 3)\");\n            assert(v01 == (v11 ^ 3), \"v01 == (v11 ^ 3)\");\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, 3 );\n            Min_CubeXorVar( pCube, Var1, 3 );\n//printf( \"\\n\" );\n//Min_CubeWrite( stdout, pCube );\n//Min_CubeWrite( stdout, pThis );\n            // check if this cube is contained\n            fCont1 = Min_CoverContainsCube( p, pCube );\n            // undo the change\n            Min_CubeXorVar( pCube, Var1, 3 );\n\n            // check if the cubes can be overwritten\n            if fCont0 \u0026\u0026 fCont1 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits -= 2;\n                Min_SopAddCube( p, pCube );\n            \n            } else if fCont0 {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var0, v00 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis.nLits--;\n                Min_SopAddCube( p, pThis );\n            \n            } else if fCont1 {\n                // expand both cubes and add them\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n                Min_CubeXorVar( pThis, Var0, v10 ^ 3 );\n                pThis.nLits--;\n                Min_SopAddCube( p, pThis );\n            \n            } else {\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n            // otherwise, no change is possible\n            continue;\n        }\n\n        // if one of them does not have DC lit, move it\n        if v00 != 3 \u0026\u0026 v01 != 3 {\n            assert(v10 == 3 || v11 == 3, \"v10 == 3 || v11 == 3\");\n            pTemp = pCube; pCube = pThis; pThis = pTemp;\n            Index = v00; v00 = v10; v10 = Index;\n            Index = v01; v01 = v11; v11 = Index;\n        }\n\n        // make sure the first cube has first var DC\n        if v00 != 3 {\n            assert(v01 == 3, \"v01 == 3\");\n            Index = Var0; Var0 = Var1; Var1 = Index;\n            Index = v00; v00 = v01; v01 = Index;\n            Index = v10; v10 = v11; v11 = Index;\n        }\n\n        // consider both cases: both have DC lit\n        if v00 == 3 \u0026\u0026 v11 == 3 {\n            assert(v01 != 3 \u0026\u0026 v10 != 3, \"v01 != 3 \u0026\u0026 v10 != 3\");\n            // try the remaining minterm\n            // create the temporary cube equal to the first corner\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube.nLits++;\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pCube );\n            // undo the cube transformations\n            Min_CubeXorVar( pCube, Var0, v10 );\n            Min_CubeXorVar( pCube, Var1, 3   );\n            pCube.nLits--;\n            // check the case when both are covered\n            if fCont0 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n            \n            } else {\n                // try two reduced cubes\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube.nLits++;\n                // remember the cubes\n                nCubesOld = p.nCubes;\n                Min_SopAddCube( p, pCube );\n                // check if the cube is absorbed\n                if p.nCubes \u003c nCubesOld + 1 { // absorbed - add the second cube\n                    Min_SopAddCube( p, pThis );\n                \n                } else { // remove this cube, and try another one\n                    assert(pCube == p.ppStore[pCube.nLits], \"pCube == p.ppStore[pCube.nLits]\");\n                    p.ppStore[pCube.nLits] = pCube.pNext;\n                    p.nCubes--;\n\n                    // return the cube to the previous state\n                    Min_CubeXorVar( pCube, Var0, v10 );\n                    pCube.nLits--;\n\n                    // generate another reduced cube\n                    Min_CubeXorVar( pThis, Var1, v01 );\n                    pThis.nLits++;\n\n                    // add both cubes\n                    Min_SopAddCube( p, pCube );\n                    Min_SopAddCube( p, pThis );\n                }\n            }\n        \n        } else { // the first cube has DC lit\n        \n            assert(v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3, \"v01 != 3 \u0026\u0026 v10 != 3 \u0026\u0026 v11 != 3\");\n            // try the remaining minterm\n            // create the temporary cube equal to the minterm\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check if this cube is contained\n            fCont0 = Min_CoverContainsCube( p, pThis );\n            // undo the cube transformations\n            Min_CubeXorVar( pThis, Var0, 3 );\n            // check the case when both are covered\n            if fCont0 {\n                // one of the cubes can be recycled, the other expanded and added\n                Min_CubeRecycle( p, pThis );\n                // remove the literals\n                Min_CubeXorVar( pCube, Var1, v01 ^ 3 );\n                pCube.nLits--;\n                Min_SopAddCube( p, pCube );\n            \n            } else {\n                // try reshaping the cubes\n                // reduce the first cube\n                Min_CubeXorVar( pCube, Var0, v10 );\n                pCube.nLits++;\n                // expand the second cube\n                Min_CubeXorVar( pThis, Var1, v11 ^ 3 );\n                pThis.nLits--;\n                // add both cubes\n                Min_SopAddCube( p, pCube );\n                Min_SopAddCube( p, pThis );\n            }\n        }\n    }\n//    printf( \"Pairs = %d  \", nPairs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds cube to the SOP cover stored in the manager.]\n\n  Description [Returns 0 if the cube is added or removed. Returns 1\n  if the cube is glued with some other cube and has to be added again.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopAddCubeInt(p *Min_Man_t, pCube *Min_Cube_t) int32 {\n    var pThis *Min_Cube_t;\n    var pThis2 *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var i int32;\n    // try to find the identical cube\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[pCube.nLits];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        if Min_CubesAreEqual( pCube, pThis ) {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    // try to find a containing cube\n    for  i = 0; i \u003c int32(pCube.nLits); i++  {\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) {\n            Min_CubeRecycle( p, pCube );\n            return 0;\n        }\n    }\n    }\n    // try to find distance one in the same bin\n    // inlining of macro Min_CoverForEachCubePrev\n    for  pThis = p.ppStore[pCube.nLits],                                                 ppPrev = \u0026(p.ppStore[pCube.nLits]);                                             (pThis != nil);                                                          ppPrev = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n        if Min_CubesDistOne( pCube, pThis, nil ) {\n            *ppPrev = pThis.pNext;\n            Min_CubesTransformOr( pCube, pThis );\n            pCube.nLits--;\n            Min_CubeRecycle( p, pThis );\n            p.nCubes--;\n            return 1;\n        }\n    }\n\n    // clean the other cubes using this one\n    for  i = pCube.nLits + 1; i \u003c= int32(pCube.nVars); i++  {\n        ppPrev = \u0026p.ppStore[i];\n        // inlining of macro Min_CoverForEachCubeSafe\n        for  pThis = p.ppStore[i],                                                 pThis2 = pThis? pThis.pNext: nil;                             (pThis != nil);                                                          pThis = pThis2,                                                 pThis2 = pThis? pThis.pNext: nil  {\n            if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pCube, pThis ) {\n                *ppPrev = pThis.pNext;\n                Min_CubeRecycle( p, pThis );\n                p.nCubes--;\n            \n            } else {\n                ppPrev = \u0026pThis.pNext; }\n        }\n    }\n\n    // add the cube\n    pCube.pNext = p.ppStore[pCube.nLits];\n    p.ppStore[pCube.nLits] = pCube;\n    p.nCubes++;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the cube to storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopAddCube(p *Min_Man_t, pCube *Min_Cube_t) {\n    assert(Min_CubeCheck( pCube ), \"Min_CubeCheck( pCube )\");\n    assert(pCube != p.pBubble, \"pCube != p.pBubble\");\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  Min_SopAddCubeInt( p, pCube ) != 0  {; }\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopContain(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var pCube2 *Min_Cube_t;\n    var ppPrev **Min_Cube_t;\n    var i, k int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube2 = pCube.pNext,                                                 ppPrev = \u0026(pCube.pNext);                                             (pCube2 != nil);                                                          ppPrev = \u0026pCube2.pNext,                                         pCube2 = pCube2.pNext  {\n            if !Min_CubesAreEqual( pCube, pCube2 ) {\n                continue; }\n            *ppPrev = pCube2.pNext;\n            Min_CubeRecycle( p, pCube2 );\n            p.nCubes--;\n        }\n        }\n        for  k = i + 1; k \u003c= p.nVars; k++  {\n        // inlining of macro Min_CoverForEachCubePrev\n        for  pCube2 = p.ppStore[k],                                                 ppPrev = \u0026(p.ppStore[k]);                                             (pCube2 != nil);                                                          ppPrev = \u0026pCube2.pNext,                                         pCube2 = pCube2.pNext  {\n            if !Min_CubeIsContained( pCube, pCube2 ) {\n                continue; }\n            *ppPrev = pCube2.pNext;\n            Min_CubeRecycle( p, pCube2 );\n            p.nCubes--;\n        }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopDist1Merge(p *Min_Man_t) {\n    var pCube, pCube2, pCubeNew *Min_Cube_t;\n    var i int32;\n    for  i = p.nVars; i \u003e= 0; i--  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube2 = pCube.pNext;                                                 (pCube2 != nil);                                                          pCube2 = pCube2.pNext  {\n            assert(pCube.nLits == pCube2.nLits, \"pCube.nLits == pCube2.nLits\");\n            if !Min_CubesDistOne( pCube, pCube2, nil ) {\n                continue; }\n            pCubeNew = Min_CubesXor( p, pCube, pCube2 );\n            assert(pCubeNew.nLits == pCube.nLits - 1, \"pCubeNew.nLits == pCube.nLits - 1\");\n            pCubeNew.pNext = p.ppStore[pCubeNew.nLits];\n            p.ppStore[pCubeNew.nLits] = pCubeNew;\n            p.nCubes++;\n        }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopComplement(p *Min_Man_t, pSharp *Min_Cube_t) *Min_Cube_t {\n     var vVars *Vec_Int_t;\n     var pCover *Min_Cube_t;\n     var pCube *Min_Cube_t;\n     var pNext *Min_Cube_t;\n     var pReady *Min_Cube_t;\n     var pThis *Min_Cube_t;\n     var ppPrev **Min_Cube_t;\n     var Num, Value, i int32;\n\n     // get the variables\n     vVars = Vec_IntAlloc( 100 );\n    // create the tautology cube\n     pCover = Min_CubeAlloc( p );\n     // sharp it with all cubes\n     // inlining of macro Min_CoverForEachCube\n     for  pCube = pSharp;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n     // inlining of macro Min_CoverForEachCubePrev\n     for  pThis = pCover,                                                 ppPrev = \u0026(pCover);                                             (pThis != nil);                                                          ppPrev = \u0026pThis.pNext,                                         pThis = pThis.pNext  {\n        if Min_CubesDisjoint( pThis, pCube ) {\n            continue; }\n        // remember the next pointer\n        pNext = pThis.pNext;\n        // get the variables, in which pThis is '-' while pCube is fixed\n        Min_CoverGetDisjVars( pThis, pCube, vVars );\n        // generate the disjoint cubes\n        pReady = pThis;\n        // inlining of macro Vec_IntForEachEntryReverse\n        for  i = Vec_IntSize(vVars) - 1; (i \u003e= 0) \u0026\u0026 (((Num) = Vec_IntEntry(vVars, i)), 1); i--  {\n            // correct the literal\n            Min_CubeXorVar( pReady, vVars.pArray[i], 3 );\n            if i == 0 {\n                break; }\n            // create the new cube and clean this value\n            Value = Min_CubeGetVar( pReady, vVars.pArray[i] );\n            pReady = Min_CubeDup( p, pReady );\n            Min_CubeXorVar( pReady, vVars.pArray[i], 3 ^ Value );\n            // add to the cover\n            *ppPrev = pReady;\n            ppPrev = \u0026pReady.pNext;\n        }\n        pThis = pReady;\n        pThis.pNext = pNext;\n     }\n     }\n     Vec_IntFree( vVars );\n\n     // perform dist-1 merge and contain\n     Min_CoverExpandRemoveEqual( p, pCover );\n     Min_SopDist1Merge( p );\n     Min_SopContain( p );\n     return Min_CoverCollect( p, p.nVars );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_SopCheck(p *Min_Man_t) int32 {\n    var pCube, pThis *Min_Cube_t;\n    var i int32;\n\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, 2*0+1 );\n    Min_CubeXorBit( pCube, 2*1+1 );\n    Min_CubeXorBit( pCube, 2*2+0 );\n    Min_CubeXorBit( pCube, 2*3+0 );\n    Min_CubeXorBit( pCube, 2*4+0 );\n    Min_CubeXorBit( pCube, 2*5+1 );\n    Min_CubeXorBit( pCube, 2*6+1 );\n    pCube.nLits = 7;\n\n//    Min_CubeWrite( stdout, pCube );\n\n    // check that the cubes contain it\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n            if pThis != p.pBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) {\n                Min_CubeRecycle( p, pCube );\n                return 1;\n            }\n        }\n    }\n    Min_CubeRecycle( p, pCube );\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

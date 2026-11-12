@@ -1,0 +1,261 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c",
+  "SHA256": "68b890548f626033d6635103a8f3c65a0eac342934b51eed22f56cf6573a39f2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMuxes != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Xor = %d.\\n\", Gia_ObjIsXor(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 4085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fanin0 = %d.  Fanin1 = %d.\\n\", Gia_ObjFaninId0(pObj, 352), Gia_ObjFaninId1(pObj, 352) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fan00 = %d.  Fan01 = %d.   Fan10 = %d.  Fan11 = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 5340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Collected XORs: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 13,
+        "ByteOffset": 6752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %5d : Supp = %5d.  Cone = %5d.\\n\", i, nSupp, nCone );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fadds = %d. Hadds = %d.  Root nodes found = %d.\\n\", Vec_IntSize(vFadds)/5, nHadds, Vec_IntSize(vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 8275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_AcecMark_rec",
+      "Start": 1233,
+      "End": 1568,
+      "BodyStart": 1294,
+      "Original": "void Gia_AcecMark_rec( Gia_Man_t * p, int iObj, int fFirst )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    if ( pObj-\u003efMark0 \u0026\u0026 !fFirst )\n        return;\n    assert( Gia_ObjIsAnd(pObj) );\n    pObj-\u003efMark1 = 1;\n    Gia_AcecMark_rec( p, Gia_ObjFaninId0(pObj, iObj), 0 );\n    Gia_AcecMark_rec( p, Gia_ObjFaninId1(pObj, iObj), 0 );\n}",
+      "Draft": "func Gia_AcecMark_rec(p *Gia_Man_t, iObj int32, fFirst int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    if pObj.fMark0 \u0026\u0026 !(fFirst != 0) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pObj.fMark1 = 1;\n    Gia_AcecMark_rec( p, Gia_ObjFaninId0(pObj, iObj), 0 );\n    Gia_AcecMark_rec( p, Gia_ObjFaninId1(pObj, iObj), 0 );\n}"
+    },
+    {
+      "Name": "Gia_AcecMarkFadd",
+      "Start": 1569,
+      "End": 2031,
+      "BodyStart": 1621,
+      "Original": "void Gia_AcecMarkFadd( Gia_Man_t * p, int * pSigs )\n{\n//    if ( Gia_ManObj(p, pSigs[3])-\u003efMark1 || Gia_ManObj(p, pSigs[4])-\u003efMark1 )\n//        return;\n    Gia_ManObj( p, pSigs[0] )-\u003efMark0 = 1;\n    Gia_ManObj( p, pSigs[1] )-\u003efMark0 = 1;\n    Gia_ManObj( p, pSigs[2] )-\u003efMark0 = 1;\n//    assert( !Gia_ManObj(p, pSigs[3])-\u003efMark1 );\n//    assert( !Gia_ManObj(p, pSigs[4])-\u003efMark1 );\n    Gia_AcecMark_rec( p, pSigs[3], 1 );\n    Gia_AcecMark_rec( p, pSigs[4], 1 );\n}",
+      "Draft": "func Gia_AcecMarkFadd(p *Gia_Man_t, pSigs *int32) {\n//    if ( Gia_ManObj(p, pSigs[3])-\u003efMark1 || Gia_ManObj(p, pSigs[4])-\u003efMark1 )\n//        return;\n    Gia_ManObj( p, pSigs[0] ).fMark0 = 1;\n    Gia_ManObj( p, pSigs[1] ).fMark0 = 1;\n    Gia_ManObj( p, pSigs[2] ).fMark0 = 1;\n//    assert( !Gia_ManObj(p, pSigs[3])-\u003efMark1 );\n//    assert( !Gia_ManObj(p, pSigs[4])-\u003efMark1 );\n    Gia_AcecMark_rec( p, pSigs[3], 1 );\n    Gia_AcecMark_rec( p, pSigs[4], 1 );\n}"
+    },
+    {
+      "Name": "Gia_AcecMarkHadd",
+      "Start": 2032,
+      "End": 2399,
+      "BodyStart": 2084,
+      "Original": "void Gia_AcecMarkHadd( Gia_Man_t * p, int * pSigs )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p, pSigs[0] );\n    int iFan0 = Gia_ObjFaninId0( pObj, pSigs[0] );\n    int iFan1 = Gia_ObjFaninId1( pObj, pSigs[0] );\n    Gia_ManObj( p, iFan0 )-\u003efMark0 = 1;\n    Gia_ManObj( p, iFan1 )-\u003efMark0 = 1;\n    Gia_AcecMark_rec( p, pSigs[0], 1 );\n    Gia_AcecMark_rec( p, pSigs[1], 1 );\n}",
+      "Draft": "func Gia_AcecMarkHadd(p *Gia_Man_t, pSigs *int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, pSigs[0] );\n    var iFan0 int32  = Gia_ObjFaninId0( pObj, pSigs[0] );\n    var iFan1 int32  = Gia_ObjFaninId1( pObj, pSigs[0] );\n    Gia_ManObj( p, iFan0 ).fMark0 = 1;\n    Gia_ManObj( p, iFan1 ).fMark0 = 1;\n    Gia_AcecMark_rec( p, pSigs[0], 1 );\n    Gia_AcecMark_rec( p, pSigs[1], 1 );\n}"
+    },
+    {
+      "Name": "Gia_AcecCollectXors_rec",
+      "Start": 2679,
+      "End": 3057,
+      "BodyStart": 2780,
+      "Original": "void Gia_AcecCollectXors_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Bit_t * vMap, Vec_Int_t * vXors )\n{\n    if ( !Gia_ObjIsXor(pObj) )//|| Vec_BitEntry(vMap, Gia_ObjId(p, pObj)) )\n        return;\n    Vec_IntPush( vXors, Gia_ObjId(p, pObj) );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin0(pObj), vMap, vXors );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin1(pObj), vMap, vXors );\n}",
+      "Draft": "func Gia_AcecCollectXors_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vMap *Vec_Bit_t, vXors *Vec_Int_t) {\n    if !Gia_ObjIsXor(pObj) {//|| Vec_BitEntry(vMap, Gia_ObjId(p, pObj)) )\n        return; }\n    Vec_IntPush( vXors, Gia_ObjId(p, pObj) );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin0(pObj), vMap, vXors );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin1(pObj), vMap, vXors );\n}"
+    },
+    {
+      "Name": "Gia_AcecCollectXors",
+      "Start": 3058,
+      "End": 3317,
+      "BodyStart": 3125,
+      "Original": "Vec_Int_t * Gia_AcecCollectXors( Gia_Man_t * p, Vec_Bit_t * vMap )\n{\n    Vec_Int_t * vXors = Vec_IntAlloc( 100 );\n    Gia_Obj_t * pObj = Gia_ObjFanin0( Gia_ManCo(p, Gia_ManCoNum(p)-1) );\n    Gia_AcecCollectXors_rec( p, pObj, vMap, vXors );\n    return vXors;\n}",
+      "Draft": "func Gia_AcecCollectXors(p *Gia_Man_t, vMap *Vec_Bit_t) *Vec_Int_t {\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Gia_Obj_t  = Gia_ObjFanin0( Gia_ManCo(p, Gia_ManCoNum(p)-1) );\n    Gia_AcecCollectXors_rec( p, pObj, vMap, vXors );\n    return vXors;\n}"
+    },
+    {
+      "Name": "Gia_AcecExplore",
+      "Start": 3553,
+      "End": 6835,
+      "BodyStart": 3605,
+      "Original": "void Gia_AcecExplore( Gia_Man_t * p, int fVerbose )\n{\n    Vec_Int_t * vNodes = Vec_IntAlloc( 100 );\n    Vec_Int_t * vFadds, * vHadds, * vXors;\n    Vec_Bit_t * vMap = Vec_BitStart( Gia_ManObjNum(p) );\n    Gia_Obj_t * pObj; \n    int i, nSupp, nCone, nHadds = 0;\n    assert( p-\u003epMuxes != NULL );\n    vFadds = Gia_ManDetectFullAdders( p, fVerbose, NULL );\n    vHadds = Gia_ManDetectHalfAdders( p, fVerbose );\n\n    pObj = Gia_ManObj( p, 352 );\n    printf( \"Xor = %d.\\n\", Gia_ObjIsXor(pObj) );\n    printf( \"Fanin0 = %d.  Fanin1 = %d.\\n\", Gia_ObjFaninId0(pObj, 352), Gia_ObjFaninId1(pObj, 352) );\n    printf( \"Fan00 = %d.  Fan01 = %d.   Fan10 = %d.  Fan11 = %d.\\n\", \n        Gia_ObjFaninId0(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), \n        Gia_ObjFaninId1(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), \n        Gia_ObjFaninId0(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)), \n        Gia_ObjFaninId1(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)) );\n\n    // create a map of all HADD/FADD outputs\n    for ( i = 0; i \u003c Vec_IntSize(vHadds)/2; i++ )\n    {\n        int * pSigs = Vec_IntEntryP(vHadds, 2*i);\n        Vec_BitWriteEntry( vMap, pSigs[0], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[1], 1 );\n    }\n    for ( i = 0; i \u003c Vec_IntSize(vFadds)/5; i++ )\n    {\n        int * pSigs = Vec_IntEntryP(vFadds, 5*i);\n        Vec_BitWriteEntry( vMap, pSigs[3], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[4], 1 );\n    }\n\n    Gia_ManCleanMark01( p );\n\n    // mark outputs\n    Gia_ManForEachCo( p, pObj, i )\n        Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n\n    // collect XORs\n    vXors = Gia_AcecCollectXors( p, vMap );\n    Vec_BitFree( vMap );\n\n    printf( \"Collected XORs: \" );\n    Vec_IntPrint( vXors );\n\n    // mark their fanins\n    Gia_ManForEachObjVec( vXors, p, pObj, i )\n    {\n        pObj-\u003efMark1 = 1;\n        Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n        Gia_ObjFanin1(pObj)-\u003efMark0 = 1;\n    }\n\n    // mark FADDs\n    for ( i = 0; i \u003c Vec_IntSize(vFadds)/5; i++ )\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n\n    // iterate through HADDs and find those that fit in\n    while ( 1 )\n    {\n        int fChange = 0;\n        for ( i = 0; i \u003c Vec_IntSize(vHadds)/2; i++ )\n        {\n            int * pSigs = Vec_IntEntryP(vHadds, 2*i);\n            if ( !Gia_ManObj(p, pSigs[0])-\u003efMark0 || !Gia_ManObj(p, pSigs[1])-\u003efMark0 )\n                continue;\n            if ( Gia_ManObj(p, pSigs[0])-\u003efMark1 || Gia_ManObj(p, pSigs[1])-\u003efMark1 )\n                continue;\n            Gia_AcecMarkHadd( p, pSigs );\n            fChange = 1;\n            nHadds++;\n        }\n        if ( !fChange )\n            break;\n    }\n    // print inputs to the adder network\n    Gia_ManForEachAnd( p, pObj, i )\n        if ( pObj-\u003efMark0 \u0026\u0026 !pObj-\u003efMark1 )\n        {\n            nSupp = Gia_ManSuppSize( p, \u0026i, 1 );\n            nCone = Gia_ManConeSize( p, \u0026i, 1 );\n            printf( \"Node %5d : Supp = %5d.  Cone = %5d.\\n\", i, nSupp, nCone );\n            Vec_IntPush( vNodes, i );\n        }\n    printf( \"Fadds = %d. Hadds = %d.  Root nodes found = %d.\\n\", Vec_IntSize(vFadds)/5, nHadds, Vec_IntSize(vNodes) );\n\n    Gia_ManCleanMark01( p );\n\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n        pObj-\u003efMark0 = 1;\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vHadds );\n    Vec_IntFree( vNodes );\n}",
+      "Draft": "func Gia_AcecExplore(p *Gia_Man_t, fVerbose int32) {\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vFadds, vHadds, vXors *Vec_Int_t;\n    var vMap *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t; \n    var i, nSupp, nCone, nHadds int32;\n    assert(p.pMuxes != nil, \"p.pMuxes != nil\");\n    vFadds = Gia_ManDetectFullAdders( p, fVerbose, nil );\n    vHadds = Gia_ManDetectHalfAdders( p, fVerbose );\n\n    pObj = Gia_ManObj( p, 352 );\n    fmt.Printf(\"Xor = %d.\\n\", Gia_ObjIsXor(pObj));\n    fmt.Printf(\"Fanin0 = %d.  Fanin1 = %d.\\n\", Gia_ObjFaninId0(pObj, 352), Gia_ObjFaninId1(pObj, 352));\n    fmt.Printf(\"Fan00 = %d.  Fan01 = %d.   Fan10 = %d.  Fan11 = %d.\\n\", Gia_ObjFaninId0(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), Gia_ObjFaninId1(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), Gia_ObjFaninId0(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)), Gia_ObjFaninId1(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)));\n\n    // create a map of all HADD/FADD outputs\n    for  i = 0; i \u003c Vec_IntSize(vHadds)/2; i++  {\n        var pSigs *int32  = Vec_IntEntryP(vHadds, 2*i);\n        Vec_BitWriteEntry( vMap, pSigs[0], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[1], 1 );\n    }\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        var pSigs *int32  = Vec_IntEntryP(vFadds, 5*i);\n        Vec_BitWriteEntry( vMap, pSigs[3], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[4], 1 );\n    }\n\n    Gia_ManCleanMark01( p );\n\n    // mark outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n    }\n\n    // collect XORs\n    vXors = Gia_AcecCollectXors( p, vMap );\n    Vec_BitFree( vMap );\n\n    fmt.Printf(\"Collected XORs: \");\n    Vec_IntPrint( vXors );\n\n    // mark their fanins\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vXors)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vXors,i))); i++  {\n        pObj.fMark1 = 1;\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n        Gia_ObjFanin1(pObj).fMark0 = 1;\n    }\n\n    // mark FADDs\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n    }\n\n    // iterate through HADDs and find those that fit in\n    for {\n        var fChange int32;\n        for  i = 0; i \u003c Vec_IntSize(vHadds)/2; i++  {\n            var pSigs *int32  = Vec_IntEntryP(vHadds, 2*i);\n            if !Gia_ManObj(p, pSigs[0]).fMark0 || !Gia_ManObj(p, pSigs[1]).fMark0 {\n                continue; }\n            if Gia_ManObj(p, pSigs[0]).fMark1 || Gia_ManObj(p, pSigs[1]).fMark1 {\n                continue; }\n            Gia_AcecMarkHadd( p, pSigs );\n            fChange = 1;\n            nHadds++;\n        }\n        if !(fChange != 0) {\n            break; }\n    }\n    // print inputs to the adder network\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj.fMark0 \u0026\u0026 !pObj.fMark1 {\n            nSupp = Gia_ManSuppSize( p, \u0026i, 1 );\n            nCone = Gia_ManConeSize( p, \u0026i, 1 );\n            fmt.Printf(\"Node %5d : Supp = %5d.  Cone = %5d.\\n\", i, nSupp, nCone);\n            Vec_IntPush( vNodes, i );\n        }\n    }\n    fmt.Printf(\"Fadds = %d. Hadds = %d.  Root nodes found = %d.\\n\", Vec_IntSize(vFadds)/5, nHadds, Vec_IntSize(vNodes));\n\n    Gia_ManCleanMark01( p );\n\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        pObj.fMark0 = 1;\n    }\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vHadds );\n    Vec_IntFree( vNodes );\n}"
+    },
+    {
+      "Name": "Gia_AcecCover",
+      "Start": 7072,
+      "End": 7792,
+      "BodyStart": 7108,
+      "Original": "void Gia_AcecCover( Gia_Man_t * p )\n{\n    int fVerbose = 1;\n    int i, k, Entry;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vCutsXor2 = NULL;\n    Vec_Int_t * vFadds = Gia_ManDetectFullAdders( p, fVerbose, \u0026vCutsXor2 );\n\n    // mark FADDs\n    Gia_ManCleanMark01( p );\n    for ( i = 0; i \u003c Vec_IntSize(vFadds)/5; i++ )\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n\n    k = 0;\n    Vec_IntForEachEntry( vCutsXor2, Entry, i )\n    {\n        if ( i % 3 != 2 )\n            continue;\n        pObj = Gia_ManObj( p, Entry );\n        if ( pObj-\u003efMark1 )\n            continue;\n        printf( \"%d \", Entry );\n    }\n    printf( \"\\n\" );\n\n    Gia_ManCleanMark01( p );\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vCutsXor2 );\n}",
+      "Draft": "func Gia_AcecCover(p *Gia_Man_t) {\n    var fVerbose int32  = 1;\n    var i, k, Entry int32;\n    var pObj *Gia_Obj_t;\n    var vCutsXor2 *Vec_Int_t  = nil;\n    var vFadds *Vec_Int_t  = Gia_ManDetectFullAdders( p, fVerbose, \u0026vCutsXor2 );\n\n    // mark FADDs\n    Gia_ManCleanMark01( p );\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n    }\n\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCutsXor2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCutsXor2, i)), 1); i++  {\n        if i % 3 != 2 {\n            continue; }\n        pObj = Gia_ManObj( p, Entry );\n        if pObj.fMark1 {\n            continue; }\n        fmt.Printf(\"%d \", Entry);\n    }\n    fmt.Printf(\"\\n\");\n\n    Gia_ManCleanMark01( p );\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vCutsXor2 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1233,
+      "End": 1568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecMarkFadd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecMarkFadd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1569,
+      "End": 2031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecMarkHadd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecMarkHadd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2032,
+      "End": 2399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecCollectXors_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecCollectXors_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2679,
+      "End": 3057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecCollectXors",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecCollectXors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3058,
+      "End": 3317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecExplore",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecExplore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3553,
+      "End": 6835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::Gia_AcecCover",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AcecCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7072,
+      "End": 7792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCover.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8039
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecCover.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecCover.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_AcecMark_rec(p *Gia_Man_t, iObj int32, fFirst int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    if pObj.fMark0 \u0026\u0026 !(fFirst != 0) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pObj.fMark1 = 1;\n    Gia_AcecMark_rec( p, Gia_ObjFaninId0(pObj, iObj), 0 );\n    Gia_AcecMark_rec( p, Gia_ObjFaninId1(pObj, iObj), 0 );\n}\nfunc Gia_AcecMarkFadd(p *Gia_Man_t, pSigs *int32) {\n//    if ( Gia_ManObj(p, pSigs[3])-\u003efMark1 || Gia_ManObj(p, pSigs[4])-\u003efMark1 )\n//        return;\n    Gia_ManObj( p, pSigs[0] ).fMark0 = 1;\n    Gia_ManObj( p, pSigs[1] ).fMark0 = 1;\n    Gia_ManObj( p, pSigs[2] ).fMark0 = 1;\n//    assert( !Gia_ManObj(p, pSigs[3])-\u003efMark1 );\n//    assert( !Gia_ManObj(p, pSigs[4])-\u003efMark1 );\n    Gia_AcecMark_rec( p, pSigs[3], 1 );\n    Gia_AcecMark_rec( p, pSigs[4], 1 );\n}\nfunc Gia_AcecMarkHadd(p *Gia_Man_t, pSigs *int32) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, pSigs[0] );\n    var iFan0 int32  = Gia_ObjFaninId0( pObj, pSigs[0] );\n    var iFan1 int32  = Gia_ObjFaninId1( pObj, pSigs[0] );\n    Gia_ManObj( p, iFan0 ).fMark0 = 1;\n    Gia_ManObj( p, iFan1 ).fMark0 = 1;\n    Gia_AcecMark_rec( p, pSigs[0], 1 );\n    Gia_AcecMark_rec( p, pSigs[1], 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect XORs reachable from the last output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_AcecCollectXors_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vMap *Vec_Bit_t, vXors *Vec_Int_t) {\n    if !Gia_ObjIsXor(pObj) {//|| Vec_BitEntry(vMap, Gia_ObjId(p, pObj)) )\n        return; }\n    Vec_IntPush( vXors, Gia_ObjId(p, pObj) );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin0(pObj), vMap, vXors );\n    Gia_AcecCollectXors_rec( p, Gia_ObjFanin1(pObj), vMap, vXors );\n}\nfunc Gia_AcecCollectXors(p *Gia_Man_t, vMap *Vec_Bit_t) *Vec_Int_t {\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Gia_Obj_t  = Gia_ObjFanin0( Gia_ManCo(p, Gia_ManCoNum(p)-1) );\n    Gia_AcecCollectXors_rec( p, pObj, vMap, vXors );\n    return vXors;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_AcecExplore(p *Gia_Man_t, fVerbose int32) {\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vFadds, vHadds, vXors *Vec_Int_t;\n    var vMap *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t; \n    var i, nSupp, nCone, nHadds int32;\n    assert(p.pMuxes != nil, \"p.pMuxes != nil\");\n    vFadds = Gia_ManDetectFullAdders( p, fVerbose, nil );\n    vHadds = Gia_ManDetectHalfAdders( p, fVerbose );\n\n    pObj = Gia_ManObj( p, 352 );\n    fmt.Printf(\"Xor = %d.\\n\", Gia_ObjIsXor(pObj));\n    fmt.Printf(\"Fanin0 = %d.  Fanin1 = %d.\\n\", Gia_ObjFaninId0(pObj, 352), Gia_ObjFaninId1(pObj, 352));\n    fmt.Printf(\"Fan00 = %d.  Fan01 = %d.   Fan10 = %d.  Fan11 = %d.\\n\", Gia_ObjFaninId0(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), Gia_ObjFaninId1(Gia_ObjFanin0(pObj), Gia_ObjFaninId0(pObj, 352)), Gia_ObjFaninId0(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)), Gia_ObjFaninId1(Gia_ObjFanin1(pObj), Gia_ObjFaninId1(pObj, 352)));\n\n    // create a map of all HADD/FADD outputs\n    for  i = 0; i \u003c Vec_IntSize(vHadds)/2; i++  {\n        var pSigs *int32  = Vec_IntEntryP(vHadds, 2*i);\n        Vec_BitWriteEntry( vMap, pSigs[0], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[1], 1 );\n    }\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        var pSigs *int32  = Vec_IntEntryP(vFadds, 5*i);\n        Vec_BitWriteEntry( vMap, pSigs[3], 1 );\n        Vec_BitWriteEntry( vMap, pSigs[4], 1 );\n    }\n\n    Gia_ManCleanMark01( p );\n\n    // mark outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n    }\n\n    // collect XORs\n    vXors = Gia_AcecCollectXors( p, vMap );\n    Vec_BitFree( vMap );\n\n    fmt.Printf(\"Collected XORs: \");\n    Vec_IntPrint( vXors );\n\n    // mark their fanins\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vXors)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vXors,i))); i++  {\n        pObj.fMark1 = 1;\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n        Gia_ObjFanin1(pObj).fMark0 = 1;\n    }\n\n    // mark FADDs\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n    }\n\n    // iterate through HADDs and find those that fit in\n    for {\n        var fChange int32;\n        for  i = 0; i \u003c Vec_IntSize(vHadds)/2; i++  {\n            var pSigs *int32  = Vec_IntEntryP(vHadds, 2*i);\n            if !Gia_ManObj(p, pSigs[0]).fMark0 || !Gia_ManObj(p, pSigs[1]).fMark0 {\n                continue; }\n            if Gia_ManObj(p, pSigs[0]).fMark1 || Gia_ManObj(p, pSigs[1]).fMark1 {\n                continue; }\n            Gia_AcecMarkHadd( p, pSigs );\n            fChange = 1;\n            nHadds++;\n        }\n        if !(fChange != 0) {\n            break; }\n    }\n    // print inputs to the adder network\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj.fMark0 \u0026\u0026 !pObj.fMark1 {\n            nSupp = Gia_ManSuppSize( p, \u0026i, 1 );\n            nCone = Gia_ManConeSize( p, \u0026i, 1 );\n            fmt.Printf(\"Node %5d : Supp = %5d.  Cone = %5d.\\n\", i, nSupp, nCone);\n            Vec_IntPush( vNodes, i );\n        }\n    }\n    fmt.Printf(\"Fadds = %d. Hadds = %d.  Root nodes found = %d.\\n\", Vec_IntSize(vFadds)/5, nHadds, Vec_IntSize(vNodes));\n\n    Gia_ManCleanMark01( p );\n\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        pObj.fMark0 = 1;\n    }\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vHadds );\n    Vec_IntFree( vNodes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_AcecCover(p *Gia_Man_t) {\n    var fVerbose int32  = 1;\n    var i, k, Entry int32;\n    var pObj *Gia_Obj_t;\n    var vCutsXor2 *Vec_Int_t  = nil;\n    var vFadds *Vec_Int_t  = Gia_ManDetectFullAdders( p, fVerbose, \u0026vCutsXor2 );\n\n    // mark FADDs\n    Gia_ManCleanMark01( p );\n    for  i = 0; i \u003c Vec_IntSize(vFadds)/5; i++  {\n        Gia_AcecMarkFadd( p, Vec_IntEntryP(vFadds, 5*i) );\n    }\n\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCutsXor2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCutsXor2, i)), 1); i++  {\n        if i % 3 != 2 {\n            continue; }\n        pObj = Gia_ManObj( p, Entry );\n        if pObj.fMark1 {\n            continue; }\n        fmt.Printf(\"%d \", Entry);\n    }\n    fmt.Printf(\"\\n\");\n\n    Gia_ManCleanMark01( p );\n\n    Vec_IntFree( vFadds );\n    Vec_IntFree( vCutsXor2 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

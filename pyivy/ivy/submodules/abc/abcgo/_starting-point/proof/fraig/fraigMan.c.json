@@ -1,0 +1,1390 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c",
+  "SHA256": "8f2febae761a5d29df56857b8be6921ea3ca051e45b46b06a0032efb3849c72e",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pParams, 0, sizeof(Prove_Params_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 3645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CEC enging parameters:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 3687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fraiging enabled: %s\\n\", pParams.fUseFraiging? \"yes\":\"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Rewriting enabled: %s\\n\", pParams.fUseRewriting? \"yes\":\"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"BDD construction enabled: %s\\n\", pParams.fUseBdds? \"yes\":\"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Verbose output enabled: %s\\n\", pParams.fVerbose? \"yes\":\"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solver iterations: %d\\n\", pParams.nItersMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 4051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Starting mitering limit: %d\\n\", pParams.nMiteringLimitStart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 4127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Multiplicative coeficient for mitering: %.2f\\n\", pParams.nMiteringLimitMulti );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 4220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Starting number of rewriting iterations: %d\\n\", pParams.nRewritingLimitStart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 4313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Multiplicative coeficient for rewriting: %.2f\\n\", pParams.nRewritingLimitMulti );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 4408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Starting number of conflicts in fraiging: %.2f\\n\", pParams.nFraigingLimitMulti );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 4503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Multiplicative coeficient for fraiging: %.2f\\n\", pParams.nRewritingLimitMulti );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"BDD size limit for bailing out: %d\\n\", pParams.nBddSizeLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 4674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"BDD reordering enabled: %s\\n\", pParams.fBddReorder? \"yes\":\"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 4753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Last-gasp mitering limit: %d\\n\", pParams.nMiteringLimitLast );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 4829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total conflict limit: %d\\n\", int32(pParams.nTotalBacktrackLimit) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 4910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total inspection limit: %d\\n\", int32(pParams.nTotalInspectLimit) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 4991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Parameter dump complete.\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 5427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pParams, 0, sizeof(Fraig_Params_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 7198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pParams, 0, sizeof(Fraig_Params_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 208,
+        "Column": 71,
+        "ByteOffset": 9776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fraig_Man_t *) malloc(sizeof(Fraig_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 9824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fraig_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 288,
+        "Column": 82,
+        "ByteOffset": 13749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pModel {     /*__starting_point_inline_macro:ABC_FREE__*/((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 294,
+        "Column": 71,
+        "ByteOffset": 13969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pSuppS[0]) ? (free((char *) (p.pSuppS[0])), (p.pSuppS[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 295,
+        "Column": 68,
+        "ByteOffset": 14091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pSuppS) ? (free((char *) (p.pSuppS)), (p.pSuppS) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 298,
+        "Column": 71,
+        "ByteOffset": 14234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pSuppF[0]) ? (free((char *) (p.pSuppF[0])), (p.pSuppF[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 299,
+        "Column": 68,
+        "ByteOffset": 14356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pSuppF) ? (free((char *) (p.pSuppF)), (p.pSuppF) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 302,
+        "Column": 71,
+        "ByteOffset": 14482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 303,
+        "Column": 70,
+        "ByteOffset": 14614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppInputNames) ? (free((char *) (p.ppInputNames)), (p.ppInputNames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 304,
+        "Column": 57,
+        "ByteOffset": 14731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 15162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSat == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 16021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Words: Random = %d. Dynamic = %d. Used = %d. Memory = %0.2f MB.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 16163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 5,
+        "ByteOffset": 16333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes: Final = %d. Total = %d. Mux = %d. (Exor = %d.) ClaVars = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 56,
+        "ByteOffset": 16634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG simulation  \") ); printf( \"%6.2f sec\\n\", float32((p.timeSims))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 97,
+        "ByteOffset": 16675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG simulation  \") ); printf( \"%6.2f sec\\n\", float32((p.timeSims))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 354,
+        "Column": 151,
+        "ByteOffset": 16729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG simulation  \") ); printf( \"%6.2f sec\\n\", float32((p.timeSims))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 56,
+        "ByteOffset": 16804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG traversal   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTrav))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 97,
+        "ByteOffset": 16845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG traversal   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTrav))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 355,
+        "Column": 151,
+        "ByteOffset": 16899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"AIG traversal   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTrav))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 56,
+        "ByteOffset": 16974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Solver feedback \") ); printf( \"%6.2f sec\\n\", float32((p.timeFeed))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 97,
+        "ByteOffset": 17015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Solver feedback \") ); printf( \"%6.2f sec\\n\", float32((p.timeFeed))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 356,
+        "Column": 151,
+        "ByteOffset": 17069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Solver feedback \") ); printf( \"%6.2f sec\\n\", float32((p.timeFeed))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 56,
+        "ByteOffset": 17144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"SAT solving     \") ); printf( \"%6.2f sec\\n\", float32((p.timeSat))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 97,
+        "ByteOffset": 17185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"SAT solving     \") ); printf( \"%6.2f sec\\n\", float32((p.timeSat))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 357,
+        "Column": 150,
+        "ByteOffset": 17238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"SAT solving     \") ); printf( \"%6.2f sec\\n\", float32((p.timeSat))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 56,
+        "ByteOffset": 17313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Network update  \") ); printf( \"%6.2f sec\\n\", float32((p.timeToNet))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 97,
+        "ByteOffset": 17354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Network update  \") ); printf( \"%6.2f sec\\n\", float32((p.timeToNet))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 358,
+        "Column": 152,
+        "ByteOffset": 17409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"Network update  \") ); printf( \"%6.2f sec\\n\", float32((p.timeToNet))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 56,
+        "ByteOffset": 17484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"TOTAL RUNTIME   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTotal))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 97,
+        "ByteOffset": 17525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"TOTAL RUNTIME   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTotal))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 359,
+        "Column": 152,
+        "ByteOffset": 17580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"TOTAL RUNTIME   \") ); printf( \"%6.2f sec\\n\", float32((p.timeTotal))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 73,
+        "ByteOffset": 17672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time1 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time1\") ); printf( \"%6.2f sec\\n\", float32((p.time1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 103,
+        "ByteOffset": 17702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time1 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time1\") ); printf( \"%6.2f sec\\n\", float32((p.time1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 360,
+        "Column": 154,
+        "ByteOffset": 17753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time1 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time1\") ); printf( \"%6.2f sec\\n\", float32((p.time1))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 73,
+        "ByteOffset": 17847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time2 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time2\") ); printf( \"%6.2f sec\\n\", float32((p.time2))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 103,
+        "ByteOffset": 17877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time2 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time2\") ); printf( \"%6.2f sec\\n\", float32((p.time2))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 361,
+        "Column": 154,
+        "ByteOffset": 17928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time2 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time2\") ); printf( \"%6.2f sec\\n\", float32((p.time2))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 73,
+        "ByteOffset": 18022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time3 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time3\") ); printf( \"%6.2f sec\\n\", float32((p.time3))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 103,
+        "ByteOffset": 18052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time3 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time3\") ); printf( \"%6.2f sec\\n\", float32((p.time3))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 362,
+        "Column": 154,
+        "ByteOffset": 18103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time3 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time3\") ); printf( \"%6.2f sec\\n\", float32((p.time3))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 73,
+        "ByteOffset": 18197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time4 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time4\") ); printf( \"%6.2f sec\\n\", float32((p.time4))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 103,
+        "ByteOffset": 18227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time4 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time4\") ); printf( \"%6.2f sec\\n\", float32((p.time4))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 363,
+        "Column": 154,
+        "ByteOffset": 18278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.time4 \u003e 0 { /*__starting_point_inline_macro:Fraig_PrintTime__*/printf( \"%s = \", (\"time4\") ); printf( \"%6.2f sec\\n\", float32((p.time4))/float32((CLOCKS_PER_SEC)) ); }"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 18390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 366,
+        "Column": 13,
+        "ByteOffset": 18398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 18857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e 0 \u0026\u0026 nWords \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 386,
+        "Column": 76,
+        "ByteOffset": 19008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pUnsigned = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 19135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pUnsigned, 0, sizeof(unsigned) * nSize * nWords ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 422,
+        "Column": 9,
+        "ByteOffset": 20145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == pNode.Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 21620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1 != pNode2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 531,
+        "Column": 5,
+        "ByteOffset": 24244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Prove_ParamsSetDefault",
+      "Start": 1373,
+      "End": 3292,
+      "BodyStart": 1429,
+      "Original": "void Prove_ParamsSetDefault( Prove_Params_t * pParams )\n{\n    // clean the parameter structure \n    memset( pParams, 0, sizeof(Prove_Params_t) );\n    // general parameters\n    pParams-\u003efUseFraiging         = 1;       // enables fraiging\n    pParams-\u003efUseRewriting        = 1;       // enables rewriting\n    pParams-\u003efUseBdds             = 0;       // enables BDD construction when other methods fail\n    pParams-\u003efVerbose             = 0;       // prints verbose stats\n    // iterations\n    pParams-\u003enItersMax            = 6;       // the number of iterations\n    // mitering \n    pParams-\u003enMiteringLimitStart  = 5000;    // starting mitering limit\n    pParams-\u003enMiteringLimitMulti  = 2.0;     // multiplicative coefficient to increase the limit in each iteration\n    // rewriting (currently not used)\n    pParams-\u003enRewritingLimitStart = 3;       // the number of rewriting iterations\n    pParams-\u003enRewritingLimitMulti = 1.0;     // multiplicative coefficient to increase the limit in each iteration\n    // fraiging \n    pParams-\u003enFraigingLimitStart  = 2;       // starting backtrack(conflict) limit\n    pParams-\u003enFraigingLimitMulti  = 8.0;     // multiplicative coefficient to increase the limit in each iteration\n    // last-gasp BDD construction\n    pParams-\u003enBddSizeLimit        = 1000000; // the number of BDD nodes when construction is aborted\n    pParams-\u003efBddReorder          = 1;       // enables dynamic BDD variable reordering\n    // last-gasp mitering\n//    pParams-\u003enMiteringLimitLast   = 1000000; // final mitering limit\n    pParams-\u003enMiteringLimitLast   = 0;       // final mitering limit\n    // global SAT solver limits\n    pParams-\u003enTotalBacktrackLimit = 0;       // global limit on the number of backtracks\n    pParams-\u003enTotalInspectLimit   = 0;       // global limit on the number of clause inspects\n//    pParams-\u003enTotalInspectLimit   = 100000000;  // global limit on the number of clause inspects\n}",
+      "Draft": "func Prove_ParamsSetDefault(pParams *Prove_Params_t) {\n    // clean the parameter structure \n    memset( pParams, 0, sizeof(Prove_Params_t) );\n    // general parameters\n    pParams.fUseFraiging         = 1;       // enables fraiging\n    pParams.fUseRewriting        = 1;       // enables rewriting\n    pParams.fUseBdds             = 0;       // enables BDD construction when other methods fail\n    pParams.fVerbose             = 0;       // prints verbose stats\n    // iterations\n    pParams.nItersMax            = 6;       // the number of iterations\n    // mitering \n    pParams.nMiteringLimitStart  = 5000;    // starting mitering limit\n    pParams.nMiteringLimitMulti  = 2.0;     // multiplicative coefficient to increase the limit in each iteration\n    // rewriting (currently not used)\n    pParams.nRewritingLimitStart = 3;       // the number of rewriting iterations\n    pParams.nRewritingLimitMulti = 1.0;     // multiplicative coefficient to increase the limit in each iteration\n    // fraiging \n    pParams.nFraigingLimitStart  = 2;       // starting backtrack(conflict) limit\n    pParams.nFraigingLimitMulti  = 8.0;     // multiplicative coefficient to increase the limit in each iteration\n    // last-gasp BDD construction\n    pParams.nBddSizeLimit        = 1000000; // the number of BDD nodes when construction is aborted\n    pParams.fBddReorder          = 1;       // enables dynamic BDD variable reordering\n    // last-gasp mitering\n//    pParams-\u003enMiteringLimitLast   = 1000000; // final mitering limit\n    pParams.nMiteringLimitLast   = 0;       // final mitering limit\n    // global SAT solver limits\n    pParams.nTotalBacktrackLimit = 0;       // global limit on the number of backtracks\n    pParams.nTotalInspectLimit   = 0;       // global limit on the number of clause inspects\n//    pParams-\u003enTotalInspectLimit   = 100000000;  // global limit on the number of clause inspects\n}"
+    },
+    {
+      "Name": "Prove_ParamsPrint",
+      "Start": 3583,
+      "End": 5039,
+      "BodyStart": 3634,
+      "Original": "void Prove_ParamsPrint( Prove_Params_t * pParams )\n{\n    printf( \"CEC enging parameters:\\n\" );\n    printf( \"Fraiging enabled: %s\\n\", pParams-\u003efUseFraiging? \"yes\":\"no\" );\n    printf( \"Rewriting enabled: %s\\n\", pParams-\u003efUseRewriting? \"yes\":\"no\" );\n    printf( \"BDD construction enabled: %s\\n\", pParams-\u003efUseBdds? \"yes\":\"no\" );\n    printf( \"Verbose output enabled: %s\\n\", pParams-\u003efVerbose? \"yes\":\"no\" );\n    printf( \"Solver iterations: %d\\n\", pParams-\u003enItersMax );\n    printf( \"Starting mitering limit: %d\\n\", pParams-\u003enMiteringLimitStart );\n    printf( \"Multiplicative coeficient for mitering: %.2f\\n\", pParams-\u003enMiteringLimitMulti );\n    printf( \"Starting number of rewriting iterations: %d\\n\", pParams-\u003enRewritingLimitStart );\n    printf( \"Multiplicative coeficient for rewriting: %.2f\\n\", pParams-\u003enRewritingLimitMulti );\n    printf( \"Starting number of conflicts in fraiging: %.2f\\n\", pParams-\u003enFraigingLimitMulti );\n    printf( \"Multiplicative coeficient for fraiging: %.2f\\n\", pParams-\u003enRewritingLimitMulti );\n    printf( \"BDD size limit for bailing out: %d\\n\", pParams-\u003enBddSizeLimit );\n    printf( \"BDD reordering enabled: %s\\n\", pParams-\u003efBddReorder? \"yes\":\"no\" );\n    printf( \"Last-gasp mitering limit: %d\\n\", pParams-\u003enMiteringLimitLast );\n    printf( \"Total conflict limit: %d\\n\", (int)pParams-\u003enTotalBacktrackLimit );\n    printf( \"Total inspection limit: %d\\n\", (int)pParams-\u003enTotalInspectLimit );\n    printf( \"Parameter dump complete.\\n\" );\n}",
+      "Draft": "func Prove_ParamsPrint(pParams *Prove_Params_t) {\n    fmt.Printf(\"CEC enging parameters:\\n\");\n    fmt.Printf(\"Fraiging enabled: %s\\n\", pParams.fUseFraiging? \"yes\":\"no\");\n    fmt.Printf(\"Rewriting enabled: %s\\n\", pParams.fUseRewriting? \"yes\":\"no\");\n    fmt.Printf(\"BDD construction enabled: %s\\n\", pParams.fUseBdds? \"yes\":\"no\");\n    fmt.Printf(\"Verbose output enabled: %s\\n\", pParams.fVerbose? \"yes\":\"no\");\n    fmt.Printf(\"Solver iterations: %d\\n\", pParams.nItersMax);\n    fmt.Printf(\"Starting mitering limit: %d\\n\", pParams.nMiteringLimitStart);\n    fmt.Printf(\"Multiplicative coeficient for mitering: %.2f\\n\", pParams.nMiteringLimitMulti);\n    fmt.Printf(\"Starting number of rewriting iterations: %d\\n\", pParams.nRewritingLimitStart);\n    fmt.Printf(\"Multiplicative coeficient for rewriting: %.2f\\n\", pParams.nRewritingLimitMulti);\n    fmt.Printf(\"Starting number of conflicts in fraiging: %.2f\\n\", pParams.nFraigingLimitMulti);\n    fmt.Printf(\"Multiplicative coeficient for fraiging: %.2f\\n\", pParams.nRewritingLimitMulti);\n    fmt.Printf(\"BDD size limit for bailing out: %d\\n\", pParams.nBddSizeLimit);\n    fmt.Printf(\"BDD reordering enabled: %s\\n\", pParams.fBddReorder? \"yes\":\"no\");\n    fmt.Printf(\"Last-gasp mitering limit: %d\\n\", pParams.nMiteringLimitLast);\n    fmt.Printf(\"Total conflict limit: %d\\n\", int32(pParams.nTotalBacktrackLimit));\n    fmt.Printf(\"Total inspection limit: %d\\n\", int32(pParams.nTotalInspectLimit));\n    fmt.Printf(\"Parameter dump complete.\\n\");\n}"
+    },
+    {
+      "Name": "Fraig_ParamsSetDefault",
+      "Start": 5375,
+      "End": 6827,
+      "BodyStart": 5431,
+      "Original": "void Fraig_ParamsSetDefault( Fraig_Params_t * pParams )\n{\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams-\u003enPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams-\u003enPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams-\u003enBTLimit   = 99;                     // the max number of backtracks to perform\n    pParams-\u003enSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams-\u003efFuncRed   =  1;                     // performs only one level hashing\n    pParams-\u003efFeedBack  =  1;                     // enables solver feedback\n    pParams-\u003efDist1Pats =  1;                     // enables distance-1 patterns\n    pParams-\u003efDoSparse  =  0;                     // performs equiv tests for sparse functions \n    pParams-\u003efChoicing  =  0;                     // enables recording structural choices\n    pParams-\u003efTryProve  =  1;                     // tries to solve the final miter\n    pParams-\u003efVerbose   =  0;                     // the verbosiness flag\n    pParams-\u003efVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams-\u003efInternal  =  0;                     // the flag indicates the internal run \n    pParams-\u003enConfLimit =  0;                     // the limit on the number of conflicts\n    pParams-\u003enInspLimit =  0;                     // the limit on the number of inspections\n}",
+      "Draft": "func Fraig_ParamsSetDefault(pParams *Fraig_Params_t) {\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams.nPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams.nPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = 99;                     // the max number of backtracks to perform\n    pParams.nSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams.fFuncRed   =  1;                     // performs only one level hashing\n    pParams.fFeedBack  =  1;                     // enables solver feedback\n    pParams.fDist1Pats =  1;                     // enables distance-1 patterns\n    pParams.fDoSparse  =  0;                     // performs equiv tests for sparse functions \n    pParams.fChoicing  =  0;                     // enables recording structural choices\n    pParams.fTryProve  =  1;                     // tries to solve the final miter\n    pParams.fVerbose   =  0;                     // the verbosiness flag\n    pParams.fVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams.fInternal  =  0;                     // the flag indicates the internal run \n    pParams.nConfLimit =  0;                     // the limit on the number of conflicts\n    pParams.nInspLimit =  0;                     // the limit on the number of inspections\n}"
+    },
+    {
+      "Name": "Fraig_ParamsSetDefaultFull",
+      "Start": 7160,
+      "End": 8616,
+      "BodyStart": 7220,
+      "Original": "void Fraig_ParamsSetDefaultFull( Fraig_Params_t * pParams )\n{\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams-\u003enPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams-\u003enPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams-\u003enBTLimit   = -1;                     // the max number of backtracks to perform\n    pParams-\u003enSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams-\u003efFuncRed   =  1;                     // performs only one level hashing\n    pParams-\u003efFeedBack  =  1;                     // enables solver feedback\n    pParams-\u003efDist1Pats =  1;                     // enables distance-1 patterns\n    pParams-\u003efDoSparse  =  1;                     // performs equiv tests for sparse functions \n    pParams-\u003efChoicing  =  0;                     // enables recording structural choices\n    pParams-\u003efTryProve  =  0;                     // tries to solve the final miter\n    pParams-\u003efVerbose   =  0;                     // the verbosiness flag\n    pParams-\u003efVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams-\u003efInternal  =  0;                     // the flag indicates the internal run \n    pParams-\u003enConfLimit =  0;                     // the limit on the number of conflicts\n    pParams-\u003enInspLimit =  0;                     // the limit on the number of inspections\n}",
+      "Draft": "func Fraig_ParamsSetDefaultFull(pParams *Fraig_Params_t) {\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams.nPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams.nPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = -1;                     // the max number of backtracks to perform\n    pParams.nSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams.fFuncRed   =  1;                     // performs only one level hashing\n    pParams.fFeedBack  =  1;                     // enables solver feedback\n    pParams.fDist1Pats =  1;                     // enables distance-1 patterns\n    pParams.fDoSparse  =  1;                     // performs equiv tests for sparse functions \n    pParams.fChoicing  =  0;                     // enables recording structural choices\n    pParams.fTryProve  =  0;                     // tries to solve the final miter\n    pParams.fVerbose   =  0;                     // the verbosiness flag\n    pParams.fVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams.fInternal  =  0;                     // the flag indicates the internal run \n    pParams.nConfLimit =  0;                     // the limit on the number of conflicts\n    pParams.nInspLimit =  0;                     // the limit on the number of inspections\n}"
+    },
+    {
+      "Name": "Fraig_ManCreate",
+      "Start": 8882,
+      "End": 12206,
+      "BodyStart": 8940,
+      "Original": "Fraig_Man_t * Fraig_ManCreate( Fraig_Params_t * pParams )\n{\n    Fraig_Params_t Params;\n    Fraig_Man_t * p;\n\n    // set the random seed for simulation\n//    srand( 0xFEEDDEAF );\n//    srand( 0xDEADCAFE );\n    Aig_ManRandom( 1 );\n\n    // set parameters for equivalence checking\n    if ( pParams == NULL )\n        Fraig_ParamsSetDefault( pParams = \u0026Params );\n    // adjust the amount of simulation info\n    if ( pParams-\u003enPatsRand \u003c 128 )\n        pParams-\u003enPatsRand = 128;\n    if ( pParams-\u003enPatsRand \u003e 32768 )\n        pParams-\u003enPatsRand = 32768;\n    if ( pParams-\u003enPatsDyna \u003c 128 )\n        pParams-\u003enPatsDyna = 128;\n    if ( pParams-\u003enPatsDyna \u003e 32768 )\n        pParams-\u003enPatsDyna = 32768;\n    // if reduction is not performed, allocate minimum simulation info\n    if ( !pParams-\u003efFuncRed )\n        pParams-\u003enPatsRand = pParams-\u003enPatsDyna = 128;\n\n    // start the manager\n    p = ABC_ALLOC( Fraig_Man_t, 1 );\n    memset( p, 0, sizeof(Fraig_Man_t) );\n\n    // set the default parameters\n    p-\u003enWordsRand = FRAIG_NUM_WORDS( pParams-\u003enPatsRand );  // the number of words of random simulation info\n    p-\u003enWordsDyna = FRAIG_NUM_WORDS( pParams-\u003enPatsDyna );  // the number of patterns for dynamic simulation info\n    p-\u003enBTLimit   = pParams-\u003enBTLimit;    // -1 means infinite backtrack limit\n    p-\u003enSeconds   = pParams-\u003enSeconds;    // the timeout for the final miter\n    p-\u003efFuncRed   = pParams-\u003efFuncRed;    // enables functional reduction (otherwise, only one-level hashing is performed)\n    p-\u003efFeedBack  = pParams-\u003efFeedBack;   // enables solver feedback (the use of counter-examples in simulation)\n    p-\u003efDist1Pats = pParams-\u003efDist1Pats;  // enables solver feedback (the use of counter-examples in simulation)\n    p-\u003efDoSparse  = pParams-\u003efDoSparse;   // performs equivalence checking for sparse functions (whose sim-info is 0)\n    p-\u003efChoicing  = pParams-\u003efChoicing;   // disable accumulation of structural choices (keeps only the first choice)\n    p-\u003efTryProve  = pParams-\u003efTryProve;   // disable accumulation of structural choices (keeps only the first choice)\n    p-\u003efVerbose   = pParams-\u003efVerbose;    // disable verbose output\n    p-\u003efVerboseP  = pParams-\u003efVerboseP;   // disable verbose output\n    p-\u003enInspLimit = pParams-\u003enInspLimit;  // the limit on the number of inspections\n\n    // start memory managers\n    p-\u003emmNodes    = Fraig_MemFixedStart( sizeof(Fraig_Node_t) );\n    p-\u003emmSims     = Fraig_MemFixedStart( sizeof(unsigned) * (p-\u003enWordsRand + p-\u003enWordsDyna) );\n    // allocate node arrays\n    p-\u003evInputs    = Fraig_NodeVecAlloc( 1000 );    // the array of primary inputs\n    p-\u003evOutputs   = Fraig_NodeVecAlloc( 1000 );    // the array of primary outputs\n    p-\u003evNodes     = Fraig_NodeVecAlloc( 1000 );    // the array of internal nodes\n    // start the tables\n    p-\u003epTableS    = Fraig_HashTableCreate( 1000 ); // hashing by structure\n    p-\u003epTableF    = Fraig_HashTableCreate( 1000 ); // hashing by function\n    p-\u003epTableF0   = Fraig_HashTableCreate( 1000 ); // hashing by function (for sparse functions)\n    // create the constant node\n    p-\u003epConst1    = Fraig_NodeCreateConst( p );\n    // initialize SAT solver feedback data structures\n    Fraig_FeedBackInit( p );\n    // initialize other variables\n    p-\u003evProj      = Msat_IntVecAlloc( 10 ); \n    p-\u003enTravIds   = 1;\n    p-\u003enTravIds2  = 1;\n    return p;\n}",
+      "Draft": "func Fraig_ManCreate(pParams *Fraig_Params_t) *Fraig_Man_t {\n    var Params Fraig_Params_t;\n    var p *Fraig_Man_t;\n\n    // set the random seed for simulation\n//    srand( 0xFEEDDEAF );\n//    srand( 0xDEADCAFE );\n    Aig_ManRandom( 1 );\n\n    // set parameters for equivalence checking\n    if pParams == nil {\n        Fraig_ParamsSetDefault( pParams = \u0026Params ); }\n    // adjust the amount of simulation info\n    if pParams.nPatsRand \u003c 128 {\n        pParams.nPatsRand = 128; }\n    if pParams.nPatsRand \u003e 32768 {\n        pParams.nPatsRand = 32768; }\n    if pParams.nPatsDyna \u003c 128 {\n        pParams.nPatsDyna = 128; }\n    if pParams.nPatsDyna \u003e 32768 {\n        pParams.nPatsDyna = 32768; }\n    // if reduction is not performed, allocate minimum simulation info\n    if !pParams.fFuncRed {\n        pParams.nPatsRand = pParams.nPatsDyna = 128; }\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fraig_Man_t *) malloc(sizeof(Fraig_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fraig_Man_t) );\n\n    // set the default parameters\n    // inlining of macro FRAIG_NUM_WORDS\n    p.nWordsRand = (((pParams.nPatsRand)\u003e\u003e5) + (((pParams.nPatsRand)\u002631) \u003e 0));  // the number of words of random simulation info\n    // inlining of macro FRAIG_NUM_WORDS\n    p.nWordsDyna = (((pParams.nPatsDyna)\u003e\u003e5) + (((pParams.nPatsDyna)\u002631) \u003e 0));  // the number of patterns for dynamic simulation info\n    p.nBTLimit   = pParams.nBTLimit;    // -1 means infinite backtrack limit\n    p.nSeconds   = pParams.nSeconds;    // the timeout for the final miter\n    p.fFuncRed   = pParams.fFuncRed;    // enables functional reduction (otherwise, only one-level hashing is performed)\n    p.fFeedBack  = pParams.fFeedBack;   // enables solver feedback (the use of counter-examples in simulation)\n    p.fDist1Pats = pParams.fDist1Pats;  // enables solver feedback (the use of counter-examples in simulation)\n    p.fDoSparse  = pParams.fDoSparse;   // performs equivalence checking for sparse functions (whose sim-info is 0)\n    p.fChoicing  = pParams.fChoicing;   // disable accumulation of structural choices (keeps only the first choice)\n    p.fTryProve  = pParams.fTryProve;   // disable accumulation of structural choices (keeps only the first choice)\n    p.fVerbose   = pParams.fVerbose;    // disable verbose output\n    p.fVerboseP  = pParams.fVerboseP;   // disable verbose output\n    p.nInspLimit = pParams.nInspLimit;  // the limit on the number of inspections\n\n    // start memory managers\n    p.mmNodes    = Fraig_MemFixedStart( sizeof(Fraig_Node_t) );\n    p.mmSims     = Fraig_MemFixedStart( sizeof(unsigned) * (p.nWordsRand + p.nWordsDyna) );\n    // allocate node arrays\n    p.vInputs    = Fraig_NodeVecAlloc( 1000 );    // the array of primary inputs\n    p.vOutputs   = Fraig_NodeVecAlloc( 1000 );    // the array of primary outputs\n    p.vNodes     = Fraig_NodeVecAlloc( 1000 );    // the array of internal nodes\n    // start the tables\n    p.pTableS    = Fraig_HashTableCreate( 1000 ); // hashing by structure\n    p.pTableF    = Fraig_HashTableCreate( 1000 ); // hashing by function\n    p.pTableF0   = Fraig_HashTableCreate( 1000 ); // hashing by function (for sparse functions)\n    // create the constant node\n    p.pConst1    = Fraig_NodeCreateConst( p );\n    // initialize SAT solver feedback data structures\n    Fraig_FeedBackInit( p );\n    // initialize other variables\n    p.vProj      = Msat_IntVecAlloc( 10 ); \n    p.nTravIds   = 1;\n    p.nTravIds2  = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Fraig_ManFree",
+      "Start": 12474,
+      "End": 13993,
+      "BodyStart": 12512,
+      "Original": "void Fraig_ManFree( Fraig_Man_t * p )\n{\n    int i;\n    if ( p-\u003efVerbose )   \n    {\n        if ( p-\u003efChoicing ) Fraig_ManReportChoices( p );\n        Fraig_ManPrintStats( p );\n//        Fraig_TablePrintStatsS( p );\n//        Fraig_TablePrintStatsF( p );\n//        Fraig_TablePrintStatsF0( p );\n    }\n \n    for ( i = 0; i \u003c p-\u003evNodes-\u003enSize; i++ )\n        if ( p-\u003evNodes-\u003epArray[i]-\u003evFanins )\n        {\n            Fraig_NodeVecFree( p-\u003evNodes-\u003epArray[i]-\u003evFanins );\n            p-\u003evNodes-\u003epArray[i]-\u003evFanins = NULL;\n        }\n\n    if ( p-\u003evInputs )    Fraig_NodeVecFree( p-\u003evInputs );\n    if ( p-\u003evNodes )     Fraig_NodeVecFree( p-\u003evNodes );\n    if ( p-\u003evOutputs )   Fraig_NodeVecFree( p-\u003evOutputs );\n\n    if ( p-\u003epTableS )    Fraig_HashTableFree( p-\u003epTableS );\n    if ( p-\u003epTableF )    Fraig_HashTableFree( p-\u003epTableF );\n    if ( p-\u003epTableF0 )   Fraig_HashTableFree( p-\u003epTableF0 );\n\n    if ( p-\u003epSat )       Msat_SolverFree( p-\u003epSat );\n    if ( p-\u003evProj )      Msat_IntVecFree( p-\u003evProj );\n    if ( p-\u003evCones )     Fraig_NodeVecFree( p-\u003evCones );\n    if ( p-\u003evPatsReal )  Msat_IntVecFree( p-\u003evPatsReal );\n    if ( p-\u003epModel )     ABC_FREE( p-\u003epModel );\n\n    Fraig_MemFixedStop( p-\u003emmNodes, 0 );\n    Fraig_MemFixedStop( p-\u003emmSims, 0 );\n\n    if ( p-\u003epSuppS )\n    {\n        ABC_FREE( p-\u003epSuppS[0] );\n        ABC_FREE( p-\u003epSuppS );\n    }\n    if ( p-\u003epSuppF )\n    {\n        ABC_FREE( p-\u003epSuppF[0] );\n        ABC_FREE( p-\u003epSuppF );\n    }\n\n    ABC_FREE( p-\u003eppOutputNames );\n    ABC_FREE( p-\u003eppInputNames );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fraig_ManFree(p *Fraig_Man_t) {\n    var i int32;\n    if p.fVerbose {\n        if p.fChoicing { Fraig_ManReportChoices( p ); }\n        Fraig_ManPrintStats( p );\n//        Fraig_TablePrintStatsS( p );\n//        Fraig_TablePrintStatsF( p );\n//        Fraig_TablePrintStatsF0( p );\n    }\n \n    for  i = 0; i \u003c p.vNodes.nSize; i++  {\n        if p.vNodes.pArray[i].vFanins {\n            Fraig_NodeVecFree( p.vNodes.pArray[i].vFanins );\n            p.vNodes.pArray[i].vFanins = nil;\n        }\n    }\n\n    if p.vInputs {    Fraig_NodeVecFree( p.vInputs ); }\n    if p.vNodes {     Fraig_NodeVecFree( p.vNodes ); }\n    if p.vOutputs {   Fraig_NodeVecFree( p.vOutputs ); }\n\n    if p.pTableS {    Fraig_HashTableFree( p.pTableS ); }\n    if p.pTableF {    Fraig_HashTableFree( p.pTableF ); }\n    if p.pTableF0 {   Fraig_HashTableFree( p.pTableF0 ); }\n\n    if p.pSat {       Msat_SolverFree( p.pSat ); }\n    if p.vProj {      Msat_IntVecFree( p.vProj ); }\n    if p.vCones {     Fraig_NodeVecFree( p.vCones ); }\n    if p.vPatsReal {  Msat_IntVecFree( p.vPatsReal ); }\n    // inlining of macro ABC_FREE\n    if p.pModel {     ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0); }\n\n    Fraig_MemFixedStop( p.mmNodes, 0 );\n    Fraig_MemFixedStop( p.mmSims, 0 );\n\n    if p.pSuppS {\n        // inlining of macro ABC_FREE\n        ((p.pSuppS[0]) ? (free((char *) (p.pSuppS[0])), (p.pSuppS[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pSuppS) ? (free((char *) (p.pSuppS)), (p.pSuppS) = 0) : 0);\n    }\n    if p.pSuppF {\n        // inlining of macro ABC_FREE\n        ((p.pSuppF[0]) ? (free((char *) (p.pSuppF[0])), (p.pSuppF[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pSuppF) ? (free((char *) (p.pSuppF)), (p.pSuppF) = 0) : 0);\n    }\n\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppInputNames) ? (free((char *) (p.ppInputNames)), (p.ppInputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fraig_ManCreateSolver",
+      "Start": 14277,
+      "End": 14728,
+      "BodyStart": 14323,
+      "Original": "void Fraig_ManCreateSolver( Fraig_Man_t * p )\n{\n    extern abctime timeSelect;\n    extern abctime timeAssign;\n    assert( p-\u003epSat == NULL );\n    // allocate data for SAT solving\n    p-\u003epSat       = Msat_SolverAlloc( 500, 1, 1, 1, 1, 0 );\n    p-\u003evVarsInt   = Msat_SolverReadConeVars( p-\u003epSat );   \n    p-\u003evAdjacents = Msat_SolverReadAdjacents( p-\u003epSat );\n    p-\u003evVarsUsed  = Msat_SolverReadVarsUsed( p-\u003epSat );\n    timeSelect = 0;\n    timeAssign = 0;\n}",
+      "Draft": "func Fraig_ManCreateSolver(p *Fraig_Man_t) {\n    extern abctime timeSelect;\n    extern abctime timeAssign;\n    assert(p.pSat == nil, \"p.pSat == nil\");\n    // allocate data for SAT solving\n    p.pSat       = Msat_SolverAlloc( 500, 1, 1, 1, 1, 0 );\n    p.vVarsInt   = Msat_SolverReadConeVars( p.pSat );   \n    p.vAdjacents = Msat_SolverReadAdjacents( p.pSat );\n    p.vVarsUsed  = Msat_SolverReadVarsUsed( p.pSat );\n    timeSelect = 0;\n    timeAssign = 0;\n}"
+    },
+    {
+      "Name": "Fraig_ManPrintStats",
+      "Start": 14998,
+      "End": 16548,
+      "BodyStart": 15042,
+      "Original": "void Fraig_ManPrintStats( Fraig_Man_t * p )\n{\n    double nMemory;\n    nMemory = ((double)(p-\u003evInputs-\u003enSize + p-\u003evNodes-\u003enSize) * \n        (sizeof(Fraig_Node_t) + sizeof(unsigned)*(p-\u003enWordsRand + p-\u003enWordsDyna) /*+ p-\u003enSuppWords*sizeof(unsigned)*/))/(1\u003c\u003c20);\n    printf( \"Words: Random = %d. Dynamic = %d. Used = %d. Memory = %0.2f MB.\\n\", \n        p-\u003enWordsRand, p-\u003enWordsDyna, p-\u003eiWordPerm, nMemory );\n    printf( \"Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\\n\", \n        p-\u003enSatProof, p-\u003enSatCounter, p-\u003enSatFails, p-\u003enSatFailsReal, p-\u003enSatZeros );\n    printf( \"Nodes: Final = %d. Total = %d. Mux = %d. (Exor = %d.) ClaVars = %d.\\n\", \n        Fraig_CountNodes(p,0), p-\u003evNodes-\u003enSize, Fraig_ManCountMuxes(p), Fraig_ManCountExors(p), p-\u003enVarsClauses );\n    if ( p-\u003epSat ) Msat_SolverPrintStats( p-\u003epSat );\n    Fraig_PrintTime( \"AIG simulation  \", p-\u003etimeSims  );\n    Fraig_PrintTime( \"AIG traversal   \", p-\u003etimeTrav  );\n    Fraig_PrintTime( \"Solver feedback \", p-\u003etimeFeed  );\n    Fraig_PrintTime( \"SAT solving     \", p-\u003etimeSat   );\n    Fraig_PrintTime( \"Network update  \", p-\u003etimeToNet );\n    Fraig_PrintTime( \"TOTAL RUNTIME   \", p-\u003etimeTotal );\n    if ( p-\u003etime1 \u003e 0 ) { Fraig_PrintTime( \"time1\", p-\u003etime1 ); }\n    if ( p-\u003etime2 \u003e 0 ) { Fraig_PrintTime( \"time2\", p-\u003etime2 ); }\n    if ( p-\u003etime3 \u003e 0 ) { Fraig_PrintTime( \"time3\", p-\u003etime3 ); }\n    if ( p-\u003etime4 \u003e 0 ) { Fraig_PrintTime( \"time4\", p-\u003etime4 ); }\n//    ABC_PRT( \"Selection \", timeSelect );\n//    ABC_PRT( \"Assignment\", timeAssign );\n    fflush( stdout );\n}",
+      "Draft": "func Fraig_ManPrintStats(p *Fraig_Man_t) {\n    var nMemory float64;\n    nMemory = (float64((p.vInputs.nSize + p.vNodes.nSize)) * \n        (sizeof(Fraig_Node_t) + sizeof(unsigned)*(p.nWordsRand + p.nWordsDyna) /*+ p-\u003enSuppWords*sizeof(unsigned)*/))/(1\u003c\u003c20);\n    fmt.Printf(\"Words: Random = %d. Dynamic = %d. Used = %d. Memory = %0.2f MB.\\n\", p.nWordsRand, p.nWordsDyna, p.iWordPerm, nMemory);\n    fmt.Printf(\"Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\\n\", p.nSatProof, p.nSatCounter, p.nSatFails, p.nSatFailsReal, p.nSatZeros);\n    fmt.Printf(\"Nodes: Final = %d. Total = %d. Mux = %d. (Exor = %d.) ClaVars = %d.\\n\", Fraig_CountNodes(p,0), p.vNodes.nSize, Fraig_ManCountMuxes(p), Fraig_ManCountExors(p), p.nVarsClauses);\n    if p.pSat { Msat_SolverPrintStats( p.pSat ); }\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"AIG simulation  \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeSims))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"AIG traversal   \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeTrav))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"Solver feedback \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeFeed))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"SAT solving     \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeSat))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"Network update  \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeToNet))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"TOTAL RUNTIME   \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeTotal))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    if p.time1 \u003e 0 { fmt.Printf(\"%s = \", (\"time1\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time1))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time2 \u003e 0 { fmt.Printf(\"%s = \", (\"time2\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time2))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time3 \u003e 0 { fmt.Printf(\"%s = \", (\"time3\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time3))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time4 \u003e 0 { fmt.Printf(\"%s = \", (\"time4\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time4))/float32((int64(time.Second)))); }\n//    ABC_PRT( \"Selection \", timeSelect );\n//    ABC_PRT( \"Assignment\", timeAssign );\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Fraig_UtilInfoAlloc",
+      "Start": 16831,
+      "End": 17411,
+      "BodyStart": 16906,
+      "Original": "Fraig_NodeVec_t * Fraig_UtilInfoAlloc( int nSize, int nWords, int fClean )\n{\n    Fraig_NodeVec_t * vInfo;\n    unsigned * pUnsigned;\n    int i;\n    assert( nSize \u003e 0 \u0026\u0026 nWords \u003e 0 );\n    vInfo = Fraig_NodeVecAlloc( nSize );\n    pUnsigned = ABC_ALLOC( unsigned, nSize * nWords );\n    vInfo-\u003epArray[0] = (Fraig_Node_t *)pUnsigned;\n    if ( fClean )\n        memset( pUnsigned, 0, sizeof(unsigned) * nSize * nWords );\n    for ( i = 1; i \u003c nSize; i++ )\n        vInfo-\u003epArray[i] = (Fraig_Node_t *)(((unsigned *)vInfo-\u003epArray[i-1]) + nWords);\n    vInfo-\u003enSize = nSize;\n    return vInfo;\n}",
+      "Draft": "func Fraig_UtilInfoAlloc(nSize int32, nWords int32, fClean int32) *Fraig_NodeVec_t {\n    var vInfo *Fraig_NodeVec_t;\n    var pUnsigned *uint32;\n    var i int32;\n    assert(nSize \u003e 0 \u0026\u0026 nWords \u003e 0, \"nSize \u003e 0 \u0026\u0026 nWords \u003e 0\");\n    vInfo = Fraig_NodeVecAlloc( nSize );\n    // inlining of macro ABC_ALLOC\n    pUnsigned = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));\n    vInfo.pArray[0] = (Fraig_Node_t *)pUnsigned;\n    if fClean != 0 {\n        memset( pUnsigned, 0, sizeof(unsigned) * nSize * nWords ); }\n    for  i = 1; i \u003c nSize; i++  {\n        vInfo.pArray[i] = (Fraig_Node_t *)(((unsigned *)vInfo.pArray[i-1]) + nWords);\n    }\n    vInfo.nSize = nSize;\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Fraig_ManGetSimInfo",
+      "Start": 17684,
+      "End": 18480,
+      "BodyStart": 17741,
+      "Original": "Fraig_NodeVec_t * Fraig_ManGetSimInfo( Fraig_Man_t * p )\n{\n    Fraig_NodeVec_t * vInfo;\n    Fraig_Node_t * pNode;\n    unsigned * pUnsigned;\n    int nRandom, nDynamic;\n    int i, k, nWords;\n\n    nRandom  = Fraig_ManReadPatternNumRandom( p );\n    nDynamic = Fraig_ManReadPatternNumDynamic( p );\n    nWords = nRandom / 32 + nDynamic / 32;\n\n    vInfo = Fraig_UtilInfoAlloc( p-\u003evNodes-\u003enSize, nWords, 0 );\n    for ( i = 0; i \u003c p-\u003evNodes-\u003enSize; i++ )\n    {\n        pNode = p-\u003evNodes-\u003epArray[i];\n        assert( i == pNode-\u003eNum );\n        pUnsigned = (unsigned *)vInfo-\u003epArray[i];\n        for ( k = 0; k \u003c nRandom / 32; k++ )\n            pUnsigned[k] = pNode-\u003epuSimR[k];\n        for ( k = 0; k \u003c nDynamic / 32; k++ )\n            pUnsigned[nRandom / 32 + k] = pNode-\u003epuSimD[k];\n    }\n    return vInfo;\n}",
+      "Draft": "func Fraig_ManGetSimInfo(p *Fraig_Man_t) *Fraig_NodeVec_t {\n    var vInfo *Fraig_NodeVec_t;\n    var pNode *Fraig_Node_t;\n    var pUnsigned *uint32;\n    var nRandom, nDynamic int32;\n    var i, k, nWords int32;\n\n    nRandom  = Fraig_ManReadPatternNumRandom( p );\n    nDynamic = Fraig_ManReadPatternNumDynamic( p );\n    nWords = nRandom / 32 + nDynamic / 32;\n\n    vInfo = Fraig_UtilInfoAlloc( p.vNodes.nSize, nWords, 0 );\n    for  i = 0; i \u003c p.vNodes.nSize; i++  {\n        pNode = p.vNodes.pArray[i];\n        assert(i == pNode.Num, \"i == pNode.Num\");\n        pUnsigned = (unsigned *)vInfo.pArray[i];\n        for  k = 0; k \u003c nRandom / 32; k++  {\n            pUnsigned[k] = pNode.puSimR[k];\n        }\n        for  k = 0; k \u003c nDynamic / 32; k++  {\n            pUnsigned[nRandom / 32 + k] = pNode.puSimD[k];\n        }\n    }\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Fraig_ManCheckClauseUsingSimInfo",
+      "Start": 18820,
+      "End": 20534,
+      "BodyStart": 18922,
+      "Original": "int Fraig_ManCheckClauseUsingSimInfo( Fraig_Man_t * p, Fraig_Node_t * pNode1, Fraig_Node_t * pNode2 )\n{\n    int fCompl1, fCompl2, i;\n\n    fCompl1 = 1 ^ Fraig_IsComplement(pNode1) ^ Fraig_Regular(pNode1)-\u003efInv;\n    fCompl2 = 1 ^ Fraig_IsComplement(pNode2) ^ Fraig_Regular(pNode2)-\u003efInv;\n\n    pNode1 = Fraig_Regular(pNode1);\n    pNode2 = Fraig_Regular(pNode2);\n    assert( pNode1 != pNode2 );\n    \n    // check the simulation info\n    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for ( i = 0; i \u003c p-\u003enWordsRand; i++ )\n            if ( ~pNode1-\u003epuSimR[i] \u0026 ~pNode2-\u003epuSimR[i] )\n                return 0;\n        for ( i = 0; i \u003c p-\u003eiWordStart; i++ )\n            if ( ~pNode1-\u003epuSimD[i] \u0026 ~pNode2-\u003epuSimD[i] )\n                return 0;\n        return 1;\n    }\n    if ( !fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for ( i = 0; i \u003c p-\u003enWordsRand; i++ )\n            if ( pNode1-\u003epuSimR[i] \u0026 ~pNode2-\u003epuSimR[i] )\n                return 0;\n        for ( i = 0; i \u003c p-\u003eiWordStart; i++ )\n            if ( pNode1-\u003epuSimD[i] \u0026 ~pNode2-\u003epuSimD[i] )\n                return 0;\n        return 1;\n    }\n    if ( fCompl1 \u0026\u0026 !fCompl2 )\n    {\n        for ( i = 0; i \u003c p-\u003enWordsRand; i++ )\n            if ( ~pNode1-\u003epuSimR[i] \u0026 pNode2-\u003epuSimR[i] )\n                return 0;\n        for ( i = 0; i \u003c p-\u003eiWordStart; i++ )\n            if ( ~pNode1-\u003epuSimD[i] \u0026 pNode2-\u003epuSimD[i] )\n                return 0;\n        return 1;\n    }\n//    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for ( i = 0; i \u003c p-\u003enWordsRand; i++ )\n            if ( pNode1-\u003epuSimR[i] \u0026 pNode2-\u003epuSimR[i] )\n                return 0;\n        for ( i = 0; i \u003c p-\u003eiWordStart; i++ )\n            if ( pNode1-\u003epuSimD[i] \u0026 pNode2-\u003epuSimD[i] )\n                return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Fraig_ManCheckClauseUsingSimInfo(p *Fraig_Man_t, pNode1 *Fraig_Node_t, pNode2 *Fraig_Node_t) int32 {\n    var fCompl1, fCompl2, i int32;\n\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    fCompl1 = 1 ^ ((int32(((ABC_PTRUINT_T) (pNode1) \u0026 01)))) ^ ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1) \u0026 ~01)) .fInv;\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    fCompl2 = 1 ^ ((int32(((ABC_PTRUINT_T) (pNode2) \u0026 01)))) ^ ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2) \u0026 ~01)) .fInv;\n\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2) \u0026 ~01)) ;\n    assert(pNode1 != pNode2, \"pNode1 != pNode2\");\n    \n    // check the simulation info\n    if fCompl1 \u0026\u0026 fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if ~pNode1.puSimR[i] \u0026 ~pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if ~pNode1.puSimD[i] \u0026 ~pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    if !fCompl1 \u0026\u0026 fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if pNode1.puSimR[i] \u0026 ~pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if pNode1.puSimD[i] \u0026 ~pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    if fCompl1 \u0026\u0026 !fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if ~pNode1.puSimR[i] \u0026 pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if ~pNode1.puSimD[i] \u0026 pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n//    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if pNode1.puSimR[i] \u0026 pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if pNode1.puSimD[i] \u0026 pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Fraig_ManAddClause",
+      "Start": 20989,
+      "End": 21612,
+      "BodyStart": 21069,
+      "Original": "void Fraig_ManAddClause( Fraig_Man_t * p, Fraig_Node_t ** ppNodes, int nNodes )\n{\n    Fraig_Node_t * pNode;\n    int i, fComp, RetValue;\n    if ( p-\u003epSat == NULL )\n        Fraig_ManCreateSolver( p );\n    // create four clauses\n    Msat_IntVecClear( p-\u003evProj );\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        pNode = Fraig_Regular(ppNodes[i]);\n        fComp = Fraig_IsComplement(ppNodes[i]);\n        Msat_IntVecPush( p-\u003evProj, MSAT_VAR2LIT(pNode-\u003eNum, fComp) );\n//        printf( \"%d(%d) \", pNode-\u003eNum, fComp );\n    }\n//    printf( \"\\n\" );\n    RetValue = Msat_SolverAddClause( p-\u003epSat, p-\u003evProj );\n    assert( RetValue );\n}",
+      "Draft": "func Fraig_ManAddClause(p *Fraig_Man_t, ppNodes **Fraig_Node_t, nNodes int32) {\n    var pNode *Fraig_Node_t;\n    var i, fComp, RetValue int32;\n    if p.pSat == nil {\n        Fraig_ManCreateSolver( p ); }\n    // create four clauses\n    Msat_IntVecClear( p.vProj );\n    for  i = 0; i \u003c nNodes; i++  {\n        // inlining of macro Fraig_Regular\n        pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(ppNodes[i]) \u0026 ~01)) ;\n        // inlining of macro Fraig_IsComplement\n        fComp = ((int32(((ABC_PTRUINT_T) (ppNodes[i]) \u0026 01))));\n        // inlining of macro MSAT_VAR2LIT\n        Msat_IntVecPush( p.vProj, (2*(pNode.Num)+(fComp))  );\n//        printf( \"%d(%d) \", pNode-\u003eNum, fComp );\n    }\n//    printf( \"\\n\" );\n    RetValue = Msat_SolverAddClause( p.pSat, p.vProj );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::1493",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1493,
+      "End": 1499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::5457",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5457,
+      "End": 5463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::7246",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7246,
+      "End": 7252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::9830",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9761,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::9885",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9808,
+      "End": 9814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::11466",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11239,
+      "End": 11245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::11531",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11304,
+      "End": 11310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::16091",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15138,
+      "End": 15144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::16114",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15161,
+      "End": 15167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::19194",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17070,
+      "End": 17070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::mechanical::sizeof::19339",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17207,
+      "End": 17213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::9807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9761,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::13895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13603,
+      "End": 13603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14127",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13744,
+      "End": 13744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13778,
+      "End": 13778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13842,
+      "End": 13842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13876,
+      "End": 13876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13910,
+      "End": 13910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13944,
+      "End": 13944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::14915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13977,
+      "End": 13977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::19174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17070,
+      "End": 17070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::19264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17132,
+      "End": 17148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::19437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17305,
+      "End": 17321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::19455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17323,
+      "End": 17335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::20361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18229,
+      "End": 18241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::21251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19001,
+      "End": 19001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::21473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19077,
+      "End": 19077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::21594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19120,
+      "End": 19120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::21708",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19156,
+      "End": 19156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::pointer-cast::23936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21306,
+      "End": 21306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Prove_ParamsSetDefault",
+      "Category": "semantic-review",
+      "Symbol": "Prove_ParamsSetDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1373,
+      "End": 3292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::ternary::Prove_ParamsPrint",
+      "Category": "ternary-review",
+      "Symbol": "Prove_ParamsPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3583,
+      "End": 5039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Prove_ParamsPrint",
+      "Category": "semantic-review",
+      "Symbol": "Prove_ParamsPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3583,
+      "End": 5039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ParamsSetDefault",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ParamsSetDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5375,
+      "End": 6827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ParamsSetDefaultFull",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ParamsSetDefaultFull",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7160,
+      "End": 8616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8882,
+      "End": 12206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::ternary::Fraig_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12474,
+      "End": 13993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12474,
+      "End": 13993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManCreateSolver",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCreateSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14277,
+      "End": 14728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14998,
+      "End": 16548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_UtilInfoAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_UtilInfoAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16831,
+      "End": 17411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManGetSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManGetSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17684,
+      "End": 18480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManCheckClauseUsingSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManCheckClauseUsingSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18820,
+      "End": 20534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::Fraig_ManAddClause",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_ManAddClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20989,
+      "End": 21612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21858
+    }
+  ],
+  "Draft": "package fraig\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraigMan.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Implementation of the FRAIG manager.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigMan.c,v 1.11 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar timeSelect abctime;\nvar timeAssign abctime;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the default parameters of the package.]\n\n  Description [This set of parameters is tuned for equivalence checking.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prove_ParamsSetDefault(pParams *Prove_Params_t) {\n    // clean the parameter structure \n    memset( pParams, 0, sizeof(Prove_Params_t) );\n    // general parameters\n    pParams.fUseFraiging         = 1;       // enables fraiging\n    pParams.fUseRewriting        = 1;       // enables rewriting\n    pParams.fUseBdds             = 0;       // enables BDD construction when other methods fail\n    pParams.fVerbose             = 0;       // prints verbose stats\n    // iterations\n    pParams.nItersMax            = 6;       // the number of iterations\n    // mitering \n    pParams.nMiteringLimitStart  = 5000;    // starting mitering limit\n    pParams.nMiteringLimitMulti  = 2.0;     // multiplicative coefficient to increase the limit in each iteration\n    // rewriting (currently not used)\n    pParams.nRewritingLimitStart = 3;       // the number of rewriting iterations\n    pParams.nRewritingLimitMulti = 1.0;     // multiplicative coefficient to increase the limit in each iteration\n    // fraiging \n    pParams.nFraigingLimitStart  = 2;       // starting backtrack(conflict) limit\n    pParams.nFraigingLimitMulti  = 8.0;     // multiplicative coefficient to increase the limit in each iteration\n    // last-gasp BDD construction\n    pParams.nBddSizeLimit        = 1000000; // the number of BDD nodes when construction is aborted\n    pParams.fBddReorder          = 1;       // enables dynamic BDD variable reordering\n    // last-gasp mitering\n//    pParams-\u003enMiteringLimitLast   = 1000000; // final mitering limit\n    pParams.nMiteringLimitLast   = 0;       // final mitering limit\n    // global SAT solver limits\n    pParams.nTotalBacktrackLimit = 0;       // global limit on the number of backtracks\n    pParams.nTotalInspectLimit   = 0;       // global limit on the number of clause inspects\n//    pParams-\u003enTotalInspectLimit   = 100000000;  // global limit on the number of clause inspects\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints out the current values of CEC engine parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prove_ParamsPrint(pParams *Prove_Params_t) {\n    fmt.Printf(\"CEC enging parameters:\\n\");\n    fmt.Printf(\"Fraiging enabled: %s\\n\", pParams.fUseFraiging? \"yes\":\"no\");\n    fmt.Printf(\"Rewriting enabled: %s\\n\", pParams.fUseRewriting? \"yes\":\"no\");\n    fmt.Printf(\"BDD construction enabled: %s\\n\", pParams.fUseBdds? \"yes\":\"no\");\n    fmt.Printf(\"Verbose output enabled: %s\\n\", pParams.fVerbose? \"yes\":\"no\");\n    fmt.Printf(\"Solver iterations: %d\\n\", pParams.nItersMax);\n    fmt.Printf(\"Starting mitering limit: %d\\n\", pParams.nMiteringLimitStart);\n    fmt.Printf(\"Multiplicative coeficient for mitering: %.2f\\n\", pParams.nMiteringLimitMulti);\n    fmt.Printf(\"Starting number of rewriting iterations: %d\\n\", pParams.nRewritingLimitStart);\n    fmt.Printf(\"Multiplicative coeficient for rewriting: %.2f\\n\", pParams.nRewritingLimitMulti);\n    fmt.Printf(\"Starting number of conflicts in fraiging: %.2f\\n\", pParams.nFraigingLimitMulti);\n    fmt.Printf(\"Multiplicative coeficient for fraiging: %.2f\\n\", pParams.nRewritingLimitMulti);\n    fmt.Printf(\"BDD size limit for bailing out: %d\\n\", pParams.nBddSizeLimit);\n    fmt.Printf(\"BDD reordering enabled: %s\\n\", pParams.fBddReorder? \"yes\":\"no\");\n    fmt.Printf(\"Last-gasp mitering limit: %d\\n\", pParams.nMiteringLimitLast);\n    fmt.Printf(\"Total conflict limit: %d\\n\", int32(pParams.nTotalBacktrackLimit));\n    fmt.Printf(\"Total inspection limit: %d\\n\", int32(pParams.nTotalInspectLimit));\n    fmt.Printf(\"Parameter dump complete.\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the default parameters of the package.]\n\n  Description [This set of parameters is tuned for equivalence checking.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ParamsSetDefault(pParams *Fraig_Params_t) {\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams.nPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams.nPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = 99;                     // the max number of backtracks to perform\n    pParams.nSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams.fFuncRed   =  1;                     // performs only one level hashing\n    pParams.fFeedBack  =  1;                     // enables solver feedback\n    pParams.fDist1Pats =  1;                     // enables distance-1 patterns\n    pParams.fDoSparse  =  0;                     // performs equiv tests for sparse functions \n    pParams.fChoicing  =  0;                     // enables recording structural choices\n    pParams.fTryProve  =  1;                     // tries to solve the final miter\n    pParams.fVerbose   =  0;                     // the verbosiness flag\n    pParams.fVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams.fInternal  =  0;                     // the flag indicates the internal run \n    pParams.nConfLimit =  0;                     // the limit on the number of conflicts\n    pParams.nInspLimit =  0;                     // the limit on the number of inspections\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the default parameters of the package.]\n\n  Description [This set of parameters is tuned for complete FRAIGing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ParamsSetDefaultFull(pParams *Fraig_Params_t) {\n    memset( pParams, 0, sizeof(Fraig_Params_t) );\n    pParams.nPatsRand  = FRAIG_PATTERNS_RANDOM;  // the number of words of random simulation info\n    pParams.nPatsDyna  = FRAIG_PATTERNS_DYNAMIC; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = -1;                     // the max number of backtracks to perform\n    pParams.nSeconds   = 20;                     // the max number of seconds to solve the miter\n    pParams.fFuncRed   =  1;                     // performs only one level hashing\n    pParams.fFeedBack  =  1;                     // enables solver feedback\n    pParams.fDist1Pats =  1;                     // enables distance-1 patterns\n    pParams.fDoSparse  =  1;                     // performs equiv tests for sparse functions \n    pParams.fChoicing  =  0;                     // enables recording structural choices\n    pParams.fTryProve  =  0;                     // tries to solve the final miter\n    pParams.fVerbose   =  0;                     // the verbosiness flag\n    pParams.fVerboseP  =  0;                     // the verbose flag for reporting the proof\n    pParams.fInternal  =  0;                     // the flag indicates the internal run \n    pParams.nConfLimit =  0;                     // the limit on the number of conflicts\n    pParams.nInspLimit =  0;                     // the limit on the number of inspections\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the new FRAIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCreate(pParams *Fraig_Params_t) *Fraig_Man_t {\n    var Params Fraig_Params_t;\n    var p *Fraig_Man_t;\n\n    // set the random seed for simulation\n//    srand( 0xFEEDDEAF );\n//    srand( 0xDEADCAFE );\n    Aig_ManRandom( 1 );\n\n    // set parameters for equivalence checking\n    if pParams == nil {\n        Fraig_ParamsSetDefault( pParams = \u0026Params ); }\n    // adjust the amount of simulation info\n    if pParams.nPatsRand \u003c 128 {\n        pParams.nPatsRand = 128; }\n    if pParams.nPatsRand \u003e 32768 {\n        pParams.nPatsRand = 32768; }\n    if pParams.nPatsDyna \u003c 128 {\n        pParams.nPatsDyna = 128; }\n    if pParams.nPatsDyna \u003e 32768 {\n        pParams.nPatsDyna = 32768; }\n    // if reduction is not performed, allocate minimum simulation info\n    if !pParams.fFuncRed {\n        pParams.nPatsRand = pParams.nPatsDyna = 128; }\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fraig_Man_t *) malloc(sizeof(Fraig_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fraig_Man_t) );\n\n    // set the default parameters\n    // inlining of macro FRAIG_NUM_WORDS\n    p.nWordsRand = (((pParams.nPatsRand)\u003e\u003e5) + (((pParams.nPatsRand)\u002631) \u003e 0));  // the number of words of random simulation info\n    // inlining of macro FRAIG_NUM_WORDS\n    p.nWordsDyna = (((pParams.nPatsDyna)\u003e\u003e5) + (((pParams.nPatsDyna)\u002631) \u003e 0));  // the number of patterns for dynamic simulation info\n    p.nBTLimit   = pParams.nBTLimit;    // -1 means infinite backtrack limit\n    p.nSeconds   = pParams.nSeconds;    // the timeout for the final miter\n    p.fFuncRed   = pParams.fFuncRed;    // enables functional reduction (otherwise, only one-level hashing is performed)\n    p.fFeedBack  = pParams.fFeedBack;   // enables solver feedback (the use of counter-examples in simulation)\n    p.fDist1Pats = pParams.fDist1Pats;  // enables solver feedback (the use of counter-examples in simulation)\n    p.fDoSparse  = pParams.fDoSparse;   // performs equivalence checking for sparse functions (whose sim-info is 0)\n    p.fChoicing  = pParams.fChoicing;   // disable accumulation of structural choices (keeps only the first choice)\n    p.fTryProve  = pParams.fTryProve;   // disable accumulation of structural choices (keeps only the first choice)\n    p.fVerbose   = pParams.fVerbose;    // disable verbose output\n    p.fVerboseP  = pParams.fVerboseP;   // disable verbose output\n    p.nInspLimit = pParams.nInspLimit;  // the limit on the number of inspections\n\n    // start memory managers\n    p.mmNodes    = Fraig_MemFixedStart( sizeof(Fraig_Node_t) );\n    p.mmSims     = Fraig_MemFixedStart( sizeof(unsigned) * (p.nWordsRand + p.nWordsDyna) );\n    // allocate node arrays\n    p.vInputs    = Fraig_NodeVecAlloc( 1000 );    // the array of primary inputs\n    p.vOutputs   = Fraig_NodeVecAlloc( 1000 );    // the array of primary outputs\n    p.vNodes     = Fraig_NodeVecAlloc( 1000 );    // the array of internal nodes\n    // start the tables\n    p.pTableS    = Fraig_HashTableCreate( 1000 ); // hashing by structure\n    p.pTableF    = Fraig_HashTableCreate( 1000 ); // hashing by function\n    p.pTableF0   = Fraig_HashTableCreate( 1000 ); // hashing by function (for sparse functions)\n    // create the constant node\n    p.pConst1    = Fraig_NodeCreateConst( p );\n    // initialize SAT solver feedback data structures\n    Fraig_FeedBackInit( p );\n    // initialize other variables\n    p.vProj      = Msat_IntVecAlloc( 10 ); \n    p.nTravIds   = 1;\n    p.nTravIds2  = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManFree(p *Fraig_Man_t) {\n    var i int32;\n    if p.fVerbose {\n        if p.fChoicing { Fraig_ManReportChoices( p ); }\n        Fraig_ManPrintStats( p );\n//        Fraig_TablePrintStatsS( p );\n//        Fraig_TablePrintStatsF( p );\n//        Fraig_TablePrintStatsF0( p );\n    }\n \n    for  i = 0; i \u003c p.vNodes.nSize; i++  {\n        if p.vNodes.pArray[i].vFanins {\n            Fraig_NodeVecFree( p.vNodes.pArray[i].vFanins );\n            p.vNodes.pArray[i].vFanins = nil;\n        }\n    }\n\n    if p.vInputs {    Fraig_NodeVecFree( p.vInputs ); }\n    if p.vNodes {     Fraig_NodeVecFree( p.vNodes ); }\n    if p.vOutputs {   Fraig_NodeVecFree( p.vOutputs ); }\n\n    if p.pTableS {    Fraig_HashTableFree( p.pTableS ); }\n    if p.pTableF {    Fraig_HashTableFree( p.pTableF ); }\n    if p.pTableF0 {   Fraig_HashTableFree( p.pTableF0 ); }\n\n    if p.pSat {       Msat_SolverFree( p.pSat ); }\n    if p.vProj {      Msat_IntVecFree( p.vProj ); }\n    if p.vCones {     Fraig_NodeVecFree( p.vCones ); }\n    if p.vPatsReal {  Msat_IntVecFree( p.vPatsReal ); }\n    // inlining of macro ABC_FREE\n    if p.pModel {     ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0); }\n\n    Fraig_MemFixedStop( p.mmNodes, 0 );\n    Fraig_MemFixedStop( p.mmSims, 0 );\n\n    if p.pSuppS {\n        // inlining of macro ABC_FREE\n        ((p.pSuppS[0]) ? (free((char *) (p.pSuppS[0])), (p.pSuppS[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pSuppS) ? (free((char *) (p.pSuppS)), (p.pSuppS) = 0) : 0);\n    }\n    if p.pSuppF {\n        // inlining of macro ABC_FREE\n        ((p.pSuppF[0]) ? (free((char *) (p.pSuppF[0])), (p.pSuppF[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pSuppF) ? (free((char *) (p.pSuppF)), (p.pSuppF) = 0) : 0);\n    }\n\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppInputNames) ? (free((char *) (p.ppInputNames)), (p.ppInputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the SAT solver to run on the two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCreateSolver(p *Fraig_Man_t) {\n    extern abctime timeSelect;\n    extern abctime timeAssign;\n    assert(p.pSat == nil, \"p.pSat == nil\");\n    // allocate data for SAT solving\n    p.pSat       = Msat_SolverAlloc( 500, 1, 1, 1, 1, 0 );\n    p.vVarsInt   = Msat_SolverReadConeVars( p.pSat );   \n    p.vAdjacents = Msat_SolverReadAdjacents( p.pSat );\n    p.vVarsUsed  = Msat_SolverReadVarsUsed( p.pSat );\n    timeSelect = 0;\n    timeAssign = 0;\n}\n\n \n/**Function*************************************************************\n\n  Synopsis    [Deallocates the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManPrintStats(p *Fraig_Man_t) {\n    var nMemory float64;\n    nMemory = (float64((p.vInputs.nSize + p.vNodes.nSize)) * \n        (sizeof(Fraig_Node_t) + sizeof(unsigned)*(p.nWordsRand + p.nWordsDyna) /*+ p-\u003enSuppWords*sizeof(unsigned)*/))/(1\u003c\u003c20);\n    fmt.Printf(\"Words: Random = %d. Dynamic = %d. Used = %d. Memory = %0.2f MB.\\n\", p.nWordsRand, p.nWordsDyna, p.iWordPerm, nMemory);\n    fmt.Printf(\"Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\\n\", p.nSatProof, p.nSatCounter, p.nSatFails, p.nSatFailsReal, p.nSatZeros);\n    fmt.Printf(\"Nodes: Final = %d. Total = %d. Mux = %d. (Exor = %d.) ClaVars = %d.\\n\", Fraig_CountNodes(p,0), p.vNodes.nSize, Fraig_ManCountMuxes(p), Fraig_ManCountExors(p), p.nVarsClauses);\n    if p.pSat { Msat_SolverPrintStats( p.pSat ); }\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"AIG simulation  \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeSims))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"AIG traversal   \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeTrav))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"Solver feedback \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeFeed))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"SAT solving     \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeSat))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"Network update  \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeToNet))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    fmt.Printf(\"%s = \", (\"TOTAL RUNTIME   \")); fmt.Printf(\"%6.2f sec\\n\", float32((p.timeTotal))/float32((int64(time.Second))));\n    // inlining of macro Fraig_PrintTime\n    if p.time1 \u003e 0 { fmt.Printf(\"%s = \", (\"time1\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time1))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time2 \u003e 0 { fmt.Printf(\"%s = \", (\"time2\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time2))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time3 \u003e 0 { fmt.Printf(\"%s = \", (\"time3\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time3))/float32((int64(time.Second)))); }\n    // inlining of macro Fraig_PrintTime\n    if p.time4 \u003e 0 { fmt.Printf(\"%s = \", (\"time4\")); fmt.Printf(\"%6.2f sec\\n\", float32((p.time4))/float32((int64(time.Second)))); }\n//    ABC_PRT( \"Selection \", timeSelect );\n//    ABC_PRT( \"Assignment\", timeAssign );\n    fflush( os.Stdout );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation information for all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_UtilInfoAlloc(nSize int32, nWords int32, fClean int32) *Fraig_NodeVec_t {\n    var vInfo *Fraig_NodeVec_t;\n    var pUnsigned *uint32;\n    var i int32;\n    assert(nSize \u003e 0 \u0026\u0026 nWords \u003e 0, \"nSize \u003e 0 \u0026\u0026 nWords \u003e 0\");\n    vInfo = Fraig_NodeVecAlloc( nSize );\n    // inlining of macro ABC_ALLOC\n    pUnsigned = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));\n    vInfo.pArray[0] = (Fraig_Node_t *)pUnsigned;\n    if fClean != 0 {\n        memset( pUnsigned, 0, sizeof(unsigned) * nSize * nWords ); }\n    for  i = 1; i \u003c nSize; i++  {\n        vInfo.pArray[i] = (Fraig_Node_t *)(((unsigned *)vInfo.pArray[i-1]) + nWords);\n    }\n    vInfo.nSize = nSize;\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns simulation info of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManGetSimInfo(p *Fraig_Man_t) *Fraig_NodeVec_t {\n    var vInfo *Fraig_NodeVec_t;\n    var pNode *Fraig_Node_t;\n    var pUnsigned *uint32;\n    var nRandom, nDynamic int32;\n    var i, k, nWords int32;\n\n    nRandom  = Fraig_ManReadPatternNumRandom( p );\n    nDynamic = Fraig_ManReadPatternNumDynamic( p );\n    nWords = nRandom / 32 + nDynamic / 32;\n\n    vInfo = Fraig_UtilInfoAlloc( p.vNodes.nSize, nWords, 0 );\n    for  i = 0; i \u003c p.vNodes.nSize; i++  {\n        pNode = p.vNodes.pArray[i];\n        assert(i == pNode.Num, \"i == pNode.Num\");\n        pUnsigned = (unsigned *)vInfo.pArray[i];\n        for  k = 0; k \u003c nRandom / 32; k++  {\n            pUnsigned[k] = pNode.puSimR[k];\n        }\n        for  k = 0; k \u003c nDynamic / 32; k++  {\n            pUnsigned[nRandom / 32 + k] = pNode.puSimD[k];\n        }\n    }\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if A v B is always true based on the siminfo.]\n\n  Description [A v B is always true iff A' * B' is always false.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManCheckClauseUsingSimInfo(p *Fraig_Man_t, pNode1 *Fraig_Node_t, pNode2 *Fraig_Node_t) int32 {\n    var fCompl1, fCompl2, i int32;\n\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    fCompl1 = 1 ^ ((int32(((ABC_PTRUINT_T) (pNode1) \u0026 01)))) ^ ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1) \u0026 ~01)) .fInv;\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    fCompl2 = 1 ^ ((int32(((ABC_PTRUINT_T) (pNode2) \u0026 01)))) ^ ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2) \u0026 ~01)) .fInv;\n\n    // inlining of macro Fraig_Regular\n    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1) \u0026 ~01)) ;\n    // inlining of macro Fraig_Regular\n    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2) \u0026 ~01)) ;\n    assert(pNode1 != pNode2, \"pNode1 != pNode2\");\n    \n    // check the simulation info\n    if fCompl1 \u0026\u0026 fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if ~pNode1.puSimR[i] \u0026 ~pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if ~pNode1.puSimD[i] \u0026 ~pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    if !fCompl1 \u0026\u0026 fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if pNode1.puSimR[i] \u0026 ~pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if pNode1.puSimD[i] \u0026 ~pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    if fCompl1 \u0026\u0026 !fCompl2 {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if ~pNode1.puSimR[i] \u0026 pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if ~pNode1.puSimD[i] \u0026 pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n//    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        for  i = 0; i \u003c p.nWordsRand; i++  {\n            if pNode1.puSimR[i] \u0026 pNode2.puSimR[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c p.iWordStart; i++  {\n            if pNode1.puSimD[i] \u0026 pNode2.puSimD[i] {\n                return 0; }\n        }\n        return 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses to the solver.]\n\n  Description [This procedure is used to add external clauses to the solver.\n  The clauses are given by sets of nodes. Each node stands for one literal.\n  If the node is complemented, the literal is negated.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_ManAddClause(p *Fraig_Man_t, ppNodes **Fraig_Node_t, nNodes int32) {\n    var pNode *Fraig_Node_t;\n    var i, fComp, RetValue int32;\n    if p.pSat == nil {\n        Fraig_ManCreateSolver( p ); }\n    // create four clauses\n    Msat_IntVecClear( p.vProj );\n    for  i = 0; i \u003c nNodes; i++  {\n        // inlining of macro Fraig_Regular\n        pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(ppNodes[i]) \u0026 ~01)) ;\n        // inlining of macro Fraig_IsComplement\n        fComp = ((int32(((ABC_PTRUINT_T) (ppNodes[i]) \u0026 01))));\n        // inlining of macro MSAT_VAR2LIT\n        Msat_IntVecPush( p.vProj, (2*(pNode.Num)+(fComp))  );\n//        printf( \"%d(%d) \", pNode-\u003eNum, fComp );\n    }\n//    printf( \"\\n\" );\n    RetValue = Msat_SolverAddClause( p.pSat, p.vProj );\n    assert((RetValue != 0), \"RetValue\");\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

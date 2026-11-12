@@ -1,0 +1,266 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c",
+  "SHA256": "859e0ec9466e570eb9618f98a14dba0718c9838f9849af57970b15fe3a24233a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 343,
+        "Column": 21,
+        "ByteOffset": 13523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( BitGroupNumbers[Temp] != MARKNUMBER );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 21,
+        "ByteOffset": 14026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( BitGroupNumbers[Temp] != MARKNUMBER );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 14738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 9,
+        "ByteOffset": 14839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 14906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 15775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 15876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 15943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "PrepareBitSetModule",
+      "Start": 7299,
+      "End": 8135,
+      "BodyStart": 7404,
+      "Original": "void PrepareBitSetModule()\n// this function should be called before anything is done with the cube cover\n{   \n    // prepare bit count\n    int i, k;\n    int nLimit;\n    \n    nLimit = FULL16BITS;\n    for ( i = 0; i \u003c nLimit; i++ )\n    {\n        BitCount[i] = BitCount8[ i \u0026 0xff ] + BitCount8[ i\u003e\u003e8 ];\n        BitGroupNumbers[i] = MARKNUMBER;\n    }\n    // prepare bit groups\n    for ( k = 0; k \u003c 163; k++ )\n        BitGroupNumbers[ SparseNumbers[k] ] = k;\n/*\n    // verify bit groups\n    int n = 4368;\n    char Buff[100];\n    cout \u003c\u003c \"The number is \" \u003c\u003c n \u003c\u003c endl;\n    cout \u003c\u003c \"The binary is \" \u003c\u003c itoa(n,Buff,2) \u003c\u003c endl;\n    cout \u003c\u003c \"BitGroupNumbers[n] is \" \u003c\u003c (int)BitGroupNumbers[n] \u003c\u003c endl;\n    cout \u003c\u003c \"The group literals are \";\n    for ( int g = 0; g \u003c 4; g++ )\n        cout \u003c\u003c \" \" \u003c\u003c (int)GroupLiterals[BitGroupNumbers[n]][g];\n*/\n}",
+      "Draft": "void PrepareBitSetModule()\n// this function should be called before anything is done with the cube cover\n{   \n    // prepare bit count\n    var i, k int32;\n    var nLimit int32;\n    \n    nLimit = FULL16BITS;\n    for  i = 0; i \u003c nLimit; i++  {\n        BitCount[i] = BitCount8[ i \u0026 0xff ] + BitCount8[ i\u003e\u003e8 ];\n        BitGroupNumbers[i] = MARKNUMBER;\n    }\n    // prepare bit groups\n    for  k = 0; k \u003c 163; k++  {\n        BitGroupNumbers[ SparseNumbers[k] ] = k;\n    }\n/*\n    // verify bit groups\n    int n = 4368;\n    char Buff[100];\n    cout \u003c\u003c \"The number is \" \u003c\u003c n \u003c\u003c endl;\n    cout \u003c\u003c \"The binary is \" \u003c\u003c itoa(n,Buff,2) \u003c\u003c endl;\n    cout \u003c\u003c \"BitGroupNumbers[n] is \" \u003c\u003c (int)BitGroupNumbers[n] \u003c\u003c endl;\n    cout \u003c\u003c \"The group literals are \";\n    for ( int g = 0; g \u003c 4; g++ )\n        cout \u003c\u003c \" \" \u003c\u003c (int)GroupLiterals[BitGroupNumbers[n]][g];\n*/\n}"
+    },
+    {
+      "Name": "GetVar",
+      "Start": 8493,
+      "End": 8810,
+      "BodyStart": 8613,
+      "Original": "varvalue GetVar( Cube * pC, int Var )\n// returns VAR_NEG if var is neg, VAR_POS if var is pos, VAR_ABS if var is absent\n{\n    int Bit = (Var\u003c\u003c1);\n    int Value = ((pC-\u003epCubeDataIn[VarWord(Bit)] \u003e\u003e VarBit(Bit)) \u0026 3);\n    assert( Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS );\n    return (varvalue)Value;\n}",
+      "Draft": "varvalue GetVar( Cube * pC, int Var )\n// returns VAR_NEG if var is neg, VAR_POS if var is pos, VAR_ABS if var is absent\n{\n    var Bit int32  = (Var\u003c\u003c1);\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    var Value int32  = ((pC.pCubeDataIn[((Bit)\u003e\u003eLOGBPI)] \u003e\u003e ((Bit)\u0026BPIMASK)) \u0026 3);\n    assert(Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS, \"Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS\");\n    return (varvalue)Value;\n}"
+    },
+    {
+      "Name": "ExorVar",
+      "Start": 8812,
+      "End": 9080,
+      "BodyStart": 8992,
+      "Original": "void ExorVar( Cube * pC, int Var, varvalue Val )\n// EXORs the value Val with the value of variable Var in the given cube\n// ((cube[VAR_WORD((v)\u003c\u003c1)]) ^ ( (pol)\u003c\u003cVAR_BIT((v)\u003c\u003c1) ))\n{\n    int Bit = (Var\u003c\u003c1);\n    pC-\u003epCubeDataIn[VarWord(Bit)] ^= ( Val \u003c\u003c VarBit(Bit) );\n}",
+      "Draft": "void ExorVar( Cube * pC, int Var, varvalue Val )\n// EXORs the value Val with the value of variable Var in the given cube\n// ((cube[VAR_WORD((v)\u003c\u003c1)]) ^ ( (pol)\u003c\u003cVAR_BIT((v)\u003c\u003c1) ))\n{\n    var Bit int32  = (Var\u003c\u003c1);\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    pC.pCubeDataIn[((Bit)\u003e\u003eLOGBPI)] ^= ( Val \u003c\u003c ((Bit)\u0026BPIMASK) );\n}"
+    },
+    {
+      "Name": "GetDistance",
+      "Start": 9429,
+      "End": 10163,
+      "BodyStart": 9535,
+      "Original": "int GetDistance( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n{\n    int i;\n    DiffVarCounter = 0;\n\n    for ( i = 0; i \u003c g_CoverInfo.nWordsIn; i++ )\n    {\n        Temp1 = pC1-\u003epCubeDataIn[i] ^ pC2-\u003epCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // count how many bits are one in this var difference\n        DiffVarCounter  += BIT_COUNT(Temp2);\n        if ( DiffVarCounter \u003e 4 )\n            return 5;\n    }\n    // check whether the output parts are different\n    for ( i = 0; i \u003c g_CoverInfo.nWordsOut; i++ )\n        if ( pC1-\u003epCubeDataOut[i] ^ pC2-\u003epCubeDataOut[i] )\n        {\n            DiffVarCounter++;\n            break;\n        }\n    return DiffVarCounter;\n}",
+      "Draft": "int GetDistance( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n{\n    var i int32;\n    DiffVarCounter = 0;\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // count how many bits are one in this var difference\n        // inlining of macro BIT_COUNT\n        DiffVarCounter  += (BitCount[(Temp2)\u00260xffff] + BitCount[(Temp2)\u003e\u003e16]);\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    // check whether the output parts are different\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] ^ pC2.pCubeDataOut[i] {\n            DiffVarCounter++;\n            break;\n        }\n    }\n    return DiffVarCounter;\n}"
+    },
+    {
+      "Name": "GetDistancePlus",
+      "Start": 10369,
+      "End": 12160,
+      "BodyStart": 10550,
+      "Original": "int GetDistancePlus( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n// if the distance is 1, returns the number of diff variable in VarNum\n{\n    int i;\n\n    DiffVarCounter = 0;\n    LastNonZeroWordNum = -1;\n    for ( i = 0; i \u003c g_CoverInfo.nWordsIn; i++ )\n    {\n        Temp1 = pC1-\u003epCubeDataIn[i] ^ pC2-\u003epCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // save the value of var difference, in case \n        // the distance is one and we need to return the var number\n        if ( Temp2 )\n        {\n            LastNonZeroWordNum = i;\n            LastNonZeroWord = Temp2;\n        }\n\n        // count how many bits are one in this var difference\n        DiffVarCounter  += BIT_COUNT(Temp2);\n        if ( DiffVarCounter \u003e 4 )\n            return 5;\n    }\n    // check whether the output parts are different\n    for ( i = 0; i \u003c g_CoverInfo.nWordsOut; i++ )\n        if ( pC1-\u003epCubeDataOut[i] ^ pC2-\u003epCubeDataOut[i] )\n        {\n            DiffVarCounter++;\n            break;\n        }\n\n    if ( DiffVarCounter == 1 )\n    {\n        if ( LastNonZeroWordNum == -1 ) // the output is the only different variable\n            s_DiffVarNum = -1;\n        else\n        {\n            Temp = (LastNonZeroWord\u003e\u003e2);\n            for ( i = 0; Temp; Temp\u003e\u003e=2, i++ );\n            s_DiffVarNum = LastNonZeroWordNum*BPI/2 + i;\n\n            // save the old var value\n            s_DiffVarValueP_old = GetVar( pC1, s_DiffVarNum );\n            s_DiffVarValueQ = GetVar( pC2, s_DiffVarNum );\n\n            // EXOR this value with the corresponding value in p cube           \n            ExorVar( pC1, s_DiffVarNum, (varvalue)s_DiffVarValueQ );\n\n            s_DiffVarValueP_new = GetVar( pC1, s_DiffVarNum );\n        }\n    }\n\n    return DiffVarCounter;\n}",
+      "Draft": "int GetDistancePlus( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n// if the distance is 1, returns the number of diff variable in VarNum\n{\n    var i int32;\n\n    DiffVarCounter = 0;\n    LastNonZeroWordNum = -1;\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // save the value of var difference, in case \n        // the distance is one and we need to return the var number\n        if Temp2 {\n            LastNonZeroWordNum = i;\n            LastNonZeroWord = Temp2;\n        }\n\n        // count how many bits are one in this var difference\n        // inlining of macro BIT_COUNT\n        DiffVarCounter  += (BitCount[(Temp2)\u00260xffff] + BitCount[(Temp2)\u003e\u003e16]);\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    // check whether the output parts are different\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] ^ pC2.pCubeDataOut[i] {\n            DiffVarCounter++;\n            break;\n        }\n    }\n\n    if DiffVarCounter == 1 {\n        if LastNonZeroWordNum == -1 { // the output is the only different variable\n            s_DiffVarNum = -1;\n        } else {\n            Temp = (LastNonZeroWord\u003e\u003e2);\n            for  i = 0; Temp; Temp\u003e\u003e=2, i++  {}\n            s_DiffVarNum = LastNonZeroWordNum*BPI/2 + i;\n\n            // save the old var value\n            s_DiffVarValueP_old = GetVar( pC1, s_DiffVarNum );\n            s_DiffVarValueQ = GetVar( pC2, s_DiffVarNum );\n\n            // EXOR this value with the corresponding value in p cube           \n            ExorVar( pC1, s_DiffVarNum, (varvalue)s_DiffVarValueQ );\n\n            s_DiffVarValueP_new = GetVar( pC1, s_DiffVarNum );\n        }\n    }\n\n    return DiffVarCounter;\n}"
+    },
+    {
+      "Name": "FindDiffVars",
+      "Start": 12162,
+      "End": 14046,
+      "BodyStart": 12444,
+      "Original": "int FindDiffVars( int * pDiffVars, Cube * pC1, Cube * pC2 )\n// determine different variables in two cubes and \n// writes them into pDiffVars[]\n// -1 is written into pDiffVars[0] if the cubes have different outputs\n// returns the number of different variables (including the output)\n{\n    int i, v;\n    DiffVarCounter = 0;\n    // check whether the output parts of the cubes are different\n\n    for ( i = 0; i \u003c g_CoverInfo.nWordsOut; i++ )\n        if ( pC1-\u003epCubeDataOut[i] != pC2-\u003epCubeDataOut[i] )\n        { // they are different\n            pDiffVars[0] = -1;\n            DiffVarCounter = 1;\n            break;\n        }\n\n    for ( i = 0; i \u003c g_CoverInfo.nWordsIn; i++ )\n    {\n\n        Temp1 = pC1-\u003epCubeDataIn[i] ^ pC2-\u003epCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // check the first part of this word\n        Temp = Temp2 \u0026 0xffff;\n        cVars = BitCount[ Temp ];\n        if ( cVars )\n        {\n            if ( cVars \u003c 5 )\n                for ( v = 0; v \u003c cVars; v++ )\n                {\n                    assert( BitGroupNumbers[Temp] != MARKNUMBER );\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            else\n                return 5;\n        }\n        if ( DiffVarCounter \u003e 4 )\n            return 5;\n\n        // check the second part of this word\n        Temp = Temp2 \u003e\u003e 16;\n        cVars = BitCount[ Temp ];\n        if ( cVars )\n        {\n            if ( cVars \u003c 5 )\n                for ( v = 0; v \u003c cVars; v++ )\n                {\n                    assert( BitGroupNumbers[Temp] != MARKNUMBER );\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + 8 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            else\n                return 5;\n        }\n        if ( DiffVarCounter \u003e 4 )\n            return 5;\n    }\n    return DiffVarCounter;\n}",
+      "Draft": "int FindDiffVars( int * pDiffVars, Cube * pC1, Cube * pC2 )\n// determine different variables in two cubes and \n// writes them into pDiffVars[]\n// -1 is written into pDiffVars[0] if the cubes have different outputs\n// returns the number of different variables (including the output)\n{\n    var i, v int32;\n    DiffVarCounter = 0;\n    // check whether the output parts of the cubes are different\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] != pC2.pCubeDataOut[i] { // they are different\n            pDiffVars[0] = -1;\n            DiffVarCounter = 1;\n            break;\n        }\n    }\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // check the first part of this word\n        Temp = Temp2 \u0026 0xffff;\n        cVars = BitCount[ Temp ];\n        if cVars != 0 {\n            if cVars \u003c 5 {\n                for  v = 0; v \u003c cVars; v++  {\n                    assert(BitGroupNumbers[Temp] != MARKNUMBER, \"BitGroupNumbers[Temp] != MARKNUMBER\");\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            } else {\n                return 5; }\n        }\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n\n        // check the second part of this word\n        Temp = Temp2 \u003e\u003e 16;\n        cVars = BitCount[ Temp ];\n        if cVars != 0 {\n            if cVars \u003c 5 {\n                for  v = 0; v \u003c cVars; v++  {\n                    assert(BitGroupNumbers[Temp] != MARKNUMBER, \"BitGroupNumbers[Temp] != MARKNUMBER\");\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + 8 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            } else {\n                return 5; }\n        }\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    return DiffVarCounter;\n}"
+    },
+    {
+      "Name": "InsertVars",
+      "Start": 14048,
+      "End": 14948,
+      "BodyStart": 14341,
+      "Original": "void InsertVars( Cube * pC, int * pVars, int nVarsIn, int * pVarValues )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    int GlobalBit;\n    int LocalWord;\n    int LocalBit;\n    int i;\n    assert( nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn );\n    for ( i = 0; i \u003c nVarsIn; i++ )\n    {\n        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn );\n        assert( pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS );\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        LocalWord = VarWord(GlobalBit);\n        LocalBit  = VarBit(GlobalBit);\n\n        // correct this variables\n        pC-\u003epCubeDataIn[LocalWord] = ((pC-\u003epCubeDataIn[LocalWord]\u0026(~(3\u003c\u003cLocalBit)))|(pVarValues[i]\u003c\u003cLocalBit));\n    }\n}",
+      "Draft": "void InsertVars( Cube * pC, int * pVars, int nVarsIn, int * pVarValues )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    var GlobalBit int32;\n    var LocalWord int32;\n    var LocalBit int32;\n    var i int32;\n    assert(nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn, \"nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn\");\n    for  i = 0; i \u003c nVarsIn; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn\");\n        assert(pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS, \"pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS\");\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        // inlining of macro VarWord\n        LocalWord = ((GlobalBit)\u003e\u003eLOGBPI);\n        // inlining of macro VarBit\n        LocalBit  = ((GlobalBit)\u0026BPIMASK);\n\n        // correct this variables\n        pC.pCubeDataIn[LocalWord] = ((pC.pCubeDataIn[LocalWord]\u0026(~(3\u003c\u003cLocalBit)))|(pVarValues[i]\u003c\u003cLocalBit));\n    }\n}"
+    },
+    {
+      "Name": "InsertVarsWithoutClearing",
+      "Start": 14950,
+      "End": 15929,
+      "BodyStart": 15270,
+      "Original": "void InsertVarsWithoutClearing( Cube * pC, int * pVars, int nVarsIn, int * pVarValues, int Output )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    int GlobalBit;\n    int LocalWord;\n    int LocalBit;\n    int i;\n    assert( nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn );\n    for ( i = 0; i \u003c nVarsIn; i++ )\n    {\n        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn );\n        assert( pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS );\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        LocalWord = VarWord(GlobalBit);\n        LocalBit  = VarBit(GlobalBit);\n\n        // correct this variables\n        pC-\u003epCubeDataIn[LocalWord] |= ( pVarValues[i] \u003c\u003c LocalBit );\n    }\n    // insert the output bit\n    pC-\u003epCubeDataOut[VarWord(Output)] |= ( 1 \u003c\u003c VarBit(Output) );\n}",
+      "Draft": "void InsertVarsWithoutClearing( Cube * pC, int * pVars, int nVarsIn, int * pVarValues, int Output )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    var GlobalBit int32;\n    var LocalWord int32;\n    var LocalBit int32;\n    var i int32;\n    assert(nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn, \"nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn\");\n    for  i = 0; i \u003c nVarsIn; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn\");\n        assert(pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS, \"pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS\");\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        // inlining of macro VarWord\n        LocalWord = ((GlobalBit)\u003e\u003eLOGBPI);\n        // inlining of macro VarBit\n        LocalBit  = ((GlobalBit)\u0026BPIMASK);\n\n        // correct this variables\n        pC.pCubeDataIn[LocalWord] |= ( pVarValues[i] \u003c\u003c LocalBit );\n    }\n    // insert the output bit\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    pC.pCubeDataOut[((Output)\u003e\u003eLOGBPI)] |= ( 1 \u003c\u003c ((Output)\u0026BPIMASK) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::PrepareBitSetModule",
+      "Category": "semantic-review",
+      "Symbol": "PrepareBitSetModule",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7299,
+      "End": 8135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::GetVar",
+      "Category": "semantic-review",
+      "Symbol": "GetVar",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8493,
+      "End": 8810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::ExorVar",
+      "Category": "semantic-review",
+      "Symbol": "ExorVar",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8812,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::GetDistance",
+      "Category": "semantic-review",
+      "Symbol": "GetDistance",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9429,
+      "End": 10163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::GetDistancePlus",
+      "Category": "semantic-review",
+      "Symbol": "GetDistancePlus",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10369,
+      "End": 12160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::FindDiffVars",
+      "Category": "semantic-review",
+      "Symbol": "FindDiffVars",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12162,
+      "End": 14046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::InsertVars",
+      "Category": "semantic-review",
+      "Symbol": "InsertVars",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14048,
+      "End": 14948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::InsertVarsWithoutClearing",
+      "Category": "semantic-review",
+      "Symbol": "InsertVarsWithoutClearing",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14950,
+      "End": 15929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorBits.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16160
+    }
+  ],
+  "Draft": "package exor\n\n/**CFile****************************************************************\n\n  FileName    [exorBits.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Exclusive sum-of-product minimization.]\n\n  Synopsis    [Bit-level procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exorBits.c,v 1.0 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                  Implementation of EXORCISM - 4                  ///\n///              An Exclusive Sum-of-Product Minimizer               ///\n///                                                                  ///\n///               Alan Mishchenko  \u003calanmi@ee.pdx.edu\u003e               ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///              EXOR-Oriented Bit String Manipulation               ///\n///                                                                  ///\n///  Ver. 1.0. Started - July 18, 2000. Last update - July 20, 2000  ///\n///  Ver. 1.4. Started -  Aug 10, 2000. Last update -  Aug 10, 2000  ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///   This software was tested with the BDD package \"CUDD\", v.2.3.0  ///\n///                          by Fabio Somenzi                        ///\n///                  http://vlsi.colorado.edu/~fabio/                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"exor.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       EXTERNAL VARIABLES                         ///\n////////////////////////////////////////////////////////////////////////\n\n// information about the cube cover\n// the number of cubes is constantly updated when the cube cover is processed\n// in this module, only the number of variables (nVarsIn) and integers (nWordsIn)\n// is used, which do not change\nvar g_CoverInfo cinfo;\n\n////////////////////////////////////////////////////////////////////////\n///                  FUNCTIONS OF THIS MODULE                        ///\n////////////////////////////////////////////////////////////////////////\n\n// int GetDistance( Cube * pC1, Cube * pC2 );\n\n// return the distance between two cubes\n// int GetDistancePlus( Cube * pC1, Cube * pC2 );\n\n\n// int FindDiffVars( int * pDiffVars, Cube * pC1, Cube * pC2 );\n\n// determine different variables in cubes from pCubes[] and writes them into pDiffVars\n// returns the number of different variables\n\n// void InsertVars( Cube * pC, int * pVars, int nVarsIn, int * pVarValues );\n\n\n//inline int VarWord( int element );\n//inline int VarBit( int element );\n// varvalue GetVar( Cube * pC, int Var );\n\n\n// void ExorVar( Cube * pC, int Var, varvalue Val );\n\n\n////////////////////////////////////////////////////////////////////////\n///                        STATIC VARIABLES                          ///\n////////////////////////////////////////////////////////////////////////\n\n// the bit count for the first 256 integer numbers\nstatic unsigned char BitCount8[256] = {\n    0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8\n};\n\nvar SparseNumbers [163]int32 = [163]int32{ \n    0,1,4,5,16,17,20,21,64,65,68,69,80,81,84,85,256,257,260,\n    261,272,273,276,277,320,321,324,325,336,337,340,1024,1025,\n    1028,1029,1040,1041,1044,1045,1088,1089,1092,1093,1104,1105,\n    1108,1280,1281,1284,1285,1296,1297,1300,1344,1345,1348,1360,\n    4096,4097,4100,4101,4112,4113,4116,4117,4160,4161,4164,4165,\n    4176,4177,4180,4352,4353,4356,4357,4368,4369,4372,4416,4417,\n    4420,4432,5120,5121,5124,5125,5136,5137,5140,5184,5185,5188,\n    5200,5376,5377,5380,5392,5440,16384,16385,16388,16389,16400,\n    16401,16404,16405,16448,16449,16452,16453,16464,16465,16468,\n    16640,16641,16644,16645,16656,16657,16660,16704,16705,16708,\n    16720,17408,17409,17412,17413,17424,17425,17428,17472,17473,\n    17476,17488,17664,17665,17668,17680,17728,20480,20481,20484,\n    20485,20496,20497,20500,20544,20545,20548,20560,20736,20737,\n    20740,20752,20800,21504,21505,21508,21520,21568,21760, \n};\n\nstatic unsigned char GroupLiterals[163][4] = {\n    {0}, {0}, {1}, {0,1}, {2}, {0,2}, {1,2}, {0,1,2}, {3}, {0,3},\n    {1,3}, {0,1,3}, {2,3}, {0,2,3}, {1,2,3}, {0,1,2,3}, {4}, {0,4},\n    {1,4}, {0,1,4}, {2,4}, {0,2,4}, {1,2,4}, {0,1,2,4}, {3,4},\n    {0,3,4}, {1,3,4}, {0,1,3,4}, {2,3,4}, {0,2,3,4}, {1,2,3,4}, {5},\n    {0,5}, {1,5}, {0,1,5}, {2,5}, {0,2,5}, {1,2,5}, {0,1,2,5}, {3,5},\n    {0,3,5}, {1,3,5}, {0,1,3,5}, {2,3,5}, {0,2,3,5}, {1,2,3,5},\n    {4,5}, {0,4,5}, {1,4,5}, {0,1,4,5}, {2,4,5}, {0,2,4,5},\n    {1,2,4,5}, {3,4,5}, {0,3,4,5}, {1,3,4,5}, {2,3,4,5}, {6}, {0,6},\n    {1,6}, {0,1,6}, {2,6}, {0,2,6}, {1,2,6}, {0,1,2,6}, {3,6},\n    {0,3,6}, {1,3,6}, {0,1,3,6}, {2,3,6}, {0,2,3,6}, {1,2,3,6},\n    {4,6}, {0,4,6}, {1,4,6}, {0,1,4,6}, {2,4,6}, {0,2,4,6},\n    {1,2,4,6}, {3,4,6}, {0,3,4,6}, {1,3,4,6}, {2,3,4,6}, {5,6},\n    {0,5,6}, {1,5,6}, {0,1,5,6}, {2,5,6}, {0,2,5,6}, {1,2,5,6},\n    {3,5,6}, {0,3,5,6}, {1,3,5,6}, {2,3,5,6}, {4,5,6}, {0,4,5,6},\n    {1,4,5,6}, {2,4,5,6}, {3,4,5,6}, {7}, {0,7}, {1,7}, {0,1,7},\n    {2,7}, {0,2,7}, {1,2,7}, {0,1,2,7}, {3,7}, {0,3,7}, {1,3,7},\n    {0,1,3,7}, {2,3,7}, {0,2,3,7}, {1,2,3,7}, {4,7}, {0,4,7},\n    {1,4,7}, {0,1,4,7}, {2,4,7}, {0,2,4,7}, {1,2,4,7}, {3,4,7},\n    {0,3,4,7}, {1,3,4,7}, {2,3,4,7}, {5,7}, {0,5,7}, {1,5,7},\n    {0,1,5,7}, {2,5,7}, {0,2,5,7}, {1,2,5,7}, {3,5,7}, {0,3,5,7},\n    {1,3,5,7}, {2,3,5,7}, {4,5,7}, {0,4,5,7}, {1,4,5,7}, {2,4,5,7},\n    {3,4,5,7}, {6,7}, {0,6,7}, {1,6,7}, {0,1,6,7}, {2,6,7},\n    {0,2,6,7}, {1,2,6,7}, {3,6,7}, {0,3,6,7}, {1,3,6,7}, {2,3,6,7},\n    {4,6,7}, {0,4,6,7}, {1,4,6,7}, {2,4,6,7}, {3,4,6,7}, {5,6,7},\n    {0,5,6,7}, {1,5,6,7}, {2,5,6,7}, {3,5,6,7}, {4,5,6,7} \n};\n\n// the bit count to 16-bit numbers\nconst FULL16BITS =  0x10000\nconst MARKNUMBER =  200\n\nstatic unsigned char BitGroupNumbers[FULL16BITS];\nunsigned char BitCount[FULL16BITS];\n\n////////////////////////////////////////////////////////////////////////\n///                      FUNCTION DEFINITIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\nvoid PrepareBitSetModule()\n// this function should be called before anything is done with the cube cover\n{   \n    // prepare bit count\n    var i, k int32;\n    var nLimit int32;\n    \n    nLimit = FULL16BITS;\n    for  i = 0; i \u003c nLimit; i++  {\n        BitCount[i] = BitCount8[ i \u0026 0xff ] + BitCount8[ i\u003e\u003e8 ];\n        BitGroupNumbers[i] = MARKNUMBER;\n    }\n    // prepare bit groups\n    for  k = 0; k \u003c 163; k++  {\n        BitGroupNumbers[ SparseNumbers[k] ] = k;\n    }\n/*\n    // verify bit groups\n    int n = 4368;\n    char Buff[100];\n    cout \u003c\u003c \"The number is \" \u003c\u003c n \u003c\u003c endl;\n    cout \u003c\u003c \"The binary is \" \u003c\u003c itoa(n,Buff,2) \u003c\u003c endl;\n    cout \u003c\u003c \"BitGroupNumbers[n] is \" \u003c\u003c (int)BitGroupNumbers[n] \u003c\u003c endl;\n    cout \u003c\u003c \"The group literals are \";\n    for ( int g = 0; g \u003c 4; g++ )\n        cout \u003c\u003c \" \" \u003c\u003c (int)GroupLiterals[BitGroupNumbers[n]][g];\n*/\n}\n\n////////////////////////////////////////////////////////////////////////\n///                   INLINE FUNCTION DEFINITIONS                    ///\n////////////////////////////////////////////////////////////////////////\n/*\nint VarWord( int element )\n{\n    return ( element \u003e\u003e LOGBPI );\n}\n\nint VarBit( int element )\n{\n    return ( element \u0026 BPIMASK );\n}\n*/\n\nvarvalue GetVar( Cube * pC, int Var )\n// returns VAR_NEG if var is neg, VAR_POS if var is pos, VAR_ABS if var is absent\n{\n    var Bit int32  = (Var\u003c\u003c1);\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    var Value int32  = ((pC.pCubeDataIn[((Bit)\u003e\u003eLOGBPI)] \u003e\u003e ((Bit)\u0026BPIMASK)) \u0026 3);\n    assert(Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS, \"Value == VAR_NEG || Value == VAR_POS || Value == VAR_ABS\");\n    return (varvalue)Value;\n}\n\nvoid ExorVar( Cube * pC, int Var, varvalue Val )\n// EXORs the value Val with the value of variable Var in the given cube\n// ((cube[VAR_WORD((v)\u003c\u003c1)]) ^ ( (pol)\u003c\u003cVAR_BIT((v)\u003c\u003c1) ))\n{\n    var Bit int32  = (Var\u003c\u003c1);\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    pC.pCubeDataIn[((Bit)\u003e\u003eLOGBPI)] ^= ( Val \u003c\u003c ((Bit)\u0026BPIMASK) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      FUNCTION DEFINITIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\nvar DiffVarCounter, cVars int32;\nvar Temp1, Temp2, Temp drow;\nvar LastNonZeroWord drow;\nvar LastNonZeroWordNum int32;\n\nint GetDistance( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n{\n    var i int32;\n    DiffVarCounter = 0;\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // count how many bits are one in this var difference\n        // inlining of macro BIT_COUNT\n        DiffVarCounter  += (BitCount[(Temp2)\u00260xffff] + BitCount[(Temp2)\u003e\u003e16]);\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    // check whether the output parts are different\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] ^ pC2.pCubeDataOut[i] {\n            DiffVarCounter++;\n            break;\n        }\n    }\n    return DiffVarCounter;\n}\n\n// place to put the number of the different variable and its value in the second cube\nvar s_DiffVarNum int32;\nvar s_DiffVarValueP_old int32;\nvar s_DiffVarValueP_new int32;\nvar s_DiffVarValueQ int32;\n\nint GetDistancePlus( Cube * pC1, Cube * pC2 )\n// finds and returns the distance between two cubes pC1 and pC2\n// if the distance is 1, returns the number of diff variable in VarNum\n{\n    var i int32;\n\n    DiffVarCounter = 0;\n    LastNonZeroWordNum = -1;\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // save the value of var difference, in case \n        // the distance is one and we need to return the var number\n        if Temp2 {\n            LastNonZeroWordNum = i;\n            LastNonZeroWord = Temp2;\n        }\n\n        // count how many bits are one in this var difference\n        // inlining of macro BIT_COUNT\n        DiffVarCounter  += (BitCount[(Temp2)\u00260xffff] + BitCount[(Temp2)\u003e\u003e16]);\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    // check whether the output parts are different\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] ^ pC2.pCubeDataOut[i] {\n            DiffVarCounter++;\n            break;\n        }\n    }\n\n    if DiffVarCounter == 1 {\n        if LastNonZeroWordNum == -1 { // the output is the only different variable\n            s_DiffVarNum = -1;\n        } else {\n            Temp = (LastNonZeroWord\u003e\u003e2);\n            for  i = 0; Temp; Temp\u003e\u003e=2, i++  {}\n            s_DiffVarNum = LastNonZeroWordNum*BPI/2 + i;\n\n            // save the old var value\n            s_DiffVarValueP_old = GetVar( pC1, s_DiffVarNum );\n            s_DiffVarValueQ = GetVar( pC2, s_DiffVarNum );\n\n            // EXOR this value with the corresponding value in p cube           \n            ExorVar( pC1, s_DiffVarNum, (varvalue)s_DiffVarValueQ );\n\n            s_DiffVarValueP_new = GetVar( pC1, s_DiffVarNum );\n        }\n    }\n\n    return DiffVarCounter;\n}\n\nint FindDiffVars( int * pDiffVars, Cube * pC1, Cube * pC2 )\n// determine different variables in two cubes and \n// writes them into pDiffVars[]\n// -1 is written into pDiffVars[0] if the cubes have different outputs\n// returns the number of different variables (including the output)\n{\n    var i, v int32;\n    DiffVarCounter = 0;\n    // check whether the output parts of the cubes are different\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsOut; i++  {\n        if pC1.pCubeDataOut[i] != pC2.pCubeDataOut[i] { // they are different\n            pDiffVars[0] = -1;\n            DiffVarCounter = 1;\n            break;\n        }\n    }\n\n    for  i = 0; i \u003c g_CoverInfo.nWordsIn; i++  {\n\n        Temp1 = pC1.pCubeDataIn[i] ^ pC2.pCubeDataIn[i];\n        Temp2 = (Temp1|(Temp1\u003e\u003e1)) \u0026 DIFFERENT;\n\n        // check the first part of this word\n        Temp = Temp2 \u0026 0xffff;\n        cVars = BitCount[ Temp ];\n        if cVars != 0 {\n            if cVars \u003c 5 {\n                for  v = 0; v \u003c cVars; v++  {\n                    assert(BitGroupNumbers[Temp] != MARKNUMBER, \"BitGroupNumbers[Temp] != MARKNUMBER\");\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            } else {\n                return 5; }\n        }\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n\n        // check the second part of this word\n        Temp = Temp2 \u003e\u003e 16;\n        cVars = BitCount[ Temp ];\n        if cVars != 0 {\n            if cVars \u003c 5 {\n                for  v = 0; v \u003c cVars; v++  {\n                    assert(BitGroupNumbers[Temp] != MARKNUMBER, \"BitGroupNumbers[Temp] != MARKNUMBER\");\n                    pDiffVars[ DiffVarCounter++ ] = i*16 + 8 + GroupLiterals[ BitGroupNumbers[Temp] ][v];\n                }\n            } else {\n                return 5; }\n        }\n        if DiffVarCounter \u003e 4 {\n            return 5; }\n    }\n    return DiffVarCounter;\n}\n\nvoid InsertVars( Cube * pC, int * pVars, int nVarsIn, int * pVarValues )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    var GlobalBit int32;\n    var LocalWord int32;\n    var LocalBit int32;\n    var i int32;\n    assert(nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn, \"nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn\");\n    for  i = 0; i \u003c nVarsIn; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn\");\n        assert(pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS, \"pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS\");\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        // inlining of macro VarWord\n        LocalWord = ((GlobalBit)\u003e\u003eLOGBPI);\n        // inlining of macro VarBit\n        LocalBit  = ((GlobalBit)\u0026BPIMASK);\n\n        // correct this variables\n        pC.pCubeDataIn[LocalWord] = ((pC.pCubeDataIn[LocalWord]\u0026(~(3\u003c\u003cLocalBit)))|(pVarValues[i]\u003c\u003cLocalBit));\n    }\n}\n\nvoid InsertVarsWithoutClearing( Cube * pC, int * pVars, int nVarsIn, int * pVarValues, int Output )\n// corrects the given number of variables (nVarsIn) in pC-\u003epCubeDataIn[]\n// variable numbers are given in pVarNumbers[], their values are in pVarValues[]\n// arrays pVarNumbers[] and pVarValues[] are provided by the user\n{\n    var GlobalBit int32;\n    var LocalWord int32;\n    var LocalBit int32;\n    var i int32;\n    assert(nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn, \"nVarsIn \u003e 0 \u0026\u0026 nVarsIn \u003c= g_CoverInfo.nVarsIn\");\n    for  i = 0; i \u003c nVarsIn; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c g_CoverInfo.nVarsIn\");\n        assert(pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS, \"pVarValues[i] == VAR_NEG || pVarValues[i] == VAR_POS || pVarValues[i] == VAR_ABS\");\n        GlobalBit = (pVars[i]\u003c\u003c1);\n        // inlining of macro VarWord\n        LocalWord = ((GlobalBit)\u003e\u003eLOGBPI);\n        // inlining of macro VarBit\n        LocalBit  = ((GlobalBit)\u0026BPIMASK);\n\n        // correct this variables\n        pC.pCubeDataIn[LocalWord] |= ( pVarValues[i] \u003c\u003c LocalBit );\n    }\n    // insert the output bit\n    // inlining of macro VarWord\n    // inlining of macro VarBit\n    pC.pCubeDataOut[((Output)\u003e\u003eLOGBPI)] |= ( 1 \u003c\u003c ((Output)\u0026BPIMASK) );\n}\n\n///////////////////////////////////////////////////////////////////\n////////////              End of File             /////////////////\n///////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

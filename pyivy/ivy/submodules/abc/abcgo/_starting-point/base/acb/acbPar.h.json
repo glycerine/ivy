@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbPar.h",
+  "SHA256": "0727715467afd40ba8926058edc787ed19daccc7fdd6f20630f0a6964daf0555",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbPar.h::struct::Acb_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Acb_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1270,
+      "End": 2274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbPar.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2667
+    }
+  ],
+  "Draft": "package acb\n\n/**CFile****************************************************************\n\n  FileName    [acbPar.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 21, 2015.]\n\n  Revision    [$Id: acbPar.h,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Acb_Par_t struct {\n    nLutSize             int32;      // LUT size\n    nTfoLevMax             int32;    // the maximum fanout levels\n    nTfiLevMax             int32;    // the maximum fanin levels\n    nFanoutMax             int32;    // the maximum number of fanouts\n    nWinNodeMax             int32;   // the maximum number of nodes in the window\n    nGrowthLevel             int32;  // the maximum allowed growth in level\n    nBTLimit             int32;      // the maximum number of conflicts in one SAT run\n    nNodesMax             int32;     // the maximum number of nodes to try\n    fUseAshen             int32;     // user Ashenhurst decomposition\n    iNodeOne             int32;      // one particular node to try\n    fArea             int32;         // performs optimization for area\n    fMoreEffort             int32;   // performs high-affort minimization\n    fVerbose             int32;      // enable basic stats\n    fVeryVerbose             int32;  // enable detailed stats\n}\n\n\n/*=== acbAbc.c =============================================================*/\n// extern void   Acb_ParSetDefault( Acb_Par_t * pPars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n"
+}

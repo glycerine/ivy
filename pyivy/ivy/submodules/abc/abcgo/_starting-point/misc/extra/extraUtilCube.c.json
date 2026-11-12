@@ -1,0 +1,579 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c",
+  "SHA256": "988788bb0a98f177b352fa2c671fbfaef2a9d761afb2d36dbc35ccbe8f405e27",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 38,
+        "Column": 78,
+        "ByteOffset": 1309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_StatePrint(pState string) { var i int32; for  i = 0; i \u003c 24; i++  { printf(\" %2d\", pState[i]); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 39,
+        "Column": 2,
+        "ByteOffset": 1339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": " printf( \"\\n\" );          }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Enumerating states of 2x2x2 cube.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == Counter );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[i], pStart, 24 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 3163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == Counter );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 3261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[3+i], pFirst[i], 24 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 3646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == Counter );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[6+i], pFirst[3+i], 24 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 4133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 4234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d   \", 0, 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 4327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d   \", 1, Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 21,
+        "ByteOffset": 4914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Did not converge.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 5127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iter %2d -\u003e %8d   \", i, Counter );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 201,
+        "Column": 83,
+        "ByteOffset": 8705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    word State, * pHash = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(1 \u003c\u003c 29), sizeof(word)));  //  4 GB"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Enumerating states of 2x2x2 cube.\\n\" );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 9246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[i], pStart, 24 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 9689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[3+i], pFirst[i], 24 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 10151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pFirst[6+i], pFirst[3+i], 24 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 10616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d   \", 0, 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 10709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d   \", 1, Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 21,
+        "ByteOffset": 11392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Did not converge.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 11605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iter %2d -\u003e %8d   \", i, Counter );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 271,
+        "Column": 61,
+        "ByteOffset": 11796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pHash) ? (free((char *) (pHash)), (pHash) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_StatePush",
+      "Start": 883,
+      "End": 1049,
+      "BodyStart": 960,
+      "Original": "static inline void Abc_StatePush( Vec_Int_t * vData, char * pState, int k )  { int i; for ( i = 0; i \u003c 6; i++ ) Vec_IntWriteEntry(vData, 6*k+i, ((int*)pState)[i]);  }",
+      "Draft": "func Abc_StatePush(vData *Vec_Int_t, pState string, k int32) { var i int32; for  i = 0; i \u003c 6; i++  { Vec_IntWriteEntry(vData, 6*k+i, ((int*)pState)[i]); }  }"
+    },
+    {
+      "Name": "Abc_StatePerm",
+      "Start": 1050,
+      "End": 1216,
+      "BodyStart": 1127,
+      "Original": "static inline void Abc_StatePerm( char * pState, char * pPerm, char * pRes ) { int i; for ( i = 0; i \u003c 24; i++ ) pRes[i] = pState[(int)pPerm[i]];                    }",
+      "Draft": "func Abc_StatePerm(pState string, pPerm string, pRes string) { var i int32; for  i = 0; i \u003c 24; i++  { pRes[i] = pState[int32(pPerm[i])]; }                    }"
+    },
+    {
+      "Name": "Abc_StatePrint",
+      "Start": 1217,
+      "End": 1383,
+      "BodyStart": 1294,
+      "Original": "static inline void Abc_StatePrint( char * pState )                           { int i; for ( i = 0; i \u003c 24; i++ ) printf(\" %2d\", pState[i]); printf( \"\\n\" );          }",
+      "Draft": "func Abc_StatePrint(pState string) { var i int32; for  i = 0; i \u003c 24; i++  { fmt.Printf(\" %2d\", pState[i]); }\n fmt.Printf(\"\\n\");          }"
+    },
+    {
+      "Name": "Abc_EnumerateCubeStates2",
+      "Start": 1839,
+      "End": 4961,
+      "BodyStart": 1871,
+      "Original": "void Abc_EnumerateCubeStates2()\n{\n    int pXYZ[3][9][2] = {\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    Vec_Int_t * vData = Vec_IntStart( 6 * (1 \u003c\u003c 22) );            // 96 MB\n    Hsh_IntMan_t * vHash = Hsh_IntManStart( vData, 6, 1 \u003c\u003c 22 );  // 32 MB\n    int i, k, v, RetValue, Beg, End, Counter = 0;\n    char pStart[24], pFirst[9][24];\n    abctime clk = Abc_Clock();\n    printf( \"Enumerating states of 2x2x2 cube.\\n\" );\n    // init state\n    for ( v = 0; v \u003c 24; v++ )\n        pStart[v] = v;\n    Abc_StatePush( vData, pStart, Counter );\n    RetValue = Hsh_IntManAdd( vHash, Counter );\n    assert( RetValue == Counter );\n    Counter++;\n    // first nine states\n    for ( i = 0; i \u003c 3; i++ )\n    {\n        memcpy( pFirst[i], pStart, 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[i][pXYZ[i][v][0]-1], pFirst[i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert( RetValue == Counter );\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[3+i][pXYZ[i][v][0]-1], pFirst[3+i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert( RetValue == Counter );\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[6+i][pXYZ[i][v][0]-1], pFirst[6+i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert( RetValue == Counter );\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    printf( \"Iter %2d -\u003e %8d   \", 0, 1 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    printf( \"Iter %2d -\u003e %8d   \", 1, Counter );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for ( i = 2; i \u003c= 100; i++ )\n    {\n        if ( Beg == End )\n            break;\n        for ( k = Beg; k \u003c End; k++ )\n            for ( v = 0; v \u003c 9; v++ )\n            {\n                Abc_StatePerm( (char *)Vec_IntEntryP(vData, 6*k), pFirst[v], (char *)Vec_IntEntryP(vData, 6*Counter) );\n                RetValue = Hsh_IntManAdd( vHash, Counter );\n                if ( RetValue == Counter )\n                    Counter++;\n                if ( Counter == (1\u003c\u003c22) )\n                {\n                    printf( \"Did not converge.  \" );\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        Beg = End;  End = Counter;\n        printf( \"Iter %2d -\u003e %8d   \", i, Counter );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Hsh_IntManStop( vHash );\n    Vec_IntFree( vData );\n}",
+      "Draft": "func Abc_EnumerateCubeStates2() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    var vData *Vec_Int_t  = Vec_IntStart( 6 * (1 \u003c\u003c 22) );            // 96 MB\n    var vHash *Hsh_IntMan_t  = Hsh_IntManStart( vData, 6, 1 \u003c\u003c 22 );  // 32 MB\n    var i, k, v, RetValue, Beg, End, Counter int32;\n    var pStart [24]byte;\n    var pFirst [9][24]byte;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    // init state\n    for  v = 0; v \u003c 24; v++  {\n        pStart[v] = v;\n    }\n    Abc_StatePush( vData, pStart, Counter );\n    RetValue = Hsh_IntManAdd( vHash, Counter );\n    assert(RetValue == Counter, \"RetValue == Counter\");\n    Counter++;\n    // first nine states\n    for  i = 0; i \u003c 3; i++  {\n        memcpy( pFirst[i], pStart, 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[i][pXYZ[i][v][0]-1]; pFirst[i][pXYZ[i][v][0]-1] = pFirst[i][pXYZ[i][v][1]-1]; pFirst[i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[3+i][pXYZ[i][v][0]-1]; pFirst[3+i][pXYZ[i][v][0]-1] = pFirst[3+i][pXYZ[i][v][1]-1]; pFirst[3+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[6+i][pXYZ[i][v][0]-1]; pFirst[6+i][pXYZ[i][v][0]-1] = pFirst[6+i][pXYZ[i][v][1]-1]; pFirst[6+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 0, 1);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 1, Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for  i = 2; i \u003c= 100; i++  {\n        if Beg == End {\n            break; }\n        for  k = Beg; k \u003c End; k++  {\n            for  v = 0; v \u003c 9; v++  {\n                Abc_StatePerm( (char *)Vec_IntEntryP(vData, 6*k), pFirst[v], (char *)Vec_IntEntryP(vData, 6*Counter) );\n                RetValue = Hsh_IntManAdd( vHash, Counter );\n                if RetValue == Counter {\n                    Counter++; }\n                if Counter == (1\u003c\u003c22) {\n                    fmt.Printf(\"Did not converge.  \");\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        }\n        Beg = End;  End = Counter;\n        fmt.Printf(\"Iter %2d -\u003e %8d   \", i, Counter);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Hsh_IntManStop( vHash );\n    Vec_IntFree( vData );\n}"
+    },
+    {
+      "Name": "Abc_DataHasBit",
+      "Start": 5785,
+      "End": 5893,
+      "BodyStart": 5840,
+      "Original": "static inline int  Abc_DataHasBit( word * p, word i )  { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }",
+      "Draft": "func Abc_DataHasBit(p *word, i word) int32 { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }"
+    },
+    {
+      "Name": "Abc_DataXorBit",
+      "Start": 5894,
+      "End": 6002,
+      "BodyStart": 5949,
+      "Original": "static inline void Abc_DataXorBit( word * p, word i )  { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }",
+      "Draft": "func Abc_DataXorBit(p *word, i word) { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }"
+    },
+    {
+      "Name": "Abc_DataGetCube",
+      "Start": 6003,
+      "End": 6103,
+      "BodyStart": 6063,
+      "Original": "static inline int  Abc_DataGetCube( word w, int i )         { return (w \u003e\u003e (5*i)) \u0026 31;            }",
+      "Draft": "func Abc_DataGetCube(w word, i int32) int32 { return (w \u003e\u003e (5*i)) \u0026 31;            }"
+    },
+    {
+      "Name": "Abc_DataXorCube",
+      "Start": 6104,
+      "End": 6204,
+      "BodyStart": 6164,
+      "Original": "static inline word Abc_DataXorCube( word w, int i, int c )  { return w ^ (((word)c) \u003c\u003c (5*i));     }",
+      "Draft": "func Abc_DataXorCube(w word, i int32, c int32) word { return w ^ (((word)c) \u003c\u003c (5*i));     }"
+    },
+    {
+      "Name": "Abc_CubeGenerateSign",
+      "Start": 6205,
+      "End": 7195,
+      "BodyStart": 6262,
+      "Original": "static inline word Abc_CubeGenerateSign( char * pState )\n{\n    static int Var2Cor[24] = { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, -1, -1, -1, 6, 6, 6 };\n    static int Var2Per[24] = { 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, -1, -1, -1, 0, 1, 2 };\n    word Res = 0; \n    Res = Abc_DataXorCube( Res, 0, (Var2Cor[(int)pState[ 0]] \u003c\u003c 2) | Var2Per[(int)pState[ 0]] );\n    Res = Abc_DataXorCube( Res, 1, (Var2Cor[(int)pState[ 3]] \u003c\u003c 2) | Var2Per[(int)pState[ 3]] );\n    Res = Abc_DataXorCube( Res, 2, (Var2Cor[(int)pState[ 6]] \u003c\u003c 2) | Var2Per[(int)pState[ 6]] );\n    Res = Abc_DataXorCube( Res, 3, (Var2Cor[(int)pState[ 9]] \u003c\u003c 2) | Var2Per[(int)pState[ 9]] );\n    Res = Abc_DataXorCube( Res, 4, (Var2Cor[(int)pState[12]] \u003c\u003c 2) | Var2Per[(int)pState[12]] );\n    Res = Abc_DataXorCube( Res, 5, (Var2Cor[(int)pState[15]] \u003c\u003c 2) | Var2Per[(int)pState[15]] );\n    Res = Abc_DataXorCube( Res, 6, (Var2Cor[(int)pState[21]] \u003c\u003c 2) | Var2Per[(int)pState[21]] );\n    return Res;\n}",
+      "Draft": "func Abc_CubeGenerateSign(pState string) word {\n    \n    \n    var Res word; \n    Res = Abc_DataXorCube( Res, 0, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 0])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 0])] );\n    Res = Abc_DataXorCube( Res, 1, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 3])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 3])] );\n    Res = Abc_DataXorCube( Res, 2, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 6])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 6])] );\n    Res = Abc_DataXorCube( Res, 3, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 9])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 9])] );\n    Res = Abc_DataXorCube( Res, 4, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[12])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[12])] );\n    Res = Abc_DataXorCube( Res, 5, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[15])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[15])] );\n    Res = Abc_DataXorCube( Res, 6, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[21])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[21])] );\n    return Res;\n}"
+    },
+    {
+      "Name": "Abc_EnumerateCubeStates",
+      "Start": 7431,
+      "End": 10556,
+      "BodyStart": 7462,
+      "Original": "void Abc_EnumerateCubeStates()\n{\n    int pXYZ[3][9][2] = {\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    Vec_Int_t * vData = Vec_IntStart( 6 * (1 \u003c\u003c 22) );  // 96 MB\n    word State, * pHash = ABC_CALLOC( word, 1 \u003c\u003c 29 );  //  4 GB\n    int i, k, v, Beg, End, Counter = 0;\n    char * pPrev, * pState, pStart[24], pFirst[9][24];\n    abctime clk = Abc_Clock();\n    printf( \"Enumerating states of 2x2x2 cube.\\n\" );\n    // init state\n    for ( v = 0; v \u003c 24; v++ )\n        pStart[v] = v;\n    Abc_StatePush( vData, pStart, Counter );\n    Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pStart) );\n    Counter++;\n    // first nine states\n    for ( i = 0; i \u003c 3; i++ )\n    {\n        memcpy( pFirst[i], pStart, 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[i][pXYZ[i][v][0]-1], pFirst[i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[3+i][pXYZ[i][v][0]-1], pFirst[3+i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[3+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for ( v = 0; v \u003c 9; v++ )\n            ABC_SWAP( char, pFirst[6+i][pXYZ[i][v][0]-1], pFirst[6+i][pXYZ[i][v][1]-1] );\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[6+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    printf( \"Iter %2d -\u003e %8d   \", 0, 1 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    printf( \"Iter %2d -\u003e %8d   \", 1, Counter );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for ( i = 2; i \u003c= 100; i++ )\n    {\n        if ( Beg == End )\n            break;\n        for ( k = Beg; k \u003c End; k++ )\n        {\n            pPrev = (char *)Vec_IntEntryP(vData, 6*k);\n            for ( v = 0; v \u003c 9; v++ )\n            {\n                pState = (char *)Vec_IntEntryP(vData, 6*Counter);\n                Abc_StatePerm( pPrev, pFirst[v], pState );\n                State = Abc_CubeGenerateSign( pState );\n                if ( !Abc_DataHasBit(pHash, State) )\n                    Abc_DataXorBit(pHash, State), Counter++;\n                if ( Counter == (1\u003c\u003c22) )\n                {\n                    printf( \"Did not converge.  \" );\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        }\n        Beg = End;  End = Counter;\n        printf( \"Iter %2d -\u003e %8d   \", i, Counter );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFree( vData );\n    ABC_FREE( pHash );\n}",
+      "Draft": "func Abc_EnumerateCubeStates() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    var vData *Vec_Int_t  = Vec_IntStart( 6 * (1 \u003c\u003c 22) );  // 96 MB\n    // inlining of macro ABC_CALLOC\n    word State, * pHash = ((word *) calloc((size_t)(1 \u003c\u003c 29), sizeof(word)));  //  4 GB\n    var i, k, v, Beg, End, Counter int32;\n    var pPrev string;\n    var pState string;\n    var pStart [24]byte;\n    var pFirst [9][24]byte;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    // init state\n    for  v = 0; v \u003c 24; v++  {\n        pStart[v] = v;\n    }\n    Abc_StatePush( vData, pStart, Counter );\n    Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pStart) );\n    Counter++;\n    // first nine states\n    for  i = 0; i \u003c 3; i++  {\n        memcpy( pFirst[i], pStart, 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[i][pXYZ[i][v][0]-1]; pFirst[i][pXYZ[i][v][0]-1] = pFirst[i][pXYZ[i][v][1]-1]; pFirst[i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[3+i][pXYZ[i][v][0]-1]; pFirst[3+i][pXYZ[i][v][0]-1] = pFirst[3+i][pXYZ[i][v][1]-1]; pFirst[3+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[3+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[6+i][pXYZ[i][v][0]-1]; pFirst[6+i][pXYZ[i][v][0]-1] = pFirst[6+i][pXYZ[i][v][1]-1]; pFirst[6+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[6+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 0, 1);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 1, Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for  i = 2; i \u003c= 100; i++  {\n        if Beg == End {\n            break; }\n        for  k = Beg; k \u003c End; k++  {\n            pPrev = (char *)Vec_IntEntryP(vData, 6*k);\n            for  v = 0; v \u003c 9; v++  {\n                pState = (char *)Vec_IntEntryP(vData, 6*Counter);\n                Abc_StatePerm( pPrev, pFirst[v], pState );\n                State = Abc_CubeGenerateSign( pState );\n                if !(Abc_DataHasBit(pHash, State) != 0) {\n                    Abc_DataXorBit(pHash, State);\nCounter++; }\n                if Counter == (1\u003c\u003c22) {\n                    fmt.Printf(\"Did not converge.  \");\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        }\n        Beg = End;  End = Counter;\n        fmt.Printf(\"Iter %2d -\u003e %8d   \", i, Counter);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFree( vData );\n    // inlining of macro ABC_FREE\n    ((pHash) ? (free((char *) (pHash)), (pHash) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::mechanical::static::6579",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6268,
+      "End": 6274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::mechanical::static::6687",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6376,
+      "End": 6382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::mechanical::sizeof::8230",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7837,
+      "End": 7837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::1028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1028,
+      "End": 1034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::4605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4294,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::4651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4340,
+      "End": 4348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::8195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7837,
+      "End": 7837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::10417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9726,
+      "End": 9734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::10529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9838,
+      "End": 9846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::pointer-cast::11288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10536,
+      "End": 10536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_StatePush",
+      "Category": "semantic-review",
+      "Symbol": "Abc_StatePush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 883,
+      "End": 1049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_StatePerm",
+      "Category": "semantic-review",
+      "Symbol": "Abc_StatePerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1050,
+      "End": 1216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_StatePrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_StatePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1217,
+      "End": 1383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_EnumerateCubeStates2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateCubeStates2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1839,
+      "End": 4961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_DataHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5785,
+      "End": 5893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_DataXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5894,
+      "End": 6002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_DataGetCube",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataGetCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6003,
+      "End": 6103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_DataXorCube",
+      "Category": "semantic-review",
+      "Symbol": "Abc_DataXorCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6104,
+      "End": 6204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_CubeGenerateSign",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CubeGenerateSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6205,
+      "End": 7195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::ternary::Abc_EnumerateCubeStates",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EnumerateCubeStates",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7431,
+      "End": 10556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::Abc_EnumerateCubeStates",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateCubeStates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7431,
+      "End": 10556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCube.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10803
+    }
+  ],
+  "Draft": "package extra\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilCube.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Permutation computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilCube.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Abc_StatePush(vData *Vec_Int_t, pState string, k int32) { var i int32; for  i = 0; i \u003c 6; i++  { Vec_IntWriteEntry(vData, 6*k+i, ((int*)pState)[i]); }  }\nfunc Abc_StatePerm(pState string, pPerm string, pRes string) { var i int32; for  i = 0; i \u003c 24; i++  { pRes[i] = pState[int32(pPerm[i])]; }                    }\nfunc Abc_StatePrint(pState string) { var i int32; for  i = 0; i \u003c 24; i++  { fmt.Printf(\" %2d\", pState[i]); }\n fmt.Printf(\"\\n\");          }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumerateCubeStates2() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    var vData *Vec_Int_t  = Vec_IntStart( 6 * (1 \u003c\u003c 22) );            // 96 MB\n    var vHash *Hsh_IntMan_t  = Hsh_IntManStart( vData, 6, 1 \u003c\u003c 22 );  // 32 MB\n    var i, k, v, RetValue, Beg, End, Counter int32;\n    var pStart [24]byte;\n    var pFirst [9][24]byte;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    // init state\n    for  v = 0; v \u003c 24; v++  {\n        pStart[v] = v;\n    }\n    Abc_StatePush( vData, pStart, Counter );\n    RetValue = Hsh_IntManAdd( vHash, Counter );\n    assert(RetValue == Counter, \"RetValue == Counter\");\n    Counter++;\n    // first nine states\n    for  i = 0; i \u003c 3; i++  {\n        memcpy( pFirst[i], pStart, 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[i][pXYZ[i][v][0]-1]; pFirst[i][pXYZ[i][v][0]-1] = pFirst[i][pXYZ[i][v][1]-1]; pFirst[i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[3+i][pXYZ[i][v][0]-1]; pFirst[3+i][pXYZ[i][v][0]-1] = pFirst[3+i][pXYZ[i][v][1]-1]; pFirst[3+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[6+i][pXYZ[i][v][0]-1]; pFirst[6+i][pXYZ[i][v][0]-1] = pFirst[6+i][pXYZ[i][v][1]-1]; pFirst[6+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        RetValue = Hsh_IntManAdd( vHash, Counter );\n        assert(RetValue == Counter, \"RetValue == Counter\");\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 0, 1);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 1, Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for  i = 2; i \u003c= 100; i++  {\n        if Beg == End {\n            break; }\n        for  k = Beg; k \u003c End; k++  {\n            for  v = 0; v \u003c 9; v++  {\n                Abc_StatePerm( (char *)Vec_IntEntryP(vData, 6*k), pFirst[v], (char *)Vec_IntEntryP(vData, 6*Counter) );\n                RetValue = Hsh_IntManAdd( vHash, Counter );\n                if RetValue == Counter {\n                    Counter++; }\n                if Counter == (1\u003c\u003c22) {\n                    fmt.Printf(\"Did not converge.  \");\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        }\n        Beg = End;  End = Counter;\n        fmt.Printf(\"Iter %2d -\u003e %8d   \", i, Counter);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Hsh_IntManStop( vHash );\n    Vec_IntFree( vData );\n}\n\n/*\nEnumerating states of 2x2x2 cube.\nIter  0 -\u003e        1   Time =     0.00 sec\nIter  1 -\u003e       10   Time =     0.00 sec\nIter  2 -\u003e       64   Time =     0.00 sec\nIter  3 -\u003e      385   Time =     0.00 sec\nIter  4 -\u003e     2232   Time =     0.00 sec\nIter  5 -\u003e    12224   Time =     0.00 sec\nIter  6 -\u003e    62360   Time =     0.02 sec\nIter  7 -\u003e   289896   Time =     0.09 sec\nIter  8 -\u003e  1159968   Time =     0.90 sec\nIter  9 -\u003e  3047716   Time =    11.62 sec\nIter 10 -\u003e  3671516   Time =    52.00 sec\nIter 11 -\u003e  3674160   Time =    70.38 sec\nIter 12 -\u003e  3674160   Time =    70.48 sec \n*/\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_DataHasBit(p *word, i word) int32 { return (p[(i)\u003e\u003e6] \u0026 (((word)1)\u003c\u003c((i) \u0026 63))) \u003e 0; }\nfunc Abc_DataXorBit(p *word, i word) { p[(i)\u003e\u003e6] ^= (((word)1)\u003c\u003c((i) \u0026 63));             }\nfunc Abc_DataGetCube(w word, i int32) int32 { return (w \u003e\u003e (5*i)) \u0026 31;            }\nfunc Abc_DataXorCube(w word, i int32, c int32) word { return w ^ (((word)c) \u003c\u003c (5*i));     }\nvar spStatic_Abc_CubeGenerateSign_Var2Cor [24]int32 = [24]int32{ 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, -1, -1, -1, 6, 6, 6 };\nvar spStatic_Abc_CubeGenerateSign_Var2Per [24]int32 = [24]int32{ 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, -1, -1, -1, 0, 1, 2 };\nfunc Abc_CubeGenerateSign(pState string) word {\n    \n    \n    var Res word; \n    Res = Abc_DataXorCube( Res, 0, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 0])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 0])] );\n    Res = Abc_DataXorCube( Res, 1, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 3])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 3])] );\n    Res = Abc_DataXorCube( Res, 2, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 6])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 6])] );\n    Res = Abc_DataXorCube( Res, 3, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[ 9])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[ 9])] );\n    Res = Abc_DataXorCube( Res, 4, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[12])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[12])] );\n    Res = Abc_DataXorCube( Res, 5, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[15])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[15])] );\n    Res = Abc_DataXorCube( Res, 6, (spStatic_Abc_CubeGenerateSign_Var2Cor[int32(pState[21])] \u003c\u003c 2) | spStatic_Abc_CubeGenerateSign_Var2Per[int32(pState[21])] );\n    return Res;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumerateCubeStates() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n\n    var vData *Vec_Int_t  = Vec_IntStart( 6 * (1 \u003c\u003c 22) );  // 96 MB\n    // inlining of macro ABC_CALLOC\n    word State, * pHash = ((word *) calloc((size_t)(1 \u003c\u003c 29), sizeof(word)));  //  4 GB\n    var i, k, v, Beg, End, Counter int32;\n    var pPrev string;\n    var pState string;\n    var pStart [24]byte;\n    var pFirst [9][24]byte;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    // init state\n    for  v = 0; v \u003c 24; v++  {\n        pStart[v] = v;\n    }\n    Abc_StatePush( vData, pStart, Counter );\n    Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pStart) );\n    Counter++;\n    // first nine states\n    for  i = 0; i \u003c 3; i++  {\n        memcpy( pFirst[i], pStart, 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[i][pXYZ[i][v][0]-1]; pFirst[i][pXYZ[i][v][0]-1] = pFirst[i][pXYZ[i][v][1]-1]; pFirst[i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[i] );\n\n        memcpy( pFirst[3+i], pFirst[i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[3+i][pXYZ[i][v][0]-1]; pFirst[3+i][pXYZ[i][v][0]-1] = pFirst[3+i][pXYZ[i][v][1]-1]; pFirst[3+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[3+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[3+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[3+i] );\n\n        memcpy( pFirst[6+i], pFirst[3+i], 24 );\n        for  v = 0; v \u003c 9; v++  {\n            // inlining of macro ABC_SWAP\n             var t byte  = pFirst[6+i][pXYZ[i][v][0]-1]; pFirst[6+i][pXYZ[i][v][0]-1] = pFirst[6+i][pXYZ[i][v][1]-1]; pFirst[6+i][pXYZ[i][v][1]-1] = t; };\n        Abc_StatePush( vData, pFirst[6+i], Counter );\n        Abc_DataXorBit( pHash, Abc_CubeGenerateSign(pFirst[6+i]) );\n        Counter++;\n        //Abc_StatePrint( pFirst[6+i] );\n    }\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 0, 1);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    fmt.Printf(\"Iter %2d -\u003e %8d   \", 1, Counter);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Beg = 1;  End = 10;\n    for  i = 2; i \u003c= 100; i++  {\n        if Beg == End {\n            break; }\n        for  k = Beg; k \u003c End; k++  {\n            pPrev = (char *)Vec_IntEntryP(vData, 6*k);\n            for  v = 0; v \u003c 9; v++  {\n                pState = (char *)Vec_IntEntryP(vData, 6*Counter);\n                Abc_StatePerm( pPrev, pFirst[v], pState );\n                State = Abc_CubeGenerateSign( pState );\n                if !(Abc_DataHasBit(pHash, State) != 0) {\n                    Abc_DataXorBit(pHash, State);\nCounter++; }\n                if Counter == (1\u003c\u003c22) {\n                    fmt.Printf(\"Did not converge.  \");\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                    return;\n                }\n            }\n        }\n        Beg = End;  End = Counter;\n        fmt.Printf(\"Iter %2d -\u003e %8d   \", i, Counter);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFree( vData );\n    // inlining of macro ABC_FREE\n    ((pHash) ? (free((char *) (pHash)), (pHash) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

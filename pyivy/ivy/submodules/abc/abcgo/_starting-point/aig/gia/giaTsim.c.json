@@ -1,0 +1,1584 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c",
+  "SHA256": "46ecbfdca63fcfe21f89b6e0c1177f8ebbe752f2448547d777aaed425415024e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 36,
+        "Column": 5,
+        "ByteOffset": 964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 85,
+        "Column": 80,
+        "ByteOffset": 2749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSim    = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*p.pAig.nFront))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 86,
+        "Column": 80,
+        "ByteOffset": 2899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSimCis = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCiNum(p.pAig)))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 80,
+        "ByteOffset": 3056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSimCos = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCoNum(p.pAig)))));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 73,
+        "ByteOffset": 3351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCount0  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 73,
+        "ByteOffset": 3476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCountX  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 94,
+        "Column": 80,
+        "ByteOffset": 3647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins    = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned * *) calloc((size_t)(p.nBins), sizeof(unsigned *)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 74,
+        "ByteOffset": 3806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRetired = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(char)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 115,
+        "Column": 65,
+        "ByteOffset": 4426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 66,
+        "ByteOffset": 5032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRetired) ? (free((char *) (p.pRetired)), (p.pRetired) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 139,
+        "Column": 65,
+        "ByteOffset": 5149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCount0) ? (free((char *) (p.pCount0)), (p.pCount0) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 140,
+        "Column": 65,
+        "ByteOffset": 5264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCountX) ? (free((char *) (p.pCountX)), (p.pCountX) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 63,
+        "ByteOffset": 5377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 142,
+        "Column": 66,
+        "ByteOffset": 5489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 69,
+        "ByteOffset": 5610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 69,
+        "ByteOffset": 5737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 57,
+        "ByteOffset": 5852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 291,
+        "Column": 13,
+        "ByteOffset": 10599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManTerStateLookup( pState, nWords, pBins, nBins ) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 327,
+        "Column": 80,
+        "ByteOffset": 11676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return (unsigned *)/*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 12958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pAig.nFront \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 12991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManConst0(p.pAig).Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 13,
+        "ByteOffset": 13272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjValue(pObj) \u003c p.pAig.nFront );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 13,
+        "ByteOffset": 13424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjValue(pObj) \u003c p.pAig.nFront );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 386,
+        "Column": 13,
+        "ByteOffset": 13598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjValue(pObj) == GIA_NONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 13713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(p.pAig) == iCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 391,
+        "Column": 5,
+        "ByteOffset": 13757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p.pAig) == iCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 14561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iMaxTerValue \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 14810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pRetired[i] == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 473,
+        "Column": 5,
+        "ByteOffset": 16734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %4d : \", iNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 13,
+        "ByteOffset": 16863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 13,
+        "ByteOffset": 16963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 482,
+        "Column": 13,
+        "ByteOffset": 17062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"x\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 485,
+        "Column": 13,
+        "ByteOffset": 17114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 17139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" (0=%4d, 1=%4d, x=%4d)\\n\", nZeros, nOnes, nDcs );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 17715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pStates, 0, sizeof(int) * nStateWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 5,
+        "ByteOffset": 18197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Found %d constant registers.\\n\", nZeros );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 18289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pStates, 0, sizeof(int) * nStateWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 5,
+        "ByteOffset": 18808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Found %d non-ternary registers.\\n\", nConsts );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 611,
+        "Column": 13,
+        "ByteOffset": 21339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( pTemp, pFlop, sizeof(unsigned) * nFlopWords ) {"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 635,
+        "Column": 70,
+        "ByteOffset": 22085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCi2Lit = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))), 0xff, sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 635,
+        "Column": 77,
+        "ByteOffset": 22092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCi2Lit = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))), 0xff, sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 652,
+        "Column": 9,
+        "ByteOffset": 22899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Transforming %d const and %d equiv registers.\\n\", Counter0, CounterE ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 23467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 679,
+        "Column": 9,
+        "ByteOffset": 23604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj = %8d (%8d). F = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 9,
+        "ByteOffset": 23734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG = %7.2f MB. F-mem = %7.2f MB. Other = %7.2f MB.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 686,
+        "Column": 73,
+        "ByteOffset": 24153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 716,
+        "Column": 9,
+        "ByteOffset": 25325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ternary simulation saturated after %d iterations. \", i+1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 718,
+        "Column": 78,
+        "ByteOffset": 25554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 743,
+        "Column": 63,
+        "ByteOffset": 26248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManTerSimInfoGet",
+      "Start": 767,
+      "End": 887,
+      "BodyStart": 833,
+      "Original": "static inline int Gia_ManTerSimInfoGet( unsigned * pInfo, int i )\n{\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Gia_ManTerSimInfoGet(pInfo *uint32, i int32) int32 {\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimInfoSet",
+      "Start": 888,
+      "End": 1117,
+      "BodyStart": 966,
+      "Original": "static inline void Gia_ManTerSimInfoSet( unsigned * pInfo, int i, int Value )\n{\n    assert( Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND );\n    Value ^= Gia_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Gia_ManTerSimInfoSet(pInfo *uint32, i int32, Value int32) {\n    assert(Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND, \"Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND\");\n    Value ^= Gia_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Gia_ManTerStateNext",
+      "Start": 1119,
+      "End": 1264,
+      "BodyStart": 1218,
+      "Original": "static inline unsigned * Gia_ManTerStateNext( unsigned * pState, int nWords )                      { return *((unsigned **)(pState + nWords));  }",
+      "Draft": "func Gia_ManTerStateNext(pState *uint32, nWords int32) *uint32 { return *((unsigned **)(pState + nWords));  }"
+    },
+    {
+      "Name": "Gia_ManTerStateSetNext",
+      "Start": 1265,
+      "End": 1410,
+      "BodyStart": 1364,
+      "Original": "static inline void       Gia_ManTerStateSetNext( unsigned * pState, int nWords, unsigned * pNext ) { *((unsigned **)(pState + nWords)) = pNext; }",
+      "Draft": "func Gia_ManTerStateSetNext(pState *uint32, nWords int32, pNext *uint32) { *((unsigned **)(pState + nWords)) = pNext; }"
+    },
+    {
+      "Name": "Gia_ManTerCreate",
+      "Start": 2584,
+      "End": 3477,
+      "BodyStart": 2636,
+      "Original": "Gia_ManTer_t * Gia_ManTerCreate( Gia_Man_t * pAig )\n{\n    Gia_ManTer_t * p;\n    p = ABC_CALLOC( Gia_ManTer_t, 1 );\n    p-\u003epAig   = Gia_ManFront( pAig );\n    p-\u003enIters = 300;\n    p-\u003epDataSim    = ABC_ALLOC( unsigned, Abc_BitWordNum(2*p-\u003epAig-\u003enFront) );\n    p-\u003epDataSimCis = ABC_ALLOC( unsigned, Abc_BitWordNum(2*Gia_ManCiNum(p-\u003epAig)) );\n    p-\u003epDataSimCos = ABC_ALLOC( unsigned, Abc_BitWordNum(2*Gia_ManCoNum(p-\u003epAig)) );\n    // allocate storage for terminary states\n    p-\u003enStateWords = Abc_BitWordNum( 2*Gia_ManRegNum(pAig) );\n    p-\u003evStates  = Vec_PtrAlloc( 1000 );\n    p-\u003epCount0  = ABC_CALLOC( int, Gia_ManRegNum(pAig) );\n    p-\u003epCountX  = ABC_CALLOC( int, Gia_ManRegNum(pAig) );\n    p-\u003enBins    = Abc_PrimeCudd( 500 );\n    p-\u003epBins    = ABC_CALLOC( unsigned *, p-\u003enBins );\n    p-\u003evRetired = Vec_IntAlloc( 100 );\n    p-\u003epRetired = ABC_CALLOC( char, Gia_ManRegNum(pAig) );\n    return p;\n}",
+      "Draft": "func Gia_ManTerCreate(pAig *Gia_Man_t) *Gia_ManTer_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_ManTer_t{};\n    p.pAig   = Gia_ManFront( pAig );\n    p.nIters = 300;\n    // inlining of macro ABC_ALLOC\n    p.pDataSim    = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*p.pAig.nFront))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCiNum(p.pAig)))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCoNum(p.pAig)))));\n    // allocate storage for terminary states\n    p.nStateWords = Abc_BitWordNum( 2*Gia_ManRegNum(pAig) );\n    p.vStates  = Vec_PtrAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pCount0  = ((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pCountX  = ((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));\n    p.nBins    = Abc_PrimeCudd( 500 );\n    // inlining of macro ABC_CALLOC\n    p.pBins    = ((unsigned * *) calloc((size_t)(p.nBins), sizeof(unsigned *)));\n    p.vRetired = Vec_IntAlloc( 100 );\n    // inlining of macro ABC_CALLOC\n    p.pRetired = ((char *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(char)));\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManTerStatesFree",
+      "Start": 3713,
+      "End": 3910,
+      "BodyStart": 3762,
+      "Original": "void Gia_ManTerStatesFree( Vec_Ptr_t * vStates )\n{\n    unsigned * pTemp;\n    int i;\n    Vec_PtrForEachEntry( unsigned *, vStates, pTemp, i )\n        ABC_FREE( pTemp );\n    Vec_PtrFree( vStates );\n}",
+      "Draft": "func Gia_ManTerStatesFree(vStates *Vec_Ptr_t) {\n    var pTemp *uint32;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n    }\n    Vec_PtrFree( vStates );\n}"
+    },
+    {
+      "Name": "Gia_ManTerDelete",
+      "Start": 4146,
+      "End": 4606,
+      "BodyStart": 4188,
+      "Original": "void Gia_ManTerDelete( Gia_ManTer_t * p )\n{\n    if ( p-\u003evStates ) \n        Gia_ManTerStatesFree( p-\u003evStates );\n    if ( p-\u003evFlops ) \n        Gia_ManTerStatesFree( p-\u003evFlops );\n    Gia_ManStop( p-\u003epAig );\n    Vec_IntFree( p-\u003evRetired );\n    ABC_FREE( p-\u003epRetired );\n    ABC_FREE( p-\u003epCount0 );\n    ABC_FREE( p-\u003epCountX );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p-\u003epDataSim );\n    ABC_FREE( p-\u003epDataSimCis );\n    ABC_FREE( p-\u003epDataSimCos );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_ManTerDelete(p *Gia_ManTer_t) {\n    if p.vStates { \n        Gia_ManTerStatesFree( p.vStates ); }\n    if p.vFlops { \n        Gia_ManTerStatesFree( p.vFlops ); }\n    Gia_ManStop( p.pAig );\n    Vec_IntFree( p.vRetired );\n    // inlining of macro ABC_FREE\n    ((p.pRetired) ? (free((char *) (p.pRetired)), (p.pRetired) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCount0) ? (free((char *) (p.pCount0)), (p.pCount0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCountX) ? (free((char *) (p.pCountX)), (p.pCountX) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimulateCi",
+      "Start": 4842,
+      "End": 5036,
+      "BodyStart": 4929,
+      "Original": "static inline void Gia_ManTerSimulateCi( Gia_ManTer_t * p, Gia_Obj_t * pObj, int iCi )\n{\n    Gia_ManTerSimInfoSet( p-\u003epDataSim, Gia_ObjValue(pObj), Gia_ManTerSimInfoGet(p-\u003epDataSimCis, iCi) );\n}",
+      "Draft": "func Gia_ManTerSimulateCi(p *Gia_ManTer_t, pObj *Gia_Obj_t, iCi int32) {\n    Gia_ManTerSimInfoSet( p.pDataSim, Gia_ObjValue(pObj), Gia_ManTerSimInfoGet(p.pDataSimCis, iCi) );\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimulateCo",
+      "Start": 5272,
+      "End": 5532,
+      "BodyStart": 5359,
+      "Original": "static inline void Gia_ManTerSimulateCo( Gia_ManTer_t * p, int iCo, Gia_Obj_t * pObj )\n{\n    int Value = Gia_ManTerSimInfoGet( p-\u003epDataSim, Gia_ObjDiff0(pObj) );\n    Gia_ManTerSimInfoSet( p-\u003epDataSimCos, iCo, Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) ) );\n}",
+      "Draft": "func Gia_ManTerSimulateCo(p *Gia_ManTer_t, iCo int32, pObj *Gia_Obj_t) {\n    var Value int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff0(pObj) );\n    Gia_ManTerSimInfoSet( p.pDataSimCos, iCo, Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) ) );\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimulateNode",
+      "Start": 5768,
+      "End": 6139,
+      "BodyStart": 5848,
+      "Original": "static inline void Gia_ManTerSimulateNode( Gia_ManTer_t * p, Gia_Obj_t * pObj )\n{\n    int Value0 = Gia_ManTerSimInfoGet( p-\u003epDataSim, Gia_ObjDiff0(pObj) );\n    int Value1 = Gia_ManTerSimInfoGet( p-\u003epDataSim, Gia_ObjDiff1(pObj) );\n    Gia_ManTerSimInfoSet( p-\u003epDataSim, Gia_ObjValue(pObj), Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) ) );\n}",
+      "Draft": "func Gia_ManTerSimulateNode(p *Gia_ManTer_t, pObj *Gia_Obj_t) {\n    var Value0 int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff0(pObj) );\n    var Value1 int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff1(pObj) );\n    Gia_ManTerSimInfoSet( p.pDataSim, Gia_ObjValue(pObj), Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) ) );\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimInfoInit",
+      "Start": 6375,
+      "End": 6664,
+      "BodyStart": 6436,
+      "Original": "static inline void Gia_ManTerSimInfoInit( Gia_ManTer_t * p )\n{\n    int i = 0;\n    for ( ; i \u003c Gia_ManPiNum(p-\u003epAig); i++ )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, i, GIA_UND );\n    for ( ; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, i, GIA_ZER );\n}",
+      "Draft": "func Gia_ManTerSimInfoInit(p *Gia_ManTer_t) {\n    var i int32;\n    for  ; i \u003c Gia_ManPiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_UND );\n    }\n    for  ; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_ZER );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimInfoTransfer",
+      "Start": 6900,
+      "End": 7271,
+      "BodyStart": 6965,
+      "Original": "static inline void Gia_ManTerSimInfoTransfer( Gia_ManTer_t * p )\n{\n    int i = 0;\n    for ( ; i \u003c Gia_ManPiNum(p-\u003epAig); i++ )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, i, GIA_UND );\n    for ( ; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, i, Gia_ManTerSimInfoGet( p-\u003epDataSimCos, Gia_ManCoNum(p-\u003epAig)-Gia_ManCiNum(p-\u003epAig)+i ) );\n}",
+      "Draft": "func Gia_ManTerSimInfoTransfer(p *Gia_ManTer_t) {\n    var i int32;\n    for  ; i \u003c Gia_ManPiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_UND );\n    }\n    for  ; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, Gia_ManTerSimInfoGet( p.pDataSimCos, Gia_ManCoNum(p.pAig)-Gia_ManCiNum(p.pAig)+i ) );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManTerStateHash",
+      "Start": 7566,
+      "End": 8729,
+      "BodyStart": 7639,
+      "Original": "int Gia_ManTerStateHash( unsigned * pState, int nWords, int nTableSize )\n{\n    static int s_FPrimes[128] = { \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned uHash;\n    int i;\n    uHash = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        uHash ^= pState[i] * s_FPrimes[i \u0026 0x7F];\n    return uHash % nTableSize;\n}",
+      "Draft": "func Gia_ManTerStateHash(pState *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    uHash = 0;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pState[i] * spStatic_Gia_ManTerStateHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}"
+    },
+    {
+      "Name": "Gia_ManTerStateLookup",
+      "Start": 8994,
+      "End": 9376,
+      "BodyStart": 9090,
+      "Original": "unsigned * Gia_ManTerStateLookup( unsigned * pState, int nWords, unsigned ** pBins, int nBins )\n{\n    unsigned * pEntry;\n    int Hash = Gia_ManTerStateHash( pState, nWords, nBins );\n    for ( pEntry = pBins[Hash]; pEntry; pEntry = Gia_ManTerStateNext(pEntry, nWords) )\n        if ( !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) )\n            return pEntry;\n    return NULL;\n}",
+      "Draft": "func Gia_ManTerStateLookup(pState *uint32, nWords int32, pBins **uint32, nBins int32) *uint32 {\n    var pEntry *uint32;\n    var Hash int32  = Gia_ManTerStateHash( pState, nWords, nBins );\n    for  pEntry = pBins[Hash]; (pEntry != nil); pEntry = Gia_ManTerStateNext(pEntry, nWords)  {\n        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {\n            return pEntry; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Gia_ManTerStateInsert",
+      "Start": 9641,
+      "End": 9954,
+      "BodyStart": 9731,
+      "Original": "void Gia_ManTerStateInsert( unsigned * pState, int nWords, unsigned ** pBins, int nBins )\n{\n    int Hash = Gia_ManTerStateHash( pState, nWords, nBins );\n    assert( !Gia_ManTerStateLookup( pState, nWords, pBins, nBins ) );\n    Gia_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}",
+      "Draft": "func Gia_ManTerStateInsert(pState *uint32, nWords int32, pBins **uint32, nBins int32) {\n    var Hash int32  = Gia_ManTerStateHash( pState, nWords, nBins );\n    assert(!(Gia_ManTerStateLookup( pState, nWords, pBins, nBins ) != nil), \"!Gia_ManTerStateLookup( pState, nWords, pBins, nBins )\");\n    Gia_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}"
+    },
+    {
+      "Name": "Gia_ManTerStateAlloc",
+      "Start": 10215,
+      "End": 10355,
+      "BodyStart": 10261,
+      "Original": "unsigned * Gia_ManTerStateAlloc( int nWords )\n{\n    return (unsigned *)ABC_CALLOC( char, sizeof(unsigned) * nWords + sizeof(unsigned *) );\n}",
+      "Draft": "func Gia_ManTerStateAlloc(nWords int32) *uint32 {\n    // inlining of macro ABC_CALLOC\n    return (unsigned *)((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));\n}"
+    },
+    {
+      "Name": "Gia_ManTerStateCreate",
+      "Start": 10617,
+      "End": 11150,
+      "BodyStart": 10670,
+      "Original": "unsigned * Gia_ManTerStateCreate( Gia_ManTer_t * p )\n{\n    int i, Value, nPis = Gia_ManPiNum(p-\u003epAig);\n    unsigned * pRes = Gia_ManTerStateAlloc( p-\u003enStateWords );\n    for ( i = nPis; i \u003c Gia_ManCiNum(p-\u003epAig); i++ )\n    {\n        Value = Gia_ManTerSimInfoGet( p-\u003epDataSimCis, i );\n        Gia_ManTerSimInfoSet( pRes, i-nPis, Value );\n        if ( Value == GIA_ZER )\n            p-\u003epCount0[i-nPis]++;\n        if ( Value == GIA_UND )\n            p-\u003epCountX[i-nPis]++;\n    }\n    Vec_PtrPush( p-\u003evStates, pRes );\n    return pRes;    \n}",
+      "Draft": "func Gia_ManTerStateCreate(p *Gia_ManTer_t) *uint32 {\n    var i int32;\n    var Value int32;\n    var nPis int32 = Gia_ManPiNum(p.pAig);\n    var pRes *uint32  = Gia_ManTerStateAlloc( p.nStateWords );\n    for  i = nPis; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Value = Gia_ManTerSimInfoGet( p.pDataSimCis, i );\n        Gia_ManTerSimInfoSet( pRes, i-nPis, Value );\n        if Value == GIA_ZER {\n            p.pCount0[i-nPis]++; }\n        if Value == GIA_UND {\n            p.pCountX[i-nPis]++; }\n    }\n    Vec_PtrPush( p.vStates, pRes );\n    return pRes;    \n}"
+    },
+    {
+      "Name": "Gia_ManTerSimulateRound",
+      "Start": 11427,
+      "End": 12337,
+      "BodyStart": 11490,
+      "Original": "static inline void Gia_ManTerSimulateRound( Gia_ManTer_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, iCis = 0, iCos = 0;\n    assert( p-\u003epAig-\u003enFront \u003e 0 );\n    assert( Gia_ManConst0(p-\u003epAig)-\u003eValue == 0 );\n    Gia_ManTerSimInfoSet( p-\u003epDataSim, 0, GIA_ZER );\n    Gia_ManForEachObj1( p-\u003epAig, pObj, i )\n    {\n        if ( Gia_ObjIsAndOrConst0(pObj) )\n        {\n            assert( Gia_ObjValue(pObj) \u003c p-\u003epAig-\u003enFront );\n            Gia_ManTerSimulateNode( p, pObj );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n        {\n            assert( Gia_ObjValue(pObj) \u003c p-\u003epAig-\u003enFront );\n            Gia_ManTerSimulateCi( p, pObj, iCis++ );\n        }\n        else // if ( Gia_ObjIsCo(pObj) )\n        {\n            assert( Gia_ObjValue(pObj) == GIA_NONE );\n            Gia_ManTerSimulateCo( p, iCos++, pObj );\n        }\n    }\n    assert( Gia_ManCiNum(p-\u003epAig) == iCis );\n    assert( Gia_ManCoNum(p-\u003epAig) == iCos );\n}",
+      "Draft": "func Gia_ManTerSimulateRound(p *Gia_ManTer_t) {\n    var pObj *Gia_Obj_t;\n    var i, iCis, iCos int32;\n    assert(p.pAig.nFront \u003e 0, \"p.pAig.nFront \u003e 0\");\n    assert(Gia_ManConst0(p.pAig).Value == 0, \"Gia_ManConst0(p.pAig).Value == 0\");\n    Gia_ManTerSimInfoSet( p.pDataSim, 0, GIA_ZER );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n        if Gia_ObjIsAndOrConst0(pObj) {\n            assert(Gia_ObjValue(pObj) \u003c p.pAig.nFront, \"Gia_ObjValue(pObj) \u003c p.pAig.nFront\");\n            Gia_ManTerSimulateNode( p, pObj );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            assert(Gia_ObjValue(pObj) \u003c p.pAig.nFront, \"Gia_ObjValue(pObj) \u003c p.pAig.nFront\");\n            Gia_ManTerSimulateCi( p, pObj, iCis++ );\n        \n        } else { // if ( Gia_ObjIsCo(pObj) )\n        \n            assert(Gia_ObjValue(pObj) == GIA_NONE, \"Gia_ObjValue(pObj) == GIA_NONE\");\n            Gia_ManTerSimulateCo( p, iCos++, pObj );\n        }\n    }\n    assert(Gia_ManCiNum(p.pAig) == iCis, \"Gia_ManCiNum(p.pAig) == iCis\");\n    assert(Gia_ManCoNum(p.pAig) == iCos, \"Gia_ManCoNum(p.pAig) == iCos\");\n}"
+    },
+    {
+      "Name": "Gia_ManTerRetire2",
+      "Start": 12706,
+      "End": 13716,
+      "BodyStart": 12767,
+      "Original": "int Gia_ManTerRetire2( Gia_ManTer_t * p, unsigned * pState )\n{\n    int i, Entry, iMaxTerValue = -1;\n    // find non-retired register with this value\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        if ( Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p-\u003epRetired[i] \u0026\u0026 iMaxTerValue \u003c p-\u003epCountX[i] )\n            iMaxTerValue = p-\u003epCountX[i];\n    assert( iMaxTerValue \u003e= 0 );\n    // retire the first registers with this value\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        if ( Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p-\u003epRetired[i] \u0026\u0026 iMaxTerValue == p-\u003epCountX[i] )\n        {\n            assert( p-\u003epRetired[i] == 0 );\n            p-\u003epRetired[i] = 1;\n            Vec_IntPush( p-\u003evRetired, i );\n            if ( iMaxTerValue == 0 )\n                break;\n        }\n    // update all the retired registers\n    Vec_IntForEachEntry( p-\u003evRetired, Entry, i )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, Gia_ManPiNum(p-\u003epAig)+Entry, GIA_UND );\n    return Vec_IntSize(p-\u003evRetired);\n}",
+      "Draft": "func Gia_ManTerRetire2(p *Gia_ManTer_t, pState *uint32) int32 {\n    var i int32;\n    var Entry int32;\n    var iMaxTerValue int32 = -1;\n    // find non-retired register with this value\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p.pRetired[i] \u0026\u0026 iMaxTerValue \u003c p.pCountX[i] {\n            iMaxTerValue = p.pCountX[i]; }\n    }\n    assert(iMaxTerValue \u003e= 0, \"iMaxTerValue \u003e= 0\");\n    // retire the first registers with this value\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p.pRetired[i] \u0026\u0026 iMaxTerValue == p.pCountX[i] {\n            assert(p.pRetired[i] == 0, \"p.pRetired[i] == 0\");\n            p.pRetired[i] = 1;\n            Vec_IntPush( p.vRetired, i );\n            if iMaxTerValue == 0 {\n                break; }\n        }\n    }\n    // update all the retired registers\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vRetired)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vRetired, i)), 1); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, Gia_ManPiNum(p.pAig)+Entry, GIA_UND );\n    }\n    return Vec_IntSize(p.vRetired);\n}"
+    },
+    {
+      "Name": "Gia_ManTerRetire",
+      "Start": 14085,
+      "End": 14643,
+      "BodyStart": 14162,
+      "Original": "int Gia_ManTerRetire( Gia_ManTer_t * p, unsigned * pThis, unsigned * pPrev )\n{\n    int i, Entry;\n    // find registers whose value has changed\n    Vec_IntClear( p-\u003evRetired );\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        if ( Gia_ManTerSimInfoGet( pThis, i ) != Gia_ManTerSimInfoGet( pPrev, i ) )\n            Vec_IntPush( p-\u003evRetired, i );\n    // set all of them to zero\n    Vec_IntForEachEntry( p-\u003evRetired, Entry, i )\n        Gia_ManTerSimInfoSet( p-\u003epDataSimCis, Gia_ManPiNum(p-\u003epAig)+Entry, GIA_UND );\n    return Vec_IntSize(p-\u003evRetired);\n}",
+      "Draft": "func Gia_ManTerRetire(p *Gia_ManTer_t, pThis *uint32, pPrev *uint32) int32 {\n    var i, Entry int32;\n    // find registers whose value has changed\n    Vec_IntClear( p.vRetired );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pThis, i ) != Gia_ManTerSimInfoGet( pPrev, i ) {\n            Vec_IntPush( p.vRetired, i ); }\n    }\n    // set all of them to zero\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vRetired)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vRetired, i)), 1); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, Gia_ManPiNum(p.pAig)+Entry, GIA_UND );\n    }\n    return Vec_IntSize(p.vRetired);\n}"
+    },
+    {
+      "Name": "Gia_ManTerStatePrint",
+      "Start": 14908,
+      "End": 15493,
+      "BodyStart": 14976,
+      "Original": "void Gia_ManTerStatePrint( unsigned * pState, int nRegs, int iNum )\n{\n    int i, nZeros = 0, nOnes = 0, nDcs = 0;\n    printf( \" %4d : \", iNum );\n    for ( i = 0; i \u003c nRegs; i++ )\n    {\n        if ( Gia_ManTerSimInfoGet(pState, i) == GIA_ZER )\n            printf( \"0\" ), nZeros++;\n        else if ( Gia_ManTerSimInfoGet(pState, i) == GIA_ONE )\n            printf( \"1\" ), nOnes++;\n        else if ( Gia_ManTerSimInfoGet(pState, i) == GIA_UND )\n            printf( \"x\" ), nDcs++;\n        else\n            assert( 0 );\n    }\n    printf( \" (0=%4d, 1=%4d, x=%4d)\\n\", nZeros, nOnes, nDcs );\n}",
+      "Draft": "func Gia_ManTerStatePrint(pState *uint32, nRegs int32, iNum int32) {\n    var i, nZeros, nOnes, nDcs int32;\n    fmt.Printf(\" %4d : \", iNum);\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pState, i) == GIA_ZER {\n            fmt.Printf(\"0\");\nnZeros++;\n        } else if Gia_ManTerSimInfoGet(pState, i) == GIA_ONE {\n            fmt.Printf(\"1\");\nnOnes++;\n        } else if Gia_ManTerSimInfoGet(pState, i) == GIA_UND {\n            fmt.Printf(\"x\");\nnDcs++;\n        } else {\n            assert(false, \"0\"); }\n    }\n    fmt.Printf(\" (0=%4d, 1=%4d, x=%4d)\\n\", nZeros, nOnes, nDcs);\n}"
+    },
+    {
+      "Name": "Gia_ManTerAnalyze2",
+      "Start": 15729,
+      "End": 16949,
+      "BodyStart": 15787,
+      "Original": "void Gia_ManTerAnalyze2( Vec_Ptr_t * vStates, int nRegs )\n{\n    unsigned * pTemp, * pStates = (unsigned *)Vec_PtrPop( vStates );\n    int i, w, nZeros, nConsts, nStateWords;\n    // detect constant zero registers\n    nStateWords = Abc_BitWordNum( 2*nRegs );\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    Vec_PtrForEachEntry( unsigned *, vStates, pTemp, i )\n        for ( w = 0; w \u003c nStateWords; w++ )\n            pStates[w] |= pTemp[w];\n    // count the number of zeros\n    nZeros = 0;\n    for ( i = 0; i \u003c nRegs; i++ )\n        if ( Gia_ManTerSimInfoGet(pStates, i) == GIA_ZER )\n            nZeros++;\n    printf( \"Found %d constant registers.\\n\", nZeros );\n    // detect non-ternary registers\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    Vec_PtrForEachEntry( unsigned *, vStates, pTemp, i )\n        for ( w = 0; w \u003c nStateWords; w++ )\n            pStates[w] |= (~(pTemp[w] ^ (pTemp[w] \u003e\u003e 1)) \u0026 0x55555555);\n    // count the nonternary registers\n    nConsts = 0;\n    for ( i = 0; i \u003c nRegs; i++ )\n        if ( Gia_ManTerSimInfoGet(pStates, i) == 0 )\n            nConsts++;\n    printf( \"Found %d non-ternary registers.\\n\", nConsts );\n    // return the state back\n    Vec_PtrPush( vStates, pStates );\n}",
+      "Draft": "func Gia_ManTerAnalyze2(vStates *Vec_Ptr_t, nRegs int32) {\n    var pTemp *uint32;\n    var pStates *uint32 = (unsigned *)Vec_PtrPop( vStates );\n    var i, w, nZeros, nConsts, nStateWords int32;\n    // detect constant zero registers\n    nStateWords = Abc_BitWordNum( 2*nRegs );\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        for  w = 0; w \u003c nStateWords; w++  {\n            pStates[w] |= pTemp[w];\n        }\n    }\n    // count the number of zeros\n    nZeros = 0;\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pStates, i) == GIA_ZER {\n            nZeros++; }\n    }\n    fmt.Printf(\"Found %d constant registers.\\n\", nZeros);\n    // detect non-ternary registers\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        for  w = 0; w \u003c nStateWords; w++  {\n            pStates[w] |= (~(pTemp[w] ^ (pTemp[w] \u003e\u003e 1)) \u0026 0x55555555);\n        }\n    }\n    // count the nonternary registers\n    nConsts = 0;\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pStates, i) == 0 {\n            nConsts++; }\n    }\n    fmt.Printf(\"Found %d non-ternary registers.\\n\", nConsts);\n    // return the state back\n    Vec_PtrPush( vStates, pStates );\n}"
+    },
+    {
+      "Name": "Gia_ManTerAnalyze",
+      "Start": 17185,
+      "End": 17578,
+      "BodyStart": 17228,
+      "Original": "void Gia_ManTerAnalyze( Gia_ManTer_t * p )\n{\n    int i, nZeros = 0, nConsts = 0;\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        if ( p-\u003epCount0[i] == Vec_PtrSize(p-\u003evStates) )\n            nZeros++;\n        else if ( p-\u003epCountX[i] == 0 )\n            nConsts++;\n//    printf( \"Found %d constant registers.\\n\", nZeros );\n//    printf( \"Found %d non-ternary registers.\\n\", nConsts );\n}",
+      "Draft": "func Gia_ManTerAnalyze(p *Gia_ManTer_t) {\n    var i, nZeros, nConsts int32;\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) {\n            nZeros++;\n        } else if p.pCountX[i] == 0 {\n            nConsts++; }\n    }\n//    printf( \"Found %d constant registers.\\n\", nZeros );\n//    printf( \"Found %d non-ternary registers.\\n\", nConsts );\n}"
+    },
+    {
+      "Name": "Gia_ManTerTranspose",
+      "Start": 17866,
+      "End": 18610,
+      "BodyStart": 17918,
+      "Original": "Vec_Ptr_t * Gia_ManTerTranspose( Gia_ManTer_t * p )\n{\n    Vec_Ptr_t * vFlops;\n    unsigned * pState, * pFlop;\n    int i, k, nFlopWords;\n    vFlops = Vec_PtrAlloc( 100 );\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p-\u003evStates) );\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n    {\n        if ( p-\u003epCount0[i] == Vec_PtrSize(p-\u003evStates) ) \n            continue;\n        if ( p-\u003epCountX[i] \u003e 0 )\n            continue;\n        pFlop = Gia_ManTerStateAlloc( nFlopWords );\n        Vec_PtrPush( vFlops, pFlop );\n        Vec_PtrForEachEntry( unsigned *, p-\u003evStates, pState, k )\n            Gia_ManTerSimInfoSet( pFlop, k, Gia_ManTerSimInfoGet(pState, i) );\n//Gia_ManTerStatePrint( pFlop, Vec_PtrSize(p-\u003evStates), i );\n    }\n    return vFlops;\n}",
+      "Draft": "func Gia_ManTerTranspose(p *Gia_ManTer_t) *Vec_Ptr_t {\n    var vFlops *Vec_Ptr_t;\n    var pState, pFlop *uint32;\n    var i, k, nFlopWords int32;\n    vFlops = Vec_PtrAlloc( 100 );\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p.vStates) );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) { \n            continue; }\n        if p.pCountX[i] \u003e 0 {\n            continue; }\n        pFlop = Gia_ManTerStateAlloc( nFlopWords );\n        Vec_PtrPush( vFlops, pFlop );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(p.vStates)) \u0026\u0026 (((pState) = (unsigned *)Vec_PtrEntry(p.vStates, k)), 1); k++  {\n            Gia_ManTerSimInfoSet( pFlop, k, Gia_ManTerSimInfoGet(pState, i) );\n        }\n//Gia_ManTerStatePrint( pFlop, Vec_PtrSize(p-\u003evStates), i );\n    }\n    return vFlops;\n}"
+    },
+    {
+      "Name": "Gia_ManFindEqualFlop",
+      "Start": 18896,
+      "End": 19244,
+      "BodyStart": 18970,
+      "Original": "int Gia_ManFindEqualFlop( Vec_Ptr_t * vFlops, int iFlop, int nFlopWords )\n{\n    unsigned * pFlop, * pTemp;\n    int i;\n    pFlop = (unsigned *)Vec_PtrEntry( vFlops, iFlop );\n    Vec_PtrForEachEntryStop( unsigned *, vFlops, pTemp, i, iFlop )\n        if ( !memcmp( pTemp, pFlop, sizeof(unsigned) * nFlopWords ) )\n            return i;\n    return -1;\n}",
+      "Draft": "func Gia_ManFindEqualFlop(vFlops *Vec_Ptr_t, iFlop int32, nFlopWords int32) int32 {\n    var pFlop, pTemp *uint32;\n    var i int32;\n    pFlop = (unsigned *)Vec_PtrEntry( vFlops, iFlop );\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c iFlop) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vFlops, i)), 1); i++  {\n        if !memcmp( pTemp, pFlop, sizeof(unsigned) * nFlopWords ) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Gia_ManTerCreateMap",
+      "Start": 19516,
+      "End": 20682,
+      "BodyStart": 19576,
+      "Original": "int * Gia_ManTerCreateMap( Gia_ManTer_t * p, int fVerbose )\n{\n    int * pCi2Lit;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vMapKtoI;\n    int i, iRepr, nFlopWords, Counter0 = 0, CounterE = 0;\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p-\u003evStates) );\n    p-\u003evFlops = Gia_ManTerTranspose( p );\n    pCi2Lit = ABC_FALLOC( int, Gia_ManCiNum(p-\u003epAig) );\n    vMapKtoI = Vec_IntAlloc( 100 );\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        if ( p-\u003epCount0[i] == Vec_PtrSize(p-\u003evStates) )\n            pCi2Lit[Gia_ManPiNum(p-\u003epAig)+i] = 0, Counter0++;\n        else if ( p-\u003epCountX[i] == 0 )\n        {\n            iRepr = Gia_ManFindEqualFlop( p-\u003evFlops, Vec_IntSize(vMapKtoI), nFlopWords );\n            Vec_IntPush( vMapKtoI, i );\n            if ( iRepr \u003c 0 )\n                continue;\n            pObj = Gia_ManCi( p-\u003epAig, Gia_ManPiNum(p-\u003epAig)+Vec_IntEntry(vMapKtoI, iRepr) );\n            pCi2Lit[Gia_ManPiNum(p-\u003epAig)+i] = Abc_Var2Lit( Gia_ObjId( p-\u003epAig, pObj ), 0 );\n            CounterE++;\n        }\n    Vec_IntFree( vMapKtoI );\n    if ( fVerbose )\n        printf( \"Transforming %d const and %d equiv registers.\\n\", Counter0, CounterE );\n    return pCi2Lit;\n}",
+      "Draft": "func Gia_ManTerCreateMap(p *Gia_ManTer_t, fVerbose int32) *int32 {\n    var pCi2Lit *int32;\n    var pObj *Gia_Obj_t;\n    var vMapKtoI *Vec_Int_t;\n    var i, iRepr, nFlopWords, Counter0, CounterE int32;\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p.vStates) );\n    p.vFlops = Gia_ManTerTranspose( p );\n    // inlining of macro ABC_FALLOC\n    pCi2Lit = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))), 0xff, sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))));\n    vMapKtoI = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) {\n            pCi2Lit[Gia_ManPiNum(p.pAig)+i] = 0, Counter0++;\n        } else if p.pCountX[i] == 0 {\n            iRepr = Gia_ManFindEqualFlop( p.vFlops, Vec_IntSize(vMapKtoI), nFlopWords );\n            Vec_IntPush( vMapKtoI, i );\n            if iRepr \u003c 0 {\n                continue; }\n            pObj = Gia_ManCi( p.pAig, Gia_ManPiNum(p.pAig)+Vec_IntEntry(vMapKtoI, iRepr) );\n            pCi2Lit[Gia_ManPiNum(p.pAig)+i] = Abc_Var2Lit( Gia_ObjId( p.pAig, pObj ), 0 );\n            CounterE++;\n        }\n    }\n    Vec_IntFree( vMapKtoI );\n    if fVerbose != 0 {\n        fmt.Printf(\"Transforming %d const and %d equiv registers.\\n\", Counter0, CounterE); }\n    return pCi2Lit;\n}"
+    },
+    {
+      "Name": "Gia_ManTerSimulate",
+      "Start": 20919,
+      "End": 23052,
+      "BodyStart": 20987,
+      "Original": "Gia_ManTer_t * Gia_ManTerSimulate( Gia_Man_t * pAig, int fVerbose )\n{\n    Gia_ManTer_t * p;\n    unsigned * pState, * pPrev, * pLoop;\n    int i, Counter;\n    abctime clk, clkTotal = Abc_Clock();\n    assert( Gia_ManRegNum(pAig) \u003e 0 );\n    // create manager\n    clk = Abc_Clock();\n    p = Gia_ManTerCreate( pAig );\n    if ( 0 )\n    {\n        printf( \"Obj = %8d (%8d). F = %6d. \", \n            pAig-\u003enObjs, Gia_ManCiNum(pAig) + Gia_ManAndNum(pAig), p-\u003epAig-\u003enFront );\n        printf( \"AIG = %7.2f MB. F-mem = %7.2f MB. Other = %7.2f MB.  \", \n            12.0*Gia_ManObjNum(p-\u003epAig)/(1\u003c\u003c20), \n            4.0*Abc_BitWordNum(2 * p-\u003epAig-\u003enFront)/(1\u003c\u003c20), \n            4.0*Abc_BitWordNum(2 * (Gia_ManCiNum(pAig) + Gia_ManCoNum(pAig)))/(1\u003c\u003c20) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    // perform simulation\n    Gia_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Gia_ManTerStateCreate( p );\n    Gia_ManTerStateInsert( pState, p-\u003enStateWords, p-\u003epBins, p-\u003enBins );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), 0 );\n    // perform simuluation till convergence\n    pPrev = NULL;\n    for ( i = 0; ; i++ )\n    {\n        Gia_ManTerSimulateRound( p );\n        Gia_ManTerSimInfoTransfer( p );\n        pState = Gia_ManTerStateCreate( p );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), i+1 );\n        if ( (pLoop = Gia_ManTerStateLookup(pState, p-\u003enStateWords, p-\u003epBins, p-\u003enBins)) )\n        {\n            pAig-\u003enTerStates = Vec_PtrSize( p-\u003evStates );\n            pAig-\u003enTerLoop = Vec_PtrFind( p-\u003evStates, pLoop );\n            break;\n        }\n        Gia_ManTerStateInsert( pState, p-\u003enStateWords, p-\u003epBins, p-\u003enBins );\n        if ( i \u003e= p-\u003enIters \u0026\u0026 i % 10 == 0 )\n        {\n            Counter = Gia_ManTerRetire( p, pState, pPrev );\n//            Counter = Gia_ManTerRetire2( p, pState );\n//            if ( fVerbose )\n//                printf( \"Retired %d registers.\\n\", Counter );\n        }\n        pPrev = pState;\n    }\n    if ( fVerbose )\n    {\n        printf( \"Ternary simulation saturated after %d iterations. \", i+1 );\n        ABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n    }\n    return p;\n}",
+      "Draft": "func Gia_ManTerSimulate(pAig *Gia_Man_t, fVerbose int32) *Gia_ManTer_t {\n    var p *Gia_ManTer_t;\n    var pState, pPrev, pLoop *uint32;\n    var i, Counter int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManRegNum(pAig) \u003e 0, \"Gia_ManRegNum(pAig) \u003e 0\");\n    // create manager\n    clk = Abc_Clock();\n    p = Gia_ManTerCreate( pAig );\n    if false {\n        fmt.Printf(\"Obj = %8d (%8d). F = %6d. \", pAig.nObjs, Gia_ManCiNum(pAig) + Gia_ManAndNum(pAig), p.pAig.nFront);\n        fmt.Printf(\"AIG = %7.2f MB. F-mem = %7.2f MB. Other = %7.2f MB.  \", 12.0*Gia_ManObjNum(p.pAig)/(1\u003c\u003c20), 4.0*Abc_BitWordNum(2 * p.pAig.nFront)/(1\u003c\u003c20), 4.0*Abc_BitWordNum(2 * (Gia_ManCiNum(pAig) + Gia_ManCoNum(pAig)))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // perform simulation\n    Gia_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Gia_ManTerStateCreate( p );\n    Gia_ManTerStateInsert( pState, p.nStateWords, p.pBins, p.nBins );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), 0 );\n    // perform simuluation till convergence\n    pPrev = nil;\n    for  i = 0; ; i++  {\n        Gia_ManTerSimulateRound( p );\n        Gia_ManTerSimInfoTransfer( p );\n        pState = Gia_ManTerStateCreate( p );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), i+1 );\n        if pLoop = Gia_ManTerStateLookup(pState, p.nStateWords, p.pBins, p.nBins) {\n            pAig.nTerStates = Vec_PtrSize( p.vStates );\n            pAig.nTerLoop = Vec_PtrFind( p.vStates, pLoop );\n            break;\n        }\n        Gia_ManTerStateInsert( pState, p.nStateWords, p.pBins, p.nBins );\n        if i \u003e= p.nIters \u0026\u0026 i % 10 == 0 {\n            Counter = Gia_ManTerRetire( p, pState, pPrev );\n//            Counter = Gia_ManTerRetire2( p, pState );\n//            if ( fVerbose )\n//                printf( \"Retired %d registers.\\n\", Counter );\n        }\n        pPrev = pState;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Ternary simulation saturated after %d iterations. \", i+1);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManReduceConst",
+      "Start": 23288,
+      "End": 23673,
+      "BodyStart": 23353,
+      "Original": "Gia_Man_t * Gia_ManReduceConst( Gia_Man_t * pAig, int fVerbose )\n{\n    Gia_ManTer_t * p;\n    Gia_Man_t * pNew = NULL;\n    int * pCi2Lit;\n    p = Gia_ManTerSimulate( pAig, fVerbose );\n    Gia_ManTerAnalyze( p );\n    pCi2Lit = Gia_ManTerCreateMap( p, fVerbose );\n    Gia_ManTerDelete( p );\n    pNew = Gia_ManDupDfsCiMap( pAig, pCi2Lit, NULL );\n    ABC_FREE( pCi2Lit );\n    return pNew;\n}",
+      "Draft": "func Gia_ManReduceConst(pAig *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var p *Gia_ManTer_t;\n    var pNew *Gia_Man_t  = nil;\n    var pCi2Lit *int32;\n    p = Gia_ManTerSimulate( pAig, fVerbose );\n    Gia_ManTerAnalyze( p );\n    pCi2Lit = Gia_ManTerCreateMap( p, fVerbose );\n    Gia_ManTerDelete( p );\n    pNew = Gia_ManDupDfsCiMap( pAig, pCi2Lit, nil );\n    // inlining of macro ABC_FREE\n    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::struct::Gia_ManTer_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_ManTer_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1442,
+      "End": 2096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::2752",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2668,
+      "End": 2668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::2922",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2779,
+      "End": 2779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::3075",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2858,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::3234",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2943,
+      "End": 2943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::3564",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3172,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::3690",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3230,
+      "End": 3230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::3852",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3328,
+      "End": 3328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::4025",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3421,
+      "End": 3421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::static::9128",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 7645,
+      "End": 7651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::10784",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9301,
+      "End": 9307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::11841",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10286,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::11869",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10286,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::11890",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10286,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::17874",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16009,
+      "End": 16015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::18426",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16455,
+      "End": 16461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::21442",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19172,
+      "End": 19178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::22160",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19821,
+      "End": 19821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::mechanical::sizeof::22214",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19821,
+      "End": 19821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::1229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1229,
+      "End": 1242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::1368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1368,
+      "End": 1381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::2715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2668,
+      "End": 2668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::2902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2779,
+      "End": 2779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2858,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2943,
+      "End": 2943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3518",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3172,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3230,
+      "End": 3230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3328,
+      "End": 3328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3328,
+      "End": 3328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::3978",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3421,
+      "End": 3421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::4490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3801,
+      "End": 3801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::4608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3862,
+      "End": 3862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5218",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4386,
+      "End": 4386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5338",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4415,
+      "End": 4415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4443,
+      "End": 4443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4471,
+      "End": 4471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4497,
+      "End": 4497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5811",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4526,
+      "End": 4526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::5941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4558,
+      "End": 4558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::6058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4590,
+      "End": 4590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::11757",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10274,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::11816",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10286,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::11875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10286,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::17688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15823,
+      "End": 15835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::18017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16042,
+      "End": 16042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::18569",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16488,
+      "End": 16488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::20578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18387,
+      "End": 18387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::21212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19026,
+      "End": 19038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::21358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19073,
+      "End": 19073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::22138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19821,
+      "End": 19821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::pointer-cast::26353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23634,
+      "End": 23634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimInfoGet",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimInfoGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 767,
+      "End": 887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimInfoSet",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimInfoSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 888,
+      "End": 1117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateNext",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1119,
+      "End": 1264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateSetNext",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateSetNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1265,
+      "End": 1410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerCreate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2584,
+      "End": 3477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::ternary::Gia_ManTerStatesFree",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManTerStatesFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3713,
+      "End": 3910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStatesFree",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStatesFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3713,
+      "End": 3910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::ternary::Gia_ManTerDelete",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManTerDelete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4146,
+      "End": 4606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerDelete",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4146,
+      "End": 4606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimulateCi",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimulateCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4842,
+      "End": 5036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimulateCo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimulateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5272,
+      "End": 5532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimulateNode",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimulateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5768,
+      "End": 6139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimInfoInit",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimInfoInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6375,
+      "End": 6664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimInfoTransfer",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimInfoTransfer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6900,
+      "End": 7271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateHash",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7566,
+      "End": 8729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateLookup",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8994,
+      "End": 9376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateInsert",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9641,
+      "End": 9954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10215,
+      "End": 10355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStateCreate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStateCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10617,
+      "End": 11150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimulateRound",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimulateRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11427,
+      "End": 12337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerRetire2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerRetire2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12706,
+      "End": 13716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerRetire",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerRetire",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14085,
+      "End": 14643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerStatePrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerStatePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14908,
+      "End": 15493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerAnalyze2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerAnalyze2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15729,
+      "End": 16949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerAnalyze",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerAnalyze",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17185,
+      "End": 17578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerTranspose",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerTranspose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17866,
+      "End": 18610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManFindEqualFlop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFindEqualFlop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18896,
+      "End": 19244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerCreateMap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerCreateMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19516,
+      "End": 20682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManTerSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTerSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20919,
+      "End": 23052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::ternary::Gia_ManReduceConst",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManReduceConst",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23288,
+      "End": 23673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::Gia_ManReduceConst",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReduceConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23288,
+      "End": 23673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTsim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23920
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaTsim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Ternary simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaTsim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Gia_ManTerSimInfoGet(pInfo *uint32, i int32) int32 {\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}\nfunc Gia_ManTerSimInfoSet(pInfo *uint32, i int32, Value int32) {\n    assert(Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND, \"Value \u003e= GIA_ZER \u0026\u0026 Value \u003c= GIA_UND\");\n    Value ^= Gia_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}\n\nfunc Gia_ManTerStateNext(pState *uint32, nWords int32) *uint32 { return *((unsigned **)(pState + nWords));  }\nfunc Gia_ManTerStateSetNext(pState *uint32, nWords int32, pNext *uint32) { *((unsigned **)(pState + nWords)) = pNext; }\n\n// ternary simulation manager\n   \ntype Gia_ManTer_t struct {\n    pAig     *Gia_Man_t;\n    nIters            int32;\n    nStateWords            int32;\n    vStates     *Vec_Ptr_t;\n    vFlops     *Vec_Ptr_t;\n    vRetired     *Vec_Int_t;     // retired registers\n    pRetired          string;     // retired registers\n    pCount0           *int32;\n    pCountX           *int32;\n    // hash table for states\n    nBins            int32;\n    pBins     **uint32;\n    // simulation information\n    pDataSim      *uint32;     // simulation data\n    pDataSimCis      *uint32;  // simulation data for CIs\n    pDataSimCos      *uint32;  // simulation data for COs\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerCreate(pAig *Gia_Man_t) *Gia_ManTer_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_ManTer_t{};\n    p.pAig   = Gia_ManFront( pAig );\n    p.nIters = 300;\n    // inlining of macro ABC_ALLOC\n    p.pDataSim    = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*p.pAig.nFront))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCiNum(p.pAig)))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_BitWordNum(2*Gia_ManCoNum(p.pAig)))));\n    // allocate storage for terminary states\n    p.nStateWords = Abc_BitWordNum( 2*Gia_ManRegNum(pAig) );\n    p.vStates  = Vec_PtrAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pCount0  = ((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pCountX  = ((int *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(int)));\n    p.nBins    = Abc_PrimeCudd( 500 );\n    // inlining of macro ABC_CALLOC\n    p.pBins    = ((unsigned * *) calloc((size_t)(p.nBins), sizeof(unsigned *)));\n    p.vRetired = Vec_IntAlloc( 100 );\n    // inlining of macro ABC_CALLOC\n    p.pRetired = ((char *) calloc((size_t)(Gia_ManRegNum(pAig)), sizeof(char)));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStatesFree(vStates *Vec_Ptr_t) {\n    var pTemp *uint32;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n    }\n    Vec_PtrFree( vStates );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerDelete(p *Gia_ManTer_t) {\n    if p.vStates { \n        Gia_ManTerStatesFree( p.vStates ); }\n    if p.vFlops { \n        Gia_ManTerStatesFree( p.vFlops ); }\n    Gia_ManStop( p.pAig );\n    Vec_IntFree( p.vRetired );\n    // inlining of macro ABC_FREE\n    ((p.pRetired) ? (free((char *) (p.pRetired)), (p.pRetired) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCount0) ? (free((char *) (p.pCount0)), (p.pCount0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCountX) ? (free((char *) (p.pCountX)), (p.pCountX) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSim) ? (free((char *) (p.pDataSim)), (p.pDataSim) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCis) ? (free((char *) (p.pDataSimCis)), (p.pDataSimCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDataSimCos) ? (free((char *) (p.pDataSimCos)), (p.pDataSimCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimulateCi(p *Gia_ManTer_t, pObj *Gia_Obj_t, iCi int32) {\n    Gia_ManTerSimInfoSet( p.pDataSim, Gia_ObjValue(pObj), Gia_ManTerSimInfoGet(p.pDataSimCis, iCi) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimulateCo(p *Gia_ManTer_t, iCo int32, pObj *Gia_Obj_t) {\n    var Value int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff0(pObj) );\n    Gia_ManTerSimInfoSet( p.pDataSimCos, iCo, Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimulateNode(p *Gia_ManTer_t, pObj *Gia_Obj_t) {\n    var Value0 int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff0(pObj) );\n    var Value1 int32  = Gia_ManTerSimInfoGet( p.pDataSim, Gia_ObjDiff1(pObj) );\n    Gia_ManTerSimInfoSet( p.pDataSim, Gia_ObjValue(pObj), Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimInfoInit(p *Gia_ManTer_t) {\n    var i int32;\n    for  ; i \u003c Gia_ManPiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_UND );\n    }\n    for  ; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_ZER );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimInfoTransfer(p *Gia_ManTer_t) {\n    var i int32;\n    for  ; i \u003c Gia_ManPiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, GIA_UND );\n    }\n    for  ; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, i, Gia_ManTerSimInfoGet( p.pDataSimCos, Gia_ManCoNum(p.pAig)-Gia_ManCiNum(p.pAig)+i ) );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the node using its simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Gia_ManTerStateHash_s_FPrimes [128]int32 = [128]int32{ \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Gia_ManTerStateHash(pState *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    uHash = 0;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pState[i] * spStatic_Gia_ManTerStateHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStateLookup(pState *uint32, nWords int32, pBins **uint32, nBins int32) *uint32 {\n    var pEntry *uint32;\n    var Hash int32  = Gia_ManTerStateHash( pState, nWords, nBins );\n    for  pEntry = pBins[Hash]; (pEntry != nil); pEntry = Gia_ManTerStateNext(pEntry, nWords)  {\n        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {\n            return pEntry; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStateInsert(pState *uint32, nWords int32, pBins **uint32, nBins int32) {\n    var Hash int32  = Gia_ManTerStateHash( pState, nWords, nBins );\n    assert(!(Gia_ManTerStateLookup( pState, nWords, pBins, nBins ) != nil), \"!Gia_ManTerStateLookup( pState, nWords, pBins, nBins )\");\n    Gia_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocs new ternary state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStateAlloc(nWords int32) *uint32 {\n    // inlining of macro ABC_CALLOC\n    return (unsigned *)((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates new ternary state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStateCreate(p *Gia_ManTer_t) *uint32 {\n    var i int32;\n    var Value int32;\n    var nPis int32 = Gia_ManPiNum(p.pAig);\n    var pRes *uint32  = Gia_ManTerStateAlloc( p.nStateWords );\n    for  i = nPis; i \u003c Gia_ManCiNum(p.pAig); i++  {\n        Value = Gia_ManTerSimInfoGet( p.pDataSimCis, i );\n        Gia_ManTerSimInfoSet( pRes, i-nPis, Value );\n        if Value == GIA_ZER {\n            p.pCount0[i-nPis]++; }\n        if Value == GIA_UND {\n            p.pCountX[i-nPis]++; }\n    }\n    Vec_PtrPush( p.vStates, pRes );\n    return pRes;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one round of ternary simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimulateRound(p *Gia_ManTer_t) {\n    var pObj *Gia_Obj_t;\n    var i, iCis, iCos int32;\n    assert(p.pAig.nFront \u003e 0, \"p.pAig.nFront \u003e 0\");\n    assert(Gia_ManConst0(p.pAig).Value == 0, \"Gia_ManConst0(p.pAig).Value == 0\");\n    Gia_ManTerSimInfoSet( p.pDataSim, 0, GIA_ZER );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pAig, i)); i++  {\n        if Gia_ObjIsAndOrConst0(pObj) {\n            assert(Gia_ObjValue(pObj) \u003c p.pAig.nFront, \"Gia_ObjValue(pObj) \u003c p.pAig.nFront\");\n            Gia_ManTerSimulateNode( p, pObj );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            assert(Gia_ObjValue(pObj) \u003c p.pAig.nFront, \"Gia_ObjValue(pObj) \u003c p.pAig.nFront\");\n            Gia_ManTerSimulateCi( p, pObj, iCis++ );\n        \n        } else { // if ( Gia_ObjIsCo(pObj) )\n        \n            assert(Gia_ObjValue(pObj) == GIA_NONE, \"Gia_ObjValue(pObj) == GIA_NONE\");\n            Gia_ManTerSimulateCo( p, iCos++, pObj );\n        }\n    }\n    assert(Gia_ManCiNum(p.pAig) == iCis, \"Gia_ManCiNum(p.pAig) == iCis\");\n    assert(Gia_ManCoNum(p.pAig) == iCos, \"Gia_ManCoNum(p.pAig) == iCos\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retires a set of registers to speed up convergence.]\n\n  Description [Retire all non-ternary registers which has max number \n  of ternary values so far.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerRetire2(p *Gia_ManTer_t, pState *uint32) int32 {\n    var i int32;\n    var Entry int32;\n    var iMaxTerValue int32 = -1;\n    // find non-retired register with this value\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p.pRetired[i] \u0026\u0026 iMaxTerValue \u003c p.pCountX[i] {\n            iMaxTerValue = p.pCountX[i]; }\n    }\n    assert(iMaxTerValue \u003e= 0, \"iMaxTerValue \u003e= 0\");\n    // retire the first registers with this value\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pState, i ) != GIA_UND \u0026\u0026 !p.pRetired[i] \u0026\u0026 iMaxTerValue == p.pCountX[i] {\n            assert(p.pRetired[i] == 0, \"p.pRetired[i] == 0\");\n            p.pRetired[i] = 1;\n            Vec_IntPush( p.vRetired, i );\n            if iMaxTerValue == 0 {\n                break; }\n        }\n    }\n    // update all the retired registers\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vRetired)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vRetired, i)), 1); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, Gia_ManPiNum(p.pAig)+Entry, GIA_UND );\n    }\n    return Vec_IntSize(p.vRetired);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retires a set of registers to speed up convergence.]\n\n  Description [Retire all non-ternary registers which has max number \n  of ternary values so far.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerRetire(p *Gia_ManTer_t, pThis *uint32, pPrev *uint32) int32 {\n    var i, Entry int32;\n    // find registers whose value has changed\n    Vec_IntClear( p.vRetired );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if Gia_ManTerSimInfoGet( pThis, i ) != Gia_ManTerSimInfoGet( pPrev, i ) {\n            Vec_IntPush( p.vRetired, i ); }\n    }\n    // set all of them to zero\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vRetired)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vRetired, i)), 1); i++  {\n        Gia_ManTerSimInfoSet( p.pDataSimCis, Gia_ManPiNum(p.pAig)+Entry, GIA_UND );\n    }\n    return Vec_IntSize(p.vRetired);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerStatePrint(pState *uint32, nRegs int32, iNum int32) {\n    var i, nZeros, nOnes, nDcs int32;\n    fmt.Printf(\" %4d : \", iNum);\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pState, i) == GIA_ZER {\n            fmt.Printf(\"0\");\nnZeros++;\n        } else if Gia_ManTerSimInfoGet(pState, i) == GIA_ONE {\n            fmt.Printf(\"1\");\nnOnes++;\n        } else if Gia_ManTerSimInfoGet(pState, i) == GIA_UND {\n            fmt.Printf(\"x\");\nnDcs++;\n        } else {\n            assert(false, \"0\"); }\n    }\n    fmt.Printf(\" (0=%4d, 1=%4d, x=%4d)\\n\", nZeros, nOnes, nDcs);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerAnalyze2(vStates *Vec_Ptr_t, nRegs int32) {\n    var pTemp *uint32;\n    var pStates *uint32 = (unsigned *)Vec_PtrPop( vStates );\n    var i, w, nZeros, nConsts, nStateWords int32;\n    // detect constant zero registers\n    nStateWords = Abc_BitWordNum( 2*nRegs );\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        for  w = 0; w \u003c nStateWords; w++  {\n            pStates[w] |= pTemp[w];\n        }\n    }\n    // count the number of zeros\n    nZeros = 0;\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pStates, i) == GIA_ZER {\n            nZeros++; }\n    }\n    fmt.Printf(\"Found %d constant registers.\\n\", nZeros);\n    // detect non-ternary registers\n    memset( pStates, 0, sizeof(int) * nStateWords );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStates)) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vStates, i)), 1); i++  {\n        for  w = 0; w \u003c nStateWords; w++  {\n            pStates[w] |= (~(pTemp[w] ^ (pTemp[w] \u003e\u003e 1)) \u0026 0x55555555);\n        }\n    }\n    // count the nonternary registers\n    nConsts = 0;\n    for  i = 0; i \u003c nRegs; i++  {\n        if Gia_ManTerSimInfoGet(pStates, i) == 0 {\n            nConsts++; }\n    }\n    fmt.Printf(\"Found %d non-ternary registers.\\n\", nConsts);\n    // return the state back\n    Vec_PtrPush( vStates, pStates );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerAnalyze(p *Gia_ManTer_t) {\n    var i, nZeros, nConsts int32;\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) {\n            nZeros++;\n        } else if p.pCountX[i] == 0 {\n            nConsts++; }\n    }\n//    printf( \"Found %d constant registers.\\n\", nZeros );\n//    printf( \"Found %d non-ternary registers.\\n\", nConsts );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transposes state vector for non-ternary registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerTranspose(p *Gia_ManTer_t) *Vec_Ptr_t {\n    var vFlops *Vec_Ptr_t;\n    var pState, pFlop *uint32;\n    var i, k, nFlopWords int32;\n    vFlops = Vec_PtrAlloc( 100 );\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p.vStates) );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) { \n            continue; }\n        if p.pCountX[i] \u003e 0 {\n            continue; }\n        pFlop = Gia_ManTerStateAlloc( nFlopWords );\n        Vec_PtrPush( vFlops, pFlop );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(p.vStates)) \u0026\u0026 (((pState) = (unsigned *)Vec_PtrEntry(p.vStates, k)), 1); k++  {\n            Gia_ManTerSimInfoSet( pFlop, k, Gia_ManTerSimInfoGet(pState, i) );\n        }\n//Gia_ManTerStatePrint( pFlop, Vec_PtrSize(p-\u003evStates), i );\n    }\n    return vFlops;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transposes state vector for non-ternary registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFindEqualFlop(vFlops *Vec_Ptr_t, iFlop int32, nFlopWords int32) int32 {\n    var pFlop, pTemp *uint32;\n    var i int32;\n    pFlop = (unsigned *)Vec_PtrEntry( vFlops, iFlop );\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c iFlop) \u0026\u0026 (((pTemp) = (unsigned *)Vec_PtrEntry(vFlops, i)), 1); i++  {\n        if !memcmp( pTemp, pFlop, sizeof(unsigned) * nFlopWords ) {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates map of registers to replace.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerCreateMap(p *Gia_ManTer_t, fVerbose int32) *int32 {\n    var pCi2Lit *int32;\n    var pObj *Gia_Obj_t;\n    var vMapKtoI *Vec_Int_t;\n    var i, iRepr, nFlopWords, Counter0, CounterE int32;\n    nFlopWords = Abc_BitWordNum( 2*Vec_PtrSize(p.vStates) );\n    p.vFlops = Gia_ManTerTranspose( p );\n    // inlining of macro ABC_FALLOC\n    pCi2Lit = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))), 0xff, sizeof(int) * (size_t)(Gia_ManCiNum(p.pAig))));\n    vMapKtoI = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n        if p.pCount0[i] == Vec_PtrSize(p.vStates) {\n            pCi2Lit[Gia_ManPiNum(p.pAig)+i] = 0, Counter0++;\n        } else if p.pCountX[i] == 0 {\n            iRepr = Gia_ManFindEqualFlop( p.vFlops, Vec_IntSize(vMapKtoI), nFlopWords );\n            Vec_IntPush( vMapKtoI, i );\n            if iRepr \u003c 0 {\n                continue; }\n            pObj = Gia_ManCi( p.pAig, Gia_ManPiNum(p.pAig)+Vec_IntEntry(vMapKtoI, iRepr) );\n            pCi2Lit[Gia_ManPiNum(p.pAig)+i] = Abc_Var2Lit( Gia_ObjId( p.pAig, pObj ), 0 );\n            CounterE++;\n        }\n    }\n    Vec_IntFree( vMapKtoI );\n    if fVerbose != 0 {\n        fmt.Printf(\"Transforming %d const and %d equiv registers.\\n\", Counter0, CounterE); }\n    return pCi2Lit;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTerSimulate(pAig *Gia_Man_t, fVerbose int32) *Gia_ManTer_t {\n    var p *Gia_ManTer_t;\n    var pState, pPrev, pLoop *uint32;\n    var i, Counter int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Gia_ManRegNum(pAig) \u003e 0, \"Gia_ManRegNum(pAig) \u003e 0\");\n    // create manager\n    clk = Abc_Clock();\n    p = Gia_ManTerCreate( pAig );\n    if false {\n        fmt.Printf(\"Obj = %8d (%8d). F = %6d. \", pAig.nObjs, Gia_ManCiNum(pAig) + Gia_ManAndNum(pAig), p.pAig.nFront);\n        fmt.Printf(\"AIG = %7.2f MB. F-mem = %7.2f MB. Other = %7.2f MB.  \", 12.0*Gia_ManObjNum(p.pAig)/(1\u003c\u003c20), 4.0*Abc_BitWordNum(2 * p.pAig.nFront)/(1\u003c\u003c20), 4.0*Abc_BitWordNum(2 * (Gia_ManCiNum(pAig) + Gia_ManCoNum(pAig)))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // perform simulation\n    Gia_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Gia_ManTerStateCreate( p );\n    Gia_ManTerStateInsert( pState, p.nStateWords, p.pBins, p.nBins );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), 0 );\n    // perform simuluation till convergence\n    pPrev = nil;\n    for  i = 0; ; i++  {\n        Gia_ManTerSimulateRound( p );\n        Gia_ManTerSimInfoTransfer( p );\n        pState = Gia_ManTerStateCreate( p );\n//Gia_ManTerStatePrint( pState, Gia_ManRegNum(pAig), i+1 );\n        if pLoop = Gia_ManTerStateLookup(pState, p.nStateWords, p.pBins, p.nBins) {\n            pAig.nTerStates = Vec_PtrSize( p.vStates );\n            pAig.nTerLoop = Vec_PtrFind( p.vStates, pLoop );\n            break;\n        }\n        Gia_ManTerStateInsert( pState, p.nStateWords, p.pBins, p.nBins );\n        if i \u003e= p.nIters \u0026\u0026 i % 10 == 0 {\n            Counter = Gia_ManTerRetire( p, pState, pPrev );\n//            Counter = Gia_ManTerRetire2( p, pState );\n//            if ( fVerbose )\n//                printf( \"Retired %d registers.\\n\", Counter );\n        }\n        pPrev = pState;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Ternary simulation saturated after %d iterations. \", i+1);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReduceConst(pAig *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var p *Gia_ManTer_t;\n    var pNew *Gia_Man_t  = nil;\n    var pCi2Lit *int32;\n    p = Gia_ManTerSimulate( pAig, fVerbose );\n    Gia_ManTerAnalyze( p );\n    pCi2Lit = Gia_ManTerCreateMap( p, fVerbose );\n    Gia_ManTerDelete( p );\n    pNew = Gia_ManDupDfsCiMap( pAig, pCi2Lit, nil );\n    // inlining of macro ABC_FREE\n    ((pCi2Lit) ? (free((char *) (pCi2Lit)), (pCi2Lit) = 0) : 0);\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

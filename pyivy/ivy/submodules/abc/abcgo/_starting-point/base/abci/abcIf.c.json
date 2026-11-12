@@ -1,0 +1,1333 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c",
+  "SHA256": "8178533555a5625b2a80294e332d84d70de057e62fe5c8b440adaa4938258f30",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pIfMan.vSwitching == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopy) == If_ManObjNum(pIfMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 17,
+        "ByteOffset": 4510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The AIG-node delay is not set. Assuming unit-delay.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 9,
+        "ByteOffset": 5354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPars.nLutSize \u003c= If_DsdManVarNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 9,
+        "ByteOffset": 5410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pPars.pLutStruct == nil \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars.pLutStruct \u0026\u0026 pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 6464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkIf: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 7469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 240,
+        "Column": 41,
+        "ByteOffset": 8108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 13,
+        "ByteOffset": 8732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode))) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 332,
+        "Column": 41,
+        "ByteOffset": 12029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 13,
+        "ByteOffset": 13177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Added %d buffers/inverters to decouple the CO drivers.\\n\", nDupGates );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 13,
+        "ByteOffset": 13287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 13749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 13786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntryLast(vAig) \u003c 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 9,
+        "ByteOffset": 13878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nLeaves == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 9,
+        "ByteOffset": 14039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vAig, 0) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 14085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 9,
+        "ByteOffset": 14356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vAig) \u0026 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 14940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (i \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 15081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == Vec_IntSize(vAig) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 15527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Delay \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 16247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pIfObj.Type == IF_AND );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 481,
+        "Column": 13,
+        "ByteOffset": 18510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 17,
+        "ByteOffset": 18719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 554,
+        "Column": 5,
+        "ByteOffset": 22043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_CutData(pCut) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 625,
+        "Column": 5,
+        "ByteOffset": 24350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 9,
+        "ByteOffset": 24743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NodeIfToHop(): Computing local AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 680,
+        "Column": 5,
+        "ByteOffset": 26099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 733,
+        "Column": 5,
+        "ByteOffset": 27970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (Abc_Obj_t **)Vec_PtrArray(vCos), (size_t)Abc_NtkCoNum(pNtk), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 738,
+        "Column": 5,
+        "ByteOffset": 28243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) \u003e= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy) );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 483,
+        "Column": 1,
+        "ByteOffset": 17994
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 490,
+        "Column": 1,
+        "ByteOffset": 18341
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManComputeSwitching",
+      "Start": 1976,
+      "End": 3384,
+      "BodyStart": 2025,
+      "Original": "void If_ManComputeSwitching( If_Man_t * pIfMan )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew;\n    Vec_Int_t * vCopy;\n    If_Obj_t * pIfObj;\n    int i;\n    assert( pIfMan-\u003evSwitching == NULL );\n    // create the new manager\n    pNew = Gia_ManStart( If_ManObjNum(pIfMan) );\n    vCopy = Vec_IntAlloc( If_ManObjNum(pIfMan) );\n    // constant and inputs\n    Vec_IntPush( vCopy, 1 );\n    If_ManForEachCi( pIfMan, pIfObj, i )\n        Vec_IntPush( vCopy, Gia_ManAppendCi(pNew) );\n    // internal nodes\n    If_ManForEachNode( pIfMan, pIfObj, i )\n    {\n        int iLit0 = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj)-\u003eId), If_ObjFaninC0(pIfObj) );\n        int iLit1 = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin1(pIfObj)-\u003eId), If_ObjFaninC1(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n    }\n    // outputs\n    If_ManForEachCo( pIfMan, pIfObj, i )\n    {\n        int iLit0 = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj)-\u003eId), If_ObjFaninC0(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendCo(pNew, iLit0) );\n    }\n    assert( Vec_IntSize(vCopy) == If_ManObjNum(pIfMan) );\n    Vec_IntFree( vCopy );\n    // compute switching activity\n    pIfMan-\u003evSwitching = Gia_ManComputeSwitchProbs( pNew, 48, 16, 0 );\n    Gia_ManStop( pNew );\n    if ( pIfMan-\u003epPars-\u003efVerbose )\n        Abc_PrintTime( 1, \"Computing switching activity\", Abc_Clock() - clk );\n}",
+      "Draft": "func If_ManComputeSwitching(pIfMan *If_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vCopy *Vec_Int_t;\n    var pIfObj *If_Obj_t;\n    var i int32;\n    assert(pIfMan.vSwitching == nil, \"pIfMan.vSwitching == nil\");\n    // create the new manager\n    pNew = Gia_ManStart( If_ManObjNum(pIfMan) );\n    vCopy = Vec_IntAlloc( If_ManObjNum(pIfMan) );\n    // constant and inputs\n    Vec_IntPush( vCopy, 1 );\n    If_ManForEachCi( pIfMan, pIfObj, i )\n        Vec_IntPush( vCopy, Gia_ManAppendCi(pNew) );\n    // internal nodes\n    If_ManForEachNode( pIfMan, pIfObj, i )\n    {\n        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );\n        var iLit1 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin1(pIfObj).Id), If_ObjFaninC1(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n    }\n    // outputs\n    If_ManForEachCo( pIfMan, pIfObj, i )\n    {\n        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendCo(pNew, iLit0) );\n    }\n    assert(Vec_IntSize(vCopy) == If_ManObjNum(pIfMan), \"Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)\");\n    Vec_IntFree( vCopy );\n    // compute switching activity\n    pIfMan.vSwitching = Gia_ManComputeSwitchProbs( pNew, 48, 16, 0 );\n    Gia_ManStop( pNew );\n    if pIfMan.pPars.fVerbose {\n        Abc_PrintTime( 1, \"Computing switching activity\", Abc_Clock() - clk ); }\n}"
+    },
+    {
+      "Name": "Abc_NtkIf",
+      "Start": 3660,
+      "End": 6583,
+      "BodyStart": 3720,
+      "Original": "Abc_Ntk_t * Abc_NtkIf( Abc_Ntk_t * pNtk, If_Par_t * pPars )\n{\n    Abc_Ntk_t * pNtkNew, * pTemp;\n    If_Man_t * pIfMan;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // get timing information\n    pPars-\u003epTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars-\u003epTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // update timing info to reflect logic level\n    if ( (pPars-\u003efDelayOpt || pPars-\u003efDsdBalance || pPars-\u003efUserRecLib || pPars-\u003efUserSesLib) \u0026\u0026 pNtk-\u003epManTime )\n    {\n        int c;\n        if ( pNtk-\u003eAndGateDelay == 0.0 )\n        {\n            if ( Abc_FrameReadLibGen() )\n                pNtk-\u003eAndGateDelay = Mio_LibraryReadDelayAigNode((Mio_Library_t *)Abc_FrameReadLibGen());\n            if ( pNtk-\u003eAndGateDelay == 0.0 )\n            {\n                pNtk-\u003eAndGateDelay = 1.0;\n                printf( \"The AIG-node delay is not set. Assuming unit-delay.\\n\" );\n            }\n        }\n        for ( c = 0; c \u003c Abc_NtkCiNum(pNtk); c++ )\n            pPars-\u003epTimesArr[c] /= pNtk-\u003eAndGateDelay;\n        for ( c = 0; c \u003c Abc_NtkCoNum(pNtk); c++ )\n            pPars-\u003epTimesReq[c] /= pNtk-\u003eAndGateDelay;\n    }\n\n    // set the latch paths\n    if ( pPars-\u003efLatchPaths \u0026\u0026 pPars-\u003epTimesArr )\n    {\n        int c;\n        for ( c = 0; c \u003c Abc_NtkPiNum(pNtk); c++ )\n            pPars-\u003epTimesArr[c] = -ABC_INFINITY;\n    }\n\n    // create FPGA mapper\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if ( pIfMan == NULL )\n        return NULL;\n    if ( pPars-\u003efPower )\n        If_ManComputeSwitching( pIfMan );\n\n    // create DSD manager\n    if ( pPars-\u003efUseDsd )\n    {\n        If_DsdMan_t * p = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        assert( pPars-\u003enLutSize \u003c= If_DsdManVarNum(p) );\n        assert( (pPars-\u003epLutStruct == NULL \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars-\u003epLutStruct \u0026\u0026 pPars-\u003epLutStruct[0] - '0' == If_DsdManLutSize(p)) );\n        pIfMan-\u003epIfDsdMan = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        if ( pPars-\u003efDsdBalance )\n            If_DsdManAllocIsops( pIfMan-\u003epIfDsdMan, pPars-\u003enLutSize );\n    }\n\n    // perform FPGA mapping\n    if ( !If_ManPerformMapping( pIfMan ) )\n    {\n        If_ManStop( pIfMan );\n        return NULL;\n    }\n\n    // transform the result of mapping into the new network\n    pNtkNew = Abc_NtkFromIf( pIfMan, pNtk );\n    if ( pNtkNew == NULL )\n        return NULL;\n    If_ManStop( pIfMan );\n    if ( pPars-\u003efDelayOpt || pPars-\u003efDsdBalance || pPars-\u003efUserRecLib )\n    {\n        pNtkNew = Abc_NtkStrash( pTemp = pNtkNew, 0, 0, 0 );\n        Abc_NtkDelete( pTemp );\n    }\n    else if ( pPars-\u003efBidec \u0026\u0026 pPars-\u003enLutSize \u003c= 8 )\n        Abc_NtkBidecResyn( pNtkNew, 0 );\n\n    // duplicate EXDC\n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkIf: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *Abc_Ntk_t {\n    var pNtkNew, pTemp *Abc_Ntk_t;\n    var pIfMan *If_Man_t;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // get timing information\n    pPars.pTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars.pTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // update timing info to reflect logic level\n    if (pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib || pPars.fUserSesLib) \u0026\u0026 pNtk.pManTime {\n        var c int32;\n        if pNtk.AndGateDelay == 0.0 {\n            if Abc_FrameReadLibGen() {\n                pNtk.AndGateDelay = Mio_LibraryReadDelayAigNode((Mio_Library_t *)Abc_FrameReadLibGen()); }\n            if pNtk.AndGateDelay == 0.0 {\n                pNtk.AndGateDelay = 1.0;\n                fmt.Printf(\"The AIG-node delay is not set. Assuming unit-delay.\\n\");\n            }\n        }\n        for  c = 0; c \u003c Abc_NtkCiNum(pNtk); c++  {\n            pPars.pTimesArr[c] /= pNtk.AndGateDelay;\n        }\n        for  c = 0; c \u003c Abc_NtkCoNum(pNtk); c++  {\n            pPars.pTimesReq[c] /= pNtk.AndGateDelay;\n        }\n    }\n\n    // set the latch paths\n    if pPars.fLatchPaths \u0026\u0026 pPars.pTimesArr {\n        var c int32;\n        for  c = 0; c \u003c Abc_NtkPiNum(pNtk); c++  {\n            pPars.pTimesArr[c] = -ABC_INFINITY;\n        }\n    }\n\n    // create FPGA mapper\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if pIfMan == nil {\n        return nil; }\n    if pPars.fPower {\n        If_ManComputeSwitching( pIfMan ); }\n\n    // create DSD manager\n    if pPars.fUseDsd {\n        var p *If_DsdMan_t  = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        assert(pPars.nLutSize \u003c= If_DsdManVarNum(p), \"pPars.nLutSize \u003c= If_DsdManVarNum(p)\");\n        assert((pPars.pLutStruct == nil \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars.pLutStruct \u0026\u0026 pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p)), \"(pPars.pLutStruct == nil \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars.pLutStruct \u0026\u0026 pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p))\");\n        pIfMan.pIfDsdMan = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        if pPars.fDsdBalance {\n            If_DsdManAllocIsops( pIfMan.pIfDsdMan, pPars.nLutSize ); }\n    }\n\n    // perform FPGA mapping\n    if !If_ManPerformMapping( pIfMan ) {\n        If_ManStop( pIfMan );\n        return nil;\n    }\n\n    // transform the result of mapping into the new network\n    pNtkNew = Abc_NtkFromIf( pIfMan, pNtk );\n    if pNtkNew == nil {\n        return nil; }\n    If_ManStop( pIfMan );\n    if pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib {\n        pNtkNew = Abc_NtkStrash( pTemp = pNtkNew, 0, 0, 0 );\n        Abc_NtkDelete( pTemp );\n    \n    } else if pPars.fBidec \u0026\u0026 pPars.nLutSize \u003c= 8 {\n        Abc_NtkBidecResyn( pNtkNew, 0 ); }\n\n    // duplicate EXDC\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkIf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_ObjIfCopy",
+      "Start": 6854,
+      "End": 6950,
+      "BodyStart": 6914,
+      "Original": "static inline If_Obj_t * Abc_ObjIfCopy( Abc_Obj_t * pNode ) { return (If_Obj_t *)pNode-\u003epCopy; }",
+      "Draft": "func Abc_ObjIfCopy(pNode *Abc_Obj_t) *If_Obj_t { return (If_Obj_t *)pNode.pCopy; }"
+    },
+    {
+      "Name": "Abc_NtkToIf",
+      "Start": 6952,
+      "End": 9470,
+      "BodyStart": 7013,
+      "Original": "If_Man_t * Abc_NtkToIf( Abc_Ntk_t * pNtk, If_Par_t * pPars )\n{\n    ProgressBar * pProgress;\n    If_Man_t * pIfMan;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pPrev;\n    int i;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan-\u003epName = Abc_UtilStrsav( Abc_NtkName(pNtk) );\n\n    // print warning about excessive memory usage\n    if ( 1.0 * Abc_NtkObjNum(pNtk) * pIfMan-\u003enObjBytes / (1\u003c\u003c30) \u003e 1.0 )\n        printf( \"Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\\n\", \n            1.0 * Abc_NtkObjNum(pNtk) * pIfMan-\u003enObjBytes / (1\u003c\u003c30), Abc_NtkObjNum(pNtk) );\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk)-\u003epCopy = (Abc_Obj_t *)If_ManConst1( pIfMan );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode-\u003epCopy = (Abc_Obj_t *)If_ManCreateCi( pIfMan );\n        // transfer logic level information\n        Abc_ObjIfCopy(pNode)-\u003eLevel = pNode-\u003eLevel;\n    }\n\n    // load the AIG into the mapper\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    vNodes = Abc_AigDfs( pNtk, 0, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Initial\" );\n        // add the node to the mapper\n        pNode-\u003epCopy = (Abc_Obj_t *)If_ManCreateAnd( pIfMan, \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ), \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin1(pNode)), Abc_ObjFaninC1(pNode) ) );\n        // set up the choice node\n        if ( Abc_AigNodeIsChoice( pNode ) )\n        {\n            Abc_Obj_t * pEquiv;\n//            int Counter = 0;\n            assert( If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode))) );\n            for ( pPrev = pNode, pEquiv = Abc_ObjEquiv(pPrev); pEquiv; pPrev = pEquiv, pEquiv = Abc_ObjEquiv(pPrev) )\n                If_ObjSetChoice( Abc_ObjIfCopy(pPrev), Abc_ObjIfCopy(pEquiv) );//, Counter++;\n//            printf( \"%d \", Counter );\n            If_ManCreateChoice( pIfMan, Abc_ObjIfCopy(pNode) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs without copying the phase\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)If_ManCreateCo( pIfMan, If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ) );\n    return pIfMan;\n}",
+      "Draft": "func Abc_NtkToIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *If_Man_t {\n    var pProgress *ProgressBar;\n    var pIfMan *If_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pPrev *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan.pName = Abc_UtilStrsav( Abc_NtkName(pNtk) );\n\n    // print warning about excessive memory usage\n    if 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1\u003c\u003c30) \u003e 1.0 {\n        fmt.Printf(\"Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\\n\", 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1\u003c\u003c30), Abc_NtkObjNum(pNtk)); }\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)If_ManConst1( pIfMan );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCi( pIfMan );\n        // transfer logic level information\n        Abc_ObjIfCopy(pNode).Level = pNode.Level;\n    }\n\n    // load the AIG into the mapper\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    vNodes = Abc_AigDfs( pNtk, 0, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Initial\" );\n        // add the node to the mapper\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateAnd( pIfMan, \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ), \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin1(pNode)), Abc_ObjFaninC1(pNode) ) );\n        // set up the choice node\n        if Abc_AigNodeIsChoice( pNode ) {\n            var pEquiv *Abc_Obj_t;\n//            int Counter = 0;\n            assert(If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode))), \"If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode)))\");\n            for  pPrev = pNode, pEquiv = Abc_ObjEquiv(pPrev); (pEquiv != nil); pPrev = pEquiv, pEquiv = Abc_ObjEquiv(pPrev)  {\n                If_ObjSetChoice( Abc_ObjIfCopy(pPrev), Abc_ObjIfCopy(pEquiv) );\n            }//, Counter++;\n//            printf( \"%d \", Counter );\n            If_ManCreateChoice( pIfMan, Abc_ObjIfCopy(pNode) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs without copying the phase\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCo( pIfMan, If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ) );\n    return pIfMan;\n}"
+    },
+    {
+      "Name": "Abc_MapBoxSetPrevNext",
+      "Start": 9730,
+      "End": 10121,
+      "BodyStart": 9844,
+      "Original": "static inline void Abc_MapBoxSetPrevNext( Vec_Ptr_t * vDrivers, Vec_Int_t * vMapIn, Vec_Int_t * vMapOut, int Id )\n{\n    Abc_Obj_t * pNode;\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    Vec_IntWriteEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    Vec_IntWriteEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n}",
+      "Draft": "func Abc_MapBoxSetPrevNext(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) {\n    var pNode *Abc_Obj_t;\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    Vec_IntWriteEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    Vec_IntWriteEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n}"
+    },
+    {
+      "Name": "Abc_MapBox2Next",
+      "Start": 10122,
+      "End": 10367,
+      "BodyStart": 10229,
+      "Original": "static inline int Abc_MapBox2Next( Vec_Ptr_t * vDrivers, Vec_Int_t * vMapIn, Vec_Int_t * vMapOut, int Id )\n{\n    Abc_Obj_t * pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    return Vec_IntEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}",
+      "Draft": "func Abc_MapBox2Next(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {\n    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    return Vec_IntEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}"
+    },
+    {
+      "Name": "Abc_MapBox2Prev",
+      "Start": 10368,
+      "End": 10614,
+      "BodyStart": 10475,
+      "Original": "static inline int Abc_MapBox2Prev( Vec_Ptr_t * vDrivers, Vec_Int_t * vMapIn, Vec_Int_t * vMapOut, int Id )\n{\n    Abc_Obj_t * pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    return Vec_IntEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}",
+      "Draft": "func Abc_MapBox2Prev(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {\n    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    return Vec_IntEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}"
+    },
+    {
+      "Name": "Abc_NtkFromIf",
+      "Start": 10930,
+      "End": 13412,
+      "BodyStart": 10995,
+      "Original": "Abc_Ntk_t * Abc_NtkFromIf( If_Man_t * pIfMan, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pNode, * pNodeNew;\n    Vec_Int_t * vCover;\n    int i, nDupGates;\n    // create the new network\n    if ( pIfMan-\u003epPars-\u003efUseBdds || pIfMan-\u003epPars-\u003efUseCnfs || pIfMan-\u003epPars-\u003efUseMv )\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );\n    else if ( pIfMan-\u003epPars-\u003efUseSops || pIfMan-\u003epPars-\u003efUserSesLib || pIfMan-\u003epPars-\u003enGateSize \u003e 0 )\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    else\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG );\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( pIfMan );\n    If_ManCleanCutData( pIfMan );\n    // make the mapper point to the new network\n    If_ObjSetCopy( If_ManConst1(pIfMan), Abc_NtkCreateNodeConst1(pNtkNew) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        If_ObjSetCopy( If_ManCi(pIfMan, i), pNode-\u003epCopy );\n\n    // process the nodes in topological order\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Final\" );\n        pNodeNew = Abc_NodeFromIf_rec( pNtkNew, pIfMan, If_ObjFanin0(If_ManCo(pIfMan, i)), vCover );\n        pNodeNew = Abc_ObjNotCond( pNodeNew, If_ObjFaninC0(If_ManCo(pIfMan, i)) );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vCover );\n\n    // remove the constant node if not used\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( If_ManConst1(pIfMan) );\n    if ( Abc_ObjFanoutNum(pNodeNew) == 0 \u0026\u0026 !Abc_ObjIsNone(pNodeNew) )\n        Abc_NtkDeleteObj( pNodeNew );\n    // minimize the node\n    if ( pIfMan-\u003epPars-\u003efUseBdds || pIfMan-\u003epPars-\u003efUseCnfs || pIfMan-\u003epPars-\u003efUseMv )\n        Abc_NtkSweep( pNtkNew, 0 );\n    if ( pIfMan-\u003epPars-\u003efUseBdds )\n        Abc_NtkBddReorder( pNtkNew, 0 );\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !pIfMan-\u003epPars-\u003efUseBuffs );\n    if ( nDupGates \u0026\u0026 pIfMan-\u003epPars-\u003efVerbose \u0026\u0026 !Abc_FrameReadFlag(\"silentmode\") )\n    {\n        if ( pIfMan-\u003epPars-\u003efUseBuffs )\n            printf( \"Added %d buffers/inverters to decouple the CO drivers.\\n\", nDupGates );\n        else\n            printf( \"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates );\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromIf(pIfMan *If_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var vCover *Vec_Int_t;\n    var i, nDupGates int32;\n    // create the new network\n    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );\n    } else if pIfMan.pPars.fUseSops || pIfMan.pPars.fUserSesLib || pIfMan.pPars.nGateSize \u003e 0 {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    } else {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG ); }\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( pIfMan );\n    If_ManCleanCutData( pIfMan );\n    // make the mapper point to the new network\n    If_ObjSetCopy( If_ManConst1(pIfMan), Abc_NtkCreateNodeConst1(pNtkNew) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        If_ObjSetCopy( If_ManCi(pIfMan, i), pNode.pCopy );\n\n    // process the nodes in topological order\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Final\" );\n        pNodeNew = Abc_NodeFromIf_rec( pNtkNew, pIfMan, If_ObjFanin0(If_ManCo(pIfMan, i)), vCover );\n        pNodeNew = Abc_ObjNotCond( pNodeNew, If_ObjFaninC0(If_ManCo(pIfMan, i)) );\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vCover );\n\n    // remove the constant node if not used\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( If_ManConst1(pIfMan) );\n    if Abc_ObjFanoutNum(pNodeNew) == 0 \u0026\u0026 !Abc_ObjIsNone(pNodeNew) {\n        Abc_NtkDeleteObj( pNodeNew ); }\n    // minimize the node\n    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        Abc_NtkSweep( pNtkNew, 0 ); }\n    if pIfMan.pPars.fUseBdds {\n        Abc_NtkBddReorder( pNtkNew, 0 ); }\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !pIfMan.pPars.fUseBuffs );\n    if (nDupGates != 0) \u0026\u0026 pIfMan.pPars.fVerbose \u0026\u0026 !Abc_FrameReadFlag(\"silentmode\") {\n        if pIfMan.pPars.fUseBuffs {\n            fmt.Printf(\"Added %d buffers/inverters to decouple the CO drivers.\\n\", nDupGates);\n        } else {\n            fmt.Printf(\"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates); }\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeBuildFromMiniInt",
+      "Start": 13675,
+      "End": 15229,
+      "BodyStart": 13763,
+      "Original": "Hop_Obj_t * Abc_NodeBuildFromMiniInt( Hop_Man_t * pMan, Vec_Int_t * vAig, int nLeaves )\n{\n    assert( Vec_IntSize(vAig) \u003e 0 );\n    assert( Vec_IntEntryLast(vAig) \u003c 2 );\n    if ( Vec_IntSize(vAig) == 1 ) // const\n    {\n        assert( nLeaves == 0 );\n        return Hop_NotCond( Hop_ManConst0(pMan), Vec_IntEntry(vAig, 0) );\n    }\n    if ( Vec_IntSize(vAig) == 2 ) // variable\n    {\n        assert( Vec_IntEntry(vAig, 0) == 0 );\n        assert( nLeaves == 1 );\n        return Hop_NotCond( Hop_IthVar(pMan, 0), Vec_IntEntry(vAig, 1) );\n    }\n    else\n    {\n        int i, iVar0, iVar1, iLit0, iLit1;\n        Hop_Obj_t * piLit0, * piLit1, * piLit = NULL;\n        assert( Vec_IntSize(vAig) \u0026 1 );\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            piLit0 = Hop_NotCond( iVar0 \u003c nLeaves ? Hop_IthVar(pMan, iVar0) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar0 - nLeaves), Abc_LitIsCompl(iLit0) );\n            piLit1 = Hop_NotCond( iVar1 \u003c nLeaves ? Hop_IthVar(pMan, iVar1) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar1 - nLeaves), Abc_LitIsCompl(iLit1) );\n            piLit  = Hop_And( pMan, piLit0, piLit1 );\n            assert( (i \u0026 1) == 0 );\n            Vec_PtrWriteEntry( (Vec_Ptr_t *)vAig, Abc_Lit2Var(i), piLit );  // overwriting entries\n        }\n        assert( i == Vec_IntSize(vAig) - 1 );\n        piLit = Hop_NotCond( piLit, Vec_IntEntry(vAig, i) );\n        Vec_IntClear( vAig ); // useless\n        return piLit;\n    }\n}",
+      "Draft": "func Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *Hop_Obj_t {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n    \n        assert(nLeaves == 0, \"nLeaves == 0\");\n        return Hop_NotCond( Hop_ManConst0(pMan), Vec_IntEntry(vAig, 0) );\n    }\n    if Vec_IntSize(vAig) == 2 { // variable\n    \n        assert(Vec_IntEntry(vAig, 0) == 0, \"Vec_IntEntry(vAig, 0) == 0\");\n        assert(nLeaves == 1, \"nLeaves == 1\");\n        return Hop_NotCond( Hop_IthVar(pMan, 0), Vec_IntEntry(vAig, 1) );\n    \n    } else {\n        var i, iVar0, iVar1, iLit0, iLit1 int32;\n        var piLit0 *Hop_Obj_t;\n        var piLit1 *Hop_Obj_t;\n        var piLit *Hop_Obj_t = nil;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            piLit0 = Hop_NotCond( iVar0 \u003c nLeaves ? Hop_IthVar(pMan, iVar0) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar0 - nLeaves), Abc_LitIsCompl(iLit0) );\n            piLit1 = Hop_NotCond( iVar1 \u003c nLeaves ? Hop_IthVar(pMan, iVar1) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar1 - nLeaves), Abc_LitIsCompl(iLit1) );\n            piLit  = Hop_And( pMan, piLit0, piLit1 );\n            assert((i \u0026 1) == 0, \"(i \u0026 1) == 0\");\n            Vec_PtrWriteEntry( (Vec_Ptr_t *)vAig, Abc_Lit2Var(i), piLit );  // overwriting entries\n        }\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        piLit = Hop_NotCond( piLit, Vec_IntEntry(vAig, i) );\n        Vec_IntClear( vAig ); // useless\n        return piLit;\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeBuildFromMini",
+      "Start": 15230,
+      "End": 15598,
+      "BodyStart": 15328,
+      "Original": "Hop_Obj_t * Abc_NodeBuildFromMini( Hop_Man_t * pMan, If_Man_t * p, If_Cut_t * pCut, int fUseDsd )\n{\n    int Delay;\n    if ( fUseDsd )\n        Delay = If_CutDsdBalanceEval( p, pCut, p-\u003evArray );\n    else\n        Delay = If_CutSopBalanceEval( p, pCut, p-\u003evArray );\n    assert( Delay \u003e= 0 );\n    return Abc_NodeBuildFromMiniInt( pMan, p-\u003evArray, If_CutLeaveNum(pCut) );\n}",
+      "Draft": "func Abc_NodeBuildFromMini(pMan *Hop_Man_t, p *If_Man_t, pCut *If_Cut_t, fUseDsd int32) *Hop_Obj_t {\n    var Delay int32;\n    if fUseDsd != 0 {\n        Delay = If_CutDsdBalanceEval( p, pCut, p.vArray );\n    } else {\n        Delay = If_CutSopBalanceEval( p, pCut, p.vArray ); }\n    assert(Delay \u003e= 0, \"Delay \u003e= 0\");\n    return Abc_NodeBuildFromMiniInt( pMan, p.vArray, If_CutLeaveNum(pCut) );\n}"
+    },
+    {
+      "Name": "Abc_NodeFromIf_rec",
+      "Start": 15869,
+      "End": 21316,
+      "BodyStart": 15981,
+      "Original": "Abc_Obj_t * Abc_NodeFromIf_rec( Abc_Ntk_t * pNtkNew, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Int_t * vCover )\n{\n    Abc_Obj_t * pNodeNew;\n    If_Cut_t * pCutBest;\n    If_Obj_t * pIfLeaf;\n    int i;\n    // return if the result if known\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( pIfObj );\n    if ( pNodeNew )\n        return pNodeNew;\n    assert( pIfObj-\u003eType == IF_AND );\n    // get the parameters of the best cut\n    pCutBest = If_ObjCutBest( pIfObj );\n    if ( pIfMan-\u003epPars-\u003efUserSesLib )\n    {\n        // create the subgraph composed of Abc_Obj_t nodes based on the given cut\n        Abc_Obj_t * pFanins[IF_MAX_FUNC_LUTSIZE];\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            pFanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover);\n        pNodeNew = Abc_ExactBuildNode( If_CutTruthW(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), If_CutArrTimeProfile(pIfMan, pCutBest), pFanins, pNtkNew );\n        If_ObjSetCopy( pIfObj, pNodeNew );\n        return pNodeNew;\n    }\n    // create a new node \n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n//    if ( pIfMan-\u003epPars-\u003epLutLib \u0026\u0026 pIfMan-\u003epPars-\u003epLutLib-\u003efVarPinDelays )\n    if ( !pIfMan-\u003epPars-\u003efDelayOpt \u0026\u0026 !pIfMan-\u003epPars-\u003efDelayOptLut \u0026\u0026 !pIfMan-\u003epPars-\u003efDsdBalance \u0026\u0026 !pIfMan-\u003epPars-\u003efUseTtPerm \u0026\u0026 \n         !pIfMan-\u003epPars-\u003epLutStruct \u0026\u0026 !pIfMan-\u003epPars-\u003efUserRecLib \u0026\u0026 !pIfMan-\u003epPars-\u003efUserSesLib \u0026\u0026 !pIfMan-\u003epPars-\u003enGateSize )\n        If_CutRotatePins( pIfMan, pCutBest );\n    if ( pIfMan-\u003epPars-\u003efUseCnfs || pIfMan-\u003epPars-\u003efUseMv )\n    {\n        If_CutForEachLeafReverse( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    }\n    else\n    {\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    }\n    // set the level of the new node\n    pNodeNew-\u003eLevel = Abc_ObjLevelNew( pNodeNew );\n    // derive the function of this node\n    if ( pIfMan-\u003epPars-\u003efTruth )\n    {\n        if ( pIfMan-\u003epPars-\u003efUseBdds )\n        { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 0 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        }\n        else if ( pIfMan-\u003epPars-\u003efUseCnfs || pIfMan-\u003epPars-\u003efUseMv )\n        { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 1 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        }\n        else if ( pIfMan-\u003epPars-\u003efUseSops || pIfMan-\u003epPars-\u003enGateSize \u003e 0 ) \n        {\n            // transform truth table into the SOP\n            int RetValue = Kit_TruthIsop( If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), vCover, 1 );\n            assert( RetValue == 0 || RetValue == 1 );\n            // check the case of constant cover\n            if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) )\n            {\n                assert( RetValue == 0 );\n                pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, If_CutLeaveNum(pCutBest), NULL );\n                pNodeNew = (Vec_IntSize(vCover) == 0) ? Abc_NtkCreateNodeConst0(pNtkNew) : Abc_NtkCreateNodeConst1(pNtkNew);\n            }\n            else\n            {\n                // derive the AIG for that tree\n                pNodeNew-\u003epData = Abc_SopCreateFromIsop( (Mem_Flex_t *)pNtkNew-\u003epManFunc, If_CutLeaveNum(pCutBest), vCover );\n                if ( RetValue )\n                    Abc_SopComplement( (char *)pNodeNew-\u003epData );\n            }\n        }\n        else if ( pIfMan-\u003epPars-\u003efDelayOpt )\n            pNodeNew-\u003epData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew-\u003epManFunc, pIfMan, pCutBest, 0 );\n        else if ( pIfMan-\u003epPars-\u003efDsdBalance )\n            pNodeNew-\u003epData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew-\u003epManFunc, pIfMan, pCutBest, 1 );\n        else if ( pIfMan-\u003epPars-\u003efUserRecLib )\n        {\n            extern Hop_Obj_t * Abc_RecToHop3( Hop_Man_t * pMan, If_Man_t * pIfMan, If_Cut_t * pCut, If_Obj_t * pIfObj );\n            pNodeNew-\u003epData = Abc_RecToHop3( (Hop_Man_t *)pNtkNew-\u003epManFunc, pIfMan, pCutBest, pIfObj ); \n        }\n        else\n        {\n            extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n            word * pTruth = If_CutTruthW(pIfMan, pCutBest);\n            if ( pIfMan-\u003epPars-\u003efUseTtPerm )\n                for ( i = 0; i \u003c (int)pCutBest-\u003enLeaves; i++ )\n                    if ( If_CutLeafBit(pCutBest, i) )\n                        Abc_TtFlip( pTruth, Abc_TtWordNum(pCutBest-\u003enLeaves), i );\n            pNodeNew-\u003epData = Kit_TruthToHop( (Hop_Man_t *)pNtkNew-\u003epManFunc, (unsigned *)pTruth, If_CutLeaveNum(pCutBest), vCover );\n//            if ( pIfMan-\u003epPars-\u003efUseBat )\n//                Bat_ManFuncPrintCell( *pTruth );\n        }\n        // complement the node if the cut was complemented\n        if ( pCutBest-\u003efCompl \u0026\u0026 !pIfMan-\u003epPars-\u003efDelayOpt \u0026\u0026 !pIfMan-\u003epPars-\u003efDsdBalance )\n            Abc_NodeComplement( pNodeNew );\n    }\n    else\n    {\n        pNodeNew-\u003epData = Abc_NodeIfToHop( (Hop_Man_t *)pNtkNew-\u003epManFunc, pIfMan, pIfObj );\n    }\n    If_ObjSetCopy( pIfObj, pNodeNew );\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vCover *Vec_Int_t) *Abc_Obj_t {\n    var pNodeNew *Abc_Obj_t;\n    var pCutBest *If_Cut_t;\n    var pIfLeaf *If_Obj_t;\n    var i int32;\n    // return if the result if known\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( pIfObj );\n    if pNodeNew != nil {\n        return pNodeNew; }\n    assert(pIfObj.Type == IF_AND, \"pIfObj.Type == IF_AND\");\n    // get the parameters of the best cut\n    pCutBest = If_ObjCutBest( pIfObj );\n    if pIfMan.pPars.fUserSesLib {\n        // create the subgraph composed of Abc_Obj_t nodes based on the given cut\n        var pFanins [IF_MAX_FUNC_LUTSIZE]*Abc_Obj_t;\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            pFanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover);\n        pNodeNew = Abc_ExactBuildNode( If_CutTruthW(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), If_CutArrTimeProfile(pIfMan, pCutBest), pFanins, pNtkNew );\n        If_ObjSetCopy( pIfObj, pNodeNew );\n        return pNodeNew;\n    }\n    // create a new node \n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n//    if ( pIfMan-\u003epPars-\u003epLutLib \u0026\u0026 pIfMan-\u003epPars-\u003epLutLib-\u003efVarPinDelays )\n    if !pIfMan.pPars.fDelayOpt \u0026\u0026 !pIfMan.pPars.fDelayOptLut \u0026\u0026 !pIfMan.pPars.fDsdBalance \u0026\u0026 !pIfMan.pPars.fUseTtPerm \u0026\u0026 \n         !pIfMan.pPars.pLutStruct \u0026\u0026 !pIfMan.pPars.fUserRecLib \u0026\u0026 !pIfMan.pPars.fUserSesLib \u0026\u0026 !pIfMan.pPars.nGateSize {\n        If_CutRotatePins( pIfMan, pCutBest ); }\n    if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        If_CutForEachLeafReverse( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    \n    } else {\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    }\n    // set the level of the new node\n    pNodeNew.Level = Abc_ObjLevelNew( pNodeNew );\n    // derive the function of this node\n    if pIfMan.pPars.fTruth {\n        if pIfMan.pPars.fUseBdds { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 0 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        \n        } else if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 1 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        \n        } else if pIfMan.pPars.fUseSops || pIfMan.pPars.nGateSize \u003e 0 {\n            // transform truth table into the SOP\n            var RetValue int32  = Kit_TruthIsop( If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), vCover, 1 );\n            assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n            // check the case of constant cover\n            if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n                assert(RetValue == 0, \"RetValue == 0\");\n                pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), nil );\n                if Vec_IntSize(vCover) == 0 {\n                    pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n                } else {\n                    pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);\n                }\n            \n            } else {\n                // derive the AIG for that tree\n                pNodeNew.pData = Abc_SopCreateFromIsop( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), vCover );\n                if RetValue != 0 {\n                    Abc_SopComplement( (char *)pNodeNew.pData ); }\n            }\n        \n        } else if pIfMan.pPars.fDelayOpt {\n            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 0 );\n        } else if pIfMan.pPars.fDsdBalance {\n            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 1 );\n        } else if pIfMan.pPars.fUserRecLib {\n            extern Hop_Obj_t * Abc_RecToHop3( Hop_Man_t * pMan, If_Man_t * pIfMan, If_Cut_t * pCut, If_Obj_t * pIfObj );\n            pNodeNew.pData = Abc_RecToHop3( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, pIfObj ); \n        \n        } else {\n            extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n            var pTruth *word  = If_CutTruthW(pIfMan, pCutBest);\n            if pIfMan.pPars.fUseTtPerm {\n                for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n                    if If_CutLeafBit(pCutBest, i) {\n                        Abc_TtFlip( pTruth, Abc_TtWordNum(pCutBest.nLeaves), i ); }\n                } }\n            pNodeNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtkNew.pManFunc, (unsigned *)pTruth, If_CutLeaveNum(pCutBest), vCover );\n//            if ( pIfMan-\u003epPars-\u003efUseBat )\n//                Bat_ManFuncPrintCell( *pTruth );\n        }\n        // complement the node if the cut was complemented\n        if pCutBest.fCompl \u0026\u0026 !pIfMan.pPars.fDelayOpt \u0026\u0026 !pIfMan.pPars.fDsdBalance {\n            Abc_NodeComplement( pNodeNew ); }\n    \n    } else {\n        pNodeNew.pData = Abc_NodeIfToHop( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pIfObj );\n    }\n    If_ObjSetCopy( pIfObj, pNodeNew );\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeIfToHop_rec",
+      "Start": 21600,
+      "End": 22480,
+      "BodyStart": 21715,
+      "Original": "Hop_Obj_t * Abc_NodeIfToHop_rec( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Ptr_t * vVisited )\n{\n    If_Cut_t * pCut;\n    Hop_Obj_t * gFunc, * gFunc0, * gFunc1;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if ( If_CutData(pCut) )\n        return (Hop_Obj_t *)If_CutData(pCut);\n    // compute the functions of the children\n    gFunc0 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj-\u003epFanin0, vVisited );\n    gFunc1 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj-\u003epFanin1, vVisited );\n    // get the function of the cut\n    gFunc  = Hop_And( pHopMan, Hop_NotCond(gFunc0, pIfObj-\u003efCompl0), Hop_NotCond(gFunc1, pIfObj-\u003efCompl1) );  \n    assert( If_CutData(pCut) == NULL );\n    If_CutSetData( pCut, gFunc );\n    // add this cut to the visited list\n    Vec_PtrPush( vVisited, pCut );\n    return gFunc;\n}",
+      "Draft": "func Abc_NodeIfToHop_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    gFunc0 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin0, vVisited );\n    gFunc1 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin1, vVisited );\n    // get the function of the cut\n    gFunc  = Hop_And( pHopMan, Hop_NotCond(gFunc0, pIfObj.fCompl0), Hop_NotCond(gFunc1, pIfObj.fCompl1) );  \n    assert(If_CutData(pCut) == nil, \"If_CutData(pCut) == nil\");\n    If_CutSetData( pCut, gFunc );\n    // add this cut to the visited list\n    Vec_PtrPush( vVisited, pCut );\n    return gFunc;\n}"
+    },
+    {
+      "Name": "Abc_NodeIfToHop2_rec",
+      "Start": 22765,
+      "End": 24118,
+      "BodyStart": 22881,
+      "Original": "Hop_Obj_t * Abc_NodeIfToHop2_rec( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Ptr_t * vVisited )\n{\n    If_Cut_t * pCut;\n    If_Obj_t * pTemp;\n    Hop_Obj_t * gFunc, * gFunc0, * gFunc1;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if ( If_CutData(pCut) )\n        return (Hop_Obj_t *)If_CutData(pCut);\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if ( If_ObjIsCi(pIfObj) )\n        return (Hop_Obj_t *)If_CutData(pCut);\n    // compute the functions of the children\n    for ( pTemp = pIfObj; pTemp; pTemp = pTemp-\u003epEquiv )\n    {\n        gFunc0 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp-\u003epFanin0, vVisited );\n        if ( gFunc0 == (void *)1 )\n            continue;\n        gFunc1 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp-\u003epFanin1, vVisited );\n        if ( gFunc1 == (void *)1 )\n            continue;\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp-\u003efCompl0), Hop_NotCond(gFunc1, pTemp-\u003efCompl1) ); \n        if ( pTemp-\u003efPhase != pIfObj-\u003efPhase )\n            gFunc = Hop_Not(gFunc);\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}",
+      "Draft": "func Abc_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var pTemp *If_Obj_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if If_ObjIsCi(pIfObj) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    for  pTemp = pIfObj; pTemp; pTemp = pTemp.pEquiv  {\n        gFunc0 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );\n        if gFunc0 == (void *)1 {\n            continue; }\n        gFunc1 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );\n        if gFunc1 == (void *)1 {\n            continue; }\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); \n        if pTemp.fPhase != pIfObj.fPhase {\n            gFunc = Hop_Not(gFunc); }\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}"
+    },
+    {
+      "Name": "Abc_NodeIfToHop",
+      "Start": 24390,
+      "End": 25358,
+      "BodyStart": 24479,
+      "Original": "Hop_Obj_t * Abc_NodeIfToHop( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj )\n{\n    If_Cut_t * pCut;\n    Hop_Obj_t * gFunc;\n    If_Obj_t * pLeaf;\n    int i;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert( pCut-\u003enLeaves \u003e 1 );\n    // set the leaf variables\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan-\u003evTemp );\n    gFunc = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan-\u003evTemp ); \n    if ( gFunc == (void *)1 )\n    {\n        printf( \"Abc_NodeIfToHop(): Computing local AIG has failed.\\n\" );\n        return NULL;\n    }\n    // clean the cuts\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), NULL );\n    Vec_PtrForEachEntry( If_Cut_t *, pIfMan-\u003evTemp, pCut, i )\n        If_CutSetData( pCut, NULL );\n    return gFunc;\n}",
+      "Draft": "func Abc_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc *Hop_Obj_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan.vTemp );\n    gFunc = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); \n    if gFunc == (void *)1 {\n        fmt.Printf(\"Abc_NodeIfToHop(): Computing local AIG has failed.\\n\");\n        return nil;\n    }\n    // clean the cuts\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), nil );\n    Vec_PtrForEachEntry( If_Cut_t *, pIfMan.vTemp, pCut, i )\n        If_CutSetData( pCut, nil );\n    return gFunc;\n}"
+    },
+    {
+      "Name": "Abc_ObjCompareFlow",
+      "Start": 25634,
+      "End": 25949,
+      "BodyStart": 25703,
+      "Original": "int Abc_ObjCompareFlow( Abc_Obj_t ** ppNode0, Abc_Obj_t ** ppNode1 )\n{\n    float Flow0 = Abc_Int2Float((int)(ABC_PTRINT_T)(*ppNode0)-\u003epCopy);\n    float Flow1 = Abc_Int2Float((int)(ABC_PTRINT_T)(*ppNode1)-\u003epCopy);\n    if ( Flow0 \u003e Flow1 )\n        return -1;\n    if ( Flow0 \u003c Flow1 )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Abc_ObjCompareFlow(ppNode0 **Abc_Obj_t, ppNode1 **Abc_Obj_t) int32 {\n    var Flow0 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode0).pCopy));\n    var Flow1 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode1).pCopy));\n    if Flow0 \u003e Flow1 {\n        return -1; }\n    if Flow0 \u003c Flow1 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindGoodOrder_rec",
+      "Start": 26243,
+      "End": 26837,
+      "BodyStart": 26314,
+      "Original": "void Abc_NtkFindGoodOrder_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    if ( !Abc_ObjIsNode(pNode) )\n        return;\n    assert( Abc_ObjIsNode( pNode ) );\n    // if this node is already visited, skip\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return;\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // visit the transitive fanin of the node\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin1(pNode), vNodes );\n    // add the node after the fanins have been added\n    Vec_PtrPush( vNodes, pNode );\n}",
+      "Draft": "func Abc_NtkFindGoodOrder_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    if !Abc_ObjIsNode(pNode) {\n        return; }\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // visit the transitive fanin of the node\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin1(pNode), vNodes );\n    // add the node after the fanins have been added\n    Vec_PtrPush( vNodes, pNode );\n}"
+    },
+    {
+      "Name": "Abc_NtkFindGoodOrder",
+      "Start": 27131,
+      "End": 28933,
+      "BodyStart": 27184,
+      "Original": "Vec_Ptr_t * Abc_NtkFindGoodOrder( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes, * vCos;\n    Abc_Obj_t * pNode, * pFanin0, * pFanin1;\n    float Flow0, Flow1;\n    int i;\n\n    // initialize the flow\n    Abc_AigConst1(pNtk)-\u003epCopy = NULL;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = NULL;\n    // compute the flow\n    Abc_AigForEachAnd( pNtk, pNode, i )\n    {\n        pFanin0 = Abc_ObjFanin0(pNode);\n        pFanin1 = Abc_ObjFanin1(pNode);\n        Flow0 = Abc_Int2Float((int)(ABC_PTRINT_T)pFanin0-\u003epCopy)/Abc_ObjFanoutNum(pFanin0);\n        Flow1 = Abc_Int2Float((int)(ABC_PTRINT_T)pFanin1-\u003epCopy)/Abc_ObjFanoutNum(pFanin1);\n        pNode-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Abc_Float2Int(Flow0 + Flow1+(float)1.0);\n    }\n    // find the flow of the COs\n    vCos = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pNode-\u003epCopy = Abc_ObjFanin0(pNode)-\u003epCopy;\n//        pNode-\u003epCopy = (Abc_Obj_t *)Abc_Float2Int((float)Abc_ObjFanin0(pNode)-\u003eLevel);\n        Vec_PtrPush( vCos, pNode );\n    }\n\n    // sort nodes in the increasing order of the flow\n    qsort( (Abc_Obj_t **)Vec_PtrArray(vCos), (size_t)Abc_NtkCoNum(pNtk), \n        sizeof(Abc_Obj_t *), (int (*)(const void *, const void *))Abc_ObjCompareFlow );\n    // verify sorting\n    pFanin0 = (Abc_Obj_t *)Vec_PtrEntry(vCos, 0);\n    pFanin1 = (Abc_Obj_t *)Vec_PtrEntryLast(vCos);\n    assert( Abc_Int2Float((int)(ABC_PTRINT_T)pFanin0-\u003epCopy) \u003e= Abc_Int2Float((int)(ABC_PTRINT_T)pFanin1-\u003epCopy) );\n\n    // collect the nodes in the topological order from the new array\n    Abc_NtkIncrementTravId( pNtk );\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vCos, pNode, i )\n        Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Vec_PtrFree( vCos );\n    return vNodes;\n}",
+      "Draft": "func Abc_NtkFindGoodOrder(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes, vCos *Vec_Ptr_t;\n    var pNode, pFanin0, pFanin1 *Abc_Obj_t;\n    var Flow0, Flow1 float32;\n    var i int32;\n\n    // initialize the flow\n    Abc_AigConst1(pNtk).pCopy = nil;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n    // compute the flow\n    Abc_AigForEachAnd( pNtk, pNode, i )\n    {\n        pFanin0 = Abc_ObjFanin0(pNode);\n        pFanin1 = Abc_ObjFanin1(pNode);\n        Flow0 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy)/Abc_ObjFanoutNum(pFanin0);\n        Flow1 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)/Abc_ObjFanoutNum(pFanin1);\n        pNode.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Abc_Float2Int(Flow0 + Flow1+float32(1.0));\n    }\n    // find the flow of the COs\n    vCos = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;\n//        pNode-\u003epCopy = (Abc_Obj_t *)Abc_Float2Int((float)Abc_ObjFanin0(pNode)-\u003eLevel);\n        Vec_PtrPush( vCos, pNode );\n    }\n\n    // sort nodes in the increasing order of the flow\n    qsort( (Abc_Obj_t **)Vec_PtrArray(vCos), (size_t)Abc_NtkCoNum(pNtk), \n            sizeof(Abc_Obj_t *), (int (*)(void *, void *))Abc_ObjCompareFlow );\n    // verify sorting\n    pFanin0 = (Abc_Obj_t *)Vec_PtrEntry(vCos, 0);\n    pFanin1 = (Abc_Obj_t *)Vec_PtrEntryLast(vCos);\n    assert(Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) \u003e= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy), \"Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) \u003e= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)\");\n\n    // collect the nodes in the topological order from the new array\n    Abc_NtkIncrementTravId( pNtk );\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vCos, pNode, i )\n        Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Vec_PtrFree( vCos );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NtkMarkMux",
+      "Start": 29186,
+      "End": 30291,
+      "BodyStart": 29273,
+      "Original": "void Abc_NtkMarkMux( Abc_Obj_t * pDriver, Abc_Obj_t ** ppNode1, Abc_Obj_t ** ppNode2 )\n{\n    Abc_Obj_t * pNodeC, * pNodeT, * pNodeE;\n    If_Obj_t * pIfObj;\n\n    *ppNode1 = NULL;\n    *ppNode2 = NULL;\n    if ( pDriver == NULL )\n        return;\n    if ( !Abc_NodeIsMuxType(pDriver) )\n        return;\n\n    pNodeC = Abc_NodeRecognizeMux( pDriver, \u0026pNodeT, \u0026pNodeE );\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin0(pDriver)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin1(pDriver)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeC)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n\n/*\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeT)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeE)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n*/\n    *ppNode1 = Abc_ObjRegular(pNodeC);\n    *ppNode2 = Abc_ObjRegular(pNodeT);\n}",
+      "Draft": "func Abc_NtkMarkMux(pDriver *Abc_Obj_t, ppNode1 **Abc_Obj_t, ppNode2 **Abc_Obj_t) {\n    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var pIfObj *If_Obj_t;\n\n    *ppNode1 = nil;\n    *ppNode2 = nil;\n    if pDriver == nil {\n        return; }\n    if !Abc_NodeIsMuxType(pDriver) {\n        return; }\n\n    pNodeC = Abc_NodeRecognizeMux( pDriver, \u0026pNodeT, \u0026pNodeE );\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin0(pDriver).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin1(pDriver).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeC).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n\n/*\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeT)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeE)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n*/\n    *ppNode1 = Abc_ObjRegular(pNodeC);\n    *ppNode2 = Abc_ObjRegular(pNodeT);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::mechanical::sizeof::28046",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28308,
+      "End": 28314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::4303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4303,
+      "End": 4320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::5246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5246,
+      "End": 5261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::5520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5520,
+      "End": 5535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::6923",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6923,
+      "End": 6935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::7772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7772,
+      "End": 7785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::7877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7877,
+      "End": 7890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::8352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8352,
+      "End": 8365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::9337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9337,
+      "End": 9350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::9881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9881,
+      "End": 9894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::10006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10006,
+      "End": 10019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::10255",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10255,
+      "End": 10268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::10501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10501,
+      "End": 10514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::12533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12533,
+      "End": 12546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::14599",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14599,
+      "End": 14612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::14625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14625,
+      "End": 14638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::14765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14765,
+      "End": 14778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::14791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14791,
+      "End": 14804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::14974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14974,
+      "End": 14987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::16121",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16121,
+      "End": 16134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::18858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19120,
+      "End": 19134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::19200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19462,
+      "End": 19476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::19340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19602,
+      "End": 19610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::19489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19751,
+      "End": 19764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::19644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19906,
+      "End": 19919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::19922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20184,
+      "End": 20197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::20485",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20747,
+      "End": 20760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::20517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20779,
+      "End": 20791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::20937",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21199,
+      "End": 21212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::21668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21930,
+      "End": 21943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::22856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23118,
+      "End": 23131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::23008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23270,
+      "End": 23278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::23103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23365,
+      "End": 23378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::23349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23611,
+      "End": 23619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::23490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23752,
+      "End": 23760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::23824",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24086,
+      "End": 24099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::24736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24998,
+      "End": 25006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::27528",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27790,
+      "End": 27803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::27975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28237,
+      "End": 28251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::28052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28314,
+      "End": 28327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::28162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28424,
+      "End": 28437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::28212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28474,
+      "End": 28487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::29312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29574,
+      "End": 29586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::29443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29705,
+      "End": 29717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::pointer-cast::29575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29837,
+      "End": 29849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::If_ManComputeSwitching",
+      "Category": "semantic-review",
+      "Symbol": "If_ManComputeSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1976,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkIf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3660,
+      "End": 6583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_ObjIfCopy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjIfCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6854,
+      "End": 6950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkToIf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6952,
+      "End": 9470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_MapBoxSetPrevNext",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MapBoxSetPrevNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9730,
+      "End": 10121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_MapBox2Next",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MapBox2Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10122,
+      "End": 10367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_MapBox2Prev",
+      "Category": "semantic-review",
+      "Symbol": "Abc_MapBox2Prev",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10368,
+      "End": 10614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkFromIf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10930,
+      "End": 13412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::ternary::Abc_NodeBuildFromMiniInt",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NodeBuildFromMiniInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13675,
+      "End": 15229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeBuildFromMiniInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBuildFromMiniInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13675,
+      "End": 15229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeBuildFromMini",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBuildFromMini",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15230,
+      "End": 15598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeFromIf_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromIf_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15869,
+      "End": 21316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeIfToHop_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIfToHop_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21600,
+      "End": 22480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeIfToHop2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIfToHop2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22765,
+      "End": 24118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NodeIfToHop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIfToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24390,
+      "End": 25358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_ObjCompareFlow",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjCompareFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25634,
+      "End": 25949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkFindGoodOrder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindGoodOrder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26243,
+      "End": 26837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkFindGoodOrder",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindGoodOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27131,
+      "End": 28933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::Abc_NtkMarkMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMarkMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29186,
+      "End": 30291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17994,
+      "End": 18199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18341,
+      "End": 18546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::2368",
+      "Category": "macro-inline-review",
+      "Symbol": "If_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2368,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::2484",
+      "Category": "macro-inline-review",
+      "Symbol": "If_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2484,
+      "End": 2522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::2838",
+      "Category": "macro-inline-review",
+      "Symbol": "If_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2838,
+      "End": 2874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::7813",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7813,
+      "End": 7847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::8172",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8172,
+      "End": 8224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::9279",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9279,
+      "End": 9313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::11812",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11812,
+      "End": 11846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::12066",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12066,
+      "End": 12100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::14376",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14376,
+      "End": 14426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::16505",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16505,
+      "End": 16554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::17394",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeafReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17394,
+      "End": 17450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::17575",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17575,
+      "End": 17624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::24683",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24683,
+      "End": 24726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::25143",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25143,
+      "End": 25186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::25244",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25244,
+      "End": 25301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::27369",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27369,
+      "End": 27403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::27461",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_AigForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27461,
+      "End": 27496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::27947",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27947,
+      "End": 27981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIf.c::macro-inline::28771",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28771,
+      "End": 28821
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcIf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface with the FPGA mapping package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: abcIf.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"map/if/if.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"map/mio/mio.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern If_Man_t *  Abc_NtkToIf( Abc_Ntk_t * pNtk, If_Par_t * pPars );\n\n// static Abc_Ntk_t * Abc_NtkFromIf( If_Man_t * pIfMan, Abc_Ntk_t * pNtk );\n\n// extern Abc_Obj_t * Abc_NodeFromIf_rec( Abc_Ntk_t * pNtkNew, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Int_t * vCover );\n\n// static Hop_Obj_t * Abc_NodeIfToHop( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj );\n\n// static Vec_Ptr_t * Abc_NtkFindGoodOrder( Abc_Ntk_t * pNtk );\n\n\n// extern void Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose );\n\n// extern void Abc_NtkBidecResyn( Abc_Ntk_t * pNtk, int fVerbose );\n\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Interface with the FPGA mapping package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManComputeSwitching(pIfMan *If_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vCopy *Vec_Int_t;\n    var pIfObj *If_Obj_t;\n    var i int32;\n    assert(pIfMan.vSwitching == nil, \"pIfMan.vSwitching == nil\");\n    // create the new manager\n    pNew = Gia_ManStart( If_ManObjNum(pIfMan) );\n    vCopy = Vec_IntAlloc( If_ManObjNum(pIfMan) );\n    // constant and inputs\n    Vec_IntPush( vCopy, 1 );\n    If_ManForEachCi( pIfMan, pIfObj, i )\n        Vec_IntPush( vCopy, Gia_ManAppendCi(pNew) );\n    // internal nodes\n    If_ManForEachNode( pIfMan, pIfObj, i )\n    {\n        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );\n        var iLit1 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin1(pIfObj).Id), If_ObjFaninC1(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1) );\n    }\n    // outputs\n    If_ManForEachCo( pIfMan, pIfObj, i )\n    {\n        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );\n        Vec_IntPush( vCopy, Gia_ManAppendCo(pNew, iLit0) );\n    }\n    assert(Vec_IntSize(vCopy) == If_ManObjNum(pIfMan), \"Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)\");\n    Vec_IntFree( vCopy );\n    // compute switching activity\n    pIfMan.vSwitching = Gia_ManComputeSwitchProbs( pNew, 48, 16, 0 );\n    Gia_ManStop( pNew );\n    if pIfMan.pPars.fVerbose {\n        Abc_PrintTime( 1, \"Computing switching activity\", Abc_Clock() - clk ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interface with the FPGA mapping package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *Abc_Ntk_t {\n    var pNtkNew, pTemp *Abc_Ntk_t;\n    var pIfMan *If_Man_t;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // get timing information\n    pPars.pTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars.pTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // update timing info to reflect logic level\n    if (pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib || pPars.fUserSesLib) \u0026\u0026 pNtk.pManTime {\n        var c int32;\n        if pNtk.AndGateDelay == 0.0 {\n            if Abc_FrameReadLibGen() {\n                pNtk.AndGateDelay = Mio_LibraryReadDelayAigNode((Mio_Library_t *)Abc_FrameReadLibGen()); }\n            if pNtk.AndGateDelay == 0.0 {\n                pNtk.AndGateDelay = 1.0;\n                fmt.Printf(\"The AIG-node delay is not set. Assuming unit-delay.\\n\");\n            }\n        }\n        for  c = 0; c \u003c Abc_NtkCiNum(pNtk); c++  {\n            pPars.pTimesArr[c] /= pNtk.AndGateDelay;\n        }\n        for  c = 0; c \u003c Abc_NtkCoNum(pNtk); c++  {\n            pPars.pTimesReq[c] /= pNtk.AndGateDelay;\n        }\n    }\n\n    // set the latch paths\n    if pPars.fLatchPaths \u0026\u0026 pPars.pTimesArr {\n        var c int32;\n        for  c = 0; c \u003c Abc_NtkPiNum(pNtk); c++  {\n            pPars.pTimesArr[c] = -ABC_INFINITY;\n        }\n    }\n\n    // create FPGA mapper\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if pIfMan == nil {\n        return nil; }\n    if pPars.fPower {\n        If_ManComputeSwitching( pIfMan ); }\n\n    // create DSD manager\n    if pPars.fUseDsd {\n        var p *If_DsdMan_t  = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        assert(pPars.nLutSize \u003c= If_DsdManVarNum(p), \"pPars.nLutSize \u003c= If_DsdManVarNum(p)\");\n        assert((pPars.pLutStruct == nil \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars.pLutStruct \u0026\u0026 pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p)), \"(pPars.pLutStruct == nil \u0026\u0026 If_DsdManLutSize(p) == 0) || (pPars.pLutStruct \u0026\u0026 pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p))\");\n        pIfMan.pIfDsdMan = (If_DsdMan_t *)Abc_FrameReadManDsd();\n        if pPars.fDsdBalance {\n            If_DsdManAllocIsops( pIfMan.pIfDsdMan, pPars.nLutSize ); }\n    }\n\n    // perform FPGA mapping\n    if !If_ManPerformMapping( pIfMan ) {\n        If_ManStop( pIfMan );\n        return nil;\n    }\n\n    // transform the result of mapping into the new network\n    pNtkNew = Abc_NtkFromIf( pIfMan, pNtk );\n    if pNtkNew == nil {\n        return nil; }\n    If_ManStop( pIfMan );\n    if pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib {\n        pNtkNew = Abc_NtkStrash( pTemp = pNtkNew, 0, 0, 0 );\n        Abc_NtkDelete( pTemp );\n    \n    } else if pPars.fBidec \u0026\u0026 pPars.nLutSize \u003c= 8 {\n        Abc_NtkBidecResyn( pNtkNew, 0 ); }\n\n    // duplicate EXDC\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkIf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into FPGA manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjIfCopy(pNode *Abc_Obj_t) *If_Obj_t { return (If_Obj_t *)pNode.pCopy; } \nfunc Abc_NtkToIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *If_Man_t {\n    var pProgress *ProgressBar;\n    var pIfMan *If_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pPrev *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan.pName = Abc_UtilStrsav( Abc_NtkName(pNtk) );\n\n    // print warning about excessive memory usage\n    if 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1\u003c\u003c30) \u003e 1.0 {\n        fmt.Printf(\"Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\\n\", 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1\u003c\u003c30), Abc_NtkObjNum(pNtk)); }\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)If_ManConst1( pIfMan );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCi( pIfMan );\n        // transfer logic level information\n        Abc_ObjIfCopy(pNode).Level = pNode.Level;\n    }\n\n    // load the AIG into the mapper\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    vNodes = Abc_AigDfs( pNtk, 0, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Initial\" );\n        // add the node to the mapper\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateAnd( pIfMan, \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ), \n            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin1(pNode)), Abc_ObjFaninC1(pNode) ) );\n        // set up the choice node\n        if Abc_AigNodeIsChoice( pNode ) {\n            var pEquiv *Abc_Obj_t;\n//            int Counter = 0;\n            assert(If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode))), \"If_ObjId(Abc_ObjIfCopy(pNode)) \u003e If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode)))\");\n            for  pPrev = pNode, pEquiv = Abc_ObjEquiv(pPrev); (pEquiv != nil); pPrev = pEquiv, pEquiv = Abc_ObjEquiv(pPrev)  {\n                If_ObjSetChoice( Abc_ObjIfCopy(pPrev), Abc_ObjIfCopy(pEquiv) );\n            }//, Counter++;\n//            printf( \"%d \", Counter );\n            If_ManCreateChoice( pIfMan, Abc_ObjIfCopy(pNode) );\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs without copying the phase\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCo( pIfMan, If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ) );\n    return pIfMan;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Box mapping procedures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_MapBoxSetPrevNext(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) {\n    var pNode *Abc_Obj_t;\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    Vec_IntWriteEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    Vec_IntWriteEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );\n}\nfunc Abc_MapBox2Next(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {\n    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);\n    return Vec_IntEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}\nfunc Abc_MapBox2Prev(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {\n    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);\n    return Vec_IntEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the mapped network.]\n\n  Description [Assuming the copy field of the mapped nodes are NULL.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromIf(pIfMan *If_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var vCover *Vec_Int_t;\n    var i, nDupGates int32;\n    // create the new network\n    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );\n    } else if pIfMan.pPars.fUseSops || pIfMan.pPars.fUserSesLib || pIfMan.pPars.nGateSize \u003e 0 {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    } else {\n        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG ); }\n    // prepare the mapping manager\n    If_ManCleanNodeCopy( pIfMan );\n    If_ManCleanCutData( pIfMan );\n    // make the mapper point to the new network\n    If_ObjSetCopy( If_ManConst1(pIfMan), Abc_NtkCreateNodeConst1(pNtkNew) );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        If_ObjSetCopy( If_ManCi(pIfMan, i), pNode.pCopy );\n\n    // process the nodes in topological order\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, \"Final\" );\n        pNodeNew = Abc_NodeFromIf_rec( pNtkNew, pIfMan, If_ObjFanin0(If_ManCo(pIfMan, i)), vCover );\n        pNodeNew = Abc_ObjNotCond( pNodeNew, If_ObjFaninC0(If_ManCo(pIfMan, i)) );\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_IntFree( vCover );\n\n    // remove the constant node if not used\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( If_ManConst1(pIfMan) );\n    if Abc_ObjFanoutNum(pNodeNew) == 0 \u0026\u0026 !Abc_ObjIsNone(pNodeNew) {\n        Abc_NtkDeleteObj( pNodeNew ); }\n    // minimize the node\n    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        Abc_NtkSweep( pNtkNew, 0 ); }\n    if pIfMan.pPars.fUseBdds {\n        Abc_NtkBddReorder( pNtkNew, 0 ); }\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !pIfMan.pPars.fUseBuffs );\n    if (nDupGates != 0) \u0026\u0026 pIfMan.pPars.fVerbose \u0026\u0026 !Abc_FrameReadFlag(\"silentmode\") {\n        if pIfMan.pPars.fUseBuffs {\n            fmt.Printf(\"Added %d buffers/inverters to decouple the CO drivers.\\n\", nDupGates);\n        } else {\n            fmt.Printf(\"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates); }\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Rebuilds GIA from mini AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *Hop_Obj_t {\n    assert(Vec_IntSize(vAig) \u003e 0, \"Vec_IntSize(vAig) \u003e 0\");\n    assert(Vec_IntEntryLast(vAig) \u003c 2, \"Vec_IntEntryLast(vAig) \u003c 2\");\n    if Vec_IntSize(vAig) == 1 { // const\n    \n        assert(nLeaves == 0, \"nLeaves == 0\");\n        return Hop_NotCond( Hop_ManConst0(pMan), Vec_IntEntry(vAig, 0) );\n    }\n    if Vec_IntSize(vAig) == 2 { // variable\n    \n        assert(Vec_IntEntry(vAig, 0) == 0, \"Vec_IntEntry(vAig, 0) == 0\");\n        assert(nLeaves == 1, \"nLeaves == 1\");\n        return Hop_NotCond( Hop_IthVar(pMan, 0), Vec_IntEntry(vAig, 1) );\n    \n    } else {\n        var i, iVar0, iVar1, iLit0, iLit1 int32;\n        var piLit0 *Hop_Obj_t;\n        var piLit1 *Hop_Obj_t;\n        var piLit *Hop_Obj_t = nil;\n        assert(Vec_IntSize(vAig) \u0026 1, \"Vec_IntSize(vAig) \u0026 1\");\n        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )\n        {\n            iVar0 = Abc_Lit2Var( iLit0 );\n            iVar1 = Abc_Lit2Var( iLit1 );\n            piLit0 = Hop_NotCond( iVar0 \u003c nLeaves ? Hop_IthVar(pMan, iVar0) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar0 - nLeaves), Abc_LitIsCompl(iLit0) );\n            piLit1 = Hop_NotCond( iVar1 \u003c nLeaves ? Hop_IthVar(pMan, iVar1) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar1 - nLeaves), Abc_LitIsCompl(iLit1) );\n            piLit  = Hop_And( pMan, piLit0, piLit1 );\n            assert((i \u0026 1) == 0, \"(i \u0026 1) == 0\");\n            Vec_PtrWriteEntry( (Vec_Ptr_t *)vAig, Abc_Lit2Var(i), piLit );  // overwriting entries\n        }\n        assert(i == Vec_IntSize(vAig) - 1, \"i == Vec_IntSize(vAig) - 1\");\n        piLit = Hop_NotCond( piLit, Vec_IntEntry(vAig, i) );\n        Vec_IntClear( vAig ); // useless\n        return piLit;\n    }\n}\nfunc Abc_NodeBuildFromMini(pMan *Hop_Man_t, p *If_Man_t, pCut *If_Cut_t, fUseDsd int32) *Hop_Obj_t {\n    var Delay int32;\n    if fUseDsd != 0 {\n        Delay = If_CutDsdBalanceEval( p, pCut, p.vArray );\n    } else {\n        Delay = If_CutSopBalanceEval( p, pCut, p.vArray ); }\n    assert(Delay \u003e= 0, \"Delay \u003e= 0\");\n    return Abc_NodeBuildFromMiniInt( pMan, p.vArray, If_CutLeaveNum(pCut) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive one node after FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vCover *Vec_Int_t) *Abc_Obj_t {\n    var pNodeNew *Abc_Obj_t;\n    var pCutBest *If_Cut_t;\n    var pIfLeaf *If_Obj_t;\n    var i int32;\n    // return if the result if known\n    pNodeNew = (Abc_Obj_t *)If_ObjCopy( pIfObj );\n    if pNodeNew != nil {\n        return pNodeNew; }\n    assert(pIfObj.Type == IF_AND, \"pIfObj.Type == IF_AND\");\n    // get the parameters of the best cut\n    pCutBest = If_ObjCutBest( pIfObj );\n    if pIfMan.pPars.fUserSesLib {\n        // create the subgraph composed of Abc_Obj_t nodes based on the given cut\n        var pFanins [IF_MAX_FUNC_LUTSIZE]*Abc_Obj_t;\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            pFanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover);\n        pNodeNew = Abc_ExactBuildNode( If_CutTruthW(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), If_CutArrTimeProfile(pIfMan, pCutBest), pFanins, pNtkNew );\n        If_ObjSetCopy( pIfObj, pNodeNew );\n        return pNodeNew;\n    }\n    // create a new node \n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n//    if ( pIfMan-\u003epPars-\u003epLutLib \u0026\u0026 pIfMan-\u003epPars-\u003epLutLib-\u003efVarPinDelays )\n    if !pIfMan.pPars.fDelayOpt \u0026\u0026 !pIfMan.pPars.fDelayOptLut \u0026\u0026 !pIfMan.pPars.fDsdBalance \u0026\u0026 !pIfMan.pPars.fUseTtPerm \u0026\u0026 \n         !pIfMan.pPars.pLutStruct \u0026\u0026 !pIfMan.pPars.fUserRecLib \u0026\u0026 !pIfMan.pPars.fUserSesLib \u0026\u0026 !pIfMan.pPars.nGateSize {\n        If_CutRotatePins( pIfMan, pCutBest ); }\n    if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {\n        If_CutForEachLeafReverse( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    \n    } else {\n        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )\n            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );\n    }\n    // set the level of the new node\n    pNodeNew.Level = Abc_ObjLevelNew( pNodeNew );\n    // derive the function of this node\n    if pIfMan.pPars.fTruth {\n        if pIfMan.pPars.fUseBdds { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 0 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        \n        } else if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv { \n            // transform truth table into the BDD \n#ifdef ABC_USE_CUDD\n            pNodeNew-\u003epData = Kit_TruthToBdd( (DdManager *)pNtkNew-\u003epManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 1 );  Cudd_Ref((DdNode *)pNodeNew-\u003epData); \n#endif\n        \n        } else if pIfMan.pPars.fUseSops || pIfMan.pPars.nGateSize \u003e 0 {\n            // transform truth table into the SOP\n            var RetValue int32  = Kit_TruthIsop( If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), vCover, 1 );\n            assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n            // check the case of constant cover\n            if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n                assert(RetValue == 0, \"RetValue == 0\");\n                pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), nil );\n                if Vec_IntSize(vCover) == 0 {\n                    pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n                } else {\n                    pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);\n                }\n            \n            } else {\n                // derive the AIG for that tree\n                pNodeNew.pData = Abc_SopCreateFromIsop( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), vCover );\n                if RetValue != 0 {\n                    Abc_SopComplement( (char *)pNodeNew.pData ); }\n            }\n        \n        } else if pIfMan.pPars.fDelayOpt {\n            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 0 );\n        } else if pIfMan.pPars.fDsdBalance {\n            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 1 );\n        } else if pIfMan.pPars.fUserRecLib {\n            extern Hop_Obj_t * Abc_RecToHop3( Hop_Man_t * pMan, If_Man_t * pIfMan, If_Cut_t * pCut, If_Obj_t * pIfObj );\n            pNodeNew.pData = Abc_RecToHop3( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, pIfObj ); \n        \n        } else {\n            extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n            var pTruth *word  = If_CutTruthW(pIfMan, pCutBest);\n            if pIfMan.pPars.fUseTtPerm {\n                for  i = 0; i \u003c int32(pCutBest.nLeaves); i++  {\n                    if If_CutLeafBit(pCutBest, i) {\n                        Abc_TtFlip( pTruth, Abc_TtWordNum(pCutBest.nLeaves), i ); }\n                } }\n            pNodeNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtkNew.pManFunc, (unsigned *)pTruth, If_CutLeaveNum(pCutBest), vCover );\n//            if ( pIfMan-\u003epPars-\u003efUseBat )\n//                Bat_ManFuncPrintCell( *pTruth );\n        }\n        // complement the node if the cut was complemented\n        if pCutBest.fCompl \u0026\u0026 !pIfMan.pPars.fDelayOpt \u0026\u0026 !pIfMan.pPars.fDsdBalance {\n            Abc_NodeComplement( pNodeNew ); }\n    \n    } else {\n        pNodeNew.pData = Abc_NodeIfToHop( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pIfObj );\n    }\n    If_ObjSetCopy( pIfObj, pNodeNew );\n    return pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the truth table for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIfToHop_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    gFunc0 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin0, vVisited );\n    gFunc1 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin1, vVisited );\n    // get the function of the cut\n    gFunc  = Hop_And( pHopMan, Hop_NotCond(gFunc0, pIfObj.fCompl0), Hop_NotCond(gFunc1, pIfObj.fCompl1) );  \n    assert(If_CutData(pCut) == nil, \"If_CutData(pCut) == nil\");\n    If_CutSetData( pCut, gFunc );\n    // add this cut to the visited list\n    Vec_PtrPush( vVisited, pCut );\n    return gFunc;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the truth table for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var pTemp *If_Obj_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if If_ObjIsCi(pIfObj) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    for  pTemp = pIfObj; pTemp; pTemp = pTemp.pEquiv  {\n        gFunc0 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );\n        if gFunc0 == (void *)1 {\n            continue; }\n        gFunc1 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );\n        if gFunc1 == (void *)1 {\n            continue; }\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); \n        if pTemp.fPhase != pIfObj.fPhase {\n            gFunc = Hop_Not(gFunc); }\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc *Hop_Obj_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan.vTemp );\n    gFunc = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); \n    if gFunc == (void *)1 {\n        fmt.Printf(\"Abc_NodeIfToHop(): Computing local AIG has failed.\\n\");\n        return nil;\n    }\n    // clean the cuts\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), nil );\n    Vec_PtrForEachEntry( If_Cut_t *, pIfMan.vTemp, pCut, i )\n        If_CutSetData( pCut, nil );\n    return gFunc;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison for two nodes with the flow.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjCompareFlow(ppNode0 **Abc_Obj_t, ppNode1 **Abc_Obj_t) int32 {\n    var Flow0 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode0).pCopy));\n    var Flow1 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode1).pCopy));\n    if Flow0 \u003e Flow1 {\n        return -1; }\n    if Flow0 \u003c Flow1 {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindGoodOrder_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    if !Abc_ObjIsNode(pNode) {\n        return; }\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // visit the transitive fanin of the node\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin1(pNode), vNodes );\n    // add the node after the fanins have been added\n    Vec_PtrPush( vNodes, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindGoodOrder(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNodes, vCos *Vec_Ptr_t;\n    var pNode, pFanin0, pFanin1 *Abc_Obj_t;\n    var Flow0, Flow1 float32;\n    var i int32;\n\n    // initialize the flow\n    Abc_AigConst1(pNtk).pCopy = nil;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n    // compute the flow\n    Abc_AigForEachAnd( pNtk, pNode, i )\n    {\n        pFanin0 = Abc_ObjFanin0(pNode);\n        pFanin1 = Abc_ObjFanin1(pNode);\n        Flow0 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy)/Abc_ObjFanoutNum(pFanin0);\n        Flow1 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)/Abc_ObjFanoutNum(pFanin1);\n        pNode.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Abc_Float2Int(Flow0 + Flow1+float32(1.0));\n    }\n    // find the flow of the COs\n    vCos = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;\n//        pNode-\u003epCopy = (Abc_Obj_t *)Abc_Float2Int((float)Abc_ObjFanin0(pNode)-\u003eLevel);\n        Vec_PtrPush( vCos, pNode );\n    }\n\n    // sort nodes in the increasing order of the flow\n    qsort( (Abc_Obj_t **)Vec_PtrArray(vCos), (size_t)Abc_NtkCoNum(pNtk), \n            sizeof(Abc_Obj_t *), (int (*)(void *, void *))Abc_ObjCompareFlow );\n    // verify sorting\n    pFanin0 = (Abc_Obj_t *)Vec_PtrEntry(vCos, 0);\n    pFanin1 = (Abc_Obj_t *)Vec_PtrEntryLast(vCos);\n    assert(Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) \u003e= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy), \"Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) \u003e= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)\");\n\n    // collect the nodes in the topological order from the new array\n    Abc_NtkIncrementTravId( pNtk );\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vCos, pNode, i )\n        Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );\n    Vec_PtrFree( vCos );\n    return vNodes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets PO drivers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMarkMux(pDriver *Abc_Obj_t, ppNode1 **Abc_Obj_t, ppNode2 **Abc_Obj_t) {\n    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var pIfObj *If_Obj_t;\n\n    *ppNode1 = nil;\n    *ppNode2 = nil;\n    if pDriver == nil {\n        return; }\n    if !Abc_NodeIsMuxType(pDriver) {\n        return; }\n\n    pNodeC = Abc_NodeRecognizeMux( pDriver, \u0026pNodeT, \u0026pNodeE );\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin0(pDriver).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin1(pDriver).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeC).pCopy );\n    if If_ObjIsAnd(pIfObj) {\n        pIfObj.fSkipCut = 1; }\n\n/*\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeT)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeE)-\u003epCopy );\n    if ( If_ObjIsAnd(pIfObj) )\n        pIfObj-\u003efSkipCut = 1;\n*/\n    *ppNode1 = Abc_ObjRegular(pNodeC);\n    *ppNode2 = Abc_ObjRegular(pNodeT);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,187 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c",
+  "SHA256": "54a1e06e1b56fe7fe301816ef1e5ed02f8fa34ad4464199f48335210fcaa6ac1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == l_Undef || RetValue == l_True || RetValue == l_False );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_InfoHasBit(p.uCare, Mint) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pCnf.pVarNums[pObjPo.Id] \u003e= 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.uCare, 0, sizeof(unsigned) * p.nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 4216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %4d : Care = %2d. Total = %2d.  \", pNode.Id, p.nCares, (1\u003c\u003cp.nFanins) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 126,
+        "Column": 28,
+        "ByteOffset": 4330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, p.uCare, (1\u003c\u003cp.nFanins) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 4373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFanins != 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMfsSolveSat_iter",
+      "Start": 1317,
+      "End": 2708,
+      "BodyStart": 1362,
+      "Original": "int Abc_NtkMfsSolveSat_iter( Mfs_Man_t * p )\n{\n    int Lits[MFS_FANIN_MAX];\n    int RetValue, nBTLimit, iVar, b, Mint;\n//    int nConfs = p-\u003epSat-\u003estats.conflicts;\n    if ( p-\u003enTotConfLim \u0026\u0026 p-\u003enTotConfLim \u003c= p-\u003epSat-\u003estats.conflicts )\n        return -1;\n    nBTLimit = p-\u003enTotConfLim? p-\u003enTotConfLim - p-\u003epSat-\u003estats.conflicts : 0;\n    RetValue = sat_solver_solve( p-\u003epSat, NULL, NULL, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    assert( RetValue == l_Undef || RetValue == l_True || RetValue == l_False );\n//printf( \"%c\", RetValue==l_Undef ? '?' : (RetValue==l_False ? '-' : '+') );\n//printf( \"%d \", p-\u003epSat-\u003estats.conflicts-nConfs );\n//if ( RetValue==l_False )\n//printf( \"\\n\" );\n    if ( RetValue == l_Undef )\n        return -1;\n    if ( RetValue == l_False )\n        return 0;\n    p-\u003enCares++;\n    // add SAT assignment to the solver\n    Mint = 0;\n    Vec_IntForEachEntry( p-\u003evProjVarsSat, iVar, b )\n    {\n        Lits[b] = toLit( iVar );\n        if ( sat_solver_var_value( p-\u003epSat, iVar ) )\n        {\n            Mint |= (1 \u003c\u003c b);\n            Lits[b] = lit_neg( Lits[b] );\n        }\n    }\n    assert( !Abc_InfoHasBit(p-\u003euCare, Mint) );\n    Abc_InfoSetBit( p-\u003euCare, Mint );\n    // add the blocking clause\n    RetValue = sat_solver_addclause( p-\u003epSat, Lits, Lits + Vec_IntSize(p-\u003evProjVarsSat) );\n    if ( RetValue == 0 )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Abc_NtkMfsSolveSat_iter(p *Mfs_Man_t) int32 {\n    var Lits [MFS_FANIN_MAX]int32;\n    var RetValue, nBTLimit, iVar, b, Mint int32;\n//    int nConfs = p-\u003epSat-\u003estats.conflicts;\n    if p.nTotConfLim \u0026\u0026 p.nTotConfLim \u003c= p.pSat.stats.conflicts {\n        return -1; }\n    if p.nTotConfLim {\n        nBTLimit = p.nTotConfLim - p.pSat.stats.conflicts;\n    } else {\n        nBTLimit = 0;\n    }\n    RetValue = sat_solver_solve( p.pSat, nil, nil, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    assert(RetValue == l_Undef || RetValue == l_True || RetValue == l_False, \"RetValue == l_Undef || RetValue == l_True || RetValue == l_False\");\n//printf( \"%c\", RetValue==l_Undef ? '?' : (RetValue==l_False ? '-' : '+') );\n//printf( \"%d \", p-\u003epSat-\u003estats.conflicts-nConfs );\n//if ( RetValue==l_False )\n//printf( \"\\n\" );\n    if RetValue == l_Undef {\n        return -1; }\n    if RetValue == l_False {\n        return 0; }\n    p.nCares++;\n    // add SAT assignment to the solver\n    Mint = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  b = 0; (b \u003c Vec_IntSize(p.vProjVarsSat)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVarsSat, b)), 1); b++  {\n        Lits[b] = toLit( iVar );\n        if sat_solver_var_value( p.pSat, iVar ) {\n            Mint |= (1 \u003c\u003c b);\n            Lits[b] = lit_neg( Lits[b] );\n        }\n    }\n    assert(!Abc_InfoHasBit(p.uCare, Mint), \"!Abc_InfoHasBit(p.uCare, Mint)\");\n    Abc_InfoSetBit( p.uCare, Mint );\n    // add the blocking clause\n    RetValue = sat_solver_addclause( p.pSat, Lits, Lits + Vec_IntSize(p.vProjVarsSat) );\n    if RetValue == 0 {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsSolveSat",
+      "Start": 2984,
+      "End": 4713,
+      "BodyStart": 3043,
+      "Original": "int Abc_NtkMfsSolveSat( Mfs_Man_t * p, Abc_Obj_t * pNode )\n{\n    Aig_Obj_t * pObjPo;\n    int RetValue, i;\n    // collect projection variables\n    Vec_IntClear( p-\u003evProjVarsSat );\n    Vec_PtrForEachEntryStart( Aig_Obj_t *, p-\u003epAigWin-\u003evCos, pObjPo, i, Aig_ManCoNum(p-\u003epAigWin) - Abc_ObjFaninNum(pNode) )\n    {\n        assert( p-\u003epCnf-\u003epVarNums[pObjPo-\u003eId] \u003e= 0 );\n        Vec_IntPush( p-\u003evProjVarsSat, p-\u003epCnf-\u003epVarNums[pObjPo-\u003eId] );\n    }\n\n    // prepare the truth table of care set\n    p-\u003enFanins = Vec_IntSize( p-\u003evProjVarsSat );\n    p-\u003enWords = Abc_TruthWordNum( p-\u003enFanins );\n    memset( p-\u003euCare, 0, sizeof(unsigned) * p-\u003enWords );\n\n    // iterate through the SAT assignments\n    p-\u003enCares = 0;\n    p-\u003enTotConfLim = p-\u003epPars-\u003enBTLimit;\n    while ( (RetValue = Abc_NtkMfsSolveSat_iter(p)) == 1 );\n    if ( RetValue == -1 )\n        return 0;\n\n    // write statistics\n    p-\u003enMintsCare  += p-\u003enCares;\n    p-\u003enMintsTotal += (1\u003c\u003cp-\u003enFanins);\n\n    if ( p-\u003epPars-\u003efVeryVerbose )\n    {\n        printf( \"Node %4d : Care = %2d. Total = %2d.  \", pNode-\u003eId, p-\u003enCares, (1\u003c\u003cp-\u003enFanins) );\n        Extra_PrintBinary( stdout, p-\u003euCare, (1\u003c\u003cp-\u003enFanins) );\n        printf( \"\\n\" );\n    }\n\n    // map the care \n    if ( p-\u003enFanins \u003e 4 )\n        return 1;\n    if ( p-\u003enFanins == 4 )\n        p-\u003euCare[0] = p-\u003euCare[0] | (p-\u003euCare[0] \u003c\u003c 16);\n    if ( p-\u003enFanins == 3 )\n        p-\u003euCare[0] = p-\u003euCare[0] | (p-\u003euCare[0] \u003c\u003c 8) | (p-\u003euCare[0] \u003c\u003c 16) | (p-\u003euCare[0] \u003c\u003c 24);\n    if ( p-\u003enFanins == 2 )\n        p-\u003euCare[0] = p-\u003euCare[0] | (p-\u003euCare[0] \u003c\u003c  4) | (p-\u003euCare[0] \u003c\u003c  8) | (p-\u003euCare[0] \u003c\u003c 12) |\n              (p-\u003euCare[0] \u003c\u003c 16) | (p-\u003euCare[0] \u003c\u003c 20) | (p-\u003euCare[0] \u003c\u003c 24) | (p-\u003euCare[0] \u003c\u003c 28);\n    assert( p-\u003enFanins != 1 );\n    return 1;\n}",
+      "Draft": "func Abc_NtkMfsSolveSat(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pObjPo *Aig_Obj_t;\n    var RetValue, i int32;\n    // collect projection variables\n    Vec_IntClear( p.vProjVarsSat );\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p.pAigWin) - Abc_ObjFaninNum(pNode); (i \u003c Vec_PtrSize(p.pAigWin.vCos)) \u0026\u0026 (((pObjPo) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigWin.vCos, i)), 1); i++  {\n        assert(p.pCnf.pVarNums[pObjPo.Id] \u003e= 0, \"p.pCnf.pVarNums[pObjPo.Id] \u003e= 0\");\n        Vec_IntPush( p.vProjVarsSat, p.pCnf.pVarNums[pObjPo.Id] );\n    }\n\n    // prepare the truth table of care set\n    p.nFanins = Vec_IntSize( p.vProjVarsSat );\n    p.nWords = Abc_TruthWordNum( p.nFanins );\n    memset( p.uCare, 0, sizeof(unsigned) * p.nWords );\n\n    // iterate through the SAT assignments\n    p.nCares = 0;\n    p.nTotConfLim = p.pPars.nBTLimit;\n    for  (RetValue = Abc_NtkMfsSolveSat_iter(p)) == 1  {; }\n    if RetValue == -1 {\n        return 0; }\n\n    // write statistics\n    p.nMintsCare  += p.nCares;\n    p.nMintsTotal += (1\u003c\u003cp.nFanins);\n\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Node %4d : Care = %2d. Total = %2d.  \", pNode.Id, p.nCares, (1\u003c\u003cp.nFanins));\n        Extra_PrintBinary( os.Stdout, p.uCare, (1\u003c\u003cp.nFanins) );\n        fmt.Printf(\"\\n\");\n    }\n\n    // map the care \n    if p.nFanins \u003e 4 {\n        return 1; }\n    if p.nFanins == 4 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c 16); }\n    if p.nFanins == 3 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c 8) | (p.uCare[0] \u003c\u003c 16) | (p.uCare[0] \u003c\u003c 24); }\n    if p.nFanins == 2 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c  4) | (p.uCare[0] \u003c\u003c  8) | (p.uCare[0] \u003c\u003c 12) |\n              (p.uCare[0] \u003c\u003c 16) | (p.uCare[0] \u003c\u003c 20) | (p.uCare[0] \u003c\u003c 24) | (p.uCare[0] \u003c\u003c 28); }\n    assert(p.nFanins != 1, \"p.nFanins != 1\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkAddOneHotness",
+      "Start": 5001,
+      "End": 5635,
+      "BodyStart": 5043,
+      "Original": "int Abc_NtkAddOneHotness( Mfs_Man_t * p )\n{\n    Aig_Obj_t * pObj1, * pObj2;\n    int i, k, Lits[2];\n    for ( i = 0; i \u003c Vec_PtrSize(p-\u003epAigWin-\u003evCis); i++ )\n    for ( k = i+1; k \u003c Vec_PtrSize(p-\u003epAigWin-\u003evCis); k++ )\n    {\n        pObj1 = Aig_ManCi( p-\u003epAigWin, i );\n        pObj2 = Aig_ManCi( p-\u003epAigWin, k );\n        Lits[0] = toLitCond( p-\u003epCnf-\u003epVarNums[pObj1-\u003eId], 1 );\n        Lits[1] = toLitCond( p-\u003epCnf-\u003epVarNums[pObj2-\u003eId], 1 );\n        if ( !sat_solver_addclause( p-\u003epSat, Lits, Lits+2 ) )\n        {\n            sat_solver_delete( p-\u003epSat );\n            p-\u003epSat = NULL;\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkAddOneHotness(p *Mfs_Man_t) int32 {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var Lits [2]int32;\n    for  i = 0; i \u003c Vec_PtrSize(p.pAigWin.vCis); i++  {\n    for  k = i+1; k \u003c Vec_PtrSize(p.pAigWin.vCis); k++  {\n        pObj1 = Aig_ManCi( p.pAigWin, i );\n        pObj2 = Aig_ManCi( p.pAigWin, k );\n        Lits[0] = toLitCond( p.pCnf.pVarNums[pObj1.Id], 1 );\n        Lits[1] = toLitCond( p.pCnf.pVarNums[pObj2.Id], 1 );\n        if !sat_solver_addclause( p.pSat, Lits, Lits+2 ) {\n            sat_solver_delete( p.pSat );\n            p.pSat = nil;\n            return 0;\n        }\n    }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::mechanical::sizeof::3816",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3590,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::pointer-cast::3454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3167,
+      "End": 3167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::Abc_NtkMfsSolveSat_iter",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsSolveSat_iter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1317,
+      "End": 2708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::Abc_NtkMfsSolveSat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsSolveSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2984,
+      "End": 4713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::Abc_NtkAddOneHotness",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAddOneHotness",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5001,
+      "End": 5635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5882
+    }
+  ],
+  "Draft": "package mfs\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mfsSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Procedures to compute don't-cares using SAT.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mfsSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mfsInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Enumerates through the SAT assignments.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsSolveSat_iter(p *Mfs_Man_t) int32 {\n    var Lits [MFS_FANIN_MAX]int32;\n    var RetValue, nBTLimit, iVar, b, Mint int32;\n//    int nConfs = p-\u003epSat-\u003estats.conflicts;\n    if p.nTotConfLim \u0026\u0026 p.nTotConfLim \u003c= p.pSat.stats.conflicts {\n        return -1; }\n    if p.nTotConfLim {\n        nBTLimit = p.nTotConfLim - p.pSat.stats.conflicts;\n    } else {\n        nBTLimit = 0;\n    }\n    RetValue = sat_solver_solve( p.pSat, nil, nil, (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    assert(RetValue == l_Undef || RetValue == l_True || RetValue == l_False, \"RetValue == l_Undef || RetValue == l_True || RetValue == l_False\");\n//printf( \"%c\", RetValue==l_Undef ? '?' : (RetValue==l_False ? '-' : '+') );\n//printf( \"%d \", p-\u003epSat-\u003estats.conflicts-nConfs );\n//if ( RetValue==l_False )\n//printf( \"\\n\" );\n    if RetValue == l_Undef {\n        return -1; }\n    if RetValue == l_False {\n        return 0; }\n    p.nCares++;\n    // add SAT assignment to the solver\n    Mint = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  b = 0; (b \u003c Vec_IntSize(p.vProjVarsSat)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVarsSat, b)), 1); b++  {\n        Lits[b] = toLit( iVar );\n        if sat_solver_var_value( p.pSat, iVar ) {\n            Mint |= (1 \u003c\u003c b);\n            Lits[b] = lit_neg( Lits[b] );\n        }\n    }\n    assert(!Abc_InfoHasBit(p.uCare, Mint), \"!Abc_InfoHasBit(p.uCare, Mint)\");\n    Abc_InfoSetBit( p.uCare, Mint );\n    // add the blocking clause\n    RetValue = sat_solver_addclause( p.pSat, Lits, Lits + Vec_IntSize(p.vProjVarsSat) );\n    if RetValue == 0 {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Enumerates through the SAT assignments.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Abc_NtkMfsSolveSat(p *Mfs_Man_t, pNode *Abc_Obj_t) int32 {\n    var pObjPo *Aig_Obj_t;\n    var RetValue, i int32;\n    // collect projection variables\n    Vec_IntClear( p.vProjVarsSat );\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p.pAigWin) - Abc_ObjFaninNum(pNode); (i \u003c Vec_PtrSize(p.pAigWin.vCos)) \u0026\u0026 (((pObjPo) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigWin.vCos, i)), 1); i++  {\n        assert(p.pCnf.pVarNums[pObjPo.Id] \u003e= 0, \"p.pCnf.pVarNums[pObjPo.Id] \u003e= 0\");\n        Vec_IntPush( p.vProjVarsSat, p.pCnf.pVarNums[pObjPo.Id] );\n    }\n\n    // prepare the truth table of care set\n    p.nFanins = Vec_IntSize( p.vProjVarsSat );\n    p.nWords = Abc_TruthWordNum( p.nFanins );\n    memset( p.uCare, 0, sizeof(unsigned) * p.nWords );\n\n    // iterate through the SAT assignments\n    p.nCares = 0;\n    p.nTotConfLim = p.pPars.nBTLimit;\n    for  (RetValue = Abc_NtkMfsSolveSat_iter(p)) == 1  {; }\n    if RetValue == -1 {\n        return 0; }\n\n    // write statistics\n    p.nMintsCare  += p.nCares;\n    p.nMintsTotal += (1\u003c\u003cp.nFanins);\n\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Node %4d : Care = %2d. Total = %2d.  \", pNode.Id, p.nCares, (1\u003c\u003cp.nFanins));\n        Extra_PrintBinary( os.Stdout, p.uCare, (1\u003c\u003cp.nFanins) );\n        fmt.Printf(\"\\n\");\n    }\n\n    // map the care \n    if p.nFanins \u003e 4 {\n        return 1; }\n    if p.nFanins == 4 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c 16); }\n    if p.nFanins == 3 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c 8) | (p.uCare[0] \u003c\u003c 16) | (p.uCare[0] \u003c\u003c 24); }\n    if p.nFanins == 2 {\n        p.uCare[0] = p.uCare[0] | (p.uCare[0] \u003c\u003c  4) | (p.uCare[0] \u003c\u003c  8) | (p.uCare[0] \u003c\u003c 12) |\n              (p.uCare[0] \u003c\u003c 16) | (p.uCare[0] \u003c\u003c 20) | (p.uCare[0] \u003c\u003c 24) | (p.uCare[0] \u003c\u003c 28); }\n    assert(p.nFanins != 1, \"p.nFanins != 1\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one-hotness constraints for the window inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Abc_NtkAddOneHotness(p *Mfs_Man_t) int32 {\n    var pObj1, pObj2 *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var Lits [2]int32;\n    for  i = 0; i \u003c Vec_PtrSize(p.pAigWin.vCis); i++  {\n    for  k = i+1; k \u003c Vec_PtrSize(p.pAigWin.vCis); k++  {\n        pObj1 = Aig_ManCi( p.pAigWin, i );\n        pObj2 = Aig_ManCi( p.pAigWin, k );\n        Lits[0] = toLitCond( p.pCnf.pVarNums[pObj1.Id], 1 );\n        Lits[1] = toLitCond( p.pCnf.pVarNums[pObj2.Id], 1 );\n        if !sat_solver_addclause( p.pSat, Lits, Lits+2 ) {\n            sat_solver_delete( p.pSat );\n            p.pSat = nil;\n            return 0;\n        }\n    }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

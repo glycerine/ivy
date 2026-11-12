@@ -1,0 +1,230 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c",
+  "SHA256": "d861595120abea9112918b79f6f5c203fdf86fc7f5d0c11d9f90f7e3a7355162",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pLevels ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 5855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"No mapping is available.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 6800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pLevels[iFan] + 1 == pLevels[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLevels );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 7416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"AIG = %d. LUT = %d. Lev = %d.   Path nodes = %d.  Path edges = %d. (%d.)\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbc_ManAddInternalToPath_rec",
+      "Start": 1274,
+      "End": 1862,
+      "BodyStart": 1353,
+      "Original": "int Sbc_ManAddInternalToPath_rec( Gia_Man_t * p, int iObj, Vec_Bit_t * vPath )\n{\n    Gia_Obj_t * pObj; \n    int k, iFan, Value = 0;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return Vec_BitEntry(vPath, iObj);\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n        return Vec_BitEntry(vPath, iObj);\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_LutForEachFanin( p, iObj, iFan, k )\n        Value |= Sbc_ManAddInternalToPath_rec( p, iFan, vPath );\n    if ( Value )\n        Vec_BitWriteEntry( vPath, iObj, 1 );\n    return Value;\n}",
+      "Draft": "func Sbc_ManAddInternalToPath_rec(p *Gia_Man_t, iObj int32, vPath *Vec_Bit_t) int32 {\n    var pObj *Gia_Obj_t; \n    var k, iFan, Value int32;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return Vec_BitEntry(vPath, iObj); }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return Vec_BitEntry(vPath, iObj); }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        Value |= Sbc_ManAddInternalToPath_rec( p, iFan, vPath );\n    }\n    if Value != 0 {\n        Vec_BitWriteEntry( vPath, iObj, 1 ); }\n    return Value;\n}"
+    },
+    {
+      "Name": "Sbc_ManAddInternalToPath",
+      "Start": 1863,
+      "End": 2253,
+      "BodyStart": 1929,
+      "Original": "void Sbc_ManAddInternalToPath( Gia_Man_t * p, Vec_Bit_t * vPath )\n{\n    int k, iFan, iObj;\n    Gia_ManForEachLut( p, iObj )\n    {\n        if ( !Vec_BitEntry(vPath, iObj) )\n            continue;\n        Gia_ManIncrementTravId( p );\n        Gia_LutForEachFanin( p, iObj, iFan, k )\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n        Sbc_ManAddInternalToPath_rec( p, iObj, vPath );\n    }\n}",
+      "Draft": "func Sbc_ManAddInternalToPath(p *Gia_Man_t, vPath *Vec_Bit_t) {\n    var k, iFan, iObj int32;\n    // inlining of macro Gia_ManForEachLut\n    for  iObj = 1; iObj \u003c Gia_ManObjNum(p); iObj++  { if !Gia_ObjIsLut(p, iObj) {} else {\n        if !Vec_BitEntry(vPath, iObj) {\n            continue; }\n        Gia_ManIncrementTravId( p );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n        }\n        Sbc_ManAddInternalToPath_rec( p, iObj, vPath );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Sbc_ManCriticalPath_rec",
+      "Start": 2489,
+      "End": 3859,
+      "BodyStart": 2604,
+      "Original": "void Sbc_ManCriticalPath_rec( Gia_Man_t * p, int * pLevels, int iObj, int LevelFan, Vec_Bit_t * vPath, int Slack )\n{\n    Gia_Obj_t * pObj; int k, iFan;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    Vec_BitWriteEntry( vPath, iObj, 1 );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Tim_Man_t * pManTime = (Tim_Man_t *)p-\u003epManTime;\n        int iBox = pManTime ? Tim_ManBoxForCi( pManTime, Gia_ObjCioId(pObj) ) : -1;\n        if ( iBox \u003e= 0 )\n        {\n            int curCo = Tim_ManBoxInputFirst( pManTime, iBox );\n            int nBoxInputs = Tim_ManBoxInputNum( pManTime, iBox );\n            for ( k = 0; k \u003c nBoxInputs; k++ )\n            {\n                Gia_Obj_t * pCo = Gia_ManCo( p, curCo + k );\n                int iDriver = Gia_ObjFaninId0p( p, pCo );\n                if ( (pLevels[iDriver]+Slack \u003e= LevelFan-1) \u0026\u0026 iDriver )\n                    Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Abc_MaxInt(0, pLevels[iDriver]+Slack-(LevelFan-1)) );\n            }\n        }\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_LutForEachFanin( p, iObj, iFan, k )\n        if ( pLevels[iFan]+Slack \u003e= LevelFan-1 )\n            Sbc_ManCriticalPath_rec( p, pLevels, iFan, pLevels[iFan], vPath, Abc_MaxInt(0, pLevels[iFan]+Slack-(LevelFan-1)) );\n}",
+      "Draft": "func Sbc_ManCriticalPath_rec(p *Gia_Man_t, pLevels *int32, iObj int32, LevelFan int32, vPath *Vec_Bit_t, Slack int32) {\n    var pObj *Gia_Obj_t; var k, iFan int32;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    Vec_BitWriteEntry( vPath, iObj, 1 );\n    if Gia_ObjIsCi(pObj) {\n        var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n        var iBox int32;\n        if pManTime != nil {\n            iBox = Tim_ManBoxForCi( pManTime, Gia_ObjCioId(pObj) );\n        } else {\n            iBox = -1;\n        }\n        if iBox \u003e= 0 {\n            var curCo int32  = Tim_ManBoxInputFirst( pManTime, iBox );\n            var nBoxInputs int32  = Tim_ManBoxInputNum( pManTime, iBox );\n            for  k = 0; k \u003c nBoxInputs; k++  {\n                var pCo *Gia_Obj_t  = Gia_ManCo( p, curCo + k );\n                var iDriver int32  = Gia_ObjFaninId0p( p, pCo );\n                if (pLevels[iDriver]+Slack \u003e= LevelFan-1) \u0026\u0026 (iDriver != 0) {\n                    Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Abc_MaxInt(0, pLevels[iDriver]+Slack-(LevelFan-1)) ); }\n            }\n        }\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        if pLevels[iFan]+Slack \u003e= LevelFan-1 {\n            Sbc_ManCriticalPath_rec( p, pLevels, iFan, pLevels[iFan], vPath, Abc_MaxInt(0, pLevels[iFan]+Slack-(LevelFan-1)) ); }\n    }\n}"
+    },
+    {
+      "Name": "Sbc_ManCriticalPath",
+      "Start": 3860,
+      "End": 4520,
+      "BodyStart": 3909,
+      "Original": "Vec_Bit_t * Sbc_ManCriticalPath( Gia_Man_t * p )\n{\n    int * pLevels = NULL, k, iDriver, Slack = 1;\n    int nLevels = p-\u003epManTime ? Gia_ManLutLevelWithBoxes(p) : Gia_ManLutLevel(p, \u0026pLevels);\n    Vec_Bit_t * vPath = Vec_BitStart( Gia_ManObjNum(p) );\n    if ( p-\u003epManTime )\n        pLevels = Vec_IntArray( p-\u003evLevels );\n    Gia_ManIncrementTravId( p );\n    Gia_ManForEachCoDriverId( p, iDriver, k )\n        if ( (pLevels[iDriver] == nLevels) \u0026\u0026 iDriver )\n            Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Slack );\n    if ( !p-\u003epManTime )\n        ABC_FREE( pLevels );\n    Sbc_ManAddInternalToPath( p, vPath );\n    return vPath;\n}",
+      "Draft": "func Sbc_ManCriticalPath(p *Gia_Man_t) *Vec_Bit_t {\n    var pLevels *int32 = nil;\n    var k int32;\n    var iDriver int32;\n    var Slack int32 = 1;\n    var nLevels int32;\n    if p.pManTime {\n        nLevels = Gia_ManLutLevelWithBoxes(p);\n    } else {\n        nLevels = Gia_ManLutLevel(p, \u0026pLevels);\n    }\n    var vPath *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    if p.pManTime {\n        pLevels = Vec_IntArray( p.vLevels ); }\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iDriver) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        if (pLevels[iDriver] == nLevels) \u0026\u0026 (iDriver != 0) {\n            Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Slack ); }\n    }\n    if !p.pManTime {\n        ABC_FREE( pLevels ); }\n    Sbc_ManAddInternalToPath( p, vPath );\n    return vPath;\n}"
+    },
+    {
+      "Name": "Sbc_ManDelayTrace",
+      "Start": 4757,
+      "End": 6173,
+      "BodyStart": 4797,
+      "Original": "void Sbc_ManDelayTrace( Gia_Man_t * p )\n{\n    Vec_Bit_t * vPath = Vec_BitStart( Gia_ManObjNum(p) );\n    int i, k, iFan, nLevels, * pLevels;\n    int nLuts = 0, nNodes = 0, nEdges = 0, nEdgesAll = 0;\n    if ( !Gia_ManHasMapping(p) )\n    {\n        printf( \"No mapping is available.\\n\" );\n        return;\n    }\n    assert( Gia_ManHasMapping(p) );\n    // set critical CO drivers\n    nLevels = Gia_ManLutLevel( p, \u0026pLevels );\n    Gia_ManForEachCoDriverId( p, iFan, i )\n        if ( pLevels[iFan] == nLevels )\n            Vec_BitWriteEntry( vPath, iFan, 1 );\n    // set critical internal nodes\n    Gia_ManForEachLutReverse( p, i )\n    { \n        nLuts++;\n        if ( !Vec_BitEntry(vPath, i) )\n            continue;\n        nNodes++;\n        Gia_LutForEachFanin( p, i, iFan, k )\n        {\n            if ( pLevels[iFan] +1 \u003c pLevels[i] )\n                continue;\n            assert( pLevels[iFan] + 1 == pLevels[i] );\n            Vec_BitWriteEntry( vPath, iFan, 1 );\n            nEdges++;\n            //printf( \"%d -\u003e %d\\n\", i, iFan );\n        }\n    }\n    Gia_ManForEachLut( p, i )\n        Gia_LutForEachFanin( p, i, iFan, k )\n            nEdgesAll += (Vec_BitEntry(vPath, i) \u0026\u0026 Vec_BitEntry(vPath, iFan));\n\n    ABC_FREE( pLevels );\n    Vec_BitFree( vPath );\n    printf( \"AIG = %d. LUT = %d. Lev = %d.   Path nodes = %d.  Path edges = %d. (%d.)\\n\", \n        Gia_ManAndNum(p), nLuts, nLevels, nNodes, nEdges, nEdgesAll );\n}",
+      "Draft": "func Sbc_ManDelayTrace(p *Gia_Man_t) {\n    var vPath *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var i int32;\n    var k int32;\n    var iFan int32;\n    var nLevels int32;\n    var pLevels *int32;\n    var nLuts, nNodes, nEdges, nEdgesAll int32;\n    if !Gia_ManHasMapping(p) {\n        fmt.Printf(\"No mapping is available.\\n\");\n        return;\n    }\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    // set critical CO drivers\n    nLevels = Gia_ManLutLevel( p, \u0026pLevels );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iFan) = Gia_ObjFaninId0p(p, Gia_ManCo(p, i))), 1); i++  {\n        if pLevels[iFan] == nLevels {\n            Vec_BitWriteEntry( vPath, iFan, 1 ); }\n    }\n    // set critical internal nodes\n    // inlining of macro Gia_ManForEachLutReverse\n    for  i = Gia_ManObjNum(p) - 1; i \u003e 0; i--  { if !Gia_ObjIsLut(p, i) {} else { \n        nLuts++;\n        if !Vec_BitEntry(vPath, i) {\n            continue; }\n        nNodes++;\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            if pLevels[iFan] +1 \u003c pLevels[i] {\n                continue; }\n            assert(pLevels[iFan] + 1 == pLevels[i], \"pLevels[iFan] + 1 == pLevels[i]\");\n            Vec_BitWriteEntry( vPath, iFan, 1 );\n            nEdges++;\n            //printf( \"%d -\u003e %d\\n\", i, iFan );\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            nEdgesAll += (Vec_BitEntry(vPath, i) \u0026\u0026 Vec_BitEntry(vPath, iFan));\n        } }\n    }\n\n    ABC_FREE( pLevels );\n    Vec_BitFree( vPath );\n    fmt.Printf(\"AIG = %d. LUT = %d. Lev = %d.   Path nodes = %d.  Path edges = %d. (%d.)\\n\", Gia_ManAndNum(p), nLuts, nLevels, nNodes, nEdges, nEdgesAll);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::pointer-cast::3207",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2883,
+      "End": 2896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::Sbc_ManAddInternalToPath_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sbc_ManAddInternalToPath_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1274,
+      "End": 1862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::Sbc_ManAddInternalToPath",
+      "Category": "semantic-review",
+      "Symbol": "Sbc_ManAddInternalToPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1863,
+      "End": 2253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::Sbc_ManCriticalPath_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sbc_ManCriticalPath_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2489,
+      "End": 3859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::Sbc_ManCriticalPath",
+      "Category": "semantic-review",
+      "Symbol": "Sbc_ManCriticalPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3860,
+      "End": 4520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::Sbc_ManDelayTrace",
+      "Category": "semantic-review",
+      "Symbol": "Sbc_ManDelayTrace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4757,
+      "End": 6173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::macro-inline::4438",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4438,
+      "End": 4457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdPath.c::macro-inline::5963",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5963,
+      "End": 5982
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbdPath.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Critical path.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbdPath.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n//#include \"misc/tim/tim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbc_ManAddInternalToPath_rec(p *Gia_Man_t, iObj int32, vPath *Vec_Bit_t) int32 {\n    var pObj *Gia_Obj_t; \n    var k, iFan, Value int32;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return Vec_BitEntry(vPath, iObj); }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return Vec_BitEntry(vPath, iObj); }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        Value |= Sbc_ManAddInternalToPath_rec( p, iFan, vPath );\n    }\n    if Value != 0 {\n        Vec_BitWriteEntry( vPath, iObj, 1 ); }\n    return Value;\n}\nfunc Sbc_ManAddInternalToPath(p *Gia_Man_t, vPath *Vec_Bit_t) {\n    var k, iFan, iObj int32;\n    // inlining of macro Gia_ManForEachLut\n    for  iObj = 1; iObj \u003c Gia_ManObjNum(p); iObj++  { if !Gia_ObjIsLut(p, iObj) {} else {\n        if !Vec_BitEntry(vPath, iObj) {\n            continue; }\n        Gia_ManIncrementTravId( p );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n        }\n        Sbc_ManAddInternalToPath_rec( p, iObj, vPath );\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbc_ManCriticalPath_rec(p *Gia_Man_t, pLevels *int32, iObj int32, LevelFan int32, vPath *Vec_Bit_t, Slack int32) {\n    var pObj *Gia_Obj_t; var k, iFan int32;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    Vec_BitWriteEntry( vPath, iObj, 1 );\n    if Gia_ObjIsCi(pObj) {\n        var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;\n        var iBox int32;\n        if pManTime != nil {\n            iBox = Tim_ManBoxForCi( pManTime, Gia_ObjCioId(pObj) );\n        } else {\n            iBox = -1;\n        }\n        if iBox \u003e= 0 {\n            var curCo int32  = Tim_ManBoxInputFirst( pManTime, iBox );\n            var nBoxInputs int32  = Tim_ManBoxInputNum( pManTime, iBox );\n            for  k = 0; k \u003c nBoxInputs; k++  {\n                var pCo *Gia_Obj_t  = Gia_ManCo( p, curCo + k );\n                var iDriver int32  = Gia_ObjFaninId0p( p, pCo );\n                if (pLevels[iDriver]+Slack \u003e= LevelFan-1) \u0026\u0026 (iDriver != 0) {\n                    Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Abc_MaxInt(0, pLevels[iDriver]+Slack-(LevelFan-1)) ); }\n            }\n        }\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n        if pLevels[iFan]+Slack \u003e= LevelFan-1 {\n            Sbc_ManCriticalPath_rec( p, pLevels, iFan, pLevels[iFan], vPath, Abc_MaxInt(0, pLevels[iFan]+Slack-(LevelFan-1)) ); }\n    }\n}\nfunc Sbc_ManCriticalPath(p *Gia_Man_t) *Vec_Bit_t {\n    var pLevels *int32 = nil;\n    var k int32;\n    var iDriver int32;\n    var Slack int32 = 1;\n    var nLevels int32;\n    if p.pManTime {\n        nLevels = Gia_ManLutLevelWithBoxes(p);\n    } else {\n        nLevels = Gia_ManLutLevel(p, \u0026pLevels);\n    }\n    var vPath *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    if p.pManTime {\n        pLevels = Vec_IntArray( p.vLevels ); }\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iDriver) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        if (pLevels[iDriver] == nLevels) \u0026\u0026 (iDriver != 0) {\n            Sbc_ManCriticalPath_rec( p, pLevels, iDriver, pLevels[iDriver], vPath, Slack ); }\n    }\n    if !p.pManTime {\n        ABC_FREE( pLevels ); }\n    Sbc_ManAddInternalToPath( p, vPath );\n    return vPath;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbc_ManDelayTrace(p *Gia_Man_t) {\n    var vPath *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var i int32;\n    var k int32;\n    var iFan int32;\n    var nLevels int32;\n    var pLevels *int32;\n    var nLuts, nNodes, nEdges, nEdgesAll int32;\n    if !Gia_ManHasMapping(p) {\n        fmt.Printf(\"No mapping is available.\\n\");\n        return;\n    }\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    // set critical CO drivers\n    nLevels = Gia_ManLutLevel( p, \u0026pLevels );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iFan) = Gia_ObjFaninId0p(p, Gia_ManCo(p, i))), 1); i++  {\n        if pLevels[iFan] == nLevels {\n            Vec_BitWriteEntry( vPath, iFan, 1 ); }\n    }\n    // set critical internal nodes\n    // inlining of macro Gia_ManForEachLutReverse\n    for  i = Gia_ManObjNum(p) - 1; i \u003e 0; i--  { if !Gia_ObjIsLut(p, i) {} else { \n        nLuts++;\n        if !Vec_BitEntry(vPath, i) {\n            continue; }\n        nNodes++;\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            if pLevels[iFan] +1 \u003c pLevels[i] {\n                continue; }\n            assert(pLevels[iFan] + 1 == pLevels[i], \"pLevels[iFan] + 1 == pLevels[i]\");\n            Vec_BitWriteEntry( vPath, iFan, 1 );\n            nEdges++;\n            //printf( \"%d -\u003e %d\\n\", i, iFan );\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            nEdgesAll += (Vec_BitEntry(vPath, i) \u0026\u0026 Vec_BitEntry(vPath, iFan));\n        } }\n    }\n\n    ABC_FREE( pLevels );\n    Vec_BitFree( vPath );\n    fmt.Printf(\"AIG = %d. LUT = %d. Lev = %d.   Path nodes = %d.  Path edges = %d. (%d.)\\n\", Gia_ManAndNum(p), nLuts, nLevels, nNodes, nEdges, nEdgesAll);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/IntTypes.h",
+  "SHA256": "1427444a71e620e48fc86244bb07c3a9c2f0d4f625778bbc47d1c64e8b4e6e32",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 1322
+      },
+      "Directive": "#ifdef __sun"
+    },
+    {
+      "Location": {
+        "Line": 41,
+        "Column": 1,
+        "ByteOffset": 1686
+      },
+      "Directive": "#ifndef PRIu64"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/IntTypes.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/IntTypes.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1322,
+      "End": 1663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/IntTypes.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1686,
+      "End": 1747
+    }
+  ],
+  "Draft": "package glucose2\n\n/**************************************************************************************[IntTypes.h]\nCopyright (c) 2009-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n#ifdef __sun\n    // Not sure if there are newer versions that support C99 headers. The\n    // needed features are implemented in the headers below though:\n\n#   include \u003csys/int_types.h\u003e\n#   include \u003csys/int_fmtio.h\u003e\n#   include \u003csys/int_limits.h\u003e\n\n#else\n\n#define __STDC_LIMIT_MACROS\n#   include \"pstdint.h\"\n//#   include \u003cinttypes.h\u003e\n\n#endif\n\n//#include \u003climits.h\u003e\n\n#ifndef PRIu64\n#define PRIu64 \"lu\"\n#define PRIi64 \"ld\"\n#endif\n//=================================================================================================\n\n//#include \u003cmisc/util/abc_namespaces.h\u003e\n\n\n"
+}

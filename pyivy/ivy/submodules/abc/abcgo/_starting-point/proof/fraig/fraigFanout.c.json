@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFanout.c",
+  "SHA256": "f54502e0e2e0114b09901cb7b1c3641d8727f0aeeaf0a49bdbcbb2dd9d7c7c08",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 579
+      },
+      "Directive": "#ifdef FRAIG_ENABLE_FANOUTS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigFanout.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 579,
+      "End": 5441
+    }
+  ],
+  "Draft": "package fraig\n\n/**CFile****************************************************************\n\n  FileName    [fraigFanout.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Procedures to manipulate fanouts of the FRAIG nodes.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigFanout.c,v 1.5 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#ifdef FRAIG_ENABLE_FANOUTS\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Fraig_NodeAddFaninFanout( Fraig_Node_t * pFanin, Fraig_Node_t * pFanout )\n{\n    Fraig_Node_t * pPivot;\n\n    // pFanins is a fanin of pFanout\n    assert( !Fraig_IsComplement(pFanin) );\n    assert( !Fraig_IsComplement(pFanout) );\n    assert( Fraig_Regular(pFanout-\u003ep1) == pFanin || Fraig_Regular(pFanout-\u003ep2) == pFanin );\n\n    pPivot = pFanin-\u003epFanPivot;\n    if ( pPivot == NULL )\n    {\n        pFanin-\u003epFanPivot = pFanout;\n        return;\n    }\n\n    if ( Fraig_Regular(pPivot-\u003ep1) == pFanin )\n    {\n        if ( Fraig_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n        else // if ( Fraig_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n    }\n    else // if ( Fraig_Regular(pPivot-\u003ep2) == pFanin )\n    {\n        assert( Fraig_Regular(pPivot-\u003ep2) == pFanin );\n        if ( Fraig_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n        else // if ( Fraig_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Fraig_NodeRemoveFaninFanout( Fraig_Node_t * pFanin, Fraig_Node_t * pFanoutToRemove )\n{\n    Fraig_Node_t * pFanout, * pFanout2, ** ppFanList;\n    // start the linked list of fanouts\n    ppFanList = \u0026pFanin-\u003epFanPivot; \n    // go through the fanouts\n    Fraig_NodeForEachFanoutSafe( pFanin, pFanout, pFanout2 )\n    {\n        // skip the fanout-to-remove\n        if ( pFanout == pFanoutToRemove )\n            continue;\n        // add useful fanouts to the list\n        *ppFanList = pFanout;\n        ppFanList = Fraig_NodeReadNextFanoutPlace( pFanin, pFanout );\n    }\n    *ppFanList = NULL;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers fanout to a different node.]\n\n  Description [Assumes that the other node currently has no fanouts.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Fraig_NodeTransferFanout( Fraig_Node_t * pNodeFrom, Fraig_Node_t * pNodeTo )\n{\n    Fraig_Node_t * pFanout;\n    assert( pNodeTo-\u003epFanPivot == NULL );\n    assert( pNodeTo-\u003epFanFanin1 == NULL );\n    assert( pNodeTo-\u003epFanFanin2 == NULL );\n    // go through the fanouts and update their fanins\n    Fraig_NodeForEachFanout( pNodeFrom, pFanout )\n    {\n        if ( Fraig_Regular(pFanout-\u003ep1) == pNodeFrom )\n            pFanout-\u003ep1 = Fraig_NotCond( pNodeTo, Fraig_IsComplement(pFanout-\u003ep1) );\n        else if ( Fraig_Regular(pFanout-\u003ep2) == pNodeFrom )\n            pFanout-\u003ep2 = Fraig_NotCond( pNodeTo, Fraig_IsComplement(pFanout-\u003ep2) );            \n    }\n    // move the pointers\n    pNodeTo-\u003epFanPivot  = pNodeFrom-\u003epFanPivot;  \n    pNodeTo-\u003epFanFanin1 = pNodeFrom-\u003epFanFanin1; \n    pNodeTo-\u003epFanFanin2 = pNodeFrom-\u003epFanFanin2;\n    pNodeFrom-\u003epFanPivot  = NULL; \n    pNodeFrom-\u003epFanFanin1 = NULL; \n    pNodeFrom-\u003epFanFanin2 = NULL;  \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of fanouts of a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Fraig_NodeGetFanoutNum( Fraig_Node_t * pNode )\n{\n    Fraig_Node_t * pFanout;\n    int Counter = 0;\n    Fraig_NodeForEachFanout( pNode, pFanout )\n        Counter++;\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n#endif\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

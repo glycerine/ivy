@@ -1,0 +1,314 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c",
+  "SHA256": "802ee410b99f5ab4b6e6d3a64a5a6611e0cc379b42416c189538529fd84196bc",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 49,
+        "Column": 22,
+        "ByteOffset": 1402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Lpk_Fun_t *)ABC_ALLOC( char, sizeof(Lpk_Fun_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars) * 3 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Lpk_Fun_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 3522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pFanins, p.pFanins, 16 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pDelays, p.pDelays, sizeof(int)*16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 4785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nVarsNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 5368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fSupports == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_FunAlloc",
+      "Start": 1298,
+      "End": 1519,
+      "BodyStart": 1336,
+      "Original": "Lpk_Fun_t * Lpk_FunAlloc( int nVars )\n{\n    Lpk_Fun_t * p;\n    p = (Lpk_Fun_t *)ABC_ALLOC( char, sizeof(Lpk_Fun_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars) * 3 );\n    memset( p, 0, sizeof(Lpk_Fun_t) );\n    return p;\n}",
+      "Draft": "func Lpk_FunAlloc(nVars int32) *Lpk_Fun_t {\n    var p *Lpk_Fun_t;\n    p = (Lpk_Fun_t *)ABC_ALLOC( char, sizeof(Lpk_Fun_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars) * 3 );\n    memset( p, 0, sizeof(Lpk_Fun_t) );\n    return p;\n}"
+    },
+    {
+      "Name": "Lpk_FunFree",
+      "Start": 1775,
+      "End": 1831,
+      "BodyStart": 1809,
+      "Original": "void Lpk_FunFree( Lpk_Fun_t * p )\n{\n    ABC_FREE( p );\n}",
+      "Draft": "func Lpk_FunFree(p *Lpk_Fun_t) {\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Lpk_FunCreate",
+      "Start": 2097,
+      "End": 2790,
+      "BodyStart": 2221,
+      "Original": "Lpk_Fun_t * Lpk_FunCreate( Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, unsigned * pTruth, int nLutK, int AreaLim, int DelayLim )\n{\n    Lpk_Fun_t * p;\n    Abc_Obj_t * pNode;\n    int i;\n    p = Lpk_FunAlloc( Vec_PtrSize(vLeaves) );\n    p-\u003eId = Vec_PtrSize(vLeaves);\n    p-\u003evNodes = vLeaves;\n    p-\u003enVars = Vec_PtrSize(vLeaves);\n    p-\u003enLutK = nLutK;\n    p-\u003enAreaLim = AreaLim;\n    p-\u003enDelayLim = DelayLim;\n    p-\u003euSupp = Kit_TruthSupport( pTruth, p-\u003enVars );\n    Kit_TruthCopy( Lpk_FunTruth(p,0), pTruth, p-\u003enVars );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        p-\u003epFanins[i] = i;\n        p-\u003epDelays[i] = pNode-\u003eLevel;\n    }\n    Vec_PtrPush( p-\u003evNodes, p );\n    return p;\n}",
+      "Draft": "func Lpk_FunCreate(pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *uint32, nLutK int32, AreaLim int32, DelayLim int32) *Lpk_Fun_t {\n    var p *Lpk_Fun_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    p = Lpk_FunAlloc( Vec_PtrSize(vLeaves) );\n    p.Id = Vec_PtrSize(vLeaves);\n    p.vNodes = vLeaves;\n    p.nVars = Vec_PtrSize(vLeaves);\n    p.nLutK = nLutK;\n    p.nAreaLim = AreaLim;\n    p.nDelayLim = DelayLim;\n    p.uSupp = Kit_TruthSupport( pTruth, p.nVars );\n    Kit_TruthCopy( Lpk_FunTruth(p,0), pTruth, p.nVars );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        p.pFanins[i] = i;\n        p.pDelays[i] = pNode.Level;\n    }\n    Vec_PtrPush( p.vNodes, p );\n    return p;\n}"
+    },
+    {
+      "Name": "Lpk_FunDup",
+      "Start": 3078,
+      "End": 3666,
+      "BodyStart": 3137,
+      "Original": "Lpk_Fun_t * Lpk_FunDup( Lpk_Fun_t * p, unsigned * pTruth )\n{\n    Lpk_Fun_t * pNew;\n    pNew = Lpk_FunAlloc( p-\u003enVars );\n    pNew-\u003eId = Vec_PtrSize(p-\u003evNodes);\n    pNew-\u003evNodes = p-\u003evNodes;\n    pNew-\u003enVars = p-\u003enVars;\n    pNew-\u003enLutK = p-\u003enLutK;\n    pNew-\u003enAreaLim = p-\u003enAreaLim;\n    pNew-\u003enDelayLim = p-\u003enDelayLim;\n    pNew-\u003euSupp = Kit_TruthSupport( pTruth, p-\u003enVars );\n    Kit_TruthCopy( Lpk_FunTruth(pNew,0), pTruth, p-\u003enVars );\n    memcpy( pNew-\u003epFanins, p-\u003epFanins, 16 );\n    memcpy( pNew-\u003epDelays, p-\u003epDelays, sizeof(int)*16 );\n    Vec_PtrPush( p-\u003evNodes, pNew );\n    return pNew;\n}",
+      "Draft": "func Lpk_FunDup(p *Lpk_Fun_t, pTruth *uint32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    pNew = Lpk_FunAlloc( p.nVars );\n    pNew.Id = Vec_PtrSize(p.vNodes);\n    pNew.vNodes = p.vNodes;\n    pNew.nVars = p.nVars;\n    pNew.nLutK = p.nLutK;\n    pNew.nAreaLim = p.nAreaLim;\n    pNew.nDelayLim = p.nDelayLim;\n    pNew.uSupp = Kit_TruthSupport( pTruth, p.nVars );\n    Kit_TruthCopy( Lpk_FunTruth(pNew,0), pTruth, p.nVars );\n    memcpy( pNew.pFanins, p.pFanins, 16 );\n    memcpy( pNew.pDelays, p.pDelays, sizeof(int)*16 );\n    Vec_PtrPush( p.vNodes, pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Lpk_FunSuppMinimize",
+      "Start": 3936,
+      "End": 4791,
+      "BodyStart": 3977,
+      "Original": "int Lpk_FunSuppMinimize( Lpk_Fun_t * p )\n{\n    int i, k, nVarsNew;\n    // compress the truth table\n    if ( p-\u003euSupp == Kit_BitMask(p-\u003enVars) )\n        return 0;\n    // invalidate support info\n    p-\u003efSupports = 0;\n//Extra_PrintBinary( stdout, \u0026p-\u003euSupp, p-\u003enVars ); printf( \"\\n\" );\n    // minimize support\n    nVarsNew = Kit_WordCountOnes(p-\u003euSupp);\n    Kit_TruthShrink( Lpk_FunTruth(p, 1), Lpk_FunTruth(p, 0), nVarsNew, p-\u003enVars, p-\u003euSupp, 1 );\n    k = 0;\n    Lpk_SuppForEachVar( p-\u003euSupp, i )\n    {\n        p-\u003epFanins[k] = p-\u003epFanins[i];\n        p-\u003epDelays[k] = p-\u003epDelays[i];\n/*\n        if ( p-\u003efSupports )\n        {\n            p-\u003epuSupps[2*k+0] = p-\u003epuSupps[2*i+0];\n            p-\u003epuSupps[2*k+1] = p-\u003epuSupps[2*i+1];\n        }\n*/\n        k++;\n    }\n    assert( k == nVarsNew );\n    p-\u003enVars = k;\n    p-\u003euSupp = Kit_BitMask(p-\u003enVars);\n    return 1;\n}",
+      "Draft": "func Lpk_FunSuppMinimize(p *Lpk_Fun_t) int32 {\n    var i, k, nVarsNew int32;\n    // compress the truth table\n    if p.uSupp == Kit_BitMask(p.nVars) {\n        return 0; }\n    // invalidate support info\n    p.fSupports = 0;\n//Extra_PrintBinary( stdout, \u0026p-\u003euSupp, p-\u003enVars ); printf( \"\\n\" );\n    // minimize support\n    nVarsNew = Kit_WordCountOnes(p.uSupp);\n    Kit_TruthShrink( Lpk_FunTruth(p, 1), Lpk_FunTruth(p, 0), nVarsNew, p.nVars, p.uSupp, 1 );\n    k = 0;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(p.uSupp \u0026 (1\u003c\u003ci)) {} else {\n        p.pFanins[k] = p.pFanins[i];\n        p.pDelays[k] = p.pDelays[i];\n/*\n        if ( p-\u003efSupports )\n        {\n            p-\u003epuSupps[2*k+0] = p-\u003epuSupps[2*i+0];\n            p-\u003epuSupps[2*k+1] = p-\u003epuSupps[2*i+1];\n        }\n*/\n        k++;\n    }\n    }\n    assert(k == nVarsNew, \"k == nVarsNew\");\n    p.nVars = k;\n    p.uSupp = Kit_BitMask(p.nVars);\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_FunComputeCofSupps",
+      "Start": 5067,
+      "End": 5694,
+      "BodyStart": 5112,
+      "Original": "void Lpk_FunComputeCofSupps( Lpk_Fun_t * p )\n{\n    unsigned * pTruth  = Lpk_FunTruth( p, 0 );\n    unsigned * pTruth0 = Lpk_FunTruth( p, 1 );\n    unsigned * pTruth1 = Lpk_FunTruth( p, 2 );\n    int Var;\n    assert( p-\u003efSupports == 0 );\n//    Lpk_SuppForEachVar( p-\u003euSupp, Var )\n    for ( Var = 0; Var \u003c (int)p-\u003enVars; Var++ )\n    {\n        Kit_TruthCofactor0New( pTruth0, pTruth, p-\u003enVars, Var );\n        Kit_TruthCofactor1New( pTruth1, pTruth, p-\u003enVars, Var );\n        p-\u003epuSupps[2*Var+0] = Kit_TruthSupport( pTruth0, p-\u003enVars );\n        p-\u003epuSupps[2*Var+1] = Kit_TruthSupport( pTruth1, p-\u003enVars );\n    }\n    p-\u003efSupports = 1;\n}",
+      "Draft": "func Lpk_FunComputeCofSupps(p *Lpk_Fun_t) {\n    var pTruth *uint32   = Lpk_FunTruth( p, 0 );\n    var pTruth0 *uint32  = Lpk_FunTruth( p, 1 );\n    var pTruth1 *uint32  = Lpk_FunTruth( p, 2 );\n    var Var int32;\n    assert(p.fSupports == 0, \"p.fSupports == 0\");\n//    Lpk_SuppForEachVar( p-\u003euSupp, Var )\n    for  Var = 0; Var \u003c int32(p.nVars); Var++  {\n        Kit_TruthCofactor0New( pTruth0, pTruth, p.nVars, Var );\n        Kit_TruthCofactor1New( pTruth1, pTruth, p.nVars, Var );\n        p.puSupps[2*Var+0] = Kit_TruthSupport( pTruth0, p.nVars );\n        p.puSupps[2*Var+1] = Kit_TruthSupport( pTruth1, p.nVars );\n    }\n    p.fSupports = 1;\n}"
+    },
+    {
+      "Name": "Lpk_SuppDelay",
+      "Start": 5961,
+      "End": 6160,
+      "BodyStart": 6012,
+      "Original": "int Lpk_SuppDelay( unsigned uSupp, int * pDelays )\n{\n    int Delay, Var;\n    Delay = 0;\n    Lpk_SuppForEachVar( uSupp, Var )\n        Delay = Abc_MaxInt( Delay, pDelays[Var] );\n    return Delay + 1;\n}",
+      "Draft": "func Lpk_SuppDelay(uSupp uint32, pDelays *int32) int32 {\n    var Delay, Var int32;\n    Delay = 0;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        Delay = Abc_MaxInt( Delay, pDelays[Var] ); }\n    }\n    return Delay + 1;\n}"
+    },
+    {
+      "Name": "Lpk_SuppToVars",
+      "Start": 6428,
+      "End": 6593,
+      "BodyStart": 6483,
+      "Original": "int Lpk_SuppToVars( unsigned uBoundSet, char * pVars )\n{\n    int i, nVars = 0;\n    Lpk_SuppForEachVar( uBoundSet, i )\n        pVars[nVars++] = i;\n    return nVars;\n}",
+      "Draft": "func Lpk_SuppToVars(uBoundSet uint32, pVars string) int32 {\n    var i, nVars int32;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(uBoundSet \u0026 (1\u003c\u003ci)) {} else {\n        pVars[nVars++] = i; }\n    }\n    return nVars;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::mechanical::sizeof::1395",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1395,
+      "End": 1401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::mechanical::sizeof::1415",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1415,
+      "End": 1421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::mechanical::sizeof::1483",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1483,
+      "End": 1489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::mechanical::sizeof::3594",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3594,
+      "End": 3600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::pointer-cast::1365",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1365,
+      "End": 1378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 1519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunFree",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1775,
+      "End": 1831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunCreate",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2097,
+      "End": 2790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunDup",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3078,
+      "End": 3666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunSuppMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunSuppMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3936,
+      "End": 4791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_FunComputeCofSupps",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunComputeCofSupps",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5067,
+      "End": 5694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_SuppDelay",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_SuppDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5961,
+      "End": 6160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::Lpk_SuppToVars",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_SuppToVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6428,
+      "End": 6593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::macro-inline::1378",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1378,
+      "End": 1463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::macro-inline::1815",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1815,
+      "End": 1828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcUtil.c::macro-inline::2611",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2611,
+      "End": 2664
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkAbcUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    [Procedures working on decomposed functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkAbcUtil.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunAlloc(nVars int32) *Lpk_Fun_t {\n    var p *Lpk_Fun_t;\n    p = (Lpk_Fun_t *)ABC_ALLOC( char, sizeof(Lpk_Fun_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars) * 3 );\n    memset( p, 0, sizeof(Lpk_Fun_t) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the function]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunFree(p *Lpk_Fun_t) {\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the starting function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunCreate(pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *uint32, nLutK int32, AreaLim int32, DelayLim int32) *Lpk_Fun_t {\n    var p *Lpk_Fun_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    p = Lpk_FunAlloc( Vec_PtrSize(vLeaves) );\n    p.Id = Vec_PtrSize(vLeaves);\n    p.vNodes = vLeaves;\n    p.nVars = Vec_PtrSize(vLeaves);\n    p.nLutK = nLutK;\n    p.nAreaLim = AreaLim;\n    p.nDelayLim = DelayLim;\n    p.uSupp = Kit_TruthSupport( pTruth, p.nVars );\n    Kit_TruthCopy( Lpk_FunTruth(p,0), pTruth, p.nVars );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n    {\n        p.pFanins[i] = i;\n        p.pDelays[i] = pNode.Level;\n    }\n    Vec_PtrPush( p.vNodes, p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the new function with the given truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunDup(p *Lpk_Fun_t, pTruth *uint32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    pNew = Lpk_FunAlloc( p.nVars );\n    pNew.Id = Vec_PtrSize(p.vNodes);\n    pNew.vNodes = p.vNodes;\n    pNew.nVars = p.nVars;\n    pNew.nLutK = p.nLutK;\n    pNew.nAreaLim = p.nAreaLim;\n    pNew.nDelayLim = p.nDelayLim;\n    pNew.uSupp = Kit_TruthSupport( pTruth, p.nVars );\n    Kit_TruthCopy( Lpk_FunTruth(pNew,0), pTruth, p.nVars );\n    memcpy( pNew.pFanins, p.pFanins, 16 );\n    memcpy( pNew.pDelays, p.pDelays, sizeof(int)*16 );\n    Vec_PtrPush( p.vNodes, pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes support of the function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunSuppMinimize(p *Lpk_Fun_t) int32 {\n    var i, k, nVarsNew int32;\n    // compress the truth table\n    if p.uSupp == Kit_BitMask(p.nVars) {\n        return 0; }\n    // invalidate support info\n    p.fSupports = 0;\n//Extra_PrintBinary( stdout, \u0026p-\u003euSupp, p-\u003enVars ); printf( \"\\n\" );\n    // minimize support\n    nVarsNew = Kit_WordCountOnes(p.uSupp);\n    Kit_TruthShrink( Lpk_FunTruth(p, 1), Lpk_FunTruth(p, 0), nVarsNew, p.nVars, p.uSupp, 1 );\n    k = 0;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(p.uSupp \u0026 (1\u003c\u003ci)) {} else {\n        p.pFanins[k] = p.pFanins[i];\n        p.pDelays[k] = p.pDelays[i];\n/*\n        if ( p-\u003efSupports )\n        {\n            p-\u003epuSupps[2*k+0] = p-\u003epuSupps[2*i+0];\n            p-\u003epuSupps[2*k+1] = p-\u003epuSupps[2*i+1];\n        }\n*/\n        k++;\n    }\n    }\n    assert(k == nVarsNew, \"k == nVarsNew\");\n    p.nVars = k;\n    p.uSupp = Kit_BitMask(p.nVars);\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cofactors w.r.t. each variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunComputeCofSupps(p *Lpk_Fun_t) {\n    var pTruth *uint32   = Lpk_FunTruth( p, 0 );\n    var pTruth0 *uint32  = Lpk_FunTruth( p, 1 );\n    var pTruth1 *uint32  = Lpk_FunTruth( p, 2 );\n    var Var int32;\n    assert(p.fSupports == 0, \"p.fSupports == 0\");\n//    Lpk_SuppForEachVar( p-\u003euSupp, Var )\n    for  Var = 0; Var \u003c int32(p.nVars); Var++  {\n        Kit_TruthCofactor0New( pTruth0, pTruth, p.nVars, Var );\n        Kit_TruthCofactor1New( pTruth1, pTruth, p.nVars, Var );\n        p.puSupps[2*Var+0] = Kit_TruthSupport( pTruth0, p.nVars );\n        p.puSupps[2*Var+1] = Kit_TruthSupport( pTruth1, p.nVars );\n    }\n    p.fSupports = 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Get the delay of the bound set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_SuppDelay(uSupp uint32, pDelays *int32) int32 {\n    var Delay, Var int32;\n    Delay = 0;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        Delay = Abc_MaxInt( Delay, pDelays[Var] ); }\n    }\n    return Delay + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts support into variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_SuppToVars(uBoundSet uint32, pVars string) int32 {\n    var i, nVars int32;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(uBoundSet \u0026 (1\u003c\u003ci)) {} else {\n        pVars[nVars++] = i; }\n    }\n    return nVars;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

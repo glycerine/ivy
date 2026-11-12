@@ -1,0 +1,1935 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c",
+  "SHA256": "1e87effb9ac10b03ab47410a336e7d89b0a796c7fbc158d2314ab5c496c90101",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 66,
+        "ByteOffset": 2812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_ZddSetVarIJ(p *Abc_ZddMan, i int32, j int32, v int32) { assert( i \u003c j ); p.pT2V[i * p.nPermSize + j] = v;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 60,
+        "ByteOffset": 2928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_ZddVarIJ(p *Abc_ZddMan, i int32, j int32) int32 { assert( i \u003c j ); return p.pT2V[i * p.nPermSize + j];   }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Res \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 4736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 4777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003c Abc_ZddObjVar(p, True) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 4821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003c Abc_ZddObjVar(p, False) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 5246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aborting because the number of nodes exceeded %d.\\n\", p.nObjsAlloc );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 175,
+        "Column": 1,
+        "ByteOffset": 5325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 175,
+        "Column": 8,
+        "ByteOffset": 5332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 9,
+        "ByteOffset": 5351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nObjs \u003c p.nObjsAlloc );     "
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 213,
+        "Column": 76,
+        "ByteOffset": 6522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pUnique     = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nUniqueMask + 1), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 76,
+        "ByteOffset": 6648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNexts      = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nObjsAlloc), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 215,
+        "Column": 83,
+        "ByteOffset": 6776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCache      = /*__starting_point_inline_macro:ABC_CALLOC__*/((Abc_ZddEnt *) calloc((size_t)(p.nCacheMask + 1), sizeof(Abc_ZddEnt)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 216,
+        "Column": 83,
+        "ByteOffset": 6915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs       = /*__starting_point_inline_macro:ABC_CALLOC__*/((Abc_ZddObj *) calloc((size_t)(p.nObjsAlloc), sizeof(Abc_ZddObj)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 6995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pObjs, 0xff, sizeof(Abc_ZddObj) * 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nObjs == nVars + 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 7505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 2 * p.nVars == nPermSize * (nPermSize - 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 7563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nPermSize == 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 236,
+        "Column": 70,
+        "ByteOffset": 7689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pV2TI = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 77,
+        "ByteOffset": 7696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pV2TI = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 237,
+        "Column": 70,
+        "ByteOffset": 7847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pV2TJ = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 237,
+        "Column": 77,
+        "ByteOffset": 7854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pV2TJ = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 238,
+        "Column": 70,
+        "ByteOffset": 8005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pT2V  = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)), 0xff, sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 238,
+        "Column": 77,
+        "ByteOffset": 8012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pT2V  = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)), 0xff, sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 8335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v == p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 8402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ZDD stats: Var = %d  Obj = %d  Alloc = %d  Hit = %d  Miss = %d  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 8573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Mem = %.2f MB\\n\", 4.0*int32((p.nMemory/(1\u003c\u003c20))) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 252,
+        "Column": 62,
+        "ByteOffset": 8695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pT2V) ? (free((char *) (p.pT2V)), (p.pT2V) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 253,
+        "Column": 63,
+        "ByteOffset": 8802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pV2TI) ? (free((char *) (p.pV2TI)), (p.pV2TI) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 254,
+        "Column": 63,
+        "ByteOffset": 8911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pV2TJ) ? (free((char *) (p.pV2TJ)), (p.pV2TJ) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 255,
+        "Column": 65,
+        "ByteOffset": 9022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pUnique) ? (free((char *) (p.pUnique)), (p.pUnique) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 64,
+        "ByteOffset": 9136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 257,
+        "Column": 64,
+        "ByteOffset": 9248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCache) ? (free((char *) (p.pCache)), (p.pCache) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 258,
+        "Column": 63,
+        "ByteOffset": 9359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 259,
+        "Column": 57,
+        "ByteOffset": 9462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 554,
+        "Column": 5,
+        "ByteOffset": 19373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003c p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 20043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 584,
+        "Column": 9,
+        "ByteOffset": 20468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pV2TI[VarPerm] \u003e p.pV2TI[VarTop] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 587,
+        "Column": 9,
+        "ByteOffset": 20616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ZddObjVar(p, r1) \u003e VarTop );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 626,
+        "Column": 5,
+        "ByteOffset": 21873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"{\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 628,
+        "Column": 9,
+        "ByteOffset": 21929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %2d\", pPerm[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 630,
+        "Column": 5,
+        "ByteOffset": 21967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 9,
+        "ByteOffset": 22085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Empty set\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 637,
+        "Column": 9,
+        "ByteOffset": 22153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(%d %d)\", pComb[i] \u003e\u003e 16, pComb[i] \u0026 0xffff );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 639,
+        "Column": 5,
+        "ByteOffset": 22219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 651,
+        "Column": 13,
+        "ByteOffset": 22694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == pPerm[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 9,
+        "ByteOffset": 24074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nPermSize \u003c= 24 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 711,
+        "Column": 80,
+        "ByteOffset": 24674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pPath *int32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nVars), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 713,
+        "Column": 61,
+        "ByteOffset": 24815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPath) ? (free((char *) (pPath)), (pPath) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 728,
+        "Column": 5,
+        "ByteOffset": 25350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Resulting set:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 730,
+        "Column": 5,
+        "ByteOffset": 25414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 5,
+        "ByteOffset": 25434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 771,
+        "Column": 5,
+        "ByteOffset": 27063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Paths = %d.  Shared nodes = %d.\\n\", Paths, Abc_ZddCountNodesArray(p, vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 804,
+        "Column": 9,
+        "ByteOffset": 28125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Perm %d:\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 816,
+        "Column": 5,
+        "ByteOffset": 28600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nResulting set of permutations:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 818,
+        "Column": 5,
+        "ByteOffset": 28682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 823,
+        "Column": 5,
+        "ByteOffset": 28869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nResulting set of permutations:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 825,
+        "Column": 5,
+        "ByteOffset": 28951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 826,
+        "Column": 5,
+        "ByteOffset": 29053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 863,
+        "Column": 5,
+        "ByteOffset": 30128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Enumerating states of 2x2x2 cube.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 867,
+        "Column": 5,
+        "ByteOffset": 30317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 0, 1, 0, 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 878,
+        "Column": 9,
+        "ByteOffset": 30850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize == 9 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 897,
+        "Column": 5,
+        "ByteOffset": 31614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 1, Abc_ZddCountPaths(p, ZddTurns), Abc_ZddCountNodes(p, ZddTurns), p.nObjs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 904,
+        "Column": 9,
+        "ByteOffset": 31982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", i, Abc_ZddCountPaths(p, ZddAll), Abc_ZddCountNodes(p, ZddAll), p.nObjs );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 851,
+        "Column": 1,
+        "ByteOffset": 27639
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ZddIthVar",
+      "Start": 2121,
+      "End": 2264,
+      "BodyStart": 2204,
+      "Original": "static inline int          Abc_ZddIthVar( int i )                                  { return i + 2;                                            }",
+      "Draft": "func Abc_ZddIthVar(i int32) int32 { return i + 2;                                            }"
+    },
+    {
+      "Name": "Abc_ZddHash",
+      "Start": 2265,
+      "End": 2408,
+      "BodyStart": 2348,
+      "Original": "static inline unsigned     Abc_ZddHash( int Arg0, int Arg1, int Arg2 )             { return 12582917 * Arg0 + 4256249 * Arg1 + 741457 * Arg2; }",
+      "Draft": "func Abc_ZddHash(Arg0 int32, Arg1 int32, Arg2 int32) uint32 { return 12582917 * Arg0 + 4256249 * Arg1 + 741457 * Arg2; }"
+    },
+    {
+      "Name": "Abc_ZddNode",
+      "Start": 2410,
+      "End": 2553,
+      "BodyStart": 2493,
+      "Original": "static inline Abc_ZddObj * Abc_ZddNode( Abc_ZddMan * p, int i )                    { return p-\u003epObjs + i;                                     }",
+      "Draft": "func Abc_ZddNode(p *Abc_ZddMan, i int32) *Abc_ZddObj { return p.pObjs + i;                                     }"
+    },
+    {
+      "Name": "Abc_ZddObjId",
+      "Start": 2554,
+      "End": 2697,
+      "BodyStart": 2637,
+      "Original": "static inline int          Abc_ZddObjId( Abc_ZddMan * p, Abc_ZddObj * pObj )       { return pObj - p-\u003epObjs;                                  }",
+      "Draft": "func Abc_ZddObjId(p *Abc_ZddMan, pObj *Abc_ZddObj) int32 { return pObj - p.pObjs;                                  }"
+    },
+    {
+      "Name": "Abc_ZddObjVar",
+      "Start": 2698,
+      "End": 2841,
+      "BodyStart": 2781,
+      "Original": "static inline int          Abc_ZddObjVar( Abc_ZddMan * p, int i )                  { return Abc_ZddNode(p, i)-\u003eVar;                           }",
+      "Draft": "func Abc_ZddObjVar(p *Abc_ZddMan, i int32) int32 { return Abc_ZddNode(p, i).Var;                           }"
+    },
+    {
+      "Name": "Abc_ZddSetVarIJ",
+      "Start": 2843,
+      "End": 2986,
+      "BodyStart": 2926,
+      "Original": "static inline void         Abc_ZddSetVarIJ( Abc_ZddMan * p, int i, int j, int v )  { assert( i \u003c j ); p-\u003epT2V[i * p-\u003enPermSize + j] = v;      }",
+      "Draft": "func Abc_ZddSetVarIJ(p *Abc_ZddMan, i int32, j int32, v int32) { assert(i \u003c j, \"i \u003c j\"); p.pT2V[i * p.nPermSize + j] = v;      }"
+    },
+    {
+      "Name": "Abc_ZddVarIJ",
+      "Start": 2987,
+      "End": 3130,
+      "BodyStart": 3070,
+      "Original": "static inline int          Abc_ZddVarIJ( Abc_ZddMan * p, int i, int j )            { assert( i \u003c j ); return p-\u003epT2V[i * p-\u003enPermSize + j];   }",
+      "Draft": "func Abc_ZddVarIJ(p *Abc_ZddMan, i int32, j int32) int32 { assert(i \u003c j, \"i \u003c j\"); return p.pT2V[i * p.nPermSize + j];   }"
+    },
+    {
+      "Name": "Abc_ZddVarsClash",
+      "Start": 3131,
+      "End": 3351,
+      "BodyStart": 3214,
+      "Original": "static inline int          Abc_ZddVarsClash( Abc_ZddMan * p, int v0, int v1 )      { return p-\u003epV2TI[v0] == p-\u003epV2TI[v1] || p-\u003epV2TJ[v0] == p-\u003epV2TJ[v1] || p-\u003epV2TI[v0] == p-\u003epV2TJ[v1] || p-\u003epV2TJ[v0] == p-\u003epV2TI[v1];  }",
+      "Draft": "func Abc_ZddVarsClash(p *Abc_ZddMan, v0 int32, v1 int32) int32 { return p.pV2TI[v0] == p.pV2TI[v1] || p.pV2TJ[v0] == p.pV2TJ[v1] || p.pV2TI[v0] == p.pV2TJ[v1] || p.pV2TJ[v0] == p.pV2TI[v1];  }"
+    },
+    {
+      "Name": "Abc_ZddCacheLookup",
+      "Start": 3807,
+      "End": 4098,
+      "BodyStart": 3892,
+      "Original": "static inline int Abc_ZddCacheLookup( Abc_ZddMan * p, int Arg0, int Arg1, int Arg2 )\n{\n    Abc_ZddEnt * pEnt = p-\u003epCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p-\u003enCacheMask);\n    p-\u003enCacheLookups++;\n    return (pEnt-\u003eArg0 == Arg0 \u0026\u0026 pEnt-\u003eArg1 == Arg1 \u0026\u0026 pEnt-\u003eArg2 == Arg2) ? pEnt-\u003eRes : -1;\n}",
+      "Draft": "func Abc_ZddCacheLookup(p *Abc_ZddMan, Arg0 int32, Arg1 int32, Arg2 int32) int32 {\n    var pEnt *Abc_ZddEnt  = p.pCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p.nCacheMask);\n    p.nCacheLookups++;\n    if pEnt.Arg0 == Arg0 \u0026\u0026 pEnt.Arg1 == Arg1 \u0026\u0026 pEnt.Arg2 == Arg2 {\n        return pEnt.Res;\n    } else {\n        return -1;\n    }\n}"
+    },
+    {
+      "Name": "Abc_ZddCacheInsert",
+      "Start": 4099,
+      "End": 4425,
+      "BodyStart": 4193,
+      "Original": "static inline int Abc_ZddCacheInsert( Abc_ZddMan * p, int Arg0, int Arg1, int Arg2, int Res )\n{\n    Abc_ZddEnt * pEnt = p-\u003epCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p-\u003enCacheMask);\n    pEnt-\u003eArg0 = Arg0;  pEnt-\u003eArg1 = Arg1;  pEnt-\u003eArg2 = Arg2;  pEnt-\u003eRes = Res;\n    p-\u003enCacheMisses++;\n    assert( Res \u003e= 0 );\n    return Res;\n}",
+      "Draft": "func Abc_ZddCacheInsert(p *Abc_ZddMan, Arg0 int32, Arg1 int32, Arg2 int32, Res int32) int32 {\n    var pEnt *Abc_ZddEnt  = p.pCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p.nCacheMask);\n    pEnt.Arg0 = Arg0;  pEnt.Arg1 = Arg1;  pEnt.Arg2 = Arg2;  pEnt.Res = Res;\n    p.nCacheMisses++;\n    assert(Res \u003e= 0, \"Res \u003e= 0\");\n    return Res;\n}"
+    },
+    {
+      "Name": "Abc_ZddUniqueLookup",
+      "Start": 4426,
+      "End": 4794,
+      "BodyStart": 4512,
+      "Original": "static inline int Abc_ZddUniqueLookup( Abc_ZddMan * p, int Var, int True, int False )\n{\n    int *q = p-\u003epUnique + (Abc_ZddHash(Var, True, False) \u0026 p-\u003enUniqueMask);\n    for ( ; *q; q = p-\u003epNexts + *q )\n        if ( p-\u003epObjs[*q].Var == (unsigned)Var \u0026\u0026 p-\u003epObjs[*q].True == (unsigned)True \u0026\u0026 p-\u003epObjs[*q].False == (unsigned)False )\n            return *q;\n    return 0;\n}",
+      "Draft": "func Abc_ZddUniqueLookup(p *Abc_ZddMan, Var int32, True int32, False int32) int32 {\n    var q *int32  = p.pUnique + (Abc_ZddHash(Var, True, False) \u0026 p.nUniqueMask);\n    for  ; *q; q = p.pNexts + *q  {\n        if p.pObjs[*q].Var == uint32(Var) \u0026\u0026 p.pObjs[*q].True == uint32(True) \u0026\u0026 p.pObjs[*q].False == uint32(False) {\n            return *q; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_ZddUniqueCreate",
+      "Start": 4795,
+      "End": 5795,
+      "BodyStart": 4881,
+      "Original": "static inline int Abc_ZddUniqueCreate( Abc_ZddMan * p, int Var, int True, int False )\n{\n    assert( Var \u003e= 0 \u0026\u0026 Var \u003c p-\u003enVars );\n    assert( Var \u003c Abc_ZddObjVar(p, True) );\n    assert( Var \u003c Abc_ZddObjVar(p, False) );\n    if ( True == 0 )\n        return False;\n    {\n        int *q = p-\u003epUnique + (Abc_ZddHash(Var, True, False) \u0026 p-\u003enUniqueMask);\n        for ( ; *q; q = p-\u003epNexts + *q )\n            if ( p-\u003epObjs[*q].Var == (unsigned)Var \u0026\u0026 p-\u003epObjs[*q].True == (unsigned)True \u0026\u0026 p-\u003epObjs[*q].False == (unsigned)False )\n                return *q;\n        if ( p-\u003enObjs == p-\u003enObjsAlloc )\n            printf( \"Aborting because the number of nodes exceeded %d.\\n\", p-\u003enObjsAlloc ), fflush(stdout);\n        assert( p-\u003enObjs \u003c p-\u003enObjsAlloc );     \n        *q = p-\u003enObjs++;\n        p-\u003epObjs[*q].Var = Var;\n        p-\u003epObjs[*q].True = True;\n        p-\u003epObjs[*q].False = False;\n//        printf( \"Added node %3d: Var = %3d.  True = %3d.  False = %3d\\n\", *q, Var, True, False );\n        return *q;\n    }\n}",
+      "Draft": "func Abc_ZddUniqueCreate(p *Abc_ZddMan, Var int32, True int32, False int32) int32 {\n    assert(Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars, \"Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars\");\n    assert(Var \u003c Abc_ZddObjVar(p, True), \"Var \u003c Abc_ZddObjVar(p, True)\");\n    assert(Var \u003c Abc_ZddObjVar(p, False), \"Var \u003c Abc_ZddObjVar(p, False)\");\n    if True == 0 {\n        return False; }\n    {\n        var q *int32  = p.pUnique + (Abc_ZddHash(Var, True, False) \u0026 p.nUniqueMask);\n        for  ; *q; q = p.pNexts + *q  {\n            if p.pObjs[*q].Var == uint32(Var) \u0026\u0026 p.pObjs[*q].True == uint32(True) \u0026\u0026 p.pObjs[*q].False == uint32(False) {\n                return *q; }\n        }\n        if p.nObjs == p.nObjsAlloc {\n            fmt.Printf(\"Aborting because the number of nodes exceeded %d.\\n\", p.nObjsAlloc);\nfflush(os.Stdout); }\n        assert(p.nObjs \u003c p.nObjsAlloc, \"p.nObjs \u003c p.nObjsAlloc\");     \n        *q = p.nObjs++;\n        p.pObjs[*q].Var = Var;\n        p.pObjs[*q].True = True;\n        p.pObjs[*q].False = False;\n//        printf( \"Added node %3d: Var = %3d.  True = %3d.  False = %3d\\n\", *q, Var, True, False );\n        return *q;\n    }\n}"
+    },
+    {
+      "Name": "Abc_ZddBuildSet",
+      "Start": 5796,
+      "End": 6027,
+      "BodyStart": 5856,
+      "Original": "int Abc_ZddBuildSet( Abc_ZddMan * p, int * pSet, int Size )\n{\n    int i, Res = 1;\n    Vec_IntSelectSort( pSet, Size );\n    for ( i = Size - 1; i \u003e= 0; i-- )\n        Res = Abc_ZddUniqueCreate( p, pSet[i], Res, 0 );\n    return Res;\n}",
+      "Draft": "func Abc_ZddBuildSet(p *Abc_ZddMan, pSet *int32, Size int32) int32 {\n    var i int32;\n    var Res int32 = 1;\n    Vec_IntSelectSort( pSet, Size );\n    for  i = Size - 1; i \u003e= 0; i--  {\n        Res = Abc_ZddUniqueCreate( p, pSet[i], Res, 0 );\n    }\n    return Res;\n}"
+    },
+    {
+      "Name": "Abc_ZddManAlloc",
+      "Start": 6263,
+      "End": 7239,
+      "BodyStart": 6316,
+      "Original": "Abc_ZddMan * Abc_ZddManAlloc( int nVars, int nObjs )\n{\n    Abc_ZddMan * p; int i;\n    p = ABC_CALLOC( Abc_ZddMan, 1 );\n    p-\u003enVars       = nVars;\n    p-\u003enObjsAlloc  = nObjs;\n    p-\u003enUniqueMask = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    p-\u003enCacheMask  = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    p-\u003epUnique     = ABC_CALLOC( int, p-\u003enUniqueMask + 1 );\n    p-\u003epNexts      = ABC_CALLOC( int, p-\u003enObjsAlloc );\n    p-\u003epCache      = ABC_CALLOC( Abc_ZddEnt, p-\u003enCacheMask + 1 );\n    p-\u003epObjs       = ABC_CALLOC( Abc_ZddObj, p-\u003enObjsAlloc );\n    p-\u003enObjs       = 2;\n    memset( p-\u003epObjs, 0xff, sizeof(Abc_ZddObj) * 2 );\n    p-\u003epObjs[0].Var = nVars;\n    p-\u003epObjs[1].Var = nVars;\n    for ( i = 0; i \u003c nVars; i++ )\n        Abc_ZddUniqueCreate( p, i, 1, 0 );\n    assert( p-\u003enObjs == nVars + 2 );\n    p-\u003enMemory = sizeof(Abc_ZddMan)/4 + \n        p-\u003enUniqueMask + 1 + p-\u003enObjsAlloc + \n        (p-\u003enCacheMask + 1) * sizeof(Abc_ZddEnt)/4 + \n        p-\u003enObjsAlloc * sizeof(Abc_ZddObj)/4;\n    return p;\n}",
+      "Draft": "func Abc_ZddManAlloc(nVars int32, nObjs int32) *Abc_ZddMan {\n     var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Abc_ZddMan{};\n    p.nVars       = nVars;\n    p.nObjsAlloc  = nObjs;\n    p.nUniqueMask = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    p.nCacheMask  = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    // inlining of macro ABC_CALLOC\n    p.pUnique     = ((int *) calloc((size_t)(p.nUniqueMask + 1), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pNexts      = ((int *) calloc((size_t)(p.nObjsAlloc), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pCache      = ((Abc_ZddEnt *) calloc((size_t)(p.nCacheMask + 1), sizeof(Abc_ZddEnt)));\n    // inlining of macro ABC_CALLOC\n    p.pObjs       = ((Abc_ZddObj *) calloc((size_t)(p.nObjsAlloc), sizeof(Abc_ZddObj)));\n    p.nObjs       = 2;\n    memset( p.pObjs, 0xff, sizeof(Abc_ZddObj) * 2 );\n    p.pObjs[0].Var = nVars;\n    p.pObjs[1].Var = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        Abc_ZddUniqueCreate( p, i, 1, 0 );\n    }\n    assert(p.nObjs == nVars + 2, \"p.nObjs == nVars + 2\");\n    p.nMemory = sizeof(Abc_ZddMan)/4 + \n        p.nUniqueMask + 1 + p.nObjsAlloc + \n        (p.nCacheMask + 1) * sizeof(Abc_ZddEnt)/4 + \n        p.nObjsAlloc * sizeof(Abc_ZddObj)/4;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_ZddManCreatePerms",
+      "Start": 7240,
+      "End": 7833,
+      "BodyStart": 7300,
+      "Original": "void Abc_ZddManCreatePerms( Abc_ZddMan * p, int nPermSize )\n{\n    int i, j, v = 0;\n    assert( 2 * p-\u003enVars == nPermSize * (nPermSize - 1) );\n    assert( p-\u003enPermSize == 0 );\n    p-\u003enPermSize = nPermSize;\n    p-\u003epV2TI = ABC_FALLOC( int, p-\u003enVars );\n    p-\u003epV2TJ = ABC_FALLOC( int, p-\u003enVars );\n    p-\u003epT2V  = ABC_FALLOC( int, p-\u003enPermSize * p-\u003enPermSize );\n    for ( i = 0; i \u003c nPermSize; i++ )\n        for ( j = i + 1; j \u003c nPermSize; j++ )\n        {\n            p-\u003epV2TI[v] = i;\n            p-\u003epV2TJ[v] = j;\n            Abc_ZddSetVarIJ( p, i, j, v++ );\n        }\n    assert( v == p-\u003enVars );\n}",
+      "Draft": "func Abc_ZddManCreatePerms(p *Abc_ZddMan, nPermSize int32) {\n    var i, j, v int32;\n    assert(2 * p.nVars == nPermSize * (nPermSize - 1), \"2 * p.nVars == nPermSize * (nPermSize - 1)\");\n    assert(p.nPermSize == 0, \"p.nPermSize == 0\");\n    p.nPermSize = nPermSize;\n    // inlining of macro ABC_FALLOC\n    p.pV2TI = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));\n    // inlining of macro ABC_FALLOC\n    p.pV2TJ = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));\n    // inlining of macro ABC_FALLOC\n    p.pT2V  = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)), 0xff, sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)));\n    for  i = 0; i \u003c nPermSize; i++  {\n        for  j = i + 1; j \u003c nPermSize; j++  {\n            p.pV2TI[v] = i;\n            p.pV2TJ[v] = j;\n            Abc_ZddSetVarIJ( p, i, j, v++ );\n        }\n    }\n    assert(v == p.nVars, \"v == p.nVars\");\n}"
+    },
+    {
+      "Name": "Abc_ZddManFree",
+      "Start": 7834,
+      "End": 8320,
+      "BodyStart": 7872,
+      "Original": "void Abc_ZddManFree( Abc_ZddMan * p )\n{\n    printf( \"ZDD stats: Var = %d  Obj = %d  Alloc = %d  Hit = %d  Miss = %d  \", \n        p-\u003enVars, p-\u003enObjs, p-\u003enObjsAlloc, p-\u003enCacheLookups-p-\u003enCacheMisses, p-\u003enCacheMisses );\n    printf( \"Mem = %.2f MB\\n\", 4.0*(int)(p-\u003enMemory/(1\u003c\u003c20)) );\n    ABC_FREE( p-\u003epT2V );\n    ABC_FREE( p-\u003epV2TI );\n    ABC_FREE( p-\u003epV2TJ );\n    ABC_FREE( p-\u003epUnique );\n    ABC_FREE( p-\u003epNexts );\n    ABC_FREE( p-\u003epCache );\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_ZddManFree(p *Abc_ZddMan) {\n    fmt.Printf(\"ZDD stats: Var = %d  Obj = %d  Alloc = %d  Hit = %d  Miss = %d  \", p.nVars, p.nObjs, p.nObjsAlloc, p.nCacheLookups-p.nCacheMisses, p.nCacheMisses);\n    fmt.Printf(\"Mem = %.2f MB\\n\", 4.0*int32((p.nMemory/(1\u003c\u003c20))));\n    // inlining of macro ABC_FREE\n    ((p.pT2V) ? (free((char *) (p.pT2V)), (p.pT2V) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pV2TI) ? (free((char *) (p.pV2TI)), (p.pV2TI) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pV2TJ) ? (free((char *) (p.pV2TJ)), (p.pV2TJ) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pUnique) ? (free((char *) (p.pUnique)), (p.pUnique) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCache) ? (free((char *) (p.pCache)), (p.pCache) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_ZddDiff",
+      "Start": 8556,
+      "End": 9315,
+      "BodyStart": 8604,
+      "Original": "int Abc_ZddDiff( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, r;\n    if ( a == 0 ) return 0;\n    if ( b == 0 ) return a;\n    if ( a == b ) return 0;\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DIFF)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddDiff( p, A-\u003eFalse, b ), \n        r = Abc_ZddUniqueCreate( p, A-\u003eVar, A-\u003eTrue, r0 );\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r = Abc_ZddDiff( p, a, B-\u003eFalse );\n    else\n        r0 = Abc_ZddDiff( p, A-\u003eFalse, B-\u003eFalse ), \n        r1 = Abc_ZddDiff( p, A-\u003eTrue, B-\u003eTrue ),\n        r = Abc_ZddUniqueCreate( p, A-\u003eVar, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DIFF, r );\n}",
+      "Draft": "func Abc_ZddDiff(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return a; }\n    if a == b { return 0; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DIFF)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDiff( p, A.False, b );\nr = Abc_ZddUniqueCreate( p, A.Var, A.True, r0 );\n    } else if A.Var \u003e B.Var {\n        r = Abc_ZddDiff( p, a, B.False );\n    } else {\n        r0 = Abc_ZddDiff( p, A.False, B.False );\nr1 = Abc_ZddDiff( p, A.True, B.True );\nr = Abc_ZddUniqueCreate( p, A.Var, r1, r0 ); }\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DIFF, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddUnion",
+      "Start": 9316,
+      "End": 10135,
+      "BodyStart": 9365,
+      "Original": "int Abc_ZddUnion( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, r;\n    if ( a == 0 ) return b;\n    if ( b == 0 ) return a;\n    if ( a == b ) return a;\n    if ( a \u003e b )  return Abc_ZddUnion( p, b, a );\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_UNION)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddUnion( p, A-\u003eFalse, b ), \n        r1 = A-\u003eTrue;\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r0 = Abc_ZddUnion( p, a, B-\u003eFalse ), \n        r1 = B-\u003eTrue;\n    else\n        r0 = Abc_ZddUnion( p, A-\u003eFalse, B-\u003eFalse ), \n        r1 = Abc_ZddUnion( p, A-\u003eTrue, B-\u003eTrue );\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A-\u003eVar, B-\u003eVar), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_UNION, r );\n}",
+      "Draft": "func Abc_ZddUnion(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return b; }\n    if b == 0 { return a; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddUnion( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_UNION)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddUnion( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddUnion( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddUnion( p, A.False, B.False );\nr1 = Abc_ZddUnion( p, A.True, B.True ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_UNION, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddMinUnion",
+      "Start": 10136,
+      "End": 11043,
+      "BodyStart": 10188,
+      "Original": "int Abc_ZddMinUnion( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, r;\n    if ( a == 0 ) return b;\n    if ( b == 0 ) return a;\n    if ( a == b ) return a;\n    if ( a \u003e b )  return Abc_ZddMinUnion( p, b, a );\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_MIN_UNION)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddMinUnion( p, A-\u003eFalse, b ), \n        r1 = A-\u003eTrue;\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r0 = Abc_ZddMinUnion( p, a, B-\u003eFalse ), \n        r1 = B-\u003eTrue;\n    else\n        r0 = Abc_ZddMinUnion( p, A-\u003eFalse, B-\u003eFalse ), \n        r1 = Abc_ZddMinUnion( p, A-\u003eTrue, B-\u003eTrue );\n    r1 = Abc_ZddDiff( p, r1, r0 ); // assume args are minimal\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A-\u003eVar, B-\u003eVar), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_MIN_UNION, r );\n}",
+      "Draft": "func Abc_ZddMinUnion(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return b; }\n    if b == 0 { return a; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddMinUnion( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_MIN_UNION)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddMinUnion( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddMinUnion( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddMinUnion( p, A.False, B.False );\nr1 = Abc_ZddMinUnion( p, A.True, B.True ); }\n    r1 = Abc_ZddDiff( p, r1, r0 ); // assume args are minimal\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_MIN_UNION, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddIntersect",
+      "Start": 11044,
+      "End": 11887,
+      "BodyStart": 11097,
+      "Original": "int Abc_ZddIntersect( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, r;\n    if ( a == 0 ) return 0;\n    if ( b == 0 ) return 0;\n    if ( a == b ) return a;\n    if ( a \u003e b )  return Abc_ZddIntersect( p, b, a );\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_INTER)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddIntersect( p, A-\u003eFalse, b ), \n        r1 = A-\u003eTrue;\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r0 = Abc_ZddIntersect( p, a, B-\u003eFalse ), \n        r1 = B-\u003eTrue;\n    else\n        r0 = Abc_ZddIntersect( p, A-\u003eFalse, B-\u003eFalse ), \n        r1 = Abc_ZddIntersect( p, A-\u003eTrue, B-\u003eTrue );\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A-\u003eVar, B-\u003eVar), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_INTER, r );\n}",
+      "Draft": "func Abc_ZddIntersect(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddIntersect( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_INTER)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddIntersect( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddIntersect( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddIntersect( p, A.False, B.False );\nr1 = Abc_ZddIntersect( p, A.True, B.True ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_INTER, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddCof0",
+      "Start": 11888,
+      "End": 12468,
+      "BodyStart": 11938,
+      "Original": "int Abc_ZddCof0( Abc_ZddMan * p, int a, int Var )\n{\n    Abc_ZddObj * A; \n    int r0, r1, r;\n    if ( a \u003c 2 ) return a;\n    A = Abc_ZddNode( p, a );\n    if ( (int)A-\u003eVar \u003e Var )\n        return a;\n    if ( (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF0)) \u003e= 0 )\n        return r;\n    if ( (int)A-\u003eVar \u003c Var )\n        r0 = Abc_ZddCof0( p, A-\u003eFalse, Var ),\n        r1 = Abc_ZddCof0( p, A-\u003eTrue, Var ),\n        r  = Abc_ZddUniqueCreate( p, A-\u003eVar, r1, r0 );\n    else\n        r = Abc_ZddCof0( p, A-\u003eFalse, Var );\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF0, r );\n}",
+      "Draft": "func Abc_ZddCof0(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 { return a; }\n    A = Abc_ZddNode( p, a );\n    if int32(A.Var) \u003e Var {\n        return a; }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF0)) \u003e= 0 {\n        return r; }\n    if int32(A.Var) \u003c Var {\n        r0 = Abc_ZddCof0( p, A.False, Var );\nr1 = Abc_ZddCof0( p, A.True, Var );\nr  = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    } else {\n        r = Abc_ZddCof0( p, A.False, Var ); }\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF0, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddCof1",
+      "Start": 12469,
+      "End": 13060,
+      "BodyStart": 12519,
+      "Original": "int Abc_ZddCof1( Abc_ZddMan * p, int a, int Var )\n{\n    Abc_ZddObj * A; \n    int r0, r1, r;\n    if ( a \u003c 2 ) return a;\n    A = Abc_ZddNode( p, a );\n    if ( (int)A-\u003eVar \u003e Var )\n        return a;\n    if ( (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF1)) \u003e= 0 )\n        return r;\n    if ( (int)A-\u003eVar \u003c Var )\n        r0 = Abc_ZddCof1( p, A-\u003eFalse, Var ),\n        r1 = Abc_ZddCof1( p, A-\u003eTrue, Var );\n    else\n        r0 = 0,\n        r1 = Abc_ZddCof1( p, A-\u003eTrue, Var );\n    r = Abc_ZddUniqueCreate( p, A-\u003eVar, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF1, r );\n}",
+      "Draft": "func Abc_ZddCof1(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 { return a; }\n    A = Abc_ZddNode( p, a );\n    if int32(A.Var) \u003e Var {\n        return a; }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF1)) \u003e= 0 {\n        return r; }\n    if int32(A.Var) \u003c Var {\n        r0 = Abc_ZddCof1( p, A.False, Var );\nr1 = Abc_ZddCof1( p, A.True, Var );\n    } else {\n        r0 = 0;\nr1 = Abc_ZddCof1( p, A.True, Var ); }\n    r = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF1, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddCountPaths",
+      "Start": 13061,
+      "End": 13429,
+      "BodyStart": 13108,
+      "Original": "int Abc_ZddCountPaths( Abc_ZddMan * p, int a )\n{\n    Abc_ZddObj * A;  \n    int r;\n    if ( a \u003c 2 ) return a;\n    if ( (r = Abc_ZddCacheLookup(p, a, 0, ABC_ZDD_OPER_PATHS)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    r = Abc_ZddCountPaths( p, A-\u003eFalse ) + Abc_ZddCountPaths( p, A-\u003eTrue );\n    return Abc_ZddCacheInsert( p, a, 0, ABC_ZDD_OPER_PATHS, r );\n}",
+      "Draft": "func Abc_ZddCountPaths(p *Abc_ZddMan, a int32) int32 {\n    var A *Abc_ZddObj;  \n    var r int32;\n    if a \u003c 2 { return a; }\n    if (r = Abc_ZddCacheLookup(p, a, 0, ABC_ZDD_OPER_PATHS)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    r = Abc_ZddCountPaths( p, A.False ) + Abc_ZddCountPaths( p, A.True );\n    return Abc_ZddCacheInsert( p, a, 0, ABC_ZDD_OPER_PATHS, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddCount_rec",
+      "Start": 13809,
+      "End": 14073,
+      "BodyStart": 13855,
+      "Original": "int Abc_ZddCount_rec( Abc_ZddMan * p, int i )\n{\n    Abc_ZddObj * A;\n    if ( i \u003c 2 )\n        return 0;\n    A = Abc_ZddNode( p, i );\n    if ( A-\u003eMark )\n        return 0;\n    A-\u003eMark = 1;\n    return 1 + Abc_ZddCount_rec(p, A-\u003eFalse) + Abc_ZddCount_rec(p, A-\u003eTrue);\n}",
+      "Draft": "func Abc_ZddCount_rec(p *Abc_ZddMan, i int32) int32 {\n    var A *Abc_ZddObj;\n    if i \u003c 2 {\n        return 0; }\n    A = Abc_ZddNode( p, i );\n    if A.Mark {\n        return 0; }\n    A.Mark = 1;\n    return 1 + Abc_ZddCount_rec(p, A.False) + Abc_ZddCount_rec(p, A.True);\n}"
+    },
+    {
+      "Name": "Abc_ZddUnmark_rec",
+      "Start": 14074,
+      "End": 14335,
+      "BodyStart": 14122,
+      "Original": "void Abc_ZddUnmark_rec( Abc_ZddMan * p, int i )\n{\n    Abc_ZddObj * A;\n    if ( i \u003c 2 )\n        return;\n    A = Abc_ZddNode( p, i );\n    if ( !A-\u003eMark )\n        return;\n    A-\u003eMark = 0;\n    Abc_ZddUnmark_rec( p, A-\u003eFalse );\n    Abc_ZddUnmark_rec( p, A-\u003eTrue );\n}",
+      "Draft": "func Abc_ZddUnmark_rec(p *Abc_ZddMan, i int32) {\n    var A *Abc_ZddObj;\n    if i \u003c 2 {\n        return; }\n    A = Abc_ZddNode( p, i );\n    if !A.Mark {\n        return; }\n    A.Mark = 0;\n    Abc_ZddUnmark_rec( p, A.False );\n    Abc_ZddUnmark_rec( p, A.True );\n}"
+    },
+    {
+      "Name": "Abc_ZddCountNodes",
+      "Start": 14336,
+      "End": 14477,
+      "BodyStart": 14383,
+      "Original": "int Abc_ZddCountNodes( Abc_ZddMan * p, int i )\n{\n    int Count = Abc_ZddCount_rec( p, i );\n    Abc_ZddUnmark_rec( p, i );\n    return Count;\n}",
+      "Draft": "func Abc_ZddCountNodes(p *Abc_ZddMan, i int32) int32 {\n    var Count int32  = Abc_ZddCount_rec( p, i );\n    Abc_ZddUnmark_rec( p, i );\n    return Count;\n}"
+    },
+    {
+      "Name": "Abc_ZddCountNodesArray",
+      "Start": 14478,
+      "End": 14752,
+      "BodyStart": 14543,
+      "Original": "int Abc_ZddCountNodesArray( Abc_ZddMan * p, Vec_Int_t * vNodes )\n{\n    int i, Id, Count = 0;\n    Vec_IntForEachEntry( vNodes, Id, i )\n        Count += Abc_ZddCount_rec( p, Id );\n    Vec_IntForEachEntry( vNodes, Id, i )\n        Abc_ZddUnmark_rec( p, Id );\n    return Count;\n}",
+      "Draft": "func Abc_ZddCountNodesArray(p *Abc_ZddMan, vNodes *Vec_Int_t) int32 {\n    var i, Id, Count int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Id) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        Count += Abc_ZddCount_rec( p, Id );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Id) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        Abc_ZddUnmark_rec( p, Id );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Abc_ZddThresh",
+      "Start": 14988,
+      "End": 15458,
+      "BodyStart": 15038,
+      "Original": "int Abc_ZddThresh( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A; \n    int r0, r1, r;\n    if ( a \u003c 2 )  return a;\n    if ( b == 0 ) return 0;\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_THRESH)) \u003e= 0 )\n        return r;\n    A  = Abc_ZddNode( p, a );\n    r0 = Abc_ZddThresh( p, A-\u003eFalse, b ),\n    r1 = Abc_ZddThresh( p, A-\u003eTrue, b-1 );\n    r  = Abc_ZddUniqueCreate( p, A-\u003eVar, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_THRESH, r );\n}",
+      "Draft": "func Abc_ZddThresh(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 {  return a; }\n    if b == 0 { return 0; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_THRESH)) \u003e= 0 {\n        return r; }\n    A  = Abc_ZddNode( p, a );\n    r0 = Abc_ZddThresh( p, A.False, b );\nr1 = Abc_ZddThresh( p, A.True, b-1 );\n    r  = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_THRESH, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddDotProduct",
+      "Start": 15459,
+      "End": 16553,
+      "BodyStart": 15513,
+      "Original": "int Abc_ZddDotProduct( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, b2, t1, t2, r;\n    if ( a == 0 ) return 0;\n    if ( b == 0 ) return 0;\n    if ( a == 1 ) return b;\n    if ( b == 1 ) return a;\n    if ( a \u003e b )  return Abc_ZddDotProduct( p, b, a );\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddDotProduct( p, A-\u003eFalse, b ), \n        r1 = Abc_ZddDotProduct( p, A-\u003eTrue, b );\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r0 = Abc_ZddDotProduct( p, a, B-\u003eFalse ), \n        r1 = Abc_ZddDotProduct( p, a, B-\u003eTrue ); \n    else\n        r0 = Abc_ZddDotProduct( p, A-\u003eFalse, B-\u003eFalse ),\n        b2 = Abc_ZddUnion( p, B-\u003eFalse, B-\u003eTrue ), \n        t1 = Abc_ZddDotProduct( p, A-\u003eTrue, b2 ), \n        t2 = Abc_ZddDotProduct( p, A-\u003eFalse, B-\u003eTrue ), \n        r1 = Abc_ZddUnion( p, t1, t2 );\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A-\u003eVar, B-\u003eVar), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD, r );\n}",
+      "Draft": "func Abc_ZddDotProduct(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, b2, t1, t2, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 1 { return a; }\n    if a \u003e b {  return Abc_ZddDotProduct( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDotProduct( p, A.False, b );\nr1 = Abc_ZddDotProduct( p, A.True, b );\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddDotProduct( p, a, B.False );\nr1 = Abc_ZddDotProduct( p, a, B.True ); \n    } else {\n        r0 = Abc_ZddDotProduct( p, A.False, B.False );\nb2 = Abc_ZddUnion( p, B.False, B.True );\nt1 = Abc_ZddDotProduct( p, A.True, b2 );\nt2 = Abc_ZddDotProduct( p, A.False, B.True );\nr1 = Abc_ZddUnion( p, t1, t2 ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddDotMinProduct6",
+      "Start": 16554,
+      "End": 17766,
+      "BodyStart": 16612,
+      "Original": "int Abc_ZddDotMinProduct6( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * A, * B; \n    int r0, r1, b2, t1, t2, r;\n    if ( a == 0 ) return 0;\n    if ( b == 0 ) return 0;\n    if ( a == 1 ) return b;\n    if ( b == 1 ) return a;\n    if ( a \u003e b )  return Abc_ZddDotMinProduct6( p, b, a );\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD_6)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if ( A-\u003eVar \u003c B-\u003eVar )\n        r0 = Abc_ZddDotMinProduct6( p, A-\u003eFalse, b ), \n        r1 = Abc_ZddDotMinProduct6( p, A-\u003eTrue, b );\n    else if ( A-\u003eVar \u003e B-\u003eVar )\n        r0 = Abc_ZddDotMinProduct6( p, a, B-\u003eFalse ), \n        r1 = Abc_ZddDotMinProduct6( p, a, B-\u003eTrue ); \n    else\n        r0 = Abc_ZddDotMinProduct6( p, A-\u003eFalse, B-\u003eFalse ),\n        b2 = Abc_ZddMinUnion( p, B-\u003eFalse, B-\u003eTrue ), \n        t1 = Abc_ZddDotMinProduct6( p, A-\u003eTrue, b2 ), \n        t2 = Abc_ZddDotMinProduct6( p, A-\u003eFalse, B-\u003eTrue ), \n        r1 = Abc_ZddMinUnion( p, t1, t2 );\n    r1 = Abc_ZddThresh( p, r1, 5 ),\n    r1 = Abc_ZddDiff( p, r1, r0 ); \n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A-\u003eVar, B-\u003eVar), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD_6, r );\n}",
+      "Draft": "func Abc_ZddDotMinProduct6(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, b2, t1, t2, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 1 { return a; }\n    if a \u003e b {  return Abc_ZddDotMinProduct6( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD_6)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDotMinProduct6( p, A.False, b );\nr1 = Abc_ZddDotMinProduct6( p, A.True, b );\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddDotMinProduct6( p, a, B.False );\nr1 = Abc_ZddDotMinProduct6( p, a, B.True ); \n    } else {\n        r0 = Abc_ZddDotMinProduct6( p, A.False, B.False );\nb2 = Abc_ZddMinUnion( p, B.False, B.True );\nt1 = Abc_ZddDotMinProduct6( p, A.True, b2 );\nt2 = Abc_ZddDotMinProduct6( p, A.False, B.True );\nr1 = Abc_ZddMinUnion( p, t1, t2 ); }\n    r1 = Abc_ZddThresh( p, r1, 5 );\nr1 = Abc_ZddDiff( p, r1, r0 ); \n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD_6, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddPerm",
+      "Start": 18002,
+      "End": 19714,
+      "BodyStart": 18052,
+      "Original": "int Abc_ZddPerm( Abc_ZddMan * p, int a, int Var )\n{\n    Abc_ZddObj * A; \n    int r0, r1, r;\n    assert( Var \u003c p-\u003enVars );\n    if ( a == 0 )  return 0;\n    if ( a == 1 )  return Abc_ZddIthVar(Var);\n    if ( (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_PERM)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    if ( p-\u003epV2TI[A-\u003eVar] \u003e p-\u003epV2TI[Var] ) // Ai \u003e Bi\n        r = Abc_ZddUniqueCreate( p, Var, a, 0 );\n    else if ( (int)A-\u003eVar == Var ) // Ai == Bi \u0026\u0026 Aj == Bj\n        r0 = Abc_ZddPerm( p, A-\u003eFalse, Var ), \n        r  = Abc_ZddUnion( p, r0, A-\u003eTrue );\n    else \n    {\n        int VarPerm, VarTop;\n        int Ai = p-\u003epV2TI[A-\u003eVar];\n        int Aj = p-\u003epV2TJ[A-\u003eVar];\n        int Bi = p-\u003epV2TI[Var];\n        int Bj = p-\u003epV2TJ[Var];\n        assert( Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi );\n        if ( Aj == Bi )\n            VarPerm = Var,\n            VarTop  = Abc_ZddVarIJ(p, Ai, Bj);\n        else if ( Aj == Bj )\n            VarPerm = Var,\n            VarTop  = Abc_ZddVarIJ(p, Ai, Bi);\n        else if ( Ai == Bi )\n            VarPerm = Abc_ZddVarIJ(p, Abc_MinInt(Aj, Bj), Abc_MaxInt(Aj, Bj)),\n            VarTop  = A-\u003eVar;\n        else // no clash\n            VarPerm = Var, \n            VarTop  = A-\u003eVar;\n        assert( p-\u003epV2TI[VarPerm] \u003e p-\u003epV2TI[VarTop] );\n        r0 = Abc_ZddPerm( p, A-\u003eFalse, Var ); \n        r1 = Abc_ZddPerm( p, A-\u003eTrue, VarPerm );\n        assert( Abc_ZddObjVar(p, r1) \u003e VarTop );\n        if ( Abc_ZddObjVar(p, r0) \u003e VarTop )\n            r = Abc_ZddUniqueCreate( p, VarTop, r1, r0 );\n        else\n            r1 = Abc_ZddUniqueCreate( p, VarTop, r1, 0 ),\n            r = Abc_ZddUnion( p, r0, r1 );\n    }\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_PERM, r );\n}",
+      "Draft": "func Abc_ZddPerm(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    assert(Var \u003c p.nVars, \"Var \u003c p.nVars\");\n    if a == 0 {  return 0; }\n    if a == 1 {  return Abc_ZddIthVar(Var); }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_PERM)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    if p.pV2TI[A.Var] \u003e p.pV2TI[Var] { // Ai \u003e Bi\n        r = Abc_ZddUniqueCreate( p, Var, a, 0 );\n    } else if int32(A.Var) == Var { // Ai == Bi \u0026\u0026 Aj == Bj\n        r0 = Abc_ZddPerm( p, A.False, Var );\nr  = Abc_ZddUnion( p, r0, A.True );\n    } else {\n        var VarPerm, VarTop int32;\n        var Ai int32  = p.pV2TI[A.Var];\n        var Aj int32  = p.pV2TJ[A.Var];\n        var Bi int32  = p.pV2TI[Var];\n        var Bj int32  = p.pV2TJ[Var];\n        assert(Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi, \"Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi\");\n        if Aj == Bi {\n            VarPerm = Var;\nVarTop  = Abc_ZddVarIJ(p, Ai, Bj);\n        } else if Aj == Bj {\n            VarPerm = Var;\nVarTop  = Abc_ZddVarIJ(p, Ai, Bi);\n        } else if Ai == Bi {\n            VarPerm = Abc_ZddVarIJ(p, Abc_MinInt(Aj, Bj), Abc_MaxInt(Aj, Bj));\nVarTop  = A.Var;\n        } else { // no clash\n            VarPerm = Var;\nVarTop  = A.Var; }\n        assert(p.pV2TI[VarPerm] \u003e p.pV2TI[VarTop], \"p.pV2TI[VarPerm] \u003e p.pV2TI[VarTop]\");\n        r0 = Abc_ZddPerm( p, A.False, Var ); \n        r1 = Abc_ZddPerm( p, A.True, VarPerm );\n        assert(Abc_ZddObjVar(p, r1) \u003e VarTop, \"Abc_ZddObjVar(p, r1) \u003e VarTop\");\n        if Abc_ZddObjVar(p, r0) \u003e VarTop {\n            r = Abc_ZddUniqueCreate( p, VarTop, r1, r0 );\n        } else {\n            r1 = Abc_ZddUniqueCreate( p, VarTop, r1, 0 );\nr = Abc_ZddUnion( p, r0, r1 ); }\n    }\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_PERM, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddPermProduct",
+      "Start": 19715,
+      "End": 20286,
+      "BodyStart": 19770,
+      "Original": "int Abc_ZddPermProduct( Abc_ZddMan * p, int a, int b )\n{\n    Abc_ZddObj * B; \n    int r0, r1, r;\n    if ( a == 0 ) return 0;\n    if ( a == 1 ) return b;\n    if ( b == 0 ) return 0;\n    if ( b == 1 ) return a;\n    if ( (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_PERM_PROD)) \u003e= 0 )\n        return r;\n    B  = Abc_ZddNode( p, b );\n    r0 = Abc_ZddPermProduct( p, a, B-\u003eFalse ); \n    r1 = Abc_ZddPermProduct( p, a, B-\u003eTrue ); \n    r1 = Abc_ZddPerm( p, r1, B-\u003eVar );\n    r  = Abc_ZddUnion( p, r0, r1 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_PERM_PROD, r );\n}",
+      "Draft": "func Abc_ZddPermProduct(p *Abc_ZddMan, a int32, b int32) int32 {\n    var B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 0 { return 0; }\n    if b == 1 { return a; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_PERM_PROD)) \u003e= 0 {\n        return r; }\n    B  = Abc_ZddNode( p, b );\n    r0 = Abc_ZddPermProduct( p, a, B.False ); \n    r1 = Abc_ZddPermProduct( p, a, B.True ); \n    r1 = Abc_ZddPerm( p, r1, B.Var );\n    r  = Abc_ZddUnion( p, r0, r1 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_PERM_PROD, r );\n}"
+    },
+    {
+      "Name": "Abc_ZddPermPrint",
+      "Start": 20563,
+      "End": 20734,
+      "BodyStart": 20610,
+      "Original": "void Abc_ZddPermPrint( int * pPerm, int Size )\n{\n    int i;\n    printf( \"{\" );\n    for ( i = 0; i \u003c Size; i++ )\n        printf( \" %2d\", pPerm[i] );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Abc_ZddPermPrint(pPerm *int32, Size int32) {\n    var i int32;\n    fmt.Printf(\"{\");\n    for  i = 0; i \u003c Size; i++  {\n        fmt.Printf(\" %2d\", pPerm[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Abc_ZddCombPrint",
+      "Start": 20735,
+      "End": 20971,
+      "BodyStart": 20784,
+      "Original": "void Abc_ZddCombPrint( int * pComb, int nTrans )\n{\n    int i;\n    if ( nTrans == 0 )\n        printf( \"Empty set\" );\n    for ( i = 0; i \u003c nTrans; i++ )\n        printf( \"(%d %d)\", pComb[i] \u003e\u003e 16, pComb[i] \u0026 0xffff );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_ZddCombPrint(pComb *int32, nTrans int32) {\n    var i int32;\n    if nTrans == 0 {\n        fmt.Printf(\"Empty set\"); }\n    for  i = 0; i \u003c nTrans; i++  {\n        fmt.Printf(\"(%d %d)\", pComb[i] \u003e\u003e 16, pComb[i] \u0026 0xffff);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_ZddPerm2Comb",
+      "Start": 20972,
+      "End": 21399,
+      "BodyStart": 21031,
+      "Original": "int Abc_ZddPerm2Comb( int * pPerm, int Size, int * pComb )\n{\n    int i, j, nTrans = 0;\n    for ( i = 0; i \u003c Size; i++ )\n        if ( i != pPerm[i] )\n        {\n            for ( j = i+1; j \u003c Size; j++ )\n                if ( i == pPerm[j] )\n                    break;\n            pComb[nTrans++] = (i \u003c\u003c 16) | j;\n            ABC_SWAP( int, pPerm[i], pPerm[j] );\n            assert( i == pPerm[i] );\n        }\n    return nTrans;\n}",
+      "Draft": "func Abc_ZddPerm2Comb(pPerm *int32, Size int32, pComb *int32) int32 {\n    var i, j, nTrans int32;\n    for  i = 0; i \u003c Size; i++  {\n        if i != pPerm[i] {\n            for  j = i+1; j \u003c Size; j++  {\n                if i == pPerm[j] {\n                    break; }\n            }\n            pComb[nTrans++] = (i \u003c\u003c 16) | j;\n            // inlining of macro ABC_SWAP\n            { var t int32  = pPerm[i]; pPerm[i] = pPerm[j]; pPerm[j] = t; };\n            assert(i == pPerm[i], \"i == pPerm[i]\");\n        }\n    }\n    return nTrans;\n}"
+    },
+    {
+      "Name": "Abc_ZddComb2Perm",
+      "Start": 21400,
+      "End": 21653,
+      "BodyStart": 21472,
+      "Original": "void Abc_ZddComb2Perm( int * pComb, int nTrans, int * pPerm, int Size )\n{\n    int v;\n    for ( v = 0; v \u003c Size; v++ )\n        pPerm[v] = v;\n    for ( v = nTrans-1; v \u003e= 0; v-- )\n        ABC_SWAP( int, pPerm[pComb[v] \u003e\u003e 16], pPerm[pComb[v] \u0026 0xffff] );\n}",
+      "Draft": "func Abc_ZddComb2Perm(pComb *int32, nTrans int32, pPerm *int32, Size int32) {\n    var v int32;\n    for  v = 0; v \u003c Size; v++  {\n        pPerm[v] = v;\n    }\n    for  v = nTrans-1; v \u003e= 0; v--  {\n        // inlining of macro ABC_SWAP\n         var t int32  = pPerm[pComb[v] \u003e\u003e 16]; pPerm[pComb[v] \u003e\u003e 16] = pPerm[pComb[v] \u0026 0xffff]; pPerm[pComb[v] \u0026 0xffff] = t; };\n}"
+    },
+    {
+      "Name": "Abc_ZddPermCombTest",
+      "Start": 21654,
+      "End": 22016,
+      "BodyStart": 21681,
+      "Original": "void Abc_ZddPermCombTest()\n{\n    int Size = 10;\n    int pPerm[10] = { 6, 5, 7, 0, 3, 2, 1, 8, 9, 4 };\n    int pComb[10], nTrans;\n    Abc_ZddPermPrint( pPerm, Size );\n    nTrans = Abc_ZddPerm2Comb( pPerm, Size, pComb );\n    Abc_ZddCombPrint( pComb, nTrans );\n    Abc_ZddComb2Perm( pComb, nTrans, pPerm, Size );\n    Abc_ZddPermPrint( pPerm, Size );\n    Size = 0;\n}",
+      "Draft": "func Abc_ZddPermCombTest() {\n    var Size int32  = 10;\n    var pPerm [10]int32 = [10]int32{ 6, 5, 7, 0, 3, 2, 1, 8, 9, 4 };\n    var pComb [10]int32;\n    var nTrans int32;\n    Abc_ZddPermPrint( pPerm, Size );\n    nTrans = Abc_ZddPerm2Comb( pPerm, Size, pComb );\n    Abc_ZddCombPrint( pComb, nTrans );\n    Abc_ZddComb2Perm( pComb, nTrans, pPerm, Size );\n    Abc_ZddPermPrint( pPerm, Size );\n    Size = 0;\n}"
+    },
+    {
+      "Name": "Abc_ZddPrint_rec",
+      "Start": 22266,
+      "End": 22995,
+      "BodyStart": 22336,
+      "Original": "void Abc_ZddPrint_rec( Abc_ZddMan * p, int a, int * pPath, int Size )\n{\n    Abc_ZddObj * A;  \n    if ( a == 0 ) return;\n//    if ( a == 1 ) { Abc_ZddPermPrint( pPath, Size ); return; }\n    if ( a == 1 )\n    { \n        int pPerm[24], pComb[24], i;\n        assert( p-\u003enPermSize \u003c= 24 );\n        for ( i = 0; i \u003c Size; i++ )\n            pComb[i] = (p-\u003epV2TI[pPath[i]] \u003c\u003c 16) | p-\u003epV2TJ[pPath[i]];\n        Abc_ZddCombPrint( pComb, Size ); \n        Abc_ZddComb2Perm( pComb, Size, pPerm, p-\u003enPermSize );\n        Abc_ZddPermPrint( pPerm, p-\u003enPermSize );\n        return; \n    }\n    A = Abc_ZddNode( p, a );\n    Abc_ZddPrint_rec( p, A-\u003eFalse, pPath, Size );\n    pPath[Size] = A-\u003eVar;\n    Abc_ZddPrint_rec( p, A-\u003eTrue, pPath, Size + 1 );\n}",
+      "Draft": "func Abc_ZddPrint_rec(p *Abc_ZddMan, a int32, pPath *int32, Size int32) {\n    var A *Abc_ZddObj;  \n    if a == 0 { return; }\n//    if ( a == 1 ) { Abc_ZddPermPrint( pPath, Size ); return; }\n    if a == 1 { \n        var pPerm [24]int32;\n        var pComb [24]int32;\n        var i int32;\n        assert(p.nPermSize \u003c= 24, \"p.nPermSize \u003c= 24\");\n        for  i = 0; i \u003c Size; i++  {\n            pComb[i] = (p.pV2TI[pPath[i]] \u003c\u003c 16) | p.pV2TJ[pPath[i]];\n        }\n        Abc_ZddCombPrint( pComb, Size ); \n        Abc_ZddComb2Perm( pComb, Size, pPerm, p.nPermSize );\n        Abc_ZddPermPrint( pPerm, p.nPermSize );\n        return; \n    }\n    A = Abc_ZddNode( p, a );\n    Abc_ZddPrint_rec( p, A.False, pPath, Size );\n    pPath[Size] = A.Var;\n    Abc_ZddPrint_rec( p, A.True, pPath, Size + 1 );\n}"
+    },
+    {
+      "Name": "Abc_ZddPrint",
+      "Start": 22996,
+      "End": 23152,
+      "BodyStart": 23039,
+      "Original": "void Abc_ZddPrint( Abc_ZddMan * p, int a )\n{\n    int * pPath = ABC_CALLOC( int, p-\u003enVars );\n    Abc_ZddPrint_rec( p, a, pPath, 0 );\n    ABC_FREE( pPath );\n}",
+      "Draft": "func Abc_ZddPrint(p *Abc_ZddMan, a int32) {\n    // inlining of macro ABC_CALLOC\n    var pPath *int32  = ((int *) calloc((size_t)(p.nVars), sizeof(int)));\n    Abc_ZddPrint_rec( p, a, pPath, 0 );\n    // inlining of macro ABC_FREE\n    ((pPath) ? (free((char *) (pPath)), (pPath) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_ZddPrintTest",
+      "Start": 23153,
+      "End": 23816,
+      "BodyStart": 23193,
+      "Original": "void Abc_ZddPrintTest( Abc_ZddMan * p )\n{\n//    int nSets = 2;\n//    int Size = 2;\n//    int pSets[2][2] = { {5, 0}, {3, 11} };\n    int nSets = 3;\n    int Size = 5;\n    int pSets[3][5] = { {5, 0, 2, 10, 7}, {3, 11, 10, 7, 2}, {0, 2, 5, 10, 7} };\n    int i, Set, Union = 0;\n    for ( i = 0; i \u003c nSets; i++ )\n    {\n        Abc_ZddPermPrint( pSets[i], Size );\n        Set = Abc_ZddBuildSet( p, pSets[i], Size );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    printf( \"Resulting set:\\n\" );\n    Abc_ZddPrint( p, Union );\n    printf( \"\\n\" );\n    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );\n    Size = 0;\n}",
+      "Draft": "func Abc_ZddPrintTest(p *Abc_ZddMan) {\n//    int nSets = 2;\n//    int Size = 2;\n//    int pSets[2][2] = { {5, 0}, {3, 11} };\n    var nSets int32  = 3;\n    var Size int32  = 5;\n    var pSets [3][5]int32 = [3][5]int32{ {5, 0, 2, 10, 7}, {3, 11, 10, 7, 2}, {0, 2, 5, 10, 7} };\n    var i, Set, Union int32;\n    for  i = 0; i \u003c nSets; i++  {\n        Abc_ZddPermPrint( pSets[i], Size );\n        Set = Abc_ZddBuildSet( p, pSets[i], Size );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    fmt.Printf(\"Resulting set:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n    Size = 0;\n}"
+    },
+    {
+      "Name": "Abc_ZddGiaTest",
+      "Start": 24052,
+      "End": 25103,
+      "BodyStart": 24092,
+      "Original": "void Abc_ZddGiaTest( Gia_Man_t * pGia )\n{\n    Abc_ZddMan * p;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vNodes;\n    int i, r, Paths = 0;\n    p = Abc_ZddManAlloc( Gia_ManObjNum(pGia), 1 \u003c\u003c 24 ); // 576 MB  (36 B/node)\n    Gia_ManFillValue( pGia );\n    Gia_ManForEachCi( pGia, pObj, i )\n        pObj-\u003eValue = Abc_ZddIthVar( Gia_ObjId(pGia, pObj) );\n    vNodes = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        r = Abc_ZddDotMinProduct6( p, Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue );\n        r = Abc_ZddUnion( p, r, Abc_ZddIthVar(i) );\n        pObj-\u003eValue = r;\n        Vec_IntPush( vNodes, r );\n        // print\n//        printf( \"Node %d:\\n\", i );\n//        Abc_ZddPrint( p, r );\n//        printf( \"Node %d   ZddNodes = %d\\n\", i, Abc_ZddCountNodes(p, r) );\n    }\n    Gia_ManForEachAnd( pGia, pObj, i )\n        Paths += Abc_ZddCountPaths(p, pObj-\u003eValue);\n    printf( \"Paths = %d.  Shared nodes = %d.\\n\", Paths, Abc_ZddCountNodesArray(p, vNodes) );\n    Vec_IntFree( vNodes );\n    Abc_ZddManFree( p );\n}",
+      "Draft": "func Abc_ZddGiaTest(pGia *Gia_Man_t) {\n    var p *Abc_ZddMan;\n    var pObj *Gia_Obj_t;\n    var vNodes *Vec_Int_t;\n    var i, r, Paths int32;\n    p = Abc_ZddManAlloc( Gia_ManObjNum(pGia), 1 \u003c\u003c 24 ); // 576 MB  (36 B/node)\n    Gia_ManFillValue( pGia );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        pObj.Value = Abc_ZddIthVar( Gia_ObjId(pGia, pObj) );\n    }\n    vNodes = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        r = Abc_ZddDotMinProduct6( p, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n        r = Abc_ZddUnion( p, r, Abc_ZddIthVar(i) );\n        pObj.Value = r;\n        Vec_IntPush( vNodes, r );\n        // print\n//        printf( \"Node %d:\\n\", i );\n//        Abc_ZddPrint( p, r );\n//        printf( \"Node %d   ZddNodes = %d\\n\", i, Abc_ZddCountNodes(p, r) );\n    }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Paths += Abc_ZddCountPaths(p, pObj.Value); }\n    }\n    fmt.Printf(\"Paths = %d.  Shared nodes = %d.\\n\", Paths, Abc_ZddCountNodesArray(p, vNodes));\n    Vec_IntFree( vNodes );\n    Abc_ZddManFree( p );\n}"
+    },
+    {
+      "Name": "Abc_ZddPermTestInt",
+      "Start": 25620,
+      "End": 26908,
+      "BodyStart": 25662,
+      "Original": "void Abc_ZddPermTestInt( Abc_ZddMan * p )\n{\n    int nPerms = 3;\n    int Size = 5;\n    int pPerms[3][5] = { {1, 0, 2, 4, 3}, {1, 2, 4, 0, 3}, {0, 3, 2, 1, 4} };\n    int pComb[5], nTrans;\n    int i, k, Set, Union = 0, iPivot;\n    for ( i = 0; i \u003c nPerms; i++ )\n        Abc_ZddPermPrint( pPerms[i], Size );\n    for ( i = 0; i \u003c nPerms; i++ )\n    {\n        printf( \"Perm %d:\\n\", i );\n        Abc_ZddPermPrint( pPerms[i], Size );\n        nTrans = Abc_ZddPerm2Comb( pPerms[i], Size, pComb );\n        Abc_ZddCombPrint( pComb, nTrans );\n        for ( k = 0; k \u003c nTrans; k++ )\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xFFFF );\n        Abc_ZddPermPrint( pComb, nTrans );\n        // add to ZDD\n        Set = Abc_ZddBuildSet( p, pComb, nTrans );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    printf( \"\\nResulting set of permutations:\\n\" );\n    Abc_ZddPrint( p, Union );\n    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );\n\n    iPivot = Abc_ZddVarIJ( p, 3, 4 );\n    Union = Abc_ZddPerm( p, Union, iPivot );\n\n    printf( \"\\nResulting set of permutations:\\n\" );\n    Abc_ZddPrint( p, Union );\n    printf( \"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_ZddPermTestInt(p *Abc_ZddMan) {\n    var nPerms int32  = 3;\n    var Size int32  = 5;\n    var pPerms [3][5]int32 = [3][5]int32{ {1, 0, 2, 4, 3}, {1, 2, 4, 0, 3}, {0, 3, 2, 1, 4} };\n    var pComb [5]int32;\n    var nTrans int32;\n    var i, k, Set, Union, iPivot int32;\n    for  i = 0; i \u003c nPerms; i++  {\n        Abc_ZddPermPrint( pPerms[i], Size );\n    }\n    for  i = 0; i \u003c nPerms; i++  {\n        fmt.Printf(\"Perm %d:\\n\", i);\n        Abc_ZddPermPrint( pPerms[i], Size );\n        nTrans = Abc_ZddPerm2Comb( pPerms[i], Size, pComb );\n        Abc_ZddCombPrint( pComb, nTrans );\n        for  k = 0; k \u003c nTrans; k++  {\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xFFFF );\n        }\n        Abc_ZddPermPrint( pComb, nTrans );\n        // add to ZDD\n        Set = Abc_ZddBuildSet( p, pComb, nTrans );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    fmt.Printf(\"\\nResulting set of permutations:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n\n    iPivot = Abc_ZddVarIJ( p, 3, 4 );\n    Union = Abc_ZddPerm( p, Union, iPivot );\n\n    fmt.Printf(\"\\nResulting set of permutations:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_ZddPermTest",
+      "Start": 26910,
+      "End": 27085,
+      "BodyStart": 26933,
+      "Original": "void Abc_ZddPermTest()\n{\n    Abc_ZddMan * p;\n    p = Abc_ZddManAlloc( 10, 1 \u003c\u003c 20 );\n    Abc_ZddManCreatePerms( p, 5 );\n    Abc_ZddPermTestInt( p );\n    Abc_ZddManFree( p );\n}",
+      "Draft": "func Abc_ZddPermTest() {\n    var p *Abc_ZddMan;\n    p = Abc_ZddManAlloc( 10, 1 \u003c\u003c 20 );\n    Abc_ZddManCreatePerms( p, 5 );\n    Abc_ZddPermTestInt( p );\n    Abc_ZddManFree( p );\n}"
+    },
+    {
+      "Name": "Abc_EnumerateCubeStatesZdd",
+      "Start": 27322,
+      "End": 29873,
+      "BodyStart": 27356,
+      "Original": "void Abc_EnumerateCubeStatesZdd()\n{\n    int pXYZ[3][9][2] = {\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n#ifdef WIN32\n    int LogObj = 24;\n#else\n    int LogObj = 27;\n#endif\n    Abc_ZddMan * p;\n    int i, k, pComb[9], pPerm[24], nSize;\n    int ZddTurn1, ZddTurn2, ZddTurn3, ZddTurns, ZddAll;\n    abctime clk = Abc_Clock();\n    printf( \"Enumerating states of 2x2x2 cube.\\n\" );\n    p = Abc_ZddManAlloc( 24 * 23 / 2, 1 \u003c\u003c LogObj ); // finished with 2^27 (4 GB)\n    Abc_ZddManCreatePerms( p, 24 );\n    // init state\n    printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 0, 1, 0, 2 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // first 9 states\n    ZddTurns = 1;\n    for ( i = 0; i \u003c 3; i++ )\n    {\n        for ( k = 0; k \u003c 24; k++ )\n            pPerm[k] = k;\n        for ( k = 0; k \u003c 9; k++ )\n            ABC_SWAP( int, pPerm[pXYZ[i][k][0]-1], pPerm[pXYZ[i][k][1]-1] );\n        nSize = Abc_ZddPerm2Comb( pPerm, 24, pComb );\n        assert( nSize == 9 );\n        for ( k = 0; k \u003c 9; k++ )\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xffff );\n        // add first turn\n        ZddTurn1  = Abc_ZddBuildSet( p, pComb, 9 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn1 );\n        //Abc_ZddPrint( p, ZddTurn1 );\n        // add second turn\n        ZddTurn2 = Abc_ZddPermProduct( p, ZddTurn1, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn2 );\n        //Abc_ZddPrint( p, ZddTurn2 );\n        // add third turn\n        ZddTurn3 = Abc_ZddPermProduct( p, ZddTurn2, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn3 );\n        //Abc_ZddPrint( p, ZddTurn3 );\n        //printf( \"\\n\" );\n    }\n    //Abc_ZddPrint( p, ZddTurns );\n    printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 1, Abc_ZddCountPaths(p, ZddTurns), Abc_ZddCountNodes(p, ZddTurns), p-\u003enObjs );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // other states\n    ZddAll = ZddTurns;\n    for ( i = 2; i \u003c= 100; i++ )\n    {\n        int ZddAllPrev = ZddAll;\n        ZddAll = Abc_ZddPermProduct( p, ZddAll, ZddTurns );\n        printf( \"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", i, Abc_ZddCountPaths(p, ZddAll), Abc_ZddCountNodes(p, ZddAll), p-\u003enObjs );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if ( ZddAllPrev == ZddAll )\n            break;\n    }\n    Abc_ZddManFree( p );\n}",
+      "Draft": "func Abc_EnumerateCubeStatesZdd() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n#ifdef WIN32\n    int LogObj = 24;\n#else\n    int LogObj = 27;\n#endif\n    var p *Abc_ZddMan;\n    var i int32;\n    var k int32;\n    var pComb [9]int32;\n    var pPerm [24]int32;\n    var nSize int32;\n    var ZddTurn1, ZddTurn2, ZddTurn3, ZddTurns, ZddAll int32;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    p = Abc_ZddManAlloc( 24 * 23 / 2, 1 \u003c\u003c LogObj ); // finished with 2^27 (4 GB)\n    Abc_ZddManCreatePerms( p, 24 );\n    // init state\n    fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 0, 1, 0, 2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // first 9 states\n    ZddTurns = 1;\n    for  i = 0; i \u003c 3; i++  {\n        for  k = 0; k \u003c 24; k++  {\n            pPerm[k] = k;\n        }\n        for  k = 0; k \u003c 9; k++  {\n            // inlining of macro ABC_SWAP\n             var t int32  = pPerm[pXYZ[i][k][0]-1]; pPerm[pXYZ[i][k][0]-1] = pPerm[pXYZ[i][k][1]-1]; pPerm[pXYZ[i][k][1]-1] = t; };\n        nSize = Abc_ZddPerm2Comb( pPerm, 24, pComb );\n        assert(nSize == 9, \"nSize == 9\");\n        for  k = 0; k \u003c 9; k++  {\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xffff );\n        }\n        // add first turn\n        ZddTurn1  = Abc_ZddBuildSet( p, pComb, 9 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn1 );\n        //Abc_ZddPrint( p, ZddTurn1 );\n        // add second turn\n        ZddTurn2 = Abc_ZddPermProduct( p, ZddTurn1, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn2 );\n        //Abc_ZddPrint( p, ZddTurn2 );\n        // add third turn\n        ZddTurn3 = Abc_ZddPermProduct( p, ZddTurn2, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn3 );\n        //Abc_ZddPrint( p, ZddTurn3 );\n        //printf( \"\\n\" );\n    }\n    //Abc_ZddPrint( p, ZddTurns );\n    fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 1, Abc_ZddCountPaths(p, ZddTurns), Abc_ZddCountNodes(p, ZddTurns), p.nObjs);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // other states\n    ZddAll = ZddTurns;\n    for  i = 2; i \u003c= 100; i++  {\n        var ZddAllPrev int32  = ZddAll;\n        ZddAll = Abc_ZddPermProduct( p, ZddAll, ZddTurns );\n        fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", i, Abc_ZddCountPaths(p, ZddAll), Abc_ZddCountNodes(p, ZddAll), p.nObjs);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if ZddAllPrev == ZddAll {\n            break; }\n    }\n    Abc_ZddManFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::struct::Abc_ZddObj::unsigned     Var  : 31;",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_ZddObj",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1366,
+      "End": 1394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::struct::Abc_ZddObj::unsigned     Mark :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_ZddObj",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1394,
+      "End": 1422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::struct::Abc_ZddObj",
+      "Category": "struct-review",
+      "Symbol": "Abc_ZddObj",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1306,
+      "End": 1472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::struct::Abc_ZddEnt",
+      "Category": "struct-review",
+      "Symbol": "Abc_ZddEnt",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1476,
+      "End": 1630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::struct::Abc_ZddMan",
+      "Category": "struct-review",
+      "Symbol": "Abc_ZddMan",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1632,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::enum::887",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 887,
+      "End": 891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::6435",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6353,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::6732",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6565,
+      "End": 6565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::6855",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6625,
+      "End": 6625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::6989",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6680,
+      "End": 6680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7126",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6746,
+      "End": 6746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7200",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6839,
+      "End": 6845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7415",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7054,
+      "End": 7060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7515",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7154,
+      "End": 7160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7563",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7202,
+      "End": 7208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7890",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7460,
+      "End": 7460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::7931",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7460,
+      "End": 7460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::8051",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7504,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::8092",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7504,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::8212",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7548,
+      "End": 7548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::8272",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7548,
+      "End": 7548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::mechanical::sizeof::24921",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23059,
+      "End": 23059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::6400",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6353,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::6687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6565,
+      "End": 6565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::6815",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6625,
+      "End": 6625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::6938",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6680,
+      "End": 6680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::7079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6746,
+      "End": 6746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::7868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7460,
+      "End": 7460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::8029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7504,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::8190",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7548,
+      "End": 7548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::8913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8119,
+      "End": 8119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9023",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8144,
+      "End": 8144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8170,
+      "End": 8170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8196,
+      "End": 8196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9366",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8224,
+      "End": 8224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8251,
+      "End": 8251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8278,
+      "End": 8278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::9700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8304,
+      "End": 8304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::24886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23059,
+      "End": 23059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::pointer-cast::25041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23132,
+      "End": 23132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2121,
+      "End": 2264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddHash",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2265,
+      "End": 2408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2410,
+      "End": 2553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddObjId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2554,
+      "End": 2697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddObjVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddObjVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2698,
+      "End": 2841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddSetVarIJ",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddSetVarIJ",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2843,
+      "End": 2986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddVarIJ",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddVarIJ",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2987,
+      "End": 3130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddVarsClash",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddVarsClash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3131,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCacheLookup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCacheLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3807,
+      "End": 4098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCacheInsert",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCacheInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4099,
+      "End": 4425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddUniqueLookup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddUniqueLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4426,
+      "End": 4794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddUniqueCreate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddUniqueCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4795,
+      "End": 5795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddBuildSet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddBuildSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5796,
+      "End": 6027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6263,
+      "End": 7239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddManCreatePerms",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddManCreatePerms",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7240,
+      "End": 7833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::ternary::Abc_ZddManFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_ZddManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7834,
+      "End": 8320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddManFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7834,
+      "End": 8320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddDiff",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddDiff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8556,
+      "End": 9315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddUnion",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9316,
+      "End": 10135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddMinUnion",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddMinUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10136,
+      "End": 11043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddIntersect",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddIntersect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11044,
+      "End": 11887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCof0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCof0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11888,
+      "End": 12468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCof1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCof1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12469,
+      "End": 13060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCountPaths",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCountPaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13061,
+      "End": 13429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCount_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCount_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13809,
+      "End": 14073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddUnmark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddUnmark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14074,
+      "End": 14335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCountNodes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCountNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14336,
+      "End": 14477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCountNodesArray",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCountNodesArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14478,
+      "End": 14752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddThresh",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddThresh",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14988,
+      "End": 15458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddDotProduct",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddDotProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15459,
+      "End": 16553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddDotMinProduct6",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddDotMinProduct6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16554,
+      "End": 17766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPerm",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18002,
+      "End": 19714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPermProduct",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPermProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19715,
+      "End": 20286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPermPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPermPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20563,
+      "End": 20734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddCombPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddCombPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20735,
+      "End": 20971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPerm2Comb",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPerm2Comb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20972,
+      "End": 21399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddComb2Perm",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddComb2Perm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21400,
+      "End": 21653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPermCombTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPermCombTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21654,
+      "End": 22016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22266,
+      "End": 22995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::ternary::Abc_ZddPrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_ZddPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22996,
+      "End": 23152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22996,
+      "End": 23152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPrintTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPrintTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23153,
+      "End": 23816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddGiaTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddGiaTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24052,
+      "End": 25103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPermTestInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPermTestInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25620,
+      "End": 26908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_ZddPermTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ZddPermTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26910,
+      "End": 27085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::Abc_EnumerateCubeStatesZdd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateCubeStatesZdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27322,
+      "End": 29873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPerm.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27639,
+      "End": 27706
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilPerm.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Permutation computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilPerm.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"aig/gia/gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n type Abc_ZddOper int32\nconst  \n(\n    ABC_ZDD_OPER_NONE Abc_ZddOper = iota\n\n    ABC_ZDD_OPER_DIFF\n\n    ABC_ZDD_OPER_UNION\n\n    ABC_ZDD_OPER_MIN_UNION\n\n    ABC_ZDD_OPER_INTER\n\n    ABC_ZDD_OPER_PERM\n\n    ABC_ZDD_OPER_PERM_PROD\n\n    ABC_ZDD_OPER_COF0\n\n    ABC_ZDD_OPER_COF1\n\n    ABC_ZDD_OPER_THRESH\n\n    ABC_ZDD_OPER_DOT_PROD\n\n    ABC_ZDD_OPER_DOT_PROD_6\n\n    ABC_ZDD_OPER_INSERT\n\n    ABC_ZDD_OPER_PATHS\n\n    ABC_ZDD_OPER_NODES\n\n    ABC_ZDD_OPER_ITE\n\n)\n\n \n\n   \ntype Abc_ZddObj struct {\n    Var uint32; /* C bitfield: 31 bits; review packing and truncation */\n    Mark uint32; /* C bitfield: 1 bits; review packing and truncation */\n    True     uint32;\n    False     uint32;\n}  \n\n   \ntype Abc_ZddEnt struct {\n    Arg0          int32;\n    Arg1          int32;\n    Arg2          int32;\n    Res          int32;\n}\n\n   \ntype Abc_ZddMan struct {\n    nVars          int32;\n    nObjs          int32;\n    nObjsAlloc          int32;\n    nPermSize          int32;\n    nUniqueMask     uint32;\n    nCacheMask     uint32;\n    pUnique         *int32;\n    pNexts         *int32;\n    pCache  *Abc_ZddEnt;\n    pObjs  *Abc_ZddObj;\n    nCacheLookups          int32;\n    nCacheMisses          int32;\n    nMemory         word;\n    pV2TI         *int32;\n    pV2TJ         *int32;\n    pT2V         *int32;\n}\n\nfunc Abc_ZddIthVar(i int32) int32 { return i + 2;                                            }\nfunc Abc_ZddHash(Arg0 int32, Arg1 int32, Arg2 int32) uint32 { return 12582917 * Arg0 + 4256249 * Arg1 + 741457 * Arg2; }\n\nfunc Abc_ZddNode(p *Abc_ZddMan, i int32) *Abc_ZddObj { return p.pObjs + i;                                     }\nfunc Abc_ZddObjId(p *Abc_ZddMan, pObj *Abc_ZddObj) int32 { return pObj - p.pObjs;                                  }\nfunc Abc_ZddObjVar(p *Abc_ZddMan, i int32) int32 { return Abc_ZddNode(p, i).Var;                           }\n\nfunc Abc_ZddSetVarIJ(p *Abc_ZddMan, i int32, j int32, v int32) { assert(i \u003c j, \"i \u003c j\"); p.pT2V[i * p.nPermSize + j] = v;      }\nfunc Abc_ZddVarIJ(p *Abc_ZddMan, i int32, j int32) int32 { assert(i \u003c j, \"i \u003c j\"); return p.pT2V[i * p.nPermSize + j];   }\nfunc Abc_ZddVarsClash(p *Abc_ZddMan, v0 int32, v1 int32) int32 { return p.pV2TI[v0] == p.pV2TI[v1] || p.pV2TJ[v0] == p.pV2TJ[v1] || p.pV2TI[v0] == p.pV2TJ[v1] || p.pV2TJ[v0] == p.pV2TI[v1];  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddCacheLookup(p *Abc_ZddMan, Arg0 int32, Arg1 int32, Arg2 int32) int32 {\n    var pEnt *Abc_ZddEnt  = p.pCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p.nCacheMask);\n    p.nCacheLookups++;\n    if pEnt.Arg0 == Arg0 \u0026\u0026 pEnt.Arg1 == Arg1 \u0026\u0026 pEnt.Arg2 == Arg2 {\n        return pEnt.Res;\n    } else {\n        return -1;\n    }\n}\nfunc Abc_ZddCacheInsert(p *Abc_ZddMan, Arg0 int32, Arg1 int32, Arg2 int32, Res int32) int32 {\n    var pEnt *Abc_ZddEnt  = p.pCache + (Abc_ZddHash(Arg0, Arg1, Arg2) \u0026 p.nCacheMask);\n    pEnt.Arg0 = Arg0;  pEnt.Arg1 = Arg1;  pEnt.Arg2 = Arg2;  pEnt.Res = Res;\n    p.nCacheMisses++;\n    assert(Res \u003e= 0, \"Res \u003e= 0\");\n    return Res;\n}\nfunc Abc_ZddUniqueLookup(p *Abc_ZddMan, Var int32, True int32, False int32) int32 {\n    var q *int32  = p.pUnique + (Abc_ZddHash(Var, True, False) \u0026 p.nUniqueMask);\n    for  ; *q; q = p.pNexts + *q  {\n        if p.pObjs[*q].Var == uint32(Var) \u0026\u0026 p.pObjs[*q].True == uint32(True) \u0026\u0026 p.pObjs[*q].False == uint32(False) {\n            return *q; }\n    }\n    return 0;\n}\nfunc Abc_ZddUniqueCreate(p *Abc_ZddMan, Var int32, True int32, False int32) int32 {\n    assert(Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars, \"Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars\");\n    assert(Var \u003c Abc_ZddObjVar(p, True), \"Var \u003c Abc_ZddObjVar(p, True)\");\n    assert(Var \u003c Abc_ZddObjVar(p, False), \"Var \u003c Abc_ZddObjVar(p, False)\");\n    if True == 0 {\n        return False; }\n    {\n        var q *int32  = p.pUnique + (Abc_ZddHash(Var, True, False) \u0026 p.nUniqueMask);\n        for  ; *q; q = p.pNexts + *q  {\n            if p.pObjs[*q].Var == uint32(Var) \u0026\u0026 p.pObjs[*q].True == uint32(True) \u0026\u0026 p.pObjs[*q].False == uint32(False) {\n                return *q; }\n        }\n        if p.nObjs == p.nObjsAlloc {\n            fmt.Printf(\"Aborting because the number of nodes exceeded %d.\\n\", p.nObjsAlloc);\nfflush(os.Stdout); }\n        assert(p.nObjs \u003c p.nObjsAlloc, \"p.nObjs \u003c p.nObjsAlloc\");     \n        *q = p.nObjs++;\n        p.pObjs[*q].Var = Var;\n        p.pObjs[*q].True = True;\n        p.pObjs[*q].False = False;\n//        printf( \"Added node %3d: Var = %3d.  True = %3d.  False = %3d\\n\", *q, Var, True, False );\n        return *q;\n    }\n}\nfunc Abc_ZddBuildSet(p *Abc_ZddMan, pSet *int32, Size int32) int32 {\n    var i int32;\n    var Res int32 = 1;\n    Vec_IntSelectSort( pSet, Size );\n    for  i = Size - 1; i \u003e= 0; i--  {\n        Res = Abc_ZddUniqueCreate( p, pSet[i], Res, 0 );\n    }\n    return Res;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddManAlloc(nVars int32, nObjs int32) *Abc_ZddMan {\n     var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Abc_ZddMan{};\n    p.nVars       = nVars;\n    p.nObjsAlloc  = nObjs;\n    p.nUniqueMask = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    p.nCacheMask  = (1 \u003c\u003c Abc_Base2Log(nObjs)) - 1;\n    // inlining of macro ABC_CALLOC\n    p.pUnique     = ((int *) calloc((size_t)(p.nUniqueMask + 1), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pNexts      = ((int *) calloc((size_t)(p.nObjsAlloc), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pCache      = ((Abc_ZddEnt *) calloc((size_t)(p.nCacheMask + 1), sizeof(Abc_ZddEnt)));\n    // inlining of macro ABC_CALLOC\n    p.pObjs       = ((Abc_ZddObj *) calloc((size_t)(p.nObjsAlloc), sizeof(Abc_ZddObj)));\n    p.nObjs       = 2;\n    memset( p.pObjs, 0xff, sizeof(Abc_ZddObj) * 2 );\n    p.pObjs[0].Var = nVars;\n    p.pObjs[1].Var = nVars;\n    for  i = 0; i \u003c nVars; i++  {\n        Abc_ZddUniqueCreate( p, i, 1, 0 );\n    }\n    assert(p.nObjs == nVars + 2, \"p.nObjs == nVars + 2\");\n    p.nMemory = sizeof(Abc_ZddMan)/4 + \n        p.nUniqueMask + 1 + p.nObjsAlloc + \n        (p.nCacheMask + 1) * sizeof(Abc_ZddEnt)/4 + \n        p.nObjsAlloc * sizeof(Abc_ZddObj)/4;\n    return p;\n}\nfunc Abc_ZddManCreatePerms(p *Abc_ZddMan, nPermSize int32) {\n    var i, j, v int32;\n    assert(2 * p.nVars == nPermSize * (nPermSize - 1), \"2 * p.nVars == nPermSize * (nPermSize - 1)\");\n    assert(p.nPermSize == 0, \"p.nPermSize == 0\");\n    p.nPermSize = nPermSize;\n    // inlining of macro ABC_FALLOC\n    p.pV2TI = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));\n    // inlining of macro ABC_FALLOC\n    p.pV2TJ = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nVars)), 0xff, sizeof(int) * (size_t)(p.nVars)));\n    // inlining of macro ABC_FALLOC\n    p.pT2V  = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)), 0xff, sizeof(int) * (size_t)(p.nPermSize * p.nPermSize)));\n    for  i = 0; i \u003c nPermSize; i++  {\n        for  j = i + 1; j \u003c nPermSize; j++  {\n            p.pV2TI[v] = i;\n            p.pV2TJ[v] = j;\n            Abc_ZddSetVarIJ( p, i, j, v++ );\n        }\n    }\n    assert(v == p.nVars, \"v == p.nVars\");\n}\nfunc Abc_ZddManFree(p *Abc_ZddMan) {\n    fmt.Printf(\"ZDD stats: Var = %d  Obj = %d  Alloc = %d  Hit = %d  Miss = %d  \", p.nVars, p.nObjs, p.nObjsAlloc, p.nCacheLookups-p.nCacheMisses, p.nCacheMisses);\n    fmt.Printf(\"Mem = %.2f MB\\n\", 4.0*int32((p.nMemory/(1\u003c\u003c20))));\n    // inlining of macro ABC_FREE\n    ((p.pT2V) ? (free((char *) (p.pT2V)), (p.pT2V) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pV2TI) ? (free((char *) (p.pV2TI)), (p.pV2TI) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pV2TJ) ? (free((char *) (p.pV2TJ)), (p.pV2TJ) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pUnique) ? (free((char *) (p.pUnique)), (p.pUnique) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCache) ? (free((char *) (p.pCache)), (p.pCache) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddDiff(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return a; }\n    if a == b { return 0; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DIFF)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDiff( p, A.False, b );\nr = Abc_ZddUniqueCreate( p, A.Var, A.True, r0 );\n    } else if A.Var \u003e B.Var {\n        r = Abc_ZddDiff( p, a, B.False );\n    } else {\n        r0 = Abc_ZddDiff( p, A.False, B.False );\nr1 = Abc_ZddDiff( p, A.True, B.True );\nr = Abc_ZddUniqueCreate( p, A.Var, r1, r0 ); }\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DIFF, r );\n}\nfunc Abc_ZddUnion(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return b; }\n    if b == 0 { return a; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddUnion( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_UNION)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddUnion( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddUnion( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddUnion( p, A.False, B.False );\nr1 = Abc_ZddUnion( p, A.True, B.True ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_UNION, r );\n}\nfunc Abc_ZddMinUnion(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return b; }\n    if b == 0 { return a; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddMinUnion( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_MIN_UNION)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddMinUnion( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddMinUnion( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddMinUnion( p, A.False, B.False );\nr1 = Abc_ZddMinUnion( p, A.True, B.True ); }\n    r1 = Abc_ZddDiff( p, r1, r0 ); // assume args are minimal\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_MIN_UNION, r );\n}\nfunc Abc_ZddIntersect(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == b { return a; }\n    if a \u003e b {  return Abc_ZddIntersect( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_INTER)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddIntersect( p, A.False, b );\nr1 = A.True;\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddIntersect( p, a, B.False );\nr1 = B.True;\n    } else {\n        r0 = Abc_ZddIntersect( p, A.False, B.False );\nr1 = Abc_ZddIntersect( p, A.True, B.True ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_INTER, r );\n}\nfunc Abc_ZddCof0(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 { return a; }\n    A = Abc_ZddNode( p, a );\n    if int32(A.Var) \u003e Var {\n        return a; }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF0)) \u003e= 0 {\n        return r; }\n    if int32(A.Var) \u003c Var {\n        r0 = Abc_ZddCof0( p, A.False, Var );\nr1 = Abc_ZddCof0( p, A.True, Var );\nr  = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    } else {\n        r = Abc_ZddCof0( p, A.False, Var ); }\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF0, r );\n}\nfunc Abc_ZddCof1(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 { return a; }\n    A = Abc_ZddNode( p, a );\n    if int32(A.Var) \u003e Var {\n        return a; }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_COF1)) \u003e= 0 {\n        return r; }\n    if int32(A.Var) \u003c Var {\n        r0 = Abc_ZddCof1( p, A.False, Var );\nr1 = Abc_ZddCof1( p, A.True, Var );\n    } else {\n        r0 = 0;\nr1 = Abc_ZddCof1( p, A.True, Var ); }\n    r = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_COF1, r );\n}\nfunc Abc_ZddCountPaths(p *Abc_ZddMan, a int32) int32 {\n    var A *Abc_ZddObj;  \n    var r int32;\n    if a \u003c 2 { return a; }\n    if (r = Abc_ZddCacheLookup(p, a, 0, ABC_ZDD_OPER_PATHS)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    r = Abc_ZddCountPaths( p, A.False ) + Abc_ZddCountPaths( p, A.True );\n    return Abc_ZddCacheInsert( p, a, 0, ABC_ZDD_OPER_PATHS, r );\n}\n/*\nint Abc_ZddCountNodes( Abc_ZddMan * p, int a )\n{\n    Abc_ZddObj * A;  \n    int r;\n    if ( a \u003c 2 ) return 0;\n    if ( (r = Abc_ZddCacheLookup(p, a, 0, ABC_ZDD_OPER_NODES)) \u003e= 0 )\n        return r;\n    A = Abc_ZddNode( p, a );\n    r = 1 + Abc_ZddCountNodes( p, A-\u003eFalse ) + Abc_ZddCountNodes( p, A-\u003eTrue );\n    return Abc_ZddCacheInsert( p, a, 0, ABC_ZDD_OPER_NODES, r );\n}\n*/\nfunc Abc_ZddCount_rec(p *Abc_ZddMan, i int32) int32 {\n    var A *Abc_ZddObj;\n    if i \u003c 2 {\n        return 0; }\n    A = Abc_ZddNode( p, i );\n    if A.Mark {\n        return 0; }\n    A.Mark = 1;\n    return 1 + Abc_ZddCount_rec(p, A.False) + Abc_ZddCount_rec(p, A.True);\n}\nfunc Abc_ZddUnmark_rec(p *Abc_ZddMan, i int32) {\n    var A *Abc_ZddObj;\n    if i \u003c 2 {\n        return; }\n    A = Abc_ZddNode( p, i );\n    if !A.Mark {\n        return; }\n    A.Mark = 0;\n    Abc_ZddUnmark_rec( p, A.False );\n    Abc_ZddUnmark_rec( p, A.True );\n}\nfunc Abc_ZddCountNodes(p *Abc_ZddMan, i int32) int32 {\n    var Count int32  = Abc_ZddCount_rec( p, i );\n    Abc_ZddUnmark_rec( p, i );\n    return Count;\n}\nfunc Abc_ZddCountNodesArray(p *Abc_ZddMan, vNodes *Vec_Int_t) int32 {\n    var i, Id, Count int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Id) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        Count += Abc_ZddCount_rec( p, Id );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Id) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        Abc_ZddUnmark_rec( p, Id );\n    }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddThresh(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a \u003c 2 {  return a; }\n    if b == 0 { return 0; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_THRESH)) \u003e= 0 {\n        return r; }\n    A  = Abc_ZddNode( p, a );\n    r0 = Abc_ZddThresh( p, A.False, b );\nr1 = Abc_ZddThresh( p, A.True, b-1 );\n    r  = Abc_ZddUniqueCreate( p, A.Var, r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_THRESH, r );\n}\nfunc Abc_ZddDotProduct(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, b2, t1, t2, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 1 { return a; }\n    if a \u003e b {  return Abc_ZddDotProduct( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDotProduct( p, A.False, b );\nr1 = Abc_ZddDotProduct( p, A.True, b );\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddDotProduct( p, a, B.False );\nr1 = Abc_ZddDotProduct( p, a, B.True ); \n    } else {\n        r0 = Abc_ZddDotProduct( p, A.False, B.False );\nb2 = Abc_ZddUnion( p, B.False, B.True );\nt1 = Abc_ZddDotProduct( p, A.True, b2 );\nt2 = Abc_ZddDotProduct( p, A.False, B.True );\nr1 = Abc_ZddUnion( p, t1, t2 ); }\n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD, r );\n}\nfunc Abc_ZddDotMinProduct6(p *Abc_ZddMan, a int32, b int32) int32 {\n    var A, B *Abc_ZddObj; \n    var r0, r1, b2, t1, t2, r int32;\n    if a == 0 { return 0; }\n    if b == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 1 { return a; }\n    if a \u003e b {  return Abc_ZddDotMinProduct6( p, b, a ); }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_DOT_PROD_6)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    B = Abc_ZddNode( p, b );\n    if A.Var \u003c B.Var {\n        r0 = Abc_ZddDotMinProduct6( p, A.False, b );\nr1 = Abc_ZddDotMinProduct6( p, A.True, b );\n    } else if A.Var \u003e B.Var {\n        r0 = Abc_ZddDotMinProduct6( p, a, B.False );\nr1 = Abc_ZddDotMinProduct6( p, a, B.True ); \n    } else {\n        r0 = Abc_ZddDotMinProduct6( p, A.False, B.False );\nb2 = Abc_ZddMinUnion( p, B.False, B.True );\nt1 = Abc_ZddDotMinProduct6( p, A.True, b2 );\nt2 = Abc_ZddDotMinProduct6( p, A.False, B.True );\nr1 = Abc_ZddMinUnion( p, t1, t2 ); }\n    r1 = Abc_ZddThresh( p, r1, 5 );\nr1 = Abc_ZddDiff( p, r1, r0 ); \n    r = Abc_ZddUniqueCreate( p, Abc_MinInt(A.Var, B.Var), r1, r0 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_DOT_PROD_6, r );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddPerm(p *Abc_ZddMan, a int32, Var int32) int32 {\n    var A *Abc_ZddObj; \n    var r0, r1, r int32;\n    assert(Var \u003c p.nVars, \"Var \u003c p.nVars\");\n    if a == 0 {  return 0; }\n    if a == 1 {  return Abc_ZddIthVar(Var); }\n    if (r = Abc_ZddCacheLookup(p, a, Var, ABC_ZDD_OPER_PERM)) \u003e= 0 {\n        return r; }\n    A = Abc_ZddNode( p, a );\n    if p.pV2TI[A.Var] \u003e p.pV2TI[Var] { // Ai \u003e Bi\n        r = Abc_ZddUniqueCreate( p, Var, a, 0 );\n    } else if int32(A.Var) == Var { // Ai == Bi \u0026\u0026 Aj == Bj\n        r0 = Abc_ZddPerm( p, A.False, Var );\nr  = Abc_ZddUnion( p, r0, A.True );\n    } else {\n        var VarPerm, VarTop int32;\n        var Ai int32  = p.pV2TI[A.Var];\n        var Aj int32  = p.pV2TJ[A.Var];\n        var Bi int32  = p.pV2TI[Var];\n        var Bj int32  = p.pV2TJ[Var];\n        assert(Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi, \"Ai \u003c Aj \u0026\u0026 Bi \u003c Bj \u0026\u0026 Ai \u003c= Bi\");\n        if Aj == Bi {\n            VarPerm = Var;\nVarTop  = Abc_ZddVarIJ(p, Ai, Bj);\n        } else if Aj == Bj {\n            VarPerm = Var;\nVarTop  = Abc_ZddVarIJ(p, Ai, Bi);\n        } else if Ai == Bi {\n            VarPerm = Abc_ZddVarIJ(p, Abc_MinInt(Aj, Bj), Abc_MaxInt(Aj, Bj));\nVarTop  = A.Var;\n        } else { // no clash\n            VarPerm = Var;\nVarTop  = A.Var; }\n        assert(p.pV2TI[VarPerm] \u003e p.pV2TI[VarTop], \"p.pV2TI[VarPerm] \u003e p.pV2TI[VarTop]\");\n        r0 = Abc_ZddPerm( p, A.False, Var ); \n        r1 = Abc_ZddPerm( p, A.True, VarPerm );\n        assert(Abc_ZddObjVar(p, r1) \u003e VarTop, \"Abc_ZddObjVar(p, r1) \u003e VarTop\");\n        if Abc_ZddObjVar(p, r0) \u003e VarTop {\n            r = Abc_ZddUniqueCreate( p, VarTop, r1, r0 );\n        } else {\n            r1 = Abc_ZddUniqueCreate( p, VarTop, r1, 0 );\nr = Abc_ZddUnion( p, r0, r1 ); }\n    }\n    return Abc_ZddCacheInsert( p, a, Var, ABC_ZDD_OPER_PERM, r );\n}\nfunc Abc_ZddPermProduct(p *Abc_ZddMan, a int32, b int32) int32 {\n    var B *Abc_ZddObj; \n    var r0, r1, r int32;\n    if a == 0 { return 0; }\n    if a == 1 { return b; }\n    if b == 0 { return 0; }\n    if b == 1 { return a; }\n    if (r = Abc_ZddCacheLookup(p, a, b, ABC_ZDD_OPER_PERM_PROD)) \u003e= 0 {\n        return r; }\n    B  = Abc_ZddNode( p, b );\n    r0 = Abc_ZddPermProduct( p, a, B.False ); \n    r1 = Abc_ZddPermProduct( p, a, B.True ); \n    r1 = Abc_ZddPerm( p, r1, B.Var );\n    r  = Abc_ZddUnion( p, r0, r1 );\n    return Abc_ZddCacheInsert( p, a, b, ABC_ZDD_OPER_PERM_PROD, r );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Printing permutations and transpositions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddPermPrint(pPerm *int32, Size int32) {\n    var i int32;\n    fmt.Printf(\"{\");\n    for  i = 0; i \u003c Size; i++  {\n        fmt.Printf(\" %2d\", pPerm[i]);\n    }\n    fmt.Printf(\" }\\n\");\n}\nfunc Abc_ZddCombPrint(pComb *int32, nTrans int32) {\n    var i int32;\n    if nTrans == 0 {\n        fmt.Printf(\"Empty set\"); }\n    for  i = 0; i \u003c nTrans; i++  {\n        fmt.Printf(\"(%d %d)\", pComb[i] \u003e\u003e 16, pComb[i] \u0026 0xffff);\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Abc_ZddPerm2Comb(pPerm *int32, Size int32, pComb *int32) int32 {\n    var i, j, nTrans int32;\n    for  i = 0; i \u003c Size; i++  {\n        if i != pPerm[i] {\n            for  j = i+1; j \u003c Size; j++  {\n                if i == pPerm[j] {\n                    break; }\n            }\n            pComb[nTrans++] = (i \u003c\u003c 16) | j;\n            // inlining of macro ABC_SWAP\n            { var t int32  = pPerm[i]; pPerm[i] = pPerm[j]; pPerm[j] = t; };\n            assert(i == pPerm[i], \"i == pPerm[i]\");\n        }\n    }\n    return nTrans;\n}\nfunc Abc_ZddComb2Perm(pComb *int32, nTrans int32, pPerm *int32, Size int32) {\n    var v int32;\n    for  v = 0; v \u003c Size; v++  {\n        pPerm[v] = v;\n    }\n    for  v = nTrans-1; v \u003e= 0; v--  {\n        // inlining of macro ABC_SWAP\n         var t int32  = pPerm[pComb[v] \u003e\u003e 16]; pPerm[pComb[v] \u003e\u003e 16] = pPerm[pComb[v] \u0026 0xffff]; pPerm[pComb[v] \u0026 0xffff] = t; };\n}\nfunc Abc_ZddPermCombTest() {\n    var Size int32  = 10;\n    var pPerm [10]int32 = [10]int32{ 6, 5, 7, 0, 3, 2, 1, 8, 9, 4 };\n    var pComb [10]int32;\n    var nTrans int32;\n    Abc_ZddPermPrint( pPerm, Size );\n    nTrans = Abc_ZddPerm2Comb( pPerm, Size, pComb );\n    Abc_ZddCombPrint( pComb, nTrans );\n    Abc_ZddComb2Perm( pComb, nTrans, pPerm, Size );\n    Abc_ZddPermPrint( pPerm, Size );\n    Size = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Printing ZDDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddPrint_rec(p *Abc_ZddMan, a int32, pPath *int32, Size int32) {\n    var A *Abc_ZddObj;  \n    if a == 0 { return; }\n//    if ( a == 1 ) { Abc_ZddPermPrint( pPath, Size ); return; }\n    if a == 1 { \n        var pPerm [24]int32;\n        var pComb [24]int32;\n        var i int32;\n        assert(p.nPermSize \u003c= 24, \"p.nPermSize \u003c= 24\");\n        for  i = 0; i \u003c Size; i++  {\n            pComb[i] = (p.pV2TI[pPath[i]] \u003c\u003c 16) | p.pV2TJ[pPath[i]];\n        }\n        Abc_ZddCombPrint( pComb, Size ); \n        Abc_ZddComb2Perm( pComb, Size, pPerm, p.nPermSize );\n        Abc_ZddPermPrint( pPerm, p.nPermSize );\n        return; \n    }\n    A = Abc_ZddNode( p, a );\n    Abc_ZddPrint_rec( p, A.False, pPath, Size );\n    pPath[Size] = A.Var;\n    Abc_ZddPrint_rec( p, A.True, pPath, Size + 1 );\n}\nfunc Abc_ZddPrint(p *Abc_ZddMan, a int32) {\n    // inlining of macro ABC_CALLOC\n    var pPath *int32  = ((int *) calloc((size_t)(p.nVars), sizeof(int)));\n    Abc_ZddPrint_rec( p, a, pPath, 0 );\n    // inlining of macro ABC_FREE\n    ((pPath) ? (free((char *) (pPath)), (pPath) = 0) : 0);\n}\nfunc Abc_ZddPrintTest(p *Abc_ZddMan) {\n//    int nSets = 2;\n//    int Size = 2;\n//    int pSets[2][2] = { {5, 0}, {3, 11} };\n    var nSets int32  = 3;\n    var Size int32  = 5;\n    var pSets [3][5]int32 = [3][5]int32{ {5, 0, 2, 10, 7}, {3, 11, 10, 7, 2}, {0, 2, 5, 10, 7} };\n    var i, Set, Union int32;\n    for  i = 0; i \u003c nSets; i++  {\n        Abc_ZddPermPrint( pSets[i], Size );\n        Set = Abc_ZddBuildSet( p, pSets[i], Size );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    fmt.Printf(\"Resulting set:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n    Size = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddGiaTest(pGia *Gia_Man_t) {\n    var p *Abc_ZddMan;\n    var pObj *Gia_Obj_t;\n    var vNodes *Vec_Int_t;\n    var i, r, Paths int32;\n    p = Abc_ZddManAlloc( Gia_ManObjNum(pGia), 1 \u003c\u003c 24 ); // 576 MB  (36 B/node)\n    Gia_ManFillValue( pGia );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        pObj.Value = Abc_ZddIthVar( Gia_ObjId(pGia, pObj) );\n    }\n    vNodes = Vec_IntAlloc( Gia_ManAndNum(pGia) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        r = Abc_ZddDotMinProduct6( p, Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n        r = Abc_ZddUnion( p, r, Abc_ZddIthVar(i) );\n        pObj.Value = r;\n        Vec_IntPush( vNodes, r );\n        // print\n//        printf( \"Node %d:\\n\", i );\n//        Abc_ZddPrint( p, r );\n//        printf( \"Node %d   ZddNodes = %d\\n\", i, Abc_ZddCountNodes(p, r) );\n    }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Paths += Abc_ZddCountPaths(p, pObj.Value); }\n    }\n    fmt.Printf(\"Paths = %d.  Shared nodes = %d.\\n\", Paths, Abc_ZddCountNodesArray(p, vNodes));\n    Vec_IntFree( vNodes );\n    Abc_ZddManFree( p );\n}\n/*\n    abc 01\u003e \u0026r pj1.aig; \u0026ps; \u0026test\n    pj1      : i/o =   1769/   1063  and =   16285  lev =  156 (12.91)  mem = 0.23 MB\n    Paths = 839934.  Shared nodes = 770999.\n    ZDD stats: Var = 19118  Obj = 11578174  All = 16777216  Hits = 25617277  Miss = 40231476  Mem = 576.00 MB\n*/\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ZddPermTestInt(p *Abc_ZddMan) {\n    var nPerms int32  = 3;\n    var Size int32  = 5;\n    var pPerms [3][5]int32 = [3][5]int32{ {1, 0, 2, 4, 3}, {1, 2, 4, 0, 3}, {0, 3, 2, 1, 4} };\n    var pComb [5]int32;\n    var nTrans int32;\n    var i, k, Set, Union, iPivot int32;\n    for  i = 0; i \u003c nPerms; i++  {\n        Abc_ZddPermPrint( pPerms[i], Size );\n    }\n    for  i = 0; i \u003c nPerms; i++  {\n        fmt.Printf(\"Perm %d:\\n\", i);\n        Abc_ZddPermPrint( pPerms[i], Size );\n        nTrans = Abc_ZddPerm2Comb( pPerms[i], Size, pComb );\n        Abc_ZddCombPrint( pComb, nTrans );\n        for  k = 0; k \u003c nTrans; k++  {\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xFFFF );\n        }\n        Abc_ZddPermPrint( pComb, nTrans );\n        // add to ZDD\n        Set = Abc_ZddBuildSet( p, pComb, nTrans );\n        Union = Abc_ZddUnion( p, Union, Set );\n    }\n    fmt.Printf(\"\\nResulting set of permutations:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n\n    iPivot = Abc_ZddVarIJ( p, 3, 4 );\n    Union = Abc_ZddPerm( p, Union, iPivot );\n\n    fmt.Printf(\"\\nResulting set of permutations:\\n\");\n    Abc_ZddPrint( p, Union );\n    fmt.Printf(\"Nodes = %d.   Path = %d.\\n\", Abc_ZddCountNodes(p, Union), Abc_ZddCountPaths(p, Union));\n    fmt.Printf(\"\\n\");\n}\n\nfunc Abc_ZddPermTest() {\n    var p *Abc_ZddMan;\n    p = Abc_ZddManAlloc( 10, 1 \u003c\u003c 20 );\n    Abc_ZddManCreatePerms( p, 5 );\n    Abc_ZddPermTestInt( p );\n    Abc_ZddManFree( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EnumerateCubeStatesZdd() {\n    var pXYZ [3][9][2]int32 = [3][9][2]int32{\n        { {3, 5}, {3,17}, {3,15}, {1, 6}, {1,16}, {1,14}, {2, 4}, {2,18}, {2,13} },\n        { {2,14}, {2,24}, {2,12}, {3,13}, {3,23}, {3,10}, {1,15}, {1,22}, {1,11} },\n        { {1,10}, {1, 7}, {1, 4}, {3,12}, {3, 9}, {3, 6}, {2,11}, {2, 8}, {2, 5} }  };\n#ifdef WIN32\n    int LogObj = 24;\n#else\n    int LogObj = 27;\n#endif\n    var p *Abc_ZddMan;\n    var i int32;\n    var k int32;\n    var pComb [9]int32;\n    var pPerm [24]int32;\n    var nSize int32;\n    var ZddTurn1, ZddTurn2, ZddTurn3, ZddTurns, ZddAll int32;\n    var clk abctime  = Abc_Clock();\n    fmt.Printf(\"Enumerating states of 2x2x2 cube.\\n\");\n    p = Abc_ZddManAlloc( 24 * 23 / 2, 1 \u003c\u003c LogObj ); // finished with 2^27 (4 GB)\n    Abc_ZddManCreatePerms( p, 24 );\n    // init state\n    fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 0, 1, 0, 2);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // first 9 states\n    ZddTurns = 1;\n    for  i = 0; i \u003c 3; i++  {\n        for  k = 0; k \u003c 24; k++  {\n            pPerm[k] = k;\n        }\n        for  k = 0; k \u003c 9; k++  {\n            // inlining of macro ABC_SWAP\n             var t int32  = pPerm[pXYZ[i][k][0]-1]; pPerm[pXYZ[i][k][0]-1] = pPerm[pXYZ[i][k][1]-1]; pPerm[pXYZ[i][k][1]-1] = t; };\n        nSize = Abc_ZddPerm2Comb( pPerm, 24, pComb );\n        assert(nSize == 9, \"nSize == 9\");\n        for  k = 0; k \u003c 9; k++  {\n            pComb[k] = Abc_ZddVarIJ( p, pComb[k] \u003e\u003e 16, pComb[k] \u0026 0xffff );\n        }\n        // add first turn\n        ZddTurn1  = Abc_ZddBuildSet( p, pComb, 9 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn1 );\n        //Abc_ZddPrint( p, ZddTurn1 );\n        // add second turn\n        ZddTurn2 = Abc_ZddPermProduct( p, ZddTurn1, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn2 );\n        //Abc_ZddPrint( p, ZddTurn2 );\n        // add third turn\n        ZddTurn3 = Abc_ZddPermProduct( p, ZddTurn2, ZddTurn1 );\n        ZddTurns = Abc_ZddUnion( p, ZddTurns, ZddTurn3 );\n        //Abc_ZddPrint( p, ZddTurn3 );\n        //printf( \"\\n\" );\n    }\n    //Abc_ZddPrint( p, ZddTurns );\n    fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", 1, Abc_ZddCountPaths(p, ZddTurns), Abc_ZddCountNodes(p, ZddTurns), p.nObjs);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // other states\n    ZddAll = ZddTurns;\n    for  i = 2; i \u003c= 100; i++  {\n        var ZddAllPrev int32  = ZddAll;\n        ZddAll = Abc_ZddPermProduct( p, ZddAll, ZddTurns );\n        fmt.Printf(\"Iter %2d -\u003e %8d  Nodes = %7d  Used = %10d  \", i, Abc_ZddCountPaths(p, ZddAll), Abc_ZddCountNodes(p, ZddAll), p.nObjs);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if ZddAllPrev == ZddAll {\n            break; }\n    }\n    Abc_ZddManFree( p );\n}\n\n/*\nEnumerating states of 2x2x2 cube.\nIter  0 -\u003e        1  Nodes =       0  Used =          2  Time =     0.00 sec\nIter  1 -\u003e       10  Nodes =      63  Used =        577  Time =     0.00 sec\nIter  2 -\u003e       64  Nodes =     443  Used =       4349  Time =     0.03 sec\nIter  3 -\u003e      385  Nodes =    2018  Used =      26654  Time =     0.14 sec\nIter  4 -\u003e     2232  Nodes =    7451  Used =     119442  Time =     0.45 sec\nIter  5 -\u003e    12224  Nodes =   25178  Used =     490038  Time =     1.10 sec\nIter  6 -\u003e    62360  Nodes =   83955  Used =    1919750  Time =     1.79 sec\nIter  7 -\u003e   289896  Nodes =  290863  Used =    7182932  Time =     3.15 sec\nIter  8 -\u003e  1159968  Nodes =  614845  Used =   25301123  Time =     8.03 sec\nIter  9 -\u003e  3047716  Nodes =  585664  Used =   66228369  Time =    20.22 sec\nIter 10 -\u003e  3671516  Nodes =   19430  Used =  102292452  Time =    33.41 sec\nIter 11 -\u003e  3674160  Nodes =     511  Used =  103545878  Time =    33.92 sec\nIter 12 -\u003e  3674160  Nodes =     511  Used =  103566266  Time =    33.93 sec\nZDD stats: Var = 276  Obj = 103566266  Alloc = 134217728  Hit = 63996630  Miss = 141768893  Mem = 4608.00 MB\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

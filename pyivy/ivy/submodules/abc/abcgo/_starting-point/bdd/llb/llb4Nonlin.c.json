@@ -1,0 +1,1695 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c",
+  "SHA256": "add47b9b4a66e8fe428f2fffda05d31676fbf7de4c1088d1950ad124df2f81f1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 9408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Llb_ObjBddVar(vOrder, pObj) \u003c 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 12679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 14,
+        "ByteOffset": 14062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVarsX = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 405,
+        "Column": 14,
+        "ByteOffset": 14117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVarsY = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 9,
+        "ByteOffset": 14224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 14278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 14543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVarsX );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 14567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVarsY );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 567,
+        "Column": 5,
+        "ByteOffset": 19321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vRings) \u003e 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 15,
+        "ByteOffset": 19715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pValues = ABC_ALLOC( char, Cudd_ReadSize(p.dd) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 582,
+        "Column": 5,
+        "ByteOffset": 19976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 613,
+        "Column": 9,
+        "ByteOffset": 21223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 621,
+        "Column": 17,
+        "ByteOffset": 21511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( fBackward || pValues[Llb_ObjBddVar(p.vOrder, pObj)] == 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 21805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pValues );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 655,
+        "Column": 5,
+        "ByteOffset": 22503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 669,
+        "Column": 21,
+        "ByteOffset": 23087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 679,
+        "Column": 17,
+        "ByteOffset": 23495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during remapping bad states.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 696,
+        "Column": 25,
+        "ByteOffset": 24176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 716,
+        "Column": 17,
+        "ByteOffset": 25025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during image computation.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 727,
+        "Column": 13,
+        "ByteOffset": 25531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pAig.pSeqModel == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 17,
+        "ByteOffset": 26328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during image computation in quantification.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 17,
+        "ByteOffset": 26792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during remapping next states.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 777,
+        "Column": 17,
+        "ByteOffset": 27670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during image computation in transfer 1.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 797,
+        "Column": 17,
+        "ByteOffset": 28681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds) during image computation in transfer 1.\\n\",  p.pPars.TimeLimit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 808,
+        "Column": 13,
+        "ByteOffset": 29061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"I =%5d : \",   nIters );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 809,
+        "Column": 13,
+        "ByteOffset": 29106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fr =%7d  \",   nBddSizeFr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 810,
+        "Column": 13,
+        "ByteOffset": 29155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ImNs =%7d  \", nBddSizeTo );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 811,
+        "Column": 13,
+        "ByteOffset": 29204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ImCs =%7d  \", nBddSizeTo2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 812,
+        "Column": 13,
+        "ByteOffset": 29254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Rea =%7d   \", Cudd_DagSize(p.bReached) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 813,
+        "Column": 13,
+        "ByteOffset": 29317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"(%4d %4d)  \", Cudd_ReadReorderings(p.dd), Cudd_ReadGarbageCollections(p.dd) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 827,
+        "Column": 17,
+        "ByteOffset": 29937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached limit on the number of timeframes (%d).\\n\",  p.pPars.nIterMax ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 837,
+        "Column": 13,
+        "ByteOffset": 30454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reachability analysis completed after %d frames.\\n\", nIters );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 13,
+        "ByteOffset": 30555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reachability analysis is stopped after %d frames.\\n\", nIters ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 840,
+        "Column": 9,
+        "ByteOffset": 30638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p.pAig)) );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 840,
+        "Column": 86,
+        "ByteOffset": 30715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p.pAig)) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 841,
+        "Column": 9,
+        "ByteOffset": 30759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout ); "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 841,
+        "Column": 17,
+        "ByteOffset": 30767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 845,
+        "Column": 13,
+        "ByteOffset": 31028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verified only for states reachable in %d frames.  \", nIters ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 851,
+        "Column": 9,
+        "ByteOffset": 31231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The miter is proved unreachable after %d iterations.  \", nIters ); }"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 899,
+        "Column": 9,
+        "ByteOffset": 32706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Llb_Mnx_t, 1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 905,
+        "Column": 50,
+        "ByteOffset": 32884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pPars.TimeTarget = p.pPars.TimeLimit * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 982,
+        "Column": 5,
+        "ByteOffset": 35618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1007,
+        "Column": 5,
+        "ByteOffset": 36207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %d.  Direct LO = %d. Compl LO = %d.\\n\", Aig_ManRegNum(p.pAig), Counter1, Counter0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1027,
+        "Column": 9,
+        "ByteOffset": 36817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of objects is more than 2^15.  Clustering cannot be used.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1080,
+        "Column": 5,
+        "ByteOffset": 38365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1097,
+        "Column": 5,
+        "ByteOffset": 39101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cudd_ReadSize(dd) == Saig_ManRegNum(pAig) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_Nonlin4ComputeBad",
+      "Start": 2351,
+      "End": 5238,
+      "BodyStart": 2438,
+      "Original": "DdNode * Llb_Nonlin4ComputeBad( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder )\n{\n    Vec_Ptr_t * vNodes;\n    DdNode * bBdd, * bBdd0, * bBdd1, * bTemp, * bResult, * bCube;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig)-\u003epData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(pAig-\u003evCos), Saig_ManPoNum(pAig) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bBdd1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if ( bBdd == NULL )\n        {\n            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n                if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj-\u003epData != NULL )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n            Vec_PtrFree( vNodes );\n            return NULL;\n        }\n        Cudd_Ref( bBdd );\n        pObj-\u003epData = bBdd;\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        bBdd0   = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     \n        if ( bResult == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bTemp );\n            break;\n        }\n        Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj-\u003epData != NULL )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    Vec_PtrFree( vNodes );\n    if ( bResult )\n    {\n        bCube = Cudd_ReadOne(dd);  Cudd_Ref( bCube );\n        Saig_ManForEachPi( pAig, pObj, i )\n        {\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, (DdNode *)pObj-\u003epData );  \n            if ( bCube == NULL )\n            {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bResult );\n                bResult = NULL;\n                break;\n            }\n            Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        if ( bResult != NULL )\n        {\n            bResult = Cudd_bddExistAbstract( dd, bTemp = bResult, bCube );  Cudd_Ref( bResult );\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_Deref( bResult );\n        }\n    }\n//if ( bResult )\n//printf( \"Bad state = %d.\\n\", Cudd_DagSize(bResult) );\n    return bResult;\n}",
+      "Draft": "func Llb_Nonlin4ComputeBad(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) *DdNode {\n    var vNodes *Vec_Ptr_t;\n    var bBdd, bBdd0, bBdd1, bTemp, bResult, bCube *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig).pData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(pAig.vCos), Saig_ManPoNum(pAig) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if bBdd == nil {\n            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n                if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj.pData != nil )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( bBdd );\n        pObj.pData = bBdd;\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0   = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     \n        if bResult == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            break;\n        }\n        Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj.pData != nil )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Vec_PtrFree( vNodes );\n    if bResult {\n        bCube = Cudd_ReadOne(dd);  Cudd_Ref( bCube );\n        Saig_ManForEachPi( pAig, pObj, i )\n        {\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, (DdNode *)pObj.pData );  \n            if bCube == nil {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bResult );\n                bResult = nil;\n                break;\n            }\n            Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        if bResult != nil {\n            bResult = Cudd_bddExistAbstract( dd, bTemp = bResult, bCube );  Cudd_Ref( bResult );\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_Deref( bResult );\n        }\n    }\n//if ( bResult )\n//printf( \"Bad state = %d.\\n\", Cudd_DagSize(bResult) );\n    return bResult;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4DerivePartitions",
+      "Start": 5506,
+      "End": 7962,
+      "BodyStart": 5602,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4DerivePartitions( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder )\n{\n    Vec_Ptr_t * vRoots;\n    Aig_Obj_t * pObj;\n    DdNode * bBdd, * bBdd0, * bBdd1, * bPart;\n    int i;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig)-\u003epData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003e= 0 )\n        {\n            pObj-\u003epData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n            Cudd_Ref( (DdNode *)pObj-\u003epData );\n        }\n    Saig_ManForEachLi( pAig, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute intermediate BDDs\n    vRoots = Vec_PtrAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bBdd1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if ( bBdd == NULL )\n            goto finish;\n        Cudd_Ref( bBdd );\n        if ( pObj-\u003epData == NULL )\n        {\n            pObj-\u003epData = bBdd;\n            continue;\n        }\n        // create new partition\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj-\u003epData, bBdd );  \n        if ( bPart == NULL )\n            goto finish;\n        Cudd_Ref( bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n    // compute register output BDDs\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj-\u003epData, bBdd0 );  \n        if ( bPart == NULL )\n            goto finish;\n        Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n//printf( \"\\n\" );\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    return vRoots;\n    // early termination\nfinish:\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj-\u003epData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    Vec_PtrForEachEntry( DdNode *, vRoots, bPart, i )\n        Cudd_RecursiveDeref( dd, bPart );\n    Vec_PtrFree( vRoots );\n    return NULL;\n}",
+      "Draft": "func Llb_Nonlin4DerivePartitions(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) *Vec_Ptr_t {\n    var vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bBdd, bBdd0, bBdd1, bPart *DdNode;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig).pData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if Llb_ObjBddVar(vOrder, pObj) \u003e= 0 {\n            pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n            Cudd_Ref( (DdNode *)pObj.pData );\n        }\n    Saig_ManForEachLi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute intermediate BDDs\n    vRoots = Vec_PtrAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if bBdd == nil {\n            goto finish; }\n        Cudd_Ref( bBdd );\n        if pObj.pData == nil {\n            pObj.pData = bBdd;\n            continue;\n        }\n        // create new partition\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj.pData, bBdd );  \n        if bPart == nil {\n            goto finish; }\n        Cudd_Ref( bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n    // compute register output BDDs\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj.pData, bBdd0 );  \n        if bPart == nil {\n            goto finish; }\n        Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n//printf( \"\\n\" );\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    return vRoots;\n    // early termination\nfinish:\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.pData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Vec_PtrForEachEntry( DdNode *, vRoots, bPart, i )\n        Cudd_RecursiveDeref( dd, bPart );\n    Vec_PtrFree( vRoots );\n    return nil;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateOrderSimple",
+      "Start": 8228,
+      "End": 8645,
+      "BodyStart": 8289,
+      "Original": "Vec_Int_t * Llb_Nonlin4CreateOrderSimple( Aig_Man_t * pAig )\n{\n    Vec_Int_t * vOrder;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManForEachCi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    return vOrder;\n}",
+      "Draft": "func Llb_Nonlin4CreateOrderSimple(pAig *Aig_Man_t) *Vec_Int_t {\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManForEachCi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateOrder_rec",
+      "Start": 8916,
+      "End": 10155,
+      "BodyStart": 9022,
+      "Original": "void Llb_Nonlin4CreateOrder_rec( Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Int_t * vOrder, int * pCounter )\n{\n    Aig_Obj_t * pFanin0, * pFanin1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert( Llb_ObjBddVar(vOrder, pObj) \u003c 0 );\n    if ( Aig_ObjIsCi(pObj) )\n    {\n//        if ( Saig_ObjIsLo(pAig, pObj) )\n//            Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), (*pCounter)++ );\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel )\n    {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n    }\n    else\n    {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n    }\n    if ( pObj-\u003efMarkA )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n}",
+      "Draft": "func Llb_Nonlin4CreateOrder_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vOrder *Vec_Int_t, pCounter *int32) {\n    var pFanin0, pFanin1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert(Llb_ObjBddVar(vOrder, pObj) \u003c 0, \"Llb_ObjBddVar(vOrder, pObj) \u003c 0\");\n    if Aig_ObjIsCi(pObj) {\n//        if ( Saig_ObjIsLo(pAig, pObj) )\n//            Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), (*pCounter)++ );\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if pFanin0.Level \u003e pFanin1.Level {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n    \n    } else {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n    }\n    if pObj.fMarkA {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ ); }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CollectHighRefNodes",
+      "Start": 10433,
+      "End": 11044,
+      "BodyStart": 10507,
+      "Original": "Vec_Int_t * Llb_Nonlin4CollectHighRefNodes( Aig_Man_t * pAig, int nFans )\n{\n    Vec_Int_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) \u003e= nFans )\n            pObj-\u003efMarkA = 1;\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj)-\u003efMarkA = 0;\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj-\u003efMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}",
+      "Draft": "func Llb_Nonlin4CollectHighRefNodes(pAig *Aig_Man_t, nFans int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) \u003e= nFans )\n            pObj.fMarkA = 1;\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj).fMarkA = 0;\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateOrder",
+      "Start": 11315,
+      "End": 12626,
+      "BodyStart": 11370,
+      "Original": "Vec_Int_t * Llb_Nonlin4CreateOrder( Aig_Man_t * pAig )\n{\n    Vec_Int_t * vNodes = NULL;\n    Vec_Int_t * vOrder;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n/*\n    // mark internal nodes to be used\n    Aig_ManCleanMarkA( pAig );\n    vNodes = Llb_Nonlin4CollectHighRefNodes( pAig, 4 );\n    Aig_ManForEachObjVec( vNodes, pAig, pObj, i )\n        pObj-\u003efMarkA = 1;\nprintf( \"Techmapping added %d pivots.\\n\", Vec_IntSize(vNodes) );\n*/\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4CreateOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003c 0 )\n        {\n//            if ( Saig_ObjIsLo(pAig, pObj) )\n//                Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), Counter++ );\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        }\n    assert( Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0) );\n    Aig_ManCleanMarkA( pAig );\n    Vec_IntFreeP( \u0026vNodes );\n    return vOrder;\n}",
+      "Draft": "func Llb_Nonlin4CreateOrder(pAig *Aig_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t  = nil;\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n/*\n    // mark internal nodes to be used\n    Aig_ManCleanMarkA( pAig );\n    vNodes = Llb_Nonlin4CollectHighRefNodes( pAig, 4 );\n    Aig_ManForEachObjVec( vNodes, pAig, pObj, i )\n        pObj-\u003efMarkA = 1;\nprintf( \"Techmapping added %d pivots.\\n\", Vec_IntSize(vNodes) );\n*/\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4CreateOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if Llb_ObjBddVar(vOrder, pObj) \u003c 0 {\n//            if ( Saig_ObjIsLo(pAig, pObj) )\n//                Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), Counter++ );\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        }\n    assert(Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0), \"Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0)\");\n    Aig_ManCleanMarkA( pAig );\n    Vec_IntFreeP( \u0026vNodes );\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CreateVars2Q",
+      "Start": 12922,
+      "End": 13349,
+      "BodyStart": 13029,
+      "Original": "Vec_Int_t * Llb_Nonlin4CreateVars2Q( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder, int fBackward )\n{\n    Vec_Int_t * vVars2Q;\n    Aig_Obj_t * pObjLi, * pObjLo;\n    int i;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Cudd_ReadSize(dd), 1 );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, fBackward ? pObjLo : pObjLi), 0 );\n    return vVars2Q;\n}",
+      "Draft": "func Llb_Nonlin4CreateVars2Q(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fBackward int32) *Vec_Int_t {\n    var vVars2Q *Vec_Int_t;\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Cudd_ReadSize(dd), 1 );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, fBackward ? pObjLo : pObjLi), 0 );\n    return vVars2Q;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SetupVarMap",
+      "Start": 13643,
+      "End": 14346,
+      "BodyStart": 13727,
+      "Original": "void Llb_Nonlin4SetupVarMap( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder )\n{\n    DdNode ** pVarsX, ** pVarsY;\n    Aig_Obj_t * pObjLo, * pObjLi;\n    int i;\n    pVarsX = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    pVarsY = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    Saig_ManForEachLiLo( pAig, pObjLo, pObjLi, i )\n    {\n        assert( Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0 );\n        assert( Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0 );\n        pVarsX[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLo) );\n        pVarsY[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n    }\n    Cudd_SetVarMap( dd, pVarsX, pVarsY, Aig_ManRegNum(pAig) );\n    ABC_FREE( pVarsX );\n    ABC_FREE( pVarsY );\n}",
+      "Draft": "func Llb_Nonlin4SetupVarMap(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) {\n    var pVarsX, pVarsY **DdNode;\n    var pObjLo, pObjLi *Aig_Obj_t;\n    var i int32;\n    pVarsX = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    pVarsY = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    Saig_ManForEachLiLo( pAig, pObjLo, pObjLi, i )\n    {\n        assert(Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0, \"Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0\");\n        assert(Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0, \"Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0\");\n        pVarsX[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLo) );\n        pVarsY[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n    }\n    Cudd_SetVarMap( dd, pVarsX, pVarsY, Aig_ManRegNum(pAig) );\n    ABC_FREE( pVarsX );\n    ABC_FREE( pVarsY );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4ComputeInitState",
+      "Start": 14640,
+      "End": 15299,
+      "BodyStart": 14748,
+      "Original": "DdNode * Llb_Nonlin4ComputeInitState( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder, int fBackward )\n{\n    Aig_Obj_t * pObjLi, * pObjLo;\n    DdNode * bRes, * bVar, * bTemp;\n    int i;\n    abctime TimeStop;\n    TimeStop = dd-\u003eTimeStop;  dd-\u003eTimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo) );\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, Cudd_Not(bVar) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd-\u003eTimeStop = TimeStop;\n    return bRes;\n}",
+      "Draft": "func Llb_Nonlin4ComputeInitState(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fBackward int32) *DdNode {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo) );\n        // inlining of macro Cudd_Not\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, ((DdNode *)((ptrint)(bVar) ^ 01)) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    return bRes;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4ComputeCube",
+      "Start": 15593,
+      "End": 16496,
+      "BodyStart": 15707,
+      "Original": "DdNode * Llb_Nonlin4ComputeCube( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder, char * pValues, int Flag )\n{\n    Aig_Obj_t * pObjLo, * pObjLi, * pObjTemp;\n    DdNode * bRes, * bVar, * bTemp;\n    int i;\n    abctime TimeStop;\n    TimeStop = dd-\u003eTimeStop;  dd-\u003eTimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        if ( Flag )\n            pObjTemp = pObjLo, pObjLo = pObjLi, pObjLi = pObjTemp;\n        // get the correspoding flop input variable\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n        if ( pValues[Llb_ObjBddVar(vOrder, pObjLo)] != 1 )\n            bVar = Cudd_Not(bVar);\n        // create cube\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bVar );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd-\u003eTimeStop = TimeStop;\n    return bRes;\n}",
+      "Draft": "func Llb_Nonlin4ComputeCube(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, pValues string, Flag int32) *DdNode {\n    var pObjLo, pObjLi, pObjTemp *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        if Flag != 0 {\n            pObjTemp = pObjLo;\npObjLo = pObjLi;\npObjLi = pObjTemp; }\n        // get the correspoding flop input variable\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n        if pValues[Llb_ObjBddVar(vOrder, pObjLo)] != 1 {\n            // inlining of macro Cudd_Not\n            bVar = ((DdNode *)((ptrint)(bVar) ^ 01)); }\n        // create cube\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bVar );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    return bRes;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4RecordState",
+      "Start": 16790,
+      "End": 17127,
+      "BodyStart": 16908,
+      "Original": "void Llb_Nonlin4RecordState( Aig_Man_t * pAig, Vec_Int_t * vOrder, unsigned * pState, char * pValues, int fBackward )\n{\n    Aig_Obj_t * pObjLo, * pObjLi;\n    int i;\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        if ( pValues[Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo)] == 1 )\n            Abc_InfoSetBit( pState, i );\n}",
+      "Draft": "func Llb_Nonlin4RecordState(pAig *Aig_Man_t, vOrder *Vec_Int_t, pState *uint32, pValues string, fBackward int32) {\n    var pObjLo, pObjLi *Aig_Obj_t;\n    var i int32;\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        if ( pValues[Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo)] == 1 )\n            Abc_InfoSetBit( pState, i );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Multiply",
+      "Start": 17400,
+      "End": 17787,
+      "BodyStart": 17486,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4Multiply( DdManager * dd, DdNode * bCube, Vec_Ptr_t * vParts )\n{\n    Vec_Ptr_t * vNew;\n    DdNode * bTemp, * bFunc;\n    int i;\n    vNew = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n    {\n        bTemp = Cudd_bddAnd( dd, bFunc, bCube );  Cudd_Ref( bTemp );\n        Vec_PtrPush( vNew, bTemp );\n    }\n    return vNew;\n}",
+      "Draft": "func Llb_Nonlin4Multiply(dd *DdManager, bCube *DdNode, vParts *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNew *Vec_Ptr_t;\n    var bTemp, bFunc *DdNode;\n    var i int32;\n    vNew = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n    {\n        bTemp = Cudd_bddAnd( dd, bFunc, bCube );  Cudd_Ref( bTemp );\n        Vec_PtrPush( vNew, bTemp );\n    }\n    return vNew;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Deref",
+      "Start": 18060,
+      "End": 18277,
+      "BodyStart": 18120,
+      "Original": "void Llb_Nonlin4Deref( DdManager * dd, Vec_Ptr_t * vParts )\n{\n    DdNode * bFunc;\n    int i;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}",
+      "Draft": "func Llb_Nonlin4Deref(dd *DdManager, vParts *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4DeriveCex",
+      "Start": 18562,
+      "End": 21608,
+      "BodyStart": 18641,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4DeriveCex( Llb_Mnx_t * p, int fBackward, int fVerbose )\n{\n    Vec_Int_t * vVars2Q;\n    Vec_Ptr_t * vStates, * vRootsNew;\n    Aig_Obj_t * pObj;\n    DdNode * bState = NULL, * bImage, * bOneCube, * bRing;\n    int i, v, RetValue;//, clk = Abc_Clock();\n    char * pValues;\n    assert( Vec_PtrSize(p-\u003evRings) \u003e 0 );\n    // disable the timeout\n    p-\u003edd-\u003eTimeStop  = 0;\n\n    // start the state set\n    vStates = Vec_PtrAllocSimInfo( Vec_PtrSize(p-\u003evRings), Abc_BitWordNum(Aig_ManRegNum(p-\u003epAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(p-\u003epAig)) );\n    if ( fBackward )\n        Vec_PtrReverseOrder( vStates );\n\n    // get the last cube\n    pValues = ABC_ALLOC( char, Cudd_ReadSize(p-\u003edd) );\n    bOneCube = Cudd_bddIntersect( p-\u003edd, (DdNode *)Vec_PtrEntryLast(p-\u003evRings), p-\u003ebBad );  Cudd_Ref( bOneCube );\n    RetValue = Cudd_bddPickOneCube( p-\u003edd, bOneCube, pValues );\n    Cudd_RecursiveDeref( p-\u003edd, bOneCube );\n    assert( RetValue );\n\n    // record the cube\n    Llb_Nonlin4RecordState( p-\u003epAig, p-\u003evOrder, (unsigned *)Vec_PtrEntryLast(vStates), pValues, fBackward );\n\n    // write state in terms of NS variables\n    if ( Vec_PtrSize(p-\u003evRings) \u003e 1 )\n    {\n        bState = Llb_Nonlin4ComputeCube( p-\u003edd, p-\u003epAig, p-\u003evOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    // perform backward analysis\n    vVars2Q = Llb_Nonlin4CreateVars2Q( p-\u003edd, p-\u003epAig, p-\u003evOrder, !fBackward );\n    Vec_PtrForEachEntryReverse( DdNode *, p-\u003evRings, bRing, v )\n    { \n        if ( v == Vec_PtrSize(p-\u003evRings) - 1 )\n            continue;\n\n        // preprocess partitions\n        vRootsNew = Llb_Nonlin4Multiply( p-\u003edd, bState, p-\u003evRoots );\n        Cudd_RecursiveDeref( p-\u003edd, bState );\n\n        // compute the next states\n        bImage = Llb_Nonlin4Image( p-\u003edd, vRootsNew, NULL, vVars2Q ); Cudd_Ref( bImage );\n        Llb_Nonlin4Deref( p-\u003edd, vRootsNew );\n\n        // intersect with the previous set\n        bOneCube = Cudd_bddIntersect( p-\u003edd, bImage, bRing );  Cudd_Ref( bOneCube );\n        Cudd_RecursiveDeref( p-\u003edd, bImage );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( p-\u003edd, bOneCube, pValues );\n        Cudd_RecursiveDeref( p-\u003edd, bOneCube );\n        assert( RetValue );\n\n        // record the cube\n        Llb_Nonlin4RecordState( p-\u003epAig, p-\u003evOrder, (unsigned *)Vec_PtrEntry(vStates, v), pValues, fBackward );\n\n        // check that we get the init state\n        if ( v == 0 )\n        {\n            Saig_ManForEachLo( p-\u003epAig, pObj, i )\n                assert( fBackward || pValues[Llb_ObjBddVar(p-\u003evOrder, pObj)] == 0 );\n            break;\n        } \n\n        // write state in terms of NS variables\n        bState = Llb_Nonlin4ComputeCube( p-\u003edd, p-\u003epAig, p-\u003evOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    Vec_IntFree( vVars2Q );\n    ABC_FREE( pValues );\n    if ( fBackward )\n        Vec_PtrReverseOrder( vStates );\n//    if ( fVerbose )\n//        Abc_PrintTime( 1, \"BDD-based cex generation time\", Abc_Clock() - clk );\n    return vStates;\n}",
+      "Draft": "func Llb_Nonlin4DeriveCex(p *Llb_Mnx_t, fBackward int32, fVerbose int32) *Vec_Ptr_t {\n    var vVars2Q *Vec_Int_t;\n    var vStates, vRootsNew *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bState *DdNode = nil;\n    var bImage *DdNode;\n    var bOneCube *DdNode;\n    var bRing *DdNode;\n    var i, v, RetValue int32;//, clk = Abc_Clock();\n    var pValues string;\n    assert(Vec_PtrSize(p.vRings) \u003e 0, \"Vec_PtrSize(p.vRings) \u003e 0\");\n    // disable the timeout\n    p.dd.TimeStop  = 0;\n\n    // start the state set\n    vStates = Vec_PtrAllocSimInfo( Vec_PtrSize(p.vRings), Abc_BitWordNum(Aig_ManRegNum(p.pAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(p.pAig)) );\n    if fBackward != 0 {\n        Vec_PtrReverseOrder( vStates ); }\n\n    // get the last cube\n    pValues = ABC_ALLOC( char, Cudd_ReadSize(p.dd) );\n    bOneCube = Cudd_bddIntersect( p.dd, (DdNode *)Vec_PtrEntryLast(p.vRings), p.bBad );  Cudd_Ref( bOneCube );\n    RetValue = Cudd_bddPickOneCube( p.dd, bOneCube, pValues );\n    Cudd_RecursiveDeref( p.dd, bOneCube );\n    assert((RetValue != 0), \"RetValue\");\n\n    // record the cube\n    Llb_Nonlin4RecordState( p.pAig, p.vOrder, (unsigned *)Vec_PtrEntryLast(vStates), pValues, fBackward );\n\n    // write state in terms of NS variables\n    if Vec_PtrSize(p.vRings) \u003e 1 {\n        bState = Llb_Nonlin4ComputeCube( p.dd, p.pAig, p.vOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    // perform backward analysis\n    vVars2Q = Llb_Nonlin4CreateVars2Q( p.dd, p.pAig, p.vOrder, !fBackward );\n    Vec_PtrForEachEntryReverse( DdNode *, p.vRings, bRing, v )\n    { \n        if v == Vec_PtrSize(p.vRings) - 1 {\n            continue; }\n\n        // preprocess partitions\n        vRootsNew = Llb_Nonlin4Multiply( p.dd, bState, p.vRoots );\n        Cudd_RecursiveDeref( p.dd, bState );\n\n        // compute the next states\n        bImage = Llb_Nonlin4Image( p.dd, vRootsNew, nil, vVars2Q ); Cudd_Ref( bImage );\n        Llb_Nonlin4Deref( p.dd, vRootsNew );\n\n        // intersect with the previous set\n        bOneCube = Cudd_bddIntersect( p.dd, bImage, bRing );  Cudd_Ref( bOneCube );\n        Cudd_RecursiveDeref( p.dd, bImage );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( p.dd, bOneCube, pValues );\n        Cudd_RecursiveDeref( p.dd, bOneCube );\n        assert((RetValue != 0), \"RetValue\");\n\n        // record the cube\n        Llb_Nonlin4RecordState( p.pAig, p.vOrder, (unsigned *)Vec_PtrEntry(vStates, v), pValues, fBackward );\n\n        // check that we get the init state\n        if v == 0 {\n            Saig_ManForEachLo( p.pAig, pObj, i )\n                assert((fBackward != 0) || pValues[Llb_ObjBddVar(p.vOrder, pObj)] == 0, \"fBackward || pValues[Llb_ObjBddVar(p.vOrder, pObj)] == 0\");\n            break;\n        } \n\n        // write state in terms of NS variables\n        bState = Llb_Nonlin4ComputeCube( p.dd, p.pAig, p.vOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    Vec_IntFree( vVars2Q );\n    ABC_FREE( pValues );\n    if fBackward != 0 {\n        Vec_PtrReverseOrder( vStates ); }\n//    if ( fVerbose )\n//        Abc_PrintTime( 1, \"BDD-based cex generation time\", Abc_Clock() - clk );\n    return vStates;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Reachability",
+      "Start": 21877,
+      "End": 30932,
+      "BodyStart": 21922,
+      "Original": "int Llb_Nonlin4Reachability( Llb_Mnx_t * p )\n{ \n    DdNode * bAux;\n    int nIters, nBddSizeFr = 0, nBddSizeTo = 0, nBddSizeTo2 = 0;\n    abctime clkTemp, clkIter, clk = Abc_Clock();\n    assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n\n    if ( p-\u003epPars-\u003efBackward )\n    {\n        // create bad state in the ring manager\n        if ( !p-\u003epPars-\u003efSkipOutCheck )\n        {\n            p-\u003ebBad = Llb_Nonlin4ComputeInitState( p-\u003edd, p-\u003epAig, p-\u003evOrder, p-\u003epPars-\u003efBackward );  Cudd_Ref( p-\u003ebBad );\n        }\n        // create init state\n        if ( p-\u003epPars-\u003efCluster )\n            p-\u003ebCurrent = p-\u003edd-\u003ebFunc, p-\u003edd-\u003ebFunc = NULL; \n        else\n        {\n            p-\u003ebCurrent = Llb_Nonlin4ComputeBad( p-\u003edd, p-\u003epAig, p-\u003evOrder );          \n            if ( p-\u003ebCurrent == NULL )\n            {\n                if ( !p-\u003epPars-\u003efSilent )\n                    printf( \"Reached timeout (%d seconds) during constructing the bad states.\\n\", p-\u003epPars-\u003eTimeLimit );\n                p-\u003epPars-\u003eiFrame = -1;\n                return -1;\n            }\n            Cudd_Ref( p-\u003ebCurrent );\n        }\n        // remap into the next states\n        p-\u003ebCurrent = Cudd_bddVarMap( p-\u003edd, bAux = p-\u003ebCurrent );\n        if ( p-\u003ebCurrent == NULL )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during remapping bad states.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            Cudd_RecursiveDeref( p-\u003edd, bAux );\n            p-\u003epPars-\u003eiFrame = -1;\n            return -1;\n        }\n        Cudd_Ref( p-\u003ebCurrent );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );\n    }\n    else\n    {\n        // create bad state in the ring manager\n        if ( !p-\u003epPars-\u003efSkipOutCheck )\n        {\n            if ( p-\u003epPars-\u003efCluster )\n                p-\u003ebBad = p-\u003edd-\u003ebFunc, p-\u003edd-\u003ebFunc = NULL; \n            else\n            {\n                p-\u003ebBad = Llb_Nonlin4ComputeBad( p-\u003edd, p-\u003epAig, p-\u003evOrder );          \n                if ( p-\u003ebBad == NULL )\n                {\n                    if ( !p-\u003epPars-\u003efSilent )\n                        printf( \"Reached timeout (%d seconds) during constructing the bad states.\\n\", p-\u003epPars-\u003eTimeLimit );\n                    p-\u003epPars-\u003eiFrame = -1;\n                    return -1;\n                }\n                Cudd_Ref( p-\u003ebBad );\n            }\n        }\n        else if ( p-\u003edd-\u003ebFunc )\n            Cudd_RecursiveDeref( p-\u003edd, p-\u003edd-\u003ebFunc ), p-\u003edd-\u003ebFunc = NULL;\n        // compute the starting set of states\n        p-\u003ebCurrent = Llb_Nonlin4ComputeInitState( p-\u003edd, p-\u003epAig, p-\u003evOrder, p-\u003epPars-\u003efBackward );  Cudd_Ref( p-\u003ebCurrent );\n    }\n    // perform iterations\n    p-\u003ebReached = p-\u003ebCurrent; Cudd_Ref( p-\u003ebReached );\n    for ( nIters = 0; nIters \u003c p-\u003epPars-\u003enIterMax; nIters++ )\n    { \n        clkIter = Abc_Clock();\n        // check the runtime limit\n        if ( p-\u003epPars-\u003eTimeLimit \u0026\u0026 Abc_Clock() \u003e p-\u003epPars-\u003eTimeTarget )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during image computation.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n\n        // save the onion ring\n        Vec_PtrPush( p-\u003evRings, p-\u003ebCurrent );   Cudd_Ref( p-\u003ebCurrent );\n\n        // check it for bad states\n        if ( !p-\u003epPars-\u003efSkipOutCheck \u0026\u0026 !Cudd_bddLeq( p-\u003edd, p-\u003ebCurrent, Cudd_Not(p-\u003ebBad) ) ) \n        {\n            Vec_Ptr_t * vStates;\n            assert( p-\u003epAig-\u003epSeqModel == NULL );\n            vStates = Llb_Nonlin4DeriveCex( p, p-\u003epPars-\u003efBackward, p-\u003epPars-\u003efVerbose ); \n            p-\u003epAig-\u003epSeqModel = Llb4_Nonlin4TransformCex( p-\u003epAig, vStates, -1, p-\u003epPars-\u003efVerbose );\n            Vec_PtrFreeP( \u0026vStates );\n            if ( !p-\u003epPars-\u003efSilent )\n            {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", p-\u003epAig-\u003epSeqModel-\u003eiPo, p-\u003epAig-\u003epName, nIters );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            return 0;\n        }\n\n        // compute the next states\n        clkTemp = Abc_Clock();\n        p-\u003ebNext = Llb_Nonlin4Image( p-\u003edd, p-\u003evRoots, p-\u003ebCurrent, p-\u003evVars2Q );\n        if ( p-\u003ebNext == NULL )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during image computation in quantification.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p-\u003ebNext );\n        p-\u003etimeImage += Abc_Clock() - clkTemp;\n\n        // remap into current states\n        clkTemp = Abc_Clock();\n        p-\u003ebNext = Cudd_bddVarMap( p-\u003edd, bAux = p-\u003ebNext );\n        if ( p-\u003ebNext == NULL )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during remapping next states.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            Cudd_RecursiveDeref( p-\u003edd, bAux );\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p-\u003ebNext );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );\n        p-\u003etimeRemap += Abc_Clock() - clkTemp;\n\n        // collect statistics\n        if ( p-\u003epPars-\u003efVerbose )\n        {\n            nBddSizeFr  = Cudd_DagSize( p-\u003ebCurrent );\n            nBddSizeTo  = Cudd_DagSize( bAux );\n            nBddSizeTo2 = Cudd_DagSize( p-\u003ebNext );\n        }\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebCurrent ); p-\u003ebCurrent = NULL;\n\n        // derive new states\n        p-\u003ebCurrent = Cudd_bddAnd( p-\u003edd, p-\u003ebNext, Cudd_Not(p-\u003ebReached) );     \n        if ( p-\u003ebCurrent == NULL )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during image computation in transfer 1.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p-\u003ebCurrent );\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebNext ); p-\u003ebNext = NULL;\n        if ( Cudd_IsConstant(p-\u003ebCurrent) )\n            break;\n/*\n        // reduce BDD size using constrain // Cudd_bddRestrict\n        p-\u003ebCurrent = Cudd_bddRestrict( p-\u003edd, bAux = p-\u003ebCurrent, Cudd_Not(p-\u003ebReached) );   \n        Cudd_Ref( p-\u003ebCurrent );\nprintf( \"Before = %d.  After = %d.\\n\", Cudd_DagSize(bAux), Cudd_DagSize(p-\u003ebCurrent) );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );\n*/\n\n        // add to the reached set\n        p-\u003ebReached = Cudd_bddOr( p-\u003edd, bAux = p-\u003ebReached, p-\u003ebCurrent );                 \n        if ( p-\u003ebReached == NULL )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached timeout (%d seconds) during image computation in transfer 1.\\n\",  p-\u003epPars-\u003eTimeLimit );\n            p-\u003epPars-\u003eiFrame = nIters - 1;\n            Cudd_RecursiveDeref( p-\u003edd, bAux );  \n            return -1;\n        }\n        Cudd_Ref( p-\u003ebReached );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );  \n\n\n        // report the results\n        if ( p-\u003epPars-\u003efVerbose )\n        {\n            printf( \"I =%5d : \",   nIters );\n            printf( \"Fr =%7d  \",   nBddSizeFr );\n            printf( \"ImNs =%7d  \", nBddSizeTo );\n            printf( \"ImCs =%7d  \", nBddSizeTo2 );\n            printf( \"Rea =%7d   \", Cudd_DagSize(p-\u003ebReached) );\n            printf( \"(%4d %4d)  \", Cudd_ReadReorderings(p-\u003edd), Cudd_ReadGarbageCollections(p-\u003edd) );\n            Abc_PrintTime( 1, \"T\", Abc_Clock() - clkIter );\n        }\n/*\n        if ( pPars-\u003efVerbose )\n        {\n            double nMints = Cudd_CountMinterm(p-\u003edd, bReached, Saig_ManRegNum(p-\u003epAig) );\n//            Extra_bddPrint( p-\u003edd, bReached );printf( \"\\n\" );\n            printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p-\u003epAig)) );\n            fflush( stdout ); \n        }\n*/\n        if ( nIters == p-\u003epPars-\u003enIterMax - 1 )\n        {\n            if ( !p-\u003epPars-\u003efSilent )\n                printf( \"Reached limit on the number of timeframes (%d).\\n\",  p-\u003epPars-\u003enIterMax );\n            p-\u003epPars-\u003eiFrame = nIters;\n            return -1;\n        }\n    }\n    \n    // report the stats\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        double nMints = Cudd_CountMinterm(p-\u003edd, p-\u003ebReached, Saig_ManRegNum(p-\u003epAig) );\n        if ( p-\u003ebCurrent \u0026\u0026 Cudd_IsConstant(p-\u003ebCurrent) )\n            printf( \"Reachability analysis completed after %d frames.\\n\", nIters );\n        else\n            printf( \"Reachability analysis is stopped after %d frames.\\n\", nIters );\n        printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p-\u003epAig)) );\n        fflush( stdout ); \n    }\n    if ( p-\u003ebCurrent == NULL || !Cudd_IsConstant(p-\u003ebCurrent) )\n    {\n        if ( !p-\u003epPars-\u003efSilent )\n            printf( \"Verified only for states reachable in %d frames.  \", nIters );\n        p-\u003epPars-\u003eiFrame = p-\u003epPars-\u003enIterMax;\n        return -1; // undecided\n    }\n    // report\n    if ( !p-\u003epPars-\u003efSilent )\n        printf( \"The miter is proved unreachable after %d iterations.  \", nIters );\n    if ( !p-\u003epPars-\u003efSilent )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    p-\u003epPars-\u003eiFrame = nIters - 1;\n    return 1; // unreachable\n}",
+      "Draft": "func Llb_Nonlin4Reachability(p *Llb_Mnx_t) int32 { \n    var bAux *DdNode;\n    var nIters, nBddSizeFr, nBddSizeTo, nBddSizeTo2 int32;\n    var clkTemp abctime;\n    var clkIter abctime;\n    var clk abctime = Abc_Clock();\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n\n    if p.pPars.fBackward {\n        // create bad state in the ring manager\n        if !p.pPars.fSkipOutCheck {\n            p.bBad = Llb_Nonlin4ComputeInitState( p.dd, p.pAig, p.vOrder, p.pPars.fBackward );  Cudd_Ref( p.bBad );\n        }\n        // create init state\n        if p.pPars.fCluster {\n            p.bCurrent = p.dd.bFunc, p.dd.bFunc = nil; \n        } else {\n            p.bCurrent = Llb_Nonlin4ComputeBad( p.dd, p.pAig, p.vOrder );          \n            if p.bCurrent == nil {\n                if !p.pPars.fSilent {\n                    fmt.Printf(\"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit); }\n                p.pPars.iFrame = -1;\n                return -1;\n            }\n            Cudd_Ref( p.bCurrent );\n        }\n        // remap into the next states\n        p.bCurrent = Cudd_bddVarMap( p.dd, bAux = p.bCurrent );\n        if p.bCurrent == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during remapping bad states.\\n\", p.pPars.TimeLimit); }\n            Cudd_RecursiveDeref( p.dd, bAux );\n            p.pPars.iFrame = -1;\n            return -1;\n        }\n        Cudd_Ref( p.bCurrent );\n        Cudd_RecursiveDeref( p.dd, bAux );\n    \n    } else {\n        // create bad state in the ring manager\n        if !p.pPars.fSkipOutCheck {\n            if p.pPars.fCluster {\n                p.bBad = p.dd.bFunc, p.dd.bFunc = nil; \n            } else {\n                p.bBad = Llb_Nonlin4ComputeBad( p.dd, p.pAig, p.vOrder );          \n                if p.bBad == nil {\n                    if !p.pPars.fSilent {\n                        fmt.Printf(\"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit); }\n                    p.pPars.iFrame = -1;\n                    return -1;\n                }\n                Cudd_Ref( p.bBad );\n            }\n        \n        } else if p.dd.bFunc {\n            Cudd_RecursiveDeref( p.dd, p.dd.bFunc );\np.dd.bFunc = nil; }\n        // compute the starting set of states\n        p.bCurrent = Llb_Nonlin4ComputeInitState( p.dd, p.pAig, p.vOrder, p.pPars.fBackward );  Cudd_Ref( p.bCurrent );\n    }\n    // perform iterations\n    p.bReached = p.bCurrent; Cudd_Ref( p.bReached );\n    for  nIters = 0; nIters \u003c p.pPars.nIterMax; nIters++  { \n        clkIter = Abc_Clock();\n        // check the runtime limit\n        if p.pPars.TimeLimit \u0026\u0026 Abc_Clock() \u003e p.pPars.TimeTarget {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n\n        // save the onion ring\n        Vec_PtrPush( p.vRings, p.bCurrent );   Cudd_Ref( p.bCurrent );\n\n        // check it for bad states\n        // inlining of macro Cudd_Not\n        if !p.pPars.fSkipOutCheck \u0026\u0026 !Cudd_bddLeq( p.dd, p.bCurrent, ((DdNode *)((ptrint)(p.bBad) ^ 01)) ) {\n            var vStates *Vec_Ptr_t;\n            assert(p.pAig.pSeqModel == nil, \"p.pAig.pSeqModel == nil\");\n            vStates = Llb_Nonlin4DeriveCex( p, p.pPars.fBackward, p.pPars.fVerbose ); \n            p.pAig.pSeqModel = Llb4_Nonlin4TransformCex( p.pAig, vStates, -1, p.pPars.fVerbose );\n            Vec_PtrFreeP( \u0026vStates );\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", p.pAig.pSeqModel.iPo, p.pAig.pName, nIters );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            p.pPars.iFrame = nIters - 1;\n            return 0;\n        }\n\n        // compute the next states\n        clkTemp = Abc_Clock();\n        p.bNext = Llb_Nonlin4Image( p.dd, p.vRoots, p.bCurrent, p.vVars2Q );\n        if p.bNext == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in quantification.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bNext );\n        p.timeImage += Abc_Clock() - clkTemp;\n\n        // remap into current states\n        clkTemp = Abc_Clock();\n        p.bNext = Cudd_bddVarMap( p.dd, bAux = p.bNext );\n        if p.bNext == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during remapping next states.\\n\", p.pPars.TimeLimit); }\n            Cudd_RecursiveDeref( p.dd, bAux );\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bNext );\n        Cudd_RecursiveDeref( p.dd, bAux );\n        p.timeRemap += Abc_Clock() - clkTemp;\n\n        // collect statistics\n        if p.pPars.fVerbose {\n            nBddSizeFr  = Cudd_DagSize( p.bCurrent );\n            nBddSizeTo  = Cudd_DagSize( bAux );\n            nBddSizeTo2 = Cudd_DagSize( p.bNext );\n        }\n        Cudd_RecursiveDeref( p.dd, p.bCurrent ); p.bCurrent = nil;\n\n        // derive new states\n        // inlining of macro Cudd_Not\n        p.bCurrent = Cudd_bddAnd( p.dd, p.bNext, ((DdNode *)((ptrint)(p.bReached) ^ 01)) );     \n        if p.bCurrent == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in transfer 1.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bCurrent );\n        Cudd_RecursiveDeref( p.dd, p.bNext ); p.bNext = nil;\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if  (((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            break; }\n/*\n        // reduce BDD size using constrain // Cudd_bddRestrict\n        p-\u003ebCurrent = Cudd_bddRestrict( p-\u003edd, bAux = p-\u003ebCurrent, Cudd_Not(p-\u003ebReached) );   \n        Cudd_Ref( p-\u003ebCurrent );\nprintf( \"Before = %d.  After = %d.\\n\", Cudd_DagSize(bAux), Cudd_DagSize(p-\u003ebCurrent) );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );\n*/\n\n        // add to the reached set\n        p.bReached = Cudd_bddOr( p.dd, bAux = p.bReached, p.bCurrent );                 \n        if p.bReached == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in transfer 1.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            Cudd_RecursiveDeref( p.dd, bAux );  \n            return -1;\n        }\n        Cudd_Ref( p.bReached );\n        Cudd_RecursiveDeref( p.dd, bAux );  \n\n\n        // report the results\n        if p.pPars.fVerbose {\n            fmt.Printf(\"I =%5d : \", nIters);\n            fmt.Printf(\"Fr =%7d  \", nBddSizeFr);\n            fmt.Printf(\"ImNs =%7d  \", nBddSizeTo);\n            fmt.Printf(\"ImCs =%7d  \", nBddSizeTo2);\n            fmt.Printf(\"Rea =%7d   \", Cudd_DagSize(p.bReached));\n            fmt.Printf(\"(%4d %4d)  \", Cudd_ReadReorderings(p.dd), Cudd_ReadGarbageCollections(p.dd));\n            Abc_PrintTime( 1, \"T\", Abc_Clock() - clkIter );\n        }\n/*\n        if ( pPars-\u003efVerbose )\n        {\n            double nMints = Cudd_CountMinterm(p-\u003edd, bReached, Saig_ManRegNum(p-\u003epAig) );\n//            Extra_bddPrint( p-\u003edd, bReached );printf( \"\\n\" );\n            printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p-\u003epAig)) );\n            fflush( stdout ); \n        }\n*/\n        if nIters == p.pPars.nIterMax - 1 {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached limit on the number of timeframes (%d).\\n\", p.pPars.nIterMax); }\n            p.pPars.iFrame = nIters;\n            return -1;\n        }\n    }\n    \n    // report the stats\n    if p.pPars.fVerbose {\n        var nMints float64  = Cudd_CountMinterm(p.dd, p.bReached, Saig_ManRegNum(p.pAig) );\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if p.bCurrent \u0026\u0026 ((((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            fmt.Printf(\"Reachability analysis completed after %d frames.\\n\", nIters);\n        } else {\n            fmt.Printf(\"Reachability analysis is stopped after %d frames.\\n\", nIters); }\n        fmt.Printf(\"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p.pAig))));\n        fflush( os.Stdout ); \n    }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if p.bCurrent == nil || !((((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if !p.pPars.fSilent {\n            fmt.Printf(\"Verified only for states reachable in %d frames.  \", nIters); }\n        p.pPars.iFrame = p.pPars.nIterMax;\n        return -1; // undecided\n    }\n    // report\n    if !p.pPars.fSilent {\n        fmt.Printf(\"The miter is proved unreachable after %d iterations.  \", nIters); }\n    if !p.pPars.fSilent {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    p.pPars.iFrame = nIters - 1;\n    return 1; // unreachable\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4Reorder",
+      "Start": 31205,
+      "End": 31848,
+      "BodyStart": 31273,
+      "Original": "void Llb_Nonlin4Reorder( DdManager * dd, int fTwice, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    if ( fVerbose )\n        Abc_Print( 1, \"Reordering... Before =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if ( fVerbose )\n        Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n    if ( fTwice )\n    {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if ( fVerbose )\n            Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n    }\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Llb_Nonlin4Reorder(dd *DdManager, fTwice int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Reordering... Before =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if fVerbose != 0 {\n        Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    if fTwice != 0 {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 {\n            Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}"
+    },
+    {
+      "Name": "Llb_MnxStart",
+      "Start": 32085,
+      "End": 33592,
+      "BodyStart": 32152,
+      "Original": "Llb_Mnx_t * Llb_MnxStart( Aig_Man_t * pAig, Gia_ParLlb_t * pPars )\n{\n    Llb_Mnx_t * p;\n\n    p = ABC_CALLOC( Llb_Mnx_t, 1 );\n    p-\u003epAig    = pAig;\n    p-\u003epPars   = pPars;\n\n    // compute time to stop\n    p-\u003epPars-\u003eTimeTarget = p-\u003epPars-\u003eTimeLimit ? p-\u003epPars-\u003eTimeLimit * CLOCKS_PER_SEC + Abc_Clock(): 0;\n\n    if ( pPars-\u003efCluster )\n    {\n//        Llb_Nonlin4Cluster( p-\u003epAig, \u0026p-\u003edd, \u0026p-\u003evOrder, \u0026p-\u003evRoots, pPars-\u003enBddMax, pPars-\u003efVerbose );\n//        Cudd_AutodynEnable( p-\u003edd,  CUDD_REORDER_SYMM_SIFT );\n        Llb4_Nonlin4Sweep( p-\u003epAig, pPars-\u003enBddMax, pPars-\u003enClusterMax, \u0026p-\u003edd, \u0026p-\u003evOrder, \u0026p-\u003evRoots, pPars-\u003efVerbose );\n        // set the stop time parameter\n        p-\u003edd-\u003eTimeStop  = p-\u003epPars-\u003eTimeTarget;\n    }\n    else\n    {\n//    p-\u003evOrder  = Llb_Nonlin4CreateOrderSimple( pAig );\n        p-\u003evOrder  = Llb_Nonlin4CreateOrder( pAig );\n        p-\u003edd      = Cudd_Init( Vec_IntCountPositive(p-\u003evOrder) + 1, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynEnable( p-\u003edd,  CUDD_REORDER_SYMM_SIFT );\n        Cudd_SetMaxGrowth( p-\u003edd, 1.05 );\n        // set the stop time parameter\n        p-\u003edd-\u003eTimeStop  = p-\u003epPars-\u003eTimeTarget;\n        p-\u003evRoots  = Llb_Nonlin4DerivePartitions( p-\u003edd, pAig, p-\u003evOrder );\n    }\n\n    Llb_Nonlin4SetupVarMap( p-\u003edd, pAig, p-\u003evOrder );\n    p-\u003evVars2Q = Llb_Nonlin4CreateVars2Q( p-\u003edd, pAig, p-\u003evOrder, p-\u003epPars-\u003efBackward );\n    p-\u003evRings  = Vec_PtrAlloc( 100 );\n\n    if ( pPars-\u003efReorder )\n        Llb_Nonlin4Reorder( p-\u003edd, 0, 1 );\n    return p;\n}",
+      "Draft": "func Llb_MnxStart(pAig *Aig_Man_t, pPars *Gia_ParLlb_t) *Llb_Mnx_t {\n    var p *Llb_Mnx_t;\n\n    p = new(Llb_Mnx_t);\n    p.pAig    = pAig;\n    p.pPars   = pPars;\n\n    // compute time to stop\n    if p.pPars.TimeLimit {\n        p.pPars.TimeTarget = p.pPars.TimeLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        p.pPars.TimeTarget = 0;\n    }\n\n    if pPars.fCluster {\n//        Llb_Nonlin4Cluster( p-\u003epAig, \u0026p-\u003edd, \u0026p-\u003evOrder, \u0026p-\u003evRoots, pPars-\u003enBddMax, pPars-\u003efVerbose );\n//        Cudd_AutodynEnable( p-\u003edd,  CUDD_REORDER_SYMM_SIFT );\n        Llb4_Nonlin4Sweep( p.pAig, pPars.nBddMax, pPars.nClusterMax, \u0026p.dd, \u0026p.vOrder, \u0026p.vRoots, pPars.fVerbose );\n        // set the stop time parameter\n        p.dd.TimeStop  = p.pPars.TimeTarget;\n    \n    } else {\n//    p-\u003evOrder  = Llb_Nonlin4CreateOrderSimple( pAig );\n        p.vOrder  = Llb_Nonlin4CreateOrder( pAig );\n        p.dd      = Cudd_Init( Vec_IntCountPositive(p.vOrder) + 1, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynEnable( p.dd,  CUDD_REORDER_SYMM_SIFT );\n        Cudd_SetMaxGrowth( p.dd, 1.05 );\n        // set the stop time parameter\n        p.dd.TimeStop  = p.pPars.TimeTarget;\n        p.vRoots  = Llb_Nonlin4DerivePartitions( p.dd, pAig, p.vOrder );\n    }\n\n    Llb_Nonlin4SetupVarMap( p.dd, pAig, p.vOrder );\n    p.vVars2Q = Llb_Nonlin4CreateVars2Q( p.dd, pAig, p.vOrder, p.pPars.fBackward );\n    p.vRings  = Vec_PtrAlloc( 100 );\n\n    if pPars.fReorder {\n        Llb_Nonlin4Reorder( p.dd, 0, 1 ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Llb_MnxStop",
+      "Start": 33829,
+      "End": 35148,
+      "BodyStart": 33863,
+      "Original": "void Llb_MnxStop( Llb_Mnx_t * p )\n{\n    DdNode * bTemp;\n    int i;\n    if ( p-\u003epPars-\u003efVerbose ) \n    {\n        p-\u003etimeReo = Cudd_ReadReorderingTime(p-\u003edd);\n        p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeImage - p-\u003etimeRemap;\n        ABC_PRTP( \"Image    \", p-\u003etimeImage, p-\u003etimeTotal );\n        ABC_PRTP( \"Remap    \", p-\u003etimeRemap, p-\u003etimeTotal );\n        ABC_PRTP( \"Other    \", p-\u003etimeOther, p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL    \", p-\u003etimeTotal, p-\u003etimeTotal );\n        ABC_PRTP( \"  reo    \", p-\u003etimeReo,   p-\u003etimeTotal );\n    }\n    // remove BDDs\n    if ( p-\u003ebBad )\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebBad );\n    if ( p-\u003ebReached )\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebReached );\n    if ( p-\u003ebCurrent )\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebCurrent );\n    if ( p-\u003ebNext )\n        Cudd_RecursiveDeref( p-\u003edd, p-\u003ebNext );\n    if ( p-\u003evRings )\n    Vec_PtrForEachEntry( DdNode *, p-\u003evRings, bTemp, i )\n        Cudd_RecursiveDeref( p-\u003edd, bTemp );\n    if ( p-\u003evRoots )\n    Vec_PtrForEachEntry( DdNode *, p-\u003evRoots, bTemp, i )\n        Cudd_RecursiveDeref( p-\u003edd, bTemp );\n    // remove arrays\n    Vec_PtrFreeP( \u0026p-\u003evRings );\n    Vec_PtrFreeP( \u0026p-\u003evRoots );\n//Cudd_PrintInfo( p-\u003edd, stdout );\n    Extra_StopManager( p-\u003edd );\n    Vec_IntFreeP( \u0026p-\u003evOrder );\n    Vec_IntFreeP( \u0026p-\u003evVars2Q );\n    ABC_FREE( p );\n}",
+      "Draft": "func Llb_MnxStop(p *Llb_Mnx_t) {\n    var bTemp *DdNode;\n    var i int32;\n    if p.pPars.fVerbose {\n        p.timeReo = Cudd_ReadReorderingTime(p.dd);\n        p.timeOther = p.timeTotal - p.timeImage - p.timeRemap;\n        ABC_PRTP( \"Image    \", p.timeImage, p.timeTotal );\n        ABC_PRTP( \"Remap    \", p.timeRemap, p.timeTotal );\n        ABC_PRTP( \"Other    \", p.timeOther, p.timeTotal );\n        ABC_PRTP( \"TOTAL    \", p.timeTotal, p.timeTotal );\n        ABC_PRTP( \"  reo    \", p.timeReo,   p.timeTotal );\n    }\n    // remove BDDs\n    if p.bBad {\n        Cudd_RecursiveDeref( p.dd, p.bBad ); }\n    if p.bReached {\n        Cudd_RecursiveDeref( p.dd, p.bReached ); }\n    if p.bCurrent {\n        Cudd_RecursiveDeref( p.dd, p.bCurrent ); }\n    if p.bNext {\n        Cudd_RecursiveDeref( p.dd, p.bNext ); }\n    if p.vRings {\n    Vec_PtrForEachEntry( DdNode *, p.vRings, bTemp, i )\n        Cudd_RecursiveDeref( p.dd, bTemp ); }\n    if p.vRoots {\n    Vec_PtrForEachEntry( DdNode *, p.vRoots, bTemp, i )\n        Cudd_RecursiveDeref( p.dd, bTemp ); }\n    // remove arrays\n    Vec_PtrFreeP( \u0026p.vRings );\n    Vec_PtrFreeP( \u0026p.vRoots );\n//Cudd_PrintInfo( p-\u003edd, stdout );\n    Extra_StopManager( p.dd );\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vVars2Q );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Llb_MnxCheckNextStateVars",
+      "Start": 35385,
+      "End": 35837,
+      "BodyStart": 35433,
+      "Original": "void Llb_MnxCheckNextStateVars( Llb_Mnx_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter0 = 0, Counter1 = 0;\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n        if ( Saig_ObjIsLo(p-\u003epAig, Aig_ObjFanin0(pObj)) )\n        {\n            if ( Aig_ObjFaninC0(pObj) )\n                Counter0++;\n            else\n                Counter1++;\n        }\n    printf( \"Total = %d.  Direct LO = %d. Compl LO = %d.\\n\", Aig_ManRegNum(p-\u003epAig), Counter1, Counter0 );\n}",
+      "Draft": "func Llb_MnxCheckNextStateVars(p *Llb_Mnx_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter0, Counter1 int32;\n    Saig_ManForEachLi( p.pAig, pObj, i )\n        if Saig_ObjIsLo(p.pAig, Aig_ObjFanin0(pObj)) {\n            if Aig_ObjFaninC0(pObj) {\n                Counter0++;\n            } else {\n                Counter1++; }\n        }\n    fmt.Printf(\"Total = %d.  Direct LO = %d. Compl LO = %d.\\n\", Aig_ManRegNum(p.pAig), Counter1, Counter0);\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4CoreReach",
+      "Start": 36092,
+      "End": 36770,
+      "BodyStart": 36159,
+      "Original": "int Llb_Nonlin4CoreReach( Aig_Man_t * pAig, Gia_ParLlb_t * pPars )\n{\n    Llb_Mnx_t * pMnn;\n    int RetValue = -1;\n    if ( pPars-\u003efVerbose )\n    Aig_ManPrintStats( pAig );\n    if ( pPars-\u003efCluster \u0026\u0026 Aig_ManObjNum(pAig) \u003e= (1 \u003c\u003c 15) )\n    {\n        printf( \"The number of objects is more than 2^15.  Clustering cannot be used.\\n\" );\n        return RetValue;\n    }\n    {\n        abctime clk = Abc_Clock();\n        pMnn = Llb_MnxStart( pAig, pPars );\n//Llb_MnxCheckNextStateVars( pMnn );\n        if ( !pPars-\u003efSkipReach )\n            RetValue = Llb_Nonlin4Reachability( pMnn );\n        pMnn-\u003etimeTotal = Abc_Clock() - clk;\n        Llb_MnxStop( pMnn );\n    }\n    return RetValue;\n}",
+      "Draft": "func Llb_Nonlin4CoreReach(pAig *Aig_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var pMnn *Llb_Mnx_t;\n    var RetValue int32  = -1;\n    if pPars.fVerbose {\n    Aig_ManPrintStats( pAig ); }\n    if pPars.fCluster \u0026\u0026 Aig_ManObjNum(pAig) \u003e= (1 \u003c\u003c 15) {\n        fmt.Printf(\"The number of objects is more than 2^15.  Clustering cannot be used.\\n\");\n        return RetValue;\n    }\n    {\n        var clk abctime  = Abc_Clock();\n        pMnn = Llb_MnxStart( pAig, pPars );\n//Llb_MnxCheckNextStateVars( pMnn );\n        if !pPars.fSkipReach {\n            RetValue = Llb_Nonlin4Reachability( pMnn ); }\n        pMnn.timeTotal = Abc_Clock() - clk;\n        Llb_MnxStop( pMnn );\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Llb_ReachableStates",
+      "Start": 37069,
+      "End": 39240,
+      "BodyStart": 37121,
+      "Original": "Aig_Man_t * Llb_ReachableStates( Aig_Man_t * pAig )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    Vec_Int_t * vPermute;\n    Vec_Ptr_t * vNames;\n    Gia_ParLlb_t Pars, * pPars = \u0026Pars;\n    DdManager * dd;\n    DdNode * bReached;\n    Llb_Mnx_t * pMnn;\n    Abc_Ntk_t * pNtk, * pNtkMuxes;\n    Aig_Obj_t * pObj;\n    int i, RetValue;\n    abctime clk = Abc_Clock();\n\n    // create parameters\n    Llb_ManSetDefaultParams( pPars );\n    pPars-\u003efSkipOutCheck = 1;\n    pPars-\u003efCluster      = 0;\n    pPars-\u003efReorder      = 0;\n    pPars-\u003efSilent       = 1;\n    pPars-\u003enBddMax       = 100;\n    pPars-\u003enClusterMax   = 500;\n\n    // run reachability\n    pMnn = Llb_MnxStart( pAig, pPars );\n    RetValue = Llb_Nonlin4Reachability( pMnn );\n    assert( RetValue == 1 );\n\n    // print BDD\n//    Extra_bddPrint( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    Extra_bddPrintSupport( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    printf( \"\\n\" );\n\n    // collect flop output variables\n    vPermute = Vec_IntStartFull( Cudd_ReadSize(pMnn-\u003edd) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vPermute, Llb_ObjBddVar(pMnn-\u003evOrder, pObj), i );\n\n    // transfer the reached state BDD into the new manager\n    dd = Cudd_Init( Saig_ManRegNum(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bReached = Extra_TransferPermute( pMnn-\u003edd, dd, pMnn-\u003ebReached, Vec_IntArray(vPermute) );  Cudd_Ref( bReached );\n    Vec_IntFree( vPermute );\n    assert( Cudd_ReadSize(dd) == Saig_ManRegNum(pAig) );\n\n    // quit reachability engine\n    pMnn-\u003etimeTotal = Abc_Clock() - clk;\n    Llb_MnxStop( pMnn );\n\n    // derive the network\n    vNames = Abc_NodeGetFakeNames( Saig_ManRegNum(pAig) );\n    pNtk = Abc_NtkDeriveFromBdd( dd, bReached, \"reached\", vNames );\n    Abc_NodeFreeNames( vNames );\n    Cudd_RecursiveDeref( dd, bReached );\n    Cudd_Quit( dd );\n\n    // convert\n    pNtkMuxes = Abc_NtkBddToMuxes( pNtk, 0, 1000000 );\n    Abc_NtkDelete( pNtk );\n    pNtk = Abc_NtkStrash( pNtkMuxes, 0, 1, 0 );\n    Abc_NtkDelete( pNtkMuxes );\n    pAig = Abc_NtkToDar( pNtk, 0, 0 );\n    Abc_NtkDelete( pNtk );\n    return pAig;\n}",
+      "Draft": "func Llb_ReachableStates(pAig *Aig_Man_t) *Aig_Man_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    var vPermute *Vec_Int_t;\n    var vNames *Vec_Ptr_t;\n    var Pars Gia_ParLlb_t;\n    var pPars *Gia_ParLlb_t = \u0026Pars;\n    var dd *DdManager;\n    var bReached *DdNode;\n    var pMnn *Llb_Mnx_t;\n    var pNtk, pNtkMuxes *Abc_Ntk_t;\n    var pObj *Aig_Obj_t;\n    var i, RetValue int32;\n    var clk abctime  = Abc_Clock();\n\n    // create parameters\n    Llb_ManSetDefaultParams( pPars );\n    pPars.fSkipOutCheck = 1;\n    pPars.fCluster      = 0;\n    pPars.fReorder      = 0;\n    pPars.fSilent       = 1;\n    pPars.nBddMax       = 100;\n    pPars.nClusterMax   = 500;\n\n    // run reachability\n    pMnn = Llb_MnxStart( pAig, pPars );\n    RetValue = Llb_Nonlin4Reachability( pMnn );\n    assert(RetValue == 1, \"RetValue == 1\");\n\n    // print BDD\n//    Extra_bddPrint( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    Extra_bddPrintSupport( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    printf( \"\\n\" );\n\n    // collect flop output variables\n    vPermute = Vec_IntStartFull( Cudd_ReadSize(pMnn.dd) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vPermute, Llb_ObjBddVar(pMnn.vOrder, pObj), i );\n\n    // transfer the reached state BDD into the new manager\n    dd = Cudd_Init( Saig_ManRegNum(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bReached = Extra_TransferPermute( pMnn.dd, dd, pMnn.bReached, Vec_IntArray(vPermute) );  Cudd_Ref( bReached );\n    Vec_IntFree( vPermute );\n    assert(Cudd_ReadSize(dd) == Saig_ManRegNum(pAig), \"Cudd_ReadSize(dd) == Saig_ManRegNum(pAig)\");\n\n    // quit reachability engine\n    pMnn.timeTotal = Abc_Clock() - clk;\n    Llb_MnxStop( pMnn );\n\n    // derive the network\n    vNames = Abc_NodeGetFakeNames( Saig_ManRegNum(pAig) );\n    pNtk = Abc_NtkDeriveFromBdd( dd, bReached, \"reached\", vNames );\n    Abc_NodeFreeNames( vNames );\n    Cudd_RecursiveDeref( dd, bReached );\n    Cudd_Quit( dd );\n\n    // convert\n    pNtkMuxes = Abc_NtkBddToMuxes( pNtk, 0, 1000000 );\n    Abc_NtkDelete( pNtk );\n    pNtk = Abc_NtkStrash( pNtkMuxes, 0, 1, 0 );\n    Abc_NtkDelete( pNtkMuxes );\n    pAig = Abc_NtkToDar( pNtk, 0, 0 );\n    Abc_NtkDelete( pNtk );\n    return pAig;\n}"
+    },
+    {
+      "Name": "Llb_ReachableStatesGia",
+      "Start": 39241,
+      "End": 39548,
+      "BodyStart": 39293,
+      "Original": "Gia_Man_t * Llb_ReachableStatesGia( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    Aig_Man_t * pAig, * pReached;\n    pAig = Gia_ManToAigSimple( p );\n    pReached = Llb_ReachableStates( pAig );\n    Aig_ManStop( pAig );\n    pNew = Gia_ManFromAigSimple( pReached );\n    Aig_ManStop( pReached );\n    return pNew;\n}",
+      "Draft": "func Llb_ReachableStatesGia(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pAig, pReached *Aig_Man_t;\n    pAig = Gia_ManToAigSimple( p );\n    pReached = Llb_ReachableStates( pAig );\n    Aig_ManStop( pAig );\n    pNew = Gia_ManFromAigSimple( pReached );\n    Aig_ManStop( pReached );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::struct::Llb_Mnx_t",
+      "Category": "struct-review",
+      "Symbol": "Llb_Mnx_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 851,
+      "End": 1792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::2857",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2857,
+      "End": 2871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3056,
+      "End": 3056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3056,
+      "End": 3056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3148,
+      "End": 3148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3276",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3148,
+      "End": 3148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3604",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3486,
+      "End": 3496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3797,
+      "End": 3797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::3984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3797,
+      "End": 3797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::4472",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4295,
+      "End": 4305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::4708",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4531,
+      "End": 4541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::6309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6132,
+      "End": 6142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::6634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6408,
+      "End": 6408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::6654",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6408,
+      "End": 6408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::6785",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6500,
+      "End": 6500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::6805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6500,
+      "End": 6500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::7174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6879,
+      "End": 6889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::7559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7215,
+      "End": 7215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::7579",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7215,
+      "End": 7215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::7679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7325,
+      "End": 7335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::7969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7615,
+      "End": 7625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::8150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7796,
+      "End": 7806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::15542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15143,
+      "End": 15143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::16727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16265,
+      "End": 16265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::19819",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19339,
+      "End": 19349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::20096",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19616,
+      "End": 19628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::21380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20900,
+      "End": 20912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::25712",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25187,
+      "End": 25187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::27933",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27345,
+      "End": 27345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::28475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27767,
+      "End": 27767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::30865",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30013,
+      "End": 30013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::pointer-cast::31410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30414,
+      "End": 30414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4ComputeBad",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4ComputeBad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2351,
+      "End": 5238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4DerivePartitions",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4DerivePartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5506,
+      "End": 7962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CreateOrderSimple",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateOrderSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8228,
+      "End": 8645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CreateOrder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateOrder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8916,
+      "End": 10155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CollectHighRefNodes",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CollectHighRefNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10433,
+      "End": 11044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::ternary::Llb_Nonlin4CreateOrder",
+      "Category": "ternary-review",
+      "Symbol": "Llb_Nonlin4CreateOrder",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11315,
+      "End": 12626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CreateOrder",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11315,
+      "End": 12626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::ternary::Llb_Nonlin4CreateVars2Q",
+      "Category": "ternary-review",
+      "Symbol": "Llb_Nonlin4CreateVars2Q",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12922,
+      "End": 13349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CreateVars2Q",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CreateVars2Q",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12922,
+      "End": 13349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4SetupVarMap",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SetupVarMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13643,
+      "End": 14346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::ternary::Llb_Nonlin4ComputeInitState",
+      "Category": "ternary-review",
+      "Symbol": "Llb_Nonlin4ComputeInitState",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14640,
+      "End": 15299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4ComputeInitState",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4ComputeInitState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14640,
+      "End": 15299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4ComputeCube",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4ComputeCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15593,
+      "End": 16496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::ternary::Llb_Nonlin4RecordState",
+      "Category": "ternary-review",
+      "Symbol": "Llb_Nonlin4RecordState",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16790,
+      "End": 17127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4RecordState",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4RecordState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16790,
+      "End": 17127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4Multiply",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Multiply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17400,
+      "End": 17787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4Deref",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Deref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18060,
+      "End": 18277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4DeriveCex",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4DeriveCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18562,
+      "End": 21608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4Reachability",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Reachability",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21877,
+      "End": 30932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4Reorder",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4Reorder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31205,
+      "End": 31848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_MnxStart",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MnxStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32085,
+      "End": 33592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_MnxStop",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MnxStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33829,
+      "End": 35148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_MnxCheckNextStateVars",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MnxCheckNextStateVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35385,
+      "End": 35837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_Nonlin4CoreReach",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4CoreReach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36092,
+      "End": 36770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_ReachableStates",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ReachableStates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37069,
+      "End": 39240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::Llb_ReachableStatesGia",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ReachableStatesGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39241,
+      "End": 39548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 39795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::2684",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2684,
+      "End": 2717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::2924",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2924,
+      "End": 2975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::3323",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3323,
+      "End": 3374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::3738",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3738,
+      "End": 3772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::4148",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4148,
+      "End": 4199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::4434",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4434,
+      "End": 4468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::5828",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5828,
+      "End": 5861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::5939",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5939,
+      "End": 5974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::6171",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6171,
+      "End": 6205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::6350",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6350,
+      "End": 6385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::7158",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7158,
+      "End": 7192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::7546",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7546,
+      "End": 7581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::7696",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7696,
+      "End": 7731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::7825",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7825,
+      "End": 7874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::8422",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8422,
+      "End": 8455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::8525",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8525,
+      "End": 8559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::10601",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10601,
+      "End": 10636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::10740",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10740,
+      "End": 10774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::10877",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10877,
+      "End": 10912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::11934",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11934,
+      "End": 11968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::12133",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12133,
+      "End": 12166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::13188",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13188,
+      "End": 13234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::13820",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13820,
+      "End": 13860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::13875",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13875,
+      "End": 13915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::13921",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13921,
+      "End": 13967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::14301",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14301,
+      "End": 14319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::14325",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14325,
+      "End": 14343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::14956",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14956,
+      "End": 15002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::15927",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15927,
+      "End": 15973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::16959",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLiLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16959,
+      "End": 17005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::17602",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17602,
+      "End": 17651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::18157",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18157,
+      "End": 18206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::19257",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19257,
+      "End": 19296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::20001",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20001,
+      "End": 20060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::21049",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21049,
+      "End": 21086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::21401",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21401,
+      "End": 21420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::32182",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32182,
+      "End": 32208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34061",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34061,
+      "End": 34112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34122",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34122,
+      "End": 34173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34183",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34183,
+      "End": 34234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34244",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34244,
+      "End": 34295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34305",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34305,
+      "End": 34356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34690",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34690,
+      "End": 34742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::34813",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34813,
+      "End": 34865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::35132",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35132,
+      "End": 35145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::35500",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35500,
+      "End": 35537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Nonlin.c::macro-inline::38113",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 38113,
+      "End": 38147
+    }
+  ],
+  "Draft": "package llb\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [llb2Nonlin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Non-linear quantification scheduling.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Nonlin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n//#include \"base/abc/abc.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Llb_Mnx_t struct {\n    // user info\n    pAig      *Aig_Man_t;           // AIG manager\n    pPars   *Gia_ParLlb_t;          // parameters\n\n    // intermediate BDDs\n    dd      *DdManager;             // BDD manager\n    bBad         *DdNode;           // bad states in terms of CIs\n    bReached         *DdNode;       // reached states \n    bCurrent         *DdNode;       // from states\n    bNext         *DdNode;          // to states\n    vRings      *Vec_Ptr_t;         // onion rings in ddR\n    vRoots      *Vec_Ptr_t;         // BDDs for partitions\n\n    // structural info\n    vOrder      *Vec_Int_t;         // for each object ID, its BDD variable number or -1\n    vVars2Q      *Vec_Int_t;        // 1 if variable is quantifiable; 0 othervise\n\n    timeImage         abctime;\n    timeRemap         abctime;\n    timeReo         abctime;\n    timeOther         abctime;\n    timeTotal         abctime;\n}\n\n//extern int timeBuild, timeAndEx, timeOther;\n//extern int nSuppMax;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Computes bad in working manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4ComputeBad(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) *DdNode {\n    var vNodes *Vec_Ptr_t;\n    var bBdd, bBdd0, bBdd1, bTemp, bResult, bCube *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig).pData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(pAig.vCos), Saig_ManPoNum(pAig) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if bBdd == nil {\n            Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n                if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj.pData != nil )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( bBdd );\n        pObj.pData = bBdd;\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0   = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     \n        if bResult == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            break;\n        }\n        Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 pObj.pData != nil )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Vec_PtrFree( vNodes );\n    if bResult {\n        bCube = Cudd_ReadOne(dd);  Cudd_Ref( bCube );\n        Saig_ManForEachPi( pAig, pObj, i )\n        {\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, (DdNode *)pObj.pData );  \n            if bCube == nil {\n                Cudd_RecursiveDeref( dd, bTemp );\n                Cudd_RecursiveDeref( dd, bResult );\n                bResult = nil;\n                break;\n            }\n            Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n        if bResult != nil {\n            bResult = Cudd_bddExistAbstract( dd, bTemp = bResult, bCube );  Cudd_Ref( bResult );\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_Deref( bResult );\n        }\n    }\n//if ( bResult )\n//printf( \"Bad state = %d.\\n\", Cudd_DagSize(bResult) );\n    return bResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives BDDs for the partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4DerivePartitions(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) *Vec_Ptr_t {\n    var vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bBdd, bBdd0, bBdd1, bPart *DdNode;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    // assign elementary variables\n    Aig_ManConst1(pAig).pData = Cudd_ReadOne(dd); \n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if Llb_ObjBddVar(vOrder, pObj) \u003e= 0 {\n            pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n            Cudd_Ref( (DdNode *)pObj.pData );\n        }\n    Saig_ManForEachLi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // compute intermediate BDDs\n    vRoots = Vec_PtrAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if bBdd == nil {\n            goto finish; }\n        Cudd_Ref( bBdd );\n        if pObj.pData == nil {\n            pObj.pData = bBdd;\n            continue;\n        }\n        // create new partition\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj.pData, bBdd );  \n        if bPart == nil {\n            goto finish; }\n        Cudd_Ref( bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n    // compute register output BDDs\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bPart = Cudd_bddXnor( dd, (DdNode *)pObj.pData, bBdd0 );  \n        if bPart == nil {\n            goto finish; }\n        Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n//printf( \"%d \", Cudd_DagSize(bPart) );\n    }\n//printf( \"\\n\" );\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    return vRoots;\n    // early termination\nfinish:\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.pData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Vec_PtrForEachEntry( DdNode *, vRoots, bPart, i )\n        Cudd_RecursiveDeref( dd, bPart );\n    Vec_PtrFree( vRoots );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find simple variable ordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateOrderSimple(pAig *Aig_Man_t) *Vec_Int_t {\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManForEachCi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n    return vOrder;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find good static variable ordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateOrder_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vOrder *Vec_Int_t, pCounter *int32) {\n    var pFanin0, pFanin1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert(Llb_ObjBddVar(vOrder, pObj) \u003c 0, \"Llb_ObjBddVar(vOrder, pObj) \u003c 0\");\n    if Aig_ObjIsCi(pObj) {\n//        if ( Saig_ObjIsLo(pAig, pObj) )\n//            Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), (*pCounter)++ );\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if pFanin0.Level \u003e pFanin1.Level {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n    \n    } else {\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin1, vOrder, pCounter );\n        Llb_Nonlin4CreateOrder_rec( pAig, pFanin0, vOrder, pCounter );\n    }\n    if pObj.fMarkA {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect nodes with the given fanout count.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CollectHighRefNodes(pAig *Aig_Man_t, nFans int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) \u003e= nFans )\n            pObj.fMarkA = 1;\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj).fMarkA = 0;\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find good static variable ordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateOrder(pAig *Aig_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t  = nil;\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n/*\n    // mark internal nodes to be used\n    Aig_ManCleanMarkA( pAig );\n    vNodes = Llb_Nonlin4CollectHighRefNodes( pAig, 4 );\n    Aig_ManForEachObjVec( vNodes, pAig, pObj, i )\n        pObj-\u003efMarkA = 1;\nprintf( \"Techmapping added %d pivots.\\n\", Vec_IntSize(vNodes) );\n*/\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4CreateOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if Llb_ObjBddVar(vOrder, pObj) \u003c 0 {\n//            if ( Saig_ObjIsLo(pAig, pObj) )\n//                Vec_IntWriteEntry( vOrder, Aig_ObjId(Saig_ObjLoToLi(pAig, pObj)), Counter++ );\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        }\n    assert(Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0), \"Counter \u003c= Aig_ManCiNum(pAig) + Aig_ManRegNum(pAig) + (vNodes?Vec_IntSize(vNodes):0)\");\n    Aig_ManCleanMarkA( pAig );\n    Vec_IntFreeP( \u0026vNodes );\n    return vOrder;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates quantifiable varaibles for both types of traversal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CreateVars2Q(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fBackward int32) *Vec_Int_t {\n    var vVars2Q *Vec_Int_t;\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Cudd_ReadSize(dd), 1 );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, fBackward ? pObjLo : pObjLi), 0 );\n    return vVars2Q;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute initial state in terms of current state variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SetupVarMap(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t) {\n    var pVarsX, pVarsY **DdNode;\n    var pObjLo, pObjLi *Aig_Obj_t;\n    var i int32;\n    pVarsX = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    pVarsY = ABC_ALLOC( DdNode *, Cudd_ReadSize(dd) );\n    Saig_ManForEachLiLo( pAig, pObjLo, pObjLi, i )\n    {\n        assert(Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0, \"Llb_ObjBddVar(vOrder, pObjLo) \u003e= 0\");\n        assert(Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0, \"Llb_ObjBddVar(vOrder, pObjLi) \u003e= 0\");\n        pVarsX[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLo) );\n        pVarsY[i] = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n    }\n    Cudd_SetVarMap( dd, pVarsX, pVarsY, Aig_ManRegNum(pAig) );\n    ABC_FREE( pVarsX );\n    ABC_FREE( pVarsY );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute initial state in terms of current state variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4ComputeInitState(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fBackward int32) *DdNode {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo) );\n        // inlining of macro Cudd_Not\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, ((DdNode *)((ptrint)(bVar) ^ 01)) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute initial state in terms of current state variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4ComputeCube(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, pValues string, Flag int32) *DdNode {\n    var pObjLo, pObjLi, pObjTemp *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        if Flag != 0 {\n            pObjTemp = pObjLo;\npObjLo = pObjLi;\npObjLi = pObjTemp; }\n        // get the correspoding flop input variable\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObjLi) );\n        if pValues[Llb_ObjBddVar(vOrder, pObjLo)] != 1 {\n            // inlining of macro Cudd_Not\n            bVar = ((DdNode *)((ptrint)(bVar) ^ 01)); }\n        // create cube\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, bVar );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute initial state in terms of current state variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4RecordState(pAig *Aig_Man_t, vOrder *Vec_Int_t, pState *uint32, pValues string, fBackward int32) {\n    var pObjLo, pObjLi *Aig_Obj_t;\n    var i int32;\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n        if ( pValues[Llb_ObjBddVar(vOrder, fBackward? pObjLi : pObjLo)] == 1 )\n            Abc_InfoSetBit( pState, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiply every partition by the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Multiply(dd *DdManager, bCube *DdNode, vParts *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNew *Vec_Ptr_t;\n    var bTemp, bFunc *DdNode;\n    var i int32;\n    vNew = Vec_PtrAlloc( Vec_PtrSize(vParts) );\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n    {\n        bTemp = Cudd_bddAnd( dd, bFunc, bCube );  Cudd_Ref( bTemp );\n        Vec_PtrPush( vNew, bTemp );\n    }\n    return vNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiply every partition by the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Deref(dd *DdManager, vParts *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives counter-example by backward reachability.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4DeriveCex(p *Llb_Mnx_t, fBackward int32, fVerbose int32) *Vec_Ptr_t {\n    var vVars2Q *Vec_Int_t;\n    var vStates, vRootsNew *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var bState *DdNode = nil;\n    var bImage *DdNode;\n    var bOneCube *DdNode;\n    var bRing *DdNode;\n    var i, v, RetValue int32;//, clk = Abc_Clock();\n    var pValues string;\n    assert(Vec_PtrSize(p.vRings) \u003e 0, \"Vec_PtrSize(p.vRings) \u003e 0\");\n    // disable the timeout\n    p.dd.TimeStop  = 0;\n\n    // start the state set\n    vStates = Vec_PtrAllocSimInfo( Vec_PtrSize(p.vRings), Abc_BitWordNum(Aig_ManRegNum(p.pAig)) );\n    Vec_PtrCleanSimInfo( vStates, 0, Abc_BitWordNum(Aig_ManRegNum(p.pAig)) );\n    if fBackward != 0 {\n        Vec_PtrReverseOrder( vStates ); }\n\n    // get the last cube\n    pValues = ABC_ALLOC( char, Cudd_ReadSize(p.dd) );\n    bOneCube = Cudd_bddIntersect( p.dd, (DdNode *)Vec_PtrEntryLast(p.vRings), p.bBad );  Cudd_Ref( bOneCube );\n    RetValue = Cudd_bddPickOneCube( p.dd, bOneCube, pValues );\n    Cudd_RecursiveDeref( p.dd, bOneCube );\n    assert((RetValue != 0), \"RetValue\");\n\n    // record the cube\n    Llb_Nonlin4RecordState( p.pAig, p.vOrder, (unsigned *)Vec_PtrEntryLast(vStates), pValues, fBackward );\n\n    // write state in terms of NS variables\n    if Vec_PtrSize(p.vRings) \u003e 1 {\n        bState = Llb_Nonlin4ComputeCube( p.dd, p.pAig, p.vOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    // perform backward analysis\n    vVars2Q = Llb_Nonlin4CreateVars2Q( p.dd, p.pAig, p.vOrder, !fBackward );\n    Vec_PtrForEachEntryReverse( DdNode *, p.vRings, bRing, v )\n    { \n        if v == Vec_PtrSize(p.vRings) - 1 {\n            continue; }\n\n        // preprocess partitions\n        vRootsNew = Llb_Nonlin4Multiply( p.dd, bState, p.vRoots );\n        Cudd_RecursiveDeref( p.dd, bState );\n\n        // compute the next states\n        bImage = Llb_Nonlin4Image( p.dd, vRootsNew, nil, vVars2Q ); Cudd_Ref( bImage );\n        Llb_Nonlin4Deref( p.dd, vRootsNew );\n\n        // intersect with the previous set\n        bOneCube = Cudd_bddIntersect( p.dd, bImage, bRing );  Cudd_Ref( bOneCube );\n        Cudd_RecursiveDeref( p.dd, bImage );\n\n        // find any assignment of the BDD\n        RetValue = Cudd_bddPickOneCube( p.dd, bOneCube, pValues );\n        Cudd_RecursiveDeref( p.dd, bOneCube );\n        assert((RetValue != 0), \"RetValue\");\n\n        // record the cube\n        Llb_Nonlin4RecordState( p.pAig, p.vOrder, (unsigned *)Vec_PtrEntry(vStates, v), pValues, fBackward );\n\n        // check that we get the init state\n        if v == 0 {\n            Saig_ManForEachLo( p.pAig, pObj, i )\n                assert((fBackward != 0) || pValues[Llb_ObjBddVar(p.vOrder, pObj)] == 0, \"fBackward || pValues[Llb_ObjBddVar(p.vOrder, pObj)] == 0\");\n            break;\n        } \n\n        // write state in terms of NS variables\n        bState = Llb_Nonlin4ComputeCube( p.dd, p.pAig, p.vOrder, pValues, fBackward );   Cudd_Ref( bState );\n    }\n    Vec_IntFree( vVars2Q );\n    ABC_FREE( pValues );\n    if fBackward != 0 {\n        Vec_PtrReverseOrder( vStates ); }\n//    if ( fVerbose )\n//        Abc_PrintTime( 1, \"BDD-based cex generation time\", Abc_Clock() - clk );\n    return vStates;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Perform reachability with hints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Reachability(p *Llb_Mnx_t) int32 { \n    var bAux *DdNode;\n    var nIters, nBddSizeFr, nBddSizeTo, nBddSizeTo2 int32;\n    var clkTemp abctime;\n    var clkIter abctime;\n    var clk abctime = Abc_Clock();\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n\n    if p.pPars.fBackward {\n        // create bad state in the ring manager\n        if !p.pPars.fSkipOutCheck {\n            p.bBad = Llb_Nonlin4ComputeInitState( p.dd, p.pAig, p.vOrder, p.pPars.fBackward );  Cudd_Ref( p.bBad );\n        }\n        // create init state\n        if p.pPars.fCluster {\n            p.bCurrent = p.dd.bFunc, p.dd.bFunc = nil; \n        } else {\n            p.bCurrent = Llb_Nonlin4ComputeBad( p.dd, p.pAig, p.vOrder );          \n            if p.bCurrent == nil {\n                if !p.pPars.fSilent {\n                    fmt.Printf(\"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit); }\n                p.pPars.iFrame = -1;\n                return -1;\n            }\n            Cudd_Ref( p.bCurrent );\n        }\n        // remap into the next states\n        p.bCurrent = Cudd_bddVarMap( p.dd, bAux = p.bCurrent );\n        if p.bCurrent == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during remapping bad states.\\n\", p.pPars.TimeLimit); }\n            Cudd_RecursiveDeref( p.dd, bAux );\n            p.pPars.iFrame = -1;\n            return -1;\n        }\n        Cudd_Ref( p.bCurrent );\n        Cudd_RecursiveDeref( p.dd, bAux );\n    \n    } else {\n        // create bad state in the ring manager\n        if !p.pPars.fSkipOutCheck {\n            if p.pPars.fCluster {\n                p.bBad = p.dd.bFunc, p.dd.bFunc = nil; \n            } else {\n                p.bBad = Llb_Nonlin4ComputeBad( p.dd, p.pAig, p.vOrder );          \n                if p.bBad == nil {\n                    if !p.pPars.fSilent {\n                        fmt.Printf(\"Reached timeout (%d seconds) during constructing the bad states.\\n\", p.pPars.TimeLimit); }\n                    p.pPars.iFrame = -1;\n                    return -1;\n                }\n                Cudd_Ref( p.bBad );\n            }\n        \n        } else if p.dd.bFunc {\n            Cudd_RecursiveDeref( p.dd, p.dd.bFunc );\np.dd.bFunc = nil; }\n        // compute the starting set of states\n        p.bCurrent = Llb_Nonlin4ComputeInitState( p.dd, p.pAig, p.vOrder, p.pPars.fBackward );  Cudd_Ref( p.bCurrent );\n    }\n    // perform iterations\n    p.bReached = p.bCurrent; Cudd_Ref( p.bReached );\n    for  nIters = 0; nIters \u003c p.pPars.nIterMax; nIters++  { \n        clkIter = Abc_Clock();\n        // check the runtime limit\n        if p.pPars.TimeLimit \u0026\u0026 Abc_Clock() \u003e p.pPars.TimeTarget {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n\n        // save the onion ring\n        Vec_PtrPush( p.vRings, p.bCurrent );   Cudd_Ref( p.bCurrent );\n\n        // check it for bad states\n        // inlining of macro Cudd_Not\n        if !p.pPars.fSkipOutCheck \u0026\u0026 !Cudd_bddLeq( p.dd, p.bCurrent, ((DdNode *)((ptrint)(p.bBad) ^ 01)) ) {\n            var vStates *Vec_Ptr_t;\n            assert(p.pAig.pSeqModel == nil, \"p.pAig.pSeqModel == nil\");\n            vStates = Llb_Nonlin4DeriveCex( p, p.pPars.fBackward, p.pPars.fVerbose ); \n            p.pAig.pSeqModel = Llb4_Nonlin4TransformCex( p.pAig, vStates, -1, p.pPars.fVerbose );\n            Vec_PtrFreeP( \u0026vStates );\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", p.pAig.pSeqModel.iPo, p.pAig.pName, nIters );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            p.pPars.iFrame = nIters - 1;\n            return 0;\n        }\n\n        // compute the next states\n        clkTemp = Abc_Clock();\n        p.bNext = Llb_Nonlin4Image( p.dd, p.vRoots, p.bCurrent, p.vVars2Q );\n        if p.bNext == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in quantification.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bNext );\n        p.timeImage += Abc_Clock() - clkTemp;\n\n        // remap into current states\n        clkTemp = Abc_Clock();\n        p.bNext = Cudd_bddVarMap( p.dd, bAux = p.bNext );\n        if p.bNext == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during remapping next states.\\n\", p.pPars.TimeLimit); }\n            Cudd_RecursiveDeref( p.dd, bAux );\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bNext );\n        Cudd_RecursiveDeref( p.dd, bAux );\n        p.timeRemap += Abc_Clock() - clkTemp;\n\n        // collect statistics\n        if p.pPars.fVerbose {\n            nBddSizeFr  = Cudd_DagSize( p.bCurrent );\n            nBddSizeTo  = Cudd_DagSize( bAux );\n            nBddSizeTo2 = Cudd_DagSize( p.bNext );\n        }\n        Cudd_RecursiveDeref( p.dd, p.bCurrent ); p.bCurrent = nil;\n\n        // derive new states\n        // inlining of macro Cudd_Not\n        p.bCurrent = Cudd_bddAnd( p.dd, p.bNext, ((DdNode *)((ptrint)(p.bReached) ^ 01)) );     \n        if p.bCurrent == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in transfer 1.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( p.bCurrent );\n        Cudd_RecursiveDeref( p.dd, p.bNext ); p.bNext = nil;\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if  (((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX {\n            break; }\n/*\n        // reduce BDD size using constrain // Cudd_bddRestrict\n        p-\u003ebCurrent = Cudd_bddRestrict( p-\u003edd, bAux = p-\u003ebCurrent, Cudd_Not(p-\u003ebReached) );   \n        Cudd_Ref( p-\u003ebCurrent );\nprintf( \"Before = %d.  After = %d.\\n\", Cudd_DagSize(bAux), Cudd_DagSize(p-\u003ebCurrent) );\n        Cudd_RecursiveDeref( p-\u003edd, bAux );\n*/\n\n        // add to the reached set\n        p.bReached = Cudd_bddOr( p.dd, bAux = p.bReached, p.bCurrent );                 \n        if p.bReached == nil {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached timeout (%d seconds) during image computation in transfer 1.\\n\", p.pPars.TimeLimit); }\n            p.pPars.iFrame = nIters - 1;\n            Cudd_RecursiveDeref( p.dd, bAux );  \n            return -1;\n        }\n        Cudd_Ref( p.bReached );\n        Cudd_RecursiveDeref( p.dd, bAux );  \n\n\n        // report the results\n        if p.pPars.fVerbose {\n            fmt.Printf(\"I =%5d : \", nIters);\n            fmt.Printf(\"Fr =%7d  \", nBddSizeFr);\n            fmt.Printf(\"ImNs =%7d  \", nBddSizeTo);\n            fmt.Printf(\"ImCs =%7d  \", nBddSizeTo2);\n            fmt.Printf(\"Rea =%7d   \", Cudd_DagSize(p.bReached));\n            fmt.Printf(\"(%4d %4d)  \", Cudd_ReadReorderings(p.dd), Cudd_ReadGarbageCollections(p.dd));\n            Abc_PrintTime( 1, \"T\", Abc_Clock() - clkIter );\n        }\n/*\n        if ( pPars-\u003efVerbose )\n        {\n            double nMints = Cudd_CountMinterm(p-\u003edd, bReached, Saig_ManRegNum(p-\u003epAig) );\n//            Extra_bddPrint( p-\u003edd, bReached );printf( \"\\n\" );\n            printf( \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p-\u003epAig)) );\n            fflush( stdout ); \n        }\n*/\n        if nIters == p.pPars.nIterMax - 1 {\n            if !p.pPars.fSilent {\n                fmt.Printf(\"Reached limit on the number of timeframes (%d).\\n\", p.pPars.nIterMax); }\n            p.pPars.iFrame = nIters;\n            return -1;\n        }\n    }\n    \n    // report the stats\n    if p.pPars.fVerbose {\n        var nMints float64  = Cudd_CountMinterm(p.dd, p.bReached, Saig_ManRegNum(p.pAig) );\n        // inlining of macro Cudd_IsConstant\n        // inlining of macro Cudd_Regular\n        if p.bCurrent \u0026\u0026 ((((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            fmt.Printf(\"Reachability analysis completed after %d frames.\\n\", nIters);\n        } else {\n            fmt.Printf(\"Reachability analysis is stopped after %d frames.\\n\", nIters); }\n        fmt.Printf(\"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p.pAig))));\n        fflush( os.Stdout ); \n    }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if p.bCurrent == nil || !((((DdNode *)((ptruint)(p.bCurrent) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if !p.pPars.fSilent {\n            fmt.Printf(\"Verified only for states reachable in %d frames.  \", nIters); }\n        p.pPars.iFrame = p.pPars.nIterMax;\n        return -1; // undecided\n    }\n    // report\n    if !p.pPars.fSilent {\n        fmt.Printf(\"The miter is proved unreachable after %d iterations.  \", nIters); }\n    if !p.pPars.fSilent {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    p.pPars.iFrame = nIters - 1;\n    return 1; // unreachable\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders BDDs in the working manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4Reorder(dd *DdManager, fTwice int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Reordering... Before =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if fVerbose != 0 {\n        Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    if fTwice != 0 {\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 {\n            Abc_Print( 1, \"After =%5d. \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }\n    }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MnxStart(pAig *Aig_Man_t, pPars *Gia_ParLlb_t) *Llb_Mnx_t {\n    var p *Llb_Mnx_t;\n\n    p = new(Llb_Mnx_t);\n    p.pAig    = pAig;\n    p.pPars   = pPars;\n\n    // compute time to stop\n    if p.pPars.TimeLimit {\n        p.pPars.TimeTarget = p.pPars.TimeLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        p.pPars.TimeTarget = 0;\n    }\n\n    if pPars.fCluster {\n//        Llb_Nonlin4Cluster( p-\u003epAig, \u0026p-\u003edd, \u0026p-\u003evOrder, \u0026p-\u003evRoots, pPars-\u003enBddMax, pPars-\u003efVerbose );\n//        Cudd_AutodynEnable( p-\u003edd,  CUDD_REORDER_SYMM_SIFT );\n        Llb4_Nonlin4Sweep( p.pAig, pPars.nBddMax, pPars.nClusterMax, \u0026p.dd, \u0026p.vOrder, \u0026p.vRoots, pPars.fVerbose );\n        // set the stop time parameter\n        p.dd.TimeStop  = p.pPars.TimeTarget;\n    \n    } else {\n//    p-\u003evOrder  = Llb_Nonlin4CreateOrderSimple( pAig );\n        p.vOrder  = Llb_Nonlin4CreateOrder( pAig );\n        p.dd      = Cudd_Init( Vec_IntCountPositive(p.vOrder) + 1, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynEnable( p.dd,  CUDD_REORDER_SYMM_SIFT );\n        Cudd_SetMaxGrowth( p.dd, 1.05 );\n        // set the stop time parameter\n        p.dd.TimeStop  = p.pPars.TimeTarget;\n        p.vRoots  = Llb_Nonlin4DerivePartitions( p.dd, pAig, p.vOrder );\n    }\n\n    Llb_Nonlin4SetupVarMap( p.dd, pAig, p.vOrder );\n    p.vVars2Q = Llb_Nonlin4CreateVars2Q( p.dd, pAig, p.vOrder, p.pPars.fBackward );\n    p.vRings  = Vec_PtrAlloc( 100 );\n\n    if pPars.fReorder {\n        Llb_Nonlin4Reorder( p.dd, 0, 1 ); }\n    return p;\n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MnxStop(p *Llb_Mnx_t) {\n    var bTemp *DdNode;\n    var i int32;\n    if p.pPars.fVerbose {\n        p.timeReo = Cudd_ReadReorderingTime(p.dd);\n        p.timeOther = p.timeTotal - p.timeImage - p.timeRemap;\n        ABC_PRTP( \"Image    \", p.timeImage, p.timeTotal );\n        ABC_PRTP( \"Remap    \", p.timeRemap, p.timeTotal );\n        ABC_PRTP( \"Other    \", p.timeOther, p.timeTotal );\n        ABC_PRTP( \"TOTAL    \", p.timeTotal, p.timeTotal );\n        ABC_PRTP( \"  reo    \", p.timeReo,   p.timeTotal );\n    }\n    // remove BDDs\n    if p.bBad {\n        Cudd_RecursiveDeref( p.dd, p.bBad ); }\n    if p.bReached {\n        Cudd_RecursiveDeref( p.dd, p.bReached ); }\n    if p.bCurrent {\n        Cudd_RecursiveDeref( p.dd, p.bCurrent ); }\n    if p.bNext {\n        Cudd_RecursiveDeref( p.dd, p.bNext ); }\n    if p.vRings {\n    Vec_PtrForEachEntry( DdNode *, p.vRings, bTemp, i )\n        Cudd_RecursiveDeref( p.dd, bTemp ); }\n    if p.vRoots {\n    Vec_PtrForEachEntry( DdNode *, p.vRoots, bTemp, i )\n        Cudd_RecursiveDeref( p.dd, bTemp ); }\n    // remove arrays\n    Vec_PtrFreeP( \u0026p.vRings );\n    Vec_PtrFreeP( \u0026p.vRoots );\n//Cudd_PrintInfo( p-\u003edd, stdout );\n    Extra_StopManager( p.dd );\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vVars2Q );\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MnxCheckNextStateVars(p *Llb_Mnx_t) {\n    var pObj *Aig_Obj_t;\n    var i, Counter0, Counter1 int32;\n    Saig_ManForEachLi( p.pAig, pObj, i )\n        if Saig_ObjIsLo(p.pAig, Aig_ObjFanin0(pObj)) {\n            if Aig_ObjFaninC0(pObj) {\n                Counter0++;\n            } else {\n                Counter1++; }\n        }\n    fmt.Printf(\"Total = %d.  Direct LO = %d. Compl LO = %d.\\n\", Aig_ManRegNum(p.pAig), Counter1, Counter0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4CoreReach(pAig *Aig_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var pMnn *Llb_Mnx_t;\n    var RetValue int32  = -1;\n    if pPars.fVerbose {\n    Aig_ManPrintStats( pAig ); }\n    if pPars.fCluster \u0026\u0026 Aig_ManObjNum(pAig) \u003e= (1 \u003c\u003c 15) {\n        fmt.Printf(\"The number of objects is more than 2^15.  Clustering cannot be used.\\n\");\n        return RetValue;\n    }\n    {\n        var clk abctime  = Abc_Clock();\n        pMnn = Llb_MnxStart( pAig, pPars );\n//Llb_MnxCheckNextStateVars( pMnn );\n        if !pPars.fSkipReach {\n            RetValue = Llb_Nonlin4Reachability( pMnn ); }\n        pMnn.timeTotal = Abc_Clock() - clk;\n        Llb_MnxStop( pMnn );\n    }\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Takes an AIG and returns an AIG representing reachable states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ReachableStates(pAig *Aig_Man_t) *Aig_Man_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    var vPermute *Vec_Int_t;\n    var vNames *Vec_Ptr_t;\n    var Pars Gia_ParLlb_t;\n    var pPars *Gia_ParLlb_t = \u0026Pars;\n    var dd *DdManager;\n    var bReached *DdNode;\n    var pMnn *Llb_Mnx_t;\n    var pNtk, pNtkMuxes *Abc_Ntk_t;\n    var pObj *Aig_Obj_t;\n    var i, RetValue int32;\n    var clk abctime  = Abc_Clock();\n\n    // create parameters\n    Llb_ManSetDefaultParams( pPars );\n    pPars.fSkipOutCheck = 1;\n    pPars.fCluster      = 0;\n    pPars.fReorder      = 0;\n    pPars.fSilent       = 1;\n    pPars.nBddMax       = 100;\n    pPars.nClusterMax   = 500;\n\n    // run reachability\n    pMnn = Llb_MnxStart( pAig, pPars );\n    RetValue = Llb_Nonlin4Reachability( pMnn );\n    assert(RetValue == 1, \"RetValue == 1\");\n\n    // print BDD\n//    Extra_bddPrint( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    Extra_bddPrintSupport( pMnn-\u003edd, pMnn-\u003ebReached ); \n//    printf( \"\\n\" );\n\n    // collect flop output variables\n    vPermute = Vec_IntStartFull( Cudd_ReadSize(pMnn.dd) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vPermute, Llb_ObjBddVar(pMnn.vOrder, pObj), i );\n\n    // transfer the reached state BDD into the new manager\n    dd = Cudd_Init( Saig_ManRegNum(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bReached = Extra_TransferPermute( pMnn.dd, dd, pMnn.bReached, Vec_IntArray(vPermute) );  Cudd_Ref( bReached );\n    Vec_IntFree( vPermute );\n    assert(Cudd_ReadSize(dd) == Saig_ManRegNum(pAig), \"Cudd_ReadSize(dd) == Saig_ManRegNum(pAig)\");\n\n    // quit reachability engine\n    pMnn.timeTotal = Abc_Clock() - clk;\n    Llb_MnxStop( pMnn );\n\n    // derive the network\n    vNames = Abc_NodeGetFakeNames( Saig_ManRegNum(pAig) );\n    pNtk = Abc_NtkDeriveFromBdd( dd, bReached, \"reached\", vNames );\n    Abc_NodeFreeNames( vNames );\n    Cudd_RecursiveDeref( dd, bReached );\n    Cudd_Quit( dd );\n\n    // convert\n    pNtkMuxes = Abc_NtkBddToMuxes( pNtk, 0, 1000000 );\n    Abc_NtkDelete( pNtk );\n    pNtk = Abc_NtkStrash( pNtkMuxes, 0, 1, 0 );\n    Abc_NtkDelete( pNtkMuxes );\n    pAig = Abc_NtkToDar( pNtk, 0, 0 );\n    Abc_NtkDelete( pNtk );\n    return pAig;\n}\nfunc Llb_ReachableStatesGia(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pAig, pReached *Aig_Man_t;\n    pAig = Gia_ManToAigSimple( p );\n    pReached = Llb_ReachableStates( pAig );\n    Aig_ManStop( pAig );\n    pNew = Gia_ManFromAigSimple( pReached );\n    Aig_ManStop( pReached );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

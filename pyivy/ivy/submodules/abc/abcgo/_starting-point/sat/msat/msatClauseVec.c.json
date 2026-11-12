@@ -1,0 +1,452 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c",
+  "SHA256": "845df66a0538734af74c7c99e391caab93d16eb57001d1b2357951a722d49c0b",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 49,
+        "Column": 76,
+        "ByteOffset": 1615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_ClauseVec_t *) malloc(sizeof(Msat_ClauseVec_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 55,
+        "Column": 86,
+        "ByteOffset": 1856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nCap)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 74,
+        "Column": 64,
+        "ByteOffset": 2313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 57,
+        "ByteOffset": 2418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 124,
+        "Column": 41,
+        "ByteOffset": 3588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((Msat_Clause_t * *) realloc((char *)(p.pArray), sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 126,
+        "Column": 41,
+        "ByteOffset": 3716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e= nSizeNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 5625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 6000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_ClauseVecAlloc",
+      "Start": 1436,
+      "End": 1736,
+      "BodyStart": 1487,
+      "Original": "Msat_ClauseVec_t * Msat_ClauseVecAlloc( int nCap )\n{\n    Msat_ClauseVec_t * p;\n    p = ABC_ALLOC( Msat_ClauseVec_t, 1 );\n    if ( nCap \u003e 0 \u0026\u0026 nCap \u003c 16 )\n        nCap = 16;\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( Msat_Clause_t *, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Msat_ClauseVecAlloc(nCap int32) *Msat_ClauseVec_t {\n    var p *Msat_ClauseVec_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_ClauseVec_t *) malloc(sizeof(Msat_ClauseVec_t) * (size_t)(1)));\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        // inlining of macro ABC_ALLOC\n        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nCap)));\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecFree",
+      "Start": 1972,
+      "End": 2069,
+      "BodyStart": 2020,
+      "Original": "void Msat_ClauseVecFree( Msat_ClauseVec_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_ClauseVecFree(p *Msat_ClauseVec_t) {\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecReadArray",
+      "Start": 2305,
+      "End": 2395,
+      "BodyStart": 2370,
+      "Original": "Msat_Clause_t ** Msat_ClauseVecReadArray( Msat_ClauseVec_t * p )\n{\n    return p-\u003epArray;\n}",
+      "Draft": "func Msat_ClauseVecReadArray(p *Msat_ClauseVec_t) **Msat_Clause_t {\n    return p.pArray;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecReadSize",
+      "Start": 2631,
+      "End": 2706,
+      "BodyStart": 2682,
+      "Original": "int Msat_ClauseVecReadSize( Msat_ClauseVec_t * p )\n{\n    return p-\u003enSize;\n}",
+      "Draft": "func Msat_ClauseVecReadSize(p *Msat_ClauseVec_t) int32 {\n    return p.nSize;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecGrow",
+      "Start": 2983,
+      "End": 3187,
+      "BodyStart": 3044,
+      "Original": "void Msat_ClauseVecGrow( Msat_ClauseVec_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = ABC_REALLOC( Msat_Clause_t *, p-\u003epArray, nCapMin ); \n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Msat_ClauseVecGrow(p *Msat_ClauseVec_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((Msat_Clause_t * *) realloc((char *)(p.pArray), sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));\n    } else {\n        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));\n    } \n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecShrink",
+      "Start": 3423,
+      "End": 3551,
+      "BodyStart": 3487,
+      "Original": "void Msat_ClauseVecShrink( Msat_ClauseVec_t * p, int nSizeNew )\n{\n    assert( p-\u003enSize \u003e= nSizeNew );\n    p-\u003enSize = nSizeNew;\n}",
+      "Draft": "func Msat_ClauseVecShrink(p *Msat_ClauseVec_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecClear",
+      "Start": 3787,
+      "End": 3857,
+      "BodyStart": 3836,
+      "Original": "void Msat_ClauseVecClear( Msat_ClauseVec_t * p )\n{\n    p-\u003enSize = 0;\n}",
+      "Draft": "func Msat_ClauseVecClear(p *Msat_ClauseVec_t) {\n    p.nSize = 0;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecPush",
+      "Start": 4093,
+      "End": 4377,
+      "BodyStart": 4164,
+      "Original": "void Msat_ClauseVecPush( Msat_ClauseVec_t * p, Msat_Clause_t * Entry )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Msat_ClauseVecGrow( p, 16 );\n        else\n            Msat_ClauseVecGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Entry;\n}",
+      "Draft": "func Msat_ClauseVecPush(p *Msat_ClauseVec_t, Entry *Msat_Clause_t) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Msat_ClauseVecGrow( p, 16 );\n        } else {\n            Msat_ClauseVecGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecPop",
+      "Start": 4613,
+      "End": 4708,
+      "BodyStart": 4671,
+      "Original": "Msat_Clause_t * Msat_ClauseVecPop( Msat_ClauseVec_t * p )\n{\n    return p-\u003epArray[--p-\u003enSize];\n}",
+      "Draft": "func Msat_ClauseVecPop(p *Msat_ClauseVec_t) *Msat_Clause_t {\n    return p.pArray[--p.nSize];\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecWriteEntry",
+      "Start": 4944,
+      "End": 5095,
+      "BodyStart": 5028,
+      "Original": "void Msat_ClauseVecWriteEntry( Msat_ClauseVec_t * p, int i, Msat_Clause_t * Entry )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Msat_ClauseVecWriteEntry(p *Msat_ClauseVec_t, i int32, Entry *Msat_Clause_t) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Msat_ClauseVecReadEntry",
+      "Start": 5331,
+      "End": 5468,
+      "BodyStart": 5402,
+      "Original": "Msat_Clause_t * Msat_ClauseVecReadEntry( Msat_ClauseVec_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray[i];\n}",
+      "Draft": "func Msat_ClauseVecReadEntry(p *Msat_ClauseVec_t, i int32) *Msat_Clause_t {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::mechanical::sizeof::1597",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1523,
+      "End": 1523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::mechanical::sizeof::1830",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1675,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::mechanical::sizeof::3543",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::mechanical::sizeof::3628",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::1569",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1523,
+      "End": 1523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::1803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1675,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::1836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1675,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::2254",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2026,
+      "End": 2026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::2361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2053,
+      "End": 2053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::3494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::3522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::3549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::3601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::pointer-cast::3634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3108,
+      "End": 3108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1436,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::ternary::Msat_ClauseVecFree",
+      "Category": "ternary-review",
+      "Symbol": "Msat_ClauseVecFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1972,
+      "End": 2069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecFree",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1972,
+      "End": 2069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecReadArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecReadArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2305,
+      "End": 2395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecReadSize",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecReadSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2631,
+      "End": 2706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecGrow",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2983,
+      "End": 3187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecShrink",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3423,
+      "End": 3551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecClear",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3787,
+      "End": 3857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecPush",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4093,
+      "End": 4377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecPop",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4613,
+      "End": 4708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4944,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::Msat_ClauseVecReadEntry",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseVecReadEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5331,
+      "End": 5468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClauseVec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5715
+    }
+  ],
+  "Draft": "package msat\n\n/**CFile****************************************************************\n\n  FileName    [msatClauseVec.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Procedures working with arrays of SAT clauses.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatClauseVec.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecAlloc(nCap int32) *Msat_ClauseVec_t {\n    var p *Msat_ClauseVec_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_ClauseVec_t *) malloc(sizeof(Msat_ClauseVec_t) * (size_t)(1)));\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        // inlining of macro ABC_ALLOC\n        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nCap)));\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecFree(p *Msat_ClauseVec_t) {\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecReadArray(p *Msat_ClauseVec_t) **Msat_Clause_t {\n    return p.pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecReadSize(p *Msat_ClauseVec_t) int32 {\n    return p.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecGrow(p *Msat_ClauseVec_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((Msat_Clause_t * *) realloc((char *)(p.pArray), sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));\n    } else {\n        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));\n    } \n    p.nCap   = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecShrink(p *Msat_ClauseVec_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecClear(p *Msat_ClauseVec_t) {\n    p.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecPush(p *Msat_ClauseVec_t, Entry *Msat_Clause_t) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Msat_ClauseVecGrow( p, 16 );\n        } else {\n            Msat_ClauseVecGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecPop(p *Msat_ClauseVec_t) *Msat_Clause_t {\n    return p.pArray[--p.nSize];\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecWriteEntry(p *Msat_ClauseVec_t, i int32, Entry *Msat_Clause_t) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseVecReadEntry(p *Msat_ClauseVec_t, i int32) *Msat_Clause_t {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

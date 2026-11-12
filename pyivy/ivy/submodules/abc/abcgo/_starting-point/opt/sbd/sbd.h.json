@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.h",
+  "SHA256": "588f2f175028380ed9369cb78855e608f92ec12c5aab230e2afa71d4b1c2a79a",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.h::struct::Sbd_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1264,
+      "End": 2347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3331
+    }
+  ],
+  "Draft": "package sbd\n\n/**CFile****************************************************************\n\n  FileName    [sbd.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbd.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Sbd_Par_t struct {\n    nLutSize             int32;     // target LUT size\n    nLutNum             int32;      // target LUT count\n    nCutSize             int32;     // target cut size\n    nCutNum             int32;      // target cut count\n    nTfoLevels             int32;   // the number of TFO levels (windowing)\n    nTfoFanMax             int32;   // the max number of fanouts (windowing)\n    nWinSizeMax             int32;  // maximum window size (windowing)\n    nBTLimit             int32;     // maximum number of SAT conflicts \n    nWords             int32;       // simulation word count\n    fMapping             int32;     // generate mapping\n    fMoreCuts             int32;    // use several cuts\n    fFindDivs             int32;    // perform divisor search\n    fUsePath             int32;     // optimize only critical path\n    fArea             int32;        // area-oriented optimization\n    fCover             int32;       // use complete cover procedure\n    fVerbose             int32;     // verbose flag\n    fVeryVerbose             int32; // verbose flag\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sbdCnf.c ==========================================================*/\n/*=== sbdCore.c ==========================================================*/\n// extern void         Sbd_ParSetDefault( Sbd_Par_t * pPars );\n\n// extern Gia_Man_t *  Sbd_NtkPerform( Gia_Man_t * p, Sbd_Par_t * pPars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

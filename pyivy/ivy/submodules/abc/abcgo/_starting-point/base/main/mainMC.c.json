@@ -1,0 +1,420 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainMC.c",
+  "SHA256": "31eeb3ea6a006d4d62b242d7e7b4289474648b1daa200a3599f1b594a4913680",
+  "Library": [
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 72,
+        "Column": 27,
+        "ByteOffset": 2007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clkTotal int64  = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Expecting one command-line argument (an input file in AIGER format).\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0] );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 79,
+        "Column": 13,
+        "ByteOffset": 2231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( os.Args[1], \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Cannot open input AIGER file \\\"%s\\\".\\n\", os.Args[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0] );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 2527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Parsing the AIGER file \\\"%s\\\" has failed.\\n\", os.Args[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0] );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 4011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = stdout;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 4180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 4340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  # File %10s.  \", os.Args[1] );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 144,
+        "Column": 22,
+        "ByteOffset": 4403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        PRT( \"Time\", clock() - clkTotal );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 147,
+        "Column": 21,
+        "ByteOffset": 4456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 4477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose(pFile); }"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 4531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(10);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 4629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 4689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  # File %10s.  \", os.Args[1] );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 158,
+        "Column": 22,
+        "ByteOffset": 4752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        PRT( \"Time\", clock() - clkTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 4792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 162,
+        "Column": 21,
+        "ByteOffset": 4829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 4850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose(pFile); }"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 165,
+        "Column": 9,
+        "ByteOffset": 4904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(20);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"2\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 9,
+        "ByteOffset": 5070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  # File %10s.  \", os.Args[1] );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 174,
+        "Column": 22,
+        "ByteOffset": 5133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        PRT( \"Time\", clock() - clkTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 9,
+        "ByteOffset": 5173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 178,
+        "Column": 21,
+        "ByteOffset": 5210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 179,
+        "Column": 13,
+        "ByteOffset": 5231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose(pFile); }"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 5285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "main",
+      "Start": 1357,
+      "End": 5281,
+      "BodyStart": 1393,
+      "Original": "int main( int argc, char * argv[] )\n{\n    int fEnableBmcOnly = 0;  // enable to make it BMC-only\n\n    int fEnableCounter = 1;  // should be 1 in the final version\n    int fEnableComment = 0;  // should be 0 in the final version\n\n    Fra_Sec_t SecPar, * pSecPar = \u0026SecPar;\n    FILE * pFile;\n    Aig_Man_t * pAig;\n    int RetValue = -1;\n    int Depth    = -1;\n    // BMC parameters\n    int nFrames  = 50;\n    int nSizeMax = 500000;\n    int nBTLimit = 10000;\n    int fRewrite = 0;\n    int fNewAlgo = 1;\n    int fVerbose = 0;\n    clock_t clkTotal = clock();\n\n    if ( argc != 2 )\n    {\n        printf( \"  Expecting one command-line argument (an input file in AIGER format).\\n\" );\n        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", argv[0] );\n        return 0;\n    }\n    pFile = fopen( argv[1], \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"  Cannot open input AIGER file \\\"%s\\\".\\n\", argv[1] );\n        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", argv[0] );\n        return 0;\n    }\n    fclose( pFile );\n    pAig = Ioa_ReadAiger( argv[1], 1 );\n    if ( pAig == NULL )\n    {\n        printf( \"  Parsing the AIGER file \\\"%s\\\" has failed.\\n\", argv[1] );\n        printf( \"  usage: %s \u003cfile.aig\u003e\\n\", argv[0] );\n        return 0;\n    }\n\n    Aig_ManSetRegNum( pAig, pAig-\u003enRegs );\n    if ( !fEnableBmcOnly )\n    {\n        // perform BMC\n        if ( pAig-\u003enRegs != 0 )\n            RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, NULL, 0, 0 );\n\n        // perform full-blown SEC\n        if ( RetValue != 0 )\n        {\n            extern void Dar_LibStart();\n            extern void Dar_LibStop();\n            extern void Cnf_ManFree();\n\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar-\u003eTimeLimit       = 600;\n            pSecPar-\u003enFramesMax      =   4;  // the max number of frames used for induction\n            pSecPar-\u003efPhaseAbstract  =   0;  // disable phase-abstraction\n            pSecPar-\u003efSilent         =   1;  // disable phase-abstraction\n\n            Dar_LibStart();\n            RetValue = Fra_FraigSec( pAig, pSecPar, NULL );\n            Dar_LibStop();\n            Cnf_ManFree();\n        }\n    }\n\n    // perform BMC again\n    if ( RetValue == -1 \u0026\u0026 pAig-\u003enRegs != 0 )\n    {\n        int nFrames  = 200;\n        int nSizeMax = 500000;\n        int nBTLimit = 10000000;\n        int fRewrite = 0;\n        RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, \u0026Depth, 0, 0 );\n        if ( RetValue != 0 )\n            RetValue = -1;\n    }\n\n    // decide how to report the output\n    pFile = stdout;\n\n    // report the result\n    if ( RetValue == 0 ) \n    {\n//        fprintf(stdout, \"s SATIFIABLE\\n\");\n        fprintf( pFile, \"1\" );\n        if ( fEnableCounter  )\n        {\n        printf( \"\\n\" );\n        if ( pAig-\u003epSeqModel )\n        Fra_SmlWriteCounterExample( pFile, pAig, pAig-\u003epSeqModel );\n        }\n\n        if ( fEnableComment )\n        {\n        printf( \"  # File %10s.  \", argv[1] );\n        PRT( \"Time\", clock() - clkTotal );\n        }\n\n        if ( pFile != stdout )\n            fclose(pFile);\n        Aig_ManStop( pAig );\n        exit(10);\n    } \n    else if ( RetValue == 1 ) \n    {\n//    fprintf(stdout, \"s UNSATISFIABLE\\n\");\n        fprintf( pFile, \"0\" );\n\n        if ( fEnableComment )\n        {\n        printf( \"  # File %10s.  \", argv[1] );\n        PRT( \"Time\", clock() - clkTotal );\n        }\n        printf( \"\\n\" );\n\n        if ( pFile != stdout )\n            fclose(pFile);\n        Aig_ManStop( pAig );\n        exit(20);\n    } \n    else // if ( RetValue == -1 ) \n    {\n//    fprintf(stdout, \"s UNKNOWN\\n\");\n        fprintf( pFile, \"2\" );\n\n        if ( fEnableComment )\n        {\n        printf( \"  # File %10s.  \", argv[1] );\n        PRT( \"Time\", clock() - clkTotal );\n        }\n        printf( \"\\n\" );\n\n        if ( pFile != stdout )\n            fclose(pFile);\n        Aig_ManStop( pAig );\n        exit(0);\n    }\n    return 0;\n}",
+      "Draft": "func main() {\n    var fEnableBmcOnly int32;  // enable to make it BMC-only\n\n    var fEnableCounter int32  = 1;  // should be 1 in the final version\n    var fEnableComment int32;  // should be 0 in the final version\n\n    var SecPar Fra_Sec_t;\n    var pSecPar *Fra_Sec_t = \u0026SecPar;\n    var pFile *os.File;\n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    var Depth int32     = -1;\n    // BMC parameters\n    var nFrames int32   = 50;\n    var nSizeMax int32  = 500000;\n    var nBTLimit int32  = 10000;\n    var fRewrite int32;\n    var fNewAlgo int32  = 1;\n    var fVerbose int32;\n    var clkTotal int64  = time.Now().UnixNano();\n\n    if len(os.Args) != 2 {\n        fmt.Printf(\"  Expecting one command-line argument (an input file in AIGER format).\\n\");\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n    pFile = os.Open(os.Args[1]);\n    if pFile == nil {\n        fmt.Printf(\"  Cannot open input AIGER file \\\"%s\\\".\\n\", os.Args[1]);\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n    _ = (pFile).Close();\n    pAig = Ioa_ReadAiger( os.Args[1], 1 );\n    if pAig == nil {\n        fmt.Printf(\"  Parsing the AIGER file \\\"%s\\\" has failed.\\n\", os.Args[1]);\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n\n    Aig_ManSetRegNum( pAig, pAig.nRegs );\n    if !(fEnableBmcOnly != 0) {\n        // perform BMC\n        if pAig.nRegs != 0 {\n            RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, nil, 0, 0 ); }\n\n        // perform full-blown SEC\n        if RetValue != 0 {\n            extern void Dar_LibStart();\n            extern void Dar_LibStop();\n            extern void Cnf_ManFree();\n\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar.TimeLimit       = 600;\n            pSecPar.nFramesMax      =   4;  // the max number of frames used for induction\n            pSecPar.fPhaseAbstract  =   0;  // disable phase-abstraction\n            pSecPar.fSilent         =   1;  // disable phase-abstraction\n\n            Dar_LibStart();\n            RetValue = Fra_FraigSec( pAig, pSecPar, nil );\n            Dar_LibStop();\n            Cnf_ManFree();\n        }\n    }\n\n    // perform BMC again\n    if RetValue == -1 \u0026\u0026 pAig.nRegs != 0 {\n        var nFrames int32   = 200;\n        var nSizeMax int32  = 500000;\n        var nBTLimit int32  = 10000000;\n        var fRewrite int32;\n        RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, \u0026Depth, 0, 0 );\n        if RetValue != 0 {\n            RetValue = -1; }\n    }\n\n    // decide how to report the output\n    pFile = os.Stdout;\n\n    // report the result\n    if RetValue == 0 {\n//        fprintf(stdout, \"s SATIFIABLE\\n\");\n        fmt.Fprintf(pFile, \"1\");\n        if fEnableCounter != 0 {\n        fmt.Printf(\"\\n\");\n        if pAig.pSeqModel {\n        Fra_SmlWriteCounterExample( pFile, pAig, pAig.pSeqModel ); }\n        }\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(10));\n     \n    } else if RetValue == 1 {\n//    fprintf(stdout, \"s UNSATISFIABLE\\n\");\n        fmt.Fprintf(pFile, \"0\");\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n        fmt.Printf(\"\\n\");\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(20));\n     \n    } else { // if ( RetValue == -1 ) \n    \n//    fprintf(stdout, \"s UNKNOWN\\n\");\n        fmt.Fprintf(pFile, \"2\");\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n        fmt.Printf(\"\\n\");\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(0));\n    }\n    return ;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainMC.c::main",
+      "Category": "semantic-review",
+      "Symbol": "main",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1357,
+      "End": 5281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainMC.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainMC.c::macro-inline::584",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 584,
+      "End": 608
+    }
+  ],
+  "Draft": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mainMC.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [The main file for the model checker.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: main.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mainInt.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \"aig/fra/fra.h\"\n//#include \"aig/ioa/ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [The main() procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc main() {\n    var fEnableBmcOnly int32;  // enable to make it BMC-only\n\n    var fEnableCounter int32  = 1;  // should be 1 in the final version\n    var fEnableComment int32;  // should be 0 in the final version\n\n    var SecPar Fra_Sec_t;\n    var pSecPar *Fra_Sec_t = \u0026SecPar;\n    var pFile *os.File;\n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    var Depth int32     = -1;\n    // BMC parameters\n    var nFrames int32   = 50;\n    var nSizeMax int32  = 500000;\n    var nBTLimit int32  = 10000;\n    var fRewrite int32;\n    var fNewAlgo int32  = 1;\n    var fVerbose int32;\n    var clkTotal int64  = time.Now().UnixNano();\n\n    if len(os.Args) != 2 {\n        fmt.Printf(\"  Expecting one command-line argument (an input file in AIGER format).\\n\");\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n    pFile = os.Open(os.Args[1]);\n    if pFile == nil {\n        fmt.Printf(\"  Cannot open input AIGER file \\\"%s\\\".\\n\", os.Args[1]);\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n    _ = (pFile).Close();\n    pAig = Ioa_ReadAiger( os.Args[1], 1 );\n    if pAig == nil {\n        fmt.Printf(\"  Parsing the AIGER file \\\"%s\\\" has failed.\\n\", os.Args[1]);\n        fmt.Printf(\"  usage: %s \u003cfile.aig\u003e\\n\", os.Args[0]);\n        return ;\n    }\n\n    Aig_ManSetRegNum( pAig, pAig.nRegs );\n    if !(fEnableBmcOnly != 0) {\n        // perform BMC\n        if pAig.nRegs != 0 {\n            RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, nil, 0, 0 ); }\n\n        // perform full-blown SEC\n        if RetValue != 0 {\n            extern void Dar_LibStart();\n            extern void Dar_LibStop();\n            extern void Cnf_ManFree();\n\n            Fra_SecSetDefaultParams( pSecPar );\n            pSecPar.TimeLimit       = 600;\n            pSecPar.nFramesMax      =   4;  // the max number of frames used for induction\n            pSecPar.fPhaseAbstract  =   0;  // disable phase-abstraction\n            pSecPar.fSilent         =   1;  // disable phase-abstraction\n\n            Dar_LibStart();\n            RetValue = Fra_FraigSec( pAig, pSecPar, nil );\n            Dar_LibStop();\n            Cnf_ManFree();\n        }\n    }\n\n    // perform BMC again\n    if RetValue == -1 \u0026\u0026 pAig.nRegs != 0 {\n        var nFrames int32   = 200;\n        var nSizeMax int32  = 500000;\n        var nBTLimit int32  = 10000000;\n        var fRewrite int32;\n        RetValue = Saig_ManBmcSimple( pAig, nFrames, nSizeMax, nBTLimit, fRewrite, fVerbose, \u0026Depth, 0, 0 );\n        if RetValue != 0 {\n            RetValue = -1; }\n    }\n\n    // decide how to report the output\n    pFile = os.Stdout;\n\n    // report the result\n    if RetValue == 0 {\n//        fprintf(stdout, \"s SATIFIABLE\\n\");\n        fmt.Fprintf(pFile, \"1\");\n        if fEnableCounter != 0 {\n        fmt.Printf(\"\\n\");\n        if pAig.pSeqModel {\n        Fra_SmlWriteCounterExample( pFile, pAig, pAig.pSeqModel ); }\n        }\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(10));\n     \n    } else if RetValue == 1 {\n//    fprintf(stdout, \"s UNSATISFIABLE\\n\");\n        fmt.Fprintf(pFile, \"0\");\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n        fmt.Printf(\"\\n\");\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(20));\n     \n    } else { // if ( RetValue == -1 ) \n    \n//    fprintf(stdout, \"s UNKNOWN\\n\");\n        fmt.Fprintf(pFile, \"2\");\n\n        if fEnableComment != 0 {\n        fmt.Printf(\"  # File %10s.  \", os.Args[1]);\n        PRT( \"Time\", time.Now().UnixNano() - clkTotal );\n        }\n        fmt.Printf(\"\\n\");\n\n        if pFile != os.Stdout {\n            _ = (pFile).Close(); }\n        Aig_ManStop( pAig );\n        os.Exit(int(0));\n    }\n    return ;\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

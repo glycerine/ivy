@@ -1,0 +1,573 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c",
+  "SHA256": "a6c50386b382e10e5ad6042b5561598bac27af8ac93b71e84222303367efdbb1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Type == KIT_DSD_PRIME );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uSupport \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 4703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a'+k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Subsets(%d): \", Vec_IntSize(vSets) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 6464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( spStatic_Lpk_ComposeSets_TravId, 0, sizeof(int) * (1 \u003c\u003c 16) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 13,
+        "ByteOffset": 9646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pEntry.SRed \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 10063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 10090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Var = %c  \",  'a' + pSet.iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 10136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Size = %2d  \", pSet.Size );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 10177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Over = %2d  \", pSet.Over );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 10218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"SRed = %2d  \", pSet.SRed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 10289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"              \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 10357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 11501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nExploring support-reducing bound-sets of function:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 11702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Evaluating variable %c:\\n\", 'a'+i ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 356,
+        "Column": 23,
+        "ByteOffset": 12260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrint( stdout, ppNtks[0] ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 358,
+        "Column": 23,
+        "ByteOffset": 12327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrint( stdout, ppNtks[1] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 12941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 14124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Could not select a subset.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 417,
+        "Column": 9,
+        "ByteOffset": 14234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Selected the following subset:\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 14877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Entry );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_ComputeSets_rec",
+      "Start": 1688,
+      "End": 3015,
+      "BodyStart": 1766,
+      "Original": "unsigned Lpk_ComputeSets_rec( Kit_DsdNtk_t * p, int iLit, Vec_Int_t * vSets )\n{\n    unsigned i, iLitFanin, uSupport, uSuppCur;\n    Kit_DsdObj_t * pObj;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if ( pObj == NULL )\n        return (1 \u003c\u003c Abc_Lit2Var(iLit));\n    if ( pObj-\u003eType == KIT_DSD_AND || pObj-\u003eType == KIT_DSD_XOR )\n    {\n        unsigned uSupps[16], Limit, s;\n        uSupport = 0;\n        Kit_DsdObjForEachFanin( p, pObj, iLitFanin, i )\n        {\n            uSupps[i] = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj-\u003enFans) - 1;\n        for ( s = 1; s \u003c Limit; s++ )\n        {\n            uSuppCur = 0;\n            for ( i = 0; i \u003c pObj-\u003enFans; i++ )\n                if ( s \u0026 (1 \u003c\u003c i) )\n                    uSuppCur |= uSupps[i];\n            Vec_IntPush( vSets, uSuppCur );\n        }\n        return uSupport;\n    }\n    assert( pObj-\u003eType == KIT_DSD_PRIME );\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    Kit_DsdObjForEachFanin( p, pObj, iLitFanin, i )\n    {\n        uSuppCur  = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n        uSupport |= uSuppCur;\n        Vec_IntPush( vSets, uSuppCur );\n    }\n    return uSupport;\n}",
+      "Draft": "func Lpk_ComputeSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t) uint32 {\n    var i, iLitFanin, uSupport, uSuppCur uint32;\n    var pObj *Kit_DsdObj_t;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return (1 \u003c\u003c Abc_Lit2Var(iLit)); }\n    if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {\n        var uSupps [16]uint32;\n        var Limit uint32;\n        var s uint32;\n        uSupport = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n            uSupps[i] = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj.nFans) - 1;\n        for  s = 1; s \u003c Limit; s++  {\n            uSuppCur = 0;\n            for  i = 0; i \u003c pObj.nFans; i++  {\n                if s \u0026 (1 \u003c\u003c i) {\n                    uSuppCur |= uSupps[i]; }\n            }\n            Vec_IntPush( vSets, uSuppCur );\n        }\n        return uSupport;\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        uSuppCur  = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n        uSupport |= uSuppCur;\n        Vec_IntPush( vSets, uSuppCur );\n    }\n    return uSupport;\n}"
+    },
+    {
+      "Name": "Lpk_ComputeSets",
+      "Start": 3305,
+      "End": 4124,
+      "BodyStart": 3369,
+      "Original": "unsigned Lpk_ComputeSets( Kit_DsdNtk_t * p, Vec_Int_t * vSets )\n{\n    unsigned uSupport, Entry;\n    int Number, i;\n    assert( p-\u003enVars \u003c= 16 );\n    Vec_IntClear( vSets );\n    Vec_IntPush( vSets, 0 );\n    if ( Kit_DsdNtkRoot(p)-\u003eType == KIT_DSD_CONST1 )\n        return 0;\n    if ( Kit_DsdNtkRoot(p)-\u003eType == KIT_DSD_VAR )\n    {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p)-\u003epFans[0]) );\n        Vec_IntPush( vSets, uSupport );\n        return uSupport;\n    }\n    uSupport = Lpk_ComputeSets_rec( p, p-\u003eRoot, vSets );\n    assert( (uSupport \u0026 0xFFFF0000) == 0 );\n    Vec_IntPush( vSets, uSupport );\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return uSupport;\n}",
+      "Draft": "func Lpk_ComputeSets(p *Kit_DsdNtk_t, vSets *Vec_Int_t) uint32 {\n    var uSupport, Entry uint32;\n    var Number, i int32;\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    Vec_IntClear( vSets );\n    Vec_IntPush( vSets, 0 );\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {\n        return 0; }\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p).pFans[0]) );\n        Vec_IntPush( vSets, uSupport );\n        return uSupport;\n    }\n    uSupport = Lpk_ComputeSets_rec( p, p.Root, vSets );\n    assert((uSupport \u0026 0xFFFF0000) == 0, \"(uSupport \u0026 0xFFFF0000) == 0\");\n    Vec_IntPush( vSets, uSupport );\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return uSupport;\n}"
+    },
+    {
+      "Name": "Lpk_PrintSetOne",
+      "Start": 4387,
+      "End": 4568,
+      "BodyStart": 4431,
+      "Original": "static void Lpk_PrintSetOne( int uSupport )\n{\n    unsigned k;\n    for ( k = 0; k \u003c 16; k++ )\n        if ( uSupport \u0026 (1\u003c\u003ck) )\n            printf( \"%c\", 'a'+k );\n    printf( \" \" );\n}",
+      "Draft": "func Lpk_PrintSetOne(uSupport int32) {\n    var k uint32;\n    for  k = 0; k \u003c 16; k++  {\n        if uSupport \u0026 (1\u003c\u003ck) {\n            fmt.Printf(\"%c\", 'a'+k); }\n    }\n    fmt.Printf(\" \");\n}"
+    },
+    {
+      "Name": "Lpk_PrintSets",
+      "Start": 4830,
+      "End": 5113,
+      "BodyStart": 4877,
+      "Original": "static void Lpk_PrintSets( Vec_Int_t * vSets )\n{\n    unsigned uSupport;\n    int Number, i;\n    printf( \"Subsets(%d): \", Vec_IntSize(vSets) );\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Lpk_PrintSets(vSets *Vec_Int_t) {\n    var uSupport uint32;\n    var Number, i int32;\n    fmt.Printf(\"Subsets(%d): \", Vec_IntSize(vSets));\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Lpk_ComposeSets",
+      "Start": 5394,
+      "End": 8846,
+      "BodyStart": 5534,
+      "Original": "void Lpk_ComposeSets( Vec_Int_t * vSets0, Vec_Int_t * vSets1, int nVars, int iCofVar,\n    Lpk_Set_t * pStore, int * pSize, int nSizeLimit )\n{\n    static int nTravId = 0;            // the number of the times this is visited\n    static int TravId[1\u003c\u003c16] = {0};    // last visited\n    static char SRed[1\u003c\u003c16];           // best support reduction\n    static char Over[1\u003c\u003c16];           // best overlaps\n    static unsigned Parents[1\u003c\u003c16];    // best set of parents\n    static unsigned short Used[1\u003c\u003c16]; // storage for used subsets\n    int nSuppSize, nSuppOver, nSuppRed, nUsed, nMinOver, i, k, s;\n    unsigned Entry, Entry0, Entry1;\n    unsigned uSupp, uSupp0, uSupp1, uSuppTotal;\n    Lpk_Set_t * pEntry;\n\n    if ( nTravId == (1 \u003c\u003c 30) )\n        memset( TravId, 0, sizeof(int) * (1 \u003c\u003c 16) );\n\n    // collect support reducing subsets\n    nUsed = 0;\n    nTravId++;\n    uSuppTotal = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003ciCofVar);\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        uSupp0 = (Entry0 \u0026 0xFFFF);\n        uSupp1 = (Entry1 \u0026 0xFFFF);\n        // skip trivial\n        if ( uSupp0 == 0 || uSupp1 == 0 || (uSupp0 | uSupp1) == uSuppTotal )\n            continue;\n        if ( Kit_WordHasOneBit(uSupp0) \u0026\u0026 Kit_WordHasOneBit(uSupp1) )\n            continue;\n        // get the entry\n        Entry = Entry0 | Entry1;\n        uSupp = Entry \u0026 0xFFFF;\n        // set the bound set size\n        nSuppSize = Kit_WordCountOnes( uSupp );\n        // get the number of overlapping vars\n        nSuppOver = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n        // get the support reduction\n        nSuppRed  = nSuppSize - 1 - nSuppOver;\n        // only consider support-reducing subsets\n        if ( nSuppRed \u003c= 0 )\n            continue;\n        // check if this support is already used\n        if ( TravId[uSupp] \u003c nTravId )\n        {\n            Used[nUsed++] = uSupp;\n\n            TravId[uSupp] = nTravId;\n            SRed[uSupp] = nSuppRed;\n            Over[uSupp] = nSuppOver;\n            Parents[uSupp] = (k \u003c\u003c 16) | i;\n        }\n        else if ( TravId[uSupp] == nTravId \u0026\u0026 SRed[uSupp] \u003c nSuppRed )\n        {\n            TravId[uSupp] = nTravId;\n            SRed[uSupp] = nSuppRed;\n            Over[uSupp] = nSuppOver;\n            Parents[uSupp] = (k \u003c\u003c 16) | i;\n        }\n    }\n\n    // find the minimum overlap\n    nMinOver = 1000;\n    for ( s = 0; s \u003c nUsed; s++ )\n        if ( nMinOver \u003e Over[Used[s]] )\n            nMinOver = Over[Used[s]];\n\n\n    // collect the accumulated ones\n    for ( s = 0; s \u003c nUsed; s++ )\n        if ( Over[Used[s]] == nMinOver )\n        {\n            // save the entry\n            if ( *pSize == nSizeLimit )\n                return;\n            pEntry = pStore + (*pSize)++;\n\n            i = Parents[Used[s]] \u0026 0xFFFF;\n            k = Parents[Used[s]] \u003e\u003e 16;\n\n            pEntry-\u003euSubset0 = Vec_IntEntry(vSets0, i);\n            pEntry-\u003euSubset1 = Vec_IntEntry(vSets1, k);\n            Entry  = pEntry-\u003euSubset0 | pEntry-\u003euSubset1;\n\n            // record the cofactoring variable\n            pEntry-\u003eiVar = iCofVar;\n            // set the bound set size\n            pEntry-\u003eSize = Kit_WordCountOnes( Entry \u0026 0xFFFF );\n            // get the number of overlapping vars\n            pEntry-\u003eOver = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n            // get the support reduction\n            pEntry-\u003eSRed = pEntry-\u003eSize - 1 - pEntry-\u003eOver;\n            assert( pEntry-\u003eSRed \u003e 0 );\n        }\n}",
+      "Draft": "func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar int32, pStore *Lpk_Set_t, pSize *int32, nSizeLimit int32) {\n                // the number of the times this is visited\n        // last visited\n               // best support reduction\n               // best overlaps\n        // best set of parents\n    static unsigned short Used[1\u003c\u003c16]; // storage for used subsets\n    var nSuppSize, nSuppOver, nSuppRed, nUsed, nMinOver, i, k, s int32;\n    var Entry, Entry0, Entry1 uint32;\n    var uSupp, uSupp0, uSupp1, uSuppTotal uint32;\n    var pEntry *Lpk_Set_t;\n\n    if spStatic_Lpk_ComposeSets_nTravId == (1 \u003c\u003c 30) {\n        memset( spStatic_Lpk_ComposeSets_TravId, 0, sizeof(int) * (1 \u003c\u003c 16) ); }\n\n    // collect support reducing subsets\n    nUsed = 0;\n    spStatic_Lpk_ComposeSets_nTravId++;\n    uSuppTotal = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003ciCofVar);\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        uSupp0 = (Entry0 \u0026 0xFFFF);\n        uSupp1 = (Entry1 \u0026 0xFFFF);\n        // skip trivial\n        if uSupp0 == 0 || uSupp1 == 0 || (uSupp0 | uSupp1) == uSuppTotal {\n            continue; }\n        if Kit_WordHasOneBit(uSupp0) \u0026\u0026 Kit_WordHasOneBit(uSupp1) {\n            continue; }\n        // get the entry\n        Entry = Entry0 | Entry1;\n        uSupp = Entry \u0026 0xFFFF;\n        // set the bound set size\n        nSuppSize = Kit_WordCountOnes( uSupp );\n        // get the number of overlapping vars\n        nSuppOver = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n        // get the support reduction\n        nSuppRed  = nSuppSize - 1 - nSuppOver;\n        // only consider support-reducing subsets\n        if nSuppRed \u003c= 0 {\n            continue; }\n        // check if this support is already used\n        if spStatic_Lpk_ComposeSets_TravId[uSupp] \u003c spStatic_Lpk_ComposeSets_nTravId {\n            Used[nUsed++] = uSupp;\n\n            spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId;\n            spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed;\n            spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver;\n            spStatic_Lpk_ComposeSets_Parents[uSupp] = (k \u003c\u003c 16) | i;\n        \n        } else if spStatic_Lpk_ComposeSets_TravId[uSupp] == spStatic_Lpk_ComposeSets_nTravId \u0026\u0026 spStatic_Lpk_ComposeSets_SRed[uSupp] \u003c nSuppRed {\n            spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId;\n            spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed;\n            spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver;\n            spStatic_Lpk_ComposeSets_Parents[uSupp] = (k \u003c\u003c 16) | i;\n        }\n    }\n\n    // find the minimum overlap\n    nMinOver = 1000;\n    for  s = 0; s \u003c nUsed; s++  {\n        if nMinOver \u003e spStatic_Lpk_ComposeSets_Over[Used[s]] {\n            nMinOver = spStatic_Lpk_ComposeSets_Over[Used[s]]; }\n    }\n\n\n    // collect the accumulated ones\n    for  s = 0; s \u003c nUsed; s++  {\n        if spStatic_Lpk_ComposeSets_Over[Used[s]] == nMinOver {\n            // save the entry\n            if *pSize == nSizeLimit {\n                return; }\n            pEntry = pStore + (*pSize)++;\n\n            i = spStatic_Lpk_ComposeSets_Parents[Used[s]] \u0026 0xFFFF;\n            k = spStatic_Lpk_ComposeSets_Parents[Used[s]] \u003e\u003e 16;\n\n            pEntry.uSubset0 = Vec_IntEntry(vSets0, i);\n            pEntry.uSubset1 = Vec_IntEntry(vSets1, k);\n            Entry  = pEntry.uSubset0 | pEntry.uSubset1;\n\n            // record the cofactoring variable\n            pEntry.iVar = iCofVar;\n            // set the bound set size\n            pEntry.Size = Kit_WordCountOnes( Entry \u0026 0xFFFF );\n            // get the number of overlapping vars\n            pEntry.Over = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n            // get the support reduction\n            pEntry.SRed = pEntry.Size - 1 - pEntry.Over;\n            assert(pEntry.SRed \u003e 0, \"pEntry.SRed \u003e 0\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Lpk_MapSuppPrintSet",
+      "Start": 9097,
+      "End": 9535,
+      "BodyStart": 9149,
+      "Original": "void Lpk_MapSuppPrintSet( Lpk_Set_t * pSet, int i )\n{\n    unsigned Entry;\n    Entry = pSet-\u003euSubset0 | pSet-\u003euSubset1;\n    printf( \"%2d : \", i );\n    printf( \"Var = %c  \",  'a' + pSet-\u003eiVar );\n    printf( \"Size = %2d  \", pSet-\u003eSize );\n    printf( \"Over = %2d  \", pSet-\u003eOver );\n    printf( \"SRed = %2d  \", pSet-\u003eSRed );\n    Lpk_PrintSetOne( Entry );\n    printf( \"              \" );\n    Lpk_PrintSetOne( Entry \u003e\u003e 16 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Lpk_MapSuppPrintSet(pSet *Lpk_Set_t, i int32) {\n    var Entry uint32;\n    Entry = pSet.uSubset0 | pSet.uSubset1;\n    fmt.Printf(\"%2d : \", i);\n    fmt.Printf(\"Var = %c  \", 'a' + pSet.iVar);\n    fmt.Printf(\"Size = %2d  \", pSet.Size);\n    fmt.Printf(\"Over = %2d  \", pSet.Over);\n    fmt.Printf(\"SRed = %2d  \", pSet.SRed);\n    Lpk_PrintSetOne( Entry );\n    fmt.Printf(\"              \");\n    Lpk_PrintSetOne( Entry \u003e\u003e 16 );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Lpk_MapSuppRedDecSelect",
+      "Start": 9795,
+      "End": 13498,
+      "BodyStart": 9907,
+      "Original": "unsigned Lpk_MapSuppRedDecSelect( Lpk_Man_t * p, unsigned * pTruth, int nVars, int * piVar, int * piVarReused )\n{\n    static int nStoreSize = 256;\n    static Lpk_Set_t pStore[256], * pSet, * pSetBest;\n    Kit_DsdNtk_t * ppNtks[2], * pTemp;\n    Vec_Int_t * vSets0 = p-\u003evSets[0];\n    Vec_Int_t * vSets1 = p-\u003evSets[1];\n    unsigned * pCof0 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 0 );\n    unsigned * pCof1 = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, 1 );\n    int nSets, i, SizeMax;//, SRedMax;\n    unsigned Entry;\n    int fVerbose = p-\u003epPars-\u003efVeryVerbose;\n//    int fVerbose = 0;\n\n    // collect decomposable subsets for each pair of cofactors\n    if ( fVerbose )\n    {\n        printf( \"\\nExploring support-reducing bound-sets of function:\\n\" );\n        Kit_DsdPrintFromTruth( pTruth, nVars );\n    }\n    nSets = 0;\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if ( fVerbose )\n        printf( \"Evaluating variable %c:\\n\", 'a'+i );\n        // evaluate the cofactor pair\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        // decompose and expand\n        ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n        ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n        ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n        ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n        if ( fVerbose )\n        Kit_DsdPrint( stdout, ppNtks[0] );\n        if ( fVerbose )\n        Kit_DsdPrint( stdout, ppNtks[1] );\n        // compute subsets\n        Lpk_ComputeSets( ppNtks[0], vSets0 );\n        Lpk_ComputeSets( ppNtks[1], vSets1 );\n        // print subsets\n        if ( fVerbose )\n        Lpk_PrintSets( vSets0 );\n        if ( fVerbose )\n        Lpk_PrintSets( vSets1 );\n        // free the networks\n        Kit_DsdNtkFree( ppNtks[0] );\n        Kit_DsdNtkFree( ppNtks[1] );\n        // evaluate the pair\n        Lpk_ComposeSets( vSets0, vSets1, nVars, i, pStore, \u0026nSets, nStoreSize );\n    }\n\n    // print the results\n    if ( fVerbose )\n    printf( \"\\n\" );\n    if ( fVerbose )\n    for ( i = 0; i \u003c nSets; i++ )\n        Lpk_MapSuppPrintSet( pStore + i, i );\n\n    // choose the best subset\n    SizeMax = 0;\n    pSetBest = NULL;\n    for ( i = 0; i \u003c nSets; i++ )\n    {\n        pSet = pStore + i;\n        if ( pSet-\u003eSize \u003e p-\u003epPars-\u003enLutSize - 1 )\n            continue;\n        if ( SizeMax \u003c pSet-\u003eSize )\n        {\n            pSetBest = pSet;\n            SizeMax = pSet-\u003eSize;\n        }\n    }\n/*\n    // if the best is not choosen, select the one with largest reduction\n    SRedMax = 0;\n    if ( pSetBest == NULL )\n    {\n        for ( i = 0; i \u003c nSets; i++ )\n        {\n            pSet = pStore + i;\n            if ( SRedMax \u003c pSet-\u003eSRed )\n            {\n                pSetBest = pSet;\n                SRedMax = pSet-\u003eSRed;\n            }\n        }\n    }\n*/\n    if ( pSetBest == NULL )\n    {\n        if ( fVerbose )\n        printf( \"Could not select a subset.\\n\" );\n        return 0;\n    }\n    else\n    {\n        if ( fVerbose )\n        printf( \"Selected the following subset:\\n\" );\n        if ( fVerbose )\n        Lpk_MapSuppPrintSet( pSetBest, pSetBest - pStore );\n    }\n\n    // prepare the return result\n    // get the remaining variables\n    Entry = ((pSetBest-\u003euSubset0 \u003e\u003e 16) | (pSetBest-\u003euSubset1 \u003e\u003e 16));\n    // get the variables to be removed\n    Entry = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003cpSetBest-\u003eiVar) \u0026 ~Entry;\n    // make sure there are some - otherwise it is not supp-red\n    assert( Entry );\n    // remember the first such variable\n    *piVarReused = Kit_WordFindFirstBit( Entry );\n    *piVar = pSetBest-\u003eiVar;\n    return (pSetBest-\u003euSubset1 \u003c\u003c 16) | (pSetBest-\u003euSubset0 \u0026 0xFFFF);\n}",
+      "Draft": "func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth *uint32, nVars int32, piVar *int32, piVarReused *int32) uint32 {\n    \n    \n    var ppNtks [2]*Kit_DsdNtk_t;\n    var pTemp *Kit_DsdNtk_t;\n    var vSets0 *Vec_Int_t  = p.vSets[0];\n    var vSets1 *Vec_Int_t  = p.vSets[1];\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 1 );\n    var nSets, i, SizeMax int32;//, SRedMax;\n    var Entry uint32;\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n//    int fVerbose = 0;\n\n    // collect decomposable subsets for each pair of cofactors\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nExploring support-reducing bound-sets of function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars );\n    }\n    nSets = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        if fVerbose != 0 {\n        fmt.Printf(\"Evaluating variable %c:\\n\", 'a'+i); }\n        // evaluate the cofactor pair\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        // decompose and expand\n        ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n        ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n        ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n        ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n        if fVerbose != 0 {\n        Kit_DsdPrint( os.Stdout, ppNtks[0] ); }\n        if fVerbose != 0 {\n        Kit_DsdPrint( os.Stdout, ppNtks[1] ); }\n        // compute subsets\n        Lpk_ComputeSets( ppNtks[0], vSets0 );\n        Lpk_ComputeSets( ppNtks[1], vSets1 );\n        // print subsets\n        if fVerbose != 0 {\n        Lpk_PrintSets( vSets0 ); }\n        if fVerbose != 0 {\n        Lpk_PrintSets( vSets1 ); }\n        // free the networks\n        Kit_DsdNtkFree( ppNtks[0] );\n        Kit_DsdNtkFree( ppNtks[1] );\n        // evaluate the pair\n        Lpk_ComposeSets( vSets0, vSets1, nVars, i, spStatic_Lpk_MapSuppRedDecSelect_pStore, \u0026nSets, spStatic_Lpk_MapSuppRedDecSelect_nStoreSize );\n    }\n\n    // print the results\n    if fVerbose != 0 {\n    fmt.Printf(\"\\n\"); }\n    if fVerbose != 0 {\n    for  i = 0; i \u003c nSets; i++  {\n        Lpk_MapSuppPrintSet( spStatic_Lpk_MapSuppRedDecSelect_pStore + i, i );\n    } }\n\n    // choose the best subset\n    SizeMax = 0;\n    spStatic_Lpk_MapSuppRedDecSelect_pSetBest = nil;\n    for  i = 0; i \u003c nSets; i++  {\n        spStatic_Lpk_MapSuppRedDecSelect_pSet = spStatic_Lpk_MapSuppRedDecSelect_pStore + i;\n        if spStatic_Lpk_MapSuppRedDecSelect_pSet.Size \u003e p.pPars.nLutSize - 1 {\n            continue; }\n        if SizeMax \u003c spStatic_Lpk_MapSuppRedDecSelect_pSet.Size {\n            spStatic_Lpk_MapSuppRedDecSelect_pSetBest = spStatic_Lpk_MapSuppRedDecSelect_pSet;\n            SizeMax = spStatic_Lpk_MapSuppRedDecSelect_pSet.Size;\n        }\n    }\n/*\n    // if the best is not choosen, select the one with largest reduction\n    SRedMax = 0;\n    if ( pSetBest == NULL )\n    {\n        for ( i = 0; i \u003c nSets; i++ )\n        {\n            pSet = pStore + i;\n            if ( SRedMax \u003c pSet-\u003eSRed )\n            {\n                pSetBest = pSet;\n                SRedMax = pSet-\u003eSRed;\n            }\n        }\n    }\n*/\n    if spStatic_Lpk_MapSuppRedDecSelect_pSetBest == nil {\n        if fVerbose != 0 {\n        fmt.Printf(\"Could not select a subset.\\n\"); }\n        return 0;\n    \n    } else {\n        if fVerbose != 0 {\n        fmt.Printf(\"Selected the following subset:\\n\"); }\n        if fVerbose != 0 {\n        Lpk_MapSuppPrintSet( spStatic_Lpk_MapSuppRedDecSelect_pSetBest, spStatic_Lpk_MapSuppRedDecSelect_pSetBest - spStatic_Lpk_MapSuppRedDecSelect_pStore ); }\n    }\n\n    // prepare the return result\n    // get the remaining variables\n    Entry = ((spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 \u003e\u003e 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 \u003e\u003e 16));\n    // get the variables to be removed\n    Entry = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003cspStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar) \u0026 ~Entry;\n    // make sure there are some - otherwise it is not supp-red\n    assert((Entry != 0), \"Entry\");\n    // remember the first such variable\n    *piVarReused = Kit_WordFindFirstBit( Entry );\n    *piVar = spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar;\n    return (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 \u003c\u003c 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 \u0026 0xFFFF);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::struct::Lpk_Set_t",
+      "Category": "struct-review",
+      "Symbol": "Lpk_Set_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 772,
+      "End": 1190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::5728",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5540,
+      "End": 5546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::5810",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5622,
+      "End": 5628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::5865",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5677,
+      "End": 5683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::5930",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5742,
+      "End": 5748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::5986",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5798,
+      "End": 5804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::6048",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5860,
+      "End": 5866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::sizeof::6345",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6157,
+      "End": 6163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::10101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9913,
+      "End": 9919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::mechanical::static::10134",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9946,
+      "End": 9952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::pointer-cast::10322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10134,
+      "End": 10146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::pointer-cast::10389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10201,
+      "End": 10213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_ComputeSets_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComputeSets_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1688,
+      "End": 3015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_ComputeSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComputeSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3305,
+      "End": 4124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_PrintSetOne",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_PrintSetOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4387,
+      "End": 4568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_PrintSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_PrintSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4830,
+      "End": 5113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_ComposeSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComposeSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5394,
+      "End": 8846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_MapSuppPrintSet",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapSuppPrintSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9097,
+      "End": 9535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::Lpk_MapSuppRedDecSelect",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapSuppRedDecSelect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9795,
+      "End": 13498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::macro-inline::3950",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3950,
+      "End": 3989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::macro-inline::4976",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4976,
+      "End": 5015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::macro-inline::6312",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6312,
+      "End": 6352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkSets.c::macro-inline::6357",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6357,
+      "End": 6397
+    }
+  ],
+  "Draft": "package lpk\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [lpkSets.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkSets.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Lpk_Set_t struct {\n    iVar         byte;        // the cofactoring variable\n    Over         byte;        // the overlap in supports\n    SRed         byte;        // the support reduction\n    Size         byte;        // the size of the boundset\n    uSubset0     uint32;    // the first subset (with removed)\n    uSubset1     uint32;    // the second subset (with removed)\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively computes decomposable subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ComputeSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t) uint32 {\n    var i, iLitFanin, uSupport, uSuppCur uint32;\n    var pObj *Kit_DsdObj_t;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return (1 \u003c\u003c Abc_Lit2Var(iLit)); }\n    if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {\n        var uSupps [16]uint32;\n        var Limit uint32;\n        var s uint32;\n        uSupport = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n            uSupps[i] = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj.nFans) - 1;\n        for  s = 1; s \u003c Limit; s++  {\n            uSuppCur = 0;\n            for  i = 0; i \u003c pObj.nFans; i++  {\n                if s \u0026 (1 \u003c\u003c i) {\n                    uSuppCur |= uSupps[i]; }\n            }\n            Vec_IntPush( vSets, uSuppCur );\n        }\n        return uSupport;\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        uSuppCur  = Lpk_ComputeSets_rec( p, iLitFanin, vSets );\n        uSupport |= uSuppCur;\n        Vec_IntPush( vSets, uSuppCur );\n    }\n    return uSupport;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of subsets of decomposable variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ComputeSets(p *Kit_DsdNtk_t, vSets *Vec_Int_t) uint32 {\n    var uSupport, Entry uint32;\n    var Number, i int32;\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    Vec_IntClear( vSets );\n    Vec_IntPush( vSets, 0 );\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {\n        return 0; }\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p).pFans[0]) );\n        Vec_IntPush( vSets, uSupport );\n        return uSupport;\n    }\n    uSupport = Lpk_ComputeSets_rec( p, p.Root, vSets );\n    assert((uSupport \u0026 0xFFFF0000) == 0, \"(uSupport \u0026 0xFFFF0000) == 0\");\n    Vec_IntPush( vSets, uSupport );\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return uSupport;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the sets of subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_PrintSetOne(uSupport int32) {\n    var k uint32;\n    for  k = 0; k \u003c 16; k++  {\n        if uSupport \u0026 (1\u003c\u003ck) {\n            fmt.Printf(\"%c\", 'a'+k); }\n    }\n    fmt.Printf(\" \");\n}\n/**Function*************************************************************\n\n  Synopsis    [Prints the sets of subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_PrintSets(vSets *Vec_Int_t) {\n    var uSupport uint32;\n    var Number, i int32;\n    fmt.Printf(\"Subsets(%d): \", Vec_IntSize(vSets));\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes maximal support reducing bound-sets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Lpk_ComposeSets_nTravId int32;\nvar spStatic_Lpk_ComposeSets_TravId [1\u003c\u003c16]int32 ;\nvar spStatic_Lpk_ComposeSets_SRed [1\u003c\u003c16]byte;\nvar spStatic_Lpk_ComposeSets_Over [1\u003c\u003c16]byte;\nvar spStatic_Lpk_ComposeSets_Parents [1\u003c\u003c16]uint32;\nfunc Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar int32, pStore *Lpk_Set_t, pSize *int32, nSizeLimit int32) {\n                // the number of the times this is visited\n        // last visited\n               // best support reduction\n               // best overlaps\n        // best set of parents\n    static unsigned short Used[1\u003c\u003c16]; // storage for used subsets\n    var nSuppSize, nSuppOver, nSuppRed, nUsed, nMinOver, i, k, s int32;\n    var Entry, Entry0, Entry1 uint32;\n    var uSupp, uSupp0, uSupp1, uSuppTotal uint32;\n    var pEntry *Lpk_Set_t;\n\n    if spStatic_Lpk_ComposeSets_nTravId == (1 \u003c\u003c 30) {\n        memset( spStatic_Lpk_ComposeSets_TravId, 0, sizeof(int) * (1 \u003c\u003c 16) ); }\n\n    // collect support reducing subsets\n    nUsed = 0;\n    spStatic_Lpk_ComposeSets_nTravId++;\n    uSuppTotal = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003ciCofVar);\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        uSupp0 = (Entry0 \u0026 0xFFFF);\n        uSupp1 = (Entry1 \u0026 0xFFFF);\n        // skip trivial\n        if uSupp0 == 0 || uSupp1 == 0 || (uSupp0 | uSupp1) == uSuppTotal {\n            continue; }\n        if Kit_WordHasOneBit(uSupp0) \u0026\u0026 Kit_WordHasOneBit(uSupp1) {\n            continue; }\n        // get the entry\n        Entry = Entry0 | Entry1;\n        uSupp = Entry \u0026 0xFFFF;\n        // set the bound set size\n        nSuppSize = Kit_WordCountOnes( uSupp );\n        // get the number of overlapping vars\n        nSuppOver = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n        // get the support reduction\n        nSuppRed  = nSuppSize - 1 - nSuppOver;\n        // only consider support-reducing subsets\n        if nSuppRed \u003c= 0 {\n            continue; }\n        // check if this support is already used\n        if spStatic_Lpk_ComposeSets_TravId[uSupp] \u003c spStatic_Lpk_ComposeSets_nTravId {\n            Used[nUsed++] = uSupp;\n\n            spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId;\n            spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed;\n            spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver;\n            spStatic_Lpk_ComposeSets_Parents[uSupp] = (k \u003c\u003c 16) | i;\n        \n        } else if spStatic_Lpk_ComposeSets_TravId[uSupp] == spStatic_Lpk_ComposeSets_nTravId \u0026\u0026 spStatic_Lpk_ComposeSets_SRed[uSupp] \u003c nSuppRed {\n            spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId;\n            spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed;\n            spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver;\n            spStatic_Lpk_ComposeSets_Parents[uSupp] = (k \u003c\u003c 16) | i;\n        }\n    }\n\n    // find the minimum overlap\n    nMinOver = 1000;\n    for  s = 0; s \u003c nUsed; s++  {\n        if nMinOver \u003e spStatic_Lpk_ComposeSets_Over[Used[s]] {\n            nMinOver = spStatic_Lpk_ComposeSets_Over[Used[s]]; }\n    }\n\n\n    // collect the accumulated ones\n    for  s = 0; s \u003c nUsed; s++  {\n        if spStatic_Lpk_ComposeSets_Over[Used[s]] == nMinOver {\n            // save the entry\n            if *pSize == nSizeLimit {\n                return; }\n            pEntry = pStore + (*pSize)++;\n\n            i = spStatic_Lpk_ComposeSets_Parents[Used[s]] \u0026 0xFFFF;\n            k = spStatic_Lpk_ComposeSets_Parents[Used[s]] \u003e\u003e 16;\n\n            pEntry.uSubset0 = Vec_IntEntry(vSets0, i);\n            pEntry.uSubset1 = Vec_IntEntry(vSets1, k);\n            Entry  = pEntry.uSubset0 | pEntry.uSubset1;\n\n            // record the cofactoring variable\n            pEntry.iVar = iCofVar;\n            // set the bound set size\n            pEntry.Size = Kit_WordCountOnes( Entry \u0026 0xFFFF );\n            // get the number of overlapping vars\n            pEntry.Over = Kit_WordCountOnes( Entry \u0026 (Entry \u003e\u003e 16) );\n            // get the support reduction\n            pEntry.SRed = pEntry.Size - 1 - pEntry.Over;\n            assert(pEntry.SRed \u003e 0, \"pEntry.SRed \u003e 0\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapSuppPrintSet(pSet *Lpk_Set_t, i int32) {\n    var Entry uint32;\n    Entry = pSet.uSubset0 | pSet.uSubset1;\n    fmt.Printf(\"%2d : \", i);\n    fmt.Printf(\"Var = %c  \", 'a' + pSet.iVar);\n    fmt.Printf(\"Size = %2d  \", pSet.Size);\n    fmt.Printf(\"Over = %2d  \", pSet.Over);\n    fmt.Printf(\"SRed = %2d  \", pSet.SRed);\n    Lpk_PrintSetOne( Entry );\n    fmt.Printf(\"              \");\n    Lpk_PrintSetOne( Entry \u003e\u003e 16 );\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates the cofactors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Lpk_MapSuppRedDecSelect_nStoreSize int32 = 256;\nvar spStatic_Lpk_MapSuppRedDecSelect_pStore [256]Lpk_Set_t;\nvar spStatic_Lpk_MapSuppRedDecSelect_pSet *Lpk_Set_t;\nvar spStatic_Lpk_MapSuppRedDecSelect_pSetBest *Lpk_Set_t;\nfunc Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth *uint32, nVars int32, piVar *int32, piVarReused *int32) uint32 {\n    \n    \n    var ppNtks [2]*Kit_DsdNtk_t;\n    var pTemp *Kit_DsdNtk_t;\n    var vSets0 *Vec_Int_t  = p.vSets[0];\n    var vSets1 *Vec_Int_t  = p.vSets[1];\n    var pCof0 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 0 );\n    var pCof1 *uint32  = (unsigned *)Vec_PtrEntry( p.vTtNodes, 1 );\n    var nSets, i, SizeMax int32;//, SRedMax;\n    var Entry uint32;\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n//    int fVerbose = 0;\n\n    // collect decomposable subsets for each pair of cofactors\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nExploring support-reducing bound-sets of function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars );\n    }\n    nSets = 0;\n    for  i = 0; i \u003c nVars; i++  {\n        if fVerbose != 0 {\n        fmt.Printf(\"Evaluating variable %c:\\n\", 'a'+i); }\n        // evaluate the cofactor pair\n        Kit_TruthCofactor0New( pCof0, pTruth, nVars, i );\n        Kit_TruthCofactor1New( pCof1, pTruth, nVars, i );\n        // decompose and expand\n        ppNtks[0] = Kit_DsdDecompose( pCof0, nVars );\n        ppNtks[1] = Kit_DsdDecompose( pCof1, nVars );\n        ppNtks[0] = Kit_DsdExpand( pTemp = ppNtks[0] );      Kit_DsdNtkFree( pTemp );\n        ppNtks[1] = Kit_DsdExpand( pTemp = ppNtks[1] );      Kit_DsdNtkFree( pTemp );\n        if fVerbose != 0 {\n        Kit_DsdPrint( os.Stdout, ppNtks[0] ); }\n        if fVerbose != 0 {\n        Kit_DsdPrint( os.Stdout, ppNtks[1] ); }\n        // compute subsets\n        Lpk_ComputeSets( ppNtks[0], vSets0 );\n        Lpk_ComputeSets( ppNtks[1], vSets1 );\n        // print subsets\n        if fVerbose != 0 {\n        Lpk_PrintSets( vSets0 ); }\n        if fVerbose != 0 {\n        Lpk_PrintSets( vSets1 ); }\n        // free the networks\n        Kit_DsdNtkFree( ppNtks[0] );\n        Kit_DsdNtkFree( ppNtks[1] );\n        // evaluate the pair\n        Lpk_ComposeSets( vSets0, vSets1, nVars, i, spStatic_Lpk_MapSuppRedDecSelect_pStore, \u0026nSets, spStatic_Lpk_MapSuppRedDecSelect_nStoreSize );\n    }\n\n    // print the results\n    if fVerbose != 0 {\n    fmt.Printf(\"\\n\"); }\n    if fVerbose != 0 {\n    for  i = 0; i \u003c nSets; i++  {\n        Lpk_MapSuppPrintSet( spStatic_Lpk_MapSuppRedDecSelect_pStore + i, i );\n    } }\n\n    // choose the best subset\n    SizeMax = 0;\n    spStatic_Lpk_MapSuppRedDecSelect_pSetBest = nil;\n    for  i = 0; i \u003c nSets; i++  {\n        spStatic_Lpk_MapSuppRedDecSelect_pSet = spStatic_Lpk_MapSuppRedDecSelect_pStore + i;\n        if spStatic_Lpk_MapSuppRedDecSelect_pSet.Size \u003e p.pPars.nLutSize - 1 {\n            continue; }\n        if SizeMax \u003c spStatic_Lpk_MapSuppRedDecSelect_pSet.Size {\n            spStatic_Lpk_MapSuppRedDecSelect_pSetBest = spStatic_Lpk_MapSuppRedDecSelect_pSet;\n            SizeMax = spStatic_Lpk_MapSuppRedDecSelect_pSet.Size;\n        }\n    }\n/*\n    // if the best is not choosen, select the one with largest reduction\n    SRedMax = 0;\n    if ( pSetBest == NULL )\n    {\n        for ( i = 0; i \u003c nSets; i++ )\n        {\n            pSet = pStore + i;\n            if ( SRedMax \u003c pSet-\u003eSRed )\n            {\n                pSetBest = pSet;\n                SRedMax = pSet-\u003eSRed;\n            }\n        }\n    }\n*/\n    if spStatic_Lpk_MapSuppRedDecSelect_pSetBest == nil {\n        if fVerbose != 0 {\n        fmt.Printf(\"Could not select a subset.\\n\"); }\n        return 0;\n    \n    } else {\n        if fVerbose != 0 {\n        fmt.Printf(\"Selected the following subset:\\n\"); }\n        if fVerbose != 0 {\n        Lpk_MapSuppPrintSet( spStatic_Lpk_MapSuppRedDecSelect_pSetBest, spStatic_Lpk_MapSuppRedDecSelect_pSetBest - spStatic_Lpk_MapSuppRedDecSelect_pStore ); }\n    }\n\n    // prepare the return result\n    // get the remaining variables\n    Entry = ((spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 \u003e\u003e 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 \u003e\u003e 16));\n    // get the variables to be removed\n    Entry = Kit_BitMask(nVars) \u0026 ~(1\u003c\u003cspStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar) \u0026 ~Entry;\n    // make sure there are some - otherwise it is not supp-red\n    assert((Entry != 0), \"Entry\");\n    // remember the first such variable\n    *piVarReused = Kit_WordFindFirstBit( Entry );\n    *piVar = spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar;\n    return (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 \u003c\u003c 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 \u0026 0xFFFF);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

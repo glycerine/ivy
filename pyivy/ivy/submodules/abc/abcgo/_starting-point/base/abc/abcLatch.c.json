@@ -1,0 +1,1141 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c",
+  "SHA256": "40c1390dc6c3c676849bd43df60e59f20ca5c4f3e59a2064753eaf3de81c3098",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsLatch(pLatch) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsLatch(pLatch) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 14,
+        "ByteOffset": 6309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pInits = ABC_ALLOC( char, Abc_NtkLatchNum(pNtk) + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 13,
+        "ByteOffset": 6649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 8508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 9080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 10895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The number of converted latches with DC values = %d.\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 1,
+        "ByteOffset": 12374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Converted %d one-hot registers.\\n\", Vec_IntSize(vNumbers) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 13226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 9,
+        "ByteOffset": 13381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot reencode %d flops because it will lead to 2^%d states.\\n\", nFlops, nFlops );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 13,
+        "ByteOffset": 13661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot process logic network with don't-care init values. Run \\\"zero\\\".\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 5,
+        "ByteOffset": 14519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtkNew) == nStates );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 14570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 14629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 14688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 14760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 14832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 5,
+        "ByteOffset": 14897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 466,
+        "Column": 9,
+        "ByteOffset": 15258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pObjNew) == nStates/2 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 9,
+        "ByteOffset": 16803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkConvertOnehot(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 500,
+        "Column": 18,
+        "ByteOffset": 16812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkConvertOnehot(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 526,
+        "Column": 5,
+        "ByteOffset": 17483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pGia) == Vec_IntSize(vClasses) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 19359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 586,
+        "Column": 9,
+        "ByteOffset": 19641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsPo(pObj) \u0026\u0026 pObj.pNtk == pNtkOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 590,
+        "Column": 5,
+        "ByteOffset": 19784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 654,
+        "Column": 9,
+        "ByteOffset": 21973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanin(pDriver, 2) == pFlopOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 664,
+        "Column": 9,
+        "ByteOffset": 22376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Opposite phase enable is present in %d flops (out of %d).\\n\", Count1, Abc_NtkLatchNum(pNtk) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 5,
+        "ByteOffset": 22504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CountN = %4d. Count2 = %4d. Count1 = %4d. Count0 = %4d. Ctrls = %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 706,
+        "Column": 5,
+        "ByteOffset": 23868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 707,
+        "Column": 5,
+        "ByteOffset": 23905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nPis  == Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 727,
+        "Column": 5,
+        "ByteOffset": 24835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 539
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 298,
+        "Column": 1,
+        "ByteOffset": 8687
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkLatchIsSelfFeed_rec",
+      "Start": 1333,
+      "End": 1740,
+      "BodyStart": 1410,
+      "Original": "int Abc_NtkLatchIsSelfFeed_rec( Abc_Obj_t * pLatch, Abc_Obj_t * pLatchRoot )\n{\n    Abc_Obj_t * pFanin;\n    assert( Abc_ObjIsLatch(pLatch) );\n    if ( pLatch == pLatchRoot )\n        return 1;\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if ( !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) )\n        return 0;\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}",
+      "Draft": "func Abc_NtkLatchIsSelfFeed_rec(pLatch *Abc_Obj_t, pLatchRoot *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    assert(Abc_ObjIsLatch(pLatch), \"Abc_ObjIsLatch(pLatch)\");\n    if pLatch == pLatchRoot {\n        return 1; }\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) {\n        return 0; }\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}"
+    },
+    {
+      "Name": "Abc_NtkLatchIsSelfFeed",
+      "Start": 2009,
+      "End": 2338,
+      "BodyStart": 2058,
+      "Original": "int Abc_NtkLatchIsSelfFeed( Abc_Obj_t * pLatch )\n{\n    Abc_Obj_t * pFanin;\n    assert( Abc_ObjIsLatch(pLatch) );\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if ( !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) )\n        return 0;\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}",
+      "Draft": "func Abc_NtkLatchIsSelfFeed(pLatch *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    assert(Abc_ObjIsLatch(pLatch), \"Abc_ObjIsLatch(pLatch)\");\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) {\n        return 0; }\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}"
+    },
+    {
+      "Name": "Abc_NtkCountSelfFeedLatches",
+      "Start": 2607,
+      "End": 3000,
+      "BodyStart": 2659,
+      "Original": "int Abc_NtkCountSelfFeedLatches( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pLatch;\n    int i, Counter;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n//        if ( Abc_NtkLatchIsSelfFeed(pLatch) \u0026\u0026 Abc_ObjFanoutNum(pLatch) \u003e 1 )\n//            printf( \"Fanouts = %d.\\n\", Abc_ObjFanoutNum(pLatch) );\n        Counter += Abc_NtkLatchIsSelfFeed( pLatch );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NtkCountSelfFeedLatches(pNtk *Abc_Ntk_t) int32 {\n    var pLatch *Abc_Obj_t;\n    var i, Counter int32;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n//        if ( Abc_NtkLatchIsSelfFeed(pLatch) \u0026\u0026 Abc_ObjFanoutNum(pLatch) \u003e 1 )\n//            printf( \"Fanouts = %d.\\n\", Abc_ObjFanoutNum(pLatch) );\n        Counter += Abc_NtkLatchIsSelfFeed( pLatch );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkRemoveSelfFeedLatches",
+      "Start": 3298,
+      "End": 3857,
+      "BodyStart": 3351,
+      "Original": "int Abc_NtkRemoveSelfFeedLatches( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pLatch, * pConst1;\n    int i, Counter;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( Abc_NtkLatchIsSelfFeed( pLatch ) )\n        {\n            if ( Abc_NtkIsStrash(pNtk) )\n                pConst1 = Abc_AigConst1(pNtk);\n            else\n                pConst1 = Abc_NtkCreateNodeConst1(pNtk);\n            Abc_ObjPatchFanin( Abc_ObjFanin0(pLatch), Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pConst1 );\n            Counter++;\n        }\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NtkRemoveSelfFeedLatches(pNtk *Abc_Ntk_t) int32 {\n    var pLatch, pConst1 *Abc_Obj_t;\n    var i, Counter int32;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if Abc_NtkLatchIsSelfFeed( pLatch ) != 0 {\n            if Abc_NtkIsStrash(pNtk) {\n                pConst1 = Abc_AigConst1(pNtk);\n            } else {\n                pConst1 = Abc_NtkCreateNodeConst1(pNtk); }\n            Abc_ObjPatchFanin( Abc_ObjFanin0(pLatch), Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pConst1 );\n            Counter++;\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkLatchPipe",
+      "Start": 4176,
+      "End": 5268,
+      "BodyStart": 4232,
+      "Original": "void Abc_NtkLatchPipe( Abc_Ntk_t * pNtk, int nLatches )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pLatch, * pFanin, * pFanout;\n    int i, k, nTotal, nDigits;\n    if ( nLatches \u003c 1 )\n        return;\n    nTotal = nLatches * Abc_NtkPiNum(pNtk);\n    nDigits = Abc_Base10Log( nTotal );\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        // remember current fanins of the PI\n        Abc_NodeCollectFanouts( pObj, vNodes );\n        // create the latches\n        for ( pFanin = pObj, k = 0; k \u003c nLatches; k++, pFanin = pLatch )\n        {\n            pLatch = Abc_NtkCreateLatch( pNtk );\n            Abc_ObjAddFanin( pLatch, pFanin );\n            Abc_LatchSetInitDc( pLatch );\n            // create the name of the new latch\n            Abc_ObjAssignName( pLatch, Abc_ObjNameDummy(\"LL\", i*nLatches + k, nDigits), NULL );\n        }\n        // patch the PI fanouts\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pFanout, k )\n            Abc_ObjPatchFanin( pFanout, pObj, pFanin );\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n}",
+      "Draft": "func Abc_NtkLatchPipe(pNtk *Abc_Ntk_t, nLatches int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pLatch, pFanin, pFanout *Abc_Obj_t;\n    var i, k, nTotal, nDigits int32;\n    if nLatches \u003c 1 {\n        return; }\n    nTotal = nLatches * Abc_NtkPiNum(pNtk);\n    nDigits = Abc_Base10Log( nTotal );\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        // remember current fanins of the PI\n        Abc_NodeCollectFanouts( pObj, vNodes );\n        // create the latches\n        for  pFanin, k = pObj, 0; k \u003c nLatches; k, pFanin = k+1, pLatch  {\n            pLatch = Abc_NtkCreateLatch( pNtk );\n            Abc_ObjAddFanin( pLatch, pFanin );\n            Abc_LatchSetInitDc( pLatch );\n            // create the name of the new latch\n            Abc_ObjAssignName( pLatch, Abc_ObjNameDummy(\"LL\", i*nLatches + k, nDigits), nil );\n        }\n        // patch the PI fanouts\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pFanout, k )\n            Abc_ObjPatchFanin( pFanout, pObj, pFanin );\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectLatchValues",
+      "Start": 5542,
+      "End": 5837,
+      "BodyStart": 5600,
+      "Original": "Vec_Int_t * Abc_NtkCollectLatchValues( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vValues;\n    Abc_Obj_t * pLatch;\n    int i;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        Vec_IntPush( vValues, Abc_LatchIsInit1(pLatch) );\n    return vValues;\n}",
+      "Draft": "func Abc_NtkCollectLatchValues(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vValues *Vec_Int_t;\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        Vec_IntPush( vValues, Abc_LatchIsInit1(pLatch) );\n    return vValues;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectLatchValuesStr",
+      "Start": 6099,
+      "End": 6620,
+      "BodyStart": 6155,
+      "Original": "char * Abc_NtkCollectLatchValuesStr( Abc_Ntk_t * pNtk )\n{\n    char * pInits;\n    Abc_Obj_t * pLatch;\n    int i;\n    pInits = ABC_ALLOC( char, Abc_NtkLatchNum(pNtk) + 1 );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( Abc_LatchIsInit0(pLatch) )\n            pInits[i] = '0';\n        else if ( Abc_LatchIsInit1(pLatch) )\n            pInits[i] = '1';\n        else if ( Abc_LatchIsInitDc(pLatch) )\n            pInits[i] = 'x';\n        else\n            assert( 0 );\n    }\n    pInits[i] = 0;\n    return pInits;\n}",
+      "Draft": "func Abc_NtkCollectLatchValuesStr(pNtk *Abc_Ntk_t) string {\n    var pInits string;\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    pInits = ABC_ALLOC( char, Abc_NtkLatchNum(pNtk) + 1 );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if Abc_LatchIsInit0(pLatch) {\n            pInits[i] = '0';\n        } else if Abc_LatchIsInit1(pLatch) {\n            pInits[i] = '1';\n        } else if Abc_LatchIsInitDc(pLatch) {\n            pInits[i] = 'x';\n        } else {\n            assert(false, \"0\"); }\n    }\n    pInits[i] = 0;\n    return pInits;\n}"
+    },
+    {
+      "Name": "Abc_NtkInsertLatchValues",
+      "Start": 6894,
+      "End": 7174,
+      "BodyStart": 6965,
+      "Original": "void Abc_NtkInsertLatchValues( Abc_Ntk_t * pNtk, Vec_Int_t * vValues )\n{\n    Abc_Obj_t * pLatch;\n    int i;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        pLatch-\u003epData = (void *)(ABC_PTRINT_T)(vValues? (Vec_IntEntry(vValues,i)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC);\n}",
+      "Draft": "func Abc_NtkInsertLatchValues(pNtk *Abc_Ntk_t, vValues *Vec_Int_t) {\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        pLatch.pData = (void *)(ABC_PTRINT_T)(vValues? (Vec_IntEntry(vValues,i)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC);\n}"
+    },
+    {
+      "Name": "Abc_NtkAddLatch",
+      "Start": 7453,
+      "End": 8043,
+      "BodyStart": 7543,
+      "Original": "Abc_Obj_t * Abc_NtkAddLatch( Abc_Ntk_t * pNtk, Abc_Obj_t * pDriver, Abc_InitType_t Init )\n{\n    Abc_Obj_t * pLatchOut, * pLatch, * pLatchIn;\n    pLatchOut = Abc_NtkCreateBo(pNtk);\n    pLatch    = Abc_NtkCreateLatch(pNtk);\n    pLatchIn  = Abc_NtkCreateBi(pNtk);\n    Abc_ObjAssignName( pLatchOut, Abc_ObjName(pLatch), \"_lo\" );\n    Abc_ObjAssignName( pLatchIn,  Abc_ObjName(pLatch), \"_li\" );\n    Abc_ObjAddFanin( pLatchOut, pLatch );\n    Abc_ObjAddFanin( pLatch, pLatchIn );\n    if ( pDriver )\n    Abc_ObjAddFanin( pLatchIn, pDriver );\n    pLatch-\u003epData = (void *)Init;\n    return pLatchOut;\n}",
+      "Draft": "func Abc_NtkAddLatch(pNtk *Abc_Ntk_t, pDriver *Abc_Obj_t, Init Abc_InitType_t) *Abc_Obj_t {\n    var pLatchOut, pLatch, pLatchIn *Abc_Obj_t;\n    pLatchOut = Abc_NtkCreateBo(pNtk);\n    pLatch    = Abc_NtkCreateLatch(pNtk);\n    pLatchIn  = Abc_NtkCreateBi(pNtk);\n    Abc_ObjAssignName( pLatchOut, Abc_ObjName(pLatch), \"_lo\" );\n    Abc_ObjAssignName( pLatchIn,  Abc_ObjName(pLatch), \"_li\" );\n    Abc_ObjAddFanin( pLatchOut, pLatch );\n    Abc_ObjAddFanin( pLatch, pLatchIn );\n    if pDriver != nil {\n    Abc_ObjAddFanin( pLatchIn, pDriver ); }\n    pLatch.pData = (void *)Init;\n    return pLatchOut;\n}"
+    },
+    {
+      "Name": "Abc_NtkNodeConvertToMux",
+      "Start": 8291,
+      "End": 9240,
+      "BodyStart": 8418,
+      "Original": "void Abc_NtkNodeConvertToMux( Abc_Ntk_t * pNtk, Abc_Obj_t * pNodeC, Abc_Obj_t * pNode1, Abc_Obj_t * pNode0, Abc_Obj_t * pMux )\n{\n    assert( Abc_NtkIsLogic(pNtk) );\n    Abc_ObjAddFanin( pMux, pNodeC );\n    Abc_ObjAddFanin( pMux, pNode1 );\n    Abc_ObjAddFanin( pMux, pNode0 );\n    if ( Abc_NtkHasSop(pNtk) )\n        pMux-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pMux-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pMux-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pMux-\u003epData = Hop_Mux((Hop_Man_t *)pNtk-\u003epManFunc,Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,2));\n    else\n        assert( 0 );\n}",
+      "Draft": "func Abc_NtkNodeConvertToMux(pNtk *Abc_Ntk_t, pNodeC *Abc_Obj_t, pNode1 *Abc_Obj_t, pNode0 *Abc_Obj_t, pMux *Abc_Obj_t) {\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_ObjAddFanin( pMux, pNodeC );\n    Abc_ObjAddFanin( pMux, pNode1 );\n    Abc_ObjAddFanin( pMux, pNode0 );\n    if Abc_NtkHasSop(pNtk) {\n        pMux.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pMux-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pMux-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pMux.pData = Hop_Mux((Hop_Man_t *)pNtk.pManFunc,Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,2));\n    } else {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Abc_NtkConvertDcLatches",
+      "Start": 9530,
+      "End": 11144,
+      "BodyStart": 9579,
+      "Original": "void Abc_NtkConvertDcLatches( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pCtrl, * pLatch, * pMux, * pPi;\n    Abc_InitType_t Init = ABC_INIT_ZERO;\n    int i, fFound = 0, Counter;\n    // check if there are latches with DC values\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        if ( Abc_LatchIsInitDc(pLatch) )\n        {\n            fFound = 1;\n            break;\n        }\n    if ( !fFound )\n        return;\n    // add control latch\n    pCtrl = Abc_NtkAddLatch( pNtk, Abc_NtkCreateNodeConst1(pNtk), Init );\n    // add fanouts for each latch with DC values\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( !Abc_LatchIsInitDc(pLatch) )\n            continue;\n        // change latch value\n        pLatch-\u003epData = (void *)Init;\n        // if the latch output has the same name as a PO, rename it\n        if ( Abc_NodeFindCoFanout( Abc_ObjFanout0(pLatch) ) )\n        {\n            Nm_ManDeleteIdName( pLatch-\u003epNtk-\u003epManName, Abc_ObjFanout0(pLatch)-\u003eId );\n            Abc_ObjAssignName( Abc_ObjFanout0(pLatch), Abc_ObjName(pLatch), \"_lo\" );\n        }\n        // create new PIs\n        pPi = Abc_NtkCreatePi( pNtk );\n        Abc_ObjAssignName( pPi, Abc_ObjName(pLatch), \"_pi\" );\n        // create a new node and transfer fanout from latch output to the new node\n        pMux = Abc_NtkCreateNode( pNtk );\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pMux );\n        // convert the node into a mux\n        Abc_NtkNodeConvertToMux( pNtk, pCtrl, Abc_ObjFanout0(pLatch), pPi, pMux );\n        Counter++;\n    }\n    printf( \"The number of converted latches with DC values = %d.\\n\", Counter );\n}",
+      "Draft": "func Abc_NtkConvertDcLatches(pNtk *Abc_Ntk_t) {\n    var pCtrl, pLatch, pMux, pPi *Abc_Obj_t;\n    var Init Abc_InitType_t  = ABC_INIT_ZERO;\n    var i, fFound, Counter int32;\n    // check if there are latches with DC values\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        if Abc_LatchIsInitDc(pLatch) {\n            fFound = 1;\n            break;\n        }\n    if !fFound {\n        return; }\n    // add control latch\n    pCtrl = Abc_NtkAddLatch( pNtk, Abc_NtkCreateNodeConst1(pNtk), Init );\n    // add fanouts for each latch with DC values\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if !Abc_LatchIsInitDc(pLatch) {\n            continue; }\n        // change latch value\n        pLatch.pData = (void *)Init;\n        // if the latch output has the same name as a PO, rename it\n        if Abc_NodeFindCoFanout( Abc_ObjFanout0(pLatch) ) {\n            Nm_ManDeleteIdName( pLatch.pNtk.pManName, Abc_ObjFanout0(pLatch).Id );\n            Abc_ObjAssignName( Abc_ObjFanout0(pLatch), Abc_ObjName(pLatch), \"_lo\" );\n        }\n        // create new PIs\n        pPi = Abc_NtkCreatePi( pNtk );\n        Abc_ObjAssignName( pPi, Abc_ObjName(pLatch), \"_pi\" );\n        // create a new node and transfer fanout from latch output to the new node\n        pMux = Abc_NtkCreateNode( pNtk );\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pMux );\n        // convert the node into a mux\n        Abc_NtkNodeConvertToMux( pNtk, pCtrl, Abc_ObjFanout0(pLatch), pPi, pMux );\n        Counter++;\n    }\n    fmt.Printf(\"The number of converted latches with DC values = %d.\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Abc_NtkConverLatchNamesIntoNumbers",
+      "Start": 11442,
+      "End": 12796,
+      "BodyStart": 11509,
+      "Original": "Vec_Ptr_t * Abc_NtkConverLatchNamesIntoNumbers( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vResult, * vNames;\n    Vec_Int_t * vNumbers;\n    Abc_Obj_t * pObj;\n    char * pName;\n    int i, k, Num;\n    if ( pNtk-\u003evOnehots == NULL )\n        return NULL;\n    // set register numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003epNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    // add the numbers\n    vResult = Vec_PtrAlloc( Vec_PtrSize(pNtk-\u003evOnehots) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, pNtk-\u003evOnehots, vNames, i )\n    {\n        vNumbers = Vec_IntAlloc( Vec_PtrSize(vNames) );\n        Vec_PtrForEachEntry( char *, vNames, pName, k )\n        {\n            Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_BO );\n            if ( Num \u003c 0 )\n                continue;\n            pObj = Abc_NtkObj( pNtk, Num );\n            if ( Abc_ObjFaninNum(pObj) != 1 || !Abc_ObjIsLatch(Abc_ObjFanin0(pObj)) )\n                continue;\n            Vec_IntPush( vNumbers, (int)(ABC_PTRINT_T)pObj-\u003epNext );\n        }\n        if ( Vec_IntSize( vNumbers ) \u003e 1 )\n        {\n            Vec_PtrPush( vResult, vNumbers );\nprintf( \"Converted %d one-hot registers.\\n\", Vec_IntSize(vNumbers) );\n        }\n        else\n            Vec_IntFree( vNumbers );\n    }\n    // clean the numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003epNext = NULL;\n    return vResult;\n}",
+      "Draft": "func Abc_NtkConverLatchNamesIntoNumbers(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vResult, vNames *Vec_Ptr_t;\n    var vNumbers *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i, k, Num int32;\n    if pNtk.vOnehots == nil {\n        return nil; }\n    // set register numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    // add the numbers\n    vResult = Vec_PtrAlloc( Vec_PtrSize(pNtk.vOnehots) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, pNtk.vOnehots, vNames, i )\n    {\n        vNumbers = Vec_IntAlloc( Vec_PtrSize(vNames) );\n        Vec_PtrForEachEntry( char *, vNames, pName, k )\n        {\n            Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BO );\n            if Num \u003c 0 {\n                continue; }\n            pObj = Abc_NtkObj( pNtk, Num );\n            if Abc_ObjFaninNum(pObj) != 1 || !Abc_ObjIsLatch(Abc_ObjFanin0(pObj)) {\n                continue; }\n            Vec_IntPush( vNumbers, int32((ABC_PTRINT_T))pObj.pNext );\n        }\n        if Vec_IntSize( vNumbers ) \u003e 1 {\n            Vec_PtrPush( vResult, vNumbers );\nfmt.Printf(\"Converted %d one-hot registers.\\n\", Vec_IntSize(vNumbers));\n        \n        } else {\n            Vec_IntFree( vNumbers ); }\n    }\n    // clean the numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pNext = nil;\n    return vResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkConvertOnehot",
+      "Start": 13087,
+      "End": 17044,
+      "BodyStart": 13140,
+      "Original": "Abc_Ntk_t * Abc_NtkConvertOnehot( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pFanin, * pObjNew, * pObjLiNew, * pObjLoNew;\n    int i, k, nFlops, nStates, iState, pfCompl[32];\n    assert( Abc_NtkIsLogic(pNtk) );\n    nFlops = Abc_NtkLatchNum(pNtk);\n    if ( nFlops == 0 )\n        return Abc_NtkDup( pNtk );\n    if ( nFlops \u003e 16 )\n    {\n        printf( \"Cannot reencode %d flops because it will lead to 2^%d states.\\n\", nFlops, nFlops );\n        return NULL;\n    }\n    // check if there are latches with DC values\n    iState = 0;\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        if ( Abc_LatchIsInitDc(pObj) )\n        {\n            printf( \"Cannot process logic network with don't-care init values. Run \\\"zero\\\".\\n\" );\n            return NULL;\n        }\n        if ( Abc_LatchIsInit1(pObj) )\n            iState |= (1 \u003c\u003c i);\n    }\n    // transfer logic to SOPs\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n    // create new network\n    pNtkNew = Abc_NtkStartFromNoLatches( pNtk, pNtk-\u003entkType, pNtk-\u003entkFunc );\n    nStates = (1 \u003c\u003c nFlops);\n    for ( i = 0; i \u003c nStates; i++ )\n    {\n        pObjNew   = Abc_NtkCreateLatch( pNtkNew );\n        pObjLiNew = Abc_NtkCreateBi( pNtkNew );\n        pObjLoNew = Abc_NtkCreateBo( pNtkNew );\n        Abc_ObjAddFanin( pObjNew, pObjLiNew );\n        Abc_ObjAddFanin( pObjLoNew, pObjNew );\n        if ( i == iState )\n            Abc_LatchSetInit1( pObjNew );\n        else\n            Abc_LatchSetInit0( pObjNew );\n    }\n    Abc_NtkAddDummyBoxNames( pNtkNew );\n    assert( Abc_NtkLatchNum(pNtkNew) == nStates );\n    assert( Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk) );\n    assert( Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk) );\n    assert( Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates );\n    assert( Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates );\n    assert( Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops );\n    assert( Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops );\n    // create hot-to-log transformers\n    for ( i = 0; i \u003c nFlops; i++ ) \n    {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for ( k = 0; k \u003c nStates; k++ )\n            if ( (k \u003e\u003e i) \u0026 1 )\n                Abc_ObjAddFanin( pObjNew, Abc_NtkCi(pNtkNew, Abc_NtkPiNum(pNtkNew)+k) );\n        assert( Abc_ObjFaninNum(pObjNew) == nStates/2 );\n        pObjNew-\u003epData = Abc_SopCreateOr( (Mem_Flex_t *)pNtkNew-\u003epManFunc, nStates/2, NULL );\n        // save the new flop\n        pObj = Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i );\n        pObj-\u003epCopy = pObjNew;\n    }\n    // duplicate the nodes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj-\u003epCopy = Abc_NtkDupObj( pNtkNew, pObj, 1 );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n    }\n    Vec_PtrFree( vNodes );\n    // connect the POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Abc_ObjAddFanin( pObj-\u003epCopy, Abc_ObjNotCond(Abc_ObjFanin0(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj)) );\n    // write entries into the nodes\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_ObjNotCond(Abc_ObjFanin0(pObj)-\u003epCopy, Abc_ObjFaninC0(pObj));\n    // create log-to-hot transformers\n    for ( k = 0; k \u003c nStates; k++ )\n    {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for ( i = 0; i \u003c nFlops; i++ )\n        {\n            pObj = Abc_NtkCo( pNtk, Abc_NtkPoNum(pNtk) + i );\n            Abc_ObjAddFanin( pObjNew, Abc_ObjRegular(pObj-\u003epCopy) );\n            pfCompl[i] = Abc_ObjIsComplement(pObj-\u003epCopy) ^ !((k \u003e\u003e i) \u0026 1);\n        }\n        pObjNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, nFlops, pfCompl );\n        // connect it to the flop input\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, Abc_NtkPoNum(pNtkNew)+k), pObjNew );\n    }\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkConvertOnehot(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkConvertOnehot(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var vNodes *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pFanin, pObjNew, pObjLiNew, pObjLoNew *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var nFlops int32;\n    var nStates int32;\n    var iState int32;\n    var pfCompl [32]int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    nFlops = Abc_NtkLatchNum(pNtk);\n    if nFlops == 0 {\n        return Abc_NtkDup( pNtk ); }\n    if nFlops \u003e 16 {\n        fmt.Printf(\"Cannot reencode %d flops because it will lead to 2^%d states.\\n\", nFlops, nFlops);\n        return nil;\n    }\n    // check if there are latches with DC values\n    iState = 0;\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        if Abc_LatchIsInitDc(pObj) {\n            fmt.Printf(\"Cannot process logic network with don't-care init values. Run \\\"zero\\\".\\n\");\n            return nil;\n        }\n        if Abc_LatchIsInit1(pObj) {\n            iState |= (1 \u003c\u003c i); }\n    }\n    // transfer logic to SOPs\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n    // create new network\n    pNtkNew = Abc_NtkStartFromNoLatches( pNtk, pNtk.ntkType, pNtk.ntkFunc );\n    nStates = (1 \u003c\u003c nFlops);\n    for  i = 0; i \u003c nStates; i++  {\n        pObjNew   = Abc_NtkCreateLatch( pNtkNew );\n        pObjLiNew = Abc_NtkCreateBi( pNtkNew );\n        pObjLoNew = Abc_NtkCreateBo( pNtkNew );\n        Abc_ObjAddFanin( pObjNew, pObjLiNew );\n        Abc_ObjAddFanin( pObjLoNew, pObjNew );\n        if i == iState {\n            Abc_LatchSetInit1( pObjNew );\n        } else {\n            Abc_LatchSetInit0( pObjNew ); }\n    }\n    Abc_NtkAddDummyBoxNames( pNtkNew );\n    assert(Abc_NtkLatchNum(pNtkNew) == nStates, \"Abc_NtkLatchNum(pNtkNew) == nStates\");\n    assert(Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk), \"Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk)\");\n    assert(Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk), \"Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk)\");\n    assert(Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates, \"Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates\");\n    assert(Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates, \"Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates\");\n    assert(Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops, \"Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops\");\n    assert(Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops, \"Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops\");\n    // create hot-to-log transformers\n    for  i = 0; i \u003c nFlops; i++  {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for  k = 0; k \u003c nStates; k++  {\n            if (k \u003e\u003e i) \u0026 1 {\n                Abc_ObjAddFanin( pObjNew, Abc_NtkCi(pNtkNew, Abc_NtkPiNum(pNtkNew)+k) ); }\n        }\n        assert(Abc_ObjFaninNum(pObjNew) == nStates/2, \"Abc_ObjFaninNum(pObjNew) == nStates/2\");\n        pObjNew.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNtkNew.pManFunc, nStates/2, nil );\n        // save the new flop\n        pObj = Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i );\n        pObj.pCopy = pObjNew;\n    }\n    // duplicate the nodes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.pCopy = Abc_NtkDupObj( pNtkNew, pObj, 1 );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n    }\n    Vec_PtrFree( vNodes );\n    // connect the POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Abc_ObjAddFanin( pObj.pCopy, Abc_ObjNotCond(Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj)) );\n    // write entries into the nodes\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.pCopy = Abc_ObjNotCond(Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj));\n    // create log-to-hot transformers\n    for  k = 0; k \u003c nStates; k++  {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for  i = 0; i \u003c nFlops; i++  {\n            pObj = Abc_NtkCo( pNtk, Abc_NtkPoNum(pNtk) + i );\n            Abc_ObjAddFanin( pObjNew, Abc_ObjRegular(pObj.pCopy) );\n            pfCompl[i] = Abc_ObjIsComplement(pObj.pCopy) ^ !((k \u003e\u003e i) \u0026 1);\n        }\n        pObjNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, nFlops, pfCompl );\n        // connect it to the flop input\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, Abc_NtkPoNum(pNtkNew)+k), pObjNew );\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkConvertOnehot(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeWithClassesAig",
+      "Start": 17391,
+      "End": 17956,
+      "BodyStart": 17511,
+      "Original": "Aig_Man_t * Abc_NtkRetimeWithClassesAig( Aig_Man_t * pMan, Vec_Int_t * vClasses, Vec_Int_t ** pvClasses, int fVerbose )\n{\n    Aig_Man_t * pManNew;\n    Gia_Man_t * pGia, * pGiaNew;\n    pGia = Gia_ManFromAigSimple( pMan );\n    assert( Gia_ManRegNum(pGia) == Vec_IntSize(vClasses) );\n    pGia-\u003evFlopClasses = vClasses;\n    pGiaNew = Gia_ManRetimeForward( pGia, 10, fVerbose );\n    *pvClasses = pGiaNew-\u003evFlopClasses; \n    pGiaNew-\u003evFlopClasses = NULL;\n    pManNew = Gia_ManToAig( pGiaNew, 0 );\n    Gia_ManStop( pGiaNew );\n    Gia_ManStop( pGia );\n    return pManNew;\n}",
+      "Draft": "func Abc_NtkRetimeWithClassesAig(pMan *Aig_Man_t, vClasses *Vec_Int_t, pvClasses **Vec_Int_t, fVerbose int32) *Aig_Man_t {\n    var pManNew *Aig_Man_t;\n    var pGia, pGiaNew *Gia_Man_t;\n    pGia = Gia_ManFromAigSimple( pMan );\n    assert(Gia_ManRegNum(pGia) == Vec_IntSize(vClasses), \"Gia_ManRegNum(pGia) == Vec_IntSize(vClasses)\");\n    pGia.vFlopClasses = vClasses;\n    pGiaNew = Gia_ManRetimeForward( pGia, 10, fVerbose );\n    *pvClasses = pGiaNew.vFlopClasses; \n    pGiaNew.vFlopClasses = nil;\n    pManNew = Gia_ManToAig( pGiaNew, 0 );\n    Gia_ManStop( pGiaNew );\n    Gia_ManStop( pGia );\n    return pManNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeWithClassesNtk",
+      "Start": 18223,
+      "End": 19028,
+      "BodyStart": 18343,
+      "Original": "Abc_Ntk_t * Abc_NtkRetimeWithClassesNtk( Abc_Ntk_t * pNtk, Vec_Int_t * vClasses, Vec_Int_t ** pvClasses, int fVerbose )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n    Abc_Ntk_t * pNtkAig, * pNtkAigRet, * pNtkRes;\n    Aig_Man_t * pMan, * pManNew;\n    pNtkAig    = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    pMan       = Abc_NtkToDar( pNtkAig, 0, 1 );\n    pManNew    = Abc_NtkRetimeWithClassesAig( pMan, vClasses, pvClasses, fVerbose );\n    pNtkAigRet = Abc_NtkFromDarSeqSweep( pNtkAig, pManNew );\n    pNtkRes    = Abc_NtkToLogic( pNtkAigRet );\n    Abc_NtkDelete( pNtkAigRet );\n    Abc_NtkDelete( pNtkAig );\n    Aig_ManStop( pManNew );\n    Aig_ManStop( pMan );\n    return pNtkRes;\n}",
+      "Draft": "func Abc_NtkRetimeWithClassesNtk(pNtk *Abc_Ntk_t, vClasses *Vec_Int_t, pvClasses **Vec_Int_t, fVerbose int32) *Abc_Ntk_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n    var pNtkAig, pNtkAigRet, pNtkRes *Abc_Ntk_t;\n    var pMan, pManNew *Aig_Man_t;\n    pNtkAig    = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    pMan       = Abc_NtkToDar( pNtkAig, 0, 1 );\n    pManNew    = Abc_NtkRetimeWithClassesAig( pMan, vClasses, pvClasses, fVerbose );\n    pNtkAigRet = Abc_NtkFromDarSeqSweep( pNtkAig, pManNew );\n    pNtkRes    = Abc_NtkToLogic( pNtkAigRet );\n    Abc_NtkDelete( pNtkAigRet );\n    Abc_NtkDelete( pNtkAig );\n    Aig_ManStop( pManNew );\n    Aig_ManStop( pMan );\n    return pNtkRes;\n}"
+    },
+    {
+      "Name": "Abc_NtkTransformBack",
+      "Start": 19305,
+      "End": 20789,
+      "BodyStart": 19420,
+      "Original": "void Abc_NtkTransformBack( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew, Vec_Ptr_t * vControls, Vec_Int_t * vClasses )\n{\n    Abc_Obj_t * pObj, * pNodeNew, * pCtrl, * pDriver;\n    int i, Class;\n    assert( Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew) );\n    // match the POs of the old into new\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n        pObj-\u003epCopy = Abc_NtkPo( pNtkNew, i );\n    // remap the flops\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        assert( Abc_ObjIsPo(pObj) \u0026\u0026 pObj-\u003epNtk == pNtkOld );\n        Vec_PtrWriteEntry( vControls, i, pObj-\u003epCopy );\n    }\n    // create self-loops\n    assert( Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses) );\n    Abc_NtkForEachLatch( pNtkNew, pObj, i )\n    {\n        Class = Vec_IntEntry( vClasses, i );\n        if ( Class == -1 )\n            continue;\n        pDriver = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        pCtrl = (Abc_Obj_t *)Vec_PtrEntry( vControls, Class );\n        pCtrl = Abc_ObjFanin0( pCtrl );\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Abc_ObjAddFanin( pNodeNew, pCtrl );\n        Abc_ObjAddFanin( pNodeNew, pDriver );\n        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanout0(pObj) );\n        Abc_ObjSetData( pNodeNew, Abc_SopRegister((Mem_Flex_t *)pNtkNew-\u003epManFunc, \"0-1 1\\n11- 1\\n\") );\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, pNodeNew );\n    }\n    // remove the useless POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n        Abc_NtkDeleteObj( pObj );\n}",
+      "Draft": "func Abc_NtkTransformBack(pNtkOld *Abc_Ntk_t, pNtkNew *Abc_Ntk_t, vControls *Vec_Ptr_t, vClasses *Vec_Int_t) {\n    var pObj, pNodeNew, pCtrl, pDriver *Abc_Obj_t;\n    var i, Class int32;\n    assert(Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew), \"Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew)\");\n    // match the POs of the old into new\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n        pObj.pCopy = Abc_NtkPo( pNtkNew, i );\n    // remap the flops\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        assert(Abc_ObjIsPo(pObj) \u0026\u0026 pObj.pNtk == pNtkOld, \"Abc_ObjIsPo(pObj) \u0026\u0026 pObj.pNtk == pNtkOld\");\n        Vec_PtrWriteEntry( vControls, i, pObj.pCopy );\n    }\n    // create self-loops\n    assert(Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses), \"Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses)\");\n    Abc_NtkForEachLatch( pNtkNew, pObj, i )\n    {\n        Class = Vec_IntEntry( vClasses, i );\n        if Class == -1 {\n            continue; }\n        pDriver = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        pCtrl = (Abc_Obj_t *)Vec_PtrEntry( vControls, Class );\n        pCtrl = Abc_ObjFanin0( pCtrl );\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Abc_ObjAddFanin( pNodeNew, pCtrl );\n        Abc_ObjAddFanin( pNodeNew, pDriver );\n        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanout0(pObj) );\n        Abc_ObjSetData( pNodeNew, Abc_SopRegister((Mem_Flex_t *)pNtkNew.pManFunc, \"0-1 1\\n11- 1\\n\") );\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, pNodeNew );\n    }\n    // remove the useless POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n        Abc_NtkDeleteObj( pObj );\n}"
+    },
+    {
+      "Name": "Abc_NtkCRetime",
+      "Start": 21040,
+      "End": 23633,
+      "BodyStart": 21101,
+      "Original": "Abc_Ntk_t * Abc_NtkCRetime( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Vec_Ptr_t * vControls;\n    Vec_Int_t * vFlopClasses, * vFlopClassesNew;\n    Abc_Obj_t * pObj, * pDriver, * pFlopOut, * pObjPo;\n    int i, iFlop, CountN = 0, Count2 = 0, Count1 = 0, Count0 = 0;\n\n    // duplicate the AIG\n    pNtk = Abc_NtkDup( pNtk );\n\n    // update registers\n    vControls    = Vec_PtrAlloc( 100 );\n    vFlopClasses = Vec_IntAlloc( 100 );\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        pFlopOut = Abc_ObjFanout0(pObj);\n        pDriver = Abc_ObjFanin0( Abc_ObjFanin0(pObj) );\n        if ( Abc_ObjFaninNum(pDriver) != 3 )\n        {\n            Vec_IntPush( vFlopClasses, -1 );\n            CountN++;\n            continue;\n        }\n        if ( Abc_ObjFanin(pDriver, 1) != pFlopOut \u0026\u0026 Abc_ObjFanin(pDriver, 2) != pFlopOut )\n        {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count2++;\n            continue;\n        }\n        if ( Abc_ObjFanin(pDriver, 1) == pFlopOut )\n        {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count1++;\n            continue;\n        }\n        assert( Abc_ObjFanin(pDriver, 2) == pFlopOut );\n        Count0++;\n        Vec_PtrPushUnique( vControls, Abc_ObjFanin0(pDriver) );\n        // set the flop class\n        iFlop = Vec_PtrFind( vControls, Abc_ObjFanin0(pDriver) );\n        Vec_IntPush( vFlopClasses, iFlop );\n        // update\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, Abc_ObjFanin(pDriver, 1) );\n    }\n    if ( Count1 )\n        printf( \"Opposite phase enable is present in %d flops (out of %d).\\n\", Count1, Abc_NtkLatchNum(pNtk) );\n    if ( fVerbose )\n    printf( \"CountN = %4d. Count2 = %4d. Count1 = %4d. Count0 = %4d. Ctrls = %d.\\n\", \n        CountN, Count2, Count1, Count0, Vec_PtrSize(vControls) );\n\n    // add the controls to the list of POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        pObjPo = Abc_NtkCreatePo( pNtk );\n        Abc_ObjAddFanin( pObjPo, pObj );\n        Abc_ObjAssignName( pObjPo, Abc_ObjName(pObjPo), NULL );\n        Vec_PtrWriteEntry( vControls, i, pObjPo );\n    }\n    Abc_NtkOrderCisCos( pNtk );\n    Abc_NtkCleanup( pNtk, fVerbose );\n\n    // performs retiming with classes\n    pNtkNew = Abc_NtkRetimeWithClassesNtk( pNtk, vFlopClasses, \u0026vFlopClassesNew, fVerbose );\n    Abc_NtkTransformBack( pNtk, pNtkNew, vControls, vFlopClassesNew );\n//    assert( Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk) );\n    Abc_NtkDelete( pNtk );\n\n    Vec_PtrFree( vControls );\n//    Vec_IntFree( vFlopClasses );\n    Vec_IntFree( vFlopClassesNew );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkCRetime(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vControls *Vec_Ptr_t;\n    var vFlopClasses, vFlopClassesNew *Vec_Int_t;\n    var pObj, pDriver, pFlopOut, pObjPo *Abc_Obj_t;\n    var i, iFlop, CountN, Count2, Count1, Count0 int32;\n\n    // duplicate the AIG\n    pNtk = Abc_NtkDup( pNtk );\n\n    // update registers\n    vControls    = Vec_PtrAlloc( 100 );\n    vFlopClasses = Vec_IntAlloc( 100 );\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        pFlopOut = Abc_ObjFanout0(pObj);\n        pDriver = Abc_ObjFanin0( Abc_ObjFanin0(pObj) );\n        if Abc_ObjFaninNum(pDriver) != 3 {\n            Vec_IntPush( vFlopClasses, -1 );\n            CountN++;\n            continue;\n        }\n        if Abc_ObjFanin(pDriver, 1) != pFlopOut \u0026\u0026 Abc_ObjFanin(pDriver, 2) != pFlopOut {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count2++;\n            continue;\n        }\n        if Abc_ObjFanin(pDriver, 1) == pFlopOut {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count1++;\n            continue;\n        }\n        assert(Abc_ObjFanin(pDriver, 2) == pFlopOut, \"Abc_ObjFanin(pDriver, 2) == pFlopOut\");\n        Count0++;\n        Vec_PtrPushUnique( vControls, Abc_ObjFanin0(pDriver) );\n        // set the flop class\n        iFlop = Vec_PtrFind( vControls, Abc_ObjFanin0(pDriver) );\n        Vec_IntPush( vFlopClasses, iFlop );\n        // update\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, Abc_ObjFanin(pDriver, 1) );\n    }\n    if Count1 {\n        fmt.Printf(\"Opposite phase enable is present in %d flops (out of %d).\\n\", Count1, Abc_NtkLatchNum(pNtk)); }\n    if fVerbose != 0 {\n    fmt.Printf(\"CountN = %4d. Count2 = %4d. Count1 = %4d. Count0 = %4d. Ctrls = %d.\\n\", CountN, Count2, Count1, Count0, Vec_PtrSize(vControls)); }\n\n    // add the controls to the list of POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        pObjPo = Abc_NtkCreatePo( pNtk );\n        Abc_ObjAddFanin( pObjPo, pObj );\n        Abc_ObjAssignName( pObjPo, Abc_ObjName(pObjPo), nil );\n        Vec_PtrWriteEntry( vControls, i, pObjPo );\n    }\n    Abc_NtkOrderCisCos( pNtk );\n    Abc_NtkCleanup( pNtk, fVerbose );\n\n    // performs retiming with classes\n    pNtkNew = Abc_NtkRetimeWithClassesNtk( pNtk, vFlopClasses, \u0026vFlopClassesNew, fVerbose );\n    Abc_NtkTransformBack( pNtk, pNtkNew, vControls, vFlopClassesNew );\n//    assert( Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk) );\n    Abc_NtkDelete( pNtk );\n\n    Vec_PtrFree( vControls );\n//    Vec_IntFree( vFlopClasses );\n    Vec_IntFree( vFlopClassesNew );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkVerifyCex",
+      "Start": 23925,
+      "End": 25320,
+      "BodyStart": 23981,
+      "Original": "int Abc_NtkVerifyCex( Abc_Ntk_t * pNtk, Abc_Cex_t * p )\n{\n    Abc_Obj_t * pObj;\n    int RetValue, i, k, iBit = 0;\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( p-\u003enPis  == Abc_NtkPiNum(pNtk) );\n//    assert( p-\u003enRegs == Abc_NtkLatchNum(pNtk) );\n    Abc_NtkCleanMarkC( pNtk );\n    Abc_AigConst1(pNtk)-\u003efMarkC = 1;\n    // initialize flops\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        Abc_ObjFanout0(pObj)-\u003efMarkC = Abc_InfoHasBit(p-\u003epData, iBit++);\n    // simulate timeframes\n    iBit = p-\u003enRegs;\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        Abc_NtkForEachPi( pNtk, pObj, k )\n            pObj-\u003efMarkC = Abc_InfoHasBit(p-\u003epData, iBit++);\n        Abc_NtkForEachNode( pNtk, pObj, k )\n            pObj-\u003efMarkC = (Abc_ObjFanin0(pObj)-\u003efMarkC ^ Abc_ObjFaninC0(pObj)) \u0026 \n                           (Abc_ObjFanin1(pObj)-\u003efMarkC ^ Abc_ObjFaninC1(pObj));\n        Abc_NtkForEachCo( pNtk, pObj, k )\n            pObj-\u003efMarkC = Abc_ObjFanin0(pObj)-\u003efMarkC ^ Abc_ObjFaninC0(pObj);\n        Abc_NtkForEachLatch( pNtk, pObj, k )\n            Abc_ObjFanout0(pObj)-\u003efMarkC = Abc_ObjFanin0(pObj)-\u003efMarkC;\n    }\n    assert( iBit == p-\u003enBits );\n    // figure out the number of failed output\n    RetValue = -1;\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if ( pObj-\u003efMarkC )\n        {\n            RetValue = i;\n            break;\n        }\n    }\n    Abc_NtkCleanMarkC( pNtk );\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkVerifyCex(pNtk *Abc_Ntk_t, p *Abc_Cex_t) int32 {\n    var pObj *Abc_Obj_t;\n    var RetValue, i, k, iBit int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(p.nPis  == Abc_NtkPiNum(pNtk), \"p.nPis  == Abc_NtkPiNum(pNtk)\");\n//    assert( p-\u003enRegs == Abc_NtkLatchNum(pNtk) );\n    Abc_NtkCleanMarkC( pNtk );\n    Abc_AigConst1(pNtk).fMarkC = 1;\n    // initialize flops\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        Abc_ObjFanout0(pObj).fMarkC = Abc_InfoHasBit(p.pData, iBit++);\n    // simulate timeframes\n    iBit = p.nRegs;\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        Abc_NtkForEachPi( pNtk, pObj, k )\n            pObj.fMarkC = Abc_InfoHasBit(p.pData, iBit++);\n        Abc_NtkForEachNode( pNtk, pObj, k )\n            pObj.fMarkC = (Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj)) \u0026 \n                           (Abc_ObjFanin1(pObj).fMarkC ^ Abc_ObjFaninC1(pObj));\n        Abc_NtkForEachCo( pNtk, pObj, k )\n            pObj.fMarkC = Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj);\n        Abc_NtkForEachLatch( pNtk, pObj, k )\n            Abc_ObjFanout0(pObj).fMarkC = Abc_ObjFanin0(pObj).fMarkC;\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    // figure out the number of failed output\n    RetValue = -1;\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if pObj.fMarkC {\n            RetValue = i;\n            break;\n        }\n    }\n    Abc_NtkCleanMarkC( pNtk );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::7084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7069,
+      "End": 7077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8006,
+      "End": 8014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8637,
+      "End": 8651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9053,
+      "End": 9066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8882",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9092,
+      "End": 9105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9134,
+      "End": 9147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::8966",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9176,
+      "End": 9189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::10055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10265,
+      "End": 10273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::11567",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11777,
+      "End": 11790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::15252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15462,
+      "End": 15476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::16516",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16726,
+      "End": 16740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::19991",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20201,
+      "End": 20214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::pointer-cast::20326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20536,
+      "End": 20550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkLatchIsSelfFeed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLatchIsSelfFeed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1333,
+      "End": 1740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkLatchIsSelfFeed",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLatchIsSelfFeed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2009,
+      "End": 2338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkCountSelfFeedLatches",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCountSelfFeedLatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2607,
+      "End": 3000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkRemoveSelfFeedLatches",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRemoveSelfFeedLatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3298,
+      "End": 3857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkLatchPipe",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLatchPipe",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4176,
+      "End": 5268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkCollectLatchValues",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectLatchValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5542,
+      "End": 5837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkCollectLatchValuesStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectLatchValuesStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6099,
+      "End": 6620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::ternary::Abc_NtkInsertLatchValues",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkInsertLatchValues",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6894,
+      "End": 7174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkInsertLatchValues",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInsertLatchValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6894,
+      "End": 7174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkAddLatch",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAddLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7453,
+      "End": 8043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkNodeConvertToMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkNodeConvertToMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8291,
+      "End": 9240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkConvertDcLatches",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConvertDcLatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9530,
+      "End": 11144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkConverLatchNamesIntoNumbers",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConverLatchNamesIntoNumbers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11442,
+      "End": 12796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkConvertOnehot",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConvertOnehot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13087,
+      "End": 17044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkRetimeWithClassesAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeWithClassesAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17391,
+      "End": 17956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkRetimeWithClassesNtk",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeWithClassesNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18223,
+      "End": 19028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkTransformBack",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTransformBack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19305,
+      "End": 20789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkCRetime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCRetime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21040,
+      "End": 23633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::Abc_NtkVerifyCex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkVerifyCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23925,
+      "End": 25320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 539,
+      "End": 598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8687,
+      "End": 8986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::2726",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2726,
+      "End": 2764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::3429",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3429,
+      "End": 3467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::4503",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4503,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::5081",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5081,
+      "End": 5135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::5719",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5719,
+      "End": 5757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::6224",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6224,
+      "End": 6268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::6274",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6274,
+      "End": 6312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::7006",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7006,
+      "End": 7044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::9755",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9755,
+      "End": 9793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::10102",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10102,
+      "End": 10140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::11718",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11718,
+      "End": 11754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::11893",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11893,
+      "End": 11954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::12025",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12025,
+      "End": 12072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::12710",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12710,
+      "End": 12746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::13668",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13668,
+      "End": 13704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::15705",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15705,
+      "End": 15756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::15828",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15828,
+      "End": 15866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::15986",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15986,
+      "End": 16019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::16166",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16166,
+      "End": 16199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::19601",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19601,
+      "End": 19637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::19712",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19712,
+      "End": 19766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::19991",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19991,
+      "End": 20030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::20699",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20699,
+      "End": 20753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::21491",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21491,
+      "End": 21527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::22884",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22884,
+      "End": 22938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::24269",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24269,
+      "End": 24305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::24480",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24480,
+      "End": 24513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::24583",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24583,
+      "End": 24618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::24791",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24791,
+      "End": 24824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::24912",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24912,
+      "End": 24948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcLatch.c::macro-inline::25128",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25128,
+      "End": 25161
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcLatch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures working with latches.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcLatch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if latches form self-loop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLatchIsSelfFeed_rec(pLatch *Abc_Obj_t, pLatchRoot *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    assert(Abc_ObjIsLatch(pLatch), \"Abc_ObjIsLatch(pLatch)\");\n    if pLatch == pLatchRoot {\n        return 1; }\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) {\n        return 0; }\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if latches form self-loop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLatchIsSelfFeed(pLatch *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    assert(Abc_ObjIsLatch(pLatch), \"Abc_ObjIsLatch(pLatch)\");\n    pFanin = Abc_ObjFanin0(Abc_ObjFanin0(pLatch));\n    if !Abc_ObjIsBo(pFanin) || !Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) {\n        return 0; }\n    return Abc_NtkLatchIsSelfFeed_rec( Abc_ObjFanin0(pFanin), pLatch );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if latches form self-loop.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCountSelfFeedLatches(pNtk *Abc_Ntk_t) int32 {\n    var pLatch *Abc_Obj_t;\n    var i, Counter int32;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n//        if ( Abc_NtkLatchIsSelfFeed(pLatch) \u0026\u0026 Abc_ObjFanoutNum(pLatch) \u003e 1 )\n//            printf( \"Fanouts = %d.\\n\", Abc_ObjFanoutNum(pLatch) );\n        Counter += Abc_NtkLatchIsSelfFeed( pLatch );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces self-feeding latches by latches with constant inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRemoveSelfFeedLatches(pNtk *Abc_Ntk_t) int32 {\n    var pLatch, pConst1 *Abc_Obj_t;\n    var i, Counter int32;\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if Abc_NtkLatchIsSelfFeed( pLatch ) != 0 {\n            if Abc_NtkIsStrash(pNtk) {\n                pConst1 = Abc_AigConst1(pNtk);\n            } else {\n                pConst1 = Abc_NtkCreateNodeConst1(pNtk); }\n            Abc_ObjPatchFanin( Abc_ObjFanin0(pLatch), Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pConst1 );\n            Counter++;\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pipelines the network with latches.]\n\n  Description []\n               \n  SideEffects [Does not check the names of the added latches!!!]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLatchPipe(pNtk *Abc_Ntk_t, nLatches int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj, pLatch, pFanin, pFanout *Abc_Obj_t;\n    var i, k, nTotal, nDigits int32;\n    if nLatches \u003c 1 {\n        return; }\n    nTotal = nLatches * Abc_NtkPiNum(pNtk);\n    nDigits = Abc_Base10Log( nTotal );\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        // remember current fanins of the PI\n        Abc_NodeCollectFanouts( pObj, vNodes );\n        // create the latches\n        for  pFanin, k = pObj, 0; k \u003c nLatches; k, pFanin = k+1, pLatch  {\n            pLatch = Abc_NtkCreateLatch( pNtk );\n            Abc_ObjAddFanin( pLatch, pFanin );\n            Abc_LatchSetInitDc( pLatch );\n            // create the name of the new latch\n            Abc_ObjAssignName( pLatch, Abc_ObjNameDummy(\"LL\", i*nLatches + k, nDigits), nil );\n        }\n        // patch the PI fanouts\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pFanout, k )\n            Abc_ObjPatchFanin( pFanout, pObj, pFanin );\n    }\n    Vec_PtrFree( vNodes );\n    Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectLatchValues(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vValues *Vec_Int_t;\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        Vec_IntPush( vValues, Abc_LatchIsInit1(pLatch) );\n    return vValues;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives latch init string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectLatchValuesStr(pNtk *Abc_Ntk_t) string {\n    var pInits string;\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    pInits = ABC_ALLOC( char, Abc_NtkLatchNum(pNtk) + 1 );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if Abc_LatchIsInit0(pLatch) {\n            pInits[i] = '0';\n        } else if Abc_LatchIsInit1(pLatch) {\n            pInits[i] = '1';\n        } else if Abc_LatchIsInitDc(pLatch) {\n            pInits[i] = 'x';\n        } else {\n            assert(false, \"0\"); }\n    }\n    pInits[i] = 0;\n    return pInits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkInsertLatchValues(pNtk *Abc_Ntk_t, vValues *Vec_Int_t) {\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        pLatch.pData = (void *)(ABC_PTRINT_T)(vValues? (Vec_IntEntry(vValues,i)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates latch with the given initial value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAddLatch(pNtk *Abc_Ntk_t, pDriver *Abc_Obj_t, Init Abc_InitType_t) *Abc_Obj_t {\n    var pLatchOut, pLatch, pLatchIn *Abc_Obj_t;\n    pLatchOut = Abc_NtkCreateBo(pNtk);\n    pLatch    = Abc_NtkCreateLatch(pNtk);\n    pLatchIn  = Abc_NtkCreateBi(pNtk);\n    Abc_ObjAssignName( pLatchOut, Abc_ObjName(pLatch), \"_lo\" );\n    Abc_ObjAssignName( pLatchIn,  Abc_ObjName(pLatch), \"_li\" );\n    Abc_ObjAddFanin( pLatchOut, pLatch );\n    Abc_ObjAddFanin( pLatch, pLatchIn );\n    if pDriver != nil {\n    Abc_ObjAddFanin( pLatchIn, pDriver ); }\n    pLatch.pData = (void *)Init;\n    return pLatchOut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates MUX.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkNodeConvertToMux(pNtk *Abc_Ntk_t, pNodeC *Abc_Obj_t, pNode1 *Abc_Obj_t, pNode0 *Abc_Obj_t, pMux *Abc_Obj_t) {\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_ObjAddFanin( pMux, pNodeC );\n    Abc_ObjAddFanin( pMux, pNode1 );\n    Abc_ObjAddFanin( pMux, pNode0 );\n    if Abc_NtkHasSop(pNtk) {\n        pMux.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pMux-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pMux-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pMux.pData = Hop_Mux((Hop_Man_t *)pNtk.pManFunc,Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,2));\n    } else {\n        assert(false, \"0\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts registers with DC values into additional PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConvertDcLatches(pNtk *Abc_Ntk_t) {\n    var pCtrl, pLatch, pMux, pPi *Abc_Obj_t;\n    var Init Abc_InitType_t  = ABC_INIT_ZERO;\n    var i, fFound, Counter int32;\n    // check if there are latches with DC values\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        if Abc_LatchIsInitDc(pLatch) {\n            fFound = 1;\n            break;\n        }\n    if !fFound {\n        return; }\n    // add control latch\n    pCtrl = Abc_NtkAddLatch( pNtk, Abc_NtkCreateNodeConst1(pNtk), Init );\n    // add fanouts for each latch with DC values\n    Counter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if !Abc_LatchIsInitDc(pLatch) {\n            continue; }\n        // change latch value\n        pLatch.pData = (void *)Init;\n        // if the latch output has the same name as a PO, rename it\n        if Abc_NodeFindCoFanout( Abc_ObjFanout0(pLatch) ) {\n            Nm_ManDeleteIdName( pLatch.pNtk.pManName, Abc_ObjFanout0(pLatch).Id );\n            Abc_ObjAssignName( Abc_ObjFanout0(pLatch), Abc_ObjName(pLatch), \"_lo\" );\n        }\n        // create new PIs\n        pPi = Abc_NtkCreatePi( pNtk );\n        Abc_ObjAssignName( pPi, Abc_ObjName(pLatch), \"_pi\" );\n        // create a new node and transfer fanout from latch output to the new node\n        pMux = Abc_NtkCreateNode( pNtk );\n        Abc_ObjTransferFanout( Abc_ObjFanout0(pLatch), pMux );\n        // convert the node into a mux\n        Abc_NtkNodeConvertToMux( pNtk, pCtrl, Abc_ObjFanout0(pLatch), pPi, pMux );\n        Counter++;\n    }\n    fmt.Printf(\"The number of converted latches with DC values = %d.\\n\", Counter);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfors the array of latch names into that of latch numbers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConverLatchNamesIntoNumbers(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vResult, vNames *Vec_Ptr_t;\n    var vNumbers *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var pName string;\n    var i, k, Num int32;\n    if pNtk.vOnehots == nil {\n        return nil; }\n    // set register numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;\n    // add the numbers\n    vResult = Vec_PtrAlloc( Vec_PtrSize(pNtk.vOnehots) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, pNtk.vOnehots, vNames, i )\n    {\n        vNumbers = Vec_IntAlloc( Vec_PtrSize(vNames) );\n        Vec_PtrForEachEntry( char *, vNames, pName, k )\n        {\n            Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BO );\n            if Num \u003c 0 {\n                continue; }\n            pObj = Abc_NtkObj( pNtk, Num );\n            if Abc_ObjFaninNum(pObj) != 1 || !Abc_ObjIsLatch(Abc_ObjFanin0(pObj)) {\n                continue; }\n            Vec_IntPush( vNumbers, int32((ABC_PTRINT_T))pObj.pNext );\n        }\n        if Vec_IntSize( vNumbers ) \u003e 1 {\n            Vec_PtrPush( vResult, vNumbers );\nfmt.Printf(\"Converted %d one-hot registers.\\n\", Vec_IntSize(vNumbers));\n        \n        } else {\n            Vec_IntFree( vNumbers ); }\n    }\n    // clean the numbers\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pNext = nil;\n    return vResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts registers with DC values into additional PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConvertOnehot(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var vNodes *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pFanin, pObjNew, pObjLiNew, pObjLoNew *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var nFlops int32;\n    var nStates int32;\n    var iState int32;\n    var pfCompl [32]int32;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    nFlops = Abc_NtkLatchNum(pNtk);\n    if nFlops == 0 {\n        return Abc_NtkDup( pNtk ); }\n    if nFlops \u003e 16 {\n        fmt.Printf(\"Cannot reencode %d flops because it will lead to 2^%d states.\\n\", nFlops, nFlops);\n        return nil;\n    }\n    // check if there are latches with DC values\n    iState = 0;\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        if Abc_LatchIsInitDc(pObj) {\n            fmt.Printf(\"Cannot process logic network with don't-care init values. Run \\\"zero\\\".\\n\");\n            return nil;\n        }\n        if Abc_LatchIsInit1(pObj) {\n            iState |= (1 \u003c\u003c i); }\n    }\n    // transfer logic to SOPs\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n    // create new network\n    pNtkNew = Abc_NtkStartFromNoLatches( pNtk, pNtk.ntkType, pNtk.ntkFunc );\n    nStates = (1 \u003c\u003c nFlops);\n    for  i = 0; i \u003c nStates; i++  {\n        pObjNew   = Abc_NtkCreateLatch( pNtkNew );\n        pObjLiNew = Abc_NtkCreateBi( pNtkNew );\n        pObjLoNew = Abc_NtkCreateBo( pNtkNew );\n        Abc_ObjAddFanin( pObjNew, pObjLiNew );\n        Abc_ObjAddFanin( pObjLoNew, pObjNew );\n        if i == iState {\n            Abc_LatchSetInit1( pObjNew );\n        } else {\n            Abc_LatchSetInit0( pObjNew ); }\n    }\n    Abc_NtkAddDummyBoxNames( pNtkNew );\n    assert(Abc_NtkLatchNum(pNtkNew) == nStates, \"Abc_NtkLatchNum(pNtkNew) == nStates\");\n    assert(Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk), \"Abc_NtkPiNum(pNtkNew) == Abc_NtkPiNum(pNtk)\");\n    assert(Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk), \"Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk)\");\n    assert(Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates, \"Abc_NtkCiNum(pNtkNew) == Abc_NtkPiNum(pNtkNew) + nStates\");\n    assert(Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates, \"Abc_NtkCoNum(pNtkNew) == Abc_NtkPoNum(pNtkNew) + nStates\");\n    assert(Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops, \"Abc_NtkCiNum(pNtk) == Abc_NtkPiNum(pNtk) + nFlops\");\n    assert(Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops, \"Abc_NtkCoNum(pNtk) == Abc_NtkPoNum(pNtk) + nFlops\");\n    // create hot-to-log transformers\n    for  i = 0; i \u003c nFlops; i++  {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for  k = 0; k \u003c nStates; k++  {\n            if (k \u003e\u003e i) \u0026 1 {\n                Abc_ObjAddFanin( pObjNew, Abc_NtkCi(pNtkNew, Abc_NtkPiNum(pNtkNew)+k) ); }\n        }\n        assert(Abc_ObjFaninNum(pObjNew) == nStates/2, \"Abc_ObjFaninNum(pObjNew) == nStates/2\");\n        pObjNew.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNtkNew.pManFunc, nStates/2, nil );\n        // save the new flop\n        pObj = Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i );\n        pObj.pCopy = pObjNew;\n    }\n    // duplicate the nodes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.pCopy = Abc_NtkDupObj( pNtkNew, pObj, 1 );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n    }\n    Vec_PtrFree( vNodes );\n    // connect the POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Abc_ObjAddFanin( pObj.pCopy, Abc_ObjNotCond(Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj)) );\n    // write entries into the nodes\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.pCopy = Abc_ObjNotCond(Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj));\n    // create log-to-hot transformers\n    for  k = 0; k \u003c nStates; k++  {\n        pObjNew = Abc_NtkCreateNode( pNtkNew );\n        for  i = 0; i \u003c nFlops; i++  {\n            pObj = Abc_NtkCo( pNtk, Abc_NtkPoNum(pNtk) + i );\n            Abc_ObjAddFanin( pObjNew, Abc_ObjRegular(pObj.pCopy) );\n            pfCompl[i] = Abc_ObjIsComplement(pObj.pCopy) ^ !((k \u003e\u003e i) \u0026 1);\n        }\n        pObjNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, nFlops, pfCompl );\n        // connect it to the flop input\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, Abc_NtkPoNum(pNtkNew)+k), pObjNew );\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkConvertOnehot(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs retiming with classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeWithClassesAig(pMan *Aig_Man_t, vClasses *Vec_Int_t, pvClasses **Vec_Int_t, fVerbose int32) *Aig_Man_t {\n    var pManNew *Aig_Man_t;\n    var pGia, pGiaNew *Gia_Man_t;\n    pGia = Gia_ManFromAigSimple( pMan );\n    assert(Gia_ManRegNum(pGia) == Vec_IntSize(vClasses), \"Gia_ManRegNum(pGia) == Vec_IntSize(vClasses)\");\n    pGia.vFlopClasses = vClasses;\n    pGiaNew = Gia_ManRetimeForward( pGia, 10, fVerbose );\n    *pvClasses = pGiaNew.vFlopClasses; \n    pGiaNew.vFlopClasses = nil;\n    pManNew = Gia_ManToAig( pGiaNew, 0 );\n    Gia_ManStop( pGiaNew );\n    Gia_ManStop( pGia );\n    return pManNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs retiming with classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeWithClassesNtk(pNtk *Abc_Ntk_t, vClasses *Vec_Int_t, pvClasses **Vec_Int_t, fVerbose int32) *Abc_Ntk_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n    var pNtkAig, pNtkAigRet, pNtkRes *Abc_Ntk_t;\n    var pMan, pManNew *Aig_Man_t;\n    pNtkAig    = Abc_NtkStrash( pNtk, 0, 1, 0 );\n    pMan       = Abc_NtkToDar( pNtkAig, 0, 1 );\n    pManNew    = Abc_NtkRetimeWithClassesAig( pMan, vClasses, pvClasses, fVerbose );\n    pNtkAigRet = Abc_NtkFromDarSeqSweep( pNtkAig, pManNew );\n    pNtkRes    = Abc_NtkToLogic( pNtkAigRet );\n    Abc_NtkDelete( pNtkAigRet );\n    Abc_NtkDelete( pNtkAig );\n    Aig_ManStop( pManNew );\n    Aig_ManStop( pMan );\n    return pNtkRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns self-loops back into the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTransformBack(pNtkOld *Abc_Ntk_t, pNtkNew *Abc_Ntk_t, vControls *Vec_Ptr_t, vClasses *Vec_Int_t) {\n    var pObj, pNodeNew, pCtrl, pDriver *Abc_Obj_t;\n    var i, Class int32;\n    assert(Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew), \"Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew)\");\n    // match the POs of the old into new\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n        pObj.pCopy = Abc_NtkPo( pNtkNew, i );\n    // remap the flops\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        assert(Abc_ObjIsPo(pObj) \u0026\u0026 pObj.pNtk == pNtkOld, \"Abc_ObjIsPo(pObj) \u0026\u0026 pObj.pNtk == pNtkOld\");\n        Vec_PtrWriteEntry( vControls, i, pObj.pCopy );\n    }\n    // create self-loops\n    assert(Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses), \"Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses)\");\n    Abc_NtkForEachLatch( pNtkNew, pObj, i )\n    {\n        Class = Vec_IntEntry( vClasses, i );\n        if Class == -1 {\n            continue; }\n        pDriver = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        pCtrl = (Abc_Obj_t *)Vec_PtrEntry( vControls, Class );\n        pCtrl = Abc_ObjFanin0( pCtrl );\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Abc_ObjAddFanin( pNodeNew, pCtrl );\n        Abc_ObjAddFanin( pNodeNew, pDriver );\n        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanout0(pObj) );\n        Abc_ObjSetData( pNodeNew, Abc_SopRegister((Mem_Flex_t *)pNtkNew.pManFunc, \"0-1 1\\n11- 1\\n\") );\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, pNodeNew );\n    }\n    // remove the useless POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n        Abc_NtkDeleteObj( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Classify flops.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCRetime(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var vControls *Vec_Ptr_t;\n    var vFlopClasses, vFlopClassesNew *Vec_Int_t;\n    var pObj, pDriver, pFlopOut, pObjPo *Abc_Obj_t;\n    var i, iFlop, CountN, Count2, Count1, Count0 int32;\n\n    // duplicate the AIG\n    pNtk = Abc_NtkDup( pNtk );\n\n    // update registers\n    vControls    = Vec_PtrAlloc( 100 );\n    vFlopClasses = Vec_IntAlloc( 100 );\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        pFlopOut = Abc_ObjFanout0(pObj);\n        pDriver = Abc_ObjFanin0( Abc_ObjFanin0(pObj) );\n        if Abc_ObjFaninNum(pDriver) != 3 {\n            Vec_IntPush( vFlopClasses, -1 );\n            CountN++;\n            continue;\n        }\n        if Abc_ObjFanin(pDriver, 1) != pFlopOut \u0026\u0026 Abc_ObjFanin(pDriver, 2) != pFlopOut {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count2++;\n            continue;\n        }\n        if Abc_ObjFanin(pDriver, 1) == pFlopOut {\n            Vec_IntPush( vFlopClasses, -1 );\n            Count1++;\n            continue;\n        }\n        assert(Abc_ObjFanin(pDriver, 2) == pFlopOut, \"Abc_ObjFanin(pDriver, 2) == pFlopOut\");\n        Count0++;\n        Vec_PtrPushUnique( vControls, Abc_ObjFanin0(pDriver) );\n        // set the flop class\n        iFlop = Vec_PtrFind( vControls, Abc_ObjFanin0(pDriver) );\n        Vec_IntPush( vFlopClasses, iFlop );\n        // update\n        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, Abc_ObjFanin(pDriver, 1) );\n    }\n    if Count1 {\n        fmt.Printf(\"Opposite phase enable is present in %d flops (out of %d).\\n\", Count1, Abc_NtkLatchNum(pNtk)); }\n    if fVerbose != 0 {\n    fmt.Printf(\"CountN = %4d. Count2 = %4d. Count1 = %4d. Count0 = %4d. Ctrls = %d.\\n\", CountN, Count2, Count1, Count0, Vec_PtrSize(vControls)); }\n\n    // add the controls to the list of POs\n    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )\n    {\n        pObjPo = Abc_NtkCreatePo( pNtk );\n        Abc_ObjAddFanin( pObjPo, pObj );\n        Abc_ObjAssignName( pObjPo, Abc_ObjName(pObjPo), nil );\n        Vec_PtrWriteEntry( vControls, i, pObjPo );\n    }\n    Abc_NtkOrderCisCos( pNtk );\n    Abc_NtkCleanup( pNtk, fVerbose );\n\n    // performs retiming with classes\n    pNtkNew = Abc_NtkRetimeWithClassesNtk( pNtk, vFlopClasses, \u0026vFlopClassesNew, fVerbose );\n    Abc_NtkTransformBack( pNtk, pNtkNew, vControls, vFlopClassesNew );\n//    assert( Abc_NtkPoNum(pNtkNew) == Abc_NtkPoNum(pNtk) );\n    Abc_NtkDelete( pNtk );\n\n    Vec_PtrFree( vControls );\n//    Vec_IntFree( vFlopClasses );\n    Vec_IntFree( vFlopClassesNew );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates CEX and return the ID of the PO that failed.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkVerifyCex(pNtk *Abc_Ntk_t, p *Abc_Cex_t) int32 {\n    var pObj *Abc_Obj_t;\n    var RetValue, i, k, iBit int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(p.nPis  == Abc_NtkPiNum(pNtk), \"p.nPis  == Abc_NtkPiNum(pNtk)\");\n//    assert( p-\u003enRegs == Abc_NtkLatchNum(pNtk) );\n    Abc_NtkCleanMarkC( pNtk );\n    Abc_AigConst1(pNtk).fMarkC = 1;\n    // initialize flops\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        Abc_ObjFanout0(pObj).fMarkC = Abc_InfoHasBit(p.pData, iBit++);\n    // simulate timeframes\n    iBit = p.nRegs;\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        Abc_NtkForEachPi( pNtk, pObj, k )\n            pObj.fMarkC = Abc_InfoHasBit(p.pData, iBit++);\n        Abc_NtkForEachNode( pNtk, pObj, k )\n            pObj.fMarkC = (Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj)) \u0026 \n                           (Abc_ObjFanin1(pObj).fMarkC ^ Abc_ObjFaninC1(pObj));\n        Abc_NtkForEachCo( pNtk, pObj, k )\n            pObj.fMarkC = Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj);\n        Abc_NtkForEachLatch( pNtk, pObj, k )\n            Abc_ObjFanout0(pObj).fMarkC = Abc_ObjFanin0(pObj).fMarkC;\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    // figure out the number of failed output\n    RetValue = -1;\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if pObj.fMarkC {\n            RetValue = i;\n            break;\n        }\n    }\n    Abc_NtkCleanMarkC( pNtk );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

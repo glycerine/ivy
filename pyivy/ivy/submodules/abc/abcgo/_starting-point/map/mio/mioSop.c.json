@@ -1,0 +1,453 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c",
+  "SHA256": "80cb61c42d7045a97d7ec1dab2531bb2c24b7a962cec6336e701920a4a32b02c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 13,
+        "ByteOffset": 2199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 8372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mio_CubeVar0",
+      "Start": 764,
+      "End": 876,
+      "BodyStart": 831,
+      "Original": "static inline unsigned Mio_CubeVar0( int v )                       { return (1\u003c\u003c (v\u003c\u003c1)   );                   }",
+      "Draft": "func Mio_CubeVar0(v int32) uint32 { return (1\u003c\u003c (v\u003c\u003c1)   );                   }"
+    },
+    {
+      "Name": "Mio_CubeVar1",
+      "Start": 877,
+      "End": 989,
+      "BodyStart": 944,
+      "Original": "static inline unsigned Mio_CubeVar1( int v )                       { return (1\u003c\u003c((v\u003c\u003c1)+1));                   }",
+      "Draft": "func Mio_CubeVar1(v int32) uint32 { return (1\u003c\u003c((v\u003c\u003c1)+1));                   }"
+    },
+    {
+      "Name": "Mio_CubeHasVar0",
+      "Start": 990,
+      "End": 1102,
+      "BodyStart": 1057,
+      "Original": "static inline int      Mio_CubeHasVar0( unsigned x, int v )        { return (x \u0026 Mio_CubeVar0(v)) \u003e 0;         }",
+      "Draft": "func Mio_CubeHasVar0(x uint32, v int32) int32 { return (x \u0026 Mio_CubeVar0(v)) \u003e 0;         }"
+    },
+    {
+      "Name": "Mio_CubeHasVar1",
+      "Start": 1103,
+      "End": 1215,
+      "BodyStart": 1170,
+      "Original": "static inline int      Mio_CubeHasVar1( unsigned x, int v )        { return (x \u0026 Mio_CubeVar1(v)) \u003e 0;         }",
+      "Draft": "func Mio_CubeHasVar1(x uint32, v int32) int32 { return (x \u0026 Mio_CubeVar1(v)) \u003e 0;         }"
+    },
+    {
+      "Name": "Mio_CubeEmpty",
+      "Start": 1216,
+      "End": 1328,
+      "BodyStart": 1283,
+      "Original": "static inline int      Mio_CubeEmpty( unsigned x )                 { return (x \u0026 (x\u003e\u003e1) \u0026 0x55555555) != 0;    }",
+      "Draft": "func Mio_CubeEmpty(x uint32) int32 { return (x \u0026 (x\u003e\u003e1) \u0026 0x55555555) != 0;    }"
+    },
+    {
+      "Name": "Mio_CubeAnd",
+      "Start": 1329,
+      "End": 1441,
+      "BodyStart": 1396,
+      "Original": "static inline unsigned Mio_CubeAnd( unsigned x, unsigned y )       { return x | y;                             }",
+      "Draft": "func Mio_CubeAnd(x uint32, y uint32) uint32 { return x | y;                             }"
+    },
+    {
+      "Name": "Mio_CubeContains",
+      "Start": 1442,
+      "End": 1554,
+      "BodyStart": 1509,
+      "Original": "static inline int      Mio_CubeContains( unsigned x, unsigned y )  { return (x | y) == y;                      }",
+      "Draft": "func Mio_CubeContains(x uint32, y uint32) int32 { return (x | y) == y;                      }"
+    },
+    {
+      "Name": "Mio_SopPushSCC",
+      "Start": 2052,
+      "End": 2509,
+      "BodyStart": 2101,
+      "Original": "void Mio_SopPushSCC( Vec_Int_t * p, unsigned c )\n{\n    unsigned Entry;\n    int i, k = 0;\n    Vec_IntForEachEntry( p, Entry, i )\n    {\n        if ( Mio_CubeContains( Entry, c ) ) // Entry contains c\n        {\n            assert( i == k );\n            return;\n        }\n        if ( Mio_CubeContains( c, Entry ) ) // c contains Entry\n            continue;\n        Vec_IntWriteEntry( p, k++, Entry );\n    }\n    Vec_IntShrink( p, k );\n    Vec_IntPush( p, c );\n}",
+      "Draft": "func Mio_SopPushSCC(p *Vec_Int_t, c uint32) {\n    var Entry uint32;\n    var i, k int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        if Mio_CubeContains( Entry, c ) != 0 { // Entry contains c\n        \n            assert(i == k, \"i == k\");\n            return;\n        }\n        if Mio_CubeContains( c, Entry ) != 0 { // c contains Entry\n            continue; }\n        Vec_IntWriteEntry( p, k++, Entry );\n    }\n    Vec_IntShrink( p, k );\n    Vec_IntPush( p, c );\n}"
+    },
+    {
+      "Name": "Mio_SopCoverOr",
+      "Start": 2771,
+      "End": 3101,
+      "BodyStart": 2830,
+      "Original": "Vec_Int_t * Mio_SopCoverOr( Vec_Int_t * p, Vec_Int_t * q )\n{\n    Vec_Int_t * r;\n    unsigned Entry;\n    int i;\n    r = Vec_IntAlloc( Vec_IntSize(p) + Vec_IntSize(q) );\n    Vec_IntForEachEntry( p, Entry, i )\n        Vec_IntPush( r, Entry );\n    Vec_IntForEachEntry( q, Entry, i )\n        Mio_SopPushSCC( r, Entry );\n    return r;\n}",
+      "Draft": "func Mio_SopCoverOr(p *Vec_Int_t, q *Vec_Int_t) *Vec_Int_t {\n    var r *Vec_Int_t;\n    var Entry uint32;\n    var i int32;\n    r = Vec_IntAlloc( Vec_IntSize(p) + Vec_IntSize(q) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        Vec_IntPush( r, Entry );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(q)) \u0026\u0026 (((Entry) = Vec_IntEntry(q, i)), 1); i++  {\n        Mio_SopPushSCC( r, Entry );\n    }\n    return r;\n}"
+    },
+    {
+      "Name": "Mio_SopCoverAnd",
+      "Start": 3364,
+      "End": 3775,
+      "BodyStart": 3424,
+      "Original": "Vec_Int_t * Mio_SopCoverAnd( Vec_Int_t * p, Vec_Int_t * q )\n{\n    Vec_Int_t * r;\n    unsigned EntryP, EntryQ;\n    int i, k;\n    r = Vec_IntAlloc( Vec_IntSize(p) * Vec_IntSize(q) );\n    Vec_IntForEachEntry( p, EntryP, i )\n        Vec_IntForEachEntry( q, EntryQ, k )\n            if ( !Mio_CubeEmpty( Mio_CubeAnd(EntryP, EntryQ) ) )\n                Mio_SopPushSCC( r, Mio_CubeAnd(EntryP, EntryQ) );\n    return r;\n}",
+      "Draft": "func Mio_SopCoverAnd(p *Vec_Int_t, q *Vec_Int_t) *Vec_Int_t {\n    var r *Vec_Int_t;\n    var EntryP, EntryQ uint32;\n    var i, k int32;\n    r = Vec_IntAlloc( Vec_IntSize(p) * Vec_IntSize(q) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((EntryP) = Vec_IntEntry(p, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(q)) \u0026\u0026 (((EntryQ) = Vec_IntEntry(q, k)), 1); k++  {\n            if !(Mio_CubeEmpty( Mio_CubeAnd(EntryP, EntryQ) ) != 0) {\n                Mio_SopPushSCC( r, Mio_CubeAnd(EntryP, EntryQ) ); }\n        }\n    }\n    return r;\n}"
+    },
+    {
+      "Name": "Mio_SopVar0",
+      "Start": 4035,
+      "End": 4182,
+      "BodyStart": 4068,
+      "Original": "Vec_Int_t * Mio_SopVar0( int i )\n{\n    Vec_Int_t * vSop;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar0(i) );\n    return vSop;\n}",
+      "Draft": "func Mio_SopVar0(i int32) *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar0(i) );\n    return vSop;\n}"
+    },
+    {
+      "Name": "Mio_SopVar1",
+      "Start": 4442,
+      "End": 4589,
+      "BodyStart": 4475,
+      "Original": "Vec_Int_t * Mio_SopVar1( int i )\n{\n    Vec_Int_t * vSop;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar1(i) );\n    return vSop;\n}",
+      "Draft": "func Mio_SopVar1(i int32) *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar1(i) );\n    return vSop;\n}"
+    },
+    {
+      "Name": "Mio_SopConst0",
+      "Start": 4851,
+      "End": 4951,
+      "BodyStart": 4879,
+      "Original": "Vec_Int_t * Mio_SopConst0()\n{\n    Vec_Int_t * vSop;\n    vSop = Vec_IntAlloc( 1 );\n    return vSop;\n}",
+      "Draft": "func Mio_SopConst0() *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    return vSop;\n}"
+    },
+    {
+      "Name": "Mio_SopConst1",
+      "Start": 5213,
+      "End": 5341,
+      "BodyStart": 5241,
+      "Original": "Vec_Int_t * Mio_SopConst1()\n{\n    Vec_Int_t * vSop;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, 0 );\n    return vSop;\n}",
+      "Draft": "func Mio_SopConst1() *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, 0 );\n    return vSop;\n}"
+    },
+    {
+      "Name": "Mio_SopDeriveFromArray",
+      "Start": 5623,
+      "End": 6848,
+      "BodyStart": 5717,
+      "Original": "char * Mio_SopDeriveFromArray( Vec_Int_t * vSop, int nVars, Vec_Str_t * vStr, int fPolarity )\n{\n    unsigned Entry;\n    int i, k;\n    Vec_StrClear( vStr );\n    if ( Vec_IntSize(vSop) == 0 )\n    {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, (char)('1'-fPolarity) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if ( Vec_IntSize(vSop) == 1 \u0026\u0026 Vec_IntEntry(vSop, 0) == 0 )\n    {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, (char)('0'+fPolarity) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    // create cubes\n    Vec_IntForEachEntry( vSop, Entry, i )\n    {\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            if ( Mio_CubeHasVar0( Entry, k ) )\n                Vec_StrPush( vStr, '0' );\n            else if ( Mio_CubeHasVar1( Entry, k ) )\n                Vec_StrPush( vStr, '1' );\n            else \n                Vec_StrPush( vStr, '-' );\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, (char)('0'+fPolarity) );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}",
+      "Draft": "func Mio_SopDeriveFromArray(vSop *Vec_Int_t, nVars int32, vStr *Vec_Str_t, fPolarity int32) string {\n    var Entry uint32;\n    var i, k int32;\n    Vec_StrClear( vStr );\n    if Vec_IntSize(vSop) == 0 {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('1'-fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Vec_IntSize(vSop) == 1 \u0026\u0026 Vec_IntEntry(vSop, 0) == 0 {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('0'+fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    // create cubes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSop, i)), 1); i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if Mio_CubeHasVar0( Entry, k ) != 0 {\n                Vec_StrPush( vStr, '0' );\n            } else if Mio_CubeHasVar1( Entry, k ) != 0 {\n                Vec_StrPush( vStr, '1' );\n            } else { \n                Vec_StrPush( vStr, '-' ); }\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('0'+fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}"
+    },
+    {
+      "Name": "Mio_LibDeriveSop",
+      "Start": 7164,
+      "End": 9904,
+      "BodyStart": 7238,
+      "Original": "char * Mio_LibDeriveSop( int nVars, Vec_Int_t * vExpr, Vec_Str_t * vStr )\n{\n    Vec_Int_t * vSop;\n    Vec_Ptr_t * vSops0, * vSops1, * vTemp;\n    int i, Index0, Index1, fCompl0, fCompl1;\n    Vec_StrClear( vStr );\n    if ( Exp_IsConst0(vExpr) )\n    {\n        Vec_StrPrintStr( vStr, \" 0\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if ( Exp_IsConst1(vExpr) )\n    {\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if ( Exp_IsLit(vExpr) )\n    {\n        for ( i = 0; i \u003c nVars; i++ )\n            Vec_StrPush( vStr, '-' );\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        assert( (Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars );\n        Vec_StrWriteEntry( vStr, Vec_IntEntry(vExpr,0) \u003e\u003e 1, (char)('1' - (Vec_IntEntry(vExpr,0) \u0026 1)) );\n        return Vec_StrArray( vStr );\n    }\n    vSops0 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    vSops1 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        Vec_PtrPush( vSops0, Mio_SopVar0(i) );\n        Vec_PtrPush( vSops1, Mio_SopVar1(i) );\n    }\n    for ( i = 0; i \u003c Exp_NodeNum(vExpr); i++ )\n    {\n        Index0  = Vec_IntEntry( vExpr, 2*i+0 ) \u003e\u003e 1;\n        Index1  = Vec_IntEntry( vExpr, 2*i+1 ) \u003e\u003e 1;\n        fCompl0 = Vec_IntEntry( vExpr, 2*i+0 ) \u0026 1;\n        fCompl1 = Vec_IntEntry( vExpr, 2*i+1 ) \u0026 1;\n        // positive polarity\n        vSop = Mio_SopCoverAnd( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0),\n                                fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) );\n        Vec_PtrPush( vSops1, vSop );\n        // negative polarity\n        vSop = Mio_SopCoverOr( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0),\n                               fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) );\n        Vec_PtrPush( vSops0, vSop );\n    }\n    // complement\n    if ( Vec_IntEntryLast(vExpr) \u0026 1 )\n    {\n        vTemp  = vSops0;\n        vSops0 = vSops1;\n        vSops1 = vTemp;\n    }\n    // select the best polarity\n    if ( Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops0) ) \u003c Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops1) ) )\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops0);\n    else\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops1);\n    // convert positive polarity into SOP\n    Mio_SopDeriveFromArray( vSop, nVars, vStr, (vSop == Vec_PtrEntryLast(vSops1)) );\n    Vec_VecFree( (Vec_Vec_t *)vSops0 );\n    Vec_VecFree( (Vec_Vec_t *)vSops1 );\n    return Vec_StrArray( vStr );\n}",
+      "Draft": "func Mio_LibDeriveSop(nVars int32, vExpr *Vec_Int_t, vStr *Vec_Str_t) string {\n    var vSop *Vec_Int_t;\n    var vSops0, vSops1, vTemp *Vec_Ptr_t;\n    var i, Index0, Index1, fCompl0, fCompl1 int32;\n    Vec_StrClear( vStr );\n    if Exp_IsConst0(vExpr) {\n        Vec_StrPrintStr( vStr, \" 0\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Exp_IsConst1(vExpr) {\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Exp_IsLit(vExpr) {\n        for  i = 0; i \u003c nVars; i++  {\n            Vec_StrPush( vStr, '-' );\n        }\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        assert((Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars, \"(Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars\");\n        Vec_StrWriteEntry( vStr, Vec_IntEntry(vExpr,0) \u003e\u003e 1, byte(('1' - (Vec_IntEntry(vExpr,0) \u0026 1))) );\n        return Vec_StrArray( vStr );\n    }\n    vSops0 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    vSops1 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    for  i = 0; i \u003c nVars; i++  {\n        Vec_PtrPush( vSops0, Mio_SopVar0(i) );\n        Vec_PtrPush( vSops1, Mio_SopVar1(i) );\n    }\n    for  i = 0; i \u003c Exp_NodeNum(vExpr); i++  {\n        Index0  = Vec_IntEntry( vExpr, 2*i+0 ) \u003e\u003e 1;\n        Index1  = Vec_IntEntry( vExpr, 2*i+1 ) \u003e\u003e 1;\n        fCompl0 = Vec_IntEntry( vExpr, 2*i+0 ) \u0026 1;\n        fCompl1 = Vec_IntEntry( vExpr, 2*i+1 ) \u0026 1;\n        // positive polarity\n        vSop = Mio_SopCoverAnd( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0),\n                                fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) );\n        Vec_PtrPush( vSops1, vSop );\n        // negative polarity\n        vSop = Mio_SopCoverOr( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0),\n                               fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) );\n        Vec_PtrPush( vSops0, vSop );\n    }\n    // complement\n    if Vec_IntEntryLast(vExpr) \u0026 1 {\n        vTemp  = vSops0;\n        vSops0 = vSops1;\n        vSops1 = vTemp;\n    }\n    // select the best polarity\n    if Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops0) ) \u003c Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops1) ) {\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops0);\n    } else {\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops1); }\n    // convert positive polarity into SOP\n    Mio_SopDeriveFromArray( vSop, nVars, vStr, (vSop == Vec_PtrEntryLast(vSops1)) );\n    Vec_VecFree( (Vec_Vec_t *)vSops0 );\n    Vec_VecFree( (Vec_Vec_t *)vSops1 );\n    return Vec_StrArray( vStr );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8667,
+      "End": 8680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8711,
+      "End": 8724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8796,
+      "End": 8809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8840,
+      "End": 8853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8992,
+      "End": 9005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9036,
+      "End": 9049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9120,
+      "End": 9133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::9767",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9164,
+      "End": 9177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9449,
+      "End": 9462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9504,
+      "End": 9517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9561,
+      "End": 9574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9624,
+      "End": 9637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9807,
+      "End": 9820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::pointer-cast::10450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9847,
+      "End": 9860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeVar0",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeVar0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 764,
+      "End": 876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeVar1",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeVar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 877,
+      "End": 989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeHasVar0",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeHasVar0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 990,
+      "End": 1102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeHasVar1",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeHasVar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1103,
+      "End": 1215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1216,
+      "End": 1328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1329,
+      "End": 1441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_CubeContains",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CubeContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1442,
+      "End": 1554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopPushSCC",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopPushSCC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2052,
+      "End": 2509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopCoverOr",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopCoverOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2771,
+      "End": 3101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopCoverAnd",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopCoverAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3364,
+      "End": 3775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopVar0",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopVar0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4035,
+      "End": 4182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopVar1",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopVar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4442,
+      "End": 4589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopConst0",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4851,
+      "End": 4951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopConst1",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5213,
+      "End": 5341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_SopDeriveFromArray",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopDeriveFromArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5623,
+      "End": 6848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::ternary::Mio_LibDeriveSop",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibDeriveSop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7164,
+      "End": 9904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::Mio_LibDeriveSop",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibDeriveSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7164,
+      "End": 9904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioSop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10152
+    }
+  ],
+  "Draft": "package mio\n\n/**CFile****************************************************************\n\n  FileName    [mioSop.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Derives SOP from Boolean expression.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mioSop.c,v 1.4 2004/06/28 14:20:25 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mioInt.h\"\n//#include \"exp.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Mio_CubeVar0(v int32) uint32 { return (1\u003c\u003c (v\u003c\u003c1)   );                   }\nfunc Mio_CubeVar1(v int32) uint32 { return (1\u003c\u003c((v\u003c\u003c1)+1));                   }\nfunc Mio_CubeHasVar0(x uint32, v int32) int32 { return (x \u0026 Mio_CubeVar0(v)) \u003e 0;         }\nfunc Mio_CubeHasVar1(x uint32, v int32) int32 { return (x \u0026 Mio_CubeVar1(v)) \u003e 0;         }\nfunc Mio_CubeEmpty(x uint32) int32 { return (x \u0026 (x\u003e\u003e1) \u0026 0x55555555) != 0;    }\nfunc Mio_CubeAnd(x uint32, y uint32) uint32 { return x | y;                             }\nfunc Mio_CubeContains(x uint32, y uint32) int32 { return (x | y) == y;                      } // x contains y\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Push while performing SCC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopPushSCC(p *Vec_Int_t, c uint32) {\n    var Entry uint32;\n    var i, k int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        if Mio_CubeContains( Entry, c ) != 0 { // Entry contains c\n        \n            assert(i == k, \"i == k\");\n            return;\n        }\n        if Mio_CubeContains( c, Entry ) != 0 { // c contains Entry\n            continue; }\n        Vec_IntWriteEntry( p, k++, Entry );\n    }\n    Vec_IntShrink( p, k );\n    Vec_IntPush( p, c );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make the OR of two covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopCoverOr(p *Vec_Int_t, q *Vec_Int_t) *Vec_Int_t {\n    var r *Vec_Int_t;\n    var Entry uint32;\n    var i int32;\n    r = Vec_IntAlloc( Vec_IntSize(p) + Vec_IntSize(q) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        Vec_IntPush( r, Entry );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(q)) \u0026\u0026 (((Entry) = Vec_IntEntry(q, i)), 1); i++  {\n        Mio_SopPushSCC( r, Entry );\n    }\n    return r;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make the AND of two covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopCoverAnd(p *Vec_Int_t, q *Vec_Int_t) *Vec_Int_t {\n    var r *Vec_Int_t;\n    var EntryP, EntryQ uint32;\n    var i, k int32;\n    r = Vec_IntAlloc( Vec_IntSize(p) * Vec_IntSize(q) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((EntryP) = Vec_IntEntry(p, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(q)) \u0026\u0026 (((EntryQ) = Vec_IntEntry(q, k)), 1); k++  {\n            if !(Mio_CubeEmpty( Mio_CubeAnd(EntryP, EntryQ) ) != 0) {\n                Mio_SopPushSCC( r, Mio_CubeAnd(EntryP, EntryQ) ); }\n        }\n    }\n    return r;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create negative literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopVar0(i int32) *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar0(i) );\n    return vSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create positive literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopVar1(i int32) *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, Mio_CubeVar1(i) );\n    return vSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create constant 0 literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopConst0() *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    return vSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create constant 1 literal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopConst1() *Vec_Int_t {\n    var vSop *Vec_Int_t;\n    vSop = Vec_IntAlloc( 1 );\n    Vec_IntPush( vSop, 0 );\n    return vSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives SOP representation as the char string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopDeriveFromArray(vSop *Vec_Int_t, nVars int32, vStr *Vec_Str_t, fPolarity int32) string {\n    var Entry uint32;\n    var i, k int32;\n    Vec_StrClear( vStr );\n    if Vec_IntSize(vSop) == 0 {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('1'-fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Vec_IntSize(vSop) == 1 \u0026\u0026 Vec_IntEntry(vSop, 0) == 0 {\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('0'+fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    // create cubes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSop, i)), 1); i++  {\n        for  k = 0; k \u003c nVars; k++  {\n            if Mio_CubeHasVar0( Entry, k ) != 0 {\n                Vec_StrPush( vStr, '0' );\n            } else if Mio_CubeHasVar1( Entry, k ) != 0 {\n                Vec_StrPush( vStr, '1' );\n            } else { \n                Vec_StrPush( vStr, '-' ); }\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, byte(('0'+fPolarity)) );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives SOP representation.]\n\n  Description [The SOP is guaranteed to be SCC-free but not minimal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibDeriveSop(nVars int32, vExpr *Vec_Int_t, vStr *Vec_Str_t) string {\n    var vSop *Vec_Int_t;\n    var vSops0, vSops1, vTemp *Vec_Ptr_t;\n    var i, Index0, Index1, fCompl0, fCompl1 int32;\n    Vec_StrClear( vStr );\n    if Exp_IsConst0(vExpr) {\n        Vec_StrPrintStr( vStr, \" 0\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Exp_IsConst1(vExpr) {\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    if Exp_IsLit(vExpr) {\n        for  i = 0; i \u003c nVars; i++  {\n            Vec_StrPush( vStr, '-' );\n        }\n        Vec_StrPrintStr( vStr, \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        assert((Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars, \"(Vec_IntEntry(vExpr,0) \u003e\u003e 1) \u003c nVars\");\n        Vec_StrWriteEntry( vStr, Vec_IntEntry(vExpr,0) \u003e\u003e 1, byte(('1' - (Vec_IntEntry(vExpr,0) \u0026 1))) );\n        return Vec_StrArray( vStr );\n    }\n    vSops0 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    vSops1 = Vec_PtrAlloc( nVars + Exp_NodeNum(vExpr) );\n    for  i = 0; i \u003c nVars; i++  {\n        Vec_PtrPush( vSops0, Mio_SopVar0(i) );\n        Vec_PtrPush( vSops1, Mio_SopVar1(i) );\n    }\n    for  i = 0; i \u003c Exp_NodeNum(vExpr); i++  {\n        Index0  = Vec_IntEntry( vExpr, 2*i+0 ) \u003e\u003e 1;\n        Index1  = Vec_IntEntry( vExpr, 2*i+1 ) \u003e\u003e 1;\n        fCompl0 = Vec_IntEntry( vExpr, 2*i+0 ) \u0026 1;\n        fCompl1 = Vec_IntEntry( vExpr, 2*i+1 ) \u0026 1;\n        // positive polarity\n        vSop = Mio_SopCoverAnd( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0),\n                                fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) );\n        Vec_PtrPush( vSops1, vSop );\n        // negative polarity\n        vSop = Mio_SopCoverOr( fCompl0 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index0) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index0),\n                               fCompl1 ? (Vec_Int_t *)Vec_PtrEntry(vSops1, Index1) : (Vec_Int_t *)Vec_PtrEntry(vSops0, Index1) );\n        Vec_PtrPush( vSops0, vSop );\n    }\n    // complement\n    if Vec_IntEntryLast(vExpr) \u0026 1 {\n        vTemp  = vSops0;\n        vSops0 = vSops1;\n        vSops1 = vTemp;\n    }\n    // select the best polarity\n    if Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops0) ) \u003c Vec_IntSize( (Vec_Int_t *)Vec_PtrEntryLast(vSops1) ) {\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops0);\n    } else {\n        vSop = (Vec_Int_t *)Vec_PtrEntryLast(vSops1); }\n    // convert positive polarity into SOP\n    Mio_SopDeriveFromArray( vSop, nVars, vStr, (vSop == Vec_PtrEntryLast(vSops1)) );\n    Vec_VecFree( (Vec_Vec_t *)vSops0 );\n    Vec_VecFree( (Vec_Vec_t *)vSops1 );\n    return Vec_StrArray( vStr );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

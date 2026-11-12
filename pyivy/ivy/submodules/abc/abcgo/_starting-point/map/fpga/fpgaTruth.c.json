@@ -1,0 +1,315 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c",
+  "SHA256": "e60a16ac631374fe074138896fa11ca77cf14ab7d86f9ceeeb955812cc48c1d4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 2769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.uSign == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 5426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d \", Volume );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_TruthsCutBdd_rec",
+      "Start": 1292,
+      "End": 2413,
+      "BodyStart": 1387,
+      "Original": "DdNode * Fpga_TruthsCutBdd_rec( DdManager * dd, Fpga_Cut_t * pCut, Fpga_NodeVec_t * vVisited )\n{\n    DdNode * bFunc, * bFunc0, * bFunc1;\n    assert( !Fpga_IsComplement(pCut) );\n    // if the cut is visited, return the result\n    if ( pCut-\u003euSign )\n        return (DdNode *)(ABC_PTRUINT_T)pCut-\u003euSign;\n    // compute the functions of the children\n    bFunc0 = Fpga_TruthsCutBdd_rec( dd, Fpga_CutRegular(pCut-\u003epOne), vVisited );   Cudd_Ref( bFunc0 );\n    bFunc0 = Cudd_NotCond( bFunc0, Fpga_CutIsComplement(pCut-\u003epOne) );\n    bFunc1 = Fpga_TruthsCutBdd_rec( dd, Fpga_CutRegular(pCut-\u003epTwo), vVisited );   Cudd_Ref( bFunc1 );\n    bFunc1 = Cudd_NotCond( bFunc1, Fpga_CutIsComplement(pCut-\u003epTwo) );\n    // get the function of the cut\n    bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n    bFunc  = Cudd_NotCond( bFunc, pCut-\u003ePhase );\n    Cudd_RecursiveDeref( dd, bFunc0 );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    assert( pCut-\u003euSign == 0 );\n    pCut-\u003euSign = (unsigned)(ABC_PTRUINT_T)bFunc;\n    // add this cut to the visited list\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n    return bFunc;\n}",
+      "Draft": "func Fpga_TruthsCutBdd_rec(dd *DdManager, pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) *DdNode {\n    var bFunc, bFunc0, bFunc1 *DdNode;\n    // inlining of macro Fpga_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01))))\");\n    // if the cut is visited, return the result\n    if pCut.uSign {\n        return (DdNode *)(ABC_PTRUINT_T)pCut.uSign; }\n    // compute the functions of the children\n    // inlining of macro Fpga_CutRegular\n    bFunc0 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );   Cudd_Ref( bFunc0 );\n    // inlining of macro Cudd_NotCond\n    // inlining of macro Fpga_CutIsComplement\n    bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (((int32(((ABC_PTRUINT_T)(pCut.pOne) \u0026 01)))))));\n    // inlining of macro Fpga_CutRegular\n    bFunc1 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );   Cudd_Ref( bFunc1 );\n    // inlining of macro Cudd_NotCond\n    // inlining of macro Fpga_CutIsComplement\n    bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (((int32(((ABC_PTRUINT_T)(pCut.pTwo) \u0026 01)))))));\n    // get the function of the cut\n    bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n    // inlining of macro Cudd_NotCond\n    bFunc  = ((DdNode *)((ptrint)(bFunc) ^ (pCut.Phase)));\n    Cudd_RecursiveDeref( dd, bFunc0 );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    assert(pCut.uSign == 0, \"pCut.uSign == 0\");\n    pCut.uSign = uint32((ABC_PTRUINT_T))bFunc;\n    // add this cut to the visited list\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Fpga_TruthsCutBdd",
+      "Start": 2685,
+      "End": 3643,
+      "BodyStart": 2742,
+      "Original": "void * Fpga_TruthsCutBdd( void * dd, Fpga_Cut_t * pCut )\n{\n    Fpga_NodeVec_t * vVisited;\n    DdNode * bFunc;\n    int i;\n    assert( pCut-\u003enLeaves \u003e 1 );\n    // set the leaf variables\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        pCut-\u003eppLeaves[i]-\u003epCuts-\u003euSign = (unsigned)(ABC_PTRUINT_T)Cudd_bddIthVar( (DdManager *)dd, i );\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    bFunc = Fpga_TruthsCutBdd_rec( (DdManager *)dd, pCut, vVisited );   Cudd_Ref( bFunc );\n    // clean the intermediate BDDs\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        pCut-\u003eppLeaves[i]-\u003epCuts-\u003euSign = 0;\n    for ( i = 0; i \u003c vVisited-\u003enSize; i++ )\n    {\n        pCut = (Fpga_Cut_t *)vVisited-\u003epArray[i];\n        Cudd_RecursiveDeref( (DdManager *)dd, (DdNode*)(ABC_PTRUINT_T)pCut-\u003euSign );\n        pCut-\u003euSign = 0;\n    }\n//    printf( \"%d \", vVisited-\u003enSize );\n    Fpga_NodeVecFree( vVisited );\n    Cudd_Deref( bFunc );\n    return bFunc;\n}",
+      "Draft": "func Fpga_TruthsCutBdd(dd any, pCut *Fpga_Cut_t) any {\n    var vVisited *Fpga_NodeVec_t;\n    var bFunc *DdNode;\n    var i int32;\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.uSign = uint32((ABC_PTRUINT_T))Cudd_bddIthVar( (DdManager *)dd, i );\n    }\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    bFunc = Fpga_TruthsCutBdd_rec( (DdManager *)dd, pCut, vVisited );   Cudd_Ref( bFunc );\n    // clean the intermediate BDDs\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.uSign = 0;\n    }\n    for  i = 0; i \u003c vVisited.nSize; i++  {\n        pCut = (Fpga_Cut_t *)vVisited.pArray[i];\n        Cudd_RecursiveDeref( (DdManager *)dd, (DdNode*)(ABC_PTRUINT_T)pCut.uSign );\n        pCut.uSign = 0;\n    }\n//    printf( \"%d \", vVisited-\u003enSize );\n    Fpga_NodeVecFree( vVisited );\n    Cudd_Deref( bFunc );\n    return bFunc;\n}"
+    },
+    {
+      "Name": "Fpga_CutVolume_rec",
+      "Start": 3928,
+      "End": 4288,
+      "BodyStart": 4000,
+      "Original": "void Fpga_CutVolume_rec( Fpga_Cut_t * pCut, Fpga_NodeVec_t * vVisited )\n{\n    assert( !Fpga_IsComplement(pCut) );\n    if ( pCut-\u003efMark )\n        return;\n    pCut-\u003efMark = 1;\n    Fpga_CutVolume_rec( Fpga_CutRegular(pCut-\u003epOne), vVisited );\n    Fpga_CutVolume_rec( Fpga_CutRegular(pCut-\u003epTwo), vVisited );\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n}",
+      "Draft": "func Fpga_CutVolume_rec(pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) {\n    // inlining of macro Fpga_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01))))\");\n    if pCut.fMark {\n        return; }\n    pCut.fMark = 1;\n    // inlining of macro Fpga_CutRegular\n    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );\n    // inlining of macro Fpga_CutRegular\n    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n}"
+    },
+    {
+      "Name": "Fpga_CutVolume",
+      "Start": 4560,
+      "End": 5279,
+      "BodyStart": 4600,
+      "Original": "int Fpga_CutVolume( Fpga_Cut_t * pCut )\n{\n    Fpga_NodeVec_t * vVisited;\n    int Volume, i;\n    assert( pCut-\u003enLeaves \u003e 1 );\n    // set the leaf variables\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        pCut-\u003eppLeaves[i]-\u003epCuts-\u003efMark = 1;\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    Fpga_CutVolume_rec( pCut, vVisited ); \n    // clean the marks\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        pCut-\u003eppLeaves[i]-\u003epCuts-\u003efMark = 0;\n    for ( i = 0; i \u003c vVisited-\u003enSize; i++ )\n    {\n        pCut = (Fpga_Cut_t *)vVisited-\u003epArray[i];\n        pCut-\u003efMark = 0;\n    }\n    Volume = vVisited-\u003enSize;\n    printf( \"%d \", Volume );\n    Fpga_NodeVecFree( vVisited );\n    return Volume;\n}",
+      "Draft": "func Fpga_CutVolume(pCut *Fpga_Cut_t) int32 {\n    var vVisited *Fpga_NodeVec_t;\n    var Volume, i int32;\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.fMark = 1;\n    }\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    Fpga_CutVolume_rec( pCut, vVisited ); \n    // clean the marks\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.fMark = 0;\n    }\n    for  i = 0; i \u003c vVisited.nSize; i++  {\n        pCut = (Fpga_Cut_t *)vVisited.pArray[i];\n        pCut.fMark = 0;\n    }\n    Volume = vVisited.nSize;\n    fmt.Printf(\"%d \", Volume);\n    Fpga_NodeVecFree( vVisited );\n    return Volume;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::1623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1555,
+      "End": 1565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::1798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1678,
+      "End": 1678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::1947",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1754,
+      "End": 1754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::2174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1852,
+      "End": 1852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::2323",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1928,
+      "End": 1928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::2624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2103,
+      "End": 2103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::2902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2371,
+      "End": 2386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::3525",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2994,
+      "End": 3007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::3662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3131,
+      "End": 3144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::3905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3374,
+      "End": 3388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::3969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3438,
+      "End": 3451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::3986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3455,
+      "End": 3464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::4777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4126,
+      "End": 4126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::4918",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4191,
+      "End": 4191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::5015",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4264,
+      "End": 4279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::pointer-cast::5851",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5100,
+      "End": 5114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::Fpga_TruthsCutBdd_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_TruthsCutBdd_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1292,
+      "End": 2413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::void-pointer::Fpga_TruthsCutBdd",
+      "Category": "void-pointer-review",
+      "Symbol": "Fpga_TruthsCutBdd",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2685,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::Fpga_TruthsCutBdd",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_TruthsCutBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2685,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::Fpga_CutVolume_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutVolume_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3928,
+      "End": 4288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::Fpga_CutVolume",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4560,
+      "End": 5279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5526
+    }
+  ],
+  "Draft": "package fpga\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fpgaTruth.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaTruth.c,v 1.4 2005/01/23 06:59:42 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n//#include \"bdd/cudd/cudd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the truth table for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_TruthsCutBdd_rec(dd *DdManager, pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) *DdNode {\n    var bFunc, bFunc0, bFunc1 *DdNode;\n    // inlining of macro Fpga_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01))))\");\n    // if the cut is visited, return the result\n    if pCut.uSign {\n        return (DdNode *)(ABC_PTRUINT_T)pCut.uSign; }\n    // compute the functions of the children\n    // inlining of macro Fpga_CutRegular\n    bFunc0 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );   Cudd_Ref( bFunc0 );\n    // inlining of macro Cudd_NotCond\n    // inlining of macro Fpga_CutIsComplement\n    bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (((int32(((ABC_PTRUINT_T)(pCut.pOne) \u0026 01)))))));\n    // inlining of macro Fpga_CutRegular\n    bFunc1 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );   Cudd_Ref( bFunc1 );\n    // inlining of macro Cudd_NotCond\n    // inlining of macro Fpga_CutIsComplement\n    bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (((int32(((ABC_PTRUINT_T)(pCut.pTwo) \u0026 01)))))));\n    // get the function of the cut\n    bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );\n    // inlining of macro Cudd_NotCond\n    bFunc  = ((DdNode *)((ptrint)(bFunc) ^ (pCut.Phase)));\n    Cudd_RecursiveDeref( dd, bFunc0 );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    assert(pCut.uSign == 0, \"pCut.uSign == 0\");\n    pCut.uSign = uint32((ABC_PTRUINT_T))bFunc;\n    // add this cut to the visited list\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n    return bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_TruthsCutBdd(dd any, pCut *Fpga_Cut_t) any {\n    var vVisited *Fpga_NodeVec_t;\n    var bFunc *DdNode;\n    var i int32;\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.uSign = uint32((ABC_PTRUINT_T))Cudd_bddIthVar( (DdManager *)dd, i );\n    }\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    bFunc = Fpga_TruthsCutBdd_rec( (DdManager *)dd, pCut, vVisited );   Cudd_Ref( bFunc );\n    // clean the intermediate BDDs\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.uSign = 0;\n    }\n    for  i = 0; i \u003c vVisited.nSize; i++  {\n        pCut = (Fpga_Cut_t *)vVisited.pArray[i];\n        Cudd_RecursiveDeref( (DdManager *)dd, (DdNode*)(ABC_PTRUINT_T)pCut.uSign );\n        pCut.uSign = 0;\n    }\n//    printf( \"%d \", vVisited-\u003enSize );\n    Fpga_NodeVecFree( vVisited );\n    Cudd_Deref( bFunc );\n    return bFunc;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the truth table for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutVolume_rec(pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) {\n    // inlining of macro Fpga_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pCut) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) \u0026 01))))\");\n    if pCut.fMark {\n        return; }\n    pCut.fMark = 1;\n    // inlining of macro Fpga_CutRegular\n    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );\n    // inlining of macro Fpga_CutRegular\n    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );\n    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutVolume(pCut *Fpga_Cut_t) int32 {\n    var vVisited *Fpga_NodeVec_t;\n    var Volume, i int32;\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.fMark = 1;\n    }\n    // recursively compute the function\n    vVisited = Fpga_NodeVecAlloc( 10 );\n    Fpga_CutVolume_rec( pCut, vVisited ); \n    // clean the marks\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.ppLeaves[i].pCuts.fMark = 0;\n    }\n    for  i = 0; i \u003c vVisited.nSize; i++  {\n        pCut = (Fpga_Cut_t *)vVisited.pArray[i];\n        pCut.fMark = 0;\n    }\n    Volume = vVisited.nSize;\n    fmt.Printf(\"%d \", Volume);\n    Fpga_NodeVecFree( vVisited );\n    return Volume;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

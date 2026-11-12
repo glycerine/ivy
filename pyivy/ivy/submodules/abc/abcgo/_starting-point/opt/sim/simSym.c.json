@@ -1,0 +1,135 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSym.c",
+  "SHA256": "8d2dbb853f77babac7c0d6983b993a0faa3a0caceed8ba2e31b6c3e442d44a5f",
+  "Library": [
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 0xABC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 1773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Sim_UtilMatrsAreDisjoint( p ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 13,
+        "ByteOffset": 2840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 4293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Sim_UtilMatrsAreDisjoint( p ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 13,
+        "ByteOffset": 4490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_ComputeTwoVarSymms",
+      "Start": 1312,
+      "End": 4832,
+      "BodyStart": 1373,
+      "Original": "int Sim_ComputeTwoVarSymms( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Sym_Man_t * p;\n    Vec_Ptr_t * vResult;\n    int Result;\n    int i;\n    abctime clk, clkTotal = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sym_ManStart( pNtk, fVerbose );\n    p-\u003enPairsTotal = p-\u003enPairsRem = Sim_UtilCountAllPairs( p-\u003evSuppFun, p-\u003enSimWords, p-\u003evPairsTotal );\n    if ( fVerbose )\n        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", \n               p-\u003enPairsTotal, p-\u003enPairsSymm, p-\u003enPairsNonSymm, p-\u003enPairsRem );\n\n    // detect symmetries using circuit structure\nclk = Abc_Clock();\n    Sim_SymmsStructCompute( pNtk, p-\u003evMatrSymms, p-\u003evSuppFun );\np-\u003etimeStruct = Abc_Clock() - clk;\n\n    Sim_UtilCountPairsAll( p );\n    p-\u003enPairsSymmStr = p-\u003enPairsSymm;\n    if ( fVerbose )\n        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", \n            p-\u003enPairsTotal, p-\u003enPairsSymm, p-\u003enPairsNonSymm, p-\u003enPairsRem );\n\n    // detect symmetries using simulation\n    for ( i = 1; i \u003c= 1000; i++ )\n    {\n        // simulate this pattern\n        Sim_UtilSetRandom( p-\u003euPatRand, p-\u003enSimWords );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        if ( i % 50 != 0 )\n            continue;\n        // check disjointness\n        assert( Sim_UtilMatrsAreDisjoint( p ) );\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if ( i % 500 != 0 )\n            continue;\n        if ( fVerbose )\n            printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", \n                p-\u003enPairsTotal, p-\u003enPairsSymm, p-\u003enPairsNonSymm, p-\u003enPairsRem );\n    }\n\n    // detect symmetries using SAT\n    for ( i = 1; Sim_SymmsGetPatternUsingSat( p, p-\u003euPatRand ); i++ )\n    {\n        // simulate this pattern in four polarities\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1 );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar2 );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1 );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar2 );\n/*\n        // try the previuos pair\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar2Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n*/\n        if ( i % 10 != 0 )\n            continue;\n        // check disjointness\n        assert( Sim_UtilMatrsAreDisjoint( p ) );\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if ( i % 50 != 0 )\n            continue;\n        if ( fVerbose )\n            printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", \n                p-\u003enPairsTotal, p-\u003enPairsSymm, p-\u003enPairsNonSymm, p-\u003enPairsRem );\n    }\n\n    // count the number of pairs\n    Sim_UtilCountPairsAll( p );\n    if ( fVerbose )\n        printf( \"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", \n            p-\u003enPairsTotal, p-\u003enPairsSymm, p-\u003enPairsNonSymm, p-\u003enPairsRem );\n//    Sim_UtilCountPairsAllPrint( p );\n\n    Result = p-\u003enPairsSymm;\n    vResult = p-\u003evMatrSymms;  \np-\u003etimeTotal = Abc_Clock() - clkTotal;\n    //  p-\u003evMatrSymms = NULL;\n    Sym_ManStop( p );\n    return Result;\n}",
+      "Draft": "func Sim_ComputeTwoVarSymms(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var p *Sym_Man_t;\n    var vResult *Vec_Ptr_t;\n    var Result int32;\n    var i int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sym_ManStart( pNtk, fVerbose );\n    p.nPairsTotal = p.nPairsRem = Sim_UtilCountAllPairs( p.vSuppFun, p.nSimWords, p.vPairsTotal );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n\n    // detect symmetries using circuit structure\nclk = Abc_Clock();\n    Sim_SymmsStructCompute( pNtk, p.vMatrSymms, p.vSuppFun );\np.timeStruct = Abc_Clock() - clk;\n\n    Sim_UtilCountPairsAll( p );\n    p.nPairsSymmStr = p.nPairsSymm;\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n\n    // detect symmetries using simulation\n    for  i = 1; i \u003c= 1000; i++  {\n        // simulate this pattern\n        Sim_UtilSetRandom( p.uPatRand, p.nSimWords );\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        if i % 50 != 0 {\n            continue; }\n        // check disjointness\n        assert(Sim_UtilMatrsAreDisjoint( p ), \"Sim_UtilMatrsAreDisjoint( p )\");\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if i % 500 != 0 {\n            continue; }\n        if fVerbose != 0 {\n            fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n    }\n\n    // detect symmetries using SAT\n    for  i = 1; Sim_SymmsGetPatternUsingSat( p, p.uPatRand ); i++  {\n        // simulate this pattern in four polarities\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar1)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar1) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar2)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar2) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar1)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar1) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar2)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar2) \u0026 31)));\n/*\n        // try the previuos pair\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar2Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n*/\n        if i % 10 != 0 {\n            continue; }\n        // check disjointness\n        assert(Sim_UtilMatrsAreDisjoint( p ), \"Sim_UtilMatrsAreDisjoint( p )\");\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if i % 50 != 0 {\n            continue; }\n        if fVerbose != 0 {\n            fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n    }\n\n    // count the number of pairs\n    Sim_UtilCountPairsAll( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n//    Sim_UtilCountPairsAllPrint( p );\n\n    Result = p.nPairsSymm;\n    vResult = p.vMatrSymms;  \np.timeTotal = Abc_Clock() - clkTotal;\n    //  p-\u003evMatrSymms = NULL;\n    Sym_ManStop( p );\n    return Result;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSym.c::Sim_ComputeTwoVarSymms",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeTwoVarSymms",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1312,
+      "End": 4832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSym.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5079
+    }
+  ],
+  "Draft": "package sim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [simSym.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Simulation to determine two-variable symmetries.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simSym.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes two variable symmetries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeTwoVarSymms(pNtk *Abc_Ntk_t, fVerbose int32) int32 {\n    var p *Sym_Man_t;\n    var vResult *Vec_Ptr_t;\n    var Result int32;\n    var i int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n\n    srand( 0xABC );\n\n    // start the simulation manager\n    p = Sym_ManStart( pNtk, fVerbose );\n    p.nPairsTotal = p.nPairsRem = Sim_UtilCountAllPairs( p.vSuppFun, p.nSimWords, p.vPairsTotal );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n\n    // detect symmetries using circuit structure\nclk = Abc_Clock();\n    Sim_SymmsStructCompute( pNtk, p.vMatrSymms, p.vSuppFun );\np.timeStruct = Abc_Clock() - clk;\n\n    Sim_UtilCountPairsAll( p );\n    p.nPairsSymmStr = p.nPairsSymm;\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n\n    // detect symmetries using simulation\n    for  i = 1; i \u003c= 1000; i++  {\n        // simulate this pattern\n        Sim_UtilSetRandom( p.uPatRand, p.nSimWords );\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        if i % 50 != 0 {\n            continue; }\n        // check disjointness\n        assert(Sim_UtilMatrsAreDisjoint( p ), \"Sim_UtilMatrsAreDisjoint( p )\");\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if i % 500 != 0 {\n            continue; }\n        if fVerbose != 0 {\n            fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n    }\n\n    // detect symmetries using SAT\n    for  i = 1; Sim_SymmsGetPatternUsingSat( p, p.uPatRand ); i++  {\n        // simulate this pattern in four polarities\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar1)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar1) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar2)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar2) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar1)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar1) \u0026 31)));\n        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );\n        // inlining of macro Sim_XorBit\n        ((p.uPatRand)[(p.iVar2)\u003e\u003e5] ^= (1\u003c\u003c((p.iVar2) \u0026 31)));\n/*\n        // try the previuos pair\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar2Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n        Sim_XorBit( p-\u003euPatRand, p-\u003eiVar1Old );\n        Sim_SymmsSimulate( p, p-\u003euPatRand, p-\u003evMatrNonSymms );\n*/\n        if i % 10 != 0 {\n            continue; }\n        // check disjointness\n        assert(Sim_UtilMatrsAreDisjoint( p ), \"Sim_UtilMatrsAreDisjoint( p )\");\n        // count the number of pairs\n        Sim_UtilCountPairsAll( p );\n        if i % 50 != 0 {\n            continue; }\n        if fVerbose != 0 {\n            fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n    }\n\n    // count the number of pairs\n    Sim_UtilCountPairsAll( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\\n\", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }\n//    Sim_UtilCountPairsAllPrint( p );\n\n    Result = p.nPairsSymm;\n    vResult = p.vMatrSymms;  \np.timeTotal = Abc_Clock() - clkTotal;\n    //  p-\u003evMatrSymms = NULL;\n    Sym_ManStop( p );\n    return Result;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,63 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubehack.c",
+  "SHA256": "d487f4fb3fef0af89cd8ef9dfff54759dce028649da3521f653e0cc533de987b",
+  "Functions": [
+    {
+      "Name": "undefine_cube_size",
+      "Start": 2341,
+      "End": 2653,
+      "BodyStart": 2367,
+      "Original": "void\nundefine_cube_size()\n{\n    if (cube.num_binary_vars \u003e 100) {\n    if (cube.fullset != 0) {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    } else {\n    cube.num_vars = cube.num_binary_vars = 100;\n    if (cube.fullset != 0) {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    }\n}",
+      "Draft": "func undefine_cube_size() {\n    if cube.num_binary_vars \u003e 100 {\n    if cube.fullset != 0 {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    } else {\n    cube.num_vars = cube.num_binary_vars = 100;\n    if cube.fullset != 0 {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    }\n}"
+    },
+    {
+      "Name": "set_espresso_flags",
+      "Start": 2656,
+      "End": 2940,
+      "BodyStart": 2682,
+      "Original": "void\nset_espresso_flags()\n{\n    summary = FALSE;\n    trace = FALSE;\n    remove_essential = TRUE;\n    force_irredundant = TRUE;\n    unwrap_onset = TRUE;\n    single_expand = FALSE;\n    pos = FALSE;\n    recompute_onset = FALSE;\n    use_super_gasp = FALSE;\n    use_random_order = FALSE;\n}",
+      "Draft": "func set_espresso_flags() {\n    summary = FALSE;\n    trace = FALSE;\n    remove_essential = TRUE;\n    force_irredundant = TRUE;\n    unwrap_onset = TRUE;\n    single_expand = FALSE;\n    pos = FALSE;\n    recompute_onset = FALSE;\n    use_super_gasp = FALSE;\n    use_random_order = FALSE;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubehack.c::mechanical::static::881",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 881,
+      "End": 887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubehack.c::undefine_cube_size",
+      "Category": "semantic-review",
+      "Symbol": "undefine_cube_size",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2341,
+      "End": 2653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubehack.c::set_espresso_flags",
+      "Category": "semantic-review",
+      "Symbol": "set_espresso_flags",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2656,
+      "End": 2940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubehack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2965
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source: /vol/opua/opua2/sis/sis-1.1/common/src/sis/node/RCS/cubehack.c,v $\n * $Author: sis $\n * $Revision: 1.2 $\n * $Date: 1992/05/06 18:57:41 $\n *\n */\n/*\n#include \"sis.h\"\n#include \"node_int.h\"\n\n#ifdef lint\nstruct cube_struct cube;\nbool summary;\nbool trace;\nbool remove_essential;\nbool force_irredundant;\nbool unwrap_onset;\nbool single_expand;\nbool pos;\nbool recompute_onset;\nbool use_super_gasp;\nbool use_random_order;\n#endif\n*/\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\nvoid \ncautious_define_cube_size(n)\nvar n int32;\n{\n    if (cube.fullset != 0 \u0026\u0026 cube.num_binary_vars == n)\n    return;\n    if cube.fullset != 0 {\n    setdown_cube();\n    FREE(cube.part_size);\n    }\n    cube.num_binary_vars = cube.num_vars = n;\n    cube.part_size = ALLOC(int, n);\n    cube_setup();\n}\n\n\nvoid\ndefine_cube_size(n)\nvar n int32;\n{\n    register int q, i;\n    static int called_before = 0;\n\n    /* check if the cube is already just the right size */\n    if (cube.fullset != 0 \u0026\u0026 cube.num_binary_vars == n \u0026\u0026 cube.num_vars == n)\n    return;\n\n    /* We can't handle more than 100 inputs */\n    if n \u003e 100 {\n    cautious_define_cube_size(n);\n    called_before = 0;\n    return;\n    }\n\n    if cube.fullset == 0 || ! called_before {\n    cautious_define_cube_size(100);\n    called_before = 1;\n    }\n\n    cube.num_vars = n;\n    cube.num_binary_vars = n;\n    cube.num_mv_vars = 0;\n    cube.output = -1;\n    cube.size = n * 2;\n\n    /* first_part, last_part, first_word, last_word, part_size OKAY */\n    /* cube.sparse is OKAY */\n\n    /* need to completely re-make cube.fullset and cube.binary_mask */\n    (void) set_fill(cube.fullset, n*2);\n    (void) set_fill(cube.binary_mask, n*2);\n\n    /* need to resize each set in cube.var_mask and cube.temp */\n    q = cube.fullset[0];\n    for(i = 0; i \u003c cube.num_vars; i++)\n    cube.var_mask[i][0] = q;\n    for(i = 0; i \u003c CUBE_TEMP; i++)\n    cube.temp[i][0] = q;\n\n    /* need to resize cube.emptyset and cube.mv_mask */\n    cube.emptyset[0] = q;\n    cube.mv_mask[0] = q;\n\n    /* need to reset the inword and inmask */\n    if cube.num_binary_vars != 0 {\n    cube.inword = cube.last_word[cube.num_binary_vars - 1];\n    cube.inmask = cube.binary_mask[cube.inword] \u0026 DISJOINT;\n    } else {\n    cube.inword = -1;\n    cube.inmask = 0;\n    }\n\n    /* cdata (entire structure) is OKAY */\n}\n\n\nfunc undefine_cube_size() {\n    if cube.num_binary_vars \u003e 100 {\n    if cube.fullset != 0 {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    } else {\n    cube.num_vars = cube.num_binary_vars = 100;\n    if cube.fullset != 0 {\n        setdown_cube();\n        FREE(cube.part_size);\n    }\n    }\n}\n\n\nfunc set_espresso_flags() {\n    summary = FALSE;\n    trace = FALSE;\n    remove_essential = TRUE;\n    force_irredundant = TRUE;\n    unwrap_onset = TRUE;\n    single_expand = FALSE;\n    pos = FALSE;\n    recompute_onset = FALSE;\n    use_super_gasp = FALSE;\n    use_random_order = FALSE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

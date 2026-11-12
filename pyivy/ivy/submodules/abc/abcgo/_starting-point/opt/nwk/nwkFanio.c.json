@@ -1,0 +1,527 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c",
+  "SHA256": "a6e4fdf53bb3584c9c5dc0350bb029462c54b631b24dbc17f18eabcec74b1c2f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjReallocIsNeeded(pObj) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( pObj.pFanio, pFanioOld, pObj.nFanioAlloc * sizeof(Nwk_Obj_t *) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 4894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pMan == pFanin.pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 4934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Id \u003e= 0 \u0026\u0026 pFanin.Id \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == k + 1 ); // if it fails, likely because of duplicated fanin"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == k + 1 ); // if it fails, likely because of duplicated fanout"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 7314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFaninOld != pFaninNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 7352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj != pFaninOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 7385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj != pFaninNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 7418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pMan == pFaninOld.pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 7461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pMan == pFaninNew.pMan );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 7604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nwk_ObjPatchFanin(); Error! Node %d is not among\", pFaninOld.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 7688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" the fanins of node %d...\\n\", pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 8766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 8830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeFrom.pMan == pNodeTo.pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 8876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeFrom != pNodeTo );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 8912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pNodeFrom) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 9360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pNodeFrom) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 9408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 9821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeOld.pMan == pNodeNew.pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 9867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeOld != pNodeNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 9903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pNodeOld) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ObjCollectFanins",
+      "Start": 1271,
+      "End": 1485,
+      "BodyStart": 1338,
+      "Original": "void Nwk_ObjCollectFanins( Nwk_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    Nwk_Obj_t * pFanin;\n    int i;\n    Vec_PtrClear(vNodes);\n    Nwk_ObjForEachFanin( pNode, pFanin, i )\n        Vec_PtrPush( vNodes, pFanin );\n}",
+      "Draft": "func Nwk_ObjCollectFanins(pNode *Nwk_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrClear(vNodes);\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pNode).nFanins)) \u0026\u0026 ((pFanin) = (pNode).pFanio[i]); i++  {\n        Vec_PtrPush( vNodes, pFanin );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ObjCollectFanouts",
+      "Start": 1750,
+      "End": 1969,
+      "BodyStart": 1818,
+      "Original": "void Nwk_ObjCollectFanouts( Nwk_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    Nwk_Obj_t * pFanout;\n    int i;\n    Vec_PtrClear(vNodes);\n    Nwk_ObjForEachFanout( pNode, pFanout, i )\n        Vec_PtrPush( vNodes, pFanout );\n}",
+      "Draft": "func Nwk_ObjCollectFanouts(pNode *Nwk_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanout *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrClear(vNodes);\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pNode).nFanouts)) \u0026\u0026 ((pFanout) = (pNode).pFanio[(pNode).nFanins+i]); i++  {\n        Vec_PtrPush( vNodes, pFanout );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ObjFindFanin",
+      "Start": 2249,
+      "End": 2459,
+      "BodyStart": 2310,
+      "Original": "int Nwk_ObjFindFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin )\n{  \n    Nwk_Obj_t * pTemp;\n    int i;\n    Nwk_ObjForEachFanin( pObj, pTemp, i )\n        if ( pTemp == pFanin )\n            return i;\n    return -1;\n}",
+      "Draft": "func Nwk_ObjFindFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) int32 {  \n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pTemp) = (pObj).pFanio[i]); i++  {\n        if pTemp == pFanin {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Nwk_ObjFindFanout",
+      "Start": 2740,
+      "End": 2954,
+      "BodyStart": 2803,
+      "Original": "int Nwk_ObjFindFanout( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanout )\n{  \n    Nwk_Obj_t * pTemp;\n    int i;\n    Nwk_ObjForEachFanout( pObj, pTemp, i )\n        if ( pTemp == pFanout )\n            return i;\n    return -1;\n}",
+      "Draft": "func Nwk_ObjFindFanout(pObj *Nwk_Obj_t, pFanout *Nwk_Obj_t) int32 {  \n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pTemp) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if pTemp == pFanout {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Nwk_ObjReallocIsNeeded",
+      "Start": 3234,
+      "End": 3364,
+      "BodyStart": 3295,
+      "Original": "static inline int Nwk_ObjReallocIsNeeded( Nwk_Obj_t * pObj )\n{  \n    return pObj-\u003enFanins + pObj-\u003enFanouts == pObj-\u003enFanioAlloc;\n}",
+      "Draft": "func Nwk_ObjReallocIsNeeded(pObj *Nwk_Obj_t) int32 {  \n    return pObj.nFanins + pObj.nFanouts == pObj.nFanioAlloc;\n}"
+    },
+    {
+      "Name": "Nwk_ManReallocNode",
+      "Start": 3624,
+      "End": 4054,
+      "BodyStart": 3682,
+      "Original": "static Nwk_Obj_t * Nwk_ManReallocNode( Nwk_Obj_t * pObj )\n{  \n    Nwk_Obj_t ** pFanioOld = pObj-\u003epFanio;\n    assert( Nwk_ObjReallocIsNeeded(pObj) );\n    pObj-\u003epFanio = (Nwk_Obj_t **)Aig_MmFlexEntryFetch( pObj-\u003epMan-\u003epMemObjs, 2 * pObj-\u003enFanioAlloc * sizeof(Nwk_Obj_t *) );\n    memmove( pObj-\u003epFanio, pFanioOld, pObj-\u003enFanioAlloc * sizeof(Nwk_Obj_t *) );\n    pObj-\u003enFanioAlloc *= 2;\n    pObj-\u003epMan-\u003enRealloced++;\n    return NULL;\n}",
+      "Draft": "func Nwk_ManReallocNode(pObj *Nwk_Obj_t) *Nwk_Obj_t {  \n    var pFanioOld **Nwk_Obj_t  = pObj.pFanio;\n    assert((Nwk_ObjReallocIsNeeded(pObj) != 0), \"Nwk_ObjReallocIsNeeded(pObj)\");\n    pObj.pFanio = (Nwk_Obj_t **)Aig_MmFlexEntryFetch( pObj.pMan.pMemObjs, 2 * pObj.nFanioAlloc * sizeof(Nwk_Obj_t *) );\n    memmove( pObj.pFanio, pFanioOld, pObj.nFanioAlloc * sizeof(Nwk_Obj_t *) );\n    pObj.nFanioAlloc *= 2;\n    pObj.pMan.nRealloced++;\n    return nil;\n}"
+    },
+    {
+      "Name": "Nwk_ObjAddFanin",
+      "Start": 4342,
+      "End": 4970,
+      "BodyStart": 4403,
+      "Original": "void Nwk_ObjAddFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin )\n{\n    int i;\n    assert( pObj-\u003epMan == pFanin-\u003epMan );\n    assert( pObj-\u003eId \u003e= 0 \u0026\u0026 pFanin-\u003eId \u003e= 0 );\n    if ( Nwk_ObjReallocIsNeeded(pObj) )\n        Nwk_ManReallocNode( pObj );\n    if ( Nwk_ObjReallocIsNeeded(pFanin) )\n        Nwk_ManReallocNode( pFanin );\n    for ( i = pObj-\u003enFanins + pObj-\u003enFanouts; i \u003e pObj-\u003enFanins; i-- )\n        pObj-\u003epFanio[i] = pObj-\u003epFanio[i-1];\n    pObj-\u003epFanio[pObj-\u003enFanins++] = pFanin;\n    pFanin-\u003epFanio[pFanin-\u003enFanins + pFanin-\u003enFanouts++] = pObj;\n    pObj-\u003eLevel = Abc_MaxInt( pObj-\u003eLevel, pFanin-\u003eLevel + Nwk_ObjIsNode(pObj) );\n}",
+      "Draft": "func Nwk_ObjAddFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) {\n    var i int32;\n    assert(pObj.pMan == pFanin.pMan, \"pObj.pMan == pFanin.pMan\");\n    assert(pObj.Id \u003e= 0 \u0026\u0026 pFanin.Id \u003e= 0, \"pObj.Id \u003e= 0 \u0026\u0026 pFanin.Id \u003e= 0\");\n    if Nwk_ObjReallocIsNeeded(pObj) != 0 {\n        Nwk_ManReallocNode( pObj ); }\n    if Nwk_ObjReallocIsNeeded(pFanin) != 0 {\n        Nwk_ManReallocNode( pFanin ); }\n    for  i = pObj.nFanins + pObj.nFanouts; i \u003e pObj.nFanins; i--  {\n        pObj.pFanio[i] = pObj.pFanio[i-1];\n    }\n    pObj.pFanio[pObj.nFanins++] = pFanin;\n    pFanin.pFanio[pFanin.nFanins + pFanin.nFanouts++] = pObj;\n    pObj.Level = Abc_MaxInt( pObj.Level, pFanin.Level + Nwk_ObjIsNode(pObj) );\n}"
+    },
+    {
+      "Name": "Nwk_ObjDeleteFanin",
+      "Start": 5258,
+      "End": 6146,
+      "BodyStart": 5322,
+      "Original": "void Nwk_ObjDeleteFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin )\n{\n    int i, k, Limit, fFound;\n    // remove pFanin from the fanin list of pObj\n    Limit = pObj-\u003enFanins + pObj-\u003enFanouts;\n    fFound = 0;\n    for ( k = i = 0; i \u003c Limit; i++ )\n        if ( fFound || pObj-\u003epFanio[i] != pFanin )\n            pObj-\u003epFanio[k++] = pObj-\u003epFanio[i];\n        else\n            fFound = 1;\n    assert( i == k + 1 ); // if it fails, likely because of duplicated fanin\n    pObj-\u003enFanins--;\n    // remove pObj from the fanout list of pFanin\n    Limit = pFanin-\u003enFanins + pFanin-\u003enFanouts;\n    fFound = 0;\n    for ( k = i = pFanin-\u003enFanins; i \u003c Limit; i++ )\n        if ( fFound || pFanin-\u003epFanio[i] != pObj )\n            pFanin-\u003epFanio[k++] = pFanin-\u003epFanio[i];\n        else\n            fFound = 1;\n    assert( i == k + 1 ); // if it fails, likely because of duplicated fanout\n    pFanin-\u003enFanouts--; \n}",
+      "Draft": "func Nwk_ObjDeleteFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) {\n    var i, k, Limit, fFound int32;\n    // remove pFanin from the fanin list of pObj\n    Limit = pObj.nFanins + pObj.nFanouts;\n    fFound = 0;\n    for  k = i = 0; i \u003c Limit; i++  {\n        if (fFound != 0) || pObj.pFanio[i] != pFanin {\n            pObj.pFanio[k++] = pObj.pFanio[i];\n        } else {\n            fFound = 1; }\n    }\n    assert(i == k + 1, \"i == k + 1\"); // if it fails, likely because of duplicated fanin\n    pObj.nFanins--;\n    // remove pObj from the fanout list of pFanin\n    Limit = pFanin.nFanins + pFanin.nFanouts;\n    fFound = 0;\n    for  k = i = pFanin.nFanins; i \u003c Limit; i++  {\n        if (fFound != 0) || pFanin.pFanio[i] != pObj {\n            pFanin.pFanio[k++] = pFanin.pFanio[i];\n        } else {\n            fFound = 1; }\n    }\n    assert(i == k + 1, \"i == k + 1\"); // if it fails, likely because of duplicated fanout\n    pFanin.nFanouts--; \n}"
+    },
+    {
+      "Name": "Nwk_ObjPatchFanin",
+      "Start": 6717,
+      "End": 7840,
+      "BodyStart": 6806,
+      "Original": "void Nwk_ObjPatchFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFaninOld, Nwk_Obj_t * pFaninNew )\n{\n    int i, k, iFanin, Limit;\n    assert( pFaninOld != pFaninNew );\n    assert( pObj != pFaninOld );\n    assert( pObj != pFaninNew );\n    assert( pObj-\u003epMan == pFaninOld-\u003epMan );\n    assert( pObj-\u003epMan == pFaninNew-\u003epMan );\n    // update the fanin\n    iFanin = Nwk_ObjFindFanin( pObj, pFaninOld );\n    if ( iFanin == -1 )\n    {\n        printf( \"Nwk_ObjPatchFanin(); Error! Node %d is not among\", pFaninOld-\u003eId );\n        printf( \" the fanins of node %d...\\n\", pObj-\u003eId );\n        return;\n    }\n    pObj-\u003epFanio[iFanin] = pFaninNew;\n    // remove pObj from the fanout list of pFaninOld\n    Limit = pFaninOld-\u003enFanins + pFaninOld-\u003enFanouts;\n    for ( k = i = pFaninOld-\u003enFanins; i \u003c Limit; i++ )\n        if ( pFaninOld-\u003epFanio[i] != pObj )\n            pFaninOld-\u003epFanio[k++] = pFaninOld-\u003epFanio[i];\n    pFaninOld-\u003enFanouts--;\n    // add pObj to the fanout list of pFaninNew\n    if ( Nwk_ObjReallocIsNeeded(pFaninNew) )\n        Nwk_ManReallocNode( pFaninNew );\n    pFaninNew-\u003epFanio[pFaninNew-\u003enFanins + pFaninNew-\u003enFanouts++] = pObj;\n}",
+      "Draft": "func Nwk_ObjPatchFanin(pObj *Nwk_Obj_t, pFaninOld *Nwk_Obj_t, pFaninNew *Nwk_Obj_t) {\n    var i, k, iFanin, Limit int32;\n    assert(pFaninOld != pFaninNew, \"pFaninOld != pFaninNew\");\n    assert(pObj != pFaninOld, \"pObj != pFaninOld\");\n    assert(pObj != pFaninNew, \"pObj != pFaninNew\");\n    assert(pObj.pMan == pFaninOld.pMan, \"pObj.pMan == pFaninOld.pMan\");\n    assert(pObj.pMan == pFaninNew.pMan, \"pObj.pMan == pFaninNew.pMan\");\n    // update the fanin\n    iFanin = Nwk_ObjFindFanin( pObj, pFaninOld );\n    if iFanin == -1 {\n        fmt.Printf(\"Nwk_ObjPatchFanin(); Error! Node %d is not among\", pFaninOld.Id);\n        fmt.Printf(\" the fanins of node %d...\\n\", pObj.Id);\n        return;\n    }\n    pObj.pFanio[iFanin] = pFaninNew;\n    // remove pObj from the fanout list of pFaninOld\n    Limit = pFaninOld.nFanins + pFaninOld.nFanouts;\n    for  k = i = pFaninOld.nFanins; i \u003c Limit; i++  {\n        if pFaninOld.pFanio[i] != pObj {\n            pFaninOld.pFanio[k++] = pFaninOld.pFanio[i]; }\n    }\n    pFaninOld.nFanouts--;\n    // add pObj to the fanout list of pFaninNew\n    if Nwk_ObjReallocIsNeeded(pFaninNew) != 0 {\n        Nwk_ManReallocNode( pFaninNew ); }\n    pFaninNew.pFanio[pFaninNew.nFanins + pFaninNew.nFanouts++] = pObj;\n}"
+    },
+    {
+      "Name": "Nwk_ObjTransferFanout",
+      "Start": 8128,
+      "End": 8913,
+      "BodyStart": 8201,
+      "Original": "void Nwk_ObjTransferFanout( Nwk_Obj_t * pNodeFrom, Nwk_Obj_t * pNodeTo )\n{\n    Vec_Ptr_t * vFanouts = pNodeFrom-\u003epMan-\u003evTemp;\n    Nwk_Obj_t * pTemp;\n    int nFanoutsOld, i;\n    assert( !Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo) );\n    assert( pNodeFrom-\u003epMan == pNodeTo-\u003epMan );\n    assert( pNodeFrom != pNodeTo );\n    assert( Nwk_ObjFanoutNum(pNodeFrom) \u003e 0 );\n    // get the fanouts of the old node\n    nFanoutsOld = Nwk_ObjFanoutNum(pNodeTo);\n    Nwk_ObjCollectFanouts( pNodeFrom, vFanouts );\n    // patch the fanin of each of them\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vFanouts, pTemp, i )\n        Nwk_ObjPatchFanin( pTemp, pNodeFrom, pNodeTo );\n    assert( Nwk_ObjFanoutNum(pNodeFrom) == 0 );\n    assert( Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts) );\n}",
+      "Draft": "func Nwk_ObjTransferFanout(pNodeFrom *Nwk_Obj_t, pNodeTo *Nwk_Obj_t) {\n    var vFanouts *Vec_Ptr_t  = pNodeFrom.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var nFanoutsOld, i int32;\n    assert(!Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo), \"!Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo)\");\n    assert(pNodeFrom.pMan == pNodeTo.pMan, \"pNodeFrom.pMan == pNodeTo.pMan\");\n    assert(pNodeFrom != pNodeTo, \"pNodeFrom != pNodeTo\");\n    assert(Nwk_ObjFanoutNum(pNodeFrom) \u003e 0, \"Nwk_ObjFanoutNum(pNodeFrom) \u003e 0\");\n    // get the fanouts of the old node\n    nFanoutsOld = Nwk_ObjFanoutNum(pNodeTo);\n    Nwk_ObjCollectFanouts( pNodeFrom, vFanouts );\n    // patch the fanin of each of them\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n        Nwk_ObjPatchFanin( pTemp, pNodeFrom, pNodeTo );\n    }\n    assert(Nwk_ObjFanoutNum(pNodeFrom) == 0, \"Nwk_ObjFanoutNum(pNodeFrom) == 0\");\n    assert(Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts), \"Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts)\");\n}"
+    },
+    {
+      "Name": "Nwk_ObjReplace",
+      "Start": 9181,
+      "End": 9539,
+      "BodyStart": 9247,
+      "Original": "void Nwk_ObjReplace( Nwk_Obj_t * pNodeOld, Nwk_Obj_t * pNodeNew )\n{\n    assert( pNodeOld-\u003epMan == pNodeNew-\u003epMan );\n    assert( pNodeOld != pNodeNew );\n    assert( Nwk_ObjFanoutNum(pNodeOld) \u003e 0 );\n    // transfer the fanouts to the old node\n    Nwk_ObjTransferFanout( pNodeOld, pNodeNew );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pNodeOld );\n}",
+      "Draft": "func Nwk_ObjReplace(pNodeOld *Nwk_Obj_t, pNodeNew *Nwk_Obj_t) {\n    assert(pNodeOld.pMan == pNodeNew.pMan, \"pNodeOld.pMan == pNodeNew.pMan\");\n    assert(pNodeOld != pNodeNew, \"pNodeOld != pNodeNew\");\n    assert(Nwk_ObjFanoutNum(pNodeOld) \u003e 0, \"Nwk_ObjFanoutNum(pNodeOld) \u003e 0\");\n    // transfer the fanouts to the old node\n    Nwk_ObjTransferFanout( pNodeOld, pNodeNew );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pNodeOld );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::mechanical::sizeof::4299",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3874,
+      "End": 3880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::mechanical::sizeof::4380",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3955,
+      "End": 3961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::pointer-cast::4217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3792,
+      "End": 3806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::pointer-cast::4305",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3880,
+      "End": 3893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::pointer-cast::4386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3961,
+      "End": 3974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::pointer-cast::9209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8673,
+      "End": 8673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjCollectFanins",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjCollectFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1271,
+      "End": 1485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjCollectFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjCollectFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1750,
+      "End": 1969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjFindFanin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFindFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2249,
+      "End": 2459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjFindFanout",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFindFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2740,
+      "End": 2954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjReallocIsNeeded",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjReallocIsNeeded",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3234,
+      "End": 3364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ManReallocNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManReallocNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3624,
+      "End": 4054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjAddFanin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjAddFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4342,
+      "End": 4970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjDeleteFanin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjDeleteFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5258,
+      "End": 6146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjPatchFanin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjPatchFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6717,
+      "End": 7840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjTransferFanout",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjTransferFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8128,
+      "End": 8913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::Nwk_ObjReplace",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjReplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9181,
+      "End": 9539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFanio.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9787
+    }
+  ],
+  "Draft": "package nwk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkFanio.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Manipulation of fanins/fanouts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkFanio.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects fanins of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjCollectFanins(pNode *Nwk_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrClear(vNodes);\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pNode).nFanins)) \u0026\u0026 ((pFanin) = (pNode).pFanio[i]); i++  {\n        Vec_PtrPush( vNodes, pFanin );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects fanouts of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjCollectFanouts(pNode *Nwk_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanout *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrClear(vNodes);\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pNode).nFanouts)) \u0026\u0026 ((pFanout) = (pNode).pFanio[(pNode).nFanins+i]); i++  {\n        Vec_PtrPush( vNodes, pFanout );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the fanin of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjFindFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) int32 {  \n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pTemp) = (pObj).pFanio[i]); i++  {\n        if pTemp == pFanin {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the fanout of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjFindFanout(pObj *Nwk_Obj_t, pFanout *Nwk_Obj_t) int32 {  \n    var pTemp *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pTemp) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if pTemp == pFanout {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node has to be reallocated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjReallocIsNeeded(pObj *Nwk_Obj_t) int32 {  \n    return pObj.nFanins + pObj.nFanouts == pObj.nFanioAlloc;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Reallocates the object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManReallocNode(pObj *Nwk_Obj_t) *Nwk_Obj_t {  \n    var pFanioOld **Nwk_Obj_t  = pObj.pFanio;\n    assert((Nwk_ObjReallocIsNeeded(pObj) != 0), \"Nwk_ObjReallocIsNeeded(pObj)\");\n    pObj.pFanio = (Nwk_Obj_t **)Aig_MmFlexEntryFetch( pObj.pMan.pMemObjs, 2 * pObj.nFanioAlloc * sizeof(Nwk_Obj_t *) );\n    memmove( pObj.pFanio, pFanioOld, pObj.nFanioAlloc * sizeof(Nwk_Obj_t *) );\n    pObj.nFanioAlloc *= 2;\n    pObj.pMan.nRealloced++;\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fanout/fanin relationship between the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjAddFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) {\n    var i int32;\n    assert(pObj.pMan == pFanin.pMan, \"pObj.pMan == pFanin.pMan\");\n    assert(pObj.Id \u003e= 0 \u0026\u0026 pFanin.Id \u003e= 0, \"pObj.Id \u003e= 0 \u0026\u0026 pFanin.Id \u003e= 0\");\n    if Nwk_ObjReallocIsNeeded(pObj) != 0 {\n        Nwk_ManReallocNode( pObj ); }\n    if Nwk_ObjReallocIsNeeded(pFanin) != 0 {\n        Nwk_ManReallocNode( pFanin ); }\n    for  i = pObj.nFanins + pObj.nFanouts; i \u003e pObj.nFanins; i--  {\n        pObj.pFanio[i] = pObj.pFanio[i-1];\n    }\n    pObj.pFanio[pObj.nFanins++] = pFanin;\n    pFanin.pFanio[pFanin.nFanins + pFanin.nFanouts++] = pObj;\n    pObj.Level = Abc_MaxInt( pObj.Level, pFanin.Level + Nwk_ObjIsNode(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes fanout/fanin relationship between the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjDeleteFanin(pObj *Nwk_Obj_t, pFanin *Nwk_Obj_t) {\n    var i, k, Limit, fFound int32;\n    // remove pFanin from the fanin list of pObj\n    Limit = pObj.nFanins + pObj.nFanouts;\n    fFound = 0;\n    for  k = i = 0; i \u003c Limit; i++  {\n        if (fFound != 0) || pObj.pFanio[i] != pFanin {\n            pObj.pFanio[k++] = pObj.pFanio[i];\n        } else {\n            fFound = 1; }\n    }\n    assert(i == k + 1, \"i == k + 1\"); // if it fails, likely because of duplicated fanin\n    pObj.nFanins--;\n    // remove pObj from the fanout list of pFanin\n    Limit = pFanin.nFanins + pFanin.nFanouts;\n    fFound = 0;\n    for  k = i = pFanin.nFanins; i \u003c Limit; i++  {\n        if (fFound != 0) || pFanin.pFanio[i] != pObj {\n            pFanin.pFanio[k++] = pFanin.pFanio[i];\n        } else {\n            fFound = 1; }\n    }\n    assert(i == k + 1, \"i == k + 1\"); // if it fails, likely because of duplicated fanout\n    pFanin.nFanouts--; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces a fanin of the node.]\n\n  Description [The node is pObj. An old fanin of this node (pFaninOld) has to be\n  replaced by a new fanin (pFaninNew). Assumes that the node and the old fanin \n  are not complemented. The new fanin can be complemented. In this case, the\n  polarity of the new fanin will change, compared to the polarity of the old fanin.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjPatchFanin(pObj *Nwk_Obj_t, pFaninOld *Nwk_Obj_t, pFaninNew *Nwk_Obj_t) {\n    var i, k, iFanin, Limit int32;\n    assert(pFaninOld != pFaninNew, \"pFaninOld != pFaninNew\");\n    assert(pObj != pFaninOld, \"pObj != pFaninOld\");\n    assert(pObj != pFaninNew, \"pObj != pFaninNew\");\n    assert(pObj.pMan == pFaninOld.pMan, \"pObj.pMan == pFaninOld.pMan\");\n    assert(pObj.pMan == pFaninNew.pMan, \"pObj.pMan == pFaninNew.pMan\");\n    // update the fanin\n    iFanin = Nwk_ObjFindFanin( pObj, pFaninOld );\n    if iFanin == -1 {\n        fmt.Printf(\"Nwk_ObjPatchFanin(); Error! Node %d is not among\", pFaninOld.Id);\n        fmt.Printf(\" the fanins of node %d...\\n\", pObj.Id);\n        return;\n    }\n    pObj.pFanio[iFanin] = pFaninNew;\n    // remove pObj from the fanout list of pFaninOld\n    Limit = pFaninOld.nFanins + pFaninOld.nFanouts;\n    for  k = i = pFaninOld.nFanins; i \u003c Limit; i++  {\n        if pFaninOld.pFanio[i] != pObj {\n            pFaninOld.pFanio[k++] = pFaninOld.pFanio[i]; }\n    }\n    pFaninOld.nFanouts--;\n    // add pObj to the fanout list of pFaninNew\n    if Nwk_ObjReallocIsNeeded(pFaninNew) != 0 {\n        Nwk_ManReallocNode( pFaninNew ); }\n    pFaninNew.pFanio[pFaninNew.nFanins + pFaninNew.nFanouts++] = pObj;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers fanout from the old node to the new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjTransferFanout(pNodeFrom *Nwk_Obj_t, pNodeTo *Nwk_Obj_t) {\n    var vFanouts *Vec_Ptr_t  = pNodeFrom.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var nFanoutsOld, i int32;\n    assert(!Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo), \"!Nwk_ObjIsCo(pNodeFrom) \u0026\u0026 !Nwk_ObjIsCo(pNodeTo)\");\n    assert(pNodeFrom.pMan == pNodeTo.pMan, \"pNodeFrom.pMan == pNodeTo.pMan\");\n    assert(pNodeFrom != pNodeTo, \"pNodeFrom != pNodeTo\");\n    assert(Nwk_ObjFanoutNum(pNodeFrom) \u003e 0, \"Nwk_ObjFanoutNum(pNodeFrom) \u003e 0\");\n    // get the fanouts of the old node\n    nFanoutsOld = Nwk_ObjFanoutNum(pNodeTo);\n    Nwk_ObjCollectFanouts( pNodeFrom, vFanouts );\n    // patch the fanin of each of them\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanouts)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vFanouts, i)), 1); i++  {\n        Nwk_ObjPatchFanin( pTemp, pNodeFrom, pNodeTo );\n    }\n    assert(Nwk_ObjFanoutNum(pNodeFrom) == 0, \"Nwk_ObjFanoutNum(pNodeFrom) == 0\");\n    assert(Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts), \"Nwk_ObjFanoutNum(pNodeTo) == nFanoutsOld + Vec_PtrSize(vFanouts)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the node by a new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjReplace(pNodeOld *Nwk_Obj_t, pNodeNew *Nwk_Obj_t) {\n    assert(pNodeOld.pMan == pNodeNew.pMan, \"pNodeOld.pMan == pNodeNew.pMan\");\n    assert(pNodeOld != pNodeNew, \"pNodeOld != pNodeNew\");\n    assert(Nwk_ObjFanoutNum(pNodeOld) \u003e 0, \"Nwk_ObjFanoutNum(pNodeOld) \u003e 0\");\n    // transfer the fanouts to the old node\n    Nwk_ObjTransferFanout( pNodeOld, pNodeNew );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pNodeOld );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,582 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c",
+  "SHA256": "fd7d47955d8d05ed437d72bc2e0661a2e0d42bb9acd9822a54e9a9ee9888028a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 50,
+        "Column": 9,
+        "ByteOffset": 1541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"ABCCTo%d\", nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 9,
+        "ByteOffset": 1586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 58,
+        "Column": 9,
+        "ByteOffset": 1939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sa%do%d\", pPref[Type - BAC_BOX_BUF], nInA, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 2305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == nOuts \u0026\u0026 nInB == nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 2355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA + nInB == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 2410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_AND], nInA, nInB, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 2710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == nOuts \u0026\u0026 nInB == nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 1 + nInA + nInB == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sc%da%db%do%d\", pPref[Type - BAC_BOX_MUX], 1, nInA, nInB, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 3125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 3181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 3 == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 3226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sa%db%dc%do%d\", pPref[Type - BAC_BOX_MAJ], 1, 1, 1, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 3605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA == nInB \u0026\u0026 1 == nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 3651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA + nInB == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 3706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_RAND], nInA, nInB, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 4007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA * nOuts == nInB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 4047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA + nInB == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 4102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_SEL], nInA, nInB, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 4404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nInA * nOuts == nInB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 4444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 1 + nInA + nInB == Vec_IntSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 4503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pName, \"%si%da%db%do%d\", pPref[Type - BAC_BOX_SEL], 1, nInA, nInB, nOuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 5432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nBos \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 5851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nBis == 2 * nBos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 6204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nBis - 1 == 2 * nBos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 6690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nBis % nBos == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 6834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( n \u003e 1 \u0026\u0026 n \u003c 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 14,
+        "ByteOffset": 7587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 8177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nBis == Bac_BoxBiNum(p, iBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 8363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(\u0026p.vArray) == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 9,
+        "ByteOffset": 8410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(\u0026p.vArray, 0) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 8461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(\u0026p.vArray, 2) == nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 9091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(\u0026p.vArray) == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 9138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(\u0026p.vArray, 1) == nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 11365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 11419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 11734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Bac_ObjType(p, iNext) == BAC_BOX_RAMWC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 12011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 12068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Bac_ObjType(p, BoxR) == BAC_BOX_RAMR );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bac_BoxCreate",
+      "Start": 1236,
+      "End": 4810,
+      "BodyStart": 1343,
+      "Original": "int Bac_BoxCreate( Bac_Ntk_t * p, Bac_ObjType_t Type, Vec_Int_t * vFanins, int nInA, int nInB, int nOuts )\n{\n    char pName[100]; int i, iObj, iFanin;\n    assert( BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN );\n    if ( BAC_BOX_CF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_CZ )\n    {\n        sprintf( pName, \"ABCCTo%d\", nOuts );\n        assert( 0 == Vec_IntSize(vFanins) );\n        iObj = Bac_BoxAlloc( p, Type, 0, nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV )\n    {\n        char * pPref[2] = { \"ABCBUF\", \"ABCINV\" };\n        assert( nInA == nOuts );\n        assert( nInA == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sa%do%d\", pPref[Type - BAC_BOX_BUF], nInA, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR )\n    {\n        char * pPref[6] = { \"ABCAND\", \"ABCNAND\", \"ABCOR\", \"ABCNOR\", \"ABCXOR\", \"ABCXNOR\" };\n        assert( nInA == nOuts \u0026\u0026 nInB == nOuts );\n        assert( nInA + nInB == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_AND], nInA, nInB, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( Type == BAC_BOX_MUX )\n    {\n        char * pPref[1] = { \"ABCMUX\" };\n        assert( nInA == nOuts \u0026\u0026 nInB == nOuts );\n        assert( 1 + nInA + nInB == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sc%da%db%do%d\", pPref[Type - BAC_BOX_MUX], 1, nInA, nInB, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( Type == BAC_BOX_MAJ )\n    {\n        char * pPref[1] = { \"ABCMAJ\" };\n        assert( nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1 );\n        assert( 3 == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sa%db%dc%do%d\", pPref[Type - BAC_BOX_MAJ], 1, 1, 1, 1 );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( BAC_BOX_RAND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_RXNOR )\n    {\n        char * pPref[6] = { \"ABCRAND\", \"ABCRNAND\", \"ABCROR\", \"ABCRNOR\", \"ABCRXOR\", \"ABCRXNOR\" };\n        assert( nInA == nInB \u0026\u0026 1 == nOuts );\n        assert( nInA + nInB == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_RAND], nInA, nInB, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( Type == BAC_BOX_SEL )\n    {\n        char * pPref[1] = { \"ABCSEL\" };\n        assert( nInA * nOuts == nInB );\n        assert( nInA + nInB == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%sa%db%do%d\", pPref[Type - BAC_BOX_SEL], nInA, nInB, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    else if ( Type == BAC_BOX_PSEL )\n    {\n        char * pPref[1] = { \"ABCPSEL\" };\n        assert( nInA * nOuts == nInB );\n        assert( 1 + nInA + nInB == Vec_IntSize(vFanins) );\n        sprintf( pName, \"%si%da%db%do%d\", pPref[Type - BAC_BOX_SEL], 1, nInA, nInB, nOuts );\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p-\u003epDesign-\u003epMods, pName, NULL) );\n    }\n    // add fanins\n    Vec_IntForEachEntry( vFanins, iFanin, i )\n        Bac_ObjSetFanin( p, Bac_BoxBi(p, iObj, i), iFanin );\n    return iObj;\n}",
+      "Draft": "func Bac_BoxCreate(p *Bac_Ntk_t, Type Bac_ObjType_t, vFanins *Vec_Int_t, nInA int32, nInB int32, nOuts int32) int32 {\n    var pName string // was [100]byte in C\n var i, iObj, iFanin int32;\n    assert(BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN, \"BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN\");\n    if BAC_BOX_CF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_CZ {\n        pName = fmt.Sprintf(\"ABCCTo%d\", nOuts);\n        assert(0 == Vec_IntSize(vFanins), \"0 == Vec_IntSize(vFanins)\");\n        iObj = Bac_BoxAlloc( p, Type, 0, nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV {\n        var pPref [2]string = [2]string{ \"ABCBUF\", \"ABCINV\" };\n        assert(nInA == nOuts, \"nInA == nOuts\");\n        assert(nInA == Vec_IntSize(vFanins), \"nInA == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%do%d\", pPref[Type - BAC_BOX_BUF], nInA, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR {\n        var pPref [6]string = [6]string{ \"ABCAND\", \"ABCNAND\", \"ABCOR\", \"ABCNOR\", \"ABCXOR\", \"ABCXNOR\" };\n        assert(nInA == nOuts \u0026\u0026 nInB == nOuts, \"nInA == nOuts \u0026\u0026 nInB == nOuts\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_AND], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_MUX {\n        var pPref [1]string = [1]string{ \"ABCMUX\" };\n        assert(nInA == nOuts \u0026\u0026 nInB == nOuts, \"nInA == nOuts \u0026\u0026 nInB == nOuts\");\n        assert(1 + nInA + nInB == Vec_IntSize(vFanins), \"1 + nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sc%da%db%do%d\", pPref[Type - BAC_BOX_MUX], 1, nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_MAJ {\n        var pPref [1]string = [1]string{ \"ABCMAJ\" };\n        assert(nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1, \"nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1\");\n        assert(3 == Vec_IntSize(vFanins), \"3 == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%dc%do%d\", pPref[Type - BAC_BOX_MAJ], 1, 1, 1, 1);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_RAND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_RXNOR {\n        var pPref [6]string = [6]string{ \"ABCRAND\", \"ABCRNAND\", \"ABCROR\", \"ABCRNOR\", \"ABCRXOR\", \"ABCRXNOR\" };\n        assert(nInA == nInB \u0026\u0026 1 == nOuts, \"nInA == nInB \u0026\u0026 1 == nOuts\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_RAND], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_SEL {\n        var pPref [1]string = [1]string{ \"ABCSEL\" };\n        assert(nInA * nOuts == nInB, \"nInA * nOuts == nInB\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_SEL], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_PSEL {\n        var pPref [1]string = [1]string{ \"ABCPSEL\" };\n        assert(nInA * nOuts == nInB, \"nInA * nOuts == nInB\");\n        assert(1 + nInA + nInB == Vec_IntSize(vFanins), \"1 + nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%si%da%db%do%d\", pPref[Type - BAC_BOX_SEL], 1, nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    }\n    // add fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        Bac_ObjSetFanin( p, Bac_BoxBi(p, iObj, i), iFanin );\n    }\n    return iObj;\n}"
+    },
+    {
+      "Name": "Bac_ObjClpWide",
+      "Start": 5046,
+      "End": 7559,
+      "BodyStart": 5092,
+      "Original": "int Bac_ObjClpWide( Bac_Ntk_t * p, int iBox )\n{\n    Bac_ObjType_t Type = Bac_ObjType( p, iBox );\n    int nBis = Bac_BoxBiNum(p, iBox);\n    int nBos = Bac_BoxBoNum(p, iBox);\n    int i, k, iObj;\n    assert( nBos \u003e 1 );\n    Vec_IntClear( \u0026p-\u003evArray );\n    if ( BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV )\n    {\n        for ( i = 0; i \u003c nBos; i++ )\n        {\n            Vec_IntFill( \u0026p-\u003evArray2, 1, Bac_BoxFanin(p, iBox, i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p-\u003evArray2, 1, -1, 1 );\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    }\n    else if ( BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR )\n    {\n        assert( nBis == 2 * nBos );\n        for ( i = 0; i \u003c nBos; i++ )\n        {\n            Vec_IntFillTwo( \u0026p-\u003evArray2, 2, Bac_BoxFanin(p, iBox, i), Bac_BoxFanin(p, iBox, nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p-\u003evArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    }\n    else if ( Type == BAC_BOX_MUX )\n    {\n        assert( nBis - 1 == 2 * nBos );\n        for ( i = 0; i \u003c nBos; i++ )\n        {\n            Vec_IntFill( \u0026p-\u003evArray2, 1, Bac_BoxFanin(p, iBox, 0) );\n            Vec_IntPushTwo( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p-\u003evArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    }\n    else if ( Type == BAC_BOX_NMUX )\n    {\n        int n, nIns = nBis / nBos;\n        assert( nBis % nBos == 0 );\n        for ( n = 1; n \u003c 32; n++ )\n            if ( n + (1 \u003c\u003c n) == nIns )\n                break;\n        assert( n \u003e 1 \u0026\u0026 n \u003c 32 );\n        for ( i = 0; i \u003c nBos; i++ )\n        {\n            Vec_IntClear( \u0026p-\u003evArray2 );\n            for ( k = 0; k \u003c n; k++ )\n                Vec_IntPush( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, k) );\n            for ( k = 0; k \u003c (1 \u003c\u003c n); k++ )\n                Vec_IntPush( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, n + (1 \u003c\u003c n) * i + k) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p-\u003evArray2, n, (1 \u003c\u003c n), 1 );\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    }\n    else if ( Type == BAC_BOX_SEL )\n    {\n    }\n    else if ( Type == BAC_BOX_PSEL )\n    {\n    }\n    else if ( Type == BAC_BOX_DFF || Type == BAC_BOX_LATCH )\n    {\n    }\n    else if ( Type == BAC_BOX_DFFRS || Type == BAC_BOX_LATCHRS )\n    {\n    }\n    else assert( 0 );\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p-\u003evArray), Vec_IntSize(\u0026p-\u003evArray) );\n    return iBox;\n}",
+      "Draft": "func Bac_ObjClpWide(p *Bac_Ntk_t, iBox int32) int32 {\n    var Type Bac_ObjType_t  = Bac_ObjType( p, iBox );\n    var nBis int32  = Bac_BoxBiNum(p, iBox);\n    var nBos int32  = Bac_BoxBoNum(p, iBox);\n    var i, k, iObj int32;\n    assert(nBos \u003e 1, \"nBos \u003e 1\");\n    Vec_IntClear( \u0026p.vArray );\n    if BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV {\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Bac_BoxFanin(p, iBox, i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, -1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR {\n        assert(nBis == 2 * nBos, \"nBis == 2 * nBos\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFillTwo( \u0026p.vArray2, 2, Bac_BoxFanin(p, iBox, i), Bac_BoxFanin(p, iBox, nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_MUX {\n        assert(nBis - 1 == 2 * nBos, \"nBis - 1 == 2 * nBos\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Bac_BoxFanin(p, iBox, 0) );\n            Vec_IntPushTwo( \u0026p.vArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_NMUX {\n        var n int32;\n        var nIns int32 = nBis / nBos;\n        assert(nBis % nBos == 0, \"nBis % nBos == 0\");\n        for  n = 1; n \u003c 32; n++  {\n            if n + (1 \u003c\u003c n) == nIns {\n                break; }\n        }\n        assert(n \u003e 1 \u0026\u0026 n \u003c 32, \"n \u003e 1 \u0026\u0026 n \u003c 32\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntClear( \u0026p.vArray2 );\n            for  k = 0; k \u003c n; k++  {\n                Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, k) );\n            }\n            for  k = 0; k \u003c (1 \u003c\u003c n); k++  {\n                Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, n + (1 \u003c\u003c n) * i + k) );\n            }\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, n, (1 \u003c\u003c n), 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_SEL {\n    \n    } else if Type == BAC_BOX_PSEL {\n    \n    } else if Type == BAC_BOX_DFF || Type == BAC_BOX_LATCH {\n    \n    } else if Type == BAC_BOX_DFFRS || Type == BAC_BOX_LATCHRS {\n    \n    } else { assert(false, \"0\"); }\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p.vArray), Vec_IntSize(\u0026p.vArray) );\n    return iBox;\n}"
+    },
+    {
+      "Name": "Bac_ObjClpArith",
+      "Start": 7795,
+      "End": 10885,
+      "BodyStart": 7842,
+      "Original": "int Bac_ObjClpArith( Bac_Ntk_t * p, int iBox )\n{\n    Bac_ObjType_t Type = Bac_ObjType( p, iBox );\n    int i, iObj = -1;\n    int nBis = 0;//Bac_NtkReadRangesPrim( Bac_BoxNtkName(p, iObj), \u0026p-\u003evArray, 0 );\n    assert( nBis == Bac_BoxBiNum(p, iBox) );\n    if ( Type == BAC_BOX_ADD )\n    {\n        int Carry = Bac_BoxFanin(p, iBox, 0);\n        int nBits = Vec_IntEntry(\u0026p-\u003evArray, 1);\n        assert( Vec_IntSize(\u0026p-\u003evArray) == 3 );\n        assert( Vec_IntEntry(\u0026p-\u003evArray, 0) == 1 );\n        assert( Vec_IntEntry(\u0026p-\u003evArray, 2) == nBits );\n        Vec_IntClear( \u0026p-\u003evArray );\n        for ( i = 0; i \u003c nBits; i++ )\n        {\n            Vec_IntFill( \u0026p-\u003evArray2, 1, Carry );\n            Vec_IntPushTwo( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBits+i) );\n            iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p-\u003evArray2, 1, 1, 1 );\n            Carry = Bac_BoxBo(p, iObj, 1);\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, 0) );\n        }\n        Vec_IntPush( \u0026p-\u003evArray, Carry );\n    }\n    else if ( Type == BAC_BOX_SUB )\n    {\n        int iConst, nBits = Vec_IntEntry(\u0026p-\u003evArray, 0);\n        assert( Vec_IntSize(\u0026p-\u003evArray) == 2 );\n        assert( Vec_IntEntry(\u0026p-\u003evArray, 1) == nBits );\n        // create inverter\n        Vec_IntClear( \u0026p-\u003evArray2 );\n        for ( i = 0; i \u003c nBits; i++ )\n            Vec_IntPush( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, nBits+i) );\n        iObj = Bac_BoxCreate( p, BAC_BOX_INV, \u0026p-\u003evArray2, nBits, -1, nBits );\n        // create constant\n        Vec_IntClear( \u0026p-\u003evArray2 );\n        iConst = Bac_BoxCreate( p, BAC_BOX_CT, \u0026p-\u003evArray2, -1, -1, 1 );\n        // collect fanins\n        Vec_IntFill( \u0026p-\u003evArray2, 1, iConst+1 );\n        for ( i = 0; i \u003c nBits; i++ )\n            Vec_IntPush( \u0026p-\u003evArray2, Bac_BoxFanin(p, iBox, i) );\n        for ( i = 0; i \u003c nBits; i++ )\n            Vec_IntPush( \u0026p-\u003evArray2, Bac_BoxBo(p, iObj, i) );\n        // create adder\n        iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p-\u003evArray2, nBits, nBits, nBits );\n        // collect fanins\n        Vec_IntClear( \u0026p-\u003evArray );\n        for ( i = 0; i \u003c nBits; i++ )\n            Vec_IntPush( \u0026p-\u003evArray, Bac_BoxBo(p, iObj, i) );\n    }\n    else if ( Type == BAC_BOX_MUL )\n    {\n    }\n    else if ( Type == BAC_BOX_DIV )\n    {\n    }\n    else if ( Type == BAC_BOX_MOD )\n    {\n    }\n    else if ( Type == BAC_BOX_REM )\n    {\n    }\n    else if ( Type == BAC_BOX_POW )\n    {\n    }\n    else if ( Type == BAC_BOX_MIN )\n    {\n    }\n    else if ( Type == BAC_BOX_ABS )\n    {\n    }\n\n    else if ( Type == BAC_BOX_LTHAN )\n    {\n    }\n    else if ( Type == BAC_BOX_LETHAN )\n    {\n    }\n    else if ( Type == BAC_BOX_METHAN )\n    {\n    }\n    else if ( Type == BAC_BOX_MTHAN )\n    {\n    }\n    else if ( Type == BAC_BOX_EQU )\n    {\n    }\n    else if ( Type == BAC_BOX_NEQU )\n    {\n    }\n\n    else if ( Type == BAC_BOX_SHIL )\n    {\n    }\n    else if ( Type == BAC_BOX_SHIR )\n    {\n    }\n    else if ( Type == BAC_BOX_ROTL )\n    {\n    }\n    else if ( Type == BAC_BOX_ROTR )\n    {\n    }\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p-\u003evArray), Vec_IntSize(\u0026p-\u003evArray) );\n    return 1;\n}",
+      "Draft": "func Bac_ObjClpArith(p *Bac_Ntk_t, iBox int32) int32 {\n    var Type Bac_ObjType_t  = Bac_ObjType( p, iBox );\n    var i int32;\n    var iObj int32 = -1;\n    var nBis int32;//Bac_NtkReadRangesPrim( Bac_BoxNtkName(p, iObj), \u0026p-\u003evArray, 0 );\n    assert(nBis == Bac_BoxBiNum(p, iBox), \"nBis == Bac_BoxBiNum(p, iBox)\");\n    if Type == BAC_BOX_ADD {\n        var Carry int32  = Bac_BoxFanin(p, iBox, 0);\n        var nBits int32  = Vec_IntEntry(\u0026p.vArray, 1);\n        assert(Vec_IntSize(\u0026p.vArray) == 3, \"Vec_IntSize(\u0026p.vArray) == 3\");\n        assert(Vec_IntEntry(\u0026p.vArray, 0) == 1, \"Vec_IntEntry(\u0026p.vArray, 0) == 1\");\n        assert(Vec_IntEntry(\u0026p.vArray, 2) == nBits, \"Vec_IntEntry(\u0026p.vArray, 2) == nBits\");\n        Vec_IntClear( \u0026p.vArray );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Carry );\n            Vec_IntPushTwo( \u0026p.vArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBits+i) );\n            iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p.vArray2, 1, 1, 1 );\n            Carry = Bac_BoxBo(p, iObj, 1);\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n        Vec_IntPush( \u0026p.vArray, Carry );\n    \n    } else if Type == BAC_BOX_SUB {\n        var iConst int32;\n        var nBits int32 = Vec_IntEntry(\u0026p.vArray, 0);\n        assert(Vec_IntSize(\u0026p.vArray) == 2, \"Vec_IntSize(\u0026p.vArray) == 2\");\n        assert(Vec_IntEntry(\u0026p.vArray, 1) == nBits, \"Vec_IntEntry(\u0026p.vArray, 1) == nBits\");\n        // create inverter\n        Vec_IntClear( \u0026p.vArray2 );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, nBits+i) );\n        }\n        iObj = Bac_BoxCreate( p, BAC_BOX_INV, \u0026p.vArray2, nBits, -1, nBits );\n        // create constant\n        Vec_IntClear( \u0026p.vArray2 );\n        iConst = Bac_BoxCreate( p, BAC_BOX_CT, \u0026p.vArray2, -1, -1, 1 );\n        // collect fanins\n        Vec_IntFill( \u0026p.vArray2, 1, iConst+1 );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, i) );\n        }\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxBo(p, iObj, i) );\n        }\n        // create adder\n        iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p.vArray2, nBits, nBits, nBits );\n        // collect fanins\n        Vec_IntClear( \u0026p.vArray );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, i) );\n        }\n    \n    } else if Type == BAC_BOX_MUL {\n    \n    } else if Type == BAC_BOX_DIV {\n    \n    } else if Type == BAC_BOX_MOD {\n    \n    } else if Type == BAC_BOX_REM {\n    \n    } else if Type == BAC_BOX_POW {\n    \n    } else if Type == BAC_BOX_MIN {\n    \n    } else if Type == BAC_BOX_ABS {\n    \n\n    } else if Type == BAC_BOX_LTHAN {\n    \n    } else if Type == BAC_BOX_LETHAN {\n    \n    } else if Type == BAC_BOX_METHAN {\n    \n    } else if Type == BAC_BOX_MTHAN {\n    \n    } else if Type == BAC_BOX_EQU {\n    \n    } else if Type == BAC_BOX_NEQU {\n    \n\n    } else if Type == BAC_BOX_SHIL {\n    \n    } else if Type == BAC_BOX_SHIR {\n    \n    } else if Type == BAC_BOX_ROTL {\n    \n    } else if Type == BAC_BOX_ROTR {\n    }\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p.vArray), Vec_IntSize(\u0026p.vArray) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_ObjClpMemory",
+      "Start": 11121,
+      "End": 12326,
+      "BodyStart": 11169,
+      "Original": "int Bac_ObjClpMemory( Bac_Ntk_t * p, int iBox )\n{\n    int i, En, iNext, nItems = Bac_BoxBiNum(p, iBox);\n    assert( Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX );\n    assert( Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox) );\n    // for each fanin of RAMBOX, make sure address width is the same\n    Bac_BoxForEachFaninBox( p, iBox, iNext, i )\n        assert( Bac_ObjType(p, iNext) == BAC_BOX_RAMWC );\n\n    // create decoders, selectors and flops\n    for ( i = 0; i \u003c nItems; i++ )\n    {\n        int BoxW = Bac_ObjFanin(p, Bac_BoxBi(p, iBox, i));\n        int BoxR = Bac_ObjFanout(p, Bac_BoxBo(p, iBox, 0));\n        assert( Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC );\n        assert( Bac_ObjType(p, BoxR) == BAC_BOX_RAMR );\n        // create enable\n        Vec_IntFillTwo( \u0026p-\u003evArray2, 2, Bac_BoxFanin(p, BoxW, 1), Bac_BoxFanin(p, BoxR, 0) );\n        En = Bac_BoxCreate( p, BAC_BOX_AND, \u0026p-\u003evArray2, 1, 1, 1 );\n        En = Bac_BoxBo( p, En, 0 );\n        // collect address\n    }\n    // for each fanout of RAMBOX, makes ure address width is the same\n//    Bac_BoxForEachFanoutBox( p, iBox, iNext, i )\n//        assert( Bac_ObjType(p, iNext) == BAC_BOX_RAMR );\n    // create selectors and connect them\n    return 1;\n}",
+      "Draft": "func Bac_ObjClpMemory(p *Bac_Ntk_t, iBox int32) int32 {\n    var i int32;\n    var En int32;\n    var iNext int32;\n    var nItems int32 = Bac_BoxBiNum(p, iBox);\n    assert(Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX, \"Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX\");\n    assert(Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox), \"Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox)\");\n    // for each fanin of RAMBOX, make sure address width is the same\n    // inlining of macro Bac_BoxForEachFaninBox\n    for  i = 0; iBox - 1 - i \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iBox - 1 - i) \u0026\u0026 (((iNext) = Bac_BoxFaninBox(p, iBox, i)), 1); i++  {\n        assert(Bac_ObjType(p, iNext) == BAC_BOX_RAMWC, \"Bac_ObjType(p, iNext) == BAC_BOX_RAMWC\");\n    }\n\n    // create decoders, selectors and flops\n    for  i = 0; i \u003c nItems; i++  {\n        var BoxW int32  = Bac_ObjFanin(p, Bac_BoxBi(p, iBox, i));\n        var BoxR int32  = Bac_ObjFanout(p, Bac_BoxBo(p, iBox, 0));\n        assert(Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC, \"Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC\");\n        assert(Bac_ObjType(p, BoxR) == BAC_BOX_RAMR, \"Bac_ObjType(p, BoxR) == BAC_BOX_RAMR\");\n        // create enable\n        Vec_IntFillTwo( \u0026p.vArray2, 2, Bac_BoxFanin(p, BoxW, 1), Bac_BoxFanin(p, BoxR, 0) );\n        En = Bac_BoxCreate( p, BAC_BOX_AND, \u0026p.vArray2, 1, 1, 1 );\n        En = Bac_BoxBo( p, En, 0 );\n        // collect address\n    }\n    // for each fanout of RAMBOX, makes ure address width is the same\n//    Bac_BoxForEachFanoutBox( p, iBox, iNext, i )\n//        assert( Bac_ObjType(p, iNext) == BAC_BOX_RAMR );\n    // create selectors and connect them\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c::Bac_BoxCreate",
+      "Category": "semantic-review",
+      "Symbol": "Bac_BoxCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1236,
+      "End": 4810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c::Bac_ObjClpWide",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ObjClpWide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5046,
+      "End": 7559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c::Bac_ObjClpArith",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ObjClpArith",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7795,
+      "End": 10885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c::Bac_ObjClpMemory",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ObjClpMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11121,
+      "End": 12326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacOper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12573
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bacOper.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Operator procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacOper.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_BoxCreate(p *Bac_Ntk_t, Type Bac_ObjType_t, vFanins *Vec_Int_t, nInA int32, nInB int32, nOuts int32) int32 {\n    var pName string // was [100]byte in C\n var i, iObj, iFanin int32;\n    assert(BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN, \"BAC_OBJ_BOX \u003c Type \u0026\u0026 Type \u003c BAC_BOX_UNKNOWN\");\n    if BAC_BOX_CF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_CZ {\n        pName = fmt.Sprintf(\"ABCCTo%d\", nOuts);\n        assert(0 == Vec_IntSize(vFanins), \"0 == Vec_IntSize(vFanins)\");\n        iObj = Bac_BoxAlloc( p, Type, 0, nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV {\n        var pPref [2]string = [2]string{ \"ABCBUF\", \"ABCINV\" };\n        assert(nInA == nOuts, \"nInA == nOuts\");\n        assert(nInA == Vec_IntSize(vFanins), \"nInA == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%do%d\", pPref[Type - BAC_BOX_BUF], nInA, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR {\n        var pPref [6]string = [6]string{ \"ABCAND\", \"ABCNAND\", \"ABCOR\", \"ABCNOR\", \"ABCXOR\", \"ABCXNOR\" };\n        assert(nInA == nOuts \u0026\u0026 nInB == nOuts, \"nInA == nOuts \u0026\u0026 nInB == nOuts\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_AND], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_MUX {\n        var pPref [1]string = [1]string{ \"ABCMUX\" };\n        assert(nInA == nOuts \u0026\u0026 nInB == nOuts, \"nInA == nOuts \u0026\u0026 nInB == nOuts\");\n        assert(1 + nInA + nInB == Vec_IntSize(vFanins), \"1 + nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sc%da%db%do%d\", pPref[Type - BAC_BOX_MUX], 1, nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_MAJ {\n        var pPref [1]string = [1]string{ \"ABCMAJ\" };\n        assert(nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1, \"nInA == 1 \u0026\u0026 nInB == 1 \u0026\u0026 nOuts == 1\");\n        assert(3 == Vec_IntSize(vFanins), \"3 == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%dc%do%d\", pPref[Type - BAC_BOX_MAJ], 1, 1, 1, 1);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if BAC_BOX_RAND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_RXNOR {\n        var pPref [6]string = [6]string{ \"ABCRAND\", \"ABCRNAND\", \"ABCROR\", \"ABCRNOR\", \"ABCRXOR\", \"ABCRXNOR\" };\n        assert(nInA == nInB \u0026\u0026 1 == nOuts, \"nInA == nInB \u0026\u0026 1 == nOuts\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_RAND], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_SEL {\n        var pPref [1]string = [1]string{ \"ABCSEL\" };\n        assert(nInA * nOuts == nInB, \"nInA * nOuts == nInB\");\n        assert(nInA + nInB == Vec_IntSize(vFanins), \"nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%sa%db%do%d\", pPref[Type - BAC_BOX_SEL], nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    \n    } else if Type == BAC_BOX_PSEL {\n        var pPref [1]string = [1]string{ \"ABCPSEL\" };\n        assert(nInA * nOuts == nInB, \"nInA * nOuts == nInB\");\n        assert(1 + nInA + nInB == Vec_IntSize(vFanins), \"1 + nInA + nInB == Vec_IntSize(vFanins)\");\n        pName = fmt.Sprintf(\"%si%da%db%do%d\", pPref[Type - BAC_BOX_SEL], 1, nInA, nInB, nOuts);\n        iObj = Bac_BoxAlloc( p, Type, Vec_IntSize(vFanins), nOuts, Abc_NamStrFindOrAdd(p.pDesign.pMods, pName, nil) );\n    }\n    // add fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        Bac_ObjSetFanin( p, Bac_BoxBi(p, iObj, i), iFanin );\n    }\n    return iObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ObjClpWide(p *Bac_Ntk_t, iBox int32) int32 {\n    var Type Bac_ObjType_t  = Bac_ObjType( p, iBox );\n    var nBis int32  = Bac_BoxBiNum(p, iBox);\n    var nBos int32  = Bac_BoxBoNum(p, iBox);\n    var i, k, iObj int32;\n    assert(nBos \u003e 1, \"nBos \u003e 1\");\n    Vec_IntClear( \u0026p.vArray );\n    if BAC_BOX_BUF \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_INV {\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Bac_BoxFanin(p, iBox, i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, -1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if BAC_BOX_AND \u003c= Type \u0026\u0026 Type \u003c= BAC_BOX_XNOR {\n        assert(nBis == 2 * nBos, \"nBis == 2 * nBos\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFillTwo( \u0026p.vArray2, 2, Bac_BoxFanin(p, iBox, i), Bac_BoxFanin(p, iBox, nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_MUX {\n        assert(nBis - 1 == 2 * nBos, \"nBis - 1 == 2 * nBos\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Bac_BoxFanin(p, iBox, 0) );\n            Vec_IntPushTwo( \u0026p.vArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBos+i) );\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, 1, 1, 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_NMUX {\n        var n int32;\n        var nIns int32 = nBis / nBos;\n        assert(nBis % nBos == 0, \"nBis % nBos == 0\");\n        for  n = 1; n \u003c 32; n++  {\n            if n + (1 \u003c\u003c n) == nIns {\n                break; }\n        }\n        assert(n \u003e 1 \u0026\u0026 n \u003c 32, \"n \u003e 1 \u0026\u0026 n \u003c 32\");\n        for  i = 0; i \u003c nBos; i++  {\n            Vec_IntClear( \u0026p.vArray2 );\n            for  k = 0; k \u003c n; k++  {\n                Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, k) );\n            }\n            for  k = 0; k \u003c (1 \u003c\u003c n); k++  {\n                Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, n + (1 \u003c\u003c n) * i + k) );\n            }\n            iObj = Bac_BoxCreate( p, Type, \u0026p.vArray2, n, (1 \u003c\u003c n), 1 );\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n    \n    } else if Type == BAC_BOX_SEL {\n    \n    } else if Type == BAC_BOX_PSEL {\n    \n    } else if Type == BAC_BOX_DFF || Type == BAC_BOX_LATCH {\n    \n    } else if Type == BAC_BOX_DFFRS || Type == BAC_BOX_LATCHRS {\n    \n    } else { assert(false, \"0\"); }\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p.vArray), Vec_IntSize(\u0026p.vArray) );\n    return iBox;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ObjClpArith(p *Bac_Ntk_t, iBox int32) int32 {\n    var Type Bac_ObjType_t  = Bac_ObjType( p, iBox );\n    var i int32;\n    var iObj int32 = -1;\n    var nBis int32;//Bac_NtkReadRangesPrim( Bac_BoxNtkName(p, iObj), \u0026p-\u003evArray, 0 );\n    assert(nBis == Bac_BoxBiNum(p, iBox), \"nBis == Bac_BoxBiNum(p, iBox)\");\n    if Type == BAC_BOX_ADD {\n        var Carry int32  = Bac_BoxFanin(p, iBox, 0);\n        var nBits int32  = Vec_IntEntry(\u0026p.vArray, 1);\n        assert(Vec_IntSize(\u0026p.vArray) == 3, \"Vec_IntSize(\u0026p.vArray) == 3\");\n        assert(Vec_IntEntry(\u0026p.vArray, 0) == 1, \"Vec_IntEntry(\u0026p.vArray, 0) == 1\");\n        assert(Vec_IntEntry(\u0026p.vArray, 2) == nBits, \"Vec_IntEntry(\u0026p.vArray, 2) == nBits\");\n        Vec_IntClear( \u0026p.vArray );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntFill( \u0026p.vArray2, 1, Carry );\n            Vec_IntPushTwo( \u0026p.vArray2, Bac_BoxFanin(p, iBox, 1+i), Bac_BoxFanin(p, iBox, 1+nBits+i) );\n            iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p.vArray2, 1, 1, 1 );\n            Carry = Bac_BoxBo(p, iObj, 1);\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, 0) );\n        }\n        Vec_IntPush( \u0026p.vArray, Carry );\n    \n    } else if Type == BAC_BOX_SUB {\n        var iConst int32;\n        var nBits int32 = Vec_IntEntry(\u0026p.vArray, 0);\n        assert(Vec_IntSize(\u0026p.vArray) == 2, \"Vec_IntSize(\u0026p.vArray) == 2\");\n        assert(Vec_IntEntry(\u0026p.vArray, 1) == nBits, \"Vec_IntEntry(\u0026p.vArray, 1) == nBits\");\n        // create inverter\n        Vec_IntClear( \u0026p.vArray2 );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, nBits+i) );\n        }\n        iObj = Bac_BoxCreate( p, BAC_BOX_INV, \u0026p.vArray2, nBits, -1, nBits );\n        // create constant\n        Vec_IntClear( \u0026p.vArray2 );\n        iConst = Bac_BoxCreate( p, BAC_BOX_CT, \u0026p.vArray2, -1, -1, 1 );\n        // collect fanins\n        Vec_IntFill( \u0026p.vArray2, 1, iConst+1 );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxFanin(p, iBox, i) );\n        }\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray2, Bac_BoxBo(p, iObj, i) );\n        }\n        // create adder\n        iObj = Bac_BoxCreate( p, BAC_BOX_ADD, \u0026p.vArray2, nBits, nBits, nBits );\n        // collect fanins\n        Vec_IntClear( \u0026p.vArray );\n        for  i = 0; i \u003c nBits; i++  {\n            Vec_IntPush( \u0026p.vArray, Bac_BoxBo(p, iObj, i) );\n        }\n    \n    } else if Type == BAC_BOX_MUL {\n    \n    } else if Type == BAC_BOX_DIV {\n    \n    } else if Type == BAC_BOX_MOD {\n    \n    } else if Type == BAC_BOX_REM {\n    \n    } else if Type == BAC_BOX_POW {\n    \n    } else if Type == BAC_BOX_MIN {\n    \n    } else if Type == BAC_BOX_ABS {\n    \n\n    } else if Type == BAC_BOX_LTHAN {\n    \n    } else if Type == BAC_BOX_LETHAN {\n    \n    } else if Type == BAC_BOX_METHAN {\n    \n    } else if Type == BAC_BOX_MTHAN {\n    \n    } else if Type == BAC_BOX_EQU {\n    \n    } else if Type == BAC_BOX_NEQU {\n    \n\n    } else if Type == BAC_BOX_SHIL {\n    \n    } else if Type == BAC_BOX_SHIR {\n    \n    } else if Type == BAC_BOX_ROTL {\n    \n    } else if Type == BAC_BOX_ROTR {\n    }\n    Bac_BoxReplace( p, iBox, Vec_IntArray(\u0026p.vArray), Vec_IntSize(\u0026p.vArray) );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ObjClpMemory(p *Bac_Ntk_t, iBox int32) int32 {\n    var i int32;\n    var En int32;\n    var iNext int32;\n    var nItems int32 = Bac_BoxBiNum(p, iBox);\n    assert(Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX, \"Bac_ObjType(p, iBox) == BAC_BOX_RAMBOX\");\n    assert(Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox), \"Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox)\");\n    // for each fanin of RAMBOX, make sure address width is the same\n    // inlining of macro Bac_BoxForEachFaninBox\n    for  i = 0; iBox - 1 - i \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iBox - 1 - i) \u0026\u0026 (((iNext) = Bac_BoxFaninBox(p, iBox, i)), 1); i++  {\n        assert(Bac_ObjType(p, iNext) == BAC_BOX_RAMWC, \"Bac_ObjType(p, iNext) == BAC_BOX_RAMWC\");\n    }\n\n    // create decoders, selectors and flops\n    for  i = 0; i \u003c nItems; i++  {\n        var BoxW int32  = Bac_ObjFanin(p, Bac_BoxBi(p, iBox, i));\n        var BoxR int32  = Bac_ObjFanout(p, Bac_BoxBo(p, iBox, 0));\n        assert(Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC, \"Bac_ObjType(p, BoxW) == BAC_BOX_RAMWC\");\n        assert(Bac_ObjType(p, BoxR) == BAC_BOX_RAMR, \"Bac_ObjType(p, BoxR) == BAC_BOX_RAMR\");\n        // create enable\n        Vec_IntFillTwo( \u0026p.vArray2, 2, Bac_BoxFanin(p, BoxW, 1), Bac_BoxFanin(p, BoxR, 0) );\n        En = Bac_BoxCreate( p, BAC_BOX_AND, \u0026p.vArray2, 1, 1, 1 );\n        En = Bac_BoxBo( p, En, 0 );\n        // collect address\n    }\n    // for each fanout of RAMBOX, makes ure address width is the same\n//    Bac_BoxForEachFanoutBox( p, iBox, iNext, i )\n//        assert( Bac_ObjType(p, iNext) == BAC_BOX_RAMR );\n    // create selectors and connect them\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

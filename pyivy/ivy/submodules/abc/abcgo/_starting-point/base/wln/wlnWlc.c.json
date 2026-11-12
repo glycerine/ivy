@@ -1,0 +1,392 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c",
+  "SHA256": "a77bbe6ddc455218133c1a5a04ed3b7c19e4f33bd4699af88e2882ceccd6d0b9",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 51,
+        "Column": 27,
+        "ByteOffset": 1400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pBuffer, \"%d\\'b\", nBits );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 53,
+        "Column": 11,
+        "ByteOffset": 1498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Len = strlen(pBuffer);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 27,
+        "ByteOffset": 1755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pBuffer, \"%d\\'b\", nBits );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 63,
+        "Column": 11,
+        "ByteOffset": 1853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Len = strlen(pBuffer);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 3310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == Wlc_ObjCiId(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 13,
+        "ByteOffset": 3595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Flop %3d init state: %d\\'b\", i-Wlc_NtkPiNum(p), Wlc_ObjRange(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 21,
+        "ByteOffset": 3948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 25,
+        "ByteOffset": 4075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%c\", p.pInits[iBit+n] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 17,
+        "ByteOffset": 4347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"x\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 21,
+        "ByteOffset": 4431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \" (range %d)\", Wlc_ObjRange(pObj) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 13,
+        "ByteOffset": 4504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pString );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 5033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"ff_init_%d\", Vec_IntSize(vInits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 5263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInits == nil || iBit == int32(strlen(p.pInits)) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 143,
+        "Column": 46,
+        "ByteOffset": 5304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInits == nil || iBit == int32(strlen(p.pInits)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 5490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == Wlc_ObjCiId(pObj) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 13,
+        "ByteOffset": 6862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pString );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 7561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wln_ConstFromBits",
+      "Start": 1292,
+      "End": 1624,
+      "BodyStart": 1343,
+      "Original": "char * Wln_ConstFromBits( int * pBits, int nBits )\n{\n    char * pBuffer = ABC_ALLOC( char, nBits+100 ); int i, Len;\n    sprintf( pBuffer, \"%d\\'b\", nBits );\n    Len = strlen(pBuffer);\n    for ( i = nBits-1; i \u003e= 0; i-- )\n        pBuffer[Len++] = '0' + Abc_InfoHasBit((unsigned *)pBits, i);\n    pBuffer[Len] = 0;\n    return pBuffer;\n}",
+      "Draft": "func Wln_ConstFromBits(pBits *int32, nBits int32) string {\n    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;\n    pBuffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = len(pBuffer);\n    for  i = nBits-1; i \u003e= 0; i--  {\n        pBuffer[Len++] = '0' + Abc_InfoHasBit((unsigned *)pBits, i);\n    }\n    pBuffer[Len] = 0;\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Wln_ConstFromStr",
+      "Start": 1625,
+      "End": 1920,
+      "BodyStart": 1676,
+      "Original": "char * Wln_ConstFromStr( char * pBits, int nBits )\n{\n    char * pBuffer = ABC_ALLOC( char, nBits+100 ); int i, Len;\n    sprintf( pBuffer, \"%d\\'b\", nBits );\n    Len = strlen(pBuffer);\n    for ( i = 0; i \u003c nBits; i++ )\n        pBuffer[Len++] = pBits[i];\n    pBuffer[Len] = 0;\n    return pBuffer;\n}",
+      "Draft": "func Wln_ConstFromStr(pBits string, nBits int32) string {\n    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;\n    pBuffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = len(pBuffer);\n    for  i = 0; i \u003c nBits; i++  {\n        pBuffer[Len++] = pBits[i];\n    }\n    pBuffer[Len] = 0;\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Wln_TrasformNameId",
+      "Start": 1921,
+      "End": 2092,
+      "BodyStart": 1997,
+      "Original": "int Wln_TrasformNameId( Wln_Ntk_t * pNew, Wlc_Ntk_t * p, Wlc_Obj_t * pObj )\n{\n    return Abc_NamStrFindOrAdd( pNew-\u003epManName, Wlc_ObjName(p, Wlc_ObjId(p, pObj)), NULL );\n}",
+      "Draft": "func Wln_TrasformNameId(pNew *Wln_Ntk_t, p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    return Abc_NamStrFindOrAdd( pNew.pManName, Wlc_ObjName(p, Wlc_ObjId(p, pObj)), nil );\n}"
+    },
+    {
+      "Name": "Wln_NtkFromWlc",
+      "Start": 2093,
+      "End": 7521,
+      "BodyStart": 2137,
+      "Original": "Wln_Ntk_t * Wln_NtkFromWlc( Wlc_Ntk_t * p )\n{\n    Wlc_Obj_t * pObj; \n    char Buffer[1000];\n    int i, j, n, Type, iFanin, iOutId, iBit = 0;\n    Vec_Int_t * vFanins = Vec_IntAlloc( 10 );\n    Vec_Int_t * vInits = Vec_IntAlloc( Wlc_NtkFfNum(p) );\n    Wln_Ntk_t * pNew = Wln_NtkAlloc( p-\u003epName, Wlc_NtkObjNum(p)+Wlc_NtkCoNum(p)+Wlc_NtkFfNum(p) );\n    pNew-\u003epManName = Abc_NamStart( Abc_NamObjNumMax(p-\u003epManName), 10 );\n    if ( p-\u003epSpec ) pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003efSmtLib = p-\u003efSmtLib;\n    Wlc_NtkCleanCopy( p );\n    Wln_NtkCleanNameId( pNew );\n    // add primary inputs\n    Wlc_NtkForEachPi( p, pObj, i ) \n    {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CI, pObj-\u003eSigned, pObj-\u003eEnd, pObj-\u003eBeg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // create initial state of the flops\n    Wlc_NtkForEachCi( p, pObj, i ) \n    {\n        assert( i == Wlc_ObjCiId(pObj) );\n        if ( pObj-\u003eType == WLC_OBJ_PI )\n            continue;\n        for ( j = 0; j \u003c Wlc_ObjRange(pObj); j++ )\n            if ( p-\u003epInits[iBit+j] == 'x' )\n                break;\n        // print flop init state\n        if ( 1 )\n        {\n            printf( \"Flop %3d init state: %d\\'b\", i-Wlc_NtkPiNum(p), Wlc_ObjRange(pObj) );\n            if ( j == Wlc_ObjRange(pObj) )\n            {\n                int Count = 0;\n                for ( n = 0; n \u003c Wlc_ObjRange(pObj); n++ )\n                    Count += p-\u003epInits[iBit+n] == '0';\n                if ( Count == Wlc_ObjRange(pObj) )\n                    printf( \"0\" );\n                else\n                    for ( n = 0; n \u003c Wlc_ObjRange(pObj); n++ )\n                        printf( \"%c\", p-\u003epInits[iBit+n] );\n            }\n            else\n            {\n                int Count = 0;\n                for ( n = 0; n \u003c Wlc_ObjRange(pObj); n++ )\n                    Count += p-\u003epInits[iBit+n] == 'x';\n                printf( \"x\" );\n                if ( Count != Wlc_ObjRange(pObj) )\n                    printf( \" (range %d)\", Wlc_ObjRange(pObj) );\n            }\n            printf( \"\\n\" );\n        }\n        Type = j == Wlc_ObjRange(pObj) ? ABC_OPER_CONST : ABC_OPER_CI; \n        iOutId = Wln_ObjAlloc( pNew, Type, pObj-\u003eSigned, pObj-\u003eEnd, pObj-\u003eBeg );\n        if ( j == Wlc_ObjRange(pObj) ) // constant\n        {\n            char * pString = Wln_ConstFromStr(p-\u003epInits + iBit, Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew-\u003epManName, pString, NULL) );\n            ABC_FREE( pString );\n        }\n        sprintf( Buffer, \"ff_init_%d\", Vec_IntSize(vInits) );\n        Wln_ObjSetNameId( pNew, iOutId, Abc_NamStrFindOrAdd(pNew-\u003epManName, Buffer, NULL) );\n        Vec_IntPush( vInits, iOutId );\n        iBit += Wlc_ObjRange(pObj);\n    }\n    assert( p-\u003epInits == NULL || iBit == (int)strlen(p-\u003epInits) );\n    // add flop outputs\n    Wlc_NtkForEachCi( p, pObj, i ) \n    {\n        assert( i == Wlc_ObjCiId(pObj) );\n        if ( pObj-\u003eType == WLC_OBJ_PI )\n            continue;\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_DFFRSE, pObj-\u003eSigned, pObj-\u003eEnd, pObj-\u003eBeg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // add internal nodes \n    Wlc_NtkForEachObj( p, pObj, i ) \n    {\n        if ( Wlc_ObjIsCi(pObj) || pObj-\u003eType == 0 )\n            continue;\n        iOutId = Wln_ObjAlloc( pNew, Ndr_TypeWlc2Ndr(pObj-\u003eType), pObj-\u003eSigned, pObj-\u003eEnd, pObj-\u003eBeg );\n        Vec_IntClear( vFanins );\n        Wlc_ObjForEachFanin( pObj, iFanin, n )\n            Vec_IntPush( vFanins, Wlc_ObjCopy(p, iFanin) );\n        Wln_ObjAddFanins( pNew, iOutId, vFanins );\n        if ( pObj-\u003eType == WLC_OBJ_BIT_SELECT )\n            Wln_ObjSetSlice( pNew, iOutId, Hash_Int2ManInsert(pNew-\u003epRanges, pObj-\u003eEnd, pObj-\u003eBeg, 0) );\n        else if ( pObj-\u003eType == WLC_OBJ_CONST )\n        {\n            char * pString = Wln_ConstFromBits(Wlc_ObjConstValue(pObj), Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew-\u003epManName, pString, NULL) );\n            ABC_FREE( pString );\n        }\n//        else if ( Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 )\n//            ABC_SWAP( int, Wln_ObjFanins(p, iObj)[1], Wln_ObjFanins(p, iObj)[2] );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, i, iOutId );\n    }\n    Wlc_NtkForEachPo( p, pObj, i ) \n    {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CO, pObj-\u003eSigned, pObj-\u003eEnd, pObj-\u003eBeg );\n        Wln_ObjAddFanin( pNew, iOutId, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)) );\n        //Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n    }\n    assert( Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p) );\n    Wlc_NtkForEachCo( p, pObj, i ) \n    {\n        if ( i \u003c Wlc_NtkPoNum(p) )\n            continue;\n        //char * pInNames[8] = {\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        Vec_IntClear( vFanins );\n        Vec_IntPush( vFanins, Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)) );\n        for ( n = 0; n \u003c 6; n++ )\n            Vec_IntPush( vFanins, 0 );\n        Vec_IntPush( vFanins, Vec_IntEntry(vInits, i-Wlc_NtkPoNum(p)) );\n        Wln_ObjAddFanins( pNew, Vec_IntEntry(\u0026pNew-\u003evFfs, i-Wlc_NtkPoNum(p)), vFanins );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vInits );\n    return pNew;\n}",
+      "Draft": "func Wln_NtkFromWlc(p *Wlc_Ntk_t) *Wln_Ntk_t {\n    var pObj *Wlc_Obj_t; \n    var Buffer string // was [1000]byte in C\n\n    var i, j, n, Type, iFanin, iOutId, iBit int32;\n    var vFanins *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var vInits *Vec_Int_t  = Vec_IntAlloc( Wlc_NtkFfNum(p) );\n    var pNew *Wln_Ntk_t  = Wln_NtkAlloc( p.pName, Wlc_NtkObjNum(p)+Wlc_NtkCoNum(p)+Wlc_NtkFfNum(p) );\n    pNew.pManName = Abc_NamStart( Abc_NamObjNumMax(p.pManName), 10 );\n    if p.pSpec { pNew.pSpec = Abc_UtilStrsav( p.pSpec ); }\n    pNew.fSmtLib = p.fSmtLib;\n    Wlc_NtkCleanCopy( p );\n    Wln_NtkCleanNameId( pNew );\n    // add primary inputs\n    // inlining of macro Wlc_NtkForEachPi\n    for  i = 0; (i \u003c Wlc_NtkPiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPi(p, i)), 1); i++  {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CI, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // create initial state of the flops\n    // inlining of macro Wlc_NtkForEachCi\n    for  i = 0; (i \u003c Wlc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCi(p, i)), 1); i++  {\n        assert(i == Wlc_ObjCiId(pObj), \"i == Wlc_ObjCiId(pObj)\");\n        if pObj.Type == WLC_OBJ_PI {\n            continue; }\n        for  j = 0; j \u003c Wlc_ObjRange(pObj); j++  {\n            if p.pInits[iBit+j] == 'x' {\n                break; }\n        }\n        // print flop init state\n        if true {\n            fmt.Printf(\"Flop %3d init state: %d\\'b\", i-Wlc_NtkPiNum(p), Wlc_ObjRange(pObj));\n            if j == Wlc_ObjRange(pObj) {\n                var Count int32;\n                for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                    Count += p.pInits[iBit+n] == '0';\n                }\n                if Count == Wlc_ObjRange(pObj) {\n                    fmt.Printf(\"0\");\n                } else {\n                    for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                        fmt.Printf(\"%c\", p.pInits[iBit+n]);\n                    } }\n            \n            } else {\n                var Count int32;\n                for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                    Count += p.pInits[iBit+n] == 'x';\n                }\n                fmt.Printf(\"x\");\n                if Count != Wlc_ObjRange(pObj) {\n                    fmt.Printf(\" (range %d)\", Wlc_ObjRange(pObj)); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n        if j == Wlc_ObjRange(pObj) {\n            Type = ABC_OPER_CONST;\n        } else {\n            Type = ABC_OPER_CI;\n        } \n        iOutId = Wln_ObjAlloc( pNew, Type, pObj.Signed, pObj.End, pObj.Beg );\n        if j == Wlc_ObjRange(pObj) { // constant\n        \n            var pString string  = Wln_ConstFromStr(p.pInits + iBit, Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, pString, nil) );\n            ABC_FREE( pString );\n        }\n        Buffer = fmt.Sprintf(\"ff_init_%d\", Vec_IntSize(vInits));\n        Wln_ObjSetNameId( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, Buffer, nil) );\n        Vec_IntPush( vInits, iOutId );\n        iBit += Wlc_ObjRange(pObj);\n    }\n    assert(p.pInits == nil || iBit == int32(len(p.pInits)), \"p.pInits == nil || iBit == int32(strlen(p.pInits))\");\n    // add flop outputs\n    // inlining of macro Wlc_NtkForEachCi\n    for  i = 0; (i \u003c Wlc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCi(p, i)), 1); i++  {\n        assert(i == Wlc_ObjCiId(pObj), \"i == Wlc_ObjCiId(pObj)\");\n        if pObj.Type == WLC_OBJ_PI {\n            continue; }\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_DFFRSE, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // add internal nodes \n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if Wlc_ObjIsCi(pObj) || pObj.Type == 0 {\n            continue; }\n        iOutId = Wln_ObjAlloc( pNew, Ndr_TypeWlc2Ndr(pObj.Type), pObj.Signed, pObj.End, pObj.Beg );\n        Vec_IntClear( vFanins );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  n = 0; (n \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, n)), 1); n++  {\n            Vec_IntPush( vFanins, Wlc_ObjCopy(p, iFanin) );\n        }\n        Wln_ObjAddFanins( pNew, iOutId, vFanins );\n        if pObj.Type == WLC_OBJ_BIT_SELECT {\n            Wln_ObjSetSlice( pNew, iOutId, Hash_Int2ManInsert(pNew.pRanges, pObj.End, pObj.Beg, 0) );\n        } else if pObj.Type == WLC_OBJ_CONST {\n            var pString string  = Wln_ConstFromBits(Wlc_ObjConstValue(pObj), Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, pString, nil) );\n            ABC_FREE( pString );\n        }\n//        else if ( Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 )\n//            ABC_SWAP( int, Wln_ObjFanins(p, iObj)[1], Wln_ObjFanins(p, iObj)[2] );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, i, iOutId );\n    }\n    // inlining of macro Wlc_NtkForEachPo\n    for  i = 0; (i \u003c Wlc_NtkPoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPo(p, i)), 1); i++  {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CO, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjAddFanin( pNew, iOutId, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)) );\n        //Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n    }\n    assert(Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p), \"Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p)\");\n    // inlining of macro Wlc_NtkForEachCo\n    for  i = 0; (i \u003c Wlc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCo(p, i)), 1); i++  {\n        if i \u003c Wlc_NtkPoNum(p) {\n            continue; }\n        //char * pInNames[8] = {\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        Vec_IntClear( vFanins );\n        Vec_IntPush( vFanins, Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)) );\n        for  n = 0; n \u003c 6; n++  {\n            Vec_IntPush( vFanins, 0 );\n        }\n        Vec_IntPush( vFanins, Vec_IntEntry(vInits, i-Wlc_NtkPoNum(p)) );\n        Wln_ObjAddFanins( pNew, Vec_IntEntry(\u0026pNew.vFfs, i-Wlc_NtkPoNum(p)), vFanins );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vInits );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Wln_NtkFromWlcTest",
+      "Start": 7522,
+      "End": 7679,
+      "BodyStart": 7563,
+      "Original": "void Wln_NtkFromWlcTest( Wlc_Ntk_t * p )\n{\n    Wln_Ntk_t * pNew = Wln_NtkFromWlc( p );\n    Wln_WriteVer( pNew, \"test_wlc2wln.v\" );\n    Wln_NtkFree( pNew );\n}",
+      "Draft": "func Wln_NtkFromWlcTest(p *Wlc_Ntk_t) {\n    var pNew *Wln_Ntk_t  = Wln_NtkFromWlc( p );\n    Wln_WriteVer( pNew, \"test_wlc2wln.v\" );\n    Wln_NtkFree( pNew );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::pointer-cast::1558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1558,
+      "End": 1570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::Wln_ConstFromBits",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ConstFromBits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1292,
+      "End": 1624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::Wln_ConstFromStr",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ConstFromStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1625,
+      "End": 1920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::Wln_TrasformNameId",
+      "Category": "semantic-review",
+      "Symbol": "Wln_TrasformNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1921,
+      "End": 2092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::Wln_NtkFromWlc",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkFromWlc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2093,
+      "End": 7521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::Wln_NtkFromWlcTest",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkFromWlcTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7522,
+      "End": 7679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::macro-inline::1366",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1366,
+      "End": 1394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::macro-inline::1699",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1699,
+      "End": 1727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::macro-inline::4642",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4642,
+      "End": 4661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWlc.c::macro-inline::6230",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6230,
+      "End": 6249
+    }
+  ],
+  "Draft": "package wln\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlnWlc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Word-level network.]\n\n  Synopsis    [Network transformation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 23, 2018.]\n\n  Revision    [$Id: wlnWlc.c,v 1.00 2018/09/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wln.h\"\n//#include \"base/wlc/wlc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Ndr_TypeWlc2Ndr( int Type );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_ConstFromBits(pBits *int32, nBits int32) string {\n    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;\n    pBuffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = len(pBuffer);\n    for  i = nBits-1; i \u003e= 0; i--  {\n        pBuffer[Len++] = '0' + Abc_InfoHasBit((unsigned *)pBits, i);\n    }\n    pBuffer[Len] = 0;\n    return pBuffer;\n}\nfunc Wln_ConstFromStr(pBits string, nBits int32) string {\n    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;\n    pBuffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = len(pBuffer);\n    for  i = 0; i \u003c nBits; i++  {\n        pBuffer[Len++] = pBits[i];\n    }\n    pBuffer[Len] = 0;\n    return pBuffer;\n}\nfunc Wln_TrasformNameId(pNew *Wln_Ntk_t, p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {\n    return Abc_NamStrFindOrAdd( pNew.pManName, Wlc_ObjName(p, Wlc_ObjId(p, pObj)), nil );\n}\nfunc Wln_NtkFromWlc(p *Wlc_Ntk_t) *Wln_Ntk_t {\n    var pObj *Wlc_Obj_t; \n    var Buffer string // was [1000]byte in C\n\n    var i, j, n, Type, iFanin, iOutId, iBit int32;\n    var vFanins *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var vInits *Vec_Int_t  = Vec_IntAlloc( Wlc_NtkFfNum(p) );\n    var pNew *Wln_Ntk_t  = Wln_NtkAlloc( p.pName, Wlc_NtkObjNum(p)+Wlc_NtkCoNum(p)+Wlc_NtkFfNum(p) );\n    pNew.pManName = Abc_NamStart( Abc_NamObjNumMax(p.pManName), 10 );\n    if p.pSpec { pNew.pSpec = Abc_UtilStrsav( p.pSpec ); }\n    pNew.fSmtLib = p.fSmtLib;\n    Wlc_NtkCleanCopy( p );\n    Wln_NtkCleanNameId( pNew );\n    // add primary inputs\n    // inlining of macro Wlc_NtkForEachPi\n    for  i = 0; (i \u003c Wlc_NtkPiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPi(p, i)), 1); i++  {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CI, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // create initial state of the flops\n    // inlining of macro Wlc_NtkForEachCi\n    for  i = 0; (i \u003c Wlc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCi(p, i)), 1); i++  {\n        assert(i == Wlc_ObjCiId(pObj), \"i == Wlc_ObjCiId(pObj)\");\n        if pObj.Type == WLC_OBJ_PI {\n            continue; }\n        for  j = 0; j \u003c Wlc_ObjRange(pObj); j++  {\n            if p.pInits[iBit+j] == 'x' {\n                break; }\n        }\n        // print flop init state\n        if true {\n            fmt.Printf(\"Flop %3d init state: %d\\'b\", i-Wlc_NtkPiNum(p), Wlc_ObjRange(pObj));\n            if j == Wlc_ObjRange(pObj) {\n                var Count int32;\n                for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                    Count += p.pInits[iBit+n] == '0';\n                }\n                if Count == Wlc_ObjRange(pObj) {\n                    fmt.Printf(\"0\");\n                } else {\n                    for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                        fmt.Printf(\"%c\", p.pInits[iBit+n]);\n                    } }\n            \n            } else {\n                var Count int32;\n                for  n = 0; n \u003c Wlc_ObjRange(pObj); n++  {\n                    Count += p.pInits[iBit+n] == 'x';\n                }\n                fmt.Printf(\"x\");\n                if Count != Wlc_ObjRange(pObj) {\n                    fmt.Printf(\" (range %d)\", Wlc_ObjRange(pObj)); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n        if j == Wlc_ObjRange(pObj) {\n            Type = ABC_OPER_CONST;\n        } else {\n            Type = ABC_OPER_CI;\n        } \n        iOutId = Wln_ObjAlloc( pNew, Type, pObj.Signed, pObj.End, pObj.Beg );\n        if j == Wlc_ObjRange(pObj) { // constant\n        \n            var pString string  = Wln_ConstFromStr(p.pInits + iBit, Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, pString, nil) );\n            ABC_FREE( pString );\n        }\n        Buffer = fmt.Sprintf(\"ff_init_%d\", Vec_IntSize(vInits));\n        Wln_ObjSetNameId( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, Buffer, nil) );\n        Vec_IntPush( vInits, iOutId );\n        iBit += Wlc_ObjRange(pObj);\n    }\n    assert(p.pInits == nil || iBit == int32(len(p.pInits)), \"p.pInits == nil || iBit == int32(strlen(p.pInits))\");\n    // add flop outputs\n    // inlining of macro Wlc_NtkForEachCi\n    for  i = 0; (i \u003c Wlc_NtkCiNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCi(p, i)), 1); i++  {\n        assert(i == Wlc_ObjCiId(pObj), \"i == Wlc_ObjCiId(pObj)\");\n        if pObj.Type == WLC_OBJ_PI {\n            continue; }\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_DFFRSE, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, Wlc_ObjId(p, pObj), iOutId );\n    }\n    // add internal nodes \n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if Wlc_ObjIsCi(pObj) || pObj.Type == 0 {\n            continue; }\n        iOutId = Wln_ObjAlloc( pNew, Ndr_TypeWlc2Ndr(pObj.Type), pObj.Signed, pObj.End, pObj.Beg );\n        Vec_IntClear( vFanins );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  n = 0; (n \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, n)), 1); n++  {\n            Vec_IntPush( vFanins, Wlc_ObjCopy(p, iFanin) );\n        }\n        Wln_ObjAddFanins( pNew, iOutId, vFanins );\n        if pObj.Type == WLC_OBJ_BIT_SELECT {\n            Wln_ObjSetSlice( pNew, iOutId, Hash_Int2ManInsert(pNew.pRanges, pObj.End, pObj.Beg, 0) );\n        } else if pObj.Type == WLC_OBJ_CONST {\n            var pString string  = Wln_ConstFromBits(Wlc_ObjConstValue(pObj), Wlc_ObjRange(pObj));\n            Wln_ObjSetConst( pNew, iOutId, Abc_NamStrFindOrAdd(pNew.pManName, pString, nil) );\n            ABC_FREE( pString );\n        }\n//        else if ( Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 )\n//            ABC_SWAP( int, Wln_ObjFanins(p, iObj)[1], Wln_ObjFanins(p, iObj)[2] );\n        Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n        Wlc_ObjSetCopy( p, i, iOutId );\n    }\n    // inlining of macro Wlc_NtkForEachPo\n    for  i = 0; (i \u003c Wlc_NtkPoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkPo(p, i)), 1); i++  {\n        iOutId = Wln_ObjAlloc( pNew, ABC_OPER_CO, pObj.Signed, pObj.End, pObj.Beg );\n        Wln_ObjAddFanin( pNew, iOutId, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)) );\n        //Wln_ObjSetNameId( pNew, iOutId, Wln_TrasformNameId(pNew, p, pObj) );\n    }\n    assert(Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p), \"Vec_IntSize(vInits) == Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p)\");\n    // inlining of macro Wlc_NtkForEachCo\n    for  i = 0; (i \u003c Wlc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCo(p, i)), 1); i++  {\n        if i \u003c Wlc_NtkPoNum(p) {\n            continue; }\n        //char * pInNames[8] = {\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        Vec_IntClear( vFanins );\n        Vec_IntPush( vFanins, Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)) );\n        for  n = 0; n \u003c 6; n++  {\n            Vec_IntPush( vFanins, 0 );\n        }\n        Vec_IntPush( vFanins, Vec_IntEntry(vInits, i-Wlc_NtkPoNum(p)) );\n        Wln_ObjAddFanins( pNew, Vec_IntEntry(\u0026pNew.vFfs, i-Wlc_NtkPoNum(p)), vFanins );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vInits );\n    return pNew;\n}\nfunc Wln_NtkFromWlcTest(p *Wlc_Ntk_t) {\n    var pNew *Wln_Ntk_t  = Wln_NtkFromWlc( p );\n    Wln_WriteVer( pNew, \"test_wlc2wln.v\" );\n    Wln_NtkFree( pNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

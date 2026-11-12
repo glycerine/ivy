@@ -1,0 +1,268 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c",
+  "SHA256": "dc7a33f7bc83c0be19c6b6a3be159804de38be8e580ccb898f74cc1085799c46",
+  "Functions": [
+    {
+      "Name": "cube_setup",
+      "Start": 525,
+      "End": 2569,
+      "BodyStart": 543,
+      "Original": "void cube_setup()\n{\n    register int i, var;\n    register pcube p;\n\n    if (cube.num_binary_vars \u003c 0 || cube.num_vars \u003c cube.num_binary_vars)\n    fatal(\"cube size is silly, error in .i/.o or .mv\");\n\n    cube.num_mv_vars = cube.num_vars - cube.num_binary_vars;\n    cube.output = cube.num_mv_vars \u003e 0 ? cube.num_vars - 1 : -1;\n\n    cube.size = 0;\n    cube.first_part = ALLOC(int, cube.num_vars);\n    cube.last_part = ALLOC(int, cube.num_vars);\n    cube.first_word = ALLOC(int, cube.num_vars);\n    cube.last_word = ALLOC(int, cube.num_vars);\n    for(var = 0; var \u003c cube.num_vars; var++) {\n    if (var \u003c cube.num_binary_vars)\n        cube.part_size[var] = 2;\n    cube.first_part[var] = cube.size;\n    cube.first_word[var] = WHICH_WORD(cube.size);\n    cube.size += ABS(cube.part_size[var]);\n    cube.last_part[var] = cube.size - 1;\n    cube.last_word[var] = WHICH_WORD(cube.size - 1);\n    }\n\n    cube.var_mask = ALLOC(pset, cube.num_vars);\n    cube.sparse = ALLOC(int, cube.num_vars);\n    cube.binary_mask = new_cube();\n    cube.mv_mask = new_cube();\n    for(var = 0; var \u003c cube.num_vars; var++) {\n    p = cube.var_mask[var] = new_cube();\n    for(i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++)\n        set_insert(p, i);\n    if (var \u003c cube.num_binary_vars) {\n        INLINEset_or(cube.binary_mask, cube.binary_mask, p);\n        cube.sparse[var] = 0;\n    } else {\n        INLINEset_or(cube.mv_mask, cube.mv_mask, p);\n        cube.sparse[var] = 1;\n    }\n    }\n    if (cube.num_binary_vars == 0)\n    cube.inword = -1;\n    else {\n    cube.inword = cube.last_word[cube.num_binary_vars - 1];\n    cube.inmask = cube.binary_mask[cube.inword] \u0026 DISJOINT;\n    }\n\n    cube.temp = ALLOC(pset, CUBE_TEMP);\n    for(i = 0; i \u003c CUBE_TEMP; i++)\n    cube.temp[i] = new_cube();\n    cube.fullset = set_fill(new_cube(), cube.size);\n    cube.emptyset = new_cube();\n\n    cdata.part_zeros = ALLOC(int, cube.size);\n    cdata.var_zeros = ALLOC(int, cube.num_vars);\n    cdata.parts_active = ALLOC(int, cube.num_vars);\n    cdata.is_unate = ALLOC(int, cube.num_vars);\n}",
+      "Draft": "func cube_setup() {\n    register int i, var;\n    register pcube p;\n\n    if cube.num_binary_vars \u003c 0 || cube.num_vars \u003c cube.num_binary_vars {\n    fatal(\"cube size is silly, error in .i/.o or .mv\"); }\n\n    cube.num_mv_vars = cube.num_vars - cube.num_binary_vars;\n    if cube.num_mv_vars \u003e 0 {\n        cube.output = cube.num_vars - 1;\n    } else {\n        cube.output = -1;\n    }\n\n    cube.size = 0;\n    cube.first_part = ALLOC(int, cube.num_vars);\n    cube.last_part = ALLOC(int, cube.num_vars);\n    cube.first_word = ALLOC(int, cube.num_vars);\n    cube.last_word = ALLOC(int, cube.num_vars);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    if var \u003c cube.num_binary_vars {\n        cube.part_size[var] = 2; }\n    cube.first_part[var] = cube.size;\n    // inlining of macro WHICH_WORD\n    cube.first_word[var] = (((cube.size) \u003e\u003e LOGBPI) + 1);\n    cube.size += ABS(cube.part_size[var]);\n    cube.last_part[var] = cube.size - 1;\n    // inlining of macro WHICH_WORD\n    cube.last_word[var] = (((cube.size - 1) \u003e\u003e LOGBPI) + 1);\n    }\n\n    cube.var_mask = ALLOC(pset, cube.num_vars);\n    cube.sparse = ALLOC(int, cube.num_vars);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.binary_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.mv_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    p = cube.var_mask[var] = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n    }\n    if var \u003c cube.num_binary_vars {\n        INLINEset_or(cube.binary_mask, cube.binary_mask, p);\n        cube.sparse[var] = 0;\n    } else {\n        INLINEset_or(cube.mv_mask, cube.mv_mask, p);\n        cube.sparse[var] = 1;\n    }\n    }\n    if cube.num_binary_vars == 0 {\n    cube.inword = -1;\n    } else {\n    cube.inword = cube.last_word[cube.num_binary_vars - 1];\n    cube.inmask = cube.binary_mask[cube.inword] \u0026 DISJOINT;\n    }\n\n    cube.temp = ALLOC(pset, CUBE_TEMP);\n    for i = 0; i \u003c CUBE_TEMP; i++ {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.temp[i] = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    }\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.fullset = set_fill(set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.emptyset = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n\n    cdata.part_zeros = ALLOC(int, cube.size);\n    cdata.var_zeros = ALLOC(int, cube.num_vars);\n    cdata.parts_active = ALLOC(int, cube.num_vars);\n    cdata.is_unate = ALLOC(int, cube.num_vars);\n}"
+    },
+    {
+      "Name": "setdown_cube",
+      "Start": 2805,
+      "End": 3809,
+      "BodyStart": 2825,
+      "Original": "void setdown_cube()\n{\n    register int i, var;\n\n    FREE(cube.first_part);\n    FREE(cube.last_part);\n    FREE(cube.first_word);\n    FREE(cube.last_word);\n    FREE(cube.sparse);\n\n    free_cube(cube.binary_mask);\n    free_cube(cube.mv_mask);\n    free_cube(cube.fullset);\n    free_cube(cube.emptyset);\n    for(var = 0; var \u003c cube.num_vars; var++)\n    free_cube(cube.var_mask[var]);\n    FREE(cube.var_mask);\n\n    for(i = 0; i \u003c CUBE_TEMP; i++)\n    free_cube(cube.temp[i]);\n    FREE(cube.temp);\n\n    FREE(cdata.part_zeros);\n    FREE(cdata.var_zeros);\n    FREE(cdata.parts_active);\n    FREE(cdata.is_unate);\n\n    cube.first_part = cube.last_part = (int *) NULL;\n    cube.first_word = cube.last_word = (int *) NULL;\n    cube.sparse = (int *) NULL;\n    cube.binary_mask = cube.mv_mask = (pcube) NULL;\n    cube.fullset = cube.emptyset = (pcube) NULL;\n    cube.var_mask = cube.temp = (pcube *) NULL;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) NULL;\n    cdata.is_unate = (bool *) NULL;\n}",
+      "Draft": "func setdown_cube() {\n    register int i, var;\n\n    FREE(cube.first_part);\n    FREE(cube.last_part);\n    FREE(cube.first_word);\n    FREE(cube.last_word);\n    FREE(cube.sparse);\n\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.binary_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.mv_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.fullset);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.emptyset);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.var_mask[var]);\n    }\n    FREE(cube.var_mask);\n\n    for i = 0; i \u003c CUBE_TEMP; i++ {\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.temp[i]);\n    }\n    FREE(cube.temp);\n\n    FREE(cdata.part_zeros);\n    FREE(cdata.var_zeros);\n    FREE(cdata.parts_active);\n    FREE(cdata.is_unate);\n\n    cube.first_part = cube.last_part = (int *) nil;\n    cube.first_word = cube.last_word = (int *) nil;\n    cube.sparse = (int *) nil;\n    cube.binary_mask = cube.mv_mask = (pcube) nil;\n    cube.fullset = cube.emptyset = (pcube) nil;\n    cube.var_mask = cube.temp = (pcube *) nil;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) nil;\n    cdata.is_unate = (bool *) nil;\n}"
+    },
+    {
+      "Name": "save_cube_struct",
+      "Start": 3812,
+      "End": 4369,
+      "BodyStart": 3836,
+      "Original": "void save_cube_struct()\n{\n    temp_cube_save = cube;              /* structure copy ! */\n    temp_cdata_save = cdata;            /*      \"\"          */\n\n    cube.first_part = cube.last_part = (int *) NULL;\n    cube.first_word = cube.last_word = (int *) NULL;\n    cube.part_size = (int *) NULL;\n    cube.binary_mask = cube.mv_mask = (pcube) NULL;\n    cube.fullset = cube.emptyset = (pcube) NULL;\n    cube.var_mask = cube.temp = (pcube *) NULL;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) NULL;\n    cdata.is_unate = (bool *) NULL;\n}",
+      "Draft": "func save_cube_struct() {\n    temp_cube_save = cube;              /* structure copy ! */\n    temp_cdata_save = cdata;            /*      \"\"          */\n\n    cube.first_part = cube.last_part = (int *) nil;\n    cube.first_word = cube.last_word = (int *) nil;\n    cube.part_size = (int *) nil;\n    cube.binary_mask = cube.mv_mask = (pcube) nil;\n    cube.fullset = cube.emptyset = (pcube) nil;\n    cube.var_mask = cube.temp = (pcube *) nil;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) nil;\n    cdata.is_unate = (bool *) nil;\n}"
+    },
+    {
+      "Name": "restore_cube_struct",
+      "Start": 4372,
+      "End": 4528,
+      "BodyStart": 4399,
+      "Original": "void restore_cube_struct()\n{\n    cube = temp_cube_save;              /* structure copy ! */\n    cdata = temp_cdata_save;            /*      \"\"          */\n}",
+      "Draft": "func restore_cube_struct() {\n    cube = temp_cube_save;              /* structure copy ! */\n    cdata = temp_cdata_save;            /*      \"\"          */\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3447,
+      "End": 3454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5117",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3500,
+      "End": 3507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5149",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3532,
+      "End": 3539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3679,
+      "End": 3688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3758,
+      "End": 3765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3793,
+      "End": 3801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4004,
+      "End": 4011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4057,
+      "End": 4064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4092,
+      "End": 4099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4239,
+      "End": 4248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5935",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4318,
+      "End": 4325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::pointer-cast::5970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4353,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::cube_setup",
+      "Category": "semantic-review",
+      "Symbol": "cube_setup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 525,
+      "End": 2569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::setdown_cube",
+      "Category": "semantic-review",
+      "Symbol": "setdown_cube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2805,
+      "End": 3809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::save_cube_struct",
+      "Category": "semantic-review",
+      "Symbol": "save_cube_struct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3812,
+      "End": 4369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::restore_cube_struct",
+      "Category": "semantic-review",
+      "Symbol": "restore_cube_struct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4372,
+      "End": 4528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::1528",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1528,
+      "End": 1538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::1559",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1559,
+      "End": 1569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::1647",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1647,
+      "End": 1657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::1796",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1796,
+      "End": 1847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::1900",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1900,
+      "End": 1943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::2276",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2276,
+      "End": 2286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::2316",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2316,
+      "End": 2326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cubestr.c::macro-inline::2360",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2360,
+      "End": 2370
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    Module: cubestr.c -- routines for managing the global cube structure\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    cube_setup -- assume that the fields \"num_vars\", \"num_binary_vars\", and\n    part_size[num_binary_vars .. num_vars-1] are setup, and initialize the\n    rest of cube and cdata.\n\n    If a part_size is \u003c 0, then the field size is abs(part_size) and the\n    field read from the input is symbolic.\n*/\nfunc cube_setup() {\n    register int i, var;\n    register pcube p;\n\n    if cube.num_binary_vars \u003c 0 || cube.num_vars \u003c cube.num_binary_vars {\n    fatal(\"cube size is silly, error in .i/.o or .mv\"); }\n\n    cube.num_mv_vars = cube.num_vars - cube.num_binary_vars;\n    if cube.num_mv_vars \u003e 0 {\n        cube.output = cube.num_vars - 1;\n    } else {\n        cube.output = -1;\n    }\n\n    cube.size = 0;\n    cube.first_part = ALLOC(int, cube.num_vars);\n    cube.last_part = ALLOC(int, cube.num_vars);\n    cube.first_word = ALLOC(int, cube.num_vars);\n    cube.last_word = ALLOC(int, cube.num_vars);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    if var \u003c cube.num_binary_vars {\n        cube.part_size[var] = 2; }\n    cube.first_part[var] = cube.size;\n    // inlining of macro WHICH_WORD\n    cube.first_word[var] = (((cube.size) \u003e\u003e LOGBPI) + 1);\n    cube.size += ABS(cube.part_size[var]);\n    cube.last_part[var] = cube.size - 1;\n    // inlining of macro WHICH_WORD\n    cube.last_word[var] = (((cube.size - 1) \u003e\u003e LOGBPI) + 1);\n    }\n\n    cube.var_mask = ALLOC(pset, cube.num_vars);\n    cube.sparse = ALLOC(int, cube.num_vars);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.binary_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.mv_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    p = cube.var_mask[var] = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n    }\n    if var \u003c cube.num_binary_vars {\n        INLINEset_or(cube.binary_mask, cube.binary_mask, p);\n        cube.sparse[var] = 0;\n    } else {\n        INLINEset_or(cube.mv_mask, cube.mv_mask, p);\n        cube.sparse[var] = 1;\n    }\n    }\n    if cube.num_binary_vars == 0 {\n    cube.inword = -1;\n    } else {\n    cube.inword = cube.last_word[cube.num_binary_vars - 1];\n    cube.inmask = cube.binary_mask[cube.inword] \u0026 DISJOINT;\n    }\n\n    cube.temp = ALLOC(pset, CUBE_TEMP);\n    for i = 0; i \u003c CUBE_TEMP; i++ {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.temp[i] = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    }\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.fullset = set_fill(set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cube.emptyset = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n\n    cdata.part_zeros = ALLOC(int, cube.size);\n    cdata.var_zeros = ALLOC(int, cube.num_vars);\n    cdata.parts_active = ALLOC(int, cube.num_vars);\n    cdata.is_unate = ALLOC(int, cube.num_vars);\n}\n\f\n/*\n    setdown_cube -- free memory allocated for the cube/cdata structs\n    (free's all but the part_size array)\n\n    (I wanted to call this cube_setdown, but that violates the 8-character\n    external routine limit on the IBM !)\n*/\nfunc setdown_cube() {\n    register int i, var;\n\n    FREE(cube.first_part);\n    FREE(cube.last_part);\n    FREE(cube.first_word);\n    FREE(cube.last_word);\n    FREE(cube.sparse);\n\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.binary_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.mv_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.fullset);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.emptyset);\n    for var = 0; var \u003c cube.num_vars; var++ {\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.var_mask[var]);\n    }\n    FREE(cube.var_mask);\n\n    for i = 0; i \u003c CUBE_TEMP; i++ {\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cube.temp[i]);\n    }\n    FREE(cube.temp);\n\n    FREE(cdata.part_zeros);\n    FREE(cdata.var_zeros);\n    FREE(cdata.parts_active);\n    FREE(cdata.is_unate);\n\n    cube.first_part = cube.last_part = (int *) nil;\n    cube.first_word = cube.last_word = (int *) nil;\n    cube.sparse = (int *) nil;\n    cube.binary_mask = cube.mv_mask = (pcube) nil;\n    cube.fullset = cube.emptyset = (pcube) nil;\n    cube.var_mask = cube.temp = (pcube *) nil;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) nil;\n    cdata.is_unate = (bool *) nil;\n}\n\n\nfunc save_cube_struct() {\n    temp_cube_save = cube;              /* structure copy ! */\n    temp_cdata_save = cdata;            /*      \"\"          */\n\n    cube.first_part = cube.last_part = (int *) nil;\n    cube.first_word = cube.last_word = (int *) nil;\n    cube.part_size = (int *) nil;\n    cube.binary_mask = cube.mv_mask = (pcube) nil;\n    cube.fullset = cube.emptyset = (pcube) nil;\n    cube.var_mask = cube.temp = (pcube *) nil;\n\n    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *) nil;\n    cdata.is_unate = (bool *) nil;\n}\n\n\nfunc restore_cube_struct() {\n    cube = temp_cube_save;              /* structure copy ! */\n    cdata = temp_cdata_save;            /*      \"\"          */\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

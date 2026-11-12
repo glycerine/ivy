@@ -1,0 +1,1548 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h",
+  "SHA256": "2caeb07a14464ace31924c4a1a686728fed51c728b06c36c529caea9c73b7b06",
+  "Library": [
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 91,
+        "Column": 26,
+        "ByteOffset": 2924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *Scl_Con_t   = ABC_CALLOC( Scl_Con_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pInCellDef );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pModelName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 4151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pFileName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 145,
+        "Column": 27,
+        "ByteOffset": 4713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( p.pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 146,
+        "Column": 10,
+        "ByteOffset": 4750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( Buffer, 1000, pFile )  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 18,
+        "ByteOffset": 4817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( Buffer, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 19,
+        "ByteOffset": 4915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken2 = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 13,
+        "ByteOffset": 4981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Line %d: Skipping directive \\\"%s\\\" without argument.\\n\", nLines, pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 19,
+        "ByteOffset": 5115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken3 = strtok( nil, \" \\t\\r\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 157,
+        "Column": 13,
+        "ByteOffset": 5153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp(pToken, \".model\") {                                p.pModelName  = Abc_UtilStrsav(pToken2);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 158,
+        "Column": 20,
+        "ByteOffset": 5271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_CELL)) {  p.pInCellDef  = Abc_UtilStrsav(pToken2);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 159,
+        "Column": 20,
+        "ByteOffset": 5384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_ARR)) {  p.tInArrDef   = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 159,
+        "Column": 100,
+        "ByteOffset": 5464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_ARR)) {  p.tInArrDef   = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 160,
+        "Column": 20,
+        "ByteOffset": 5499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_SLEW)) {  p.tInSlewDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 160,
+        "Column": 101,
+        "ByteOffset": 5580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_SLEW)) {  p.tInSlewDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 161,
+        "Column": 20,
+        "ByteOffset": 5615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_LOAD)) {  p.tInLoadDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 161,
+        "Column": 101,
+        "ByteOffset": 5696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_LOAD)) {  p.tInLoadDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 162,
+        "Column": 20,
+        "ByteOffset": 5731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_REQ)) {  p.tOutReqDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 162,
+        "Column": 101,
+        "ByteOffset": 5812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_REQ)) {  p.tOutReqDef  = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 163,
+        "Column": 20,
+        "ByteOffset": 5847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_LOAD)) {  p.tOutLoadDef = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 163,
+        "Column": 102,
+        "ByteOffset": 5929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_LOAD)) {  p.tOutLoadDef = Scl_Flt2Int(atof(pToken2));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 36,
+        "ByteOffset": 5980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if pToken3 == nil { printf( \"Directive %s should be followed by two arguments.\\n\", pToken ); continue; "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 165,
+        "Column": 20,
+        "ByteOffset": 6083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_CELL)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_PtrWriteEntry( \u0026p.vInCells,  Num-1, Abc_UtilStrsav(pToken3) ); }    else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 200,
+        "ByteOffset": 6263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_CELL)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_PtrWriteEntry( \u0026p.vInCells,  Num-1, Abc_UtilStrsav(pToken3) ); }    else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 166,
+        "Column": 20,
+        "ByteOffset": 6351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 166,
+        "Column": 172,
+        "ByteOffset": 6503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 199,
+        "ByteOffset": 6530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 167,
+        "Column": 20,
+        "ByteOffset": 6618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 167,
+        "Column": 173,
+        "ByteOffset": 6771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 200,
+        "ByteOffset": 6798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 168,
+        "Column": 20,
+        "ByteOffset": 6886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 168,
+        "Column": 173,
+        "ByteOffset": 7039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 200,
+        "ByteOffset": 7066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 169,
+        "Column": 20,
+        "ByteOffset": 7154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 169,
+        "Column": 173,
+        "ByteOffset": 7307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 200,
+        "ByteOffset": 7334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 170,
+        "Column": 20,
+        "ByteOffset": 7423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 170,
+        "Column": 174,
+        "ByteOffset": 7577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 201,
+        "ByteOffset": 7604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD)) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 18,
+        "ByteOffset": 7691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { printf( \"Line %d: Skipping unrecognized directive \\\"%s\\\".\\n\", nLines, pToken ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 9121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 201,
+        "Column": 39,
+        "ByteOffset": 9544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = pFileName ? fopen( pFileName, \"wb\" ) : stdout;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 201,
+        "Column": 66,
+        "ByteOffset": 9571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = pFileName ? fopen( pFileName, \"wb\" ) : stdout;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 9609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 9693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", p.pModelName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 30,
+        "ByteOffset": 9770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pInCellDef {        fprintf( pFile, \".default_%s %s\\n\",   SCL_INPUT_CELL,  p.pInCellDef ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 30,
+        "ByteOffset": 9872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.tInArrDef   != 0 {  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_ARR,   Scl_Int2Flt(p.tInArrDef) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 30,
+        "ByteOffset": 9986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.tInSlewDef  != 0 {  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_SLEW,  Scl_Int2Flt(p.tInSlewDef) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 30,
+        "ByteOffset": 10101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.tInLoadDef  != 0 {  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_LOAD,  Scl_Int2Flt(p.tInLoadDef) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 30,
+        "ByteOffset": 10216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.tOutReqDef  != 0 {  fprintf( pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_REQ,  Scl_Int2Flt(p.tOutReqDef) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 30,
+        "ByteOffset": 10331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.tOutLoadDef != 0 {  fprintf( pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_LOAD, Scl_Int2Flt(p.tOutLoadDef) ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 215,
+        "Column": 88,
+        "ByteOffset": 10506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName \u0026\u0026 (!p.pInCellDef || strcmp(pName,p.pInCellDef)) )  fprintf( pFile, \".%s %s %s\\n\",   SCL_INPUT_CELL,  Abc_NamStr(p.pNamI, i+1), pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 119,
+        "ByteOffset": 10537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName \u0026\u0026 (!p.pInCellDef || strcmp(pName,p.pInCellDef)) )  fprintf( pFile, \".%s %s %s\\n\",   SCL_INPUT_CELL,  Abc_NamStr(p.pNamI, i+1), pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 86,
+        "ByteOffset": 10707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntForEachEntry( \u0026p.vInArrs, Value, i )        if ( Value != p.tInArrDef )   fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_ARR,   Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 86,
+        "ByteOffset": 10890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntForEachEntry( \u0026p.vInSlews, Value, i )       if ( Value != p.tInSlewDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_SLEW,  Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 86,
+        "ByteOffset": 11073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntForEachEntry( \u0026p.vInLoads, Value, i )       if ( Value != p.tInLoadDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_LOAD,  Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 86,
+        "ByteOffset": 11256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntForEachEntry( \u0026p.vOutReqs, Value, i )       if ( Value != p.tOutReqDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_REQ,  Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 86,
+        "ByteOffset": 11439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntForEachEntry( \u0026p.vOutLoads, Value, i )      if ( Value != p.tOutLoadDef ) fprintf( pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_LOAD, Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 222,
+        "Column": 17,
+        "ByteOffset": 11554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 11571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose ( pFile ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Scl_Flt2Int",
+      "Start": 2199,
+      "End": 2276,
+      "BodyStart": 2248,
+      "Original": "static inline int       Scl_Flt2Int( float w )   { return SCL_NUM*w;        }",
+      "Draft": "func Scl_Flt2Int(w float32) int32 { return SCL_NUM*w;        }"
+    },
+    {
+      "Name": "Scl_Int2Flt",
+      "Start": 2277,
+      "End": 2354,
+      "BodyStart": 2326,
+      "Original": "static inline float     Scl_Int2Flt( int i )     { return (float)i/SCL_NUM; }",
+      "Draft": "func Scl_Int2Flt(i int32) float32 { return float32(i)/SCL_NUM; }"
+    },
+    {
+      "Name": "Scl_ConAlloc",
+      "Start": 2831,
+      "End": 3771,
+      "BodyStart": 2928,
+      "Original": "static inline Scl_Con_t * Scl_ConAlloc( char * pFileName, Abc_Nam_t * pNamI, Abc_Nam_t * pNamO )\n{\n    Scl_Con_t * p  = ABC_CALLOC( Scl_Con_t, 1 );\n    p-\u003epFileName   = Abc_UtilStrsav( pFileName );\n    p-\u003epNamI       = pNamI;\n    p-\u003epNamO       = pNamO;\n    p-\u003epModelName  = NULL;\n    p-\u003epInCellDef  = NULL;\n    p-\u003etInArrDef   = SCL_INFINITY;\n    p-\u003etInSlewDef  = SCL_INFINITY;\n    p-\u003etInLoadDef  = SCL_INFINITY;\n    p-\u003etOutReqDef  = SCL_INFINITY;\n    p-\u003etOutLoadDef = SCL_INFINITY;\n    Vec_PtrFill( \u0026p-\u003evInCells,  Abc_NamObjNumMax(pNamI)-1, NULL );\n    Vec_IntFill( \u0026p-\u003evInArrs,   Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p-\u003evInSlews,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p-\u003evInLoads,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p-\u003evOutReqs,  Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p-\u003evOutLoads, Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    return p;\n}",
+      "Draft": "func Scl_ConAlloc(pFileName string, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) *Scl_Con_t {\n    var p *Scl_Con_t   = new(Scl_Con_t);\n    p.pFileName   = Abc_UtilStrsav( pFileName );\n    p.pNamI       = pNamI;\n    p.pNamO       = pNamO;\n    p.pModelName  = nil;\n    p.pInCellDef  = nil;\n    p.tInArrDef   = SCL_INFINITY;\n    p.tInSlewDef  = SCL_INFINITY;\n    p.tInLoadDef  = SCL_INFINITY;\n    p.tOutReqDef  = SCL_INFINITY;\n    p.tOutLoadDef = SCL_INFINITY;\n    Vec_PtrFill( \u0026p.vInCells,  Abc_NamObjNumMax(pNamI)-1, nil );\n    Vec_IntFill( \u0026p.vInArrs,   Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vInSlews,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vInLoads,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vOutReqs,  Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vOutLoads, Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    return p;\n}"
+    },
+    {
+      "Name": "Scl_ConFree",
+      "Start": 3772,
+      "End": 4272,
+      "BodyStart": 3820,
+      "Original": "static inline void Scl_ConFree( Scl_Con_t * p )\n{\n    Vec_PtrErase( \u0026p-\u003evInCellsPtr );\n    Vec_PtrFreeData( \u0026p-\u003evInCells );\n    Vec_PtrErase( \u0026p-\u003evInCells );\n    Vec_IntErase( \u0026p-\u003evInArrs );\n    Vec_IntErase( \u0026p-\u003evInSlews );\n    Vec_IntErase( \u0026p-\u003evInLoads );\n    Vec_IntErase( \u0026p-\u003evOutReqs );\n    Vec_IntErase( \u0026p-\u003evOutLoads );\n    Abc_NamDeref( p-\u003epNamI );\n    Abc_NamDeref( p-\u003epNamO );\n    ABC_FREE( p-\u003epInCellDef );\n    ABC_FREE( p-\u003epModelName );\n    ABC_FREE( p-\u003epFileName );\n    ABC_FREE( p );\n}",
+      "Draft": "func Scl_ConFree(p *Scl_Con_t) {\n    Vec_PtrErase( \u0026p.vInCellsPtr );\n    Vec_PtrFreeData( \u0026p.vInCells );\n    Vec_PtrErase( \u0026p.vInCells );\n    Vec_IntErase( \u0026p.vInArrs );\n    Vec_IntErase( \u0026p.vInSlews );\n    Vec_IntErase( \u0026p.vInLoads );\n    Vec_IntErase( \u0026p.vOutReqs );\n    Vec_IntErase( \u0026p.vOutLoads );\n    Abc_NamDeref( p.pNamI );\n    Abc_NamDeref( p.pNamO );\n    ABC_FREE( p.pInCellDef );\n    ABC_FREE( p.pModelName );\n    ABC_FREE( p.pFileName );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Scl_ConParse",
+      "Start": 4531,
+      "End": 9250,
+      "BodyStart": 4617,
+      "Original": "static inline int Scl_ConParse( Scl_Con_t * p, Abc_Nam_t * pNamI, Abc_Nam_t * pNamO )\n{\n    char Buffer[1000];\n    char * pToken, * pToken2, * pToken3, * pName; \n    int i, Num = -1, nLines = 0; int Value;\n    FILE * pFile = fopen( p-\u003epFileName, \"rb\" );\n    while ( fgets( Buffer, 1000, pFile ) )\n    {\n        nLines++;\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if ( pToken == NULL )\n            continue;\n        pToken2 = strtok( NULL, \" \\t\\r\\n\" );\n        if ( pToken2 == NULL )\n        {\n            printf( \"Line %d: Skipping directive \\\"%s\\\" without argument.\\n\", nLines, pToken );\n            continue;\n        }\n        pToken3 = strtok( NULL, \" \\t\\r\\n\" );\n        if ( !strcmp(pToken, \".model\") )                                p-\u003epModelName  = Abc_UtilStrsav(pToken2);\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_CELL)) )  p-\u003epInCellDef  = Abc_UtilStrsav(pToken2);\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_ARR))  )  p-\u003etInArrDef   = Scl_Flt2Int(atof(pToken2));\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_SLEW)) )  p-\u003etInSlewDef  = Scl_Flt2Int(atof(pToken2));\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_LOAD)) )  p-\u003etInLoadDef  = Scl_Flt2Int(atof(pToken2));\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_REQ)) )  p-\u003etOutReqDef  = Scl_Flt2Int(atof(pToken2));\n        else if ( !strcmp(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_LOAD)))  p-\u003etOutLoadDef = Scl_Flt2Int(atof(pToken2));\n        else if ( pToken3 == NULL ) { printf( \"Directive %s should be followed by two arguments.\\n\", pToken ); continue; }\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_CELL))  )     if ( (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 )  Vec_PtrWriteEntry( \u0026p-\u003evInCells,  Num-1, Abc_UtilStrsav(pToken3) );    else printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 );\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR))   )     if ( (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 )  Vec_IntWriteEntry( \u0026p-\u003evInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); else printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 );\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW))  )     if ( (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 )  Vec_IntWriteEntry( \u0026p-\u003evInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); else printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 );\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD))  )     if ( (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 )  Vec_IntWriteEntry( \u0026p-\u003evInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); else printf( \"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2 );\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ))  )     if ( (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 )  Vec_IntWriteEntry( \u0026p-\u003evOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); else printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 );\n        else if ( !strcmp(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD)) )     if ( (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 )  Vec_IntWriteEntry( \u0026p-\u003evOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); else printf( \"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2 );\n        else printf( \"Line %d: Skipping unrecognized directive \\\"%s\\\".\\n\", nLines, pToken );\n    }\n    // set missing defaults\n    if ( p-\u003epInCellDef  == NULL )          p-\u003epInCellDef  = NULL; // consider using buffer from the current library\n    if ( p-\u003etInArrDef   == SCL_INFINITY )  p-\u003etInArrDef   = 0;\n    if ( p-\u003etInSlewDef  == SCL_INFINITY )  p-\u003etInSlewDef  = 0;\n    if ( p-\u003etInLoadDef  == SCL_INFINITY )  p-\u003etInLoadDef  = 0;\n    if ( p-\u003etOutReqDef  == SCL_INFINITY )  p-\u003etOutReqDef  = 0;\n    if ( p-\u003etOutLoadDef == SCL_INFINITY )  p-\u003etOutLoadDef = 0;\n    // set individual defaults\n    if ( p-\u003epInCellDef )\n    Vec_PtrForEachEntry(char *, \u0026p-\u003evInCells, pName, i) if ( pName == NULL )          Vec_PtrWriteEntry( \u0026p-\u003evInCells,  i, Abc_UtilStrsav(p-\u003epInCellDef) );\n    Vec_IntForEachEntry( \u0026p-\u003evInArrs, Value, i )        if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p-\u003evInArrs,   i, p-\u003etInArrDef );\n    Vec_IntForEachEntry( \u0026p-\u003evInSlews, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p-\u003evInSlews,  i, p-\u003etInSlewDef );\n    Vec_IntForEachEntry( \u0026p-\u003evInLoads, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p-\u003evInLoads,  i, p-\u003etInLoadDef );\n    Vec_IntForEachEntry( \u0026p-\u003evOutReqs, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p-\u003evOutReqs,  i, p-\u003etOutReqDef );\n    Vec_IntForEachEntry( \u0026p-\u003evOutLoads, Value, i )      if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p-\u003evOutLoads, i, p-\u003etOutLoadDef );\n\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Scl_ConParse(p *Scl_Con_t, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) int32 {\n    var Buffer [1000]byte;\n    var pToken, pToken2, pToken3, pName string; \n    var i int32;\n    var Num int32 = -1;\n    var nLines int32; var Value int32;\n    var pFile *os.File  = os.Open(p.pFileName);\n    for  fgets( Buffer, 1000, pFile )  {\n        nLines++;\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if pToken == nil {\n            continue; }\n        pToken2 = strtok( nil, \" \\t\\r\\n\" );\n        if pToken2 == nil {\n            fmt.Printf(\"Line %d: Skipping directive \\\"%s\\\" without argument.\\n\", nLines, pToken);\n            continue;\n        }\n        pToken3 = strtok( nil, \" \\t\\r\\n\" );\n        if !(int32(strings.Compare(pToken, \".model\")) != 0) {                                p.pModelName  = Abc_UtilStrsav(pToken2);\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_CELL))) != 0) {  p.pInCellDef  = Abc_UtilStrsav(pToken2);\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_ARR))) != 0) {  p.tInArrDef   = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_SLEW))) != 0) {  p.tInSlewDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_LOAD))) != 0) {  p.tInLoadDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_REQ))) != 0) {  p.tOutReqDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_LOAD))) != 0) {  p.tOutLoadDef = Scl_Flt2Int(atof(pToken2));\n        } else if pToken3 == nil { fmt.Printf(\"Directive %s should be followed by two arguments.\\n\", pToken); continue; \n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_CELL))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_PtrWriteEntry( \u0026p.vInCells,  Num-1, Abc_UtilStrsav(pToken3) ); }    else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ))) != 0) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD))) != 0) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else { fmt.Printf(\"Line %d: Skipping unrecognized directive \\\"%s\\\".\\n\", nLines, pToken); }\n    }\n    // set missing defaults\n    if p.pInCellDef  == nil {          p.pInCellDef  = nil; } // consider using buffer from the current library\n    if p.tInArrDef   == SCL_INFINITY {  p.tInArrDef   = 0; }\n    if p.tInSlewDef  == SCL_INFINITY {  p.tInSlewDef  = 0; }\n    if p.tInLoadDef  == SCL_INFINITY {  p.tInLoadDef  = 0; }\n    if p.tOutReqDef  == SCL_INFINITY {  p.tOutReqDef  = 0; }\n    if p.tOutLoadDef == SCL_INFINITY {  p.tOutLoadDef = 0; }\n    // set individual defaults\n    if p.pInCellDef {\n    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName == nil )          Vec_PtrWriteEntry( \u0026p.vInCells,  i, Abc_UtilStrsav(p.pInCellDef) ); }\n    Vec_IntForEachEntry( \u0026p.vInArrs, Value, i )        if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInArrs,   i, p.tInArrDef );\n    Vec_IntForEachEntry( \u0026p.vInSlews, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInSlews,  i, p.tInSlewDef );\n    Vec_IntForEachEntry( \u0026p.vInLoads, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInLoads,  i, p.tInLoadDef );\n    Vec_IntForEachEntry( \u0026p.vOutReqs, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vOutReqs,  i, p.tOutReqDef );\n    Vec_IntForEachEntry( \u0026p.vOutLoads, Value, i )      if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vOutLoads, i, p.tOutLoadDef );\n\n    _ = (pFile).Close();\n    return 1;\n}"
+    },
+    {
+      "Name": "Scl_ConRead",
+      "Start": 9251,
+      "End": 9509,
+      "BodyStart": 9347,
+      "Original": "static inline Scl_Con_t * Scl_ConRead( char * pFileName, Abc_Nam_t * pNamI, Abc_Nam_t * pNamO )\n{\n    Scl_Con_t * p = Scl_ConAlloc( pFileName, pNamI, pNamO );\n    if ( Scl_ConParse(p, pNamI, pNamO) )\n        return p;\n    Scl_ConFree( p );\n    return NULL;\n}",
+      "Draft": "func Scl_ConRead(pFileName string, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) *Scl_Con_t {\n    var p *Scl_Con_t  = Scl_ConAlloc( pFileName, pNamI, pNamO );\n    if Scl_ConParse(p, pNamI, pNamO) != 0 {\n        return p; }\n    Scl_ConFree( p );\n    return nil;\n}"
+    },
+    {
+      "Name": "Scl_ConWrite",
+      "Start": 9510,
+      "End": 11735,
+      "BodyStart": 9577,
+      "Original": "static inline void Scl_ConWrite( Scl_Con_t * p, char * pFileName )\n{\n    char * pName; int Value; int i;\n    FILE * pFile = pFileName ? fopen( pFileName, \"wb\" ) : stdout;\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \".model %s\\n\", p-\u003epModelName );\n\n    if ( p-\u003epInCellDef )        fprintf( pFile, \".default_%s %s\\n\",   SCL_INPUT_CELL,  p-\u003epInCellDef );\n    if ( p-\u003etInArrDef   != 0 )  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_ARR,   Scl_Int2Flt(p-\u003etInArrDef) );\n    if ( p-\u003etInSlewDef  != 0 )  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_SLEW,  Scl_Int2Flt(p-\u003etInSlewDef) );\n    if ( p-\u003etInLoadDef  != 0 )  fprintf( pFile, \".default_%s %.2f\\n\", SCL_INPUT_LOAD,  Scl_Int2Flt(p-\u003etInLoadDef) );\n    if ( p-\u003etOutReqDef  != 0 )  fprintf( pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_REQ,  Scl_Int2Flt(p-\u003etOutReqDef) );\n    if ( p-\u003etOutLoadDef != 0 )  fprintf( pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_LOAD, Scl_Int2Flt(p-\u003etOutLoadDef) );\n\n    Vec_PtrForEachEntry(char *, \u0026p-\u003evInCells, pName, i) if ( pName \u0026\u0026 (!p-\u003epInCellDef || strcmp(pName,p-\u003epInCellDef)) )  fprintf( pFile, \".%s %s %s\\n\",   SCL_INPUT_CELL,  Abc_NamStr(p-\u003epNamI, i+1), pName );\n    Vec_IntForEachEntry( \u0026p-\u003evInArrs, Value, i )        if ( Value != p-\u003etInArrDef )   fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_ARR,   Abc_NamStr(p-\u003epNamI, i+1), Scl_Int2Flt(Value) );\n    Vec_IntForEachEntry( \u0026p-\u003evInSlews, Value, i )       if ( Value != p-\u003etInSlewDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_SLEW,  Abc_NamStr(p-\u003epNamI, i+1), Scl_Int2Flt(Value) );\n    Vec_IntForEachEntry( \u0026p-\u003evInLoads, Value, i )       if ( Value != p-\u003etInLoadDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_INPUT_LOAD,  Abc_NamStr(p-\u003epNamI, i+1), Scl_Int2Flt(Value) );\n    Vec_IntForEachEntry( \u0026p-\u003evOutReqs, Value, i )       if ( Value != p-\u003etOutReqDef )  fprintf( pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_REQ,  Abc_NamStr(p-\u003epNamO, i+1), Scl_Int2Flt(Value) );\n    Vec_IntForEachEntry( \u0026p-\u003evOutLoads, Value, i )      if ( Value != p-\u003etOutLoadDef ) fprintf( pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_LOAD, Abc_NamStr(p-\u003epNamO, i+1), Scl_Int2Flt(Value) );\n\n    if ( pFile != stdout )\n        fclose ( pFile );\n}",
+      "Draft": "func Scl_ConWrite(p *Scl_Con_t, pFileName string) {\n    var pName string; var Value int32; var i int32;\n    var pFile *os.File  = pFileName ? os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : os.Stdout;\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \".model %s\\n\", p.pModelName);\n\n    if p.pInCellDef {        fmt.Fprintf(pFile, \".default_%s %s\\n\", SCL_INPUT_CELL, p.pInCellDef); }\n    if p.tInArrDef   != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_ARR, Scl_Int2Flt(p.tInArrDef)); }\n    if p.tInSlewDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_SLEW, Scl_Int2Flt(p.tInSlewDef)); }\n    if p.tInLoadDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_LOAD, Scl_Int2Flt(p.tInLoadDef)); }\n    if p.tOutReqDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_REQ, Scl_Int2Flt(p.tOutReqDef)); }\n    if p.tOutLoadDef != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_LOAD, Scl_Int2Flt(p.tOutLoadDef)); }\n\n    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName \u0026\u0026 (!p.pInCellDef || int32(strings.Compare(pName, p.pInCellDef))) )  fmt.Fprintf(pFile, \".%s %s %s\\n\", SCL_INPUT_CELL, Abc_NamStr(p.pNamI, i+1), pName);\n    Vec_IntForEachEntry( \u0026p.vInArrs, Value, i )        if ( Value != p.tInArrDef )   fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_ARR, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vInSlews, Value, i )       if ( Value != p.tInSlewDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_SLEW, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vInLoads, Value, i )       if ( Value != p.tInLoadDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_LOAD, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vOutReqs, Value, i )       if ( Value != p.tOutReqDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_REQ, Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vOutLoads, Value, i )      if ( Value != p.tOutLoadDef ) fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_LOAD, Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value));\n\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n}"
+    },
+    {
+      "Name": "Scl_ConHasInCells_",
+      "Start": 11985,
+      "End": 12122,
+      "BodyStart": 12049,
+      "Original": "static inline int    Scl_ConHasInCells_( Scl_Con_t * p )        { return Vec_PtrCountZero(\u0026p-\u003evInCells)  != Vec_PtrSize(\u0026p-\u003evInCells);  }",
+      "Draft": "func Scl_ConHasInCells_(p *Scl_Con_t) int32 { return Vec_PtrCountZero(\u0026p.vInCells)  != Vec_PtrSize(\u0026p.vInCells);  }"
+    },
+    {
+      "Name": "Scl_ConHasInArrs_",
+      "Start": 12123,
+      "End": 12260,
+      "BodyStart": 12187,
+      "Original": "static inline int    Scl_ConHasInArrs_( Scl_Con_t * p )         { return Vec_IntCountZero(\u0026p-\u003evInArrs)   != Vec_IntSize(\u0026p-\u003evInArrs);   }",
+      "Draft": "func Scl_ConHasInArrs_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInArrs)   != Vec_IntSize(\u0026p.vInArrs);   }"
+    },
+    {
+      "Name": "Scl_ConHasInSlews_",
+      "Start": 12261,
+      "End": 12398,
+      "BodyStart": 12325,
+      "Original": "static inline int    Scl_ConHasInSlews_( Scl_Con_t * p )        { return Vec_IntCountZero(\u0026p-\u003evInSlews)  != Vec_IntSize(\u0026p-\u003evInSlews);  }",
+      "Draft": "func Scl_ConHasInSlews_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInSlews)  != Vec_IntSize(\u0026p.vInSlews);  }"
+    },
+    {
+      "Name": "Scl_ConHasInLoads_",
+      "Start": 12399,
+      "End": 12536,
+      "BodyStart": 12463,
+      "Original": "static inline int    Scl_ConHasInLoads_( Scl_Con_t * p )        { return Vec_IntCountZero(\u0026p-\u003evInLoads)  != Vec_IntSize(\u0026p-\u003evInLoads);  }",
+      "Draft": "func Scl_ConHasInLoads_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInLoads)  != Vec_IntSize(\u0026p.vInLoads);  }"
+    },
+    {
+      "Name": "Scl_ConHasOutReqs_",
+      "Start": 12537,
+      "End": 12674,
+      "BodyStart": 12601,
+      "Original": "static inline int    Scl_ConHasOutReqs_( Scl_Con_t * p )        { return Vec_IntCountZero(\u0026p-\u003evOutReqs)  != Vec_IntSize(\u0026p-\u003evOutReqs);  }",
+      "Draft": "func Scl_ConHasOutReqs_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vOutReqs)  != Vec_IntSize(\u0026p.vOutReqs);  }"
+    },
+    {
+      "Name": "Scl_ConHasOutLoads_",
+      "Start": 12675,
+      "End": 12812,
+      "BodyStart": 12739,
+      "Original": "static inline int    Scl_ConHasOutLoads_( Scl_Con_t * p )       { return Vec_IntCountZero(\u0026p-\u003evOutLoads) != Vec_IntSize(\u0026p-\u003evOutLoads); }",
+      "Draft": "func Scl_ConHasOutLoads_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vOutLoads) != Vec_IntSize(\u0026p.vOutLoads); }"
+    },
+    {
+      "Name": "Scl_ConGetInCell_",
+      "Start": 12814,
+      "End": 12929,
+      "BodyStart": 12878,
+      "Original": "static inline char * Scl_ConGetInCell_( Scl_Con_t * p, int i )  { return (char*)Vec_PtrEntry( \u0026p-\u003evInCells,  i ); }",
+      "Draft": "func Scl_ConGetInCell_(p *Scl_Con_t, i int32) string { return (char*)Vec_PtrEntry( \u0026p.vInCells,  i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInArr_",
+      "Start": 12930,
+      "End": 13038,
+      "BodyStart": 12994,
+      "Original": "static inline int    Scl_ConGetInArr_( Scl_Con_t * p, int i )   { return Vec_IntEntry( \u0026p-\u003evInArrs,   i ); }",
+      "Draft": "func Scl_ConGetInArr_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInArrs,   i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInSlew_",
+      "Start": 13039,
+      "End": 13147,
+      "BodyStart": 13103,
+      "Original": "static inline int    Scl_ConGetInSlew_( Scl_Con_t * p, int i )  { return Vec_IntEntry( \u0026p-\u003evInSlews,  i ); }",
+      "Draft": "func Scl_ConGetInSlew_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInSlews,  i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInLoad_",
+      "Start": 13148,
+      "End": 13256,
+      "BodyStart": 13212,
+      "Original": "static inline int    Scl_ConGetInLoad_( Scl_Con_t * p, int i )  { return Vec_IntEntry( \u0026p-\u003evInLoads,  i ); }",
+      "Draft": "func Scl_ConGetInLoad_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInLoads,  i ); }"
+    },
+    {
+      "Name": "Scl_ConGetOutReq_",
+      "Start": 13257,
+      "End": 13365,
+      "BodyStart": 13321,
+      "Original": "static inline int    Scl_ConGetOutReq_( Scl_Con_t * p, int i )  { return Vec_IntEntry( \u0026p-\u003evOutReqs,  i ); }",
+      "Draft": "func Scl_ConGetOutReq_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vOutReqs,  i ); }"
+    },
+    {
+      "Name": "Scl_ConGetOutLoad_",
+      "Start": 13366,
+      "End": 13474,
+      "BodyStart": 13430,
+      "Original": "static inline int    Scl_ConGetOutLoad_( Scl_Con_t * p, int i ) { return Vec_IntEntry( \u0026p-\u003evOutLoads, i ); }",
+      "Draft": "func Scl_ConGetOutLoad_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vOutLoads, i ); }"
+    },
+    {
+      "Name": "Scl_ConIsRunning",
+      "Start": 13764,
+      "End": 13871,
+      "BodyStart": 13818,
+      "Original": "static inline int    Scl_ConIsRunning()               { return Scl_ConReadMan() != NULL;                  }",
+      "Draft": "func Scl_ConIsRunning() int32 { return Scl_ConReadMan() != nil;                  }"
+    },
+    {
+      "Name": "Scl_ConHasInCells",
+      "Start": 13873,
+      "End": 13980,
+      "BodyStart": 13927,
+      "Original": "static inline int    Scl_ConHasInCells()              { return Scl_ConHasInCells_ ( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasInCells() int32 { return Scl_ConHasInCells_ ( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConHasInArrs",
+      "Start": 13981,
+      "End": 14088,
+      "BodyStart": 14035,
+      "Original": "static inline int    Scl_ConHasInArrs()               { return Scl_ConHasInArrs_  ( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasInArrs() int32 { return Scl_ConHasInArrs_  ( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConHasInSlews",
+      "Start": 14089,
+      "End": 14196,
+      "BodyStart": 14143,
+      "Original": "static inline int    Scl_ConHasInSlews()              { return Scl_ConHasInSlews_ ( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasInSlews() int32 { return Scl_ConHasInSlews_ ( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConHasInLoads",
+      "Start": 14197,
+      "End": 14304,
+      "BodyStart": 14251,
+      "Original": "static inline int    Scl_ConHasInLoads()              { return Scl_ConHasInLoads_ ( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasInLoads() int32 { return Scl_ConHasInLoads_ ( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConHasOutReqs",
+      "Start": 14305,
+      "End": 14412,
+      "BodyStart": 14359,
+      "Original": "static inline int    Scl_ConHasOutReqs()              { return Scl_ConHasOutReqs_ ( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasOutReqs() int32 { return Scl_ConHasOutReqs_ ( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConHasOutLoads",
+      "Start": 14413,
+      "End": 14520,
+      "BodyStart": 14467,
+      "Original": "static inline int    Scl_ConHasOutLoads()             { return Scl_ConHasOutLoads_( Scl_ConReadMan() );   }",
+      "Draft": "func Scl_ConHasOutLoads() int32 { return Scl_ConHasOutLoads_( Scl_ConReadMan() );   }"
+    },
+    {
+      "Name": "Scl_ConGetInCell",
+      "Start": 14522,
+      "End": 14629,
+      "BodyStart": 14576,
+      "Original": "static inline char * Scl_ConGetInCell( int i )        { return Scl_ConGetInCell_ ( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetInCell(i int32) string { return Scl_ConGetInCell_ ( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInArr",
+      "Start": 14630,
+      "End": 14737,
+      "BodyStart": 14684,
+      "Original": "static inline int    Scl_ConGetInArr( int i )         { return Scl_ConGetInArr_  ( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetInArr(i int32) int32 { return Scl_ConGetInArr_  ( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInSlew",
+      "Start": 14738,
+      "End": 14845,
+      "BodyStart": 14792,
+      "Original": "static inline int    Scl_ConGetInSlew( int i )        { return Scl_ConGetInSlew_ ( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetInSlew(i int32) int32 { return Scl_ConGetInSlew_ ( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInLoad",
+      "Start": 14846,
+      "End": 14953,
+      "BodyStart": 14900,
+      "Original": "static inline int    Scl_ConGetInLoad( int i )        { return Scl_ConGetInLoad_ ( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetInLoad(i int32) int32 { return Scl_ConGetInLoad_ ( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetOutReq",
+      "Start": 14954,
+      "End": 15061,
+      "BodyStart": 15008,
+      "Original": "static inline int    Scl_ConGetOutReq( int i )        { return Scl_ConGetOutReq_ ( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetOutReq(i int32) int32 { return Scl_ConGetOutReq_ ( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetOutLoad",
+      "Start": 15062,
+      "End": 15169,
+      "BodyStart": 15116,
+      "Original": "static inline int    Scl_ConGetOutLoad( int i )       { return Scl_ConGetOutLoad_( Scl_ConReadMan(), i ); }",
+      "Draft": "func Scl_ConGetOutLoad(i int32) int32 { return Scl_ConGetOutLoad_( Scl_ConReadMan(), i ); }"
+    },
+    {
+      "Name": "Scl_ConGetInArrFloat",
+      "Start": 15171,
+      "End": 15278,
+      "BodyStart": 15225,
+      "Original": "static inline float  Scl_ConGetInArrFloat( int i )    { return Scl_Int2Flt( Scl_ConGetInArr(i) );         }",
+      "Draft": "func Scl_ConGetInArrFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInArr(i) );         }"
+    },
+    {
+      "Name": "Scl_ConGetInSlewFloat",
+      "Start": 15279,
+      "End": 15386,
+      "BodyStart": 15333,
+      "Original": "static inline float  Scl_ConGetInSlewFloat( int i )   { return Scl_Int2Flt( Scl_ConGetInSlew(i) );        }",
+      "Draft": "func Scl_ConGetInSlewFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInSlew(i) );        }"
+    },
+    {
+      "Name": "Scl_ConGetInLoadFloat",
+      "Start": 15387,
+      "End": 15494,
+      "BodyStart": 15441,
+      "Original": "static inline float  Scl_ConGetInLoadFloat( int i )   { return Scl_Int2Flt( Scl_ConGetInLoad(i) );        }",
+      "Draft": "func Scl_ConGetInLoadFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInLoad(i) );        }"
+    },
+    {
+      "Name": "Scl_ConGetOutReqFloat",
+      "Start": 15495,
+      "End": 15602,
+      "BodyStart": 15549,
+      "Original": "static inline float  Scl_ConGetOutReqFloat( int i )   { return Scl_Int2Flt( Scl_ConGetOutReq(i) );        }",
+      "Draft": "func Scl_ConGetOutReqFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetOutReq(i) );        }"
+    },
+    {
+      "Name": "Scl_ConGetOutLoadFloat",
+      "Start": 15603,
+      "End": 15710,
+      "BodyStart": 15657,
+      "Original": "static inline float  Scl_ConGetOutLoadFloat( int i )  { return Scl_Int2Flt( Scl_ConGetOutLoad(i) );       }",
+      "Draft": "func Scl_ConGetOutLoadFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetOutLoad(i) );       }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::struct::Scl_Con_t",
+      "Category": "struct-review",
+      "Symbol": "Scl_Con_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 815,
+      "End": 1800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::pointer-cast::12887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12887,
+      "End": 12894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro::SCL_DIRECTIVE",
+      "Category": "macro-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2040,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro::SCL_DEF_DIRECTIVE",
+      "Category": "macro-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2081,
+      "End": 2129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_Flt2Int",
+      "Category": "semantic-review",
+      "Symbol": "Scl_Flt2Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2199,
+      "End": 2276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_Int2Flt",
+      "Category": "semantic-review",
+      "Symbol": "Scl_Int2Flt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2277,
+      "End": 2354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2831,
+      "End": 3771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConFree",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3772,
+      "End": 4272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConParse",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConParse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4531,
+      "End": 9250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConRead",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9251,
+      "End": 9509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::ternary::Scl_ConWrite",
+      "Category": "ternary-review",
+      "Symbol": "Scl_ConWrite",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9510,
+      "End": 11735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConWrite",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9510,
+      "End": 11735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInCells_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInCells_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11985,
+      "End": 12122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInArrs_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInArrs_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12123,
+      "End": 12260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInSlews_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInSlews_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12261,
+      "End": 12398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInLoads_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInLoads_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12399,
+      "End": 12536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasOutReqs_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasOutReqs_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12537,
+      "End": 12674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasOutLoads_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasOutLoads_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12675,
+      "End": 12812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInCell_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInCell_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12814,
+      "End": 12929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInArr_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInArr_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12930,
+      "End": 13038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInSlew_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInSlew_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13039,
+      "End": 13147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInLoad_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInLoad_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13148,
+      "End": 13256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutReq_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutReq_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13257,
+      "End": 13365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutLoad_",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutLoad_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13366,
+      "End": 13474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConIsRunning",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConIsRunning",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13764,
+      "End": 13871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInCells",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInCells",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13873,
+      "End": 13980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInArrs",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInArrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13981,
+      "End": 14088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInSlews",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInSlews",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14089,
+      "End": 14196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasInLoads",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasInLoads",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14197,
+      "End": 14304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasOutReqs",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasOutReqs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14305,
+      "End": 14412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConHasOutLoads",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConHasOutLoads",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14413,
+      "End": 14520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInCell",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14522,
+      "End": 14629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInArr",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInArr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14630,
+      "End": 14737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInSlew",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInSlew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14738,
+      "End": 14845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInLoad",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14846,
+      "End": 14953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutReq",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutReq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14954,
+      "End": 15061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutLoad",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15062,
+      "End": 15169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInArrFloat",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInArrFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15171,
+      "End": 15278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInSlewFloat",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInSlewFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15279,
+      "End": 15386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetInLoadFloat",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetInLoadFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15387,
+      "End": 15494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutReqFloat",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutReqFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15495,
+      "End": 15602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::Scl_ConGetOutLoadFloat",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConGetOutLoadFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15603,
+      "End": 15710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5357",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5357,
+      "End": 5390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5471",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5471,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5588",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5588,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5705",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5705,
+      "End": 5738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5822",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5822,
+      "End": 5855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::5939",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DEF_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 5939,
+      "End": 5973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::6179",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 6179,
+      "End": 6208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::6445",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 6445,
+      "End": 6473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::6711",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 6711,
+      "End": 6740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::6977",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 6977,
+      "End": 7006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::7243",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 7243,
+      "End": 7272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclCon.h::macro-inline::7510",
+      "Category": "macro-inline-review",
+      "Symbol": "SCL_DIRECTIVE",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 7510,
+      "End": 7540
+    }
+  ],
+  "Draft": "package scl\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [sclCon.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Constraint manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclCon.h,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Scl_Con_t struct {\n    pFileName          string;   // constraint file name\n    pModelName          string;  // current design name\n    pInCellDef          string;  // default input driving gate\n    tInArrDef            int32;   // default input arrival time\n    tInSlewDef            int32;  // default input slew\n    tInLoadDef            int32;  // default input load\n    tOutReqDef            int32;  // default output required time\n    tOutLoadDef            int32; // default output load\n    vInCells      Vec_Ptr_t;    // input driving gate names\n    vInCellsPtr      Vec_Ptr_t; // input driving gates\n    vInArrs      Vec_Int_t;     // input arrival times\n    vInSlews      Vec_Int_t;    // input slews\n    vInLoads      Vec_Int_t;    // input loads\n    vOutReqs      Vec_Int_t;    // output required times\n    vOutLoads      Vec_Int_t;   // output loads\n    pNamI     *Abc_Nam_t;       // input names\n    pNamO     *Abc_Nam_t;       // output names\n}\n\nconst SCL_INPUT_CELL =   \"input_cell\"\nconst SCL_INPUT_ARR =    \"input_arrival\"\nconst SCL_INPUT_SLEW =   \"input_slew\"\nconst SCL_INPUT_LOAD =   \"input_load\"\nconst SCL_OUTPUT_REQ =   \"output_required\"\nconst SCL_OUTPUT_LOAD =  \"output_load\"\n\n// Original macro:\n// #define SCL_DIRECTIVE(ITEM)     \".\"#ITEM\n\n// Original macro:\n// #define SCL_DEF_DIRECTIVE(ITEM) \".default_\"#ITEM\n\n\nconst SCL_NUM =          1000\n#define SCL_INFINITY    (0x3FFFFFFF)\n\nfunc Scl_Flt2Int(w float32) int32 { return SCL_NUM*w;        }\nfunc Scl_Int2Flt(i int32) float32 { return float32(i)/SCL_NUM; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Manager construction.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_ConAlloc(pFileName string, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) *Scl_Con_t {\n    var p *Scl_Con_t   = new(Scl_Con_t);\n    p.pFileName   = Abc_UtilStrsav( pFileName );\n    p.pNamI       = pNamI;\n    p.pNamO       = pNamO;\n    p.pModelName  = nil;\n    p.pInCellDef  = nil;\n    p.tInArrDef   = SCL_INFINITY;\n    p.tInSlewDef  = SCL_INFINITY;\n    p.tInLoadDef  = SCL_INFINITY;\n    p.tOutReqDef  = SCL_INFINITY;\n    p.tOutLoadDef = SCL_INFINITY;\n    Vec_PtrFill( \u0026p.vInCells,  Abc_NamObjNumMax(pNamI)-1, nil );\n    Vec_IntFill( \u0026p.vInArrs,   Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vInSlews,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vInLoads,  Abc_NamObjNumMax(pNamI)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vOutReqs,  Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    Vec_IntFill( \u0026p.vOutLoads, Abc_NamObjNumMax(pNamO)-1, SCL_INFINITY );\n    return p;\n}\nfunc Scl_ConFree(p *Scl_Con_t) {\n    Vec_PtrErase( \u0026p.vInCellsPtr );\n    Vec_PtrFreeData( \u0026p.vInCells );\n    Vec_PtrErase( \u0026p.vInCells );\n    Vec_IntErase( \u0026p.vInArrs );\n    Vec_IntErase( \u0026p.vInSlews );\n    Vec_IntErase( \u0026p.vInLoads );\n    Vec_IntErase( \u0026p.vOutReqs );\n    Vec_IntErase( \u0026p.vOutLoads );\n    Abc_NamDeref( p.pNamI );\n    Abc_NamDeref( p.pNamO );\n    ABC_FREE( p.pInCellDef );\n    ABC_FREE( p.pModelName );\n    ABC_FREE( p.pFileName );\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Manager serialization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_ConParse(p *Scl_Con_t, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) int32 {\n    var Buffer [1000]byte;\n    var pToken, pToken2, pToken3, pName string; \n    var i int32;\n    var Num int32 = -1;\n    var nLines int32; var Value int32;\n    var pFile *os.File  = os.Open(p.pFileName);\n    for  fgets( Buffer, 1000, pFile )  {\n        nLines++;\n        pToken = strtok( Buffer, \" \\t\\r\\n\" );\n        if pToken == nil {\n            continue; }\n        pToken2 = strtok( nil, \" \\t\\r\\n\" );\n        if pToken2 == nil {\n            fmt.Printf(\"Line %d: Skipping directive \\\"%s\\\" without argument.\\n\", nLines, pToken);\n            continue;\n        }\n        pToken3 = strtok( nil, \" \\t\\r\\n\" );\n        if !(int32(strings.Compare(pToken, \".model\")) != 0) {                                p.pModelName  = Abc_UtilStrsav(pToken2);\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_CELL))) != 0) {  p.pInCellDef  = Abc_UtilStrsav(pToken2);\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_ARR))) != 0) {  p.tInArrDef   = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_SLEW))) != 0) {  p.tInSlewDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_INPUT_LOAD))) != 0) {  p.tInLoadDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_REQ))) != 0) {  p.tOutReqDef  = Scl_Flt2Int(atof(pToken2));\n        } else if !(int32(strings.Compare(pToken, SCL_DEF_DIRECTIVE(SCL_OUTPUT_LOAD))) != 0) {  p.tOutLoadDef = Scl_Flt2Int(atof(pToken2));\n        } else if pToken3 == nil { fmt.Printf(\"Directive %s should be followed by two arguments.\\n\", pToken); continue; \n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_CELL))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_PtrWriteEntry( \u0026p.vInCells,  Num-1, Abc_UtilStrsav(pToken3) ); }    else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_ARR))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInArrs,   Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_SLEW))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInSlews,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_INPUT_LOAD))) != 0) {     if (Num = Abc_NamStrFind(pNamI, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vInLoads,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find input \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_OUTPUT_REQ))) != 0) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutReqs,  Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else if !(int32(strings.Compare(pToken, SCL_DIRECTIVE(SCL_OUTPUT_LOAD))) != 0) {     if (Num = Abc_NamStrFind(pNamO, pToken2)) \u003e 0 {  Vec_IntWriteEntry( \u0026p.vOutLoads, Num-1, Scl_Flt2Int(atof(pToken3)) ); } else { fmt.Printf(\"Line %d: Cannot find output \\\"%s\\\".\\n\", nLines, pToken2); }\n        } else { fmt.Printf(\"Line %d: Skipping unrecognized directive \\\"%s\\\".\\n\", nLines, pToken); }\n    }\n    // set missing defaults\n    if p.pInCellDef  == nil {          p.pInCellDef  = nil; } // consider using buffer from the current library\n    if p.tInArrDef   == SCL_INFINITY {  p.tInArrDef   = 0; }\n    if p.tInSlewDef  == SCL_INFINITY {  p.tInSlewDef  = 0; }\n    if p.tInLoadDef  == SCL_INFINITY {  p.tInLoadDef  = 0; }\n    if p.tOutReqDef  == SCL_INFINITY {  p.tOutReqDef  = 0; }\n    if p.tOutLoadDef == SCL_INFINITY {  p.tOutLoadDef = 0; }\n    // set individual defaults\n    if p.pInCellDef {\n    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName == nil )          Vec_PtrWriteEntry( \u0026p.vInCells,  i, Abc_UtilStrsav(p.pInCellDef) ); }\n    Vec_IntForEachEntry( \u0026p.vInArrs, Value, i )        if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInArrs,   i, p.tInArrDef );\n    Vec_IntForEachEntry( \u0026p.vInSlews, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInSlews,  i, p.tInSlewDef );\n    Vec_IntForEachEntry( \u0026p.vInLoads, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vInLoads,  i, p.tInLoadDef );\n    Vec_IntForEachEntry( \u0026p.vOutReqs, Value, i )       if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vOutReqs,  i, p.tOutReqDef );\n    Vec_IntForEachEntry( \u0026p.vOutLoads, Value, i )      if ( Value == SCL_INFINITY )  Vec_IntWriteEntry( \u0026p.vOutLoads, i, p.tOutLoadDef );\n\n    _ = (pFile).Close();\n    return 1;\n}\nfunc Scl_ConRead(pFileName string, pNamI *Abc_Nam_t, pNamO *Abc_Nam_t) *Scl_Con_t {\n    var p *Scl_Con_t  = Scl_ConAlloc( pFileName, pNamI, pNamO );\n    if Scl_ConParse(p, pNamI, pNamO) != 0 {\n        return p; }\n    Scl_ConFree( p );\n    return nil;\n}\nfunc Scl_ConWrite(p *Scl_Con_t, pFileName string) {\n    var pName string; var Value int32; var i int32;\n    var pFile *os.File  = pFileName ? os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : os.Stdout;\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \".model %s\\n\", p.pModelName);\n\n    if p.pInCellDef {        fmt.Fprintf(pFile, \".default_%s %s\\n\", SCL_INPUT_CELL, p.pInCellDef); }\n    if p.tInArrDef   != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_ARR, Scl_Int2Flt(p.tInArrDef)); }\n    if p.tInSlewDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_SLEW, Scl_Int2Flt(p.tInSlewDef)); }\n    if p.tInLoadDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_INPUT_LOAD, Scl_Int2Flt(p.tInLoadDef)); }\n    if p.tOutReqDef  != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_REQ, Scl_Int2Flt(p.tOutReqDef)); }\n    if p.tOutLoadDef != 0 {  fmt.Fprintf(pFile, \".default_%s %.2f\\n\", SCL_OUTPUT_LOAD, Scl_Int2Flt(p.tOutLoadDef)); }\n\n    Vec_PtrForEachEntry(char *, \u0026p.vInCells, pName, i) if ( pName \u0026\u0026 (!p.pInCellDef || int32(strings.Compare(pName, p.pInCellDef))) )  fmt.Fprintf(pFile, \".%s %s %s\\n\", SCL_INPUT_CELL, Abc_NamStr(p.pNamI, i+1), pName);\n    Vec_IntForEachEntry( \u0026p.vInArrs, Value, i )        if ( Value != p.tInArrDef )   fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_ARR, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vInSlews, Value, i )       if ( Value != p.tInSlewDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_SLEW, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vInLoads, Value, i )       if ( Value != p.tInLoadDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_INPUT_LOAD, Abc_NamStr(p.pNamI, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vOutReqs, Value, i )       if ( Value != p.tOutReqDef )  fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_REQ, Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value));\n    Vec_IntForEachEntry( \u0026p.vOutLoads, Value, i )      if ( Value != p.tOutLoadDef ) fmt.Fprintf(pFile, \".%s %s %.2f\\n\", SCL_OUTPUT_LOAD, Abc_NamStr(p.pNamO, i+1), Scl_Int2Flt(Value));\n\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Internal APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_ConHasInCells_(p *Scl_Con_t) int32 { return Vec_PtrCountZero(\u0026p.vInCells)  != Vec_PtrSize(\u0026p.vInCells);  }\nfunc Scl_ConHasInArrs_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInArrs)   != Vec_IntSize(\u0026p.vInArrs);   }\nfunc Scl_ConHasInSlews_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInSlews)  != Vec_IntSize(\u0026p.vInSlews);  }\nfunc Scl_ConHasInLoads_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vInLoads)  != Vec_IntSize(\u0026p.vInLoads);  }\nfunc Scl_ConHasOutReqs_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vOutReqs)  != Vec_IntSize(\u0026p.vOutReqs);  }\nfunc Scl_ConHasOutLoads_(p *Scl_Con_t) int32 { return Vec_IntCountZero(\u0026p.vOutLoads) != Vec_IntSize(\u0026p.vOutLoads); }\n\nfunc Scl_ConGetInCell_(p *Scl_Con_t, i int32) string { return (char*)Vec_PtrEntry( \u0026p.vInCells,  i ); }\nfunc Scl_ConGetInArr_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInArrs,   i ); }\nfunc Scl_ConGetInSlew_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInSlews,  i ); }\nfunc Scl_ConGetInLoad_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vInLoads,  i ); }\nfunc Scl_ConGetOutReq_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vOutReqs,  i ); }\nfunc Scl_ConGetOutLoad_(p *Scl_Con_t, i int32) int32 { return Vec_IntEntry( \u0026p.vOutLoads, i ); }\n\n/**Function*************************************************************\n\n  Synopsis    [External APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// extern Scl_Con_t *   Scl_ConReadMan();\n\n\nfunc Scl_ConIsRunning() int32 { return Scl_ConReadMan() != nil;                  }\n\nfunc Scl_ConHasInCells() int32 { return Scl_ConHasInCells_ ( Scl_ConReadMan() );   }\nfunc Scl_ConHasInArrs() int32 { return Scl_ConHasInArrs_  ( Scl_ConReadMan() );   }\nfunc Scl_ConHasInSlews() int32 { return Scl_ConHasInSlews_ ( Scl_ConReadMan() );   }\nfunc Scl_ConHasInLoads() int32 { return Scl_ConHasInLoads_ ( Scl_ConReadMan() );   }\nfunc Scl_ConHasOutReqs() int32 { return Scl_ConHasOutReqs_ ( Scl_ConReadMan() );   }\nfunc Scl_ConHasOutLoads() int32 { return Scl_ConHasOutLoads_( Scl_ConReadMan() );   }\n\nfunc Scl_ConGetInCell(i int32) string { return Scl_ConGetInCell_ ( Scl_ConReadMan(), i ); }\nfunc Scl_ConGetInArr(i int32) int32 { return Scl_ConGetInArr_  ( Scl_ConReadMan(), i ); }\nfunc Scl_ConGetInSlew(i int32) int32 { return Scl_ConGetInSlew_ ( Scl_ConReadMan(), i ); }\nfunc Scl_ConGetInLoad(i int32) int32 { return Scl_ConGetInLoad_ ( Scl_ConReadMan(), i ); }\nfunc Scl_ConGetOutReq(i int32) int32 { return Scl_ConGetOutReq_ ( Scl_ConReadMan(), i ); }\nfunc Scl_ConGetOutLoad(i int32) int32 { return Scl_ConGetOutLoad_( Scl_ConReadMan(), i ); }\n\nfunc Scl_ConGetInArrFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInArr(i) );         }\nfunc Scl_ConGetInSlewFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInSlew(i) );        }\nfunc Scl_ConGetInLoadFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetInLoad(i) );        }\nfunc Scl_ConGetOutReqFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetOutReq(i) );        }\nfunc Scl_ConGetOutLoadFloat(i int32) float32 { return Scl_Int2Flt( Scl_ConGetOutLoad(i) );       }\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

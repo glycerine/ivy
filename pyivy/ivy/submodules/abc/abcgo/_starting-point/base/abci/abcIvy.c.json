@@ -1,0 +1,1330 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c",
+  "SHA256": "06bfdc46764b3df45a18ed9e43d15a9c8a43d2b4337654d87fded251ff73d5db",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 4139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 4273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkIvyBefore(): Converting to SOPs has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 4438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The network has %d self-feeding latches.\\n\", Abc_NtkCountSelfFeedLatches(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 4652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG check has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 6037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 6294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkStrash: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 16555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 523,
+        "Column": 23,
+        "ByteOffset": 17184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNtk.pModel = ABC_CALLOC( int, Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 578,
+        "Column": 13,
+        "ByteOffset": 19354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( pFileName, \"cecmiter.aig\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 580,
+        "Column": 13,
+        "ByteOffset": 19458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Intermediate reduced miter is written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 20512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 618,
+        "Column": 13,
+        "ByteOffset": 20680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkIvy(): Converting to SOPs has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 623,
+        "Column": 9,
+        "ByteOffset": 20831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The network has %d self-feeding latches. Quitting.\\n\", Abc_NtkCountSelfFeedLatches(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 9,
+        "ByteOffset": 21053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 9,
+        "ByteOffset": 21278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG check has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 9,
+        "ByteOffset": 24775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromIvy(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 753,
+        "Column": 18,
+        "ByteOffset": 24784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromIvy(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 796,
+        "Column": 18,
+        "ByteOffset": 26483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 821,
+        "Column": 13,
+        "ByteOffset": 27492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Ivy_IsComplement(pNode.pEquiv) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 847,
+        "Column": 9,
+        "ByteOffset": 28495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromIvySeq(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 847,
+        "Column": 18,
+        "ByteOffset": 28504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromIvySeq(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 868,
+        "Column": 5,
+        "ByteOffset": 29048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 931,
+        "Column": 5,
+        "ByteOffset": 30975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 980,
+        "Column": 5,
+        "ByteOffset": 32676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins == Abc_SopGetVarNum(pSop) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1023,
+        "Column": 5,
+        "ByteOffset": 34083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins == Abc_SopGetVarNum(pSop) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1094,
+        "Column": 18,
+        "ByteOffset": 36228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 29,
+        "Column": 1,
+        "ByteOffset": 704
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 596,
+        "Column": 1,
+        "ByteOffset": 19878
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_EdgeCreate",
+      "Start": 2147,
+      "End": 2268,
+      "BodyStart": 2226,
+      "Original": "static inline Abc_Edge_t   Abc_EdgeCreate( int Id, int fCompl )                { return (Id \u003c\u003c 1) | fCompl;             }",
+      "Draft": "func Abc_EdgeCreate(Id int32, fCompl int32) Abc_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }"
+    },
+    {
+      "Name": "Abc_EdgeId",
+      "Start": 2269,
+      "End": 2390,
+      "BodyStart": 2348,
+      "Original": "static inline int          Abc_EdgeId( Abc_Edge_t Edge )                       { return Edge \u003e\u003e 1;                      }",
+      "Draft": "func Abc_EdgeId(Edge Abc_Edge_t) int32 { return Edge \u003e\u003e 1;                      }"
+    },
+    {
+      "Name": "Abc_EdgeIsComplement",
+      "Start": 2391,
+      "End": 2512,
+      "BodyStart": 2470,
+      "Original": "static inline int          Abc_EdgeIsComplement( Abc_Edge_t Edge )             { return Edge \u0026 1;                       }",
+      "Draft": "func Abc_EdgeIsComplement(Edge Abc_Edge_t) int32 { return Edge \u0026 1;                       }"
+    },
+    {
+      "Name": "Abc_EdgeRegular",
+      "Start": 2513,
+      "End": 2634,
+      "BodyStart": 2592,
+      "Original": "static inline Abc_Edge_t   Abc_EdgeRegular( Abc_Edge_t Edge )                  { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }",
+      "Draft": "func Abc_EdgeRegular(Edge Abc_Edge_t) Abc_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }"
+    },
+    {
+      "Name": "Abc_EdgeNot",
+      "Start": 2635,
+      "End": 2756,
+      "BodyStart": 2714,
+      "Original": "static inline Abc_Edge_t   Abc_EdgeNot( Abc_Edge_t Edge )                      { return Edge ^ 1;                       }",
+      "Draft": "func Abc_EdgeNot(Edge Abc_Edge_t) Abc_Edge_t { return Edge ^ 1;                       }"
+    },
+    {
+      "Name": "Abc_EdgeNotCond",
+      "Start": 2757,
+      "End": 2878,
+      "BodyStart": 2836,
+      "Original": "static inline Abc_Edge_t   Abc_EdgeNotCond( Abc_Edge_t Edge, int fCond )       { return Edge ^ fCond;                   }",
+      "Draft": "func Abc_EdgeNotCond(Edge Abc_Edge_t, fCond int32) Abc_Edge_t { return Edge ^ fCond;                   }"
+    },
+    {
+      "Name": "Abc_EdgeFromNode",
+      "Start": 2879,
+      "End": 3047,
+      "BodyStart": 2958,
+      "Original": "static inline Abc_Edge_t   Abc_EdgeFromNode( Abc_Obj_t * pNode )               { return Abc_EdgeCreate( Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) );       }",
+      "Draft": "func Abc_EdgeFromNode(pNode *Abc_Obj_t) Abc_Edge_t { return Abc_EdgeCreate( Abc_ObjRegular(pNode).Id, Abc_ObjIsComplement(pNode) );       }"
+    },
+    {
+      "Name": "Abc_EdgeToNode",
+      "Start": 3048,
+      "End": 3216,
+      "BodyStart": 3127,
+      "Original": "static inline Abc_Obj_t *  Abc_EdgeToNode( Abc_Ntk_t * p, Abc_Edge_t Edge )    { return Abc_ObjNotCond( Abc_NtkObj(p, Abc_EdgeId(Edge)), Abc_EdgeIsComplement(Edge) ); }",
+      "Draft": "func Abc_EdgeToNode(p *Abc_Ntk_t, Edge Abc_Edge_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_NtkObj(p, Abc_EdgeId(Edge)), Abc_EdgeIsComplement(Edge) ); }"
+    },
+    {
+      "Name": "Abc_ObjFanin0Ivy",
+      "Start": 3218,
+      "End": 3395,
+      "BodyStart": 3297,
+      "Original": "static inline Abc_Obj_t *  Abc_ObjFanin0Ivy( Abc_Ntk_t * p, Ivy_Obj_t * pObj ) { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin0(pObj)-\u003eTravId), Ivy_ObjFaninC0(pObj) ); }",
+      "Draft": "func Abc_ObjFanin0Ivy(p *Abc_Ntk_t, pObj *Ivy_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin0(pObj).TravId), Ivy_ObjFaninC0(pObj) ); }"
+    },
+    {
+      "Name": "Abc_ObjFanin1Ivy",
+      "Start": 3396,
+      "End": 3573,
+      "BodyStart": 3475,
+      "Original": "static inline Abc_Obj_t *  Abc_ObjFanin1Ivy( Abc_Ntk_t * p, Ivy_Obj_t * pObj ) { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin1(pObj)-\u003eTravId), Ivy_ObjFaninC1(pObj) ); }",
+      "Draft": "func Abc_ObjFanin1Ivy(p *Abc_Ntk_t, pObj *Ivy_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin1(pObj).TravId), Ivy_ObjFaninC1(pObj) ); }"
+    },
+    {
+      "Name": "Abc_NtkIvyBefore",
+      "Start": 4161,
+      "End": 5489,
+      "BodyStart": 4232,
+      "Original": "Ivy_Man_t * Abc_NtkIvyBefore( Abc_Ntk_t * pNtk, int fSeq, int fUseDc )\n{\n    Ivy_Man_t * pMan;\n//timeRetime = Abc_Clock();\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    if ( Abc_NtkIsBddLogic(pNtk) )\n    {\n        if ( !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) )\n        {\n            printf( \"Abc_NtkIvyBefore(): Converting to SOPs has failed.\\n\" );\n            return NULL;\n        }\n    }\n    if ( fSeq \u0026\u0026 Abc_NtkCountSelfFeedLatches(pNtk) )\n    {\n        printf( \"Warning: The network has %d self-feeding latches.\\n\", Abc_NtkCountSelfFeedLatches(pNtk) );\n//        return NULL;\n    }\n    // print warning about choice nodes\n    if ( Abc_NtkGetChoiceNum( pNtk ) )\n        printf( \"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\" );\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if ( !Ivy_ManCheck( pMan ) )\n    {\n        printf( \"AIG check has failed.\\n\" );\n        Ivy_ManStop( pMan );\n        return NULL;\n    }\n//    Ivy_ManPrintStats( pMan );\n    if ( fSeq )\n    {\n        int nLatches = Abc_NtkLatchNum(pNtk);\n        Vec_Int_t * vInit = Abc_NtkCollectLatchValuesIvy( pNtk, fUseDc );\n        Ivy_ManMakeSeq( pMan, nLatches, vInit-\u003epArray );\n        Vec_IntFree( vInit );\n//        Ivy_ManPrintStats( pMan );\n    }\n//timeRetime = Abc_Clock() - timeRetime;\n    return pMan;\n}",
+      "Draft": "func Abc_NtkIvyBefore(pNtk *Abc_Ntk_t, fSeq int32, fUseDc int32) *Ivy_Man_t {\n    var pMan *Ivy_Man_t;\n//timeRetime = Abc_Clock();\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Abc_NtkIvyBefore(): Converting to SOPs has failed.\\n\");\n            return nil;\n        }\n    }\n    if (fSeq != 0) \u0026\u0026 Abc_NtkCountSelfFeedLatches(pNtk) {\n        fmt.Printf(\"Warning: The network has %d self-feeding latches.\\n\", Abc_NtkCountSelfFeedLatches(pNtk));\n//        return NULL;\n    }\n    // print warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\"); }\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if !Ivy_ManCheck( pMan ) {\n        fmt.Printf(\"AIG check has failed.\\n\");\n        Ivy_ManStop( pMan );\n        return nil;\n    }\n//    Ivy_ManPrintStats( pMan );\n    if fSeq != 0 {\n        var nLatches int32  = Abc_NtkLatchNum(pNtk);\n        var vInit *Vec_Int_t  = Abc_NtkCollectLatchValuesIvy( pNtk, fUseDc );\n        Ivy_ManMakeSeq( pMan, nLatches, vInit.pArray );\n        Vec_IntFree( vInit );\n//        Ivy_ManPrintStats( pMan );\n    }\n//timeRetime = Abc_Clock() - timeRetime;\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyAfter",
+      "Start": 5750,
+      "End": 6602,
+      "BodyStart": 5837,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyAfter( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan, int fSeq, int fHaig )\n{\n    Abc_Ntk_t * pNtkAig;\n    int nNodes, fCleanup = 1;\n    // convert from the AIG manager\n    if ( fSeq )\n        pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan, fHaig );\n    else\n        pNtkAig = Abc_NtkFromIvy( pNtk, pMan );\n    // report the cleanup results\n    if ( !fHaig \u0026\u0026 fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup((Abc_Aig_t *)pNtkAig-\u003epManFunc)) )\n        printf( \"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkAig-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        printf( \"Abc_NtkStrash: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyAfter(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t, fSeq int32, fHaig int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var nNodes int32;\n    var fCleanup int32 = 1;\n    // convert from the AIG manager\n    if fSeq != 0 {\n        pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan, fHaig );\n    } else {\n        pNtkAig = Abc_NtkFromIvy( pNtk, pMan ); }\n    // report the cleanup results\n    if !fHaig \u0026\u0026 fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup((Abc_Aig_t *)pNtkAig.pManFunc)) {\n        fmt.Printf(\"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes); }\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkAig.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkStrash: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyStrash",
+      "Start": 6898,
+      "End": 7181,
+      "BodyStart": 6947,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyStrash( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyStrash(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if pMan == nil {\n        return nil; }\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyHaig",
+      "Start": 7478,
+      "End": 9023,
+      "BodyStart": 7569,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyHaig( Abc_Ntk_t * pNtk, int nIters, int fUseZeroCost, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan;\n    abctime clk;\n//    int i;\n/*\nextern int nMoves;\nextern int nMovesS;\nextern int nClauses;\nextern int timeInv;\n\nnMoves = 0;\nnMovesS = 0;\nnClauses = 0;\ntimeInv = 0;\n*/\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if ( pMan == NULL )\n        return NULL;\n//timeRetime = Abc_Clock();\n\nclk = Abc_Clock();\n    Ivy_ManHaigStart( pMan, fVerbose );\n//    Ivy_ManRewriteSeq( pMan, 0, 0 );\n//    for ( i = 0; i \u003c nIters; i++ )\n//        Ivy_ManRewriteSeq( pMan, fUseZeroCost, 0 );\n\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n//printf( \"%d \", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//ABC_PRT( \" \", Abc_Clock() - clk );\n//printf( \"\\n\" );\n/*\n    printf( \"Moves = %d.  \", nMoves );\n    printf( \"MovesS = %d.  \", nMovesS );\n    printf( \"Clauses = %d.  \", nClauses );\n    ABC_PRT( \"Time\", timeInv );\n*/\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"Haig size = %d.\\n\", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//    Ivy_ManHaigPostprocess( pMan, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n\n    // write working AIG into the current network\n//    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 ); \n    // write HAIG into the current network\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan-\u003epHaig, 1, 1 );\n\n    Ivy_ManHaigStop( pMan );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyHaig(pNtk *Abc_Ntk_t, nIters int32, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    var clk abctime;\n//    int i;\n/*\nextern int nMoves;\nextern int nMovesS;\nextern int nClauses;\nextern int timeInv;\n\nnMoves = 0;\nnMovesS = 0;\nnClauses = 0;\ntimeInv = 0;\n*/\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n\nclk = Abc_Clock();\n    Ivy_ManHaigStart( pMan, fVerbose );\n//    Ivy_ManRewriteSeq( pMan, 0, 0 );\n//    for ( i = 0; i \u003c nIters; i++ )\n//        Ivy_ManRewriteSeq( pMan, fUseZeroCost, 0 );\n\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n//printf( \"%d \", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//ABC_PRT( \" \", Abc_Clock() - clk );\n//printf( \"\\n\" );\n/*\n    printf( \"Moves = %d.  \", nMoves );\n    printf( \"MovesS = %d.  \", nMovesS );\n    printf( \"Clauses = %d.  \", nClauses );\n    ABC_PRT( \"Time\", timeInv );\n*/\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"Haig size = %d.\\n\", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//    Ivy_ManHaigPostprocess( pMan, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n\n    // write working AIG into the current network\n//    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 ); \n    // write HAIG into the current network\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan.pHaig, 1, 1 );\n\n    Ivy_ManHaigStop( pMan );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyCuts",
+      "Start": 9319,
+      "End": 9545,
+      "BodyStart": 9372,
+      "Original": "void Abc_NtkIvyCuts( Abc_Ntk_t * pNtk, int nInputs )\n{\n    Ivy_Man_t * pMan;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if ( pMan == NULL )\n        return;\n    Ivy_CutComputeAll( pMan, nInputs );\n    Ivy_ManStop( pMan );\n}",
+      "Draft": "func Abc_NtkIvyCuts(pNtk *Abc_Ntk_t, nInputs int32) {\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if pMan == nil {\n        return; }\n    Ivy_CutComputeAll( pMan, nInputs );\n    Ivy_ManStop( pMan );\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyRewrite",
+      "Start": 9841,
+      "End": 10313,
+      "BodyStart": 9941,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyRewrite( Abc_Ntk_t * pNtk, int fUpdateLevel, int fUseZeroCost, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if ( pMan == NULL )\n        return NULL;\n//timeRetime = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyRewrite(pNtk *Abc_Ntk_t, fUpdateLevel int32, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyRewriteSeq",
+      "Start": 10609,
+      "End": 11130,
+      "BodyStart": 10694,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyRewriteSeq( Abc_Ntk_t * pNtk, int fUseZeroCost, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if ( pMan == NULL )\n        return NULL;\n//timeRetime = Abc_Clock();\n    Ivy_ManRewriteSeq( pMan, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyRewriteSeq(pNtk *Abc_Ntk_t, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n    Ivy_ManRewriteSeq( pMan, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyResyn0",
+      "Start": 11426,
+      "End": 11842,
+      "BodyStart": 11507,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyResyn0( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan, * pTemp;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    pMan = Ivy_ManResyn0( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyResyn0(pNtk *Abc_Ntk_t, fUpdateLevel int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    pMan = Ivy_ManResyn0( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyResyn",
+      "Start": 12138,
+      "End": 12552,
+      "BodyStart": 12218,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyResyn( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan, * pTemp;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    pMan = Ivy_ManResyn( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyResyn(pNtk *Abc_Ntk_t, fUpdateLevel int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    pMan = Ivy_ManResyn( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvySat",
+      "Start": 12848,
+      "End": 13467,
+      "BodyStart": 12924,
+      "Original": "Abc_Ntk_t * Abc_NtkIvySat( Abc_Ntk_t * pNtk, int nConfLimit, int fVerbose )\n{\n    Ivy_FraigParams_t Params, * pParams = \u0026Params; \n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan, * pTemp;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    Ivy_FraigParamsDefault( pParams );\n    pParams-\u003enBTLimitMiter = nConfLimit;\n    pParams-\u003efVerbose = fVerbose;\n//    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    pMan = Ivy_FraigMiter( pTemp = pMan, pParams );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvySat(pNtk *Abc_Ntk_t, nConfLimit int32, fVerbose int32) *Abc_Ntk_t {\n    var Params Ivy_FraigParams_t;\n    var pParams *Ivy_FraigParams_t = \u0026Params; \n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    Ivy_FraigParamsDefault( pParams );\n    pParams.nBTLimitMiter = nConfLimit;\n    pParams.fVerbose = fVerbose;\n//    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    pMan = Ivy_FraigMiter( pTemp = pMan, pParams );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkTransferPointers",
+      "Start": 13755,
+      "End": 14638,
+      "BodyStart": 13825,
+      "Original": "void Abc_NtkTransferPointers( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkAig )\n{\n    Abc_Obj_t * pObj;\n    Ivy_Obj_t * pObjIvy, * pObjFraig;\n    int i;\n    pObj = Abc_AigConst1(pNtk);\n    pObj-\u003epCopy = Abc_AigConst1(pNtkAig);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCi(pNtkAig, i);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkCo(pNtkAig, i);\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003epCopy = Abc_NtkBox(pNtkAig, i);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObjIvy = (Ivy_Obj_t *)pObj-\u003epCopy;\n        if ( pObjIvy == NULL )\n            continue;\n        pObjFraig = Ivy_ObjEquiv( pObjIvy );\n        if ( pObjFraig == NULL )\n            continue;\n        pObj-\u003epCopy = Abc_EdgeToNode( pNtkAig, Ivy_Regular(pObjFraig)-\u003eTravId );\n        pObj-\u003epCopy = Abc_ObjNotCond( pObj-\u003epCopy, Ivy_IsComplement(pObjFraig) );\n    }\n}",
+      "Draft": "func Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pObjIvy, pObjFraig *Ivy_Obj_t;\n    var i int32;\n    pObj = Abc_AigConst1(pNtk);\n    pObj.pCopy = Abc_AigConst1(pNtkAig);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkCi(pNtkAig, i);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkCo(pNtkAig, i);\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkBox(pNtkAig, i);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObjIvy = (Ivy_Obj_t *)pObj.pCopy;\n        if pObjIvy == nil {\n            continue; }\n        pObjFraig = Ivy_ObjEquiv( pObjIvy );\n        if pObjFraig == nil {\n            continue; }\n        pObj.pCopy = Abc_EdgeToNode( pNtkAig, Ivy_Regular(pObjFraig).TravId );\n        pObj.pCopy = Abc_ObjNotCond( pObj.pCopy, Ivy_IsComplement(pObjFraig) );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyFraig",
+      "Start": 14934,
+      "End": 16014,
+      "BodyStart": 15054,
+      "Original": "Abc_Ntk_t * Abc_NtkIvyFraig( Abc_Ntk_t * pNtk, int nConfLimit, int fDoSparse, int fProve, int fTransfer, int fVerbose )\n{\n    Ivy_FraigParams_t Params, * pParams = \u0026Params; \n    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan, * pTemp;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    Ivy_FraigParamsDefault( pParams );\n    pParams-\u003enBTLimitNode = nConfLimit;\n    pParams-\u003efVerbose     = fVerbose;\n    pParams-\u003efProve       = fProve;\n    pParams-\u003efDoSparse    = fDoSparse;\n    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    // transfer the pointers\n    if ( fTransfer == 1 )\n    {\n        Vec_Ptr_t * vCopies;\n        vCopies = Abc_NtkSaveCopy( pNtk );\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n        Abc_NtkLoadCopy( pNtk, vCopies );\n        Vec_PtrFree( vCopies );\n        Abc_NtkTransferPointers( pNtk, pNtkAig );\n    }\n    else\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    pNtkAig-\u003epModel = (int *)pMan-\u003epData; pMan-\u003epData = NULL;\n    Ivy_ManStop( pTemp );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkIvyFraig(pNtk *Abc_Ntk_t, nConfLimit int32, fDoSparse int32, fProve int32, fTransfer int32, fVerbose int32) *Abc_Ntk_t {\n    var Params Ivy_FraigParams_t;\n    var pParams *Ivy_FraigParams_t = \u0026Params; \n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    Ivy_FraigParamsDefault( pParams );\n    pParams.nBTLimitNode = nConfLimit;\n    pParams.fVerbose     = fVerbose;\n    pParams.fProve       = fProve;\n    pParams.fDoSparse    = fDoSparse;\n    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    // transfer the pointers\n    if fTransfer == 1 {\n        var vCopies *Vec_Ptr_t;\n        vCopies = Abc_NtkSaveCopy( pNtk );\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n        Abc_NtkLoadCopy( pNtk, vCopies );\n        Vec_PtrFree( vCopies );\n        Abc_NtkTransferPointers( pNtk, pNtkAig );\n    \n    } else {\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 ); }\n    pNtkAig.pModel = (int *)pMan.pData; pMan.pData = nil;\n    Ivy_ManStop( pTemp );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvyProve",
+      "Start": 16311,
+      "End": 20588,
+      "BodyStart": 16367,
+      "Original": "int Abc_NtkIvyProve( Abc_Ntk_t ** ppNtk, void * pPars )\n{\n    Prove_Params_t * pParams = (Prove_Params_t *)pPars;\n    Abc_Ntk_t * pNtk = *ppNtk, * pNtkTemp;\n    Abc_Obj_t * pObj, * pFanin;\n    Ivy_Man_t * pMan;\n    Aig_Man_t * pMan2;\n    int RetValue;\n    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );\n    // experiment with various parameters settings\n//    pParams-\u003efUseBdds = 1;\n//    pParams-\u003efBddReorder = 1;\n//    pParams-\u003enTotalBacktrackLimit = 10000;\n \n    // strash the network if it is not strashed already\n    if ( !Abc_NtkIsStrash(pNtk) )\n    {\n        pNtk = Abc_NtkStrash( pNtkTemp = pNtk, 0, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n \n    // check the case when the 0000 simulation pattern detect the bug\n    pObj = Abc_NtkPo(pNtk,0);\n    pFanin = Abc_ObjFanin0(pObj);\n    if ( Abc_ObjFanin0(pObj)-\u003efPhase != (unsigned)Abc_ObjFaninC0(pObj) )\n    {\n        pNtk-\u003epModel = ABC_CALLOC( int, Abc_NtkCiNum(pNtk) );\n        return 0;\n    }\n\n    // changed in \"src\\sat\\fraig\\fraigMan.c\"\n    //    pParams-\u003enMiteringLimitStart  = 300;    // starting mitering limit\n    // to be\n    //    pParams-\u003enMiteringLimitStart  = 5000;    // starting mitering limit\n\n    // if SAT only, solve without iteration\n//    RetValue = Abc_NtkMiterSat( pNtk, 2*(ABC_INT64_T)pParams-\u003enMiteringLimitStart, (ABC_INT64_T)0, 0, NULL, NULL );\n    pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n    RetValue = Fra_FraigSat( pMan2, (ABC_INT64_T)pParams-\u003enMiteringLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 ); \n    pNtk-\u003epModel = (int *)pMan2-\u003epData, pMan2-\u003epData = NULL;\n    Aig_ManStop( pMan2 );\n//    pNtk-\u003epModel = Aig_ManReleaseData( pMan2 );\n    if ( RetValue \u003e= 0 )\n        return RetValue;\n\n    // apply AIG rewriting\n    if ( pParams-\u003efUseRewriting \u0026\u0026 Abc_NtkNodeNum(pNtk) \u003e 500 )\n    {\n//        abctime clk = Abc_Clock();\n//printf( \"Before rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n        pParams-\u003efUseRewriting = 0;\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n//printf( \"After rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // convert ABC network into IVY network\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n\n    // solve the CEC problem\n    RetValue = Ivy_FraigProve( \u0026pMan, pParams );\n//    RetValue = -1;\n\n    // convert IVY network into ABC network    \n    pNtk = Abc_NtkIvyAfter( pNtkTemp = pNtk, pMan, 0, 0 );\n    Abc_NtkDelete( pNtkTemp );\n    // transfer model if given\n    pNtk-\u003epModel = (int *)pMan-\u003epData; pMan-\u003epData = NULL;\n    Ivy_ManStop( pMan );\n\n    // try to prove it using brute force SAT with good CNF encoding\n    if ( RetValue \u003c 0 )\n    {\n        pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n        // dump the miter before entering high-effort solving\n        if ( pParams-\u003efVerbose )\n        {\n            char pFileName[100];\n            sprintf( pFileName, \"cecmiter.aig\" );\n            Ioa_WriteAiger( pMan2, pFileName, 0, 0 );\n            printf( \"Intermediate reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n        RetValue = Fra_FraigSat( pMan2, pParams-\u003enMiteringLimitLast, 0, 0, 0, 0, 0, 0, 0, pParams-\u003efVerbose ); \n        pNtk-\u003epModel = (int *)pMan2-\u003epData, pMan2-\u003epData = NULL;\n        Aig_ManStop( pMan2 );\n    }\n\n    // try to prove it using brute force BDDs\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n    }\n#endif\n\n    // return the result\n    *ppNtk = pNtk;\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkIvyProve(ppNtk **Abc_Ntk_t, pPars any) int32 {\n    var pParams *Prove_Params_t  = (Prove_Params_t *)pPars;\n    var pNtk *Abc_Ntk_t = *ppNtk;\n    var pNtkTemp *Abc_Ntk_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pMan *Ivy_Man_t;\n    var pMan2 *Aig_Man_t;\n    var RetValue int32;\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    // experiment with various parameters settings\n//    pParams-\u003efUseBdds = 1;\n//    pParams-\u003efBddReorder = 1;\n//    pParams-\u003enTotalBacktrackLimit = 10000;\n \n    // strash the network if it is not strashed already\n    if !Abc_NtkIsStrash(pNtk) {\n        pNtk = Abc_NtkStrash( pNtkTemp = pNtk, 0, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n \n    // check the case when the 0000 simulation pattern detect the bug\n    pObj = Abc_NtkPo(pNtk,0);\n    pFanin = Abc_ObjFanin0(pObj);\n    if Abc_ObjFanin0(pObj).fPhase != uint32(Abc_ObjFaninC0(pObj)) {\n        pNtk.pModel = ABC_CALLOC( int, Abc_NtkCiNum(pNtk) );\n        return 0;\n    }\n\n    // changed in \"src\\sat\\fraig\\fraigMan.c\"\n    //    pParams-\u003enMiteringLimitStart  = 300;    // starting mitering limit\n    // to be\n    //    pParams-\u003enMiteringLimitStart  = 5000;    // starting mitering limit\n\n    // if SAT only, solve without iteration\n//    RetValue = Abc_NtkMiterSat( pNtk, 2*(ABC_INT64_T)pParams-\u003enMiteringLimitStart, (ABC_INT64_T)0, 0, NULL, NULL );\n    pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n    RetValue = Fra_FraigSat( pMan2, (ABC_INT64_T)pParams.nMiteringLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 ); \n    pNtk.pModel = (int *)pMan2.pData, pMan2.pData = nil;\n    Aig_ManStop( pMan2 );\n//    pNtk-\u003epModel = Aig_ManReleaseData( pMan2 );\n    if RetValue \u003e= 0 {\n        return RetValue; }\n\n    // apply AIG rewriting\n    if pParams.fUseRewriting \u0026\u0026 Abc_NtkNodeNum(pNtk) \u003e 500 {\n//        abctime clk = Abc_Clock();\n//printf( \"Before rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n        pParams.fUseRewriting = 0;\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n//printf( \"After rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // convert ABC network into IVY network\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n\n    // solve the CEC problem\n    RetValue = Ivy_FraigProve( \u0026pMan, pParams );\n//    RetValue = -1;\n\n    // convert IVY network into ABC network    \n    pNtk = Abc_NtkIvyAfter( pNtkTemp = pNtk, pMan, 0, 0 );\n    Abc_NtkDelete( pNtkTemp );\n    // transfer model if given\n    pNtk.pModel = (int *)pMan.pData; pMan.pData = nil;\n    Ivy_ManStop( pMan );\n\n    // try to prove it using brute force SAT with good CNF encoding\n    if RetValue \u003c 0 {\n        pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n        // dump the miter before entering high-effort solving\n        if pParams.fVerbose {\n            var pFileName string // was [100]byte in C\n\n            pFileName = fmt.Sprintf(\"cecmiter.aig\");\n            Ioa_WriteAiger( pMan2, pFileName, 0, 0 );\n            printf( \"Intermediate reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n        RetValue = Fra_FraigSat( pMan2, pParams.nMiteringLimitLast, 0, 0, 0, 0, 0, 0, 0, pParams.fVerbose ); \n        pNtk.pModel = (int *)pMan2.pData, pMan2.pData = nil;\n        Aig_ManStop( pMan2 );\n    }\n\n    // try to prove it using brute force BDDs\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n    }\n#endif\n\n    // return the result\n    *ppNtk = pNtk;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkIvy",
+      "Start": 20884,
+      "End": 23610,
+      "BodyStart": 20927,
+      "Original": "Abc_Ntk_t * Abc_NtkIvy( Abc_Ntk_t * pNtk )\n{\n//    Abc_Ntk_t * pNtkAig;\n    Ivy_Man_t * pMan;//, * pTemp;\n//    int fCleanup = 1;\n//    int nNodes;\n//    int nLatches = Abc_NtkLatchNum(pNtk);\n    Vec_Int_t * vInit = Abc_NtkCollectLatchValuesIvy( pNtk, 0 );\n\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    if ( Abc_NtkIsBddLogic(pNtk) )\n    {\n        if ( !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) )\n        {\n            Vec_IntFree( vInit );\n            printf( \"Abc_NtkIvy(): Converting to SOPs has failed.\\n\" );\n            return NULL;\n        }\n    }\n    if ( Abc_NtkCountSelfFeedLatches(pNtk) )\n    {\n        printf( \"Warning: The network has %d self-feeding latches. Quitting.\\n\", Abc_NtkCountSelfFeedLatches(pNtk) );\n        return NULL;\n    }\n\n    // print warning about choice nodes\n    if ( Abc_NtkGetChoiceNum( pNtk ) )\n        printf( \"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\" );\n\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if ( !Ivy_ManCheck( pMan ) )\n    {\n        Vec_IntFree( vInit );\n        printf( \"AIG check has failed.\\n\" );\n        Ivy_ManStop( pMan );\n        return NULL;\n    }\n\n//    Ivy_MffcTest( pMan );\n//    Ivy_ManPrintStats( pMan );\n\n//    pMan = Ivy_ManBalance( pTemp = pMan, 1 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManSeqRewrite( pMan, 0, 0 );\n//    Ivy_ManTestCutsAlg( pMan );\n//    Ivy_ManTestCutsBool( pMan );\n//    Ivy_ManRewriteAlg( pMan, 1, 1 );\n\n//    pMan = Ivy_ManResyn( pTemp = pMan, 1, 0 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManTestCutsAll( pMan );\n//    Ivy_ManTestCutsTravAll( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManRewritePre( pMan, 1, 0, 0 );\n//    Ivy_ManPrintStats( pMan );\n//    printf( \"\\n\" );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManMakeSeq( pMan, nLatches, pInit );\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRequiredLevels( pMan );\n\n//    Ivy_FastMapPerform( pMan, 8 );\n    Ivy_ManStop( pMan );\n    return NULL;\n\n\n/*\n    // convert from the AIG manager\n    pNtkAig = Abc_NtkFromIvy( pNtk, pMan );\n//    pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan );\n    Ivy_ManStop( pMan );\n\n    // report the cleanup results\n    if ( fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup(pNtkAig-\u003epManFunc)) )\n        printf( \"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkAig-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        ABC_FREE( pInit );\n        printf( \"Abc_NtkStrash: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n\n    ABC_FREE( pInit );\n    return pNtkAig;\n*/\n}",
+      "Draft": "func Abc_NtkIvy(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n//    Abc_Ntk_t * pNtkAig;\n    var pMan *Ivy_Man_t;//, * pTemp;\n//    int fCleanup = 1;\n//    int nNodes;\n//    int nLatches = Abc_NtkLatchNum(pNtk);\n    var vInit *Vec_Int_t  = Abc_NtkCollectLatchValuesIvy( pNtk, 0 );\n\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            Vec_IntFree( vInit );\n            fmt.Printf(\"Abc_NtkIvy(): Converting to SOPs has failed.\\n\");\n            return nil;\n        }\n    }\n    if Abc_NtkCountSelfFeedLatches(pNtk) {\n        fmt.Printf(\"Warning: The network has %d self-feeding latches. Quitting.\\n\", Abc_NtkCountSelfFeedLatches(pNtk));\n        return nil;\n    }\n\n    // print warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\"); }\n\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if !Ivy_ManCheck( pMan ) {\n        Vec_IntFree( vInit );\n        fmt.Printf(\"AIG check has failed.\\n\");\n        Ivy_ManStop( pMan );\n        return nil;\n    }\n\n//    Ivy_MffcTest( pMan );\n//    Ivy_ManPrintStats( pMan );\n\n//    pMan = Ivy_ManBalance( pTemp = pMan, 1 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManSeqRewrite( pMan, 0, 0 );\n//    Ivy_ManTestCutsAlg( pMan );\n//    Ivy_ManTestCutsBool( pMan );\n//    Ivy_ManRewriteAlg( pMan, 1, 1 );\n\n//    pMan = Ivy_ManResyn( pTemp = pMan, 1, 0 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManTestCutsAll( pMan );\n//    Ivy_ManTestCutsTravAll( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManRewritePre( pMan, 1, 0, 0 );\n//    Ivy_ManPrintStats( pMan );\n//    printf( \"\\n\" );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManMakeSeq( pMan, nLatches, pInit );\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRequiredLevels( pMan );\n\n//    Ivy_FastMapPerform( pMan, 8 );\n    Ivy_ManStop( pMan );\n    return nil;\n\n\n/*\n    // convert from the AIG manager\n    pNtkAig = Abc_NtkFromIvy( pNtk, pMan );\n//    pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan );\n    Ivy_ManStop( pMan );\n\n    // report the cleanup results\n    if ( fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup(pNtkAig-\u003epManFunc)) )\n        printf( \"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkAig-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        ABC_FREE( pInit );\n        printf( \"Abc_NtkStrash: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n\n    ABC_FREE( pInit );\n    return pNtkAig;\n*/\n}"
+    },
+    {
+      "Name": "Abc_NtkFromIvy",
+      "Start": 23899,
+      "End": 25543,
+      "BodyStart": 23967,
+      "Original": "Abc_Ntk_t * Abc_NtkFromIvy( Abc_Ntk_t * pNtkOld, Ivy_Man_t * pMan )\n{\n    Vec_Int_t * vNodes;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObj, * pObjNew, * pFaninNew, * pFaninNew0, * pFaninNew1;\n    Ivy_Obj_t * pNode;\n    int i;\n    // perform strashing\n    pNtk = Abc_NtkStartFrom( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan)-\u003eTravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i)-\u003eTravId = Abc_EdgeFromNode( pObj-\u003epCopy );\n    // rebuild the AIG\n    vNodes = Ivy_ManDfs( pMan );\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if ( Ivy_ObjIsBuf(pNode) )\n        {\n            pNode-\u003eTravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if ( Ivy_ObjIsExor(pNode) )\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk-\u003epManFunc, pFaninNew0, pFaninNew1 );\n        else\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pFaninNew0, pFaninNew1 );\n        pNode-\u003eTravId = Abc_EdgeFromNode( pObjNew );\n    }\n    // connect the PO nodes\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj-\u003epCopy, pFaninNew );\n    }\n    Vec_IntFree( vNodes );\n    if ( !Abc_NtkCheck( pNtk ) )\n        fprintf( stdout, \"Abc_NtkFromIvy(): Network check has failed.\\n\" );\n    return pNtk;\n}",
+      "Draft": "func Abc_NtkFromIvy(pNtkOld *Abc_Ntk_t, pMan *Ivy_Man_t) *Abc_Ntk_t {\n    var vNodes *Vec_Int_t;\n    var pNtk *Abc_Ntk_t;\n    var pObj, pObjNew, pFaninNew, pFaninNew0, pFaninNew1 *Abc_Obj_t;\n    var pNode *Ivy_Obj_t;\n    var i int32;\n    // perform strashing\n    pNtk = Abc_NtkStartFrom( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan).TravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i).TravId = Abc_EdgeFromNode( pObj.pCopy );\n    // rebuild the AIG\n    vNodes = Ivy_ManDfs( pMan );\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if Ivy_ObjIsBuf(pNode) {\n            pNode.TravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if Ivy_ObjIsExor(pNode) {\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 );\n        } else {\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 ); }\n        pNode.TravId = Abc_EdgeFromNode( pObjNew );\n    }\n    // connect the PO nodes\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj.pCopy, pFaninNew );\n    }\n    Vec_IntFree( vNodes );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromIvy(): Network check has failed.\\n\"); }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Abc_NtkFromIvySeq",
+      "Start": 25830,
+      "End": 29306,
+      "BodyStart": 25912,
+      "Original": "Abc_Ntk_t * Abc_NtkFromIvySeq( Abc_Ntk_t * pNtkOld, Ivy_Man_t * pMan, int fHaig )\n{\n    Vec_Int_t * vNodes, * vLatches;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObj, * pObjNew, * pFaninNew, * pFaninNew0, * pFaninNew1;\n    Ivy_Obj_t * pNode, * pTemp;\n    int i;\n//    assert( Ivy_ManLatchNum(pMan) \u003e 0 );\n    // perform strashing\n    pNtk = Abc_NtkStartFromNoLatches( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan)-\u003eTravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachPi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i)-\u003eTravId = Abc_EdgeFromNode( pObj-\u003epCopy );\n    // create latches of the new network\n    vNodes = Ivy_ManDfsSeq( pMan, \u0026vLatches );\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pObjNew = Abc_NtkCreateLatch( pNtk );\n        pFaninNew0 = Abc_NtkCreateBi( pNtk );\n        pFaninNew1 = Abc_NtkCreateBo( pNtk );\n        Abc_ObjAddFanin( pObjNew, pFaninNew0 );\n        Abc_ObjAddFanin( pFaninNew1, pObjNew );\n        if ( fHaig || Ivy_ObjInit(pNode) == IVY_INIT_DC )\n            Abc_LatchSetInitDc( pObjNew );\n        else if ( Ivy_ObjInit(pNode) == IVY_INIT_1 )\n            Abc_LatchSetInit1( pObjNew );\n        else if ( Ivy_ObjInit(pNode) == IVY_INIT_0 )\n            Abc_LatchSetInit0( pObjNew );\n        else assert( 0 );\n        pNode-\u003eTravId = Abc_EdgeFromNode( pFaninNew1 );\n    }\n    Abc_NtkAddDummyBoxNames( pNtk );\n    // rebuild the AIG\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if ( Ivy_ObjIsBuf(pNode) )\n        {\n            pNode-\u003eTravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if ( Ivy_ObjIsExor(pNode) )\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk-\u003epManFunc, pFaninNew0, pFaninNew1 );\n        else\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk-\u003epManFunc, pFaninNew0, pFaninNew1 );\n        pNode-\u003eTravId = Abc_EdgeFromNode( pObjNew );\n        // process the choice nodes\n        if ( fHaig \u0026\u0026 pNode-\u003epEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 )\n        {\n            pFaninNew = Abc_EdgeToNode( pNtk, pNode-\u003eTravId );\n//            pFaninNew-\u003efPhase = 0;\n            assert( !Ivy_IsComplement(pNode-\u003epEquiv) );\n            for ( pTemp = pNode-\u003epEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n            {\n                pFaninNew1 = Abc_EdgeToNode( pNtk, pTemp-\u003eTravId );\n//                pFaninNew1-\u003efPhase = Ivy_IsComplement( pTemp-\u003epEquiv );\n                pFaninNew-\u003epData = pFaninNew1;\n                pFaninNew = pFaninNew1;\n            }\n            pFaninNew-\u003epData = NULL;\n//            printf( \"Writing choice node %d.\\n\", pNode-\u003eId );\n        }\n    }\n    // connect the PO nodes\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj-\u003epCopy, pFaninNew );\n    }\n    // connect the latches\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, pNode );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(pNtk, i)), pFaninNew );\n    }\n    Vec_IntFree( vLatches );\n    Vec_IntFree( vNodes );\n    if ( !Abc_NtkCheck( pNtk ) )\n        fprintf( stdout, \"Abc_NtkFromIvySeq(): Network check has failed.\\n\" );\n    return pNtk;\n}",
+      "Draft": "func Abc_NtkFromIvySeq(pNtkOld *Abc_Ntk_t, pMan *Ivy_Man_t, fHaig int32) *Abc_Ntk_t {\n    var vNodes, vLatches *Vec_Int_t;\n    var pNtk *Abc_Ntk_t;\n    var pObj, pObjNew, pFaninNew, pFaninNew0, pFaninNew1 *Abc_Obj_t;\n    var pNode, pTemp *Ivy_Obj_t;\n    var i int32;\n//    assert( Ivy_ManLatchNum(pMan) \u003e 0 );\n    // perform strashing\n    pNtk = Abc_NtkStartFromNoLatches( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan).TravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachPi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i).TravId = Abc_EdgeFromNode( pObj.pCopy );\n    // create latches of the new network\n    vNodes = Ivy_ManDfsSeq( pMan, \u0026vLatches );\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pObjNew = Abc_NtkCreateLatch( pNtk );\n        pFaninNew0 = Abc_NtkCreateBi( pNtk );\n        pFaninNew1 = Abc_NtkCreateBo( pNtk );\n        Abc_ObjAddFanin( pObjNew, pFaninNew0 );\n        Abc_ObjAddFanin( pFaninNew1, pObjNew );\n        if (fHaig != 0) || Ivy_ObjInit(pNode) == IVY_INIT_DC {\n            Abc_LatchSetInitDc( pObjNew );\n        } else if Ivy_ObjInit(pNode) == IVY_INIT_1 {\n            Abc_LatchSetInit1( pObjNew );\n        } else if Ivy_ObjInit(pNode) == IVY_INIT_0 {\n            Abc_LatchSetInit0( pObjNew );\n        } else { assert(false, \"0\"); }\n        pNode.TravId = Abc_EdgeFromNode( pFaninNew1 );\n    }\n    Abc_NtkAddDummyBoxNames( pNtk );\n    // rebuild the AIG\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if Ivy_ObjIsBuf(pNode) {\n            pNode.TravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if Ivy_ObjIsExor(pNode) {\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 );\n        } else {\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 ); }\n        pNode.TravId = Abc_EdgeFromNode( pObjNew );\n        // process the choice nodes\n        if (fHaig != 0) \u0026\u0026 pNode.pEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 {\n            pFaninNew = Abc_EdgeToNode( pNtk, pNode.TravId );\n//            pFaninNew-\u003efPhase = 0;\n            assert(!Ivy_IsComplement(pNode.pEquiv), \"!Ivy_IsComplement(pNode.pEquiv)\");\n            for  pTemp = pNode.pEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                pFaninNew1 = Abc_EdgeToNode( pNtk, pTemp.TravId );\n//                pFaninNew1-\u003efPhase = Ivy_IsComplement( pTemp-\u003epEquiv );\n                pFaninNew.pData = pFaninNew1;\n                pFaninNew = pFaninNew1;\n            }\n            pFaninNew.pData = nil;\n//            printf( \"Writing choice node %d.\\n\", pNode-\u003eId );\n        }\n    }\n    // connect the PO nodes\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj.pCopy, pFaninNew );\n    }\n    // connect the latches\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, pNode );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(pNtk, i)), pFaninNew );\n    }\n    Vec_IntFree( vLatches );\n    Vec_IntFree( vNodes );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromIvySeq(): Network check has failed.\\n\"); }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Abc_NtkToIvy",
+      "Start": 29593,
+      "End": 30452,
+      "BodyStart": 29641,
+      "Original": "Ivy_Man_t * Abc_NtkToIvy( Abc_Ntk_t * pNtkOld )\n{\n    Ivy_Man_t * pMan;\n    Abc_Obj_t * pObj;\n    Ivy_Obj_t * pFanin;\n    int i;\n    // create the manager\n    assert( Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld) );\n    pMan = Ivy_ManStart();\n    // create the PIs\n    if ( Abc_NtkIsStrash(pNtkOld) )\n        Abc_AigConst1(pNtkOld)-\u003epCopy = (Abc_Obj_t *)Ivy_ManConst1(pMan);\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)Ivy_ObjCreatePi(pMan);\n    // perform the conversion of the internal nodes\n    Abc_NtkStrashPerformAig( pNtkOld, pMan );\n    // create the POs\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFanin = (Ivy_Obj_t *)Abc_ObjFanin0(pObj)-\u003epCopy;\n        pFanin = Ivy_NotCond( pFanin, Abc_ObjFaninC0(pObj) );\n        Ivy_ObjCreatePo( pMan, pFanin );\n    }\n    Ivy_ManCleanup( pMan );\n    return pMan;\n}",
+      "Draft": "func Abc_NtkToIvy(pNtkOld *Abc_Ntk_t) *Ivy_Man_t {\n    var pMan *Ivy_Man_t;\n    var pObj *Abc_Obj_t;\n    var pFanin *Ivy_Obj_t;\n    var i int32;\n    // create the manager\n    assert(Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld), \"Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld)\");\n    pMan = Ivy_ManStart();\n    // create the PIs\n    if Abc_NtkIsStrash(pNtkOld) {\n        Abc_AigConst1(pNtkOld).pCopy = (Abc_Obj_t *)Ivy_ManConst1(pMan); }\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)Ivy_ObjCreatePi(pMan);\n    // perform the conversion of the internal nodes\n    Abc_NtkStrashPerformAig( pNtkOld, pMan );\n    // create the POs\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFanin = (Ivy_Obj_t *)Abc_ObjFanin0(pObj).pCopy;\n        pFanin = Ivy_NotCond( pFanin, Abc_ObjFaninC0(pObj) );\n        Ivy_ObjCreatePo( pMan, pFanin );\n    }\n    Ivy_ManCleanup( pMan );\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkStrashPerformAig",
+      "Start": 30723,
+      "End": 31250,
+      "BodyStart": 30790,
+      "Original": "void Abc_NtkStrashPerformAig( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan )\n{\n//    ProgressBar * pProgress;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode;\n    int i;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n//    pProgress = Extra_ProgressBarStart( stdout, vNodes-\u003enSize );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n//        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNode-\u003epCopy = (Abc_Obj_t *)Abc_NodeStrashAig( pMan, pNode );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Abc_NtkStrashPerformAig(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t) {\n//    ProgressBar * pProgress;\n    var vNodes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n//    pProgress = Extra_ProgressBarStart( stdout, vNodes-\u003enSize );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n//        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeStrashAig( pMan, pNode );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_NodeStrashAig",
+      "Start": 31510,
+      "End": 32772,
+      "BodyStart": 31579,
+      "Original": "Ivy_Obj_t * Abc_NodeStrashAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode )\n{\n    int fUseFactor = 1;\n    char * pSop;\n    Ivy_Obj_t * pFanin0, * pFanin1;\n\n    assert( Abc_ObjIsNode(pNode) );\n\n    // consider the case when the graph is an AIG\n    if ( Abc_NtkIsStrash(pNode-\u003epNtk) )\n    {\n        if ( Abc_AigNodeIsConst(pNode) )\n            return Ivy_ManConst1(pMan);\n        pFanin0 = (Ivy_Obj_t *)Abc_ObjFanin0(pNode)-\u003epCopy;\n        pFanin0 = Ivy_NotCond( pFanin0, Abc_ObjFaninC0(pNode) );\n        pFanin1 = (Ivy_Obj_t *)Abc_ObjFanin1(pNode)-\u003epCopy;\n        pFanin1 = Ivy_NotCond( pFanin1, Abc_ObjFaninC1(pNode) );\n        return Ivy_And( pMan, pFanin0, pFanin1 );\n    }\n\n    // get the SOP of the node\n    if ( Abc_NtkHasMapping(pNode-\u003epNtk) )\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode-\u003epData);\n    else\n        pSop = (char *)pNode-\u003epData;\n\n    // consider the constant node\n    if ( Abc_NodeIsConst(pNode) )\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Abc_SopIsConst0(pSop) );\n\n    // decide when to use factoring\n    if ( fUseFactor \u0026\u0026 Abc_ObjFaninNum(pNode) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) )\n        return Abc_NodeStrashAigFactorAig( pMan, pNode, pSop );\n    return Abc_NodeStrashAigSopAig( pMan, pNode, pSop );\n}",
+      "Draft": "func Abc_NodeStrashAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t) *Ivy_Obj_t {\n    var fUseFactor int32  = 1;\n    var pSop string;\n    var pFanin0, pFanin1 *Ivy_Obj_t;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n\n    // consider the case when the graph is an AIG\n    if Abc_NtkIsStrash(pNode.pNtk) {\n        if Abc_AigNodeIsConst(pNode) {\n            return Ivy_ManConst1(pMan); }\n        pFanin0 = (Ivy_Obj_t *)Abc_ObjFanin0(pNode).pCopy;\n        pFanin0 = Ivy_NotCond( pFanin0, Abc_ObjFaninC0(pNode) );\n        pFanin1 = (Ivy_Obj_t *)Abc_ObjFanin1(pNode).pCopy;\n        pFanin1 = Ivy_NotCond( pFanin1, Abc_ObjFaninC1(pNode) );\n        return Ivy_And( pMan, pFanin0, pFanin1 );\n    }\n\n    // get the SOP of the node\n    if Abc_NtkHasMapping(pNode.pNtk) {\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode.pData);\n    } else {\n        pSop = (char *)pNode.pData; }\n\n    // consider the constant node\n    if Abc_NodeIsConst(pNode) {\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Abc_SopIsConst0(pSop) ); }\n\n    // decide when to use factoring\n    if (fUseFactor != 0) \u0026\u0026 Abc_ObjFaninNum(pNode) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) {\n        return Abc_NodeStrashAigFactorAig( pMan, pNode, pSop ); }\n    return Abc_NodeStrashAigSopAig( pMan, pNode, pSop );\n}"
+    },
+    {
+      "Name": "Abc_NodeStrashAigSopAig",
+      "Start": 33046,
+      "End": 34240,
+      "BodyStart": 33134,
+      "Original": "Ivy_Obj_t * Abc_NodeStrashAigSopAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode, char * pSop )\n{\n    Abc_Obj_t * pFanin;\n    Ivy_Obj_t * pAnd, * pSum;\n    char * pCube;\n    int i, nFanins;\n    int fExor = Abc_SopIsExorType(pSop);\n\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert( nFanins == Abc_SopGetVarNum(pSop) );\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    Abc_SopForEachCube( pSop, nFanins, pCube )\n    {\n        // create the AND of literals\n        pAnd = Ivy_ManConst1(pMan);\n        Abc_ObjForEachFanin( pNode, pFanin, i ) // pFanin can be a net\n        {\n            if ( pCube[i] == '1' )\n                pAnd = Ivy_And( pMan, pAnd, (Ivy_Obj_t *)pFanin-\u003epCopy );\n            else if ( pCube[i] == '0' )\n                pAnd = Ivy_And( pMan, pAnd, Ivy_Not((Ivy_Obj_t *)pFanin-\u003epCopy) );\n        }\n        // add to the sum of cubes\n        if ( fExor )\n            pSum = Ivy_Exor( pMan, pSum, pAnd );\n        else\n            pSum = Ivy_Or( pMan, pSum, pAnd );\n    }\n    // decide whether to complement the result\n    if ( Abc_SopIsComplement(pSop) )\n        pSum = Ivy_Not(pSum);\n    return pSum;\n}",
+      "Draft": "func Abc_NodeStrashAigSopAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFanin *Abc_Obj_t;\n    var pAnd, pSum *Ivy_Obj_t;\n    var pCube string;\n    var i, nFanins int32;\n    var fExor int32  = Abc_SopIsExorType(pSop);\n\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum(pSop), \"nFanins == Abc_SopGetVarNum(pSop)\");\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    Abc_SopForEachCube( pSop, nFanins, pCube )\n    {\n        // create the AND of literals\n        pAnd = Ivy_ManConst1(pMan);\n        Abc_ObjForEachFanin( pNode, pFanin, i ) // pFanin can be a net\n        {\n            if pCube[i] == '1' {\n                pAnd = Ivy_And( pMan, pAnd, (Ivy_Obj_t *)pFanin.pCopy );\n            } else if pCube[i] == '0' {\n                pAnd = Ivy_And( pMan, pAnd, Ivy_Not((Ivy_Obj_t *)pFanin.pCopy) ); }\n        }\n        // add to the sum of cubes\n        if fExor != 0 {\n            pSum = Ivy_Exor( pMan, pSum, pAnd );\n        } else {\n            pSum = Ivy_Or( pMan, pSum, pAnd ); }\n    }\n    // decide whether to complement the result\n    if Abc_SopIsComplement(pSop) {\n        pSum = Ivy_Not(pSum); }\n    return pSum;\n}"
+    },
+    {
+      "Name": "Abc_NodeStrashAigExorAig",
+      "Start": 34506,
+      "End": 35123,
+      "BodyStart": 34595,
+      "Original": "Ivy_Obj_t * Abc_NodeStrashAigExorAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode, char * pSop )\n{\n    Abc_Obj_t * pFanin;\n    Ivy_Obj_t * pSum;\n    int i, nFanins;\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert( nFanins == Abc_SopGetVarNum(pSop) );\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    for ( i = 0; i \u003c nFanins; i++ )\n    {\n        pFanin = Abc_ObjFanin( pNode, i );\n        pSum = Ivy_Exor( pMan, pSum, (Ivy_Obj_t *)pFanin-\u003epCopy );\n    }\n    if ( Abc_SopIsComplement(pSop) )\n        pSum = Ivy_Not(pSum);\n    return pSum;\n}",
+      "Draft": "func Abc_NodeStrashAigExorAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFanin *Abc_Obj_t;\n    var pSum *Ivy_Obj_t;\n    var i, nFanins int32;\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum(pSop), \"nFanins == Abc_SopGetVarNum(pSop)\");\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    for  i = 0; i \u003c nFanins; i++  {\n        pFanin = Abc_ObjFanin( pNode, i );\n        pSum = Ivy_Exor( pMan, pSum, (Ivy_Obj_t *)pFanin.pCopy );\n    }\n    if Abc_SopIsComplement(pSop) {\n        pSum = Ivy_Not(pSum); }\n    return pSum;\n}"
+    },
+    {
+      "Name": "Abc_NodeStrashAigFactorAig",
+      "Start": 35397,
+      "End": 36061,
+      "BodyStart": 35488,
+      "Original": "Ivy_Obj_t * Abc_NodeStrashAigFactorAig( Ivy_Man_t * pMan, Abc_Obj_t * pRoot, char * pSop )\n{\n    Dec_Graph_t * pFForm;\n    Dec_Node_t * pNode;\n    Ivy_Obj_t * pAnd;\n    int i;\n\n//    extern Ivy_Obj_t * Dec_GraphToNetworkAig( Ivy_Man_t * pMan, Dec_Graph_t * pGraph );\n\n//    assert( 0 );\n\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode-\u003epFunc = Abc_ObjFanin(pRoot,i)-\u003epCopy;\n    // perform strashing\n//    pAnd = Dec_GraphToNetworkAig( pMan, pFForm );\n    pAnd = Dec_GraphToNetworkIvy( pMan, pFForm );\n//    pAnd = NULL;\n\n    Dec_GraphFree( pFForm );\n    return pAnd;\n}",
+      "Draft": "func Abc_NodeStrashAigFactorAig(pMan *Ivy_Man_t, pRoot *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var pAnd *Ivy_Obj_t;\n    var i int32;\n\n//    extern Ivy_Obj_t * Dec_GraphToNetworkAig( Ivy_Man_t * pMan, Dec_Graph_t * pGraph );\n\n//    assert( 0 );\n\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode.pFunc = Abc_ObjFanin(pRoot,i).pCopy;\n    // perform strashing\n//    pAnd = Dec_GraphToNetworkAig( pMan, pFForm );\n    pAnd = Dec_GraphToNetworkIvy( pMan, pFForm );\n//    pAnd = NULL;\n\n    Dec_GraphFree( pFForm );\n    return pAnd;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectLatchValuesIvy",
+      "Start": 36335,
+      "End": 36907,
+      "BodyStart": 36409,
+      "Original": "Vec_Int_t * Abc_NtkCollectLatchValuesIvy( Abc_Ntk_t * pNtk, int fUseDcs )\n{\n    Abc_Obj_t * pLatch;\n    Vec_Int_t * vArray;\n    int i;\n    vArray = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( fUseDcs || Abc_LatchIsInitDc(pLatch) )\n            Vec_IntPush( vArray, IVY_INIT_DC );\n        else if ( Abc_LatchIsInit1(pLatch) )\n            Vec_IntPush( vArray, IVY_INIT_1 );\n        else if ( Abc_LatchIsInit0(pLatch) )\n            Vec_IntPush( vArray, IVY_INIT_0 );\n        else assert( 0 );\n    }\n    return vArray;\n}",
+      "Draft": "func Abc_NtkCollectLatchValuesIvy(pNtk *Abc_Ntk_t, fUseDcs int32) *Vec_Int_t {\n    var pLatch *Abc_Obj_t;\n    var vArray *Vec_Int_t;\n    var i int32;\n    vArray = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if (fUseDcs != 0) || Abc_LatchIsInitDc(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_DC );\n        } else if Abc_LatchIsInit1(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_1 );\n        } else if Abc_LatchIsInit0(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_0 );\n        } else { assert(false, \"0\"); }\n    }\n    return vArray;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::6166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6151,
+      "End": 6164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::14304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14289,
+      "End": 14302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::15917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15902,
+      "End": 15909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::16415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16400,
+      "End": 16418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::17849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17834,
+      "End": 17841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::19079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19064,
+      "End": 19071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::19768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19753,
+      "End": 19760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::24422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24975,
+      "End": 24988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::24524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25077,
+      "End": 25090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::27205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27758,
+      "End": 27771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::27307",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27860,
+      "End": 27873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::29386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29939,
+      "End": 29952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::29483",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30036,
+      "End": 30049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::29703",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30256,
+      "End": 30269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::30574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31127,
+      "End": 31140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::31338",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31891,
+      "End": 31904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::31463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32016,
+      "End": 32029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::31731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32284,
+      "End": 32298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::31784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32337,
+      "End": 32345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::33221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33774,
+      "End": 33787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::33343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33896,
+      "End": 33909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::pointer-cast::34449",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35002,
+      "End": 35015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2147,
+      "End": 2268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2269,
+      "End": 2390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2391,
+      "End": 2512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeRegular",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2513,
+      "End": 2634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeNot",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2635,
+      "End": 2756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2757,
+      "End": 2878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeFromNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeFromNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2879,
+      "End": 3047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_EdgeToNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EdgeToNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3048,
+      "End": 3216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_ObjFanin0Ivy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjFanin0Ivy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3218,
+      "End": 3395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_ObjFanin1Ivy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjFanin1Ivy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3396,
+      "End": 3573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyBefore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyBefore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4161,
+      "End": 5489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyAfter",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyAfter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5750,
+      "End": 6602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyStrash",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyStrash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6898,
+      "End": 7181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyHaig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyHaig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7478,
+      "End": 9023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9319,
+      "End": 9545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9841,
+      "End": 10313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyRewriteSeq",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyRewriteSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10609,
+      "End": 11130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyResyn0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyResyn0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11426,
+      "End": 11842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyResyn",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyResyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12138,
+      "End": 12552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvySat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvySat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12848,
+      "End": 13467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkTransferPointers",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTransferPointers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13755,
+      "End": 14638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyFraig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14934,
+      "End": 16014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::void-pointer::Abc_NtkIvyProve",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkIvyProve",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16311,
+      "End": 20588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvyProve",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvyProve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16311,
+      "End": 20588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkIvy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIvy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20884,
+      "End": 23610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkFromIvy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromIvy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23899,
+      "End": 25543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkFromIvySeq",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromIvySeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25830,
+      "End": 29306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkToIvy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToIvy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29593,
+      "End": 30452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkStrashPerformAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkStrashPerformAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30723,
+      "End": 31250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NodeStrashAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31510,
+      "End": 32772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NodeStrashAigSopAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashAigSopAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33046,
+      "End": 34240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NodeStrashAigExorAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashAigExorAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34506,
+      "End": 35123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NodeStrashAigFactorAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeStrashAigFactorAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35397,
+      "End": 36061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::Abc_NtkCollectLatchValuesIvy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectLatchValuesIvy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36335,
+      "End": 36907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 37154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 704,
+      "End": 763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19878,
+      "End": 20520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::13976",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13976,
+      "End": 14009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::14059",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14059,
+      "End": 14092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::14142",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14142,
+      "End": 14178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::14229",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14229,
+      "End": 14264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::17216",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17216,
+      "End": 17253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::24345",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24345,
+      "End": 24381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::24512",
+      "Category": "macro-inline-review",
+      "Symbol": "Ivy_ManForEachNodeVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24512,
+      "End": 24559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::25223",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25223,
+      "End": 25259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::26363",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26363,
+      "End": 26399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::26562",
+      "Category": "macro-inline-review",
+      "Symbol": "Ivy_ManForEachNodeVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26562,
+      "End": 26611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::27295",
+      "Category": "macro-inline-review",
+      "Symbol": "Ivy_ManForEachNodeVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27295,
+      "End": 27342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::28734",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28734,
+      "End": 28770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::28931",
+      "Category": "macro-inline-review",
+      "Symbol": "Ivy_ManForEachNodeVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28931,
+      "End": 28980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::29977",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29977,
+      "End": 30013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::30196",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30196,
+      "End": 30232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::30988",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30988,
+      "End": 31040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::33491",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33491,
+      "End": 33533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::33622",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33622,
+      "End": 33661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::35773",
+      "Category": "macro-inline-review",
+      "Symbol": "Dec_GraphForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35773,
+      "End": 35813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcIvy.c::macro-inline::36526",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36526,
+      "End": 36564
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcIvy.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Strashing of the current network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcIvy.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"proof/fra/fra.h\"\n//#include \"aig/ivy/ivy.h\"\n//#include \"proof/fraig/fraig.h\"\n//#include \"map/mio/mio.h\"\n//#include \"aig/aig/aig.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n// extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n// extern void   Aig_ManStop( Aig_Man_t * pMan );\n\n//extern int Fra_FraigSat( Aig_Man_t * pMan, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, int fFlipBits, int fAndOuts, int fNewSolver, int fVerbose );\n// extern Ivy_Obj_t * Dec_GraphToNetworkIvy( Ivy_Man_t * pMan, Dec_Graph_t * pGraph );\n\n// extern void Ivy_CutComputeAll( Ivy_Man_t * p, int nInputs );\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Abc_Ntk_t *  Abc_NtkFromIvy( Abc_Ntk_t * pNtkOld, Ivy_Man_t * pMan );\n\n// static Abc_Ntk_t *  Abc_NtkFromIvySeq( Abc_Ntk_t * pNtkOld, Ivy_Man_t * pMan, int fHaig );\n\n// static Ivy_Man_t *  Abc_NtkToIvy( Abc_Ntk_t * pNtkOld );\n\n\n// static void         Abc_NtkStrashPerformAig( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan );\n\n// static Ivy_Obj_t *  Abc_NodeStrashAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode );\n\n// static Ivy_Obj_t *  Abc_NodeStrashAigSopAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode, char * pSop );\n\n// static Ivy_Obj_t *  Abc_NodeStrashAigExorAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode, char * pSop );\n\n// static Ivy_Obj_t *  Abc_NodeStrashAigFactorAig( Ivy_Man_t * pMan, Abc_Obj_t * pNode, char * pSop );\n\n\ntypedef int   Abc_Edge_t;\nfunc Abc_EdgeCreate(Id int32, fCompl int32) Abc_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }\nfunc Abc_EdgeId(Edge Abc_Edge_t) int32 { return Edge \u003e\u003e 1;                      }\nfunc Abc_EdgeIsComplement(Edge Abc_Edge_t) int32 { return Edge \u0026 1;                       }\nfunc Abc_EdgeRegular(Edge Abc_Edge_t) Abc_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }\nfunc Abc_EdgeNot(Edge Abc_Edge_t) Abc_Edge_t { return Edge ^ 1;                       }\nfunc Abc_EdgeNotCond(Edge Abc_Edge_t, fCond int32) Abc_Edge_t { return Edge ^ fCond;                   }\nfunc Abc_EdgeFromNode(pNode *Abc_Obj_t) Abc_Edge_t { return Abc_EdgeCreate( Abc_ObjRegular(pNode).Id, Abc_ObjIsComplement(pNode) );       }\nfunc Abc_EdgeToNode(p *Abc_Ntk_t, Edge Abc_Edge_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_NtkObj(p, Abc_EdgeId(Edge)), Abc_EdgeIsComplement(Edge) ); }\n\nfunc Abc_ObjFanin0Ivy(p *Abc_Ntk_t, pObj *Ivy_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin0(pObj).TravId), Ivy_ObjFaninC0(pObj) ); }\nfunc Abc_ObjFanin1Ivy(p *Abc_Ntk_t, pObj *Ivy_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( Abc_EdgeToNode(p, Ivy_ObjFanin1(pObj).TravId), Ivy_ObjFaninC1(pObj) ); }\n\n// static Vec_Int_t * Abc_NtkCollectLatchValuesIvy( Abc_Ntk_t * pNtk, int fUseDcs );\n\n\nvar timeRetime int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the IVY package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyBefore(pNtk *Abc_Ntk_t, fSeq int32, fUseDc int32) *Ivy_Man_t {\n    var pMan *Ivy_Man_t;\n//timeRetime = Abc_Clock();\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Abc_NtkIvyBefore(): Converting to SOPs has failed.\\n\");\n            return nil;\n        }\n    }\n    if (fSeq != 0) \u0026\u0026 Abc_NtkCountSelfFeedLatches(pNtk) {\n        fmt.Printf(\"Warning: The network has %d self-feeding latches.\\n\", Abc_NtkCountSelfFeedLatches(pNtk));\n//        return NULL;\n    }\n    // print warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\"); }\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if !Ivy_ManCheck( pMan ) {\n        fmt.Printf(\"AIG check has failed.\\n\");\n        Ivy_ManStop( pMan );\n        return nil;\n    }\n//    Ivy_ManPrintStats( pMan );\n    if fSeq != 0 {\n        var nLatches int32  = Abc_NtkLatchNum(pNtk);\n        var vInit *Vec_Int_t  = Abc_NtkCollectLatchValuesIvy( pNtk, fUseDc );\n        Ivy_ManMakeSeq( pMan, nLatches, vInit.pArray );\n        Vec_IntFree( vInit );\n//        Ivy_ManPrintStats( pMan );\n    }\n//timeRetime = Abc_Clock() - timeRetime;\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the IVY package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyAfter(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t, fSeq int32, fHaig int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var nNodes int32;\n    var fCleanup int32 = 1;\n    // convert from the AIG manager\n    if fSeq != 0 {\n        pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan, fHaig );\n    } else {\n        pNtkAig = Abc_NtkFromIvy( pNtk, pMan ); }\n    // report the cleanup results\n    if !fHaig \u0026\u0026 fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup((Abc_Aig_t *)pNtkAig.pManFunc)) {\n        fmt.Printf(\"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes); }\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkAig.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkStrash: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyStrash(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if pMan == nil {\n        return nil; }\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyHaig(pNtk *Abc_Ntk_t, nIters int32, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    var clk abctime;\n//    int i;\n/*\nextern int nMoves;\nextern int nMovesS;\nextern int nClauses;\nextern int timeInv;\n\nnMoves = 0;\nnMovesS = 0;\nnClauses = 0;\ntimeInv = 0;\n*/\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n\nclk = Abc_Clock();\n    Ivy_ManHaigStart( pMan, fVerbose );\n//    Ivy_ManRewriteSeq( pMan, 0, 0 );\n//    for ( i = 0; i \u003c nIters; i++ )\n//        Ivy_ManRewriteSeq( pMan, fUseZeroCost, 0 );\n\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 0, 0 );\n    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"%d \", Ivy_ManNodeNum(pMan) );\n//printf( \"%d \", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//ABC_PRT( \" \", Abc_Clock() - clk );\n//printf( \"\\n\" );\n/*\n    printf( \"Moves = %d.  \", nMoves );\n    printf( \"MovesS = %d.  \", nMovesS );\n    printf( \"Clauses = %d.  \", nClauses );\n    ABC_PRT( \"Time\", timeInv );\n*/\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//printf( \"Haig size = %d.\\n\", Ivy_ManNodeNum(pMan-\u003epHaig) );\n//    Ivy_ManHaigPostprocess( pMan, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n\n    // write working AIG into the current network\n//    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 ); \n    // write HAIG into the current network\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan.pHaig, 1, 1 );\n\n    Ivy_ManHaigStop( pMan );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyCuts(pNtk *Abc_Ntk_t, nInputs int32) {\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 0 );\n    if pMan == nil {\n        return; }\n    Ivy_CutComputeAll( pMan, nInputs );\n    Ivy_ManStop( pMan );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyRewrite(pNtk *Abc_Ntk_t, fUpdateLevel int32, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n    Ivy_ManRewritePre( pMan, fUpdateLevel, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyRewriteSeq(pNtk *Abc_Ntk_t, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 1, 1 );\n    if pMan == nil {\n        return nil; }\n//timeRetime = Abc_Clock();\n    Ivy_ManRewriteSeq( pMan, fUseZeroCost, fVerbose );\n//timeRetime = Abc_Clock() - timeRetime;\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n//    Ivy_ManRewriteSeq( pMan, 1, 0 );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 1, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyResyn0(pNtk *Abc_Ntk_t, fUpdateLevel int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    pMan = Ivy_ManResyn0( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyResyn(pNtk *Abc_Ntk_t, fUpdateLevel int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    pMan = Ivy_ManResyn( pTemp = pMan, fUpdateLevel, fVerbose );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvySat(pNtk *Abc_Ntk_t, nConfLimit int32, fVerbose int32) *Abc_Ntk_t {\n    var Params Ivy_FraigParams_t;\n    var pParams *Ivy_FraigParams_t = \u0026Params; \n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    Ivy_FraigParamsDefault( pParams );\n    pParams.nBTLimitMiter = nConfLimit;\n    pParams.fVerbose = fVerbose;\n//    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    pMan = Ivy_FraigMiter( pTemp = pMan, pParams );\n    Ivy_ManStop( pTemp );\n    pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the final nodes to point to the original nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pObjIvy, pObjFraig *Ivy_Obj_t;\n    var i int32;\n    pObj = Abc_AigConst1(pNtk);\n    pObj.pCopy = Abc_AigConst1(pNtkAig);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkCi(pNtkAig, i);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkCo(pNtkAig, i);\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj.pCopy = Abc_NtkBox(pNtkAig, i);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObjIvy = (Ivy_Obj_t *)pObj.pCopy;\n        if pObjIvy == nil {\n            continue; }\n        pObjFraig = Ivy_ObjEquiv( pObjIvy );\n        if pObjFraig == nil {\n            continue; }\n        pObj.pCopy = Abc_EdgeToNode( pNtkAig, Ivy_Regular(pObjFraig).TravId );\n        pObj.pCopy = Abc_ObjNotCond( pObj.pCopy, Ivy_IsComplement(pObjFraig) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvyFraig(pNtk *Abc_Ntk_t, nConfLimit int32, fDoSparse int32, fProve int32, fTransfer int32, fVerbose int32) *Abc_Ntk_t {\n    var Params Ivy_FraigParams_t;\n    var pParams *Ivy_FraigParams_t = \u0026Params; \n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Ivy_Man_t;\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    if pMan == nil {\n        return nil; }\n    Ivy_FraigParamsDefault( pParams );\n    pParams.nBTLimitNode = nConfLimit;\n    pParams.fVerbose     = fVerbose;\n    pParams.fProve       = fProve;\n    pParams.fDoSparse    = fDoSparse;\n    pMan = Ivy_FraigPerform( pTemp = pMan, pParams );\n    // transfer the pointers\n    if fTransfer == 1 {\n        var vCopies *Vec_Ptr_t;\n        vCopies = Abc_NtkSaveCopy( pNtk );\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 );\n        Abc_NtkLoadCopy( pNtk, vCopies );\n        Vec_PtrFree( vCopies );\n        Abc_NtkTransferPointers( pNtk, pNtkAig );\n    \n    } else {\n        pNtkAig = Abc_NtkIvyAfter( pNtk, pMan, 0, 0 ); }\n    pNtkAig.pModel = (int *)pMan.pData; pMan.pData = nil;\n    Ivy_ManStop( pTemp );\n    Ivy_ManStop( pMan );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc Abc_NtkIvyProve(ppNtk **Abc_Ntk_t, pPars any) int32 {\n    var pParams *Prove_Params_t  = (Prove_Params_t *)pPars;\n    var pNtk *Abc_Ntk_t = *ppNtk;\n    var pNtkTemp *Abc_Ntk_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pMan *Ivy_Man_t;\n    var pMan2 *Aig_Man_t;\n    var RetValue int32;\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    // experiment with various parameters settings\n//    pParams-\u003efUseBdds = 1;\n//    pParams-\u003efBddReorder = 1;\n//    pParams-\u003enTotalBacktrackLimit = 10000;\n \n    // strash the network if it is not strashed already\n    if !Abc_NtkIsStrash(pNtk) {\n        pNtk = Abc_NtkStrash( pNtkTemp = pNtk, 0, 1, 0 );\n        Abc_NtkDelete( pNtkTemp );\n    }\n \n    // check the case when the 0000 simulation pattern detect the bug\n    pObj = Abc_NtkPo(pNtk,0);\n    pFanin = Abc_ObjFanin0(pObj);\n    if Abc_ObjFanin0(pObj).fPhase != uint32(Abc_ObjFaninC0(pObj)) {\n        pNtk.pModel = ABC_CALLOC( int, Abc_NtkCiNum(pNtk) );\n        return 0;\n    }\n\n    // changed in \"src\\sat\\fraig\\fraigMan.c\"\n    //    pParams-\u003enMiteringLimitStart  = 300;    // starting mitering limit\n    // to be\n    //    pParams-\u003enMiteringLimitStart  = 5000;    // starting mitering limit\n\n    // if SAT only, solve without iteration\n//    RetValue = Abc_NtkMiterSat( pNtk, 2*(ABC_INT64_T)pParams-\u003enMiteringLimitStart, (ABC_INT64_T)0, 0, NULL, NULL );\n    pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n    RetValue = Fra_FraigSat( pMan2, (ABC_INT64_T)pParams.nMiteringLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 ); \n    pNtk.pModel = (int *)pMan2.pData, pMan2.pData = nil;\n    Aig_ManStop( pMan2 );\n//    pNtk-\u003epModel = Aig_ManReleaseData( pMan2 );\n    if RetValue \u003e= 0 {\n        return RetValue; }\n\n    // apply AIG rewriting\n    if pParams.fUseRewriting \u0026\u0026 Abc_NtkNodeNum(pNtk) \u003e 500 {\n//        abctime clk = Abc_Clock();\n//printf( \"Before rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n        pParams.fUseRewriting = 0;\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          \n        Abc_NtkDelete( pNtkTemp );\n        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n        Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n//printf( \"After rwsat = %d. \", Abc_NtkNodeNum(pNtk) );\n//ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // convert ABC network into IVY network\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n\n    // solve the CEC problem\n    RetValue = Ivy_FraigProve( \u0026pMan, pParams );\n//    RetValue = -1;\n\n    // convert IVY network into ABC network    \n    pNtk = Abc_NtkIvyAfter( pNtkTemp = pNtk, pMan, 0, 0 );\n    Abc_NtkDelete( pNtkTemp );\n    // transfer model if given\n    pNtk.pModel = (int *)pMan.pData; pMan.pData = nil;\n    Ivy_ManStop( pMan );\n\n    // try to prove it using brute force SAT with good CNF encoding\n    if RetValue \u003c 0 {\n        pMan2 = Abc_NtkToDar( pNtk, 0, 0 );\n        // dump the miter before entering high-effort solving\n        if pParams.fVerbose {\n            var pFileName string // was [100]byte in C\n\n            pFileName = fmt.Sprintf(\"cecmiter.aig\");\n            Ioa_WriteAiger( pMan2, pFileName, 0, 0 );\n            printf( \"Intermediate reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n        RetValue = Fra_FraigSat( pMan2, pParams.nMiteringLimitLast, 0, 0, 0, 0, 0, 0, 0, pParams.fVerbose ); \n        pNtk.pModel = (int *)pMan2.pData, pMan2.pData = nil;\n        Aig_ManStop( pMan2 );\n    }\n\n    // try to prove it using brute force BDDs\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n    }\n#endif\n\n    // return the result\n    *ppNtk = pNtk;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gives the current ABC network to AIG manager for processing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIvy(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n//    Abc_Ntk_t * pNtkAig;\n    var pMan *Ivy_Man_t;//, * pTemp;\n//    int fCleanup = 1;\n//    int nNodes;\n//    int nLatches = Abc_NtkLatchNum(pNtk);\n    var vInit *Vec_Int_t  = Abc_NtkCollectLatchValuesIvy( pNtk, 0 );\n\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            Vec_IntFree( vInit );\n            fmt.Printf(\"Abc_NtkIvy(): Converting to SOPs has failed.\\n\");\n            return nil;\n        }\n    }\n    if Abc_NtkCountSelfFeedLatches(pNtk) {\n        fmt.Printf(\"Warning: The network has %d self-feeding latches. Quitting.\\n\", Abc_NtkCountSelfFeedLatches(pNtk));\n        return nil;\n    }\n\n    // print warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Warning: The choice nodes in the initial AIG are removed by strashing.\\n\"); }\n\n    // convert to the AIG manager\n    pMan = Abc_NtkToIvy( pNtk );\n    if !Ivy_ManCheck( pMan ) {\n        Vec_IntFree( vInit );\n        fmt.Printf(\"AIG check has failed.\\n\");\n        Ivy_ManStop( pMan );\n        return nil;\n    }\n\n//    Ivy_MffcTest( pMan );\n//    Ivy_ManPrintStats( pMan );\n\n//    pMan = Ivy_ManBalance( pTemp = pMan, 1 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManSeqRewrite( pMan, 0, 0 );\n//    Ivy_ManTestCutsAlg( pMan );\n//    Ivy_ManTestCutsBool( pMan );\n//    Ivy_ManRewriteAlg( pMan, 1, 1 );\n\n//    pMan = Ivy_ManResyn( pTemp = pMan, 1, 0 );\n//    Ivy_ManStop( pTemp );\n\n//    Ivy_ManTestCutsAll( pMan );\n//    Ivy_ManTestCutsTravAll( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManRewritePre( pMan, 1, 0, 0 );\n//    Ivy_ManPrintStats( pMan );\n//    printf( \"\\n\" );\n\n//    Ivy_ManPrintStats( pMan );\n//    Ivy_ManMakeSeq( pMan, nLatches, pInit );\n//    Ivy_ManPrintStats( pMan );\n\n//    Ivy_ManRequiredLevels( pMan );\n\n//    Ivy_FastMapPerform( pMan, 8 );\n    Ivy_ManStop( pMan );\n    return nil;\n\n\n/*\n    // convert from the AIG manager\n    pNtkAig = Abc_NtkFromIvy( pNtk, pMan );\n//    pNtkAig = Abc_NtkFromIvySeq( pNtk, pMan );\n    Ivy_ManStop( pMan );\n\n    // report the cleanup results\n    if ( fCleanup \u0026\u0026 (nNodes = Abc_AigCleanup(pNtkAig-\u003epManFunc)) )\n        printf( \"Warning: AIG cleanup removed %d nodes (this is not a bug).\\n\", nNodes );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkAig-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        ABC_FREE( pInit );\n        printf( \"Abc_NtkStrash: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n\n    ABC_FREE( pInit );\n    return pNtkAig;\n*/\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from the AIG manager into ABC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromIvy(pNtkOld *Abc_Ntk_t, pMan *Ivy_Man_t) *Abc_Ntk_t {\n    var vNodes *Vec_Int_t;\n    var pNtk *Abc_Ntk_t;\n    var pObj, pObjNew, pFaninNew, pFaninNew0, pFaninNew1 *Abc_Obj_t;\n    var pNode *Ivy_Obj_t;\n    var i int32;\n    // perform strashing\n    pNtk = Abc_NtkStartFrom( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan).TravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i).TravId = Abc_EdgeFromNode( pObj.pCopy );\n    // rebuild the AIG\n    vNodes = Ivy_ManDfs( pMan );\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if Ivy_ObjIsBuf(pNode) {\n            pNode.TravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if Ivy_ObjIsExor(pNode) {\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 );\n        } else {\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 ); }\n        pNode.TravId = Abc_EdgeFromNode( pObjNew );\n    }\n    // connect the PO nodes\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj.pCopy, pFaninNew );\n    }\n    Vec_IntFree( vNodes );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromIvy(): Network check has failed.\\n\"); }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from the AIG manager into ABC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromIvySeq(pNtkOld *Abc_Ntk_t, pMan *Ivy_Man_t, fHaig int32) *Abc_Ntk_t {\n    var vNodes, vLatches *Vec_Int_t;\n    var pNtk *Abc_Ntk_t;\n    var pObj, pObjNew, pFaninNew, pFaninNew0, pFaninNew1 *Abc_Obj_t;\n    var pNode, pTemp *Ivy_Obj_t;\n    var i int32;\n//    assert( Ivy_ManLatchNum(pMan) \u003e 0 );\n    // perform strashing\n    pNtk = Abc_NtkStartFromNoLatches( pNtkOld, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Ivy_ManConst1(pMan).TravId = Abc_EdgeFromNode( Abc_AigConst1(pNtk) );\n    Abc_NtkForEachPi( pNtkOld, pObj, i )\n        Ivy_ManPi(pMan, i).TravId = Abc_EdgeFromNode( pObj.pCopy );\n    // create latches of the new network\n    vNodes = Ivy_ManDfsSeq( pMan, \u0026vLatches );\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pObjNew = Abc_NtkCreateLatch( pNtk );\n        pFaninNew0 = Abc_NtkCreateBi( pNtk );\n        pFaninNew1 = Abc_NtkCreateBo( pNtk );\n        Abc_ObjAddFanin( pObjNew, pFaninNew0 );\n        Abc_ObjAddFanin( pFaninNew1, pObjNew );\n        if (fHaig != 0) || Ivy_ObjInit(pNode) == IVY_INIT_DC {\n            Abc_LatchSetInitDc( pObjNew );\n        } else if Ivy_ObjInit(pNode) == IVY_INIT_1 {\n            Abc_LatchSetInit1( pObjNew );\n        } else if Ivy_ObjInit(pNode) == IVY_INIT_0 {\n            Abc_LatchSetInit0( pObjNew );\n        } else { assert(false, \"0\"); }\n        pNode.TravId = Abc_EdgeFromNode( pFaninNew1 );\n    }\n    Abc_NtkAddDummyBoxNames( pNtk );\n    // rebuild the AIG\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNode, i )\n    {\n        // add the first fanin\n        pFaninNew0 = Abc_ObjFanin0Ivy( pNtk, pNode );\n        if Ivy_ObjIsBuf(pNode) {\n            pNode.TravId = Abc_EdgeFromNode( pFaninNew0 );\n            continue;\n        }\n        // add the second fanin\n        pFaninNew1 = Abc_ObjFanin1Ivy( pNtk, pNode );\n        // create the new node\n        if Ivy_ObjIsExor(pNode) {\n            pObjNew = Abc_AigXor( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 );\n        } else {\n            pObjNew = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pFaninNew0, pFaninNew1 ); }\n        pNode.TravId = Abc_EdgeFromNode( pObjNew );\n        // process the choice nodes\n        if (fHaig != 0) \u0026\u0026 pNode.pEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 {\n            pFaninNew = Abc_EdgeToNode( pNtk, pNode.TravId );\n//            pFaninNew-\u003efPhase = 0;\n            assert(!Ivy_IsComplement(pNode.pEquiv), \"!Ivy_IsComplement(pNode.pEquiv)\");\n            for  pTemp = pNode.pEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                pFaninNew1 = Abc_EdgeToNode( pNtk, pTemp.TravId );\n//                pFaninNew1-\u003efPhase = Ivy_IsComplement( pTemp-\u003epEquiv );\n                pFaninNew.pData = pFaninNew1;\n                pFaninNew = pFaninNew1;\n            }\n            pFaninNew.pData = nil;\n//            printf( \"Writing choice node %d.\\n\", pNode-\u003eId );\n        }\n    }\n    // connect the PO nodes\n    Abc_NtkForEachPo( pNtkOld, pObj, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, Ivy_ManPo(pMan, i) );\n        Abc_ObjAddFanin( pObj.pCopy, pFaninNew );\n    }\n    // connect the latches\n    Ivy_ManForEachNodeVec( pMan, vLatches, pNode, i )\n    {\n        pFaninNew = Abc_ObjFanin0Ivy( pNtk, pNode );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(pNtk, i)), pFaninNew );\n    }\n    Vec_IntFree( vLatches );\n    Vec_IntFree( vNodes );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromIvySeq(): Network check has failed.\\n\"); }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from the AIG manager into ABC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToIvy(pNtkOld *Abc_Ntk_t) *Ivy_Man_t {\n    var pMan *Ivy_Man_t;\n    var pObj *Abc_Obj_t;\n    var pFanin *Ivy_Obj_t;\n    var i int32;\n    // create the manager\n    assert(Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld), \"Abc_NtkHasSop(pNtkOld) || Abc_NtkIsStrash(pNtkOld)\");\n    pMan = Ivy_ManStart();\n    // create the PIs\n    if Abc_NtkIsStrash(pNtkOld) {\n        Abc_AigConst1(pNtkOld).pCopy = (Abc_Obj_t *)Ivy_ManConst1(pMan); }\n    Abc_NtkForEachCi( pNtkOld, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)Ivy_ObjCreatePi(pMan);\n    // perform the conversion of the internal nodes\n    Abc_NtkStrashPerformAig( pNtkOld, pMan );\n    // create the POs\n    Abc_NtkForEachCo( pNtkOld, pObj, i )\n    {\n        pFanin = (Ivy_Obj_t *)Abc_ObjFanin0(pObj).pCopy;\n        pFanin = Ivy_NotCond( pFanin, Abc_ObjFaninC0(pObj) );\n        Ivy_ObjCreatePo( pMan, pFanin );\n    }\n    Ivy_ManCleanup( pMan );\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the network for strashing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkStrashPerformAig(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t) {\n//    ProgressBar * pProgress;\n    var vNodes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n//    pProgress = Extra_ProgressBarStart( stdout, vNodes-\u003enSize );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n//        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeStrashAig( pMan, pNode );\n    }\n//    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeStrashAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t) *Ivy_Obj_t {\n    var fUseFactor int32  = 1;\n    var pSop string;\n    var pFanin0, pFanin1 *Ivy_Obj_t;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n\n    // consider the case when the graph is an AIG\n    if Abc_NtkIsStrash(pNode.pNtk) {\n        if Abc_AigNodeIsConst(pNode) {\n            return Ivy_ManConst1(pMan); }\n        pFanin0 = (Ivy_Obj_t *)Abc_ObjFanin0(pNode).pCopy;\n        pFanin0 = Ivy_NotCond( pFanin0, Abc_ObjFaninC0(pNode) );\n        pFanin1 = (Ivy_Obj_t *)Abc_ObjFanin1(pNode).pCopy;\n        pFanin1 = Ivy_NotCond( pFanin1, Abc_ObjFaninC1(pNode) );\n        return Ivy_And( pMan, pFanin0, pFanin1 );\n    }\n\n    // get the SOP of the node\n    if Abc_NtkHasMapping(pNode.pNtk) {\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode.pData);\n    } else {\n        pSop = (char *)pNode.pData; }\n\n    // consider the constant node\n    if Abc_NodeIsConst(pNode) {\n        return Ivy_NotCond( Ivy_ManConst1(pMan), Abc_SopIsConst0(pSop) ); }\n\n    // decide when to use factoring\n    if (fUseFactor != 0) \u0026\u0026 Abc_ObjFaninNum(pNode) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) {\n        return Abc_NodeStrashAigFactorAig( pMan, pNode, pSop ); }\n    return Abc_NodeStrashAigSopAig( pMan, pNode, pSop );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeStrashAigSopAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFanin *Abc_Obj_t;\n    var pAnd, pSum *Ivy_Obj_t;\n    var pCube string;\n    var i, nFanins int32;\n    var fExor int32  = Abc_SopIsExorType(pSop);\n\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum(pSop), \"nFanins == Abc_SopGetVarNum(pSop)\");\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    Abc_SopForEachCube( pSop, nFanins, pCube )\n    {\n        // create the AND of literals\n        pAnd = Ivy_ManConst1(pMan);\n        Abc_ObjForEachFanin( pNode, pFanin, i ) // pFanin can be a net\n        {\n            if pCube[i] == '1' {\n                pAnd = Ivy_And( pMan, pAnd, (Ivy_Obj_t *)pFanin.pCopy );\n            } else if pCube[i] == '0' {\n                pAnd = Ivy_And( pMan, pAnd, Ivy_Not((Ivy_Obj_t *)pFanin.pCopy) ); }\n        }\n        // add to the sum of cubes\n        if fExor != 0 {\n            pSum = Ivy_Exor( pMan, pSum, pAnd );\n        } else {\n            pSum = Ivy_Or( pMan, pSum, pAnd ); }\n    }\n    // decide whether to complement the result\n    if Abc_SopIsComplement(pSop) {\n        pSum = Ivy_Not(pSum); }\n    return pSum;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashed n-input XOR function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeStrashAigExorAig(pMan *Ivy_Man_t, pNode *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFanin *Abc_Obj_t;\n    var pSum *Ivy_Obj_t;\n    var i, nFanins int32;\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum(pSop), \"nFanins == Abc_SopGetVarNum(pSop)\");\n    // go through the cubes of the node's SOP\n    pSum = Ivy_Not( Ivy_ManConst1(pMan) );\n    for  i = 0; i \u003c nFanins; i++  {\n        pFanin = Abc_ObjFanin( pNode, i );\n        pSum = Ivy_Exor( pMan, pSum, (Ivy_Obj_t *)pFanin.pCopy );\n    }\n    if Abc_SopIsComplement(pSop) {\n        pSum = Ivy_Not(pSum); }\n    return pSum;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeStrashAigFactorAig(pMan *Ivy_Man_t, pRoot *Abc_Obj_t, pSop string) *Ivy_Obj_t {\n    var pFForm *Dec_Graph_t;\n    var pNode *Dec_Node_t;\n    var pAnd *Ivy_Obj_t;\n    var i int32;\n\n//    extern Ivy_Obj_t * Dec_GraphToNetworkAig( Ivy_Man_t * pMan, Dec_Graph_t * pGraph );\n\n//    assert( 0 );\n\n    // perform factoring\n    pFForm = Dec_Factor( pSop );\n    // collect the fanins\n    Dec_GraphForEachLeaf( pFForm, pNode, i )\n        pNode.pFunc = Abc_ObjFanin(pRoot,i).pCopy;\n    // perform strashing\n//    pAnd = Dec_GraphToNetworkAig( pMan, pFForm );\n    pAnd = Dec_GraphToNetworkIvy( pMan, pFForm );\n//    pAnd = NULL;\n\n    Dec_GraphFree( pFForm );\n    return pAnd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectLatchValuesIvy(pNtk *Abc_Ntk_t, fUseDcs int32) *Vec_Int_t {\n    var pLatch *Abc_Obj_t;\n    var vArray *Vec_Int_t;\n    var i int32;\n    vArray = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if (fUseDcs != 0) || Abc_LatchIsInitDc(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_DC );\n        } else if Abc_LatchIsInit1(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_1 );\n        } else if Abc_LatchIsInit0(pLatch) {\n            Vec_IntPush( vArray, IVY_INIT_0 );\n        } else { assert(false, \"0\"); }\n    }\n    return vArray;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

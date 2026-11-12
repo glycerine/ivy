@@ -1,0 +1,96 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Heap.h",
+  "SHA256": "ed1d6c060726b8e1e30cf324fca50666788d44b35c68b9e15c1464531d7fa8cb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 34,
+        "ByteOffset": 3091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    int  operator[](int index) { assert(index \u003c heap.size()); return heap[index]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 30,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void decrease  (int n) { assert(inHeap(n)); percolateUp  (indices[n]); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 30,
+        "ByteOffset": 3250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void increase  (int n) { assert(inHeap(n)); percolateDown(indices[n]); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(!inHeap(n));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Heap.h::mechanical::static::1889",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1889,
+      "End": 1895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Heap.h::mechanical::static::1943",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1943,
+      "End": 1949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Heap.h::mechanical::static::1999",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1999,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Heap.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4749
+    }
+  ],
+  "Draft": "package glucose2\n\n/******************************************************************************************[Heap.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \"sat/glucose2/Vec.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco2 {\n\n//=================================================================================================\n// A heap implementation with support for decrease/increase key.\n\n\ntemplate\u003cclass Comp\u003e\nclass Heap {\n    Comp     lt;       // The heap is a minimum-heap with respect to this comparator\n    vec\u003cint\u003e heap;     // Heap of integers\n    vec\u003cint\u003e indices;  // Each integers position (index) in the Heap\n\n    // Index \"traversal\" functions\n    static inline int left  (int i) { return i*2+1; }\n    static inline int right (int i) { return (i+1)*2; }\n    static inline int parent(int i) { return (i-1) \u003e\u003e 1; }\n\n\n    void percolateUp(int i)\n    {\n        int x  = heap[i];\n        int p  = parent(i);\n        \n        while (i != 0 \u0026\u0026 lt(x, heap[p])){\n            heap[i]          = heap[p];\n            indices[heap[p]] = i;\n            i                = p;\n            p                = parent(p);\n        }\n        heap   [i] = x;\n        indices[x] = i;\n    }\n\n\n    void percolateDown(int i)\n    {\n        int x = heap[i];\n        while (left(i) \u003c heap.size()){\n            int child = right(i) \u003c heap.size() \u0026\u0026 lt(heap[right(i)], heap[left(i)]) ? right(i) : left(i);\n            if (!lt(heap[child], x)) break;\n            heap[i]          = heap[child];\n            indices[heap[i]] = i;\n            i                = child;\n        }\n        heap   [i] = x;\n        indices[x] = i;\n    }\n\n\n  public:\n    Heap(Comp\u0026 c) : lt(c) { }\n\n    int  size      ()          { return heap.size(); }\n    bool empty     ()          { return heap.size() == 0; }\n    bool inHeap    (int n)     { return n \u003c indices.size() \u0026\u0026 indices[n] \u003e= 0; }\n    int  operator[](int index) { assert(index \u003c heap.size(), \"index \u003c heap.size()\"); return heap[index]; }\n\n\n    void decrease  (int n) { assert(inHeap(n), \"inHeap(n)\"); percolateUp  (indices[n]); }\n    void increase  (int n) { assert(inHeap(n), \"inHeap(n)\"); percolateDown(indices[n]); }\n\n\n    // Safe variant of insert/decrease/increase:\n    void update(int n)\n    {\n        if (!inHeap(n))\n            insert(n);\n        else {\n            percolateUp(indices[n]);\n            percolateDown(indices[n]); }\n    }\n\n\n    void insert(int n)\n    {\n        indices.growTo(n+1, -1);\n        assert(!inHeap(n), \"!inHeap(n)\");\n\n        indices[n] = heap.size();\n        heap.push(n);\n        percolateUp(indices[n]); \n    }\n\n\n    int  removeMin()\n    {\n        int x            = heap[0];\n        heap[0]          = heap.last();\n        indices[heap[0]] = 0;\n        indices[x]       = -1;\n        heap.pop();\n        if (heap.size() \u003e 1) percolateDown(0);\n        return x; \n    }\n\n\n    // Rebuild the heap from scratch, using the elements in 'ns':\n    void build(vec\u003cint\u003e\u0026 ns) {\n        int i;\n        for (i = 0; i \u003c heap.size(); i++)\n            indices[heap[i]] = -1;\n        heap.clear();\n\n        for i = 0; i \u003c ns.size(); i++{\n            indices[ns[i]] = i;\n            heap.push(ns[i]); }\n\n        for (i = heap.size() / 2 - 1; i \u003e= 0; i--)\n            percolateDown(i);\n    }\n\n    void clear(bool dealloc = false) \n    { \n        int i;\n        for (i = 0; i \u003c heap.size(); i++)\n            indices[heap[i]] = -1;\n        heap.clear(dealloc); \n    }\n};\n\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

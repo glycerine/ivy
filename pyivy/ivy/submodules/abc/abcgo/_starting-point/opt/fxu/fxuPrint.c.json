@@ -1,0 +1,569 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c",
+  "SHA256": "a2f2b05092368d3e70932f3d131cf56cbb2776c19caf1adc98eb2c22ffcc5437",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 59,
+        "Column": 17,
+        "ByteOffset": 1536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( \"matrix.txt\", \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Matrix has %d vars, %d cubes, %d literals, %d divisors.\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Divisors selected so far: single = %d, double = %d.\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 1960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d\", pVar.iVar % 10 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%4d\", pCube.iCube );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%4d\", pCube.pVar.iVar );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 17,
+        "ByteOffset": 2808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \".\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 13,
+        "ByteOffset": 2857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 13,
+        "ByteOffset": 2984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"The double divisors are:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Divisor #%3d (lit=%d,%d) (w=%2d):  \", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 13,
+        "ByteOffset": 3745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" \u003c%d, %d\u003e (b=%d)\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"The cubes are:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Cube #%3d: \", pCube.iCube );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 17,
+        "ByteOffset": 4487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" \u003c%d %d\u003e (d=%d) (b=%d)\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 4643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"The single divisors are:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 4952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Single-cube divisor #%5d: Var1 = %4d. Var2 = %4d. Weight = %2d\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 5130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 171,
+        "Column": 70,
+        "ByteOffset": 6106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProfile = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)((WeightMax + 1))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 6160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pProfile, 0, sizeof(int) * (WeightMax + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 6504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pDiv.Weight \u003c= WeightMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"The double divisors profile:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Weight  \u003c -1 divisors = %6d\\n\", CounterL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Weight    -1 divisors = %6d\\n\", Counter1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 13,
+        "ByteOffset": 6988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"Weight   %3d divisors = %6d\\n\", i, pProfile[i] ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 7067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"End of divisor profile printout\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 195,
+        "Column": 64,
+        "ByteOffset": 7185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pProfile) ? (free((char *) (pProfile)), (pProfile) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_MatrixPrint",
+      "Start": 1196,
+      "End": 4450,
+      "BodyStart": 1249,
+      "Original": "void Fxu_MatrixPrint( FILE * pFile, Fxu_Matrix * p )\n{\n    Fxu_Var * pVar;\n    Fxu_Cube * pCube;\n    Fxu_Double * pDiv;\n    Fxu_Single * pSingle;\n    Fxu_Lit * pLit;\n    Fxu_Pair * pPair;\n    int i, LastNum;\n    int fStdout;\n\n    fStdout = 1;\n    if ( pFile == NULL )\n    {\n        pFile = fopen( \"matrix.txt\", \"w\" );\n        fStdout = 0;\n    }\n\n    fprintf( pFile, \"Matrix has %d vars, %d cubes, %d literals, %d divisors.\\n\", \n        p-\u003elVars.nItems, p-\u003elCubes.nItems, p-\u003enEntries, p-\u003enDivs );\n    fprintf( pFile, \"Divisors selected so far: single = %d, double = %d.\\n\", \n        p-\u003enDivs1, p-\u003enDivs2 );\n    fprintf( pFile, \"\\n\" );\n\n    // print the numbers on top of the matrix\n    for ( i = 0; i \u003c 12; i++ )\n        fprintf( pFile, \" \" );\n    Fxu_MatrixForEachVariable( p, pVar )\n        fprintf( pFile, \"%d\", pVar-\u003eiVar % 10 );\n    fprintf( pFile, \"\\n\" );\n\n    // print the rows\n    Fxu_MatrixForEachCube( p, pCube )\n    {\n        fprintf( pFile, \"%4d\", pCube-\u003eiCube );\n        fprintf( pFile, \"  \" );\n        fprintf( pFile, \"%4d\", pCube-\u003epVar-\u003eiVar );\n        fprintf( pFile, \"  \" );\n\n        // print the literals\n        LastNum = -1;\n        Fxu_CubeForEachLiteral( pCube, pLit )\n        {\n            for ( i = LastNum + 1; i \u003c pLit-\u003epVar-\u003eiVar; i++ )\n                fprintf( pFile, \".\" );\n            fprintf( pFile, \"1\" );\n            LastNum = i;\n        }\n        for ( i = LastNum + 1; i \u003c p-\u003elVars.nItems; i++ )\n            fprintf( pFile, \".\" );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n\n    // print the double-cube divisors\n    fprintf( pFile, \"The double divisors are:\\n\" );\n    Fxu_MatrixForEachDouble( p, pDiv, i )\n    {\n        fprintf( pFile, \"Divisor #%3d (lit=%d,%d) (w=%2d):  \", \n            pDiv-\u003eNum, pDiv-\u003elPairs.pHead-\u003enLits1, \n            pDiv-\u003elPairs.pHead-\u003enLits2, pDiv-\u003eWeight );\n        Fxu_DoubleForEachPair( pDiv, pPair )\n            fprintf( pFile, \" \u003c%d, %d\u003e (b=%d)\", \n                pPair-\u003epCube1-\u003eiCube, pPair-\u003epCube2-\u003eiCube, pPair-\u003enBase );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n\n    // print the divisors associated with each cube\n    fprintf( pFile, \"The cubes are:\\n\" );\n    Fxu_MatrixForEachCube( p, pCube )\n    {\n        fprintf( pFile, \"Cube #%3d: \", pCube-\u003eiCube );\n        if ( pCube-\u003epVar-\u003eppPairs )\n        {\n            Fxu_CubeForEachPair( pCube, pPair, i )\n                fprintf( pFile, \" \u003c%d %d\u003e (d=%d) (b=%d)\", \n                    pPair-\u003eiCube1, pPair-\u003eiCube2, pPair-\u003epDiv-\u003eNum, pPair-\u003enBase );\n        }\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n\n    // print the single-cube divisors\n    fprintf( pFile, \"The single divisors are:\\n\" );\n    Fxu_MatrixForEachSingle( p, pSingle )\n    {\n        fprintf( pFile, \"Single-cube divisor #%5d: Var1 = %4d. Var2 = %4d. Weight = %2d\\n\", \n            pSingle-\u003eNum, pSingle-\u003epVar1-\u003eiVar, pSingle-\u003epVar2-\u003eiVar, pSingle-\u003eWeight );\n    }\n    fprintf( pFile, \"\\n\" );\n\n/*\n    {\n        int Index;\n        fprintf( pFile, \"Distribution of divisors in the hash table:\\n\" );\n        for ( Index = 0; Index \u003c p-\u003enTableSize; Index++ )\n            fprintf( pFile, \" %d\", p-\u003epTable[Index].nItems );\n        fprintf( pFile, \"\\n\" );\n    }\n*/\n    if ( !fStdout )\n        fclose( pFile );\n}",
+      "Draft": "func Fxu_MatrixPrint(pFile *os.File, p *Fxu_Matrix) {\n    var pVar *Fxu_Var;\n    var pCube *Fxu_Cube;\n    var pDiv *Fxu_Double;\n    var pSingle *Fxu_Single;\n    var pLit *Fxu_Lit;\n    var pPair *Fxu_Pair;\n    var i, LastNum int32;\n    var fStdout int32;\n\n    fStdout = 1;\n    if pFile == nil {\n        pFile = os.OpenFile(\"matrix.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fStdout = 0;\n    }\n\n    fmt.Fprintf(pFile, \"Matrix has %d vars, %d cubes, %d literals, %d divisors.\\n\", p.lVars.nItems, p.lCubes.nItems, p.nEntries, p.nDivs);\n    fmt.Fprintf(pFile, \"Divisors selected so far: single = %d, double = %d.\\n\", p.nDivs1, p.nDivs2);\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the numbers on top of the matrix\n    for  i = 0; i \u003c 12; i++  {\n        fmt.Fprintf(pFile, \" \");\n    }\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar = (p).lVars.pHead;          (pVar != nil);          pVar = pVar.pNext  {\n        fmt.Fprintf(pFile, \"%d\", pVar.iVar % 10);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the rows\n    // inlining of macro Fxu_MatrixForEachCube\n    for  pCube = (p).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        fmt.Fprintf(pFile, \"%4d\", pCube.iCube);\n        fmt.Fprintf(pFile, \"  \");\n        fmt.Fprintf(pFile, \"%4d\", pCube.pVar.iVar);\n        fmt.Fprintf(pFile, \"  \");\n\n        // print the literals\n        LastNum = -1;\n        // inlining of macro Fxu_CubeForEachLiteral\n        for  pLit = (pCube).lLits.pHead;          (pLit != nil);          pLit = pLit.pHNext  {\n            for  i = LastNum + 1; i \u003c pLit.pVar.iVar; i++  {\n                fmt.Fprintf(pFile, \".\");\n            }\n            fmt.Fprintf(pFile, \"1\");\n            LastNum = i;\n        }\n        for  i = LastNum + 1; i \u003c p.lVars.nItems; i++  {\n            fmt.Fprintf(pFile, \".\");\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the double-cube divisors\n    fmt.Fprintf(pFile, \"The double divisors are:\\n\");\n    // inlining of macro Fxu_MatrixForEachDouble\n    // inlining of macro Fxu_TableForEachDouble\n    for  i = 0; i \u003c (p).nTableSize; i++  {        for  pDiv = (p).pTable[i].pHead;          (pDiv != nil);          pDiv = pDiv.pNext  {\n        fmt.Fprintf(pFile, \"Divisor #%3d (lit=%d,%d) (w=%2d):  \", pDiv.Num, pDiv.lPairs.pHead.nLits1, pDiv.lPairs.pHead.nLits2, pDiv.Weight);\n        // inlining of macro Fxu_DoubleForEachPair\n        for  pPair = (pDiv).lPairs.pHead;          (pPair != nil);          pPair = pPair.pDNext  {\n            fmt.Fprintf(pFile, \" \u003c%d, %d\u003e (b=%d)\", pPair.pCube1.iCube, pPair.pCube2.iCube, pPair.nBase);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the divisors associated with each cube\n    fmt.Fprintf(pFile, \"The cubes are:\\n\");\n    // inlining of macro Fxu_MatrixForEachCube\n    for  pCube = (p).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        fmt.Fprintf(pFile, \"Cube #%3d: \", pCube.iCube);\n        if pCube.pVar.ppPairs {\n            // inlining of macro Fxu_CubeForEachPair\n            for  i = 0;        i \u003c pCube.pVar.nCubes \u0026\u0026 (((pPair) = (pCube).pVar.ppPairs[(pCube).iCube][i]), 1);        i++  {        if pPair == nil {} else {\n                fmt.Fprintf(pFile, \" \u003c%d %d\u003e (d=%d) (b=%d)\", pPair.iCube1, pPair.iCube2, pPair.pDiv.Num, pPair.nBase); }\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the single-cube divisors\n    fmt.Fprintf(pFile, \"The single divisors are:\\n\");\n    // inlining of macro Fxu_MatrixForEachSingle\n    for  pSingle = (p).lSingles.pHead;          (pSingle != nil);          pSingle = pSingle.pNext  {\n        fmt.Fprintf(pFile, \"Single-cube divisor #%5d: Var1 = %4d. Var2 = %4d. Weight = %2d\\n\", pSingle.Num, pSingle.pVar1.iVar, pSingle.pVar2.iVar, pSingle.Weight);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n/*\n    {\n        int Index;\n        fprintf( pFile, \"Distribution of divisors in the hash table:\\n\" );\n        for ( Index = 0; Index \u003c p-\u003enTableSize; Index++ )\n            fprintf( pFile, \" %d\", p-\u003epTable[Index].nItems );\n        fprintf( pFile, \"\\n\" );\n    }\n*/\n    if !(fStdout != 0) {\n        _ = (pFile).Close(); }\n}"
+    },
+    {
+      "Name": "Fxu_MatrixPrintDivisorProfile",
+      "Start": 4686,
+      "End": 5826,
+      "BodyStart": 4753,
+      "Original": "void Fxu_MatrixPrintDivisorProfile( FILE * pFile, Fxu_Matrix * p )\n{\n    Fxu_Double * pDiv;\n    int WeightMax;\n    int * pProfile;\n    int Counter1; // the number of -1 weight\n    int CounterL; // the number of less than -1 weight\n    int i;\n\n    WeightMax = Fxu_HeapDoubleReadMaxWeight( p-\u003epHeapDouble );\n    pProfile = ABC_ALLOC( int, (WeightMax + 1) );\n    memset( pProfile, 0, sizeof(int) * (WeightMax + 1) );\n\n    Counter1 = 0;\n    CounterL = 0;\n    Fxu_MatrixForEachDouble( p, pDiv, i )\n    {\n        assert( pDiv-\u003eWeight \u003c= WeightMax );\n        if ( pDiv-\u003eWeight == -1 )\n            Counter1++;\n        else if ( pDiv-\u003eWeight \u003c 0 )\n            CounterL++;\n        else\n            pProfile[ pDiv-\u003eWeight ]++;\n    }\n\n    fprintf( pFile, \"The double divisors profile:\\n\" );\n    fprintf( pFile, \"Weight  \u003c -1 divisors = %6d\\n\", CounterL );\n    fprintf( pFile, \"Weight    -1 divisors = %6d\\n\", Counter1 );\n    for ( i = 0; i \u003c= WeightMax; i++ )\n        if ( pProfile[i] )\n            fprintf( pFile, \"Weight   %3d divisors = %6d\\n\", i, pProfile[i] );\n    fprintf( pFile, \"End of divisor profile printout\\n\" );\n    ABC_FREE( pProfile );\n}",
+      "Draft": "func Fxu_MatrixPrintDivisorProfile(pFile *os.File, p *Fxu_Matrix) {\n    var pDiv *Fxu_Double;\n    var WeightMax int32;\n    var pProfile *int32;\n    var Counter1 int32; // the number of -1 weight\n    var CounterL int32; // the number of less than -1 weight\n    var i int32;\n\n    WeightMax = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n    // inlining of macro ABC_ALLOC\n    pProfile = ((int *) malloc(sizeof(int) * (size_t)((WeightMax + 1))));\n    memset( pProfile, 0, sizeof(int) * (WeightMax + 1) );\n\n    Counter1 = 0;\n    CounterL = 0;\n    // inlining of macro Fxu_MatrixForEachDouble\n    // inlining of macro Fxu_TableForEachDouble\n    for  i = 0; i \u003c (p).nTableSize; i++  {        for  pDiv = (p).pTable[i].pHead;          (pDiv != nil);          pDiv = pDiv.pNext  {\n        assert(pDiv.Weight \u003c= WeightMax, \"pDiv.Weight \u003c= WeightMax\");\n        if pDiv.Weight == -1 {\n            Counter1++;\n        } else if pDiv.Weight \u003c 0 {\n            CounterL++;\n        } else {\n            pProfile[ pDiv.Weight ]++; }\n    }\n    }\n\n    fmt.Fprintf(pFile, \"The double divisors profile:\\n\");\n    fmt.Fprintf(pFile, \"Weight  \u003c -1 divisors = %6d\\n\", CounterL);\n    fmt.Fprintf(pFile, \"Weight    -1 divisors = %6d\\n\", Counter1);\n    for  i = 0; i \u003c= WeightMax; i++  {\n        if pProfile[i] {\n            fmt.Fprintf(pFile, \"Weight   %3d divisors = %6d\\n\", i, pProfile[i]); }\n    }\n    fmt.Fprintf(pFile, \"End of divisor profile printout\\n\");\n    // inlining of macro ABC_FREE\n    ((pProfile) ? (free((char *) (pProfile)), (pProfile) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::mechanical::sizeof::6072",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5007,
+      "End": 5007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::mechanical::sizeof::6140",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5067,
+      "End": 5073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::pointer-cast::6057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5007,
+      "End": 5007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::pointer-cast::7146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5803,
+      "End": 5803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::Fxu_MatrixPrint",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1196,
+      "End": 4450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::ternary::Fxu_MatrixPrintDivisorProfile",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_MatrixPrintDivisorProfile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4686,
+      "End": 5826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::Fxu_MatrixPrintDivisorProfile",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixPrintDivisorProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4686,
+      "End": 5826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPrint.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6074
+    }
+  ],
+  "Draft": "package fxu\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fxuPrint.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Various printing procedures.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuPrint.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixPrint(pFile *os.File, p *Fxu_Matrix) {\n    var pVar *Fxu_Var;\n    var pCube *Fxu_Cube;\n    var pDiv *Fxu_Double;\n    var pSingle *Fxu_Single;\n    var pLit *Fxu_Lit;\n    var pPair *Fxu_Pair;\n    var i, LastNum int32;\n    var fStdout int32;\n\n    fStdout = 1;\n    if pFile == nil {\n        pFile = os.OpenFile(\"matrix.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        fStdout = 0;\n    }\n\n    fmt.Fprintf(pFile, \"Matrix has %d vars, %d cubes, %d literals, %d divisors.\\n\", p.lVars.nItems, p.lCubes.nItems, p.nEntries, p.nDivs);\n    fmt.Fprintf(pFile, \"Divisors selected so far: single = %d, double = %d.\\n\", p.nDivs1, p.nDivs2);\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the numbers on top of the matrix\n    for  i = 0; i \u003c 12; i++  {\n        fmt.Fprintf(pFile, \" \");\n    }\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar = (p).lVars.pHead;          (pVar != nil);          pVar = pVar.pNext  {\n        fmt.Fprintf(pFile, \"%d\", pVar.iVar % 10);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the rows\n    // inlining of macro Fxu_MatrixForEachCube\n    for  pCube = (p).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        fmt.Fprintf(pFile, \"%4d\", pCube.iCube);\n        fmt.Fprintf(pFile, \"  \");\n        fmt.Fprintf(pFile, \"%4d\", pCube.pVar.iVar);\n        fmt.Fprintf(pFile, \"  \");\n\n        // print the literals\n        LastNum = -1;\n        // inlining of macro Fxu_CubeForEachLiteral\n        for  pLit = (pCube).lLits.pHead;          (pLit != nil);          pLit = pLit.pHNext  {\n            for  i = LastNum + 1; i \u003c pLit.pVar.iVar; i++  {\n                fmt.Fprintf(pFile, \".\");\n            }\n            fmt.Fprintf(pFile, \"1\");\n            LastNum = i;\n        }\n        for  i = LastNum + 1; i \u003c p.lVars.nItems; i++  {\n            fmt.Fprintf(pFile, \".\");\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the double-cube divisors\n    fmt.Fprintf(pFile, \"The double divisors are:\\n\");\n    // inlining of macro Fxu_MatrixForEachDouble\n    // inlining of macro Fxu_TableForEachDouble\n    for  i = 0; i \u003c (p).nTableSize; i++  {        for  pDiv = (p).pTable[i].pHead;          (pDiv != nil);          pDiv = pDiv.pNext  {\n        fmt.Fprintf(pFile, \"Divisor #%3d (lit=%d,%d) (w=%2d):  \", pDiv.Num, pDiv.lPairs.pHead.nLits1, pDiv.lPairs.pHead.nLits2, pDiv.Weight);\n        // inlining of macro Fxu_DoubleForEachPair\n        for  pPair = (pDiv).lPairs.pHead;          (pPair != nil);          pPair = pPair.pDNext  {\n            fmt.Fprintf(pFile, \" \u003c%d, %d\u003e (b=%d)\", pPair.pCube1.iCube, pPair.pCube2.iCube, pPair.nBase);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the divisors associated with each cube\n    fmt.Fprintf(pFile, \"The cubes are:\\n\");\n    // inlining of macro Fxu_MatrixForEachCube\n    for  pCube = (p).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        fmt.Fprintf(pFile, \"Cube #%3d: \", pCube.iCube);\n        if pCube.pVar.ppPairs {\n            // inlining of macro Fxu_CubeForEachPair\n            for  i = 0;        i \u003c pCube.pVar.nCubes \u0026\u0026 (((pPair) = (pCube).pVar.ppPairs[(pCube).iCube][i]), 1);        i++  {        if pPair == nil {} else {\n                fmt.Fprintf(pFile, \" \u003c%d %d\u003e (d=%d) (b=%d)\", pPair.iCube1, pPair.iCube2, pPair.pDiv.Num, pPair.nBase); }\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // print the single-cube divisors\n    fmt.Fprintf(pFile, \"The single divisors are:\\n\");\n    // inlining of macro Fxu_MatrixForEachSingle\n    for  pSingle = (p).lSingles.pHead;          (pSingle != nil);          pSingle = pSingle.pNext  {\n        fmt.Fprintf(pFile, \"Single-cube divisor #%5d: Var1 = %4d. Var2 = %4d. Weight = %2d\\n\", pSingle.Num, pSingle.pVar1.iVar, pSingle.pVar2.iVar, pSingle.Weight);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n\n/*\n    {\n        int Index;\n        fprintf( pFile, \"Distribution of divisors in the hash table:\\n\" );\n        for ( Index = 0; Index \u003c p-\u003enTableSize; Index++ )\n            fprintf( pFile, \" %d\", p-\u003epTable[Index].nItems );\n        fprintf( pFile, \"\\n\" );\n    }\n*/\n    if !(fStdout != 0) {\n        _ = (pFile).Close(); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixPrintDivisorProfile(pFile *os.File, p *Fxu_Matrix) {\n    var pDiv *Fxu_Double;\n    var WeightMax int32;\n    var pProfile *int32;\n    var Counter1 int32; // the number of -1 weight\n    var CounterL int32; // the number of less than -1 weight\n    var i int32;\n\n    WeightMax = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n    // inlining of macro ABC_ALLOC\n    pProfile = ((int *) malloc(sizeof(int) * (size_t)((WeightMax + 1))));\n    memset( pProfile, 0, sizeof(int) * (WeightMax + 1) );\n\n    Counter1 = 0;\n    CounterL = 0;\n    // inlining of macro Fxu_MatrixForEachDouble\n    // inlining of macro Fxu_TableForEachDouble\n    for  i = 0; i \u003c (p).nTableSize; i++  {        for  pDiv = (p).pTable[i].pHead;          (pDiv != nil);          pDiv = pDiv.pNext  {\n        assert(pDiv.Weight \u003c= WeightMax, \"pDiv.Weight \u003c= WeightMax\");\n        if pDiv.Weight == -1 {\n            Counter1++;\n        } else if pDiv.Weight \u003c 0 {\n            CounterL++;\n        } else {\n            pProfile[ pDiv.Weight ]++; }\n    }\n    }\n\n    fmt.Fprintf(pFile, \"The double divisors profile:\\n\");\n    fmt.Fprintf(pFile, \"Weight  \u003c -1 divisors = %6d\\n\", CounterL);\n    fmt.Fprintf(pFile, \"Weight    -1 divisors = %6d\\n\", Counter1);\n    for  i = 0; i \u003c= WeightMax; i++  {\n        if pProfile[i] {\n            fmt.Fprintf(pFile, \"Weight   %3d divisors = %6d\\n\", i, pProfile[i]); }\n    }\n    fmt.Fprintf(pFile, \"End of divisor profile printout\\n\");\n    // inlining of macro ABC_FREE\n    ((pProfile) ? (free((char *) (pProfile)), (pProfile) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1139 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c",
+  "SHA256": "8e4fcab61797f70e86889e80a684bc9d2a4d9231cebed7b3b7ef20cb5adfe4c0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 8501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 10269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 10556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 11125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Tents = %6d.   Cands = %6d.  %10.2f %%\\n\", t, Vec_IntSum(vCands), 100.0*Vec_IntSum(vCands)/Gia_ManCandNum(p) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 325,
+        "Column": 26,
+        "ByteOffset": 11675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *Bmcs_Man_t  = ABC_CALLOC( Bmcs_Man_t, 1 ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 11867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pGia) \u003e 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 13404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 14,
+        "ByteOffset": 14813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 14,
+        "ByteOffset": 15677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 15696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLitClean) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 448,
+        "Column": 5,
+        "ByteOffset": 16199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 16417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 5,
+        "ByteOffset": 19159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pMap );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 541,
+        "Column": 80,
+        "ByteOffset": 20043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 542,
+        "Column": 5,
+        "ByteOffset": 20067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 543,
+        "Column": 5,
+        "ByteOffset": 20087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 543,
+        "Column": 13,
+        "ByteOffset": 20095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 577,
+        "Column": 13,
+        "ByteOffset": 21661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 9,
+        "ByteOffset": 22718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 612,
+        "Column": 63,
+        "ByteOffset": 23210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars.nTimeOut {"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 635,
+        "Column": 25,
+        "ByteOffset": 24446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 635,
+        "Column": 33,
+        "ByteOffset": 24454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 9,
+        "ByteOffset": 24945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 25781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nProcs \u003c PAR_THR_MAX );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 619
+      },
+      "Directive": "#ifdef ABC_USE_EXT_SOLVERS"
+    },
+    {
+      "Location": {
+        "Line": 49,
+        "Column": 1,
+        "ByteOffset": 1361
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 51,
+        "Column": 1,
+        "ByteOffset": 1386
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 392,
+        "Column": 1,
+        "ByteOffset": 13470
+      },
+      "Directive": "#ifdef ABC_USE_EXT_SOLVERS"
+    },
+    {
+      "Location": {
+        "Line": 585,
+        "Column": 1,
+        "ByteOffset": 20360
+      },
+      "Directive": "#ifndef ABC_USE_EXT_SOLVERS"
+    },
+    {
+      "Location": {
+        "Line": 726,
+        "Column": 1,
+        "ByteOffset": 26390
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmcs_ManCopies",
+      "Start": 3104,
+      "End": 3210,
+      "BodyStart": 3164,
+      "Original": "static inline int * Bmcs_ManCopies( Bmcs_Man_t * p, int f ) { return (int*)Vec_PtrEntry(\u0026p-\u003evGia2Fr, f); }",
+      "Draft": "func Bmcs_ManCopies(p *Bmcs_Man_t, f int32) *int32 { return (int*)Vec_PtrEntry(\u0026p.vGia2Fr, f); }"
+    },
+    {
+      "Name": "Bmc_SuperBuildTents_rec",
+      "Start": 3688,
+      "End": 4853,
+      "BodyStart": 3875,
+      "Original": "void Bmc_SuperBuildTents_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vIns, Vec_Int_t * vCuts, Vec_Int_t * vFlops, Vec_Int_t * vObjs, Vec_Int_t * vRankIns, Vec_Int_t * vRankCuts, int Rank )\n{\n    Gia_Obj_t * pObj;\n    if ( iObj == 0 )\n        return;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( pObj-\u003efMark0 )\n    {\n        if ( !pObj-\u003efMark1 )\n            return;\n        Vec_IntPush( vCuts, iObj );\n        Vec_IntPush( vRankCuts, Rank );\n        pObj-\u003efMark1 = 1;\n        return;\n    }\n    pObj-\u003efMark0 = 1;\n    if ( Gia_ObjIsPi(p, pObj) )\n    {\n        Vec_IntPush( vIns, iObj );\n        Vec_IntPush( vRankIns, Rank );\n        pObj-\u003efMark1 = 1;\n        return;\n    }\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vFlops, iObj );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Vec_IntPush( vObjs, iObj );\n}",
+      "Draft": "func Bmc_SuperBuildTents_rec(p *Gia_Man_t, iObj int32, vIns *Vec_Int_t, vCuts *Vec_Int_t, vFlops *Vec_Int_t, vObjs *Vec_Int_t, vRankIns *Vec_Int_t, vRankCuts *Vec_Int_t, Rank int32) {\n    var pObj *Gia_Obj_t;\n    if iObj == 0 {\n        return; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if pObj.fMark0 {\n        if !pObj.fMark1 {\n            return; }\n        Vec_IntPush( vCuts, iObj );\n        Vec_IntPush( vRankCuts, Rank );\n        pObj.fMark1 = 1;\n        return;\n    }\n    pObj.fMark0 = 1;\n    if Gia_ObjIsPi(p, pObj) {\n        Vec_IntPush( vIns, iObj );\n        Vec_IntPush( vRankIns, Rank );\n        pObj.fMark1 = 1;\n        return;\n    }\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vFlops, iObj );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Vec_IntPush( vObjs, iObj );\n}"
+    },
+    {
+      "Name": "Bmc_SuperBuildTents",
+      "Start": 4854,
+      "End": 8422,
+      "BodyStart": 4923,
+      "Original": "Gia_Man_t * Bmc_SuperBuildTents( Gia_Man_t * p, Vec_Int_t ** pvMap )\n{\n    Vec_Int_t * vIns      = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vCuts     = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vFlops    = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vObjs     = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vLimIns   = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vLimCuts  = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vLimFlops = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vLimObjs  = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vRankIns  = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vRankCuts = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vMap      = Vec_IntAlloc( 1000 );\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, r, Entry, Rank, iPrev, iThis = 0;\n    // collect internal nodes\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vFlops, Gia_ObjId(p, pObj) );\n    Gia_ManCleanMark01( p );\n    for ( Rank = 0; iThis \u003c Vec_IntEntryLast(vFlops); Rank++ )\n    {\n        Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n        Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n        Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n        Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n        iPrev = iThis;\n        iThis = Vec_IntEntryLast(vFlops);\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, iPrev, iThis )\n        {\n            Gia_ManIncrementTravId( p );\n            Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(Gia_ManObj(p, iPrev), iPrev), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n        }\n    }\n    Gia_ManCleanMark01( p );\n    Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n    Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n    Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n    Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n    // create new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObjVec( vIns, p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    for ( r = Rank; r \u003e= 0; r-- )\n    {\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, Vec_IntEntry(vLimFlops, r), Vec_IntEntry(vLimFlops, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n        }\n        Vec_IntForEachEntryStartStop( vObjs, Entry, i, Vec_IntEntry(vLimObjs, r), Vec_IntEntry(vLimObjs, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n        }\n    }\n    Gia_ManForEachPo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Vec_IntSize(vCuts) );\n\n    // create map\n    Vec_IntForEachEntryTwo( vIns, vRankIns, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n    Vec_IntForEachEntryTwo( vCuts, vRankCuts, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n\n    Vec_IntFree( vIns   );\n    Vec_IntFree( vCuts  );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vObjs  );\n\n    Vec_IntFree( vLimIns   );\n    Vec_IntFree( vLimCuts  );\n    Vec_IntFree( vLimFlops );\n    Vec_IntFree( vLimObjs  );\n\n    Vec_IntFree( vRankIns  );\n    Vec_IntFree( vRankCuts  );\n\n    if ( pvMap )\n        *pvMap = vMap;\n    else\n        Vec_IntFree( vMap );\n\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Bmc_SuperBuildTents(p *Gia_Man_t, pvMap **Vec_Int_t) *Gia_Man_t {\n    var vIns *Vec_Int_t       = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t      = Vec_IntAlloc( 1000 );\n    var vFlops *Vec_Int_t     = Vec_IntAlloc( 1000 );\n    var vObjs *Vec_Int_t      = Vec_IntAlloc( 1000 );\n    var vLimIns *Vec_Int_t    = Vec_IntAlloc( 1000 );\n    var vLimCuts *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vLimFlops *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vLimObjs *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vRankIns *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vRankCuts *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMap *Vec_Int_t       = Vec_IntAlloc( 1000 );\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, r, Entry, Rank, iPrev, iThis int32;\n    // collect internal nodes\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vFlops, Gia_ObjId(p, pObj) );\n    Gia_ManCleanMark01( p );\n    for  Rank = 0; iThis \u003c Vec_IntEntryLast(vFlops); Rank++  {\n        Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n        Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n        Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n        Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n        iPrev = iThis;\n        iThis = Vec_IntEntryLast(vFlops);\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, iPrev, iThis )\n        {\n            Gia_ManIncrementTravId( p );\n            Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(Gia_ManObj(p, iPrev), iPrev), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n        }\n    }\n    Gia_ManCleanMark01( p );\n    Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n    Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n    Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n    Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n    // create new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManForEachObjVec( vIns, p, pObj, i )\n        pObj.Value = Gia_ManAppendCi(pNew);\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        pObj.Value = Gia_ManAppendCi(pNew);\n    for  r = Rank; r \u003e= 0; r--  {\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, Vec_IntEntry(vLimFlops, r), Vec_IntEntry(vLimFlops, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        Vec_IntForEachEntryStartStop( vObjs, Entry, i, Vec_IntEntry(vLimObjs, r), Vec_IntEntry(vLimObjs, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n    }\n    Gia_ManForEachPo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Vec_IntSize(vCuts) );\n\n    // create map\n    Vec_IntForEachEntryTwo( vIns, vRankIns, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n    Vec_IntForEachEntryTwo( vCuts, vRankCuts, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n\n    Vec_IntFree( vIns   );\n    Vec_IntFree( vCuts  );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vObjs  );\n\n    Vec_IntFree( vLimIns   );\n    Vec_IntFree( vLimCuts  );\n    Vec_IntFree( vLimFlops );\n    Vec_IntFree( vLimObjs  );\n\n    Vec_IntFree( vRankIns  );\n    Vec_IntFree( vRankCuts  );\n\n    if pvMap {\n        *pvMap = vMap;\n    } else {\n        Vec_IntFree( vMap ); }\n\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCountTents_rec",
+      "Start": 8672,
+      "End": 9266,
+      "BodyStart": 8746,
+      "Original": "void Gia_ManCountTents_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vRoots )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots );\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots );\n    }\n    else if ( Gia_ObjIsRo(p, pObj) )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    else if ( !Gia_ObjIsPi(p, pObj) )\n        assert( 0 );\n}",
+      "Draft": "func Gia_ManCountTents_rec(p *Gia_Man_t, iObj int32, vRoots *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots );\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots );\n    \n    } else if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    } else if !Gia_ObjIsPi(p, pObj) {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Gia_ManCountTents",
+      "Start": 9267,
+      "End": 9943,
+      "BodyStart": 9306,
+      "Original": "int Gia_ManCountTents( Gia_Man_t * p )\n{\n    Vec_Int_t * vRoots;\n    Gia_Obj_t * pObj;  \n    int t, i, iObj, nSizeCurr = 0;\n    assert( Gia_ManPoNum(p) \u003e 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for ( t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++ )\n    {\n        int nSizePrev = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountTents_rec( p, iObj, vRoots );\n    }\n    Vec_IntFree( vRoots );\n    return t;\n}",
+      "Draft": "func Gia_ManCountTents(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var pObj *Gia_Obj_t;  \n    var t, i, iObj, nSizeCurr int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for  t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++  {\n        var nSizePrev int32  = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountTents_rec( p, iObj, vRoots );\n    }\n    Vec_IntFree( vRoots );\n    return t;\n}"
+    },
+    {
+      "Name": "Gia_ManCountRanks_rec",
+      "Start": 10191,
+      "End": 11035,
+      "BodyStart": 10315,
+      "Original": "void Gia_ManCountRanks_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vRoots, Vec_Int_t * vRanks, Vec_Int_t * vCands, int Rank )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, iObj) )\n    {\n        if ( Vec_IntEntry(vRanks, iObj) \u003c Rank )\n            Vec_IntWriteEntry( vCands, iObj, 1 );\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    Vec_IntWriteEntry( vRanks, iObj, Rank );\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots, vRanks, vCands, Rank );\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots, vRanks, vCands, Rank );\n    }\n    else if ( Gia_ObjIsRo(p, pObj) )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    else if ( !Gia_ObjIsPi(p, pObj) )\n        assert( 0 );\n}",
+      "Draft": "func Gia_ManCountRanks_rec(p *Gia_Man_t, iObj int32, vRoots *Vec_Int_t, vRanks *Vec_Int_t, vCands *Vec_Int_t, Rank int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        if Vec_IntEntry(vRanks, iObj) \u003c Rank {\n            Vec_IntWriteEntry( vCands, iObj, 1 ); }\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    Vec_IntWriteEntry( vRanks, iObj, Rank );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots, vRanks, vCands, Rank );\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots, vRanks, vCands, Rank );\n    \n    } else if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    } else if !Gia_ObjIsPi(p, pObj) {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Gia_ManCountRanks",
+      "Start": 11036,
+      "End": 12071,
+      "BodyStart": 11075,
+      "Original": "int Gia_ManCountRanks( Gia_Man_t * p )\n{\n    Vec_Int_t * vRoots;\n    Vec_Int_t * vRanks = Vec_IntStartFull( Gia_ManObjNum(p) );\n    Vec_Int_t * vCands = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_Obj_t * pObj;  \n    int t, i, iObj, nSizeCurr = 0;\n    assert( Gia_ManPoNum(p) \u003e 0 );\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for ( t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++ )\n    {\n        int nSizePrev = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountRanks_rec( p, iObj, vRoots, vRanks, vCands, t );\n    }\n    Vec_IntWriteEntry( vCands, 0, 0 );\n    printf( \"Tents = %6d.   Cands = %6d.  %10.2f %%\\n\", t, Vec_IntSum(vCands), 100.0*Vec_IntSum(vCands)/Gia_ManCandNum(p) );\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRanks );\n    Vec_IntFree( vCands );\n    return t;\n}",
+      "Draft": "func Gia_ManCountRanks(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var vRanks *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var vCands *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t;  \n    var t, i, iObj, nSizeCurr int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for  t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++  {\n        var nSizePrev int32  = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountRanks_rec( p, iObj, vRoots, vRanks, vCands, t );\n    }\n    Vec_IntWriteEntry( vCands, 0, 0 );\n    fmt.Printf(\"Tents = %6d.   Cands = %6d.  %10.2f %%\\n\", t, Vec_IntSum(vCands), 100.0*Vec_IntSum(vCands)/Gia_ManCandNum(p));\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRanks );\n    Vec_IntFree( vCands );\n    return t;\n}"
+    },
+    {
+      "Name": "Bmcs_ManStart",
+      "Start": 12308,
+      "End": 13802,
+      "BodyStart": 12377,
+      "Original": "Bmcs_Man_t * Bmcs_ManStart( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )\n{\n    Bmcs_Man_t * p = ABC_CALLOC( Bmcs_Man_t, 1 ); \n    int i, Lit = Abc_Var2Lit( 0, 1 );\n    satoko_opts_t opts;\n    satoko_default_opts(\u0026opts);\n    opts.conf_limit = pPars-\u003enConfLimit;\n    assert( Gia_ManRegNum(pGia) \u003e 0 );\n    p-\u003epPars   = pPars;\n    p-\u003epGia    = pGia;\n    p-\u003epFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p-\u003epFrames);\n    p-\u003epClean  = NULL;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p-\u003evGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p-\u003evFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p-\u003evFr2Sat, 0 );\n    Vec_IntGrow( \u0026p-\u003evCiMap, 3*Gia_ManCiNum(pGia) );\n    for ( i = 0; i \u003c pPars-\u003enProcs; i++ )\n    {\n        // modify parameters to get different SAT solvers\n        opts.f_rst = 0.8 - i * 0.05;\n        opts.b_rst = 1.4 - i * 0.05;\n        opts.garbage_max_ratio = (float) 0.3 + i * 0.05;\n        // create SAT solvers\n        p-\u003epSats[i] = bmc_sat_solver_start( i );  \n#ifdef ABC_USE_EXT_SOLVERS\n        p-\u003epSats[i]-\u003eSolverType = i;\n#else\n        satoko_configure(p-\u003epSats[i], \u0026opts);\n#endif\n        bmc_sat_solver_addvar( p-\u003epSats[i] );\n        bmc_sat_solver_addclause( p-\u003epSats[i], \u0026Lit, 1 );  \n        bmc_sat_solver_setstop( p-\u003epSats[i], \u0026p-\u003efStopNow );\n    }\n    p-\u003enSatVars = 1;\n    return p;\n}",
+      "Draft": "func Bmcs_ManStart(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) *Bmcs_Man_t {\n    var p *Bmcs_Man_t  = new(Bmcs_Man_t); \n    var i int32;\n    var Lit int32 = Abc_Var2Lit( 0, 1 );\n    var opts satoko_opts_t;\n    satoko_default_opts(\u0026opts);\n    opts.conf_limit = pPars.nConfLimit;\n    assert(Gia_ManRegNum(pGia) \u003e 0, \"Gia_ManRegNum(pGia) \u003e 0\");\n    p.pPars   = pPars;\n    p.pGia    = pGia;\n    p.pFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p.pFrames);\n    p.pClean  = nil;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p.vGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p.vFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p.vFr2Sat, 0 );\n    Vec_IntGrow( \u0026p.vCiMap, 3*Gia_ManCiNum(pGia) );\n    for  i = 0; i \u003c pPars.nProcs; i++  {\n        // modify parameters to get different SAT solvers\n        opts.f_rst = 0.8 - i * 0.05;\n        opts.b_rst = 1.4 - i * 0.05;\n        opts.garbage_max_ratio = float32( 0.3) + i * 0.05;\n        // create SAT solvers\n        p.pSats[i] = bmc_sat_solver_start( i );  \n#ifdef ABC_USE_EXT_SOLVERS\n        p-\u003epSats[i]-\u003eSolverType = i;\n#else\n        satoko_configure(p-\u003epSats[i], \u0026opts);\n#endif\n        bmc_sat_solver_addvar( p.pSats[i] );\n        bmc_sat_solver_addclause( p.pSats[i], \u0026Lit, 1 );  \n        bmc_sat_solver_setstop( p.pSats[i], \u0026p.fStopNow );\n    }\n    p.nSatVars = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Bmcs_ManStop",
+      "Start": 13803,
+      "End": 14192,
+      "BodyStart": 13839,
+      "Original": "void Bmcs_ManStop( Bmcs_Man_t * p )\n{\n    int i;\n    Gia_ManStopP( \u0026p-\u003epFrames );\n    Gia_ManStopP( \u0026p-\u003epClean );\n    Vec_PtrFreeData( \u0026p-\u003evGia2Fr );\n    Vec_PtrErase( \u0026p-\u003evGia2Fr );\n    Vec_IntErase( \u0026p-\u003evFr2Sat );\n    Vec_IntErase( \u0026p-\u003evCiMap );\n    for ( i = 0; i \u003c p-\u003epPars-\u003enProcs; i++ )\n        if ( p-\u003epSats[i] ) \n            bmc_sat_solver_stop( p-\u003epSats[i] );\n    ABC_FREE( p );\n}",
+      "Draft": "func Bmcs_ManStop(p *Bmcs_Man_t) {\n    var i int32;\n    Gia_ManStopP( \u0026p.pFrames );\n    Gia_ManStopP( \u0026p.pClean );\n    Vec_PtrFreeData( \u0026p.vGia2Fr );\n    Vec_PtrErase( \u0026p.vGia2Fr );\n    Vec_IntErase( \u0026p.vFr2Sat );\n    Vec_IntErase( \u0026p.vCiMap );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        if p.pSats[i] { \n            bmc_sat_solver_stop( p.pSats[i] ); }\n    }\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Bmcs_ManUnfold_rec",
+      "Start": 14451,
+      "End": 15656,
+      "BodyStart": 14509,
+      "Original": "int Bmcs_ManUnfold_rec( Bmcs_Man_t * p, int iObj, int f )\n{\n    Gia_Obj_t * pObj; \n    int iLit = 0, * pCopies = Bmcs_ManCopies( p, f );\n    if ( pCopies[iObj] \u003e= 0 )\n        return pCopies[iObj];\n    pObj = Gia_ManObj( p-\u003epGia, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        if ( Gia_ObjIsPi(p-\u003epGia, pObj) )\n        {\n            Vec_IntPushTwo( \u0026p-\u003evCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p-\u003epFrames );\n        }\n        else if ( f \u003e 0 )\n        {\n            pObj = Gia_ObjRoToRi( p-\u003epGia, pObj );\n            iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    }\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if ( iLit \u003e 0 )\n        {\n            int iNew;\n            iNew = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p-\u003epFrames, iLit, iNew );\n        }\n    }\n    else assert( 0 );\n    return (pCopies[iObj] = iLit);\n}",
+      "Draft": "func Bmcs_ManUnfold_rec(p *Bmcs_Man_t, iObj int32, f int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iLit int32;\n    var pCopies *int32 = Bmcs_ManCopies( p, f );\n    if pCopies[iObj] \u003e= 0 {\n        return pCopies[iObj]; }\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPushTwo( \u0026p.vCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p.pFrames );\n        \n        } else if f \u003e 0 {\n            pObj = Gia_ObjRoToRi( p.pGia, pObj );\n            iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if iLit \u003e 0 {\n            var iNew int32;\n            iNew = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p.pFrames, iLit, iNew );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return (pCopies[iObj] = iLit);\n}"
+    },
+    {
+      "Name": "Bmcs_ManCollect_rec",
+      "Start": 15657,
+      "End": 16637,
+      "BodyStart": 15709,
+      "Original": "int Bmcs_ManCollect_rec( Bmcs_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj; \n    int iSatVar, iLitClean = Gia_ObjCopyArray( p-\u003epFrames, iObj );\n    if ( iLitClean \u003e= 0 )\n        return iLitClean;\n    pObj = Gia_ManObj( p-\u003epFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, iObj );\n    if ( iSatVar \u003e 0 || Gia_ObjIsCi(pObj) )\n        iLitClean = Gia_ManAppendCi( p-\u003epClean );\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        int iLit0 = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        int iLit1 = Bmcs_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p-\u003epClean, iLit0, iLit1 );\n    }\n    else assert( 0 );\n    assert( !Abc_LitIsCompl(iLitClean) );\n    Gia_ManObj( p-\u003epClean, Abc_Lit2Var(iLitClean) )-\u003eValue = iObj;\n    Gia_ObjSetCopyArray( p-\u003epFrames, iObj, iLitClean );\n    return iLitClean;\n}",
+      "Draft": "func Bmcs_ManCollect_rec(p *Bmcs_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iSatVar int32;\n    var iLitClean int32 = Gia_ObjCopyArray( p.pFrames, iObj );\n    if iLitClean \u003e= 0 {\n        return iLitClean; }\n    pObj = Gia_ManObj( p.pFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p.vFr2Sat, iObj );\n    if iSatVar \u003e 0 || Gia_ObjIsCi(pObj) {\n        iLitClean = Gia_ManAppendCi( p.pClean );\n    } else if Gia_ObjIsAnd(pObj) {\n        var iLit0 int32  = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        var iLit1 int32  = Bmcs_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p.pClean, iLit0, iLit1 );\n    \n    } else { assert(false, \"0\"); }\n    assert(!Abc_LitIsCompl(iLitClean), \"!Abc_LitIsCompl(iLitClean)\");\n    Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = iObj;\n    Gia_ObjSetCopyArray( p.pFrames, iObj, iLitClean );\n    return iLitClean;\n}"
+    },
+    {
+      "Name": "Bmcs_ManUnfold",
+      "Start": 16638,
+      "End": 18873,
+      "BodyStart": 16706,
+      "Original": "Gia_Man_t * Bmcs_ManUnfold( Bmcs_Man_t * p, int f, int nFramesAdd )\n{\n    Gia_Man_t * pNew = NULL; Gia_Obj_t * pObj;\n    int i, k, iLitFrame, iLitClean, fTrivial = 1;\n    int * pCopies, nFrameObjs = Gia_ManObjNum(p-\u003epFrames);\n    assert( Gia_ManPoNum(p-\u003epFrames) == f * Gia_ManPoNum(p-\u003epGia) );\n    for ( k = 0; k \u003c nFramesAdd; k++ )\n    {\n        // unfold this timeframe\n        Vec_PtrPush( \u0026p-\u003evGia2Fr, ABC_FALLOC(int, Gia_ManObjNum(p-\u003epGia)) );\n        assert( Vec_PtrSize(\u0026p-\u003evGia2Fr) == f+k+1 );\n        pCopies = Bmcs_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        Gia_ManForEachPo( p-\u003epGia, pObj, i )\n        {\n            iLitFrame = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p-\u003epGia, pObj)] = Gia_ManAppendCo( p-\u003epFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if ( fTrivial )\n        return NULL;\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p-\u003evFr2Sat, Gia_ManObjNum(p-\u003epFrames), -1 );\n    Vec_IntFillExtra( \u0026p-\u003epFrames-\u003evCopies, Gia_ManObjNum(p-\u003epFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p-\u003epClean );\n    p-\u003epClean = Gia_ManStart( Gia_ManObjNum(p-\u003epFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p-\u003epFrames, 0, 0 );\n    for ( k = 0; k \u003c nFramesAdd; k++ )\n    for ( i = 0; i \u003c Gia_ManPoNum(p-\u003epGia); i++ )\n    {\n        pObj = Gia_ManCo( p-\u003epFrames, (f+k) * Gia_ManPoNum(p-\u003epGia) + i );\n        iLitClean = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0p(p-\u003epFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p-\u003epClean, iLitClean );\n        Gia_ManObj( p-\u003epClean, Abc_Lit2Var(iLitClean) )-\u003eValue = Gia_ObjId(p-\u003epFrames, pObj);\n        Gia_ObjSetCopyArray( p-\u003epFrames, Gia_ObjId(p-\u003epFrames, pObj), iLitClean );\n    }\n    pNew = p-\u003epClean; p-\u003epClean = NULL;\n    Gia_ManForEachObj( pNew, pObj, i )\n        Gia_ObjSetCopyArray( p-\u003epFrames, pObj-\u003eValue, -1 );\n    return pNew;\n}",
+      "Draft": "func Bmcs_ManUnfold(p *Bmcs_Man_t, f int32, nFramesAdd int32) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil; var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var iLitFrame int32;\n    var iLitClean int32;\n    var fTrivial int32 = 1;\n    var pCopies *int32;\n    var nFrameObjs int32 = Gia_ManObjNum(p.pFrames);\n    assert(Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia)\");\n    for  k = 0; k \u003c nFramesAdd; k++  {\n        // unfold this timeframe\n        Vec_PtrPush( \u0026p.vGia2Fr, ABC_FALLOC(int, Gia_ManObjNum(p.pGia)) );\n        assert(Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1, \"Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1\");\n        pCopies = Bmcs_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        Gia_ManForEachPo( p.pGia, pObj, i )\n        {\n            iLitFrame = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p.pGia, pObj)] = Gia_ManAppendCo( p.pFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if fTrivial != 0 {\n        return nil; }\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p.vFr2Sat, Gia_ManObjNum(p.pFrames), -1 );\n    Vec_IntFillExtra( \u0026p.pFrames.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p.pClean );\n    p.pClean = Gia_ManStart( Gia_ManObjNum(p.pFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p.pFrames, 0, 0 );\n    for  k = 0; k \u003c nFramesAdd; k++  {\n    for  i = 0; i \u003c Gia_ManPoNum(p.pGia); i++  {\n        pObj = Gia_ManCo( p.pFrames, (f+k) * Gia_ManPoNum(p.pGia) + i );\n        iLitClean = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0p(p.pFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p.pClean, iLitClean );\n        Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = Gia_ObjId(p.pFrames, pObj);\n        Gia_ObjSetCopyArray( p.pFrames, Gia_ObjId(p.pFrames, pObj), iLitClean );\n    }\n    }\n    pNew = p.pClean; p.pClean = nil;\n    Gia_ManForEachObj( pNew, pObj, i )\n        Gia_ObjSetCopyArray( p.pFrames, pObj.Value, -1 );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bmcs_ManAddNewCnf",
+      "Start": 18874,
+      "End": 19894,
+      "BodyStart": 18945,
+      "Original": "Cnf_Dat_t * Bmcs_ManAddNewCnf( Bmcs_Man_t * p, int f, int nFramesAdd )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew = Bmcs_ManUnfold( p, f, nFramesAdd );\n    Cnf_Dat_t * pCnf;\n    Gia_Obj_t * pObj; \n    int i, iVar, * pMap;\n    p-\u003etimeUnf += Abc_Clock() - clk;\n    if ( pNew == NULL )\n        return NULL;\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    pMap = ABC_FALLOC( int, Gia_ManObjNum(pNew) );\n    pMap[0] = 0;\n    Gia_ManForEachObj1( pNew, pObj, i )\n    {\n        if ( pCnf-\u003epObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) )\n            continue;\n        iVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, pObj-\u003eValue );\n        if ( iVar == -1 )\n            Vec_IntWriteEntry( \u0026p-\u003evFr2Sat, pObj-\u003eValue, (iVar = p-\u003enSatVars++) );\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for ( i = 0; i \u003c pCnf-\u003enLiterals; i++ )\n        pCnf-\u003epClauses[0][i] = Abc_Lit2LitV( pMap, pCnf-\u003epClauses[0][i] );\n    ABC_FREE( pMap );\n    p-\u003etimeCnf += Abc_Clock() - clk;\n    return pCnf;\n}",
+      "Draft": "func Bmcs_ManAddNewCnf(p *Bmcs_Man_t, f int32, nFramesAdd int32) *Cnf_Dat_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = Bmcs_ManUnfold( p, f, nFramesAdd );\n    var pCnf *Cnf_Dat_t;\n    var pObj *Gia_Obj_t; \n    var i int32;\n    var iVar int32;\n    var pMap *int32;\n    p.timeUnf += Abc_Clock() - clk;\n    if pNew == nil {\n        return nil; }\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    pMap = ABC_FALLOC( int, Gia_ManObjNum(pNew) );\n    pMap[0] = 0;\n    Gia_ManForEachObj1( pNew, pObj, i )\n    {\n        if pCnf.pObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) {\n            continue; }\n        iVar = Vec_IntEntry( \u0026p.vFr2Sat, pObj.Value );\n        if iVar == -1 {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, pObj.Value, (iVar = p.nSatVars++) ); }\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        pCnf.pClauses[0][i] = Abc_Lit2LitV( pMap, pCnf.pClauses[0][i] );\n    }\n    ABC_FREE( pMap );\n    p.timeCnf += Abc_Clock() - clk;\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Bmcs_ManPrintFrame",
+      "Start": 20130,
+      "End": 21162,
+      "BodyStart": 20223,
+      "Original": "void Bmcs_ManPrintFrame( Bmcs_Man_t * p, int f, int nClauses, int Solver, abctime clkStart )\n{\n    int fUnfinished = 0;\n    if ( !p-\u003epPars-\u003efVerbose )\n        return;\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n#ifndef ABC_USE_EXT_SOLVERS\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)satoko_varnum(p-\u003epSats[0]) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)satoko_clausenum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",(double)satoko_learntnum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", (double)satoko_conflictnum(p-\u003epSats[0]) );  \n#else\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n#endif\n    if ( p-\u003epPars-\u003enProcs \u003e 1 )\n        Abc_Print( 1, \"S = %3d. \",  Solver );\n    Abc_Print( 1, \"%4.0f MB\",       1.0*((int)Gia_ManMemory(p-\u003epFrames) + Vec_IntMemory(\u0026p-\u003evFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    (float)(Abc_Clock() - clkStart)/(float)(CLOCKS_PER_SEC) );\n    printf( \"\\n\" );\n    fflush( stdout );\n}",
+      "Draft": "func Bmcs_ManPrintFrame(p *Bmcs_Man_t, f int32, nClauses int32, Solver int32, clkStart abctime) {\n    var fUnfinished int32;\n    if !p.pPars.fVerbose {\n        return; }\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n#ifndef ABC_USE_EXT_SOLVERS\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)satoko_varnum(p-\u003epSats[0]) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)satoko_clausenum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",(double)satoko_learntnum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", (double)satoko_conflictnum(p-\u003epSats[0]) );  \n#else\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n#endif\n    if p.pPars.nProcs \u003e 1 {\n        Abc_Print( 1, \"S = %3d. \",  Solver ); }\n    Abc_Print( 1, \"%4.0f MB\",       1.0*(int32(Gia_ManMemory(p.pFrames)) + Vec_IntMemory(\u0026p.vFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((int64(time.Second))) );\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Bmcs_ManPrintTime",
+      "Start": 21163,
+      "End": 21613,
+      "BodyStart": 21204,
+      "Original": "void Bmcs_ManPrintTime( Bmcs_Man_t * p )\n{\n    abctime clkTotal = p-\u003etimeUnf + p-\u003etimeCnf + p-\u003etimeSat + p-\u003etimeOth;\n    if ( !p-\u003epPars-\u003efVerbose )\n        return;\n    ABC_PRTP( \"Unfolding     \", p-\u003etimeUnf,  clkTotal );\n    ABC_PRTP( \"CNF generation\", p-\u003etimeCnf,  clkTotal );\n    ABC_PRTP( \"SAT solving   \", p-\u003etimeSat,  clkTotal );\n    ABC_PRTP( \"Other         \", p-\u003etimeOth,  clkTotal );\n    ABC_PRTP( \"TOTAL         \", clkTotal  ,  clkTotal );\n}",
+      "Draft": "func Bmcs_ManPrintTime(p *Bmcs_Man_t) {\n    var clkTotal abctime  = p.timeUnf + p.timeCnf + p.timeSat + p.timeOth;\n    if !p.pPars.fVerbose {\n        return; }\n    ABC_PRTP( \"Unfolding     \", p.timeUnf,  clkTotal );\n    ABC_PRTP( \"CNF generation\", p.timeCnf,  clkTotal );\n    ABC_PRTP( \"SAT solving   \", p.timeSat,  clkTotal );\n    ABC_PRTP( \"Other         \", p.timeOth,  clkTotal );\n    ABC_PRTP( \"TOTAL         \", clkTotal  ,  clkTotal );\n}"
+    },
+    {
+      "Name": "Bmcs_ManGenerateCex",
+      "Start": 21614,
+      "End": 22354,
+      "BodyStart": 21685,
+      "Original": "Abc_Cex_t * Bmcs_ManGenerateCex( Bmcs_Man_t * p, int i, int f, int s )\n{\n    Abc_Cex_t * pCex = Abc_CexMakeTriv( Gia_ManRegNum(p-\u003epGia), Gia_ManPiNum(p-\u003epGia), Gia_ManPoNum(p-\u003epGia), f*Gia_ManPoNum(p-\u003epGia)+i );\n    Gia_Obj_t * pObj;  int k;\n    Gia_ManForEachPi( p-\u003epFrames, pObj, k )\n    {\n        int iSatVar = Vec_IntEntry( \u0026p-\u003evFr2Sat, Gia_ObjId(p-\u003epFrames, pObj) );\n        if ( iSatVar \u003e 0 \u0026\u0026 bmc_sat_solver_read_cex_varvalue(p-\u003epSats[s], iSatVar) ) // 1 bit\n        {\n            int iCiId   = Vec_IntEntry( \u0026p-\u003evCiMap, 2*k+0 );\n            int iFrame  = Vec_IntEntry( \u0026p-\u003evCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex-\u003epData, Gia_ManRegNum(p-\u003epGia) + iFrame * Gia_ManPiNum(p-\u003epGia) + iCiId );\n        }\n    }\n    return pCex;\n}",
+      "Draft": "func Bmcs_ManGenerateCex(p *Bmcs_Man_t, i int32, f int32, s int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t  = Abc_CexMakeTriv( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), Gia_ManPoNum(p.pGia), f*Gia_ManPoNum(p.pGia)+i );\n    var pObj *Gia_Obj_t;  var k int32;\n    Gia_ManForEachPi( p.pFrames, pObj, k )\n    {\n        var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n        if iSatVar \u003e 0 \u0026\u0026 bmc_sat_solver_read_cex_varvalue(p.pSats[s], iSatVar) { // 1 bit\n        \n            var iCiId int32    = Vec_IntEntry( \u0026p.vCiMap, 2*k+0 );\n            var iFrame int32   = Vec_IntEntry( \u0026p.vCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex.pData, Gia_ManRegNum(p.pGia) + iFrame * Gia_ManPiNum(p.pGia) + iCiId );\n        }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Bmcs_ManAddCnf",
+      "Start": 22355,
+      "End": 22715,
+      "BodyStart": 22434,
+      "Original": "void Bmcs_ManAddCnf( Bmcs_Man_t * p, bmc_sat_solver * pSat, Cnf_Dat_t * pCnf )\n{\n    int i;\n    for ( i = p-\u003enSatVarsOld; i \u003c p-\u003enSatVars; i++ )\n        bmc_sat_solver_addvar( pSat );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !bmc_sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1]-pCnf-\u003epClauses[i] ) )\n            assert( 0 );\n}",
+      "Draft": "func Bmcs_ManAddCnf(p *Bmcs_Man_t, pSat *bmc_sat_solver, pCnf *Cnf_Dat_t) {\n    var i int32;\n    for  i = p.nSatVarsOld; i \u003c p.nSatVars; i++  {\n        bmc_sat_solver_addvar( pSat );\n    }\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmc_sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            assert(false, \"0\"); }\n    }\n}"
+    },
+    {
+      "Name": "Bmcs_ManPerformOne",
+      "Start": 22716,
+      "End": 26152,
+      "BodyStart": 22781,
+      "Original": "int Bmcs_ManPerformOne( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )\n{\n    abctime clkStart = Abc_Clock();\n    Bmcs_Man_t * p = Bmcs_ManStart( pGia, pPars );\n    int f, k = 0, i = Gia_ManPoNum(pGia), status, RetValue = -1, nClauses = 0;\n    Abc_CexFreeP( \u0026pGia-\u003epCexSeq );\n    for ( f = 0; !pPars-\u003enFramesMax || f \u003c pPars-\u003enFramesMax; f += pPars-\u003enFramesAdd )\n    {\n        Cnf_Dat_t * pCnf = Bmcs_ManAddNewCnf( p, f, pPars-\u003enFramesAdd );\n        if ( pCnf == NULL )\n        {\n            Bmcs_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if( pPars-\u003epFuncOnFrameDone)\n                for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n                for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n                    pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n            continue;\n        }\n        nClauses += pCnf-\u003enClauses;\n        Bmcs_ManAddCnf( p, p-\u003epSats[0], pCnf );\n        p-\u003enSatVarsOld = p-\u003enSatVars;\n        Cnf_DataFree( pCnf );\n        assert( Gia_ManPoNum(p-\u003epFrames) == (f + pPars-\u003enFramesAdd) * Gia_ManPoNum(pGia) );\n        for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n        {\n            for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n            {\n                abctime clk = Abc_Clock();\n                int iObj = Gia_ObjId( p-\u003epFrames, Gia_ManCo(p-\u003epFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                int iLit = Abc_Var2Lit( Vec_IntEntry(\u0026p-\u003evFr2Sat, iObj), 0 );\n                if ( pPars-\u003enTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars-\u003enTimeOut )\n                    break;\n                status = bmc_sat_solver_solve( p-\u003epSats[0], \u0026iLit, 1 );\n                p-\u003etimeSat += Abc_Clock() - clk;\n                if ( status == l_False ) // unsat\n                {\n                    if ( i == Gia_ManPoNum(pGia)-1 )\n                        Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if( pPars-\u003epFuncOnFrameDone)\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n                    continue;\n                }\n                if ( status == l_True ) // sat\n                {\n                    RetValue = 0;\n                    pPars-\u003eiFrame = f+k;\n                    pGia-\u003epCexSeq = Bmcs_ManGenerateCex( p, i, f+k, 0 );\n                    pPars-\u003enFailOuts++;\n                    Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if ( !pPars-\u003efNotVerbose )\n                    {\n                        int nOutDigits = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars-\u003enFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( stdout );\n                    }\n                    if( pPars-\u003epFuncOnFrameDone)\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 1);\n                }\n                break;\n            }\n            if ( i \u003c Gia_ManPoNum(pGia) || f+k == pPars-\u003enFramesMax-1 )\n                break;\n        }\n        if ( k \u003c pPars-\u003enFramesAdd )\n            break;\n    }\n    p-\u003etimeOth = Abc_Clock() - clkStart - p-\u003etimeUnf - p-\u003etimeCnf - p-\u003etimeSat;\n    if ( RetValue == -1 \u0026\u0026 !pPars-\u003efNotVerbose )\n        printf( \"No output failed in %d frames.  \", f + (k \u003c pPars-\u003enFramesAdd ? k+1 : 0) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcs_ManPrintTime( p );\n    Bmcs_ManStop( p );\n    return RetValue;\n}",
+      "Draft": "func Bmcs_ManPerformOne(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {\n    var clkStart abctime  = Abc_Clock();\n    var p *Bmcs_Man_t  = Bmcs_ManStart( pGia, pPars );\n    var f int32;\n    var k int32;\n    var i int32 = Gia_ManPoNum(pGia);\n    var status int32;\n    var RetValue int32 = -1;\n    var nClauses int32;\n    Abc_CexFreeP( \u0026pGia.pCexSeq );\n    for  f = 0; !pPars.nFramesMax || f \u003c pPars.nFramesMax; f += pPars.nFramesAdd  {\n        var pCnf *Cnf_Dat_t  = Bmcs_ManAddNewCnf( p, f, pPars.nFramesAdd );\n        if pCnf == nil {\n            Bmcs_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if pPars.pFuncOnFrameDone {\n                for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n                for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                    pPars.pFuncOnFrameDone(f+k, i, 0);\n                }\n                } }\n            continue;\n        }\n        nClauses += pCnf.nClauses;\n        Bmcs_ManAddCnf( p, p.pSats[0], pCnf );\n        p.nSatVarsOld = p.nSatVars;\n        Cnf_DataFree( pCnf );\n        assert(Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia), \"Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia)\");\n        for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n            for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                var clk abctime  = Abc_Clock();\n                var iObj int32  = Gia_ObjId( p.pFrames, Gia_ManCo(p.pFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                var iLit int32  = Abc_Var2Lit( Vec_IntEntry(\u0026p.vFr2Sat, iObj), 0 );\n                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.nTimeOut {\n                    break; }\n                status = bmc_sat_solver_solve( p.pSats[0], \u0026iLit, 1 );\n                p.timeSat += Abc_Clock() - clk;\n                if status == l_False { // unsat\n                \n                    if i == Gia_ManPoNum(pGia)-1 {\n                        Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart ); }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 0); }\n                    continue;\n                }\n                if status == l_True { // sat\n                \n                    RetValue = 0;\n                    pPars.iFrame = f+k;\n                    pGia.pCexSeq = Bmcs_ManGenerateCex( p, i, f+k, 0 );\n                    pPars.nFailOuts++;\n                    Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if !pPars.fNotVerbose {\n                        var nOutDigits int32  = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars.nFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( os.Stdout );\n                    }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 1); }\n                }\n                break;\n            }\n            if i \u003c Gia_ManPoNum(pGia) || f+k == pPars.nFramesMax-1 {\n                break; }\n        }\n        if k \u003c pPars.nFramesAdd {\n            break; }\n    }\n    p.timeOth = Abc_Clock() - clkStart - p.timeUnf - p.timeCnf - p.timeSat;\n    if RetValue == -1 \u0026\u0026 !pPars.fNotVerbose {\n        fmt.Printf(\"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0)); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcs_ManPrintTime( p );\n    Bmcs_ManStop( p );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bmcs_ManPerform",
+      "Start": 33119,
+      "End": 33370,
+      "BodyStart": 33182,
+      "Original": "int Bmcs_ManPerform( Gia_Man_t * pGia, Bmc_AndPar_t * pPars ) \n{ \n    assert( pPars-\u003enProcs \u003c PAR_THR_MAX );\n    if ( pPars-\u003enProcs == 1 )\n        return Bmcs_ManPerformOne( pGia, pPars );\n    else\n        return Bmcs_ManPerformMulti( pGia, pPars );\n}",
+      "Draft": "func Bmcs_ManPerform(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 { \n    assert(pPars.nProcs \u003c PAR_THR_MAX, \"pPars.nProcs \u003c PAR_THR_MAX\");\n    if pPars.nProcs == 1 {\n        return Bmcs_ManPerformOne( pGia, pPars );\n    } else {\n        return Bmcs_ManPerformMulti( pGia, pPars ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::struct::Bmcs_Man_t::// maps CIs of pFrames into CIs/frames of GIA\n    bmc_sat_solver *  pSats[PAR_THR_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Bmcs_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2340,
+      "End": 2441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::struct::Bmcs_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Bmcs_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1775,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::pointer-cast::2443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3173,
+      "End": 3179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::pointer-cast::18445",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19223,
+      "End": 19236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManCopies",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManCopies",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3104,
+      "End": 3210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmc_SuperBuildTents_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_SuperBuildTents_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3688,
+      "End": 4853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmc_SuperBuildTents",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_SuperBuildTents",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4854,
+      "End": 8422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Gia_ManCountTents_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountTents_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8672,
+      "End": 9266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Gia_ManCountTents",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountTents",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9267,
+      "End": 9943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Gia_ManCountRanks_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountRanks_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10191,
+      "End": 11035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Gia_ManCountRanks",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountRanks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11036,
+      "End": 12071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12308,
+      "End": 13802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13803,
+      "End": 14192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManUnfold_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManUnfold_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14451,
+      "End": 15656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15657,
+      "End": 16637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManUnfold",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManUnfold",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16638,
+      "End": 18873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManAddNewCnf",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManAddNewCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18874,
+      "End": 19894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::ternary::Bmcs_ManPrintFrame",
+      "Category": "ternary-review",
+      "Symbol": "Bmcs_ManPrintFrame",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20130,
+      "End": 21162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManPrintFrame",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManPrintFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20130,
+      "End": 21162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManPrintTime",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManPrintTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21163,
+      "End": 21613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManGenerateCex",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManGenerateCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21614,
+      "End": 22354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManAddCnf",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManAddCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22355,
+      "End": 22715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::ternary::Bmcs_ManPerformOne",
+      "Category": "ternary-review",
+      "Symbol": "Bmcs_ManPerformOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22716,
+      "End": 26152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManPerformOne",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManPerformOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22716,
+      "End": 26152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::Bmcs_ManPerform",
+      "Category": "semantic-review",
+      "Symbol": "Bmcs_ManPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33119,
+      "End": 33370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 619,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1361,
+      "End": 1501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13470,
+      "End": 13592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20360,
+      "End": 20832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26390,
+      "End": 32882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::5607",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5607,
+      "End": 5637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::6080",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6080,
+      "End": 6142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::6809",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6809,
+      "End": 6849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::6899",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6899,
+      "End": 6940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7034",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7034,
+      "End": 7140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7261",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7261,
+      "End": 7364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7487",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7487,
+      "End": 7517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7580",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7580,
+      "End": 7621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7753",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryTwo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7753,
+      "End": 7809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::7859",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryTwo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7859,
+      "End": 7917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::9536",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9536,
+      "End": 9566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::9771",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9771,
+      "End": 9840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::11427",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11427,
+      "End": 11457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::11662",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11662,
+      "End": 11731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::12400",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12400,
+      "End": 12427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::13441",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_start",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13441,
+      "End": 13466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::13601",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_addvar",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13601,
+      "End": 13637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::13647",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13647,
+      "End": 13695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::13707",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_setstop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13707,
+      "End": 13758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::14136",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_stop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14136,
+      "End": 14170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::14176",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14176,
+      "End": 14189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::17045",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17045,
+      "End": 17084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::17290",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17290,
+      "End": 17326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::18760",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18760,
+      "End": 18794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::19290",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19290,
+      "End": 19328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::19351",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObj1",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19351,
+      "End": 19386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::19821",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19821,
+      "End": 19837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21331",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21331,
+      "End": 21382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21388",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21388,
+      "End": 21439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21445",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21445,
+      "End": 21496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21502",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21502,
+      "End": 21553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21559",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21559,
+      "End": 21610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::21860",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21860,
+      "End": 21899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::22014",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_read_cex_varvalue",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22014,
+      "End": 22068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::22508",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_addvar",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22508,
+      "End": 22537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::22596",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22596,
+      "End": 22686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmcS.c::macro-inline::24253",
+      "Category": "macro-inline-review",
+      "Symbol": "bmc_sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24253,
+      "End": 24298
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bmcBmcS.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [New BMC package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 20, 2017.]\n\n  Revision    [$Id: bmcBmcS.c,v 1.00 2017/07/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/satoko/satoko.h\"\n\n\n//#define ABC_USE_EXT_SOLVERS 1\n\n#ifdef ABC_USE_EXT_SOLVERS\n    #include \"extsat/bmc/bmcApi.h\"\n    #define l_Undef -1\n    #define l_True   1\n    #define l_False  0\n#else\n    #define l_Undef  0\n    #define l_True   1\n    #define l_False -1\n    #define bmc_sat_solver                     satoko_t\n    #define bmc_sat_solver_start(type)         satoko_create()\n    #define bmc_sat_solver_stop                satoko_destroy\n    #define bmc_sat_solver_addclause           satoko_add_clause\n    #define bmc_sat_solver_addvar(s)           satoko_add_variable(s, 0)\n    #define bmc_sat_solver_solve               satoko_solve_assumptions\n    #define bmc_sat_solver_read_cex_varvalue   satoko_read_cex_varvalue\n    #define bmc_sat_solver_setstop             satoko_set_stop\n#endif\n\n\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n    #include \"../lib/pthread.h\"\n#else\n    //#include \u003cpthread.h\u003e\n    #include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst PAR_THR_MAX = 100\n\n   \ntype Bmcs_Man_t struct {\n    pPars     *Bmc_AndPar_t;               // parameters\n    pGia        *Gia_Man_t;                // user's AIG\n    pFrames        *Gia_Man_t;             // unfolded AIG (pFrames-\u003evCopies point to pClean)\n    pClean        *Gia_Man_t;              // incremental AIG (pClean-\u003eValue point to pFrames)\n    vGia2Fr         Vec_Ptr_t;             // copies of GIA in each timeframe\n    vFr2Sat         Vec_Int_t;             // mapping of objects in pFrames into SAT variables\n    vCiMap         Vec_Int_t;              // maps CIs of pFrames into CIs/frames of GIA\n    bmc_sat_solver *  pSats[PAR_THR_MAX];  // concurrent SAT solvers\n    nSatVars               int32;            // number of SAT variables used\n    nSatVarsOld               int32;         // number of SAT variables used\n    fStopNow               int32;            // signal when it is time to stop\n    timeUnf           abctime;             // runtime of unfolding\n    timeCnf           abctime;             // runtime of CNF generation\n    timeSat           abctime;             // runtime of the solvers\n    timeOth           abctime;             // other runtime\n}\n\n//static inline int * Bmcs_ManCopies( Bmcs_Man_t * p, int f ) { return (int*)Vec_PtrEntry(\u0026p-\u003evGia2Fr, f % Vec_PtrSize(\u0026p-\u003evGia2Fr)); }\nfunc Bmcs_ManCopies(p *Bmcs_Man_t, f int32) *int32 { return (int*)Vec_PtrEntry(\u0026p.vGia2Fr, f); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Incremental unfolding.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_SuperBuildTents_rec(p *Gia_Man_t, iObj int32, vIns *Vec_Int_t, vCuts *Vec_Int_t, vFlops *Vec_Int_t, vObjs *Vec_Int_t, vRankIns *Vec_Int_t, vRankCuts *Vec_Int_t, Rank int32) {\n    var pObj *Gia_Obj_t;\n    if iObj == 0 {\n        return; }\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if pObj.fMark0 {\n        if !pObj.fMark1 {\n            return; }\n        Vec_IntPush( vCuts, iObj );\n        Vec_IntPush( vRankCuts, Rank );\n        pObj.fMark1 = 1;\n        return;\n    }\n    pObj.fMark0 = 1;\n    if Gia_ObjIsPi(p, pObj) {\n        Vec_IntPush( vIns, iObj );\n        Vec_IntPush( vRankIns, Rank );\n        pObj.fMark1 = 1;\n        return;\n    }\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vFlops, iObj );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n    Vec_IntPush( vObjs, iObj );\n}\nfunc Bmc_SuperBuildTents(p *Gia_Man_t, pvMap **Vec_Int_t) *Gia_Man_t {\n    var vIns *Vec_Int_t       = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t      = Vec_IntAlloc( 1000 );\n    var vFlops *Vec_Int_t     = Vec_IntAlloc( 1000 );\n    var vObjs *Vec_Int_t      = Vec_IntAlloc( 1000 );\n    var vLimIns *Vec_Int_t    = Vec_IntAlloc( 1000 );\n    var vLimCuts *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vLimFlops *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vLimObjs *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vRankIns *Vec_Int_t   = Vec_IntAlloc( 1000 );\n    var vRankCuts *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vMap *Vec_Int_t       = Vec_IntAlloc( 1000 );\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, r, Entry, Rank, iPrev, iThis int32;\n    // collect internal nodes\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vFlops, Gia_ObjId(p, pObj) );\n    Gia_ManCleanMark01( p );\n    for  Rank = 0; iThis \u003c Vec_IntEntryLast(vFlops); Rank++  {\n        Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n        Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n        Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n        Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n        iPrev = iThis;\n        iThis = Vec_IntEntryLast(vFlops);\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, iPrev, iThis )\n        {\n            Gia_ManIncrementTravId( p );\n            Bmc_SuperBuildTents_rec( p, Gia_ObjFaninId0(Gia_ManObj(p, iPrev), iPrev), vIns, vCuts, vFlops, vObjs, vRankIns, vRankCuts, Rank );\n        }\n    }\n    Gia_ManCleanMark01( p );\n    Vec_IntPush( vLimIns,   Vec_IntSize(vIns)   );\n    Vec_IntPush( vLimCuts,  Vec_IntSize(vCuts)  );\n    Vec_IntPush( vLimFlops, Vec_IntSize(vFlops) );\n    Vec_IntPush( vLimObjs,  Vec_IntSize(vObjs)  );\n    // create new GIA\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManForEachObjVec( vIns, p, pObj, i )\n        pObj.Value = Gia_ManAppendCi(pNew);\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        pObj.Value = Gia_ManAppendCi(pNew);\n    for  r = Rank; r \u003e= 0; r--  {\n        Vec_IntForEachEntryStartStop( vFlops, Entry, i, Vec_IntEntry(vLimFlops, r), Vec_IntEntry(vLimFlops, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        Vec_IntForEachEntryStartStop( vObjs, Entry, i, Vec_IntEntry(vLimObjs, r), Vec_IntEntry(vLimObjs, r+1) )\n        {\n            pObj = Gia_ManObj(p, Entry);\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n    }\n    Gia_ManForEachPo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManForEachObjVec( vCuts, p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Vec_IntSize(vCuts) );\n\n    // create map\n    Vec_IntForEachEntryTwo( vIns, vRankIns, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n    Vec_IntForEachEntryTwo( vCuts, vRankCuts, Entry, Rank, i )\n        Vec_IntPushTwo( vMap, Entry, Rank );\n\n    Vec_IntFree( vIns   );\n    Vec_IntFree( vCuts  );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vObjs  );\n\n    Vec_IntFree( vLimIns   );\n    Vec_IntFree( vLimCuts  );\n    Vec_IntFree( vLimFlops );\n    Vec_IntFree( vLimObjs  );\n\n    Vec_IntFree( vRankIns  );\n    Vec_IntFree( vRankCuts  );\n\n    if pvMap {\n        *pvMap = vMap;\n    } else {\n        Vec_IntFree( vMap ); }\n\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count tents.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCountTents_rec(p *Gia_Man_t, iObj int32, vRoots *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots );\n        Gia_ManCountTents_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots );\n    \n    } else if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    } else if !Gia_ObjIsPi(p, pObj) {\n        assert(false, \"0\"); }\n}\nfunc Gia_ManCountTents(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var pObj *Gia_Obj_t;  \n    var t, i, iObj, nSizeCurr int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for  t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++  {\n        var nSizePrev int32  = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountTents_rec( p, iObj, vRoots );\n    }\n    Vec_IntFree( vRoots );\n    return t;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count tents.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCountRanks_rec(p *Gia_Man_t, iObj int32, vRoots *Vec_Int_t, vRanks *Vec_Int_t, vCands *Vec_Int_t, Rank int32) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, iObj) {\n        if Vec_IntEntry(vRanks, iObj) \u003c Rank {\n            Vec_IntWriteEntry( vCands, iObj, 1 ); }\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    Vec_IntWriteEntry( vRanks, iObj, Rank );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsAnd(pObj) {\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId0(pObj, iObj), vRoots, vRanks, vCands, Rank );\n        Gia_ManCountRanks_rec( p, Gia_ObjFaninId1(pObj, iObj), vRoots, vRanks, vCands, Rank );\n    \n    } else if Gia_ObjIsRo(p, pObj) {\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, Gia_ObjRoToRi(p, pObj)) );\n    } else if !Gia_ObjIsPi(p, pObj) {\n        assert(false, \"0\"); }\n}\nfunc Gia_ManCountRanks(p *Gia_Man_t) int32 {\n    var vRoots *Vec_Int_t;\n    var vRanks *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var vCands *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var pObj *Gia_Obj_t;  \n    var t, i, iObj, nSizeCurr int32;\n    assert(Gia_ManPoNum(p) \u003e 0, \"Gia_ManPoNum(p) \u003e 0\");\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrentId( p, 0 );\n    vRoots = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p, pObj, i )\n        Vec_IntPush( vRoots, Gia_ObjFaninId0p(p, pObj) );\n    for  t = 0; nSizeCurr \u003c Vec_IntSize(vRoots); t++  {\n        var nSizePrev int32  = nSizeCurr;\n        nSizeCurr = Vec_IntSize(vRoots);\n        Vec_IntForEachEntryStartStop( vRoots, iObj, i, nSizePrev, nSizeCurr )\n            Gia_ManCountRanks_rec( p, iObj, vRoots, vRanks, vCands, t );\n    }\n    Vec_IntWriteEntry( vCands, 0, 0 );\n    fmt.Printf(\"Tents = %6d.   Cands = %6d.  %10.2f %%\\n\", t, Vec_IntSum(vCands), 100.0*Vec_IntSum(vCands)/Gia_ManCandNum(p));\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRanks );\n    Vec_IntFree( vCands );\n    return t;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcs_ManStart(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) *Bmcs_Man_t {\n    var p *Bmcs_Man_t  = new(Bmcs_Man_t); \n    var i int32;\n    var Lit int32 = Abc_Var2Lit( 0, 1 );\n    var opts satoko_opts_t;\n    satoko_default_opts(\u0026opts);\n    opts.conf_limit = pPars.nConfLimit;\n    assert(Gia_ManRegNum(pGia) \u003e 0, \"Gia_ManRegNum(pGia) \u003e 0\");\n    p.pPars   = pPars;\n    p.pGia    = pGia;\n    p.pFrames = Gia_ManStart( 3*Gia_ManObjNum(pGia) );  Gia_ManHashStart(p.pFrames);\n    p.pClean  = nil;\n//    Vec_PtrFill( \u0026p-\u003evGia2Fr, Gia_ManCountTents(pGia)+1, NULL );\n//    for ( i = 0; i \u003c Vec_PtrSize(\u0026p-\u003evGia2Fr); i++ )\n//        Vec_PtrWriteEntry( \u0026p-\u003evGia2Fr, i, ABC_FALLOC(int, Gia_ManObjNum(pGia)) );\n    Vec_PtrGrow( \u0026p.vGia2Fr, 1000 );  \n    Vec_IntGrow( \u0026p.vFr2Sat, 3*Gia_ManCiNum(pGia) );  \n    Vec_IntPush( \u0026p.vFr2Sat, 0 );\n    Vec_IntGrow( \u0026p.vCiMap, 3*Gia_ManCiNum(pGia) );\n    for  i = 0; i \u003c pPars.nProcs; i++  {\n        // modify parameters to get different SAT solvers\n        opts.f_rst = 0.8 - i * 0.05;\n        opts.b_rst = 1.4 - i * 0.05;\n        opts.garbage_max_ratio = float32( 0.3) + i * 0.05;\n        // create SAT solvers\n        p.pSats[i] = bmc_sat_solver_start( i );  \n#ifdef ABC_USE_EXT_SOLVERS\n        p-\u003epSats[i]-\u003eSolverType = i;\n#else\n        satoko_configure(p-\u003epSats[i], \u0026opts);\n#endif\n        bmc_sat_solver_addvar( p.pSats[i] );\n        bmc_sat_solver_addclause( p.pSats[i], \u0026Lit, 1 );  \n        bmc_sat_solver_setstop( p.pSats[i], \u0026p.fStopNow );\n    }\n    p.nSatVars = 1;\n    return p;\n}\nfunc Bmcs_ManStop(p *Bmcs_Man_t) {\n    var i int32;\n    Gia_ManStopP( \u0026p.pFrames );\n    Gia_ManStopP( \u0026p.pClean );\n    Vec_PtrFreeData( \u0026p.vGia2Fr );\n    Vec_PtrErase( \u0026p.vGia2Fr );\n    Vec_IntErase( \u0026p.vFr2Sat );\n    Vec_IntErase( \u0026p.vCiMap );\n    for  i = 0; i \u003c p.pPars.nProcs; i++  {\n        if p.pSats[i] { \n            bmc_sat_solver_stop( p.pSats[i] ); }\n    }\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Incremental unfolding.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcs_ManUnfold_rec(p *Bmcs_Man_t, iObj int32, f int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iLit int32;\n    var pCopies *int32 = Bmcs_ManCopies( p, f );\n    if pCopies[iObj] \u003e= 0 {\n        return pCopies[iObj]; }\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPushTwo( \u0026p.vCiMap, Gia_ObjCioId(pObj), f );\n            iLit = Gia_ManAppendCi( p.pFrames );\n        \n        } else if f \u003e 0 {\n            pObj = Gia_ObjRoToRi( p.pGia, pObj );\n            iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f-1 );\n            iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        }\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        iLit = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0(pObj, iObj), f );\n        iLit = Abc_LitNotCond( iLit, Gia_ObjFaninC0(pObj) );\n        if iLit \u003e 0 {\n            var iNew int32;\n            iNew = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId1(pObj, iObj), f );\n            iNew = Abc_LitNotCond( iNew, Gia_ObjFaninC1(pObj) );\n            iLit = Gia_ManHashAnd( p.pFrames, iLit, iNew );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return (pCopies[iObj] = iLit);\n}\nfunc Bmcs_ManCollect_rec(p *Bmcs_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var iSatVar int32;\n    var iLitClean int32 = Gia_ObjCopyArray( p.pFrames, iObj );\n    if iLitClean \u003e= 0 {\n        return iLitClean; }\n    pObj = Gia_ManObj( p.pFrames, iObj );\n    iSatVar = Vec_IntEntry( \u0026p.vFr2Sat, iObj );\n    if iSatVar \u003e 0 || Gia_ObjIsCi(pObj) {\n        iLitClean = Gia_ManAppendCi( p.pClean );\n    } else if Gia_ObjIsAnd(pObj) {\n        var iLit0 int32  = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n        var iLit1 int32  = Bmcs_ManCollect_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitClean = Gia_ManAppendAnd( p.pClean, iLit0, iLit1 );\n    \n    } else { assert(false, \"0\"); }\n    assert(!Abc_LitIsCompl(iLitClean), \"!Abc_LitIsCompl(iLitClean)\");\n    Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = iObj;\n    Gia_ObjSetCopyArray( p.pFrames, iObj, iLitClean );\n    return iLitClean;\n}\nfunc Bmcs_ManUnfold(p *Bmcs_Man_t, f int32, nFramesAdd int32) *Gia_Man_t {\n    var pNew *Gia_Man_t  = nil; var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var iLitFrame int32;\n    var iLitClean int32;\n    var fTrivial int32 = 1;\n    var pCopies *int32;\n    var nFrameObjs int32 = Gia_ManObjNum(p.pFrames);\n    assert(Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == f * Gia_ManPoNum(p.pGia)\");\n    for  k = 0; k \u003c nFramesAdd; k++  {\n        // unfold this timeframe\n        Vec_PtrPush( \u0026p.vGia2Fr, ABC_FALLOC(int, Gia_ManObjNum(p.pGia)) );\n        assert(Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1, \"Vec_PtrSize(\u0026p.vGia2Fr) == f+k+1\");\n        pCopies = Bmcs_ManCopies( p, f+k );\n        //memset( pCopies, 0xFF, sizeof(int)*Gia_ManObjNum(p-\u003epGia) );  \n        pCopies[0] = 0;\n        Gia_ManForEachPo( p.pGia, pObj, i )\n        {\n            iLitFrame = Bmcs_ManUnfold_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), f+k );\n            iLitFrame = Abc_LitNotCond( iLitFrame, Gia_ObjFaninC0(pObj) );\n            pCopies[Gia_ObjId(p.pGia, pObj)] = Gia_ManAppendCo( p.pFrames, iLitFrame );\n            fTrivial \u0026= (iLitFrame == 0);\n        }\n    }\n    if fTrivial != 0 {\n        return nil; }\n    // create a clean copy of the new nodes of this timeframe\n    Vec_IntFillExtra( \u0026p.vFr2Sat, Gia_ManObjNum(p.pFrames), -1 );\n    Vec_IntFillExtra( \u0026p.pFrames.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    //assert( Vec_IntCountEntry(\u0026p-\u003epFrames-\u003evCopies, -1) == Vec_IntSize(\u0026p-\u003epFrames-\u003evCopies) );\n    Gia_ManStopP( \u0026p.pClean );\n    p.pClean = Gia_ManStart( Gia_ManObjNum(p.pFrames) - nFrameObjs + 1000 );\n    Gia_ObjSetCopyArray( p.pFrames, 0, 0 );\n    for  k = 0; k \u003c nFramesAdd; k++  {\n    for  i = 0; i \u003c Gia_ManPoNum(p.pGia); i++  {\n        pObj = Gia_ManCo( p.pFrames, (f+k) * Gia_ManPoNum(p.pGia) + i );\n        iLitClean = Bmcs_ManCollect_rec( p, Gia_ObjFaninId0p(p.pFrames, pObj) );\n        iLitClean = Abc_LitNotCond( iLitClean, Gia_ObjFaninC0(pObj) );\n        iLitClean = Gia_ManAppendCo( p.pClean, iLitClean );\n        Gia_ManObj( p.pClean, Abc_Lit2Var(iLitClean) ).Value = Gia_ObjId(p.pFrames, pObj);\n        Gia_ObjSetCopyArray( p.pFrames, Gia_ObjId(p.pFrames, pObj), iLitClean );\n    }\n    }\n    pNew = p.pClean; p.pClean = nil;\n    Gia_ManForEachObj( pNew, pObj, i )\n        Gia_ObjSetCopyArray( p.pFrames, pObj.Value, -1 );\n    return pNew;\n}\nfunc Bmcs_ManAddNewCnf(p *Bmcs_Man_t, f int32, nFramesAdd int32) *Cnf_Dat_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = Bmcs_ManUnfold( p, f, nFramesAdd );\n    var pCnf *Cnf_Dat_t;\n    var pObj *Gia_Obj_t; \n    var i int32;\n    var iVar int32;\n    var pMap *int32;\n    p.timeUnf += Abc_Clock() - clk;\n    if pNew == nil {\n        return nil; }\n    clk = Abc_Clock();\n    pCnf = (Cnf_Dat_t *) Mf_ManGenerateCnf( pNew, 8, 1, 0, 0, 0 );\n    pMap = ABC_FALLOC( int, Gia_ManObjNum(pNew) );\n    pMap[0] = 0;\n    Gia_ManForEachObj1( pNew, pObj, i )\n    {\n        if pCnf.pObj2Count[i] \u003c= 0 \u0026\u0026 !Gia_ObjIsCi(pObj) {\n            continue; }\n        iVar = Vec_IntEntry( \u0026p.vFr2Sat, pObj.Value );\n        if iVar == -1 {\n            Vec_IntWriteEntry( \u0026p.vFr2Sat, pObj.Value, (iVar = p.nSatVars++) ); }\n        pMap[i] = iVar;\n    }\n    Gia_ManStop( pNew );\n    for  i = 0; i \u003c pCnf.nLiterals; i++  {\n        pCnf.pClauses[0][i] = Abc_Lit2LitV( pMap, pCnf.pClauses[0][i] );\n    }\n    ABC_FREE( pMap );\n    p.timeCnf += Abc_Clock() - clk;\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcs_ManPrintFrame(p *Bmcs_Man_t, f int32, nClauses int32, Solver int32, clkStart abctime) {\n    var fUnfinished int32;\n    if !p.pPars.fVerbose {\n        return; }\n    Abc_Print( 1, \"%4d %s : \", f,   fUnfinished ? \"-\" : \"+\" );\n#ifndef ABC_USE_EXT_SOLVERS\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)satoko_varnum(p-\u003epSats[0]) ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)satoko_clausenum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Learn =%9.0f.  \",(double)satoko_learntnum(p-\u003epSats[0]) );  \n    Abc_Print( 1, \"Conf =%9.0f.  \", (double)satoko_conflictnum(p-\u003epSats[0]) );  \n#else\n    Abc_Print( 1, \"Var =%8.0f.  \",  (double)p-\u003enSatVars ); \n    Abc_Print( 1, \"Cla =%9.0f.  \",  (double)nClauses );  \n#endif\n    if p.pPars.nProcs \u003e 1 {\n        Abc_Print( 1, \"S = %3d. \",  Solver ); }\n    Abc_Print( 1, \"%4.0f MB\",       1.0*(int32(Gia_ManMemory(p.pFrames)) + Vec_IntMemory(\u0026p.vFr2Sat))/(1\u003c\u003c20) );\n    Abc_Print( 1, \"%9.2f sec  \",    float32((Abc_Clock() - clkStart))/float32((int64(time.Second))) );\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}\nfunc Bmcs_ManPrintTime(p *Bmcs_Man_t) {\n    var clkTotal abctime  = p.timeUnf + p.timeCnf + p.timeSat + p.timeOth;\n    if !p.pPars.fVerbose {\n        return; }\n    ABC_PRTP( \"Unfolding     \", p.timeUnf,  clkTotal );\n    ABC_PRTP( \"CNF generation\", p.timeCnf,  clkTotal );\n    ABC_PRTP( \"SAT solving   \", p.timeSat,  clkTotal );\n    ABC_PRTP( \"Other         \", p.timeOth,  clkTotal );\n    ABC_PRTP( \"TOTAL         \", clkTotal  ,  clkTotal );\n}\nfunc Bmcs_ManGenerateCex(p *Bmcs_Man_t, i int32, f int32, s int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t  = Abc_CexMakeTriv( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), Gia_ManPoNum(p.pGia), f*Gia_ManPoNum(p.pGia)+i );\n    var pObj *Gia_Obj_t;  var k int32;\n    Gia_ManForEachPi( p.pFrames, pObj, k )\n    {\n        var iSatVar int32  = Vec_IntEntry( \u0026p.vFr2Sat, Gia_ObjId(p.pFrames, pObj) );\n        if iSatVar \u003e 0 \u0026\u0026 bmc_sat_solver_read_cex_varvalue(p.pSats[s], iSatVar) { // 1 bit\n        \n            var iCiId int32    = Vec_IntEntry( \u0026p.vCiMap, 2*k+0 );\n            var iFrame int32   = Vec_IntEntry( \u0026p.vCiMap, 2*k+1 );\n            Abc_InfoSetBit( pCex.pData, Gia_ManRegNum(p.pGia) + iFrame * Gia_ManPiNum(p.pGia) + iCiId );\n        }\n    }\n    return pCex;\n}\nfunc Bmcs_ManAddCnf(p *Bmcs_Man_t, pSat *bmc_sat_solver, pCnf *Cnf_Dat_t) {\n    var i int32;\n    for  i = p.nSatVarsOld; i \u003c p.nSatVars; i++  {\n        bmc_sat_solver_addvar( pSat );\n    }\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmc_sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            assert(false, \"0\"); }\n    }\n}\nfunc Bmcs_ManPerformOne(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 {\n    var clkStart abctime  = Abc_Clock();\n    var p *Bmcs_Man_t  = Bmcs_ManStart( pGia, pPars );\n    var f int32;\n    var k int32;\n    var i int32 = Gia_ManPoNum(pGia);\n    var status int32;\n    var RetValue int32 = -1;\n    var nClauses int32;\n    Abc_CexFreeP( \u0026pGia.pCexSeq );\n    for  f = 0; !pPars.nFramesMax || f \u003c pPars.nFramesMax; f += pPars.nFramesAdd  {\n        var pCnf *Cnf_Dat_t  = Bmcs_ManAddNewCnf( p, f, pPars.nFramesAdd );\n        if pCnf == nil {\n            Bmcs_ManPrintFrame( p, f, nClauses, -1, clkStart );\n            if pPars.pFuncOnFrameDone {\n                for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n                for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                    pPars.pFuncOnFrameDone(f+k, i, 0);\n                }\n                } }\n            continue;\n        }\n        nClauses += pCnf.nClauses;\n        Bmcs_ManAddCnf( p, p.pSats[0], pCnf );\n        p.nSatVarsOld = p.nSatVars;\n        Cnf_DataFree( pCnf );\n        assert(Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia), \"Gia_ManPoNum(p.pFrames) == (f + pPars.nFramesAdd) * Gia_ManPoNum(pGia)\");\n        for  k = 0; k \u003c pPars.nFramesAdd; k++  {\n            for  i = 0; i \u003c Gia_ManPoNum(pGia); i++  {\n                var clk abctime  = Abc_Clock();\n                var iObj int32  = Gia_ObjId( p.pFrames, Gia_ManCo(p.pFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                var iLit int32  = Abc_Var2Lit( Vec_IntEntry(\u0026p.vFr2Sat, iObj), 0 );\n                if pPars.nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.nTimeOut {\n                    break; }\n                status = bmc_sat_solver_solve( p.pSats[0], \u0026iLit, 1 );\n                p.timeSat += Abc_Clock() - clk;\n                if status == l_False { // unsat\n                \n                    if i == Gia_ManPoNum(pGia)-1 {\n                        Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart ); }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 0); }\n                    continue;\n                }\n                if status == l_True { // sat\n                \n                    RetValue = 0;\n                    pPars.iFrame = f+k;\n                    pGia.pCexSeq = Bmcs_ManGenerateCex( p, i, f+k, 0 );\n                    pPars.nFailOuts++;\n                    Bmcs_ManPrintFrame( p, f+k, nClauses, -1, clkStart );\n                    if !pPars.fNotVerbose {\n                        var nOutDigits int32  = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars.nFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( os.Stdout );\n                    }\n                    if pPars.pFuncOnFrameDone {\n                        pPars.pFuncOnFrameDone(f+k, i, 1); }\n                }\n                break;\n            }\n            if i \u003c Gia_ManPoNum(pGia) || f+k == pPars.nFramesMax-1 {\n                break; }\n        }\n        if k \u003c pPars.nFramesAdd {\n            break; }\n    }\n    p.timeOth = Abc_Clock() - clkStart - p.timeUnf - p.timeCnf - p.timeSat;\n    if RetValue == -1 \u0026\u0026 !pPars.fNotVerbose {\n        fmt.Printf(\"No output failed in %d frames.  \", f + (k \u003c pPars.nFramesAdd ? k+1 : 0)); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcs_ManPrintTime( p );\n    Bmcs_ManStop( p );\n    return RetValue;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n#ifndef ABC_USE_PTHREADS\n\nint Bmcs_ManPerformMulti( Gia_Man_t * pGia, Bmc_AndPar_t * pPars ) { return Bmcs_ManPerformOne(pGia, pPars); }\n\n#else // pthreads are used\n\n\ntypedef struct Par_ThData_t_\n{\n    bmc_sat_solver *  pSat;\n    int         iLit;\n    int         iThread;\n    int         fWorking;\n    int         status;\n} Par_ThData_t;\n\nvoid * Bmcs_ManWorkerThread( void * pArg )\n{\n    Par_ThData_t * pThData = (Par_ThData_t *)pArg;\n    volatile int * pPlace = \u0026pThData-\u003efWorking;\n    while ( 1 )\n    {\n        while ( *pPlace == 0 );\n        assert( pThData-\u003efWorking );\n        if ( pThData-\u003epSat == NULL )\n        {\n            pthread_exit( NULL );\n            assert( 0 );\n            return NULL;\n        }\n\n        pThData-\u003estatus = bmc_sat_solver_solve( pThData-\u003epSat, \u0026pThData-\u003eiLit, 1 );\n\n        //printf( \"Thread %d finished with status %d\\n\", pThData-\u003eiThread, pThData-\u003estatus );\n\n        pThData-\u003efWorking = 0;\n    }\n    assert( 0 );\n    return NULL;\n}\n\nint Bmcs_ManPerform_Solve( Bmcs_Man_t * p, int iLit, pthread_t * WorkerThread, Par_ThData_t * ThData, int nProcs, int * pSolver )\n{\n    int i, status = -1;\n    // set new problem\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        ThData[i].iLit = iLit;\n        assert( ThData[i].fWorking == 0 );\n    }\n    // start solvers on a new problem\n    for ( i = 0; i \u003c nProcs; i++ )\n        ThData[i].fWorking = 1;\n    // check if any of the solvers finished\n    while ( i == nProcs )\n    {\n        for ( i = 0; i \u003c nProcs; i++ )\n        {\n            if ( ThData[i].fWorking )\n                continue;\n            // set stop request\n            p-\u003efStopNow = 1;\n            // remember status\n            status = ThData[i].status;\n            //printf( \"Solver %d returned status %d.\\n\", i, status );\n            *pSolver = i;\n            break;\n        }\n    }\n    // wait till threads finish\n    while ( i \u003c nProcs )\n    {\n        for ( i = 0; i \u003c nProcs; i++ )\n            if ( ThData[i].fWorking )\n                break;\n    }\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        ThData[i].iLit = -1;\n        assert( ThData[i].fWorking == 0 );\n    }\n    // reset stop request\n    p-\u003efStopNow = 0;\n    return status;\n}\n\nint Bmcs_ManPerformMulti( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )\n{\n    abctime clkStart = Abc_Clock();\n    pthread_t WorkerThread[PAR_THR_MAX];\n    Par_ThData_t ThData[PAR_THR_MAX];\n    Bmcs_Man_t * p = Bmcs_ManStart( pGia, pPars );\n    int f, k = 0, i = Gia_ManPoNum(pGia), status, RetValue = -1, nClauses = 0, Solver = 0;\n    Abc_CexFreeP( \u0026pGia-\u003epCexSeq );\n    // start threads\n    for ( i = 0; i \u003c pPars-\u003enProcs; i++ )\n    {\n        ThData[i].pSat     = p-\u003epSats[i];\n        ThData[i].iLit     = -1;\n        ThData[i].iThread  =  i;\n        ThData[i].fWorking =  0;\n        ThData[i].status   = -1;\n        status = pthread_create( WorkerThread + i, NULL, Bmcs_ManWorkerThread, (void *)(ThData + i) );  assert( status == 0 );\n    }\n    // solve properties in each timeframe\n    for ( f = 0; !pPars-\u003enFramesMax || f \u003c pPars-\u003enFramesMax; f += pPars-\u003enFramesAdd )\n    {\n        Cnf_Dat_t * pCnf = Bmcs_ManAddNewCnf( p, f, pPars-\u003enFramesAdd );\n        if ( pCnf == NULL )\n        {\n            Bmcs_ManPrintFrame( p, f, nClauses, 0, clkStart );\n            if( pPars-\u003epFuncOnFrameDone )\n                for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n                for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n                    pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n            continue;\n        }\n        // load CNF into solvers\n        nClauses += pCnf-\u003enClauses;\n        for ( i = 0; i \u003c pPars-\u003enProcs; i++ )\n            Bmcs_ManAddCnf( p, p-\u003epSats[i], pCnf );\n        p-\u003enSatVarsOld = p-\u003enSatVars;\n        Cnf_DataFree( pCnf );\n        // solve outputs\n        assert( Gia_ManPoNum(p-\u003epFrames) == (f + pPars-\u003enFramesAdd) * Gia_ManPoNum(pGia) );\n        for ( k = 0; k \u003c pPars-\u003enFramesAdd; k++ )\n        {\n            for ( i = 0; i \u003c Gia_ManPoNum(pGia); i++ )\n            {\n                abctime clk = Abc_Clock();\n                int iObj = Gia_ObjId( p-\u003epFrames, Gia_ManCo(p-\u003epFrames, (f+k) * Gia_ManPoNum(pGia) + i) );\n                int iLit = Abc_Var2Lit( Vec_IntEntry(\u0026p-\u003evFr2Sat, iObj), 0 );\n                if ( pPars-\u003enTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars-\u003enTimeOut )\n                    break;\n                status = Bmcs_ManPerform_Solve( p, iLit, WorkerThread, ThData, pPars-\u003enProcs, \u0026Solver );\n                p-\u003etimeSat += Abc_Clock() - clk;\n                if ( status == l_False ) // unsat\n                {\n                    if ( i == Gia_ManPoNum(pGia)-1 )\n                        Bmcs_ManPrintFrame( p, f+k, nClauses, Solver, clkStart );\n                    if( pPars-\u003epFuncOnFrameDone )\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 0);\n                    continue;\n                }\n                if ( status == l_True ) // sat\n                {\n                    RetValue = 0;\n                    pPars-\u003eiFrame = f+k;\n                    pGia-\u003epCexSeq = Bmcs_ManGenerateCex( p, i, f+k, Solver );\n                    pPars-\u003enFailOuts++;\n                    Bmcs_ManPrintFrame( p, f+k, nClauses, Solver, clkStart );\n                    if ( !pPars-\u003efNotVerbose )\n                    {\n                        int nOutDigits = Abc_Base10Log( Gia_ManPoNum(pGia) );\n                        Abc_Print( 1, \"Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).  \",  \n                            nOutDigits, i, f+k, nOutDigits, pPars-\u003enFailOuts, nOutDigits, Gia_ManPoNum(pGia) );\n                        fflush( stdout );\n                    }\n                    if( pPars-\u003epFuncOnFrameDone )\n                        pPars-\u003epFuncOnFrameDone(f+k, i, 1);\n                }\n                break;\n            }\n            if ( i \u003c Gia_ManPoNum(pGia) || f+k == pPars-\u003enFramesMax-1 )\n                break;\n        }\n        if ( k \u003c pPars-\u003enFramesAdd )\n            break;\n    }\n    // stop threads\n    for ( i = 0; i \u003c pPars-\u003enProcs; i++ )\n    {\n        assert( !ThData[i].fWorking );\n        ThData[i].pSat = NULL;\n        ThData[i].fWorking = 1;\n    }\n    p-\u003etimeOth = Abc_Clock() - clkStart - p-\u003etimeUnf - p-\u003etimeCnf - p-\u003etimeSat;\n    if ( RetValue == -1 \u0026\u0026 !pPars-\u003efNotVerbose )\n        printf( \"No output failed in %d frames.  \", f + (k \u003c pPars-\u003enFramesAdd ? k+1 : 0) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Bmcs_ManPrintTime( p );\n    Bmcs_ManStop( p );\n    return RetValue;\n}\n\n#endif // pthreads are used\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmcs_ManPerform(pGia *Gia_Man_t, pPars *Bmc_AndPar_t) int32 { \n    assert(pPars.nProcs \u003c PAR_THR_MAX, \"pPars.nProcs \u003c PAR_THR_MAX\");\n    if pPars.nProcs == 1 {\n        return Bmcs_ManPerformOne( pGia, pPars );\n    } else {\n        return Bmcs_ManPerformMulti( pGia, pPars ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

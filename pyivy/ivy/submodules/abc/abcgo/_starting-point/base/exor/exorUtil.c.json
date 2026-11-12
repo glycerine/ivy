@@ -1,0 +1,548 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c",
+  "SHA256": "05eb135802f3bd21931aa39aa2e9ae32377026a24f30ea8e7c6dd653b991d1e1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.fMark == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 17,
+        "ByteOffset": 4280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 4371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", LitCounterControl, LitCounter ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 5211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.fMark == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 17,
+        "ByteOffset": 5422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"0\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 17,
+        "ByteOffset": 5502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 17,
+        "ByteOffset": 5582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"-\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 17,
+        "ByteOffset": 5642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(0); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 21,
+        "ByteOffset": 6005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 21,
+        "ByteOffset": 6073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 9,
+        "ByteOffset": 6212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 6430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 6485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\\nCannot open the output file\\n\" );"
+    },
+    {
+      "Name": "time",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    time( \u0026ltime );"
+    },
+    {
+      "Name": "asctime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 196,
+        "Column": 15,
+        "ByteOffset": 6623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStr = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "localtime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 196,
+        "Column": 24,
+        "ByteOffset": 6632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStr = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 6791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# EXORCISM-4 output for command line arguments: \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 6865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\\"-Q %d -V %d\\\"\\n\", g_CoverInfo.Quality, g_CoverInfo.Verbosity );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Minimization performed %s\", TimeStr );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 7014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Initial statistics: \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 7062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesBefore, g_CoverInfo.nLiteralsBefore, g_CoverInfo.QCostBefore );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 7207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Final   statistics: \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesInUse, g_CoverInfo.nLiteralsAfter, g_CoverInfo.QCostAfter );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# File reading and reordering time = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeRead))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 207,
+        "Column": 166,
+        "ByteOffset": 7558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# File reading and reordering time = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeRead))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Starting cover generation time   = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeStart))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 208,
+        "Column": 167,
+        "ByteOffset": 7745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Starting cover generation time   = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeStart))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 7770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Pure ESOP minimization time      = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeMin))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 209,
+        "Column": 165,
+        "ByteOffset": 7930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Pure ESOP minimization time      = %.2f sec\\n\", /*__starting_point_inline_macro:TICKS_TO_SECONDS__*/(float32((g_CoverInfo.TimeMin))/float32((CLOCKS_PER_SEC))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".i %d\\n\", g_CoverInfo.nVarsIn );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 8009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".o %d\\n\", g_CoverInfo.nVarsOut );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 8064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".p %d\\n\", g_CoverInfo.nCubesInUse );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 8122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".type esop\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 8193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".e\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 8223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "CountLiterals",
+      "Start": 3465,
+      "End": 3638,
+      "BodyStart": 3485,
+      "Original": "int CountLiterals()\n{\n    Cube* p;\n    int LitCounter = 0;\n    for ( p = IterCubeSetStart( ); p; p = IterCubeSetNext() )\n        LitCounter += p-\u003ea;\n    return LitCounter;\n}",
+      "Draft": "func CountLiterals() int32 {\n    var p *Cube;\n    var LitCounter int32;\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        LitCounter += p.a;\n    }\n    return LitCounter;\n}"
+    },
+    {
+      "Name": "CountLiteralsCheck",
+      "Start": 3640,
+      "End": 4480,
+      "BodyStart": 3665,
+      "Original": "int CountLiteralsCheck()\n{\n    Cube* p;\n    int Value, v;\n    int LitCounter = 0;\n    int LitCounterControl = 0;\n\n    for ( p = IterCubeSetStart( ); p; p = IterCubeSetNext() )\n    {\n        LitCounterControl += p-\u003ea;\n\n        assert( p-\u003efMark == 0 );\n\n        // write the input variables\n        for ( v = 0; v \u003c g_CoverInfo.nVarsIn; v++ )\n        {\n            Value = GetVar( p, v );\n            if ( Value == VAR_NEG )\n                LitCounter++;\n            else if ( Value == VAR_POS )\n                LitCounter++;\n            else if ( Value != VAR_ABS )\n            {\n                assert(0);\n            }\n        }\n    }\n\n    if ( LitCounterControl != LitCounter )\n        printf( \"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", LitCounterControl, LitCounter );\n    return LitCounter;\n}",
+      "Draft": "func CountLiteralsCheck() int32 {\n    var p *Cube;\n    var Value, v int32;\n    var LitCounter int32;\n    var LitCounterControl int32;\n\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        LitCounterControl += p.a;\n\n        assert(p.fMark == 0, \"p.fMark == 0\");\n\n        // write the input variables\n        for  v = 0; v \u003c g_CoverInfo.nVarsIn; v++  {\n            Value = GetVar( p, v );\n            if Value == VAR_NEG {\n                LitCounter++;\n            } else if Value == VAR_POS {\n                LitCounter++;\n            } else if Value != VAR_ABS {\n                assert(false, \"0\");\n            }\n        }\n    }\n\n    if LitCounterControl != LitCounter {\n        fmt.Printf(\"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", LitCounterControl, LitCounter); }\n    return LitCounter;\n}"
+    },
+    {
+      "Name": "CountQCost",
+      "Start": 4482,
+      "End": 4885,
+      "BodyStart": 4499,
+      "Original": "int CountQCost()\n{\n    Cube* p;\n    int QCost = 0;\n    int QCostControl = 0;\n    for ( p = IterCubeSetStart( ); p; p = IterCubeSetNext() )\n    {\n        QCostControl += p-\u003eq;\n        QCost += ComputeQCostBits( p );\n    }\n//    if ( QCostControl != QCost )\n//        printf( \"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", QCostControl, QCost );\n    return QCost;\n}",
+      "Draft": "func CountQCost() int32 {\n    var p *Cube;\n    var QCost int32;\n    var QCostControl int32;\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        QCostControl += p.q;\n        QCost += ComputeQCostBits( p );\n    }\n//    if ( QCostControl != QCost )\n//        printf( \"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", QCostControl, QCost );\n    return QCost;\n}"
+    },
+    {
+      "Name": "WriteTableIntoFile",
+      "Start": 4888,
+      "End": 6160,
+      "BodyStart": 4977,
+      "Original": "void WriteTableIntoFile( FILE * pFile )\n// nCubesAlloc is the number of allocated cubes \n{\n    int v, w;\n    Cube * p;\n    int cOutputs;\n    int nOutput;\n    int WordSize;\n\n    for ( p = IterCubeSetStart( ); p; p = IterCubeSetNext() )\n    {\n        assert( p-\u003efMark == 0 );\n\n        // write the input variables\n        for ( v = 0; v \u003c g_CoverInfo.nVarsIn; v++ )\n        {\n            int Value = GetVar( p, v );\n            if ( Value == VAR_NEG )\n                fprintf( pFile, \"0\" );\n            else if ( Value == VAR_POS )\n                fprintf( pFile, \"1\" );\n            else if ( Value == VAR_ABS )\n                fprintf( pFile, \"-\" );\n            else\n                assert(0);\n        }\n        fprintf( pFile, \" \" );\n\n        // write the output variables\n        cOutputs = 0;\n        nOutput = g_CoverInfo.nVarsOut;\n        WordSize = 8*sizeof( unsigned );\n        for ( w = 0; w \u003c g_CoverInfo.nWordsOut; w++ )\n            for ( v = 0; v \u003c WordSize; v++ )\n            {\n                if ( p-\u003epCubeDataOut[w] \u0026 (1\u003c\u003cv) )\n                    fprintf( pFile, \"1\" );\n                else\n                    fprintf( pFile, \"0\" );\n                if ( ++cOutputs == nOutput )\n                    break;\n            }\n        fprintf( pFile, \"\\n\" );\n    }\n}",
+      "Draft": "void WriteTableIntoFile( FILE * pFile )\n// nCubesAlloc is the number of allocated cubes \n{\n    var v, w int32;\n    var p *Cube;\n    var cOutputs int32;\n    var nOutput int32;\n    var WordSize int32;\n\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        assert(p.fMark == 0, \"p.fMark == 0\");\n\n        // write the input variables\n        for  v = 0; v \u003c g_CoverInfo.nVarsIn; v++  {\n            var Value int32  = GetVar( p, v );\n            if Value == VAR_NEG {\n                fmt.Fprintf(pFile, \"0\");\n            } else if Value == VAR_POS {\n                fmt.Fprintf(pFile, \"1\");\n            } else if Value == VAR_ABS {\n                fmt.Fprintf(pFile, \"-\");\n            } else {\n                assert(false, \"0\"); }\n        }\n        fmt.Fprintf(pFile, \" \");\n\n        // write the output variables\n        cOutputs = 0;\n        nOutput = g_CoverInfo.nVarsOut;\n        WordSize = 8*sizeof( unsigned );\n        for  w = 0; w \u003c g_CoverInfo.nWordsOut; w++  {\n            for  v = 0; v \u003c WordSize; v++  {\n                if p.pCubeDataOut[w] \u0026 (1\u003c\u003cv) {\n                    fmt.Fprintf(pFile, \"1\");\n                } else {\n                    fmt.Fprintf(pFile, \"0\"); }\n                if cOutputs++; cOutputs == nOutput {\n                    break; }\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "WriteResultIntoFile",
+      "Start": 6163,
+      "End": 7949,
+      "BodyStart": 6263,
+      "Original": "int WriteResultIntoFile( char * pFileName )\n// write the ESOP cover into the PLA file \u003cNewFileName\u003e\n{\n    FILE * pFile;\n    time_t ltime;\n    char * TimeStr;\n\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( pFile, \"\\n\\nCannot open the output file\\n\" );\n        return 1;\n    }\n\n    // get current time\n    time( \u0026ltime );\n    TimeStr = asctime( localtime( \u0026ltime ) );\n    // get the number of literals\n    g_CoverInfo.nLiteralsAfter = CountLiteralsCheck();\n    g_CoverInfo.QCostAfter = CountQCost();\n    fprintf( pFile, \"# EXORCISM-4 output for command line arguments: \" );\n    fprintf( pFile, \"\\\"-Q %d -V %d\\\"\\n\", g_CoverInfo.Quality, g_CoverInfo.Verbosity );\n    fprintf( pFile, \"# Minimization performed %s\", TimeStr );\n    fprintf( pFile, \"# Initial statistics: \" );\n    fprintf( pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesBefore, g_CoverInfo.nLiteralsBefore, g_CoverInfo.QCostBefore );\n    fprintf( pFile, \"# Final   statistics: \" );\n    fprintf( pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesInUse, g_CoverInfo.nLiteralsAfter, g_CoverInfo.QCostAfter );\n    fprintf( pFile, \"# File reading and reordering time = %.2f sec\\n\", TICKS_TO_SECONDS(g_CoverInfo.TimeRead) );\n    fprintf( pFile, \"# Starting cover generation time   = %.2f sec\\n\", TICKS_TO_SECONDS(g_CoverInfo.TimeStart) );\n    fprintf( pFile, \"# Pure ESOP minimization time      = %.2f sec\\n\", TICKS_TO_SECONDS(g_CoverInfo.TimeMin) );\n    fprintf( pFile, \".i %d\\n\", g_CoverInfo.nVarsIn );\n    fprintf( pFile, \".o %d\\n\", g_CoverInfo.nVarsOut );\n    fprintf( pFile, \".p %d\\n\", g_CoverInfo.nCubesInUse );\n    fprintf( pFile, \".type esop\\n\" );\n    WriteTableIntoFile( pFile );\n    fprintf( pFile, \".e\\n\" );\n    fclose( pFile );\n    return 0;\n}",
+      "Draft": "int WriteResultIntoFile( char * pFileName )\n// write the ESOP cover into the PLA file \u003cNewFileName\u003e\n{\n    var pFile *os.File;\n    var ltime int64;\n    var TimeStr string;\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(pFile, \"\\n\\nCannot open the output file\\n\");\n        return 1;\n    }\n\n    // get current time\n    time( \u0026ltime );\n    TimeStr = asctime( localtime( \u0026ltime ) );\n    // get the number of literals\n    g_CoverInfo.nLiteralsAfter = CountLiteralsCheck();\n    g_CoverInfo.QCostAfter = CountQCost();\n    fmt.Fprintf(pFile, \"# EXORCISM-4 output for command line arguments: \");\n    fmt.Fprintf(pFile, \"\\\"-Q %d -V %d\\\"\\n\", g_CoverInfo.Quality, g_CoverInfo.Verbosity);\n    fmt.Fprintf(pFile, \"# Minimization performed %s\", TimeStr);\n    fmt.Fprintf(pFile, \"# Initial statistics: \");\n    fmt.Fprintf(pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesBefore, g_CoverInfo.nLiteralsBefore, g_CoverInfo.QCostBefore);\n    fmt.Fprintf(pFile, \"# Final   statistics: \");\n    fmt.Fprintf(pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesInUse, g_CoverInfo.nLiteralsAfter, g_CoverInfo.QCostAfter);\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# File reading and reordering time = %.2f sec\\n\", (float32((g_CoverInfo.TimeRead))/float32((int64(time.Second)))));\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# Starting cover generation time   = %.2f sec\\n\", (float32((g_CoverInfo.TimeStart))/float32((int64(time.Second)))));\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# Pure ESOP minimization time      = %.2f sec\\n\", (float32((g_CoverInfo.TimeMin))/float32((int64(time.Second)))));\n    fmt.Fprintf(pFile, \".i %d\\n\", g_CoverInfo.nVarsIn);\n    fmt.Fprintf(pFile, \".o %d\\n\", g_CoverInfo.nVarsOut);\n    fmt.Fprintf(pFile, \".p %d\\n\", g_CoverInfo.nCubesInUse);\n    fmt.Fprintf(pFile, \".type esop\\n\");\n    WriteTableIntoFile( pFile );\n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::mechanical::sizeof::5744",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5744,
+      "End": 5750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::CountLiterals",
+      "Category": "semantic-review",
+      "Symbol": "CountLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3465,
+      "End": 3638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::CountLiteralsCheck",
+      "Category": "semantic-review",
+      "Symbol": "CountLiteralsCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3640,
+      "End": 4480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::CountQCost",
+      "Category": "semantic-review",
+      "Symbol": "CountQCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4482,
+      "End": 4885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::WriteTableIntoFile",
+      "Category": "semantic-review",
+      "Symbol": "WriteTableIntoFile",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4888,
+      "End": 6160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::WriteResultIntoFile",
+      "Category": "semantic-review",
+      "Symbol": "WriteResultIntoFile",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6163,
+      "End": 7949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8181
+    }
+  ],
+  "Draft": "package exor\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [exorUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Exclusive sum-of-product minimization.]\n\n  Synopsis    [Utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exorUtil.c,v 1.0 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                  Implementation of EXORCISM - 4                  ///\n///              An Exclusive Sum-of-Product Minimizer               ///\n///               Alan Mishchenko  \u003calanmi@ee.pdx.edu\u003e               ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                        Utility Functions                         ///\n///                                                                  ///\n///       1) allocating memory for and creating the ESOP cover       ///\n///       2) writing the resultant cover into an ESOP PLA file       ///\n///                                                                  ///\n///  Ver. 1.0. Started - July 15, 2000. Last update - July 20, 2000  ///\n///  Ver. 1.4. Started -  Aug 10, 2000. Last update -  Aug 10, 2000  ///\n///  Ver. 1.5. Started -  Aug 19, 2000. Last update -  Aug 19, 2000  ///\n///  Ver. 1.7. Started -  Sep 20, 2000. Last update -  Sep 23, 2000  ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///   This software was tested with the BDD package \"CUDD\", v.2.3.0  ///\n///                          by Fabio Somenzi                        ///\n///                  http://vlsi.colorado.edu/~fabio/                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"exor.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                      EXTERNAL VARIABLES                         ////\n////////////////////////////////////////////////////////////////////////\n\n// information about the options, the function, and the cover\nvar g_CoverInfo cinfo;\n\n////////////////////////////////////////////////////////////////////////\n///                        EXTERNAL FUNCTIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\n// Cube Cover Iterator\n// starts an iterator that traverses all the cubes in the ring\n// extern Cube* IterCubeSetStart();\n\n// returns the next cube in the ring\n// extern Cube* IterCubeSetNext();\n\n\n// retrieves the variable from the cube\n// extern varvalue GetVar( Cube* pC, int Var );\n\n\n////////////////////////////////////////////////////////////////////////\n///                      FUNCTION DECLARATIONS                       ///\n////////////////////////////////////////////////////////////////////////\n\n///////////////////////////////////////////////////////////////////\n////////////       Cover Service Procedures       /////////////////\n///////////////////////////////////////////////////////////////////\n\nfunc CountLiterals() int32 {\n    var p *Cube;\n    var LitCounter int32;\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        LitCounter += p.a;\n    }\n    return LitCounter;\n}\n\nfunc CountLiteralsCheck() int32 {\n    var p *Cube;\n    var Value, v int32;\n    var LitCounter int32;\n    var LitCounterControl int32;\n\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        LitCounterControl += p.a;\n\n        assert(p.fMark == 0, \"p.fMark == 0\");\n\n        // write the input variables\n        for  v = 0; v \u003c g_CoverInfo.nVarsIn; v++  {\n            Value = GetVar( p, v );\n            if Value == VAR_NEG {\n                LitCounter++;\n            } else if Value == VAR_POS {\n                LitCounter++;\n            } else if Value != VAR_ABS {\n                assert(false, \"0\");\n            }\n        }\n    }\n\n    if LitCounterControl != LitCounter {\n        fmt.Printf(\"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", LitCounterControl, LitCounter); }\n    return LitCounter;\n}\n\nfunc CountQCost() int32 {\n    var p *Cube;\n    var QCost int32;\n    var QCostControl int32;\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        QCostControl += p.q;\n        QCost += ComputeQCostBits( p );\n    }\n//    if ( QCostControl != QCost )\n//        printf( \"Warning! The recorded number of literals (%d) differs from the actual number (%d)\\n\", QCostControl, QCost );\n    return QCost;\n}\n\n\nvoid WriteTableIntoFile( FILE * pFile )\n// nCubesAlloc is the number of allocated cubes \n{\n    var v, w int32;\n    var p *Cube;\n    var cOutputs int32;\n    var nOutput int32;\n    var WordSize int32;\n\n    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {\n        assert(p.fMark == 0, \"p.fMark == 0\");\n\n        // write the input variables\n        for  v = 0; v \u003c g_CoverInfo.nVarsIn; v++  {\n            var Value int32  = GetVar( p, v );\n            if Value == VAR_NEG {\n                fmt.Fprintf(pFile, \"0\");\n            } else if Value == VAR_POS {\n                fmt.Fprintf(pFile, \"1\");\n            } else if Value == VAR_ABS {\n                fmt.Fprintf(pFile, \"-\");\n            } else {\n                assert(false, \"0\"); }\n        }\n        fmt.Fprintf(pFile, \" \");\n\n        // write the output variables\n        cOutputs = 0;\n        nOutput = g_CoverInfo.nVarsOut;\n        WordSize = 8*sizeof( unsigned );\n        for  w = 0; w \u003c g_CoverInfo.nWordsOut; w++  {\n            for  v = 0; v \u003c WordSize; v++  {\n                if p.pCubeDataOut[w] \u0026 (1\u003c\u003cv) {\n                    fmt.Fprintf(pFile, \"1\");\n                } else {\n                    fmt.Fprintf(pFile, \"0\"); }\n                if cOutputs++; cOutputs == nOutput {\n                    break; }\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}\n\n\nint WriteResultIntoFile( char * pFileName )\n// write the ESOP cover into the PLA file \u003cNewFileName\u003e\n{\n    var pFile *os.File;\n    var ltime int64;\n    var TimeStr string;\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(pFile, \"\\n\\nCannot open the output file\\n\");\n        return 1;\n    }\n\n    // get current time\n    time( \u0026ltime );\n    TimeStr = asctime( localtime( \u0026ltime ) );\n    // get the number of literals\n    g_CoverInfo.nLiteralsAfter = CountLiteralsCheck();\n    g_CoverInfo.QCostAfter = CountQCost();\n    fmt.Fprintf(pFile, \"# EXORCISM-4 output for command line arguments: \");\n    fmt.Fprintf(pFile, \"\\\"-Q %d -V %d\\\"\\n\", g_CoverInfo.Quality, g_CoverInfo.Verbosity);\n    fmt.Fprintf(pFile, \"# Minimization performed %s\", TimeStr);\n    fmt.Fprintf(pFile, \"# Initial statistics: \");\n    fmt.Fprintf(pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesBefore, g_CoverInfo.nLiteralsBefore, g_CoverInfo.QCostBefore);\n    fmt.Fprintf(pFile, \"# Final   statistics: \");\n    fmt.Fprintf(pFile, \"Cubes = %d  Literals = %d  QCost = %d\\n\", g_CoverInfo.nCubesInUse, g_CoverInfo.nLiteralsAfter, g_CoverInfo.QCostAfter);\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# File reading and reordering time = %.2f sec\\n\", (float32((g_CoverInfo.TimeRead))/float32((int64(time.Second)))));\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# Starting cover generation time   = %.2f sec\\n\", (float32((g_CoverInfo.TimeStart))/float32((int64(time.Second)))));\n    // inlining of macro TICKS_TO_SECONDS\n    fmt.Fprintf(pFile, \"# Pure ESOP minimization time      = %.2f sec\\n\", (float32((g_CoverInfo.TimeMin))/float32((int64(time.Second)))));\n    fmt.Fprintf(pFile, \".i %d\\n\", g_CoverInfo.nVarsIn);\n    fmt.Fprintf(pFile, \".o %d\\n\", g_CoverInfo.nVarsOut);\n    fmt.Fprintf(pFile, \".p %d\\n\", g_CoverInfo.nCubesInUse);\n    fmt.Fprintf(pFile, \".type esop\\n\");\n    WriteTableIntoFile( pFile );\n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n    return 0;\n}\n\n///////////////////////////////////////////////////////////////////\n////////////              End of File             /////////////////\n///////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

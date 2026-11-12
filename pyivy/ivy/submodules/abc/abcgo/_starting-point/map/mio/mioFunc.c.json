@@ -1,0 +1,423 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c",
+  "SHA256": "104716b0395b3bd1c08ff15a3a361fedd95c4f742ae0411fe24087a671f2fb87",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 61,
+        "Column": 42,
+        "ByteOffset": 1788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pRegName = Mem_FlexEntryFetch( pMan, strlen(pName) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pRegName, pName );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 13,
+        "ByteOffset": 2865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( Buffer, \" \" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 101,
+        "Column": 16,
+        "ByteOffset": 2959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pTemp, pPinNames[i] ) == 0 {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 17,
+        "ByteOffset": 3200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = strtok( nil, \" \" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 110,
+        "Column": 62,
+        "ByteOffset": 3287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((Buffer) ? (free((char *) (Buffer)), (Buffer) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 145,
+        "Column": 12,
+        "ByteOffset": 4421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( pGate.pForm, MIO_STRING_CONST0 ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 152,
+        "Column": 19,
+        "ByteOffset": 4724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strcmp( pGate.pForm, MIO_STRING_CONST1 ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 5045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot read formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 178,
+        "Column": 8,
+        "ByteOffset": 5609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( pGate.pPins.pName, \"*\" ) == 0 {"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 181,
+        "Column": 70,
+        "ByteOffset": 5787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 204,
+        "Column": 36,
+        "ByteOffset": 6772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if pPinNames[i] \u0026\u0026 strcmp( pPinNames[i], pPin.pName ) == 0 {"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 208,
+        "Column": 84,
+        "ByteOffset": 7138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    /*__starting_point_inline_macro:ABC_FREE__*/((pPinNames[i]) ? (free((char *) (pPinNames[i])), (pPinNames[i]) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 21,
+        "ByteOffset": 7348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Cannot find pin name \\\"%s\\\" in the formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 17,
+        "ByteOffset": 7690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Name \\\"%s\\\" appears in the formula \\\"%s\\\" of gate \\\"%s\\\" but there is no such pin.\\n\", "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 230,
+        "Column": 9,
+        "ByteOffset": 7939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pPinNames, pPinNamesCopy, nPins * sizeof(char *) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 259,
+        "Column": 80,
+        "ByteOffset": 9171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pGate.pTruth = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(4), sizeof(word)));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mio_SopRegister",
+      "Start": 1605,
+      "End": 1839,
+      "BodyStart": 1663,
+      "Original": "char * Mio_SopRegister( Mem_Flex_t * pMan, char * pName )\n{\n    char * pRegName;\n    if ( pName == NULL ) return NULL;\n    pRegName = Mem_FlexEntryFetch( pMan, strlen(pName) + 1 );\n    strcpy( pRegName, pName );\n    return pRegName;\n}",
+      "Draft": "func Mio_SopRegister(pMan *Mem_Flex_t, pName string) string {\n    var pRegName string;\n    if pName == nil { return nil; }\n    pRegName = Mem_FlexEntryFetch( pMan, len(pName) + 1 );\n    pRegName = pName;\n    return pRegName;\n}"
+    },
+    {
+      "Name": "Mio_GateCollectNames",
+      "Start": 2112,
+      "End": 3232,
+      "BodyStart": 2176,
+      "Original": "int Mio_GateCollectNames( char * pFormula, char * pPinNames[] )\n{\n    char * Buffer;\n    char * pTemp;\n    int nPins, i;\n\n    // save the formula as it was\n    //strcpy( Buffer, pFormula );\n    Buffer = Abc_UtilStrsav( pFormula );\n\n    // remove the non-name symbols\n    for ( pTemp = Buffer; *pTemp; pTemp++ )\n        if ( *pTemp == MIO_SYMB_AND  || *pTemp == MIO_SYMB_AND2   || \n             *pTemp == MIO_SYMB_OR   || *pTemp == MIO_SYMB_OR2    || \n             *pTemp == MIO_SYMB_XOR  || \n             *pTemp == MIO_SYMB_NOT  || *pTemp == MIO_SYMB_AFTNOT ||\n             *pTemp == MIO_SYMB_OPEN || *pTemp == MIO_SYMB_CLOSE )\n             *pTemp = ' ';\n\n    // save the names\n    nPins = 0;\n    pTemp = strtok( Buffer, \" \" );\n    while ( pTemp )\n    {\n        for ( i = 0; i \u003c nPins; i++ )\n            if ( strcmp( pTemp, pPinNames[i] ) == 0 )\n                break;\n        if ( i == nPins )\n        { // cannot find this name; save it\n            pPinNames[nPins++] = Abc_UtilStrsav(pTemp);\n        }\n        // get the next name\n        pTemp = strtok( NULL, \" \" );\n    }\n    ABC_FREE( Buffer );\n    return nPins;\n}",
+      "Draft": "func Mio_GateCollectNames(pFormula string, pPinNames []string) int32 {\n    var Buffer string;\n    var pTemp string;\n    var nPins, i int32;\n\n    // save the formula as it was\n    //strcpy( Buffer, pFormula );\n    Buffer = Abc_UtilStrsav( pFormula );\n\n    // remove the non-name symbols\n    for  pTemp = Buffer; *pTemp; pTemp++  {\n        if *pTemp == MIO_SYMB_AND  || *pTemp == MIO_SYMB_AND2   || \n             *pTemp == MIO_SYMB_OR   || *pTemp == MIO_SYMB_OR2    || \n             *pTemp == MIO_SYMB_XOR  || \n             *pTemp == MIO_SYMB_NOT  || *pTemp == MIO_SYMB_AFTNOT ||\n             *pTemp == MIO_SYMB_OPEN || *pTemp == MIO_SYMB_CLOSE {\n             *pTemp = ' '; }\n    }\n\n    // save the names\n    nPins = 0;\n    pTemp = strtok( Buffer, \" \" );\n    for  pTemp  {\n        for  i = 0; i \u003c nPins; i++  {\n            if int32(strings.Compare(pTemp, pPinNames[i])) == 0 {\n                break; }\n        }\n        if i == nPins { // cannot find this name; save it\n            pPinNames[nPins++] = Abc_UtilStrsav(pTemp);\n        }\n        // get the next name\n        pTemp = strtok( nil, \" \" );\n    }\n    // inlining of macro ABC_FREE\n    ((Buffer) ? (free((char *) (Buffer)), (Buffer) = 0) : 0);\n    return nPins;\n}"
+    },
+    {
+      "Name": "Mio_GateParseFormula",
+      "Start": 3508,
+      "End": 9099,
+      "BodyStart": 3555,
+      "Original": "int Mio_GateParseFormula( Mio_Gate_t * pGate )\n{\n    char * pPinNames[100];\n    char * pPinNamesCopy[100];\n    Mio_Pin_t * pPin, ** ppPin;\n    int nPins, iPin, i;\n\n    // set the maximum delay of the gate; count pins\n    pGate-\u003edDelayMax = 0.0;\n    nPins = 0;\n    Mio_GateForEachPin( pGate, pPin )\n    {\n        // set the maximum delay of the gate\n        if ( pGate-\u003edDelayMax \u003c pPin-\u003edDelayBlockMax )\n            pGate-\u003edDelayMax = pPin-\u003edDelayBlockMax;\n        // count the pin\n        nPins++;\n    }\n\n    // check for the gate with const function\n    if ( nPins == 0 )\n    {\n        if ( strcmp( pGate-\u003epForm, MIO_STRING_CONST0 ) == 0 )\n        {\n//            pGate-\u003ebFunc = b0;\n            pGate-\u003evExpr = Exp_Const0();\n            pGate-\u003epSop = Mio_SopRegister( (Mem_Flex_t *)pGate-\u003epLib-\u003epMmFlex, \" 0\\n\" );\n            pGate-\u003euTruth = 0;\n            pGate-\u003epLib-\u003epGate0 = pGate;\n        }\n        else if ( strcmp( pGate-\u003epForm, MIO_STRING_CONST1 ) == 0 )\n        {\n//            pGate-\u003ebFunc = b1;\n            pGate-\u003evExpr = Exp_Const1();\n            pGate-\u003epSop = Mio_SopRegister( (Mem_Flex_t *)pGate-\u003epLib-\u003epMmFlex, \" 1\\n\" );\n            pGate-\u003euTruth = ~(word)0;\n            pGate-\u003epLib-\u003epGate1 = pGate;\n        }\n        else\n        {\n            printf( \"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate-\u003epForm, pGate-\u003epName );\n            return 1;\n        }\n//        Cudd_Ref( pGate-\u003ebFunc );\n        return 0;\n    }\n\n    // collect the names as they appear in the formula\n    nPins = Mio_GateCollectNames( pGate-\u003epForm, pPinNames );\n    if ( nPins == 0 )\n    {\n        printf( \"Cannot read formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate-\u003epForm, pGate-\u003epName );\n        return 1;\n    }\n\n    // set the number of inputs\n    pGate-\u003enInputs = nPins;\n\n    // consider the case when all the pins have identical pin info\n    if ( strcmp( pGate-\u003epPins-\u003epName, \"*\" ) == 0 )\n    {\n        // get the topmost (generic) pin\n        pPin = pGate-\u003epPins;\n        ABC_FREE( pPin-\u003epName );\n\n        // create individual pins from the generic pin\n        ppPin = \u0026pPin-\u003epNext;\n        for ( i = 1; i \u003c nPins; i++ )\n        {\n            // get the new pin\n            *ppPin = Mio_PinDup( pPin );\n            // set its name\n            (*ppPin)-\u003epName = pPinNames[i];\n            // prepare the next place in the list\n            ppPin = \u0026((*ppPin)-\u003epNext);\n        }\n        *ppPin = NULL;\n\n        // set the name of the topmost pin\n        pPin-\u003epName = pPinNames[0];\n    }\n    else\n    {\n        // reorder the variable names to appear the save way as the pins\n        iPin = 0;\n        Mio_GateForEachPin( pGate, pPin )\n        {\n            // find the pin with the name pPin-\u003epName\n            for ( i = 0; i \u003c nPins; i++ )\n            {\n                if ( pPinNames[i] \u0026\u0026 strcmp( pPinNames[i], pPin-\u003epName ) == 0 )\n                {\n                    // free pPinNames[i] because it is already available as pPin-\u003epName\n                    // setting pPinNames[i] to NULL is useful to make sure that\n                    // this name is not assigned to two pins in the list\n                    ABC_FREE( pPinNames[i] );\n                    pPinNamesCopy[iPin++] = pPin-\u003epName;\n                    break;\n                }\n                if ( i == nPins )\n                {\n                    printf( \"Cannot find pin name \\\"%s\\\" in the formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", \n                        pPin-\u003epName, pGate-\u003epForm, pGate-\u003epName );\n                    return 1;\n                }\n            }\n        }\n\n        // check for the remaining names\n        for ( i = 0; i \u003c nPins; i++ )\n            if ( pPinNames[i] )\n            {\n                printf( \"Name \\\"%s\\\" appears in the formula \\\"%s\\\" of gate \\\"%s\\\" but there is no such pin.\\n\", \n                    pPinNames[i], pGate-\u003epForm, pGate-\u003epName );\n                return 1;\n            }\n\n        // copy the names back\n        memcpy( pPinNames, pPinNamesCopy, nPins * sizeof(char *) );\n    }\n/*\n    // expand the manager if necessary\n    if ( dd-\u003esize \u003c nPins )\n    {\n        Cudd_Quit( dd );\n        dd = Cudd_Init( nPins + 10, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_zddVarsFromBddVars( dd, 2 );\n    }\n    // derive formula as the BDD\n    pGate-\u003ebFunc = Parse_FormulaParser( stdout, pGate-\u003epForm, nPins, 0, pPinNames, dd, dd-\u003evars );\n    if ( pGate-\u003ebFunc == NULL )\n        return 1;\n    Cudd_Ref( pGate-\u003ebFunc );\n    // derive cover\n    pGate-\u003epSop = Abc_ConvertBddToSop( pGate-\u003epLib-\u003epMmFlex, dd, pGate-\u003ebFunc, pGate-\u003ebFunc, nPins, 0, pGate-\u003epLib-\u003evCube, -1 );\n*/\n\n    // derive expression \n    pGate-\u003evExpr = Mio_ParseFormula( pGate-\u003epForm, (char **)pPinNames, nPins );\n//    Mio_ParseFormulaTruthTest( pGate-\u003epForm, (char **)pPinNames, nPins );\n    // derive cover\n    pGate-\u003epSop = Mio_LibDeriveSop( nPins, pGate-\u003evExpr, pGate-\u003epLib-\u003evCube );\n    pGate-\u003epSop = Mio_SopRegister( (Mem_Flex_t *)pGate-\u003epLib-\u003epMmFlex, pGate-\u003epSop );\n    // derive truth table\n    if ( nPins \u003c= 6 )\n        pGate-\u003euTruth = Exp_Truth6( nPins, pGate-\u003evExpr, NULL );\n    else if ( nPins \u003c= 8 )\n    {\n        pGate-\u003epTruth = ABC_CALLOC( word, 4 );\n        Exp_Truth8( nPins, pGate-\u003evExpr, NULL, pGate-\u003epTruth );\n    }\n\n/*\n    // verify\n    if ( pGate-\u003enInputs \u003c= 6 )\n    {\n        extern word Abc_SopToTruth( char * pSop, int nInputs );\n        word t2 = Abc_SopToTruth( pGate-\u003epSop, nPins );\n        if ( pGate-\u003euTruth != t2 )\n        {\n            printf( \"%s\\n\", pGate-\u003epForm );\n            Exp_Print( nPins, pGate-\u003evExpr );\n            printf( \"Verification failed!\\n\" );\n        }\n    }\n*/\n    return 0;\n}",
+      "Draft": "func Mio_GateParseFormula(pGate *Mio_Gate_t) int32 {\n    var pPinNames [100]string;\n    var pPinNamesCopy [100]string;\n    var pPin *Mio_Pin_t;\n    var ppPin **Mio_Pin_t;\n    var nPins, iPin, i int32;\n\n    // set the maximum delay of the gate; count pins\n    pGate.dDelayMax = 0.0;\n    nPins = 0;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        // set the maximum delay of the gate\n        if pGate.dDelayMax \u003c pPin.dDelayBlockMax {\n            pGate.dDelayMax = pPin.dDelayBlockMax; }\n        // count the pin\n        nPins++;\n    }\n\n    // check for the gate with const function\n    if nPins == 0 {\n        if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST0)) == 0 {\n//            pGate-\u003ebFunc = b0;\n            pGate.vExpr = Exp_Const0();\n            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, \" 0\\n\" );\n            pGate.uTruth = 0;\n            pGate.pLib.pGate0 = pGate;\n        \n        } else if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST1)) == 0 {\n//            pGate-\u003ebFunc = b1;\n            pGate.vExpr = Exp_Const1();\n            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, \" 1\\n\" );\n            pGate.uTruth = ~(word)0;\n            pGate.pLib.pGate1 = pGate;\n        \n        } else {\n            fmt.Printf(\"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName);\n            return 1;\n        }\n//        Cudd_Ref( pGate-\u003ebFunc );\n        return 0;\n    }\n\n    // collect the names as they appear in the formula\n    nPins = Mio_GateCollectNames( pGate.pForm, pPinNames );\n    if nPins == 0 {\n        fmt.Printf(\"Cannot read formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName);\n        return 1;\n    }\n\n    // set the number of inputs\n    pGate.nInputs = nPins;\n\n    // consider the case when all the pins have identical pin info\n    if int32(strings.Compare(pGate.pPins.pName, \"*\")) == 0 {\n        // get the topmost (generic) pin\n        pPin = pGate.pPins;\n        // inlining of macro ABC_FREE\n        ((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);\n\n        // create individual pins from the generic pin\n        ppPin = \u0026pPin.pNext;\n        for  i = 1; i \u003c nPins; i++  {\n            // get the new pin\n            *ppPin = Mio_PinDup( pPin );\n            // set its name\n            (*ppPin).pName = pPinNames[i];\n            // prepare the next place in the list\n            ppPin = \u0026((*ppPin).pNext);\n        }\n        *ppPin = nil;\n\n        // set the name of the topmost pin\n        pPin.pName = pPinNames[0];\n    \n    } else {\n        // reorder the variable names to appear the save way as the pins\n        iPin = 0;\n        // inlining of macro Mio_GateForEachPin\n        for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n            // find the pin with the name pPin-\u003epName\n            for  i = 0; i \u003c nPins; i++  {\n                if pPinNames[i] \u0026\u0026 int32(strings.Compare(pPinNames[i], pPin.pName)) == 0 {\n                    // free pPinNames[i] because it is already available as pPin-\u003epName\n                    // setting pPinNames[i] to NULL is useful to make sure that\n                    // this name is not assigned to two pins in the list\n                    // inlining of macro ABC_FREE\n                    ((pPinNames[i]) ? (free((char *) (pPinNames[i])), (pPinNames[i]) = 0) : 0);\n                    pPinNamesCopy[iPin++] = pPin.pName;\n                    break;\n                }\n                if i == nPins {\n                    fmt.Printf(\"Cannot find pin name \\\"%s\\\" in the formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pPin.pName, pGate.pForm, pGate.pName);\n                    return 1;\n                }\n            }\n        }\n\n        // check for the remaining names\n        for  i = 0; i \u003c nPins; i++  {\n            if pPinNames[i] {\n                fmt.Printf(\"Name \\\"%s\\\" appears in the formula \\\"%s\\\" of gate \\\"%s\\\" but there is no such pin.\\n\", pPinNames[i], pGate.pForm, pGate.pName);\n                return 1;\n            }\n        }\n\n        // copy the names back\n        memcpy( pPinNames, pPinNamesCopy, nPins * sizeof(char *) );\n    }\n/*\n    // expand the manager if necessary\n    if ( dd-\u003esize \u003c nPins )\n    {\n        Cudd_Quit( dd );\n        dd = Cudd_Init( nPins + 10, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_zddVarsFromBddVars( dd, 2 );\n    }\n    // derive formula as the BDD\n    pGate-\u003ebFunc = Parse_FormulaParser( stdout, pGate-\u003epForm, nPins, 0, pPinNames, dd, dd-\u003evars );\n    if ( pGate-\u003ebFunc == NULL )\n        return 1;\n    Cudd_Ref( pGate-\u003ebFunc );\n    // derive cover\n    pGate-\u003epSop = Abc_ConvertBddToSop( pGate-\u003epLib-\u003epMmFlex, dd, pGate-\u003ebFunc, pGate-\u003ebFunc, nPins, 0, pGate-\u003epLib-\u003evCube, -1 );\n*/\n\n    // derive expression \n    pGate.vExpr = Mio_ParseFormula( pGate.pForm, (char **)pPinNames, nPins );\n//    Mio_ParseFormulaTruthTest( pGate-\u003epForm, (char **)pPinNames, nPins );\n    // derive cover\n    pGate.pSop = Mio_LibDeriveSop( nPins, pGate.vExpr, pGate.pLib.vCube );\n    pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, pGate.pSop );\n    // derive truth table\n    if nPins \u003c= 6 {\n        pGate.uTruth = Exp_Truth6( nPins, pGate.vExpr, nil );\n    } else if nPins \u003c= 8 {\n        // inlining of macro ABC_CALLOC\n        pGate.pTruth = ((word *) calloc((size_t)(4), sizeof(word)));\n        Exp_Truth8( nPins, pGate.vExpr, nil, pGate.pTruth );\n    }\n\n/*\n    // verify\n    if ( pGate-\u003enInputs \u003c= 6 )\n    {\n        extern word Abc_SopToTruth( char * pSop, int nInputs );\n        word t2 = Abc_SopToTruth( pGate-\u003epSop, nPins );\n        if ( pGate-\u003euTruth != t2 )\n        {\n            printf( \"%s\\n\", pGate-\u003epForm );\n            Exp_Print( nPins, pGate-\u003evExpr );\n            printf( \"Verification failed!\\n\" );\n        }\n    }\n*/\n    return 0;\n}"
+    },
+    {
+      "Name": "Mio_LibraryParseFormulas",
+      "Start": 9375,
+      "End": 9741,
+      "BodyStart": 9428,
+      "Original": "int Mio_LibraryParseFormulas( Mio_Library_t * pLib )\n{\n    Mio_Gate_t * pGate;\n\n    // count the gates\n    pLib-\u003enGates = 0;\n    Mio_LibraryForEachGate( pLib, pGate )\n        pLib-\u003enGates++;        \n\n    // for each gate, derive its function\n    Mio_LibraryForEachGate( pLib, pGate )\n        if ( Mio_GateParseFormula( pGate ) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Mio_LibraryParseFormulas(pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n\n    // count the gates\n    pLib.nGates = 0;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.nGates++;\n    }        \n\n    // for each gate, derive its function\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        if Mio_GateParseFormula( pGate ) != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::mechanical::sizeof::8094",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7458,
+      "End": 7464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::mechanical::sizeof::9326",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8614,
+      "End": 8614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::3255",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3193,
+      "End": 3193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::4543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4277,
+      "End": 4291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::4865",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4599,
+      "End": 4613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::5808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5475,
+      "End": 5475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::7224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6614,
+      "End": 6614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::8100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7464,
+      "End": 7472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::8790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8154,
+      "End": 8163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::9029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8393,
+      "End": 8407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::pointer-cast::9297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8614,
+      "End": 8614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::Mio_SopRegister",
+      "Category": "semantic-review",
+      "Symbol": "Mio_SopRegister",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1605,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::ternary::Mio_GateCollectNames",
+      "Category": "ternary-review",
+      "Symbol": "Mio_GateCollectNames",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2112,
+      "End": 3232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::Mio_GateCollectNames",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateCollectNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2112,
+      "End": 3232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::ternary::Mio_GateParseFormula",
+      "Category": "ternary-review",
+      "Symbol": "Mio_GateParseFormula",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3508,
+      "End": 9099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::Mio_GateParseFormula",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateParseFormula",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3508,
+      "End": 9099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::Mio_LibraryParseFormulas",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryParseFormulas",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9375,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioFunc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9988
+    }
+  ],
+  "Draft": "package mio\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mioFunc.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mioFunc.c,v 1.4 2004/06/28 14:20:25 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mioInt.h\"\n//#include \"parse.h\"\n//#include \"exp.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// these symbols (and no other) can appear in the formulas\n#define MIO_SYMB_AND    '*'\n#define MIO_SYMB_AND2   '\u0026'\n#define MIO_SYMB_OR     '+'\n#define MIO_SYMB_OR2    '|'\n#define MIO_SYMB_XOR    '^'\n#define MIO_SYMB_NOT    '!'\n#define MIO_SYMB_AFTNOT '\\''\n#define MIO_SYMB_OPEN   '('\n#define MIO_SYMB_CLOSE  ')'\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Registers the cube string with the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_SopRegister(pMan *Mem_Flex_t, pName string) string {\n    var pRegName string;\n    if pName == nil { return nil; }\n    pRegName = Mem_FlexEntryFetch( pMan, len(pName) + 1 );\n    pRegName = pName;\n    return pRegName;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect the pin names in the formula.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_GateCollectNames(pFormula string, pPinNames []string) int32 {\n    var Buffer string;\n    var pTemp string;\n    var nPins, i int32;\n\n    // save the formula as it was\n    //strcpy( Buffer, pFormula );\n    Buffer = Abc_UtilStrsav( pFormula );\n\n    // remove the non-name symbols\n    for  pTemp = Buffer; *pTemp; pTemp++  {\n        if *pTemp == MIO_SYMB_AND  || *pTemp == MIO_SYMB_AND2   || \n             *pTemp == MIO_SYMB_OR   || *pTemp == MIO_SYMB_OR2    || \n             *pTemp == MIO_SYMB_XOR  || \n             *pTemp == MIO_SYMB_NOT  || *pTemp == MIO_SYMB_AFTNOT ||\n             *pTemp == MIO_SYMB_OPEN || *pTemp == MIO_SYMB_CLOSE {\n             *pTemp = ' '; }\n    }\n\n    // save the names\n    nPins = 0;\n    pTemp = strtok( Buffer, \" \" );\n    for  pTemp  {\n        for  i = 0; i \u003c nPins; i++  {\n            if int32(strings.Compare(pTemp, pPinNames[i])) == 0 {\n                break; }\n        }\n        if i == nPins { // cannot find this name; save it\n            pPinNames[nPins++] = Abc_UtilStrsav(pTemp);\n        }\n        // get the next name\n        pTemp = strtok( nil, \" \" );\n    }\n    // inlining of macro ABC_FREE\n    ((Buffer) ? (free((char *) (Buffer)), (Buffer) = 0) : 0);\n    return nPins;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deriving the functionality of the gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_GateParseFormula(pGate *Mio_Gate_t) int32 {\n    var pPinNames [100]string;\n    var pPinNamesCopy [100]string;\n    var pPin *Mio_Pin_t;\n    var ppPin **Mio_Pin_t;\n    var nPins, iPin, i int32;\n\n    // set the maximum delay of the gate; count pins\n    pGate.dDelayMax = 0.0;\n    nPins = 0;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        // set the maximum delay of the gate\n        if pGate.dDelayMax \u003c pPin.dDelayBlockMax {\n            pGate.dDelayMax = pPin.dDelayBlockMax; }\n        // count the pin\n        nPins++;\n    }\n\n    // check for the gate with const function\n    if nPins == 0 {\n        if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST0)) == 0 {\n//            pGate-\u003ebFunc = b0;\n            pGate.vExpr = Exp_Const0();\n            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, \" 0\\n\" );\n            pGate.uTruth = 0;\n            pGate.pLib.pGate0 = pGate;\n        \n        } else if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST1)) == 0 {\n//            pGate-\u003ebFunc = b1;\n            pGate.vExpr = Exp_Const1();\n            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, \" 1\\n\" );\n            pGate.uTruth = ~(word)0;\n            pGate.pLib.pGate1 = pGate;\n        \n        } else {\n            fmt.Printf(\"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName);\n            return 1;\n        }\n//        Cudd_Ref( pGate-\u003ebFunc );\n        return 0;\n    }\n\n    // collect the names as they appear in the formula\n    nPins = Mio_GateCollectNames( pGate.pForm, pPinNames );\n    if nPins == 0 {\n        fmt.Printf(\"Cannot read formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pGate.pForm, pGate.pName);\n        return 1;\n    }\n\n    // set the number of inputs\n    pGate.nInputs = nPins;\n\n    // consider the case when all the pins have identical pin info\n    if int32(strings.Compare(pGate.pPins.pName, \"*\")) == 0 {\n        // get the topmost (generic) pin\n        pPin = pGate.pPins;\n        // inlining of macro ABC_FREE\n        ((pPin.pName) ? (free((char *) (pPin.pName)), (pPin.pName) = 0) : 0);\n\n        // create individual pins from the generic pin\n        ppPin = \u0026pPin.pNext;\n        for  i = 1; i \u003c nPins; i++  {\n            // get the new pin\n            *ppPin = Mio_PinDup( pPin );\n            // set its name\n            (*ppPin).pName = pPinNames[i];\n            // prepare the next place in the list\n            ppPin = \u0026((*ppPin).pNext);\n        }\n        *ppPin = nil;\n\n        // set the name of the topmost pin\n        pPin.pName = pPinNames[0];\n    \n    } else {\n        // reorder the variable names to appear the save way as the pins\n        iPin = 0;\n        // inlining of macro Mio_GateForEachPin\n        for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n            // find the pin with the name pPin-\u003epName\n            for  i = 0; i \u003c nPins; i++  {\n                if pPinNames[i] \u0026\u0026 int32(strings.Compare(pPinNames[i], pPin.pName)) == 0 {\n                    // free pPinNames[i] because it is already available as pPin-\u003epName\n                    // setting pPinNames[i] to NULL is useful to make sure that\n                    // this name is not assigned to two pins in the list\n                    // inlining of macro ABC_FREE\n                    ((pPinNames[i]) ? (free((char *) (pPinNames[i])), (pPinNames[i]) = 0) : 0);\n                    pPinNamesCopy[iPin++] = pPin.pName;\n                    break;\n                }\n                if i == nPins {\n                    fmt.Printf(\"Cannot find pin name \\\"%s\\\" in the formula \\\"%s\\\" of gate \\\"%s\\\".\\n\", pPin.pName, pGate.pForm, pGate.pName);\n                    return 1;\n                }\n            }\n        }\n\n        // check for the remaining names\n        for  i = 0; i \u003c nPins; i++  {\n            if pPinNames[i] {\n                fmt.Printf(\"Name \\\"%s\\\" appears in the formula \\\"%s\\\" of gate \\\"%s\\\" but there is no such pin.\\n\", pPinNames[i], pGate.pForm, pGate.pName);\n                return 1;\n            }\n        }\n\n        // copy the names back\n        memcpy( pPinNames, pPinNamesCopy, nPins * sizeof(char *) );\n    }\n/*\n    // expand the manager if necessary\n    if ( dd-\u003esize \u003c nPins )\n    {\n        Cudd_Quit( dd );\n        dd = Cudd_Init( nPins + 10, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_zddVarsFromBddVars( dd, 2 );\n    }\n    // derive formula as the BDD\n    pGate-\u003ebFunc = Parse_FormulaParser( stdout, pGate-\u003epForm, nPins, 0, pPinNames, dd, dd-\u003evars );\n    if ( pGate-\u003ebFunc == NULL )\n        return 1;\n    Cudd_Ref( pGate-\u003ebFunc );\n    // derive cover\n    pGate-\u003epSop = Abc_ConvertBddToSop( pGate-\u003epLib-\u003epMmFlex, dd, pGate-\u003ebFunc, pGate-\u003ebFunc, nPins, 0, pGate-\u003epLib-\u003evCube, -1 );\n*/\n\n    // derive expression \n    pGate.vExpr = Mio_ParseFormula( pGate.pForm, (char **)pPinNames, nPins );\n//    Mio_ParseFormulaTruthTest( pGate-\u003epForm, (char **)pPinNames, nPins );\n    // derive cover\n    pGate.pSop = Mio_LibDeriveSop( nPins, pGate.vExpr, pGate.pLib.vCube );\n    pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, pGate.pSop );\n    // derive truth table\n    if nPins \u003c= 6 {\n        pGate.uTruth = Exp_Truth6( nPins, pGate.vExpr, nil );\n    } else if nPins \u003c= 8 {\n        // inlining of macro ABC_CALLOC\n        pGate.pTruth = ((word *) calloc((size_t)(4), sizeof(word)));\n        Exp_Truth8( nPins, pGate.vExpr, nil, pGate.pTruth );\n    }\n\n/*\n    // verify\n    if ( pGate-\u003enInputs \u003c= 6 )\n    {\n        extern word Abc_SopToTruth( char * pSop, int nInputs );\n        word t2 = Abc_SopToTruth( pGate-\u003epSop, nPins );\n        if ( pGate-\u003euTruth != t2 )\n        {\n            printf( \"%s\\n\", pGate-\u003epForm );\n            Exp_Print( nPins, pGate-\u003evExpr );\n            printf( \"Verification failed!\\n\" );\n        }\n    }\n*/\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deriving the functionality of the gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryParseFormulas(pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n\n    // count the gates\n    pLib.nGates = 0;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        pLib.nGates++;\n    }        \n\n    // for each gate, derive its function\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        if Mio_GateParseFormula( pGate ) != 0 {\n            return 1; }\n    }\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

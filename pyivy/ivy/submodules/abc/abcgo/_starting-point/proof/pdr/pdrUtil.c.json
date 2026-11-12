@@ -1,0 +1,1168 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c",
+  "SHA256": "91441f24090bc3fa4c93c2d0ae3594c7606d287a88767d7c881e25cbe1d4fa13",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 22,
+        "ByteOffset": 1398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Pdr_Set_t *)ABC_CALLOC( char, sizeof(Pdr_Set_t) + nSize * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 1823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 22,
+        "ByteOffset": 1907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (Vec_IntSize(vLits) + Vec_IntSize(vPiLits)) * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 2810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet.nLits );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 22,
+        "ByteOffset": 2879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (pSet.nTotal - 1) * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == p.nTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 3697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet.nLits );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 22,
+        "ByteOffset": 3763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (nLits + pSet.nTotal - pSet.nLits) * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 4001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLits[i] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == p.nTotal );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 22,
+        "ByteOffset": 4633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + pSet.nTotal * sizeof(int) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 5504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 5906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuff = ABC_ALLOC( char, nRegs + 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 6407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", pBuff );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 6442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuff );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 6793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf (\"%d \", p.Lits[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 6830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf (\"\\n\");"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 8789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuff = ABC_ALLOC( char, nRegs + 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 9407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuff );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 9812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pOld.nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 9842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 9,
+        "ByteOffset": 10169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pNewInt != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 10203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pOldInt != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 10813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pOld.nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 10843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 9,
+        "ByteOffset": 10994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pOldInt != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 9,
+        "ByteOffset": 11168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pNewInt != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 11202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pOldInt != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 11839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube.Lits[i] != -1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 494,
+        "Column": 9,
+        "ByteOffset": 13063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Pdr_Obl_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 9,
+        "ByteOffset": 13936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 732,
+        "Column": 5,
+        "ByteOffset": 18729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 752,
+        "Column": 5,
+        "ByteOffset": 19662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_SetAlloc",
+      "Start": 1236,
+      "End": 1437,
+      "BodyStart": 1274,
+      "Original": "Pdr_Set_t * Pdr_SetAlloc( int nSize )\n{\n    Pdr_Set_t * p;\n    assert( nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30) );\n    p = (Pdr_Set_t *)ABC_CALLOC( char, sizeof(Pdr_Set_t) + nSize * sizeof(int) );\n    return p;\n}",
+      "Draft": "func Pdr_SetAlloc(nSize int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    assert(nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30), \"nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30)\");\n    p = (Pdr_Set_t *)ABC_CALLOC( char, sizeof(Pdr_Set_t) + nSize * sizeof(int) );\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetCreate",
+      "Start": 1673,
+      "End": 2428,
+      "BodyStart": 1741,
+      "Original": "Pdr_Set_t * Pdr_SetCreate( Vec_Int_t * vLits, Vec_Int_t * vPiLits )\n{\n    Pdr_Set_t * p;\n    int i;\n    assert( Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30) );\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (Vec_IntSize(vLits) + Vec_IntSize(vPiLits)) * sizeof(int) );\n    p-\u003enLits  = Vec_IntSize(vLits);\n    p-\u003enTotal = Vec_IntSize(vLits) + Vec_IntSize(vPiLits);\n    p-\u003enRefs  = 1;\n    p-\u003eSign   = 0;\n    for ( i = 0; i \u003c p-\u003enLits; i++ )\n    {\n        p-\u003eLits[i] = Vec_IntEntry(vLits, i);\n        p-\u003eSign   |= ((word)1 \u003c\u003c (p-\u003eLits[i] % 63));\n    }\n    Vec_IntSelectSort( p-\u003eLits, p-\u003enLits );\n    // remember PI literals \n    for ( i = p-\u003enLits; i \u003c p-\u003enTotal; i++ )\n        p-\u003eLits[i] = Vec_IntEntry(vPiLits, i-p-\u003enLits);\n    return p;\n}",
+      "Draft": "func Pdr_SetCreate(vLits *Vec_Int_t, vPiLits *Vec_Int_t) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i int32;\n    assert(Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30), \"Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30)\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (Vec_IntSize(vLits) + Vec_IntSize(vPiLits)) * sizeof(int) );\n    p.nLits  = Vec_IntSize(vLits);\n    p.nTotal = Vec_IntSize(vLits) + Vec_IntSize(vPiLits);\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        p.Lits[i] = Vec_IntEntry(vLits, i);\n        p.Sign   |= ((word)1 \u003c\u003c (p.Lits[i] % 63));\n    }\n    Vec_IntSelectSort( p.Lits, p.nLits );\n    // remember PI literals \n    for  i = p.nLits; i \u003c p.nTotal; i++  {\n        p.Lits[i] = Vec_IntEntry(vPiLits, i-p.nLits);\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetCreateFrom",
+      "Start": 2664,
+      "End": 3314,
+      "BodyStart": 2727,
+      "Original": "Pdr_Set_t * Pdr_SetCreateFrom( Pdr_Set_t * pSet, int iRemove )\n{\n    Pdr_Set_t * p;\n    int i, k = 0;\n    assert( iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet-\u003enLits );\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (pSet-\u003enTotal - 1) * sizeof(int) );\n    p-\u003enLits  = pSet-\u003enLits - 1;\n    p-\u003enTotal = pSet-\u003enTotal - 1;\n    p-\u003enRefs  = 1;\n    p-\u003eSign   = 0;\n    for ( i = 0; i \u003c pSet-\u003enTotal; i++ )\n    {\n        if ( i == iRemove )\n            continue;\n        p-\u003eLits[k++] = pSet-\u003eLits[i];\n        if ( i \u003e= pSet-\u003enLits )\n            continue;\n        p-\u003eSign   |= ((word)1 \u003c\u003c (pSet-\u003eLits[i] % 63));\n    }\n    assert( k == p-\u003enTotal );\n    return p;\n}",
+      "Draft": "func Pdr_SetCreateFrom(pSet *Pdr_Set_t, iRemove int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i, k int32;\n    assert(iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet.nLits, \"iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet.nLits\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (pSet.nTotal - 1) * sizeof(int) );\n    p.nLits  = pSet.nLits - 1;\n    p.nTotal = pSet.nTotal - 1;\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c pSet.nTotal; i++  {\n        if i == iRemove {\n            continue; }\n        p.Lits[k++] = pSet.Lits[i];\n        if i \u003e= pSet.nLits {\n            continue; }\n        p.Sign   |= ((word)1 \u003c\u003c (pSet.Lits[i] % 63));\n    }\n    assert(k == p.nTotal, \"k == p.nTotal\");\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetCreateSubset",
+      "Start": 3550,
+      "End": 4281,
+      "BodyStart": 3626,
+      "Original": "Pdr_Set_t * Pdr_SetCreateSubset( Pdr_Set_t * pSet, int * pLits, int nLits )\n{\n    Pdr_Set_t * p;\n    int i, k = 0;\n    assert( nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet-\u003enLits );\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (nLits + pSet-\u003enTotal - pSet-\u003enLits) * sizeof(int) );\n    p-\u003enLits  = nLits;\n    p-\u003enTotal = nLits + pSet-\u003enTotal - pSet-\u003enLits;\n    p-\u003enRefs  = 1;\n    p-\u003eSign   = 0;\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        assert( pLits[i] \u003e= 0 );\n        p-\u003eLits[k++] = pLits[i];\n        p-\u003eSign   |= ((word)1 \u003c\u003c (pLits[i] % 63));\n    }\n    Vec_IntSelectSort( p-\u003eLits, p-\u003enLits );\n    for ( i = pSet-\u003enLits; i \u003c pSet-\u003enTotal; i++ )\n        p-\u003eLits[k++] = pSet-\u003eLits[i];\n    assert( k == p-\u003enTotal );\n    return p;\n}",
+      "Draft": "func Pdr_SetCreateSubset(pSet *Pdr_Set_t, pLits *int32, nLits int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i, k int32;\n    assert(nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet.nLits, \"nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet.nLits\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (nLits + pSet.nTotal - pSet.nLits) * sizeof(int) );\n    p.nLits  = nLits;\n    p.nTotal = nLits + pSet.nTotal - pSet.nLits;\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c nLits; i++  {\n        assert(pLits[i] \u003e= 0, \"pLits[i] \u003e= 0\");\n        p.Lits[k++] = pLits[i];\n        p.Sign   |= ((word)1 \u003c\u003c (pLits[i] % 63));\n    }\n    Vec_IntSelectSort( p.Lits, p.nLits );\n    for  i = pSet.nLits; i \u003c pSet.nTotal; i++  {\n        p.Lits[k++] = pSet.Lits[i];\n    }\n    assert(k == p.nTotal, \"k == p.nTotal\");\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetDup",
+      "Start": 4517,
+      "End": 4878,
+      "BodyStart": 4560,
+      "Original": "Pdr_Set_t * Pdr_SetDup( Pdr_Set_t * pSet )\n{\n    Pdr_Set_t * p;\n    int i;\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + pSet-\u003enTotal * sizeof(int) );\n    p-\u003enLits  = pSet-\u003enLits;\n    p-\u003enTotal = pSet-\u003enTotal;\n    p-\u003enRefs  = 1;\n    p-\u003eSign   = pSet-\u003eSign;\n    for ( i = 0; i \u003c pSet-\u003enTotal; i++ )\n        p-\u003eLits[i] = pSet-\u003eLits[i];\n    return p;\n}",
+      "Draft": "func Pdr_SetDup(pSet *Pdr_Set_t) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i int32;\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + pSet.nTotal * sizeof(int) );\n    p.nLits  = pSet.nLits;\n    p.nTotal = pSet.nTotal;\n    p.nRefs  = 1;\n    p.Sign   = pSet.Sign;\n    for  i = 0; i \u003c pSet.nTotal; i++  {\n        p.Lits[i] = pSet.Lits[i];\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetRef",
+      "Start": 5114,
+      "End": 5187,
+      "BodyStart": 5154,
+      "Original": "Pdr_Set_t * Pdr_SetRef( Pdr_Set_t * p )\n{\n    p-\u003enRefs++;\n    return p;\n}",
+      "Draft": "func Pdr_SetRef(p *Pdr_Set_t) *Pdr_Set_t {\n    p.nRefs++;\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_SetDeref",
+      "Start": 5423,
+      "End": 5511,
+      "BodyStart": 5458,
+      "Original": "void Pdr_SetDeref( Pdr_Set_t * p )\n{\n    if ( --p-\u003enRefs == 0 )\n        ABC_FREE( p );\n}",
+      "Draft": "func Pdr_SetDeref(p *Pdr_Set_t) {\n    if --p.nRefs == 0 {\n        ABC_FREE( p ); }\n}"
+    },
+    {
+      "Name": "Pdr_SetPrint",
+      "Start": 5747,
+      "End": 6453,
+      "BodyStart": 5832,
+      "Original": "void Pdr_SetPrint( FILE * pFile, Pdr_Set_t * p, int nRegs, Vec_Int_t * vFlopCounts )\n{\n    char * pBuff;\n    int i, k, Entry;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for ( i = 0; i \u003c nRegs; i++ )\n        pBuff[i] = '-';\n    pBuff[i] = 0;\n    for ( i = 0; i \u003c p-\u003enLits; i++ )\n    {\n        if ( p-\u003eLits[i] == -1 )\n            continue;\n        pBuff[Abc_Lit2Var(p-\u003eLits[i])] = (Abc_LitIsCompl(p-\u003eLits[i])? '0':'1');\n    }\n    if ( vFlopCounts )\n    {\n        // skip some literals\n        k = 0;\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    fprintf( pFile, \"%s\", pBuff );\n    ABC_FREE( pBuff );\n}",
+      "Draft": "func Pdr_SetPrint(pFile *os.File, p *Pdr_Set_t, nRegs int32, vFlopCounts *Vec_Int_t) {\n    var pBuff string;\n    var i, k, Entry int32;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for  i = 0; i \u003c nRegs; i++  {\n        pBuff[i] = '-';\n    }\n    pBuff[i] = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        if p.Lits[i] == -1 {\n            continue; }\n        pBuff[Abc_Lit2Var(p.Lits[i])] = (Abc_LitIsCompl(p.Lits[i])? '0':'1');\n    }\n    if vFlopCounts != nil {\n        // skip some literals\n        k = 0;\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    fmt.Fprintf(pFile, \"%s\", pBuff);\n    ABC_FREE( pBuff );\n}"
+    },
+    {
+      "Name": "ZPdr_SetPrint",
+      "Start": 6689,
+      "End": 6831,
+      "BodyStart": 6725,
+      "Original": "void ZPdr_SetPrint( Pdr_Set_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enLits; i++)\n        printf (\"%d \", p-\u003eLits[i]);\n    printf (\"\\n\");\n\n}",
+      "Draft": "func ZPdr_SetPrint(p *Pdr_Set_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nLits; i++ {\n        fmt.Printf(\"%d \", p.Lits[i]);\n    }\n    fmt.Printf(\"\\n\");\n\n}"
+    },
+    {
+      "Name": "ZPdr_SetIntersection",
+      "Start": 7104,
+      "End": 8458,
+      "BodyStart": 7190,
+      "Original": "Pdr_Set_t * ZPdr_SetIntersection( Pdr_Set_t * p1, Pdr_Set_t * p2, Hash_Int_t * keep )\n{\n    Pdr_Set_t * pIntersection;\n    Vec_Int_t * vCommonLits, * vPiLits;\n    int i, j, nLits;\n    nLits = p1-\u003enLits;\n    if ( p2-\u003enLits \u003c nLits )\n        nLits = p2-\u003enLits;\n    vCommonLits = Vec_IntAlloc( nLits );\n    vPiLits = Vec_IntAlloc( 1 );\n    for ( i = 0, j = 0; i \u003c p1-\u003enLits \u0026\u0026 j \u003c p2-\u003enLits; )\n    {\n        if ( p1-\u003eLits[i] \u003e p2-\u003eLits[j] )\n        {\n            if ( Hash_IntExists( keep, p2-\u003eLits[j] ) )\n            {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return NULL;\n            }\n            j++;\n        }\n        else if ( p1-\u003eLits[i] \u003c p2-\u003eLits[j] )\n        {\n            if ( Hash_IntExists( keep, p1-\u003eLits[i] ) )\n            {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return NULL;\n            }\n            i++;\n        }\n        else\n        {\n          Vec_IntPush( vCommonLits, p1-\u003eLits[i] );\n          i++;\n          j++;\n        }\n    }\n    pIntersection = Pdr_SetCreate( vCommonLits, vPiLits );\n    Vec_IntFree( vCommonLits );\n    Vec_IntFree( vPiLits );\n    return pIntersection;\n}",
+      "Draft": "func ZPdr_SetIntersection(p1 *Pdr_Set_t, p2 *Pdr_Set_t, keep *Hash_Int_t) *Pdr_Set_t {\n    var pIntersection *Pdr_Set_t;\n    var vCommonLits, vPiLits *Vec_Int_t;\n    var i, j, nLits int32;\n    nLits = p1.nLits;\n    if p2.nLits \u003c nLits {\n        nLits = p2.nLits; }\n    vCommonLits = Vec_IntAlloc( nLits );\n    vPiLits = Vec_IntAlloc( 1 );\n    for  i, j = 0, 0; i \u003c p1.nLits \u0026\u0026 j \u003c p2.nLits;  {\n        if p1.Lits[i] \u003e p2.Lits[j] {\n            if Hash_IntExists( keep, p2.Lits[j] ) {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return nil;\n            }\n            j++;\n        \n        } else if p1.Lits[i] \u003c p2.Lits[j] {\n            if Hash_IntExists( keep, p1.Lits[i] ) {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return nil;\n            }\n            i++;\n        \n        } else {\n          Vec_IntPush( vCommonLits, p1.Lits[i] );\n          i++;\n          j++;\n        }\n    }\n    pIntersection = Pdr_SetCreate( vCommonLits, vPiLits );\n    Vec_IntFree( vCommonLits );\n    Vec_IntFree( vPiLits );\n    return pIntersection;\n}"
+    },
+    {
+      "Name": "Pdr_SetPrintStr",
+      "Start": 8695,
+      "End": 9494,
+      "BodyStart": 8787,
+      "Original": "void Pdr_SetPrintStr( Vec_Str_t * vStr, Pdr_Set_t * p, int nRegs, Vec_Int_t * vFlopCounts )\n{\n    char * pBuff;\n    int i, k = 0, Entry;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for ( i = 0; i \u003c nRegs; i++ )\n        pBuff[i] = '-';\n    pBuff[i] = 0;\n    for ( i = 0; i \u003c p-\u003enLits; i++ )\n    {\n        if ( p-\u003eLits[i] == -1 )\n            continue;\n        pBuff[Abc_Lit2Var(p-\u003eLits[i])] = (Abc_LitIsCompl(p-\u003eLits[i])? '0':'1');\n    }\n    if ( vFlopCounts )\n    {\n        // skip some literals\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    Vec_StrPushBuffer( vStr, pBuff, k );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    ABC_FREE( pBuff );\n}",
+      "Draft": "func Pdr_SetPrintStr(vStr *Vec_Str_t, p *Pdr_Set_t, nRegs int32, vFlopCounts *Vec_Int_t) {\n    var pBuff string;\n    var i, k, Entry int32;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for  i = 0; i \u003c nRegs; i++  {\n        pBuff[i] = '-';\n    }\n    pBuff[i] = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        if p.Lits[i] == -1 {\n            continue; }\n        pBuff[Abc_Lit2Var(p.Lits[i])] = (Abc_LitIsCompl(p.Lits[i])? '0':'1');\n    }\n    if vFlopCounts != nil {\n        // skip some literals\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    Vec_StrPushBuffer( vStr, pBuff, k );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    ABC_FREE( pBuff );\n}"
+    },
+    {
+      "Name": "Pdr_SetContains",
+      "Start": 9779,
+      "End": 10500,
+      "BodyStart": 9837,
+      "Original": "int Pdr_SetContains( Pdr_Set_t * pOld, Pdr_Set_t * pNew )\n{\n    int * pOldInt, * pNewInt;\n    assert( pOld-\u003enLits \u003e 0 );\n    assert( pNew-\u003enLits \u003e 0 );\n    if ( pOld-\u003enLits \u003c pNew-\u003enLits )\n        return 0;\n    if ( (pOld-\u003eSign \u0026 pNew-\u003eSign) != pNew-\u003eSign )\n        return 0;\n    pOldInt = pOld-\u003eLits + pOld-\u003enLits - 1;\n    pNewInt = pNew-\u003eLits + pNew-\u003enLits - 1;\n    while ( pNew-\u003eLits \u003c= pNewInt )\n    {\n        if ( pOld-\u003eLits \u003e pOldInt )\n            return 0;\n        assert( *pNewInt != -1 );\n        assert( *pOldInt != -1 );\n        if ( *pNewInt == *pOldInt )\n            pNewInt--, pOldInt--;\n        else if ( *pNewInt \u003c *pOldInt )\n            pOldInt--;\n        else\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Pdr_SetContains(pOld *Pdr_Set_t, pNew *Pdr_Set_t) int32 {\n    var pOldInt, pNewInt *int32;\n    assert(pOld.nLits \u003e 0, \"pOld.nLits \u003e 0\");\n    assert(pNew.nLits \u003e 0, \"pNew.nLits \u003e 0\");\n    if pOld.nLits \u003c pNew.nLits {\n        return 0; }\n    if (pOld.Sign \u0026 pNew.Sign) != pNew.Sign {\n        return 0; }\n    pOldInt = pOld.Lits + pOld.nLits - 1;\n    pNewInt = pNew.Lits + pNew.nLits - 1;\n    for  pNew.Lits \u003c= pNewInt  {\n        if pOld.Lits \u003e pOldInt {\n            return 0; }\n        assert(*pNewInt != -1, \"*pNewInt != -1\");\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == *pOldInt {\n            pNewInt--, pOldInt--;\n        } else if *pNewInt \u003c *pOldInt {\n            pOldInt--;\n        } else {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Pdr_SetContainsSimple",
+      "Start": 10785,
+      "End": 11517,
+      "BodyStart": 10849,
+      "Original": "int Pdr_SetContainsSimple( Pdr_Set_t * pOld, Pdr_Set_t * pNew )\n{\n    int * pOldInt, * pNewInt;\n    assert( pOld-\u003enLits \u003e 0 );\n    assert( pNew-\u003enLits \u003e 0 );\n    pOldInt = pOld-\u003eLits + pOld-\u003enLits - 1;\n    pNewInt = pNew-\u003eLits + pNew-\u003enLits - 1;\n    while ( pNew-\u003eLits \u003c= pNewInt )\n    {\n        assert( *pOldInt != -1 );\n        if ( *pNewInt == -1 )\n        {\n            pNewInt--;\n            continue;\n        }\n        if ( pOld-\u003eLits \u003e pOldInt )\n            return 0;\n        assert( *pNewInt != -1 );\n        assert( *pOldInt != -1 );\n        if ( *pNewInt == *pOldInt )\n            pNewInt--, pOldInt--;\n        else if ( *pNewInt \u003c *pOldInt )\n            pOldInt--;\n        else\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Pdr_SetContainsSimple(pOld *Pdr_Set_t, pNew *Pdr_Set_t) int32 {\n    var pOldInt, pNewInt *int32;\n    assert(pOld.nLits \u003e 0, \"pOld.nLits \u003e 0\");\n    assert(pNew.nLits \u003e 0, \"pNew.nLits \u003e 0\");\n    pOldInt = pOld.Lits + pOld.nLits - 1;\n    pNewInt = pNew.Lits + pNew.nLits - 1;\n    for  pNew.Lits \u003c= pNewInt  {\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == -1 {\n            pNewInt--;\n            continue;\n        }\n        if pOld.Lits \u003e pOldInt {\n            return 0; }\n        assert(*pNewInt != -1, \"*pNewInt != -1\");\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == *pOldInt {\n            pNewInt--, pOldInt--;\n        } else if *pNewInt \u003c *pOldInt {\n            pOldInt--;\n        } else {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Pdr_SetIsInit",
+      "Start": 11810,
+      "End": 12108,
+      "BodyStart": 11862,
+      "Original": "int Pdr_SetIsInit( Pdr_Set_t * pCube, int iRemove )\n{\n    int i;\n    for ( i = 0; i \u003c pCube-\u003enLits; i++ )\n    {\n        assert( pCube-\u003eLits[i] != -1 );\n        if ( i == iRemove )\n            continue;\n        if ( Abc_LitIsCompl( pCube-\u003eLits[i] ) == 0 )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Pdr_SetIsInit(pCube *Pdr_Set_t, iRemove int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c pCube.nLits; i++  {\n        assert(pCube.Lits[i] != -1, \"pCube.Lits[i] != -1\");\n        if i == iRemove {\n            continue; }\n        if Abc_LitIsCompl( pCube.Lits[i] ) == 0 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Pdr_SetCompare",
+      "Start": 12344,
+      "End": 12800,
+      "BodyStart": 12401,
+      "Original": "int Pdr_SetCompare( Pdr_Set_t ** pp1, Pdr_Set_t ** pp2 )\n{\n    Pdr_Set_t * p1 = *pp1;\n    Pdr_Set_t * p2 = *pp2;\n    int i;\n    for ( i = 0; i \u003c p1-\u003enLits \u0026\u0026 i \u003c p2-\u003enLits; i++ )\n    {\n        if ( p1-\u003eLits[i] \u003e p2-\u003eLits[i] )\n            return -1;\n        if ( p1-\u003eLits[i] \u003c p2-\u003eLits[i] )\n            return 1;\n    }\n    if ( i == p1-\u003enLits \u0026\u0026 i \u003c p2-\u003enLits )\n        return -1;\n    if ( i \u003c p1-\u003enLits \u0026\u0026 i == p2-\u003enLits )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Pdr_SetCompare(pp1 **Pdr_Set_t, pp2 **Pdr_Set_t) int32 {\n    var p1 *Pdr_Set_t  = *pp1;\n    var p2 *Pdr_Set_t  = *pp2;\n    var i int32;\n    for  i = 0; i \u003c p1.nLits \u0026\u0026 i \u003c p2.nLits; i++  {\n        if p1.Lits[i] \u003e p2.Lits[i] {\n            return -1; }\n        if p1.Lits[i] \u003c p2.Lits[i] {\n            return 1; }\n    }\n    if i == p1.nLits \u0026\u0026 i \u003c p2.nLits {\n        return -1; }\n    if i \u003c p1.nLits \u0026\u0026 i == p2.nLits {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Pdr_OblStart",
+      "Start": 13036,
+      "End": 13323,
+      "BodyStart": 13119,
+      "Original": "Pdr_Obl_t * Pdr_OblStart( int k, int prio, Pdr_Set_t * pState, Pdr_Obl_t * pNext )\n{\n    Pdr_Obl_t * p;\n    p = ABC_ALLOC( Pdr_Obl_t, 1 );\n    p-\u003eiFrame = k;\n    p-\u003eprio   = prio;\n    p-\u003enRefs  = 1;\n    p-\u003epState = pState;\n    p-\u003epNext  = pNext;\n    p-\u003epLink  = NULL;\n    return p;    \n}",
+      "Draft": "func Pdr_OblStart(k int32, prio int32, pState *Pdr_Set_t, pNext *Pdr_Obl_t) *Pdr_Obl_t {\n    var p *Pdr_Obl_t;\n    p = new(Pdr_Obl_t);\n    p.iFrame = k;\n    p.prio   = prio;\n    p.nRefs  = 1;\n    p.pState = pState;\n    p.pNext  = pNext;\n    p.pLink  = nil;\n    return p;    \n}"
+    },
+    {
+      "Name": "Pdr_OblRef",
+      "Start": 13559,
+      "End": 13632,
+      "BodyStart": 13599,
+      "Original": "Pdr_Obl_t * Pdr_OblRef( Pdr_Obl_t * p )\n{\n    p-\u003enRefs++;\n    return p;\n}",
+      "Draft": "func Pdr_OblRef(p *Pdr_Obl_t) *Pdr_Obl_t {\n    p.nRefs++;\n    return p;\n}"
+    },
+    {
+      "Name": "Pdr_OblDeref",
+      "Start": 13868,
+      "End": 14065,
+      "BodyStart": 13903,
+      "Original": "void Pdr_OblDeref( Pdr_Obl_t * p )\n{\n    if ( --p-\u003enRefs == 0 )\n    {\n        if ( p-\u003epNext )\n            Pdr_OblDeref( p-\u003epNext );\n        Pdr_SetDeref( p-\u003epState );\n        ABC_FREE( p );\n    }\n}",
+      "Draft": "func Pdr_OblDeref(p *Pdr_Obl_t) {\n    if --p.nRefs == 0 {\n        if p.pNext {\n            Pdr_OblDeref( p.pNext ); }\n        Pdr_SetDeref( p.pState );\n        ABC_FREE( p );\n    }\n}"
+    },
+    {
+      "Name": "Pdr_QueueIsEmpty",
+      "Start": 14301,
+      "End": 14372,
+      "BodyStart": 14339,
+      "Original": "int Pdr_QueueIsEmpty( Pdr_Man_t * p )\n{\n    return p-\u003epQueue == NULL;\n}",
+      "Draft": "func Pdr_QueueIsEmpty(p *Pdr_Man_t) int32 {\n    return p.pQueue == nil;\n}"
+    },
+    {
+      "Name": "Pdr_QueueHead",
+      "Start": 14608,
+      "End": 14676,
+      "BodyStart": 14651,
+      "Original": "Pdr_Obl_t * Pdr_QueueHead( Pdr_Man_t * p )\n{\n    return p-\u003epQueue;\n}",
+      "Draft": "func Pdr_QueueHead(p *Pdr_Man_t) *Pdr_Obl_t {\n    return p.pQueue;\n}"
+    },
+    {
+      "Name": "Pdr_QueuePop",
+      "Start": 14912,
+      "End": 15136,
+      "BodyStart": 14954,
+      "Original": "Pdr_Obl_t * Pdr_QueuePop( Pdr_Man_t * p )\n{\n    Pdr_Obl_t * pRes = p-\u003epQueue;\n    if ( p-\u003epQueue == NULL )\n        return NULL;\n    p-\u003epQueue = p-\u003epQueue-\u003epLink;\n    Pdr_OblDeref( pRes );\n    p-\u003enQueCur--;\n    return pRes;\n}",
+      "Draft": "func Pdr_QueuePop(p *Pdr_Man_t) *Pdr_Obl_t {\n    var pRes *Pdr_Obl_t  = p.pQueue;\n    if p.pQueue == nil {\n        return nil; }\n    p.pQueue = p.pQueue.pLink;\n    Pdr_OblDeref( pRes );\n    p.nQueCur--;\n    return pRes;\n}"
+    },
+    {
+      "Name": "Pdr_QueueClean",
+      "Start": 15372,
+      "End": 15524,
+      "BodyStart": 15409,
+      "Original": "void Pdr_QueueClean( Pdr_Man_t * p )\n{\n    Pdr_Obl_t * pThis;\n    while ( (pThis = Pdr_QueuePop(p)) )\n        Pdr_OblDeref( pThis );\n    pThis = NULL;\n}",
+      "Draft": "func Pdr_QueueClean(p *Pdr_Man_t) {\n    var pThis *Pdr_Obl_t;\n    for  pThis = Pdr_QueuePop(p)  {\n        Pdr_OblDeref( pThis );\n    }\n    pThis = nil;\n}"
+    },
+    {
+      "Name": "Pdr_QueuePush",
+      "Start": 15760,
+      "End": 16324,
+      "BodyStart": 15814,
+      "Original": "void Pdr_QueuePush( Pdr_Man_t * p, Pdr_Obl_t * pObl )\n{\n    Pdr_Obl_t * pTemp, ** ppPrev;\n    p-\u003enObligs++;\n    p-\u003enQueCur++;\n    p-\u003enQueMax = Abc_MaxInt( p-\u003enQueMax, p-\u003enQueCur );\n    Pdr_OblRef( pObl );\n    if ( p-\u003epQueue == NULL )\n    {\n        p-\u003epQueue = pObl;\n        return;\n    }\n    for ( ppPrev = \u0026p-\u003epQueue, pTemp = p-\u003epQueue; pTemp; ppPrev = \u0026pTemp-\u003epLink, pTemp = pTemp-\u003epLink )\n        if ( pTemp-\u003eiFrame \u003e pObl-\u003eiFrame || (pTemp-\u003eiFrame == pObl-\u003eiFrame \u0026\u0026 pTemp-\u003eprio \u003e pObl-\u003eprio) )\n            break;\n    *ppPrev = pObl;\n    pObl-\u003epLink = pTemp;\n}",
+      "Draft": "func Pdr_QueuePush(p *Pdr_Man_t, pObl *Pdr_Obl_t) {\n    var pTemp *Pdr_Obl_t;\n    var ppPrev **Pdr_Obl_t;\n    p.nObligs++;\n    p.nQueCur++;\n    p.nQueMax = Abc_MaxInt( p.nQueMax, p.nQueCur );\n    Pdr_OblRef( pObl );\n    if p.pQueue == nil {\n        p.pQueue = pObl;\n        return;\n    }\n    for  ppPrev, pTemp = \u0026p.pQueue, p.pQueue; (pTemp != nil); ppPrev = \u0026pTemp.pLink, pTemp = pTemp.pLink  {\n        if pTemp.iFrame \u003e pObl.iFrame || (pTemp.iFrame == pObl.iFrame \u0026\u0026 pTemp.prio \u003e pObl.prio) {\n            break; }\n    }\n    *ppPrev = pObl;\n    pObl.pLink = pTemp;\n}"
+    },
+    {
+      "Name": "Pdr_QueuePrint",
+      "Start": 16560,
+      "End": 16758,
+      "BodyStart": 16597,
+      "Original": "void Pdr_QueuePrint( Pdr_Man_t * p )\n{\n    Pdr_Obl_t * pObl;\n    for ( pObl = p-\u003epQueue; pObl; pObl = pObl-\u003epLink )\n        Abc_Print( 1, \"Frame = %2d.  Prio = %8d.\\n\", pObl-\u003eiFrame, pObl-\u003eprio );\n}",
+      "Draft": "func Pdr_QueuePrint(p *Pdr_Man_t) {\n    var pObl *Pdr_Obl_t;\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pLink  {\n        Abc_Print( 1, \"Frame = %2d.  Prio = %8d.\\n\", pObl.iFrame, pObl.prio );\n    }\n}"
+    },
+    {
+      "Name": "Pdr_QueueStop",
+      "Start": 16994,
+      "End": 17206,
+      "BodyStart": 17030,
+      "Original": "void Pdr_QueueStop( Pdr_Man_t * p )\n{\n    Pdr_Obl_t * pObl;\n    while ( !Pdr_QueueIsEmpty(p) )\n    {\n        pObl = Pdr_QueuePop(p);\n        Pdr_OblDeref( pObl );\n    }\n    p-\u003epQueue = NULL;\n    p-\u003enQueCur = 0;\n}",
+      "Draft": "func Pdr_QueueStop(p *Pdr_Man_t) {\n    var pObl *Pdr_Obl_t;\n    for  !(Pdr_QueueIsEmpty(p) != 0)  {\n        pObl = Pdr_QueuePop(p);\n        Pdr_OblDeref( pObl );\n    }\n    p.pQueue = nil;\n    p.nQueCur = 0;\n}"
+    },
+    {
+      "Name": "Pdr_ObjSatValue",
+      "Start": 17546,
+      "End": 17765,
+      "BodyStart": 17631,
+      "Original": "static inline int Pdr_ObjSatValue( Aig_Man_t * pAig, Aig_Obj_t * pNode, int fCompl )\n{\n    if ( Aig_ObjIsTravIdCurrent(pAig, pNode) )\n        return (pNode-\u003efMarkA ^ fCompl) ? PDR_VAL1 : PDR_VAL0;\n    return PDR_VALX;\n}",
+      "Draft": "func Pdr_ObjSatValue(pAig *Aig_Man_t, pNode *Aig_Obj_t, fCompl int32) int32 {\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        if pNode.fMarkA ^ fCompl {\n            return PDR_VAL1;\n        } else {\n            return PDR_VAL0;\n        } }\n    return PDR_VALX;\n}"
+    },
+    {
+      "Name": "Pdr_NtkFindSatAssign_rec",
+      "Start": 18050,
+      "End": 20126,
+      "BodyStart": 18158,
+      "Original": "int Pdr_NtkFindSatAssign_rec( Aig_Man_t * pAig, Aig_Obj_t * pNode, int Value, Pdr_Set_t * pCube, int Heur )\n{\n    int Value0, Value1;\n    if ( Aig_ObjIsConst1(pNode) )\n        return 1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pNode) )\n        return ((int)pNode-\u003efMarkA == Value);\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode-\u003efMarkA = Value;\n    if ( Aig_ObjIsCi(pNode) )\n    {\n        if ( Saig_ObjIsLo(pAig, pNode) )\n        {\n//            pCube-\u003eLits[pCube-\u003enLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), !Value );\n            pCube-\u003eLits[pCube-\u003enLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), Value );\n            pCube-\u003eSign |= ((word)1 \u003c\u003c (pCube-\u003eLits[pCube-\u003enLits-1] % 63));\n        }\n        return 1;\n    }\n    assert( Aig_ObjIsNode(pNode) );\n    // propagation\n    if ( Value ) \n    {\n        if ( !Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), pCube, Heur) )\n            return 0;\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), pCube, Heur);\n    }\n    // justification\n    Value0 = Pdr_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if ( Value0 == PDR_VAL0 )\n        return 1;\n    Value1 = Pdr_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if ( Value1 == PDR_VAL0 )\n        return 1;\n    if ( Value0 == PDR_VAL1 \u0026\u0026 Value1 == PDR_VAL1 )\n        return 0;\n    if ( Value0 == PDR_VAL1 )\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur);\n    if ( Value1 == PDR_VAL1 )\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur);\n    assert( Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX );\n    // decision making\n//    if ( rand() % 10 == Heur )\n    if ( Aig_ObjId(pNode) % 4 == Heur )\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur);\n    else\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur);\n}",
+      "Draft": "func Pdr_NtkFindSatAssign_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, pCube *Pdr_Set_t, Heur int32) int32 {\n    var Value0, Value1 int32;\n    if Aig_ObjIsConst1(pNode) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return (int32(pNode.fMarkA) == Value); }\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode.fMarkA = Value;\n    if Aig_ObjIsCi(pNode) {\n        if Saig_ObjIsLo(pAig, pNode) {\n//            pCube-\u003eLits[pCube-\u003enLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), !Value );\n            pCube.Lits[pCube.nLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), Value );\n            pCube.Sign |= ((word)1 \u003c\u003c (pCube.Lits[pCube.nLits-1] % 63));\n        }\n        return 1;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // propagation\n    if Value != 0 {\n        if !(Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), pCube, Heur) != 0) {\n            return 0; }\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), pCube, Heur);\n    }\n    // justification\n    Value0 = Pdr_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if Value0 == PDR_VAL0 {\n        return 1; }\n    Value1 = Pdr_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if Value1 == PDR_VAL0 {\n        return 1; }\n    if Value0 == PDR_VAL1 \u0026\u0026 Value1 == PDR_VAL1 {\n        return 0; }\n    if Value0 == PDR_VAL1 {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur); }\n    if Value1 == PDR_VAL1 {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur); }\n    assert(Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX, \"Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX\");\n    // decision making\n//    if ( rand() % 10 == Heur )\n    if Aig_ObjId(pNode) % 4 == Heur {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur);\n    } else {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::1379",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1379,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::1407",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1407,
+      "End": 1413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::1878",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1878,
+      "End": 1884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::1944",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1944,
+      "End": 1950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::2857",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2857,
+      "End": 2863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::2898",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2898,
+      "End": 2904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::3753",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3753,
+      "End": 3759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::3812",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3812,
+      "End": 3818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::4630",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4630,
+      "End": 4636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::mechanical::sizeof::4665",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4665,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::pointer-cast::1348",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1348,
+      "End": 1361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::pointer-cast::1848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1848,
+      "End": 1861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::pointer-cast::2827",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2827,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::pointer-cast::3723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3723,
+      "End": 3736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::pointer-cast::4600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4600,
+      "End": 4613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1236,
+      "End": 1437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetCreate",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1673,
+      "End": 2428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetCreateFrom",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetCreateFrom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2664,
+      "End": 3314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetCreateSubset",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetCreateSubset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3550,
+      "End": 4281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetDup",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4517,
+      "End": 4878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetRef",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5114,
+      "End": 5187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetDeref",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5423,
+      "End": 5511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::ternary::Pdr_SetPrint",
+      "Category": "ternary-review",
+      "Symbol": "Pdr_SetPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5747,
+      "End": 6453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetPrint",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5747,
+      "End": 6453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::ZPdr_SetPrint",
+      "Category": "semantic-review",
+      "Symbol": "ZPdr_SetPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6689,
+      "End": 6831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::ZPdr_SetIntersection",
+      "Category": "semantic-review",
+      "Symbol": "ZPdr_SetIntersection",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7104,
+      "End": 8458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::ternary::Pdr_SetPrintStr",
+      "Category": "ternary-review",
+      "Symbol": "Pdr_SetPrintStr",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8695,
+      "End": 9494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetPrintStr",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetPrintStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8695,
+      "End": 9494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetContains",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9779,
+      "End": 10500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetContainsSimple",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetContainsSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10785,
+      "End": 11517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetIsInit",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetIsInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11810,
+      "End": 12108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_SetCompare",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_SetCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12344,
+      "End": 12800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_OblStart",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_OblStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13036,
+      "End": 13323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_OblRef",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_OblRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13559,
+      "End": 13632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_OblDeref",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_OblDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13868,
+      "End": 14065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueueIsEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueueIsEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14301,
+      "End": 14372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueueHead",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueueHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14608,
+      "End": 14676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueuePop",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueuePop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14912,
+      "End": 15136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueueClean",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueueClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15372,
+      "End": 15524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueuePush",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueuePush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15760,
+      "End": 16324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueuePrint",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueuePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16560,
+      "End": 16758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_QueueStop",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_QueueStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16994,
+      "End": 17206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_ObjSatValue",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjSatValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17546,
+      "End": 17765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::Pdr_NtkFindSatAssign_rec",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_NtkFindSatAssign_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18050,
+      "End": 20126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::1361",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1361,
+      "End": 1420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::1861",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1861,
+      "End": 1957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::2840",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2840,
+      "End": 2911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::3736",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3736,
+      "End": 3825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::4613",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4613,
+      "End": 4678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::5495",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5495,
+      "End": 5508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::5885",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5885,
+      "End": 5913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::6256",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6256,
+      "End": 6300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::6433",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6433,
+      "End": 6450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::8844",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8844,
+      "End": 8872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::9200",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9200,
+      "End": 9244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::9474",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9474,
+      "End": 9491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::13148",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13148,
+      "End": 13173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrUtil.c::macro-inline::14043",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14043,
+      "End": 14056
+    }
+  ],
+  "Draft": "package pdr\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [pdrUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrUtil.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetAlloc(nSize int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    assert(nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30), \"nSize \u003e= 0 \u0026\u0026 nSize \u003c (1\u003c\u003c30)\");\n    p = (Pdr_Set_t *)ABC_CALLOC( char, sizeof(Pdr_Set_t) + nSize * sizeof(int) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetCreate(vLits *Vec_Int_t, vPiLits *Vec_Int_t) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i int32;\n    assert(Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30), \"Vec_IntSize(vLits) + Vec_IntSize(vPiLits) \u003c (1\u003c\u003c30)\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (Vec_IntSize(vLits) + Vec_IntSize(vPiLits)) * sizeof(int) );\n    p.nLits  = Vec_IntSize(vLits);\n    p.nTotal = Vec_IntSize(vLits) + Vec_IntSize(vPiLits);\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        p.Lits[i] = Vec_IntEntry(vLits, i);\n        p.Sign   |= ((word)1 \u003c\u003c (p.Lits[i] % 63));\n    }\n    Vec_IntSelectSort( p.Lits, p.nLits );\n    // remember PI literals \n    for  i = p.nLits; i \u003c p.nTotal; i++  {\n        p.Lits[i] = Vec_IntEntry(vPiLits, i-p.nLits);\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetCreateFrom(pSet *Pdr_Set_t, iRemove int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i, k int32;\n    assert(iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet.nLits, \"iRemove \u003e= 0 \u0026\u0026 iRemove \u003c pSet.nLits\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (pSet.nTotal - 1) * sizeof(int) );\n    p.nLits  = pSet.nLits - 1;\n    p.nTotal = pSet.nTotal - 1;\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c pSet.nTotal; i++  {\n        if i == iRemove {\n            continue; }\n        p.Lits[k++] = pSet.Lits[i];\n        if i \u003e= pSet.nLits {\n            continue; }\n        p.Sign   |= ((word)1 \u003c\u003c (pSet.Lits[i] % 63));\n    }\n    assert(k == p.nTotal, \"k == p.nTotal\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetCreateSubset(pSet *Pdr_Set_t, pLits *int32, nLits int32) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i, k int32;\n    assert(nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet.nLits, \"nLits \u003e= 0 \u0026\u0026 nLits \u003c= pSet.nLits\");\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + (nLits + pSet.nTotal - pSet.nLits) * sizeof(int) );\n    p.nLits  = nLits;\n    p.nTotal = nLits + pSet.nTotal - pSet.nLits;\n    p.nRefs  = 1;\n    p.Sign   = 0;\n    for  i = 0; i \u003c nLits; i++  {\n        assert(pLits[i] \u003e= 0, \"pLits[i] \u003e= 0\");\n        p.Lits[k++] = pLits[i];\n        p.Sign   |= ((word)1 \u003c\u003c (pLits[i] % 63));\n    }\n    Vec_IntSelectSort( p.Lits, p.nLits );\n    for  i = pSet.nLits; i \u003c pSet.nTotal; i++  {\n        p.Lits[k++] = pSet.Lits[i];\n    }\n    assert(k == p.nTotal, \"k == p.nTotal\");\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetDup(pSet *Pdr_Set_t) *Pdr_Set_t {\n    var p *Pdr_Set_t;\n    var i int32;\n    p = (Pdr_Set_t *)ABC_ALLOC( char, sizeof(Pdr_Set_t) + pSet.nTotal * sizeof(int) );\n    p.nLits  = pSet.nLits;\n    p.nTotal = pSet.nTotal;\n    p.nRefs  = 1;\n    p.Sign   = pSet.Sign;\n    for  i = 0; i \u003c pSet.nTotal; i++  {\n        p.Lits[i] = pSet.Lits[i];\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetRef(p *Pdr_Set_t) *Pdr_Set_t {\n    p.nRefs++;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetDeref(p *Pdr_Set_t) {\n    if --p.nRefs == 0 {\n        ABC_FREE( p ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetPrint(pFile *os.File, p *Pdr_Set_t, nRegs int32, vFlopCounts *Vec_Int_t) {\n    var pBuff string;\n    var i, k, Entry int32;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for  i = 0; i \u003c nRegs; i++  {\n        pBuff[i] = '-';\n    }\n    pBuff[i] = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        if p.Lits[i] == -1 {\n            continue; }\n        pBuff[Abc_Lit2Var(p.Lits[i])] = (Abc_LitIsCompl(p.Lits[i])? '0':'1');\n    }\n    if vFlopCounts != nil {\n        // skip some literals\n        k = 0;\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    fmt.Fprintf(pFile, \"%s\", pBuff);\n    ABC_FREE( pBuff );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ZPdr_SetPrint(p *Pdr_Set_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nLits; i++ {\n        fmt.Printf(\"%d \", p.Lits[i]);\n    }\n    fmt.Printf(\"\\n\");\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return the intersection of p1 and p2.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ZPdr_SetIntersection(p1 *Pdr_Set_t, p2 *Pdr_Set_t, keep *Hash_Int_t) *Pdr_Set_t {\n    var pIntersection *Pdr_Set_t;\n    var vCommonLits, vPiLits *Vec_Int_t;\n    var i, j, nLits int32;\n    nLits = p1.nLits;\n    if p2.nLits \u003c nLits {\n        nLits = p2.nLits; }\n    vCommonLits = Vec_IntAlloc( nLits );\n    vPiLits = Vec_IntAlloc( 1 );\n    for  i, j = 0, 0; i \u003c p1.nLits \u0026\u0026 j \u003c p2.nLits;  {\n        if p1.Lits[i] \u003e p2.Lits[j] {\n            if Hash_IntExists( keep, p2.Lits[j] ) {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return nil;\n            }\n            j++;\n        \n        } else if p1.Lits[i] \u003c p2.Lits[j] {\n            if Hash_IntExists( keep, p1.Lits[i] ) {\n                //about to drop a literal that should not be dropped\n                Vec_IntFree( vCommonLits );\n                Vec_IntFree( vPiLits );\n                return nil;\n            }\n            i++;\n        \n        } else {\n          Vec_IntPush( vCommonLits, p1.Lits[i] );\n          i++;\n          j++;\n        }\n    }\n    pIntersection = Pdr_SetCreate( vCommonLits, vPiLits );\n    Vec_IntFree( vCommonLits );\n    Vec_IntFree( vPiLits );\n    return pIntersection;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetPrintStr(vStr *Vec_Str_t, p *Pdr_Set_t, nRegs int32, vFlopCounts *Vec_Int_t) {\n    var pBuff string;\n    var i, k, Entry int32;\n    pBuff = ABC_ALLOC( char, nRegs + 1 );\n    for  i = 0; i \u003c nRegs; i++  {\n        pBuff[i] = '-';\n    }\n    pBuff[i] = 0;\n    for  i = 0; i \u003c p.nLits; i++  {\n        if p.Lits[i] == -1 {\n            continue; }\n        pBuff[Abc_Lit2Var(p.Lits[i])] = (Abc_LitIsCompl(p.Lits[i])? '0':'1');\n    }\n    if vFlopCounts != nil {\n        // skip some literals\n        Vec_IntForEachEntry( vFlopCounts, Entry, i )\n            if ( Entry ) \n                pBuff[k++] = pBuff[i];\n        pBuff[k] = 0;\n    }\n    Vec_StrPushBuffer( vStr, pBuff, k );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    ABC_FREE( pBuff );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if pOld set-theoretically contains pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetContains(pOld *Pdr_Set_t, pNew *Pdr_Set_t) int32 {\n    var pOldInt, pNewInt *int32;\n    assert(pOld.nLits \u003e 0, \"pOld.nLits \u003e 0\");\n    assert(pNew.nLits \u003e 0, \"pNew.nLits \u003e 0\");\n    if pOld.nLits \u003c pNew.nLits {\n        return 0; }\n    if (pOld.Sign \u0026 pNew.Sign) != pNew.Sign {\n        return 0; }\n    pOldInt = pOld.Lits + pOld.nLits - 1;\n    pNewInt = pNew.Lits + pNew.nLits - 1;\n    for  pNew.Lits \u003c= pNewInt  {\n        if pOld.Lits \u003e pOldInt {\n            return 0; }\n        assert(*pNewInt != -1, \"*pNewInt != -1\");\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == *pOldInt {\n            pNewInt--, pOldInt--;\n        } else if *pNewInt \u003c *pOldInt {\n            pOldInt--;\n        } else {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if pOld set-theoretically contains pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetContainsSimple(pOld *Pdr_Set_t, pNew *Pdr_Set_t) int32 {\n    var pOldInt, pNewInt *int32;\n    assert(pOld.nLits \u003e 0, \"pOld.nLits \u003e 0\");\n    assert(pNew.nLits \u003e 0, \"pNew.nLits \u003e 0\");\n    pOldInt = pOld.Lits + pOld.nLits - 1;\n    pNewInt = pNew.Lits + pNew.nLits - 1;\n    for  pNew.Lits \u003c= pNewInt  {\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == -1 {\n            pNewInt--;\n            continue;\n        }\n        if pOld.Lits \u003e pOldInt {\n            return 0; }\n        assert(*pNewInt != -1, \"*pNewInt != -1\");\n        assert(*pOldInt != -1, \"*pOldInt != -1\");\n        if *pNewInt == *pOldInt {\n            pNewInt--, pOldInt--;\n        } else if *pNewInt \u003c *pOldInt {\n            pOldInt--;\n        } else {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return 1 if the state cube contains init state (000...0).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetIsInit(pCube *Pdr_Set_t, iRemove int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c pCube.nLits; i++  {\n        assert(pCube.Lits[i] != -1, \"pCube.Lits[i] != -1\");\n        if i == iRemove {\n            continue; }\n        if Abc_LitIsCompl( pCube.Lits[i] ) == 0 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_SetCompare(pp1 **Pdr_Set_t, pp2 **Pdr_Set_t) int32 {\n    var p1 *Pdr_Set_t  = *pp1;\n    var p2 *Pdr_Set_t  = *pp2;\n    var i int32;\n    for  i = 0; i \u003c p1.nLits \u0026\u0026 i \u003c p2.nLits; i++  {\n        if p1.Lits[i] \u003e p2.Lits[i] {\n            return -1; }\n        if p1.Lits[i] \u003c p2.Lits[i] {\n            return 1; }\n    }\n    if i == p1.nLits \u0026\u0026 i \u003c p2.nLits {\n        return -1; }\n    if i \u003c p1.nLits \u0026\u0026 i == p2.nLits {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_OblStart(k int32, prio int32, pState *Pdr_Set_t, pNext *Pdr_Obl_t) *Pdr_Obl_t {\n    var p *Pdr_Obl_t;\n    p = new(Pdr_Obl_t);\n    p.iFrame = k;\n    p.prio   = prio;\n    p.nRefs  = 1;\n    p.pState = pState;\n    p.pNext  = pNext;\n    p.pLink  = nil;\n    return p;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_OblRef(p *Pdr_Obl_t) *Pdr_Obl_t {\n    p.nRefs++;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_OblDeref(p *Pdr_Obl_t) {\n    if --p.nRefs == 0 {\n        if p.pNext {\n            Pdr_OblDeref( p.pNext ); }\n        Pdr_SetDeref( p.pState );\n        ABC_FREE( p );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueueIsEmpty(p *Pdr_Man_t) int32 {\n    return p.pQueue == nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueueHead(p *Pdr_Man_t) *Pdr_Obl_t {\n    return p.pQueue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueuePop(p *Pdr_Man_t) *Pdr_Obl_t {\n    var pRes *Pdr_Obl_t  = p.pQueue;\n    if p.pQueue == nil {\n        return nil; }\n    p.pQueue = p.pQueue.pLink;\n    Pdr_OblDeref( pRes );\n    p.nQueCur--;\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueueClean(p *Pdr_Man_t) {\n    var pThis *Pdr_Obl_t;\n    for  pThis = Pdr_QueuePop(p)  {\n        Pdr_OblDeref( pThis );\n    }\n    pThis = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueuePush(p *Pdr_Man_t, pObl *Pdr_Obl_t) {\n    var pTemp *Pdr_Obl_t;\n    var ppPrev **Pdr_Obl_t;\n    p.nObligs++;\n    p.nQueCur++;\n    p.nQueMax = Abc_MaxInt( p.nQueMax, p.nQueCur );\n    Pdr_OblRef( pObl );\n    if p.pQueue == nil {\n        p.pQueue = pObl;\n        return;\n    }\n    for  ppPrev, pTemp = \u0026p.pQueue, p.pQueue; (pTemp != nil); ppPrev = \u0026pTemp.pLink, pTemp = pTemp.pLink  {\n        if pTemp.iFrame \u003e pObl.iFrame || (pTemp.iFrame == pObl.iFrame \u0026\u0026 pTemp.prio \u003e pObl.prio) {\n            break; }\n    }\n    *ppPrev = pObl;\n    pObl.pLink = pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueuePrint(p *Pdr_Man_t) {\n    var pObl *Pdr_Obl_t;\n    for  pObl = p.pQueue; (pObl != nil); pObl = pObl.pLink  {\n        Abc_Print( 1, \"Frame = %2d.  Prio = %8d.\\n\", pObl.iFrame, pObl.prio );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_QueueStop(p *Pdr_Man_t) {\n    var pObl *Pdr_Obl_t;\n    for  !(Pdr_QueueIsEmpty(p) != 0)  {\n        pObl = Pdr_QueuePop(p);\n        Pdr_OblDeref( pObl );\n    }\n    p.pQueue = nil;\n    p.nQueCur = 0;\n}\n\n\nconst PDR_VAL0 =  1\nconst PDR_VAL1 =  2\nconst PDR_VALX =  3\n\n/**Function*************************************************************\n\n  Synopsis    [Returns value (0 or 1) or X if unassigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjSatValue(pAig *Aig_Man_t, pNode *Aig_Obj_t, fCompl int32) int32 {\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        if pNode.fMarkA ^ fCompl {\n            return PDR_VAL1;\n        } else {\n            return PDR_VAL0;\n        } }\n    return PDR_VALX;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively searched for a satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_NtkFindSatAssign_rec(pAig *Aig_Man_t, pNode *Aig_Obj_t, Value int32, pCube *Pdr_Set_t, Heur int32) int32 {\n    var Value0, Value1 int32;\n    if Aig_ObjIsConst1(pNode) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent(pAig, pNode) {\n        return (int32(pNode.fMarkA) == Value); }\n    Aig_ObjSetTravIdCurrent(pAig, pNode);\n    pNode.fMarkA = Value;\n    if Aig_ObjIsCi(pNode) {\n        if Saig_ObjIsLo(pAig, pNode) {\n//            pCube-\u003eLits[pCube-\u003enLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), !Value );\n            pCube.Lits[pCube.nLits++] = Abc_Var2Lit( Aig_ObjCioId(pNode) - Saig_ManPiNum(pAig), Value );\n            pCube.Sign |= ((word)1 \u003c\u003c (pCube.Lits[pCube.nLits-1] % 63));\n        }\n        return 1;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // propagation\n    if Value != 0 {\n        if !(Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), !Aig_ObjFaninC0(pNode), pCube, Heur) != 0) {\n            return 0; }\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), !Aig_ObjFaninC1(pNode), pCube, Heur);\n    }\n    // justification\n    Value0 = Pdr_ObjSatValue( pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode) );\n    if Value0 == PDR_VAL0 {\n        return 1; }\n    Value1 = Pdr_ObjSatValue( pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode) );\n    if Value1 == PDR_VAL0 {\n        return 1; }\n    if Value0 == PDR_VAL1 \u0026\u0026 Value1 == PDR_VAL1 {\n        return 0; }\n    if Value0 == PDR_VAL1 {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur); }\n    if Value1 == PDR_VAL1 {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur); }\n    assert(Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX, \"Value0 == PDR_VALX \u0026\u0026 Value1 == PDR_VALX\");\n    // decision making\n//    if ( rand() % 10 == Heur )\n    if Aig_ObjId(pNode) % 4 == Heur {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin1(pNode), Aig_ObjFaninC1(pNode), pCube, Heur);\n    } else {\n        return Pdr_NtkFindSatAssign_rec(pAig, Aig_ObjFanin0(pNode), Aig_ObjFaninC0(pNode), pCube, Heur); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

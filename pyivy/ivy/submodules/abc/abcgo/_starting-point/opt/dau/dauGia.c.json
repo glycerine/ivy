@@ -1,0 +1,750 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c",
+  "SHA256": "adb0412996a21bc6eeab9b53603dc3e0c054313a93349dc23439b6ec653c2026",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 1824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Func == s_Truths6[0] || Func == s_Truths6Neg[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '(' \u0026\u0026 *q == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '[' \u0026\u0026 *q == ']' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( **p == '{' \u0026\u0026 *q2 == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 13,
+        "ByteOffset": 4648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *p == q2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 4842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '\u003c' \u0026\u0026 *q == '\u003e' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 21,
+        "ByteOffset": 5042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( *pOld - 'a' \u003c nVars ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp == Temp + 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 9,
+        "ByteOffset": 5303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 5442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( **p == '{' \u0026\u0026 *q == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 6169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '{' \u0026\u0026 *q == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 9,
+        "ByteOffset": 6358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 9,
+        "ByteOffset": 6388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 7095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *++p == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFans \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 291,
+        "Column": 9,
+        "ByteOffset": 10000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '(' \u0026\u0026 *q == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 9,
+        "ByteOffset": 10285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 10540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '[' \u0026\u0026 *q == ']' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 10825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 13,
+        "ByteOffset": 11378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( **p == '{' \u0026\u0026 *q2 == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 11596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *p == q2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 343,
+        "Column": 9,
+        "ByteOffset": 11790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '\u003c' \u0026\u0026 *q == '\u003e' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 21,
+        "ByteOffset": 11990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( *pOld - 'a' \u003c nVars ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 12213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp == Temp + 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 9,
+        "ByteOffset": 12250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 13,
+        "ByteOffset": 12389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( **p == '{' \u0026\u0026 *q == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 9,
+        "ByteOffset": 13982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( **p == '{' \u0026\u0026 *q == '}' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 14170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 14200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 5,
+        "ByteOffset": 14787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 15137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *++p == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 5,
+        "ByteOffset": 15818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 17261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Calls = %d. NonDSD = %d. Non1Step = %d.\\n\", m_Calls, m_NonDsd, m_Non1Step );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 512,
+        "Column": 5,
+        "ByteOffset": 17924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );   "
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 519,
+        "Column": 83,
+        "ByteOffset": 18292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNew.pMuxes = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned))); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DsdToGiaCompose_rec",
+      "Start": 1551,
+      "End": 2395,
+      "BodyStart": 1636,
+      "Original": "int Dau_DsdToGiaCompose_rec( Gia_Man_t * pGia, word Func, int * pFanins, int nVars )\n{\n    int t0, t1;\n    if ( Func == 0 )\n        return 0;\n    if ( Func == ~(word)0 )\n        return 1;\n    assert( nVars \u003e 0 );\n    if ( --nVars == 0 )\n    {\n        assert( Func == s_Truths6[0] || Func == s_Truths6Neg[0] );\n        return Abc_LitNotCond( pFanins[0], (int)(Func == s_Truths6Neg[0]) );\n    }\n    if ( !Abc_Tt6HasVar(Func, nVars) )\n        return Dau_DsdToGiaCompose_rec( pGia, Func, pFanins, nVars );\n    t0 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor0(Func, nVars), pFanins, nVars );\n    t1 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor1(Func, nVars), pFanins, nVars );\n    if ( pGia-\u003epMuxes )\n        return Gia_ManHashMuxReal( pGia, pFanins[nVars], t1, t0 );\n    else\n        return Gia_ManHashMux( pGia, pFanins[nVars], t1, t0 );\n}",
+      "Draft": "func Dau_DsdToGiaCompose_rec(pGia *Gia_Man_t, Func word, pFanins *int32, nVars int32) int32 {\n    var t0, t1 int32;\n    if Func == 0 {\n        return 0; }\n    if Func == ~(word)0 {\n        return 1; }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    if nVars--; nVars == 0 {\n        assert(Func == s_Truths6[0] || Func == s_Truths6Neg[0], \"Func == s_Truths6[0] || Func == s_Truths6Neg[0]\");\n        return Abc_LitNotCond( pFanins[0], int32((Func == s_Truths6Neg[0])) );\n    }\n    if !Abc_Tt6HasVar(Func, nVars) {\n        return Dau_DsdToGiaCompose_rec( pGia, Func, pFanins, nVars ); }\n    t0 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor0(Func, nVars), pFanins, nVars );\n    t1 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor1(Func, nVars), pFanins, nVars );\n    if pGia.pMuxes {\n        return Gia_ManHashMuxReal( pGia, pFanins[nVars], t1, t0 );\n    } else {\n        return Gia_ManHashMux( pGia, pFanins[nVars], t1, t0 ); }\n}"
+    },
+    {
+      "Name": "Dau_DsdToGia2_rec",
+      "Start": 2663,
+      "End": 6549,
+      "BodyStart": 2778,
+      "Original": "int Dau_DsdToGia2_rec( Gia_Man_t * pGia, char * pStr, char ** p, int * pMatches, int * pLits, Vec_Int_t * vCover )\n{\n    int fCompl = 0;\n    if ( **p == '!' )\n        (*p)++, fCompl = 1;\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR ) // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl );\n    if ( **p == '(' ) // and/or\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        int Res = 1, Lit;\n        assert( **p == '(' \u0026\u0026 *q == ')' );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Res = Gia_ManHashAnd( pGia, Res, Lit );\n        }\n        assert( *p == q );\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if ( **p == '[' ) // xor\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        int Res = 0, Lit;\n        assert( **p == '[' \u0026\u0026 *q == ']' );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            if ( pGia-\u003epMuxes )\n                Res = Gia_ManHashXorReal( pGia, Res, Lit );\n            else\n                Res = Gia_ManHashXor( pGia, Res, Lit );\n        }\n        assert( *p == q );\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if ( **p == '\u003c' ) // mux\n    {\n        int nVars = 0;\n        int Temp[3], * pTemp = Temp, Res;\n        int Fanins[DAU_DSD_MAX_VAR], * pLits2;\n        char * pOld = *p;\n        char * q = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if ( *(q+1) == '{' )\n        {\n            char * q2;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert( **p == '{' \u0026\u0026 *q2 == '}' );\n            for ( nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++ )\n                Fanins[nVars] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            assert( *p == q2 );\n            pLits2 = Fanins;\n        }\n        else\n            pLits2 = pLits;\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert( **p == '\u003c' \u0026\u0026 *q == '\u003e' );\n        // verify internal variables\n        if ( nVars )\n            for ( ; pOld \u003c q; pOld++ )\n                if ( *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' )\n                    assert( *pOld - 'a' \u003c nVars );\n        // derive MUX components\n        for ( (*p)++; *p \u003c q; (*p)++ )\n            *pTemp++ = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        assert( pTemp == Temp + 3 );\n        assert( *p == q );\n        if ( *(q+1) == '{' ) // and/or\n        {\n            char * q = pStr + pMatches[ ++(*p) - pStr ];\n            assert( **p == '{' \u0026\u0026 *q == '}' );\n            *p = q;\n        }\n        if ( pGia-\u003epMuxes )\n            Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n        else\n            Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] );\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n    {\n        Vec_Int_t vLeaves;  char * q;\n        word pFunc[DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1];\n        int Fanins[DAU_DSD_MAX_VAR], Res; \n        int i, nVars = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert( **p == '{' \u0026\u0026 *q == '}' );\n        for ( i = 0, (*p)++; *p \u003c q; (*p)++, i++ )\n            Fanins[i] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        assert( i == nVars );\n        assert( *p == q );\n//        Res = Dau_DsdToGia2Compose_rec( pGia, Func, Fanins, nVars );\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;        \n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, 1 );\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dau_DsdToGia2_rec(pGia *Gia_Man_t, pStr string, p *string, pMatches *int32, pLits *int32, vCover *Vec_Int_t) int32 {\n    var fCompl int32;\n    if **p == '!' {\n        (*p)++, fCompl = 1; }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR { // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl ); }\n    if **p == '(' { // and/or\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var Res int32 = 1;\n        var Lit int32;\n        assert(**p == '(' \u0026\u0026 *q == ')', \"**p == '(' \u0026\u0026 *q == ')'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Res = Gia_ManHashAnd( pGia, Res, Lit );\n        }\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if **p == '[' { // xor\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var Res, Lit int32;\n        assert(**p == '[' \u0026\u0026 *q == ']', \"**p == '[' \u0026\u0026 *q == ']'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            if pGia.pMuxes {\n                Res = Gia_ManHashXorReal( pGia, Res, Lit );\n            } else {\n                Res = Gia_ManHashXor( pGia, Res, Lit ); }\n        }\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if **p == '\u003c' { // mux\n    \n        var nVars int32;\n        var Temp [3]int32;\n        var pTemp *int32 = Temp;\n        var Res int32;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var pLits2 *int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if *(q+1) == '{' {\n            var q2 string;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert(**p == '{' \u0026\u0026 *q2 == '}', \"**p == '{' \u0026\u0026 *q2 == '}'\");\n            for  nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++  {\n                Fanins[nVars] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            }\n            assert(*p == q2, \"*p == q2\");\n            pLits2 = Fanins;\n        \n        } else {\n            pLits2 = pLits; }\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '\u003c' \u0026\u0026 *q == '\u003e', \"**p == '\u003c' \u0026\u0026 *q == '\u003e'\");\n        // verify internal variables\n        if nVars != 0 {\n            for  ; pOld \u003c q; pOld++  {\n                if *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' {\n                    assert(*pOld - 'a' \u003c nVars, \"*pOld - 'a' \u003c nVars\"); }\n            } }\n        // derive MUX components\n        for  (*p)++; *p \u003c q; (*p)++  {\n            *pTemp++ = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        }\n        assert(pTemp == Temp + 3, \"pTemp == Temp + 3\");\n        assert(*p == q, \"*p == q\");\n        if *(q+1) == '{' { // and/or\n        \n            var q string  = pStr + pMatches[ ++(*p) - pStr ];\n            assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n            *p = q;\n        }\n        if pGia.pMuxes {\n            Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n        } else {\n            Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] ); }\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') {\n        var vLeaves Vec_Int_t;  var q string;\n        var pFunc [DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1]word;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var Res int32; \n        var i int32;\n        var nVars int32 = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n        for  i = 0, (*p)++; *p \u003c q; (*p)++, i++  {\n            Fanins[i] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        }\n        assert(i == nVars, \"i == nVars\");\n        assert(*p == q, \"*p == q\");\n//        Res = Dau_DsdToGia2Compose_rec( pGia, Func, Fanins, nVars );\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;        \n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, 1 );\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdToGia2",
+      "Start": 6550,
+      "End": 6897,
+      "BodyStart": 6631,
+      "Original": "int Dau_DsdToGia2( Gia_Man_t * pGia, char * p, int * pLits, Vec_Int_t * vCover )\n{\n    int Res;\n    if ( *p == '0' \u0026\u0026 *(p+1) == 0 )\n        Res = 0;\n    else if ( *p == '1' \u0026\u0026 *(p+1) == 0 )\n        Res = 1;\n    else\n        Res = Dau_DsdToGia2_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover );\n    assert( *++p == 0 );\n    return Res;\n}",
+      "Draft": "func Dau_DsdToGia2(pGia *Gia_Man_t, p string, pLits *int32, vCover *Vec_Int_t) int32 {\n    var Res int32;\n    if *p == '0' \u0026\u0026 *(p+1) == 0 {\n        Res = 0;\n    } else if *p == '1' \u0026\u0026 *(p+1) == 0 {\n        Res = 1;\n    } else {\n        Res = Dau_DsdToGia2_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover ); }\n    assert(*++p == 0, \"*++p == 0\");\n    return Res;\n}"
+    },
+    {
+      "Name": "Dau_DsdAddToArray",
+      "Start": 7165,
+      "End": 7540,
+      "BodyStart": 7242,
+      "Original": "void Dau_DsdAddToArray( Gia_Man_t * pGia, int * pFans, int nFans, int iFan )\n{\n    int i;\n    pFans[nFans] = iFan;\n    if ( nFans == 0 )\n        return;\n    for ( i = nFans; i \u003e 0; i-- )\n    {\n        if ( Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i])) \u003c= Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i-1])) )\n            return;\n        ABC_SWAP( int, pFans[i], pFans[i-1] );\n    }\n}",
+      "Draft": "func Dau_DsdAddToArray(pGia *Gia_Man_t, pFans *int32, nFans int32, iFan int32) {\n    var i int32;\n    pFans[nFans] = iFan;\n    if nFans == 0 {\n        return; }\n    for  i = nFans; i \u003e 0; i--  {\n        if Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i])) \u003c= Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i-1])) {\n            return; }\n        // inlining of macro ABC_SWAP\n        { var t int32  = pFans[i]; pFans[i] = pFans[i-1]; pFans[i-1] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdBalance",
+      "Start": 7541,
+      "End": 9198,
+      "BodyStart": 7614,
+      "Original": "int Dau_DsdBalance( Gia_Man_t * pGia, int * pFans, int nFans, int fAnd )\n{\n    Gia_Obj_t * pObj;\n    int iFan0, iFan1, iFan;\n    if ( nFans == 1 )\n        return pFans[0];\n    assert( nFans \u003e 1 );\n    iFan0 = pFans[--nFans];\n    iFan1 = pFans[--nFans];\n    if ( Vec_IntSize(\u0026pGia-\u003evHTable) == 0 )\n    {\n        if ( fAnd )\n            iFan = Gia_ManAppendAnd2( pGia, iFan0, iFan1 );\n        else if ( pGia-\u003epMuxes )\n        {\n            int fCompl = Abc_LitIsCompl(iFan0) ^ Abc_LitIsCompl(iFan1);\n            iFan = Gia_ManAppendXorReal( pGia, Abc_LitRegular(iFan0), Abc_LitRegular(iFan1) );\n            iFan = Abc_LitNotCond( iFan, fCompl );\n        }\n        else \n            iFan = Gia_ManAppendXor2( pGia, iFan0, iFan1 );\n    }\n    else\n    {\n        if ( fAnd )\n            iFan = Gia_ManHashAnd( pGia, iFan0, iFan1 );\n        else if ( pGia-\u003epMuxes )\n            iFan = Gia_ManHashXorReal( pGia, iFan0, iFan1 );\n        else \n            iFan = Gia_ManHashXor( pGia, iFan0, iFan1 );\n    }\n    pObj = Gia_ManObj(pGia, Abc_Lit2Var(iFan));\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        if ( fAnd )\n            Gia_ObjSetAndLevel( pGia, pObj );\n        else if ( pGia-\u003epMuxes )\n            Gia_ObjSetXorLevel( pGia, pObj );\n        else \n        {\n            if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) )\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) );\n            if ( Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) )\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) );\n            Gia_ObjSetAndLevel( pGia, pObj );\n        }\n    }\n    Dau_DsdAddToArray( pGia, pFans, nFans++, iFan );\n    return Dau_DsdBalance( pGia, pFans, nFans, fAnd );\n}",
+      "Draft": "func Dau_DsdBalance(pGia *Gia_Man_t, pFans *int32, nFans int32, fAnd int32) int32 {\n    var pObj *Gia_Obj_t;\n    var iFan0, iFan1, iFan int32;\n    if nFans == 1 {\n        return pFans[0]; }\n    assert(nFans \u003e 1, \"nFans \u003e 1\");\n    iFan0 = pFans[--nFans];\n    iFan1 = pFans[--nFans];\n    if Vec_IntSize(\u0026pGia.vHTable) == 0 {\n        if fAnd != 0 {\n            iFan = Gia_ManAppendAnd2( pGia, iFan0, iFan1 );\n        } else if pGia.pMuxes {\n            var fCompl int32  = Abc_LitIsCompl(iFan0) ^ Abc_LitIsCompl(iFan1);\n            iFan = Gia_ManAppendXorReal( pGia, Abc_LitRegular(iFan0), Abc_LitRegular(iFan1) );\n            iFan = Abc_LitNotCond( iFan, fCompl );\n        \n        } else { \n            iFan = Gia_ManAppendXor2( pGia, iFan0, iFan1 ); }\n    \n    } else {\n        if fAnd != 0 {\n            iFan = Gia_ManHashAnd( pGia, iFan0, iFan1 );\n        } else if pGia.pMuxes {\n            iFan = Gia_ManHashXorReal( pGia, iFan0, iFan1 );\n        } else { \n            iFan = Gia_ManHashXor( pGia, iFan0, iFan1 ); }\n    }\n    pObj = Gia_ManObj(pGia, Abc_Lit2Var(iFan));\n    if Gia_ObjIsAnd(pObj) {\n        if fAnd != 0 {\n            Gia_ObjSetAndLevel( pGia, pObj );\n        } else if pGia.pMuxes {\n            Gia_ObjSetXorLevel( pGia, pObj );\n        } else {\n            if Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) ); }\n            if Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) {\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) ); }\n            Gia_ObjSetAndLevel( pGia, pObj );\n        }\n    }\n    Dau_DsdAddToArray( pGia, pFans, nFans++, iFan );\n    return Dau_DsdBalance( pGia, pFans, nFans, fAnd );\n}"
+    },
+    {
+      "Name": "Dau_DsdToGia_rec",
+      "Start": 9199,
+      "End": 14285,
+      "BodyStart": 9313,
+      "Original": "int Dau_DsdToGia_rec( Gia_Man_t * pGia, char * pStr, char ** p, int * pMatches, int * pLits, Vec_Int_t * vCover )\n{\n    int fCompl = 0;\n    if ( **p == '!' )\n        (*p)++, fCompl = 1;\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR ) // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl );\n    if ( **p == '(' ) // and/or\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        int pFans[DAU_DSD_MAX_VAR], nFans = 0, Fan;\n        assert( **p == '(' \u0026\u0026 *q == ')' );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 1 );\n        assert( *p == q );\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if ( **p == '[' ) // xor\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        int pFans[DAU_DSD_MAX_VAR], nFans = 0, Fan;\n        assert( **p == '[' \u0026\u0026 *q == ']' );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 0 );\n        assert( *p == q );\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if ( **p == '\u003c' ) // mux\n    {\n        Gia_Obj_t * pObj;\n        int nVars = 0;\n        int Temp[3], * pTemp = Temp, Res;\n        int Fanins[DAU_DSD_MAX_VAR], * pLits2;\n        char * pOld = *p;\n        char * q = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if ( *(q+1) == '{' )\n        {\n            char * q2;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert( **p == '{' \u0026\u0026 *q2 == '}' );\n            for ( nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++ )\n                Fanins[nVars] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            assert( *p == q2 );\n            pLits2 = Fanins;\n        }\n        else\n            pLits2 = pLits;\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert( **p == '\u003c' \u0026\u0026 *q == '\u003e' );\n        // verify internal variables\n        if ( nVars )\n            for ( ; pOld \u003c q; pOld++ )\n                if ( *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' )\n                    assert( *pOld - 'a' \u003c nVars );\n        // derive MUX components\n        for ( (*p)++; *p \u003c q; (*p)++ )\n            *pTemp++ = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        assert( pTemp == Temp + 3 );\n        assert( *p == q );\n        if ( *(q+1) == '{' ) // and/or\n        {\n            char * q = pStr + pMatches[ ++(*p) - pStr ];\n            assert( **p == '{' \u0026\u0026 *q == '}' );\n            *p = q;\n        }\n        if ( Vec_IntSize(\u0026pGia-\u003evHTable) == 0 )\n        {\n            if ( pGia-\u003epMuxes )\n                Res = Gia_ManAppendMux( pGia, Temp[0], Temp[1], Temp[2] );\n            else\n                Res = Gia_ManAppendMux2( pGia, Temp[0], Temp[1], Temp[2] );\n        }\n        else\n        {\n            if ( pGia-\u003epMuxes )\n                Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n            else\n                Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] );\n        }\n        pObj = Gia_ManObj(pGia, Abc_Lit2Var(Res));\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( pGia-\u003epMuxes \u0026\u0026 Vec_IntSize(\u0026pGia-\u003evHTable) )\n                Gia_ObjSetMuxLevel( pGia, pObj );\n            else \n            {\n                if ( Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) )\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) );\n                if ( Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) )\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) );\n                Gia_ObjSetAndLevel( pGia, pObj );\n            }\n        }\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n    {\n        Vec_Int_t vLeaves;  char * q;\n        word pFunc[DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1];\n        int Fanins[DAU_DSD_MAX_VAR], Res, nObjOld; \n        int i, nVars = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert( **p == '{' \u0026\u0026 *q == '}' );\n        for ( i = 0, (*p)++; *p \u003c q; (*p)++, i++ )\n            Fanins[i] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        assert( i == nVars );\n        assert( *p == q );\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;      \n        nObjOld = Gia_ManObjNum(pGia);\n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, Vec_IntSize(\u0026pGia-\u003evHTable) != 0 );\n//        assert( nVars \u003c= 6 );\n//        Res = Dau_DsdToGiaCompose_rec( pGia, pFunc[0], Fanins, nVars );\n        for ( i = nObjOld; i \u003c Gia_ManObjNum(pGia); i++ )\n            Gia_ObjSetGateLevel( pGia, Gia_ManObj(pGia, i) );\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dau_DsdToGia_rec(pGia *Gia_Man_t, pStr string, p *string, pMatches *int32, pLits *int32, vCover *Vec_Int_t) int32 {\n    var fCompl int32;\n    if **p == '!' {\n        (*p)++, fCompl = 1; }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR { // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl ); }\n    if **p == '(' { // and/or\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var pFans [DAU_DSD_MAX_VAR]int32;\n        var nFans int32;\n        var Fan int32;\n        assert(**p == '(' \u0026\u0026 *q == ')', \"**p == '(' \u0026\u0026 *q == ')'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 1 );\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if **p == '[' { // xor\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var pFans [DAU_DSD_MAX_VAR]int32;\n        var nFans int32;\n        var Fan int32;\n        assert(**p == '[' \u0026\u0026 *q == ']', \"**p == '[' \u0026\u0026 *q == ']'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 0 );\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if **p == '\u003c' { // mux\n    \n        var pObj *Gia_Obj_t;\n        var nVars int32;\n        var Temp [3]int32;\n        var pTemp *int32 = Temp;\n        var Res int32;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var pLits2 *int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if *(q+1) == '{' {\n            var q2 string;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert(**p == '{' \u0026\u0026 *q2 == '}', \"**p == '{' \u0026\u0026 *q2 == '}'\");\n            for  nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++  {\n                Fanins[nVars] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            }\n            assert(*p == q2, \"*p == q2\");\n            pLits2 = Fanins;\n        \n        } else {\n            pLits2 = pLits; }\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '\u003c' \u0026\u0026 *q == '\u003e', \"**p == '\u003c' \u0026\u0026 *q == '\u003e'\");\n        // verify internal variables\n        if nVars != 0 {\n            for  ; pOld \u003c q; pOld++  {\n                if *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' {\n                    assert(*pOld - 'a' \u003c nVars, \"*pOld - 'a' \u003c nVars\"); }\n            } }\n        // derive MUX components\n        for  (*p)++; *p \u003c q; (*p)++  {\n            *pTemp++ = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        }\n        assert(pTemp == Temp + 3, \"pTemp == Temp + 3\");\n        assert(*p == q, \"*p == q\");\n        if *(q+1) == '{' { // and/or\n        \n            var q string  = pStr + pMatches[ ++(*p) - pStr ];\n            assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n            *p = q;\n        }\n        if Vec_IntSize(\u0026pGia.vHTable) == 0 {\n            if pGia.pMuxes {\n                Res = Gia_ManAppendMux( pGia, Temp[0], Temp[1], Temp[2] );\n            } else {\n                Res = Gia_ManAppendMux2( pGia, Temp[0], Temp[1], Temp[2] ); }\n        \n        } else {\n            if pGia.pMuxes {\n                Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n            } else {\n                Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] ); }\n        }\n        pObj = Gia_ManObj(pGia, Abc_Lit2Var(Res));\n        if Gia_ObjIsAnd(pObj) {\n            if pGia.pMuxes \u0026\u0026 Vec_IntSize(\u0026pGia.vHTable) {\n                Gia_ObjSetMuxLevel( pGia, pObj );\n            } else {\n                if Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) ); }\n                if Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) {\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) ); }\n                Gia_ObjSetAndLevel( pGia, pObj );\n            }\n        }\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') {\n        var vLeaves Vec_Int_t;  var q string;\n        var pFunc [DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1]word;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var Res int32;\n        var nObjOld int32; \n        var i int32;\n        var nVars int32 = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n        for  i = 0, (*p)++; *p \u003c q; (*p)++, i++  {\n            Fanins[i] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        }\n        assert(i == nVars, \"i == nVars\");\n        assert(*p == q, \"*p == q\");\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;      \n        nObjOld = Gia_ManObjNum(pGia);\n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, Vec_IntSize(\u0026pGia.vHTable) != 0 );\n//        assert( nVars \u003c= 6 );\n//        Res = Dau_DsdToGiaCompose_rec( pGia, pFunc[0], Fanins, nVars );\n        for  i = nObjOld; i \u003c Gia_ManObjNum(pGia); i++  {\n            Gia_ObjSetGateLevel( pGia, Gia_ManObj(pGia, i) );\n        }\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdToGia",
+      "Start": 14286,
+      "End": 14631,
+      "BodyStart": 14366,
+      "Original": "int Dau_DsdToGia( Gia_Man_t * pGia, char * p, int * pLits, Vec_Int_t * vCover )\n{\n    int Res;\n    if ( *p == '0' \u0026\u0026 *(p+1) == 0 )\n        Res = 0;\n    else if ( *p == '1' \u0026\u0026 *(p+1) == 0 )\n        Res = 1;\n    else\n        Res = Dau_DsdToGia_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover );\n    assert( *++p == 0 );\n    return Res;\n}",
+      "Draft": "func Dau_DsdToGia(pGia *Gia_Man_t, p string, pLits *int32, vCover *Vec_Int_t) int32 {\n    var Res int32;\n    if *p == '0' \u0026\u0026 *(p+1) == 0 {\n        Res = 0;\n    } else if *p == '1' \u0026\u0026 *(p+1) == 0 {\n        Res = 1;\n    } else {\n        Res = Dau_DsdToGia_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover ); }\n    assert(*++p == 0, \"*++p == 0\");\n    return Res;\n}"
+    },
+    {
+      "Name": "Dsm_ManTruthToGia",
+      "Start": 14893,
+      "End": 16235,
+      "BodyStart": 14983,
+      "Original": "int Dsm_ManTruthToGia( void * p, word * pTruth, Vec_Int_t * vLeaves, Vec_Int_t * vCover )\n{\n    int fUseMuxes = 0;\n    int fDelayBalance = 1;\n    Gia_Man_t * pGia = (Gia_Man_t *)p;\n    int nSizeNonDec;\n    char pDsd[1000];\n    word pTruthCopy[DAU_MAX_WORD];\n    Abc_TtCopy( pTruthCopy, pTruth, Abc_TtWordNum(Vec_IntSize(vLeaves)), 0 );\n    m_Calls++;\n    assert( Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR );\n    if ( Vec_IntSize(vLeaves) == 0 )\n        return (int)(pTruth[0] \u0026 1);\n    if ( Vec_IntSize(vLeaves) == 1 )\n        return Abc_LitNotCond( Vec_IntEntry(vLeaves, 0), (int)(pTruth[0] \u0026 1) );\n    // collect delay information\n    if ( fDelayBalance \u0026\u0026 fUseMuxes )\n    {\n        int i, iLit, pVarLevels[DAU_DSD_MAX_VAR];\n        Vec_IntForEachEntry( vLeaves, iLit, i )\n            pVarLevels[i] = Gia_ObjLevelId( pGia, Abc_Lit2Var(iLit) );\n        nSizeNonDec = Dau_DsdDecomposeLevel( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd, pVarLevels );\n    }\n    else\n        nSizeNonDec = Dau_DsdDecompose( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd );\n    if ( nSizeNonDec )\n        m_NonDsd++;\n//    printf( \"%s\\n\", pDsd );\n    if ( fDelayBalance \u0026\u0026 pGia-\u003evLevels )\n        return Dau_DsdToGia( pGia, pDsd, Vec_IntArray(vLeaves), vCover );\n    else\n        return Dau_DsdToGia2( pGia, pDsd, Vec_IntArray(vLeaves), vCover );\n}",
+      "Draft": "func Dsm_ManTruthToGia(p any, pTruth *word, vLeaves *Vec_Int_t, vCover *Vec_Int_t) int32 {\n    var fUseMuxes int32;\n    var fDelayBalance int32  = 1;\n    var pGia *Gia_Man_t  = (Gia_Man_t *)p;\n    var nSizeNonDec int32;\n    var pDsd [1000]byte;\n    var pTruthCopy [DAU_MAX_WORD]word;\n    Abc_TtCopy( pTruthCopy, pTruth, Abc_TtWordNum(Vec_IntSize(vLeaves)), 0 );\n    m_Calls++;\n    assert(Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR, \"Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR\");\n    if Vec_IntSize(vLeaves) == 0 {\n        return int32((pTruth[0] \u0026 1)); }\n    if Vec_IntSize(vLeaves) == 1 {\n        return Abc_LitNotCond( Vec_IntEntry(vLeaves, 0), int32((pTruth[0] \u0026 1)) ); }\n    // collect delay information\n    if (fDelayBalance != 0) \u0026\u0026 (fUseMuxes != 0) {\n        var i int32;\n        var iLit int32;\n        var pVarLevels [DAU_DSD_MAX_VAR]int32;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n            pVarLevels[i] = Gia_ObjLevelId( pGia, Abc_Lit2Var(iLit) );\n        }\n        nSizeNonDec = Dau_DsdDecomposeLevel( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd, pVarLevels );\n    \n    } else {\n        nSizeNonDec = Dau_DsdDecompose( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd ); }\n    if nSizeNonDec != 0 {\n        m_NonDsd++; }\n//    printf( \"%s\\n\", pDsd );\n    if (fDelayBalance != 0) \u0026\u0026 pGia.vLevels {\n        return Dau_DsdToGia( pGia, pDsd, Vec_IntArray(vLeaves), vCover );\n    } else {\n        return Dau_DsdToGia2( pGia, pDsd, Vec_IntArray(vLeaves), vCover ); }\n}"
+    },
+    {
+      "Name": "Dsm_ManReportStats",
+      "Start": 16497,
+      "End": 16657,
+      "BodyStart": 16523,
+      "Original": "void Dsm_ManReportStats()\n{\n    printf( \"Calls = %d. NonDSD = %d. Non1Step = %d.\\n\", m_Calls, m_NonDsd, m_Non1Step );\n    m_Calls = m_NonDsd = m_Non1Step = 0;\n}",
+      "Draft": "func Dsm_ManReportStats() {\n    fmt.Printf(\"Calls = %d. NonDSD = %d. Non1Step = %d.\\n\", m_Calls, m_NonDsd, m_Non1Step);\n    m_Calls = m_NonDsd = m_Non1Step = 0;\n}"
+    },
+    {
+      "Name": "Dsm_ManDeriveGia",
+      "Start": 16942,
+      "End": 19358,
+      "BodyStart": 16996,
+      "Original": "void * Dsm_ManDeriveGia( void * pGia, int fUseMuxes )\n{\n    Gia_Man_t * p = (Gia_Man_t *)pGia;\n    Gia_Man_t * pNew, * pTemp;\n    Vec_Int_t * vCover, * vLeaves;\n    Gia_Obj_t * pObj; \n    int k, i, iLut, iVar;\n    word * pTruth;\n    assert( Gia_ManHasMapping(p) );   \n    // create new manager\n    pNew = Gia_ManStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003evLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    if ( fUseMuxes )\n        pNew-\u003epMuxes = ABC_CALLOC( unsigned, pNew-\u003enObjsAlloc );\n    // map primary inputs\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    // iterate through nodes used in the mapping\n    vLeaves = Vec_IntAlloc( 16 );\n    vCover  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Gia_ManHashStart( pNew );\n    Gia_ObjComputeTruthTableStart( p, Gia_ManLutSizeMax(p) );\n    Gia_ManForEachAnd( p, pObj, iLut )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            continue;\n        }\n        if ( !Gia_ObjIsLut(p, iLut) )\n            continue;\n        // collect leaves\n        Vec_IntClear( vLeaves );\n        Gia_LutForEachFanin( p, iLut, iVar, k )\n            Vec_IntPush( vLeaves, iVar );\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, iLut), vLeaves );\n        // collect incoming literals\n        Vec_IntClear( vLeaves );\n        Gia_LutForEachFanin( p, iLut, iVar, k )\n            Vec_IntPush( vLeaves, Gia_ManObj(p, iVar)-\u003eValue );\n        Gia_ManObj(p, iLut)-\u003eValue = Dsm_ManTruthToGia( pNew, pTruth, vLeaves, vCover );\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vCover );\n/*\n    Gia_ManForEachAnd( pNew, pObj, i )\n    {\n        int iLev  = Gia_ObjLevelId(pNew, i);\n        int iLev0 = Gia_ObjLevelId(pNew, Gia_ObjFaninId0(pObj, i));\n        int iLev1 = Gia_ObjLevelId(pNew, Gia_ObjFaninId1(pObj, i));\n        assert( iLev == 1 + Abc_MaxInt(iLev0, iLev1) );\n    }\n*/\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Dsm_ManDeriveGia(pGia any, fUseMuxes int32) any {\n    var p *Gia_Man_t  = (Gia_Man_t *)pGia;\n    var pNew, pTemp *Gia_Man_t;\n    var vCover, vLeaves *Vec_Int_t;\n    var pObj *Gia_Obj_t; \n    var k, i, iLut, iVar int32;\n    var pTruth *word;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");   \n    // create new manager\n    pNew = Gia_ManStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.vLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    if fUseMuxes != 0 {\n        // inlining of macro ABC_CALLOC\n        pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned))); }\n    // map primary inputs\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // iterate through nodes used in the mapping\n    vLeaves = Vec_IntAlloc( 16 );\n    vCover  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Gia_ManHashStart( pNew );\n    Gia_ObjComputeTruthTableStart( p, Gia_ManLutSizeMax(p) );\n    // inlining of macro Gia_ManForEachAnd\n    for  iLut = 0; (iLut \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, iLut)); iLut++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            continue;\n        }\n        if !Gia_ObjIsLut(p, iLut) {\n            continue; }\n        // collect leaves\n        Vec_IntClear( vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iVar = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            Vec_IntPush( vLeaves, iVar );\n        }\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, iLut), vLeaves );\n        // collect incoming literals\n        Vec_IntClear( vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iVar = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            Vec_IntPush( vLeaves, Gia_ManObj(p, iVar).Value );\n        }\n        Gia_ManObj(p, iLut).Value = Dsm_ManTruthToGia( pNew, pTruth, vLeaves, vCover );\n    }\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vCover );\n/*\n    Gia_ManForEachAnd( pNew, pObj, i )\n    {\n        int iLev  = Gia_ObjLevelId(pNew, i);\n        int iLev0 = Gia_ObjLevelId(pNew, Gia_ObjFaninId0(pObj, i));\n        int iLev1 = Gia_ObjLevelId(pNew, Gia_ObjFaninId1(pObj, i));\n        assert( iLev == 1 + Abc_MaxInt(iLev0, iLev1) );\n    }\n*/\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::mechanical::sizeof::17759",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17491,
+      "End": 17491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::pointer-cast::6394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6394,
+      "End": 6406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::pointer-cast::13940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13873,
+      "End": 13885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::pointer-cast::15125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15058,
+      "End": 15071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::pointer-cast::17191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17018,
+      "End": 17031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::pointer-cast::17711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17491,
+      "End": 17491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdToGiaCompose_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdToGiaCompose_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1551,
+      "End": 2395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::ternary::Dau_DsdToGia2_rec",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DsdToGia2_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2663,
+      "End": 6549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdToGia2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdToGia2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2663,
+      "End": 6549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdToGia2",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdToGia2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6550,
+      "End": 6897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdAddToArray",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdAddToArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7165,
+      "End": 7540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdBalance",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdBalance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7541,
+      "End": 9198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::ternary::Dau_DsdToGia_rec",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DsdToGia_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9199,
+      "End": 14285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdToGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdToGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9199,
+      "End": 14285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dau_DsdToGia",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14286,
+      "End": 14631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::void-pointer::Dsm_ManTruthToGia",
+      "Category": "void-pointer-review",
+      "Symbol": "Dsm_ManTruthToGia",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 14893,
+      "End": 16235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dsm_ManTruthToGia",
+      "Category": "semantic-review",
+      "Symbol": "Dsm_ManTruthToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14893,
+      "End": 16235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dsm_ManReportStats",
+      "Category": "semantic-review",
+      "Symbol": "Dsm_ManReportStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16497,
+      "End": 16657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::void-pointer::Dsm_ManDeriveGia",
+      "Category": "void-pointer-review",
+      "Symbol": "Dsm_ManDeriveGia",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 16942,
+      "End": 19358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::Dsm_ManDeriveGia",
+      "Category": "semantic-review",
+      "Symbol": "Dsm_ManDeriveGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16942,
+      "End": 19358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauGia.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19607
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [dauGia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Coverting DSD into GIA.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauGia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );\n\n\nconst DAU_DSD_MAX_VAR = 12\n\nvar m_Calls int32;\nvar m_NonDsd int32;\nvar m_Non1Step int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Derives GIA for the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdToGiaCompose_rec(pGia *Gia_Man_t, Func word, pFanins *int32, nVars int32) int32 {\n    var t0, t1 int32;\n    if Func == 0 {\n        return 0; }\n    if Func == ~(word)0 {\n        return 1; }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    if nVars--; nVars == 0 {\n        assert(Func == s_Truths6[0] || Func == s_Truths6Neg[0], \"Func == s_Truths6[0] || Func == s_Truths6Neg[0]\");\n        return Abc_LitNotCond( pFanins[0], int32((Func == s_Truths6Neg[0])) );\n    }\n    if !Abc_Tt6HasVar(Func, nVars) {\n        return Dau_DsdToGiaCompose_rec( pGia, Func, pFanins, nVars ); }\n    t0 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor0(Func, nVars), pFanins, nVars );\n    t1 = Dau_DsdToGiaCompose_rec( pGia, Abc_Tt6Cofactor1(Func, nVars), pFanins, nVars );\n    if pGia.pMuxes {\n        return Gia_ManHashMuxReal( pGia, pFanins[nVars], t1, t0 );\n    } else {\n        return Gia_ManHashMux( pGia, pFanins[nVars], t1, t0 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA for the DSD formula.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdToGia2_rec(pGia *Gia_Man_t, pStr string, p *string, pMatches *int32, pLits *int32, vCover *Vec_Int_t) int32 {\n    var fCompl int32;\n    if **p == '!' {\n        (*p)++, fCompl = 1; }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR { // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl ); }\n    if **p == '(' { // and/or\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var Res int32 = 1;\n        var Lit int32;\n        assert(**p == '(' \u0026\u0026 *q == ')', \"**p == '(' \u0026\u0026 *q == ')'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Res = Gia_ManHashAnd( pGia, Res, Lit );\n        }\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if **p == '[' { // xor\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var Res, Lit int32;\n        assert(**p == '[' \u0026\u0026 *q == ']', \"**p == '[' \u0026\u0026 *q == ']'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Lit = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            if pGia.pMuxes {\n                Res = Gia_ManHashXorReal( pGia, Res, Lit );\n            } else {\n                Res = Gia_ManHashXor( pGia, Res, Lit ); }\n        }\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if **p == '\u003c' { // mux\n    \n        var nVars int32;\n        var Temp [3]int32;\n        var pTemp *int32 = Temp;\n        var Res int32;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var pLits2 *int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if *(q+1) == '{' {\n            var q2 string;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert(**p == '{' \u0026\u0026 *q2 == '}', \"**p == '{' \u0026\u0026 *q2 == '}'\");\n            for  nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++  {\n                Fanins[nVars] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            }\n            assert(*p == q2, \"*p == q2\");\n            pLits2 = Fanins;\n        \n        } else {\n            pLits2 = pLits; }\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '\u003c' \u0026\u0026 *q == '\u003e', \"**p == '\u003c' \u0026\u0026 *q == '\u003e'\");\n        // verify internal variables\n        if nVars != 0 {\n            for  ; pOld \u003c q; pOld++  {\n                if *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' {\n                    assert(*pOld - 'a' \u003c nVars, \"*pOld - 'a' \u003c nVars\"); }\n            } }\n        // derive MUX components\n        for  (*p)++; *p \u003c q; (*p)++  {\n            *pTemp++ = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        }\n        assert(pTemp == Temp + 3, \"pTemp == Temp + 3\");\n        assert(*p == q, \"*p == q\");\n        if *(q+1) == '{' { // and/or\n        \n            var q string  = pStr + pMatches[ ++(*p) - pStr ];\n            assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n            *p = q;\n        }\n        if pGia.pMuxes {\n            Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n        } else {\n            Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] ); }\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') {\n        var vLeaves Vec_Int_t;  var q string;\n        var pFunc [DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1]word;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var Res int32; \n        var i int32;\n        var nVars int32 = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n        for  i = 0, (*p)++; *p \u003c q; (*p)++, i++  {\n            Fanins[i] = Dau_DsdToGia2_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        }\n        assert(i == nVars, \"i == nVars\");\n        assert(*p == q, \"*p == q\");\n//        Res = Dau_DsdToGia2Compose_rec( pGia, Func, Fanins, nVars );\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;        \n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, 1 );\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Dau_DsdToGia2(pGia *Gia_Man_t, p string, pLits *int32, vCover *Vec_Int_t) int32 {\n    var Res int32;\n    if *p == '0' \u0026\u0026 *(p+1) == 0 {\n        Res = 0;\n    } else if *p == '1' \u0026\u0026 *(p+1) == 0 {\n        Res = 1;\n    } else {\n        Res = Dau_DsdToGia2_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover ); }\n    assert(*++p == 0, \"*++p == 0\");\n    return Res;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA for the DSD formula.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdAddToArray(pGia *Gia_Man_t, pFans *int32, nFans int32, iFan int32) {\n    var i int32;\n    pFans[nFans] = iFan;\n    if nFans == 0 {\n        return; }\n    for  i = nFans; i \u003e 0; i--  {\n        if Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i])) \u003c= Gia_ObjLevelId(pGia, Abc_Lit2Var(pFans[i-1])) {\n            return; }\n        // inlining of macro ABC_SWAP\n        { var t int32  = pFans[i]; pFans[i] = pFans[i-1]; pFans[i-1] = t; };\n    }\n}\nfunc Dau_DsdBalance(pGia *Gia_Man_t, pFans *int32, nFans int32, fAnd int32) int32 {\n    var pObj *Gia_Obj_t;\n    var iFan0, iFan1, iFan int32;\n    if nFans == 1 {\n        return pFans[0]; }\n    assert(nFans \u003e 1, \"nFans \u003e 1\");\n    iFan0 = pFans[--nFans];\n    iFan1 = pFans[--nFans];\n    if Vec_IntSize(\u0026pGia.vHTable) == 0 {\n        if fAnd != 0 {\n            iFan = Gia_ManAppendAnd2( pGia, iFan0, iFan1 );\n        } else if pGia.pMuxes {\n            var fCompl int32  = Abc_LitIsCompl(iFan0) ^ Abc_LitIsCompl(iFan1);\n            iFan = Gia_ManAppendXorReal( pGia, Abc_LitRegular(iFan0), Abc_LitRegular(iFan1) );\n            iFan = Abc_LitNotCond( iFan, fCompl );\n        \n        } else { \n            iFan = Gia_ManAppendXor2( pGia, iFan0, iFan1 ); }\n    \n    } else {\n        if fAnd != 0 {\n            iFan = Gia_ManHashAnd( pGia, iFan0, iFan1 );\n        } else if pGia.pMuxes {\n            iFan = Gia_ManHashXorReal( pGia, iFan0, iFan1 );\n        } else { \n            iFan = Gia_ManHashXor( pGia, iFan0, iFan1 ); }\n    }\n    pObj = Gia_ManObj(pGia, Abc_Lit2Var(iFan));\n    if Gia_ObjIsAnd(pObj) {\n        if fAnd != 0 {\n            Gia_ObjSetAndLevel( pGia, pObj );\n        } else if pGia.pMuxes {\n            Gia_ObjSetXorLevel( pGia, pObj );\n        } else {\n            if Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) ); }\n            if Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) {\n                Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) ); }\n            Gia_ObjSetAndLevel( pGia, pObj );\n        }\n    }\n    Dau_DsdAddToArray( pGia, pFans, nFans++, iFan );\n    return Dau_DsdBalance( pGia, pFans, nFans, fAnd );\n}\nfunc Dau_DsdToGia_rec(pGia *Gia_Man_t, pStr string, p *string, pMatches *int32, pLits *int32, vCover *Vec_Int_t) int32 {\n    var fCompl int32;\n    if **p == '!' {\n        (*p)++, fCompl = 1; }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c 'a' + DAU_DSD_MAX_VAR { // var\n        return Abc_LitNotCond( pLits[**p - 'a'], fCompl ); }\n    if **p == '(' { // and/or\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var pFans [DAU_DSD_MAX_VAR]int32;\n        var nFans int32;\n        var Fan int32;\n        assert(**p == '(' \u0026\u0026 *q == ')', \"**p == '(' \u0026\u0026 *q == ')'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 1 );\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if **p == '[' { // xor\n    \n        var q string  = pStr + pMatches[ *p - pStr ];\n        var pFans [DAU_DSD_MAX_VAR]int32;\n        var nFans int32;\n        var Fan int32;\n        assert(**p == '[' \u0026\u0026 *q == ']', \"**p == '[' \u0026\u0026 *q == ']'\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Fan = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            Dau_DsdAddToArray( pGia, pFans, nFans++, Fan );\n        }\n        Fan = Dau_DsdBalance( pGia, pFans, nFans, 0 );\n        assert(*p == q, \"*p == q\");\n        return Abc_LitNotCond( Fan, fCompl );\n    }\n    if **p == '\u003c' { // mux\n    \n        var pObj *Gia_Obj_t;\n        var nVars int32;\n        var Temp [3]int32;\n        var pTemp *int32 = Temp;\n        var Res int32;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var pLits2 *int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        // read fanins\n        if *(q+1) == '{' {\n            var q2 string;\n            *p = q+1;\n            q2 = pStr + pMatches[ *p - pStr ];\n            assert(**p == '{' \u0026\u0026 *q2 == '}', \"**p == '{' \u0026\u0026 *q2 == '}'\");\n            for  nVars = 0, (*p)++; *p \u003c q2; (*p)++, nVars++  {\n                Fanins[nVars] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n            }\n            assert(*p == q2, \"*p == q2\");\n            pLits2 = Fanins;\n        \n        } else {\n            pLits2 = pLits; }\n        // read MUX\n        *p = pOld;\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '\u003c' \u0026\u0026 *q == '\u003e', \"**p == '\u003c' \u0026\u0026 *q == '\u003e'\");\n        // verify internal variables\n        if nVars != 0 {\n            for  ; pOld \u003c q; pOld++  {\n                if *pOld \u003e= 'a' \u0026\u0026 *pOld \u003c= 'z' {\n                    assert(*pOld - 'a' \u003c nVars, \"*pOld - 'a' \u003c nVars\"); }\n            } }\n        // derive MUX components\n        for  (*p)++; *p \u003c q; (*p)++  {\n            *pTemp++ = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits2, vCover );\n        }\n        assert(pTemp == Temp + 3, \"pTemp == Temp + 3\");\n        assert(*p == q, \"*p == q\");\n        if *(q+1) == '{' { // and/or\n        \n            var q string  = pStr + pMatches[ ++(*p) - pStr ];\n            assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n            *p = q;\n        }\n        if Vec_IntSize(\u0026pGia.vHTable) == 0 {\n            if pGia.pMuxes {\n                Res = Gia_ManAppendMux( pGia, Temp[0], Temp[1], Temp[2] );\n            } else {\n                Res = Gia_ManAppendMux2( pGia, Temp[0], Temp[1], Temp[2] ); }\n        \n        } else {\n            if pGia.pMuxes {\n                Res = Gia_ManHashMuxReal( pGia, Temp[0], Temp[1], Temp[2] );\n            } else {\n                Res = Gia_ManHashMux( pGia, Temp[0], Temp[1], Temp[2] ); }\n        }\n        pObj = Gia_ManObj(pGia, Abc_Lit2Var(Res));\n        if Gia_ObjIsAnd(pObj) {\n            if pGia.pMuxes \u0026\u0026 Vec_IntSize(\u0026pGia.vHTable) {\n                Gia_ObjSetMuxLevel( pGia, pObj );\n            } else {\n                if Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin0(pObj) ); }\n                if Gia_ObjIsAnd(Gia_ObjFanin1(pObj)) {\n                    Gia_ObjSetAndLevel( pGia, Gia_ObjFanin1(pObj) ); }\n                Gia_ObjSetAndLevel( pGia, pObj );\n            }\n        }\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    if (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') {\n        var vLeaves Vec_Int_t;  var q string;\n        var pFunc [DAU_DSD_MAX_VAR \u003e 6 ? (1 \u003c\u003c (DAU_DSD_MAX_VAR-6)) : 1]word;\n        var Fanins [DAU_DSD_MAX_VAR]int32;\n        var Res int32;\n        var nObjOld int32; \n        var i int32;\n        var nVars int32 = Abc_TtReadHex( pFunc, *p );\n        *p += Abc_TtHexDigitNum( nVars );\n        q = pStr + pMatches[ *p - pStr ];\n        assert(**p == '{' \u0026\u0026 *q == '}', \"**p == '{' \u0026\u0026 *q == '}'\");\n        for  i = 0, (*p)++; *p \u003c q; (*p)++, i++  {\n            Fanins[i] = Dau_DsdToGia_rec( pGia, pStr, p, pMatches, pLits, vCover );\n        }\n        assert(i == nVars, \"i == nVars\");\n        assert(*p == q, \"*p == q\");\n        vLeaves.nCap = nVars;\n        vLeaves.nSize = nVars;\n        vLeaves.pArray = Fanins;      \n        nObjOld = Gia_ManObjNum(pGia);\n        Res = Kit_TruthToGia( pGia, (unsigned *)pFunc, nVars, vCover, \u0026vLeaves, Vec_IntSize(\u0026pGia.vHTable) != 0 );\n//        assert( nVars \u003c= 6 );\n//        Res = Dau_DsdToGiaCompose_rec( pGia, pFunc[0], Fanins, nVars );\n        for  i = nObjOld; i \u003c Gia_ManObjNum(pGia); i++  {\n            Gia_ObjSetGateLevel( pGia, Gia_ManObj(pGia, i) );\n        }\n        m_Non1Step++;\n        return Abc_LitNotCond( Res, fCompl );\n    }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Dau_DsdToGia(pGia *Gia_Man_t, p string, pLits *int32, vCover *Vec_Int_t) int32 {\n    var Res int32;\n    if *p == '0' \u0026\u0026 *(p+1) == 0 {\n        Res = 0;\n    } else if *p == '1' \u0026\u0026 *(p+1) == 0 {\n        Res = 1;\n    } else {\n        Res = Dau_DsdToGia_rec( pGia, p, \u0026p, Dau_DsdComputeMatches(p), pLits, vCover ); }\n    assert(*++p == 0, \"*++p == 0\");\n    return Res;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Convert TT to GIA via DSD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsm_ManTruthToGia(p any, pTruth *word, vLeaves *Vec_Int_t, vCover *Vec_Int_t) int32 {\n    var fUseMuxes int32;\n    var fDelayBalance int32  = 1;\n    var pGia *Gia_Man_t  = (Gia_Man_t *)p;\n    var nSizeNonDec int32;\n    var pDsd [1000]byte;\n    var pTruthCopy [DAU_MAX_WORD]word;\n    Abc_TtCopy( pTruthCopy, pTruth, Abc_TtWordNum(Vec_IntSize(vLeaves)), 0 );\n    m_Calls++;\n    assert(Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR, \"Vec_IntSize(vLeaves) \u003c= DAU_DSD_MAX_VAR\");\n    if Vec_IntSize(vLeaves) == 0 {\n        return int32((pTruth[0] \u0026 1)); }\n    if Vec_IntSize(vLeaves) == 1 {\n        return Abc_LitNotCond( Vec_IntEntry(vLeaves, 0), int32((pTruth[0] \u0026 1)) ); }\n    // collect delay information\n    if (fDelayBalance != 0) \u0026\u0026 (fUseMuxes != 0) {\n        var i int32;\n        var iLit int32;\n        var pVarLevels [DAU_DSD_MAX_VAR]int32;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n            pVarLevels[i] = Gia_ObjLevelId( pGia, Abc_Lit2Var(iLit) );\n        }\n        nSizeNonDec = Dau_DsdDecomposeLevel( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd, pVarLevels );\n    \n    } else {\n        nSizeNonDec = Dau_DsdDecompose( pTruthCopy, Vec_IntSize(vLeaves), fUseMuxes, 1, pDsd ); }\n    if nSizeNonDec != 0 {\n        m_NonDsd++; }\n//    printf( \"%s\\n\", pDsd );\n    if (fDelayBalance != 0) \u0026\u0026 pGia.vLevels {\n        return Dau_DsdToGia( pGia, pDsd, Vec_IntArray(vLeaves), vCover );\n    } else {\n        return Dau_DsdToGia2( pGia, pDsd, Vec_IntArray(vLeaves), vCover ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Convert TT to GIA via DSD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsm_ManReportStats() {\n    fmt.Printf(\"Calls = %d. NonDSD = %d. Non1Step = %d.\\n\", m_Calls, m_NonDsd, m_Non1Step);\n    m_Calls = m_NonDsd = m_Non1Step = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs structural hashing on the LUT functions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsm_ManDeriveGia(pGia any, fUseMuxes int32) any {\n    var p *Gia_Man_t  = (Gia_Man_t *)pGia;\n    var pNew, pTemp *Gia_Man_t;\n    var vCover, vLeaves *Vec_Int_t;\n    var pObj *Gia_Obj_t; \n    var k, i, iLut, iVar int32;\n    var pTruth *word;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");   \n    // create new manager\n    pNew = Gia_ManStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.vLevels = Vec_IntStart( 6*Gia_ManObjNum(p)/5 + 100 );\n    if fUseMuxes != 0 {\n        // inlining of macro ABC_CALLOC\n        pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned))); }\n    // map primary inputs\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // iterate through nodes used in the mapping\n    vLeaves = Vec_IntAlloc( 16 );\n    vCover  = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Gia_ManHashStart( pNew );\n    Gia_ObjComputeTruthTableStart( p, Gia_ManLutSizeMax(p) );\n    // inlining of macro Gia_ManForEachAnd\n    for  iLut = 0; (iLut \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, iLut)); iLut++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n            continue;\n        }\n        if !Gia_ObjIsLut(p, iLut) {\n            continue; }\n        // collect leaves\n        Vec_IntClear( vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iVar = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            Vec_IntPush( vLeaves, iVar );\n        }\n        pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, iLut), vLeaves );\n        // collect incoming literals\n        Vec_IntClear( vLeaves );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iVar = Gia_ObjLutFanins(p,iLut)[k]),1); k++  {\n            Vec_IntPush( vLeaves, Gia_ManObj(p, iVar).Value );\n        }\n        Gia_ManObj(p, iLut).Value = Dsm_ManTruthToGia( pNew, pTruth, vLeaves, vCover );\n    }\n    }\n    Gia_ObjComputeTruthTableStop( p );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vCover );\n/*\n    Gia_ManForEachAnd( pNew, pObj, i )\n    {\n        int iLev  = Gia_ObjLevelId(pNew, i);\n        int iLev0 = Gia_ObjLevelId(pNew, Gia_ObjFaninId0(pObj, i));\n        int iLev1 = Gia_ObjLevelId(pNew, Gia_ObjFaninId1(pObj, i));\n        assert( iLev == 1 + Abc_MaxInt(iLev0, iLev1) );\n    }\n*/\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

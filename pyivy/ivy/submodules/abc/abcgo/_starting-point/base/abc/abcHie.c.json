@@ -1,0 +1,1040 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c",
+  "SHA256": "7b2844b7b8593527e1d48fe01c692a018259884a9d53d762afa3642bc3618e73",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NtkBoxNum(pNtk) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 80,
+        "Column": 9,
+        "ByteOffset": 2770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Suffix, \"_%s_%d\", Abc_NtkName(pNtk), *pCounter ); }"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 108,
+        "Column": 12,
+        "ByteOffset": 4392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 6770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 6838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 8652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 9921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 10124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 10779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"EXDC is not transformed.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 10863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 243,
+        "Column": 18,
+        "ByteOffset": 10872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 11828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NtkBoxNum(pNtk) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 12037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 12400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 297,
+        "Column": 9,
+        "ByteOffset": 12874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"(%d)\", *pCounter );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 329,
+        "Column": 12,
+        "ByteOffset": 14607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 9,
+        "ByteOffset": 17058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 9,
+        "ByteOffset": 17126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 415,
+        "Column": 12,
+        "ByteOffset": 18893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp( Abc_NtkName(*p1), Abc_NtkName(*p2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 447,
+        "Column": 5,
+        "ByteOffset": 19834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 13,
+        "ByteOffset": 20739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 9,
+        "ByteOffset": 20922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"MODULE  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 469,
+        "Column": 9,
+        "ByteOffset": 20952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%-30s : \", Abc_NtkName(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 470,
+        "Column": 9,
+        "ByteOffset": 21003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PI=%6d \", Abc_NtkPiNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 21054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PO=%6d \", Abc_NtkPoNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 21105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BB=%6d \", Abc_NtkBoxNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 473,
+        "Column": 9,
+        "ByteOffset": 21157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ND=%6d \", Abc_NtkNodeNum(pModel) ); // sans constants"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 21228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Lev=%5d \", Abc_NtkLevel(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 9,
+        "ByteOffset": 21280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 17,
+        "ByteOffset": 21487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%15d : %s\\n\", Num, Abc_NtkName((Abc_Ntk_t *)Vec_PtrEntry(vMods, k)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 9,
+        "ByteOffset": 21846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"MODULE   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 9,
+        "ByteOffset": 21877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%-30s : \", Abc_NtkName(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 9,
+        "ByteOffset": 21928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PI=%6d \", Abc_NtkPiNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 21979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PO=%6d \", Abc_NtkPoNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 9,
+        "ByteOffset": 22030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BB=%6d \", Abc_NtkBoxNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 491,
+        "Column": 9,
+        "ByteOffset": 22082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ND=%6d \", Abc_NtkNodeNum(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 492,
+        "Column": 9,
+        "ByteOffset": 22135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Lev=%5d \", Abc_NtkLevel(pModel) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 493,
+        "Column": 9,
+        "ByteOffset": 22187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 516,
+        "Column": 5,
+        "ByteOffset": 22775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 546,
+        "Column": 5,
+        "ByteOffset": 24155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 552,
+        "Column": 9,
+        "ByteOffset": 24384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 9,
+        "ByteOffset": 25039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"EXDC is not transformed.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 25123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 569,
+        "Column": 18,
+        "ByteOffset": 25132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 594,
+        "Column": 5,
+        "ByteOffset": 25862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 25900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkWhiteboxNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 652,
+        "Column": 9,
+        "ByteOffset": 29395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pTerm) \u003c= 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 9,
+        "ByteOffset": 29884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkConvertBlackboxes(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 666,
+        "Column": 18,
+        "ByteOffset": 29893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkConvertBlackboxes(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 5,
+        "ByteOffset": 31088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtkH) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 31127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkWhiteboxNum(pNtkH) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 698,
+        "Column": 5,
+        "ByteOffset": 31173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkBlackboxNum(pNtkH) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 700,
+        "Column": 5,
+        "ByteOffset": 31219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtkL) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 701,
+        "Column": 5,
+        "ByteOffset": 31258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkWhiteboxNum(pNtkL) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 702,
+        "Column": 5,
+        "ByteOffset": 31304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkBlackboxNum(pNtkL) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 718,
+        "Column": 13,
+        "ByteOffset": 32044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the PI %s.\\n\", Abc_ObjName(pNetH) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 723,
+        "Column": 13,
+        "ByteOffset": 32265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Error in Abc_NtkInsertNewLogic(): Primary input %s is repeated twice.\\n\", Abc_ObjName(pNetH) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 17,
+        "ByteOffset": 33377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the inpout %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 747,
+        "Column": 17,
+        "ByteOffset": 33657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Error in Abc_NtkInsertNewLogic(): Box output %s is repeated twice.\\n\", Abc_ObjName(pNetH) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 762,
+        "Column": 13,
+        "ByteOffset": 34363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Error in Abc_NtkInsertNewLogic(): There is no PO corresponding to the PO %s.\\n\", Abc_ObjName(pNetH) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 779,
+        "Column": 17,
+        "ByteOffset": 35398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"There is no PO corresponding to the input %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 813,
+        "Column": 5,
+        "ByteOffset": 37041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 819,
+        "Column": 9,
+        "ByteOffset": 37249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkInsertNewLogic(): Network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 819,
+        "Column": 18,
+        "ByteOffset": 37258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkInsertNewLogic(): Network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkFlattenLogicHierarchy2_rec",
+      "Start": 1412,
+      "End": 6159,
+      "BodyStart": 1508,
+      "Original": "void Abc_NtkFlattenLogicHierarchy2_rec( Abc_Ntk_t * pNtkNew, Abc_Ntk_t * pNtk, int * pCounter )\n{\n    char Suffix[2000] = {0};\n    Abc_Ntk_t * pNtkModel;\n    Abc_Obj_t * pObj, * pTerm, * pNet, * pFanin;\n    int i, k;\n\n    // process the blackbox\n    if ( Abc_NtkHasBlackbox(pNtk) )\n    {\n        // duplicate the blackbox\n        assert( Abc_NtkBoxNum(pNtk) == 1 );\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj-\u003epCopy-\u003epData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert( Abc_ObjFaninNum(pObj-\u003epCopy) == Abc_NtkPiNum(pNtk) );\n        Abc_NtkForEachPi( pNtk, pTerm, i )\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj-\u003epCopy,i), Abc_ObjFanout0(pTerm)-\u003epCopy );\n\n        // connect blackbox fanouts to the PO nets\n        assert( Abc_ObjFanoutNum(pObj-\u003epCopy) == Abc_NtkPoNum(pNtk) );\n        Abc_NtkForEachPo( pNtk, pTerm, i )\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm)-\u003epCopy, Abc_ObjFanout(pObj-\u003epCopy,i) );\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if ( *pCounter )\n        sprintf( Suffix, \"_%s_%d\", Abc_NtkName(pNtk), *pCounter );\n\n    // duplicate nets of all boxes, including latches\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n        {\n            pNet = Abc_ObjFanin0(pTerm);\n            if ( pNet-\u003epCopy )\n                continue;\n            pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n        {\n            pNet = Abc_ObjFanout0(pTerm);\n            if ( pNet-\u003epCopy )\n                continue;\n            pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        Abc_NodeSetTravIdCurrent( pTerm );\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n    {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if ( strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) )\n            continue;\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet-\u003epCopy-\u003epNtk), pNet-\u003epCopy );\n        if ( Nm_ManFindNameById(pNet-\u003epCopy-\u003epNtk-\u003epManName, pNet-\u003epCopy-\u003eId) )\n            Nm_ManDeleteIdName(pNet-\u003epCopy-\u003epNtk-\u003epManName, pNet-\u003epCopy-\u003eId);\n        Abc_ObjAssignName( pNet-\u003epCopy, Abc_ObjName(pNet), Suffix );\n    }\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        Abc_NodeSetTravIdCurrent( pObj );\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n            Abc_NodeSetTravIdCurrent( pTerm );\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n            Abc_NodeSetTravIdCurrent( pTerm );\n    }\n\n    // duplicate objects that do not have prototypes yet\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        if ( pObj-\u003epCopy )\n            continue;\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n\n    // connect objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n                    Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n\n    // call recursively\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        pNtkModel = (Abc_Ntk_t *)pObj-\u003epData;\n        // check the match between the number of actual and formal parameters\n        assert( Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel) );\n        assert( Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel) );\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) )-\u003epCopy = Abc_ObjFanin0(pTerm)-\u003epCopy;\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) )-\u003epCopy = Abc_ObjFanout0(pTerm)-\u003epCopy;\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtkModel, pCounter );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if ( Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) )\n    {\n        if ( Abc_NtkMvVar( pNtkNew ) == NULL )\n            Abc_NtkStartMvVars( pNtkNew );\n        Abc_NtkForEachNet( pNtk, pObj, i )\n            Abc_NtkSetMvVarValues( pObj-\u003epCopy, Abc_ObjMvVarNum(pObj) );\n    }\n}",
+      "Draft": "func Abc_NtkFlattenLogicHierarchy2_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32) {\n    var Suffix string // was [2000]byte in C\n\n    var pNtkModel *Abc_Ntk_t;\n    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    // process the blackbox\n    if Abc_NtkHasBlackbox(pNtk) {\n        // duplicate the blackbox\n        assert(Abc_NtkBoxNum(pNtk) == 1, \"Abc_NtkBoxNum(pNtk) == 1\");\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj.pCopy.pData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), \"Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );\n        }\n\n        // connect blackbox fanouts to the PO nets\n        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), \"Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );\n        }\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if *pCounter {\n        Suffix = fmt.Sprintf(\"_%s_%d\", Abc_NtkName(pNtk), *pCounter); }\n\n    // duplicate nets of all boxes, including latches\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {\n            continue; }\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );\n        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {\n            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }\n        Abc_ObjAssignName( pNet.pCopy, Abc_ObjName(pNet), Suffix );\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n    }\n\n    // duplicate objects that do not have prototypes yet\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if pObj.pCopy {\n            continue; }\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if !Abc_NodeIsTravIdCurrent(pFanin) {\n                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n            } }\n    }\n\n    // call recursively\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkModel = (Abc_Ntk_t *)pObj.pData;\n        // check the match between the number of actual and formal parameters\n        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), \"Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)\");\n        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), \"Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)\");\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;\n        }\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtkModel, pCounter );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) {\n        if Abc_NtkMvVar( pNtkNew ) == nil {\n            Abc_NtkStartMvVars( pNtkNew ); }\n        // inlining of macro Abc_NtkForEachNet\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {\n            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenLogicHierarchy2",
+      "Start": 6439,
+      "End": 8718,
+      "BodyStart": 6501,
+      "Original": "Abc_Ntk_t * Abc_NtkFlattenLogicHierarchy2( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pTerm, * pNet;\n    int i, Counter;\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n\n    assert( Abc_NtkIsNetlist(pNtk) );\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk-\u003entkType, pNtk-\u003entkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew-\u003epName = Abc_UtilStrsav(pNtk-\u003epName);\n    pNtkNew-\u003epSpec = Abc_UtilStrsav(pNtk-\u003epSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet-\u003epCopy, pTerm-\u003epCopy );\n    }\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm-\u003epCopy, pNet-\u003epCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    Counter = -1;\n    Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtk, \u0026Counter );\n    printf( \"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", \n        Counter, Abc_NtkBlackboxNum(pNtkNew) );\n\n    if ( pNtk-\u003epDesign )\n    {\n        // pass on the design\n        assert( Vec_PtrEntry(pNtk-\u003epDesign-\u003evTops, 0) == pNtk );\n        pNtkNew-\u003epDesign = Abc_DesDupBlackboxes( pNtk-\u003epDesign, pNtkNew );\n        // update the pointers\n        Abc_NtkForEachBlackbox( pNtkNew, pTerm, i )\n            pTerm-\u003epData = ((Abc_Ntk_t *)pTerm-\u003epData)-\u003epCopy;\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        printf( \"EXDC is not transformed.\\n\" );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFlattenLogicHierarchy2(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pTerm, pNet *Abc_Obj_t;\n    var i, Counter int32;\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNtkNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    Counter = -1;\n    Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtk, \u0026Counter );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", Counter, Abc_NtkBlackboxNum(pNtkNew));\n\n    if pNtk.pDesign {\n        // pass on the design\n        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, \"Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk\");\n        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );\n        // update the pointers\n        // inlining of macro Abc_NtkForEachBlackbox\n        for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vBoxes)) \u0026\u0026 (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {\n            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }\n        }\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        fmt.Printf(\"EXDC is not transformed.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenLogicHierarchy_rec",
+      "Start": 9133,
+      "End": 14286,
+      "BodyStart": 9247,
+      "Original": "void Abc_NtkFlattenLogicHierarchy_rec( Abc_Ntk_t * pNtkNew, Abc_Ntk_t * pNtk, int * pCounter, Vec_Str_t * vPref )\n{\n    Abc_Ntk_t * pNtkModel;\n    Abc_Obj_t * pObj, * pTerm, * pNet, * pFanin;\n    int i, k, Length;\n\n    // process the blackbox\n    if ( Abc_NtkHasBlackbox(pNtk) )\n    {\n        //printf( \"Flatting black box \\\"%s\\\".\\n\", pNtk-\u003epName );\n        // duplicate the blackbox\n        assert( Abc_NtkBoxNum(pNtk) == 1 );\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj-\u003epCopy-\u003epData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert( Abc_ObjFaninNum(pObj-\u003epCopy) == Abc_NtkPiNum(pNtk) );\n        Abc_NtkForEachPi( pNtk, pTerm, i )\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj-\u003epCopy,i), Abc_ObjFanout0(pTerm)-\u003epCopy );\n\n        // connect blackbox fanouts to the PO nets\n        assert( Abc_ObjFanoutNum(pObj-\u003epCopy) == Abc_NtkPoNum(pNtk) );\n        Abc_NtkForEachPo( pNtk, pTerm, i )\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm)-\u003epCopy, Abc_ObjFanout(pObj-\u003epCopy,i) );\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if ( *pCounter )\n    {\n        char Buffer[20];\n        sprintf( Buffer, \"(%d)\", *pCounter );\n        Vec_StrPrintStr( vPref, Buffer );\n    }\n    Vec_StrPush( vPref, '|' );\n    Vec_StrPush( vPref, 0 );\n\n    // duplicate nets of all boxes, including latches\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n        {\n            pNet = Abc_ObjFanin0(pTerm);\n            if ( pNet-\u003epCopy )\n                continue;\n            pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n        {\n            pNet = Abc_ObjFanout0(pTerm);\n            if ( pNet-\u003epCopy )\n                continue;\n            pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        Abc_NodeSetTravIdCurrent( pTerm );\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n    {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if ( strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) )\n            continue;\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet-\u003epCopy-\u003epNtk), pNet-\u003epCopy );\n        if ( Nm_ManFindNameById(pNet-\u003epCopy-\u003epNtk-\u003epManName, pNet-\u003epCopy-\u003eId) )\n            Nm_ManDeleteIdName(pNet-\u003epCopy-\u003epNtk-\u003epManName, pNet-\u003epCopy-\u003eId);\n        Abc_ObjAssignName( pNet-\u003epCopy, Vec_StrArray(vPref), Abc_ObjName(pNet) );\n    }\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        Abc_NodeSetTravIdCurrent( pObj );\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n            Abc_NodeSetTravIdCurrent( pTerm );\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n            Abc_NodeSetTravIdCurrent( pTerm );\n    }\n\n    // duplicate objects that do not have prototypes yet\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        if ( pObj-\u003epCopy )\n            continue;\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n\n    // connect objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n                    Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n\n    // call recursively\n    Vec_StrPop( vPref );\n    Length = Vec_StrSize( vPref );\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        pNtkModel = (Abc_Ntk_t *)pObj-\u003epData;\n        // check the match between the number of actual and formal parameters\n        assert( Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel) );\n        assert( Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel) );\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) )-\u003epCopy = Abc_ObjFanin0(pTerm)-\u003epCopy;\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) )-\u003epCopy = Abc_ObjFanout0(pTerm)-\u003epCopy;\n        // create name\n        Vec_StrShrink( vPref, Length );\n        Vec_StrPrintStr( vPref, Abc_NtkName(pNtkModel) );\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtkModel, pCounter, vPref );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if ( Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) )\n    {\n        if ( Abc_NtkMvVar( pNtkNew ) == NULL )\n            Abc_NtkStartMvVars( pNtkNew );\n        Abc_NtkForEachNet( pNtk, pObj, i )\n            Abc_NtkSetMvVarValues( pObj-\u003epCopy, Abc_ObjMvVarNum(pObj) );\n    }\n}",
+      "Draft": "func Abc_NtkFlattenLogicHierarchy_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32, vPref *Vec_Str_t) {\n    var pNtkModel *Abc_Ntk_t;\n    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;\n    var i, k, Length int32;\n\n    // process the blackbox\n    if Abc_NtkHasBlackbox(pNtk) {\n        //printf( \"Flatting black box \\\"%s\\\".\\n\", pNtk-\u003epName );\n        // duplicate the blackbox\n        assert(Abc_NtkBoxNum(pNtk) == 1, \"Abc_NtkBoxNum(pNtk) == 1\");\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj.pCopy.pData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), \"Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );\n        }\n\n        // connect blackbox fanouts to the PO nets\n        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), \"Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );\n        }\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if *pCounter {\n        var Buffer string // was [20]byte in C\n\n        Buffer = fmt.Sprintf(\"(%d)\", *pCounter);\n        Vec_StrPrintStr( vPref, Buffer );\n    }\n    Vec_StrPush( vPref, '|' );\n    Vec_StrPush( vPref, 0 );\n\n    // duplicate nets of all boxes, including latches\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {\n            continue; }\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );\n        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {\n            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }\n        Abc_ObjAssignName( pNet.pCopy, Vec_StrArray(vPref), Abc_ObjName(pNet) );\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n    }\n\n    // duplicate objects that do not have prototypes yet\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if pObj.pCopy {\n            continue; }\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if !Abc_NodeIsTravIdCurrent(pFanin) {\n                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n            } }\n    }\n\n    // call recursively\n    Vec_StrPop( vPref );\n    Length = Vec_StrSize( vPref );\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkModel = (Abc_Ntk_t *)pObj.pData;\n        // check the match between the number of actual and formal parameters\n        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), \"Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)\");\n        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), \"Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)\");\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;\n        }\n        // create name\n        Vec_StrShrink( vPref, Length );\n        Vec_StrPrintStr( vPref, Abc_NtkName(pNtkModel) );\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtkModel, pCounter, vPref );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) {\n        if Abc_NtkMvVar( pNtkNew ) == nil {\n            Abc_NtkStartMvVars( pNtkNew ); }\n        // inlining of macro Abc_NtkForEachNet\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {\n            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkCompareNames",
+      "Start": 14557,
+      "End": 14677,
+      "BodyStart": 14617,
+      "Original": "int Abc_NtkCompareNames( Abc_Ntk_t ** p1, Abc_Ntk_t ** p2 )\n{\n    return strcmp( Abc_NtkName(*p1), Abc_NtkName(*p2) );\n}",
+      "Draft": "func Abc_NtkCompareNames(p1 **Abc_Ntk_t, p2 **Abc_Ntk_t) int32 {\n    return int32(strings.Compare(Abc_NtkName(*p1), Abc_NtkName(*p2)));\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintBoxInfo",
+      "Start": 14944,
+      "End": 17537,
+      "BodyStart": 14989,
+      "Original": "void Abc_NtkPrintBoxInfo( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vMods;\n    Abc_Ntk_t * pModel, * pBoxModel;\n    Abc_Obj_t * pObj;\n    Vec_Int_t * vCounts;\n    int i, k, Num;\n    if ( pNtk-\u003epDesign == NULL || pNtk-\u003epDesign-\u003evModules == NULL )\n    {\n//        printf( \"There is no hierarchy information.\\n\" );\n        return;\n    }\n    // sort models by name\n    vMods = pNtk-\u003epDesign-\u003evModules;\n    Vec_PtrSort( vMods, (int(*)())Abc_NtkCompareNames );\n//    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )\n//        printf( \"%s\\n\", Abc_NtkName(pModel) );\n\n    // swap the first model\n    Num = Vec_PtrFind( vMods, pNtk );\n    assert( Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods) );\n    pBoxModel = (Abc_Ntk_t *)Vec_PtrEntry(vMods, 0);\n    Vec_PtrWriteEntry(vMods, 0, (Abc_Ntk_t *)Vec_PtrEntry(vMods, Num) );\n    Vec_PtrWriteEntry(vMods, Num, pBoxModel );\n\n    // print models\n    vCounts = Vec_IntStart( Vec_PtrSize(vMods) );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )\n    {\n        if ( Abc_NtkBoxNum(pModel) == 0 )\n            continue;\n        Vec_IntFill( vCounts, Vec_IntSize(vCounts), 0 );\n        Abc_NtkForEachBox( pModel, pObj, k )\n        {\n            pBoxModel = (Abc_Ntk_t *)pObj-\u003epData;\n            if ( pBoxModel == NULL )\n                continue;\n            Num = Vec_PtrFind( vMods, pBoxModel );\n            assert( Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods) );\n            Vec_IntAddToEntry( vCounts, Num, 1 );\n        }\n\n//        Abc_NtkPrintStats( pModel, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n        printf( \"MODULE  \" );\n        printf( \"%-30s : \", Abc_NtkName(pModel) );\n        printf( \"PI=%6d \", Abc_NtkPiNum(pModel) );\n        printf( \"PO=%6d \", Abc_NtkPoNum(pModel) );\n        printf( \"BB=%6d \", Abc_NtkBoxNum(pModel) );\n        printf( \"ND=%6d \", Abc_NtkNodeNum(pModel) ); // sans constants\n        printf( \"Lev=%5d \", Abc_NtkLevel(pModel) );\n        printf( \"\\n\" );\n\n        Vec_IntForEachEntry( vCounts, Num, k )\n            if ( Num )\n                printf( \"%15d : %s\\n\", Num, Abc_NtkName((Abc_Ntk_t *)Vec_PtrEntry(vMods, k)) );\n    }\n    Vec_IntFree( vCounts );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )\n    {\n        if ( Abc_NtkBoxNum(pModel) != 0 )\n            continue;\n        printf( \"MODULE   \" );\n        printf( \"%-30s : \", Abc_NtkName(pModel) );\n        printf( \"PI=%6d \", Abc_NtkPiNum(pModel) );\n        printf( \"PO=%6d \", Abc_NtkPoNum(pModel) );\n        printf( \"BB=%6d \", Abc_NtkBoxNum(pModel) );\n        printf( \"ND=%6d \", Abc_NtkNodeNum(pModel) );\n        printf( \"Lev=%5d \", Abc_NtkLevel(pModel) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Abc_NtkPrintBoxInfo(pNtk *Abc_Ntk_t) {\n    var vMods *Vec_Ptr_t;\n    var pModel, pBoxModel *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var vCounts *Vec_Int_t;\n    var i, k, Num int32;\n    if pNtk.pDesign == nil || pNtk.pDesign.vModules == nil {\n//        printf( \"There is no hierarchy information.\\n\" );\n        return;\n    }\n    // sort models by name\n    vMods = pNtk.pDesign.vModules;\n    Vec_PtrSort( vMods, (int(*)())Abc_NtkCompareNames );\n//    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )\n//        printf( \"%s\\n\", Abc_NtkName(pModel) );\n\n    // swap the first model\n    Num = Vec_PtrFind( vMods, pNtk );\n    assert(Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods), \"Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods)\");\n    pBoxModel = (Abc_Ntk_t *)Vec_PtrEntry(vMods, 0);\n    Vec_PtrWriteEntry(vMods, 0, (Abc_Ntk_t *)Vec_PtrEntry(vMods, Num) );\n    Vec_PtrWriteEntry(vMods, Num, pBoxModel );\n\n    // print models\n    vCounts = Vec_IntStart( Vec_PtrSize(vMods) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMods)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {\n        if Abc_NtkBoxNum(pModel) == 0 {\n            continue; }\n        Vec_IntFill( vCounts, Vec_IntSize(vCounts), 0 );\n        // inlining of macro Abc_NtkForEachBox\n        for  k = 0; (k \u003c Vec_PtrSize((pModel).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pModel, k)), 1); k++  {\n            pBoxModel = (Abc_Ntk_t *)pObj.pData;\n            if pBoxModel == nil {\n                continue; }\n            Num = Vec_PtrFind( vMods, pBoxModel );\n            assert(Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods), \"Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods)\");\n            Vec_IntAddToEntry( vCounts, Num, 1 );\n        }\n\n//        Abc_NtkPrintStats( pModel, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n        fmt.Printf(\"MODULE  \");\n        fmt.Printf(\"%-30s : \", Abc_NtkName(pModel));\n        fmt.Printf(\"PI=%6d \", Abc_NtkPiNum(pModel));\n        fmt.Printf(\"PO=%6d \", Abc_NtkPoNum(pModel));\n        fmt.Printf(\"BB=%6d \", Abc_NtkBoxNum(pModel));\n        fmt.Printf(\"ND=%6d \", Abc_NtkNodeNum(pModel)); // sans constants\n        fmt.Printf(\"Lev=%5d \", Abc_NtkLevel(pModel));\n        fmt.Printf(\"\\n\");\n\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Num) = Vec_IntEntry(vCounts, k)), 1); k++  {\n            if Num != 0 {\n                fmt.Printf(\"%15d : %s\\n\", Num, Abc_NtkName((Abc_Ntk_t *)Vec_PtrEntry(vMods, k))); }\n        }\n    }\n    Vec_IntFree( vCounts );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMods)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {\n        if Abc_NtkBoxNum(pModel) != 0 {\n            continue; }\n        fmt.Printf(\"MODULE   \");\n        fmt.Printf(\"%-30s : \", Abc_NtkName(pModel));\n        fmt.Printf(\"PI=%6d \", Abc_NtkPiNum(pModel));\n        fmt.Printf(\"PO=%6d \", Abc_NtkPoNum(pModel));\n        fmt.Printf(\"BB=%6d \", Abc_NtkBoxNum(pModel));\n        fmt.Printf(\"ND=%6d \", Abc_NtkNodeNum(pModel));\n        fmt.Printf(\"Lev=%5d \", Abc_NtkLevel(pModel));\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkFlattenLogicHierarchy",
+      "Start": 17817,
+      "End": 20259,
+      "BodyStart": 17878,
+      "Original": "Abc_Ntk_t * Abc_NtkFlattenLogicHierarchy( Abc_Ntk_t * pNtk )\n{\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n    Vec_Str_t * vPref;\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pTerm, * pNet;\n    int i, Counter = -1;\n\n    assert( Abc_NtkIsNetlist(pNtk) );\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk-\u003entkType, pNtk-\u003entkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew-\u003epName = Extra_UtilStrsav(pNtk-\u003epName);\n    pNtkNew-\u003epSpec = Extra_UtilStrsav(pNtk-\u003epSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet-\u003epCopy, pTerm-\u003epCopy );\n    }\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm-\u003epCopy, pNet-\u003epCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    vPref = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( vPref, Abc_NtkName(pNtk) );\n    Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtk, \u0026Counter, vPref );\n    printf( \"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", \n        Counter, Abc_NtkBlackboxNum(pNtkNew) );\n    Vec_StrFree( vPref );\n\n    if ( pNtk-\u003epDesign )\n    {\n        // pass on the design\n        assert( Vec_PtrEntry(pNtk-\u003epDesign-\u003evTops, 0) == pNtk );\n        pNtkNew-\u003epDesign = Abc_DesDupBlackboxes( pNtk-\u003epDesign, pNtkNew );\n        // update the pointers\n        Abc_NtkForEachBlackbox( pNtkNew, pTerm, i )\n            pTerm-\u003epData = ((Abc_Ntk_t *)pTerm-\u003epData)-\u003epCopy;\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        printf( \"EXDC is not transformed.\\n\" );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        fprintf( stdout, \"Abc_NtkFlattenLogicHierarchy(): Network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFlattenLogicHierarchy(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n    var vPref *Vec_Str_t;\n    var pNtkNew *Abc_Ntk_t; \n    var pTerm, pNet *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = -1;\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);\n    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    vPref = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( vPref, Abc_NtkName(pNtk) );\n    Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtk, \u0026Counter, vPref );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", Counter, Abc_NtkBlackboxNum(pNtkNew));\n    Vec_StrFree( vPref );\n\n    if pNtk.pDesign {\n        // pass on the design\n        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, \"Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk\");\n        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );\n        // update the pointers\n        // inlining of macro Abc_NtkForEachBlackbox\n        for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vBoxes)) \u0026\u0026 (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {\n            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }\n        }\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        fmt.Printf(\"EXDC is not transformed.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFlattenLogicHierarchy(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkConvertBlackboxes",
+      "Start": 20676,
+      "End": 23269,
+      "BodyStart": 20733,
+      "Original": "Abc_Ntk_t * Abc_NtkConvertBlackboxes( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pNet, * pFanin, * pTerm;\n    int i, k;\n\n    assert( Abc_NtkIsNetlist(pNtk) );\n    assert( Abc_NtkWhiteboxNum(pNtk) == 0 );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk-\u003entkType, pNtk-\u003entkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew-\u003epName = Extra_UtilStrsav( pNtk-\u003epName );\n    pNtkNew-\u003epSpec = Extra_UtilStrsav( pNtk-\u003epSpec );\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // mark the nodes that should not be connected\n    Abc_NtkIncrementTravId( pNtk );\n    Abc_NtkForEachBlackbox( pNtk, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );\n    Abc_NtkForEachCi( pNtk, pTerm, i )\n        Abc_NodeSetTravIdCurrent( pTerm );\n    Abc_NtkForEachCo( pNtk, pTerm, i )\n        Abc_NodeSetTravIdCurrent( pTerm );\n    // unmark PIs and LIs/LOs\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n        Abc_NodeSetTravIdPrevious( pTerm );\n    Abc_NtkForEachLatchInput( pNtk, pTerm, i )\n        Abc_NodeSetTravIdPrevious( pTerm );\n    Abc_NtkForEachLatchOutput( pNtk, pTerm, i )\n        Abc_NodeSetTravIdPrevious( pTerm );\n    // copy the box outputs\n    Abc_NtkForEachBlackbox( pNtk, pObj, i )\n        Abc_ObjForEachFanout( pObj, pTerm, k )\n            pTerm-\u003epCopy = Abc_NtkCreatePi( pNtkNew );\n\n    // duplicate other objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            Abc_NtkDupObj( pNtkNew, pObj, Abc_ObjIsNet(pObj) );\n\n    // connect all objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n\n    // create unique PO for each net feeding into blackboxes or POs\n    Abc_NtkIncrementTravId( pNtk );\n    Abc_NtkForEachCo( pNtk, pTerm, i )\n    {\n        // skip latch inputs\n        assert( Abc_ObjFanoutNum(pTerm) \u003c= 1 );\n        if ( Abc_ObjFanoutNum(pTerm) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pTerm)) )\n            continue;\n        // check if the net is visited\n        pNet = Abc_ObjFanin0(pTerm);\n        if ( Abc_NodeIsTravIdCurrent(pNet) )\n            continue;\n        // create PO\n        Abc_NodeSetTravIdCurrent( pNet );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtkNew), pNet-\u003epCopy );\n    }\n\n    // check integrity\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        fprintf( stdout, \"Abc_NtkConvertBlackboxes(): Network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkConvertBlackboxes(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNet, pFanin, pTerm *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_NtkWhiteboxNum(pNtk) == 0, \"Abc_NtkWhiteboxNum(pNtk) == 0\");\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav( pNtk.pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pNtk.pSpec );\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // mark the nodes that should not be connected\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {\n        Abc_NodeSetTravIdCurrent( pObj ); }\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // unmark PIs and LIs/LOs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdPrevious( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pTerm) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_NodeSetTravIdPrevious( pTerm ); }\n    }\n    // inlining of macro Abc_NtkForEachLatchOutput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pTerm) = Abc_ObjFanout0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_NodeSetTravIdPrevious( pTerm ); }\n    }\n    // copy the box outputs\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pTerm.pCopy = Abc_NtkCreatePi( pNtkNew );\n        } }\n    }\n\n    // duplicate other objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            Abc_NtkDupObj( pNtkNew, pObj, Abc_ObjIsNet(pObj) ); }\n    }\n\n    // connect all objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n            } }\n    }\n\n    // create unique PO for each net feeding into blackboxes or POs\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        // skip latch inputs\n        assert(Abc_ObjFanoutNum(pTerm) \u003c= 1, \"Abc_ObjFanoutNum(pTerm) \u003c= 1\");\n        if Abc_ObjFanoutNum(pTerm) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pTerm)) {\n            continue; }\n        // check if the net is visited\n        pNet = Abc_ObjFanin0(pTerm);\n        if Abc_NodeIsTravIdCurrent(pNet) {\n            continue; }\n        // create PO\n        Abc_NodeSetTravIdCurrent( pNet );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtkNew), pNet.pCopy );\n    }\n\n    // check integrity\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkConvertBlackboxes(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkInsertNewLogic",
+      "Start": 24102,
+      "End": 29635,
+      "BodyStart": 24176,
+      "Original": "Abc_Ntk_t * Abc_NtkInsertNewLogic( Abc_Ntk_t * pNtkH, Abc_Ntk_t * pNtkL )\n{\n    Abc_Des_t * pDesign;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObjH, * pObjL, * pNetH, * pNetL, * pTermH;\n    int i, k;\n\n    assert( Abc_NtkIsNetlist(pNtkH) );\n    assert( Abc_NtkWhiteboxNum(pNtkH) == 0 );\n    assert( Abc_NtkBlackboxNum(pNtkH) \u003e 0 );\n\n    assert( Abc_NtkIsNetlist(pNtkL) );\n    assert( Abc_NtkWhiteboxNum(pNtkL) == 0 );\n    assert( Abc_NtkBlackboxNum(pNtkL) == 0 );\n\n    // prepare the logic network for copying\n    Abc_NtkCleanCopy( pNtkL );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtkL-\u003entkType, pNtkL-\u003entkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew-\u003epName = Extra_UtilStrsav( pNtkH-\u003epName );\n    pNtkNew-\u003epSpec = Extra_UtilStrsav( pNtkH-\u003epSpec );\n\n    // make sure every PI/PO has a PI/PO in the processed network\n    Abc_NtkForEachPi( pNtkH, pObjH, i )\n    {\n        pNetH = Abc_ObjFanout0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if ( pNetL == NULL || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) )\n        {\n            printf( \"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the PI %s.\\n\", Abc_ObjName(pNetH) );\n            Abc_NtkDelete( pNtkNew );\n            return NULL;\n        }\n        if ( pNetL-\u003epCopy )\n        {\n            printf( \"Error in Abc_NtkInsertNewLogic(): Primary input %s is repeated twice.\\n\", Abc_ObjName(pNetH) );\n            Abc_NtkDelete( pNtkNew );\n            return NULL;\n        }\n        // create the new net\n        pNetL-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanin0(pNetL), 0 );\n    }\n\n    // make sure every BB has a PI/PO in the processed network\n    Abc_NtkForEachBlackbox( pNtkH, pObjH, i )\n    {\n        // duplicate the box \n        Abc_NtkDupBox( pNtkNew, pObjH, 0 );\n        pObjH-\u003epCopy-\u003epData = pObjH-\u003epData;\n        // create PIs\n        Abc_ObjForEachFanout( pObjH, pTermH, k )\n        {\n            pNetH = Abc_ObjFanout0( pTermH );\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if ( pNetL == NULL || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) )\n            {\n                printf( \"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the inpout %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH) );\n                Abc_NtkDelete( pNtkNew );\n                return NULL;\n            }\n            if ( pNetL-\u003epCopy )\n            {\n                printf( \"Error in Abc_NtkInsertNewLogic(): Box output %s is repeated twice.\\n\", Abc_ObjName(pNetH) );\n                Abc_NtkDelete( pNtkNew );\n                return NULL;\n            }\n            // create net and map the PI\n            pNetL-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanin0(pNetL)-\u003epCopy = pTermH-\u003epCopy;\n        }\n    }\n\n    Abc_NtkForEachPo( pNtkH, pObjH, i )\n    {\n        pNetH = Abc_ObjFanin0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if ( pNetL == NULL || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) )\n        {\n            printf( \"Error in Abc_NtkInsertNewLogic(): There is no PO corresponding to the PO %s.\\n\", Abc_ObjName(pNetH) );\n            Abc_NtkDelete( pNtkNew );\n            return NULL;\n        }\n        if ( pNetL-\u003epCopy )\n            continue;\n        // create the new net\n        pNetL-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanout0(pNetL), 0 );\n    }\n    Abc_NtkForEachBlackbox( pNtkH, pObjH, i )\n    {\n        Abc_ObjForEachFanin( pObjH, pTermH, k )\n        {\n            char * pName;\n            pNetH = Abc_ObjFanin0( pTermH );\n            pName = Abc_ObjName(pNetH);\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if ( pNetL == NULL || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) )\n            {\n                printf( \"There is no PO corresponding to the input %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH) );\n                Abc_NtkDelete( pNtkNew );\n                return NULL;\n            }\n            // create net and map the PO\n            if ( pNetL-\u003epCopy )\n            {\n                if ( Abc_ObjFanout0(pNetL)-\u003epCopy == NULL )\n                    Abc_ObjFanout0(pNetL)-\u003epCopy = pTermH-\u003epCopy;\n                else\n                    Abc_ObjAddFanin( pTermH-\u003epCopy, pNetL-\u003epCopy );\n                continue;\n            }\n            pNetL-\u003epCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanout0(pNetL)-\u003epCopy = pTermH-\u003epCopy;\n        }\n    }\n\n    // duplicate other objects of the logic network\n    Abc_NtkForEachObj( pNtkL, pObjL, i )\n        if ( pObjL-\u003epCopy == NULL \u0026\u0026 !Abc_ObjIsPo(pObjL) ) // skip POs feeding into PIs\n            Abc_NtkDupObj( pNtkNew, pObjL, Abc_ObjIsNet(pObjL) );\n\n    // connect objects\n    Abc_NtkForEachObj( pNtkL, pObjL, i )\n        Abc_ObjForEachFanin( pObjL, pNetL, k )\n            if ( pObjL-\u003epCopy )\n                Abc_ObjAddFanin( pObjL-\u003epCopy, pNetL-\u003epCopy );\n\n    // transfer the design\n    pDesign = pNtkH-\u003epDesign;  pNtkH-\u003epDesign = NULL;\n    assert( Vec_PtrEntry( pDesign-\u003evModules, 0 ) == pNtkH );\n    Vec_PtrWriteEntry( pDesign-\u003evModules, 0, pNtkNew );\n    pNtkNew-\u003epDesign = pDesign;\n\n    // check integrity\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        fprintf( stdout, \"Abc_NtkInsertNewLogic(): Network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkInsertNewLogic(pNtkH *Abc_Ntk_t, pNtkL *Abc_Ntk_t) *Abc_Ntk_t {\n    var pDesign *Abc_Des_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObjH, pObjL, pNetH, pNetL, pTermH *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsNetlist(pNtkH), \"Abc_NtkIsNetlist(pNtkH)\");\n    assert(Abc_NtkWhiteboxNum(pNtkH) == 0, \"Abc_NtkWhiteboxNum(pNtkH) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtkH) \u003e 0, \"Abc_NtkBlackboxNum(pNtkH) \u003e 0\");\n\n    assert(Abc_NtkIsNetlist(pNtkL), \"Abc_NtkIsNetlist(pNtkL)\");\n    assert(Abc_NtkWhiteboxNum(pNtkL) == 0, \"Abc_NtkWhiteboxNum(pNtkL) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtkL) == 0, \"Abc_NtkBlackboxNum(pNtkL) == 0\");\n\n    // prepare the logic network for copying\n    Abc_NtkCleanCopy( pNtkL );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtkL.ntkType, pNtkL.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav( pNtkH.pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pNtkH.pSpec );\n\n    // make sure every PI/PO has a PI/PO in the processed network\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtkH)) \u0026\u0026 (((pObjH) = Abc_NtkPi(pNtkH, i)), 1); i++  {\n        pNetH = Abc_ObjFanout0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the PI %s.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        if pNetL.pCopy {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): Primary input %s is repeated twice.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        // create the new net\n        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanin0(pNetL), 0 );\n    }\n\n    // make sure every BB has a PI/PO in the processed network\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkH).vBoxes)) \u0026\u0026 (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {\n        // duplicate the box \n        Abc_NtkDupBox( pNtkNew, pObjH, 0 );\n        pObjH.pCopy.pData = pObjH.pData;\n        // create PIs\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObjH)) \u0026\u0026 (((pTermH) = Abc_ObjFanout(pObjH, k)), 1); k++  {\n            pNetH = Abc_ObjFanout0( pTermH );\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {\n                fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the inpout %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            if pNetL.pCopy {\n                fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): Box output %s is repeated twice.\\n\", Abc_ObjName(pNetH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            // create net and map the PI\n            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanin0(pNetL).pCopy = pTermH.pCopy;\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkH)) \u0026\u0026 (((pObjH) = Abc_NtkPo(pNtkH, i)), 1); i++  {\n        pNetH = Abc_ObjFanin0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PO corresponding to the PO %s.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        if pNetL.pCopy {\n            continue; }\n        // create the new net\n        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanout0(pNetL), 0 );\n    }\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkH).vBoxes)) \u0026\u0026 (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObjH)) \u0026\u0026 (((pTermH) = Abc_ObjFanin(pObjH, k)), 1); k++  {\n            var pName string;\n            pNetH = Abc_ObjFanin0( pTermH );\n            pName = Abc_ObjName(pNetH);\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {\n                fmt.Printf(\"There is no PO corresponding to the input %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            // create net and map the PO\n            if pNetL.pCopy {\n                if Abc_ObjFanout0(pNetL).pCopy == nil {\n                    Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;\n                } else {\n                    Abc_ObjAddFanin( pTermH.pCopy, pNetL.pCopy ); }\n                continue;\n            }\n            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;\n        }\n    }\n    }\n\n    // duplicate other objects of the logic network\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkL).vObjs)) \u0026\u0026 (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else\n        if pObjL.pCopy == nil \u0026\u0026 !Abc_ObjIsPo(pObjL) { // skip POs feeding into PIs\n            Abc_NtkDupObj( pNtkNew, pObjL, Abc_ObjIsNet(pObjL) ); }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkL).vObjs)) \u0026\u0026 (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObjL)) \u0026\u0026 (((pNetL) = Abc_ObjFanin(pObjL, k)), 1); k++  {\n            if pObjL.pCopy {\n                Abc_ObjAddFanin( pObjL.pCopy, pNetL.pCopy ); }\n        } }\n    }\n\n    // transfer the design\n    pDesign = pNtkH.pDesign;  pNtkH.pDesign = nil;\n    assert(Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH, \"Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH\");\n    Vec_PtrWriteEntry( pDesign.vModules, 0, pNtkNew );\n    pNtkNew.pDesign = pDesign;\n\n    // check integrity\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkInsertNewLogic(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::6668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5090,
+      "End": 5103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::10550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8215,
+      "End": 8228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::17003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13090,
+      "End": 13103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::19940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15637,
+      "End": 15650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::20009",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15706,
+      "End": 15719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::20281",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15869,
+      "End": 15869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::20648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16128,
+      "End": 16141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::21590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16964,
+      "End": 16977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::21777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17042,
+      "End": 17042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::pointer-cast::24854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19757,
+      "End": 19770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkFlattenLogicHierarchy2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenLogicHierarchy2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1412,
+      "End": 6159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkFlattenLogicHierarchy2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenLogicHierarchy2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6439,
+      "End": 8718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkFlattenLogicHierarchy_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenLogicHierarchy_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9133,
+      "End": 14286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkCompareNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCompareNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14557,
+      "End": 14677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkPrintBoxInfo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintBoxInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14944,
+      "End": 17537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkFlattenLogicHierarchy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFlattenLogicHierarchy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17817,
+      "End": 20259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkConvertBlackboxes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkConvertBlackboxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20676,
+      "End": 23269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::Abc_NtkInsertNewLogic",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInsertNewLogic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24102,
+      "End": 29635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcHie.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29882
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcHie.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures to handle hierarchy.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcHie.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively flattens logic hierarchy of the netlist.]\n\n  Description [When this procedure is called, the PI/PO nets of the old \n  netlist point to the corresponding nets of the flattened netlist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFlattenLogicHierarchy2_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32) {\n    var Suffix string // was [2000]byte in C\n\n    var pNtkModel *Abc_Ntk_t;\n    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    // process the blackbox\n    if Abc_NtkHasBlackbox(pNtk) {\n        // duplicate the blackbox\n        assert(Abc_NtkBoxNum(pNtk) == 1, \"Abc_NtkBoxNum(pNtk) == 1\");\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj.pCopy.pData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), \"Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );\n        }\n\n        // connect blackbox fanouts to the PO nets\n        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), \"Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );\n        }\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if *pCounter {\n        Suffix = fmt.Sprintf(\"_%s_%d\", Abc_NtkName(pNtk), *pCounter); }\n\n    // duplicate nets of all boxes, including latches\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {\n            continue; }\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );\n        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {\n            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }\n        Abc_ObjAssignName( pNet.pCopy, Abc_ObjName(pNet), Suffix );\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n    }\n\n    // duplicate objects that do not have prototypes yet\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if pObj.pCopy {\n            continue; }\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if !Abc_NodeIsTravIdCurrent(pFanin) {\n                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n            } }\n    }\n\n    // call recursively\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkModel = (Abc_Ntk_t *)pObj.pData;\n        // check the match between the number of actual and formal parameters\n        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), \"Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)\");\n        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), \"Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)\");\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;\n        }\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtkModel, pCounter );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) {\n        if Abc_NtkMvVar( pNtkNew ) == nil {\n            Abc_NtkStartMvVars( pNtkNew ); }\n        // inlining of macro Abc_NtkForEachNet\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {\n            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Flattens the logic hierarchy of the netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFlattenLogicHierarchy2(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pTerm, pNet *Abc_Obj_t;\n    var i, Counter int32;\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Abc_UtilStrsav(pNtk.pName);\n    pNtkNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    Counter = -1;\n    Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtk, \u0026Counter );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", Counter, Abc_NtkBlackboxNum(pNtkNew));\n\n    if pNtk.pDesign {\n        // pass on the design\n        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, \"Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk\");\n        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );\n        // update the pointers\n        // inlining of macro Abc_NtkForEachBlackbox\n        for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vBoxes)) \u0026\u0026 (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {\n            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }\n        }\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        fmt.Printf(\"EXDC is not transformed.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively flattens logic hierarchy of the netlist.]\n\n  Description [When this procedure is called, the PI/PO nets of the old \n  netlist point to the corresponding nets of the flattened netlist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFlattenLogicHierarchy_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32, vPref *Vec_Str_t) {\n    var pNtkModel *Abc_Ntk_t;\n    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;\n    var i, k, Length int32;\n\n    // process the blackbox\n    if Abc_NtkHasBlackbox(pNtk) {\n        //printf( \"Flatting black box \\\"%s\\\".\\n\", pNtk-\u003epName );\n        // duplicate the blackbox\n        assert(Abc_NtkBoxNum(pNtk) == 1, \"Abc_NtkBoxNum(pNtk) == 1\");\n        pObj = Abc_NtkBox( pNtk, 0 );\n        Abc_NtkDupBox( pNtkNew, pObj, 1 );\n        pObj.pCopy.pData = pNtk;\n\n        // connect blackbox fanins to the PI nets\n        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), \"Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );\n        }\n\n        // connect blackbox fanouts to the PO nets\n        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), \"Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)\");\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );\n        }\n        return;\n    }\n\n    (*pCounter)++;\n\n    // create the suffix, which will be appended to the internal names\n    if *pCounter {\n        var Buffer string // was [20]byte in C\n\n        Buffer = fmt.Sprintf(\"(%d)\", *pCounter);\n        Vec_StrPrintStr( vPref, Buffer );\n    }\n    Vec_StrPush( vPref, '|' );\n    Vec_StrPush( vPref, 0 );\n\n    // duplicate nets of all boxes, including latches\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if pNet.pCopy {\n                continue; }\n            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );\n        }\n    }\n\n    // mark objects that will not be used\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n        // if the netlist has net names beginning with \"abc_property_\"\n        // these names will be addes as primary outputs of the network\n        pNet = Abc_ObjFanin0(pTerm);\n        if strncmp( Abc_ObjName(pNet), \"abc_property\", 12 ) {\n            continue; }\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );\n        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {\n            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }\n        Abc_ObjAssignName( pNet.pCopy, Vec_StrArray(vPref), Abc_ObjName(pNet) );\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        Abc_NodeSetTravIdCurrent( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_NodeSetTravIdCurrent( pTerm );\n        }\n    }\n\n    // duplicate objects that do not have prototypes yet\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if pObj.pCopy {\n            continue; }\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n    }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                if !Abc_NodeIsTravIdCurrent(pFanin) {\n                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n            } }\n    }\n\n    // call recursively\n    Vec_StrPop( vPref );\n    Length = Vec_StrSize( vPref );\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkModel = (Abc_Ntk_t *)pObj.pData;\n        // check the match between the number of actual and formal parameters\n        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), \"Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)\");\n        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), \"Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)\");\n        // clean the node copy fields\n        Abc_NtkCleanCopy( pNtkModel );\n        // map PIs/POs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;\n        }\n        // create name\n        Vec_StrShrink( vPref, Length );\n        Vec_StrPrintStr( vPref, Abc_NtkName(pNtkModel) );\n        // call recursively\n        Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtkModel, pCounter, vPref );\n    }\n\n    // if it is a BLIF-MV netlist transfer the values of all nets\n    if Abc_NtkHasBlifMv(pNtk) \u0026\u0026 Abc_NtkMvVar(pNtk) {\n        if Abc_NtkMvVar( pNtkNew ) == nil {\n            Abc_NtkStartMvVars( pNtkNew ); }\n        // inlining of macro Abc_NtkForEachNet\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {\n            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if CI names are repeated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCompareNames(p1 **Abc_Ntk_t, p2 **Abc_Ntk_t) int32 {\n    return int32(strings.Compare(Abc_NtkName(*p1), Abc_NtkName(*p2)));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints information about boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintBoxInfo(pNtk *Abc_Ntk_t) {\n    var vMods *Vec_Ptr_t;\n    var pModel, pBoxModel *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var vCounts *Vec_Int_t;\n    var i, k, Num int32;\n    if pNtk.pDesign == nil || pNtk.pDesign.vModules == nil {\n//        printf( \"There is no hierarchy information.\\n\" );\n        return;\n    }\n    // sort models by name\n    vMods = pNtk.pDesign.vModules;\n    Vec_PtrSort( vMods, (int(*)())Abc_NtkCompareNames );\n//    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )\n//        printf( \"%s\\n\", Abc_NtkName(pModel) );\n\n    // swap the first model\n    Num = Vec_PtrFind( vMods, pNtk );\n    assert(Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods), \"Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods)\");\n    pBoxModel = (Abc_Ntk_t *)Vec_PtrEntry(vMods, 0);\n    Vec_PtrWriteEntry(vMods, 0, (Abc_Ntk_t *)Vec_PtrEntry(vMods, Num) );\n    Vec_PtrWriteEntry(vMods, Num, pBoxModel );\n\n    // print models\n    vCounts = Vec_IntStart( Vec_PtrSize(vMods) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMods)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {\n        if Abc_NtkBoxNum(pModel) == 0 {\n            continue; }\n        Vec_IntFill( vCounts, Vec_IntSize(vCounts), 0 );\n        // inlining of macro Abc_NtkForEachBox\n        for  k = 0; (k \u003c Vec_PtrSize((pModel).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pModel, k)), 1); k++  {\n            pBoxModel = (Abc_Ntk_t *)pObj.pData;\n            if pBoxModel == nil {\n                continue; }\n            Num = Vec_PtrFind( vMods, pBoxModel );\n            assert(Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods), \"Num \u003e= 0 \u0026\u0026 Num \u003c Vec_PtrSize(vMods)\");\n            Vec_IntAddToEntry( vCounts, Num, 1 );\n        }\n\n//        Abc_NtkPrintStats( pModel, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n        fmt.Printf(\"MODULE  \");\n        fmt.Printf(\"%-30s : \", Abc_NtkName(pModel));\n        fmt.Printf(\"PI=%6d \", Abc_NtkPiNum(pModel));\n        fmt.Printf(\"PO=%6d \", Abc_NtkPoNum(pModel));\n        fmt.Printf(\"BB=%6d \", Abc_NtkBoxNum(pModel));\n        fmt.Printf(\"ND=%6d \", Abc_NtkNodeNum(pModel)); // sans constants\n        fmt.Printf(\"Lev=%5d \", Abc_NtkLevel(pModel));\n        fmt.Printf(\"\\n\");\n\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Num) = Vec_IntEntry(vCounts, k)), 1); k++  {\n            if Num != 0 {\n                fmt.Printf(\"%15d : %s\\n\", Num, Abc_NtkName((Abc_Ntk_t *)Vec_PtrEntry(vMods, k))); }\n        }\n    }\n    Vec_IntFree( vCounts );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMods)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {\n        if Abc_NtkBoxNum(pModel) != 0 {\n            continue; }\n        fmt.Printf(\"MODULE   \");\n        fmt.Printf(\"%-30s : \", Abc_NtkName(pModel));\n        fmt.Printf(\"PI=%6d \", Abc_NtkPiNum(pModel));\n        fmt.Printf(\"PO=%6d \", Abc_NtkPoNum(pModel));\n        fmt.Printf(\"BB=%6d \", Abc_NtkBoxNum(pModel));\n        fmt.Printf(\"ND=%6d \", Abc_NtkNodeNum(pModel));\n        fmt.Printf(\"Lev=%5d \", Abc_NtkLevel(pModel));\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Flattens the logic hierarchy of the netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFlattenLogicHierarchy(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );\n    var vPref *Vec_Str_t;\n    var pNtkNew *Abc_Ntk_t; \n    var pTerm, pNet *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = -1;\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n//    Abc_NtkPrintBoxInfo( pNtk );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);\n    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // duplicate PIs/POs and their nets\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanout0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pTerm, 0 );\n        pNet = Abc_ObjFanin0( pTerm );\n        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );\n        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );\n    }\n\n    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes\n    vPref = Vec_StrAlloc( 1000 );\n    Vec_StrPrintStr( vPref, Abc_NtkName(pNtk) );\n    Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtk, \u0026Counter, vPref );\n    fmt.Printf(\"Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\\n\", Counter, Abc_NtkBlackboxNum(pNtkNew));\n    Vec_StrFree( vPref );\n\n    if pNtk.pDesign {\n        // pass on the design\n        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, \"Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk\");\n        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );\n        // update the pointers\n        // inlining of macro Abc_NtkForEachBlackbox\n        for  i = 0; (i \u003c Vec_PtrSize((pNtkNew).vBoxes)) \u0026\u0026 (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {\n            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }\n        }\n    }\n\n    // we may have added property outputs\n    Abc_NtkOrderCisCos( pNtkNew );\n\n    // copy the timing information\n//    Abc_ManTimeDup( pNtk, pNtkNew );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        fmt.Printf(\"EXDC is not transformed.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFlattenLogicHierarchy(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts blackboxes by making them into additional PIs/POs.]\n\n  Description [The input netlist has not logic hierarchy. The resulting\n  netlist has additional PIs/POs for each blackbox input/output.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkConvertBlackboxes(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNet, pFanin, pTerm *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_NtkWhiteboxNum(pNtk) == 0, \"Abc_NtkWhiteboxNum(pNtk) == 0\");\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav( pNtk.pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pNtk.pSpec );\n\n    // clean the node copy fields\n    Abc_NtkCleanCopy( pNtk );\n\n    // mark the nodes that should not be connected\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {\n        Abc_NodeSetTravIdCurrent( pObj ); }\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pTerm );\n    }\n    // unmark PIs and LIs/LOs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_NodeSetTravIdPrevious( pTerm );\n    }\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pTerm) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_NodeSetTravIdPrevious( pTerm ); }\n    }\n    // inlining of macro Abc_NtkForEachLatchOutput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pTerm) = Abc_ObjFanout0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        Abc_NodeSetTravIdPrevious( pTerm ); }\n    }\n    // copy the box outputs\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            pTerm.pCopy = Abc_NtkCreatePi( pNtkNew );\n        } }\n    }\n\n    // duplicate other objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            Abc_NtkDupObj( pNtkNew, pObj, Abc_ObjIsNet(pObj) ); }\n    }\n\n    // connect all objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );\n            } }\n    }\n\n    // create unique PO for each net feeding into blackboxes or POs\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        // skip latch inputs\n        assert(Abc_ObjFanoutNum(pTerm) \u003c= 1, \"Abc_ObjFanoutNum(pTerm) \u003c= 1\");\n        if Abc_ObjFanoutNum(pTerm) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pTerm)) {\n            continue; }\n        // check if the net is visited\n        pNet = Abc_ObjFanin0(pTerm);\n        if Abc_NodeIsTravIdCurrent(pNet) {\n            continue; }\n        // create PO\n        Abc_NodeSetTravIdCurrent( pNet );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtkNew), pNet.pCopy );\n    }\n\n    // check integrity\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkConvertBlackboxes(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts blackboxes into the netlist.]\n\n  Description [The first arg is the netlist with blackboxes without logic hierarchy.\n  The second arg is a non-hierarchical netlist derived from the above netlist after processing.\n  This procedure create a new netlist, which is comparable to the original netlist with\n  blackboxes, except that it contains logic nodes from the netlist after processing.]\n               \n  SideEffects [This procedure silently assumes that blackboxes appear\n  only in the top-level model. If they appear in other models as well, \n  the name of the model and its number were appended to the names of \n  blackbox inputs/outputs.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkInsertNewLogic(pNtkH *Abc_Ntk_t, pNtkL *Abc_Ntk_t) *Abc_Ntk_t {\n    var pDesign *Abc_Des_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pObjH, pObjL, pNetH, pNetL, pTermH *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsNetlist(pNtkH), \"Abc_NtkIsNetlist(pNtkH)\");\n    assert(Abc_NtkWhiteboxNum(pNtkH) == 0, \"Abc_NtkWhiteboxNum(pNtkH) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtkH) \u003e 0, \"Abc_NtkBlackboxNum(pNtkH) \u003e 0\");\n\n    assert(Abc_NtkIsNetlist(pNtkL), \"Abc_NtkIsNetlist(pNtkL)\");\n    assert(Abc_NtkWhiteboxNum(pNtkL) == 0, \"Abc_NtkWhiteboxNum(pNtkL) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtkL) == 0, \"Abc_NtkBlackboxNum(pNtkL) == 0\");\n\n    // prepare the logic network for copying\n    Abc_NtkCleanCopy( pNtkL );\n\n    // start the network\n    pNtkNew = Abc_NtkAlloc( pNtkL.ntkType, pNtkL.ntkFunc, 1 );\n    // duplicate the name and the spec\n    pNtkNew.pName = Extra_UtilStrsav( pNtkH.pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pNtkH.pSpec );\n\n    // make sure every PI/PO has a PI/PO in the processed network\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtkH)) \u0026\u0026 (((pObjH) = Abc_NtkPi(pNtkH, i)), 1); i++  {\n        pNetH = Abc_ObjFanout0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the PI %s.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        if pNetL.pCopy {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): Primary input %s is repeated twice.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        // create the new net\n        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanin0(pNetL), 0 );\n    }\n\n    // make sure every BB has a PI/PO in the processed network\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkH).vBoxes)) \u0026\u0026 (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {\n        // duplicate the box \n        Abc_NtkDupBox( pNtkNew, pObjH, 0 );\n        pObjH.pCopy.pData = pObjH.pData;\n        // create PIs\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObjH)) \u0026\u0026 (((pTermH) = Abc_ObjFanout(pObjH, k)), 1); k++  {\n            pNetH = Abc_ObjFanout0( pTermH );\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {\n                fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the inpout %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            if pNetL.pCopy {\n                fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): Box output %s is repeated twice.\\n\", Abc_ObjName(pNetH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            // create net and map the PI\n            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanin0(pNetL).pCopy = pTermH.pCopy;\n        }\n    }\n    }\n\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkH)) \u0026\u0026 (((pObjH) = Abc_NtkPo(pNtkH, i)), 1); i++  {\n        pNetH = Abc_ObjFanin0(pObjH);\n        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n        if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {\n            fmt.Printf(\"Error in Abc_NtkInsertNewLogic(): There is no PO corresponding to the PO %s.\\n\", Abc_ObjName(pNetH));\n            Abc_NtkDelete( pNtkNew );\n            return nil;\n        }\n        if pNetL.pCopy {\n            continue; }\n        // create the new net\n        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n        Abc_NtkDupObj( pNtkNew, Abc_ObjFanout0(pNetL), 0 );\n    }\n    // inlining of macro Abc_NtkForEachBlackbox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkH).vBoxes)) \u0026\u0026 (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObjH)) \u0026\u0026 (((pTermH) = Abc_ObjFanin(pObjH, k)), 1); k++  {\n            var pName string;\n            pNetH = Abc_ObjFanin0( pTermH );\n            pName = Abc_ObjName(pNetH);\n            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );\n            if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {\n                fmt.Printf(\"There is no PO corresponding to the input %s of blackbox %s.\\n\", Abc_ObjName(pNetH), Abc_ObjName(pObjH));\n                Abc_NtkDelete( pNtkNew );\n                return nil;\n            }\n            // create net and map the PO\n            if pNetL.pCopy {\n                if Abc_ObjFanout0(pNetL).pCopy == nil {\n                    Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;\n                } else {\n                    Abc_ObjAddFanin( pTermH.pCopy, pNetL.pCopy ); }\n                continue;\n            }\n            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );\n            Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;\n        }\n    }\n    }\n\n    // duplicate other objects of the logic network\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkL).vObjs)) \u0026\u0026 (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else\n        if pObjL.pCopy == nil \u0026\u0026 !Abc_ObjIsPo(pObjL) { // skip POs feeding into PIs\n            Abc_NtkDupObj( pNtkNew, pObjL, Abc_ObjIsNet(pObjL) ); }\n    }\n\n    // connect objects\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkL).vObjs)) \u0026\u0026 (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObjL)) \u0026\u0026 (((pNetL) = Abc_ObjFanin(pObjL, k)), 1); k++  {\n            if pObjL.pCopy {\n                Abc_ObjAddFanin( pObjL.pCopy, pNetL.pCopy ); }\n        } }\n    }\n\n    // transfer the design\n    pDesign = pNtkH.pDesign;  pNtkH.pDesign = nil;\n    assert(Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH, \"Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH\");\n    Vec_PtrWriteEntry( pDesign.vModules, 0, pNtkNew );\n    pNtkNew.pDesign = pDesign;\n\n    // check integrity\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkInsertNewLogic(): Network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

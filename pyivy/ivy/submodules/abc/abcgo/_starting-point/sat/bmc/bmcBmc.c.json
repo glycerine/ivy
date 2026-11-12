@@ -1,0 +1,578 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c",
+  "SHA256": "2e57fedcd61e8953ad6c68839fe65a845566de9666ab982af31054a0f95c1ebc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 5299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 195,
+        "Column": 69,
+        "ByteOffset": 8366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nVars+1), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 9889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running \\\"bmc\\\". AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 10115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 249,
+        "Column": 73,
+        "ByteOffset": 10475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 250,
+        "Column": 9,
+        "ByteOffset": 10503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 250,
+        "Column": 17,
+        "ByteOffset": 10511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 13,
+        "ByteOffset": 10790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 262,
+        "Column": 73,
+        "ByteOffset": 11085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 263,
+        "Column": 13,
+        "ByteOffset": 11117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 263,
+        "Column": 21,
+        "ByteOffset": 11125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 17,
+        "ByteOffset": 11704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 17,
+        "ByteOffset": 11976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 12033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CNF: Variables = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 294,
+        "Column": 73,
+        "ByteOffset": 12298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 12326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 295,
+        "Column": 17,
+        "ByteOffset": 12334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 13,
+        "ByteOffset": 12502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The BMC problem is trivially UNSAT\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 305,
+        "Column": 13,
+        "ByteOffset": 12564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 305,
+        "Column": 21,
+        "ByteOffset": 12572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 17,
+        "ByteOffset": 12983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Solving output %2d of frame %3d ... \\r\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 17,
+        "ByteOffset": 13522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Solved %2d outputs of frame %3d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 17,
+        "ByteOffset": 13653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Conf =%8.0f. Imp =%11.0f. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 328,
+        "Column": 77,
+        "ByteOffset": 14050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkPart)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 330,
+        "Column": 17,
+        "ByteOffset": 14125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 330,
+        "Column": 25,
+        "ByteOffset": 14133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fflush( stdout );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 354,
+        "Column": 74,
+        "ByteOffset": 15157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManFramesBmc",
+      "Start": 1487,
+      "End": 2861,
+      "BodyStart": 1550,
+      "Original": "Aig_Man_t * Saig_ManFramesBmc( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, f;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ManConst0( pFrames );\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        // create POs for this frame\n        Saig_ManForEachPo( pAig, pObj, i )\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n        if ( f == nFrames - 1 )\n            break;\n        // save register inputs\n        Saig_ManForEachLi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n            pObjLo-\u003epData = pObjLi-\u003epData;\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Saig_ManFramesBmc(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // create POs for this frame\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Saig_ManFramesCount_rec",
+      "Start": 3159,
+      "End": 3501,
+      "BodyStart": 3222,
+      "Original": "int Saig_ManFramesCount_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( !Aig_ObjIsNode(pObj) )\n        return 0;\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1 + Saig_ManFramesCount_rec( p, Aig_ObjFanin0(pObj) ) + \n        Saig_ManFramesCount_rec( p, Aig_ObjFanin1(pObj) );\n}",
+      "Draft": "func Saig_ManFramesCount_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if !Aig_ObjIsNode(pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1 + Saig_ManFramesCount_rec( p, Aig_ObjFanin0(pObj) ) + \n        Saig_ManFramesCount_rec( p, Aig_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Saig_ManFramesBmcLimit",
+      "Start": 3985,
+      "End": 5668,
+      "BodyStart": 4067,
+      "Original": "Aig_Man_t * Saig_ManFramesBmcLimit( Aig_Man_t * pAig, int nFrames, int nSizeMax )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjPo;\n    int i, f, Counter = 0;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    pFrames = Aig_ManStart( nSizeMax );\n    Aig_ManIncrementTravId( pFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ManConst0( pFrames );\n    // add timeframes\n    Counter = 0;\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        // create POs for this frame\n        Saig_ManForEachPo( pAig, pObj, i )\n        {\n            pObjPo = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n            Counter += Saig_ManFramesCount_rec( pFrames, Aig_ObjFanin0(pObjPo) );\n        }\n        if ( Counter \u003e= nSizeMax )\n        {\n            Aig_ManCleanup( pFrames );\n            return pFrames;\n        }\n        if ( f == nFrames - 1 )\n            break;\n        // save register inputs\n        Saig_ManForEachLi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n            pObjLo-\u003epData = pObjLi-\u003epData;\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Saig_ManFramesBmcLimit(pAig *Aig_Man_t, nFrames int32, nSizeMax int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjPo *Aig_Obj_t;\n    var i, f, Counter int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( nSizeMax );\n    Aig_ManIncrementTravId( pFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    Counter = 0;\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // create POs for this frame\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObjPo = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n            Counter += Saig_ManFramesCount_rec( pFrames, Aig_ObjFanin0(pObjPo) );\n        }\n        if Counter \u003e= nSizeMax {\n            Aig_ManCleanup( pFrames );\n            return pFrames;\n        }\n        if f == nFrames - 1 {\n            break; }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Sat2_SolverGetModel",
+      "Start": 6012,
+      "End": 6267,
+      "BodyStart": 6078,
+      "Original": "int * Sat2_SolverGetModel( satoko_t * p, int * pVars, int nVars )\n{\n    int * pModel;\n    int i;\n    pModel = ABC_CALLOC( int, nVars+1 );\n    for ( i = 0; i \u003c nVars; i++ )\n        pModel[i] = satoko_read_cex_varvalue(p, pVars[i]);\n    return pModel;    \n}",
+      "Draft": "func Sat2_SolverGetModel(p *satoko_t, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = satoko_read_cex_varvalue(p, pVars[i]);\n    }\n    return pModel;    \n}"
+    },
+    {
+      "Name": "Saig_ManBmcSimple",
+      "Start": 6535,
+      "End": 12600,
+      "BodyStart": 6695,
+      "Original": "int Saig_ManBmcSimple( Aig_Man_t * pAig, int nFrames, int nSizeMax, int nConfLimit, int fRewrite, int fVerbose, int * piFrame, int nCofFanLit, int fUseSatoko )\n{\n    extern Aig_Man_t * Gia_ManCofactorAig( Aig_Man_t * p, int nFrames, int nCofFanLit );\n    sat_solver * pSat = NULL;\n    satoko_t * pSat2 = NULL;\n    Cnf_Dat_t * pCnf;\n    Aig_Man_t * pFrames, * pAigTemp;\n    Aig_Obj_t * pObj;\n    int status, Lit, i, RetValue = -1;\n    abctime clk;\n\n    // derive the timeframes\n    clk = Abc_Clock();\n    if ( nCofFanLit )\n    {\n        pFrames = Gia_ManCofactorAig( pAig, nFrames, nCofFanLit );\n        if ( pFrames == NULL )\n            return -1;\n    }\n    else if ( nSizeMax \u003e 0 )\n    {\n        pFrames = Saig_ManFramesBmcLimit( pAig, nFrames, nSizeMax );\n        nFrames = Aig_ManCoNum(pFrames) / Saig_ManPoNum(pAig) + ((Aig_ManCoNum(pFrames) % Saig_ManPoNum(pAig)) \u003e 0);\n    }\n    else\n        pFrames = Saig_ManFramesBmc( pAig, nFrames );\n    if ( piFrame )\n        *piFrame = nFrames;\n    if ( fVerbose )\n    {\n        printf( \"Running \\\"bmc\\\". AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", \n            Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig),\n            Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig) );\n        printf( \"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", \n            nFrames, Aig_ManCiNum(pFrames), Aig_ManCoNum(pFrames), \n            Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        fflush( stdout );\n    }\n    // rewrite the timeframes\n    if ( fRewrite )\n    {\n        clk = Abc_Clock();\n//        pFrames = Dar_ManBalance( pAigTemp = pFrames, 0 );\n        pFrames = Dar_ManRwsat( pAigTemp = pFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if ( fVerbose )\n        {\n            printf( \"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", \n                Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk );\n            fflush( stdout );\n        }\n    }\n    // create the SAT solver\n    clk = Abc_Clock();\n    pCnf = Cnf_Derive( pFrames, Aig_ManCoNum(pFrames) );  \n//if ( s_fInterrupt )\n//return -1;\n    if ( fUseSatoko )\n    {\n        satoko_opts_t opts;\n        satoko_default_opts(\u0026opts);\n        opts.conf_limit = nConfLimit;\n        pSat2 = satoko_create();  \n        satoko_configure(pSat2, \u0026opts);\n        satoko_setnvars(pSat2, pCnf-\u003enVars);\n        for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n            if ( !satoko_add_clause( pSat2, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1]-pCnf-\u003epClauses[i] ) )\n                assert( 0 );\n    }\n    else\n    {\n        pSat = sat_solver_new();\n        sat_solver_setnvars( pSat, pCnf-\u003enVars );\n        for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n            if ( !sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n                assert( 0 );\n    }\n    if ( fVerbose )\n    {\n        printf( \"CNF: Variables = %6d. Clauses = %7d. Literals = %8d. \", pCnf-\u003enVars, pCnf-\u003enClauses, pCnf-\u003enLiterals );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        fflush( stdout );\n    }\n    status = pSat ? sat_solver_simplify(pSat) : 1;\n    if ( status == 0 )\n    {\n        if ( fVerbose )\n        {\n            printf( \"The BMC problem is trivially UNSAT\\n\" );\n            fflush( stdout );\n        }\n    }\n    else\n    {\n        abctime clkPart = Abc_Clock();\n        Aig_ManForEachCo( pFrames, pObj, i )\n        {\n            Lit = toLitCond( pCnf-\u003epVarNums[pObj-\u003eId], 0 );\n            if ( fVerbose )\n            {\n                printf( \"Solving output %2d of frame %3d ... \\r\", \n                    i % Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig) );\n            }\n            clk = Abc_Clock();\n            if ( pSat2 )\n                status = satoko_solve_assumptions_limit( pSat2, \u0026Lit, 1, nConfLimit );\n            else\n                status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n            if ( fVerbose \u0026\u0026 (i % Saig_ManPoNum(pAig) == Saig_ManPoNum(pAig) - 1) )\n            {\n                printf( \"Solved %2d outputs of frame %3d.  \", \n                    Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig) );\n                printf( \"Conf =%8.0f. Imp =%11.0f. \", \n                    (double)(pSat ? pSat-\u003estats.conflicts    : satoko_conflictnum(pSat2)), \n                    (double)(pSat ? pSat-\u003estats.propagations : satoko_stats(pSat2)-\u003en_propagations) );\n                ABC_PRT( \"T\", Abc_Clock() - clkPart );\n                clkPart = Abc_Clock();\n                fflush( stdout );\n            }\n            if ( status == l_False )\n            {\n/*\n                Lit = lit_neg( Lit );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n                assert( RetValue );\n                if ( pSat-\u003eqtail != pSat-\u003eqhead )\n                {\n                    RetValue = sat_solver_simplify(pSat);\n                    assert( RetValue );\n                }\n*/\n            }\n            else if ( status == l_True )\n            {\n                Vec_Int_t * vCiIds = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n                int * pModel = pSat2 ? Sat2_SolverGetModel(pSat2, vCiIds-\u003epArray, vCiIds-\u003enSize) : Sat_SolverGetModel(pSat, vCiIds-\u003epArray, vCiIds-\u003enSize);\n                pModel[Aig_ManCiNum(pFrames)] = pObj-\u003eId;\n                pAig-\u003epSeqModel = Fra_SmlCopyCounterExample( pAig, pFrames, pModel );\n                ABC_FREE( pModel );\n                Vec_IntFree( vCiIds );\n\n                if ( piFrame )\n                    *piFrame = i / Saig_ManPoNum(pAig);\n                RetValue = 0;\n                break;\n            }\n            else\n            {\n                if ( piFrame )\n                    *piFrame = i / Saig_ManPoNum(pAig);\n                RetValue = -1;\n                break;\n            }\n        }\n    }\n    if ( pSat )  sat_solver_delete( pSat );\n    if ( pSat2 ) satoko_destroy( pSat2 );\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n    return RetValue;\n}",
+      "Draft": "func Saig_ManBmcSimple(pAig *Aig_Man_t, nFrames int32, nSizeMax int32, nConfLimit int32, fRewrite int32, fVerbose int32, piFrame *int32, nCofFanLit int32, fUseSatoko int32) int32 {\n    extern Aig_Man_t * Gia_ManCofactorAig( Aig_Man_t * p, int nFrames, int nCofFanLit );\n    var pSat *sat_solver  = nil;\n    var pSat2 *satoko_t  = nil;\n    var pCnf *Cnf_Dat_t;\n    var pFrames, pAigTemp *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var status int32;\n    var Lit int32;\n    var i int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n\n    // derive the timeframes\n    clk = Abc_Clock();\n    if nCofFanLit != 0 {\n        pFrames = Gia_ManCofactorAig( pAig, nFrames, nCofFanLit );\n        if pFrames == nil {\n            return -1; }\n    \n    } else if nSizeMax \u003e 0 {\n        pFrames = Saig_ManFramesBmcLimit( pAig, nFrames, nSizeMax );\n        nFrames = Aig_ManCoNum(pFrames) / Saig_ManPoNum(pAig) + ((Aig_ManCoNum(pFrames) % Saig_ManPoNum(pAig)) \u003e 0);\n    \n    } else {\n        pFrames = Saig_ManFramesBmc( pAig, nFrames ); }\n    if piFrame != nil {\n        *piFrame = nFrames; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Running \\\"bmc\\\". AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n        fmt.Printf(\"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", nFrames, Aig_ManCiNum(pFrames), Aig_ManCoNum(pFrames), Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fflush( os.Stdout );\n    }\n    // rewrite the timeframes\n    if fRewrite != 0 {\n        clk = Abc_Clock();\n//        pFrames = Dar_ManBalance( pAigTemp = pFrames, 0 );\n        pFrames = Dar_ManRwsat( pAigTemp = pFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            fflush( os.Stdout );\n        }\n    }\n    // create the SAT solver\n    clk = Abc_Clock();\n    pCnf = Cnf_Derive( pFrames, Aig_ManCoNum(pFrames) );  \n//if ( s_fInterrupt )\n//return -1;\n    if fUseSatoko != 0 {\n        var opts satoko_opts_t;\n        satoko_default_opts(\u0026opts);\n        opts.conf_limit = nConfLimit;\n        pSat2 = satoko_create();  \n        satoko_configure(pSat2, \u0026opts);\n        satoko_setnvars(pSat2, pCnf.nVars);\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            if !satoko_add_clause( pSat2, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        pSat = sat_solver_new();\n        sat_solver_setnvars( pSat, pCnf.nVars );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n                assert(false, \"0\"); }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"CNF: Variables = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fflush( os.Stdout );\n    }\n    if pSat != nil {\n        status = sat_solver_simplify(pSat);\n    } else {\n        status = 1;\n    }\n    if status == 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"The BMC problem is trivially UNSAT\\n\");\n            fflush( os.Stdout );\n        }\n    \n    } else {\n        var clkPart abctime  = Abc_Clock();\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n            Lit = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n            if fVerbose != 0 {\n                fmt.Printf(\"Solving output %2d of frame %3d ... \\r\", i % Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig));\n            }\n            clk = Abc_Clock();\n            if pSat2 != nil {\n                status = satoko_solve_assumptions_limit( pSat2, \u0026Lit, 1, nConfLimit );\n            } else {\n                status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 ); }\n            if (fVerbose != 0) \u0026\u0026 (i % Saig_ManPoNum(pAig) == Saig_ManPoNum(pAig) - 1) {\n                fmt.Printf(\"Solved %2d outputs of frame %3d.  \", Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig));\n                fmt.Printf(\"Conf =%8.0f. Imp =%11.0f. \", float64((pSat ? pSat.stats.conflicts    : satoko_conflictnum(pSat2))), float64((pSat ? pSat.stats.propagations : satoko_stats(pSat2).n_propagations)));\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkPart)))/(float64(int64(time.Second))));;\n                clkPart = Abc_Clock();\n                fflush( os.Stdout );\n            }\n            if status == l_False {\n/*\n                Lit = lit_neg( Lit );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n                assert( RetValue );\n                if ( pSat-\u003eqtail != pSat-\u003eqhead )\n                {\n                    RetValue = sat_solver_simplify(pSat);\n                    assert( RetValue );\n                }\n*/\n            \n            } else if status == l_True {\n                var vCiIds *Vec_Int_t  = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n                var pModel *int32;\n                if pSat2 != nil {\n                    pModel = Sat2_SolverGetModel(pSat2, vCiIds.pArray, vCiIds.nSize);\n                } else {\n                    pModel = Sat_SolverGetModel(pSat, vCiIds.pArray, vCiIds.nSize);\n                }\n                pModel[Aig_ManCiNum(pFrames)] = pObj.Id;\n                pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pFrames, pModel );\n                // inlining of macro ABC_FREE\n                ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n                Vec_IntFree( vCiIds );\n\n                if piFrame != nil {\n                    *piFrame = i / Saig_ManPoNum(pAig); }\n                RetValue = 0;\n                break;\n            \n            } else {\n                if piFrame != nil {\n                    *piFrame = i / Saig_ManPoNum(pAig); }\n                RetValue = -1;\n                break;\n            }\n        }\n    }\n    if pSat != nil {  sat_solver_delete( pSat ); }\n    if pSat2 != nil { satoko_destroy( pSat2 ); }\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::mechanical::sizeof::8283",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6122,
+      "End": 6122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::1979",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1872,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::2379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2069,
+      "End": 2069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::2705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2210,
+      "End": 2210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::3119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2387,
+      "End": 2387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::3435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2578,
+      "End": 2578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::5576",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4429,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::5993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4643,
+      "End": 4643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::6319",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4784,
+      "End": 4784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::6733",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4961,
+      "End": 4961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::7282",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5385,
+      "End": 5385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::8249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6122,
+      "End": 6122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::12645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9946,
+      "End": 9946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::pointer-cast::14930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12022,
+      "End": 12022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::Saig_ManFramesBmc",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFramesBmc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1487,
+      "End": 2861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::Saig_ManFramesCount_rec",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFramesCount_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3159,
+      "End": 3501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::Saig_ManFramesBmcLimit",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFramesBmcLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3985,
+      "End": 5668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::Sat2_SolverGetModel",
+      "Category": "semantic-review",
+      "Symbol": "Sat2_SolverGetModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6012,
+      "End": 6267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::ternary::Saig_ManBmcSimple",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManBmcSimple",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6535,
+      "End": 12600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::Saig_ManBmcSimple",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManBmcSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6535,
+      "End": 12600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcBmc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12847
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bmcBmc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Simple BMC package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcBmc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"proof/fra/fra.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n//#include \"sat/satoko/satoko.h\"\n//#include \"bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create timeframes of the manager for BMC.]\n\n  Description [The resulting manager is combinational. POs correspond to \\\n  the property outputs in each time-frame.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFramesBmc(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // create POs for this frame\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of internal nodes that are not counted yet.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFramesCount_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if !Aig_ObjIsNode(pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1 + Saig_ManFramesCount_rec( p, Aig_ObjFanin0(pObj) ) + \n        Saig_ManFramesCount_rec( p, Aig_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create timeframes of the manager for BMC.]\n\n  Description [The resulting manager is combinational. POs correspond to \n  the property outputs in each time-frame.\n  The unrolling is stopped as soon as the number of nodes in the frames\n  exceeds the given maximum size.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFramesBmcLimit(pAig *Aig_Man_t, nFrames int32, nSizeMax int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjPo *Aig_Obj_t;\n    var i, f, Counter int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( nSizeMax );\n    Aig_ManIncrementTravId( pFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    Counter = 0;\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // create POs for this frame\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObjPo = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n            Counter += Saig_ManFramesCount_rec( pFrames, Aig_ObjFanin0(pObjPo) );\n        }\n        if Counter \u003e= nSizeMax {\n            Aig_ManCleanup( pFrames );\n            return pFrames;\n        }\n        if f == nFrames - 1 {\n            break; }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"misc/util/utilMem.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat2_SolverGetModel(p *satoko_t, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = satoko_read_cex_varvalue(p, pVars[i]);\n    }\n    return pModel;    \n}\n \n/**Function*************************************************************\n\n  Synopsis    [Performs BMC for the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManBmcSimple(pAig *Aig_Man_t, nFrames int32, nSizeMax int32, nConfLimit int32, fRewrite int32, fVerbose int32, piFrame *int32, nCofFanLit int32, fUseSatoko int32) int32 {\n    extern Aig_Man_t * Gia_ManCofactorAig( Aig_Man_t * p, int nFrames, int nCofFanLit );\n    var pSat *sat_solver  = nil;\n    var pSat2 *satoko_t  = nil;\n    var pCnf *Cnf_Dat_t;\n    var pFrames, pAigTemp *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var status int32;\n    var Lit int32;\n    var i int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n\n    // derive the timeframes\n    clk = Abc_Clock();\n    if nCofFanLit != 0 {\n        pFrames = Gia_ManCofactorAig( pAig, nFrames, nCofFanLit );\n        if pFrames == nil {\n            return -1; }\n    \n    } else if nSizeMax \u003e 0 {\n        pFrames = Saig_ManFramesBmcLimit( pAig, nFrames, nSizeMax );\n        nFrames = Aig_ManCoNum(pFrames) / Saig_ManPoNum(pAig) + ((Aig_ManCoNum(pFrames) % Saig_ManPoNum(pAig)) \u003e 0);\n    \n    } else {\n        pFrames = Saig_ManFramesBmc( pAig, nFrames ); }\n    if piFrame != nil {\n        *piFrame = nFrames; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Running \\\"bmc\\\". AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n        fmt.Printf(\"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", nFrames, Aig_ManCiNum(pFrames), Aig_ManCoNum(pFrames), Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fflush( os.Stdout );\n    }\n    // rewrite the timeframes\n    if fRewrite != 0 {\n        clk = Abc_Clock();\n//        pFrames = Dar_ManBalance( pAigTemp = pFrames, 0 );\n        pFrames = Dar_ManRwsat( pAigTemp = pFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", Aig_ManNodeNum(pFrames), Aig_ManLevelNum(pFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            fflush( os.Stdout );\n        }\n    }\n    // create the SAT solver\n    clk = Abc_Clock();\n    pCnf = Cnf_Derive( pFrames, Aig_ManCoNum(pFrames) );  \n//if ( s_fInterrupt )\n//return -1;\n    if fUseSatoko != 0 {\n        var opts satoko_opts_t;\n        satoko_default_opts(\u0026opts);\n        opts.conf_limit = nConfLimit;\n        pSat2 = satoko_create();  \n        satoko_configure(pSat2, \u0026opts);\n        satoko_setnvars(pSat2, pCnf.nVars);\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            if !satoko_add_clause( pSat2, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n                assert(false, \"0\"); }\n        }\n    \n    } else {\n        pSat = sat_solver_new();\n        sat_solver_setnvars( pSat, pCnf.nVars );\n        for  i = 0; i \u003c pCnf.nClauses; i++  {\n            if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n                assert(false, \"0\"); }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"CNF: Variables = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fflush( os.Stdout );\n    }\n    if pSat != nil {\n        status = sat_solver_simplify(pSat);\n    } else {\n        status = 1;\n    }\n    if status == 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"The BMC problem is trivially UNSAT\\n\");\n            fflush( os.Stdout );\n        }\n    \n    } else {\n        var clkPart abctime  = Abc_Clock();\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n            Lit = toLitCond( pCnf.pVarNums[pObj.Id], 0 );\n            if fVerbose != 0 {\n                fmt.Printf(\"Solving output %2d of frame %3d ... \\r\", i % Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig));\n            }\n            clk = Abc_Clock();\n            if pSat2 != nil {\n                status = satoko_solve_assumptions_limit( pSat2, \u0026Lit, 1, nConfLimit );\n            } else {\n                status = sat_solver_solve( pSat, \u0026Lit, \u0026Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 ); }\n            if (fVerbose != 0) \u0026\u0026 (i % Saig_ManPoNum(pAig) == Saig_ManPoNum(pAig) - 1) {\n                fmt.Printf(\"Solved %2d outputs of frame %3d.  \", Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig));\n                fmt.Printf(\"Conf =%8.0f. Imp =%11.0f. \", float64((pSat ? pSat.stats.conflicts    : satoko_conflictnum(pSat2))), float64((pSat ? pSat.stats.propagations : satoko_stats(pSat2).n_propagations)));\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"T\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkPart)))/(float64(int64(time.Second))));;\n                clkPart = Abc_Clock();\n                fflush( os.Stdout );\n            }\n            if status == l_False {\n/*\n                Lit = lit_neg( Lit );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n                assert( RetValue );\n                if ( pSat-\u003eqtail != pSat-\u003eqhead )\n                {\n                    RetValue = sat_solver_simplify(pSat);\n                    assert( RetValue );\n                }\n*/\n            \n            } else if status == l_True {\n                var vCiIds *Vec_Int_t  = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n                var pModel *int32;\n                if pSat2 != nil {\n                    pModel = Sat2_SolverGetModel(pSat2, vCiIds.pArray, vCiIds.nSize);\n                } else {\n                    pModel = Sat_SolverGetModel(pSat, vCiIds.pArray, vCiIds.nSize);\n                }\n                pModel[Aig_ManCiNum(pFrames)] = pObj.Id;\n                pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pFrames, pModel );\n                // inlining of macro ABC_FREE\n                ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n                Vec_IntFree( vCiIds );\n\n                if piFrame != nil {\n                    *piFrame = i / Saig_ManPoNum(pAig); }\n                RetValue = 0;\n                break;\n            \n            } else {\n                if piFrame != nil {\n                    *piFrame = i / Saig_ManPoNum(pAig); }\n                RetValue = -1;\n                break;\n            }\n        }\n    }\n    if pSat != nil {  sat_solver_delete( pSat ); }\n    if pSat2 != nil { satoko_destroy( pSat2 ); }\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

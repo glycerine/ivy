@@ -1,0 +1,424 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c",
+  "SHA256": "ae41b525068a0ccfa0ba3d6d78457d1986cd81f98ac0938375053a56e0066acb",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( FileName, \"aig\\\\%03d.blif\", ++spStatic_Fra_FraigNodeSpeculate_Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Speculation cone with %d nodes was written into file \\\"%s\\\".\\n\", Aig_ManNodeNum(pTemp), FileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p.pManAig) == Vec_IntSize(vCex) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 9,
+        "ByteOffset": 6995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkB ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 13,
+        "ByteOffset": 8407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The node %d is not constant under cex!\\n\", pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 17,
+        "ByteOffset": 8816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The nodes %d and %d are not equal under cex!\\n\", ppClass[0].Id, ppClass[c].Id ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 9915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 10548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.nFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p.pManFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 11407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 12350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fra_FraigNode(): Error in class refinement!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 12415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.nFramesK || Fra_ClassObjRepr(pObj) != pObjRepr );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_FraigMiterStatus",
+      "Start": 2289,
+      "End": 3734,
+      "BodyStart": 2331,
+      "Original": "int Fra_FraigMiterStatus( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pChild;\n    int i, CountConst0 = 0, CountNonConst0 = 0, CountUndecided = 0;\n    if ( p-\u003epData )\n        return 0;\n    Aig_ManForEachPoSeq( p, pObj, i )\n    {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if ( pChild == Aig_ManConst0(p) )\n        {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if ( pChild == Aig_ManConst1(p) )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if ( Aig_ObjIsCi(Aig_Regular(pChild)) \u0026\u0026 Aig_ObjCioId(Aig_Regular(pChild)) \u003c p-\u003enTruePis )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if ( Aig_Regular(pChild)-\u003efPhase != (unsigned)Aig_IsComplement(pChild) )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n/*\n    if ( p-\u003epParams-\u003efVerbose )\n    {\n        printf( \"Miter has %d outputs. \", Aig_ManCoNum(p-\u003epManAig) );\n        printf( \"Const0 = %d.  \", CountConst0 );\n        printf( \"NonConst0 = %d.  \", CountNonConst0 );\n        printf( \"Undecided = %d.  \", CountUndecided );\n        printf( \"\\n\" );\n    }\n*/\n    if ( CountNonConst0 )\n        return 0;\n    if ( CountUndecided )\n        return -1;\n    return 1;\n}",
+      "Draft": "func Fra_FraigMiterStatus(p *Aig_Man_t) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i, CountConst0, CountNonConst0, CountUndecided int32;\n    if p.pData {\n        return 0; }\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if Aig_ObjIsCi(Aig_Regular(pChild)) \u0026\u0026 Aig_ObjCioId(Aig_Regular(pChild)) \u003c p.nTruePis {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n/*\n    if ( p-\u003epParams-\u003efVerbose )\n    {\n        printf( \"Miter has %d outputs. \", Aig_ManCoNum(p-\u003epManAig) );\n        printf( \"Const0 = %d.  \", CountConst0 );\n        printf( \"NonConst0 = %d.  \", CountNonConst0 );\n        printf( \"Undecided = %d.  \", CountUndecided );\n        printf( \"\\n\" );\n    }\n*/\n    if CountNonConst0 {\n        return 0; }\n    if CountUndecided != 0 {\n        return -1; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_FraigMiterAssertedOutput",
+      "Start": 4002,
+      "End": 4575,
+      "BodyStart": 4052,
+      "Original": "int Fra_FraigMiterAssertedOutput( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pChild;\n    int i;\n    Aig_ManForEachPoSeq( p, pObj, i )\n    {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if ( pChild == Aig_ManConst0(p) )\n            continue;\n        // check if the output is constant 1\n        if ( pChild == Aig_ManConst1(p) )\n            return i;\n        // check if the output can be not constant 0\n        if ( Aig_Regular(pChild)-\u003efPhase != (unsigned)Aig_IsComplement(pChild) )\n            return i;\n    }\n    return -1;\n}",
+      "Draft": "func Fra_FraigMiterAssertedOutput(p *Aig_Man_t) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            continue; }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            return i; }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Fra_FraigNodeSpeculate",
+      "Start": 4848,
+      "End": 5588,
+      "BodyStart": 4975,
+      "Original": "static inline void Fra_FraigNodeSpeculate( Fra_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pObjFraig, Aig_Obj_t * pObjReprFraig )\n{ \n    static int Counter = 0;\n    char FileName[20];\n    Aig_Man_t * pTemp;\n    Aig_Obj_t * pNode;\n    int i;\n    // create manager with the logic for these two nodes\n    pTemp = Aig_ManExtractMiter( p-\u003epManFraig, pObjFraig, pObjReprFraig );\n    // dump the logic into a file\n    sprintf( FileName, \"aig\\\\%03d.blif\", ++Counter );\n    Aig_ManDumpBlif( pTemp, FileName, NULL, NULL );\n    printf( \"Speculation cone with %d nodes was written into file \\\"%s\\\".\\n\", Aig_ManNodeNum(pTemp), FileName );\n    // clean up\n    Aig_ManStop( pTemp );\n    Aig_ManForEachObj( p-\u003epManFraig, pNode, i )\n        pNode-\u003epData = p;\n}",
+      "Draft": "func Fra_FraigNodeSpeculate(p *Fra_Man_t, pObj *Aig_Obj_t, pObjFraig *Aig_Obj_t, pObjReprFraig *Aig_Obj_t) { \n    \n    var FileName string // was [20]byte in C\n\n    var pTemp *Aig_Man_t;\n    var pNode *Aig_Obj_t;\n    var i int32;\n    // create manager with the logic for these two nodes\n    pTemp = Aig_ManExtractMiter( p.pManFraig, pObjFraig, pObjReprFraig );\n    // dump the logic into a file\n    FileName = fmt.Sprintf(\"aig\\\\%03d.blif\", ++spStatic_Fra_FraigNodeSpeculate_Counter);\n    Aig_ManDumpBlif( pTemp, FileName, nil, nil );\n    printf( \"Speculation cone with %d nodes was written into file \\\"%s\\\".\\n\", Aig_ManNodeNum(pTemp), FileName );\n    // clean up\n    Aig_ManStop( pTemp );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        pNode.pData = p; }\n    }\n}"
+    },
+    {
+      "Name": "Fra_FraigVerifyCounterEx",
+      "Start": 5858,
+      "End": 7552,
+      "BodyStart": 5923,
+      "Original": "void Fra_FraigVerifyCounterEx( Fra_Man_t * p, Vec_Int_t * vCex )\n{\n    Aig_Obj_t * pObj, ** ppClass;\n    int i, c;\n    assert( Aig_ManCiNum(p-\u003epManAig) == Vec_IntSize(vCex) );\n    // make sure the input pattern is not used\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n        assert( !pObj-\u003efMarkB );\n    // simulate the cex through the AIG\n    Aig_ManConst1(p-\u003epManAig)-\u003efMarkB = 1;\n    Aig_ManForEachCi( p-\u003epManAig, pObj, i )\n        pObj-\u003efMarkB = Vec_IntEntry(vCex, i);\n    Aig_ManForEachNode( p-\u003epManAig, pObj, i )\n        pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                       (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n    Aig_ManForEachCo( p-\u003epManAig, pObj, i )\n        pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n    // check if the classes hold\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003epCla-\u003evClasses1, pObj, i )\n    {\n        if ( pObj-\u003efPhase != pObj-\u003efMarkB )\n            printf( \"The node %d is not constant under cex!\\n\", pObj-\u003eId );\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t **, p-\u003epCla-\u003evClasses, ppClass, i )\n    {\n        for ( c = 1; ppClass[c]; c++ )\n            if ( (ppClass[0]-\u003efPhase ^ ppClass[c]-\u003efPhase) != (ppClass[0]-\u003efMarkB ^ ppClass[c]-\u003efMarkB) )\n                printf( \"The nodes %d and %d are not equal under cex!\\n\", ppClass[0]-\u003eId, ppClass[c]-\u003eId );\n//        for ( c = 0; ppClass[c]; c++ )\n//            if ( Fra_ObjFraig(ppClass[c],p-\u003epPars-\u003enFramesK) == Aig_ManConst1(p-\u003epManFraig) )\n//                printf( \"A member of non-constant class has a constant repr!\\n\" );\n    }\n    // clean the simulation pattern\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n        pObj-\u003efMarkB = 0;\n}",
+      "Draft": "func Fra_FraigVerifyCounterEx(p *Fra_Man_t, vCex *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, c int32;\n    assert(Aig_ManCiNum(p.pManAig) == Vec_IntSize(vCex), \"Aig_ManCiNum(p.pManAig) == Vec_IntSize(vCex)\");\n    // make sure the input pattern is not used\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkB, \"!pObj.fMarkB\"); }\n    }\n    // simulate the cex through the AIG\n    Aig_ManConst1(p.pManAig).fMarkB = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pObj.fMarkB = Vec_IntEntry(vCex, i);\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                       (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n    }\n    // check if the classes hold\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pCla.vClasses1)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pCla.vClasses1, i)), 1); i++  {\n        if pObj.fPhase != pObj.fMarkB {\n            fmt.Printf(\"The node %d is not constant under cex!\\n\", pObj.Id); }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pCla.vClasses)) \u0026\u0026 (((ppClass) = (Aig_Obj_t **)Vec_PtrEntry(p.pCla.vClasses, i)), 1); i++  {\n        for  c = 1; ppClass[c]; c++  {\n            if (ppClass[0].fPhase ^ ppClass[c].fPhase) != (ppClass[0].fMarkB ^ ppClass[c].fMarkB) {\n                fmt.Printf(\"The nodes %d and %d are not equal under cex!\\n\", ppClass[0].Id, ppClass[c].Id); }\n        }\n//        for ( c = 0; ppClass[c]; c++ )\n//            if ( Fra_ObjFraig(ppClass[c],p-\u003epPars-\u003enFramesK) == Aig_ManConst1(p-\u003epManFraig) )\n//                printf( \"A member of non-constant class has a constant repr!\\n\" );\n    }\n    // clean the simulation pattern\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n}"
+    },
+    {
+      "Name": "Fra_FraigNode",
+      "Start": 7844,
+      "End": 10625,
+      "BodyStart": 7912,
+      "Original": "static inline void Fra_FraigNode( Fra_Man_t * p, Aig_Obj_t * pObj )\n{ \n    Aig_Obj_t * pObjRepr, * pObjFraig, * pObjFraig2, * pObjReprFraig;\n    int RetValue;\n    assert( !Aig_IsComplement(pObj) );\n    // get representative of this class\n    pObjRepr = Fra_ClassObjRepr( pObj );\n    if ( pObjRepr == NULL || // this is a unique node\n       (!p-\u003epPars-\u003efDoSparse \u0026\u0026 pObjRepr == Aig_ManConst1(p-\u003epManAig)) ) // this is a sparse node\n        return;\n    // get the fraiged node\n    pObjFraig = Fra_ObjFraig( pObj, p-\u003epPars-\u003enFramesK );\n    // get the fraiged representative\n    pObjReprFraig = Fra_ObjFraig( pObjRepr, p-\u003epPars-\u003enFramesK );\n    // if the fraiged nodes are the same, return\n    if ( Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) )\n    {\n        p-\u003enSatCallsSkipped++;\n        return;\n    }\n    assert( p-\u003epPars-\u003enFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p-\u003epManFraig) );\n    // if they are proved different, the c-ex will be in p-\u003epPatWords\n    RetValue = Fra_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if ( RetValue == 1 )  // proved equivalent\n    {\n//        if ( p-\u003epPars-\u003efChoicing )\n//            Aig_ObjCreateRepr( p-\u003epManFraig, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n        // the nodes proved equal\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj-\u003efPhase ^ pObjRepr-\u003efPhase );\n        Fra_ObjSetFraig( pObj, p-\u003epPars-\u003enFramesK, pObjFraig2 );\n        return;\n    }\n    if ( RetValue == -1 ) // failed\n    {\n        if ( p-\u003evTimeouts == NULL )\n            p-\u003evTimeouts = Vec_PtrAlloc( 100 );\n        Vec_PtrPush( p-\u003evTimeouts, pObj );\n        if ( !p-\u003epPars-\u003efSpeculate )\n            return;\n        assert( 0 );\n        // speculate\n        p-\u003enSpeculs++;\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj-\u003efPhase ^ pObjRepr-\u003efPhase );\n        Fra_ObjSetFraig( pObj, p-\u003epPars-\u003enFramesK, pObjFraig2 );\n        Fra_FraigNodeSpeculate( p, pObj, Aig_Regular(pObjFraig), Aig_Regular(pObjReprFraig) );\n        return;\n    }\n    // disprove the nodes\n    p-\u003epCla-\u003efRefinement = 1;\n    // if we do not include the node into those disproved, we may end up \n    // merging this node with another representative, for which proof has timed out\n    if ( p-\u003evTimeouts )\n        Vec_PtrPush( p-\u003evTimeouts, pObj );\n    // verify that the counter-example satisfies all the constraints\n//    if ( p-\u003evCex )\n//        Fra_FraigVerifyCounterEx( p, p-\u003evCex );\n    // simulate the counter-example and return the Fraig node\n    Fra_SmlResimulate( p );\n    if ( p-\u003epManFraig-\u003epData )\n        return;\n    if ( !p-\u003epPars-\u003enFramesK \u0026\u0026 Fra_ClassObjRepr(pObj) == pObjRepr )\n        printf( \"Fra_FraigNode(): Error in class refinement!\\n\" );\n    assert( p-\u003epPars-\u003enFramesK || Fra_ClassObjRepr(pObj) != pObjRepr );\n}",
+      "Draft": "func Fra_FraigNode(p *Fra_Man_t, pObj *Aig_Obj_t) { \n    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;\n    var RetValue int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    // get representative of this class\n    pObjRepr = Fra_ClassObjRepr( pObj );\n    if pObjRepr == nil || // this is a unique node\n       (!p.pPars.fDoSparse \u0026\u0026 pObjRepr == Aig_ManConst1(p.pManAig)) { // this is a sparse node\n        return; }\n    // get the fraiged node\n    pObjFraig = Fra_ObjFraig( pObj, p.pPars.nFramesK );\n    // get the fraiged representative\n    pObjReprFraig = Fra_ObjFraig( pObjRepr, p.pPars.nFramesK );\n    // if the fraiged nodes are the same, return\n    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {\n        p.nSatCallsSkipped++;\n        return;\n    }\n    assert(p.pPars.nFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p.pManFraig), \"p.pPars.nFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p.pManFraig)\");\n    // if they are proved different, the c-ex will be in p-\u003epPatWords\n    RetValue = Fra_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if RetValue == 1 {  // proved equivalent\n    \n//        if ( p-\u003epPars-\u003efChoicing )\n//            Aig_ObjCreateRepr( p-\u003epManFraig, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n        // the nodes proved equal\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjFraig2 );\n        return;\n    }\n    if RetValue == -1 { // failed\n    \n        if p.vTimeouts == nil {\n            p.vTimeouts = Vec_PtrAlloc( 100 ); }\n        Vec_PtrPush( p.vTimeouts, pObj );\n        if !p.pPars.fSpeculate {\n            return; }\n        assert(false, \"0\");\n        // speculate\n        p.nSpeculs++;\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjFraig2 );\n        Fra_FraigNodeSpeculate( p, pObj, Aig_Regular(pObjFraig), Aig_Regular(pObjReprFraig) );\n        return;\n    }\n    // disprove the nodes\n    p.pCla.fRefinement = 1;\n    // if we do not include the node into those disproved, we may end up \n    // merging this node with another representative, for which proof has timed out\n    if p.vTimeouts {\n        Vec_PtrPush( p.vTimeouts, pObj ); }\n    // verify that the counter-example satisfies all the constraints\n//    if ( p-\u003evCex )\n//        Fra_FraigVerifyCounterEx( p, p-\u003evCex );\n    // simulate the counter-example and return the Fraig node\n    Fra_SmlResimulate( p );\n    if p.pManFraig.pData {\n        return; }\n    if !p.pPars.nFramesK \u0026\u0026 Fra_ClassObjRepr(pObj) == pObjRepr {\n        fmt.Printf(\"Fra_FraigNode(): Error in class refinement!\\n\"); }\n    assert(p.pPars.nFramesK || Fra_ClassObjRepr(pObj) != pObjRepr, \"p.pPars.nFramesK || Fra_ClassObjRepr(pObj) != pObjRepr\");\n}"
+    },
+    {
+      "Name": "Fra_FraigSweep",
+      "Start": 10902,
+      "End": 13010,
+      "BodyStart": 10939,
+      "Original": "void Fra_FraigSweep( Fra_Man_t * p )\n{\n//    Bar_Progress_t * pProgress = NULL;\n    Aig_Obj_t * pObj, * pObjNew;\n    int i, Pos = 0;\n    int nBTracksOld;\n    // fraig latch outputs\n    Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n    {\n        Fra_FraigNode( p, pObj );\n        if ( p-\u003epPars-\u003efUseImps )\n            Pos = Fra_ImpCheckForNode( p, p-\u003epCla-\u003evImps, pObj, Pos );\n    }\n    if ( p-\u003epPars-\u003efLatchCorr )\n        return;\n    // fraig internal nodes\n//    if ( !p-\u003epPars-\u003efDontShowBar )\n//        pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p-\u003epManAig) );\n    nBTracksOld = p-\u003epPars-\u003enBTLimitNode;\n    Aig_ManForEachNode( p-\u003epManAig, pObj, i )\n    {\n//        if ( pProgress )\n//            Bar_ProgressUpdate( pProgress, i, NULL );\n        // derive and remember the new fraig node\n        pObjNew = Aig_And( p-\u003epManFraig, Fra_ObjChild0Fra(pObj,p-\u003epPars-\u003enFramesK), Fra_ObjChild1Fra(pObj,p-\u003epPars-\u003enFramesK) );\n        Fra_ObjSetFraig( pObj, p-\u003epPars-\u003enFramesK, pObjNew );\n        Aig_Regular(pObjNew)-\u003epData = p;\n        // quit if simulation detected a counter-example for a PO\n        if ( p-\u003epManFraig-\u003epData )\n            continue;\n//        if ( Aig_SupportSize(p-\u003epManAig,pObj) \u003e 16 )\n//            continue;\n        // perform fraiging\n        if ( p-\u003epPars-\u003enLevelMax \u0026\u0026 (int)pObj-\u003eLevel \u003e p-\u003epPars-\u003enLevelMax )\n            p-\u003epPars-\u003enBTLimitNode = 5;\n        Fra_FraigNode( p, pObj );\n        if ( p-\u003epPars-\u003enLevelMax \u0026\u0026 (int)pObj-\u003eLevel \u003e p-\u003epPars-\u003enLevelMax )\n            p-\u003epPars-\u003enBTLimitNode = nBTracksOld;\n        // check implications\n        if ( p-\u003epPars-\u003efUseImps )\n            Pos = Fra_ImpCheckForNode( p, p-\u003epCla-\u003evImps, pObj, Pos );\n    }\n//    if ( pProgress )\n//        Bar_ProgressStop( pProgress );\n    // try to prove the outputs of the miter\n    p-\u003enNodesMiter = Aig_ManNodeNum(p-\u003epManFraig);\n//    Fra_MiterStatus( p-\u003epManFraig );\n//    if ( p-\u003epPars-\u003efProve \u0026\u0026 p-\u003epManFraig-\u003epData == NULL )\n//        Fra_MiterProve( p );\n    // compress implications after processing all of them\n    if ( p-\u003epPars-\u003efUseImps )\n        Fra_ImpCompactArray( p-\u003epCla-\u003evImps );\n}",
+      "Draft": "func Fra_FraigSweep(p *Fra_Man_t) {\n//    Bar_Progress_t * pProgress = NULL;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, Pos int32;\n    var nBTracksOld int32;\n    // fraig latch outputs\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_FraigNode( p, pObj );\n        if p.pPars.fUseImps {\n            Pos = Fra_ImpCheckForNode( p, p.pCla.vImps, pObj, Pos ); }\n    }\n    if p.pPars.fLatchCorr {\n        return; }\n    // fraig internal nodes\n//    if ( !p-\u003epPars-\u003efDontShowBar )\n//        pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p-\u003epManAig) );\n    nBTracksOld = p.pPars.nBTLimitNode;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n//        if ( pProgress )\n//            Bar_ProgressUpdate( pProgress, i, NULL );\n        // derive and remember the new fraig node\n        pObjNew = Aig_And( p.pManFraig, Fra_ObjChild0Fra(pObj,p.pPars.nFramesK), Fra_ObjChild1Fra(pObj,p.pPars.nFramesK) );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjNew );\n        Aig_Regular(pObjNew).pData = p;\n        // quit if simulation detected a counter-example for a PO\n        if p.pManFraig.pData {\n            continue; }\n//        if ( Aig_SupportSize(p-\u003epManAig,pObj) \u003e 16 )\n//            continue;\n        // perform fraiging\n        if p.pPars.nLevelMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nLevelMax {\n            p.pPars.nBTLimitNode = 5; }\n        Fra_FraigNode( p, pObj );\n        if p.pPars.nLevelMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nLevelMax {\n            p.pPars.nBTLimitNode = nBTracksOld; }\n        // check implications\n        if p.pPars.fUseImps {\n            Pos = Fra_ImpCheckForNode( p, p.pCla.vImps, pObj, Pos ); }\n    }\n    }\n//    if ( pProgress )\n//        Bar_ProgressStop( pProgress );\n    // try to prove the outputs of the miter\n    p.nNodesMiter = Aig_ManNodeNum(p.pManFraig);\n//    Fra_MiterStatus( p-\u003epManFraig );\n//    if ( p-\u003epPars-\u003efProve \u0026\u0026 p-\u003epManFraig-\u003epData == NULL )\n//        Fra_MiterProve( p );\n    // compress implications after processing all of them\n    if p.pPars.fUseImps {\n        Fra_ImpCompactArray( p.pCla.vImps ); }\n}"
+    },
+    {
+      "Name": "Fra_FraigPerform",
+      "Start": 13275,
+      "End": 15249,
+      "BodyStart": 13346,
+      "Original": "Aig_Man_t * Fra_FraigPerform( Aig_Man_t * pManAig, Fra_Par_t * pPars )\n{\n    Fra_Man_t * p;\n    Aig_Man_t * pManAigNew;\n    abctime clk;\n    if ( Aig_ManNodeNum(pManAig) == 0 )\n        return Aig_ManDupOrdered(pManAig);\nclk = Abc_Clock();\n    p = Fra_ManStart( pManAig, pPars );\n    p-\u003epManFraig = Fra_ManPrepareComb( p );\n    p-\u003epSml = Fra_SmlStart( pManAig, 0, 1, pPars-\u003enSimWords );\n    Fra_SmlSimulate( p, 0 );\n//    if ( p-\u003epPars-\u003efChoicing )\n//        Aig_ManReprStart( p-\u003epManFraig, Aig_ManObjNumMax(p-\u003epManAig) );\n    // collect initial states\n    p-\u003enLitsBeg  = Fra_ClassesCountLits( p-\u003epCla );\n    p-\u003enNodesBeg = Aig_ManNodeNum(pManAig);\n    p-\u003enRegsBeg  = Aig_ManRegNum(pManAig);\n    // perform fraig sweep\nif ( p-\u003epPars-\u003efVerbose )\nFra_ClassesPrint( p-\u003epCla, 1 );\n    Fra_FraigSweep( p );\n    // call back the procedure to check implications\n    if ( pManAig-\u003epImpFunc )\n        pManAig-\u003epImpFunc( p, pManAig-\u003epImpData );\n    // no need to filter one-hot clauses because they satisfy base case by construction\n    // finalize the fraiged manager\n    Fra_ManFinalizeComb( p );\n    if ( p-\u003epPars-\u003efChoicing )\n    { \nabctime clk2 = Abc_Clock();\n        Fra_ClassesCopyReprs( p-\u003epCla, p-\u003evTimeouts );\n        pManAigNew = Aig_ManDupRepr( p-\u003epManAig, 1 );\n        Aig_ManReprStart( pManAigNew, Aig_ManObjNumMax(pManAigNew) );\n        Aig_ManTransferRepr( pManAigNew, p-\u003epManAig );\n        Aig_ManMarkValidChoices( pManAigNew );\n        Aig_ManStop( p-\u003epManFraig );\n        p-\u003epManFraig = NULL;\np-\u003etimeTrav += Abc_Clock() - clk2;\n    }\n    else\n    {\n        Fra_ClassesCopyReprs( p-\u003epCla, p-\u003evTimeouts );\n        Aig_ManCleanup( p-\u003epManFraig );\n        pManAigNew = p-\u003epManFraig;\n        p-\u003epManFraig = NULL;\n    }\np-\u003etimeTotal = Abc_Clock() - clk;\n    // collect final stats\n    p-\u003enLitsEnd  = Fra_ClassesCountLits( p-\u003epCla );\n    p-\u003enNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p-\u003enRegsEnd  = Aig_ManRegNum(pManAigNew);\n    Fra_ManStop( p );\n    return pManAigNew;\n}",
+      "Draft": "func Fra_FraigPerform(pManAig *Aig_Man_t, pPars *Fra_Par_t) *Aig_Man_t {\n    var p *Fra_Man_t;\n    var pManAigNew *Aig_Man_t;\n    var clk abctime;\n    if Aig_ManNodeNum(pManAig) == 0 {\n        return Aig_ManDupOrdered(pManAig); }\nclk = Abc_Clock();\n    p = Fra_ManStart( pManAig, pPars );\n    p.pManFraig = Fra_ManPrepareComb( p );\n    p.pSml = Fra_SmlStart( pManAig, 0, 1, pPars.nSimWords );\n    Fra_SmlSimulate( p, 0 );\n//    if ( p-\u003epPars-\u003efChoicing )\n//        Aig_ManReprStart( p-\u003epManFraig, Aig_ManObjNumMax(p-\u003epManAig) );\n    // collect initial states\n    p.nLitsBeg  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesBeg = Aig_ManNodeNum(pManAig);\n    p.nRegsBeg  = Aig_ManRegNum(pManAig);\n    // perform fraig sweep\nif p.pPars.fVerbose {\nFra_ClassesPrint( p.pCla, 1 ); }\n    Fra_FraigSweep( p );\n    // call back the procedure to check implications\n    if pManAig.pImpFunc {\n        pManAig.pImpFunc( p, pManAig.pImpData ); }\n    // no need to filter one-hot clauses because they satisfy base case by construction\n    // finalize the fraiged manager\n    Fra_ManFinalizeComb( p );\n    if p.pPars.fChoicing { \nvar clk2 abctime  = Abc_Clock();\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        pManAigNew = Aig_ManDupRepr( p.pManAig, 1 );\n        Aig_ManReprStart( pManAigNew, Aig_ManObjNumMax(pManAigNew) );\n        Aig_ManTransferRepr( pManAigNew, p.pManAig );\n        Aig_ManMarkValidChoices( pManAigNew );\n        Aig_ManStop( p.pManFraig );\n        p.pManFraig = nil;\np.timeTrav += Abc_Clock() - clk2;\n    \n    } else {\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        Aig_ManCleanup( p.pManFraig );\n        pManAigNew = p.pManFraig;\n        p.pManFraig = nil;\n    }\np.timeTotal = Abc_Clock() - clk;\n    // collect final stats\n    p.nLitsEnd  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pManAigNew);\n    Fra_ManStop( p );\n    return pManAigNew;\n}"
+    },
+    {
+      "Name": "Fra_FraigChoice",
+      "Start": 15514,
+      "End": 15961,
+      "BodyStart": 15594,
+      "Original": "Aig_Man_t * Fra_FraigChoice( Aig_Man_t * pManAig, int nConfMax, int nLevelMax )\n{\n    Fra_Par_t Pars, * pPars = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars-\u003enBTLimitNode = nConfMax;\n    pPars-\u003efChoicing    = 1;\n    pPars-\u003efDoSparse    = 1;\n    pPars-\u003efSpeculate   = 0;\n    pPars-\u003efProve       = 0;\n    pPars-\u003efVerbose     = 0;\n    pPars-\u003efDontShowBar = 1;\n    pPars-\u003enLevelMax    = nLevelMax;\n    return Fra_FraigPerform( pManAig, pPars );\n}",
+      "Draft": "func Fra_FraigChoice(pManAig *Aig_Man_t, nConfMax int32, nLevelMax int32) *Aig_Man_t {\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars.nBTLimitNode = nConfMax;\n    pPars.fChoicing    = 1;\n    pPars.fDoSparse    = 1;\n    pPars.fSpeculate   = 0;\n    pPars.fProve       = 0;\n    pPars.fVerbose     = 0;\n    pPars.fDontShowBar = 1;\n    pPars.nLevelMax    = nLevelMax;\n    return Fra_FraigPerform( pManAig, pPars );\n}"
+    },
+    {
+      "Name": "Fra_FraigEquivence",
+      "Start": 16198,
+      "End": 16658,
+      "BodyStart": 16278,
+      "Original": "Aig_Man_t * Fra_FraigEquivence( Aig_Man_t * pManAig, int nConfMax, int fProve )\n{\n    Aig_Man_t * pFraig;\n    Fra_Par_t Pars, * pPars = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars-\u003enBTLimitNode = nConfMax;\n    pPars-\u003efChoicing    = 0;\n    pPars-\u003efDoSparse    = 1;\n    pPars-\u003efSpeculate   = 0;\n    pPars-\u003efProve       = fProve;\n    pPars-\u003efVerbose     = 0;\n    pPars-\u003efDontShowBar = 1;\n    pFraig = Fra_FraigPerform( pManAig, pPars );\n    return pFraig;\n}",
+      "Draft": "func Fra_FraigEquivence(pManAig *Aig_Man_t, nConfMax int32, fProve int32) *Aig_Man_t {\n    var pFraig *Aig_Man_t;\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars.nBTLimitNode = nConfMax;\n    pPars.fChoicing    = 0;\n    pPars.fDoSparse    = 1;\n    pPars.fSpeculate   = 0;\n    pPars.fProve       = fProve;\n    pPars.fVerbose     = 0;\n    pPars.fDontShowBar = 1;\n    pFraig = Fra_FraigPerform( pManAig, pPars );\n    return pFraig;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::mechanical::static::5374",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4982,
+      "End": 4988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::2655",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2475,
+      "End": 2475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::4477",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4101,
+      "End": 4101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::6084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5517,
+      "End": 5517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::6873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6085,
+      "End": 6085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::7253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6246,
+      "End": 6246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::7535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6336,
+      "End": 6336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::7979",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6538,
+      "End": 6538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::8270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6690,
+      "End": 6690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::8589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6890,
+      "End": 6890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::9349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7484,
+      "End": 7484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::13228",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11087,
+      "End": 11087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::pointer-cast::13851",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11521,
+      "End": 11521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigMiterStatus",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigMiterStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2289,
+      "End": 3734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigMiterAssertedOutput",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigMiterAssertedOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4002,
+      "End": 4575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigNodeSpeculate",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigNodeSpeculate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4848,
+      "End": 5588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigVerifyCounterEx",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigVerifyCounterEx",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5858,
+      "End": 7552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigNode",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7844,
+      "End": 10625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigSweep",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10902,
+      "End": 13010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigPerform",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13275,
+      "End": 15249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigChoice",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15514,
+      "End": 15961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::Fra_FraigEquivence",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigEquivence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16198,
+      "End": 16658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16906
+    }
+  ],
+  "Draft": "package fra\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fraCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraCore.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/* \n    Speculating reduction in the sequential case leads to an interesting \n    situation when a counter-ex may not refine any classes. This happens\n    for non-constant equivalence classes. In such cases the representative\n    of the class (proved by simulation to be non-constant) may be reduced \n    to a constant during the speculative reduction. The fraig-representative \n    of this representative node is a constant node, even though this is a \n    non-constant class. Experiments have shown that this situation happens \n    very often at the beginning of the refinement iteration when there are \n    many spurious candidate equivalence classes (especially if heavy-duty \n    simulatation of BMC was node used at the beginning). As a result, the \n    SAT solver run may return a counter-ex that  distinguishes the given \n    representative node from the constant-1 node but this counter-ex\n    does not distinguish the nodes in the non-costant class... This is why \n    there is no check of refinement after a counter-ex in the sequential case.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reports the status of the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigMiterStatus(p *Aig_Man_t) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i, CountConst0, CountNonConst0, CountUndecided int32;\n    if p.pData {\n        return 0; }\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if Aig_ObjIsCi(Aig_Regular(pChild)) \u0026\u0026 Aig_ObjCioId(Aig_Regular(pChild)) \u003c p.nTruePis {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n/*\n    if ( p-\u003epParams-\u003efVerbose )\n    {\n        printf( \"Miter has %d outputs. \", Aig_ManCoNum(p-\u003epManAig) );\n        printf( \"Const0 = %d.  \", CountConst0 );\n        printf( \"NonConst0 = %d.  \", CountNonConst0 );\n        printf( \"Undecided = %d.  \", CountUndecided );\n        printf( \"\\n\" );\n    }\n*/\n    if CountNonConst0 {\n        return 0; }\n    if CountUndecided != 0 {\n        return -1; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports the status of the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigMiterAssertedOutput(p *Aig_Man_t) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            continue; }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            return i; }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write speculative miter for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Fra_FraigNodeSpeculate_Counter int32;\nfunc Fra_FraigNodeSpeculate(p *Fra_Man_t, pObj *Aig_Obj_t, pObjFraig *Aig_Obj_t, pObjReprFraig *Aig_Obj_t) { \n    \n    var FileName string // was [20]byte in C\n\n    var pTemp *Aig_Man_t;\n    var pNode *Aig_Obj_t;\n    var i int32;\n    // create manager with the logic for these two nodes\n    pTemp = Aig_ManExtractMiter( p.pManFraig, pObjFraig, pObjReprFraig );\n    // dump the logic into a file\n    FileName = fmt.Sprintf(\"aig\\\\%03d.blif\", ++spStatic_Fra_FraigNodeSpeculate_Counter);\n    Aig_ManDumpBlif( pTemp, FileName, nil, nil );\n    printf( \"Speculation cone with %d nodes was written into file \\\"%s\\\".\\n\", Aig_ManNodeNum(pTemp), FileName );\n    // clean up\n    Aig_ManStop( pTemp );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vObjs)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        pNode.pData = p; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the generated counter-ex.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigVerifyCounterEx(p *Fra_Man_t, vCex *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, c int32;\n    assert(Aig_ManCiNum(p.pManAig) == Vec_IntSize(vCex), \"Aig_ManCiNum(p.pManAig) == Vec_IntSize(vCex)\");\n    // make sure the input pattern is not used\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkB, \"!pObj.fMarkB\"); }\n    }\n    // simulate the cex through the AIG\n    Aig_ManConst1(p.pManAig).fMarkB = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pObj.fMarkB = Vec_IntEntry(vCex, i);\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                       (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n    }\n    // check if the classes hold\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pCla.vClasses1)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pCla.vClasses1, i)), 1); i++  {\n        if pObj.fPhase != pObj.fMarkB {\n            fmt.Printf(\"The node %d is not constant under cex!\\n\", pObj.Id); }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pCla.vClasses)) \u0026\u0026 (((ppClass) = (Aig_Obj_t **)Vec_PtrEntry(p.pCla.vClasses, i)), 1); i++  {\n        for  c = 1; ppClass[c]; c++  {\n            if (ppClass[0].fPhase ^ ppClass[c].fPhase) != (ppClass[0].fMarkB ^ ppClass[c].fMarkB) {\n                fmt.Printf(\"The nodes %d and %d are not equal under cex!\\n\", ppClass[0].Id, ppClass[c].Id); }\n        }\n//        for ( c = 0; ppClass[c]; c++ )\n//            if ( Fra_ObjFraig(ppClass[c],p-\u003epPars-\u003enFramesK) == Aig_ManConst1(p-\u003epManFraig) )\n//                printf( \"A member of non-constant class has a constant repr!\\n\" );\n    }\n    // clean the simulation pattern\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for one node.]\n\n  Description [Returns the fraiged node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigNode(p *Fra_Man_t, pObj *Aig_Obj_t) { \n    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;\n    var RetValue int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    // get representative of this class\n    pObjRepr = Fra_ClassObjRepr( pObj );\n    if pObjRepr == nil || // this is a unique node\n       (!p.pPars.fDoSparse \u0026\u0026 pObjRepr == Aig_ManConst1(p.pManAig)) { // this is a sparse node\n        return; }\n    // get the fraiged node\n    pObjFraig = Fra_ObjFraig( pObj, p.pPars.nFramesK );\n    // get the fraiged representative\n    pObjReprFraig = Fra_ObjFraig( pObjRepr, p.pPars.nFramesK );\n    // if the fraiged nodes are the same, return\n    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {\n        p.nSatCallsSkipped++;\n        return;\n    }\n    assert(p.pPars.nFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p.pManFraig), \"p.pPars.nFramesK || Aig_Regular(pObjFraig) != Aig_ManConst1(p.pManFraig)\");\n    // if they are proved different, the c-ex will be in p-\u003epPatWords\n    RetValue = Fra_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if RetValue == 1 {  // proved equivalent\n    \n//        if ( p-\u003epPars-\u003efChoicing )\n//            Aig_ObjCreateRepr( p-\u003epManFraig, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n        // the nodes proved equal\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjFraig2 );\n        return;\n    }\n    if RetValue == -1 { // failed\n    \n        if p.vTimeouts == nil {\n            p.vTimeouts = Vec_PtrAlloc( 100 ); }\n        Vec_PtrPush( p.vTimeouts, pObj );\n        if !p.pPars.fSpeculate {\n            return; }\n        assert(false, \"0\");\n        // speculate\n        p.nSpeculs++;\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjFraig2 );\n        Fra_FraigNodeSpeculate( p, pObj, Aig_Regular(pObjFraig), Aig_Regular(pObjReprFraig) );\n        return;\n    }\n    // disprove the nodes\n    p.pCla.fRefinement = 1;\n    // if we do not include the node into those disproved, we may end up \n    // merging this node with another representative, for which proof has timed out\n    if p.vTimeouts {\n        Vec_PtrPush( p.vTimeouts, pObj ); }\n    // verify that the counter-example satisfies all the constraints\n//    if ( p-\u003evCex )\n//        Fra_FraigVerifyCounterEx( p, p-\u003evCex );\n    // simulate the counter-example and return the Fraig node\n    Fra_SmlResimulate( p );\n    if p.pManFraig.pData {\n        return; }\n    if !p.pPars.nFramesK \u0026\u0026 Fra_ClassObjRepr(pObj) == pObjRepr {\n        fmt.Printf(\"Fra_FraigNode(): Error in class refinement!\\n\"); }\n    assert(p.pPars.nFramesK || Fra_ClassObjRepr(pObj) != pObjRepr, \"p.pPars.nFramesK || Fra_ClassObjRepr(pObj) != pObjRepr\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for the internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigSweep(p *Fra_Man_t) {\n//    Bar_Progress_t * pProgress = NULL;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, Pos int32;\n    var nBTracksOld int32;\n    // fraig latch outputs\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_FraigNode( p, pObj );\n        if p.pPars.fUseImps {\n            Pos = Fra_ImpCheckForNode( p, p.pCla.vImps, pObj, Pos ); }\n    }\n    if p.pPars.fLatchCorr {\n        return; }\n    // fraig internal nodes\n//    if ( !p-\u003epPars-\u003efDontShowBar )\n//        pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p-\u003epManAig) );\n    nBTracksOld = p.pPars.nBTLimitNode;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n//        if ( pProgress )\n//            Bar_ProgressUpdate( pProgress, i, NULL );\n        // derive and remember the new fraig node\n        pObjNew = Aig_And( p.pManFraig, Fra_ObjChild0Fra(pObj,p.pPars.nFramesK), Fra_ObjChild1Fra(pObj,p.pPars.nFramesK) );\n        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, pObjNew );\n        Aig_Regular(pObjNew).pData = p;\n        // quit if simulation detected a counter-example for a PO\n        if p.pManFraig.pData {\n            continue; }\n//        if ( Aig_SupportSize(p-\u003epManAig,pObj) \u003e 16 )\n//            continue;\n        // perform fraiging\n        if p.pPars.nLevelMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nLevelMax {\n            p.pPars.nBTLimitNode = 5; }\n        Fra_FraigNode( p, pObj );\n        if p.pPars.nLevelMax \u0026\u0026 int32(pObj.Level) \u003e p.pPars.nLevelMax {\n            p.pPars.nBTLimitNode = nBTracksOld; }\n        // check implications\n        if p.pPars.fUseImps {\n            Pos = Fra_ImpCheckForNode( p, p.pCla.vImps, pObj, Pos ); }\n    }\n    }\n//    if ( pProgress )\n//        Bar_ProgressStop( pProgress );\n    // try to prove the outputs of the miter\n    p.nNodesMiter = Aig_ManNodeNum(p.pManFraig);\n//    Fra_MiterStatus( p-\u003epManFraig );\n//    if ( p-\u003epPars-\u003efProve \u0026\u0026 p-\u003epManFraig-\u003epData == NULL )\n//        Fra_MiterProve( p );\n    // compress implications after processing all of them\n    if p.pPars.fUseImps {\n        Fra_ImpCompactArray( p.pCla.vImps ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigPerform(pManAig *Aig_Man_t, pPars *Fra_Par_t) *Aig_Man_t {\n    var p *Fra_Man_t;\n    var pManAigNew *Aig_Man_t;\n    var clk abctime;\n    if Aig_ManNodeNum(pManAig) == 0 {\n        return Aig_ManDupOrdered(pManAig); }\nclk = Abc_Clock();\n    p = Fra_ManStart( pManAig, pPars );\n    p.pManFraig = Fra_ManPrepareComb( p );\n    p.pSml = Fra_SmlStart( pManAig, 0, 1, pPars.nSimWords );\n    Fra_SmlSimulate( p, 0 );\n//    if ( p-\u003epPars-\u003efChoicing )\n//        Aig_ManReprStart( p-\u003epManFraig, Aig_ManObjNumMax(p-\u003epManAig) );\n    // collect initial states\n    p.nLitsBeg  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesBeg = Aig_ManNodeNum(pManAig);\n    p.nRegsBeg  = Aig_ManRegNum(pManAig);\n    // perform fraig sweep\nif p.pPars.fVerbose {\nFra_ClassesPrint( p.pCla, 1 ); }\n    Fra_FraigSweep( p );\n    // call back the procedure to check implications\n    if pManAig.pImpFunc {\n        pManAig.pImpFunc( p, pManAig.pImpData ); }\n    // no need to filter one-hot clauses because they satisfy base case by construction\n    // finalize the fraiged manager\n    Fra_ManFinalizeComb( p );\n    if p.pPars.fChoicing { \nvar clk2 abctime  = Abc_Clock();\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        pManAigNew = Aig_ManDupRepr( p.pManAig, 1 );\n        Aig_ManReprStart( pManAigNew, Aig_ManObjNumMax(pManAigNew) );\n        Aig_ManTransferRepr( pManAigNew, p.pManAig );\n        Aig_ManMarkValidChoices( pManAigNew );\n        Aig_ManStop( p.pManFraig );\n        p.pManFraig = nil;\np.timeTrav += Abc_Clock() - clk2;\n    \n    } else {\n        Fra_ClassesCopyReprs( p.pCla, p.vTimeouts );\n        Aig_ManCleanup( p.pManFraig );\n        pManAigNew = p.pManFraig;\n        p.pManFraig = nil;\n    }\np.timeTotal = Abc_Clock() - clk;\n    // collect final stats\n    p.nLitsEnd  = Fra_ClassesCountLits( p.pCla );\n    p.nNodesEnd = Aig_ManNodeNum(pManAigNew);\n    p.nRegsEnd  = Aig_ManRegNum(pManAigNew);\n    Fra_ManStop( p );\n    return pManAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs choicing of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigChoice(pManAig *Aig_Man_t, nConfMax int32, nLevelMax int32) *Aig_Man_t {\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars.nBTLimitNode = nConfMax;\n    pPars.fChoicing    = 1;\n    pPars.fDoSparse    = 1;\n    pPars.fSpeculate   = 0;\n    pPars.fProve       = 0;\n    pPars.fVerbose     = 0;\n    pPars.fDontShowBar = 1;\n    pPars.nLevelMax    = nLevelMax;\n    return Fra_FraigPerform( pManAig, pPars );\n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigEquivence(pManAig *Aig_Man_t, nConfMax int32, fProve int32) *Aig_Man_t {\n    var pFraig *Aig_Man_t;\n    var Pars Fra_Par_t;\n    var pPars *Fra_Par_t = \u0026Pars; \n    Fra_ParamsDefault( pPars );\n    pPars.nBTLimitNode = nConfMax;\n    pPars.fChoicing    = 0;\n    pPars.fDoSparse    = 1;\n    pPars.fSpeculate   = 0;\n    pPars.fProve       = fProve;\n    pPars.fVerbose     = 0;\n    pPars.fDontShowBar = 1;\n    pFraig = Fra_FraigPerform( pManAig, pPars );\n    return pFraig;\n} \n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

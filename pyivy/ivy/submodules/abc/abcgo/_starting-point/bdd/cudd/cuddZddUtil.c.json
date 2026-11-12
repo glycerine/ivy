@@ -1,0 +1,1872 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c",
+  "SHA256": "2840938ab05e66e9be17a264a20ff4d6655c71d4d9fc5fc5c26a1e0f4e4f0565",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 12,
+        "ByteOffset": 5582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    list = ABC_ALLOC(int, size);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(list);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 12,
+        "ByteOffset": 6528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    list = ABC_ALLOC(int, size);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 6764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(list);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 16,
+        "ByteOffset": 7980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(zdd.out,\": is the empty ZDD\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "fflush retained: establish whether the stream is buffered, input, or flush-all before choosing behavior (Sync is not fflush).",
+      "Location": {
+        "Line": 217,
+        "Column": 16,
+        "ByteOffset": 8036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(zdd.out);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 16,
+        "ByteOffset": 8314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(zdd.out,\": %d nodes %g minterms\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 20,
+        "ByteOffset": 8581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(zdd.out,\"\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "fflush retained: establish whether the stream is buffered, input, or flush-all before choosing behavior (Sync is not fflush).",
+      "Location": {
+        "Line": 234,
+        "Column": 16,
+        "ByteOffset": 8629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(zdd.out);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 273,
+        "Column": 11,
+        "ByteOffset": 9957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen = ABC_ALLOC(DdGen,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 26,
+        "ByteOffset": 10344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen.gen.cubes.cube = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 10450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(gen);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 23,
+        "ByteOffset": 10740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    gen.stack.stack = ABC_ALLOC(DdNodePtr, nvars+1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 9,
+        "ByteOffset": 10852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(gen.gen.cubes.cube);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 9,
+        "ByteOffset": 10890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(gen);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 15,
+        "ByteOffset": 18042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        res = ABC_ALLOC(char, nvars+1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 14,
+        "ByteOffset": 20368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sorted = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 608,
+        "Column": 14,
+        "ByteOffset": 22485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"digraph \\\"ZDD\\\" {\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 609,
+        "Column": 18,
+        "ByteOffset": 22537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { return(0); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 14,
+        "ByteOffset": 22569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 612,
+        "Column": 18,
+        "ByteOffset": 22666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { return(0); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 615,
+        "Column": 14,
+        "ByteOffset": 22770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"{ node [shape = plaintext];\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 616,
+        "Column": 18,
+        "ByteOffset": 22832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 617,
+        "Column": 14,
+        "ByteOffset": 22867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"  edge [style = invis];\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 618,
+        "Column": 18,
+        "ByteOffset": 22925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 622,
+        "Column": 14,
+        "ByteOffset": 23086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"  \\\"CONST NODES\\\" [style = invis];\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 623,
+        "Column": 18,
+        "ByteOffset": 23155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 26,
+        "ByteOffset": 23301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\" %d \\\" -\u003e \", dd.invpermZ[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 26,
+        "ByteOffset": 23391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\" %s \\\" -\u003e \", inames[dd.invpermZ[i]]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 631,
+        "Column": 26,
+        "ByteOffset": 23482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 634,
+        "Column": 14,
+        "ByteOffset": 23533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"\\\"CONST NODES\\\"; \\n}\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 635,
+        "Column": 18,
+        "ByteOffset": 23588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 14,
+        "ByteOffset": 23666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"{ rank = same; node [shape = box]; edge [style = invis];\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 639,
+        "Column": 18,
+        "ByteOffset": 23757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 22,
+        "ByteOffset": 23855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"\\\"F%d\\\"\", i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 22,
+        "ByteOffset": 23919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"\\\"  %s  \\\"\", onames[i]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 646,
+        "Column": 22,
+        "ByteOffset": 23987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 22,
+        "ByteOffset": 24054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"; }\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 22,
+        "ByteOffset": 24113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\" -\u003e \");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 652,
+        "Column": 22,
+        "ByteOffset": 24164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 22,
+        "ByteOffset": 24359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"{ rank = same; \");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 659,
+        "Column": 26,
+        "ByteOffset": 24415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 661,
+        "Column": 26,
+        "ByteOffset": 24493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\" %d \\\";\\n\", dd.invpermZ[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 26,
+        "ByteOffset": 24582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\" %s \\\";\\n\", inames[dd.invpermZ[i]]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 665,
+        "Column": 26,
+        "ByteOffset": 24672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 672,
+        "Column": 34,
+        "ByteOffset": 25050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        retval = fprintf(fp,\"\\\"%p\\\";\\n\", (void *)"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 675,
+        "Column": 38,
+        "ByteOffset": 25247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 680,
+        "Column": 22,
+        "ByteOffset": 25382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"}\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 681,
+        "Column": 26,
+        "ByteOffset": 25426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 14,
+        "ByteOffset": 25522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 688,
+        "Column": 18,
+        "ByteOffset": 25619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 695,
+        "Column": 26,
+        "ByteOffset": 25935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\"%p\\\";\\n\", (void *)"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 697,
+        "Column": 30,
+        "ByteOffset": 26074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 702,
+        "Column": 14,
+        "ByteOffset": 26169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"}\\n}\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 703,
+        "Column": 18,
+        "ByteOffset": 26208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 709,
+        "Column": 22,
+        "ByteOffset": 26373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"\\\"F%d\\\"\", i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 711,
+        "Column": 22,
+        "ByteOffset": 26437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(fp,\"\\\"  %s  \\\"\", onames[i]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 713,
+        "Column": 22,
+        "ByteOffset": 26505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 714,
+        "Column": 18,
+        "ByteOffset": 26544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        retval = fprintf(fp,\" -\u003e \\\"%p\\\" [style = solid];\\n\","
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 717,
+        "Column": 22,
+        "ByteOffset": 26729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 729,
+        "Column": 34,
+        "ByteOffset": 27219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        retval = fprintf(fp,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 734,
+        "Column": 38,
+        "ByteOffset": 27575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 34,
+        "ByteOffset": 27630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        retval = fprintf(fp,"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 742,
+        "Column": 38,
+        "ByteOffset": 28158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 26,
+        "ByteOffset": 28616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                retval = fprintf(fp,\"\\\"%p\\\" [label = \\\"%g\\\"];\\n\","
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 761,
+        "Column": 30,
+        "ByteOffset": 28910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 768,
+        "Column": 14,
+        "ByteOffset": 29042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(fp,\"}\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 769,
+        "Column": 18,
+        "ByteOffset": 29078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { goto failure; }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 772,
+        "Column": 5,
+        "ByteOffset": 29134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(sorted);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 24,
+        "ByteOffset": 29200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if sorted != nil { ABC_FREE(sorted); }"
+    },
+    {
+      "Name": "fputc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 809,
+        "Column": 12,
+        "ByteOffset": 30238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fputc('\\n', zdd.out);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 841,
+        "Column": 15,
+        "ByteOffset": 31308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void)fprintf(zdd.out, \"ID = %d\\n\", (f == base));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 854,
+        "Column": 16,
+        "ByteOffset": 31907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(zdd.out, \"T = %d\\t\\t\", (n == base));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 863,
+        "Column": 16,
+        "ByteOffset": 32329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(zdd.out, \"E = %d\\n\", (n == base));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 915,
+        "Column": 28,
+        "ByteOffset": 34054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(zdd.out,\"0\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 917,
+        "Column": 28,
+        "ByteOffset": 34138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(zdd.out,\"1\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 919,
+        "Column": 28,
+        "ByteOffset": 34222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(zdd.out,\"@\");       /* should never happen */"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 921,
+        "Column": 28,
+        "ByteOffset": 34328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(zdd.out,\"-\"); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 923,
+        "Column": 20,
+        "ByteOffset": 34385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(zdd.out,\" 1\\n\");"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 987,
+        "Column": 28,
+        "ByteOffset": 36578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) putc('-',zdd.out);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 989,
+        "Column": 28,
+        "ByteOffset": 36659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) putc('1',zdd.out);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 991,
+        "Column": 28,
+        "ByteOffset": 36740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) putc('0',zdd.out);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 993,
+        "Column": 28,
+        "ByteOffset": 36811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) putc('@',zdd.out); } /* should never happen */"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 995,
+        "Column": 20,
+        "ByteOffset": 36891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(zdd.out,\" 1\\n\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 95,
+        "Column": 1,
+        "ByteOffset": 3797
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 879,
+        "Column": 1,
+        "ByteOffset": 29415
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 892,
+        "Column": 1,
+        "ByteOffset": 29852
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 907,
+        "Column": 1,
+        "ByteOffset": 30268
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddPrintMinterm",
+      "Start": 5439,
+      "End": 5867,
+      "BodyStart": 5501,
+      "Original": "int\nCudd_zddPrintMinterm(\n  DdManager * zdd,\n  DdNode * node)\n{\n    int         i, size;\n    int         *list;\n\n    size = (int)zdd-\u003esizeZ;\n    list = ABC_ALLOC(int, size);\n    if (list == NULL) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c size; i++) list[i] = 3; /* bogus value should disappear */\n    zdd_print_minterm_aux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n}",
+      "Draft": "func Cudd_zddPrintMinterm(zdd *DdManager, node *DdNode) int32 {\n    var i, size int32;\n    var list *int32;\n\n    size = int32(zdd.sizeZ);\n    list = ABC_ALLOC(int, size);\n    if list == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c size; i++ { list[i] = 3; } /* bogus value should disappear */\n    zdd_print_minterm_aux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddPrintCover",
+      "Start": 6315,
+      "End": 6811,
+      "BodyStart": 6375,
+      "Original": "int\nCudd_zddPrintCover(\n  DdManager * zdd,\n  DdNode * node)\n{\n    int         i, size;\n    int         *list;\n\n    size = (int)zdd-\u003esizeZ;\n    if (size % 2 != 0) return(0); /* number of variables should be even */\n    list = ABC_ALLOC(int, size);\n    if (list == NULL) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c size; i++) list[i] = 3; /* bogus value should disappear */\n    zddPrintCoverAux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n}",
+      "Draft": "func Cudd_zddPrintCover(zdd *DdManager, node *DdNode) int32 {\n    var i, size int32;\n    var list *int32;\n\n    size = int32(zdd.sizeZ);\n    if size % 2 != 0 { return(0); } /* number of variables should be even */\n    list = ABC_ALLOC(int, size);\n    if list == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c size; i++ { list[i] = 3; } /* bogus value should disappear */\n    zddPrintCoverAux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddPrintDebug",
+      "Start": 7714,
+      "End": 8650,
+      "BodyStart": 7792,
+      "Original": "int\nCudd_zddPrintDebug(\n  DdManager * zdd,\n  DdNode * f,\n  int  n,\n  int  pr)\n{\n    DdNode      *empty = DD_ZERO(zdd);\n    int         nodes;\n    double      minterms;\n    int         retval = 1;\n\n    if (f == empty \u0026\u0026 pr \u003e 0) {\n        (void) fprintf(zdd-\u003eout,\": is the empty ZDD\\n\");\n        (void) fflush(zdd-\u003eout);\n        return(1);\n    }\n\n    if (pr \u003e 0) {\n        nodes = Cudd_zddDagSize(f);\n        if (nodes == CUDD_OUT_OF_MEM) retval = 0;\n        minterms = Cudd_zddCountMinterm(zdd, f, n);\n        if (minterms == (double)CUDD_OUT_OF_MEM) retval = 0;\n        (void) fprintf(zdd-\u003eout,\": %d nodes %g minterms\\n\",\n                       nodes, minterms);\n        if (pr \u003e 2)\n            if (!cuddZddP(zdd, f)) retval = 0;\n        if (pr == 2 || pr \u003e 3) {\n            if (!Cudd_zddPrintMinterm(zdd, f)) retval = 0;\n            (void) fprintf(zdd-\u003eout,\"\\n\");\n        }\n        (void) fflush(zdd-\u003eout);\n    }\n    return(retval);\n\n}",
+      "Draft": "func Cudd_zddPrintDebug(zdd *DdManager, f *DdNode, n int32, pr int32) int32 {\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero);\n    var nodes int32;\n    var minterms float64;\n    var retval int32  = 1;\n\n    if f == empty \u0026\u0026 pr \u003e 0 {\n        (void) fmt.Fprintf(zdd.out, \": is the empty ZDD\\n\");\n        (void) fflush(zdd.out);\n        return(1);\n    }\n\n    if pr \u003e 0 {\n        nodes = Cudd_zddDagSize(f);\n        if nodes == CUDD_OUT_OF_MEM { retval = 0; }\n        minterms = Cudd_zddCountMinterm(zdd, f, n);\n        if minterms == float64(CUDD_OUT_OF_MEM) { retval = 0; }\n        (void) fmt.Fprintf(zdd.out, \": %d nodes %g minterms\\n\", nodes, minterms);\n        if pr \u003e 2 {\n            if !(cuddZddP(zdd, f) != 0) { retval = 0; } }\n        if pr == 2 || pr \u003e 3 {\n            if !(Cudd_zddPrintMinterm(zdd, f) != 0) { retval = 0; }\n            (void) fmt.Fprintf(zdd.out, \"\\n\");\n        }\n        (void) fflush(zdd.out);\n    }\n    return(retval);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddFirstPath",
+      "Start": 9639,
+      "End": 12559,
+      "BodyStart": 9714,
+      "Original": "DdGen *\nCudd_zddFirstPath(\n  DdManager * zdd,\n  DdNode * f,\n  int ** path)\n{\n    DdGen *gen;\n    DdNode *top, *next, *prev;\n    int i;\n    int nvars;\n\n    /* Sanity Check. */\n    if (zdd == NULL || f == NULL) return(NULL);\n\n    /* Allocate generator an initialize it. */\n    gen = ABC_ALLOC(DdGen,1);\n    if (gen == NULL) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n\n    gen-\u003emanager = zdd;\n    gen-\u003etype = CUDD_GEN_ZDD_PATHS;\n    gen-\u003estatus = CUDD_GEN_EMPTY;\n    gen-\u003egen.cubes.cube = NULL;\n    gen-\u003egen.cubes.value = DD_ZERO_VAL;\n    gen-\u003estack.sp = 0;\n    gen-\u003estack.stack = NULL;\n    gen-\u003enode = NULL;\n\n    nvars = zdd-\u003esizeZ;\n    gen-\u003egen.cubes.cube = ABC_ALLOC(int,nvars);\n    if (gen-\u003egen.cubes.cube == NULL) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen);\n        return(NULL);\n    }\n    for (i = 0; i \u003c nvars; i++) gen-\u003egen.cubes.cube[i] = 2;\n\n    /* The maximum stack depth is one plus the number of variables.\n    ** because a path may have nodes at all levels, including the\n    ** constant level.\n    */\n    gen-\u003estack.stack = ABC_ALLOC(DdNodePtr, nvars+1);\n    if (gen-\u003estack.stack == NULL) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen-\u003egen.cubes.cube);\n        ABC_FREE(gen);\n        return(NULL);\n    }\n    for (i = 0; i \u003c= nvars; i++) gen-\u003estack.stack[i] = NULL;\n\n    /* Find the first path of the ZDD. */\n    gen-\u003estack.stack[gen-\u003estack.sp] = f; gen-\u003estack.sp++;\n\n    while (1) {\n        top = gen-\u003estack.stack[gen-\u003estack.sp-1];\n        if (!cuddIsConstant(Cudd_Regular(top))) {\n            /* Take the else branch first. */\n            gen-\u003egen.cubes.cube[Cudd_Regular(top)-\u003eindex] = 0;\n            next = cuddE(Cudd_Regular(top));\n            gen-\u003estack.stack[gen-\u003estack.sp] = Cudd_Not(next); gen-\u003estack.sp++;\n        } else if (Cudd_Regular(top) == DD_ZERO(zdd)) {\n            /* Backtrack. */\n            while (1) {\n                if (gen-\u003estack.sp == 1) {\n                    /* The current node has no predecessor. */\n                    gen-\u003estatus = CUDD_GEN_EMPTY;\n                    gen-\u003estack.sp--;\n                    goto done;\n                }\n                prev = Cudd_Regular(gen-\u003estack.stack[gen-\u003estack.sp-2]);\n                next = cuddT(prev);\n                if (next != top) { /* follow the then branch next */\n                    gen-\u003egen.cubes.cube[prev-\u003eindex] = 1;\n                    gen-\u003estack.stack[gen-\u003estack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen-\u003egen.cubes.cube[prev-\u003eindex] = 2;\n                gen-\u003estack.sp--;\n                top = gen-\u003estack.stack[gen-\u003estack.sp-1];\n            }\n        } else {\n            gen-\u003estatus = CUDD_GEN_NONEMPTY;\n            gen-\u003egen.cubes.value = cuddV(Cudd_Regular(top));\n            goto done;\n        }\n    }\n\ndone:\n    *path = gen-\u003egen.cubes.cube;\n    return(gen);\n\n}",
+      "Draft": "func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {\n    var gen *DdGen;\n    var top, next, prev *DdNode;\n    var i int32;\n    var nvars int32;\n\n    /* Sanity Check. */\n    if zdd == nil || f == nil { return(nil); }\n\n    /* Allocate generator an initialize it. */\n    gen = new(DdGen);\n    if gen == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    gen.manager = zdd;\n    gen.type = CUDD_GEN_ZDD_PATHS;\n    gen.status = CUDD_GEN_EMPTY;\n    gen.gen.cubes.cube = nil;\n    gen.gen.cubes.value = DD_ZERO_VAL;\n    gen.stack.sp = 0;\n    gen.stack.stack = nil;\n    gen.node = nil;\n\n    nvars = zdd.sizeZ;\n    gen.gen.cubes.cube = ABC_ALLOC(int,nvars);\n    if gen.gen.cubes.cube == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen);\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ { gen.gen.cubes.cube[i] = 2; }\n\n    /* The maximum stack depth is one plus the number of variables.\n    ** because a path may have nodes at all levels, including the\n    ** constant level.\n    */\n    gen.stack.stack = ABC_ALLOC(DdNodePtr, nvars+1);\n    if gen.stack.stack == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen.gen.cubes.cube);\n        ABC_FREE(gen);\n        return(nil);\n    }\n    for i = 0; i \u003c= nvars; i++ { gen.stack.stack[i] = nil; }\n\n    /* Find the first path of the ZDD. */\n    gen.stack.stack[gen.stack.sp] = f; gen.stack.sp++;\n\n    for {\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro cuddIsConstant\n        // inlining of macro Cudd_Regular\n        if !((((DdNode *)((ptruint)(top) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* Take the else branch first. */\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) \u0026 ~01)).index] = 0;\n            // inlining of macro cuddE\n            // inlining of macro Cudd_Regular\n            next = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.kids.E);\n            // inlining of macro Cudd_Not\n            gen.stack.stack[gen.stack.sp] = ((DdNode *)((ptrint)(next) ^ 01)); gen.stack.sp++;\n        // inlining of macro Cudd_Regular\n        // inlining of macro DD_ZERO\n        } else if ((DdNode *)((ptruint)(top) \u0026 ~01)) == ((zdd).zero) {\n            /* Backtrack. */\n            for {\n                if gen.stack.sp == 1 {\n                    /* The current node has no predecessor. */\n                    gen.status = CUDD_GEN_EMPTY;\n                    gen.stack.sp--;\n                    goto done;\n                }\n                // inlining of macro Cudd_Regular\n                prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n                // inlining of macro cuddT\n                next = ((prev).type.kids.T);\n                if next != top { /* follow the then branch next */\n                    gen.gen.cubes.cube[prev.index] = 1;\n                    gen.stack.stack[gen.stack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen.gen.cubes.cube[prev.index] = 2;\n                gen.stack.sp--;\n                top = gen.stack.stack[gen.stack.sp-1];\n            }\n        } else {\n            gen.status = CUDD_GEN_NONEMPTY;\n            // inlining of macro cuddV\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.value);\n            goto done;\n        }\n    }\n\ndone:\n    *path = gen.gen.cubes.cube;\n    return(gen);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddNextPath",
+      "Start": 13114,
+      "End": 15477,
+      "BodyStart": 13166,
+      "Original": "int\nCudd_zddNextPath(\n  DdGen * gen,\n  int ** path)\n{\n    DdNode *top, *next, *prev;\n    DdManager *zdd = gen-\u003emanager;\n\n    /* Backtrack from previously reached terminal node. */\n    while (1) {\n        if (gen-\u003estack.sp == 1) {\n            /* The current node has no predecessor. */\n            gen-\u003estatus = CUDD_GEN_EMPTY;\n            gen-\u003estack.sp--;\n            goto done;\n        }\n        top = gen-\u003estack.stack[gen-\u003estack.sp-1];\n        prev = Cudd_Regular(gen-\u003estack.stack[gen-\u003estack.sp-2]);\n        next = cuddT(prev);\n        if (next != top) { /* follow the then branch next */\n            gen-\u003egen.cubes.cube[prev-\u003eindex] = 1;\n            gen-\u003estack.stack[gen-\u003estack.sp-1] = next;\n            break;\n        }\n        /* Pop the stack and try again. */\n        gen-\u003egen.cubes.cube[prev-\u003eindex] = 2;\n        gen-\u003estack.sp--;\n    }\n\n    while (1) {\n        top = gen-\u003estack.stack[gen-\u003estack.sp-1];\n        if (!cuddIsConstant(Cudd_Regular(top))) {\n            /* Take the else branch first. */\n            gen-\u003egen.cubes.cube[Cudd_Regular(top)-\u003eindex] = 0;\n            next = cuddE(Cudd_Regular(top));\n            gen-\u003estack.stack[gen-\u003estack.sp] = Cudd_Not(next); gen-\u003estack.sp++;\n        } else if (Cudd_Regular(top) == DD_ZERO(zdd)) {\n            /* Backtrack. */\n            while (1) {\n                if (gen-\u003estack.sp == 1) {\n                    /* The current node has no predecessor. */\n                    gen-\u003estatus = CUDD_GEN_EMPTY;\n                    gen-\u003estack.sp--;\n                    goto done;\n                }\n                prev = Cudd_Regular(gen-\u003estack.stack[gen-\u003estack.sp-2]);\n                next = cuddT(prev);\n                if (next != top) { /* follow the then branch next */\n                    gen-\u003egen.cubes.cube[prev-\u003eindex] = 1;\n                    gen-\u003estack.stack[gen-\u003estack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen-\u003egen.cubes.cube[prev-\u003eindex] = 2;\n                gen-\u003estack.sp--;\n                top = gen-\u003estack.stack[gen-\u003estack.sp-1];\n            }\n        } else {\n            gen-\u003estatus = CUDD_GEN_NONEMPTY;\n            gen-\u003egen.cubes.value = cuddV(Cudd_Regular(top));\n            goto done;\n        }\n    }\n\ndone:\n    if (gen-\u003estatus == CUDD_GEN_EMPTY) return(0);\n    *path = gen-\u003egen.cubes.cube;\n    return(1);\n\n}",
+      "Draft": "func Cudd_zddNextPath(gen *DdGen, path **int32) int32 {\n    var top, next, prev *DdNode;\n    var zdd *DdManager  = gen.manager;\n\n    /* Backtrack from previously reached terminal node. */\n    for {\n        if gen.stack.sp == 1 {\n            /* The current node has no predecessor. */\n            gen.status = CUDD_GEN_EMPTY;\n            gen.stack.sp--;\n            goto done;\n        }\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro Cudd_Regular\n        prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n        // inlining of macro cuddT\n        next = ((prev).type.kids.T);\n        if next != top { /* follow the then branch next */\n            gen.gen.cubes.cube[prev.index] = 1;\n            gen.stack.stack[gen.stack.sp-1] = next;\n            break;\n        }\n        /* Pop the stack and try again. */\n        gen.gen.cubes.cube[prev.index] = 2;\n        gen.stack.sp--;\n    }\n\n    for {\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro cuddIsConstant\n        // inlining of macro Cudd_Regular\n        if !((((DdNode *)((ptruint)(top) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* Take the else branch first. */\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) \u0026 ~01)).index] = 0;\n            // inlining of macro cuddE\n            // inlining of macro Cudd_Regular\n            next = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.kids.E);\n            // inlining of macro Cudd_Not\n            gen.stack.stack[gen.stack.sp] = ((DdNode *)((ptrint)(next) ^ 01)); gen.stack.sp++;\n        // inlining of macro Cudd_Regular\n        // inlining of macro DD_ZERO\n        } else if ((DdNode *)((ptruint)(top) \u0026 ~01)) == ((zdd).zero) {\n            /* Backtrack. */\n            for {\n                if gen.stack.sp == 1 {\n                    /* The current node has no predecessor. */\n                    gen.status = CUDD_GEN_EMPTY;\n                    gen.stack.sp--;\n                    goto done;\n                }\n                // inlining of macro Cudd_Regular\n                prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n                // inlining of macro cuddT\n                next = ((prev).type.kids.T);\n                if next != top { /* follow the then branch next */\n                    gen.gen.cubes.cube[prev.index] = 1;\n                    gen.stack.stack[gen.stack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen.gen.cubes.cube[prev.index] = 2;\n                gen.stack.sp--;\n                top = gen.stack.stack[gen.stack.sp-1];\n            }\n        } else {\n            gen.status = CUDD_GEN_NONEMPTY;\n            // inlining of macro cuddV\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.value);\n            goto done;\n        }\n    }\n\ndone:\n    if gen.status == CUDD_GEN_EMPTY { return(0); }\n    *path = gen.gen.cubes.cube;\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddCoverPathToString",
+      "Start": 16216,
+      "End": 17163,
+      "BodyStart": 16450,
+      "Original": "char *\nCudd_zddCoverPathToString(\n  DdManager *zdd                /* DD manager */,\n  int *path                     /* path of ZDD representing a cover */,\n  char *str                     /* pointer to string to use if != NULL */\n  )\n{\n    int nvars = zdd-\u003esizeZ;\n    int i;\n    char *res;\n\n    if (nvars \u0026 1) return(NULL);\n    nvars \u003e\u003e= 1;\n    if (str == NULL) {\n        res = ABC_ALLOC(char, nvars+1);\n        if (res == NULL) return(NULL);\n    } else {\n        res = str;\n    }\n    for (i = 0; i \u003c nvars; i++) {\n        int v = (path[2*i] \u003c\u003c 2) | path[2*i+1];\n        switch (v) {\n        case 0:\n        case 2:\n        case 8:\n        case 10:\n            res[i] = '-';\n            break;\n        case 1:\n        case 9:\n            res[i] = '0';\n            break;\n        case 4:\n        case 6:\n            res[i] = '1';\n            break;\n        default:\n            res[i] = '?';\n        }\n    }\n    res[nvars] = 0;\n\n    return(res);\n\n}",
+      "Draft": "char *\nCudd_zddCoverPathToString(\n  DdManager *zdd                /* DD manager */,\n  int *path                     /* path of ZDD representing a cover */,\n  char *str                     /* pointer to string to use if != NULL */\n  )\n{\n    var nvars int32  = zdd.sizeZ;\n    var i int32;\n    var res string;\n\n    if nvars \u0026 1 { return(nil); }\n    nvars \u003e\u003e= 1;\n    if str == nil {\n        res = ABC_ALLOC(char, nvars+1);\n        if res == nil { return(nil); }\n    } else {\n        res = str;\n    }\n    for i = 0; i \u003c nvars; i++ {\n        var v int32  = (path[2*i] \u003c\u003c 2) | path[2*i+1];\n        switch v {\n        case 0,\n         2,\n         8,\n         10:\n            res[i] = '-';\n            break;\n        case 1,\n         9:\n            res[i] = '0';\n            break;\n        case 4,\n         6:\n            res[i] = '1';\n            break;\n        default:\n            res[i] = '?';\n        }\n    }\n    res[nvars] = 0;\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddDumpDot",
+      "Start": 18248,
+      "End": 27362,
+      "BodyStart": 18564,
+      "Original": "int\nCudd_zddDumpDot(\n  DdManager * dd /* manager */,\n  int  n /* number of output nodes to be dumped */,\n  DdNode ** f /* array of output nodes to be dumped */,\n  char ** inames /* array of input names (or NULL) */,\n  char ** onames /* array of output names (or NULL) */,\n  FILE * fp /* pointer to the dump file */)\n{\n    DdNode      *support = NULL;\n    DdNode      *scan;\n    int         *sorted = NULL;\n    int         nvars = dd-\u003esizeZ;\n    st__table    *visited = NULL;\n    st__generator *gen;\n    int         retval;\n    int         i, j;\n    int         slots;\n    DdNodePtr   *nodelist;\n    long        refAddr, diff, mask;\n\n    /* Build a bit array with the support of f. */\n    sorted = ABC_ALLOC(int,nvars);\n    if (sorted == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto failure;\n    }\n    for (i = 0; i \u003c nvars; i++) sorted[i] = 0;\n\n    /* Take the union of the supports of each output function. */\n    for (i = 0; i \u003c n; i++) {\n        support = Cudd_Support(dd,f[i]);\n        if (support == NULL) goto failure;\n        cuddRef(support);\n        scan = support;\n        while (!cuddIsConstant(scan)) {\n            sorted[scan-\u003eindex] = 1;\n            scan = cuddT(scan);\n        }\n        Cudd_RecursiveDeref(dd,support);\n    }\n    support = NULL; /* so that we do not try to free it in case of failure */\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n    if (visited == NULL) goto failure;\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    for (i = 0; i \u003c n; i++) {\n        retval = cuddCollectNodes(f[i],visited);\n        if (retval == 0) goto failure;\n    }\n\n    /* Find how many most significant hex digits are identical\n    ** in the addresses of all the nodes. Build a mask based\n    ** on this knowledge, so that digits that carry no information\n    ** will not be printed. This is done in two steps.\n    **  1. We scan the symbol table to find the bits that differ\n    **     in at least 2 addresses.\n    **  2. We choose one of the possible masks. There are 8 possible\n    **     masks for 32-bit integer, and 16 possible masks for 64-bit\n    **     integers.\n    */\n\n    /* Find the bits that are different. */\n    refAddr = (long) f[0];\n    diff = 0;\n    gen = st__init_gen(visited);\n    while ( st__gen(gen, (const char **)\u0026scan, NULL)) {\n        diff |= refAddr ^ (long) scan;\n    }\n    st__free_gen(gen);\n\n    /* Choose the mask. */\n    for (i = 0; (unsigned) i \u003c 8 * sizeof(long); i += 4) {\n        mask = (1 \u003c\u003c i) - 1;\n        if (diff \u003c= mask) break;\n    }\n\n    /* Write the header and the global attributes. */\n    retval = fprintf(fp,\"digraph \\\"ZDD\\\" {\\n\");\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\n        \"size = \\\"7.5,10\\\"\\ncenter = true;\\nedge [dir = none];\\n\");\n    if (retval == EOF) return(0);\n\n    /* Write the input name subgraph by scanning the support array. */\n    retval = fprintf(fp,\"{ node [shape = plaintext];\\n\");\n    if (retval == EOF) goto failure;\n    retval = fprintf(fp,\"  edge [style = invis];\\n\");\n    if (retval == EOF) goto failure;\n    /* We use a name (\"CONST NODES\") with an embedded blank, because\n    ** it is unlikely to appear as an input name.\n    */\n    retval = fprintf(fp,\"  \\\"CONST NODES\\\" [style = invis];\\n\");\n    if (retval == EOF) goto failure;\n    for (i = 0; i \u003c nvars; i++) {\n        if (sorted[dd-\u003einvpermZ[i]]) {\n            if (inames == NULL) {\n                retval = fprintf(fp,\"\\\" %d \\\" -\u003e \", dd-\u003einvpermZ[i]);\n            } else {\n                retval = fprintf(fp,\"\\\" %s \\\" -\u003e \", inames[dd-\u003einvpermZ[i]]);\n            }\n            if (retval == EOF) goto failure;\n        }\n    }\n    retval = fprintf(fp,\"\\\"CONST NODES\\\"; \\n}\\n\");\n    if (retval == EOF) goto failure;\n\n    /* Write the output node subgraph. */\n    retval = fprintf(fp,\"{ rank = same; node [shape = box]; edge [style = invis];\\n\");\n    if (retval == EOF) goto failure;\n    for (i = 0; i \u003c n; i++) {\n        if (onames == NULL) {\n            retval = fprintf(fp,\"\\\"F%d\\\"\", i);\n        } else {\n            retval = fprintf(fp,\"\\\"  %s  \\\"\", onames[i]);\n        }\n        if (retval == EOF) goto failure;\n        if (i == n - 1) {\n            retval = fprintf(fp,\"; }\\n\");\n        } else {\n            retval = fprintf(fp,\" -\u003e \");\n        }\n        if (retval == EOF) goto failure;\n    }\n\n    /* Write rank info: All nodes with the same index have the same rank. */\n    for (i = 0; i \u003c nvars; i++) {\n        if (sorted[dd-\u003einvpermZ[i]]) {\n            retval = fprintf(fp,\"{ rank = same; \");\n            if (retval == EOF) goto failure;\n            if (inames == NULL) {\n                retval = fprintf(fp,\"\\\" %d \\\";\\n\", dd-\u003einvpermZ[i]);\n            } else {\n                retval = fprintf(fp,\"\\\" %s \\\";\\n\", inames[dd-\u003einvpermZ[i]]);\n            }\n            if (retval == EOF) goto failure;\n            nodelist = dd-\u003esubtableZ[i].nodelist;\n            slots = dd-\u003esubtableZ[i].slots;\n            for (j = 0; j \u003c slots; j++) {\n                scan = nodelist[j];\n                while (scan != NULL) {\n                    if ( st__is_member(visited,(char *) scan)) {\n                        retval = fprintf(fp,\"\\\"%p\\\";\\n\", (void *)\n                                         ((mask \u0026 (ptrint) scan) /\n                                          sizeof(DdNode)));\n                        if (retval == EOF) goto failure;\n                    }\n                    scan = scan-\u003enext;\n                }\n            }\n            retval = fprintf(fp,\"}\\n\");\n            if (retval == EOF) goto failure;\n        }\n    }\n\n    /* All constants have the same rank. */\n    retval = fprintf(fp,\n        \"{ rank = same; \\\"CONST NODES\\\";\\n{ node [shape = box]; \");\n    if (retval == EOF) goto failure;\n    nodelist = dd-\u003econstants.nodelist;\n    slots = dd-\u003econstants.slots;\n    for (j = 0; j \u003c slots; j++) {\n        scan = nodelist[j];\n        while (scan != NULL) {\n            if ( st__is_member(visited,(char *) scan)) {\n                retval = fprintf(fp,\"\\\"%p\\\";\\n\", (void *)\n                                 ((mask \u0026 (ptrint) scan) / sizeof(DdNode)));\n                if (retval == EOF) goto failure;\n            }\n            scan = scan-\u003enext;\n        }\n    }\n    retval = fprintf(fp,\"}\\n}\\n\");\n    if (retval == EOF) goto failure;\n\n    /* Write edge info. */\n    /* Edges from the output nodes. */\n    for (i = 0; i \u003c n; i++) {\n        if (onames == NULL) {\n            retval = fprintf(fp,\"\\\"F%d\\\"\", i);\n        } else {\n            retval = fprintf(fp,\"\\\"  %s  \\\"\", onames[i]);\n        }\n        if (retval == EOF) goto failure;\n        retval = fprintf(fp,\" -\u003e \\\"%p\\\" [style = solid];\\n\",\n                         (void *) ((mask \u0026 (ptrint) f[i]) /\n                                          sizeof(DdNode)));\n        if (retval == EOF) goto failure;\n    }\n\n    /* Edges from internal nodes. */\n    for (i = 0; i \u003c nvars; i++) {\n        if (sorted[dd-\u003einvpermZ[i]]) {\n            nodelist = dd-\u003esubtableZ[i].nodelist;\n            slots = dd-\u003esubtableZ[i].slots;\n            for (j = 0; j \u003c slots; j++) {\n                scan = nodelist[j];\n                while (scan != NULL) {\n                    if ( st__is_member(visited,(char *) scan)) {\n                        retval = fprintf(fp,\n                            \"\\\"%p\\\" -\u003e \\\"%p\\\";\\n\",\n                            (void *) ((mask \u0026 (ptrint) scan) / sizeof(DdNode)),\n                            (void *) ((mask \u0026 (ptrint) cuddT(scan)) /\n                                      sizeof(DdNode)));\n                        if (retval == EOF) goto failure;\n                        retval = fprintf(fp,\n                                         \"\\\"%p\\\" -\u003e \\\"%p\\\" [style = dashed];\\n\",\n                                         (void *) ((mask \u0026 (ptrint) scan)\n                                                   / sizeof(DdNode)),\n                                         (void *) ((mask \u0026 (ptrint)\n                                                    cuddE(scan)) /\n                                                   sizeof(DdNode)));\n                        if (retval == EOF) goto failure;\n                    }\n                    scan = scan-\u003enext;\n                }\n            }\n        }\n    }\n\n    /* Write constant labels. */\n    nodelist = dd-\u003econstants.nodelist;\n    slots = dd-\u003econstants.slots;\n    for (j = 0; j \u003c slots; j++) {\n        scan = nodelist[j];\n        while (scan != NULL) {\n            if ( st__is_member(visited,(char *) scan)) {\n                retval = fprintf(fp,\"\\\"%p\\\" [label = \\\"%g\\\"];\\n\",\n                                 (void *) ((mask \u0026 (ptrint) scan) /\n                                           sizeof(DdNode)),\n                                 cuddV(scan));\n                if (retval == EOF) goto failure;\n            }\n            scan = scan-\u003enext;\n        }\n    }\n\n    /* Write trailer and return. */\n    retval = fprintf(fp,\"}\\n\");\n    if (retval == EOF) goto failure;\n\n    st__free_table(visited);\n    ABC_FREE(sorted);\n    return(1);\n\nfailure:\n    if (sorted != NULL) ABC_FREE(sorted);\n    if (visited != NULL) st__free_table(visited);\n    return(0);\n\n}",
+      "Draft": "int\nCudd_zddDumpDot(\n  DdManager * dd /* manager */,\n  int  n /* number of output nodes to be dumped */,\n  DdNode ** f /* array of output nodes to be dumped */,\n  char ** inames /* array of input names (or NULL) */,\n  char ** onames /* array of output names (or NULL) */,\n  FILE * fp /* pointer to the dump file */)\n{\n    var support *DdNode  = nil;\n    var scan *DdNode;\n    var sorted *int32  = nil;\n    var nvars int32  = dd.sizeZ;\n    var visited *st__table  = nil;\n    var gen *st__generator;\n    var retval int32;\n    var i, j int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var refAddr, diff, mask long;\n\n    /* Build a bit array with the support of f. */\n    sorted = ABC_ALLOC(int,nvars);\n    if sorted == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        goto failure;\n    }\n    for i = 0; i \u003c nvars; i++ { sorted[i] = 0; }\n\n    /* Take the union of the supports of each output function. */\n    for i = 0; i \u003c n; i++ {\n        support = Cudd_Support(dd,f[i]);\n        if support == nil { goto failure; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(support).ref);\n        scan = support;\n        // inlining of macro cuddIsConstant\n        for !((scan).index == CUDD_CONST_INDEX) {\n            sorted[scan.index] = 1;\n            // inlining of macro cuddT\n            scan = ((scan).type.kids.T);\n        }\n        Cudd_RecursiveDeref(dd,support);\n    }\n    support = nil; /* so that we do not try to free it in case of failure */\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n    if visited == nil { goto failure; }\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    for i = 0; i \u003c n; i++ {\n        retval = cuddCollectNodes(f[i],visited);\n        if retval == 0 { goto failure; }\n    }\n\n    /* Find how many most significant hex digits are identical\n    ** in the addresses of all the nodes. Build a mask based\n    ** on this knowledge, so that digits that carry no information\n    ** will not be printed. This is done in two steps.\n    **  1. We scan the symbol table to find the bits that differ\n    **     in at least 2 addresses.\n    **  2. We choose one of the possible masks. There are 8 possible\n    **     masks for 32-bit integer, and 16 possible masks for 64-bit\n    **     integers.\n    */\n\n    /* Find the bits that are different. */\n    refAddr = int64( f[0]);\n    diff = 0;\n    gen = st__init_gen(visited);\n    for  st__gen(gen, (char **)\u0026scan, nil) {\n        diff |= refAddr ^ int64( scan);\n    }\n    st__free_gen(gen);\n\n    /* Choose the mask. */\n    for i = 0; uint32( i) \u003c 8 * sizeof(long); i += 4 {\n        mask = (1 \u003c\u003c i) - 1;\n        if diff \u003c= mask { break; }\n    }\n\n    /* Write the header and the global attributes. */\n    retval = fmt.Fprintf(fp, \"digraph \\\"ZDD\\\" {\\n\");\n    if retval == -1 { return(0); }\n    retval = fmt.Fprintf(fp, \"size = \\\"7.5,10\\\"\\ncenter = true;\\nedge [dir = none];\\n\");\n    if retval == -1 { return(0); }\n\n    /* Write the input name subgraph by scanning the support array. */\n    retval = fmt.Fprintf(fp, \"{ node [shape = plaintext];\\n\");\n    if retval == -1 { goto failure; }\n    retval = fmt.Fprintf(fp, \"  edge [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    /* We use a name (\"CONST NODES\") with an embedded blank, because\n    ** it is unlikely to appear as an input name.\n    */\n    retval = fmt.Fprintf(fp, \"  \\\"CONST NODES\\\" [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            if inames == nil {\n                retval = fmt.Fprintf(fp, \"\\\" %d \\\" -\u003e \", dd.invpermZ[i]);\n            } else {\n                retval = fmt.Fprintf(fp, \"\\\" %s \\\" -\u003e \", inames[dd.invpermZ[i]]);\n            }\n            if retval == -1 { goto failure; }\n        }\n    }\n    retval = fmt.Fprintf(fp, \"\\\"CONST NODES\\\"; \\n}\\n\");\n    if retval == -1 { goto failure; }\n\n    /* Write the output node subgraph. */\n    retval = fmt.Fprintf(fp, \"{ rank = same; node [shape = box]; edge [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    for i = 0; i \u003c n; i++ {\n        if onames == nil {\n            retval = fmt.Fprintf(fp, \"\\\"F%d\\\"\", i);\n        } else {\n            retval = fmt.Fprintf(fp, \"\\\"  %s  \\\"\", onames[i]);\n        }\n        if retval == -1 { goto failure; }\n        if i == n - 1 {\n            retval = fmt.Fprintf(fp, \"; }\\n\");\n        } else {\n            retval = fmt.Fprintf(fp, \" -\u003e \");\n        }\n        if retval == -1 { goto failure; }\n    }\n\n    /* Write rank info: All nodes with the same index have the same rank. */\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            retval = fmt.Fprintf(fp, \"{ rank = same; \");\n            if retval == -1 { goto failure; }\n            if inames == nil {\n                retval = fmt.Fprintf(fp, \"\\\" %d \\\";\\n\", dd.invpermZ[i]);\n            } else {\n                retval = fmt.Fprintf(fp, \"\\\" %s \\\";\\n\", inames[dd.invpermZ[i]]);\n            }\n            if retval == -1 { goto failure; }\n            nodelist = dd.subtableZ[i].nodelist;\n            slots = dd.subtableZ[i].slots;\n            for j = 0; j \u003c slots; j++ {\n                scan = nodelist[j];\n                for scan != nil {\n                    // inlining of macro st__is_member\n                    if  st__lookup(visited,(char *) scan,(char **) 0) {\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\";\\n\", (void *)\n                                                                 ((mask \u0026 (ptrint) scan) /\n                                                                  sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                    }\n                    scan = scan.next;\n                }\n            }\n            retval = fmt.Fprintf(fp, \"}\\n\");\n            if retval == -1 { goto failure; }\n        }\n    }\n\n    /* All constants have the same rank. */\n    retval = fmt.Fprintf(fp, \"{ rank = same; \\\"CONST NODES\\\";\\n{ node [shape = box]; \");\n    if retval == -1 { goto failure; }\n    nodelist = dd.constants.nodelist;\n    slots = dd.constants.slots;\n    for j = 0; j \u003c slots; j++ {\n        scan = nodelist[j];\n        for scan != nil {\n            // inlining of macro st__is_member\n            if  st__lookup(visited,(char *) scan,(char **) 0) {\n                retval = fmt.Fprintf(fp, \"\\\"%p\\\";\\n\", (void *)\n                                                 ((mask \u0026 (ptrint) scan) / sizeof(DdNode)));\n                if retval == -1 { goto failure; }\n            }\n            scan = scan.next;\n        }\n    }\n    retval = fmt.Fprintf(fp, \"}\\n}\\n\");\n    if retval == -1 { goto failure; }\n\n    /* Write edge info. */\n    /* Edges from the output nodes. */\n    for i = 0; i \u003c n; i++ {\n        if onames == nil {\n            retval = fmt.Fprintf(fp, \"\\\"F%d\\\"\", i);\n        } else {\n            retval = fmt.Fprintf(fp, \"\\\"  %s  \\\"\", onames[i]);\n        }\n        if retval == -1 { goto failure; }\n        retval = fmt.Fprintf(fp, \" -\u003e \\\"%p\\\" [style = solid];\\n\", (void *) ((mask \u0026 (ptrint) f[i]) /\n                                                  sizeof(DdNode)));\n        if retval == -1 { goto failure; }\n    }\n\n    /* Edges from internal nodes. */\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            nodelist = dd.subtableZ[i].nodelist;\n            slots = dd.subtableZ[i].slots;\n            for j = 0; j \u003c slots; j++ {\n                scan = nodelist[j];\n                for scan != nil {\n                    // inlining of macro st__is_member\n                    if  st__lookup(visited,(char *) scan,(char **) 0) {\n                        // inlining of macro cuddT\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\" -\u003e \\\"%p\\\";\\n\", (void *) ((mask \u0026 (ptrint) scan) / sizeof(DdNode)), (void *) ((mask \u0026 (ptrint) ((scan).type.kids.T)) /\n                                                              sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\" -\u003e \\\"%p\\\" [style = dashed];\\n\", (void *) ((mask \u0026 (ptrint) scan)\n                                                                           / sizeof(DdNode)), (void *) ((mask \u0026 (ptrint)\n                                                                            // inlining of macro cuddE\n                                                                            ((scan).type.kids.E)) /\n                                                                           sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                    }\n                    scan = scan.next;\n                }\n            }\n        }\n    }\n\n    /* Write constant labels. */\n    nodelist = dd.constants.nodelist;\n    slots = dd.constants.slots;\n    for j = 0; j \u003c slots; j++ {\n        scan = nodelist[j];\n        for scan != nil {\n            // inlining of macro st__is_member\n            if  st__lookup(visited,(char *) scan,(char **) 0) {\n                retval = fmt.Fprintf(fp, \"\\\"%p\\\" [label = \\\"%g\\\"];\\n\", (void *) ((mask \u0026 (ptrint) scan) /\n                                                           // inlining of macro cuddV\n                                                           sizeof(DdNode)), ((scan).type.value));\n                if retval == -1 { goto failure; }\n            }\n            scan = scan.next;\n        }\n    }\n\n    /* Write trailer and return. */\n    retval = fmt.Fprintf(fp, \"}\\n\");\n    if retval == -1 { goto failure; }\n\n    st__free_table(visited);\n    ABC_FREE(sorted);\n    return(1);\n\nfailure:\n    if sorted != nil { ABC_FREE(sorted); }\n    if visited != nil { st__free_table(visited); }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "cuddZddP",
+      "Start": 28063,
+      "End": 28345,
+      "BodyStart": 28110,
+      "Original": "int\ncuddZddP(\n  DdManager * zdd,\n  DdNode * f)\n{\n    int retval;\n    st__table *table = st__init_table( st__ptrcmp, st__ptrhash);\n\n    if (table == NULL) return(0);\n\n    retval = zp2(zdd, f, table);\n    st__free_table(table);\n    (void) fputc('\\n', zdd-\u003eout);\n    return(retval);\n\n}",
+      "Draft": "func cuddZddP(zdd *DdManager, f *DdNode) int32 {\n    var retval int32;\n    var table *st__table  = st__init_table( st__ptrcmp, st__ptrhash);\n\n    if table == nil { return(0); }\n\n    retval = zp2(zdd, f, table);\n    st__free_table(table);\n    (void) fputc('\\n', zdd.out);\n    return(retval);\n\n}"
+    },
+    {
+      "Name": "zp2",
+      "Start": 28971,
+      "End": 30699,
+      "BodyStart": 29037,
+      "Original": "static int\nzp2(\n  DdManager * zdd,\n  DdNode * f,\n  st__table * t)\n{\n    DdNode      *n;\n    int         T, E;\n    DdNode      *base = DD_ONE(zdd);\n\n    if (f == NULL)\n        return(0);\n\n    if (Cudd_IsConstant(f)) {\n        (void)fprintf(zdd-\u003eout, \"ID = %d\\n\", (f == base));\n        return(1);\n    }\n    if ( st__is_member(t, (char *)f) == 1)\n        return(1);\n\n    if ( st__insert(t, (char *) f, NULL) == st__OUT_OF_MEM)\n        return(0);\n\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#else\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#endif\n\n    n = cuddT(f);\n    if (Cudd_IsConstant(n)) {\n        (void) fprintf(zdd-\u003eout, \"T = %d\\t\\t\", (n == base));\n        T = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"T = 0x%lx\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"T = 0x%x\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        T = 0;\n    }\n\n    n = cuddE(f);\n    if (Cudd_IsConstant(n)) {\n        (void) fprintf(zdd-\u003eout, \"E = %d\\n\", (n == base));\n        E = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"E = 0x%lx\\n\", (ptruint) n /\n                      (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"E = 0x%x\\n\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        E = 0;\n    }\n\n    if (E == 0)\n        if (zp2(zdd, cuddE(f), t) == 0) return(0);\n    if (T == 0)\n        if (zp2(zdd, cuddT(f), t) == 0) return(0);\n    return(1);\n\n}",
+      "Draft": "func zp2(zdd *DdManager, f *DdNode, t *st__table) int32 {\n    var n *DdNode;\n    var T, E int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    if f == nil {\n        return(0); }\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void)fmt.Fprintf(zdd.out, \"ID = %d\\n\", (f == base));\n        return(1);\n    }\n    // inlining of macro st__is_member\n    if  st__lookup(t,(char *)f,(char **) 0) == 1 {\n        return(1); }\n\n    if st__insert(t, (char *) f, nil) == st__OUT_OF_MEM {\n        return(0); }\n\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#else\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#endif\n\n    // inlining of macro cuddT\n    n = ((f).type.kids.T);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void) fmt.Fprintf(zdd.out, \"T = %d\\t\\t\", (n == base));\n        T = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"T = 0x%lx\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"T = 0x%x\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        T = 0;\n    }\n\n    // inlining of macro cuddE\n    n = ((f).type.kids.E);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void) fmt.Fprintf(zdd.out, \"E = %d\\n\", (n == base));\n        E = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"E = 0x%lx\\n\", (ptruint) n /\n                      (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"E = 0x%x\\n\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        E = 0;\n    }\n\n    if E == 0 {\n        // inlining of macro cuddE\n        if zp2(zdd, ((f).type.kids.E), t) == 0 { return(0); } }\n    if T == 0 {\n        // inlining of macro cuddT\n        if zp2(zdd, ((f).type.kids.T), t) == 0 { return(0); } }\n    return(1);\n\n}"
+    },
+    {
+      "Name": "zdd_print_minterm_aux",
+      "Start": 31008,
+      "End": 32834,
+      "BodyStart": 31198,
+      "Original": "static void\nzdd_print_minterm_aux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    DdNode      *Nv, *Nnv;\n    int         i, v;\n    DdNode      *base = DD_ONE(zdd);\n\n    if (Cudd_IsConstant(node)) {\n        if (node == base) {\n            /* Check for missing variable. */\n            if (level != zdd-\u003esizeZ) {\n                list[zdd-\u003einvpermZ[level]] = 0;\n                zdd_print_minterm_aux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for (i = 0; i \u003c zdd-\u003esizeZ; i++) {\n                v = list[i];\n                if (v == 0)\n                    (void) fprintf(zdd-\u003eout,\"0\");\n                else if (v == 1)\n                    (void) fprintf(zdd-\u003eout,\"1\");\n                else if (v == 3)\n                    (void) fprintf(zdd-\u003eout,\"@\");       /* should never happen */\n                else\n                    (void) fprintf(zdd-\u003eout,\"-\");\n            }\n            (void) fprintf(zdd-\u003eout,\" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        if (level != cuddIZ(zdd,node-\u003eindex)) {\n            list[zdd-\u003einvpermZ[level]] = 0;\n            zdd_print_minterm_aux(zdd, node, level + 1, list);\n            return;\n        }\n\n        Nnv = cuddE(node);\n        Nv = cuddT(node);\n        if (Nv == Nnv) {\n            list[node-\u003eindex] = 2;\n            zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node-\u003eindex] = 1;\n        zdd_print_minterm_aux(zdd, Nv, level + 1, list);\n        list[node-\u003eindex] = 0;\n        zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n}",
+      "Draft": "static void\nzdd_print_minterm_aux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    var Nv, Nnv *DdNode;\n    var i, v int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if node == base {\n            /* Check for missing variable. */\n            if level != zdd.sizeZ {\n                list[zdd.invpermZ[level]] = 0;\n                zdd_print_minterm_aux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for i = 0; i \u003c zdd.sizeZ; i++ {\n                v = list[i];\n                if v == 0 {\n                    (void) fmt.Fprintf(zdd.out, \"0\");\n                } else if v == 1 {\n                    (void) fmt.Fprintf(zdd.out, \"1\");\n                } else if v == 3 {\n                    (void) fmt.Fprintf(zdd.out, \"@\");       /* should never happen */\n                } else {\n                    (void) fmt.Fprintf(zdd.out, \"-\"); }\n            }\n            (void) fmt.Fprintf(zdd.out, \" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        // inlining of macro cuddIZ\n        if level != (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(zdd).permZ[(node.index)]) {\n            list[zdd.invpermZ[level]] = 0;\n            zdd_print_minterm_aux(zdd, node, level + 1, list);\n            return;\n        }\n\n        // inlining of macro cuddE\n        Nnv = ((node).type.kids.E);\n        // inlining of macro cuddT\n        Nv = ((node).type.kids.T);\n        if Nv == Nnv {\n            list[node.index] = 2;\n            zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node.index] = 1;\n        zdd_print_minterm_aux(zdd, Nv, level + 1, list);\n        list[node.index] = 0;\n        zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n}"
+    },
+    {
+      "Name": "zddPrintCoverAux",
+      "Start": 33159,
+      "End": 34956,
+      "BodyStart": 33344,
+      "Original": "static void\nzddPrintCoverAux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    DdNode      *Nv, *Nnv;\n    int         i, v;\n    DdNode      *base = DD_ONE(zdd);\n\n    if (Cudd_IsConstant(node)) {\n        if (node == base) {\n            /* Check for missing variable. */\n            if (level != zdd-\u003esizeZ) {\n                list[zdd-\u003einvpermZ[level]] = 0;\n                zddPrintCoverAux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for (i = 0; i \u003c zdd-\u003esizeZ; i += 2) {\n                v = list[i] * 4 + list[i+1];\n                if (v == 0)\n                    (void) putc('-',zdd-\u003eout);\n                else if (v == 4)\n                    (void) putc('1',zdd-\u003eout);\n                else if (v == 1)\n                    (void) putc('0',zdd-\u003eout);\n                else\n                    (void) putc('@',zdd-\u003eout); /* should never happen */\n            }\n            (void) fprintf(zdd-\u003eout,\" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        if (level != cuddIZ(zdd,node-\u003eindex)) {\n            list[zdd-\u003einvpermZ[level]] = 0;\n            zddPrintCoverAux(zdd, node, level + 1, list);\n            return;\n        }\n\n        Nnv = cuddE(node);\n        Nv = cuddT(node);\n        if (Nv == Nnv) {\n            list[node-\u003eindex] = 2;\n            zddPrintCoverAux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node-\u003eindex] = 1;\n        zddPrintCoverAux(zdd, Nv, level + 1, list);\n        list[node-\u003eindex] = 0;\n        zddPrintCoverAux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n}",
+      "Draft": "static void\nzddPrintCoverAux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    var Nv, Nnv *DdNode;\n    var i, v int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if node == base {\n            /* Check for missing variable. */\n            if level != zdd.sizeZ {\n                list[zdd.invpermZ[level]] = 0;\n                zddPrintCoverAux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for i = 0; i \u003c zdd.sizeZ; i += 2 {\n                v = list[i] * 4 + list[i+1];\n                if v == 0 {\n                    (void) putc('-',zdd.out);\n                } else if v == 4 {\n                    (void) putc('1',zdd.out);\n                } else if v == 1 {\n                    (void) putc('0',zdd.out);\n                } else {\n                    (void) putc('@',zdd.out); } /* should never happen */\n            }\n            (void) fmt.Fprintf(zdd.out, \" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        // inlining of macro cuddIZ\n        if level != (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(zdd).permZ[(node.index)]) {\n            list[zdd.invpermZ[level]] = 0;\n            zddPrintCoverAux(zdd, node, level + 1, list);\n            return;\n        }\n\n        // inlining of macro cuddE\n        Nnv = ((node).type.kids.E);\n        // inlining of macro cuddT\n        Nv = ((node).type.kids.T);\n        if Nv == Nnv {\n            list[node.index] = 2;\n            zddPrintCoverAux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node.index] = 1;\n        zddPrintCoverAux(zdd, Nv, level + 1, list);\n        list[node.index] = 0;\n        zddPrintCoverAux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::22474",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20743,
+      "End": 20749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::25355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23566,
+      "End": 23572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::26196",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24349,
+      "End": 24355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::26859",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25012,
+      "End": 25018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::27528",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25623,
+      "End": 25629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::27704",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25748,
+      "End": 25754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::28032",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26076,
+      "End": 26082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::28286",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26279,
+      "End": 26285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::mechanical::sizeof::28961",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26896,
+      "End": 26902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::11274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11167,
+      "End": 11167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::11467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11282,
+      "End": 11282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::11625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11332,
+      "End": 11332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::11766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11404,
+      "End": 11404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::11885",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11456,
+      "End": 11456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::12348",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11810,
+      "End": 11810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::13132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12435,
+      "End": 12435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::14336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13567,
+      "End": 13567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::14974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14037,
+      "End": 14037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::15167",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14152,
+      "End": 14152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::15325",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14202,
+      "End": 14202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::15466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14274,
+      "End": 14274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::15585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14326,
+      "End": 14326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::16048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14680,
+      "End": 14680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::16832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15305,
+      "End": 15305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::25150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23351,
+      "End": 23351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::25164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23351,
+      "End": 23351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::25237",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23448,
+      "End": 23456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::26049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24192,
+      "End": 24192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::26063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24192,
+      "End": 24192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::26128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24281,
+      "End": 24289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::26782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24935,
+      "End": 24943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::27339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25424,
+      "End": 25424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::27353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25424,
+      "End": 25424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::27493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25588,
+      "End": 25596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::27573",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25668,
+      "End": 25676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::27946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25990,
+      "End": 25998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::28090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26134,
+      "End": 26142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::28754",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26679,
+      "End": 26679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::28768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26679,
+      "End": 26679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::28883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26818,
+      "End": 26826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::31426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29166,
+      "End": 29166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::31645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29281,
+      "End": 29281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::31655",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29281,
+      "End": 29281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::31717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29358,
+      "End": 29366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::32029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29741,
+      "End": 29741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::32458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30159,
+      "End": 30159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::33700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31295,
+      "End": 31295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::pointer-cast::36236",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33441,
+      "End": 33441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddPrintMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPrintMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5439,
+      "End": 5867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddPrintCover",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPrintCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6315,
+      "End": 6811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddPrintDebug",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddPrintDebug",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7714,
+      "End": 8650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddFirstPath",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddFirstPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9639,
+      "End": 12559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddNextPath",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddNextPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13114,
+      "End": 15477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddCoverPathToString",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddCoverPathToString",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 16216,
+      "End": 17163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::Cudd_zddDumpDot",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddDumpDot",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 18248,
+      "End": 27362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::cuddZddP",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28063,
+      "End": 28345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::zp2",
+      "Category": "semantic-review",
+      "Symbol": "zp2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28971,
+      "End": 30699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::ternary::zdd_print_minterm_aux",
+      "Category": "ternary-review",
+      "Symbol": "zdd_print_minterm_aux",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31008,
+      "End": 32834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::zdd_print_minterm_aux",
+      "Category": "semantic-review",
+      "Symbol": "zdd_print_minterm_aux",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 31008,
+      "End": 32834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::ternary::zddPrintCoverAux",
+      "Category": "ternary-review",
+      "Symbol": "zddPrintCoverAux",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 33159,
+      "End": 34956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::zddPrintCoverAux",
+      "Category": "semantic-review",
+      "Symbol": "zddPrintCoverAux",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 33159,
+      "End": 34956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 35013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3797,
+      "End": 3909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29415,
+      "End": 29713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29852,
+      "End": 30110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30268,
+      "End": 30525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::5591",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5591,
+      "End": 5611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::5834",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5834,
+      "End": 5848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::6540",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6540,
+      "End": 6560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::6778",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6778,
+      "End": 6792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::9920",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9920,
+      "End": 9938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::10325",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10325,
+      "End": 10345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::10436",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10436,
+      "End": 10449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::10727",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10727,
+      "End": 10756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::10844",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10844,
+      "End": 10873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::10883",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10883,
+      "End": 10896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::16594",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16594,
+      "End": 16618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::18945",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18945,
+      "End": 18965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::19298",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19298,
+      "End": 19314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::27210",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27210,
+      "End": 27226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddUtil.c::macro-inline::27277",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27277,
+      "End": 27293
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddUtil.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Utility functions for ZDDs.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_zddPrintMinterm()\n                    \u003cli\u003e Cudd_zddPrintCover()\n                    \u003cli\u003e Cudd_zddPrintDebug()\n                    \u003cli\u003e Cudd_zddFirstPath()\n                    \u003cli\u003e Cudd_zddNextPath()\n                    \u003cli\u003e Cudd_zddCoverPathToString()\n                    \u003cli\u003e Cudd_zddDumpDot()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddP()\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e zp2()\n                    \u003cli\u003e zdd_print_minterm_aux()\n                    \u003cli\u003e zddPrintCoverAux()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Hyong-Kyoon Shin, In-Ho Moon, Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddUtil.c,v 1.27 2009/03/08 02:49:02 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int zp2 (DdManager *zdd, DdNode *f, st__table *t);\n\n// static void zdd_print_minterm_aux (DdManager *zdd, DdNode *node, int level, int *list);\n\n// static void zddPrintCoverAux (DdManager *zdd, DdNode *node, int level, int *list);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints a disjoint sum of product form for a ZDD.]\n\n  Description [Prints a disjoint sum of product form for a ZDD. Returns 1\n  if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddPrintDebug Cudd_zddPrintCover]\n\n******************************************************************************/\nfunc Cudd_zddPrintMinterm(zdd *DdManager, node *DdNode) int32 {\n    var i, size int32;\n    var list *int32;\n\n    size = int32(zdd.sizeZ);\n    list = ABC_ALLOC(int, size);\n    if list == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c size; i++ { list[i] = 3; } /* bogus value should disappear */\n    zdd_print_minterm_aux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n} /* end of Cudd_zddPrintMinterm */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints a sum of products from a ZDD representing a cover.]\n\n  Description [Prints a sum of products from a ZDD representing a cover.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddPrintMinterm]\n\n******************************************************************************/\nfunc Cudd_zddPrintCover(zdd *DdManager, node *DdNode) int32 {\n    var i, size int32;\n    var list *int32;\n\n    size = int32(zdd.sizeZ);\n    if size % 2 != 0 { return(0); } /* number of variables should be even */\n    list = ABC_ALLOC(int, size);\n    if list == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c size; i++ { list[i] = 3; } /* bogus value should disappear */\n    zddPrintCoverAux(zdd, node, 0, list);\n    ABC_FREE(list);\n    return(1);\n\n} /* end of Cudd_zddPrintCover */\n\n\n/**Function********************************************************************\n\n  Synopsis [Prints to the standard output a ZDD and its statistics.]\n\n  Description [Prints to the standard output a DD and its statistics.\n  The statistics include the number of nodes and the number of minterms.\n  (The number of minterms is also the number of combinations in the set.)\n  The statistics are printed if pr \u0026gt; 0.  Specifically:\n  \u003cul\u003e\n  \u003cli\u003e pr = 0 : prints nothing\n  \u003cli\u003e pr = 1 : prints counts of nodes and minterms\n  \u003cli\u003e pr = 2 : prints counts + disjoint sum of products\n  \u003cli\u003e pr = 3 : prints counts + list of nodes\n  \u003cli\u003e pr \u0026gt; 3 : prints counts + disjoint sum of products + list of nodes\n  \u003c/ul\u003e\n  Returns 1 if successful; 0 otherwise.\n  ]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddPrintDebug(zdd *DdManager, f *DdNode, n int32, pr int32) int32 {\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero);\n    var nodes int32;\n    var minterms float64;\n    var retval int32  = 1;\n\n    if f == empty \u0026\u0026 pr \u003e 0 {\n        (void) fmt.Fprintf(zdd.out, \": is the empty ZDD\\n\");\n        (void) fflush(zdd.out);\n        return(1);\n    }\n\n    if pr \u003e 0 {\n        nodes = Cudd_zddDagSize(f);\n        if nodes == CUDD_OUT_OF_MEM { retval = 0; }\n        minterms = Cudd_zddCountMinterm(zdd, f, n);\n        if minterms == float64(CUDD_OUT_OF_MEM) { retval = 0; }\n        (void) fmt.Fprintf(zdd.out, \": %d nodes %g minterms\\n\", nodes, minterms);\n        if pr \u003e 2 {\n            if !(cuddZddP(zdd, f) != 0) { retval = 0; } }\n        if pr == 2 || pr \u003e 3 {\n            if !(Cudd_zddPrintMinterm(zdd, f) != 0) { retval = 0; }\n            (void) fmt.Fprintf(zdd.out, \"\\n\");\n        }\n        (void) fflush(zdd.out);\n    }\n    return(retval);\n\n} /* end of Cudd_zddPrintDebug */\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the first path of a ZDD.]\n\n  Description [Defines an iterator on the paths of a ZDD\n  and finds its first path. Returns a generator that contains the\n  information necessary to continue the enumeration if successful; NULL\n  otherwise.\u003cp\u003e\n  A path is represented as an array of literals, which are integers in\n  {0, 1, 2}; 0 represents an else arc out of a node, 1 represents a then arc\n  out of a node, and 2 stands for the absence of a node.\n  The size of the array equals the number of variables in the manager at\n  the time Cudd_zddFirstCube is called.\u003cp\u003e\n  The paths that end in the empty terminal are not enumerated.]\n\n  SideEffects [The first path is returned as a side effect.]\n\n  SeeAlso     [Cudd_zddForeachPath Cudd_zddNextPath Cudd_GenFree\n  Cudd_IsGenEmpty]\n\n******************************************************************************/\nfunc Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {\n    var gen *DdGen;\n    var top, next, prev *DdNode;\n    var i int32;\n    var nvars int32;\n\n    /* Sanity Check. */\n    if zdd == nil || f == nil { return(nil); }\n\n    /* Allocate generator an initialize it. */\n    gen = new(DdGen);\n    if gen == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    gen.manager = zdd;\n    gen.type = CUDD_GEN_ZDD_PATHS;\n    gen.status = CUDD_GEN_EMPTY;\n    gen.gen.cubes.cube = nil;\n    gen.gen.cubes.value = DD_ZERO_VAL;\n    gen.stack.sp = 0;\n    gen.stack.stack = nil;\n    gen.node = nil;\n\n    nvars = zdd.sizeZ;\n    gen.gen.cubes.cube = ABC_ALLOC(int,nvars);\n    if gen.gen.cubes.cube == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen);\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ { gen.gen.cubes.cube[i] = 2; }\n\n    /* The maximum stack depth is one plus the number of variables.\n    ** because a path may have nodes at all levels, including the\n    ** constant level.\n    */\n    gen.stack.stack = ABC_ALLOC(DdNodePtr, nvars+1);\n    if gen.stack.stack == nil {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(gen.gen.cubes.cube);\n        ABC_FREE(gen);\n        return(nil);\n    }\n    for i = 0; i \u003c= nvars; i++ { gen.stack.stack[i] = nil; }\n\n    /* Find the first path of the ZDD. */\n    gen.stack.stack[gen.stack.sp] = f; gen.stack.sp++;\n\n    for {\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro cuddIsConstant\n        // inlining of macro Cudd_Regular\n        if !((((DdNode *)((ptruint)(top) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* Take the else branch first. */\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) \u0026 ~01)).index] = 0;\n            // inlining of macro cuddE\n            // inlining of macro Cudd_Regular\n            next = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.kids.E);\n            // inlining of macro Cudd_Not\n            gen.stack.stack[gen.stack.sp] = ((DdNode *)((ptrint)(next) ^ 01)); gen.stack.sp++;\n        // inlining of macro Cudd_Regular\n        // inlining of macro DD_ZERO\n        } else if ((DdNode *)((ptruint)(top) \u0026 ~01)) == ((zdd).zero) {\n            /* Backtrack. */\n            for {\n                if gen.stack.sp == 1 {\n                    /* The current node has no predecessor. */\n                    gen.status = CUDD_GEN_EMPTY;\n                    gen.stack.sp--;\n                    goto done;\n                }\n                // inlining of macro Cudd_Regular\n                prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n                // inlining of macro cuddT\n                next = ((prev).type.kids.T);\n                if next != top { /* follow the then branch next */\n                    gen.gen.cubes.cube[prev.index] = 1;\n                    gen.stack.stack[gen.stack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen.gen.cubes.cube[prev.index] = 2;\n                gen.stack.sp--;\n                top = gen.stack.stack[gen.stack.sp-1];\n            }\n        } else {\n            gen.status = CUDD_GEN_NONEMPTY;\n            // inlining of macro cuddV\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.value);\n            goto done;\n        }\n    }\n\ndone:\n    *path = gen.gen.cubes.cube;\n    return(gen);\n\n} /* end of Cudd_zddFirstPath */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Generates the next path of a ZDD.]\n\n  Description [Generates the next path of a ZDD onset,\n  using generator gen. Returns 0 if the enumeration is completed; 1\n  otherwise.]\n\n  SideEffects [The path is returned as a side effect. The\n  generator is modified.]\n\n  SeeAlso     [Cudd_zddForeachPath Cudd_zddFirstPath Cudd_GenFree\n  Cudd_IsGenEmpty]\n\n******************************************************************************/\nfunc Cudd_zddNextPath(gen *DdGen, path **int32) int32 {\n    var top, next, prev *DdNode;\n    var zdd *DdManager  = gen.manager;\n\n    /* Backtrack from previously reached terminal node. */\n    for {\n        if gen.stack.sp == 1 {\n            /* The current node has no predecessor. */\n            gen.status = CUDD_GEN_EMPTY;\n            gen.stack.sp--;\n            goto done;\n        }\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro Cudd_Regular\n        prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n        // inlining of macro cuddT\n        next = ((prev).type.kids.T);\n        if next != top { /* follow the then branch next */\n            gen.gen.cubes.cube[prev.index] = 1;\n            gen.stack.stack[gen.stack.sp-1] = next;\n            break;\n        }\n        /* Pop the stack and try again. */\n        gen.gen.cubes.cube[prev.index] = 2;\n        gen.stack.sp--;\n    }\n\n    for {\n        top = gen.stack.stack[gen.stack.sp-1];\n        // inlining of macro cuddIsConstant\n        // inlining of macro Cudd_Regular\n        if !((((DdNode *)((ptruint)(top) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n            /* Take the else branch first. */\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) \u0026 ~01)).index] = 0;\n            // inlining of macro cuddE\n            // inlining of macro Cudd_Regular\n            next = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.kids.E);\n            // inlining of macro Cudd_Not\n            gen.stack.stack[gen.stack.sp] = ((DdNode *)((ptrint)(next) ^ 01)); gen.stack.sp++;\n        // inlining of macro Cudd_Regular\n        // inlining of macro DD_ZERO\n        } else if ((DdNode *)((ptruint)(top) \u0026 ~01)) == ((zdd).zero) {\n            /* Backtrack. */\n            for {\n                if gen.stack.sp == 1 {\n                    /* The current node has no predecessor. */\n                    gen.status = CUDD_GEN_EMPTY;\n                    gen.stack.sp--;\n                    goto done;\n                }\n                // inlining of macro Cudd_Regular\n                prev = ((DdNode *)((ptruint)(gen.stack.stack[gen.stack.sp-2]) \u0026 ~01));\n                // inlining of macro cuddT\n                next = ((prev).type.kids.T);\n                if next != top { /* follow the then branch next */\n                    gen.gen.cubes.cube[prev.index] = 1;\n                    gen.stack.stack[gen.stack.sp-1] = next;\n                    break;\n                }\n                /* Pop the stack and try again. */\n                gen.gen.cubes.cube[prev.index] = 2;\n                gen.stack.sp--;\n                top = gen.stack.stack[gen.stack.sp-1];\n            }\n        } else {\n            gen.status = CUDD_GEN_NONEMPTY;\n            // inlining of macro cuddV\n            // inlining of macro Cudd_Regular\n            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) \u0026 ~01))).type.value);\n            goto done;\n        }\n    }\n\ndone:\n    if gen.status == CUDD_GEN_EMPTY { return(0); }\n    *path = gen.gen.cubes.cube;\n    return(1);\n\n} /* end of Cudd_zddNextPath */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Converts a path of a ZDD representing a cover to a string.]\n\n  Description [Converts a path of a ZDD representing a cover to a\n  string.  The string represents an implicant of the cover.  The path\n  is typically produced by Cudd_zddForeachPath.  Returns a pointer to\n  the string if successful; NULL otherwise.  If the str input is NULL,\n  it allocates a new string.  The string passed to this function must\n  have enough room for all variables and for the terminator.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddForeachPath]\n\n******************************************************************************/\nchar *\nCudd_zddCoverPathToString(\n  DdManager *zdd                /* DD manager */,\n  int *path                     /* path of ZDD representing a cover */,\n  char *str                     /* pointer to string to use if != NULL */\n  )\n{\n    var nvars int32  = zdd.sizeZ;\n    var i int32;\n    var res string;\n\n    if nvars \u0026 1 { return(nil); }\n    nvars \u003e\u003e= 1;\n    if str == nil {\n        res = ABC_ALLOC(char, nvars+1);\n        if res == nil { return(nil); }\n    } else {\n        res = str;\n    }\n    for i = 0; i \u003c nvars; i++ {\n        var v int32  = (path[2*i] \u003c\u003c 2) | path[2*i+1];\n        switch v {\n        case 0,\n         2,\n         8,\n         10:\n            res[i] = '-';\n            break;\n        case 1,\n         9:\n            res[i] = '0';\n            break;\n        case 4,\n         6:\n            res[i] = '1';\n            break;\n        default:\n            res[i] = '?';\n        }\n    }\n    res[nvars] = 0;\n\n    return(res);\n\n} /* end of Cudd_zddCoverPathToString */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Writes a dot file representing the argument ZDDs.]\n\n  Description [Writes a file representing the argument ZDDs in a format\n  suitable for the graph drawing program dot.\n  It returns 1 in case of success; 0 otherwise (e.g., out-of-memory,\n  file system full).\n  Cudd_zddDumpDot does not close the file: This is the caller\n  responsibility. Cudd_zddDumpDot uses a minimal unique subset of the\n  hexadecimal address of a node as name for it.\n  If the argument inames is non-null, it is assumed to hold the pointers\n  to the names of the inputs. Similarly for onames.\n  Cudd_zddDumpDot uses the following convention to draw arcs:\n    \u003cul\u003e\n    \u003cli\u003e solid line: THEN arcs;\n    \u003cli\u003e dashed line: ELSE arcs.\n    \u003c/ul\u003e\n  The dot options are chosen so that the drawing fits on a letter-size\n  sheet.\n  ]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DumpDot Cudd_zddPrintDebug]\n\n******************************************************************************/\nint\nCudd_zddDumpDot(\n  DdManager * dd /* manager */,\n  int  n /* number of output nodes to be dumped */,\n  DdNode ** f /* array of output nodes to be dumped */,\n  char ** inames /* array of input names (or NULL) */,\n  char ** onames /* array of output names (or NULL) */,\n  FILE * fp /* pointer to the dump file */)\n{\n    var support *DdNode  = nil;\n    var scan *DdNode;\n    var sorted *int32  = nil;\n    var nvars int32  = dd.sizeZ;\n    var visited *st__table  = nil;\n    var gen *st__generator;\n    var retval int32;\n    var i, j int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var refAddr, diff, mask long;\n\n    /* Build a bit array with the support of f. */\n    sorted = ABC_ALLOC(int,nvars);\n    if sorted == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        goto failure;\n    }\n    for i = 0; i \u003c nvars; i++ { sorted[i] = 0; }\n\n    /* Take the union of the supports of each output function. */\n    for i = 0; i \u003c n; i++ {\n        support = Cudd_Support(dd,f[i]);\n        if support == nil { goto failure; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(support).ref);\n        scan = support;\n        // inlining of macro cuddIsConstant\n        for !((scan).index == CUDD_CONST_INDEX) {\n            sorted[scan.index] = 1;\n            // inlining of macro cuddT\n            scan = ((scan).type.kids.T);\n        }\n        Cudd_RecursiveDeref(dd,support);\n    }\n    support = nil; /* so that we do not try to free it in case of failure */\n\n    /* Initialize symbol table for visited nodes. */\n    visited = st__init_table( st__ptrcmp, st__ptrhash);\n    if visited == nil { goto failure; }\n\n    /* Collect all the nodes of this DD in the symbol table. */\n    for i = 0; i \u003c n; i++ {\n        retval = cuddCollectNodes(f[i],visited);\n        if retval == 0 { goto failure; }\n    }\n\n    /* Find how many most significant hex digits are identical\n    ** in the addresses of all the nodes. Build a mask based\n    ** on this knowledge, so that digits that carry no information\n    ** will not be printed. This is done in two steps.\n    **  1. We scan the symbol table to find the bits that differ\n    **     in at least 2 addresses.\n    **  2. We choose one of the possible masks. There are 8 possible\n    **     masks for 32-bit integer, and 16 possible masks for 64-bit\n    **     integers.\n    */\n\n    /* Find the bits that are different. */\n    refAddr = int64( f[0]);\n    diff = 0;\n    gen = st__init_gen(visited);\n    for  st__gen(gen, (char **)\u0026scan, nil) {\n        diff |= refAddr ^ int64( scan);\n    }\n    st__free_gen(gen);\n\n    /* Choose the mask. */\n    for i = 0; uint32( i) \u003c 8 * sizeof(long); i += 4 {\n        mask = (1 \u003c\u003c i) - 1;\n        if diff \u003c= mask { break; }\n    }\n\n    /* Write the header and the global attributes. */\n    retval = fmt.Fprintf(fp, \"digraph \\\"ZDD\\\" {\\n\");\n    if retval == -1 { return(0); }\n    retval = fmt.Fprintf(fp, \"size = \\\"7.5,10\\\"\\ncenter = true;\\nedge [dir = none];\\n\");\n    if retval == -1 { return(0); }\n\n    /* Write the input name subgraph by scanning the support array. */\n    retval = fmt.Fprintf(fp, \"{ node [shape = plaintext];\\n\");\n    if retval == -1 { goto failure; }\n    retval = fmt.Fprintf(fp, \"  edge [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    /* We use a name (\"CONST NODES\") with an embedded blank, because\n    ** it is unlikely to appear as an input name.\n    */\n    retval = fmt.Fprintf(fp, \"  \\\"CONST NODES\\\" [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            if inames == nil {\n                retval = fmt.Fprintf(fp, \"\\\" %d \\\" -\u003e \", dd.invpermZ[i]);\n            } else {\n                retval = fmt.Fprintf(fp, \"\\\" %s \\\" -\u003e \", inames[dd.invpermZ[i]]);\n            }\n            if retval == -1 { goto failure; }\n        }\n    }\n    retval = fmt.Fprintf(fp, \"\\\"CONST NODES\\\"; \\n}\\n\");\n    if retval == -1 { goto failure; }\n\n    /* Write the output node subgraph. */\n    retval = fmt.Fprintf(fp, \"{ rank = same; node [shape = box]; edge [style = invis];\\n\");\n    if retval == -1 { goto failure; }\n    for i = 0; i \u003c n; i++ {\n        if onames == nil {\n            retval = fmt.Fprintf(fp, \"\\\"F%d\\\"\", i);\n        } else {\n            retval = fmt.Fprintf(fp, \"\\\"  %s  \\\"\", onames[i]);\n        }\n        if retval == -1 { goto failure; }\n        if i == n - 1 {\n            retval = fmt.Fprintf(fp, \"; }\\n\");\n        } else {\n            retval = fmt.Fprintf(fp, \" -\u003e \");\n        }\n        if retval == -1 { goto failure; }\n    }\n\n    /* Write rank info: All nodes with the same index have the same rank. */\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            retval = fmt.Fprintf(fp, \"{ rank = same; \");\n            if retval == -1 { goto failure; }\n            if inames == nil {\n                retval = fmt.Fprintf(fp, \"\\\" %d \\\";\\n\", dd.invpermZ[i]);\n            } else {\n                retval = fmt.Fprintf(fp, \"\\\" %s \\\";\\n\", inames[dd.invpermZ[i]]);\n            }\n            if retval == -1 { goto failure; }\n            nodelist = dd.subtableZ[i].nodelist;\n            slots = dd.subtableZ[i].slots;\n            for j = 0; j \u003c slots; j++ {\n                scan = nodelist[j];\n                for scan != nil {\n                    // inlining of macro st__is_member\n                    if  st__lookup(visited,(char *) scan,(char **) 0) {\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\";\\n\", (void *)\n                                                                 ((mask \u0026 (ptrint) scan) /\n                                                                  sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                    }\n                    scan = scan.next;\n                }\n            }\n            retval = fmt.Fprintf(fp, \"}\\n\");\n            if retval == -1 { goto failure; }\n        }\n    }\n\n    /* All constants have the same rank. */\n    retval = fmt.Fprintf(fp, \"{ rank = same; \\\"CONST NODES\\\";\\n{ node [shape = box]; \");\n    if retval == -1 { goto failure; }\n    nodelist = dd.constants.nodelist;\n    slots = dd.constants.slots;\n    for j = 0; j \u003c slots; j++ {\n        scan = nodelist[j];\n        for scan != nil {\n            // inlining of macro st__is_member\n            if  st__lookup(visited,(char *) scan,(char **) 0) {\n                retval = fmt.Fprintf(fp, \"\\\"%p\\\";\\n\", (void *)\n                                                 ((mask \u0026 (ptrint) scan) / sizeof(DdNode)));\n                if retval == -1 { goto failure; }\n            }\n            scan = scan.next;\n        }\n    }\n    retval = fmt.Fprintf(fp, \"}\\n}\\n\");\n    if retval == -1 { goto failure; }\n\n    /* Write edge info. */\n    /* Edges from the output nodes. */\n    for i = 0; i \u003c n; i++ {\n        if onames == nil {\n            retval = fmt.Fprintf(fp, \"\\\"F%d\\\"\", i);\n        } else {\n            retval = fmt.Fprintf(fp, \"\\\"  %s  \\\"\", onames[i]);\n        }\n        if retval == -1 { goto failure; }\n        retval = fmt.Fprintf(fp, \" -\u003e \\\"%p\\\" [style = solid];\\n\", (void *) ((mask \u0026 (ptrint) f[i]) /\n                                                  sizeof(DdNode)));\n        if retval == -1 { goto failure; }\n    }\n\n    /* Edges from internal nodes. */\n    for i = 0; i \u003c nvars; i++ {\n        if sorted[dd.invpermZ[i]] {\n            nodelist = dd.subtableZ[i].nodelist;\n            slots = dd.subtableZ[i].slots;\n            for j = 0; j \u003c slots; j++ {\n                scan = nodelist[j];\n                for scan != nil {\n                    // inlining of macro st__is_member\n                    if  st__lookup(visited,(char *) scan,(char **) 0) {\n                        // inlining of macro cuddT\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\" -\u003e \\\"%p\\\";\\n\", (void *) ((mask \u0026 (ptrint) scan) / sizeof(DdNode)), (void *) ((mask \u0026 (ptrint) ((scan).type.kids.T)) /\n                                                              sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                        retval = fmt.Fprintf(fp, \"\\\"%p\\\" -\u003e \\\"%p\\\" [style = dashed];\\n\", (void *) ((mask \u0026 (ptrint) scan)\n                                                                           / sizeof(DdNode)), (void *) ((mask \u0026 (ptrint)\n                                                                            // inlining of macro cuddE\n                                                                            ((scan).type.kids.E)) /\n                                                                           sizeof(DdNode)));\n                        if retval == -1 { goto failure; }\n                    }\n                    scan = scan.next;\n                }\n            }\n        }\n    }\n\n    /* Write constant labels. */\n    nodelist = dd.constants.nodelist;\n    slots = dd.constants.slots;\n    for j = 0; j \u003c slots; j++ {\n        scan = nodelist[j];\n        for scan != nil {\n            // inlining of macro st__is_member\n            if  st__lookup(visited,(char *) scan,(char **) 0) {\n                retval = fmt.Fprintf(fp, \"\\\"%p\\\" [label = \\\"%g\\\"];\\n\", (void *) ((mask \u0026 (ptrint) scan) /\n                                                           // inlining of macro cuddV\n                                                           sizeof(DdNode)), ((scan).type.value));\n                if retval == -1 { goto failure; }\n            }\n            scan = scan.next;\n        }\n    }\n\n    /* Write trailer and return. */\n    retval = fmt.Fprintf(fp, \"}\\n\");\n    if retval == -1 { goto failure; }\n\n    st__free_table(visited);\n    ABC_FREE(sorted);\n    return(1);\n\nfailure:\n    if sorted != nil { ABC_FREE(sorted); }\n    if visited != nil { st__free_table(visited); }\n    return(0);\n\n} /* end of Cudd_zddDumpBlif */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Prints a ZDD to the standard output. One line per node is\n  printed.]\n\n  Description [Prints a ZDD to the standard output. One line per node is\n  printed. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddPrintDebug]\n\n******************************************************************************/\nfunc cuddZddP(zdd *DdManager, f *DdNode) int32 {\n    var retval int32;\n    var table *st__table  = st__init_table( st__ptrcmp, st__ptrhash);\n\n    if table == nil { return(0); }\n\n    retval = zp2(zdd, f, table);\n    st__free_table(table);\n    (void) fputc('\\n', zdd.out);\n    return(retval);\n\n} /* end of cuddZddP */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of cuddZddP.]\n\n  Description [Performs the recursive step of cuddZddP. Returns 1 in\n  case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zp2(zdd *DdManager, f *DdNode, t *st__table) int32 {\n    var n *DdNode;\n    var T, E int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    if f == nil {\n        return(0); }\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void)fmt.Fprintf(zdd.out, \"ID = %d\\n\", (f == base));\n        return(1);\n    }\n    // inlining of macro st__is_member\n    if  st__lookup(t,(char *)f,(char **) 0) == 1 {\n        return(1); }\n\n    if st__insert(t, (char *) f, nil) == st__OUT_OF_MEM {\n        return(0); }\n\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%lx\\tindex = %u\\tr = %u\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#else\n    (void) fprintf(zdd-\u003eout, \"ID = 0x%x\\tindex = %hu\\tr = %hu\\t\",\n        (ptruint)f / (ptruint) sizeof(DdNode), f-\u003eindex, f-\u003eref);\n#endif\n\n    // inlining of macro cuddT\n    n = ((f).type.kids.T);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void) fmt.Fprintf(zdd.out, \"T = %d\\t\\t\", (n == base));\n        T = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"T = 0x%lx\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"T = 0x%x\\t\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        T = 0;\n    }\n\n    // inlining of macro cuddE\n    n = ((f).type.kids.E);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(n) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        (void) fmt.Fprintf(zdd.out, \"E = %d\\n\", (n == base));\n        E = 1;\n    } else {\n#if SIZEOF_VOID_P == 8\n        (void) fprintf(zdd-\u003eout, \"E = 0x%lx\\n\", (ptruint) n /\n                      (ptruint) sizeof(DdNode));\n#else\n        (void) fprintf(zdd-\u003eout, \"E = 0x%x\\n\", (ptruint) n /\n                       (ptruint) sizeof(DdNode));\n#endif\n        E = 0;\n    }\n\n    if E == 0 {\n        // inlining of macro cuddE\n        if zp2(zdd, ((f).type.kids.E), t) == 0 { return(0); } }\n    if T == 0 {\n        // inlining of macro cuddT\n        if zp2(zdd, ((f).type.kids.T), t) == 0 { return(0); } }\n    return(1);\n\n} /* end of zp2 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_zddPrintMinterm.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic void\nzdd_print_minterm_aux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    var Nv, Nnv *DdNode;\n    var i, v int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if node == base {\n            /* Check for missing variable. */\n            if level != zdd.sizeZ {\n                list[zdd.invpermZ[level]] = 0;\n                zdd_print_minterm_aux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for i = 0; i \u003c zdd.sizeZ; i++ {\n                v = list[i];\n                if v == 0 {\n                    (void) fmt.Fprintf(zdd.out, \"0\");\n                } else if v == 1 {\n                    (void) fmt.Fprintf(zdd.out, \"1\");\n                } else if v == 3 {\n                    (void) fmt.Fprintf(zdd.out, \"@\");       /* should never happen */\n                } else {\n                    (void) fmt.Fprintf(zdd.out, \"-\"); }\n            }\n            (void) fmt.Fprintf(zdd.out, \" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        // inlining of macro cuddIZ\n        if level != (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(zdd).permZ[(node.index)]) {\n            list[zdd.invpermZ[level]] = 0;\n            zdd_print_minterm_aux(zdd, node, level + 1, list);\n            return;\n        }\n\n        // inlining of macro cuddE\n        Nnv = ((node).type.kids.E);\n        // inlining of macro cuddT\n        Nv = ((node).type.kids.T);\n        if Nv == Nnv {\n            list[node.index] = 2;\n            zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node.index] = 1;\n        zdd_print_minterm_aux(zdd, Nv, level + 1, list);\n        list[node.index] = 0;\n        zdd_print_minterm_aux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n} /* end of zdd_print_minterm_aux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_zddPrintCover.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic void\nzddPrintCoverAux(\n  DdManager * zdd /* manager */,\n  DdNode * node /* current node */,\n  int  level /* depth in the recursion */,\n  int * list /* current recursion path */)\n{\n    var Nv, Nnv *DdNode;\n    var i, v int32;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(node) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        if node == base {\n            /* Check for missing variable. */\n            if level != zdd.sizeZ {\n                list[zdd.invpermZ[level]] = 0;\n                zddPrintCoverAux(zdd, node, level + 1, list);\n                return;\n            }\n            /* Terminal case: Print one cube based on the current recursion\n            ** path.\n            */\n            for i = 0; i \u003c zdd.sizeZ; i += 2 {\n                v = list[i] * 4 + list[i+1];\n                if v == 0 {\n                    (void) putc('-',zdd.out);\n                } else if v == 4 {\n                    (void) putc('1',zdd.out);\n                } else if v == 1 {\n                    (void) putc('0',zdd.out);\n                } else {\n                    (void) putc('@',zdd.out); } /* should never happen */\n            }\n            (void) fmt.Fprintf(zdd.out, \" 1\\n\");\n        }\n    } else {\n        /* Check for missing variable. */\n        // inlining of macro cuddIZ\n        if level != (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(zdd).permZ[(node.index)]) {\n            list[zdd.invpermZ[level]] = 0;\n            zddPrintCoverAux(zdd, node, level + 1, list);\n            return;\n        }\n\n        // inlining of macro cuddE\n        Nnv = ((node).type.kids.E);\n        // inlining of macro cuddT\n        Nv = ((node).type.kids.T);\n        if Nv == Nnv {\n            list[node.index] = 2;\n            zddPrintCoverAux(zdd, Nnv, level + 1, list);\n            return;\n        }\n\n        list[node.index] = 1;\n        zddPrintCoverAux(zdd, Nv, level + 1, list);\n        list[node.index] = 0;\n        zddPrintCoverAux(zdd, Nnv, level + 1, list);\n    }\n    return;\n\n} /* end of zddPrintCoverAux */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,456 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c",
+  "SHA256": "18692a83cb5d4b83994369975340f0a75681d54f57921b08c60b4dc06a5363a3",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 69,
+        "ByteOffset": 1418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hop_Man_t *) malloc(sizeof(Hop_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Hop_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 69,
+        "Column": 78,
+        "ByteOffset": 2071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hop_Obj_t * *) malloc(sizeof(Hop_Obj_t *) * (size_t)(p.nTableSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTable, 0, sizeof(Hop_Obj_t *) * p.nTableSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 2875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 3380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 !pObj.fMarkB ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 102,
+        "Column": 63,
+        "ByteOffset": 3601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 104,
+        "Column": 63,
+        "ByteOffset": 3778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 110,
+        "Column": 64,
+        "ByteOffset": 4074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 57,
+        "ByteOffset": 4179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fRefCount );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI/PO = %d/%d. \", Hop_ManPiNum(p), Hop_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"A = %7d. \",       Hop_ManAndNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"X = %5d. \",       Hop_ManExorNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cre = %7d. \",     p.nCreated );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Del = %7d. \",     p.nDeleted );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lev = %3d. \",     Hop_ManCountLevels(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ManStart",
+      "Start": 1253,
+      "End": 2044,
+      "BodyStart": 1280,
+      "Original": "Hop_Man_t * Hop_ManStart()\n{\n    Hop_Man_t * p;\n    // start the manager\n    p = ABC_ALLOC( Hop_Man_t, 1 );\n    memset( p, 0, sizeof(Hop_Man_t) );\n    // perform initializations\n    p-\u003enTravIds = 1;\n    p-\u003efRefCount = 1;\n    p-\u003efCatchExor = 0;\n    // allocate arrays for nodes\n    p-\u003evPis = Vec_PtrAlloc( 100 );\n    p-\u003evPos = Vec_PtrAlloc( 100 );\n    // prepare the internal memory manager\n    Hop_ManStartMemory( p );\n    // create the constant node\n    p-\u003epConst1 = Hop_ManFetchMemory( p );\n    p-\u003epConst1-\u003eType = AIG_CONST1;\n    p-\u003epConst1-\u003efPhase = 1;\n    p-\u003enCreated = 1;\n    // start the table\n//    p-\u003enTableSize = 107;\n    p-\u003enTableSize = 10007;\n    p-\u003epTable = ABC_ALLOC( Hop_Obj_t *, p-\u003enTableSize );\n    memset( p-\u003epTable, 0, sizeof(Hop_Obj_t *) * p-\u003enTableSize );\n    return p;\n}",
+      "Draft": "func Hop_ManStart() *Hop_Man_t {\n    var p *Hop_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Hop_Man_t *) malloc(sizeof(Hop_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Hop_Man_t) );\n    // perform initializations\n    p.nTravIds = 1;\n    p.fRefCount = 1;\n    p.fCatchExor = 0;\n    // allocate arrays for nodes\n    p.vPis = Vec_PtrAlloc( 100 );\n    p.vPos = Vec_PtrAlloc( 100 );\n    // prepare the internal memory manager\n    Hop_ManStartMemory( p );\n    // create the constant node\n    p.pConst1 = Hop_ManFetchMemory( p );\n    p.pConst1.Type = AIG_CONST1;\n    p.pConst1.fPhase = 1;\n    p.nCreated = 1;\n    // start the table\n//    p-\u003enTableSize = 107;\n    p.nTableSize = 10007;\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Hop_Obj_t * *) malloc(sizeof(Hop_Obj_t *) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, sizeof(Hop_Obj_t *) * p.nTableSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Hop_ManStop",
+      "Start": 2302,
+      "End": 3138,
+      "BodyStart": 2336,
+      "Original": "void Hop_ManStop( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj;\n    int i;\n    // make sure the nodes have clean marks\n    pObj = Hop_ManConst1(p);\n    assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    Hop_ManForEachPi( p, pObj, i )\n        assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    Hop_ManForEachPo( p, pObj, i )\n        assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    Hop_ManForEachNode( p, pObj, i )\n        assert( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n    // print time\n    if ( p-\u003etime1 ) { ABC_PRT( \"time1\", p-\u003etime1 ); }\n    if ( p-\u003etime2 ) { ABC_PRT( \"time2\", p-\u003etime2 ); }\n//    Hop_TableProfile( p );\n    if ( p-\u003evChunks )  Hop_ManStopMemory( p );\n    if ( p-\u003evPis )     Vec_PtrFree( p-\u003evPis );\n    if ( p-\u003evPos )     Vec_PtrFree( p-\u003evPos );\n    if ( p-\u003evObjs )    Vec_PtrFree( p-\u003evObjs );\n    ABC_FREE( p-\u003epTable );\n    ABC_FREE( p );\n}",
+      "Draft": "func Hop_ManStop(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // make sure the nodes have clean marks\n    pObj = Hop_ManConst1(p);\n    assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // print time\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n//    Hop_TableProfile( p );\n    if p.vChunks {  Hop_ManStopMemory( p ); }\n    if p.vPis {     Vec_PtrFree( p.vPis ); }\n    if p.vPos {     Vec_PtrFree( p.vPos ); }\n    if p.vObjs {    Vec_PtrFree( p.vObjs ); }\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Hop_ManCleanup",
+      "Start": 3419,
+      "End": 3983,
+      "BodyStart": 3455,
+      "Original": "int Hop_ManCleanup( Hop_Man_t * p )\n{\n    Vec_Ptr_t * vObjs;\n    Hop_Obj_t * pNode;\n    int i, nNodesOld;\n    assert( p-\u003efRefCount );\n    nNodesOld = Hop_ManNodeNum(p);\n    // collect roots of dangling nodes\n    vObjs = Vec_PtrAlloc( 100 );\n    Hop_ManForEachNode( p, pNode, i )\n        if ( Hop_ObjRefs(pNode) == 0 )\n            Vec_PtrPush( vObjs, pNode );\n    // recursively remove dangling nodes\n    Vec_PtrForEachEntry( Hop_Obj_t *, vObjs, pNode, i )\n        Hop_ObjDelete_rec( p, pNode );\n    Vec_PtrFree( vObjs );\n    return nNodesOld - Hop_ManNodeNum(p);\n}",
+      "Draft": "func Hop_ManCleanup(p *Hop_Man_t) int32 {\n    var vObjs *Vec_Ptr_t;\n    var pNode *Hop_Obj_t;\n    var i, nNodesOld int32;\n    assert(p.fRefCount, \"p.fRefCount\");\n    nNodesOld = Hop_ManNodeNum(p);\n    // collect roots of dangling nodes\n    vObjs = Vec_PtrAlloc( 100 );\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pNode) = p.pTable[i]) == nil {} else\n        if Hop_ObjRefs(pNode) == 0 {\n            Vec_PtrPush( vObjs, pNode ); }\n    }\n    // recursively remove dangling nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pNode) = (Hop_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        Hop_ObjDelete_rec( p, pNode );\n    }\n    Vec_PtrFree( vObjs );\n    return nNodesOld - Hop_ManNodeNum(p);\n}"
+    },
+    {
+      "Name": "Hop_ManPrintStats",
+      "Start": 4241,
+      "End": 4622,
+      "BodyStart": 4281,
+      "Original": "void Hop_ManPrintStats( Hop_Man_t * p )\n{\n    printf( \"PI/PO = %d/%d. \", Hop_ManPiNum(p), Hop_ManPoNum(p) );\n    printf( \"A = %7d. \",       Hop_ManAndNum(p) );\n    printf( \"X = %5d. \",       Hop_ManExorNum(p) );\n    printf( \"Cre = %7d. \",     p-\u003enCreated );\n    printf( \"Del = %7d. \",     p-\u003enDeleted );\n    printf( \"Lev = %3d. \",     Hop_ManCountLevels(p) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Hop_ManPrintStats(p *Hop_Man_t) {\n    fmt.Printf(\"PI/PO = %d/%d. \", Hop_ManPiNum(p), Hop_ManPoNum(p));\n    fmt.Printf(\"A = %7d. \", Hop_ManAndNum(p));\n    fmt.Printf(\"X = %5d. \", Hop_ManExorNum(p));\n    fmt.Printf(\"Cre = %7d. \", p.nCreated);\n    fmt.Printf(\"Del = %7d. \", p.nDeleted);\n    fmt.Printf(\"Lev = %3d. \", Hop_ManCountLevels(p));\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::mechanical::sizeof::1401",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::mechanical::sizeof::1454",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1379,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::mechanical::sizeof::2067",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1923,
+      "End": 1923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::mechanical::sizeof::2142",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1990,
+      "End": 1996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::1380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::2044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1923,
+      "End": 1923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::2073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1923,
+      "End": 1923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::2148",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1996,
+      "End": 2009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::2807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2494,
+      "End": 2494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::3072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2579,
+      "End": 2579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::4080",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3095,
+      "End": 3095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::4187",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3122,
+      "End": 3122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::pointer-cast::5163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3823,
+      "End": 3823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::Hop_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1253,
+      "End": 2044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::ternary::Hop_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Hop_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2302,
+      "End": 3138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::Hop_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2302,
+      "End": 3138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::Hop_ManCleanup",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManCleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3419,
+      "End": 3983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::Hop_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4241,
+      "End": 4622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4871
+    }
+  ],
+  "Draft": "package hop\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [hopMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [AIG manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopMan.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManStart() *Hop_Man_t {\n    var p *Hop_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Hop_Man_t *) malloc(sizeof(Hop_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Hop_Man_t) );\n    // perform initializations\n    p.nTravIds = 1;\n    p.fRefCount = 1;\n    p.fCatchExor = 0;\n    // allocate arrays for nodes\n    p.vPis = Vec_PtrAlloc( 100 );\n    p.vPos = Vec_PtrAlloc( 100 );\n    // prepare the internal memory manager\n    Hop_ManStartMemory( p );\n    // create the constant node\n    p.pConst1 = Hop_ManFetchMemory( p );\n    p.pConst1.Type = AIG_CONST1;\n    p.pConst1.fPhase = 1;\n    p.nCreated = 1;\n    // start the table\n//    p-\u003enTableSize = 107;\n    p.nTableSize = 10007;\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Hop_Obj_t * *) malloc(sizeof(Hop_Obj_t *) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, sizeof(Hop_Obj_t *) * p.nTableSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManStop(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // make sure the nodes have clean marks\n    pObj = Hop_ManConst1(p);\n    assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        assert(!pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 !pObj.fMarkB\"); }\n    }\n    // print time\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n//    Hop_TableProfile( p );\n    if p.vChunks {  Hop_ManStopMemory( p ); }\n    if p.vPis {     Vec_PtrFree( p.vPis ); }\n    if p.vPos {     Vec_PtrFree( p.vPos ); }\n    if p.vObjs {    Vec_PtrFree( p.vObjs ); }\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of dangling nodes removed.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManCleanup(p *Hop_Man_t) int32 {\n    var vObjs *Vec_Ptr_t;\n    var pNode *Hop_Obj_t;\n    var i, nNodesOld int32;\n    assert(p.fRefCount, \"p.fRefCount\");\n    nNodesOld = Hop_ManNodeNum(p);\n    // collect roots of dangling nodes\n    vObjs = Vec_PtrAlloc( 100 );\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pNode) = p.pTable[i]) == nil {} else\n        if Hop_ObjRefs(pNode) == 0 {\n            Vec_PtrPush( vObjs, pNode ); }\n    }\n    // recursively remove dangling nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pNode) = (Hop_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        Hop_ObjDelete_rec( p, pNode );\n    }\n    Vec_PtrFree( vObjs );\n    return nNodesOld - Hop_ManNodeNum(p);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManPrintStats(p *Hop_Man_t) {\n    fmt.Printf(\"PI/PO = %d/%d. \", Hop_ManPiNum(p), Hop_ManPoNum(p));\n    fmt.Printf(\"A = %7d. \", Hop_ManAndNum(p));\n    fmt.Printf(\"X = %5d. \", Hop_ManExorNum(p));\n    fmt.Printf(\"Cre = %7d. \", p.nCreated);\n    fmt.Printf(\"Del = %7d. \", p.nDeleted);\n    fmt.Printf(\"Lev = %3d. \", Hop_ManCountLevels(p));\n    fmt.Printf(\"\\n\");\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

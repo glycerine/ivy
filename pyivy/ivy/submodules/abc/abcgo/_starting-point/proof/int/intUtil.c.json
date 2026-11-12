@@ -1,0 +1,95 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c",
+  "SHA256": "808f6433183b93a53c9601fe69fc34a05b88f0492640a791e0193d04a2956765",
+  "Library": [
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 98,
+        "Column": 73,
+        "ByteOffset": 3336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManCheckInitialState",
+      "Start": 1291,
+      "End": 2218,
+      "BodyStart": 1339,
+      "Original": "int Inter_ManCheckInitialState( Aig_Man_t * p )\n{\n    Cnf_Dat_t * pCnf;\n    Aig_Obj_t * pObj;\n    sat_solver * pSat;\n    int i, status;\n    //abctime clk = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 1 );\n    if ( pSat == NULL )\n    {\n        Cnf_DataFree( pCnf );\n        return 0;\n    }\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    //ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if ( status == l_True )\n    {\n        p-\u003epSeqModel = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), 1 );\n        Saig_ManForEachPi( p, pObj, i )\n            if ( sat_solver_var_value( pSat, pCnf-\u003epVarNums[Aig_ObjId(pObj)] ) )\n                Abc_InfoSetBit( p-\u003epSeqModel-\u003epData, Aig_ManRegNum(p) + i );\n    }\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    return status == l_True;\n}",
+      "Draft": "func Inter_ManCheckInitialState(p *Aig_Man_t) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var pSat *sat_solver;\n    var i, status int32;\n    //abctime clk = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 1 );\n    if pSat == nil {\n        Cnf_DataFree( pCnf );\n        return 0;\n    }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    //ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if status == l_True {\n        p.pSeqModel = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), 1 );\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            if sat_solver_var_value( pSat, pCnf.pVarNums[Aig_ObjId(pObj)] ) {\n                Abc_InfoSetBit( p.pSeqModel.pData, Aig_ManRegNum(p) + i ); }\n        }\n    }\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    return status == l_True;\n}"
+    },
+    {
+      "Name": "Inter_ManCheckAllStates",
+      "Start": 2500,
+      "End": 3038,
+      "BodyStart": 2545,
+      "Original": "int Inter_ManCheckAllStates( Aig_Man_t * p )\n{\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    int status;\n    abctime clk = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if ( pSat == NULL )\n        return 1;\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    sat_solver_delete( pSat );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    return status == l_False;\n}",
+      "Draft": "func Inter_ManCheckAllStates(p *Aig_Man_t) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var status int32;\n    var clk abctime  = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if pSat == nil {\n        return 1; }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    sat_solver_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    return status == l_False;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::pointer-cast::1519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1519,
+      "End": 1533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::pointer-cast::2097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1935,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::pointer-cast::2878",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2698,
+      "End": 2712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::Inter_ManCheckInitialState",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckInitialState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1291,
+      "End": 2218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::Inter_ManCheckAllStates",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckAllStates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2500,
+      "End": 3038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3285
+    }
+  ],
+  "Draft": "package int\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [intUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Various interpolation utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the property fails in the initial state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckInitialState(p *Aig_Man_t) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var pSat *sat_solver;\n    var i, status int32;\n    //abctime clk = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 1 );\n    if pSat == nil {\n        Cnf_DataFree( pCnf );\n        return 0;\n    }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    //ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if status == l_True {\n        p.pSeqModel = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), 1 );\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n            if sat_solver_var_value( pSat, pCnf.pVarNums[Aig_ObjId(pObj)] ) {\n                Abc_InfoSetBit( p.pSeqModel.pData, Aig_ManRegNum(p) + i ); }\n        }\n    }\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    return status == l_True;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the property holds in all states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckAllStates(p *Aig_Man_t) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var status int32;\n    var clk abctime  = Abc_Clock();\n    pCnf = Cnf_Derive( p, Saig_ManRegNum(p) ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if pSat == nil {\n        return 1; }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    sat_solver_delete( pSat );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    return status == l_False;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

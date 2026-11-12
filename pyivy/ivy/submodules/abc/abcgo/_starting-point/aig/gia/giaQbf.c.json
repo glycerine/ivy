@@ -1,0 +1,1972 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c",
+  "SHA256": "7e4cbc5caaff905271d37b86a00c8b10ecc9ad1a5bf9fdd57bc6c844f00ae67b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize * nLutNum \u003c= nFlops );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 13,
+        "ByteOffset": 2657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = strtok( pStr, \", \" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 80,
+        "Column": 28,
+        "ByteOffset": 2724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var iFlop int32  = atoi(pTemp);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 2778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Flop index (%d) exceeds the number of flops (%d).\\n\", iFlop, nFlops );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 17,
+        "ByteOffset": 2941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = strtok( nil, \", \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 3027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gia_GenCollectFlopIndexes: Expecting %d flop indexes (instead of %d).\\n\", nLutNum * nLutSize, Vec_IntSize(vFlops) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gia_GenCollectFlopIndexes: There are %d duplicated flops in the list.\\n\", nDups );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vFlops) == nLutNum * nLutSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 4432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 8498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 8562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vXLits) == nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 11608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Generated QBF miter with %d parameters, %d functional variables, and %d AIG nodes.\\n\", "
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 299,
+        "Column": 79,
+        "ByteOffset": 12217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pRes *word  = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(Abc_Bit6WordNum(nLutNum)), sizeof(word)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 12653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d-input %d-output code table:\\n\", nLutSize, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 9,
+        "ByteOffset": 12847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d  \", i );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 316,
+        "Column": 28,
+        "ByteOffset": 12896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)\u0026i, nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 12940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  --\u003e  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 13,
+        "ByteOffset": 13000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d  \", int32(CodeX[0]) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 320,
+        "Column": 28,
+        "ByteOffset": 13065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)CodeX, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 13111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 322,
+        "Column": 65,
+        "ByteOffset": 13191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 13282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "time",
+      "Status": "converted",
+      "Message": "Wall-clock Unix seconds; time_t uses int64 in this draft.",
+      "Location": {
+        "Line": 325,
+        "Column": 12,
+        "ByteOffset": 13289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 13306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Simulation of the encoding with %d random pairs:\\n\", nPairs );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 334,
+        "Column": 89,
+        "ByteOffset": 13722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var CodeXCodeY *word  = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(nWords), sizeof(word)));"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 336,
+        "Column": 20,
+        "ByteOffset": 13811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            NumX = rand() % (1 \u003c\u003c nLutSize);"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 337,
+        "Column": 20,
+        "ByteOffset": 13856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            NumY = rand() % (1 \u003c\u003c nLutSize);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 9,
+        "ByteOffset": 14322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d :\", n );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 14352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" x =%3d \", NumX );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 349,
+        "Column": 28,
+        "ByteOffset": 14407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout,(unsigned *) \u0026NumX, nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 9,
+        "ByteOffset": 14454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" y =%3d \", NumY );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 351,
+        "Column": 28,
+        "ByteOffset": 14509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)\u0026NumY, nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 14556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" nand =%3d \", NumXY );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 353,
+        "Column": 28,
+        "ByteOffset": 14615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)\u0026NumXY, nLutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 14663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 9,
+        "ByteOffset": 14688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" c(x) = \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 357,
+        "Column": 28,
+        "ByteOffset": 14737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)CodeX, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 14783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" c(y) = \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 359,
+        "Column": 28,
+        "ByteOffset": 14832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)CodeY, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 9,
+        "ByteOffset": 14878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" c(nand) = \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 361,
+        "Column": 28,
+        "ByteOffset": 14930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)CodeXY, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 14977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  nand(c(x),c(y)) = \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 363,
+        "Column": 28,
+        "ByteOffset": 15038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)CodeXCodeY, nLutNum );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 15089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 366,
+        "Column": 9,
+        "ByteOffset": 15114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s\", Abc_TtEqual(CodeXCodeY, CodeXY, nWords) ? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 9,
+        "ByteOffset": 15194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 369,
+        "Column": 65,
+        "ByteOffset": 15275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 370,
+        "Column": 65,
+        "ByteOffset": 15382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((CodeY) ? (free((char *) (CodeY)), (CodeY) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 371,
+        "Column": 66,
+        "ByteOffset": 15490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((CodeXY) ? (free((char *) (CodeXY)), (CodeXY) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 372,
+        "Column": 70,
+        "ByteOffset": 15604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((CodeXCodeY) ? (free((char *) (CodeXCodeY)), (CodeXCodeY) = 0) : 0);"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 15838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "time",
+      "Status": "converted",
+      "Message": "Wall-clock Unix seconds; time_t uses int64 in this draft.",
+      "Location": {
+        "Line": 380,
+        "Column": 12,
+        "ByteOffset": 15845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( time(nil) );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 382,
+        "Column": 29,
+        "ByteOffset": 15940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_IntPush( vCode, rand() \u0026 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 17431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d : \", Iter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 17,
+        "ByteOffset": 17627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", !Abc_LitIsCompl(iLit) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 13,
+        "ByteOffset": 17692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 431,
+        "Column": 49,
+        "ByteOffset": 17918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut { RetValue = 0; break; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 435,
+        "Column": 45,
+        "ByteOffset": 18077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 9,
+        "ByteOffset": 18114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Enumerated %d assignments when timeout (%d sec) was reached.  \", nSolutions, nTimeOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 18260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Enumerated %d assignments when conflict limit (%d) was reached.  \", nSolutions, nConfLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 9,
+        "ByteOffset": 18385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Enumerated the complete set of %d assignments.  \", nSolutions ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 20199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 535,
+        "Column": 57,
+        "ByteOffset": 21946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 24946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 639,
+        "Column": 5,
+        "ByteOffset": 26098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pNew) == nPars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 740,
+        "Column": 5,
+        "ByteOffset": 29564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d : \", Iter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 741,
+        "Column": 5,
+        "ByteOffset": 29594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vValues) == p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 36,
+        "ByteOffset": 29672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Vec_IntPrintBinary( vValues ); printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 743,
+        "Column": 5,
+        "ByteOffset": 29692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Var =%7d  \",  p.pSatSynG ? bmcg_sat_solver_varnum(p.pSatSynG)      : sat_solver_nvars(p.pSatSyn)      );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 5,
+        "ByteOffset": 29810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cla =%7d  \",  p.pSatSynG ? bmcg_sat_solver_clausenum(p.pSatSynG)   : sat_solver_nclauses(p.pSatSyn)   );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 745,
+        "Column": 5,
+        "ByteOffset": 29928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Conf =%9d  \", p.pSatSynG ? bmcg_sat_solver_conflictnum(p.pSatSynG) : sat_solver_nconflicts(p.pSatSyn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 762,
+        "Column": 5,
+        "ByteOffset": 30492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vValues) == p.nPars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 798,
+        "Column": 13,
+        "ByteOffset": 31620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntEntry(p.vParMap, i) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 802,
+        "Column": 13,
+        "ByteOffset": 31861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 811,
+        "Column": 5,
+        "ByteOffset": 32048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vValues) == p.nPars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 812,
+        "Column": 5,
+        "ByteOffset": 32095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Pattern   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 814,
+        "Column": 5,
+        "ByteOffset": 32160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 818,
+        "Column": 9,
+        "ByteOffset": 32452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Var =%4d \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 820,
+        "Column": 13,
+        "ByteOffset": 32522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"UNSAT\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 823,
+        "Column": 13,
+        "ByteOffset": 32668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 828,
+        "Column": 9,
+        "ByteOffset": 32806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 830,
+        "Column": 5,
+        "ByteOffset": 32832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vValues) == p.nPars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 851,
+        "Column": 9,
+        "ByteOffset": 33533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Solving QBF for \\\"%s\\\" with %d parameters, %d variables and %d AIG nodes.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 853,
+        "Column": 5,
+        "ByteOffset": 33699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pGia) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 857,
+        "Column": 9,
+        "ByteOffset": 33871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vValues) == p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 879,
+        "Column": 9,
+        "ByteOffset": 34798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vValues) == p.nPars );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 884,
+        "Column": 51,
+        "ByteOffset": 35102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nTimeOut \u0026\u0026 (Abc_Clock() - p.clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut { RetValue = -1; break; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 888,
+        "Column": 9,
+        "ByteOffset": 35251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parameters: \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 889,
+        "Column": 9,
+        "ByteOffset": 35285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vValues) == nPars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 891,
+        "Column": 9,
+        "ByteOffset": 35377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(p.vValues) - nZeros );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 894,
+        "Column": 13,
+        "ByteOffset": 35562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(p.vValues) == (1 \u003c\u003c nEncVars) * nBits );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 898,
+        "Column": 65,
+        "ByteOffset": 35764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if RetValue == -1 \u0026\u0026 nTimeOut \u0026\u0026 (Abc_Clock() - p.clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 899,
+        "Column": 9,
+        "ByteOffset": 35801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem timed out after %d sec.  \", nTimeOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 901,
+        "Column": 9,
+        "ByteOffset": 35915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem aborted after %d conflicts.  \", nConfLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 903,
+        "Column": 9,
+        "ByteOffset": 36035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem aborted after %d iterations.  \", nIterLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 905,
+        "Column": 9,
+        "ByteOffset": 36141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem is UNSAT after %d iterations.  \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 907,
+        "Column": 9,
+        "ByteOffset": 36223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The problem is SAT after %d iterations.  \", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 909,
+        "Column": 9,
+        "ByteOffset": 36309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_GenCollectFlopIndexes",
+      "Start": 2293,
+      "End": 3452,
+      "BodyStart": 2385,
+      "Original": "Vec_Int_t * Gia_GenCollectFlopIndexes( char * pStr, int nLutNum, int nLutSize, int nFlops )\n{\n    int nDups;\n    char * pTemp;\n    Vec_Int_t * vFlops;\n    assert( nLutSize * nLutNum \u003c= nFlops );\n    if ( pStr == NULL )\n        return Vec_IntStartNatural( nLutNum * nLutSize );\n    vFlops = Vec_IntAlloc( nLutNum * nLutSize );\n    pTemp = strtok( pStr, \", \" );\n    while ( pTemp )\n    {\n        int iFlop = atoi(pTemp);\n        if ( iFlop \u003e= nFlops )\n        {\n            printf( \"Flop index (%d) exceeds the number of flops (%d).\\n\", iFlop, nFlops );\n            break;\n        }\n        Vec_IntPush( vFlops, iFlop );\n        pTemp = strtok( NULL, \", \" );\n    }\n    if ( Vec_IntSize(vFlops) != nLutNum * nLutSize )\n    {\n        printf( \"Gia_GenCollectFlopIndexes: Expecting %d flop indexes (instead of %d).\\n\", nLutNum * nLutSize, Vec_IntSize(vFlops) );\n        Vec_IntFree( vFlops );\n        return NULL;\n    }\n    nDups = Vec_IntCountDuplicates(vFlops);\n    if ( nDups )\n    {\n        printf( \"Gia_GenCollectFlopIndexes: There are %d duplicated flops in the list.\\n\", nDups );\n        Vec_IntFree( vFlops );\n        return NULL;\n    }\n    return vFlops;\n}",
+      "Draft": "func Gia_GenCollectFlopIndexes(pStr string, nLutNum int32, nLutSize int32, nFlops int32) *Vec_Int_t {\n    var nDups int32;\n    var pTemp string;\n    var vFlops *Vec_Int_t;\n    assert(nLutSize * nLutNum \u003c= nFlops, \"nLutSize * nLutNum \u003c= nFlops\");\n    if pStr == nil {\n        return Vec_IntStartNatural( nLutNum * nLutSize ); }\n    vFlops = Vec_IntAlloc( nLutNum * nLutSize );\n    pTemp = strtok( pStr, \", \" );\n    for  pTemp  {\n        var iFlop int32  = strconv.Atoi(pTemp);\n        if iFlop \u003e= nFlops {\n            fmt.Printf(\"Flop index (%d) exceeds the number of flops (%d).\\n\", iFlop, nFlops);\n            break;\n        }\n        Vec_IntPush( vFlops, iFlop );\n        pTemp = strtok( nil, \", \" );\n    }\n    if Vec_IntSize(vFlops) != nLutNum * nLutSize {\n        fmt.Printf(\"Gia_GenCollectFlopIndexes: Expecting %d flop indexes (instead of %d).\\n\", nLutNum * nLutSize, Vec_IntSize(vFlops));\n        Vec_IntFree( vFlops );\n        return nil;\n    }\n    nDups = Vec_IntCountDuplicates(vFlops);\n    if nDups != 0 {\n        fmt.Printf(\"Gia_GenCollectFlopIndexes: There are %d duplicated flops in the list.\\n\", nDups);\n        Vec_IntFree( vFlops );\n        return nil;\n    }\n    return vFlops;\n}"
+    },
+    {
+      "Name": "Gia_GenCreateMux_rec",
+      "Start": 3453,
+      "End": 3870,
+      "BodyStart": 3552,
+      "Original": "int Gia_GenCreateMux_rec( Gia_Man_t * pNew, int * pCtrl, int nCtrl, Vec_Int_t * vData, int Shift )\n{\n    int iLit0, iLit1;\n    if ( nCtrl == 0 )\n        return Vec_IntEntry( vData, Shift );\n    iLit0 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}",
+      "Draft": "func Gia_GenCreateMux_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {\n    var iLit0, iLit1 int32;\n    if nCtrl == 0 {\n        return Vec_IntEntry( vData, Shift ); }\n    iLit0 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}"
+    },
+    {
+      "Name": "Gia_GenCreateMuxes",
+      "Start": 3871,
+      "End": 4737,
+      "BodyStart": 4018,
+      "Original": "Vec_Int_t * Gia_GenCreateMuxes( Gia_Man_t * p, Gia_Man_t * pNew, Vec_Int_t * vFlops, int nLutNum, int nLutSize, Vec_Int_t * vParLits, int fUseRi )\n{\n    Vec_Int_t * vLits = Vec_IntAlloc( nLutNum );\n    int i, k, iMux, iFlop, pCtrl[16];\n    // add MUXes for each group of flops\n    assert( Vec_IntSize(vFlops) == nLutNum * nLutSize );\n    for ( i = 0; i \u003c nLutNum; i++ )\n    {\n        for ( k = 0; k \u003c nLutSize; k++ )\n        {\n            iFlop = Vec_IntEntry(vFlops, i * nLutSize + k);\n            assert( iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p) );\n            if ( fUseRi )\n                pCtrl[k] = Gia_ManRi(p, iFlop)-\u003eValue;\n            else\n                pCtrl[k] = Gia_ManRo(p, iFlop)-\u003eValue;\n        }\n        iMux = Gia_GenCreateMux_rec( pNew, pCtrl, nLutSize, vParLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}",
+      "Draft": "func Gia_GenCreateMuxes(p *Gia_Man_t, pNew *Gia_Man_t, vFlops *Vec_Int_t, nLutNum int32, nLutSize int32, vParLits *Vec_Int_t, fUseRi int32) *Vec_Int_t {\n    var vLits *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n    var i int32;\n    var k int32;\n    var iMux int32;\n    var iFlop int32;\n    var pCtrl [16]int32;\n    // add MUXes for each group of flops\n    assert(Vec_IntSize(vFlops) == nLutNum * nLutSize, \"Vec_IntSize(vFlops) == nLutNum * nLutSize\");\n    for  i = 0; i \u003c nLutNum; i++  {\n        for  k = 0; k \u003c nLutSize; k++  {\n            iFlop = Vec_IntEntry(vFlops, i * nLutSize + k);\n            assert(iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p), \"iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p)\");\n            if fUseRi != 0 {\n                pCtrl[k] = Gia_ManRi(p, iFlop).Value;\n            } else {\n                pCtrl[k] = Gia_ManRo(p, iFlop).Value; }\n        }\n        iMux = Gia_GenCreateMux_rec( pNew, pCtrl, nLutSize, vParLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}"
+    },
+    {
+      "Name": "Gia_GenQbfMiter",
+      "Start": 4738,
+      "End": 7052,
+      "BodyStart": 4863,
+      "Original": "Gia_Man_t * Gia_GenQbfMiter( Gia_Man_t * p, int nFrames, int nLutNum, int nLutSize, char * pStr, int fUseOut, int fVerbose )\n{\n    Gia_Obj_t * pObj; \n    Gia_Man_t * pTemp, * pNew;\n    int i, iMiter, iLut0, iLut1, nPars = nLutNum * (1 \u003c\u003c nLutSize);\n    Vec_Int_t * vLits0, * vLits1, * vParLits;\n    Vec_Int_t * vFlops = Gia_GenCollectFlopIndexes( pStr, nLutNum, nLutSize, Gia_ManRegNum(p) );\n    // collect parameter literals (data vars)\n    vParLits = Vec_IntAlloc( nPars );\n    for ( i = 0; i \u003c nPars; i++ )\n        Vec_IntPush( vParLits, i ? Abc_Var2Lit(i+1, 0) : 1 );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    for ( i = 0; i \u003c nPars; i++ )\n        Gia_ManAppendCi( pNew );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n    vLits0 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 0 );\n    vLits1 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 1 );\n    // create miter output\n    //iMiter = Gia_ManHashAnd( pNew, Vec_IntEntry(vLits0, 0), Abc_LitNot(Vec_IntEntry(vLits1, 0)) );\n    ///////////////////////////////////////////////////////////////////////////\n    iLut0 = Vec_IntEntry(vLits0, 0);\n    iLut1 = Vec_IntEntry(vLits1, 0);\n    if ( fUseOut )\n    {\n        Gia_Obj_t * pObjPoLast = Gia_ManPo( p, Gia_ManPoNum(p)-1 );\n        int iOut = Abc_LitNotCond( Gia_ObjFanin0Copy(pObjPoLast), 0 );\n        iLut1 = Gia_ManHashAnd( pNew, iLut1, Abc_LitNot(iOut) );\n    }\n    iMiter = Gia_ManHashAnd( pNew, iLut0, Abc_LitNot(iLut1) );\n    ///////////////////////////////////////////////////////////////////////////\n    iMiter = Gia_ManHashAnd( pNew, Abc_LitNot(iMiter), Abc_Var2Lit(1, 0) );\n    Gia_ManAppendCo( pNew, iMiter );\n    // cleanup\n    Vec_IntFree( vLits0 );\n    Vec_IntFree( vLits1 );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vParLits );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_GenQbfMiter(p *Gia_Man_t, nFrames int32, nLutNum int32, nLutSize int32, pStr string, fUseOut int32, fVerbose int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t; \n    var pTemp, pNew *Gia_Man_t;\n    var i int32;\n    var iMiter int32;\n    var iLut0 int32;\n    var iLut1 int32;\n    var nPars int32 = nLutNum * (1 \u003c\u003c nLutSize);\n    var vLits0, vLits1, vParLits *Vec_Int_t;\n    var vFlops *Vec_Int_t  = Gia_GenCollectFlopIndexes( pStr, nLutNum, nLutSize, Gia_ManRegNum(p) );\n    // collect parameter literals (data vars)\n    vParLits = Vec_IntAlloc( nPars );\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntPush( vParLits, i ? Abc_Var2Lit(i+1, 0) : 1 );\n    }\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    for  i = 0; i \u003c nPars; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    vLits0 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 0 );\n    vLits1 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 1 );\n    // create miter output\n    //iMiter = Gia_ManHashAnd( pNew, Vec_IntEntry(vLits0, 0), Abc_LitNot(Vec_IntEntry(vLits1, 0)) );\n    ///////////////////////////////////////////////////////////////////////////\n    iLut0 = Vec_IntEntry(vLits0, 0);\n    iLut1 = Vec_IntEntry(vLits1, 0);\n    if fUseOut != 0 {\n        var pObjPoLast *Gia_Obj_t  = Gia_ManPo( p, Gia_ManPoNum(p)-1 );\n        var iOut int32  = Abc_LitNotCond( Gia_ObjFanin0Copy(pObjPoLast), 0 );\n        iLut1 = Gia_ManHashAnd( pNew, iLut1, Abc_LitNot(iOut) );\n    }\n    iMiter = Gia_ManHashAnd( pNew, iLut0, Abc_LitNot(iLut1) );\n    ///////////////////////////////////////////////////////////////////////////\n    iMiter = Gia_ManHashAnd( pNew, Abc_LitNot(iMiter), Abc_Var2Lit(1, 0) );\n    Gia_ManAppendCo( pNew, iMiter );\n    // cleanup\n    Vec_IntFree( vLits0 );\n    Vec_IntFree( vLits1 );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vParLits );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_Gen2CreateMux_rec",
+      "Start": 7329,
+      "End": 7749,
+      "BodyStart": 7429,
+      "Original": "int Gia_Gen2CreateMux_rec( Gia_Man_t * pNew, int * pCtrl, int nCtrl, Vec_Int_t * vData, int Shift )\n{\n    int iLit0, iLit1;\n    if ( nCtrl == 0 )\n        return Vec_IntEntry( vData, Shift );\n    iLit0 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}",
+      "Draft": "func Gia_Gen2CreateMux_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {\n    var iLit0, iLit1 int32;\n    if nCtrl == 0 {\n        return Vec_IntEntry( vData, Shift ); }\n    iLit0 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}"
+    },
+    {
+      "Name": "Gia_Gen2CreateMuxes",
+      "Start": 7750,
+      "End": 8299,
+      "BodyStart": 7869,
+      "Original": "Vec_Int_t * Gia_Gen2CreateMuxes( Gia_Man_t * pNew, int nLutSize, int nLutNum, Vec_Int_t * vPLits, Vec_Int_t * vXLits )\n{\n    Vec_Int_t * vLits = Vec_IntAlloc( nLutNum );\n    int i, iMux;\n    // add MUXes for each group of flops\n    assert( Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize) );\n    assert( Vec_IntSize(vXLits) == nLutSize );\n    for ( i = 0; i \u003c nLutNum; i++ )\n    {\n        iMux = Gia_Gen2CreateMux_rec( pNew, Vec_IntArray(vXLits), nLutSize, vPLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}",
+      "Draft": "func Gia_Gen2CreateMuxes(pNew *Gia_Man_t, nLutSize int32, nLutNum int32, vPLits *Vec_Int_t, vXLits *Vec_Int_t) *Vec_Int_t {\n    var vLits *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n    var i, iMux int32;\n    // add MUXes for each group of flops\n    assert(Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize), \"Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize)\");\n    assert(Vec_IntSize(vXLits) == nLutSize, \"Vec_IntSize(vXLits) == nLutSize\");\n    for  i = 0; i \u003c nLutNum; i++  {\n        iMux = Gia_Gen2CreateMux_rec( pNew, Vec_IntArray(vXLits), nLutSize, vPLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}"
+    },
+    {
+      "Name": "Gia_Gen2CreateMiter",
+      "Start": 8300,
+      "End": 11227,
+      "BodyStart": 8361,
+      "Original": "Gia_Man_t * Gia_Gen2CreateMiter( int nLutSize, int nLutNum )\n{\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\u003c-- XVars--\u003e|\u003c-- YVars--\u003e|\n    Vec_Int_t * vPLits  = Vec_IntAlloc( nLutNum * (1 \u003c\u003c nLutSize) );\n    Vec_Int_t * vXLits  = Vec_IntAlloc( nLutSize );\n    Vec_Int_t * vYLits  = Vec_IntAlloc( nLutSize );\n    Vec_Int_t * vXYLits = Vec_IntAlloc( nLutSize );\n    Vec_Int_t * vXRes, * vYRes, * vXYRes;\n    Vec_Int_t * vXYRes2 = Vec_IntAlloc( 2 * nLutNum );\n    Gia_Man_t * pTemp, * pNew = Gia_ManStart( 1000 ); int i, k, v, Cond, Res;\n    pNew-\u003epName = Abc_UtilStrsav( \"homoqbf\" );\n    Gia_ManHashAlloc( pNew );\n    for ( i = 0; i \u003c nLutNum * (1 \u003c\u003c nLutSize); i++ )\n        Vec_IntPush( vPLits, Gia_ManAppendCi(pNew) );\n    for ( i = 0; i \u003c nLutSize; i++ )\n        Vec_IntPush( vXLits, Gia_ManAppendCi(pNew) );\n    for ( i = 0; i \u003c nLutSize; i++ )\n        Vec_IntPush( vYLits, Gia_ManAppendCi(pNew) );\n    for ( i = 0; i \u003c nLutSize; i++ )\n        Vec_IntPush( vXYLits, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXLits, i), Vec_IntEntry(vYLits, i))) );\n    vXRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXLits );\n    vYRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vYLits );\n    vXYRes = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXYLits );\n    for ( i = 0; i \u003c nLutNum; i++ )\n    {\n        Vec_IntPush( vXYRes2, Vec_IntEntry(vXYRes, i) );\n        Vec_IntPush( vXYRes2, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXRes, i), Vec_IntEntry(vYRes, i))) );\n    }\n    Res = Gia_ManHashDualMiter( pNew, vXYRes2 );\n    // uniqueness of codes\n    for ( i = 0; i \u003c (1 \u003c\u003c nLutSize); i++ )\n    {\n        Vec_Int_t * vCondA = Vec_IntAlloc( nLutNum );\n        Vec_Int_t * vCondB = Vec_IntAlloc( nLutNum );\n        for ( v = 0; v \u003c nLutNum; v++ )\n            Vec_IntPush( vCondA, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+i) );\n        for ( k = i+1; k \u003c (1 \u003c\u003c nLutSize); k++ )\n        {\n            Vec_IntClear( vCondB );\n            for ( v = 0; v \u003c nLutNum; v++ )\n            {\n                Vec_IntPush( vCondB, Vec_IntEntry(vCondA, v) );\n                Vec_IntPush( vCondB, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+k) );\n            }\n            Cond = Gia_ManHashDualMiter( pNew, vCondB );\n            Res = Gia_ManHashOr( pNew, Res, Abc_LitNot(Cond) );\n        }\n        Vec_IntFree( vCondA );\n        Vec_IntFree( vCondB );\n    }\n    Gia_ManAppendCo( pNew, Abc_LitNot(Res) );\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vPLits );\n    Vec_IntFree( vXLits );\n    Vec_IntFree( vYLits );\n    Vec_IntFree( vXYLits );\n    Vec_IntFree( vXRes );\n    Vec_IntFree( vYRes );\n    Vec_IntFree( vXYRes );\n    Vec_IntFree( vXYRes2 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    printf( \"Generated QBF miter with %d parameters, %d functional variables, and %d AIG nodes.\\n\", \n        nLutNum * (1 \u003c\u003c nLutSize), 2*nLutSize, Gia_ManAndNum(pNew) );\n    return pNew;\n}",
+      "Draft": "func Gia_Gen2CreateMiter(nLutSize int32, nLutNum int32) *Gia_Man_t {\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\u003c-- XVars--\u003e|\u003c-- YVars--\u003e|\n    var vPLits *Vec_Int_t   = Vec_IntAlloc( nLutNum * (1 \u003c\u003c nLutSize) );\n    var vXLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );\n    var vYLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );\n    var vXYLits *Vec_Int_t  = Vec_IntAlloc( nLutSize );\n    var vXRes, vYRes, vXYRes *Vec_Int_t;\n    var vXYRes2 *Vec_Int_t  = Vec_IntAlloc( 2 * nLutNum );\n    var pTemp *Gia_Man_t;\n    var pNew *Gia_Man_t = Gia_ManStart( 1000 ); var i, k, v, Cond, Res int32;\n    pNew.pName = Abc_UtilStrsav( \"homoqbf\" );\n    Gia_ManHashAlloc( pNew );\n    for  i = 0; i \u003c nLutNum * (1 \u003c\u003c nLutSize); i++  {\n        Vec_IntPush( vPLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vXLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vYLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vXYLits, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXLits, i), Vec_IntEntry(vYLits, i))) );\n    }\n    vXRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXLits );\n    vYRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vYLits );\n    vXYRes = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXYLits );\n    for  i = 0; i \u003c nLutNum; i++  {\n        Vec_IntPush( vXYRes2, Vec_IntEntry(vXYRes, i) );\n        Vec_IntPush( vXYRes2, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXRes, i), Vec_IntEntry(vYRes, i))) );\n    }\n    Res = Gia_ManHashDualMiter( pNew, vXYRes2 );\n    // uniqueness of codes\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize); i++  {\n        var vCondA *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n        var vCondB *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n        for  v = 0; v \u003c nLutNum; v++  {\n            Vec_IntPush( vCondA, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+i) );\n        }\n        for  k = i+1; k \u003c (1 \u003c\u003c nLutSize); k++  {\n            Vec_IntClear( vCondB );\n            for  v = 0; v \u003c nLutNum; v++  {\n                Vec_IntPush( vCondB, Vec_IntEntry(vCondA, v) );\n                Vec_IntPush( vCondB, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+k) );\n            }\n            Cond = Gia_ManHashDualMiter( pNew, vCondB );\n            Res = Gia_ManHashOr( pNew, Res, Abc_LitNot(Cond) );\n        }\n        Vec_IntFree( vCondA );\n        Vec_IntFree( vCondB );\n    }\n    Gia_ManAppendCo( pNew, Abc_LitNot(Res) );\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vPLits );\n    Vec_IntFree( vXLits );\n    Vec_IntFree( vYLits );\n    Vec_IntFree( vXYLits );\n    Vec_IntFree( vXRes );\n    Vec_IntFree( vYRes );\n    Vec_IntFree( vXYRes );\n    Vec_IntFree( vXYRes2 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    fmt.Printf(\"Generated QBF miter with %d parameters, %d functional variables, and %d AIG nodes.\\n\", nLutNum * (1 \u003c\u003c nLutSize), 2*nLutSize, Gia_ManAndNum(pNew));\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_Gen2CodeOne",
+      "Start": 11228,
+      "End": 11466,
+      "BodyStart": 11303,
+      "Original": "int Gia_Gen2CodeOne( int nLutSize, int nLutNum, Vec_Int_t * vCode, int x )\n{\n    int k, Code = 0;\n    for ( k = 0; k \u003c nLutNum; k++ )\n        if ( Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) )\n            Code |= (1 \u003c\u003c k);\n    return Code;\n}",
+      "Draft": "func Gia_Gen2CodeOne(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) int32 {\n    var k, Code int32;\n    for  k = 0; k \u003c nLutNum; k++  {\n        if Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) {\n            Code |= (1 \u003c\u003c k); }\n    }\n    return Code;\n}"
+    },
+    {
+      "Name": "Gia_Gen2CodeOneP",
+      "Start": 11467,
+      "End": 11784,
+      "BodyStart": 11546,
+      "Original": "word * Gia_Gen2CodeOneP( int nLutSize, int nLutNum, Vec_Int_t * vCode, int x )\n{\n    word * pRes = ABC_CALLOC( word, Abc_Bit6WordNum(nLutNum) );\n    int k;\n    for ( k = 0; k \u003c nLutNum; k++ )\n        if ( Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) )\n            Abc_InfoSetBit( (unsigned *)pRes, k );\n    return pRes;\n}",
+      "Draft": "func Gia_Gen2CodeOneP(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) *word {\n    // inlining of macro ABC_CALLOC\n    var pRes *word  = ((word *) calloc((size_t)(Abc_Bit6WordNum(nLutNum)), sizeof(word)));\n    var k int32;\n    for  k = 0; k \u003c nLutNum; k++  {\n        if Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) {\n            Abc_InfoSetBit( (unsigned *)pRes, k ); }\n    }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Gia_Gen2CodePrint",
+      "Start": 11785,
+      "End": 14433,
+      "BodyStart": 11856,
+      "Original": "void Gia_Gen2CodePrint( int nLutSize, int nLutNum, Vec_Int_t * vCode )\n{\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\n    int i, n, nPairs = 16;\n    printf( \"%d-input %d-output code table:\\n\", nLutSize, nLutNum );\n    for ( i = 0; i \u003c (1 \u003c\u003c nLutSize); i++ )\n    {\n        word * CodeX  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, i );\n        printf( \"%3d  \", i );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026i, nLutSize );\n        printf( \"  --\u003e  \" );\n        if ( nLutNum \u003c= 16 )\n            printf( \"%5d  \", (int)CodeX[0] );\n        Extra_PrintBinary( stdout, (unsigned *)CodeX, nLutNum );\n        printf( \"\\n\" );\n        ABC_FREE( CodeX );\n    }\n    // create several different pairs\n    srand( time(NULL) );\n    printf( \"Simulation of the encoding with %d random pairs:\\n\", nPairs );\n    for ( n = 0; n \u003c nPairs; n++ )\n    {\n        unsigned MaskIn = Abc_InfoMask( nLutSize );\n        int NumX = 0, NumY = 0, NumXY, nWords = Abc_Bit6WordNum(nLutNum);\n        word * CodeX, * CodeY, * CodeXY;\n        word * CodeXCodeY = ABC_CALLOC( word, nWords );\n        while ( NumX == NumY )\n        {\n            NumX = rand() % (1 \u003c\u003c nLutSize);\n            NumY = rand() % (1 \u003c\u003c nLutSize);\n            NumXY = MaskIn \u0026 ~(NumX \u0026 NumY);\n        }\n        CodeX  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumX );\n        CodeY  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumY );\n        CodeXY = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumXY );\n        Abc_TtAnd( CodeXCodeY, CodeX, CodeY, nWords, 1 );\n        if ( nLutNum \u003c 64*nWords )\n            CodeXCodeY[nWords-1] \u0026= Abc_Tt6Mask(nLutNum % 64);            \n\n        printf( \"%2d :\", n );\n        printf( \" x =%3d \", NumX );\n        Extra_PrintBinary( stdout,(unsigned *) \u0026NumX, nLutSize );\n        printf( \" y =%3d \", NumY );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026NumY, nLutSize );\n        printf( \" nand =%3d \", NumXY );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026NumXY, nLutSize );\n        printf( \"  \" );\n\n        printf( \" c(x) = \" );\n        Extra_PrintBinary( stdout, (unsigned *)CodeX, nLutNum );\n        printf( \" c(y) = \" );\n        Extra_PrintBinary( stdout, (unsigned *)CodeY, nLutNum );\n        printf( \" c(nand) = \" );\n        Extra_PrintBinary( stdout, (unsigned *)CodeXY, nLutNum );\n        printf( \"  nand(c(x),c(y)) = \" );\n        Extra_PrintBinary( stdout, (unsigned *)CodeXCodeY, nLutNum );\n        printf( \"  \" );\n\n        printf( \"%s\", Abc_TtEqual(CodeXCodeY, CodeXY, nWords) ? \"yes\" : \"no\" );\n        printf( \"\\n\" );\n\n        ABC_FREE( CodeX );\n        ABC_FREE( CodeY );\n        ABC_FREE( CodeXY );\n        ABC_FREE( CodeXCodeY );\n    }\n}",
+      "Draft": "func Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\n    var i int32;\n    var n int32;\n    var nPairs int32 = 16;\n    fmt.Printf(\"%d-input %d-output code table:\\n\", nLutSize, nLutNum);\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize); i++  {\n        var CodeX *word   = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, i );\n        fmt.Printf(\"%3d  \", i);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026i, nLutSize );\n        fmt.Printf(\"  --\u003e  \");\n        if nLutNum \u003c= 16 {\n            fmt.Printf(\"%5d  \", int32(CodeX[0])); }\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );\n        fmt.Printf(\"\\n\");\n        // inlining of macro ABC_FREE\n        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);\n    }\n    // create several different pairs\n    srand( time.Now().Unix() );\n    fmt.Printf(\"Simulation of the encoding with %d random pairs:\\n\", nPairs);\n    for  n = 0; n \u003c nPairs; n++  {\n        var MaskIn uint32  = Abc_InfoMask( nLutSize );\n        var NumX int32;\n        var NumY int32;\n        var NumXY int32;\n        var nWords int32 = Abc_Bit6WordNum(nLutNum);\n        var CodeX, CodeY, CodeXY *word;\n        // inlining of macro ABC_CALLOC\n        var CodeXCodeY *word  = ((word *) calloc((size_t)(nWords), sizeof(word)));\n        for  NumX == NumY  {\n            NumX = rand() % (1 \u003c\u003c nLutSize);\n            NumY = rand() % (1 \u003c\u003c nLutSize);\n            NumXY = MaskIn \u0026 ~(NumX \u0026 NumY);\n        }\n        CodeX  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumX );\n        CodeY  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumY );\n        CodeXY = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumXY );\n        Abc_TtAnd( CodeXCodeY, CodeX, CodeY, nWords, 1 );\n        if nLutNum \u003c 64*nWords {\n            CodeXCodeY[nWords-1] \u0026= Abc_Tt6Mask(nLutNum % 64); }            \n\n        fmt.Printf(\"%2d :\", n);\n        fmt.Printf(\" x =%3d \", NumX);\n        Extra_PrintBinary( os.Stdout,(unsigned *) \u0026NumX, nLutSize );\n        fmt.Printf(\" y =%3d \", NumY);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026NumY, nLutSize );\n        fmt.Printf(\" nand =%3d \", NumXY);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026NumXY, nLutSize );\n        fmt.Printf(\"  \");\n\n        fmt.Printf(\" c(x) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );\n        fmt.Printf(\" c(y) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeY, nLutNum );\n        fmt.Printf(\" c(nand) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXY, nLutNum );\n        fmt.Printf(\"  nand(c(x),c(y)) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXCodeY, nLutNum );\n        fmt.Printf(\"  \");\n\n        fmt.Printf(\"%s\", Abc_TtEqual(CodeXCodeY, CodeXY, nWords) ? \"yes\" : \"no\");\n        fmt.Printf(\"\\n\");\n\n        // inlining of macro ABC_FREE\n        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeY) ? (free((char *) (CodeY)), (CodeY) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeXY) ? (free((char *) (CodeXY)), (CodeXY) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeXCodeY) ? (free((char *) (CodeXCodeY)), (CodeXCodeY) = 0) : 0);\n    }\n}"
+    },
+    {
+      "Name": "Gia_Gen2CodeTest",
+      "Start": 14434,
+      "End": 14764,
+      "BodyStart": 14458,
+      "Original": "void Gia_Gen2CodeTest()\n{\n    int i, nLutSize = 1, nLutNum = 2;\n    Vec_Int_t * vCode = Vec_IntAlloc( (1 \u003c\u003c nLutSize) * nLutNum );\n    srand( time(NULL) );\n    for ( i = 0; i \u003c (1 \u003c\u003c nLutSize) * nLutNum; i++ )\n        Vec_IntPush( vCode, rand() \u0026 1 );\n    Gia_Gen2CodePrint( nLutSize, nLutNum, vCode );\n    Vec_IntFree( vCode );\n}",
+      "Draft": "func Gia_Gen2CodeTest() {\n    var i int32;\n    var nLutSize int32 = 1;\n    var nLutNum int32 = 2;\n    var vCode *Vec_Int_t  = Vec_IntAlloc( (1 \u003c\u003c nLutSize) * nLutNum );\n    srand( time.Now().Unix() );\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize) * nLutNum; i++  {\n        Vec_IntPush( vCode, rand() \u0026 1 );\n    }\n    Gia_Gen2CodePrint( nLutSize, nLutNum, vCode );\n    Vec_IntFree( vCode );\n}"
+    },
+    {
+      "Name": "Gia_ManSatEnum",
+      "Start": 15039,
+      "End": 17147,
+      "BodyStart": 15122,
+      "Original": "int Gia_ManSatEnum( Gia_Man_t * pGia, int nConfLimit, int nTimeOut, int fVerbose )\n{\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    Vec_Int_t * vLits;\n    int i, iLit, iParVarBeg, Iter;\n    int nSolutions = 0, RetValue = 0;\n    abctime clkStart = Abc_Clock();\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    iParVarBeg = pCnf-\u003enVars - Gia_ManPiNum(pGia);// - 1;\n    Cnf_DataFree( pCnf );\n    // iterate through the SAT assignment\n    vLits = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    for ( Iter = 1 ; ; Iter++ )\n    {\n        int status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfLimit, 0, 0, 0 );\n        if ( status == l_False ) { RetValue =  1; break; }\n        if ( status == l_Undef ) { RetValue =  0; break; }\n        nSolutions++;\n        // extract SAT assignment\n        Vec_IntClear( vLits );\n        for ( i = 0; i \u003c Gia_ManPiNum(pGia); i++ )\n            Vec_IntPush( vLits, Abc_Var2Lit(iParVarBeg+i, sat_solver_var_value(pSat, iParVarBeg+i)) );\n        if ( fVerbose )\n        {\n            printf( \"%5d : \", Iter );\n            Vec_IntForEachEntry( vLits, iLit, i )\n                printf( \"%d\", !Abc_LitIsCompl(iLit) );\n            printf( \"\\n\" );\n        }\n        // add clause\n        if ( !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) )\n            { RetValue =  1; break; }\n        if ( nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut ) { RetValue = 0; break; }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if ( nTimeOut \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= nTimeOut )\n        printf( \"Enumerated %d assignments when timeout (%d sec) was reached.  \", nSolutions, nTimeOut );\n    else if ( nConfLimit \u0026\u0026 !RetValue )\n        printf( \"Enumerated %d assignments when conflict limit (%d) was reached.  \", nSolutions, nConfLimit );\n    else \n        printf( \"Enumerated the complete set of %d assignments.  \", nSolutions );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    return RetValue;\n}",
+      "Draft": "func Gia_ManSatEnum(pGia *Gia_Man_t, nConfLimit int32, nTimeOut int32, fVerbose int32) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var i, iLit, iParVarBeg, Iter int32;\n    var nSolutions, RetValue int32;\n    var clkStart abctime  = Abc_Clock();\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    iParVarBeg = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;\n    Cnf_DataFree( pCnf );\n    // iterate through the SAT assignment\n    vLits = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    for  Iter = 1 ; ; Iter++  {\n        var status int32  = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 );\n        if status == l_False { RetValue =  1; break; }\n        if status == l_Undef { RetValue =  0; break; }\n        nSolutions++;\n        // extract SAT assignment\n        Vec_IntClear( vLits );\n        for  i = 0; i \u003c Gia_ManPiNum(pGia); i++  {\n            Vec_IntPush( vLits, Abc_Var2Lit(iParVarBeg+i, sat_solver_var_value(pSat, iParVarBeg+i)) );\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"%5d : \", Iter);\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {\n                fmt.Printf(\"%d\", !Abc_LitIsCompl(iLit));\n            }\n            fmt.Printf(\"\\n\");\n        }\n        // add clause\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) { RetValue =  1; break; }\n        if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= nTimeOut { RetValue = 0; break; }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= nTimeOut {\n        fmt.Printf(\"Enumerated %d assignments when timeout (%d sec) was reached.  \", nSolutions, nTimeOut);\n    } else if (nConfLimit != 0) \u0026\u0026 !(RetValue != 0) {\n        fmt.Printf(\"Enumerated %d assignments when conflict limit (%d) was reached.  \", nSolutions, nConfLimit);\n    } else { \n        fmt.Printf(\"Enumerated the complete set of %d assignments.  \", nSolutions); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Gia_QbfDumpFile",
+      "Start": 17428,
+      "End": 18647,
+      "BodyStart": 17480,
+      "Original": "void Gia_QbfDumpFile( Gia_Man_t * pGia, int nPars )\n{\n    // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n    // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    Vec_Int_t * vVarMap, * vForAlls, * vExists;\n    Gia_Obj_t * pObj;\n    char * pFileName;\n    int i, Entry;\n    // create var map\n    vVarMap = Vec_IntStart( pCnf-\u003enVars );\n    Gia_ManForEachCi( pGia, pObj, i )\n        if ( i \u003c nPars )\n            Vec_IntWriteEntry( vVarMap, pCnf-\u003epVarNums[Gia_ManCiIdToId(pGia, i)], 1 );\n    // create various maps\n    vForAlls = Vec_IntAlloc( nPars );\n    vExists = Vec_IntAlloc( Gia_ManCiNum(pGia) - nPars );\n    Vec_IntForEachEntry( vVarMap, Entry, i )\n        if ( Entry )\n            Vec_IntPush( vForAlls, i );\n        else\n            Vec_IntPush( vExists, i );\n    // generate CNF\n    pFileName = Extra_FileNameGenericAppend( pGia-\u003epSpec, \".qdimacs\" );\n    Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vForAlls );\n    Vec_IntFree( vExists );\n    Vec_IntFree( vVarMap );\n    printf( \"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName );\n}",
+      "Draft": "func Gia_QbfDumpFile(pGia *Gia_Man_t, nPars int32) {\n    // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n    // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    var vVarMap, vForAlls, vExists *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var pFileName string;\n    var i, Entry int32;\n    // create var map\n    vVarMap = Vec_IntStart( pCnf.nVars );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        if i \u003c nPars {\n            Vec_IntWriteEntry( vVarMap, pCnf.pVarNums[Gia_ManCiIdToId(pGia, i)], 1 ); }\n    }\n    // create various maps\n    vForAlls = Vec_IntAlloc( nPars );\n    vExists = Vec_IntAlloc( Gia_ManCiNum(pGia) - nPars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVarMap, i)), 1); i++  {\n        if Entry != 0 {\n            Vec_IntPush( vForAlls, i );\n        } else {\n            Vec_IntPush( vExists, i ); }\n    }\n    // generate CNF\n    pFileName = Extra_FileNameGenericAppend( pGia.pSpec, \".qdimacs\" );\n    Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vForAlls );\n    Vec_IntFree( vExists );\n    Vec_IntFree( vVarMap );\n    fmt.Printf(\"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName);\n}"
+    },
+    {
+      "Name": "Gia_QbfAlloc",
+      "Start": 18926,
+      "End": 19952,
+      "BodyStart": 19010,
+      "Original": "Qbf_Man_t * Gia_QbfAlloc( Gia_Man_t * pGia, int nPars, int fGlucose, int fVerbose )\n{\n    Qbf_Man_t * p;\n    Cnf_Dat_t * pCnf;\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    p = ABC_CALLOC( Qbf_Man_t, 1 );\n    p-\u003eclkStart   = Abc_Clock();\n    p-\u003epGia       = pGia;\n    p-\u003enPars      = nPars;\n    p-\u003enVars      = Gia_ManPiNum(pGia) - nPars;\n    p-\u003efVerbose   = fVerbose;\n    p-\u003eiParVarBeg = pCnf-\u003enVars - Gia_ManPiNum(pGia);// - 1;\n    p-\u003epSatVer    = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    p-\u003epSatSyn    = sat_solver_new();\n    p-\u003epSatSynG   = fGlucose ? bmcg_sat_solver_start() : NULL; \n    p-\u003evValues    = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    p-\u003evParMap    = Vec_IntStartFull( nPars );\n    p-\u003evLits      = Vec_IntAlloc( nPars );\n    sat_solver_setnvars( p-\u003epSatSyn, nPars );\n    if ( p-\u003epSatSynG ) bmcg_sat_solver_set_nvars( p-\u003epSatSynG, nPars );\n    Cnf_DataFree( pCnf );\n    return p;\n}",
+      "Draft": "func Gia_QbfAlloc(pGia *Gia_Man_t, nPars int32, fGlucose int32, fVerbose int32) *Qbf_Man_t {\n    \n    var pCnf *Cnf_Dat_t;\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Qbf_Man_t{};\n    p.clkStart   = Abc_Clock();\n    p.pGia       = pGia;\n    p.nPars      = nPars;\n    p.nVars      = Gia_ManPiNum(pGia) - nPars;\n    p.fVerbose   = fVerbose;\n    p.iParVarBeg = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;\n    p.pSatVer    = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    p.pSatSyn    = sat_solver_new();\n    if fGlucose != 0 {\n        p.pSatSynG = bmcg_sat_solver_start();\n    } else {\n        p.pSatSynG = nil;\n    } \n    p.vValues    = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    p.vParMap    = Vec_IntStartFull( nPars );\n    p.vLits      = Vec_IntAlloc( nPars );\n    sat_solver_setnvars( p.pSatSyn, nPars );\n    if p.pSatSynG { bmcg_sat_solver_set_nvars( p.pSatSynG, nPars ); }\n    Cnf_DataFree( pCnf );\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_QbfFree",
+      "Start": 19953,
+      "End": 20234,
+      "BodyStart": 19987,
+      "Original": "void Gia_QbfFree( Qbf_Man_t * p )\n{\n    sat_solver_delete( p-\u003epSatVer );\n    sat_solver_delete( p-\u003epSatSyn );\n    if ( p-\u003epSatSynG ) bmcg_sat_solver_stop( p-\u003epSatSynG );\n    Vec_IntFree( p-\u003evLits );\n    Vec_IntFree( p-\u003evValues );\n    Vec_IntFree( p-\u003evParMap );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_QbfFree(p *Qbf_Man_t) {\n    sat_solver_delete( p.pSatVer );\n    sat_solver_delete( p.pSatSyn );\n    if p.pSatSynG { bmcg_sat_solver_stop( p.pSatSynG ); }\n    Vec_IntFree( p.vLits );\n    Vec_IntFree( p.vValues );\n    Vec_IntFree( p.vParMap );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_QbfQuantifyOne",
+      "Start": 20498,
+      "End": 21952,
+      "BodyStart": 20581,
+      "Original": "Gia_Man_t * Gia_QbfQuantifyOne( Gia_Man_t * p, int iVar, int fAndAll, int fOrAll )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj; \n    Vec_Int_t * vCofs;\n    int i, c;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachPi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    // compute cofactors\n    vCofs = Vec_IntAlloc( 2 * Gia_ManPoNum(p) );\n    for ( c = 0; c \u003c 2; c++ )\n    {\n        Gia_ManPi(p, iVar)-\u003eValue = c;\n        Gia_ManForEachAnd( p, pObj, i )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachPo( p, pObj, i )\n            Vec_IntPush( vCofs, Gia_ObjFanin0Copy(pObj) );\n    }\n    if ( fAndAll )\n    {\n        for ( i = 0; i \u003c Gia_ManPoNum(p); i++ )\n            Gia_ManAppendCo( pNew, Gia_ManHashAnd(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n    }\n    else if ( fOrAll )\n    {\n        for ( i = 0; i \u003c Gia_ManPoNum(p); i++ )\n            Gia_ManAppendCo( pNew, Gia_ManHashOr(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n    }\n    else\n    {\n        Vec_IntForEachEntry( vCofs, c, i )\n            Gia_ManAppendCo( pNew, c );\n    }\n    Vec_IntFree( vCofs );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_QbfQuantifyOne(p *Gia_Man_t, iVar int32, fAndAll int32, fOrAll int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; \n    var vCofs *Vec_Int_t;\n    var i, c int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // compute cofactors\n    vCofs = Vec_IntAlloc( 2 * Gia_ManPoNum(p) );\n    for  c = 0; c \u003c 2; c++  {\n        Gia_ManPi(p, iVar).Value = c;\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Vec_IntPush( vCofs, Gia_ObjFanin0Copy(pObj) );\n        }\n    }\n    if fAndAll != 0 {\n        for  i = 0; i \u003c Gia_ManPoNum(p); i++  {\n            Gia_ManAppendCo( pNew, Gia_ManHashAnd(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n        }\n    \n    } else if fOrAll != 0 {\n        for  i = 0; i \u003c Gia_ManPoNum(p); i++  {\n            Gia_ManAppendCo( pNew, Gia_ManHashOr(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n        }\n    \n    } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCofs)) \u0026\u0026 (((c) = Vec_IntEntry(vCofs, i)), 1); i++  {\n            Gia_ManAppendCo( pNew, c );\n        }\n    }\n    Vec_IntFree( vCofs );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_QbfQuantifyAll",
+      "Start": 21953,
+      "End": 22289,
+      "BodyStart": 22037,
+      "Original": "Gia_Man_t * Gia_QbfQuantifyAll( Gia_Man_t * p, int nPars, int fAndAll, int fOrAll )\n{\n    Gia_Man_t * pNew, * pTemp; int v;\n    pNew = Gia_ManDup( p );\n    for ( v = Gia_ManPiNum(p) - 1; v \u003e= nPars; v-- )\n    {\n        pNew = Gia_QbfQuantifyOne( pTemp = pNew, v, fAndAll, fOrAll );\n        Gia_ManStop( pTemp );\n    }\n    return pNew;\n}",
+      "Draft": "func Gia_QbfQuantifyAll(p *Gia_Man_t, nPars int32, fAndAll int32, fOrAll int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t; var v int32;\n    pNew = Gia_ManDup( p );\n    for  v = Gia_ManPiNum(p) - 1; v \u003e= nPars; v--  {\n        pNew = Gia_QbfQuantifyOne( pTemp = pNew, v, fAndAll, fOrAll );\n        Gia_ManStop( pTemp );\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_QbfCofactor",
+      "Start": 22553,
+      "End": 23607,
+      "BodyStart": 22651,
+      "Original": "Gia_Man_t * Gia_QbfCofactor( Gia_Man_t * p, int nPars, Vec_Int_t * vValues, Vec_Int_t * vParMap )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj; int i;\n    assert( Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachPi( p, pObj, i )\n        if ( i \u003c nPars )\n        {\n            pObj-\u003eValue = Gia_ManAppendCi(pNew);\n            if ( Vec_IntEntry(vParMap, i) != -1 )\n                pObj-\u003eValue = Vec_IntEntry(vParMap, i);\n        }\n        else\n            pObj-\u003eValue = Vec_IntEntry(vValues, i - nPars);\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert( Gia_ManPiNum(pNew) == nPars );\n    return pNew;\n}",
+      "Draft": "func Gia_QbfCofactor(p *Gia_Man_t, nPars int32, vValues *Vec_Int_t, vParMap *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var i int32;\n    assert(Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues), \"Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003c nPars {\n            pObj.Value = Gia_ManAppendCi(pNew);\n            if Vec_IntEntry(vParMap, i) != -1 {\n                pObj.Value = Vec_IntEntry(vParMap, i); }\n        \n        } else {\n            pObj.Value = Vec_IntEntry(vValues, i - nPars); }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == nPars, \"Gia_ManPiNum(pNew) == nPars\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Cnf_SpecialDataLift",
+      "Start": 24351,
+      "End": 24704,
+      "BodyStart": 24438,
+      "Original": "void Cnf_SpecialDataLift( Cnf_Dat_t * p, int nVarsPlus, int firstPiVar, int lastPiVar)\n{\n    int v, var;\n    for ( v = 0; v \u003c p-\u003enLiterals; v++ )\n    {\n        var = p-\u003epClauses[0][v] / 2;\n        if (var \u003c firstPiVar || var \u003e= lastPiVar)\n            p-\u003epClauses[0][v] += 2*nVarsPlus;\n        else \n            p-\u003epClauses[0][v] -= 2*firstPiVar;\n    }\n}",
+      "Draft": "func Cnf_SpecialDataLift(p *Cnf_Dat_t, nVarsPlus int32, firstPiVar int32, lastPiVar int32) {\n    var v, var int32;\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        var = p.pClauses[0][v] / 2;\n        if var \u003c firstPiVar || var \u003e= lastPiVar {\n            p.pClauses[0][v] += 2*nVarsPlus;\n        } else { \n            p.pClauses[0][v] -= 2*firstPiVar; }\n    }\n}"
+    },
+    {
+      "Name": "Gia_QbfAddCofactor",
+      "Start": 24706,
+      "End": 25690,
+      "BodyStart": 24764,
+      "Original": "int Gia_QbfAddCofactor( Qbf_Man_t * p, Gia_Man_t * pCof )\n{\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    int i, useold = 0;\n    int iFirstVar = useold ? sat_solver_nvars(p-\u003epSatSyn) + pCnf-\u003enVars - Gia_ManPiNum(pCof) : pCnf-\u003enVars - Gia_ManPiNum(pCof); //-1   \n    pCnf-\u003epMan = NULL;\n    \n    if (useold)    \n        Cnf_DataLift( pCnf, sat_solver_nvars(p-\u003epSatSyn) );\n    else\n        Cnf_SpecialDataLift( pCnf, sat_solver_nvars(p-\u003epSatSyn), iFirstVar, iFirstVar + Gia_ManPiNum(p-\u003epGia) );\n\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !sat_solver_addclause( p-\u003epSatSyn, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n        {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    Cnf_DataFree( pCnf );\n    // add connection clauses\n    if (useold)\n           for ( i = 0; i \u003c Gia_ManPiNum(p-\u003epGia); i++ )\n            if ( !sat_solver_add_buffer( p-\u003epSatSyn, i, iFirstVar+i, 0 ) )\n                return 0;\n    return 1;\n}",
+      "Draft": "func Gia_QbfAddCofactor(p *Qbf_Man_t, pCof *Gia_Man_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    var i, useold int32;\n    var iFirstVar int32;\n    if useold != 0 {\n        iFirstVar = sat_solver_nvars(p.pSatSyn) + pCnf.nVars - Gia_ManPiNum(pCof);\n    } else {\n        iFirstVar = pCnf.nVars - Gia_ManPiNum(pCof);\n    } //-1   \n    pCnf.pMan = nil;\n    \n    if useold != 0 {    \n        Cnf_DataLift( pCnf, sat_solver_nvars(p.pSatSyn) );\n    } else {\n        Cnf_SpecialDataLift( pCnf, sat_solver_nvars(p.pSatSyn), iFirstVar, iFirstVar + Gia_ManPiNum(p.pGia) ); }\n\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( p.pSatSyn, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    }\n    Cnf_DataFree( pCnf );\n    // add connection clauses\n    if useold != 0 {\n           for  i = 0; i \u003c Gia_ManPiNum(p.pGia); i++  {\n            if !sat_solver_add_buffer( p.pSatSyn, i, iFirstVar+i, 0 ) {\n                return 0; }\n           } }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_QbfAddCofactorG",
+      "Start": 25691,
+      "End": 26309,
+      "BodyStart": 25750,
+      "Original": "int Gia_QbfAddCofactorG( Qbf_Man_t * p, Gia_Man_t * pCof )\n{\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    int i, iFirstVar = pCnf-\u003enVars - Gia_ManPiNum(pCof); //-1   \n    pCnf-\u003epMan = NULL;\n    Cnf_SpecialDataLift( pCnf, bmcg_sat_solver_varnum(p-\u003epSatSynG), iFirstVar, iFirstVar + Gia_ManPiNum(p-\u003epGia) );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !bmcg_sat_solver_addclause( p-\u003epSatSynG, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1]-pCnf-\u003epClauses[i] ) )\n        {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    Cnf_DataFree( pCnf );\n    return 1;\n}",
+      "Draft": "func Gia_QbfAddCofactorG(p *Qbf_Man_t, pCof *Gia_Man_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    var i int32;\n    var iFirstVar int32 = pCnf.nVars - Gia_ManPiNum(pCof); //-1   \n    pCnf.pMan = nil;\n    Cnf_SpecialDataLift( pCnf, bmcg_sat_solver_varnum(p.pSatSynG), iFirstVar, iFirstVar + Gia_ManPiNum(p.pGia) );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmcg_sat_solver_addclause( p.pSatSynG, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    }\n    Cnf_DataFree( pCnf );\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_QbfOnePattern",
+      "Start": 26568,
+      "End": 26844,
+      "BodyStart": 26629,
+      "Original": "void Gia_QbfOnePattern( Qbf_Man_t * p, Vec_Int_t * vValues )\n{\n    int i;\n    Vec_IntClear( vValues );\n    for ( i = 0; i \u003c p-\u003enPars; i++ )\n        Vec_IntPush( vValues, p-\u003epSatSynG ? bmcg_sat_solver_read_cex_varvalue(p-\u003epSatSynG, i) : sat_solver_var_value(p-\u003epSatSyn, i) );\n}",
+      "Draft": "func Gia_QbfOnePattern(p *Qbf_Man_t, vValues *Vec_Int_t) {\n    var i int32;\n    Vec_IntClear( vValues );\n    for  i = 0; i \u003c p.nPars; i++  {\n        Vec_IntPush( vValues, p.pSatSynG ? bmcg_sat_solver_read_cex_varvalue(p.pSatSynG, i) : sat_solver_var_value(p.pSatSyn, i) );\n    }\n}"
+    },
+    {
+      "Name": "Gia_QbfPrint",
+      "Start": 26845,
+      "End": 27465,
+      "BodyStart": 26911,
+      "Original": "void Gia_QbfPrint( Qbf_Man_t * p, Vec_Int_t * vValues, int Iter )\n{\n    printf( \"%5d : \", Iter );\n    assert( Vec_IntSize(vValues) == p-\u003enVars );\n    Vec_IntPrintBinary( vValues ); printf( \"  \" );\n    printf( \"Var =%7d  \",  p-\u003epSatSynG ? bmcg_sat_solver_varnum(p-\u003epSatSynG)      : sat_solver_nvars(p-\u003epSatSyn)      );\n    printf( \"Cla =%7d  \",  p-\u003epSatSynG ? bmcg_sat_solver_clausenum(p-\u003epSatSynG)   : sat_solver_nclauses(p-\u003epSatSyn)   );\n    printf( \"Conf =%9d  \", p-\u003epSatSynG ? bmcg_sat_solver_conflictnum(p-\u003epSatSynG) : sat_solver_nconflicts(p-\u003epSatSyn) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003eclkStart );\n}",
+      "Draft": "func Gia_QbfPrint(p *Qbf_Man_t, vValues *Vec_Int_t, Iter int32) {\n    fmt.Printf(\"%5d : \", Iter);\n    assert(Vec_IntSize(vValues) == p.nVars, \"Vec_IntSize(vValues) == p.nVars\");\n    Vec_IntPrintBinary( vValues ); fmt.Printf(\"  \");\n    fmt.Printf(\"Var =%7d  \", p.pSatSynG ? bmcg_sat_solver_varnum(p.pSatSynG)      : sat_solver_nvars(p.pSatSyn));\n    fmt.Printf(\"Cla =%7d  \", p.pSatSynG ? bmcg_sat_solver_clausenum(p.pSatSynG)   : sat_solver_nclauses(p.pSatSyn));\n    fmt.Printf(\"Conf =%9d  \", p.pSatSynG ? bmcg_sat_solver_conflictnum(p.pSatSynG) : sat_solver_nconflicts(p.pSatSyn));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n}"
+    },
+    {
+      "Name": "Gia_QbfVerify",
+      "Start": 27757,
+      "End": 28396,
+      "BodyStart": 27813,
+      "Original": "int Gia_QbfVerify( Qbf_Man_t * p, Vec_Int_t * vValues )\n{\n    int i, Entry, RetValue;\n    assert( Vec_IntSize(vValues) == p-\u003enPars );\n    Vec_IntClear( p-\u003evLits );\n    Vec_IntForEachEntry( vValues, Entry, i )\n        Vec_IntPush( p-\u003evLits, Abc_Var2Lit(p-\u003eiParVarBeg+i, !Entry) );\n    RetValue = sat_solver_solve( p-\u003epSatVer, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits), 0, 0, 0, 0 );\n    if ( RetValue == l_True )\n    {\n        Vec_IntClear( vValues );\n        for ( i = 0; i \u003c p-\u003enVars; i++ )\n            Vec_IntPush( vValues, sat_solver_var_value(p-\u003epSatVer, p-\u003eiParVarBeg+p-\u003enPars+i) );\n    }\n    return RetValue == l_True ? 1 : 0;\n}",
+      "Draft": "func Gia_QbfVerify(p *Qbf_Man_t, vValues *Vec_Int_t) int32 {\n    var i, Entry, RetValue int32;\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n    Vec_IntClear( p.vLits );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vValues)) \u0026\u0026 (((Entry) = Vec_IntEntry(vValues, i)), 1); i++  {\n        Vec_IntPush( p.vLits, Abc_Var2Lit(p.iParVarBeg+i, !Entry) );\n    }\n    RetValue = sat_solver_solve( p.pSatVer, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits), 0, 0, 0, 0 );\n    if RetValue == l_True {\n        Vec_IntClear( vValues );\n        for  i = 0; i \u003c p.nVars; i++  {\n            Vec_IntPush( vValues, sat_solver_var_value(p.pSatVer, p.iParVarBeg+p.nPars+i) );\n        }\n    }\n    if RetValue == l_True {\n        return 1;\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Gia_QbfAddSpecialConstr",
+      "Start": 28652,
+      "End": 29082,
+      "BodyStart": 28698,
+      "Original": "void Gia_QbfAddSpecialConstr( Qbf_Man_t * p )\n{\n    int i, status, Lits[2];\n    for ( i = 0; i \u003c 4*11; i++ )\n        if ( i % 4 == 0 )\n        {\n            assert( Vec_IntEntry(p-\u003evParMap, i) == -1 );\n            Vec_IntWriteEntry( p-\u003evParMap, i, (i % 4) == 3 );\n            Lits[0] = Abc_Var2Lit( i, (i % 4) != 3 );\n            status = sat_solver_addclause( p-\u003epSatSyn, Lits, Lits+1 );\n            assert( status );\n        }\n}",
+      "Draft": "func Gia_QbfAddSpecialConstr(p *Qbf_Man_t) {\n    var i int32;\n    var status int32;\n    var Lits [2]int32;\n    for  i = 0; i \u003c 4*11; i++  {\n        if i % 4 == 0 {\n            assert(Vec_IntEntry(p.vParMap, i) == -1, \"Vec_IntEntry(p.vParMap, i) == -1\");\n            Vec_IntWriteEntry( p.vParMap, i, (i % 4) == 3 );\n            Lits[0] = Abc_Var2Lit( i, (i % 4) != 3 );\n            status = sat_solver_addclause( p.pSatSyn, Lits, Lits+1 );\n            assert((status != 0), \"status\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gia_QbfLearnConstraint",
+      "Start": 29083,
+      "End": 29936,
+      "BodyStart": 29149,
+      "Original": "void Gia_QbfLearnConstraint( Qbf_Man_t * p, Vec_Int_t * vValues )\n{\n    int i, status, Entry, Lits[2];\n    assert( Vec_IntSize(vValues) == p-\u003enPars );\n    printf( \"  Pattern   \" );\n    Vec_IntPrintBinary( vValues );\n    printf( \"\\n\" );\n    Vec_IntForEachEntry( vValues, Entry, i )\n    {\n        Lits[0] = Abc_Var2Lit( i, Entry );\n        status = sat_solver_solve( p-\u003epSatSyn, Lits, Lits+1, 0, 0, 0, 0 );\n        printf( \"  Var =%4d \", i );\n        if ( status != l_True )\n        {\n            printf( \"UNSAT\\n\" );\n            Lits[0] = Abc_LitNot(Lits[0]);\n            status = sat_solver_addclause( p-\u003epSatSyn, Lits, Lits+1 );\n            assert( status );\n            continue;\n        }\n        Gia_QbfOnePattern( p, p-\u003evLits );\n        Vec_IntPrintBinary( p-\u003evLits );\n        printf( \"\\n\" );\n    }\n    assert( Vec_IntSize(vValues) == p-\u003enPars );\n}",
+      "Draft": "func Gia_QbfLearnConstraint(p *Qbf_Man_t, vValues *Vec_Int_t) {\n    var i int32;\n    var status int32;\n    var Entry int32;\n    var Lits [2]int32;\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n    fmt.Printf(\"  Pattern   \");\n    Vec_IntPrintBinary( vValues );\n    fmt.Printf(\"\\n\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vValues)) \u0026\u0026 (((Entry) = Vec_IntEntry(vValues, i)), 1); i++  {\n        Lits[0] = Abc_Var2Lit( i, Entry );\n        status = sat_solver_solve( p.pSatSyn, Lits, Lits+1, 0, 0, 0, 0 );\n        fmt.Printf(\"  Var =%4d \", i);\n        if status != l_True {\n            fmt.Printf(\"UNSAT\\n\");\n            Lits[0] = Abc_LitNot(Lits[0]);\n            status = sat_solver_addclause( p.pSatSyn, Lits, Lits+1 );\n            assert((status != 0), \"status\");\n            continue;\n        }\n        Gia_QbfOnePattern( p, p.vLits );\n        Vec_IntPrintBinary( p.vLits );\n        fmt.Printf(\"\\n\");\n    }\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n}"
+    },
+    {
+      "Name": "Gia_QbfSolve",
+      "Start": 30221,
+      "End": 33663,
+      "BodyStart": 30357,
+      "Original": "int Gia_QbfSolve( Gia_Man_t * pGia, int nPars, int nIterLimit, int nConfLimit, int nTimeOut, int nEncVars, int fGlucose, int fVerbose )\n{\n    Qbf_Man_t * p = Gia_QbfAlloc( pGia, nPars, fGlucose, fVerbose );\n    Gia_Man_t * pCof;\n    int i, status, RetValue = 0;\n    abctime clk;\n//    Gia_QbfAddSpecialConstr( p );\n    if ( fVerbose )\n        printf( \"Solving QBF for \\\"%s\\\" with %d parameters, %d variables and %d AIG nodes.\\n\", \n            Gia_ManName(pGia), p-\u003enPars, p-\u003enVars, Gia_ManAndNum(pGia) );\n    assert( Gia_ManRegNum(pGia) == 0 );\n    Vec_IntFill( p-\u003evValues, nPars, 0 );\n    for ( i = 0; Gia_QbfVerify(p, p-\u003evValues); i++ )\n    {\n        // generate next constraint\n        assert( Vec_IntSize(p-\u003evValues) == p-\u003enVars );\n        pCof = Gia_QbfCofactor( pGia, nPars, p-\u003evValues, p-\u003evParMap );\n        status = p-\u003epSatSynG ? Gia_QbfAddCofactorG( p, pCof ) : Gia_QbfAddCofactor( p, pCof );\n        Gia_ManStop( pCof );\n        if ( status == 0 )       { RetValue =  1; break; }\n        // synthesize next assignment\n        clk = Abc_Clock();\n        if ( p-\u003epSatSynG )\n            status = bmcg_sat_solver_solve( p-\u003epSatSynG, NULL, 0 );\n        else\n            status = sat_solver_solve( p-\u003epSatSyn, NULL, NULL, (ABC_INT64_T)nConfLimit, 0, 0, 0 );\n        p-\u003eclkSat += Abc_Clock() - clk;\n        if ( fVerbose )\n            Gia_QbfPrint( p, p-\u003evValues, i );\n        if ( status == l_False ) { RetValue =  1; break; }\n        if ( status == l_Undef ) { RetValue = -1; break; }\n        // extract SAT assignment\n        Gia_QbfOnePattern( p, p-\u003evValues );\n        assert( Vec_IntSize(p-\u003evValues) == p-\u003enPars );\n        // examine variables\n//        Gia_QbfLearnConstraint( p, p-\u003evValues );\n//        Vec_IntPrintBinary( p-\u003evValues ); printf( \"\\n\" );\n        if ( nIterLimit \u0026\u0026 i+1 == nIterLimit ) { RetValue = -1; break; }\n        if ( nTimeOut \u0026\u0026 (Abc_Clock() - p-\u003eclkStart)/CLOCKS_PER_SEC \u003e= nTimeOut ) { RetValue = -1; break; }\n    }\n    if ( RetValue == 0 )\n    {\n        int nZeros = Vec_IntCountZero( p-\u003evValues );\n        printf( \"Parameters: \" );\n        assert( Vec_IntSize(p-\u003evValues) == nPars );\n        Vec_IntPrintBinary( p-\u003evValues );\n        printf( \"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(p-\u003evValues) - nZeros );\n        if ( nEncVars )\n        {\n            int nBits = Vec_IntSize(p-\u003evValues)/(1 \u003c\u003c nEncVars);\n            assert( Vec_IntSize(p-\u003evValues) == (1 \u003c\u003c nEncVars) * nBits );\n            Gia_Gen2CodePrint( nEncVars, nBits, p-\u003evValues );\n        }\n    }\n    if ( RetValue == -1 \u0026\u0026 nTimeOut \u0026\u0026 (Abc_Clock() - p-\u003eclkStart)/CLOCKS_PER_SEC \u003e= nTimeOut )\n        printf( \"The problem timed out after %d sec.  \", nTimeOut );\n    else if ( RetValue == -1 \u0026\u0026 nConfLimit )\n        printf( \"The problem aborted after %d conflicts.  \", nConfLimit );\n    else if ( RetValue == -1 \u0026\u0026 nIterLimit )\n        printf( \"The problem aborted after %d iterations.  \", nIterLimit );\n    else if ( RetValue == 1 )\n        printf( \"The problem is UNSAT after %d iterations.  \", i );\n    else \n        printf( \"The problem is SAT after %d iterations.  \", i );\n    if ( fVerbose )\n    {\n        printf( \"\\n\" );\n        Abc_PrintTime( 1, \"SAT  \", p-\u003eclkSat );\n        Abc_PrintTime( 1, \"Other\", Abc_Clock() - p-\u003eclkStart - p-\u003eclkSat );\n        Abc_PrintTime( 1, \"TOTAL\", Abc_Clock() - p-\u003eclkStart );\n    }\n    else\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003eclkStart );\n    Gia_QbfFree( p );\n    return RetValue;\n}",
+      "Draft": "func Gia_QbfSolve(pGia *Gia_Man_t, nPars int32, nIterLimit int32, nConfLimit int32, nTimeOut int32, nEncVars int32, fGlucose int32, fVerbose int32) int32 {\n    var p *Qbf_Man_t  = Gia_QbfAlloc( pGia, nPars, fGlucose, fVerbose );\n    var pCof *Gia_Man_t;\n    var i, status, RetValue int32;\n    var clk abctime;\n//    Gia_QbfAddSpecialConstr( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Solving QBF for \\\"%s\\\" with %d parameters, %d variables and %d AIG nodes.\\n\", Gia_ManName(pGia), p.nPars, p.nVars, Gia_ManAndNum(pGia)); }\n    assert(Gia_ManRegNum(pGia) == 0, \"Gia_ManRegNum(pGia) == 0\");\n    Vec_IntFill( p.vValues, nPars, 0 );\n    for  i = 0; (Gia_QbfVerify(p, p.vValues) != 0); i++  {\n        // generate next constraint\n        assert(Vec_IntSize(p.vValues) == p.nVars, \"Vec_IntSize(p.vValues) == p.nVars\");\n        pCof = Gia_QbfCofactor( pGia, nPars, p.vValues, p.vParMap );\n        if p.pSatSynG {\n            status = Gia_QbfAddCofactorG( p, pCof );\n        } else {\n            status = Gia_QbfAddCofactor( p, pCof );\n        }\n        Gia_ManStop( pCof );\n        if status == 0       { RetValue =  1; break; }\n        // synthesize next assignment\n        clk = Abc_Clock();\n        if p.pSatSynG {\n            status = bmcg_sat_solver_solve( p.pSatSynG, nil, 0 );\n        } else {\n            status = sat_solver_solve( p.pSatSyn, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 ); }\n        p.clkSat += Abc_Clock() - clk;\n        if fVerbose != 0 {\n            Gia_QbfPrint( p, p.vValues, i ); }\n        if status == l_False { RetValue =  1; break; }\n        if status == l_Undef { RetValue = -1; break; }\n        // extract SAT assignment\n        Gia_QbfOnePattern( p, p.vValues );\n        assert(Vec_IntSize(p.vValues) == p.nPars, \"Vec_IntSize(p.vValues) == p.nPars\");\n        // examine variables\n//        Gia_QbfLearnConstraint( p, p-\u003evValues );\n//        Vec_IntPrintBinary( p-\u003evValues ); printf( \"\\n\" );\n        if (nIterLimit != 0) \u0026\u0026 i+1 == nIterLimit { RetValue = -1; break; }\n        if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - p.clkStart)/int64(time.Second) \u003e= nTimeOut { RetValue = -1; break; }\n    }\n    if RetValue == 0 {\n        var nZeros int32  = Vec_IntCountZero( p.vValues );\n        fmt.Printf(\"Parameters: \");\n        assert(Vec_IntSize(p.vValues) == nPars, \"Vec_IntSize(p.vValues) == nPars\");\n        Vec_IntPrintBinary( p.vValues );\n        fmt.Printf(\"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(p.vValues) - nZeros);\n        if nEncVars != 0 {\n            var nBits int32  = Vec_IntSize(p.vValues)/(1 \u003c\u003c nEncVars);\n            assert(Vec_IntSize(p.vValues) == (1 \u003c\u003c nEncVars) * nBits, \"Vec_IntSize(p.vValues) == (1 \u003c\u003c nEncVars) * nBits\");\n            Gia_Gen2CodePrint( nEncVars, nBits, p.vValues );\n        }\n    }\n    if RetValue == -1 \u0026\u0026 (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - p.clkStart)/int64(time.Second) \u003e= nTimeOut {\n        fmt.Printf(\"The problem timed out after %d sec.  \", nTimeOut);\n    } else if RetValue == -1 \u0026\u0026 (nConfLimit != 0) {\n        fmt.Printf(\"The problem aborted after %d conflicts.  \", nConfLimit);\n    } else if RetValue == -1 \u0026\u0026 (nIterLimit != 0) {\n        fmt.Printf(\"The problem aborted after %d iterations.  \", nIterLimit);\n    } else if RetValue == 1 {\n        fmt.Printf(\"The problem is UNSAT after %d iterations.  \", i);\n    } else { \n        fmt.Printf(\"The problem is SAT after %d iterations.  \", i); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        Abc_PrintTime( 1, \"SAT  \", p.clkSat );\n        Abc_PrintTime( 1, \"Other\", Abc_Clock() - p.clkStart - p.clkSat );\n        Abc_PrintTime( 1, \"TOTAL\", Abc_Clock() - p.clkStart );\n    \n    } else {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart ); }\n    Gia_QbfFree( p );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::struct::Qbf_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Qbf_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 915,
+      "End": 1785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::mechanical::sizeof::11988",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11566,
+      "End": 11566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::mechanical::sizeof::13377",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12824,
+      "End": 12824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::mechanical::sizeof::20484",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 19219,
+      "End": 19219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::11936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11566,
+      "End": 11566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::12135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11743,
+      "End": 11755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::12587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12195,
+      "End": 12207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::12754",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12362,
+      "End": 12374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::12877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12424,
+      "End": 12424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::13343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12824,
+      "End": 12824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13515,
+      "End": 13527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14159",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13618,
+      "End": 13630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14265",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13724,
+      "End": 13736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13846,
+      "End": 13858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13941,
+      "End": 13953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14039,
+      "End": 14051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14147,
+      "End": 14159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::14922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14320,
+      "End": 14320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::15029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14347,
+      "End": 14347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::15137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14374,
+      "End": 14374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::15251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14402,
+      "End": 14402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::16185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15312,
+      "End": 15325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::16251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15378,
+      "End": 15392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::18614",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17637,
+      "End": 17650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::20294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19110,
+      "End": 19123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::20450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19219,
+      "End": 19219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::20750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19492,
+      "End": 19506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::21533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20218,
+      "End": 20218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::26854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24789,
+      "End": 24802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::pointer-cast::27840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25775,
+      "End": 25788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_GenCollectFlopIndexes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_GenCollectFlopIndexes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2293,
+      "End": 3452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_GenCreateMux_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_GenCreateMux_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3453,
+      "End": 3870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_GenCreateMuxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_GenCreateMuxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3871,
+      "End": 4737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::ternary::Gia_GenQbfMiter",
+      "Category": "ternary-review",
+      "Symbol": "Gia_GenQbfMiter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4738,
+      "End": 7052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_GenQbfMiter",
+      "Category": "semantic-review",
+      "Symbol": "Gia_GenQbfMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4738,
+      "End": 7052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CreateMux_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CreateMux_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7329,
+      "End": 7749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CreateMuxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CreateMuxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7750,
+      "End": 8299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CreateMiter",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CreateMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8300,
+      "End": 11227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CodeOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CodeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11228,
+      "End": 11466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CodeOneP",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CodeOneP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11467,
+      "End": 11784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::ternary::Gia_Gen2CodePrint",
+      "Category": "ternary-review",
+      "Symbol": "Gia_Gen2CodePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11785,
+      "End": 14433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CodePrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CodePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11785,
+      "End": 14433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_Gen2CodeTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Gen2CodeTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14434,
+      "End": 14764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_ManSatEnum",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSatEnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15039,
+      "End": 17147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfDumpFile",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfDumpFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17428,
+      "End": 18647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18926,
+      "End": 19952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::ternary::Gia_QbfFree",
+      "Category": "ternary-review",
+      "Symbol": "Gia_QbfFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19953,
+      "End": 20234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfFree",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19953,
+      "End": 20234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfQuantifyOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfQuantifyOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20498,
+      "End": 21952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfQuantifyAll",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfQuantifyAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21953,
+      "End": 22289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfCofactor",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfCofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22553,
+      "End": 23607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Cnf_SpecialDataLift",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_SpecialDataLift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24351,
+      "End": 24704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfAddCofactor",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfAddCofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24706,
+      "End": 25690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfAddCofactorG",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfAddCofactorG",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25691,
+      "End": 26309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::ternary::Gia_QbfOnePattern",
+      "Category": "ternary-review",
+      "Symbol": "Gia_QbfOnePattern",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26568,
+      "End": 26844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfOnePattern",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfOnePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26568,
+      "End": 26844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::ternary::Gia_QbfPrint",
+      "Category": "ternary-review",
+      "Symbol": "Gia_QbfPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26845,
+      "End": 27465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfPrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26845,
+      "End": 27465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfVerify",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27757,
+      "End": 28396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfAddSpecialConstr",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfAddSpecialConstr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28652,
+      "End": 29082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfLearnConstraint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfLearnConstraint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29083,
+      "End": 29936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::Gia_QbfSolve",
+      "Category": "semantic-review",
+      "Symbol": "Gia_QbfSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30221,
+      "End": 33663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaQbf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33910
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strconv\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaQbf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [QBF solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 18, 2014.]\n\n  Revision    [$Id: giaQbf.c,v 1.00 2014/10/18 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"sat/glucose/AbcGlucose.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n    \ntype Qbf_Man_t struct {\n    pGia      *Gia_Man_t;           // original miter\n    nPars             int32;          // parameter variables\n    nVars             int32;          // functional variables\n    fVerbose             int32;       // verbose flag\n    // internal variables\n    iParVarBeg             int32;     // SAT var ID of the first par variable in the ver solver\n    pSatVer     *sat_solver;        // verification instance\n    pSatSyn     *sat_solver;        // synthesis instance\n    pSatSynG *bmcg_sat_solver;       // synthesis instance\n    vValues      *Vec_Int_t;        // variable values\n    vParMap      *Vec_Int_t;        // parameter mapping\n    vLits      *Vec_Int_t;          // literals for the SAT solver\n    clkStart         abctime;       // global timeout\n    clkSat         abctime;         // SAT solver time\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Generating QBF miter to solve the induction problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_GenCollectFlopIndexes(pStr string, nLutNum int32, nLutSize int32, nFlops int32) *Vec_Int_t {\n    var nDups int32;\n    var pTemp string;\n    var vFlops *Vec_Int_t;\n    assert(nLutSize * nLutNum \u003c= nFlops, \"nLutSize * nLutNum \u003c= nFlops\");\n    if pStr == nil {\n        return Vec_IntStartNatural( nLutNum * nLutSize ); }\n    vFlops = Vec_IntAlloc( nLutNum * nLutSize );\n    pTemp = strtok( pStr, \", \" );\n    for  pTemp  {\n        var iFlop int32  = strconv.Atoi(pTemp);\n        if iFlop \u003e= nFlops {\n            fmt.Printf(\"Flop index (%d) exceeds the number of flops (%d).\\n\", iFlop, nFlops);\n            break;\n        }\n        Vec_IntPush( vFlops, iFlop );\n        pTemp = strtok( nil, \", \" );\n    }\n    if Vec_IntSize(vFlops) != nLutNum * nLutSize {\n        fmt.Printf(\"Gia_GenCollectFlopIndexes: Expecting %d flop indexes (instead of %d).\\n\", nLutNum * nLutSize, Vec_IntSize(vFlops));\n        Vec_IntFree( vFlops );\n        return nil;\n    }\n    nDups = Vec_IntCountDuplicates(vFlops);\n    if nDups != 0 {\n        fmt.Printf(\"Gia_GenCollectFlopIndexes: There are %d duplicated flops in the list.\\n\", nDups);\n        Vec_IntFree( vFlops );\n        return nil;\n    }\n    return vFlops;\n}\nfunc Gia_GenCreateMux_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {\n    var iLit0, iLit1 int32;\n    if nCtrl == 0 {\n        return Vec_IntEntry( vData, Shift ); }\n    iLit0 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_GenCreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}\nfunc Gia_GenCreateMuxes(p *Gia_Man_t, pNew *Gia_Man_t, vFlops *Vec_Int_t, nLutNum int32, nLutSize int32, vParLits *Vec_Int_t, fUseRi int32) *Vec_Int_t {\n    var vLits *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n    var i int32;\n    var k int32;\n    var iMux int32;\n    var iFlop int32;\n    var pCtrl [16]int32;\n    // add MUXes for each group of flops\n    assert(Vec_IntSize(vFlops) == nLutNum * nLutSize, \"Vec_IntSize(vFlops) == nLutNum * nLutSize\");\n    for  i = 0; i \u003c nLutNum; i++  {\n        for  k = 0; k \u003c nLutSize; k++  {\n            iFlop = Vec_IntEntry(vFlops, i * nLutSize + k);\n            assert(iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p), \"iFlop \u003e= 0 \u0026\u0026 iFlop \u003c Gia_ManRegNum(p)\");\n            if fUseRi != 0 {\n                pCtrl[k] = Gia_ManRi(p, iFlop).Value;\n            } else {\n                pCtrl[k] = Gia_ManRo(p, iFlop).Value; }\n        }\n        iMux = Gia_GenCreateMux_rec( pNew, pCtrl, nLutSize, vParLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}\nfunc Gia_GenQbfMiter(p *Gia_Man_t, nFrames int32, nLutNum int32, nLutSize int32, pStr string, fUseOut int32, fVerbose int32) *Gia_Man_t {\n    var pObj *Gia_Obj_t; \n    var pTemp, pNew *Gia_Man_t;\n    var i int32;\n    var iMiter int32;\n    var iLut0 int32;\n    var iLut1 int32;\n    var nPars int32 = nLutNum * (1 \u003c\u003c nLutSize);\n    var vLits0, vLits1, vParLits *Vec_Int_t;\n    var vFlops *Vec_Int_t  = Gia_GenCollectFlopIndexes( pStr, nLutNum, nLutSize, Gia_ManRegNum(p) );\n    // collect parameter literals (data vars)\n    vParLits = Vec_IntAlloc( nPars );\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntPush( vParLits, i ? Abc_Var2Lit(i+1, 0) : 1 );\n    }\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    for  i = 0; i \u003c nPars; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    vLits0 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 0 );\n    vLits1 = Gia_GenCreateMuxes( p, pNew, vFlops, nLutNum, nLutSize, vParLits, 1 );\n    // create miter output\n    //iMiter = Gia_ManHashAnd( pNew, Vec_IntEntry(vLits0, 0), Abc_LitNot(Vec_IntEntry(vLits1, 0)) );\n    ///////////////////////////////////////////////////////////////////////////\n    iLut0 = Vec_IntEntry(vLits0, 0);\n    iLut1 = Vec_IntEntry(vLits1, 0);\n    if fUseOut != 0 {\n        var pObjPoLast *Gia_Obj_t  = Gia_ManPo( p, Gia_ManPoNum(p)-1 );\n        var iOut int32  = Abc_LitNotCond( Gia_ObjFanin0Copy(pObjPoLast), 0 );\n        iLut1 = Gia_ManHashAnd( pNew, iLut1, Abc_LitNot(iOut) );\n    }\n    iMiter = Gia_ManHashAnd( pNew, iLut0, Abc_LitNot(iLut1) );\n    ///////////////////////////////////////////////////////////////////////////\n    iMiter = Gia_ManHashAnd( pNew, Abc_LitNot(iMiter), Abc_Var2Lit(1, 0) );\n    Gia_ManAppendCo( pNew, iMiter );\n    // cleanup\n    Vec_IntFree( vLits0 );\n    Vec_IntFree( vLits1 );\n    Vec_IntFree( vFlops );\n    Vec_IntFree( vParLits );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generate miter for the encoding problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Gen2CreateMux_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {\n    var iLit0, iLit1 int32;\n    if nCtrl == 0 {\n        return Vec_IntEntry( vData, Shift ); }\n    iLit0 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );\n    iLit1 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1\u003c\u003c(nCtrl-1)) );\n    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );\n}\nfunc Gia_Gen2CreateMuxes(pNew *Gia_Man_t, nLutSize int32, nLutNum int32, vPLits *Vec_Int_t, vXLits *Vec_Int_t) *Vec_Int_t {\n    var vLits *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n    var i, iMux int32;\n    // add MUXes for each group of flops\n    assert(Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize), \"Vec_IntSize(vPLits) == nLutNum * (1 \u003c\u003c nLutSize)\");\n    assert(Vec_IntSize(vXLits) == nLutSize, \"Vec_IntSize(vXLits) == nLutSize\");\n    for  i = 0; i \u003c nLutNum; i++  {\n        iMux = Gia_Gen2CreateMux_rec( pNew, Vec_IntArray(vXLits), nLutSize, vPLits, i * (1 \u003c\u003c nLutSize) );\n        Vec_IntPush( vLits, iMux );\n    }\n    return vLits;\n}\nfunc Gia_Gen2CreateMiter(nLutSize int32, nLutNum int32) *Gia_Man_t {\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\u003c-- XVars--\u003e|\u003c-- YVars--\u003e|\n    var vPLits *Vec_Int_t   = Vec_IntAlloc( nLutNum * (1 \u003c\u003c nLutSize) );\n    var vXLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );\n    var vYLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );\n    var vXYLits *Vec_Int_t  = Vec_IntAlloc( nLutSize );\n    var vXRes, vYRes, vXYRes *Vec_Int_t;\n    var vXYRes2 *Vec_Int_t  = Vec_IntAlloc( 2 * nLutNum );\n    var pTemp *Gia_Man_t;\n    var pNew *Gia_Man_t = Gia_ManStart( 1000 ); var i, k, v, Cond, Res int32;\n    pNew.pName = Abc_UtilStrsav( \"homoqbf\" );\n    Gia_ManHashAlloc( pNew );\n    for  i = 0; i \u003c nLutNum * (1 \u003c\u003c nLutSize); i++  {\n        Vec_IntPush( vPLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vXLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vYLits, Gia_ManAppendCi(pNew) );\n    }\n    for  i = 0; i \u003c nLutSize; i++  {\n        Vec_IntPush( vXYLits, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXLits, i), Vec_IntEntry(vYLits, i))) );\n    }\n    vXRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXLits );\n    vYRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vYLits );\n    vXYRes = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXYLits );\n    for  i = 0; i \u003c nLutNum; i++  {\n        Vec_IntPush( vXYRes2, Vec_IntEntry(vXYRes, i) );\n        Vec_IntPush( vXYRes2, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXRes, i), Vec_IntEntry(vYRes, i))) );\n    }\n    Res = Gia_ManHashDualMiter( pNew, vXYRes2 );\n    // uniqueness of codes\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize); i++  {\n        var vCondA *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n        var vCondB *Vec_Int_t  = Vec_IntAlloc( nLutNum );\n        for  v = 0; v \u003c nLutNum; v++  {\n            Vec_IntPush( vCondA, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+i) );\n        }\n        for  k = i+1; k \u003c (1 \u003c\u003c nLutSize); k++  {\n            Vec_IntClear( vCondB );\n            for  v = 0; v \u003c nLutNum; v++  {\n                Vec_IntPush( vCondB, Vec_IntEntry(vCondA, v) );\n                Vec_IntPush( vCondB, Vec_IntEntry(vPLits, v*(1 \u003c\u003c nLutSize)+k) );\n            }\n            Cond = Gia_ManHashDualMiter( pNew, vCondB );\n            Res = Gia_ManHashOr( pNew, Res, Abc_LitNot(Cond) );\n        }\n        Vec_IntFree( vCondA );\n        Vec_IntFree( vCondB );\n    }\n    Gia_ManAppendCo( pNew, Abc_LitNot(Res) );\n    Gia_ManHashStop( pNew );\n    Vec_IntFree( vPLits );\n    Vec_IntFree( vXLits );\n    Vec_IntFree( vYLits );\n    Vec_IntFree( vXYLits );\n    Vec_IntFree( vXRes );\n    Vec_IntFree( vYRes );\n    Vec_IntFree( vXYRes );\n    Vec_IntFree( vXYRes2 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    fmt.Printf(\"Generated QBF miter with %d parameters, %d functional variables, and %d AIG nodes.\\n\", nLutNum * (1 \u003c\u003c nLutSize), 2*nLutSize, Gia_ManAndNum(pNew));\n    return pNew;\n}\nfunc Gia_Gen2CodeOne(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) int32 {\n    var k, Code int32;\n    for  k = 0; k \u003c nLutNum; k++  {\n        if Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) {\n            Code |= (1 \u003c\u003c k); }\n    }\n    return Code;\n}\nfunc Gia_Gen2CodeOneP(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) *word {\n    // inlining of macro ABC_CALLOC\n    var pRes *word  = ((word *) calloc((size_t)(Abc_Bit6WordNum(nLutNum)), sizeof(word)));\n    var k int32;\n    for  k = 0; k \u003c nLutNum; k++  {\n        if Vec_IntEntry(vCode, k*(1 \u003c\u003c nLutSize)+x) {\n            Abc_InfoSetBit( (unsigned *)pRes, k ); }\n    }\n    return pRes;\n}\nfunc Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {\n    // |\u003c-- PVars(0)--\u003e|...|\u003c-- PVars(nLutNum-1)--\u003e|\n    var i int32;\n    var n int32;\n    var nPairs int32 = 16;\n    fmt.Printf(\"%d-input %d-output code table:\\n\", nLutSize, nLutNum);\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize); i++  {\n        var CodeX *word   = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, i );\n        fmt.Printf(\"%3d  \", i);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026i, nLutSize );\n        fmt.Printf(\"  --\u003e  \");\n        if nLutNum \u003c= 16 {\n            fmt.Printf(\"%5d  \", int32(CodeX[0])); }\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );\n        fmt.Printf(\"\\n\");\n        // inlining of macro ABC_FREE\n        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);\n    }\n    // create several different pairs\n    srand( time.Now().Unix() );\n    fmt.Printf(\"Simulation of the encoding with %d random pairs:\\n\", nPairs);\n    for  n = 0; n \u003c nPairs; n++  {\n        var MaskIn uint32  = Abc_InfoMask( nLutSize );\n        var NumX int32;\n        var NumY int32;\n        var NumXY int32;\n        var nWords int32 = Abc_Bit6WordNum(nLutNum);\n        var CodeX, CodeY, CodeXY *word;\n        // inlining of macro ABC_CALLOC\n        var CodeXCodeY *word  = ((word *) calloc((size_t)(nWords), sizeof(word)));\n        for  NumX == NumY  {\n            NumX = rand() % (1 \u003c\u003c nLutSize);\n            NumY = rand() % (1 \u003c\u003c nLutSize);\n            NumXY = MaskIn \u0026 ~(NumX \u0026 NumY);\n        }\n        CodeX  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumX );\n        CodeY  = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumY );\n        CodeXY = Gia_Gen2CodeOneP( nLutSize, nLutNum, vCode, NumXY );\n        Abc_TtAnd( CodeXCodeY, CodeX, CodeY, nWords, 1 );\n        if nLutNum \u003c 64*nWords {\n            CodeXCodeY[nWords-1] \u0026= Abc_Tt6Mask(nLutNum % 64); }            \n\n        fmt.Printf(\"%2d :\", n);\n        fmt.Printf(\" x =%3d \", NumX);\n        Extra_PrintBinary( os.Stdout,(unsigned *) \u0026NumX, nLutSize );\n        fmt.Printf(\" y =%3d \", NumY);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026NumY, nLutSize );\n        fmt.Printf(\" nand =%3d \", NumXY);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026NumXY, nLutSize );\n        fmt.Printf(\"  \");\n\n        fmt.Printf(\" c(x) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeX, nLutNum );\n        fmt.Printf(\" c(y) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeY, nLutNum );\n        fmt.Printf(\" c(nand) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXY, nLutNum );\n        fmt.Printf(\"  nand(c(x),c(y)) = \");\n        Extra_PrintBinary( os.Stdout, (unsigned *)CodeXCodeY, nLutNum );\n        fmt.Printf(\"  \");\n\n        fmt.Printf(\"%s\", Abc_TtEqual(CodeXCodeY, CodeXY, nWords) ? \"yes\" : \"no\");\n        fmt.Printf(\"\\n\");\n\n        // inlining of macro ABC_FREE\n        ((CodeX) ? (free((char *) (CodeX)), (CodeX) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeY) ? (free((char *) (CodeY)), (CodeY) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeXY) ? (free((char *) (CodeXY)), (CodeXY) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((CodeXCodeY) ? (free((char *) (CodeXCodeY)), (CodeXCodeY) = 0) : 0);\n    }\n}\nfunc Gia_Gen2CodeTest() {\n    var i int32;\n    var nLutSize int32 = 1;\n    var nLutNum int32 = 2;\n    var vCode *Vec_Int_t  = Vec_IntAlloc( (1 \u003c\u003c nLutSize) * nLutNum );\n    srand( time.Now().Unix() );\n    for  i = 0; i \u003c (1 \u003c\u003c nLutSize) * nLutNum; i++  {\n        Vec_IntPush( vCode, rand() \u0026 1 );\n    }\n    Gia_Gen2CodePrint( nLutSize, nLutNum, vCode );\n    Vec_IntFree( vCode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Naive way to enumerate SAT assignments.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSatEnum(pGia *Gia_Man_t, nConfLimit int32, nTimeOut int32, fVerbose int32) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var i, iLit, iParVarBeg, Iter int32;\n    var nSolutions, RetValue int32;\n    var clkStart abctime  = Abc_Clock();\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    iParVarBeg = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;\n    Cnf_DataFree( pCnf );\n    // iterate through the SAT assignment\n    vLits = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    for  Iter = 1 ; ; Iter++  {\n        var status int32  = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 );\n        if status == l_False { RetValue =  1; break; }\n        if status == l_Undef { RetValue =  0; break; }\n        nSolutions++;\n        // extract SAT assignment\n        Vec_IntClear( vLits );\n        for  i = 0; i \u003c Gia_ManPiNum(pGia); i++  {\n            Vec_IntPush( vLits, Abc_Var2Lit(iParVarBeg+i, sat_solver_var_value(pSat, iParVarBeg+i)) );\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"%5d : \", Iter);\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {\n                fmt.Printf(\"%d\", !Abc_LitIsCompl(iLit));\n            }\n            fmt.Printf(\"\\n\");\n        }\n        // add clause\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) { RetValue =  1; break; }\n        if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= nTimeOut { RetValue = 0; break; }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= nTimeOut {\n        fmt.Printf(\"Enumerated %d assignments when timeout (%d sec) was reached.  \", nSolutions, nTimeOut);\n    } else if (nConfLimit != 0) \u0026\u0026 !(RetValue != 0) {\n        fmt.Printf(\"Enumerated %d assignments when conflict limit (%d) was reached.  \", nSolutions, nConfLimit);\n    } else { \n        fmt.Printf(\"Enumerated the complete set of %d assignments.  \", nSolutions); }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumps the original problem in QDIMACS format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfDumpFile(pGia *Gia_Man_t, nPars int32) {\n    // original problem: \\exists p \\forall x \\exists y.  M(p,x,y)\n    // negated problem:  \\forall p \\exists x \\exists y. !M(p,x,y)\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    var vVarMap, vForAlls, vExists *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var pFileName string;\n    var i, Entry int32;\n    // create var map\n    vVarMap = Vec_IntStart( pCnf.nVars );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n        if i \u003c nPars {\n            Vec_IntWriteEntry( vVarMap, pCnf.pVarNums[Gia_ManCiIdToId(pGia, i)], 1 ); }\n    }\n    // create various maps\n    vForAlls = Vec_IntAlloc( nPars );\n    vExists = Vec_IntAlloc( Gia_ManCiNum(pGia) - nPars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVarMap)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVarMap, i)), 1); i++  {\n        if Entry != 0 {\n            Vec_IntPush( vForAlls, i );\n        } else {\n            Vec_IntPush( vExists, i ); }\n    }\n    // generate CNF\n    pFileName = Extra_FileNameGenericAppend( pGia.pSpec, \".qdimacs\" );\n    Cnf_DataWriteIntoFile( pCnf, pFileName, 0, vForAlls, vExists );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vForAlls );\n    Vec_IntFree( vExists );\n    Vec_IntFree( vVarMap );\n    fmt.Printf(\"The 2QBF formula was written into file \\\"%s\\\".\\n\", pFileName);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generate one SAT assignment of the problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfAlloc(pGia *Gia_Man_t, nPars int32, fGlucose int32, fVerbose int32) *Qbf_Man_t {\n    \n    var pCnf *Cnf_Dat_t;\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    Gia_ObjFlipFaninC0( Gia_ManPo(pGia, 0) );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Qbf_Man_t{};\n    p.clkStart   = Abc_Clock();\n    p.pGia       = pGia;\n    p.nPars      = nPars;\n    p.nVars      = Gia_ManPiNum(pGia) - nPars;\n    p.fVerbose   = fVerbose;\n    p.iParVarBeg = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;\n    p.pSatVer    = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    p.pSatSyn    = sat_solver_new();\n    if fGlucose != 0 {\n        p.pSatSynG = bmcg_sat_solver_start();\n    } else {\n        p.pSatSynG = nil;\n    } \n    p.vValues    = Vec_IntAlloc( Gia_ManPiNum(pGia) );\n    p.vParMap    = Vec_IntStartFull( nPars );\n    p.vLits      = Vec_IntAlloc( nPars );\n    sat_solver_setnvars( p.pSatSyn, nPars );\n    if p.pSatSynG { bmcg_sat_solver_set_nvars( p.pSatSynG, nPars ); }\n    Cnf_DataFree( pCnf );\n    return p;\n}\nfunc Gia_QbfFree(p *Qbf_Man_t) {\n    sat_solver_delete( p.pSatVer );\n    sat_solver_delete( p.pSatSyn );\n    if p.pSatSynG { bmcg_sat_solver_stop( p.pSatSynG ); }\n    Vec_IntFree( p.vLits );\n    Vec_IntFree( p.vValues );\n    Vec_IntFree( p.vParMap );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create and add one cofactor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfQuantifyOne(p *Gia_Man_t, iVar int32, fAndAll int32, fOrAll int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; \n    var vCofs *Vec_Int_t;\n    var i, c int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // compute cofactors\n    vCofs = Vec_IntAlloc( 2 * Gia_ManPoNum(p) );\n    for  c = 0; c \u003c 2; c++  {\n        Gia_ManPi(p, iVar).Value = c;\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Vec_IntPush( vCofs, Gia_ObjFanin0Copy(pObj) );\n        }\n    }\n    if fAndAll != 0 {\n        for  i = 0; i \u003c Gia_ManPoNum(p); i++  {\n            Gia_ManAppendCo( pNew, Gia_ManHashAnd(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n        }\n    \n    } else if fOrAll != 0 {\n        for  i = 0; i \u003c Gia_ManPoNum(p); i++  {\n            Gia_ManAppendCo( pNew, Gia_ManHashOr(pNew, Vec_IntEntry(vCofs, i), Vec_IntEntry(vCofs, Gia_ManPoNum(p)+i)) );\n        }\n    \n    } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCofs)) \u0026\u0026 (((c) = Vec_IntEntry(vCofs, i)), 1); i++  {\n            Gia_ManAppendCo( pNew, c );\n        }\n    }\n    Vec_IntFree( vCofs );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\nfunc Gia_QbfQuantifyAll(p *Gia_Man_t, nPars int32, fAndAll int32, fOrAll int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t; var v int32;\n    pNew = Gia_ManDup( p );\n    for  v = Gia_ManPiNum(p) - 1; v \u003e= nPars; v--  {\n        pNew = Gia_QbfQuantifyOne( pTemp = pNew, v, fAndAll, fOrAll );\n        Gia_ManStop( pTemp );\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create and add one cofactor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfCofactor(p *Gia_Man_t, nPars int32, vValues *Vec_Int_t, vParMap *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t; var i int32;\n    assert(Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues), \"Gia_ManPiNum(p) == nPars + Vec_IntSize(vValues)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        if i \u003c nPars {\n            pObj.Value = Gia_ManAppendCi(pNew);\n            if Vec_IntEntry(vParMap, i) != -1 {\n                pObj.Value = Vec_IntEntry(vParMap, i); }\n        \n        } else {\n            pObj.Value = Vec_IntEntry(vValues, i - nPars); }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == nPars, \"Gia_ManPiNum(pNew) == nPars\");\n    return pNew;\n}\n/*\nint Gia_QbfAddCofactor( Qbf_Man_t * p, Gia_Man_t * pCof )\n{\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    int i, iFirstVar = sat_solver_nvars(p-\u003epSatSyn) + pCnf-\u003enVars - Gia_ManPiNum(pCof);// - 1;\n    pCnf-\u003epMan = NULL;\n    Cnf_DataLift( pCnf, sat_solver_nvars(p-\u003epSatSyn) );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !sat_solver_addclause( p-\u003epSatSyn, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n        {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    Cnf_DataFree( pCnf );\n    // add connection clauses\n    for ( i = 0; i \u003c Gia_ManPiNum(p-\u003epGia); i++ )\n        if ( !sat_solver_add_buffer( p-\u003epSatSyn, i, iFirstVar+i, 0 ) )\n            return 0;\n    return 1;\n}\n*/\nfunc Cnf_SpecialDataLift(p *Cnf_Dat_t, nVarsPlus int32, firstPiVar int32, lastPiVar int32) {\n    var v, var int32;\n    for  v = 0; v \u003c p.nLiterals; v++  {\n        var = p.pClauses[0][v] / 2;\n        if var \u003c firstPiVar || var \u003e= lastPiVar {\n            p.pClauses[0][v] += 2*nVarsPlus;\n        } else { \n            p.pClauses[0][v] -= 2*firstPiVar; }\n    }\n}\n\nfunc Gia_QbfAddCofactor(p *Qbf_Man_t, pCof *Gia_Man_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    var i, useold int32;\n    var iFirstVar int32;\n    if useold != 0 {\n        iFirstVar = sat_solver_nvars(p.pSatSyn) + pCnf.nVars - Gia_ManPiNum(pCof);\n    } else {\n        iFirstVar = pCnf.nVars - Gia_ManPiNum(pCof);\n    } //-1   \n    pCnf.pMan = nil;\n    \n    if useold != 0 {    \n        Cnf_DataLift( pCnf, sat_solver_nvars(p.pSatSyn) );\n    } else {\n        Cnf_SpecialDataLift( pCnf, sat_solver_nvars(p.pSatSyn), iFirstVar, iFirstVar + Gia_ManPiNum(p.pGia) ); }\n\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( p.pSatSyn, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    }\n    Cnf_DataFree( pCnf );\n    // add connection clauses\n    if useold != 0 {\n           for  i = 0; i \u003c Gia_ManPiNum(p.pGia); i++  {\n            if !sat_solver_add_buffer( p.pSatSyn, i, iFirstVar+i, 0 ) {\n                return 0; }\n           } }\n    return 1;\n}\nfunc Gia_QbfAddCofactorG(p *Qbf_Man_t, pCof *Gia_Man_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pCof, 8, 0, 1, 0, 0 );\n    var i int32;\n    var iFirstVar int32 = pCnf.nVars - Gia_ManPiNum(pCof); //-1   \n    pCnf.pMan = nil;\n    Cnf_SpecialDataLift( pCnf, bmcg_sat_solver_varnum(p.pSatSynG), iFirstVar, iFirstVar + Gia_ManPiNum(p.pGia) );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !bmcg_sat_solver_addclause( p.pSatSynG, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {\n            Cnf_DataFree( pCnf );\n            return 0;\n        }\n    }\n    Cnf_DataFree( pCnf );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extract SAT assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfOnePattern(p *Qbf_Man_t, vValues *Vec_Int_t) {\n    var i int32;\n    Vec_IntClear( vValues );\n    for  i = 0; i \u003c p.nPars; i++  {\n        Vec_IntPush( vValues, p.pSatSynG ? bmcg_sat_solver_read_cex_varvalue(p.pSatSynG, i) : sat_solver_var_value(p.pSatSyn, i) );\n    }\n}\nfunc Gia_QbfPrint(p *Qbf_Man_t, vValues *Vec_Int_t, Iter int32) {\n    fmt.Printf(\"%5d : \", Iter);\n    assert(Vec_IntSize(vValues) == p.nVars, \"Vec_IntSize(vValues) == p.nVars\");\n    Vec_IntPrintBinary( vValues ); fmt.Printf(\"  \");\n    fmt.Printf(\"Var =%7d  \", p.pSatSynG ? bmcg_sat_solver_varnum(p.pSatSynG)      : sat_solver_nvars(p.pSatSyn));\n    fmt.Printf(\"Cla =%7d  \", p.pSatSynG ? bmcg_sat_solver_clausenum(p.pSatSynG)   : sat_solver_nclauses(p.pSatSyn));\n    fmt.Printf(\"Conf =%9d  \", p.pSatSynG ? bmcg_sat_solver_conflictnum(p.pSatSynG) : sat_solver_nconflicts(p.pSatSyn));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generate one SAT assignment in terms of functional vars.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfVerify(p *Qbf_Man_t, vValues *Vec_Int_t) int32 {\n    var i, Entry, RetValue int32;\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n    Vec_IntClear( p.vLits );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vValues)) \u0026\u0026 (((Entry) = Vec_IntEntry(vValues, i)), 1); i++  {\n        Vec_IntPush( p.vLits, Abc_Var2Lit(p.iParVarBeg+i, !Entry) );\n    }\n    RetValue = sat_solver_solve( p.pSatVer, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits), 0, 0, 0, 0 );\n    if RetValue == l_True {\n        Vec_IntClear( vValues );\n        for  i = 0; i \u003c p.nVars; i++  {\n            Vec_IntPush( vValues, sat_solver_var_value(p.pSatVer, p.iParVarBeg+p.nPars+i) );\n        }\n    }\n    if RetValue == l_True {\n        return 1;\n    } else {\n        return 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constraint learning.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfAddSpecialConstr(p *Qbf_Man_t) {\n    var i int32;\n    var status int32;\n    var Lits [2]int32;\n    for  i = 0; i \u003c 4*11; i++  {\n        if i % 4 == 0 {\n            assert(Vec_IntEntry(p.vParMap, i) == -1, \"Vec_IntEntry(p.vParMap, i) == -1\");\n            Vec_IntWriteEntry( p.vParMap, i, (i % 4) == 3 );\n            Lits[0] = Abc_Var2Lit( i, (i % 4) != 3 );\n            status = sat_solver_addclause( p.pSatSyn, Lits, Lits+1 );\n            assert((status != 0), \"status\");\n        }\n    }\n}\nfunc Gia_QbfLearnConstraint(p *Qbf_Man_t, vValues *Vec_Int_t) {\n    var i int32;\n    var status int32;\n    var Entry int32;\n    var Lits [2]int32;\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n    fmt.Printf(\"  Pattern   \");\n    Vec_IntPrintBinary( vValues );\n    fmt.Printf(\"\\n\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vValues)) \u0026\u0026 (((Entry) = Vec_IntEntry(vValues, i)), 1); i++  {\n        Lits[0] = Abc_Var2Lit( i, Entry );\n        status = sat_solver_solve( p.pSatSyn, Lits, Lits+1, 0, 0, 0, 0 );\n        fmt.Printf(\"  Var =%4d \", i);\n        if status != l_True {\n            fmt.Printf(\"UNSAT\\n\");\n            Lits[0] = Abc_LitNot(Lits[0]);\n            status = sat_solver_addclause( p.pSatSyn, Lits, Lits+1 );\n            assert((status != 0), \"status\");\n            continue;\n        }\n        Gia_QbfOnePattern( p, p.vLits );\n        Vec_IntPrintBinary( p.vLits );\n        fmt.Printf(\"\\n\");\n    }\n    assert(Vec_IntSize(vValues) == p.nPars, \"Vec_IntSize(vValues) == p.nPars\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs QBF solving using an improved algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_QbfSolve(pGia *Gia_Man_t, nPars int32, nIterLimit int32, nConfLimit int32, nTimeOut int32, nEncVars int32, fGlucose int32, fVerbose int32) int32 {\n    var p *Qbf_Man_t  = Gia_QbfAlloc( pGia, nPars, fGlucose, fVerbose );\n    var pCof *Gia_Man_t;\n    var i, status, RetValue int32;\n    var clk abctime;\n//    Gia_QbfAddSpecialConstr( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Solving QBF for \\\"%s\\\" with %d parameters, %d variables and %d AIG nodes.\\n\", Gia_ManName(pGia), p.nPars, p.nVars, Gia_ManAndNum(pGia)); }\n    assert(Gia_ManRegNum(pGia) == 0, \"Gia_ManRegNum(pGia) == 0\");\n    Vec_IntFill( p.vValues, nPars, 0 );\n    for  i = 0; (Gia_QbfVerify(p, p.vValues) != 0); i++  {\n        // generate next constraint\n        assert(Vec_IntSize(p.vValues) == p.nVars, \"Vec_IntSize(p.vValues) == p.nVars\");\n        pCof = Gia_QbfCofactor( pGia, nPars, p.vValues, p.vParMap );\n        if p.pSatSynG {\n            status = Gia_QbfAddCofactorG( p, pCof );\n        } else {\n            status = Gia_QbfAddCofactor( p, pCof );\n        }\n        Gia_ManStop( pCof );\n        if status == 0       { RetValue =  1; break; }\n        // synthesize next assignment\n        clk = Abc_Clock();\n        if p.pSatSynG {\n            status = bmcg_sat_solver_solve( p.pSatSynG, nil, 0 );\n        } else {\n            status = sat_solver_solve( p.pSatSyn, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 ); }\n        p.clkSat += Abc_Clock() - clk;\n        if fVerbose != 0 {\n            Gia_QbfPrint( p, p.vValues, i ); }\n        if status == l_False { RetValue =  1; break; }\n        if status == l_Undef { RetValue = -1; break; }\n        // extract SAT assignment\n        Gia_QbfOnePattern( p, p.vValues );\n        assert(Vec_IntSize(p.vValues) == p.nPars, \"Vec_IntSize(p.vValues) == p.nPars\");\n        // examine variables\n//        Gia_QbfLearnConstraint( p, p-\u003evValues );\n//        Vec_IntPrintBinary( p-\u003evValues ); printf( \"\\n\" );\n        if (nIterLimit != 0) \u0026\u0026 i+1 == nIterLimit { RetValue = -1; break; }\n        if (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - p.clkStart)/int64(time.Second) \u003e= nTimeOut { RetValue = -1; break; }\n    }\n    if RetValue == 0 {\n        var nZeros int32  = Vec_IntCountZero( p.vValues );\n        fmt.Printf(\"Parameters: \");\n        assert(Vec_IntSize(p.vValues) == nPars, \"Vec_IntSize(p.vValues) == nPars\");\n        Vec_IntPrintBinary( p.vValues );\n        fmt.Printf(\"  Statistics: 0=%d 1=%d\\n\", nZeros, Vec_IntSize(p.vValues) - nZeros);\n        if nEncVars != 0 {\n            var nBits int32  = Vec_IntSize(p.vValues)/(1 \u003c\u003c nEncVars);\n            assert(Vec_IntSize(p.vValues) == (1 \u003c\u003c nEncVars) * nBits, \"Vec_IntSize(p.vValues) == (1 \u003c\u003c nEncVars) * nBits\");\n            Gia_Gen2CodePrint( nEncVars, nBits, p.vValues );\n        }\n    }\n    if RetValue == -1 \u0026\u0026 (nTimeOut != 0) \u0026\u0026 (Abc_Clock() - p.clkStart)/int64(time.Second) \u003e= nTimeOut {\n        fmt.Printf(\"The problem timed out after %d sec.  \", nTimeOut);\n    } else if RetValue == -1 \u0026\u0026 (nConfLimit != 0) {\n        fmt.Printf(\"The problem aborted after %d conflicts.  \", nConfLimit);\n    } else if RetValue == -1 \u0026\u0026 (nIterLimit != 0) {\n        fmt.Printf(\"The problem aborted after %d iterations.  \", nIterLimit);\n    } else if RetValue == 1 {\n        fmt.Printf(\"The problem is UNSAT after %d iterations.  \", i);\n    } else { \n        fmt.Printf(\"The problem is SAT after %d iterations.  \", i); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        Abc_PrintTime( 1, \"SAT  \", p.clkSat );\n        Abc_PrintTime( 1, \"Other\", Abc_Clock() - p.clkStart - p.clkSat );\n        Abc_PrintTime( 1, \"TOTAL\", Abc_Clock() - p.clkStart );\n    \n    } else {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart ); }\n    Gia_QbfFree( p );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

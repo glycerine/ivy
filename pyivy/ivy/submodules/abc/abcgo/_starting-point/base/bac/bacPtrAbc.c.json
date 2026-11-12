@@ -1,0 +1,1431 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c",
+  "SHA256": "ec54fe755655186296cd688a7bba7c294229cc5fa77f0ef8a03ebc86af13a12a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 3139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vArray) == Vec_PtrCap(vArray) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 4088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 14,
+        "ByteOffset": 4327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pObj) \u003c= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsBox(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 5458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vBoxes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 6201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vSigs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vSigs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 6918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 7332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vDes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 7843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converting to Ptr:  Memory = %6.3f MB  \", 1.0*Bac_PtrMemory(vDes)/(1\u003c\u003c20) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 8024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished writing output file \\\"%s\\\".  \", pFileName );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 8484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"Const0T\") {      return BAC_BOX_CF; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 8544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"Const1T\") {      return BAC_BOX_CT; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"BufT\") {         return BAC_BOX_BUF; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 8665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"InvT\") {         return BAC_BOX_INV; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"AndT\") {         return BAC_BOX_AND; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"NandT\") {        return BAC_BOX_NAND; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 8849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"OrT\") {          return BAC_BOX_OR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"NorT\") {         return BAC_BOX_NOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 8970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"XorT\") {         return BAC_BOX_XOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 9031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"XnorT\") {        return BAC_BOX_XNOR; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 9471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 10518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkNameId(pNtk) == NameId );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 54,
+        "ByteOffset": 10795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Vec_IntGetEntryFull(vMap, NameId) != -1 { printf( \"PI with name \\\"%s\\\" is not unique module \\\"%s\\\".\\n\", pName, pModuleName ); return 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 9,
+        "ByteOffset": 11617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vBox) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 11663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 58,
+        "ByteOffset": 12348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Vec_IntGetEntryFull(vMap, NameId) != -1 { printf( \"Signal \\\"%s\\\" has multiple drivers in module \\\"%s\\\".\\n\", pName, pModuleName ); return 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 12641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 17,
+        "ByteOffset": 13093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Signal \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 13,
+        "ByteOffset": 13487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"PO with name \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 13921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iObj == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 13947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk.vType) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 16582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 16883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vBoxes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 5,
+        "ByteOffset": 17185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vSigs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 17485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vSigs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 5,
+        "ByteOffset": 17904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 18146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot transform CBA network into Ptr because it is not mapped.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 18478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ptr_CheckArray(vDes) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ptr_HopToType",
+      "Start": 1361,
+      "End": 3147,
+      "BodyStart": 1402,
+      "Original": "char * Ptr_HopToType( Abc_Obj_t * pObj )\n{\n    static word uTruth, uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    assert( Abc_ObjIsNode(pObj) );\n    uTruth = Hop_ManComputeTruth6( (Hop_Man_t *)Abc_ObjNtk(pObj)-\u003epManFunc, (Hop_Obj_t *)pObj-\u003epData, Abc_ObjFaninNum(pObj) );\n/*\n    if ( uTruth ==  0 )                           return \"BAC_BOX_C0\";\n    if ( uTruth == ~(word)0 )                     return \"BAC_BOX_C1\";\n    if ( uTruth ==  uTruths6[0] )                 return \"BAC_BOX_BUF\";\n    if ( uTruth == ~uTruths6[0] )                 return \"BAC_BOX_INV\";\n    if ( uTruth == (uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_AND\";\n    if ( uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_NAND\";\n    if ( uTruth == (uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_OR\";\n    if ( uTruth ==~(uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_NOR\";\n    if ( uTruth == (uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XOR\";\n    if ( uTruth ==~(uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XNOR\";\n*/\n    if ( uTruth ==  0 )                           return \"Const0T\";\n    if ( uTruth == ~(word)0 )                     return \"Const1T\";\n    if ( uTruth ==  uTruths6[0] )                 return \"BufT\";\n    if ( uTruth == ~uTruths6[0] )                 return \"InvT\";\n    if ( uTruth == (uTruths6[0] \u0026 uTruths6[1]) )  return \"AndT\";\n    if ( uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) )  return \"NandT\";\n    if ( uTruth == (uTruths6[0] | uTruths6[1]) )  return \"OrT\";\n    if ( uTruth ==~(uTruths6[0] | uTruths6[1]) )  return \"NorT\";\n    if ( uTruth == (uTruths6[0] ^ uTruths6[1]) )  return \"XorT\";\n    if ( uTruth ==~(uTruths6[0] ^ uTruths6[1]) )  return \"XnorT\";\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Ptr_HopToType(pObj *Abc_Obj_t) string {\n    static word uTruth, uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    uTruth = Hop_ManComputeTruth6( (Hop_Man_t *)Abc_ObjNtk(pObj).pManFunc, (Hop_Obj_t *)pObj.pData, Abc_ObjFaninNum(pObj) );\n/*\n    if ( uTruth ==  0 )                           return \"BAC_BOX_C0\";\n    if ( uTruth == ~(word)0 )                     return \"BAC_BOX_C1\";\n    if ( uTruth ==  uTruths6[0] )                 return \"BAC_BOX_BUF\";\n    if ( uTruth == ~uTruths6[0] )                 return \"BAC_BOX_INV\";\n    if ( uTruth == (uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_AND\";\n    if ( uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_NAND\";\n    if ( uTruth == (uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_OR\";\n    if ( uTruth ==~(uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_NOR\";\n    if ( uTruth == (uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XOR\";\n    if ( uTruth ==~(uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XNOR\";\n*/\n    if uTruth ==  0 {                           return \"Const0T\"; }\n    if uTruth == ~(word)0 {                     return \"Const1T\"; }\n    if uTruth ==  uTruths6[0] {                 return \"BufT\"; }\n    if uTruth == ~uTruths6[0] {                 return \"InvT\"; }\n    if uTruth == (uTruths6[0] \u0026 uTruths6[1]) {  return \"AndT\"; }\n    if uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) {  return \"NandT\"; }\n    if uTruth == (uTruths6[0] | uTruths6[1]) {  return \"OrT\"; }\n    if uTruth ==~(uTruths6[0] | uTruths6[1]) {  return \"NorT\"; }\n    if uTruth == (uTruths6[0] ^ uTruths6[1]) {  return \"XorT\"; }\n    if uTruth ==~(uTruths6[0] ^ uTruths6[1]) {  return \"XnorT\"; }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Ptr_AbcObjName",
+      "Start": 3410,
+      "End": 3761,
+      "BodyStart": 3452,
+      "Original": "char * Ptr_AbcObjName( Abc_Obj_t * pObj )\n{\n    if ( Abc_ObjIsNet(pObj) || Abc_ObjIsBox(pObj) )\n        return Abc_ObjName(pObj);\n    if ( Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj) )\n        return Ptr_AbcObjName(Abc_ObjFanout0(pObj));\n    if ( Abc_ObjIsCo(pObj) )\n        return Ptr_AbcObjName(Abc_ObjFanin0(pObj));\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Ptr_AbcObjName(pObj *Abc_Obj_t) string {\n    if Abc_ObjIsNet(pObj) || Abc_ObjIsBox(pObj) {\n        return Abc_ObjName(pObj); }\n    if Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj) {\n        return Ptr_AbcObjName(Abc_ObjFanout0(pObj)); }\n    if Abc_ObjIsCo(pObj) {\n        return Ptr_AbcObjName(Abc_ObjFanin0(pObj)); }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Ptr_CheckArray",
+      "Start": 3762,
+      "End": 3884,
+      "BodyStart": 3810,
+      "Original": "static int Ptr_CheckArray( Vec_Ptr_t * vArray )\n{\n    assert( Vec_PtrSize(vArray) == Vec_PtrCap(vArray) );\n    return 1;\n}",
+      "Draft": "func Ptr_CheckArray(vArray *Vec_Ptr_t) int32 {\n    assert(Vec_PtrSize(vArray) == Vec_PtrCap(vArray), \"Vec_PtrSize(vArray) == Vec_PtrCap(vArray)\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveNode",
+      "Start": 3885,
+      "End": 4704,
+      "BodyStart": 3935,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveNode( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanin; int i;\n    Vec_Ptr_t * vNode = Vec_PtrAllocExact( 2 + 2 * (1 + Abc_ObjFaninNum(pObj)) );\n    assert( Abc_ObjIsNode(pObj) );\n    if ( Abc_NtkHasAig(pObj-\u003epNtk) )\n        Vec_PtrPush( vNode, Ptr_HopToType(pObj) );\n    else if ( Abc_NtkHasSop(pObj-\u003epNtk) )\n        Vec_PtrPush( vNode, Ptr_SopToTypeName((char *)pObj-\u003epData) );\n    else assert( 0 );\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert( Abc_ObjFaninNum(pObj) \u003c= 2 );\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        Vec_PtrPush( vNode, (void*)(i ? \"r\" : \"l\") );\n        Vec_PtrPush( vNode, Ptr_AbcObjName(pFanin) );\n    }\n    Vec_PtrPush( vNode, (void*)(\"o\") );\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert( Ptr_CheckArray(vNode) );\n    return vNode;\n}",
+      "Draft": "func Ptr_AbcDeriveNode(pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var pFanin *Abc_Obj_t; var i int32;\n    var vNode *Vec_Ptr_t  = Vec_PtrAllocExact( 2 + 2 * (1 + Abc_ObjFaninNum(pObj)) );\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    if Abc_NtkHasAig(pObj.pNtk) {\n        Vec_PtrPush( vNode, Ptr_HopToType(pObj) );\n    } else if Abc_NtkHasSop(pObj.pNtk) {\n        Vec_PtrPush( vNode, Ptr_SopToTypeName((char *)pObj.pData) );\n    } else { assert(false, \"0\"); }\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert(Abc_ObjFaninNum(pObj) \u003c= 2, \"Abc_ObjFaninNum(pObj) \u003c= 2\");\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        Vec_PtrPush( vNode, (void*)(i ? \"r\" : \"l\") );\n        Vec_PtrPush( vNode, Ptr_AbcObjName(pFanin) );\n    }\n    Vec_PtrPush( vNode, (void*)(\"o\") );\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vNode) != 0), \"Ptr_CheckArray(vNode)\");\n    return vNode;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveBox",
+      "Start": 4705,
+      "End": 5455,
+      "BodyStart": 4754,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveBox( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pNext; int i;\n    Abc_Ntk_t * pNtk = Abc_ObjModel(pObj);\n    Vec_Ptr_t * vBox = Vec_PtrAllocExact( 2 + 2 * Abc_ObjFaninNum(pObj) + 2 * Abc_ObjFanoutNum(pObj) );\n    assert( Abc_ObjIsBox(pObj) );\n    Vec_PtrPush( vBox, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vBox, Ptr_AbcObjName(pObj) );\n    Abc_ObjForEachFanin( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPi(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    Abc_ObjForEachFanout( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPo(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    assert( Ptr_CheckArray(vBox) );\n    return vBox;\n}",
+      "Draft": "func Ptr_AbcDeriveBox(pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var pNext *Abc_Obj_t; var i int32;\n    var pNtk *Abc_Ntk_t  = Abc_ObjModel(pObj);\n    var vBox *Vec_Ptr_t  = Vec_PtrAllocExact( 2 + 2 * Abc_ObjFaninNum(pObj) + 2 * Abc_ObjFanoutNum(pObj) );\n    assert(Abc_ObjIsBox(pObj), \"Abc_ObjIsBox(pObj)\");\n    Vec_PtrPush( vBox, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vBox, Ptr_AbcObjName(pObj) );\n    Abc_ObjForEachFanin( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPi(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    Abc_ObjForEachFanout( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPo(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    assert((Ptr_CheckArray(vBox) != 0), \"Ptr_CheckArray(vBox)\");\n    return vBox;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveBoxes",
+      "Start": 5456,
+      "End": 5876,
+      "BodyStart": 5507,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveBoxes( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj; int i;\n    Vec_Ptr_t * vBoxes = Vec_PtrAllocExact( Abc_NtkBoxNum(pNtk) + Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachBox( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveBox(pObj) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveNode(pObj) );\n    assert( Ptr_CheckArray(vBoxes) );\n    return vBoxes;\n}",
+      "Draft": "func Ptr_AbcDeriveBoxes(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vBoxes *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkBoxNum(pNtk) + Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachBox( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveBox(pObj) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveNode(pObj) );\n    assert((Ptr_CheckArray(vBoxes) != 0), \"Ptr_CheckArray(vBoxes)\");\n    return vBoxes;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveInputs",
+      "Start": 5878,
+      "End": 6172,
+      "BodyStart": 5930,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveInputs( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj; int i;\n    Vec_Ptr_t * vSigs = Vec_PtrAllocExact( Abc_NtkPiNum(pNtk) );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert( Ptr_CheckArray(vSigs) );\n    return vSigs;\n}",
+      "Draft": "func Ptr_AbcDeriveInputs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkPiNum(pNtk) );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveOutputs",
+      "Start": 6173,
+      "End": 6468,
+      "BodyStart": 6226,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveOutputs( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj; int i;\n    Vec_Ptr_t * vSigs = Vec_PtrAllocExact( Abc_NtkPoNum(pNtk) );\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert( Ptr_CheckArray(vSigs) );\n    return vSigs;\n}",
+      "Draft": "func Ptr_AbcDeriveOutputs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkPoNum(pNtk) );\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveNtk",
+      "Start": 6469,
+      "End": 6868,
+      "BodyStart": 6518,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveNtk( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNtk = Vec_PtrAllocExact( 5 );\n    Vec_PtrPush( vNtk, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveInputs(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveOutputs(pNtk) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveBoxes(pNtk) );\n    assert( Ptr_CheckArray(vNtk) );\n    return vNtk;\n}",
+      "Draft": "func Ptr_AbcDeriveNtk(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNtk *Vec_Ptr_t  = Vec_PtrAllocExact( 5 );\n    Vec_PtrPush( vNtk, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveInputs(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveOutputs(pNtk) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveBoxes(pNtk) );\n    assert((Ptr_CheckArray(vNtk) != 0), \"Ptr_CheckArray(vNtk)\");\n    return vNtk;\n}"
+    },
+    {
+      "Name": "Ptr_AbcDeriveDes",
+      "Start": 6869,
+      "End": 7275,
+      "BodyStart": 6918,
+      "Original": "Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vDes;\n    Abc_Ntk_t * pTemp; int i;\n    vDes = Vec_PtrAllocExact( 1 + Vec_PtrSize(pNtk-\u003epDesign-\u003evModules) );\n    Vec_PtrPush( vDes, pNtk-\u003epDesign-\u003epName );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pTemp, i )\n        Vec_PtrPush( vDes, Ptr_AbcDeriveNtk(pTemp) );\n    assert( Ptr_CheckArray(vDes) );\n    return vDes;\n}",
+      "Draft": "func Ptr_AbcDeriveDes(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vDes *Vec_Ptr_t;\n    var pTemp *Abc_Ntk_t; var i int32;\n    vDes = Vec_PtrAllocExact( 1 + Vec_PtrSize(pNtk.pDesign.vModules) );\n    Vec_PtrPush( vDes, pNtk.pDesign.pName );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        Vec_PtrPush( vDes, Ptr_AbcDeriveNtk(pTemp) );\n    assert((Ptr_CheckArray(vDes) != 0), \"Ptr_CheckArray(vDes)\");\n    return vDes;\n}"
+    },
+    {
+      "Name": "Ptr_ManExperiment",
+      "Start": 7511,
+      "End": 8048,
+      "BodyStart": 7554,
+      "Original": "void Ptr_ManExperiment( Abc_Ntk_t * pNtk )\n{\n    abctime clk = Abc_Clock();\n    char * pFileName = Extra_FileNameGenericAppend(pNtk-\u003epDesign-\u003epName, \"_out.blif\");\n    Vec_Ptr_t * vDes = Ptr_AbcDeriveDes( pNtk );\n    printf( \"Converting to Ptr:  Memory = %6.3f MB  \", 1.0*Bac_PtrMemory(vDes)/(1\u003c\u003c20) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrDumpBlif( pFileName, vDes );\n    printf( \"Finished writing output file \\\"%s\\\".  \", pFileName );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrFree( vDes );\n}",
+      "Draft": "func Ptr_ManExperiment(pNtk *Abc_Ntk_t) {\n    var clk abctime  = Abc_Clock();\n    var pFileName string  = Extra_FileNameGenericAppend(pNtk.pDesign.pName, \"_out.blif\");\n    var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pNtk );\n    fmt.Printf(\"Converting to Ptr:  Memory = %6.3f MB  \", 1.0*Bac_PtrMemory(vDes)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrDumpBlif( pFileName, vDes );\n    fmt.Printf(\"Finished writing output file \\\"%s\\\".  \", pFileName);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrFree( vDes );\n}"
+    },
+    {
+      "Name": "Ptr_NameToType",
+      "Start": 8319,
+      "End": 9003,
+      "BodyStart": 8367,
+      "Original": "static inline int Ptr_NameToType( char * pSop )\n{\n    if ( !strcmp(pSop, \"Const0T\") )      return BAC_BOX_CF;\n    if ( !strcmp(pSop, \"Const1T\") )      return BAC_BOX_CT;\n    if ( !strcmp(pSop, \"BufT\") )         return BAC_BOX_BUF;\n    if ( !strcmp(pSop, \"InvT\") )         return BAC_BOX_INV;\n    if ( !strcmp(pSop, \"AndT\") )         return BAC_BOX_AND;\n    if ( !strcmp(pSop, \"NandT\") )        return BAC_BOX_NAND;\n    if ( !strcmp(pSop, \"OrT\") )          return BAC_BOX_OR;\n    if ( !strcmp(pSop, \"NorT\") )         return BAC_BOX_NOR;\n    if ( !strcmp(pSop, \"XorT\") )         return BAC_BOX_XOR;\n    if ( !strcmp(pSop, \"XnorT\") )        return BAC_BOX_XNOR;\n    return BAC_OBJ_BOX;\n}",
+      "Draft": "func Ptr_NameToType(pSop string) int32 {\n    if !(int32(strings.Compare(pSop, \"Const0T\")) != 0) {      return BAC_BOX_CF; }\n    if !(int32(strings.Compare(pSop, \"Const1T\")) != 0) {      return BAC_BOX_CT; }\n    if !(int32(strings.Compare(pSop, \"BufT\")) != 0) {         return BAC_BOX_BUF; }\n    if !(int32(strings.Compare(pSop, \"InvT\")) != 0) {         return BAC_BOX_INV; }\n    if !(int32(strings.Compare(pSop, \"AndT\")) != 0) {         return BAC_BOX_AND; }\n    if !(int32(strings.Compare(pSop, \"NandT\")) != 0) {        return BAC_BOX_NAND; }\n    if !(int32(strings.Compare(pSop, \"OrT\")) != 0) {          return BAC_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"NorT\")) != 0) {         return BAC_BOX_NOR; }\n    if !(int32(strings.Compare(pSop, \"XorT\")) != 0) {         return BAC_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"XnorT\")) != 0) {        return BAC_BOX_XNOR; }\n    return BAC_OBJ_BOX;\n}"
+    },
+    {
+      "Name": "Ptr_ManCountNtk",
+      "Start": 9004,
+      "End": 9567,
+      "BodyStart": 9044,
+      "Original": "int Ptr_ManCountNtk( Vec_Ptr_t * vNtk )\n{\n    Vec_Ptr_t * vInputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    Vec_Ptr_t * vOutputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    Vec_Ptr_t * vNodes = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3);\n    Vec_Ptr_t * vBoxes = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    Vec_Ptr_t * vBox; int i, Counter = 0;\n    assert( Vec_PtrSize(vNodes) == 0 );\n    Counter += Vec_PtrSize(vInputs);\n    Counter += Vec_PtrSize(vOutputs);\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Counter += Vec_PtrSize(vBox)/2;\n    return Counter;\n}",
+      "Draft": "func Ptr_ManCountNtk(vNtk *Vec_Ptr_t) int32 {\n    var vInputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vNodes *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3);\n    var vBoxes *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vBox *Vec_Ptr_t; var i, Counter int32;\n    assert(Vec_PtrSize(vNodes) == 0, \"Vec_PtrSize(vNodes) == 0\");\n    Counter += Vec_PtrSize(vInputs);\n    Counter += Vec_PtrSize(vOutputs);\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Counter += Vec_PtrSize(vBox)/2;\n    return Counter;\n}"
+    },
+    {
+      "Name": "Bac_BoxCountOutputs",
+      "Start": 9568,
+      "End": 9806,
+      "BodyStart": 9628,
+      "Original": "int Bac_BoxCountOutputs( Bac_Ntk_t * pNtk, char * pBoxNtk )\n{\n    int ModuleId = Bac_ManNtkFindId( pNtk-\u003epDesign, pBoxNtk );\n    if ( ModuleId == 0 )\n        return 1;\n    return Bac_NtkPoNumAlloc( Bac_ManNtk(pNtk-\u003epDesign, ModuleId) );\n}",
+      "Draft": "func Bac_BoxCountOutputs(pNtk *Bac_Ntk_t, pBoxNtk string) int32 {\n    var ModuleId int32  = Bac_ManNtkFindId( pNtk.pDesign, pBoxNtk );\n    if ModuleId == 0 {\n        return 1; }\n    return Bac_NtkPoNumAlloc( Bac_ManNtk(pNtk.pDesign, ModuleId) );\n}"
+    },
+    {
+      "Name": "Bac_NtkDeriveFromPtr",
+      "Start": 9807,
+      "End": 13855,
+      "BodyStart": 9909,
+      "Original": "int Bac_NtkDeriveFromPtr( Bac_Ntk_t * pNtk, Vec_Ptr_t * vNtk, Vec_Int_t * vMap, Vec_Int_t * vBox2Id )\n{\n    char * pName, * pModuleName = (char *)Vec_PtrEntry(vNtk, 0);\n    Vec_Ptr_t * vInputs  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    Vec_Ptr_t * vOutputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    Vec_Ptr_t * vBoxes   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4), * vBox;\n    int i, k, iObj, iTerm, NameId;\n    // start network with the given name\n    NameId = Abc_NamStrFindOrAdd( pNtk-\u003epDesign-\u003epStrs, pModuleName, NULL );\n    assert( Bac_NtkNameId(pNtk) == NameId );\n    // map driven NameIds into their ObjIds for PIs\n    Vec_PtrForEachEntry( char *, vInputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk-\u003epDesign-\u003epStrs, pName, NULL );\n        if ( Vec_IntGetEntryFull(vMap, NameId) != -1 )\n            { printf( \"PI with name \\\"%s\\\" is not unique module \\\"%s\\\".\\n\", pName, pModuleName ); return 0; }\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntSetEntryFull( vMap, NameId, iObj );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 1), -1, -1 );\n    }\n    // map driven NameIds into their ObjIds for BOs\n    Vec_IntClear( vBox2Id );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        char * pBoxNtk = (char *)Vec_PtrEntry(vBox, 0);\n        char * pBoxName = (char *)Vec_PtrEntry(vBox, 1);\n        int nOutputs = Bac_BoxCountOutputs( pNtk, pBoxNtk );\n        int nInputs = Vec_PtrSize(vBox)/2 - nOutputs - 1;\n        int NtkId = Bac_ManNtkFindId( pNtk-\u003epDesign, pBoxNtk );\n        assert( Vec_PtrSize(vBox) % 2 == 0 );\n        assert( nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox) );\n        iObj = Bac_BoxAlloc( pNtk, (Bac_ObjType_t)Ptr_NameToType(pBoxNtk), nInputs, nOutputs, NtkId );\n        if ( NtkId \u003e 0 )\n            Bac_NtkSetHost( Bac_ManNtk(pNtk-\u003epDesign, NtkId), Bac_NtkId(pNtk), iObj );\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(Abc_NamStrFindOrAdd(pNtk-\u003epDesign-\u003epStrs, pBoxName, NULL), BAC_NAME_BIN) );\n        Bac_BoxForEachBo( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, Vec_PtrSize(vBox) - 2*(nOutputs - k) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk-\u003epDesign-\u003epStrs, pName, NULL );\n            if ( Vec_IntGetEntryFull(vMap, NameId) != -1 )\n                { printf( \"Signal \\\"%s\\\" has multiple drivers in module \\\"%s\\\".\\n\", pName, pModuleName ); return 0; }\n            Bac_ObjSetName( pNtk, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntSetEntryFull( vMap, NameId, iTerm );\n        }\n        Vec_IntPush( vBox2Id, iObj );\n    }\n    assert( Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes) );\n    // connect BIs\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        iObj = Vec_IntEntry( vBox2Id, i );\n        Bac_BoxForEachBi( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, 2*(k + 1) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk-\u003epDesign-\u003epStrs, pName, NULL );\n            if ( Vec_IntGetEntryFull(vMap, NameId) == -1 )\n                printf( \"Signal \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName );\n            Bac_ObjSetFanin( pNtk, iTerm, Vec_IntGetEntryFull(vMap, NameId) );\n        }\n    }\n    // connect POs\n    Vec_PtrForEachEntry( char *, vOutputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk-\u003epDesign-\u003epStrs, pName, NULL );\n        if ( Vec_IntGetEntryFull(vMap, NameId) == -1 )\n            printf( \"PO with name \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName );\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PO, Vec_IntGetEntryFull(vMap, NameId) );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 2), -1, -1 );\n    }\n    // update map\n    Bac_NtkForEachCi( pNtk, iObj )\n        Vec_IntSetEntryFull( vMap, Bac_ObjNameId(pNtk, iObj), -1 );\n    // double check\n    Vec_IntForEachEntry( vMap, iObj, i )\n        assert( iObj == -1 );\n    assert( Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk-\u003evType) );\n    return 1;\n}",
+      "Draft": "func Bac_NtkDeriveFromPtr(pNtk *Bac_Ntk_t, vNtk *Vec_Ptr_t, vMap *Vec_Int_t, vBox2Id *Vec_Int_t) int32 {\n    var pName string;\n    var pModuleName string = (char *)Vec_PtrEntry(vNtk, 0);\n    var vInputs *Vec_Ptr_t   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vBoxes *Vec_Ptr_t = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vBox *Vec_Ptr_t;\n    var i, k, iObj, iTerm, NameId int32;\n    // start network with the given name\n    NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pModuleName, nil );\n    assert(Bac_NtkNameId(pNtk) == NameId, \"Bac_NtkNameId(pNtk) == NameId\");\n    // map driven NameIds into their ObjIds for PIs\n    Vec_PtrForEachEntry( char *, vInputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n        if Vec_IntGetEntryFull(vMap, NameId) != -1 { fmt.Printf(\"PI with name \\\"%s\\\" is not unique module \\\"%s\\\".\\n\", pName, pModuleName); return 0; }\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntSetEntryFull( vMap, NameId, iObj );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 1), -1, -1 );\n    }\n    // map driven NameIds into their ObjIds for BOs\n    Vec_IntClear( vBox2Id );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        var pBoxNtk string  = (char *)Vec_PtrEntry(vBox, 0);\n        var pBoxName string  = (char *)Vec_PtrEntry(vBox, 1);\n        var nOutputs int32  = Bac_BoxCountOutputs( pNtk, pBoxNtk );\n        var nInputs int32  = Vec_PtrSize(vBox)/2 - nOutputs - 1;\n        var NtkId int32  = Bac_ManNtkFindId( pNtk.pDesign, pBoxNtk );\n        assert(Vec_PtrSize(vBox) % 2 == 0, \"Vec_PtrSize(vBox) % 2 == 0\");\n        assert(nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox), \"nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox)\");\n        iObj = Bac_BoxAlloc( pNtk, (Bac_ObjType_t)Ptr_NameToType(pBoxNtk), nInputs, nOutputs, NtkId );\n        if NtkId \u003e 0 {\n            Bac_NtkSetHost( Bac_ManNtk(pNtk.pDesign, NtkId), Bac_NtkId(pNtk), iObj ); }\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(Abc_NamStrFindOrAdd(pNtk.pDesign.pStrs, pBoxName, nil), BAC_NAME_BIN) );\n        Bac_BoxForEachBo( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, Vec_PtrSize(vBox) - 2*(nOutputs - k) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n            if Vec_IntGetEntryFull(vMap, NameId) != -1 { fmt.Printf(\"Signal \\\"%s\\\" has multiple drivers in module \\\"%s\\\".\\n\", pName, pModuleName); return 0; }\n            Bac_ObjSetName( pNtk, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntSetEntryFull( vMap, NameId, iTerm );\n        }\n        Vec_IntPush( vBox2Id, iObj );\n    }\n    assert(Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes), \"Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes)\");\n    // connect BIs\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        iObj = Vec_IntEntry( vBox2Id, i );\n        Bac_BoxForEachBi( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, 2*(k + 1) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n            if Vec_IntGetEntryFull(vMap, NameId) == -1 {\n                fmt.Printf(\"Signal \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName); }\n            Bac_ObjSetFanin( pNtk, iTerm, Vec_IntGetEntryFull(vMap, NameId) );\n        }\n    }\n    // connect POs\n    Vec_PtrForEachEntry( char *, vOutputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n        if Vec_IntGetEntryFull(vMap, NameId) == -1 {\n            fmt.Printf(\"PO with name \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName); }\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PO, Vec_IntGetEntryFull(vMap, NameId) );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 2), -1, -1 );\n    }\n    // update map\n    Bac_NtkForEachCi( pNtk, iObj )\n        Vec_IntSetEntryFull( vMap, Bac_ObjNameId(pNtk, iObj), -1 );\n    // double check\n    Vec_IntForEachEntry( vMap, iObj, i )\n        assert(iObj == -1, \"iObj == -1\");\n    assert(Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk.vType), \"Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk.vType)\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformToCba",
+      "Start": 13856,
+      "End": 15035,
+      "BodyStart": 13910,
+      "Original": "Bac_Man_t * Bac_PtrTransformToCba( Vec_Ptr_t * vDes )\n{\n    char * pName = (char *)Vec_PtrEntry(vDes, 0);\n    Bac_Man_t * pNew = Bac_ManAlloc( pName, Vec_PtrSize(vDes) - 1 );\n    Vec_Int_t * vMap = Vec_IntStartFull( 1000 );\n    Vec_Int_t * vBox2Id = Vec_IntAlloc( 1000 );\n    // create interfaces\n    Bac_Ntk_t * pNtk; int i;\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        Vec_Ptr_t * vNtk = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        Vec_Ptr_t * vInputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n        Vec_Ptr_t * vOutputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n        int NameId = Abc_NamStrFindOrAdd( pNew-\u003epStrs, (char *)Vec_PtrEntry(vNtk, 0), NULL );\n        Bac_NtkAlloc( pNtk, NameId, Vec_PtrSize(vInputs), Vec_PtrSize(vOutputs), Ptr_ManCountNtk(vNtk) );\n        Bac_NtkStartNames( pNtk );\n    }\n    // parse the networks\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        Vec_Ptr_t * vNtk = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        if ( !Bac_NtkDeriveFromPtr( pNtk, vNtk, vMap, vBox2Id ) )\n            break;\n    }\n    if ( i \u003c= Bac_ManNtkNum(pNew) )\n       Bac_ManFree(pNew), pNew = NULL;\n    Vec_IntFree( vBox2Id );\n    Vec_IntFree( vMap );\n    return pNew;\n}",
+      "Draft": "func Bac_PtrTransformToCba(vDes *Vec_Ptr_t) *Bac_Man_t {\n    var pName string  = (char *)Vec_PtrEntry(vDes, 0);\n    var pNew *Bac_Man_t  = Bac_ManAlloc( pName, Vec_PtrSize(vDes) - 1 );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( 1000 );\n    var vBox2Id *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    // create interfaces\n    var pNtk *Bac_Ntk_t; var i int32;\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        var vNtk *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        var vInputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n        var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n        var NameId int32  = Abc_NamStrFindOrAdd( pNew.pStrs, (char *)Vec_PtrEntry(vNtk, 0), nil );\n        Bac_NtkAlloc( pNtk, NameId, Vec_PtrSize(vInputs), Vec_PtrSize(vOutputs), Ptr_ManCountNtk(vNtk) );\n        Bac_NtkStartNames( pNtk );\n    }\n    // parse the networks\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        var vNtk *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        if !(Bac_NtkDeriveFromPtr( pNtk, vNtk, vMap, vBox2Id ) != 0) {\n            break; }\n    }\n    if i \u003c= Bac_ManNtkNum(pNew) {\n       Bac_ManFree(pNew);\npNew = nil; }\n    Vec_IntFree( vBox2Id );\n    Vec_IntFree( vMap );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bac_NtkTransformToPtrBox",
+      "Start": 15305,
+      "End": 16316,
+      "BodyStart": 15369,
+      "Original": "Vec_Ptr_t * Bac_NtkTransformToPtrBox( Bac_Ntk_t * p, int iBox )\n{\n    int i, iTerm, fUser = Bac_ObjIsBoxUser( p, iBox );\n    Bac_Ntk_t * pBoxNtk = Bac_BoxNtk( p, iBox );\n    Mio_Library_t * pLib = (Mio_Library_t *)p-\u003epDesign-\u003epMioLib;\n    Mio_Gate_t * pGate = pLib ? Mio_LibraryReadGateByName( pLib, Bac_BoxNtkName(p, iBox), NULL ) : NULL;\n    Vec_Ptr_t * vBox = Vec_PtrAllocExact( 2*Bac_BoxSize(p, iBox) );\n    Vec_PtrPush( vBox, Bac_BoxNtkName(p, iBox) );\n    Vec_PtrPush( vBox, Bac_ObjNameStr(p, iBox) );\n    Bac_BoxForEachBi( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPi(pBoxNtk, i)) : Mio_GateReadPinName(pGate, i) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    Bac_BoxForEachBo( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPo(pBoxNtk, i)) : Mio_GateReadOutName(pGate) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    assert( Ptr_CheckArray(vBox) );\n    return vBox;\n}",
+      "Draft": "func Bac_NtkTransformToPtrBox(p *Bac_Ntk_t, iBox int32) *Vec_Ptr_t {\n    var i int32;\n    var iTerm int32;\n    var fUser int32 = Bac_ObjIsBoxUser( p, iBox );\n    var pBoxNtk *Bac_Ntk_t  = Bac_BoxNtk( p, iBox );\n    var pLib *Mio_Library_t  = (Mio_Library_t *)p.pDesign.pMioLib;\n    var pGate *Mio_Gate_t;\n    if pLib != nil {\n        pGate = Mio_LibraryReadGateByName( pLib, Bac_BoxNtkName(p, iBox), nil );\n    } else {\n        pGate = nil;\n    }\n    var vBox *Vec_Ptr_t  = Vec_PtrAllocExact( 2*Bac_BoxSize(p, iBox) );\n    Vec_PtrPush( vBox, Bac_BoxNtkName(p, iBox) );\n    Vec_PtrPush( vBox, Bac_ObjNameStr(p, iBox) );\n    Bac_BoxForEachBi( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPi(pBoxNtk, i)) : Mio_GateReadPinName(pGate, i) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    Bac_BoxForEachBo( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPo(pBoxNtk, i)) : Mio_GateReadOutName(pGate) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    assert((Ptr_CheckArray(vBox) != 0), \"Ptr_CheckArray(vBox)\");\n    return vBox;\n}"
+    },
+    {
+      "Name": "Bac_NtkTransformToPtrBoxes",
+      "Start": 16317,
+      "End": 16610,
+      "BodyStart": 16373,
+      "Original": "Vec_Ptr_t * Bac_NtkTransformToPtrBoxes( Bac_Ntk_t * p )\n{\n    int iBox;\n    Vec_Ptr_t * vBoxes = Vec_PtrAllocExact( Bac_NtkBoxNum(p) );\n    Bac_NtkForEachBox( p, iBox )\n        Vec_PtrPush( vBoxes, Bac_NtkTransformToPtrBox(p, iBox) );\n    assert( Ptr_CheckArray(vBoxes) );\n    return vBoxes;\n}",
+      "Draft": "func Bac_NtkTransformToPtrBoxes(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var iBox int32;\n    var vBoxes *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkBoxNum(p) );\n    Bac_NtkForEachBox( p, iBox )\n        Vec_PtrPush( vBoxes, Bac_NtkTransformToPtrBox(p, iBox) );\n    assert((Ptr_CheckArray(vBoxes) != 0), \"Ptr_CheckArray(vBoxes)\");\n    return vBoxes;\n}"
+    },
+    {
+      "Name": "Bac_NtkTransformToPtrInputs",
+      "Start": 16612,
+      "End": 16899,
+      "BodyStart": 16669,
+      "Original": "Vec_Ptr_t * Bac_NtkTransformToPtrInputs( Bac_Ntk_t * p )\n{\n    int i, iTerm;\n    Vec_Ptr_t * vSigs = Vec_PtrAllocExact( Bac_NtkPiNum(p) );\n    Bac_NtkForEachPi( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert( Ptr_CheckArray(vSigs) );\n    return vSigs;\n}",
+      "Draft": "func Bac_NtkTransformToPtrInputs(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var i, iTerm int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkPiNum(p) );\n    Bac_NtkForEachPi( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}"
+    },
+    {
+      "Name": "Bac_NtkTransformToPtrOutputs",
+      "Start": 16900,
+      "End": 17188,
+      "BodyStart": 16958,
+      "Original": "Vec_Ptr_t * Bac_NtkTransformToPtrOutputs( Bac_Ntk_t * p )\n{\n    int i, iTerm;\n    Vec_Ptr_t * vSigs = Vec_PtrAllocExact( Bac_NtkPoNum(p) );\n    Bac_NtkForEachPo( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert( Ptr_CheckArray(vSigs) );\n    return vSigs;\n}",
+      "Draft": "func Bac_NtkTransformToPtrOutputs(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var i, iTerm int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkPoNum(p) );\n    Bac_NtkForEachPo( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}"
+    },
+    {
+      "Name": "Bac_NtkTransformToPtr",
+      "Start": 17189,
+      "End": 17600,
+      "BodyStart": 17240,
+      "Original": "Vec_Ptr_t * Bac_NtkTransformToPtr( Bac_Ntk_t * p )\n{\n    Vec_Ptr_t * vNtk = Vec_PtrAllocExact(5);\n    Vec_PtrPush( vNtk, Bac_NtkName(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrInputs(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrOutputs(p) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrBoxes(p) );\n    assert( Ptr_CheckArray(vNtk) );\n    return vNtk;\n}",
+      "Draft": "func Bac_NtkTransformToPtr(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var vNtk *Vec_Ptr_t  = Vec_PtrAllocExact(5);\n    Vec_PtrPush( vNtk, Bac_NtkName(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrInputs(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrOutputs(p) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrBoxes(p) );\n    assert((Ptr_CheckArray(vNtk) != 0), \"Ptr_CheckArray(vNtk)\");\n    return vNtk;\n}"
+    },
+    {
+      "Name": "Bac_PtrDeriveFromCba",
+      "Start": 17601,
+      "End": 18175,
+      "BodyStart": 17651,
+      "Original": "Vec_Ptr_t * Bac_PtrDeriveFromCba( Bac_Man_t * p )\n{\n    Vec_Ptr_t * vDes;\n    Bac_Ntk_t * pTemp; int i;\n    if ( p == NULL )\n        return NULL;\n    if ( p-\u003epMioLib == NULL )\n    {\n        printf( \"Cannot transform CBA network into Ptr because it is not mapped.\\n\" );\n        return NULL;\n    }\n    Bac_ManAssignInternWordNames( p );\n    vDes = Vec_PtrAllocExact( 1 + Bac_ManNtkNum(p) );\n    Vec_PtrPush( vDes, p-\u003epName );\n    Bac_ManForEachNtk( p, pTemp, i )\n        Vec_PtrPush( vDes, Bac_NtkTransformToPtr(pTemp) );\n    assert( Ptr_CheckArray(vDes) );\n    return vDes;\n}",
+      "Draft": "func Bac_PtrDeriveFromCba(p *Bac_Man_t) *Vec_Ptr_t {\n    var vDes *Vec_Ptr_t;\n    var pTemp *Bac_Ntk_t; var i int32;\n    if p == nil {\n        return nil; }\n    if p.pMioLib == nil {\n        fmt.Printf(\"Cannot transform CBA network into Ptr because it is not mapped.\\n\");\n        return nil;\n    }\n    Bac_ManAssignInternWordNames( p );\n    vDes = Vec_PtrAllocExact( 1 + Bac_ManNtkNum(p) );\n    Vec_PtrPush( vDes, p.pName );\n    Bac_ManForEachNtk( p, pTemp, i )\n        Vec_PtrPush( vDes, Bac_NtkTransformToPtr(pTemp) );\n    assert((Ptr_CheckArray(vDes) != 0), \"Ptr_CheckArray(vDes)\");\n    return vDes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::mechanical::static::1408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1408,
+      "End": 1414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::1638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1638,
+      "End": 1651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::1679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1679,
+      "End": 1692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::4261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4261,
+      "End": 4269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::4474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4474,
+      "End": 4481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::4584",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4584,
+      "End": 4591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::9072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9072,
+      "End": 9085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::9135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9135,
+      "End": 9148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::9196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9196,
+      "End": 9209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::9257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9257,
+      "End": 9270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::9945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9945,
+      "End": 9953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::10003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10003,
+      "End": 10016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::10066",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10066,
+      "End": 10079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::10129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10129,
+      "End": 10142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::11139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11139,
+      "End": 11147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::11196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11196,
+      "End": 11204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::11948",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11948,
+      "End": 11956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::12727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12727,
+      "End": 12735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::13931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13931,
+      "End": 13939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::14254",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14254,
+      "End": 14267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::14320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14320,
+      "End": 14333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::14387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14387,
+      "End": 14400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::14478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14478,
+      "End": 14486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::14762",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14762,
+      "End": 14775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::pointer-cast::15502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15502,
+      "End": 15519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_HopToType",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_HopToType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1361,
+      "End": 3147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcObjName",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcObjName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3410,
+      "End": 3761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_CheckArray",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_CheckArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3762,
+      "End": 3884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::ternary::Ptr_AbcDeriveNode",
+      "Category": "ternary-review",
+      "Symbol": "Ptr_AbcDeriveNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3885,
+      "End": 4704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveNode",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3885,
+      "End": 4704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveBox",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4705,
+      "End": 5455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5456,
+      "End": 5876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveInputs",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5878,
+      "End": 6172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6173,
+      "End": 6468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveNtk",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6469,
+      "End": 6868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_AbcDeriveDes",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_AbcDeriveDes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6869,
+      "End": 7275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_ManExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_ManExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7511,
+      "End": 8048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_NameToType",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_NameToType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8319,
+      "End": 9003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Ptr_ManCountNtk",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_ManCountNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9004,
+      "End": 9567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_BoxCountOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_BoxCountOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9568,
+      "End": 9806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkDeriveFromPtr",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDeriveFromPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9807,
+      "End": 13855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_PtrTransformToCba",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformToCba",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13856,
+      "End": 15035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::ternary::Bac_NtkTransformToPtrBox",
+      "Category": "ternary-review",
+      "Symbol": "Bac_NtkTransformToPtrBox",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15305,
+      "End": 16316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkTransformToPtrBox",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkTransformToPtrBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15305,
+      "End": 16316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkTransformToPtrBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkTransformToPtrBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16317,
+      "End": 16610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkTransformToPtrInputs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkTransformToPtrInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16612,
+      "End": 16899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkTransformToPtrOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkTransformToPtrOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16900,
+      "End": 17188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_NtkTransformToPtr",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkTransformToPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17189,
+      "End": 17600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::Bac_PtrDeriveFromCba",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDeriveFromCba",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17601,
+      "End": 18175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::1452",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1452,
+      "End": 1481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::1491",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1491,
+      "End": 1520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::1530",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1530,
+      "End": 1559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::4401",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4401,
+      "End": 4439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::5062",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5062,
+      "End": 5099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::5233",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5233,
+      "End": 5271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::5632",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5632,
+      "End": 5666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::5726",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5726,
+      "End": 5761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::6030",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6030,
+      "End": 6063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::6326",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6326,
+      "End": 6359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::7097",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7097,
+      "End": 7166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::9454",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9454,
+      "End": 9505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::10427",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10427,
+      "End": 10475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::11056",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11056,
+      "End": 11107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::11877",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11877,
+      "End": 11917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::12547",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12547,
+      "End": 12598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::12656",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12656,
+      "End": 12696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::13125",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13125,
+      "End": 13174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::13587",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13587,
+      "End": 13617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::13710",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13710,
+      "End": 13746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::14186",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14186,
+      "End": 14220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::14694",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14694,
+      "End": 14728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::15817",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15817,
+      "End": 15854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::16043",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16043,
+      "End": 16080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::16457",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16457,
+      "End": 16485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::16755",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16755,
+      "End": 16786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::17044",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17044,
+      "End": 17075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtrAbc.c::macro-inline::18029",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18029,
+      "End": 18061
+    }
+  ],
+  "Draft": "package bac\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bacPtrAbc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Simple interface with external tools.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacPtrAbc.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"base/abc/abc.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Node type conversions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ptr_HopToType(pObj *Abc_Obj_t) string {\n    static word uTruth, uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    uTruth = Hop_ManComputeTruth6( (Hop_Man_t *)Abc_ObjNtk(pObj).pManFunc, (Hop_Obj_t *)pObj.pData, Abc_ObjFaninNum(pObj) );\n/*\n    if ( uTruth ==  0 )                           return \"BAC_BOX_C0\";\n    if ( uTruth == ~(word)0 )                     return \"BAC_BOX_C1\";\n    if ( uTruth ==  uTruths6[0] )                 return \"BAC_BOX_BUF\";\n    if ( uTruth == ~uTruths6[0] )                 return \"BAC_BOX_INV\";\n    if ( uTruth == (uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_AND\";\n    if ( uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) )  return \"BAC_BOX_NAND\";\n    if ( uTruth == (uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_OR\";\n    if ( uTruth ==~(uTruths6[0] | uTruths6[1]) )  return \"BAC_BOX_NOR\";\n    if ( uTruth == (uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XOR\";\n    if ( uTruth ==~(uTruths6[0] ^ uTruths6[1]) )  return \"BAC_BOX_XNOR\";\n*/\n    if uTruth ==  0 {                           return \"Const0T\"; }\n    if uTruth == ~(word)0 {                     return \"Const1T\"; }\n    if uTruth ==  uTruths6[0] {                 return \"BufT\"; }\n    if uTruth == ~uTruths6[0] {                 return \"InvT\"; }\n    if uTruth == (uTruths6[0] \u0026 uTruths6[1]) {  return \"AndT\"; }\n    if uTruth ==~(uTruths6[0] \u0026 uTruths6[1]) {  return \"NandT\"; }\n    if uTruth == (uTruths6[0] | uTruths6[1]) {  return \"OrT\"; }\n    if uTruth ==~(uTruths6[0] | uTruths6[1]) {  return \"NorT\"; }\n    if uTruth == (uTruths6[0] ^ uTruths6[1]) {  return \"XorT\"; }\n    if uTruth ==~(uTruths6[0] ^ uTruths6[1]) {  return \"XnorT\"; }\n    assert(false, \"0\");\n    return nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create Ptr from Abc_Ntk_t.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ptr_AbcObjName(pObj *Abc_Obj_t) string {\n    if Abc_ObjIsNet(pObj) || Abc_ObjIsBox(pObj) {\n        return Abc_ObjName(pObj); }\n    if Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj) {\n        return Ptr_AbcObjName(Abc_ObjFanout0(pObj)); }\n    if Abc_ObjIsCo(pObj) {\n        return Ptr_AbcObjName(Abc_ObjFanin0(pObj)); }\n    assert(false, \"0\");\n    return nil;\n}\nfunc Ptr_CheckArray(vArray *Vec_Ptr_t) int32 {\n    assert(Vec_PtrSize(vArray) == Vec_PtrCap(vArray), \"Vec_PtrSize(vArray) == Vec_PtrCap(vArray)\");\n    return 1;\n}\nfunc Ptr_AbcDeriveNode(pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var pFanin *Abc_Obj_t; var i int32;\n    var vNode *Vec_Ptr_t  = Vec_PtrAllocExact( 2 + 2 * (1 + Abc_ObjFaninNum(pObj)) );\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    if Abc_NtkHasAig(pObj.pNtk) {\n        Vec_PtrPush( vNode, Ptr_HopToType(pObj) );\n    } else if Abc_NtkHasSop(pObj.pNtk) {\n        Vec_PtrPush( vNode, Ptr_SopToTypeName((char *)pObj.pData) );\n    } else { assert(false, \"0\"); }\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert(Abc_ObjFaninNum(pObj) \u003c= 2, \"Abc_ObjFaninNum(pObj) \u003c= 2\");\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        Vec_PtrPush( vNode, (void*)(i ? \"r\" : \"l\") );\n        Vec_PtrPush( vNode, Ptr_AbcObjName(pFanin) );\n    }\n    Vec_PtrPush( vNode, (void*)(\"o\") );\n    Vec_PtrPush( vNode, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vNode) != 0), \"Ptr_CheckArray(vNode)\");\n    return vNode;\n}\nfunc Ptr_AbcDeriveBox(pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var pNext *Abc_Obj_t; var i int32;\n    var pNtk *Abc_Ntk_t  = Abc_ObjModel(pObj);\n    var vBox *Vec_Ptr_t  = Vec_PtrAllocExact( 2 + 2 * Abc_ObjFaninNum(pObj) + 2 * Abc_ObjFanoutNum(pObj) );\n    assert(Abc_ObjIsBox(pObj), \"Abc_ObjIsBox(pObj)\");\n    Vec_PtrPush( vBox, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vBox, Ptr_AbcObjName(pObj) );\n    Abc_ObjForEachFanin( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPi(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    Abc_ObjForEachFanout( pObj, pNext, i )\n    {\n        Vec_PtrPush( vBox, Ptr_AbcObjName(Abc_NtkPo(pNtk, i)) );\n        Vec_PtrPush( vBox, Ptr_AbcObjName(pNext) );\n    }\n    assert((Ptr_CheckArray(vBox) != 0), \"Ptr_CheckArray(vBox)\");\n    return vBox;\n}\nfunc Ptr_AbcDeriveBoxes(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vBoxes *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkBoxNum(pNtk) + Abc_NtkNodeNum(pNtk) );\n    Abc_NtkForEachBox( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveBox(pObj) );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Vec_PtrPush( vBoxes, Ptr_AbcDeriveNode(pObj) );\n    assert((Ptr_CheckArray(vBoxes) != 0), \"Ptr_CheckArray(vBoxes)\");\n    return vBoxes;\n}\n\nfunc Ptr_AbcDeriveInputs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkPiNum(pNtk) );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}\nfunc Ptr_AbcDeriveOutputs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t; var i int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Abc_NtkPoNum(pNtk) );\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Vec_PtrPush( vSigs, Ptr_AbcObjName(pObj) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}\nfunc Ptr_AbcDeriveNtk(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vNtk *Vec_Ptr_t  = Vec_PtrAllocExact( 5 );\n    Vec_PtrPush( vNtk, Abc_NtkName(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveInputs(pNtk) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveOutputs(pNtk) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Ptr_AbcDeriveBoxes(pNtk) );\n    assert((Ptr_CheckArray(vNtk) != 0), \"Ptr_CheckArray(vNtk)\");\n    return vNtk;\n}\nfunc Ptr_AbcDeriveDes(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var vDes *Vec_Ptr_t;\n    var pTemp *Abc_Ntk_t; var i int32;\n    vDes = Vec_PtrAllocExact( 1 + Vec_PtrSize(pNtk.pDesign.vModules) );\n    Vec_PtrPush( vDes, pNtk.pDesign.pName );\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        Vec_PtrPush( vDes, Ptr_AbcDeriveNtk(pTemp) );\n    assert((Ptr_CheckArray(vDes) != 0), \"Ptr_CheckArray(vDes)\");\n    return vDes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ptr_ManExperiment(pNtk *Abc_Ntk_t) {\n    var clk abctime  = Abc_Clock();\n    var pFileName string  = Extra_FileNameGenericAppend(pNtk.pDesign.pName, \"_out.blif\");\n    var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pNtk );\n    fmt.Printf(\"Converting to Ptr:  Memory = %6.3f MB  \", 1.0*Bac_PtrMemory(vDes)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrDumpBlif( pFileName, vDes );\n    fmt.Printf(\"Finished writing output file \\\"%s\\\".  \", pFileName);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Bac_PtrFree( vDes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create Bac_Man_t from tech-ind Ptr.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ptr_NameToType(pSop string) int32 {\n    if !(int32(strings.Compare(pSop, \"Const0T\")) != 0) {      return BAC_BOX_CF; }\n    if !(int32(strings.Compare(pSop, \"Const1T\")) != 0) {      return BAC_BOX_CT; }\n    if !(int32(strings.Compare(pSop, \"BufT\")) != 0) {         return BAC_BOX_BUF; }\n    if !(int32(strings.Compare(pSop, \"InvT\")) != 0) {         return BAC_BOX_INV; }\n    if !(int32(strings.Compare(pSop, \"AndT\")) != 0) {         return BAC_BOX_AND; }\n    if !(int32(strings.Compare(pSop, \"NandT\")) != 0) {        return BAC_BOX_NAND; }\n    if !(int32(strings.Compare(pSop, \"OrT\")) != 0) {          return BAC_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"NorT\")) != 0) {         return BAC_BOX_NOR; }\n    if !(int32(strings.Compare(pSop, \"XorT\")) != 0) {         return BAC_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"XnorT\")) != 0) {        return BAC_BOX_XNOR; }\n    return BAC_OBJ_BOX;\n}\nfunc Ptr_ManCountNtk(vNtk *Vec_Ptr_t) int32 {\n    var vInputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vNodes *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3);\n    var vBoxes *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vBox *Vec_Ptr_t; var i, Counter int32;\n    assert(Vec_PtrSize(vNodes) == 0, \"Vec_PtrSize(vNodes) == 0\");\n    Counter += Vec_PtrSize(vInputs);\n    Counter += Vec_PtrSize(vOutputs);\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Counter += Vec_PtrSize(vBox)/2;\n    return Counter;\n}\nfunc Bac_BoxCountOutputs(pNtk *Bac_Ntk_t, pBoxNtk string) int32 {\n    var ModuleId int32  = Bac_ManNtkFindId( pNtk.pDesign, pBoxNtk );\n    if ModuleId == 0 {\n        return 1; }\n    return Bac_NtkPoNumAlloc( Bac_ManNtk(pNtk.pDesign, ModuleId) );\n}\nfunc Bac_NtkDeriveFromPtr(pNtk *Bac_Ntk_t, vNtk *Vec_Ptr_t, vMap *Vec_Int_t, vBox2Id *Vec_Int_t) int32 {\n    var pName string;\n    var pModuleName string = (char *)Vec_PtrEntry(vNtk, 0);\n    var vInputs *Vec_Ptr_t   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vBoxes *Vec_Ptr_t = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vBox *Vec_Ptr_t;\n    var i, k, iObj, iTerm, NameId int32;\n    // start network with the given name\n    NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pModuleName, nil );\n    assert(Bac_NtkNameId(pNtk) == NameId, \"Bac_NtkNameId(pNtk) == NameId\");\n    // map driven NameIds into their ObjIds for PIs\n    Vec_PtrForEachEntry( char *, vInputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n        if Vec_IntGetEntryFull(vMap, NameId) != -1 { fmt.Printf(\"PI with name \\\"%s\\\" is not unique module \\\"%s\\\".\\n\", pName, pModuleName); return 0; }\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PI, -1 );\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n        Vec_IntSetEntryFull( vMap, NameId, iObj );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 1), -1, -1 );\n    }\n    // map driven NameIds into their ObjIds for BOs\n    Vec_IntClear( vBox2Id );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        var pBoxNtk string  = (char *)Vec_PtrEntry(vBox, 0);\n        var pBoxName string  = (char *)Vec_PtrEntry(vBox, 1);\n        var nOutputs int32  = Bac_BoxCountOutputs( pNtk, pBoxNtk );\n        var nInputs int32  = Vec_PtrSize(vBox)/2 - nOutputs - 1;\n        var NtkId int32  = Bac_ManNtkFindId( pNtk.pDesign, pBoxNtk );\n        assert(Vec_PtrSize(vBox) % 2 == 0, \"Vec_PtrSize(vBox) % 2 == 0\");\n        assert(nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox), \"nOutputs \u003e 0 \u0026\u0026 2*(nOutputs + 1) \u003c= Vec_PtrSize(vBox)\");\n        iObj = Bac_BoxAlloc( pNtk, (Bac_ObjType_t)Ptr_NameToType(pBoxNtk), nInputs, nOutputs, NtkId );\n        if NtkId \u003e 0 {\n            Bac_NtkSetHost( Bac_ManNtk(pNtk.pDesign, NtkId), Bac_NtkId(pNtk), iObj ); }\n        Bac_ObjSetName( pNtk, iObj, Abc_Var2Lit2(Abc_NamStrFindOrAdd(pNtk.pDesign.pStrs, pBoxName, nil), BAC_NAME_BIN) );\n        Bac_BoxForEachBo( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, Vec_PtrSize(vBox) - 2*(nOutputs - k) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n            if Vec_IntGetEntryFull(vMap, NameId) != -1 { fmt.Printf(\"Signal \\\"%s\\\" has multiple drivers in module \\\"%s\\\".\\n\", pName, pModuleName); return 0; }\n            Bac_ObjSetName( pNtk, iTerm, Abc_Var2Lit2(NameId, BAC_NAME_BIN) );\n            Vec_IntSetEntryFull( vMap, NameId, iTerm );\n        }\n        Vec_IntPush( vBox2Id, iObj );\n    }\n    assert(Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes), \"Vec_IntSize(vBox2Id) == Vec_PtrSize(vBoxes)\");\n    // connect BIs\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n    {\n        iObj = Vec_IntEntry( vBox2Id, i );\n        Bac_BoxForEachBi( pNtk, iObj, iTerm, k )\n        {\n            pName = (char *)Vec_PtrEntry( vBox, 2*(k + 1) + 1 );\n            NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n            if Vec_IntGetEntryFull(vMap, NameId) == -1 {\n                fmt.Printf(\"Signal \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName); }\n            Bac_ObjSetFanin( pNtk, iTerm, Vec_IntGetEntryFull(vMap, NameId) );\n        }\n    }\n    // connect POs\n    Vec_PtrForEachEntry( char *, vOutputs, pName, i )\n    {\n        NameId = Abc_NamStrFindOrAdd( pNtk.pDesign.pStrs, pName, nil );\n        if Vec_IntGetEntryFull(vMap, NameId) == -1 {\n            fmt.Printf(\"PO with name \\\"%s\\\" in not driven in module \\\"%s\\\".\\n\", pName, pModuleName); }\n        iObj = Bac_ObjAlloc( pNtk, BAC_OBJ_PO, Vec_IntGetEntryFull(vMap, NameId) );\n        Bac_NtkAddInfo( pNtk, Abc_Var2Lit2(NameId, 2), -1, -1 );\n    }\n    // update map\n    Bac_NtkForEachCi( pNtk, iObj )\n        Vec_IntSetEntryFull( vMap, Bac_ObjNameId(pNtk, iObj), -1 );\n    // double check\n    Vec_IntForEachEntry( vMap, iObj, i )\n        assert(iObj == -1, \"iObj == -1\");\n    assert(Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk.vType), \"Bac_NtkObjNum(pNtk) == Vec_StrCap(\u0026pNtk.vType)\");\n    return 1;\n}\nfunc Bac_PtrTransformToCba(vDes *Vec_Ptr_t) *Bac_Man_t {\n    var pName string  = (char *)Vec_PtrEntry(vDes, 0);\n    var pNew *Bac_Man_t  = Bac_ManAlloc( pName, Vec_PtrSize(vDes) - 1 );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( 1000 );\n    var vBox2Id *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    // create interfaces\n    var pNtk *Bac_Ntk_t; var i int32;\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        var vNtk *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        var vInputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n        var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n        var NameId int32  = Abc_NamStrFindOrAdd( pNew.pStrs, (char *)Vec_PtrEntry(vNtk, 0), nil );\n        Bac_NtkAlloc( pNtk, NameId, Vec_PtrSize(vInputs), Vec_PtrSize(vOutputs), Ptr_ManCountNtk(vNtk) );\n        Bac_NtkStartNames( pNtk );\n    }\n    // parse the networks\n    Bac_ManForEachNtk( pNew, pNtk, i )\n    {\n        var vNtk *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vDes, i);\n        if !(Bac_NtkDeriveFromPtr( pNtk, vNtk, vMap, vBox2Id ) != 0) {\n            break; }\n    }\n    if i \u003c= Bac_ManNtkNum(pNew) {\n       Bac_ManFree(pNew);\npNew = nil; }\n    Vec_IntFree( vBox2Id );\n    Vec_IntFree( vMap );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create Ptr from mapped Bac_Man_t.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkTransformToPtrBox(p *Bac_Ntk_t, iBox int32) *Vec_Ptr_t {\n    var i int32;\n    var iTerm int32;\n    var fUser int32 = Bac_ObjIsBoxUser( p, iBox );\n    var pBoxNtk *Bac_Ntk_t  = Bac_BoxNtk( p, iBox );\n    var pLib *Mio_Library_t  = (Mio_Library_t *)p.pDesign.pMioLib;\n    var pGate *Mio_Gate_t;\n    if pLib != nil {\n        pGate = Mio_LibraryReadGateByName( pLib, Bac_BoxNtkName(p, iBox), nil );\n    } else {\n        pGate = nil;\n    }\n    var vBox *Vec_Ptr_t  = Vec_PtrAllocExact( 2*Bac_BoxSize(p, iBox) );\n    Vec_PtrPush( vBox, Bac_BoxNtkName(p, iBox) );\n    Vec_PtrPush( vBox, Bac_ObjNameStr(p, iBox) );\n    Bac_BoxForEachBi( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPi(pBoxNtk, i)) : Mio_GateReadPinName(pGate, i) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    Bac_BoxForEachBo( p, iBox, iTerm, i )\n    {\n        Vec_PtrPush( vBox, fUser ? Bac_ObjNameStr(pBoxNtk, Bac_NtkPo(pBoxNtk, i)) : Mio_GateReadOutName(pGate) );\n        Vec_PtrPush( vBox, Bac_ObjNameStr(p, iTerm) );\n    }\n    assert((Ptr_CheckArray(vBox) != 0), \"Ptr_CheckArray(vBox)\");\n    return vBox;\n}\nfunc Bac_NtkTransformToPtrBoxes(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var iBox int32;\n    var vBoxes *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkBoxNum(p) );\n    Bac_NtkForEachBox( p, iBox )\n        Vec_PtrPush( vBoxes, Bac_NtkTransformToPtrBox(p, iBox) );\n    assert((Ptr_CheckArray(vBoxes) != 0), \"Ptr_CheckArray(vBoxes)\");\n    return vBoxes;\n}\n\nfunc Bac_NtkTransformToPtrInputs(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var i, iTerm int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkPiNum(p) );\n    Bac_NtkForEachPi( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}\nfunc Bac_NtkTransformToPtrOutputs(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var i, iTerm int32;\n    var vSigs *Vec_Ptr_t  = Vec_PtrAllocExact( Bac_NtkPoNum(p) );\n    Bac_NtkForEachPo( p, iTerm, i )\n        Vec_PtrPush( vSigs, Bac_ObjNameStr(p, iTerm) );\n    assert((Ptr_CheckArray(vSigs) != 0), \"Ptr_CheckArray(vSigs)\");\n    return vSigs;\n}\nfunc Bac_NtkTransformToPtr(p *Bac_Ntk_t) *Vec_Ptr_t {\n    var vNtk *Vec_Ptr_t  = Vec_PtrAllocExact(5);\n    Vec_PtrPush( vNtk, Bac_NtkName(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrInputs(p) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrOutputs(p) );\n    Vec_PtrPush( vNtk, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNtk, Bac_NtkTransformToPtrBoxes(p) );\n    assert((Ptr_CheckArray(vNtk) != 0), \"Ptr_CheckArray(vNtk)\");\n    return vNtk;\n}\nfunc Bac_PtrDeriveFromCba(p *Bac_Man_t) *Vec_Ptr_t {\n    var vDes *Vec_Ptr_t;\n    var pTemp *Bac_Ntk_t; var i int32;\n    if p == nil {\n        return nil; }\n    if p.pMioLib == nil {\n        fmt.Printf(\"Cannot transform CBA network into Ptr because it is not mapped.\\n\");\n        return nil;\n    }\n    Bac_ManAssignInternWordNames( p );\n    vDes = Vec_PtrAllocExact( 1 + Bac_ManNtkNum(p) );\n    Vec_PtrPush( vDes, p.pName );\n    Bac_ManForEachNtk( p, pTemp, i )\n        Vec_PtrPush( vDes, Bac_NtkTransformToPtr(pTemp) );\n    assert((Ptr_CheckArray(vDes) != 0), \"Ptr_CheckArray(vDes)\");\n    return vDes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

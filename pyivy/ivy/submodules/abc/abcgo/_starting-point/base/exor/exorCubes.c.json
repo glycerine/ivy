@@ -1,0 +1,429 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c",
+  "SHA256": "dc63ddc585984ef6a9e270d0bfa715a075461b924872fbd2854e4b685d9aa19d",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 76,
+        "ByteOffset": 4657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pp = (Cube **)/*__starting_point_inline_macro:ABC_ALLOC__*/((Cube * *) malloc(sizeof(Cube *) * (size_t)(nCubes)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 76,
+        "ByteOffset": 4968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pp[0] = (Cube *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(TotalSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 5059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pp[0], 0, (size_t)TotalSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert ( g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 73,
+        "ByteOffset": 6210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_pCoverMemory[0]) ? (free((char *) (s_pCoverMemory[0])), (s_pCoverMemory[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 155,
+        "Column": 70,
+        "ByteOffset": 6346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_pCoverMemory) ? (free((char *) (s_pCoverMemory)), (s_pCoverMemory) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 6650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 6667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.Prev == nil ); // the cube should not be in use"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 6729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.Next == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 6758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.ID );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 7032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s_CubesFree );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "AllocateCover",
+      "Start": 3948,
+      "End": 5916,
+      "BodyStart": 4110,
+      "Original": "int AllocateCover( int nCubes, int nWordsIn, int nWordsOut )\n// uses the cover parameters nCubes and nWords\n// to allocate-and-clean the cover in one large piece\n{\n    int OneCubeSize;\n    int OneInputSetSize;\n    Cube ** pp;\n    int TotalSize;\n    int i, k;\n\n    // determine the size of one cube WITH storage for bits\n    OneCubeSize = sizeof(Cube) + (nWordsIn+nWordsOut)*sizeof(unsigned);\n    // determine what is the amount of storage for the input part of the cube \n    OneInputSetSize = nWordsIn*sizeof(unsigned);\n\n    // allocate memory for the array of pointers\n    pp = (Cube **)ABC_ALLOC( Cube *, nCubes );\n    if ( pp == NULL )\n        return 0;\n\n    // determine the size of the total cube cover\n    TotalSize = nCubes*OneCubeSize;\n    // allocate and clear memory for the cover in one large piece\n    pp[0] = (Cube *)ABC_ALLOC( char, TotalSize );\n    if ( pp[0] == NULL )\n        return 0;\n    memset( pp[0], 0, (size_t)TotalSize );\n\n    // assign pointers to cubes and bit strings inside this piece\n    pp[0]-\u003epCubeDataIn  = (unsigned*)(pp[0] + 1);\n    pp[0]-\u003epCubeDataOut = (unsigned*)((char*)pp[0]-\u003epCubeDataIn + OneInputSetSize);\n    for ( i = 1; i \u003c nCubes; i++ )\n    {\n        pp[i] = (Cube *)((char*)pp[i-1] + OneCubeSize);\n        pp[i]-\u003epCubeDataIn = (unsigned*)(pp[i] + 1);\n        pp[i]-\u003epCubeDataOut = (unsigned*)((char*)pp[i]-\u003epCubeDataIn + OneInputSetSize);\n    }\n\n    // connect the cubes into the list using Next pointers\n    for ( k = 0; k \u003c nCubes-1; k++ )\n        pp[k]-\u003eNext = pp[k+1];\n    // the last pointer is already set to NULL\n\n    // assign the head of the free list\n    s_CubesFree = pp[0];\n    // set the counters of the used and free cubes\n    g_CoverInfo.nCubesInUse = 0;\n    g_CoverInfo.nCubesFree = nCubes;\n\n    // save the pointer to the allocated memory\n    s_pCoverMemory = pp;\n\n    assert ( g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc );\n\n    return nCubes*sizeof(Cube *) + TotalSize;\n}",
+      "Draft": "int AllocateCover( int nCubes, int nWordsIn, int nWordsOut )\n// uses the cover parameters nCubes and nWords\n// to allocate-and-clean the cover in one large piece\n{\n    var OneCubeSize int32;\n    var OneInputSetSize int32;\n    var pp **Cube;\n    var TotalSize int32;\n    var i, k int32;\n\n    // determine the size of one cube WITH storage for bits\n    OneCubeSize = sizeof(Cube) + (nWordsIn+nWordsOut)*sizeof(unsigned);\n    // determine what is the amount of storage for the input part of the cube \n    OneInputSetSize = nWordsIn*sizeof(unsigned);\n\n    // allocate memory for the array of pointers\n    // inlining of macro ABC_ALLOC\n    pp = (Cube **)((Cube * *) malloc(sizeof(Cube *) * (size_t)(nCubes)));\n    if pp == nil {\n        return 0; }\n\n    // determine the size of the total cube cover\n    TotalSize = nCubes*OneCubeSize;\n    // allocate and clear memory for the cover in one large piece\n    // inlining of macro ABC_ALLOC\n    pp[0] = (Cube *)((char *) malloc(sizeof(char) * (size_t)(TotalSize)));\n    if pp[0] == nil {\n        return 0; }\n    memset( pp[0], 0, (size_t)TotalSize );\n\n    // assign pointers to cubes and bit strings inside this piece\n    pp[0].pCubeDataIn  = (unsigned*)(pp[0] + 1);\n    pp[0].pCubeDataOut = (unsigned*)((char*)pp[0].pCubeDataIn + OneInputSetSize);\n    for  i = 1; i \u003c nCubes; i++  {\n        pp[i] = (Cube *)((char*)pp[i-1] + OneCubeSize);\n        pp[i].pCubeDataIn = (unsigned*)(pp[i] + 1);\n        pp[i].pCubeDataOut = (unsigned*)((char*)pp[i].pCubeDataIn + OneInputSetSize);\n    }\n\n    // connect the cubes into the list using Next pointers\n    for  k = 0; k \u003c nCubes-1; k++  {\n        pp[k].Next = pp[k+1];\n    }\n    // the last pointer is already set to NULL\n\n    // assign the head of the free list\n    s_CubesFree = pp[0];\n    // set the counters of the used and free cubes\n    g_CoverInfo.nCubesInUse = 0;\n    g_CoverInfo.nCubesFree = nCubes;\n\n    // save the pointer to the allocated memory\n    s_pCoverMemory = pp;\n\n    assert(g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc, \"g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc\");\n\n    return nCubes*sizeof(Cube *) + TotalSize;\n}"
+    },
+    {
+      "Name": "DelocateCover",
+      "Start": 5918,
+      "End": 6009,
+      "BodyStart": 5939,
+      "Original": "void DelocateCover()\n{\n    ABC_FREE( s_pCoverMemory[0] );\n    ABC_FREE( s_pCoverMemory );\n}",
+      "Draft": "func DelocateCover() {\n    // inlining of macro ABC_FREE\n    ((s_pCoverMemory[0]) ? (free((char *) (s_pCoverMemory[0])), (s_pCoverMemory[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pCoverMemory) ? (free((char *) (s_pCoverMemory)), (s_pCoverMemory) = 0) : 0);\n}"
+    },
+    {
+      "Name": "AddToFreeCubes",
+      "Start": 6216,
+      "End": 6593,
+      "BodyStart": 6248,
+      "Original": "void AddToFreeCubes( Cube * p )\n{\n    assert( p );\n    assert( p-\u003ePrev == NULL ); // the cube should not be in use\n    assert( p-\u003eNext == NULL );\n    assert( p-\u003eID );\n\n    p-\u003eNext = s_CubesFree;\n    s_CubesFree = p;\n\n    // set the ID of the cube to 0, \n    // so that cube pair garbage collection could recognize it as different\n    p-\u003eID = 0;\n\n    g_CoverInfo.nCubesFree++;\n}",
+      "Draft": "func AddToFreeCubes(p *Cube) {\n    assert((p != nil), \"p\");\n    assert(p.Prev == nil, \"p.Prev == nil\"); // the cube should not be in use\n    assert(p.Next == nil, \"p.Next == nil\");\n    assert(p.ID, \"p.ID\");\n\n    p.Next = s_CubesFree;\n    s_CubesFree = p;\n\n    // set the ID of the cube to 0, \n    // so that cube pair garbage collection could recognize it as different\n    p.ID = 0;\n\n    g_CoverInfo.nCubesFree++;\n}"
+    },
+    {
+      "Name": "GetFreeCube",
+      "Start": 6595,
+      "End": 6782,
+      "BodyStart": 6616,
+      "Original": "Cube * GetFreeCube()\n{\n    Cube * p;\n    assert( s_CubesFree );\n    p = s_CubesFree;\n    s_CubesFree = s_CubesFree-\u003eNext;\n    p-\u003eNext = NULL;\n    g_CoverInfo.nCubesFree--;\n    return p;\n}",
+      "Draft": "func GetFreeCube() *Cube {\n    var p *Cube;\n    assert((s_CubesFree != nil), \"s_CubesFree\");\n    p = s_CubesFree;\n    s_CubesFree = s_CubesFree.Next;\n    p.Next = nil;\n    g_CoverInfo.nCubesFree--;\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::4286",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4286,
+      "End": 4292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::4322",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4322,
+      "End": 4328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::4450",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4450,
+      "End": 4456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::4600",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4536,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::4912",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4778,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::mechanical::sizeof::6029",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5887,
+      "End": 5893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::4527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4527,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::4582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4536,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::4606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4536,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::4842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4770,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::4896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4778,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4987,
+      "End": 4998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5037,
+      "End": 5048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5049,
+      "End": 5056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5152,
+      "End": 5160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5161,
+      "End": 5168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5363",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5221,
+      "End": 5232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5275,
+      "End": 5286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::5429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5287,
+      "End": 5294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::6035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5893,
+      "End": 5901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::6160",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5945,
+      "End": 5945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::pointer-cast::6296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5980,
+      "End": 5980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::AllocateCover",
+      "Category": "semantic-review",
+      "Symbol": "AllocateCover",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3948,
+      "End": 5916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::ternary::DelocateCover",
+      "Category": "ternary-review",
+      "Symbol": "DelocateCover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5918,
+      "End": 6009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::DelocateCover",
+      "Category": "semantic-review",
+      "Symbol": "DelocateCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5918,
+      "End": 6009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::AddToFreeCubes",
+      "Category": "semantic-review",
+      "Symbol": "AddToFreeCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6216,
+      "End": 6593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::GetFreeCube",
+      "Category": "semantic-review",
+      "Symbol": "GetFreeCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6595,
+      "End": 6782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/exor/exorCubes.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7013
+    }
+  ],
+  "Draft": "package exor\n\n/**CFile****************************************************************\n\n  FileName    [exorCubes.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Exclusive sum-of-product minimization.]\n\n  Synopsis    [Cube manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exorCubes.c,v 1.0 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///                  Implementation of EXORCISM - 4                  ///\n///              An Exclusive Sum-of-Product Minimizer               ///\n///                                                                  ///\n///               Alan Mishchenko  \u003calanmi@ee.pdx.edu\u003e               ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///                                                                  ///\n///              Cube Allocation and Free Cube Management            ///\n///                                                                  ///\n///  Ver. 1.0. Started - July 18, 2000. Last update - July 20, 2000  ///\n///  Ver. 1.1. Started - July 24, 2000. Last update - July 29, 2000  ///\n///  Ver. 1.2. Started - July 30, 2000. Last update - July 30, 2000  ///\n///  Ver. 1.5. Started -  Aug 19, 2000. Last update -  Aug 19, 2000  ///\n///                                                                  ///\n////////////////////////////////////////////////////////////////////////\n///   This software was tested with the BDD package \"CUDD\", v.2.3.0  ///\n///                          by Fabio Somenzi                        ///\n///                  http://vlsi.colorado.edu/~fabio/                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"exor.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                       EXTERNAL FUNCTIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       EXTERNAL VARIABLES                         ///\n////////////////////////////////////////////////////////////////////////\n\n// information about the cube cover before and after simplification\nvar g_CoverInfo cinfo;\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTIONS OF THIS MODULE                      ///\n////////////////////////////////////////////////////////////////////////\n\n// cube cover memory allocation/delocation procedures\n// (called from the ExorMain module)\n// int AllocateCover( int nCubes, int nWordsIn, int nWordsOut );\n\n// void DelocateCover();\n\n\n// manipulation of the free cube list\n// (called from Pseudo-Kronecker, ExorList, and ExorLink modules)\n// void AddToFreeCubes( Cube * pC );\n\n// Cube * GetFreeCube();\n\n\n////////////////////////////////////////////////////////////////////////\n///                      EXPORTED VARIABLES                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      STATIC VARIABLES                            ///\n////////////////////////////////////////////////////////////////////////\n\n// the pointer to the allocated memory\nvar s_pCoverMemory **Cube;\n\n// the list of free cubes\nvar s_CubesFree *Cube;\n\n///////////////////////////////////////////////////////////////////\n///                  CUBE COVER MEMORY MANAGEMENT                //\n///////////////////////////////////////////////////////////////////\n\nint AllocateCover( int nCubes, int nWordsIn, int nWordsOut )\n// uses the cover parameters nCubes and nWords\n// to allocate-and-clean the cover in one large piece\n{\n    var OneCubeSize int32;\n    var OneInputSetSize int32;\n    var pp **Cube;\n    var TotalSize int32;\n    var i, k int32;\n\n    // determine the size of one cube WITH storage for bits\n    OneCubeSize = sizeof(Cube) + (nWordsIn+nWordsOut)*sizeof(unsigned);\n    // determine what is the amount of storage for the input part of the cube \n    OneInputSetSize = nWordsIn*sizeof(unsigned);\n\n    // allocate memory for the array of pointers\n    // inlining of macro ABC_ALLOC\n    pp = (Cube **)((Cube * *) malloc(sizeof(Cube *) * (size_t)(nCubes)));\n    if pp == nil {\n        return 0; }\n\n    // determine the size of the total cube cover\n    TotalSize = nCubes*OneCubeSize;\n    // allocate and clear memory for the cover in one large piece\n    // inlining of macro ABC_ALLOC\n    pp[0] = (Cube *)((char *) malloc(sizeof(char) * (size_t)(TotalSize)));\n    if pp[0] == nil {\n        return 0; }\n    memset( pp[0], 0, (size_t)TotalSize );\n\n    // assign pointers to cubes and bit strings inside this piece\n    pp[0].pCubeDataIn  = (unsigned*)(pp[0] + 1);\n    pp[0].pCubeDataOut = (unsigned*)((char*)pp[0].pCubeDataIn + OneInputSetSize);\n    for  i = 1; i \u003c nCubes; i++  {\n        pp[i] = (Cube *)((char*)pp[i-1] + OneCubeSize);\n        pp[i].pCubeDataIn = (unsigned*)(pp[i] + 1);\n        pp[i].pCubeDataOut = (unsigned*)((char*)pp[i].pCubeDataIn + OneInputSetSize);\n    }\n\n    // connect the cubes into the list using Next pointers\n    for  k = 0; k \u003c nCubes-1; k++  {\n        pp[k].Next = pp[k+1];\n    }\n    // the last pointer is already set to NULL\n\n    // assign the head of the free list\n    s_CubesFree = pp[0];\n    // set the counters of the used and free cubes\n    g_CoverInfo.nCubesInUse = 0;\n    g_CoverInfo.nCubesFree = nCubes;\n\n    // save the pointer to the allocated memory\n    s_pCoverMemory = pp;\n\n    assert(g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc, \"g_CoverInfo.nCubesInUse + g_CoverInfo.nCubesFree == g_CoverInfo.nCubesAlloc\");\n\n    return nCubes*sizeof(Cube *) + TotalSize;\n}\n\nfunc DelocateCover() {\n    // inlining of macro ABC_FREE\n    ((s_pCoverMemory[0]) ? (free((char *) (s_pCoverMemory[0])), (s_pCoverMemory[0]) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pCoverMemory) ? (free((char *) (s_pCoverMemory)), (s_pCoverMemory) = 0) : 0);\n}\n\n///////////////////////////////////////////////////////////////////\n///           FREE CUBE LIST MANIPULATION FUNCTIONS             ///\n///////////////////////////////////////////////////////////////////\n\nfunc AddToFreeCubes(p *Cube) {\n    assert((p != nil), \"p\");\n    assert(p.Prev == nil, \"p.Prev == nil\"); // the cube should not be in use\n    assert(p.Next == nil, \"p.Next == nil\");\n    assert(p.ID, \"p.ID\");\n\n    p.Next = s_CubesFree;\n    s_CubesFree = p;\n\n    // set the ID of the cube to 0, \n    // so that cube pair garbage collection could recognize it as different\n    p.ID = 0;\n\n    g_CoverInfo.nCubesFree++;\n}\n\nfunc GetFreeCube() *Cube {\n    var p *Cube;\n    assert((s_CubesFree != nil), \"s_CubesFree\");\n    p = s_CubesFree;\n    s_CubesFree = s_CubesFree.Next;\n    p.Next = nil;\n    g_CoverInfo.nCubesFree--;\n    return p;\n}\n\n///////////////////////////////////////////////////////////////////\n////////////              End of File             /////////////////\n///////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

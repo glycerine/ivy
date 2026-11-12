@@ -1,0 +1,306 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c",
+  "SHA256": "076d82f24c462d69d72a7b979c89535ad7837bf46928d287146afeb48039fecc",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 16,
+        "ByteOffset": 2808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(scratch, \"%s+%s\", var1bar, var2bar);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 16,
+        "ByteOffset": 2918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(scratch, \"%s+%s\", var1bar, var2);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 16,
+        "ByteOffset": 3027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(scratch, \"%s+%s\", var1, var2bar);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 16,
+        "ByteOffset": 3136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(scratch, \"%s+%s\", var1, var2);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 8984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"    \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 9054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%3d \", i+1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 9148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%3d \", i+1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 9227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%3d \", cost_array[i][j]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 9269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 5,
+        "ByteOffset": 13439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"pair is\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 13496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf (\" (%d %d)\", pair.var1[i], pair.var2[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 5,
+        "ByteOffset": 13549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 463,
+        "Column": 5,
+        "ByteOffset": 16268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"cost is %d \", cost);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 505,
+        "Column": 5,
+        "ByteOffset": 17335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 549,
+        "Column": 9,
+        "ByteOffset": 18495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# phase is %s\\n\", pc1(global_PLA.phase));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::pointer-cast::3527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3527,
+      "End": 3535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::pointer-cast::3826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3826,
+      "End": 3834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::pointer-cast::3953",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3953,
+      "End": 3961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::10635",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10635,
+      "End": 10645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::12142",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12142,
+      "End": 12172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::13118",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13118,
+      "End": 13148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::14204",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14204,
+      "End": 14233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::16257",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16257,
+      "End": 16284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/pair.c::macro-inline::17364",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17364,
+      "End": 17383
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvoid set_pair(PLA)\nvar PLA pPLA;\n{\n    set_pair1(PLA, TRUE);\n}\n\nvoid set_pair1(PLA, adjust_labels)\nvar PLA pPLA;\nvar adjust_labels bool;\n{\n    int i, var, *paired, newvar;\n    int old_num_vars, old_num_binary_vars, old_size, old_mv_start;\n    int *new_part_size, new_num_vars, new_num_binary_vars, new_mv_start;\n    ppair pair = PLA.pair;\n    char scratch[1000], **oldlabel, *var1, *var1bar, *var2, *var2bar;\n\n    if (adjust_labels)\n    makeup_labels(PLA);\n\n    /* Check the pair structure for valid entries and see which binary\n    variables are left unpaired\n    */\n    paired = ALLOC(bool, cube.num_binary_vars);\n    for(var = 0; var \u003c cube.num_binary_vars; var++)\n    paired[var] = FALSE;\n    for(i = 0; i \u003c pair.cnt; i++)\n    if (pair.var1[i] \u003e 0 \u0026\u0026 pair.var1[i] \u003c= cube.num_binary_vars) \u0026\u0026\n         (pair.var2[i] \u003e 0 \u0026\u0026 pair.var2[i] \u003c= cube.num_binary_vars) {\n        paired[pair.var1[i]-1] = TRUE;\n        paired[pair.var2[i]-1] = TRUE;\n    } else\n        fatal(\"can only pair binary-valued variables\");\n\n    PLA.F = delvar(pairvar(PLA.F, pair), paired);\n    PLA.R = delvar(pairvar(PLA.R, pair), paired);\n    PLA.D = delvar(pairvar(PLA.D, pair), paired);\n\n    /* Now painfully adjust the cube size */\n    old_size = cube.size;\n    old_num_vars = cube.num_vars;\n    old_num_binary_vars = cube.num_binary_vars;\n    old_mv_start = cube.first_part[cube.num_binary_vars];\n    /* Create the new cube.part_size vector and setup the cube structure */\n    new_num_binary_vars = 0;\n    for(var = 0; var \u003c old_num_binary_vars; var++)\n    new_num_binary_vars += (paired[var] == FALSE);\n    new_num_vars = new_num_binary_vars + pair.cnt;\n    new_num_vars += old_num_vars - old_num_binary_vars;\n    new_part_size = ALLOC(int, new_num_vars);\n    for(var = 0; var \u003c pair.cnt; var++)\n    new_part_size[new_num_binary_vars + var] = 4;\n    for(var = 0; var \u003c old_num_vars - old_num_binary_vars; var++)\n    new_part_size[new_num_binary_vars + pair.cnt + var] =\n        cube.part_size[old_num_binary_vars + var];\n    setdown_cube();\n    FREE(cube.part_size);\n    cube.num_vars = new_num_vars;\n    cube.num_binary_vars = new_num_binary_vars;\n    cube.part_size = new_part_size;\n    cube_setup();\n\n    /* hack with the labels to get them correct */\n    if adjust_labels {\n    oldlabel = PLA.label;\n    PLA.label = ALLOC(char *, cube.size);\n    for var = 0; var \u003c pair.cnt; var++ {\n        newvar = cube.num_binary_vars*2 + var*4;\n        var1 = oldlabel[ (pair.var1[var]-1) * 2 + 1];\n        var2 = oldlabel[ (pair.var2[var]-1) * 2 + 1];\n        var1bar = oldlabel[ (pair.var1[var]-1) * 2];\n        var2bar = oldlabel[ (pair.var2[var]-1) * 2];\n        (void) sprintf(scratch, \"%s+%s\", var1bar, var2bar);\n        PLA.label[newvar] = util_strsav(scratch);\n        (void) sprintf(scratch, \"%s+%s\", var1bar, var2);\n        PLA.label[newvar+1] = util_strsav(scratch);\n        (void) sprintf(scratch, \"%s+%s\", var1, var2bar);\n        PLA.label[newvar+2] = util_strsav(scratch);\n        (void) sprintf(scratch, \"%s+%s\", var1, var2);\n        PLA.label[newvar+3] = util_strsav(scratch);\n    }\n    /* Copy the old labels for the unpaired binary vars */\n    i = 0;\n    for var = 0; var \u003c old_num_binary_vars; var++ {\n        if paired[var] == FALSE {\n        PLA.label[2*i] = oldlabel[2*var];\n        PLA.label[2*i+1] = oldlabel[2*var+1];\n        oldlabel[2*var] = oldlabel[2*var+1] = (char *) NULL;\n        i++;\n        }\n    }\n    /* Copy the old labels for the remaining unpaired vars */\n    new_mv_start = cube.num_binary_vars*2 + pair.cnt*4;\n    for i = old_mv_start; i \u003c old_size; i++ {\n        PLA.label[new_mv_start + i - old_mv_start] = oldlabel[i];\n        oldlabel[i] = (char *) NULL;\n    }\n    /* free remaining entries in oldlabel */\n    for(i = 0; i \u003c old_size; i++)\n        if (oldlabel[i] != (char *) NULL)\n        FREE(oldlabel[i]);\n    FREE(oldlabel);\n    }\n\n    /* the paired variables should not be sparse (cf. mv_reduce/raise_in)*/\n    for(var = 0; var \u003c pair.cnt; var++)\n    cube.sparse[cube.num_binary_vars + var] = 0;\n    FREE(paired);\n}\n\f\npcover pairvar(A, pair)\npcover A;\nvar pair ppair;\n{\n    register pcube last, p;\n    register int val, p1, p2, b1, b0;\n    int insert_col, pairnum;\n\n    insert_col = cube.first_part[cube.num_vars - 1];\n\n    /* stretch the cover matrix to make room for the paired variables */\n    A = sf_delcol(A, insert_col, -4*pair.cnt);\n\n    /* compute the paired values */\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    for pairnum = 0; pairnum \u003c pair.cnt; pairnum++ {\n        p1 = cube.first_part[pair.var1[pairnum] - 1];\n        p2 = cube.first_part[pair.var2[pairnum] - 1];\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        b1 = (p[(((p2+1) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((p2+1) \u0026 (BPI-1))));\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        b0 = (p[(((p2) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((p2) \u0026 (BPI-1))));\n        val = insert_col + pairnum * 4;\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if /* a0 */ p[(((p1) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((p1) \u0026 (BPI-1))) {\n        if (b0)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((val + 3) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((val + 3) \u0026 (BPI-1)));\n        if (b1)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((val + 2) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((val + 2) \u0026 (BPI-1)));\n        }\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if /* a1 */ p[(((p1+1) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((p1+1) \u0026 (BPI-1))) {\n        if (b0)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((val + 1) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((val + 1) \u0026 (BPI-1)));\n        if (b1)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((val) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((val) \u0026 (BPI-1)));\n        }\n    }\n    }\n    return A;\n}\n\n\n/* delvar -- delete variables from A, minimize the number of column shifts */\npcover delvar(A, paired)\npcover A;\nvar paired []bool;\n{\n    bool run;\n    int first_run = 0; // Suppress \"might be used uninitialized\"\n    int run_length, var, offset = 0;\n\n    run = FALSE; run_length = 0;\n    for(var = 0; var \u003c cube.num_binary_vars; var++)\n    if (paired[var])\n        if (run)\n        run_length += cube.part_size[var];\n        else {\n        run = TRUE;\n        first_run = cube.first_part[var];\n        run_length = cube.part_size[var];\n        }\n    else\n        if run {\n        A = sf_delcol(A, first_run-offset, run_length);\n        run = FALSE;\n        offset += run_length;\n        }\n    if (run)\n    A = sf_delcol(A, first_run-offset, run_length);\n    return A;\n}\n\f\n/*\n    find_optimal_pairing -- find which binary variables should be paired\n    to maximally reduce the number of terms\n\n    This is essentially the technique outlined by T. Sasao in the\n    Trans. on Comp., Oct 1984.  We estimate the cost of pairing each\n    pair individually using 1 of 4 strategies: (1) algebraic division\n    of F by the pair (exactly T. Sasao technique); (2) strong division\n    of F by the paired variables (using REDUCE/EXPAND/ IRREDUNDANT from\n    espresso); (3) full minimization using espresso; (4) exact\n    minimization.  These are in order of both increasing accuracy and\n    increasing difficulty (!)\n\n    Once the n squared pairs have been evaluated, T. Sasao proposes a\n    graph covering of nodes by disjoint edges.  For now, I solve this\n    problem exhaustively (complexity = (n-1)*(n-3)*...*3*1 for n\n    variables when n is even).  Note that solving this problem exactly\n    is the same as evaluating the cost function for all possible\n    pairings.\n\n                   n       pairs\n\n                 1, 2           1\n                 3, 4           3\n                 5, 6          15\n                 7, 8         105\n                 9,10         945\n                11,12      10,395\n                13,14     135,135\n                15,16   2,027,025\n                17,18  34,459,425\n                19,20 654,729,075\n*/\nvoid find_optimal_pairing(PLA, strategy)\nvar PLA pPLA;\nvar strategy int32;\n{\n    int i, j, **cost_array;\n\n    cost_array = find_pairing_cost(PLA, strategy);\n\n    if summary {\n    fmt.Printf(\"    \");\n    for(i = 0; i \u003c cube.num_binary_vars; i++)\n        fmt.Printf(\"%3d \", i+1);\n    fmt.Printf(\"\\n\");\n    for i = 0; i \u003c cube.num_binary_vars; i++ {\n        fmt.Printf(\"%3d \", i+1);\n        for(j = 0; j \u003c cube.num_binary_vars; j++)\n        fmt.Printf(\"%3d \", cost_array[i][j]);\n        fmt.Printf(\"\\n\");\n    }\n    }\n\n    if cube.num_binary_vars \u003c= 14 {\n    PLA.pair = pair_best_cost(cost_array);\n    } else {\n    (void) greedy_best_cost(cost_array, \u0026(PLA.pair));\n    }\n    fmt.Printf(\"# \");\n    print_pair(PLA.pair);\n    \n    for(i = 0; i \u003c cube.num_binary_vars; i++)\n    FREE(cost_array[i]);\n    FREE(cost_array);\n\n    set_pair(PLA);\n    // inlining of macro EXEC_S\n    {long t=ptime();PLA.F=espresso(PLA.F,PLA.D,PLA.R);if(summary)print_trace(PLA.F,\"ESPRESSO  \",ptime()-t);};\n}\n\f\nint **find_pairing_cost(PLA, strategy)\nvar PLA pPLA;\nvar strategy int32;\n{\n    int var1, var2, **cost_array;\n    int i, j;\n    int xnum_binary_vars = 0, xnum_vars = 0, *xpart_size = NULL, cost = 0; // Suppress \"might be used uninitialized\"\n    pcover T;\n    pcover Fsave = NULL, Dsave = NULL, Rsave = NULL; // Suppress \"might be used uninitialized\"\n    pset mask;\n/*    char *s;*/\n\n    /* data is returned in the cost array */\n    cost_array = ALLOC(int *, cube.num_binary_vars);\n    for(i = 0; i \u003c cube.num_binary_vars; i++)\n    cost_array[i] = ALLOC(int, cube.num_binary_vars);\n    for(i = 0; i \u003c cube.num_binary_vars; i++)\n    for(j = 0; j \u003c cube.num_binary_vars; j++)\n        cost_array[i][j] = 0;\n\n    /* Setup the pair structure for pairing variables together */\n    PLA.pair = pair_new(1);\n    PLA.pair.cnt = 1;\n\n    for var1 = 0; var1 \u003c cube.num_binary_vars-1; var1++ {\n    for var2 = var1+1; var2 \u003c cube.num_binary_vars; var2++ {\n        /* if anything but simple strategy, perform setup */\n        if strategy \u003e 0 {\n        /* save the original covers */\n        Fsave = sf_save(PLA.F);\n        Dsave = sf_save(PLA.D);\n        Rsave = sf_save(PLA.R);\n\n        /* save the original cube structure */\n        xnum_binary_vars = cube.num_binary_vars;\n        xnum_vars = cube.num_vars;\n        xpart_size = ALLOC(int, cube.num_vars);\n        for(i = 0; i \u003c cube.num_vars; i++)\n            xpart_size[i] = cube.part_size[i];\n\n        /* pair two variables together */\n        PLA.pair.var1[0] = var1 + 1;\n        PLA.pair.var2[0] = var2 + 1;\n        set_pair1(PLA, /* adjust_labels */ FALSE);\n        }\n\n\n        /* decide how to best estimate worth of this pairing */\n        switch strategy {\n        case 3:\n            /*s = \"exact minimization\";*/\n            PLA.F = minimize_exact(PLA.F, PLA.D, PLA.R, 1);\n            cost = Fsave.count - PLA.F.count;\n            break;\n        case 2:\n            /*s = \"full minimization\";*/\n            PLA.F = espresso(PLA.F, PLA.D, PLA.R);\n            cost = Fsave.count - PLA.F.count;\n            break;\n        case 1:\n            /*s = \"strong division\";*/\n            PLA.F = reduce(PLA.F, PLA.D);\n            PLA.F = expand(PLA.F, PLA.R, FALSE);\n            PLA.F = irredundant(PLA.F, PLA.D);\n            cost = Fsave.count - PLA.F.count;\n            break;\n        case 0:\n            /*s = \"weak division\";*/\n            // inlining of macro new_cube\n            // inlining of macro set_new\n            mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n            set_or(mask, cube.var_mask[var1], cube.var_mask[var2]);\n            T = dist_merge(sf_save(PLA.F), mask);\n            cost = PLA.F.count - T.count;\n            sf_free(T);\n            // inlining of macro set_free\n            FREE(mask);\n        }\n\n        cost_array[var1][var2] = cost;\n\n        if strategy \u003e 0 {\n        /* restore the original cube structure -- free the new ones */\n        setdown_cube();\n        FREE(cube.part_size);\n        cube.num_binary_vars = xnum_binary_vars;\n        cube.num_vars = xnum_vars;\n        cube.part_size = xpart_size;\n        cube_setup();\n\n        /* restore the original cover(s) -- free the new ones */\n        sf_free(PLA.F);\n        sf_free(PLA.D);\n        sf_free(PLA.R);\n        PLA.F = Fsave;\n        PLA.D = Dsave;\n        PLA.R = Rsave;\n        }\n    }\n    }\n\n    pair_free(PLA.pair);\n    PLA.pair = NULL;\n    return cost_array;\n}\n\f\nvar best_cost int32;\nvar cost_array **int32;\nvar best_pair ppair;\nvar best_phase pset;\nvar global_PLA pPLA;\nstatic pcover best_F, best_D, best_R;\nvar pair_minim_strategy int32;\n\n\nvoid print_pair(pair)\nvar pair ppair;\n{\n    int i;\n\n    fmt.Printf(\"pair is\");\n    for(i = 0; i \u003c pair.cnt; i++)\n    fmt.Printf(\" (%d %d)\", pair.var1[i], pair.var2[i]);\n    fmt.Printf(\"\\n\");\n}\n\n\nint greedy_best_cost(cost_array_local, pair_p)\nvar cost_array_local **int32;\nvar pair_p *ppair;\n{\n    int i, j;\n    int besti = 0, bestj = 0;\n    int maxcost, total_cost;\n    pset cand;\n    ppair pair;\n\n    pair = pair_new(cube.num_binary_vars);\n    // inlining of macro set_full\n    cand = set_fill(ALLOC(unsigned int, SET_SIZE(cube.num_binary_vars)), cube.num_binary_vars);\n    total_cost = 0;\n\n    while (set_ord(cand) \u003e= 2) {\n    maxcost = -1;\n    for i = 0; i \u003c cube.num_binary_vars; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if cand[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        for j = i+1; j \u003c cube.num_binary_vars; j++ {\n            // inlining of macro is_in_set\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if cand[(((j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((j) \u0026 (BPI-1))) {\n            if cost_array_local[i][j] \u003e maxcost {\n                maxcost = cost_array_local[i][j];\n                besti = i;\n                bestj = j;\n            }\n            }\n        }\n        }\n    }\n    pair.var1[pair.cnt] = besti+1;\n    pair.var2[pair.cnt] = bestj+1;\n    pair.cnt++;\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (cand[(((besti) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((besti) \u0026 (BPI-1))));\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (cand[(((bestj) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((bestj) \u0026 (BPI-1))));\n    total_cost += maxcost;\n    }\n    // inlining of macro set_free\n    FREE(cand);\n    *pair_p = pair;\n    return total_cost;\n}\n\n\nppair pair_best_cost(cost_array_local)\nvar cost_array_local **int32;\n{\n    ppair pair;\n    pset candidate;\n\n    best_cost = -1;\n    best_pair = NULL;\n    cost_array = cost_array_local;\n\n    pair = pair_new(cube.num_binary_vars);\n    // inlining of macro set_full\n    candidate = set_fill(ALLOC(unsigned int, SET_SIZE(cube.num_binary_vars)), cube.num_binary_vars);\n    generate_all_pairs(pair, cube.num_binary_vars, candidate, find_best_cost);\n    pair_free(pair);\n    // inlining of macro set_free\n    FREE(candidate);\n    return best_pair;\n}\n\n\nvoid find_best_cost(pair)\nregister ppair pair;\n{\n    register int i, cost;\n\n    cost = 0;\n    for(i = 0; i \u003c pair.cnt; i++)\n    cost += cost_array[pair.var1[i]-1][pair.var2[i]-1];\n    if cost \u003e best_cost {\n    best_cost = cost;\n    best_pair = pair_save(pair, pair.cnt);\n    }\n    if (debug \u0026 MINCOV) \u0026\u0026 trace {\n    fmt.Printf(\"cost is %d \", cost);\n    print_pair(pair);\n    }\n}\n\f\n/*\n    pair_all: brute-force approach to try all possible pairings\n\n    pair_strategy is:\n    2) for espresso\n    3) for minimize_exact\n    4) for phase assignment\n*/\n\nvoid pair_all(PLA, pair_strategy)\nvar PLA pPLA;\nvar pair_strategy int32;\n{\n    ppair pair;\n    pset candidate;\n\n    global_PLA = PLA;\n    pair_minim_strategy = pair_strategy;\n    best_cost = PLA.F.count + 1;\n    best_pair = NULL;\n    best_phase = NULL;\n    best_F = best_D = best_R = NULL;\n    pair = pair_new(cube.num_binary_vars);\n    // inlining of macro set_new\n    candidate = set_fill(set_clear(ALLOC(unsigned int, SET_SIZE(cube.num_binary_vars)), cube.num_binary_vars), cube.num_binary_vars);\n\n    generate_all_pairs(pair, cube.num_binary_vars, candidate, minimize_pair);\n\n    pair_free(pair);\n    // inlining of macro set_free\n    FREE(candidate);\n\n    PLA.pair = best_pair;\n    PLA.phase = best_phase;\n/* not really necessary\n    if (phase != NULL)\n    (void) set_phase(PLA-\u003ephase);\n*/\n    set_pair(PLA);\n    fmt.Printf(\"# \");\n    print_pair(PLA.pair);\n\n    sf_free(PLA.F);\n    sf_free(PLA.D);\n    sf_free(PLA.R);\n    PLA.F = best_F;\n    PLA.D = best_D;\n    PLA.R = best_R;\n}\n\n\n/*\n *  minimize_pair -- called as each pair is generated\n */\nvoid minimize_pair(pair)\nvar pair ppair;\n{\n    pcover Fsave, Dsave, Rsave;\n    int i, xnum_binary_vars, xnum_vars, *xpart_size;\n\n    /* save the original covers */\n    Fsave = sf_save(global_PLA.F);\n    Dsave = sf_save(global_PLA.D);\n    Rsave = sf_save(global_PLA.R);\n\n    /* save the original cube structure */\n    xnum_binary_vars = cube.num_binary_vars;\n    xnum_vars = cube.num_vars;\n    xpart_size = ALLOC(int, cube.num_vars);\n    for(i = 0; i \u003c cube.num_vars; i++)\n    xpart_size[i] = cube.part_size[i];\n\n    /* setup the paired variables */\n    global_PLA.pair = pair;\n    set_pair1(global_PLA, /* adjust_labels */ FALSE);\n\n    /* call the minimizer */\n    if (summary)\n    print_pair(pair);\n    switch pair_minim_strategy {\n    case 2:\n        // inlining of macro EXEC_S\n        {long t=ptime();phase_assignment(global_PLA,0);if(summary)print_trace(global_PLA.F,\"OPO       \",ptime()-t);};\n        if (summary)\n        fmt.Printf(\"# phase is %s\\n\", pc1(global_PLA.phase));\n        break;\n    case 1:\n        // inlining of macro EXEC_S\n        {long t=ptime();global_PLA.F = minimize_exact(global_PLA.F, global_PLA.D,\n        global_PLA.R, 1);if(summary)print_trace(global_PLA.F,\"EXACT     \",ptime()-t);};\n        break;\n    case 0:\n        // inlining of macro EXEC_S\n        {long t=ptime();global_PLA.F = espresso(global_PLA.F, global_PLA.D,\n        global_PLA.R);if(summary)print_trace(global_PLA.F,\"ESPRESSO  \",ptime()-t);};\n        break;\n    default:\n        break;\n    }\n\n    /* see if we have a new best solution */\n    if global_PLA.F.count \u003c best_cost {\n    best_cost = global_PLA.F.count;\n    best_pair = pair_save(pair, pair.cnt);\n    // inlining of macro set_save\n    best_phase = global_PLA.phase!=NULL?set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(global_PLA.phase))), global_PLA.phase):NULL;\n    if (best_F != NULL) sf_free(best_F);\n    if (best_D != NULL) sf_free(best_D);\n    if (best_R != NULL) sf_free(best_R);\n    best_F = sf_save(global_PLA.F);\n    best_D = sf_save(global_PLA.D);\n    best_R = sf_save(global_PLA.R);\n    }\n\n    /* restore the original cube structure -- free the new ones */\n    setdown_cube();\n    FREE(cube.part_size);\n    cube.num_binary_vars = xnum_binary_vars;\n    cube.num_vars = xnum_vars;\n    cube.part_size = xpart_size;\n    cube_setup();\n\n    /* restore the original cover(s) -- free the new ones */\n    sf_free(global_PLA.F);\n    sf_free(global_PLA.D);\n    sf_free(global_PLA.R);\n    global_PLA.F = Fsave;\n    global_PLA.D = Dsave;\n    global_PLA.R = Rsave;\n    global_PLA.pair = NULL;\n    global_PLA.phase = NULL;\n}\n\f\nvoid generate_all_pairs(pair, n, candidate, action)\nvar pair ppair;\nvar n int32;\nvar candidate pset;\nint (*action)();\n{\n    int i, j;\n    pset recur_candidate;\n    ppair recur_pair;\n\n    if set_ord(candidate) \u003c 2 {\n    (*action)(pair);\n    return;\n    }\n\n    recur_pair = pair_save(pair, n);\n    // inlining of macro set_save\n    recur_candidate = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(candidate))), candidate);\n\n    /* Find first variable still in the candidate set */\n    for(i = 0; i \u003c n; i++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if ((candidate[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        break;\n\n    /* Try all pairs of i with other variables */\n    for(j = i+1; j \u003c n; j++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if candidate[(((j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((j) \u0026 (BPI-1))) {\n        /* pair (i j) -- remove from candidate set for future pairings */\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (recur_candidate[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (recur_candidate[(((j) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((j) \u0026 (BPI-1))));\n\n        /* add to the pair array */\n        recur_pair.var1[recur_pair.cnt] = i+1;\n        recur_pair.var2[recur_pair.cnt] = j+1;\n        recur_pair.cnt++;\n\n        /* recur looking for the end ... */\n        generate_all_pairs(recur_pair, n, recur_candidate, action);\n\n        /* now break this pair, and restore candidate set */\n        recur_pair.cnt--;\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (recur_candidate[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (recur_candidate[(((j) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((j) \u0026 (BPI-1)));\n    }\n\n    /* if odd, generate all pairs which do NOT include i */\n    if (set_ord(candidate) % 2) == 1 {\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (recur_candidate[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n    generate_all_pairs(recur_pair, n, recur_candidate, action);\n    }\n\n    pair_free(recur_pair);\n    // inlining of macro set_free\n    FREE(recur_candidate);\n}\n\f\nppair pair_new(n)\nregister int n;\n{\n    register ppair pair1;\n\n    pair1 = ALLOC(pair_t, 1);\n    pair1.cnt = 0;\n    pair1.var1 = ALLOC(int, n);\n    pair1.var2 = ALLOC(int, n);\n    return pair1;\n}\n\n\nppair pair_save(pair, n)\nregister ppair pair;\nregister int n;\n{\n    register int k;\n    register ppair pair1;\n\n    pair1 = pair_new(n);\n    pair1.cnt = pair.cnt;\n    for k = 0; k \u003c pair.cnt; k++ {\n    pair1.var1[k] = pair.var1[k];\n    pair1.var2[k] = pair.var2[k];\n    }\n    return pair1;\n}\n\n\nvoid pair_free(pair)\nregister ppair pair;\n{\n    FREE(pair.var1);\n    FREE(pair.var2);\n    FREE(pair);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

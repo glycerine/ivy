@@ -1,0 +1,548 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c",
+  "SHA256": "be07be43329bca1e497dfedd07f08a5247bc01957daf9119376535273133af34",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Wln_ObjName_Buffer, \"n%d\", iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsConst(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsNone(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsConst(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsSlice(p, iObj) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 84,
+        "ByteOffset": 2632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pArray *int32  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(4)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 106,
+        "ByteOffset": 3010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pVec.pArray[0] = /*__starting_point_inline_macro:ABC_REALLOC__*/((pVec.pArray[0]) ? ((int *) realloc((char *)(pVec.pArray[0]), sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize)))) :          ((int *) malloc(sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize))))); } "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 213,
+        "ByteOffset": 3117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pVec.pArray[0] = /*__starting_point_inline_macro:ABC_REALLOC__*/((pVec.pArray[0]) ? ((int *) realloc((char *)(pVec.pArray[0]), sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize)))) :          ((int *) malloc(sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize))))); } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 3190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVec.nSize \u003c pVec.nCap );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 40,
+        "ByteOffset": 3887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.vFanins = ((Wln_Vec_t *) realloc((char *)(p.vFanins), sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 40,
+        "ByteOffset": 4014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.vFanins = ((Wln_Vec_t *) malloc(sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 4081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.vFanins + iObj, 0, sizeof(Wln_Vec_t) * iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 4192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj == Vec_StrSize(\u0026p.vSigns) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 4238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObj == Vec_IntSize(\u0026p.vRanges) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj %6d : Type = %6s  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjFaninNum(p, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 5602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d \", iFanin ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 5640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wln_ObjName",
+      "Start": 1251,
+      "End": 1507,
+      "BodyStart": 1297,
+      "Original": "char * Wln_ObjName( Wln_Ntk_t * p, int iObj )\n{\n    static char Buffer[100];\n    if ( Wln_NtkHasNameId(p) \u0026\u0026 Wln_ObjNameId(p, iObj) )\n        return Abc_NamStr( p-\u003epManName, Wln_ObjNameId(p, iObj) );\n    sprintf( Buffer, \"n%d\", iObj );\n    return Buffer;\n}",
+      "Draft": "func Wln_ObjName(p *Wln_Ntk_t, iObj int32) string {\n    \n    if Wln_NtkHasNameId(p) \u0026\u0026 Wln_ObjNameId(p, iObj) {\n        return Abc_NamStr( p.pManName, Wln_ObjNameId(p, iObj) ); }\n    spStatic_Wln_ObjName_Buffer = fmt.Sprintf(\"n%d\", iObj);\n    return spStatic_Wln_ObjName_Buffer;\n}"
+    },
+    {
+      "Name": "Wln_ObjConstString",
+      "Start": 1534,
+      "End": 1691,
+      "BodyStart": 1587,
+      "Original": "char * Wln_ObjConstString( Wln_Ntk_t * p, int iObj )\n{\n    assert( Wln_ObjIsConst(p, iObj) );\n    return Abc_NamStr( p-\u003epManName, Wln_ObjFanin0(p, iObj) );\n}",
+      "Draft": "func Wln_ObjConstString(p *Wln_Ntk_t, iObj int32) string {\n    assert(Wln_ObjIsConst(p, iObj), \"Wln_ObjIsConst(p, iObj)\");\n    return Abc_NamStr( p.pManName, Wln_ObjFanin0(p, iObj) );\n}"
+    },
+    {
+      "Name": "Wln_ObjUpdateType",
+      "Start": 1718,
+      "End": 1944,
+      "BodyStart": 1778,
+      "Original": "void Wln_ObjUpdateType( Wln_Ntk_t * p, int iObj, int Type )\n{\n    assert( Wln_ObjIsNone(p, iObj) );\n    p-\u003enObjs[Wln_ObjType(p, iObj)]--;\n    Vec_IntWriteEntry( \u0026p-\u003evTypes, iObj, Type );\n    p-\u003enObjs[Wln_ObjType(p, iObj)]++;\n}",
+      "Draft": "func Wln_ObjUpdateType(p *Wln_Ntk_t, iObj int32, Type int32) {\n    assert(Wln_ObjIsNone(p, iObj), \"Wln_ObjIsNone(p, iObj)\");\n    p.nObjs[Wln_ObjType(p, iObj)]--;\n    Vec_IntWriteEntry( \u0026p.vTypes, iObj, Type );\n    p.nObjs[Wln_ObjType(p, iObj)]++;\n}"
+    },
+    {
+      "Name": "Wln_ObjSetConst",
+      "Start": 1945,
+      "End": 2090,
+      "BodyStart": 2005,
+      "Original": "void Wln_ObjSetConst( Wln_Ntk_t * p, int iObj, int NameId )\n{\n    assert( Wln_ObjIsConst(p, iObj) );\n    Wln_ObjSetFanin( p, iObj, 0, NameId );\n}",
+      "Draft": "func Wln_ObjSetConst(p *Wln_Ntk_t, iObj int32, NameId int32) {\n    assert(Wln_ObjIsConst(p, iObj), \"Wln_ObjIsConst(p, iObj)\");\n    Wln_ObjSetFanin( p, iObj, 0, NameId );\n}"
+    },
+    {
+      "Name": "Wln_ObjSetSlice",
+      "Start": 2091,
+      "End": 2238,
+      "BodyStart": 2152,
+      "Original": "void Wln_ObjSetSlice( Wln_Ntk_t * p, int iObj, int SliceId )\n{\n    assert( Wln_ObjIsSlice(p, iObj) );\n    Wln_ObjSetFanin( p, iObj, 1, SliceId );\n}",
+      "Draft": "func Wln_ObjSetSlice(p *Wln_Ntk_t, iObj int32, SliceId int32) {\n    assert(Wln_ObjIsSlice(p, iObj), \"Wln_ObjIsSlice(p, iObj)\");\n    Wln_ObjSetFanin( p, iObj, 1, SliceId );\n}"
+    },
+    {
+      "Name": "Wln_ObjAddFanin",
+      "Start": 2239,
+      "End": 2966,
+      "BodyStart": 2302,
+      "Original": "void Wln_ObjAddFanin( Wln_Ntk_t * p, int iObj, int i )        \n{ \n    Wln_Vec_t * pVec = p-\u003evFanins + iObj;\n    if ( Wln_ObjFaninNum(p, iObj) \u003c 2 )\n        pVec-\u003eArray[pVec-\u003enSize++] = i;\n    else if ( Wln_ObjFaninNum(p, iObj) == 2 )\n    {\n        int * pArray = ABC_ALLOC( int, 4 );\n        pArray[0] = pVec-\u003eArray[0];\n        pArray[1] = pVec-\u003eArray[1];\n        pArray[2] = i;\n        pVec-\u003epArray[0] = pArray;\n        pVec-\u003enSize     = 3;\n        pVec-\u003enCap      = 4;\n    }\n    else \n    {\n        if ( pVec-\u003enSize == pVec-\u003enCap )\n            pVec-\u003epArray[0] = ABC_REALLOC( int, pVec-\u003epArray[0], (pVec-\u003enCap = 2*pVec-\u003enSize) ); \n        assert( pVec-\u003enSize \u003c pVec-\u003enCap );\n        pVec-\u003epArray[0][pVec-\u003enSize++] = i;\n    }\n}",
+      "Draft": "func Wln_ObjAddFanin(p *Wln_Ntk_t, iObj int32, i int32) { \n    var pVec *Wln_Vec_t  = p.vFanins + iObj;\n    if Wln_ObjFaninNum(p, iObj) \u003c 2 {\n        pVec.Array[pVec.nSize++] = i;\n    } else if Wln_ObjFaninNum(p, iObj) == 2 {\n        // inlining of macro ABC_ALLOC\n        var pArray *int32  = ((int *) malloc(sizeof(int) * (size_t)(4)));\n        pArray[0] = pVec.Array[0];\n        pArray[1] = pVec.Array[1];\n        pArray[2] = i;\n        pVec.pArray[0] = pArray;\n        pVec.nSize     = 3;\n        pVec.nCap      = 4;\n    \n    } else {\n        if pVec.nSize == pVec.nCap {\n            // inlining of macro ABC_REALLOC\n            pVec.pArray[0] = ((pVec.pArray[0]) ? ((int *) realloc((char *)(pVec.pArray[0]), sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize)))) :          ((int *) malloc(sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize))))); } \n        assert(pVec.nSize \u003c pVec.nCap, \"pVec.nSize \u003c pVec.nCap\");\n        pVec.pArray[0][pVec.nSize++] = i;\n    }\n}"
+    },
+    {
+      "Name": "Wln_ObjAddFanins",
+      "Start": 2967,
+      "End": 3165,
+      "BodyStart": 3036,
+      "Original": "int Wln_ObjAddFanins( Wln_Ntk_t * p, int iObj, Vec_Int_t * vFanins )\n{\n    int i, iFanin;\n    Vec_IntForEachEntry( vFanins, iFanin, i )\n        Wln_ObjAddFanin( p, iObj, iFanin );\n    return iObj;\n}",
+      "Draft": "func Wln_ObjAddFanins(p *Wln_Ntk_t, iObj int32, vFanins *Vec_Int_t) int32 {\n    var i, iFanin int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        Wln_ObjAddFanin( p, iObj, iFanin );\n    }\n    return iObj;\n}"
+    },
+    {
+      "Name": "Wln_ObjAlloc",
+      "Start": 3166,
+      "End": 4107,
+      "BodyStart": 3240,
+      "Original": "int Wln_ObjAlloc( Wln_Ntk_t * p, int Type, int Signed, int End, int Beg )\n{\n    int iObj = Vec_IntSize(\u0026p-\u003evTypes);\n    if ( iObj == Vec_IntCap(\u0026p-\u003evTypes) )\n    {\n        p-\u003evFanins = ABC_REALLOC( Wln_Vec_t, p-\u003evFanins, 2 * iObj );\n        memset( p-\u003evFanins + iObj, 0, sizeof(Wln_Vec_t) * iObj );\n        Vec_IntGrow( \u0026p-\u003evTypes, 2 * iObj );\n    }\n    assert( iObj == Vec_StrSize(\u0026p-\u003evSigns) );\n    assert( iObj == Vec_IntSize(\u0026p-\u003evRanges) );\n    Vec_IntPush( \u0026p-\u003evTypes, Type );\n    Vec_StrPush( \u0026p-\u003evSigns, (char)Signed );\n    Vec_IntPush( \u0026p-\u003evRanges, Hash_Int2ManInsert(p-\u003epRanges, End, Beg, 0) );\n    if ( Wln_ObjIsCi(p, iObj) ) Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p-\u003evCis) ), Vec_IntPush( \u0026p-\u003evCis, iObj );\n    if ( Wln_ObjIsCo(p, iObj) ) Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p-\u003evCos) ), Vec_IntPush( \u0026p-\u003evCos, iObj );\n    if ( Wln_ObjIsFf(p, iObj) ) Vec_IntPush( \u0026p-\u003evFfs, iObj );\n    p-\u003enObjs[Type]++;\n    return iObj;\n}",
+      "Draft": "func Wln_ObjAlloc(p *Wln_Ntk_t, Type int32, Signed int32, End int32, Beg int32) int32 {\n    var iObj int32  = Vec_IntSize(\u0026p.vTypes);\n    if iObj == Vec_IntCap(\u0026p.vTypes) {\n        // inlining of macro ABC_REALLOC\n        \n        if p.vFanins {\n            p.vFanins = ((Wln_Vec_t *) realloc((char *)(p.vFanins), sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));\n        } else {\n            p.vFanins = ((Wln_Vec_t *) malloc(sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));\n        }\n        memset( p.vFanins + iObj, 0, sizeof(Wln_Vec_t) * iObj );\n        Vec_IntGrow( \u0026p.vTypes, 2 * iObj );\n    }\n    assert(iObj == Vec_StrSize(\u0026p.vSigns), \"iObj == Vec_StrSize(\u0026p.vSigns)\");\n    assert(iObj == Vec_IntSize(\u0026p.vRanges), \"iObj == Vec_IntSize(\u0026p.vRanges)\");\n    Vec_IntPush( \u0026p.vTypes, Type );\n    Vec_StrPush( \u0026p.vSigns, byte(Signed) );\n    Vec_IntPush( \u0026p.vRanges, Hash_Int2ManInsert(p.pRanges, End, Beg, 0) );\n    if Wln_ObjIsCi(p, iObj) { Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p.vCis) );\nVec_IntPush( \u0026p.vCis, iObj ); }\n    if Wln_ObjIsCo(p, iObj) { Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p.vCos) );\nVec_IntPush( \u0026p.vCos, iObj ); }\n    if Wln_ObjIsFf(p, iObj) { Vec_IntPush( \u0026p.vFfs, iObj ); }\n    p.nObjs[Type]++;\n    return iObj;\n}"
+    },
+    {
+      "Name": "Wln_ObjClone",
+      "Start": 4108,
+      "End": 4306,
+      "BodyStart": 4170,
+      "Original": "int Wln_ObjClone( Wln_Ntk_t * pNew, Wln_Ntk_t * p, int iObj )\n{\n    return Wln_ObjAlloc( pNew, Wln_ObjType(p, iObj), Wln_ObjIsSigned(p, iObj), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj) );\n}",
+      "Draft": "func Wln_ObjClone(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    return Wln_ObjAlloc( pNew, Wln_ObjType(p, iObj), Wln_ObjIsSigned(p, iObj), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj) );\n}"
+    },
+    {
+      "Name": "Wln_ObjCreateCo",
+      "Start": 4307,
+      "End": 4504,
+      "BodyStart": 4356,
+      "Original": "int Wln_ObjCreateCo( Wln_Ntk_t * p, int iFanin )\n{\n    int iCo = Wln_ObjClone( p, p, iFanin );\n    Wln_ObjUpdateType( p, iCo, ABC_OPER_CO );\n    Wln_ObjAddFanin( p, iCo, iFanin );\n    return iCo;\n}",
+      "Draft": "func Wln_ObjCreateCo(p *Wln_Ntk_t, iFanin int32) int32 {\n    var iCo int32  = Wln_ObjClone( p, p, iFanin );\n    Wln_ObjUpdateType( p, iCo, ABC_OPER_CO );\n    Wln_ObjAddFanin( p, iCo, iFanin );\n    return iCo;\n}"
+    },
+    {
+      "Name": "Wln_ObjPrint",
+      "Start": 4505,
+      "End": 4807,
+      "BodyStart": 4550,
+      "Original": "void Wln_ObjPrint( Wln_Ntk_t * p, int iObj )\n{\n    int k, iFanin, Type = Wln_ObjType(p, iObj);\n    printf( \"Obj %6d : Type = %6s  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjFaninNum(p, iObj) );\n    Wln_ObjForEachFanin( p, iObj, iFanin, k )\n        printf( \"%5d \", iFanin );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_ObjPrint(p *Wln_Ntk_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var Type int32 = Wln_ObjType(p, iObj);\n    fmt.Printf(\"Obj %6d : Type = %6s  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjFaninNum(p, iObj));\n    // inlining of macro Wln_ObjForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n        fmt.Printf(\"%5d \", iFanin); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::static::1303",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1303,
+      "End": 1309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::2563",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2502,
+      "End": 2502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::2984",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2803,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::3066",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2803,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::3818",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3351,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::3892",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3351,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::mechanical::sizeof::3973",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3437,
+      "End": 3443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::2548",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2502,
+      "End": 2502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::2941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2803,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::2957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2803,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::3051",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2803,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::3774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3351,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::3796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3351,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::pointer-cast::3871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3351,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjName",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1251,
+      "End": 1507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjConstString",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjConstString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1534,
+      "End": 1691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjUpdateType",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjUpdateType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1718,
+      "End": 1944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjSetConst",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjSetConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1945,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjSetSlice",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjSetSlice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2091,
+      "End": 2238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::ternary::Wln_ObjAddFanin",
+      "Category": "ternary-review",
+      "Symbol": "Wln_ObjAddFanin",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2239,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjAddFanin",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjAddFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2239,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjAddFanins",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjAddFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2967,
+      "End": 3165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3166,
+      "End": 4107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjClone",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjClone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4108,
+      "End": 4306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjCreateCo",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjCreateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4307,
+      "End": 4504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::Wln_ObjPrint",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4505,
+      "End": 4807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnObj.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5054
+    }
+  ],
+  "Draft": "package wln\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlnObj.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Word-level network.]\n\n  Synopsis    [Object construction procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 23, 2018.]\n\n  Revision    [$Id: wlnObj.c,v 1.00 2018/09/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wln.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creating objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Wln_ObjName_Buffer string // was [100]byte in C\n\nfunc Wln_ObjName(p *Wln_Ntk_t, iObj int32) string {\n    \n    if Wln_NtkHasNameId(p) \u0026\u0026 Wln_ObjNameId(p, iObj) {\n        return Abc_NamStr( p.pManName, Wln_ObjNameId(p, iObj) ); }\n    spStatic_Wln_ObjName_Buffer = fmt.Sprintf(\"n%d\", iObj);\n    return spStatic_Wln_ObjName_Buffer;\n}                          \nfunc Wln_ObjConstString(p *Wln_Ntk_t, iObj int32) string {\n    assert(Wln_ObjIsConst(p, iObj), \"Wln_ObjIsConst(p, iObj)\");\n    return Abc_NamStr( p.pManName, Wln_ObjFanin0(p, iObj) );\n}                          \nfunc Wln_ObjUpdateType(p *Wln_Ntk_t, iObj int32, Type int32) {\n    assert(Wln_ObjIsNone(p, iObj), \"Wln_ObjIsNone(p, iObj)\");\n    p.nObjs[Wln_ObjType(p, iObj)]--;\n    Vec_IntWriteEntry( \u0026p.vTypes, iObj, Type );\n    p.nObjs[Wln_ObjType(p, iObj)]++;\n}\nfunc Wln_ObjSetConst(p *Wln_Ntk_t, iObj int32, NameId int32) {\n    assert(Wln_ObjIsConst(p, iObj), \"Wln_ObjIsConst(p, iObj)\");\n    Wln_ObjSetFanin( p, iObj, 0, NameId );\n}\nfunc Wln_ObjSetSlice(p *Wln_Ntk_t, iObj int32, SliceId int32) {\n    assert(Wln_ObjIsSlice(p, iObj), \"Wln_ObjIsSlice(p, iObj)\");\n    Wln_ObjSetFanin( p, iObj, 1, SliceId );\n}\nfunc Wln_ObjAddFanin(p *Wln_Ntk_t, iObj int32, i int32) { \n    var pVec *Wln_Vec_t  = p.vFanins + iObj;\n    if Wln_ObjFaninNum(p, iObj) \u003c 2 {\n        pVec.Array[pVec.nSize++] = i;\n    } else if Wln_ObjFaninNum(p, iObj) == 2 {\n        // inlining of macro ABC_ALLOC\n        var pArray *int32  = ((int *) malloc(sizeof(int) * (size_t)(4)));\n        pArray[0] = pVec.Array[0];\n        pArray[1] = pVec.Array[1];\n        pArray[2] = i;\n        pVec.pArray[0] = pArray;\n        pVec.nSize     = 3;\n        pVec.nCap      = 4;\n    \n    } else {\n        if pVec.nSize == pVec.nCap {\n            // inlining of macro ABC_REALLOC\n            pVec.pArray[0] = ((pVec.pArray[0]) ? ((int *) realloc((char *)(pVec.pArray[0]), sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize)))) :          ((int *) malloc(sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize))))); } \n        assert(pVec.nSize \u003c pVec.nCap, \"pVec.nSize \u003c pVec.nCap\");\n        pVec.pArray[0][pVec.nSize++] = i;\n    }\n}\nfunc Wln_ObjAddFanins(p *Wln_Ntk_t, iObj int32, vFanins *Vec_Int_t) int32 {\n    var i, iFanin int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        Wln_ObjAddFanin( p, iObj, iFanin );\n    }\n    return iObj;\n}\nfunc Wln_ObjAlloc(p *Wln_Ntk_t, Type int32, Signed int32, End int32, Beg int32) int32 {\n    var iObj int32  = Vec_IntSize(\u0026p.vTypes);\n    if iObj == Vec_IntCap(\u0026p.vTypes) {\n        // inlining of macro ABC_REALLOC\n        \n        if p.vFanins {\n            p.vFanins = ((Wln_Vec_t *) realloc((char *)(p.vFanins), sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));\n        } else {\n            p.vFanins = ((Wln_Vec_t *) malloc(sizeof(Wln_Vec_t) * (size_t)(2 * iObj)));\n        }\n        memset( p.vFanins + iObj, 0, sizeof(Wln_Vec_t) * iObj );\n        Vec_IntGrow( \u0026p.vTypes, 2 * iObj );\n    }\n    assert(iObj == Vec_StrSize(\u0026p.vSigns), \"iObj == Vec_StrSize(\u0026p.vSigns)\");\n    assert(iObj == Vec_IntSize(\u0026p.vRanges), \"iObj == Vec_IntSize(\u0026p.vRanges)\");\n    Vec_IntPush( \u0026p.vTypes, Type );\n    Vec_StrPush( \u0026p.vSigns, byte(Signed) );\n    Vec_IntPush( \u0026p.vRanges, Hash_Int2ManInsert(p.pRanges, End, Beg, 0) );\n    if Wln_ObjIsCi(p, iObj) { Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p.vCis) );\nVec_IntPush( \u0026p.vCis, iObj ); }\n    if Wln_ObjIsCo(p, iObj) { Wln_ObjSetFanin( p, iObj, 1, Vec_IntSize(\u0026p.vCos) );\nVec_IntPush( \u0026p.vCos, iObj ); }\n    if Wln_ObjIsFf(p, iObj) { Vec_IntPush( \u0026p.vFfs, iObj ); }\n    p.nObjs[Type]++;\n    return iObj;\n}\nfunc Wln_ObjClone(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    return Wln_ObjAlloc( pNew, Wln_ObjType(p, iObj), Wln_ObjIsSigned(p, iObj), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj) );\n}\nfunc Wln_ObjCreateCo(p *Wln_Ntk_t, iFanin int32) int32 {\n    var iCo int32  = Wln_ObjClone( p, p, iFanin );\n    Wln_ObjUpdateType( p, iCo, ABC_OPER_CO );\n    Wln_ObjAddFanin( p, iCo, iFanin );\n    return iCo;\n}\nfunc Wln_ObjPrint(p *Wln_Ntk_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var Type int32 = Wln_ObjType(p, iObj);\n    fmt.Printf(\"Obj %6d : Type = %6s  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjFaninNum(p, iObj));\n    // inlining of macro Wln_ObjForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n        fmt.Printf(\"%5d \", iFanin); }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,419 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c",
+  "SHA256": "2bde7a41918e9716a58aceff9a0aa00c2b9571b69c838e7326497bef2a800600",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 49,
+        "Column": 69,
+        "ByteOffset": 1415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Ssw_Frm_t *) malloc(sizeof(Ssw_Frm_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssw_Frm_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 57,
+        "ByteOffset": 2163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjRepr.Id \u003c pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjNew != Aig_Not(pObjReprNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjNew != pObjReprNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFrames == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 7127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vInits == nil || Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFrames.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 8174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFrames == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 8206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 8247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_FrmStart",
+      "Start": 1260,
+      "End": 1642,
+      "BodyStart": 1305,
+      "Original": "Ssw_Frm_t * Ssw_FrmStart( Aig_Man_t * pAig )\n{\n    Ssw_Frm_t * p;\n    p = ABC_ALLOC( Ssw_Frm_t, 1 );\n    memset( p, 0, sizeof(Ssw_Frm_t) );\n    p-\u003epAig          = pAig;\n    p-\u003enObjs         = Aig_ManObjNumMax( pAig );\n    p-\u003enFrames       = 0;\n    p-\u003epFrames       = NULL;\n    p-\u003evAig2Frm      = Vec_PtrAlloc( 0 );\n    Vec_PtrFill( p-\u003evAig2Frm, 2 * p-\u003enObjs, NULL );\n    return p;\n}",
+      "Draft": "func Ssw_FrmStart(pAig *Aig_Man_t) *Ssw_Frm_t {\n    var p *Ssw_Frm_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Frm_t *) malloc(sizeof(Ssw_Frm_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Frm_t) );\n    p.pAig          = pAig;\n    p.nObjs         = Aig_ManObjNumMax( pAig );\n    p.nFrames       = 0;\n    p.pFrames       = nil;\n    p.vAig2Frm      = Vec_PtrAlloc( 0 );\n    Vec_PtrFill( p.vAig2Frm, 2 * p.nObjs, nil );\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_FrmStop",
+      "Start": 1901,
+      "End": 2046,
+      "BodyStart": 1935,
+      "Original": "void Ssw_FrmStop( Ssw_Frm_t * p )\n{\n    if ( p-\u003epFrames )\n        Aig_ManStop( p-\u003epFrames );\n    Vec_PtrFree( p-\u003evAig2Frm );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssw_FrmStop(p *Ssw_Frm_t) {\n    if p.pFrames {\n        Aig_ManStop( p.pFrames ); }\n    Vec_PtrFree( p.vAig2Frm );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_FramesConstrainNode",
+      "Start": 2311,
+      "End": 3793,
+      "BodyStart": 2453,
+      "Original": "static inline void Ssw_FramesConstrainNode( Ssw_Man_t * p, Aig_Man_t * pFrames, Aig_Man_t * pAig, Aig_Obj_t * pObj, int iFrame, int fTwoPos )\n{\n    Aig_Obj_t * pObjNew, * pObjNew2, * pObjRepr, * pObjReprNew, * pMiter;\n    // skip nodes without representative\n    pObjRepr = Aig_ObjRepr(pAig, pObj);\n    if ( pObjRepr == NULL )\n        return;\n    p-\u003enConstrTotal++;\n    assert( pObjRepr-\u003eId \u003c pObj-\u003eId );\n    // get the new node\n    pObjNew = Ssw_ObjFrame( p, pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Ssw_ObjFrame( p, pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if ( pObj-\u003efPhase == pObjRepr-\u003efPhase )\n    {\n        assert( pObjNew != Aig_Not(pObjReprNew) );\n        if ( pObjNew == pObjReprNew )\n            return;\n    }\n    else\n    {\n        assert( pObjNew != pObjReprNew );\n        if ( pObjNew == Aig_Not(pObjReprNew) )\n            return;\n    }\n    p-\u003enConstrReduced++;\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj-\u003efPhase ^ pObjRepr-\u003efPhase );\n    // set the new node\n    Ssw_ObjSetFrame( p, pObj, iFrame, pObjNew2 );\n    // add the constraint\n    if ( fTwoPos )\n    {\n        Aig_ObjCreateCo( pFrames, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, pObjNew );\n    }\n    else\n    {\n        pMiter = Aig_Exor( pFrames, pObjNew, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, Aig_NotCond(pMiter, Aig_ObjPhaseReal(pMiter)) );\n    }\n}",
+      "Draft": "func Ssw_FramesConstrainNode(p *Ssw_Man_t, pFrames *Aig_Man_t, pAig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32, fTwoPos int32) {\n    var pObjNew, pObjNew2, pObjRepr, pObjReprNew, pMiter *Aig_Obj_t;\n    // skip nodes without representative\n    pObjRepr = Aig_ObjRepr(pAig, pObj);\n    if pObjRepr == nil {\n        return; }\n    p.nConstrTotal++;\n    assert(pObjRepr.Id \u003c pObj.Id, \"pObjRepr.Id \u003c pObj.Id\");\n    // get the new node\n    pObjNew = Ssw_ObjFrame( p, pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Ssw_ObjFrame( p, pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if pObj.fPhase == pObjRepr.fPhase {\n        assert(pObjNew != Aig_Not(pObjReprNew), \"pObjNew != Aig_Not(pObjReprNew)\");\n        if pObjNew == pObjReprNew {\n            return; }\n    \n    } else {\n        assert(pObjNew != pObjReprNew, \"pObjNew != pObjReprNew\");\n        if pObjNew == Aig_Not(pObjReprNew) {\n            return; }\n    }\n    p.nConstrReduced++;\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj.fPhase ^ pObjRepr.fPhase );\n    // set the new node\n    Ssw_ObjSetFrame( p, pObj, iFrame, pObjNew2 );\n    // add the constraint\n    if fTwoPos != 0 {\n        Aig_ObjCreateCo( pFrames, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, pObjNew );\n    \n    } else {\n        pMiter = Aig_Exor( pFrames, pObjNew, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, Aig_NotCond(pMiter, Aig_ObjPhaseReal(pMiter)) );\n    }\n}"
+    },
+    {
+      "Name": "Ssw_FramesWithClasses",
+      "Start": 4069,
+      "End": 6460,
+      "BodyStart": 4120,
+      "Original": "Aig_Man_t * Ssw_FramesWithClasses( Ssw_Man_t * p )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pObjNew;\n    int i, f, iLits;\n    assert( p-\u003epFrames == NULL );\n    assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert( Aig_ManRegNum(p-\u003epAig) \u003c Aig_ManCiNum(p-\u003epAig) );\n    p-\u003enConstrTotal = p-\u003enConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p-\u003epAig) * p-\u003enFrames );\n    // create latches for the first frame\n    Saig_ManForEachLo( p-\u003epAig, pObj, i )\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // add timeframes\n    iLits = 0;\n    for ( f = 0; f \u003c p-\u003epPars-\u003enFramesK; f++ )\n    {\n        // map constants and PIs\n        Ssw_ObjSetFrame( p, Aig_ManConst1(p-\u003epAig), f, Aig_ManConst1(pFrames) );\n        Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        {\n            pObjNew = Aig_ObjCreateCi(pFrames);\n            pObjNew-\u003efPhase = (p-\u003evInits != NULL) \u0026\u0026 Vec_IntEntry(p-\u003evInits, iLits++);\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n        }\n        // set the constraints on the latch outputs\n        Saig_ManForEachLo( p-\u003epAig, pObj, i )\n            Ssw_FramesConstrainNode( p, pFrames, p-\u003epAig, pObj, f, 1 );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( p-\u003epAig, pObj, i )\n        {\n            pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            Ssw_FramesConstrainNode( p, pFrames, p-\u003epAig, pObj, f, 1 );\n        }\n        // transfer to the primary outputs\n        Aig_ManForEachCo( p-\u003epAig, pObj, i )\n            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj,f) );\n        // transfer latch input to the latch outputs\n        Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n            Ssw_ObjSetFrame( p, pObjLo, f+1, Ssw_ObjFrame(p, pObjLi,f) );\n    }\n    assert( p-\u003evInits == NULL || Vec_IntSize(p-\u003evInits) == iLits + Saig_ManPiNum(p-\u003epAig) );\n    // add the POs for the latch outputs of the last frame\n    Saig_ManForEachLo( p-\u003epAig, pObj, i )\n        Aig_ObjCreateCo( pFrames, Ssw_ObjFrame( p, pObj, p-\u003epPars-\u003enFramesK ) );\n\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    // make sure the satisfying assignment is node assigned\n    assert( pFrames-\u003epData == NULL );\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}",
+      "Draft": "func Ssw_FramesWithClasses(p *Ssw_Man_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var i, f, iLits int32;\n    assert(p.pFrames == nil, \"p.pFrames == nil\");\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    p.nConstrTotal = p.nConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    // create latches for the first frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // add timeframes\n    iLits = 0;\n    for  f = 0; f \u003c p.pPars.nFramesK; f++  {\n        // map constants and PIs\n        Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(pFrames) );\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjNew = Aig_ObjCreateCi(pFrames);\n            pObjNew.fPhase = (p.vInits != nil) \u0026\u0026 Vec_IntEntry(p.vInits, iLits++);\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n        }\n        // set the constraints on the latch outputs\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, f, 1 );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, f, 1 );\n        }\n        }\n        // transfer to the primary outputs\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj,f) );\n        }\n        // transfer latch input to the latch outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Ssw_ObjSetFrame( p, pObjLo, f+1, Ssw_ObjFrame(p, pObjLi,f) );\n        }\n    }\n    assert(p.vInits == nil || Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig), \"p.vInits == nil || Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig)\");\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, Ssw_ObjFrame( p, pObj, p.pPars.nFramesK ) );\n    }\n\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    // make sure the satisfying assignment is node assigned\n    assert(pFrames.pData == nil, \"pFrames.pData == nil\");\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Ssw_SpeculativeReduction",
+      "Start": 6736,
+      "End": 8467,
+      "BodyStart": 6790,
+      "Original": "Aig_Man_t * Ssw_SpeculativeReduction( Ssw_Man_t * p )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjNew;\n    int i;\n    assert( p-\u003epFrames == NULL );\n    assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert( Aig_ManRegNum(p-\u003epAig) \u003c Aig_ManCiNum(p-\u003epAig) );\n    p-\u003enConstrTotal = p-\u003enConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p-\u003epAig) * p-\u003enFrames );\n    pFrames-\u003epName = Abc_UtilStrsav( p-\u003epAig-\u003epName );\n    // map constants and PIs\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p-\u003epAig), 0, Aig_ManConst1(pFrames) );\n    Saig_ManForEachPi( p-\u003epAig, pObj, i )\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // create latches for the first frame\n    Saig_ManForEachLo( p-\u003epAig, pObj, i )\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    // set the constraints on the latch outputs\n    Saig_ManForEachLo( p-\u003epAig, pObj, i )\n        Ssw_FramesConstrainNode( p, pFrames, p-\u003epAig, pObj, 0, 0 );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n    {\n        pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, 0), Ssw_ObjChild1Fra(p, pObj, 0) );\n        Ssw_ObjSetFrame( p, pObj, 0, pObjNew );\n        Ssw_FramesConstrainNode( p, pFrames, p-\u003epAig, pObj, 0, 0 );\n    }\n    // add the POs for the latch outputs of the last frame\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n        Aig_ObjCreateCo( pFrames, Ssw_ObjChild0Fra(p, pObj,0) );\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(p-\u003epAig) );\n//    Abc_Print( 1, \"SpecRed: Total constraints = %d. Reduced constraints = %d.\\n\", \n//        p-\u003enConstrTotal, p-\u003enConstrReduced );\n    return pFrames;\n}",
+      "Draft": "func Ssw_SpeculativeReduction(p *Ssw_Man_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i int32;\n    assert(p.pFrames == nil, \"p.pFrames == nil\");\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    p.nConstrTotal = p.nConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    pFrames.pName = Abc_UtilStrsav( p.pAig.pName );\n    // map constants and PIs\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), 0, Aig_ManConst1(pFrames) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // create latches for the first frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // set the constraints on the latch outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, 0, 0 );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, 0), Ssw_ObjChild1Fra(p, pObj, 0) );\n        Ssw_ObjSetFrame( p, pObj, 0, pObjNew );\n        Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, 0, 0 );\n    }\n    }\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, Ssw_ObjChild0Fra(p, pObj,0) );\n    }\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(p.pAig) );\n//    Abc_Print( 1, \"SpecRed: Total constraints = %d. Reduced constraints = %d.\\n\", \n//        p-\u003enConstrTotal, p-\u003enConstrReduced );\n    return pFrames;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::mechanical::sizeof::1401",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::mechanical::sizeof::1454",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1379,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::1380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1334,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::2162",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2030,
+      "End": 2030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::4809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4552,
+      "End": 4552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::5333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4867,
+      "End": 4867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::5766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5172,
+      "End": 5172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::6139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5334,
+      "End": 5334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::6714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::7451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6126,
+      "End": 6126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::8845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7311,
+      "End": 7311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::9122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7460,
+      "End": 7460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::9428",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7615,
+      "End": 7615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::9789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7765,
+      "End": 7765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::pointer-cast::10299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8093,
+      "End": 8093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::Ssw_FrmStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_FrmStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1260,
+      "End": 1642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::ternary::Ssw_FrmStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_FrmStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1901,
+      "End": 2046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::Ssw_FrmStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_FrmStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1901,
+      "End": 2046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::Ssw_FramesConstrainNode",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_FramesConstrainNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2311,
+      "End": 3793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::Ssw_FramesWithClasses",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_FramesWithClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4069,
+      "End": 6460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::Ssw_SpeculativeReduction",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SpeculativeReduction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6736,
+      "End": 8467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8713
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [AIG manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswAig.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the SAT manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_FrmStart(pAig *Aig_Man_t) *Ssw_Frm_t {\n    var p *Ssw_Frm_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Ssw_Frm_t *) malloc(sizeof(Ssw_Frm_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Ssw_Frm_t) );\n    p.pAig          = pAig;\n    p.nObjs         = Aig_ManObjNumMax( pAig );\n    p.nFrames       = 0;\n    p.pFrames       = nil;\n    p.vAig2Frm      = Vec_PtrAlloc( 0 );\n    Vec_PtrFill( p.vAig2Frm, 2 * p.nObjs, nil );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the SAT manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_FrmStop(p *Ssw_Frm_t) {\n    if p.pFrames {\n        Aig_ManStop( p.pFrames ); }\n    Vec_PtrFree( p.vAig2Frm );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs speculative reduction for one node.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_FramesConstrainNode(p *Ssw_Man_t, pFrames *Aig_Man_t, pAig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32, fTwoPos int32) {\n    var pObjNew, pObjNew2, pObjRepr, pObjReprNew, pMiter *Aig_Obj_t;\n    // skip nodes without representative\n    pObjRepr = Aig_ObjRepr(pAig, pObj);\n    if pObjRepr == nil {\n        return; }\n    p.nConstrTotal++;\n    assert(pObjRepr.Id \u003c pObj.Id, \"pObjRepr.Id \u003c pObj.Id\");\n    // get the new node\n    pObjNew = Ssw_ObjFrame( p, pObj, iFrame );\n    // get the new node of the representative\n    pObjReprNew = Ssw_ObjFrame( p, pObjRepr, iFrame );\n    // if this is the same node, no need to add constraints\n    if pObj.fPhase == pObjRepr.fPhase {\n        assert(pObjNew != Aig_Not(pObjReprNew), \"pObjNew != Aig_Not(pObjReprNew)\");\n        if pObjNew == pObjReprNew {\n            return; }\n    \n    } else {\n        assert(pObjNew != pObjReprNew, \"pObjNew != pObjReprNew\");\n        if pObjNew == Aig_Not(pObjReprNew) {\n            return; }\n    }\n    p.nConstrReduced++;\n    // these are different nodes - perform speculative reduction\n    pObjNew2 = Aig_NotCond( pObjReprNew, pObj.fPhase ^ pObjRepr.fPhase );\n    // set the new node\n    Ssw_ObjSetFrame( p, pObj, iFrame, pObjNew2 );\n    // add the constraint\n    if fTwoPos != 0 {\n        Aig_ObjCreateCo( pFrames, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, pObjNew );\n    \n    } else {\n        pMiter = Aig_Exor( pFrames, pObjNew, pObjNew2 );\n        Aig_ObjCreateCo( pFrames, Aig_NotCond(pMiter, Aig_ObjPhaseReal(pMiter)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the inductive case with speculative reduction.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_FramesWithClasses(p *Ssw_Man_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;\n    var i, f, iLits int32;\n    assert(p.pFrames == nil, \"p.pFrames == nil\");\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    p.nConstrTotal = p.nConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    // create latches for the first frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // add timeframes\n    iLits = 0;\n    for  f = 0; f \u003c p.pPars.nFramesK; f++  {\n        // map constants and PIs\n        Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(pFrames) );\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            pObjNew = Aig_ObjCreateCi(pFrames);\n            pObjNew.fPhase = (p.vInits != nil) \u0026\u0026 Vec_IntEntry(p.vInits, iLits++);\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n        }\n        // set the constraints on the latch outputs\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n            Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, f, 1 );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );\n            Ssw_ObjSetFrame( p, pObj, f, pObjNew );\n            Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, f, 1 );\n        }\n        }\n        // transfer to the primary outputs\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj,f) );\n        }\n        // transfer latch input to the latch outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Ssw_ObjSetFrame( p, pObjLo, f+1, Ssw_ObjFrame(p, pObjLi,f) );\n        }\n    }\n    assert(p.vInits == nil || Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig), \"p.vInits == nil || Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig)\");\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, Ssw_ObjFrame( p, pObj, p.pPars.nFramesK ) );\n    }\n\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    // make sure the satisfying assignment is node assigned\n    assert(pFrames.pData == nil, \"pFrames.pData == nil\");\n//Aig_ManShow( pFrames, 0, NULL );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the inductive case with speculative reduction.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SpeculativeReduction(p *Ssw_Man_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i int32;\n    assert(p.pFrames == nil, \"p.pFrames == nil\");\n    assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n    assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n    p.nConstrTotal = p.nConstrReduced = 0;\n\n    // start the fraig package\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFrames );\n    pFrames.pName = Abc_UtilStrsav( p.pAig.pName );\n    // map constants and PIs\n    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), 0, Aig_ManConst1(pFrames) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // create latches for the first frame\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(pFrames) );\n    }\n    // set the constraints on the latch outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, 0, 0 );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObjNew = Aig_And( pFrames, Ssw_ObjChild0Fra(p, pObj, 0), Ssw_ObjChild1Fra(p, pObj, 0) );\n        Ssw_ObjSetFrame( p, pObj, 0, pObjNew );\n        Ssw_FramesConstrainNode( p, pFrames, p.pAig, pObj, 0, 0 );\n    }\n    }\n    // add the POs for the latch outputs of the last frame\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, Ssw_ObjChild0Fra(p, pObj,0) );\n    }\n    // remove dangling nodes\n    Aig_ManCleanup( pFrames );\n    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(p.pAig) );\n//    Abc_Print( 1, \"SpecRed: Total constraints = %d. Reduced constraints = %d.\\n\", \n//        p-\u003enConstrTotal, p-\u003enConstrReduced );\n    return pFrames;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

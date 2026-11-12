@@ -1,0 +1,346 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c",
+  "SHA256": "875441e0cace569acfb2c975c6bf09c90ff0c0755a56663866008e63c95f4954",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 70,
+        "ByteOffset": 4888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    node = /*__starting_point_inline_macro:ABC_ALLOC__*/((MtrNode *) malloc(sizeof(MtrNode) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 60,
+        "ByteOffset": 5372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((node) ? (free((char *) (node)), (node) = 0) : 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Formatting call has no format argument.",
+      "Location": {
+        "Line": 393,
+        "Column": 12,
+        "ByteOffset": 12169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stdout,"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 393,
+        "Column": 20,
+        "ByteOffset": 12177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stdout,"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 84,
+        "Column": 1,
+        "ByteOffset": 3456
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 277,
+        "Column": 1,
+        "ByteOffset": 8577
+      },
+      "Directive": "#ifdef MTR_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 428,
+        "Column": 1,
+        "ByteOffset": 12096
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mtr_AllocNode",
+      "Start": 4780,
+      "End": 4884,
+      "BodyStart": 4810,
+      "Original": "MtrNode *\nMtr_AllocNode(void)\n{\n    MtrNode *node;\n\n    node = ABC_ALLOC(MtrNode,1);\n    return node;\n\n}",
+      "Draft": "func Mtr_AllocNode() *MtrNode {\n    var node *MtrNode;\n\n    // inlining of macro ABC_ALLOC\n    node = ((MtrNode *) malloc(sizeof(MtrNode) * (size_t)(1)));\n    return node;\n\n}"
+    },
+    {
+      "Name": "Mtr_DeallocNode",
+      "Start": 5179,
+      "End": 5284,
+      "BodyStart": 5248,
+      "Original": "void\nMtr_DeallocNode(\n  MtrNode * node /* node to be deallocated */)\n{\n    ABC_FREE(node);\n    return;\n\n}",
+      "Draft": "void\nMtr_DeallocNode(\n  MtrNode * node /* node to be deallocated */)\n{\n    // inlining of macro ABC_FREE\n    ((node) ? (free((char *) (node)), (node) = 0) : 0);\n    return;\n\n}"
+    },
+    {
+      "Name": "Mtr_InitTree",
+      "Start": 5670,
+      "End": 5897,
+      "BodyStart": 5699,
+      "Original": "MtrNode *\nMtr_InitTree(void)\n{\n    MtrNode *node;\n\n    node = Mtr_AllocNode();\n    if (node == NULL) return(NULL);\n\n    node-\u003eparent = node-\u003echild = node-\u003eelder = node-\u003eyounger = NULL;\n    node-\u003eflags = 0;\n\n    return(node);\n\n}",
+      "Draft": "func Mtr_InitTree() *MtrNode {\n    var node *MtrNode;\n\n    node = Mtr_AllocNode();\n    if node == nil { return(nil); }\n\n    node.parent = node.child = node.elder = node.younger = nil;\n    node.flags = 0;\n\n    return(node);\n\n}"
+    },
+    {
+      "Name": "Mtr_FreeTree",
+      "Start": 6207,
+      "End": 6416,
+      "BodyStart": 6244,
+      "Original": "void\nMtr_FreeTree(\n  MtrNode * node)\n{\n    if (node == NULL) return;\n    if (! MTR_TEST(node,MTR_TERMINAL)) Mtr_FreeTree(node-\u003echild);\n    Mtr_FreeTree(node-\u003eyounger);\n    Mtr_DeallocNode(node);\n    return;\n\n}",
+      "Draft": "func Mtr_FreeTree(node *MtrNode) {\n    if node == nil { return; }\n    // inlining of macro MTR_TEST\n    if ! (node.flags \u0026 (MTR_TERMINAL)) { Mtr_FreeTree(node.child); }\n    Mtr_FreeTree(node.younger);\n    Mtr_DeallocNode(node);\n    return;\n\n}"
+    },
+    {
+      "Name": "Mtr_CopyTree",
+      "Start": 6933,
+      "End": 8047,
+      "BodyStart": 6993,
+      "Original": "MtrNode *\nMtr_CopyTree(\n  MtrNode * node,\n  int  expansion)\n{\n    MtrNode *copy;\n\n    if (node == NULL) return(NULL);\n    if (expansion \u003c 1) return(NULL);\n    copy = Mtr_AllocNode();\n    if (copy == NULL) return(NULL);\n    copy-\u003eparent = copy-\u003eelder = copy-\u003echild = copy-\u003eyounger = NULL;\n    if (node-\u003echild != NULL) {\n        copy-\u003echild = Mtr_CopyTree(node-\u003echild, expansion);\n        if (copy-\u003echild == NULL) {\n            Mtr_DeallocNode(copy);\n            return(NULL);\n        }\n    }\n    if (node-\u003eyounger != NULL) {\n        copy-\u003eyounger = Mtr_CopyTree(node-\u003eyounger, expansion);\n        if (copy-\u003eyounger == NULL) {\n            Mtr_FreeTree(copy);\n            return(NULL);\n        }\n    }\n    copy-\u003eflags = node-\u003eflags;\n    copy-\u003elow = node-\u003elow * expansion;\n    copy-\u003esize = node-\u003esize * expansion;\n    copy-\u003eindex = node-\u003eindex * expansion;\n    if (copy-\u003eyounger) copy-\u003eyounger-\u003eelder = copy;\n    if (copy-\u003echild) {\n        MtrNode *auxnode = copy-\u003echild;\n        while (auxnode != NULL) {\n            auxnode-\u003eparent = copy;\n            auxnode = auxnode-\u003eyounger;\n        }\n    }\n    return(copy);\n\n}",
+      "Draft": "func Mtr_CopyTree(node *MtrNode, expansion int32) *MtrNode {\n    var copy *MtrNode;\n\n    if node == nil { return(nil); }\n    if expansion \u003c 1 { return(nil); }\n    copy = Mtr_AllocNode();\n    if copy == nil { return(nil); }\n    copy.parent = copy.elder = copy.child = copy.younger = nil;\n    if node.child != nil {\n        copy.child = Mtr_CopyTree(node.child, expansion);\n        if copy.child == nil {\n            Mtr_DeallocNode(copy);\n            return(nil);\n        }\n    }\n    if node.younger != nil {\n        copy.younger = Mtr_CopyTree(node.younger, expansion);\n        if copy.younger == nil {\n            Mtr_FreeTree(copy);\n            return(nil);\n        }\n    }\n    copy.flags = node.flags;\n    copy.low = node.low * expansion;\n    copy.size = node.size * expansion;\n    copy.index = node.index * expansion;\n    if copy.younger { copy.younger.elder = copy; }\n    if copy.child {\n        var auxnode *MtrNode  = copy.child;\n        for auxnode != nil {\n            auxnode.parent = copy;\n            auxnode = auxnode.younger;\n        }\n    }\n    return(copy);\n\n}"
+    },
+    {
+      "Name": "Mtr_MakeFirstChild",
+      "Start": 8389,
+      "End": 8732,
+      "BodyStart": 8453,
+      "Original": "void\nMtr_MakeFirstChild(\n  MtrNode * parent,\n  MtrNode * child)\n{\n    child-\u003eparent = parent;\n    child-\u003eyounger = parent-\u003echild;\n    child-\u003eelder = NULL;\n    if (parent-\u003echild != NULL) {\n#ifdef MTR_DEBUG\n        assert(parent-\u003echild-\u003eelder == NULL);\n#endif\n        parent-\u003echild-\u003eelder = child;\n    }\n    parent-\u003echild = child;\n    return;\n\n}",
+      "Draft": "func Mtr_MakeFirstChild(parent *MtrNode, child *MtrNode) {\n    child.parent = parent;\n    child.younger = parent.child;\n    child.elder = nil;\n    if parent.child != nil {\n#ifdef MTR_DEBUG\n        assert(parent-\u003echild-\u003eelder == NULL);\n#endif\n        parent.child.elder = child;\n    }\n    parent.child = child;\n    return;\n\n}"
+    },
+    {
+      "Name": "Mtr_MakeLastChild",
+      "Start": 9079,
+      "End": 9513,
+      "BodyStart": 9142,
+      "Original": "void\nMtr_MakeLastChild(\n  MtrNode * parent,\n  MtrNode * child)\n{\n    MtrNode *node;\n\n    child-\u003eyounger = NULL;\n\n    if (parent-\u003echild == NULL) {\n        parent-\u003echild = child;\n        child-\u003eelder = NULL;\n    } else {\n        for (node = parent-\u003echild;\n             node-\u003eyounger != NULL;\n             node = node-\u003eyounger);\n        node-\u003eyounger = child;\n        child-\u003eelder = node;\n    }\n    child-\u003eparent = parent;\n    return;\n\n}",
+      "Draft": "func Mtr_MakeLastChild(parent *MtrNode, child *MtrNode) {\n    var node *MtrNode;\n\n    child.younger = nil;\n\n    if parent.child == nil {\n        parent.child = child;\n        child.elder = nil;\n    } else {\n        for node = parent.child;\n             node.younger != nil;\n             node = node.younger {}\n        node.younger = child;\n        child.elder = node;\n    }\n    child.parent = parent;\n    return;\n\n}"
+    },
+    {
+      "Name": "Mtr_CreateFirstChild",
+      "Start": 9970,
+      "End": 10251,
+      "BodyStart": 10022,
+      "Original": "MtrNode *\nMtr_CreateFirstChild(\n  MtrNode * parent)\n{\n    MtrNode *child;\n\n    child = Mtr_AllocNode();\n    if (child == NULL) return(NULL);\n\n    child-\u003echild = child-\u003eyounger = child-\u003e elder = NULL;\n    child-\u003eflags = 0;\n    Mtr_MakeFirstChild(parent,child);\n    return(child);\n\n}",
+      "Draft": "func Mtr_CreateFirstChild(parent *MtrNode) *MtrNode {\n    var child *MtrNode;\n\n    child = Mtr_AllocNode();\n    if child == nil { return(nil); }\n\n    child.child = child.younger = child. elder = nil;\n    child.flags = 0;\n    Mtr_MakeFirstChild(parent,child);\n    return(child);\n\n}"
+    },
+    {
+      "Name": "Mtr_CreateLastChild",
+      "Start": 10709,
+      "End": 10987,
+      "BodyStart": 10760,
+      "Original": "MtrNode *\nMtr_CreateLastChild(\n  MtrNode * parent)\n{\n    MtrNode *child;\n\n    child = Mtr_AllocNode();\n    if (child == NULL) return(NULL);\n\n    child-\u003echild = child-\u003eyounger = child-\u003eelder = NULL;\n    child-\u003eflags = 0;\n    Mtr_MakeLastChild(parent,child);\n    return(child);\n\n}",
+      "Draft": "func Mtr_CreateLastChild(parent *MtrNode) *MtrNode {\n    var child *MtrNode;\n\n    child = Mtr_AllocNode();\n    if child == nil { return(nil); }\n\n    child.child = child.younger = child.elder = nil;\n    child.flags = 0;\n    Mtr_MakeLastChild(parent,child);\n    return(child);\n\n}"
+    },
+    {
+      "Name": "Mtr_MakeNextSibling",
+      "Start": 11387,
+      "End": 11678,
+      "BodyStart": 11452,
+      "Original": "void\nMtr_MakeNextSibling(\n  MtrNode * first,\n  MtrNode * second)\n{\n    second-\u003eyounger = first-\u003eyounger;\n    if (first-\u003eyounger != NULL) {\n        first-\u003eyounger-\u003eelder = second;\n    }\n    second-\u003eparent = first-\u003eparent;\n    first-\u003eyounger = second;\n    second-\u003eelder = first;\n    return;\n\n}",
+      "Draft": "func Mtr_MakeNextSibling(first *MtrNode, second *MtrNode) {\n    second.younger = first.younger;\n    if first.younger != nil {\n        first.younger.elder = second;\n    }\n    second.parent = first.parent;\n    first.younger = second;\n    second.elder = first;\n    return;\n\n}"
+    },
+    {
+      "Name": "Mtr_PrintTree",
+      "Start": 11999,
+      "End": 12746,
+      "BodyStart": 12037,
+      "Original": "void\nMtr_PrintTree(\n  MtrNode * node)\n{\n    if (node == NULL) return;\n    (void) fprintf(stdout,\n#if SIZEOF_VOID_P == 8\n    \"N=0x%-8lx C=0x%-8lx Y=0x%-8lx E=0x%-8lx P=0x%-8lx F=%x L=%u S=%u\\n\",\n    (unsigned long) node, (unsigned long) node-\u003echild,\n    (unsigned long) node-\u003eyounger, (unsigned long) node-\u003eelder,\n    (unsigned long) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#else\n    \"N=0x%-8x C=0x%-8x Y=0x%-8x E=0x%-8x P=0x%-8x F=%x L=%hu S=%hu\\n\",\n    (unsigned) node, (unsigned) node-\u003echild,\n    (unsigned) node-\u003eyounger, (unsigned) node-\u003eelder,\n    (unsigned) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#endif\n    if (!MTR_TEST(node,MTR_TERMINAL)) Mtr_PrintTree(node-\u003echild);\n    Mtr_PrintTree(node-\u003eyounger);\n    return;\n\n}",
+      "Draft": "func Mtr_PrintTree(node *MtrNode) {\n    if node == nil { return; }\n    (void) fprintf(os.Stdout,\n    #if SIZEOF_VOID_P == 8\n    \"N=0x%-8lx C=0x%-8lx Y=0x%-8lx E=0x%-8lx P=0x%-8lx F=%x L=%u S=%u\\n\",\n    (unsigned long) node, (unsigned long) node-\u003echild,\n    (unsigned long) node-\u003eyounger, (unsigned long) node-\u003eelder,\n    (unsigned long) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#else\n    \"N=0x%-8x C=0x%-8x Y=0x%-8x E=0x%-8x P=0x%-8x F=%x L=%hu S=%hu\\n\",\n    (unsigned) node, (unsigned) node-\u003echild,\n    (unsigned) node-\u003eyounger, (unsigned) node-\u003eelder,\n    (unsigned) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#endif\n    // inlining of macro MTR_TEST\n    if (!(node.flags \u0026 (MTR_TERMINAL))) Mtr_PrintTree(node.child);\n    Mtr_PrintTree(node.younger);\n    return;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::mechanical::sizeof::4872",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4843,
+      "End": 4843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::pointer-cast::4853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4843,
+      "End": 4843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::pointer-cast::5354",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5254,
+      "End": 5254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_AllocNode",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_AllocNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4780,
+      "End": 4884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::ternary::Mtr_DeallocNode",
+      "Category": "ternary-review",
+      "Symbol": "Mtr_DeallocNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5179,
+      "End": 5284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_DeallocNode",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_DeallocNode",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5179,
+      "End": 5284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_InitTree",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_InitTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5670,
+      "End": 5897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_FreeTree",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_FreeTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6207,
+      "End": 6416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_CopyTree",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_CopyTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6933,
+      "End": 8047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_MakeFirstChild",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_MakeFirstChild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8389,
+      "End": 8732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_MakeLastChild",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_MakeLastChild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9079,
+      "End": 9513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_CreateFirstChild",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_CreateFirstChild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9970,
+      "End": 10251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_CreateLastChild",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_CreateLastChild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10709,
+      "End": 10987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_MakeNextSibling",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_MakeNextSibling",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11387,
+      "End": 11678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::Mtr_PrintTree",
+      "Category": "semantic-review",
+      "Symbol": "Mtr_PrintTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11999,
+      "End": 12746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3456,
+      "End": 3566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8577,
+      "End": 8646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtrBasic.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12096,
+      "End": 12631
+    }
+  ],
+  "Draft": "package mtr\n\nimport \"os\"\n\n/**CFile***********************************************************************\n\n  FileName    [mtrBasic.c]\n\n  PackageName [mtr]\n\n  Synopsis    [Basic manipulation of multiway branching trees.]\n\n  Description [External procedures included in this module:\n            \u003cul\u003e\n            \u003cli\u003e Mtr_AllocNode()\n            \u003cli\u003e Mtr_DeallocNode()\n            \u003cli\u003e Mtr_InitTree()\n            \u003cli\u003e Mtr_FreeTree()\n            \u003cli\u003e Mtr_CopyTree()\n            \u003cli\u003e Mtr_MakeFirstChild()\n            \u003cli\u003e Mtr_MakeLastChild()\n            \u003cli\u003e Mtr_CreateFirstChild()\n            \u003cli\u003e Mtr_CreateLastChild()\n            \u003cli\u003e Mtr_MakeNextSibling()\n            \u003cli\u003e Mtr_PrintTree()\n            \u003c/ul\u003e\n            ]\n\n  SeeAlso     [cudd package]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"mtrInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] MTR_UNUSED = \"$Id: mtrBasic.c,v 1.13 2009/02/20 02:03:47 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates new tree node.]\n\n  Description [Allocates new tree node. Returns pointer to node.]\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_DeallocNode]\n\n******************************************************************************/\nfunc Mtr_AllocNode() *MtrNode {\n    var node *MtrNode;\n\n    // inlining of macro ABC_ALLOC\n    node = ((MtrNode *) malloc(sizeof(MtrNode) * (size_t)(1)));\n    return node;\n\n} /* Mtr_AllocNode */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Deallocates tree node.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_AllocNode]\n\n******************************************************************************/\nvoid\nMtr_DeallocNode(\n  MtrNode * node /* node to be deallocated */)\n{\n    // inlining of macro ABC_FREE\n    ((node) ? (free((char *) (node)), (node) = 0) : 0);\n    return;\n\n} /* end of Mtr_DeallocNode */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes tree with one node.]\n\n  Description [Initializes tree with one node. Returns pointer to node.]\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_FreeTree Mtr_InitGroupTree]\n\n******************************************************************************/\nfunc Mtr_InitTree() *MtrNode {\n    var node *MtrNode;\n\n    node = Mtr_AllocNode();\n    if node == nil { return(nil); }\n\n    node.parent = node.child = node.elder = node.younger = nil;\n    node.flags = 0;\n\n    return(node);\n\n} /* end of Mtr_InitTree */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Disposes of tree rooted at node.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_InitTree]\n\n******************************************************************************/\nfunc Mtr_FreeTree(node *MtrNode) {\n    if node == nil { return; }\n    // inlining of macro MTR_TEST\n    if ! (node.flags \u0026 (MTR_TERMINAL)) { Mtr_FreeTree(node.child); }\n    Mtr_FreeTree(node.younger);\n    Mtr_DeallocNode(node);\n    return;\n\n} /* end of Mtr_FreeTree */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes a copy of tree.]\n\n  Description [Makes a copy of tree. If parameter expansion is greater\n  than 1, it will expand the tree by that factor. It is an error for\n  expansion to be less than 1. Returns a pointer to the copy if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_InitTree]\n\n******************************************************************************/\nfunc Mtr_CopyTree(node *MtrNode, expansion int32) *MtrNode {\n    var copy *MtrNode;\n\n    if node == nil { return(nil); }\n    if expansion \u003c 1 { return(nil); }\n    copy = Mtr_AllocNode();\n    if copy == nil { return(nil); }\n    copy.parent = copy.elder = copy.child = copy.younger = nil;\n    if node.child != nil {\n        copy.child = Mtr_CopyTree(node.child, expansion);\n        if copy.child == nil {\n            Mtr_DeallocNode(copy);\n            return(nil);\n        }\n    }\n    if node.younger != nil {\n        copy.younger = Mtr_CopyTree(node.younger, expansion);\n        if copy.younger == nil {\n            Mtr_FreeTree(copy);\n            return(nil);\n        }\n    }\n    copy.flags = node.flags;\n    copy.low = node.low * expansion;\n    copy.size = node.size * expansion;\n    copy.index = node.index * expansion;\n    if copy.younger { copy.younger.elder = copy; }\n    if copy.child {\n        var auxnode *MtrNode  = copy.child;\n        for auxnode != nil {\n            auxnode.parent = copy;\n            auxnode = auxnode.younger;\n        }\n    }\n    return(copy);\n\n} /* end of Mtr_CopyTree */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes child the first child of parent.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_MakeLastChild Mtr_CreateFirstChild]\n\n******************************************************************************/\nfunc Mtr_MakeFirstChild(parent *MtrNode, child *MtrNode) {\n    child.parent = parent;\n    child.younger = parent.child;\n    child.elder = nil;\n    if parent.child != nil {\n#ifdef MTR_DEBUG\n        assert(parent-\u003echild-\u003eelder == NULL);\n#endif\n        parent.child.elder = child;\n    }\n    parent.child = child;\n    return;\n\n} /* end of Mtr_MakeFirstChild */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes child the last child of parent.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_MakeFirstChild Mtr_CreateLastChild]\n\n******************************************************************************/\nfunc Mtr_MakeLastChild(parent *MtrNode, child *MtrNode) {\n    var node *MtrNode;\n\n    child.younger = nil;\n\n    if parent.child == nil {\n        parent.child = child;\n        child.elder = nil;\n    } else {\n        for node = parent.child;\n             node.younger != nil;\n             node = node.younger {}\n        node.younger = child;\n        child.elder = node;\n    }\n    child.parent = parent;\n    return;\n\n} /* end of Mtr_MakeLastChild */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates a new node and makes it the first child of parent.]\n\n  Description [Creates a new node and makes it the first child of\n  parent. Returns pointer to new child.]\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_MakeFirstChild Mtr_CreateLastChild]\n\n******************************************************************************/\nfunc Mtr_CreateFirstChild(parent *MtrNode) *MtrNode {\n    var child *MtrNode;\n\n    child = Mtr_AllocNode();\n    if child == nil { return(nil); }\n\n    child.child = child.younger = child. elder = nil;\n    child.flags = 0;\n    Mtr_MakeFirstChild(parent,child);\n    return(child);\n\n} /* end of Mtr_CreateFirstChild */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates a new node and makes it the last child of parent.]\n\n  Description [Creates a new node and makes it the last child of parent.\n  Returns pointer to new child.]\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_MakeLastChild Mtr_CreateFirstChild]\n\n******************************************************************************/\nfunc Mtr_CreateLastChild(parent *MtrNode) *MtrNode {\n    var child *MtrNode;\n\n    child = Mtr_AllocNode();\n    if child == nil { return(nil); }\n\n    child.child = child.younger = child.elder = nil;\n    child.flags = 0;\n    Mtr_MakeLastChild(parent,child);\n    return(child);\n\n} /* end of Mtr_CreateLastChild */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes second the next sibling of first.]\n\n  Description [Makes second the next sibling of first. Second becomes a\n  child of the parent of first.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Mtr_MakeNextSibling(first *MtrNode, second *MtrNode) {\n    second.younger = first.younger;\n    if first.younger != nil {\n        first.younger.elder = second;\n    }\n    second.parent = first.parent;\n    first.younger = second;\n    second.elder = first;\n    return;\n\n} /* end of Mtr_MakeNextSibling */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints a tree, one node per line.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Mtr_PrintGroups]\n\n******************************************************************************/\nfunc Mtr_PrintTree(node *MtrNode) {\n    if node == nil { return; }\n    (void) fprintf(os.Stdout,\n    #if SIZEOF_VOID_P == 8\n    \"N=0x%-8lx C=0x%-8lx Y=0x%-8lx E=0x%-8lx P=0x%-8lx F=%x L=%u S=%u\\n\",\n    (unsigned long) node, (unsigned long) node-\u003echild,\n    (unsigned long) node-\u003eyounger, (unsigned long) node-\u003eelder,\n    (unsigned long) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#else\n    \"N=0x%-8x C=0x%-8x Y=0x%-8x E=0x%-8x P=0x%-8x F=%x L=%hu S=%hu\\n\",\n    (unsigned) node, (unsigned) node-\u003echild,\n    (unsigned) node-\u003eyounger, (unsigned) node-\u003eelder,\n    (unsigned) node-\u003eparent, node-\u003eflags, node-\u003elow, node-\u003esize);\n#endif\n    // inlining of macro MTR_TEST\n    if (!(node.flags \u0026 (MTR_TERMINAL))) Mtr_PrintTree(node.child);\n    Mtr_PrintTree(node.younger);\n    return;\n\n} /* end of Mtr_PrintTree */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

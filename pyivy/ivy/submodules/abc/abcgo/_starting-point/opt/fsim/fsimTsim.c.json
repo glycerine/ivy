@@ -1,0 +1,934 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c",
+  "SHA256": "fc84f14d2458c25bded2e198169c46eb3ad7c6a9f924962196303281ee9ad1d2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 211,
+        "Column": 13,
+        "ByteOffset": 7093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Fsim_ManTerStateLookup( pState, nWords, pBins, nBins ) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 249,
+        "Column": 80,
+        "ByteOffset": 8251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pRes = (unsigned *)/*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 13,
+        "ByteOffset": 9008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 9076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 13,
+        "ByteOffset": 9143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"x\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 13,
+        "ByteOffset": 9195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 9220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" (0=%5d, 1=%5d, x=%5d)\\n\", nZeros, nOnes, nDcs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCis == p.nCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 10134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCos == p.nCos );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 336,
+        "Column": 26,
+        "ByteOffset": 10643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clkTotal int64 = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 10656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 339,
+        "Column": 11,
+        "ByteOffset": 10723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    clk = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 9,
+        "ByteOffset": 10790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj = %8d (%8d). Cut = %6d. Front = %6d.  FrtMem = %7.2f MB. \", "
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 346,
+        "Column": 43,
+        "ByteOffset": 11112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 346,
+        "Column": 69,
+        "ByteOffset": 11138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 349,
+        "Column": 11,
+        "ByteOffset": 11208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    clk = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 11270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Max ID = %8d. Log max ID = %2d.  AigMem = %7.2f MB (%5.2f byte/obj).  \", "
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 357,
+        "Column": 43,
+        "ByteOffset": 11629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 357,
+        "Column": 69,
+        "ByteOffset": 11655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 363,
+        "Column": 76,
+        "ByteOffset": 11928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBins   = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned * *) malloc(sizeof(unsigned *) * (size_t)(nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 11979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBins, 0, sizeof(unsigned *) * nBins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 12057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pDataSim == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 367,
+        "Column": 77,
+        "ByteOffset": 12162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSim = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nFront) * sizeof(unsigned))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 368,
+        "Column": 80,
+        "ByteOffset": 12328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSimCis = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCis) * sizeof(unsigned))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 369,
+        "Column": 80,
+        "ByteOffset": 12492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDataSimCos = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCos) * sizeof(unsigned))));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 9,
+        "ByteOffset": 13298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", "
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 392,
+        "Column": 43,
+        "ByteOffset": 13722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 392,
+        "Column": 74,
+        "ByteOffset": 13753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 394,
+        "Column": 61,
+        "ByteOffset": 13839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBins) ? (free((char *) (pBins)), (pBins) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_XsimNotCond",
+      "Start": 838,
+      "End": 1042,
+      "BodyStart": 900,
+      "Original": "static inline int Aig_XsimNotCond( int Value, int fCompl )   \n{ \n    if ( Value == FSIM_UND )\n        return FSIM_UND;\n    if ( Value == FSIM_ZER + fCompl )\n        return FSIM_ZER;\n    return FSIM_ONE;\n}",
+      "Draft": "func Aig_XsimNotCond(Value int32, fCompl int32) int32 { \n    if Value == FSIM_UND {\n        return FSIM_UND; }\n    if Value == FSIM_ZER + fCompl {\n        return FSIM_ZER; }\n    return FSIM_ONE;\n}"
+    },
+    {
+      "Name": "Aig_XsimAndCond",
+      "Start": 1043,
+      "End": 1331,
+      "BodyStart": 1132,
+      "Original": "static inline int Aig_XsimAndCond( int Value0, int fCompl0, int Value1, int fCompl1 )   \n{ \n    if ( Value0 == FSIM_UND || Value1 == FSIM_UND )\n        return FSIM_UND;\n    if ( Value0 == FSIM_ZER + fCompl0 || Value1 == FSIM_ZER + fCompl1 )\n        return FSIM_ZER;\n    return FSIM_ONE;\n}",
+      "Draft": "func Aig_XsimAndCond(Value0 int32, fCompl0 int32, Value1 int32, fCompl1 int32) int32 { \n    if Value0 == FSIM_UND || Value1 == FSIM_UND {\n        return FSIM_UND; }\n    if Value0 == FSIM_ZER + fCompl0 || Value1 == FSIM_ZER + fCompl1 {\n        return FSIM_ZER; }\n    return FSIM_ONE;\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimInfoGet",
+      "Start": 1333,
+      "End": 1454,
+      "BodyStart": 1400,
+      "Original": "static inline int Fsim_ManTerSimInfoGet( unsigned * pInfo, int i )\n{\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Fsim_ManTerSimInfoGet(pInfo *uint32, i int32) int32 {\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimInfoSet",
+      "Start": 1455,
+      "End": 1688,
+      "BodyStart": 1534,
+      "Original": "static inline void Fsim_ManTerSimInfoSet( unsigned * pInfo, int i, int Value )\n{\n    assert( Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND );\n    Value ^= Fsim_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}",
+      "Draft": "func Fsim_ManTerSimInfoSet(pInfo *uint32, i int32, Value int32) {\n    assert(Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND, \"Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND\");\n    Value ^= Fsim_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}"
+    },
+    {
+      "Name": "Fsim_ManTerStateNext",
+      "Start": 1690,
+      "End": 1836,
+      "BodyStart": 1790,
+      "Original": "static inline unsigned * Fsim_ManTerStateNext( unsigned * pState, int nWords )                      { return *((unsigned **)(pState + nWords));  }",
+      "Draft": "func Fsim_ManTerStateNext(pState *uint32, nWords int32) *uint32 { return *((unsigned **)(pState + nWords));  }"
+    },
+    {
+      "Name": "Fsim_ManTerStateSetNext",
+      "Start": 1837,
+      "End": 1983,
+      "BodyStart": 1937,
+      "Original": "static inline void       Fsim_ManTerStateSetNext( unsigned * pState, int nWords, unsigned * pNext ) { *((unsigned **)(pState + nWords)) = pNext; }",
+      "Draft": "func Fsim_ManTerStateSetNext(pState *uint32, nWords int32, pNext *uint32) { *((unsigned **)(pState + nWords)) = pNext; }"
+    },
+    {
+      "Name": "Fsim_ManTerSimulateCi",
+      "Start": 2439,
+      "End": 2614,
+      "BodyStart": 2518,
+      "Original": "static inline void Fsim_ManTerSimulateCi( Fsim_Man_t * p, int iNode, int iCi )\n{\n    Fsim_ManTerSimInfoSet( p-\u003epDataSim, iNode, Fsim_ManTerSimInfoGet(p-\u003epDataSimCis, iCi) );\n}",
+      "Draft": "func Fsim_ManTerSimulateCi(p *Fsim_Man_t, iNode int32, iCi int32) {\n    Fsim_ManTerSimInfoSet( p.pDataSim, iNode, Fsim_ManTerSimInfoGet(p.pDataSimCis, iCi) );\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimulateCo",
+      "Start": 2850,
+      "End": 3107,
+      "BodyStart": 2929,
+      "Original": "static inline void Fsim_ManTerSimulateCo( Fsim_Man_t * p, int iCo, int iFan0 )\n{\n    int Value = Fsim_ManTerSimInfoGet( p-\u003epDataSim, Fsim_Lit2Var(iFan0) );\n    Fsim_ManTerSimInfoSet( p-\u003epDataSimCos, iCo, Aig_XsimNotCond( Value, Fsim_LitIsCompl(iFan0) ) );\n}",
+      "Draft": "func Fsim_ManTerSimulateCo(p *Fsim_Man_t, iCo int32, iFan0 int32) {\n    var Value int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan0) );\n    Fsim_ManTerSimInfoSet( p.pDataSimCos, iCo, Aig_XsimNotCond( Value, Fsim_LitIsCompl(iFan0) ) );\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimulateNode",
+      "Start": 3343,
+      "End": 3724,
+      "BodyStart": 3437,
+      "Original": "static inline void Fsim_ManTerSimulateNode( Fsim_Man_t * p, int iNode, int iFan0, int iFan1 )\n{\n    int Value0 = Fsim_ManTerSimInfoGet( p-\u003epDataSim, Fsim_Lit2Var(iFan0) );\n    int Value1 = Fsim_ManTerSimInfoGet( p-\u003epDataSim, Fsim_Lit2Var(iFan1) );\n    Fsim_ManTerSimInfoSet( p-\u003epDataSim, iNode, Aig_XsimAndCond( Value0, Fsim_LitIsCompl(iFan0), Value1, Fsim_LitIsCompl(iFan1) ) );\n}",
+      "Draft": "func Fsim_ManTerSimulateNode(p *Fsim_Man_t, iNode int32, iFan0 int32, iFan1 int32) {\n    var Value0 int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan0) );\n    var Value1 int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan1) );\n    Fsim_ManTerSimInfoSet( p.pDataSim, iNode, Aig_XsimAndCond( Value0, Fsim_LitIsCompl(iFan0), Value1, Fsim_LitIsCompl(iFan1) ) );\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimInfoInit",
+      "Start": 3960,
+      "End": 4284,
+      "BodyStart": 4020,
+      "Original": "static inline void Fsim_ManTerSimInfoInit( Fsim_Man_t * p )\n{\n    int iPioNum, i;\n    Vec_IntForEachEntry( p-\u003evCis2Ids, iPioNum, i )\n    {\n        if ( iPioNum \u003c p-\u003enPis )\n            Fsim_ManTerSimInfoSet( p-\u003epDataSimCis, i, FSIM_UND );\n        else\n            Fsim_ManTerSimInfoSet( p-\u003epDataSimCis, i, FSIM_ZER );\n    }\n}",
+      "Draft": "func Fsim_ManTerSimInfoInit(p *Fsim_Man_t) {\n    var iPioNum, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_UND );\n        } else {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_ZER ); }\n    }\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimInfoTransfer",
+      "Start": 4520,
+      "End": 4904,
+      "BodyStart": 4584,
+      "Original": "static inline void Fsim_ManTerSimInfoTransfer( Fsim_Man_t * p )\n{\n    int iPioNum, i;\n    Vec_IntForEachEntry( p-\u003evCis2Ids, iPioNum, i )\n    {\n        if ( iPioNum \u003c p-\u003enPis )\n            Fsim_ManTerSimInfoSet( p-\u003epDataSimCis, i, FSIM_UND );\n        else\n            Fsim_ManTerSimInfoSet( p-\u003epDataSimCis, i, Fsim_ManTerSimInfoGet( p-\u003epDataSimCos, p-\u003enPos+iPioNum-p-\u003enPis ) );\n    }\n}",
+      "Draft": "func Fsim_ManTerSimInfoTransfer(p *Fsim_Man_t) {\n    var iPioNum, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_UND );\n        } else {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, Fsim_ManTerSimInfoGet( p.pDataSimCos, p.nPos+iPioNum-p.nPis ) ); }\n    }\n}"
+    },
+    {
+      "Name": "Fsim_ManTerStateHash",
+      "Start": 5199,
+      "End": 6363,
+      "BodyStart": 5273,
+      "Original": "int Fsim_ManTerStateHash( unsigned * pState, int nWords, int nTableSize )\n{\n    static int s_FPrimes[128] = { \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned uHash;\n    int i;\n    uHash = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        uHash ^= pState[i] * s_FPrimes[i \u0026 0x7F];\n    return uHash % nTableSize;\n}",
+      "Draft": "func Fsim_ManTerStateHash(pState *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    uHash = 0;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pState[i] * spStatic_Fsim_ManTerStateHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}"
+    },
+    {
+      "Name": "Fsim_ManTerStateLookup",
+      "Start": 6628,
+      "End": 7008,
+      "BodyStart": 6718,
+      "Original": "int Fsim_ManTerStateLookup( unsigned * pState, int nWords, unsigned ** pBins, int nBins )\n{\n    unsigned * pEntry;\n    int Hash;\n    Hash = Fsim_ManTerStateHash( pState, nWords, nBins );\n    for ( pEntry = pBins[Hash]; pEntry; pEntry = Fsim_ManTerStateNext(pEntry, nWords) )\n        if ( !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Fsim_ManTerStateLookup(pState *uint32, nWords int32, pBins **uint32, nBins int32) int32 {\n    var pEntry *uint32;\n    var Hash int32;\n    Hash = Fsim_ManTerStateHash( pState, nWords, nBins );\n    for  pEntry = pBins[Hash]; (pEntry != nil); pEntry = Fsim_ManTerStateNext(pEntry, nWords)  {\n        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Fsim_ManTerStateInsert",
+      "Start": 7273,
+      "End": 7590,
+      "BodyStart": 7364,
+      "Original": "void Fsim_ManTerStateInsert( unsigned * pState, int nWords, unsigned ** pBins, int nBins )\n{\n    int Hash = Fsim_ManTerStateHash( pState, nWords, nBins );\n    assert( !Fsim_ManTerStateLookup( pState, nWords, pBins, nBins ) );\n    Fsim_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}",
+      "Draft": "func Fsim_ManTerStateInsert(pState *uint32, nWords int32, pBins **uint32, nBins int32) {\n    var Hash int32  = Fsim_ManTerStateHash( pState, nWords, nBins );\n    assert(!(Fsim_ManTerStateLookup( pState, nWords, pBins, nBins ) != 0), \"!Fsim_ManTerStateLookup( pState, nWords, pBins, nBins )\");\n    Fsim_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}"
+    },
+    {
+      "Name": "Fsim_ManTerStateCreate",
+      "Start": 7855,
+      "End": 8204,
+      "BodyStart": 7941,
+      "Original": "unsigned * Fsim_ManTerStateCreate( unsigned * pInfo, int nPis, int nCis, int nWords )\n{\n    unsigned * pRes;\n    int i;\n    pRes = (unsigned *)ABC_CALLOC( char, sizeof(unsigned) * nWords + sizeof(unsigned *) );\n    for ( i = nPis; i \u003c nCis; i++ )\n        Fsim_ManTerSimInfoSet( pRes, i-nPis, Fsim_ManTerSimInfoGet(pInfo, i) );\n    return pRes;    \n}",
+      "Draft": "func Fsim_ManTerStateCreate(pInfo *uint32, nPis int32, nCis int32, nWords int32) *uint32 {\n    var pRes *uint32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pRes = (unsigned *)((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));\n    for  i = nPis; i \u003c nCis; i++  {\n        Fsim_ManTerSimInfoSet( pRes, i-nPis, Fsim_ManTerSimInfoGet(pInfo, i) );\n    }\n    return pRes;    \n}"
+    },
+    {
+      "Name": "Fsim_ManTerStatePrint",
+      "Start": 8469,
+      "End": 9019,
+      "BodyStart": 8528,
+      "Original": "void Fsim_ManTerStatePrint( unsigned * pState, int nRegs )\n{\n    int i, Value, nZeros = 0, nOnes = 0, nDcs = 0;\n    for ( i = 0; i \u003c nRegs; i++ )\n    {\n        Value = (Aig_InfoHasBit( pState, 2 * i + 1 ) \u003c\u003c 1) | Aig_InfoHasBit( pState, 2 * i );\n        if ( Value == 1 )\n            printf( \"0\" ), nZeros++;\n        else if ( Value == 2 )\n            printf( \"1\" ), nOnes++;\n        else if ( Value == 3 )\n            printf( \"x\" ), nDcs++;\n        else\n            assert( 0 );\n    }\n    printf( \" (0=%5d, 1=%5d, x=%5d)\\n\", nZeros, nOnes, nDcs );\n}",
+      "Draft": "func Fsim_ManTerStatePrint(pState *uint32, nRegs int32) {\n    var i, Value, nZeros, nOnes, nDcs int32;\n    for  i = 0; i \u003c nRegs; i++  {\n        Value = (Aig_InfoHasBit( pState, 2 * i + 1 ) \u003c\u003c 1) | Aig_InfoHasBit( pState, 2 * i );\n        if Value == 1 {\n            fmt.Printf(\"0\");\nnZeros++;\n        } else if Value == 2 {\n            fmt.Printf(\"1\");\nnOnes++;\n        } else if Value == 3 {\n            fmt.Printf(\"x\");\nnDcs++;\n        } else {\n            assert(false, \"0\"); }\n    }\n    fmt.Printf(\" (0=%5d, 1=%5d, x=%5d)\\n\", nZeros, nOnes, nDcs);\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimulateRound",
+      "Start": 9256,
+      "End": 9927,
+      "BodyStart": 9318,
+      "Original": "static inline void Fsim_ManTerSimulateRound( Fsim_Man_t * p )\n{\n    int * pCur, * pEnd;\n    int iCis = 0, iCos = 0;\n    if ( Aig_ObjRefs(Aig_ManConst1(p-\u003epAig)) )\n        Fsim_ManTerSimInfoSet( p-\u003epDataSimCis, 1, FSIM_ONE );\n    pCur = p-\u003epDataAig2 + 6;\n    pEnd = p-\u003epDataAig2 + 3 * p-\u003enObjs;\n    while ( pCur \u003c pEnd )\n    {\n        if ( pCur[1] == 0 )\n            Fsim_ManTerSimulateCi( p, pCur[0], iCis++ );\n        else if ( pCur[2] == 0 )\n            Fsim_ManTerSimulateCo( p, iCos++, pCur[1] );\n        else\n            Fsim_ManTerSimulateNode( p, pCur[0], pCur[1], pCur[2] );\n        pCur += 3;\n    }\n    assert( iCis == p-\u003enCis );\n    assert( iCos == p-\u003enCos );\n}",
+      "Draft": "func Fsim_ManTerSimulateRound(p *Fsim_Man_t) {\n    var pCur, pEnd *int32;\n    var iCis, iCos int32;\n    if Aig_ObjRefs(Aig_ManConst1(p.pAig)) {\n        Fsim_ManTerSimInfoSet( p.pDataSimCis, 1, FSIM_ONE ); }\n    pCur = p.pDataAig2 + 6;\n    pEnd = p.pDataAig2 + 3 * p.nObjs;\n    for  pCur \u003c pEnd  {\n        if pCur[1] == 0 {\n            Fsim_ManTerSimulateCi( p, pCur[0], iCis++ );\n        } else if pCur[2] == 0 {\n            Fsim_ManTerSimulateCo( p, iCos++, pCur[1] );\n        } else {\n            Fsim_ManTerSimulateNode( p, pCur[0], pCur[1], pCur[2] ); }\n        pCur += 3;\n    }\n    assert(iCis == p.nCis, \"iCis == p.nCis\");\n    assert(iCos == p.nCos, \"iCos == p.nCos\");\n}"
+    },
+    {
+      "Name": "Fsim_ManTerSimulate",
+      "Start": 10163,
+      "End": 12949,
+      "BodyStart": 10229,
+      "Original": "Vec_Ptr_t * Fsim_ManTerSimulate( Aig_Man_t * pAig, int fVerbose )\n{\n    Fsim_Man_t * p;\n    Vec_Ptr_t * vStates;\n    unsigned ** pBins, * pState;\n    int i, nWords, nBins;\n    clock_t clk, clkTotal = clock();\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    // create manager\n    clk = clock();\n    p = Fsim_ManCreate( pAig );\n    if ( fVerbose )\n    {\n        printf( \"Obj = %8d (%8d). Cut = %6d. Front = %6d.  FrtMem = %7.2f MB. \", \n            p-\u003enObjs, p-\u003enCis + p-\u003enNodes, p-\u003enCrossCutMax, p-\u003enFront, \n            4.0*Aig_BitWordNum(2 * p-\u003enFront)/(1\u003c\u003c20) );\n        ABC_PRT( \"Time\", clock() - clk );\n    }\n    // create simulation frontier\n    clk = clock();\n    Fsim_ManFront( p, 0 );\n    if ( fVerbose )\n    {\n        printf( \"Max ID = %8d. Log max ID = %2d.  AigMem = %7.2f MB (%5.2f byte/obj).  \", \n            p-\u003eiNumber, Aig_Base2Log(p-\u003eiNumber), \n            1.0*(p-\u003epDataCur-p-\u003epDataAig)/(1\u003c\u003c20), \n            1.0*(p-\u003epDataCur-p-\u003epDataAig)/p-\u003enObjs ); \n        ABC_PRT( \"Time\", clock() - clk );\n    }\n    // allocate storage for terminary states\n    nWords  = Abc_BitWordNum( 2*Aig_ManRegNum(pAig) );\n    vStates = Vec_PtrAlloc( 1000 );\n    nBins   = Abc_PrimeCudd( 500 );\n    pBins   = ABC_ALLOC( unsigned *, nBins );\n    memset( pBins, 0, sizeof(unsigned *) * nBins );\n    // perform simulation\n    assert( p-\u003epDataSim == NULL );\n    p-\u003epDataSim = ABC_ALLOC( unsigned, Aig_BitWordNum(2 * p-\u003enFront) * sizeof(unsigned) );\n    p-\u003epDataSimCis = ABC_ALLOC( unsigned, Aig_BitWordNum(2 * p-\u003enCis) * sizeof(unsigned) );\n    p-\u003epDataSimCos = ABC_ALLOC( unsigned, Aig_BitWordNum(2 * p-\u003enCos) * sizeof(unsigned) );\n    Fsim_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Fsim_ManTerStateCreate( p-\u003epDataSimCis, p-\u003enPis, p-\u003enCis, nWords );\n    Vec_PtrPush( vStates, pState );\n    Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    // perform simuluation till convergence\n    for ( i = 0; ; i++ )\n    {\n        Fsim_ManTerSimulateRound( p );\n        Fsim_ManTerSimInfoTransfer( p );\n        // hash the first state\n        pState = Fsim_ManTerStateCreate( p-\u003epDataSimCis, p-\u003enPis, p-\u003enCis, nWords );\n        Vec_PtrPush( vStates, pState );\n        if ( Fsim_ManTerStateLookup(pState, nWords, pBins, nBins) )\n            break;\n        Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    }\n    if ( fVerbose )\n    {\n        printf( \"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", \n            p-\u003enCrossCutMax, \n            p-\u003epDataAig2? 12.0*p-\u003enObjs/(1\u003c\u003c20) : 1.0*(p-\u003epDataCur-p-\u003epDataAig)/(1\u003c\u003c20), \n            4.0*(Aig_BitWordNum(2 * p-\u003enFront)+Aig_BitWordNum(2 * p-\u003enCis)+Aig_BitWordNum(2 * p-\u003enCos))/(1\u003c\u003c20) );\n        ABC_PRT( \"Sim time\", clock() - clkTotal );\n    }\n    ABC_FREE( pBins );\n    Fsim_ManDelete( p );\n    return vStates;\n\n}",
+      "Draft": "func Fsim_ManTerSimulate(pAig *Aig_Man_t, fVerbose int32) *Vec_Ptr_t {\n    var p *Fsim_Man_t;\n    var vStates *Vec_Ptr_t;\n    var pBins **uint32;\n    var pState *uint32;\n    var i, nWords, nBins int32;\n    var clk int64;\n    var clkTotal int64 = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    // create manager\n    clk = time.Now().UnixNano();\n    p = Fsim_ManCreate( pAig );\n    if fVerbose != 0 {\n        fmt.Printf(\"Obj = %8d (%8d). Cut = %6d. Front = %6d.  FrtMem = %7.2f MB. \", p.nObjs, p.nCis + p.nNodes, p.nCrossCutMax, p.nFront, 4.0*Aig_BitWordNum(2 * p.nFront)/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // create simulation frontier\n    clk = time.Now().UnixNano();\n    Fsim_ManFront( p, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Max ID = %8d. Log max ID = %2d.  AigMem = %7.2f MB (%5.2f byte/obj).  \", p.iNumber, Aig_Base2Log(p.iNumber), 1.0*(p.pDataCur-p.pDataAig)/(1\u003c\u003c20), 1.0*(p.pDataCur-p.pDataAig)/p.nObjs); \n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // allocate storage for terminary states\n    nWords  = Abc_BitWordNum( 2*Aig_ManRegNum(pAig) );\n    vStates = Vec_PtrAlloc( 1000 );\n    nBins   = Abc_PrimeCudd( 500 );\n    // inlining of macro ABC_ALLOC\n    pBins   = ((unsigned * *) malloc(sizeof(unsigned *) * (size_t)(nBins)));\n    memset( pBins, 0, sizeof(unsigned *) * nBins );\n    // perform simulation\n    assert(p.pDataSim == nil, \"p.pDataSim == nil\");\n    // inlining of macro ABC_ALLOC\n    p.pDataSim = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nFront) * sizeof(unsigned))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCis) * sizeof(unsigned))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCos) * sizeof(unsigned))));\n    Fsim_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Fsim_ManTerStateCreate( p.pDataSimCis, p.nPis, p.nCis, nWords );\n    Vec_PtrPush( vStates, pState );\n    Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    // perform simuluation till convergence\n    for  i = 0; ; i++  {\n        Fsim_ManTerSimulateRound( p );\n        Fsim_ManTerSimInfoTransfer( p );\n        // hash the first state\n        pState = Fsim_ManTerStateCreate( p.pDataSimCis, p.nPis, p.nCis, nWords );\n        Vec_PtrPush( vStates, pState );\n        if Fsim_ManTerStateLookup(pState, nWords, pBins, nBins) != 0 {\n            break; }\n        Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", p.nCrossCutMax, p.pDataAig2? 12.0*p.nObjs/(1\u003c\u003c20) : 1.0*(p.pDataCur-p.pDataAig)/(1\u003c\u003c20), 4.0*(Aig_BitWordNum(2 * p.nFront)+Aig_BitWordNum(2 * p.nCis)+Aig_BitWordNum(2 * p.nCos))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Sim time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_FREE\n    ((pBins) ? (free((char *) (pBins)), (pBins) = 0) : 0);\n    Fsim_ManDelete( p );\n    return vStates;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::static::5499",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5279,
+      "End": 5285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::7161",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6941,
+      "End": 6947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::8290",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7998,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::8318",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7998,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::8339",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7998,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::11971",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11358,
+      "End": 11358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12033",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11412,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12208",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11521,
+      "End": 11521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12268",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11521,
+      "End": 11521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12376",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11615,
+      "End": 11615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12434",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11615,
+      "End": 11615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12542",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11707,
+      "End": 11707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::mechanical::sizeof::12600",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11707,
+      "End": 11707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::1801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1801,
+      "End": 1814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::1941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1941,
+      "End": 1954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::8206",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7986,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::8265",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7998,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::8324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7998,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::11949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11358,
+      "End": 11358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::11977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11358,
+      "End": 11358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::12039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11418,
+      "End": 11430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::12188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11521,
+      "End": 11521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::12356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11615,
+      "End": 11615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::12522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11707,
+      "End": 11707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::pointer-cast::13915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12883,
+      "End": 12883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Aig_XsimNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Aig_XsimNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 838,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Aig_XsimAndCond",
+      "Category": "semantic-review",
+      "Symbol": "Aig_XsimAndCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1043,
+      "End": 1331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimInfoGet",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimInfoGet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1333,
+      "End": 1454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimInfoSet",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimInfoSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1455,
+      "End": 1688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateNext",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1690,
+      "End": 1836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateSetNext",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateSetNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1837,
+      "End": 1983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimulateCi",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimulateCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2439,
+      "End": 2614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimulateCo",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimulateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2850,
+      "End": 3107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimulateNode",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimulateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3343,
+      "End": 3724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimInfoInit",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimInfoInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3960,
+      "End": 4284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimInfoTransfer",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimInfoTransfer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4520,
+      "End": 4904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateHash",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5199,
+      "End": 6363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateLookup",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6628,
+      "End": 7008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateInsert",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7273,
+      "End": 7590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStateCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStateCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7855,
+      "End": 8204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerStatePrint",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerStatePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8469,
+      "End": 9019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimulateRound",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimulateRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9256,
+      "End": 9927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::ternary::Fsim_ManTerSimulate",
+      "Category": "ternary-review",
+      "Symbol": "Fsim_ManTerSimulate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10163,
+      "End": 12949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::Fsim_ManTerSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManTerSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10163,
+      "End": 12949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimTsim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13196
+    }
+  ],
+  "Draft": "package fsim\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fsimTsim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast sequential AIG simulator.]\n\n  Synopsis    [Varius utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: fsimTsim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fsimInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst FSIM_ZER = 1\nconst FSIM_ONE = 2\nconst FSIM_UND = 3\n\nfunc Aig_XsimNotCond(Value int32, fCompl int32) int32 { \n    if Value == FSIM_UND {\n        return FSIM_UND; }\n    if Value == FSIM_ZER + fCompl {\n        return FSIM_ZER; }\n    return FSIM_ONE;\n}\nfunc Aig_XsimAndCond(Value0 int32, fCompl0 int32, Value1 int32, fCompl1 int32) int32 { \n    if Value0 == FSIM_UND || Value1 == FSIM_UND {\n        return FSIM_UND; }\n    if Value0 == FSIM_ZER + fCompl0 || Value1 == FSIM_ZER + fCompl1 {\n        return FSIM_ZER; }\n    return FSIM_ONE;\n}\n\nfunc Fsim_ManTerSimInfoGet(pInfo *uint32, i int32) int32 {\n    return 3 \u0026 (pInfo[i \u003e\u003e 4] \u003e\u003e ((i \u0026 15) \u003c\u003c 1));\n}\nfunc Fsim_ManTerSimInfoSet(pInfo *uint32, i int32, Value int32) {\n    assert(Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND, \"Value \u003e= FSIM_ZER \u0026\u0026 Value \u003c= FSIM_UND\");\n    Value ^= Fsim_ManTerSimInfoGet( pInfo, i );\n    pInfo[i \u003e\u003e 4] ^= (Value \u003c\u003c ((i \u0026 15) \u003c\u003c 1));\n}\n\nfunc Fsim_ManTerStateNext(pState *uint32, nWords int32) *uint32 { return *((unsigned **)(pState + nWords));  }\nfunc Fsim_ManTerStateSetNext(pState *uint32, nWords int32, pNext *uint32) { *((unsigned **)(pState + nWords)) = pNext; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimulateCi(p *Fsim_Man_t, iNode int32, iCi int32) {\n    Fsim_ManTerSimInfoSet( p.pDataSim, iNode, Fsim_ManTerSimInfoGet(p.pDataSimCis, iCi) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimulateCo(p *Fsim_Man_t, iCo int32, iFan0 int32) {\n    var Value int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan0) );\n    Fsim_ManTerSimInfoSet( p.pDataSimCos, iCo, Aig_XsimNotCond( Value, Fsim_LitIsCompl(iFan0) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimulateNode(p *Fsim_Man_t, iNode int32, iFan0 int32, iFan1 int32) {\n    var Value0 int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan0) );\n    var Value1 int32  = Fsim_ManTerSimInfoGet( p.pDataSim, Fsim_Lit2Var(iFan1) );\n    Fsim_ManTerSimInfoSet( p.pDataSim, iNode, Aig_XsimAndCond( Value0, Fsim_LitIsCompl(iFan0), Value1, Fsim_LitIsCompl(iFan1) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimInfoInit(p *Fsim_Man_t) {\n    var iPioNum, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_UND );\n        } else {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_ZER ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimInfoTransfer(p *Fsim_Man_t) {\n    var iPioNum, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, FSIM_UND );\n        } else {\n            Fsim_ManTerSimInfoSet( p.pDataSimCis, i, Fsim_ManTerSimInfoGet( p.pDataSimCos, p.nPos+iPioNum-p.nPis ) ); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the node using its simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Fsim_ManTerStateHash_s_FPrimes [128]int32 = [128]int32{ \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Fsim_ManTerStateHash(pState *uint32, nWords int32, nTableSize int32) int32 {\n    \n    var uHash uint32;\n    var i int32;\n    uHash = 0;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pState[i] * spStatic_Fsim_ManTerStateHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerStateLookup(pState *uint32, nWords int32, pBins **uint32, nBins int32) int32 {\n    var pEntry *uint32;\n    var Hash int32;\n    Hash = Fsim_ManTerStateHash( pState, nWords, nBins );\n    for  pEntry = pBins[Hash]; (pEntry != nil); pEntry = Fsim_ManTerStateNext(pEntry, nWords)  {\n        if !memcmp( pEntry, pState, sizeof(unsigned) * nWords ) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerStateInsert(pState *uint32, nWords int32, pBins **uint32, nBins int32) {\n    var Hash int32  = Fsim_ManTerStateHash( pState, nWords, nBins );\n    assert(!(Fsim_ManTerStateLookup( pState, nWords, pBins, nBins ) != 0), \"!Fsim_ManTerStateLookup( pState, nWords, pBins, nBins )\");\n    Fsim_ManTerStateSetNext( pState, nWords, pBins[Hash] );\n    pBins[Hash] = pState;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerStateCreate(pInfo *uint32, nPis int32, nCis int32, nWords int32) *uint32 {\n    var pRes *uint32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pRes = (unsigned *)((char *) calloc((size_t)(sizeof(unsigned) * nWords + sizeof(unsigned *)), sizeof(char)));\n    for  i = nPis; i \u003c nCis; i++  {\n        Fsim_ManTerSimInfoSet( pRes, i-nPis, Fsim_ManTerSimInfoGet(pInfo, i) );\n    }\n    return pRes;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts value into the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerStatePrint(pState *uint32, nRegs int32) {\n    var i, Value, nZeros, nOnes, nDcs int32;\n    for  i = 0; i \u003c nRegs; i++  {\n        Value = (Aig_InfoHasBit( pState, 2 * i + 1 ) \u003c\u003c 1) | Aig_InfoHasBit( pState, 2 * i );\n        if Value == 1 {\n            fmt.Printf(\"0\");\nnZeros++;\n        } else if Value == 2 {\n            fmt.Printf(\"1\");\nnOnes++;\n        } else if Value == 3 {\n            fmt.Printf(\"x\");\nnDcs++;\n        } else {\n            assert(false, \"0\"); }\n    }\n    fmt.Printf(\" (0=%5d, 1=%5d, x=%5d)\\n\", nZeros, nOnes, nDcs);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimulateRound(p *Fsim_Man_t) {\n    var pCur, pEnd *int32;\n    var iCis, iCos int32;\n    if Aig_ObjRefs(Aig_ManConst1(p.pAig)) {\n        Fsim_ManTerSimInfoSet( p.pDataSimCis, 1, FSIM_ONE ); }\n    pCur = p.pDataAig2 + 6;\n    pEnd = p.pDataAig2 + 3 * p.nObjs;\n    for  pCur \u003c pEnd  {\n        if pCur[1] == 0 {\n            Fsim_ManTerSimulateCi( p, pCur[0], iCis++ );\n        } else if pCur[2] == 0 {\n            Fsim_ManTerSimulateCo( p, iCos++, pCur[1] );\n        } else {\n            Fsim_ManTerSimulateNode( p, pCur[0], pCur[1], pCur[2] ); }\n        pCur += 3;\n    }\n    assert(iCis == p.nCis, \"iCis == p.nCis\");\n    assert(iCos == p.nCos, \"iCos == p.nCos\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManTerSimulate(pAig *Aig_Man_t, fVerbose int32) *Vec_Ptr_t {\n    var p *Fsim_Man_t;\n    var vStates *Vec_Ptr_t;\n    var pBins **uint32;\n    var pState *uint32;\n    var i, nWords, nBins int32;\n    var clk int64;\n    var clkTotal int64 = time.Now().UnixNano();\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    // create manager\n    clk = time.Now().UnixNano();\n    p = Fsim_ManCreate( pAig );\n    if fVerbose != 0 {\n        fmt.Printf(\"Obj = %8d (%8d). Cut = %6d. Front = %6d.  FrtMem = %7.2f MB. \", p.nObjs, p.nCis + p.nNodes, p.nCrossCutMax, p.nFront, 4.0*Aig_BitWordNum(2 * p.nFront)/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // create simulation frontier\n    clk = time.Now().UnixNano();\n    Fsim_ManFront( p, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Max ID = %8d. Log max ID = %2d.  AigMem = %7.2f MB (%5.2f byte/obj).  \", p.iNumber, Aig_Base2Log(p.iNumber), 1.0*(p.pDataCur-p.pDataAig)/(1\u003c\u003c20), 1.0*(p.pDataCur-p.pDataAig)/p.nObjs); \n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // allocate storage for terminary states\n    nWords  = Abc_BitWordNum( 2*Aig_ManRegNum(pAig) );\n    vStates = Vec_PtrAlloc( 1000 );\n    nBins   = Abc_PrimeCudd( 500 );\n    // inlining of macro ABC_ALLOC\n    pBins   = ((unsigned * *) malloc(sizeof(unsigned *) * (size_t)(nBins)));\n    memset( pBins, 0, sizeof(unsigned *) * nBins );\n    // perform simulation\n    assert(p.pDataSim == nil, \"p.pDataSim == nil\");\n    // inlining of macro ABC_ALLOC\n    p.pDataSim = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nFront) * sizeof(unsigned))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCis) * sizeof(unsigned))));\n    // inlining of macro ABC_ALLOC\n    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Aig_BitWordNum(2 * p.nCos) * sizeof(unsigned))));\n    Fsim_ManTerSimInfoInit( p );\n    // hash the first state\n    pState = Fsim_ManTerStateCreate( p.pDataSimCis, p.nPis, p.nCis, nWords );\n    Vec_PtrPush( vStates, pState );\n    Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    // perform simuluation till convergence\n    for  i = 0; ; i++  {\n        Fsim_ManTerSimulateRound( p );\n        Fsim_ManTerSimInfoTransfer( p );\n        // hash the first state\n        pState = Fsim_ManTerStateCreate( p.pDataSimCis, p.nPis, p.nCis, nWords );\n        Vec_PtrPush( vStates, pState );\n        if Fsim_ManTerStateLookup(pState, nWords, pBins, nBins) != 0 {\n            break; }\n        Fsim_ManTerStateInsert( pState, nWords, pBins, nBins );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", p.nCrossCutMax, p.pDataAig2? 12.0*p.nObjs/(1\u003c\u003c20) : 1.0*(p.pDataCur-p.pDataAig)/(1\u003c\u003c20), 4.0*(Aig_BitWordNum(2 * p.nFront)+Aig_BitWordNum(2 * p.nCis)+Aig_BitWordNum(2 * p.nCos))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Sim time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_FREE\n    ((pBins) ? (free((char *) (pBins)), (pBins) = 0) : 0);\n    Fsim_ManDelete( p );\n    return vStates;\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

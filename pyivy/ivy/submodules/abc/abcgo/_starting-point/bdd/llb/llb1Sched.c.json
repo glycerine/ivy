@@ -1,0 +1,191 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c",
+  "SHA256": "25b2740d2175e1e2b9366dc306fed531990a30eb84edc977a3d88ad90e0aabac",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p.nCols );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p.nCols );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCol1 != iCol2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCol \u003e= 1 \u0026\u0026 iCol \u003c p.nCols - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 5522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pProdNums[iVar] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 6296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == p.pProdNums[iVar] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_MtrSwapColumns",
+      "Start": 1257,
+      "End": 1934,
+      "BodyStart": 1320,
+      "Original": "void Llb_MtrSwapColumns( Llb_Mtr_t * p, int iCol1, int iCol2 )\n{\n    Llb_Grp_t * pGemp;\n    char * pTemp;\n    int iTemp;\n    assert( iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p-\u003enCols );\n    assert( iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p-\u003enCols );\n    if ( iCol1 == iCol2 )\n        return;\n    assert( iCol1 != iCol2 );\n    // swap col groups\n    pGemp = p-\u003epColGrps[iCol1];\n    p-\u003epColGrps[iCol1] = p-\u003epColGrps[iCol2];\n    p-\u003epColGrps[iCol2] = pGemp;\n    // swap col vectors\n    pTemp = p-\u003epMatrix[iCol1];\n    p-\u003epMatrix[iCol1] = p-\u003epMatrix[iCol2];\n    p-\u003epMatrix[iCol2] = pTemp;\n    // swap col sums\n    iTemp = p-\u003epColSums[iCol1];\n    p-\u003epColSums[iCol1] = p-\u003epColSums[iCol2];\n    p-\u003epColSums[iCol2] = iTemp;\n}",
+      "Draft": "func Llb_MtrSwapColumns(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) {\n    var pGemp *Llb_Grp_t;\n    var pTemp string;\n    var iTemp int32;\n    assert(iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p.nCols, \"iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p.nCols\");\n    assert(iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p.nCols, \"iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p.nCols\");\n    if iCol1 == iCol2 {\n        return; }\n    assert(iCol1 != iCol2, \"iCol1 != iCol2\");\n    // swap col groups\n    pGemp = p.pColGrps[iCol1];\n    p.pColGrps[iCol1] = p.pColGrps[iCol2];\n    p.pColGrps[iCol2] = pGemp;\n    // swap col vectors\n    pTemp = p.pMatrix[iCol1];\n    p.pMatrix[iCol1] = p.pMatrix[iCol2];\n    p.pMatrix[iCol2] = pTemp;\n    // swap col sums\n    iTemp = p.pColSums[iCol1];\n    p.pColSums[iCol1] = p.pColSums[iCol2];\n    p.pColSums[iCol2] = iTemp;\n}"
+    },
+    {
+      "Name": "Llb_MtrFindBestColumn",
+      "Start": 2220,
+      "End": 4620,
+      "BodyStart": 2278,
+      "Original": "int Llb_MtrFindBestColumn( Llb_Mtr_t * p, int iGrpStart )\n{\n    int Cost, Cost2, CostBest = ABC_INFINITY, Cost2Best = ABC_INFINITY;\n    int WeightCur, WeightBest = -ABC_INFINITY, iGrp = -1, iGrpBest = -1;\n    int k, c, iVar, Counter;\n    // find partition that reduces partial product as much as possible\n    for ( iVar = 0; iVar \u003c p-\u003enRows - p-\u003enFfs; iVar++ )\n    { \n        if ( p-\u003epRowSums[iVar] \u003c 2 )\n            continue;\n        // look at present variables that can be quantified\n        if ( !(p-\u003epProdVars[iVar] == 1 \u0026\u0026 p-\u003epProdNums[iVar] == 1) )\n            continue;\n        // check that it appears in one partition only\n        Counter = 0;\n        for ( c = iGrpStart; c \u003c p-\u003enCols-1; c++ )\n            if ( p-\u003epMatrix[c][iVar] == 1 )\n            {\n                iGrp = c;\n                Counter++;\n            }\n        assert( Counter == 1 );\n        if ( Counter != 1 )\n            Abc_Print( -1, \"Llb_MtrFindBestColumn() Internal error!\\n\" );\n        // find weight of this column\n        WeightCur = 0;\n        for ( k = 0; k \u003c p-\u003enRows; k++ )\n        {\n            // increase weight if variable k will be quantified from partial product\n            if ( p-\u003epProdVars[k] == 1 \u0026\u0026 p-\u003epMatrix[iGrp][k] == 1 \u0026\u0026 p-\u003epProdNums[k] == 1 ) \n                WeightCur += 2;\n            // decrease weight if variable k will be added to partial product\n            if ( p-\u003epProdVars[k] == 0 \u0026\u0026 p-\u003epMatrix[iGrp][k] == 1 )\n                WeightCur--;\n        }\n        if ( WeightCur \u003e 0 \u0026\u0026 WeightBest \u003c WeightCur )\n        {\n            WeightBest = WeightCur;\n            iGrpBest   = iGrp;\n        }\n    }\n    if ( iGrpBest \u003e= 0 )\n        return iGrpBest;\n    // could not find the group with any vars to quantify\n    // select the group that contains as few extra variables as possible\n    // if there is a tie, select variables that appear in less groups than others\n    for ( iGrp = iGrpStart; iGrp \u003c p-\u003enCols-1; iGrp++ )\n    {\n        Cost = Cost2 = 0;\n        for ( k = 0; k \u003c p-\u003enRows; k++ )\n            if ( p-\u003epProdVars[k] == 0 \u0026\u0026 p-\u003epMatrix[iGrp][k] == 1 )\n            {\n                Cost++;\n                Cost2 += p-\u003epProdNums[k];\n            }\n        if ( CostBest \u003e  Cost || \n            (CostBest == Cost \u0026\u0026 Cost2 \u003e Cost2Best) )\n        {\n            CostBest  = Cost;\n            Cost2Best = Cost2;\n            iGrpBest  = iGrp;\n        }\n    }\n    return iGrpBest;\n}",
+      "Draft": "func Llb_MtrFindBestColumn(p *Llb_Mtr_t, iGrpStart int32) int32 {\n    var Cost int32;\n    var Cost2 int32;\n    var CostBest int32 = ABC_INFINITY;\n    var Cost2Best int32 = ABC_INFINITY;\n    var WeightCur int32;\n    var WeightBest int32 = -ABC_INFINITY;\n    var iGrp int32 = -1;\n    var iGrpBest int32 = -1;\n    var k, c, iVar, Counter int32;\n    // find partition that reduces partial product as much as possible\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  { \n        if p.pRowSums[iVar] \u003c 2 {\n            continue; }\n        // look at present variables that can be quantified\n        if !(p.pProdVars[iVar] == 1 \u0026\u0026 p.pProdNums[iVar] == 1) {\n            continue; }\n        // check that it appears in one partition only\n        Counter = 0;\n        for  c = iGrpStart; c \u003c p.nCols-1; c++  {\n            if p.pMatrix[c][iVar] == 1 {\n                iGrp = c;\n                Counter++;\n            }\n        }\n        assert(Counter == 1, \"Counter == 1\");\n        if Counter != 1 {\n            Abc_Print( -1, \"Llb_MtrFindBestColumn() Internal error!\\n\" ); }\n        // find weight of this column\n        WeightCur = 0;\n        for  k = 0; k \u003c p.nRows; k++  {\n            // increase weight if variable k will be quantified from partial product\n            if p.pProdVars[k] == 1 \u0026\u0026 p.pMatrix[iGrp][k] == 1 \u0026\u0026 p.pProdNums[k] == 1 { \n                WeightCur += 2; }\n            // decrease weight if variable k will be added to partial product\n            if p.pProdVars[k] == 0 \u0026\u0026 p.pMatrix[iGrp][k] == 1 {\n                WeightCur--; }\n        }\n        if WeightCur \u003e 0 \u0026\u0026 WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            iGrpBest   = iGrp;\n        }\n    }\n    if iGrpBest \u003e= 0 {\n        return iGrpBest; }\n    // could not find the group with any vars to quantify\n    // select the group that contains as few extra variables as possible\n    // if there is a tie, select variables that appear in less groups than others\n    for  iGrp = iGrpStart; iGrp \u003c p.nCols-1; iGrp++  {\n        Cost = Cost2 = 0;\n        for  k = 0; k \u003c p.nRows; k++  {\n            if p.pProdVars[k] == 0 \u0026\u0026 p.pMatrix[iGrp][k] == 1 {\n                Cost++;\n                Cost2 += p.pProdNums[k];\n            }\n        }\n        if CostBest \u003e  Cost || \n            (CostBest == Cost \u0026\u0026 Cost2 \u003e Cost2Best) {\n            CostBest  = Cost;\n            Cost2Best = Cost2;\n            iGrpBest  = iGrp;\n        }\n    }\n    return iGrpBest;\n}"
+    },
+    {
+      "Name": "Llb_MtrUseSelectedColumn",
+      "Start": 4907,
+      "End": 5667,
+      "BodyStart": 4964,
+      "Original": "void Llb_MtrUseSelectedColumn( Llb_Mtr_t * p, int iCol )\n{\n    int iVar;\n    assert( iCol \u003e= 1 \u0026\u0026 iCol \u003c p-\u003enCols - 1 );\n    for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n    {\n        if ( p-\u003epMatrix[iCol][iVar] == 0 )\n            continue;\n        if ( p-\u003epProdVars[iVar] == 1 \u0026\u0026 p-\u003epProdNums[iVar] == 1 )\n        {\n            p-\u003epProdVars[iVar] = 0;\n            p-\u003epProdNums[iVar] = 0;\n            continue;\n        }\n        if ( p-\u003epProdVars[iVar] == 0 )\n        {\n            p-\u003epProdVars[iVar] = 1;\n            p-\u003epProdNums[iVar] = p-\u003epRowSums[iVar];\n        }\n        p-\u003epProdNums[iVar]--;\n        assert( p-\u003epProdNums[iVar] \u003e= 0 );\n        if ( p-\u003epProdNums[iVar] \u003c 0 )\n            Abc_Print( -1, \"Llb_MtrUseSelectedColumn() Internal error!\\n\" );\n    }\n}",
+      "Draft": "func Llb_MtrUseSelectedColumn(p *Llb_Mtr_t, iCol int32) {\n    var iVar int32;\n    assert(iCol \u003e= 1 \u0026\u0026 iCol \u003c p.nCols - 1, \"iCol \u003e= 1 \u0026\u0026 iCol \u003c p.nCols - 1\");\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pMatrix[iCol][iVar] == 0 {\n            continue; }\n        if p.pProdVars[iVar] == 1 \u0026\u0026 p.pProdNums[iVar] == 1 {\n            p.pProdVars[iVar] = 0;\n            p.pProdNums[iVar] = 0;\n            continue;\n        }\n        if p.pProdVars[iVar] == 0 {\n            p.pProdVars[iVar] = 1;\n            p.pProdNums[iVar] = p.pRowSums[iVar];\n        }\n        p.pProdNums[iVar]--;\n        assert(p.pProdNums[iVar] \u003e= 0, \"p.pProdNums[iVar] \u003e= 0\");\n        if p.pProdNums[iVar] \u003c 0 {\n            Abc_Print( -1, \"Llb_MtrUseSelectedColumn() Internal error!\\n\" ); }\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrVerifyColumns",
+      "Start": 5918,
+      "End": 6448,
+      "BodyStart": 5976,
+      "Original": "void Llb_MtrVerifyColumns( Llb_Mtr_t * p, int iGrpStart )\n{\n    int iVar, iGrp, Counter;\n    for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n    {\n        if ( p-\u003epProdVars[iVar] == 0 )\n            continue;\n        Counter = 0;\n        for ( iGrp = iGrpStart; iGrp \u003c p-\u003enCols; iGrp++ )\n            if ( p-\u003epMatrix[iGrp][iVar] == 1 )\n                Counter++;\n        assert( Counter == p-\u003epProdNums[iVar] );\n        if ( Counter != p-\u003epProdNums[iVar] )\n            Abc_Print( -1, \"Llb_MtrVerifyColumns(): Internal error.\\n\" );\n    }\n}",
+      "Draft": "func Llb_MtrVerifyColumns(p *Llb_Mtr_t, iGrpStart int32) {\n    var iVar, iGrp, Counter int32;\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pProdVars[iVar] == 0 {\n            continue; }\n        Counter = 0;\n        for  iGrp = iGrpStart; iGrp \u003c p.nCols; iGrp++  {\n            if p.pMatrix[iGrp][iVar] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pProdNums[iVar], \"Counter == p.pProdNums[iVar]\");\n        if Counter != p.pProdNums[iVar] {\n            Abc_Print( -1, \"Llb_MtrVerifyColumns(): Internal error.\\n\" ); }\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrSchedule",
+      "Start": 6698,
+      "End": 7453,
+      "BodyStart": 6736,
+      "Original": "void Llb_MtrSchedule( Llb_Mtr_t * p )\n{\n    int iGrp, iGrpBest, i;\n    // start partial product\n    for ( i = 0; i \u003c p-\u003enRows; i++ )\n    {\n        if ( i \u003e= p-\u003enPis \u0026\u0026 i \u003c p-\u003enPis + p-\u003enFfs )\n        {\n            p-\u003epProdVars[i] = 1;\n            p-\u003epProdNums[i] = p-\u003epRowSums[i] - 1;\n        }\n        else \n        {\n            p-\u003epProdVars[i] = 0;\n            p-\u003epProdNums[i] = p-\u003epRowSums[i];\n        }\n    }\n    // order the partitions\n    Llb_MtrVerifyMatrix( p );\n    for ( iGrp = 1; iGrp \u003c p-\u003enCols-1; iGrp++ )\n    {\n        Llb_MtrVerifyColumns( p, iGrp );\n        iGrpBest = Llb_MtrFindBestColumn( p, iGrp );\n        Llb_MtrUseSelectedColumn( p, iGrpBest );\n        Llb_MtrSwapColumns( p, iGrp, iGrpBest );\n    }\n    Llb_MtrVerifyMatrix( p );\n}",
+      "Draft": "func Llb_MtrSchedule(p *Llb_Mtr_t) {\n    var iGrp, iGrpBest, i int32;\n    // start partial product\n    for  i = 0; i \u003c p.nRows; i++  {\n        if i \u003e= p.nPis \u0026\u0026 i \u003c p.nPis + p.nFfs {\n            p.pProdVars[i] = 1;\n            p.pProdNums[i] = p.pRowSums[i] - 1;\n        \n        } else {\n            p.pProdVars[i] = 0;\n            p.pProdNums[i] = p.pRowSums[i];\n        }\n    }\n    // order the partitions\n    Llb_MtrVerifyMatrix( p );\n    for  iGrp = 1; iGrp \u003c p.nCols-1; iGrp++  {\n        Llb_MtrVerifyColumns( p, iGrp );\n        iGrpBest = Llb_MtrFindBestColumn( p, iGrp );\n        Llb_MtrUseSelectedColumn( p, iGrpBest );\n        Llb_MtrSwapColumns( p, iGrp, iGrpBest );\n    }\n    Llb_MtrVerifyMatrix( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::Llb_MtrSwapColumns",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrSwapColumns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1257,
+      "End": 1934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::Llb_MtrFindBestColumn",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrFindBestColumn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2220,
+      "End": 4620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::Llb_MtrUseSelectedColumn",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrUseSelectedColumn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4907,
+      "End": 5667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::Llb_MtrVerifyColumns",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrVerifyColumns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5918,
+      "End": 6448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::Llb_MtrSchedule",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrSchedule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6698,
+      "End": 7453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Sched.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7700
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb1Sched.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Partition scheduling algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Sched.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Swaps two rows.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrSwapColumns(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) {\n    var pGemp *Llb_Grp_t;\n    var pTemp string;\n    var iTemp int32;\n    assert(iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p.nCols, \"iCol1 \u003e= 0 \u0026\u0026 iCol1 \u003c p.nCols\");\n    assert(iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p.nCols, \"iCol2 \u003e= 0 \u0026\u0026 iCol2 \u003c p.nCols\");\n    if iCol1 == iCol2 {\n        return; }\n    assert(iCol1 != iCol2, \"iCol1 != iCol2\");\n    // swap col groups\n    pGemp = p.pColGrps[iCol1];\n    p.pColGrps[iCol1] = p.pColGrps[iCol2];\n    p.pColGrps[iCol2] = pGemp;\n    // swap col vectors\n    pTemp = p.pMatrix[iCol1];\n    p.pMatrix[iCol1] = p.pMatrix[iCol2];\n    p.pMatrix[iCol2] = pTemp;\n    // swap col sums\n    iTemp = p.pColSums[iCol1];\n    p.pColSums[iCol1] = p.pColSums[iCol2];\n    p.pColSums[iCol2] = iTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find columns which brings as few vars as possible.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrFindBestColumn(p *Llb_Mtr_t, iGrpStart int32) int32 {\n    var Cost int32;\n    var Cost2 int32;\n    var CostBest int32 = ABC_INFINITY;\n    var Cost2Best int32 = ABC_INFINITY;\n    var WeightCur int32;\n    var WeightBest int32 = -ABC_INFINITY;\n    var iGrp int32 = -1;\n    var iGrpBest int32 = -1;\n    var k, c, iVar, Counter int32;\n    // find partition that reduces partial product as much as possible\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  { \n        if p.pRowSums[iVar] \u003c 2 {\n            continue; }\n        // look at present variables that can be quantified\n        if !(p.pProdVars[iVar] == 1 \u0026\u0026 p.pProdNums[iVar] == 1) {\n            continue; }\n        // check that it appears in one partition only\n        Counter = 0;\n        for  c = iGrpStart; c \u003c p.nCols-1; c++  {\n            if p.pMatrix[c][iVar] == 1 {\n                iGrp = c;\n                Counter++;\n            }\n        }\n        assert(Counter == 1, \"Counter == 1\");\n        if Counter != 1 {\n            Abc_Print( -1, \"Llb_MtrFindBestColumn() Internal error!\\n\" ); }\n        // find weight of this column\n        WeightCur = 0;\n        for  k = 0; k \u003c p.nRows; k++  {\n            // increase weight if variable k will be quantified from partial product\n            if p.pProdVars[k] == 1 \u0026\u0026 p.pMatrix[iGrp][k] == 1 \u0026\u0026 p.pProdNums[k] == 1 { \n                WeightCur += 2; }\n            // decrease weight if variable k will be added to partial product\n            if p.pProdVars[k] == 0 \u0026\u0026 p.pMatrix[iGrp][k] == 1 {\n                WeightCur--; }\n        }\n        if WeightCur \u003e 0 \u0026\u0026 WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            iGrpBest   = iGrp;\n        }\n    }\n    if iGrpBest \u003e= 0 {\n        return iGrpBest; }\n    // could not find the group with any vars to quantify\n    // select the group that contains as few extra variables as possible\n    // if there is a tie, select variables that appear in less groups than others\n    for  iGrp = iGrpStart; iGrp \u003c p.nCols-1; iGrp++  {\n        Cost = Cost2 = 0;\n        for  k = 0; k \u003c p.nRows; k++  {\n            if p.pProdVars[k] == 0 \u0026\u0026 p.pMatrix[iGrp][k] == 1 {\n                Cost++;\n                Cost2 += p.pProdNums[k];\n            }\n        }\n        if CostBest \u003e  Cost || \n            (CostBest == Cost \u0026\u0026 Cost2 \u003e Cost2Best) {\n            CostBest  = Cost;\n            Cost2Best = Cost2;\n            iGrpBest  = iGrp;\n        }\n    }\n    return iGrpBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of variables that will be saved.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrUseSelectedColumn(p *Llb_Mtr_t, iCol int32) {\n    var iVar int32;\n    assert(iCol \u003e= 1 \u0026\u0026 iCol \u003c p.nCols - 1, \"iCol \u003e= 1 \u0026\u0026 iCol \u003c p.nCols - 1\");\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pMatrix[iCol][iVar] == 0 {\n            continue; }\n        if p.pProdVars[iVar] == 1 \u0026\u0026 p.pProdNums[iVar] == 1 {\n            p.pProdVars[iVar] = 0;\n            p.pProdNums[iVar] = 0;\n            continue;\n        }\n        if p.pProdVars[iVar] == 0 {\n            p.pProdVars[iVar] = 1;\n            p.pProdNums[iVar] = p.pRowSums[iVar];\n        }\n        p.pProdNums[iVar]--;\n        assert(p.pProdNums[iVar] \u003e= 0, \"p.pProdNums[iVar] \u003e= 0\");\n        if p.pProdNums[iVar] \u003c 0 {\n            Abc_Print( -1, \"Llb_MtrUseSelectedColumn() Internal error!\\n\" ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrVerifyColumns(p *Llb_Mtr_t, iGrpStart int32) {\n    var iVar, iGrp, Counter int32;\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pProdVars[iVar] == 0 {\n            continue; }\n        Counter = 0;\n        for  iGrp = iGrpStart; iGrp \u003c p.nCols; iGrp++  {\n            if p.pMatrix[iGrp][iVar] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pProdNums[iVar], \"Counter == p.pProdNums[iVar]\");\n        if Counter != p.pProdNums[iVar] {\n            Abc_Print( -1, \"Llb_MtrVerifyColumns(): Internal error.\\n\" ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Matrix reduce.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrSchedule(p *Llb_Mtr_t) {\n    var iGrp, iGrpBest, i int32;\n    // start partial product\n    for  i = 0; i \u003c p.nRows; i++  {\n        if i \u003e= p.nPis \u0026\u0026 i \u003c p.nPis + p.nFfs {\n            p.pProdVars[i] = 1;\n            p.pProdNums[i] = p.pRowSums[i] - 1;\n        \n        } else {\n            p.pProdVars[i] = 0;\n            p.pProdNums[i] = p.pRowSums[i];\n        }\n    }\n    // order the partitions\n    Llb_MtrVerifyMatrix( p );\n    for  iGrp = 1; iGrp \u003c p.nCols-1; iGrp++  {\n        Llb_MtrVerifyColumns( p, iGrp );\n        iGrpBest = Llb_MtrFindBestColumn( p, iGrp );\n        Llb_MtrUseSelectedColumn( p, iGrpBest );\n        Llb_MtrSwapColumns( p, iGrp, iGrpBest );\n    }\n    Llb_MtrVerifyMatrix( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

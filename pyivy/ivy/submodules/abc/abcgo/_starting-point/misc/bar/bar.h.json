@@ -1,0 +1,65 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.h",
+  "SHA256": "8687a3eca41981f3f96b176148298195a3856182d85d0814e47c90b5f7b78c62",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 550
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bar_ProgressUpdate",
+      "Start": 2153,
+      "End": 2375,
+      "BodyStart": 2250,
+      "Original": "static inline void       Bar_ProgressUpdate( Bar_Progress_t * p, int nItemsCur, char * pString ) {  \n    if ( BAR_PROGRESS_USE \u0026\u0026 p \u0026\u0026 (nItemsCur \u003c *((int*)p)) ) return;\n    Bar_ProgressUpdate_int(p, nItemsCur, pString);\n}",
+      "Draft": "func Bar_ProgressUpdate(p *Bar_Progress_t, nItemsCur int32, pString string) {  \n    if BAR_PROGRESS_USE \u0026\u0026 p \u0026\u0026 (nItemsCur \u003c *((int*)p)) { return; }\n    Bar_ProgressUpdate_int(p, nItemsCur, pString);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.h::pointer-cast::2304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2303,
+      "End": 2309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.h::Bar_ProgressUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2153,
+      "End": 2375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 550,
+      "End": 623
+    }
+  ],
+  "Draft": "package bar\n\n/**CFile****************************************************************\n\n  FileName    [bar.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Progress bar.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bar.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nconst BAR_PROGRESS_USE =   1\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n \ntype Bar_Progress_t = Bar_Progress_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== bar.c ==========================================================*/\n// extern Bar_Progress_t *  Bar_ProgressStart( FILE * pFile, int nItemsTotal );\n\n// extern void              Bar_ProgressStop( Bar_Progress_t * p );\n\n// extern void              Bar_ProgressUpdate_int( Bar_Progress_t * p, int nItemsCur, char * pString );\n\n\nfunc Bar_ProgressUpdate(p *Bar_Progress_t, nItemsCur int32, pString string) {  \n    if BAR_PROGRESS_USE \u0026\u0026 p \u0026\u0026 (nItemsCur \u003c *((int*)p)) { return; }\n    Bar_ProgressUpdate_int(p, nItemsCur, pString);\n}\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

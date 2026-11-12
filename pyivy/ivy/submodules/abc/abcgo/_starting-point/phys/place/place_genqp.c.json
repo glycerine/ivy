@@ -1,0 +1,648 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c",
+  "SHA256": "f9faefcf742984cf26e71ea10d18c9833202fbdedcfa91259583d99c33d1068c",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 61,
+        "Column": 31,
+        "ByteOffset": 1592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var cell_numTerms *int32  = calloc(g_place_numCells, sizeof(int));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 62,
+        "Column": 36,
+        "ByteOffset": 1666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var cell_terms ***ConcreteNet  = calloc(g_place_numCells, sizeof(ConcreteNet**));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 65,
+        "Column": 22,
+        "ByteOffset": 1797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var seen *int32  = calloc(g_place_numCells, sizeof(int));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 22,
+        "ByteOffset": 1954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    g_place_qpProb = malloc(sizeof(qps_problem_t));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 40,
+        "ByteOffset": 2640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        cell_terms[c] = (ConcreteNet**)realloc(cell_terms[c], p*sizeof(ConcreteNet*));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 2765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-10 : \\t\\t%d large nets ignored\\n\", ignoreNum);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 32,
+        "ByteOffset": 2987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.area        = realloc(g_place_qpProb.area,"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 32,
+        "ByteOffset": 3135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.edge_weight = realloc(g_place_qpProb.edge_weight,"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 32,
+        "ByteOffset": 3292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.connect     = realloc(g_place_qpProb.connect,"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 32,
+        "ByteOffset": 3451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.fixed       = realloc(g_place_qpProb.fixed,"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QMAN-10 :\\tperforming incremental placement\\n\");"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 30,
+        "ByteOffset": 3793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.x = (float*)realloc(g_place_qpProb.x, sizeof(float)*g_place_numCells);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 30,
+        "ByteOffset": 3881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.y = (float*)realloc(g_place_qpProb.y, sizeof(float)*g_place_numCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 172,
+        "Column": 3,
+        "ByteOffset": 5554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(cell_numTerms);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 173,
+        "Column": 3,
+        "ByteOffset": 5577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(cell_terms);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 174,
+        "Column": 3,
+        "ByteOffset": 5597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(seen);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 194,
+        "Column": 28,
+        "ByteOffset": 6106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var stack **Partition  = malloc(sizeof(Partition*)*g_place_numPartitions*2);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 6545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 3,
+        "ByteOffset": 7181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cogRevNum == g_place_numPartitions);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 7303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 7,
+        "ByteOffset": 7539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(cell);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 269,
+        "Column": 3,
+        "ByteOffset": 8046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(stack);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 284,
+        "Column": 30,
+        "ByteOffset": 8390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var COG_rev *reverseCOG  = malloc(sizeof(reverseCOG)*g_place_numPartitions);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 286,
+        "Column": 29,
+        "ByteOffset": 8469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.cog_list = malloc(sizeof(int)*(g_place_numPartitions+g_place_numCells));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 287,
+        "Column": 26,
+        "ByteOffset": 8556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.cog_x = malloc(sizeof(float)*g_place_numPartitions);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 288,
+        "Column": 26,
+        "ByteOffset": 8626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_qpProb.cog_y = malloc(sizeof(float)*g_place_numPartitions);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 314,
+        "Column": 3,
+        "ByteOffset": 9287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(g_place_qpProb.cog_list);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 315,
+        "Column": 3,
+        "ByteOffset": 9320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(g_place_qpProb.cog_x);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 316,
+        "Column": 3,
+        "ByteOffset": 9350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(g_place_qpProb.cog_y);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 318,
+        "Column": 3,
+        "ByteOffset": 9381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(COG_rev);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "splitPenalty",
+      "Start": 918,
+      "End": 1093,
+      "BodyStart": 947,
+      "Original": "float splitPenalty(int pins) {\n\n  if (pins \u003e 1) {\n    return 1.0 + CLIQUE_PENALTY/(pins - 1);\n    // return pow(pins - 1, CLIQUE_PENALTY);\n  }\n  return 1.0 + CLIQUE_PENALTY;\n}",
+      "Draft": "func splitPenalty(pins int32) float32 {\n\n  if pins \u003e 1 {\n    return 1.0 + CLIQUE_PENALTY/(pins - 1);\n    // return pow(pins - 1, CLIQUE_PENALTY);\n  }\n  return 1.0 + CLIQUE_PENALTY;\n}"
+    },
+    {
+      "Name": "constructQuadraticProblem",
+      "Start": 1350,
+      "End": 5571,
+      "BodyStart": 1383,
+      "Original": "void constructQuadraticProblem() {\n  int maxConnections = 1;\n  int ignoreNum = 0;\n  int n,t,c,c2,p;\n  ConcreteCell  *cell;\n  ConcreteNet   *net;\n  int           *cell_numTerms = calloc(g_place_numCells, sizeof(int));\n  ConcreteNet ***cell_terms = calloc(g_place_numCells, sizeof(ConcreteNet**));\n  bool incremental = false;\n  int nextIndex = 1;\n  int *seen = calloc(g_place_numCells, sizeof(int));\n  float weight;\n  int last_index;\n\n  // create problem object\n  if (!g_place_qpProb) {\n    g_place_qpProb = malloc(sizeof(qps_problem_t));\n    g_place_qpProb-\u003earea = NULL;\n    g_place_qpProb-\u003ex = NULL;\n    g_place_qpProb-\u003ey = NULL;\n    g_place_qpProb-\u003efixed = NULL;\n    g_place_qpProb-\u003econnect = NULL;\n    g_place_qpProb-\u003eedge_weight = NULL;\n  }\n\n  // count the maximum possible number of non-sparse entries\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n]) {\n    ConcreteNet *net = g_place_concreteNets[n];\n    if (net-\u003em_numTerms \u003e IGNORE_NETSIZE) {\n      ignoreNum++;\n    }\n    else {\n      maxConnections += net-\u003em_numTerms*(net-\u003em_numTerms-1);\n      for(t=0; t\u003cnet-\u003em_numTerms; t++) {\n        c = net-\u003em_terms[t]-\u003em_id;\n        p = ++cell_numTerms[c];\n        cell_terms[c] = (ConcreteNet**)realloc(cell_terms[c], p*sizeof(ConcreteNet*));\n        cell_terms[c][p-1] = net;\n      }\n    }\n  }\n  if(ignoreNum) {\n    printf(\"QMAN-10 : \\t\\t%d large nets ignored\\n\", ignoreNum);\n  }\n\n  // initialize the data structures\n  g_place_qpProb-\u003enum_cells = g_place_numCells;\n  maxConnections += g_place_numCells + 1;\n\n  g_place_qpProb-\u003earea        = realloc(g_place_qpProb-\u003earea,\n                                       sizeof(float)*g_place_numCells);// \"area\" matrix\n  g_place_qpProb-\u003eedge_weight = realloc(g_place_qpProb-\u003eedge_weight,\n                                       sizeof(float)*maxConnections);  // \"weight\" matrix\n  g_place_qpProb-\u003econnect     = realloc(g_place_qpProb-\u003econnect,\n                                       sizeof(int)*maxConnections);    // \"connectivity\" matrix\n  g_place_qpProb-\u003efixed       = realloc(g_place_qpProb-\u003efixed,\n                                       sizeof(int)*g_place_numCells);  // \"fixed\" matrix\n\n  // initialize or keep preexisting locations\n  if (g_place_qpProb-\u003ex != NULL \u0026\u0026 g_place_qpProb-\u003ey != NULL) {\n    printf(\"QMAN-10 :\\tperforming incremental placement\\n\");\n    incremental = true;\n  }\n  g_place_qpProb-\u003ex = (float*)realloc(g_place_qpProb-\u003ex, sizeof(float)*g_place_numCells);\n  g_place_qpProb-\u003ey = (float*)realloc(g_place_qpProb-\u003ey, sizeof(float)*g_place_numCells);\n\n  // form a row for each cell\n  // build data\n  for(c = 0; c \u003c g_place_numCells; c++) if (g_place_concreteCells[c]) {\n    cell = g_place_concreteCells[c];\n    \n    // fill in the characteristics for this cell\n    g_place_qpProb-\u003earea[c] = getCellArea(cell);\n    if (cell-\u003em_fixed || cell-\u003em_parent-\u003em_pad) {\n      g_place_qpProb-\u003ex[c] = cell-\u003em_x;\n      g_place_qpProb-\u003ey[c] = cell-\u003em_y;\n      g_place_qpProb-\u003efixed[c] = 1;\n    } else {\n      if (!incremental) {\n        g_place_qpProb-\u003ex[c] = g_place_coreBounds.x+g_place_coreBounds.w*0.5;\n        g_place_qpProb-\u003ey[c] = g_place_coreBounds.y+g_place_coreBounds.h*0.5;\n      }\n      g_place_qpProb-\u003efixed[c] = 0;\n    }\n\n    // update connectivity matrices\n    last_index = nextIndex;\n    for(n=0; n\u003ccell_numTerms[c]; n++) {\n      net = cell_terms[c][n];\n      weight = net-\u003em_weight / splitPenalty(net-\u003em_numTerms);\n      for(t=0; t\u003cnet-\u003em_numTerms; t++) {\n        c2 = net-\u003em_terms[t]-\u003em_id;\n        if (c2 == c) continue;\n        if (seen[c2] \u003c last_index) {\n          // not seen\n          g_place_qpProb-\u003econnect[nextIndex-1] = c2;\n          g_place_qpProb-\u003eedge_weight[nextIndex-1] = weight;\n          seen[c2] = nextIndex;\n          nextIndex++;\n        } else {\n          // seen\n          g_place_qpProb-\u003eedge_weight[seen[c2]-1] += weight;\n        }\n      }\n    }\n    g_place_qpProb-\u003econnect[nextIndex-1] = -1;\n    g_place_qpProb-\u003eedge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;\n  } else {\n    // fill in dummy values for connectivity matrices\n    g_place_qpProb-\u003econnect[nextIndex-1] = -1;\n    g_place_qpProb-\u003eedge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;    \n  }\n\n  free(cell_numTerms);\n  free(cell_terms);\n  free(seen);\n}",
+      "Draft": "func constructQuadraticProblem() {\n  var maxConnections int32  = 1;\n  var ignoreNum int32;\n  var n, t, c, c2, p int32;\n  var cell *ConcreteCell;\n  var net *ConcreteNet;\n  var cell_numTerms *int32  = calloc(g_place_numCells, sizeof(int));\n  var cell_terms ***ConcreteNet  = calloc(g_place_numCells, sizeof(ConcreteNet**));\n  var incremental bool  = false;\n  var nextIndex int32  = 1;\n  var seen *int32  = calloc(g_place_numCells, sizeof(int));\n  var weight float32;\n  var last_index int32;\n\n  // create problem object\n  if !(g_place_qpProb != nil) {\n    g_place_qpProb = malloc(sizeof(qps_problem_t));\n    g_place_qpProb.area = nil;\n    g_place_qpProb.x = nil;\n    g_place_qpProb.y = nil;\n    g_place_qpProb.fixed = nil;\n    g_place_qpProb.connect = nil;\n    g_place_qpProb.edge_weight = nil;\n  }\n\n  // count the maximum possible number of non-sparse entries\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    var net *ConcreteNet  = g_place_concreteNets[n];\n    if net.m_numTerms \u003e IGNORE_NETSIZE {\n      ignoreNum++;\n    \n    } else {\n      maxConnections += net.m_numTerms*(net.m_numTerms-1);\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        c = net.m_terms[t].m_id;\n        p = ++cell_numTerms[c];\n        cell_terms[c] = (ConcreteNet**)realloc(cell_terms[c], p*sizeof(ConcreteNet*));\n        cell_terms[c][p-1] = net;\n      }\n    }\n  }\n  }\n  if ignoreNum != 0 {\n    fmt.Printf(\"QMAN-10 : \\t\\t%d large nets ignored\\n\", ignoreNum);\n  }\n\n  // initialize the data structures\n  g_place_qpProb.num_cells = g_place_numCells;\n  maxConnections += g_place_numCells + 1;\n\n  g_place_qpProb.area        = realloc(g_place_qpProb.area,\n                                         sizeof(float)*g_place_numCells);// \"area\" matrix\n  g_place_qpProb.edge_weight = realloc(g_place_qpProb.edge_weight,\n                                         sizeof(float)*maxConnections);  // \"weight\" matrix\n  g_place_qpProb.connect     = realloc(g_place_qpProb.connect,\n                                         sizeof(int)*maxConnections);    // \"connectivity\" matrix\n  g_place_qpProb.fixed       = realloc(g_place_qpProb.fixed,\n                                         sizeof(int)*g_place_numCells);  // \"fixed\" matrix\n\n  // initialize or keep preexisting locations\n  if g_place_qpProb.x != nil \u0026\u0026 g_place_qpProb.y != nil {\n    fmt.Printf(\"QMAN-10 :\\tperforming incremental placement\\n\");\n    incremental = true;\n  }\n  g_place_qpProb.x = (float*)realloc(g_place_qpProb.x, sizeof(float)*g_place_numCells);\n  g_place_qpProb.y = (float*)realloc(g_place_qpProb.y, sizeof(float)*g_place_numCells);\n\n  // form a row for each cell\n  // build data\n  for c = 0; c \u003c g_place_numCells; c++ { if g_place_concreteCells[c] {\n    cell = g_place_concreteCells[c];\n    \n    // fill in the characteristics for this cell\n    g_place_qpProb.area[c] = getCellArea(cell);\n    if cell.m_fixed || cell.m_parent.m_pad {\n      g_place_qpProb.x[c] = cell.m_x;\n      g_place_qpProb.y[c] = cell.m_y;\n      g_place_qpProb.fixed[c] = 1;\n    } else {\n      if !incremental {\n        g_place_qpProb.x[c] = g_place_coreBounds.x+g_place_coreBounds.w*0.5;\n        g_place_qpProb.y[c] = g_place_coreBounds.y+g_place_coreBounds.h*0.5;\n      }\n      g_place_qpProb.fixed[c] = 0;\n    }\n\n    // update connectivity matrices\n    last_index = nextIndex;\n    for n=0; n\u003ccell_numTerms[c]; n++ {\n      net = cell_terms[c][n];\n      weight = net.m_weight / splitPenalty(net.m_numTerms);\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        c2 = net.m_terms[t].m_id;\n        if c2 == c { continue; }\n        if seen[c2] \u003c last_index {\n          // not seen\n          g_place_qpProb.connect[nextIndex-1] = c2;\n          g_place_qpProb.edge_weight[nextIndex-1] = weight;\n          seen[c2] = nextIndex;\n          nextIndex++;\n        } else {\n          // seen\n          g_place_qpProb.edge_weight[seen[c2]-1] += weight;\n        }\n      }\n    }\n    g_place_qpProb.connect[nextIndex-1] = -1;\n    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;\n  } else {\n    // fill in dummy values for connectivity matrices\n    g_place_qpProb.connect[nextIndex-1] = -1;\n    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;    \n  }\n  }\n\n  free(cell_numTerms);\n  free(cell_terms);\n  free(seen);\n}"
+    },
+    {
+      "Name": "generateCoGConstraints",
+      "Start": 5904,
+      "End": 8015,
+      "BodyStart": 5953,
+      "Original": "int generateCoGConstraints(reverseCOG COG_rev[]) {\n  int numConstraints = 0; // actual num constraints\n  int cogRevNum = 0;\n  Partition **stack = malloc(sizeof(Partition*)*g_place_numPartitions*2);\n  int stackPtr = 0;\n  Partition *p;\n  float cgx, cgy;\n  int next_index = 0, last_constraint = 0;\n  bool isTrueConstraint = false;\n  int i, m;\n  float totarea;\n  ConcreteCell *cell;\n\n  // each partition may give rise to a center-of-gravity constraint\n  stack[stackPtr] = g_place_rootPartition;\n  while(stackPtr \u003e= 0) {\n    p = stack[stackPtr--];\n    assert(p);\n\n    // traverse down the partition tree to leaf nodes-only\n    if (!p-\u003em_leaf) {\n      stack[++stackPtr] = p-\u003em_sub1;\n      stack[++stackPtr] = p-\u003em_sub2;\n    } else {\n      /*\n      cout \u003c\u003c \"adding a COG constraint for box \"\n       \u003c\u003c p-\u003ebounds.x \u003c\u003c \",\"\n       \u003c\u003c p-\u003ebounds.y \u003c\u003c \" of size\"\n       \u003c\u003c p-\u003ebounds.w \u003c\u003c \"x\"\n       \u003c\u003c p-\u003ebounds.h\n       \u003c\u003c endl;\n      */\n      cgx = p-\u003em_bounds.x + p-\u003em_bounds.w*0.5;\n      cgy = p-\u003em_bounds.y + p-\u003em_bounds.h*0.5;\n      COG_rev[cogRevNum].x = cgx;\n      COG_rev[cogRevNum].y = cgy;\n      COG_rev[cogRevNum].part = p;\n      COG_rev[cogRevNum].delta = 0;\n\n      cogRevNum++;\n    }\n  }\n\n  assert(cogRevNum == g_place_numPartitions);\n  \n  for (i = 0; i \u003c g_place_numPartitions; i++) {\n    p = COG_rev[i].part;\n    assert(p);\n    g_place_qpProb-\u003ecog_x[numConstraints] = COG_rev[i].x;\n    g_place_qpProb-\u003ecog_y[numConstraints] = COG_rev[i].y;\n    totarea = 0.0;\n    for(m=0; m\u003cp-\u003em_numMembers; m++) if (p-\u003em_members[m]) {\n      cell = p-\u003em_members[m];\n      assert(cell);\n\n      if (!cell-\u003em_fixed \u0026\u0026 !cell-\u003em_parent-\u003em_pad) {\n    isTrueConstraint = true;\n      }\n      else {\n    continue;\n      }\n      g_place_qpProb-\u003ecog_list[next_index++] = cell-\u003em_id;\n      totarea += getCellArea(cell);\n    }\n    if (totarea == 0.0) {\n      isTrueConstraint = false;\n    }\n    if (isTrueConstraint) {\n      numConstraints++;\n      g_place_qpProb-\u003ecog_list[next_index++] = -1;\n      last_constraint = next_index;\n    }\n    else {\n      next_index = last_constraint;\n    }\n  }\n\n  free(stack);\n\n  return --numConstraints;\n}",
+      "Draft": "func generateCoGConstraints(COG_rev []reverseCOG) int32 {\n  var numConstraints int32; // actual num constraints\n  var cogRevNum int32;\n  var stack **Partition  = malloc(sizeof(Partition*)*g_place_numPartitions*2);\n  var stackPtr int32;\n  var p *Partition;\n  var cgx, cgy float32;\n  var next_index, last_constraint int32;\n  var isTrueConstraint bool  = false;\n  var i, m int32;\n  var totarea float32;\n  var cell *ConcreteCell;\n\n  // each partition may give rise to a center-of-gravity constraint\n  stack[stackPtr] = g_place_rootPartition;\n  for stackPtr \u003e= 0 {\n    p = stack[stackPtr]; stackPtr--;\n    assert(p, \"p\");\n\n    // traverse down the partition tree to leaf nodes-only\n    if !p.m_leaf {\n      stack[++stackPtr] = p.m_sub1;\n      stack[++stackPtr] = p.m_sub2;\n    } else {\n      /*\n      cout \u003c\u003c \"adding a COG constraint for box \"\n       \u003c\u003c p-\u003ebounds.x \u003c\u003c \",\"\n       \u003c\u003c p-\u003ebounds.y \u003c\u003c \" of size\"\n       \u003c\u003c p-\u003ebounds.w \u003c\u003c \"x\"\n       \u003c\u003c p-\u003ebounds.h\n       \u003c\u003c endl;\n      */\n      cgx = p.m_bounds.x + p.m_bounds.w*0.5;\n      cgy = p.m_bounds.y + p.m_bounds.h*0.5;\n      COG_rev[cogRevNum].x = cgx;\n      COG_rev[cogRevNum].y = cgy;\n      COG_rev[cogRevNum].part = p;\n      COG_rev[cogRevNum].delta = 0;\n\n      cogRevNum++;\n    }\n  }\n\n  assert(cogRevNum == g_place_numPartitions, \"cogRevNum == g_place_numPartitions\");\n  \n  for i = 0; i \u003c g_place_numPartitions; i++ {\n    p = COG_rev[i].part;\n    assert(p, \"p\");\n    g_place_qpProb.cog_x[numConstraints] = COG_rev[i].x;\n    g_place_qpProb.cog_y[numConstraints] = COG_rev[i].y;\n    totarea = 0.0;\n    for m=0; m\u003cp.m_numMembers; m++ { if p.m_members[m] {\n      cell = p.m_members[m];\n      assert((cell != nil), \"cell\");\n\n      if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n    isTrueConstraint = true;\n      \n      } else {\n    continue;\n      }\n      g_place_qpProb.cog_list[next_index++] = cell.m_id;\n      totarea += getCellArea(cell);\n    }\n    }\n    if totarea == 0.0 {\n      isTrueConstraint = false;\n    }\n    if isTrueConstraint {\n      numConstraints++;\n      g_place_qpProb.cog_list[next_index++] = -1;\n      last_constraint = next_index;\n    \n    } else {\n      next_index = last_constraint;\n    }\n  }\n\n  free(stack);\n\n  return --numConstraints;\n}"
+    },
+    {
+      "Name": "solveQuadraticProblem",
+      "Start": 8230,
+      "End": 9317,
+      "BodyStart": 8270,
+      "Original": "void solveQuadraticProblem(bool useCOG) {\n  int c;\n\n  reverseCOG *COG_rev = malloc(sizeof(reverseCOG)*g_place_numPartitions);\n\n  g_place_qpProb-\u003ecog_list = malloc(sizeof(int)*(g_place_numPartitions+g_place_numCells));\n  g_place_qpProb-\u003ecog_x = malloc(sizeof(float)*g_place_numPartitions);\n  g_place_qpProb-\u003ecog_y = malloc(sizeof(float)*g_place_numPartitions);\n\n  // memset(g_place_qpProb-\u003ex, 0, sizeof(float)*g_place_numCells);\n  // memset(g_place_qpProb-\u003ey, 0, sizeof(float)*g_place_numCells);\n\n  qps_init(g_place_qpProb);\n\n  if (useCOG)\n      g_place_qpProb-\u003ecog_num = generateCoGConstraints(COG_rev);\n  else\n      g_place_qpProb-\u003ecog_num = 0;\n\n  g_place_qpProb-\u003eloop_num = 0;\n\n  qps_solve(g_place_qpProb);\n\n  qps_clean(g_place_qpProb);\n\n  // set the positions\n  for(c = 0; c \u003c g_place_numCells; c++) if (g_place_concreteCells[c]) {\n    g_place_concreteCells[c]-\u003em_x = g_place_qpProb-\u003ex[c];\n    g_place_concreteCells[c]-\u003em_y = g_place_qpProb-\u003ey[c];\n  }\n  \n  // clean up\n  free(g_place_qpProb-\u003ecog_list);\n  free(g_place_qpProb-\u003ecog_x);\n  free(g_place_qpProb-\u003ecog_y);\n\n  free(COG_rev);\n}",
+      "Draft": "func solveQuadraticProblem(useCOG bool) {\n  var c int32;\n\n  var COG_rev *reverseCOG  = malloc(sizeof(reverseCOG)*g_place_numPartitions);\n\n  g_place_qpProb.cog_list = malloc(sizeof(int)*(g_place_numPartitions+g_place_numCells));\n  g_place_qpProb.cog_x = malloc(sizeof(float)*g_place_numPartitions);\n  g_place_qpProb.cog_y = malloc(sizeof(float)*g_place_numPartitions);\n\n  // memset(g_place_qpProb-\u003ex, 0, sizeof(float)*g_place_numCells);\n  // memset(g_place_qpProb-\u003ey, 0, sizeof(float)*g_place_numCells);\n\n  qps_init(g_place_qpProb);\n\n  if useCOG {\n      g_place_qpProb.cog_num = generateCoGConstraints(COG_rev);\n  } else {\n      g_place_qpProb.cog_num = 0; }\n\n  g_place_qpProb.loop_num = 0;\n\n  qps_solve(g_place_qpProb);\n\n  qps_clean(g_place_qpProb);\n\n  // set the positions\n  for c = 0; c \u003c g_place_numCells; c++ { if g_place_concreteCells[c] {\n    g_place_concreteCells[c].m_x = g_place_qpProb.x[c];\n    g_place_concreteCells[c].m_y = g_place_qpProb.y[c];\n  }\n  }\n  \n  // clean up\n  free(g_place_qpProb.cog_list);\n  free(g_place_qpProb.cog_x);\n  free(g_place_qpProb.cog_y);\n\n  free(COG_rev);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::1553",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1553,
+      "End": 1559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::1622",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1622,
+      "End": 1628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::1734",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1734,
+      "End": 1740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::1863",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1863,
+      "End": 1869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::2583",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2583,
+      "End": 2589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::2973",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2973,
+      "End": 2979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::3130",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3130,
+      "End": 3136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::3285",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3285,
+      "End": 3291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::3444",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3444,
+      "End": 3450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::3751",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3751,
+      "End": 3757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::3841",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3841,
+      "End": 3847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::6057",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6057,
+      "End": 6063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::8313",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8313,
+      "End": 8319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::8393",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8393,
+      "End": 8399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::8481",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8481,
+      "End": 8487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::mechanical::sizeof::8552",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8552,
+      "End": 8558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::1628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1628,
+      "End": 1643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::2543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2543,
+      "End": 2558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::2589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2589,
+      "End": 2603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::3716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3716,
+      "End": 3724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::3806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3806,
+      "End": 3814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::pointer-cast::6063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6063,
+      "End": 6075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::splitPenalty",
+      "Category": "semantic-review",
+      "Symbol": "splitPenalty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 918,
+      "End": 1093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::constructQuadraticProblem",
+      "Category": "semantic-review",
+      "Symbol": "constructQuadraticProblem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1350,
+      "End": 5571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::generateCoGConstraints",
+      "Category": "semantic-review",
+      "Symbol": "generateCoGConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5904,
+      "End": 8015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::solveQuadraticProblem",
+      "Category": "semantic-review",
+      "Symbol": "solveQuadraticProblem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8230,
+      "End": 9317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_genqp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9342
+    }
+  ],
+  "Draft": "package place\n\nimport \"fmt\"\n\n/*===================================================================*/\n//  \n//     place_genqp.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"place_base.h\"\n//#include \"place_qpsolver.h\"\n//#include \"place_gordian.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\nvar g_place_qpProb *qps_problem_t = nil;\n\n\n// --------------------------------------------------------------------\n// splitPenalty()\n//\n/// \\brief Returns a weight for all of the edges in the clique for a multipin net.\n//\n// --------------------------------------------------------------------\nfunc splitPenalty(pins int32) float32 {\n\n  if pins \u003e 1 {\n    return 1.0 + CLIQUE_PENALTY/(pins - 1);\n    // return pow(pins - 1, CLIQUE_PENALTY);\n  }\n  return 1.0 + CLIQUE_PENALTY;\n}\n\n\n// --------------------------------------------------------------------\n// constructQuadraticProblem()\n//\n/// \\brief Constructs the matrices necessary to do analytical placement.\n//\n// --------------------------------------------------------------------\nfunc constructQuadraticProblem() {\n  var maxConnections int32  = 1;\n  var ignoreNum int32;\n  var n, t, c, c2, p int32;\n  var cell *ConcreteCell;\n  var net *ConcreteNet;\n  var cell_numTerms *int32  = calloc(g_place_numCells, sizeof(int));\n  var cell_terms ***ConcreteNet  = calloc(g_place_numCells, sizeof(ConcreteNet**));\n  var incremental bool  = false;\n  var nextIndex int32  = 1;\n  var seen *int32  = calloc(g_place_numCells, sizeof(int));\n  var weight float32;\n  var last_index int32;\n\n  // create problem object\n  if !(g_place_qpProb != nil) {\n    g_place_qpProb = malloc(sizeof(qps_problem_t));\n    g_place_qpProb.area = nil;\n    g_place_qpProb.x = nil;\n    g_place_qpProb.y = nil;\n    g_place_qpProb.fixed = nil;\n    g_place_qpProb.connect = nil;\n    g_place_qpProb.edge_weight = nil;\n  }\n\n  // count the maximum possible number of non-sparse entries\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    var net *ConcreteNet  = g_place_concreteNets[n];\n    if net.m_numTerms \u003e IGNORE_NETSIZE {\n      ignoreNum++;\n    \n    } else {\n      maxConnections += net.m_numTerms*(net.m_numTerms-1);\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        c = net.m_terms[t].m_id;\n        p = ++cell_numTerms[c];\n        cell_terms[c] = (ConcreteNet**)realloc(cell_terms[c], p*sizeof(ConcreteNet*));\n        cell_terms[c][p-1] = net;\n      }\n    }\n  }\n  }\n  if ignoreNum != 0 {\n    fmt.Printf(\"QMAN-10 : \\t\\t%d large nets ignored\\n\", ignoreNum);\n  }\n\n  // initialize the data structures\n  g_place_qpProb.num_cells = g_place_numCells;\n  maxConnections += g_place_numCells + 1;\n\n  g_place_qpProb.area        = realloc(g_place_qpProb.area,\n                                         sizeof(float)*g_place_numCells);// \"area\" matrix\n  g_place_qpProb.edge_weight = realloc(g_place_qpProb.edge_weight,\n                                         sizeof(float)*maxConnections);  // \"weight\" matrix\n  g_place_qpProb.connect     = realloc(g_place_qpProb.connect,\n                                         sizeof(int)*maxConnections);    // \"connectivity\" matrix\n  g_place_qpProb.fixed       = realloc(g_place_qpProb.fixed,\n                                         sizeof(int)*g_place_numCells);  // \"fixed\" matrix\n\n  // initialize or keep preexisting locations\n  if g_place_qpProb.x != nil \u0026\u0026 g_place_qpProb.y != nil {\n    fmt.Printf(\"QMAN-10 :\\tperforming incremental placement\\n\");\n    incremental = true;\n  }\n  g_place_qpProb.x = (float*)realloc(g_place_qpProb.x, sizeof(float)*g_place_numCells);\n  g_place_qpProb.y = (float*)realloc(g_place_qpProb.y, sizeof(float)*g_place_numCells);\n\n  // form a row for each cell\n  // build data\n  for c = 0; c \u003c g_place_numCells; c++ { if g_place_concreteCells[c] {\n    cell = g_place_concreteCells[c];\n    \n    // fill in the characteristics for this cell\n    g_place_qpProb.area[c] = getCellArea(cell);\n    if cell.m_fixed || cell.m_parent.m_pad {\n      g_place_qpProb.x[c] = cell.m_x;\n      g_place_qpProb.y[c] = cell.m_y;\n      g_place_qpProb.fixed[c] = 1;\n    } else {\n      if !incremental {\n        g_place_qpProb.x[c] = g_place_coreBounds.x+g_place_coreBounds.w*0.5;\n        g_place_qpProb.y[c] = g_place_coreBounds.y+g_place_coreBounds.h*0.5;\n      }\n      g_place_qpProb.fixed[c] = 0;\n    }\n\n    // update connectivity matrices\n    last_index = nextIndex;\n    for n=0; n\u003ccell_numTerms[c]; n++ {\n      net = cell_terms[c][n];\n      weight = net.m_weight / splitPenalty(net.m_numTerms);\n      for t=0; t\u003cnet.m_numTerms; t++ {\n        c2 = net.m_terms[t].m_id;\n        if c2 == c { continue; }\n        if seen[c2] \u003c last_index {\n          // not seen\n          g_place_qpProb.connect[nextIndex-1] = c2;\n          g_place_qpProb.edge_weight[nextIndex-1] = weight;\n          seen[c2] = nextIndex;\n          nextIndex++;\n        } else {\n          // seen\n          g_place_qpProb.edge_weight[seen[c2]-1] += weight;\n        }\n      }\n    }\n    g_place_qpProb.connect[nextIndex-1] = -1;\n    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;\n  } else {\n    // fill in dummy values for connectivity matrices\n    g_place_qpProb.connect[nextIndex-1] = -1;\n    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    \n    nextIndex++;    \n  }\n  }\n\n  free(cell_numTerms);\n  free(cell_terms);\n  free(seen);\n}\n\ntypedef struct reverseCOG {\n  float      x,y;\n  Partition *part;\n  float      delta;\n}\n reverseCOG;\n\n\n// --------------------------------------------------------------------\n// generateCoGConstraints()\n//\n/// \\brief Generates center of gravity constraints.\n//\n// --------------------------------------------------------------------\nfunc generateCoGConstraints(COG_rev []reverseCOG) int32 {\n  var numConstraints int32; // actual num constraints\n  var cogRevNum int32;\n  var stack **Partition  = malloc(sizeof(Partition*)*g_place_numPartitions*2);\n  var stackPtr int32;\n  var p *Partition;\n  var cgx, cgy float32;\n  var next_index, last_constraint int32;\n  var isTrueConstraint bool  = false;\n  var i, m int32;\n  var totarea float32;\n  var cell *ConcreteCell;\n\n  // each partition may give rise to a center-of-gravity constraint\n  stack[stackPtr] = g_place_rootPartition;\n  for stackPtr \u003e= 0 {\n    p = stack[stackPtr]; stackPtr--;\n    assert(p, \"p\");\n\n    // traverse down the partition tree to leaf nodes-only\n    if !p.m_leaf {\n      stack[++stackPtr] = p.m_sub1;\n      stack[++stackPtr] = p.m_sub2;\n    } else {\n      /*\n      cout \u003c\u003c \"adding a COG constraint for box \"\n       \u003c\u003c p-\u003ebounds.x \u003c\u003c \",\"\n       \u003c\u003c p-\u003ebounds.y \u003c\u003c \" of size\"\n       \u003c\u003c p-\u003ebounds.w \u003c\u003c \"x\"\n       \u003c\u003c p-\u003ebounds.h\n       \u003c\u003c endl;\n      */\n      cgx = p.m_bounds.x + p.m_bounds.w*0.5;\n      cgy = p.m_bounds.y + p.m_bounds.h*0.5;\n      COG_rev[cogRevNum].x = cgx;\n      COG_rev[cogRevNum].y = cgy;\n      COG_rev[cogRevNum].part = p;\n      COG_rev[cogRevNum].delta = 0;\n\n      cogRevNum++;\n    }\n  }\n\n  assert(cogRevNum == g_place_numPartitions, \"cogRevNum == g_place_numPartitions\");\n  \n  for i = 0; i \u003c g_place_numPartitions; i++ {\n    p = COG_rev[i].part;\n    assert(p, \"p\");\n    g_place_qpProb.cog_x[numConstraints] = COG_rev[i].x;\n    g_place_qpProb.cog_y[numConstraints] = COG_rev[i].y;\n    totarea = 0.0;\n    for m=0; m\u003cp.m_numMembers; m++ { if p.m_members[m] {\n      cell = p.m_members[m];\n      assert((cell != nil), \"cell\");\n\n      if !cell.m_fixed \u0026\u0026 !cell.m_parent.m_pad {\n    isTrueConstraint = true;\n      \n      } else {\n    continue;\n      }\n      g_place_qpProb.cog_list[next_index++] = cell.m_id;\n      totarea += getCellArea(cell);\n    }\n    }\n    if totarea == 0.0 {\n      isTrueConstraint = false;\n    }\n    if isTrueConstraint {\n      numConstraints++;\n      g_place_qpProb.cog_list[next_index++] = -1;\n      last_constraint = next_index;\n    \n    } else {\n      next_index = last_constraint;\n    }\n  }\n\n  free(stack);\n\n  return --numConstraints;\n}\n\n\n// --------------------------------------------------------------------\n// solveQuadraticProblem()\n//\n/// \\brief Calls quadratic solver.\n//\n// --------------------------------------------------------------------\nfunc solveQuadraticProblem(useCOG bool) {\n  var c int32;\n\n  var COG_rev *reverseCOG  = malloc(sizeof(reverseCOG)*g_place_numPartitions);\n\n  g_place_qpProb.cog_list = malloc(sizeof(int)*(g_place_numPartitions+g_place_numCells));\n  g_place_qpProb.cog_x = malloc(sizeof(float)*g_place_numPartitions);\n  g_place_qpProb.cog_y = malloc(sizeof(float)*g_place_numPartitions);\n\n  // memset(g_place_qpProb-\u003ex, 0, sizeof(float)*g_place_numCells);\n  // memset(g_place_qpProb-\u003ey, 0, sizeof(float)*g_place_numCells);\n\n  qps_init(g_place_qpProb);\n\n  if useCOG {\n      g_place_qpProb.cog_num = generateCoGConstraints(COG_rev);\n  } else {\n      g_place_qpProb.cog_num = 0; }\n\n  g_place_qpProb.loop_num = 0;\n\n  qps_solve(g_place_qpProb);\n\n  qps_clean(g_place_qpProb);\n\n  // set the positions\n  for c = 0; c \u003c g_place_numCells; c++ { if g_place_concreteCells[c] {\n    g_place_concreteCells[c].m_x = g_place_qpProb.x[c];\n    g_place_concreteCells[c].m_y = g_place_qpProb.y[c];\n  }\n  }\n  \n  // clean up\n  free(g_place_qpProb.cog_list);\n  free(g_place_qpProb.cog_x);\n  free(g_place_qpProb.cog_y);\n\n  free(COG_rev);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

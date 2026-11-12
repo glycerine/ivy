@@ -1,0 +1,250 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c",
+  "SHA256": "a662c01f353c5aba88676a2a9c7c39ced083361ca63350ee5925a79f98d8590a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 53,
+        "Column": 78,
+        "ByteOffset": 1556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppInputs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nRegs)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 60,
+        "Column": 64,
+        "ByteOffset": 1880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppInputs) ? (free((char *) (ppInputs)), (ppInputs) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManStartInitState",
+      "Start": 1288,
+      "End": 1739,
+      "BodyStart": 1337,
+      "Original": "Aig_Man_t * Inter_ManStartInitState( int nRegs )\n{\n    Aig_Man_t * p;\n    Aig_Obj_t * pRes;\n    Aig_Obj_t ** ppInputs;\n    int i;\n    assert( nRegs \u003e 0 );\n    ppInputs = ABC_ALLOC( Aig_Obj_t *, nRegs );\n    p = Aig_ManStart( nRegs );\n    for ( i = 0; i \u003c nRegs; i++ )\n        ppInputs[i] = Aig_Not( Aig_ObjCreateCi(p) );\n    pRes = Aig_Multi( p, ppInputs, nRegs, AIG_OBJ_AND );\n    Aig_ObjCreateCo( p, pRes );\n    ABC_FREE( ppInputs );\n    return p;\n}",
+      "Draft": "func Inter_ManStartInitState(nRegs int32) *Aig_Man_t {\n    var p *Aig_Man_t;\n    var pRes *Aig_Obj_t;\n    var ppInputs **Aig_Obj_t;\n    var i int32;\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    // inlining of macro ABC_ALLOC\n    ppInputs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nRegs)));\n    p = Aig_ManStart( nRegs );\n    for  i = 0; i \u003c nRegs; i++  {\n        ppInputs[i] = Aig_Not( Aig_ObjCreateCi(p) );\n    }\n    pRes = Aig_Multi( p, ppInputs, nRegs, AIG_OBJ_AND );\n    Aig_ObjCreateCo( p, pRes );\n    // inlining of macro ABC_FREE\n    ((ppInputs) ? (free((char *) (ppInputs)), (ppInputs) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Inter_ManStartDuplicated",
+      "Start": 2001,
+      "End": 3199,
+      "BodyStart": 2055,
+      "Original": "Aig_Man_t * Inter_ManStartDuplicated( Aig_Man_t * p )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    // set registers\n    pNew-\u003enTruePis = p-\u003enTruePis;\n    pNew-\u003enTruePos = Saig_ManConstrNum(p);\n    pNew-\u003enRegs    = p-\u003enRegs;\n    // duplicate internal nodes\n    Aig_ManForEachNode( p, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // create constraint outputs\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        if ( i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) )\n            continue;\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // create register inputs with MUXes\n    Saig_ManForEachLi( p, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pNew );\n    return pNew;\n}",
+      "Draft": "func Inter_ManStartDuplicated(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // set registers\n    pNew.nTruePis = p.nTruePis;\n    pNew.nTruePos = Saig_ManConstrNum(p);\n    pNew.nRegs    = p.nRegs;\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n\n    // create constraint outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n            continue; }\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // create register inputs with MUXes\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Inter_ManStartOneOutput",
+      "Start": 3503,
+      "End": 5355,
+      "BodyStart": 3573,
+      "Original": "Aig_Man_t * Inter_ManStartOneOutput( Aig_Man_t * p, int fAddFirstPo )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    Aig_Obj_t * pCtrl = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p, pObj, i )\n    {\n        if ( i == Saig_ManPiNum(p) )\n            pCtrl = Aig_ObjCreateCi( pNew );\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    }\n    // set registers\n    pNew-\u003enRegs    = fAddFirstPo? 0 : p-\u003enRegs;\n    pNew-\u003enTruePis = fAddFirstPo? Aig_ManCiNum(p) + 1 : p-\u003enTruePis + 1;\n    pNew-\u003enTruePos = fAddFirstPo + Saig_ManConstrNum(p);\n    // duplicate internal nodes\n    Aig_ManForEachNode( p, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n\n    // create constraint outputs\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        if ( i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) )\n            continue;\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // add the PO\n    if ( fAddFirstPo )\n    {\n        pObj = Aig_ManCo( p, 0 );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    else\n    {\n        // create register inputs with MUXes\n        Saig_ManForEachLiLo( p, pObjLi, pObjLo, i )\n        {\n            pObj = Aig_Mux( pNew, pCtrl, (Aig_Obj_t *)pObjLo-\u003epData, Aig_ObjChild0Copy(pObjLi) );\n    //        pObj = Aig_Mux( pNew, pCtrl, Aig_ManConst0(pNew), Aig_ObjChild0Copy(pObjLi) );\n            Aig_ObjCreateCo( pNew, pObj );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}",
+      "Draft": "func Inter_ManStartOneOutput(p *Aig_Man_t, fAddFirstPo int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pCtrl *Aig_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if i == Saig_ManPiNum(p) {\n            pCtrl = Aig_ObjCreateCi( pNew ); }\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // set registers\n    if fAddFirstPo != 0 {\n        pNew.nRegs = 0;\n    } else {\n        pNew.nRegs = p.nRegs;\n    }\n    if fAddFirstPo != 0 {\n        pNew.nTruePis = Aig_ManCiNum(p) + 1;\n    } else {\n        pNew.nTruePis = p.nTruePis + 1;\n    }\n    pNew.nTruePos = fAddFirstPo + Saig_ManConstrNum(p);\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n\n    // create constraint outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n            continue; }\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // add the PO\n    if fAddFirstPo != 0 {\n        pObj = Aig_ManCo( p, 0 );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    \n    } else {\n        // create register inputs with MUXes\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n            pObj = Aig_Mux( pNew, pCtrl, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n    //        pObj = Aig_Mux( pNew, pCtrl, Aig_ManConst0(pNew), Aig_ObjChild0Copy(pObjLi) );\n            Aig_ObjCreateCo( pNew, pObj );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::mechanical::sizeof::1527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1458,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::1504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1458,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::1533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1458,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::1843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1702,
+      "End": 1702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::2746",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2422,
+      "End": 2422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::3172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2665,
+      "End": 2665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::3566",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2825,
+      "End": 2825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::3926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3063,
+      "End": 3063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::5091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4032,
+      "End": 4032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::5681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4439,
+      "End": 4439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::6075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4599,
+      "End": 4599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::pointer-cast::6734",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5100,
+      "End": 5113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::ternary::Inter_ManStartInitState",
+      "Category": "ternary-review",
+      "Symbol": "Inter_ManStartInitState",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1288,
+      "End": 1739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::Inter_ManStartInitState",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManStartInitState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1288,
+      "End": 1739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::Inter_ManStartDuplicated",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManStartDuplicated",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2001,
+      "End": 3199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::Inter_ManStartOneOutput",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManStartOneOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3503,
+      "End": 5355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intDup.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5602
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [intDup.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Specialized AIG duplication procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intDup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create trivial AIG manager for the init state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManStartInitState(nRegs int32) *Aig_Man_t {\n    var p *Aig_Man_t;\n    var pRes *Aig_Obj_t;\n    var ppInputs **Aig_Obj_t;\n    var i int32;\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    // inlining of macro ABC_ALLOC\n    ppInputs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nRegs)));\n    p = Aig_ManStart( nRegs );\n    for  i = 0; i \u003c nRegs; i++  {\n        ppInputs[i] = Aig_Not( Aig_ObjCreateCi(p) );\n    }\n    pRes = Aig_Multi( p, ppInputs, nRegs, AIG_OBJ_AND );\n    Aig_ObjCreateCo( p, pRes );\n    // inlining of macro ABC_FREE\n    ((ppInputs) ? (free((char *) (ppInputs)), (ppInputs) = 0) : 0);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicate the AIG w/o POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManStartDuplicated(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // set registers\n    pNew.nTruePis = p.nTruePis;\n    pNew.nTruePos = Saig_ManConstrNum(p);\n    pNew.nRegs    = p.nRegs;\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n\n    // create constraint outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n            continue; }\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // create register inputs with MUXes\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicate the AIG w/o POs and transforms to transit into init state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManStartOneOutput(p *Aig_Man_t, fAddFirstPo int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pCtrl *Aig_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // create the new manager\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // create the PIs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if i == Saig_ManPiNum(p) {\n            pCtrl = Aig_ObjCreateCi( pNew ); }\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // set registers\n    if fAddFirstPo != 0 {\n        pNew.nRegs = 0;\n    } else {\n        pNew.nRegs = p.nRegs;\n    }\n    if fAddFirstPo != 0 {\n        pNew.nTruePis = Aig_ManCiNum(p) + 1;\n    } else {\n        pNew.nTruePis = p.nTruePis + 1;\n    }\n    pNew.nTruePos = fAddFirstPo + Saig_ManConstrNum(p);\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n\n    // create constraint outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i \u003c Saig_ManPoNum(p)-Saig_ManConstrNum(p) {\n            continue; }\n        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n    }\n\n    // add the PO\n    if fAddFirstPo != 0 {\n        pObj = Aig_ManCo( p, 0 );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    \n    } else {\n        // create register inputs with MUXes\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n            pObj = Aig_Mux( pNew, pCtrl, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n    //        pObj = Aig_Mux( pNew, pCtrl, Aig_ManConst0(pNew), Aig_ObjChild0Copy(pObjLi) );\n            Aig_ObjCreateCo( pNew, pObj );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

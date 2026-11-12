@@ -1,0 +1,905 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c",
+  "SHA256": "b95820eef35adc8dcdcbdf9ed7d1693d3aa24007520f06d127f48f8800fd3ea6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 5190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBits) == int32(strlen(pSymb)) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 146,
+        "Column": 41,
+        "ByteOffset": 5226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBits) == int32(strlen(pSymb)) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 5248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Bac_NtkGenerateName_Buffer, \"%s%s_\", s_Pref, pName );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 148,
+        "Column": 51,
+        "ByteOffset": 5370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp = spStatic_Bac_NtkGenerateName_Buffer + strlen(spStatic_Bac_NtkGenerateName_Buffer);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pTemp, \"%c%d\", pSymb[i], Bits );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 151,
+        "Column": 18,
+        "ByteOffset": 5628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp += strlen(pTemp);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 160,
+        "Column": 8,
+        "ByteOffset": 5835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strncmp(pName, s_Pref, strlen(s_Pref)) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 160,
+        "Column": 31,
+        "ByteOffset": 5858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strncmp(pName, s_Pref, strlen(s_Pref)) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 162,
+        "Column": 14,
+        "ByteOffset": 5920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pName += strlen(s_Pref);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 5992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strncmp(pName, s_Types[i].pName, strlen(s_Types[i].pName)) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 164,
+        "Column": 46,
+        "ByteOffset": 6025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strncmp(pName, s_Types[i].pName, strlen(s_Types[i].pName)) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 6631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strncmp(pName, s_Pref, strlen(s_Pref)) );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 182,
+        "Column": 14,
+        "ByteOffset": 6640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strncmp(pName, s_Pref, strlen(s_Pref)) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 182,
+        "Column": 37,
+        "ByteOffset": 6663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strncmp(pName, s_Pref, strlen(s_Pref)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 6758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_CharIsDigit(*pTemp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 7115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(spStatic_Bac_NameToRanges_vBits) \u003c= 10 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 7810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsCi(p, iNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 8021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Bac_ObjFanin(p, iCo) == iOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 8559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Bac_NtkHasFanouts(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 8769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Bac_ObjNextFanout(p, iCo) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 278,
+        "Column": 13,
+        "ByteOffset": 10019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"%s%0*d\", pPref, nDigits, iNum );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 280,
+        "Column": 13,
+        "ByteOffset": 10099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"%s%0*d_%d\", pPref, nDigits, iNum, i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 13,
+        "ByteOffset": 12361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iBit \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 17,
+        "ByteOffset": 13381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Bac_ObjBit(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 17,
+        "ByteOffset": 13429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 17,
+        "ByteOffset": 13757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Bac_ObjBit(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 17,
+        "ByteOffset": 13851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 22,
+        "ByteOffset": 14071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 14104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPis == Bac_NtkPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 9,
+        "ByteOffset": 14147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPos == Bac_NtkPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 15847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 17454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 18845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ObjIsBoxUser(p, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 13,
+        "ByteOffset": 19904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cyclic dependency of user boxes is detected.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 20422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) == Bac_NtkPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 564,
+        "Column": 13,
+        "ByteOffset": 22349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 589,
+        "Column": 5,
+        "ByteOffset": 23703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 593,
+        "Column": 5,
+        "ByteOffset": 23979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bac_GetTypeId",
+      "Start": 4408,
+      "End": 4596,
+      "BodyStart": 4462,
+      "Original": "static inline int Bac_GetTypeId( Bac_ObjType_t Type )\n{\n    int i;\n    for ( i = 1; i \u003c BAC_BOX_UNKNOWN; i++ )\n        if ( s_Types[i].Type == Type )\n            return i;\n    return -1;\n}",
+      "Draft": "func Bac_GetTypeId(Type Bac_ObjType_t) int32 {\n    var i int32;\n    for  i = 1; i \u003c BAC_BOX_UNKNOWN; i++  {\n        if s_Types[i].Type == Type {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Bac_ManSetupTypes",
+      "Start": 4597,
+      "End": 4875,
+      "BodyStart": 4654,
+      "Original": "void Bac_ManSetupTypes( char ** pNames, char ** pSymbs )\n{\n    int Type;\n    for ( Type = 1; Type \u003c BAC_BOX_UNKNOWN; Type++ )\n    {\n        int Id = Bac_GetTypeId( (Bac_ObjType_t)Type );\n        pNames[Type] = s_Types[Id].pName;\n        pSymbs[Type] = s_Types[Id].pSymb;\n    }\n}",
+      "Draft": "func Bac_ManSetupTypes(pNames *string, pSymbs *string) {\n    var Type int32;\n    for  Type = 1; Type \u003c BAC_BOX_UNKNOWN; Type++  {\n        var Id int32  = Bac_GetTypeId( (Bac_ObjType_t)Type );\n        pNames[Type] = s_Types[Id].pName;\n        pSymbs[Type] = s_Types[Id].pSymb;\n    }\n}"
+    },
+    {
+      "Name": "Bac_NtkGenerateName",
+      "Start": 4877,
+      "End": 5492,
+      "BodyStart": 4960,
+      "Original": "char * Bac_NtkGenerateName( Bac_Ntk_t * p, Bac_ObjType_t Type, Vec_Int_t * vBits )\n{\n    static char Buffer[100]; \n    char * pTemp; int i, Bits;\n    char * pName = Bac_ManPrimName( p-\u003epDesign, Type );\n    char * pSymb = Bac_ManPrimSymb( p-\u003epDesign, Type );\n    assert( Vec_IntSize(vBits) == (int)strlen(pSymb) );\n    sprintf( Buffer, \"%s%s_\", s_Pref, pName );\n    pTemp = Buffer + strlen(Buffer);\n    Vec_IntForEachEntry( vBits, Bits, i )\n    {\n        sprintf( pTemp, \"%c%d\", pSymb[i], Bits );\n        pTemp += strlen(pTemp);\n    }\n    //Vec_IntPrint( vBits );\n    //printf( \"%s\\n\", Buffer );\n    return Buffer;\n}",
+      "Draft": "func Bac_NtkGenerateName(p *Bac_Ntk_t, Type Bac_ObjType_t, vBits *Vec_Int_t) string {\n     \n    var pTemp string; var i, Bits int32;\n    var pName string  = Bac_ManPrimName( p.pDesign, Type );\n    var pSymb string  = Bac_ManPrimSymb( p.pDesign, Type );\n    assert(Vec_IntSize(vBits) == int32(len(pSymb)), \"Vec_IntSize(vBits) == int32(strlen(pSymb))\");\n    spStatic_Bac_NtkGenerateName_Buffer = fmt.Sprintf(\"%s%s_\", s_Pref, pName);\n    pTemp = spStatic_Bac_NtkGenerateName_Buffer + strlen(spStatic_Bac_NtkGenerateName_Buffer);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBits)) \u0026\u0026 (((Bits) = Vec_IntEntry(vBits, i)), 1); i++  {\n        pTemp = fmt.Sprintf(\"%c%d\", pSymb[i], Bits);\n        pTemp += len(pTemp);\n    }\n    //Vec_IntPrint( vBits );\n    //printf( \"%s\\n\", Buffer );\n    return spStatic_Bac_NtkGenerateName_Buffer;\n}"
+    },
+    {
+      "Name": "Bac_NameToType",
+      "Start": 5494,
+      "End": 5841,
+      "BodyStart": 5539,
+      "Original": "Bac_ObjType_t Bac_NameToType( char * pName )\n{\n    int i;\n    if ( strncmp(pName, s_Pref, strlen(s_Pref)) )\n        return BAC_OBJ_NONE;\n    pName += strlen(s_Pref);\n    for ( i = 1; i \u003c BAC_BOX_UNKNOWN; i++ )\n        if ( !strncmp(pName, s_Types[i].pName, strlen(s_Types[i].pName)) )\n            return s_Types[i].Type;\n    return BAC_OBJ_NONE;\n}",
+      "Draft": "func Bac_NameToType(pName string) Bac_ObjType_t {\n    var i int32;\n    if strncmp(pName, s_Pref, len(s_Pref)) {\n        return BAC_OBJ_NONE; }\n    pName += len(s_Pref);\n    for  i = 1; i \u003c BAC_BOX_UNKNOWN; i++  {\n        if !strncmp(pName, s_Types[i].pName, len(s_Types[i].pName)) {\n            return s_Types[i].Type; }\n    }\n    return BAC_OBJ_NONE;\n}"
+    },
+    {
+      "Name": "Bac_NameToRanges",
+      "Start": 5842,
+      "End": 6618,
+      "BodyStart": 5887,
+      "Original": "Vec_Int_t * Bac_NameToRanges( char * pName )\n{\n    static Vec_Int_t Bits, * vBits = \u0026Bits;\n    static int pArray[10];\n    char * pTemp; \n    int Num = 0, Count = 0;\n    // initialize array\n    vBits-\u003epArray = pArray;\n    vBits-\u003enSize = 0;\n    vBits-\u003enCap = 10;\n    // check the name\n    assert( !strncmp(pName, s_Pref, strlen(s_Pref)) );\n    for ( pTemp = pName; *pTemp \u0026\u0026 !Bac_CharIsDigit(*pTemp); pTemp++ );\n    assert( Bac_CharIsDigit(*pTemp) );\n    for ( ; *pTemp; pTemp++ )\n    {\n        if ( Bac_CharIsDigit(*pTemp) )\n            Num = 10 * Num + *pTemp - '0';\n        else\n            Vec_IntPush( vBits, Num ), Count += Num, Num = 0;\n    }\n    assert( Num \u003e 0 );\n    Vec_IntPush( vBits, Num );  Count += Num;\n    assert( Vec_IntSize(vBits) \u003c= 10 );\n    return vBits;\n}",
+      "Draft": "func Bac_NameToRanges(pName string) *Vec_Int_t {\n    \n    \n    var pTemp string; \n    var Num, Count int32;\n    // initialize array\n    spStatic_Bac_NameToRanges_vBits.pArray = spStatic_Bac_NameToRanges_pArray;\n    spStatic_Bac_NameToRanges_vBits.nSize = 0;\n    spStatic_Bac_NameToRanges_vBits.nCap = 10;\n    // check the name\n    assert(!strncmp(pName, s_Pref, len(s_Pref)), \"!strncmp(pName, s_Pref, strlen(s_Pref))\");\n    for  pTemp = pName; *pTemp \u0026\u0026 !Bac_CharIsDigit(*pTemp); pTemp++  {}\n    assert(Bac_CharIsDigit(*pTemp), \"Bac_CharIsDigit(*pTemp)\");\n    for  ; *pTemp; pTemp++  {\n        if Bac_CharIsDigit(*pTemp) {\n            Num = 10 * Num + *pTemp - '0';\n        } else {\n            Vec_IntPush( spStatic_Bac_NameToRanges_vBits, Num );\nCount += Num;\nNum = 0; }\n    }\n    assert(Num \u003e 0, \"Num \u003e 0\");\n    Vec_IntPush( spStatic_Bac_NameToRanges_vBits, Num );  Count += Num;\n    assert(Vec_IntSize(spStatic_Bac_NameToRanges_vBits) \u003c= 10, \"Vec_IntSize(spStatic_Bac_NameToRanges_vBits) \u003c= 10\");\n    return spStatic_Bac_NameToRanges_vBits;\n}"
+    },
+    {
+      "Name": "Bac_NtkUpdateFanout",
+      "Start": 7118,
+      "End": 7540,
+      "BodyStart": 7180,
+      "Original": "void Bac_NtkUpdateFanout( Bac_Ntk_t * p, int iOld, int iNew )\n{\n    int iCo;\n    assert( Bac_ObjIsCi(p, iOld) );\n    assert( Bac_ObjIsCi(p, iNew) );\n    Bac_ObjForEachFanout( p, iOld, iCo )\n    {\n        assert( Bac_ObjFanin(p, iCo) == iOld );\n        Bac_ObjCleanFanin( p, iCo );\n        Bac_ObjSetFanin( p, iCo, iNew );\n    }\n    Bac_ObjSetFanout( p, iNew, Bac_ObjFanout(p, iOld) );\n    Bac_ObjSetFanout( p, iOld, 0 );\n}",
+      "Draft": "func Bac_NtkUpdateFanout(p *Bac_Ntk_t, iOld int32, iNew int32) {\n    var iCo int32;\n    assert(Bac_ObjIsCi(p, iOld), \"Bac_ObjIsCi(p, iOld)\");\n    assert(Bac_ObjIsCi(p, iNew), \"Bac_ObjIsCi(p, iNew)\");\n    // inlining of macro Bac_ObjForEachFanout\n    for  iCo = Bac_ObjFanout(p, iOld); (iCo != 0); iCo = Bac_ObjNextFanout(p, iCo)  {\n        assert(Bac_ObjFanin(p, iCo) == iOld, \"Bac_ObjFanin(p, iCo) == iOld\");\n        Bac_ObjCleanFanin( p, iCo );\n        Bac_ObjSetFanin( p, iCo, iNew );\n    }\n    Bac_ObjSetFanout( p, iNew, Bac_ObjFanout(p, iOld) );\n    Bac_ObjSetFanout( p, iOld, 0 );\n}"
+    },
+    {
+      "Name": "Bac_NtkDeriveFanout",
+      "Start": 7791,
+      "End": 8326,
+      "BodyStart": 7833,
+      "Original": "void Bac_NtkDeriveFanout( Bac_Ntk_t * p )\n{\n    int iCi, iCo;\n    assert( !Bac_NtkHasFanouts(p) );\n    Bac_NtkStartFanouts( p );\n    Bac_NtkForEachCo( p, iCo )\n    {\n        assert( !Bac_ObjNextFanout(p, iCo) );\n        iCi = Bac_ObjFanin(p, iCo);\n        if ( Bac_ObjFanout(p, iCi) )\n            Bac_ObjSetNextFanout( p, Bac_ObjFanout(p, iCi), iCo );\n        Bac_ObjSetFanout( p, iCi, iCo );\n    }\n    Bac_NtkForEachCo( p, iCo )\n        if ( !Bac_ObjNextFanout(p, iCo) )\n            Bac_ObjSetFanout( p, Bac_ObjFanin(p, iCo), iCo );\n}",
+      "Draft": "func Bac_NtkDeriveFanout(p *Bac_Ntk_t) {\n    var iCi, iCo int32;\n    assert(!Bac_NtkHasFanouts(p), \"!Bac_NtkHasFanouts(p)\");\n    Bac_NtkStartFanouts( p );\n    // inlining of macro Bac_NtkForEachCo\n    for  iCo = 0; (iCo \u003c Bac_NtkObjNum(p)); iCo++  { if !Bac_ObjIsCo(p, iCo) {} else {\n        assert(!Bac_ObjNextFanout(p, iCo), \"!Bac_ObjNextFanout(p, iCo)\");\n        iCi = Bac_ObjFanin(p, iCo);\n        if Bac_ObjFanout(p, iCi) {\n            Bac_ObjSetNextFanout( p, Bac_ObjFanout(p, iCi), iCo ); }\n        Bac_ObjSetFanout( p, iCi, iCo );\n    }\n    }\n    // inlining of macro Bac_NtkForEachCo\n    for  iCo = 0; (iCo \u003c Bac_NtkObjNum(p)); iCo++  { if !Bac_ObjIsCo(p, iCo) {} else\n        if !Bac_ObjNextFanout(p, iCo) {\n            Bac_ObjSetFanout( p, Bac_ObjFanin(p, iCo), iCo ); }\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManDeriveFanout",
+      "Start": 8327,
+      "End": 8474,
+      "BodyStart": 8369,
+      "Original": "void Bac_ManDeriveFanout( Bac_Man_t * p )\n{\n    Bac_Ntk_t * pNtk; int i;\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_NtkDeriveFanout( pNtk );\n}",
+      "Draft": "func Bac_ManDeriveFanout(p *Bac_Man_t) {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_NtkDeriveFanout( pNtk );\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManAssignInternTwo",
+      "Start": 8735,
+      "End": 9252,
+      "BodyStart": 8834,
+      "Original": "int Bac_ManAssignInternTwo( Bac_Ntk_t * p, int iNum, int nDigits, char * pPref, Vec_Int_t * vMap )\n{\n    char Buffer[16]; int i, NameId = 0;\n    for ( i = 0; !NameId || Vec_IntEntry(vMap, NameId); i++ )\n    {\n        if ( i == 0 )\n            sprintf( Buffer, \"%s%0*d\", pPref, nDigits, iNum );\n        else\n            sprintf( Buffer, \"%s%0*d_%d\", pPref, nDigits, iNum, i );\n        NameId = Abc_NamStrFindOrAdd( p-\u003epDesign-\u003epStrs, Buffer, NULL );\n    }\n    Vec_IntWriteEntry( vMap, NameId, 1 );\n    return NameId;\n}",
+      "Draft": "func Bac_ManAssignInternTwo(p *Bac_Ntk_t, iNum int32, nDigits int32, pPref string, vMap *Vec_Int_t) int32 {\n    var Buffer string // was [16]byte in C\n var i, NameId int32;\n    for  i = 0; !(NameId != 0) || Vec_IntEntry(vMap, NameId); i++  {\n        if i == 0 {\n            Buffer = fmt.Sprintf(\"%s%0*d\", pPref, nDigits, iNum);\n        } else {\n            Buffer = fmt.Sprintf(\"%s%0*d_%d\", pPref, nDigits, iNum, i); }\n        NameId = Abc_NamStrFindOrAdd( p.pDesign.pStrs, Buffer, nil );\n    }\n    Vec_IntWriteEntry( vMap, NameId, 1 );\n    return NameId;\n}"
+    },
+    {
+      "Name": "Bac_ManAssignCountNames",
+      "Start": 9253,
+      "End": 9604,
+      "BodyStart": 9298,
+      "Original": "int Bac_ManAssignCountNames( Bac_Ntk_t * p )\n{\n    int i, iObj, iBox, Count = 0;\n    Bac_NtkForEachPiMain( p, iObj, i )\n        if ( !Bac_ObjNameInt(p, iObj) )\n            Count++;\n    Bac_NtkForEachBox( p, iBox )\n        Bac_BoxForEachBoMain( p, iBox, iObj, i )\n            if ( !Bac_ObjNameInt(p, iObj) )\n                Count++;\n    return Count;\n}",
+      "Draft": "func Bac_ManAssignCountNames(p *Bac_Ntk_t) int32 {\n    var i, iObj, iBox, Count int32;\n    // inlining of macro Bac_NtkForEachPiMain\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  {  if Bac_ObjBit(p, iObj) {} else\n        if !Bac_ObjNameInt(p, iObj) {\n            Count++; }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iBox = 0; (iBox \u003c Bac_NtkObjNum(p)); iBox++  { if !Bac_ObjIsBox(p, iBox) {} else {\n        // inlining of macro Bac_BoxForEachBoMain\n        for  iObj, i = iBox + 1, 0; iObj \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iObj); iObj, i = iObj+1, i+1  {  if Bac_ObjBit(p, iObj) {} else\n            if !Bac_ObjNameInt(p, iObj) {\n                Count++; }\n        } }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Bac_ManAssignInternWordNamesNtk",
+      "Start": 9605,
+      "End": 13076,
+      "BodyStart": 9677,
+      "Original": "void Bac_ManAssignInternWordNamesNtk( Bac_Ntk_t * p, Vec_Int_t * vMap )\n{\n    int k, iObj, iTerm, iName = -1, iBit = -1;\n    int nDigits, nPis = 0, nPos = 0, nNames = 1;\n    // start names\n    if ( !Bac_NtkHasNames(p) )\n        Bac_NtkStartNames(p);\n    nDigits = Abc_Base10Log( Bac_ManAssignCountNames(p) );\n    // populate map with the currently used names\n    Bac_NtkForEachCi( p, iObj )\n        if ( Bac_ObjNameInt(p, iObj) )\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 );\n    Bac_NtkForEachBox( p, iObj )\n        if ( Bac_ObjNameInt(p, iObj) )\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 );\n    // assign CI names\n    Bac_NtkForEachCi( p, iObj )\n    {\n        if ( Bac_ObjNameInt(p, iObj) )\n        {\n            iName = -1;\n            iBit = -1;\n            continue;\n        }\n        if ( Bac_ObjBit(p, iObj) )\n        {\n            assert( iBit \u003e 0 );\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iBit++, BAC_NAME_INDEX) );\n        }\n        else\n        {\n            //int Type = Bac_ObjType(p, iObj);\n            int Range = Bac_ObjIsPi(p, iObj) ? Bac_ObjPiRange(p, iObj) : Bac_BoxBoRange(p, iObj);\n            iName = Bac_ManAssignInternTwo( p, nNames++, nDigits, (char*)(Bac_ObjIsPi(p, iObj) ? \"i\":\"n\"), vMap );\n            if ( Range == 1 )\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n            else\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_WORD) );\n            iBit = 1;\n        }\n    }\n    // transfer names to the interface\n    if ( Bac_NtkInfoNum(p) )\n    {\n        for ( k = 0; k \u003c Bac_NtkInfoNum(p); k++ )\n        {\n            //char * pName = Bac_NtkName(p);\n            if ( Bac_NtkInfoType(p, k) == 1 ) // PI\n            {\n                iObj = Bac_NtkPi(p, nPis);\n                assert( !Bac_ObjBit(p, iObj) );\n                assert( Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD );\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 1) );\n                nPis += Bac_NtkInfoRange(p, k);\n            }\n            else if ( Bac_NtkInfoType(p, k) == 2 ) // PO\n            {\n                iObj = Bac_NtkPo(p, nPos);\n                assert( !Bac_ObjBit(p, iObj) );\n                iObj = Bac_ObjFanin(p, iObj);\n                assert( Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD );\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 2) );\n                nPos += Bac_NtkInfoRange(p, k);\n            }\n            else assert( 0 );\n        }\n        assert( nPis == Bac_NtkPiNum(p) );\n        assert( nPos == Bac_NtkPoNum(p) );\n    }\n    // assign instance names\n    nDigits = Abc_Base10Log( Bac_NtkObjNum(p) );\n    Bac_NtkForEachBox( p, iObj )\n        if ( !Bac_ObjNameInt(p, iObj) )\n        {\n            iName = Bac_ManAssignInternTwo( p, iObj, nDigits, \"g\", vMap );\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n        }\n    // unmark all names\n    Bac_NtkForEachPi( p, iObj, k )\n        if ( Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD )\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 );\n    Bac_NtkForEachBox( p, iObj )\n    {\n        Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 );\n        Bac_BoxForEachBo( p, iObj, iTerm, k )\n            if ( Bac_ObjNameType(p, iTerm) \u003c= BAC_NAME_WORD )\n                Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iTerm), 0 );\n    }\n//    printf( \"Generated %d word-level names.\\n\", nNames-1 );\n}",
+      "Draft": "func Bac_ManAssignInternWordNamesNtk(p *Bac_Ntk_t, vMap *Vec_Int_t) {\n    var k int32;\n    var iObj int32;\n    var iTerm int32;\n    var iName int32 = -1;\n    var iBit int32 = -1;\n    var nDigits int32;\n    var nPis int32;\n    var nPos int32;\n    var nNames int32 = 1;\n    // start names\n    if !Bac_NtkHasNames(p) {\n        Bac_NtkStartNames(p); }\n    nDigits = Abc_Base10Log( Bac_ManAssignCountNames(p) );\n    // populate map with the currently used names\n    // inlining of macro Bac_NtkForEachCi\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsCi(p, iObj) {} else\n        if Bac_ObjNameInt(p, iObj) {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 ); }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjNameInt(p, iObj) {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 ); }\n    }\n    // assign CI names\n    // inlining of macro Bac_NtkForEachCi\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsCi(p, iObj) {} else {\n        if Bac_ObjNameInt(p, iObj) {\n            iName = -1;\n            iBit = -1;\n            continue;\n        }\n        if Bac_ObjBit(p, iObj) {\n            assert(iBit \u003e 0, \"iBit \u003e 0\");\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iBit++, BAC_NAME_INDEX) );\n        \n        } else {\n            //int Type = Bac_ObjType(p, iObj);\n            var Range int32;\n            if Bac_ObjIsPi(p, iObj) {\n                Range = Bac_ObjPiRange(p, iObj);\n            } else {\n                Range = Bac_BoxBoRange(p, iObj);\n            }\n            iName = Bac_ManAssignInternTwo( p, nNames++, nDigits, (char*)(Bac_ObjIsPi(p, iObj) ? \"i\":\"n\"), vMap );\n            if Range == 1 {\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n            } else {\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_WORD) ); }\n            iBit = 1;\n        }\n    }\n    }\n    // transfer names to the interface\n    if Bac_NtkInfoNum(p) {\n        for  k = 0; k \u003c Bac_NtkInfoNum(p); k++  {\n            //char * pName = Bac_NtkName(p);\n            if Bac_NtkInfoType(p, k) == 1 { // PI\n            \n                iObj = Bac_NtkPi(p, nPis);\n                assert(!Bac_ObjBit(p, iObj), \"!Bac_ObjBit(p, iObj)\");\n                assert(Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD, \"Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD\");\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 1) );\n                nPis += Bac_NtkInfoRange(p, k);\n            \n            } else if Bac_NtkInfoType(p, k) == 2 { // PO\n            \n                iObj = Bac_NtkPo(p, nPos);\n                assert(!Bac_ObjBit(p, iObj), \"!Bac_ObjBit(p, iObj)\");\n                iObj = Bac_ObjFanin(p, iObj);\n                assert(Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD, \"Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD\");\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 2) );\n                nPos += Bac_NtkInfoRange(p, k);\n            \n            } else { assert(false, \"0\"); }\n        }\n        assert(nPis == Bac_NtkPiNum(p), \"nPis == Bac_NtkPiNum(p)\");\n        assert(nPos == Bac_NtkPoNum(p), \"nPos == Bac_NtkPoNum(p)\");\n    }\n    // assign instance names\n    nDigits = Abc_Base10Log( Bac_NtkObjNum(p) );\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if !Bac_ObjNameInt(p, iObj) {\n            iName = Bac_ManAssignInternTwo( p, iObj, nDigits, \"g\", vMap );\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n        }\n    }\n    // unmark all names\n    // inlining of macro Bac_NtkForEachPi\n    for  k = 0; (k \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, k)), 1); k++  { \n        if Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 ); }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else {\n        Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 );\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n            if Bac_ObjNameType(p, iTerm) \u003c= BAC_NAME_WORD {\n                Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iTerm), 0 ); }\n        }\n    }\n    }\n//    printf( \"Generated %d word-level names.\\n\", nNames-1 );\n}"
+    },
+    {
+      "Name": "Bac_ManAssignInternWordNames",
+      "Start": 13077,
+      "End": 13398,
+      "BodyStart": 13128,
+      "Original": "void Bac_ManAssignInternWordNames( Bac_Man_t * p )\n{\n    Vec_Int_t * vMap = Vec_IntStart( 2*Bac_ManObjNum(p) );\n    Bac_Ntk_t * pNtk; int i;\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_ManAssignInternWordNamesNtk( pNtk, vMap );\n    assert( Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap) );\n    Vec_IntFree( vMap );\n}",
+      "Draft": "func Bac_ManAssignInternWordNames(p *Bac_Man_t) {\n    var vMap *Vec_Int_t  = Vec_IntStart( 2*Bac_ManObjNum(p) );\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManAssignInternWordNamesNtk( pNtk, vMap );\n    }\n    assert(Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap), \"Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap)\");\n    Vec_IntFree( vMap );\n}"
+    },
+    {
+      "Name": "Bac_ManClpObjNum_rec",
+      "Start": 13676,
+      "End": 13987,
+      "BodyStart": 13718,
+      "Original": "int Bac_ManClpObjNum_rec( Bac_Ntk_t * p )\n{\n    int i, Counter = 0;\n    if ( p-\u003eCount \u003e= 0 )\n        return p-\u003eCount;\n    Bac_NtkForEachBox( p, i )\n        Counter += Bac_ObjIsBoxUser(p, i) ? Bac_ManClpObjNum_rec( Bac_BoxNtk(p, i) ) + 3*Bac_BoxBoNum(p, i) : Bac_BoxSize(p, i);\n    return (p-\u003eCount = Counter);\n}",
+      "Draft": "func Bac_ManClpObjNum_rec(p *Bac_Ntk_t) int32 {\n    var i, Counter int32;\n    if p.Count \u003e= 0 {\n        return p.Count; }\n    // inlining of macro Bac_NtkForEachBox\n    for  i = 0; (i \u003c Bac_NtkObjNum(p)); i++  { if !Bac_ObjIsBox(p, i) {} else {\n        Counter += Bac_ObjIsBoxUser(p, i) ? Bac_ManClpObjNum_rec( Bac_BoxNtk(p, i) ) + 3*Bac_BoxBoNum(p, i) : Bac_BoxSize(p, i); }\n    }\n    return (p.Count = Counter);\n}"
+    },
+    {
+      "Name": "Bac_ManClpObjNum",
+      "Start": 13988,
+      "End": 14205,
+      "BodyStart": 14026,
+      "Original": "int Bac_ManClpObjNum( Bac_Man_t * p )\n{\n    Bac_Ntk_t * pNtk; int i;\n    Bac_ManForEachNtk( p, pNtk, i )\n        pNtk-\u003eCount = -1;\n    return Bac_NtkPioNum( Bac_ManRoot(p) ) + Bac_ManClpObjNum_rec( Bac_ManRoot(p) );\n}",
+      "Draft": "func Bac_ManClpObjNum(p *Bac_Man_t) int32 {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        pNtk.Count = -1;\n    }\n    return Bac_NtkPioNum( Bac_ManRoot(p) ) + Bac_ManClpObjNum_rec( Bac_ManRoot(p) );\n}"
+    },
+    {
+      "Name": "Bac_NtkDfs_rec",
+      "Start": 14473,
+      "End": 14969,
+      "BodyStart": 14540,
+      "Original": "void Bac_NtkDfs_rec( Bac_Ntk_t * p, int iObj, Vec_Int_t * vBoxes )\n{\n    int k, iFanin;\n    if ( Bac_ObjIsBo(p, iObj) == 1 )\n    {\n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n        return;\n    }\n    assert( Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj) );\n    if ( Bac_ObjCopy(p, iObj) \u003e 0 ) // visited\n        return;\n    Bac_ObjSetCopy( p, iObj, 1 );\n    Bac_BoxForEachFanin( p, iObj, iFanin, k )\n        Bac_NtkDfs_rec( p, iFanin, vBoxes );\n    Vec_IntPush( vBoxes, iObj );\n}",
+      "Draft": "func Bac_NtkDfs_rec(p *Bac_Ntk_t, iObj int32, vBoxes *Vec_Int_t) {\n    var k, iFanin int32;\n    if Bac_ObjIsBo(p, iObj) == 1 {\n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n        return;\n    }\n    assert(Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj), \"Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj)\");\n    if Bac_ObjCopy(p, iObj) \u003e 0 { // visited\n        return; }\n    Bac_ObjSetCopy( p, iObj, 1 );\n    // inlining of macro Bac_BoxForEachFanin\n    for  k = 0; iObj - 1 - k \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iObj - 1 - k) \u0026\u0026 (((iFanin) = Bac_BoxFanin(p, iObj, k)), 1); k++  {\n        Bac_NtkDfs_rec( p, iFanin, vBoxes );\n    }\n    Vec_IntPush( vBoxes, iObj );\n}"
+    },
+    {
+      "Name": "Bac_NtkDfs",
+      "Start": 14970,
+      "End": 15339,
+      "BodyStart": 15010,
+      "Original": "Vec_Int_t * Bac_NtkDfs( Bac_Ntk_t * p )\n{\n    int i, iObj;\n    Vec_Int_t * vBoxes = Vec_IntAlloc( Bac_NtkBoxNum(p) );\n    Bac_NtkStartCopies( p ); // -1 = not visited; 1 = finished\n    Bac_NtkForEachPi( p, iObj, i )\n        Bac_ObjSetCopy( p, iObj, 1 );\n    Bac_NtkForEachPo( p, iObj, i )\n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n    return vBoxes;\n}",
+      "Draft": "func Bac_NtkDfs(p *Bac_Ntk_t) *Vec_Int_t {\n    var i, iObj int32;\n    var vBoxes *Vec_Int_t  = Vec_IntAlloc( Bac_NtkBoxNum(p) );\n    Bac_NtkStartCopies( p ); // -1 = not visited; 1 = finished\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  { \n        Bac_ObjSetCopy( p, iObj, 1 );\n    }\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPo(p, i)), 1); i++  { \n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n    }\n    return vBoxes;\n}"
+    },
+    {
+      "Name": "Bac_NtkDfsUserBoxes_rec",
+      "Start": 15612,
+      "End": 16234,
+      "BodyStart": 15687,
+      "Original": "int Bac_NtkDfsUserBoxes_rec( Bac_Ntk_t * p, int iObj, Vec_Int_t * vBoxes )\n{\n    int k, iFanin;\n    assert( Bac_ObjIsBoxUser(p, iObj) );\n    if ( Bac_ObjCopy(p, iObj) == 1 ) // visited\n        return 1;\n    if ( Bac_ObjCopy(p, iObj) == 0 ) // loop\n        return 0;\n    Bac_ObjSetCopy( p, iObj, 0 );\n    Bac_BoxForEachFanin( p, iObj, iFanin, k )\n        if ( Bac_ObjIsBo(p, iFanin) \u0026\u0026 Bac_ObjIsBoxUser(p, Bac_ObjFanin(p, iFanin)) )\n            if ( !Bac_NtkDfsUserBoxes_rec( p, Bac_ObjFanin(p, iFanin), vBoxes ) )\n                return 0;\n    Vec_IntPush( vBoxes, iObj );\n    Bac_ObjSetCopy( p, iObj, 1 );\n    return 1;\n}",
+      "Draft": "func Bac_NtkDfsUserBoxes_rec(p *Bac_Ntk_t, iObj int32, vBoxes *Vec_Int_t) int32 {\n    var k, iFanin int32;\n    assert(Bac_ObjIsBoxUser(p, iObj), \"Bac_ObjIsBoxUser(p, iObj)\");\n    if Bac_ObjCopy(p, iObj) == 1 { // visited\n        return 1; }\n    if Bac_ObjCopy(p, iObj) == 0 { // loop\n        return 0; }\n    Bac_ObjSetCopy( p, iObj, 0 );\n    // inlining of macro Bac_BoxForEachFanin\n    for  k = 0; iObj - 1 - k \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iObj - 1 - k) \u0026\u0026 (((iFanin) = Bac_BoxFanin(p, iObj, k)), 1); k++  {\n        if Bac_ObjIsBo(p, iFanin) \u0026\u0026 Bac_ObjIsBoxUser(p, Bac_ObjFanin(p, iFanin)) {\n            if !(Bac_NtkDfsUserBoxes_rec( p, Bac_ObjFanin(p, iFanin), vBoxes ) != 0) {\n                return 0; } }\n    }\n    Vec_IntPush( vBoxes, iObj );\n    Bac_ObjSetCopy( p, iObj, 1 );\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_NtkDfsUserBoxes",
+      "Start": 16235,
+      "End": 16633,
+      "BodyStart": 16276,
+      "Original": "int Bac_NtkDfsUserBoxes( Bac_Ntk_t * p )\n{\n    int iObj;\n    Bac_NtkStartCopies( p ); // -1 = not visited; 0 = on the path; 1 = finished\n    Vec_IntClear( \u0026p-\u003evArray );\n    Bac_NtkForEachBoxUser( p, iObj )\n        if ( !Bac_NtkDfsUserBoxes_rec( p, iObj, \u0026p-\u003evArray ) )\n        {\n            printf( \"Cyclic dependency of user boxes is detected.\\n\" );\n            return 0;\n        }\n    return 1;\n}",
+      "Draft": "func Bac_NtkDfsUserBoxes(p *Bac_Ntk_t) int32 {\n    var iObj int32;\n    Bac_NtkStartCopies( p ); // -1 = not visited; 0 = on the path; 1 = finished\n    Vec_IntClear( \u0026p.vArray );\n    // inlining of macro Bac_NtkForEachBoxUser\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBoxUser(p, iObj) {} else\n        if !(Bac_NtkDfsUserBoxes_rec( p, iObj, \u0026p.vArray ) != 0) {\n            fmt.Printf(\"Cyclic dependency of user boxes is detected.\\n\");\n            return 0;\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Bac_NtkCollapse_rec",
+      "Start": 16869,
+      "End": 18666,
+      "BodyStart": 16948,
+      "Original": "void Bac_NtkCollapse_rec( Bac_Ntk_t * pNew, Bac_Ntk_t * p, Vec_Int_t * vSigs )\n{\n    int i, iObj, iObjNew, iTerm;\n    Bac_NtkStartCopies( p );\n    // set PI copies\n    assert( Vec_IntSize(vSigs) == Bac_NtkPiNum(p) );\n    Bac_NtkForEachPi( p, iObj, i )\n        Bac_ObjSetCopy( p, iObj, Vec_IntEntry(vSigs, i) );\n    // duplicate internal objects and create buffers for hierarchy instances\n    Bac_NtkForEachBox( p, iObj )\n        if ( Bac_ObjIsBoxPrim( p, iObj ) )\n            Bac_BoxDup( pNew, p, iObj );\n        else\n        {\n            Bac_BoxForEachBo( p, iObj, iTerm, i )\n            {\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BI,  -1 );\n                iObjNew = Bac_ObjAlloc( pNew, BAC_BOX_BUF, -1 ); // buffer\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BO,  -1 );\n                Bac_ObjSetCopy( p, iTerm, iObjNew );\n            }\n        }\n    // duplicate user modules and connect objects\n    Bac_NtkForEachBox( p, iObj )\n        if ( Bac_ObjIsBoxPrim( p, iObj ) )\n        {\n            Bac_BoxForEachBi( p, iObj, iTerm, i )\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm), Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n        }\n        else\n        {\n            Vec_IntClear( vSigs );\n            Bac_BoxForEachBi( p, iObj, iTerm, i )\n                Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n            Bac_NtkCollapse_rec( pNew, Bac_BoxNtk(p, iObj), vSigs );\n            assert( Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj) );\n            Bac_BoxForEachBo( p, iObj, iTerm, i )\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm)-2, Vec_IntEntry(vSigs, i) );\n        }\n    // collect POs\n    Vec_IntClear( vSigs );\n    Bac_NtkForEachPo( p, iObj, i )\n        Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iObj)) );\n}",
+      "Draft": "func Bac_NtkCollapse_rec(pNew *Bac_Ntk_t, p *Bac_Ntk_t, vSigs *Vec_Int_t) {\n    var i, iObj, iObjNew, iTerm int32;\n    Bac_NtkStartCopies( p );\n    // set PI copies\n    assert(Vec_IntSize(vSigs) == Bac_NtkPiNum(p), \"Vec_IntSize(vSigs) == Bac_NtkPiNum(p)\");\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  { \n        Bac_ObjSetCopy( p, iObj, Vec_IntEntry(vSigs, i) );\n    }\n    // duplicate internal objects and create buffers for hierarchy instances\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjIsBoxPrim( p, iObj ) {\n            Bac_BoxDup( pNew, p, iObj );\n        } else {\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, i = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, i = iTerm+1, i+1  {\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BI,  -1 );\n                iObjNew = Bac_ObjAlloc( pNew, BAC_BOX_BUF, -1 ); // buffer\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BO,  -1 );\n                Bac_ObjSetCopy( p, iTerm, iObjNew );\n            }\n        }\n    }\n    // duplicate user modules and connect objects\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjIsBoxPrim( p, iObj ) {\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, i = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, i = iTerm-1, i+1  {\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm), Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n            }\n        \n        } else {\n            Vec_IntClear( vSigs );\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, i = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, i = iTerm-1, i+1  {\n                Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n            }\n            Bac_NtkCollapse_rec( pNew, Bac_BoxNtk(p, iObj), vSigs );\n            assert(Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj), \"Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj)\");\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, i = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, i = iTerm+1, i+1  {\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm)-2, Vec_IntEntry(vSigs, i) );\n            }\n        }\n    }\n    // collect POs\n    Vec_IntClear( vSigs );\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPo(p, i)), 1); i++  { \n        Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iObj)) );\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManCollapse",
+      "Start": 18667,
+      "End": 20000,
+      "BodyStart": 18712,
+      "Original": "Bac_Man_t * Bac_ManCollapse( Bac_Man_t * p )\n{\n    int i, iObj;\n    Vec_Int_t * vSigs = Vec_IntAlloc( 1000 );\n    Bac_Man_t * pNew = Bac_ManStart( p, 1 );\n    Bac_Ntk_t * pRoot = Bac_ManRoot( p );\n    Bac_Ntk_t * pRootNew = Bac_ManRoot( pNew );\n    Bac_NtkAlloc( pRootNew, Bac_NtkNameId(pRoot), Bac_NtkPiNum(pRoot), Bac_NtkPoNum(pRoot), Bac_ManClpObjNum(p) );\n    if ( Vec_IntSize(\u0026pRoot-\u003evInfo) )\n        Vec_IntAppend( \u0026pRootNew-\u003evInfo, \u0026pRoot-\u003evInfo );\n    Bac_NtkForEachPi( pRoot, iObj, i )\n        Vec_IntPush( vSigs, Bac_ObjAlloc(pRootNew, BAC_OBJ_PI, -1) );\n    Bac_NtkCollapse_rec( pRootNew, pRoot, vSigs );\n    assert( Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot) );\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Bac_ObjAlloc( pRootNew, BAC_OBJ_PO, Vec_IntEntry(vSigs, i) );\n    assert( Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew) );\n    Vec_IntFree( vSigs );\n    // transfer PI/PO names\n    if ( Bac_NtkHasNames(pRoot) )\n    {\n        Bac_NtkStartNames( pRootNew );\n        Bac_NtkForEachPi( pRoot, iObj, i )\n            Bac_ObjSetName( pRootNew, Bac_NtkPi(pRootNew, i), Bac_ObjName(pRoot, iObj) );\n        Bac_NtkForEachPoDriver( pRoot, iObj, i )\n            if ( !Bac_ObjIsPi(pRoot, iObj) )\n                Bac_ObjSetName( pRootNew, Bac_ObjCopy(pRoot, iObj), Bac_ObjName(pRoot, iObj) );\n    }\n    return pNew;\n}",
+      "Draft": "func Bac_ManCollapse(p *Bac_Man_t) *Bac_Man_t {\n    var i, iObj int32;\n    var vSigs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var pNew *Bac_Man_t  = Bac_ManStart( p, 1 );\n    var pRoot *Bac_Ntk_t  = Bac_ManRoot( p );\n    var pRootNew *Bac_Ntk_t  = Bac_ManRoot( pNew );\n    Bac_NtkAlloc( pRootNew, Bac_NtkNameId(pRoot), Bac_NtkPiNum(pRoot), Bac_NtkPoNum(pRoot), Bac_ManClpObjNum(p) );\n    if Vec_IntSize(\u0026pRoot.vInfo) {\n        Vec_IntAppend( \u0026pRootNew.vInfo, \u0026pRoot.vInfo ); }\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPi(pRoot, i)), 1); i++  { \n        Vec_IntPush( vSigs, Bac_ObjAlloc(pRootNew, BAC_OBJ_PI, -1) );\n    }\n    Bac_NtkCollapse_rec( pRootNew, pRoot, vSigs );\n    assert(Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot), \"Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot)\");\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPo(pRoot, i)), 1); i++  { \n        Bac_ObjAlloc( pRootNew, BAC_OBJ_PO, Vec_IntEntry(vSigs, i) );\n    }\n    assert(Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew), \"Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew)\");\n    Vec_IntFree( vSigs );\n    // transfer PI/PO names\n    if Bac_NtkHasNames(pRoot) {\n        Bac_NtkStartNames( pRootNew );\n        // inlining of macro Bac_NtkForEachPi\n        for  i = 0; (i \u003c Bac_NtkPiNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPi(pRoot, i)), 1); i++  { \n            Bac_ObjSetName( pRootNew, Bac_NtkPi(pRootNew, i), Bac_ObjName(pRoot, iObj) );\n        }\n        // inlining of macro Bac_NtkForEachPoDriver\n        for  i = 0; (i \u003c Bac_NtkPoNum(pRoot))  \u0026\u0026 (((iObj) = Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i))), 1); i++  { \n            if !Bac_ObjIsPi(pRoot, iObj) {\n                Bac_ObjSetName( pRootNew, Bac_ObjCopy(pRoot, iObj), Bac_ObjName(pRoot, iObj) ); }\n        }\n    }\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::struct::Bac_Pair_t",
+      "Category": "struct-review",
+      "Symbol": "Bac_Pair_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 781,
+      "End": 917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::mechanical::static::4966",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4966,
+      "End": 4972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::mechanical::static::5997",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5893,
+      "End": 5899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::mechanical::static::6041",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5937,
+      "End": 5943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::pointer-cast::12079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10826,
+      "End": 10833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_GetTypeId",
+      "Category": "semantic-review",
+      "Symbol": "Bac_GetTypeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4408,
+      "End": 4596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManSetupTypes",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManSetupTypes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4597,
+      "End": 4875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkGenerateName",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkGenerateName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4877,
+      "End": 5492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NameToType",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NameToType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5494,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NameToRanges",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NameToRanges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5842,
+      "End": 6618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkUpdateFanout",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkUpdateFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7118,
+      "End": 7540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkDeriveFanout",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDeriveFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7791,
+      "End": 8326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManDeriveFanout",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManDeriveFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8327,
+      "End": 8474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManAssignInternTwo",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManAssignInternTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8735,
+      "End": 9252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManAssignCountNames",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManAssignCountNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9253,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::ternary::Bac_ManAssignInternWordNamesNtk",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManAssignInternWordNamesNtk",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9605,
+      "End": 13076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManAssignInternWordNamesNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManAssignInternWordNamesNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 13076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManAssignInternWordNames",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManAssignInternWordNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13077,
+      "End": 13398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::ternary::Bac_ManClpObjNum_rec",
+      "Category": "ternary-review",
+      "Symbol": "Bac_ManClpObjNum_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13676,
+      "End": 13987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManClpObjNum_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManClpObjNum_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13676,
+      "End": 13987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManClpObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManClpObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13988,
+      "End": 14205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14473,
+      "End": 14969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkDfs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14970,
+      "End": 15339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkDfsUserBoxes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDfsUserBoxes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15612,
+      "End": 16234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkDfsUserBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkDfsUserBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16235,
+      "End": 16633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_NtkCollapse_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkCollapse_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16869,
+      "End": 18666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::Bac_ManCollapse",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManCollapse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18667,
+      "End": 20000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacNtk.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20246
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bacNtk.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Netlist manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacNtk.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Bac_Pair_t struct {\n    Type Bac_ObjType_t;\n    pName         string;\n    pSymb         string;\n}\nvar s_Pref string = \"ABC_\";\nvar s_Types [BAC_BOX_UNKNOWN]Bac_Pair_t = [BAC_BOX_UNKNOWN]Bac_Pair_t{ \n    { BAC_OBJ_NONE,     \"NONE\",    nil    },\n    { BAC_OBJ_PI,       \"PI\",      nil    },\n    { BAC_OBJ_PO,       \"PO\",      nil    },\n    { BAC_OBJ_BI,       \"BI\",      nil    },\n    { BAC_OBJ_BO,       \"BO\",      nil    },\n    { BAC_OBJ_BOX,      \"BOX\",     nil    },\n    \n    { BAC_BOX_CF,       \"CF\",      \"o\"     },\n    { BAC_BOX_CT,       \"CT\",      \"o\"     }, \n    { BAC_BOX_CX,       \"CX\",      \"o\"     }, \n    { BAC_BOX_CZ,       \"CZ\",      \"o\"     },\n    { BAC_BOX_BUF,      \"BUF\",     \"ao\"    },\n    { BAC_BOX_INV,      \"INV\",     \"ao\"    },\n    { BAC_BOX_AND,      \"AND\",     \"abo\"   },\n    { BAC_BOX_NAND,     \"NAND\",    \"abo\"   },\n    { BAC_BOX_OR,       \"OR\",      \"abo\"   },\n    { BAC_BOX_NOR,      \"NOR\",     \"abo\"   },\n    { BAC_BOX_XOR,      \"XOR\",     \"abo\"   },\n    { BAC_BOX_XNOR,     \"XNOR\",    \"abo\"   },\n    { BAC_BOX_SHARP,    \"SHARP\",   \"abo\"   },\n    { BAC_BOX_SHARPL,   \"SHARPL\",  \"abo\"   },\n    { BAC_BOX_MUX,      \"MUX\",     \"cabo\"  },\n    { BAC_BOX_MAJ,      \"MAJ\",     \"abco\"  },\n    \n    { BAC_BOX_RAND,     \"RAND\",    \"ao\"    },\n    { BAC_BOX_RNAND,    \"RNAND\",   \"ao\"    },\n    { BAC_BOX_ROR,      \"ROR\",     \"ao\"    },\n    { BAC_BOX_RNOR,     \"RNOR\",    \"ao\"    },\n    { BAC_BOX_RXOR,     \"RXOR\",    \"ao\"    },\n    { BAC_BOX_RXNOR,    \"RXNOR\",   \"ao\"    },\n    \n    { BAC_BOX_LAND,     \"LAND\",    \"abo\"   },\n    { BAC_BOX_LNAND,    \"LNAND\",   \"abo\"   },\n    { BAC_BOX_LOR,      \"LOR\",     \"abo\"   },\n    { BAC_BOX_LNOR,     \"LNOR\",    \"abo\"   },\n    { BAC_BOX_LXOR,     \"LXOR\",    \"abo\"   },\n    { BAC_BOX_LXNOR,    \"LXNOR\",   \"abo\"   },\n    \n    { BAC_BOX_NMUX,     \"NMUX\",    \"abo\"   },\n    { BAC_BOX_SEL,      \"SEL\",     \"abo\"   },\n    { BAC_BOX_PSEL,     \"PSEL\",    \"iabo\"  },\n    { BAC_BOX_ENC,      \"ENC\",     \"ao\"    },\n    { BAC_BOX_PENC,     \"PENC\",    \"ao\"    },\n    { BAC_BOX_DEC,      \"DEC\",     \"ao\"    },\n    { BAC_BOX_EDEC,     \"EDEC\",    \"abo\"   },\n    \n    { BAC_BOX_ADD,      \"ADD\",     \"iabso\" },\n    { BAC_BOX_SUB,      \"SUB\",     \"abo\"   },\n    { BAC_BOX_MUL,      \"MUL\",     \"abo\"   },\n    { BAC_BOX_DIV,      \"DIV\",     \"abo\"   },\n    { BAC_BOX_MOD,      \"MOD\",     \"abo\"   },\n    { BAC_BOX_REM,      \"REM\",     \"abo\"   },\n    { BAC_BOX_POW,      \"POW\",     \"abo\"   },\n    { BAC_BOX_MIN,      \"MIN\",     \"ao\"    },\n    { BAC_BOX_ABS,      \"ABS\",     \"ao\"    },\n\n    { BAC_BOX_LTHAN,    \"LTHAN\",   \"iabo\"  },\n    { BAC_BOX_LETHAN,   \"LETHAN\",  \"abo\"   },\n    { BAC_BOX_METHAN,   \"METHAN\",  \"abo\"   },\n    { BAC_BOX_MTHAN,    \"MTHAN\",   \"abo\"   },\n    { BAC_BOX_EQU,      \"EQU\",     \"abo\"   },\n    { BAC_BOX_NEQU,     \"NEQU\",    \"abo\"   },\n    \n    { BAC_BOX_SHIL,     \"SHIL\",    \"abo\"   },\n    { BAC_BOX_SHIR,     \"SHIR\",    \"abo\"   },\n    { BAC_BOX_ROTL,     \"ROTL\",    \"abo\"   },\n    { BAC_BOX_ROTR,     \"ROTR\",    \"abo\"   },\n\n    { BAC_BOX_GATE,     \"GATE\",    \"io\"    },\n    { BAC_BOX_LUT,      \"LUT\",     \"io\"    },\n    { BAC_BOX_ASSIGN,   \"ASSIGN\",  \"abo\"   },\n    \n    { BAC_BOX_TRI,      \"TRI\",     \"abo\"   },\n    { BAC_BOX_RAM,      \"RAM\",     \"eadro\" },\n    { BAC_BOX_RAMR,     \"RAMR\",    \"eamo\"  },\n    { BAC_BOX_RAMW,     \"RAMW\",    \"eado\"  },\n    { BAC_BOX_RAMWC,    \"RAMWC\",   \"ceado\" },\n    { BAC_BOX_RAMBOX,   \"RAMBOX\",  \"io\"    },\n    \n    { BAC_BOX_LATCH,    \"LATCH\",   \"dvsgq\" },\n    { BAC_BOX_LATCHRS,  \"LATCHRS\", \"dsrgq\" },\n    { BAC_BOX_DFF,      \"DFF\",     \"dvscq\" },\n    { BAC_BOX_DFFRS,    \"DFFRS\",   \"dsrcq\" },\n}; \nfunc Bac_GetTypeId(Type Bac_ObjType_t) int32 {\n    var i int32;\n    for  i = 1; i \u003c BAC_BOX_UNKNOWN; i++  {\n        if s_Types[i].Type == Type {\n            return i; }\n    }\n    return -1;\n}\nfunc Bac_ManSetupTypes(pNames *string, pSymbs *string) {\n    var Type int32;\n    for  Type = 1; Type \u003c BAC_BOX_UNKNOWN; Type++  {\n        var Id int32  = Bac_GetTypeId( (Bac_ObjType_t)Type );\n        pNames[Type] = s_Types[Id].pName;\n        pSymbs[Type] = s_Types[Id].pSymb;\n    }\n}\n\nvar spStatic_Bac_NtkGenerateName_Buffer string // was [100]byte in C\n\nfunc Bac_NtkGenerateName(p *Bac_Ntk_t, Type Bac_ObjType_t, vBits *Vec_Int_t) string {\n     \n    var pTemp string; var i, Bits int32;\n    var pName string  = Bac_ManPrimName( p.pDesign, Type );\n    var pSymb string  = Bac_ManPrimSymb( p.pDesign, Type );\n    assert(Vec_IntSize(vBits) == int32(len(pSymb)), \"Vec_IntSize(vBits) == int32(strlen(pSymb))\");\n    spStatic_Bac_NtkGenerateName_Buffer = fmt.Sprintf(\"%s%s_\", s_Pref, pName);\n    pTemp = spStatic_Bac_NtkGenerateName_Buffer + strlen(spStatic_Bac_NtkGenerateName_Buffer);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBits)) \u0026\u0026 (((Bits) = Vec_IntEntry(vBits, i)), 1); i++  {\n        pTemp = fmt.Sprintf(\"%c%d\", pSymb[i], Bits);\n        pTemp += len(pTemp);\n    }\n    //Vec_IntPrint( vBits );\n    //printf( \"%s\\n\", Buffer );\n    return spStatic_Bac_NtkGenerateName_Buffer;\n}\n\nfunc Bac_NameToType(pName string) Bac_ObjType_t {\n    var i int32;\n    if strncmp(pName, s_Pref, len(s_Pref)) {\n        return BAC_OBJ_NONE; }\n    pName += len(s_Pref);\n    for  i = 1; i \u003c BAC_BOX_UNKNOWN; i++  {\n        if !strncmp(pName, s_Types[i].pName, len(s_Types[i].pName)) {\n            return s_Types[i].Type; }\n    }\n    return BAC_OBJ_NONE;\n}\nvar spStatic_Bac_NameToRanges_Bits Vec_Int_t;\nvar spStatic_Bac_NameToRanges_vBits *Vec_Int_t = \u0026spStatic_Bac_NameToRanges_Bits;\nvar spStatic_Bac_NameToRanges_pArray [10]int32;\nfunc Bac_NameToRanges(pName string) *Vec_Int_t {\n    \n    \n    var pTemp string; \n    var Num, Count int32;\n    // initialize array\n    spStatic_Bac_NameToRanges_vBits.pArray = spStatic_Bac_NameToRanges_pArray;\n    spStatic_Bac_NameToRanges_vBits.nSize = 0;\n    spStatic_Bac_NameToRanges_vBits.nCap = 10;\n    // check the name\n    assert(!strncmp(pName, s_Pref, len(s_Pref)), \"!strncmp(pName, s_Pref, strlen(s_Pref))\");\n    for  pTemp = pName; *pTemp \u0026\u0026 !Bac_CharIsDigit(*pTemp); pTemp++  {}\n    assert(Bac_CharIsDigit(*pTemp), \"Bac_CharIsDigit(*pTemp)\");\n    for  ; *pTemp; pTemp++  {\n        if Bac_CharIsDigit(*pTemp) {\n            Num = 10 * Num + *pTemp - '0';\n        } else {\n            Vec_IntPush( spStatic_Bac_NameToRanges_vBits, Num );\nCount += Num;\nNum = 0; }\n    }\n    assert(Num \u003e 0, \"Num \u003e 0\");\n    Vec_IntPush( spStatic_Bac_NameToRanges_vBits, Num );  Count += Num;\n    assert(Vec_IntSize(spStatic_Bac_NameToRanges_vBits) \u003c= 10, \"Vec_IntSize(spStatic_Bac_NameToRanges_vBits) \u003c= 10\");\n    return spStatic_Bac_NameToRanges_vBits;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces fanin iOld by iNew in all fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkUpdateFanout(p *Bac_Ntk_t, iOld int32, iNew int32) {\n    var iCo int32;\n    assert(Bac_ObjIsCi(p, iOld), \"Bac_ObjIsCi(p, iOld)\");\n    assert(Bac_ObjIsCi(p, iNew), \"Bac_ObjIsCi(p, iNew)\");\n    // inlining of macro Bac_ObjForEachFanout\n    for  iCo = Bac_ObjFanout(p, iOld); (iCo != 0); iCo = Bac_ObjNextFanout(p, iCo)  {\n        assert(Bac_ObjFanin(p, iCo) == iOld, \"Bac_ObjFanin(p, iCo) == iOld\");\n        Bac_ObjCleanFanin( p, iCo );\n        Bac_ObjSetFanin( p, iCo, iNew );\n    }\n    Bac_ObjSetFanout( p, iNew, Bac_ObjFanout(p, iOld) );\n    Bac_ObjSetFanout( p, iOld, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkDeriveFanout(p *Bac_Ntk_t) {\n    var iCi, iCo int32;\n    assert(!Bac_NtkHasFanouts(p), \"!Bac_NtkHasFanouts(p)\");\n    Bac_NtkStartFanouts( p );\n    // inlining of macro Bac_NtkForEachCo\n    for  iCo = 0; (iCo \u003c Bac_NtkObjNum(p)); iCo++  { if !Bac_ObjIsCo(p, iCo) {} else {\n        assert(!Bac_ObjNextFanout(p, iCo), \"!Bac_ObjNextFanout(p, iCo)\");\n        iCi = Bac_ObjFanin(p, iCo);\n        if Bac_ObjFanout(p, iCi) {\n            Bac_ObjSetNextFanout( p, Bac_ObjFanout(p, iCi), iCo ); }\n        Bac_ObjSetFanout( p, iCi, iCo );\n    }\n    }\n    // inlining of macro Bac_NtkForEachCo\n    for  iCo = 0; (iCo \u003c Bac_NtkObjNum(p)); iCo++  { if !Bac_ObjIsCo(p, iCo) {} else\n        if !Bac_ObjNextFanout(p, iCo) {\n            Bac_ObjSetFanout( p, Bac_ObjFanin(p, iCo), iCo ); }\n    }\n}\nfunc Bac_ManDeriveFanout(p *Bac_Man_t) {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_NtkDeriveFanout( pNtk );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns word-level names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManAssignInternTwo(p *Bac_Ntk_t, iNum int32, nDigits int32, pPref string, vMap *Vec_Int_t) int32 {\n    var Buffer string // was [16]byte in C\n var i, NameId int32;\n    for  i = 0; !(NameId != 0) || Vec_IntEntry(vMap, NameId); i++  {\n        if i == 0 {\n            Buffer = fmt.Sprintf(\"%s%0*d\", pPref, nDigits, iNum);\n        } else {\n            Buffer = fmt.Sprintf(\"%s%0*d_%d\", pPref, nDigits, iNum, i); }\n        NameId = Abc_NamStrFindOrAdd( p.pDesign.pStrs, Buffer, nil );\n    }\n    Vec_IntWriteEntry( vMap, NameId, 1 );\n    return NameId;\n}\nfunc Bac_ManAssignCountNames(p *Bac_Ntk_t) int32 {\n    var i, iObj, iBox, Count int32;\n    // inlining of macro Bac_NtkForEachPiMain\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  {  if Bac_ObjBit(p, iObj) {} else\n        if !Bac_ObjNameInt(p, iObj) {\n            Count++; }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iBox = 0; (iBox \u003c Bac_NtkObjNum(p)); iBox++  { if !Bac_ObjIsBox(p, iBox) {} else {\n        // inlining of macro Bac_BoxForEachBoMain\n        for  iObj, i = iBox + 1, 0; iObj \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iObj); iObj, i = iObj+1, i+1  {  if Bac_ObjBit(p, iObj) {} else\n            if !Bac_ObjNameInt(p, iObj) {\n                Count++; }\n        } }\n    }\n    return Count;\n}\nfunc Bac_ManAssignInternWordNamesNtk(p *Bac_Ntk_t, vMap *Vec_Int_t) {\n    var k int32;\n    var iObj int32;\n    var iTerm int32;\n    var iName int32 = -1;\n    var iBit int32 = -1;\n    var nDigits int32;\n    var nPis int32;\n    var nPos int32;\n    var nNames int32 = 1;\n    // start names\n    if !Bac_NtkHasNames(p) {\n        Bac_NtkStartNames(p); }\n    nDigits = Abc_Base10Log( Bac_ManAssignCountNames(p) );\n    // populate map with the currently used names\n    // inlining of macro Bac_NtkForEachCi\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsCi(p, iObj) {} else\n        if Bac_ObjNameInt(p, iObj) {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 ); }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjNameInt(p, iObj) {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 1 ); }\n    }\n    // assign CI names\n    // inlining of macro Bac_NtkForEachCi\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsCi(p, iObj) {} else {\n        if Bac_ObjNameInt(p, iObj) {\n            iName = -1;\n            iBit = -1;\n            continue;\n        }\n        if Bac_ObjBit(p, iObj) {\n            assert(iBit \u003e 0, \"iBit \u003e 0\");\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iBit++, BAC_NAME_INDEX) );\n        \n        } else {\n            //int Type = Bac_ObjType(p, iObj);\n            var Range int32;\n            if Bac_ObjIsPi(p, iObj) {\n                Range = Bac_ObjPiRange(p, iObj);\n            } else {\n                Range = Bac_BoxBoRange(p, iObj);\n            }\n            iName = Bac_ManAssignInternTwo( p, nNames++, nDigits, (char*)(Bac_ObjIsPi(p, iObj) ? \"i\":\"n\"), vMap );\n            if Range == 1 {\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n            } else {\n                Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_WORD) ); }\n            iBit = 1;\n        }\n    }\n    }\n    // transfer names to the interface\n    if Bac_NtkInfoNum(p) {\n        for  k = 0; k \u003c Bac_NtkInfoNum(p); k++  {\n            //char * pName = Bac_NtkName(p);\n            if Bac_NtkInfoType(p, k) == 1 { // PI\n            \n                iObj = Bac_NtkPi(p, nPis);\n                assert(!Bac_ObjBit(p, iObj), \"!Bac_ObjBit(p, iObj)\");\n                assert(Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD, \"Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD\");\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 1) );\n                nPis += Bac_NtkInfoRange(p, k);\n            \n            } else if Bac_NtkInfoType(p, k) == 2 { // PO\n            \n                iObj = Bac_NtkPo(p, nPos);\n                assert(!Bac_ObjBit(p, iObj), \"!Bac_ObjBit(p, iObj)\");\n                iObj = Bac_ObjFanin(p, iObj);\n                assert(Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD, \"Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD\");\n                Bac_NtkSetInfoName( p, k, Abc_Var2Lit2(Bac_ObjNameId(p, iObj), 2) );\n                nPos += Bac_NtkInfoRange(p, k);\n            \n            } else { assert(false, \"0\"); }\n        }\n        assert(nPis == Bac_NtkPiNum(p), \"nPis == Bac_NtkPiNum(p)\");\n        assert(nPos == Bac_NtkPoNum(p), \"nPos == Bac_NtkPoNum(p)\");\n    }\n    // assign instance names\n    nDigits = Abc_Base10Log( Bac_NtkObjNum(p) );\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if !Bac_ObjNameInt(p, iObj) {\n            iName = Bac_ManAssignInternTwo( p, iObj, nDigits, \"g\", vMap );\n            Bac_ObjSetName( p, iObj, Abc_Var2Lit2(iName, BAC_NAME_BIN) );\n        }\n    }\n    // unmark all names\n    // inlining of macro Bac_NtkForEachPi\n    for  k = 0; (k \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, k)), 1); k++  { \n        if Bac_ObjNameType(p, iObj) \u003c= BAC_NAME_WORD {\n            Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 ); }\n    }\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else {\n        Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iObj), 0 );\n        // inlining of macro Bac_BoxForEachBo\n        for  iTerm, k = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n            if Bac_ObjNameType(p, iTerm) \u003c= BAC_NAME_WORD {\n                Vec_IntWriteEntry( vMap, Bac_ObjNameId(p, iTerm), 0 ); }\n        }\n    }\n    }\n//    printf( \"Generated %d word-level names.\\n\", nNames-1 );\n}\nfunc Bac_ManAssignInternWordNames(p *Bac_Man_t) {\n    var vMap *Vec_Int_t  = Vec_IntStart( 2*Bac_ManObjNum(p) );\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManAssignInternWordNamesNtk( pNtk, vMap );\n    }\n    assert(Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap), \"Vec_IntCountEntry(vMap, 0) == Vec_IntSize(vMap)\");\n    Vec_IntFree( vMap );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count number of objects after collapsing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManClpObjNum_rec(p *Bac_Ntk_t) int32 {\n    var i, Counter int32;\n    if p.Count \u003e= 0 {\n        return p.Count; }\n    // inlining of macro Bac_NtkForEachBox\n    for  i = 0; (i \u003c Bac_NtkObjNum(p)); i++  { if !Bac_ObjIsBox(p, i) {} else {\n        Counter += Bac_ObjIsBoxUser(p, i) ? Bac_ManClpObjNum_rec( Bac_BoxNtk(p, i) ) + 3*Bac_BoxBoNum(p, i) : Bac_BoxSize(p, i); }\n    }\n    return (p.Count = Counter);\n}\nfunc Bac_ManClpObjNum(p *Bac_Man_t) int32 {\n    var pNtk *Bac_Ntk_t; var i int32;\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        pNtk.Count = -1;\n    }\n    return Bac_NtkPioNum( Bac_ManRoot(p) ) + Bac_ManClpObjNum_rec( Bac_ManRoot(p) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects boxes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkDfs_rec(p *Bac_Ntk_t, iObj int32, vBoxes *Vec_Int_t) {\n    var k, iFanin int32;\n    if Bac_ObjIsBo(p, iObj) == 1 {\n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n        return;\n    }\n    assert(Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj), \"Bac_ObjIsPi(p, iObj) || Bac_ObjIsBox(p, iObj)\");\n    if Bac_ObjCopy(p, iObj) \u003e 0 { // visited\n        return; }\n    Bac_ObjSetCopy( p, iObj, 1 );\n    // inlining of macro Bac_BoxForEachFanin\n    for  k = 0; iObj - 1 - k \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iObj - 1 - k) \u0026\u0026 (((iFanin) = Bac_BoxFanin(p, iObj, k)), 1); k++  {\n        Bac_NtkDfs_rec( p, iFanin, vBoxes );\n    }\n    Vec_IntPush( vBoxes, iObj );\n}\nfunc Bac_NtkDfs(p *Bac_Ntk_t) *Vec_Int_t {\n    var i, iObj int32;\n    var vBoxes *Vec_Int_t  = Vec_IntAlloc( Bac_NtkBoxNum(p) );\n    Bac_NtkStartCopies( p ); // -1 = not visited; 1 = finished\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  { \n        Bac_ObjSetCopy( p, iObj, 1 );\n    }\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPo(p, i)), 1); i++  { \n        Bac_NtkDfs_rec( p, Bac_ObjFanin(p, iObj), vBoxes );\n    }\n    return vBoxes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects user boxes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkDfsUserBoxes_rec(p *Bac_Ntk_t, iObj int32, vBoxes *Vec_Int_t) int32 {\n    var k, iFanin int32;\n    assert(Bac_ObjIsBoxUser(p, iObj), \"Bac_ObjIsBoxUser(p, iObj)\");\n    if Bac_ObjCopy(p, iObj) == 1 { // visited\n        return 1; }\n    if Bac_ObjCopy(p, iObj) == 0 { // loop\n        return 0; }\n    Bac_ObjSetCopy( p, iObj, 0 );\n    // inlining of macro Bac_BoxForEachFanin\n    for  k = 0; iObj - 1 - k \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iObj - 1 - k) \u0026\u0026 (((iFanin) = Bac_BoxFanin(p, iObj, k)), 1); k++  {\n        if Bac_ObjIsBo(p, iFanin) \u0026\u0026 Bac_ObjIsBoxUser(p, Bac_ObjFanin(p, iFanin)) {\n            if !(Bac_NtkDfsUserBoxes_rec( p, Bac_ObjFanin(p, iFanin), vBoxes ) != 0) {\n                return 0; } }\n    }\n    Vec_IntPush( vBoxes, iObj );\n    Bac_ObjSetCopy( p, iObj, 1 );\n    return 1;\n}\nfunc Bac_NtkDfsUserBoxes(p *Bac_Ntk_t) int32 {\n    var iObj int32;\n    Bac_NtkStartCopies( p ); // -1 = not visited; 0 = on the path; 1 = finished\n    Vec_IntClear( \u0026p.vArray );\n    // inlining of macro Bac_NtkForEachBoxUser\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBoxUser(p, iObj) {} else\n        if !(Bac_NtkDfsUserBoxes_rec( p, iObj, \u0026p.vArray ) != 0) {\n            fmt.Printf(\"Cyclic dependency of user boxes is detected.\\n\");\n            return 0;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_NtkCollapse_rec(pNew *Bac_Ntk_t, p *Bac_Ntk_t, vSigs *Vec_Int_t) {\n    var i, iObj, iObjNew, iTerm int32;\n    Bac_NtkStartCopies( p );\n    // set PI copies\n    assert(Vec_IntSize(vSigs) == Bac_NtkPiNum(p), \"Vec_IntSize(vSigs) == Bac_NtkPiNum(p)\");\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPi(p, i)), 1); i++  { \n        Bac_ObjSetCopy( p, iObj, Vec_IntEntry(vSigs, i) );\n    }\n    // duplicate internal objects and create buffers for hierarchy instances\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjIsBoxPrim( p, iObj ) {\n            Bac_BoxDup( pNew, p, iObj );\n        } else {\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, i = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, i = iTerm+1, i+1  {\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BI,  -1 );\n                iObjNew = Bac_ObjAlloc( pNew, BAC_BOX_BUF, -1 ); // buffer\n                iObjNew = Bac_ObjAlloc( pNew, BAC_OBJ_BO,  -1 );\n                Bac_ObjSetCopy( p, iTerm, iObjNew );\n            }\n        }\n    }\n    // duplicate user modules and connect objects\n    // inlining of macro Bac_NtkForEachBox\n    for  iObj = 0; (iObj \u003c Bac_NtkObjNum(p)); iObj++  { if !Bac_ObjIsBox(p, iObj) {} else\n        if Bac_ObjIsBoxPrim( p, iObj ) {\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, i = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, i = iTerm-1, i+1  {\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm), Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n            }\n        \n        } else {\n            Vec_IntClear( vSigs );\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, i = iObj - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, i = iTerm-1, i+1  {\n                Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iTerm)) );\n            }\n            Bac_NtkCollapse_rec( pNew, Bac_BoxNtk(p, iObj), vSigs );\n            assert(Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj), \"Vec_IntSize(vSigs) == Bac_BoxBoNum(p, iObj)\");\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, i = iObj + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, i = iTerm+1, i+1  {\n                Bac_ObjSetFanin( pNew, Bac_ObjCopy(p, iTerm)-2, Vec_IntEntry(vSigs, i) );\n            }\n        }\n    }\n    // collect POs\n    Vec_IntClear( vSigs );\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(p))  \u0026\u0026 (((iObj) = Bac_NtkPo(p, i)), 1); i++  { \n        Vec_IntPush( vSigs, Bac_ObjCopy(p, Bac_ObjFanin(p, iObj)) );\n    }\n}\nfunc Bac_ManCollapse(p *Bac_Man_t) *Bac_Man_t {\n    var i, iObj int32;\n    var vSigs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var pNew *Bac_Man_t  = Bac_ManStart( p, 1 );\n    var pRoot *Bac_Ntk_t  = Bac_ManRoot( p );\n    var pRootNew *Bac_Ntk_t  = Bac_ManRoot( pNew );\n    Bac_NtkAlloc( pRootNew, Bac_NtkNameId(pRoot), Bac_NtkPiNum(pRoot), Bac_NtkPoNum(pRoot), Bac_ManClpObjNum(p) );\n    if Vec_IntSize(\u0026pRoot.vInfo) {\n        Vec_IntAppend( \u0026pRootNew.vInfo, \u0026pRoot.vInfo ); }\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPi(pRoot, i)), 1); i++  { \n        Vec_IntPush( vSigs, Bac_ObjAlloc(pRootNew, BAC_OBJ_PI, -1) );\n    }\n    Bac_NtkCollapse_rec( pRootNew, pRoot, vSigs );\n    assert(Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot), \"Vec_IntSize(vSigs) == Bac_NtkPoNum(pRoot)\");\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPo(pRoot, i)), 1); i++  { \n        Bac_ObjAlloc( pRootNew, BAC_OBJ_PO, Vec_IntEntry(vSigs, i) );\n    }\n    assert(Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew), \"Bac_NtkObjNum(pRootNew) == Bac_NtkObjNumAlloc(pRootNew)\");\n    Vec_IntFree( vSigs );\n    // transfer PI/PO names\n    if Bac_NtkHasNames(pRoot) {\n        Bac_NtkStartNames( pRootNew );\n        // inlining of macro Bac_NtkForEachPi\n        for  i = 0; (i \u003c Bac_NtkPiNum(pRoot))  \u0026\u0026 (((iObj) = Bac_NtkPi(pRoot, i)), 1); i++  { \n            Bac_ObjSetName( pRootNew, Bac_NtkPi(pRootNew, i), Bac_ObjName(pRoot, iObj) );\n        }\n        // inlining of macro Bac_NtkForEachPoDriver\n        for  i = 0; (i \u003c Bac_NtkPoNum(pRoot))  \u0026\u0026 (((iObj) = Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i))), 1); i++  { \n            if !Bac_ObjIsPi(pRoot, iObj) {\n                Bac_ObjSetName( pRootNew, Bac_ObjCopy(pRoot, iObj), Bac_ObjName(pRoot, iObj) ); }\n        }\n    }\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

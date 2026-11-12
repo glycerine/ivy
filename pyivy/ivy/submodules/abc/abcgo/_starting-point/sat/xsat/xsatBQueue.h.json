@@ -1,0 +1,273 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h",
+  "SHA256": "9c968c92334bbeb421d46f5d347e423816b3d61c019d5c0af8001fa63447a417",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 63,
+        "Column": 75,
+        "ByteOffset": 1890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pData = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 63,
+        "ByteOffset": 2272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 80,
+        "Column": 57,
+        "ByteOffset": 2375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(p.iFirst == p.iEmpty);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 3307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e= 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSAT_BQueueNew",
+      "Start": 1742,
+      "End": 1937,
+      "BodyStart": 1799,
+      "Original": "static inline xSAT_BQueue_t * xSAT_BQueueNew( int nCap )\n{\n    xSAT_BQueue_t * p = ABC_CALLOC( xSAT_BQueue_t, 1 );\n    p-\u003enCap = nCap;\n    p-\u003epData = ABC_CALLOC( unsigned, nCap );\n    return p;\n}",
+      "Draft": "func xSAT_BQueueNew(nCap int32) *xSAT_BQueue_t {\n    // inlining of macro ABC_CALLOC\n    var p *xSAT_BQueue_t  = \u0026xSAT_BQueue_t{};\n    p.nCap = nCap;\n    // inlining of macro ABC_CALLOC\n    p.pData = ((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));\n    return p;\n}"
+    },
+    {
+      "Name": "xSAT_BQueueFree",
+      "Start": 2158,
+      "End": 2262,
+      "BodyStart": 2214,
+      "Original": "static inline void xSAT_BQueueFree( xSAT_BQueue_t * p )\n{\n    ABC_FREE( p-\u003epData );\n    ABC_FREE( p );\n}",
+      "Draft": "func xSAT_BQueueFree(p *xSAT_BQueue_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "xSAT_BQueuePush",
+      "Start": 2483,
+      "End": 2911,
+      "BodyStart": 2555,
+      "Original": "static inline void xSAT_BQueuePush( xSAT_BQueue_t * p, unsigned Value )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        assert(p-\u003eiFirst == p-\u003eiEmpty);\n        p-\u003enSum -= p-\u003epData[p-\u003eiFirst];\n        p-\u003eiFirst = ( p-\u003eiFirst + 1 ) % p-\u003enCap;\n    }\n    else\n        p-\u003enSize++;\n\n    p-\u003enSum += Value;\n    p-\u003epData[p-\u003eiEmpty] = Value;\n    if ( ( ++p-\u003eiEmpty ) == p-\u003enCap )\n    {\n        p-\u003eiEmpty = 0;\n        p-\u003eiFirst = 0;\n    }\n}",
+      "Draft": "func xSAT_BQueuePush(p *xSAT_BQueue_t, Value uint32) {\n    if p.nSize == p.nCap {\n        assert(p.iFirst == p.iEmpty, \"p.iFirst == p.iEmpty\");\n        p.nSum -= p.pData[p.iFirst];\n        p.iFirst = ( p.iFirst + 1 ) % p.nCap;\n    \n    } else {\n        p.nSize++; }\n\n    p.nSum += Value;\n    p.pData[p.iEmpty] = Value;\n    if ( ++p.iEmpty ) == p.nCap {\n        p.iEmpty = 0;\n        p.iFirst = 0;\n    }\n}"
+    },
+    {
+      "Name": "xSAT_BQueuePop",
+      "Start": 3132,
+      "End": 3379,
+      "BodyStart": 3186,
+      "Original": "static inline int xSAT_BQueuePop( xSAT_BQueue_t * p )\n{\n    int RetValue;\n    assert( p-\u003enSize \u003e= 1 );\n    RetValue = p-\u003epData[p-\u003eiFirst];\n    p-\u003enSum -= RetValue;\n    p-\u003eiFirst = ( p-\u003eiFirst + 1 ) % p-\u003enCap;\n    p-\u003enSize--;\n    return RetValue;\n}",
+      "Draft": "func xSAT_BQueuePop(p *xSAT_BQueue_t) int32 {\n    var RetValue int32;\n    assert(p.nSize \u003e= 1, \"p.nSize \u003e= 1\");\n    RetValue = p.pData[p.iFirst];\n    p.nSum -= RetValue;\n    p.iFirst = ( p.iFirst + 1 ) % p.nCap;\n    p.nSize--;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "xSAT_BQueueAvg",
+      "Start": 3600,
+      "End": 3722,
+      "BodyStart": 3659,
+      "Original": "static inline unsigned xSAT_BQueueAvg( xSAT_BQueue_t * p )\n{\n    return ( unsigned )( p-\u003enSum / ( ( word ) p-\u003enSize ) );\n}",
+      "Draft": "func xSAT_BQueueAvg(p *xSAT_BQueue_t) uint32 {\n    return uint32(  ( p.nSum / ( ( word ) p.nSize ) ));\n}"
+    },
+    {
+      "Name": "xSAT_BQueueIsValid",
+      "Start": 3943,
+      "End": 4040,
+      "BodyStart": 4001,
+      "Original": "static inline int xSAT_BQueueIsValid( xSAT_BQueue_t * p )\n{\n    return ( p-\u003enCap == p-\u003enSize );\n}",
+      "Draft": "func xSAT_BQueueIsValid(p *xSAT_BQueue_t) int32 {\n    return ( p.nCap == p.nSize );\n}"
+    },
+    {
+      "Name": "xSAT_BQueueClean",
+      "Start": 4261,
+      "End": 4394,
+      "BodyStart": 4318,
+      "Original": "static inline void xSAT_BQueueClean( xSAT_BQueue_t * p )\n{\n    p-\u003eiFirst = 0;\n    p-\u003eiEmpty = 0;\n    p-\u003enSize = 0;\n    p-\u003enSum = 0;\n}",
+      "Draft": "func xSAT_BQueueClean(p *xSAT_BQueue_t) {\n    p.iFirst = 0;\n    p.iEmpty = 0;\n    p.nSize = 0;\n    p.nSum = 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::struct::xSAT_BQueue_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_BQueue_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1133,
+      "End": 1302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::mechanical::sizeof::1910",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1825,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::mechanical::sizeof::2053",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1892,
+      "End": 1892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::pointer-cast::1872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1825,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::pointer-cast::2017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1892,
+      "End": 1892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::pointer-cast::2435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2220,
+      "End": 2220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::pointer-cast::2540",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2246,
+      "End": 2246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueueNew",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueueNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1742,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::ternary::xSAT_BQueueFree",
+      "Category": "ternary-review",
+      "Symbol": "xSAT_BQueueFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2158,
+      "End": 2262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueueFree",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueueFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2158,
+      "End": 2262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueuePush",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueuePush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2483,
+      "End": 2911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueuePop",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueuePop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3132,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueueAvg",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueueAvg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3600,
+      "End": 3722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueueIsValid",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueueIsValid",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3943,
+      "End": 4040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::xSAT_BQueueClean",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_BQueueClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4261,
+      "End": 4394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatBQueue.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4429
+    }
+  ],
+  "Draft": "package xsat\n\n/**CFile****************************************************************\n\n  FileName    [xsatBQueue.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [Bounded queue implementation.]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n   \ntype xSAT_BQueue_t struct {\n    nSize int32;\n    nCap int32;\n    iFirst int32;\n    iEmpty int32;\n    nSum word;\n    pData  *uint32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueueNew(nCap int32) *xSAT_BQueue_t {\n    // inlining of macro ABC_CALLOC\n    var p *xSAT_BQueue_t  = \u0026xSAT_BQueue_t{};\n    p.nCap = nCap;\n    // inlining of macro ABC_CALLOC\n    p.pData = ((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueueFree(p *xSAT_BQueue_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueuePush(p *xSAT_BQueue_t, Value uint32) {\n    if p.nSize == p.nCap {\n        assert(p.iFirst == p.iEmpty, \"p.iFirst == p.iEmpty\");\n        p.nSum -= p.pData[p.iFirst];\n        p.iFirst = ( p.iFirst + 1 ) % p.nCap;\n    \n    } else {\n        p.nSize++; }\n\n    p.nSum += Value;\n    p.pData[p.iEmpty] = Value;\n    if ( ++p.iEmpty ) == p.nCap {\n        p.iEmpty = 0;\n        p.iFirst = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueuePop(p *xSAT_BQueue_t) int32 {\n    var RetValue int32;\n    assert(p.nSize \u003e= 1, \"p.nSize \u003e= 1\");\n    RetValue = p.pData[p.iFirst];\n    p.nSum -= RetValue;\n    p.iFirst = ( p.iFirst + 1 ) % p.nCap;\n    p.nSize--;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueueAvg(p *xSAT_BQueue_t) uint32 {\n    return uint32(  ( p.nSum / ( ( word ) p.nSize ) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueueIsValid(p *xSAT_BQueue_t) int32 {\n    return ( p.nCap == p.nSize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_BQueueClean(p *xSAT_BQueue_t) {\n    p.iFirst = 0;\n    p.iEmpty = 0;\n    p.nSize = 0;\n    p.nSum = 0;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

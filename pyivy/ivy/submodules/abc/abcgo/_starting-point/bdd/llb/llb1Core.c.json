@@ -1,0 +1,159 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c",
+  "SHA256": "87cec4d36018ce4def582047161c82635157aa8e1d2e40de71754cb573220ce0",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_ParLlb_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 3684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vHints == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 13,
+        "ByteOffset": 4251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Original matrix:          \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 17,
+        "ByteOffset": 4552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Matrix after clustering:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 17,
+        "ByteOffset": 4881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Matrix after scheduling:  \" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManSetDefaultParams",
+      "Start": 1283,
+      "End": 2261,
+      "BodyStart": 1332,
+      "Original": "void Llb_ManSetDefaultParams( Gia_ParLlb_t * p )\n{\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p-\u003enBddMax       = 10000000;\n    p-\u003enIterMax      = 10000000;\n    p-\u003enClusterMax   =       20;\n    p-\u003enHintDepth    =        0;\n    p-\u003eHintFirst     =        0;\n    p-\u003efUseFlow      =        0;  // use flow \n    p-\u003enVolumeMax    =      100;  // max volume\n    p-\u003enVolumeMin    =       30;  // min volume\n    p-\u003enPartValue    =        5;  // partitioning value\n    p-\u003efBackward     =        0;  // forward by default\n    p-\u003efReorder      =        1;\n    p-\u003efIndConstr    =        0;\n    p-\u003efUsePivots    =        0;\n    p-\u003efCluster      =        0;\n    p-\u003efSchedule     =        0;\n    p-\u003efDumpReached  =        0;\n    p-\u003efVerbose      =        0;\n    p-\u003efVeryVerbose  =        0;\n    p-\u003efSilent       =        0;\n    p-\u003eTimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p-\u003eTimeLimitGlo  =        0;\n    p-\u003eTimeTarget    =        0;\n    p-\u003eiFrame        =       -1;\n}",
+      "Draft": "func Llb_ManSetDefaultParams(p *Gia_ParLlb_t) {\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p.nBddMax       = 10000000;\n    p.nIterMax      = 10000000;\n    p.nClusterMax   =       20;\n    p.nHintDepth    =        0;\n    p.HintFirst     =        0;\n    p.fUseFlow      =        0;  // use flow \n    p.nVolumeMax    =      100;  // max volume\n    p.nVolumeMin    =       30;  // min volume\n    p.nPartValue    =        5;  // partitioning value\n    p.fBackward     =        0;  // forward by default\n    p.fReorder      =        1;\n    p.fIndConstr    =        0;\n    p.fUsePivots    =        0;\n    p.fCluster      =        0;\n    p.fSchedule     =        0;\n    p.fDumpReached  =        0;\n    p.fVerbose      =        0;\n    p.fVeryVerbose  =        0;\n    p.fSilent       =        0;\n    p.TimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p.TimeLimitGlo  =        0;\n    p.TimeTarget    =        0;\n    p.iFrame        =       -1;\n}"
+    },
+    {
+      "Name": "Llb_ManPrintAig",
+      "Start": 2528,
+      "End": 3196,
+      "BodyStart": 2566,
+      "Original": "void Llb_ManPrintAig( Llb_Man_t * p )\n{\n    Abc_Print( 1, \"pi =%3d  \",    Saig_ManPiNum(p-\u003epAig) );\n    Abc_Print( 1, \"po =%3d  \",    Saig_ManPoNum(p-\u003epAig) );\n    Abc_Print( 1, \"ff =%3d  \",    Saig_ManRegNum(p-\u003epAig) );\n    Abc_Print( 1, \"int =%5d  \",   Vec_IntSize(p-\u003evVar2Obj)-Aig_ManCiNum(p-\u003epAig)-Saig_ManRegNum(p-\u003epAig) );\n    Abc_Print( 1, \"var =%5d  \",   Vec_IntSize(p-\u003evVar2Obj) );\n    Abc_Print( 1, \"part =%5d  \",  Vec_PtrSize(p-\u003evGroups)-2 );\n    Abc_Print( 1, \"and =%5d  \",   Aig_ManNodeNum(p-\u003epAig) );\n    Abc_Print( 1, \"lev =%4d  \",   Aig_ManLevelNum(p-\u003epAig) );\n//    Abc_Print( 1, \"cut =%4d  \",   Llb_ManCrossCut(p-\u003epAig) );\n    Abc_Print( 1, \"\\n\" );\n}",
+      "Draft": "func Llb_ManPrintAig(p *Llb_Man_t) {\n    Abc_Print( 1, \"pi =%3d  \",    Saig_ManPiNum(p.pAig) );\n    Abc_Print( 1, \"po =%3d  \",    Saig_ManPoNum(p.pAig) );\n    Abc_Print( 1, \"ff =%3d  \",    Saig_ManRegNum(p.pAig) );\n    Abc_Print( 1, \"int =%5d  \",   Vec_IntSize(p.vVar2Obj)-Aig_ManCiNum(p.pAig)-Saig_ManRegNum(p.pAig) );\n    Abc_Print( 1, \"var =%5d  \",   Vec_IntSize(p.vVar2Obj) );\n    Abc_Print( 1, \"part =%5d  \",  Vec_PtrSize(p.vGroups)-2 );\n    Abc_Print( 1, \"and =%5d  \",   Aig_ManNodeNum(p.pAig) );\n    Abc_Print( 1, \"lev =%4d  \",   Aig_ManLevelNum(p.pAig) );\n//    Abc_Print( 1, \"cut =%4d  \",   Llb_ManCrossCut(p-\u003epAig) );\n    Abc_Print( 1, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Llb_ManModelCheckAig",
+      "Start": 3432,
+      "End": 5467,
+      "BodyStart": 3543,
+      "Original": "int Llb_ManModelCheckAig( Aig_Man_t * pAigGlo, Gia_ParLlb_t * pPars, Vec_Int_t * vHints, DdManager ** pddGlo )\n{\n    Llb_Man_t * p = NULL; \n    Aig_Man_t * pAig;\n    int RetValue = -1;\n    abctime clk = Abc_Clock();\n\n    if ( pPars-\u003efIndConstr )\n    {\n        assert( vHints == NULL );\n        vHints = Llb_ManDeriveConstraints( pAigGlo );\n    }\n\n    // derive AIG for hints\n    if ( vHints == NULL )\n        pAig = Aig_ManDupSimple( pAigGlo );\n    else\n    {\n        if ( pPars-\u003efVerbose )\n            Llb_ManPrintEntries( pAigGlo, vHints );\n        pAig = Aig_ManDupSimpleWithHints( pAigGlo, vHints );\n    }\n\n\n    if ( pPars-\u003efUseFlow )\n    {\n//        p = Llb_ManStartFlow( pAigGlo, pAig, pPars );\n    }\n    else\n    {\n        p = Llb_ManStart( pAigGlo, pAig, pPars );\n        if ( pPars-\u003efVerbose )\n        {\n            Llb_ManPrintAig( p );\n            printf( \"Original matrix:          \" );\n            Llb_MtrPrintMatrixStats( p-\u003epMatrix );\n            if ( pPars-\u003efVeryVerbose )\n                Llb_MtrPrint( p-\u003epMatrix, 1 );\n        }\n        if ( pPars-\u003efCluster )\n        {\n            Llb_ManCluster( p-\u003epMatrix );\n            if ( pPars-\u003efVerbose )\n            {\n                printf( \"Matrix after clustering:  \" );\n                Llb_MtrPrintMatrixStats( p-\u003epMatrix );\n                if ( pPars-\u003efVeryVerbose )\n                    Llb_MtrPrint( p-\u003epMatrix, 1 );\n            }\n        }\n        if ( pPars-\u003efSchedule )\n        {\n            Llb_MtrSchedule( p-\u003epMatrix );\n            if ( pPars-\u003efVerbose )\n            {\n                printf( \"Matrix after scheduling:  \" );\n                Llb_MtrPrintMatrixStats( p-\u003epMatrix );\n                if ( pPars-\u003efVeryVerbose )\n                    Llb_MtrPrint( p-\u003epMatrix, 1 );\n            }\n        }\n    }\n    \n    if ( !p-\u003epPars-\u003efSkipReach ) \n        RetValue = Llb_ManReachability( p, vHints, pddGlo );\n    Llb_ManStop( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if ( pPars-\u003efIndConstr )\n        Vec_IntFreeP( \u0026vHints );\n    return RetValue;\n}",
+      "Draft": "func Llb_ManModelCheckAig(pAigGlo *Aig_Man_t, pPars *Gia_ParLlb_t, vHints *Vec_Int_t, pddGlo **DdManager) int32 {\n    var p *Llb_Man_t  = nil; \n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    var clk abctime  = Abc_Clock();\n\n    if pPars.fIndConstr {\n        assert(vHints == nil, \"vHints == nil\");\n        vHints = Llb_ManDeriveConstraints( pAigGlo );\n    }\n\n    // derive AIG for hints\n    if vHints == nil {\n        pAig = Aig_ManDupSimple( pAigGlo );\n    } else {\n        if pPars.fVerbose {\n            Llb_ManPrintEntries( pAigGlo, vHints ); }\n        pAig = Aig_ManDupSimpleWithHints( pAigGlo, vHints );\n    }\n\n\n    if pPars.fUseFlow {\n//        p = Llb_ManStartFlow( pAigGlo, pAig, pPars );\n    \n    } else {\n        p = Llb_ManStart( pAigGlo, pAig, pPars );\n        if pPars.fVerbose {\n            Llb_ManPrintAig( p );\n            fmt.Printf(\"Original matrix:          \");\n            Llb_MtrPrintMatrixStats( p.pMatrix );\n            if pPars.fVeryVerbose {\n                Llb_MtrPrint( p.pMatrix, 1 ); }\n        }\n        if pPars.fCluster {\n            Llb_ManCluster( p.pMatrix );\n            if pPars.fVerbose {\n                fmt.Printf(\"Matrix after clustering:  \");\n                Llb_MtrPrintMatrixStats( p.pMatrix );\n                if pPars.fVeryVerbose {\n                    Llb_MtrPrint( p.pMatrix, 1 ); }\n            }\n        }\n        if pPars.fSchedule {\n            Llb_MtrSchedule( p.pMatrix );\n            if pPars.fVerbose {\n                fmt.Printf(\"Matrix after scheduling:  \");\n                Llb_MtrPrintMatrixStats( p.pMatrix );\n                if pPars.fVeryVerbose {\n                    Llb_MtrPrint( p.pMatrix, 1 ); }\n            }\n        }\n    }\n    \n    if !p.pPars.fSkipReach { \n        RetValue = Llb_ManReachability( p, vHints, pddGlo ); }\n    Llb_ManStop( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if pPars.fIndConstr {\n        Vec_IntFreeP( \u0026vHints ); }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Llb_ManModelCheckGia",
+      "Start": 5703,
+      "End": 6260,
+      "BodyStart": 5770,
+      "Original": "int Llb_ManModelCheckGia( Gia_Man_t * pGia, Gia_ParLlb_t * pPars )\n{\n    Gia_Man_t * pGia2;\n    Aig_Man_t * pAig;\n    int RetValue = -1;\n    pGia2 = Gia_ManDupDfs( pGia );\n    pAig  = Gia_ManToAigSimple( pGia2 );\n    Gia_ManStop( pGia2 );\n//Aig_ManShow( pAig, 0, NULL ); \n\n    if ( pPars-\u003enHintDepth == 0 )\n        RetValue = Llb_ManModelCheckAig( pAig, pPars, NULL, NULL );\n    else\n        RetValue = Llb_ManModelCheckAigWithHints( pAig, pPars );\n    pGia-\u003epCexSeq = pAig-\u003epSeqModel; pAig-\u003epSeqModel = NULL;\n    Aig_ManStop( pAig );\n    return RetValue;\n}",
+      "Draft": "func Llb_ManModelCheckGia(pGia *Gia_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var pGia2 *Gia_Man_t;\n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    pGia2 = Gia_ManDupDfs( pGia );\n    pAig  = Gia_ManToAigSimple( pGia2 );\n    Gia_ManStop( pGia2 );\n//Aig_ManShow( pAig, 0, NULL ); \n\n    if pPars.nHintDepth == 0 {\n        RetValue = Llb_ManModelCheckAig( pAig, pPars, nil, nil );\n    } else {\n        RetValue = Llb_ManModelCheckAigWithHints( pAig, pPars ); }\n    pGia.pCexSeq = pAig.pSeqModel; pAig.pSeqModel = nil;\n    Aig_ManStop( pAig );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::mechanical::sizeof::1352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1352,
+      "End": 1358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::Llb_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1283,
+      "End": 2261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::Llb_ManPrintAig",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManPrintAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2528,
+      "End": 3196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::Llb_ManModelCheckAig",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManModelCheckAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3432,
+      "End": 5467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::Llb_ManModelCheckGia",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManModelCheckGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5703,
+      "End": 6260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Core.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6507
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb1Core.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Top-level procedure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Core.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManSetDefaultParams(p *Gia_ParLlb_t) {\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p.nBddMax       = 10000000;\n    p.nIterMax      = 10000000;\n    p.nClusterMax   =       20;\n    p.nHintDepth    =        0;\n    p.HintFirst     =        0;\n    p.fUseFlow      =        0;  // use flow \n    p.nVolumeMax    =      100;  // max volume\n    p.nVolumeMin    =       30;  // min volume\n    p.nPartValue    =        5;  // partitioning value\n    p.fBackward     =        0;  // forward by default\n    p.fReorder      =        1;\n    p.fIndConstr    =        0;\n    p.fUsePivots    =        0;\n    p.fCluster      =        0;\n    p.fSchedule     =        0;\n    p.fDumpReached  =        0;\n    p.fVerbose      =        0;\n    p.fVeryVerbose  =        0;\n    p.fSilent       =        0;\n    p.TimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p.TimeLimitGlo  =        0;\n    p.TimeTarget    =        0;\n    p.iFrame        =       -1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics about MFFCs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManPrintAig(p *Llb_Man_t) {\n    Abc_Print( 1, \"pi =%3d  \",    Saig_ManPiNum(p.pAig) );\n    Abc_Print( 1, \"po =%3d  \",    Saig_ManPoNum(p.pAig) );\n    Abc_Print( 1, \"ff =%3d  \",    Saig_ManRegNum(p.pAig) );\n    Abc_Print( 1, \"int =%5d  \",   Vec_IntSize(p.vVar2Obj)-Aig_ManCiNum(p.pAig)-Saig_ManRegNum(p.pAig) );\n    Abc_Print( 1, \"var =%5d  \",   Vec_IntSize(p.vVar2Obj) );\n    Abc_Print( 1, \"part =%5d  \",  Vec_PtrSize(p.vGroups)-2 );\n    Abc_Print( 1, \"and =%5d  \",   Aig_ManNodeNum(p.pAig) );\n    Abc_Print( 1, \"lev =%4d  \",   Aig_ManLevelNum(p.pAig) );\n//    Abc_Print( 1, \"cut =%4d  \",   Llb_ManCrossCut(p-\u003epAig) );\n    Abc_Print( 1, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManModelCheckAig(pAigGlo *Aig_Man_t, pPars *Gia_ParLlb_t, vHints *Vec_Int_t, pddGlo **DdManager) int32 {\n    var p *Llb_Man_t  = nil; \n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    var clk abctime  = Abc_Clock();\n\n    if pPars.fIndConstr {\n        assert(vHints == nil, \"vHints == nil\");\n        vHints = Llb_ManDeriveConstraints( pAigGlo );\n    }\n\n    // derive AIG for hints\n    if vHints == nil {\n        pAig = Aig_ManDupSimple( pAigGlo );\n    } else {\n        if pPars.fVerbose {\n            Llb_ManPrintEntries( pAigGlo, vHints ); }\n        pAig = Aig_ManDupSimpleWithHints( pAigGlo, vHints );\n    }\n\n\n    if pPars.fUseFlow {\n//        p = Llb_ManStartFlow( pAigGlo, pAig, pPars );\n    \n    } else {\n        p = Llb_ManStart( pAigGlo, pAig, pPars );\n        if pPars.fVerbose {\n            Llb_ManPrintAig( p );\n            fmt.Printf(\"Original matrix:          \");\n            Llb_MtrPrintMatrixStats( p.pMatrix );\n            if pPars.fVeryVerbose {\n                Llb_MtrPrint( p.pMatrix, 1 ); }\n        }\n        if pPars.fCluster {\n            Llb_ManCluster( p.pMatrix );\n            if pPars.fVerbose {\n                fmt.Printf(\"Matrix after clustering:  \");\n                Llb_MtrPrintMatrixStats( p.pMatrix );\n                if pPars.fVeryVerbose {\n                    Llb_MtrPrint( p.pMatrix, 1 ); }\n            }\n        }\n        if pPars.fSchedule {\n            Llb_MtrSchedule( p.pMatrix );\n            if pPars.fVerbose {\n                fmt.Printf(\"Matrix after scheduling:  \");\n                Llb_MtrPrintMatrixStats( p.pMatrix );\n                if pPars.fVeryVerbose {\n                    Llb_MtrPrint( p.pMatrix, 1 ); }\n            }\n        }\n    }\n    \n    if !p.pPars.fSkipReach { \n        RetValue = Llb_ManReachability( p, vHints, pddGlo ); }\n    Llb_ManStop( p );\n\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    if pPars.fIndConstr {\n        Vec_IntFreeP( \u0026vHints ); }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManModelCheckGia(pGia *Gia_Man_t, pPars *Gia_ParLlb_t) int32 {\n    var pGia2 *Gia_Man_t;\n    var pAig *Aig_Man_t;\n    var RetValue int32  = -1;\n    pGia2 = Gia_ManDupDfs( pGia );\n    pAig  = Gia_ManToAigSimple( pGia2 );\n    Gia_ManStop( pGia2 );\n//Aig_ManShow( pAig, 0, NULL ); \n\n    if pPars.nHintDepth == 0 {\n        RetValue = Llb_ManModelCheckAig( pAig, pPars, nil, nil );\n    } else {\n        RetValue = Llb_ManModelCheckAigWithHints( pAig, pPars ); }\n    pGia.pCexSeq = pAig.pSeqModel; pAig.pSeqModel = nil;\n    Aig_ManStop( pAig );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

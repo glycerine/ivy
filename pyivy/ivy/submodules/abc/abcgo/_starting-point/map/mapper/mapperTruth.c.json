@@ -1,0 +1,279 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c",
+  "SHA256": "bf22253beaaddb94be88bcfa467a1985e2feae55a746216ee71978b75c6ffa0a",
+  "Library": [
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 59,
+        "Column": 41,
+        "ByteOffset": 1763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 1926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pCuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 1957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pCuts.nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 6841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.fMark == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vVisited.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 9994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.fMark == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_MappingTruths",
+      "Start": 1470,
+      "End": 2700,
+      "BodyStart": 1513,
+      "Original": "void Map_MappingTruths( Map_Man_t * pMan )\n{\n    ProgressBar * pProgress;\n    Map_Node_t * pNode;\n    Map_Cut_t * pCut;\n    int nNodes, i;\n    // compute the cuts for the POs\n    nNodes = pMan-\u003evMapObjs-\u003enSize;\n    pProgress = Extra_ProgressBarStart( stdout, nNodes );\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        pNode = pMan-\u003evMapObjs-\u003epArray[i];\n        if ( !Map_NodeIsAnd( pNode ) )\n            continue;\n        assert( pNode-\u003epCuts );\n        assert( pNode-\u003epCuts-\u003enLeaves == 1 );\n\n        // match the simple cut\n        pNode-\u003epCuts-\u003eM[0].uPhase     = 0;\n        pNode-\u003epCuts-\u003eM[0].pSupers    = pMan-\u003epSuperLib-\u003epSuperInv;\n        pNode-\u003epCuts-\u003eM[0].uPhaseBest = 0;\n        pNode-\u003epCuts-\u003eM[0].pSuperBest = pMan-\u003epSuperLib-\u003epSuperInv;\n\n        pNode-\u003epCuts-\u003eM[1].uPhase     = 0;\n        pNode-\u003epCuts-\u003eM[1].pSupers    = pMan-\u003epSuperLib-\u003epSuperInv;\n        pNode-\u003epCuts-\u003eM[1].uPhaseBest = 1;\n        pNode-\u003epCuts-\u003eM[1].pSuperBest = pMan-\u003epSuperLib-\u003epSuperInv;\n\n        // match the rest of the cuts\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n             Map_TruthsCut( pMan, pCut );\n        Extra_ProgressBarUpdate( pProgress, i, \"Tables ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n}",
+      "Draft": "func Map_MappingTruths(pMan *Map_Man_t) {\n    var pProgress *ProgressBar;\n    var pNode *Map_Node_t;\n    var pCut *Map_Cut_t;\n    var nNodes, i int32;\n    // compute the cuts for the POs\n    nNodes = pMan.vMapObjs.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    for  i = 0; i \u003c nNodes; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if !Map_NodeIsAnd( pNode ) {\n            continue; }\n        assert(pNode.pCuts, \"pNode.pCuts\");\n        assert(pNode.pCuts.nLeaves == 1, \"pNode.pCuts.nLeaves == 1\");\n\n        // match the simple cut\n        pNode.pCuts.M[0].uPhase     = 0;\n        pNode.pCuts.M[0].pSupers    = pMan.pSuperLib.pSuperInv;\n        pNode.pCuts.M[0].uPhaseBest = 0;\n        pNode.pCuts.M[0].pSuperBest = pMan.pSuperLib.pSuperInv;\n\n        pNode.pCuts.M[1].uPhase     = 0;\n        pNode.pCuts.M[1].pSupers    = pMan.pSuperLib.pSuperInv;\n        pNode.pCuts.M[1].uPhaseBest = 1;\n        pNode.pCuts.M[1].pSuperBest = pMan.pSuperLib.pSuperInv;\n\n        // match the rest of the cuts\n        for  pCut = pNode.pCuts.pNext; (pCut != nil); pCut = pCut.pNext  {\n             Map_TruthsCut( pMan, pCut );\n        }\n        Extra_ProgressBarUpdate( pProgress, i, \"Tables ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n}"
+    },
+    {
+      "Name": "Map_TruthsCut",
+      "Start": 2972,
+      "End": 6140,
+      "BodyStart": 3026,
+      "Original": "void Map_TruthsCut( Map_Man_t * p, Map_Cut_t * pCut )\n{ \n//    unsigned uCanon1, uCanon2;\n    unsigned uTruth[2], uCanon[2];\n    unsigned char uPhases[16];\n    unsigned * uCanon2;\n    char * pPhases2;\n    int fUseFast = 1;\n    int fUseSlow = 0;\n    int fUseRec = 0; // this does not work for Solaris\n\n    extern int Map_CanonCompute( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes );\n \n    // generally speaking, 1-input cut can be matched into a wire!\n    if ( pCut-\u003enLeaves == 1 )\n        return;\n/*\n    if ( p-\u003enVarsMax == 5 )\n    {\n        uTruth[0] = pCut-\u003euTruth;\n        uTruth[1] = pCut-\u003euTruth;\n    }\n    else\n*/\n    Map_TruthsCutOne( p, pCut, uTruth );\n\n\n    // compute the canonical form for the positive phase\n    if ( fUseFast )\n        Map_CanonComputeFast( p, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    else if ( fUseSlow )\n        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    else if ( fUseRec )\n    {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p-\u003enVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    }\n    else\n        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    pCut-\u003eM[1].pSupers = Map_SuperTableLookupC( p-\u003epSuperLib, uCanon );\n    pCut-\u003eM[1].uPhase  = uPhases[0];\n    p-\u003enCanons++;\n\n//uCanon1 = uCanon[0] \u0026 0xFFFF;\n\n    // compute the canonical form for the negative phase\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n    if ( fUseFast )\n        Map_CanonComputeFast( p, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    else if ( fUseSlow )\n        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    else if ( fUseRec )\n    {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p-\u003enVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    }\n    else\n        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n    pCut-\u003eM[0].pSupers = Map_SuperTableLookupC( p-\u003epSuperLib, uCanon );\n    pCut-\u003eM[0].uPhase  = uPhases[0];\n    p-\u003enCanons++;\n\n//uCanon2 = uCanon[0] \u0026 0xFFFF;\n//assert( p-\u003enVarsMax == 4 );\n//Rwt_Man4ExploreCount( uCanon1 \u003c uCanon2 ? uCanon1 : uCanon2 );\n\n    // restore the truth table\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n}",
+      "Draft": "func Map_TruthsCut(p *Map_Man_t, pCut *Map_Cut_t) { \n//    unsigned uCanon1, uCanon2;\n    var uTruth, uCanon [2]uint32;\n    unsigned char uPhases[16];\n    var uCanon2 *uint32;\n    var pPhases2 string;\n    var fUseFast int32  = 1;\n    var fUseSlow int32;\n    var fUseRec int32; // this does not work for Solaris\n\n    extern int Map_CanonCompute( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes );\n \n    // generally speaking, 1-input cut can be matched into a wire!\n    if pCut.nLeaves == 1 {\n        return; }\n/*\n    if ( p-\u003enVarsMax == 5 )\n    {\n        uTruth[0] = pCut-\u003euTruth;\n        uTruth[1] = pCut-\u003euTruth;\n    }\n    else\n*/\n    Map_TruthsCutOne( p, pCut, uTruth );\n\n\n    // compute the canonical form for the positive phase\n    if fUseFast != 0 {\n        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseSlow != 0 {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseRec != 0 {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    \n    } else {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }\n    pCut.M[1].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );\n    pCut.M[1].uPhase  = uPhases[0];\n    p.nCanons++;\n\n//uCanon1 = uCanon[0] \u0026 0xFFFF;\n\n    // compute the canonical form for the negative phase\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n    if fUseFast != 0 {\n        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseSlow != 0 {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseRec != 0 {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    \n    } else {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }\n    pCut.M[0].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );\n    pCut.M[0].uPhase  = uPhases[0];\n    p.nCanons++;\n\n//uCanon2 = uCanon[0] \u0026 0xFFFF;\n//assert( p-\u003enVarsMax == 4 );\n//Rwt_Man4ExploreCount( uCanon1 \u003c uCanon2 ? uCanon1 : uCanon2 );\n\n    // restore the truth table\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n}"
+    },
+    {
+      "Name": "Map_TruthsCutOne",
+      "Start": 6412,
+      "End": 8738,
+      "BodyStart": 6488,
+      "Original": "void Map_TruthsCutOne( Map_Man_t * p, Map_Cut_t * pCut, unsigned uTruth[] )\n{\n    unsigned uTruth1[2], uTruth2[2];\n    Map_Cut_t * pTemp = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n    // mark the cut leaves\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pTemp = pCut-\u003eppLeaves[i]-\u003epCuts;\n        pTemp-\u003efMark = 1;\n        pTemp-\u003eM[0].uPhaseBest = p-\u003euTruths[i][0];\n        pTemp-\u003eM[1].uPhaseBest = p-\u003euTruths[i][1];\n    }\n    assert( pCut-\u003efMark == 0 );\n\n    // collect the cuts in the cut cone\n    p-\u003evVisited-\u003enSize = 0;\n    Map_CutsCollect_rec( pCut, p-\u003evVisited );\n    assert( p-\u003evVisited-\u003enSize \u003e 0 );\n    pCut-\u003enVolume = p-\u003evVisited-\u003enSize;\n\n    // compute the tables and unmark\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pTemp = pCut-\u003eppLeaves[i]-\u003epCuts;\n        pTemp-\u003efMark = 0;\n    }\n    for ( i = 0; i \u003c p-\u003evVisited-\u003enSize; i++ )\n    {\n        // get the cut\n        pTemp = (Map_Cut_t *)p-\u003evVisited-\u003epArray[i];\n        pTemp-\u003efMark = 0;\n        // get truth table of the first branch\n        if ( Map_CutIsComplement(pTemp-\u003epOne) )\n        {\n            uTruth1[0] = ~Map_CutRegular(pTemp-\u003epOne)-\u003eM[0].uPhaseBest;\n            uTruth1[1] = ~Map_CutRegular(pTemp-\u003epOne)-\u003eM[1].uPhaseBest;\n        }\n        else\n        {\n            uTruth1[0] = Map_CutRegular(pTemp-\u003epOne)-\u003eM[0].uPhaseBest;\n            uTruth1[1] = Map_CutRegular(pTemp-\u003epOne)-\u003eM[1].uPhaseBest;\n        }\n        // get truth table of the second branch\n        if ( Map_CutIsComplement(pTemp-\u003epTwo) )\n        {\n            uTruth2[0] = ~Map_CutRegular(pTemp-\u003epTwo)-\u003eM[0].uPhaseBest;\n            uTruth2[1] = ~Map_CutRegular(pTemp-\u003epTwo)-\u003eM[1].uPhaseBest;\n        }\n        else\n        {\n            uTruth2[0] = Map_CutRegular(pTemp-\u003epTwo)-\u003eM[0].uPhaseBest;\n            uTruth2[1] = Map_CutRegular(pTemp-\u003epTwo)-\u003eM[1].uPhaseBest;\n        }\n        // get the truth table of the output\n        if ( !pTemp-\u003ePhase )\n        {\n            pTemp-\u003eM[0].uPhaseBest = uTruth1[0] \u0026 uTruth2[0];\n            pTemp-\u003eM[1].uPhaseBest = uTruth1[1] \u0026 uTruth2[1];\n        }\n        else\n        {\n            pTemp-\u003eM[0].uPhaseBest = ~(uTruth1[0] \u0026 uTruth2[0]);\n            pTemp-\u003eM[1].uPhaseBest = ~(uTruth1[1] \u0026 uTruth2[1]);\n        }\n    }\n    uTruth[0] = pTemp-\u003eM[0].uPhaseBest;\n    uTruth[1] = pTemp-\u003eM[1].uPhaseBest;\n}",
+      "Draft": "func Map_TruthsCutOne(p *Map_Man_t, pCut *Map_Cut_t, uTruth []uint32) {\n    var uTruth1, uTruth2 [2]uint32;\n    var pTemp *Map_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // mark the cut leaves\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pTemp = pCut.ppLeaves[i].pCuts;\n        pTemp.fMark = 1;\n        pTemp.M[0].uPhaseBest = p.uTruths[i][0];\n        pTemp.M[1].uPhaseBest = p.uTruths[i][1];\n    }\n    assert(pCut.fMark == 0, \"pCut.fMark == 0\");\n\n    // collect the cuts in the cut cone\n    p.vVisited.nSize = 0;\n    Map_CutsCollect_rec( pCut, p.vVisited );\n    assert(p.vVisited.nSize \u003e 0, \"p.vVisited.nSize \u003e 0\");\n    pCut.nVolume = p.vVisited.nSize;\n\n    // compute the tables and unmark\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pTemp = pCut.ppLeaves[i].pCuts;\n        pTemp.fMark = 0;\n    }\n    for  i = 0; i \u003c p.vVisited.nSize; i++  {\n        // get the cut\n        pTemp = (Map_Cut_t *)p.vVisited.pArray[i];\n        pTemp.fMark = 0;\n        // get truth table of the first branch\n        // inlining of macro Map_CutIsComplement\n        if  (int32(((ABC_PTRUINT_T) (pTemp.pOne) \u0026 01)) != 0) {\n            // inlining of macro Map_CutRegular\n            uTruth1[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth1[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[1].uPhaseBest;\n        \n        } else {\n            // inlining of macro Map_CutRegular\n            uTruth1[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth1[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[1].uPhaseBest;\n        }\n        // get truth table of the second branch\n        // inlining of macro Map_CutIsComplement\n        if  (int32(((ABC_PTRUINT_T) (pTemp.pTwo) \u0026 01)) != 0) {\n            // inlining of macro Map_CutRegular\n            uTruth2[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth2[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[1].uPhaseBest;\n        \n        } else {\n            // inlining of macro Map_CutRegular\n            uTruth2[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth2[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[1].uPhaseBest;\n        }\n        // get the truth table of the output\n        if !pTemp.Phase {\n            pTemp.M[0].uPhaseBest = uTruth1[0] \u0026 uTruth2[0];\n            pTemp.M[1].uPhaseBest = uTruth1[1] \u0026 uTruth2[1];\n        \n        } else {\n            pTemp.M[0].uPhaseBest = ~(uTruth1[0] \u0026 uTruth2[0]);\n            pTemp.M[1].uPhaseBest = ~(uTruth1[1] \u0026 uTruth2[1]);\n        }\n    }\n    uTruth[0] = pTemp.M[0].uPhaseBest;\n    uTruth[1] = pTemp.M[1].uPhaseBest;\n}"
+    },
+    {
+      "Name": "Map_CutsCollect_rec",
+      "Start": 9003,
+      "End": 9352,
+      "BodyStart": 9074,
+      "Original": "void Map_CutsCollect_rec( Map_Cut_t * pCut, Map_NodeVec_t * vVisited )\n{\n    if ( pCut-\u003efMark )\n        return;\n    Map_CutsCollect_rec( Map_CutRegular(pCut-\u003epOne), vVisited );\n    Map_CutsCollect_rec( Map_CutRegular(pCut-\u003epTwo), vVisited );\n    assert( pCut-\u003efMark == 0 );\n    pCut-\u003efMark = 1;\n    Map_NodeVecPush( vVisited, (Map_Node_t *)pCut );\n}",
+      "Draft": "func Map_CutsCollect_rec(pCut *Map_Cut_t, vVisited *Map_NodeVec_t) {\n    if pCut.fMark {\n        return; }\n    // inlining of macro Map_CutRegular\n    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );\n    // inlining of macro Map_CutRegular\n    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );\n    assert(pCut.fMark == 0, \"pCut.fMark == 0\");\n    pCut.fMark = 1;\n    Map_NodeVecPush( vVisited, (Map_Node_t *)pCut );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::7338",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7338,
+      "End": 7351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::7651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7532,
+      "End": 7532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::7798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7604,
+      "End": 7604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::7977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7708,
+      "End": 7708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::8123",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7779,
+      "End": 7779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::8454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7967,
+      "End": 7967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::8601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8039,
+      "End": 8039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::8780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8143,
+      "End": 8143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::8926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8214,
+      "End": 8214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::9927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9140,
+      "End": 9140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::10067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9205,
+      "End": 9205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::pointer-cast::10215",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9329,
+      "End": 9343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::Map_MappingTruths",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingTruths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1470,
+      "End": 2700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::ternary::Map_TruthsCut",
+      "Category": "ternary-review",
+      "Symbol": "Map_TruthsCut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2972,
+      "End": 6140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::Map_TruthsCut",
+      "Category": "semantic-review",
+      "Symbol": "Map_TruthsCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2972,
+      "End": 6140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::Map_TruthsCutOne",
+      "Category": "semantic-review",
+      "Symbol": "Map_TruthsCutOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6412,
+      "End": 8738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::Map_CutsCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutsCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9003,
+      "End": 9352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10194
+    }
+  ],
+  "Draft": "package mapper\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mapperTruth.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperTruth.c,v 1.8 2005/01/23 06:59:45 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Map_TruthsCut( Map_Man_t * pMan, Map_Cut_t * pCut );\n\n// extern void Map_TruthsCutOne( Map_Man_t * p, Map_Cut_t * pCut, unsigned uTruth[] );\n\n// static void Map_CutsCollect_rec( Map_Cut_t * pCut, Map_NodeVec_t * vVisited );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives truth tables for each cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingTruths(pMan *Map_Man_t) {\n    var pProgress *ProgressBar;\n    var pNode *Map_Node_t;\n    var pCut *Map_Cut_t;\n    var nNodes, i int32;\n    // compute the cuts for the POs\n    nNodes = pMan.vMapObjs.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    for  i = 0; i \u003c nNodes; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if !Map_NodeIsAnd( pNode ) {\n            continue; }\n        assert(pNode.pCuts, \"pNode.pCuts\");\n        assert(pNode.pCuts.nLeaves == 1, \"pNode.pCuts.nLeaves == 1\");\n\n        // match the simple cut\n        pNode.pCuts.M[0].uPhase     = 0;\n        pNode.pCuts.M[0].pSupers    = pMan.pSuperLib.pSuperInv;\n        pNode.pCuts.M[0].uPhaseBest = 0;\n        pNode.pCuts.M[0].pSuperBest = pMan.pSuperLib.pSuperInv;\n\n        pNode.pCuts.M[1].uPhase     = 0;\n        pNode.pCuts.M[1].pSupers    = pMan.pSuperLib.pSuperInv;\n        pNode.pCuts.M[1].uPhaseBest = 1;\n        pNode.pCuts.M[1].pSuperBest = pMan.pSuperLib.pSuperInv;\n\n        // match the rest of the cuts\n        for  pCut = pNode.pCuts.pNext; (pCut != nil); pCut = pCut.pNext  {\n             Map_TruthsCut( pMan, pCut );\n        }\n        Extra_ProgressBarUpdate( pProgress, i, \"Tables ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table for one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_TruthsCut(p *Map_Man_t, pCut *Map_Cut_t) { \n//    unsigned uCanon1, uCanon2;\n    var uTruth, uCanon [2]uint32;\n    unsigned char uPhases[16];\n    var uCanon2 *uint32;\n    var pPhases2 string;\n    var fUseFast int32  = 1;\n    var fUseSlow int32;\n    var fUseRec int32; // this does not work for Solaris\n\n    extern int Map_CanonCompute( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes );\n \n    // generally speaking, 1-input cut can be matched into a wire!\n    if pCut.nLeaves == 1 {\n        return; }\n/*\n    if ( p-\u003enVarsMax == 5 )\n    {\n        uTruth[0] = pCut-\u003euTruth;\n        uTruth[1] = pCut-\u003euTruth;\n    }\n    else\n*/\n    Map_TruthsCutOne( p, pCut, uTruth );\n\n\n    // compute the canonical form for the positive phase\n    if fUseFast != 0 {\n        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseSlow != 0 {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseRec != 0 {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    \n    } else {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }\n    pCut.M[1].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );\n    pCut.M[1].uPhase  = uPhases[0];\n    p.nCanons++;\n\n//uCanon1 = uCanon[0] \u0026 0xFFFF;\n\n    // compute the canonical form for the negative phase\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n    if fUseFast != 0 {\n        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseSlow != 0 {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );\n    } else if fUseRec != 0 {\n//        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n/*\n        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )\n        {\n            int k = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        }\n*/\n        uCanon[0] = uCanon2[0];\n        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];\n        uPhases[0] = pPhases2[0];\n    \n    } else {\n        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }\n    pCut.M[0].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );\n    pCut.M[0].uPhase  = uPhases[0];\n    p.nCanons++;\n\n//uCanon2 = uCanon[0] \u0026 0xFFFF;\n//assert( p-\u003enVarsMax == 4 );\n//Rwt_Man4ExploreCount( uCanon1 \u003c uCanon2 ? uCanon1 : uCanon2 );\n\n    // restore the truth table\n    uTruth[0] = ~uTruth[0];\n    uTruth[1] = ~uTruth[1];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table of one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_TruthsCutOne(p *Map_Man_t, pCut *Map_Cut_t, uTruth []uint32) {\n    var uTruth1, uTruth2 [2]uint32;\n    var pTemp *Map_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    // mark the cut leaves\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pTemp = pCut.ppLeaves[i].pCuts;\n        pTemp.fMark = 1;\n        pTemp.M[0].uPhaseBest = p.uTruths[i][0];\n        pTemp.M[1].uPhaseBest = p.uTruths[i][1];\n    }\n    assert(pCut.fMark == 0, \"pCut.fMark == 0\");\n\n    // collect the cuts in the cut cone\n    p.vVisited.nSize = 0;\n    Map_CutsCollect_rec( pCut, p.vVisited );\n    assert(p.vVisited.nSize \u003e 0, \"p.vVisited.nSize \u003e 0\");\n    pCut.nVolume = p.vVisited.nSize;\n\n    // compute the tables and unmark\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pTemp = pCut.ppLeaves[i].pCuts;\n        pTemp.fMark = 0;\n    }\n    for  i = 0; i \u003c p.vVisited.nSize; i++  {\n        // get the cut\n        pTemp = (Map_Cut_t *)p.vVisited.pArray[i];\n        pTemp.fMark = 0;\n        // get truth table of the first branch\n        // inlining of macro Map_CutIsComplement\n        if  (int32(((ABC_PTRUINT_T) (pTemp.pOne) \u0026 01)) != 0) {\n            // inlining of macro Map_CutRegular\n            uTruth1[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth1[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[1].uPhaseBest;\n        \n        } else {\n            // inlining of macro Map_CutRegular\n            uTruth1[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth1[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) \u0026 ~01)) .M[1].uPhaseBest;\n        }\n        // get truth table of the second branch\n        // inlining of macro Map_CutIsComplement\n        if  (int32(((ABC_PTRUINT_T) (pTemp.pTwo) \u0026 01)) != 0) {\n            // inlining of macro Map_CutRegular\n            uTruth2[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth2[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[1].uPhaseBest;\n        \n        } else {\n            // inlining of macro Map_CutRegular\n            uTruth2[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[0].uPhaseBest;\n            // inlining of macro Map_CutRegular\n            uTruth2[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) \u0026 ~01)) .M[1].uPhaseBest;\n        }\n        // get the truth table of the output\n        if !pTemp.Phase {\n            pTemp.M[0].uPhaseBest = uTruth1[0] \u0026 uTruth2[0];\n            pTemp.M[1].uPhaseBest = uTruth1[1] \u0026 uTruth2[1];\n        \n        } else {\n            pTemp.M[0].uPhaseBest = ~(uTruth1[0] \u0026 uTruth2[0]);\n            pTemp.M[1].uPhaseBest = ~(uTruth1[1] \u0026 uTruth2[1]);\n        }\n    }\n    uTruth[0] = pTemp.M[0].uPhaseBest;\n    uTruth[1] = pTemp.M[1].uPhaseBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collect the cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutsCollect_rec(pCut *Map_Cut_t, vVisited *Map_NodeVec_t) {\n    if pCut.fMark {\n        return; }\n    // inlining of macro Map_CutRegular\n    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) \u0026 ~01)) , vVisited );\n    // inlining of macro Map_CutRegular\n    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) \u0026 ~01)) , vVisited );\n    assert(pCut.fMark == 0, \"pCut.fMark == 0\");\n    pCut.fMark = 1;\n    Map_NodeVecPush( vVisited, (Map_Node_t *)pCut );\n}\n\n/*\n    {\n        unsigned * uCanon2;\n        char * pPhases2;\n\n        Map_CanonComputeSlow( p-\u003euTruths, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n        if ( uCanon2[0] != uCanon[0] )\n        {\n            int v = 0;\n            Map_CanonCompute( p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, \u0026uCanon2, \u0026pPhases2 );\n            Map_CanonComputeFast( p, p-\u003enVarsMax, pCut-\u003enLeaves, uTruth, uPhases, uCanon );\n        }\n//        else\n//        {\n//            printf( \"Correct.\\n\" );\n//        }\n    }\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

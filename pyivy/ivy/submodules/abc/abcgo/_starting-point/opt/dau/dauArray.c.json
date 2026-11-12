@@ -1,0 +1,399 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c",
+  "SHA256": "dd2cf78865bfec1d7117900bb05ee2da0ffcc5bc59748ae655b86d7572b74226",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 13,
+        "ByteOffset": 3127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( fCompl == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 18,
+        "ByteOffset": 4090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( d == -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 4525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\\n\", p.fCompl );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 4660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"!\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 4724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + p.iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 17,
+        "ByteOffset": 4817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%c\", pTypes[d--] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 13,
+        "ByteOffset": 4934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", OpenType[p.Type] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 13,
+        "ByteOffset": 4980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + p.Data );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 13,
+        "ByteOffset": 5022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", p.Depth );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( d == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( d == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( d == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DsdClean",
+      "Start": 1283,
+      "End": 1352,
+      "BodyStart": 1332,
+      "Original": "static inline void Dau_DsdClean( Dau_Dsd_t * p ) { *((int *)p) = 0; }",
+      "Draft": "func Dau_DsdClean(p *Dau_Dsd_t) { *((int *)p) = 0; }"
+    },
+    {
+      "Name": "Dau_DsdCountAnd",
+      "Start": 1575,
+      "End": 1751,
+      "BodyStart": 1612,
+      "Original": "int Dau_DsdCountAnd( Dau_Dsd_t * p )\n{\n    int Count, Costs[7] = {0, 0, 0, 1, 3, 3, 3};\n    for ( Count = 0; p-\u003eType; p++ )\n        Count += Costs[p-\u003eType];\n    return Count;\n}",
+      "Draft": "func Dau_DsdCountAnd(p *Dau_Dsd_t) int32 {\n    var Count int32;\n    var Costs [7]int32 = [7]int32{0, 0, 0, 1, 3, 3, 3};\n    for  Count = 0; p.Type; p++  {\n        Count += Costs[p.Type];\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Dau_DsdConstruct",
+      "Start": 2264,
+      "End": 3972,
+      "BodyStart": 2320,
+      "Original": "int Dau_DsdConstruct( char * pDsd, Dau_Dsd_t * pStore )\n{\n    Dau_Dsd_t * pLevel[DAU_MAX_VAR];\n    Dau_Dsd_t * q = pStore;\n    int d = -1, fCompl = 0;\n    if ( Dau_DsdIsConst(pDsd) )\n    {\n        Dau_DsdClean( q );\n        q-\u003eType   = DAU_DSD_CONST0;\n        q-\u003efCompl = Dau_DsdIsConst1(pDsd);\n        return 1;\n    }\n    for ( --q; *pDsd; pDsd++ )\n    {\n        if ( *pDsd == '!' )\n        {\n            fCompl ^= 1;\n            continue;\n        }\n        if ( *pDsd == ')' || *pDsd == ']' || *pDsd == '\u003e' || *pDsd == '}' )\n        {\n            assert( fCompl == 0 );\n            if ( --d \u003e= 0 )\n            {\n                pLevel[d]-\u003enFans++;\n                if ( pLevel[d]-\u003eData \u003e pLevel[d+1]-\u003eData )\n                    pLevel[d]-\u003eData = pLevel[d+1]-\u003eData;\n            }\n            continue;\n        }\n        Dau_DsdClean( ++q );\n        q-\u003eData = 31;\n        q-\u003efCompl = fCompl;\n        fCompl = 0;\n        if ( *pDsd \u003e= 'a' \u0026\u0026 *pDsd \u003c= 'z' )\n        {\n            q-\u003eType   = DAU_DSD_VAR;\n            q-\u003eiVar   = *pDsd - 'a';\n            q-\u003eDepth  = d + 1;\n            if ( d \u003e= 0 )\n            {\n                pLevel[d]-\u003enFans++;\n                if ( pLevel[d]-\u003eData \u003e q-\u003eiVar )\n                    pLevel[d]-\u003eData = q-\u003eiVar;\n            }\n            continue;\n        }\n        if ( *pDsd == '(' )\n            q-\u003eType = DAU_DSD_AND;\n        else if ( *pDsd == '[' )\n            q-\u003eType = DAU_DSD_XOR;\n        else if ( *pDsd == '\u003c' )\n            q-\u003eType = DAU_DSD_MUX;\n        else if ( *pDsd == '{' )\n            q-\u003eType = DAU_DSD_PRIME;\n        else assert( 0 );\n        pLevel[++d] = q;\n        q-\u003eDepth = d;\n    }\n    assert( d == -1 );\n    Dau_DsdClean( ++q );\n    return q - pStore;\n}",
+      "Draft": "func Dau_DsdConstruct(pDsd string, pStore *Dau_Dsd_t) int32 {\n    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;\n    var q *Dau_Dsd_t  = pStore;\n    var d int32 = -1;\n    var fCompl int32;\n    if Dau_DsdIsConst(pDsd) {\n        Dau_DsdClean( q );\n        q.Type   = DAU_DSD_CONST0;\n        q.fCompl = Dau_DsdIsConst1(pDsd);\n        return 1;\n    }\n    for  --q; *pDsd; pDsd++  {\n        if *pDsd == '!' {\n            fCompl ^= 1;\n            continue;\n        }\n        if *pDsd == ')' || *pDsd == ']' || *pDsd == '\u003e' || *pDsd == '}' {\n            assert(fCompl == 0, \"fCompl == 0\");\n            if d--; d \u003e= 0 {\n                pLevel[d].nFans++;\n                if pLevel[d].Data \u003e pLevel[d+1].Data {\n                    pLevel[d].Data = pLevel[d+1].Data; }\n            }\n            continue;\n        }\n        Dau_DsdClean( ++q );\n        q.Data = 31;\n        q.fCompl = fCompl;\n        fCompl = 0;\n        if *pDsd \u003e= 'a' \u0026\u0026 *pDsd \u003c= 'z' {\n            q.Type   = DAU_DSD_VAR;\n            q.iVar   = *pDsd - 'a';\n            q.Depth  = d + 1;\n            if d \u003e= 0 {\n                pLevel[d].nFans++;\n                if pLevel[d].Data \u003e q.iVar {\n                    pLevel[d].Data = q.iVar; }\n            }\n            continue;\n        }\n        if *pDsd == '(' {\n            q.Type = DAU_DSD_AND;\n        } else if *pDsd == '[' {\n            q.Type = DAU_DSD_XOR;\n        } else if *pDsd == '\u003c' {\n            q.Type = DAU_DSD_MUX;\n        } else if *pDsd == '{' {\n            q.Type = DAU_DSD_PRIME;\n        } else { assert(false, \"0\"); }\n        pLevel[++d] = q;\n        q.Depth = d;\n    }\n    assert(d == -1, \"d == -1\");\n    Dau_DsdClean( ++q );\n    return q - pStore;\n}"
+    },
+    {
+      "Name": "Dau_DsdPrint",
+      "Start": 3974,
+      "End": 4883,
+      "BodyStart": 4009,
+      "Original": "void Dau_DsdPrint( Dau_Dsd_t * p )\n{\n    char OpenType[7]  = {0, 0, 0, '(', '[', '\u003c', '{'};\n    char CloseType[7] = {0, 0, 0, ')', ']', '\u003e', '}'};\n    char pTypes[DAU_MAX_VAR];\n    int d, pVisits[DAU_MAX_VAR];\n    if ( p-\u003eType == DAU_DSD_CONST0 )\n    {\n        printf( \"%d\\n\", p-\u003efCompl );\n        return;\n    }\n    pVisits[0] = 1;\n    for ( d = 0; p-\u003eType; p++ )\n    {\n        if ( p-\u003efCompl )\n            printf( \"!\" );\n        if ( p-\u003eType == DAU_DSD_VAR )\n        {\n            printf( \"%c\", 'a' + p-\u003eiVar );\n            while ( d \u003e 0 \u0026\u0026 --pVisits[d] == 0 )\n                printf( \"%c\", pTypes[d--] );\n        }\n        else\n        {\n            pVisits[++d] = p-\u003enFans;\n            printf( \"%c\", OpenType[p-\u003eType] );\n            printf( \"%c\", 'a' + p-\u003eData );\n            printf( \"%d\", p-\u003eDepth );\n            pTypes[d]  = CloseType[p-\u003eType];\n        }\n    }\n    assert( d == 0 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Dau_DsdPrint(p *Dau_Dsd_t) {\n    var OpenType [7]byte = [7]byte{0, 0, 0, '(', '[', '\u003c', '{'};\n    var CloseType [7]byte = [7]byte{0, 0, 0, ')', ']', '\u003e', '}'};\n    var pTypes [DAU_MAX_VAR]byte;\n    var d int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        fmt.Printf(\"%d\\n\", p.fCompl);\n        return;\n    }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        if p.fCompl {\n            fmt.Printf(\"!\"); }\n        if p.Type == DAU_DSD_VAR {\n            fmt.Printf(\"%c\", 'a' + p.iVar);\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                fmt.Printf(\"%c\", pTypes[d--]);\n            }\n        \n        } else {\n            pVisits[++d] = p.nFans;\n            fmt.Printf(\"%c\", OpenType[p.Type]);\n            fmt.Printf(\"%c\", 'a' + p.Data);\n            fmt.Printf(\"%d\", p.Depth);\n            pTypes[d]  = CloseType[p.Type];\n        }\n    }\n    assert(d == 0, \"d == 0\");\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Dau_DsdDepth",
+      "Start": 4885,
+      "End": 5275,
+      "BodyStart": 4920,
+      "Original": "void Dau_DsdDepth( Dau_Dsd_t * p )\n{\n    int d, pVisits[DAU_MAX_VAR];\n    if ( p-\u003eType == DAU_DSD_CONST0 )\n        return;\n    pVisits[0] = 1;\n    for ( d = 0; p-\u003eType; p++ )\n    {\n        p-\u003eDepth = d;\n        if ( p-\u003eType == DAU_DSD_VAR )\n            while ( d \u003e 0 \u0026\u0026 --pVisits[d] == 0 )\n                d--;\n        else\n            pVisits[++d] = p-\u003enFans;\n    }\n    assert( d == 0 );\n}",
+      "Draft": "func Dau_DsdDepth(p *Dau_Dsd_t) {\n    var d int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        return; }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        p.Depth = d;\n        if p.Type == DAU_DSD_VAR {\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                d--;\n            }\n        } else {\n            pVisits[++d] = p.nFans; }\n    }\n    assert(d == 0, \"d == 0\");\n}"
+    },
+    {
+      "Name": "Dau_DsdRemoveUseless",
+      "Start": 5277,
+      "End": 6378,
+      "BodyStart": 5320,
+      "Original": "void Dau_DsdRemoveUseless( Dau_Dsd_t * p )\n{\n    Dau_Dsd_t * q = p, * pLevel[DAU_MAX_VAR];\n    int d, fChange = 0, pVisits[DAU_MAX_VAR];\n    if ( p-\u003eType == DAU_DSD_CONST0 )\n        return;\n    pVisits[0] = 1;\n    for ( d = 0; p-\u003eType; p++ )\n    {\n        p-\u003eDepth = d;\n        if ( p-\u003eType == DAU_DSD_VAR )\n            while ( d \u003e 0 \u0026\u0026 --pVisits[d] == 0 )\n                d--;\n        else\n        {\n            if ( d \u003e 0 \u0026\u0026 (pLevel[d-1]-\u003eType == DAU_DSD_XOR \u0026\u0026 p-\u003eType == DAU_DSD_XOR ||\n                           pLevel[d-1]-\u003eType == DAU_DSD_AND \u0026\u0026 p-\u003eType == DAU_DSD_AND \u0026\u0026 !p-\u003efCompl) )\n            {\n                pLevel[d-1]-\u003enFans += p-\u003enFans - 1;\n                pVisits[d] += p-\u003enFans - 1;\n                p-\u003efUnused = 1;\n                fChange = 1;\n            }\n            else\n            {\n                pLevel[d++] = p;\n                pVisits[d] = p-\u003enFans;\n            }\n        }\n    }\n    assert( d == 0 );\n    // compact\n    if ( fChange )\n    {\n        for ( p = q; p-\u003eType; p++ )\n            if ( !p-\u003efUnused )\n                *q++ = *p;\n        Dau_DsdClean( q );\n    }\n}",
+      "Draft": "func Dau_DsdRemoveUseless(p *Dau_Dsd_t) {\n    var q *Dau_Dsd_t = p;\n    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;\n    var d int32;\n    var fChange int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        return; }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        p.Depth = d;\n        if p.Type == DAU_DSD_VAR {\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                d--;\n            }\n        } else {\n            if d \u003e 0 \u0026\u0026 (pLevel[d-1].Type == DAU_DSD_XOR \u0026\u0026 p.Type == DAU_DSD_XOR ||\n                           pLevel[d-1].Type == DAU_DSD_AND \u0026\u0026 p.Type == DAU_DSD_AND \u0026\u0026 !p.fCompl) {\n                pLevel[d-1].nFans += p.nFans - 1;\n                pVisits[d] += p.nFans - 1;\n                p.fUnused = 1;\n                fChange = 1;\n            \n            } else {\n                pLevel[d++] = p;\n                pVisits[d] = p.nFans;\n            }\n        }\n    }\n    assert(d == 0, \"d == 0\");\n    // compact\n    if fChange != 0 {\n        for  p = q; p.Type; p++  {\n            if !p.fUnused {\n                *q++ = *p; }\n        }\n        Dau_DsdClean( q );\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdTest22",
+      "Start": 6380,
+      "End": 6790,
+      "BodyStart": 6401,
+      "Original": "void Dau_DsdTest22()\n{\n    Dau_Dsd_t pStore[2 * DAU_MAX_VAR];\n//    char * pDsd = \"[(ab)c(f!(he))]\";\n//    char * pDsd = \"[(abd)cf(f!{she})]\";\n    char * pDsd = \"[(abd)[cf](f(sg(he)))]\";\n//    char * pDsd = \"[(ab)[cf]]\";\n    int i, nSize = Dau_DsdConstruct( pDsd, pStore );\n//    Dau_DsdDepth( pStore );\n    Dau_DsdPrint( pStore );\n\n    Dau_DsdRemoveUseless( pStore );\n\n    Dau_DsdPrint( pStore );\n    i = 0;\n}",
+      "Draft": "func Dau_DsdTest22() {\n    var pStore [2 * DAU_MAX_VAR]Dau_Dsd_t;\n//    char * pDsd = \"[(ab)c(f!(he))]\";\n//    char * pDsd = \"[(abd)cf(f!{she})]\";\n    var pDsd string  = \"[(abd)[cf](f(sg(he)))]\";\n//    char * pDsd = \"[(ab)[cf]]\";\n    var i int32;\n    var nSize int32 = Dau_DsdConstruct( pDsd, pStore );\n//    Dau_DsdDepth( pStore );\n    Dau_DsdPrint( pStore );\n\n    Dau_DsdRemoveUseless( pStore );\n\n    Dau_DsdPrint( pStore );\n    i = 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::unsigned       iVar    :   5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 835,
+      "End": 869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// variable\n    unsigned       nFans   :   5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 869,
+      "End": 916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// fanin count\n    unsigned       Depth   :   5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 916,
+      "End": 966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// tree depth\n    unsigned       Offset  :   5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 966,
+      "End": 1015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// the diff between this and other node\n    unsigned       Data    :   5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1015,
+      "End": 1090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// user data\n    unsigned       Type    :   3;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1090,
+      "End": 1138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// node type\n    unsigned       fCompl  :   1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1138,
+      "End": 1186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t::// the complemented attribute\n    unsigned       fUnused :   1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1186,
+      "End": 1251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::struct::Dau_Dsd_t",
+      "Category": "struct-review",
+      "Symbol": "Dau_Dsd_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 779,
+      "End": 1281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::pointer-cast::1336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1336,
+      "End": 1343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdClean",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1283,
+      "End": 1352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdCountAnd",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdCountAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1575,
+      "End": 1751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdConstruct",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdConstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2264,
+      "End": 3972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdPrint",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3974,
+      "End": 4883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdDepth",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdDepth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4885,
+      "End": 5275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdRemoveUseless",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdRemoveUseless",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5277,
+      "End": 6378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::Dau_DsdTest22",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdTest22",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6380,
+      "End": 6790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauArray.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7037
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [dauArray.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Array representation of DSD.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauArray.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Dau_Dsd_t struct {\n    iVar uint32; /* C bitfield: 5 bits; review packing and truncation */  // variable\n    nFans uint32; /* C bitfield: 5 bits; review packing and truncation */  // fanin count\n    Depth uint32; /* C bitfield: 5 bits; review packing and truncation */  // tree depth\n    Offset uint32; /* C bitfield: 5 bits; review packing and truncation */  // the diff between this and other node\n    Data uint32; /* C bitfield: 5 bits; review packing and truncation */  // user data\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */  // node type\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute\n    fUnused uint32; /* C bitfield: 1 bits; review packing and truncation */  // this vertice is unused\n}\n\nfunc Dau_DsdClean(p *Dau_Dsd_t) { *((int *)p) = 0; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \nfunc Dau_DsdCountAnd(p *Dau_Dsd_t) int32 {\n    var Count int32;\n    var Costs [7]int32 = [7]int32{0, 0, 0, 1, 3, 3, 3};\n    for  Count = 0; p.Type; p++  {\n        Count += Costs[p.Type];\n    }\n    return Count;\n}\n\n/*\nvoid Dau_DsdMark( Dau_Dsd_t * p, int nSize, int * pMarks )\n{\n    int pStore[DAU_MAX_VAR] = {0};\n    Dau_Dsd_t * q;\n    if ( p-\u003eType == DAU_DSD_CONST || p-\u003eType == DAU_DSD_VAR )\n        return;\n    for ( q = p + nSize - 1; q \u003e= p; q-- )\n    {\n        if ( q-\u003eType == DAU_DSD_VAR )\n            pStore[q-\u003eDepth] += pMarks[q-\u003eiVar];\n        else \n        {\n            q-\u003eData = pStore[q-\u003eDepth+1]; pStore[q-\u003eDepth+1] = 0;\n            pStore[q-\u003eDepth] += (q-\u003eData == q-\u003enFans);            \n        }\n    }\n}\n*/\n\nfunc Dau_DsdConstruct(pDsd string, pStore *Dau_Dsd_t) int32 {\n    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;\n    var q *Dau_Dsd_t  = pStore;\n    var d int32 = -1;\n    var fCompl int32;\n    if Dau_DsdIsConst(pDsd) {\n        Dau_DsdClean( q );\n        q.Type   = DAU_DSD_CONST0;\n        q.fCompl = Dau_DsdIsConst1(pDsd);\n        return 1;\n    }\n    for  --q; *pDsd; pDsd++  {\n        if *pDsd == '!' {\n            fCompl ^= 1;\n            continue;\n        }\n        if *pDsd == ')' || *pDsd == ']' || *pDsd == '\u003e' || *pDsd == '}' {\n            assert(fCompl == 0, \"fCompl == 0\");\n            if d--; d \u003e= 0 {\n                pLevel[d].nFans++;\n                if pLevel[d].Data \u003e pLevel[d+1].Data {\n                    pLevel[d].Data = pLevel[d+1].Data; }\n            }\n            continue;\n        }\n        Dau_DsdClean( ++q );\n        q.Data = 31;\n        q.fCompl = fCompl;\n        fCompl = 0;\n        if *pDsd \u003e= 'a' \u0026\u0026 *pDsd \u003c= 'z' {\n            q.Type   = DAU_DSD_VAR;\n            q.iVar   = *pDsd - 'a';\n            q.Depth  = d + 1;\n            if d \u003e= 0 {\n                pLevel[d].nFans++;\n                if pLevel[d].Data \u003e q.iVar {\n                    pLevel[d].Data = q.iVar; }\n            }\n            continue;\n        }\n        if *pDsd == '(' {\n            q.Type = DAU_DSD_AND;\n        } else if *pDsd == '[' {\n            q.Type = DAU_DSD_XOR;\n        } else if *pDsd == '\u003c' {\n            q.Type = DAU_DSD_MUX;\n        } else if *pDsd == '{' {\n            q.Type = DAU_DSD_PRIME;\n        } else { assert(false, \"0\"); }\n        pLevel[++d] = q;\n        q.Depth = d;\n    }\n    assert(d == -1, \"d == -1\");\n    Dau_DsdClean( ++q );\n    return q - pStore;\n}\n\nfunc Dau_DsdPrint(p *Dau_Dsd_t) {\n    var OpenType [7]byte = [7]byte{0, 0, 0, '(', '[', '\u003c', '{'};\n    var CloseType [7]byte = [7]byte{0, 0, 0, ')', ']', '\u003e', '}'};\n    var pTypes [DAU_MAX_VAR]byte;\n    var d int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        fmt.Printf(\"%d\\n\", p.fCompl);\n        return;\n    }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        if p.fCompl {\n            fmt.Printf(\"!\"); }\n        if p.Type == DAU_DSD_VAR {\n            fmt.Printf(\"%c\", 'a' + p.iVar);\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                fmt.Printf(\"%c\", pTypes[d--]);\n            }\n        \n        } else {\n            pVisits[++d] = p.nFans;\n            fmt.Printf(\"%c\", OpenType[p.Type]);\n            fmt.Printf(\"%c\", 'a' + p.Data);\n            fmt.Printf(\"%d\", p.Depth);\n            pTypes[d]  = CloseType[p.Type];\n        }\n    }\n    assert(d == 0, \"d == 0\");\n    fmt.Printf(\"\\n\");\n}\n\nfunc Dau_DsdDepth(p *Dau_Dsd_t) {\n    var d int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        return; }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        p.Depth = d;\n        if p.Type == DAU_DSD_VAR {\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                d--;\n            }\n        } else {\n            pVisits[++d] = p.nFans; }\n    }\n    assert(d == 0, \"d == 0\");\n}\n\nfunc Dau_DsdRemoveUseless(p *Dau_Dsd_t) {\n    var q *Dau_Dsd_t = p;\n    var pLevel [DAU_MAX_VAR]*Dau_Dsd_t;\n    var d int32;\n    var fChange int32;\n    var pVisits [DAU_MAX_VAR]int32;\n    if p.Type == DAU_DSD_CONST0 {\n        return; }\n    pVisits[0] = 1;\n    for  d = 0; p.Type; p++  {\n        p.Depth = d;\n        if p.Type == DAU_DSD_VAR {\n            for  d \u003e 0 \u0026\u0026 --pVisits[d] == 0  {\n                d--;\n            }\n        } else {\n            if d \u003e 0 \u0026\u0026 (pLevel[d-1].Type == DAU_DSD_XOR \u0026\u0026 p.Type == DAU_DSD_XOR ||\n                           pLevel[d-1].Type == DAU_DSD_AND \u0026\u0026 p.Type == DAU_DSD_AND \u0026\u0026 !p.fCompl) {\n                pLevel[d-1].nFans += p.nFans - 1;\n                pVisits[d] += p.nFans - 1;\n                p.fUnused = 1;\n                fChange = 1;\n            \n            } else {\n                pLevel[d++] = p;\n                pVisits[d] = p.nFans;\n            }\n        }\n    }\n    assert(d == 0, \"d == 0\");\n    // compact\n    if fChange != 0 {\n        for  p = q; p.Type; p++  {\n            if !p.fUnused {\n                *q++ = *p; }\n        }\n        Dau_DsdClean( q );\n    }\n}\n\nfunc Dau_DsdTest22() {\n    var pStore [2 * DAU_MAX_VAR]Dau_Dsd_t;\n//    char * pDsd = \"[(ab)c(f!(he))]\";\n//    char * pDsd = \"[(abd)cf(f!{she})]\";\n    var pDsd string  = \"[(abd)[cf](f(sg(he)))]\";\n//    char * pDsd = \"[(ab)[cf]]\";\n    var i int32;\n    var nSize int32 = Dau_DsdConstruct( pDsd, pStore );\n//    Dau_DsdDepth( pStore );\n    Dau_DsdPrint( pStore );\n\n    Dau_DsdRemoveUseless( pStore );\n\n    Dau_DsdPrint( pStore );\n    i = 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

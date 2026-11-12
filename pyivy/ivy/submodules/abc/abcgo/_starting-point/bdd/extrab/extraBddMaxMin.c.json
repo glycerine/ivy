@@ -1,0 +1,870 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c",
+  "SHA256": "b8cccd528eb24c50538174334be412f7e48b14fb6d742d2b848b6309201ace80",
+  "Functions": [
+    {
+      "Name": "Extra_zddMaximal",
+      "Start": 3553,
+      "End": 3744,
+      "BodyStart": 3612,
+      "Original": "DdNode\t*\nExtra_zddMaximal(\n  DdManager * dd,\n  DdNode * S)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMaximal(dd, S);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMaximal(dd *DdManager, S *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaximal(dd, S);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddMinimal",
+      "Start": 4079,
+      "End": 4270,
+      "BodyStart": 4138,
+      "Original": "DdNode\t*\nExtra_zddMinimal(\n  DdManager * dd,\n  DdNode * S)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMinimal(dd, S);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMinimal(dd *DdManager, S *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMinimal(dd, S);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddMaxUnion",
+      "Start": 4653,
+      "End": 4863,
+      "BodyStart": 4727,
+      "Original": "DdNode\t*\nExtra_zddMaxUnion(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMaxUnion(dd, S, T);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMaxUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxUnion(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddMinUnion",
+      "Start": 5247,
+      "End": 5457,
+      "BodyStart": 5321,
+      "Original": "DdNode\t*\nExtra_zddMinUnion(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMinUnion(dd, S, T);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMinUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMinUnion(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddDotProduct",
+      "Start": 5910,
+      "End": 6124,
+      "BodyStart": 5986,
+      "Original": "DdNode\t*\nExtra_zddDotProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddDotProduct(dd, S, T);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddDotProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddCrossProduct",
+      "Start": 6588,
+      "End": 6806,
+      "BodyStart": 6666,
+      "Original": "DdNode\t*\nExtra_zddCrossProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddCrossProduct(dd, S, T);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddCrossProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddCrossProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddMaxDotProduct",
+      "Start": 7222,
+      "End": 7442,
+      "BodyStart": 7301,
+      "Original": "DdNode\t*\nExtra_zddMaxDotProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n    DdNode\t*res;\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMaxDotProduct(dd, S, T);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMaxDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxDotProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "extraZddMaximal",
+      "Start": 8004,
+      "End": 9464,
+      "BodyStart": 8065,
+      "Original": "DdNode\t*\nextraZddMaximal(\n  DdManager * dd,\n  DdNode * zSet)\n{\n\tDdNode *zRes;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( zSet == z0 || zSet == z1 )\n\t\treturn zSet;\n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMaximal, zSet);\n\tif (zRes)\n\t\treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1;\n\n\t\t/* compute maximal for subsets without the top-most element */\n\t\tzSet0 = extraZddMaximal(dd, cuddE(zSet));\n\t\tif ( zSet0 == NULL )\n\t\t\treturn NULL;\n\t\tcuddRef( zSet0 );\n\n\t\t/* compute maximal for subsets with the top-most element */\n\t\tzSet1 = extraZddMaximal(dd, cuddT(zSet));\n\t\tif ( zSet1 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zSet1 );\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif ( zRes0 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zRes0 );\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMaximal, zSet, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMaximal(dd *DdManager, zSet *DdNode) *DdNode {\n\tvar zRes *DdNode;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif zSet == z0 || zSet == z1 {\n\t\treturn zSet; }\n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMaximal, zSet);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\t/* compute maximal for subsets without the top-most element */\n\t\t// inlining of macro cuddE\n\t\tzSet0 = extraZddMaximal(dd, ((zSet).type.kids.E));\n\t\tif zSet0 == nil {\n\t\t\treturn nil; }\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t/* compute maximal for subsets with the top-most element */\n\t\t// inlining of macro cuddT\n\t\tzSet1 = extraZddMaximal(dd, ((zSet).type.kids.T));\n\t\tif zSet1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMaximal, zSet, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddMinimal",
+      "Start": 9779,
+      "End": 11356,
+      "BodyStart": 9840,
+      "Original": "DdNode\t*\nextraZddMinimal(\n  DdManager * dd,\n  DdNode * zSet)\n{\n\tDdNode *zRes;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( zSet == z0 )\n\t\treturn zSet;\n\t/* the empty combinaTon, if present, is the only minimal combinaTon */\n\tif ( Extra_zddEmptyBelongs(dd, zSet) )\n\t\treturn z1; \n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMinimal, zSet);\n\tif (zRes)\n\t\treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1;\n\n\t\t/* compute minimal for subsets without the top-most element */\n\t\tzSet0 = extraZddMinimal(dd, cuddE(zSet));\n\t\tif ( zSet0 == NULL )\n\t\t\treturn NULL;\n\t\tcuddRef( zSet0 );\n\n\t\t/* compute minimal for subsets with the top-most element */\n\t\tzSet1 = extraZddMinimal(dd, cuddT(zSet));\n\t\tif ( zSet1 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zSet1 );\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif ( zRes1 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zRes1 );\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMinimal, zSet, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMinimal(dd *DdManager, zSet *DdNode) *DdNode {\n\tvar zRes *DdNode;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif zSet == z0 {\n\t\treturn zSet; }\n\t/* the empty combinaTon, if present, is the only minimal combinaTon */\n\tif Extra_zddEmptyBelongs(dd, zSet) {\n\t\treturn z1; } \n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMinimal, zSet);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\t/* compute minimal for subsets without the top-most element */\n\t\t// inlining of macro cuddE\n\t\tzSet0 = extraZddMinimal(dd, ((zSet).type.kids.E));\n\t\tif zSet0 == nil {\n\t\t\treturn nil; }\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t/* compute minimal for subsets with the top-most element */\n\t\t// inlining of macro cuddT\n\t\tzSet1 = extraZddMinimal(dd, ((zSet).type.kids.T));\n\t\tif zSet1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif zRes1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMinimal, zSet, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddMaxUnion",
+      "Start": 11671,
+      "End": 13832,
+      "BodyStart": 11744,
+      "Original": "DdNode\t*\nextraZddMaxUnion(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n\tDdNode *zRes;\n\tint TopS, TopT;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( S == z0 )\n\t\treturn T;\n\tif ( T == z0 )\n\t\treturn S;\n\tif ( S == T )\n\t\treturn S;\n\tif ( S == z1 )\n\t\treturn T;\n\tif ( T == z1 )\n\t\treturn S;\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd-\u003epermZ[S-\u003eindex];\n\tTopT = dd-\u003epermZ[T-\u003eindex];\n\n\tif ( TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) )\n\t\treturn extraZddMaxUnion(dd, T, S);\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxUnion, S, T);\n\tif (zRes)\n\t\treturn zRes;\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1;\n\n\t\tif ( TopS == TopT )\n\t\t{\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\tzSet0 = extraZddMaxUnion(dd, cuddE(S), cuddE(T) );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zSet0 );\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\tzSet1 = extraZddMaxUnion(dd, cuddT(S), cuddT(T) );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\t\t}\n\t\telse /* if ( TopS \u003c TopT ) */\n\t\t{\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\tzSet0 = extraZddMaxUnion(dd, cuddE(S), T );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zSet0 );\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\tzSet1 = cuddT(S);\n\t\t\tcuddRef( zSet1 );\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif ( zRes0 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zRes0 );\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMaxUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 {\n\t\treturn T; }\n\tif T == z0 {\n\t\treturn S; }\n\tif S == T {\n\t\treturn S; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMaxUnion(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxUnion, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\tif TopS == TopT {\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMaxUnion(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMaxUnion(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMaxUnion(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = ((S).type.kids.T);\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddMinUnion",
+      "Start": 14148,
+      "End": 16415,
+      "BodyStart": 14221,
+      "Original": "DdNode\t*\nextraZddMinUnion(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n\tDdNode *zRes;\n\tint TopS, TopT;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( S == z0 )\n\t\treturn T;\n\tif ( T == z0 )\n\t\treturn S;\n\tif ( S == T )\n\t\treturn S;\n\t/* the empty combination, if present, is the only minimal combination */\n\tif ( Extra_zddEmptyBelongs(dd, S) || Extra_zddEmptyBelongs(dd, T) )\n\t\treturn z1; \n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd-\u003epermZ[S-\u003eindex];\n\tTopT = dd-\u003epermZ[T-\u003eindex];\n\n\tif ( TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) )\n\t\treturn extraZddMinUnion(dd, T, S);\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMinUnion, S, T);\n\tif (zRes)\n\t\treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1;\n\t\tif ( TopS == TopT )\n\t\t{\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\tzSet0 = extraZddMinUnion(dd, cuddE(S), cuddE(T) );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zSet0 );\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\tzSet1 = extraZddMinUnion(dd, cuddT(S), cuddT(T) );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\t\t}\n\t\telse /* if ( TopS \u003c TopT ) */\n\t\t{\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\tzSet0 = extraZddMinUnion(dd, cuddE(S), T );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zSet0 );\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\tzSet1 = cuddT(S);\n\t\t\tcuddRef( zSet1 );\n\t\t}\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif ( zRes1 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zRes1 );\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMinUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMinUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 {\n\t\treturn T; }\n\tif T == z0 {\n\t\treturn S; }\n\tif S == T {\n\t\treturn S; }\n\t/* the empty combination, if present, is the only minimal combination */\n\tif Extra_zddEmptyBelongs(dd, S) || Extra_zddEmptyBelongs(dd, T) {\n\t\treturn z1; } \n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMinUnion(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMinUnion, S, T);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMinUnion(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMinUnion(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMinUnion(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = ((S).type.kids.T);\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t}\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif zRes1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMinUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddDotProduct",
+      "Start": 16733,
+      "End": 19472,
+      "BodyStart": 16808,
+      "Original": "DdNode\t*\nextraZddDotProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n\tDdNode *zRes;\n\tint TopS, TopT;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( S == z0 || T == z0 )\n\t\treturn z0;\n\tif ( S == z1 )\n\t\treturn T;\n\tif ( T == z1 )\n\t\treturn S;\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd-\u003epermZ[S-\u003eindex];\n\tTopT = dd-\u003epermZ[T-\u003eindex];\n\n\tif ( TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) )\n\t\treturn extraZddDotProduct(dd, T, S);\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddDotProduct, S, T);\n\tif (zRes)\n\t\treturn zRes;\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1, *zTemp;\n\t\tif ( TopS == TopT )\n\t\t{\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\tzTemp = cuddZddUnion(dd, cuddE(T), cuddT(T) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\tzSet0 = extraZddDotProduct(dd, cuddT(S), zTemp );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute DotProduct with the top element for subsets (S0, T1) */\n\t\t\tzSet1 = extraZddDotProduct(dd, cuddE(S), cuddT(T) );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\tzRes0 = extraZddDotProduct(dd, cuddE(S), cuddE(T) );\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t}\n\t\telse /* if ( TopS \u003c TopT ) */\n\t\t{\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T) */\n\t\t\tzRes1 = extraZddDotProduct(dd, cuddT(S), T );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\tzRes0 = extraZddDotProduct(dd, cuddE(S), T );\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t}\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddDotProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddDotProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet0 = extraZddDotProduct(dd, ((S).type.kids.T), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute DotProduct with the top element for subsets (S0, T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddDotProduct(dd, ((S).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddDotProduct(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddDotProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zRes1 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddDotProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t}\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddCrossProduct",
+      "Start": 19794,
+      "End": 22903,
+      "BodyStart": 19871,
+      "Original": "DdNode\t*\nextraZddCrossProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n\tDdNode *zRes;\n\tint TopS, TopT;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( S == z0 || T == z0 )\n\t\treturn z0;\n\tif ( S == z1 || T == z1 )\n\t\treturn z1;\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd-\u003epermZ[S-\u003eindex];\n\tTopT = dd-\u003epermZ[T-\u003eindex];\n\n\tif ( TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) )\n\t\treturn extraZddCrossProduct(dd, T, S);\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddCrossProduct, S, T);\n\tif (zRes)\n\t\treturn zRes;\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1, *zTemp;\n\n\t\tif ( TopS == TopT )\n\t\t{\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\tzTemp = cuddZddUnion(dd, cuddE(T), cuddT(T) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S0, T0+T1) */\n\t\t\tzSet0 = extraZddCrossProduct(dd, cuddE(S), zTemp );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S1, T0) */\n\t\t\tzSet1 = extraZddCrossProduct(dd, cuddT(S), cuddE(T) );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes0 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute CrossProduct for subsets with the top-most element */\n\t\t\tzRes1 = extraZddCrossProduct(dd, cuddT(S), cuddT(T) );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* create the new node */\n\t\t\tzRes = cuddZddGetNode( dd, S-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopS \u003c TopT ) */\n\t\t{\n\t\t\t/* compute CrossProduct without the top element (S0, T) */\n\t\t\tzSet0 = extraZddCrossProduct(dd, cuddE(S), T );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zSet0 );\n\n\t\t\t/* compute CrossProduct without the top element (S1, T) */\n\t\t\tzSet1 = extraZddCrossProduct(dd, cuddT(S), T );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif ( zRes == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes );\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\tcuddDeref( zRes );\n\t\t}\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddCrossProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddCrossProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 || T == z1 {\n\t\treturn z1; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddCrossProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddCrossProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S0, T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddCrossProduct(dd, ((S).type.kids.E), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S1, T0) */\n\t\t\t// inlining of macro cuddT\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet1 = extraZddCrossProduct(dd, ((S).type.kids.T), ((T).type.kids.E) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes0 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute CrossProduct for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddCrossProduct(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* create the new node */\n\t\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute CrossProduct without the top element (S0, T) */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddCrossProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute CrossProduct without the top element (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddCrossProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddCrossProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddMaxDotProduct",
+      "Start": 23228,
+      "End": 26334,
+      "BodyStart": 23306,
+      "Original": "DdNode\t*\nextraZddMaxDotProduct(\n  DdManager * dd,\n  DdNode * S,\n  DdNode * T)\n{\n\tDdNode *zRes;\n\tint TopS, TopT;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif ( S == z0 || T == z0 )\n\t\treturn z0;\n\tif ( S == z1 )\n\t\treturn T;\n\tif ( T == z1 )\n\t\treturn S;\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd-\u003epermZ[S-\u003eindex];\n\tTopT = dd-\u003epermZ[T-\u003eindex];\n\n\tif ( TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) )\n\t\treturn extraZddMaxDotProduct(dd, T, S);\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxDotProduct, S, T);\n\tif (zRes)\n\t\treturn zRes;\n\telse\n\t{\n\t\tDdNode *zSet0, *zSet1, *zRes0, *zRes1, *zTemp;\n\t\tif ( TopS == TopT )\n\t\t{\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\tzTemp = extraZddMaxUnion(dd, cuddE(T), cuddT(T) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\tzSet0 = extraZddMaxDotProduct(dd, cuddT(S), zTemp );\n\t\t\tif ( zSet0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S0, T1) */\n\t\t\tzSet1 = extraZddMaxDotProduct(dd, cuddE(S), cuddT(T) );\n\t\t\tif ( zSet1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zSet1 );\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = extraZddMaxUnion(dd, zSet0, zSet1 );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, cuddE(S), cuddE(T) );\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t}\n\t\telse /* if ( TopS \u003c TopT ) */\n\t\t{\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T) */\n\t\t\tzRes1 = extraZddMaxDotProduct(dd, cuddT(S), T );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, cuddE(S), T );\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\tif ( zRes0 == NULL )\n\t\t{\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddRef( zRes0 );\n\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S-\u003eindex, zRes1, zRes0 );\n\t\tif ( zRes == NULL ) \n\t\t{\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn NULL;\n\t\t}\n\t\tcuddDeref( zRes0 );\n\t\tcuddDeref( zRes1 );\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMaxDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMaxDotProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxDotProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = extraZddMaxUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet0 = extraZddMaxDotProduct(dd, ((S).type.kids.T), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S0, T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMaxDotProduct(dd, ((S).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = extraZddMaxUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxDotProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zRes1 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::3635",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3635,
+      "End": 3637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::4161",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4161,
+      "End": 4163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::4750",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4750,
+      "End": 4752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::5344",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5344,
+      "End": 5346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::6009",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6009,
+      "End": 6011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::6689",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6689,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::mechanical::do::7324",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7324,
+      "End": 7326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddMaximal",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMaximal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3553,
+      "End": 3744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddMinimal",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMinimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4079,
+      "End": 4270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddMaxUnion",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMaxUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4653,
+      "End": 4863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddMinUnion",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMinUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5247,
+      "End": 5457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddDotProduct",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddDotProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5910,
+      "End": 6124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddCrossProduct",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddCrossProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6588,
+      "End": 6806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::Extra_zddMaxDotProduct",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMaxDotProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7222,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddMaximal",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMaximal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8004,
+      "End": 9464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddMinimal",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMinimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9779,
+      "End": 11356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddMaxUnion",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMaxUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11671,
+      "End": 13832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddMinUnion",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMinUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14148,
+      "End": 16415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddDotProduct",
+      "Category": "semantic-review",
+      "Symbol": "extraZddDotProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16733,
+      "End": 19472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddCrossProduct",
+      "Category": "semantic-review",
+      "Symbol": "extraZddCrossProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19794,
+      "End": 22903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::extraZddMaxDotProduct",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMaxDotProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23228,
+      "End": 26334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::8086",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8086,
+      "End": 8098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::8488",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8488,
+      "End": 8504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::8700",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8700,
+      "End": 8716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::8972",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8972,
+      "End": 8988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::9312",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9312,
+      "End": 9330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::9334",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9334,
+      "End": 9352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::9861",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9861,
+      "End": 9873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::10375",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10375,
+      "End": 10391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::10587",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10587,
+      "End": 10603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::10933",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10933,
+      "End": 10949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::11204",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11204,
+      "End": 11222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::11226",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11226,
+      "End": 11244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::11782",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11782,
+      "End": 11794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::12519",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12519,
+      "End": 12535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::12748",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12748,
+      "End": 12764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::12963",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12963,
+      "End": 12979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::13066",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13066,
+      "End": 13082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::13342",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13342,
+      "End": 13358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::13679",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13679,
+      "End": 13697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::13701",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13701,
+      "End": 13719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::14259",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14259,
+      "End": 14271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::15097",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15097,
+      "End": 15113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::15326",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15326,
+      "End": 15342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::15541",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15541,
+      "End": 15557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::15644",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15644,
+      "End": 15660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::15994",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15994,
+      "End": 16010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::16262",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16262,
+      "End": 16280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::16284",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16284,
+      "End": 16302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::16846",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16846,
+      "End": 16858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::17538",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17538,
+      "End": 17554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::17776",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17776,
+      "End": 17792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::18052",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18052,
+      "End": 18068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::18319",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18319,
+      "End": 18335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::18632",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18632,
+      "End": 18648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::18852",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18852,
+      "End": 18868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::19082",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19082,
+      "End": 19098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::19317",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19317,
+      "End": 19335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::19339",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19339,
+      "End": 19357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::19909",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19909,
+      "End": 19921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::20590",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20590,
+      "End": 20606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::20835",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20835,
+      "End": 20851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::21118",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21118,
+      "End": 21134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::21385",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21385,
+      "End": 21401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::21699",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21699,
+      "End": 21715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::21939",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21939,
+      "End": 21957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::21962",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21962,
+      "End": 21980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::22179",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22179,
+      "End": 22195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::22404",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22404,
+      "End": 22420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::22669",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22669,
+      "End": 22684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::22765",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22765,
+      "End": 22782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::23344",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23344,
+      "End": 23356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::24046",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24046,
+      "End": 24062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::24290",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24290,
+      "End": 24306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::24572",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24572,
+      "End": 24588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::24843",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24843,
+      "End": 24859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::25162",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25162,
+      "End": 25178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::25388",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25388,
+      "End": 25404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::25624",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25624,
+      "End": 25640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::25908",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25908,
+      "End": 25924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::26176",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26176,
+      "End": 26194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddMaxMin.c::macro-inline::26198",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26198,
+      "End": 26216
+    }
+  ],
+  "Draft": "package extrab\n\n/**CFile***********************************************************************\n\n  FileName    [zMaxMin.c]\n\n  PackageName [extra]\n\n  Synopsis    [Experimental version of some ZDD operators.]\n\n  Description [External procedures included in this module:\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\u003cli\u003e Extra_zddMaximal();\n\t\t\t\t\u003cli\u003e Extra_zddMinimal();\n\t\t\t\t\u003cli\u003e Extra_zddMaxUnion();\n\t\t\t\t\u003cli\u003e Extra_zddMinUnion();\n\t\t\t\t\u003cli\u003e Extra_zddDotProduct();\n\t\t\t\t\u003cli\u003e Extra_zddCrossProduct();\n\t\t\t\t\u003cli\u003e Extra_zddMaxDotProduct();\n\t\t\t\t\u003c/ul\u003e\n\t\t\tInternal procedures included in this module:\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\u003cli\u003e extraZddMaximal();\n\t\t\t\t\u003cli\u003e extraZddMinimal();\n\t\t\t\t\u003cli\u003e extraZddMaxUnion();\n\t\t\t\t\u003cli\u003e extraZddMinUnion();\n\t\t\t\t\u003cli\u003e extraZddDotProduct();\n\t\t\t\t\u003cli\u003e extraZddCrossProduct();\n\t\t\t\t\u003cli\u003e extraZddMaxDotProduct();\n\t\t\t\t\u003c/ul\u003e\n\t\t\tStaTc procedures included in this module:\n\t\t\t\t\u003cul\u003e\n\t\t\t\t\u003c/ul\u003e\n\t\t\t\t\n          DotProduct and MaxDotProduct were introduced \n\t\t  by O.Coudert to solve problems arising in two-level planar routing\n          See O. Coudert, C.-J. R. Shi. Exact Multi-Layer Topological Planar \n\t\t  Routing. Proc. of IEEE Custom Integrated Circuit Conference '96, \n\t\t  pp. 179-182.\n\t      ]\n\n  SeeAlso     []\n\n  Author      [Alan Mishchenko]\n\n  Copyright   []\n\n  ReviSon    [$zMaxMin.c, v.1.2, November 26, 2000, alanmi $]\n\n******************************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaTcStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* StaTc Function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaTcEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported Functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the maximal of a set represented by its ZDD.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddMinimal]\n\n******************************************************************************/\nfunc Extra_zddMaximal(dd *DdManager, S *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaximal(dd, S);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddMaximal */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the minimal of a set represented by its ZDD.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddMaximal]\n\n******************************************************************************/\nfunc Extra_zddMinimal(dd *DdManager, S *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMinimal(dd, S);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddMinimal */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the maximal of the union of two sets represented by ZDDs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddMaximal Extra_zddMimimal Extra_zddMinUnion]\n\n******************************************************************************/\nfunc Extra_zddMaxUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxUnion(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddMaxUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the minimal of the union of two sets represented by ZDDs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddMaximal Extra_zddMimimal Extra_zddMaxUnion]\n\n******************************************************************************/\nfunc Extra_zddMinUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMinUnion(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddMinUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the dot product of two sets of subsets represented by ZDDs.]\n\n  Description [The dot product is defined as a set of pair-wise unions of subsets \n  belonging to the arguments.]\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddCrossProduct]\n\n******************************************************************************/\nfunc Extra_zddDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddDotProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddDotProduct */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the cross product of two sets of subsets represented by ZDDs.]\n\n  Description [The cross product is defined as a set of pair-wise intersections of subsets \n  belonging to the arguments.]\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddDotProduct]\n\n******************************************************************************/\nfunc Extra_zddCrossProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddCrossProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddCrossProduct */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the maximal of the DotProduct of the union of two sets represented by ZDDs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddDotProduct Extra_zddMaximal Extra_zddMinCrossProduct]\n\n******************************************************************************/\nfunc Extra_zddMaxDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n    var res *DdNode;\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxDotProduct(dd, S, T);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_zddMaxDotProduct */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal Functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMaximal.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMaximal(dd *DdManager, zSet *DdNode) *DdNode {\n\tvar zRes *DdNode;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif zSet == z0 || zSet == z1 {\n\t\treturn zSet; }\n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMaximal, zSet);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\t/* compute maximal for subsets without the top-most element */\n\t\t// inlining of macro cuddE\n\t\tzSet0 = extraZddMaximal(dd, ((zSet).type.kids.E));\n\t\tif zSet0 == nil {\n\t\t\treturn nil; }\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t/* compute maximal for subsets with the top-most element */\n\t\t// inlining of macro cuddT\n\t\tzSet1 = extraZddMaximal(dd, ((zSet).type.kids.T));\n\t\tif zSet1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMaximal, zSet, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMaximal */\n\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMinimal.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMinimal(dd *DdManager, zSet *DdNode) *DdNode {\n\tvar zRes *DdNode;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif zSet == z0 {\n\t\treturn zSet; }\n\t/* the empty combinaTon, if present, is the only minimal combinaTon */\n\tif Extra_zddEmptyBelongs(dd, zSet) {\n\t\treturn z1; } \n\n    /* check cache */\n\tzRes = cuddCacheLookup1Zdd(dd, extraZddMinimal, zSet);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\t/* compute minimal for subsets without the top-most element */\n\t\t// inlining of macro cuddE\n\t\tzSet0 = extraZddMinimal(dd, ((zSet).type.kids.E));\n\t\tif zSet0 == nil {\n\t\t\treturn nil; }\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t/* compute minimal for subsets with the top-most element */\n\t\t// inlining of macro cuddT\n\t\tzSet1 = extraZddMinimal(dd, ((zSet).type.kids.T));\n\t\tif zSet1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif zRes1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, zSet.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert1(dd, extraZddMinimal, zSet, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMinimal */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMaxUnion.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMaxUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 {\n\t\treturn T; }\n\tif T == z0 {\n\t\treturn S; }\n\tif S == T {\n\t\treturn S; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMaxUnion(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxUnion, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\n\t\tif TopS == TopT {\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMaxUnion(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMaxUnion(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMaxUnion(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = ((S).type.kids.T);\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zSet0, zSet1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\n\t\t/* subset with this element remains unchanged */\n\t\tzRes1 = zSet1;\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMaxUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMinUnion.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMinUnion(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 {\n\t\treturn T; }\n\tif T == z0 {\n\t\treturn S; }\n\tif S == T {\n\t\treturn S; }\n\t/* the empty combination, if present, is the only minimal combination */\n\tif Extra_zddEmptyBelongs(dd, S) || Extra_zddEmptyBelongs(dd, T) {\n\t\treturn z1; } \n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMinUnion(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMinUnion, S, T);\n\tif zRes != nil {\n\t\treturn(zRes);\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1 *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMinUnion(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute maximal for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMinUnion(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute maximal for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddMinUnion(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* subset with this element is just the cofactor of S */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = ((S).type.kids.T);\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\t\t}\n\n\t\t/* subset without this element remains unchanged */\n\t\tzRes0 = zSet0;\n\n\t\t/* remove subsets with this element that contain subsets without this element */\n\t\tzRes1 = extraZddNotSupSet(dd, zSet1, zSet0);\n\t\tif zRes1 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMinUnion, S, T, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMinUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddDotProduct.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddDotProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddDotProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet0 = extraZddDotProduct(dd, ((S).type.kids.T), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute DotProduct with the top element for subsets (S0, T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddDotProduct(dd, ((S).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddDotProduct(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute DotProduct with the top element for subsets (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddDotProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zRes1 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compute DotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddDotProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t}\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddDotProduct */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddCrossProduct.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddCrossProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 || T == z1 {\n\t\treturn z1; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddCrossProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddCrossProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S0, T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddCrossProduct(dd, ((S).type.kids.E), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute CrossProduct without the top element for subsets (S1, T0) */\n\t\t\t// inlining of macro cuddT\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet1 = extraZddCrossProduct(dd, ((S).type.kids.T), ((T).type.kids.E) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes0 = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute CrossProduct for subsets with the top-most element */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddCrossProduct(dd, ((S).type.kids.T), ((T).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* create the new node */\n\t\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute CrossProduct without the top element (S0, T) */\n\t\t\t// inlining of macro cuddE\n\t\t\tzSet0 = extraZddCrossProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zSet0 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\n\t\t\t/* compute CrossProduct without the top element (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddCrossProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes = cuddZddUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddCrossProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddCrossProduct */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMaxDotProduct.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMaxDotProduct(dd *DdManager, S *DdNode, T *DdNode) *DdNode {\n\tvar zRes *DdNode;\n\tvar TopS, TopT int32;\n    statLine(dd); \n\n\t/* consider terminal cases */\n\tif S == z0 || T == z0 {\n\t\treturn z0; }\n\tif S == z1 {\n\t\treturn T; }\n\tif T == z1 {\n\t\treturn S; }\n\n\t/* the operation is commutative - normalize the problem */\n\tTopS = dd.permZ[S.index];\n\tTopT = dd.permZ[T.index];\n\n\tif TopS \u003e TopT || (TopS == TopT \u0026\u0026 S \u003e T) {\n\t\treturn extraZddMaxDotProduct(dd, T, S); }\n\n    /* check cache */\n\tzRes = cuddCacheLookup2Zdd(dd, extraZddMaxDotProduct, S, T);\n\tif zRes != nil {\n\t\treturn zRes;\n\t} else {\n\t\tvar zSet0, zSet1, zRes0, zRes1, zTemp *DdNode;\n\t\tif TopS == TopT {\n\t\t\t/* compute the union of two cofactors of T (T0+T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = extraZddMaxUnion(dd, ((T).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T0+T1) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet0 = extraZddMaxDotProduct(dd, ((S).type.kids.T), zTemp );\n\t\t\tif zSet0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S0, T1) */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzSet1 = extraZddMaxDotProduct(dd, ((S).type.kids.E), ((T).type.kids.T) );\n\t\t\tif zSet1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zSet1).ref);\n\n\t\t\t/* compute the union of these two partial results (zSet0 + zSet1) */\n\t\t\tzRes1 = extraZddMaxUnion(dd, zSet0, zSet1 );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet0);\n\t\t\tCudd_RecursiveDerefZdd(dd, zSet1);\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, ((S).type.kids.E), ((T).type.kids.E) );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else { /* if ( TopS \u003c TopT ) */\n\t\t\n\t\t\t/* compute MaxDotProduct with the top element for subsets (S1, T) */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxDotProduct(dd, ((S).type.kids.T), T );\n\t\t\tif zRes1 == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compute MaxDotProduct for subsets without the top-most element */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxDotProduct(dd, ((S).type.kids.E), T );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t}\n\n\t\t/* remove subsets without this element covered by subsets with this element */\n\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\tif zRes0 == nil {\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddRef\n\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\n\t\t/* create the new node */\n\t\tzRes = cuddZddGetNode( dd, S.index, zRes1, zRes0 );\n\t\tif zRes == nil {\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\treturn nil;\n\t\t}\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t// inlining of macro cuddDeref\n\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\n\t\t/* insert the result into cache */\n\t\tcuddCacheInsert2(dd, extraZddMaxDotProduct, S, T, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMaxDotProduct */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of staTc Functions                                            */\n/*---------------------------------------------------------------------------*/\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

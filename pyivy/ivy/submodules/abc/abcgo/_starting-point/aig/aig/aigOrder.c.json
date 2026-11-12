@@ -1,0 +1,431 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c",
+  "SHA256": "bcd2143772ff2d53c18d53b0635b13809b855bd20bb01259cf0e04ced91da3ad",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManBufNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 79,
+        "ByteOffset": 1667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pOrderData = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * p.nOrderAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pOrderData, 0xFF, sizeof(unsigned) * 2 * p.nOrderAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 80,
+        "Column": 68,
+        "ByteOffset": 2645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pOrderData) ? (free((char *) (p.pOrderData)), (p.pOrderData) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ObjId != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode( Aig_ManObj(p, ObjId) ) );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 104,
+        "Column": 42,
+        "ByteOffset": 3372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pOrderData = ((unsigned *) realloc((char *)(p.pOrderData), sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 42,
+        "ByteOffset": 3510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pOrderData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pOrderData + 2 * p.nOrderAlloc, 0xFF, sizeof(unsigned) * 2 * (nOrderAlloc - p.nOrderAlloc) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData[2*ObjId] == 0xFFFFFFFF );   // prev"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData[2*ObjId+1] == 0xFFFFFFFF ); // next"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData[2*iPrev+1] == uint32(p.iNext) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ObjId != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode( Aig_ManObj(p, ObjId) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pOrderData[2*p.iPrev+1] == uint32(p.iNext) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManOrderStart",
+      "Start": 1270,
+      "End": 1922,
+      "BodyStart": 1310,
+      "Original": "void Aig_ManOrderStart( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManBufNum(p) == 0 );\n    // allocate order datastructure\n    assert( p-\u003epOrderData == NULL );\n    p-\u003enOrderAlloc = 2 * Aig_ManObjNumMax(p);\n    if ( p-\u003enOrderAlloc \u003c (1\u003c\u003c12) )\n        p-\u003enOrderAlloc = (1\u003c\u003c12);\n    p-\u003epOrderData = ABC_ALLOC( unsigned, 2 * p-\u003enOrderAlloc );\n    memset( p-\u003epOrderData, 0xFF, sizeof(unsigned) * 2 * p-\u003enOrderAlloc );\n    // add the constant node\n    p-\u003epOrderData[0] = p-\u003epOrderData[1] = 0;\n    p-\u003eiPrev = p-\u003eiNext = 0;\n    // add the internal nodes\n    Aig_ManForEachNode( p, pObj, i )\n        Aig_ObjOrderInsert( p, pObj-\u003eId );\n}",
+      "Draft": "func Aig_ManOrderStart(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    // allocate order datastructure\n    assert(p.pOrderData == nil, \"p.pOrderData == nil\");\n    p.nOrderAlloc = 2 * Aig_ManObjNumMax(p);\n    if p.nOrderAlloc \u003c (1\u003c\u003c12) {\n        p.nOrderAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pOrderData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * p.nOrderAlloc)));\n    memset( p.pOrderData, 0xFF, sizeof(unsigned) * 2 * p.nOrderAlloc );\n    // add the constant node\n    p.pOrderData[0] = p.pOrderData[1] = 0;\n    p.iPrev = p.iNext = 0;\n    // add the internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Aig_ObjOrderInsert( p, pObj.Id ); }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManOrderStop",
+      "Start": 2190,
+      "End": 2345,
+      "BodyStart": 2229,
+      "Original": "void Aig_ManOrderStop( Aig_Man_t * p )\n{\n    assert( p-\u003epOrderData );\n    ABC_FREE( p-\u003epOrderData );\n    p-\u003enOrderAlloc = 0;\n    p-\u003eiPrev = p-\u003eiNext = 0;\n}",
+      "Draft": "func Aig_ManOrderStop(p *Aig_Man_t) {\n    assert(p.pOrderData, \"p.pOrderData\");\n    // inlining of macro ABC_FREE\n    ((p.pOrderData) ? (free((char *) (p.pOrderData)), (p.pOrderData) = 0) : 0);\n    p.nOrderAlloc = 0;\n    p.iPrev = p.iNext = 0;\n}"
+    },
+    {
+      "Name": "Aig_ObjOrderInsert",
+      "Start": 2611,
+      "End": 3478,
+      "BodyStart": 2663,
+      "Original": "void Aig_ObjOrderInsert( Aig_Man_t * p, int ObjId )\n{\n    int iPrev;\n    assert( ObjId != 0 );\n    assert( Aig_ObjIsNode( Aig_ManObj(p, ObjId) ) );\n    if ( ObjId \u003e= p-\u003enOrderAlloc )\n    {\n        int nOrderAlloc = 2 * ObjId; \n        p-\u003epOrderData = ABC_REALLOC( unsigned, p-\u003epOrderData, 2 * nOrderAlloc );\n        memset( p-\u003epOrderData + 2 * p-\u003enOrderAlloc, 0xFF, sizeof(unsigned) * 2 * (nOrderAlloc - p-\u003enOrderAlloc) );\n        p-\u003enOrderAlloc = nOrderAlloc;\n    }\n    assert( p-\u003epOrderData[2*ObjId] == 0xFFFFFFFF );   // prev\n    assert( p-\u003epOrderData[2*ObjId+1] == 0xFFFFFFFF ); // next\n    iPrev = p-\u003epOrderData[2*p-\u003eiNext];\n    assert( p-\u003epOrderData[2*iPrev+1] == (unsigned)p-\u003eiNext );\n    p-\u003epOrderData[2*ObjId] = iPrev;\n    p-\u003epOrderData[2*iPrev+1] = ObjId;\n    p-\u003epOrderData[2*p-\u003eiNext] = ObjId;\n    p-\u003epOrderData[2*ObjId+1] = p-\u003eiNext;\n    p-\u003enAndTotal++;\n}",
+      "Draft": "func Aig_ObjOrderInsert(p *Aig_Man_t, ObjId int32) {\n    var iPrev int32;\n    assert(ObjId != 0, \"ObjId != 0\");\n    assert(Aig_ObjIsNode( Aig_ManObj(p, ObjId) ), \"Aig_ObjIsNode( Aig_ManObj(p, ObjId) )\");\n    if ObjId \u003e= p.nOrderAlloc {\n        var nOrderAlloc int32  = 2 * ObjId; \n        // inlining of macro ABC_REALLOC\n        \n        if p.pOrderData {\n            p.pOrderData = ((unsigned *) realloc((char *)(p.pOrderData), sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));\n        } else {\n            p.pOrderData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));\n        }\n        memset( p.pOrderData + 2 * p.nOrderAlloc, 0xFF, sizeof(unsigned) * 2 * (nOrderAlloc - p.nOrderAlloc) );\n        p.nOrderAlloc = nOrderAlloc;\n    }\n    assert(p.pOrderData[2*ObjId] == 0xFFFFFFFF, \"p.pOrderData[2*ObjId] == 0xFFFFFFFF\");   // prev\n    assert(p.pOrderData[2*ObjId+1] == 0xFFFFFFFF, \"p.pOrderData[2*ObjId+1] == 0xFFFFFFFF\"); // next\n    iPrev = p.pOrderData[2*p.iNext];\n    assert(p.pOrderData[2*iPrev+1] == uint32(p.iNext), \"p.pOrderData[2*iPrev+1] == uint32(p.iNext)\");\n    p.pOrderData[2*ObjId] = iPrev;\n    p.pOrderData[2*iPrev+1] = ObjId;\n    p.pOrderData[2*p.iNext] = ObjId;\n    p.pOrderData[2*ObjId+1] = p.iNext;\n    p.nAndTotal++;\n}"
+    },
+    {
+      "Name": "Aig_ObjOrderRemove",
+      "Start": 3815,
+      "End": 4368,
+      "BodyStart": 3867,
+      "Original": "void Aig_ObjOrderRemove( Aig_Man_t * p, int ObjId )\n{\n    int iPrev, iNext;\n    assert( ObjId != 0 );\n    assert( Aig_ObjIsNode( Aig_ManObj(p, ObjId) ) );\n    iPrev = p-\u003epOrderData[2*ObjId];\n    iNext = p-\u003epOrderData[2*ObjId+1];\n    p-\u003epOrderData[2*ObjId] = 0xFFFFFFFF;\n    p-\u003epOrderData[2*ObjId+1] = 0xFFFFFFFF;\n    p-\u003epOrderData[2*iNext] = iPrev;\n    p-\u003epOrderData[2*iPrev+1] = iNext;\n    if ( p-\u003eiPrev == ObjId )\n    {\n        p-\u003enAndPrev--;\n        p-\u003eiPrev = iPrev;\n    }\n    if ( p-\u003eiNext == ObjId )\n        p-\u003eiNext = iNext;\n    p-\u003enAndTotal--;\n}",
+      "Draft": "func Aig_ObjOrderRemove(p *Aig_Man_t, ObjId int32) {\n    var iPrev, iNext int32;\n    assert(ObjId != 0, \"ObjId != 0\");\n    assert(Aig_ObjIsNode( Aig_ManObj(p, ObjId) ), \"Aig_ObjIsNode( Aig_ManObj(p, ObjId) )\");\n    iPrev = p.pOrderData[2*ObjId];\n    iNext = p.pOrderData[2*ObjId+1];\n    p.pOrderData[2*ObjId] = 0xFFFFFFFF;\n    p.pOrderData[2*ObjId+1] = 0xFFFFFFFF;\n    p.pOrderData[2*iNext] = iPrev;\n    p.pOrderData[2*iPrev+1] = iNext;\n    if p.iPrev == ObjId {\n        p.nAndPrev--;\n        p.iPrev = iPrev;\n    }\n    if p.iNext == ObjId {\n        p.iNext = iNext; }\n    p.nAndTotal--;\n}"
+    },
+    {
+      "Name": "Aig_ObjOrderAdvance",
+      "Start": 4631,
+      "End": 4814,
+      "BodyStart": 4673,
+      "Original": "void Aig_ObjOrderAdvance( Aig_Man_t * p )\n{\n    assert( p-\u003epOrderData );\n    assert( p-\u003epOrderData[2*p-\u003eiPrev+1] == (unsigned)p-\u003eiNext );\n    p-\u003eiPrev = p-\u003eiNext;\n    p-\u003enAndPrev++;\n}",
+      "Draft": "func Aig_ObjOrderAdvance(p *Aig_Man_t) {\n    assert(p.pOrderData, \"p.pOrderData\");\n    assert(p.pOrderData[2*p.iPrev+1] == uint32(p.iNext), \"p.pOrderData[2*p.iPrev+1] == uint32(p.iNext)\");\n    p.iPrev = p.iNext;\n    p.nAndPrev++;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::mechanical::sizeof::1657",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1591,
+      "End": 1591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::mechanical::sizeof::1741",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1667,
+      "End": 1673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::mechanical::sizeof::3381",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2862,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::mechanical::sizeof::3460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2862,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::mechanical::sizeof::3567",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2977,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::1637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1591,
+      "End": 1591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::2083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1845,
+      "End": 1845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::2643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2264,
+      "End": 2264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::3335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2862,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::3356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2862,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::pointer-cast::3440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2862,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::Aig_ManOrderStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManOrderStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1270,
+      "End": 1922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::ternary::Aig_ManOrderStop",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManOrderStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2190,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::Aig_ManOrderStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManOrderStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2190,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::Aig_ObjOrderInsert",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjOrderInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2611,
+      "End": 3478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::Aig_ObjOrderRemove",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjOrderRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3815,
+      "End": 4368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::Aig_ObjOrderAdvance",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjOrderAdvance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4631,
+      "End": 4814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigOrder.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5061
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigOrder.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Dynamically updated topological order.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigOrder.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes the order datastructure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManOrderStart(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    // allocate order datastructure\n    assert(p.pOrderData == nil, \"p.pOrderData == nil\");\n    p.nOrderAlloc = 2 * Aig_ManObjNumMax(p);\n    if p.nOrderAlloc \u003c (1\u003c\u003c12) {\n        p.nOrderAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pOrderData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * p.nOrderAlloc)));\n    memset( p.pOrderData, 0xFF, sizeof(unsigned) * 2 * p.nOrderAlloc );\n    // add the constant node\n    p.pOrderData[0] = p.pOrderData[1] = 0;\n    p.iPrev = p.iNext = 0;\n    // add the internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Aig_ObjOrderInsert( p, pObj.Id ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the order datastructure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManOrderStop(p *Aig_Man_t) {\n    assert(p.pOrderData, \"p.pOrderData\");\n    // inlining of macro ABC_FREE\n    ((p.pOrderData) ? (free((char *) (p.pOrderData)), (p.pOrderData) = 0) : 0);\n    p.nOrderAlloc = 0;\n    p.iPrev = p.iNext = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts an entry before iNext.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjOrderInsert(p *Aig_Man_t, ObjId int32) {\n    var iPrev int32;\n    assert(ObjId != 0, \"ObjId != 0\");\n    assert(Aig_ObjIsNode( Aig_ManObj(p, ObjId) ), \"Aig_ObjIsNode( Aig_ManObj(p, ObjId) )\");\n    if ObjId \u003e= p.nOrderAlloc {\n        var nOrderAlloc int32  = 2 * ObjId; \n        // inlining of macro ABC_REALLOC\n        \n        if p.pOrderData {\n            p.pOrderData = ((unsigned *) realloc((char *)(p.pOrderData), sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));\n        } else {\n            p.pOrderData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(2 * nOrderAlloc)));\n        }\n        memset( p.pOrderData + 2 * p.nOrderAlloc, 0xFF, sizeof(unsigned) * 2 * (nOrderAlloc - p.nOrderAlloc) );\n        p.nOrderAlloc = nOrderAlloc;\n    }\n    assert(p.pOrderData[2*ObjId] == 0xFFFFFFFF, \"p.pOrderData[2*ObjId] == 0xFFFFFFFF\");   // prev\n    assert(p.pOrderData[2*ObjId+1] == 0xFFFFFFFF, \"p.pOrderData[2*ObjId+1] == 0xFFFFFFFF\"); // next\n    iPrev = p.pOrderData[2*p.iNext];\n    assert(p.pOrderData[2*iPrev+1] == uint32(p.iNext), \"p.pOrderData[2*iPrev+1] == uint32(p.iNext)\");\n    p.pOrderData[2*ObjId] = iPrev;\n    p.pOrderData[2*iPrev+1] = ObjId;\n    p.pOrderData[2*p.iNext] = ObjId;\n    p.pOrderData[2*ObjId+1] = p.iNext;\n    p.nAndTotal++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the entry.]\n\n  Description [If iPrev is removed, it slides backward. \n  If iNext is removed, it slides forward.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjOrderRemove(p *Aig_Man_t, ObjId int32) {\n    var iPrev, iNext int32;\n    assert(ObjId != 0, \"ObjId != 0\");\n    assert(Aig_ObjIsNode( Aig_ManObj(p, ObjId) ), \"Aig_ObjIsNode( Aig_ManObj(p, ObjId) )\");\n    iPrev = p.pOrderData[2*ObjId];\n    iNext = p.pOrderData[2*ObjId+1];\n    p.pOrderData[2*ObjId] = 0xFFFFFFFF;\n    p.pOrderData[2*ObjId+1] = 0xFFFFFFFF;\n    p.pOrderData[2*iNext] = iPrev;\n    p.pOrderData[2*iPrev+1] = iNext;\n    if p.iPrev == ObjId {\n        p.nAndPrev--;\n        p.iPrev = iPrev;\n    }\n    if p.iNext == ObjId {\n        p.iNext = iNext; }\n    p.nAndTotal--;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Advances the order forward.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjOrderAdvance(p *Aig_Man_t) {\n    assert(p.pOrderData, \"p.pOrderData\");\n    assert(p.pOrderData[2*p.iPrev+1] == uint32(p.iNext), \"p.pOrderData[2*p.iPrev+1] == uint32(p.iNext)\");\n    p.iPrev = p.iNext;\n    p.nAndPrev++;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

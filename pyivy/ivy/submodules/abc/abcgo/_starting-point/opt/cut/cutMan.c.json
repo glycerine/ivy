@@ -1,0 +1,747 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c",
+  "SHA256": "f94e62040e1a9f15c8c9f9b8d26e2ce10ec0a0f3ce494cdb182ae10f3e895802",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pParams.nVarsMax \u003e= 3 \u0026\u0026 pParams.nVarsMax \u003c= CUT_SIZE_MAX );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 57,
+        "Column": 69,
+        "ByteOffset": 1605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Cut_Man_t *) malloc(sizeof(Cut_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cut_Man_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping computation of truth tables for sequential cuts with more than 5 inputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 13,
+        "ByteOffset": 2600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping computation of truth table for more than %d inputs.\\n\", 14 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 82,
+        "ByteOffset": 2922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.puTemp[0] = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(4 * p.nTruthWords)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 134,
+        "Column": 86,
+        "ByteOffset": 4686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.puTemp[0] {   /*__starting_point_inline_macro:ABC_FREE__*/((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 137,
+        "Column": 57,
+        "ByteOffset": 4836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cut computation statistics:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCutsCur-p.nCutsTriv, p.nCutsTriv );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Peak cuts         = %8d.\\n\", p.nCutsPeak );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total allocated   = %8d.\\n\", p.nCutsAlloc );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total deallocated = %8d.\\n\", p.nCutsDealloc );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cuts filtered     = %8d.\\n\", p.nCutsFilter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes saturated   = %8d. (Max cuts = %d.)\\n\", p.nCutsLimit, p.pParams.nKeepMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cuts per node     = %8.1f\\n\", (float32((p.nCutsCur-p.nCutsTriv)))/p.nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The cut size      = %8d bytes.\\n\", p.EntrySize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Peak memory       = %8.2f MB.\\n\", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total nodes       = %8d.\\n\", p.nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 6057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"DAG nodes         = %8d.\\n\", p.nNodesDag );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 6114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Tree nodes        = %8d.\\n\", p.nNodes - p.nNodesDag );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 6188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes w/o cuts    = %8d.\\n\", p.nNodesNoCuts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 6291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Mapping delay     = %8d.\\n\", p.nDelayMin ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 176,
+        "Column": 67,
+        "ByteOffset": 6494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMerge)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 178,
+        "Column": 67,
+        "ByteOffset": 6661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUnion)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 180,
+        "Column": 68,
+        "ByteOffset": 6829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFilter)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 182,
+        "Column": 67,
+        "ByteOffset": 6996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 184,
+        "Column": 65,
+        "ByteOffset": 7161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMap)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 204,
+        "Column": 14,
+        "ByteOffset": 7816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = fopen( \"cut_stats.txt\", \"a+\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 7852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%-20s \", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%8d \", p.nNodes );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%6.1f \", (float32((p.nCutsCur)))/p.nNodes );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%6.2f \", (float32((100.0 * p.nCutsLimit)))/p.nNodes );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 8081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%6.2f \", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 8160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%6.2f \", float32((TimeTotal))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 210,
+        "Column": 62,
+        "ByteOffset": 8217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%6.2f \", float32((TimeTotal))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 8241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 8270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pTable );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_ManStart",
+      "Start": 1305,
+      "End": 3671,
+      "BodyStart": 1356,
+      "Original": "Cut_Man_t * Cut_ManStart( Cut_Params_t * pParams )\n{\n    Cut_Man_t * p;\n//    extern int nTruthDsd;\n//    nTruthDsd = 0;\n    assert( pParams-\u003enVarsMax \u003e= 3 \u0026\u0026 pParams-\u003enVarsMax \u003c= CUT_SIZE_MAX );\n    p = ABC_ALLOC( Cut_Man_t, 1 );\n    memset( p, 0, sizeof(Cut_Man_t) );\n    // set and correct parameters\n    p-\u003epParams = pParams;\n    // prepare storage for cuts\n    p-\u003evCutsNew = Vec_PtrAlloc( pParams-\u003enIdsMax );\n    Vec_PtrFill( p-\u003evCutsNew, pParams-\u003enIdsMax, NULL );\n    // prepare storage for sequential cuts\n    if ( pParams-\u003efSeq )\n    {\n        p-\u003epParams-\u003efFilter = 1;\n        p-\u003evCutsOld = Vec_PtrAlloc( pParams-\u003enIdsMax );\n        Vec_PtrFill( p-\u003evCutsOld, pParams-\u003enIdsMax, NULL );\n        p-\u003evCutsTemp = Vec_PtrAlloc( pParams-\u003enCutSet );\n        Vec_PtrFill( p-\u003evCutsTemp, pParams-\u003enCutSet, NULL );\n        if ( pParams-\u003efTruth \u0026\u0026 pParams-\u003enVarsMax \u003e 5 )\n        {\n            pParams-\u003efTruth = 0;\n            printf( \"Skipping computation of truth tables for sequential cuts with more than 5 inputs.\\n\" );\n        }\n    }\n    // entry size\n    p-\u003eEntrySize = sizeof(Cut_Cut_t) + pParams-\u003enVarsMax * sizeof(int);\n    if ( pParams-\u003efTruth )\n    {\n        if ( pParams-\u003enVarsMax \u003e 14 )\n        {\n            pParams-\u003efTruth = 0;\n            printf( \"Skipping computation of truth table for more than %d inputs.\\n\", 14 );\n        }\n        else\n        {\n            p-\u003enTruthWords = Cut_TruthWords( pParams-\u003enVarsMax );\n            p-\u003eEntrySize += p-\u003enTruthWords * sizeof(unsigned);\n        }\n        p-\u003epuTemp[0] = ABC_ALLOC( unsigned, 4 * p-\u003enTruthWords );\n        p-\u003epuTemp[1] = p-\u003epuTemp[0] + p-\u003enTruthWords;\n        p-\u003epuTemp[2] = p-\u003epuTemp[1] + p-\u003enTruthWords;\n        p-\u003epuTemp[3] = p-\u003epuTemp[2] + p-\u003enTruthWords;\n    }\n    // enable cut computation recording\n    if ( pParams-\u003efRecord )\n    {\n        p-\u003evNodeCuts   = Vec_IntStart( pParams-\u003enIdsMax );\n        p-\u003evNodeStarts = Vec_IntStart( pParams-\u003enIdsMax );\n        p-\u003evCutPairs   = Vec_IntAlloc( 0 );\n    }\n    // allocate storage for delays\n    if ( pParams-\u003efMap \u0026\u0026 !p-\u003epParams-\u003efSeq )\n    {\n        p-\u003evDelays = Vec_IntStart( pParams-\u003enIdsMax );\n        p-\u003evDelays2 = Vec_IntStart( pParams-\u003enIdsMax );\n        p-\u003evCutsMax = Vec_PtrStart( pParams-\u003enIdsMax );\n    }\n    // memory for cuts\n    p-\u003epMmCuts = Extra_MmFixedStart( p-\u003eEntrySize );\n    p-\u003evTemp = Vec_PtrAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Cut_ManStart(pParams *Cut_Params_t) *Cut_Man_t {\n    var p *Cut_Man_t;\n//    extern int nTruthDsd;\n//    nTruthDsd = 0;\n    assert(pParams.nVarsMax \u003e= 3 \u0026\u0026 pParams.nVarsMax \u003c= CUT_SIZE_MAX, \"pParams.nVarsMax \u003e= 3 \u0026\u0026 pParams.nVarsMax \u003c= CUT_SIZE_MAX\");\n    // inlining of macro ABC_ALLOC\n    p = ((Cut_Man_t *) malloc(sizeof(Cut_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cut_Man_t) );\n    // set and correct parameters\n    p.pParams = pParams;\n    // prepare storage for cuts\n    p.vCutsNew = Vec_PtrAlloc( pParams.nIdsMax );\n    Vec_PtrFill( p.vCutsNew, pParams.nIdsMax, nil );\n    // prepare storage for sequential cuts\n    if pParams.fSeq {\n        p.pParams.fFilter = 1;\n        p.vCutsOld = Vec_PtrAlloc( pParams.nIdsMax );\n        Vec_PtrFill( p.vCutsOld, pParams.nIdsMax, nil );\n        p.vCutsTemp = Vec_PtrAlloc( pParams.nCutSet );\n        Vec_PtrFill( p.vCutsTemp, pParams.nCutSet, nil );\n        if pParams.fTruth \u0026\u0026 pParams.nVarsMax \u003e 5 {\n            pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth tables for sequential cuts with more than 5 inputs.\\n\");\n        }\n    }\n    // entry size\n    p.EntrySize = sizeof(Cut_Cut_t) + pParams.nVarsMax * sizeof(int);\n    if pParams.fTruth {\n        if pParams.nVarsMax \u003e 14 {\n            pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth table for more than %d inputs.\\n\", 14);\n        \n        } else {\n            p.nTruthWords = Cut_TruthWords( pParams.nVarsMax );\n            p.EntrySize += p.nTruthWords * sizeof(unsigned);\n        }\n        // inlining of macro ABC_ALLOC\n        p.puTemp[0] = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(4 * p.nTruthWords)));\n        p.puTemp[1] = p.puTemp[0] + p.nTruthWords;\n        p.puTemp[2] = p.puTemp[1] + p.nTruthWords;\n        p.puTemp[3] = p.puTemp[2] + p.nTruthWords;\n    }\n    // enable cut computation recording\n    if pParams.fRecord {\n        p.vNodeCuts   = Vec_IntStart( pParams.nIdsMax );\n        p.vNodeStarts = Vec_IntStart( pParams.nIdsMax );\n        p.vCutPairs   = Vec_IntAlloc( 0 );\n    }\n    // allocate storage for delays\n    if pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n        p.vDelays = Vec_IntStart( pParams.nIdsMax );\n        p.vDelays2 = Vec_IntStart( pParams.nIdsMax );\n        p.vCutsMax = Vec_PtrStart( pParams.nIdsMax );\n    }\n    // memory for cuts\n    p.pMmCuts = Extra_MmFixedStart( p.EntrySize );\n    p.vTemp = Vec_PtrAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Cut_ManStop",
+      "Start": 3929,
+      "End": 4674,
+      "BodyStart": 3963,
+      "Original": "void Cut_ManStop( Cut_Man_t * p )\n{\n    if ( p-\u003evCutsNew )    Vec_PtrFree( p-\u003evCutsNew );\n    if ( p-\u003evCutsOld )    Vec_PtrFree( p-\u003evCutsOld );\n    if ( p-\u003evCutsTemp )   Vec_PtrFree( p-\u003evCutsTemp );\n    if ( p-\u003evFanCounts )  Vec_IntFree( p-\u003evFanCounts );\n    if ( p-\u003evTemp )       Vec_PtrFree( p-\u003evTemp );\n\n    if ( p-\u003evCutsMax )    Vec_PtrFree( p-\u003evCutsMax );\n    if ( p-\u003evDelays )     Vec_IntFree( p-\u003evDelays );\n    if ( p-\u003evDelays2 )    Vec_IntFree( p-\u003evDelays2 );\n    if ( p-\u003evNodeCuts )   Vec_IntFree( p-\u003evNodeCuts );\n    if ( p-\u003evNodeStarts ) Vec_IntFree( p-\u003evNodeStarts );\n    if ( p-\u003evCutPairs )   Vec_IntFree( p-\u003evCutPairs );\n    if ( p-\u003epuTemp[0] )   ABC_FREE( p-\u003epuTemp[0] );\n\n    Extra_MmFixedStop( p-\u003epMmCuts );\n    ABC_FREE( p );\n}",
+      "Draft": "func Cut_ManStop(p *Cut_Man_t) {\n    if p.vCutsNew {    Vec_PtrFree( p.vCutsNew ); }\n    if p.vCutsOld {    Vec_PtrFree( p.vCutsOld ); }\n    if p.vCutsTemp {   Vec_PtrFree( p.vCutsTemp ); }\n    if p.vFanCounts {  Vec_IntFree( p.vFanCounts ); }\n    if p.vTemp {       Vec_PtrFree( p.vTemp ); }\n\n    if p.vCutsMax {    Vec_PtrFree( p.vCutsMax ); }\n    if p.vDelays {     Vec_IntFree( p.vDelays ); }\n    if p.vDelays2 {    Vec_IntFree( p.vDelays2 ); }\n    if p.vNodeCuts {   Vec_IntFree( p.vNodeCuts ); }\n    if p.vNodeStarts { Vec_IntFree( p.vNodeStarts ); }\n    if p.vCutPairs {   Vec_IntFree( p.vCutPairs ); }\n    // inlining of macro ABC_FREE\n    if p.puTemp[0] {   ((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0); }\n\n    Extra_MmFixedStop( p.pMmCuts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Cut_ManPrintStats",
+      "Start": 4910,
+      "End": 6636,
+      "BodyStart": 4950,
+      "Original": "void Cut_ManPrintStats( Cut_Man_t * p )\n{\n    if ( p-\u003epReady )\n    {\n        Cut_CutRecycle( p, p-\u003epReady );\n        p-\u003epReady = NULL;\n    }\n    printf( \"Cut computation statistics:\\n\" );\n    printf( \"Current cuts      = %8d. (Trivial = %d.)\\n\", p-\u003enCutsCur-p-\u003enCutsTriv, p-\u003enCutsTriv );\n    printf( \"Peak cuts         = %8d.\\n\", p-\u003enCutsPeak );\n    printf( \"Total allocated   = %8d.\\n\", p-\u003enCutsAlloc );\n    printf( \"Total deallocated = %8d.\\n\", p-\u003enCutsDealloc );\n    printf( \"Cuts filtered     = %8d.\\n\", p-\u003enCutsFilter );\n    printf( \"Nodes saturated   = %8d. (Max cuts = %d.)\\n\", p-\u003enCutsLimit, p-\u003epParams-\u003enKeepMax );\n    printf( \"Cuts per node     = %8.1f\\n\", ((float)(p-\u003enCutsCur-p-\u003enCutsTriv))/p-\u003enNodes );\n    printf( \"The cut size      = %8d bytes.\\n\", p-\u003eEntrySize );\n    printf( \"Peak memory       = %8.2f MB.\\n\", (float)p-\u003enCutsPeak * p-\u003eEntrySize / (1\u003c\u003c20) );\n    printf( \"Total nodes       = %8d.\\n\", p-\u003enNodes );\n    if ( p-\u003epParams-\u003efDag || p-\u003epParams-\u003efTree )\n    {\n    printf( \"DAG nodes         = %8d.\\n\", p-\u003enNodesDag );\n    printf( \"Tree nodes        = %8d.\\n\", p-\u003enNodes - p-\u003enNodesDag );\n    }\n    printf( \"Nodes w/o cuts    = %8d.\\n\", p-\u003enNodesNoCuts );\n    if ( p-\u003epParams-\u003efMap \u0026\u0026 !p-\u003epParams-\u003efSeq )\n    printf( \"Mapping delay     = %8d.\\n\", p-\u003enDelayMin );\n\n    ABC_PRT( \"Merge \", p-\u003etimeMerge );\n    ABC_PRT( \"Union \", p-\u003etimeUnion );\n    ABC_PRT( \"Filter\", p-\u003etimeFilter );\n    ABC_PRT( \"Truth \", p-\u003etimeTruth );\n    ABC_PRT( \"Map   \", p-\u003etimeMap );\n//    printf( \"Nodes = %d. Multi = %d.  Cuts = %d. Multi = %d.\\n\", \n//        p-\u003enNodes, p-\u003enNodesMulti, p-\u003enCutsCur-p-\u003enCutsTriv, p-\u003enCutsMulti );\n//    printf( \"Count0 = %d. Count1 = %d. Count2 = %d.\\n\\n\", p-\u003eCount0, p-\u003eCount1, p-\u003eCount2 );\n}",
+      "Draft": "func Cut_ManPrintStats(p *Cut_Man_t) {\n    if p.pReady {\n        Cut_CutRecycle( p, p.pReady );\n        p.pReady = nil;\n    }\n    fmt.Printf(\"Cut computation statistics:\\n\");\n    fmt.Printf(\"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCutsCur-p.nCutsTriv, p.nCutsTriv);\n    fmt.Printf(\"Peak cuts         = %8d.\\n\", p.nCutsPeak);\n    fmt.Printf(\"Total allocated   = %8d.\\n\", p.nCutsAlloc);\n    fmt.Printf(\"Total deallocated = %8d.\\n\", p.nCutsDealloc);\n    fmt.Printf(\"Cuts filtered     = %8d.\\n\", p.nCutsFilter);\n    fmt.Printf(\"Nodes saturated   = %8d. (Max cuts = %d.)\\n\", p.nCutsLimit, p.pParams.nKeepMax);\n    fmt.Printf(\"Cuts per node     = %8.1f\\n\", (float32((p.nCutsCur-p.nCutsTriv)))/p.nNodes);\n    fmt.Printf(\"The cut size      = %8d bytes.\\n\", p.EntrySize);\n    fmt.Printf(\"Peak memory       = %8.2f MB.\\n\", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20));\n    fmt.Printf(\"Total nodes       = %8d.\\n\", p.nNodes);\n    if p.pParams.fDag || p.pParams.fTree {\n    fmt.Printf(\"DAG nodes         = %8d.\\n\", p.nNodesDag);\n    fmt.Printf(\"Tree nodes        = %8d.\\n\", p.nNodes - p.nNodesDag);\n    }\n    fmt.Printf(\"Nodes w/o cuts    = %8d.\\n\", p.nNodesNoCuts);\n    if p.pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n    fmt.Printf(\"Mapping delay     = %8d.\\n\", p.nDelayMin); }\n\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Merge \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMerge)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Union \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUnion)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Filter\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFilter)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Map   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMap)))/(float64(int64(time.Second))));;\n//    printf( \"Nodes = %d. Multi = %d.  Cuts = %d. Multi = %d.\\n\", \n//        p-\u003enNodes, p-\u003enNodesMulti, p-\u003enCutsCur-p-\u003enCutsTriv, p-\u003enCutsMulti );\n//    printf( \"Count0 = %d. Count1 = %d. Count2 = %d.\\n\\n\", p-\u003eCount0, p-\u003eCount1, p-\u003eCount2 );\n}"
+    },
+    {
+      "Name": "Cut_ManPrintStatsToFile",
+      "Start": 6907,
+      "End": 7494,
+      "BodyStart": 6990,
+      "Original": "void Cut_ManPrintStatsToFile( Cut_Man_t * p, char * pFileName, abctime TimeTotal )\n{\n    FILE * pTable;\n    pTable = fopen( \"cut_stats.txt\", \"a+\" );\n    fprintf( pTable, \"%-20s \", pFileName );\n    fprintf( pTable, \"%8d \", p-\u003enNodes );\n    fprintf( pTable, \"%6.1f \", ((float)(p-\u003enCutsCur))/p-\u003enNodes );\n    fprintf( pTable, \"%6.2f \", ((float)(100.0 * p-\u003enCutsLimit))/p-\u003enNodes );\n    fprintf( pTable, \"%6.2f \", (float)p-\u003enCutsPeak * p-\u003eEntrySize / (1\u003c\u003c20) );\n    fprintf( pTable, \"%6.2f \", (float)(TimeTotal)/(float)(CLOCKS_PER_SEC) );\n    fprintf( pTable, \"\\n\" );\n    fclose( pTable );\n}",
+      "Draft": "func Cut_ManPrintStatsToFile(p *Cut_Man_t, pFileName string, TimeTotal abctime) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"cut_stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%-20s \", pFileName);\n    fmt.Fprintf(pTable, \"%8d \", p.nNodes);\n    fmt.Fprintf(pTable, \"%6.1f \", (float32((p.nCutsCur)))/p.nNodes);\n    fmt.Fprintf(pTable, \"%6.2f \", (float32((100.0 * p.nCutsLimit)))/p.nNodes);\n    fmt.Fprintf(pTable, \"%6.2f \", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20));\n    fmt.Fprintf(pTable, \"%6.2f \", float32((TimeTotal))/float32((int64(time.Second))));\n    fmt.Fprintf(pTable, \"\\n\");\n    _ = (pTable).Close();\n}"
+    },
+    {
+      "Name": "Cut_ManSetFanoutCounts",
+      "Start": 7730,
+      "End": 7834,
+      "BodyStart": 7799,
+      "Original": "void Cut_ManSetFanoutCounts( Cut_Man_t * p, Vec_Int_t * vFanCounts )\n{\n    p-\u003evFanCounts = vFanCounts;\n}",
+      "Draft": "func Cut_ManSetFanoutCounts(p *Cut_Man_t, vFanCounts *Vec_Int_t) {\n    p.vFanCounts = vFanCounts;\n}"
+    },
+    {
+      "Name": "Cut_ManSetNodeAttrs",
+      "Start": 8070,
+      "End": 8171,
+      "BodyStart": 8136,
+      "Original": "void Cut_ManSetNodeAttrs( Cut_Man_t * p, Vec_Int_t * vNodeAttrs )\n{\n    p-\u003evNodeAttrs = vNodeAttrs;\n}",
+      "Draft": "func Cut_ManSetNodeAttrs(p *Cut_Man_t, vNodeAttrs *Vec_Int_t) {\n    p.vNodeAttrs = vNodeAttrs;\n}"
+    },
+    {
+      "Name": "Cut_ManReadVarsMax",
+      "Start": 8407,
+      "End": 8483,
+      "BodyStart": 8447,
+      "Original": "int Cut_ManReadVarsMax( Cut_Man_t * p )\n{\n    return p-\u003epParams-\u003enVarsMax;\n}",
+      "Draft": "func Cut_ManReadVarsMax(p *Cut_Man_t) int32 {\n    return p.pParams.nVarsMax;\n}"
+    },
+    {
+      "Name": "Cut_ManReadParams",
+      "Start": 8719,
+      "End": 8795,
+      "BodyStart": 8769,
+      "Original": "Cut_Params_t * Cut_ManReadParams( Cut_Man_t * p )\n{\n    return p-\u003epParams;\n}",
+      "Draft": "func Cut_ManReadParams(p *Cut_Man_t) *Cut_Params_t {\n    return p.pParams;\n}"
+    },
+    {
+      "Name": "Cut_ManReadNodeAttrs",
+      "Start": 9031,
+      "End": 9110,
+      "BodyStart": 9081,
+      "Original": "Vec_Int_t * Cut_ManReadNodeAttrs( Cut_Man_t * p )\n{\n    return p-\u003evNodeAttrs;\n}",
+      "Draft": "func Cut_ManReadNodeAttrs(p *Cut_Man_t) *Vec_Int_t {\n    return p.vNodeAttrs;\n}"
+    },
+    {
+      "Name": "Cut_ManIncrementDagNodes",
+      "Start": 9346,
+      "End": 9416,
+      "BodyStart": 9393,
+      "Original": "void Cut_ManIncrementDagNodes( Cut_Man_t * p )\n{\n    p-\u003enNodesDag++;\n}",
+      "Draft": "func Cut_ManIncrementDagNodes(p *Cut_Man_t) {\n    p.nNodesDag++;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::1576",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1509,
+      "End": 1509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::1629",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1554,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::2452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2377,
+      "End": 2383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::2492",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2417,
+      "End": 2423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::2855",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2780,
+      "End": 2786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::mechanical::sizeof::2972",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2831,
+      "End": 2831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::pointer-cast::1555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1509,
+      "End": 1509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::pointer-cast::2952",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2831,
+      "End": 2831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::pointer-cast::4807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4590,
+      "End": 4590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::pointer-cast::4958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4658,
+      "End": 4658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1305,
+      "End": 3671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::ternary::Cut_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Cut_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3929,
+      "End": 4674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3929,
+      "End": 4674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4910,
+      "End": 6636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManPrintStatsToFile",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManPrintStatsToFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6907,
+      "End": 7494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManSetFanoutCounts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManSetFanoutCounts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7730,
+      "End": 7834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManSetNodeAttrs",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManSetNodeAttrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8070,
+      "End": 8171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManReadVarsMax",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManReadVarsMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8407,
+      "End": 8483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManReadParams",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManReadParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8719,
+      "End": 8795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManReadNodeAttrs",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManReadNodeAttrs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9031,
+      "End": 9110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::Cut_ManIncrementDagNodes",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManIncrementDagNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9346,
+      "End": 9416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9663
+    }
+  ],
+  "Draft": "package cut\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cutMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Cut manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern void Npn_StartTruth8( uint8 uTruths[][32] );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the cut manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManStart(pParams *Cut_Params_t) *Cut_Man_t {\n    var p *Cut_Man_t;\n//    extern int nTruthDsd;\n//    nTruthDsd = 0;\n    assert(pParams.nVarsMax \u003e= 3 \u0026\u0026 pParams.nVarsMax \u003c= CUT_SIZE_MAX, \"pParams.nVarsMax \u003e= 3 \u0026\u0026 pParams.nVarsMax \u003c= CUT_SIZE_MAX\");\n    // inlining of macro ABC_ALLOC\n    p = ((Cut_Man_t *) malloc(sizeof(Cut_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Cut_Man_t) );\n    // set and correct parameters\n    p.pParams = pParams;\n    // prepare storage for cuts\n    p.vCutsNew = Vec_PtrAlloc( pParams.nIdsMax );\n    Vec_PtrFill( p.vCutsNew, pParams.nIdsMax, nil );\n    // prepare storage for sequential cuts\n    if pParams.fSeq {\n        p.pParams.fFilter = 1;\n        p.vCutsOld = Vec_PtrAlloc( pParams.nIdsMax );\n        Vec_PtrFill( p.vCutsOld, pParams.nIdsMax, nil );\n        p.vCutsTemp = Vec_PtrAlloc( pParams.nCutSet );\n        Vec_PtrFill( p.vCutsTemp, pParams.nCutSet, nil );\n        if pParams.fTruth \u0026\u0026 pParams.nVarsMax \u003e 5 {\n            pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth tables for sequential cuts with more than 5 inputs.\\n\");\n        }\n    }\n    // entry size\n    p.EntrySize = sizeof(Cut_Cut_t) + pParams.nVarsMax * sizeof(int);\n    if pParams.fTruth {\n        if pParams.nVarsMax \u003e 14 {\n            pParams.fTruth = 0;\n            fmt.Printf(\"Skipping computation of truth table for more than %d inputs.\\n\", 14);\n        \n        } else {\n            p.nTruthWords = Cut_TruthWords( pParams.nVarsMax );\n            p.EntrySize += p.nTruthWords * sizeof(unsigned);\n        }\n        // inlining of macro ABC_ALLOC\n        p.puTemp[0] = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(4 * p.nTruthWords)));\n        p.puTemp[1] = p.puTemp[0] + p.nTruthWords;\n        p.puTemp[2] = p.puTemp[1] + p.nTruthWords;\n        p.puTemp[3] = p.puTemp[2] + p.nTruthWords;\n    }\n    // enable cut computation recording\n    if pParams.fRecord {\n        p.vNodeCuts   = Vec_IntStart( pParams.nIdsMax );\n        p.vNodeStarts = Vec_IntStart( pParams.nIdsMax );\n        p.vCutPairs   = Vec_IntAlloc( 0 );\n    }\n    // allocate storage for delays\n    if pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n        p.vDelays = Vec_IntStart( pParams.nIdsMax );\n        p.vDelays2 = Vec_IntStart( pParams.nIdsMax );\n        p.vCutsMax = Vec_PtrStart( pParams.nIdsMax );\n    }\n    // memory for cuts\n    p.pMmCuts = Extra_MmFixedStart( p.EntrySize );\n    p.vTemp = Vec_PtrAlloc( 100 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the cut manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManStop(p *Cut_Man_t) {\n    if p.vCutsNew {    Vec_PtrFree( p.vCutsNew ); }\n    if p.vCutsOld {    Vec_PtrFree( p.vCutsOld ); }\n    if p.vCutsTemp {   Vec_PtrFree( p.vCutsTemp ); }\n    if p.vFanCounts {  Vec_IntFree( p.vFanCounts ); }\n    if p.vTemp {       Vec_PtrFree( p.vTemp ); }\n\n    if p.vCutsMax {    Vec_PtrFree( p.vCutsMax ); }\n    if p.vDelays {     Vec_IntFree( p.vDelays ); }\n    if p.vDelays2 {    Vec_IntFree( p.vDelays2 ); }\n    if p.vNodeCuts {   Vec_IntFree( p.vNodeCuts ); }\n    if p.vNodeStarts { Vec_IntFree( p.vNodeStarts ); }\n    if p.vCutPairs {   Vec_IntFree( p.vCutPairs ); }\n    // inlining of macro ABC_FREE\n    if p.puTemp[0] {   ((p.puTemp[0]) ? (free((char *) (p.puTemp[0])), (p.puTemp[0]) = 0) : 0); }\n\n    Extra_MmFixedStop( p.pMmCuts );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManPrintStats(p *Cut_Man_t) {\n    if p.pReady {\n        Cut_CutRecycle( p, p.pReady );\n        p.pReady = nil;\n    }\n    fmt.Printf(\"Cut computation statistics:\\n\");\n    fmt.Printf(\"Current cuts      = %8d. (Trivial = %d.)\\n\", p.nCutsCur-p.nCutsTriv, p.nCutsTriv);\n    fmt.Printf(\"Peak cuts         = %8d.\\n\", p.nCutsPeak);\n    fmt.Printf(\"Total allocated   = %8d.\\n\", p.nCutsAlloc);\n    fmt.Printf(\"Total deallocated = %8d.\\n\", p.nCutsDealloc);\n    fmt.Printf(\"Cuts filtered     = %8d.\\n\", p.nCutsFilter);\n    fmt.Printf(\"Nodes saturated   = %8d. (Max cuts = %d.)\\n\", p.nCutsLimit, p.pParams.nKeepMax);\n    fmt.Printf(\"Cuts per node     = %8.1f\\n\", (float32((p.nCutsCur-p.nCutsTriv)))/p.nNodes);\n    fmt.Printf(\"The cut size      = %8d bytes.\\n\", p.EntrySize);\n    fmt.Printf(\"Peak memory       = %8.2f MB.\\n\", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20));\n    fmt.Printf(\"Total nodes       = %8d.\\n\", p.nNodes);\n    if p.pParams.fDag || p.pParams.fTree {\n    fmt.Printf(\"DAG nodes         = %8d.\\n\", p.nNodesDag);\n    fmt.Printf(\"Tree nodes        = %8d.\\n\", p.nNodes - p.nNodesDag);\n    }\n    fmt.Printf(\"Nodes w/o cuts    = %8d.\\n\", p.nNodesNoCuts);\n    if p.pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n    fmt.Printf(\"Mapping delay     = %8d.\\n\", p.nDelayMin); }\n\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Merge \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMerge)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Union \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUnion)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Filter\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFilter)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Map   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMap)))/(float64(int64(time.Second))));;\n//    printf( \"Nodes = %d. Multi = %d.  Cuts = %d. Multi = %d.\\n\", \n//        p-\u003enNodes, p-\u003enNodesMulti, p-\u003enCutsCur-p-\u003enCutsTriv, p-\u003enCutsMulti );\n//    printf( \"Count0 = %d. Count1 = %d. Count2 = %d.\\n\\n\", p-\u003eCount0, p-\u003eCount1, p-\u003eCount2 );\n}\n\n    \n/**Function*************************************************************\n\n  Synopsis    [Prints some interesting stats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManPrintStatsToFile(p *Cut_Man_t, pFileName string, TimeTotal abctime) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"cut_stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%-20s \", pFileName);\n    fmt.Fprintf(pTable, \"%8d \", p.nNodes);\n    fmt.Fprintf(pTable, \"%6.1f \", (float32((p.nCutsCur)))/p.nNodes);\n    fmt.Fprintf(pTable, \"%6.2f \", (float32((100.0 * p.nCutsLimit)))/p.nNodes);\n    fmt.Fprintf(pTable, \"%6.2f \", float32(p.nCutsPeak) * p.EntrySize / (1\u003c\u003c20));\n    fmt.Fprintf(pTable, \"%6.2f \", float32((TimeTotal))/float32((int64(time.Second))));\n    fmt.Fprintf(pTable, \"\\n\");\n    _ = (pTable).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManSetFanoutCounts(p *Cut_Man_t, vFanCounts *Vec_Int_t) {\n    p.vFanCounts = vFanCounts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManSetNodeAttrs(p *Cut_Man_t, vNodeAttrs *Vec_Int_t) {\n    p.vNodeAttrs = vNodeAttrs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManReadVarsMax(p *Cut_Man_t) int32 {\n    return p.pParams.nVarsMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManReadParams(p *Cut_Man_t) *Cut_Params_t {\n    return p.pParams;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManReadNodeAttrs(p *Cut_Man_t) *Vec_Int_t {\n    return p.vNodeAttrs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManIncrementDagNodes(p *Cut_Man_t) {\n    p.nNodesDag++;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

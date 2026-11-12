@@ -1,0 +1,315 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c",
+  "SHA256": "4e8d0a928e5f406829b5b305ecb0f700c4c01b2a0cab8755e4ab8ae08d342dfe",
+  "Library": [
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 31,
+        "Column": 8,
+        "ByteOffset": 553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strncmp(PLA.label[i], \"DONT_CARE\", 9) == 0 ||"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 32,
+        "Column": 7,
+        "ByteOffset": 605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      strncmp(PLA.label[i], \"DONTCARE\", 8) == 0 ||"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 33,
+        "Column": 7,
+        "ByteOffset": 656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      strncmp(PLA.label[i], \"dont_care\", 9) == 0 ||"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 34,
+        "Column": 7,
+        "ByteOffset": 708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      strncmp(PLA.label[i], \"dontcare\", 8) == 0 {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 16,
+        "ByteOffset": 17185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(PLA.label[base+i], \"X%d\", i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 498,
+        "Column": 12,
+        "ByteOffset": 18831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 498,
+        "Column": 20,
+        "ByteOffset": 18839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 12,
+        "ByteOffset": 18914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 500,
+        "Column": 20,
+        "ByteOffset": 18922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 12,
+        "ByteOffset": 19231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 509,
+        "Column": 20,
+        "ByteOffset": 19239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 511,
+        "Column": 12,
+        "ByteOffset": 19318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 511,
+        "Column": 20,
+        "ByteOffset": 19326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr,"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 9,
+        "ByteOffset": 22014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# state EVERY to %d, before=%d after=%d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 22803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# state ANY to NOWHERE, before=%d after=%d\\n\", before, after);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 13,
+        "ByteOffset": 25163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"# state %d to %d, before=%d after=%d\\n\","
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 642,
+        "Column": 21,
+        "ByteOffset": 26342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    kiss_print_cube(stdout, PLA, p, \"~1\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::pointer-cast::346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 346,
+      "End": 354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::pointer-cast::16361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12480,
+      "End": 12488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::895",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 895,
+      "End": 917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::932",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 932,
+      "End": 954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::4759",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4759,
+      "End": 4782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::9079",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9079,
+      "End": 9117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::15297",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15297,
+      "End": 15307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::15486",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15486,
+      "End": 15496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::15613",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15613,
+      "End": 15623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/hack.c::macro-inline::17498",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17498,
+      "End": 17509
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvoid map_dcset(PLA)\nvar PLA pPLA;\n{\n    int var, i;\n    pcover Tplus, Tminus, Tplusbar, Tminusbar;\n    pcover newf, term1, term2, dcset, dcsetbar;\n    pcube cplus, cminus, last, p;\n\n    if (PLA.label == NIL(char *) || PLA.label[0] == NIL(char))\n    return;\n\n    /* try to find a binary variable named \"DONT_CARE\" */\n    var = -1;\n    for i = 0; i \u003c cube.num_binary_vars * 2; i++ {\n    if strncmp(PLA.label[i], \"DONT_CARE\", 9) == 0 ||\n      strncmp(PLA.label[i], \"DONTCARE\", 8) == 0 ||\n      strncmp(PLA.label[i], \"dont_care\", 9) == 0 ||\n      strncmp(PLA.label[i], \"dontcare\", 8) == 0 {\n        var = i/2;\n        break;\n    }\n    }\n    if var == -1 {\n    return;\n    }\n\n    /* form the cofactor cubes for the don't-care variable */\n    // inlining of macro set_save\n    cplus = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    // inlining of macro set_save\n    cminus = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (cplus[(((var*2) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((var*2) \u0026 (BPI-1))));\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (cminus[(((var*2 + 1) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((var*2 + 1) \u0026 (BPI-1))));\n\n    /* form the don't-care set */\n    // inlining of macro EXEC\n    {long t=ptime();simp_comp(cofactor(cube1list(PLA.F), cplus), \u0026Tplus, \u0026Tplusbar);if(trace)print_trace(Tplus,\"simpcomp+\",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();simp_comp(cofactor(cube1list(PLA.F), cminus), \u0026Tminus, \u0026Tminusbar);if(trace)print_trace(Tminus,\"simpcomp-\",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();term1 = cv_intersect(Tplus, Tminusbar);if(trace)print_trace(term1,\"term1    \",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();term2 = cv_intersect(Tminus, Tplusbar);if(trace)print_trace(term2,\"term2    \",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();dcset = sf_union(term1, term2);if(trace)print_trace(dcset,\"union     \",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();simp_comp(cube1list(dcset), \u0026PLA.D, \u0026dcsetbar);if(trace)print_trace(PLA.D,\"simplify\",ptime()-t);};\n    // inlining of macro EXEC\n    {long t=ptime();newf = cv_intersect(PLA.F, dcsetbar);if(trace)print_trace(PLA.F,\"separate  \",ptime()-t);};\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    PLA.F = newf;\n    // inlining of macro free_cover\n    sf_free(Tplus);\n    // inlining of macro free_cover\n    sf_free(Tminus);\n    // inlining of macro free_cover\n    sf_free(Tplusbar);\n    // inlining of macro free_cover\n    sf_free(Tminusbar);\n    // inlining of macro free_cover\n    sf_free(dcsetbar);\n\n    /* remove any cubes dependent on the DONT_CARE variable */\n    (void) sf_active(PLA.F);\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if ! (p[(((var*2) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((var*2) \u0026 (BPI-1)))) || ! (p[(((var*2+1) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((var*2+1) \u0026 (BPI-1)))) {\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (ACTIVE));\n    }\n    }\n    PLA.F = sf_inactive(PLA.F);\n\n    /* resize the cube and delete the don't-care variable */\n    setdown_cube();\n    for i = 2*var+2; i \u003c cube.size; i++ {\n    PLA.label[i-2] = PLA.label[i];\n    }\n    for i = var+1; i \u003c cube.num_vars; i++ {\n    cube.part_size[i-1] = cube.part_size[i];\n    }\n    cube.num_binary_vars--;\n    cube.num_vars--;\n    cube_setup();\n    PLA.F = sf_delc(PLA.F, 2*var, 2*var+1);\n    PLA.D = sf_delc(PLA.D, 2*var, 2*var+1);\n}\n\f\nvoid map_output_symbolic(PLA)\nvar PLA pPLA;\n{\n    pset_family newF, newD;\n    pset compress;\n    symbolic_t *p1;\n    symbolic_list_t *p2;\n    int i, bit, tot_size, base, old_size;\n\n    /* Remove the DC-set from the ON-set (is this necessary ??) */\n    if PLA.D.count \u003e 0 {\n    sf_free(PLA.F);\n    PLA.F = complement(cube2list(PLA.D, PLA.R));\n    }\n\n    /* tot_size = width added for all symbolic variables */\n    tot_size = 0;\n    for p1=PLA.symbolic_output; p1!=NIL(symbolic_t); p1=p1.next {\n    for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        if p2.pos\u003c0 || p2.pos\u003e=cube.part_size[cube.output] {\n        fatal(\"symbolic-output index out of range\");\n/*        } else if (p2-\u003evariable != cube.output) {\n        fatal(\"symbolic-output label must be an output\");*/\n        }\n    }\n    tot_size += 1 \u003c\u003c p1.symbolic_list_length;\n    }\n\n    /* adjust the indices to skip over new outputs */\n    for p1=PLA.symbolic_output; p1!=NIL(symbolic_t); p1=p1.next {\n    for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        p2.pos += tot_size;\n    }\n    }\n\n    /* resize the cube structure -- add enough for the one-hot outputs */\n    old_size = cube.size;\n    cube.part_size[cube.output] += tot_size;\n    setdown_cube();\n    cube_setup();\n\n    /* insert space in the output part for the one-hot output */\n    base = cube.first_part[cube.output];\n    PLA.F = sf_addcol(PLA.F, base, tot_size);\n    PLA.D = sf_addcol(PLA.D, base, tot_size);\n    PLA.R = sf_addcol(PLA.R, base, tot_size);\n\n    /* do the real work */\n    for p1=PLA.symbolic_output; p1!=NIL(symbolic_t); p1=p1.next {\n    // inlining of macro new_cover\n    newF = sf_new(100, cube.size);\n    // inlining of macro new_cover\n    newD = sf_new(100, cube.size);\n    find_inputs(NIL(set_family_t), PLA, p1.symbolic_list, base, 0,\n                \u0026newF, \u0026newD);\n/*\n *  Not sure what this means\n    find_dc_inputs(PLA, p1-\u003esymbolic_list,\n                base, 1 \u003c\u003c p1-\u003esymbolic_list_length, \u0026newF, \u0026newD);\n */\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    PLA.F = newF;\n/*\n *  retain OLD DC-set -- but we've lost the don't-care arc information\n *  (it defaults to branch to the zero state)\n    free_cover(PLA-\u003eD);\n    PLA-\u003eD = newD;\n */\n    // inlining of macro free_cover\n    sf_free(newD);\n    base += 1 \u003c\u003c p1.symbolic_list_length;\n    }\n\n    /* delete the old outputs, and resize the cube */\n    // inlining of macro set_full\n    compress = set_fill(ALLOC(unsigned int, SET_SIZE(newF.sf_size)), newF.sf_size);\n    for p1=PLA.symbolic_output; p1!=NIL(symbolic_t); p1=p1.next {\n    for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        bit = cube.first_part[cube.output] + p2.pos;\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (compress[(((bit) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((bit) \u0026 (BPI-1))));\n    }\n    }\n    cube.part_size[cube.output] -= newF.sf_size - set_ord(compress);\n    setdown_cube();\n    cube_setup();\n    PLA.F = sf_compress(PLA.F, compress);\n    PLA.D = sf_compress(PLA.D, compress);\n    if (cube.size != PLA.F.sf_size) fatal(\"error\");\n\n    /* Quick minimization */\n    PLA.F = sf_contain(PLA.F);\n    PLA.D = sf_contain(PLA.D);\n    for i = 0; i \u003c cube.num_vars; i++ {\n    PLA.F = d1merge(PLA.F, i);\n    PLA.D = d1merge(PLA.D, i);\n    }\n    PLA.F = sf_contain(PLA.F);\n    PLA.D = sf_contain(PLA.D);\n\n    // inlining of macro free_cover\n    sf_free(PLA.R);\n    // inlining of macro new_cover\n    PLA.R = sf_new(0, cube.size);\n\n    symbolic_hack_labels(PLA, PLA.symbolic_output,\n                compress, cube.size, old_size, tot_size);\n    // inlining of macro set_free\n    FREE(compress);\n}\n\n\nvoid find_inputs(A, PLA, list, base, value, newF, newD)\npcover A;\nvar PLA pPLA;\nvar list *symbolic_list_t;\nvar base, value int32;\npcover *newF, *newD;\n{\n    pcover S, S1;\n    register pset last, p;\n\n    /*\n     *  A represents th 'input' values for which the outputs assume\n     *  the integer value 'value\n     */\n    if list == NIL(symbolic_list_t) {\n    /*\n     *  Simulate these inputs against the on-set; then, insert into the\n     *  new on-set a 1 in the proper position\n     */\n    S = cv_intersect(A, PLA.F);\n    // inlining of macro foreach_set\n    for p=S.data,last=p+S.count*S.wsize;p\u003clast;p+=S.wsize {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p[(((base + value) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((base + value) \u0026 (BPI-1)));\n    }\n    *newF = sf_append(*newF, S);\n\n    /*\n     *  'simulate' these inputs against the don't-care set\n    S = cv_intersect(A, PLA-\u003eD);\n    *newD = sf_append(*newD, S);\n     */\n\n    } else {\n    /* intersect and recur with the OFF-set */\n    S = cof_output(PLA.R, cube.first_part[cube.output] + list.pos);\n    if A != NIL(set_family_t) {\n        S1 = cv_intersect(A, S);\n        // inlining of macro free_cover\n        sf_free(S);\n        S = S1;\n    }\n    find_inputs(S, PLA, list.next, base, value*2, newF, newD);\n    // inlining of macro free_cover\n    sf_free(S);\n\n    /* intersect and recur with the ON-set */\n    S = cof_output(PLA.F, cube.first_part[cube.output] + list.pos);\n    if A != NIL(set_family_t) {\n        S1 = cv_intersect(A, S);\n        // inlining of macro free_cover\n        sf_free(S);\n        S = S1;\n    }\n    find_inputs(S, PLA, list.next, base, value*2 + 1, newF, newD);\n    // inlining of macro free_cover\n    sf_free(S);\n    }\n}\n\n\n     \n                                                   \n         \n                      \n                 \n                    \n \n                    \n                        \n                          \n                   \n\n                                                                       \n                          \n                                                         \n                                                                   \n                                 \n              \n            \n                                \n                      \n                      \n               \n     \n     \n\n                                \n                                \n\n                                \n                             \n                                           \n                         \n     \n     \n                                \n                  \n \n      \n\f\nvoid map_symbolic(PLA)\nvar PLA pPLA;\n{\n    symbolic_t *p1;\n    symbolic_list_t *p2;\n    int var, base, num_vars, num_binary_vars, *new_part_size;\n    int new_size, size_added, num_deleted_vars, num_added_vars, newvar;\n    pset compress;\n\n    /* Verify legal values are in the symbolic lists */\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1.next {\n    for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        if p2.variable  \u003c 0 || p2.variable \u003e= cube.num_binary_vars {\n        fatal(\".symbolic requires binary variables\");\n        }\n    }\n    }\n\n    /*\n     *  size_added = width added for all symbolic variables\n     *  num_deleted_vars = # binary variables to be deleted\n     *  num_added_vars = # new mv variables\n     *  compress = a cube which will be used to compress the set families\n     */\n    size_added = 0;\n    num_added_vars = 0;\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1.next {\n    size_added += 1 \u003c\u003c p1.symbolic_list_length;\n    num_added_vars++;\n    }\n    // inlining of macro set_full\n    compress = set_fill(ALLOC(unsigned int, SET_SIZE(PLA.F.sf_size + size_added)), PLA.F.sf_size + size_added);\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1.next {\n    for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (compress[(((p2.variable*2) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((p2.variable*2) \u0026 (BPI-1))));\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (compress[(((p2.variable*2+1) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((p2.variable*2+1) \u0026 (BPI-1))));\n    }\n    }\n    num_deleted_vars = ((PLA.F.sf_size + size_added) - set_ord(compress))/2;\n\n    /* compute the new cube constants */\n    num_vars = cube.num_vars - num_deleted_vars + num_added_vars;\n    num_binary_vars = cube.num_binary_vars - num_deleted_vars;\n    new_size = cube.size - num_deleted_vars*2 + size_added;\n    new_part_size = ALLOC(int, num_vars);\n    new_part_size[num_vars-1] = cube.part_size[cube.num_vars-1];\n    for var = cube.num_binary_vars; var \u003c cube.num_vars-1; var++ {\n    new_part_size[var-num_deleted_vars] = cube.part_size[var];\n    }\n\n    /* re-size the covers, opening room for the new mv variables */\n    base = cube.first_part[cube.output];\n    PLA.F = sf_addcol(PLA.F, base, size_added);\n    PLA.D = sf_addcol(PLA.D, base, size_added);\n    PLA.R = sf_addcol(PLA.R, base, size_added);\n\n    /* compute the values for the new mv variables */\n    newvar = (cube.num_vars - 1) - num_deleted_vars;\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1.next {\n    PLA.F = map_symbolic_cover(PLA.F, p1.symbolic_list, base);\n    PLA.D = map_symbolic_cover(PLA.D, p1.symbolic_list, base);\n    PLA.R = map_symbolic_cover(PLA.R, p1.symbolic_list, base);\n    base += 1 \u003c\u003c p1.symbolic_list_length;\n    new_part_size[newvar++] = 1 \u003c\u003c p1.symbolic_list_length;\n    }\n\n    /* delete the binary variables which disappear */\n    PLA.F = sf_compress(PLA.F, compress);\n    PLA.D = sf_compress(PLA.D, compress);\n    PLA.R = sf_compress(PLA.R, compress);\n\n    symbolic_hack_labels(PLA, PLA.symbolic, compress,\n        new_size, cube.size, size_added);\n    setdown_cube();\n    FREE(cube.part_size);\n    cube.num_vars = num_vars;\n    cube.num_binary_vars = num_binary_vars;\n    cube.part_size = new_part_size;\n    cube_setup();\n    // inlining of macro set_free\n    FREE(compress);\n}\n\n\npcover map_symbolic_cover(T, list, base)\npcover T;\nvar list *symbolic_list_t;\nvar base int32;\n{\n    pset last, p;\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n    form_bitvector(p, base, 0, list);\n    }\n    return T;\n}\n\n\nvoid form_bitvector(p, base, value, list)\nvar p pset;            /* old cube, looking at binary variables */\nvar base int32;        /* where in mv cube the new variable starts */\nvar value int32;        /* current value for this recursion */\nvar list *symbolic_list_t;    /* current place in the symbolic list */\n{\n    if list == NIL(symbolic_list_t) {\n    // inlining of macro set_insert\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (p[(((base + value) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((base + value) \u0026 (BPI-1)));\n    } else {\n    // inlining of macro GETINPUT\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    switch (p[(((2*list.variable) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*list.variable) \u0026 (BPI-1))) \u0026 3 {\n        case ZERO:\n        form_bitvector(p, base, value*2, list.next);\n        break;\n        case ONE:\n        form_bitvector(p, base, value*2+1, list.next);\n        break;\n        case TWO:\n        form_bitvector(p, base, value*2, list.next);\n        form_bitvector(p, base, value*2+1, list.next);\n        break;\n        default:\n        fatal(\"bad cube in form_bitvector\");\n    }\n    }\n}\n\n\nvoid symbolic_hack_labels(PLA, list, compress, new_size, old_size, size_added)\nvar PLA pPLA;\nvar list *symbolic_t;\nvar compress pset;\nvar new_size, old_size, size_added int32;\n{\n    int i, base;\n    char **oldlabel;\n    symbolic_t *p1;\n    symbolic_label_t *p3;\n\n    /* hack with the labels */\n    if ((oldlabel = PLA.label) == NIL(char *))\n    return;\n    PLA.label = ALLOC(char *, new_size);\n    for i = 0; i \u003c new_size; i++ {\n    PLA.label[i] = NIL(char);\n    }\n\n    /* copy the binary variable labels and unchanged mv variable labels */\n    base = 0;\n    for i = 0; i \u003c cube.first_part[cube.output]; i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if compress[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        PLA.label[base++] = oldlabel[i];\n    } else {\n        if oldlabel[i] != NIL(char) {\n        FREE(oldlabel[i]);\n        }\n    }\n    }\n\n    /* add the user-defined labels for the symbolic outputs */\n    for p1 = list; p1 != NIL(symbolic_t); p1 = p1.next {\n    p3 = p1.symbolic_label;\n    for i = 0; i \u003c (1 \u003c\u003c p1.symbolic_list_length); i++ {\n        if p3 == NIL(symbolic_label_t) {\n        PLA.label[base+i] = ALLOC(char, 10);\n        (void) sprintf(PLA.label[base+i], \"X%d\", i);\n        } else {\n        PLA.label[base+i] = p3.label;\n        p3 = p3.next;\n        }\n    }\n    base += 1 \u003c\u003c p1.symbolic_list_length;\n    }\n\n    /* copy the labels for the binary outputs which remain */\n    for i = cube.first_part[cube.output]; i \u003c old_size; i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if compress[(((i + size_added) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i + size_added) \u0026 (BPI-1))) {\n        PLA.label[base++] = oldlabel[i];\n    } else {\n        if oldlabel[i] != NIL(char) {\n        FREE(oldlabel[i]);\n        }\n    }\n    }\n    FREE(oldlabel);\n}\n\f\nstatic pcover fsm_simplify(F)\npcover F;\n{\n    pcover D, R;\n    // inlining of macro new_cover\n    D = sf_new(0, cube.size);\n    R = complement(cube1list(F));\n    F = espresso(F, D, R);\n    // inlining of macro free_cover\n    sf_free(D);\n    // inlining of macro free_cover\n    sf_free(R);\n    return F;\n}\n\n\nvoid disassemble_fsm(PLA, verbose_mode)\nvar PLA pPLA;\nvar verbose_mode int32;\n{\n    int nin, nstates, nout;\n    int before, after, present_state, next_state, i, j;\n    pcube next_state_mask, present_state_mask, state_mask, p, p1, last;\n    pcover go_nowhere, F, tF;\n\n    /* We make the DISGUSTING assumption that the first 'n' outputs have\n     *  been created by .symbolic-output, and represent a one-hot encoding\n     * of the next state.  'n' is the size of the second-to-last multiple-\n     * valued variable (i.e., before the outputs\n     */\n\n    if cube.num_vars - cube.num_binary_vars != 2 {\n    (void) fmt.Fprintf(os.Stderr, \"use .symbolic and .symbolic-output to specify\\n\");\n    (void) fmt.Fprintf(os.Stderr, \"the present state and next state field information\\n\");\n    fatal(\"disassemble_pla: need two multiple-valued variables\\n\");\n    }\n\n    nin = cube.num_binary_vars;\n    nstates = cube.part_size[cube.num_binary_vars];\n    nout = cube.part_size[cube.num_vars - 1];\n    if nout \u003c nstates {\n    (void) fmt.Fprintf(os.Stderr, \"use .symbolic and .symbolic-output to specify\\n\");\n    (void) fmt.Fprintf(os.Stderr, \"the present state and next state field information\\n\");\n    fatal(\"disassemble_pla: # outputs \u003c # states\\n\");\n    }\n\n\n    present_state = cube.first_part[cube.num_binary_vars];\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    present_state_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for i = 0; i \u003c nstates; i++ {\n    // inlining of macro set_insert\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (present_state_mask[(((i + present_state) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i + present_state) \u0026 (BPI-1)));\n    }\n\n    next_state = cube.first_part[cube.num_binary_vars+1];\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    next_state_mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for i = 0; i \u003c nstates; i++ {\n    // inlining of macro set_insert\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (next_state_mask[(((i + next_state) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i + next_state) \u0026 (BPI-1)));\n    }\n\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    state_mask = set_or(set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size), next_state_mask, present_state_mask);\n\n    // inlining of macro new_cover\n    F = sf_new(10, cube.size);\n\n\n    /*\n     *  check for arcs which go from ANY state to state #i\n     */\n    for i = 0; i \u003c nstates; i++ {\n    // inlining of macro new_cover\n    tF = sf_new(10, cube.size);\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n        if setp_implies(present_state_mask, p) { /* from any state ! */\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((next_state + i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((next_state + i) \u0026 (BPI-1))) {\n            tF = sf_addset(tF, p);\n        }\n        }\n    }\n    before = tF.count;\n    if before \u003e 0 {\n        tF = fsm_simplify(tF);\n        /* don't allow the next state to disappear ... */\n        // inlining of macro foreach_set\n        for p=tF.data,last=p+tF.count*tF.wsize;p\u003clast;p+=tF.wsize {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p[(((next_state + i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((next_state + i) \u0026 (BPI-1)));\n        }\n        after = tF.count;\n        F = sf_append(F, tF);\n        if verbose_mode != 0 {\n        fmt.Printf(\"# state EVERY to %d, before=%d after=%d\\n\", i, before, after);\n        }\n    }\n    }\n\n\n    /*\n     *  some 'arcs' may NOT have a next state -- handle these\n     *  we must unravel the present state part\n     */\n    // inlining of macro new_cover\n    go_nowhere = sf_new(10, cube.size);\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    if setp_disjoint(p, next_state_mask) { /* no next state !! */\n        go_nowhere = sf_addset(go_nowhere, p);\n    }\n    }\n    before = go_nowhere.count;\n    go_nowhere = unravel_range(go_nowhere,\n                cube.num_binary_vars, cube.num_binary_vars);\n    after = go_nowhere.count;\n    F = sf_append(F, go_nowhere);\n    if verbose_mode != 0 {\n    fmt.Printf(\"# state ANY to NOWHERE, before=%d after=%d\\n\", before, after);\n    }\n\n\n    /*\n     *  minimize cover for all arcs from state #i to state #j\n     */\n    for i = 0; i \u003c nstates; i++ {\n    for j = 0; j \u003c nstates; j++ {\n        // inlining of macro new_cover\n        tF = sf_new(10, cube.size);\n        // inlining of macro foreach_set\n        for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n        /* not EVERY state */\n        if ! setp_implies(present_state_mask, p) {\n            // inlining of macro is_in_set\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if p[(((present_state + i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((present_state + i) \u0026 (BPI-1))) {\n            // inlining of macro is_in_set\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if p[(((next_state + j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((next_state + j) \u0026 (BPI-1))) {\n                // inlining of macro set_save\n                p1 = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(p))), p);\n                set_diff(p1, p1, state_mask);\n                // inlining of macro set_insert\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (p1[(((present_state + i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((present_state + i) \u0026 (BPI-1)));\n                // inlining of macro set_insert\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (p1[(((next_state + j) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((next_state + j) \u0026 (BPI-1)));\n                tF = sf_addset(tF, p1);\n                // inlining of macro set_free\n                FREE(p1);\n            }\n            }\n        }\n        }\n        before = tF.count;\n        if before \u003e 0 {\n        tF = fsm_simplify(tF);\n        /* don't allow the next state to disappear ... */\n        // inlining of macro foreach_set\n        for p=tF.data,last=p+tF.count*tF.wsize;p\u003clast;p+=tF.wsize {\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((next_state + j) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((next_state + j) \u0026 (BPI-1)));\n        }\n        after = tF.count;\n        F = sf_append(F, tF);\n        if verbose_mode != 0 {\n            fmt.Printf(\"# state %d to %d, before=%d after=%d\\n\", i, j, before, after);\n        }\n        }\n    }\n    }\n\n\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(state_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(present_state_mask);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(next_state_mask);\n\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    PLA.F = F;\n    // inlining of macro free_cover\n    sf_free(PLA.D);\n    // inlining of macro new_cover\n    PLA.D = sf_new(0, cube.size);\n\n    setdown_cube();\n    FREE(cube.part_size);\n    cube.num_binary_vars = nin;\n    cube.num_vars = nin + 3;\n    cube.part_size = ALLOC(int, cube.num_vars);\n    cube.part_size[cube.num_binary_vars] = nstates;\n    cube.part_size[cube.num_binary_vars+1] = nstates;\n    cube.part_size[cube.num_binary_vars+2] = nout - nstates;\n    cube_setup();\n\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    kiss_print_cube(os.Stdout, PLA, p, \"~1\");\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

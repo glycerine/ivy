@@ -1,0 +1,2223 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c",
+  "SHA256": "749b40a10dc05ba821371f9227754f54e6259e2593101a967891fbbefa73802c",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 27,
+        "ByteOffset": 1322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    new_node = (ltlNode *)malloc( sizeof(ltlNode) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 31,
+        "ByteOffset": 2289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        tempFormula = (char *)malloc( sizeof(char)*(strlen(pLtlFormula)+1) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 102,
+        "Column": 53,
+        "ByteOffset": 2311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        tempFormula = (char *)malloc( sizeof(char)*(strlen(pLtlFormula)+1) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 2345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( tempFormula, \"%s\", pLtlFormula );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 121,
+        "Column": 20,
+        "ByteOffset": 2833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    name = (char *)malloc( sizeof(char) * (length + 1));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 3089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( formula );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 135,
+        "Column": 23,
+        "ByteOffset": 3130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if index \u003e= int32(strlen( formula )) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 3159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nInvalid LTL formula: unexpected end of string...\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 3486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nInvalid LTL formula: expecting temporal operator at the position %d....\\n\", index);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 158,
+        "Column": 21,
+        "ByteOffset": 3900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    formulaLength = strlen( formula );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 3984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nFAULTING POINT: formula = %s\\nstartOfSuffixString = %d, formula[%d] = %c\\n\\n\", formula, startOfSuffixString, startOfSuffixString - 1, formula[startOfSuffixString-1]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 33,
+        "ByteOffset": 5706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 33,
+        "ByteOffset": 7131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 33,
+        "ByteOffset": 8554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 33,
+        "ByteOffset": 10323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 21,
+        "ByteOffset": 13049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 13,
+        "ByteOffset": 13845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\u0026 \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 13871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 13911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 13,
+        "ByteOffset": 14099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"+ \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 13,
+        "ByteOffset": 14125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 13,
+        "ByteOffset": 14165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 13,
+        "ByteOffset": 14354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"~ \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 13,
+        "ByteOffset": 14380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 13,
+        "ByteOffset": 14473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 14560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"G \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 13,
+        "ByteOffset": 14586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 14679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 13,
+        "ByteOffset": 14768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"F \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 13,
+        "ByteOffset": 14794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 13,
+        "ByteOffset": 14887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 413,
+        "Column": 13,
+        "ByteOffset": 14970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"X \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 13,
+        "ByteOffset": 14996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 13,
+        "ByteOffset": 15089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 15173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"U \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 420,
+        "Column": 13,
+        "ByteOffset": 15199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 13,
+        "ByteOffset": 15239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 13,
+        "ByteOffset": 15429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%s \", node.name);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 13,
+        "ByteOffset": 15467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 13,
+        "ByteOffset": 15507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 13,
+        "ByteOffset": 15585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nUnsupported token type: Exiting execution\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 432,
+        "Column": 13,
+        "ByteOffset": 15654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 13,
+        "ByteOffset": 15784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"( \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 13,
+        "ByteOffset": 15810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 13,
+        "ByteOffset": 15850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 443,
+        "Column": 13,
+        "ByteOffset": 15952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\u0026 \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 13,
+        "ByteOffset": 16040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\") \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 448,
+        "Column": 13,
+        "ByteOffset": 16106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"( \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 13,
+        "ByteOffset": 16132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 13,
+        "ByteOffset": 16172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 13,
+        "ByteOffset": 16274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"+ \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 13,
+        "ByteOffset": 16362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\") \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 13,
+        "ByteOffset": 16429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"~ \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 13,
+        "ByteOffset": 16455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 460,
+        "Column": 13,
+        "ByteOffset": 16556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 463,
+        "Column": 13,
+        "ByteOffset": 16643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"G \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 465,
+        "Column": 13,
+        "ByteOffset": 16697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 13,
+        "ByteOffset": 16798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 13,
+        "ByteOffset": 16915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"F \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 473,
+        "Column": 13,
+        "ByteOffset": 16969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 475,
+        "Column": 13,
+        "ByteOffset": 17070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 13,
+        "ByteOffset": 17181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"X \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 13,
+        "ByteOffset": 17207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 13,
+        "ByteOffset": 17308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 13,
+        "ByteOffset": 17392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"( \");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 13,
+        "ByteOffset": 17418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 13,
+        "ByteOffset": 17458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 13,
+        "ByteOffset": 17560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"U \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 491,
+        "Column": 13,
+        "ByteOffset": 17648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\") \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 13,
+        "ByteOffset": 17716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%s \", node.name);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 13,
+        "ByteOffset": 17754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.left == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 496,
+        "Column": 13,
+        "ByteOffset": 17794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( node.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 13,
+        "ByteOffset": 17872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nUnsupported token type: Exiting execution\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 500,
+        "Column": 13,
+        "ByteOffset": 17941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 520,
+        "Column": 13,
+        "ByteOffset": 18618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nextNode.type == EVENTUALLY );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 523,
+        "Column": 17,
+        "ByteOffset": 18762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nextToNextNode.pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 533,
+        "Column": 17,
+        "ByteOffset": 19278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nextToNextNode.pObj == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 13,
+        "ByteOffset": 19917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nINVALID situation: aborting...\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 548,
+        "Column": 13,
+        "ByteOffset": 19975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 9,
+        "ByteOffset": 20216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLtlNode.type != BOOL );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 561,
+        "Column": 17,
+        "ByteOffset": 20319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 561,
+        "Column": 42,
+        "ByteOffset": 20344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 564,
+        "Column": 17,
+        "ByteOffset": 20580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 564,
+        "Column": 39,
+        "ByteOffset": 20602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 17,
+        "ByteOffset": 20777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 42,
+        "ByteOffset": 20802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 571,
+        "Column": 17,
+        "ByteOffset": 21038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 571,
+        "Column": 39,
+        "ByteOffset": 21060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 575,
+        "Column": 17,
+        "ByteOffset": 21235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right == nil ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 575,
+        "Column": 42,
+        "ByteOffset": 21260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right == nil ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 577,
+        "Column": 17,
+        "ByteOffset": 21406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 17,
+        "ByteOffset": 21628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"FORBIDDEN node: ABORTING!!\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 585,
+        "Column": 17,
+        "ByteOffset": 21684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 588,
+        "Column": 17,
+        "ByteOffset": 21742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 589,
+        "Column": 17,
+        "ByteOffset": 21839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                exit(0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 600,
+        "Column": 9,
+        "ByteOffset": 22069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLtlNode.type != BOOL );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 603,
+        "Column": 17,
+        "ByteOffset": 22172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 603,
+        "Column": 42,
+        "ByteOffset": 22197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 17,
+        "ByteOffset": 22391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 39,
+        "ByteOffset": 22413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 610,
+        "Column": 17,
+        "ByteOffset": 22585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 610,
+        "Column": 42,
+        "ByteOffset": 22610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 613,
+        "Column": 17,
+        "ByteOffset": 22804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 613,
+        "Column": 39,
+        "ByteOffset": 22826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj ); assert( rightAigObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 17,
+        "ByteOffset": 22998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right == nil ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 42,
+        "ByteOffset": 23023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pLtlNode.left ); assert( pLtlNode.right == nil ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 17,
+        "ByteOffset": 23148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( leftAigObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 626,
+        "Column": 17,
+        "ByteOffset": 23370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"\\nAttempting to create circuit with missing AIG pointer in a TEMPORAL node: ABORTING!!\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 627,
+        "Column": 17,
+        "ByteOffset": 23486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 630,
+        "Column": 17,
+        "ByteOffset": 23544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 631,
+        "Column": 17,
+        "ByteOffset": 23641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                exit(0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 643,
+        "Column": 13,
+        "ByteOffset": 23932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topNode.right == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 661,
+        "Column": 13,
+        "ByteOffset": 24371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topNode.right == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 667,
+        "Column": 13,
+        "ByteOffset": 24565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topNode.right == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 671,
+        "Column": 17,
+        "ByteOffset": 24705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nextNode.right == nil );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 681,
+        "Column": 8,
+        "ByteOffset": 24937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( targetName, \"true\" ) == 0 { "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 683,
+        "Column": 8,
+        "ByteOffset": 25001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp( targetName, \"false\" ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 701,
+        "Column": 20,
+        "ByteOffset": 25553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( Abc_ObjName( pNode ), targetName ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 706,
+        "Column": 13,
+        "ByteOffset": 25755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nVariable name \\\"%s\\\" not found in the PO name list\\n\", targetName);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 712,
+        "Column": 13,
+        "ByteOffset": 25930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 713,
+        "Column": 13,
+        "ByteOffset": 25976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 720,
+        "Column": 13,
+        "ByteOffset": 26233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 721,
+        "Column": 13,
+        "ByteOffset": 26279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 724,
+        "Column": 13,
+        "ByteOffset": 26413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 725,
+        "Column": 13,
+        "ByteOffset": 26487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 747,
+        "Column": 20,
+        "ByteOffset": 27225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp( Abc_ObjName( pNode ), targetName ) == 0 {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 749,
+        "Column": 21,
+        "ByteOffset": 27347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Aig_ObjIsCo( pObj ));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 754,
+        "Column": 13,
+        "ByteOffset": 27612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 760,
+        "Column": 13,
+        "ByteOffset": 27710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 761,
+        "Column": 13,
+        "ByteOffset": 27756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 769,
+        "Column": 13,
+        "ByteOffset": 28063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 770,
+        "Column": 13,
+        "ByteOffset": 28109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 774,
+        "Column": 13,
+        "ByteOffset": 28276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 775,
+        "Column": 13,
+        "ByteOffset": 28350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 786,
+        "Column": 17,
+        "ByteOffset": 28585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"\\nfaulting PODMANDYO topASTNode-\u003ename = %s\\n\", topASTNode.name);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 794,
+        "Column": 13,
+        "ByteOffset": 28785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 795,
+        "Column": 13,
+        "ByteOffset": 28831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 802,
+        "Column": 13,
+        "ByteOffset": 29080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.left != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 803,
+        "Column": 13,
+        "ByteOffset": 29126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( topASTNode.right == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 806,
+        "Column": 13,
+        "ByteOffset": 29256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 807,
+        "Column": 13,
+        "ByteOffset": 29330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "generateTypedNode",
+      "Start": 1079,
+      "End": 1487,
+      "BodyStart": 1194,
+      "Original": "ltlNode *generateTypedNode( tokenType new_type )\n//void generateTypedNode( ltlNode *new_node, tokenType new_type )\n{\n    ltlNode *new_node;\n\n    new_node = (ltlNode *)malloc( sizeof(ltlNode) );\n    if( new_node )\n    {\n        new_node-\u003etype = new_type;\n        new_node-\u003epObj = NULL;\n        new_node-\u003ename = NULL;\n        new_node-\u003eleft = NULL;\n        new_node-\u003eright = NULL;\n    }\n\n    return new_node;\n}",
+      "Draft": "ltlNode *generateTypedNode( tokenType new_type )\n//void generateTypedNode( ltlNode *new_node, tokenType new_type )\n{\n    var new_node *ltlNode;\n\n    new_node = (ltlNode *)malloc( sizeof(ltlNode) );\n    if new_node != nil {\n        new_node.type = new_type;\n        new_node.pObj = nil;\n        new_node.name = nil;\n        new_node.left = nil;\n        new_node.right = nil;\n    }\n\n    return new_node;\n}"
+    },
+    {
+      "Name": "isNotVarNameSymbol",
+      "Start": 1580,
+      "End": 1706,
+      "BodyStart": 1627,
+      "Original": "static inline int isNotVarNameSymbol( char c )\n{\n    return ( c == ' ' || c == '\\t' || c == '\\n' || c == ':' || c == '\\0' );\n}",
+      "Draft": "func isNotVarNameSymbol(c byte) int32 {\n    return ( c == ' ' || c == '\\t' || c == '\\n' || c == ':' || c == '\\0' );\n}"
+    },
+    {
+      "Name": "Abc_FrameCopyLTLDataBase",
+      "Start": 1708,
+      "End": 2413,
+      "BodyStart": 1777,
+      "Original": "void Abc_FrameCopyLTLDataBase( Abc_Frame_t *pAbc, Abc_Ntk_t * pNtk )\n{\n    char *pLtlFormula, *tempFormula;\n    int i;\n\n    if( pAbc-\u003evLTLProperties_global != NULL )\n    {\n//        printf(\"Deleting exisitng LTL database from the frame\\n\");\n        Vec_PtrFree( pAbc-\u003evLTLProperties_global );\n        pAbc-\u003evLTLProperties_global = NULL;\n    }\n    pAbc-\u003evLTLProperties_global = Vec_PtrAlloc(Vec_PtrSize(pNtk-\u003evLtlProperties));\n    Vec_PtrForEachEntry( char *, pNtk-\u003evLtlProperties, pLtlFormula, i )\n    {\n        tempFormula = (char *)malloc( sizeof(char)*(strlen(pLtlFormula)+1) );\n        sprintf( tempFormula, \"%s\", pLtlFormula );\n        Vec_PtrPush( pAbc-\u003evLTLProperties_global, tempFormula );\n    }\n}",
+      "Draft": "func Abc_FrameCopyLTLDataBase(pAbc *Abc_Frame_t, pNtk *Abc_Ntk_t) {\n    var pLtlFormula, tempFormula string;\n    var i int32;\n\n    if pAbc.vLTLProperties_global != nil {\n//        printf(\"Deleting exisitng LTL database from the frame\\n\");\n        Vec_PtrFree( pAbc.vLTLProperties_global );\n        pAbc.vLTLProperties_global = nil;\n    }\n    pAbc.vLTLProperties_global = Vec_PtrAlloc(Vec_PtrSize(pNtk.vLtlProperties));\n    Vec_PtrForEachEntry( char *, pNtk.vLtlProperties, pLtlFormula, i )\n    {\n        tempFormula = (char *)malloc( sizeof(char)*(len(pLtlFormula)+1) );\n        tempFormula = fmt.Sprintf(\"%s\", pLtlFormula);\n        Vec_PtrPush( pAbc.vLTLProperties_global, tempFormula );\n    }\n}"
+    },
+    {
+      "Name": "getVarName",
+      "Start": 2415,
+      "End": 2900,
+      "BodyStart": 2487,
+      "Original": "char *getVarName( char *suffixFormula, int startLoc, int *endLocation )\n{\n    int i = startLoc, length;\n    char *name;\n\n    if( isNotVarNameSymbol( suffixFormula[startLoc] ) )\n        return NULL;\n\n    while( !isNotVarNameSymbol( suffixFormula[i] ) )\n        i++;\n    *endLocation = i;\n    length = i - startLoc;\n    name = (char *)malloc( sizeof(char) * (length + 1));\n    for( i=0; i\u003clength; i++ )\n        name[i] = suffixFormula[i+startLoc];\n    name[i] = '\\0';\n\n    return name;\n}",
+      "Draft": "func getVarName(suffixFormula string, startLoc int32, endLocation *int32) string {\n    var i int32 = startLoc;\n    var length int32;\n    var name string;\n\n    if isNotVarNameSymbol( suffixFormula[startLoc] ) != 0 {\n        return nil; }\n\n    for  !(isNotVarNameSymbol( suffixFormula[i] ) != 0)  {\n        i++;\n    }\n    *endLocation = i;\n    length = i - startLoc;\n    name = (char *)malloc( sizeof(char) * (length + 1));\n    for  i=0; i\u003clength; i++  {\n        name[i] = suffixFormula[i+startLoc];\n    }\n    name[i] = '\\0';\n\n    return name;\n}"
+    },
+    {
+      "Name": "isUnexpectedEOS",
+      "Start": 2933,
+      "End": 3164,
+      "BodyStart": 2981,
+      "Original": "int isUnexpectedEOS( char *formula, int index )\n{\n    assert( formula );\n    if( index \u003e= (int)strlen( formula ) )\n    {\n        printf(\"\\nInvalid LTL formula: unexpected end of string...\" );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func isUnexpectedEOS(formula string, index int32) int32 {\n    assert(formula, \"formula\");\n    if index \u003e= int32(len(formula)) {\n        fmt.Printf(\"\\nInvalid LTL formula: unexpected end of string...\");\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "isTemporalOperator",
+      "Start": 3166,
+      "End": 3521,
+      "BodyStart": 3217,
+      "Original": "int isTemporalOperator( char *formula, int index )\n{\n    if( !(isUnexpectedEOS( formula, index ) || formula[ index ] == 'G' || formula[ index ] == 'F' || formula[ index ] == 'U' || formula[ index ] == 'X') )\n    {\n        printf(\"\\nInvalid LTL formula: expecting temporal operator at the position %d....\\n\", index);\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func isTemporalOperator(formula string, index int32) int32 {\n    if !((isUnexpectedEOS( formula, index ) != 0) || formula[ index ] == 'G' || formula[ index ] == 'F' || formula[ index ] == 'U' || formula[ index ] == 'X') {\n        fmt.Printf(\"\\nInvalid LTL formula: expecting temporal operator at the position %d....\\n\", index);\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "readLtlFormula",
+      "Start": 3523,
+      "End": 13633,
+      "BodyStart": 3564,
+      "Original": "ltlNode *readLtlFormula( char *formula )\n{\n    char ch;\n    char *varName;\n    int formulaLength, rememberEnd;\n    int i = startOfSuffixString;\n    ltlNode *curr_node, *temp_node_left, *temp_node_right;\n    char prevChar;\n    \n    formulaLength = strlen( formula );\n    if( isUnexpectedEOS( formula, startOfSuffixString ) )\n    {\n        printf(\"\\nFAULTING POINT: formula = %s\\nstartOfSuffixString = %d, formula[%d] = %c\\n\\n\", formula, startOfSuffixString, startOfSuffixString - 1, formula[startOfSuffixString-1]);\n        return NULL;\n    }\n            \n    while( i \u003c formulaLength )\n    {\n        ch = formula[i];\n\n        switch(ch){\n            case ' ':\n            case '\\n':\n            case '\\r':\n            case '\\t':\n            case '\\v':\n            case '\\f':\n                        i++;\n                        startOfSuffixString = i;\n                        break;\n            case ':':\n                        i++;\n                        if( !isTemporalOperator( formula, i ) )\n                            return NULL;\n                        startOfSuffixString = i;\n                        break;\n            case 'G':\n                        prevChar = formula[i-1];\n                        if( prevChar == ':' ) //i.e. 'G' is a temporal operator\n                        {\n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if( temp_node_left == NULL )\n                                return NULL;\n                            else\n                            {\n                                curr_node = generateTypedNode(GLOBALLY);\n                                curr_node-\u003eleft = temp_node_left;\n                                return curr_node;\n                            }\n                        }\n                        else    //i.e. 'G' must be starting a variable name\n                        {\n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if( !varName )\n                            {\n                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );\n                                return NULL;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node-\u003ename = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }\n            case 'F':\n                        prevChar = formula[i-1];\n                        if( prevChar == ':' ) //i.e. 'F' is a temporal operator\n                        {\n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if( temp_node_left == NULL )\n                                return NULL;\n                            else\n                            {\n                                curr_node = generateTypedNode(EVENTUALLY);\n                                curr_node-\u003eleft = temp_node_left;\n                                return curr_node;\n                            }\n                        }\n                        else //i.e. 'F' must be starting a variable name\n                        {\n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if( !varName )\n                            {\n                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );\n                                return NULL;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node-\u003ename = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            case 'X':\n                        prevChar = formula[i-1];\n                        if( prevChar == ':' ) //i.e. 'X' is a temporal operator\n                        {\n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if( temp_node_left == NULL )\n                                return NULL;\n                            else\n                            {\n                                curr_node = generateTypedNode(NEXT);\n                                curr_node-\u003eleft = temp_node_left;\n                                return curr_node;\n                            }\n                        }\n                        else //i.e. 'X' must be starting a variable name\n                        {\n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if( !varName )\n                            {\n                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );\n                                return NULL;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node-\u003ename = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            case 'U':\n                        prevChar = formula[i-1];\n                        if( prevChar == ':' ) //i.e. 'X' is a temporal operator\n                        {\n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if( temp_node_left == NULL )\n                                return NULL;\n                            temp_node_right = readLtlFormula( formula );\n                            if( temp_node_right == NULL )\n                            {\n                                //need to do memory management: if right subtree is NULL then left\n                                //subtree must be freed.\n                                return NULL;\n                            }\n                            curr_node = generateTypedNode(UNTIL);\n                            curr_node-\u003eleft = temp_node_left;\n                            curr_node-\u003eright = temp_node_right;\n                            return curr_node;\n                        }\n                        else //i.e. 'U' must be starting a variable name\n                        {\n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if( !varName )\n                            {\n                                printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );\n                                return NULL;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node-\u003ename = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            case '+':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if( temp_node_left == NULL )\n                            return NULL;\n                        temp_node_right = readLtlFormula( formula );\n                        if( temp_node_right == NULL )\n                        {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return NULL;\n                        }\n                        curr_node = generateTypedNode(OR);\n                        curr_node-\u003eleft = temp_node_left;\n                        curr_node-\u003eright = temp_node_right;\n                        return curr_node;\n            case '\u0026':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if( temp_node_left == NULL )\n                            return NULL;\n                        temp_node_right = readLtlFormula( formula );\n                        if( temp_node_right == NULL )\n                        {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return NULL;\n                        }\n                        curr_node = generateTypedNode(AND);\n                        curr_node-\u003eleft = temp_node_left;\n                        curr_node-\u003eright = temp_node_right;\n                        return curr_node;\n            case '!':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if( temp_node_left == NULL )\n                            return NULL;\n                        else\n                        {\n                            curr_node = generateTypedNode(NOT);\n                            curr_node-\u003eleft = temp_node_left;\n                            return curr_node;\n                        }\n            default:\n                varName = getVarName( formula, i, \u0026rememberEnd );\n                if( !varName )\n                {\n                    printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\" );\n                    return NULL;\n                }\n                curr_node = generateTypedNode(BOOL);\n                curr_node-\u003ename = varName;\n                i = rememberEnd;\n                startOfSuffixString = i;\n                return curr_node;\n        }\n    }\n    return NULL;\n}",
+      "Draft": "func readLtlFormula(formula string) *ltlNode {\n    var ch byte;\n    var varName string;\n    var formulaLength, rememberEnd int32;\n    var i int32  = startOfSuffixString;\n    var curr_node, temp_node_left, temp_node_right *ltlNode;\n    var prevChar byte;\n    \n    formulaLength = len(formula);\n    if isUnexpectedEOS( formula, startOfSuffixString ) != 0 {\n        fmt.Printf(\"\\nFAULTING POINT: formula = %s\\nstartOfSuffixString = %d, formula[%d] = %c\\n\\n\", formula, startOfSuffixString, startOfSuffixString - 1, formula[startOfSuffixString-1]);\n        return nil;\n    }\n            \n    for  i \u003c formulaLength  {\n        ch = formula[i];\n\n        switch ch{\n            case ' ',\n             '\\n',\n             '\\r',\n             '\\t',\n             '\\v',\n             '\\f':\n                        i++;\n                        startOfSuffixString = i;\n                        break;\n            case ':':\n                        i++;\n                        if !(isTemporalOperator( formula, i ) != 0) {\n                            return nil; }\n                        startOfSuffixString = i;\n                        break;\n            case 'G':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'G' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(GLOBALLY);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else {    //i.e. 'G' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }\n            fallthrough\ncase 'F':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'F' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(EVENTUALLY);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else { //i.e. 'F' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase 'X':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'X' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(NEXT);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else { //i.e. 'X' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase 'U':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'X' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil; }\n                            temp_node_right = readLtlFormula( formula );\n                            if temp_node_right == nil {\n                                //need to do memory management: if right subtree is NULL then left\n                                //subtree must be freed.\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(UNTIL);\n                            curr_node.left = temp_node_left;\n                            curr_node.right = temp_node_right;\n                            return curr_node;\n                        \n                        } else { //i.e. 'U' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase '+':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil; }\n                        temp_node_right = readLtlFormula( formula );\n                        if temp_node_right == nil {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return nil;\n                        }\n                        curr_node = generateTypedNode(OR);\n                        curr_node.left = temp_node_left;\n                        curr_node.right = temp_node_right;\n                        return curr_node;\n            case '\u0026':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil; }\n                        temp_node_right = readLtlFormula( formula );\n                        if temp_node_right == nil {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return nil;\n                        }\n                        curr_node = generateTypedNode(AND);\n                        curr_node.left = temp_node_left;\n                        curr_node.right = temp_node_right;\n                        return curr_node;\n            case '!':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil;\n                        } else {\n                            curr_node = generateTypedNode(NOT);\n                            curr_node.left = temp_node_left;\n                            return curr_node;\n                        }\n            fallthrough\ndefault:\n                varName = getVarName( formula, i, \u0026rememberEnd );\n                if !varName {\n                    fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                    return nil;\n                }\n                curr_node = generateTypedNode(BOOL);\n                curr_node.name = varName;\n                i = rememberEnd;\n                startOfSuffixString = i;\n                return curr_node;\n        }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "resetGlobalVar",
+      "Start": 13635,
+      "End": 13689,
+      "BodyStart": 13657,
+      "Original": "void resetGlobalVar()\n{\n    startOfSuffixString = 0;\n}",
+      "Draft": "func resetGlobalVar() {\n    startOfSuffixString = 0;\n}"
+    },
+    {
+      "Name": "parseFormulaCreateAST",
+      "Start": 13691,
+      "End": 13947,
+      "BodyStart": 13744,
+      "Original": "ltlNode *parseFormulaCreateAST( char *inputFormula )\n{\n    ltlNode *temp;\n\n    temp = readLtlFormula( inputFormula );\n    //if( temp == NULL )\n    //    printf(\"\\nAST creation failed for formula %s\", inputFormula );\n    resetGlobalVar();\n    return temp;\n}",
+      "Draft": "func parseFormulaCreateAST(inputFormula string) *ltlNode {\n    var temp *ltlNode;\n\n    temp = readLtlFormula( inputFormula );\n    //if( temp == NULL )\n    //    printf(\"\\nAST creation failed for formula %s\", inputFormula );\n    resetGlobalVar();\n    return temp;\n}"
+    },
+    {
+      "Name": "traverseAbstractSyntaxTree",
+      "Start": 13949,
+      "End": 15925,
+      "BodyStart": 13998,
+      "Original": "void traverseAbstractSyntaxTree( ltlNode *node )\n{\n    switch(node-\u003etype){\n        case( AND ):\n            printf(\"\u0026 \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            traverseAbstractSyntaxTree( node-\u003eright );\n            return;\n        case( OR ):\n            printf(\"+ \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            traverseAbstractSyntaxTree( node-\u003eright );\n            return;\n        case( NOT ):\n            printf(\"~ \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( GLOBALLY ):\n            printf(\"G \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( EVENTUALLY ):\n            printf(\"F \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( NEXT ):\n            printf(\"X \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( UNTIL ):\n            printf(\"U \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree( node-\u003eleft );\n            traverseAbstractSyntaxTree( node-\u003eright );\n            return;\n        case( BOOL ):\n            printf(\"%s \", node-\u003ename);\n            assert( node-\u003eleft == NULL );\n            assert( node-\u003eright == NULL );\n            return;\n        default:\n            printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func traverseAbstractSyntaxTree(node *ltlNode) {\n    switch node.type{\n        case( AND ):\n            fmt.Printf(\"\u0026 \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( OR ):\n            fmt.Printf(\"+ \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( NOT ):\n            fmt.Printf(\"~ \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( GLOBALLY ):\n            fmt.Printf(\"G \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( EVENTUALLY ):\n            fmt.Printf(\"F \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( NEXT ):\n            fmt.Printf(\"X \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( UNTIL ):\n            fmt.Printf(\"U \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( BOOL ):\n            fmt.Printf(\"%s \", node.name);\n            assert(node.left == nil, \"node.left == nil\");\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        default:\n            fmt.Printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "traverseAbstractSyntaxTree_postFix",
+      "Start": 15927,
+      "End": 18259,
+      "BodyStart": 15984,
+      "Original": "void traverseAbstractSyntaxTree_postFix( ltlNode *node )\n{\n    switch(node-\u003etype){\n        case( AND ):\n            printf(\"( \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            printf(\"\u0026 \");\n            traverseAbstractSyntaxTree_postFix( node-\u003eright );\n            printf(\") \");\n            return;\n        case( OR ):\n            printf(\"( \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            printf(\"+ \");\n            traverseAbstractSyntaxTree_postFix( node-\u003eright );\n            printf(\") \");\n            return;\n        case( NOT ):\n            printf(\"~ \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( GLOBALLY ):\n            printf(\"G \");\n            //printf(\"( \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            //printf(\") \");\n            return;\n        case( EVENTUALLY ):\n            printf(\"F \");\n            //printf(\"( \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            //printf(\") \");\n            return;\n        case( NEXT ):\n            printf(\"X \");\n            assert( node-\u003eleft != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            assert( node-\u003eright == NULL );\n            return;\n        case( UNTIL ):\n            printf(\"( \");\n            assert( node-\u003eleft != NULL );\n            assert( node-\u003eright != NULL );\n            traverseAbstractSyntaxTree_postFix( node-\u003eleft );\n            printf(\"U \");\n            traverseAbstractSyntaxTree_postFix( node-\u003eright );\n            printf(\") \");\n            return;\n        case( BOOL ):\n            printf(\"%s \", node-\u003ename);\n            assert( node-\u003eleft == NULL );\n            assert( node-\u003eright == NULL );\n            return;\n        default:\n            printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func traverseAbstractSyntaxTree_postFix(node *ltlNode) {\n    switch node.type{\n        case( AND ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"\u0026 \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( OR ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"+ \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( NOT ):\n            fmt.Printf(\"~ \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( GLOBALLY ):\n            fmt.Printf(\"G \");\n            //printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            //printf(\") \");\n            return;\n        case( EVENTUALLY ):\n            fmt.Printf(\"F \");\n            //printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            //printf(\") \");\n            return;\n        case( NEXT ):\n            fmt.Printf(\"X \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( UNTIL ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"U \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( BOOL ):\n            fmt.Printf(\"%s \", node.name);\n            assert(node.left == nil, \"node.left == nil\");\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        default:\n            fmt.Printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "populateAigPointerUnitGF",
+      "Start": 18261,
+      "End": 20376,
+      "BodyStart": 18376,
+      "Original": "void populateAigPointerUnitGF( Aig_Man_t *pAigNew, ltlNode *topASTNode, Vec_Ptr_t *vSignal, Vec_Vec_t *vAigGFMap )\n{\n    ltlNode *nextNode, *nextToNextNode;\n    int serialNumSignal;\n\n    switch( topASTNode-\u003etype ){\n        case AND:\n        case OR:\n        case IMPLY:\n            populateAigPointerUnitGF( pAigNew, topASTNode-\u003eleft, vSignal, vAigGFMap );\n            populateAigPointerUnitGF( pAigNew, topASTNode-\u003eright, vSignal, vAigGFMap );\n            return;\n        case NOT:\n            populateAigPointerUnitGF( pAigNew, topASTNode-\u003eleft, vSignal, vAigGFMap );\n            return;\n        case GLOBALLY:\n            nextNode = topASTNode-\u003eleft;\n            assert( nextNode-\u003etype == EVENTUALLY );\n            nextToNextNode = nextNode-\u003eleft;\n            if( nextToNextNode-\u003etype == BOOL )\n            {\n                assert( nextToNextNode-\u003epObj );\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode-\u003epObj );\n                if( serialNumSignal == -1 )\n                {                    \n                    Vec_PtrPush( vSignal, nextToNextNode-\u003epObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode-\u003epObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            }\n            else\n            {\n                assert( nextToNextNode-\u003epObj == NULL );\n                buildLogicFromLTLNode_combinationalOnly( pAigNew, nextToNextNode );\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode-\u003epObj );\n                if( serialNumSignal == -1 )\n                {\n                    Vec_PtrPush( vSignal, nextToNextNode-\u003epObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode-\u003epObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            }\n            return;\n        case BOOL:\n            return;\n        default:\n            printf(\"\\nINVALID situation: aborting...\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func populateAigPointerUnitGF(pAigNew *Aig_Man_t, topASTNode *ltlNode, vSignal *Vec_Ptr_t, vAigGFMap *Vec_Vec_t) {\n    var nextNode, nextToNextNode *ltlNode;\n    var serialNumSignal int32;\n\n    switch  topASTNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            populateAigPointerUnitGF( pAigNew, topASTNode.left, vSignal, vAigGFMap );\n            populateAigPointerUnitGF( pAigNew, topASTNode.right, vSignal, vAigGFMap );\n            return;\n        case NOT:\n            populateAigPointerUnitGF( pAigNew, topASTNode.left, vSignal, vAigGFMap );\n            return;\n        case GLOBALLY:\n            nextNode = topASTNode.left;\n            assert(nextNode.type == EVENTUALLY, \"nextNode.type == EVENTUALLY\");\n            nextToNextNode = nextNode.left;\n            if nextToNextNode.type == BOOL {\n                assert(nextToNextNode.pObj, \"nextToNextNode.pObj\");\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                if serialNumSignal == -1 {                    \n                    Vec_PtrPush( vSignal, nextToNextNode.pObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            \n            } else {\n                assert(nextToNextNode.pObj == nil, \"nextToNextNode.pObj == nil\");\n                buildLogicFromLTLNode_combinationalOnly( pAigNew, nextToNextNode );\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                if serialNumSignal == -1 {\n                    Vec_PtrPush( vSignal, nextToNextNode.pObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            }\n            return;\n        case BOOL:\n            return;\n        default:\n            fmt.Printf(\"\\nINVALID situation: aborting...\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "buildLogicFromLTLNode_combinationalOnly",
+      "Start": 20378,
+      "End": 22271,
+      "BodyStart": 20470,
+      "Original": "Aig_Obj_t *buildLogicFromLTLNode_combinationalOnly( Aig_Man_t *pAigNew, ltlNode *pLtlNode )\n{\n    Aig_Obj_t *leftAigObj, *rightAigObj;\n\n    if( pLtlNode-\u003epObj != NULL )\n        return pLtlNode-\u003epObj;\n    else\n    {\n        assert( pLtlNode-\u003etype != BOOL );\n        switch( pLtlNode-\u003etype ){\n            case AND:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright );\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode-\u003eleft );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode-\u003eright );\n                assert( leftAigObj ); assert( rightAigObj );\n                pLtlNode-\u003epObj = Aig_And( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode-\u003epObj;\n            case OR:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright );\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode-\u003eleft );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode-\u003eright );\n                assert( leftAigObj ); assert( rightAigObj );\n                pLtlNode-\u003epObj = Aig_Or( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode-\u003epObj;\n            case NOT:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright == NULL ); \n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode-\u003eleft );\n                assert( leftAigObj );\n                pLtlNode-\u003epObj = Aig_Not( leftAigObj );\n                return pLtlNode-\u003epObj;\n            case GLOBALLY:\n            case EVENTUALLY:\n            case NEXT:\n            case UNTIL:\n                printf(\"FORBIDDEN node: ABORTING!!\\n\");\n                exit(0);\n            default:\n                printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                exit(0);\n        }\n    }\n}",
+      "Draft": "func buildLogicFromLTLNode_combinationalOnly(pAigNew *Aig_Man_t, pLtlNode *ltlNode) *Aig_Obj_t {\n    var leftAigObj, rightAigObj *Aig_Obj_t;\n\n    if pLtlNode.pObj != nil {\n        return pLtlNode.pObj;\n    } else {\n        assert(pLtlNode.type != BOOL, \"pLtlNode.type != BOOL\");\n        switch  pLtlNode.type {\n            case AND:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_And( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case OR:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_Or( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case NOT:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right == nil, \"pLtlNode.right == nil\"); \n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                assert(leftAigObj, \"leftAigObj\");\n                pLtlNode.pObj = Aig_Not( leftAigObj );\n                return pLtlNode.pObj;\n            case GLOBALLY,\n             EVENTUALLY,\n             NEXT,\n             UNTIL:\n                fmt.Printf(\"FORBIDDEN node: ABORTING!!\\n\");\n                os.Exit(int(0));\n            fallthrough\ndefault:\n                fmt.Printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                os.Exit(int(0));\n        }\n    }\n}"
+    },
+    {
+      "Name": "buildLogicFromLTLNode",
+      "Start": 22273,
+      "End": 24094,
+      "BodyStart": 22344,
+      "Original": "Aig_Obj_t *buildLogicFromLTLNode( Aig_Man_t *pAig, ltlNode *pLtlNode )\n{\n    Aig_Obj_t *leftAigObj, *rightAigObj;\n\n    if( pLtlNode-\u003epObj != NULL )\n        return pLtlNode-\u003epObj;\n    else\n    {\n        assert( pLtlNode-\u003etype != BOOL );\n        switch( pLtlNode-\u003etype ){\n            case AND:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright );\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode-\u003eleft );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode-\u003eright );\n                assert( leftAigObj ); assert( rightAigObj );\n                pLtlNode-\u003epObj = Aig_And( pAig, leftAigObj, rightAigObj );\n                return pLtlNode-\u003epObj;\n            case OR:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright );\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode-\u003eleft );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode-\u003eright );\n                assert( leftAigObj ); assert( rightAigObj );\n                pLtlNode-\u003epObj = Aig_Or( pAig, leftAigObj, rightAigObj );\n                return pLtlNode-\u003epObj;\n            case NOT:\n                assert( pLtlNode-\u003eleft ); assert( pLtlNode-\u003eright == NULL ); \n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode-\u003eleft );\n                assert( leftAigObj );\n                pLtlNode-\u003epObj = Aig_Not( leftAigObj );\n                return pLtlNode-\u003epObj;\n            case GLOBALLY:\n            case EVENTUALLY:\n            case NEXT:\n            case UNTIL:\n                printf(\"\\nAttempting to create circuit with missing AIG pointer in a TEMPORAL node: ABORTING!!\\n\");\n                exit(0);\n            default:\n                printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                exit(0);\n        }\n    }\n}",
+      "Draft": "func buildLogicFromLTLNode(pAig *Aig_Man_t, pLtlNode *ltlNode) *Aig_Obj_t {\n    var leftAigObj, rightAigObj *Aig_Obj_t;\n\n    if pLtlNode.pObj != nil {\n        return pLtlNode.pObj;\n    } else {\n        assert(pLtlNode.type != BOOL, \"pLtlNode.type != BOOL\");\n        switch  pLtlNode.type {\n            case AND:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_And( pAig, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case OR:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_Or( pAig, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case NOT:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right == nil, \"pLtlNode.right == nil\"); \n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                assert(leftAigObj, \"leftAigObj\");\n                pLtlNode.pObj = Aig_Not( leftAigObj );\n                return pLtlNode.pObj;\n            case GLOBALLY,\n             EVENTUALLY,\n             NEXT,\n             UNTIL:\n                fmt.Printf(\"\\nAttempting to create circuit with missing AIG pointer in a TEMPORAL node: ABORTING!!\\n\");\n                os.Exit(int(0));\n            fallthrough\ndefault:\n                fmt.Printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                os.Exit(int(0));\n        }\n    }\n}"
+    },
+    {
+      "Name": "isNonTemporalSubformula",
+      "Start": 24096,
+      "End": 24548,
+      "BodyStart": 24144,
+      "Original": "int isNonTemporalSubformula( ltlNode *topNode )\n{\n    switch( topNode-\u003etype ){\n        case AND:\n        case OR:\n        case IMPLY:\n            return isNonTemporalSubformula( topNode-\u003eleft) \u0026\u0026 isNonTemporalSubformula( topNode-\u003eright ) ;\n        case NOT:\n            assert( topNode-\u003eright == NULL );\n            return isNonTemporalSubformula( topNode-\u003eleft );\n        case BOOL:\n            return 1;\n        default:\n            return 0;\n    }\n}",
+      "Draft": "func isNonTemporalSubformula(topNode *ltlNode) int32 {\n    switch  topNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            return isNonTemporalSubformula( topNode.left) \u0026\u0026 isNonTemporalSubformula( topNode.right ) ;\n        case NOT:\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            return isNonTemporalSubformula( topNode.left );\n        case BOOL:\n            return 1;\n        default:\n            return 0;\n    }\n}"
+    },
+    {
+      "Name": "isWellFormed",
+      "Start": 24550,
+      "End": 25324,
+      "BodyStart": 24587,
+      "Original": "int isWellFormed( ltlNode *topNode )\n{\n    ltlNode *nextNode;\n\n    switch( topNode-\u003etype ){\n        case AND:\n        case OR:\n        case IMPLY:\n            return isWellFormed( topNode-\u003eleft) \u0026\u0026 isWellFormed( topNode-\u003eright ) ;\n        case NOT:\n            assert( topNode-\u003eright == NULL );\n            return isWellFormed( topNode-\u003eleft );\n        case BOOL:\n            return 1;\n        case GLOBALLY:\n            nextNode = topNode-\u003eleft;\n            assert( topNode-\u003eright == NULL );\n            if( nextNode-\u003etype != EVENTUALLY )\n                return 0;\n            else\n            {\n                assert( nextNode-\u003eright == NULL );\n                return isNonTemporalSubformula( nextNode-\u003eleft );\n            }\n        default:\n            return 0;\n    }\n}",
+      "Draft": "func isWellFormed(topNode *ltlNode) int32 {\n    var nextNode *ltlNode;\n\n    switch  topNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            return isWellFormed( topNode.left) \u0026\u0026 isWellFormed( topNode.right ) ;\n        case NOT:\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            return isWellFormed( topNode.left );\n        case BOOL:\n            return 1;\n        case GLOBALLY:\n            nextNode = topNode.left;\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            if nextNode.type != EVENTUALLY {\n                return 0;\n            } else {\n                assert(nextNode.right == nil, \"nextNode.right == nil\");\n                return isNonTemporalSubformula( nextNode.left );\n            }\n        fallthrough\ndefault:\n            return 0;\n    }\n}"
+    },
+    {
+      "Name": "checkBooleanConstant",
+      "Start": 25326,
+      "End": 25515,
+      "BodyStart": 25371,
+      "Original": "int checkBooleanConstant( char *targetName )\n{\n    if( strcmp( targetName, \"true\" ) == 0 ) \n        return 1;\n    if( strcmp( targetName, \"false\" ) == 0 )\n        return 0;\n    return -1;\n}",
+      "Draft": "func checkBooleanConstant(targetName string) int32 {\n    if int32(strings.Compare(targetName, \"true\")) == 0 { \n        return 1; }\n    if int32(strings.Compare(targetName, \"false\")) == 0 {\n        return 0; }\n    return -1;\n}"
+    },
+    {
+      "Name": "checkSignalNameExistence",
+      "Start": 25517,
+      "End": 26981,
+      "BodyStart": 25586,
+      "Original": "int checkSignalNameExistence( Abc_Ntk_t *pNtk, ltlNode *topASTNode )\n{\n    char *targetName;\n    Abc_Obj_t * pNode;\n    int i;\n        \n    switch( topASTNode-\u003etype ){\n        case BOOL:\n            targetName = topASTNode-\u003ename;\n            //printf(\"\\nTrying to match name %s\\n\", targetName);\n            if( checkBooleanConstant( targetName ) != -1 )\n                return 1;\n            Abc_NtkForEachPo( pNtk, pNode, i )\n            {\n                if( strcmp( Abc_ObjName( pNode ), targetName ) == 0 )\n                {\n                    //printf(\"\\nVariable name \\\"%s\\\" MATCHED\\n\", targetName);\n                    return 1;\n                }\n            }\n            printf(\"\\nVariable name \\\"%s\\\" not found in the PO name list\\n\", targetName);\n            return 0;\n        case AND:\n        case OR:\n        case IMPLY:\n        case UNTIL:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright != NULL );\n            return checkSignalNameExistence( pNtk, topASTNode-\u003eleft ) \u0026\u0026 checkSignalNameExistence( pNtk, topASTNode-\u003eright );\n            \n        case NOT:\n        case NEXT:\n        case GLOBALLY:\n        case EVENTUALLY:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright == NULL );\n            return checkSignalNameExistence( pNtk, topASTNode-\u003eleft );\n        default:\n            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func checkSignalNameExistence(pNtk *Abc_Ntk_t, topASTNode *ltlNode) int32 {\n    var targetName string;\n    var pNode *Abc_Obj_t;\n    var i int32;\n        \n    switch  topASTNode.type {\n        case BOOL:\n            targetName = topASTNode.name;\n            //printf(\"\\nTrying to match name %s\\n\", targetName);\n            if checkBooleanConstant( targetName ) != -1 {\n                return 1; }\n            Abc_NtkForEachPo( pNtk, pNode, i )\n            {\n                if int32(strings.Compare(Abc_ObjName( pNode ), targetName)) == 0 {\n                    //printf(\"\\nVariable name \\\"%s\\\" MATCHED\\n\", targetName);\n                    return 1;\n                }\n            }\n            fmt.Printf(\"\\nVariable name \\\"%s\\\" not found in the PO name list\\n\", targetName);\n            return 0;\n        case AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            return checkSignalNameExistence( pNtk, topASTNode.left ) \u0026\u0026 checkSignalNameExistence( pNtk, topASTNode.right );\n            \n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            return checkSignalNameExistence( pNtk, topASTNode.left );\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "populateBoolWithAigNodePtr",
+      "Start": 26983,
+      "End": 28909,
+      "BodyStart": 27095,
+      "Original": "void populateBoolWithAigNodePtr( Abc_Ntk_t *pNtk, Aig_Man_t *pAigOld, Aig_Man_t *pAigNew, ltlNode *topASTNode )\n{\n    char *targetName;\n    Abc_Obj_t * pNode;\n    int i;\n    Aig_Obj_t *pObj, *pDriverImage;\n    \n    switch( topASTNode-\u003etype ){\n        case BOOL:\n            targetName = topASTNode-\u003ename;\n            if( checkBooleanConstant( targetName ) == 1 )\n            {\n                topASTNode-\u003epObj = Aig_ManConst1( pAigNew );\n                return;\n            }\n            if( checkBooleanConstant( targetName ) == 0 )\n            {\n                topASTNode-\u003epObj = Aig_Not(topASTNode-\u003epObj = Aig_ManConst1( pAigNew ));\n                return;\n            }\n            Abc_NtkForEachPo( pNtk, pNode, i )\n                if( strcmp( Abc_ObjName( pNode ), targetName ) == 0 )\n                {\n                    pObj = Aig_ManCo( pAigOld, i );\n                    assert( Aig_ObjIsCo( pObj ));\n                    pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n                    topASTNode-\u003epObj = pDriverImage;\n                    return;\n                }\n            assert(0);\n        case AND:\n        case OR:\n        case IMPLY:\n        case UNTIL:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright != NULL );\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode-\u003eleft );\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode-\u003eright );\n            return;\n        case NOT:\n        case NEXT:\n        case GLOBALLY:\n        case EVENTUALLY:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright == NULL );\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode-\u003eleft );\n            return;\n        default:\n            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func populateBoolWithAigNodePtr(pNtk *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, topASTNode *ltlNode) {\n    var targetName string;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    var pObj, pDriverImage *Aig_Obj_t;\n    \n    switch  topASTNode.type {\n        case BOOL:\n            targetName = topASTNode.name;\n            if checkBooleanConstant( targetName ) == 1 {\n                topASTNode.pObj = Aig_ManConst1( pAigNew );\n                return;\n            }\n            if checkBooleanConstant( targetName ) == 0 {\n                topASTNode.pObj = Aig_Not(topASTNode.pObj = Aig_ManConst1( pAigNew ));\n                return;\n            }\n            Abc_NtkForEachPo( pNtk, pNode, i )\n                if int32(strings.Compare(Abc_ObjName( pNode ), targetName)) == 0 {\n                    pObj = Aig_ManCo( pAigOld, i );\n                    assert(Aig_ObjIsCo( pObj ), \"Aig_ObjIsCo( pObj )\");\n                    pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n                    topASTNode.pObj = pDriverImage;\n                    return;\n                }\n            assert(false, \"0\");\n        fallthrough\ncase AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.left );\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.right );\n            return;\n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.left );\n            return;\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "checkAllBoolHaveAIGPointer",
+      "Start": 28911,
+      "End": 29924,
+      "BodyStart": 28965,
+      "Original": "int checkAllBoolHaveAIGPointer( ltlNode *topASTNode )\n{\n    \n    switch( topASTNode-\u003etype ){\n        case BOOL:\n            if( topASTNode-\u003epObj != NULL )\n                return 1;\n            else\n            {\n                printf(\"\\nfaulting PODMANDYO topASTNode-\u003ename = %s\\n\", topASTNode-\u003ename);\n                return 0;\n            }\n        case AND:\n        case OR:\n        case IMPLY:\n        case UNTIL:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright != NULL );\n            return checkAllBoolHaveAIGPointer( topASTNode-\u003eleft ) \u0026\u0026 checkAllBoolHaveAIGPointer( topASTNode-\u003eright );\n            \n        case NOT:\n        case NEXT:\n        case GLOBALLY:\n        case EVENTUALLY:\n            assert( topASTNode-\u003eleft != NULL );\n            assert( topASTNode-\u003eright == NULL );\n            return checkAllBoolHaveAIGPointer( topASTNode-\u003eleft );\n        default:\n            printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            exit(0);\n    }\n}",
+      "Draft": "func checkAllBoolHaveAIGPointer(topASTNode *ltlNode) int32 {\n    \n    switch  topASTNode.type {\n        case BOOL:\n            if( topASTNode.pObj != nil )\n                return 1;\n            else {\n                fmt.Printf(\"\\nfaulting PODMANDYO topASTNode-\u003ename = %s\\n\", topASTNode.name);\n                return 0;\n            }\n        fallthrough\ncase AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            return checkAllBoolHaveAIGPointer( topASTNode.left ) \u0026\u0026 checkAllBoolHaveAIGPointer( topASTNode.right );\n            \n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            return checkAllBoolHaveAIGPointer( topASTNode.left );\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}"
+    },
+    {
+      "Name": "setAIGNodePtrOfGloballyNode",
+      "Start": 29926,
+      "End": 30029,
+      "BodyStart": 29998,
+      "Original": "void setAIGNodePtrOfGloballyNode( ltlNode *astNode, Aig_Obj_t *pObjLo )\n{\n    astNode-\u003epObj = pObjLo;\n}",
+      "Draft": "func setAIGNodePtrOfGloballyNode(astNode *ltlNode, pObjLo *Aig_Obj_t) {\n    astNode.pObj = pObjLo;\n}"
+    },
+    {
+      "Name": "retriveAIGPointerFromLTLNode",
+      "Start": 30043,
+      "End": 30132,
+      "BodyStart": 30103,
+      "Original": "Aig_Obj_t *retriveAIGPointerFromLTLNode( ltlNode *astNode )\n{\n    return astNode-\u003epObj;\n}",
+      "Draft": "func retriveAIGPointerFromLTLNode(astNode *ltlNode) *Aig_Obj_t {\n    return astNode.pObj;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::struct::ltlNode_t",
+      "Category": "struct-review",
+      "Symbol": "ltlNode_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 907,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::enum::692",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 692,
+      "End": 696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::enum::772",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 772,
+      "End": 776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::enum::831",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 831,
+      "End": 835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::enum::864",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 864,
+      "End": 868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::sizeof::1254",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1254,
+      "End": 1260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::sizeof::2250",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2250,
+      "End": 2256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::mechanical::sizeof::2756",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2756,
+      "End": 2762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::pointer-cast::1235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1235,
+      "End": 1246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::pointer-cast::2234",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2234,
+      "End": 2242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::pointer-cast::2740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2740,
+      "End": 2748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::pointer-cast::27942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27942,
+      "End": 27955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::generateTypedNode",
+      "Category": "semantic-review",
+      "Symbol": "generateTypedNode",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1079,
+      "End": 1487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::isNotVarNameSymbol",
+      "Category": "semantic-review",
+      "Symbol": "isNotVarNameSymbol",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1580,
+      "End": 1706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::Abc_FrameCopyLTLDataBase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameCopyLTLDataBase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1708,
+      "End": 2413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::getVarName",
+      "Category": "semantic-review",
+      "Symbol": "getVarName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2415,
+      "End": 2900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::isUnexpectedEOS",
+      "Category": "semantic-review",
+      "Symbol": "isUnexpectedEOS",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2933,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::isTemporalOperator",
+      "Category": "semantic-review",
+      "Symbol": "isTemporalOperator",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3166,
+      "End": 3521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::readLtlFormula",
+      "Category": "semantic-review",
+      "Symbol": "readLtlFormula",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3523,
+      "End": 13633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::resetGlobalVar",
+      "Category": "semantic-review",
+      "Symbol": "resetGlobalVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13635,
+      "End": 13689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::parseFormulaCreateAST",
+      "Category": "semantic-review",
+      "Symbol": "parseFormulaCreateAST",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13691,
+      "End": 13947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::traverseAbstractSyntaxTree",
+      "Category": "semantic-review",
+      "Symbol": "traverseAbstractSyntaxTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13949,
+      "End": 15925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::traverseAbstractSyntaxTree_postFix",
+      "Category": "semantic-review",
+      "Symbol": "traverseAbstractSyntaxTree_postFix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15927,
+      "End": 18259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::populateAigPointerUnitGF",
+      "Category": "semantic-review",
+      "Symbol": "populateAigPointerUnitGF",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18261,
+      "End": 20376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::buildLogicFromLTLNode_combinationalOnly",
+      "Category": "semantic-review",
+      "Symbol": "buildLogicFromLTLNode_combinationalOnly",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20378,
+      "End": 22271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::buildLogicFromLTLNode",
+      "Category": "semantic-review",
+      "Symbol": "buildLogicFromLTLNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22273,
+      "End": 24094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::isNonTemporalSubformula",
+      "Category": "semantic-review",
+      "Symbol": "isNonTemporalSubformula",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24096,
+      "End": 24548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::isWellFormed",
+      "Category": "semantic-review",
+      "Symbol": "isWellFormed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24550,
+      "End": 25324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::checkBooleanConstant",
+      "Category": "semantic-review",
+      "Symbol": "checkBooleanConstant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25326,
+      "End": 25515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::checkSignalNameExistence",
+      "Category": "semantic-review",
+      "Symbol": "checkSignalNameExistence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25517,
+      "End": 26981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::populateBoolWithAigNodePtr",
+      "Category": "semantic-review",
+      "Symbol": "populateBoolWithAigNodePtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26983,
+      "End": 28909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::checkAllBoolHaveAIGPointer",
+      "Category": "semantic-review",
+      "Symbol": "checkAllBoolHaveAIGPointer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28911,
+      "End": 29924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::setAIGNodePtrOfGloballyNode",
+      "Category": "semantic-review",
+      "Symbol": "setAIGNodePtrOfGloballyNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29926,
+      "End": 30029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::retriveAIGPointerFromLTLNode",
+      "Category": "semantic-review",
+      "Symbol": "retriveAIGPointerFromLTLNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30043,
+      "End": 30132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::macro-inline::2138",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2138,
+      "End": 2205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::macro-inline::25909",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25909,
+      "End": 25943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/ltl_parser.c::macro-inline::27670",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27670,
+      "End": 27704
+    }
+  ],
+  "Draft": "package live\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ltl_parser.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis    [LTL checker.]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2009.]\n\n  Revision    [$Id: ltl_parser.c,v 1.00 2009/01/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \"aig/aig/aig.h\"\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\ntype ltlToken int32\nconst  ( AND ltlToken = iota\n OR\n NOT\n IMPLY\n GLOBALLY\n EVENTUALLY\n NEXT\n UNTIL\n BOOL \n)\n\ntype ltlGrammerToken int32\nconst  ( OPERAND ltlGrammerToken = iota\n LTL\n BINOP\n UOP \n)\n\ntype tokenType = ltlToken ;\ntype ltlGrammerTokenType = ltlGrammerToken ;\n\ntype ltlNode_t struct {\n    type tokenType;\n    name string;\n    pObj *Aig_Obj_t;\n    left  *ltlNode_t;\n    right  *ltlNode_t;\n}\n\ntype ltlNode = ltlNode_t;\n\nltlNode *generateTypedNode( tokenType new_type )\n//void generateTypedNode( ltlNode *new_node, tokenType new_type )\n{\n    var new_node *ltlNode;\n\n    new_node = (ltlNode *)malloc( sizeof(ltlNode) );\n    if new_node != nil {\n        new_node.type = new_type;\n        new_node.pObj = nil;\n        new_node.name = nil;\n        new_node.left = nil;\n        new_node.right = nil;\n    }\n\n    return new_node;\n}\n\n// Aig_Obj_t *buildLogicFromLTLNode_combinationalOnly( Aig_Man_t *pAig, ltlNode *pLtlNode );\n\n\nfunc isNotVarNameSymbol(c byte) int32 {\n    return ( c == ' ' || c == '\\t' || c == '\\n' || c == ':' || c == '\\0' );\n}\n\nfunc Abc_FrameCopyLTLDataBase(pAbc *Abc_Frame_t, pNtk *Abc_Ntk_t) {\n    var pLtlFormula, tempFormula string;\n    var i int32;\n\n    if pAbc.vLTLProperties_global != nil {\n//        printf(\"Deleting exisitng LTL database from the frame\\n\");\n        Vec_PtrFree( pAbc.vLTLProperties_global );\n        pAbc.vLTLProperties_global = nil;\n    }\n    pAbc.vLTLProperties_global = Vec_PtrAlloc(Vec_PtrSize(pNtk.vLtlProperties));\n    Vec_PtrForEachEntry( char *, pNtk.vLtlProperties, pLtlFormula, i )\n    {\n        tempFormula = (char *)malloc( sizeof(char)*(len(pLtlFormula)+1) );\n        tempFormula = fmt.Sprintf(\"%s\", pLtlFormula);\n        Vec_PtrPush( pAbc.vLTLProperties_global, tempFormula );\n    }\n}\n\nfunc getVarName(suffixFormula string, startLoc int32, endLocation *int32) string {\n    var i int32 = startLoc;\n    var length int32;\n    var name string;\n\n    if isNotVarNameSymbol( suffixFormula[startLoc] ) != 0 {\n        return nil; }\n\n    for  !(isNotVarNameSymbol( suffixFormula[i] ) != 0)  {\n        i++;\n    }\n    *endLocation = i;\n    length = i - startLoc;\n    name = (char *)malloc( sizeof(char) * (length + 1));\n    for  i=0; i\u003clength; i++  {\n        name[i] = suffixFormula[i+startLoc];\n    }\n    name[i] = '\\0';\n\n    return name;\n}\n\n\nvar startOfSuffixString int32;\n\nfunc isUnexpectedEOS(formula string, index int32) int32 {\n    assert(formula, \"formula\");\n    if index \u003e= int32(len(formula)) {\n        fmt.Printf(\"\\nInvalid LTL formula: unexpected end of string...\");\n        return 1;\n    }\n    return 0;\n}\n\nfunc isTemporalOperator(formula string, index int32) int32 {\n    if !((isUnexpectedEOS( formula, index ) != 0) || formula[ index ] == 'G' || formula[ index ] == 'F' || formula[ index ] == 'U' || formula[ index ] == 'X') {\n        fmt.Printf(\"\\nInvalid LTL formula: expecting temporal operator at the position %d....\\n\", index);\n        return 0;\n    }\n    return 1;\n}\n\nfunc readLtlFormula(formula string) *ltlNode {\n    var ch byte;\n    var varName string;\n    var formulaLength, rememberEnd int32;\n    var i int32  = startOfSuffixString;\n    var curr_node, temp_node_left, temp_node_right *ltlNode;\n    var prevChar byte;\n    \n    formulaLength = len(formula);\n    if isUnexpectedEOS( formula, startOfSuffixString ) != 0 {\n        fmt.Printf(\"\\nFAULTING POINT: formula = %s\\nstartOfSuffixString = %d, formula[%d] = %c\\n\\n\", formula, startOfSuffixString, startOfSuffixString - 1, formula[startOfSuffixString-1]);\n        return nil;\n    }\n            \n    for  i \u003c formulaLength  {\n        ch = formula[i];\n\n        switch ch{\n            case ' ',\n             '\\n',\n             '\\r',\n             '\\t',\n             '\\v',\n             '\\f':\n                        i++;\n                        startOfSuffixString = i;\n                        break;\n            case ':':\n                        i++;\n                        if !(isTemporalOperator( formula, i ) != 0) {\n                            return nil; }\n                        startOfSuffixString = i;\n                        break;\n            case 'G':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'G' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(GLOBALLY);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else {    //i.e. 'G' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }\n            fallthrough\ncase 'F':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'F' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(EVENTUALLY);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else { //i.e. 'F' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase 'X':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'X' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil;\n                            } else {\n                                curr_node = generateTypedNode(NEXT);\n                                curr_node.left = temp_node_left;\n                                return curr_node;\n                            }\n                        \n                        } else { //i.e. 'X' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase 'U':\n                        prevChar = formula[i-1];\n                        if prevChar == ':' { //i.e. 'X' is a temporal operator\n                        \n                            i++;\n                            startOfSuffixString = i;\n                            temp_node_left = readLtlFormula( formula );\n                            if temp_node_left == nil {\n                                return nil; }\n                            temp_node_right = readLtlFormula( formula );\n                            if temp_node_right == nil {\n                                //need to do memory management: if right subtree is NULL then left\n                                //subtree must be freed.\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(UNTIL);\n                            curr_node.left = temp_node_left;\n                            curr_node.right = temp_node_right;\n                            return curr_node;\n                        \n                        } else { //i.e. 'U' must be starting a variable name\n                        \n                            varName = getVarName( formula, i, \u0026rememberEnd );\n                            if !varName {\n                                fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                                return nil;\n                            }\n                            curr_node = generateTypedNode(BOOL);\n                            curr_node.name = varName;\n                            i = rememberEnd;\n                            startOfSuffixString = i;\n                            return curr_node;\n                        }    \n            fallthrough\ncase '+':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil; }\n                        temp_node_right = readLtlFormula( formula );\n                        if temp_node_right == nil {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return nil;\n                        }\n                        curr_node = generateTypedNode(OR);\n                        curr_node.left = temp_node_left;\n                        curr_node.right = temp_node_right;\n                        return curr_node;\n            case '\u0026':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil; }\n                        temp_node_right = readLtlFormula( formula );\n                        if temp_node_right == nil {\n                            //need to do memory management: if right subtree is NULL then left\n                            //subtree must be freed.\n                            return nil;\n                        }\n                        curr_node = generateTypedNode(AND);\n                        curr_node.left = temp_node_left;\n                        curr_node.right = temp_node_right;\n                        return curr_node;\n            case '!':\n                        i++;\n                        startOfSuffixString = i;\n                        temp_node_left = readLtlFormula( formula );\n                        if temp_node_left == nil {\n                            return nil;\n                        } else {\n                            curr_node = generateTypedNode(NOT);\n                            curr_node.left = temp_node_left;\n                            return curr_node;\n                        }\n            fallthrough\ndefault:\n                varName = getVarName( formula, i, \u0026rememberEnd );\n                if !varName {\n                    fmt.Printf(\"\\nInvalid LTL formula: expecting valid variable name token...aborting\");\n                    return nil;\n                }\n                curr_node = generateTypedNode(BOOL);\n                curr_node.name = varName;\n                i = rememberEnd;\n                startOfSuffixString = i;\n                return curr_node;\n        }\n    }\n    return nil;\n}\n\nfunc resetGlobalVar() {\n    startOfSuffixString = 0;\n}\n\nfunc parseFormulaCreateAST(inputFormula string) *ltlNode {\n    var temp *ltlNode;\n\n    temp = readLtlFormula( inputFormula );\n    //if( temp == NULL )\n    //    printf(\"\\nAST creation failed for formula %s\", inputFormula );\n    resetGlobalVar();\n    return temp;\n}\n\nfunc traverseAbstractSyntaxTree(node *ltlNode) {\n    switch node.type{\n        case( AND ):\n            fmt.Printf(\"\u0026 \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( OR ):\n            fmt.Printf(\"+ \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( NOT ):\n            fmt.Printf(\"~ \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( GLOBALLY ):\n            fmt.Printf(\"G \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( EVENTUALLY ):\n            fmt.Printf(\"F \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( NEXT ):\n            fmt.Printf(\"X \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( UNTIL ):\n            fmt.Printf(\"U \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree( node.left );\n            traverseAbstractSyntaxTree( node.right );\n            return;\n        case( BOOL ):\n            fmt.Printf(\"%s \", node.name);\n            assert(node.left == nil, \"node.left == nil\");\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        default:\n            fmt.Printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc traverseAbstractSyntaxTree_postFix(node *ltlNode) {\n    switch node.type{\n        case( AND ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"\u0026 \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( OR ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"+ \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( NOT ):\n            fmt.Printf(\"~ \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( GLOBALLY ):\n            fmt.Printf(\"G \");\n            //printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            //printf(\") \");\n            return;\n        case( EVENTUALLY ):\n            fmt.Printf(\"F \");\n            //printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            //printf(\") \");\n            return;\n        case( NEXT ):\n            fmt.Printf(\"X \");\n            assert(node.left != nil, \"node.left != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        case( UNTIL ):\n            fmt.Printf(\"( \");\n            assert(node.left != nil, \"node.left != nil\");\n            assert(node.right != nil, \"node.right != nil\");\n            traverseAbstractSyntaxTree_postFix( node.left );\n            fmt.Printf(\"U \");\n            traverseAbstractSyntaxTree_postFix( node.right );\n            fmt.Printf(\") \");\n            return;\n        case( BOOL ):\n            fmt.Printf(\"%s \", node.name);\n            assert(node.left == nil, \"node.left == nil\");\n            assert(node.right == nil, \"node.right == nil\");\n            return;\n        default:\n            fmt.Printf(\"\\nUnsupported token type: Exiting execution\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc populateAigPointerUnitGF(pAigNew *Aig_Man_t, topASTNode *ltlNode, vSignal *Vec_Ptr_t, vAigGFMap *Vec_Vec_t) {\n    var nextNode, nextToNextNode *ltlNode;\n    var serialNumSignal int32;\n\n    switch  topASTNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            populateAigPointerUnitGF( pAigNew, topASTNode.left, vSignal, vAigGFMap );\n            populateAigPointerUnitGF( pAigNew, topASTNode.right, vSignal, vAigGFMap );\n            return;\n        case NOT:\n            populateAigPointerUnitGF( pAigNew, topASTNode.left, vSignal, vAigGFMap );\n            return;\n        case GLOBALLY:\n            nextNode = topASTNode.left;\n            assert(nextNode.type == EVENTUALLY, \"nextNode.type == EVENTUALLY\");\n            nextToNextNode = nextNode.left;\n            if nextToNextNode.type == BOOL {\n                assert(nextToNextNode.pObj, \"nextToNextNode.pObj\");\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                if serialNumSignal == -1 {                    \n                    Vec_PtrPush( vSignal, nextToNextNode.pObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            \n            } else {\n                assert(nextToNextNode.pObj == nil, \"nextToNextNode.pObj == nil\");\n                buildLogicFromLTLNode_combinationalOnly( pAigNew, nextToNextNode );\n                serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                if serialNumSignal == -1 {\n                    Vec_PtrPush( vSignal, nextToNextNode.pObj );\n                    serialNumSignal = Vec_PtrFind( vSignal, nextToNextNode.pObj );\n                }\n                //Vec_PtrPush( vGLOBALLY, topASTNode );\n                Vec_VecPush( vAigGFMap, serialNumSignal, topASTNode );\n            }\n            return;\n        case BOOL:\n            return;\n        default:\n            fmt.Printf(\"\\nINVALID situation: aborting...\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc buildLogicFromLTLNode_combinationalOnly(pAigNew *Aig_Man_t, pLtlNode *ltlNode) *Aig_Obj_t {\n    var leftAigObj, rightAigObj *Aig_Obj_t;\n\n    if pLtlNode.pObj != nil {\n        return pLtlNode.pObj;\n    } else {\n        assert(pLtlNode.type != BOOL, \"pLtlNode.type != BOOL\");\n        switch  pLtlNode.type {\n            case AND:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_And( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case OR:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_Or( pAigNew, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case NOT:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right == nil, \"pLtlNode.right == nil\"); \n                leftAigObj = buildLogicFromLTLNode_combinationalOnly( pAigNew, pLtlNode.left );\n                assert(leftAigObj, \"leftAigObj\");\n                pLtlNode.pObj = Aig_Not( leftAigObj );\n                return pLtlNode.pObj;\n            case GLOBALLY,\n             EVENTUALLY,\n             NEXT,\n             UNTIL:\n                fmt.Printf(\"FORBIDDEN node: ABORTING!!\\n\");\n                os.Exit(int(0));\n            fallthrough\ndefault:\n                fmt.Printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                os.Exit(int(0));\n        }\n    }\n}\n\nfunc buildLogicFromLTLNode(pAig *Aig_Man_t, pLtlNode *ltlNode) *Aig_Obj_t {\n    var leftAigObj, rightAigObj *Aig_Obj_t;\n\n    if pLtlNode.pObj != nil {\n        return pLtlNode.pObj;\n    } else {\n        assert(pLtlNode.type != BOOL, \"pLtlNode.type != BOOL\");\n        switch  pLtlNode.type {\n            case AND:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_And( pAig, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case OR:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right, \"pLtlNode.right\");\n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                rightAigObj = buildLogicFromLTLNode( pAig, pLtlNode.right );\n                assert(leftAigObj, \"leftAigObj\"); assert((rightAigObj != nil), \"rightAigObj\");\n                pLtlNode.pObj = Aig_Or( pAig, leftAigObj, rightAigObj );\n                return pLtlNode.pObj;\n            case NOT:\n                assert(pLtlNode.left, \"pLtlNode.left\"); assert(pLtlNode.right == nil, \"pLtlNode.right == nil\"); \n                leftAigObj = buildLogicFromLTLNode( pAig, pLtlNode.left );\n                assert(leftAigObj, \"leftAigObj\");\n                pLtlNode.pObj = Aig_Not( leftAigObj );\n                return pLtlNode.pObj;\n            case GLOBALLY,\n             EVENTUALLY,\n             NEXT,\n             UNTIL:\n                fmt.Printf(\"\\nAttempting to create circuit with missing AIG pointer in a TEMPORAL node: ABORTING!!\\n\");\n                os.Exit(int(0));\n            fallthrough\ndefault:\n                fmt.Printf(\"\\nSerious ERROR: attempting to create AIG node from a temporal node\\n\");\n                os.Exit(int(0));\n        }\n    }\n}\n\nfunc isNonTemporalSubformula(topNode *ltlNode) int32 {\n    switch  topNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            return isNonTemporalSubformula( topNode.left) \u0026\u0026 isNonTemporalSubformula( topNode.right ) ;\n        case NOT:\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            return isNonTemporalSubformula( topNode.left );\n        case BOOL:\n            return 1;\n        default:\n            return 0;\n    }\n}\n\nfunc isWellFormed(topNode *ltlNode) int32 {\n    var nextNode *ltlNode;\n\n    switch  topNode.type {\n        case AND,\n         OR,\n         IMPLY:\n            return isWellFormed( topNode.left) \u0026\u0026 isWellFormed( topNode.right ) ;\n        case NOT:\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            return isWellFormed( topNode.left );\n        case BOOL:\n            return 1;\n        case GLOBALLY:\n            nextNode = topNode.left;\n            assert(topNode.right == nil, \"topNode.right == nil\");\n            if nextNode.type != EVENTUALLY {\n                return 0;\n            } else {\n                assert(nextNode.right == nil, \"nextNode.right == nil\");\n                return isNonTemporalSubformula( nextNode.left );\n            }\n        fallthrough\ndefault:\n            return 0;\n    }\n}\n\nfunc checkBooleanConstant(targetName string) int32 {\n    if int32(strings.Compare(targetName, \"true\")) == 0 { \n        return 1; }\n    if int32(strings.Compare(targetName, \"false\")) == 0 {\n        return 0; }\n    return -1;\n}\n\nfunc checkSignalNameExistence(pNtk *Abc_Ntk_t, topASTNode *ltlNode) int32 {\n    var targetName string;\n    var pNode *Abc_Obj_t;\n    var i int32;\n        \n    switch  topASTNode.type {\n        case BOOL:\n            targetName = topASTNode.name;\n            //printf(\"\\nTrying to match name %s\\n\", targetName);\n            if checkBooleanConstant( targetName ) != -1 {\n                return 1; }\n            Abc_NtkForEachPo( pNtk, pNode, i )\n            {\n                if int32(strings.Compare(Abc_ObjName( pNode ), targetName)) == 0 {\n                    //printf(\"\\nVariable name \\\"%s\\\" MATCHED\\n\", targetName);\n                    return 1;\n                }\n            }\n            fmt.Printf(\"\\nVariable name \\\"%s\\\" not found in the PO name list\\n\", targetName);\n            return 0;\n        case AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            return checkSignalNameExistence( pNtk, topASTNode.left ) \u0026\u0026 checkSignalNameExistence( pNtk, topASTNode.right );\n            \n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            return checkSignalNameExistence( pNtk, topASTNode.left );\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc populateBoolWithAigNodePtr(pNtk *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, topASTNode *ltlNode) {\n    var targetName string;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    var pObj, pDriverImage *Aig_Obj_t;\n    \n    switch  topASTNode.type {\n        case BOOL:\n            targetName = topASTNode.name;\n            if checkBooleanConstant( targetName ) == 1 {\n                topASTNode.pObj = Aig_ManConst1( pAigNew );\n                return;\n            }\n            if checkBooleanConstant( targetName ) == 0 {\n                topASTNode.pObj = Aig_Not(topASTNode.pObj = Aig_ManConst1( pAigNew ));\n                return;\n            }\n            Abc_NtkForEachPo( pNtk, pNode, i )\n                if int32(strings.Compare(Abc_ObjName( pNode ), targetName)) == 0 {\n                    pObj = Aig_ManCo( pAigOld, i );\n                    assert(Aig_ObjIsCo( pObj ), \"Aig_ObjIsCo( pObj )\");\n                    pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n                    topASTNode.pObj = pDriverImage;\n                    return;\n                }\n            assert(false, \"0\");\n        fallthrough\ncase AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.left );\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.right );\n            return;\n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            populateBoolWithAigNodePtr( pNtk, pAigOld, pAigNew, topASTNode.left );\n            return;\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc checkAllBoolHaveAIGPointer(topASTNode *ltlNode) int32 {\n    \n    switch  topASTNode.type {\n        case BOOL:\n            if( topASTNode.pObj != nil )\n                return 1;\n            else {\n                fmt.Printf(\"\\nfaulting PODMANDYO topASTNode-\u003ename = %s\\n\", topASTNode.name);\n                return 0;\n            }\n        fallthrough\ncase AND,\n         OR,\n         IMPLY,\n         UNTIL:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right != nil, \"topASTNode.right != nil\");\n            return checkAllBoolHaveAIGPointer( topASTNode.left ) \u0026\u0026 checkAllBoolHaveAIGPointer( topASTNode.right );\n            \n        case NOT,\n         NEXT,\n         GLOBALLY,\n         EVENTUALLY:\n            assert(topASTNode.left != nil, \"topASTNode.left != nil\");\n            assert(topASTNode.right == nil, \"topASTNode.right == nil\");\n            return checkAllBoolHaveAIGPointer( topASTNode.left );\n        default:\n            fmt.Printf(\"\\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\\n\");\n            os.Exit(int(0));\n    }\n}\n\nfunc setAIGNodePtrOfGloballyNode(astNode *ltlNode, pObjLo *Aig_Obj_t) {\n    astNode.pObj = pObjLo;\n}\n            \nfunc retriveAIGPointerFromLTLNode(astNode *ltlNode) *Aig_Obj_t {\n    return astNode.pObj;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

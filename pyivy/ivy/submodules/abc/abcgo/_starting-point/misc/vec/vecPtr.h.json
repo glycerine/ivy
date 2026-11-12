@@ -1,0 +1,2288 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h",
+  "SHA256": "ebcfd0213ac8902f0f12f5a3ba51ac0bb7195f4ff3981bf6985a1b6f08dd0c0c",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 20,
+        "ByteOffset": 4015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( void *, p.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 4177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCap \u003e= 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 4206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 20,
+        "ByteOffset": 4307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( void *, p.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArray, 0, sizeof(void *) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 5762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 16,
+        "ByteOffset": 5848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_ALLOC( void *, nSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pArray, sizeof(void *) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 6296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 20,
+        "ByteOffset": 6411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( void *, p.nCap );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 6487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pVec.pArray, sizeof(void *) * (size_t)pVec.nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 7158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Ptr_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 7725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 7819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 7845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 8173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p).pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 8202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 10598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 10945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 11303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 11644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e 0 );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 16,
+        "ByteOffset": 12085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_REALLOC( void *, p.pArray, nCapMin ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 569,
+        "Column": 5,
+        "ByteOffset": 14620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e= nSizeNew );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 604,
+        "Column": 13,
+        "ByteOffset": 15575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pTemp ); }"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 16099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pDest.pArray, pSour.pArray, sizeof(void *) * (size_t)pSour.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 16553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vector has %d entries: {\", Vec_PtrSize(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 646,
+        "Column": 9,
+        "ByteOffset": 16762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s \", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 648,
+        "Column": 5,
+        "ByteOffset": 16796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 741,
+        "Column": 5,
+        "ByteOffset": 19054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e 0 );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 767,
+        "Column": 28,
+        "ByteOffset": 19677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if p.pArray[i] \u0026\u0026 !strcmp((char *)p.pArray[i], Entry) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 791,
+        "Column": 5,
+        "ByteOffset": 20217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 818,
+        "Column": 5,
+        "ByteOffset": 20812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 838,
+        "Column": 5,
+        "ByteOffset": 21318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 858,
+        "Column": 5,
+        "ByteOffset": 21821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nItems \u003c p.nSize );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 860,
+        "Column": 5,
+        "ByteOffset": 21893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( (char **)p.pArray + p.nSize, p.pArray, (size_t)nItems * sizeof(void*) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 861,
+        "Column": 5,
+        "ByteOffset": 21979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( p.pArray, (char **)p.pArray + nItems, (size_t)p.nSize * sizeof(void*) );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 942,
+        "Column": 9,
+        "ByteOffset": 24012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), "
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 945,
+        "Column": 9,
+        "ByteOffset": 24159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 994,
+        "Column": 5,
+        "ByteOffset": 25872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCounts == nil || Vec_IntSize(vCounts) == Vec_PtrSize(p) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1017,
+        "Column": 24,
+        "ByteOffset": 26653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMemory = (void **)ABC_ALLOC( char, (sizeof(void *) + sizeof(unsigned) * (size_t)nWords) * nEntries );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1054,
+        "Column": 9,
+        "ByteOffset": 27770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0, (size_t)(4*(nWords-iWord)) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1072,
+        "Column": 9,
+        "ByteOffset": 28288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0xFF, (size_t)(4*(nWords-iWord)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1090,
+        "Column": 5,
+        "ByteOffset": 28814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vInfo) \u003e 1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1095,
+        "Column": 5,
+        "ByteOffset": 29061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( Vec_PtrEntry(vInfoNew,0), Vec_PtrEntry(vInfo,0), (size_t)(Vec_PtrSize(vInfo) * nWords * 4) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1097,
+        "Column": 5,
+        "ByteOffset": 29192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( vInfo.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1103,
+        "Column": 5,
+        "ByteOffset": 29354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( vInfoNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1120,
+        "Column": 5,
+        "ByteOffset": 29820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vInfo) \u003e 1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1126,
+        "Column": 9,
+        "ByteOffset": 30111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_PtrEntry(vInfoNew,i), Vec_PtrEntry(vInfo,i), (size_t)(nWords * 4) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1129,
+        "Column": 5,
+        "ByteOffset": 30227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( vInfo.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1133,
+        "Column": 5,
+        "ByteOffset": 30346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( vInfoNew );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_PtrAlloc",
+      "Start": 3685,
+      "End": 3960,
+      "BodyStart": 3736,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAlloc( int nCap )\n{\n    Vec_Ptr_t * p;\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    if ( nCap \u003e 0 \u0026\u0026 nCap \u003c 8 )\n        nCap = 8;\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( void *, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_PtrAlloc(nCap int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 8 {\n        nCap = 8; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrAllocExact",
+      "Start": 3961,
+      "End": 4216,
+      "BodyStart": 4017,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAllocExact( int nCap )\n{\n    Vec_Ptr_t * p;\n    assert( nCap \u003e= 0 );\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( void *, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_PtrAllocExact(nCap int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Ptr_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrStart",
+      "Start": 4505,
+      "End": 4706,
+      "BodyStart": 4557,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrStart( int nSize )\n{\n    Vec_Ptr_t * p;\n    p = Vec_PtrAlloc( nSize );\n    p-\u003enSize = nSize;\n    memset( p-\u003epArray, 0, sizeof(void *) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_PtrStart(nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = Vec_PtrAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(void *) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrAllocArray",
+      "Start": 5001,
+      "End": 5215,
+      "BodyStart": 5074,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAllocArray( void ** pArray, int nSize )\n{\n    Vec_Ptr_t * p;\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = pArray;\n    return p;\n}",
+      "Draft": "func Vec_PtrAllocArray(pArray *any, nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrAllocArrayCopy",
+      "Start": 5510,
+      "End": 5813,
+      "BodyStart": 5587,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAllocArrayCopy( void ** pArray, int nSize )\n{\n    Vec_Ptr_t * p;\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = ABC_ALLOC( void *, nSize );\n    memcpy( p-\u003epArray, pArray, sizeof(void *) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_PtrAllocArrayCopy(pArray *any, nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( void *, nSize );\n    memcpy( p.pArray, pArray, sizeof(void *) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrDup",
+      "Start": 6078,
+      "End": 6402,
+      "BodyStart": 6135,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrDup( Vec_Ptr_t * pVec )\n{\n    Vec_Ptr_t * p;\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( void *, p-\u003enCap ) : NULL;\n    memcpy( p-\u003epArray, pVec-\u003epArray, sizeof(void *) * (size_t)pVec-\u003enSize );\n    return p;\n}",
+      "Draft": "func Vec_PtrDup(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(void *) * (size_t)pVec.nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrDupStr",
+      "Start": 6403,
+      "End": 6631,
+      "BodyStart": 6463,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrDupStr( Vec_Ptr_t * pVec )\n{\n    int i;\n    Vec_Ptr_t * p = Vec_PtrDup( pVec );\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        p-\u003epArray[i] = Abc_UtilStrsav( (char *)p-\u003epArray[i] );\n    return p;\n}",
+      "Draft": "func Vec_PtrDupStr(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var i int32;\n    var p *Vec_Ptr_t  = Vec_PtrDup( pVec );\n    for  i = 0; i \u003c p.nSize; i++  {\n        p.pArray[i] = Abc_UtilStrsav( (char *)p.pArray[i] );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrDupArray",
+      "Start": 6907,
+      "End": 7196,
+      "BodyStart": 6969,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrDupArray( Vec_Ptr_t * pVec )\n{\n    Vec_Ptr_t * p;\n    p = ABC_ALLOC( Vec_Ptr_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enCap;\n    p-\u003epArray = pVec-\u003epArray;\n    pVec-\u003enSize  = 0;\n    pVec-\u003enCap   = 0;\n    pVec-\u003epArray = NULL;\n    return p;\n}",
+      "Draft": "func Vec_PtrDupArray(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_PtrZero",
+      "Start": 7449,
+      "End": 7557,
+      "BodyStart": 7497,
+      "Original": "static inline void Vec_PtrZero( Vec_Ptr_t * p )\n{\n    p-\u003epArray = NULL;\n    p-\u003enSize = 0;\n    p-\u003enCap = 0;\n}",
+      "Draft": "func Vec_PtrZero(p *Vec_Ptr_t) {\n    p.pArray = nil;\n    p.nSize = 0;\n    p.nCap = 0;\n}"
+    },
+    {
+      "Name": "Vec_PtrErase",
+      "Start": 7558,
+      "End": 7672,
+      "BodyStart": 7607,
+      "Original": "static inline void Vec_PtrErase( Vec_Ptr_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    p-\u003enSize = 0;\n    p-\u003enCap = 0;\n}",
+      "Draft": "func Vec_PtrErase(p *Vec_Ptr_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}"
+    },
+    {
+      "Name": "Vec_PtrFree",
+      "Start": 7673,
+      "End": 7770,
+      "BodyStart": 7721,
+      "Original": "static inline void Vec_PtrFree( Vec_Ptr_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Vec_PtrFree(p *Vec_Ptr_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Vec_PtrFreeP",
+      "Start": 8006,
+      "End": 8149,
+      "BodyStart": 8056,
+      "Original": "static inline void Vec_PtrFreeP( Vec_Ptr_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    ABC_FREE( (*p)-\u003epArray );\n    ABC_FREE( (*p) );\n}",
+      "Draft": "func Vec_PtrFreeP(p **Vec_Ptr_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}"
+    },
+    {
+      "Name": "Vec_PtrReleaseArray",
+      "Start": 8385,
+      "End": 8555,
+      "BodyStart": 8444,
+      "Original": "static inline void ** Vec_PtrReleaseArray( Vec_Ptr_t * p )\n{\n    void ** pArray = p-\u003epArray;\n    p-\u003enCap = 0;\n    p-\u003enSize = 0;\n    p-\u003epArray = NULL;\n    return pArray;\n}",
+      "Draft": "func Vec_PtrReleaseArray(p *Vec_Ptr_t) *any {\n    var pArray *any  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}"
+    },
+    {
+      "Name": "Vec_PtrArray",
+      "Start": 8791,
+      "End": 8868,
+      "BodyStart": 8843,
+      "Original": "static inline void ** Vec_PtrArray( Vec_Ptr_t * p )\n{\n    return p-\u003epArray;\n}",
+      "Draft": "func Vec_PtrArray(p *Vec_Ptr_t) *any {\n    return p.pArray;\n}"
+    },
+    {
+      "Name": "Vec_PtrSize",
+      "Start": 9104,
+      "End": 9175,
+      "BodyStart": 9151,
+      "Original": "static inline int Vec_PtrSize( Vec_Ptr_t * p )\n{\n    return p-\u003enSize;\n}",
+      "Draft": "func Vec_PtrSize(p *Vec_Ptr_t) int32 {\n    return p.nSize;\n}"
+    },
+    {
+      "Name": "Vec_PtrCap",
+      "Start": 9411,
+      "End": 9480,
+      "BodyStart": 9457,
+      "Original": "static inline int Vec_PtrCap( Vec_Ptr_t * p )\n{\n    return p-\u003enCap;\n}",
+      "Draft": "func Vec_PtrCap(p *Vec_Ptr_t) int32 {\n    return p.nCap;\n}"
+    },
+    {
+      "Name": "Vec_PtrMemory",
+      "Start": 9716,
+      "End": 9853,
+      "BodyStart": 9768,
+      "Original": "static inline double Vec_PtrMemory( Vec_Ptr_t * p )\n{\n    return !p ? 0.0 : 1.0 * sizeof(void *) * (size_t)p-\u003enCap + sizeof(Vec_Ptr_t);\n}",
+      "Draft": "func Vec_PtrMemory(p *Vec_Ptr_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(void *) * (size_t)p.nCap + sizeof(Vec_Ptr_t);\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrCountZero",
+      "Start": 10089,
+      "End": 10269,
+      "BodyStart": 10142,
+      "Original": "static inline int Vec_PtrCountZero( Vec_Ptr_t * p ) \n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        Counter += (p-\u003epArray[i] == NULL);\n    return Counter;\n}",
+      "Draft": "func Vec_PtrCountZero(p *Vec_Ptr_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += (p.pArray[i] == nil);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Vec_PtrEntry",
+      "Start": 10505,
+      "End": 10629,
+      "BodyStart": 10563,
+      "Original": "static inline void * Vec_PtrEntry( Vec_Ptr_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray[i];\n}",
+      "Draft": "func Vec_PtrEntry(p *Vec_Ptr_t, i int32) any {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}"
+    },
+    {
+      "Name": "Vec_PtrEntryP",
+      "Start": 10865,
+      "End": 10992,
+      "BodyStart": 10925,
+      "Original": "static inline void ** Vec_PtrEntryP( Vec_Ptr_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray + i;\n}",
+      "Draft": "func Vec_PtrEntryP(p *Vec_Ptr_t, i int32) *any {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}"
+    },
+    {
+      "Name": "Vec_PtrWriteEntry",
+      "Start": 11228,
+      "End": 11370,
+      "BodyStart": 11303,
+      "Original": "static inline void Vec_PtrWriteEntry( Vec_Ptr_t * p, int i, void * Entry )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Vec_PtrWriteEntry(p *Vec_Ptr_t, i int32, Entry any) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_PtrEntryLast",
+      "Start": 11606,
+      "End": 11726,
+      "BodyStart": 11661,
+      "Original": "static inline void * Vec_PtrEntryLast( Vec_Ptr_t * p )\n{\n    assert( p-\u003enSize \u003e 0 );\n    return p-\u003epArray[p-\u003enSize-1];\n}",
+      "Draft": "func Vec_PtrEntryLast(p *Vec_Ptr_t) any {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[p.nSize-1];\n}"
+    },
+    {
+      "Name": "Vec_PtrGrow",
+      "Start": 12003,
+      "End": 12198,
+      "BodyStart": 12064,
+      "Original": "static inline void Vec_PtrGrow( Vec_Ptr_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = ABC_REALLOC( void *, p-\u003epArray, nCapMin ); \n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Vec_PtrGrow(p *Vec_Ptr_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( void *, p.pArray, nCapMin ); \n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Vec_PtrFill",
+      "Start": 12480,
+      "End": 12682,
+      "BodyStart": 12553,
+      "Original": "static inline void Vec_PtrFill( Vec_Ptr_t * p, int nSize, void * Entry )\n{\n    int i;\n    Vec_PtrGrow( p, nSize );\n    for ( i = 0; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Entry;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_PtrFill(p *Vec_Ptr_t, nSize int32, Entry any) {\n    var i int32;\n    Vec_PtrGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Entry;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_PtrFillTwo",
+      "Start": 12683,
+      "End": 12934,
+      "BodyStart": 12780,
+      "Original": "static inline void Vec_PtrFillTwo( Vec_Ptr_t * p, int nSize, void * EntryEven, void * EntryOdd )\n{\n    int i;\n    Vec_PtrGrow( p, nSize );\n    for ( i = 0; i \u003c nSize; i++ )\n        p-\u003epArray[i] = (i \u0026 1) ? EntryOdd : EntryEven;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_PtrFillTwo(p *Vec_Ptr_t, nSize int32, EntryEven any, EntryOdd any) {\n    var i int32;\n    Vec_PtrGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = (i \u0026 1) ? EntryOdd : EntryEven;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_PtrFillExtra",
+      "Start": 13216,
+      "End": 13579,
+      "BodyStart": 13293,
+      "Original": "static inline void Vec_PtrFillExtra( Vec_Ptr_t * p, int nSize, void * Fill )\n{\n    int i;\n    if ( nSize \u003c= p-\u003enSize )\n        return;\n    if ( nSize \u003e 2 * p-\u003enCap )\n        Vec_PtrGrow( p, nSize );\n    else if ( nSize \u003e p-\u003enCap )\n        Vec_PtrGrow( p, 2 * p-\u003enCap );\n    for ( i = p-\u003enSize; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Fill;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_PtrFillExtra(p *Vec_Ptr_t, nSize int32, Fill any) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_PtrGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_PtrGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_PtrGetEntry",
+      "Start": 13861,
+      "End": 13998,
+      "BodyStart": 13922,
+      "Original": "static inline void * Vec_PtrGetEntry( Vec_Ptr_t * p, int i )\n{\n    Vec_PtrFillExtra( p, i + 1, NULL );\n    return Vec_PtrEntry( p, i );\n}",
+      "Draft": "func Vec_PtrGetEntry(p *Vec_Ptr_t, i int32) any {\n    Vec_PtrFillExtra( p, i + 1, nil );\n    return Vec_PtrEntry( p, i );\n}"
+    },
+    {
+      "Name": "Vec_PtrSetEntry",
+      "Start": 14285,
+      "End": 14439,
+      "BodyStart": 14358,
+      "Original": "static inline void Vec_PtrSetEntry( Vec_Ptr_t * p, int i, void * Entry )\n{\n    Vec_PtrFillExtra( p, i + 1, NULL );\n    Vec_PtrWriteEntry( p, i, Entry );\n}",
+      "Draft": "func Vec_PtrSetEntry(p *Vec_Ptr_t, i int32, Entry any) {\n    Vec_PtrFillExtra( p, i + 1, nil );\n    Vec_PtrWriteEntry( p, i, Entry );\n}"
+    },
+    {
+      "Name": "Vec_PtrShrink",
+      "Start": 14675,
+      "End": 14803,
+      "BodyStart": 14739,
+      "Original": "static inline void Vec_PtrShrink( Vec_Ptr_t * p, int nSizeNew )\n{\n    assert( p-\u003enSize \u003e= nSizeNew );\n    p-\u003enSize = nSizeNew;\n}",
+      "Draft": "func Vec_PtrShrink(p *Vec_Ptr_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}"
+    },
+    {
+      "Name": "Vec_PtrClear",
+      "Start": 15039,
+      "End": 15109,
+      "BodyStart": 15088,
+      "Original": "static inline void Vec_PtrClear( Vec_Ptr_t * p )\n{\n    p-\u003enSize = 0;\n}",
+      "Draft": "func Vec_PtrClear(p *Vec_Ptr_t) {\n    p.nSize = 0;\n}"
+    },
+    {
+      "Name": "Vec_PtrFreeData",
+      "Start": 15382,
+      "End": 15653,
+      "BodyStart": 15434,
+      "Original": "static inline void Vec_PtrFreeData( Vec_Ptr_t * p )\n{\n    void * pTemp; int i;\n    if ( p == NULL ) return;\n    Vec_PtrForEachEntry( void *, p, pTemp, i )\n        if ( pTemp != (void *)(ABC_PTRINT_T)1 \u0026\u0026 pTemp != (void *)(ABC_PTRINT_T)2 )\n            ABC_FREE( pTemp );\n}",
+      "Draft": "func Vec_PtrFreeData(p *Vec_Ptr_t) {\n    var pTemp any; var i int32;\n    if p == nil { return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p)) \u0026\u0026 (((pTemp) = (void *)Vec_PtrEntry(p, i)), 1); i++  {\n        if pTemp != (void *)(ABC_PTRINT_T)1 \u0026\u0026 pTemp != (void *)(ABC_PTRINT_T)2 {\n            ABC_FREE( pTemp ); }\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrFreeFree",
+      "Start": 15654,
+      "End": 15786,
+      "BodyStart": 15706,
+      "Original": "static inline void Vec_PtrFreeFree( Vec_Ptr_t * p )\n{\n    if ( p == NULL ) return;\n    Vec_PtrFreeData( p );\n    Vec_PtrFree( p );\n}",
+      "Draft": "func Vec_PtrFreeFree(p *Vec_Ptr_t) {\n    if p == nil { return; }\n    Vec_PtrFreeData( p );\n    Vec_PtrFree( p );\n}"
+    },
+    {
+      "Name": "Vec_PtrCopy",
+      "Start": 16048,
+      "End": 16300,
+      "BodyStart": 16119,
+      "Original": "static inline void Vec_PtrCopy( Vec_Ptr_t * pDest, Vec_Ptr_t * pSour )\n{\n    pDest-\u003enSize = 0;\n    Vec_PtrGrow( pDest, pSour-\u003enSize );\n    memcpy( pDest-\u003epArray, pSour-\u003epArray, sizeof(void *) * (size_t)pSour-\u003enSize );\n    pDest-\u003enSize = pSour-\u003enSize;\n}",
+      "Draft": "func Vec_PtrCopy(pDest *Vec_Ptr_t, pSour *Vec_Ptr_t) {\n    pDest.nSize = 0;\n    Vec_PtrGrow( pDest, pSour.nSize );\n    memcpy( pDest.pArray, pSour.pArray, sizeof(void *) * (size_t)pSour.nSize );\n    pDest.nSize = pSour.nSize;\n}"
+    },
+    {
+      "Name": "Vec_PtrPrintNames",
+      "Start": 16568,
+      "End": 16809,
+      "BodyStart": 16622,
+      "Original": "static inline void Vec_PtrPrintNames( Vec_Ptr_t * p )\n{\n    char * pName; int i;\n    printf( \"Vector has %d entries: {\", Vec_PtrSize(p) );\n    Vec_PtrForEachEntry( char *, p, pName, i )\n        printf( \"%s \", pName );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Vec_PtrPrintNames(p *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Printf(\"Vector has %d entries: {\", Vec_PtrSize(p));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(p, i)), 1); i++  {\n        fmt.Printf(\"%s \", pName);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Vec_PtrPush",
+      "Start": 17045,
+      "End": 17306,
+      "BodyStart": 17107,
+      "Original": "static inline void Vec_PtrPush( Vec_Ptr_t * p, void * Entry )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_PtrGrow( p, 16 );\n        else\n            Vec_PtrGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Entry;\n}",
+      "Draft": "func Vec_PtrPush(p *Vec_Ptr_t, Entry any) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_PtrGrow( p, 16 );\n        } else {\n            Vec_PtrGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_PtrPushTwo",
+      "Start": 17307,
+      "End": 17451,
+      "BodyStart": 17388,
+      "Original": "static inline void Vec_PtrPushTwo( Vec_Ptr_t * p, void * Entry1, void * Entry2 )\n{\n    Vec_PtrPush( p, Entry1 );\n    Vec_PtrPush( p, Entry2 );\n}",
+      "Draft": "func Vec_PtrPushTwo(p *Vec_Ptr_t, Entry1 any, Entry2 any) {\n    Vec_PtrPush( p, Entry1 );\n    Vec_PtrPush( p, Entry2 );\n}"
+    },
+    {
+      "Name": "Vec_PtrAppend",
+      "Start": 17452,
+      "End": 17641,
+      "BodyStart": 17525,
+      "Original": "static inline void Vec_PtrAppend( Vec_Ptr_t * vVec1, Vec_Ptr_t * vVec2 )\n{\n    void * Entry; int i;\n    Vec_PtrForEachEntry( void *, vVec2, Entry, i )\n        Vec_PtrPush( vVec1, Entry );\n}",
+      "Draft": "func Vec_PtrAppend(vVec1 *Vec_Ptr_t, vVec2 *Vec_Ptr_t) {\n    var Entry any; var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec2)) \u0026\u0026 (((Entry) = (void *)Vec_PtrEntry(vVec2, i)), 1); i++  {\n        Vec_PtrPush( vVec1, Entry );\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrPushFirst",
+      "Start": 17877,
+      "End": 18242,
+      "BodyStart": 17944,
+      "Original": "static inline void Vec_PtrPushFirst( Vec_Ptr_t * p, void * Entry )\n{\n    int i;\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_PtrGrow( p, 16 );\n        else\n            Vec_PtrGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003enSize++;\n    for ( i = p-\u003enSize - 1; i \u003e= 1; i-- )\n        p-\u003epArray[i] = p-\u003epArray[i-1];\n    p-\u003epArray[0] = Entry;\n}",
+      "Draft": "func Vec_PtrPushFirst(p *Vec_Ptr_t, Entry any) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_PtrGrow( p, 16 );\n        } else {\n            Vec_PtrGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize - 1; i \u003e= 1; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[0] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_PtrPushUnique",
+      "Start": 18478,
+      "End": 18698,
+      "BodyStart": 18545,
+      "Original": "static inline int Vec_PtrPushUnique( Vec_Ptr_t * p, void * Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return 1;\n    Vec_PtrPush( p, Entry );\n    return 0;\n}",
+      "Draft": "func Vec_PtrPushUnique(p *Vec_Ptr_t, Entry any) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_PtrPush( p, Entry );\n    return 0;\n}"
+    },
+    {
+      "Name": "Vec_PtrPop",
+      "Start": 18986,
+      "End": 19100,
+      "BodyStart": 19035,
+      "Original": "static inline void * Vec_PtrPop( Vec_Ptr_t * p )\n{\n    assert( p-\u003enSize \u003e 0 );\n    return p-\u003epArray[--p-\u003enSize];\n}",
+      "Draft": "func Vec_PtrPop(p *Vec_Ptr_t) any {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}"
+    },
+    {
+      "Name": "Vec_PtrFind",
+      "Start": 19347,
+      "End": 19533,
+      "BodyStart": 19408,
+      "Original": "static inline int Vec_PtrFind( Vec_Ptr_t * p, void * Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return i;\n    return -1;\n}",
+      "Draft": "func Vec_PtrFind(p *Vec_Ptr_t, Entry any) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Vec_PtrFindStr",
+      "Start": 19534,
+      "End": 19754,
+      "BodyStart": 19598,
+      "Original": "static inline int Vec_PtrFindStr( Vec_Ptr_t * p, char * Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] \u0026\u0026 !strcmp((char *)p-\u003epArray[i], Entry) )\n            return i;\n    return -1;\n}",
+      "Draft": "func Vec_PtrFindStr(p *Vec_Ptr_t, Entry string) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] \u0026\u0026 !int32(strings.Compare((char *)p.pArray[i], Entry)) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Vec_PtrRemove",
+      "Start": 19990,
+      "End": 20515,
+      "BodyStart": 20054,
+      "Original": "static inline void Vec_PtrRemove( Vec_Ptr_t * p, void * Entry )\n{\n    int i;\n    // delete assuming that it is closer to the end\n    for ( i = p-\u003enSize - 1; i \u003e= 0; i-- )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    assert( i \u003e= 0 );\n/*\n    // delete assuming that it is closer to the beginning\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    assert( i \u003c p-\u003enSize );\n*/\n    for ( i++; i \u003c p-\u003enSize; i++ )\n        p-\u003epArray[i-1] = p-\u003epArray[i];\n    p-\u003enSize--;\n}",
+      "Draft": "func Vec_PtrRemove(p *Vec_Ptr_t, Entry any) {\n    var i int32;\n    // delete assuming that it is closer to the end\n    for  i = p.nSize - 1; i \u003e= 0; i--  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    assert(i \u003e= 0, \"i \u003e= 0\");\n/*\n    // delete assuming that it is closer to the beginning\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    assert( i \u003c p-\u003enSize );\n*/\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n}"
+    },
+    {
+      "Name": "Vec_PtrDrop",
+      "Start": 20751,
+      "End": 20956,
+      "BodyStart": 20806,
+      "Original": "static inline void Vec_PtrDrop( Vec_Ptr_t * p, int i )\n{\n    int k;\n    assert( i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p) );\n    p-\u003enSize--;\n    for ( k = i; k \u003c p-\u003enSize; k++ )\n        p-\u003epArray[k] = p-\u003epArray[k+1];\n}",
+      "Draft": "func Vec_PtrDrop(p *Vec_Ptr_t, i int32) {\n    var k int32;\n    assert(i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p), \"i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p)\");\n    p.nSize--;\n    for  k = i; k \u003c p.nSize; k++  {\n        p.pArray[k] = p.pArray[k+1];\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrInsert",
+      "Start": 21247,
+      "End": 21517,
+      "BodyStart": 21322,
+      "Original": "static inline void Vec_PtrInsert( Vec_Ptr_t * p, int iHere, void * Entry )\n{\n    int i;\n    assert( iHere \u003e= 0 \u0026\u0026 iHere \u003c p-\u003enSize );\n    Vec_PtrPush( p, 0 );\n    for ( i = p-\u003enSize - 1; i \u003e iHere; i-- )\n        p-\u003epArray[i] = p-\u003epArray[i-1];\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Vec_PtrInsert(p *Vec_Ptr_t, iHere int32, Entry any) {\n    var i int32;\n    assert(iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize, \"iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize\");\n    Vec_PtrPush( p, 0 );\n    for  i = p.nSize - 1; i \u003e iHere; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_PtrReorder",
+      "Start": 21787,
+      "End": 22105,
+      "BodyStart": 21850,
+      "Original": "static inline void Vec_PtrReorder( Vec_Ptr_t * p, int nItems )\n{\n    assert( nItems \u003c p-\u003enSize );\n    Vec_PtrGrow( p, nItems + p-\u003enSize );\n    memmove( (char **)p-\u003epArray + p-\u003enSize, p-\u003epArray, (size_t)nItems * sizeof(void*) );\n    memmove( p-\u003epArray, (char **)p-\u003epArray + nItems, (size_t)p-\u003enSize * sizeof(void*) );\n}",
+      "Draft": "func Vec_PtrReorder(p *Vec_Ptr_t, nItems int32) {\n    assert(nItems \u003c p.nSize, \"nItems \u003c p.nSize\");\n    Vec_PtrGrow( p, nItems + p.nSize );\n    memmove( (char **)p.pArray + p.nSize, p.pArray, (size_t)nItems * sizeof(void*) );\n    memmove( p.pArray, (char **)p.pArray + nItems, (size_t)p.nSize * sizeof(void*) );\n}"
+    },
+    {
+      "Name": "Vec_PtrReverseOrder",
+      "Start": 22371,
+      "End": 22626,
+      "BodyStart": 22427,
+      "Original": "static inline void Vec_PtrReverseOrder( Vec_Ptr_t * p )\n{\n    void * Temp;\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize/2; i++ )\n    {\n        Temp = p-\u003epArray[i];\n        p-\u003epArray[i] = p-\u003epArray[p-\u003enSize-1-i];\n        p-\u003epArray[p-\u003enSize-1-i] = Temp;\n    }\n}",
+      "Draft": "func Vec_PtrReverseOrder(p *Vec_Ptr_t) {\n    var Temp any;\n    var i int32;\n    for  i = 0; i \u003c p.nSize/2; i++  {\n        Temp = p.pArray[i];\n        p.pArray[i] = p.pArray[p.nSize-1-i];\n        p.pArray[p.nSize-1-i] = Temp;\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrEqual",
+      "Start": 22894,
+      "End": 23146,
+      "BodyStart": 22960,
+      "Original": "static inline int Vec_PtrEqual( Vec_Ptr_t * p1, Vec_Ptr_t * p2 ) \n{\n    int i;\n    if ( p1-\u003enSize != p2-\u003enSize )\n        return 0;\n    for ( i = 0; i \u003c p1-\u003enSize; i++ )\n        if ( p1-\u003epArray[i] != p2-\u003epArray[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Vec_PtrEqual(p1 *Vec_Ptr_t, p2 *Vec_Ptr_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_PtrSortComparePtr",
+      "Start": 23420,
+      "End": 23583,
+      "BodyStart": 23481,
+      "Original": "static int Vec_PtrSortComparePtr( void ** pp1, void ** pp2 )\n{\n    if ( *pp1 \u003c *pp2 )\n        return -1;\n    if ( *pp1 \u003e *pp2 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Vec_PtrSortComparePtr(pp1 *any, pp2 *any) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Vec_PtrSort",
+      "Start": 23943,
+      "End": 24396,
+      "BodyStart": 24013,
+      "Original": "static void Vec_PtrSort( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)() )\n{\n    if ( p-\u003enSize \u003c 2 )\n        return;\n    if ( Vec_PtrSortCompare == NULL )\n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(void *), \n                (int (*)(const void *, const void *)) Vec_PtrSortComparePtr );\n    else\n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(void *), \n                (int (*)(const void *, const void *)) Vec_PtrSortCompare );\n}",
+      "Draft": "func Vec_PtrSort(p *Vec_Ptr_t, Vec_PtrSortCompare func() int32) {\n    if p.nSize \u003c 2 {\n        return; }\n    if Vec_PtrSortCompare == nil {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                        (int (*)(void *, void *)) Vec_PtrSortComparePtr );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                        (int (*)(void *, void *)) Vec_PtrSortCompare ); }\n}"
+    },
+    {
+      "Name": "Vec_PtrUniqify",
+      "Start": 24759,
+      "End": 25079,
+      "BodyStart": 24832,
+      "Original": "static void Vec_PtrUniqify( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)() )\n{\n    int i, k;\n    if ( p-\u003enSize \u003c 2 )\n        return;\n    Vec_PtrSort( p, Vec_PtrSortCompare );\n    for ( i = k = 1; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] != p-\u003epArray[i-1] )\n            p-\u003epArray[k++] = p-\u003epArray[i];\n    p-\u003enSize = k;\n}",
+      "Draft": "func Vec_PtrUniqify(p *Vec_Ptr_t, Vec_PtrSortCompare func() int32) {\n    var i, k int32;\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_PtrSort( p, Vec_PtrSortCompare );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if p.pArray[i] != p.pArray[i-1] {\n            p.pArray[k++] = p.pArray[i]; }\n    }\n    p.nSize = k;\n}"
+    },
+    {
+      "Name": "Vec_PtrUniqify2",
+      "Start": 25231,
+      "End": 26086,
+      "BodyStart": 25371,
+      "Original": "static void Vec_PtrUniqify2( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)(void**, void**), void (*Vec_PtrObjFree)(void*), Vec_Int_t * vCounts )\n{\n    int i, k;\n    if ( vCounts )\n        Vec_IntFill( vCounts, 1, 1 );\n    if ( p-\u003enSize \u003c 2 )\n        return;\n    Vec_PtrSort( p, (int (*)())Vec_PtrSortCompare );\n    for ( i = k = 1; i \u003c p-\u003enSize; i++ )\n        if ( Vec_PtrSortCompare(p-\u003epArray+i, p-\u003epArray+k-1) != 0 )\n        {\n            p-\u003epArray[k++] = p-\u003epArray[i];\n            if ( vCounts )\n                Vec_IntPush( vCounts, 1 );\n        }\n        else \n        {\n            if ( Vec_PtrObjFree )\n                Vec_PtrObjFree( p-\u003epArray[i] );\n            if ( vCounts )\n                Vec_IntAddToEntry( vCounts, Vec_IntSize(vCounts)-1, 1 );\n        }\n    p-\u003enSize = k;\n    assert( vCounts == NULL || Vec_IntSize(vCounts) == Vec_PtrSize(p) );\n}",
+      "Draft": "func Vec_PtrUniqify2(p *Vec_Ptr_t, Vec_PtrSortCompare func(*any, *any) int32, Vec_PtrObjFree func(any), vCounts *Vec_Int_t) {\n    var i, k int32;\n    if vCounts != nil {\n        Vec_IntFill( vCounts, 1, 1 ); }\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_PtrSort( p, (int (*)())Vec_PtrSortCompare );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if Vec_PtrSortCompare(p.pArray+i, p.pArray+k-1) != 0 {\n            p.pArray[k++] = p.pArray[i];\n            if vCounts != nil {\n                Vec_IntPush( vCounts, 1 ); }\n        \n        } else {\n            if Vec_PtrObjFree {\n                Vec_PtrObjFree( p.pArray[i] ); }\n            if vCounts != nil {\n                Vec_IntAddToEntry( vCounts, Vec_IntSize(vCounts)-1, 1 ); }\n        }\n    }\n    p.nSize = k;\n    assert(vCounts == nil || Vec_IntSize(vCounts) == Vec_PtrSize(p), \"vCounts == nil || Vec_IntSize(vCounts) == Vec_PtrSize(p)\");\n}"
+    },
+    {
+      "Name": "Vec_PtrAllocSimInfo",
+      "Start": 26645,
+      "End": 27058,
+      "BodyStart": 26719,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAllocSimInfo( int nEntries, int nWords )\n{\n    void ** pMemory;\n    unsigned * pInfo;\n    int i;\n    pMemory = (void **)ABC_ALLOC( char, (sizeof(void *) + sizeof(unsigned) * (size_t)nWords) * nEntries );\n    pInfo = (unsigned *)(pMemory + nEntries);\n    for ( i = 0; i \u003c nEntries; i++ )\n        pMemory[i] = pInfo + i * nWords;\n    return Vec_PtrAllocArray( pMemory, nEntries );\n}",
+      "Draft": "func Vec_PtrAllocSimInfo(nEntries int32, nWords int32) *Vec_Ptr_t {\n    var pMemory *any;\n    var pInfo *uint32;\n    var i int32;\n    pMemory = (void **)ABC_ALLOC( char, (sizeof(void *) + sizeof(unsigned) * (size_t)nWords) * nEntries );\n    pInfo = (unsigned *)(pMemory + nEntries);\n    for  i = 0; i \u003c nEntries; i++  {\n        pMemory[i] = pInfo + i * nWords;\n    }\n    return Vec_PtrAllocArray( pMemory, nEntries );\n}"
+    },
+    {
+      "Name": "Vec_PtrReadWordsSimInfo",
+      "Start": 27352,
+      "End": 27488,
+      "BodyStart": 27411,
+      "Original": "static inline int Vec_PtrReadWordsSimInfo( Vec_Ptr_t * p )\n{\n    return (unsigned *)Vec_PtrEntry(p,1) - (unsigned *)Vec_PtrEntry(p,0);\n}",
+      "Draft": "func Vec_PtrReadWordsSimInfo(p *Vec_Ptr_t) int32 {\n    return (unsigned *)Vec_PtrEntry(p,1) - (unsigned *)Vec_PtrEntry(p,0);\n}"
+    },
+    {
+      "Name": "Vec_PtrCleanSimInfo",
+      "Start": 27782,
+      "End": 28009,
+      "BodyStart": 27865,
+      "Original": "static inline void Vec_PtrCleanSimInfo( Vec_Ptr_t * vInfo, int iWord, int nWords )\n{\n    int i;\n    for ( i = 0; i \u003c vInfo-\u003enSize; i++ )\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0, (size_t)(4*(nWords-iWord)) );\n}",
+      "Draft": "func Vec_PtrCleanSimInfo(vInfo *Vec_Ptr_t, iWord int32, nWords int32) {\n    var i int32;\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0, (size_t)(4*(nWords-iWord)) );\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrFillSimInfo",
+      "Start": 28303,
+      "End": 28532,
+      "BodyStart": 28385,
+      "Original": "static inline void Vec_PtrFillSimInfo( Vec_Ptr_t * vInfo, int iWord, int nWords )\n{\n    int i;\n    for ( i = 0; i \u003c vInfo-\u003enSize; i++ )\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0xFF, (size_t)(4*(nWords-iWord)) );\n}",
+      "Draft": "func Vec_PtrFillSimInfo(vInfo *Vec_Ptr_t, iWord int32, nWords int32) {\n    var i int32;\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0xFF, (size_t)(4*(nWords-iWord)) );\n    }\n}"
+    },
+    {
+      "Name": "Vec_PtrDoubleSimInfo",
+      "Start": 28866,
+      "End": 29545,
+      "BodyStart": 28927,
+      "Original": "static inline void Vec_PtrDoubleSimInfo( Vec_Ptr_t * vInfo )\n{\n    Vec_Ptr_t * vInfoNew;\n    int nWords;\n    assert( Vec_PtrSize(vInfo) \u003e 1 );\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( 2*Vec_PtrSize(vInfo), nWords );\n    // copy the simulation info\n    memcpy( Vec_PtrEntry(vInfoNew,0), Vec_PtrEntry(vInfo,0), (size_t)(Vec_PtrSize(vInfo) * nWords * 4) );\n    // replace the array\n    ABC_FREE( vInfo-\u003epArray );\n    vInfo-\u003epArray = vInfoNew-\u003epArray;\n    vInfo-\u003enSize *= 2;\n    vInfo-\u003enCap *= 2;\n    // free the old array\n    vInfoNew-\u003epArray = NULL;\n    ABC_FREE( vInfoNew );\n}",
+      "Draft": "func Vec_PtrDoubleSimInfo(vInfo *Vec_Ptr_t) {\n    var vInfoNew *Vec_Ptr_t;\n    var nWords int32;\n    assert(Vec_PtrSize(vInfo) \u003e 1, \"Vec_PtrSize(vInfo) \u003e 1\");\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( 2*Vec_PtrSize(vInfo), nWords );\n    // copy the simulation info\n    memcpy( Vec_PtrEntry(vInfoNew,0), Vec_PtrEntry(vInfo,0), (size_t)(Vec_PtrSize(vInfo) * nWords * 4) );\n    // replace the array\n    ABC_FREE( vInfo.pArray );\n    vInfo.pArray = vInfoNew.pArray;\n    vInfo.nSize *= 2;\n    vInfo.nCap *= 2;\n    // free the old array\n    vInfoNew.pArray = nil;\n    ABC_FREE( vInfoNew );\n}"
+    },
+    {
+      "Name": "Vec_PtrReallocSimInfo",
+      "Start": 29883,
+      "End": 30545,
+      "BodyStart": 29945,
+      "Original": "static inline void Vec_PtrReallocSimInfo( Vec_Ptr_t * vInfo )\n{\n    Vec_Ptr_t * vInfoNew;\n    int nWords, i;\n    assert( Vec_PtrSize(vInfo) \u003e 1 );\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( Vec_PtrSize(vInfo), 2*nWords );\n    // copy the simulation info\n    for ( i = 0; i \u003c vInfo-\u003enSize; i++ )\n        memcpy( Vec_PtrEntry(vInfoNew,i), Vec_PtrEntry(vInfo,i), (size_t)(nWords * 4) );\n    // replace the array\n    ABC_FREE( vInfo-\u003epArray );\n    vInfo-\u003epArray = vInfoNew-\u003epArray;\n    // free the old array\n    vInfoNew-\u003epArray = NULL;\n    ABC_FREE( vInfoNew );\n}",
+      "Draft": "func Vec_PtrReallocSimInfo(vInfo *Vec_Ptr_t) {\n    var vInfoNew *Vec_Ptr_t;\n    var nWords, i int32;\n    assert(Vec_PtrSize(vInfo) \u003e 1, \"Vec_PtrSize(vInfo) \u003e 1\");\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( Vec_PtrSize(vInfo), 2*nWords );\n    // copy the simulation info\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memcpy( Vec_PtrEntry(vInfoNew,i), Vec_PtrEntry(vInfo,i), (size_t)(nWords * 4) );\n    }\n    // replace the array\n    ABC_FREE( vInfo.pArray );\n    vInfo.pArray = vInfoNew.pArray;\n    // free the old array\n    vInfoNew.pArray = nil;\n    ABC_FREE( vInfoNew );\n}"
+    },
+    {
+      "Name": "Vec_PtrAllocTruthTables",
+      "Start": 30846,
+      "End": 31605,
+      "BodyStart": 30909,
+      "Original": "static inline Vec_Ptr_t * Vec_PtrAllocTruthTables( int nVars )\n{\n    Vec_Ptr_t * p;\n    unsigned Masks[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    unsigned * pTruth;\n    int i, k, nWords;\n    nWords = (nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5)));\n    p = Vec_PtrAllocSimInfo( nVars, nWords );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        pTruth = (unsigned *)p-\u003epArray[i];\n        if ( i \u003c 5 )\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                pTruth[k] = Masks[i];\n        }\n        else\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                if ( k \u0026 (1 \u003c\u003c (i-5)) )\n                    pTruth[k] = ~(unsigned)0;\n                else\n                    pTruth[k] = 0;\n        }\n    }\n    return p;\n}",
+      "Draft": "func Vec_PtrAllocTruthTables(nVars int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var pTruth *uint32;\n    var i, k, nWords int32;\n    if nVars \u003c= 5 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 5));\n    }\n    p = Vec_PtrAllocSimInfo( nVars, nWords );\n    for  i = 0; i \u003c nVars; i++  {\n        pTruth = (unsigned *)p.pArray[i];\n        if i \u003c 5 {\n            for  k = 0; k \u003c nWords; k++  {\n                pTruth[k] = Masks[i];\n            }\n        \n        } else {\n            for  k = 0; k \u003c nWords; k++  {\n                if k \u0026 (1 \u003c\u003c (i-5)) {\n                    pTruth[k] = ~uint32(0);\n                } else {\n                    pTruth[k] = 0; }\n            }\n        }\n    }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::struct::Vec_Ptr_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Ptr_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1292,
+      "End": 1442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::4657",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4657,
+      "End": 4663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::5764",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5764,
+      "End": 5770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::6347",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6347,
+      "End": 6353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::9798",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9798,
+      "End": 9804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::9833",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9833,
+      "End": 9839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::16325",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16225,
+      "End": 16231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::22302",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21998,
+      "End": 22004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::22391",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22087,
+      "End": 22093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::24449",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24145,
+      "End": 24151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::24606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24302,
+      "End": 24308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::27120",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26816,
+      "End": 26822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::mechanical::sizeof::27137",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26833,
+      "End": 26839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::4663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4663,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::5770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5770,
+      "End": 5778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::6353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6353,
+      "End": 6361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::6592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6592,
+      "End": 6600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::9804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9804,
+      "End": 9812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::15598",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15494,
+      "End": 15494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::15659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15559,
+      "End": 15567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::15695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15595,
+      "End": 15603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::16331",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16231,
+      "End": 16239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::16915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16711,
+      "End": 16711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::17864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17556,
+      "End": 17556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::19989",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19685,
+      "End": 19693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::22243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21939,
+      "End": 21948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::22308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22004,
+      "End": 22011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::22343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22039,
+      "End": 22048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::22397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22093,
+      "End": 22100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::24412",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24108,
+      "End": 24116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::24455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24151,
+      "End": 24159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::24569",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24265,
+      "End": 24273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::24612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24308,
+      "End": 24316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::25493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25189,
+      "End": 25196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::25644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25340,
+      "End": 25347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::27093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26789,
+      "End": 26798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::27126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26822,
+      "End": 26830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::27198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26894,
+      "End": 26906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::27728",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27424,
+      "End": 27436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::27760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27456,
+      "End": 27468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::28239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27935,
+      "End": 27942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::28759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28455,
+      "End": 28462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::29351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29047,
+      "End": 29059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::29387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29083,
+      "End": 29095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::30372",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30068,
+      "End": 30080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::30408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30104,
+      "End": 30116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::pointer-cast::31522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31218,
+      "End": 31230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1693,
+      "End": 1890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryStart",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1891,
+      "End": 2092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryStop",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2093,
+      "End": 2277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryStartStop",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2278,
+      "End": 2466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryReverse",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2467,
+      "End": 2669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryTwo",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryTwo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2670,
+      "End": 2923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::macro::Vec_PtrForEachEntryDouble",
+      "Category": "macro-review",
+      "Symbol": "Vec_PtrForEachEntryDouble",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2924,
+      "End": 3186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3685,
+      "End": 3960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAllocExact",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAllocExact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3961,
+      "End": 4216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrStart",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4505,
+      "End": 4706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAllocArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAllocArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5001,
+      "End": 5215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAllocArrayCopy",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAllocArrayCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5510,
+      "End": 5813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrDup",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6078,
+      "End": 6402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrDupStr",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrDupStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6403,
+      "End": 6631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrDupArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrDupArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6907,
+      "End": 7196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrZero",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7449,
+      "End": 7557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrErase",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrErase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7558,
+      "End": 7672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7673,
+      "End": 7770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFreeP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFreeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8006,
+      "End": 8149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrReleaseArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrReleaseArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8385,
+      "End": 8555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8791,
+      "End": 8868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrSize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9104,
+      "End": 9175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrCap",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9411,
+      "End": 9480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9716,
+      "End": 9853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrCountZero",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrCountZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10089,
+      "End": 10269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 10505,
+      "End": 10629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10505,
+      "End": 10629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrEntryP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrEntryP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10865,
+      "End": 10992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrWriteEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrWriteEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 11228,
+      "End": 11370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11228,
+      "End": 11370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrEntryLast",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrEntryLast",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 11606,
+      "End": 11726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrEntryLast",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrEntryLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11606,
+      "End": 11726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrGrow",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12003,
+      "End": 12198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrFill",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrFill",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12480,
+      "End": 12682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFill",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12480,
+      "End": 12682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrFillTwo",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrFillTwo",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12683,
+      "End": 12934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::ternary::Vec_PtrFillTwo",
+      "Category": "ternary-review",
+      "Symbol": "Vec_PtrFillTwo",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12683,
+      "End": 12934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFillTwo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFillTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12683,
+      "End": 12934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrFillExtra",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrFillExtra",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13216,
+      "End": 13579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFillExtra",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFillExtra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13216,
+      "End": 13579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrGetEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrGetEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13861,
+      "End": 13998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrGetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrGetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13861,
+      "End": 13998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrSetEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrSetEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 14285,
+      "End": 14439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrSetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrSetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14285,
+      "End": 14439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrShrink",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14675,
+      "End": 14803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrClear",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15039,
+      "End": 15109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFreeData",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFreeData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15382,
+      "End": 15653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFreeFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFreeFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15654,
+      "End": 15786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrCopy",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16048,
+      "End": 16300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPrintNames",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPrintNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16568,
+      "End": 16809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrPush",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrPush",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17045,
+      "End": 17306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPush",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17045,
+      "End": 17306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrPushTwo",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrPushTwo",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17307,
+      "End": 17451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPushTwo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPushTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17307,
+      "End": 17451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAppend",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17452,
+      "End": 17641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrPushFirst",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrPushFirst",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17877,
+      "End": 18242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPushFirst",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPushFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17877,
+      "End": 18242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrPushUnique",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrPushUnique",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 18478,
+      "End": 18698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPushUnique",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPushUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18478,
+      "End": 18698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrPop",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrPop",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 18986,
+      "End": 19100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrPop",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18986,
+      "End": 19100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrFind",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrFind",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 19347,
+      "End": 19533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFind",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19347,
+      "End": 19533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFindStr",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFindStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19534,
+      "End": 19754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrRemove",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrRemove",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 19990,
+      "End": 20515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrRemove",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19990,
+      "End": 20515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrDrop",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrDrop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20751,
+      "End": 20956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::void-pointer::Vec_PtrInsert",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_PtrInsert",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 21247,
+      "End": 21517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrInsert",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21247,
+      "End": 21517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrReorder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrReorder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21787,
+      "End": 22105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrReverseOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrReverseOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22371,
+      "End": 22626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrEqual",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22894,
+      "End": 23146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrSortComparePtr",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrSortComparePtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23420,
+      "End": 23583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrSort",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23943,
+      "End": 24396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrUniqify",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrUniqify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24759,
+      "End": 25079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrUniqify2",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrUniqify2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25231,
+      "End": 26086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAllocSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAllocSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26645,
+      "End": 27058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrReadWordsSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrReadWordsSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27352,
+      "End": 27488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrCleanSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrCleanSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27782,
+      "End": 28009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrFillSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrFillSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28303,
+      "End": 28532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrDoubleSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrDoubleSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28866,
+      "End": 29545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrReallocSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrReallocSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29883,
+      "End": 30545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::Vec_PtrAllocTruthTables",
+      "Category": "semantic-review",
+      "Symbol": "Vec_PtrAllocTruthTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30846,
+      "End": 31605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecPtr.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31864
+    }
+  ],
+  "Draft": "package vec\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [vecPtr.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Resizable arrays of generic pointers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecPtr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Vec_Ptr_t struct {\n    nCap              int32;\n    nSize              int32;\n    pArray           *any;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// iterators through entries\n// Original macro:\n// #define Vec_PtrForEachEntry( Type, vVec, pEntry, i )                                               \\\n//     for ( i = 0; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((pEntry) = (Type)Vec_PtrEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_PtrForEachEntryStart( Type, vVec, pEntry, i, Start )                                   \\\n//     for ( i = Start; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((pEntry) = (Type)Vec_PtrEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_PtrForEachEntryStop( Type, vVec, pEntry, i, Stop )                                     \\\n//     for ( i = 0; (i \u003c Stop) \u0026\u0026 (((pEntry) = (Type)Vec_PtrEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_PtrForEachEntryStartStop( Type, vVec, pEntry, i, Start, Stop )                         \\\n//     for ( i = Start; (i \u003c Stop) \u0026\u0026 (((pEntry) = (Type)Vec_PtrEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_PtrForEachEntryReverse( Type, vVec, pEntry, i )                                        \\\n//     for ( i = Vec_PtrSize(vVec) - 1; (i \u003e= 0) \u0026\u0026 (((pEntry) = (Type)Vec_PtrEntry(vVec, i)), 1); i-- )\n\n// Original macro:\n// #define Vec_PtrForEachEntryTwo( Type1, vVec1, Type2, vVec2, pEntry1, pEntry2, i )                  \\\n//     for ( i = 0; (i \u003c Vec_PtrSize(vVec1)) \u0026\u0026 (((pEntry1) = (Type1)Vec_PtrEntry(vVec1, i)), 1) \u0026\u0026 (((pEntry2) = (Type2)Vec_PtrEntry(vVec2, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_PtrForEachEntryDouble( Type1, Type2, vVec, Entry1, Entry2, i )                                \\\n//     for ( i = 0; (i+1 \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((Entry1) = (Type1)Vec_PtrEntry(vVec, i)), 1) \u0026\u0026 (((Entry2) = (Type2)Vec_PtrEntry(vVec, i+1)), 1); i += 2 )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrAlloc(nCap int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 8 {\n        nCap = 8; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\nfunc Vec_PtrAllocExact(nCap int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Ptr_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given size and cleans it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrStart(nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = Vec_PtrAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(void *) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from an integer array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrAllocArray(pArray *any, nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from an integer array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrAllocArrayCopy(pArray *any, nSize int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( void *, nSize );\n    memcpy( p.pArray, pArray, sizeof(void *) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the integer array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrDup(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( void *, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(void *) * (size_t)pVec.nSize );\n    return p;\n}\nfunc Vec_PtrDupStr(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var i int32;\n    var p *Vec_Ptr_t  = Vec_PtrDup( pVec );\n    for  i = 0; i \u003c p.nSize; i++  {\n        p.pArray[i] = Abc_UtilStrsav( (char *)p.pArray[i] );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the array into another vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrDupArray(pVec *Vec_Ptr_t) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    p = new(Vec_Ptr_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrZero(p *Vec_Ptr_t) {\n    p.pArray = nil;\n    p.nSize = 0;\n    p.nCap = 0;\n}\nfunc Vec_PtrErase(p *Vec_Ptr_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}\nfunc Vec_PtrFree(p *Vec_Ptr_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFreeP(p **Vec_Ptr_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrReleaseArray(p *Vec_Ptr_t) *any {\n    var pArray *any  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrArray(p *Vec_Ptr_t) *any {\n    return p.pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrSize(p *Vec_Ptr_t) int32 {\n    return p.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrCap(p *Vec_Ptr_t) int32 {\n    return p.nCap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrMemory(p *Vec_Ptr_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(void *) * (size_t)p.nCap + sizeof(Vec_Ptr_t);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrCountZero(p *Vec_Ptr_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += (p.pArray[i] == nil);\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrEntry(p *Vec_Ptr_t, i int32) any {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrEntryP(p *Vec_Ptr_t, i int32) *any {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrWriteEntry(p *Vec_Ptr_t, i int32, Entry any) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrEntryLast(p *Vec_Ptr_t) any {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[p.nSize-1];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrGrow(p *Vec_Ptr_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( void *, p.pArray, nCapMin ); \n    p.nCap   = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFill(p *Vec_Ptr_t, nSize int32, Entry any) {\n    var i int32;\n    Vec_PtrGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Entry;\n    }\n    p.nSize = nSize;\n}\nfunc Vec_PtrFillTwo(p *Vec_Ptr_t, nSize int32, EntryEven any, EntryOdd any) {\n    var i int32;\n    Vec_PtrGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = (i \u0026 1) ? EntryOdd : EntryEven;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFillExtra(p *Vec_Ptr_t, nSize int32, Fill any) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_PtrGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_PtrGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the entry even if the place not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrGetEntry(p *Vec_Ptr_t, i int32) any {\n    Vec_PtrFillExtra( p, i + 1, nil );\n    return Vec_PtrEntry( p, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the entry even if the place does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrSetEntry(p *Vec_Ptr_t, i int32, Entry any) {\n    Vec_PtrFillExtra( p, i + 1, nil );\n    Vec_PtrWriteEntry( p, i, Entry );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrShrink(p *Vec_Ptr_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrClear(p *Vec_Ptr_t) {\n    p.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates array of memory pointers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFreeData(p *Vec_Ptr_t) {\n    var pTemp any; var i int32;\n    if p == nil { return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p)) \u0026\u0026 (((pTemp) = (void *)Vec_PtrEntry(p, i)), 1); i++  {\n        if pTemp != (void *)(ABC_PTRINT_T)1 \u0026\u0026 pTemp != (void *)(ABC_PTRINT_T)2 {\n            ABC_FREE( pTemp ); }\n    }\n}\nfunc Vec_PtrFreeFree(p *Vec_Ptr_t) {\n    if p == nil { return; }\n    Vec_PtrFreeData( p );\n    Vec_PtrFree( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Copies the interger array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrCopy(pDest *Vec_Ptr_t, pSour *Vec_Ptr_t) {\n    pDest.nSize = 0;\n    Vec_PtrGrow( pDest, pSour.nSize );\n    memcpy( pDest.pArray, pSour.pArray, sizeof(void *) * (size_t)pSour.nSize );\n    pDest.nSize = pSour.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Print names stored in the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrPrintNames(p *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Printf(\"Vector has %d entries: {\", Vec_PtrSize(p));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(p, i)), 1); i++  {\n        fmt.Printf(\"%s \", pName);\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrPush(p *Vec_Ptr_t, Entry any) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_PtrGrow( p, 16 );\n        } else {\n            Vec_PtrGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}\nfunc Vec_PtrPushTwo(p *Vec_Ptr_t, Entry1 any, Entry2 any) {\n    Vec_PtrPush( p, Entry1 );\n    Vec_PtrPush( p, Entry2 );\n}\nfunc Vec_PtrAppend(vVec1 *Vec_Ptr_t, vVec2 *Vec_Ptr_t) {\n    var Entry any; var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec2)) \u0026\u0026 (((Entry) = (void *)Vec_PtrEntry(vVec2, i)), 1); i++  {\n        Vec_PtrPush( vVec1, Entry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrPushFirst(p *Vec_Ptr_t, Entry any) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_PtrGrow( p, 16 );\n        } else {\n            Vec_PtrGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize - 1; i \u003e= 1; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[0] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrPushUnique(p *Vec_Ptr_t, Entry any) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_PtrPush( p, Entry );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the last entry and removes it from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrPop(p *Vec_Ptr_t) any {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFind(p *Vec_Ptr_t, Entry any) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}\nfunc Vec_PtrFindStr(p *Vec_Ptr_t, Entry string) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] \u0026\u0026 !int32(strings.Compare((char *)p.pArray[i], Entry)) {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrRemove(p *Vec_Ptr_t, Entry any) {\n    var i int32;\n    // delete assuming that it is closer to the end\n    for  i = p.nSize - 1; i \u003e= 0; i--  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    assert(i \u003e= 0, \"i \u003e= 0\");\n/*\n    // delete assuming that it is closer to the beginning\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    assert( i \u003c p-\u003enSize );\n*/\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrDrop(p *Vec_Ptr_t, i int32) {\n    var k int32;\n    assert(i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p), \"i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(p)\");\n    p.nSize--;\n    for  k = i; k \u003c p.nSize; k++  {\n        p.pArray[k] = p.pArray[k+1];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interts entry at the index iHere. Shifts other entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrInsert(p *Vec_Ptr_t, iHere int32, Entry any) {\n    var i int32;\n    assert(iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize, \"iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize\");\n    Vec_PtrPush( p, 0 );\n    for  i = p.nSize - 1; i \u003e iHere; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the first nItems to the end.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrReorder(p *Vec_Ptr_t, nItems int32) {\n    assert(nItems \u003c p.nSize, \"nItems \u003c p.nSize\");\n    Vec_PtrGrow( p, nItems + p.nSize );\n    memmove( (char **)p.pArray + p.nSize, p.pArray, (size_t)nItems * sizeof(void*) );\n    memmove( p.pArray, (char **)p.pArray + nItems, (size_t)p.nSize * sizeof(void*) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverses the order of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrReverseOrder(p *Vec_Ptr_t) {\n    var Temp any;\n    var i int32;\n    for  i = 0; i \u003c p.nSize/2; i++  {\n        Temp = p.pArray[i];\n        p.pArray[i] = p.pArray[p.nSize-1-i];\n        p.pArray[p.nSize-1-i] = Temp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two vectors are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrEqual(p1 *Vec_Ptr_t, p2 *Vec_Ptr_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrSortComparePtr(pp1 *any, pp2 *any) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { \n        return 1; }\n    return 0; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their integer value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic void Vec_PtrSort( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)() ) ___unused;\nfunc Vec_PtrSort(p *Vec_Ptr_t, Vec_PtrSortCompare func() int32) {\n    if p.nSize \u003c 2 {\n        return; }\n    if Vec_PtrSortCompare == nil {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                        (int (*)(void *, void *)) Vec_PtrSortComparePtr );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), \n                        (int (*)(void *, void *)) Vec_PtrSortCompare ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their integer value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic void Vec_PtrUniqify( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)() ) ___unused;\nfunc Vec_PtrUniqify(p *Vec_Ptr_t, Vec_PtrSortCompare func() int32) {\n    var i, k int32;\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_PtrSort( p, Vec_PtrSortCompare );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if p.pArray[i] != p.pArray[i-1] {\n            p.pArray[k++] = p.pArray[i]; }\n    }\n    p.nSize = k;\n}\nstatic void Vec_PtrUniqify2( Vec_Ptr_t * p, int (*Vec_PtrSortCompare)(void**, void**), void (*Vec_PtrObjFree)(void*), Vec_Int_t * vCounts ) ___unused;\nfunc Vec_PtrUniqify2(p *Vec_Ptr_t, Vec_PtrSortCompare func(*any, *any) int32, Vec_PtrObjFree func(any), vCounts *Vec_Int_t) {\n    var i, k int32;\n    if vCounts != nil {\n        Vec_IntFill( vCounts, 1, 1 ); }\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_PtrSort( p, (int (*)())Vec_PtrSortCompare );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if Vec_PtrSortCompare(p.pArray+i, p.pArray+k-1) != 0 {\n            p.pArray[k++] = p.pArray[i];\n            if vCounts != nil {\n                Vec_IntPush( vCounts, 1 ); }\n        \n        } else {\n            if Vec_PtrObjFree {\n                Vec_PtrObjFree( p.pArray[i] ); }\n            if vCounts != nil {\n                Vec_IntAddToEntry( vCounts, Vec_IntSize(vCounts)-1, 1 ); }\n        }\n    }\n    p.nSize = k;\n    assert(vCounts == nil || Vec_IntSize(vCounts) == Vec_PtrSize(p), \"vCounts == nil || Vec_IntSize(vCounts) == Vec_PtrSize(p)\");\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the array of simulation info.]\n\n  Description [Allocates the array containing given number of entries, \n  each of which contains given number of unsigned words of simulation data.\n  The resulting array can be freed using regular procedure Vec_PtrFree().\n  It is the responsibility of the user to ensure this array is never grown.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrAllocSimInfo(nEntries int32, nWords int32) *Vec_Ptr_t {\n    var pMemory *any;\n    var pInfo *uint32;\n    var i int32;\n    pMemory = (void **)ABC_ALLOC( char, (sizeof(void *) + sizeof(unsigned) * (size_t)nWords) * nEntries );\n    pInfo = (unsigned *)(pMemory + nEntries);\n    for  i = 0; i \u003c nEntries; i++  {\n        pMemory[i] = pInfo + i * nWords;\n    }\n    return Vec_PtrAllocArray( pMemory, nEntries );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans simulation info of each entry beginning with iWord.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrReadWordsSimInfo(p *Vec_Ptr_t) int32 {\n    return (unsigned *)Vec_PtrEntry(p,1) - (unsigned *)Vec_PtrEntry(p,0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans simulation info of each entry beginning with iWord.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrCleanSimInfo(vInfo *Vec_Ptr_t, iWord int32, nWords int32) {\n    var i int32;\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0, (size_t)(4*(nWords-iWord)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans simulation info of each entry beginning with iWord.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrFillSimInfo(vInfo *Vec_Ptr_t, iWord int32, nWords int32) {\n    var i int32;\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memset( (char*)Vec_PtrEntry(vInfo,i) + 4*iWord, 0xFF, (size_t)(4*(nWords-iWord)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the array of simulation info.]\n\n  Description [Doubles the number of objects for which siminfo is allocated.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrDoubleSimInfo(vInfo *Vec_Ptr_t) {\n    var vInfoNew *Vec_Ptr_t;\n    var nWords int32;\n    assert(Vec_PtrSize(vInfo) \u003e 1, \"Vec_PtrSize(vInfo) \u003e 1\");\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( 2*Vec_PtrSize(vInfo), nWords );\n    // copy the simulation info\n    memcpy( Vec_PtrEntry(vInfoNew,0), Vec_PtrEntry(vInfo,0), (size_t)(Vec_PtrSize(vInfo) * nWords * 4) );\n    // replace the array\n    ABC_FREE( vInfo.pArray );\n    vInfo.pArray = vInfoNew.pArray;\n    vInfo.nSize *= 2;\n    vInfo.nCap *= 2;\n    // free the old array\n    vInfoNew.pArray = nil;\n    ABC_FREE( vInfoNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the array of simulation info.]\n\n  Description [Doubles the number of simulation patterns stored for each object.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrReallocSimInfo(vInfo *Vec_Ptr_t) {\n    var vInfoNew *Vec_Ptr_t;\n    var nWords, i int32;\n    assert(Vec_PtrSize(vInfo) \u003e 1, \"Vec_PtrSize(vInfo) \u003e 1\");\n    // get the new array\n    nWords = (unsigned *)Vec_PtrEntry(vInfo,1) - (unsigned *)Vec_PtrEntry(vInfo,0);\n    vInfoNew = Vec_PtrAllocSimInfo( Vec_PtrSize(vInfo), 2*nWords );\n    // copy the simulation info\n    for  i = 0; i \u003c vInfo.nSize; i++  {\n        memcpy( Vec_PtrEntry(vInfoNew,i), Vec_PtrEntry(vInfo,i), (size_t)(nWords * 4) );\n    }\n    // replace the array\n    ABC_FREE( vInfo.pArray );\n    vInfo.pArray = vInfoNew.pArray;\n    // free the old array\n    vInfoNew.pArray = nil;\n    ABC_FREE( vInfoNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the array of truth tables for the given number of vars.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_PtrAllocTruthTables(nVars int32) *Vec_Ptr_t {\n    var p *Vec_Ptr_t;\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var pTruth *uint32;\n    var i, k, nWords int32;\n    if nVars \u003c= 5 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 5));\n    }\n    p = Vec_PtrAllocSimInfo( nVars, nWords );\n    for  i = 0; i \u003c nVars; i++  {\n        pTruth = (unsigned *)p.pArray[i];\n        if i \u003c 5 {\n            for  k = 0; k \u003c nWords; k++  {\n                pTruth[k] = Masks[i];\n            }\n        \n        } else {\n            for  k = 0; k \u003c nWords; k++  {\n                if k \u0026 (1 \u003c\u003c (i-5)) {\n                    pTruth[k] = ~uint32(0);\n                } else {\n                    pTruth[k] = 0; }\n            }\n        }\n    }\n    return p;\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

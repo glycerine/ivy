@@ -1,0 +1,144 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Dimacs.h",
+  "SHA256": "6dfc7afd6d679cee07e5bc8a5ae3a5d676a1ad98d06e743d65dc7bccf839ad27",
+  "Library": [
+    {
+      "Name": "abs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 45,
+        "Column": 15,
+        "ByteOffset": 1846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var = abs(parsed_lit)-1;"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 59,
+        "Column": 20,
+        "ByteOffset": 2206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (*in == EOF) break;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 17,
+        "ByteOffset": 2520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 69,
+        "Column": 1,
+        "ByteOffset": 2571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "exit(3);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"WARNING! DIMACS header mismatch: wrong number of variables.\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 79,
+        "Column": 17,
+        "ByteOffset": 2818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"WARNING! DIMACS header mismatch: wrong number of variables.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"WARNING! DIMACS header mismatch: wrong number of clauses.\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 81,
+        "Column": 17,
+        "ByteOffset": 2933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"WARNING! DIMACS header mismatch: wrong number of clauses.\\n\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Dimacs.h::mechanical::static::1668",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1668,
+      "End": 1674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Dimacs.h::mechanical::static::2044",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2044,
+      "End": 2050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Dimacs.h::mechanical::static::3101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3101,
+      "End": 3107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Dimacs.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3368
+    }
+  ],
+  "Draft": "package glucose\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/****************************************************************************************[Dimacs.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \u003cstdio.h\u003e\n\n//#include \"sat/glucose/ParseUtils.h\"\n//#include \"sat/glucose/SolverTypes.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//=================================================================================================\n// DIMACS Parser:\n\ntemplate\u003cclass B, class Solver\u003e\nstatic void readClause(B\u0026 in, Solver\u0026 S, vec\u003cLit\u003e\u0026 lits) {\n    int     parsed_lit, var;\n    lits.clear();\n    for {\n        parsed_lit = parseInt(in);\n        if (parsed_lit == 0) break;\n        var = abs(parsed_lit)-1;\n        while (var \u003e= S.nVars()) S.newVar();\n        lits.push( (parsed_lit \u003e 0) ? mkLit(var) : ~mkLit(var) );\n    }\n}\n\ntemplate\u003cclass B, class Solver\u003e\nstatic void parse_DIMACS_main(B\u0026 in, Solver\u0026 S) {\n    vec\u003cLit\u003e lits;\n    int vars    = 0;\n    int clauses = 0;\n    int cnt     = 0;\n    for {\n        skipWhitespace(in);\n        if (*in == -1) break;\n        else if *in == 'p'{\n            if eagerMatch(in, \"p cnf\"){\n                vars    = parseInt(in);\n                clauses = parseInt(in);\n                // SATRACE'06 hack\n                // if (clauses \u003e 4000000)\n                //     S.eliminate(true);\n            }else{\n                fmt.Printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in);\nos.Exit(int(3));\n            }\n        } else if (*in == 'c' || *in == 'p')\n            skipLine(in);\n        else{\n            cnt++;\n            readClause(in, S, lits);\n            S.addClause_(lits); }\n    }\n    if (vars != S.nVars())\n        fmt.Fprintf(os.Stderr, \"WARNING! DIMACS header mismatch: wrong number of variables.\\n\");\n    if (cnt  != clauses)\n        fmt.Fprintf(os.Stderr, \"WARNING! DIMACS header mismatch: wrong number of clauses.\\n\");\n}\n\n// Inserts problem into solver.\n//\ntemplate\u003cclass Solver\u003e\nstatic void parse_DIMACS(gzFile input_stream, Solver\u0026 S) {\n    StreamBuffer in(input_stream);\n    parse_DIMACS_main(in, S); }\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

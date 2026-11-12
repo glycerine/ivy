@@ -1,0 +1,143 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c",
+  "SHA256": "ae3c53052ab4739c1114c1445f01876bd0d35ba6b807f35fbf20c9a90421918f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 9,
+        "ByteOffset": 1511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Degree*Prev \u003e= Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Counting topologies for %d inputs and %d degree-%d nodes.\\n\", nInputs, nNodes, Degree );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 3206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %2d : This = %8d  All = %8d\\n\", i, Hsh_VecSize(p) - Stop, Hsh_VecSize(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 17,
+        "ByteOffset": 3457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Params = %3d.  \", Sbd_CountConfigVars(vTemp, nInputs, Degree) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 3596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_CountConfigVars",
+      "Start": 1255,
+      "End": 1883,
+      "BodyStart": 1322,
+      "Original": "int Sbd_CountConfigVars( Vec_Int_t * vSet, int nVars, int Degree )\n{\n    int i, k, Entry = 0, Entry2, Count = 0, Below;\n    int Prev = Vec_IntEntry( vSet, 0 );\n    Vec_IntForEachEntryStart( vSet, Entry, i, 1 )\n    {\n        assert( Degree*Prev \u003e= Entry );\n        if ( Degree*Prev == Entry )\n        {\n            Prev = Entry;\n            continue;\n        }\n        Below = nVars; \n        Vec_IntForEachEntryStart( vSet, Entry2, k, i )\n            Below += Entry2;\n        Count += Below * (Degree*Prev - 1);\n        Prev = Entry;\n    }\n    Count += nVars * Degree*Prev;\n    return Vec_IntSum(vSet) \u003c nVars - 1 ? 0 : Count;\n}",
+      "Draft": "func Sbd_CountConfigVars(vSet *Vec_Int_t, nVars int32, Degree int32) int32 {\n    var i, k, Entry, Entry2, Count, Below int32;\n    var Prev int32  = Vec_IntEntry( vSet, 0 );\n    Vec_IntForEachEntryStart( vSet, Entry, i, 1 )\n    {\n        assert(Degree*Prev \u003e= Entry, \"Degree*Prev \u003e= Entry\");\n        if Degree*Prev == Entry {\n            Prev = Entry;\n            continue;\n        }\n        Below = nVars; \n        Vec_IntForEachEntryStart( vSet, Entry2, k, i )\n            Below += Entry2;\n        Count += Below * (Degree*Prev - 1);\n        Prev = Entry;\n    }\n    Count += nVars * Degree*Prev;\n    if Vec_IntSum(vSet) \u003c nVars - 1 {\n        return 0;\n    } else {\n        return Count;\n    }\n}"
+    },
+    {
+      "Name": "Sbd_CountTopos",
+      "Start": 1884,
+      "End": 3643,
+      "BodyStart": 1906,
+      "Original": "void Sbd_CountTopos()\n{\n    int nInputs  =  9;\n    int nNodes   = 10;\n    int Degree   =  3;\n    int fVerbose =  1;\n    Hsh_VecMan_t * p = Hsh_VecManStart( 10000 ); // hash table for arrays\n    Vec_Int_t * vSet = Vec_IntAlloc( 100 );\n    int i, k, e, Start, Stop;\n    printf( \"Counting topologies for %d inputs and %d degree-%d nodes.\\n\", nInputs, nNodes, Degree );\n    Start = Hsh_VecManAdd( p, vSet );\n    for ( i = 1; i \u003c= nNodes; i++ )\n    {\n        Stop = Hsh_VecSize( p );\n        for ( e = Start; e \u003c Stop; e++ )\n        {\n            Vec_Int_t * vTemp = Hsh_VecReadEntry( p, e );\n            Vec_IntClear( vSet );\n            Vec_IntAppend( vSet, vTemp );\n            for ( k = 0; k \u003c Vec_IntSize(vSet); k++ )\n            {\n                // skip if the number of entries on this level is equal to the number of fanins on the previous level\n                if ( k ? (Vec_IntEntry(vSet, k) == Degree*Vec_IntEntry(vSet, k-1)) : (Vec_IntEntry(vSet, 0) \u003e 0) )\n                    continue;\n                Vec_IntAddToEntry( vSet, k, 1 );\n                Hsh_VecManAdd( p, vSet );\n                Vec_IntAddToEntry( vSet, k, -1 );\n            }\n            Vec_IntPush( vSet, 1 );\n            Hsh_VecManAdd( p, vSet );\n        }\n        printf( \"Nodes = %2d : This = %8d  All = %8d\\n\", i, Hsh_VecSize(p) - Stop, Hsh_VecSize(p) );\n        if ( fVerbose )\n        {\n            for ( e = Stop; e \u003c Hsh_VecSize(p); e++ )\n            {\n                Vec_Int_t * vTemp = Hsh_VecReadEntry( p, e );\n                printf( \"Params = %3d.  \", Sbd_CountConfigVars(vTemp, nInputs, Degree) );\n                Vec_IntPrint( vTemp );\n            }\n            printf( \"\\n\" );\n        }\n        Start = Stop;\n    }\n    Vec_IntFree( vSet );\n    Hsh_VecManStop( p );\n}",
+      "Draft": "func Sbd_CountTopos() {\n    var nInputs int32   =  9;\n    var nNodes int32    = 10;\n    var Degree int32    =  3;\n    var fVerbose int32  =  1;\n    var p *Hsh_VecMan_t  = Hsh_VecManStart( 10000 ); // hash table for arrays\n    var vSet *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, e, Start, Stop int32;\n    fmt.Printf(\"Counting topologies for %d inputs and %d degree-%d nodes.\\n\", nInputs, nNodes, Degree);\n    Start = Hsh_VecManAdd( p, vSet );\n    for  i = 1; i \u003c= nNodes; i++  {\n        Stop = Hsh_VecSize( p );\n        for  e = Start; e \u003c Stop; e++  {\n            var vTemp *Vec_Int_t  = Hsh_VecReadEntry( p, e );\n            Vec_IntClear( vSet );\n            Vec_IntAppend( vSet, vTemp );\n            for  k = 0; k \u003c Vec_IntSize(vSet); k++  {\n                // skip if the number of entries on this level is equal to the number of fanins on the previous level\n                if k ? (Vec_IntEntry(vSet, k) == Degree*Vec_IntEntry(vSet, k-1)) : (Vec_IntEntry(vSet, 0) \u003e 0) {\n                    continue; }\n                Vec_IntAddToEntry( vSet, k, 1 );\n                Hsh_VecManAdd( p, vSet );\n                Vec_IntAddToEntry( vSet, k, -1 );\n            }\n            Vec_IntPush( vSet, 1 );\n            Hsh_VecManAdd( p, vSet );\n        }\n        fmt.Printf(\"Nodes = %2d : This = %8d  All = %8d\\n\", i, Hsh_VecSize(p) - Stop, Hsh_VecSize(p));\n        if fVerbose != 0 {\n            for  e = Stop; e \u003c Hsh_VecSize(p); e++  {\n                var vTemp *Vec_Int_t  = Hsh_VecReadEntry( p, e );\n                fmt.Printf(\"Params = %3d.  \", Sbd_CountConfigVars(vTemp, nInputs, Degree));\n                Vec_IntPrint( vTemp );\n            }\n            fmt.Printf(\"\\n\");\n        }\n        Start = Stop;\n    }\n    Vec_IntFree( vSet );\n    Hsh_VecManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::Sbd_CountConfigVars",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CountConfigVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1255,
+      "End": 1883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::ternary::Sbd_CountTopos",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_CountTopos",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1884,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::Sbd_CountTopos",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_CountTopos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1884,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::macro-inline::1419",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1419,
+      "End": 1464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbd.c::macro-inline::1647",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1647,
+      "End": 1693
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_CountConfigVars(vSet *Vec_Int_t, nVars int32, Degree int32) int32 {\n    var i, k, Entry, Entry2, Count, Below int32;\n    var Prev int32  = Vec_IntEntry( vSet, 0 );\n    Vec_IntForEachEntryStart( vSet, Entry, i, 1 )\n    {\n        assert(Degree*Prev \u003e= Entry, \"Degree*Prev \u003e= Entry\");\n        if Degree*Prev == Entry {\n            Prev = Entry;\n            continue;\n        }\n        Below = nVars; \n        Vec_IntForEachEntryStart( vSet, Entry2, k, i )\n            Below += Entry2;\n        Count += Below * (Degree*Prev - 1);\n        Prev = Entry;\n    }\n    Count += nVars * Degree*Prev;\n    if Vec_IntSum(vSet) \u003c nVars - 1 {\n        return 0;\n    } else {\n        return Count;\n    }\n}\nfunc Sbd_CountTopos() {\n    var nInputs int32   =  9;\n    var nNodes int32    = 10;\n    var Degree int32    =  3;\n    var fVerbose int32  =  1;\n    var p *Hsh_VecMan_t  = Hsh_VecManStart( 10000 ); // hash table for arrays\n    var vSet *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i, k, e, Start, Stop int32;\n    fmt.Printf(\"Counting topologies for %d inputs and %d degree-%d nodes.\\n\", nInputs, nNodes, Degree);\n    Start = Hsh_VecManAdd( p, vSet );\n    for  i = 1; i \u003c= nNodes; i++  {\n        Stop = Hsh_VecSize( p );\n        for  e = Start; e \u003c Stop; e++  {\n            var vTemp *Vec_Int_t  = Hsh_VecReadEntry( p, e );\n            Vec_IntClear( vSet );\n            Vec_IntAppend( vSet, vTemp );\n            for  k = 0; k \u003c Vec_IntSize(vSet); k++  {\n                // skip if the number of entries on this level is equal to the number of fanins on the previous level\n                if k ? (Vec_IntEntry(vSet, k) == Degree*Vec_IntEntry(vSet, k-1)) : (Vec_IntEntry(vSet, 0) \u003e 0) {\n                    continue; }\n                Vec_IntAddToEntry( vSet, k, 1 );\n                Hsh_VecManAdd( p, vSet );\n                Vec_IntAddToEntry( vSet, k, -1 );\n            }\n            Vec_IntPush( vSet, 1 );\n            Hsh_VecManAdd( p, vSet );\n        }\n        fmt.Printf(\"Nodes = %2d : This = %8d  All = %8d\\n\", i, Hsh_VecSize(p) - Stop, Hsh_VecSize(p));\n        if fVerbose != 0 {\n            for  e = Stop; e \u003c Hsh_VecSize(p); e++  {\n                var vTemp *Vec_Int_t  = Hsh_VecReadEntry( p, e );\n                fmt.Printf(\"Params = %3d.  \", Sbd_CountConfigVars(vTemp, nInputs, Degree));\n                Vec_IntPrint( vTemp );\n            }\n            fmt.Printf(\"\\n\");\n        }\n        Start = Stop;\n    }\n    Vec_IntFree( vSet );\n    Hsh_VecManStop( p );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

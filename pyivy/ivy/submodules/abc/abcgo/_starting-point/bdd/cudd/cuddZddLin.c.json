@@ -1,0 +1,1050 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c",
+  "SHA256": "4061c552e237838e21d31669e006277995d02e3c45c9f49b6be54806ff242903",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 17,
+        "ByteOffset": 6592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    zdd_entry = ABC_ALLOC(int, size);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 11,
+        "ByteOffset": 6736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var = ABC_ALLOC(int, size);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 7003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort((void *)var, (size_t)size, sizeof(int), (DD_QSFP)cuddZddUniqueCompare);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(var);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(zdd_entry);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 27,
+        "ByteOffset": 7782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if zdd_entry != nil { ABC_FREE(zdd_entry); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 21,
+        "ByteOffset": 7825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if var != nil { ABC_FREE(var); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 528,
+        "Column": 12,
+        "ByteOffset": 20591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(table.err, \"Error: cuddZddSwapInPlace out of memory\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 773,
+        "Column": 24,
+        "ByteOffset": 29272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(table.err,\"Change in size after identity transformation! From %d to %d\\n\",size,newsize);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 3639
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 166,
+        "Column": 1,
+        "ByteOffset": 6372
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 200,
+        "Column": 1,
+        "ByteOffset": 7288
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 206,
+        "Column": 1,
+        "ByteOffset": 7469
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 272,
+        "Column": 1,
+        "ByteOffset": 9519
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 368,
+        "Column": 1,
+        "ByteOffset": 12632
+      },
+      "Directive": "#ifdef DD_COUNT"
+    },
+    {
+      "Location": {
+        "Line": 592,
+        "Column": 1,
+        "ByteOffset": 20469
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 625,
+        "Column": 1,
+        "ByteOffset": 21711
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 643,
+        "Column": 1,
+        "ByteOffset": 22402
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 742,
+        "Column": 1,
+        "ByteOffset": 25255
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 948,
+        "Column": 1,
+        "ByteOffset": 31414
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddZddLinearSifting",
+      "Start": 6229,
+      "End": 8157,
+      "BodyStart": 6304,
+      "Original": "int\ncuddZddLinearSifting(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int i;\n    int *var;\n    int size;\n    int x;\n    int result;\n#ifdef DD_STATS\n    int previousSize;\n#endif\n\n    size = table-\u003esizeZ;\n    empty = table-\u003ezero;\n\n    /* Find order in which to sift variables. */\n    var = NULL;\n    zdd_entry = ABC_ALLOC(int, size);\n    if (zdd_entry == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n    var = ABC_ALLOC(int, size);\n    if (var == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n\n    for (i = 0; i \u003c size; i++) {\n        x = table-\u003epermZ[i];\n        zdd_entry[i] = table-\u003esubtableZ[x].keys;\n        var[i] = i;\n    }\n\n    qsort((void *)var, (size_t)size, sizeof(int), (DD_QSFP)cuddZddUniqueCompare);\n\n    /* Now sift. */\n    for (i = 0; i \u003c ddMin(table-\u003esiftMaxVar, size); i++) {\n        if (zddTotalNumberSwapping \u003e= table-\u003esiftMaxSwap)\n            break;\n        x = table-\u003epermZ[var[i]];\n        if (x \u003c lower || x \u003e upper) continue;\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n        result = cuddZddLinearAux(table, x, lower, upper);\n        if (!result)\n            goto cuddZddSiftingOutOfMem;\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");     /* should never happen */\n            (void) fprintf(table-\u003eout,\"\\nSize increased from %d to %d while sifting variable %d\\n\", previousSize, table-\u003ekeysZ , var[i]);\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    ABC_FREE(var);\n    ABC_FREE(zdd_entry);\n\n    return(1);\n\ncuddZddSiftingOutOfMem:\n\n    if (zdd_entry != NULL) ABC_FREE(zdd_entry);\n    if (var != NULL) ABC_FREE(var);\n\n    return(0);\n\n}",
+      "Draft": "func cuddZddLinearSifting(table *DdManager, lower int32, upper int32) int32 {\n    var i int32;\n    var var *int32;\n    var size int32;\n    var x int32;\n    var result int32;\n#ifdef DD_STATS\n    int previousSize;\n#endif\n\n    size = table.sizeZ;\n    empty = table.zero;\n\n    /* Find order in which to sift variables. */\n    var = nil;\n    zdd_entry = ABC_ALLOC(int, size);\n    if zdd_entry == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n    var = ABC_ALLOC(int, size);\n    if var == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n\n    for i = 0; i \u003c size; i++ {\n        x = table.permZ[i];\n        zdd_entry[i] = table.subtableZ[x].keys;\n        var[i] = i;\n    }\n\n    qsort((void *)var, (size_t)size, sizeof(int), (DD_QSFP)cuddZddUniqueCompare);\n\n    /* Now sift. */\n    // inlining of macro ddMin\n    for i = 0; i \u003c (((size) \u003c (table.siftMaxVar)) ? (size) : (table.siftMaxVar)); i++ {\n        if zddTotalNumberSwapping \u003e= table.siftMaxSwap {\n            break; }\n        x = table.permZ[var[i]];\n        if x \u003c lower || x \u003e upper { continue; }\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n        result = cuddZddLinearAux(table, x, lower, upper);\n        if !(result != 0) {\n            goto cuddZddSiftingOutOfMem; }\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");     /* should never happen */\n            (void) fprintf(table-\u003eout,\"\\nSize increased from %d to %d while sifting variable %d\\n\", previousSize, table-\u003ekeysZ , var[i]);\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    ABC_FREE(var);\n    ABC_FREE(zdd_entry);\n\n    return(1);\n\ncuddZddSiftingOutOfMem:\n\n    if zdd_entry != nil { ABC_FREE(zdd_entry); }\n    if var != nil { ABC_FREE(var); }\n\n    return(0);\n\n}"
+    },
+    {
+      "Name": "cuddZddLinearInPlace",
+      "Start": 9069,
+      "End": 19648,
+      "BodyStart": 9143,
+      "Original": "static int\ncuddZddLinearInPlace(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    DdNodePtr *xlist, *ylist;\n    int         xindex, yindex;\n    int         xslots, yslots;\n    int         xshift, yshift;\n    int         oldxkeys, oldykeys;\n    int         newxkeys, newykeys;\n    int         i;\n    int         posn;\n    DdNode      *f, *f1, *f0, *f11, *f10, *f01, *f00;\n    DdNode      *newf1, *newf0, *g, *next, *previous;\n    DdNode      *special;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(cuddZddNextHigh(table,x) == y);\n    assert(table-\u003esubtableZ[x].keys != 0);\n    assert(table-\u003esubtableZ[y].keys != 0);\n    assert(table-\u003esubtableZ[x].dead == 0);\n    assert(table-\u003esubtableZ[y].dead == 0);\n#endif\n\n    zddTotalNumberLinearTr++;\n\n    /* Get parameters of x subtable. */\n    xindex   = table-\u003einvpermZ[x];\n    xlist    = table-\u003esubtableZ[x].nodelist;\n    oldxkeys = table-\u003esubtableZ[x].keys;\n    xslots   = table-\u003esubtableZ[x].slots;\n    xshift   = table-\u003esubtableZ[x].shift;\n    newxkeys = 0;\n\n    /* Get parameters of y subtable. */\n    yindex   = table-\u003einvpermZ[y];\n    ylist    = table-\u003esubtableZ[y].nodelist;\n    oldykeys = table-\u003esubtableZ[y].keys;\n    yslots   = table-\u003esubtableZ[y].slots;\n    yshift   = table-\u003esubtableZ[y].shift;\n    newykeys = oldykeys;\n\n    /* The nodes in the x layer are put in two chains.  The chain\n    ** pointed by g holds the normal nodes. When re-expressed they stay\n    ** in the x list. The chain pointed by special holds the elements\n    ** that will move to the y list.\n    */\n    g = special = NULL;\n    for (i = 0; i \u003c xslots; i++) {\n        f = xlist[i];\n        if (f == NULL) continue;\n        xlist[i] = NULL;\n        while (f != NULL) {\n            next = f-\u003enext;\n            f1 = cuddT(f);\n            /* if (f1-\u003eindex == yindex) */ cuddSatDec(f1-\u003eref);\n            f0 = cuddE(f);\n            /* if (f0-\u003eindex == yindex) */ cuddSatDec(f0-\u003eref);\n            if ((int) f1-\u003eindex == yindex \u0026\u0026 cuddE(f1) == empty \u0026\u0026\n                (int) f0-\u003eindex != yindex) {\n                f-\u003enext = special;\n                special = f;\n            } else {\n                f-\u003enext = g;\n                g = f;\n            }\n            f = next;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the x subtable */\n\n    /* Mark y nodes with pointers from above x. We mark them by\n    **  changing their index to x.\n    */\n    for (i = 0; i \u003c yslots; i++) {\n        f = ylist[i];\n        while (f != NULL) {\n            if (f-\u003eref != 0) {\n                f-\u003eindex = xindex;\n            }\n            f = f-\u003enext;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the y subtable */\n\n    /* Move special nodes to the y list. */\n    f = special;\n    while (f != NULL) {\n        next = f-\u003enext;\n        f1 = cuddT(f);\n        f11 = cuddT(f1);\n        cuddT(f) = f11;\n        cuddSatInc(f11-\u003eref);\n        f0 = cuddE(f);\n        cuddSatInc(f0-\u003eref);\n        f-\u003eindex = yindex;\n        /* Insert at the beginning of the list so that it will be\n        ** found first if there is a duplicate. The duplicate will\n        ** eventually be moved or garbage collected. No node\n        ** re-expression will add a pointer to it.\n        */\n        posn = ddHash(cuddF2L(f11), cuddF2L(f0), yshift);\n        f-\u003enext = ylist[posn];\n        ylist[posn] = f;\n        newykeys++;\n        f = next;\n    }\n\n    /* Take care of the remaining x nodes that must be re-expressed.\n    ** They form a linked list pointed by g.\n    */\n    f = g;\n    while (f != NULL) {\n#ifdef DD_COUNT\n        table-\u003eswapSteps++;\n#endif\n        next = f-\u003enext;\n        /* Find f1, f0, f11, f10, f01, f00. */\n        f1 = cuddT(f);\n        if ((int) f1-\u003eindex == yindex || (int) f1-\u003eindex == xindex) {\n            f11 = cuddT(f1); f10 = cuddE(f1);\n        } else {\n            f11 = empty; f10 = f1;\n        }\n        f0 = cuddE(f);\n        if ((int) f0-\u003eindex == yindex || (int) f0-\u003eindex == xindex) {\n            f01 = cuddT(f0); f00 = cuddE(f0);\n        } else {\n            f01 = empty; f00 = f0;\n        }\n        /* Create the new T child. */\n        if (f01 == empty) {\n            newf1 = f10;\n            cuddSatInc(newf1-\u003eref);\n        } else {\n            /* Check ylist for triple (yindex, f01, f10). */\n            posn = ddHash(cuddF2L(f01), cuddF2L(f10), yshift);\n            /* For each element newf1 in collision list ylist[posn]. */\n            newf1 = ylist[posn];\n            /* Search the collision chain skipping the marked nodes. */\n            while (newf1 != NULL) {\n                if (cuddT(newf1) == f01 \u0026\u0026 cuddE(newf1) == f10 \u0026\u0026\n                    (int) newf1-\u003eindex == yindex) {\n                    cuddSatInc(newf1-\u003eref);\n                    break; /* match */\n                }\n                newf1 = newf1-\u003enext;\n            } /* while newf1 */\n            if (newf1 == NULL) {        /* no match */\n                newf1 = cuddDynamicAllocNode(table);\n                if (newf1 == NULL)\n                    goto zddSwapOutOfMem;\n                newf1-\u003eindex = yindex; newf1-\u003eref = 1;\n                cuddT(newf1) = f01;\n                cuddE(newf1) = f10;\n                /* Insert newf1 in the collision list ylist[pos];\n                ** increase the ref counts of f01 and f10\n                */\n                newykeys++;\n                newf1-\u003enext = ylist[posn];\n                ylist[posn] = newf1;\n                cuddSatInc(f01-\u003eref);\n                cuddSatInc(f10-\u003eref);\n            }\n        }\n        cuddT(f) = newf1;\n\n        /* Do the same for f0. */\n        /* Create the new E child. */\n        if (f11 == empty) {\n            newf0 = f00;\n            cuddSatInc(newf0-\u003eref);\n        } else {\n            /* Check ylist for triple (yindex, f11, f00). */\n            posn = ddHash(cuddF2L(f11), cuddF2L(f00), yshift);\n            /* For each element newf0 in collision list ylist[posn]. */\n            newf0 = ylist[posn];\n            while (newf0 != NULL) {\n                if (cuddT(newf0) == f11 \u0026\u0026 cuddE(newf0) == f00 \u0026\u0026\n                    (int) newf0-\u003eindex == yindex) {\n                    cuddSatInc(newf0-\u003eref);\n                    break; /* match */\n                }\n                newf0 = newf0-\u003enext;\n            } /* while newf0 */\n            if (newf0 == NULL) {        /* no match */\n                newf0 = cuddDynamicAllocNode(table);\n                if (newf0 == NULL)\n                    goto zddSwapOutOfMem;\n                newf0-\u003eindex = yindex; newf0-\u003eref = 1;\n                cuddT(newf0) = f11; cuddE(newf0) = f00;\n                /* Insert newf0 in the collision list ylist[posn];\n                ** increase the ref counts of f11 and f00.\n                */\n                newykeys++;\n                newf0-\u003enext = ylist[posn];\n                ylist[posn] = newf0;\n                cuddSatInc(f11-\u003eref);\n                cuddSatInc(f00-\u003eref);\n            }\n        }\n        cuddE(f) = newf0;\n\n        /* Re-insert the modified f in xlist.\n        ** The modified f does not already exists in xlist.\n        ** (Because of the uniqueness of the cofactors.)\n        */\n        posn = ddHash(cuddF2L(newf1), cuddF2L(newf0), xshift);\n        newxkeys++;\n        f-\u003enext = xlist[posn];\n        xlist[posn] = f;\n        f = next;\n    } /* while f != NULL */\n\n    /* GC the y layer and move the marked nodes to the x list. */\n\n    /* For each node f in ylist. */\n    for (i = 0; i \u003c yslots; i++) {\n        previous = NULL;\n        f = ylist[i];\n        while (f != NULL) {\n            next = f-\u003enext;\n            if (f-\u003eref == 0) {\n                cuddSatDec(cuddT(f)-\u003eref);\n                cuddSatDec(cuddE(f)-\u003eref);\n                cuddDeallocNode(table, f);\n                newykeys--;\n                if (previous == NULL)\n                    ylist[i] = next;\n                else\n                    previous-\u003enext = next;\n            } else if ((int) f-\u003eindex == xindex) { /* move marked node */\n                if (previous == NULL)\n                    ylist[i] = next;\n                else\n                    previous-\u003enext = next;\n                f1 = cuddT(f);\n                cuddSatDec(f1-\u003eref);\n                /* Check ylist for triple (yindex, f1, empty). */\n                posn = ddHash(cuddF2L(f1), cuddF2L(empty), yshift);\n                /* For each element newf1 in collision list ylist[posn]. */\n                newf1 = ylist[posn];\n                while (newf1 != NULL) {\n                    if (cuddT(newf1) == f1 \u0026\u0026 cuddE(newf1) == empty \u0026\u0026\n                        (int) newf1-\u003eindex == yindex) {\n                        cuddSatInc(newf1-\u003eref);\n                        break; /* match */\n                    }\n                    newf1 = newf1-\u003enext;\n                } /* while newf1 */\n                if (newf1 == NULL) {    /* no match */\n                    newf1 = cuddDynamicAllocNode(table);\n                    if (newf1 == NULL)\n                        goto zddSwapOutOfMem;\n                    newf1-\u003eindex = yindex; newf1-\u003eref = 1;\n                    cuddT(newf1) = f1; cuddE(newf1) = empty;\n                    /* Insert newf1 in the collision list ylist[posn];\n                    ** increase the ref counts of f1 and empty.\n                    */\n                    newykeys++;\n                    newf1-\u003enext = ylist[posn];\n                    ylist[posn] = newf1;\n                    if (posn == i \u0026\u0026 previous == NULL)\n                        previous = newf1;\n                    cuddSatInc(f1-\u003eref);\n                    cuddSatInc(empty-\u003eref);\n                }\n                cuddT(f) = newf1;\n                f0 = cuddE(f);\n                /* Insert f in x list. */\n                posn = ddHash(cuddF2L(newf1), cuddF2L(f0), xshift);\n                newxkeys++;\n                newykeys--;\n                f-\u003enext = xlist[posn];\n                xlist[posn] = f;\n            } else {\n                previous = f;\n            }\n            f = next;\n        } /* while f */\n    } /* for i */\n\n    /* Set the appropriate fields in table. */\n    table-\u003esubtableZ[x].keys     = newxkeys;\n    table-\u003esubtableZ[y].keys     = newykeys;\n\n    table-\u003ekeysZ += newxkeys + newykeys - oldxkeys - oldykeys;\n\n    /* Update univ section; univ[x] remains the same. */\n    table-\u003euniv[y] = cuddT(table-\u003euniv[x]);\n\n#if 0\n    (void) fprintf(table-\u003eout,\"x = %d  y = %d\\n\", x, y);\n    (void) Cudd_DebugCheck(table);\n    (void) Cudd_CheckKeys(table);\n#endif\n\n    return (table-\u003ekeysZ);\n\nzddSwapOutOfMem:\n    (void) fprintf(table-\u003eerr, \"Error: cuddZddSwapInPlace out of memory\\n\");\n\n    return (0);\n\n}",
+      "Draft": "func cuddZddLinearInPlace(table *DdManager, x int32, y int32) int32 {\n    var xlist, ylist *DdNodePtr;\n    var xindex, yindex int32;\n    var xslots, yslots int32;\n    var xshift, yshift int32;\n    var oldxkeys, oldykeys int32;\n    var newxkeys, newykeys int32;\n    var i int32;\n    var posn int32;\n    var f, f1, f0, f11, f10, f01, f00 *DdNode;\n    var newf1, newf0, g, next, previous *DdNode;\n    var special *DdNode;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(cuddZddNextHigh(table,x) == y);\n    assert(table-\u003esubtableZ[x].keys != 0);\n    assert(table-\u003esubtableZ[y].keys != 0);\n    assert(table-\u003esubtableZ[x].dead == 0);\n    assert(table-\u003esubtableZ[y].dead == 0);\n#endif\n\n    zddTotalNumberLinearTr++;\n\n    /* Get parameters of x subtable. */\n    xindex   = table.invpermZ[x];\n    xlist    = table.subtableZ[x].nodelist;\n    oldxkeys = table.subtableZ[x].keys;\n    xslots   = table.subtableZ[x].slots;\n    xshift   = table.subtableZ[x].shift;\n    newxkeys = 0;\n\n    /* Get parameters of y subtable. */\n    yindex   = table.invpermZ[y];\n    ylist    = table.subtableZ[y].nodelist;\n    oldykeys = table.subtableZ[y].keys;\n    yslots   = table.subtableZ[y].slots;\n    yshift   = table.subtableZ[y].shift;\n    newykeys = oldykeys;\n\n    /* The nodes in the x layer are put in two chains.  The chain\n    ** pointed by g holds the normal nodes. When re-expressed they stay\n    ** in the x list. The chain pointed by special holds the elements\n    ** that will move to the y list.\n    */\n    g = special = nil;\n    for i = 0; i \u003c xslots; i++ {\n        f = xlist[i];\n        if f == nil { continue; }\n        xlist[i] = nil;\n        for f != nil {\n            next = f.next;\n            // inlining of macro cuddT\n            f1 = ((f).type.kids.T);\n            /* if (f1-\u003eindex == yindex) */ cuddSatDec(f1.ref);\n            // inlining of macro cuddE\n            f0 = ((f).type.kids.E);\n            /* if (f0-\u003eindex == yindex) */ cuddSatDec(f0.ref);\n            // inlining of macro cuddE\n            if int32( f1.index) == yindex \u0026\u0026 ((f1).type.kids.E) == empty \u0026\u0026\n                int32( f0.index) != yindex {\n                f.next = special;\n                special = f;\n            } else {\n                f.next = g;\n                g = f;\n            }\n            f = next;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the x subtable */\n\n    /* Mark y nodes with pointers from above x. We mark them by\n    **  changing their index to x.\n    */\n    for i = 0; i \u003c yslots; i++ {\n        f = ylist[i];\n        for f != nil {\n            if f.ref != 0 {\n                f.index = xindex;\n            }\n            f = f.next;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the y subtable */\n\n    /* Move special nodes to the y list. */\n    f = special;\n    for f != nil {\n        next = f.next;\n        // inlining of macro cuddT\n        f1 = ((f).type.kids.T);\n        // inlining of macro cuddT\n        f11 = ((f1).type.kids.T);\n        // inlining of macro cuddT\n        ((f).type.kids.T) = f11;\n        cuddSatInc(f11.ref);\n        // inlining of macro cuddE\n        f0 = ((f).type.kids.E);\n        cuddSatInc(f0.ref);\n        f.index = yindex;\n        /* Insert at the beginning of the list so that it will be\n        ** found first if there is a duplicate. The duplicate will\n        ** eventually be moved or garbage collected. No node\n        ** re-expression will add a pointer to it.\n        */\n        posn = ddHash(cuddF2L(f11), cuddF2L(f0), yshift);\n        f.next = ylist[posn];\n        ylist[posn] = f;\n        newykeys++;\n        f = next;\n    }\n\n    /* Take care of the remaining x nodes that must be re-expressed.\n    ** They form a linked list pointed by g.\n    */\n    f = g;\n    for f != nil {\n#ifdef DD_COUNT\n        table-\u003eswapSteps++;\n#endif\n        next = f.next;\n        /* Find f1, f0, f11, f10, f01, f00. */\n        // inlining of macro cuddT\n        f1 = ((f).type.kids.T);\n        if int32( f1.index) == yindex || int32( f1.index) == xindex {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            f11 = ((f1).type.kids.T); f10 = ((f1).type.kids.E);\n        } else {\n            f11 = empty; f10 = f1;\n        }\n        // inlining of macro cuddE\n        f0 = ((f).type.kids.E);\n        if int32( f0.index) == yindex || int32( f0.index) == xindex {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            f01 = ((f0).type.kids.T); f00 = ((f0).type.kids.E);\n        } else {\n            f01 = empty; f00 = f0;\n        }\n        /* Create the new T child. */\n        if f01 == empty {\n            newf1 = f10;\n            cuddSatInc(newf1.ref);\n        } else {\n            /* Check ylist for triple (yindex, f01, f10). */\n            posn = ddHash(cuddF2L(f01), cuddF2L(f10), yshift);\n            /* For each element newf1 in collision list ylist[posn]. */\n            newf1 = ylist[posn];\n            /* Search the collision chain skipping the marked nodes. */\n            for newf1 != nil {\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((newf1).type.kids.T) == f01 \u0026\u0026 ((newf1).type.kids.E) == f10 \u0026\u0026\n                    int32( newf1.index) == yindex {\n                    cuddSatInc(newf1.ref);\n                    break; /* match */\n                }\n                newf1 = newf1.next;\n            } /* while newf1 */\n            if newf1 == nil {        /* no match */\n                newf1 = cuddDynamicAllocNode(table);\n                if newf1 == nil {\n                    goto zddSwapOutOfMem; }\n                newf1.index = yindex; newf1.ref = 1;\n                // inlining of macro cuddT\n                ((newf1).type.kids.T) = f01;\n                // inlining of macro cuddE\n                ((newf1).type.kids.E) = f10;\n                /* Insert newf1 in the collision list ylist[pos];\n                ** increase the ref counts of f01 and f10\n                */\n                newykeys++;\n                newf1.next = ylist[posn];\n                ylist[posn] = newf1;\n                cuddSatInc(f01.ref);\n                cuddSatInc(f10.ref);\n            }\n        }\n        // inlining of macro cuddT\n        ((f).type.kids.T) = newf1;\n\n        /* Do the same for f0. */\n        /* Create the new E child. */\n        if f11 == empty {\n            newf0 = f00;\n            cuddSatInc(newf0.ref);\n        } else {\n            /* Check ylist for triple (yindex, f11, f00). */\n            posn = ddHash(cuddF2L(f11), cuddF2L(f00), yshift);\n            /* For each element newf0 in collision list ylist[posn]. */\n            newf0 = ylist[posn];\n            for newf0 != nil {\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((newf0).type.kids.T) == f11 \u0026\u0026 ((newf0).type.kids.E) == f00 \u0026\u0026\n                    int32( newf0.index) == yindex {\n                    cuddSatInc(newf0.ref);\n                    break; /* match */\n                }\n                newf0 = newf0.next;\n            } /* while newf0 */\n            if newf0 == nil {        /* no match */\n                newf0 = cuddDynamicAllocNode(table);\n                if newf0 == nil {\n                    goto zddSwapOutOfMem; }\n                newf0.index = yindex; newf0.ref = 1;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                ((newf0).type.kids.T) = f11; ((newf0).type.kids.E) = f00;\n                /* Insert newf0 in the collision list ylist[posn];\n                ** increase the ref counts of f11 and f00.\n                */\n                newykeys++;\n                newf0.next = ylist[posn];\n                ylist[posn] = newf0;\n                cuddSatInc(f11.ref);\n                cuddSatInc(f00.ref);\n            }\n        }\n        // inlining of macro cuddE\n        ((f).type.kids.E) = newf0;\n\n        /* Re-insert the modified f in xlist.\n        ** The modified f does not already exists in xlist.\n        ** (Because of the uniqueness of the cofactors.)\n        */\n        posn = ddHash(cuddF2L(newf1), cuddF2L(newf0), xshift);\n        newxkeys++;\n        f.next = xlist[posn];\n        xlist[posn] = f;\n        f = next;\n    } /* while f != NULL */\n\n    /* GC the y layer and move the marked nodes to the x list. */\n\n    /* For each node f in ylist. */\n    for i = 0; i \u003c yslots; i++ {\n        previous = nil;\n        f = ylist[i];\n        for f != nil {\n            next = f.next;\n            if f.ref == 0 {\n                cuddSatDec(cuddT(f).ref);\n                cuddSatDec(cuddE(f).ref);\n                // inlining of macro cuddDeallocNode\n                (f).next = (table).nextFree;     (table).nextFree = f;;\n                newykeys--;\n                if previous == nil {\n                    ylist[i] = next;\n                } else {\n                    previous.next = next; }\n            } else if int32( f.index) == xindex { /* move marked node */\n                if previous == nil {\n                    ylist[i] = next;\n                } else {\n                    previous.next = next; }\n                // inlining of macro cuddT\n                f1 = ((f).type.kids.T);\n                cuddSatDec(f1.ref);\n                /* Check ylist for triple (yindex, f1, empty). */\n                posn = ddHash(cuddF2L(f1), cuddF2L(empty), yshift);\n                /* For each element newf1 in collision list ylist[posn]. */\n                newf1 = ylist[posn];\n                for newf1 != nil {\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((newf1).type.kids.T) == f1 \u0026\u0026 ((newf1).type.kids.E) == empty \u0026\u0026\n                        int32( newf1.index) == yindex {\n                        cuddSatInc(newf1.ref);\n                        break; /* match */\n                    }\n                    newf1 = newf1.next;\n                } /* while newf1 */\n                if newf1 == nil {    /* no match */\n                    newf1 = cuddDynamicAllocNode(table);\n                    if newf1 == nil {\n                        goto zddSwapOutOfMem; }\n                    newf1.index = yindex; newf1.ref = 1;\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    ((newf1).type.kids.T) = f1; ((newf1).type.kids.E) = empty;\n                    /* Insert newf1 in the collision list ylist[posn];\n                    ** increase the ref counts of f1 and empty.\n                    */\n                    newykeys++;\n                    newf1.next = ylist[posn];\n                    ylist[posn] = newf1;\n                    if posn == i \u0026\u0026 previous == nil {\n                        previous = newf1; }\n                    cuddSatInc(f1.ref);\n                    cuddSatInc(empty.ref);\n                }\n                // inlining of macro cuddT\n                ((f).type.kids.T) = newf1;\n                // inlining of macro cuddE\n                f0 = ((f).type.kids.E);\n                /* Insert f in x list. */\n                posn = ddHash(cuddF2L(newf1), cuddF2L(f0), xshift);\n                newxkeys++;\n                newykeys--;\n                f.next = xlist[posn];\n                xlist[posn] = f;\n            } else {\n                previous = f;\n            }\n            f = next;\n        } /* while f */\n    } /* for i */\n\n    /* Set the appropriate fields in table. */\n    table.subtableZ[x].keys     = newxkeys;\n    table.subtableZ[y].keys     = newykeys;\n\n    table.keysZ += newxkeys + newykeys - oldxkeys - oldykeys;\n\n    /* Update univ section; univ[x] remains the same. */\n    // inlining of macro cuddT\n    table.univ[y] = ((table.univ[x]).type.kids.T);\n\n     \n                                                        \n                                  \n                                 \n      \n\n    return (table.keysZ);\n\nzddSwapOutOfMem:\n    (void) fmt.Fprintf(table.err, \"Error: cuddZddSwapInPlace out of memory\\n\");\n\n    return (0);\n\n}"
+    },
+    {
+      "Name": "cuddZddLinearAux",
+      "Start": 20157,
+      "End": 23565,
+      "BodyStart": 20244,
+      "Original": "static int\ncuddZddLinearAux(\n  DdManager * table,\n  int  x,\n  int  xLow,\n  int  xHigh)\n{\n    Move        *move;\n    Move        *moveUp;        /* list of up move */\n    Move        *moveDown;      /* list of down move */\n\n    int         initial_size;\n    int         result;\n\n    initial_size = table-\u003ekeysZ;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtableZ[x].keys \u003e 0);\n#endif\n\n    moveDown = NULL;\n    moveUp = NULL;\n\n    if (x == xLow) {\n        moveDown = cuddZddLinearDown(table, x, xHigh, NULL);\n        /* At this point x --\u003e xHigh. */\n        if (moveDown == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if (!result)\n            goto cuddZddLinearAuxOutOfMem;\n\n    } else if (x == xHigh) {\n        moveUp = cuddZddLinearUp(table, x, xLow, NULL);\n        /* At this point x --\u003e xLow. */\n        if (moveUp == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if (!result)\n            goto cuddZddLinearAuxOutOfMem;\n\n    } else if ((x - xLow) \u003e (xHigh - x)) { /* must go down first: shorter */\n        moveDown = cuddZddLinearDown(table, x, xHigh, NULL);\n        /* At this point x --\u003e xHigh. */\n        if (moveDown == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        moveUp = cuddZddUndoMoves(table,moveDown);\n#ifdef DD_DEBUG\n        assert(moveUp == NULL || moveUp-\u003ex == x);\n#endif\n        moveUp = cuddZddLinearUp(table, x, xLow, moveUp);\n        if (moveUp == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if (!result)\n            goto cuddZddLinearAuxOutOfMem;\n\n    } else {\n        moveUp = cuddZddLinearUp(table, x, xLow, NULL);\n        /* At this point x --\u003e xHigh. */\n        if (moveUp == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        /* Then move up. */\n        moveDown = cuddZddUndoMoves(table,moveUp);\n#ifdef DD_DEBUG\n        assert(moveDown == NULL || moveDown-\u003ey == x);\n#endif\n        moveDown = cuddZddLinearDown(table, x, xHigh, moveDown);\n        if (moveDown == (Move *) CUDD_OUT_OF_MEM)\n            goto cuddZddLinearAuxOutOfMem;\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if (!result)\n            goto cuddZddLinearAuxOutOfMem;\n    }\n\n    while (moveDown != NULL) {\n        move = moveDown-\u003enext;\n        cuddDeallocMove(table, moveDown);\n        moveDown = move;\n    }\n    while (moveUp != NULL) {\n        move = moveUp-\u003enext;\n        cuddDeallocMove(table, moveUp);\n        moveUp = move;\n    }\n\n    return(1);\n\ncuddZddLinearAuxOutOfMem:\n    if (moveDown != (Move *) CUDD_OUT_OF_MEM) {\n        while (moveDown != NULL) {\n            move = moveDown-\u003enext;\n            cuddDeallocMove(table, moveDown);\n            moveDown = move;\n        }\n    }\n    if (moveUp != (Move *) CUDD_OUT_OF_MEM) {\n        while (moveUp != NULL) {\n            move = moveUp-\u003enext;\n            cuddDeallocMove(table, moveUp);\n            moveUp = move;\n        }\n    }\n\n    return(0);\n\n}",
+      "Draft": "func cuddZddLinearAux(table *DdManager, x int32, xLow int32, xHigh int32) int32 {\n    var move *Move;\n    var moveUp *Move;        /* list of up move */\n    var moveDown *Move;      /* list of down move */\n\n    var initial_size int32;\n    var result int32;\n\n    initial_size = table.keysZ;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtableZ[x].keys \u003e 0);\n#endif\n\n    moveDown = nil;\n    moveUp = nil;\n\n    if x == xLow {\n        moveDown = cuddZddLinearDown(table, x, xHigh, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else if x == xHigh {\n        moveUp = cuddZddLinearUp(table, x, xLow, nil);\n        /* At this point x --\u003e xLow. */\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else if (x - xLow) \u003e (xHigh - x) { /* must go down first: shorter */\n        moveDown = cuddZddLinearDown(table, x, xHigh, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        moveUp = cuddZddUndoMoves(table,moveDown);\n#ifdef DD_DEBUG\n        assert(moveUp == NULL || moveUp-\u003ex == x);\n#endif\n        moveUp = cuddZddLinearUp(table, x, xLow, moveUp);\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else {\n        moveUp = cuddZddLinearUp(table, x, xLow, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Then move up. */\n        moveDown = cuddZddUndoMoves(table,moveUp);\n#ifdef DD_DEBUG\n        assert(moveDown == NULL || moveDown-\u003ey == x);\n#endif\n        moveDown = cuddZddLinearDown(table, x, xHigh, moveDown);\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n    }\n\n    for moveDown != nil {\n        move = moveDown.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moveDown)).ref = 0;     ((DdNode *)(moveDown)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveDown);;\n        moveDown = move;\n    }\n    for moveUp != nil {\n        move = moveUp.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moveUp)).ref = 0;     ((DdNode *)(moveUp)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveUp);;\n        moveUp = move;\n    }\n\n    return(1);\n\ncuddZddLinearAuxOutOfMem:\n    if moveDown != (Move *) CUDD_OUT_OF_MEM {\n        for moveDown != nil {\n            move = moveDown.next;\n            // inlining of macro cuddDeallocMove\n            ((DdNode *)(moveDown)).ref = 0;     ((DdNode *)(moveDown)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveDown);;\n            moveDown = move;\n        }\n    }\n    if moveUp != (Move *) CUDD_OUT_OF_MEM {\n        for moveUp != nil {\n            move = moveUp.next;\n            // inlining of macro cuddDeallocMove\n            ((DdNode *)(moveUp)).ref = 0;     ((DdNode *)(moveUp)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveUp);;\n            moveUp = move;\n        }\n    }\n\n    return(0);\n\n}"
+    },
+    {
+      "Name": "cuddZddLinearUp",
+      "Start": 24115,
+      "End": 25997,
+      "BodyStart": 24210,
+      "Original": "static Move *\ncuddZddLinearUp(\n  DdManager * table,\n  int  y,\n  int  xLow,\n  Move * prevMoves)\n{\n    Move        *moves;\n    Move        *move;\n    int         x;\n    int         size, newsize;\n    int         limitSize;\n\n    moves = prevMoves;\n    limitSize = table-\u003ekeysZ;\n\n    x = cuddZddNextLow(table, y);\n    while (x \u003e= xLow) {\n        size = cuddZddSwapInPlace(table, x, y);\n        if (size == 0)\n            goto cuddZddLinearUpOutOfMem;\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if (newsize == 0)\n            goto cuddZddLinearUpOutOfMem;\n        move = (Move *) cuddDynamicAllocNode(table);\n        if (move == NULL)\n            goto cuddZddLinearUpOutOfMem;\n        move-\u003ex = x;\n        move-\u003ey = y;\n        move-\u003enext = moves;\n        moves = move;\n        move-\u003eflags = CUDD_SWAP_MOVE;\n        if (newsize \u003e size) {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if (newsize == 0) goto cuddZddLinearUpOutOfMem;\n#ifdef DD_DEBUG\n            if (newsize != size) {\n                (void) fprintf(table-\u003eerr,\"Change in size after identity transformation! From %d to %d\\n\",size,newsize);\n            }\n#endif\n        } else {\n            size = newsize;\n            move-\u003eflags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move-\u003esize = size;\n\n        if ((double)size \u003e (double)limitSize * table-\u003emaxGrowth)\n            break;\n        if (size \u003c limitSize)\n            limitSize = size;\n\n        y = x;\n        x = cuddZddNextLow(table, y);\n    }\n    return(moves);\n\ncuddZddLinearUpOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}",
+      "Draft": "func cuddZddLinearUp(table *DdManager, y int32, xLow int32, prevMoves *Move) *Move {\n    var moves *Move;\n    var move *Move;\n    var x int32;\n    var size, newsize int32;\n    var limitSize int32;\n\n    moves = prevMoves;\n    limitSize = table.keysZ;\n\n    x = cuddZddNextLow(table, y);\n    for x \u003e= xLow {\n        size = cuddZddSwapInPlace(table, x, y);\n        if size == 0 {\n            goto cuddZddLinearUpOutOfMem; }\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if newsize == 0 {\n            goto cuddZddLinearUpOutOfMem; }\n        move = (Move *) cuddDynamicAllocNode(table);\n        if move == nil {\n            goto cuddZddLinearUpOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.next = moves;\n        moves = move;\n        move.flags = CUDD_SWAP_MOVE;\n        if newsize \u003e size {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if newsize == 0 { goto cuddZddLinearUpOutOfMem; }\n#ifdef DD_DEBUG\n            if (newsize != size) {\n                (void) fprintf(table-\u003eerr,\"Change in size after identity transformation! From %d to %d\\n\",size,newsize);\n            }\n#endif\n        } else {\n            size = newsize;\n            move.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move.size = size;\n\n        if float64(size) \u003e float64(limitSize) * table.maxGrowth {\n            break; }\n        if size \u003c limitSize {\n            limitSize = size; }\n\n        y = x;\n        x = cuddZddNextLow(table, y);\n    }\n    return(moves);\n\ncuddZddLinearUpOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}"
+    },
+    {
+      "Name": "cuddZddLinearDown",
+      "Start": 26523,
+      "End": 28398,
+      "BodyStart": 26621,
+      "Original": "static Move *\ncuddZddLinearDown(\n  DdManager * table,\n  int  x,\n  int  xHigh,\n  Move * prevMoves)\n{\n    Move        *moves;\n    Move        *move;\n    int         y;\n    int         size, newsize;\n    int         limitSize;\n\n    moves = prevMoves;\n    limitSize = table-\u003ekeysZ;\n\n    y = cuddZddNextHigh(table, x);\n    while (y \u003c= xHigh) {\n        size = cuddZddSwapInPlace(table, x, y);\n        if (size == 0)\n            goto cuddZddLinearDownOutOfMem;\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if (newsize == 0)\n            goto cuddZddLinearDownOutOfMem;\n        move = (Move *) cuddDynamicAllocNode(table);\n        if (move == NULL)\n            goto cuddZddLinearDownOutOfMem;\n        move-\u003ex = x;\n        move-\u003ey = y;\n        move-\u003enext = moves;\n        moves = move;\n        move-\u003eflags = CUDD_SWAP_MOVE;\n        if (newsize \u003e size) {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if (newsize == 0) goto cuddZddLinearDownOutOfMem;\n            if (newsize != size) {\n                (void) fprintf(table-\u003eerr,\"Change in size after identity transformation! From %d to %d\\n\",size,newsize);\n            }\n        } else {\n            size = newsize;\n            move-\u003eflags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move-\u003esize = size;\n\n        if ((double)size \u003e (double)limitSize * table-\u003emaxGrowth)\n            break;\n        if (size \u003c limitSize)\n            limitSize = size;\n\n        x = y;\n        y = cuddZddNextHigh(table, x);\n    }\n    return(moves);\n\ncuddZddLinearDownOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}",
+      "Draft": "func cuddZddLinearDown(table *DdManager, x int32, xHigh int32, prevMoves *Move) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size, newsize int32;\n    var limitSize int32;\n\n    moves = prevMoves;\n    limitSize = table.keysZ;\n\n    y = cuddZddNextHigh(table, x);\n    for y \u003c= xHigh {\n        size = cuddZddSwapInPlace(table, x, y);\n        if size == 0 {\n            goto cuddZddLinearDownOutOfMem; }\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if newsize == 0 {\n            goto cuddZddLinearDownOutOfMem; }\n        move = (Move *) cuddDynamicAllocNode(table);\n        if move == nil {\n            goto cuddZddLinearDownOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.next = moves;\n        moves = move;\n        move.flags = CUDD_SWAP_MOVE;\n        if newsize \u003e size {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if newsize == 0 { goto cuddZddLinearDownOutOfMem; }\n            if newsize != size {\n                (void) fmt.Fprintf(table.err, \"Change in size after identity transformation! From %d to %d\\n\", size, newsize);\n            }\n        } else {\n            size = newsize;\n            move.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move.size = size;\n\n        if float64(size) \u003e float64(limitSize) * table.maxGrowth {\n            break; }\n        if size \u003c limitSize {\n            limitSize = size; }\n\n        x = y;\n        y = cuddZddNextHigh(table, x);\n    }\n    return(moves);\n\ncuddZddLinearDownOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}"
+    },
+    {
+      "Name": "cuddZddLinearBackward",
+      "Start": 28960,
+      "End": 29847,
+      "BodyStart": 29044,
+      "Original": "static int\ncuddZddLinearBackward(\n  DdManager * table,\n  int  size,\n  Move * moves)\n{\n    Move        *move;\n    int         res;\n\n    /* Find the minimum size among moves. */\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (move-\u003esize \u003c size) {\n            size = move-\u003esize;\n        }\n    }\n\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (move-\u003esize == size) return(1);\n        if (move-\u003eflags == CUDD_LINEAR_TRANSFORM_MOVE) {\n            res = cuddZddLinearInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!res) return(0);\n        }\n        res = cuddZddSwapInPlace(table, move-\u003ex, move-\u003ey);\n        if (!res)\n            return(0);\n        if (move-\u003eflags == CUDD_INVERSE_TRANSFORM_MOVE) {\n            res = cuddZddLinearInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!res) return(0);\n        }\n    }\n\n    return(1);\n\n}",
+      "Draft": "func cuddZddLinearBackward(table *DdManager, size int32, moves *Move) int32 {\n    var move *Move;\n    var res int32;\n\n    /* Find the minimum size among moves. */\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c size {\n            size = move.size;\n        }\n    }\n\n    for move = moves; move != nil; move = move.next {\n        if move.size == size { return(1); }\n        if move.flags == CUDD_LINEAR_TRANSFORM_MOVE {\n            res = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n        res = cuddZddSwapInPlace(table, move.x, move.y);\n        if !(res != 0) {\n            return(0); }\n        if move.flags == CUDD_INVERSE_TRANSFORM_MOVE {\n            res = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddZddUndoMoves",
+      "Start": 30320,
+      "End": 32095,
+      "BodyStart": 30388,
+      "Original": "static Move*\ncuddZddUndoMoves(\n  DdManager * table,\n  Move * moves)\n{\n    Move *invmoves = NULL;\n    Move *move;\n    Move *invmove;\n    int size;\n\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        invmove = (Move *) cuddDynamicAllocNode(table);\n        if (invmove == NULL) goto cuddZddUndoMovesOutOfMem;\n        invmove-\u003ex = move-\u003ex;\n        invmove-\u003ey = move-\u003ey;\n        invmove-\u003enext = invmoves;\n        invmoves = invmove;\n        if (move-\u003eflags == CUDD_SWAP_MOVE) {\n            invmove-\u003eflags = CUDD_SWAP_MOVE;\n            size = cuddZddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!size) goto cuddZddUndoMovesOutOfMem;\n        } else if (move-\u003eflags == CUDD_LINEAR_TRANSFORM_MOVE) {\n            invmove-\u003eflags = CUDD_INVERSE_TRANSFORM_MOVE;\n            size = cuddZddLinearInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!size) goto cuddZddUndoMovesOutOfMem;\n            size = cuddZddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!size) goto cuddZddUndoMovesOutOfMem;\n        } else { /* must be CUDD_INVERSE_TRANSFORM_MOVE */\n#ifdef DD_DEBUG\n            (void) fprintf(table-\u003eerr,\"Unforseen event in ddUndoMoves!\\n\");\n#endif\n            invmove-\u003eflags = CUDD_LINEAR_TRANSFORM_MOVE;\n            size = cuddZddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!size) goto cuddZddUndoMovesOutOfMem;\n            size = cuddZddLinearInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!size) goto cuddZddUndoMovesOutOfMem;\n        }\n        invmove-\u003esize = size;\n    }\n\n    return(invmoves);\n\ncuddZddUndoMovesOutOfMem:\n    while (invmoves != NULL) {\n        move = invmoves-\u003enext;\n        cuddDeallocMove(table, invmoves);\n        invmoves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}",
+      "Draft": "func cuddZddUndoMoves(table *DdManager, moves *Move) *Move {\n    var invmoves *Move  = nil;\n    var move *Move;\n    var invmove *Move;\n    var size int32;\n\n    for move = moves; move != nil; move = move.next {\n        invmove = (Move *) cuddDynamicAllocNode(table);\n        if invmove == nil { goto cuddZddUndoMovesOutOfMem; }\n        invmove.x = move.x;\n        invmove.y = move.y;\n        invmove.next = invmoves;\n        invmoves = invmove;\n        if move.flags == CUDD_SWAP_MOVE {\n            invmove.flags = CUDD_SWAP_MOVE;\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        } else if move.flags == CUDD_LINEAR_TRANSFORM_MOVE {\n            invmove.flags = CUDD_INVERSE_TRANSFORM_MOVE;\n            size = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        } else { /* must be CUDD_INVERSE_TRANSFORM_MOVE */\n#ifdef DD_DEBUG\n            (void) fprintf(table-\u003eerr,\"Unforseen event in ddUndoMoves!\\n\");\n#endif\n            invmove.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n            size = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        }\n        invmove.size = size;\n    }\n\n    return(invmoves);\n\ncuddZddUndoMovesOutOfMem:\n    for invmoves != nil {\n        move = invmoves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(invmoves)).ref = 0;     ((DdNode *)(invmoves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(invmoves);;\n        invmoves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::mechanical::sizeof::6999",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7006,
+      "End": 7012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::6972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6979,
+      "End": 6987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::21903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20723,
+      "End": 20731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::22310",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21130,
+      "End": 21138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::22771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21591,
+      "End": 21599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::23046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21864,
+      "End": 21872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::23436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22254,
+      "End": 22262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::23748",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22568,
+      "End": 22576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22904,
+      "End": 22904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22904,
+      "End": 22904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22904,
+      "End": 22904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23035,
+      "End": 23035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23035,
+      "End": 23035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23035,
+      "End": 23035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23159,
+      "End": 23167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23269,
+      "End": 23269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23269,
+      "End": 23269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23269,
+      "End": 23269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::24995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23366,
+      "End": 23374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::25153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23472,
+      "End": 23472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::25188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23472,
+      "End": 23472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::25259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23472,
+      "End": 23472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::26474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24698,
+      "End": 24706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::27608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25898,
+      "End": 25898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::27642",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25898,
+      "End": 25898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::27712",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25898,
+      "End": 25898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::27771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25968,
+      "End": 25976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::28918",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27115,
+      "End": 27123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::30154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28299,
+      "End": 28299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::30188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28299,
+      "End": 28299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::30258",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28299,
+      "End": 28299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::30317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28369,
+      "End": 28377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::32491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30543,
+      "End": 30551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::33968",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31990,
+      "End": 31990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::34005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31990,
+      "End": 31990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::34078",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31990,
+      "End": 31990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::pointer-cast::34143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32066,
+      "End": 32074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::ternary::cuddZddLinearSifting",
+      "Category": "ternary-review",
+      "Symbol": "cuddZddLinearSifting",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6229,
+      "End": 8157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearSifting",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearSifting",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6229,
+      "End": 8157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearInPlace",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearInPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9069,
+      "End": 19648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearAux",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20157,
+      "End": 23565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearUp",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearUp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24115,
+      "End": 25997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearDown",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearDown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26523,
+      "End": 28398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddLinearBackward",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddLinearBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28960,
+      "End": 29847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::cuddZddUndoMoves",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddUndoMoves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30320,
+      "End": 32095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3639,
+      "End": 3750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6372,
+      "End": 6416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7288,
+      "End": 7347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7469,
+      "End": 7961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9519,
+      "End": 9775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12632,
+      "End": 12682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20469,
+      "End": 20533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21711,
+      "End": 21783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 22402,
+      "End": 22478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25255,
+      "End": 25447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31414,
+      "End": 31512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::6550",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6550,
+      "End": 6570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::6698",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6698,
+      "End": 6718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::7973",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7973,
+      "End": 7986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::7992",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7992,
+      "End": 8011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::8082",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8082,
+      "End": 8101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::8124",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8124,
+      "End": 8137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::10860",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10860,
+      "End": 10879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::10951",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10951,
+      "End": 10970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::11960",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11960,
+      "End": 11980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::12013",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12013,
+      "End": 12032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::12332",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12332,
+      "End": 12373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::13259",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13259,
+      "End": 13281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::13380",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13380,
+      "End": 13422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::13775",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13775,
+      "End": 13797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::14504",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14504,
+      "End": 14524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::14542",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14542,
+      "End": 14562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::14752",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14752,
+      "End": 14774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::14873",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14873,
+      "End": 14915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::15196",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15196,
+      "End": 15218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::15911",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15911,
+      "End": 15931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::15949",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15949,
+      "End": 15969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::16211",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16211,
+      "End": 16257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::16670",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16670,
+      "End": 16695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::16713",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16713,
+      "End": 16738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::17210",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17210,
+      "End": 17229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::17320",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17320,
+      "End": 17363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::17669",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17669,
+      "End": 17691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::18547",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18547,
+      "End": 18566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::18588",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18588,
+      "End": 18610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddLin.c::macro-inline::18760",
+      "Category": "macro-inline-review",
+      "Symbol": "ddHash",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18760,
+      "End": 18803
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddLin.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Procedures for dynamic variable ordering of ZDDs.]\n\n  Description [Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddLinearSifting()\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddLinearInPlace()\n                    \u003cli\u003e cuddZddLinerAux()\n                    \u003cli\u003e cuddZddLinearUp()\n                    \u003cli\u003e cuddZddLinearDown()\n                    \u003cli\u003e cuddZddLinearBackward()\n                    \u003cli\u003e cuddZddUndoMoves()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     [cuddLinear.c cuddZddReord.c]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\nconst CUDD_SWAP_MOVE = 0\nconst CUDD_LINEAR_TRANSFORM_MOVE = 1\nconst CUDD_INVERSE_TRANSFORM_MOVE = 2\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddLin.c,v 1.14 2004/08/13 18:04:53 fabio Exp $\";\n#endif\n\nvar zdd_entry *int32;\nvar zddTotalNumberSwapping int32;\nvar zddTotalNumberLinearTr int32;\nvar empty *DdNode;\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int cuddZddLinearInPlace (DdManager * table, int x, int y);\n\n// static int cuddZddLinearAux (DdManager *table, int x, int xLow, int xHigh);\n\n// static Move * cuddZddLinearUp (DdManager *table, int y, int xLow, Move *prevMoves);\n\n// static Move * cuddZddLinearDown (DdManager *table, int x, int xHigh, Move *prevMoves);\n\n// static int cuddZddLinearBackward (DdManager *table, int size, Move *moves);\n\n// static Move* cuddZddUndoMoves (DdManager *table, Move *moves);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implementation of the linear sifting algorithm for ZDDs.]\n\n  Description [Implementation of the linear sifting algorithm for ZDDs.\n  Assumes that no dead nodes are present.\n    \u003col\u003e\n    \u003cli\u003e Order all the variables according to the number of entries\n    in each unique table.\n    \u003cli\u003e Sift the variable up and down and applies the XOR transformation,\n    remembering each time the total size of the DD heap.\n    \u003cli\u003e Select the best permutation.\n    \u003cli\u003e Repeat 3 and 4 for all variables.\n    \u003c/ol\u003e\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddLinearSifting(table *DdManager, lower int32, upper int32) int32 {\n    var i int32;\n    var var *int32;\n    var size int32;\n    var x int32;\n    var result int32;\n#ifdef DD_STATS\n    int previousSize;\n#endif\n\n    size = table.sizeZ;\n    empty = table.zero;\n\n    /* Find order in which to sift variables. */\n    var = nil;\n    zdd_entry = ABC_ALLOC(int, size);\n    if zdd_entry == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n    var = ABC_ALLOC(int, size);\n    if var == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto cuddZddSiftingOutOfMem;\n    }\n\n    for i = 0; i \u003c size; i++ {\n        x = table.permZ[i];\n        zdd_entry[i] = table.subtableZ[x].keys;\n        var[i] = i;\n    }\n\n    qsort((void *)var, (size_t)size, sizeof(int), (DD_QSFP)cuddZddUniqueCompare);\n\n    /* Now sift. */\n    // inlining of macro ddMin\n    for i = 0; i \u003c (((size) \u003c (table.siftMaxVar)) ? (size) : (table.siftMaxVar)); i++ {\n        if zddTotalNumberSwapping \u003e= table.siftMaxSwap {\n            break; }\n        x = table.permZ[var[i]];\n        if x \u003c lower || x \u003e upper { continue; }\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n        result = cuddZddLinearAux(table, x, lower, upper);\n        if !(result != 0) {\n            goto cuddZddSiftingOutOfMem; }\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e (unsigned) previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");     /* should never happen */\n            (void) fprintf(table-\u003eout,\"\\nSize increased from %d to %d while sifting variable %d\\n\", previousSize, table-\u003ekeysZ , var[i]);\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    ABC_FREE(var);\n    ABC_FREE(zdd_entry);\n\n    return(1);\n\ncuddZddSiftingOutOfMem:\n\n    if zdd_entry != nil { ABC_FREE(zdd_entry); }\n    if var != nil { ABC_FREE(var); }\n\n    return(0);\n\n} /* end of cuddZddLinearSifting */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Linearly combines two adjacent variables.]\n\n  Description [Linearly combines two adjacent variables. It assumes\n  that no dead nodes are present on entry to this procedure.  The\n  procedure then guarantees that no dead nodes will be present when it\n  terminates.  cuddZddLinearInPlace assumes that x \u0026lt; y.  Returns the\n  number of keys in the table if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddZddSwapInPlace cuddLinearInPlace]\n\n******************************************************************************/\nfunc cuddZddLinearInPlace(table *DdManager, x int32, y int32) int32 {\n    var xlist, ylist *DdNodePtr;\n    var xindex, yindex int32;\n    var xslots, yslots int32;\n    var xshift, yshift int32;\n    var oldxkeys, oldykeys int32;\n    var newxkeys, newykeys int32;\n    var i int32;\n    var posn int32;\n    var f, f1, f0, f11, f10, f01, f00 *DdNode;\n    var newf1, newf0, g, next, previous *DdNode;\n    var special *DdNode;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(cuddZddNextHigh(table,x) == y);\n    assert(table-\u003esubtableZ[x].keys != 0);\n    assert(table-\u003esubtableZ[y].keys != 0);\n    assert(table-\u003esubtableZ[x].dead == 0);\n    assert(table-\u003esubtableZ[y].dead == 0);\n#endif\n\n    zddTotalNumberLinearTr++;\n\n    /* Get parameters of x subtable. */\n    xindex   = table.invpermZ[x];\n    xlist    = table.subtableZ[x].nodelist;\n    oldxkeys = table.subtableZ[x].keys;\n    xslots   = table.subtableZ[x].slots;\n    xshift   = table.subtableZ[x].shift;\n    newxkeys = 0;\n\n    /* Get parameters of y subtable. */\n    yindex   = table.invpermZ[y];\n    ylist    = table.subtableZ[y].nodelist;\n    oldykeys = table.subtableZ[y].keys;\n    yslots   = table.subtableZ[y].slots;\n    yshift   = table.subtableZ[y].shift;\n    newykeys = oldykeys;\n\n    /* The nodes in the x layer are put in two chains.  The chain\n    ** pointed by g holds the normal nodes. When re-expressed they stay\n    ** in the x list. The chain pointed by special holds the elements\n    ** that will move to the y list.\n    */\n    g = special = nil;\n    for i = 0; i \u003c xslots; i++ {\n        f = xlist[i];\n        if f == nil { continue; }\n        xlist[i] = nil;\n        for f != nil {\n            next = f.next;\n            // inlining of macro cuddT\n            f1 = ((f).type.kids.T);\n            /* if (f1-\u003eindex == yindex) */ cuddSatDec(f1.ref);\n            // inlining of macro cuddE\n            f0 = ((f).type.kids.E);\n            /* if (f0-\u003eindex == yindex) */ cuddSatDec(f0.ref);\n            // inlining of macro cuddE\n            if int32( f1.index) == yindex \u0026\u0026 ((f1).type.kids.E) == empty \u0026\u0026\n                int32( f0.index) != yindex {\n                f.next = special;\n                special = f;\n            } else {\n                f.next = g;\n                g = f;\n            }\n            f = next;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the x subtable */\n\n    /* Mark y nodes with pointers from above x. We mark them by\n    **  changing their index to x.\n    */\n    for i = 0; i \u003c yslots; i++ {\n        f = ylist[i];\n        for f != nil {\n            if f.ref != 0 {\n                f.index = xindex;\n            }\n            f = f.next;\n        } /* while there are elements in the collision chain */\n    } /* for each slot of the y subtable */\n\n    /* Move special nodes to the y list. */\n    f = special;\n    for f != nil {\n        next = f.next;\n        // inlining of macro cuddT\n        f1 = ((f).type.kids.T);\n        // inlining of macro cuddT\n        f11 = ((f1).type.kids.T);\n        // inlining of macro cuddT\n        ((f).type.kids.T) = f11;\n        cuddSatInc(f11.ref);\n        // inlining of macro cuddE\n        f0 = ((f).type.kids.E);\n        cuddSatInc(f0.ref);\n        f.index = yindex;\n        /* Insert at the beginning of the list so that it will be\n        ** found first if there is a duplicate. The duplicate will\n        ** eventually be moved or garbage collected. No node\n        ** re-expression will add a pointer to it.\n        */\n        posn = ddHash(cuddF2L(f11), cuddF2L(f0), yshift);\n        f.next = ylist[posn];\n        ylist[posn] = f;\n        newykeys++;\n        f = next;\n    }\n\n    /* Take care of the remaining x nodes that must be re-expressed.\n    ** They form a linked list pointed by g.\n    */\n    f = g;\n    for f != nil {\n#ifdef DD_COUNT\n        table-\u003eswapSteps++;\n#endif\n        next = f.next;\n        /* Find f1, f0, f11, f10, f01, f00. */\n        // inlining of macro cuddT\n        f1 = ((f).type.kids.T);\n        if int32( f1.index) == yindex || int32( f1.index) == xindex {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            f11 = ((f1).type.kids.T); f10 = ((f1).type.kids.E);\n        } else {\n            f11 = empty; f10 = f1;\n        }\n        // inlining of macro cuddE\n        f0 = ((f).type.kids.E);\n        if int32( f0.index) == yindex || int32( f0.index) == xindex {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            f01 = ((f0).type.kids.T); f00 = ((f0).type.kids.E);\n        } else {\n            f01 = empty; f00 = f0;\n        }\n        /* Create the new T child. */\n        if f01 == empty {\n            newf1 = f10;\n            cuddSatInc(newf1.ref);\n        } else {\n            /* Check ylist for triple (yindex, f01, f10). */\n            posn = ddHash(cuddF2L(f01), cuddF2L(f10), yshift);\n            /* For each element newf1 in collision list ylist[posn]. */\n            newf1 = ylist[posn];\n            /* Search the collision chain skipping the marked nodes. */\n            for newf1 != nil {\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((newf1).type.kids.T) == f01 \u0026\u0026 ((newf1).type.kids.E) == f10 \u0026\u0026\n                    int32( newf1.index) == yindex {\n                    cuddSatInc(newf1.ref);\n                    break; /* match */\n                }\n                newf1 = newf1.next;\n            } /* while newf1 */\n            if newf1 == nil {        /* no match */\n                newf1 = cuddDynamicAllocNode(table);\n                if newf1 == nil {\n                    goto zddSwapOutOfMem; }\n                newf1.index = yindex; newf1.ref = 1;\n                // inlining of macro cuddT\n                ((newf1).type.kids.T) = f01;\n                // inlining of macro cuddE\n                ((newf1).type.kids.E) = f10;\n                /* Insert newf1 in the collision list ylist[pos];\n                ** increase the ref counts of f01 and f10\n                */\n                newykeys++;\n                newf1.next = ylist[posn];\n                ylist[posn] = newf1;\n                cuddSatInc(f01.ref);\n                cuddSatInc(f10.ref);\n            }\n        }\n        // inlining of macro cuddT\n        ((f).type.kids.T) = newf1;\n\n        /* Do the same for f0. */\n        /* Create the new E child. */\n        if f11 == empty {\n            newf0 = f00;\n            cuddSatInc(newf0.ref);\n        } else {\n            /* Check ylist for triple (yindex, f11, f00). */\n            posn = ddHash(cuddF2L(f11), cuddF2L(f00), yshift);\n            /* For each element newf0 in collision list ylist[posn]. */\n            newf0 = ylist[posn];\n            for newf0 != nil {\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((newf0).type.kids.T) == f11 \u0026\u0026 ((newf0).type.kids.E) == f00 \u0026\u0026\n                    int32( newf0.index) == yindex {\n                    cuddSatInc(newf0.ref);\n                    break; /* match */\n                }\n                newf0 = newf0.next;\n            } /* while newf0 */\n            if newf0 == nil {        /* no match */\n                newf0 = cuddDynamicAllocNode(table);\n                if newf0 == nil {\n                    goto zddSwapOutOfMem; }\n                newf0.index = yindex; newf0.ref = 1;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                ((newf0).type.kids.T) = f11; ((newf0).type.kids.E) = f00;\n                /* Insert newf0 in the collision list ylist[posn];\n                ** increase the ref counts of f11 and f00.\n                */\n                newykeys++;\n                newf0.next = ylist[posn];\n                ylist[posn] = newf0;\n                cuddSatInc(f11.ref);\n                cuddSatInc(f00.ref);\n            }\n        }\n        // inlining of macro cuddE\n        ((f).type.kids.E) = newf0;\n\n        /* Re-insert the modified f in xlist.\n        ** The modified f does not already exists in xlist.\n        ** (Because of the uniqueness of the cofactors.)\n        */\n        posn = ddHash(cuddF2L(newf1), cuddF2L(newf0), xshift);\n        newxkeys++;\n        f.next = xlist[posn];\n        xlist[posn] = f;\n        f = next;\n    } /* while f != NULL */\n\n    /* GC the y layer and move the marked nodes to the x list. */\n\n    /* For each node f in ylist. */\n    for i = 0; i \u003c yslots; i++ {\n        previous = nil;\n        f = ylist[i];\n        for f != nil {\n            next = f.next;\n            if f.ref == 0 {\n                cuddSatDec(cuddT(f).ref);\n                cuddSatDec(cuddE(f).ref);\n                // inlining of macro cuddDeallocNode\n                (f).next = (table).nextFree;     (table).nextFree = f;;\n                newykeys--;\n                if previous == nil {\n                    ylist[i] = next;\n                } else {\n                    previous.next = next; }\n            } else if int32( f.index) == xindex { /* move marked node */\n                if previous == nil {\n                    ylist[i] = next;\n                } else {\n                    previous.next = next; }\n                // inlining of macro cuddT\n                f1 = ((f).type.kids.T);\n                cuddSatDec(f1.ref);\n                /* Check ylist for triple (yindex, f1, empty). */\n                posn = ddHash(cuddF2L(f1), cuddF2L(empty), yshift);\n                /* For each element newf1 in collision list ylist[posn]. */\n                newf1 = ylist[posn];\n                for newf1 != nil {\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((newf1).type.kids.T) == f1 \u0026\u0026 ((newf1).type.kids.E) == empty \u0026\u0026\n                        int32( newf1.index) == yindex {\n                        cuddSatInc(newf1.ref);\n                        break; /* match */\n                    }\n                    newf1 = newf1.next;\n                } /* while newf1 */\n                if newf1 == nil {    /* no match */\n                    newf1 = cuddDynamicAllocNode(table);\n                    if newf1 == nil {\n                        goto zddSwapOutOfMem; }\n                    newf1.index = yindex; newf1.ref = 1;\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    ((newf1).type.kids.T) = f1; ((newf1).type.kids.E) = empty;\n                    /* Insert newf1 in the collision list ylist[posn];\n                    ** increase the ref counts of f1 and empty.\n                    */\n                    newykeys++;\n                    newf1.next = ylist[posn];\n                    ylist[posn] = newf1;\n                    if posn == i \u0026\u0026 previous == nil {\n                        previous = newf1; }\n                    cuddSatInc(f1.ref);\n                    cuddSatInc(empty.ref);\n                }\n                // inlining of macro cuddT\n                ((f).type.kids.T) = newf1;\n                // inlining of macro cuddE\n                f0 = ((f).type.kids.E);\n                /* Insert f in x list. */\n                posn = ddHash(cuddF2L(newf1), cuddF2L(f0), xshift);\n                newxkeys++;\n                newykeys--;\n                f.next = xlist[posn];\n                xlist[posn] = f;\n            } else {\n                previous = f;\n            }\n            f = next;\n        } /* while f */\n    } /* for i */\n\n    /* Set the appropriate fields in table. */\n    table.subtableZ[x].keys     = newxkeys;\n    table.subtableZ[y].keys     = newykeys;\n\n    table.keysZ += newxkeys + newykeys - oldxkeys - oldykeys;\n\n    /* Update univ section; univ[x] remains the same. */\n    // inlining of macro cuddT\n    table.univ[y] = ((table.univ[x]).type.kids.T);\n\n     \n                                                        \n                                  \n                                 \n      \n\n    return (table.keysZ);\n\nzddSwapOutOfMem:\n    (void) fmt.Fprintf(table.err, \"Error: cuddZddSwapInPlace out of memory\\n\");\n\n    return (0);\n\n} /* end of cuddZddLinearInPlace */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Given xLow \u003c= x \u003c= xHigh moves x up and down between the\n  boundaries.]\n\n  Description [Given xLow \u003c= x \u003c= xHigh moves x up and down between the\n  boundaries. Finds the best position and does the required changes.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddLinearAux(table *DdManager, x int32, xLow int32, xHigh int32) int32 {\n    var move *Move;\n    var moveUp *Move;        /* list of up move */\n    var moveDown *Move;      /* list of down move */\n\n    var initial_size int32;\n    var result int32;\n\n    initial_size = table.keysZ;\n\n#ifdef DD_DEBUG\n    assert(table-\u003esubtableZ[x].keys \u003e 0);\n#endif\n\n    moveDown = nil;\n    moveUp = nil;\n\n    if x == xLow {\n        moveDown = cuddZddLinearDown(table, x, xHigh, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else if x == xHigh {\n        moveUp = cuddZddLinearUp(table, x, xLow, nil);\n        /* At this point x --\u003e xLow. */\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else if (x - xLow) \u003e (xHigh - x) { /* must go down first: shorter */\n        moveDown = cuddZddLinearDown(table, x, xHigh, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        moveUp = cuddZddUndoMoves(table,moveDown);\n#ifdef DD_DEBUG\n        assert(moveUp == NULL || moveUp-\u003ex == x);\n#endif\n        moveUp = cuddZddLinearUp(table, x, xLow, moveUp);\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveUp);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n\n    } else {\n        moveUp = cuddZddLinearUp(table, x, xLow, nil);\n        /* At this point x --\u003e xHigh. */\n        if moveUp == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Then move up. */\n        moveDown = cuddZddUndoMoves(table,moveUp);\n#ifdef DD_DEBUG\n        assert(moveDown == NULL || moveDown-\u003ey == x);\n#endif\n        moveDown = cuddZddLinearDown(table, x, xHigh, moveDown);\n        if moveDown == (Move *) CUDD_OUT_OF_MEM {\n            goto cuddZddLinearAuxOutOfMem; }\n        /* Move backward and stop at best position. */\n        result = cuddZddLinearBackward(table, initial_size, moveDown);\n        if !(result != 0) {\n            goto cuddZddLinearAuxOutOfMem; }\n    }\n\n    for moveDown != nil {\n        move = moveDown.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moveDown)).ref = 0;     ((DdNode *)(moveDown)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveDown);;\n        moveDown = move;\n    }\n    for moveUp != nil {\n        move = moveUp.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moveUp)).ref = 0;     ((DdNode *)(moveUp)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveUp);;\n        moveUp = move;\n    }\n\n    return(1);\n\ncuddZddLinearAuxOutOfMem:\n    if moveDown != (Move *) CUDD_OUT_OF_MEM {\n        for moveDown != nil {\n            move = moveDown.next;\n            // inlining of macro cuddDeallocMove\n            ((DdNode *)(moveDown)).ref = 0;     ((DdNode *)(moveDown)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveDown);;\n            moveDown = move;\n        }\n    }\n    if moveUp != (Move *) CUDD_OUT_OF_MEM {\n        for moveUp != nil {\n            move = moveUp.next;\n            // inlining of macro cuddDeallocMove\n            ((DdNode *)(moveUp)).ref = 0;     ((DdNode *)(moveUp)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moveUp);;\n            moveUp = move;\n        }\n    }\n\n    return(0);\n\n} /* end of cuddZddLinearAux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts a variable up applying the XOR transformation.]\n\n  Description [Sifts a variable up applying the XOR\n  transformation. Moves y up until either it reaches the bound (xLow)\n  or the size of the ZDD heap increases too much.  Returns the set of\n  moves in case of success; NULL if memory is full.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddLinearUp(table *DdManager, y int32, xLow int32, prevMoves *Move) *Move {\n    var moves *Move;\n    var move *Move;\n    var x int32;\n    var size, newsize int32;\n    var limitSize int32;\n\n    moves = prevMoves;\n    limitSize = table.keysZ;\n\n    x = cuddZddNextLow(table, y);\n    for x \u003e= xLow {\n        size = cuddZddSwapInPlace(table, x, y);\n        if size == 0 {\n            goto cuddZddLinearUpOutOfMem; }\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if newsize == 0 {\n            goto cuddZddLinearUpOutOfMem; }\n        move = (Move *) cuddDynamicAllocNode(table);\n        if move == nil {\n            goto cuddZddLinearUpOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.next = moves;\n        moves = move;\n        move.flags = CUDD_SWAP_MOVE;\n        if newsize \u003e size {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if newsize == 0 { goto cuddZddLinearUpOutOfMem; }\n#ifdef DD_DEBUG\n            if (newsize != size) {\n                (void) fprintf(table-\u003eerr,\"Change in size after identity transformation! From %d to %d\\n\",size,newsize);\n            }\n#endif\n        } else {\n            size = newsize;\n            move.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move.size = size;\n\n        if float64(size) \u003e float64(limitSize) * table.maxGrowth {\n            break; }\n        if size \u003c limitSize {\n            limitSize = size; }\n\n        y = x;\n        x = cuddZddNextLow(table, y);\n    }\n    return(moves);\n\ncuddZddLinearUpOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n} /* end of cuddZddLinearUp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts a variable down and applies the XOR transformation.]\n\n  Description [Sifts a variable down. Moves x down until either it\n  reaches the bound (xHigh) or the size of the ZDD heap increases too\n  much. Returns the set of moves in case of success; NULL if memory is\n  full.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddLinearDown(table *DdManager, x int32, xHigh int32, prevMoves *Move) *Move {\n    var moves *Move;\n    var move *Move;\n    var y int32;\n    var size, newsize int32;\n    var limitSize int32;\n\n    moves = prevMoves;\n    limitSize = table.keysZ;\n\n    y = cuddZddNextHigh(table, x);\n    for y \u003c= xHigh {\n        size = cuddZddSwapInPlace(table, x, y);\n        if size == 0 {\n            goto cuddZddLinearDownOutOfMem; }\n        newsize = cuddZddLinearInPlace(table, x, y);\n        if newsize == 0 {\n            goto cuddZddLinearDownOutOfMem; }\n        move = (Move *) cuddDynamicAllocNode(table);\n        if move == nil {\n            goto cuddZddLinearDownOutOfMem; }\n        move.x = x;\n        move.y = y;\n        move.next = moves;\n        moves = move;\n        move.flags = CUDD_SWAP_MOVE;\n        if newsize \u003e size {\n            /* Undo transformation. The transformation we apply is\n            ** its own inverse. Hence, we just apply the transformation\n            ** again.\n            */\n            newsize = cuddZddLinearInPlace(table,x,y);\n            if newsize == 0 { goto cuddZddLinearDownOutOfMem; }\n            if newsize != size {\n                (void) fmt.Fprintf(table.err, \"Change in size after identity transformation! From %d to %d\\n\", size, newsize);\n            }\n        } else {\n            size = newsize;\n            move.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n        }\n        move.size = size;\n\n        if float64(size) \u003e float64(limitSize) * table.maxGrowth {\n            break; }\n        if size \u003c limitSize {\n            limitSize = size; }\n\n        x = y;\n        y = cuddZddNextHigh(table, x);\n    }\n    return(moves);\n\ncuddZddLinearDownOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n} /* end of cuddZddLinearDown */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Given a set of moves, returns the ZDD heap to the position\n  giving the minimum size.]\n\n  Description [Given a set of moves, returns the ZDD heap to the\n  position giving the minimum size. In case of ties, returns to the\n  closest position giving the minimum size. Returns 1 in case of\n  success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddLinearBackward(table *DdManager, size int32, moves *Move) int32 {\n    var move *Move;\n    var res int32;\n\n    /* Find the minimum size among moves. */\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c size {\n            size = move.size;\n        }\n    }\n\n    for move = moves; move != nil; move = move.next {\n        if move.size == size { return(1); }\n        if move.flags == CUDD_LINEAR_TRANSFORM_MOVE {\n            res = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n        res = cuddZddSwapInPlace(table, move.x, move.y);\n        if !(res != 0) {\n            return(0); }\n        if move.flags == CUDD_INVERSE_TRANSFORM_MOVE {\n            res = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n    }\n\n    return(1);\n\n} /* end of cuddZddLinearBackward */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Given a set of moves, returns the ZDD heap to the order\n  in effect before the moves.]\n\n  Description [Given a set of moves, returns the ZDD heap to the\n  order in effect before the moves.  Returns 1 in case of success;\n  0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddZddUndoMoves(table *DdManager, moves *Move) *Move {\n    var invmoves *Move  = nil;\n    var move *Move;\n    var invmove *Move;\n    var size int32;\n\n    for move = moves; move != nil; move = move.next {\n        invmove = (Move *) cuddDynamicAllocNode(table);\n        if invmove == nil { goto cuddZddUndoMovesOutOfMem; }\n        invmove.x = move.x;\n        invmove.y = move.y;\n        invmove.next = invmoves;\n        invmoves = invmove;\n        if move.flags == CUDD_SWAP_MOVE {\n            invmove.flags = CUDD_SWAP_MOVE;\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        } else if move.flags == CUDD_LINEAR_TRANSFORM_MOVE {\n            invmove.flags = CUDD_INVERSE_TRANSFORM_MOVE;\n            size = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        } else { /* must be CUDD_INVERSE_TRANSFORM_MOVE */\n#ifdef DD_DEBUG\n            (void) fprintf(table-\u003eerr,\"Unforseen event in ddUndoMoves!\\n\");\n#endif\n            invmove.flags = CUDD_LINEAR_TRANSFORM_MOVE;\n            size = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n            size = cuddZddLinearInPlace(table,int32(move.x),int32(move.y));\n            if !(size != 0) { goto cuddZddUndoMovesOutOfMem; }\n        }\n        invmove.size = size;\n    }\n\n    return(invmoves);\n\ncuddZddUndoMovesOutOfMem:\n    for invmoves != nil {\n        move = invmoves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(invmoves)).ref = 0;     ((DdNode *)(invmoves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(invmoves);;\n        invmoves = move;\n    }\n    return((Move *) CUDD_OUT_OF_MEM);\n\n} /* end of cuddZddUndoMoves */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

@@ -1,0 +1,689 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c",
+  "SHA256": "7b0be0b44d4b5b6c13c1188d8b10e890c3ef4d5db22388a3d1c257065cc5de1f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 3,
+        "ByteOffset": 1215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(net);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 3,
+        "ByteOffset": 2079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(net);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 3,
+        "ByteOffset": 2779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 3,
+        "ByteOffset": 3204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(net);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 3,
+        "ByteOffset": 3219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(net.m_id \u003e= 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 43,
+        "ByteOffset": 3571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    g_place_concreteNets = (ConcreteNet**)realloc(g_place_concreteNets, "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 3667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(g_place_concreteNets);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 3740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(\u0026(g_place_concreteNets[g_place_numNets]), 0,"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 3894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(g_place_numNets \u003c= g_place_concreteNetsSize);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 3,
+        "ByteOffset": 4236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(net);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 3,
+        "ByteOffset": 4665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 3,
+        "ByteOffset": 4681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell.m_id \u003e= 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 188,
+        "Column": 45,
+        "ByteOffset": 5046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    g_place_concreteCells = (ConcreteCell**)realloc(g_place_concreteCells, "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 5142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(g_place_concreteCells);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 5218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(\u0026(g_place_concreteCells[g_place_numCells]), 0,"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 3,
+        "ByteOffset": 5704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 3,
+        "ByteOffset": 5720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 3,
+        "ByteOffset": 6528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(cell);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "getNetBBox",
+      "Start": 1114,
+      "End": 1589,
+      "BodyStart": 1156,
+      "Original": "Rect   getNetBBox(const ConcreteNet *net) {\n  int t;\n  Rect r;\n\n  assert(net);\n\n  r.x = r.y = INT_MAX;\n  r.w = r.h = -INT_MAX;\n  for(t=0; t\u003cnet-\u003em_numTerms; t++) {\n    r.x = net-\u003em_terms[t]-\u003em_x \u003c r.x ? net-\u003em_terms[t]-\u003em_x : r.x;\n    r.y = net-\u003em_terms[t]-\u003em_y \u003c r.y ? net-\u003em_terms[t]-\u003em_y : r.y;\n    r.w = net-\u003em_terms[t]-\u003em_x \u003e r.w ? net-\u003em_terms[t]-\u003em_x : r.w;\n    r.h = net-\u003em_terms[t]-\u003em_y \u003e r.h ? net-\u003em_terms[t]-\u003em_y : r.h;\n  }\n  r.w -= r.x; r.h -= r.y;\n  return r;\n}",
+      "Draft": "func getNetBBox(net *ConcreteNet) Rect {\n  var t int32;\n  var r Rect;\n\n  assert((net != nil), \"net\");\n\n  r.x = r.y = INT_MAX;\n  r.w = r.h = -INT_MAX;\n  for t=0; t\u003cnet.m_numTerms; t++ {\n    if net.m_terms[t].m_x \u003c r.x {\n        r.x = net.m_terms[t].m_x;\n    } else {\n        r.x = r.x;\n    }\n    if net.m_terms[t].m_y \u003c r.y {\n        r.y = net.m_terms[t].m_y;\n    } else {\n        r.y = r.y;\n    }\n    if net.m_terms[t].m_x \u003e r.w {\n        r.w = net.m_terms[t].m_x;\n    } else {\n        r.w = r.w;\n    }\n    if net.m_terms[t].m_y \u003e r.h {\n        r.h = net.m_terms[t].m_y;\n    } else {\n        r.h = r.h;\n    }\n  }\n  r.w -= r.x; r.h -= r.y;\n  return r;\n}"
+    },
+    {
+      "Name": "getNetWirelength",
+      "Start": 1823,
+      "End": 1941,
+      "BodyStart": 1870,
+      "Original": "float getNetWirelength(const ConcreteNet *net) {\n  Rect r;\n\n  assert(net);\n\n  r = getNetBBox(net);\n  return r.w+r.h;\n}",
+      "Draft": "func getNetWirelength(net *ConcreteNet) float32 {\n  var r Rect;\n\n  assert((net != nil), \"net\");\n\n  r = getNetBBox(net);\n  return r.w+r.h;\n}"
+    },
+    {
+      "Name": "getTotalWirelength",
+      "Start": 2165,
+      "End": 2347,
+      "BodyStart": 2192,
+      "Original": "float getTotalWirelength() {\n  float r = 0;\n  int n;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n])\n    r += getNetWirelength(g_place_concreteNets[n]);\n  return r;\n}",
+      "Draft": "func getTotalWirelength() float32 {\n  var r float32;\n  var n int32;\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    r += getNetWirelength(g_place_concreteNets[n]); }\n  }\n  return r;\n}"
+    },
+    {
+      "Name": "getCellArea",
+      "Start": 2514,
+      "End": 2636,
+      "BodyStart": 2558,
+      "Original": "float getCellArea(const ConcreteCell *cell) {\n  assert(cell);\n  return cell-\u003em_parent-\u003em_width*cell-\u003em_parent-\u003em_height;\n}",
+      "Draft": "func getCellArea(cell *ConcreteCell) float32 {\n  assert((cell != nil), \"cell\");\n  return cell.m_parent.m_width*cell.m_parent.m_height;\n}"
+    },
+    {
+      "Name": "addConcreteNet",
+      "Start": 2949,
+      "End": 3763,
+      "BodyStart": 2989,
+      "Original": "void   addConcreteNet(ConcreteNet *net) {\n  assert(net);\n  assert(net-\u003em_id \u003e= 0);\n  if (net-\u003em_id \u003e= g_place_concreteNetsSize) {\n    g_place_concreteNetsSize = (net-\u003em_id \u003e g_place_concreteNetsSize ? \n                               net-\u003em_id : g_place_concreteNetsSize);\n    g_place_concreteNetsSize *= 1.5;\n    g_place_concreteNetsSize += 20;\n    g_place_concreteNets = (ConcreteNet**)realloc(g_place_concreteNets, \n             sizeof(ConcreteNet*)*g_place_concreteNetsSize);\n    assert(g_place_concreteNets);\n  }\n  if (net-\u003em_id \u003e= g_place_numNets) {\n    memset(\u0026(g_place_concreteNets[g_place_numNets]), 0,\n            sizeof(ConcreteNet*)*(net-\u003em_id+1-g_place_numNets));\n    g_place_numNets = net-\u003em_id+1;\n    assert(g_place_numNets \u003c= g_place_concreteNetsSize);\n  }\n  g_place_concreteNets[net-\u003em_id] = net;\n}",
+      "Draft": "func addConcreteNet(net *ConcreteNet) {\n  assert((net != nil), \"net\");\n  assert(net.m_id \u003e= 0, \"net.m_id \u003e= 0\");\n  if net.m_id \u003e= g_place_concreteNetsSize {\n    if net.m_id \u003e g_place_concreteNetsSize {\n        g_place_concreteNetsSize = net.m_id;\n    } else {\n        g_place_concreteNetsSize = g_place_concreteNetsSize;\n    }\n    g_place_concreteNetsSize *= 1.5;\n    g_place_concreteNetsSize += 20;\n    g_place_concreteNets = (ConcreteNet**)realloc(g_place_concreteNets, \n                 sizeof(ConcreteNet*)*g_place_concreteNetsSize);\n    assert(g_place_concreteNets, \"g_place_concreteNets\");\n  }\n  if net.m_id \u003e= g_place_numNets {\n    memset(\u0026(g_place_concreteNets[g_place_numNets]), 0,\n                sizeof(ConcreteNet*)*(net.m_id+1-g_place_numNets));\n    g_place_numNets = net.m_id+1;\n    assert(g_place_numNets \u003c= g_place_concreteNetsSize, \"g_place_numNets \u003c= g_place_concreteNetsSize\");\n  }\n  g_place_concreteNets[net.m_id] = net;\n}"
+    },
+    {
+      "Name": "delConcreteNet",
+      "Start": 3965,
+      "End": 4131,
+      "BodyStart": 4005,
+      "Original": "void   delConcreteNet(ConcreteNet *net) {\n  assert(net);\n  g_place_concreteNets[net-\u003em_id] = 0;\n  while(!g_place_concreteNets[g_place_numNets-1]) g_place_numNets--;\n}",
+      "Draft": "func delConcreteNet(net *ConcreteNet) {\n  assert((net != nil), \"net\");\n  g_place_concreteNets[net.m_id] = 0;\n  for !g_place_concreteNets[g_place_numNets-1] { g_place_numNets--; }\n}"
+    },
+    {
+      "Name": "addConcreteCell",
+      "Start": 4393,
+      "End": 5179,
+      "BodyStart": 4436,
+      "Original": "void   addConcreteCell(ConcreteCell *cell) {\n  assert(cell);\n  assert(cell-\u003em_id \u003e= 0);\n  if (cell-\u003em_id \u003e= g_place_concreteCellsSize) {\n    g_place_concreteCellsSize = (cell-\u003em_id \u003e g_place_concreteCellsSize ? \n                                 cell-\u003em_id : g_place_concreteCellsSize);\n    g_place_concreteCellsSize *= 1.5;\n    g_place_concreteCellsSize += 20;\n    g_place_concreteCells = (ConcreteCell**)realloc(g_place_concreteCells, \n          sizeof(ConcreteCell*)*g_place_concreteCellsSize);\n    assert(g_place_concreteCells);\n  }\n  if (cell-\u003em_id \u003e= g_place_numCells) {\n    memset(\u0026(g_place_concreteCells[g_place_numCells]), 0,\n          sizeof(ConcreteCell*)*(cell-\u003em_id+1-g_place_numCells));\n    g_place_numCells = cell-\u003em_id+1;\n  }\n  g_place_concreteCells[cell-\u003em_id] = cell;\n}",
+      "Draft": "func addConcreteCell(cell *ConcreteCell) {\n  assert((cell != nil), \"cell\");\n  assert(cell.m_id \u003e= 0, \"cell.m_id \u003e= 0\");\n  if cell.m_id \u003e= g_place_concreteCellsSize {\n    if cell.m_id \u003e g_place_concreteCellsSize {\n        g_place_concreteCellsSize = cell.m_id;\n    } else {\n        g_place_concreteCellsSize = g_place_concreteCellsSize;\n    }\n    g_place_concreteCellsSize *= 1.5;\n    g_place_concreteCellsSize += 20;\n    g_place_concreteCells = (ConcreteCell**)realloc(g_place_concreteCells, \n              sizeof(ConcreteCell*)*g_place_concreteCellsSize);\n    assert(g_place_concreteCells, \"g_place_concreteCells\");\n  }\n  if cell.m_id \u003e= g_place_numCells {\n    memset(\u0026(g_place_concreteCells[g_place_numCells]), 0,\n              sizeof(ConcreteCell*)*(cell.m_id+1-g_place_numCells));\n    g_place_numCells = cell.m_id+1;\n  }\n  g_place_concreteCells[cell.m_id] = cell;\n}"
+    },
+    {
+      "Name": "delCellFromPartition",
+      "Start": 5355,
+      "End": 5794,
+      "BodyStart": 5415,
+      "Original": "void delCellFromPartition(ConcreteCell *cell, Partition *p) {\n  int c;\n  bool found = false;\n\n  assert(cell);\n  assert(p);\n\n  for(c=0; c\u003cp-\u003em_numMembers; c++) \n    if (p-\u003em_members[c] == cell) {\n      p-\u003em_members[c] = 0;\n      p-\u003em_area -= getCellArea(cell);\n      found = true;\n      break;\n    }\n     \n  if (!found) return;\n\n  if (!p-\u003em_leaf) {\n    delCellFromPartition(cell, p-\u003em_sub1);\n    delCellFromPartition(cell, p-\u003em_sub2);\n  }\n}",
+      "Draft": "func delCellFromPartition(cell *ConcreteCell, p *Partition) {\n  var c int32;\n  var found bool  = false;\n\n  assert((cell != nil), \"cell\");\n  assert((p != nil), \"p\");\n\n  for c=0; c\u003cp.m_numMembers; c++ { \n    if p.m_members[c] == cell {\n      p.m_members[c] = 0;\n      p.m_area -= getCellArea(cell);\n      found = true;\n      break;\n    }\n  }\n     \n  if !found { return; }\n\n  if !p.m_leaf {\n    delCellFromPartition(cell, p.m_sub1);\n    delCellFromPartition(cell, p.m_sub2);\n  }\n}"
+    },
+    {
+      "Name": "delConcreteCell",
+      "Start": 6234,
+      "End": 6490,
+      "BodyStart": 6277,
+      "Original": "void   delConcreteCell(ConcreteCell *cell) {\n  assert(cell);\n  g_place_concreteCells[cell-\u003em_id] = 0;\n  while(!g_place_concreteCells[g_place_numCells-1]) g_place_numCells--;\n\n  if (g_place_rootPartition) delCellFromPartition(cell, g_place_rootPartition);\n}",
+      "Draft": "func delConcreteCell(cell *ConcreteCell) {\n  assert((cell != nil), \"cell\");\n  g_place_concreteCells[cell.m_id] = 0;\n  for !g_place_concreteCells[g_place_numCells-1] { g_place_numCells--; }\n\n  if g_place_rootPartition { delCellFromPartition(cell, g_place_rootPartition); }\n}"
+    },
+    {
+      "Name": "netSortByL",
+      "Start": 6804,
+      "End": 7168,
+      "BodyStart": 6849,
+      "Original": "int netSortByL(const void *a, const void *b) {\n  const ConcreteNet *pa = *(const ConcreteNet **)a;\n  const ConcreteNet *pb = *(const ConcreteNet **)b;\n  Rect ba, bb;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  ba = getNetBBox(pa), bb = getNetBBox(pb);\n  if (ba.x \u003c bb.x) return -1;\n  if (ba.x \u003e bb.x) return 1;\n  return 0;\n}",
+      "Draft": "func netSortByL(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.x \u003c bb.x { return -1; }\n  if ba.x \u003e bb.x { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "netSortByR",
+      "Start": 7170,
+      "End": 7562,
+      "BodyStart": 7215,
+      "Original": "int netSortByR(const void *a, const void *b) {\n  const ConcreteNet *pa = *(const ConcreteNet **)a;\n  const ConcreteNet *pb = *(const ConcreteNet **)b;\n  Rect ba, bb;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  ba = getNetBBox(pa), bb = getNetBBox(pb);\n  if (ba.x + ba.w \u003c bb.x + bb.w) return -1;\n  if (ba.x + ba.w \u003e bb.x + bb.w) return 1;\n  return 0;\n}",
+      "Draft": "func netSortByR(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.x + ba.w \u003c bb.x + bb.w { return -1; }\n  if ba.x + ba.w \u003e bb.x + bb.w { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "netSortByB",
+      "Start": 7564,
+      "End": 7956,
+      "BodyStart": 7609,
+      "Original": "int netSortByB(const void *a, const void *b) {\n  const ConcreteNet *pa = *(const ConcreteNet **)a;\n  const ConcreteNet *pb = *(const ConcreteNet **)b;\n  Rect ba, bb;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  ba = getNetBBox(pa), bb = getNetBBox(pb);\n  if (ba.y + ba.h \u003c bb.y + bb.h) return -1;\n  if (ba.y + ba.h \u003e bb.y + bb.h) return 1;\n  return 0;\n}",
+      "Draft": "func netSortByB(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.y + ba.h \u003c bb.y + bb.h { return -1; }\n  if ba.y + ba.h \u003e bb.y + bb.h { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "netSortByT",
+      "Start": 7958,
+      "End": 8322,
+      "BodyStart": 8003,
+      "Original": "int netSortByT(const void *a, const void *b) {\n  const ConcreteNet *pa = *(const ConcreteNet **)a;\n  const ConcreteNet *pb = *(const ConcreteNet **)b;\n  Rect ba, bb;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  ba = getNetBBox(pa), bb = getNetBBox(pb);\n  if (ba.y \u003c bb.y) return -1;\n  if (ba.y \u003e bb.y) return 1;\n  return 0;\n}",
+      "Draft": "func netSortByT(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.y \u003c bb.y { return -1; }\n  if ba.y \u003e bb.y { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "netSortByID",
+      "Start": 8324,
+      "End": 8646,
+      "BodyStart": 8370,
+      "Original": "int netSortByID(const void *a, const void *b) {\n  const ConcreteNet *pa = *(const ConcreteNet **)a;\n  const ConcreteNet *pb = *(const ConcreteNet **)b;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  if (pa-\u003em_id \u003c pb-\u003em_id) return -1;\n  if (pa-\u003em_id \u003e pb-\u003em_id) return 1;\n  return 0;\n}",
+      "Draft": "func netSortByID(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_id \u003c pb.m_id { return -1; }\n  if pa.m_id \u003e pb.m_id { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "cellSortByX",
+      "Start": 8957,
+      "End": 9279,
+      "BodyStart": 9003,
+      "Original": "int cellSortByX(const void *a, const void *b) {\n  const ConcreteCell *pa = *(const ConcreteCell **)a;\n  const ConcreteCell *pb = *(const ConcreteCell **)b;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  if (pa-\u003em_x \u003c pb-\u003em_x) return -1;\n  if (pa-\u003em_x \u003e pb-\u003em_x) return 1;\n  return 0;\n}",
+      "Draft": "func cellSortByX(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_x \u003c pb.m_x { return -1; }\n  if pa.m_x \u003e pb.m_x { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "cellSortByY",
+      "Start": 9281,
+      "End": 9603,
+      "BodyStart": 9327,
+      "Original": "int cellSortByY(const void *a, const void *b) {\n  const ConcreteCell *pa = *(const ConcreteCell **)a;\n  const ConcreteCell *pb = *(const ConcreteCell **)b;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  if (pa-\u003em_y \u003c pb-\u003em_y) return -1;\n  if (pa-\u003em_y \u003e pb-\u003em_y) return 1;\n  return 0;\n}",
+      "Draft": "func cellSortByY(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_y \u003c pb.m_y { return -1; }\n  if pa.m_y \u003e pb.m_y { return 1; }\n  return 0;\n}"
+    },
+    {
+      "Name": "cellSortByID",
+      "Start": 9605,
+      "End": 9932,
+      "BodyStart": 9652,
+      "Original": "int cellSortByID(const void *a, const void *b) {\n  const ConcreteCell *pa = *(const ConcreteCell **)a;\n  const ConcreteCell *pb = *(const ConcreteCell **)b;\n\n  if (!pa \u0026\u0026 !pb) return 0;\n  else if (!pa) return -1;\n  else if (!pb) return 1;\n  if (pa-\u003em_id \u003c pb-\u003em_id) return -1;\n  if (pa-\u003em_id \u003e pb-\u003em_id) return 1;\n  return 0;\n}",
+      "Draft": "func cellSortByID(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_id \u003c pb.m_id { return -1; }\n  if pa.m_id \u003e pb.m_id { return 1; }\n  return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::mechanical::sizeof::3380",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3380,
+      "End": 3386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::mechanical::sizeof::3572",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3572,
+      "End": 3578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::mechanical::sizeof::4840",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4840,
+      "End": 4846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::mechanical::sizeof::5037",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5037,
+      "End": 5043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::3321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3321,
+      "End": 3336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::3386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3386,
+      "End": 3400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::3578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3578,
+      "End": 3592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::4782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4782,
+      "End": 4798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::4846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4846,
+      "End": 4861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::pointer-cast::5043",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5043,
+      "End": 5058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::getNetBBox",
+      "Category": "semantic-review",
+      "Symbol": "getNetBBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1114,
+      "End": 1589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::getNetWirelength",
+      "Category": "semantic-review",
+      "Symbol": "getNetWirelength",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1823,
+      "End": 1941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::getTotalWirelength",
+      "Category": "semantic-review",
+      "Symbol": "getTotalWirelength",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2165,
+      "End": 2347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::getCellArea",
+      "Category": "semantic-review",
+      "Symbol": "getCellArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2514,
+      "End": 2636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::addConcreteNet",
+      "Category": "semantic-review",
+      "Symbol": "addConcreteNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2949,
+      "End": 3763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::delConcreteNet",
+      "Category": "semantic-review",
+      "Symbol": "delConcreteNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3965,
+      "End": 4131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::addConcreteCell",
+      "Category": "semantic-review",
+      "Symbol": "addConcreteCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4393,
+      "End": 5179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::delCellFromPartition",
+      "Category": "semantic-review",
+      "Symbol": "delCellFromPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5355,
+      "End": 5794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::delConcreteCell",
+      "Category": "semantic-review",
+      "Symbol": "delConcreteCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6234,
+      "End": 6490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::netSortByL",
+      "Category": "void-pointer-review",
+      "Symbol": "netSortByL",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6804,
+      "End": 7168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::netSortByL",
+      "Category": "semantic-review",
+      "Symbol": "netSortByL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6804,
+      "End": 7168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::netSortByR",
+      "Category": "void-pointer-review",
+      "Symbol": "netSortByR",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7170,
+      "End": 7562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::netSortByR",
+      "Category": "semantic-review",
+      "Symbol": "netSortByR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7170,
+      "End": 7562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::netSortByB",
+      "Category": "void-pointer-review",
+      "Symbol": "netSortByB",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7564,
+      "End": 7956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::netSortByB",
+      "Category": "semantic-review",
+      "Symbol": "netSortByB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7564,
+      "End": 7956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::netSortByT",
+      "Category": "void-pointer-review",
+      "Symbol": "netSortByT",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7958,
+      "End": 8322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::netSortByT",
+      "Category": "semantic-review",
+      "Symbol": "netSortByT",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7958,
+      "End": 8322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::netSortByID",
+      "Category": "void-pointer-review",
+      "Symbol": "netSortByID",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8324,
+      "End": 8646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::netSortByID",
+      "Category": "semantic-review",
+      "Symbol": "netSortByID",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8324,
+      "End": 8646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::cellSortByX",
+      "Category": "void-pointer-review",
+      "Symbol": "cellSortByX",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8957,
+      "End": 9279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::cellSortByX",
+      "Category": "semantic-review",
+      "Symbol": "cellSortByX",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8957,
+      "End": 9279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::cellSortByY",
+      "Category": "void-pointer-review",
+      "Symbol": "cellSortByY",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9281,
+      "End": 9603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::cellSortByY",
+      "Category": "semantic-review",
+      "Symbol": "cellSortByY",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9281,
+      "End": 9603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::void-pointer::cellSortByID",
+      "Category": "void-pointer-review",
+      "Symbol": "cellSortByID",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 9605,
+      "End": 9932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::cellSortByID",
+      "Category": "semantic-review",
+      "Symbol": "cellSortByID",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 9932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_base.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9957
+    }
+  ],
+  "Draft": "package place\n\n/*===================================================================*/\n//  \n//     place_base.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"place_base.h\"\n//#include \"place_gordian.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\nvar g_place_numCells int32;\nvar g_place_numNets int32;\nvar g_place_rowHeight float32 = 1.0;\n\nvar g_place_coreBounds Rect;\nvar g_place_padBounds Rect;\n\nvar g_place_concreteCells **ConcreteCell = nil;\nvar g_place_concreteCellsSize int32;\nvar g_place_concreteNets **ConcreteNet = nil;\nvar g_place_concreteNetsSize int32;\n\n\n// --------------------------------------------------------------------\n// getNetBBox()\n//\n/// \\brief Returns the bounding box of a net.\n//\n// --------------------------------------------------------------------\nfunc getNetBBox(net *ConcreteNet) Rect {\n  var t int32;\n  var r Rect;\n\n  assert((net != nil), \"net\");\n\n  r.x = r.y = INT_MAX;\n  r.w = r.h = -INT_MAX;\n  for t=0; t\u003cnet.m_numTerms; t++ {\n    if net.m_terms[t].m_x \u003c r.x {\n        r.x = net.m_terms[t].m_x;\n    } else {\n        r.x = r.x;\n    }\n    if net.m_terms[t].m_y \u003c r.y {\n        r.y = net.m_terms[t].m_y;\n    } else {\n        r.y = r.y;\n    }\n    if net.m_terms[t].m_x \u003e r.w {\n        r.w = net.m_terms[t].m_x;\n    } else {\n        r.w = r.w;\n    }\n    if net.m_terms[t].m_y \u003e r.h {\n        r.h = net.m_terms[t].m_y;\n    } else {\n        r.h = r.h;\n    }\n  }\n  r.w -= r.x; r.h -= r.y;\n  return r;\n}\n\n\n// --------------------------------------------------------------------\n// getNetWirelength()\n//\n/// \\brief Returns the half-perimeter wirelength of a net.\n//\n// --------------------------------------------------------------------\nfunc getNetWirelength(net *ConcreteNet) float32 {\n  var r Rect;\n\n  assert((net != nil), \"net\");\n\n  r = getNetBBox(net);\n  return r.w+r.h;\n}\n\n\n// --------------------------------------------------------------------\n// getTotalWirelength()\n//\n/// \\brief Returns the total HPWL of all nets.\n//\n// --------------------------------------------------------------------\nfunc getTotalWirelength() float32 {\n  var r float32;\n  var n int32;\n  for n=0; n\u003cg_place_numNets; n++ { if g_place_concreteNets[n] {\n    r += getNetWirelength(g_place_concreteNets[n]); }\n  }\n  return r;\n}\n\n\n// --------------------------------------------------------------------\n// getCellArea()\n//\n// --------------------------------------------------------------------\nfunc getCellArea(cell *ConcreteCell) float32 {\n  assert((cell != nil), \"cell\");\n  return cell.m_parent.m_width*cell.m_parent.m_height;\n}\n\n\n// --------------------------------------------------------------------\n// addConcreteNet()\n//\n/// \\brief Adds a net to the placement database.\n///\n/// The net object must already be allocated and the ID must be set\n/// appropriately.\n//\n// --------------------------------------------------------------------\nfunc addConcreteNet(net *ConcreteNet) {\n  assert((net != nil), \"net\");\n  assert(net.m_id \u003e= 0, \"net.m_id \u003e= 0\");\n  if net.m_id \u003e= g_place_concreteNetsSize {\n    if net.m_id \u003e g_place_concreteNetsSize {\n        g_place_concreteNetsSize = net.m_id;\n    } else {\n        g_place_concreteNetsSize = g_place_concreteNetsSize;\n    }\n    g_place_concreteNetsSize *= 1.5;\n    g_place_concreteNetsSize += 20;\n    g_place_concreteNets = (ConcreteNet**)realloc(g_place_concreteNets, \n                 sizeof(ConcreteNet*)*g_place_concreteNetsSize);\n    assert(g_place_concreteNets, \"g_place_concreteNets\");\n  }\n  if net.m_id \u003e= g_place_numNets {\n    memset(\u0026(g_place_concreteNets[g_place_numNets]), 0,\n                sizeof(ConcreteNet*)*(net.m_id+1-g_place_numNets));\n    g_place_numNets = net.m_id+1;\n    assert(g_place_numNets \u003c= g_place_concreteNetsSize, \"g_place_numNets \u003c= g_place_concreteNetsSize\");\n  }\n  g_place_concreteNets[net.m_id] = net;\n}\n\n\n// --------------------------------------------------------------------\n// delConcreteNet()\n//\n/// Does not deallocate memory.\n// --------------------------------------------------------------------\nfunc delConcreteNet(net *ConcreteNet) {\n  assert((net != nil), \"net\");\n  g_place_concreteNets[net.m_id] = 0;\n  for !g_place_concreteNets[g_place_numNets-1] { g_place_numNets--; }\n}\n\n\n// --------------------------------------------------------------------\n// addConcreteCell()\n//\n/// The cell object must already be allocated and the ID must be set\n/// appropriately.\n//\n// --------------------------------------------------------------------\nfunc addConcreteCell(cell *ConcreteCell) {\n  assert((cell != nil), \"cell\");\n  assert(cell.m_id \u003e= 0, \"cell.m_id \u003e= 0\");\n  if cell.m_id \u003e= g_place_concreteCellsSize {\n    if cell.m_id \u003e g_place_concreteCellsSize {\n        g_place_concreteCellsSize = cell.m_id;\n    } else {\n        g_place_concreteCellsSize = g_place_concreteCellsSize;\n    }\n    g_place_concreteCellsSize *= 1.5;\n    g_place_concreteCellsSize += 20;\n    g_place_concreteCells = (ConcreteCell**)realloc(g_place_concreteCells, \n              sizeof(ConcreteCell*)*g_place_concreteCellsSize);\n    assert(g_place_concreteCells, \"g_place_concreteCells\");\n  }\n  if cell.m_id \u003e= g_place_numCells {\n    memset(\u0026(g_place_concreteCells[g_place_numCells]), 0,\n              sizeof(ConcreteCell*)*(cell.m_id+1-g_place_numCells));\n    g_place_numCells = cell.m_id+1;\n  }\n  g_place_concreteCells[cell.m_id] = cell;\n}\n\n\n// --------------------------------------------------------------------\n// delCellFromPartition()\n//\n// --------------------------------------------------------------------\nfunc delCellFromPartition(cell *ConcreteCell, p *Partition) {\n  var c int32;\n  var found bool  = false;\n\n  assert((cell != nil), \"cell\");\n  assert((p != nil), \"p\");\n\n  for c=0; c\u003cp.m_numMembers; c++ { \n    if p.m_members[c] == cell {\n      p.m_members[c] = 0;\n      p.m_area -= getCellArea(cell);\n      found = true;\n      break;\n    }\n  }\n     \n  if !found { return; }\n\n  if !p.m_leaf {\n    delCellFromPartition(cell, p.m_sub1);\n    delCellFromPartition(cell, p.m_sub2);\n  }\n}\n\n\n// --------------------------------------------------------------------\n// delConcreteCell()\n//\n/// \\brief Removes a cell from the placement database.\n///\n/// Does not deallocate memory.\n///\n/// Important: does not modify nets that may point to this\n/// cell. If these are connections are not removed, segmentation faults \n/// and other nasty errors will occur.\n//\n// --------------------------------------------------------------------\nfunc delConcreteCell(cell *ConcreteCell) {\n  assert((cell != nil), \"cell\");\n  g_place_concreteCells[cell.m_id] = 0;\n  for !g_place_concreteCells[g_place_numCells-1] { g_place_numCells--; }\n\n  if g_place_rootPartition { delCellFromPartition(cell, g_place_rootPartition); }\n}\n\n\n// --------------------------------------------------------------------\n// netSortByX...\n//\n/// \\brief Sorts nets by position of one of its corners.\n//\n/// These are for use with qsort().\n///\n/// Can tolerate pointers to NULL objects.\n///\n// --------------------------------------------------------------------\nfunc netSortByL(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.x \u003c bb.x { return -1; }\n  if ba.x \u003e bb.x { return 1; }\n  return 0;\n}\n\nfunc netSortByR(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.x + ba.w \u003c bb.x + bb.w { return -1; }\n  if ba.x + ba.w \u003e bb.x + bb.w { return 1; }\n  return 0;\n}\n\nfunc netSortByB(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.y + ba.h \u003c bb.y + bb.h { return -1; }\n  if ba.y + ba.h \u003e bb.y + bb.h { return 1; }\n  return 0;\n}\n\nfunc netSortByT(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n  var ba, bb Rect;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  ba = getNetBBox(pa);\nbb = getNetBBox(pb);\n  if ba.y \u003c bb.y { return -1; }\n  if ba.y \u003e bb.y { return 1; }\n  return 0;\n}\n\nfunc netSortByID(a any, b any) int32 {\n  ConcreteNet *pa = *(ConcreteNet **)a;\n  ConcreteNet *pb = *(ConcreteNet **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_id \u003c pb.m_id { return -1; }\n  if pa.m_id \u003e pb.m_id { return 1; }\n  return 0;\n}\n\n\n// --------------------------------------------------------------------\n// cellSortByX...\n//\n/// \\brief Sorts cells by either position coordinate.\n//\n/// These are for use with qsort().\n///\n/// Can tolerate pointers to NULL objects.\n//\n// --------------------------------------------------------------------\nfunc cellSortByX(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_x \u003c pb.m_x { return -1; }\n  if pa.m_x \u003e pb.m_x { return 1; }\n  return 0;\n}\n\nfunc cellSortByY(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_y \u003c pb.m_y { return -1; }\n  if pa.m_y \u003e pb.m_y { return 1; }\n  return 0;\n}\n\nfunc cellSortByID(a any, b any) int32 {\n  ConcreteCell *pa = *(ConcreteCell **)a;\n  ConcreteCell *pb = *(ConcreteCell **)b;\n\n  if !pa \u0026\u0026 !pb { return 0;\n  } else if !pa { return -1;\n  } else if !pb { return 1; }\n  if pa.m_id \u003c pb.m_id { return -1; }\n  if pa.m_id \u003e pb.m_id { return 1; }\n  return 0;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

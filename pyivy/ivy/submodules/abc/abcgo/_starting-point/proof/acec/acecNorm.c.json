@@ -1,0 +1,189 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c",
+  "SHA256": "8ba0e49969464e0255fbcbfc68fbe106fe7945555d1ee54267460dfc444cea5a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 3255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 6151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pBox.vShared != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 6190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pBox.vUnique != nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_InsertHadd",
+      "Start": 1240,
+      "End": 1539,
+      "BodyStart": 1304,
+      "Original": "void Acec_InsertHadd( Gia_Man_t * pNew, int In[2], int Out[2] )\n{\n    int And, Or;\n    Out[1] = Gia_ManAppendAnd2( pNew, In[0], In[1] );\n    And    = Gia_ManAppendAnd2( pNew, Abc_LitNot(In[0]), Abc_LitNot(In[1]) );\n    Or     = Gia_ManAppendOr2( pNew, Out[1], And );\n    Out[0] = Abc_LitNot( Or );\n}",
+      "Draft": "func Acec_InsertHadd(pNew *Gia_Man_t, In []int32, Out []int32) {\n    var And, Or int32;\n    Out[1] = Gia_ManAppendAnd2( pNew, In[0], In[1] );\n    And    = Gia_ManAppendAnd2( pNew, Abc_LitNot(In[0]), Abc_LitNot(In[1]) );\n    Or     = Gia_ManAppendOr2( pNew, Out[1], And );\n    Out[0] = Abc_LitNot( Or );\n}"
+    },
+    {
+      "Name": "Acec_InsertFadd",
+      "Start": 1540,
+      "End": 1841,
+      "BodyStart": 1604,
+      "Original": "void Acec_InsertFadd( Gia_Man_t * pNew, int In[3], int Out[2] )\n{\n    int In2[2], Out1[2], Out2[2];\n    Acec_InsertHadd( pNew, In, Out1 );\n    In2[0] = Out1[0];\n    In2[1] = In[2];\n    Acec_InsertHadd( pNew, In2, Out2 );\n    Out[0] = Out2[0];\n    Out[1] = Gia_ManAppendOr2( pNew, Out1[1], Out2[1] );\n}",
+      "Draft": "func Acec_InsertFadd(pNew *Gia_Man_t, In []int32, Out []int32) {\n    var In2, Out1, Out2 [2]int32;\n    Acec_InsertHadd( pNew, In, Out1 );\n    In2[0] = Out1[0];\n    In2[1] = In[2];\n    Acec_InsertHadd( pNew, In2, Out2 );\n    Out[0] = Out2[0];\n    Out[1] = Gia_ManAppendOr2( pNew, Out1[1], Out2[1] );\n}"
+    },
+    {
+      "Name": "Acec_InsertTree",
+      "Start": 1842,
+      "End": 3237,
+      "BodyStart": 1912,
+      "Original": "Vec_Int_t * Acec_InsertTree( Gia_Man_t * pNew, Vec_Wec_t * vLeafMap )\n{\n    Vec_Int_t * vRootRanks = Vec_IntAlloc( Vec_WecSize(vLeafMap) + 5 );\n    Vec_Int_t * vLevel;\n    int i, In[3], Out[2];\n    Vec_WecForEachLevel( vLeafMap, vLevel, i )\n    {\n        if ( Vec_IntSize(vLevel) == 0 )\n        {\n            Vec_IntPush( vRootRanks, 0 );\n            continue;\n        }\n        while ( Vec_IntSize(vLevel) \u003e 1 )\n        {\n            if ( Vec_IntSize(vLevel) == 2 )\n                Vec_IntPush( vLevel, 0 );\n            //In[2] = Vec_IntPop( vLevel );\n            //In[1] = Vec_IntPop( vLevel );\n            //In[0] = Vec_IntPop( vLevel );\n\n            In[0] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[1] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[2] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            Acec_InsertFadd( pNew, In, Out );\n            Vec_IntPush( vLevel, Out[0] );\n            if ( i+1 \u003c Vec_WecSize(vLeafMap) )\n                vLevel = Vec_WecEntry(vLeafMap, i+1);\n            else\n                vLevel = Vec_WecPushLevel(vLeafMap);\n            Vec_IntPush( vLevel, Out[1] );\n            vLevel = Vec_WecEntry(vLeafMap, i);\n        }\n        assert( Vec_IntSize(vLevel) == 1 );\n        Vec_IntPush( vRootRanks, Vec_IntEntry(vLevel, 0) );\n    }\n    return vRootRanks;\n}",
+      "Draft": "func Acec_InsertTree(pNew *Gia_Man_t, vLeafMap *Vec_Wec_t) *Vec_Int_t {\n    var vRootRanks *Vec_Int_t  = Vec_IntAlloc( Vec_WecSize(vLeafMap) + 5 );\n    var vLevel *Vec_Int_t;\n    var i int32;\n    var In [3]int32;\n    var Out [2]int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLeafMap)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLeafMap, i)), 1); i++  {\n        if Vec_IntSize(vLevel) == 0 {\n            Vec_IntPush( vRootRanks, 0 );\n            continue;\n        }\n        for  Vec_IntSize(vLevel) \u003e 1  {\n            if Vec_IntSize(vLevel) == 2 {\n                Vec_IntPush( vLevel, 0 ); }\n            //In[2] = Vec_IntPop( vLevel );\n            //In[1] = Vec_IntPop( vLevel );\n            //In[0] = Vec_IntPop( vLevel );\n\n            In[0] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[1] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[2] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            Acec_InsertFadd( pNew, In, Out );\n            Vec_IntPush( vLevel, Out[0] );\n            if i+1 \u003c Vec_WecSize(vLeafMap) {\n                vLevel = Vec_WecEntry(vLeafMap, i+1);\n            } else {\n                vLevel = Vec_WecPushLevel(vLeafMap); }\n            Vec_IntPush( vLevel, Out[1] );\n            vLevel = Vec_WecEntry(vLeafMap, i);\n        }\n        assert(Vec_IntSize(vLevel) == 1, \"Vec_IntSize(vLevel) == 1\");\n        Vec_IntPush( vRootRanks, Vec_IntEntry(vLevel, 0) );\n    }\n    return vRootRanks;\n}"
+    },
+    {
+      "Name": "Acec_InsertBox_rec",
+      "Start": 3473,
+      "End": 3854,
+      "BodyStart": 3549,
+      "Original": "int Acec_InsertBox_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( ~pObj-\u003eValue )\n        return pObj-\u003eValue;\n    assert( Gia_ObjIsAnd(pObj) );\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return (pObj-\u003eValue = Gia_ManAppendAnd2( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ));\n}",
+      "Draft": "func Acec_InsertBox_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if ~pObj.Value {\n        return pObj.Value; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return (pObj.Value = Gia_ManAppendAnd2( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ));\n}"
+    },
+    {
+      "Name": "Acec_BuildTree",
+      "Start": 3855,
+      "End": 4954,
+      "BodyStart": 3963,
+      "Original": "Vec_Int_t * Acec_BuildTree( Gia_Man_t * pNew, Gia_Man_t * p, Vec_Wec_t * vLeafLits, Vec_Int_t * vRootLits )\n{\n    Vec_Wec_t * vLeafMap = Vec_WecStart( Vec_WecSize(vLeafLits) );\n    Vec_Int_t * vLevel, * vRootRanks;  \n    int i, k, iLit, iLitNew;\n    // add roo literals\n    if ( vRootLits )\n        Vec_IntForEachEntry( vRootLits, iLit, i )\n        {\n            if ( i \u003c Vec_WecSize(vLeafMap) )\n                vLevel = Vec_WecEntry(vLeafMap, i);\n            else\n                vLevel = Vec_WecPushLevel(vLeafMap);\n            Vec_IntPush( vLevel, iLit );\n        }\n    // add other literals\n    Vec_WecForEachLevel( vLeafLits, vLevel, i )\n        Vec_IntForEachEntry( vLevel, iLit, k )\n        {\n            Gia_Obj_t * pObj = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            iLitNew = Acec_InsertBox_rec( pNew, p, pObj );\n            iLitNew = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n            Vec_WecPush( vLeafMap, i, iLitNew );\n        }\n    // construct map of root literals\n    vRootRanks = Acec_InsertTree( pNew, vLeafMap );\n    Vec_WecFree( vLeafMap );\n    return vRootRanks;\n}",
+      "Draft": "func Acec_BuildTree(pNew *Gia_Man_t, p *Gia_Man_t, vLeafLits *Vec_Wec_t, vRootLits *Vec_Int_t) *Vec_Int_t {\n    var vLeafMap *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLeafLits) );\n    var vLevel, vRootRanks *Vec_Int_t;  \n    var i, k, iLit, iLitNew int32;\n    // add roo literals\n    if vRootLits != nil {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n            if i \u003c Vec_WecSize(vLeafMap) {\n                vLevel = Vec_WecEntry(vLeafMap, i);\n            } else {\n                vLevel = Vec_WecPushLevel(vLeafMap); }\n            Vec_IntPush( vLevel, iLit );\n        } }\n    // add other literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLeafLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var pObj *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            iLitNew = Acec_InsertBox_rec( pNew, p, pObj );\n            iLitNew = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n            Vec_WecPush( vLeafMap, i, iLitNew );\n        }\n    }\n    // construct map of root literals\n    vRootRanks = Acec_InsertTree( pNew, vLeafMap );\n    Vec_WecFree( vLeafMap );\n    return vRootRanks;\n}"
+    },
+    {
+      "Name": "Acec_InsertBox",
+      "Start": 4955,
+      "End": 6513,
+      "BodyStart": 5013,
+      "Original": "Gia_Man_t * Acec_InsertBox( Acec_Box_t * pBox, int fAll )\n{\n    Gia_Man_t * p = pBox-\u003epGia;\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vRootRanks, * vLevel, * vTemp;\n    int i, k, iLit, iLitNew;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    // implement tree\n    if ( fAll )\n        vRootRanks = Acec_BuildTree( pNew, p, pBox-\u003evLeafLits, NULL );\n    else\n    {\n        assert( pBox-\u003evShared != NULL );\n        assert( pBox-\u003evUnique != NULL );\n        vRootRanks = Acec_BuildTree( pNew, p, pBox-\u003evShared, NULL );\n        vRootRanks = Acec_BuildTree( pNew, p, pBox-\u003evUnique, vTemp = vRootRanks );\n        Vec_IntFree( vTemp );\n    }\n    // update polarity of literals\n    Vec_WecForEachLevel( pBox-\u003evRootLits, vLevel, i )\n        Vec_IntForEachEntry( vLevel, iLit, k )\n        {\n            pObj = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            iLitNew = k ? 0 : Vec_IntEntry( vRootRanks, i );\n            pObj-\u003eValue = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n        }\n    Vec_IntFree( vRootRanks );\n    // construct the outputs\n    Gia_ManForEachCo( p, pObj, i )\n        Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Acec_InsertBox(pBox *Acec_Box_t, fAll int32) *Gia_Man_t {\n    var p *Gia_Man_t  = pBox.pGia;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var vRootRanks, vLevel, vTemp *Vec_Int_t;\n    var i, k, iLit, iLitNew int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // implement tree\n    if fAll != 0 {\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vLeafLits, nil );\n    } else {\n        assert(pBox.vShared != nil, \"pBox.vShared != nil\");\n        assert(pBox.vUnique != nil, \"pBox.vUnique != nil\");\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vShared, nil );\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vUnique, vTemp = vRootRanks );\n        Vec_IntFree( vTemp );\n    }\n    // update polarity of literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            pObj = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            if k {\n                iLitNew = 0;\n            } else {\n                iLitNew = Vec_IntEntry( vRootRanks, i );\n            }\n            pObj.Value = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n        }\n    }\n    Vec_IntFree( vRootRanks );\n    // construct the outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acec_Normalize",
+      "Start": 6749,
+      "End": 7093,
+      "BodyStart": 6822,
+      "Original": "Gia_Man_t * Acec_Normalize( Gia_Man_t * pGia, int fBooth, int fVerbose )\n{\n    Vec_Bit_t * vIgnore = fBooth ? Acec_BoothFindPPG( pGia ) : NULL;\n    Acec_Box_t * pBox = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    Gia_Man_t * pNew  = Acec_InsertBox( pBox, 1 );\n    Acec_BoxFreeP( \u0026pBox );\n    Vec_BitFreeP( \u0026vIgnore );\n    return pNew;\n}",
+      "Draft": "func Acec_Normalize(pGia *Gia_Man_t, fBooth int32, fVerbose int32) *Gia_Man_t {\n    var vIgnore *Vec_Bit_t;\n    if fBooth != 0 {\n        vIgnore = Acec_BoothFindPPG( pGia );\n    } else {\n        vIgnore = nil;\n    }\n    var pBox *Acec_Box_t  = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    var pNew *Gia_Man_t   = Acec_InsertBox( pBox, 1 );\n    Acec_BoxFreeP( \u0026pBox );\n    Vec_BitFreeP( \u0026vIgnore );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_InsertHadd",
+      "Category": "semantic-review",
+      "Symbol": "Acec_InsertHadd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1240,
+      "End": 1539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_InsertFadd",
+      "Category": "semantic-review",
+      "Symbol": "Acec_InsertFadd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1540,
+      "End": 1841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_InsertTree",
+      "Category": "semantic-review",
+      "Symbol": "Acec_InsertTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1842,
+      "End": 3237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_InsertBox_rec",
+      "Category": "semantic-review",
+      "Symbol": "Acec_InsertBox_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3473,
+      "End": 3854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_BuildTree",
+      "Category": "semantic-review",
+      "Symbol": "Acec_BuildTree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3855,
+      "End": 4954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_InsertBox",
+      "Category": "semantic-review",
+      "Symbol": "Acec_InsertBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4955,
+      "End": 6513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::Acec_Normalize",
+      "Category": "semantic-review",
+      "Symbol": "Acec_Normalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6749,
+      "End": 7093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecNorm.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7340
+    }
+  ],
+  "Draft": "package acec\n\n/**CFile****************************************************************\n\n  FileName    [acecNorm.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Adder tree normalization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecNorm.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_InsertHadd(pNew *Gia_Man_t, In []int32, Out []int32) {\n    var And, Or int32;\n    Out[1] = Gia_ManAppendAnd2( pNew, In[0], In[1] );\n    And    = Gia_ManAppendAnd2( pNew, Abc_LitNot(In[0]), Abc_LitNot(In[1]) );\n    Or     = Gia_ManAppendOr2( pNew, Out[1], And );\n    Out[0] = Abc_LitNot( Or );\n}\nfunc Acec_InsertFadd(pNew *Gia_Man_t, In []int32, Out []int32) {\n    var In2, Out1, Out2 [2]int32;\n    Acec_InsertHadd( pNew, In, Out1 );\n    In2[0] = Out1[0];\n    In2[1] = In[2];\n    Acec_InsertHadd( pNew, In2, Out2 );\n    Out[0] = Out2[0];\n    Out[1] = Gia_ManAppendOr2( pNew, Out1[1], Out2[1] );\n}\nfunc Acec_InsertTree(pNew *Gia_Man_t, vLeafMap *Vec_Wec_t) *Vec_Int_t {\n    var vRootRanks *Vec_Int_t  = Vec_IntAlloc( Vec_WecSize(vLeafMap) + 5 );\n    var vLevel *Vec_Int_t;\n    var i int32;\n    var In [3]int32;\n    var Out [2]int32;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLeafMap)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLeafMap, i)), 1); i++  {\n        if Vec_IntSize(vLevel) == 0 {\n            Vec_IntPush( vRootRanks, 0 );\n            continue;\n        }\n        for  Vec_IntSize(vLevel) \u003e 1  {\n            if Vec_IntSize(vLevel) == 2 {\n                Vec_IntPush( vLevel, 0 ); }\n            //In[2] = Vec_IntPop( vLevel );\n            //In[1] = Vec_IntPop( vLevel );\n            //In[0] = Vec_IntPop( vLevel );\n\n            In[0] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[1] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            In[2] = Vec_IntEntry( vLevel, 0 );\n            Vec_IntDrop( vLevel, 0 );\n\n            Acec_InsertFadd( pNew, In, Out );\n            Vec_IntPush( vLevel, Out[0] );\n            if i+1 \u003c Vec_WecSize(vLeafMap) {\n                vLevel = Vec_WecEntry(vLeafMap, i+1);\n            } else {\n                vLevel = Vec_WecPushLevel(vLeafMap); }\n            Vec_IntPush( vLevel, Out[1] );\n            vLevel = Vec_WecEntry(vLeafMap, i);\n        }\n        assert(Vec_IntSize(vLevel) == 1, \"Vec_IntSize(vLevel) == 1\");\n        Vec_IntPush( vRootRanks, Vec_IntEntry(vLevel, 0) );\n    }\n    return vRootRanks;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_InsertBox_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if ~pObj.Value {\n        return pObj.Value; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Acec_InsertBox_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return (pObj.Value = Gia_ManAppendAnd2( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ));\n}\nfunc Acec_BuildTree(pNew *Gia_Man_t, p *Gia_Man_t, vLeafLits *Vec_Wec_t, vRootLits *Vec_Int_t) *Vec_Int_t {\n    var vLeafMap *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLeafLits) );\n    var vLevel, vRootRanks *Vec_Int_t;  \n    var i, k, iLit, iLitNew int32;\n    // add roo literals\n    if vRootLits != nil {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vRootLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vRootLits, i)), 1); i++  {\n            if i \u003c Vec_WecSize(vLeafMap) {\n                vLevel = Vec_WecEntry(vLeafMap, i);\n            } else {\n                vLevel = Vec_WecPushLevel(vLeafMap); }\n            Vec_IntPush( vLevel, iLit );\n        } }\n    // add other literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vLeafLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vLeafLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            var pObj *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            iLitNew = Acec_InsertBox_rec( pNew, p, pObj );\n            iLitNew = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n            Vec_WecPush( vLeafMap, i, iLitNew );\n        }\n    }\n    // construct map of root literals\n    vRootRanks = Acec_InsertTree( pNew, vLeafMap );\n    Vec_WecFree( vLeafMap );\n    return vRootRanks;\n}\nfunc Acec_InsertBox(pBox *Acec_Box_t, fAll int32) *Gia_Man_t {\n    var p *Gia_Man_t  = pBox.pGia;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var vRootRanks, vLevel, vTemp *Vec_Int_t;\n    var i, k, iLit, iLitNew int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // implement tree\n    if fAll != 0 {\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vLeafLits, nil );\n    } else {\n        assert(pBox.vShared != nil, \"pBox.vShared != nil\");\n        assert(pBox.vUnique != nil, \"pBox.vUnique != nil\");\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vShared, nil );\n        vRootRanks = Acec_BuildTree( pNew, p, pBox.vUnique, vTemp = vRootRanks );\n        Vec_IntFree( vTemp );\n    }\n    // update polarity of literals\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            pObj = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n            if k {\n                iLitNew = 0;\n            } else {\n                iLitNew = Vec_IntEntry( vRootRanks, i );\n            }\n            pObj.Value = Abc_LitNotCond( iLitNew, Abc_LitIsCompl(iLit) );\n        }\n    }\n    Vec_IntFree( vRootRanks );\n    // construct the outputs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Acec_InsertBox_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_Normalize(pGia *Gia_Man_t, fBooth int32, fVerbose int32) *Gia_Man_t {\n    var vIgnore *Vec_Bit_t;\n    if fBooth != 0 {\n        vIgnore = Acec_BoothFindPPG( pGia );\n    } else {\n        vIgnore = nil;\n    }\n    var pBox *Acec_Box_t  = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    var pNew *Gia_Man_t   = Acec_InsertBox( pBox, 1 );\n    Acec_BoxFreeP( \u0026pBox );\n    Vec_BitFreeP( \u0026vIgnore );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

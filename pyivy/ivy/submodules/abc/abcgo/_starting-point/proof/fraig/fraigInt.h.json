@@ -1,0 +1,352 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h",
+  "SHA256": "988c77bfb205bd53e3c63310e09a257ce5d2972a87966af9ee7704c771789e48",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_ManStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fraig_ManStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4616,
+      "End": 10775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the traversal ID (use to avoid cleaning marks)\n\n    // general information about the node\n    unsigned              fInv     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11333,
+      "End": 11473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark to show that simulation info is complemented\n    unsigned              fNodePo  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11473,
+      "End": 11571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark used for primary outputs\n    unsigned              fClauses :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11571,
+      "End": 11649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the clauses for this node are loaded\n    unsigned              fMark0   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11649,
+      "End": 11730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark used for traversals\n    unsigned              fMark1   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11730,
+      "End": 11803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark used for traversals\n    unsigned              fMark2   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11803,
+      "End": 11876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark used for traversals\n    unsigned              fMark3   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11876,
+      "End": 11949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the mark used for traversals\n    unsigned              fFeedUse :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11949,
+      "End": 12022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the presence of the variable in the feedback\n    unsigned              fFeedVal :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12022,
+      "End": 12111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the value of the variable in the feedback\n    unsigned              fFailTfo :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12111,
+      "End": 12197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the node is in the TFO of the failed SAT run\n    unsigned              nFanouts :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12197,
+      "End": 12286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_::// the indicator of fanouts (none, one, or many)\n    unsigned              nOnes    : 20;",
+      "Category": "struct-field-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12286,
+      "End": 12376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fraig_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 10797,
+      "End": 14140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_NodeVecStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fraig_NodeVecStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 14166,
+      "End": 14418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::struct::Fraig_HashTableStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fraig_HashTableStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 14439,
+      "End": 14685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::FRAIG_MASK",
+      "Category": "macro-review",
+      "Symbol": "FRAIG_MASK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2577,
+      "End": 2641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::FRAIG_NUM_WORDS",
+      "Category": "macro-review",
+      "Symbol": "FRAIG_NUM_WORDS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2694,
+      "End": 2756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_BitStringSetBit",
+      "Category": "macro-review",
+      "Symbol": "Fraig_BitStringSetBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3026,
+      "End": 3094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_BitStringXorBit",
+      "Category": "macro-review",
+      "Symbol": "Fraig_BitStringXorBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3095,
+      "End": 3163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_BitStringHasBit",
+      "Category": "macro-review",
+      "Symbol": "Fraig_BitStringHasBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3164,
+      "End": 3237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeSetVarStr",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeSetVarStr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3562,
+      "End": 3650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeHasVarStr",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeHasVarStr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3651,
+      "End": 3739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_PrintTime",
+      "Category": "macro-review",
+      "Symbol": "Fraig_PrintTime",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3786,
+      "End": 3903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_HashKey2",
+      "Category": "macro-review",
+      "Symbol": "Fraig_HashKey2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3905,
+      "End": 4001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeReadNextFanout",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeReadNextFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14734,
+      "End": 14999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeReadNextFanoutPlace",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeReadNextFanoutPlace",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15068,
+      "End": 15262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15307,
+      "End": 15505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_NodeForEachFanoutSafe",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeForEachFanoutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15555,
+      "End": 15958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntryS",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntryS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16072,
+      "End": 16307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntrySafeS",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntrySafeS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16308,
+      "End": 16692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntryF",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntryF",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16756,
+      "End": 16991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntrySafeF",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntrySafeF",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16992,
+      "End": 17376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntryD",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntryD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17451,
+      "End": 17686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntrySafeD",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntrySafeD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17687,
+      "End": 18071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntryE",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntryE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 18122,
+      "End": 18357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::macro::Fraig_TableBinForEachEntrySafeE",
+      "Category": "macro-review",
+      "Symbol": "Fraig_TableBinForEachEntrySafeE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 18358,
+      "End": 18742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25939
+    }
+  ],
+  "Draft": "package fraig\n\n/**CFile****************************************************************\n\n  FileName    [fraigInt.h]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Internal declarations of the FRAIG package.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigInt.h,v 1.15 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n//#include \"fraig.h\"\n//#include \"sat/msat/msat.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \n/*\n    The AIG node policy:\n    - Each node has its main number (pNode-\u003eNum)\n      This is the number of this node in the array of all nodes and its SAT variable number\n    - The PI nodes are stored along with other nodes\n      Additionally, PI nodes have a PI number, by which they are stored in the PI node array\n    - The constant node is has number 0 and is also stored in the array\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n \n// enable this macro to support the fanouts\n#define FRAIG_ENABLE_FANOUTS\nconst FRAIG_PATTERNS_RANDOM =   2048   // should not be less than 128 and more than 32768 (2^15)\nconst FRAIG_PATTERNS_DYNAMIC =  2048   // should not be less than 256 and more than 32768 (2^15)\nconst FRAIG_MAX_PRIMES =        1024   // the maximum number of primes used for hashing\n\n// this parameter determines when simulation info is extended\n// it will be extended when the free storage in the dynamic simulation\n// info is less or equal to this number of words (FRAIG_WORDS_STORE)\n// this is done because if the free storage for dynamic simulation info \n// is not sufficient, computation becomes inefficient \nconst FRAIG_WORDS_STORE =           5   \n\n// the bit masks\n// Original macro:\n// #define FRAIG_MASK(n)             ((~((unsigned)0)) \u003e\u003e (32-(n)))\n\n#define FRAIG_FULL                 (~((unsigned)0))\n// Original macro:\n// #define FRAIG_NUM_WORDS(n)         (((n)\u003e\u003e5) + (((n)\u002631) \u003e 0))\n\n\n// generating random unsigned (#define RAND_MAX 0x7fff)\n//#define FRAIG_RANDOM_UNSIGNED   ((((unsigned)rand()) \u003c\u003c 24) ^ (((unsigned)rand()) \u003c\u003c 12) ^ ((unsigned)rand()))\n#define FRAIG_RANDOM_UNSIGNED  Aig_ManRandom(0)\n\n// macros to get hold of the bits in a bit string\n// Original macro:\n// #define Fraig_BitStringSetBit(p,i)  ((p)[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Fraig_BitStringXorBit(p,i)  ((p)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Fraig_BitStringHasBit(p,i) (((p)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0)\n\n\n// macros to get hold of the bits in the support info\n//#define Fraig_NodeSetVarStr(p,i)      (Fraig_Regular(p)-\u003epSuppStr[((i)%FRAIG_SUPP_SIGN)\u003e\u003e5] |= (1\u003c\u003c(((i)%FRAIG_SUPP_SIGN) \u0026 31)))\n//#define Fraig_NodeHasVarStr(p,i)     ((Fraig_Regular(p)-\u003epSuppStr[((i)%FRAIG_SUPP_SIGN)\u003e\u003e5]  \u0026 (1\u003c\u003c(((i)%FRAIG_SUPP_SIGN) \u0026 31))) \u003e 0)\n// Original macro:\n// #define Fraig_NodeSetVarStr(p,i)     Fraig_BitStringSetBit(Fraig_Regular(p)-\u003epSuppStr,i)\n\n// Original macro:\n// #define Fraig_NodeHasVarStr(p,i)     Fraig_BitStringHasBit(Fraig_Regular(p)-\u003epSuppStr,i)\n\n\n// copied from \"extra.h\" for stand-aloneness\n// Original macro:\n// #define Fraig_PrintTime(a,t)      printf( \"%s = \", (a) ); printf( \"%6.2f sec\\n\", (float)(t)/(float)(CLOCKS_PER_SEC) )\n\n\n// Original macro:\n// #define Fraig_HashKey2(a,b,TSIZE) (((ABC_PTRUINT_T)(a) + (ABC_PTRUINT_T)(b) * 12582917) % TSIZE)\n\n//#define Fraig_HashKey2(a,b,TSIZE) (( ((unsigned)(a)-\u003eNum * 19) ^ ((unsigned)(b)-\u003eNum * 1999) ) % TSIZE)\n//#define Fraig_HashKey2(a,b,TSIZE) ( ((unsigned)((a)-\u003eNum + (b)-\u003eNum) * ((a)-\u003eNum + (b)-\u003eNum + 1) / 2) % TSIZE)\n// the other two hash functions give bad distribution of hash chain lengths (not clear why)\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Fraig_MemFixed_t =    Fraig_MemFixed_t_;    \n\n// the mapping manager\ntype Fraig_ManStruct_t_ struct {\n    // the AIG nodes\n    vInputs      *Fraig_NodeVec_t;       // the array of primary inputs\n    vNodes      *Fraig_NodeVec_t;        // the array of all nodes, including primary inputs\n    vOutputs      *Fraig_NodeVec_t;      // the array of primary outputs (some internal nodes)\n    pConst1         *Fraig_Node_t;       // the pointer to the constant node (vNodes-\u003epArray[0])\n\n    // info about the original circuit\n    ppInputNames                *string;  // the primary input names\n    ppOutputNames                *string; // the primary output names\n\n    // various hash-tables\n    pTableS    *Fraig_HashTable_t;       // hashing by structure\n    pTableF    *Fraig_HashTable_t;       // hashing by simulation info\n    pTableF0    *Fraig_HashTable_t;      // hashing by simulation info (sparse functions)\n\n    // parameters\n    nWordsRand                   int32;    // the number of words of random simulation info\n    nWordsDyna                   int32;    // the number of words of dynamic simulation info\n    nBTLimit                   int32;      // the max number of backtracks to perform\n    nSeconds                   int32;      // the runtime limit for the miter proof\n    fFuncRed                   int32;      // performs only one level hashing\n    fFeedBack                   int32;     // enables solver feedback\n    fDist1Pats                   int32;    // enables solver feedback\n    fDoSparse                   int32;     // performs equiv tests for sparse functions \n    fChoicing                   int32;     // enables recording structural choices\n    fTryProve                   int32;     // tries to solve the final miter\n    fVerbose                   int32;      // the verbosiness flag\n    fVerboseP                   int32;     // the verbosiness flag\n    nInspLimit                ABC_INT64_T;    // the inspection limit\n\n    nTravIds                   int32;      // the traversal counter\n    nTravIds2                   int32;     // the traversal counter\n\n    // info related to the solver feedback\n    iWordStart                   int32;    // the first word to use for simulation\n    iWordPerm                   int32;     // the number of words stored permanently\n    iPatsPerm                   int32;     // the number of patterns stored permanently\n    vCones      *Fraig_NodeVec_t;        // the temporary array of internal variables\n    vPatsReal        *Msat_IntVec_t;     // the array of real pattern numbers\n    pSimsReal             *uint32;     // used for simulation patterns\n    pSimsDiff             *uint32;     // used for simulation patterns\n    pSimsTemp             *uint32;     // used for simulation patterns\n\n    // the support information\n    nSuppWords                   int32;\n    pSuppS            **uint32;\n    pSuppF            **uint32;\n\n    // the memory managers\n    mmNodes     *Fraig_MemFixed_t;       // the memory manager for nodes\n    mmSims     *Fraig_MemFixed_t;        // the memory manager for simulation info\n\n    // solving the SAT problem\n    pSat        *Msat_Solver_t;          // the SAT solver\n    vProj        *Msat_IntVec_t;         // the temporary array of projection vars \n    nSatNums                   int32;      // the counter of SAT variables\n    pModel                  *int32;        // the assignment, which satisfies the miter\n    // these arrays belong to the solver\n    vVarsInt        *Msat_IntVec_t;      // the temporary array of variables\n    vAdjacents     *Msat_ClauseVec_t;    // the temporary storage for connectivity\n    vVarsUsed        *Msat_IntVec_t;     // the array marking vars appearing in the cone\n\n    // various statistic variables\n    nSatCalls                   int32;     // the number of times equivalence checking was called\n    nSatProof                   int32;     // the number of times a proof was found\n    nSatCounter                   int32;   // the number of times a counter example was found\n    nSatFails                   int32;     // the number of times the SAT solver failed to complete due to resource limit or prediction\n    nSatFailsReal                   int32; // the number of times the SAT solver failed to complete due to resource limit\n\n    nSatCallsImp                   int32;  // the number of times equivalence checking was called\n    nSatProofImp                   int32;  // the number of times a proof was found\n    nSatCounterImp                   int32;// the number of times a counter example was found\n    nSatFailsImp                   int32;  // the number of times the SAT solver failed to complete\n\n    nSatZeros                   int32;     // the number of times the simulation vector is zero\n    nSatSupps                   int32;     // the number of times the support info was useful\n    nRefErrors                   int32;    // the number of ref counting errors\n    nImplies                   int32;      // the number of implication cases\n    nSatImpls                   int32;     // the number of implication SAT calls\n    nVarsClauses                   int32;  // the number of variables with clauses\n    nSimplifies0                   int32;\n    nSimplifies1                   int32;\n    nImplies0                   int32;\n    nImplies1                   int32;\n\n    // runtime statistics\n    timeToAig               abctime;     // time to transfer to the mapping structure\n    timeSims               abctime;      // time to compute k-feasible cuts\n    timeTrav               abctime;      // time to traverse the network\n    timeFeed               abctime;      // time for solver feedback (recording and resimulating)\n    timeImply               abctime;     // time to analyze implications\n    timeSat               abctime;       // time to compute the truth table for each cut\n    timeToNet               abctime;     // time to transfer back to the network\n    timeTotal               abctime;     // the total mapping time\n    time1               abctime;         // time to perform one task\n    time2               abctime;         // time to perform another task\n    time3               abctime;         // time to perform another task\n    time4               abctime;         // time to perform another task\n}\n\n// the mapping node\ntype Fraig_NodeStruct_t_ struct {\n    // various numbers associated with the node\n    Num                   int32;           // the unique number (SAT var number) of this node \n    NumPi                   int32;         // if the node is a PI, this is its variable number\n    Level                   int32;         // the level of the node\n    nRefs                   int32;         // the number of references of the node\n    TravId                   int32;        // the traversal ID (use to avoid cleaning marks)\n    TravId2                   int32;       // the traversal ID (use to avoid cleaning marks)\n\n    // general information about the node\n    fInv uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark to show that simulation info is complemented\n    fNodePo uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark used for primary outputs\n    fClauses uint32; /* C bitfield: 1 bits; review packing and truncation */ // the clauses for this node are loaded\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark used for traversals\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark used for traversals\n    fMark2 uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark used for traversals\n    fMark3 uint32; /* C bitfield: 1 bits; review packing and truncation */ // the mark used for traversals\n    fFeedUse uint32; /* C bitfield: 1 bits; review packing and truncation */ // the presence of the variable in the feedback\n    fFeedVal uint32; /* C bitfield: 1 bits; review packing and truncation */ // the value of the variable in the feedback\n    fFailTfo uint32; /* C bitfield: 1 bits; review packing and truncation */ // the node is in the TFO of the failed SAT run\n    nFanouts uint32; /* C bitfield: 2 bits; review packing and truncation */ // the indicator of fanouts (none, one, or many)\n    nOnes uint32; /* C bitfield: 20 bits; review packing and truncation */ // the number of 1's in the random sim info\n \n    // the children of the node\n    p1         *Fraig_Node_t;            // the first child\n    p2         *Fraig_Node_t;            // the second child\n    vFanins      *Fraig_NodeVec_t;       // the fanins of the supergate rooted at this node\n//    Fraig_NodeVec_t *     vFanouts;      // the fanouts of the supergate rooted at this node\n\n    // various linked lists\n    pNextS         *Fraig_Node_t;        // the next node in the structural hash table\n    pNextF         *Fraig_Node_t;        // the next node in the functional (simulation) hash table\n    pNextD         *Fraig_Node_t;        // the next node in the list of nodes based on dynamic simulation\n    pNextE         *Fraig_Node_t;        // the next structural choice (functionally-equivalent node)\n    pRepr         *Fraig_Node_t;         // the canonical functional representative of the node\n\n    // simulation data\n    uHashR              uint32;        // the hash value for random information\n    uHashD              uint32;        // the hash value for dynamic information \n    puSimR             *uint32;        // the simulation information (random)\n    puSimD             *uint32;        // the simulation information (dynamic)\n\n    // misc information  \n    pData0         *Fraig_Node_t;        // temporary storage for the corresponding network node\n    pData1         *Fraig_Node_t;        // temporary storage for the corresponding network node\n\n                           \n    // representation of node's fanouts\n    pFanPivot         *Fraig_Node_t;     // the first fanout of this node\n    pFanFanin1         *Fraig_Node_t;    // the next fanout of p1\n    pFanFanin2         *Fraig_Node_t;    // the next fanout of p2\n      \n} \n\n// the vector of nodes\ntype Fraig_NodeVecStruct_t_ struct {\n    nCap                   int32;          // the number of allocated entries\n    nSize                   int32;         // the number of entries in the array\n    pArray        **Fraig_Node_t;        // the array of nodes\n}\n\n// the hash table \ntype Fraig_HashTableStruct_t_ struct {\n    pBins        **Fraig_Node_t;         // the table bins\n    nBins                   int32;         // the size of the table\n    nEntries                   int32;      // the total number of entries in the table\n}\n\n// getting hold of the next fanout of the node\n// Original macro:\n// #define Fraig_NodeReadNextFanout( pNode, pFanout )                \\\n//     ( ( pFanout == NULL )? NULL :                                 \\\n//         ((Fraig_Regular((pFanout)-\u003ep1) == (pNode))?               \\\n//              (pFanout)-\u003epFanFanin1 : (pFanout)-\u003epFanFanin2) )\n\n// getting hold of the place where the next fanout will be attached\n// Original macro:\n// #define Fraig_NodeReadNextFanoutPlace( pNode, pFanout )           \\\n//     ( (Fraig_Regular((pFanout)-\u003ep1) == (pNode))?                  \\\n//          \u0026(pFanout)-\u003epFanFanin1 : \u0026(pFanout)-\u003epFanFanin2 )\n\n// iterator through the fanouts of the node\n// Original macro:\n// #define Fraig_NodeForEachFanout( pNode, pFanout )                 \\\n//     for ( pFanout = (pNode)-\u003epFanPivot; pFanout;                  \\\n//           pFanout = Fraig_NodeReadNextFanout(pNode, pFanout) )\n\n// safe iterator through the fanouts of the node\n// Original macro:\n// #define Fraig_NodeForEachFanoutSafe( pNode, pFanout, pFanout2 )   \\\n//     for ( pFanout  = (pNode)-\u003epFanPivot,                          \\\n//           pFanout2 = Fraig_NodeReadNextFanout(pNode, pFanout);    \\\n//           pFanout;                                                \\\n//           pFanout  = pFanout2,                                    \\\n//           pFanout2 = Fraig_NodeReadNextFanout(pNode, pFanout) )\n\n\n// iterators through the entries in the linked lists of nodes\n// the list of nodes in the structural hash table\n// Original macro:\n// #define Fraig_TableBinForEachEntryS( pBin, pEnt )                 \\\n//     for ( pEnt = pBin;                                            \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt-\u003epNextS )\n\n// Original macro:\n// #define Fraig_TableBinForEachEntrySafeS( pBin, pEnt, pEnt2 )      \\\n//     for ( pEnt = pBin,                                            \\\n//           pEnt2 = pEnt? pEnt-\u003epNextS: NULL;                       \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt2,                                           \\\n//           pEnt2 = pEnt? pEnt-\u003epNextS: NULL )\n\n// the list of nodes in the functional (simulation) hash table\n// Original macro:\n// #define Fraig_TableBinForEachEntryF( pBin, pEnt )                 \\\n//     for ( pEnt = pBin;                                            \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt-\u003epNextF )\n\n// Original macro:\n// #define Fraig_TableBinForEachEntrySafeF( pBin, pEnt, pEnt2 )      \\\n//     for ( pEnt = pBin,                                            \\\n//           pEnt2 = pEnt? pEnt-\u003epNextF: NULL;                       \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt2,                                           \\\n//           pEnt2 = pEnt? pEnt-\u003epNextF: NULL )\n\n// the list of nodes with the same simulation and different functionality\n// Original macro:\n// #define Fraig_TableBinForEachEntryD( pBin, pEnt )                 \\\n//     for ( pEnt = pBin;                                            \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt-\u003epNextD )\n\n// Original macro:\n// #define Fraig_TableBinForEachEntrySafeD( pBin, pEnt, pEnt2 )      \\\n//     for ( pEnt = pBin,                                            \\\n//           pEnt2 = pEnt? pEnt-\u003epNextD: NULL;                       \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt2,                                           \\\n//           pEnt2 = pEnt? pEnt-\u003epNextD: NULL )\n\n// the list of nodes with the same functionality \n// Original macro:\n// #define Fraig_TableBinForEachEntryE( pBin, pEnt )                 \\\n//     for ( pEnt = pBin;                                            \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt-\u003epNextE )\n\n// Original macro:\n// #define Fraig_TableBinForEachEntrySafeE( pBin, pEnt, pEnt2 )      \\\n//     for ( pEnt = pBin,                                            \\\n//           pEnt2 = pEnt? pEnt-\u003epNextE: NULL;                       \\\n//           pEnt;                                                   \\\n//           pEnt = pEnt2,                                           \\\n//           pEnt2 = pEnt? pEnt-\u003epNextE: NULL )\n\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n// random number generator imported from another package\n// extern unsigned            Aig_ManRandom( int fReset );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fraigCanon.c =============================================================*/\n// extern Fraig_Node_t *      Fraig_NodeAndCanon( Fraig_Man_t * pMan, Fraig_Node_t * p1, Fraig_Node_t * p2 );\n\n/*=== fraigFanout.c =============================================================*/\n// extern void                Fraig_NodeAddFaninFanout( Fraig_Node_t * pFanin, Fraig_Node_t * pFanout );\n\n// extern void                Fraig_NodeRemoveFaninFanout( Fraig_Node_t * pFanin, Fraig_Node_t * pFanoutToRemove );\n\n// extern int                 Fraig_NodeGetFanoutNum( Fraig_Node_t * pNode );\n\n/*=== fraigFeed.c =============================================================*/\n// extern void                Fraig_FeedBackInit( Fraig_Man_t * p );\n\n// extern void                Fraig_FeedBack( Fraig_Man_t * p, int * pModel, Msat_IntVec_t * vVars, Fraig_Node_t * pOld, Fraig_Node_t * pNew );\n\n// extern void                Fraig_FeedBackTest( Fraig_Man_t * p );\n\n// extern int                 Fraig_FeedBackCompress( Fraig_Man_t * p );\n\n// extern int *               Fraig_ManAllocCounterExample( Fraig_Man_t * p );\n\n// extern int *               Fraig_ManSaveCounterExample( Fraig_Man_t * p, Fraig_Node_t * pNode );\n\n/*=== fraigMan.c =============================================================*/\n// extern void                Fraig_ManCreateSolver( Fraig_Man_t * p );\n\n/*=== fraigMem.c =============================================================*/\n// extern Fraig_MemFixed_t *  Fraig_MemFixedStart( int nEntrySize );\n\n// extern void                Fraig_MemFixedStop( Fraig_MemFixed_t * p, int fVerbose );\n\n// extern char *              Fraig_MemFixedEntryFetch( Fraig_MemFixed_t * p );\n\n// extern void                Fraig_MemFixedEntryRecycle( Fraig_MemFixed_t * p, char * pEntry );\n\n// extern void                Fraig_MemFixedRestart( Fraig_MemFixed_t * p );\n\n// extern int                 Fraig_MemFixedReadMemUsage( Fraig_MemFixed_t * p );\n\n/*=== fraigNode.c =============================================================*/\n// extern Fraig_Node_t *      Fraig_NodeCreateConst( Fraig_Man_t * p );\n\n// extern Fraig_Node_t *      Fraig_NodeCreatePi( Fraig_Man_t * p );\n\n// extern Fraig_Node_t *      Fraig_NodeCreate( Fraig_Man_t * p, Fraig_Node_t * p1, Fraig_Node_t * p2 );\n\n// extern void                Fraig_NodeSimulate( Fraig_Node_t * pNode, int iWordStart, int iWordStop, int fUseRand );\n\n/*=== fraigPrime.c =============================================================*/\nvar s_FraigPrimes [FRAIG_MAX_PRIMES]int32;\n/*=== fraigSat.c ===============================================================*/\n// extern int                 Fraig_NodeIsImplication( Fraig_Man_t * p, Fraig_Node_t * pOld, Fraig_Node_t * pNew, int nBTLimit );\n\n/*=== fraigTable.c =============================================================*/\n// extern Fraig_HashTable_t * Fraig_HashTableCreate( int nSize );\n\n// extern void                Fraig_HashTableFree( Fraig_HashTable_t * p );\n\n// extern int                 Fraig_HashTableLookupS( Fraig_Man_t * pMan, Fraig_Node_t * p1, Fraig_Node_t * p2, Fraig_Node_t ** ppNodeRes );\n\n// extern Fraig_Node_t *      Fraig_HashTableLookupF( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n// extern Fraig_Node_t *      Fraig_HashTableLookupF0( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n// extern void                Fraig_HashTableInsertF0( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n// extern int                 Fraig_CompareSimInfo( Fraig_Node_t * pNode1, Fraig_Node_t * pNode2, int iWordLast, int fUseRand );\n\n// extern int                 Fraig_CompareSimInfoUnderMask( Fraig_Node_t * pNode1, Fraig_Node_t * pNode2, int iWordLast, int fUseRand, unsigned * puMask );\n\n// extern int                 Fraig_FindFirstDiff( Fraig_Node_t * pNode1, Fraig_Node_t * pNode2, int fCompl, int iWordLast, int fUseRand );\n\n// extern void                Fraig_CollectXors( Fraig_Node_t * pNode1, Fraig_Node_t * pNode2, int iWordLast, int fUseRand, unsigned * puMask );\n\n// extern void                Fraig_TablePrintStatsS( Fraig_Man_t * pMan );\n\n// extern void                Fraig_TablePrintStatsF( Fraig_Man_t * pMan );\n\n// extern void                Fraig_TablePrintStatsF0( Fraig_Man_t * pMan );\n\n// extern int                 Fraig_TableRehashF0( Fraig_Man_t * pMan, int fLinkEquiv );\n\n/*=== fraigUtil.c ===============================================================*/\n// extern int                 Fraig_NodeCountPis( Msat_IntVec_t * vVars, int nVarsPi );\n\n// extern int                 Fraig_NodeCountSuppVars( Fraig_Man_t * p, Fraig_Node_t * pNode, int fSuppStr );\n\n// extern int                 Fraig_NodesCompareSupps( Fraig_Man_t * p, Fraig_Node_t * pOld, Fraig_Node_t * pNew );\n\n// extern int                 Fraig_NodeAndSimpleCase_rec( Fraig_Node_t * pOld, Fraig_Node_t * pNew );\n\n// extern int                 Fraig_NodeIsExorType( Fraig_Node_t * pNode );\n\n// extern void                Fraig_ManSelectBestChoice( Fraig_Man_t * p );\n\n// extern int                 Fraig_BitStringCountOnes( unsigned * pString, int nWords );\n\n// extern void                Fraig_PrintBinary( FILE * pFile, unsigned * pSign, int nBits );\n\n// extern int                 Fraig_NodeIsExorType( Fraig_Node_t * pNode );\n\n// extern int                 Fraig_NodeIsExor( Fraig_Node_t * pNode );\n\n// extern int                 Fraig_NodeIsMuxType( Fraig_Node_t * pNode );\n\n// extern Fraig_Node_t *      Fraig_NodeRecognizeMux( Fraig_Node_t * pNode, Fraig_Node_t ** ppNodeT, Fraig_Node_t ** ppNodeE );\n\n// extern int                 Fraig_ManCountExors( Fraig_Man_t * pMan );\n\n// extern int                 Fraig_ManCountMuxes( Fraig_Man_t * pMan );\n\n// extern int                 Fraig_NodeSimsContained( Fraig_Man_t * pMan, Fraig_Node_t * pNode1, Fraig_Node_t * pNode2 );\n\n// extern int                 Fraig_NodeIsInSupergate( Fraig_Node_t * pOld, Fraig_Node_t * pNew );\n\n// extern Fraig_NodeVec_t *   Fraig_CollectSupergate( Fraig_Node_t * pNode, int fStopAtMux );\n\n// extern int                 Fraig_CountPis( Fraig_Man_t * p, Msat_IntVec_t * vVarNums );\n\n// extern void                Fraig_ManIncrementTravId( Fraig_Man_t * pMan );\n\n// extern void                Fraig_NodeSetTravIdCurrent( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n// extern int                 Fraig_NodeIsTravIdCurrent( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n// extern int                 Fraig_NodeIsTravIdPrevious( Fraig_Man_t * pMan, Fraig_Node_t * pNode );\n\n/*=== fraigVec.c ===============================================================*/\n// extern void                Fraig_NodeVecSortByRefCount( Fraig_NodeVec_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

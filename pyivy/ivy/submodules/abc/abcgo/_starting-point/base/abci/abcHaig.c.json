@@ -1,0 +1,877 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c",
+  "SHA256": "f1f9b4f97b6e55afe8274fa98ac8a33e2fcc83138eed88a55fe1b8e3487305d2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRepr.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ((Hop_Obj_t *)pObj.pData).Id \u003c= pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRepr.pData == pRepr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The number of class members with fanouts = %5d.\\n\", Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 5724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pNext != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRepr.pData == pRepr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 8580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkHaigReconstruct: Check for History AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 9241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 10108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 10150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 11248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCreated == Vec_PtrSize(p.vObjs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 9,
+        "ByteOffset": 12171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Hop_IsComplement(pObj.pNext) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 9,
+        "ByteOffset": 13211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjAbcThis.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 13299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObjAbcThis) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 13396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjAbcRepr != pObjAbcThis );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 14062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkHaigUse: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 5,
+        "ByteOffset": 14673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Collected %6d class members.\\n\", Vec_PtrSize(vMembers) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 14820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Collected %6d classes. (Ave = %5.2f)\\n\", Vec_PtrSize(vClasses), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 9,
+        "ByteOffset": 17431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pData == pRepr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 496,
+        "Column": 9,
+        "ByteOffset": 17470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRepr.Id \u003c= pObj.Id );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkHaigCollectMembers",
+      "Start": 1301,
+      "End": 1673,
+      "BodyStart": 1356,
+      "Original": "Vec_Ptr_t * Abc_NtkHaigCollectMembers( Hop_Man_t * p )\n{\n    Vec_Ptr_t * vObjs;\n    Hop_Obj_t * pObj;\n    int i;\n    vObjs = Vec_PtrAlloc( 4098 );\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( pObj-\u003epData == NULL )\n            continue;\n        pObj-\u003epData = Hop_ObjRepr( pObj );\n        Vec_PtrPush( vObjs, pObj );\n    }\n    return vObjs;\n}",
+      "Draft": "func Abc_NtkHaigCollectMembers(p *Hop_Man_t) *Vec_Ptr_t {\n    var vObjs *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    vObjs = Vec_PtrAlloc( 4098 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        pObj.pData = Hop_ObjRepr( pObj );\n        Vec_PtrPush( vObjs, pObj );\n    }\n    return vObjs;\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigCreateClasses",
+      "Start": 1925,
+      "End": 3908,
+      "BodyStart": 1986,
+      "Original": "Vec_Ptr_t * Abc_NtkHaigCreateClasses( Vec_Ptr_t * vMembers )\n{\n    Vec_Ptr_t * vClasses;\n    Hop_Obj_t * pObj, * pRepr;\n    int i;\n\n    // count classes\n    vClasses = Vec_PtrAlloc( 4098 );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        pRepr = (Hop_Obj_t *)pObj-\u003epData;\n        assert( pRepr-\u003epData == NULL );\n        if ( pRepr-\u003efMarkA == 0 ) // new\n        {\n            pRepr-\u003efMarkA = 1;\n            Vec_PtrPush( vClasses, pRepr );\n        }\n    }\n\n    // set representatives as representatives\n    Vec_PtrForEachEntry( Hop_Obj_t *, vClasses, pObj, i )\n    {\n        pObj-\u003efMarkA = 0;\n        pObj-\u003epData = pObj;\n    }\n\n    // go through the members and update\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        pRepr = (Hop_Obj_t *)pObj-\u003epData;\n        if ( ((Hop_Obj_t *)pRepr-\u003epData)-\u003eId \u003e pObj-\u003eId )\n            pRepr-\u003epData = pObj;\n    }\n\n    // change representatives of the class\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        pRepr = (Hop_Obj_t *)pObj-\u003epData;\n        pObj-\u003epData = pRepr-\u003epData;\n        assert( ((Hop_Obj_t *)pObj-\u003epData)-\u003eId \u003c= pObj-\u003eId );\n    }\n\n    // update classes\n    Vec_PtrForEachEntry( Hop_Obj_t *, vClasses, pObj, i )\n    {\n        pRepr = (Hop_Obj_t *)pObj-\u003epData;\n        assert( pRepr-\u003epData == pRepr );\n//        pRepr-\u003epData = NULL;\n        Vec_PtrWriteEntry( vClasses, i, pRepr );\n        Vec_PtrPush( vMembers, pObj );\n    }\n\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n        if ( pObj-\u003epData == pObj )\n            pObj-\u003epData = NULL;\n\n/*\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        printf( \"ObjId = %4d : \", pObj-\u003eId );\n        if ( pObj-\u003epData == NULL )\n        {\n            printf( \"NULL\" );\n        }\n        else\n        {\n            printf( \"%4d\", ((Hop_Obj_t *)pObj-\u003epData)-\u003eId );\n            assert( ((Hop_Obj_t *)pObj-\u003epData)-\u003eId \u003c= pObj-\u003eId );\n        }\n        printf( \"\\n\" );\n    }\n*/\n    return vClasses;\n}",
+      "Draft": "func Abc_NtkHaigCreateClasses(vMembers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vClasses *Vec_Ptr_t;\n    var pObj, pRepr *Hop_Obj_t;\n    var i int32;\n\n    // count classes\n    vClasses = Vec_PtrAlloc( 4098 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        assert(pRepr.pData == nil, \"pRepr.pData == nil\");\n        if pRepr.fMarkA == 0 { // new\n        \n            pRepr.fMarkA = 1;\n            Vec_PtrPush( vClasses, pRepr );\n        }\n    }\n\n    // set representatives as representatives\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        pObj.fMarkA = 0;\n        pObj.pData = pObj;\n    }\n\n    // go through the members and update\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        if ((Hop_Obj_t *)pRepr.pData).Id \u003e pObj.Id {\n            pRepr.pData = pObj; }\n    }\n\n    // change representatives of the class\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        pObj.pData = pRepr.pData;\n        assert(((Hop_Obj_t *)pObj.pData).Id \u003c= pObj.Id, \"((Hop_Obj_t *)pObj.pData).Id \u003c= pObj.Id\");\n    }\n\n    // update classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        assert(pRepr.pData == pRepr, \"pRepr.pData == pRepr\");\n//        pRepr-\u003epData = NULL;\n        Vec_PtrWriteEntry( vClasses, i, pRepr );\n        Vec_PtrPush( vMembers, pObj );\n    }\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        if pObj.pData == pObj {\n            pObj.pData = nil; }\n    }\n\n/*\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        printf( \"ObjId = %4d : \", pObj-\u003eId );\n        if ( pObj-\u003epData == NULL )\n        {\n            printf( \"NULL\" );\n        }\n        else\n        {\n            printf( \"%4d\", ((Hop_Obj_t *)pObj-\u003epData)-\u003eId );\n            assert( ((Hop_Obj_t *)pObj-\u003epData)-\u003eId \u003c= pObj-\u003eId );\n        }\n        printf( \"\\n\" );\n    }\n*/\n    return vClasses;\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigCountFans",
+      "Start": 4197,
+      "End": 4571,
+      "BodyStart": 4239,
+      "Original": "int Abc_NtkHaigCountFans( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj;\n    int i, Counter = 0;\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( pObj-\u003epData == NULL )\n            continue;\n        if ( Hop_ObjRefs(pObj) \u003e 0 )\n            Counter++;\n    }\n    printf( \"The number of class members with fanouts = %5d.\\n\", Counter );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkHaigCountFans(p *Hop_Man_t) int32 {\n    var pObj *Hop_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        if Hop_ObjRefs(pObj) \u003e 0 {\n            Counter++; }\n    }\n    fmt.Printf(\"The number of class members with fanouts = %5d.\\n\", Counter);\n    return Counter;\n}"
+    },
+    {
+      "Name": "Hop_ObjReprHop",
+      "Start": 4808,
+      "End": 5134,
+      "BodyStart": 4869,
+      "Original": "static inline Hop_Obj_t * Hop_ObjReprHop( Hop_Obj_t * pObj )\n{\n    Hop_Obj_t * pRepr;\n    assert( pObj-\u003epNext != NULL );\n    if ( pObj-\u003epData == NULL )\n        return pObj-\u003epNext;\n    pRepr = (Hop_Obj_t *)pObj-\u003epData;\n    assert( pRepr-\u003epData == pRepr );\n    return Hop_NotCond( pRepr-\u003epNext, pObj-\u003efPhase ^ pRepr-\u003efPhase );\n}",
+      "Draft": "func Hop_ObjReprHop(pObj *Hop_Obj_t) *Hop_Obj_t {\n    var pRepr *Hop_Obj_t;\n    assert(pObj.pNext != nil, \"pObj.pNext != nil\");\n    if pObj.pData == nil {\n        return pObj.pNext; }\n    pRepr = (Hop_Obj_t *)pObj.pData;\n    assert(pRepr.pData == pRepr, \"pRepr.pData == pRepr\");\n    return Hop_NotCond( pRepr.pNext, pObj.fPhase ^ pRepr.fPhase );\n}"
+    },
+    {
+      "Name": "Hop_ObjChild0Hop",
+      "Start": 5370,
+      "End": 5517,
+      "BodyStart": 5433,
+      "Original": "static inline Hop_Obj_t * Hop_ObjChild0Hop( Hop_Obj_t * pObj ) { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin0(pObj)), Hop_ObjFaninC0(pObj) ); }",
+      "Draft": "func Hop_ObjChild0Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin0(pObj)), Hop_ObjFaninC0(pObj) ); }"
+    },
+    {
+      "Name": "Hop_ObjChild1Hop",
+      "Start": 5518,
+      "End": 5665,
+      "BodyStart": 5581,
+      "Original": "static inline Hop_Obj_t * Hop_ObjChild1Hop( Hop_Obj_t * pObj ) { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin1(pObj)), Hop_ObjFaninC1(pObj) ); }",
+      "Draft": "func Hop_ObjChild1Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin1(pObj)), Hop_ObjFaninC1(pObj) ); }"
+    },
+    {
+      "Name": "Abc_NtkHaigReconstruct",
+      "Start": 5919,
+      "End": 7370,
+      "BodyStart": 5971,
+      "Original": "Hop_Man_t * Abc_NtkHaigReconstruct( Hop_Man_t * p )\n{ \n    Hop_Man_t * pNew;\n    Hop_Obj_t * pObj;\n    int i, Counter = 0;\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n        pObj-\u003epNext = NULL;\n    // start the HOP package\n    pNew = Hop_ManStart();\n    pNew-\u003evObjs = Vec_PtrAlloc( p-\u003enCreated );\n    Vec_PtrPush( pNew-\u003evObjs, Hop_ManConst1(pNew) );\n    // map the constant node\n    Hop_ManConst1(p)-\u003epNext = Hop_ManConst1(pNew);\n    // map the CIs\n    Hop_ManForEachPi( p, pObj, i )\n        pObj-\u003epNext = Hop_ObjCreatePi(pNew);\n    // map the internal nodes\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( !Hop_ObjIsNode(pObj) )\n            continue;\n        pObj-\u003epNext = Hop_And( pNew, Hop_ObjChild0Hop(pObj), Hop_ObjChild1Hop(pObj) );\n//        assert( !Hop_IsComplement(pObj-\u003epNext) );\n        if ( Hop_ManConst1(pNew) == Hop_Regular(pObj-\u003epNext) )\n            Counter++;\n        if ( pObj-\u003epData ) // member of the class\n            Hop_Regular(pObj-\u003epNext)-\u003epData = Hop_Regular(((Hop_Obj_t *)pObj-\u003epData)-\u003epNext);\n    }\n//    printf( \" Counter = %d.\\n\", Counter );\n    // transfer the POs\n    Hop_ManForEachPo( p, pObj, i )\n        Hop_ObjCreatePo( pNew, Hop_ObjChild0Hop(pObj) );\n    // check the new manager\n    if ( !Hop_ManCheck(pNew) )\n    {\n        printf( \"Abc_NtkHaigReconstruct: Check for History AIG has failed.\\n\" );\n        Hop_ManStop(pNew);\n        return NULL;\n    }\n    return pNew;\n}",
+      "Draft": "func Abc_NtkHaigReconstruct(p *Hop_Man_t) *Hop_Man_t { \n    var pNew *Hop_Man_t;\n    var pObj *Hop_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // start the HOP package\n    pNew = Hop_ManStart();\n    pNew.vObjs = Vec_PtrAlloc( p.nCreated );\n    Vec_PtrPush( pNew.vObjs, Hop_ManConst1(pNew) );\n    // map the constant node\n    Hop_ManConst1(p).pNext = Hop_ManConst1(pNew);\n    // map the CIs\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pNext = Hop_ObjCreatePi(pNew);\n    }\n    // map the internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if !Hop_ObjIsNode(pObj) {\n            continue; }\n        pObj.pNext = Hop_And( pNew, Hop_ObjChild0Hop(pObj), Hop_ObjChild1Hop(pObj) );\n//        assert( !Hop_IsComplement(pObj-\u003epNext) );\n        if Hop_ManConst1(pNew) == Hop_Regular(pObj.pNext) {\n            Counter++; }\n        if pObj.pData { // member of the class\n            Hop_Regular(pObj.pNext).pData = Hop_Regular(((Hop_Obj_t *)pObj.pData).pNext); }\n    }\n//    printf( \" Counter = %d.\\n\", Counter );\n    // transfer the POs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjCreatePo( pNew, Hop_ObjChild0Hop(pObj) );\n    }\n    // check the new manager\n    if !Hop_ManCheck(pNew) {\n        fmt.Printf(\"Abc_NtkHaigReconstruct: Check for History AIG has failed.\\n\");\n        Hop_ManStop(pNew);\n        return nil;\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigCheckTfi_rec",
+      "Start": 7647,
+      "End": 8389,
+      "BodyStart": 7714,
+      "Original": "int Abc_NtkHaigCheckTfi_rec( Abc_Obj_t * pNode, Abc_Obj_t * pOld )\n{\n    if ( pNode == NULL )\n        return 0;\n    if ( pNode == pOld )\n        return 1;\n    // check the trivial cases\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    assert( Abc_ObjIsNode(pNode) );\n    // if this node is already visited, skip\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return 0;\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if ( Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) )\n        return 1;\n    if ( Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) )\n        return 1;\n    // check equivalent nodes\n    return Abc_NtkHaigCheckTfi_rec( (Abc_Obj_t *)pNode-\u003epData, pOld );\n}",
+      "Draft": "func Abc_NtkHaigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    if pNode == nil {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // check the trivial cases\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return 0; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Abc_NtkHaigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigCheckTfi",
+      "Start": 8665,
+      "End": 8916,
+      "BodyStart": 8745,
+      "Original": "int Abc_NtkHaigCheckTfi( Abc_Ntk_t * pNtk, Abc_Obj_t * pOld, Abc_Obj_t * pNew )\n{\n    assert( !Abc_ObjIsComplement(pOld) );\n    assert( !Abc_ObjIsComplement(pNew) );\n    Abc_NtkIncrementTravId(pNtk);\n    return Abc_NtkHaigCheckTfi_rec( pNew, pOld );\n}",
+      "Draft": "func Abc_NtkHaigCheckTfi(pNtk *Abc_Ntk_t, pOld *Abc_Obj_t, pNew *Abc_Obj_t) int32 {\n    assert(!Abc_ObjIsComplement(pOld), \"!Abc_ObjIsComplement(pOld)\");\n    assert(!Abc_ObjIsComplement(pNew), \"!Abc_ObjIsComplement(pNew)\");\n    Abc_NtkIncrementTravId(pNtk);\n    return Abc_NtkHaigCheckTfi_rec( pNew, pOld );\n}"
+    },
+    {
+      "Name": "Hop_ObjChild0Next",
+      "Start": 9152,
+      "End": 9308,
+      "BodyStart": 9216,
+      "Original": "static inline Abc_Obj_t * Hop_ObjChild0Next( Hop_Obj_t * pObj ) { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin0(pObj)-\u003epNext, Hop_ObjFaninC0(pObj) );  }",
+      "Draft": "func Hop_ObjChild0Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin0(pObj).pNext, Hop_ObjFaninC0(pObj) );  }"
+    },
+    {
+      "Name": "Hop_ObjChild1Next",
+      "Start": 9309,
+      "End": 9465,
+      "BodyStart": 9373,
+      "Original": "static inline Abc_Obj_t * Hop_ObjChild1Next( Hop_Obj_t * pObj ) { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin1(pObj)-\u003epNext, Hop_ObjFaninC1(pObj) );  }",
+      "Draft": "func Hop_ObjChild1Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin1(pObj).pNext, Hop_ObjFaninC1(pObj) );  }"
+    },
+    {
+      "Name": "Abc_NtkHaigRecreateAig",
+      "Start": 9719,
+      "End": 12404,
+      "BodyStart": 9789,
+      "Original": "Abc_Ntk_t * Abc_NtkHaigRecreateAig( Abc_Ntk_t * pNtk, Hop_Man_t * p )\n{\n    Abc_Ntk_t * pNtkAig;\n    Abc_Obj_t * pObjOld, * pObjAbcThis, * pObjAbcRepr;\n    Hop_Obj_t * pObj;\n    int i;\n    assert( p-\u003enCreated == Vec_PtrSize(p-\u003evObjs) );\n\n    // start the new network\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // transfer new nodes to the PIs of HOP\n    Hop_ManConst1(p)-\u003epNext = (Hop_Obj_t *)Abc_AigConst1( pNtkAig );\n    Hop_ManForEachPi( p, pObj, i )\n        pObj-\u003epNext = (Hop_Obj_t *)Abc_NtkCi( pNtkAig, i );\n\n    // construct new nodes\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( !Hop_ObjIsNode(pObj) )\n            continue;\n        pObj-\u003epNext = (Hop_Obj_t *)Abc_AigAnd( (Abc_Aig_t *)pNtkAig-\u003epManFunc, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert( !Hop_IsComplement(pObj-\u003epNext) );\n    }\n\n    // set the COs\n    Abc_NtkForEachCo( pNtk, pObjOld, i )\n        Abc_ObjAddFanin( pObjOld-\u003epCopy, Hop_ObjChild0Next(Hop_ManPo(p,i)) );\n\n    // construct choice nodes\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        // skip the node without choices\n        if ( pObj-\u003epData == NULL )\n            continue;\n        // skip the representative of the class\n        if ( pObj-\u003epData == pObj )\n            continue;\n        // do not create choices for constant 1 and PIs\n        if ( !Hop_ObjIsNode((Hop_Obj_t *)pObj-\u003epData) )\n            continue;\n        // get the corresponding new nodes\n        pObjAbcThis = (Abc_Obj_t *)pObj-\u003epNext;\n        pObjAbcRepr = (Abc_Obj_t *)((Hop_Obj_t *)pObj-\u003epData)-\u003epNext;\n        // the new node cannot be already in the class\n        assert( pObjAbcThis-\u003epData == NULL );\n        // the new node cannot have fanouts\n        assert( Abc_ObjFanoutNum(pObjAbcThis) == 0 );\n        // these should be different nodes\n        assert( pObjAbcRepr != pObjAbcThis );\n        // do not create choices if there is a path from pObjAbcThis to pObjAbcRepr\n        if ( !Abc_NtkHaigCheckTfi( pNtkAig, pObjAbcRepr, pObjAbcThis ) )\n        {\n            // find the last node in the class\n            while ( pObjAbcRepr-\u003epData )\n                pObjAbcRepr = (Abc_Obj_t *)pObjAbcRepr-\u003epData;\n            // add the new node at the end of the list\n            pObjAbcRepr-\u003epData = pObjAbcThis;\n        }\n    }\n\n    // finish the new network\n//    Abc_NtkFinalize( pNtk, pNtkAig );\n//    Abc_AigCleanup( pNtkAig-\u003epManFunc );\n    // check correctness of the network\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        printf( \"Abc_NtkHaigUse: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkHaigRecreateAig(pNtk *Abc_Ntk_t, p *Hop_Man_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pObjOld, pObjAbcThis, pObjAbcRepr *Abc_Obj_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    assert(p.nCreated == Vec_PtrSize(p.vObjs), \"p.nCreated == Vec_PtrSize(p.vObjs)\");\n\n    // start the new network\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // transfer new nodes to the PIs of HOP\n    Hop_ManConst1(p).pNext = (Hop_Obj_t *)Abc_AigConst1( pNtkAig );\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pNext = (Hop_Obj_t *)Abc_NtkCi( pNtkAig, i );\n    }\n\n    // construct new nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if !Hop_ObjIsNode(pObj) {\n            continue; }\n        pObj.pNext = (Hop_Obj_t *)Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert(!Hop_IsComplement(pObj.pNext), \"!Hop_IsComplement(pObj.pNext)\");\n    }\n\n    // set the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObjOld) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_ObjAddFanin( pObjOld.pCopy, Hop_ObjChild0Next(Hop_ManPo(p,i)) );\n    }\n\n    // construct choice nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        // skip the node without choices\n        if pObj.pData == nil {\n            continue; }\n        // skip the representative of the class\n        if pObj.pData == pObj {\n            continue; }\n        // do not create choices for constant 1 and PIs\n        if !Hop_ObjIsNode((Hop_Obj_t *)pObj.pData) {\n            continue; }\n        // get the corresponding new nodes\n        pObjAbcThis = (Abc_Obj_t *)pObj.pNext;\n        pObjAbcRepr = (Abc_Obj_t *)((Hop_Obj_t *)pObj.pData).pNext;\n        // the new node cannot be already in the class\n        assert(pObjAbcThis.pData == nil, \"pObjAbcThis.pData == nil\");\n        // the new node cannot have fanouts\n        assert(Abc_ObjFanoutNum(pObjAbcThis) == 0, \"Abc_ObjFanoutNum(pObjAbcThis) == 0\");\n        // these should be different nodes\n        assert(pObjAbcRepr != pObjAbcThis, \"pObjAbcRepr != pObjAbcThis\");\n        // do not create choices if there is a path from pObjAbcThis to pObjAbcRepr\n        if !(Abc_NtkHaigCheckTfi( pNtkAig, pObjAbcRepr, pObjAbcThis ) != 0) {\n            // find the last node in the class\n            for  pObjAbcRepr.pData  {\n                pObjAbcRepr = (Abc_Obj_t *)pObjAbcRepr.pData;\n            }\n            // add the new node at the end of the list\n            pObjAbcRepr.pData = pObjAbcThis;\n        }\n    }\n\n    // finish the new network\n//    Abc_NtkFinalize( pNtk, pNtkAig );\n//    Abc_AigCleanup( pNtkAig-\u003epManFunc );\n    // check correctness of the network\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkHaigUse: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigResetReprsOld",
+      "Start": 12663,
+      "End": 13220,
+      "BodyStart": 12713,
+      "Original": "void Abc_NtkHaigResetReprsOld( Hop_Man_t * pMan )\n{\n    Vec_Ptr_t * vMembers, * vClasses;\n\n    // collect members of the classes and make them point to reprs\n    vMembers = Abc_NtkHaigCollectMembers( pMan );\n    printf( \"Collected %6d class members.\\n\", Vec_PtrSize(vMembers) );\n\n    // create classes\n    vClasses = Abc_NtkHaigCreateClasses( vMembers );\n    printf( \"Collected %6d classes. (Ave = %5.2f)\\n\", Vec_PtrSize(vClasses), \n        (float)(Vec_PtrSize(vMembers))/Vec_PtrSize(vClasses) );\n\n    Vec_PtrFree( vMembers );\n    Vec_PtrFree( vClasses );\n}",
+      "Draft": "func Abc_NtkHaigResetReprsOld(pMan *Hop_Man_t) {\n    var vMembers, vClasses *Vec_Ptr_t;\n\n    // collect members of the classes and make them point to reprs\n    vMembers = Abc_NtkHaigCollectMembers( pMan );\n    fmt.Printf(\"Collected %6d class members.\\n\", Vec_PtrSize(vMembers));\n\n    // create classes\n    vClasses = Abc_NtkHaigCreateClasses( vMembers );\n    fmt.Printf(\"Collected %6d classes. (Ave = %5.2f)\\n\", Vec_PtrSize(vClasses), float32((Vec_PtrSize(vMembers)))/Vec_PtrSize(vClasses));\n\n    Vec_PtrFree( vMembers );\n    Vec_PtrFree( vClasses );\n}"
+    },
+    {
+      "Name": "Abc_NtkHaigResetReprs",
+      "Start": 13479,
+      "End": 15515,
+      "BodyStart": 13522,
+      "Original": "int Abc_NtkHaigResetReprs( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj, * pRepr;\n    int i, nClasses, nMembers, nFanouts, nNormals;\n    // clear self-classes\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        // fix the strange situation of double-loop\n        pRepr = (Hop_Obj_t *)pObj-\u003epData;\n        if ( pRepr \u0026\u0026 pRepr-\u003epData == pObj )\n            pRepr-\u003epData = pRepr;\n        // remove self-loops\n        if ( pObj-\u003epData == pObj )\n            pObj-\u003epData = NULL;\n    }\n    // set representatives\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( pObj-\u003epData == NULL )\n            continue;\n        // get representative of the node\n        pRepr = Hop_ObjRepr( pObj );\n        pRepr-\u003epData = pRepr;\n        // set the representative\n        pObj-\u003epData = pRepr;\n    }\n    // make each class point to the smallest topological order\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( pObj-\u003epData == NULL )\n            continue;\n        pRepr = Hop_ObjRepr( pObj );\n        if ( pRepr-\u003eId \u003e pObj-\u003eId )\n        {\n            pRepr-\u003epData = pObj;\n            pObj-\u003epData = pObj;\n        }\n        else\n            pObj-\u003epData = pRepr;\n    }\n    // count classes, members, and fanouts - and verify\n    nMembers = nClasses = nFanouts = nNormals = 0;\n    Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evObjs, pObj, i )\n    {\n        if ( pObj-\u003epData == NULL )\n            continue;\n        // count members\n        nMembers++;\n        // count the classes and fanouts\n        if ( pObj-\u003epData == pObj )\n            nClasses++;\n        else if ( Hop_ObjRefs(pObj) \u003e 0 )\n            nFanouts++;\n        else\n            nNormals++;\n        // compare representatives\n        pRepr = Hop_ObjRepr( pObj );\n        assert( pObj-\u003epData == pRepr );\n        assert( pRepr-\u003eId \u003c= pObj-\u003eId );\n    }\n//    printf( \"Nodes = %7d.  Member = %7d.  Classes = %6d.  Fanouts = %6d.  Normals = %6d.\\n\", \n//        Hop_ManNodeNum(p), nMembers, nClasses, nFanouts, nNormals );\n    return nFanouts;\n}",
+      "Draft": "func Abc_NtkHaigResetReprs(p *Hop_Man_t) int32 {\n    var pObj, pRepr *Hop_Obj_t;\n    var i, nClasses, nMembers, nFanouts, nNormals int32;\n    // clear self-classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        // fix the strange situation of double-loop\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        if (pRepr != nil) \u0026\u0026 pRepr.pData == pObj {\n            pRepr.pData = pRepr; }\n        // remove self-loops\n        if pObj.pData == pObj {\n            pObj.pData = nil; }\n    }\n    // set representatives\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        // get representative of the node\n        pRepr = Hop_ObjRepr( pObj );\n        pRepr.pData = pRepr;\n        // set the representative\n        pObj.pData = pRepr;\n    }\n    // make each class point to the smallest topological order\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        pRepr = Hop_ObjRepr( pObj );\n        if pRepr.Id \u003e pObj.Id {\n            pRepr.pData = pObj;\n            pObj.pData = pObj;\n        \n        } else {\n            pObj.pData = pRepr; }\n    }\n    // count classes, members, and fanouts - and verify\n    nMembers = nClasses = nFanouts = nNormals = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        // count members\n        nMembers++;\n        // count the classes and fanouts\n        if pObj.pData == pObj {\n            nClasses++;\n        } else if Hop_ObjRefs(pObj) \u003e 0 {\n            nFanouts++;\n        } else {\n            nNormals++; }\n        // compare representatives\n        pRepr = Hop_ObjRepr( pObj );\n        assert(pObj.pData == pRepr, \"pObj.pData == pRepr\");\n        assert(pRepr.Id \u003c= pObj.Id, \"pRepr.Id \u003c= pObj.Id\");\n    }\n//    printf( \"Nodes = %7d.  Member = %7d.  Classes = %6d.  Fanouts = %6d.  Normals = %6d.\\n\", \n//        Hop_ManNodeNum(p), nMembers, nClasses, nFanouts, nNormals );\n    return nFanouts;\n}"
+    },
+    {
+      "Name": "Abc_NtkHopRemoveLoops",
+      "Start": 15800,
+      "End": 16302,
+      "BodyStart": 15872,
+      "Original": "Abc_Ntk_t * Abc_NtkHopRemoveLoops( Abc_Ntk_t * pNtk, Hop_Man_t * pMan )\n{\n    Abc_Ntk_t * pNtkAig;\n    Hop_Man_t * pManTemp;\n\n    // iteratively reconstruct the HOP manager to create choice nodes\n    while ( Abc_NtkHaigResetReprs( pMan ) )\n    {\n        pMan = Abc_NtkHaigReconstruct( pManTemp = pMan );\n        Hop_ManStop( pManTemp );\n    }\n\n    // traverse in the topological order and create new AIG\n    pNtkAig = Abc_NtkHaigRecreateAig( pNtk, pMan );\n    Hop_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkHopRemoveLoops(pNtk *Abc_Ntk_t, pMan *Hop_Man_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pManTemp *Hop_Man_t;\n\n    // iteratively reconstruct the HOP manager to create choice nodes\n    for  Abc_NtkHaigResetReprs( pMan ) != 0  {\n        pMan = Abc_NtkHaigReconstruct( pManTemp = pMan );\n        Hop_ManStop( pManTemp );\n    }\n\n    // traverse in the topological order and create new AIG\n    pNtkAig = Abc_NtkHaigRecreateAig( pNtk, pMan );\n    Hop_ManStop( pMan );\n    return pNtkAig;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::1562",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1452,
+      "End": 1452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::2336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2119,
+      "End": 2119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::2409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2195,
+      "End": 2208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::2778",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2454,
+      "End": 2454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3051",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2620,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2696,
+      "End": 2709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2736,
+      "End": 2749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3405",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2867,
+      "End": 2867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2943,
+      "End": 2956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3557",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3022,
+      "End": 3035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3745",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3100,
+      "End": 3100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::3818",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3176,
+      "End": 3189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::4125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3373,
+      "End": 3373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::5150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4291,
+      "End": 4291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::5856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5000,
+      "End": 5013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::7012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6046,
+      "End": 6046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::7511",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6387,
+      "End": 6387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::7750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6497,
+      "End": 6497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::8199",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6949,
+      "End": 6962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::8474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7063,
+      "End": 7063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::9783",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8353,
+      "End": 8366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::10671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9241,
+      "End": 9254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::10828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9398,
+      "End": 9411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::11561",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10131,
+      "End": 10144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::11765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10174,
+      "End": 10174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::11837",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10227,
+      "End": 10240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::12017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10297,
+      "End": 10297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::12154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10437,
+      "End": 10450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::12179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10462,
+      "End": 10475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::12704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10776,
+      "End": 10776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::13048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11123,
+      "End": 11136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::13163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11238,
+      "End": 11251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::13211",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11286,
+      "End": 11299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::13225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11300,
+      "End": 11313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::13832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11907,
+      "End": 11920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::15671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13636,
+      "End": 13636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::15796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13764,
+      "End": 13777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::16144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14002,
+      "End": 14002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::16613",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14364,
+      "End": 14364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::pointer-cast::17158",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14802,
+      "End": 14802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigCollectMembers",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigCollectMembers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1301,
+      "End": 1673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigCreateClasses",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigCreateClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1925,
+      "End": 3908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigCountFans",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigCountFans",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4197,
+      "End": 4571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Hop_ObjReprHop",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjReprHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4808,
+      "End": 5134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Hop_ObjChild0Hop",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0Hop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5370,
+      "End": 5517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Hop_ObjChild1Hop",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1Hop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5518,
+      "End": 5665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigReconstruct",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigReconstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5919,
+      "End": 7370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigCheckTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigCheckTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7647,
+      "End": 8389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigCheckTfi",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigCheckTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8665,
+      "End": 8916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Hop_ObjChild0Next",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9152,
+      "End": 9308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Hop_ObjChild1Next",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9309,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigRecreateAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigRecreateAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9719,
+      "End": 12404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigResetReprsOld",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigResetReprsOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12663,
+      "End": 13220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHaigResetReprs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHaigResetReprs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13479,
+      "End": 15515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::Abc_NtkHopRemoveLoops",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkHopRemoveLoops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15800,
+      "End": 16302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcHaig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16549
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcHaig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Implements history AIG for combinational rewriting.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcHaig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes in the classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigCollectMembers(p *Hop_Man_t) *Vec_Ptr_t {\n    var vObjs *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    vObjs = Vec_PtrAlloc( 4098 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        pObj.pData = Hop_ObjRepr( pObj );\n        Vec_PtrPush( vObjs, pObj );\n    }\n    return vObjs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigCreateClasses(vMembers *Vec_Ptr_t) *Vec_Ptr_t {\n    var vClasses *Vec_Ptr_t;\n    var pObj, pRepr *Hop_Obj_t;\n    var i int32;\n\n    // count classes\n    vClasses = Vec_PtrAlloc( 4098 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        assert(pRepr.pData == nil, \"pRepr.pData == nil\");\n        if pRepr.fMarkA == 0 { // new\n        \n            pRepr.fMarkA = 1;\n            Vec_PtrPush( vClasses, pRepr );\n        }\n    }\n\n    // set representatives as representatives\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        pObj.fMarkA = 0;\n        pObj.pData = pObj;\n    }\n\n    // go through the members and update\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        if ((Hop_Obj_t *)pRepr.pData).Id \u003e pObj.Id {\n            pRepr.pData = pObj; }\n    }\n\n    // change representatives of the class\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        pObj.pData = pRepr.pData;\n        assert(((Hop_Obj_t *)pObj.pData).Id \u003c= pObj.Id, \"((Hop_Obj_t *)pObj.pData).Id \u003c= pObj.Id\");\n    }\n\n    // update classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vClasses)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        assert(pRepr.pData == pRepr, \"pRepr.pData == pRepr\");\n//        pRepr-\u003epData = NULL;\n        Vec_PtrWriteEntry( vClasses, i, pRepr );\n        Vec_PtrPush( vMembers, pObj );\n    }\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMembers)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {\n        if pObj.pData == pObj {\n            pObj.pData = nil; }\n    }\n\n/*\n    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )\n    {\n        printf( \"ObjId = %4d : \", pObj-\u003eId );\n        if ( pObj-\u003epData == NULL )\n        {\n            printf( \"NULL\" );\n        }\n        else\n        {\n            printf( \"%4d\", ((Hop_Obj_t *)pObj-\u003epData)-\u003eId );\n            assert( ((Hop_Obj_t *)pObj-\u003epData)-\u003eId \u003c= pObj-\u003eId );\n        }\n        printf( \"\\n\" );\n    }\n*/\n    return vClasses;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts how many data members have non-trivial fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigCountFans(p *Hop_Man_t) int32 {\n    var pObj *Hop_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        if Hop_ObjRefs(pObj) \u003e 0 {\n            Counter++; }\n    }\n    fmt.Printf(\"The number of class members with fanouts = %5d.\\n\", Counter);\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjReprHop(pObj *Hop_Obj_t) *Hop_Obj_t {\n    var pRepr *Hop_Obj_t;\n    assert(pObj.pNext != nil, \"pObj.pNext != nil\");\n    if pObj.pData == nil {\n        return pObj.pNext; }\n    pRepr = (Hop_Obj_t *)pObj.pData;\n    assert(pRepr.pData == pRepr, \"pRepr.pData == pRepr\");\n    return Hop_NotCond( pRepr.pNext, pObj.fPhase ^ pRepr.fPhase );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjChild0Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin0(pObj)), Hop_ObjFaninC0(pObj) ); }\nfunc Hop_ObjChild1Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin1(pObj)), Hop_ObjFaninC1(pObj) ); }\n\n/**Function*************************************************************\n\n  Synopsis    [Stops history AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigReconstruct(p *Hop_Man_t) *Hop_Man_t { \n    var pNew *Hop_Man_t;\n    var pObj *Hop_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        pObj.pNext = nil;\n    }\n    // start the HOP package\n    pNew = Hop_ManStart();\n    pNew.vObjs = Vec_PtrAlloc( p.nCreated );\n    Vec_PtrPush( pNew.vObjs, Hop_ManConst1(pNew) );\n    // map the constant node\n    Hop_ManConst1(p).pNext = Hop_ManConst1(pNew);\n    // map the CIs\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pNext = Hop_ObjCreatePi(pNew);\n    }\n    // map the internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if !Hop_ObjIsNode(pObj) {\n            continue; }\n        pObj.pNext = Hop_And( pNew, Hop_ObjChild0Hop(pObj), Hop_ObjChild1Hop(pObj) );\n//        assert( !Hop_IsComplement(pObj-\u003epNext) );\n        if Hop_ManConst1(pNew) == Hop_Regular(pObj.pNext) {\n            Counter++; }\n        if pObj.pData { // member of the class\n            Hop_Regular(pObj.pNext).pData = Hop_Regular(((Hop_Obj_t *)pObj.pData).pNext); }\n    }\n//    printf( \" Counter = %d.\\n\", Counter );\n    // transfer the POs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjCreatePo( pNew, Hop_ObjChild0Hop(pObj) );\n    }\n    // check the new manager\n    if !Hop_ManCheck(pNew) {\n        fmt.Printf(\"Abc_NtkHaigReconstruct: Check for History AIG has failed.\\n\");\n        Hop_ManStop(pNew);\n        return nil;\n    }\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {\n    if pNode == nil {\n        return 0; }\n    if pNode == pOld {\n        return 1; }\n    // check the trivial cases\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return 0; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check the children\n    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Abc_NtkHaigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigCheckTfi(pNtk *Abc_Ntk_t, pOld *Abc_Obj_t, pNew *Abc_Obj_t) int32 {\n    assert(!Abc_ObjIsComplement(pOld), \"!Abc_ObjIsComplement(pOld)\");\n    assert(!Abc_ObjIsComplement(pNew), \"!Abc_ObjIsComplement(pNew)\");\n    Abc_NtkIncrementTravId(pNtk);\n    return Abc_NtkHaigCheckTfi_rec( pNew, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjChild0Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin0(pObj).pNext, Hop_ObjFaninC0(pObj) );  }\nfunc Hop_ObjChild1Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin1(pObj).pNext, Hop_ObjFaninC1(pObj) );  }\n\n/**Function*************************************************************\n\n  Synopsis    [Stops history AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigRecreateAig(pNtk *Abc_Ntk_t, p *Hop_Man_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pObjOld, pObjAbcThis, pObjAbcRepr *Abc_Obj_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    assert(p.nCreated == Vec_PtrSize(p.vObjs), \"p.nCreated == Vec_PtrSize(p.vObjs)\");\n\n    // start the new network\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // transfer new nodes to the PIs of HOP\n    Hop_ManConst1(p).pNext = (Hop_Obj_t *)Abc_AigConst1( pNtkAig );\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pNext = (Hop_Obj_t *)Abc_NtkCi( pNtkAig, i );\n    }\n\n    // construct new nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if !Hop_ObjIsNode(pObj) {\n            continue; }\n        pObj.pNext = (Hop_Obj_t *)Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );\n        assert(!Hop_IsComplement(pObj.pNext), \"!Hop_IsComplement(pObj.pNext)\");\n    }\n\n    // set the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObjOld) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_ObjAddFanin( pObjOld.pCopy, Hop_ObjChild0Next(Hop_ManPo(p,i)) );\n    }\n\n    // construct choice nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        // skip the node without choices\n        if pObj.pData == nil {\n            continue; }\n        // skip the representative of the class\n        if pObj.pData == pObj {\n            continue; }\n        // do not create choices for constant 1 and PIs\n        if !Hop_ObjIsNode((Hop_Obj_t *)pObj.pData) {\n            continue; }\n        // get the corresponding new nodes\n        pObjAbcThis = (Abc_Obj_t *)pObj.pNext;\n        pObjAbcRepr = (Abc_Obj_t *)((Hop_Obj_t *)pObj.pData).pNext;\n        // the new node cannot be already in the class\n        assert(pObjAbcThis.pData == nil, \"pObjAbcThis.pData == nil\");\n        // the new node cannot have fanouts\n        assert(Abc_ObjFanoutNum(pObjAbcThis) == 0, \"Abc_ObjFanoutNum(pObjAbcThis) == 0\");\n        // these should be different nodes\n        assert(pObjAbcRepr != pObjAbcThis, \"pObjAbcRepr != pObjAbcThis\");\n        // do not create choices if there is a path from pObjAbcThis to pObjAbcRepr\n        if !(Abc_NtkHaigCheckTfi( pNtkAig, pObjAbcRepr, pObjAbcThis ) != 0) {\n            // find the last node in the class\n            for  pObjAbcRepr.pData  {\n                pObjAbcRepr = (Abc_Obj_t *)pObjAbcRepr.pData;\n            }\n            // add the new node at the end of the list\n            pObjAbcRepr.pData = pObjAbcThis;\n        }\n    }\n\n    // finish the new network\n//    Abc_NtkFinalize( pNtk, pNtkAig );\n//    Abc_AigCleanup( pNtkAig-\u003epManFunc );\n    // check correctness of the network\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkHaigUse: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigResetReprsOld(pMan *Hop_Man_t) {\n    var vMembers, vClasses *Vec_Ptr_t;\n\n    // collect members of the classes and make them point to reprs\n    vMembers = Abc_NtkHaigCollectMembers( pMan );\n    fmt.Printf(\"Collected %6d class members.\\n\", Vec_PtrSize(vMembers));\n\n    // create classes\n    vClasses = Abc_NtkHaigCreateClasses( vMembers );\n    fmt.Printf(\"Collected %6d classes. (Ave = %5.2f)\\n\", Vec_PtrSize(vClasses), float32((Vec_PtrSize(vMembers)))/Vec_PtrSize(vClasses));\n\n    Vec_PtrFree( vMembers );\n    Vec_PtrFree( vClasses );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHaigResetReprs(p *Hop_Man_t) int32 {\n    var pObj, pRepr *Hop_Obj_t;\n    var i, nClasses, nMembers, nFanouts, nNormals int32;\n    // clear self-classes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        // fix the strange situation of double-loop\n        pRepr = (Hop_Obj_t *)pObj.pData;\n        if (pRepr != nil) \u0026\u0026 pRepr.pData == pObj {\n            pRepr.pData = pRepr; }\n        // remove self-loops\n        if pObj.pData == pObj {\n            pObj.pData = nil; }\n    }\n    // set representatives\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        // get representative of the node\n        pRepr = Hop_ObjRepr( pObj );\n        pRepr.pData = pRepr;\n        // set the representative\n        pObj.pData = pRepr;\n    }\n    // make each class point to the smallest topological order\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        pRepr = Hop_ObjRepr( pObj );\n        if pRepr.Id \u003e pObj.Id {\n            pRepr.pData = pObj;\n            pObj.pData = pObj;\n        \n        } else {\n            pObj.pData = pRepr; }\n    }\n    // count classes, members, and fanouts - and verify\n    nMembers = nClasses = nFanouts = nNormals = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {\n        if pObj.pData == nil {\n            continue; }\n        // count members\n        nMembers++;\n        // count the classes and fanouts\n        if pObj.pData == pObj {\n            nClasses++;\n        } else if Hop_ObjRefs(pObj) \u003e 0 {\n            nFanouts++;\n        } else {\n            nNormals++; }\n        // compare representatives\n        pRepr = Hop_ObjRepr( pObj );\n        assert(pObj.pData == pRepr, \"pObj.pData == pRepr\");\n        assert(pRepr.Id \u003c= pObj.Id, \"pRepr.Id \u003c= pObj.Id\");\n    }\n//    printf( \"Nodes = %7d.  Member = %7d.  Classes = %6d.  Fanouts = %6d.  Normals = %6d.\\n\", \n//        Hop_ManNodeNum(p), nMembers, nClasses, nFanouts, nNormals );\n    return nFanouts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform HOP manager into the one without loops.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkHopRemoveLoops(pNtk *Abc_Ntk_t, pMan *Hop_Man_t) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pManTemp *Hop_Man_t;\n\n    // iteratively reconstruct the HOP manager to create choice nodes\n    for  Abc_NtkHaigResetReprs( pMan ) != 0  {\n        pMan = Abc_NtkHaigReconstruct( pManTemp = pMan );\n        Hop_ManStop( pManTemp );\n    }\n\n    // traverse in the topological order and create new AIG\n    pNtkAig = Abc_NtkHaigRecreateAig( pNtk, pMan );\n    Hop_ManStop( pMan );\n    return pNtkAig;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

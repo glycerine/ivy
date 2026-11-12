@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c",
+  "SHA256": "1dfcbe1b54b2aac18b2f33ba139ddc5d0d4b370f4f528f9e91dc035f21820c18",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 8794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pStr[0] == '[' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 150,
+        "Column": 20,
+        "ByteOffset": 8839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Left = Right = atoi( pStr + 1 );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 12,
+        "ByteOffset": 8868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStr = strstr( pStr, \"=\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 153,
+        "Column": 17,
+        "ByteOffset": 8919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Right = atoi( pStr + 1 ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 157,
+        "Column": 12,
+        "ByteOffset": 9075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return atoi( Psr_NtkStr(p, Const) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 9914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 10070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSlices) \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_ManRangeSizeName",
+      "Start": 8545,
+      "End": 8628,
+      "BodyStart": 8611,
+      "Original": "static inline int Psr_ManRangeSizeName( Psr_Ntk_t * p, int Name )\n{\n    return 1;\n}",
+      "Draft": "func Psr_ManRangeSizeName(p *Psr_Ntk_t, Name int32) int32 {\n    return 1;\n}"
+    },
+    {
+      "Name": "Psr_ManRangeSizeRange",
+      "Start": 8629,
+      "End": 9025,
+      "BodyStart": 8697,
+      "Original": "static inline int Psr_ManRangeSizeRange( Psr_Ntk_t * p, int Range )\n{\n    char * pStr; \n    int Left, Right;\n    if ( Range == 0 ) \n        return 1;\n    pStr = Psr_NtkStr( p, Range );\n    assert( pStr[0] == '[' );\n    Left = Right = atoi( pStr + 1 );\n    pStr = strstr( pStr, \"=\" );\n    if ( pStr )\n        Right = atoi( pStr + 1 );\n    return 1 + (Left \u003e Right ? Left - Right : Right - Left);\n}",
+      "Draft": "func Psr_ManRangeSizeRange(p *Psr_Ntk_t, Range int32) int32 {\n    var pStr string; \n    var Left, Right int32;\n    if Range == 0 { \n        return 1; }\n    pStr = Psr_NtkStr( p, Range );\n    assert(pStr[0] == '[', \"pStr[0] == '['\");\n    Left = Right = strconv.Atoi(pStr + 1);\n    pStr = strstr( pStr, \"=\" );\n    if pStr {\n        Right = strconv.Atoi(pStr + 1); }\n    return 1 + (Left \u003e Right ? Left - Right : Right - Left);\n}"
+    },
+    {
+      "Name": "Psr_ManRangeSizeConst",
+      "Start": 9026,
+      "End": 9138,
+      "BodyStart": 9094,
+      "Original": "static inline int Psr_ManRangeSizeConst( Psr_Ntk_t * p, int Const )\n{\n    return atoi( Psr_NtkStr(p, Const) );\n}",
+      "Draft": "func Psr_ManRangeSizeConst(p *Psr_Ntk_t, Const int32) int32 {\n    return strconv.Atoi(Psr_NtkStr(p, Const));\n}"
+    },
+    {
+      "Name": "Psr_ManRangeSizeConcat",
+      "Start": 9139,
+      "End": 9423,
+      "BodyStart": 9206,
+      "Original": "static inline int Psr_ManRangeSizeConcat( Psr_Ntk_t * p, int Con )\n{\n    extern int Psr_ManRangeSizeArray( Psr_Ntk_t * p, Vec_Int_t * vSlices, int Start, int Stop );\n    Vec_Int_t * vSigs = Psr_CatSignals(p, Con);\n    return Psr_ManRangeSizeArray( p, vSigs, 0, Vec_IntSize(vSigs) );\n}",
+      "Draft": "func Psr_ManRangeSizeConcat(p *Psr_Ntk_t, Con int32) int32 {\n    extern int Psr_ManRangeSizeArray( Psr_Ntk_t * p, Vec_Int_t * vSlices, int Start, int Stop );\n    var vSigs *Vec_Int_t  = Psr_CatSignals(p, Con);\n    return Psr_ManRangeSizeArray( p, vSigs, 0, Vec_IntSize(vSigs) );\n}"
+    },
+    {
+      "Name": "Psr_ManRangeSizeSignal",
+      "Start": 9424,
+      "End": 9974,
+      "BodyStart": 9491,
+      "Original": "static inline int Psr_ManRangeSizeSignal( Psr_Ntk_t * p, int Sig )\n{\n    int Value = Abc_Lit2Var2( Sig );\n    Psr_ManType_t Type = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if ( Type == BAC_PRS_NAME )\n        return Psr_ManRangeSizeName( p, Value );\n    if ( Type == BAC_PRS_SLICE )\n        return Psr_ManRangeSizeRange( p, Psr_SliceRange(p, Value) );\n    if ( Type == BAC_PRS_CONST )\n        return Psr_ManRangeSizeConst( p, Value );\n    if ( Type == BAC_PRS_CONCAT )\n        return Psr_ManRangeSizeConcat( p, Value );\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Psr_ManRangeSizeSignal(p *Psr_Ntk_t, Sig int32) int32 {\n    var Value int32  = Abc_Lit2Var2( Sig );\n    var Type Psr_ManType_t  = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if Type == BAC_PRS_NAME {\n        return Psr_ManRangeSizeName( p, Value ); }\n    if Type == BAC_PRS_SLICE {\n        return Psr_ManRangeSizeRange( p, Psr_SliceRange(p, Value) ); }\n    if Type == BAC_PRS_CONST {\n        return Psr_ManRangeSizeConst( p, Value ); }\n    if Type == BAC_PRS_CONCAT {\n        return Psr_ManRangeSizeConcat( p, Value ); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Psr_ManRangeSizeArray",
+      "Start": 9975,
+      "End": 10264,
+      "BodyStart": 10060,
+      "Original": "int Psr_ManRangeSizeArray( Psr_Ntk_t * p, Vec_Int_t * vSlices, int Start, int Stop )\n{\n    int i, Sig, Count = 0;\n    assert( Vec_IntSize(vSlices) \u003e 0 );\n    Vec_IntForEachEntryStartStop( vSlices, Sig, i, Start, Stop )\n        Count += Psr_ManRangeSizeSignal( p, Sig );\n    return Count;\n}",
+      "Draft": "func Psr_ManRangeSizeArray(p *Psr_Ntk_t, vSlices *Vec_Int_t, Start int32, Stop int32) int32 {\n    var i, Sig, Count int32;\n    assert(Vec_IntSize(vSlices) \u003e 0, \"Vec_IntSize(vSlices) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = Start; (i \u003c Stop) \u0026\u0026 (((Sig) = Vec_IntEntry(vSlices, i)), 1); i++  {\n        Count += Psr_ManRangeSizeSignal( p, Sig );\n    }\n    return Count;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::struct::Bac_Trip_t::char *        pSigs[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Bac_Trip_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 960,
+      "End": 988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::struct::Bac_Trip_t",
+      "Category": "struct-review",
+      "Symbol": "Bac_Trip_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 827,
+      "End": 991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeName",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8545,
+      "End": 8628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::ternary::Psr_ManRangeSizeRange",
+      "Category": "ternary-review",
+      "Symbol": "Psr_ManRangeSizeRange",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8629,
+      "End": 9025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeRange",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8629,
+      "End": 9025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeConst",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9026,
+      "End": 9138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeConcat",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeConcat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9139,
+      "End": 9423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeSignal",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeSignal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9424,
+      "End": 9974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::Psr_ManRangeSizeArray",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManRangeSizeArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9975,
+      "End": 10264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPrsTrans.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10748
+    }
+  ],
+  "Draft": "package bac\n\nimport \"strconv\"\n\n/**CFile****************************************************************\n\n  FileName    [bacPrsTrans.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Parse tree to netlist transformation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacPrsTrans.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Bac_Trip_t struct {\n    Type Bac_ObjType_t;\n    pName         string;\n    pCode         string;\n    pSigs [6]string;\n}\n/*\nstatic Bac_Trip_t s_Types[100] =\n{ \n    { BAC_BOX_CT       , \"VERIFIC_PWR\",           \"1\",      {\"o\"} },\n    { BAC_BOX_CF       , \"VERIFIC_GND\",           \"1\",      {\"o\"} },\n    { BAC_BOX_CX       , \"VERIFIC_X\",             \"1\",      {\"o\"} },\n    { BAC_BOX_CZ       , \"VERIFIC_Z\",             \"1\",      {\"o\"} },\n    { BAC_BOX_INV      , \"VERIFIC_INV\",           \"11\",     {\"i\",\"o\"} },\n    { BAC_BOX_BUF      , \"VERIFIC_BUF\",           \"11\",     {\"i\",\"o\"} },\n    { BAC_BOX_AND      , \"VERIFIC_AND\",           \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_NAND     , \"VERIFIC_NAND\",          \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_OR       , \"VERIFIC_OR\",            \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_NOR      , \"VERIFIC_NOR\",           \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_XOR      , \"VERIFIC_XOR\",           \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_XNOR     , \"VERIFIC_XNOR\",          \"111\",    {\"a0\",\"a1\",\"o\"} },\n    { BAC_BOX_MUX      , \"VERIFIC_MUX\",           \"1111\",   {\"c\",\"a1\",\"a0\",\"o\"} },                        // changed order\n    { (Bac_ObjType_t)-1, \"VERIFIC_PULLUP\",        \"1\",      {\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_PULLDOWN\",      \"1\",      {\"o\"} },\n    { BAC_BOX_TRI      , \"VERIFIC_TRI\",           \"111\",    {\"i\",\"c\",\"o\"} },\n    { BAC_BOX_LATCH    , \"VERIFIC_DLATCH\",        \"11111\",  {\"d\",\"async_val\",\"async_cond\",\"gate\",\"q\"} },  // changed order\n    { BAC_BOX_LATCHRS  , \"VERIFIC_DLATCHRS\",      \"11111\",  {\"d\",\"s\",\"r\",\"gate\",\"q\"} },                   // changed order\n    { BAC_BOX_DFF      , \"VERIFIC_DFF\",           \"11111\",  {\"d\",\"async_val\",\"async_cond\",\"clk\",\"q\"} },   // changed order\n    { BAC_BOX_DFFRS    , \"VERIFIC_DFFRS\",         \"11111\",  {\"d\",\"s\",\"r\",\"clk\",\"q\"} },                    // changed order\n    { (Bac_ObjType_t)-1, \"VERIFIC_NMOS\",          \"111\",    {\"c\",\"d\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_PMOS\",          \"111\",    {\"c\",\"d\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_CMOS\",          \"1111\",   {\"d\",\"nc\",\"pc\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_TRAN\",          \"111\",    {\"inout1\",\"inout2\",\"control\"} },\n    { BAC_BOX_ADD      , \"VERIFIC_FADD\",          \"11111\",  {\"cin\",\"a\",\"b\",\"o\",\"cout\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_RCMOS\",         \"1111\",   {\"d\",\"nc\",\"pc\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_RNMOS\",         \"111\",    {\"c\",\"d\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_RPMOS\",         \"111\",    {\"c\",\"d\",\"o\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_RTRAN\",         \"111\",    {\"inout1\",\"inout2\",\"control\"} },\n    { (Bac_ObjType_t)-1, \"VERIFIC_HDL_ASSERTION\", \"1\",      {\"condition\"} },\n    { BAC_BOX_ADD      , \"add_\",                  \"1aba1\",  {\"cin\",\"a\",\"b\",\"o\",\"cout\"} },\n    { BAC_BOX_MUL      , \"mult_\",                 \"ab?\",    {\"a\",\"b\",\"o\"} },            // ? = a * b\n    { BAC_BOX_DIV      , \"div_\",                  \"ab?\",    {\"a\",\"b\",\"o\"} },            // ? = \n    { BAC_BOX_MOD      , \"mod_\",                  \"ab?\",    {\"a\",\"b\",\"o\"} },            // ? =\n    { BAC_BOX_REM      , \"rem_\",                  \"ab?\",    {\"a\",\"b\",\"o\"} },            // ? =\n    { BAC_BOX_SHIL     , \"shift_left_\",           \"1aba\",   {\"cin\",\"a\",\"amount\",\"o\"} },\n    { BAC_BOX_SHIR     , \"shift_right_\",          \"1aba\",   {\"cin\",\"a\",\"amount\",\"o\"} },\n    { BAC_BOX_ROTL     , \"rotate_left_\",          \"aba\",    {\"a\",\"amount\",\"o\"} },\n    { BAC_BOX_ROTR     , \"rotate_right_\",         \"aba\",    {\"a\",\"amount\",\"o\"} },\n    { BAC_BOX_RAND     , \"reduce_and_\",           \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_ROR      , \"reduce_or_\",            \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_RXOR     , \"reduce_xor_\",           \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_RNAND    , \"reduce_nand_\",          \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_RNOR     , \"reduce_nor_\",           \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_RXNOR    , \"reduce_xnor_\",          \"ab1\",    {\"a\",\"o\"} },\n    { BAC_BOX_LTHAN    , \"LessThan_\",             \"1ab1\",   {\"cin\",\"a\",\"b\",\"o\"} },\n    { BAC_BOX_NMUX     , \"Mux_\",                  \"ab1\",    {\"sel\",\"data\",\"o\"} },       \n    { BAC_BOX_SEL      , \"Select_\",               \"aaa\",    {\"sel\",\"data\",\"o\"} },\n    { BAC_BOX_DEC      , \"Decoder_\",              \"a?\",     {\"a\",\"o\"} },                // ? = (1 \u003c\u003c a)\n    { BAC_BOX_EDEC     , \"EnabledDecoder_\",       \"1a?\",    {\"en\",\"i\",\"o\"} },           // ? = (1 \u003c\u003c a)\n    { BAC_BOX_PSEL     , \"PrioSelect_\",           \"1aaa\",   {\"cin\",\"sel\",\"data\",\"o\"} },\n    { BAC_BOX_RAM      , \"DualPortRam_\",          \"1abab\",  {\"write_enable\",\"write_address\",\"write_data\",\"read_address\",\"read_data\"} },\n    { BAC_BOX_RAMR     , \"ReadPort_\",             \"1a1b\",   {\"read_enable\", \"read_address\", \"RAM\", \"read_data\" } },\n    { BAC_BOX_RAMW     , \"WritePort_\",            \"1ab1\",   {\"write_enable\",\"write_address\",\"write_data\", \"RAM\"} },\n    { BAC_BOX_RAMWC    , \"ClockedWritePort_\",     \"11ab1\",  {\"clk\",\"write_enable\",\"write_address\",\"write_data\", \"RAM\"} },\n    { BAC_BOX_LUT      , \"lut\",                   \"?\",      {\"i\",\"o\"} },\n    { BAC_BOX_AND      , \"and_\",                  \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_OR       , \"or_\",                   \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_XOR      , \"xor_\",                  \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_NAND     , \"nand_\",                 \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_NOR      , \"nor_\",                  \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_XNOR     , \"xnor_\",                 \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_BUF      , \"buf_\",                  \"aa\",     {\"i\",\"o\"} },\n    { BAC_BOX_INV      , \"inv_\",                  \"aa\",     {\"i\",\"o\"} },\n    { BAC_BOX_TRI      , \"tri_\",                  \"a1a\",    {\"i\",\"c\",\"o\"} },\n    { BAC_BOX_SUB      , \"sub_\",                  \"aaa\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_MIN      , \"unary_minus_\",          \"aa\",     {\"i\",\"o\"} },\n    { BAC_BOX_EQU      , \"equal_\",                \"aa1\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_NEQU     , \"not_equal_\",            \"aa1\",    {\"a\",\"b\",\"o\"} },\n    { BAC_BOX_MUX      , \"mux_\",                  \"1aaa\",   {\"cond\",\"d1\",\"d0\",\"o\"} },                       // changed order\n    { BAC_BOX_NMUX     , \"wide_mux_\",             \"ab?\",    {\"sel\",\"data\",\"o\"} },             // ? = b / (1 \u003c\u003c a)\n    { BAC_BOX_SEL      , \"wide_select_\",          \"ab?\",    {\"sel\",\"data\",\"o\"} },             // ? = b / a\n    { BAC_BOX_DFF      , \"wide_dff_\",             \"aaa1a\",  {\"d\",\"async_val\",\"async_cond\",\"clock\",\"q\"} },\n    { BAC_BOX_DFFRS    , \"wide_dlatch_\",          \"aaa1a\",  {\"d\",\"set\",\"reset\",\"clock\",\"q\"} },           \n    { BAC_BOX_LATCHRS  , \"wide_dffrs_\",           \"aaa1a\",  {\"d\",\"set\",\"reset\",\"clock\",\"q\"} },           \n    { BAC_BOX_LATCH    , \"wide_dlatchrs_\",        \"aaa1a\",  {\"d\",\"async_val\",\"async_cond\",\"clock\",\"q\"} },\n    { BAC_BOX_PSEL     , \"wide_prio_select_\",     \"ab??\",   {\"sel\",\"data\",\"carry_in\",\"o\"} },  // ? = b / a\n    { BAC_BOX_POW      , \"pow_\",                  \"abc\",    {\"a\",\"b\",\"o\"} },                  // ? = \n    { BAC_BOX_PENC     , \"PrioEncoder_\",          \"a?\",     {\"sel\",\"o\"} },\n    { BAC_BOX_ABS      , \"abs\",                   \"aa\",     {\"i\",\"o\"} }\n};\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Count range size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManRangeSizeName(p *Psr_Ntk_t, Name int32) int32 {\n    return 1;\n}\nfunc Psr_ManRangeSizeRange(p *Psr_Ntk_t, Range int32) int32 {\n    var pStr string; \n    var Left, Right int32;\n    if Range == 0 { \n        return 1; }\n    pStr = Psr_NtkStr( p, Range );\n    assert(pStr[0] == '[', \"pStr[0] == '['\");\n    Left = Right = strconv.Atoi(pStr + 1);\n    pStr = strstr( pStr, \"=\" );\n    if pStr {\n        Right = strconv.Atoi(pStr + 1); }\n    return 1 + (Left \u003e Right ? Left - Right : Right - Left);\n}\nfunc Psr_ManRangeSizeConst(p *Psr_Ntk_t, Const int32) int32 {\n    return strconv.Atoi(Psr_NtkStr(p, Const));\n}\nfunc Psr_ManRangeSizeConcat(p *Psr_Ntk_t, Con int32) int32 {\n    extern int Psr_ManRangeSizeArray( Psr_Ntk_t * p, Vec_Int_t * vSlices, int Start, int Stop );\n    var vSigs *Vec_Int_t  = Psr_CatSignals(p, Con);\n    return Psr_ManRangeSizeArray( p, vSigs, 0, Vec_IntSize(vSigs) );\n}\nfunc Psr_ManRangeSizeSignal(p *Psr_Ntk_t, Sig int32) int32 {\n    var Value int32  = Abc_Lit2Var2( Sig );\n    var Type Psr_ManType_t  = (Psr_ManType_t)Abc_Lit2Att2( Sig );\n    if Type == BAC_PRS_NAME {\n        return Psr_ManRangeSizeName( p, Value ); }\n    if Type == BAC_PRS_SLICE {\n        return Psr_ManRangeSizeRange( p, Psr_SliceRange(p, Value) ); }\n    if Type == BAC_PRS_CONST {\n        return Psr_ManRangeSizeConst( p, Value ); }\n    if Type == BAC_PRS_CONCAT {\n        return Psr_ManRangeSizeConcat( p, Value ); }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Psr_ManRangeSizeArray(p *Psr_Ntk_t, vSlices *Vec_Int_t, Start int32, Stop int32) int32 {\n    var i, Sig, Count int32;\n    assert(Vec_IntSize(vSlices) \u003e 0, \"Vec_IntSize(vSlices) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = Start; (i \u003c Stop) \u0026\u0026 (((Sig) = Vec_IntEntry(vSlices, i)), 1); i++  {\n        Count += Psr_ManRangeSizeSignal( p, Sig );\n    }\n    return Count;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

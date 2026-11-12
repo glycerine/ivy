@@ -1,0 +1,772 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c",
+  "SHA256": "853dc2f1ebefd087704ee54359ef820356d8958aa6b614d432c24d15a8094a86",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkBalance: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 120,
+        "Column": 41,
+        "ByteOffset": 4230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 7523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LeftBound \u003c= RightBound );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 9218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNodeOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 9358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNodeOld) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 10165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"BUG!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 10348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vSuper.nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 11029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeOld.pCopy == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 12049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 12457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vNodes.nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 13969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 14352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 14395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 15539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 15582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 15618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.fExor );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 5,
+        "ByteOffset": 16475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d \", Vec_PtrSize(vSuper) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 17001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 17629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vNodes.nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 544,
+        "Column": 5,
+        "ByteOffset": 20358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 550,
+        "Column": 5,
+        "ByteOffset": 20543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vSuper != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 604,
+        "Column": 5,
+        "ByteOffset": 22485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The number of nodes on the critical paths = %6d  (%5.2f %%)\\n\", Counter, 100.0 * Counter / Abc_NtkNodeNum(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkBalance",
+      "Start": 1991,
+      "End": 3229,
+      "BodyStart": 2088,
+      "Original": "Abc_Ntk_t * Abc_NtkBalance( Abc_Ntk_t * pNtk, int fDuplicate, int fSelective, int fUpdateLevel )\n{\n//    extern void Abc_NtkHaigTranfer( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n    Abc_Ntk_t * pNtkAig;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // compute the required times\n    if ( fSelective )\n    {\n        Abc_NtkStartReverseLevels( pNtk, 0 );\n        Abc_NtkMarkCriticalNodes( pNtk );\n    }\n    // perform balancing\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer HAIG\n//    Abc_NtkHaigTranfer( pNtk, pNtkAig );\n    // perform balancing\n    Abc_NtkBalancePerform( pNtk, pNtkAig, fDuplicate, fSelective, fUpdateLevel );\n    Abc_NtkFinalize( pNtk, pNtkAig );\n    Abc_AigCleanup( (Abc_Aig_t *)pNtkAig-\u003epManFunc );\n    // undo the required times\n    if ( fSelective )\n    {\n        Abc_NtkStopReverseLevels( pNtk );\n        Abc_NtkCleanMarkA( pNtk );\n    }\n    if ( pNtk-\u003epExdc )\n        pNtkAig-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkAig ) )\n    {\n        printf( \"Abc_NtkBalance: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkAig );\n        return NULL;\n    }\n//Abc_NtkPrintCiLevels( pNtkAig );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkBalance(pNtk *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Ntk_t {\n//    extern void Abc_NtkHaigTranfer( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n    var pNtkAig *Abc_Ntk_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // compute the required times\n    if fSelective != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 );\n        Abc_NtkMarkCriticalNodes( pNtk );\n    }\n    // perform balancing\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer HAIG\n//    Abc_NtkHaigTranfer( pNtk, pNtkAig );\n    // perform balancing\n    Abc_NtkBalancePerform( pNtk, pNtkAig, fDuplicate, fSelective, fUpdateLevel );\n    Abc_NtkFinalize( pNtk, pNtkAig );\n    Abc_AigCleanup( (Abc_Aig_t *)pNtkAig.pManFunc );\n    // undo the required times\n    if fSelective != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n        Abc_NtkCleanMarkA( pNtk );\n    }\n    if pNtk.pExdc {\n        pNtkAig.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkBalance: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n//Abc_NtkPrintCiLevels( pNtkAig );\n    return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkBalancePerform",
+      "Start": 3490,
+      "End": 4860,
+      "BodyStart": 3608,
+      "Original": "void Abc_NtkBalancePerform( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkAig, int fDuplicate, int fSelective, int fUpdateLevel )\n{\n    ProgressBar * pProgress;\n    Vec_Vec_t * vStorage;\n    Abc_Obj_t * pNode;\n    int i;\n    // transfer level\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy-\u003eLevel = pNode-\u003eLevel;\n    // set the level of PIs of AIG according to the arrival times of the old network\n    Abc_NtkSetNodeLevelsArrival( pNtk );\n    // allocate temporary storage for supergates\n    vStorage = Vec_VecStart( 10 );\n    // perform balancing of POs\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );\n    if ( pNtk-\u003enBarBufs == 0 )\n    {\n        Abc_NtkForEachCo( pNtk, pNode, i )\n        {\n            Extra_ProgressBarUpdate( pProgress, i, NULL );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n        }\n    }\n    else\n    {\n        Abc_NtkForEachLiPo( pNtk, pNode, i )\n        {\n            Extra_ProgressBarUpdate( pProgress, i, NULL );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n            if ( i \u003c pNtk-\u003enBarBufs )\n                Abc_ObjFanout0(Abc_ObjFanout0(pNode))-\u003eLevel = Abc_ObjFanin0(pNode)-\u003eLevel;\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vStorage );\n}",
+      "Draft": "func Abc_NtkBalancePerform(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) {\n    var pProgress *ProgressBar;\n    var vStorage *Vec_Vec_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // transfer level\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy.Level = pNode.Level;\n    }\n    // set the level of PIs of AIG according to the arrival times of the old network\n    Abc_NtkSetNodeLevelsArrival( pNtk );\n    // allocate temporary storage for supergates\n    vStorage = Vec_VecStart( 10 );\n    // perform balancing of POs\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    if pNtk.nBarBufs == 0 {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            Extra_ProgressBarUpdate( pProgress, i, nil );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n        }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachLiPo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i \u003c pNtk.nBarBufs ? Abc_NtkCoNum(pNtk) - pNtk.nBarBufs + i : i - pNtk.nBarBufs)), 1); i++  {\n            Extra_ProgressBarUpdate( pProgress, i, nil );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n            if i \u003c pNtk.nBarBufs {\n                Abc_ObjFanout0(Abc_ObjFanout0(pNode)).Level = Abc_ObjFanin0(pNode).Level; }\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vStorage );\n}"
+    },
+    {
+      "Name": "Abc_NodeBalanceFindLeft",
+      "Start": 5546,
+      "End": 6534,
+      "BodyStart": 5596,
+      "Original": "int Abc_NodeBalanceFindLeft( Vec_Ptr_t * vSuper )\n{\n    Abc_Obj_t * pNodeRight, * pNodeLeft;\n    int Current;\n    // if two or less nodes, pair with the first\n    if ( Vec_PtrSize(vSuper) \u003c 3 )\n        return 0;\n    // set the pointer to the one before the last\n    Current = Vec_PtrSize(vSuper) - 2;\n    pNodeRight = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    // go through the nodes to the left of this one\n    for ( Current--; Current \u003e= 0; Current-- )\n    {\n        // get the next node on the left\n        pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n        // if the level of this node is different, quit the loop\n        if ( Abc_ObjRegular(pNodeLeft)-\u003eLevel != Abc_ObjRegular(pNodeRight)-\u003eLevel )\n            break;\n    }\n    Current++;    \n    // get the node, for which the equality holds\n    pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    assert( Abc_ObjRegular(pNodeLeft)-\u003eLevel == Abc_ObjRegular(pNodeRight)-\u003eLevel );\n    return Current;\n}",
+      "Draft": "func Abc_NodeBalanceFindLeft(vSuper *Vec_Ptr_t) int32 {\n    var pNodeRight, pNodeLeft *Abc_Obj_t;\n    var Current int32;\n    // if two or less nodes, pair with the first\n    if Vec_PtrSize(vSuper) \u003c 3 {\n        return 0; }\n    // set the pointer to the one before the last\n    Current = Vec_PtrSize(vSuper) - 2;\n    pNodeRight = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    // go through the nodes to the left of this one\n    for  Current--; Current \u003e= 0; Current--  {\n        // get the next node on the left\n        pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n        // if the level of this node is different, quit the loop\n        if Abc_ObjRegular(pNodeLeft).Level != Abc_ObjRegular(pNodeRight).Level {\n            break; }\n    }\n    Current++;    \n    // get the node, for which the equality holds\n    pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    assert(Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level, \"Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level\");\n    return Current;\n}"
+    },
+    {
+      "Name": "Abc_NodeBalancePermute",
+      "Start": 6905,
+      "End": 8229,
+      "BodyStart": 6991,
+      "Original": "void Abc_NodeBalancePermute( Abc_Ntk_t * pNtkNew, Vec_Ptr_t * vSuper, int LeftBound )\n{\n    Abc_Obj_t * pNode1, * pNode2, * pNode3;\n    int RightBound, i;\n    // get the right bound\n    RightBound = Vec_PtrSize(vSuper) - 2;\n    assert( LeftBound \u003c= RightBound );\n    if ( LeftBound == RightBound )\n        return;\n    // get the two last nodes\n    pNode1 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound + 1 );\n    pNode2 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound     );\n    // find the first node that can be shared\n    for ( i = RightBound; i \u003e= LeftBound; i-- )\n    {\n        pNode3 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, i );\n        if ( Abc_AigAndLookup( (Abc_Aig_t *)pNtkNew-\u003epManFunc, pNode1, pNode3 ) )\n        {\n            if ( pNode3 == pNode2 )\n                return;\n            Vec_PtrWriteEntry( vSuper, i,          pNode2 );\n            Vec_PtrWriteEntry( vSuper, RightBound, pNode3 );\n            return;\n        }\n    }\n/*\n    // we did not find the node to share, randomize choice\n    {\n        int Choice = rand() % (RightBound - LeftBound + 1);\n        pNode3 = Vec_PtrEntry( vSuper, LeftBound + Choice );\n        if ( pNode3 == pNode2 )\n            return;\n        Vec_PtrWriteEntry( vSuper, LeftBound + Choice, pNode2 );\n        Vec_PtrWriteEntry( vSuper, RightBound,         pNode3 );\n    }\n*/\n}",
+      "Draft": "func Abc_NodeBalancePermute(pNtkNew *Abc_Ntk_t, vSuper *Vec_Ptr_t, LeftBound int32) {\n    var pNode1, pNode2, pNode3 *Abc_Obj_t;\n    var RightBound, i int32;\n    // get the right bound\n    RightBound = Vec_PtrSize(vSuper) - 2;\n    assert(LeftBound \u003c= RightBound, \"LeftBound \u003c= RightBound\");\n    if LeftBound == RightBound {\n        return; }\n    // get the two last nodes\n    pNode1 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound + 1 );\n    pNode2 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound     );\n    // find the first node that can be shared\n    for  i = RightBound; i \u003e= LeftBound; i--  {\n        pNode3 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, i );\n        if Abc_AigAndLookup( (Abc_Aig_t *)pNtkNew.pManFunc, pNode1, pNode3 ) {\n            if pNode3 == pNode2 {\n                return; }\n            Vec_PtrWriteEntry( vSuper, i,          pNode2 );\n            Vec_PtrWriteEntry( vSuper, RightBound, pNode3 );\n            return;\n        }\n    }\n/*\n    // we did not find the node to share, randomize choice\n    {\n        int Choice = rand() % (RightBound - LeftBound + 1);\n        pNode3 = Vec_PtrEntry( vSuper, LeftBound + Choice );\n        if ( pNode3 == pNode2 )\n            return;\n        Vec_PtrWriteEntry( vSuper, LeftBound + Choice, pNode2 );\n        Vec_PtrWriteEntry( vSuper, RightBound,         pNode3 );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Abc_NodeBalance_rec",
+      "Start": 8516,
+      "End": 10979,
+      "BodyStart": 8676,
+      "Original": "Abc_Obj_t * Abc_NodeBalance_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNodeOld, Vec_Vec_t * vStorage, int Level, int fDuplicate, int fSelective, int fUpdateLevel )\n{\n    Abc_Aig_t * pMan = (Abc_Aig_t *)pNtkNew-\u003epManFunc;\n    Abc_Obj_t * pNodeNew, * pNode1, * pNode2;\n    Vec_Ptr_t * vSuper;\n    int i, LeftBound;\n    assert( !Abc_ObjIsComplement(pNodeOld) );\n    // return if the result if known\n    if ( pNodeOld-\u003epCopy )\n        return pNodeOld-\u003epCopy;\n    assert( Abc_ObjIsNode(pNodeOld) );\n    // get the implication supergate\n//    Abc_NodeBalanceConeExor( pNodeOld );\n    vSuper = Abc_NodeBalanceCone( pNodeOld, vStorage, Level, fDuplicate, fSelective );\n    if ( vSuper-\u003enSize == 0 )\n    { // it means that the supergate contains two nodes in the opposite polarity\n        pNodeOld-\u003epCopy = Abc_ObjNot(Abc_AigConst1(pNtkNew));\n        return pNodeOld-\u003epCopy;\n    }\n    // for each old node, derive the new well-balanced node\n    for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n    {\n        pNodeNew = Abc_NodeBalance_rec( pNtkNew, Abc_ObjRegular((Abc_Obj_t *)vSuper-\u003epArray[i]), vStorage, Level + 1, fDuplicate, fSelective, fUpdateLevel );\n        vSuper-\u003epArray[i] = Abc_ObjNotCond( pNodeNew, Abc_ObjIsComplement((Abc_Obj_t *)vSuper-\u003epArray[i]) );\n    }\n    if ( vSuper-\u003enSize \u003c 2 )\n        printf( \"BUG!\\n\" );\n    // sort the new nodes by level in the decreasing order\n    Vec_PtrSort( vSuper, (int (*)(void))Abc_NodeCompareLevelsDecrease );\n    // balance the nodes\n    assert( vSuper-\u003enSize \u003e 1 );\n    while ( vSuper-\u003enSize \u003e 1 )\n    {\n        // find the left bound on the node to be paired\n        LeftBound = (!fUpdateLevel)? 0 : Abc_NodeBalanceFindLeft( vSuper );\n        // find the node that can be shared (if no such node, randomize choice)\n        Abc_NodeBalancePermute( pNtkNew, vSuper, LeftBound );\n        // pull out the last two nodes\n        pNode1 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        pNode2 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        Abc_VecObjPushUniqueOrderByLevel( vSuper, Abc_AigAnd(pMan, pNode1, pNode2) );\n    }\n    // make sure the balanced node is not assigned\n    assert( pNodeOld-\u003epCopy == NULL );\n    // mark the old node with the new node\n    pNodeOld-\u003epCopy = (Abc_Obj_t *)vSuper-\u003epArray[0];\n    vSuper-\u003enSize = 0;\n//    if ( Abc_ObjRegular(pNodeOld-\u003epCopy) == Abc_AigConst1(pNtkNew) )\n//        printf( \"Constant node\\n\" );\n//    assert( pNodeOld-\u003eLevel \u003e= Abc_ObjRegular(pNodeOld-\u003epCopy)-\u003eLevel );\n    return pNodeOld-\u003epCopy;\n}",
+      "Draft": "func Abc_NodeBalance_rec(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Obj_t {\n    var pMan *Abc_Aig_t  = (Abc_Aig_t *)pNtkNew.pManFunc;\n    var pNodeNew, pNode1, pNode2 *Abc_Obj_t;\n    var vSuper *Vec_Ptr_t;\n    var i, LeftBound int32;\n    assert(!Abc_ObjIsComplement(pNodeOld), \"!Abc_ObjIsComplement(pNodeOld)\");\n    // return if the result if known\n    if pNodeOld.pCopy {\n        return pNodeOld.pCopy; }\n    assert(Abc_ObjIsNode(pNodeOld), \"Abc_ObjIsNode(pNodeOld)\");\n    // get the implication supergate\n//    Abc_NodeBalanceConeExor( pNodeOld );\n    vSuper = Abc_NodeBalanceCone( pNodeOld, vStorage, Level, fDuplicate, fSelective );\n    if vSuper.nSize == 0 { // it means that the supergate contains two nodes in the opposite polarity\n        pNodeOld.pCopy = Abc_ObjNot(Abc_AigConst1(pNtkNew));\n        return pNodeOld.pCopy;\n    }\n    // for each old node, derive the new well-balanced node\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        pNodeNew = Abc_NodeBalance_rec( pNtkNew, Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]), vStorage, Level + 1, fDuplicate, fSelective, fUpdateLevel );\n        vSuper.pArray[i] = Abc_ObjNotCond( pNodeNew, Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]) );\n    }\n    if vSuper.nSize \u003c 2 {\n        fmt.Printf(\"BUG!\\n\"); }\n    // sort the new nodes by level in the decreasing order\n    Vec_PtrSort( vSuper, (int (*)(void))Abc_NodeCompareLevelsDecrease );\n    // balance the nodes\n    assert(vSuper.nSize \u003e 1, \"vSuper.nSize \u003e 1\");\n    for  vSuper.nSize \u003e 1  {\n        // find the left bound on the node to be paired\n        if !(fUpdateLevel != 0) {\n            LeftBound = 0;\n        } else {\n            LeftBound = Abc_NodeBalanceFindLeft( vSuper );\n        }\n        // find the node that can be shared (if no such node, randomize choice)\n        Abc_NodeBalancePermute( pNtkNew, vSuper, LeftBound );\n        // pull out the last two nodes\n        pNode1 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        pNode2 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        Abc_VecObjPushUniqueOrderByLevel( vSuper, Abc_AigAnd(pMan, pNode1, pNode2) );\n    }\n    // make sure the balanced node is not assigned\n    assert(pNodeOld.pCopy == nil, \"pNodeOld.pCopy == nil\");\n    // mark the old node with the new node\n    pNodeOld.pCopy = (Abc_Obj_t *)vSuper.pArray[0];\n    vSuper.nSize = 0;\n//    if ( Abc_ObjRegular(pNodeOld-\u003epCopy) == Abc_AigConst1(pNtkNew) )\n//        printf( \"Constant node\\n\" );\n//    assert( pNodeOld-\u003eLevel \u003e= Abc_ObjRegular(pNodeOld-\u003epCopy)-\u003eLevel );\n    return pNodeOld.pCopy;\n}"
+    },
+    {
+      "Name": "Abc_NodeBalanceCone",
+      "Start": 11452,
+      "End": 12434,
+      "BodyStart": 11570,
+      "Original": "Vec_Ptr_t * Abc_NodeBalanceCone( Abc_Obj_t * pNode, Vec_Vec_t * vStorage, int Level, int fDuplicate, int fSelective )\n{\n    Vec_Ptr_t * vNodes;\n    int RetValue, i;\n    assert( !Abc_ObjIsComplement(pNode) );\n    // extend the storage\n    if ( Vec_VecSize( vStorage ) \u003c= Level )\n        Vec_VecPush( vStorage, Level, 0 );\n    // get the temporary array of nodes\n    vNodes = Vec_VecEntry( vStorage, Level );\n    Vec_PtrClear( vNodes );\n    // collect the nodes in the implication supergate\n    RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, fDuplicate, fSelective );\n    assert( vNodes-\u003enSize \u003e 1 );\n    // unmark the visited nodes\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n        Abc_ObjRegular((Abc_Obj_t *)vNodes-\u003epArray[i])-\u003efMarkB = 0;\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if ( RetValue == -1 )\n        vNodes-\u003enSize = 0;\n    return vNodes;\n}",
+      "Draft": "func Abc_NodeBalanceCone(pNode *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    // extend the storage\n    if Vec_VecSize( vStorage ) \u003c= Level {\n        Vec_VecPush( vStorage, Level, 0 ); }\n    // get the temporary array of nodes\n    vNodes = Vec_VecEntry( vStorage, Level );\n    Vec_PtrClear( vNodes );\n    // collect the nodes in the implication supergate\n    RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, fDuplicate, fSelective );\n    assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n    // unmark the visited nodes\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjRegular((Abc_Obj_t *)vNodes.pArray[i]).fMarkB = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vNodes.nSize = 0; }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NodeBalanceCone_rec",
+      "Start": 12908,
+      "End": 14372,
+      "BodyStart": 13021,
+      "Original": "int Abc_NodeBalanceCone_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, int fFirst, int fDuplicate, int fSelective )\n{\n    int RetValue1, RetValue2, i;\n    // check if the node is visited\n    if ( Abc_ObjRegular(pNode)-\u003efMarkB )\n    {\n        // check if the node occurs in the same polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == pNode )\n                return 1;\n        // check if the node is present in the opposite polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == Abc_ObjNot(pNode) )\n                return -1;\n        assert( 0 );\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if ( !fFirst \u0026\u0026 (Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || (!fDuplicate \u0026\u0026 !fSelective \u0026\u0026 (Abc_ObjFanoutNum(pNode) \u003e 1)) || Vec_PtrSize(vSuper) \u003e 10000) )\n    {\n        Vec_PtrPush( vSuper, pNode );\n        Abc_ObjRegular(pNode)-\u003efMarkB = 1;\n        return 0;\n    }\n    assert( !Abc_ObjIsComplement(pNode) );\n    assert( Abc_ObjIsNode(pNode) );\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceCone_rec( Abc_ObjChild0(pNode), vSuper, 0, fDuplicate, fSelective );\n    RetValue2 = Abc_NodeBalanceCone_rec( Abc_ObjChild1(pNode), vSuper, 0, fDuplicate, fSelective );\n    if ( RetValue1 == -1 || RetValue2 == -1 )\n        return -1;\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}",
+      "Draft": "func Abc_NodeBalanceCone_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fDuplicate int32, fSelective int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Abc_ObjRegular(pNode).fMarkB {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pNode {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Abc_ObjNot(pNode) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) \u0026\u0026 (Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || (!(fDuplicate != 0) \u0026\u0026 !(fSelective != 0) \u0026\u0026 (Abc_ObjFanoutNum(pNode) \u003e 1)) || Vec_PtrSize(vSuper) \u003e 10000) {\n        Vec_PtrPush( vSuper, pNode );\n        Abc_ObjRegular(pNode).fMarkB = 1;\n        return 0;\n    }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceCone_rec( Abc_ObjChild0(pNode), vSuper, 0, fDuplicate, fSelective );\n    RetValue2 = Abc_NodeBalanceCone_rec( Abc_ObjChild1(pNode), vSuper, 0, fDuplicate, fSelective );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}"
+    },
+    {
+      "Name": "Abc_NodeBalanceConeExor_rec",
+      "Start": 14609,
+      "End": 15571,
+      "BodyStart": 14694,
+      "Original": "int Abc_NodeBalanceConeExor_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, int fFirst )\n{\n    int RetValue1, RetValue2, i;\n    // check if the node occurs in the same polarity\n    for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n        if ( vSuper-\u003epArray[i] == pNode )\n            return 1;\n    // if the new node is complemented or a PI, another gate begins\n    if ( !fFirst \u0026\u0026 (!pNode-\u003efExor || !Abc_ObjIsNode(pNode)) )\n    {\n        Vec_PtrPush( vSuper, pNode );\n        return 0;\n    }\n    assert( !Abc_ObjIsComplement(pNode) );\n    assert( Abc_ObjIsNode(pNode) );\n    assert( pNode-\u003efExor );\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin0(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    RetValue2 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin1(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    if ( RetValue1 == -1 || RetValue2 == -1 )\n        return -1;\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}",
+      "Draft": "func Abc_NodeBalanceConeExor_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node occurs in the same polarity\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        if vSuper.pArray[i] == pNode {\n            return 1; }\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) \u0026\u0026 (!pNode.fExor || !Abc_ObjIsNode(pNode)) {\n        Vec_PtrPush( vSuper, pNode );\n        return 0;\n    }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(pNode.fExor, \"pNode.fExor\");\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin0(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    RetValue2 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin1(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}"
+    },
+    {
+      "Name": "Abc_NodeBalanceConeExor",
+      "Start": 15807,
+      "End": 16109,
+      "BodyStart": 15864,
+      "Original": "Vec_Ptr_t * Abc_NodeBalanceConeExor( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vSuper;\n    if ( !pNode-\u003efExor )\n        return NULL;\n    vSuper = Vec_PtrAlloc( 10 );\n    Abc_NodeBalanceConeExor_rec( pNode, vSuper, 1 );\n    printf( \"%d \", Vec_PtrSize(vSuper) );\n    Vec_PtrFree( vSuper );\n    return NULL;\n}",
+      "Draft": "func Abc_NodeBalanceConeExor(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    if !pNode.fExor {\n        return nil; }\n    vSuper = Vec_PtrAlloc( 10 );\n    Abc_NodeBalanceConeExor_rec( pNode, vSuper, 1 );\n    fmt.Printf(\"%d \", Vec_PtrSize(vSuper));\n    Vec_PtrFree( vSuper );\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_NodeFindCone_rec",
+      "Start": 16395,
+      "End": 17864,
+      "BodyStart": 16449,
+      "Original": "Vec_Ptr_t * Abc_NodeFindCone_rec( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNodeC, * pNodeT, * pNodeE;\n    int RetValue, i;\n    assert( !Abc_ObjIsComplement(pNode) );\n    if ( Abc_ObjIsCi(pNode) )\n        return NULL;\n    // start the new array\n    vNodes = Vec_PtrAlloc( 4 );\n    // if the node is the MUX collect its fanins\n    if ( Abc_NodeIsMuxType(pNode) )\n    {\n        pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n        Vec_PtrPush( vNodes, Abc_ObjRegular(pNodeC) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeT) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeE) );\n    }\n    else\n    {\n        // collect the nodes in the implication supergate\n        RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, 1, 0 );\n        assert( vNodes-\u003enSize \u003e 1 );\n        // unmark the visited nodes\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n            Abc_ObjRegular(pNode)-\u003efMarkB = 0;\n        // if we found the node and its complement in the same implication supergate, \n        // return empty set of nodes (meaning that we should use constant-0 node)\n        if ( RetValue == -1 )\n            vNodes-\u003enSize = 0;\n    }\n    // call for the fanin\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pNode = Abc_ObjRegular(pNode);\n        if ( pNode-\u003epCopy )\n            continue;\n        pNode-\u003epCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n    return vNodes;\n}",
+      "Draft": "func Abc_NodeFindCone_rec(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if Abc_ObjIsCi(pNode) {\n        return nil; }\n    // start the new array\n    vNodes = Vec_PtrAlloc( 4 );\n    // if the node is the MUX collect its fanins\n    if Abc_NodeIsMuxType(pNode) {\n        pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n        Vec_PtrPush( vNodes, Abc_ObjRegular(pNodeC) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeT) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeE) );\n    \n    } else {\n        // collect the nodes in the implication supergate\n        RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, 1, 0 );\n        assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n        // unmark the visited nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            Abc_ObjRegular(pNode).fMarkB = 0;\n        }\n        // if we found the node and its complement in the same implication supergate, \n        // return empty set of nodes (meaning that we should use constant-0 node)\n        if RetValue == -1 {\n            vNodes.nSize = 0; }\n    }\n    // call for the fanin\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pNode = Abc_ObjRegular(pNode);\n        if pNode.pCopy {\n            continue; }\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Abc_NtkBalanceAttach",
+      "Start": 18154,
+      "End": 18473,
+      "BodyStart": 18200,
+      "Original": "void Abc_NtkBalanceAttach( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pNode = Abc_ObjFanin0(pNode);\n        if ( pNode-\u003epCopy )\n            continue;\n        pNode-\u003epCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n}",
+      "Draft": "func Abc_NtkBalanceAttach(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Abc_NtkCleanCopy( pNtk );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNode = Abc_ObjFanin0(pNode);\n        if pNode.pCopy {\n            continue; }\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkBalanceDetach",
+      "Start": 18763,
+      "End": 19022,
+      "BodyStart": 18809,
+      "Original": "void Abc_NtkBalanceDetach( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003epCopy )\n        {\n            Vec_PtrFree( (Vec_Ptr_t *)pNode-\u003epCopy );\n            pNode-\u003epCopy = NULL;\n        }\n}",
+      "Draft": "func Abc_NtkBalanceDetach(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            Vec_PtrFree( (Vec_Ptr_t *)pNode.pCopy );\n            pNode.pCopy = nil;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkBalanceLevel_rec",
+      "Start": 19299,
+      "End": 19949,
+      "BodyStart": 19348,
+      "Original": "int Abc_NtkBalanceLevel_rec( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vSuper;\n    Abc_Obj_t * pFanin;\n    int i, LevelMax;\n    assert( !Abc_ObjIsComplement(pNode) );\n    if ( pNode-\u003eLevel \u003e 0 )\n        return pNode-\u003eLevel;\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    vSuper = (Vec_Ptr_t *)pNode-\u003epCopy;\n    assert( vSuper != NULL );\n    LevelMax = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, i )\n    {\n        pFanin = Abc_ObjRegular(pFanin);\n        Abc_NtkBalanceLevel_rec(pFanin);\n        if ( LevelMax \u003c (int)pFanin-\u003eLevel )\n            LevelMax = pFanin-\u003eLevel;\n    }\n    pNode-\u003eLevel = LevelMax + 1;\n    return pNode-\u003eLevel;\n}",
+      "Draft": "func Abc_NtkBalanceLevel_rec(pNode *Abc_Obj_t) int32 {\n    var vSuper *Vec_Ptr_t;\n    var pFanin *Abc_Obj_t;\n    var i, LevelMax int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if pNode.Level \u003e 0 {\n        return pNode.Level; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    vSuper = (Vec_Ptr_t *)pNode.pCopy;\n    assert(vSuper != nil, \"vSuper != nil\");\n    LevelMax = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pFanin = Abc_ObjRegular(pFanin);\n        Abc_NtkBalanceLevel_rec(pFanin);\n        if LevelMax \u003c int32(pFanin.Level) {\n            LevelMax = pFanin.Level; }\n    }\n    pNode.Level = LevelMax + 1;\n    return pNode.Level;\n}"
+    },
+    {
+      "Name": "Abc_NtkBalanceLevel",
+      "Start": 20227,
+      "End": 20471,
+      "BodyStart": 20272,
+      "Original": "void Abc_NtkBalanceLevel( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode-\u003eLevel = 0;\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        Abc_NtkBalanceLevel_rec( Abc_ObjFanin0(pNode) );\n}",
+      "Draft": "func Abc_NtkBalanceLevel(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pNode) == nil {} else {\n        pNode.Level = 0; }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NtkBalanceLevel_rec( Abc_ObjFanin0(pNode) );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMarkCriticalNodes",
+      "Start": 20764,
+      "End": 21138,
+      "BodyStart": 20814,
+      "Original": "void Abc_NtkMarkCriticalNodes( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i, Counter = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( Abc_ObjRequiredLevel(pNode) - pNode-\u003eLevel \u003c= 1 )\n            pNode-\u003efMarkA = 1, Counter++;\n    printf( \"The number of nodes on the critical paths = %6d  (%5.2f %%)\\n\", Counter, 100.0 * Counter / Abc_NtkNodeNum(pNtk) );\n}",
+      "Draft": "func Abc_NtkMarkCriticalNodes(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if Abc_ObjRequiredLevel(pNode) - pNode.Level \u003c= 1 {\n            pNode.fMarkA = 1, Counter++; }\n    }\n    fmt.Printf(\"The number of nodes on the critical paths = %6d  (%5.2f %%)\\n\", Counter, 100.0 * Counter / Abc_NtkNodeNum(pNtk));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::2714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2714,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::6247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5864,
+      "End": 5877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::6459",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6076,
+      "End": 6089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::6765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6382,
+      "End": 6395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::7645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7262,
+      "End": 7275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::7711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7328,
+      "End": 7341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::7881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7498,
+      "End": 7511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::7952",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7569,
+      "End": 7582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::9084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8701,
+      "End": 8714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::9939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9556,
+      "End": 9569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::10107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9724,
+      "End": 9737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::10763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10380,
+      "End": 10393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::10813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10430,
+      "End": 10443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::11093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10710,
+      "End": 10723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::12538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12155,
+      "End": 12168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::17749",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17257,
+      "End": 17257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::18220",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17623,
+      "End": 17623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::18387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17794,
+      "End": 17807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::19116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18422,
+      "End": 18435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::19819",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18949,
+      "End": 18962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::20450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19580,
+      "End": 19593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::pointer-cast::20639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19659,
+      "End": 19659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalance",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1991,
+      "End": 3229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::ternary::Abc_NtkBalancePerform",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkBalancePerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3490,
+      "End": 4860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalancePerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalancePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3490,
+      "End": 4860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalanceFindLeft",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalanceFindLeft",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5546,
+      "End": 6534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalancePermute",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalancePermute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6905,
+      "End": 8229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalance_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalance_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8516,
+      "End": 10979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalanceCone",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalanceCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11452,
+      "End": 12434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalanceCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalanceCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12908,
+      "End": 14372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalanceConeExor_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalanceConeExor_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14609,
+      "End": 15571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeBalanceConeExor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeBalanceConeExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15807,
+      "End": 16109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NodeFindCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFindCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16395,
+      "End": 17864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalanceAttach",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalanceAttach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18154,
+      "End": 18473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalanceDetach",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalanceDetach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18763,
+      "End": 19022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalanceLevel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalanceLevel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19299,
+      "End": 19949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkBalanceLevel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBalanceLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20227,
+      "End": 20471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::Abc_NtkMarkCriticalNodes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMarkCriticalNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20764,
+      "End": 21138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcBalance.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21386
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcBalance.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Performs global balancing of the AIG by the number of levels.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcBalance.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n// static void        Abc_NtkBalancePerform( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkAig, int fDuplicate, int fSelective, int fUpdateLevel );\n\n// static Abc_Obj_t * Abc_NodeBalance_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Vec_t * vStorage, int Level, int fDuplicate, int fSelective, int fUpdateLevel );\n\n// static Vec_Ptr_t * Abc_NodeBalanceCone( Abc_Obj_t * pNode, Vec_Vec_t * vSuper, int Level, int fDuplicate, int fSelective );\n\n// static int         Abc_NodeBalanceCone_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, int fFirst, int fDuplicate, int fSelective );\n\n// static void        Abc_NtkMarkCriticalNodes( Abc_Ntk_t * pNtk );\n\n// static Vec_Ptr_t * Abc_NodeBalanceConeExor( Abc_Obj_t * pNode );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Balances the AIG network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalance(pNtk *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Ntk_t {\n//    extern void Abc_NtkHaigTranfer( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n    var pNtkAig *Abc_Ntk_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // compute the required times\n    if fSelective != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 );\n        Abc_NtkMarkCriticalNodes( pNtk );\n    }\n    // perform balancing\n    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // transfer HAIG\n//    Abc_NtkHaigTranfer( pNtk, pNtkAig );\n    // perform balancing\n    Abc_NtkBalancePerform( pNtk, pNtkAig, fDuplicate, fSelective, fUpdateLevel );\n    Abc_NtkFinalize( pNtk, pNtkAig );\n    Abc_AigCleanup( (Abc_Aig_t *)pNtkAig.pManFunc );\n    // undo the required times\n    if fSelective != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n        Abc_NtkCleanMarkA( pNtk );\n    }\n    if pNtk.pExdc {\n        pNtkAig.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkAig ) {\n        fmt.Printf(\"Abc_NtkBalance: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkAig );\n        return nil;\n    }\n//Abc_NtkPrintCiLevels( pNtkAig );\n    return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Balances the AIG network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalancePerform(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) {\n    var pProgress *ProgressBar;\n    var vStorage *Vec_Vec_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // transfer level\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy.Level = pNode.Level;\n    }\n    // set the level of PIs of AIG according to the arrival times of the old network\n    Abc_NtkSetNodeLevelsArrival( pNtk );\n    // allocate temporary storage for supergates\n    vStorage = Vec_VecStart( 10 );\n    // perform balancing of POs\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    if pNtk.nBarBufs == 0 {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            Extra_ProgressBarUpdate( pProgress, i, nil );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n        }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachLiPo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i \u003c pNtk.nBarBufs ? Abc_NtkCoNum(pNtk) - pNtk.nBarBufs + i : i - pNtk.nBarBufs)), 1); i++  {\n            Extra_ProgressBarUpdate( pProgress, i, nil );\n            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );\n            if i \u003c pNtk.nBarBufs {\n                Abc_ObjFanout0(Abc_ObjFanout0(pNode)).Level = Abc_ObjFanin0(pNode).Level; }\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_VecFree( vStorage );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds the left bound on the next candidate to be paired.]\n\n  Description [The nodes in the array are in the decreasing order of levels. \n  The last node in the array has the smallest level. By default it would be paired \n  with the next node on the left. However, it may be possible to pair it with some\n  other node on the left, in such a way that the new node is shared. This procedure\n  finds the index of the left-most node, which can be paired with the last node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalanceFindLeft(vSuper *Vec_Ptr_t) int32 {\n    var pNodeRight, pNodeLeft *Abc_Obj_t;\n    var Current int32;\n    // if two or less nodes, pair with the first\n    if Vec_PtrSize(vSuper) \u003c 3 {\n        return 0; }\n    // set the pointer to the one before the last\n    Current = Vec_PtrSize(vSuper) - 2;\n    pNodeRight = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    // go through the nodes to the left of this one\n    for  Current--; Current \u003e= 0; Current--  {\n        // get the next node on the left\n        pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n        // if the level of this node is different, quit the loop\n        if Abc_ObjRegular(pNodeLeft).Level != Abc_ObjRegular(pNodeRight).Level {\n            break; }\n    }\n    Current++;    \n    // get the node, for which the equality holds\n    pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );\n    assert(Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level, \"Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level\");\n    return Current;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves closer to the end the node that is best for sharing.]\n\n  Description [If there is no node with sharing, randomly chooses one of \n  the legal nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalancePermute(pNtkNew *Abc_Ntk_t, vSuper *Vec_Ptr_t, LeftBound int32) {\n    var pNode1, pNode2, pNode3 *Abc_Obj_t;\n    var RightBound, i int32;\n    // get the right bound\n    RightBound = Vec_PtrSize(vSuper) - 2;\n    assert(LeftBound \u003c= RightBound, \"LeftBound \u003c= RightBound\");\n    if LeftBound == RightBound {\n        return; }\n    // get the two last nodes\n    pNode1 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound + 1 );\n    pNode2 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound     );\n    // find the first node that can be shared\n    for  i = RightBound; i \u003e= LeftBound; i--  {\n        pNode3 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, i );\n        if Abc_AigAndLookup( (Abc_Aig_t *)pNtkNew.pManFunc, pNode1, pNode3 ) {\n            if pNode3 == pNode2 {\n                return; }\n            Vec_PtrWriteEntry( vSuper, i,          pNode2 );\n            Vec_PtrWriteEntry( vSuper, RightBound, pNode3 );\n            return;\n        }\n    }\n/*\n    // we did not find the node to share, randomize choice\n    {\n        int Choice = rand() % (RightBound - LeftBound + 1);\n        pNode3 = Vec_PtrEntry( vSuper, LeftBound + Choice );\n        if ( pNode3 == pNode2 )\n            return;\n        Vec_PtrWriteEntry( vSuper, LeftBound + Choice, pNode2 );\n        Vec_PtrWriteEntry( vSuper, RightBound,         pNode3 );\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Rebalances the multi-input node rooted at pNodeOld.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalance_rec(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Obj_t {\n    var pMan *Abc_Aig_t  = (Abc_Aig_t *)pNtkNew.pManFunc;\n    var pNodeNew, pNode1, pNode2 *Abc_Obj_t;\n    var vSuper *Vec_Ptr_t;\n    var i, LeftBound int32;\n    assert(!Abc_ObjIsComplement(pNodeOld), \"!Abc_ObjIsComplement(pNodeOld)\");\n    // return if the result if known\n    if pNodeOld.pCopy {\n        return pNodeOld.pCopy; }\n    assert(Abc_ObjIsNode(pNodeOld), \"Abc_ObjIsNode(pNodeOld)\");\n    // get the implication supergate\n//    Abc_NodeBalanceConeExor( pNodeOld );\n    vSuper = Abc_NodeBalanceCone( pNodeOld, vStorage, Level, fDuplicate, fSelective );\n    if vSuper.nSize == 0 { // it means that the supergate contains two nodes in the opposite polarity\n        pNodeOld.pCopy = Abc_ObjNot(Abc_AigConst1(pNtkNew));\n        return pNodeOld.pCopy;\n    }\n    // for each old node, derive the new well-balanced node\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        pNodeNew = Abc_NodeBalance_rec( pNtkNew, Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]), vStorage, Level + 1, fDuplicate, fSelective, fUpdateLevel );\n        vSuper.pArray[i] = Abc_ObjNotCond( pNodeNew, Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]) );\n    }\n    if vSuper.nSize \u003c 2 {\n        fmt.Printf(\"BUG!\\n\"); }\n    // sort the new nodes by level in the decreasing order\n    Vec_PtrSort( vSuper, (int (*)(void))Abc_NodeCompareLevelsDecrease );\n    // balance the nodes\n    assert(vSuper.nSize \u003e 1, \"vSuper.nSize \u003e 1\");\n    for  vSuper.nSize \u003e 1  {\n        // find the left bound on the node to be paired\n        if !(fUpdateLevel != 0) {\n            LeftBound = 0;\n        } else {\n            LeftBound = Abc_NodeBalanceFindLeft( vSuper );\n        }\n        // find the node that can be shared (if no such node, randomize choice)\n        Abc_NodeBalancePermute( pNtkNew, vSuper, LeftBound );\n        // pull out the last two nodes\n        pNode1 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        pNode2 = (Abc_Obj_t *)Vec_PtrPop(vSuper);\n        Abc_VecObjPushUniqueOrderByLevel( vSuper, Abc_AigAnd(pMan, pNode1, pNode2) );\n    }\n    // make sure the balanced node is not assigned\n    assert(pNodeOld.pCopy == nil, \"pNodeOld.pCopy == nil\");\n    // mark the old node with the new node\n    pNodeOld.pCopy = (Abc_Obj_t *)vSuper.pArray[0];\n    vSuper.nSize = 0;\n//    if ( Abc_ObjRegular(pNodeOld-\u003epCopy) == Abc_AigConst1(pNtkNew) )\n//        printf( \"Constant node\\n\" );\n//    assert( pNodeOld-\u003eLevel \u003e= Abc_ObjRegular(pNodeOld-\u003epCopy)-\u003eLevel );\n    return pNodeOld.pCopy;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes in the cone delimited by fMarkA==1.]\n\n  Description [Returns -1 if the AND-cone has the same node in both polarities.\n  Returns 1 if the AND-cone has the same node in the same polarity. Returns 0\n  if the AND-cone has no repeated nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalanceCone(pNode *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    // extend the storage\n    if Vec_VecSize( vStorage ) \u003c= Level {\n        Vec_VecPush( vStorage, Level, 0 ); }\n    // get the temporary array of nodes\n    vNodes = Vec_VecEntry( vStorage, Level );\n    Vec_PtrClear( vNodes );\n    // collect the nodes in the implication supergate\n    RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, fDuplicate, fSelective );\n    assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n    // unmark the visited nodes\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjRegular((Abc_Obj_t *)vNodes.pArray[i]).fMarkB = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vNodes.nSize = 0; }\n    return vNodes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes in the cone delimited by fMarkA==1.]\n\n  Description [Returns -1 if the AND-cone has the same node in both polarities.\n  Returns 1 if the AND-cone has the same node in the same polarity. Returns 0\n  if the AND-cone has no repeated nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalanceCone_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fDuplicate int32, fSelective int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Abc_ObjRegular(pNode).fMarkB {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pNode {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Abc_ObjNot(pNode) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) \u0026\u0026 (Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || (!(fDuplicate != 0) \u0026\u0026 !(fSelective != 0) \u0026\u0026 (Abc_ObjFanoutNum(pNode) \u003e 1)) || Vec_PtrSize(vSuper) \u003e 10000) {\n        Vec_PtrPush( vSuper, pNode );\n        Abc_ObjRegular(pNode).fMarkB = 1;\n        return 0;\n    }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceCone_rec( Abc_ObjChild0(pNode), vSuper, 0, fDuplicate, fSelective );\n    RetValue2 = Abc_NodeBalanceCone_rec( Abc_ObjChild1(pNode), vSuper, 0, fDuplicate, fSelective );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalanceConeExor_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node occurs in the same polarity\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        if vSuper.pArray[i] == pNode {\n            return 1; }\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) \u0026\u0026 (!pNode.fExor || !Abc_ObjIsNode(pNode)) {\n        Vec_PtrPush( vSuper, pNode );\n        return 0;\n    }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(pNode.fExor, \"pNode.fExor\");\n    // go through the branches\n    RetValue1 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin0(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    RetValue2 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin1(Abc_ObjFanin0(pNode)), vSuper, 0 );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeBalanceConeExor(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    if !pNode.fExor {\n        return nil; }\n    vSuper = Vec_PtrAlloc( 10 );\n    Abc_NodeBalanceConeExor_rec( pNode, vSuper, 1 );\n    fmt.Printf(\"%d \", Vec_PtrSize(vSuper));\n    Vec_PtrFree( vSuper );\n    return nil;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the nodes in the implication supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFindCone_rec(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if Abc_ObjIsCi(pNode) {\n        return nil; }\n    // start the new array\n    vNodes = Vec_PtrAlloc( 4 );\n    // if the node is the MUX collect its fanins\n    if Abc_NodeIsMuxType(pNode) {\n        pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n        Vec_PtrPush( vNodes, Abc_ObjRegular(pNodeC) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeT) );\n        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeE) );\n    \n    } else {\n        // collect the nodes in the implication supergate\n        RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, 1, 0 );\n        assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n        // unmark the visited nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            Abc_ObjRegular(pNode).fMarkB = 0;\n        }\n        // if we found the node and its complement in the same implication supergate, \n        // return empty set of nodes (meaning that we should use constant-0 node)\n        if RetValue == -1 {\n            vNodes.nSize = 0; }\n    }\n    // call for the fanin\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pNode = Abc_ObjRegular(pNode);\n        if pNode.pCopy {\n            continue; }\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Attaches the implication supergates to internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalanceAttach(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    Abc_NtkCleanCopy( pNtk );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNode = Abc_ObjFanin0(pNode);\n        if pNode.pCopy {\n            continue; }\n        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Attaches the implication supergates to internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalanceDetach(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            Vec_PtrFree( (Vec_Ptr_t *)pNode.pCopy );\n            pNode.pCopy = nil;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute levels of implication supergates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalanceLevel_rec(pNode *Abc_Obj_t) int32 {\n    var vSuper *Vec_Ptr_t;\n    var pFanin *Abc_Obj_t;\n    var i, LevelMax int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if pNode.Level \u003e 0 {\n        return pNode.Level; }\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    vSuper = (Vec_Ptr_t *)pNode.pCopy;\n    assert(vSuper != nil, \"vSuper != nil\");\n    LevelMax = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        pFanin = Abc_ObjRegular(pFanin);\n        Abc_NtkBalanceLevel_rec(pFanin);\n        if LevelMax \u003c int32(pFanin.Level) {\n            LevelMax = pFanin.Level; }\n    }\n    pNode.Level = LevelMax + 1;\n    return pNode.Level;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute levels of implication supergates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkBalanceLevel(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pNode) == nil {} else {\n        pNode.Level = 0; }\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NtkBalanceLevel_rec( Abc_ObjFanin0(pNode) );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the nodes on the critical and near critical paths.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMarkCriticalNodes(pNtk *Abc_Ntk_t) {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if Abc_ObjRequiredLevel(pNode) - pNode.Level \u003c= 1 {\n            pNode.fMarkA = 1, Counter++; }\n    }\n    fmt.Printf(\"The number of nodes on the critical paths = %6d  (%5.2f %%)\\n\", Counter, 100.0 * Counter / Abc_NtkNodeNum(pNtk));\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

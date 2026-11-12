@@ -1,0 +1,1540 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c",
+  "SHA256": "c65ab351150609263157fcf104717aaa8141cb622e7594d765abb056e11d2c48",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 53,
+        "ByteOffset": 22908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Iso_ManObj(p *Iso_Man_t, i int32) *Iso_Obj_t { assert( i \u003e= 0 \u0026\u0026 i \u003c p.nObjs ); if i {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 55,
+        "ByteOffset": 23070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Iso_ObjId(p *Iso_Man_t, pObj *Iso_Obj_t) int32 { assert( pObj \u003e p.pObjs \u0026\u0026 pObj \u003c p.pObjs + p.nObjs ); return pObj - p.pObjs; }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 338,
+        "Column": 13,
+        "ByteOffset": 24184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 10,
+        "ByteOffset": 24219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fscanf( pFile, \"%d\", Nums + nSize++ ) == 1  {; }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 24272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 24293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e= (1\u003c\u003c10) );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 343,
+        "Column": 5,
+        "ByteOffset": 24349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 111 );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 345,
+        "Column": 13,
+        "ByteOffset": 24409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        j = rand() % nSize;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 24562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 13,
+        "ByteOffset": 24627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d,\", Nums[i*16+j] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 9,
+        "ByteOffset": 24676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 25084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 111 );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 377,
+        "Column": 35,
+        "ByteOffset": 25169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNums[i] = (unsigned char)rand();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 9,
+        "ByteOffset": 25240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 25304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"0x%08x,\", Nums[i*8+j] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 25356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 5,
+        "ByteOffset": 26158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 434,
+        "Column": 79,
+        "ByteOffset": 26808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs    = /*__starting_point_inline_macro:ABC_CALLOC__*/((Iso_Obj_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Obj_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 436,
+        "Column": 73,
+        "ByteOffset": 26970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins    = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nBins), sizeof(int)));    "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 448,
+        "Column": 77,
+        "ByteOffset": 27500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFout)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeFout)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 450,
+        "Column": 88,
+        "ByteOffset": 27784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeHash-p.timeSort)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeHash-p.timeSort)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 452,
+        "Column": 77,
+        "ByteOffset": 28068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSort)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSort)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 454,
+        "Column": 78,
+        "ByteOffset": 28342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 456,
+        "Column": 78,
+        "ByteOffset": 28617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 462,
+        "Column": 63,
+        "ByteOffset": 28914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 463,
+        "Column": 63,
+        "ByteOffset": 29023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 464,
+        "Column": 57,
+        "ByteOffset": 29126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 480,
+        "Column": 13,
+        "ByteOffset": 29513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return -memcmp( *pp1, *pp2, sizeof(int) * ISO_NUM_INTS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 29973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 30029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 518,
+        "Column": 5,
+        "ByteOffset": 30633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ISO_NUM_INTS \u003c 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 13,
+        "ByteOffset": 32091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pIso.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 32470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vSingles) == p.nSingles );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 5,
+        "ByteOffset": 32523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vClasses) == p.nClasses );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 615,
+        "Column": 9,
+        "ByteOffset": 33760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIso.FaninSig == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 616,
+        "Column": 9,
+        "ByteOffset": 33798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIso.FanoutSig == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 689,
+        "Column": 9,
+        "ByteOffset": 37296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIso.FaninSig == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 775,
+        "Column": 9,
+        "ByteOffset": 40674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_ObjIsCo(pObj) || pIso.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 823,
+        "Column": 9,
+        "ByteOffset": 42928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIso.FaninSig == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 868,
+        "Column": 9,
+        "ByteOffset": 44440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 870,
+        "Column": 5,
+        "ByteOffset": 44476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 891,
+        "Column": 9,
+        "ByteOffset": 44934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total objects =%7d.  Entries =%7d.  Classes =%7d.  Singles =%7d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 897,
+        "Column": 5,
+        "ByteOffset": 45121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Non-trivial classes:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 902,
+        "Column": 9,
+        "ByteOffset": 45399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : {\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 905,
+        "Column": 17,
+        "ByteOffset": 45538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d\", Aig_ObjCioId( Iso_AigObj(p, pTemp) ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 909,
+        "Column": 21,
+        "ByteOffset": 45736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \" %d{%s%d(%d),%s%d(%d)}\", Iso_ObjId(p, pTemp), "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 913,
+        "Column": 21,
+        "ByteOffset": 46068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \" %d\", Iso_ObjId(p, pTemp) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 915,
+        "Column": 13,
+        "ByteOffset": 46134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"(%d)\", pTemp.Level );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 917,
+        "Column": 9,
+        "ByteOffset": 46191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" }\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 951,
+        "Column": 5,
+        "ByteOffset": 47229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pBins, 0, sizeof(int) * p.nBins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 953,
+        "Column": 9,
+        "ByteOffset": 47448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 958,
+        "Column": 9,
+        "ByteOffset": 47729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp.Id != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 983,
+        "Column": 5,
+        "ByteOffset": 48372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pIso.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 987,
+        "Column": 9,
+        "ByteOffset": 48521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp.Id == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1018,
+        "Column": 9,
+        "ByteOffset": 49427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Best level %d\\n\", LevelStart ); } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1024,
+        "Column": 17,
+        "ByteOffset": 49824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pTemp.Id ==  0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1056,
+        "Column": 5,
+        "ByteOffset": 50726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nClasses == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1057,
+        "Column": 5,
+        "ByteOffset": 50757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vClasses) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1065,
+        "Column": 9,
+        "ByteOffset": 51260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iData \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1073,
+        "Column": 9,
+        "ByteOffset": 51662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iData \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1108,
+        "Column": 5,
+        "ByteOffset": 53021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nClasses \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1110,
+        "Column": 5,
+        "ByteOffset": 53106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pIso.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1112,
+        "Column": 9,
+        "ByteOffset": 53207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp.Id == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1169,
+        "Column": 5,
+        "ByteOffset": 55197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nObjIds == 1+Aig_ManCiNum(p.pAig)+Aig_ManNodeNum(p.pAig) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Iso_ManObj",
+      "Start": 22786,
+      "End": 22943,
+      "BodyStart": 22859,
+      "Original": "static inline Iso_Obj_t *  Iso_ManObj( Iso_Man_t * p, int i )            { assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enObjs ); return i ? p-\u003epObjs + i : NULL;                }",
+      "Draft": "func Iso_ManObj(p *Iso_Man_t, i int32) *Iso_Obj_t { assert(i \u003e= 0 \u0026\u0026 i \u003c p.nObjs, \"i \u003e= 0 \u0026\u0026 i \u003c p.nObjs\"); if i != 0 {\n    return p.pObjs + i;\n} else {\n    return nil;\n}                }"
+    },
+    {
+      "Name": "Iso_ObjId",
+      "Start": 22944,
+      "End": 23101,
+      "BodyStart": 23017,
+      "Original": "static inline int          Iso_ObjId( Iso_Man_t * p, Iso_Obj_t * pObj )  { assert( pObj \u003e p-\u003epObjs \u0026\u0026 pObj \u003c p-\u003epObjs + p-\u003enObjs ); return pObj - p-\u003epObjs; }",
+      "Draft": "func Iso_ObjId(p *Iso_Man_t, pObj *Iso_Obj_t) int32 { assert(pObj \u003e p.pObjs \u0026\u0026 pObj \u003c p.pObjs + p.nObjs, \"pObj \u003e p.pObjs \u0026\u0026 pObj \u003c p.pObjs + p.nObjs\"); return pObj - p.pObjs; }"
+    },
+    {
+      "Name": "Iso_AigObj",
+      "Start": 23102,
+      "End": 23259,
+      "BodyStart": 23175,
+      "Original": "static inline Aig_Obj_t *  Iso_AigObj( Iso_Man_t * p, Iso_Obj_t * q )    { return Aig_ManObj( p-\u003epAig, Iso_ObjId(p, q) );                                   }",
+      "Draft": "func Iso_AigObj(p *Iso_Man_t, q *Iso_Obj_t) *Aig_Obj_t { return Aig_ManObj( p.pAig, Iso_ObjId(p, q) );                                   }"
+    },
+    {
+      "Name": "Iso_ReadPrimes",
+      "Start": 23970,
+      "End": 24635,
+      "BodyStart": 24010,
+      "Original": "void Iso_ReadPrimes( char * pFileName )\n{\n    FILE * pFile;\n    int Nums[10000];\n    int i, j, Temp, nSize = 0;\n    // read the numbers\n    pFile = fopen( pFileName, \"rb\" );\n    while ( fscanf( pFile, \"%d\", Nums + nSize++ ) == 1 );\n    fclose( pFile );\n    assert( nSize \u003e= (1\u003c\u003c10) );\n    // randomly permute\n    srand( 111 );\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        j = rand() % nSize;\n        Temp = Nums[i];\n        Nums[i] = Nums[j];\n        Nums[j] = Temp;\n    }\n    // write out\n    for ( i = 0; i \u003c 64; i++ )\n    {\n        printf( \"    \" );\n        for ( j = 0; j \u003c 16; j++ )\n            printf( \"%d,\", Nums[i*16+j] );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Iso_ReadPrimes(pFileName string) {\n    var pFile *os.File;\n    var Nums [10000]int32;\n    var i, j, Temp, nSize int32;\n    // read the numbers\n    pFile = os.Open(pFileName);\n    for  fscanf( pFile, \"%d\", Nums + nSize++ ) == 1  {; }\n    _ = (pFile).Close();\n    assert(nSize \u003e= (1\u003c\u003c10), \"nSize \u003e= (1\u003c\u003c10)\");\n    // randomly permute\n    srand( 111 );\n    for  i = 0; i \u003c nSize; i++  {\n        j = rand() % nSize;\n        Temp = Nums[i];\n        Nums[i] = Nums[j];\n        Nums[j] = Temp;\n    }\n    // write out\n    for  i = 0; i \u003c 64; i++  {\n        fmt.Printf(\"    \");\n        for  j = 0; j \u003c 16; j++  {\n            fmt.Printf(\"%d,\", Nums[i*16+j]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Iso_FindNumbers",
+      "Start": 24893,
+      "End": 25297,
+      "BodyStart": 24916,
+      "Original": "void Iso_FindNumbers()\n{\n    unsigned Nums[1024];\n    unsigned char * pNums = (unsigned char *)Nums;\n    int i, j;\n    srand( 111 );\n    for ( i = 0; i \u003c 1024 * 4; i++ )\n        pNums[i] = (unsigned char)rand();\n    // write out\n    for ( i = 0; i \u003c 128; i++ )\n    {\n        printf( \"    \" );\n        for ( j = 0; j \u003c 8; j++ )\n            printf( \"0x%08x,\", Nums[i*8+j] );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Iso_FindNumbers() {\n    var Nums [1024]uint32;\n    unsigned char * pNums = (unsigned char *)Nums;\n    var i, j int32;\n    srand( 111 );\n    for  i = 0; i \u003c 1024 * 4; i++  {\n        pNums[i] = (unsigned char)rand();\n    }\n    // write out\n    for  i = 0; i \u003c 128; i++  {\n        fmt.Printf(\"    \");\n        for  j = 0; j \u003c 8; j++  {\n            fmt.Printf(\"0x%08x,\", Nums[i*8+j]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Iso_ManObjCount_rec",
+      "Start": 25533,
+      "End": 25987,
+      "BodyStart": 25623,
+      "Original": "void Iso_ManObjCount_rec( Aig_Man_t * p, Aig_Obj_t * pObj, int * pnNodes, int * pnEdges )\n{\n    if ( Aig_ObjIsCi(pObj) )\n        return;\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Iso_ManObjCount_rec( p, Aig_ObjFanin0(pObj), pnNodes, pnEdges );\n    Iso_ManObjCount_rec( p, Aig_ObjFanin1(pObj), pnNodes, pnEdges );\n    (*pnEdges) += Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    (*pnNodes)++;\n}",
+      "Draft": "func Iso_ManObjCount_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pnNodes *int32, pnEdges *int32) {\n    if Aig_ObjIsCi(pObj) {\n        return; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Iso_ManObjCount_rec( p, Aig_ObjFanin0(pObj), pnNodes, pnEdges );\n    Iso_ManObjCount_rec( p, Aig_ObjFanin1(pObj), pnNodes, pnEdges );\n    (*pnEdges) += Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    (*pnNodes)++;\n}"
+    },
+    {
+      "Name": "Iso_ManObjCount",
+      "Start": 25988,
+      "End": 26228,
+      "BodyStart": 26074,
+      "Original": "void Iso_ManObjCount( Aig_Man_t * p, Aig_Obj_t * pObj, int * pnNodes, int * pnEdges )\n{\n    assert( Aig_ObjIsNode(pObj) );\n    *pnNodes = *pnEdges = 0;\n    Aig_ManIncrementTravId( p );\n    Iso_ManObjCount_rec( p, pObj, pnNodes, pnEdges );\n}",
+      "Draft": "func Iso_ManObjCount(p *Aig_Man_t, pObj *Aig_Obj_t, pnNodes *int32, pnEdges *int32) {\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    *pnNodes = *pnEdges = 0;\n    Aig_ManIncrementTravId( p );\n    Iso_ManObjCount_rec( p, pObj, pnNodes, pnEdges );\n}"
+    },
+    {
+      "Name": "Iso_ManStart",
+      "Start": 26464,
+      "End": 26979,
+      "BodyStart": 26509,
+      "Original": "Iso_Man_t * Iso_ManStart( Aig_Man_t * pAig )\n{\n    Iso_Man_t * p;\n    p = ABC_CALLOC( Iso_Man_t, 1 );\n    p-\u003epAig     = pAig;\n    p-\u003enObjs    = Aig_ManObjNumMax( pAig );\n    p-\u003epObjs    = ABC_CALLOC( Iso_Obj_t, p-\u003enObjs );\n    p-\u003enBins    = Abc_PrimeCudd( p-\u003enObjs );\n    p-\u003epBins    = ABC_CALLOC( int, p-\u003enBins );    \n    p-\u003evSingles = Vec_PtrAlloc( 1000 );\n    p-\u003evClasses = Vec_PtrAlloc( 1000 );\n    p-\u003evTemp1   = Vec_PtrAlloc( 1000 );\n    p-\u003evTemp2   = Vec_PtrAlloc( 1000 );\n    p-\u003enObjIds  = 1;\n    return p;\n}",
+      "Draft": "func Iso_ManStart(pAig *Aig_Man_t) *Iso_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Iso_Man_t{};\n    p.pAig     = pAig;\n    p.nObjs    = Aig_ManObjNumMax( pAig );\n    // inlining of macro ABC_CALLOC\n    p.pObjs    = ((Iso_Obj_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Obj_t)));\n    p.nBins    = Abc_PrimeCudd( p.nObjs );\n    // inlining of macro ABC_CALLOC\n    p.pBins    = ((int *) calloc((size_t)(p.nBins), sizeof(int)));    \n    p.vSingles = Vec_PtrAlloc( 1000 );\n    p.vClasses = Vec_PtrAlloc( 1000 );\n    p.vTemp1   = Vec_PtrAlloc( 1000 );\n    p.vTemp2   = Vec_PtrAlloc( 1000 );\n    p.nObjIds  = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Iso_ManStop",
+      "Start": 26980,
+      "End": 27693,
+      "BodyStart": 27028,
+      "Original": "void Iso_ManStop( Iso_Man_t * p, int fVerbose )\n{\n    if ( fVerbose )\n    {\n        p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeHash - p-\u003etimeFout;\n        ABC_PRTP( \"Building \", p-\u003etimeFout,               p-\u003etimeTotal );\n        ABC_PRTP( \"Hashing  \", p-\u003etimeHash-p-\u003etimeSort,   p-\u003etimeTotal );\n        ABC_PRTP( \"Sorting  \", p-\u003etimeSort,               p-\u003etimeTotal );\n        ABC_PRTP( \"Other    \", p-\u003etimeOther,              p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL    \", p-\u003etimeTotal,              p-\u003etimeTotal );\n    }\n    Vec_PtrFree( p-\u003evTemp1 );\n    Vec_PtrFree( p-\u003evTemp2 );\n    Vec_PtrFree( p-\u003evClasses );\n    Vec_PtrFree( p-\u003evSingles );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Iso_ManStop(p *Iso_Man_t, fVerbose int32) {\n    if fVerbose != 0 {\n        p.timeOther = p.timeTotal - p.timeHash - p.timeFout;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Building \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFout)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFout)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Hashing  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeHash-p.timeSort)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeHash-p.timeSort)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sorting  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSort)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSort)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    }\n    Vec_PtrFree( p.vTemp1 );\n    Vec_PtrFree( p.vTemp2 );\n    Vec_PtrFree( p.vClasses );\n    Vec_PtrFree( p.vSingles );\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Iso_ObjCompare",
+      "Start": 27970,
+      "End": 28092,
+      "BodyStart": 28027,
+      "Original": "int Iso_ObjCompare( Iso_Obj_t ** pp1, Iso_Obj_t ** pp2 )\n{\n    return -memcmp( *pp1, *pp2, sizeof(int) * ISO_NUM_INTS );\n}",
+      "Draft": "func Iso_ObjCompare(pp1 **Iso_Obj_t, pp2 **Iso_Obj_t) int32 {\n    return -memcmp( *pp1, *pp2, sizeof(int) * ISO_NUM_INTS );\n}"
+    },
+    {
+      "Name": "Iso_ObjCompareByData",
+      "Start": 28361,
+      "End": 28639,
+      "BodyStart": 28424,
+      "Original": "int Iso_ObjCompareByData( Aig_Obj_t ** pp1, Aig_Obj_t ** pp2 )\n{\n    Aig_Obj_t * pIso1 = *pp1;\n    Aig_Obj_t * pIso2 = *pp2;\n    assert( Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1) );\n    assert( Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2) );\n    return pIso1-\u003eiData - pIso2-\u003eiData;\n}",
+      "Draft": "func Iso_ObjCompareByData(pp1 **Aig_Obj_t, pp2 **Aig_Obj_t) int32 {\n    var pIso1 *Aig_Obj_t  = *pp1;\n    var pIso2 *Aig_Obj_t  = *pp2;\n    assert(Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1), \"Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1)\");\n    assert(Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2), \"Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2)\");\n    return pIso1.iData - pIso2.iData;\n}"
+    },
+    {
+      "Name": "Iso_ObjHash",
+      "Start": 28875,
+      "End": 29273,
+      "BodyStart": 28936,
+      "Original": "static inline int Iso_ObjHash( Iso_Obj_t * pIso, int nBins )\n{\n    static unsigned BigPrimes[8] = {12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};\n    unsigned * pArray = (unsigned *)pIso;\n    unsigned i, Value = 0;\n    assert( ISO_NUM_INTS \u003c 8 );\n    for ( i = 0; i \u003c ISO_NUM_INTS; i++ )\n        Value ^= BigPrimes[i] * pArray[i];\n    return Value % nBins;\n}",
+      "Draft": "func Iso_ObjHash(pIso *Iso_Obj_t, nBins int32) int32 {\n    \n    var pArray *uint32  = (unsigned *)pIso;\n    var i, Value uint32;\n    assert(ISO_NUM_INTS \u003c 8, \"ISO_NUM_INTS \u003c 8\");\n    for  i = 0; i \u003c ISO_NUM_INTS; i++  {\n        Value ^= spStatic_Iso_ObjHash_BigPrimes[i] * pArray[i];\n    }\n    return Value % nBins;\n}"
+    },
+    {
+      "Name": "Iso_ObjHashAdd",
+      "Start": 29274,
+      "End": 30033,
+      "BodyStart": 29342,
+      "Original": "static inline int Iso_ObjHashAdd( Iso_Man_t * p, Iso_Obj_t * pIso )\n{\n    Iso_Obj_t * pThis;\n    int * pPlace = p-\u003epBins + Iso_ObjHash( pIso, p-\u003enBins );\n    p-\u003enEntries++;\n    for ( pThis = Iso_ManObj(p, *pPlace); \n          pThis; pPlace = \u0026pThis-\u003eiNext, \n          pThis = Iso_ManObj(p, *pPlace) )\n        if ( Iso_ObjCompare( \u0026pThis, \u0026pIso ) == 0 ) // equal signatures\n        {\n            if ( pThis-\u003eiClass == 0 )\n            {\n                p-\u003enClasses++;\n                p-\u003enSingles--;\n            }\n            // add to the list\n            pIso-\u003eiClass = pThis-\u003eiClass;\n            pThis-\u003eiClass = Iso_ObjId( p, pIso );\n            return 1;\n        }\n    // create new list\n    *pPlace = Iso_ObjId( p, pIso );\n    p-\u003enSingles++;\n    return 0;\n}",
+      "Draft": "func Iso_ObjHashAdd(p *Iso_Man_t, pIso *Iso_Obj_t) int32 {\n    var pThis *Iso_Obj_t;\n    var pPlace *int32  = p.pBins + Iso_ObjHash( pIso, p.nBins );\n    p.nEntries++;\n    for  pThis = Iso_ManObj(p, *pPlace); \n          (pThis != nil); pPlace = \u0026pThis.iNext, \n          pThis = Iso_ManObj(p, *pPlace)  {\n        if Iso_ObjCompare( \u0026pThis, \u0026pIso ) == 0 { // equal signatures\n        \n            if pThis.iClass == 0 {\n                p.nClasses++;\n                p.nSingles--;\n            }\n            // add to the list\n            pIso.iClass = pThis.iClass;\n            pThis.iClass = Iso_ObjId( p, pIso );\n            return 1;\n        }\n    }\n    // create new list\n    *pPlace = Iso_ObjId( p, pIso );\n    p.nSingles++;\n    return 0;\n}"
+    },
+    {
+      "Name": "Iso_ManCollectClasses",
+      "Start": 30269,
+      "End": 31249,
+      "BodyStart": 30313,
+      "Original": "void Iso_ManCollectClasses( Iso_Man_t * p )\n{\n    Iso_Obj_t * pIso;\n    int i;\n    abctime clk = Abc_Clock();\n    Vec_PtrClear( p-\u003evSingles );\n    Vec_PtrClear( p-\u003evClasses );\n    for ( i = 0; i \u003c p-\u003enBins; i++ )\n    {\n        for ( pIso = Iso_ManObj(p, p-\u003epBins[i]); pIso; pIso = Iso_ManObj(p, pIso-\u003eiNext) )\n        {\n            assert( pIso-\u003eId == 0 );\n            if ( pIso-\u003eiClass )\n                Vec_PtrPush( p-\u003evClasses, pIso );\n            else \n                Vec_PtrPush( p-\u003evSingles, pIso );\n        }\n    }\n    clk = Abc_Clock();\n    Vec_PtrSort( p-\u003evSingles, (int (*)(void))Iso_ObjCompare );\n    Vec_PtrSort( p-\u003evClasses, (int (*)(void))Iso_ObjCompare );\n    p-\u003etimeSort += Abc_Clock() - clk;\n    assert( Vec_PtrSize(p-\u003evSingles) == p-\u003enSingles );\n    assert( Vec_PtrSize(p-\u003evClasses) == p-\u003enClasses );\n    // assign IDs to singletons\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evSingles, pIso, i )\n        if ( pIso-\u003eId == 0 )\n            pIso-\u003eId = p-\u003enObjIds++;\n}",
+      "Draft": "func Iso_ManCollectClasses(p *Iso_Man_t) {\n    var pIso *Iso_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Vec_PtrClear( p.vSingles );\n    Vec_PtrClear( p.vClasses );\n    for  i = 0; i \u003c p.nBins; i++  {\n        for  pIso = Iso_ManObj(p, p.pBins[i]); (pIso != nil); pIso = Iso_ManObj(p, pIso.iNext)  {\n            assert(pIso.Id == 0, \"pIso.Id == 0\");\n            if pIso.iClass {\n                Vec_PtrPush( p.vClasses, pIso );\n            } else { \n                Vec_PtrPush( p.vSingles, pIso ); }\n        }\n    }\n    clk = Abc_Clock();\n    Vec_PtrSort( p.vSingles, (int (*)(void))Iso_ObjCompare );\n    Vec_PtrSort( p.vClasses, (int (*)(void))Iso_ObjCompare );\n    p.timeSort += Abc_Clock() - clk;\n    assert(Vec_PtrSize(p.vSingles) == p.nSingles, \"Vec_PtrSize(p.vSingles) == p.nSingles\");\n    assert(Vec_PtrSize(p.vClasses) == p.nClasses, \"Vec_PtrSize(p.vClasses) == p.nClasses\");\n    // assign IDs to singletons\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSingles)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vSingles, i)), 1); i++  {\n        if pIso.Id == 0 {\n            pIso.Id = p.nObjIds++; }\n    }\n}"
+    },
+    {
+      "Name": "Iso_ManCreate",
+      "Start": 31485,
+      "End": 36068,
+      "BodyStart": 31531,
+      "Original": "Iso_Man_t * Iso_ManCreate( Aig_Man_t * pAig )\n{\n    int fUseXor = 0;\n    Iso_Man_t * p;\n    Iso_Obj_t * pIso, * pIsoF;\n    Aig_Obj_t * pObj, * pObjLi;\n    int i;\n    p = Iso_ManStart( pAig );\n\n    // create TFI signatures\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( Aig_ObjIsCo(pObj) )\n            continue;\n        pIso = p-\u003epObjs + i;\n        pIso-\u003eLevel = pObj-\u003eLevel;\n//        pIso-\u003enFinNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n\n        assert( pIso-\u003eFaninSig == 0 );\n        assert( pIso-\u003eFanoutSig == 0 );\n        if ( fUseXor )\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIso-\u003eFaninSig ^= pIsoF-\u003eFaninSig;\n                pIso-\u003eFaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIso-\u003eFaninSig ^= pIsoF-\u003eFaninSig;\n                pIso-\u003eFaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n        else\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIso-\u003eFaninSig += pIsoF-\u003eFaninSig;\n                pIso-\u003eFaninSig += pIso-\u003eLevel * s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIso-\u003eFaninSig += pIsoF-\u003eFaninSig;\n                pIso-\u003eFaninSig += pIso-\u003eLevel * s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n\n    // create TFO signatures\n    Aig_ManForEachObjReverse( pAig, pObj, i )\n    {\n        if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n            continue;\n        pIso = p-\u003epObjs + i;\n        if ( fUseXor )\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n            else if ( Aig_ObjIsCo(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n        else\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig += pIso-\u003eLevel * s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig += pIso-\u003eLevel * s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n            else if ( Aig_ObjIsCo(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                pIsoF-\u003eFanoutSig += pIso-\u003eLevel * s_1kPrimes[Abc_Var2Lit(pIso-\u003eLevel, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n\n    // consider flops\n    Aig_ManForEachLiLoSeq( p-\u003epAig, pObjLi, pObj, i )\n    {\n        if ( Aig_ObjFaninId0(pObjLi) == 0 ) // ignore constant!\n            continue;\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n\n        assert( pIso-\u003eFaninSig == 0 );\n        pIso-\u003eFaninSig = pIsoF-\u003eFaninSig;\n\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n        pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n    }\n/*\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        pIso = p-\u003epObjs + i;\n        Aig_ObjPrint( pAig, pObj );\n        printf( \"Lev = %4d.  Pos = %4d.  FaninSig = %10d.  FanoutSig = %10d.\\n\", \n            pIso-\u003eLevel, pIso-\u003enFinNeg, pIso-\u003eFaninSig, pIso-\u003eFanoutSig );\n    }\n*/\n    // add to the hash table\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        pIso = p-\u003epObjs + i;\n        Iso_ObjHashAdd( p, pIso );\n    }\n    // derive classes for the first time\n    Iso_ManCollectClasses( p );\n    return p;\n}",
+      "Draft": "func Iso_ManCreate(pAig *Aig_Man_t) *Iso_Man_t {\n    var fUseXor int32;\n    var p *Iso_Man_t;\n    var pIso, pIsoF *Iso_Obj_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var i int32;\n    p = Iso_ManStart( pAig );\n\n    // create TFI signatures\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsCo(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        pIso.Level = pObj.Level;\n//        pIso-\u003enFinNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n        assert(pIso.FanoutSig == 0, \"pIso.FanoutSig == 0\");\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                pIso.FaninSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                pIso.FaninSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n    }\n\n    // create TFO signatures\n    // inlining of macro Aig_ManForEachObjReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(pAig.vObjs) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i--  { if (pObj) == nil {} else {\n        if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n    }\n\n    // consider flops\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObj)=Aig_ManLo(p.pAig, i)), 1); i++  {\n        if Aig_ObjFaninId0(pObjLi) == 0 { // ignore constant!\n            continue; }\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n        pIso.FaninSig = pIsoF.FaninSig;\n\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n        pIsoF.FanoutSig += pIso.FanoutSig;\n    }\n/*\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        pIso = p-\u003epObjs + i;\n        Aig_ObjPrint( pAig, pObj );\n        printf( \"Lev = %4d.  Pos = %4d.  FaninSig = %10d.  FanoutSig = %10d.\\n\", \n            pIso-\u003eLevel, pIso-\u003enFinNeg, pIso-\u003eFaninSig, pIso-\u003eFanoutSig );\n    }\n*/\n    // add to the hash table\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        Iso_ObjHashAdd( p, pIso );\n    }\n    }\n    // derive classes for the first time\n    Iso_ManCollectClasses( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Iso_ManAssignAdjacency",
+      "Start": 36328,
+      "End": 41267,
+      "BodyStart": 36373,
+      "Original": "void Iso_ManAssignAdjacency( Iso_Man_t * p )\n{\n    int fUseXor = 0;\n    Iso_Obj_t * pIso, * pIsoF;\n    Aig_Obj_t * pObj, * pObjLi;\n    int i;\n\n    // create TFI signatures\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n    {\n        pIso = p-\u003epObjs + i;\n        pIso-\u003eFaninSig = 0;\n        pIso-\u003eFanoutSig = 0;\n\n        if ( Aig_ObjIsCo(pObj) )\n            continue;\n        if ( fUseXor )\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIso-\u003eFaninSig ^= pIsoF-\u003eFaninSig;\n                if ( pIsoF-\u003eId )\n                    pIso-\u003eFaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIso-\u003eFaninSig ^= pIsoF-\u003eFaninSig;\n                if ( pIsoF-\u003eId )\n                    pIso-\u003eFaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n        else\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIso-\u003eFaninSig += pIsoF-\u003eFaninSig;\n                if ( pIsoF-\u003eId )\n                    pIso-\u003eFaninSig += pIsoF-\u003eId * s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIso-\u003eFaninSig += pIsoF-\u003eFaninSig;\n                if ( pIsoF-\u003eId )\n                    pIso-\u003eFaninSig += pIsoF-\u003eId * s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n    // create TFO signatures\n    Aig_ManForEachObjReverse( p-\u003epAig, pObj, i )\n    {\n        if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n            continue;\n        pIso = p-\u003epObjs + i;\n        assert( !Aig_ObjIsCo(pObj) || pIso-\u003eId == 0 );\n        if ( fUseXor )\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n            else if ( Aig_ObjIsCo(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig ^= pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n        else\n        {\n            if ( Aig_ObjIsNode(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig += pIso-\u003eId * s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId1(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig += pIso-\u003eId * s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n            else if ( Aig_ObjIsCo(pObj) )\n            {\n                pIsoF = p-\u003epObjs + Aig_ObjFaninId0(pObj);\n                pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n                if ( pIso-\u003eId )\n                    pIsoF-\u003eFanoutSig += pIso-\u003eId * s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n\n    // consider flops\n    Aig_ManForEachLiLoSeq( p-\u003epAig, pObjLi, pObj, i )\n    {\n        if ( Aig_ObjFaninId0(pObjLi) == 0 ) // ignore constant!\n            continue;\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n        assert( pIso-\u003eFaninSig == 0 );\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n\n        if ( fUseXor )\n        {\n            pIso-\u003eFaninSig = pIsoF-\u003eFaninSig;\n            if ( pIsoF-\u003eId )\n                pIso-\u003eFaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK];\n\n            pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n            if ( pIso-\u003eId )\n                pIsoF-\u003eFanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK];\n        }\n        else\n        {\n            pIso-\u003eFaninSig = pIsoF-\u003eFaninSig;\n            if ( pIsoF-\u003eId )\n                pIso-\u003eFaninSig += pIsoF-\u003eId * s_1kPrimes[Abc_Var2Lit(pIsoF-\u003eId, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK];\n\n            pIsoF-\u003eFanoutSig += pIso-\u003eFanoutSig;\n            if ( pIso-\u003eId )\n                pIsoF-\u003eFanoutSig += pIso-\u003eId * s_1kPrimes[Abc_Var2Lit(pIso-\u003eId, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK];\n        }\n    }\n}",
+      "Draft": "func Iso_ManAssignAdjacency(p *Iso_Man_t) {\n    var fUseXor int32;\n    var pIso, pIsoF *Iso_Obj_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var i int32;\n\n    // create TFI signatures\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIso = p.pObjs + i;\n        pIso.FaninSig = 0;\n        pIso.FanoutSig = 0;\n\n        if Aig_ObjIsCo(pObj) {\n            continue; }\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            }\n        }\n    }\n    }\n    // create TFO signatures\n    // inlining of macro Aig_ManForEachObjReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(p.pAig.vObjs) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i--  { if (pObj) == nil {} else {\n        if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        assert(!Aig_ObjIsCo(pObj) || pIso.Id == 0, \"!Aig_ObjIsCo(pObj) || pIso.Id == 0\");\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n            }\n        }\n    }\n    }\n\n    // consider flops\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObj)=Aig_ManLo(p.pAig, i)), 1); i++  {\n        if Aig_ObjFaninId0(pObjLi) == 0 { // ignore constant!\n            continue; }\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n\n        if fUseXor != 0 {\n            pIso.FaninSig = pIsoF.FaninSig;\n            if pIsoF.Id {\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n\n            pIsoF.FanoutSig += pIso.FanoutSig;\n            if pIso.Id {\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n        \n        } else {\n            pIso.FaninSig = pIsoF.FaninSig;\n            if pIsoF.Id {\n                pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n\n            pIsoF.FanoutSig += pIso.FanoutSig;\n            if pIso.Id {\n                pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Iso_ManPrintClasseSizes",
+      "Start": 41505,
+      "End": 41850,
+      "BodyStart": 41551,
+      "Original": "void Iso_ManPrintClasseSizes( Iso_Man_t * p )\n{\n    Iso_Obj_t * pIso, * pTemp;\n    int i, Counter;\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evClasses, pIso, i )\n    {\n        Counter = 0;\n        for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n            Counter++;\n        printf( \"%d \", Counter );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Iso_ManPrintClasseSizes(p *Iso_Man_t) {\n    var pIso, pTemp *Iso_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        Counter = 0;\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            Counter++;\n        }\n        fmt.Printf(\"%d \", Counter);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Iso_ManPrintClasses",
+      "Start": 42086,
+      "End": 43482,
+      "BodyStart": 42160,
+      "Original": "void Iso_ManPrintClasses( Iso_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    int fOnlyCis = 0;\n    Iso_Obj_t * pIso, * pTemp;\n    int i;\n\n    // count unique objects\n    if ( fVerbose )\n        printf( \"Total objects =%7d.  Entries =%7d.  Classes =%7d.  Singles =%7d.\\n\", \n            p-\u003enObjs, p-\u003enEntries, p-\u003enClasses, p-\u003enSingles );\n\n    if ( !fVeryVerbose )\n        return;\n\n    printf( \"Non-trivial classes:\\n\" );\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evClasses, pIso, i )\n    {\n        if ( fOnlyCis \u0026\u0026 pIso-\u003eLevel \u003e 0 )\n            continue;\n\n        printf( \"%5d : {\", i );\n        for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n        {\n            if ( fOnlyCis )\n                printf( \" %d\", Aig_ObjCioId( Iso_AigObj(p, pTemp) ) );\n            else\n            {\n                Aig_Obj_t * pObj = Iso_AigObj(p, pTemp);\n                if ( Aig_ObjIsNode(pObj) )\n                    printf( \" %d{%s%d(%d),%s%d(%d)}\", Iso_ObjId(p, pTemp), \n                        Aig_ObjFaninC0(pObj)? \"-\": \"+\", Aig_ObjFaninId0(pObj), Aig_ObjLevel(Aig_ObjFanin0(pObj)), \n                        Aig_ObjFaninC1(pObj)? \"-\": \"+\", Aig_ObjFaninId1(pObj), Aig_ObjLevel(Aig_ObjFanin1(pObj)) );\n                else\n                    printf( \" %d\", Iso_ObjId(p, pTemp) );\n            }\n            printf( \"(%d)\", pTemp-\u003eLevel );\n        }        \n        printf( \" }\\n\" );\n    }\n}",
+      "Draft": "func Iso_ManPrintClasses(p *Iso_Man_t, fVerbose int32, fVeryVerbose int32) {\n    var fOnlyCis int32;\n    var pIso, pTemp *Iso_Obj_t;\n    var i int32;\n\n    // count unique objects\n    if fVerbose != 0 {\n        fmt.Printf(\"Total objects =%7d.  Entries =%7d.  Classes =%7d.  Singles =%7d.\\n\", p.nObjs, p.nEntries, p.nClasses, p.nSingles); }\n\n    if !(fVeryVerbose != 0) {\n        return; }\n\n    fmt.Printf(\"Non-trivial classes:\\n\");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        if (fOnlyCis != 0) \u0026\u0026 pIso.Level \u003e 0 {\n            continue; }\n\n        fmt.Printf(\"%5d : {\", i);\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            if fOnlyCis != 0 {\n                fmt.Printf(\" %d\", Aig_ObjCioId( Iso_AigObj(p, pTemp) ));\n            } else {\n                var pObj *Aig_Obj_t  = Iso_AigObj(p, pTemp);\n                if Aig_ObjIsNode(pObj) {\n                    fmt.Printf(\" %d{%s%d(%d),%s%d(%d)}\", Iso_ObjId(p, pTemp), Aig_ObjFaninC0(pObj)? \"-\": \"+\", Aig_ObjFaninId0(pObj), Aig_ObjLevel(Aig_ObjFanin0(pObj)), Aig_ObjFaninC1(pObj)? \"-\": \"+\", Aig_ObjFaninId1(pObj), Aig_ObjLevel(Aig_ObjFanin1(pObj)));\n                } else {\n                    fmt.Printf(\" %d\", Iso_ObjId(p, pTemp)); }\n            }\n            fmt.Printf(\"(%d)\", pTemp.Level);\n        }        \n        fmt.Printf(\" }\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Iso_ManRehashClassNodes",
+      "Start": 43719,
+      "End": 44823,
+      "BodyStart": 43765,
+      "Original": "void Iso_ManRehashClassNodes( Iso_Man_t * p )\n{\n    Iso_Obj_t * pIso, * pTemp;\n    int i;\n    // collect nodes\n    Vec_PtrClear( p-\u003evTemp1 );\n    Vec_PtrClear( p-\u003evTemp2 );\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evClasses, pIso, i )\n    {\n        for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n            if ( pTemp-\u003eId == 0 )\n                Vec_PtrPush( p-\u003evTemp1, pTemp );\n            else\n                Vec_PtrPush( p-\u003evTemp2, pTemp );\n    }\n    // clean and add nodes\n    p-\u003enClasses = 0;       // total number of classes\n    p-\u003enEntries = 0;       // total number of entries\n    p-\u003enSingles = 0;       // total number of singletons\n    memset( p-\u003epBins, 0, sizeof(int) * p-\u003enBins );\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evTemp1, pTemp, i )\n    {\n        assert( pTemp-\u003eId == 0 );\n        pTemp-\u003eiClass = pTemp-\u003eiNext = 0;\n        Iso_ObjHashAdd( p, pTemp );\n    }\n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evTemp2, pTemp, i )\n    {\n        assert( pTemp-\u003eId != 0 );\n        pTemp-\u003eiClass = pTemp-\u003eiNext = 0;\n    }\n    // collect new classes\n    Iso_ManCollectClasses( p );\n}",
+      "Draft": "func Iso_ManRehashClassNodes(p *Iso_Man_t) {\n    var pIso, pTemp *Iso_Obj_t;\n    var i int32;\n    // collect nodes\n    Vec_PtrClear( p.vTemp1 );\n    Vec_PtrClear( p.vTemp2 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            if pTemp.Id == 0 {\n                Vec_PtrPush( p.vTemp1, pTemp );\n            } else {\n                Vec_PtrPush( p.vTemp2, pTemp ); }\n        }\n    }\n    // clean and add nodes\n    p.nClasses = 0;       // total number of classes\n    p.nEntries = 0;       // total number of entries\n    p.nSingles = 0;       // total number of singletons\n    memset( p.pBins, 0, sizeof(int) * p.nBins );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp1)) \u0026\u0026 (((pTemp) = (Iso_Obj_t *)Vec_PtrEntry(p.vTemp1, i)), 1); i++  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        pTemp.iClass = pTemp.iNext = 0;\n        Iso_ObjHashAdd( p, pTemp );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp2)) \u0026\u0026 (((pTemp) = (Iso_Obj_t *)Vec_PtrEntry(p.vTemp2, i)), 1); i++  {\n        assert(pTemp.Id != 0, \"pTemp.Id != 0\");\n        pTemp.iClass = pTemp.iNext = 0;\n    }\n    // collect new classes\n    Iso_ManCollectClasses( p );\n}"
+    },
+    {
+      "Name": "Iso_ManFindBestObj",
+      "Start": 45099,
+      "End": 45826,
+      "BodyStart": 45165,
+      "Original": "Iso_Obj_t * Iso_ManFindBestObj( Iso_Man_t * p, Iso_Obj_t * pIso )\n{\n    Iso_Obj_t * pTemp, * pBest = NULL;\n    int nNodesBest = -1, nNodes;\n    int nEdgesBest = -1, nEdges;\n    assert( pIso-\u003eId == 0 );\n    if ( pIso-\u003eLevel == 0 )\n        return pIso;\n    for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n    {\n        assert( pTemp-\u003eId == 0 );\n        Iso_ManObjCount( p-\u003epAig, Iso_AigObj(p, pTemp), \u0026nNodes, \u0026nEdges );\n//        printf( \"%d,%d \", nNodes, nEdges );\n        if ( nNodesBest \u003c nNodes || (nNodesBest == nNodes \u0026\u0026 nEdgesBest \u003c nEdges) )\n        {\n            nNodesBest = nNodes;\n            nEdgesBest = nEdges;\n            pBest = pTemp;\n        }\n    }\n//    printf( \"\\n\" );\n    return pBest;\n}",
+      "Draft": "func Iso_ManFindBestObj(p *Iso_Man_t, pIso *Iso_Obj_t) *Iso_Obj_t {\n    var pTemp *Iso_Obj_t;\n    var pBest *Iso_Obj_t = nil;\n    var nNodesBest int32 = -1;\n    var nNodes int32;\n    var nEdgesBest int32 = -1;\n    var nEdges int32;\n    assert(pIso.Id == 0, \"pIso.Id == 0\");\n    if pIso.Level == 0 {\n        return pIso; }\n    for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        Iso_ManObjCount( p.pAig, Iso_AigObj(p, pTemp), \u0026nNodes, \u0026nEdges );\n//        printf( \"%d,%d \", nNodes, nEdges );\n        if nNodesBest \u003c nNodes || (nNodesBest == nNodes \u0026\u0026 nEdgesBest \u003c nEdges) {\n            nNodesBest = nNodes;\n            nEdgesBest = nEdges;\n            pBest = pTemp;\n        }\n    }\n//    printf( \"\\n\" );\n    return pBest;\n}"
+    },
+    {
+      "Name": "Iso_ManBreakTies",
+      "Start": 46102,
+      "End": 47111,
+      "BodyStart": 46155,
+      "Original": "void Iso_ManBreakTies( Iso_Man_t * p, int fVerbose )\n{\n    int fUseOneBest = 0;\n    Iso_Obj_t * pIso, * pTemp;\n    int i, LevelStart = 0;\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p-\u003evClasses, 0 );\n    LevelStart = pIso-\u003eLevel;\n    if ( fVerbose )\n        printf( \"Best level %d\\n\", LevelStart ); \n    Vec_PtrForEachEntry( Iso_Obj_t *, p-\u003evClasses, pIso, i )\n    {\n        if ( (int)pIso-\u003eLevel \u003c LevelStart )\n            break;\n        if ( !fUseOneBest )\n        {\n            for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n            {\n                assert( pTemp-\u003eId ==  0 );\n                pTemp-\u003eId = p-\u003enObjIds++;\n            }\n            continue;\n        }\n        if ( pIso-\u003eLevel == 0 )//\u0026\u0026 pIso-\u003enFoutPos + pIso-\u003enFoutNeg == 0 )\n        {\n            for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n                pTemp-\u003eId = p-\u003enObjIds++;\n            continue;\n        }\n        pIso = Iso_ManFindBestObj( p, pIso );\n        pIso-\u003eId = p-\u003enObjIds++;\n    }\n}",
+      "Draft": "func Iso_ManBreakTies(p *Iso_Man_t, fVerbose int32) {\n    var fUseOneBest int32;\n    var pIso, pTemp *Iso_Obj_t;\n    var i, LevelStart int32;\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p.vClasses, 0 );\n    LevelStart = pIso.Level;\n    if fVerbose != 0 {\n        fmt.Printf(\"Best level %d\\n\", LevelStart); } \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        if int32(pIso.Level) \u003c LevelStart {\n            break; }\n        if !(fUseOneBest != 0) {\n            for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n                assert(pTemp.Id ==  0, \"pTemp.Id ==  0\");\n                pTemp.Id = p.nObjIds++;\n            }\n            continue;\n        }\n        if pIso.Level == 0 {//\u0026\u0026 pIso-\u003enFoutPos + pIso-\u003enFoutNeg == 0 )\n        \n            for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n                pTemp.Id = p.nObjIds++;\n            }\n            continue;\n        }\n        pIso = Iso_ManFindBestObj( p, pIso );\n        pIso.Id = p.nObjIds++;\n    }\n}"
+    },
+    {
+      "Name": "Iso_ManFinalize",
+      "Start": 47454,
+      "End": 48835,
+      "BodyStart": 47499,
+      "Original": "Vec_Int_t * Iso_ManFinalize( Iso_Man_t * p )\n{\n    Vec_Int_t * vRes;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( p-\u003enClasses == 0 );\n    assert( Vec_PtrSize(p-\u003evClasses) == 0 );\n    // set canonical numbers\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n    {\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n        {\n            pObj-\u003eiData = -1;\n            continue;\n        }\n        pObj-\u003eiData = Iso_ManObj(p, Aig_ObjId(pObj))-\u003eId;\n        assert( pObj-\u003eiData \u003e 0 );\n    }\n    Aig_ManConst1(p-\u003epAig)-\u003eiData = 0;\n    // assign unique IDs to the CIs\n    Vec_PtrClear( p-\u003evTemp1 );\n    Vec_PtrClear( p-\u003evTemp2 );\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n    {\n        assert( pObj-\u003eiData \u003e 0 );\n        if ( Aig_ObjCioId(pObj) \u003e= Aig_ManCiNum(p-\u003epAig) - Aig_ManRegNum(p-\u003epAig) ) // flop\n            Vec_PtrPush( p-\u003evTemp2, pObj );\n        else // PI\n            Vec_PtrPush( p-\u003evTemp1, pObj );\n    }\n    // sort CIs by their IDs\n    Vec_PtrSort( p-\u003evTemp1, (int (*)(void))Iso_ObjCompareByData );\n    Vec_PtrSort( p-\u003evTemp2, (int (*)(void))Iso_ObjCompareByData );\n    // create the result\n    vRes = Vec_IntAlloc( Aig_ManCiNum(p-\u003epAig) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evTemp1, pObj, i )\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evTemp2, pObj, i )\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    return vRes;\n}",
+      "Draft": "func Iso_ManFinalize(p *Iso_Man_t) *Vec_Int_t {\n    var vRes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.nClasses == 0, \"p.nClasses == 0\");\n    assert(Vec_PtrSize(p.vClasses) == 0, \"Vec_PtrSize(p.vClasses) == 0\");\n    // set canonical numbers\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            pObj.iData = -1;\n            continue;\n        }\n        pObj.iData = Iso_ManObj(p, Aig_ObjId(pObj)).Id;\n        assert(pObj.iData \u003e 0, \"pObj.iData \u003e 0\");\n    }\n    }\n    Aig_ManConst1(p.pAig).iData = 0;\n    // assign unique IDs to the CIs\n    Vec_PtrClear( p.vTemp1 );\n    Vec_PtrClear( p.vTemp2 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        assert(pObj.iData \u003e 0, \"pObj.iData \u003e 0\");\n        if Aig_ObjCioId(pObj) \u003e= Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig) { // flop\n            Vec_PtrPush( p.vTemp2, pObj );\n        } else { // PI\n            Vec_PtrPush( p.vTemp1, pObj ); }\n    }\n    // sort CIs by their IDs\n    Vec_PtrSort( p.vTemp1, (int (*)(void))Iso_ObjCompareByData );\n    Vec_PtrSort( p.vTemp2, (int (*)(void))Iso_ObjCompareByData );\n    // create the result\n    vRes = Vec_IntAlloc( Aig_ManCiNum(p.pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp1)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vTemp1, i)), 1); i++  {\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp2)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vTemp2, i)), 1); i++  {\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Iso_ManDumpOneClass",
+      "Start": 49111,
+      "End": 49683,
+      "BodyStart": 49153,
+      "Original": "void Iso_ManDumpOneClass( Iso_Man_t * p )\n{\n    Vec_Ptr_t * vNodes = Vec_PtrAlloc( 100 );\n    Iso_Obj_t * pIso, * pTemp;\n    Aig_Man_t * pNew = NULL;\n    assert( p-\u003enClasses \u003e 0 );\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p-\u003evClasses, 0 );\n    assert( pIso-\u003eId == 0 );\n    for ( pTemp = pIso; pTemp; pTemp = Iso_ManObj(p, pTemp-\u003eiClass) )\n    {\n        assert( pTemp-\u003eId == 0 );\n        Vec_PtrPush( vNodes, Iso_AigObj(p, pTemp) );\n    }\n    pNew = Aig_ManDupNodes( p-\u003epAig, vNodes );\n    Vec_PtrFree( vNodes );\n    Aig_ManShow( pNew, 0, NULL ); \n    Aig_ManStopP( \u0026pNew );\n}",
+      "Draft": "func Iso_ManDumpOneClass(p *Iso_Man_t) {\n    var vNodes *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var pIso, pTemp *Iso_Obj_t;\n    var pNew *Aig_Man_t  = nil;\n    assert(p.nClasses \u003e 0, \"p.nClasses \u003e 0\");\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p.vClasses, 0 );\n    assert(pIso.Id == 0, \"pIso.Id == 0\");\n    for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        Vec_PtrPush( vNodes, Iso_AigObj(p, pTemp) );\n    }\n    pNew = Aig_ManDupNodes( p.pAig, vNodes );\n    Vec_PtrFree( vNodes );\n    Aig_ManShow( pNew, 0, nil ); \n    Aig_ManStopP( \u0026pNew );\n}"
+    },
+    {
+      "Name": "Saig_ManFindIsoPerm",
+      "Start": 49977,
+      "End": 51669,
+      "BodyStart": 50043,
+      "Original": "Vec_Int_t * Saig_ManFindIsoPerm( Aig_Man_t * pAig, int fVerbose )\n{\n    int fVeryVerbose = 0;\n    Vec_Int_t * vRes;\n    Iso_Man_t * p;\n    abctime clk = Abc_Clock(), clk2 = Abc_Clock();\n    p = Iso_ManCreate( pAig );\n    p-\u003etimeFout += Abc_Clock() - clk;\n    Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n    while ( p-\u003enClasses )\n    {\n        // assign adjacency to classes\n        clk = Abc_Clock();\n        Iso_ManAssignAdjacency( p );\n        p-\u003etimeFout += Abc_Clock() - clk;\n        // rehash the class nodes\n        clk = Abc_Clock();\n        Iso_ManRehashClassNodes( p );\n        p-\u003etimeHash += Abc_Clock() - clk;\n        Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        // force refinement\n        while ( p-\u003enSingles == 0 \u0026\u0026 p-\u003enClasses )\n        {\n//            Iso_ManPrintClasseSizes( p );\n            // assign IDs to the topmost level of classes\n            Iso_ManBreakTies( p, fVerbose );\n            // assign adjacency to classes\n            clk = Abc_Clock();\n            Iso_ManAssignAdjacency( p );\n            p-\u003etimeFout += Abc_Clock() - clk;\n            // rehash the class nodes\n            clk = Abc_Clock();\n            Iso_ManRehashClassNodes( p );\n            p-\u003etimeHash += Abc_Clock() - clk;\n            Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        }\n    }\n    p-\u003etimeTotal = Abc_Clock() - clk2;\n//    printf( \"IDs assigned = %d.  Objects = %d.\\n\", p-\u003enObjIds, 1+Aig_ManCiNum(p-\u003epAig)+Aig_ManNodeNum(p-\u003epAig) );\n    assert( p-\u003enObjIds == 1+Aig_ManCiNum(p-\u003epAig)+Aig_ManNodeNum(p-\u003epAig) );\n//    if ( p-\u003enClasses )\n//        Iso_ManDumpOneClass( p );\n    vRes = Iso_ManFinalize( p );\n    Iso_ManStop( p, fVerbose );\n    return vRes;\n}",
+      "Draft": "func Saig_ManFindIsoPerm(pAig *Aig_Man_t, fVerbose int32) *Vec_Int_t {\n    var fVeryVerbose int32;\n    var vRes *Vec_Int_t;\n    var p *Iso_Man_t;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime = Abc_Clock();\n    p = Iso_ManCreate( pAig );\n    p.timeFout += Abc_Clock() - clk;\n    Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n    for  p.nClasses  {\n        // assign adjacency to classes\n        clk = Abc_Clock();\n        Iso_ManAssignAdjacency( p );\n        p.timeFout += Abc_Clock() - clk;\n        // rehash the class nodes\n        clk = Abc_Clock();\n        Iso_ManRehashClassNodes( p );\n        p.timeHash += Abc_Clock() - clk;\n        Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        // force refinement\n        for  p.nSingles == 0 \u0026\u0026 p.nClasses  {\n//            Iso_ManPrintClasseSizes( p );\n            // assign IDs to the topmost level of classes\n            Iso_ManBreakTies( p, fVerbose );\n            // assign adjacency to classes\n            clk = Abc_Clock();\n            Iso_ManAssignAdjacency( p );\n            p.timeFout += Abc_Clock() - clk;\n            // rehash the class nodes\n            clk = Abc_Clock();\n            Iso_ManRehashClassNodes( p );\n            p.timeHash += Abc_Clock() - clk;\n            Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        }\n    }\n    p.timeTotal = Abc_Clock() - clk2;\n//    printf( \"IDs assigned = %d.  Objects = %d.\\n\", p-\u003enObjIds, 1+Aig_ManCiNum(p-\u003epAig)+Aig_ManNodeNum(p-\u003epAig) );\n    assert(p.nObjIds == 1+Aig_ManCiNum(p.pAig)+Aig_ManNodeNum(p.pAig), \"p.nObjIds == 1+Aig_ManCiNum(p.pAig)+Aig_ManNodeNum(p.pAig)\");\n//    if ( p-\u003enClasses )\n//        Iso_ManDumpOneClass( p );\n    vRes = Iso_ManFinalize( p );\n    Iso_ManStop( p, fVerbose );\n    return vRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::struct::Iso_Obj_t::// hashing entries (related to the parameter ISO_NUM_INTS!)\n    unsigned      Level     : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 21502,
+      "End": 21600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::struct::Iso_Obj_t::unsigned      nFinNeg   :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Iso_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 21600,
+      "End": 21634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::struct::Iso_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Iso_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 21446,
+      "End": 21868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::struct::Iso_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Iso_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 21870,
+      "End": 22784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::sizeof::26619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26538,
+      "End": 26538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::sizeof::26814",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26652,
+      "End": 26652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::sizeof::26980",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26750,
+      "End": 26750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::sizeof::29544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28061,
+      "End": 28067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::static::30425",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 28942,
+      "End": 28948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::mechanical::sizeof::47731",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 44405,
+      "End": 44411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::26585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26538,
+      "End": 26538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::26773",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26652,
+      "End": 26652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::26945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26750,
+      "End": 26750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::28928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27625,
+      "End": 27625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::29040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27651,
+      "End": 27651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::29145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27677,
+      "End": 27677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::30568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29085,
+      "End": 29097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::32721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31125,
+      "End": 31125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::33470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31711,
+      "End": 31711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::35151",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33158,
+      "End": 33158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::38139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35789,
+      "End": 35789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::39072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36504,
+      "End": 36504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::40766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37961,
+      "End": 37961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::44717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41608,
+      "End": 41608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::45731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42512,
+      "End": 42512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::47225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 43896,
+      "End": 43896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::47873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 44435,
+      "End": 44435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::48165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 44619,
+      "End": 44619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::49793",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 46251,
+      "End": 46264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::50055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 46400,
+      "End": 46400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::51487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 47666,
+      "End": 47666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::52117",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 48080,
+      "End": 48080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::52772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 48605,
+      "End": 48605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::52988",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 48713,
+      "End": 48713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::pointer-cast::53575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 49303,
+      "End": 49316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::macro::Iso_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Iso_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23261,
+      "End": 23407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22786,
+      "End": 22943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22944,
+      "End": 23101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_AigObj",
+      "Category": "semantic-review",
+      "Symbol": "Iso_AigObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23102,
+      "End": 23259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ReadPrimes",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ReadPrimes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23970,
+      "End": 24635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_FindNumbers",
+      "Category": "semantic-review",
+      "Symbol": "Iso_FindNumbers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24893,
+      "End": 25297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManObjCount_rec",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManObjCount_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25533,
+      "End": 25987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManObjCount",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManObjCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25988,
+      "End": 26228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26464,
+      "End": 26979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::ternary::Iso_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Iso_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26980,
+      "End": 27693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26980,
+      "End": 27693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ObjCompare",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ObjCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27970,
+      "End": 28092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ObjCompareByData",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ObjCompareByData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28361,
+      "End": 28639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ObjHash",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ObjHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28875,
+      "End": 29273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ObjHashAdd",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ObjHashAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29274,
+      "End": 30033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManCollectClasses",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManCollectClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30269,
+      "End": 31249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31485,
+      "End": 36068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManAssignAdjacency",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManAssignAdjacency",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36328,
+      "End": 41267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManPrintClasseSizes",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManPrintClasseSizes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41505,
+      "End": 41850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::ternary::Iso_ManPrintClasses",
+      "Category": "ternary-review",
+      "Symbol": "Iso_ManPrintClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 42086,
+      "End": 43482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManPrintClasses",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManPrintClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 42086,
+      "End": 43482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManRehashClassNodes",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManRehashClassNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 43719,
+      "End": 44823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManFindBestObj",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManFindBestObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 45099,
+      "End": 45826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManBreakTies",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManBreakTies",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 46102,
+      "End": 47111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManFinalize",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManFinalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 47454,
+      "End": 48835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Iso_ManDumpOneClass",
+      "Category": "semantic-review",
+      "Symbol": "Iso_ManDumpOneClass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 49111,
+      "End": 49683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::Saig_ManFindIsoPerm",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFindIsoPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 49977,
+      "End": 51669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIsoSlow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 51917
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [aigIso.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Graph isomorphism package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigIso.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*\n#define ISO_MASK 0x3FF\nstatic int s_1kPrimes[ISO_MASK+1] = \n{\n    901403,984877,908741,966307,924437,965639,918787,931067,982621,917669,981473,936407,990487,926077,922897,970861,\n    942317,961747,979717,978947,940157,987821,981221,917713,983083,992231,928253,961187,991817,927643,923129,934291,\n    998071,967567,961087,988661,910031,930481,904489,974167,941351,959911,963811,921463,900161,934489,905629,930653,\n    901819,909457,939871,924083,915113,937969,928457,946291,973787,912869,994093,959279,905803,995219,949903,911011,\n    986707,995053,930583,955511,928307,930889,968729,911507,949043,939359,961679,918041,937681,909091,963913,923539,\n    929587,953347,917573,913037,995387,976483,986239,946949,922489,917887,957553,931529,929813,949567,941683,905161,\n    928819,932417,900089,935903,926587,914467,967361,944833,945881,941741,915949,903407,904157,971863,993893,963607,\n    918943,912463,980957,962963,968089,904513,963763,907363,904097,904093,991343,918347,986983,986659,935819,903569,\n    929171,913933,999749,923123,961531,935861,915053,994853,943511,969923,927191,968333,949391,950959,968311,991409,\n    911681,987101,904027,975259,907399,946223,907259,900409,957221,901063,974657,912337,979001,970147,982301,968213,\n    923959,964219,935443,950161,989251,936127,985679,958159,930077,971899,944857,956083,914293,941981,909481,909047,\n    960527,958183,970687,914827,949051,928159,933551,964423,914041,915869,929953,901367,914219,975551,912391,917809,\n    991499,904781,949153,959887,961957,970943,947741,941263,984541,951437,984301,947423,905761,964913,971357,927709,\n    916441,941933,956993,988243,921197,905453,922081,950813,946331,998561,929023,937421,956231,907651,977897,905491,\n    960173,931837,955217,911951,990643,971021,949439,988453,996781,951497,906011,944309,911293,917123,983803,928097,\n    977747,928703,949957,919189,925513,923953,904997,986351,930689,902009,912007,906757,955793,926803,906809,962743,\n    911917,909329,949021,974651,959083,945367,905137,948377,931757,945409,920279,915007,960121,920609,946163,946391,\n    928903,932951,944329,901529,959809,918469,978643,911159,982573,965411,962233,911269,953273,974437,907589,992269,\n    929399,980431,905693,968267,970481,911089,950557,913799,920407,974489,909863,918529,975277,929323,971549,969181,\n    972787,964267,939971,943763,940483,971501,921637,945341,955211,920701,978349,969041,929861,904103,908539,995369,\n    995567,917471,908879,993821,947783,954599,978463,914519,942869,947263,988343,914657,956987,903641,943343,991063,\n    985403,926327,982829,958439,942017,960353,944987,934793,948971,999331,990767,915199,912211,946459,997019,965059,\n    924907,983233,943273,945359,919613,933883,928927,942763,994087,996211,918971,924871,938491,957139,918839,914629,\n    974329,900577,952823,941641,900461,946997,983123,935149,923693,908419,995651,912871,987067,920201,913921,929209,\n    962509,974599,972001,920273,922099,951781,958549,909971,975133,937207,929941,961397,980677,923579,980081,942199,\n    940319,942979,912349,942691,986989,947711,972343,932663,937877,940369,919571,927187,981439,932353,952313,915947,\n    915851,974041,989381,921029,997013,999199,914801,918751,997327,992843,982133,932051,964861,903979,937463,916781,\n    944389,986719,958369,961451,917767,954367,949853,934939,958807,975797,949699,957097,980773,969989,934907,909281,\n    904679,909833,991741,946769,908381,932447,957889,981697,905701,919033,999023,993541,912953,911719,934603,925019,\n    989341,912269,917789,981049,959149,989909,960521,952183,922627,936253,910957,972047,945037,940399,928313,928471,\n    962459,959947,927541,917333,926899,911837,985631,955127,922729,911171,900511,926251,918209,943477,955277,959773,\n    971039,917353,955313,930301,990799,957731,917519,938507,988111,911657,999721,968917,934537,903073,921703,966227,\n    904661,998213,954307,931309,909331,933643,910099,958627,914533,902903,950149,972721,915157,969037,988219,944137,\n    976411,952873,964787,970927,968963,920741,975187,966817,982909,975281,931907,959267,980711,924617,975691,962309,\n    976307,932209,989921,907969,947927,932207,945397,948929,904903,938563,961691,977671,963173,927149,951061,966547,\n    937661,983597,948139,948041,982759,941093,993703,910097,902347,990307,978217,996763,904919,924641,902299,929549,\n    977323,975071,932917,996293,925579,925843,915487,917443,999541,943043,919109,959879,912173,986339,939193,939599,\n    927077,977183,966521,959471,991943,985951,942187,932557,904297,972337,931751,964097,942341,966221,929113,960131,\n    906427,970133,996511,925637,971651,983443,981703,933613,939749,929029,958043,961511,957241,901079,950479,975493,\n    985799,909401,945601,911077,978359,948151,950333,968879,978727,961151,957823,950393,960293,915683,971513,915659,\n    943841,902477,916837,911161,958487,963691,949607,935707,987607,901613,972557,938947,931949,919021,982217,914737,\n    913753,971279,981683,915631,907807,970421,983173,916099,984587,912049,981391,947747,966233,932101,991733,969757,\n    904283,996601,979807,974419,964693,931537,917251,967961,910093,989321,988129,997307,963427,999221,962447,991171,\n    993137,914339,964973,908617,968567,920497,980719,949649,912239,907367,995623,906779,914327,918131,983113,962993,\n    977849,914941,932681,905713,932579,923977,965507,916469,984119,931981,998423,984407,993841,901273,910799,939847,\n    997153,971429,994927,912631,931657,968377,927833,920149,978041,947449,993233,927743,939737,975017,961861,984539,\n    938857,977437,950921,963659,923917,932983,922331,982393,983579,935537,914357,973051,904531,962077,990281,989231,\n    910643,948281,961141,911839,947413,923653,982801,903883,931943,930617,928679,962119,969977,926921,999773,954181,\n    963019,973411,918139,959719,918823,941471,931883,925273,918173,949453,946993,945457,959561,968857,935603,978283,\n    978269,947389,931267,902599,961189,947621,920039,964049,947603,913259,997811,943843,978277,972119,929431,918257,\n    991663,954043,910883,948797,929197,985057,990023,960961,967139,923227,923371,963499,961601,971591,976501,989959,\n    908731,951331,989887,925307,909299,949159,913447,969797,959449,976957,906617,901213,922667,953731,960199,960049,\n    985447,942061,955613,965443,947417,988271,945887,976369,919823,971353,962537,929963,920473,974177,903649,955777,\n    963877,973537,929627,994013,940801,985709,995341,936319,904681,945817,996617,953191,952859,934889,949513,965407,\n    988357,946801,970391,953521,905413,976187,968419,940669,908591,976439,915731,945473,948517,939181,935183,978067,\n    907663,967511,968111,981599,913907,933761,994933,980557,952073,906557,935621,914351,967903,949129,957917,971821,\n    925937,926179,955729,966871,960737,968521,949997,956999,961273,962683,990377,908851,932231,929749,932149,966971,\n    922079,978149,938453,958313,995381,906259,969503,922321,918947,972443,916411,935021,944429,928643,952199,918157,\n    917783,998497,944777,917771,936731,999953,975157,908471,989557,914189,933787,933157,938953,922931,986569,964363,\n    906473,963419,941467,946079,973561,957431,952429,965267,978473,924109,979529,991901,988583,918259,961991,978037,\n    938033,949967,986071,986333,974143,986131,963163,940553,950933,936587,923407,950357,926741,959099,914891,976231,\n    949387,949441,943213,915353,983153,975739,934243,969359,926557,969863,961097,934463,957547,916501,904901,928231,\n    903673,974359,932219,916933,996019,934399,955813,938089,907693,918223,969421,940903,940703,913027,959323,940993,\n    937823,906691,930841,923701,933259,911959,915601,960251,985399,914359,930827,950251,975379,903037,905783,971237\n};\n*/\n\n/*\n#define ISO_MASK 0x7F\nstatic int s_1kPrimes[ISO_MASK+1] = { \n    1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n    1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n    2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n    2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n    3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n    3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n    4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n    4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n    5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n    6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n    6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n    7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n    8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n};\n*/\n\n/*\n#define ISO_MASK 0x7\nstatic int s_1kPrimes[ISO_MASK+1] = { \n    12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741\n};\n*/\n\nconst ISO_MASK = 0x3FF\nstatic unsigned int s_1kPrimes[ISO_MASK+1] = \n//#define ISO_MASK 0xFF\n//static int s_1kPrimes[0x3FF+1] = \n{\n    0x38c19891,0xde37b0ed,0xdebcd025,0xe19b7bbe,0x7e7ebd0e,0xaeed03a1,0x811230dc,0x10bfece0,\n    0xb3b23fb1,0x74176098,0xc34ec7c5,0x6bef8939,0xc40be5e3,0x2ab51a09,0xafc17cea,0x0dccc7a2,\n    0xdf7db34d,0x1009c96f,0x93fd7494,0x54385b33,0x6f36eed8,0xa1953f82,0xfbd1144a,0xde533a46,\n    0x23aa1cad,0x9a18943c,0xb65000d8,0x867e9974,0xe7880035,0xf9931ad4,0xcfca1e45,0x6b5aec96,\n    0xe9c1a119,0xfa4968c5,0x94cf93da,0xe8c9eac4,0x95884242,0x1bba52c7,0x9232c321,0x9cec8658,\n    0x984b6ad9,0x18a6eed3,0x950353e2,0x6222f6eb,0xdfbedd47,0xef0f9023,0xac932a26,0x590eaf55,\n    0x97d0a034,0xdc36cd2e,0x22736b37,0xdc9066b0,0x2eb2f98b,0x5d9c7baf,0x85747c9e,0x8aca1055,\n    0x50d66b74,0x2f01ae9e,0xa1a80123,0x3e1ce2dc,0xebedbc57,0x4e68bc34,0x855ee0cf,0x17275120,\n    0x2ae7f2df,0xf71039eb,0x7c283eec,0x70cd1137,0x7cf651f3,0xa87bfa7a,0x14d87f02,0xe82e197d,\n    0x8d8a5ebe,0x1e6a15dc,0x197d49db,0x5bab9c89,0x4b55dea7,0x55dede49,0x9a6a8080,0xe5e51035,\n    0xe148d658,0x8a17eb3b,0xe22e4b38,0xe5be2a9a,0xbe938cbb,0x3b981069,0x7f9c0c8e,0xf756df10,\n    0x8fa783f7,0x252062ce,0x3dc46b4b,0xf70f6432,0x3f378276,0x44b137a1,0x2bf74b77,0x04892ed6,\n    0xfd318de1,0xd58c235e,0x94c6d25b,0x7aa5f218,0x35c9e921,0x5732fbbb,0x06026481,0xf584a44f,\n    0x946e1b5f,0x8463d5b2,0x4ebca7b2,0x54887b15,0x08d1e804,0x5b22067d,0x794580f6,0xb351ea43,\n    0xbce555b9,0x19ae2194,0xd32f1396,0x6fc1a7f1,0x1fd8a867,0x3a89fdb0,0xea49c61c,0x25f8a879,\n    0xde1e6437,0x7c74afca,0x8ba63e50,0xb1572074,0xe4655092,0xdb6f8b1c,0xc2955f3c,0x327f85ba,\n    0x60a17021,0x95bd261d,0xdea94f28,0x04528b65,0xbe0109cc,0x26dd5688,0x6ab2729d,0xc4f029ce,\n    0xacf7a0be,0x4c912f55,0x34c06e65,0x4fbb938e,0x1533fb5f,0x03da06bd,0x48262889,0xc2523d7d,\n    0x28a71d57,0x89f9713a,0xf574c551,0x7a99deb5,0x52834d91,0x5a6f4484,0xc67ba946,0x13ae698f,\n    0x3e390f34,0x34fc9593,0x894c7932,0x6cf414a3,0xdb7928ab,0x13a3b8a3,0x4b381c1d,0xa10b54cb,\n    0x55359d9d,0x35a3422a,0x58d1b551,0x0fd4de20,0x199eb3f4,0x167e09e2,0x3ee6a956,0x5371a7fa,\n    0xd424efda,0x74f521c5,0xcb899ff6,0x4a42e4f4,0x747917b6,0x4b08df0b,0x090c7a39,0x11e909e4,\n    0x258e2e32,0xd9fad92d,0x48fe5f69,0x0545cde6,0x55937b37,0x9b4ae4e4,0x1332b40e,0xc3792351,\n    0xaff982ef,0x4dba132a,0x38b81ef1,0x28e641bf,0x227208c1,0xec4bbe37,0xc4e1821c,0x512c9d09,\n    0xdaef1257,0xb63e7784,0x043e04d7,0x9c2cea47,0x45a0e59a,0x281315ca,0x849f0aac,0xa4071ed3,\n    0x0ef707b3,0xfe8dac02,0x12173864,0x471f6d46,0x24a53c0a,0x35ab9265,0xbbf77406,0xa2144e79,\n    0xb39a884a,0x0baf5b6d,0xcccee3dd,0x12c77584,0x2907325b,0xfd1adcd2,0xd16ee972,0x345ad6c1,\n    0x315ebe66,0xc7ad2b8d,0x99e82c8d,0xe52da8c8,0xba50f1d3,0x66689cd8,0x2e8e9138,0x43e15e74,\n    0xf1ced14d,0x188ec52a,0xe0ef3cbb,0xa958aedc,0x4107a1bc,0x5a9e7a3e,0x3bde939f,0xb5b28d5a,\n    0x596fe848,0xe85ad00c,0x0b6b3aae,0x44503086,0x25b5695c,0xc0c31dcd,0x5ee617f0,0x74d40c3a,\n    0xd2cb2b9f,0x1e19f5fa,0x81e24faf,0xa01ed68f,0xcee172fc,0x7fdf2e4d,0x002f4774,0x664f82dd,\n    0xc569c39a,0xa2d4dcbe,0xaadea306,0xa4c947bf,0xa413e4e3,0x81fb5486,0x8a404970,0x752c980c,\n    0x98d1d881,0x5c932c1e,0xeee65dfb,0x37592cdd,0x0fd4e65b,0xad1d383f,0x62a1452f,0x8872f68d,\n    0xb58c919b,0x345c8ee3,0xb583a6d6,0x43d72cb3,0x77aaa0aa,0xeb508242,0xf2db64f8,0x86294328,\n    0x82211731,0x1239a9d5,0x673ba5de,0xaf4af007,0x44203b19,0x2399d955,0xa175cd12,0x595928a7,\n    0x6918928b,0xde3126bb,0x6c99835c,0x63ba1fa2,0xdebbdff0,0x3d02e541,0xd6f7aac6,0xe80b4cd0,\n    0xd0fa29f1,0x804cac5e,0x2c226798,0x462f624c,0xad05b377,0x22924fcd,0xfbea205c,0x1b47586d,\n    0x214d04ab,0xe093e487,0x10607ada,0x42b261cc,0x1a85e0f6,0xb851bfc3,0x77d5591c,0xda13f344,\n    0xc39c4c00,0xe60d75fc,0x7edae36a,0x3e4ac3ec,0x8bc38db4,0xe848dce9,0xb2407d4d,0x0d79c61e,\n    0x1e6c293a,0x7bc30986,0xdf18cb8f,0x23003172,0x6948e3fa,0x9b7e4f09,0x14b3b339,0x9c8078c2,\n    0x9a47c29f,0x85bb45ec,0x9ca35a93,0xd7db5227,0x1d9b0a10,0xb7fbbfe9,0x05b72426,0x6f30b2fa,\n    0x9fb44078,0xedffd3f8,0x1b02b7bc,0x43e3cfd3,0x0d44293e,0x25c8d552,0xedd3f85d,0x6f921c8c,\n    0x953cca0c,0x9c975b70,0xc6bd0b53,0x4f204f3e,0xa3cc69cc,0xceec390b,0x34905626,0x82ad5d41,\n    0xe46589a5,0x7989841d,0x045d7d9f,0xe49b7b2f,0x46baf101,0x996f92de,0x427566c8,0x918a1ee1,\n    0xf4baa589,0x6bdff7c7,0x3c6936ea,0xe85bfb70,0x5d96ea26,0x6d5a8991,0x7f0a528d,0x852f0634,\n    0x2ec04501,0x5ca15c35,0xd8695e7a,0x456876c7,0x52e97b83,0x34b4c5ed,0x54d73fbb,0x44a6be01,\n    0xf8019155,0x33d55a31,0x3fe51c99,0xe1cb94fd,0x8c39cd60,0xd585efba,0x2765579b,0xb8f7ed12,\n    0xbb04b2cd,0xd8859981,0xd966988d,0xa68bfeda,0x73110705,0x38d6aec0,0x613bc275,0xc7283c2d,\n    0xe051d0b1,0x32b8c2ee,0x0e73fb9e,0x7ab05c25,0x6ff652b9,0x45aeabc6,0x6be1a891,0x5b43531b,\n    0xcd711248,0x2b777d40,0x46956d16,0x474355a8,0xe872d6c6,0xe4158d96,0xabe03036,0x5b4fd9a4,\n    0xeceba1db,0xaac9713f,0xe953153b,0xf44a9229,0x460cba72,0xfd13fdf6,0x8bbf82ae,0xaf55778f,\n    0xa447a5b2,0x98b647b3,0x5f351c57,0x69d0bb71,0xf14d2706,0x78b1a3af,0x7206c73f,0x3f5cd4a6,\n    0x5c0e4515,0xdb46a663,0x10c3a9b0,0x8eda7748,0x52bb44c9,0x3df62689,0xc83e2732,0xf36c99af,\n    0x7ec7a94c,0x5c823718,0x6586e58e,0x4b726e75,0xcfe03a05,0x34eb2f4b,0xf4eec9cf,0xb38d6d73,\n    0x71fafa9e,0x0371a29a,0xc405f83b,0x889f49c2,0xd1443000,0x469665bf,0x609ed65d,0x67c8f9ba,\n    0x9d2f6055,0xb91b8eb1,0x96c809fe,0x2d6ab0f5,0xc16d4f04,0x590171ab,0x73d67526,0xf724e44c,\n    0x6aef02b7,0x6489a325,0x4458401e,0x22d94ad7,0x05e5be57,0x5634fad8,0x951fcf70,0x4baad7f0,\n    0x40c1090d,0xedc28abd,0x343cc6e4,0x4ff7c030,0x0734a641,0x2635a90e,0x2e000c84,0x4b617a70,\n    0x872e9c9e,0x3dceeb42,0xd0fcc398,0x9cc9b9c8,0x2de02f0c,0xaf0e2614,0xa60253aa,0xe0517492,\n    0xa7bde4b4,0x3bb66d7d,0x7f215e82,0xf259de66,0xe17380fe,0xdbc718b4,0x66abcc29,0xf0826e1f,\n    0x08f60995,0xce81b933,0xa832c0e9,0x37aed7d4,0x8a75c261,0x916627b4,0xd486a04b,0x64fd0fde,\n    0x1261328a,0xe037772f,0xb5b71117,0x55d04bd8,0x8f6c1c7b,0xb9f5fcdd,0x5918f756,0x25c90099,\n    0x2e8787db,0x58e14e38,0x0d397852,0x32c8e33b,0x5ae2b795,0x3a7b3ff7,0x5eebf893,0x1aeee816,\n    0xc2ef31d0,0x1d86e615,0x183f1de3,0xb89d46c4,0x525ebbf6,0xfe0198ca,0x4986cc4a,0x2a75701e,\n    0x382158b1,0x192ee88f,0x3e512912,0xcd571c3d,0xdf694fe8,0xec8ead1d,0x83719ac3,0x3f654079,\n    0xf6a623c5,0x33e1fc6e,0xe7f7c426,0x5bff0f6c,0x698a9bb1,0xec2a29ba,0x75358b45,0x40c6ffef,\n    0x6605bb55,0x53a8c97a,0x7bba1569,0x499bc51b,0x5849c89a,0xe6ddb267,0x8659c719,0x14a05548,\n    0xeec648a9,0x618af87a,0x62214521,0x7f36e610,0x152efeeb,0xc2b0f0ed,0x1d657588,0xa5fcec4b,\n    0xf872f109,0x46903038,0x04b57b97,0xe5d51b14,0x06c264ec,0x68aa8d14,0xa4e1bed8,0xdae169c2,\n    0xeb90debd,0xe8c11a7a,0xcafce013,0x63820cee,0x948c23e5,0xc1d42ea3,0x8256c951,0x9b587773,\n    0x2fa8380c,0x30255e09,0x1a809cdc,0xe1446068,0x2714621d,0xb3347d64,0x1f4cbf3d,0xd068bc26,\n    0x2c422740,0x06c4a3ad,0x5dc9d63c,0x4724bf48,0x28e34add,0x27d5221d,0xe349c7e2,0x6119e0a5,\n    0x4ae7d29f,0x53a7912d,0xfc5db779,0x7d28d357,0xfd80036d,0x06bcc597,0x36d70a8a,0x37738cb7,\n    0xf11e6272,0xfdd5d153,0x5dc666dc,0x6b5a415d,0x1073b415,0x36f30d9a,0x807daf7b,0x387f6823,\n    0x8970fe00,0xee560be5,0xea8c0bad,0xfac2b422,0xc845861d,0xa181a2ee,0x29c4dffd,0x4d441bb2,\n    0x7a64cf93,0x0c33e6ac,0x0a35d034,0x1067d26d,0x8c7da0cc,0x2d6e2d5a,0x9932c25a,0x5fca4e2c,\n    0x2c82fd71,0x41730b70,0x244bdbb9,0x96514307,0xc6a32a6b,0xc4c256a7,0x38517fd8,0x541aa859,\n    0x0752afe3,0x741e22f9,0xa2565483,0x7588b0b9,0xdd404e42,0x4d86c49d,0x6fa93fc1,0x163bd200,\n    0x745d0d31,0x8d3dd20e,0xebdc64db,0x9315c149,0x39db3299,0xb0c22004,0xa4c0295b,0x8b3573eb,\n    0xd92a40a3,0x73d6c379,0x67673309,0xdaff1d7f,0x42fcfeb8,0xd57c11a4,0x402066ef,0x9d1134e0,\n    0x9f417081,0x10f49e00,0x7e7ee855,0x314e6d25,0x602bdbe6,0xa4be4045,0xac511dc4,0x33d6bda8,\n    0x2f2bc412,0x4b9c0b6c,0x98aaab06,0x7f0a5801,0xfbf1f16d,0x058f54ae,0x4fd97724,0x348cb50b,\n    0xef6f659f,0x0cd8b184,0x1d71a666,0xae3c87dd,0x7bd56793,0xe0f8f6a8,0x90429c55,0x8a3cc4d0,\n    0x49957b70,0x3baf3912,0x755efebb,0xa5eca17f,0x486065a1,0x1dffcefb,0xd914b3a0,0x1ced93c1,\n    0xa4262dcd,0xc12a4adc,0x08f6de4e,0x4c204faf,0xca1815de,0xa4af836f,0x91d5e44d,0xd2a7caa4,\n    0x68a9a3fe,0x844f8dac,0x3fc36c67,0x8be23937,0x69879d94,0x5d0dbecb,0x1f0f59a4,0x94721142,\n    0xfca6064a,0x6d28aa48,0x804cd04e,0x4a3906de,0x8e352509,0x302326d9,0xed4937ed,0x4a570e63,\n    0xcaa57efb,0x64bd4878,0x3419334a,0x712e5f6b,0x9fa9d687,0x06f8645f,0x620ca96f,0xdc5d6cce,\n    0x392f3257,0x52140f06,0xc4b3bda4,0xe8c7eba7,0x066bd754,0xc5941f26,0xe6dfd573,0x328dd14d,\n    0xb1cb4ba7,0x1d37a9b8,0x96a195a5,0x970e535a,0x290351b8,0x570000f6,0xe14ae341,0x35ede6a6,\n    0x9a02f032,0xaf2ebb58,0x146be492,0x670b3e4b,0x72fa6cfd,0xa243af97,0xbbd5fc21,0xcb8852a2,\n    0x5d5b4a42,0xeefff0ac,0xa59ad1b6,0x3ec55544,0x48d64f69,0x9065d3d0,0xdd09485b,0xdd63bd09,\n    0x605e811d,0xc4b4ed7d,0xb0b58558,0x0644400b,0x12222346,0x086f146a,0xad6dee36,0x5488d1a3,\n    0x0c93bc0c,0x18555d92,0x9f4427bf,0xa590a66a,0x3a630fda,0xf1681c2e,0x948a16fb,0x16fe3338,\n    0xc9832357,0xd1e8e6b5,0xd9cfe034,0x05b22f26,0x27233c6e,0x355890e1,0xfbe6eaf3,0x0dcd8e8f,\n    0x00b5df46,0xd97730ac,0xc6dfd8ff,0x0cb1840a,0x41e9d249,0xbb471b4e,0x480b8f63,0x1ffe8871,\n    0x17b11821,0x1709e440,0xcefb3668,0xa4954ddd,0xf03ef8b5,0x6b3e633c,0xe5813096,0x3697c9a6,\n    0x7800f52f,0x73a7aa39,0x59ac23b7,0xb4663166,0x9ca9d6f8,0x2d441072,0x38cef3d3,0x39a3faf6,\n    0x89299fb9,0xd558295f,0xcf79c633,0x232dd96e,0xadb2955b,0xe962cbb9,0xab7c0061,0x1027c329,\n    0xb4b43e07,0x25240a7a,0x98ea4825,0xdbf2edbd,0x8be15d26,0x879f3cd9,0xa4138089,0xa32dcb06,\n    0x602af961,0x4b13f451,0x1c87d0d5,0xc3bb141b,0x9ebf55a1,0xef030a9a,0x8d199b93,0xdabcbb56,\n    0xf412f80f,0x302e90ad,0xc4d9878b,0xc392f650,0x4fd3a614,0x0a96ddc4,0xcd1878c7,0x9ddd3ae1,\n    0xdaf46458,0xba7c8656,0xf667948f,0xc37e3c23,0x04a577c6,0xbe615f1e,0xcc97406c,0xd497f16f,\n    0x79586586,0xd2057d14,0x1bb92028,0xab888e5e,0x26bef100,0xf46b3671,0xf21f1acc,0x67f288c8,\n    0x39c722df,0x61d21eaf,0x9c5853a0,0x63b693c7,0x1ea53c0a,0x95bc0a85,0xa7372f2d,0x3ef6a6b3,\n    0x82c9c4ac,0x4dea10ee,0xdfcb543d,0xd412f427,0x53e27f2c,0x875d8422,0x5367a7d8,0x41acf3fa,\n    0xbce47234,0x8056fb9a,0x4e9a4c48,0xe4a45945,0x2cfee3ae,0xb4554b10,0x5e37a915,0x591b1963,\n    0x4fa255c1,0xe01c897b,0x504e6208,0x7c7368eb,0x13808fd7,0x02ac0816,0x30305d2c,0x6c4bbdb7,\n    0xa48a9599,0x57466059,0x4c6ebfc7,0x8587ccdf,0x6ff0abf0,0x5b6b63fe,0x31d9ec64,0x63458abd,\n    0x21245905,0xccdb28fc,0xac828acb,0xe5e82bea,0xa7d76141,0xa699038e,0xcaba7e06,0x2710253f,\n    0x2ff9c94d,0x26e48a2c,0xd713ec5e,0x869f2ed4,0x25bcd712,0xcb3e918f,0x615c3a5a,0x9fb43903,\n    0x37900eb9,0x4f682db0,0x35a80dc6,0x4eb27c65,0x502735ab,0xb163b4c8,0x604649a8,0xb23a6cd3,\n    0x9f715091,0x2e6fbb51,0x2ec9144b,0x272cbe65,0x90a0a453,0x420e1503,0x2d00d338,0x4aa96675,\n    0xd025b61c,0xab02d9d7,0x2afe2a37,0xf8129b9b,0x4db04c54,0x654a5c06,0x3213ff51,0x4e09d0b1,\n    0x333369a3,0xae27310a,0x91d076d0,0xa96ebcd0,0xefde54f4,0x021c309a,0xd506f53d,0xa5635251,\n    0x2f23916e,0x1fe86bb1,0xcbc62160,0x2147c8cc,0xdeb3e47c,0x028e3987,0x8061de42,0x39be931b,\n    0x2b7e54c5,0xe64d2f96,0x4069522d,0x4aa66857,0x83b62634,0x4ba72095,0x9aade2a9,0xf1223cd9,\n    0x91cbddf0,0xec5d237f,0x593f3280,0x0b924439,0x446f4063,0xc66f8d8c,0x8b7128ba,0xb597f451,\n    0xc8925236,0x1720f235,0x7cd2e9a0,0x4c130339,0x8a665a52,0x5bef2733,0xba35d9bc,0x6d26644c,\n    0x385cdce1,0x509e4280,0x12aa9ed7,0xf5314d21,0xbe249d4a,0xf32e9753,0x91821cf9,0x01d63491,\n    0x49afa237,0x80e0bc27,0x844d796b,0xeff5ccb7,0x46303091,0x743484b4,0x77de1ab7,0x5ab00bea,\n    0x6316cd81,0x8ded07f4,0x3845a3a5,0x206625c4,0x8c123c6f,0xc80a971e,0xd4d4fa3f,0x5eba911d,\n    0xee168406,0x61cdcbad,0x981a44cd,0x718d030f,0xf653e92e,0xd5b77859,0x11e9e5d9,0xf6fe6ff3,\n    0x5239f010,0xe289b21b,0x0b52832b,0xca700c62,0xee7a5e15,0x8543ce2c,0x94a703cc,0x0b844d34,\n    0xf70638e5,0xfa286206,0xf8778906,0x1419e883,0xdb0fc46b,0xbeb74261,0xc6957b62,0x8352d2a8,\n    0x460586ce,0x90b28336,0xc9107ea8,0x3590403b,0x259a4279,0x6a1a7bbe,0x0f3b76e1,0x4872a716,\n    0xa5bfff13,0x8b30be72,0xe5a68957,0x17dbbc52,0x33a40187,0x7074220c,0xd8221b92,0x40ec7448,\n    0x7dbbcdfc,0xd5a9bb83,0xb4c0d25c,0xa0040390,0x6fb429dc,0xb8cede12,0x87d193bd,0x55c6e004\n};\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst ISO_NUM_INTS = 3\n\n   \ntype Iso_Obj_t struct {\n    // hashing entries (related to the parameter ISO_NUM_INTS!)\n    Level uint32; /* C bitfield: 30 bits; review packing and truncation */\n    nFinNeg uint32; /* C bitfield: 2 bits; review packing and truncation */\n    FaninSig      uint32;\n    FanoutSig      uint32;\n    // other data\n    iNext           int32;          // hash table entry\n    iClass           int32;         // next one in class\n    Id           int32;             // unique ID\n}\n\n   \ntype Iso_Man_t struct {\n    pAig    *Aig_Man_t;           // user's AIG manager\n    pObjs    *Iso_Obj_t;          // isomorphism objects\n    nObjIds           int32;        // counter of object IDs\n    nClasses           int32;       // total number of classes\n    nEntries           int32;       // total number of entries\n    nSingles           int32;       // total number of singletons\n    nObjs           int32;          // total objects\n    nBins           int32;          // hash table size\n    pBins          *int32;          // hash table \n    vSingles    *Vec_Ptr_t;       // singletons \n    vClasses    *Vec_Ptr_t;       // other classes\n    vTemp1    *Vec_Ptr_t;         // other classes\n    vTemp2    *Vec_Ptr_t;         // other classes\n    timeHash       abctime;\n    timeFout       abctime;\n    timeSort       abctime;\n    timeOther       abctime;\n    timeTotal       abctime;\n}\n\nfunc Iso_ManObj(p *Iso_Man_t, i int32) *Iso_Obj_t { assert(i \u003e= 0 \u0026\u0026 i \u003c p.nObjs, \"i \u003e= 0 \u0026\u0026 i \u003c p.nObjs\"); if i != 0 {\n    return p.pObjs + i;\n} else {\n    return nil;\n}                }\nfunc Iso_ObjId(p *Iso_Man_t, pObj *Iso_Obj_t) int32 { assert(pObj \u003e p.pObjs \u0026\u0026 pObj \u003c p.pObjs + p.nObjs, \"pObj \u003e p.pObjs \u0026\u0026 pObj \u003c p.pObjs + p.nObjs\"); return pObj - p.pObjs; }\nfunc Iso_AigObj(p *Iso_Man_t, q *Iso_Obj_t) *Aig_Obj_t { return Aig_ManObj( p.pAig, Iso_ObjId(p, q) );                                   }\n\n// Original macro:\n// #define Iso_ManForEachObj( p, pObj, i )   \\\n//     for ( i = 1; (i \u003c p-\u003enObjs) \u0026\u0026 ((pObj) = Iso_ManObj(p, i)); i++ ) if ( pIso-\u003eLevel == -1 ) {} else\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n//extern void Iso_ReadPrimes( char * pFileName );\n//Iso_ReadPrimes( \"primes.txt\" );\n\n/**Function*************************************************************\n\n  Synopsis    [Read primes from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ReadPrimes(pFileName string) {\n    var pFile *os.File;\n    var Nums [10000]int32;\n    var i, j, Temp, nSize int32;\n    // read the numbers\n    pFile = os.Open(pFileName);\n    for  fscanf( pFile, \"%d\", Nums + nSize++ ) == 1  {; }\n    _ = (pFile).Close();\n    assert(nSize \u003e= (1\u003c\u003c10), \"nSize \u003e= (1\u003c\u003c10)\");\n    // randomly permute\n    srand( 111 );\n    for  i = 0; i \u003c nSize; i++  {\n        j = rand() % nSize;\n        Temp = Nums[i];\n        Nums[i] = Nums[j];\n        Nums[j] = Temp;\n    }\n    // write out\n    for  i = 0; i \u003c 64; i++  {\n        fmt.Printf(\"    \");\n        for  j = 0; j \u003c 16; j++  {\n            fmt.Printf(\"%d,\", Nums[i*16+j]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read primes from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_FindNumbers() {\n    var Nums [1024]uint32;\n    unsigned char * pNums = (unsigned char *)Nums;\n    var i, j int32;\n    srand( 111 );\n    for  i = 0; i \u003c 1024 * 4; i++  {\n        pNums[i] = (unsigned char)rand();\n    }\n    // write out\n    for  i = 0; i \u003c 128; i++  {\n        fmt.Printf(\"    \");\n        for  j = 0; j \u003c 8; j++  {\n            fmt.Printf(\"0x%08x,\", Nums[i*8+j]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManObjCount_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pnNodes *int32, pnEdges *int32) {\n    if Aig_ObjIsCi(pObj) {\n        return; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Iso_ManObjCount_rec( p, Aig_ObjFanin0(pObj), pnNodes, pnEdges );\n    Iso_ManObjCount_rec( p, Aig_ObjFanin1(pObj), pnNodes, pnEdges );\n    (*pnEdges) += Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n    (*pnNodes)++;\n}\nfunc Iso_ManObjCount(p *Aig_Man_t, pObj *Aig_Obj_t, pnNodes *int32, pnEdges *int32) {\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    *pnNodes = *pnEdges = 0;\n    Aig_ManIncrementTravId( p );\n    Iso_ManObjCount_rec( p, pObj, pnNodes, pnEdges );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManStart(pAig *Aig_Man_t) *Iso_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Iso_Man_t{};\n    p.pAig     = pAig;\n    p.nObjs    = Aig_ManObjNumMax( pAig );\n    // inlining of macro ABC_CALLOC\n    p.pObjs    = ((Iso_Obj_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Obj_t)));\n    p.nBins    = Abc_PrimeCudd( p.nObjs );\n    // inlining of macro ABC_CALLOC\n    p.pBins    = ((int *) calloc((size_t)(p.nBins), sizeof(int)));    \n    p.vSingles = Vec_PtrAlloc( 1000 );\n    p.vClasses = Vec_PtrAlloc( 1000 );\n    p.vTemp1   = Vec_PtrAlloc( 1000 );\n    p.vTemp2   = Vec_PtrAlloc( 1000 );\n    p.nObjIds  = 1;\n    return p;\n}\nfunc Iso_ManStop(p *Iso_Man_t, fVerbose int32) {\n    if fVerbose != 0 {\n        p.timeOther = p.timeTotal - p.timeHash - p.timeFout;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Building \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFout)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFout)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Hashing  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeHash-p.timeSort)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeHash-p.timeSort)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sorting  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSort)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSort)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    }\n    Vec_PtrFree( p.vTemp1 );\n    Vec_PtrFree( p.vTemp2 );\n    Vec_PtrFree( p.vClasses );\n    Vec_PtrFree( p.vSingles );\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compares two objects by their signature.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ObjCompare(pp1 **Iso_Obj_t, pp2 **Iso_Obj_t) int32 {\n    return -memcmp( *pp1, *pp2, sizeof(int) * ISO_NUM_INTS );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares two objects by their ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ObjCompareByData(pp1 **Aig_Obj_t, pp2 **Aig_Obj_t) int32 {\n    var pIso1 *Aig_Obj_t  = *pp1;\n    var pIso2 *Aig_Obj_t  = *pp2;\n    assert(Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1), \"Aig_ObjIsCi(pIso1) || Aig_ObjIsCo(pIso1)\");\n    assert(Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2), \"Aig_ObjIsCi(pIso2) || Aig_ObjIsCo(pIso2)\");\n    return pIso1.iData - pIso2.iData;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Iso_ObjHash_BigPrimes [8]uint32 = [8]uint32{12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};\nfunc Iso_ObjHash(pIso *Iso_Obj_t, nBins int32) int32 {\n    \n    var pArray *uint32  = (unsigned *)pIso;\n    var i, Value uint32;\n    assert(ISO_NUM_INTS \u003c 8, \"ISO_NUM_INTS \u003c 8\");\n    for  i = 0; i \u003c ISO_NUM_INTS; i++  {\n        Value ^= spStatic_Iso_ObjHash_BigPrimes[i] * pArray[i];\n    }\n    return Value % nBins;\n}\nfunc Iso_ObjHashAdd(p *Iso_Man_t, pIso *Iso_Obj_t) int32 {\n    var pThis *Iso_Obj_t;\n    var pPlace *int32  = p.pBins + Iso_ObjHash( pIso, p.nBins );\n    p.nEntries++;\n    for  pThis = Iso_ManObj(p, *pPlace); \n          (pThis != nil); pPlace = \u0026pThis.iNext, \n          pThis = Iso_ManObj(p, *pPlace)  {\n        if Iso_ObjCompare( \u0026pThis, \u0026pIso ) == 0 { // equal signatures\n        \n            if pThis.iClass == 0 {\n                p.nClasses++;\n                p.nSingles--;\n            }\n            // add to the list\n            pIso.iClass = pThis.iClass;\n            pThis.iClass = Iso_ObjId( p, pIso );\n            return 1;\n        }\n    }\n    // create new list\n    *pPlace = Iso_ObjId( p, pIso );\n    p.nSingles++;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManCollectClasses(p *Iso_Man_t) {\n    var pIso *Iso_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Vec_PtrClear( p.vSingles );\n    Vec_PtrClear( p.vClasses );\n    for  i = 0; i \u003c p.nBins; i++  {\n        for  pIso = Iso_ManObj(p, p.pBins[i]); (pIso != nil); pIso = Iso_ManObj(p, pIso.iNext)  {\n            assert(pIso.Id == 0, \"pIso.Id == 0\");\n            if pIso.iClass {\n                Vec_PtrPush( p.vClasses, pIso );\n            } else { \n                Vec_PtrPush( p.vSingles, pIso ); }\n        }\n    }\n    clk = Abc_Clock();\n    Vec_PtrSort( p.vSingles, (int (*)(void))Iso_ObjCompare );\n    Vec_PtrSort( p.vClasses, (int (*)(void))Iso_ObjCompare );\n    p.timeSort += Abc_Clock() - clk;\n    assert(Vec_PtrSize(p.vSingles) == p.nSingles, \"Vec_PtrSize(p.vSingles) == p.nSingles\");\n    assert(Vec_PtrSize(p.vClasses) == p.nClasses, \"Vec_PtrSize(p.vClasses) == p.nClasses\");\n    // assign IDs to singletons\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSingles)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vSingles, i)), 1); i++  {\n        if pIso.Id == 0 {\n            pIso.Id = p.nObjIds++; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManCreate(pAig *Aig_Man_t) *Iso_Man_t {\n    var fUseXor int32;\n    var p *Iso_Man_t;\n    var pIso, pIsoF *Iso_Obj_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var i int32;\n    p = Iso_ManStart( pAig );\n\n    // create TFI signatures\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsCo(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        pIso.Level = pObj.Level;\n//        pIso-\u003enFinNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);\n\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n        assert(pIso.FanoutSig == 0, \"pIso.FanoutSig == 0\");\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                pIso.FaninSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                pIso.FaninSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n    }\n\n    // create TFO signatures\n    // inlining of macro Aig_ManForEachObjReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(pAig.vObjs) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i--  { if (pObj) == nil {} else {\n        if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK];\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                pIsoF.FanoutSig += pIso.Level * s_1kPrimes[Abc_Var2Lit(pIso.Level, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK];\n            }\n        }\n    }\n    }\n\n    // consider flops\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObj)=Aig_ManLo(p.pAig, i)), 1); i++  {\n        if Aig_ObjFaninId0(pObjLi) == 0 { // ignore constant!\n            continue; }\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n        pIso.FaninSig = pIsoF.FaninSig;\n\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n        pIsoF.FanoutSig += pIso.FanoutSig;\n    }\n/*\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        pIso = p-\u003epObjs + i;\n        Aig_ObjPrint( pAig, pObj );\n        printf( \"Lev = %4d.  Pos = %4d.  FaninSig = %10d.  FanoutSig = %10d.\\n\", \n            pIso-\u003eLevel, pIso-\u003enFinNeg, pIso-\u003eFaninSig, pIso-\u003eFanoutSig );\n    }\n*/\n    // add to the hash table\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        Iso_ObjHashAdd( p, pIso );\n    }\n    }\n    // derive classes for the first time\n    Iso_ManCollectClasses( p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates adjacency lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManAssignAdjacency(p *Iso_Man_t) {\n    var fUseXor int32;\n    var pIso, pIsoF *Iso_Obj_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var i int32;\n\n    // create TFI signatures\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIso = p.pObjs + i;\n        pIso.FaninSig = 0;\n        pIso.FanoutSig = 0;\n\n        if Aig_ObjIsCo(pObj) {\n            continue; }\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig ^= pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIso.FaninSig += pIsoF.FaninSig;\n                if pIsoF.Id {\n                    pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            }\n        }\n    }\n    }\n    // create TFO signatures\n    // inlining of macro Aig_ManForEachObjReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_PtrSize(p.pAig.vObjs) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i--  { if (pObj) == nil {} else {\n        if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n            continue; }\n        pIso = p.pObjs + i;\n        assert(!Aig_ObjIsCo(pObj) || pIso.Id == 0, \"!Aig_ObjIsCo(pObj) || pIso.Id == 0\");\n        if fUseXor != 0 {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig ^= pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n            }\n        \n        } else {\n            if Aig_ObjIsNode(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n\n                pIsoF = p.pObjs + Aig_ObjFaninId1(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC1(pObj)) \u0026 ISO_MASK]; }\n            \n            } else if Aig_ObjIsCo(pObj) {\n                pIsoF = p.pObjs + Aig_ObjFaninId0(pObj);\n                pIsoF.FanoutSig += pIso.FanoutSig;\n                if pIso.Id {\n                    pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObj)) \u0026 ISO_MASK]; }\n            }\n        }\n    }\n    }\n\n    // consider flops\n    // inlining of macro Aig_ManForEachLiLoSeq\n    for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObj)=Aig_ManLo(p.pAig, i)), 1); i++  {\n        if Aig_ObjFaninId0(pObjLi) == 0 { // ignore constant!\n            continue; }\n        pIso  = Iso_ManObj( p, Aig_ObjId(pObj) );\n        pIsoF = Iso_ManObj( p, Aig_ObjFaninId0(pObjLi) );\n        assert(pIso.FaninSig == 0, \"pIso.FaninSig == 0\");\n//        assert( pIsoF-\u003eFanoutSig == 0 );\n\n        if fUseXor != 0 {\n            pIso.FaninSig = pIsoF.FaninSig;\n            if pIsoF.Id {\n                pIso.FaninSig ^= s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n\n            pIsoF.FanoutSig += pIso.FanoutSig;\n            if pIso.Id {\n                pIsoF.FanoutSig ^= s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n        \n        } else {\n            pIso.FaninSig = pIsoF.FaninSig;\n            if pIsoF.Id {\n                pIso.FaninSig += pIsoF.Id * s_1kPrimes[Abc_Var2Lit(pIsoF.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n\n            pIsoF.FanoutSig += pIso.FanoutSig;\n            if pIso.Id {\n                pIsoF.FanoutSig += pIso.Id * s_1kPrimes[Abc_Var2Lit(pIso.Id, Aig_ObjFaninC0(pObjLi)) \u0026 ISO_MASK]; }\n        }\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManPrintClasseSizes(p *Iso_Man_t) {\n    var pIso, pTemp *Iso_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        Counter = 0;\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            Counter++;\n        }\n        fmt.Printf(\"%d \", Counter);\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManPrintClasses(p *Iso_Man_t, fVerbose int32, fVeryVerbose int32) {\n    var fOnlyCis int32;\n    var pIso, pTemp *Iso_Obj_t;\n    var i int32;\n\n    // count unique objects\n    if fVerbose != 0 {\n        fmt.Printf(\"Total objects =%7d.  Entries =%7d.  Classes =%7d.  Singles =%7d.\\n\", p.nObjs, p.nEntries, p.nClasses, p.nSingles); }\n\n    if !(fVeryVerbose != 0) {\n        return; }\n\n    fmt.Printf(\"Non-trivial classes:\\n\");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        if (fOnlyCis != 0) \u0026\u0026 pIso.Level \u003e 0 {\n            continue; }\n\n        fmt.Printf(\"%5d : {\", i);\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            if fOnlyCis != 0 {\n                fmt.Printf(\" %d\", Aig_ObjCioId( Iso_AigObj(p, pTemp) ));\n            } else {\n                var pObj *Aig_Obj_t  = Iso_AigObj(p, pTemp);\n                if Aig_ObjIsNode(pObj) {\n                    fmt.Printf(\" %d{%s%d(%d),%s%d(%d)}\", Iso_ObjId(p, pTemp), Aig_ObjFaninC0(pObj)? \"-\": \"+\", Aig_ObjFaninId0(pObj), Aig_ObjLevel(Aig_ObjFanin0(pObj)), Aig_ObjFaninC1(pObj)? \"-\": \"+\", Aig_ObjFaninId1(pObj), Aig_ObjLevel(Aig_ObjFanin1(pObj)));\n                } else {\n                    fmt.Printf(\" %d\", Iso_ObjId(p, pTemp)); }\n            }\n            fmt.Printf(\"(%d)\", pTemp.Level);\n        }        \n        fmt.Printf(\" }\\n\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManRehashClassNodes(p *Iso_Man_t) {\n    var pIso, pTemp *Iso_Obj_t;\n    var i int32;\n    // collect nodes\n    Vec_PtrClear( p.vTemp1 );\n    Vec_PtrClear( p.vTemp2 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n            if pTemp.Id == 0 {\n                Vec_PtrPush( p.vTemp1, pTemp );\n            } else {\n                Vec_PtrPush( p.vTemp2, pTemp ); }\n        }\n    }\n    // clean and add nodes\n    p.nClasses = 0;       // total number of classes\n    p.nEntries = 0;       // total number of entries\n    p.nSingles = 0;       // total number of singletons\n    memset( p.pBins, 0, sizeof(int) * p.nBins );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp1)) \u0026\u0026 (((pTemp) = (Iso_Obj_t *)Vec_PtrEntry(p.vTemp1, i)), 1); i++  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        pTemp.iClass = pTemp.iNext = 0;\n        Iso_ObjHashAdd( p, pTemp );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp2)) \u0026\u0026 (((pTemp) = (Iso_Obj_t *)Vec_PtrEntry(p.vTemp2, i)), 1); i++  {\n        assert(pTemp.Id != 0, \"pTemp.Id != 0\");\n        pTemp.iClass = pTemp.iNext = 0;\n    }\n    // collect new classes\n    Iso_ManCollectClasses( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find nodes with the min number of edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManFindBestObj(p *Iso_Man_t, pIso *Iso_Obj_t) *Iso_Obj_t {\n    var pTemp *Iso_Obj_t;\n    var pBest *Iso_Obj_t = nil;\n    var nNodesBest int32 = -1;\n    var nNodes int32;\n    var nEdgesBest int32 = -1;\n    var nEdges int32;\n    assert(pIso.Id == 0, \"pIso.Id == 0\");\n    if pIso.Level == 0 {\n        return pIso; }\n    for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        Iso_ManObjCount( p.pAig, Iso_AigObj(p, pTemp), \u0026nNodes, \u0026nEdges );\n//        printf( \"%d,%d \", nNodes, nEdges );\n        if nNodesBest \u003c nNodes || (nNodesBest == nNodes \u0026\u0026 nEdgesBest \u003c nEdges) {\n            nNodesBest = nNodes;\n            nEdgesBest = nEdges;\n            pBest = pTemp;\n        }\n    }\n//    printf( \"\\n\" );\n    return pBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find nodes with the min number of edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManBreakTies(p *Iso_Man_t, fVerbose int32) {\n    var fUseOneBest int32;\n    var pIso, pTemp *Iso_Obj_t;\n    var i, LevelStart int32;\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p.vClasses, 0 );\n    LevelStart = pIso.Level;\n    if fVerbose != 0 {\n        fmt.Printf(\"Best level %d\\n\", LevelStart); } \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vClasses)) \u0026\u0026 (((pIso) = (Iso_Obj_t *)Vec_PtrEntry(p.vClasses, i)), 1); i++  {\n        if int32(pIso.Level) \u003c LevelStart {\n            break; }\n        if !(fUseOneBest != 0) {\n            for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n                assert(pTemp.Id ==  0, \"pTemp.Id ==  0\");\n                pTemp.Id = p.nObjIds++;\n            }\n            continue;\n        }\n        if pIso.Level == 0 {//\u0026\u0026 pIso-\u003enFoutPos + pIso-\u003enFoutNeg == 0 )\n        \n            for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n                pTemp.Id = p.nObjIds++;\n            }\n            continue;\n        }\n        pIso = Iso_ManFindBestObj( p, pIso );\n        pIso.Id = p.nObjIds++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finalizes unification of combinational outputs.]\n\n  Description [Assigns IDs to the unclassified CIs in the order of obj IDs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManFinalize(p *Iso_Man_t) *Vec_Int_t {\n    var vRes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.nClasses == 0, \"p.nClasses == 0\");\n    assert(Vec_PtrSize(p.vClasses) == 0, \"Vec_PtrSize(p.vClasses) == 0\");\n    // set canonical numbers\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            pObj.iData = -1;\n            continue;\n        }\n        pObj.iData = Iso_ManObj(p, Aig_ObjId(pObj)).Id;\n        assert(pObj.iData \u003e 0, \"pObj.iData \u003e 0\");\n    }\n    }\n    Aig_ManConst1(p.pAig).iData = 0;\n    // assign unique IDs to the CIs\n    Vec_PtrClear( p.vTemp1 );\n    Vec_PtrClear( p.vTemp2 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        assert(pObj.iData \u003e 0, \"pObj.iData \u003e 0\");\n        if Aig_ObjCioId(pObj) \u003e= Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig) { // flop\n            Vec_PtrPush( p.vTemp2, pObj );\n        } else { // PI\n            Vec_PtrPush( p.vTemp1, pObj ); }\n    }\n    // sort CIs by their IDs\n    Vec_PtrSort( p.vTemp1, (int (*)(void))Iso_ObjCompareByData );\n    Vec_PtrSort( p.vTemp2, (int (*)(void))Iso_ObjCompareByData );\n    // create the result\n    vRes = Vec_IntAlloc( Aig_ManCiNum(p.pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp1)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vTemp1, i)), 1); i++  {\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp2)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vTemp2, i)), 1); i++  {\n        Vec_IntPush( vRes, Aig_ObjCioId(pObj) );\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find nodes with the min number of edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Iso_ManDumpOneClass(p *Iso_Man_t) {\n    var vNodes *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var pIso, pTemp *Iso_Obj_t;\n    var pNew *Aig_Man_t  = nil;\n    assert(p.nClasses \u003e 0, \"p.nClasses \u003e 0\");\n    pIso = (Iso_Obj_t *)Vec_PtrEntry( p.vClasses, 0 );\n    assert(pIso.Id == 0, \"pIso.Id == 0\");\n    for  pTemp = pIso; (pTemp != nil); pTemp = Iso_ManObj(p, pTemp.iClass)  {\n        assert(pTemp.Id == 0, \"pTemp.Id == 0\");\n        Vec_PtrPush( vNodes, Iso_AigObj(p, pTemp) );\n    }\n    pNew = Aig_ManDupNodes( p.pAig, vNodes );\n    Vec_PtrFree( vNodes );\n    Aig_ManShow( pNew, 0, nil ); \n    Aig_ManStopP( \u0026pNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds canonical permutation of CIs and assigns unique IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFindIsoPerm(pAig *Aig_Man_t, fVerbose int32) *Vec_Int_t {\n    var fVeryVerbose int32;\n    var vRes *Vec_Int_t;\n    var p *Iso_Man_t;\n    var clk abctime = Abc_Clock();\n    var clk2 abctime = Abc_Clock();\n    p = Iso_ManCreate( pAig );\n    p.timeFout += Abc_Clock() - clk;\n    Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n    for  p.nClasses  {\n        // assign adjacency to classes\n        clk = Abc_Clock();\n        Iso_ManAssignAdjacency( p );\n        p.timeFout += Abc_Clock() - clk;\n        // rehash the class nodes\n        clk = Abc_Clock();\n        Iso_ManRehashClassNodes( p );\n        p.timeHash += Abc_Clock() - clk;\n        Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        // force refinement\n        for  p.nSingles == 0 \u0026\u0026 p.nClasses  {\n//            Iso_ManPrintClasseSizes( p );\n            // assign IDs to the topmost level of classes\n            Iso_ManBreakTies( p, fVerbose );\n            // assign adjacency to classes\n            clk = Abc_Clock();\n            Iso_ManAssignAdjacency( p );\n            p.timeFout += Abc_Clock() - clk;\n            // rehash the class nodes\n            clk = Abc_Clock();\n            Iso_ManRehashClassNodes( p );\n            p.timeHash += Abc_Clock() - clk;\n            Iso_ManPrintClasses( p, fVerbose, fVeryVerbose );\n        }\n    }\n    p.timeTotal = Abc_Clock() - clk2;\n//    printf( \"IDs assigned = %d.  Objects = %d.\\n\", p-\u003enObjIds, 1+Aig_ManCiNum(p-\u003epAig)+Aig_ManNodeNum(p-\u003epAig) );\n    assert(p.nObjIds == 1+Aig_ManCiNum(p.pAig)+Aig_ManNodeNum(p.pAig), \"p.nObjIds == 1+Aig_ManCiNum(p.pAig)+Aig_ManNodeNum(p.pAig)\");\n//    if ( p-\u003enClasses )\n//        Iso_ManDumpOneClass( p );\n    vRes = Iso_ManFinalize( p );\n    Iso_ManStop( p, fVerbose );\n    return vRes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

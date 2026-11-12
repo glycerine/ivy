@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaFanout.c",
+  "SHA256": "a311c9f5560d91474f595f9c51f7ac7e745eec44ce96da274dcdd5cfaa6079be",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 577
+      },
+      "Directive": "#ifdef MAP_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaFanout.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 577,
+      "End": 4153
+    }
+  ],
+  "Draft": "package fpga\n\n/**CFile****************************************************************\n\n  FileName    [fpgaFanout.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Procedures to manipulate fanouts of the FRAIG nodes.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaFanout.c,v 1.1 2005/01/23 06:59:41 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#ifdef MAP_ALLOCATE_FANOUT\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Fpga_NodeAddFaninFanout( Fpga_Node_t * pFanin, Fpga_Node_t * pFanout )\n{\n    Fpga_Node_t * pPivot;\n\n    // pFanins is a fanin of pFanout\n    assert( !Fpga_IsComplement(pFanin) );\n    assert( !Fpga_IsComplement(pFanout) );\n    assert( Fpga_Regular(pFanout-\u003ep1) == pFanin || Fpga_Regular(pFanout-\u003ep2) == pFanin );\n\n    pPivot = pFanin-\u003epFanPivot;\n    if ( pPivot == NULL )\n    {\n        pFanin-\u003epFanPivot = pFanout;\n        return;\n    }\n\n    if ( Fpga_Regular(pPivot-\u003ep1) == pFanin )\n    {\n        if ( Fpga_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n        else // if ( Fpga_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n    }\n    else // if ( Fpga_Regular(pPivot-\u003ep2) == pFanin )\n    {\n        assert( Fpga_Regular(pPivot-\u003ep2) == pFanin );\n        if ( Fpga_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n        else // if ( Fpga_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Fpga_NodeRemoveFaninFanout( Fpga_Node_t * pFanin, Fpga_Node_t * pFanoutToRemove )\n{\n    Fpga_Node_t * pFanout, * pFanout2, ** ppFanList;\n    // start the linked list of fanouts\n    ppFanList = \u0026pFanin-\u003epFanPivot; \n    // go through the fanouts\n    Fpga_NodeForEachFanoutSafe( pFanin, pFanout, pFanout2 )\n    {\n        // skip the fanout-to-remove\n        if ( pFanout == pFanoutToRemove )\n            continue;\n        // add useful fanouts to the list\n        *ppFanList = pFanout;\n        ppFanList = Fpga_NodeReadNextFanoutPlace( pFanin, pFanout );\n    }\n    *ppFanList = NULL;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of fanouts of a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Fpga_NodeGetFanoutNum( Fpga_Node_t * pNode )\n{\n    Fpga_Node_t * pFanout;\n    int Counter = 0;\n    Fpga_NodeForEachFanout( pNode, pFanout )\n        Counter++;\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n#endif\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

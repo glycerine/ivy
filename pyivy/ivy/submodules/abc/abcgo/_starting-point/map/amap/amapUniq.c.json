@@ -1,0 +1,562 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c",
+  "SHA256": "783fb74084a0afe80fa6e70d3522b2b165969ded8103dd0ff353338f6caf3bf2",
+  "Library": [
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 40,
+        "ByteOffset": 3894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pNodes = ((Amap_Nod_t *) realloc((char *)(p.pNodes), sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 140,
+        "Column": 40,
+        "ByteOffset": 4028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Amap_Nod_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 4802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pNodes == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 170,
+        "Column": 77,
+        "ByteOffset": 4930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNodes = /*__starting_point_inline_macro:ABC_ALLOC__*/((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(p.nNodesAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 1,
+        "ByteOffset": 5918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 1,
+        "ByteOffset": 7627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c  iFan2 = %5d%c\\n\", "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 285,
+        "Column": 69,
+        "ByteOffset": 8872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nSize * sizeof(void *) + nEntries)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 9296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d : \", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 13,
+        "ByteOffset": 9539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%d) \", Value\u00260xffff, Value\u003e\u003e16 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 9627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 9679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTotal == nEntries );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_IntCheckWithMask",
+      "Start": 1314,
+      "End": 1545,
+      "BodyStart": 1381,
+      "Original": "static inline int Vec_IntCheckWithMask( Vec_Int_t * p, int Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( (0xffff \u0026 p-\u003epArray[i]) == (0xffff \u0026 Entry) )\n            return p-\u003epArray[i] \u003e\u003e 16;\n    return -1;\n}",
+      "Draft": "func Vec_IntCheckWithMask(p *Vec_Int_t, Entry int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if (0xffff \u0026 p.pArray[i]) == (0xffff \u0026 Entry) {\n            return p.pArray[i] \u003e\u003e 16; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Vec_IntPushOrderWithMask",
+      "Start": 1815,
+      "End": 2188,
+      "BodyStart": 1887,
+      "Original": "static inline void Vec_IntPushOrderWithMask( Vec_Int_t * p, int Entry )\n{\n    int i;\n    if ( p-\u003enSize == p-\u003enCap )\n        Vec_IntGrow( p, 2 * p-\u003enCap );\n    p-\u003enSize++;\n    for ( i = p-\u003enSize-2; i \u003e= 0; i-- )\n        if ( (0xffff \u0026 p-\u003epArray[i]) \u003e (0xffff \u0026 Entry) )\n            p-\u003epArray[i+1] = p-\u003epArray[i];\n        else\n            break;\n    p-\u003epArray[i+1] = Entry;\n}",
+      "Draft": "func Vec_IntPushOrderWithMask(p *Vec_Int_t, Entry int32) {\n    var i int32;\n    if p.nSize == p.nCap {\n        Vec_IntGrow( p, 2 * p.nCap ); }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if (0xffff \u0026 p.pArray[i]) \u003e (0xffff \u0026 Entry) {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}"
+    },
+    {
+      "Name": "Amap_LibFindNode",
+      "Start": 2424,
+      "End": 2715,
+      "BodyStart": 2498,
+      "Original": "int Amap_LibFindNode( Amap_Lib_t * pLib, int iFan0, int iFan1, int fXor )\n{\n    if ( fXor )\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib-\u003evRulesX, iFan0), iFan1 );\n    else\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib-\u003evRules, iFan0), iFan1 );\n}",
+      "Draft": "func Amap_LibFindNode(pLib *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {\n    if fXor != 0 {\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRulesX, iFan0), iFan1 );\n    } else {\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRules, iFan0), iFan1 ); }\n}"
+    },
+    {
+      "Name": "Amap_LibFindMux",
+      "Start": 2991,
+      "End": 3392,
+      "BodyStart": 3062,
+      "Original": "int Amap_LibFindMux( Amap_Lib_t * p, int iFan0, int iFan1, int iFan2 )\n{\n    int x;\n    for ( x = 0; x \u003c Vec_IntSize(p-\u003evRules3); x += 4 )\n    {\n        if ( Vec_IntEntry(p-\u003evRules3, x)   == iFan0 \u0026\u0026\n             Vec_IntEntry(p-\u003evRules3, x+1) == iFan1 \u0026\u0026\n             Vec_IntEntry(p-\u003evRules3, x+2) == iFan2 )\n        {\n            return Vec_IntEntry(p-\u003evRules3, x+3);\n        }\n    }\n    return -1;\n}",
+      "Draft": "func Amap_LibFindMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {\n    var x int32;\n    for  x = 0; x \u003c Vec_IntSize(p.vRules3); x += 4  {\n        if Vec_IntEntry(p.vRules3, x)   == iFan0 \u0026\u0026\n             Vec_IntEntry(p.vRules3, x+1) == iFan1 \u0026\u0026\n             Vec_IntEntry(p.vRules3, x+2) == iFan2 {\n            return Vec_IntEntry(p.vRules3, x+3);\n        }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Amap_LibCreateObj",
+      "Start": 3647,
+      "End": 4201,
+      "BodyStart": 3696,
+      "Original": "Amap_Nod_t * Amap_LibCreateObj( Amap_Lib_t * p )\n{\n    Amap_Nod_t * pNode;\n    if ( p-\u003enNodes == p-\u003enNodesAlloc )\n    {\n        p-\u003epNodes = ABC_REALLOC( Amap_Nod_t, p-\u003epNodes, 2*p-\u003enNodesAlloc );\n        p-\u003enNodesAlloc *= 2;\n    }\n    pNode = Amap_LibNod( p, p-\u003enNodes );\n    memset( pNode, 0, sizeof(Amap_Nod_t) );\n    pNode-\u003eId = p-\u003enNodes++;\n    Vec_PtrPush( p-\u003evRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p-\u003evRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p-\u003evRulesX, Vec_IntAlloc(8) );\n    Vec_PtrPush( p-\u003evRulesX, Vec_IntAlloc(8) );\n    return pNode;\n}",
+      "Draft": "func Amap_LibCreateObj(p *Amap_Lib_t) *Amap_Nod_t {\n    var pNode *Amap_Nod_t;\n    if p.nNodes == p.nNodesAlloc {\n        // inlining of macro ABC_REALLOC\n        \n        if p.pNodes {\n            p.pNodes = ((Amap_Nod_t *) realloc((char *)(p.pNodes), sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));\n        } else {\n            p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));\n        }\n        p.nNodesAlloc *= 2;\n    }\n    pNode = Amap_LibNod( p, p.nNodes );\n    memset( pNode, 0, sizeof(Amap_Nod_t) );\n    pNode.Id = p.nNodes++;\n    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Amap_LibCreateVar",
+      "Start": 4456,
+      "End": 4808,
+      "BodyStart": 4496,
+      "Original": "int Amap_LibCreateVar( Amap_Lib_t * p )\n{\n    Amap_Nod_t * pNode;\n    // start the manager\n    assert( p-\u003epNodes == NULL );\n    p-\u003enNodesAlloc = 256;\n    p-\u003epNodes = ABC_ALLOC( Amap_Nod_t, p-\u003enNodesAlloc );\n    // create the first node\n    pNode = Amap_LibCreateObj( p );\n    p-\u003epNodes-\u003eType = AMAP_OBJ_PI;\n    p-\u003epNodes-\u003enSuppSize = 1;\n    return 0;\n}",
+      "Draft": "func Amap_LibCreateVar(p *Amap_Lib_t) int32 {\n    var pNode *Amap_Nod_t;\n    // start the manager\n    assert(p.pNodes == nil, \"p.pNodes == nil\");\n    p.nNodesAlloc = 256;\n    // inlining of macro ABC_ALLOC\n    p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(p.nNodesAlloc)));\n    // create the first node\n    pNode = Amap_LibCreateObj( p );\n    p.pNodes.Type = AMAP_OBJ_PI;\n    p.pNodes.nSuppSize = 1;\n    return 0;\n}"
+    },
+    {
+      "Name": "Amap_LibCreateNode",
+      "Start": 5063,
+      "End": 6626,
+      "BodyStart": 5136,
+      "Original": "int Amap_LibCreateNode( Amap_Lib_t * p, int iFan0, int iFan1, int fXor )\n{\n    Amap_Nod_t * pNode;\n    int iFan;\n    if ( iFan0 \u003c iFan1 )\n    {\n        iFan  = iFan0;\n        iFan0 = iFan1;\n        iFan1 = iFan;\n    }\n    pNode = Amap_LibCreateObj( p );\n    pNode-\u003eType  = fXor? AMAP_OBJ_XOR : AMAP_OBJ_AND;\n    pNode-\u003enSuppSize = p-\u003epNodes[Abc_Lit2Var(iFan0)].nSuppSize + p-\u003epNodes[Abc_Lit2Var(iFan1)].nSuppSize;\n    pNode-\u003eiFan0 = iFan0;\n    pNode-\u003eiFan1 = iFan1;\nif ( p-\u003efVerbose )\nprintf( \"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c\\n\", \npNode-\u003eId, (fXor?'x':' '), \nAbc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), \nAbc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+') );\n\n    if ( fXor )\n    {\n        if ( iFan0 == iFan1 )\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRulesX, iFan0), (pNode-\u003eId \u003c\u003c 16) | iFan1 );\n        else\n        {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRulesX, iFan0), (pNode-\u003eId \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRulesX, iFan1), (pNode-\u003eId \u003c\u003c 16) | iFan0 );\n        }\n    }\n    else\n    {\n        if ( iFan0 == iFan1 )\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRules, iFan0), (pNode-\u003eId \u003c\u003c 16) | iFan1 );\n        else\n        {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRules, iFan0), (pNode-\u003eId \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p-\u003evRules, iFan1), (pNode-\u003eId \u003c\u003c 16) | iFan0 );\n        }\n    }\n    return pNode-\u003eId;\n}",
+      "Draft": "func Amap_LibCreateNode(p *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {\n    var pNode *Amap_Nod_t;\n    var iFan int32;\n    if iFan0 \u003c iFan1 {\n        iFan  = iFan0;\n        iFan0 = iFan1;\n        iFan1 = iFan;\n    }\n    pNode = Amap_LibCreateObj( p );\n    if fXor != 0 {\n        pNode.Type = AMAP_OBJ_XOR;\n    } else {\n        pNode.Type = AMAP_OBJ_AND;\n    }\n    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize;\n    pNode.iFan0 = iFan0;\n    pNode.iFan1 = iFan1;\nif p.fVerbose {\nfmt.Printf(\"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c\\n\", pNode.Id, (fXor?'x':' '), Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+')); }\n\n    if fXor != 0 {\n        if iFan0 == iFan1 {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n        } else {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan1), (pNode.Id \u003c\u003c 16) | iFan0 );\n        }\n    \n    } else {\n        if iFan0 == iFan1 {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n        } else {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan1), (pNode.Id \u003c\u003c 16) | iFan0 );\n        }\n    }\n    return pNode.Id;\n}"
+    },
+    {
+      "Name": "Amap_LibCreateMux",
+      "Start": 6881,
+      "End": 7736,
+      "BodyStart": 6954,
+      "Original": "int Amap_LibCreateMux( Amap_Lib_t * p, int iFan0, int iFan1, int iFan2 )\n{\n    Amap_Nod_t * pNode;\n    pNode = Amap_LibCreateObj( p );\n    pNode-\u003eType  = AMAP_OBJ_MUX;\n    pNode-\u003enSuppSize = p-\u003epNodes[Abc_Lit2Var(iFan0)].nSuppSize + p-\u003epNodes[Abc_Lit2Var(iFan1)].nSuppSize + p-\u003epNodes[Abc_Lit2Var(iFan2)].nSuppSize;\n    pNode-\u003eiFan0 = iFan0;\n    pNode-\u003eiFan1 = iFan1;\n    pNode-\u003eiFan2 = iFan2;\nif ( p-\u003efVerbose )\nprintf( \"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c  iFan2 = %5d%c\\n\", \npNode-\u003eId, 'm', \nAbc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), \nAbc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+'), \nAbc_Lit2Var(iFan2), (Abc_LitIsCompl(iFan2)?'-':'+') );\n\n    Vec_IntPush( p-\u003evRules3, iFan0 );\n    Vec_IntPush( p-\u003evRules3, iFan1 );\n    Vec_IntPush( p-\u003evRules3, iFan2 );\n    Vec_IntPush( p-\u003evRules3, pNode-\u003eId );\n    return pNode-\u003eId;\n}",
+      "Draft": "func Amap_LibCreateMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {\n    var pNode *Amap_Nod_t;\n    pNode = Amap_LibCreateObj( p );\n    pNode.Type  = AMAP_OBJ_MUX;\n    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan2)].nSuppSize;\n    pNode.iFan0 = iFan0;\n    pNode.iFan1 = iFan1;\n    pNode.iFan2 = iFan2;\nif p.fVerbose {\nfmt.Printf(\"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c  iFan2 = %5d%c\\n\", pNode.Id, 'm', Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+'), Abc_Lit2Var(iFan2), (Abc_LitIsCompl(iFan2)?'-':'+')); }\n\n    Vec_IntPush( p.vRules3, iFan0 );\n    Vec_IntPush( p.vRules3, iFan1 );\n    Vec_IntPush( p.vRules3, iFan2 );\n    Vec_IntPush( p.vRules3, pNode.Id );\n    return pNode.Id;\n}"
+    },
+    {
+      "Name": "Amap_LibLookupTableAlloc",
+      "Start": 8006,
+      "End": 8999,
+      "BodyStart": 8072,
+      "Original": "int ** Amap_LibLookupTableAlloc( Vec_Ptr_t * vVec, int fVerbose )\n{\n    Vec_Int_t * vOne;\n    int ** pRes, * pBuffer;\n    int i, k, nTotal, nSize, nEntries, Value;\n    // count the total size\n    nEntries = nSize = Vec_PtrSize( vVec );\n    Vec_PtrForEachEntry( Vec_Int_t *, vVec, vOne, i )\n        nEntries += Vec_IntSize(vOne);\n    pBuffer = ABC_ALLOC( int, nSize * sizeof(void *) + nEntries );\n    pRes = (int **)pBuffer;\n    pRes[0] = pBuffer + nSize * sizeof(void *);\n    nTotal = 0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vVec, vOne, i )\n    {\n        pRes[i] = pRes[0] + nTotal;\n        nTotal += Vec_IntSize(vOne) + 1;\n        if ( fVerbose )\n        printf( \"%d : \", i );\n        Vec_IntForEachEntry( vOne, Value, k )\n        {\n            pRes[i][k] = Value;\n            if ( fVerbose )\n            printf( \"%d(%d) \", Value\u00260xffff, Value\u003e\u003e16 );\n        }\n        if ( fVerbose )\n        printf( \"\\n\" );\n        pRes[i][k] = 0;\n    }\n    assert( nTotal == nEntries );\n    return pRes;\n}",
+      "Draft": "func Amap_LibLookupTableAlloc(vVec *Vec_Ptr_t, fVerbose int32) **int32 {\n    var vOne *Vec_Int_t;\n    var pRes **int32;\n    var pBuffer *int32;\n    var i, k, nTotal, nSize, nEntries, Value int32;\n    // count the total size\n    nEntries = nSize = Vec_PtrSize( vVec );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {\n        nEntries += Vec_IntSize(vOne);\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((int *) malloc(sizeof(int) * (size_t)(nSize * sizeof(void *) + nEntries)));\n    pRes = (int **)pBuffer;\n    pRes[0] = pBuffer + nSize * sizeof(void *);\n    nTotal = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {\n        pRes[i] = pRes[0] + nTotal;\n        nTotal += Vec_IntSize(vOne) + 1;\n        if fVerbose != 0 {\n        fmt.Printf(\"%d : \", i); }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Value) = Vec_IntEntry(vOne, k)), 1); k++  {\n            pRes[i][k] = Value;\n            if fVerbose != 0 {\n            fmt.Printf(\"%d(%d) \", Value\u00260xffff, Value\u003e\u003e16); }\n        }\n        if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n        pRes[i][k] = 0;\n    }\n    assert(nTotal == nEntries, \"nTotal == nEntries\");\n    return pRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::3894",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3787,
+      "End": 3787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::3978",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3787,
+      "End": 3787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::4128",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3941,
+      "End": 3947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::4877",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4622,
+      "End": 4622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::8776",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8349,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::8807",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8349,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::mechanical::sizeof::8897",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8462,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::2553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2553,
+      "End": 2566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::2657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2657,
+      "End": 2670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::3850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3787,
+      "End": 3787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::3873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3787,
+      "End": 3787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::3956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3787,
+      "End": 3787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::4855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4622,
+      "End": 4622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6106",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5843,
+      "End": 5856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5979,
+      "End": 5992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6355",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6092,
+      "End": 6105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6266,
+      "End": 6279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6664",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6401,
+      "End": 6414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::6776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6513,
+      "End": 6526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::8615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8246,
+      "End": 8246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::8761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8349,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::8813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8349,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::8848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8413,
+      "End": 8421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::8903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8468,
+      "End": 8476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::pointer-cast::9039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8498,
+      "End": 8498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Vec_IntCheckWithMask",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntCheckWithMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1314,
+      "End": 1545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Vec_IntPushOrderWithMask",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntPushOrderWithMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1815,
+      "End": 2188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibFindNode",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibFindNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2424,
+      "End": 2715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibFindMux",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibFindMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2991,
+      "End": 3392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibCreateObj",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCreateObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3647,
+      "End": 4201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibCreateVar",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCreateVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4456,
+      "End": 4808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::ternary::Amap_LibCreateNode",
+      "Category": "ternary-review",
+      "Symbol": "Amap_LibCreateNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5063,
+      "End": 6626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibCreateNode",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCreateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5063,
+      "End": 6626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::ternary::Amap_LibCreateMux",
+      "Category": "ternary-review",
+      "Symbol": "Amap_LibCreateMux",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6881,
+      "End": 7736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibCreateMux",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCreateMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6881,
+      "End": 7736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::Amap_LibLookupTableAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibLookupTableAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8006,
+      "End": 8999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapUniq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9246
+    }
+  ],
+  "Draft": "package amap\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [amapUniq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Checks if the structural node already exists.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapUniq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the entry exists and returns value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntCheckWithMask(p *Vec_Int_t, Entry int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if (0xffff \u0026 p.pArray[i]) == (0xffff \u0026 Entry) {\n            return p.pArray[i] \u003e\u003e 16; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pushes entry in the natural order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntPushOrderWithMask(p *Vec_Int_t, Entry int32) {\n    var i int32;\n    if p.nSize == p.nCap {\n        Vec_IntGrow( p, 2 * p.nCap ); }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if (0xffff \u0026 p.pArray[i]) \u003e (0xffff \u0026 Entry) {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibFindNode(pLib *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {\n    if fXor != 0 {\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRulesX, iFan0), iFan1 );\n    } else {\n        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRules, iFan0), iFan1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the three-argument rule exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibFindMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {\n    var x int32;\n    for  x = 0; x \u003c Vec_IntSize(p.vRules3); x += 4  {\n        if Vec_IntEntry(p.vRules3, x)   == iFan0 \u0026\u0026\n             Vec_IntEntry(p.vRules3, x+1) == iFan1 \u0026\u0026\n             Vec_IntEntry(p.vRules3, x+2) == iFan2 {\n            return Vec_IntEntry(p.vRules3, x+3);\n        }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCreateObj(p *Amap_Lib_t) *Amap_Nod_t {\n    var pNode *Amap_Nod_t;\n    if p.nNodes == p.nNodesAlloc {\n        // inlining of macro ABC_REALLOC\n        \n        if p.pNodes {\n            p.pNodes = ((Amap_Nod_t *) realloc((char *)(p.pNodes), sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));\n        } else {\n            p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));\n        }\n        p.nNodesAlloc *= 2;\n    }\n    pNode = Amap_LibNod( p, p.nNodes );\n    memset( pNode, 0, sizeof(Amap_Nod_t) );\n    pNode.Id = p.nNodes++;\n    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );\n    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCreateVar(p *Amap_Lib_t) int32 {\n    var pNode *Amap_Nod_t;\n    // start the manager\n    assert(p.pNodes == nil, \"p.pNodes == nil\");\n    p.nNodesAlloc = 256;\n    // inlining of macro ABC_ALLOC\n    p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(p.nNodesAlloc)));\n    // create the first node\n    pNode = Amap_LibCreateObj( p );\n    p.pNodes.Type = AMAP_OBJ_PI;\n    p.pNodes.nSuppSize = 1;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCreateNode(p *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {\n    var pNode *Amap_Nod_t;\n    var iFan int32;\n    if iFan0 \u003c iFan1 {\n        iFan  = iFan0;\n        iFan0 = iFan1;\n        iFan1 = iFan;\n    }\n    pNode = Amap_LibCreateObj( p );\n    if fXor != 0 {\n        pNode.Type = AMAP_OBJ_XOR;\n    } else {\n        pNode.Type = AMAP_OBJ_AND;\n    }\n    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize;\n    pNode.iFan0 = iFan0;\n    pNode.iFan1 = iFan1;\nif p.fVerbose {\nfmt.Printf(\"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c\\n\", pNode.Id, (fXor?'x':' '), Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+')); }\n\n    if fXor != 0 {\n        if iFan0 == iFan1 {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n        } else {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan1), (pNode.Id \u003c\u003c 16) | iFan0 );\n        }\n    \n    } else {\n        if iFan0 == iFan1 {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n        } else {\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id \u003c\u003c 16) | iFan1 );\n            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan1), (pNode.Id \u003c\u003c 16) | iFan0 );\n        }\n    }\n    return pNode.Id;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCreateMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {\n    var pNode *Amap_Nod_t;\n    pNode = Amap_LibCreateObj( p );\n    pNode.Type  = AMAP_OBJ_MUX;\n    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan2)].nSuppSize;\n    pNode.iFan0 = iFan0;\n    pNode.iFan1 = iFan1;\n    pNode.iFan2 = iFan2;\nif p.fVerbose {\nfmt.Printf(\"Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c  iFan2 = %5d%c\\n\", pNode.Id, 'm', Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+'), Abc_Lit2Var(iFan2), (Abc_LitIsCompl(iFan2)?'-':'+')); }\n\n    Vec_IntPush( p.vRules3, iFan0 );\n    Vec_IntPush( p.vRules3, iFan1 );\n    Vec_IntPush( p.vRules3, iFan2 );\n    Vec_IntPush( p.vRules3, pNode.Id );\n    return pNode.Id;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates triangular lookup table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibLookupTableAlloc(vVec *Vec_Ptr_t, fVerbose int32) **int32 {\n    var vOne *Vec_Int_t;\n    var pRes **int32;\n    var pBuffer *int32;\n    var i, k, nTotal, nSize, nEntries, Value int32;\n    // count the total size\n    nEntries = nSize = Vec_PtrSize( vVec );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {\n        nEntries += Vec_IntSize(vOne);\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((int *) malloc(sizeof(int) * (size_t)(nSize * sizeof(void *) + nEntries)));\n    pRes = (int **)pBuffer;\n    pRes[0] = pBuffer + nSize * sizeof(void *);\n    nTotal = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVec)) \u0026\u0026 (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {\n        pRes[i] = pRes[0] + nTotal;\n        nTotal += Vec_IntSize(vOne) + 1;\n        if fVerbose != 0 {\n        fmt.Printf(\"%d : \", i); }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOne)) \u0026\u0026 (((Value) = Vec_IntEntry(vOne, k)), 1); k++  {\n            pRes[i][k] = Value;\n            if fVerbose != 0 {\n            fmt.Printf(\"%d(%d) \", Value\u00260xffff, Value\u003e\u003e16); }\n        }\n        if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n        pRes[i][k] = 0;\n    }\n    assert(nTotal == nEntries, \"nTotal == nEntries\");\n    return pRes;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

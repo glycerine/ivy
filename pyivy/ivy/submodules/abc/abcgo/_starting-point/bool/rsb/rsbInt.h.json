@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbInt.h",
+  "SHA256": "34a16eb097cc8e6e05e8039a9c8a835e71de2aebd21107ccac5b7c2fc6006afd",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbInt.h::struct::Rsb_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Rsb_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1478,
+      "End": 2117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2892
+    }
+  ],
+  "Draft": "package rsb\n\n/**CFile****************************************************************\n\n  FileName    [rsbInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table based resubstitution.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsbInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"rsb.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// truth table computation manager\ntype Rsb_Man_t_ struct {\n    // parameters\n    nLeafMax                int32;     // the max number of leaves of a cut\n    nDivMax                int32;      // the max number of divisors to collect\n    nDecMax                int32;      // the max number of decompositions\n    fVerbose                int32;     // verbosity level\n    // decomposition\n    vCexes         *Vec_Wrd_t;       // counter-examples\n    vDecPats         *Vec_Int_t;     // decomposition patterns\n    vFanins         *Vec_Int_t;      // the result of decomposition\n    vFaninsOld         *Vec_Int_t;   // original fanins\n    vTries         *Vec_Int_t;       // intermediate\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== rsbMan.c ==========================================================*/\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,63 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTest.c",
+  "SHA256": "e82481c5106d3fb5fb481d159ebc0ef6374dd300251392e2e8e32785c4bade69",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 542
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 567
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 41,
+        "Column": 1,
+        "ByteOffset": 918
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTest.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTest.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 542,
+      "End": 670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTest.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 918,
+      "End": 9825
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifTest.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifTest.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"aig/gia/gia.h\"\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n#include \"../lib/pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifndef ABC_USE_PTHREADS\n\n// do nothing\n\n#else // pthreads are used\n\nstatic inline word * Gia_ParTestObj( Gia_Man_t * p, int Id )         { return (word *)p-\u003epData + Id * p-\u003eiData; }\nstatic inline void   Gia_ParTestAlloc( Gia_Man_t * p, int nWords )   { assert( !p-\u003epData ); p-\u003epData = (unsigned *)ABC_ALLOC(word, Gia_ManObjNum(p) * nWords); p-\u003eiData = nWords; }\nstatic inline void   Gia_ParTestFree( Gia_Man_t * p )                { ABC_FREE( p-\u003epData ); p-\u003eiData = 0; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Gia_ParComputeSignature( Gia_Man_t * p, int nWords )\n{\n    Gia_Obj_t * pObj;\n    word * pData, Sign = 0;\n    int i, k;\n    Gia_ManForEachCo( p, pObj, k )\n    {\n        pData = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );\n        for ( i = 0; i \u003c p-\u003eiData; i++ )\n            Sign ^= pData[i];\n    }\n    Abc_TtPrintHexRev( stdout, \u0026Sign, 6 );\n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Gia_ParTestSimulateInit( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    word * pData;\n    int i, k;\n    Gia_ManForEachCi( p, pObj, k )\n    {\n        pData = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );\n        for ( i = 0; i \u003c p-\u003eiData; i++ )\n            pData[i] = Gia_ManRandomW( 0 );\n    }\n}\nvoid Gia_ParTestSimulateObj( Gia_Man_t * p, int Id )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p, Id );\n    word * pData, * pData0, * pData1;\n    int i;\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        pData  = Gia_ParTestObj( p, Id );\n        pData0 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );\n        pData1 = Gia_ParTestObj( p, Gia_ObjFaninId1(pObj, Id) );\n        if ( Gia_ObjFaninC0(pObj) )\n        {\n            if ( Gia_ObjFaninC1(pObj) )\n                for ( i = 0; i \u003c p-\u003eiData; i++ )\n                    pData[i] = ~(pData0[i] | pData1[i]);\n            else \n                for ( i = 0; i \u003c p-\u003eiData; i++ )\n                    pData[i] = ~pData0[i] \u0026 pData1[i];\n        }\n        else \n        {\n            if ( Gia_ObjFaninC1(pObj) )\n                for ( i = 0; i \u003c p-\u003eiData; i++ )\n                    pData[i] = pData0[i] \u0026 ~pData1[i];\n            else \n                for ( i = 0; i \u003c p-\u003eiData; i++ )\n                    pData[i] = pData0[i] \u0026 pData1[i];\n        }\n    }\n    else if ( Gia_ObjIsCo(pObj) )\n    {\n        pData  = Gia_ParTestObj( p, Id );\n        pData0 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );\n        if ( Gia_ObjFaninC0(pObj) )\n            for ( i = 0; i \u003c p-\u003eiData; i++ )\n                pData[i] = ~pData0[i];\n        else \n            for ( i = 0; i \u003c p-\u003eiData; i++ )\n                pData[i] = pData0[i];\n    }\n    else if ( Gia_ObjIsCi(pObj) )\n    {\n    }\n    else if ( Gia_ObjIsConst0(pObj) )\n    {\n        pData = Gia_ParTestObj( p, Id );\n        for ( i = 0; i \u003c p-\u003eiData; i++ )\n            pData[i] = 0;\n    }\n    else assert( 0 );\n}\nvoid Gia_ParTestSimulate( Gia_Man_t * p, int nWords )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManRandom( 1 );\n    Gia_ParTestAlloc( p, nWords );\n    Gia_ParTestSimulateInit( p );\n    Gia_ManForEachObj( p, pObj, i )\n        Gia_ParTestSimulateObj( p, i );\n//    Gia_ParComputeSignature( p, nWords ); printf( \"   \" );\n    Gia_ParTestFree( p );\n}\n  \n\n/**Function*************************************************************\n\n  Synopsis    [Assigns references.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Int_t * Gia_ManCreateFaninCounts( Gia_Man_t * p )  \n{\n    Vec_Int_t * vCounts;\n    Gia_Obj_t * pObj; int i;\n    vCounts = Vec_IntAlloc( Gia_ManObjNum(p) );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n            Vec_IntPush( vCounts, 2 );\n        else if ( Gia_ObjIsCo(pObj) )\n            Vec_IntPush( vCounts, 1 );\n        else\n            Vec_IntPush( vCounts, 0 );\n    }\n    assert( Vec_IntSize(vCounts) == Gia_ManObjNum(p) );\n    return vCounts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n#define PAR_THR_MAX 100\ntypedef struct Par_ThData_t_\n{\n    Gia_Man_t * p;\n    int         Id;\n    int         Status;\n} Par_ThData_t;\nvoid * Gia_ParWorkerThread( void * pArg )\n{\n    Par_ThData_t * pThData = (Par_ThData_t *)pArg;\n    volatile int * pPlace = \u0026pThData-\u003eStatus;\n    while ( 1 )\n    {\n        while ( *pPlace == 0 );\n        assert( pThData-\u003eStatus == 1 );\n        if ( pThData-\u003eId == -1 )\n        {\n            pthread_exit( NULL );\n            assert( 0 );\n            return NULL;\n        }\n        assert( pThData-\u003eId \u003e= 0 );\n        Gia_ParTestSimulateObj( pThData-\u003ep, pThData-\u003eId );\n        pThData-\u003eStatus = 0;\n    }\n    assert( 0 );\n    return NULL;\n}\nvoid Gia_ParTestSimulate2( Gia_Man_t * p, int nWords, int nProcs )\n{\n    pthread_t WorkerThread[PAR_THR_MAX];\n    Par_ThData_t ThData[PAR_THR_MAX];\n    Vec_Int_t * vStack, * vFanins;\n    int i, k, iFan, status, nCountFanins;\n    assert( nProcs \u003c= PAR_THR_MAX );\n    Gia_ManRandom( 1 );\n    Gia_ParTestAlloc( p, nWords );\n    Gia_ParTestSimulateInit( p );\n    // start the stack\n    vStack = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntryReverse( p-\u003evCis, iFan, i )\n        Vec_IntPush( vStack, iFan );\n    Vec_IntPush( vStack, 0 );\n    Gia_ManStaticFanoutStart( p );\n    vFanins = Gia_ManCreateFaninCounts( p );\n    nCountFanins = Vec_IntSum(vFanins);\n    // start the threads\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        ThData[i].p = p;\n        ThData[i].Id = -1;\n        ThData[i].Status = 0;\n        status = pthread_create( WorkerThread + i, NULL, Gia_ParWorkerThread, (void *)(ThData + i) );  assert( status == 0 );\n    }\n    while ( nCountFanins \u003e 0 || Vec_IntSize(vStack) \u003e 0 )\n    {\n        for ( i = 0; i \u003c nProcs; i++ )\n        {\n            if ( ThData[i].Status )\n                continue;\n            assert( ThData[i].Status == 0 );\n            if ( ThData[i].Id \u003e= 0 )\n            {\n                Gia_ObjForEachFanoutStaticId( p, ThData[i].Id, iFan, k )\n                {\n                    assert( Vec_IntEntry(vFanins, iFan) \u003e 0 );\n                    if ( Vec_IntAddToEntry(vFanins, iFan, -1) == 0 )\n                        Vec_IntPush( vStack, iFan );\n                    assert( nCountFanins \u003e 0 );\n                    nCountFanins--;\n                }\n                ThData[i].Id = -1;\n            }\n            if ( Vec_IntSize(vStack) \u003e 0 )\n            {\n                ThData[i].Id = Vec_IntPop( vStack );\n                ThData[i].Status = 1;\n            }\n        }\n    }\n    Vec_IntForEachEntry( vFanins, iFan, k )\n        if ( iFan != 0 )\n        {\n            printf( \"%d -\u003e %d    \", k, iFan );\n            Gia_ObjPrint( p, Gia_ManObj(p, k) );\n        }\n//    assert( Vec_IntSum(vFanins) == 0 );\n    // stop the threads\n    while ( 1 )\n    {\n        for ( i = 0; i \u003c nProcs; i++ )\n            if ( ThData[i].Status )\n                break;\n        if ( i == nProcs )\n            break;\n    }\n    for ( i = 0; i \u003c nProcs; i++ )\n    {\n        assert( ThData[i].Status == 0 );\n        ThData[i].Id = -1;\n        ThData[i].Status = 1;\n    }\n    Gia_ManStaticFanoutStop( p );\n    Vec_IntFree( vStack );\n    Vec_IntFree( vFanins );\n//    Gia_ParComputeSignature( p, nWords ); printf( \"   \" );\n    Gia_ParTestFree( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Gia_ParTest( Gia_Man_t * p, int nWords, int nProcs )\n{\n    abctime clk;\n    printf( \"Trying with %d words and %d threads.  \", nWords, nProcs );\n    printf( \"Memory usage = %.2f MB\\n\", (8.0*nWords*Gia_ManObjNum(p))/(1\u003c\u003c20) );\n    \n    clk = Abc_Clock();\n    Gia_ParTestSimulate( p, nWords );\n    Abc_PrintTime( 1, \"Regular time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    Gia_ParTestSimulate2( p, nWords, nProcs );\n    Abc_PrintTime( 1, \"Special time\", Abc_Clock() - clk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n#endif // pthreads are used\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

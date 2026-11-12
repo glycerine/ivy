@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretime.h",
+  "SHA256": "69f7a71bb304e35dcaa2b14659c92def01e72356ac90ac37389b0e384083f1fc",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 21,
+        "Column": 1,
+        "ByteOffset": 521
+      },
+      "Directive": "#if !defined(RETIME_H_)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretime.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretime.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 521,
+      "End": 5900
+    }
+  ],
+  "Draft": "package fret\n\n/**CFile****************************************************************\n\n  FileName    [fretime.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Flow-based retiming package.]\n\n  Synopsis    [Header file for retiming package.]\n\n  Author      [Aaron Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2008.]\n\n  Revision    [$Id: fretime.h,v 1.00 2008/01/01 00:00:00 ahurst Exp $]\n\n***********************************************************************/\n\n#if !defined(RETIME_H_)\n#define RETIME_H_\n\n\n#include \"base/abc/abc.h\"\n#include \"misc/vec/vec.h\"\n\n\nABC_NAMESPACE_HEADER_START\n\n\n// #define IGNORE_TIMING\n// #define DEBUG_PRINT_FLOWS\n// #define DEBUG_VISITED\n// #define DEBUG_PREORDER\n#define DEBUG_CHECK\n// #define DEBUG_PRINT_LEVELS\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#define MAX_DIST 30000\n\n// flags in Flow_Data structure...\n#define VISITED_E       0x001\n#define VISITED_R       0x002\n#define VISITED  (VISITED_E | VISITED_R)\n#define FLOW            0x004\n#define CROSS_BOUNDARY  0x008\n#define BLOCK           0x010\n#define INIT_0          0x020\n#define INIT_1          0x040\n#define INIT_CARE (INIT_0 | INIT_1)\n#define CONSERVATIVE    0x080\n#define BLOCK_OR_CONS (BLOCK | CONSERVATIVE)\n#define BIAS_NODE       0x100\n\n\n#define MAX(a,b) ((a)\u003e(b)?(a):(b))\n#define MIN(a,b) ((a)\u003c(b)?(a):(b))\n\n\ntypedef struct Flow_Data_t_ {\n  unsigned int mark : 16;\n\n  union {\n    Abc_Obj_t   *pred;\n    /* unsigned int var; */\n    Abc_Obj_t   *pInitObj;\n    Abc_Obj_t   *pCopy;\n    Vec_Ptr_t   *vNodes;\n  };\n\n  unsigned int e_dist : 16;\n  unsigned int r_dist : 16;\n} Flow_Data_t;\n\n// useful macros for manipulating Flow_Data structure...\n#define FDATA( x )     (pManMR-\u003epDataArray+Abc_ObjId(x))\n#define FSET( x, y )   FDATA(x)-\u003emark |= y\n#define FUNSET( x, y ) FDATA(x)-\u003emark \u0026= ~y\n#define FTEST( x, y )  (FDATA(x)-\u003emark \u0026 y)\n#define FTIMEEDGES( x )  \u0026(pManMR-\u003evTimeEdges[Abc_ObjId( x )])\n\ntypedef struct NodeLag_T_ {\n  int id;\n  int lag;\n} NodeLag_t;\n\ntypedef struct InitConstraint_t_ {\n  Abc_Obj_t *pBiasNode;\n\n  Vec_Int_t  vNodes;\n  Vec_Int_t  vLags;\n\n} InitConstraint_t;\n\ntypedef struct MinRegMan_t_ {\n \n  // problem description:\n  int         maxDelay;\n  int        fComputeInitState, fGuaranteeInitState, fBlockConst;\n  int         nNodes, nLatches;\n  int        fForwardOnly, fBackwardOnly;\n  int        fConservTimingOnly;\n  int         nMaxIters;\n  int        fVerbose;\n  Abc_Ntk_t  *pNtk;\n\n  int         nPreRefine;\n\n  // problem state\n  int        fIsForward;\n  int        fSinkDistTerminate;\n  int         nExactConstraints, nConservConstraints;\n  int         fSolutionIsDc;\n  int         constraintMask;\n  int         iteration, subIteration;\n  Vec_Int_t  *vLags;\n  \n  // problem data\n  Vec_Int_t   *vSinkDistHist;\n  Flow_Data_t *pDataArray;\n  Vec_Ptr_t   *vTimeEdges;\n  Vec_Ptr_t   *vExactNodes;\n  Vec_Ptr_t   *vInitConstraints;\n  Abc_Ntk_t   *pInitNtk;\n  Vec_Ptr_t   *vNodes; // re-useable struct\n  \n  NodeLag_t   *pInitToOrig;\n  int          sizeInitToOrig;\n  \n} MinRegMan_t ;\n\nextern MinRegMan_t *pManMR;\n\n#define vprintf if (pManMR-\u003efVerbose) printf \n\nstatic inline void FSETPRED(Abc_Obj_t *pObj, Abc_Obj_t *pPred) {\n  assert(!Abc_ObjIsLatch(pObj)); // must preserve field to maintain init state linkage\n  FDATA(pObj)-\u003epred = pPred;\n}\nstatic inline Abc_Obj_t * FGETPRED(Abc_Obj_t *pObj) {\n  return FDATA(pObj)-\u003epred;\n}\n\n/*=== fretMain.c ==========================================================*/\n\nAbc_Ntk_t *    Abc_FlowRetime_MinReg( Abc_Ntk_t * pNtk, int fVerbose,\n                                      int fComputeInitState, int fGuaranteeInitState, int fBlockConst,\n                                      int fForward, int fBackward, int nMaxIters,\n                                      int maxDelay, int fFastButConservative);\n\nvoid print_node(Abc_Obj_t *pObj);\n\nvoid Abc_ObjBetterTransferFanout( Abc_Obj_t * pFrom, Abc_Obj_t * pTo, int complement );\n\nint  Abc_FlowRetime_PushFlows( Abc_Ntk_t * pNtk, int fVerbose );\nint Abc_FlowRetime_IsAcrossCut( Abc_Obj_t *pCur, Abc_Obj_t *pNext );\nvoid Abc_FlowRetime_ClearFlows( int fClearAll );\n\nint  Abc_FlowRetime_GetLag( Abc_Obj_t *pObj );\nvoid Abc_FlowRetime_SetLag( Abc_Obj_t *pObj, int lag );\n\nvoid Abc_FlowRetime_UpdateLags( );\n\nvoid Abc_ObjPrintNeighborhood( Abc_Obj_t *pObj, int depth );\n\nAbc_Ntk_t * Abc_FlowRetime_NtkSilentRestrash( Abc_Ntk_t * pNtk, int fCleanup );\n\n/*=== fretFlow.c ==========================================================*/\n\nint  dfsplain_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred );\nint  dfsplain_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred );\n\nvoid dfsfast_preorder( Abc_Ntk_t *pNtk );\nint  dfsfast_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred );\nint  dfsfast_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred );\n\n/*=== fretInit.c ==========================================================*/\n\nvoid Abc_FlowRetime_PrintInitStateInfo( Abc_Ntk_t * pNtk );\n\nvoid Abc_FlowRetime_InitState( Abc_Ntk_t * pNtk );\n\nvoid Abc_FlowRetime_UpdateForwardInit( Abc_Ntk_t * pNtk );\nvoid Abc_FlowRetime_UpdateBackwardInit( Abc_Ntk_t * pNtk );\n\nvoid Abc_FlowRetime_SetupBackwardInit( Abc_Ntk_t * pNtk );\nint  Abc_FlowRetime_SolveBackwardInit( Abc_Ntk_t * pNtk );\n\nvoid Abc_FlowRetime_ConstrainInit(  );\nvoid Abc_FlowRetime_AddInitBias(  );\nvoid Abc_FlowRetime_RemoveInitBias(  );\n\n/*=== fretTime.c ==========================================================*/\n\nvoid Abc_FlowRetime_InitTiming( Abc_Ntk_t *pNtk );\nvoid Abc_FlowRetime_FreeTiming( Abc_Ntk_t *pNtk );\n\nint Abc_FlowRetime_RefineConstraints( );\n\nvoid Abc_FlowRetime_ConstrainConserv( Abc_Ntk_t * pNtk );\nvoid Abc_FlowRetime_ConstrainExact( Abc_Obj_t * pObj );\nvoid Abc_FlowRetime_ConstrainExactAll( Abc_Ntk_t * pNtk );\n\n\n\nABC_NAMESPACE_HEADER_END\n\n#endif\n"
+}

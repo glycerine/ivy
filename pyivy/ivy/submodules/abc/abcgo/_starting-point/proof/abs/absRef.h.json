@@ -1,0 +1,223 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h",
+  "SHA256": "24fee275af7d03436e1e967db0b2413682365ce1fccedc6fcc333ed4765f04e9",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsConst0(pObj) || pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pObj.Value) \u003c p.nObjsFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame ); "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rnm_ManObj",
+      "Start": 3683,
+      "End": 3972,
+      "BodyStart": 3764,
+      "Original": "static inline Rnm_Obj_t * Rnm_ManObj( Rnm_Man_t * p, Gia_Obj_t * pObj, int f )  \n{ \n    assert( Gia_ObjIsConst0(pObj) || pObj-\u003eValue );\n    assert( (int)pObj-\u003eValue \u003c p-\u003enObjsFrame );\n    assert( f \u003e= 0 \u0026\u0026 f \u003c= p-\u003epCex-\u003eiFrame ); \n    return p-\u003epObjs + f * p-\u003enObjsFrame + pObj-\u003eValue;  \n}",
+      "Draft": "func Rnm_ManObj(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32) *Rnm_Obj_t { \n    assert(Gia_ObjIsConst0(pObj) || pObj.Value, \"Gia_ObjIsConst0(pObj) || pObj.Value\");\n    assert(int32(pObj.Value) \u003c p.nObjsFrame, \"int32(pObj.Value) \u003c p.nObjsFrame\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame, \"f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame\"); \n    return p.pObjs + f * p.nObjsFrame + pObj.Value;  \n}"
+    },
+    {
+      "Name": "Rnm_ManSetRefId",
+      "Start": 3973,
+      "End": 4073,
+      "BodyStart": 4051,
+      "Original": "static inline void  Rnm_ManSetRefId( Rnm_Man_t * p, int RefId )               { p-\u003enRefId = RefId; }",
+      "Draft": "func Rnm_ManSetRefId(p *Rnm_Man_t, RefId int32) { p.nRefId = RefId; }"
+    },
+    {
+      "Name": "Rnm_ObjCount",
+      "Start": 4075,
+      "End": 4243,
+      "BodyStart": 4153,
+      "Original": "static inline int   Rnm_ObjCount( Rnm_Man_t * p, Gia_Obj_t * pObj )           { return Vec_StrEntry( p-\u003evCounts, Gia_ObjId(p-\u003epGia, pObj) );                           }",
+      "Draft": "func Rnm_ObjCount(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { return Vec_StrEntry( p.vCounts, Gia_ObjId(p.pGia, pObj) );                           }"
+    },
+    {
+      "Name": "Rnm_ObjSetCount",
+      "Start": 4244,
+      "End": 4412,
+      "BodyStart": 4322,
+      "Original": "static inline void  Rnm_ObjSetCount( Rnm_Man_t * p, Gia_Obj_t * pObj, int c ) { Vec_StrWriteEntry( p-\u003evCounts, Gia_ObjId(p-\u003epGia, pObj), (char)c );                    }",
+      "Draft": "func Rnm_ObjSetCount(p *Rnm_Man_t, pObj *Gia_Obj_t, c int32) { Vec_StrWriteEntry( p.vCounts, Gia_ObjId(p.pGia, pObj), byte(c) );                    }"
+    },
+    {
+      "Name": "Rnm_ObjAddToCount",
+      "Start": 4413,
+      "End": 4581,
+      "BodyStart": 4491,
+      "Original": "static inline int   Rnm_ObjAddToCount( Rnm_Man_t * p, Gia_Obj_t * pObj )      { int c = Rnm_ObjCount(p, pObj); if ( c \u003c 16 )  Rnm_ObjSetCount(p, pObj, c+1); return c; }",
+      "Draft": "func Rnm_ObjAddToCount(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { var c int32  = Rnm_ObjCount(p, pObj); if c \u003c 16 {  Rnm_ObjSetCount(p, pObj, c+1); }\n return c; }"
+    },
+    {
+      "Name": "Rnm_ObjIsJust",
+      "Start": 4583,
+      "End": 4751,
+      "BodyStart": 4661,
+      "Original": "static inline int   Rnm_ObjIsJust( Rnm_Man_t * p, Gia_Obj_t * pObj )          { return Gia_ObjIsConst0(pObj) || (pObj-\u003eValue \u0026\u0026 Rnm_ManObj(p, pObj, 0)-\u003efVisitJ);      }",
+      "Draft": "func Rnm_ObjIsJust(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjIsConst0(pObj) || (pObj.Value \u0026\u0026 Rnm_ManObj(p, pObj, 0).fVisitJ);      }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t::unsigned        Value     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1555,
+      "End": 1591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t::// binary value\n    unsigned        fVisit    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1591,
+      "End": 1644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t::// visited object\n    unsigned        fVisitJ   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1644,
+      "End": 1699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t::// justified visited object\n    unsigned        fPPi      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1699,
+      "End": 1764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t::// PPI object\n    unsigned        Prio      : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1764,
+      "End": 1815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Rnm_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1478,
+      "End": 1845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::struct::Rnm_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Rnm_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1847,
+      "End": 3646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3683,
+      "End": 3972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ManSetRefId",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManSetRefId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3973,
+      "End": 4073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ObjCount",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ObjCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4075,
+      "End": 4243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ObjSetCount",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ObjSetCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4244,
+      "End": 4412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ObjAddToCount",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ObjAddToCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4413,
+      "End": 4581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::Rnm_ObjIsJust",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ObjIsJust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4583,
+      "End": 4751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRef.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5872
+    }
+  ],
+  "Draft": "package abs\n\n/**CFile****************************************************************\n\n  FileName    [absRef.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Refinement manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absRef.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n    // refinement object\ntype Rnm_Obj_t struct {\n    Value uint32; /* C bitfield: 1 bits; review packing and truncation */  // binary value\n    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // visited object\n    fVisitJ uint32; /* C bitfield: 1 bits; review packing and truncation */  // justified visited object\n    fPPi uint32; /* C bitfield: 1 bits; review packing and truncation */  // PPI object\n    Prio uint32; /* C bitfield: 24 bits; review packing and truncation */  // priority (0 - highest)\n}\n\n    // refinement manager\ntype Rnm_Man_t struct {\n    // user data\n    pGia      *Gia_Man_t;            // working AIG manager (it is completely owned by this package)\n    pCex      *Abc_Cex_t;            // counter-example\n    vMap      *Vec_Int_t;            // mapping of CEX inputs into objects (PI + PPI, in any order)\n    fPropFanout             int32;     // propagate fanouts\n    fVerbose             int32;        // verbose flag\n    nRefId             int32;          // refinement ID\n    // traversing data\n    vObjs      *Vec_Int_t;           // internal objects used in value propagation\n    // filtering of selected objects\n    vCounts      *Vec_Str_t;         // fanin counters\n    vFanins      *Vec_Int_t;         // fanins\n/*\n    // SAT solver\n    sat_solver2 *   pSat;            // incremental SAT solver\n    Vec_Int_t *     vSatVars;        // SAT variables\n    Vec_Int_t *     vSat2Ids;        // mapping of SAT variables into object IDs\n    Vec_Int_t *     vIsopMem;        // memory for ISOP computation\n*/\n    // internal data\n    pObjs      *Rnm_Obj_t;           // refinement objects\n    nObjs             int32;           // the number of used objects\n    nObjsAlloc             int32;      // the number of allocated objects\n    nObjsFrame             int32;      // the number of used objects in each frame\n    nCalls             int32;          // total number of calls\n    nRefines             int32;        // total refined objects\n    nVisited             int32;        // visited during justification\n    // statistics  \n    timeFwd         abctime;         // forward propagation\n    timeBwd         abctime;         // backward propagation\n    timeVer         abctime;         // ternary simulation\n    timeTotal         abctime;       // other time\n}\n\n// accessing the refinement object\nfunc Rnm_ManObj(p *Rnm_Man_t, pObj *Gia_Obj_t, f int32) *Rnm_Obj_t { \n    assert(Gia_ObjIsConst0(pObj) || pObj.Value, \"Gia_ObjIsConst0(pObj) || pObj.Value\");\n    assert(int32(pObj.Value) \u003c p.nObjsFrame, \"int32(pObj.Value) \u003c p.nObjsFrame\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame, \"f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame\"); \n    return p.pObjs + f * p.nObjsFrame + pObj.Value;  \n}\nfunc Rnm_ManSetRefId(p *Rnm_Man_t, RefId int32) { p.nRefId = RefId; }\n\nfunc Rnm_ObjCount(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { return Vec_StrEntry( p.vCounts, Gia_ObjId(p.pGia, pObj) );                           }\nfunc Rnm_ObjSetCount(p *Rnm_Man_t, pObj *Gia_Obj_t, c int32) { Vec_StrWriteEntry( p.vCounts, Gia_ObjId(p.pGia, pObj), byte(c) );                    }\nfunc Rnm_ObjAddToCount(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { var c int32  = Rnm_ObjCount(p, pObj); if c \u003c 16 {  Rnm_ObjSetCount(p, pObj, c+1); }\n return c; }\n\nfunc Rnm_ObjIsJust(p *Rnm_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjIsConst0(pObj) || (pObj.Value \u0026\u0026 Rnm_ManObj(p, pObj, 0).fVisitJ);      }\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== absRef.c ===========================================================*/\n// extern Rnm_Man_t *  Rnm_ManStart( Gia_Man_t * pGia );\n\n// extern void         Rnm_ManStop( Rnm_Man_t * p, int fProfile );\n\n// extern double       Rnm_ManMemoryUsage( Rnm_Man_t * p );\n\n// extern Vec_Int_t *  Rnm_ManRefine( Rnm_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, int fPropFanout, int fNewRefinement, int fVerbose );\n\n/*=== absRefSelected.c ===========================================================*/\n// extern Vec_Int_t *  Rnm_ManFilterSelected( Rnm_Man_t * p, Vec_Int_t * vOldPPis );\n\n// extern Vec_Int_t *  Rnm_ManFilterSelectedNew( Rnm_Man_t * p, Vec_Int_t * vOldPPis );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

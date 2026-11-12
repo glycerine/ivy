@@ -1,0 +1,72 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gasp.c",
+  "SHA256": "aafef2259a08af20a40b2e39d4e5ba0c8dbccef5b0593f4c4e9aabe35a57fa7b",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 2122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"REDUCE_GASP: %s reduced to %s\\n\", pc1(p), pc2(cunder));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\nEXPAND1_GASP:    \\t%s\\n\", pc1(/*__starting_point_inline_macro:GETSET__*/((F).data + (F).wsize * (c1index))));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gasp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gasp.c::macro-inline::3382",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3382,
+      "End": 3392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gasp.c::macro-inline::3408",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3408,
+      "End": 3418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/gasp.c::macro-inline::3431",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3431,
+      "End": 3441
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: gasp.c\n\n    The \"last_gasp\" heuristic computes the reduction of each cube in\n    the cover (without replacement) and then performs an expansion of\n    these cubes.  The cubes which expand to cover some other cube are\n    added to the original cover and irredundant finds a minimal subset.\n\n    If one of the reduced cubes expands to cover some other reduced\n    cube, then the new prime thus generated is a candidate for reducing\n    the size of the cover.\n\n    super_gasp is a variation on this strategy which extracts a minimal\n    subset from the set of all prime implicants which cover all\n    maximally reduced cubes.\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*\n *  reduce_gasp -- compute the maximal reduction of each cube of F\n *\n *  If a cube does not reduce, it remains prime; otherwise, it is marked\n *  as nonprime.   If the cube is redundant (should NEVER happen here) we\n *  just crap out ...\n *\n *  A cover with all of the cubes of F is returned.  Those that did\n *  reduce are marked \"NONPRIME\"; those that reduced are marked \"PRIME\".\n *  The cubes are in the same order as in F.\n */\nstatic pcover reduce_gasp(F, D)\npcover F, D;\n{\n    pcube p, last, cunder, *FD;\n    pcover G;\n\n    // inlining of macro new_cover\n    G = sf_new(F.count, cube.size);\n    FD = cube2list(F, D);\n\n    /* Reduce cubes of F without replacement */\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    cunder = reduce_cube(FD, p);\n    if setp_empty(cunder) {\n        fatal(\"empty reduction in reduce_gasp, shouldn't happen\");\n    } else if setp_equal(cunder, p) {\n        // inlining of macro SET\n        (cunder[0] |= (PRIME));            /* just to make sure */\n        G = sf_addset(G, p);        /* it did not reduce ... */\n    } else {\n        // inlining of macro RESET\n        (cunder[0] \u0026= ~ (PRIME));        /* it reduced ... */\n        G = sf_addset(G, cunder);\n    }\n    if debug \u0026 GASP {\n        fmt.Printf(\"REDUCE_GASP: %s reduced to %s\\n\", pc1(p), pc2(cunder));\n    }\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cunder);\n    }\n\n    // inlining of macro free_cubelist\n    FREE(FD[0]); FREE(FD);;\n    return G;\n}\n\f\n/*\n *  expand_gasp -- expand each nonprime cube of F into a prime implicant\n *\n *  The gasp strategy differs in that only those cubes which expand to\n *  cover some other cube are saved; also, all cubes are expanded\n *  regardless of whether they become covered or not.\n */\n\npcover expand_gasp(F, D, R, Foriginal)\nINOUT pcover F;\nIN pcover D;\nIN pcover R;\nIN pcover Foriginal;\n{\n    int c1index;\n    pcover G;\n\n    /* Try to expand each nonprime and noncovered cube */\n    // inlining of macro new_cover\n    G = sf_new(10, cube.size);\n    for c1index = 0; c1index \u003c F.count; c1index++ {\n    expand1_gasp(F, D, R, Foriginal, c1index, \u0026G);\n    }\n    G = sf_dupl(G);\n    G = expand(G, R, /*nonsparse*/ FALSE);    /* Make them prime ! */\n    return G;\n}\n\n\n\n/*\n *  expand1 -- Expand a single cube against the OFF-set, using the gasp strategy\n */\nvoid expand1_gasp(F, D, R, Foriginal, c1index, G)\npcover F;        /* reduced cubes of ON-set */\npcover D;        /* DC-set */\npcover R;        /* OFF-set */\npcover Foriginal;    /* ON-set before reduction (same order as F) */\nvar c1index int32;        /* which index of F (or Freduced) to be checked */\npcover *G;\n{\n    register int c2index;\n    register pcube p, last, c2under;\n    pcube RAISE, FREESET, temp, *FD, c2essential;\n    pcover F1;\n\n    if debug \u0026 EXPAND1 {\n    // inlining of macro GETSET\n    fmt.Printf(\"\\nEXPAND1_GASP:    \\t%s\\n\", pc1(((F).data + (F).wsize * (c1index))));\n    }\n\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    RAISE = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    FREESET = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    temp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n\n    /* Initialize the OFF-set */\n    R.active_count = R.count;\n    // inlining of macro foreach_set\n    for p=R.data,last=p+R.count*R.wsize;p\u003clast;p+=R.wsize {\n    // inlining of macro SET\n    (p[0] |= (ACTIVE));\n    }\n    /* Initialize the reduced ON-set, all nonprime cubes become active */\n    F.active_count = F.count;\n    // inlining of macro foreachi_set\n    for c2under, c2index = F.data, 0;c2index\u003cF.count;c2under+=F.wsize,c2index++ {\n    // inlining of macro TESTP\n    if c1index == c2index || (c2under[0] \u0026 (PRIME)) {\n        F.active_count--;\n        // inlining of macro RESET\n        (c2under[0] \u0026= ~ (ACTIVE));\n    } else {\n        // inlining of macro SET\n        (c2under[0] |= (ACTIVE));\n    }\n    }\n\n    /* Initialize the raising and unassigned sets */\n    // inlining of macro GETSET\n    (void) set_copy(RAISE, ((F).data + (F).wsize * (c1index)));\n    (void) set_diff(FREESET, cube.fullset, RAISE);\n\n    /* Determine parts which must be lowered */\n    essen_parts(R, F, RAISE, FREESET);\n\n    /* Determine parts which can always be raised */\n    essen_raising(R, RAISE, FREESET);\n\n    /* See which, if any, of the reduced cubes we can cover */\n    // inlining of macro foreachi_set\n    for c2under, c2index = F.data, 0;c2index\u003cF.count;c2under+=F.wsize,c2index++ {\n    // inlining of macro TESTP\n    if c2under[0] \u0026 (ACTIVE) {\n        /* See if this cube can be covered by an expansion */\n        if setp_implies(c2under, RAISE) ||\n          feasibly_covered(R, c2under, RAISE, temp) {\n        \n        /* See if c1under can expanded to cover c2 reduced against\n         * (F - c1) u c1under; if so, c2 can definitely be removed !\n         */\n\n        /* Copy F and replace c1 with c1under */\n        F1 = sf_save(Foriginal);\n        // inlining of macro GETSET\n        (void) set_copy(((F1).data + (F1).wsize * (c1index)), ((F).data + (F).wsize * (c1index)));\n\n        /* Reduce c2 against ((F - c1) u c1under) */\n        FD = cube2list(F1, D);\n        // inlining of macro GETSET\n        c2essential = reduce_cube(FD, ((F1).data + (F1).wsize * (c2index)));\n        // inlining of macro free_cubelist\n        FREE(FD[0]); FREE(FD);;\n        sf_free(F1);\n\n        /* See if c2essential is covered by an expansion of c1under */\n        if feasibly_covered(R, c2essential, RAISE, temp) {\n            (void) set_or(temp, RAISE, c2essential);\n            // inlining of macro RESET\n            (temp[0] \u0026= ~ (PRIME));        /* cube not prime */\n            *G = sf_addset(*G, temp);\n        }\n        // inlining of macro set_free\n        FREE(c2essential);\n        }\n    }\n    }\n\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(RAISE);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(FREESET);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(temp);\n}\n\f\n/* irred_gasp -- Add new primes to F and find an irredundant subset */\npcover irred_gasp(F, D, G)\npcover F, D, G;                 /* G is disposed of */\n{\n    if (G.count != 0)\n    F = irredundant(sf_append(F, G), D);\n    else\n    // inlining of macro free_cover\n    sf_free(G);\n    return F;\n}\n\n\n/* last_gasp */\npcover last_gasp(F, D, R, cost)\npcover F, D, R;\nvar cost *cost_t;\n{\n    pcover G, G1;\n\n    // inlining of macro EXECUTE\n    {long t=ptime();G = reduce_gasp(F, D);totals(t,GREDUCE_TIME,G,\u0026(*cost));};\n    // inlining of macro EXECUTE\n    {long t=ptime();G1 = expand_gasp(G, D, R, F);totals(t,GEXPAND_TIME,G1,\u0026(*cost));};\n    // inlining of macro free_cover\n    sf_free(G);\n    // inlining of macro EXECUTE\n    {long t=ptime();F = irred_gasp(F, D, G1);totals(t,GIRRED_TIME,F,\u0026(*cost));};\n    return F;\n}\n\n\n/* super_gasp */\npcover super_gasp(F, D, R, cost)\npcover F, D, R;\nvar cost *cost_t;\n{\n    pcover G, G1;\n\n    // inlining of macro EXECUTE\n    {long t=ptime();G = reduce_gasp(F, D);totals(t,GREDUCE_TIME,G,\u0026(*cost));};\n    // inlining of macro EXECUTE\n    {long t=ptime();G1 = all_primes(G, R);totals(t,GEXPAND_TIME,G1,\u0026(*cost));};\n    // inlining of macro free_cover\n    sf_free(G);\n    // inlining of macro EXEC\n    {long t=ptime();G = sf_dupl(sf_append(F, G1));if(trace)print_trace(G,\"NEWPRIMES\",ptime()-t);};\n    // inlining of macro EXECUTE\n    {long t=ptime();F = irredundant(G, D);totals(t,IRRED_TIME,F,\u0026(*cost));};\n    return F;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

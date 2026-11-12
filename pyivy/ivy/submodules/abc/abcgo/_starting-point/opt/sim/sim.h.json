@@ -1,0 +1,190 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h",
+  "SHA256": "e268c37610621456c6a08cb4ee1a3d48c650dbbef47240d4f617aa0f3e6228d9",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::struct::Sym_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Sym_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1435,
+      "End": 3294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::struct::Sim_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Sim_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3296,
+      "End": 4686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::struct::Sim_Pat_t",
+      "Category": "struct-review",
+      "Symbol": "Sim_Pat_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4688,
+      "End": 4954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_NUM_WORDS",
+      "Category": "macro-review",
+      "Symbol": "SIM_NUM_WORDS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5176,
+      "End": 5233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_LAST_BITS",
+      "Category": "macro-review",
+      "Symbol": "SIM_LAST_BITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5234,
+      "End": 5293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_MASK_BEG",
+      "Category": "macro-review",
+      "Symbol": "SIM_MASK_BEG",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5338,
+      "End": 5393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_MASK_END",
+      "Category": "macro-review",
+      "Symbol": "SIM_MASK_END",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5394,
+      "End": 5446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_SET_0_FROM",
+      "Category": "macro-review",
+      "Symbol": "SIM_SET_0_FROM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5447,
+      "End": 5501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::SIM_SET_1_FROM",
+      "Category": "macro-review",
+      "Symbol": "SIM_SET_1_FROM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5502,
+      "End": 5556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SetBit",
+      "Category": "macro-review",
+      "Symbol": "Sim_SetBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5770,
+      "End": 5832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_XorBit",
+      "Category": "macro-review",
+      "Symbol": "Sim_XorBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5833,
+      "End": 5895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_HasBit",
+      "Category": "macro-review",
+      "Symbol": "Sim_HasBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5896,
+      "End": 5963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SuppStrSetVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SuppStrSetVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6007,
+      "End": 6109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SuppStrHasVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SuppStrHasVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6110,
+      "End": 6212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SuppFunSetVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SuppFunSetVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6213,
+      "End": 6310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SuppFunHasVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SuppFunHasVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6311,
+      "End": 6408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SimInfoSetVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SimInfoSetVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6409,
+      "End": 6511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SimInfoHasVar",
+      "Category": "macro-review",
+      "Symbol": "Sim_SimInfoHasVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6512,
+      "End": 6614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::macro::Sim_SimInfoGet",
+      "Category": "macro-review",
+      "Symbol": "Sim_SimInfoGet",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6615,
+      "End": 6705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/sim.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11105
+    }
+  ],
+  "Draft": "package sim\n\n/**CFile****************************************************************\n\n  FileName    [sim.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Simulation package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sim.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n/*\n    The ideas realized in this package are described in the paper:\n    \"Detecting Symmetries in Boolean Functions using Circuit Representation, \n    Simulation, and Satisfiability\".\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Sym_Man_t struct {\n    // info about the network\n    pNtk        *Abc_Ntk_t;          // the network \n    vNodes        *Vec_Ptr_t;        // internal nodes in topological order\n    nInputs               int32;\n    nOutputs               int32;\n    // internal simulation information\n    nSimWords               int32;     // the number of bits in simulation info\n    vSim        *Vec_Ptr_t;          // simulation info\n    // support information\n    vSuppFun        *Vec_Ptr_t;      // bit representation\n    vSupports        *Vec_Vec_t;     // integer representation\n    // symmetry info for each output\n    vMatrSymms        *Vec_Ptr_t;    // symmetric pairs\n    vMatrNonSymms        *Vec_Ptr_t; // non-symmetric pairs\n    vPairsTotal        *Vec_Int_t;   // total pairs\n    vPairsSym        *Vec_Int_t;     // symmetric pairs\n    vPairsNonSym        *Vec_Int_t;  // non-symmetric pairs\n    // temporary simulation info\n    uPatRand         *uint32;\n    uPatCol         *uint32;\n    uPatRow         *uint32;\n    // temporary\n    vVarsU        *Vec_Int_t;\n    vVarsV        *Vec_Int_t;\n    iOutput               int32;\n    iVar1               int32;\n    iVar2               int32;\n    iVar1Old               int32;\n    iVar2Old               int32;\n    // internal data structures\n    nSatRuns               int32;\n    nSatRunsSat               int32;\n    nSatRunsUnsat               int32;\n    // pairs\n    nPairsSymm               int32;\n    nPairsSymmStr               int32;\n    nPairsNonSymm               int32;\n    nPairsRem               int32;\n    nPairsTotal               int32;\n    // runtime statistics\n    timeStruct           abctime;\n    timeCount           abctime;\n    timeMatr           abctime;\n    timeSim           abctime;\n    timeFraig           abctime;\n    timeSat           abctime;\n    timeTotal           abctime;\n}\n\n   \ntype Sim_Man_t struct {\n    // info about the network\n    pNtk        *Abc_Ntk_t;\n    nInputs               int32;\n    nOutputs               int32;\n    fLightweight               int32;\n    // internal simulation information\n    nSimBits               int32;      // the number of bits in simulation info\n    nSimWords               int32;     // the number of words in simulation info\n    vSim0        *Vec_Ptr_t;         // simulation info 1\n    vSim1        *Vec_Ptr_t;         // simulation info 2\n    // support information\n    nSuppBits               int32;     // the number of bits in support info\n    nSuppWords               int32;    // the number of words in support info\n    vSuppStr        *Vec_Ptr_t;      // structural supports\n    vSuppFun        *Vec_Ptr_t;      // functional supports\n    // simulation targets\n    vSuppTargs        *Vec_Vec_t;    // support targets\n    iInput               int32;        // the input current processed\n    // internal data structures\n    pMmPat  *Extra_MmFixed_t;   \n    vFifo        *Vec_Ptr_t;\n    vDiffs        *Vec_Int_t;\n    nSatRuns               int32;\n    nSatRunsSat               int32;\n    nSatRunsUnsat               int32;\n    // runtime statistics\n    timeSim           abctime;\n    timeTrav           abctime;\n    timeFraig           abctime;\n    timeSat           abctime;\n    timeTotal           abctime;\n}\n\n   \ntype Sim_Pat_t struct {\n    Input              int32;         // the input which it has detected\n    Output              int32;        // the output for which it was collected\n    pData        *uint32;         // the simulation data\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define SIM_NUM_WORDS(n)      (((n)\u003e\u003e5) + (((n)\u002631) \u003e 0))\n\n// Original macro:\n// #define SIM_LAST_BITS(n)      ((((n)\u002631) \u003e 0)? (n)\u002631 : 32)\n\n\n#define SIM_MASK_FULL         (0xFFFFFFFF)\n// Original macro:\n// #define SIM_MASK_BEG(n)       (SIM_MASK_FULL \u003e\u003e (32-n))\n\n// Original macro:\n// #define SIM_MASK_END(n)       (SIM_MASK_FULL \u003c\u003c (n))\n\n// Original macro:\n// #define SIM_SET_0_FROM(m,n)   ((m) \u0026 ~SIM_MASK_BEG(n))\n\n// Original macro:\n// #define SIM_SET_1_FROM(m,n)   ((m) |  SIM_MASK_END(n))\n\n\n// generating random unsigned (#define RAND_MAX 0x7fff)\n#define SIM_RANDOM_UNSIGNED   ((((unsigned)rand()) \u003c\u003c 24) ^ (((unsigned)rand()) \u003c\u003c 12) ^ ((unsigned)rand()))\n\n// macros to get hold of bits in a bit string\n// Original macro:\n// #define Sim_SetBit(p,i)       ((p)[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Sim_XorBit(p,i)       ((p)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Sim_HasBit(p,i)      (((p)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0)\n\n\n// macros to get hold of the support info\n// Original macro:\n// #define Sim_SuppStrSetVar(vSupps,pNode,v)     Sim_SetBit((unsigned*)(vSupps)-\u003epArray[(pNode)-\u003eId],(v))\n\n// Original macro:\n// #define Sim_SuppStrHasVar(vSupps,pNode,v)     Sim_HasBit((unsigned*)(vSupps)-\u003epArray[(pNode)-\u003eId],(v))\n\n// Original macro:\n// #define Sim_SuppFunSetVar(vSupps,Output,v)    Sim_SetBit((unsigned*)(vSupps)-\u003epArray[Output],(v))\n\n// Original macro:\n// #define Sim_SuppFunHasVar(vSupps,Output,v)    Sim_HasBit((unsigned*)(vSupps)-\u003epArray[Output],(v))\n\n// Original macro:\n// #define Sim_SimInfoSetVar(vSupps,pNode,v)     Sim_SetBit((unsigned*)(vSupps)-\u003epArray[(pNode)-\u003eId],(v))\n\n// Original macro:\n// #define Sim_SimInfoHasVar(vSupps,pNode,v)     Sim_HasBit((unsigned*)(vSupps)-\u003epArray[(pNode)-\u003eId],(v))\n\n// Original macro:\n// #define Sim_SimInfoGet(vInfo,pNode)           ((unsigned *)((vInfo)-\u003epArray[(pNode)-\u003eId]))\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== simMan.c ==========================================================*/\n// extern Sym_Man_t *     Sym_ManStart( Abc_Ntk_t * pNtk, int fVerbose );\n\n// extern void            Sym_ManStop( Sym_Man_t * p );\n\n// extern void            Sym_ManPrintStats( Sym_Man_t * p );\n\n// extern Sim_Man_t *     Sim_ManStart( Abc_Ntk_t * pNtk, int fLightweight );\n\n// extern void            Sim_ManStop( Sim_Man_t * p );\n\n// extern void            Sim_ManPrintStats( Sim_Man_t * p );\n\n// extern Sim_Pat_t *     Sim_ManPatAlloc( Sim_Man_t * p );\n\n// extern void            Sim_ManPatFree( Sim_Man_t * p, Sim_Pat_t * pPat );\n\n/*=== simSeq.c ==========================================================*/\n// extern Vec_Ptr_t *     Sim_SimulateSeqRandom( Abc_Ntk_t * pNtk, int nFrames, int nWords );\n\n// extern Vec_Ptr_t *     Sim_SimulateSeqModel( Abc_Ntk_t * pNtk, int nFrames, int * pModel );\n\n/*=== simSupp.c ==========================================================*/\n// extern Vec_Ptr_t *     Sim_ComputeStrSupp( Abc_Ntk_t * pNtk );\n\n// extern Vec_Ptr_t *     Sim_ComputeFunSupp( Abc_Ntk_t * pNtk, int fVerbose );\n\n/*=== simSym.c ==========================================================*/\n// extern int             Sim_ComputeTwoVarSymms( Abc_Ntk_t * pNtk, int fVerbose );\n\n/*=== simSymSat.c ==========================================================*/\n// extern int             Sim_SymmsGetPatternUsingSat( Sym_Man_t * p, unsigned * pPattern );\n\n/*=== simSymStr.c ==========================================================*/\n// extern void            Sim_SymmsStructCompute( Abc_Ntk_t * pNtk, Vec_Ptr_t * vMatrs, Vec_Ptr_t * vSuppFun );\n\n/*=== simSymSim.c ==========================================================*/\n// extern void            Sim_SymmsSimulate( Sym_Man_t * p, unsigned * pPatRand, Vec_Ptr_t * vMatrsNonSym );\n\n/*=== simUtil.c ==========================================================*/\n// extern Vec_Ptr_t *     Sim_UtilInfoAlloc( int nSize, int nWords, int  fClean );\n\n// extern void            Sim_UtilInfoFree( Vec_Ptr_t * p );\n\n// extern void            Sim_UtilInfoAdd( unsigned * pInfo1, unsigned * pInfo2, int nWords );\n\n// extern void            Sim_UtilInfoDetectDiffs( unsigned * pInfo1, unsigned * pInfo2, int nWords, Vec_Int_t * vDiffs );\n\n// extern void            Sim_UtilInfoDetectNews( unsigned * pInfo1, unsigned * pInfo2, int nWords, Vec_Int_t * vDiffs );\n\n// extern void            Sim_UtilInfoFlip( Sim_Man_t * p, Abc_Obj_t * pNode );\n\n// extern int             Sim_UtilInfoCompare( Sim_Man_t * p, Abc_Obj_t * pNode );\n\n// extern void            Sim_UtilSimulate( Sim_Man_t * p, int  fFirst );\n\n// extern void            Sim_UtilSimulateNode( Sim_Man_t * p, Abc_Obj_t * pNode, int  fType, int  fType1, int  fType2 );\n\n// extern void            Sim_UtilSimulateNodeOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords, int nOffset );\n\n// extern void            Sim_UtilTransferNodeOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords, int nOffset, int fShift );\n\n// extern int             Sim_UtilCountSuppSizes( Sim_Man_t * p, int fStruct );\n\n// extern int             Sim_UtilCountOnes( unsigned * pSimInfo, int nSimWords );\n\n// extern Vec_Int_t *     Sim_UtilCountOnesArray( Vec_Ptr_t * vInfo, int nSimWords );\n\n// extern void            Sim_UtilSetRandom( unsigned * pPatRand, int nSimWords );\n\n// extern void            Sim_UtilSetCompl( unsigned * pPatRand, int nSimWords );\n\n// extern void            Sim_UtilSetConst( unsigned * pPatRand, int nSimWords, int fConst1 );\n\n// extern int             Sim_UtilInfoIsEqual( unsigned * pPats1, unsigned * pPats2, int nSimWords );\n\n// extern int             Sim_UtilInfoIsImp( unsigned * pPats1, unsigned * pPats2, int nSimWords );\n\n// extern int             Sim_UtilInfoIsClause( unsigned * pPats1, unsigned * pPats2, int nSimWords );\n\n// extern int             Sim_UtilCountAllPairs( Vec_Ptr_t * vSuppFun, int nSimWords, Vec_Int_t * vCounters );\n\n// extern void            Sim_UtilCountPairsAll( Sym_Man_t * p );\n\n// extern int             Sim_UtilMatrsAreDisjoint( Sym_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,340 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c",
+  "SHA256": "ceb417cd1d3abdef1d2e3e642bb79eae1173e0522a2341f741e0a814447c3fd4",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 49,
+        "Column": 69,
+        "ByteOffset": 1453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Dar_Man_t *) malloc(sizeof(Dar_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Dar_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 57,
+        "ByteOffset": 2350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Tried = %8d. Beg = %8d. End = %8d. Gain = %6d. (%6.2f %%).  Cut mem = %d MB\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cuts = %8d. Tried = %8d. Used = %8d. Bad = %5d. Skipped = %5d. Ave = %.2f.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Bufs = %5d. BufMax = %5d. BufReplace = %6d. BufFix = %6d.  Levels = %4d.\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 108,
+        "Column": 66,
+        "ByteOffset": 3632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 110,
+        "Column": 66,
+        "ByteOffset": 3798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 112,
+        "Column": 67,
+        "ByteOffset": 3965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 114,
+        "Column": 67,
+        "ByteOffset": 4132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 4364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"G = %6d (%5.2f %%)  \", p.ClassGains[i], Gain? 100.0*p.ClassGains[i]/Gain : 0.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 4494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"S = %8d (%5.2f %%)  \", p.ClassSubgs[i], p.nTotalSubgs? 100.0*p.ClassSubgs[i]/p.nTotalSubgs : 0.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 4611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"R = %7d   \", p.ClassGains[i]? p.ClassSubgs[i]/p.ClassGains[i] : 9999999 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dar_ManStart",
+      "Start": 1247,
+      "End": 1662,
+      "BodyStart": 1314,
+      "Original": "Dar_Man_t * Dar_ManStart( Aig_Man_t * pAig, Dar_RwrPar_t * pPars )\n{\n    Dar_Man_t * p;\n    Aig_ManCleanData( pAig );\n    p = ABC_ALLOC( Dar_Man_t, 1 );\n    memset( p, 0, sizeof(Dar_Man_t) );\n    p-\u003epPars = pPars;\n    p-\u003epAig  = pAig;\n    p-\u003evCutNodes = Vec_PtrAlloc( 1000 );\n    p-\u003epMemCuts = Aig_MmFixedStart( p-\u003epPars-\u003enCutsMax * sizeof(Dar_Cut_t), 1024 );\n    p-\u003evLeavesBest = Vec_PtrAlloc( 4 );\n    return p;\n}",
+      "Draft": "func Dar_ManStart(pAig *Aig_Man_t, pPars *Dar_RwrPar_t) *Dar_Man_t {\n    var p *Dar_Man_t;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = ((Dar_Man_t *) malloc(sizeof(Dar_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Dar_Man_t) );\n    p.pPars = pPars;\n    p.pAig  = pAig;\n    p.vCutNodes = Vec_PtrAlloc( 1000 );\n    p.pMemCuts = Aig_MmFixedStart( p.pPars.nCutsMax * sizeof(Dar_Cut_t), 1024 );\n    p.vLeavesBest = Vec_PtrAlloc( 4 );\n    return p;\n}"
+    },
+    {
+      "Name": "Dar_ManStop",
+      "Start": 1926,
+      "End": 2237,
+      "BodyStart": 1960,
+      "Original": "void Dar_ManStop( Dar_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose )\n        Dar_ManPrintStats( p );\n    if ( p-\u003evCutNodes )\n        Vec_PtrFree( p-\u003evCutNodes );\n    if ( p-\u003epMemCuts )\n        Aig_MmFixedStop( p-\u003epMemCuts, 0 );\n    if ( p-\u003evLeavesBest ) \n        Vec_PtrFree( p-\u003evLeavesBest );\n    ABC_FREE( p );\n}",
+      "Draft": "func Dar_ManStop(p *Dar_Man_t) {\n    if p.pPars.fVerbose {\n        Dar_ManPrintStats( p ); }\n    if p.vCutNodes {\n        Vec_PtrFree( p.vCutNodes ); }\n    if p.pMemCuts {\n        Aig_MmFixedStop( p.pMemCuts, 0 ); }\n    if p.vLeavesBest { \n        Vec_PtrFree( p.vLeavesBest ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Dar_ManPrintStats",
+      "Start": 2495,
+      "End": 4230,
+      "BodyStart": 2535,
+      "Original": "void Dar_ManPrintStats( Dar_Man_t * p )\n{\n    unsigned pCanons[222];\n    int Gain, i;\n    extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n    Gain = p-\u003enNodesInit - Aig_ManNodeNum(p-\u003epAig);\n    printf( \"Tried = %8d. Beg = %8d. End = %8d. Gain = %6d. (%6.2f %%).  Cut mem = %d MB\\n\", \n        p-\u003enNodesTried, p-\u003enNodesInit, Aig_ManNodeNum(p-\u003epAig), Gain, 100.0*Gain/p-\u003enNodesInit, p-\u003enCutMemUsed );\n    printf( \"Cuts = %8d. Tried = %8d. Used = %8d. Bad = %5d. Skipped = %5d. Ave = %.2f.\\n\", \n        p-\u003enCutsAll, p-\u003enCutsTried, p-\u003enCutsUsed, p-\u003enCutsBad, p-\u003enCutsSkipped,\n        (float)p-\u003enCutsUsed/Aig_ManNodeNum(p-\u003epAig) );\n\n    printf( \"Bufs = %5d. BufMax = %5d. BufReplace = %6d. BufFix = %6d.  Levels = %4d.\\n\", \n        Aig_ManBufNum(p-\u003epAig), p-\u003epAig-\u003enBufMax, p-\u003epAig-\u003enBufReplaces, p-\u003epAig-\u003enBufFixes, Aig_ManLevels(p-\u003epAig) );\n    ABC_PRT( \"Cuts  \", p-\u003etimeCuts );\n    ABC_PRT( \"Eval  \", p-\u003etimeEval );\n    ABC_PRT( \"Other \", p-\u003etimeOther );\n    ABC_PRT( \"TOTAL \", p-\u003etimeTotal );\n\n    if ( !p-\u003epPars-\u003efVeryVerbose )\n        return;\n    Dar_LibReturnCanonicals( pCanons );\n    for ( i = 0; i \u003c 222; i++ )\n    {\n        if ( p-\u003eClassGains[i] == 0 \u0026\u0026 p-\u003eClassTimes[i] == 0 )\n            continue;\n        printf( \"%3d : \", i );\n        printf( \"G = %6d (%5.2f %%)  \", p-\u003eClassGains[i], Gain? 100.0*p-\u003eClassGains[i]/Gain : 0.0 );\n        printf( \"S = %8d (%5.2f %%)  \", p-\u003eClassSubgs[i], p-\u003enTotalSubgs? 100.0*p-\u003eClassSubgs[i]/p-\u003enTotalSubgs : 0.0 );\n        printf( \"R = %7d   \", p-\u003eClassGains[i]? p-\u003eClassSubgs[i]/p-\u003eClassGains[i] : 9999999 );\n//        Kit_DsdPrintFromTruth( pCanons + i, 4 );\n//        ABC_PRTP( \"T\", p-\u003eClassTimes[i], p-\u003etimeEval );\n        printf( \"\\n\" );\n    }\n    fflush( stdout );\n}",
+      "Draft": "func Dar_ManPrintStats(p *Dar_Man_t) {\n    var pCanons [222]uint32;\n    var Gain, i int32;\n    extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n    Gain = p.nNodesInit - Aig_ManNodeNum(p.pAig);\n    fmt.Printf(\"Tried = %8d. Beg = %8d. End = %8d. Gain = %6d. (%6.2f %%).  Cut mem = %d MB\\n\", p.nNodesTried, p.nNodesInit, Aig_ManNodeNum(p.pAig), Gain, 100.0*Gain/p.nNodesInit, p.nCutMemUsed);\n    fmt.Printf(\"Cuts = %8d. Tried = %8d. Used = %8d. Bad = %5d. Skipped = %5d. Ave = %.2f.\\n\", p.nCutsAll, p.nCutsTried, p.nCutsUsed, p.nCutsBad, p.nCutsSkipped, float32(p.nCutsUsed)/Aig_ManNodeNum(p.pAig));\n\n    fmt.Printf(\"Bufs = %5d. BufMax = %5d. BufReplace = %6d. BufFix = %6d.  Levels = %4d.\\n\", Aig_ManBufNum(p.pAig), p.pAig.nBufMax, p.pAig.nBufReplaces, p.pAig.nBufFixes, Aig_ManLevels(p.pAig));\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Eval  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Other \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n\n    if !p.pPars.fVeryVerbose {\n        return; }\n    Dar_LibReturnCanonicals( pCanons );\n    for  i = 0; i \u003c 222; i++  {\n        if p.ClassGains[i] == 0 \u0026\u0026 p.ClassTimes[i] == 0 {\n            continue; }\n        fmt.Printf(\"%3d : \", i);\n        fmt.Printf(\"G = %6d (%5.2f %%)  \", p.ClassGains[i], Gain? 100.0*p.ClassGains[i]/Gain : 0.0);\n        fmt.Printf(\"S = %8d (%5.2f %%)  \", p.ClassSubgs[i], p.nTotalSubgs? 100.0*p.ClassSubgs[i]/p.nTotalSubgs : 0.0);\n        fmt.Printf(\"R = %7d   \", p.ClassGains[i]? p.ClassSubgs[i]/p.ClassGains[i] : 9999999);\n//        Kit_DsdPrintFromTruth( pCanons + i, 4 );\n//        ABC_PRTP( \"T\", p-\u003eClassTimes[i], p-\u003etimeEval );\n        fmt.Printf(\"\\n\");\n    }\n    fflush( os.Stdout );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::mechanical::sizeof::1440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1373,
+      "End": 1373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::mechanical::sizeof::1493",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1418,
+      "End": 1424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::mechanical::sizeof::1655",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1580,
+      "End": 1586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::pointer-cast::1419",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1373,
+      "End": 1373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::pointer-cast::2353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2221,
+      "End": 2221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::Dar_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1247,
+      "End": 1662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::ternary::Dar_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Dar_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1926,
+      "End": 2237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::Dar_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1926,
+      "End": 2237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::ternary::Dar_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Dar_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2495,
+      "End": 4230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::Dar_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2495,
+      "End": 4230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5188
+    }
+  ],
+  "Draft": "package dar\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [darMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [AIG manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: darMan.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"darInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManStart(pAig *Aig_Man_t, pPars *Dar_RwrPar_t) *Dar_Man_t {\n    var p *Dar_Man_t;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = ((Dar_Man_t *) malloc(sizeof(Dar_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Dar_Man_t) );\n    p.pPars = pPars;\n    p.pAig  = pAig;\n    p.vCutNodes = Vec_PtrAlloc( 1000 );\n    p.pMemCuts = Aig_MmFixedStart( p.pPars.nCutsMax * sizeof(Dar_Cut_t), 1024 );\n    p.vLeavesBest = Vec_PtrAlloc( 4 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManStop(p *Dar_Man_t) {\n    if p.pPars.fVerbose {\n        Dar_ManPrintStats( p ); }\n    if p.vCutNodes {\n        Vec_PtrFree( p.vCutNodes ); }\n    if p.pMemCuts {\n        Aig_MmFixedStop( p.pMemCuts, 0 ); }\n    if p.vLeavesBest { \n        Vec_PtrFree( p.vLeavesBest ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManPrintStats(p *Dar_Man_t) {\n    var pCanons [222]uint32;\n    var Gain, i int32;\n    extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n    Gain = p.nNodesInit - Aig_ManNodeNum(p.pAig);\n    fmt.Printf(\"Tried = %8d. Beg = %8d. End = %8d. Gain = %6d. (%6.2f %%).  Cut mem = %d MB\\n\", p.nNodesTried, p.nNodesInit, Aig_ManNodeNum(p.pAig), Gain, 100.0*Gain/p.nNodesInit, p.nCutMemUsed);\n    fmt.Printf(\"Cuts = %8d. Tried = %8d. Used = %8d. Bad = %5d. Skipped = %5d. Ave = %.2f.\\n\", p.nCutsAll, p.nCutsTried, p.nCutsUsed, p.nCutsBad, p.nCutsSkipped, float32(p.nCutsUsed)/Aig_ManNodeNum(p.pAig));\n\n    fmt.Printf(\"Bufs = %5d. BufMax = %5d. BufReplace = %6d. BufFix = %6d.  Levels = %4d.\\n\", Aig_ManBufNum(p.pAig), p.pAig.nBufMax, p.pAig.nBufReplaces, p.pAig.nBufFixes, Aig_ManLevels(p.pAig));\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Eval  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Other \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n\n    if !p.pPars.fVeryVerbose {\n        return; }\n    Dar_LibReturnCanonicals( pCanons );\n    for  i = 0; i \u003c 222; i++  {\n        if p.ClassGains[i] == 0 \u0026\u0026 p.ClassTimes[i] == 0 {\n            continue; }\n        fmt.Printf(\"%3d : \", i);\n        fmt.Printf(\"G = %6d (%5.2f %%)  \", p.ClassGains[i], Gain? 100.0*p.ClassGains[i]/Gain : 0.0);\n        fmt.Printf(\"S = %8d (%5.2f %%)  \", p.ClassSubgs[i], p.nTotalSubgs? 100.0*p.ClassSubgs[i]/p.nTotalSubgs : 0.0);\n        fmt.Printf(\"R = %7d   \", p.ClassGains[i]? p.ClassSubgs[i]/p.ClassGains[i] : 9999999);\n//        Kit_DsdPrintFromTruth( pCanons + i, 4 );\n//        ABC_PRTP( \"T\", p-\u003eClassTimes[i], p-\u003etimeEval );\n        fmt.Printf(\"\\n\");\n    }\n    fflush( os.Stdout );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n     \n\n                      \n\n                         \n\n                        \n\n                         \n \n                          \n          \n                                       \n                               \n     \n                            \n                                                  \n                           \n                                     \n                                                     \n                               \n     \n \n      \n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

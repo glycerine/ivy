@@ -1,0 +1,90 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h",
+  "SHA256": "8bc828b561574cc73556a9330e5c2dc3ddedc519d1d68a483d78f3d676f205f9",
+  "Functions": [
+    {
+      "Name": "xSAT_UtilSelectSort",
+      "Start": 1131,
+      "End": 1596,
+      "BodyStart": 1246,
+      "Original": "static inline void xSAT_UtilSelectSort( void** pArray, int nSize, int(* CompFnct )( const void *, const void * ) )\n{\n    int i, j, iBest;\n    void* pTmp;\n\n    for ( i = 0; i \u003c ( nSize - 1 ); i++ )\n    {\n        iBest = i;\n        for ( j = i + 1; j \u003c nSize; j++ )\n        {\n            if ( CompFnct( pArray[j], pArray[iBest] ) )\n                iBest = j;\n        }\n        pTmp = pArray[i];\n        pArray[i] = pArray[iBest];\n        pArray[iBest] = pTmp;\n    }\n}",
+      "Draft": "func xSAT_UtilSelectSort(pArray *any, nSize int32, CompFnct func(any, any) int32) {\n    var i, j, iBest int32;\n    var pTmp any;\n\n    for  i = 0; i \u003c ( nSize - 1 ); i++  {\n        iBest = i;\n        for  j = i + 1; j \u003c nSize; j++  {\n            if CompFnct( pArray[j], pArray[iBest] ) {\n                iBest = j; }\n        }\n        pTmp = pArray[i];\n        pArray[i] = pArray[iBest];\n        pArray[iBest] = pTmp;\n    }\n}"
+    },
+    {
+      "Name": "xSAT_UtilSort",
+      "Start": 1817,
+      "End": 2538,
+      "BodyStart": 1918,
+      "Original": "static void xSAT_UtilSort( void** pArray, int nSize, int(* CompFnct )( const void *, const void *) )\n{\n    if ( nSize \u003c= 15 )\n        xSAT_UtilSelectSort( pArray, nSize, CompFnct );\n    else\n    {\n        void* pPivot = pArray[nSize / 2];\n        void* pTmp;\n        int i = -1;\n        int j = nSize;\n\n        for(;;)\n        {\n            do i++; while( CompFnct( pArray[i], pPivot ) );\n            do j--; while( CompFnct( pPivot, pArray[j] ) );\n\n            if ( i \u003e= j )\n                break;\n\n            pTmp = pArray[i];\n            pArray[i] = pArray[j];\n            pArray[j] = pTmp;\n        }\n\n        xSAT_UtilSort( pArray, i, CompFnct );\n        xSAT_UtilSort( pArray + i, ( nSize - i ), CompFnct );\n    }\n}",
+      "Draft": "func xSAT_UtilSort(pArray *any, nSize int32, CompFnct func(any, any) int32) {\n    if nSize \u003c= 15 {\n        xSAT_UtilSelectSort( pArray, nSize, CompFnct );\n    } else {\n        var pPivot any  = pArray[nSize / 2];\n        var pTmp any;\n        var i int32  = -1;\n        var j int32  = nSize;\n\n        for {\n            do i++; while( CompFnct( pArray[i], pPivot ) );\n            do j--; while( CompFnct( pPivot, pArray[j] ) );\n\n            if i \u003e= j {\n                break; }\n\n            pTmp = pArray[i];\n            pArray[i] = pArray[j];\n            pArray[j] = pTmp;\n        }\n\n        xSAT_UtilSort( pArray, i, CompFnct );\n        xSAT_UtilSort( pArray + i, ( nSize - i ), CompFnct );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::mechanical::do::2158",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2158,
+      "End": 2160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::mechanical::do::2218",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2218,
+      "End": 2220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::void-pointer::xSAT_UtilSelectSort",
+      "Category": "void-pointer-review",
+      "Symbol": "xSAT_UtilSelectSort",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1131,
+      "End": 1596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::xSAT_UtilSelectSort",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_UtilSelectSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1131,
+      "End": 1596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::void-pointer::xSAT_UtilSort",
+      "Category": "void-pointer-review",
+      "Symbol": "xSAT_UtilSort",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1817,
+      "End": 2538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::xSAT_UtilSort",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_UtilSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1817,
+      "End": 2538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatUtils.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2792
+    }
+  ],
+  "Draft": "package xsat\n\n/**CFile****************************************************************\n\n  FileName    [xsatUtils.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [Utility functions used in xSAT]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_UtilSelectSort(pArray *any, nSize int32, CompFnct func(any, any) int32) {\n    var i, j, iBest int32;\n    var pTmp any;\n\n    for  i = 0; i \u003c ( nSize - 1 ); i++  {\n        iBest = i;\n        for  j = i + 1; j \u003c nSize; j++  {\n            if CompFnct( pArray[j], pArray[iBest] ) {\n                iBest = j; }\n        }\n        pTmp = pArray[i];\n        pArray[i] = pArray[iBest];\n        pArray[iBest] = pTmp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_UtilSort(pArray *any, nSize int32, CompFnct func(any, any) int32) {\n    if nSize \u003c= 15 {\n        xSAT_UtilSelectSort( pArray, nSize, CompFnct );\n    } else {\n        var pPivot any  = pArray[nSize / 2];\n        var pTmp any;\n        var i int32  = -1;\n        var j int32  = nSize;\n\n        for {\n            do i++; while( CompFnct( pArray[i], pPivot ) );\n            do j--; while( CompFnct( pPivot, pArray[j] ) );\n\n            if i \u003e= j {\n                break; }\n\n            pTmp = pArray[i];\n            pArray[i] = pArray[j];\n            pArray[j] = pTmp;\n        }\n\n        xSAT_UtilSort( pArray, i, CompFnct );\n        xSAT_UtilSort( pArray + i, ( nSize - i ), CompFnct );\n    }\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

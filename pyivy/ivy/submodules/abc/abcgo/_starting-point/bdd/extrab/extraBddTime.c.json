@@ -1,0 +1,715 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c",
+  "SHA256": "a6214d17a22ddaddf33638b2add1bf2841eea7765d0b4949211dbfa799b18051",
+  "Functions": [
+    {
+      "Name": "Extra_bddAndTime",
+      "Start": 3456,
+      "End": 3728,
+      "BodyStart": 3544,
+      "Original": "DdNode *\nExtra_bddAndTime(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  int TimeOut)\n{\n    DdNode *res;\n    int Counter = 0;\n\n    do {\n    dd-\u003ereordered = 0;\n    res = cuddBddAndRecurTime(dd,f,g, \u0026Counter, TimeOut);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_bddAndTime(dd *DdManager, f *DdNode, g *DdNode, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var Counter int32;\n\n    for {\n    dd.reordered = 0;\n    res = cuddBddAndRecurTime(dd,f,g, \u0026Counter, TimeOut);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_bddAndAbstractTime",
+      "Start": 4418,
+      "End": 4751,
+      "BodyStart": 4536,
+      "Original": "DdNode *\nExtra_bddAndAbstractTime(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  int TimeOut)\n{\n    DdNode *res;\n    int Counter = 0;\n\n    do {\n    manager-\u003ereordered = 0;\n    res = cuddBddAndAbstractRecurTime(manager, f, g, cube, \u0026Counter, TimeOut);\n    } while (manager-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Extra_bddAndAbstractTime(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var Counter int32;\n\n    for {\n    manager.reordered = 0;\n    res = cuddBddAndAbstractRecurTime(manager, f, g, cube, \u0026Counter, TimeOut);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_TransferPermuteTime",
+      "Start": 5431,
+      "End": 5792,
+      "BodyStart": 5557,
+      "Original": "DdNode * Extra_TransferPermuteTime( DdManager * ddSource, DdManager * ddDestination, DdNode * f, int * Permute, int TimeOut )\n{\n    DdNode * bRes;\n    do\n    {\n        ddDestination-\u003ereordered = 0;\n        bRes = extraTransferPermuteTime( ddSource, ddDestination, f, Permute, TimeOut );\n    }\n    while ( ddDestination-\u003ereordered == 1 );\n    return ( bRes );\n\n}",
+      "Draft": "func Extra_TransferPermuteTime(ddSource *DdManager, ddDestination *DdManager, f *DdNode, Permute *int32, TimeOut int32) *DdNode {\n    var bRes *DdNode;\n    for\n    {\n        ddDestination.reordered = 0;\n        bRes = extraTransferPermuteTime( ddSource, ddDestination, f, Permute, TimeOut );\n    \nif !( ddDestination.reordered == 1 ) { break }\n}\n    \n    return ( bRes );\n\n}"
+    },
+    {
+      "Name": "cuddBddAndRecurTime",
+      "Start": 6516,
+      "End": 9200,
+      "BodyStart": 6631,
+      "Original": "DdNode *\ncuddBddAndRecurTime(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  int * pRecCalls,\n  int TimeOut)\n{\n    DdNode *F, *fv, *fnv, *G, *gv, *gnv;\n    DdNode *one, *r, *t, *e;\n    unsigned int topf, topg, index;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n\n    /* Terminal cases. */\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    if (F == G) {\n    if (f == g) return(f);\n    else return(Cudd_Not(one));\n    }\n    if (F == one) {\n    if (f == one) return(g);\n    else return(f);\n    }\n    if (G == one) {\n    if (g == one) return(f);\n    else return(g);\n    }\n\n    /* At this point f and g are not constant. */\n    if (f \u003e g) { /* Try to increase cache efficiency. */\n    DdNode *tmp = f;\n    f = g;\n    g = tmp;\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    }\n\n    /* Check cache. */\n    if (F-\u003eref != 1 || G-\u003eref != 1) {\n    r = cuddCacheLookup2(manager, Cudd_bddAnd, f, g);\n    if (r != NULL) return(r);\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if ( TimeOut \u0026\u0026 Abc_Clock() \u003e TimeOut )\n        return NULL;\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager-\u003eperm[F-\u003eindex];\n    topg = manager-\u003eperm[G-\u003eindex];\n\n    /* Compute cofactors. */\n    if (topf \u003c= topg) {\n    index = F-\u003eindex;\n    fv = cuddT(F);\n    fnv = cuddE(F);\n    if (Cudd_IsComplement(f)) {\n        fv = Cudd_Not(fv);\n        fnv = Cudd_Not(fnv);\n    }\n    } else {\n    index = G-\u003eindex;\n    fv = fnv = f;\n    }\n\n    if (topg \u003c= topf) {\n    gv = cuddT(G);\n    gnv = cuddE(G);\n    if (Cudd_IsComplement(g)) {\n        gv = Cudd_Not(gv);\n        gnv = Cudd_Not(gnv);\n    }\n    } else {\n    gv = gnv = g;\n    }\n\n    t = cuddBddAndRecurTime(manager, fv, gv, pRecCalls, TimeOut);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n\n    e = cuddBddAndRecurTime(manager, fnv, gnv, pRecCalls, TimeOut);\n    if (e == NULL) {\n    Cudd_IterDerefBdd(manager, t);\n    return(NULL);\n    }\n    cuddRef(e);\n\n    if (t == e) {\n    r = t;\n    } else {\n    if (Cudd_IsComplement(t)) {\n        r = cuddUniqueInter(manager,(int)index,Cudd_Not(t),Cudd_Not(e));\n        if (r == NULL) {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(NULL);\n        }\n        r = Cudd_Not(r);\n    } else {\n        r = cuddUniqueInter(manager,(int)index,t,e);\n        if (r == NULL) {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(NULL);\n        }\n    }\n    }\n    cuddDeref(e);\n    cuddDeref(t);\n    if (F-\u003eref != 1 || G-\u003eref != 1)\n    cuddCacheInsert2(manager, Cudd_bddAnd, f, g, r);\n    return(r);\n\n}",
+      "Draft": "func cuddBddAndRecurTime(manager *DdManager, f *DdNode, g *DdNode, pRecCalls *int32, TimeOut int32) *DdNode {\n    var F, fv, fnv, G, gv, gnv *DdNode;\n    var one, r, t, e *DdNode;\n    unsigned int topf, topg, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    if F == G {\n    if f == g { return(f);\n    // inlining of macro Cudd_Not\n    } else { return(((DdNode *)((ptrint)(one) ^ 01))); }\n    }\n    if F == one {\n    if f == one { return(g);\n    } else { return(f); }\n    }\n    if G == one {\n    if g == one { return(f);\n    } else { return(g); }\n    }\n\n    /* At this point f and g are not constant. */\n    if f \u003e g { /* Try to increase cache efficiency. */\n    var tmp *DdNode  = f;\n    f = g;\n    g = tmp;\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    }\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n    r = cuddCacheLookup2(manager, Cudd_bddAnd, f, g);\n    if r != nil { return(r); }\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n    index = F.index;\n    // inlining of macro cuddT\n    fv = ((F).type.kids.T);\n    // inlining of macro cuddE\n    fnv = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        fv = ((DdNode *)((ptrint)(fv) ^ 01));\n        // inlining of macro Cudd_Not\n        fnv = ((DdNode *)((ptrint)(fnv) ^ 01));\n    }\n    } else {\n    index = G.index;\n    fv = fnv = f;\n    }\n\n    if topg \u003c= topf {\n    // inlining of macro cuddT\n    gv = ((G).type.kids.T);\n    // inlining of macro cuddE\n    gnv = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        gv = ((DdNode *)((ptrint)(gv) ^ 01));\n        // inlining of macro Cudd_Not\n        gnv = ((DdNode *)((ptrint)(gnv) ^ 01));\n    }\n    } else {\n    gv = gnv = g;\n    }\n\n    t = cuddBddAndRecurTime(manager, fv, gv, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddAndRecurTime(manager, fnv, gnv, pRecCalls, TimeOut);\n    if e == nil {\n    Cudd_IterDerefBdd(manager, t);\n    return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n    r = t;\n    } else {\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (t) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n    } else {\n        r = cuddUniqueInter(manager,int32(index),t,e);\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n    }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    if F.ref != 1 || G.ref != 1 {\n    cuddCacheInsert2(manager, Cudd_bddAnd, f, g, r); }\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddBddAndAbstractRecurTime",
+      "Start": 9752,
+      "End": 14636,
+      "BodyStart": 9892,
+      "Original": "DdNode *\ncuddBddAndAbstractRecurTime(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  int * pRecCalls,\n  int TimeOut)\n{\n    DdNode *F, *ft, *fe, *G, *gt, *ge;\n    DdNode *one, *zero, *r, *t, *e;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Terminal cases. */\n    if (f == zero || g == zero || f == Cudd_Not(g)) return(zero);\n    if (f == one \u0026\u0026 g == one)    return(one);\n\n    if (cube == one) {\n    return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    if (f == one || f == g) {\n    return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if (g == one) {\n    return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if (f \u003e g) { /* Try to increase cache efficiency. */\n    DdNode *tmp = f;\n    f = g;\n    g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    topf = manager-\u003eperm[F-\u003eindex];\n    topg = manager-\u003eperm[G-\u003eindex];\n    top = ddMin(topf, topg);\n    topcube = manager-\u003eperm[cube-\u003eindex];\n\n    while (topcube \u003c top) {\n    cube = cuddT(cube);\n    if (cube == one) {\n        return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    topcube = manager-\u003eperm[cube-\u003eindex];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if (F-\u003eref != 1 || G-\u003eref != 1) {\n    r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n    if (r != NULL) {\n        return(r);\n    }\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if ( TimeOut \u0026\u0026 Abc_Clock() \u003e TimeOut )\n        return NULL;\n\n    if (topf == top) {\n    index = F-\u003eindex;\n    ft = cuddT(F);\n    fe = cuddE(F);\n    if (Cudd_IsComplement(f)) {\n        ft = Cudd_Not(ft);\n        fe = Cudd_Not(fe);\n    }\n    } else {\n    index = G-\u003eindex;\n    ft = fe = f;\n    }\n\n    if (topg == top) {\n    gt = cuddT(G);\n    ge = cuddE(G);\n    if (Cudd_IsComplement(g)) {\n        gt = Cudd_Not(gt);\n        ge = Cudd_Not(ge);\n    }\n    } else {\n    gt = ge = g;\n    }\n\n    if (topcube == top) {    /* quantify */\n    DdNode *Cube = cuddT(cube);\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, Cube, pRecCalls, TimeOut);\n    if (t == NULL) return(NULL);\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1. Likewise t + t * anything == t.\n    ** Notice that t == fe implies that fe does not depend on the\n    ** variables in Cube. Likewise for t == ge.\n    */\n    if (t == one || t == fe || t == ge) {\n        if (F-\u003eref != 1 || G-\u003eref != 1)\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                f, g, cube, t);\n        return(t);\n    }\n    cuddRef(t);\n    /* Special case: t + !t * anything == t + anything. */\n    if (t == Cudd_Not(fe)) {\n        e = cuddBddExistAbstractRecur(manager, ge, Cube);\n    } else if (t == Cudd_Not(ge)) {\n        e = cuddBddExistAbstractRecur(manager, fe, Cube);\n    } else {\n        e = cuddBddAndAbstractRecurTime(manager, fe, ge, Cube, pRecCalls, TimeOut);\n    }\n    if (e == NULL) {\n        Cudd_IterDerefBdd(manager, t);\n        return(NULL);\n    }\n    if (t == e) {\n        r = t;\n        cuddDeref(t);\n    } else {\n        cuddRef(e);\n        r = cuddBddAndRecurTime(manager, Cudd_Not(t), Cudd_Not(e), pRecCalls, TimeOut);\n        if (r == NULL) {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(NULL);\n        }\n        r = Cudd_Not(r);\n        cuddRef(r);\n        Cudd_DelayedDerefBdd(manager, t);\n        Cudd_DelayedDerefBdd(manager, e);\n        cuddDeref(r);\n    }\n    } else {\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, cube, pRecCalls, TimeOut);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = cuddBddAndAbstractRecurTime(manager, fe, ge, cube, pRecCalls, TimeOut);\n    if (e == NULL) {\n        Cudd_IterDerefBdd(manager, t);\n        return(NULL);\n    }\n    if (t == e) {\n        r = t;\n        cuddDeref(t);\n    } else {\n        cuddRef(e);\n        if (Cudd_IsComplement(t)) {\n        r = cuddUniqueInter(manager, (int) index,\n                    Cudd_Not(t), Cudd_Not(e));\n        if (r == NULL) {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(NULL);\n        }\n        r = Cudd_Not(r);\n        } else {\n        r = cuddUniqueInter(manager,(int)index,t,e);\n        if (r == NULL) {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(NULL);\n        }\n        }\n        cuddDeref(e);\n        cuddDeref(t);\n    }\n    }\n\n    if (F-\u003eref != 1 || G-\u003eref != 1)\n    cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r);\n    return (r);\n\n}",
+      "Draft": "func cuddBddAndAbstractRecurTime(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, pRecCalls *int32, TimeOut int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {    return(one); }\n\n    if cube == one {\n    return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    if f == one || f == g {\n    return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n    return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if f \u003e g { /* Try to increase cache efficiency. */\n    var tmp *DdNode  = f;\n    f = g;\n    g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    for topcube \u003c top {\n    // inlining of macro cuddT\n    cube = ((cube).type.kids.T);\n    if cube == one {\n        return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    topcube = manager.perm[cube.index];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n    r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n    if r != nil {\n        return(r);\n    }\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    if topf == top {\n    index = F.index;\n    // inlining of macro cuddT\n    ft = ((F).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        ft = ((DdNode *)((ptrint)(ft) ^ 01));\n        // inlining of macro Cudd_Not\n        fe = ((DdNode *)((ptrint)(fe) ^ 01));\n    }\n    } else {\n    index = G.index;\n    ft = fe = f;\n    }\n\n    if topg == top {\n    // inlining of macro cuddT\n    gt = ((G).type.kids.T);\n    // inlining of macro cuddE\n    ge = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        gt = ((DdNode *)((ptrint)(gt) ^ 01));\n        // inlining of macro Cudd_Not\n        ge = ((DdNode *)((ptrint)(ge) ^ 01));\n    }\n    } else {\n    gt = ge = g;\n    }\n\n    if topcube == top {    /* quantify */\n    // inlining of macro cuddT\n    var Cube *DdNode  = ((cube).type.kids.T);\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, Cube, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1. Likewise t + t * anything == t.\n    ** Notice that t == fe implies that fe does not depend on the\n    ** variables in Cube. Likewise for t == ge.\n    */\n    if t == one || t == fe || t == ge {\n        if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                f, g, cube, t); }\n        return(t);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    /* Special case: t + !t * anything == t + anything. */\n    // inlining of macro Cudd_Not\n    if t == ((DdNode *)((ptrint)(fe) ^ 01)) {\n        e = cuddBddExistAbstractRecur(manager, ge, Cube);\n    // inlining of macro Cudd_Not\n    } else if t == ((DdNode *)((ptrint)(ge) ^ 01)) {\n        e = cuddBddExistAbstractRecur(manager, fe, Cube);\n    } else {\n        e = cuddBddAndAbstractRecurTime(manager, fe, ge, Cube, pRecCalls, TimeOut);\n    }\n    if e == nil {\n        Cudd_IterDerefBdd(manager, t);\n        return(nil);\n    }\n    if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro Cudd_Not\n        r = cuddBddAndRecurTime(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)), pRecCalls, TimeOut);\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_DelayedDerefBdd(manager, t);\n        Cudd_DelayedDerefBdd(manager, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n    }\n    } else {\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, cube, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddBddAndAbstractRecurTime(manager, fe, ge, cube, pRecCalls, TimeOut);\n    if e == nil {\n        Cudd_IterDerefBdd(manager, t);\n        return(nil);\n    }\n    if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n        r = cuddUniqueInter(manager, int32( index),\n                    // inlining of macro Cudd_Not\n                    ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n        if r == nil {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n        r = cuddUniqueInter(manager,int32(index),t,e);\n        if r == nil {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(nil);\n        }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    }\n    }\n\n    if F.ref != 1 || G.ref != 1 {\n    cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r); }\n    return (r);\n\n}"
+    },
+    {
+      "Name": "extraTransferPermuteTime",
+      "Start": 15353,
+      "End": 16478,
+      "BodyStart": 15463,
+      "Original": "DdNode * extraTransferPermuteTime( DdManager * ddS, DdManager * ddD, DdNode * f, int * Permute, int TimeOut )\n{\n    DdNode *res;\n    st__table *table = NULL;\n    st__generator *gen = NULL;\n    DdNode *key, *value;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if ( table == NULL )\n        goto failure;\n    res = extraTransferPermuteRecurTime( ddS, ddD, f, table, Permute, TimeOut );\n    if ( res != NULL )\n        cuddRef( res );\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if ( gen == NULL )\n        goto failure;\n    while ( st__gen( gen, ( const char ** ) \u0026key, ( char ** ) \u0026value ) )\n    {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = NULL;\n    st__free_table( table );\n    table = NULL;\n\n    if ( res != NULL )\n        cuddDeref( res );\n    return ( res );\n\n  failure:\n    if ( table != NULL )\n        st__free_table( table );\n    if ( gen != NULL )\n        st__free_gen( gen );\n    return ( NULL );\n\n}",
+      "Draft": "func extraTransferPermuteTime(ddS *DdManager, ddD *DdManager, f *DdNode, Permute *int32, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var table *st__table  = nil;\n    var gen *st__generator  = nil;\n    var key, value *DdNode;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if table == nil {\n        goto failure; }\n    res = extraTransferPermuteRecurTime( ddS, ddD, f, table, Permute, TimeOut );\n    if res != nil {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref); }\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if gen == nil {\n        goto failure; }\n    for  st__gen( gen, ( char ** ) \u0026key, ( char ** ) \u0026value )  {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( table );\n    table = nil;\n\n    if res != nil {\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref); }\n    return ( res );\n\n  failure:\n    if table != nil {\n        st__free_table( table ); }\n    if gen != nil {\n        st__free_gen( gen ); }\n    return ( nil );\n\n}"
+    },
+    {
+      "Name": "extraTransferPermuteRecurTime",
+      "Start": 16951,
+      "End": 18997,
+      "BodyStart": 17110,
+      "Original": "static DdNode * \nextraTransferPermuteRecurTime( \n  DdManager * ddS, \n  DdManager * ddD, \n  DdNode * f, \n  st__table * table, \n  int * Permute,\n  int TimeOut )\n{\n    DdNode *ft, *fe, *t, *e, *var, *res;\n    DdNode *one, *zero;\n    int index;\n    int comple = 0;\n\n    statLine( ddD );\n    one = DD_ONE( ddD );\n    comple = Cudd_IsComplement( f );\n\n    /* Trivial cases. */\n    if ( Cudd_IsConstant( f ) )\n        return ( Cudd_NotCond( one, comple ) );\n\n\n    /* Make canonical to increase the utilization of the cache. */\n    f = Cudd_NotCond( f, comple );\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if ( st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) )\n        return ( Cudd_NotCond( res, comple ) );\n\n    if ( TimeOut \u0026\u0026 Abc_Clock() \u003e TimeOut )\n        return NULL;\n\n    /* Recursive step. */\n    if ( Permute )\n        index = Permute[f-\u003eindex];\n    else\n        index = f-\u003eindex;\n\n    ft = cuddT( f );\n    fe = cuddE( f );\n\n    t = extraTransferPermuteRecurTime( ddS, ddD, ft, table, Permute, TimeOut );\n    if ( t == NULL )\n    {\n        return ( NULL );\n    }\n    cuddRef( t );\n\n    e = extraTransferPermuteRecurTime( ddS, ddD, fe, table, Permute, TimeOut );\n    if ( e == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( NULL );\n    }\n    cuddRef( e );\n\n    zero = Cudd_Not(ddD-\u003eone);\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if ( var == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( NULL );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n\n    if ( res == NULL )\n    {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( NULL );\n    }\n    cuddRef( res );\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if ( st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM )\n    {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( NULL );\n    }\n    return ( Cudd_NotCond( res, comple ) );\n\n}",
+      "Draft": "func extraTransferPermuteRecurTime(ddS *DdManager, ddD *DdManager, f *DdNode, table *st__table, Permute *int32, TimeOut int32) *DdNode {\n    var ft, fe, t, e, var, res *DdNode;\n    var one, zero *DdNode;\n    var index int32;\n    var comple int32;\n\n    statLine( ddD );\n    // inlining of macro DD_ONE\n    one = ((ddD).one);\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n\n    /* Trivial cases. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(one) ^ (comple))) ); }\n\n\n    /* Make canonical to increase the utilization of the cache. */\n    // inlining of macro Cudd_NotCond\n    f = ((DdNode *)((ptrint)(f) ^ (comple)));\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(res) ^ (comple))) ); }\n\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    /* Recursive step. */\n    if Permute != nil {\n        index = Permute[f.index];\n    } else {\n        index = f.index; }\n\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    t = extraTransferPermuteRecurTime( ddS, ddD, ft, table, Permute, TimeOut );\n    if t == nil {\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = extraTransferPermuteRecurTime( ddS, ddD, fe, table, Permute, TimeOut );\n    if e == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(ddD.one) ^ 01));\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if var == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n\n    if res == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( nil );\n    }\n    // inlining of macro Cudd_NotCond\n    return ( ((DdNode *)((ptrint)(res) ^ (comple))) );\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::mechanical::do::3589",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3589,
+      "End": 3591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::mechanical::do::4581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4581,
+      "End": 4583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::mechanical::do::5582",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5582,
+      "End": 5584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::6917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6825,
+      "End": 6825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::7007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6850,
+      "End": 6850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::7146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6928,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::7546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7261,
+      "End": 7261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::7636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7286,
+      "End": 7286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::8526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7953,
+      "End": 7953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::8617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7981,
+      "End": 7981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::9031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8170,
+      "End": 8170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::9122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8198,
+      "End": 8198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::9836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8659,
+      "End": 8659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::9911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8671,
+      "End": 8671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::10135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8832,
+      "End": 8832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::11620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10081,
+      "End": 10081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::11764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10162,
+      "End": 10162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::12460",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10791,
+      "End": 10791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::12550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10816,
+      "End": 10816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::13744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11675,
+      "End": 11675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::13834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11702,
+      "End": 11702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::14244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11887,
+      "End": 11887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::14334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11914,
+      "End": 11914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::15297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12698,
+      "End": 12698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::15454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12792,
+      "End": 12792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::16041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13186,
+      "End": 13186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::16117",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13199,
+      "End": 13199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::16361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13380,
+      "End": 13380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::17458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14029,
+      "End": 14029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::17534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14042,
+      "End": 14042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::17770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14215,
+      "End": 14215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::19863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16097,
+      "End": 16108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17331,
+      "End": 17331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17371,
+      "End": 17371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17479,
+      "End": 17479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21811",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17623,
+      "End": 17633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21825",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17637,
+      "End": 17648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::21912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17675,
+      "End": 17675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::22812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18296,
+      "End": 18296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::23410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18813,
+      "End": 18823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::23424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18827,
+      "End": 18837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::pointer-cast::23610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18964,
+      "End": 18964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::Extra_bddAndTime",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddAndTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3456,
+      "End": 3728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::Extra_bddAndAbstractTime",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddAndAbstractTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4418,
+      "End": 4751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::Extra_TransferPermuteTime",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TransferPermuteTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5431,
+      "End": 5792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::cuddBddAndRecurTime",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddAndRecurTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6516,
+      "End": 9200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::cuddBddAndAbstractRecurTime",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddAndAbstractRecurTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9752,
+      "End": 14636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::extraTransferPermuteTime",
+      "Category": "semantic-review",
+      "Symbol": "extraTransferPermuteTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15353,
+      "End": 16478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::extraTransferPermuteRecurTime",
+      "Category": "semantic-review",
+      "Symbol": "extraTransferPermuteRecurTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16951,
+      "End": 18997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::6744",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6744,
+      "End": 6761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::8360",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8360,
+      "End": 8370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::8525",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8525,
+      "End": 8535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::9062",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9062,
+      "End": 9074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::9080",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9080,
+      "End": 9092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::10024",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10024,
+      "End": 10041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::12614",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12614,
+      "End": 12624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13098",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13098,
+      "End": 13110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13133",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13133,
+      "End": 13143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13401",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13401,
+      "End": 13411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13505",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13505,
+      "End": 13517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13655",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13655,
+      "End": 13665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13876",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13876,
+      "End": 13888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::13911",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13911,
+      "End": 13921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::14463",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14463,
+      "End": 14475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::14485",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14485,
+      "End": 14497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::15782",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15782,
+      "End": 15796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::16295",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16295,
+      "End": 16311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::17217",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17217,
+      "End": 17232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::18074",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18074,
+      "End": 18086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::18270",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18270,
+      "End": 18282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddTime.c::macro-inline::18694",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18694,
+      "End": 18708
+    }
+  ],
+  "Draft": "package extrab\n\n/**CFile****************************************************************\n\n  FileName    [extraBddTime.c]\n\n  PackageName [extra]\n\n  Synopsis    [Procedures to control runtime in BDD operators.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddTime.c,v 1.0 2003/05/21 18:03:50 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\nconst CHECK_FACTOR = 10\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * cuddBddAndRecurTime( DdManager * manager, DdNode * f, DdNode * g, int * pRecCalls, int TimeOut );\n\n// static DdNode * cuddBddAndAbstractRecurTime( DdManager * manager, DdNode * f, DdNode * g, DdNode * cube, int * pRecCalls, int TimeOut );\n\n// static DdNode * extraTransferPermuteTime( DdManager * ddS, DdManager * ddD, DdNode * f, int * Permute, int TimeOut );\n\n// static DdNode * extraTransferPermuteRecurTime( DdManager * ddS, DdManager * ddD, DdNode * f, st__table * table, int * Permute, int TimeOut );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the conjunction of two BDDs f and g.]\n\n  Description [Computes the conjunction of two BDDs f and g. Returns a\n  pointer to the resulting BDD if successful; NULL if the intermediate\n  result blows up.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddIte Cudd_addApply Cudd_bddAndAbstract Cudd_bddIntersect\n  Cudd_bddOr Cudd_bddNand Cudd_bddNor Cudd_bddXor Cudd_bddXnor]\n\n******************************************************************************/\nfunc Extra_bddAndTime(dd *DdManager, f *DdNode, g *DdNode, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var Counter int32;\n\n    for {\n    dd.reordered = 0;\n    res = cuddBddAndRecurTime(dd,f,g, \u0026Counter, TimeOut);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_bddAndTime */\n\n/**Function********************************************************************\n\n  Synopsis [Takes the AND of two BDDs and simultaneously abstracts the\n  variables in cube.]\n\n  Description [Takes the AND of two BDDs and simultaneously abstracts\n  the variables in cube. The variables are existentially abstracted.\n  Returns a pointer to the result is successful; NULL otherwise.\n  Cudd_bddAndAbstract implements the semiring matrix multiplication\n  algorithm for the boolean semiring.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMatrixMultiply Cudd_addTriangle Cudd_bddAnd]\n\n******************************************************************************/\nfunc Extra_bddAndAbstractTime(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var Counter int32;\n\n    for {\n    manager.reordered = 0;\n    res = cuddBddAndAbstractRecurTime(manager, f, g, cube, \u0026Counter, TimeOut);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Extra_bddAndAbstractTime */\n\n/**Function********************************************************************\n\n  Synopsis    [Convert a {A,B}DD from a manager to another with variable remapping.]\n\n  Description [Convert a {A,B}DD from a manager to another one. The orders of the\n  variables in the two managers may be different. Returns a\n  pointer to the {A,B}DD in the destination manager if successful; NULL\n  otherwise. The i-th entry in the array Permute tells what is the index\n  of the i-th variable from the old manager in the new manager.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_TransferPermuteTime(ddSource *DdManager, ddDestination *DdManager, f *DdNode, Permute *int32, TimeOut int32) *DdNode {\n    var bRes *DdNode;\n    for\n    {\n        ddDestination.reordered = 0;\n        bRes = extraTransferPermuteTime( ddSource, ddDestination, f, Permute, TimeOut );\n    \nif !( ddDestination.reordered == 1 ) { break }\n}\n    \n    return ( bRes );\n\n} /* end of Extra_TransferPermuteTime */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Implements the recursive step of Cudd_bddAnd.]\n\n  Description [Implements the recursive step of Cudd_bddAnd by taking\n  the conjunction of two BDDs.  Returns a pointer to the result is\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAnd]\n\n******************************************************************************/\nfunc cuddBddAndRecurTime(manager *DdManager, f *DdNode, g *DdNode, pRecCalls *int32, TimeOut int32) *DdNode {\n    var F, fv, fnv, G, gv, gnv *DdNode;\n    var one, r, t, e *DdNode;\n    unsigned int topf, topg, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    if F == G {\n    if f == g { return(f);\n    // inlining of macro Cudd_Not\n    } else { return(((DdNode *)((ptrint)(one) ^ 01))); }\n    }\n    if F == one {\n    if f == one { return(g);\n    } else { return(f); }\n    }\n    if G == one {\n    if g == one { return(f);\n    } else { return(g); }\n    }\n\n    /* At this point f and g are not constant. */\n    if f \u003e g { /* Try to increase cache efficiency. */\n    var tmp *DdNode  = f;\n    f = g;\n    g = tmp;\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    }\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n    r = cuddCacheLookup2(manager, Cudd_bddAnd, f, g);\n    if r != nil { return(r); }\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n\n    /* Compute cofactors. */\n    if topf \u003c= topg {\n    index = F.index;\n    // inlining of macro cuddT\n    fv = ((F).type.kids.T);\n    // inlining of macro cuddE\n    fnv = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        fv = ((DdNode *)((ptrint)(fv) ^ 01));\n        // inlining of macro Cudd_Not\n        fnv = ((DdNode *)((ptrint)(fnv) ^ 01));\n    }\n    } else {\n    index = G.index;\n    fv = fnv = f;\n    }\n\n    if topg \u003c= topf {\n    // inlining of macro cuddT\n    gv = ((G).type.kids.T);\n    // inlining of macro cuddE\n    gnv = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        gv = ((DdNode *)((ptrint)(gv) ^ 01));\n        // inlining of macro Cudd_Not\n        gnv = ((DdNode *)((ptrint)(gnv) ^ 01));\n    }\n    } else {\n    gv = gnv = g;\n    }\n\n    t = cuddBddAndRecurTime(manager, fv, gv, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = cuddBddAndRecurTime(manager, fnv, gnv, pRecCalls, TimeOut);\n    if e == nil {\n    Cudd_IterDerefBdd(manager, t);\n    return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n    r = t;\n    } else {\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (t) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        r = cuddUniqueInter(manager,int32(index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n    } else {\n        r = cuddUniqueInter(manager,int32(index),t,e);\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n    }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    if F.ref != 1 || G.ref != 1 {\n    cuddCacheInsert2(manager, Cudd_bddAnd, f, g, r); }\n    return(r);\n\n} /* end of cuddBddAndRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis [Takes the AND of two BDDs and simultaneously abstracts the\n  variables in cube.]\n\n  Description [Takes the AND of two BDDs and simultaneously abstracts\n  the variables in cube. The variables are existentially abstracted.\n  Returns a pointer to the result is successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAndAbstract]\n\n******************************************************************************/\nfunc cuddBddAndAbstractRecurTime(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode, pRecCalls *int32, TimeOut int32) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {    return(one); }\n\n    if cube == one {\n    return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    if f == one || f == g {\n    return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n    return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if f \u003e g { /* Try to increase cache efficiency. */\n    var tmp *DdNode  = f;\n    f = g;\n    g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    for topcube \u003c top {\n    // inlining of macro cuddT\n    cube = ((cube).type.kids.T);\n    if cube == one {\n        return(cuddBddAndRecurTime(manager, f, g, pRecCalls, TimeOut));\n    }\n    topcube = manager.perm[cube.index];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n    r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n    if r != nil {\n        return(r);\n    }\n    }\n\n//    if ( TimeOut \u0026\u0026 ((*pRecCalls)++ % CHECK_FACTOR) == 0 \u0026\u0026 TimeOut \u003c Abc_Clock() )\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    if topf == top {\n    index = F.index;\n    // inlining of macro cuddT\n    ft = ((F).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((F).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (f) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        ft = ((DdNode *)((ptrint)(ft) ^ 01));\n        // inlining of macro Cudd_Not\n        fe = ((DdNode *)((ptrint)(fe) ^ 01));\n    }\n    } else {\n    index = G.index;\n    ft = fe = f;\n    }\n\n    if topg == top {\n    // inlining of macro cuddT\n    gt = ((G).type.kids.T);\n    // inlining of macro cuddE\n    ge = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        gt = ((DdNode *)((ptrint)(gt) ^ 01));\n        // inlining of macro Cudd_Not\n        ge = ((DdNode *)((ptrint)(ge) ^ 01));\n    }\n    } else {\n    gt = ge = g;\n    }\n\n    if topcube == top {    /* quantify */\n    // inlining of macro cuddT\n    var Cube *DdNode  = ((cube).type.kids.T);\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, Cube, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    /* Special case: 1 OR anything = 1. Hence, no need to compute\n    ** the else branch if t is 1. Likewise t + t * anything == t.\n    ** Notice that t == fe implies that fe does not depend on the\n    ** variables in Cube. Likewise for t == ge.\n    */\n    if t == one || t == fe || t == ge {\n        if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                f, g, cube, t); }\n        return(t);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    /* Special case: t + !t * anything == t + anything. */\n    // inlining of macro Cudd_Not\n    if t == ((DdNode *)((ptrint)(fe) ^ 01)) {\n        e = cuddBddExistAbstractRecur(manager, ge, Cube);\n    // inlining of macro Cudd_Not\n    } else if t == ((DdNode *)((ptrint)(ge) ^ 01)) {\n        e = cuddBddExistAbstractRecur(manager, fe, Cube);\n    } else {\n        e = cuddBddAndAbstractRecurTime(manager, fe, ge, Cube, pRecCalls, TimeOut);\n    }\n    if e == nil {\n        Cudd_IterDerefBdd(manager, t);\n        return(nil);\n    }\n    if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro Cudd_Not\n        r = cuddBddAndRecurTime(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)), pRecCalls, TimeOut);\n        if r == nil {\n        Cudd_IterDerefBdd(manager, t);\n        Cudd_IterDerefBdd(manager, e);\n        return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_DelayedDerefBdd(manager, t);\n        Cudd_DelayedDerefBdd(manager, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n    }\n    } else {\n    t = cuddBddAndAbstractRecurTime(manager, ft, gt, cube, pRecCalls, TimeOut);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = cuddBddAndAbstractRecurTime(manager, fe, ge, cube, pRecCalls, TimeOut);\n    if e == nil {\n        Cudd_IterDerefBdd(manager, t);\n        return(nil);\n    }\n    if t == e {\n        r = t;\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (t) \u0026 01)) != 0 {\n        r = cuddUniqueInter(manager, int32( index),\n                    // inlining of macro Cudd_Not\n                    ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n        if r == nil {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(nil);\n        }\n        // inlining of macro Cudd_Not\n        r = ((DdNode *)((ptrint)(r) ^ 01));\n        } else {\n        r = cuddUniqueInter(manager,int32(index),t,e);\n        if r == nil {\n            Cudd_IterDerefBdd(manager, t);\n            Cudd_IterDerefBdd(manager, e);\n            return(nil);\n        }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n    }\n    }\n\n    if F.ref != 1 || G.ref != 1 {\n    cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r); }\n    return (r);\n\n} /* end of cuddBddAndAbstractRecur */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Convert a BDD from a manager to another one.]\n\n  Description [Convert a BDD from a manager to another one. Returns a\n  pointer to the BDD in the destination manager if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Extra_TransferPermute]\n\n******************************************************************************/\nfunc extraTransferPermuteTime(ddS *DdManager, ddD *DdManager, f *DdNode, Permute *int32, TimeOut int32) *DdNode {\n    var res *DdNode;\n    var table *st__table  = nil;\n    var gen *st__generator  = nil;\n    var key, value *DdNode;\n\n    table = st__init_table( st__ptrcmp, st__ptrhash );\n    if table == nil {\n        goto failure; }\n    res = extraTransferPermuteRecurTime( ddS, ddD, f, table, Permute, TimeOut );\n    if res != nil {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref); }\n\n    /* Dereference all elements in the table and dispose of the table.\n       ** This must be done also if res is NULL to avoid leaks in case of\n       ** reordering. */\n    gen = st__init_gen( table );\n    if gen == nil {\n        goto failure; }\n    for  st__gen( gen, ( char ** ) \u0026key, ( char ** ) \u0026value )  {\n        Cudd_RecursiveDeref( ddD, value );\n    }\n    st__free_gen( gen );\n    gen = nil;\n    st__free_table( table );\n    table = nil;\n\n    if res != nil {\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref); }\n    return ( res );\n\n  failure:\n    if table != nil {\n        st__free_table( table ); }\n    if gen != nil {\n        st__free_gen( gen ); }\n    return ( nil );\n\n} /* end of extraTransferPermuteTime */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_TransferPermute.]\n\n  Description [Performs the recursive step of Extra_TransferPermute.\n  Returns a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [extraTransferPermuteTime]\n\n******************************************************************************/\nfunc extraTransferPermuteRecurTime(ddS *DdManager, ddD *DdManager, f *DdNode, table *st__table, Permute *int32, TimeOut int32) *DdNode {\n    var ft, fe, t, e, var, res *DdNode;\n    var one, zero *DdNode;\n    var index int32;\n    var comple int32;\n\n    statLine( ddD );\n    // inlining of macro DD_ONE\n    one = ((ddD).one);\n    // inlining of macro Cudd_IsComplement\n    comple = (int32( ((ptrint) (f) \u0026 01)));\n\n    /* Trivial cases. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if  (((DdNode *)((ptruint)(f) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(one) ^ (comple))) ); }\n\n\n    /* Make canonical to increase the utilization of the cache. */\n    // inlining of macro Cudd_NotCond\n    f = ((DdNode *)((ptrint)(f) ^ (comple)));\n    /* Now f is a regular pointer to a non-constant node. */\n\n    /* Check the cache. */\n    if st__lookup( table, ( char * ) f, ( char ** ) \u0026res ) {\n        // inlining of macro Cudd_NotCond\n        return ( ((DdNode *)((ptrint)(res) ^ (comple))) ); }\n\n    if (TimeOut != 0) \u0026\u0026 Abc_Clock() \u003e TimeOut {\n        return nil; }\n\n    /* Recursive step. */\n    if Permute != nil {\n        index = Permute[f.index];\n    } else {\n        index = f.index; }\n\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    t = extraTransferPermuteRecurTime( ddS, ddD, ft, table, Permute, TimeOut );\n    if t == nil {\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    e = extraTransferPermuteRecurTime( ddS, ddD, fe, table, Permute, TimeOut );\n    if e == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(ddD.one) ^ 01));\n    var = cuddUniqueInter( ddD, index, one, zero );\n    if var == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    res = cuddBddIteRecur( ddD, var, t, e );\n\n    if res == nil {\n        Cudd_RecursiveDeref( ddD, t );\n        Cudd_RecursiveDeref( ddD, e );\n        return ( nil );\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref( ddD, t );\n    Cudd_RecursiveDeref( ddD, e );\n\n    if st__add_direct( table, ( char * ) f, ( char * ) res ) ==\n         st__OUT_OF_MEM {\n        Cudd_RecursiveDeref( ddD, res );\n        return ( nil );\n    }\n    // inlining of macro Cudd_NotCond\n    return ( ((DdNode *)((ptrint)(res) ^ (comple))) );\n\n}  /* end of extraTransferPermuteRecurTime */\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

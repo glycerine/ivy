@@ -1,0 +1,518 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c",
+  "SHA256": "89d2edf24209e8d3b364f989787ba8ba2f19892d2addd1e6e6658b30ca28406d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsMuxType( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Id \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( NodeId \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 7297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pNode)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 8508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vFanins) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 9092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSat == nil \u0026\u0026 p.vId2Var == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 9141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p.pFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 11370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 11914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRepr != iNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 11993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRepr \u003c iNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 9,
+        "ByteOffset": 12919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 9,
+        "ByteOffset": 13814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssc_ObjSatLit",
+      "Start": 827,
+      "End": 967,
+      "BodyStart": 885,
+      "Original": "static inline int Ssc_ObjSatLit( Ssc_Man_t * p, int Lit ) { return Abc_Var2Lit( Ssc_ObjSatVar(p, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) ); }",
+      "Draft": "func Ssc_ObjSatLit(p *Ssc_Man_t, Lit int32) int32 { return Abc_Var2Lit( Ssc_ObjSatVar(p, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) ); }"
+    },
+    {
+      "Name": "Gia_ManAddClausesMux",
+      "Start": 1451,
+      "End": 3687,
+      "BodyStart": 1520,
+      "Original": "static void Gia_ManAddClausesMux( Ssc_Man_t * p, Gia_Obj_t * pNode )\n{\n    Gia_Obj_t * pNodeI, * pNodeT, * pNodeE;\n    int pLits[4], LitF, LitI, LitT, LitE, RetValue;\n    assert( !Gia_IsComplement( pNode ) );\n    assert( Gia_ObjIsMuxType( pNode ) );\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the Litiable numbers\n    LitF = Ssc_ObjSatLit( p, Gia_Obj2Lit(p-\u003epFraig,pNode) );\n    LitI = Ssc_ObjSatLit( p, Gia_Obj2Lit(p-\u003epFraig,pNodeI) );\n    LitT = Ssc_ObjSatLit( p, Gia_Obj2Lit(p-\u003epFraig,pNodeT) );\n    LitE = Ssc_ObjSatLit( p, Gia_Obj2Lit(p-\u003epFraig,pNodeE) );\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if ( LitT == LitE )\n    {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_LitNotCond(LitT, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n    pLits[0] = Abc_LitNotCond(LitT, 1);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 3 );\n    assert( RetValue );\n}",
+      "Draft": "func Gia_ManAddClausesMux(p *Ssc_Man_t, pNode *Gia_Obj_t) {\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var LitF int32;\n    var LitI int32;\n    var LitT int32;\n    var LitE int32;\n    var RetValue int32;\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(Gia_ObjIsMuxType( pNode ), \"Gia_ObjIsMuxType( pNode )\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the Litiable numbers\n    LitF = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNode) );\n    LitI = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeI) );\n    LitT = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeT) );\n    LitE = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeE) );\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if LitT == LitE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_LitNotCond(LitT, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitT, 1);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Gia_ManAddClausesSuper",
+      "Start": 3936,
+      "End": 4884,
+      "BodyStart": 4027,
+      "Original": "static void Gia_ManAddClausesSuper( Ssc_Man_t * p, Gia_Obj_t * pNode, Vec_Int_t * vSuper )\n{\n    int i, RetValue, Lit, LitNode, pLits[2];\n    assert( !Gia_IsComplement(pNode) );\n    assert( Gia_ObjIsAnd( pNode ) );\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // add !B =\u003e !C   or   B + !C\n    LitNode = Ssc_ObjSatLit( p, Gia_Obj2Lit(p-\u003epFraig,pNode) );\n    Vec_IntForEachEntry( vSuper, Lit, i )\n    {\n        pLits[0] = Ssc_ObjSatLit( p, Lit );\n        pLits[1] = Abc_LitNot( LitNode );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        // update literals\n        Vec_IntWriteEntry( vSuper, i, Abc_LitNot(pLits[0]) );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_IntPush( vSuper, LitNode );\n    RetValue = sat_solver_addclause( p-\u003epSat, Vec_IntArray(vSuper), Vec_IntArray(vSuper) + Vec_IntSize(vSuper) );\n    assert( RetValue );\n    (void) RetValue;\n}",
+      "Draft": "func Gia_ManAddClausesSuper(p *Ssc_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Int_t) {\n    var i int32;\n    var RetValue int32;\n    var Lit int32;\n    var LitNode int32;\n    var pLits [2]int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // add !B =\u003e !C   or   B + !C\n    LitNode = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNode) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Lit) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        pLits[0] = Ssc_ObjSatLit( p, Lit );\n        pLits[1] = Abc_LitNot( LitNode );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // update literals\n        Vec_IntWriteEntry( vSuper, i, Abc_LitNot(pLits[0]) );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_IntPush( vSuper, LitNode );\n    RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vSuper), Vec_IntArray(vSuper) + Vec_IntSize(vSuper) );\n    assert((RetValue != 0), \"RetValue\");\n    (void) RetValue;\n}"
+    },
+    {
+      "Name": "Ssc_ManCollectSuper_rec",
+      "Start": 5129,
+      "End": 5560,
+      "BodyStart": 5220,
+      "Original": "static void Ssc_ManCollectSuper_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper )\n{\n    // stop at complements, PIs, and MUXes\n    if ( Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || Gia_ObjIsMuxType(pObj) )\n    {\n        Vec_IntPushUnique( vSuper, Gia_Obj2Lit(p, pObj) );\n        return;\n    }\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Ssc_ManCollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    // stop at complements, PIs, and MUXes\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || Gia_ObjIsMuxType(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_Obj2Lit(p, pObj) );\n        return;\n    }\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Ssc_ManCollectSuper",
+      "Start": 5561,
+      "End": 5878,
+      "BodyStart": 5648,
+      "Original": "static void Ssc_ManCollectSuper( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper )\n{\n    assert( !Gia_IsComplement(pObj) );\n    assert( Gia_ObjIsAnd(pObj) );\n    Vec_IntClear( vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Ssc_ManCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Vec_IntClear( vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Ssc_ManCnfAddToFrontier",
+      "Start": 6134,
+      "End": 6516,
+      "BodyStart": 6215,
+      "Original": "static void Ssc_ManCnfAddToFrontier( Ssc_Man_t * p, int Id, Vec_Int_t * vFront )\n{\n    Gia_Obj_t * pObj;\n    assert( Id \u003e 0 );\n    if ( Ssc_ObjSatVar(p, Id) )\n        return;\n    pObj = Gia_ManObj( p-\u003epFraig, Id );\n    Ssc_ObjSetSatVar( p, Id, p-\u003enSatVars++ );\n    sat_solver_setnvars( p-\u003epSat, p-\u003enSatVars + 100 );\n    if ( Gia_ObjIsAnd(pObj) )\n        Vec_IntPush( vFront, Id );\n}",
+      "Draft": "func Ssc_ManCnfAddToFrontier(p *Ssc_Man_t, Id int32, vFront *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    assert(Id \u003e 0, \"Id \u003e 0\");\n    if Ssc_ObjSatVar(p, Id) {\n        return; }\n    pObj = Gia_ManObj( p.pFraig, Id );\n    Ssc_ObjSetSatVar( p, Id, p.nSatVars++ );\n    sat_solver_setnvars( p.pSat, p.nSatVars + 100 );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntPush( vFront, Id ); }\n}"
+    },
+    {
+      "Name": "Ssc_ManCnfNodeAddToSolver",
+      "Start": 6517,
+      "End": 8111,
+      "BodyStart": 6584,
+      "Original": "static void Ssc_ManCnfNodeAddToSolver( Ssc_Man_t * p, int NodeId )\n{\n    Gia_Obj_t * pNode;\n    int i, k, Id, Lit;\n    abctime clk;\n    assert( NodeId \u003e 0 );\n    // quit if CNF is ready\n    if ( Ssc_ObjSatVar(p, NodeId) )\n        return;\nclk = Abc_Clock();\n    // start the frontier\n    Vec_IntClear( p-\u003evFront );\n    Ssc_ManCnfAddToFrontier( p, NodeId, p-\u003evFront );\n    // explore nodes in the frontier\n    Gia_ManForEachObjVec( p-\u003evFront, p-\u003epFraig, pNode, i )\n    {\n        // create the supergate\n        assert( Ssc_ObjSatVar(p, Gia_ObjId(p-\u003epFraig, pNode)) );\n        if ( Gia_ObjIsMuxType(pNode) )\n        {\n            Vec_IntClear( p-\u003evFanins );\n            Vec_IntPushUnique( p-\u003evFanins, Gia_ObjFaninId0p( p-\u003epFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p-\u003evFanins, Gia_ObjFaninId0p( p-\u003epFraig, Gia_ObjFanin1(pNode) ) );\n            Vec_IntPushUnique( p-\u003evFanins, Gia_ObjFaninId1p( p-\u003epFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p-\u003evFanins, Gia_ObjFaninId1p( p-\u003epFraig, Gia_ObjFanin1(pNode) ) );\n            Vec_IntForEachEntry( p-\u003evFanins, Id, k )\n                Ssc_ManCnfAddToFrontier( p, Id, p-\u003evFront );\n            Gia_ManAddClausesMux( p, pNode );\n        }\n        else\n        {\n            Ssc_ManCollectSuper( p-\u003epFraig, pNode, p-\u003evFanins );\n            Vec_IntForEachEntry( p-\u003evFanins, Lit, k )\n                Ssc_ManCnfAddToFrontier( p, Abc_Lit2Var(Lit), p-\u003evFront );\n            Gia_ManAddClausesSuper( p, pNode, p-\u003evFanins );\n        }\n        assert( Vec_IntSize(p-\u003evFanins) \u003e 1 );\n    }\np-\u003etimeCnfGen += Abc_Clock() - clk;\n}",
+      "Draft": "func Ssc_ManCnfNodeAddToSolver(p *Ssc_Man_t, NodeId int32) {\n    var pNode *Gia_Obj_t;\n    var i, k, Id, Lit int32;\n    var clk abctime;\n    assert(NodeId \u003e 0, \"NodeId \u003e 0\");\n    // quit if CNF is ready\n    if Ssc_ObjSatVar(p, NodeId) {\n        return; }\nclk = Abc_Clock();\n    // start the frontier\n    Vec_IntClear( p.vFront );\n    Ssc_ManCnfAddToFrontier( p, NodeId, p.vFront );\n    // explore nodes in the frontier\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFront)) \u0026\u0026 ((pNode) = Gia_ManObj(p.pFraig, Vec_IntEntry(p.vFront,i))); i++  {\n        // create the supergate\n        assert(Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pNode)), \"Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pNode))\");\n        if Gia_ObjIsMuxType(pNode) {\n            Vec_IntClear( p.vFanins );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pFraig, Gia_ObjFanin1(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pFraig, Gia_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 (((Id) = Vec_IntEntry(p.vFanins, k)), 1); k++  {\n                Ssc_ManCnfAddToFrontier( p, Id, p.vFront );\n            }\n            Gia_ManAddClausesMux( p, pNode );\n        \n        } else {\n            Ssc_ManCollectSuper( p.pFraig, pNode, p.vFanins );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 (((Lit) = Vec_IntEntry(p.vFanins, k)), 1); k++  {\n                Ssc_ManCnfAddToFrontier( p, Abc_Lit2Var(Lit), p.vFront );\n            }\n            Gia_ManAddClausesSuper( p, pNode, p.vFanins );\n        }\n        assert(Vec_IntSize(p.vFanins) \u003e 1, \"Vec_IntSize(p.vFanins) \u003e 1\");\n    }\np.timeCnfGen += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Ssc_ManStartSolver",
+      "Start": 8386,
+      "End": 9890,
+      "BodyStart": 8427,
+      "Original": "void Ssc_ManStartSolver( Ssc_Man_t * p )\n{\n    Aig_Man_t * pMan = Gia_ManToAigSimple( p-\u003epFraig );\n    Cnf_Dat_t * pDat = Cnf_Derive( pMan, 0 );\n    Gia_Obj_t * pObj;\n    sat_solver * pSat;\n    int i, status;\n    assert( p-\u003epSat == NULL \u0026\u0026 p-\u003evId2Var == NULL );\n    assert( Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p-\u003epFraig) );\n    Aig_ManStop( pMan );\n    // save variable mapping\n    p-\u003enSatVarsPivot = p-\u003enSatVars = pDat-\u003enVars;\n    p-\u003evId2Var = Vec_IntStart( Gia_ManCandNum(p-\u003epAig) + Gia_ManCandNum(p-\u003epCare) + 10 ); // mapping of each node into its SAT var\n    p-\u003evVar2Id = Vec_IntStart( Gia_ManCandNum(p-\u003epAig) + Gia_ManCandNum(p-\u003epCare) + 10 ); // mapping of each SAT var into its node\n    Ssc_ObjSetSatVar( p, 0, pDat-\u003epVarNums[0] );\n    Gia_ManForEachCi( p-\u003epFraig, pObj, i )\n    {\n        int iObj = Gia_ObjId( p-\u003epFraig, pObj );\n        Ssc_ObjSetSatVar( p, iObj, pDat-\u003epVarNums[iObj] );\n    }\n//Cnf_DataWriteIntoFile( pDat, \"dump.cnf\", 1, NULL, NULL );\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat-\u003enVars + 1000 );\n    for ( i = 0; i \u003c pDat-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, pDat-\u003epClauses[i], pDat-\u003epClauses[i+1] ) )\n        {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if ( status == 0 )\n    {\n        sat_solver_delete( pSat );\n        return;\n    }\n    p-\u003epSat = pSat;\n}",
+      "Draft": "func Ssc_ManStartSolver(p *Ssc_Man_t) {\n    var pMan *Aig_Man_t  = Gia_ManToAigSimple( p.pFraig );\n    var pDat *Cnf_Dat_t  = Cnf_Derive( pMan, 0 );\n    var pObj *Gia_Obj_t;\n    var pSat *sat_solver;\n    var i, status int32;\n    assert(p.pSat == nil \u0026\u0026 p.vId2Var == nil, \"p.pSat == nil \u0026\u0026 p.vId2Var == nil\");\n    assert(Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p.pFraig), \"Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p.pFraig)\");\n    Aig_ManStop( pMan );\n    // save variable mapping\n    p.nSatVarsPivot = p.nSatVars = pDat.nVars;\n    p.vId2Var = Vec_IntStart( Gia_ManCandNum(p.pAig) + Gia_ManCandNum(p.pCare) + 10 ); // mapping of each node into its SAT var\n    p.vVar2Id = Vec_IntStart( Gia_ManCandNum(p.pAig) + Gia_ManCandNum(p.pCare) + 10 ); // mapping of each SAT var into its node\n    Ssc_ObjSetSatVar( p, 0, pDat.pVarNums[0] );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pFraig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFraig, i)); i++  {\n        var iObj int32  = Gia_ObjId( p.pFraig, pObj );\n        Ssc_ObjSetSatVar( p, iObj, pDat.pVarNums[iObj] );\n    }\n//Cnf_DataWriteIntoFile( pDat, \"dump.cnf\", 1, NULL, NULL );\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat.nVars + 1000 );\n    for  i = 0; i \u003c pDat.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pDat.pClauses[i], pDat.pClauses[i+1] ) {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        sat_solver_delete( pSat );\n        return;\n    }\n    p.pSat = pSat;\n}"
+    },
+    {
+      "Name": "Ssc_ManCollectSatPattern",
+      "Start": 10126,
+      "End": 10414,
+      "BodyStart": 10195,
+      "Original": "void Ssc_ManCollectSatPattern( Ssc_Man_t * p, Vec_Int_t * vPattern )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Vec_IntClear( vPattern );\n    Gia_ManForEachCi( p-\u003epFraig, pObj, i )\n        Vec_IntPush( vPattern, sat_solver_var_value(p-\u003epSat, Ssc_ObjSatVar(p, Gia_ObjId(p-\u003epFraig, pObj))) );\n}",
+      "Draft": "func Ssc_ManCollectSatPattern(p *Ssc_Man_t, vPattern *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Vec_IntClear( vPattern );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pFraig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFraig, i)); i++  {\n        Vec_IntPush( vPattern, sat_solver_var_value(p.pSat, Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pObj))) );\n    }\n}"
+    },
+    {
+      "Name": "Ssc_ManFindPivotSat",
+      "Start": 10415,
+      "End": 10846,
+      "BodyStart": 10464,
+      "Original": "Vec_Int_t * Ssc_ManFindPivotSat( Ssc_Man_t * p )\n{\n    Vec_Int_t * vInit;\n    int status = sat_solver_solve( p-\u003epSat, NULL, NULL, p-\u003epPars-\u003enBTLimit, 0, 0, 0 );\n    if ( status == l_False )\n        return (Vec_Int_t *)(ABC_PTRINT_T)1;\n    if ( status == l_Undef )\n        return NULL;\n    assert( status == l_True );\n    vInit = Vec_IntAlloc( Gia_ManCiNum(p-\u003epFraig) );\n    Ssc_ManCollectSatPattern( p, vInit );\n    return vInit;\n}",
+      "Draft": "func Ssc_ManFindPivotSat(p *Ssc_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var status int32  = sat_solver_solve( p.pSat, nil, nil, p.pPars.nBTLimit, 0, 0, 0 );\n    if status == l_False {\n        return (Vec_Int_t *)(ABC_PTRINT_T)1; }\n    if status == l_Undef {\n        return nil; }\n    assert(status == l_True, \"status == l_True\");\n    vInit = Vec_IntAlloc( Gia_ManCiNum(p.pFraig) );\n    Ssc_ManCollectSatPattern( p, vInit );\n    return vInit;\n}"
+    },
+    {
+      "Name": "Ssc_ManCheckEquivalence",
+      "Start": 11082,
+      "End": 13528,
+      "BodyStart": 11161,
+      "Original": "int Ssc_ManCheckEquivalence( Ssc_Man_t * p, int iRepr, int iNode, int fCompl )\n{\n    int pLitsSat[2], RetValue;\n    abctime clk;\n    assert( iRepr != iNode );\n    if ( iRepr \u003e iNode )\n        return l_Undef;\n    assert( iRepr \u003c iNode );\n//    if ( p-\u003enTimeOut )\n//        sat_solver_set_runtime_limit( p-\u003epSat, p-\u003enTimeOut * CLOCKS_PER_SEC + Abc_Clock() );\n\n    // create CNF\n    if ( iRepr )\n    Ssc_ManCnfNodeAddToSolver( p, iRepr );\n    Ssc_ManCnfNodeAddToSolver( p, iNode );\n    sat_solver_compress( p-\u003epSat );\n\n    // order the literals\n    pLitsSat[0] = Abc_Var2Lit( Ssc_ObjSatVar(p, iRepr), 0 );\n    pLitsSat[1] = Abc_Var2Lit( Ssc_ObjSatVar(p, iNode), fCompl ^ (int)(iRepr \u003e 0) );\n\n    // solve under assumptions\n    // A = 1; B = 0\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p-\u003epSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p-\u003epPars-\u003enBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( RetValue == l_False )\n    {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] ); // compl\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] ); // compl\n        RetValue = sat_solver_addclause( p-\u003epSat, pLitsSat, pLitsSat + 2 );\n        assert( RetValue );\n        p-\u003etimeSatUnsat += Abc_Clock() - clk;\n    }\n    else if ( RetValue == l_True )\n    {\n        Ssc_ManCollectSatPattern( p, p-\u003evPattern );\n        p-\u003etimeSatSat += Abc_Clock() - clk;\n        return l_True;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\n        p-\u003etimeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if ( iRepr == 0 )\n        return l_False;\n\n    // solve under assumptions\n    // A = 0; B = 1\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p-\u003epSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p-\u003epPars-\u003enBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( RetValue == l_False )\n    {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] );\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLitsSat, pLitsSat + 2 );\n        assert( RetValue );\n        p-\u003etimeSatUnsat += Abc_Clock() - clk;\n    }\n    else if ( RetValue == l_True )\n    {\n        Ssc_ManCollectSatPattern( p, p-\u003evPattern );\n        p-\u003etimeSatSat += Abc_Clock() - clk;\n        return l_True;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\n        p-\u003etimeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n    return l_False;\n}",
+      "Draft": "func Ssc_ManCheckEquivalence(p *Ssc_Man_t, iRepr int32, iNode int32, fCompl int32) int32 {\n    var pLitsSat [2]int32;\n    var RetValue int32;\n    var clk abctime;\n    assert(iRepr != iNode, \"iRepr != iNode\");\n    if iRepr \u003e iNode {\n        return l_Undef; }\n    assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n//    if ( p-\u003enTimeOut )\n//        sat_solver_set_runtime_limit( p-\u003epSat, p-\u003enTimeOut * CLOCKS_PER_SEC + Abc_Clock() );\n\n    // create CNF\n    if iRepr != 0 {\n    Ssc_ManCnfNodeAddToSolver( p, iRepr ); }\n    Ssc_ManCnfNodeAddToSolver( p, iNode );\n    sat_solver_compress( p.pSat );\n\n    // order the literals\n    pLitsSat[0] = Abc_Var2Lit( Ssc_ObjSatVar(p, iRepr), 0 );\n    pLitsSat[1] = Abc_Var2Lit( Ssc_ObjSatVar(p, iNode), fCompl ^ int32((iRepr \u003e 0)) );\n\n    // solve under assumptions\n    // A = 1; B = 0\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_False {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] ); // compl\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] ); // compl\n        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.timeSatUnsat += Abc_Clock() - clk;\n    \n    } else if RetValue == l_True {\n        Ssc_ManCollectSatPattern( p, p.vPattern );\n        p.timeSatSat += Abc_Clock() - clk;\n        return l_True;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \n        p.timeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if iRepr == 0 {\n        return l_False; }\n\n    // solve under assumptions\n    // A = 0; B = 1\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_False {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] );\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.timeSatUnsat += Abc_Clock() - clk;\n    \n    } else if RetValue == l_True {\n        Ssc_ManCollectSatPattern( p, p.vPattern );\n        p.timeSatSat += Abc_Clock() - clk;\n        return l_True;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \n        p.timeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n    return l_False;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::pointer-cast::11269",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10620,
+      "End": 10633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ObjSatLit",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjSatLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 827,
+      "End": 967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Gia_ManAddClausesMux",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAddClausesMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1451,
+      "End": 3687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Gia_ManAddClausesSuper",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAddClausesSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3936,
+      "End": 4884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5129,
+      "End": 5560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5561,
+      "End": 5878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCnfAddToFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCnfAddToFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6134,
+      "End": 6516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCnfNodeAddToSolver",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCnfNodeAddToSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6517,
+      "End": 8111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManStartSolver",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManStartSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8386,
+      "End": 9890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCollectSatPattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCollectSatPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10126,
+      "End": 10414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManFindPivotSat",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManFindPivotSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10415,
+      "End": 10846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::Ssc_ManCheckEquivalence",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManCheckEquivalence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11082,
+      "End": 13528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13776
+    }
+  ],
+  "Draft": "package ssc\n\n/**CFile****************************************************************\n\n  FileName    [sscSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [SAT procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscSat.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sscInt.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Ssc_ObjSatLit(p *Ssc_Man_t, Lit int32) int32 { return Abc_Var2Lit( Ssc_ObjSatVar(p, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) ); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Addes clauses to the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAddClausesMux(p *Ssc_Man_t, pNode *Gia_Obj_t) {\n    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;\n    var pLits [4]int32;\n    var LitF int32;\n    var LitI int32;\n    var LitT int32;\n    var LitE int32;\n    var RetValue int32;\n    assert(!Gia_IsComplement( pNode ), \"!Gia_IsComplement( pNode )\");\n    assert(Gia_ObjIsMuxType( pNode ), \"Gia_ObjIsMuxType( pNode )\");\n    // get nodes (I = if, T = then, E = else)\n    pNodeI = Gia_ObjRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n    // get the Litiable numbers\n    LitF = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNode) );\n    LitI = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeI) );\n    LitT = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeT) );\n    LitE = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNodeE) );\n\n    // f = ITE(i, t, e)\n\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n\n    // create four clauses\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 1);\n    pLits[1] = Abc_LitNotCond(LitT, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitI, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'\n    // t  \u0026 e  -\u003e f\n\n    // t  + e   + f'\n    // t' + e'  + f\n\n    if LitT == LitE {\n//        assert( fCompT == !fCompE );\n        return;\n    }\n\n    pLits[0] = Abc_LitNotCond(LitT, 0);\n    pLits[1] = Abc_LitNotCond(LitE, 0);\n    pLits[2] = Abc_LitNotCond(LitF, 1);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n    pLits[0] = Abc_LitNotCond(LitT, 1);\n    pLits[1] = Abc_LitNotCond(LitE, 1);\n    pLits[2] = Abc_LitNotCond(LitF, 0);\n    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );\n    assert((RetValue != 0), \"RetValue\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Addes clauses to the solver.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAddClausesSuper(p *Ssc_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Int_t) {\n    var i int32;\n    var RetValue int32;\n    var Lit int32;\n    var LitNode int32;\n    var pLits [2]int32;\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    assert(Gia_ObjIsAnd( pNode ), \"Gia_ObjIsAnd( pNode )\");\n    // suppose AND-gate is A \u0026 B = C\n    // add !A =\u003e !C   or   A + !C\n    // add !B =\u003e !C   or   B + !C\n    LitNode = Ssc_ObjSatLit( p, Gia_Obj2Lit(p.pFraig,pNode) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Lit) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        pLits[0] = Ssc_ObjSatLit( p, Lit );\n        pLits[1] = Abc_LitNot( LitNode );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // update literals\n        Vec_IntWriteEntry( vSuper, i, Abc_LitNot(pLits[0]) );\n    }\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n    Vec_IntPush( vSuper, LitNode );\n    RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vSuper), Vec_IntArray(vSuper) + Vec_IntSize(vSuper) );\n    assert((RetValue != 0), \"RetValue\");\n    (void) RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManCollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    // stop at complements, PIs, and MUXes\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || Gia_ObjIsMuxType(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_Obj2Lit(p, pObj) );\n        return;\n    }\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}\nfunc Ssc_ManCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Vec_IntClear( vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Ssc_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the solver clause database.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManCnfAddToFrontier(p *Ssc_Man_t, Id int32, vFront *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    assert(Id \u003e 0, \"Id \u003e 0\");\n    if Ssc_ObjSatVar(p, Id) {\n        return; }\n    pObj = Gia_ManObj( p.pFraig, Id );\n    Ssc_ObjSetSatVar( p, Id, p.nSatVars++ );\n    sat_solver_setnvars( p.pSat, p.nSatVars + 100 );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntPush( vFront, Id ); }\n}\nfunc Ssc_ManCnfNodeAddToSolver(p *Ssc_Man_t, NodeId int32) {\n    var pNode *Gia_Obj_t;\n    var i, k, Id, Lit int32;\n    var clk abctime;\n    assert(NodeId \u003e 0, \"NodeId \u003e 0\");\n    // quit if CNF is ready\n    if Ssc_ObjSatVar(p, NodeId) {\n        return; }\nclk = Abc_Clock();\n    // start the frontier\n    Vec_IntClear( p.vFront );\n    Ssc_ManCnfAddToFrontier( p, NodeId, p.vFront );\n    // explore nodes in the frontier\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFront)) \u0026\u0026 ((pNode) = Gia_ManObj(p.pFraig, Vec_IntEntry(p.vFront,i))); i++  {\n        // create the supergate\n        assert(Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pNode)), \"Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pNode))\");\n        if Gia_ObjIsMuxType(pNode) {\n            Vec_IntClear( p.vFanins );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pFraig, Gia_ObjFanin1(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pFraig, Gia_ObjFanin0(pNode) ) );\n            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pFraig, Gia_ObjFanin1(pNode) ) );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 (((Id) = Vec_IntEntry(p.vFanins, k)), 1); k++  {\n                Ssc_ManCnfAddToFrontier( p, Id, p.vFront );\n            }\n            Gia_ManAddClausesMux( p, pNode );\n        \n        } else {\n            Ssc_ManCollectSuper( p.pFraig, pNode, p.vFanins );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 (((Lit) = Vec_IntEntry(p.vFanins, k)), 1); k++  {\n                Ssc_ManCnfAddToFrontier( p, Abc_Lit2Var(Lit), p.vFront );\n            }\n            Gia_ManAddClausesSuper( p, pNode, p.vFanins );\n        }\n        assert(Vec_IntSize(p.vFanins) \u003e 1, \"Vec_IntSize(p.vFanins) \u003e 1\");\n    }\np.timeCnfGen += Abc_Clock() - clk;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the SAT solver for constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManStartSolver(p *Ssc_Man_t) {\n    var pMan *Aig_Man_t  = Gia_ManToAigSimple( p.pFraig );\n    var pDat *Cnf_Dat_t  = Cnf_Derive( pMan, 0 );\n    var pObj *Gia_Obj_t;\n    var pSat *sat_solver;\n    var i, status int32;\n    assert(p.pSat == nil \u0026\u0026 p.vId2Var == nil, \"p.pSat == nil \u0026\u0026 p.vId2Var == nil\");\n    assert(Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p.pFraig), \"Aig_ManObjNumMax(pMan) == Gia_ManObjNum(p.pFraig)\");\n    Aig_ManStop( pMan );\n    // save variable mapping\n    p.nSatVarsPivot = p.nSatVars = pDat.nVars;\n    p.vId2Var = Vec_IntStart( Gia_ManCandNum(p.pAig) + Gia_ManCandNum(p.pCare) + 10 ); // mapping of each node into its SAT var\n    p.vVar2Id = Vec_IntStart( Gia_ManCandNum(p.pAig) + Gia_ManCandNum(p.pCare) + 10 ); // mapping of each SAT var into its node\n    Ssc_ObjSetSatVar( p, 0, pDat.pVarNums[0] );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pFraig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFraig, i)); i++  {\n        var iObj int32  = Gia_ObjId( p.pFraig, pObj );\n        Ssc_ObjSetSatVar( p, iObj, pDat.pVarNums[iObj] );\n    }\n//Cnf_DataWriteIntoFile( pDat, \"dump.cnf\", 1, NULL, NULL );\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat.nVars + 1000 );\n    for  i = 0; i \u003c pDat.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pDat.pClauses[i], pDat.pClauses[i+1] ) {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        sat_solver_delete( pSat );\n        return;\n    }\n    p.pSat = pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManCollectSatPattern(p *Ssc_Man_t, vPattern *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Vec_IntClear( vPattern );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pFraig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pFraig, i)); i++  {\n        Vec_IntPush( vPattern, sat_solver_var_value(p.pSat, Ssc_ObjSatVar(p, Gia_ObjId(p.pFraig, pObj))) );\n    }\n}\nfunc Ssc_ManFindPivotSat(p *Ssc_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var status int32  = sat_solver_solve( p.pSat, nil, nil, p.pPars.nBTLimit, 0, 0, 0 );\n    if status == l_False {\n        return (Vec_Int_t *)(ABC_PTRINT_T)1; }\n    if status == l_Undef {\n        return nil; }\n    assert(status == l_True, \"status == l_True\");\n    vInit = Vec_IntAlloc( Gia_ManCiNum(p.pFraig) );\n    Ssc_ManCollectSatPattern( p, vInit );\n    return vInit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManCheckEquivalence(p *Ssc_Man_t, iRepr int32, iNode int32, fCompl int32) int32 {\n    var pLitsSat [2]int32;\n    var RetValue int32;\n    var clk abctime;\n    assert(iRepr != iNode, \"iRepr != iNode\");\n    if iRepr \u003e iNode {\n        return l_Undef; }\n    assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n//    if ( p-\u003enTimeOut )\n//        sat_solver_set_runtime_limit( p-\u003epSat, p-\u003enTimeOut * CLOCKS_PER_SEC + Abc_Clock() );\n\n    // create CNF\n    if iRepr != 0 {\n    Ssc_ManCnfNodeAddToSolver( p, iRepr ); }\n    Ssc_ManCnfNodeAddToSolver( p, iNode );\n    sat_solver_compress( p.pSat );\n\n    // order the literals\n    pLitsSat[0] = Abc_Var2Lit( Ssc_ObjSatVar(p, iRepr), 0 );\n    pLitsSat[1] = Abc_Var2Lit( Ssc_ObjSatVar(p, iNode), fCompl ^ int32((iRepr \u003e 0)) );\n\n    // solve under assumptions\n    // A = 1; B = 0\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_False {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] ); // compl\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] ); // compl\n        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.timeSatUnsat += Abc_Clock() - clk;\n    \n    } else if RetValue == l_True {\n        Ssc_ManCollectSatPattern( p, p.vPattern );\n        p.timeSatSat += Abc_Clock() - clk;\n        return l_True;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \n        p.timeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if iRepr == 0 {\n        return l_False; }\n\n    // solve under assumptions\n    // A = 0; B = 1\n    clk = Abc_Clock();\n    RetValue = sat_solver_solve( p.pSat, pLitsSat, pLitsSat + 2, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if RetValue == l_False {\n        pLitsSat[0] = Abc_LitNot( pLitsSat[0] );\n        pLitsSat[1] = Abc_LitNot( pLitsSat[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.timeSatUnsat += Abc_Clock() - clk;\n    \n    } else if RetValue == l_True {\n        Ssc_ManCollectSatPattern( p, p.vPattern );\n        p.timeSatSat += Abc_Clock() - clk;\n        return l_True;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \n        p.timeSatUndec += Abc_Clock() - clk;\n        return l_Undef;\n    }\n    return l_False;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

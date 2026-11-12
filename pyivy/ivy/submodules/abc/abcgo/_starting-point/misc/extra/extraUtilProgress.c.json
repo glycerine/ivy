@@ -1,0 +1,350 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c",
+  "SHA256": "737e0ee0407c4a8864dcca4d0639b937e948bbd1a927a01e5aa955fa54e47011",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 70,
+        "Column": 71,
+        "ByteOffset": 2362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((ProgressBar *) malloc(sizeof(ProgressBar) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(ProgressBar) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 122,
+        "Column": 57,
+        "ByteOffset": 3779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 4283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"%s \", pString ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 144,
+        "Column": 24,
+        "ByteOffset": 4344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = (pString? strlen(pString) + 1 : 0); i \u003c p.posCur; i++  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 4399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"-\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 4461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"\u003e\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 4536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 4571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( p.pFile, \"\\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 153,
+        "Column": 13,
+        "ByteOffset": 4609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 5094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 5129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( p.pFile, \"\\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 177,
+        "Column": 13,
+        "ByteOffset": 5167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_ProgressBarStart",
+      "Start": 2058,
+      "End": 2539,
+      "BodyStart": 2128,
+      "Original": "ProgressBar * Extra_ProgressBarStart( FILE * pFile, int nItemsTotal )\n{\n    ProgressBar * p;\n    if ( !Abc_FrameShowProgress(Abc_FrameGetGlobalFrame()) ) return NULL;\n    p = ABC_ALLOC( ProgressBar, 1 );\n    memset( p, 0, sizeof(ProgressBar) );\n    p-\u003epFile       = pFile;\n    p-\u003enItemsTotal = nItemsTotal;\n    p-\u003eposTotal    = 78;\n    p-\u003eposCur      = 1;\n    p-\u003enItemsNext  = (int)((7.0+p-\u003eposCur)*p-\u003enItemsTotal/p-\u003eposTotal);\n    Extra_ProgressBarShow( p, NULL );\n    return p;\n}",
+      "Draft": "func Extra_ProgressBarStart(pFile *os.File, nItemsTotal int32) *ProgressBar {\n    var p *ProgressBar;\n    if !Abc_FrameShowProgress(Abc_FrameGetGlobalFrame()) { return nil; }\n    // inlining of macro ABC_ALLOC\n    p = ((ProgressBar *) malloc(sizeof(ProgressBar) * (size_t)(1)));\n    memset( p, 0, sizeof(ProgressBar) );\n    p.pFile       = pFile;\n    p.nItemsTotal = nItemsTotal;\n    p.posTotal    = 78;\n    p.posCur      = 1;\n    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    Extra_ProgressBarShow( p, nil );\n    return p;\n}"
+    },
+    {
+      "Name": "Extra_ProgressBarUpdate_int",
+      "Start": 2800,
+      "End": 3240,
+      "BodyStart": 2883,
+      "Original": "void Extra_ProgressBarUpdate_int( ProgressBar * p, int nItemsCur, char * pString )\n{\n    if ( p == NULL ) return;\n    if ( nItemsCur \u003c p-\u003enItemsNext )\n        return;\n    if ( nItemsCur \u003e= p-\u003enItemsTotal )\n    {\n        p-\u003eposCur = 78;\n        p-\u003enItemsNext = 0x7FFFFFFF;\n    }\n    else\n    {\n        p-\u003eposCur += 7;\n        p-\u003enItemsNext = (int)((7.0+p-\u003eposCur)*p-\u003enItemsTotal/p-\u003eposTotal);\n    }\n    Extra_ProgressBarShow( p, pString );\n}",
+      "Draft": "func Extra_ProgressBarUpdate_int(p *ProgressBar, nItemsCur int32, pString string) {\n    if p == nil { return; }\n    if nItemsCur \u003c p.nItemsNext {\n        return; }\n    if nItemsCur \u003e= p.nItemsTotal {\n        p.posCur = 78;\n        p.nItemsNext = 0x7FFFFFFF;\n    \n    } else {\n        p.posCur += 7;\n        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    }\n    Extra_ProgressBarShow( p, pString );\n}"
+    },
+    {
+      "Name": "Extra_ProgressBarStop",
+      "Start": 3500,
+      "End": 3630,
+      "BodyStart": 3546,
+      "Original": "void Extra_ProgressBarStop( ProgressBar * p )\n{\n    if ( p == NULL ) return;\n    Extra_ProgressBarClean( p );\n    ABC_FREE( p );\n}",
+      "Draft": "func Extra_ProgressBarStop(p *ProgressBar) {\n    if p == nil { return; }\n    Extra_ProgressBarClean( p );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Extra_ProgressBarShow",
+      "Start": 3908,
+      "End": 4429,
+      "BodyStart": 3970,
+      "Original": "void Extra_ProgressBarShow( ProgressBar * p, char * pString )\n{\n    int i;\n    if ( p == NULL ) \n        return;\n    if ( Abc_FrameIsBatchMode() )\n        return;\n    if ( pString )\n        fprintf( p-\u003epFile, \"%s \", pString );\n    for ( i = (pString? strlen(pString) + 1 : 0); i \u003c p-\u003eposCur; i++ )\n        fprintf( p-\u003epFile, \"-\" );\n    if ( i == p-\u003eposCur )\n        fprintf( p-\u003epFile, \"\u003e\" );\n    for ( i++  ; i \u003c= p-\u003eposTotal; i++ )\n        fprintf( p-\u003epFile, \" \" );\n    fprintf( p-\u003epFile, \"\\r\" );\n    fflush( stdout );\n}",
+      "Draft": "func Extra_ProgressBarShow(p *ProgressBar, pString string) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    if pString {\n        fmt.Fprintf(p.pFile, \"%s \", pString); }\n    for  i = (pString? len(pString) + 1 : 0); i \u003c p.posCur; i++  {\n        fmt.Fprintf(p.pFile, \"-\");\n    }\n    if i == p.posCur {\n        fmt.Fprintf(p.pFile, \"\u003e\"); }\n    for  i++  ; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Extra_ProgressBarClean",
+      "Start": 4705,
+      "End": 4982,
+      "BodyStart": 4752,
+      "Original": "void Extra_ProgressBarClean( ProgressBar * p )\n{\n    int i;\n    if ( p == NULL ) \n        return;\n    if ( Abc_FrameIsBatchMode() )\n        return;\n    for ( i = 0; i \u003c= p-\u003eposTotal; i++ )\n        fprintf( p-\u003epFile, \" \" );\n    fprintf( p-\u003epFile, \"\\r\" );\n    fflush( stdout );\n}",
+      "Draft": "func Extra_ProgressBarClean(p *ProgressBar) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    for  i = 0; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::struct::ProgressBarStruct",
+      "Category": "struct-review",
+      "Symbol": "ProgressBarStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 813,
+      "End": 1188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::mechanical::sizeof::2302",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2233,
+      "End": 2233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::mechanical::sizeof::2357",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2280,
+      "End": 2286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::pointer-cast::2279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2233,
+      "End": 2233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::pointer-cast::3748",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3614,
+      "End": 3614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::Extra_ProgressBarStart",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProgressBarStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2058,
+      "End": 2539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::Extra_ProgressBarUpdate_int",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProgressBarUpdate_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2800,
+      "End": 3240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::ternary::Extra_ProgressBarStop",
+      "Category": "ternary-review",
+      "Symbol": "Extra_ProgressBarStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3500,
+      "End": 3630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::Extra_ProgressBarStop",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProgressBarStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3500,
+      "End": 3630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::ternary::Extra_ProgressBarShow",
+      "Category": "ternary-review",
+      "Symbol": "Extra_ProgressBarShow",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3908,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::Extra_ProgressBarShow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProgressBarShow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3908,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::Extra_ProgressBarClean",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ProgressBarClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4705,
+      "End": 4982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilProgress.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5229
+    }
+  ],
+  "Draft": "package extra\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilProgress.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Progress bar.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilProgress.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"extra.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype ProgressBarStruct struct {\n    nItemsNext              int32;   // the number of items for the next update of the progress bar\n    nItemsTotal              int32;  // the total number of items\n    posTotal              int32;     // the total number of positions\n    posCur              int32;       // the current position\n    pFile            *os.File;        // the output stream \n}\n\n// static void Extra_ProgressBarShow( ProgressBar * p, char * pString );\n\n// static void Extra_ProgressBarClean( ProgressBar * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the progress bar.]\n\n  Description [The first parameter is the output stream (pFile), where\n  the progress is printed. The current printing position should be the\n  first one on the given line. The second parameters is the total\n  number of items that correspond to 100% position of the progress bar.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProgressBarStart(pFile *os.File, nItemsTotal int32) *ProgressBar {\n    var p *ProgressBar;\n    if !Abc_FrameShowProgress(Abc_FrameGetGlobalFrame()) { return nil; }\n    // inlining of macro ABC_ALLOC\n    p = ((ProgressBar *) malloc(sizeof(ProgressBar) * (size_t)(1)));\n    memset( p, 0, sizeof(ProgressBar) );\n    p.pFile       = pFile;\n    p.nItemsTotal = nItemsTotal;\n    p.posTotal    = 78;\n    p.posCur      = 1;\n    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    Extra_ProgressBarShow( p, nil );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the progress bar.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProgressBarUpdate_int(p *ProgressBar, nItemsCur int32, pString string) {\n    if p == nil { return; }\n    if nItemsCur \u003c p.nItemsNext {\n        return; }\n    if nItemsCur \u003e= p.nItemsTotal {\n        p.posCur = 78;\n        p.nItemsNext = 0x7FFFFFFF;\n    \n    } else {\n        p.posCur += 7;\n        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    }\n    Extra_ProgressBarShow( p, pString );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the progress bar.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProgressBarStop(p *ProgressBar) {\n    if p == nil { return; }\n    Extra_ProgressBarClean( p );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the progress bar of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProgressBarShow(p *ProgressBar, pString string) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    if pString {\n        fmt.Fprintf(p.pFile, \"%s \", pString); }\n    for  i = (pString? len(pString) + 1 : 0); i \u003c p.posCur; i++  {\n        fmt.Fprintf(p.pFile, \"-\");\n    }\n    if i == p.posCur {\n        fmt.Fprintf(p.pFile, \"\u003e\"); }\n    for  i++  ; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the progress bar before quitting.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ProgressBarClean(p *ProgressBar) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    for  i = 0; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

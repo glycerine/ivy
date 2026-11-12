@@ -1,0 +1,1481 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c",
+  "SHA256": "4fa8b62163527528d42414e4b989ff7f2a8f0eab8828d8848d0f816bf6a88c64",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 98,
+        "Column": 73,
+        "ByteOffset": 3779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_MmFixed_t *) malloc(sizeof(Gia_MmFixed_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_MmFixed_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 80,
+        "ByteOffset": 4202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 4833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\","
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 72,
+        "ByteOffset": 5135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 65,
+        "ByteOffset": 5262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 57,
+        "ByteOffset": 5369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pEntriesFree == nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 169,
+        "Column": 41,
+        "ByteOffset": 6098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 171,
+        "Column": 41,
+        "ByteOffset": 6233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 174,
+        "Column": 81,
+        "ByteOffset": 6390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pEntriesFree = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 72,
+        "ByteOffset": 8345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 302,
+        "Column": 72,
+        "ByteOffset": 10027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_MmFlex_t *) malloc(sizeof(Gia_MmFlex_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 10076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_MmFlex_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 312,
+        "Column": 80,
+        "ByteOffset": 10358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 9,
+        "ByteOffset": 10846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 10966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\","
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 341,
+        "Column": 72,
+        "ByteOffset": 11214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 343,
+        "Column": 65,
+        "ByteOffset": 11341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 344,
+        "Column": 57,
+        "ByteOffset": 11448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 366,
+        "Column": 41,
+        "ByteOffset": 12146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 368,
+        "Column": 41,
+        "ByteOffset": 12281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 376,
+        "Column": 77,
+        "ByteOffset": 12651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pCurrent = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 5,
+        "ByteOffset": 12890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCurrent + nBytes \u003c= p.pEnd );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 410,
+        "Column": 72,
+        "ByteOffset": 13706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 463,
+        "Column": 72,
+        "ByteOffset": 15419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_MmStep_t *) malloc(sizeof(Gia_MmStep_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 464,
+        "Column": 5,
+        "ByteOffset": 15468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_MmStep_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 467,
+        "Column": 81,
+        "ByteOffset": 15647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMems = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMems)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 473,
+        "Column": 80,
+        "ByteOffset": 15996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMap = /*__starting_point_inline_macro:ABC_ALLOC__*/((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMapSize+1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 487,
+        "Column": 80,
+        "ByteOffset": 16503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 509,
+        "Column": 76,
+        "ByteOffset": 17135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 511,
+        "Column": 69,
+        "ByteOffset": 17270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 513,
+        "Column": 63,
+        "ByteOffset": 17389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 514,
+        "Column": 62,
+        "ByteOffset": 17497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 515,
+        "Column": 57,
+        "ByteOffset": 17598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 537,
+        "Column": 41,
+        "ByteOffset": 18227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 539,
+        "Column": 41,
+        "ByteOffset": 18362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 542,
+        "Column": 91,
+        "ByteOffset": 18529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pChunks[ p.nChunks++ ] = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nBytes)));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_MmFixedStart",
+      "Start": 3531,
+      "End": 4101,
+      "BodyStart": 3599,
+      "Original": "Gia_MmFixed_t * Gia_MmFixedStart( int nEntrySize, int nEntriesMax )\n{\n    Gia_MmFixed_t * p;\n\n    p = ABC_ALLOC( Gia_MmFixed_t, 1 );\n    memset( p, 0, sizeof(Gia_MmFixed_t) );\n\n    p-\u003enEntrySize    = nEntrySize;\n    p-\u003enEntriesAlloc = 0;\n    p-\u003enEntriesUsed  = 0;\n    p-\u003epEntriesFree  = NULL;\n\n    p-\u003enChunkSize = nEntriesMax / 8;\n    if ( p-\u003enChunkSize \u003c 8 )\n        p-\u003enChunkSize = 8;\n\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enMemoryAlloc  = 0;\n    return p;\n}",
+      "Draft": "func Gia_MmFixedStart(nEntrySize int32, nEntriesMax int32) *Gia_MmFixed_t {\n    var p *Gia_MmFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmFixed_t *) malloc(sizeof(Gia_MmFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    p.nChunkSize = nEntriesMax / 8;\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_MmFixedStop",
+      "Start": 4337,
+      "End": 4941,
+      "BodyStart": 4393,
+      "Original": "void Gia_MmFixedStop( Gia_MmFixed_t * p, int fVerbose )\n{\n    int i;\n    if ( p == NULL )\n        return;\n    if ( fVerbose )\n    {\n        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\",\n            p-\u003enEntrySize, p-\u003enChunkSize, p-\u003enChunks );\n        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\",\n            p-\u003enEntriesUsed, p-\u003enEntriesMax, p-\u003enEntrySize * p-\u003enEntriesUsed, p-\u003enMemoryAlloc );\n    }\n    for ( i = 0; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    ABC_FREE( p-\u003epChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_MmFixedStop(p *Gia_MmFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_MmFixedEntryFetch",
+      "Start": 5177,
+      "End": 6546,
+      "BodyStart": 5227,
+      "Original": "char * Gia_MmFixedEntryFetch( Gia_MmFixed_t * p )\n{\n    char * pTemp;\n    int i;\n\n    // check if there are still free entries\n    if ( p-\u003enEntriesUsed == p-\u003enEntriesAlloc )\n    { // need to allocate more entries\n        assert( p-\u003epEntriesFree == NULL );\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        p-\u003epEntriesFree = ABC_ALLOC( char, p-\u003enEntrySize * p-\u003enChunkSize );\n        p-\u003enMemoryAlloc += p-\u003enEntrySize * p-\u003enChunkSize;\n        // transform these entries into a linked list\n        pTemp = p-\u003epEntriesFree;\n        for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n        {\n            *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n            pTemp += p-\u003enEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = NULL;\n        // add the chunk to the chunk storage\n        p-\u003epChunks[ p-\u003enChunks++ ] = p-\u003epEntriesFree;\n        // add to the number of entries allocated\n        p-\u003enEntriesAlloc += p-\u003enChunkSize;\n    }\n    // incrememt the counter of used entries\n    p-\u003enEntriesUsed++;\n    if ( p-\u003enEntriesMax \u003c p-\u003enEntriesUsed )\n        p-\u003enEntriesMax = p-\u003enEntriesUsed;\n    // return the first entry in the free entry list\n    pTemp = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = *((char **)pTemp);\n    return pTemp;\n}",
+      "Draft": "func Gia_MmFixedEntryFetch(p *Gia_MmFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Gia_MmFixedEntryRecycle",
+      "Start": 6782,
+      "End": 7046,
+      "BodyStart": 6847,
+      "Original": "void Gia_MmFixedEntryRecycle( Gia_MmFixed_t * p, char * pEntry )\n{\n    // decrement the counter of used entries\n    p-\u003enEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = pEntry;\n}",
+      "Draft": "func Gia_MmFixedEntryRecycle(p *Gia_MmFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}"
+    },
+    {
+      "Name": "Gia_MmFixedRestart",
+      "Start": 7330,
+      "End": 8110,
+      "BodyStart": 7375,
+      "Original": "void Gia_MmFixedRestart( Gia_MmFixed_t * p )\n{\n    int i;\n    char * pTemp;\n    if ( p-\u003enChunks == 0 )\n        return;\n    // deallocate all chunks except the first one\n    for ( i = 1; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    p-\u003enChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p-\u003epChunks[0];\n    for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n    {\n        *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n        pTemp += p-\u003enEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = NULL;\n    // set the free entry list\n    p-\u003epEntriesFree  = p-\u003epChunks[0];\n    // set the correct statistics\n    p-\u003enMemoryAlloc  = p-\u003enEntrySize * p-\u003enChunkSize;\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enEntriesAlloc = p-\u003enChunkSize;\n    p-\u003enEntriesUsed  = 0;\n}",
+      "Draft": "func Gia_MmFixedRestart(p *Gia_MmFixed_t) {\n    var i int32;\n    var pTemp string;\n    if p.nChunks == 0 {\n        return; }\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}"
+    },
+    {
+      "Name": "Gia_MmFixedReadMemUsage",
+      "Start": 8346,
+      "End": 8426,
+      "BodyStart": 8395,
+      "Original": "int Gia_MmFixedReadMemUsage( Gia_MmFixed_t * p )\n{\n    return p-\u003enMemoryAlloc;\n}",
+      "Draft": "func Gia_MmFixedReadMemUsage(p *Gia_MmFixed_t) int32 {\n    return p.nMemoryAlloc;\n}"
+    },
+    {
+      "Name": "Gia_MmFixedReadMaxEntriesUsed",
+      "Start": 8662,
+      "End": 8747,
+      "BodyStart": 8717,
+      "Original": "int Gia_MmFixedReadMaxEntriesUsed( Gia_MmFixed_t * p )\n{\n    return p-\u003enEntriesMax;\n}",
+      "Draft": "func Gia_MmFixedReadMaxEntriesUsed(p *Gia_MmFixed_t) int32 {\n    return p.nEntriesMax;\n}"
+    },
+    {
+      "Name": "Gia_MmFlexStart",
+      "Start": 9071,
+      "End": 9511,
+      "BodyStart": 9104,
+      "Original": "Gia_MmFlex_t * Gia_MmFlexStart()\n{\n    Gia_MmFlex_t * p;\n\n    p = ABC_ALLOC( Gia_MmFlex_t, 1 );\n    memset( p, 0, sizeof(Gia_MmFlex_t) );\n\n    p-\u003enEntriesUsed  = 0;\n    p-\u003epCurrent      = NULL;\n    p-\u003epEnd          = NULL;\n\n    p-\u003enChunkSize    = (1 \u003c\u003c 18);\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enMemoryAlloc  = 0;\n    return p;\n}",
+      "Draft": "func Gia_MmFlexStart() *Gia_MmFlex_t {\n    var p *Gia_MmFlex_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmFlex_t *) malloc(sizeof(Gia_MmFlex_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmFlex_t) );\n\n    p.nEntriesUsed  = 0;\n    p.pCurrent      = nil;\n    p.pEnd          = nil;\n\n    p.nChunkSize    = (1 \u003c\u003c 18);\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_MmFlexStop",
+      "Start": 9747,
+      "End": 10271,
+      "BodyStart": 9801,
+      "Original": "void Gia_MmFlexStop( Gia_MmFlex_t * p, int fVerbose )\n{\n    int i;\n    if ( p == NULL )\n        return;\n    if ( fVerbose )\n    {\n        printf( \"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\",\n            p-\u003enChunkSize, p-\u003enChunks );\n        printf( \"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\",\n            p-\u003enEntriesUsed, p-\u003enMemoryUsed, p-\u003enMemoryAlloc );\n    }\n    for ( i = 0; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    ABC_FREE( p-\u003epChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_MmFlexStop(p *Gia_MmFlex_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\", p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\", p.nEntriesUsed, p.nMemoryUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_MmFlexEntryFetch",
+      "Start": 10507,
+      "End": 11677,
+      "BodyStart": 10567,
+      "Original": "char * Gia_MmFlexEntryFetch( Gia_MmFlex_t * p, int nBytes )\n{\n    char * pTemp;\n    // check if there are still free entries\n    if ( p-\u003epCurrent == NULL || p-\u003epCurrent + nBytes \u003e p-\u003epEnd )\n    { // need to allocate more entries\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        if ( nBytes \u003e p-\u003enChunkSize )\n        {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p-\u003enChunkSize = 2 * nBytes;\n        }\n        p-\u003epCurrent = ABC_ALLOC( char, p-\u003enChunkSize );\n        p-\u003epEnd     = p-\u003epCurrent + p-\u003enChunkSize;\n        p-\u003enMemoryAlloc += p-\u003enChunkSize;\n        // add the chunk to the chunk storage\n        p-\u003epChunks[ p-\u003enChunks++ ] = p-\u003epCurrent;\n    }\n    assert( p-\u003epCurrent + nBytes \u003c= p-\u003epEnd );\n    // increment the counter of used entries\n    p-\u003enEntriesUsed++;\n    // keep track of the memory used\n    p-\u003enMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p-\u003epCurrent;\n    p-\u003epCurrent += nBytes;\n    return pTemp;\n}",
+      "Draft": "func Gia_MmFlexEntryFetch(p *Gia_MmFlex_t, nBytes int32) string {\n    var pTemp string;\n    // check if there are still free entries\n    if p.pCurrent == nil || p.pCurrent + nBytes \u003e p.pEnd { // need to allocate more entries\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        if nBytes \u003e p.nChunkSize {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p.nChunkSize = 2 * nBytes;\n        }\n        // inlining of macro ABC_ALLOC\n        p.pCurrent = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.pEnd     = p.pCurrent + p.nChunkSize;\n        p.nMemoryAlloc += p.nChunkSize;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pCurrent;\n    }\n    assert(p.pCurrent + nBytes \u003c= p.pEnd, \"p.pCurrent + nBytes \u003c= p.pEnd\");\n    // increment the counter of used entries\n    p.nEntriesUsed++;\n    // keep track of the memory used\n    p.nMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p.pCurrent;\n    p.pCurrent += nBytes;\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Gia_MmFlexRestart",
+      "Start": 11961,
+      "End": 12422,
+      "BodyStart": 12004,
+      "Original": "void Gia_MmFlexRestart( Gia_MmFlex_t * p )\n{\n    int i;\n    if ( p-\u003enChunks == 0 )\n        return;\n    // deallocate all chunks except the first one\n    for ( i = 1; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    p-\u003enChunks  = 1;\n    p-\u003enMemoryAlloc = p-\u003enChunkSize;\n    // transform these entries into a linked list\n    p-\u003epCurrent = p-\u003epChunks[0];\n    p-\u003epEnd     = p-\u003epCurrent + p-\u003enChunkSize;\n    p-\u003enEntriesUsed = 0;\n    p-\u003enMemoryUsed = 0;\n}",
+      "Draft": "func Gia_MmFlexRestart(p *Gia_MmFlex_t) {\n    var i int32;\n    if p.nChunks == 0 {\n        return; }\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks  = 1;\n    p.nMemoryAlloc = p.nChunkSize;\n    // transform these entries into a linked list\n    p.pCurrent = p.pChunks[0];\n    p.pEnd     = p.pCurrent + p.nChunkSize;\n    p.nEntriesUsed = 0;\n    p.nMemoryUsed = 0;\n}"
+    },
+    {
+      "Name": "Gia_MmFlexReadMemUsage",
+      "Start": 12658,
+      "End": 12735,
+      "BodyStart": 12705,
+      "Original": "int Gia_MmFlexReadMemUsage( Gia_MmFlex_t * p )\n{\n    return p-\u003enMemoryUsed;\n}",
+      "Draft": "func Gia_MmFlexReadMemUsage(p *Gia_MmFlex_t) int32 {\n    return p.nMemoryUsed;\n}"
+    },
+    {
+      "Name": "Gia_MmStepStart",
+      "Start": 13674,
+      "End": 14659,
+      "BodyStart": 13719,
+      "Original": "Gia_MmStep_t * Gia_MmStepStart( int nSteps )\n{\n    Gia_MmStep_t * p;\n    int i, k;\n    p = ABC_ALLOC( Gia_MmStep_t, 1 );\n    memset( p, 0, sizeof(Gia_MmStep_t) );\n    p-\u003enMems = nSteps;\n    // start the fixed memory managers\n    p-\u003epMems = ABC_ALLOC( Gia_MmFixed_t *, p-\u003enMems );\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        p-\u003epMems[i] = Gia_MmFixedStart( (8\u003c\u003ci), (1\u003c\u003c13) );\n    // set up the mapping of the required memory size into the corresponding manager\n    p-\u003enMapSize = (4\u003c\u003cp-\u003enMems);\n    p-\u003epMap = ABC_ALLOC( Gia_MmFixed_t *, p-\u003enMapSize+1 );\n    p-\u003epMap[0] = NULL;\n    for ( k = 1; k \u003c= 4; k++ )\n        p-\u003epMap[k] = p-\u003epMems[0];\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        for ( k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++ )\n            p-\u003epMap[k] = p-\u003epMems[i];\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n    return p;\n}",
+      "Draft": "func Gia_MmStepStart(nSteps int32) *Gia_MmStep_t {\n    var p *Gia_MmStep_t;\n    var i, k int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmStep_t *) malloc(sizeof(Gia_MmStep_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmStep_t) );\n    p.nMems = nSteps;\n    // start the fixed memory managers\n    // inlining of macro ABC_ALLOC\n    p.pMems = ((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMems)));\n    for  i = 0; i \u003c p.nMems; i++  {\n        p.pMems[i] = Gia_MmFixedStart( (8\u003c\u003ci), (1\u003c\u003c13) );\n    }\n    // set up the mapping of the required memory size into the corresponding manager\n    p.nMapSize = (4\u003c\u003cp.nMems);\n    // inlining of macro ABC_ALLOC\n    p.pMap = ((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMapSize+1)));\n    p.pMap[0] = nil;\n    for  k = 1; k \u003c= 4; k++  {\n        p.pMap[k] = p.pMems[0];\n    }\n    for  i = 0; i \u003c p.nMems; i++  {\n        for  k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++  {\n            p.pMap[k] = p.pMems[i];\n        }\n    }\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_MmStepStop",
+      "Start": 14920,
+      "End": 15298,
+      "BodyStart": 14974,
+      "Original": "void Gia_MmStepStop( Gia_MmStep_t * p, int fVerbose )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        Gia_MmFixedStop( p-\u003epMems[i], fVerbose );\n    if ( p-\u003enChunksAlloc )\n    {\n        for ( i = 0; i \u003c p-\u003enChunks; i++ )\n            ABC_FREE( p-\u003epChunks[i] );\n        ABC_FREE( p-\u003epChunks );\n    }\n    ABC_FREE( p-\u003epMems );\n    ABC_FREE( p-\u003epMap );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_MmStepStop(p *Gia_MmStep_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        Gia_MmFixedStop( p.pMems[i], fVerbose );\n    }\n    if p.nChunksAlloc {\n        for  i = 0; i \u003c p.nChunks; i++  {\n            // inlining of macro ABC_FREE\n            ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n        }\n        // inlining of macro ABC_FREE\n        ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_MmStepEntryFetch",
+      "Start": 15552,
+      "End": 16038,
+      "BodyStart": 15612,
+      "Original": "char * Gia_MmStepEntryFetch( Gia_MmStep_t * p, int nBytes )\n{\n    if ( nBytes == 0 )\n        return NULL;\n    if ( nBytes \u003e p-\u003enMapSize )\n    {\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        p-\u003epChunks[ p-\u003enChunks++ ] = ABC_ALLOC( char, nBytes );\n        return p-\u003epChunks[p-\u003enChunks-1];\n    }\n    return Gia_MmFixedEntryFetch( p-\u003epMap[nBytes] );\n}",
+      "Draft": "func Gia_MmStepEntryFetch(p *Gia_MmStep_t, nBytes int32) string {\n    if nBytes == 0 {\n        return nil; }\n    if nBytes \u003e p.nMapSize {\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pChunks[ p.nChunks++ ] = ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n        return p.pChunks[p.nChunks-1];\n    }\n    return Gia_MmFixedEntryFetch( p.pMap[nBytes] );\n}"
+    },
+    {
+      "Name": "Gia_MmStepEntryRecycle",
+      "Start": 16294,
+      "End": 16557,
+      "BodyStart": 16369,
+      "Original": "void Gia_MmStepEntryRecycle( Gia_MmStep_t * p, char * pEntry, int nBytes )\n{\n    if ( nBytes == 0 )\n        return;\n    if ( nBytes \u003e p-\u003enMapSize )\n    {\n//        ABC_FREE( pEntry );\n        return;\n    }\n    Gia_MmFixedEntryRecycle( p-\u003epMap[nBytes], pEntry );\n}",
+      "Draft": "func Gia_MmStepEntryRecycle(p *Gia_MmStep_t, pEntry string, nBytes int32) {\n    if nBytes == 0 {\n        return; }\n    if nBytes \u003e p.nMapSize {\n//        ABC_FREE( pEntry );\n        return;\n    }\n    Gia_MmFixedEntryRecycle( p.pMap[nBytes], pEntry );\n}"
+    },
+    {
+      "Name": "Gia_MmStepReadMemUsage",
+      "Start": 16793,
+      "End": 16976,
+      "BodyStart": 16840,
+      "Original": "int Gia_MmStepReadMemUsage( Gia_MmStep_t * p )\n{\n    int i, nMemTotal = 0;\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        nMemTotal += p-\u003epMems[i]-\u003enMemoryAlloc;\n    return nMemTotal;\n}",
+      "Draft": "func Gia_MmStepReadMemUsage(p *Gia_MmStep_t) int32 {\n    var i, nMemTotal int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        nMemTotal += p.pMems[i].nMemoryAlloc;\n    }\n    return nMemTotal;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::struct::Gia_MmFixed_t_",
+      "Category": "struct-review",
+      "Symbol": "Gia_MmFixed_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 754,
+      "End": 1607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::struct::Gia_MmFlex_t_",
+      "Category": "struct-review",
+      "Symbol": "Gia_MmFlex_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1609,
+      "End": 2342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::struct::Gia_MmStep_t_",
+      "Category": "struct-review",
+      "Symbol": "Gia_MmStep_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2344,
+      "End": 2910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::3704",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3633,
+      "End": 3633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::3761",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3682,
+      "End": 3688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::4138",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3995,
+      "End": 3995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::6061",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::6136",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::6282",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5636,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::9957",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9137,
+      "End": 9137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::10013",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9185,
+      "End": 9191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::10297",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9405,
+      "End": 9405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::12113",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::12188",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::12561",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11166,
+      "End": 11166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::15334",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13765,
+      "End": 13765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::15390",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13813,
+      "End": 13819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::15564",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13914,
+      "End": 13914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::15913",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14182,
+      "End": 14182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::16409",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14606,
+      "End": 14606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::18154",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::18229",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::mechanical::sizeof::18386",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15910,
+      "End": 15910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::3679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3633,
+      "End": 3633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::4120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3995,
+      "End": 3995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::4144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3995,
+      "End": 3995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::5086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4866,
+      "End": 4866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::5210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4897,
+      "End": 4897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::5319",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4925,
+      "End": 4925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6118",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5547,
+      "End": 5547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6266",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5636,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5901,
+      "End": 5910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::6681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6027,
+      "End": 6036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::7164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6510,
+      "End": 6519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::7633",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6979,
+      "End": 6988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::8269",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7546,
+      "End": 7546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::8478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7728,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::8588",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7838,
+      "End": 7847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::9933",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9137,
+      "End": 9137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::10279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9405,
+      "End": 9405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::10303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9405,
+      "End": 9405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::11165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10196,
+      "End": 10196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::11289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10227,
+      "End": 10227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::11398",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10255,
+      "End": 10255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10850,
+      "End": 10850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::12545",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11166,
+      "End": 11166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::13629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12157,
+      "End": 12157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::15310",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13765,
+      "End": 13765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::15537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13914,
+      "End": 13914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::15570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13914,
+      "End": 13914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::15886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14182,
+      "End": 14182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::15919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14182,
+      "End": 14182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::16391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14606,
+      "End": 14606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::16415",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14606,
+      "End": 14606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::17042",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15162,
+      "End": 15162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::17170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15197,
+      "End": 15197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::17292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15231,
+      "End": 15231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::17403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15257,
+      "End": 15257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::17506",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15282,
+      "End": 15282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18160",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18211",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15810,
+      "End": 15810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::pointer-cast::18370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15910,
+      "End": 15910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3531,
+      "End": 4101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::ternary::Gia_MmFixedStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_MmFixedStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4337,
+      "End": 4941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4337,
+      "End": 4941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5177,
+      "End": 6546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedEntryRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedEntryRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6782,
+      "End": 7046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::ternary::Gia_MmFixedRestart",
+      "Category": "ternary-review",
+      "Symbol": "Gia_MmFixedRestart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7330,
+      "End": 8110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedRestart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7330,
+      "End": 8110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8346,
+      "End": 8426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFixedReadMaxEntriesUsed",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFixedReadMaxEntriesUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8662,
+      "End": 8747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFlexStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFlexStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9071,
+      "End": 9511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::ternary::Gia_MmFlexStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_MmFlexStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9747,
+      "End": 10271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFlexStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFlexStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9747,
+      "End": 10271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFlexEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFlexEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10507,
+      "End": 11677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::ternary::Gia_MmFlexRestart",
+      "Category": "ternary-review",
+      "Symbol": "Gia_MmFlexRestart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11961,
+      "End": 12422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFlexRestart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFlexRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11961,
+      "End": 12422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmFlexReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmFlexReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12658,
+      "End": 12735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmStepStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmStepStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13674,
+      "End": 14659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::ternary::Gia_MmStepStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_MmStepStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14920,
+      "End": 15298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmStepStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmStepStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14920,
+      "End": 15298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmStepEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmStepEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15552,
+      "End": 16038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmStepEntryRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmStepEntryRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16294,
+      "End": 16557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::Gia_MmStepReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Gia_MmStepReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16793,
+      "End": 16976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaMem.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17221
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaMem.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Memory managers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: giaMem.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Gia_MmFixed_t_ struct {\n    // information about individual entries\n    nEntrySize           int32;    // the size of one entry\n    nEntriesAlloc           int32; // the total number of entries allocated\n    nEntriesUsed           int32;  // the number of entries in use\n    nEntriesMax           int32;   // the max number of entries in use\n    pEntriesFree         string;  // the linked list of free entries\n\n    // this is where the memory is stored\n    nChunkSize           int32;    // the size of one chunk\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n\n    // statistics\n    nMemoryUsed           int32;   // memory used in the allocated entries\n    nMemoryAlloc           int32;  // memory allocated\n}\n\ntype Gia_MmFlex_t_ struct {\n    // information about individual entries\n    nEntriesUsed           int32;  // the number of entries allocated\n    pCurrent         string;      // the current pointer to free memory\n    pEnd         string;          // the first entry outside the free memory\n\n    // this is where the memory is stored\n    nChunkSize           int32;    // the size of one chunk\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n\n    // statistics\n    nMemoryUsed           int32;   // memory used in the allocated entries\n    nMemoryAlloc           int32;  // memory allocated\n}\n\ntype Gia_MmStep_t_ struct {\n    nMems               int32;    // the number of fixed memory managers employed\n    pMems   **Gia_MmFixed_t;    // memory managers: 2^1 words, 2^2 words, etc\n    nMapSize               int32; // the size of the memory array\n    pMap   **Gia_MmFixed_t;     // maps the number of bytes into its memory manager\n    // additional memory chunks\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates memory pieces of fixed size.]\n\n  Description [The size of the chunk is computed as the minimum of\n  1024 entries and 64K. Can only work with entry size at least 4 byte long.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedStart(nEntrySize int32, nEntriesMax int32) *Gia_MmFixed_t {\n    var p *Gia_MmFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmFixed_t *) malloc(sizeof(Gia_MmFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    p.nChunkSize = nEntriesMax / 8;\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedStop(p *Gia_MmFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedEntryFetch(p *Gia_MmFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedEntryRecycle(p *Gia_MmFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Relocates all the memory except the first chunk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedRestart(p *Gia_MmFixed_t) {\n    var i int32;\n    var pTemp string;\n    if p.nChunks == 0 {\n        return; }\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedReadMemUsage(p *Gia_MmFixed_t) int32 {\n    return p.nMemoryAlloc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFixedReadMaxEntriesUsed(p *Gia_MmFixed_t) int32 {\n    return p.nEntriesMax;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates entries of flexible size.]\n\n  Description [Can only work with entry size at least 4 byte long.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFlexStart() *Gia_MmFlex_t {\n    var p *Gia_MmFlex_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmFlex_t *) malloc(sizeof(Gia_MmFlex_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmFlex_t) );\n\n    p.nEntriesUsed  = 0;\n    p.pCurrent      = nil;\n    p.pEnd          = nil;\n\n    p.nChunkSize    = (1 \u003c\u003c 18);\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFlexStop(p *Gia_MmFlex_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\", p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\", p.nEntriesUsed, p.nMemoryUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFlexEntryFetch(p *Gia_MmFlex_t, nBytes int32) string {\n    var pTemp string;\n    // check if there are still free entries\n    if p.pCurrent == nil || p.pCurrent + nBytes \u003e p.pEnd { // need to allocate more entries\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        if nBytes \u003e p.nChunkSize {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p.nChunkSize = 2 * nBytes;\n        }\n        // inlining of macro ABC_ALLOC\n        p.pCurrent = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.pEnd     = p.pCurrent + p.nChunkSize;\n        p.nMemoryAlloc += p.nChunkSize;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pCurrent;\n    }\n    assert(p.pCurrent + nBytes \u003c= p.pEnd, \"p.pCurrent + nBytes \u003c= p.pEnd\");\n    // increment the counter of used entries\n    p.nEntriesUsed++;\n    // keep track of the memory used\n    p.nMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p.pCurrent;\n    p.pCurrent += nBytes;\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Relocates all the memory except the first chunk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFlexRestart(p *Gia_MmFlex_t) {\n    var i int32;\n    if p.nChunks == 0 {\n        return; }\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks  = 1;\n    p.nMemoryAlloc = p.nChunkSize;\n    // transform these entries into a linked list\n    p.pCurrent = p.pChunks[0];\n    p.pEnd     = p.pCurrent + p.nChunkSize;\n    p.nEntriesUsed = 0;\n    p.nMemoryUsed = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmFlexReadMemUsage(p *Gia_MmFlex_t) int32 {\n    return p.nMemoryUsed;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hierarchical memory manager.]\n\n  Description [This manager can allocate entries of any size.\n  Iternally they are mapped into the entries with the number of bytes\n  equal to the power of 2. The smallest entry size is 8 bytes. The\n  next one is 16 bytes etc. So, if the user requests 6 bytes, he gets \n  8 byte entry. If we asks for 25 bytes, he gets 32 byte entry etc.\n  The input parameters \"nSteps\" says how many fixed memory managers\n  are employed internally. Calling this procedure with nSteps equal\n  to 10 results in 10 hierarchically arranged internal memory managers, \n  which can allocate up to 4096 (1Kb) entries. Requests for larger \n  entries are handed over to malloc() and then ABC_FREE()ed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmStepStart(nSteps int32) *Gia_MmStep_t {\n    var p *Gia_MmStep_t;\n    var i, k int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Gia_MmStep_t *) malloc(sizeof(Gia_MmStep_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Gia_MmStep_t) );\n    p.nMems = nSteps;\n    // start the fixed memory managers\n    // inlining of macro ABC_ALLOC\n    p.pMems = ((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMems)));\n    for  i = 0; i \u003c p.nMems; i++  {\n        p.pMems[i] = Gia_MmFixedStart( (8\u003c\u003ci), (1\u003c\u003c13) );\n    }\n    // set up the mapping of the required memory size into the corresponding manager\n    p.nMapSize = (4\u003c\u003cp.nMems);\n    // inlining of macro ABC_ALLOC\n    p.pMap = ((Gia_MmFixed_t * *) malloc(sizeof(Gia_MmFixed_t *) * (size_t)(p.nMapSize+1)));\n    p.pMap[0] = nil;\n    for  k = 1; k \u003c= 4; k++  {\n        p.pMap[k] = p.pMems[0];\n    }\n    for  i = 0; i \u003c p.nMems; i++  {\n        for  k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++  {\n            p.pMap[k] = p.pMems[i];\n        }\n    }\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmStepStop(p *Gia_MmStep_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        Gia_MmFixedStop( p.pMems[i], fVerbose );\n    }\n    if p.nChunksAlloc {\n        for  i = 0; i \u003c p.nChunks; i++  {\n            // inlining of macro ABC_FREE\n            ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n        }\n        // inlining of macro ABC_FREE\n        ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmStepEntryFetch(p *Gia_MmStep_t, nBytes int32) string {\n    if nBytes == 0 {\n        return nil; }\n    if nBytes \u003e p.nMapSize {\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pChunks[ p.nChunks++ ] = ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n        return p.pChunks[p.nChunks-1];\n    }\n    return Gia_MmFixedEntryFetch( p.pMap[nBytes] );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmStepEntryRecycle(p *Gia_MmStep_t, pEntry string, nBytes int32) {\n    if nBytes == 0 {\n        return; }\n    if nBytes \u003e p.nMapSize {\n//        ABC_FREE( pEntry );\n        return;\n    }\n    Gia_MmFixedEntryRecycle( p.pMap[nBytes], pEntry );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_MmStepReadMemUsage(p *Gia_MmStep_t) int32 {\n    var i, nMemTotal int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        nMemTotal += p.pMems[i].nMemoryAlloc;\n    }\n    return nMemTotal;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

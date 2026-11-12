@@ -1,0 +1,1502 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c",
+  "SHA256": "73b5ff8111849b6b48b2da0a87c25c578caad34a4af1b9f32b909699ae08c875",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSizeB \u003e nSizeC ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003c= 6 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.  Mem = %.2f MB.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"{\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 11454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pC[k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 11488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 11693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj %3d\\n\", iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 11924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 14554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize \u003e 1 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 508,
+        "Column": 57,
+        "ByteOffset": 19096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 606,
+        "Column": 13,
+        "ByteOffset": 22728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot find the following cut at node %d: {\", iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 608,
+        "Column": 17,
+        "ByteOffset": 22851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d\", pFanins[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 13,
+        "ByteOffset": 22906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" }\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 612,
+        "Column": 13,
+        "ByteOffset": 22991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 612,
+        "Column": 21,
+        "ByteOffset": 22999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 614,
+        "Column": 9,
+        "ByteOffset": 23027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFound \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 627,
+        "Column": 9,
+        "ByteOffset": 23737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFanin \u003c iObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 628,
+        "Column": 9,
+        "ByteOffset": 23770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsLut(p.pGia, iFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 629,
+        "Column": 9,
+        "ByteOffset": 23818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsLut(p.pGia, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 630,
+        "Column": 9,
+        "ByteOffset": 23864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 631,
+        "Column": 9,
+        "ByteOffset": 23924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 636,
+        "Column": 9,
+        "ByteOffset": 24123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iEdge \u003e= 0 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 662,
+        "Column": 65,
+        "ByteOffset": 24899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 673,
+        "Column": 13,
+        "ByteOffset": 25593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 685,
+        "Column": 9,
+        "ByteOffset": 26203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 692,
+        "Column": 9,
+        "ByteOffset": 26586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 698,
+        "Column": 17,
+        "ByteOffset": 26981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 709,
+        "Column": 13,
+        "ByteOffset": 27427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 715,
+        "Column": 17,
+        "ByteOffset": 27791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 728,
+        "Column": 13,
+        "ByteOffset": 28481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 28516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nEdges == Vec_IntSize(vCutFans) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 734,
+        "Column": 13,
+        "ByteOffset": 28784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vArray) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 740,
+        "Column": 13,
+        "ByteOffset": 29269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 767,
+        "Column": 17,
+        "ByteOffset": 30717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 788,
+        "Column": 17,
+        "ByteOffset": 31960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 807,
+        "Column": 17,
+        "ByteOffset": 33011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 17,
+        "ByteOffset": 33574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 840,
+        "Column": 5,
+        "ByteOffset": 34163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nEdges == 1 || nEdges == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 858,
+        "Column": 21,
+        "ByteOffset": 35436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 872,
+        "Column": 25,
+        "ByteOffset": 36466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 878,
+        "Column": 18,
+        "ByteOffset": 36669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 913,
+        "Column": 17,
+        "ByteOffset": 37975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCutThis == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 917,
+        "Column": 9,
+        "ByteOffset": 38067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutThis != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 990,
+        "Column": 9,
+        "ByteOffset": 41061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running solver with %d conflicts, %d initial delay, and %d edges. Dynamic constraints = %s.\\n\", nBTLimit, DelayInit, 1+fTwoEdges, fDynamic?\"yes\":\"no\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 993,
+        "Column": 9,
+        "ByteOffset": 41284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Vars:  Total = %d.  Node = %d. Cut = %d. Edge = %d. Delay = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 998,
+        "Column": 9,
+        "ByteOffset": 41558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1014,
+        "Column": 21,
+        "ByteOffset": 42545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Proved UNSAT for delay %d.  \", Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1041,
+        "Column": 17,
+        "ByteOffset": 43558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Solution with delay %2d, node count %5d, and edge count %5d exists. Conf = %8d.  \", Delay, nNodes, nEdges, nConfs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1047,
+        "Column": 17,
+        "ByteOffset": 43895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Nodes:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1050,
+        "Column": 25,
+        "ByteOffset": 44050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%d \", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1052,
+        "Column": 17,
+        "ByteOffset": 44106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1053,
+        "Column": 17,
+        "ByteOffset": 44138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1056,
+        "Column": 17,
+        "ByteOffset": 44216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cuts:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1059,
+        "Column": 25,
+        "ByteOffset": 44384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%d \", p.nNodeVars + i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1061,
+        "Column": 17,
+        "ByteOffset": 44454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1062,
+        "Column": 17,
+        "ByteOffset": 44486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1065,
+        "Column": 17,
+        "ByteOffset": 44565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Edges:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1068,
+        "Column": 25,
+        "ByteOffset": 44747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%d \", p.nNodeVars + p.nCutVars + i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1070,
+        "Column": 17,
+        "ByteOffset": 44830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1071,
+        "Column": 17,
+        "ByteOffset": 44862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1074,
+        "Column": 17,
+        "ByteOffset": 44942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Delays: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1077,
+        "Column": 25,
+        "ByteOffset": 45139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%d \", p.nNodeVars + p.nCutVars + p.nEdgeVars + i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1079,
+        "Column": 17,
+        "ByteOffset": 45236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1080,
+        "Column": 17,
+        "ByteOffset": 45268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1086,
+        "Column": 21,
+        "ByteOffset": 45409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Proved UNSAT for delay %d. Conf = %8d.  \", Delay, nConfs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1088,
+        "Column": 21,
+        "ByteOffset": 45523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Resource limit reached for delay %d. Conf = %8d.  \", Delay, nConfs ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1095,
+        "Column": 9,
+        "ByteOffset": 45742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.  Calls = %d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sle_CutSize",
+      "Start": 856,
+      "End": 937,
+      "BodyStart": 911,
+      "Original": "static inline int   Sle_CutSize( int * pCut )          { return pCut[0] \u0026 0xF;  }",
+      "Draft": "func Sle_CutSize(pCut *int32) int32 { return pCut[0] \u0026 0xF;  }"
+    },
+    {
+      "Name": "Sle_CutSign",
+      "Start": 950,
+      "End": 1043,
+      "BodyStart": 1005,
+      "Original": "static inline int   Sle_CutSign( int * pCut )          { return ((unsigned)pCut[0]) \u003e\u003e 4;   }",
+      "Draft": "func Sle_CutSign(pCut *int32) int32 { return (uint32(pCut[0])) \u003e\u003e 4;   }"
+    },
+    {
+      "Name": "Sle_CutSetSizeSign",
+      "Start": 1056,
+      "End": 1137,
+      "BodyStart": 1111,
+      "Original": "static inline int   Sle_CutSetSizeSign( int s, int S ) { return (S \u003c\u003c 4) | s;   }",
+      "Draft": "func Sle_CutSetSizeSign(s int32, S int32) int32 { return (S \u003c\u003c 4) | s;   }"
+    },
+    {
+      "Name": "Sle_CutLeaves",
+      "Start": 1138,
+      "End": 1219,
+      "BodyStart": 1193,
+      "Original": "static inline int * Sle_CutLeaves( int * pCut )        { return pCut + 1;       }",
+      "Draft": "func Sle_CutLeaves(pCut *int32) *int32 { return pCut + 1;       }"
+    },
+    {
+      "Name": "Sle_CutIsUsed",
+      "Start": 1222,
+      "End": 1303,
+      "BodyStart": 1277,
+      "Original": "static inline int   Sle_CutIsUsed( int * pCut )        { return pCut[1] != 0;   }",
+      "Draft": "func Sle_CutIsUsed(pCut *int32) int32 { return pCut[1] != 0;   }"
+    },
+    {
+      "Name": "Sle_CutSetUnused",
+      "Start": 1304,
+      "End": 1385,
+      "BodyStart": 1359,
+      "Original": "static inline void  Sle_CutSetUnused( int * pCut )     { pCut[1] = 0;           }",
+      "Draft": "func Sle_CutSetUnused(pCut *int32) { pCut[1] = 0;           }"
+    },
+    {
+      "Name": "Sle_ListCutNum",
+      "Start": 1387,
+      "End": 1468,
+      "BodyStart": 1442,
+      "Original": "static inline int   Sle_ListCutNum( int * pList )      { return pList[0];       }",
+      "Draft": "func Sle_ListCutNum(pList *int32) int32 { return pList[0];       }"
+    },
+    {
+      "Name": "Sle_CutMergeOrder",
+      "Start": 2237,
+      "End": 3931,
+      "BodyStart": 2327,
+      "Original": "static inline int Sle_CutMergeOrder( int * pCut0, int * pCut1, int * pCut, int nLutSize )\n{ \n    int nSize0   = Sle_CutSize(pCut0);\n    int nSize1   = Sle_CutSize(pCut1);\n    int i, * pC0 = Sle_CutLeaves(pCut0);\n    int k, * pC1 = Sle_CutLeaves(pCut1);\n    int c, * pC  = Sle_CutLeaves(pCut);\n    // the case of the largest cut sizes\n    if ( nSize0 == nLutSize \u0026\u0026 nSize1 == nLutSize )\n    {\n        for ( i = 0; i \u003c nSize0; i++ )\n        {\n            if ( pC0[i] != pC1[i] )  return 0;\n            pC[i] = pC0[i];\n        }\n        pCut[0] = Sle_CutSetSizeSign( nLutSize, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if ( nSize0 == 0 ) goto FlushCut1;\n    if ( nSize1 == 0 ) goto FlushCut0;\n    while ( 1 )\n    {\n        if ( c == nLutSize ) return 0;\n        if ( pC0[i] \u003c pC1[k] )\n        {\n            pC[c++] = pC0[i++];\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n        }\n        else if ( pC0[i] \u003e pC1[k] )\n        {\n            pC[c++] = pC1[k++];\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n        else\n        {\n            pC[c++] = pC0[i++]; k++;\n            if ( i \u003e= nSize0 ) goto FlushCut1;\n            if ( k \u003e= nSize1 ) goto FlushCut0;\n        }\n    }\n\nFlushCut0:\n    if ( c + nSize0 \u003e nLutSize + i ) return 0;\n    while ( i \u003c nSize0 )\n        pC[c++] = pC0[i++];\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n\nFlushCut1:\n    if ( c + nSize1 \u003e nLutSize + k ) return 0;\n    while ( k \u003c nSize1 )\n        pC[c++] = pC1[k++];\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n}",
+      "Draft": "func Sle_CutMergeOrder(pCut0 *int32, pCut1 *int32, pCut *int32, nLutSize int32) int32 { \n    var nSize0 int32    = Sle_CutSize(pCut0);\n    var nSize1 int32    = Sle_CutSize(pCut1);\n    var i int32;\n    var pC0 *int32 = Sle_CutLeaves(pCut0);\n    var k int32;\n    var pC1 *int32 = Sle_CutLeaves(pCut1);\n    var c int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    // the case of the largest cut sizes\n    if nSize0 == nLutSize \u0026\u0026 nSize1 == nLutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut[0] = Sle_CutSetSizeSign( nLutSize, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nLutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nLutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Sle_SetCutIsContainedOrder",
+      "Start": 3932,
+      "End": 4693,
+      "BodyStart": 4043,
+      "Original": "static inline int Sle_SetCutIsContainedOrder( int * pBase, int * pCut ) // check if pCut is contained in pBase\n{\n    int i, nSizeB = Sle_CutSize(pBase);\n    int k, nSizeC = Sle_CutSize(pCut);\n    int * pLeaveB = Sle_CutLeaves(pBase);\n    int * pLeaveC = Sle_CutLeaves(pCut);\n    if ( nSizeB == nSizeC )\n    {\n        for ( i = 0; i \u003c nSizeB; i++ )\n            if ( pLeaveB[i] != pLeaveC[i] )\n                return 0;\n        return 1;\n    }\n    assert( nSizeB \u003e nSizeC ); \n    if ( nSizeC == 0 )\n        return 1;\n    for ( i = k = 0; i \u003c nSizeB; i++ )\n    {\n        if ( pLeaveB[i] \u003e pLeaveC[k] )\n            return 0;\n        if ( pLeaveB[i] == pLeaveC[k] )\n        {\n            if ( ++k == nSizeC )\n                return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "static inline int Sle_SetCutIsContainedOrder( int * pBase, int * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = Sle_CutSize(pBase);\n    var k int32;\n    var nSizeC int32 = Sle_CutSize(pCut);\n    var pLeaveB *int32  = Sle_CutLeaves(pBase);\n    var pLeaveC *int32  = Sle_CutLeaves(pCut);\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pLeaveB[i] != pLeaveC[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pLeaveB[i] \u003e pLeaveC[k] {\n            return 0; }\n        if pLeaveB[i] == pLeaveC[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sle_CutCountBits",
+      "Start": 4694,
+      "End": 4907,
+      "BodyStart": 4743,
+      "Original": "static inline int Sle_CutCountBits( unsigned i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}",
+      "Draft": "func Sle_CutCountBits(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}"
+    },
+    {
+      "Name": "Sle_SetLastCutIsContained",
+      "Start": 4908,
+      "End": 5298,
+      "BodyStart": 4986,
+      "Original": "static inline int Sle_SetLastCutIsContained( Vec_Int_t * vTemp, int * pBase )\n{\n    int i, * pCut, * pList = Vec_IntArray(vTemp);\n    Sle_ForEachCut( pList, pCut, i )\n        if ( Sle_CutIsUsed(pCut) \u0026\u0026 Sle_CutSize(pCut) \u003c= Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Sle_SetLastCutIsContained(vTemp *Vec_Int_t, pBase *int32) int32 {\n    var i int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        if (Sle_CutIsUsed(pCut) != 0) \u0026\u0026 Sle_CutSize(pCut) \u003c= Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sle_SetAddCut",
+      "Start": 5299,
+      "End": 5778,
+      "BodyStart": 5365,
+      "Original": "static inline void Sle_SetAddCut( Vec_Int_t * vTemp, int * pCut )\n{\n    int i, * pBase, * pList = Vec_IntArray(vTemp);\n    Sle_ForEachCut( pList, pBase, i )\n        if ( Sle_CutIsUsed(pBase) \u0026\u0026 Sle_CutSize(pCut) \u003c Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) )\n            Sle_CutSetUnused( pBase );\n    Vec_IntPushArray( vTemp, pCut, Sle_CutSize(pCut)+1 );\n    Vec_IntAddToEntry( vTemp, 0, 1 );\n}",
+      "Draft": "func Sle_SetAddCut(vTemp *Vec_Int_t, pCut *int32) {\n    var i int32;\n    var pBase *int32;\n    var pList *int32 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pBase = 0, pList + 1; i \u003c  pList[0]; i++, pBase += Sle_CutSize(pBase) + 1  { // cuts with unit-cut\n\n        if (Sle_CutIsUsed(pBase) != 0) \u0026\u0026 Sle_CutSize(pCut) \u003c Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) {\n            Sle_CutSetUnused( pBase ); }\n    }\n    Vec_IntPushArray( vTemp, pCut, Sle_CutSize(pCut)+1 );\n    Vec_IntAddToEntry( vTemp, 0, 1 );\n}"
+    },
+    {
+      "Name": "Sle_ManCutMerge",
+      "Start": 5779,
+      "End": 7173,
+      "BodyStart": 5878,
+      "Original": "int Sle_ManCutMerge( Gia_Man_t * p, int iObj, Vec_Int_t * vCuts, Vec_Int_t * vTemp, int nLutSize )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    int * pList0 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, iObj)) );\n    int * pList1 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, iObj)) );\n    int * pCut0, * pCut1, i, k, Cut[8], nCuts = 0;\n    Vec_IntFill( vTemp, 1, 0 );\n    Sle_ForEachCut1( pList0, pCut0, i )\n    Sle_ForEachCut1( pList1, pCut1, k )\n    {\n        if ( Sle_CutSize(pCut0) + Sle_CutSize(pCut1) \u003e nLutSize \u0026\u0026 Sle_CutCountBits(Sle_CutSign(pCut0) | Sle_CutSign(pCut1)) \u003e nLutSize )\n            continue;\n        if ( !Sle_CutMergeOrder(pCut0, pCut1, Cut, nLutSize) )\n            continue;\n        if ( Sle_SetLastCutIsContained(vTemp, Cut) )\n            continue;\n        Sle_SetAddCut( vTemp, Cut );\n    }\n    // reload\n    Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n    Vec_IntPush( vCuts, -1 );\n    pList0 = Vec_IntArray(vTemp);\n    Sle_ForEachCut( pList0, pCut0, i )\n    {\n        if ( !Sle_CutIsUsed(pCut0) )\n            continue;\n        Vec_IntPushArray( vCuts, pCut0, Sle_CutSize(pCut0)+1 );\n        nCuts++;\n    }\n    // add unit cut\n    Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntWriteEntry( vCuts, Vec_IntEntry(vCuts, iObj), nCuts );\n    return nCuts;\n}",
+      "Draft": "func Sle_ManCutMerge(p *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vTemp *Vec_Int_t, nLutSize int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pList0 *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, iObj)) );\n    var pList1 *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, iObj)) );\n    var pCut0 *int32;\n    var pCut1 *int32;\n    var i int32;\n    var k int32;\n    var Cut [8]int32;\n    var nCuts int32;\n    Vec_IntFill( vTemp, 1, 0 );\n    // inlining of macro Sle_ForEachCut1\n    for  i, pCut0 = 0, pList0 + 1; i \u003c= pList0[0]; i++, pCut0 += Sle_CutSize(pCut0) + 1  { // only non-unit cuts\n\n    // inlining of macro Sle_ForEachCut1\n    for  k, pCut1 = 0, pList1 + 1; k \u003c= pList1[0]; k++, pCut1 += Sle_CutSize(pCut1) + 1  { // only non-unit cuts\n\n    \n        if Sle_CutSize(pCut0) + Sle_CutSize(pCut1) \u003e nLutSize \u0026\u0026 Sle_CutCountBits(Sle_CutSign(pCut0) | Sle_CutSign(pCut1)) \u003e nLutSize {\n            continue; }\n        if !(Sle_CutMergeOrder(pCut0, pCut1, Cut, nLutSize) != 0) {\n            continue; }\n        if Sle_SetLastCutIsContained(vTemp, Cut) != 0 {\n            continue; }\n        Sle_SetAddCut( vTemp, Cut );\n    }\n    }\n    // reload\n    Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n    Vec_IntPush( vCuts, -1 );\n    pList0 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut0 = 0, pList0 + 1; i \u003c  pList0[0]; i++, pCut0 += Sle_CutSize(pCut0) + 1  { // cuts with unit-cut\n\n    \n        if !(Sle_CutIsUsed(pCut0) != 0) {\n            continue; }\n        Vec_IntPushArray( vCuts, pCut0, Sle_CutSize(pCut0)+1 );\n        nCuts++;\n    }\n    // add unit cut\n    Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntWriteEntry( vCuts, Vec_IntEntry(vCuts, iObj), nCuts );\n    return nCuts;\n}"
+    },
+    {
+      "Name": "Sle_ManComputeCuts",
+      "Start": 7174,
+      "End": 8172,
+      "BodyStart": 7250,
+      "Original": "Vec_Int_t * Sle_ManComputeCuts( Gia_Man_t * p, int nLutSize, int fVerbose )\n{\n    int i, iObj, nCuts = 0;\n    Vec_Int_t * vTemp = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vCuts = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    assert( nLutSize \u003c= 6 );\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    Gia_ManForEachCiId( p, iObj, i )\n    {\n        Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 0 );\n        Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n        Vec_IntPush( vCuts, iObj );\n    }\n    Gia_ManForEachAndId( p, iObj )\n        nCuts += Sle_ManCutMerge( p, iObj, vCuts, vTemp, nLutSize );\n    if ( fVerbose )\n        printf( \"Nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.  Mem = %.2f MB.\\n\", \n            Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), \n            1.0*(Vec_IntSize(vCuts)-Gia_ManObjNum(p))/Gia_ManAndNum(p), \n            1.0*Vec_IntMemory(vCuts) / (1\u003c\u003c20) );\n    Vec_IntFree( vTemp );\n    return vCuts;\n}",
+      "Draft": "func Sle_ManComputeCuts(p *Gia_Man_t, nLutSize int32, fVerbose int32) *Vec_Int_t {\n    var i, iObj, nCuts int32;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t  = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    assert(nLutSize \u003c= 6, \"nLutSize \u003c= 6\");\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 0 );\n        Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n        Vec_IntPush( vCuts, iObj );\n    }\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        nCuts += Sle_ManCutMerge( p, iObj, vCuts, vTemp, nLutSize ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.  Mem = %.2f MB.\\n\", Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), 1.0*(Vec_IntSize(vCuts)-Gia_ManObjNum(p))/Gia_ManAndNum(p), 1.0*Vec_IntMemory(vCuts) / (1\u003c\u003c20)); }\n    Vec_IntFree( vTemp );\n    return vCuts;\n}"
+    },
+    {
+      "Name": "Sle_ManComputeDelayCut",
+      "Start": 8430,
+      "End": 8736,
+      "BodyStart": 8505,
+      "Original": "int Sle_ManComputeDelayCut( Gia_Man_t * p, int * pCut, Vec_Int_t * vTime )\n{\n    int nSize   = Sle_CutSize(pCut);\n    int k, * pC = Sle_CutLeaves(pCut);\n    int DelayMax = 0;\n    for ( k = 0; k \u003c nSize; k++ )\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(vTime, pC[k]) );\n    return DelayMax + 1;\n}",
+      "Draft": "func Sle_ManComputeDelayCut(p *Gia_Man_t, pCut *int32, vTime *Vec_Int_t) int32 {\n    var nSize int32    = Sle_CutSize(pCut);\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    var DelayMax int32;\n    for  k = 0; k \u003c nSize; k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(vTime, pC[k]) );\n    }\n    return DelayMax + 1;\n}"
+    },
+    {
+      "Name": "Sle_ManComputeDelayOne",
+      "Start": 8737,
+      "End": 9178,
+      "BodyStart": 8829,
+      "Original": "int Sle_ManComputeDelayOne( Gia_Man_t * p, int iObj, Vec_Int_t * vCuts, Vec_Int_t * vTime )\n{\n    int i, * pCut, Delay, DelayMin = ABC_INFINITY;\n    int * pList = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    Sle_ForEachCut( pList, pCut, i )\n    {\n        Delay = Sle_ManComputeDelayCut( p, pCut, vTime );\n        DelayMin = Abc_MinInt( DelayMin, Delay );\n    }\n    Vec_IntWriteEntry( vTime, iObj, DelayMin );\n    return DelayMin;\n}",
+      "Draft": "func Sle_ManComputeDelayOne(p *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vTime *Vec_Int_t) int32 {\n    var i int32;\n    var pCut *int32;\n    var Delay int32;\n    var DelayMin int32 = ABC_INFINITY;\n    var pList *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n    \n        Delay = Sle_ManComputeDelayCut( p, pCut, vTime );\n        DelayMin = Abc_MinInt( DelayMin, Delay );\n    }\n    Vec_IntWriteEntry( vTime, iObj, DelayMin );\n    return DelayMin;\n}"
+    },
+    {
+      "Name": "Sle_ManComputeDelay",
+      "Start": 9179,
+      "End": 9587,
+      "BodyStart": 9239,
+      "Original": "int Sle_ManComputeDelay( Gia_Man_t * p, Vec_Int_t * vCuts )\n{\n    int iObj, Delay, DelayMax = 0;\n    Vec_Int_t * vTime = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_ManForEachAndId( p, iObj )\n    {\n        Delay = Sle_ManComputeDelayOne( p, iObj, vCuts, vTime );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    Vec_IntFree( vTime );\n    //printf( \"Delay = %d.\\n\", DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Sle_ManComputeDelay(p *Gia_Man_t, vCuts *Vec_Int_t) int32 {\n    var iObj, Delay, DelayMax int32;\n    var vTime *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Delay = Sle_ManComputeDelayOne( p, iObj, vCuts, vTime );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    Vec_IntFree( vTime );\n    //printf( \"Delay = %d.\\n\", DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Sle_ManPrintCut",
+      "Start": 9836,
+      "End": 10057,
+      "BodyStart": 9871,
+      "Original": "void Sle_ManPrintCut( int * pCut )\n{\n    int nSize   = Sle_CutSize(pCut);\n    int k, * pC = Sle_CutLeaves(pCut);\n    printf( \"{\" );\n    for ( k = 0; k \u003c nSize; k++ )\n        printf( \" %d\", pC[k] );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Sle_ManPrintCut(pCut *int32) {\n    var nSize int32    = Sle_CutSize(pCut);\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    fmt.Printf(\"{\");\n    for  k = 0; k \u003c nSize; k++  {\n        fmt.Printf(\" %d\", pC[k]);\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Sle_ManPrintCuts",
+      "Start": 10058,
+      "End": 10340,
+      "BodyStart": 10126,
+      "Original": "void Sle_ManPrintCuts( Gia_Man_t * p, Vec_Int_t * vCuts, int iObj )\n{\n    int i, * pCut;\n    int * pList = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    printf( \"Obj %3d\\n\", iObj );\n    Sle_ForEachCut( pList, pCut, i )\n        Sle_ManPrintCut( pCut );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Sle_ManPrintCuts(p *Gia_Man_t, vCuts *Vec_Int_t, iObj int32) {\n    var i int32;\n    var pCut *int32;\n    var pList *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    fmt.Printf(\"Obj %3d\\n\", iObj);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        Sle_ManPrintCut( pCut );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Sle_ManPrintCutsAll",
+      "Start": 10341,
+      "End": 10498,
+      "BodyStart": 10402,
+      "Original": "void Sle_ManPrintCutsAll( Gia_Man_t * p, Vec_Int_t * vCuts )\n{\n    int iObj;\n    Gia_ManForEachAndId( p, iObj )\n        Sle_ManPrintCuts( p, vCuts, iObj );\n}",
+      "Draft": "func Sle_ManPrintCutsAll(p *Gia_Man_t, vCuts *Vec_Int_t) {\n    var iObj int32;\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Sle_ManPrintCuts( p, vCuts, iObj ); }\n    }\n}"
+    },
+    {
+      "Name": "Sle_ManComputeCutsTest",
+      "Start": 10499,
+      "End": 10667,
+      "BodyStart": 10544,
+      "Original": "void Sle_ManComputeCutsTest( Gia_Man_t * p )\n{\n    Vec_Int_t * vCuts = Sle_ManComputeCuts( p, 4, 1 );\n    //Sle_ManPrintCutsAll( p, vCuts );\n    Vec_IntFree( vCuts );\n}",
+      "Draft": "func Sle_ManComputeCutsTest(p *Gia_Man_t) {\n    var vCuts *Vec_Int_t  = Sle_ManComputeCuts( p, 4, 1 );\n    //Sle_ManPrintCutsAll( p, vCuts );\n    Vec_IntFree( vCuts );\n}"
+    },
+    {
+      "Name": "Sle_ManInternalNodeMask",
+      "Start": 10945,
+      "End": 11182,
+      "BodyStart": 11001,
+      "Original": "Vec_Bit_t * Sle_ManInternalNodeMask( Gia_Man_t * pGia )\n{\n    int iObj;\n    Vec_Bit_t * vMask = Vec_BitStart( Gia_ManObjNum(pGia) );  \n    Gia_ManForEachAndId( pGia, iObj )\n        Vec_BitWriteEntry( vMask, iObj, 1 );\n    return vMask;\n}",
+      "Draft": "func Sle_ManInternalNodeMask(pGia *Gia_Man_t) *Vec_Bit_t {\n    var iObj int32;\n    var vMask *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );  \n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pGia, iObj)) {} else {\n        Vec_BitWriteEntry( vMask, iObj, 1 ); }\n    }\n    return vMask;\n}"
+    },
+    {
+      "Name": "Sle_ManCutHasPisOnly",
+      "Start": 11464,
+      "End": 11705,
+      "BodyStart": 11522,
+      "Original": "int Sle_ManCutHasPisOnly( int * pCut, Vec_Bit_t * vMask )\n{\n    int k, * pC = Sle_CutLeaves(pCut);\n    for ( k = 0; k \u003c Sle_CutSize(pCut); k++ )\n        if ( Vec_BitEntry(vMask, pC[k]) ) // internal node\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sle_ManCutHasPisOnly(pCut *int32, vMask *Vec_Bit_t) int32 {\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    for  k = 0; k \u003c Sle_CutSize(pCut); k++  {\n        if Vec_BitEntry(vMask, pC[k]) { // internal node\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sle_ManCollectCutFaninsOne",
+      "Start": 12029,
+      "End": 12764,
+      "BodyStart": 12171,
+      "Original": "void Sle_ManCollectCutFaninsOne( Gia_Man_t * pGia, int iObj, Vec_Int_t * vCuts, Vec_Bit_t * vMask, Vec_Int_t * vCutFanins, Vec_Bit_t * vMap )\n{\n    int i, iFanin, * pCut, * pList = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    Sle_ForEachCut( pList, pCut, i )\n    {\n        int nSize   = Sle_CutSize(pCut);\n        int k, * pC = Sle_CutLeaves(pCut);\n        assert( nSize \u003e 1 );\n        for ( k = 0; k \u003c nSize; k++ )\n            if ( Vec_BitEntry(vMask, pC[k]) \u0026\u0026 !Vec_BitEntry(vMap, pC[k]) )\n            {\n                Vec_BitWriteEntry( vMap, pC[k], 1 );\n                Vec_IntPush( vCutFanins, pC[k] );\n            }\n    }\n    Vec_IntForEachEntry( vCutFanins, iFanin, i )\n        Vec_BitWriteEntry( vMap, iFanin, 0 );\n}",
+      "Draft": "func Sle_ManCollectCutFaninsOne(pGia *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vMask *Vec_Bit_t, vCutFanins *Vec_Int_t, vMap *Vec_Bit_t) {\n    var i int32;\n    var iFanin int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n    \n        var nSize int32    = Sle_CutSize(pCut);\n        var k int32;\n        var pC *int32 = Sle_CutLeaves(pCut);\n        assert(nSize \u003e 1, \"nSize \u003e 1\");\n        for  k = 0; k \u003c nSize; k++  {\n            if Vec_BitEntry(vMask, pC[k]) \u0026\u0026 !Vec_BitEntry(vMap, pC[k]) {\n                Vec_BitWriteEntry( vMap, pC[k], 1 );\n                Vec_IntPush( vCutFanins, pC[k] );\n            }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCutFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFanins, i)), 1); i++  {\n        Vec_BitWriteEntry( vMap, iFanin, 0 );\n    }\n}"
+    },
+    {
+      "Name": "Sle_ManCollectCutFanins",
+      "Start": 12765,
+      "End": 13190,
+      "BodyStart": 12859,
+      "Original": "Vec_Wec_t * Sle_ManCollectCutFanins( Gia_Man_t * pGia, Vec_Int_t * vCuts, Vec_Bit_t * vMask )\n{\n    int iObj;\n    Vec_Bit_t * vMap = Vec_BitStart( Gia_ManObjNum(pGia) );\n    Vec_Wec_t * vCutFanins = Vec_WecStart( Gia_ManObjNum(pGia) );\n    Gia_ManForEachAndId( pGia, iObj )\n        Sle_ManCollectCutFaninsOne( pGia, iObj, vCuts, vMask, Vec_WecEntry(vCutFanins, iObj), vMap );\n    Vec_BitFree( vMap );\n    return vCutFanins;\n}",
+      "Draft": "func Sle_ManCollectCutFanins(pGia *Gia_Man_t, vCuts *Vec_Int_t, vMask *Vec_Bit_t) *Vec_Wec_t {\n    var iObj int32;\n    var vMap *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var vCutFanins *Vec_Wec_t  = Vec_WecStart( Gia_ManObjNum(pGia) );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pGia, iObj)) {} else {\n        Sle_ManCollectCutFaninsOne( pGia, iObj, vCuts, vMask, Vec_WecEntry(vCutFanins, iObj), vMap ); }\n    }\n    Vec_BitFree( vMap );\n    return vCutFanins;\n}"
+    },
+    {
+      "Name": "Sle_ManList",
+      "Start": 14904,
+      "End": 15022,
+      "BodyStart": 14960,
+      "Original": "static inline int * Sle_ManList( Sle_Man_t * p, int i ) { return Vec_IntEntryP(p-\u003evCuts, Vec_IntEntry(p-\u003evCuts, i)); }",
+      "Draft": "func Sle_ManList(p *Sle_Man_t, i int32) *int32 { return Vec_IntEntryP(p.vCuts, Vec_IntEntry(p.vCuts, i)); }"
+    },
+    {
+      "Name": "Sle_ManAlloc",
+      "Start": 15258,
+      "End": 16182,
+      "BodyStart": 15330,
+      "Original": "Sle_Man_t * Sle_ManAlloc( Gia_Man_t * pGia, int nLevels, int fVerbose )\n{\n    Sle_Man_t * p   = ABC_CALLOC( Sle_Man_t, 1 );\n    p-\u003epGia         = pGia;\n    p-\u003enLevels      = nLevels;\n    p-\u003efVerbose     = fVerbose;\n    p-\u003evMask        = Sle_ManInternalNodeMask( pGia );\n    p-\u003evCuts        = Sle_ManComputeCuts( pGia, 4, fVerbose );\n    p-\u003evCutFanins   = Sle_ManCollectCutFanins( pGia, p-\u003evCuts, p-\u003evMask );\n    p-\u003evFanoutEdges = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p-\u003evEdgeCuts    = Vec_WecAlloc( 100 );\n    p-\u003evObjMap      = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evCutFirst    = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evEdgeFirst   = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evDelayFirst  = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evPolars      = Vec_IntAlloc( 100 );\n    p-\u003evLits        = Vec_IntAlloc( 100 );\n    p-\u003enLevels      = Sle_ManComputeDelay( pGia, p-\u003evCuts );\n    return p;\n}",
+      "Draft": "func Sle_ManAlloc(pGia *Gia_Man_t, nLevels int32, fVerbose int32) *Sle_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Sle_Man_t    = \u0026Sle_Man_t{};\n    p.pGia         = pGia;\n    p.nLevels      = nLevels;\n    p.fVerbose     = fVerbose;\n    p.vMask        = Sle_ManInternalNodeMask( pGia );\n    p.vCuts        = Sle_ManComputeCuts( pGia, 4, fVerbose );\n    p.vCutFanins   = Sle_ManCollectCutFanins( pGia, p.vCuts, p.vMask );\n    p.vFanoutEdges = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p.vEdgeCuts    = Vec_WecAlloc( 100 );\n    p.vObjMap      = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vCutFirst    = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vEdgeFirst   = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vDelayFirst  = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vPolars      = Vec_IntAlloc( 100 );\n    p.vLits        = Vec_IntAlloc( 100 );\n    p.nLevels      = Sle_ManComputeDelay( pGia, p.vCuts );\n    return p;\n}"
+    },
+    {
+      "Name": "Sle_ManStop",
+      "Start": 16183,
+      "End": 16627,
+      "BodyStart": 16217,
+      "Original": "void Sle_ManStop( Sle_Man_t * p )\n{\n    sat_solver_delete( p-\u003epSat );\n    Vec_BitFree( p-\u003evMask );\n    Vec_IntFree( p-\u003evCuts );\n    Vec_WecFree( p-\u003evCutFanins );\n    Vec_WecFree( p-\u003evFanoutEdges );\n    Vec_WecFree( p-\u003evEdgeCuts );\n    Vec_IntFree( p-\u003evObjMap );\n    Vec_IntFree( p-\u003evCutFirst );\n    Vec_IntFree( p-\u003evEdgeFirst );\n    Vec_IntFree( p-\u003evDelayFirst );\n    Vec_IntFree( p-\u003evPolars );\n    Vec_IntFree( p-\u003evLits );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sle_ManStop(p *Sle_Man_t) {\n    sat_solver_delete( p.pSat );\n    Vec_BitFree( p.vMask );\n    Vec_IntFree( p.vCuts );\n    Vec_WecFree( p.vCutFanins );\n    Vec_WecFree( p.vFanoutEdges );\n    Vec_WecFree( p.vEdgeCuts );\n    Vec_IntFree( p.vObjMap );\n    Vec_IntFree( p.vCutFirst );\n    Vec_IntFree( p.vEdgeFirst );\n    Vec_IntFree( p.vDelayFirst );\n    Vec_IntFree( p.vPolars );\n    Vec_IntFree( p.vLits );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sle_ManMarkupVariables",
+      "Start": 16863,
+      "End": 17771,
+      "BodyStart": 16908,
+      "Original": "void Sle_ManMarkupVariables( Sle_Man_t * p )\n{\n    int iObj, Counter = Gia_ManObjNum(p-\u003epGia);\n    // node variables\n    p-\u003enNodeVars = Counter;\n    // cut variables\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        Vec_IntWriteEntry( p-\u003evCutFirst, iObj, Counter );\n        Counter += Sle_ListCutNum( Sle_ManList(p, iObj) );\n    }\n    p-\u003enCutVars = Counter - p-\u003enNodeVars;\n    // edge variables\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        Vec_IntWriteEntry( p-\u003evEdgeFirst, iObj, Counter );\n        Counter += Vec_IntSize( Vec_WecEntry(p-\u003evCutFanins, iObj) );\n    }\n    p-\u003enEdgeVars = Counter - p-\u003enCutVars - p-\u003enNodeVars;\n    // delay variables\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        Vec_IntWriteEntry( p-\u003evDelayFirst, iObj, Counter );\n        Counter += p-\u003enLevels;\n    }\n    p-\u003enDelayVars = Counter - p-\u003enEdgeVars - p-\u003enCutVars - p-\u003enNodeVars;\n    p-\u003enVarsTotal = Counter;\n}",
+      "Draft": "func Sle_ManMarkupVariables(p *Sle_Man_t) {\n    var iObj int32;\n    var Counter int32 = Gia_ManObjNum(p.pGia);\n    // node variables\n    p.nNodeVars = Counter;\n    // cut variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vCutFirst, iObj, Counter );\n        Counter += Sle_ListCutNum( Sle_ManList(p, iObj) );\n    }\n    }\n    p.nCutVars = Counter - p.nNodeVars;\n    // edge variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vEdgeFirst, iObj, Counter );\n        Counter += Vec_IntSize( Vec_WecEntry(p.vCutFanins, iObj) );\n    }\n    }\n    p.nEdgeVars = Counter - p.nCutVars - p.nNodeVars;\n    // delay variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vDelayFirst, iObj, Counter );\n        Counter += p.nLevels;\n    }\n    }\n    p.nDelayVars = Counter - p.nEdgeVars - p.nCutVars - p.nNodeVars;\n    p.nVarsTotal = Counter;\n}"
+    },
+    {
+      "Name": "Sle_ManCheckContained",
+      "Start": 18119,
+      "End": 18546,
+      "BodyStart": 18229,
+      "Original": "static inline int Sle_ManCheckContained( int * pCutLeaves, int nCutLeaves, int * pLutFanins, int nLutFanins )\n{\n    int i, k;\n    if ( nCutLeaves \u003e nLutFanins )\n        return 0;\n    for ( i = 0; i \u003c nCutLeaves; i++ )\n    {\n        for ( k = 0; k \u003c nLutFanins; k++ )\n            if ( pCutLeaves[i] == pLutFanins[k] )\n                break;\n        if ( k == nLutFanins ) // not found\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Sle_ManCheckContained(pCutLeaves *int32, nCutLeaves int32, pLutFanins *int32, nLutFanins int32) int32 {\n    var i, k int32;\n    if nCutLeaves \u003e nLutFanins {\n        return 0; }\n    for  i = 0; i \u003c nCutLeaves; i++  {\n        for  k = 0; k \u003c nLutFanins; k++  {\n            if pCutLeaves[i] == pLutFanins[k] {\n                break; }\n        }\n        if k == nLutFanins { // not found\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sle_ManDeriveInit",
+      "Start": 18547,
+      "End": 20813,
+      "BodyStart": 18587,
+      "Original": "void Sle_ManDeriveInit( Sle_Man_t * p )\n{\n    Vec_Int_t * vEdges;\n    int i, iObj, iFanin, iEdge;\n    if ( !Gia_ManHasMapping(p-\u003epGia) )\n        return;\n    // derive initial state\n    Vec_IntClear( p-\u003evPolars );\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        int nFanins, * pFanins, * pCut, * pList, iFound = -1;\n        if ( !Gia_ObjIsLut(p-\u003epGia, iObj) )\n            continue;\n        Vec_IntPush( p-\u003evPolars, iObj ); // node var\n        nFanins = Gia_ObjLutSize( p-\u003epGia, iObj );\n        pFanins = Gia_ObjLutFanins( p-\u003epGia, iObj );\n        // find cut\n        pList = Sle_ManList( p, iObj );\n        Sle_ForEachCut( pList, pCut, i )\n            if ( Sle_ManCheckContained( Sle_CutLeaves(pCut), Sle_CutSize(pCut), pFanins, nFanins ) )\n            {\n                iFound = i;\n                break;\n            }\n        if ( iFound == -1 )\n        {\n            printf( \"Cannot find the following cut at node %d: {\", iObj );\n            for ( i = 0; i \u003c nFanins; i++ )\n                printf( \" %d\", pFanins[i] );\n            printf( \" }\\n\" );\n            Sle_ManPrintCuts( p-\u003epGia, p-\u003evCuts, iObj );\n            fflush( stdout );\n        }\n        assert( iFound \u003e= 0 );\n        Vec_IntPush( p-\u003evPolars, Vec_IntEntry(p-\u003evCutFirst, iObj) + iFound ); // cut var\n        // check if the cut contains only primary inputs - if so, its delay is equal to 1\n        if ( Sle_ManCutHasPisOnly(pCut, p-\u003evMask) )\n            Vec_IntPush( p-\u003evPolars, Vec_IntEntry(p-\u003evDelayFirst, iObj) ); // delay var\n    }\n    Vec_IntSort( p-\u003evPolars, 0 );\n    // find zero-delay edges\n    if ( !p-\u003epGia-\u003evEdge1 )\n        return;\n    vEdges = Gia_ManEdgeToArray( p-\u003epGia );\n    Vec_IntForEachEntryDouble( vEdges, iFanin, iObj, i )\n    {\n        assert( iFanin \u003c iObj );\n        assert( Gia_ObjIsLut(p-\u003epGia, iFanin) );\n        assert( Gia_ObjIsLut(p-\u003epGia, iObj) );\n        assert( Gia_ObjIsAnd(Gia_ManObj(p-\u003epGia, iFanin)) );\n        assert( Gia_ObjIsAnd(Gia_ManObj(p-\u003epGia, iObj)) );\n        // find edge\n        iEdge = Vec_IntFind( Vec_WecEntry(p-\u003evCutFanins, iObj), iFanin );\n        if ( iEdge \u003c 0 )\n            continue;\n        assert( iEdge \u003e= 0 );\n        Vec_IntPush( p-\u003evPolars, Vec_IntEntry(p-\u003evEdgeFirst, iObj) + iEdge ); // edge\n    }\n    Vec_IntFree( vEdges );\n}",
+      "Draft": "func Sle_ManDeriveInit(p *Sle_Man_t) {\n    var vEdges *Vec_Int_t;\n    var i, iObj, iFanin, iEdge int32;\n    if !Gia_ManHasMapping(p.pGia) {\n        return; }\n    // derive initial state\n    Vec_IntClear( p.vPolars );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var nFanins int32;\n        var pFanins *int32;\n        var pCut *int32;\n        var pList *int32;\n        var iFound int32 = -1;\n        if !Gia_ObjIsLut(p.pGia, iObj) {\n            continue; }\n        Vec_IntPush( p.vPolars, iObj ); // node var\n        nFanins = Gia_ObjLutSize( p.pGia, iObj );\n        pFanins = Gia_ObjLutFanins( p.pGia, iObj );\n        // find cut\n        pList = Sle_ManList( p, iObj );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if Sle_ManCheckContained( Sle_CutLeaves(pCut), Sle_CutSize(pCut), pFanins, nFanins ) != 0 {\n                iFound = i;\n                break;\n            }\n        }\n        if iFound == -1 {\n            fmt.Printf(\"Cannot find the following cut at node %d: {\", iObj);\n            for  i = 0; i \u003c nFanins; i++  {\n                fmt.Printf(\" %d\", pFanins[i]);\n            }\n            fmt.Printf(\" }\\n\");\n            Sle_ManPrintCuts( p.pGia, p.vCuts, iObj );\n            fflush( os.Stdout );\n        }\n        assert(iFound \u003e= 0, \"iFound \u003e= 0\");\n        Vec_IntPush( p.vPolars, Vec_IntEntry(p.vCutFirst, iObj) + iFound ); // cut var\n        // check if the cut contains only primary inputs - if so, its delay is equal to 1\n        if Sle_ManCutHasPisOnly(pCut, p.vMask) != 0 {\n            Vec_IntPush( p.vPolars, Vec_IntEntry(p.vDelayFirst, iObj) ); } // delay var\n    }\n    }\n    Vec_IntSort( p.vPolars, 0 );\n    // find zero-delay edges\n    if !p.pGia.vEdge1 {\n        return; }\n    vEdges = Gia_ManEdgeToArray( p.pGia );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        assert(iFanin \u003c iObj, \"iFanin \u003c iObj\");\n        assert(Gia_ObjIsLut(p.pGia, iFanin), \"Gia_ObjIsLut(p.pGia, iFanin)\");\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        assert(Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin)), \"Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin))\");\n        assert(Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)), \"Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj))\");\n        // find edge\n        iEdge = Vec_IntFind( Vec_WecEntry(p.vCutFanins, iObj), iFanin );\n        if iEdge \u003c 0 {\n            continue; }\n        assert(iEdge \u003e= 0, \"iEdge \u003e= 0\");\n        Vec_IntPush( p.vPolars, Vec_IntEntry(p.vEdgeFirst, iObj) + iEdge ); // edge\n    }\n    Vec_IntFree( vEdges );\n}"
+    },
+    {
+      "Name": "Sle_ManDeriveCnf",
+      "Start": 21060,
+      "End": 28728,
+      "BodyStart": 21127,
+      "Original": "void Sle_ManDeriveCnf( Sle_Man_t * p, int nBTLimit, int fDynamic )\n{\n    int nTimeOut = 0;\n    int i, iObj, value;\n    Vec_Int_t * vArray;\n\n    // start the SAT solver\n    p-\u003epSat = sat_solver_new();\n    sat_solver_setnvars( p-\u003epSat, p-\u003enVarsTotal );\n    sat_solver_set_resource_limits( p-\u003epSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p-\u003epSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    sat_solver_set_random( p-\u003epSat, 1 );\n    sat_solver_set_polarity( p-\u003epSat, Vec_IntArray(p-\u003evPolars), Vec_IntSize(p-\u003evPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVarsTotal );\n\n    // set drivers to be mapped\n    Gia_ManForEachCoDriverId( p-\u003epGia, iObj, i )\n        if ( Vec_BitEntry(p-\u003evMask, iObj) ) // internal node\n        {\n            Vec_IntFill( p-\u003evLits, 1, Abc_Var2Lit(iObj, 0) ); // pos lit\n            value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n            assert( value );\n        }\n\n    // add cover clauses and edge-to-cut clauses\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        int e, iEdge, nEdges = 0, Entry;\n        int iCutVar0  = Vec_IntEntry( p-\u003evCutFirst, iObj );\n        int iEdgeVar0 = Vec_IntEntry( p-\u003evEdgeFirst, iObj );\n        int * pCut, * pList  = Sle_ManList( p, iObj );\n        Vec_Int_t * vCutFans = Vec_WecEntry( p-\u003evCutFanins, iObj );\n        assert( iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0 );\n        // node requires one of the cuts\n        Vec_IntFill( p-\u003evLits, 1, Abc_Var2Lit(iObj, 1) ); // neg lit\n        for ( i = 0; i \u003c Sle_ListCutNum(pList); i++ )\n            Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iCutVar0 + i, 0) );\n        value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n        assert( value );\n        // cuts are mutually exclusive\n        for ( i = 0; i \u003c Sle_ListCutNum(pList); i++ )\n            for ( e = i+1; e \u003c Sle_ListCutNum(pList); e++ )\n            {\n                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iCutVar0 + e, 1) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n            }\n        // cut requires fanin nodes\n        Vec_WecInit( p-\u003evEdgeCuts, Vec_IntSize(vCutFans) );\n        Sle_ForEachCut( pList, pCut, i )\n        {\n            int nSize   = Sle_CutSize(pCut);\n            int k, * pC = Sle_CutLeaves(pCut);\n            assert( nSize \u003e 1 );\n            for ( k = 0; k \u003c nSize; k++ )\n            {\n                if ( !Vec_BitEntry(p-\u003evMask, pC[k]) )\n                    continue;\n                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(pC[k], 0) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n                // find the edge ID between pC[k] and iObj\n                iEdge = Vec_IntEntry(p-\u003evObjMap, pC[k]);\n                if ( iEdge == -1 )\n                {\n                    Vec_IntWriteEntry( p-\u003evObjMap, pC[k], (iEdge = nEdges++) );\n                    Vec_WecPush( p-\u003evFanoutEdges, pC[k], iEdgeVar0 + iEdge );\n                }\n                Vec_WecPush( p-\u003evEdgeCuts, iEdge, iCutVar0 + i );\n                p-\u003enCutClas++;\n            }\n            // cut requires the node\n            Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iObj, 0) );\n            value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n            assert( value );\n        }\n        assert( nEdges == Vec_IntSize(vCutFans) );\n\n        // edge requires one of the fanout cuts\n        Vec_WecForEachLevel( p-\u003evEdgeCuts, vArray, e )\n        {\n            assert( Vec_IntSize(vArray) \u003e 0 );\n            Vec_IntFill( p-\u003evLits, 1, Abc_Var2Lit(iEdgeVar0 + e, 1) ); // neg lit (edge)\n            Vec_IntForEachEntry( vArray, Entry, i )\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(Entry, 0) ); // pos lit (cut)\n            value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n            assert( value );\n            p-\u003enEdgeClas++;\n        }\n\n        // clean object map\n        Vec_IntForEachEntry( vCutFans, Entry, i )\n            Vec_IntWriteEntry( p-\u003evObjMap, Entry, -1 );\n    }\n\n    // mutual exclusivity of edges\n    Vec_WecForEachLevel( p-\u003evFanoutEdges, vArray, iObj )\n    {\n        int j, k, EdgeJ, EdgeK;\n        int iEdgeVar0 = Vec_IntEntry( p-\u003evEdgeFirst, iObj );\n        Vec_Int_t * vCutFans = Vec_WecEntry( p-\u003evCutFanins, iObj );\n        // add fanin edges\n        for ( i = 0; i \u003c Vec_IntSize(vCutFans); i++ )\n            Vec_IntPush( vArray, iEdgeVar0 + i );\n        // generate pairs\n        if ( fDynamic )\n            continue;\n        Vec_IntForEachEntry( vArray, EdgeJ, j )\n            Vec_IntForEachEntryStart( vArray, EdgeK, k, j+1 )\n            {\n                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n            }\n        p-\u003enEdgeClas2 += Vec_IntSize(vArray) * (Vec_IntSize(vArray) - 1) / 2;\n    }\n\n    // add delay clauses\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        int e, iFanin;\n        int iEdgeVar0 = Vec_IntEntry( p-\u003evEdgeFirst, iObj );\n        int iDelayVar0 = Vec_IntEntry( p-\u003evDelayFirst, iObj );\n        Vec_Int_t * vCutFans = Vec_WecEntry( p-\u003evCutFanins, iObj );\n        // check if the node has cuts containing only primary inputs\n        int * pCut, * pList = Sle_ManList( p, iObj );\n        Sle_ForEachCut( pList, pCut, i )\n            if ( Sle_ManCutHasPisOnly(pCut, p-\u003evMask) )\n            {\n                Vec_IntFill( p-\u003evLits, 1, Abc_Var2Lit(iDelayVar0, 0) ); // pos lit\n//                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iObj, 1), Abc_Var2Lit(iDelayVar0, 0) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n                break;\n            }\n//        if ( i \u003c Sle_ListCutNum(pList) )\n//            continue;\n        // create delay requirements for each cut fanin of this node\n        Vec_IntForEachEntry( vCutFans, iFanin, e )\n        {\n            int d, iDelayVarIn = Vec_IntEntry( p-\u003evDelayFirst, iFanin );\n            for ( d = 0; d \u003c p-\u003enLevels; d++ )\n            {\n                Vec_IntClear( p-\u003evLits );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iEdgeVar0 + e, 0) );\n                if ( d \u003c p-\u003enLevels-1 )\n                    Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iDelayVar0 + d+1, 0) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n\n                Vec_IntClear( p-\u003evLits );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                if ( d \u003c p-\u003enLevels-1 )\n                    Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iEdgeVar0 + e, 1) );\n                Vec_IntPush( p-\u003evLits, Abc_Var2Lit(iDelayVar0 + d, 0) );\n                value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                assert( value );\n            }\n            p-\u003enDelayClas += 2*p-\u003enLevels;\n        }\n    }\n}",
+      "Draft": "func Sle_ManDeriveCnf(p *Sle_Man_t, nBTLimit int32, fDynamic int32) {\n    var nTimeOut int32;\n    var i, iObj, value int32;\n    var vArray *Vec_Int_t;\n\n    // start the SAT solver\n    p.pSat = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.nVarsTotal );\n    sat_solver_set_resource_limits( p.pSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_set_random( p.pSat, 1 );\n    sat_solver_set_polarity( p.pSat, Vec_IntArray(p.vPolars), Vec_IntSize(p.vPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVarsTotal );\n\n    // set drivers to be mapped\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 (((iObj) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, i))), 1); i++  {\n        if Vec_BitEntry(p.vMask, iObj) { // internal node\n        \n            Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iObj, 0) ); // pos lit\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n        }\n    }\n\n    // add cover clauses and edge-to-cut clauses\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var e, iEdge, nEdges, Entry int32;\n        var iCutVar0 int32   = Vec_IntEntry( p.vCutFirst, iObj );\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var pCut *int32;\n        var pList *int32 = Sle_ManList( p, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        assert(iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0, \"iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0\");\n        // node requires one of the cuts\n        Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iObj, 1) ); // neg lit\n        for  i = 0; i \u003c Sle_ListCutNum(pList); i++  {\n            Vec_IntPush( p.vLits, Abc_Var2Lit(iCutVar0 + i, 0) );\n        }\n        value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n        assert((value != 0), \"value\");\n        // cuts are mutually exclusive\n        for  i = 0; i \u003c Sle_ListCutNum(pList); i++  {\n            for  e = i+1; e \u003c Sle_ListCutNum(pList); e++  {\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iCutVar0 + e, 1) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n        }\n        // cut requires fanin nodes\n        Vec_WecInit( p.vEdgeCuts, Vec_IntSize(vCutFans) );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        \n            var nSize int32    = Sle_CutSize(pCut);\n            var k int32;\n            var pC *int32 = Sle_CutLeaves(pCut);\n            assert(nSize \u003e 1, \"nSize \u003e 1\");\n            for  k = 0; k \u003c nSize; k++  {\n                if !Vec_BitEntry(p.vMask, pC[k]) {\n                    continue; }\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(pC[k], 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n                // find the edge ID between pC[k] and iObj\n                iEdge = Vec_IntEntry(p.vObjMap, pC[k]);\n                if iEdge == -1 {\n                    Vec_IntWriteEntry( p.vObjMap, pC[k], (iEdge = nEdges++) );\n                    Vec_WecPush( p.vFanoutEdges, pC[k], iEdgeVar0 + iEdge );\n                }\n                Vec_WecPush( p.vEdgeCuts, iEdge, iCutVar0 + i );\n                p.nCutClas++;\n            }\n            // cut requires the node\n            Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iObj, 0) );\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n        }\n        assert(nEdges == Vec_IntSize(vCutFans), \"nEdges == Vec_IntSize(vCutFans)\");\n\n        // edge requires one of the fanout cuts\n        // inlining of macro Vec_WecForEachLevel\n        for  e = 0; (e \u003c Vec_WecSize(p.vEdgeCuts)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vEdgeCuts, e)), 1); e++  {\n            assert(Vec_IntSize(vArray) \u003e 0, \"Vec_IntSize(vArray) \u003e 0\");\n            Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iEdgeVar0 + e, 1) ); // neg lit (edge)\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, i)), 1); i++  {\n                Vec_IntPush( p.vLits, Abc_Var2Lit(Entry, 0) );\n            } // pos lit (cut)\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n            p.nEdgeClas++;\n        }\n\n        // clean object map\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCutFans, i)), 1); i++  {\n            Vec_IntWriteEntry( p.vObjMap, Entry, -1 );\n        }\n    }\n    }\n\n    // mutual exclusivity of edges\n    // inlining of macro Vec_WecForEachLevel\n    for  iObj = 0; (iObj \u003c Vec_WecSize(p.vFanoutEdges)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vFanoutEdges, iObj)), 1); iObj++  {\n        var j, k, EdgeJ, EdgeK int32;\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        // add fanin edges\n        for  i = 0; i \u003c Vec_IntSize(vCutFans); i++  {\n            Vec_IntPush( vArray, iEdgeVar0 + i );\n        }\n        // generate pairs\n        if fDynamic != 0 {\n            continue; }\n        // inlining of macro Vec_IntForEachEntry\n        for  j = 0; (j \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vArray, j)), 1); j++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  k = j+1; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vArray, k)), 1); k++  {\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n        }\n        p.nEdgeClas2 += Vec_IntSize(vArray) * (Vec_IntSize(vArray) - 1) / 2;\n    }\n\n    // add delay clauses\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var e, iFanin int32;\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var iDelayVar0 int32  = Vec_IntEntry( p.vDelayFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        // check if the node has cuts containing only primary inputs\n        var pCut *int32;\n        var pList *int32 = Sle_ManList( p, iObj );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if Sle_ManCutHasPisOnly(pCut, p.vMask) != 0 {\n                Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iDelayVar0, 0) ); // pos lit\n//                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iObj, 1), Abc_Var2Lit(iDelayVar0, 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n                break;\n            }\n        }\n//        if ( i \u003c Sle_ListCutNum(pList) )\n//            continue;\n        // create delay requirements for each cut fanin of this node\n        // inlining of macro Vec_IntForEachEntry\n        for  e = 0; (e \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFans, e)), 1); e++  {\n            var d int32;\n            var iDelayVarIn int32 = Vec_IntEntry( p.vDelayFirst, iFanin );\n            for  d = 0; d \u003c p.nLevels; d++  {\n                Vec_IntClear( p.vLits );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iEdgeVar0 + e, 0) );\n                if d \u003c p.nLevels-1 {\n                    Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVar0 + d+1, 0) ); }\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n\n                Vec_IntClear( p.vLits );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                if d \u003c p.nLevels-1 {\n                    Vec_IntPush( p.vLits, Abc_Var2Lit(iEdgeVar0 + e, 1) ); }\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVar0 + d, 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n            p.nDelayClas += 2*p.nLevels;\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Sle_ManAddEdgeConstraints",
+      "Start": 29040,
+      "End": 31107,
+      "BodyStart": 29099,
+      "Original": "int Sle_ManAddEdgeConstraints( Sle_Man_t * p, int nEdges )\n{\n    Vec_Int_t * vArray;\n    Vec_Int_t * vTemp = Vec_IntAlloc( 100 );\n    int value, iObj, nAdded = 0;\n    assert( nEdges == 1 || nEdges == 2 );\n    Vec_WecForEachLevel( p-\u003evFanoutEdges, vArray, iObj )\n    {\n        int j, k, EdgeJ, EdgeK;\n        // check if they are incompatible\n        Vec_IntClear( vTemp );\n        Vec_IntForEachEntry( vArray, EdgeJ, j )\n            if ( sat_solver_var_value(p-\u003epSat, EdgeJ) )\n                Vec_IntPush( vTemp, EdgeJ );\n        if ( Vec_IntSize(vTemp) \u003c= nEdges )\n            continue;\n        nAdded++;\n        if ( nEdges == 1 )\n        {\n            // generate pairs\n            Vec_IntForEachEntry( vTemp, EdgeJ, j )\n                Vec_IntForEachEntryStart( vTemp, EdgeK, k, j+1 )\n                {\n                    Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                    value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                    assert( value );\n                }\n            p-\u003enEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) / 2;\n        }\n        else if ( nEdges == 2 )\n        {\n            int m, EdgeM;\n            // generate triples\n            Vec_IntForEachEntry( vTemp, EdgeJ, j )\n                Vec_IntForEachEntryStart( vTemp, EdgeK, k, j+1 )\n                    Vec_IntForEachEntryStart( vTemp, EdgeM, m, k+1 )\n                    {\n                        Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                        Vec_IntPush( p-\u003evLits, Abc_Var2Lit(EdgeM, 1) );\n                        value = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntLimit(p-\u003evLits)  );\n                        assert( value );\n                    }\n            p-\u003enEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) * (Vec_IntSize(vTemp) - 2) / 6;\n        }\n        else assert( 0 );\n    }\n    Vec_IntFree( vTemp );\n    //printf( \"Added clauses to %d nodes.\\n\", nAdded );\n    return nAdded;\n}",
+      "Draft": "func Sle_ManAddEdgeConstraints(p *Sle_Man_t, nEdges int32) int32 {\n    var vArray *Vec_Int_t;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var value, iObj, nAdded int32;\n    assert(nEdges == 1 || nEdges == 2, \"nEdges == 1 || nEdges == 2\");\n    // inlining of macro Vec_WecForEachLevel\n    for  iObj = 0; (iObj \u003c Vec_WecSize(p.vFanoutEdges)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vFanoutEdges, iObj)), 1); iObj++  {\n        var j, k, EdgeJ, EdgeK int32;\n        // check if they are incompatible\n        Vec_IntClear( vTemp );\n        // inlining of macro Vec_IntForEachEntry\n        for  j = 0; (j \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vArray, j)), 1); j++  {\n            if sat_solver_var_value(p.pSat, EdgeJ) {\n                Vec_IntPush( vTemp, EdgeJ ); }\n        }\n        if Vec_IntSize(vTemp) \u003c= nEdges {\n            continue; }\n        nAdded++;\n        if nEdges == 1 {\n            // generate pairs\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vTemp, j)), 1); j++  {\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = j+1; (k \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vTemp, k)), 1); k++  {\n                    Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                    value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                    assert((value != 0), \"value\");\n                }\n            }\n            p.nEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) / 2;\n        \n        } else if nEdges == 2 {\n            var m, EdgeM int32;\n            // generate triples\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vTemp, j)), 1); j++  {\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = j+1; (k \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vTemp, k)), 1); k++  {\n                    // inlining of macro Vec_IntForEachEntryStart\n                    for  m = k+1; (m \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeM) = Vec_IntEntry(vTemp, m)), 1); m++  {\n                        Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                        Vec_IntPush( p.vLits, Abc_Var2Lit(EdgeM, 1) );\n                        value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                        assert((value != 0), \"value\");\n                    }\n                }\n            }\n            p.nEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) * (Vec_IntSize(vTemp) - 2) / 6;\n        \n        } else { assert(false, \"0\"); }\n    }\n    Vec_IntFree( vTemp );\n    //printf( \"Added clauses to %d nodes.\\n\", nAdded );\n    return nAdded;\n}"
+    },
+    {
+      "Name": "Sle_ManDeriveResult",
+      "Start": 31343,
+      "End": 33855,
+      "BodyStart": 31427,
+      "Original": "void Sle_ManDeriveResult( Sle_Man_t * p, Vec_Int_t * vEdge2, Vec_Int_t * vMapping )\n{\n    Vec_Int_t * vMapTemp;\n    int iObj;\n    // create mapping\n    Vec_IntFill( vMapping, Gia_ManObjNum(p-\u003epGia), 0 );\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        int i, iCut, iCutVar0 = Vec_IntEntry( p-\u003evCutFirst, iObj );\n        int * pCut, * pCutThis = NULL, * pList = Sle_ManList( p, iObj );\n        if ( !sat_solver_var_value(p-\u003epSat, iObj) )\n            continue;\n        Sle_ForEachCut( pList, pCut, iCut )\n            if ( sat_solver_var_value(p-\u003epSat, iCutVar0 + iCut) )\n            {\n                assert( pCutThis == NULL );\n                pCutThis = pCut;\n            }\n        assert( pCutThis != NULL );\n        Vec_IntWriteEntry( vMapping, iObj, Vec_IntSize(vMapping) );\n        Vec_IntPush( vMapping, Sle_CutSize(pCutThis) );\n        for ( i = 0; i \u003c Sle_CutSize(pCutThis); i++ )\n            Vec_IntPush( vMapping, Sle_CutLeaves(pCutThis)[i] );\n        Vec_IntPush( vMapping, iObj );\n    }\n    vMapTemp = p-\u003epGia-\u003evMapping;\n    p-\u003epGia-\u003evMapping = vMapping;\n    // collect edges\n    Vec_IntClear( vEdge2 );\n    Gia_ManForEachAndId( p-\u003epGia, iObj )\n    {\n        int i, iFanin, iEdgeVar0 = Vec_IntEntry( p-\u003evEdgeFirst, iObj );\n        Vec_Int_t * vCutFans = Vec_WecEntry( p-\u003evCutFanins, iObj );\n        //int * pCut, * pList  = Sle_ManList( p, iObj );\n        // int iCutVar0  = Vec_IntEntry( p-\u003evCutFirst, iObj );\n        if ( !sat_solver_var_value(p-\u003epSat, iObj) )\n            continue;\n        //for ( i = 0; i \u003c Sle_ListCutNum(pList); i++ )\n        //    printf( \"%d\", sat_solver_var_value(p-\u003epSat, iCutVar0 + i) );\n        //printf( \"\\n\" );\n        Vec_IntForEachEntry( vCutFans, iFanin, i )\n            if ( sat_solver_var_value(p-\u003epSat, iFanin) \u0026\u0026 sat_solver_var_value(p-\u003epSat, iEdgeVar0 + i) )\n            {\n                // verify edge\n                int * pFanins = Gia_ObjLutFanins( p-\u003epGia, iObj );\n                int k, nFanins = Gia_ObjLutSize( p-\u003epGia, iObj );\n                for ( k = 0; k \u003c nFanins; k++ )\n                {\n                    //printf( \"%d \", pFanins[k] );\n                    if ( pFanins[k] == iFanin )\n                        break;\n                }\n                //printf( \"\\n\" );\n                if ( k == nFanins )\n//                    printf( \"Cannot find LUT with input %d at node %d.\\n\", iFanin, iObj );\n                    continue;\n                Vec_IntPushTwo( vEdge2, iFanin, iObj );\n            }\n    }\n    p-\u003epGia-\u003evMapping = vMapTemp;\n}",
+      "Draft": "func Sle_ManDeriveResult(p *Sle_Man_t, vEdge2 *Vec_Int_t, vMapping *Vec_Int_t) {\n    var vMapTemp *Vec_Int_t;\n    var iObj int32;\n    // create mapping\n    Vec_IntFill( vMapping, Gia_ManObjNum(p.pGia), 0 );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var i int32;\n        var iCut int32;\n        var iCutVar0 int32 = Vec_IntEntry( p.vCutFirst, iObj );\n        var pCut *int32;\n        var pCutThis *int32 = nil;\n        var pList *int32 = Sle_ManList( p, iObj );\n        if !sat_solver_var_value(p.pSat, iObj) {\n            continue; }\n        // inlining of macro Sle_ForEachCut\n        for  iCut, pCut = 0, pList + 1; iCut \u003c  pList[0]; iCut++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if sat_solver_var_value(p.pSat, iCutVar0 + iCut) {\n                assert(pCutThis == nil, \"pCutThis == nil\");\n                pCutThis = pCut;\n            }\n        }\n        assert(pCutThis != nil, \"pCutThis != nil\");\n        Vec_IntWriteEntry( vMapping, iObj, Vec_IntSize(vMapping) );\n        Vec_IntPush( vMapping, Sle_CutSize(pCutThis) );\n        for  i = 0; i \u003c Sle_CutSize(pCutThis); i++  {\n            Vec_IntPush( vMapping, Sle_CutLeaves(pCutThis)[i] );\n        }\n        Vec_IntPush( vMapping, iObj );\n    }\n    }\n    vMapTemp = p.pGia.vMapping;\n    p.pGia.vMapping = vMapping;\n    // collect edges\n    Vec_IntClear( vEdge2 );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var i int32;\n        var iFanin int32;\n        var iEdgeVar0 int32 = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        //int * pCut, * pList  = Sle_ManList( p, iObj );\n        // int iCutVar0  = Vec_IntEntry( p-\u003evCutFirst, iObj );\n        if !sat_solver_var_value(p.pSat, iObj) {\n            continue; }\n        //for ( i = 0; i \u003c Sle_ListCutNum(pList); i++ )\n        //    printf( \"%d\", sat_solver_var_value(p-\u003epSat, iCutVar0 + i) );\n        //printf( \"\\n\" );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFans, i)), 1); i++  {\n            if sat_solver_var_value(p.pSat, iFanin) \u0026\u0026 sat_solver_var_value(p.pSat, iEdgeVar0 + i) {\n                // verify edge\n                var pFanins *int32  = Gia_ObjLutFanins( p.pGia, iObj );\n                var k int32;\n                var nFanins int32 = Gia_ObjLutSize( p.pGia, iObj );\n                for  k = 0; k \u003c nFanins; k++  {\n                    //printf( \"%d \", pFanins[k] );\n                    if pFanins[k] == iFanin {\n                        break; }\n                }\n                //printf( \"\\n\" );\n                if k == nFanins {\n//                    printf( \"Cannot find LUT with input %d at node %d.\\n\", iFanin, iObj );\n                    continue; }\n                Vec_IntPushTwo( vEdge2, iFanin, iObj );\n            }\n        }\n    }\n    }\n    p.pGia.vMapping = vMapTemp;\n}"
+    },
+    {
+      "Name": "Sle_ManExplore",
+      "Start": 34091,
+      "End": 39787,
+      "BodyStart": 34203,
+      "Original": "void Sle_ManExplore( Gia_Man_t * pGia, int nBTLimit, int DelayInit, int fDynamic, int fTwoEdges, int fVerbose )\n{\n    int fVeryVerbose = 0;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vEdges2  = Vec_IntAlloc(1000);\n    Vec_Int_t * vMapping = Vec_IntAlloc(1000);\n    int i, iLut, nConfs, status, Delay, iFirstVar;\n    int DelayStart = (DelayInit || !Gia_ManHasMapping(pGia)) ? DelayInit : Gia_ManLutLevel(pGia, NULL);\n    Sle_Man_t * p = Sle_ManAlloc( pGia, DelayStart, fVerbose );\n    if ( fVerbose )\n        printf( \"Running solver with %d conflicts, %d initial delay, and %d edges. Dynamic constraints = %s.\\n\", nBTLimit, DelayInit, 1+fTwoEdges, fDynamic?\"yes\":\"no\" );\n    Sle_ManMarkupVariables( p );\n    if ( fVerbose )\n        printf( \"Vars:  Total = %d.  Node = %d. Cut = %d. Edge = %d. Delay = %d.\\n\", \n            p-\u003enVarsTotal, p-\u003enNodeVars, p-\u003enCutVars, p-\u003enEdgeVars, p-\u003enDelayVars );\n    Sle_ManDeriveInit( p );\n    Sle_ManDeriveCnf( p, nBTLimit, fDynamic || fTwoEdges );\n    if ( fVerbose )\n        printf( \"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.\\n\", \n            sat_solver_nclauses(p-\u003epSat), p-\u003enCutClas, p-\u003enEdgeClas, p-\u003enEdgeClas2, p-\u003enDelayClas );\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", NULL, NULL, 0 );\n    for ( Delay = p-\u003enLevels; Delay \u003e= 0; Delay-- )\n    {\n        // we constrain COs, although it would be fine to constrain only POs\n        if ( Delay \u003c p-\u003enLevels )\n        {\n            Gia_ManForEachCoDriverId( p-\u003epGia, iLut, i )\n                if ( Vec_BitEntry(p-\u003evMask, iLut) ) // internal node\n                {\n                    iFirstVar = Vec_IntEntry( p-\u003evDelayFirst, iLut );\n                    if ( !sat_solver_push(p-\u003epSat, Abc_Var2Lit(iFirstVar + Delay, 1)) )\n                        break;\n                }\n            if ( i \u003c Gia_ManCoNum(p-\u003epGia) )\n            {\n                if ( fVerbose )\n                {\n                    printf( \"Proved UNSAT for delay %d.  \", Delay );\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                }\n                break;\n            }\n        }\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p-\u003epSat );\n        while ( 1 )\n        {\n            p-\u003enSatCalls++;\n            status = sat_solver_solve_internal( p-\u003epSat );\n            if ( status != l_True )\n                break;\n            if ( !Sle_ManAddEdgeConstraints(p, 1+fTwoEdges) )\n                break;\n        }\n        nConfs = sat_solver_nconflicts( p-\u003epSat ) - nConfs;\n        if ( status == l_True )\n        {\n            if ( fVerbose )\n            {\n                int nNodes = 0, nEdges = 0;\n                for ( i = 0; i \u003c p-\u003enNodeVars; i++ )\n                    nNodes += sat_solver_var_value(p-\u003epSat, i);\n                for ( i = 0; i \u003c p-\u003enEdgeVars; i++ )\n                    nEdges += sat_solver_var_value(p-\u003epSat, p-\u003enNodeVars + p-\u003enCutVars + i);\n                printf( \"Solution with delay %2d, node count %5d, and edge count %5d exists. Conf = %8d.  \", Delay, nNodes, nEdges, nConfs );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Sle_ManDeriveResult( p, vEdges2, vMapping );\n            if ( fVeryVerbose )\n            {\n                printf( \"Nodes:  \" );\n                for ( i = 0; i \u003c p-\u003enNodeVars; i++ )\n                    if ( sat_solver_var_value(p-\u003epSat, i) )\n                        printf( \"%d \", i );\n                printf( \"\\n\" );\n                printf( \"\\n\" );\n\n                Vec_IntPrint( p-\u003evCutFirst );\n                printf( \"Cuts:   \" );\n                for ( i = 0; i \u003c p-\u003enCutVars; i++ )\n                    if ( sat_solver_var_value(p-\u003epSat, p-\u003enNodeVars + i) )\n                        printf( \"%d \", p-\u003enNodeVars + i );\n                printf( \"\\n\" );\n                printf( \"\\n\" );\n\n                Vec_IntPrint( p-\u003evEdgeFirst );\n                printf( \"Edges:  \" );\n                for ( i = 0; i \u003c p-\u003enEdgeVars; i++ )\n                    if ( sat_solver_var_value(p-\u003epSat, p-\u003enNodeVars + p-\u003enCutVars + i) )\n                        printf( \"%d \", p-\u003enNodeVars + p-\u003enCutVars + i );\n                printf( \"\\n\" );\n                printf( \"\\n\" );\n\n                Vec_IntPrint( p-\u003evDelayFirst );\n                printf( \"Delays: \" );\n                for ( i = 0; i \u003c p-\u003enDelayVars; i++ )\n                    if ( sat_solver_var_value(p-\u003epSat, p-\u003enNodeVars + p-\u003enCutVars + p-\u003enEdgeVars + i) )\n                        printf( \"%d \", p-\u003enNodeVars + p-\u003enCutVars + p-\u003enEdgeVars + i );\n                printf( \"\\n\" );\n                printf( \"\\n\" );\n            }\n        }\n        else\n        {\n            if ( fVerbose )\n            {\n                if ( status == l_False )\n                    printf( \"Proved UNSAT for delay %d. Conf = %8d.  \", Delay, nConfs );\n                else\n                    printf( \"Resource limit reached for delay %d. Conf = %8d.  \", Delay, nConfs );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    if ( fVerbose )\n        printf( \"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.  Calls = %d.\\n\", \n            sat_solver_nclauses(p-\u003epSat), p-\u003enCutClas, p-\u003enEdgeClas, p-\u003enEdgeClas2, p-\u003enDelayClas, p-\u003enSatCalls );\n    if ( Vec_IntSize(vMapping) \u003e 0 )\n    {\n        Gia_ManEdgeFromArray( p-\u003epGia, vEdges2 );\n        Vec_IntFree( vEdges2 );\n        Vec_IntFreeP( \u0026p-\u003epGia-\u003evMapping );\n        p-\u003epGia-\u003evMapping = vMapping;\n    }\n    else\n    {\n        Vec_IntFree( vEdges2 );\n        Vec_IntFree( vMapping );\n    }\n    Vec_IntFreeP( \u0026p-\u003epGia-\u003evPacking );\n    Sle_ManStop( p );\n}",
+      "Draft": "func Sle_ManExplore(pGia *Gia_Man_t, nBTLimit int32, DelayInit int32, fDynamic int32, fTwoEdges int32, fVerbose int32) {\n    var fVeryVerbose int32;\n    var clk abctime  = Abc_Clock();\n    var vEdges2 *Vec_Int_t   = Vec_IntAlloc(1000);\n    var vMapping *Vec_Int_t  = Vec_IntAlloc(1000);\n    var i, iLut, nConfs, status, Delay, iFirstVar int32;\n    var DelayStart int32;\n    if (DelayInit != 0) || !Gia_ManHasMapping(pGia) {\n        DelayStart = DelayInit;\n    } else {\n        DelayStart = Gia_ManLutLevel(pGia, nil);\n    }\n    var p *Sle_Man_t  = Sle_ManAlloc( pGia, DelayStart, fVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Running solver with %d conflicts, %d initial delay, and %d edges. Dynamic constraints = %s.\\n\", nBTLimit, DelayInit, 1+fTwoEdges, fDynamic?\"yes\":\"no\"); }\n    Sle_ManMarkupVariables( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Vars:  Total = %d.  Node = %d. Cut = %d. Edge = %d. Delay = %d.\\n\", p.nVarsTotal, p.nNodeVars, p.nCutVars, p.nEdgeVars, p.nDelayVars); }\n    Sle_ManDeriveInit( p );\n    Sle_ManDeriveCnf( p, nBTLimit, fDynamic || fTwoEdges );\n    if fVerbose != 0 {\n        fmt.Printf(\"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.\\n\", sat_solver_nclauses(p.pSat), p.nCutClas, p.nEdgeClas, p.nEdgeClas2, p.nDelayClas); }\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", NULL, NULL, 0 );\n    for  Delay = p.nLevels; Delay \u003e= 0; Delay--  {\n        // we constrain COs, although it would be fine to constrain only POs\n        if Delay \u003c p.nLevels {\n            // inlining of macro Gia_ManForEachCoDriverId\n            for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, i))), 1); i++  {\n                if Vec_BitEntry(p.vMask, iLut) { // internal node\n                \n                    iFirstVar = Vec_IntEntry( p.vDelayFirst, iLut );\n                    if !sat_solver_push(p.pSat, Abc_Var2Lit(iFirstVar + Delay, 1)) {\n                        break; }\n                }\n            }\n            if i \u003c Gia_ManCoNum(p.pGia) {\n                if fVerbose != 0 {\n                    fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                }\n                break;\n            }\n        }\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p.pSat );\n        for {\n            p.nSatCalls++;\n            status = sat_solver_solve_internal( p.pSat );\n            if status != l_True {\n                break; }\n            if !(Sle_ManAddEdgeConstraints(p, 1+fTwoEdges) != 0) {\n                break; }\n        }\n        nConfs = sat_solver_nconflicts( p.pSat ) - nConfs;\n        if status == l_True {\n            if fVerbose != 0 {\n                var nNodes, nEdges int32;\n                for  i = 0; i \u003c p.nNodeVars; i++  {\n                    nNodes += sat_solver_var_value(p.pSat, i);\n                }\n                for  i = 0; i \u003c p.nEdgeVars; i++  {\n                    nEdges += sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + i);\n                }\n                fmt.Printf(\"Solution with delay %2d, node count %5d, and edge count %5d exists. Conf = %8d.  \", Delay, nNodes, nEdges, nConfs);\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Sle_ManDeriveResult( p, vEdges2, vMapping );\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Nodes:  \");\n                for  i = 0; i \u003c p.nNodeVars; i++  {\n                    if sat_solver_var_value(p.pSat, i) {\n                        fmt.Printf(\"%d \", i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vCutFirst );\n                fmt.Printf(\"Cuts:   \");\n                for  i = 0; i \u003c p.nCutVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vEdgeFirst );\n                fmt.Printf(\"Edges:  \");\n                for  i = 0; i \u003c p.nEdgeVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + p.nCutVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vDelayFirst );\n                fmt.Printf(\"Delays: \");\n                for  i = 0; i \u003c p.nDelayVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + p.nEdgeVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + p.nCutVars + p.nEdgeVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n            }\n        \n        } else {\n            if fVerbose != 0 {\n                if status == l_False {\n                    fmt.Printf(\"Proved UNSAT for delay %d. Conf = %8d.  \", Delay, nConfs);\n                } else {\n                    fmt.Printf(\"Resource limit reached for delay %d. Conf = %8d.  \", Delay, nConfs); }\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.  Calls = %d.\\n\", sat_solver_nclauses(p.pSat), p.nCutClas, p.nEdgeClas, p.nEdgeClas2, p.nDelayClas, p.nSatCalls); }\n    if Vec_IntSize(vMapping) \u003e 0 {\n        Gia_ManEdgeFromArray( p.pGia, vEdges2 );\n        Vec_IntFree( vEdges2 );\n        Vec_IntFreeP( \u0026p.pGia.vMapping );\n        p.pGia.vMapping = vMapping;\n    \n    } else {\n        Vec_IntFree( vEdges2 );\n        Vec_IntFree( vMapping );\n    }\n    Vec_IntFreeP( \u0026p.pGia.vPacking );\n    Sle_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::struct::Sle_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Sle_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 13193,
+      "End": 14902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::mechanical::sizeof::17427",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15354,
+      "End": 15354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::pointer-cast::17393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15354,
+      "End": 15354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::pointer-cast::18734",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16611,
+      "End": 16611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::macro::Sle_ForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Sle_ForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1470,
+      "End": 1617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::macro::Sle_ForEachCut1",
+      "Category": "macro-review",
+      "Symbol": "Sle_ForEachCut1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1618,
+      "End": 1765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutSize",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 856,
+      "End": 937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutSign",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 950,
+      "End": 1043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutSetSizeSign",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutSetSizeSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1056,
+      "End": 1137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1138,
+      "End": 1219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutIsUsed",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutIsUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1222,
+      "End": 1303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutSetUnused",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutSetUnused",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1304,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ListCutNum",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ListCutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1387,
+      "End": 1468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutMergeOrder",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutMergeOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2237,
+      "End": 3931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_SetCutIsContainedOrder",
+      "Category": "semantic-review",
+      "Symbol": "Sle_SetCutIsContainedOrder",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3932,
+      "End": 4693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_CutCountBits",
+      "Category": "semantic-review",
+      "Symbol": "Sle_CutCountBits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4694,
+      "End": 4907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_SetLastCutIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Sle_SetLastCutIsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4908,
+      "End": 5298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_SetAddCut",
+      "Category": "semantic-review",
+      "Symbol": "Sle_SetAddCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5299,
+      "End": 5778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManCutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManCutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5779,
+      "End": 7173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7174,
+      "End": 8172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManComputeDelayCut",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManComputeDelayCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8430,
+      "End": 8736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManComputeDelayOne",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManComputeDelayOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8737,
+      "End": 9178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManComputeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManComputeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9179,
+      "End": 9587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManPrintCut",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManPrintCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9836,
+      "End": 10057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManPrintCuts",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManPrintCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10058,
+      "End": 10340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManPrintCutsAll",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManPrintCutsAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10341,
+      "End": 10498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManComputeCutsTest",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManComputeCutsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10499,
+      "End": 10667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManInternalNodeMask",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManInternalNodeMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10945,
+      "End": 11182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManCutHasPisOnly",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManCutHasPisOnly",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11464,
+      "End": 11705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManCollectCutFaninsOne",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManCollectCutFaninsOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12029,
+      "End": 12764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManCollectCutFanins",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManCollectCutFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12765,
+      "End": 13190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManList",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14904,
+      "End": 15022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15258,
+      "End": 16182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::ternary::Sle_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Sle_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16183,
+      "End": 16627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16183,
+      "End": 16627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManMarkupVariables",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManMarkupVariables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16863,
+      "End": 17771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManCheckContained",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManCheckContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18119,
+      "End": 18546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManDeriveInit",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManDeriveInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18547,
+      "End": 20813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::ternary::Sle_ManDeriveCnf",
+      "Category": "ternary-review",
+      "Symbol": "Sle_ManDeriveCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21060,
+      "End": 28728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManDeriveCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManDeriveCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21060,
+      "End": 28728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManAddEdgeConstraints",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManAddEdgeConstraints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29040,
+      "End": 31107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManDeriveResult",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManDeriveResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31343,
+      "End": 33855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::ternary::Sle_ManExplore",
+      "Category": "ternary-review",
+      "Symbol": "Sle_ManExplore",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 34091,
+      "End": 39787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::Sle_ManExplore",
+      "Category": "semantic-review",
+      "Symbol": "Sle_ManExplore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34091,
+      "End": 39787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatLE.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 40034
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaSatLE.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Mapping with edges.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSatLE.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Sle_CutSize(pCut *int32) int32 { return pCut[0] \u0026 0xF;  }  //  4 bits\nfunc Sle_CutSign(pCut *int32) int32 { return (uint32(pCut[0])) \u003e\u003e 4;   }  // 28 bits\nfunc Sle_CutSetSizeSign(s int32, S int32) int32 { return (S \u003c\u003c 4) | s;   }\nfunc Sle_CutLeaves(pCut *int32) *int32 { return pCut + 1;       } \n\nfunc Sle_CutIsUsed(pCut *int32) int32 { return pCut[1] != 0;   }\nfunc Sle_CutSetUnused(pCut *int32) { pCut[1] = 0;           }\n\nfunc Sle_ListCutNum(pList *int32) int32 { return pList[0];       }\n\n// Original macro:\n// #define Sle_ForEachCut( pList, pCut, i )   for ( i = 0, pCut = pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1 ) // cuts with unit-cut\n\n// Original macro:\n// #define Sle_ForEachCut1( pList, pCut, i )  for ( i = 0, pCut = pList + 1; i \u003c= pList[0]; i++, pCut += Sle_CutSize(pCut) + 1 ) // only non-unit cuts\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_CutMergeOrder(pCut0 *int32, pCut1 *int32, pCut *int32, nLutSize int32) int32 { \n    var nSize0 int32    = Sle_CutSize(pCut0);\n    var nSize1 int32    = Sle_CutSize(pCut1);\n    var i int32;\n    var pC0 *int32 = Sle_CutLeaves(pCut0);\n    var k int32;\n    var pC1 *int32 = Sle_CutLeaves(pCut1);\n    var c int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    // the case of the largest cut sizes\n    if nSize0 == nLutSize \u0026\u0026 nSize1 == nLutSize {\n        for  i = 0; i \u003c nSize0; i++  {\n            if pC0[i] != pC1[i] {  return 0; }\n            pC[i] = pC0[i];\n        }\n        pCut[0] = Sle_CutSetSizeSign( nLutSize, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n        return 1;\n    }\n    // compare two cuts with different numbers\n    i = k = c = 0;\n    if nSize0 == 0 { goto FlushCut1; }\n    if nSize1 == 0 { goto FlushCut0; }\n    for {\n        if c == nLutSize { return 0; }\n        if pC0[i] \u003c pC1[k] {\n            pC[c++] = pC0[i++];\n            if i \u003e= nSize0 { goto FlushCut1; }\n        \n        } else if pC0[i] \u003e pC1[k] {\n            pC[c++] = pC1[k++];\n            if k \u003e= nSize1 { goto FlushCut0; }\n        \n        } else {\n            pC[c++] = pC0[i++]; k++;\n            if i \u003e= nSize0 { goto FlushCut1; }\n            if k \u003e= nSize1 { goto FlushCut0; }\n        }\n    }\n\nFlushCut0:\n    if c + nSize0 \u003e nLutSize + i { return 0; }\n    for  i \u003c nSize0  {\n        pC[c++] = pC0[i++];\n    }\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n\nFlushCut1:\n    if c + nSize1 \u003e nLutSize + k { return 0; }\n    for  k \u003c nSize1  {\n        pC[c++] = pC1[k++];\n    }\n    pCut[0] = Sle_CutSetSizeSign( c, Sle_CutSign(pCut0) | Sle_CutSign(pCut1) );\n    return 1;\n}\nstatic inline int Sle_SetCutIsContainedOrder( int * pBase, int * pCut ) // check if pCut is contained in pBase\n{\n    var i int32;\n    var nSizeB int32 = Sle_CutSize(pBase);\n    var k int32;\n    var nSizeC int32 = Sle_CutSize(pCut);\n    var pLeaveB *int32  = Sle_CutLeaves(pBase);\n    var pLeaveC *int32  = Sle_CutLeaves(pCut);\n    if nSizeB == nSizeC {\n        for  i = 0; i \u003c nSizeB; i++  {\n            if pLeaveB[i] != pLeaveC[i] {\n                return 0; }\n        }\n        return 1;\n    }\n    assert(nSizeB \u003e nSizeC, \"nSizeB \u003e nSizeC\"); \n    if nSizeC == 0 {\n        return 1; }\n    for  i = k = 0; i \u003c nSizeB; i++  {\n        if pLeaveB[i] \u003e pLeaveC[k] {\n            return 0; }\n        if pLeaveB[i] == pLeaveC[k] {\n            if k++; k == nSizeC {\n                return 1; }\n        }\n    }\n    return 0;\n}\nfunc Sle_CutCountBits(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}\nfunc Sle_SetLastCutIsContained(vTemp *Vec_Int_t, pBase *int32) int32 {\n    var i int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        if (Sle_CutIsUsed(pCut) != 0) \u0026\u0026 Sle_CutSize(pCut) \u003c= Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) {\n            return 1; }\n    }\n    return 0;\n}\nfunc Sle_SetAddCut(vTemp *Vec_Int_t, pCut *int32) {\n    var i int32;\n    var pBase *int32;\n    var pList *int32 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pBase = 0, pList + 1; i \u003c  pList[0]; i++, pBase += Sle_CutSize(pBase) + 1  { // cuts with unit-cut\n\n        if (Sle_CutIsUsed(pBase) != 0) \u0026\u0026 Sle_CutSize(pCut) \u003c Sle_CutSize(pBase) \u0026\u0026 (Sle_CutSign(pCut) \u0026 Sle_CutSign(pBase)) == Sle_CutSign(pCut) \u0026\u0026 Sle_SetCutIsContainedOrder(pBase, pCut) {\n            Sle_CutSetUnused( pBase ); }\n    }\n    Vec_IntPushArray( vTemp, pCut, Sle_CutSize(pCut)+1 );\n    Vec_IntAddToEntry( vTemp, 0, 1 );\n}\nfunc Sle_ManCutMerge(p *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vTemp *Vec_Int_t, nLutSize int32) int32 {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pList0 *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId0(pObj, iObj)) );\n    var pList1 *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, Gia_ObjFaninId1(pObj, iObj)) );\n    var pCut0 *int32;\n    var pCut1 *int32;\n    var i int32;\n    var k int32;\n    var Cut [8]int32;\n    var nCuts int32;\n    Vec_IntFill( vTemp, 1, 0 );\n    // inlining of macro Sle_ForEachCut1\n    for  i, pCut0 = 0, pList0 + 1; i \u003c= pList0[0]; i++, pCut0 += Sle_CutSize(pCut0) + 1  { // only non-unit cuts\n\n    // inlining of macro Sle_ForEachCut1\n    for  k, pCut1 = 0, pList1 + 1; k \u003c= pList1[0]; k++, pCut1 += Sle_CutSize(pCut1) + 1  { // only non-unit cuts\n\n    \n        if Sle_CutSize(pCut0) + Sle_CutSize(pCut1) \u003e nLutSize \u0026\u0026 Sle_CutCountBits(Sle_CutSign(pCut0) | Sle_CutSign(pCut1)) \u003e nLutSize {\n            continue; }\n        if !(Sle_CutMergeOrder(pCut0, pCut1, Cut, nLutSize) != 0) {\n            continue; }\n        if Sle_SetLastCutIsContained(vTemp, Cut) != 0 {\n            continue; }\n        Sle_SetAddCut( vTemp, Cut );\n    }\n    }\n    // reload\n    Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n    Vec_IntPush( vCuts, -1 );\n    pList0 = Vec_IntArray(vTemp);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut0 = 0, pList0 + 1; i \u003c  pList0[0]; i++, pCut0 += Sle_CutSize(pCut0) + 1  { // cuts with unit-cut\n\n    \n        if !(Sle_CutIsUsed(pCut0) != 0) {\n            continue; }\n        Vec_IntPushArray( vCuts, pCut0, Sle_CutSize(pCut0)+1 );\n        nCuts++;\n    }\n    // add unit cut\n    Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n    Vec_IntPush( vCuts, iObj );\n    Vec_IntWriteEntry( vCuts, Vec_IntEntry(vCuts, iObj), nCuts );\n    return nCuts;\n}\nfunc Sle_ManComputeCuts(p *Gia_Man_t, nLutSize int32, fVerbose int32) *Vec_Int_t {\n    var i, iObj, nCuts int32;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vCuts *Vec_Int_t  = Vec_IntAlloc( 30 * Gia_ManAndNum(p) );\n    assert(nLutSize \u003c= 6, \"nLutSize \u003c= 6\");\n    Vec_IntFill( vCuts, Gia_ManObjNum(p), 0 );\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iObj) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n        Vec_IntWriteEntry( vCuts, iObj, Vec_IntSize(vCuts) );\n        Vec_IntPush( vCuts, 0 );\n        Vec_IntPush( vCuts, Sle_CutSetSizeSign(1, 1\u003c\u003c(iObj % 28)) );\n        Vec_IntPush( vCuts, iObj );\n    }\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        nCuts += Sle_ManCutMerge( p, iObj, vCuts, vTemp, nLutSize ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.  Mem = %.2f MB.\\n\", Gia_ManAndNum(p), nCuts, 1.0*nCuts/Gia_ManAndNum(p), 1.0*(Vec_IntSize(vCuts)-Gia_ManObjNum(p))/Gia_ManAndNum(p), 1.0*Vec_IntMemory(vCuts) / (1\u003c\u003c20)); }\n    Vec_IntFree( vTemp );\n    return vCuts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cut delay computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManComputeDelayCut(p *Gia_Man_t, pCut *int32, vTime *Vec_Int_t) int32 {\n    var nSize int32    = Sle_CutSize(pCut);\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    var DelayMax int32;\n    for  k = 0; k \u003c nSize; k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(vTime, pC[k]) );\n    }\n    return DelayMax + 1;\n}\nfunc Sle_ManComputeDelayOne(p *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vTime *Vec_Int_t) int32 {\n    var i int32;\n    var pCut *int32;\n    var Delay int32;\n    var DelayMin int32 = ABC_INFINITY;\n    var pList *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n    \n        Delay = Sle_ManComputeDelayCut( p, pCut, vTime );\n        DelayMin = Abc_MinInt( DelayMin, Delay );\n    }\n    Vec_IntWriteEntry( vTime, iObj, DelayMin );\n    return DelayMin;\n}\nfunc Sle_ManComputeDelay(p *Gia_Man_t, vCuts *Vec_Int_t) int32 {\n    var iObj, Delay, DelayMax int32;\n    var vTime *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Delay = Sle_ManComputeDelayOne( p, iObj, vCuts, vTime );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    Vec_IntFree( vTime );\n    //printf( \"Delay = %d.\\n\", DelayMax );\n    return DelayMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cut printing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManPrintCut(pCut *int32) {\n    var nSize int32    = Sle_CutSize(pCut);\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    fmt.Printf(\"{\");\n    for  k = 0; k \u003c nSize; k++  {\n        fmt.Printf(\" %d\", pC[k]);\n    }\n    fmt.Printf(\" }\\n\");\n}\nfunc Sle_ManPrintCuts(p *Gia_Man_t, vCuts *Vec_Int_t, iObj int32) {\n    var i int32;\n    var pCut *int32;\n    var pList *int32  = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    fmt.Printf(\"Obj %3d\\n\", iObj);\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        Sle_ManPrintCut( pCut );\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Sle_ManPrintCutsAll(p *Gia_Man_t, vCuts *Vec_Int_t) {\n    var iObj int32;\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, iObj)) {} else {\n        Sle_ManPrintCuts( p, vCuts, iObj ); }\n    }\n}\nfunc Sle_ManComputeCutsTest(p *Gia_Man_t) {\n    var vCuts *Vec_Int_t  = Sle_ManComputeCuts( p, 4, 1 );\n    //Sle_ManPrintCutsAll( p, vCuts );\n    Vec_IntFree( vCuts );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derive mask representing internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManInternalNodeMask(pGia *Gia_Man_t) *Vec_Bit_t {\n    var iObj int32;\n    var vMask *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );  \n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pGia, iObj)) {} else {\n        Vec_BitWriteEntry( vMask, iObj, 1 ); }\n    }\n    return vMask;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the cut contains only primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManCutHasPisOnly(pCut *int32, vMask *Vec_Bit_t) int32 {\n    var k int32;\n    var pC *int32 = Sle_CutLeaves(pCut);\n    for  k = 0; k \u003c Sle_CutSize(pCut); k++  {\n        if Vec_BitEntry(vMask, pC[k]) { // internal node\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive cut fanins of each node.]\n\n  Description [These are nodes that are fanins of some cut of this node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManCollectCutFaninsOne(pGia *Gia_Man_t, iObj int32, vCuts *Vec_Int_t, vMask *Vec_Bit_t, vCutFanins *Vec_Int_t, vMap *Vec_Bit_t) {\n    var i int32;\n    var iFanin int32;\n    var pCut *int32;\n    var pList *int32 = Vec_IntEntryP( vCuts, Vec_IntEntry(vCuts, iObj) );\n    // inlining of macro Sle_ForEachCut\n    for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n    \n        var nSize int32    = Sle_CutSize(pCut);\n        var k int32;\n        var pC *int32 = Sle_CutLeaves(pCut);\n        assert(nSize \u003e 1, \"nSize \u003e 1\");\n        for  k = 0; k \u003c nSize; k++  {\n            if Vec_BitEntry(vMask, pC[k]) \u0026\u0026 !Vec_BitEntry(vMap, pC[k]) {\n                Vec_BitWriteEntry( vMap, pC[k], 1 );\n                Vec_IntPush( vCutFanins, pC[k] );\n            }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCutFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFanins, i)), 1); i++  {\n        Vec_BitWriteEntry( vMap, iFanin, 0 );\n    }\n}\nfunc Sle_ManCollectCutFanins(pGia *Gia_Man_t, vCuts *Vec_Int_t, vMask *Vec_Bit_t) *Vec_Wec_t {\n    var iObj int32;\n    var vMap *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );\n    var vCutFanins *Vec_Wec_t  = Vec_WecStart( Gia_ManObjNum(pGia) );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pGia, iObj)) {} else {\n        Sle_ManCollectCutFaninsOne( pGia, iObj, vCuts, vMask, Vec_WecEntry(vCutFanins, iObj), vMap ); }\n    }\n    Vec_BitFree( vMap );\n    return vCutFanins;\n}\n\n\n   \ntype Sle_Man_t struct {\n    // user's data\n    pGia     *Gia_Man_t;         // user's manager (with mapping and edges)\n    nLevels            int32;      // total number of levels\n    fVerbose            int32;     // verbose flag\n    nSatCalls            int32;    // the number of SAT calls\n    // SAT variables\n    nNodeVars            int32;    // node variables (Gia_ManAndNum(pGia))\n    nCutVars            int32;     // cut variables (total number of non-trivial cuts)\n    nEdgeVars            int32;    // edge variables (total number of internal edges)\n    nDelayVars            int32;   // delay variables (nNodeVars * nLevelsMax)\n    nVarsTotal            int32;   // total number of variables\n    // SAT clauses\n    nCutClas            int32;     // cut clauses\n    nEdgeClas            int32;    // edge clauses\n    nEdgeClas2            int32;   // edge clauses exclusivity\n    nDelayClas            int32;   // delay clauses\n    // internal data\n    pSat    *sat_solver;         // SAT solver\n    vMask     *Vec_Bit_t;        // internal node mask\n    vCuts     *Vec_Int_t;        // cuts for each node\n    vCutFanins     *Vec_Wec_t;   // internal cut fanins of each node\n    vFanoutEdges     *Vec_Wec_t; // internal cut fanins of each node\n    vEdgeCuts     *Vec_Wec_t;    // cuts of each edge for one node\n    vObjMap     *Vec_Int_t;      // temporary object map\n    vCutFirst     *Vec_Int_t;    // first cut of each node\n    vEdgeFirst     *Vec_Int_t;   // first edge of each node\n    vDelayFirst     *Vec_Int_t;  // first edge of each node\n    vPolars     *Vec_Int_t;      // initial \n    vLits     *Vec_Int_t;        // literals \n    // statistics\n    timeStart        abctime;\n}\n\nfunc Sle_ManList(p *Sle_Man_t, i int32) *int32 { return Vec_IntEntryP(p.vCuts, Vec_IntEntry(p.vCuts, i)); }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManAlloc(pGia *Gia_Man_t, nLevels int32, fVerbose int32) *Sle_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Sle_Man_t    = \u0026Sle_Man_t{};\n    p.pGia         = pGia;\n    p.nLevels      = nLevels;\n    p.fVerbose     = fVerbose;\n    p.vMask        = Sle_ManInternalNodeMask( pGia );\n    p.vCuts        = Sle_ManComputeCuts( pGia, 4, fVerbose );\n    p.vCutFanins   = Sle_ManCollectCutFanins( pGia, p.vCuts, p.vMask );\n    p.vFanoutEdges = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p.vEdgeCuts    = Vec_WecAlloc( 100 );\n    p.vObjMap      = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vCutFirst    = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vEdgeFirst   = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vDelayFirst  = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vPolars      = Vec_IntAlloc( 100 );\n    p.vLits        = Vec_IntAlloc( 100 );\n    p.nLevels      = Sle_ManComputeDelay( pGia, p.vCuts );\n    return p;\n}\nfunc Sle_ManStop(p *Sle_Man_t) {\n    sat_solver_delete( p.pSat );\n    Vec_BitFree( p.vMask );\n    Vec_IntFree( p.vCuts );\n    Vec_WecFree( p.vCutFanins );\n    Vec_WecFree( p.vFanoutEdges );\n    Vec_WecFree( p.vEdgeCuts );\n    Vec_IntFree( p.vObjMap );\n    Vec_IntFree( p.vCutFirst );\n    Vec_IntFree( p.vEdgeFirst );\n    Vec_IntFree( p.vDelayFirst );\n    Vec_IntFree( p.vPolars );\n    Vec_IntFree( p.vLits );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManMarkupVariables(p *Sle_Man_t) {\n    var iObj int32;\n    var Counter int32 = Gia_ManObjNum(p.pGia);\n    // node variables\n    p.nNodeVars = Counter;\n    // cut variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vCutFirst, iObj, Counter );\n        Counter += Sle_ListCutNum( Sle_ManList(p, iObj) );\n    }\n    }\n    p.nCutVars = Counter - p.nNodeVars;\n    // edge variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vEdgeFirst, iObj, Counter );\n        Counter += Vec_IntSize( Vec_WecEntry(p.vCutFanins, iObj) );\n    }\n    }\n    p.nEdgeVars = Counter - p.nCutVars - p.nNodeVars;\n    // delay variables\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        Vec_IntWriteEntry( p.vDelayFirst, iObj, Counter );\n        Counter += p.nLevels;\n    }\n    }\n    p.nDelayVars = Counter - p.nEdgeVars - p.nCutVars - p.nNodeVars;\n    p.nVarsTotal = Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derive initial variable assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// returns 1 if Cut can represent LUT (Cut is equal or is contained in LUT)\nfunc Sle_ManCheckContained(pCutLeaves *int32, nCutLeaves int32, pLutFanins *int32, nLutFanins int32) int32 {\n    var i, k int32;\n    if nCutLeaves \u003e nLutFanins {\n        return 0; }\n    for  i = 0; i \u003c nCutLeaves; i++  {\n        for  k = 0; k \u003c nLutFanins; k++  {\n            if pCutLeaves[i] == pLutFanins[k] {\n                break; }\n        }\n        if k == nLutFanins { // not found\n            return 0; }\n    }\n    return 1;\n}\nfunc Sle_ManDeriveInit(p *Sle_Man_t) {\n    var vEdges *Vec_Int_t;\n    var i, iObj, iFanin, iEdge int32;\n    if !Gia_ManHasMapping(p.pGia) {\n        return; }\n    // derive initial state\n    Vec_IntClear( p.vPolars );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var nFanins int32;\n        var pFanins *int32;\n        var pCut *int32;\n        var pList *int32;\n        var iFound int32 = -1;\n        if !Gia_ObjIsLut(p.pGia, iObj) {\n            continue; }\n        Vec_IntPush( p.vPolars, iObj ); // node var\n        nFanins = Gia_ObjLutSize( p.pGia, iObj );\n        pFanins = Gia_ObjLutFanins( p.pGia, iObj );\n        // find cut\n        pList = Sle_ManList( p, iObj );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if Sle_ManCheckContained( Sle_CutLeaves(pCut), Sle_CutSize(pCut), pFanins, nFanins ) != 0 {\n                iFound = i;\n                break;\n            }\n        }\n        if iFound == -1 {\n            fmt.Printf(\"Cannot find the following cut at node %d: {\", iObj);\n            for  i = 0; i \u003c nFanins; i++  {\n                fmt.Printf(\" %d\", pFanins[i]);\n            }\n            fmt.Printf(\" }\\n\");\n            Sle_ManPrintCuts( p.pGia, p.vCuts, iObj );\n            fflush( os.Stdout );\n        }\n        assert(iFound \u003e= 0, \"iFound \u003e= 0\");\n        Vec_IntPush( p.vPolars, Vec_IntEntry(p.vCutFirst, iObj) + iFound ); // cut var\n        // check if the cut contains only primary inputs - if so, its delay is equal to 1\n        if Sle_ManCutHasPisOnly(pCut, p.vMask) != 0 {\n            Vec_IntPush( p.vPolars, Vec_IntEntry(p.vDelayFirst, iObj) ); } // delay var\n    }\n    }\n    Vec_IntSort( p.vPolars, 0 );\n    // find zero-delay edges\n    if !p.pGia.vEdge1 {\n        return; }\n    vEdges = Gia_ManEdgeToArray( p.pGia );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        assert(iFanin \u003c iObj, \"iFanin \u003c iObj\");\n        assert(Gia_ObjIsLut(p.pGia, iFanin), \"Gia_ObjIsLut(p.pGia, iFanin)\");\n        assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n        assert(Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin)), \"Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin))\");\n        assert(Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)), \"Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj))\");\n        // find edge\n        iEdge = Vec_IntFind( Vec_WecEntry(p.vCutFanins, iObj), iFanin );\n        if iEdge \u003c 0 {\n            continue; }\n        assert(iEdge \u003e= 0, \"iEdge \u003e= 0\");\n        Vec_IntPush( p.vPolars, Vec_IntEntry(p.vEdgeFirst, iObj) + iEdge ); // edge\n    }\n    Vec_IntFree( vEdges );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive CNF.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManDeriveCnf(p *Sle_Man_t, nBTLimit int32, fDynamic int32) {\n    var nTimeOut int32;\n    var i, iObj, value int32;\n    var vArray *Vec_Int_t;\n\n    // start the SAT solver\n    p.pSat = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.nVarsTotal );\n    sat_solver_set_resource_limits( p.pSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_set_random( p.pSat, 1 );\n    sat_solver_set_polarity( p.pSat, Vec_IntArray(p.vPolars), Vec_IntSize(p.vPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVarsTotal );\n\n    // set drivers to be mapped\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 (((iObj) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, i))), 1); i++  {\n        if Vec_BitEntry(p.vMask, iObj) { // internal node\n        \n            Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iObj, 0) ); // pos lit\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n        }\n    }\n\n    // add cover clauses and edge-to-cut clauses\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var e, iEdge, nEdges, Entry int32;\n        var iCutVar0 int32   = Vec_IntEntry( p.vCutFirst, iObj );\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var pCut *int32;\n        var pList *int32 = Sle_ManList( p, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        assert(iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0, \"iCutVar0 \u003e 0 \u0026\u0026 iEdgeVar0 \u003e 0\");\n        // node requires one of the cuts\n        Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iObj, 1) ); // neg lit\n        for  i = 0; i \u003c Sle_ListCutNum(pList); i++  {\n            Vec_IntPush( p.vLits, Abc_Var2Lit(iCutVar0 + i, 0) );\n        }\n        value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n        assert((value != 0), \"value\");\n        // cuts are mutually exclusive\n        for  i = 0; i \u003c Sle_ListCutNum(pList); i++  {\n            for  e = i+1; e \u003c Sle_ListCutNum(pList); e++  {\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iCutVar0 + e, 1) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n        }\n        // cut requires fanin nodes\n        Vec_WecInit( p.vEdgeCuts, Vec_IntSize(vCutFans) );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n        \n            var nSize int32    = Sle_CutSize(pCut);\n            var k int32;\n            var pC *int32 = Sle_CutLeaves(pCut);\n            assert(nSize \u003e 1, \"nSize \u003e 1\");\n            for  k = 0; k \u003c nSize; k++  {\n                if !Vec_BitEntry(p.vMask, pC[k]) {\n                    continue; }\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(pC[k], 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n                // find the edge ID between pC[k] and iObj\n                iEdge = Vec_IntEntry(p.vObjMap, pC[k]);\n                if iEdge == -1 {\n                    Vec_IntWriteEntry( p.vObjMap, pC[k], (iEdge = nEdges++) );\n                    Vec_WecPush( p.vFanoutEdges, pC[k], iEdgeVar0 + iEdge );\n                }\n                Vec_WecPush( p.vEdgeCuts, iEdge, iCutVar0 + i );\n                p.nCutClas++;\n            }\n            // cut requires the node\n            Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(iCutVar0 + i, 1), Abc_Var2Lit(iObj, 0) );\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n        }\n        assert(nEdges == Vec_IntSize(vCutFans), \"nEdges == Vec_IntSize(vCutFans)\");\n\n        // edge requires one of the fanout cuts\n        // inlining of macro Vec_WecForEachLevel\n        for  e = 0; (e \u003c Vec_WecSize(p.vEdgeCuts)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vEdgeCuts, e)), 1); e++  {\n            assert(Vec_IntSize(vArray) \u003e 0, \"Vec_IntSize(vArray) \u003e 0\");\n            Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iEdgeVar0 + e, 1) ); // neg lit (edge)\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Entry) = Vec_IntEntry(vArray, i)), 1); i++  {\n                Vec_IntPush( p.vLits, Abc_Var2Lit(Entry, 0) );\n            } // pos lit (cut)\n            value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n            assert((value != 0), \"value\");\n            p.nEdgeClas++;\n        }\n\n        // clean object map\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCutFans, i)), 1); i++  {\n            Vec_IntWriteEntry( p.vObjMap, Entry, -1 );\n        }\n    }\n    }\n\n    // mutual exclusivity of edges\n    // inlining of macro Vec_WecForEachLevel\n    for  iObj = 0; (iObj \u003c Vec_WecSize(p.vFanoutEdges)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vFanoutEdges, iObj)), 1); iObj++  {\n        var j, k, EdgeJ, EdgeK int32;\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        // add fanin edges\n        for  i = 0; i \u003c Vec_IntSize(vCutFans); i++  {\n            Vec_IntPush( vArray, iEdgeVar0 + i );\n        }\n        // generate pairs\n        if fDynamic != 0 {\n            continue; }\n        // inlining of macro Vec_IntForEachEntry\n        for  j = 0; (j \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vArray, j)), 1); j++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  k = j+1; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vArray, k)), 1); k++  {\n                Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n        }\n        p.nEdgeClas2 += Vec_IntSize(vArray) * (Vec_IntSize(vArray) - 1) / 2;\n    }\n\n    // add delay clauses\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var e, iFanin int32;\n        var iEdgeVar0 int32  = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var iDelayVar0 int32  = Vec_IntEntry( p.vDelayFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        // check if the node has cuts containing only primary inputs\n        var pCut *int32;\n        var pList *int32 = Sle_ManList( p, iObj );\n        // inlining of macro Sle_ForEachCut\n        for  i, pCut = 0, pList + 1; i \u003c  pList[0]; i++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if Sle_ManCutHasPisOnly(pCut, p.vMask) != 0 {\n                Vec_IntFill( p.vLits, 1, Abc_Var2Lit(iDelayVar0, 0) ); // pos lit\n//                Vec_IntFillTwo( p-\u003evLits, 2, Abc_Var2Lit(iObj, 1), Abc_Var2Lit(iDelayVar0, 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n                break;\n            }\n        }\n//        if ( i \u003c Sle_ListCutNum(pList) )\n//            continue;\n        // create delay requirements for each cut fanin of this node\n        // inlining of macro Vec_IntForEachEntry\n        for  e = 0; (e \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFans, e)), 1); e++  {\n            var d int32;\n            var iDelayVarIn int32 = Vec_IntEntry( p.vDelayFirst, iFanin );\n            for  d = 0; d \u003c p.nLevels; d++  {\n                Vec_IntClear( p.vLits );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iEdgeVar0 + e, 0) );\n                if d \u003c p.nLevels-1 {\n                    Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVar0 + d+1, 0) ); }\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n\n                Vec_IntClear( p.vLits );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iObj, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iFanin, 1) );\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVarIn + d, 1) );\n                if d \u003c p.nLevels-1 {\n                    Vec_IntPush( p.vLits, Abc_Var2Lit(iEdgeVar0 + e, 1) ); }\n                Vec_IntPush( p.vLits, Abc_Var2Lit(iDelayVar0 + d, 0) );\n                value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                assert((value != 0), \"value\");\n            }\n            p.nDelayClas += 2*p.nLevels;\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add edge compatibility constraints.]\n\n  Description [Returns 1 if constraints have been added.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManAddEdgeConstraints(p *Sle_Man_t, nEdges int32) int32 {\n    var vArray *Vec_Int_t;\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var value, iObj, nAdded int32;\n    assert(nEdges == 1 || nEdges == 2, \"nEdges == 1 || nEdges == 2\");\n    // inlining of macro Vec_WecForEachLevel\n    for  iObj = 0; (iObj \u003c Vec_WecSize(p.vFanoutEdges)) \u0026\u0026 (((vArray) = Vec_WecEntry(p.vFanoutEdges, iObj)), 1); iObj++  {\n        var j, k, EdgeJ, EdgeK int32;\n        // check if they are incompatible\n        Vec_IntClear( vTemp );\n        // inlining of macro Vec_IntForEachEntry\n        for  j = 0; (j \u003c Vec_IntSize(vArray)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vArray, j)), 1); j++  {\n            if sat_solver_var_value(p.pSat, EdgeJ) {\n                Vec_IntPush( vTemp, EdgeJ ); }\n        }\n        if Vec_IntSize(vTemp) \u003c= nEdges {\n            continue; }\n        nAdded++;\n        if nEdges == 1 {\n            // generate pairs\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vTemp, j)), 1); j++  {\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = j+1; (k \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vTemp, k)), 1); k++  {\n                    Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                    value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                    assert((value != 0), \"value\");\n                }\n            }\n            p.nEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) / 2;\n        \n        } else if nEdges == 2 {\n            var m, EdgeM int32;\n            // generate triples\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeJ) = Vec_IntEntry(vTemp, j)), 1); j++  {\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = j+1; (k \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeK) = Vec_IntEntry(vTemp, k)), 1); k++  {\n                    // inlining of macro Vec_IntForEachEntryStart\n                    for  m = k+1; (m \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((EdgeM) = Vec_IntEntry(vTemp, m)), 1); m++  {\n                        Vec_IntFillTwo( p.vLits, 2, Abc_Var2Lit(EdgeJ, 1), Abc_Var2Lit(EdgeK, 1) );\n                        Vec_IntPush( p.vLits, Abc_Var2Lit(EdgeM, 1) );\n                        value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );\n                        assert((value != 0), \"value\");\n                    }\n                }\n            }\n            p.nEdgeClas2 += Vec_IntSize(vTemp) * (Vec_IntSize(vTemp) - 1) * (Vec_IntSize(vTemp) - 2) / 6;\n        \n        } else { assert(false, \"0\"); }\n    }\n    Vec_IntFree( vTemp );\n    //printf( \"Added clauses to %d nodes.\\n\", nAdded );\n    return nAdded;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManDeriveResult(p *Sle_Man_t, vEdge2 *Vec_Int_t, vMapping *Vec_Int_t) {\n    var vMapTemp *Vec_Int_t;\n    var iObj int32;\n    // create mapping\n    Vec_IntFill( vMapping, Gia_ManObjNum(p.pGia), 0 );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var i int32;\n        var iCut int32;\n        var iCutVar0 int32 = Vec_IntEntry( p.vCutFirst, iObj );\n        var pCut *int32;\n        var pCutThis *int32 = nil;\n        var pList *int32 = Sle_ManList( p, iObj );\n        if !sat_solver_var_value(p.pSat, iObj) {\n            continue; }\n        // inlining of macro Sle_ForEachCut\n        for  iCut, pCut = 0, pList + 1; iCut \u003c  pList[0]; iCut++, pCut += Sle_CutSize(pCut) + 1  { // cuts with unit-cut\n\n            if sat_solver_var_value(p.pSat, iCutVar0 + iCut) {\n                assert(pCutThis == nil, \"pCutThis == nil\");\n                pCutThis = pCut;\n            }\n        }\n        assert(pCutThis != nil, \"pCutThis != nil\");\n        Vec_IntWriteEntry( vMapping, iObj, Vec_IntSize(vMapping) );\n        Vec_IntPush( vMapping, Sle_CutSize(pCutThis) );\n        for  i = 0; i \u003c Sle_CutSize(pCutThis); i++  {\n            Vec_IntPush( vMapping, Sle_CutLeaves(pCutThis)[i] );\n        }\n        Vec_IntPush( vMapping, iObj );\n    }\n    }\n    vMapTemp = p.pGia.vMapping;\n    p.pGia.vMapping = vMapping;\n    // collect edges\n    Vec_IntClear( vEdge2 );\n    // inlining of macro Gia_ManForEachAndId\n    for  iObj = 0; (iObj \u003c p.pGia.nObjs); iObj++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)) {} else {\n        var i int32;\n        var iFanin int32;\n        var iEdgeVar0 int32 = Vec_IntEntry( p.vEdgeFirst, iObj );\n        var vCutFans *Vec_Int_t  = Vec_WecEntry( p.vCutFanins, iObj );\n        //int * pCut, * pList  = Sle_ManList( p, iObj );\n        // int iCutVar0  = Vec_IntEntry( p-\u003evCutFirst, iObj );\n        if !sat_solver_var_value(p.pSat, iObj) {\n            continue; }\n        //for ( i = 0; i \u003c Sle_ListCutNum(pList); i++ )\n        //    printf( \"%d\", sat_solver_var_value(p-\u003epSat, iCutVar0 + i) );\n        //printf( \"\\n\" );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vCutFans)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vCutFans, i)), 1); i++  {\n            if sat_solver_var_value(p.pSat, iFanin) \u0026\u0026 sat_solver_var_value(p.pSat, iEdgeVar0 + i) {\n                // verify edge\n                var pFanins *int32  = Gia_ObjLutFanins( p.pGia, iObj );\n                var k int32;\n                var nFanins int32 = Gia_ObjLutSize( p.pGia, iObj );\n                for  k = 0; k \u003c nFanins; k++  {\n                    //printf( \"%d \", pFanins[k] );\n                    if pFanins[k] == iFanin {\n                        break; }\n                }\n                //printf( \"\\n\" );\n                if k == nFanins {\n//                    printf( \"Cannot find LUT with input %d at node %d.\\n\", iFanin, iObj );\n                    continue; }\n                Vec_IntPushTwo( vEdge2, iFanin, iObj );\n            }\n        }\n    }\n    }\n    p.pGia.vMapping = vMapTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sle_ManExplore(pGia *Gia_Man_t, nBTLimit int32, DelayInit int32, fDynamic int32, fTwoEdges int32, fVerbose int32) {\n    var fVeryVerbose int32;\n    var clk abctime  = Abc_Clock();\n    var vEdges2 *Vec_Int_t   = Vec_IntAlloc(1000);\n    var vMapping *Vec_Int_t  = Vec_IntAlloc(1000);\n    var i, iLut, nConfs, status, Delay, iFirstVar int32;\n    var DelayStart int32;\n    if (DelayInit != 0) || !Gia_ManHasMapping(pGia) {\n        DelayStart = DelayInit;\n    } else {\n        DelayStart = Gia_ManLutLevel(pGia, nil);\n    }\n    var p *Sle_Man_t  = Sle_ManAlloc( pGia, DelayStart, fVerbose );\n    if fVerbose != 0 {\n        fmt.Printf(\"Running solver with %d conflicts, %d initial delay, and %d edges. Dynamic constraints = %s.\\n\", nBTLimit, DelayInit, 1+fTwoEdges, fDynamic?\"yes\":\"no\"); }\n    Sle_ManMarkupVariables( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Vars:  Total = %d.  Node = %d. Cut = %d. Edge = %d. Delay = %d.\\n\", p.nVarsTotal, p.nNodeVars, p.nCutVars, p.nEdgeVars, p.nDelayVars); }\n    Sle_ManDeriveInit( p );\n    Sle_ManDeriveCnf( p, nBTLimit, fDynamic || fTwoEdges );\n    if fVerbose != 0 {\n        fmt.Printf(\"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.\\n\", sat_solver_nclauses(p.pSat), p.nCutClas, p.nEdgeClas, p.nEdgeClas2, p.nDelayClas); }\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", NULL, NULL, 0 );\n    for  Delay = p.nLevels; Delay \u003e= 0; Delay--  {\n        // we constrain COs, although it would be fine to constrain only POs\n        if Delay \u003c p.nLevels {\n            // inlining of macro Gia_ManForEachCoDriverId\n            for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, i))), 1); i++  {\n                if Vec_BitEntry(p.vMask, iLut) { // internal node\n                \n                    iFirstVar = Vec_IntEntry( p.vDelayFirst, iLut );\n                    if !sat_solver_push(p.pSat, Abc_Var2Lit(iFirstVar + Delay, 1)) {\n                        break; }\n                }\n            }\n            if i \u003c Gia_ManCoNum(p.pGia) {\n                if fVerbose != 0 {\n                    fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n                    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n                }\n                break;\n            }\n        }\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p.pSat );\n        for {\n            p.nSatCalls++;\n            status = sat_solver_solve_internal( p.pSat );\n            if status != l_True {\n                break; }\n            if !(Sle_ManAddEdgeConstraints(p, 1+fTwoEdges) != 0) {\n                break; }\n        }\n        nConfs = sat_solver_nconflicts( p.pSat ) - nConfs;\n        if status == l_True {\n            if fVerbose != 0 {\n                var nNodes, nEdges int32;\n                for  i = 0; i \u003c p.nNodeVars; i++  {\n                    nNodes += sat_solver_var_value(p.pSat, i);\n                }\n                for  i = 0; i \u003c p.nEdgeVars; i++  {\n                    nEdges += sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + i);\n                }\n                fmt.Printf(\"Solution with delay %2d, node count %5d, and edge count %5d exists. Conf = %8d.  \", Delay, nNodes, nEdges, nConfs);\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Sle_ManDeriveResult( p, vEdges2, vMapping );\n            if fVeryVerbose != 0 {\n                fmt.Printf(\"Nodes:  \");\n                for  i = 0; i \u003c p.nNodeVars; i++  {\n                    if sat_solver_var_value(p.pSat, i) {\n                        fmt.Printf(\"%d \", i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vCutFirst );\n                fmt.Printf(\"Cuts:   \");\n                for  i = 0; i \u003c p.nCutVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vEdgeFirst );\n                fmt.Printf(\"Edges:  \");\n                for  i = 0; i \u003c p.nEdgeVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + p.nCutVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n\n                Vec_IntPrint( p.vDelayFirst );\n                fmt.Printf(\"Delays: \");\n                for  i = 0; i \u003c p.nDelayVars; i++  {\n                    if sat_solver_var_value(p.pSat, p.nNodeVars + p.nCutVars + p.nEdgeVars + i) {\n                        fmt.Printf(\"%d \", p.nNodeVars + p.nCutVars + p.nEdgeVars + i); }\n                }\n                fmt.Printf(\"\\n\");\n                fmt.Printf(\"\\n\");\n            }\n        \n        } else {\n            if fVerbose != 0 {\n                if status == l_False {\n                    fmt.Printf(\"Proved UNSAT for delay %d. Conf = %8d.  \", Delay, nConfs);\n                } else {\n                    fmt.Printf(\"Resource limit reached for delay %d. Conf = %8d.  \", Delay, nConfs); }\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Clas:  Total = %d.  Cut = %d. Edge = %d. EdgeEx = %d. Delay = %d.  Calls = %d.\\n\", sat_solver_nclauses(p.pSat), p.nCutClas, p.nEdgeClas, p.nEdgeClas2, p.nDelayClas, p.nSatCalls); }\n    if Vec_IntSize(vMapping) \u003e 0 {\n        Gia_ManEdgeFromArray( p.pGia, vEdges2 );\n        Vec_IntFree( vEdges2 );\n        Vec_IntFreeP( \u0026p.pGia.vMapping );\n        p.pGia.vMapping = vMapping;\n    \n    } else {\n        Vec_IntFree( vEdges2 );\n        Vec_IntFree( vMapping );\n    }\n    Vec_IntFreeP( \u0026p.pGia.vPacking );\n    Sle_ManStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

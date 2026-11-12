@@ -1,0 +1,408 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c",
+  "SHA256": "6c25483951407b304356e01560856e9ee5e1478cdca9ce49ee08380649f6a979",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Current assignments are: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 13,
+        "ByteOffset": 1740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \".\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 13,
+        "ByteOffset": 1784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((p.pAssigns[i])\u003e\u003e1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 17,
+        "ByteOffset": 1969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 17,
+        "ByteOffset": 2022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"1\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Original clauses: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 2613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d: \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Learned clauses: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 2872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d: \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 2946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Variable activity: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : %.4f\\n\", i, p.pdActivity[i] );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 3651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 3681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"c Produced by Msat_SolverWriteDimacs() on %s\\n\", Msat_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 3771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", p.nVars, nClauses );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 4355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d 0\\n\", ((p.pAssigns[i]\u00261)? \"-\": \"\"), i + 1 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 4463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "time",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 4887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    time( \u0026ltime );"
+    },
+    {
+      "Name": "asctime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 176,
+        "Column": 17,
+        "ByteOffset": 4919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "localtime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 176,
+        "Column": 26,
+        "ByteOffset": 4928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 177,
+        "Column": 16,
+        "ByteOffset": 4966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 4999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( spStatic_Msat_TimeStamp_Buffer, TimeStamp );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_SolverPrintAssignment",
+      "Start": 1399,
+      "End": 1955,
+      "BodyStart": 1452,
+      "Original": "void Msat_SolverPrintAssignment( Msat_Solver_t * p )\n{\n    int i;\n    printf( \"Current assignments are: \\n\" );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        printf( \"%d\", i % 10 );\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        if ( p-\u003epAssigns[i] == MSAT_VAR_UNASSIGNED )\n            printf( \".\" );\n        else\n        {\n            assert( i == MSAT_LIT2VAR(p-\u003epAssigns[i]) );\n            if ( MSAT_LITSIGN(p-\u003epAssigns[i]) )\n                printf( \"0\" );\n            else \n                printf( \"1\" );\n        }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Msat_SolverPrintAssignment(p *Msat_Solver_t) {\n    var i int32;\n    fmt.Printf(\"Current assignments are: \\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pAssigns[i] == MSAT_VAR_UNASSIGNED {\n            fmt.Printf(\".\");\n        } else {\n            // inlining of macro MSAT_LIT2VAR\n            assert(i == ((p.pAssigns[i])\u003e\u003e1), \"i == /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((p.pAssigns[i])\u003e\u003e1)\");\n            // inlining of macro MSAT_LITSIGN\n            if  (p.pAssigns[i])\u00261 {\n                fmt.Printf(\"0\");\n            } else { \n                fmt.Printf(\"1\"); }\n        }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Msat_SolverPrintClauses",
+      "Start": 2191,
+      "End": 2963,
+      "BodyStart": 2241,
+      "Original": "void Msat_SolverPrintClauses( Msat_Solver_t * p )\n{\n    Msat_Clause_t ** pClauses;\n    int nClauses, i;\n\n    printf( \"Original clauses: \\n\" );\n    nClauses = Msat_ClauseVecReadSize( p-\u003evClauses );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evClauses );\n    for ( i = 0; i \u003c nClauses; i++ )\n    {\n        printf( \"%3d: \", i );\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    printf( \"Learned clauses: \\n\" );\n    nClauses = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nClauses; i++ )\n    {\n        printf( \"%3d: \", i );\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    printf( \"Variable activity: \\n\" );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        printf( \"%3d : %.4f\\n\", i, p-\u003epdActivity[i] );\n}",
+      "Draft": "func Msat_SolverPrintClauses(p *Msat_Solver_t) {\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n\n    fmt.Printf(\"Original clauses: \\n\");\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        fmt.Printf(\"%3d: \", i);\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    fmt.Printf(\"Learned clauses: \\n\");\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        fmt.Printf(\"%3d: \", i);\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    fmt.Printf(\"Variable activity: \\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        fmt.Printf(\"%3d : %.4f\\n\", i, p.pdActivity[i]);\n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverWriteDimacs",
+      "Start": 3199,
+      "End": 4342,
+      "BodyStart": 3266,
+      "Original": "void Msat_SolverWriteDimacs( Msat_Solver_t * p, char * pFileName )\n{\n    FILE * pFile;\n    Msat_Clause_t ** pClauses;\n    int nClauses, i;\n\n    nClauses = Msat_ClauseVecReadSize(p-\u003evClauses) + Msat_ClauseVecReadSize(p-\u003evLearned);\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        nClauses += ( p-\u003epLevel[i] == 0 );\n\n    pFile = fopen( pFileName, \"wb\" );\n    fprintf( pFile, \"c Produced by Msat_SolverWriteDimacs() on %s\\n\", Msat_TimeStamp() );\n    fprintf( pFile, \"p cnf %d %d\\n\", p-\u003enVars, nClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evClauses );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evClauses );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n\n    // write zero-level assertions\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        if ( p-\u003epLevel[i] == 0 )\n            fprintf( pFile, \"%s%d 0\\n\", ((p-\u003epAssigns[i]\u00261)? \"-\": \"\"), i + 1 );\n\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Msat_SolverWriteDimacs(p *Msat_Solver_t, pFileName string) {\n    var pFile *os.File;\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n\n    nClauses = Msat_ClauseVecReadSize(p.vClauses) + Msat_ClauseVecReadSize(p.vLearned);\n    for  i = 0; i \u003c p.nVars; i++  {\n        nClauses += ( p.pLevel[i] == 0 );\n    }\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"c Produced by Msat_SolverWriteDimacs() on %s\\n\", Msat_TimeStamp());\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, nClauses);\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n    }\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n    }\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pLevel[i] == 0 {\n            fmt.Fprintf(pFile, \"%s%d 0\\n\", ((p.pAssigns[i]\u00261)? \"-\": \"\"), i + 1); }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Msat_TimeStamp",
+      "Start": 4587,
+      "End": 4875,
+      "BodyStart": 4611,
+      "Original": "char * Msat_TimeStamp()\n{\n    static char Buffer[100];\n    time_t ltime;\n    char * TimeStamp;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;\n    strcpy( Buffer, TimeStamp );\n    return Buffer;\n}",
+      "Draft": "func Msat_TimeStamp() string {\n    \n    var ltime int64;\n    var TimeStamp string;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Msat_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Msat_TimeStamp_Buffer;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::mechanical::static::4703",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4617,
+      "End": 4623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::Msat_SolverPrintAssignment",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverPrintAssignment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1399,
+      "End": 1955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::Msat_SolverPrintClauses",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverPrintClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2191,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::ternary::Msat_SolverWriteDimacs",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverWriteDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3199,
+      "End": 4342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::Msat_SolverWriteDimacs",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverWriteDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3199,
+      "End": 4342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::Msat_TimeStamp",
+      "Category": "semantic-review",
+      "Symbol": "Msat_TimeStamp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4587,
+      "End": 4875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverIo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5122
+    }
+  ],
+  "Draft": "package msat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [msatSolverIo.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Input/output of CNFs.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatSolverIo.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static char * Msat_TimeStamp();\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverPrintAssignment(p *Msat_Solver_t) {\n    var i int32;\n    fmt.Printf(\"Current assignments are: \\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pAssigns[i] == MSAT_VAR_UNASSIGNED {\n            fmt.Printf(\".\");\n        } else {\n            // inlining of macro MSAT_LIT2VAR\n            assert(i == ((p.pAssigns[i])\u003e\u003e1), \"i == /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((p.pAssigns[i])\u003e\u003e1)\");\n            // inlining of macro MSAT_LITSIGN\n            if  (p.pAssigns[i])\u00261 {\n                fmt.Printf(\"0\");\n            } else { \n                fmt.Printf(\"1\"); }\n        }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverPrintClauses(p *Msat_Solver_t) {\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n\n    fmt.Printf(\"Original clauses: \\n\");\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        fmt.Printf(\"%3d: \", i);\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    fmt.Printf(\"Learned clauses: \\n\");\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        fmt.Printf(\"%3d: \", i);\n        Msat_ClausePrint( pClauses[i] );\n    }\n\n    fmt.Printf(\"Variable activity: \\n\");\n    for  i = 0; i \u003c p.nVars; i++  {\n        fmt.Printf(\"%3d : %.4f\\n\", i, p.pdActivity[i]);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverWriteDimacs(p *Msat_Solver_t, pFileName string) {\n    var pFile *os.File;\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n\n    nClauses = Msat_ClauseVecReadSize(p.vClauses) + Msat_ClauseVecReadSize(p.vLearned);\n    for  i = 0; i \u003c p.nVars; i++  {\n        nClauses += ( p.pLevel[i] == 0 );\n    }\n\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"c Produced by Msat_SolverWriteDimacs() on %s\\n\", Msat_TimeStamp());\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.nVars, nClauses);\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n    }\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseWriteDimacs( pFile, pClauses[i], 1 );\n    }\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.nVars; i++  {\n        if p.pLevel[i] == 0 {\n            fmt.Fprintf(pFile, \"%s%d 0\\n\", ((p.pAssigns[i]\u00261)? \"-\": \"\"), i + 1); }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the time stamp.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Msat_TimeStamp_Buffer [100]byte;\nfunc Msat_TimeStamp() string {\n    \n    var ltime int64;\n    var TimeStamp string;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Msat_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Msat_TimeStamp_Buffer;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

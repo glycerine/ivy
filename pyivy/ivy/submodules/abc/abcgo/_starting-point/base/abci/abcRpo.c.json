@@ -1,0 +1,861 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c",
+  "SHA256": "b3330977d4793e0612f5e2e59a1bd91b4abb0dc2b2381b57493e70bb3d2e20c3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); // not a hexadecimal symbol"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 2316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(pFile, \"%d\", HexDigit);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(pFile, \"%c\", 'A' + HexDigit - 10); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0');"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 3567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 3941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 163,
+        "Column": 27,
+        "ByteOffset": 4451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 172,
+        "Column": 26,
+        "ByteOffset": 4721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFuncs = (word **) malloc((sizeof (word *) + sizeof (word) * p.nWords) * p.nFuncs);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 4888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(p.pFuncs[0], 0, sizeof (word) * p.nWords * p.nFuncs);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 186,
+        "Column": 27,
+        "ByteOffset": 5259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 195,
+        "Column": 26,
+        "ByteOffset": 5529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFuncs = (word **) malloc(sizeof (word *) * p.nFuncs);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 9,
+        "ByteOffset": 5882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(p.pFuncs[0]); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 5911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(p.pFuncs);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 5935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(p);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 8199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(p.nFuncs \u003e= nLines);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 8254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(pContents);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 306,
+        "Column": 13,
+        "ByteOffset": 8725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen(pFileName, \"wb\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 9,
+        "ByteOffset": 8779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 313,
+        "Column": 13,
+        "ByteOffset": 8930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite(p.pFuncs[i], nBytes, 1, pFile);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 1,
+        "ByteOffset": 9046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fprintf(pFile, \"\\n\"); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 9080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose(pFile);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 10272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(nVarNum \u003e= 6);"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 377,
+        "Column": 22,
+        "ByteOffset": 11107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 411,
+        "Column": 30,
+        "ByteOffset": 12094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Abc_PrintTime(1, \"Time\", clock() - clk);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 13395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 13532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 461,
+        "Column": 12,
+        "ByteOffset": 13539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush(stdout);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_TruthGetBit",
+      "Start": 885,
+      "End": 985,
+      "BodyStart": 936,
+      "Original": "static inline int Abc_TruthGetBit(word * p, int i) {\n    return (int) (p[i \u003e\u003e 6] \u003e\u003e (i \u0026 63)) \u0026 1;\n}",
+      "Draft": "func Abc_TruthGetBit(p *word, i int32) int32 {\n    return int32( (p[i \u003e\u003e 6] \u003e\u003e (i \u0026 63))) \u0026 1;\n}"
+    },
+    {
+      "Name": "Abc_TruthSetBit",
+      "Start": 987,
+      "End": 1085,
+      "BodyStart": 1039,
+      "Original": "static inline void Abc_TruthSetBit(word * p, int i) {\n    p[i \u003e\u003e 6] |= (((word) 1) \u003c\u003c (i \u0026 63));\n}",
+      "Draft": "func Abc_TruthSetBit(p *word, i int32) {\n    p[i \u003e\u003e 6] |= (((word) 1) \u003c\u003c (i \u0026 63));\n}"
+    },
+    {
+      "Name": "Abc_TruthXorBit",
+      "Start": 1087,
+      "End": 1185,
+      "BodyStart": 1139,
+      "Original": "static inline void Abc_TruthXorBit(word * p, int i) {\n    p[i \u003e\u003e 6] ^= (((word) 1) \u003c\u003c (i \u0026 63));\n}",
+      "Draft": "func Abc_TruthXorBit(p *word, i int32) {\n    p[i \u003e\u003e 6] ^= (((word) 1) \u003c\u003c (i \u0026 63));\n}"
+    },
+    {
+      "Name": "Abc_TruthGetHex",
+      "Start": 1240,
+      "End": 1348,
+      "BodyStart": 1291,
+      "Original": "static inline int Abc_TruthGetHex(word * p, int k) {\n    return (int) (p[k \u003e\u003e 4] \u003e\u003e ((k \u003c\u003c 2) \u0026 63)) \u0026 15;\n}",
+      "Draft": "func Abc_TruthGetHex(p *word, k int32) int32 {\n    return int32( (p[k \u003e\u003e 4] \u003e\u003e ((k \u003c\u003c 2) \u0026 63))) \u0026 15;\n}"
+    },
+    {
+      "Name": "Abc_TruthSetHex",
+      "Start": 1350,
+      "End": 1462,
+      "BodyStart": 1409,
+      "Original": "static inline void Abc_TruthSetHex(word * p, int k, int d) {\n    p[k \u003e\u003e 4] |= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}",
+      "Draft": "func Abc_TruthSetHex(p *word, k int32, d int32) {\n    p[k \u003e\u003e 4] |= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}"
+    },
+    {
+      "Name": "Abc_TruthXorHex",
+      "Start": 1464,
+      "End": 1576,
+      "BodyStart": 1523,
+      "Original": "static inline void Abc_TruthXorHex(word * p, int k, int d) {\n    p[k \u003e\u003e 4] ^= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}",
+      "Draft": "func Abc_TruthXorHex(p *word, k int32, d int32) {\n    p[k \u003e\u003e 4] ^= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}"
+    },
+    {
+      "Name": "Abc_TruthReadHexDigit",
+      "Start": 1825,
+      "End": 2203,
+      "BodyStart": 1879,
+      "Original": "static inline int Abc_TruthReadHexDigit(char HexChar) {\n    if (HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9')\n        return HexChar - '0';\n    if (HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F')\n        return HexChar - 'A' + 10;\n    if (HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f')\n        return HexChar - 'a' + 10;\n    assert(0); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}",
+      "Draft": "func Abc_TruthReadHexDigit(HexChar byte) int32 {\n    if HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9' {\n        return HexChar - '0'; }\n    if HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F' {\n        return HexChar - 'A' + 10; }\n    if HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f' {\n        return HexChar - 'a' + 10; }\n    assert(false, \"0\"); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}"
+    },
+    {
+      "Name": "Abc_TruthWriteHexDigit",
+      "Start": 2233,
+      "End": 2473,
+      "BodyStart": 2303,
+      "Original": "static inline void Abc_TruthWriteHexDigit(FILE * pFile, int HexDigit) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16);\n    if (HexDigit \u003c 10)\n        fprintf(pFile, \"%d\", HexDigit);\n    else\n        fprintf(pFile, \"%c\", 'A' + HexDigit - 10);\n}",
+      "Draft": "func Abc_TruthWriteHexDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit - 10); }\n}"
+    },
+    {
+      "Name": "Abc_TruthReadHex",
+      "Start": 2515,
+      "End": 3557,
+      "BodyStart": 2586,
+      "Original": "static void Abc_TruthReadHex(word * pTruth, char * pString, int nVars) {\n    int nWords = (nVars \u003c 7) ? 1 : (1 \u003c\u003c (nVars - 6));\n    int k, Digit, nDigits = (nVars \u003c 7) ? (1 \u003c\u003c (nVars-2)) : (nWords \u003c\u003c 4);\n    char EndSymbol;\n    // skip the first 2 symbols if they are \"0x\"\n    if (pString[0] == '0' \u0026\u0026 pString[1] == 'x')\n        pString += 2;\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0');\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for (k = 0; k \u003c nDigits; k++) {\n        Digit = Abc_TruthReadHexDigit(pString[nDigits - 1 - k]);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16);\n        Abc_TruthSetHex(pTruth, k, Digit);\n    }\n}",
+      "Draft": "func Abc_TruthReadHex(pTruth *word, pString string, nVars int32) {\n    var nWords int32;\n    if nVars \u003c 7 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var k int32;\n    var Digit int32;\n    var nDigits int32;\n    if nVars \u003c 7 {\n        nDigits = (1 \u003c\u003c (nVars-2));\n    } else {\n        nDigits = (nWords \u003c\u003c 4);\n    }\n    var EndSymbol byte;\n    // skip the first 2 symbols if they are \"0x\"\n    if pString[0] == '0' \u0026\u0026 pString[1] == 'x' {\n        pString += 2; }\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0', \"EndSymbol == ' ' || EndSymbol == '\\\\n' || EndSymbol == '\\\\r' || EndSymbol == '\\\\0'\");\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for k = 0; k \u003c nDigits; k++ {\n        Digit = Abc_TruthReadHexDigit(pString[nDigits - 1 - k]);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthSetHex(pTruth, k, Digit);\n    }\n}"
+    },
+    {
+      "Name": "Abc_TruthWriteHex",
+      "Start": 3626,
+      "End": 3934,
+      "BodyStart": 3696,
+      "Original": "static void Abc_TruthWriteHex(FILE * pFile, word * pTruth, int nVars) {\n    int nDigits, Digit, k;\n    nDigits = (1 \u003c\u003c (nVars - 2));\n    for (k = 0; k \u003c nDigits; k++) {\n        Digit = Abc_TruthGetHex(pTruth, k);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16);\n        Abc_TruthWriteHexDigit(pFile, Digit);\n    }\n}",
+      "Draft": "func Abc_TruthWriteHex(pFile *os.File, pTruth *word, nVars int32) {\n    var nDigits, Digit, k int32;\n    nDigits = (1 \u003c\u003c (nVars - 2));\n    for k = 0; k \u003c nDigits; k++ {\n        Digit = Abc_TruthGetHex(pTruth, k);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthWriteHexDigit(pFile, Digit);\n    }\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreAlloc",
+      "Start": 4219,
+      "End": 4963,
+      "BodyStart": 4285,
+      "Original": "static Rpo_TtStore_t * Abc_TruthStoreAlloc(int nVars, int nFuncs) {\n    Rpo_TtStore_t * p;\n    int i;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p-\u003enVars = nVars;\n    p-\u003enWords = (nVars \u003c 7) ? 1 : (1 \u003c\u003c (nVars - 6));\n    p-\u003enFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p-\u003epFuncs = (word **) malloc((sizeof (word *) + sizeof (word) * p-\u003enWords) * p-\u003enFuncs);\n    // assign and clean the truth table storage\n    p-\u003epFuncs[0] = (word *) (p-\u003epFuncs + p-\u003enFuncs);\n    memset(p-\u003epFuncs[0], 0, sizeof (word) * p-\u003enWords * p-\u003enFuncs);\n    // split it up into individual truth tables\n    for (i = 1; i \u003c p-\u003enFuncs; i++)\n        p-\u003epFuncs[i] = p-\u003epFuncs[i - 1] + p-\u003enWords;\n    return p;\n}",
+      "Draft": "func Abc_TruthStoreAlloc(nVars int32, nFuncs int32) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    var i int32;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p.nVars = nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p.nFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs = (word **) malloc((sizeof (word *) + sizeof (word) * p.nWords) * p.nFuncs);\n    // assign and clean the truth table storage\n    p.pFuncs[0] = (word *) (p.pFuncs + p.nFuncs);\n    memset(p.pFuncs[0], 0, sizeof (word) * p.nWords * p.nFuncs);\n    // split it up into individual truth tables\n    for i = 1; i \u003c p.nFuncs; i++ {\n        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreAlloc2",
+      "Start": 4965,
+      "End": 5603,
+      "BodyStart": 5048,
+      "Original": "static Rpo_TtStore_t * Abc_TruthStoreAlloc2(int nVars, int nFuncs, word * pBuffer) {\n    Rpo_TtStore_t * p;\n    int i;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p-\u003enVars = nVars;\n    p-\u003enWords = (nVars \u003c 7) ? 1 : (1 \u003c\u003c (nVars - 6));\n    p-\u003enFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p-\u003epFuncs = (word **) malloc(sizeof (word *) * p-\u003enFuncs);\n    // assign and clean the truth table storage\n    p-\u003epFuncs[0] = pBuffer;\n    // split it up into individual truth tables\n    for (i = 1; i \u003c p-\u003enFuncs; i++)\n        p-\u003epFuncs[i] = p-\u003epFuncs[i - 1] + p-\u003enWords;\n    return p;\n}",
+      "Draft": "func Abc_TruthStoreAlloc2(nVars int32, nFuncs int32, pBuffer *word) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    var i int32;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p.nVars = nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p.nFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs = (word **) malloc(sizeof (word *) * p.nFuncs);\n    // assign and clean the truth table storage\n    p.pFuncs[0] = pBuffer;\n    // split it up into individual truth tables\n    for i = 1; i \u003c p.nFuncs; i++ {\n        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_TtStoreFree",
+      "Start": 5605,
+      "End": 5764,
+      "BodyStart": 5665,
+      "Original": "static void Abc_TtStoreFree(Rpo_TtStore_t * p, int nVarNum) {\n    if (nVarNum \u003e= 0)\n        ABC_FREE(p-\u003epFuncs[0]);\n    ABC_FREE(p-\u003epFuncs);\n    ABC_FREE(p);\n}",
+      "Draft": "func Abc_TtStoreFree(p *Rpo_TtStore_t, nVarNum int32) {\n    if nVarNum \u003e= 0 {\n        ABC_FREE(p.pFuncs[0]); }\n    ABC_FREE(p.pFuncs);\n    ABC_FREE(p);\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreRead",
+      "Start": 7061,
+      "End": 8082,
+      "BodyStart": 7129,
+      "Original": "static void Abc_TruthStoreRead(char * pFileName, Rpo_TtStore_t * p) {\n    char * pContents;\n    int i, nLines;\n    pContents = Abc_FileRead(pFileName);\n    if (pContents == NULL)\n        return;\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for (nLines = i = 0; pContents[i] != '\\n';) {\n        // read one line\n        Abc_TruthReadHex(p-\u003epFuncs[nLines++], \u0026pContents[i], p-\u003enVars);\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        while (pContents[i++] != '\\n');\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert(p-\u003enFuncs \u003e= nLines);\n    p-\u003enFuncs = nLines;\n    ABC_FREE(pContents);\n}",
+      "Draft": "func Abc_TruthStoreRead(pFileName string, p *Rpo_TtStore_t) {\n    var pContents string;\n    var i, nLines int32;\n    pContents = Abc_FileRead(pFileName);\n    if pContents == nil {\n        return; }\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for nLines = i = 0; pContents[i] != '\\n'; {\n        // read one line\n        Abc_TruthReadHex(p.pFuncs[nLines++], \u0026pContents[i], p.nVars);\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        for pContents[i++] != '\\n' {; }\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert(p.nFuncs \u003e= nLines, \"p.nFuncs \u003e= nLines\");\n    p.nFuncs = nLines;\n    ABC_FREE(pContents);\n}"
+    },
+    {
+      "Name": "Abc_TtStoreWrite",
+      "Start": 8348,
+      "End": 8886,
+      "BodyStart": 8427,
+      "Original": "static void Abc_TtStoreWrite(char * pFileName, Rpo_TtStore_t * p, int fBinary) {\n    FILE * pFile;\n    int i, nBytes = 8 * Abc_Truth6WordNum(p-\u003enVars);\n    pFile = fopen(pFileName, \"wb\");\n    if (pFile == NULL) {\n        printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for (i = 0; i \u003c p-\u003enFuncs; i++) {\n        if (fBinary)\n            fwrite(p-\u003epFuncs[i], nBytes, 1, pFile);\n        else\n            Abc_TruthWriteHex(pFile, p-\u003epFuncs[i], p-\u003enVars), fprintf(pFile, \"\\n\");\n    }\n    fclose(pFile);\n}",
+      "Draft": "func Abc_TtStoreWrite(pFileName string, p *Rpo_TtStore_t, fBinary int32) {\n    var pFile *os.File;\n    var i int32;\n    var nBytes int32 = 8 * Abc_Truth6WordNum(p.nVars);\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for i = 0; i \u003c p.nFuncs; i++ {\n        if fBinary != 0 {\n            fwrite(p.pFuncs[i], nBytes, 1, pFile);\n        } else {\n            Abc_TruthWriteHex(pFile, p.pFuncs[i], p.nVars);\nfmt.Fprintf(pFile, \"\\n\"); }\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Abc_TtStoreLoad",
+      "Start": 9189,
+      "End": 10453,
+      "BodyStart": 9259,
+      "Original": "static Rpo_TtStore_t * Abc_TtStoreLoad(char * pFileName, int nVarNum) {\n    Rpo_TtStore_t * p;\n    if (nVarNum \u003c 0) {\n        int nVars, nTruths;\n        // figure out how many truth table and how many variables\n        Abc_TruthGetParams(pFileName, \u0026nVars, \u0026nTruths);\n        if (nVars \u003c 2 || nVars \u003e 16 || nTruths == 0)\n            return NULL;\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc(nVars, nTruths);\n        // read info from file\n        Abc_TruthStoreRead(pFileName, p);\n    } else {\n        char * pBuffer;\n        int nFileSize = Abc_FileSize(pFileName);\n        int nBytes = (1 \u003c\u003c (nVarNum - 3)); // why mishchencko put -3? ###\n        int nTruths = nFileSize / nBytes;\n        //Abc_Print(-2,\"nFileSize=%d,nTruths=%d\\n\",nFileSize, nTruths);\n        if (nFileSize == -1)\n            return NULL;\n        assert(nVarNum \u003e= 6);\n        if (nFileSize % nBytes != 0)\n            Abc_Print(0, \"The file size (%d) is divided by the truth table size (%d) with remainder (%d).\\n\",\n                nFileSize, nBytes, nFileSize % nBytes);\n        // read file contents\n        pBuffer = Abc_FileRead(pFileName);\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc2(nVarNum, nTruths, (word *) pBuffer);\n    }\n    return p;\n}",
+      "Draft": "func Abc_TtStoreLoad(pFileName string, nVarNum int32) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    if nVarNum \u003c 0 {\n        var nVars, nTruths int32;\n        // figure out how many truth table and how many variables\n        Abc_TruthGetParams(pFileName, \u0026nVars, \u0026nTruths);\n        if nVars \u003c 2 || nVars \u003e 16 || nTruths == 0 {\n            return nil; }\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc(nVars, nTruths);\n        // read info from file\n        Abc_TruthStoreRead(pFileName, p);\n    } else {\n        var pBuffer string;\n        var nFileSize int32  = Abc_FileSize(pFileName);\n        var nBytes int32  = (1 \u003c\u003c (nVarNum - 3)); // why mishchencko put -3? ###\n        var nTruths int32  = nFileSize / nBytes;\n        //Abc_Print(-2,\"nFileSize=%d,nTruths=%d\\n\",nFileSize, nTruths);\n        if nFileSize == -1 {\n            return nil; }\n        assert(nVarNum \u003e= 6, \"nVarNum \u003e= 6\");\n        if nFileSize % nBytes != 0 {\n            Abc_Print(0, \"The file size (%d) is divided by the truth table size (%d) with remainder (%d).\\n\",\n                nFileSize, nBytes, nFileSize % nBytes); }\n        // read file contents\n        pBuffer = Abc_FileRead(pFileName);\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc2(nVarNum, nTruths, (word *) pBuffer);\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_TruthRpoPerform",
+      "Start": 10762,
+      "End": 11857,
+      "BodyStart": 10836,
+      "Original": "void Abc_TruthRpoPerform(Rpo_TtStore_t * p, int nThreshold, int fVerbose) {\n    clock_t clk = clock();\n    int i;\n    int rpoCount = 0;\n    Literal_t* lit;\n    float percent;\n    for (i = 0; i \u003c p-\u003enFuncs; i++) {\n//        if(i\u003e1000) {\n//            continue;\n//        }\n////        \n//        if(i!= 2196 ) { //5886\n//            continue;\n//        }\n        if(fVerbose) {\n            Abc_Print(-2,\"%d: \", i+1);\n        }\n            \n        lit = Rpo_Factorize((unsigned *) p-\u003epFuncs[i], p-\u003enVars, nThreshold, fVerbose);\n        if (lit != NULL) {\n            if(fVerbose) {\n                Abc_Print(-2, \"Solution : %s\\n\", lit-\u003eexpression-\u003epArray);\n                Abc_Print(-2, \"\\n\\n\");\n            }\n            Lit_Free(lit);\n            rpoCount++;\n        } else {\n            if(fVerbose) {\n                Abc_Print(-2, \"null\\n\");\n                Abc_Print(-2, \"\\n\\n\");\n            }\n        }\n    }\n    percent = (rpoCount * 100.0) / p-\u003enFuncs;\n    Abc_Print(-2,\"%d of %d (%.2f %%) functions are RPO.\\n\", rpoCount,p-\u003enFuncs,percent);\n    Abc_PrintTime(1, \"Time\", clock() - clk);\n}",
+      "Draft": "func Abc_TruthRpoPerform(p *Rpo_TtStore_t, nThreshold int32, fVerbose int32) {\n    var clk int64  = time.Now().UnixNano();\n    var i int32;\n    var rpoCount int32;\n    var lit *Literal_t;\n    var percent float32;\n    for i = 0; i \u003c p.nFuncs; i++ {\n//        if(i\u003e1000) {\n//            continue;\n//        }\n////        \n//        if(i!= 2196 ) { //5886\n//            continue;\n//        }\n        if fVerbose != 0 {\n            Abc_Print(-2,\"%d: \", i+1);\n        }\n            \n        lit = Rpo_Factorize((unsigned *) p.pFuncs[i], p.nVars, nThreshold, fVerbose);\n        if lit != nil {\n            if fVerbose != 0 {\n                Abc_Print(-2, \"Solution : %s\\n\", lit.expression.pArray);\n                Abc_Print(-2, \"\\n\\n\");\n            }\n            Lit_Free(lit);\n            rpoCount++;\n        } else {\n            if fVerbose != 0 {\n                Abc_Print(-2, \"null\\n\");\n                Abc_Print(-2, \"\\n\\n\");\n            }\n        }\n    }\n    percent = (rpoCount * 100.0) / p.nFuncs;\n    Abc_Print(-2,\"%d of %d (%.2f %%) functions are RPO.\\n\", rpoCount,p.nFuncs,percent);\n    Abc_PrintTime(1, \"Time\", time.Now().UnixNano() - clk);\n}"
+    },
+    {
+      "Name": "Abc_TruthRpoTest",
+      "Start": 12130,
+      "End": 12741,
+      "BodyStart": 12213,
+      "Original": "void Abc_TruthRpoTest(char * pFileName, int nVarNum, int nThreshold, int fVerbose) {\n    Rpo_TtStore_t * p;\n\n    // allocate data-structure\n//    if (fVerbose) {\n//        Abc_Print(-2, \"Number of variables = %d\\n\", nVarNum);\n//    }\n    p = Abc_TtStoreLoad(pFileName, nVarNum);\n\n    if (fVerbose) {\n        Abc_Print(-2, \"Number of variables = %d\\n\", p-\u003enVars);\n    }\n    // consider functions from the file\n    Abc_TruthRpoPerform(p, nThreshold, fVerbose);\n\n    // delete data-structure\n    Abc_TtStoreFree(p, nVarNum);\n    //    printf( \"Finished decomposing truth tables from file \\\"%s\\\".\\n\", pFileName );\n}",
+      "Draft": "func Abc_TruthRpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) {\n    var p *Rpo_TtStore_t;\n\n    // allocate data-structure\n//    if (fVerbose) {\n//        Abc_Print(-2, \"Number of variables = %d\\n\", nVarNum);\n//    }\n    p = Abc_TtStoreLoad(pFileName, nVarNum);\n\n    if fVerbose != 0 {\n        Abc_Print(-2, \"Number of variables = %d\\n\", p.nVars);\n    }\n    // consider functions from the file\n    Abc_TruthRpoPerform(p, nThreshold, fVerbose);\n\n    // delete data-structure\n    Abc_TtStoreFree(p, nVarNum);\n    //    printf( \"Finished decomposing truth tables from file \\\"%s\\\".\\n\", pFileName );\n}"
+    },
+    {
+      "Name": "Abc_RpoTest",
+      "Start": 13017,
+      "End": 13291,
+      "BodyStart": 13093,
+      "Original": "int Abc_RpoTest(char * pFileName, int nVarNum,int nThreshold, int fVerbose) {\n    if (fVerbose) {\n        printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName);\n    }\n    Abc_TruthRpoTest(pFileName, nVarNum, nThreshold, fVerbose);\n    fflush(stdout);\n    return 0;\n}",
+      "Draft": "func Abc_RpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) int32 {\n    if fVerbose != 0 {\n        fmt.Printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName);\n    }\n    Abc_TruthRpoTest(pFileName, nVarNum, nThreshold, fVerbose);\n    fflush(os.Stdout);\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::struct::Rpo_TtStore_t",
+      "Category": "struct-review",
+      "Symbol": "Rpo_TtStore_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 691,
+      "End": 830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::4354",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4354,
+      "End": 4360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::4583",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4583,
+      "End": 4589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::4601",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4601,
+      "End": 4607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::4771",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4771,
+      "End": 4777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::5117",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5117,
+      "End": 5123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::mechanical::sizeof::5345",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5345,
+      "End": 5351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::4329",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4329,
+      "End": 4346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::4565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4565,
+      "End": 4574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::4590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4590,
+      "End": 4598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::4709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4709,
+      "End": 4717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::5092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5092,
+      "End": 5109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::5328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5328,
+      "End": 5337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::5352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5352,
+      "End": 5360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::10413",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10413,
+      "End": 10421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::pointer-cast::11229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11229,
+      "End": 11241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthGetBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthGetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 885,
+      "End": 985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 987,
+      "End": 1085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1087,
+      "End": 1185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthGetHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthGetHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1240,
+      "End": 1348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthSetHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthSetHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1350,
+      "End": 1462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthXorHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthXorHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1464,
+      "End": 1576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthReadHexDigit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthReadHexDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1825,
+      "End": 2203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthWriteHexDigit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthWriteHexDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2233,
+      "End": 2473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthReadHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthReadHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2515,
+      "End": 3557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthWriteHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthWriteHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3626,
+      "End": 3934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthStoreAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4219,
+      "End": 4963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthStoreAlloc2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreAlloc2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4965,
+      "End": 5603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TtStoreFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtStoreFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5605,
+      "End": 5764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthStoreRead",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7061,
+      "End": 8082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TtStoreWrite",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtStoreWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8348,
+      "End": 8886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TtStoreLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtStoreLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9189,
+      "End": 10453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthRpoPerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthRpoPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10762,
+      "End": 11857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_TruthRpoTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthRpoTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12130,
+      "End": 12741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::Abc_RpoTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_RpoTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13017,
+      "End": 13291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::macro-inline::5697",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5697,
+      "End": 5719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::macro-inline::5725",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5725,
+      "End": 5744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::macro-inline::5750",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5750,
+      "End": 5761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRpo.c::macro-inline::8060",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8060,
+      "End": 8079
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcRpo.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Rpo package.]\n\n  Synopsis    [Procedures for executing RPO.]\n\n  Author      [Mayler G. A. Martins / Vinicius Callegaro]\n  \n  Affiliation [UFRGS]\n\n  Date        [Ver. 1.0. Started - May 08, 2013.]\n\n  Revision    [$Id: abcRpo.c,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]\n\n ***********************************************************************/\n\n//#include \"misc/extra/extra.h\"\n\n//#include \"bool/rpo/rpo.h\"\n//#include \"bool/rpo/literal.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// data-structure to store a bunch of truth tables\n   \n\ntype Rpo_TtStore_t struct {\n    nVars int32;\n    nWords int32;\n    nFuncs int32;\n    pFuncs  **word;\n}\n\n\n// read/write/flip i-th bit of a bit string table:\n\nfunc Abc_TruthGetBit(p *word, i int32) int32 {\n    return int32( (p[i \u003e\u003e 6] \u003e\u003e (i \u0026 63))) \u0026 1;\n}\n\nfunc Abc_TruthSetBit(p *word, i int32) {\n    p[i \u003e\u003e 6] |= (((word) 1) \u003c\u003c (i \u0026 63));\n}\n\nfunc Abc_TruthXorBit(p *word, i int32) {\n    p[i \u003e\u003e 6] ^= (((word) 1) \u003c\u003c (i \u0026 63));\n}\n\n// read/write k-th digit d of a hexadecimal number:\n\nfunc Abc_TruthGetHex(p *word, k int32) int32 {\n    return int32( (p[k \u003e\u003e 4] \u003e\u003e ((k \u003c\u003c 2) \u0026 63))) \u0026 15;\n}\n\nfunc Abc_TruthSetHex(p *word, k int32, d int32) {\n    p[k \u003e\u003e 4] |= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}\n\nfunc Abc_TruthXorHex(p *word, k int32, d int32) {\n    p[k \u003e\u003e 4] ^= (((word) d) \u003c\u003c ((k \u003c\u003c 2) \u0026 63));\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// read one hex character\n\nfunc Abc_TruthReadHexDigit(HexChar byte) int32 {\n    if HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9' {\n        return HexChar - '0'; }\n    if HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F' {\n        return HexChar - 'A' + 10; }\n    if HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f' {\n        return HexChar - 'a' + 10; }\n    assert(false, \"0\"); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}\n\n// write one hex character\n\nfunc Abc_TruthWriteHexDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit - 10); }\n}\n\n// read one truth table in hexadecimal\n\nfunc Abc_TruthReadHex(pTruth *word, pString string, nVars int32) {\n    var nWords int32;\n    if nVars \u003c 7 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var k int32;\n    var Digit int32;\n    var nDigits int32;\n    if nVars \u003c 7 {\n        nDigits = (1 \u003c\u003c (nVars-2));\n    } else {\n        nDigits = (nWords \u003c\u003c 4);\n    }\n    var EndSymbol byte;\n    // skip the first 2 symbols if they are \"0x\"\n    if pString[0] == '0' \u0026\u0026 pString[1] == 'x' {\n        pString += 2; }\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0', \"EndSymbol == ' ' || EndSymbol == '\\\\n' || EndSymbol == '\\\\r' || EndSymbol == '\\\\0'\");\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for k = 0; k \u003c nDigits; k++ {\n        Digit = Abc_TruthReadHexDigit(pString[nDigits - 1 - k]);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthSetHex(pTruth, k, Digit);\n    }\n}\n\n// write one truth table in hexadecimal (do not add end-of-line!)\n\nfunc Abc_TruthWriteHex(pFile *os.File, pTruth *word, nVars int32) {\n    var nDigits, Digit, k int32;\n    nDigits = (1 \u003c\u003c (nVars - 2));\n    for k = 0; k \u003c nDigits; k++ {\n        Digit = Abc_TruthGetHex(pTruth, k);\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthWriteHexDigit(pFile, Digit);\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate/Deallocate storage for truth tables..]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TruthStoreAlloc(nVars int32, nFuncs int32) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    var i int32;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p.nVars = nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p.nFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs = (word **) malloc((sizeof (word *) + sizeof (word) * p.nWords) * p.nFuncs);\n    // assign and clean the truth table storage\n    p.pFuncs[0] = (word *) (p.pFuncs + p.nFuncs);\n    memset(p.pFuncs[0], 0, sizeof (word) * p.nWords * p.nFuncs);\n    // split it up into individual truth tables\n    for i = 1; i \u003c p.nFuncs; i++ {\n        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;\n    }\n    return p;\n}\n\nfunc Abc_TruthStoreAlloc2(nVars int32, nFuncs int32, pBuffer *word) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    var i int32;\n    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));\n    p.nVars = nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p.nFuncs = nFuncs;\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs = (word **) malloc(sizeof (word *) * p.nFuncs);\n    // assign and clean the truth table storage\n    p.pFuncs[0] = pBuffer;\n    // split it up into individual truth tables\n    for i = 1; i \u003c p.nFuncs; i++ {\n        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;\n    }\n    return p;\n}\n\nfunc Abc_TtStoreFree(p *Rpo_TtStore_t, nVarNum int32) {\n    if nVarNum \u003e= 0 {\n        ABC_FREE(p.pFuncs[0]); }\n    ABC_FREE(p.pFuncs);\n    ABC_FREE(p);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read file contents.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n// extern int Abc_FileSize(char * pFileName);\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read file contents.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n// extern char * Abc_FileRead(char * pFileName);\n\n\n/**Function*************************************************************\n\n  Synopsis    [Determine the number of variables by reading the first line.]\n\n  Description [Determine the number of functions by counting the lines.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\n// extern void Abc_TruthGetParams(char * pFileName, int * pnVars, int * pnTruths);\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read truth tables from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TruthStoreRead(pFileName string, p *Rpo_TtStore_t) {\n    var pContents string;\n    var i, nLines int32;\n    pContents = Abc_FileRead(pFileName);\n    if pContents == nil {\n        return; }\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for nLines = i = 0; pContents[i] != '\\n'; {\n        // read one line\n        Abc_TruthReadHex(p.pFuncs[nLines++], \u0026pContents[i], p.nVars);\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        for pContents[i++] != '\\n' {; }\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert(p.nFuncs \u003e= nLines, \"p.nFuncs \u003e= nLines\");\n    p.nFuncs = nLines;\n    ABC_FREE(pContents);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write truth tables into file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TtStoreWrite(pFileName string, p *Rpo_TtStore_t, fBinary int32) {\n    var pFile *os.File;\n    var i int32;\n    var nBytes int32 = 8 * Abc_Truth6WordNum(p.nVars);\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for i = 0; i \u003c p.nFuncs; i++ {\n        if fBinary != 0 {\n            fwrite(p.pFuncs[i], nBytes, 1, pFile);\n        } else {\n            Abc_TruthWriteHex(pFile, p.pFuncs[i], p.nVars);\nfmt.Fprintf(pFile, \"\\n\"); }\n    }\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read truth tables from input file and write them into output file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TtStoreLoad(pFileName string, nVarNum int32) *Rpo_TtStore_t {\n    var p *Rpo_TtStore_t;\n    if nVarNum \u003c 0 {\n        var nVars, nTruths int32;\n        // figure out how many truth table and how many variables\n        Abc_TruthGetParams(pFileName, \u0026nVars, \u0026nTruths);\n        if nVars \u003c 2 || nVars \u003e 16 || nTruths == 0 {\n            return nil; }\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc(nVars, nTruths);\n        // read info from file\n        Abc_TruthStoreRead(pFileName, p);\n    } else {\n        var pBuffer string;\n        var nFileSize int32  = Abc_FileSize(pFileName);\n        var nBytes int32  = (1 \u003c\u003c (nVarNum - 3)); // why mishchencko put -3? ###\n        var nTruths int32  = nFileSize / nBytes;\n        //Abc_Print(-2,\"nFileSize=%d,nTruths=%d\\n\",nFileSize, nTruths);\n        if nFileSize == -1 {\n            return nil; }\n        assert(nVarNum \u003e= 6, \"nVarNum \u003e= 6\");\n        if nFileSize % nBytes != 0 {\n            Abc_Print(0, \"The file size (%d) is divided by the truth table size (%d) with remainder (%d).\\n\",\n                nFileSize, nBytes, nFileSize % nBytes); }\n        // read file contents\n        pBuffer = Abc_FileRead(pFileName);\n        // allocate data-structure\n        p = Abc_TruthStoreAlloc2(nVarNum, nTruths, (word *) pBuffer);\n    }\n    return p;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Apply decomposition to the truth table.]\n\n  Description [Returns the number of AIG nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TruthRpoPerform(p *Rpo_TtStore_t, nThreshold int32, fVerbose int32) {\n    var clk int64  = time.Now().UnixNano();\n    var i int32;\n    var rpoCount int32;\n    var lit *Literal_t;\n    var percent float32;\n    for i = 0; i \u003c p.nFuncs; i++ {\n//        if(i\u003e1000) {\n//            continue;\n//        }\n////        \n//        if(i!= 2196 ) { //5886\n//            continue;\n//        }\n        if fVerbose != 0 {\n            Abc_Print(-2,\"%d: \", i+1);\n        }\n            \n        lit = Rpo_Factorize((unsigned *) p.pFuncs[i], p.nVars, nThreshold, fVerbose);\n        if lit != nil {\n            if fVerbose != 0 {\n                Abc_Print(-2, \"Solution : %s\\n\", lit.expression.pArray);\n                Abc_Print(-2, \"\\n\\n\");\n            }\n            Lit_Free(lit);\n            rpoCount++;\n        } else {\n            if fVerbose != 0 {\n                Abc_Print(-2, \"null\\n\");\n                Abc_Print(-2, \"\\n\\n\");\n            }\n        }\n    }\n    percent = (rpoCount * 100.0) / p.nFuncs;\n    Abc_Print(-2,\"%d of %d (%.2f %%) functions are RPO.\\n\", rpoCount,p.nFuncs,percent);\n    Abc_PrintTime(1, \"Time\", time.Now().UnixNano() - clk);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Apply decomposition to truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_TruthRpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) {\n    var p *Rpo_TtStore_t;\n\n    // allocate data-structure\n//    if (fVerbose) {\n//        Abc_Print(-2, \"Number of variables = %d\\n\", nVarNum);\n//    }\n    p = Abc_TtStoreLoad(pFileName, nVarNum);\n\n    if fVerbose != 0 {\n        Abc_Print(-2, \"Number of variables = %d\\n\", p.nVars);\n    }\n    // consider functions from the file\n    Abc_TruthRpoPerform(p, nThreshold, fVerbose);\n\n    // delete data-structure\n    Abc_TtStoreFree(p, nVarNum);\n    //    printf( \"Finished decomposing truth tables from file \\\"%s\\\".\\n\", pFileName );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testbench for decomposition algorithms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n ***********************************************************************/\nfunc Abc_RpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) int32 {\n    if fVerbose != 0 {\n        fmt.Printf(\"Using truth tables from file \\\"%s\\\"...\\n\", pFileName);\n    }\n    Abc_TruthRpoTest(pFileName, nVarNum, nThreshold, fVerbose);\n    fflush(os.Stdout);\n    return 0;\n}\n\n\n/////////////////////ert truth table to ///////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

@@ -1,0 +1,529 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h",
+  "SHA256": "a46eac7a0235d7ddb7d6bad6551048d3bf126672ad32420558bd0fb26e94abba",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 9653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v \u003e= 0 \u0026\u0026 v \u003c s.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 9795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v \u003e= 0 \u0026\u0026 v \u003c s.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 10543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s.qhead == s.qtail );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 10797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( s.activity2, s.activity, sizeof(unsigned) * s.iVarPivot );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 11020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 11382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 12856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 14041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003e= 0 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 4654
+      },
+      "Directive": "#ifdef USE_FLOAT_ACTIVITY2"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "clause2_read",
+      "Start": 9049,
+      "End": 9171,
+      "BodyStart": 9128,
+      "Original": "static inline clause * clause2_read( sat_solver2 * s, cla h )                  { return Sat_MemClauseHand( \u0026s-\u003eMem, h ); }",
+      "Draft": "func clause2_read(s *sat_solver2, h cla) *clause { return Sat_MemClauseHand( \u0026s.Mem, h ); }"
+    },
+    {
+      "Name": "clause2_proofid",
+      "Start": 9172,
+      "End": 9364,
+      "BodyStart": 9251,
+      "Original": "static inline int      clause2_proofid(sat_solver2* s, clause* c, int varA)    { return c-\u003elrn ? (veci_begin(\u0026s-\u003eclaProofs)[clause_id(c)]\u003c\u003c2) | (varA\u003c\u003c1) : (clause_id(c)\u003c\u003c2) | (varA\u003c\u003c1) | 1; }",
+      "Draft": "func clause2_proofid(s *sat_solver2, c *clause, varA int32) int32 { if c.lrn {\n    return (veci_begin(\u0026s.claProofs)[clause_id(c)]\u003c\u003c2) | (varA\u003c\u003c1);\n} else {\n    return (clause_id(c)\u003c\u003c2) | (varA\u003c\u003c1) | 1;\n} }"
+    },
+    {
+      "Name": "clause2_is_partA",
+      "Start": 9441,
+      "End": 9563,
+      "BodyStart": 9520,
+      "Original": "static inline int   clause2_is_partA (sat_solver2* s, int h)                   { return clause2_read(s, h)-\u003epartA;       }",
+      "Draft": "func clause2_is_partA(s *sat_solver2, h int32) int32 { return clause2_read(s, h).partA;       }"
+    },
+    {
+      "Name": "clause2_set_partA",
+      "Start": 9564,
+      "End": 9686,
+      "BodyStart": 9643,
+      "Original": "static inline void  clause2_set_partA(sat_solver2* s, int h, int partA)        { clause2_read(s, h)-\u003epartA = partA;      }",
+      "Draft": "func clause2_set_partA(s *sat_solver2, h int32, partA int32) { clause2_read(s, h).partA = partA;      }"
+    },
+    {
+      "Name": "clause2_id",
+      "Start": 9687,
+      "End": 9809,
+      "BodyStart": 9766,
+      "Original": "static inline int   clause2_id(sat_solver2* s, int h)                          { return clause_id(clause2_read(s, h));   }",
+      "Draft": "func clause2_id(s *sat_solver2, h int32) int32 { return clause_id(clause2_read(s, h));   }"
+    },
+    {
+      "Name": "clause2_set_id",
+      "Start": 9810,
+      "End": 9932,
+      "BodyStart": 9889,
+      "Original": "static inline void  clause2_set_id(sat_solver2* s, int h, int id)              { clause_set_id(clause2_read(s, h), id);  }",
+      "Draft": "func clause2_set_id(s *sat_solver2, h int32, id int32) { clause_set_id(clause2_read(s, h), id);  }"
+    },
+    {
+      "Name": "sat_solver2_nvars",
+      "Start": 10051,
+      "End": 10126,
+      "BodyStart": 10103,
+      "Original": "static inline int sat_solver2_nvars(sat_solver2* s)\n{\n    return s-\u003esize;\n}",
+      "Draft": "func sat_solver2_nvars(s *sat_solver2) int32 {\n    return s.size;\n}"
+    },
+    {
+      "Name": "sat_solver2_nclauses",
+      "Start": 10128,
+      "End": 10220,
+      "BodyStart": 10183,
+      "Original": "static inline int sat_solver2_nclauses(sat_solver2* s)\n{\n    return (int)s-\u003estats.clauses;\n}",
+      "Draft": "func sat_solver2_nclauses(s *sat_solver2) int32 {\n    return int32(s.stats.clauses);\n}"
+    },
+    {
+      "Name": "sat_solver2_nlearnts",
+      "Start": 10222,
+      "End": 10314,
+      "BodyStart": 10277,
+      "Original": "static inline int sat_solver2_nlearnts(sat_solver2* s)\n{\n    return (int)s-\u003estats.learnts;\n}",
+      "Draft": "func sat_solver2_nlearnts(s *sat_solver2) int32 {\n    return int32(s.stats.learnts);\n}"
+    },
+    {
+      "Name": "sat_solver2_nconflicts",
+      "Start": 10316,
+      "End": 10412,
+      "BodyStart": 10373,
+      "Original": "static inline int sat_solver2_nconflicts(sat_solver2* s)\n{\n    return (int)s-\u003estats.conflicts;\n}",
+      "Draft": "func sat_solver2_nconflicts(s *sat_solver2) int32 {\n    return int32(s.stats.conflicts);\n}"
+    },
+    {
+      "Name": "sat_solver2_var_value",
+      "Start": 10414,
+      "End": 10561,
+      "BodyStart": 10480,
+      "Original": "static inline int sat_solver2_var_value( sat_solver2* s, int v ) \n{\n    assert( v \u003e= 0 \u0026\u0026 v \u003c s-\u003esize );\n    return (int)(s-\u003emodel[v] == l_True);\n}",
+      "Draft": "func sat_solver2_var_value(s *sat_solver2, v int32) int32 {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c s.size, \"v \u003e= 0 \u0026\u0026 v \u003c s.size\");\n    return int32((s.model[v] == l_True));\n}"
+    },
+    {
+      "Name": "sat_solver2_var_literal",
+      "Start": 10562,
+      "End": 10720,
+      "BodyStart": 10630,
+      "Original": "static inline int sat_solver2_var_literal( sat_solver2* s, int v ) \n{\n    assert( v \u003e= 0 \u0026\u0026 v \u003c s-\u003esize );\n    return toLitCond( v, s-\u003emodel[v] != l_True );\n}",
+      "Draft": "func sat_solver2_var_literal(s *sat_solver2, v int32) int32 {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c s.size, \"v \u003e= 0 \u0026\u0026 v \u003c s.size\");\n    return toLitCond( v, s.model[v] != l_True );\n}"
+    },
+    {
+      "Name": "sat_solver2_act_var_clear",
+      "Start": 10721,
+      "End": 10886,
+      "BodyStart": 10783,
+      "Original": "static inline void sat_solver2_act_var_clear(sat_solver2* s) \n{\n    int i;\n    for (i = 0; i \u003c s-\u003esize; i++)\n        s-\u003eactivity[i] = 0;//.0;\n    s-\u003evar_inc = 1.0;\n}",
+      "Draft": "func sat_solver2_act_var_clear(s *sat_solver2) {\n    var i int32;\n    for i = 0; i \u003c s.size; i++ {\n        s.activity[i] = 0;\n    }//.0;\n    s.var_inc = 1.0;\n}"
+    },
+    {
+      "Name": "sat_solver2_final",
+      "Start": 10888,
+      "End": 11024,
+      "BodyStart": 10956,
+      "Original": "static inline int sat_solver2_final(sat_solver2* s, int ** ppArray)\n{\n    *ppArray = s-\u003econf_final.ptr;\n    return s-\u003econf_final.size;\n}",
+      "Draft": "func sat_solver2_final(s *sat_solver2, ppArray **int32) int32 {\n    *ppArray = s.conf_final.ptr;\n    return s.conf_final.size;\n}"
+    },
+    {
+      "Name": "sat_solver2_set_runtime_limit",
+      "Start": 11026,
+      "End": 11196,
+      "BodyStart": 11109,
+      "Original": "static inline abctime sat_solver2_set_runtime_limit(sat_solver2* s, abctime Limit)\n{\n    abctime temp = s-\u003enRuntimeLimit;\n    s-\u003enRuntimeLimit = Limit;\n    return temp;\n}",
+      "Draft": "func sat_solver2_set_runtime_limit(s *sat_solver2, Limit abctime) abctime {\n    var temp abctime  = s.nRuntimeLimit;\n    s.nRuntimeLimit = Limit;\n    return temp;\n}"
+    },
+    {
+      "Name": "sat_solver2_set_learntmax",
+      "Start": 11198,
+      "End": 11356,
+      "BodyStart": 11274,
+      "Original": "static inline int sat_solver2_set_learntmax(sat_solver2* s, int nLearntMax)\n{\n    int temp = s-\u003enLearntMax;\n    s-\u003enLearntMax = nLearntMax;\n    return temp;\n}",
+      "Draft": "func sat_solver2_set_learntmax(s *sat_solver2, nLearntMax int32) int32 {\n    var temp int32  = s.nLearntMax;\n    s.nLearntMax = nLearntMax;\n    return temp;\n}"
+    },
+    {
+      "Name": "sat_solver2_bookmark",
+      "Start": 11358,
+      "End": 11772,
+      "BodyStart": 11414,
+      "Original": "static inline void sat_solver2_bookmark(sat_solver2* s)\n{\n    assert( s-\u003eqhead == s-\u003eqtail );\n    s-\u003eiVarPivot    = s-\u003esize;\n    s-\u003eiTrailPivot  = s-\u003eqhead;\n    if ( s-\u003epPrf1 )\n        s-\u003ehProofPivot  = Vec_SetHandCurrent(s-\u003epPrf1);\n    Sat_MemBookMark( \u0026s-\u003eMem );\n    if ( s-\u003eactivity2 )\n    {\n        s-\u003evar_inc2 = s-\u003evar_inc;\n        memcpy( s-\u003eactivity2, s-\u003eactivity, sizeof(unsigned) * s-\u003eiVarPivot );\n    }\n}",
+      "Draft": "func sat_solver2_bookmark(s *sat_solver2) {\n    assert(s.qhead == s.qtail, \"s.qhead == s.qtail\");\n    s.iVarPivot    = s.size;\n    s.iTrailPivot  = s.qhead;\n    if s.pPrf1 {\n        s.hProofPivot  = Vec_SetHandCurrent(s.pPrf1); }\n    Sat_MemBookMark( \u0026s.Mem );\n    if s.activity2 {\n        s.var_inc2 = s.var_inc;\n        memcpy( s.activity2, s.activity, sizeof(unsigned) * s.iVarPivot );\n    }\n}"
+    },
+    {
+      "Name": "sat_solver2_add_const",
+      "Start": 11774,
+      "End": 12112,
+      "BodyStart": 11877,
+      "Original": "static inline int sat_solver2_add_const( sat_solver2 * pSat, int iVar, int fCompl, int fMark, int Id )\n{\n    lit Lits[1];\n    int Cid;\n    assert( iVar \u003e= 0 );\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 1, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n    return 1;\n}",
+      "Draft": "func sat_solver2_add_const(pSat *sat_solver2, iVar int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [1]lit;\n    var Cid int32;\n    assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 1, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "sat_solver2_add_buffer",
+      "Start": 12113,
+      "End": 12719,
+      "BodyStart": 12229,
+      "Original": "static inline int sat_solver2_add_buffer( sat_solver2 * pSat, int iVarA, int iVarB, int fCompl, int fMark, int Id )\n{\n    lit Lits[2];\n    int Cid;\n    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 );\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n    return 2;\n}",
+      "Draft": "func sat_solver2_add_buffer(pSat *sat_solver2, iVarA int32, iVarB int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 2;\n}"
+    },
+    {
+      "Name": "sat_solver2_add_and",
+      "Start": 12720,
+      "End": 13552,
+      "BodyStart": 12857,
+      "Original": "static inline int sat_solver2_add_and( sat_solver2 * pSat, int iVar, int iVar0, int iVar1, int fCompl0, int fCompl1, int fMark, int Id )\n{\n    lit Lits[3];\n    int Cid;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n    return 3;\n}",
+      "Draft": "func sat_solver2_add_and(pSat *sat_solver2, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32, fMark int32, Id int32) int32 {\n    var Lits [3]lit;\n    var Cid int32;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 3;\n}"
+    },
+    {
+      "Name": "sat_solver2_add_xor",
+      "Start": 13553,
+      "End": 14732,
+      "BodyStart": 13677,
+      "Original": "static inline int sat_solver2_add_xor( sat_solver2 * pSat, int iVarA, int iVarB, int iVarC, int fCompl, int fMark, int Id )\n{\n    lit Lits[3];\n    int Cid;\n    assert( iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0 );\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n    return 4;\n}",
+      "Draft": "func sat_solver2_add_xor(pSat *sat_solver2, iVarA int32, iVarB int32, iVarC int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [3]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 4;\n}"
+    },
+    {
+      "Name": "sat_solver2_add_constraint",
+      "Start": 14733,
+      "End": 15324,
+      "BodyStart": 14852,
+      "Original": "static inline int sat_solver2_add_constraint( sat_solver2 * pSat, int iVar, int iVar2, int fCompl, int fMark, int Id )\n{\n    lit Lits[2];\n    int Cid;\n    assert( iVar \u003e= 0 );\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if ( fMark )\n        clause2_set_partA( pSat, Cid, 1 );\n    return 2;\n}",
+      "Draft": "func sat_solver2_add_constraint(pSat *sat_solver2, iVar int32, iVar2 int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::struct::sat_solver2_t",
+      "Category": "struct-review",
+      "Symbol": "sat_solver2_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4138,
+      "End": 9047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::mechanical::sizeof::10951",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11730,
+      "End": 11736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_read",
+      "Category": "semantic-review",
+      "Symbol": "clause2_read",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9049,
+      "End": 9171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_proofid",
+      "Category": "semantic-review",
+      "Symbol": "clause2_proofid",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9172,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_is_partA",
+      "Category": "semantic-review",
+      "Symbol": "clause2_is_partA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9441,
+      "End": 9563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_set_partA",
+      "Category": "semantic-review",
+      "Symbol": "clause2_set_partA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9564,
+      "End": 9686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_id",
+      "Category": "semantic-review",
+      "Symbol": "clause2_id",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9687,
+      "End": 9809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::clause2_set_id",
+      "Category": "semantic-review",
+      "Symbol": "clause2_set_id",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9810,
+      "End": 9932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_nvars",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_nvars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10051,
+      "End": 10126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_nclauses",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_nclauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10128,
+      "End": 10220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_nlearnts",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_nlearnts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10222,
+      "End": 10314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_nconflicts",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_nconflicts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10316,
+      "End": 10412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_var_value",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_var_value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10414,
+      "End": 10561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_var_literal",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_var_literal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10562,
+      "End": 10720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_act_var_clear",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_act_var_clear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10721,
+      "End": 10886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_final",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_final",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10888,
+      "End": 11024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_set_runtime_limit",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_set_runtime_limit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11026,
+      "End": 11196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_set_learntmax",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_set_learntmax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11198,
+      "End": 11356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_bookmark",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_bookmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11358,
+      "End": 11772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_add_const",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_add_const",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11774,
+      "End": 12112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_add_buffer",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_add_buffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12113,
+      "End": 12719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_add_and",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_add_and",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12720,
+      "End": 13552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_add_xor",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_add_xor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13553,
+      "End": 14732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::sat_solver2_add_constraint",
+      "Category": "semantic-review",
+      "Symbol": "sat_solver2_add_constraint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14733,
+      "End": 15324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satSolver2.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4654,
+      "End": 5507
+    }
+  ],
+  "Draft": "package bsat\n\n/**************************************************************************************************\nMiniSat -- Copyright (c) 2005, Niklas Sorensson\nhttp://www.cs.chalmers.se/Cs/Research/FormalMethods/MiniSat/\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n// Modified to compile with MS Visual Studio 6.0 by Alan Mishchenko\n\n\n\n \n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"satVec.h\"\n//#include \"satClause.h\"\n//#include \"misc/vec/vecSet.h\"\n//#include \"satProof2.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n//#define USE_FLOAT_ACTIVITY2\n\n//=================================================================================================\n// Public interface:\n\nstruct sat_solver2_t;\ntype sat_solver2 = sat_solver2_t;\ntype Int2_Man_t = Int2_Man_t_;\n\n// extern sat_solver2* sat_solver2_new(void);\n\n// extern void         sat_solver2_delete(sat_solver2* s);\n\n\n// extern int          sat_solver2_addclause(sat_solver2* s, lit* begin, lit* end, int Id);\n\n// extern int          sat_solver2_simplify(sat_solver2* s);\n\n// extern int          sat_solver2_solve(sat_solver2* s, lit* begin, lit* end, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, ABC_INT64_T nConfLimitGlobal, ABC_INT64_T nInsLimitGlobal);\n\n// extern void         sat_solver2_rollback(sat_solver2* s);\n\n// extern void         sat_solver2_reducedb(sat_solver2* s);\n\n// extern double       sat_solver2_memory( sat_solver2* s, int fAll );\n\n// extern double       sat_solver2_memory_proof( sat_solver2* s );\n\n\n// extern void         sat_solver2_setnvars(sat_solver2* s,int n);\n\n\n// extern void         Sat_Solver2WriteDimacs( sat_solver2 * p, char * pFileName, lit* assumptionsBegin, lit* assumptionsEnd, int incrementVars );\n\n// extern void         Sat_Solver2PrintStats( FILE * pFile, sat_solver2 * p );\n\n// extern int *        Sat_Solver2GetModel( sat_solver2 * p, int * pVars, int nVars );\n\n// extern void         Sat_Solver2DoubleClauses( sat_solver2 * p, int iVar );\n\n\n// global variables\n// extern int          var_is_assigned(sat_solver2* s, int v);\n\n// extern int          var_is_partA   (sat_solver2* s, int v);\n\n// extern void         var_set_partA  (sat_solver2* s, int v, int partA);\n\n\n// proof-based APIs\n// extern void *       Sat_ProofCore( sat_solver2 * s );\n\n// extern void *       Sat_ProofInterpolant( sat_solver2 * s, void * pGloVars );\n\n// extern word *       Sat_ProofInterpolantTruth( sat_solver2 * s, void * pGloVars );\n\n// extern void         Sat_ProofCheck( sat_solver2 * s );\n\n\n// interpolation APIs\n// extern Int2_Man_t * Int2_ManStart( sat_solver2 * pSat, int * pGloVars, int nGloVars );\n\n// extern void         Int2_ManStop( Int2_Man_t * p );\n\n// extern int          Int2_ManChainStart( Int2_Man_t * p, clause * c );\n\n// extern int          Int2_ManChainResolve( Int2_Man_t * p, clause * c, int iLit, int varA );\n\n// extern void *       Int2_ManReadInterpolant( sat_solver2 * s );\n\n\n\n//=================================================================================================\n// Solver representation:\n\nstruct varinfo_t;\ntype varinfo2 = varinfo2_t;\n\ntype sat_solver2_t struct {\n    size             int32;           // nof variables\n    cap             int32;            // size of varmaps\n    qhead             int32;          // Head index of queue.\n    qtail             int32;          // Tail index of queue.\n\n    root_level             int32;     // Level of first proper decision.\n    random_seed          float64;\n    progress_estimate          float64;\n    verbosity             int32;      // Verbosity level. 0=silent, 1=some progress report, 2=everything    // activities\n\n#ifdef USE_FLOAT_ACTIVITY2\n    double          var_inc;        // Amount to bump next variable with.\n    double          var_decay;      // INVERSE decay factor for variable activity: stores 1/decay. \n    float           cla_inc;        // Amount to bump next clause with.\n    float           cla_decay;      // INVERSE decay factor for clause activity: stores 1/decay.\n    double*         activity;       // A heuristic measurement of the activity of a variable.\n#else\n    int             var_inc;        // Amount to bump next variable with.\n    int             var_inc2;       // Amount to bump next variable with.\n    int             cla_inc;        // Amount to bump next clause with.\n    unsigned*       activity;       // A heuristic measurement of the activity of a variable\n    unsigned*       activity2;      // backup variable activity\n#endif\n\n    nUnits             int32;         // the total number of unit clauses\n    nof_learnts             int32;    // the number of clauses to trigger reduceDB\n    nLearntMax             int32;     // enables using reduce DB method\n    nLearntStart             int32;   // starting learned clause limit\n    nLearntDelta             int32;   // delta of learned clause limit\n    nLearntRatio             int32;   // ratio percentage of learned clauses\n    nDBreduces             int32;     // number of DB reductions\n    fNotUseRandom             int32;  // do not allow random decisions with a fixed probability\n    fSkipSimplify             int32;  // set to one to skip simplification of the clause database\n    fProofLogging             int32;  // enable proof-logging\n    fVerbose             int32;\n\n    // clauses\n    Mem       Sat_Mem_t;\n    wlists           *veci;         // watcher lists (for each literal)\n    act_clas            veci;       // clause activities\n    claProofs            veci;      // clause proofs\n\n    // rollback\n    iVarPivot             int32;      // the pivot for variables\n    iTrailPivot             int32;    // the pivot for trail\n    hProofPivot             int32;    // the pivot for proof records\n\n    // internal state\n    vi       *varinfo2;             // variable information\n    levels            *int32;         // \n    assigns           string;        // \n    trail            *lit;          // sequence of assignment and implications\n    orderpos            *int32;       // Index in variable order.\n    reasons            *cla;        // reason clauses\n    units            *cla;          // unit clauses\n    model            *int32;          // If problem is solved, this vector contains the model (contains: lbool).\n\n    tagged            veci;         // (contains: var)\n    stack            veci;          // (contains: var)\n    order            veci;          // Variable order. (heap) (contains: var)\n    trail_lim            veci;      // Separator indices for different decision levels in 'trail'. (contains: int)\n    temp_clause            veci;    // temporary storage for a CNF clause\n    conf_final            veci;     // If problem is unsatisfiable (possibly under assumptions),\n                                    // this vector represent the final conflict clause expressed in the assumptions.\n    mark_levels            veci;    // temporary storage for labeled levels\n    min_lit_order            veci;  // ordering of removable literals\n    min_step_order            veci; // ordering of resolution steps\n    learnt_live            veci;    // remaining clauses after reduce DB\n\n    // proof logging\n    pPrf1      *Vec_Set_t;          // sequence of proof records\n    temp_proof            veci;     // temporary place to store proofs\n    hLearntLast             int32;    // in proof-logging mode, the ID of the final conflict clause (conf_final)\n    hProofLast             int32;     // in proof-logging mode, the ID of the final conflict clause (conf_final)\n    pPrf2      *Prf_Man_t;          // another proof manager\n    dPrfMemory          float64;     // memory used by the proof-logger\n    pInt2     *Int2_Man_t;          // interpolation manager\n    tempInter             int32;      // temporary storage for the interpolant\n\n    // statistics\n    stats         stats_t;\n    nConfLimit     ABC_INT64_T;     // external limit on the number of conflicts\n    nInsLimit     ABC_INT64_T;      // external limit on the number of implications\n    nRuntimeLimit         abctime;  // external limit on runtime\n}\n\nfunc clause2_read(s *sat_solver2, h cla) *clause { return Sat_MemClauseHand( \u0026s.Mem, h ); }\nfunc clause2_proofid(s *sat_solver2, c *clause, varA int32) int32 { if c.lrn {\n    return (veci_begin(\u0026s.claProofs)[clause_id(c)]\u003c\u003c2) | (varA\u003c\u003c1);\n} else {\n    return (clause_id(c)\u003c\u003c2) | (varA\u003c\u003c1) | 1;\n} }\n\n// these two only work after creating a clause before the solver is called\nfunc clause2_is_partA(s *sat_solver2, h int32) int32 { return clause2_read(s, h).partA;       }\nfunc clause2_set_partA(s *sat_solver2, h int32, partA int32) { clause2_read(s, h).partA = partA;      }\nfunc clause2_id(s *sat_solver2, h int32) int32 { return clause_id(clause2_read(s, h));   }\nfunc clause2_set_id(s *sat_solver2, h int32, id int32) { clause_set_id(clause2_read(s, h), id);  }\n\n//=================================================================================================\n// Public APIs:\n\nfunc sat_solver2_nvars(s *sat_solver2) int32 {\n    return s.size;\n}\n\nfunc sat_solver2_nclauses(s *sat_solver2) int32 {\n    return int32(s.stats.clauses);\n}\n\nfunc sat_solver2_nlearnts(s *sat_solver2) int32 {\n    return int32(s.stats.learnts);\n}\n\nfunc sat_solver2_nconflicts(s *sat_solver2) int32 {\n    return int32(s.stats.conflicts);\n}\n\nfunc sat_solver2_var_value(s *sat_solver2, v int32) int32 {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c s.size, \"v \u003e= 0 \u0026\u0026 v \u003c s.size\");\n    return int32((s.model[v] == l_True));\n}\nfunc sat_solver2_var_literal(s *sat_solver2, v int32) int32 {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c s.size, \"v \u003e= 0 \u0026\u0026 v \u003c s.size\");\n    return toLitCond( v, s.model[v] != l_True );\n}\nfunc sat_solver2_act_var_clear(s *sat_solver2) {\n    var i int32;\n    for i = 0; i \u003c s.size; i++ {\n        s.activity[i] = 0;\n    }//.0;\n    s.var_inc = 1.0;\n}\n\nfunc sat_solver2_final(s *sat_solver2, ppArray **int32) int32 {\n    *ppArray = s.conf_final.ptr;\n    return s.conf_final.size;\n}\n\nfunc sat_solver2_set_runtime_limit(s *sat_solver2, Limit abctime) abctime {\n    var temp abctime  = s.nRuntimeLimit;\n    s.nRuntimeLimit = Limit;\n    return temp;\n}\n\nfunc sat_solver2_set_learntmax(s *sat_solver2, nLearntMax int32) int32 {\n    var temp int32  = s.nLearntMax;\n    s.nLearntMax = nLearntMax;\n    return temp;\n}\n\nfunc sat_solver2_bookmark(s *sat_solver2) {\n    assert(s.qhead == s.qtail, \"s.qhead == s.qtail\");\n    s.iVarPivot    = s.size;\n    s.iTrailPivot  = s.qhead;\n    if s.pPrf1 {\n        s.hProofPivot  = Vec_SetHandCurrent(s.pPrf1); }\n    Sat_MemBookMark( \u0026s.Mem );\n    if s.activity2 {\n        s.var_inc2 = s.var_inc;\n        memcpy( s.activity2, s.activity, sizeof(unsigned) * s.iVarPivot );\n    }\n}\n\nfunc sat_solver2_add_const(pSat *sat_solver2, iVar int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [1]lit;\n    var Cid int32;\n    assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 1, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 1;\n}\nfunc sat_solver2_add_buffer(pSat *sat_solver2, iVarA int32, iVarB int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, 0 );\n    Lits[1] = toLitCond( iVarB, !fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, 1 );\n    Lits[1] = toLitCond( iVarB, fCompl );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 2;\n}\nfunc sat_solver2_add_and(pSat *sat_solver2, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32, fMark int32, Id int32) int32 {\n    var Lits [3]lit;\n    var Cid int32;\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar0, fCompl0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, 1 );\n    Lits[1] = toLitCond( iVar1, fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, 0 );\n    Lits[1] = toLitCond( iVar0, !fCompl0 );\n    Lits[2] = toLitCond( iVar1, !fCompl1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 3;\n}\nfunc sat_solver2_add_xor(pSat *sat_solver2, iVarA int32, iVarB int32, iVarC int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [3]lit;\n    var Cid int32;\n    assert(iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0, \"iVarA \u003e= 0 \u0026\u0026 iVarB \u003e= 0 \u0026\u0026 iVarC \u003e= 0\");\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, !fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 1 );\n    Lits[2] = toLitCond( iVarC, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVarA, fCompl );\n    Lits[1] = toLitCond( iVarB, 0 );\n    Lits[2] = toLitCond( iVarC, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 3, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 4;\n}\nfunc sat_solver2_add_constraint(pSat *sat_solver2, iVar int32, iVar2 int32, fCompl int32, fMark int32, Id int32) int32 {\n    var Lits [2]lit;\n    var Cid int32;\n    assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 0 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n\n    Lits[0] = toLitCond( iVar, fCompl );\n    Lits[1] = toLitCond( iVar2, 1 );\n    Cid = sat_solver2_addclause( pSat, Lits, Lits + 2, Id );\n    if fMark != 0 {\n        clause2_set_partA( pSat, Cid, 1 ); }\n    return 2;\n}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

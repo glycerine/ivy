@@ -1,0 +1,426 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c",
+  "SHA256": "b920dbb91e2af1dff44b16e284b8b2f6f1266a9e53edcc2016c47cc9889de1d8",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 13,
+        "ByteOffset": 1700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: Node with ID %d is listed as number %d in the array of objects.\\n\", pObj.Id, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 17,
+        "ByteOffset": 2026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: The AIG has non-standard constant or PI node with ID \\\"%d\\\".\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 17,
+        "ByteOffset": 2283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: The AIG has non-standard PO node with ID \\\"%d\\\".\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 17,
+        "ByteOffset": 2527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: The buffer with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 17,
+        "ByteOffset": 2773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: The latch with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 17,
+        "ByteOffset": 2967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: The latch with ID \\\"%d\\\" does not have initial state.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 17,
+        "ByteOffset": 3194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Ivy_ManCheck: Latch with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 13,
+        "ByteOffset": 3430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: The AIG has internal node \\\"%d\\\" with a NULL fanin.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 13,
+        "ByteOffset": 3624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: The AIG has node \\\"%d\\\" with a wrong ordering of fanins.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 13,
+        "ByteOffset": 3820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has level %d but should have level %d.\\n\", pObj.Id, Ivy_ObjLevel(pObj), Ivy_ObjLevelNew(pObj) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 4045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 13,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has no fanouts.\\n\", pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 4379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has mismatch between the number of fanouts and refs.\\n\", pObj.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 4653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ivy_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 5605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sequential AIG has %d dangling nodes.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 13,
+        "ByteOffset": 6938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 13,
+        "ByteOffset": 7520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 17,
+        "ByteOffset": 8047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan0.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 17,
+        "ByteOffset": 8583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan1.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 17,
+        "ByteOffset": 9356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d is a fanout of node %d but the fanin is not there.\\n\", pFanout.Id, pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 10335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Ivy_IsComplement(pObj.pEquiv) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 17,
+        "ByteOffset": 10528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d has member %d in its equiv class with %d fanouts.\\n\", pObj.Id, pTemp.Id, Ivy_ObjRefs(pTemp) ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ManCheck",
+      "Start": 1275,
+      "End": 4842,
+      "BodyStart": 1309,
+      "Original": "int Ivy_ManCheck( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj, * pObj2;\n    int i;\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        // skip deleted nodes\n        if ( Ivy_ObjId(pObj) != i )\n        {\n            printf( \"Ivy_ManCheck: Node with ID %d is listed as number %d in the array of objects.\\n\", pObj-\u003eId, i );\n            return 0;\n        }\n        // consider the constant node and PIs\n        if ( i == 0 || Ivy_ObjIsPi(pObj) )\n        {\n            if ( Ivy_ObjFaninId0(pObj) || Ivy_ObjFaninId1(pObj) || Ivy_ObjLevel(pObj) )\n            {\n                printf( \"Ivy_ManCheck: The AIG has non-standard constant or PI node with ID \\\"%d\\\".\\n\", pObj-\u003eId );\n                return 0;\n            }\n            continue;\n        }\n        if ( Ivy_ObjIsPo(pObj) )\n        {\n            if ( Ivy_ObjFaninId1(pObj) )\n            {\n                printf( \"Ivy_ManCheck: The AIG has non-standard PO node with ID \\\"%d\\\".\\n\", pObj-\u003eId );\n                return 0;\n            }\n            continue;\n        }\n        if ( Ivy_ObjIsBuf(pObj) )\n        {\n            if ( Ivy_ObjFanin1(pObj) )\n            {\n                printf( \"Ivy_ManCheck: The buffer with ID \\\"%d\\\" contains second fanin.\\n\", pObj-\u003eId );\n                return 0;\n            }\n            continue;\n        }\n        if ( Ivy_ObjIsLatch(pObj) )\n        {\n            if ( Ivy_ObjFanin1(pObj) )\n            {\n                printf( \"Ivy_ManCheck: The latch with ID \\\"%d\\\" contains second fanin.\\n\", pObj-\u003eId );\n                return 0;\n            }\n            if ( Ivy_ObjInit(pObj) == IVY_INIT_NONE )\n            {\n                printf( \"Ivy_ManCheck: The latch with ID \\\"%d\\\" does not have initial state.\\n\", pObj-\u003eId );\n                return 0;\n            }\n            pObj2 = Ivy_TableLookup( p, pObj );\n            if ( pObj2 != pObj )\n                printf( \"Ivy_ManCheck: Latch with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj-\u003eId );\n            continue;\n        }\n        // consider the AND node\n        if ( !Ivy_ObjFanin0(pObj) || !Ivy_ObjFanin1(pObj) )\n        {\n            printf( \"Ivy_ManCheck: The AIG has internal node \\\"%d\\\" with a NULL fanin.\\n\", pObj-\u003eId );\n            return 0;\n        }\n        if ( Ivy_ObjFaninId0(pObj) \u003e= Ivy_ObjFaninId1(pObj) )\n        {\n            printf( \"Ivy_ManCheck: The AIG has node \\\"%d\\\" with a wrong ordering of fanins.\\n\", pObj-\u003eId );\n            return 0;\n        }\n        if ( Ivy_ObjLevel(pObj) != Ivy_ObjLevelNew(pObj) )\n            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has level %d but should have level %d.\\n\", pObj-\u003eId, Ivy_ObjLevel(pObj), Ivy_ObjLevelNew(pObj) );\n        pObj2 = Ivy_TableLookup( p, pObj );\n        if ( pObj2 != pObj )\n            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj-\u003eId );\n        if ( Ivy_ObjRefs(pObj) == 0 )\n            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has no fanouts.\\n\", pObj-\u003eId );\n        // check fanouts\n        if ( p-\u003efFanout \u0026\u0026 Ivy_ObjRefs(pObj) != Ivy_ObjFanoutNum(p, pObj) )\n            printf( \"Ivy_ManCheck: Node with ID \\\"%d\\\" has mismatch between the number of fanouts and refs.\\n\", pObj-\u003eId );\n    }\n    // count the number of nodes in the table\n    if ( Ivy_TableCountEntries(p) != Ivy_ManAndNum(p) + Ivy_ManExorNum(p) + Ivy_ManLatchNum(p) )\n    {\n        printf( \"Ivy_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );\n        return 0;\n    }\n//    if ( !Ivy_ManCheckFanouts(p) )\n//        return 0;\n    if ( !Ivy_ManIsAcyclic(p) )\n        return 0;\n    return 1; \n}",
+      "Draft": "func Ivy_ManCheck(p *Ivy_Man_t) int32 {\n    var pObj, pObj2 *Ivy_Obj_t;\n    var i int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        // skip deleted nodes\n        if Ivy_ObjId(pObj) != i {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID %d is listed as number %d in the array of objects.\\n\", pObj.Id, i);\n            return 0;\n        }\n        // consider the constant node and PIs\n        if i == 0 || Ivy_ObjIsPi(pObj) {\n            if Ivy_ObjFaninId0(pObj) || Ivy_ObjFaninId1(pObj) || Ivy_ObjLevel(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The AIG has non-standard constant or PI node with ID \\\"%d\\\".\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsPo(pObj) {\n            if Ivy_ObjFaninId1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The AIG has non-standard PO node with ID \\\"%d\\\".\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsBuf(pObj) {\n            if Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The buffer with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsLatch(pObj) {\n            if Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The latch with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id);\n                return 0;\n            }\n            if Ivy_ObjInit(pObj) == IVY_INIT_NONE {\n                fmt.Printf(\"Ivy_ManCheck: The latch with ID \\\"%d\\\" does not have initial state.\\n\", pObj.Id);\n                return 0;\n            }\n            pObj2 = Ivy_TableLookup( p, pObj );\n            if pObj2 != pObj {\n                fmt.Printf(\"Ivy_ManCheck: Latch with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id); }\n            continue;\n        }\n        // consider the AND node\n        if !Ivy_ObjFanin0(pObj) || !Ivy_ObjFanin1(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: The AIG has internal node \\\"%d\\\" with a NULL fanin.\\n\", pObj.Id);\n            return 0;\n        }\n        if Ivy_ObjFaninId0(pObj) \u003e= Ivy_ObjFaninId1(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: The AIG has node \\\"%d\\\" with a wrong ordering of fanins.\\n\", pObj.Id);\n            return 0;\n        }\n        if Ivy_ObjLevel(pObj) != Ivy_ObjLevelNew(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has level %d but should have level %d.\\n\", pObj.Id, Ivy_ObjLevel(pObj), Ivy_ObjLevelNew(pObj)); }\n        pObj2 = Ivy_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id); }\n        if Ivy_ObjRefs(pObj) == 0 {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has no fanouts.\\n\", pObj.Id); }\n        // check fanouts\n        if p.fFanout \u0026\u0026 Ivy_ObjRefs(pObj) != Ivy_ObjFanoutNum(p, pObj) {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has mismatch between the number of fanouts and refs.\\n\", pObj.Id); }\n    }\n    }\n    // count the number of nodes in the table\n    if Ivy_TableCountEntries(p) != Ivy_ManAndNum(p) + Ivy_ManExorNum(p) + Ivy_ManLatchNum(p) {\n        fmt.Printf(\"Ivy_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        return 0;\n    }\n//    if ( !Ivy_ManCheckFanouts(p) )\n//        return 0;\n    if !Ivy_ManIsAcyclic(p) {\n        return 0; }\n    return 1; \n}"
+    },
+    {
+      "Name": "Ivy_ManCheckFanoutNums",
+      "Start": 5099,
+      "End": 5421,
+      "BodyStart": 5143,
+      "Original": "int Ivy_ManCheckFanoutNums( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj;\n    int i, Counter = 0;\n    Ivy_ManForEachObj( p, pObj, i )\n        if ( Ivy_ObjIsNode(pObj) )\n            Counter += (Ivy_ObjRefs(pObj) == 0);\n    if ( Counter )\n        printf( \"Sequential AIG has %d dangling nodes.\\n\", Counter );\n    return Counter;\n}",
+      "Draft": "func Ivy_ManCheckFanoutNums(p *Ivy_Man_t) int32 {\n    var pObj *Ivy_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Ivy_ObjIsNode(pObj) {\n            Counter += (Ivy_ObjRefs(pObj) == 0); }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"Sequential AIG has %d dangling nodes.\\n\", Counter); }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ivy_ManCheckFanouts",
+      "Start": 5678,
+      "End": 8402,
+      "BodyStart": 5719,
+      "Original": "int Ivy_ManCheckFanouts( Ivy_Man_t * p )\n{\n    Vec_Ptr_t * vFanouts;\n    Ivy_Obj_t * pObj, * pFanout, * pFanin;\n    int i, k, RetValue = 1;\n    if ( !p-\u003efFanout )\n        return 1;\n    vFanouts = Vec_PtrAlloc( 100 );\n    // make sure every fanin is a fanout\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        pFanin = Ivy_ObjFanin0(pObj);\n        if ( pFanin == NULL )\n            continue;\n        Ivy_ObjForEachFanout( p, pFanin, vFanouts, pFanout, k )\n            if ( pFanout == pObj )\n                break;\n        if ( k == Vec_PtrSize(vFanouts) )\n        {\n            printf( \"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin-\u003eId, pObj-\u003eId );\n            RetValue = 0;\n        }\n\n        pFanin = Ivy_ObjFanin1(pObj);\n        if ( pFanin == NULL )\n            continue;\n        Ivy_ObjForEachFanout( p, pFanin, vFanouts, pFanout, k )\n            if ( pFanout == pObj )\n                break;\n        if ( k == Vec_PtrSize(vFanouts) )\n        {\n            printf( \"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin-\u003eId, pObj-\u003eId );\n            RetValue = 0;\n        }\n        // check that the previous fanout has the same fanin\n        if ( pObj-\u003epPrevFan0 )\n        {\n            if ( Ivy_ObjFanin0(pObj-\u003epPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj-\u003epPrevFan0) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj-\u003epPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj-\u003epPrevFan0) != Ivy_ObjFanin1(pObj) )\n            {\n                printf( \"Node %d has prev %d without common fanin.\\n\", pObj-\u003eId, pObj-\u003epPrevFan0-\u003eId );\n                RetValue = 0;\n            }\n        }\n        // check that the previous fanout has the same fanin\n        if ( pObj-\u003epPrevFan1 )\n        {\n            if ( Ivy_ObjFanin0(pObj-\u003epPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj-\u003epPrevFan1) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj-\u003epPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj-\u003epPrevFan1) != Ivy_ObjFanin1(pObj) )\n            {\n                printf( \"Node %d has prev %d without common fanin.\\n\", pObj-\u003eId, pObj-\u003epPrevFan1-\u003eId );\n                RetValue = 0;\n            }\n        }\n    }\n    // make sure every fanout is a fanin\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        Ivy_ObjForEachFanout( p, pObj, vFanouts, pFanout, k )\n            if ( Ivy_ObjFanin0(pFanout) != pObj \u0026\u0026 Ivy_ObjFanin1(pFanout) != pObj )\n            {\n                printf( \"Node %d is a fanout of node %d but the fanin is not there.\\n\", pFanout-\u003eId, pObj-\u003eId );\n                RetValue = 0;\n            }\n    }\n    Vec_PtrFree( vFanouts );\n    return RetValue;\n}",
+      "Draft": "func Ivy_ManCheckFanouts(p *Ivy_Man_t) int32 {\n    var vFanouts *Vec_Ptr_t;\n    var pObj, pFanout, pFanin *Ivy_Obj_t;\n    var i int32;\n    var k int32;\n    var RetValue int32 = 1;\n    if !p.fFanout {\n        return 1; }\n    vFanouts = Vec_PtrAlloc( 100 );\n    // make sure every fanin is a fanout\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pFanin = Ivy_ObjFanin0(pObj);\n        if pFanin == nil {\n            continue; }\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pFanin, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if pFanout == pObj {\n                break; }\n        }\n        if k == Vec_PtrSize(vFanouts) {\n            fmt.Printf(\"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id);\n            RetValue = 0;\n        }\n\n        pFanin = Ivy_ObjFanin1(pObj);\n        if pFanin == nil {\n            continue; }\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pFanin, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if pFanout == pObj {\n                break; }\n        }\n        if k == Vec_PtrSize(vFanouts) {\n            fmt.Printf(\"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id);\n            RetValue = 0;\n        }\n        // check that the previous fanout has the same fanin\n        if pObj.pPrevFan0 {\n            if Ivy_ObjFanin0(pObj.pPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj.pPrevFan0) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan0) != Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan0.Id);\n                RetValue = 0;\n            }\n        }\n        // check that the previous fanout has the same fanin\n        if pObj.pPrevFan1 {\n            if Ivy_ObjFanin0(pObj.pPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj.pPrevFan1) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan1) != Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan1.Id);\n                RetValue = 0;\n            }\n        }\n    }\n    }\n    // make sure every fanout is a fanin\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pObj, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if Ivy_ObjFanin0(pFanout) != pObj \u0026\u0026 Ivy_ObjFanin1(pFanout) != pObj {\n                fmt.Printf(\"Node %d is a fanout of node %d but the fanin is not there.\\n\", pFanout.Id, pObj.Id);\n                RetValue = 0;\n            }\n        }\n    }\n    }\n    Vec_PtrFree( vFanouts );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Ivy_ManCheckChoices",
+      "Start": 8701,
+      "End": 9285,
+      "BodyStart": 8742,
+      "Original": "int Ivy_ManCheckChoices( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj, * pTemp;\n    int i;\n    Ivy_ManForEachObj( p-\u003epHaig, pObj, i )\n    {\n        if ( Ivy_ObjRefs(pObj) == 0 )\n            continue;\n        // count the number of nodes in the loop\n        assert( !Ivy_IsComplement(pObj-\u003epEquiv) );\n        for ( pTemp = pObj-\u003epEquiv; pTemp \u0026\u0026 pTemp != pObj; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n            if ( Ivy_ObjRefs(pTemp) \u003e 1 )\n                printf( \"Node %d has member %d in its equiv class with %d fanouts.\\n\", pObj-\u003eId, pTemp-\u003eId, Ivy_ObjRefs(pTemp) );\n    }\n    return 1;\n}",
+      "Draft": "func Ivy_ManCheckChoices(p *Ivy_Man_t) int32 {\n    var pObj, pTemp *Ivy_Obj_t;\n    var i int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pHaig.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pHaig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Ivy_ObjRefs(pObj) == 0 {\n            continue; }\n        // count the number of nodes in the loop\n        assert(!Ivy_IsComplement(pObj.pEquiv), \"!Ivy_IsComplement(pObj.pEquiv)\");\n        for  pTemp = pObj.pEquiv; (pTemp != nil) \u0026\u0026 pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            if Ivy_ObjRefs(pTemp) \u003e 1 {\n                fmt.Printf(\"Node %d has member %d in its equiv class with %d fanouts.\\n\", pObj.Id, pTemp.Id, Ivy_ObjRefs(pTemp)); }\n        }\n    }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::1520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1357,
+      "End": 1357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::5570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5195,
+      "End": 5195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::6527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5940,
+      "End": 5940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::6900",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6076,
+      "End": 6076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::7487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6485,
+      "End": 6485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::9145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7990,
+      "End": 7990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::9426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8036,
+      "End": 8036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::pointer-cast::10342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8790,
+      "End": 8790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::Ivy_ManCheck",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1275,
+      "End": 4842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::Ivy_ManCheckFanoutNums",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCheckFanoutNums",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5099,
+      "End": 5421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::Ivy_ManCheckFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCheckFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5678,
+      "End": 8402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::Ivy_ManCheckChoices",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManCheckChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8701,
+      "End": 9285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9532
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [AIG checking procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyCheck.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the consistency of the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCheck(p *Ivy_Man_t) int32 {\n    var pObj, pObj2 *Ivy_Obj_t;\n    var i int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        // skip deleted nodes\n        if Ivy_ObjId(pObj) != i {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID %d is listed as number %d in the array of objects.\\n\", pObj.Id, i);\n            return 0;\n        }\n        // consider the constant node and PIs\n        if i == 0 || Ivy_ObjIsPi(pObj) {\n            if Ivy_ObjFaninId0(pObj) || Ivy_ObjFaninId1(pObj) || Ivy_ObjLevel(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The AIG has non-standard constant or PI node with ID \\\"%d\\\".\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsPo(pObj) {\n            if Ivy_ObjFaninId1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The AIG has non-standard PO node with ID \\\"%d\\\".\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsBuf(pObj) {\n            if Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The buffer with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id);\n                return 0;\n            }\n            continue;\n        }\n        if Ivy_ObjIsLatch(pObj) {\n            if Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Ivy_ManCheck: The latch with ID \\\"%d\\\" contains second fanin.\\n\", pObj.Id);\n                return 0;\n            }\n            if Ivy_ObjInit(pObj) == IVY_INIT_NONE {\n                fmt.Printf(\"Ivy_ManCheck: The latch with ID \\\"%d\\\" does not have initial state.\\n\", pObj.Id);\n                return 0;\n            }\n            pObj2 = Ivy_TableLookup( p, pObj );\n            if pObj2 != pObj {\n                fmt.Printf(\"Ivy_ManCheck: Latch with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id); }\n            continue;\n        }\n        // consider the AND node\n        if !Ivy_ObjFanin0(pObj) || !Ivy_ObjFanin1(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: The AIG has internal node \\\"%d\\\" with a NULL fanin.\\n\", pObj.Id);\n            return 0;\n        }\n        if Ivy_ObjFaninId0(pObj) \u003e= Ivy_ObjFaninId1(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: The AIG has node \\\"%d\\\" with a wrong ordering of fanins.\\n\", pObj.Id);\n            return 0;\n        }\n        if Ivy_ObjLevel(pObj) != Ivy_ObjLevelNew(pObj) {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has level %d but should have level %d.\\n\", pObj.Id, Ivy_ObjLevel(pObj), Ivy_ObjLevelNew(pObj)); }\n        pObj2 = Ivy_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" is not in the structural hashing table.\\n\", pObj.Id); }\n        if Ivy_ObjRefs(pObj) == 0 {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has no fanouts.\\n\", pObj.Id); }\n        // check fanouts\n        if p.fFanout \u0026\u0026 Ivy_ObjRefs(pObj) != Ivy_ObjFanoutNum(p, pObj) {\n            fmt.Printf(\"Ivy_ManCheck: Node with ID \\\"%d\\\" has mismatch between the number of fanouts and refs.\\n\", pObj.Id); }\n    }\n    }\n    // count the number of nodes in the table\n    if Ivy_TableCountEntries(p) != Ivy_ManAndNum(p) + Ivy_ManExorNum(p) + Ivy_ManLatchNum(p) {\n        fmt.Printf(\"Ivy_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        return 0;\n    }\n//    if ( !Ivy_ManCheckFanouts(p) )\n//        return 0;\n    if !Ivy_ManIsAcyclic(p) {\n        return 0; }\n    return 1; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCheckFanoutNums(p *Ivy_Man_t) int32 {\n    var pObj *Ivy_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if Ivy_ObjIsNode(pObj) {\n            Counter += (Ivy_ObjRefs(pObj) == 0); }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"Sequential AIG has %d dangling nodes.\\n\", Counter); }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCheckFanouts(p *Ivy_Man_t) int32 {\n    var vFanouts *Vec_Ptr_t;\n    var pObj, pFanout, pFanin *Ivy_Obj_t;\n    var i int32;\n    var k int32;\n    var RetValue int32 = 1;\n    if !p.fFanout {\n        return 1; }\n    vFanouts = Vec_PtrAlloc( 100 );\n    // make sure every fanin is a fanout\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pFanin = Ivy_ObjFanin0(pObj);\n        if pFanin == nil {\n            continue; }\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pFanin, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if pFanout == pObj {\n                break; }\n        }\n        if k == Vec_PtrSize(vFanouts) {\n            fmt.Printf(\"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id);\n            RetValue = 0;\n        }\n\n        pFanin = Ivy_ObjFanin1(pObj);\n        if pFanin == nil {\n            continue; }\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pFanin, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if pFanout == pObj {\n                break; }\n        }\n        if k == Vec_PtrSize(vFanouts) {\n            fmt.Printf(\"Node %d is a fanin of node %d but the fanout is not there.\\n\", pFanin.Id, pObj.Id);\n            RetValue = 0;\n        }\n        // check that the previous fanout has the same fanin\n        if pObj.pPrevFan0 {\n            if Ivy_ObjFanin0(pObj.pPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj.pPrevFan0) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan0) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan0) != Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan0.Id);\n                RetValue = 0;\n            }\n        }\n        // check that the previous fanout has the same fanin\n        if pObj.pPrevFan1 {\n            if Ivy_ObjFanin0(pObj.pPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin0(pObj.pPrevFan1) != Ivy_ObjFanin1(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan1) != Ivy_ObjFanin0(pObj) \u0026\u0026 \n                 Ivy_ObjFanin1(pObj.pPrevFan1) != Ivy_ObjFanin1(pObj) {\n                fmt.Printf(\"Node %d has prev %d without common fanin.\\n\", pObj.Id, pObj.pPrevFan1.Id);\n                RetValue = 0;\n            }\n        }\n    }\n    }\n    // make sure every fanout is a fanin\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        // inlining of macro Ivy_ObjForEachFanout\n        for  k = 0, Ivy_ObjCollectFanouts(p, pObj, vFanouts);                                  k \u003c Vec_PtrSize(vFanouts) \u0026\u0026 ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,k)); k++  {\n            if Ivy_ObjFanin0(pFanout) != pObj \u0026\u0026 Ivy_ObjFanin1(pFanout) != pObj {\n                fmt.Printf(\"Node %d is a fanout of node %d but the fanin is not there.\\n\", pFanout.Id, pObj.Id);\n                RetValue = 0;\n            }\n        }\n    }\n    }\n    Vec_PtrFree( vFanouts );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that each choice node has exactly one node with fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManCheckChoices(p *Ivy_Man_t) int32 {\n    var pObj, pTemp *Ivy_Obj_t;\n    var i int32;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pHaig.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pHaig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Ivy_ObjRefs(pObj) == 0 {\n            continue; }\n        // count the number of nodes in the loop\n        assert(!Ivy_IsComplement(pObj.pEquiv), \"!Ivy_IsComplement(pObj.pEquiv)\");\n        for  pTemp = pObj.pEquiv; (pTemp != nil) \u0026\u0026 pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n            if Ivy_ObjRefs(pTemp) \u003e 1 {\n                fmt.Printf(\"Node %d has member %d in its equiv class with %d fanouts.\\n\", pObj.Id, pTemp.Id, Ivy_ObjRefs(pTemp)); }\n        }\n    }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

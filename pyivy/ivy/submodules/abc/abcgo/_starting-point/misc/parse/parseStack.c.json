@@ -1,0 +1,549 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c",
+  "SHA256": "9e127610a1888fc6fea19ac1dee59b0e107439c01d85ee6e3d805936ee73a69c",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 59,
+        "Column": 75,
+        "ByteOffset": 1784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Parse_StackFn_t *) malloc(sizeof(Parse_StackFn_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Parse_StackFn_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 61,
+        "Column": 72,
+        "ByteOffset": 1948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((void * *) malloc(sizeof(void *) * (size_t)(nDepth)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 2741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parse_StackFnPush(): Stack size is too small!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parse_StackFnPush(): Trying to extract data from the empty stack!\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 63,
+        "ByteOffset": 3700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 132,
+        "Column": 57,
+        "ByteOffset": 3803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 151,
+        "Column": 75,
+        "ByteOffset": 4254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Parse_StackOp_t *) malloc(sizeof(Parse_StackOp_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 4306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Parse_StackOp_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 153,
+        "Column": 69,
+        "ByteOffset": 4415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nDepth)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 5206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parse_StackOpPush(): Stack size is too small!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 5666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parse_StackOpPush(): Trying to extract data from the empty stack!\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 223,
+        "Column": 63,
+        "ByteOffset": 6165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 224,
+        "Column": 57,
+        "ByteOffset": 6268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Parse_StackFnStart",
+      "Start": 1590,
+      "End": 1835,
+      "BodyStart": 1641,
+      "Original": "Parse_StackFn_t * Parse_StackFnStart( int nDepth )\n{\n    Parse_StackFn_t * p;\n    p = ABC_ALLOC( Parse_StackFn_t, 1 );\n    memset( p, 0, sizeof(Parse_StackFn_t) );\n    p-\u003epData = ABC_ALLOC( void *, nDepth );\n    p-\u003eSize = nDepth;\n    return p;\n}",
+      "Draft": "func Parse_StackFnStart(nDepth int32) *Parse_StackFn_t {\n    var p *Parse_StackFn_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Parse_StackFn_t *) malloc(sizeof(Parse_StackFn_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Parse_StackFn_t) );\n    // inlining of macro ABC_ALLOC\n    p.pData = ((void * *) malloc(sizeof(void *) * (size_t)(nDepth)));\n    p.Size = nDepth;\n    return p;\n}"
+    },
+    {
+      "Name": "Parse_StackFnIsEmpty",
+      "Start": 2105,
+      "End": 2187,
+      "BodyStart": 2153,
+      "Original": "int Parse_StackFnIsEmpty( Parse_StackFn_t * p )\n{\n    return (int)(p-\u003eTop == 0);\n}",
+      "Draft": "func Parse_StackFnIsEmpty(p *Parse_StackFn_t) int32 {\n    return int32((p.Top == 0));\n}"
+    },
+    {
+      "Name": "Parse_StackFnPush",
+      "Start": 2454,
+      "End": 2677,
+      "BodyStart": 2514,
+      "Original": "void Parse_StackFnPush( Parse_StackFn_t * p, void * bFunc )\n{\n    if ( p-\u003eTop \u003e= p-\u003eSize )\n    {\n        printf( \"Parse_StackFnPush(): Stack size is too small!\\n\" );\n        return;\n    }\n    p-\u003epData[ p-\u003eTop++ ] = bFunc;\n}",
+      "Draft": "func Parse_StackFnPush(p *Parse_StackFn_t, bFunc any) {\n    if p.Top \u003e= p.Size {\n        fmt.Printf(\"Parse_StackFnPush(): Stack size is too small!\\n\");\n        return;\n    }\n    p.pData[ p.Top++ ] = bFunc;\n}"
+    },
+    {
+      "Name": "Parse_StackFnPop",
+      "Start": 2944,
+      "End": 3172,
+      "BodyStart": 2991,
+      "Original": "void * Parse_StackFnPop( Parse_StackFn_t * p )\n{\n    if ( p-\u003eTop == 0 )\n    {\n        printf( \"Parse_StackFnPush(): Trying to extract data from the empty stack!\\n\" );\n        return NULL;\n    }\n    return p-\u003epData[ --p-\u003eTop ];\n}",
+      "Draft": "func Parse_StackFnPop(p *Parse_StackFn_t) any {\n    if p.Top == 0 {\n        fmt.Printf(\"Parse_StackFnPush(): Trying to extract data from the empty stack!\\n\");\n        return nil;\n    }\n    return p.pData[ --p.Top ];\n}"
+    },
+    {
+      "Name": "Parse_StackFnFree",
+      "Start": 3426,
+      "End": 3520,
+      "BodyStart": 3472,
+      "Original": "void Parse_StackFnFree( Parse_StackFn_t * p )\n{\n    ABC_FREE( p-\u003epData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Parse_StackFnFree(p *Parse_StackFn_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Parse_StackOpStart",
+      "Start": 3776,
+      "End": 4018,
+      "BodyStart": 3827,
+      "Original": "Parse_StackOp_t * Parse_StackOpStart( int nDepth )\n{\n    Parse_StackOp_t * p;\n    p = ABC_ALLOC( Parse_StackOp_t, 1 );\n    memset( p, 0, sizeof(Parse_StackOp_t) );\n    p-\u003epData = ABC_ALLOC( int, nDepth );\n    p-\u003eSize = nDepth;\n    return p;\n}",
+      "Draft": "func Parse_StackOpStart(nDepth int32) *Parse_StackOp_t {\n    var p *Parse_StackOp_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Parse_StackOp_t *) malloc(sizeof(Parse_StackOp_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Parse_StackOp_t) );\n    // inlining of macro ABC_ALLOC\n    p.pData = ((int *) malloc(sizeof(int) * (size_t)(nDepth)));\n    p.Size = nDepth;\n    return p;\n}"
+    },
+    {
+      "Name": "Parse_StackOpIsEmpty",
+      "Start": 4288,
+      "End": 4370,
+      "BodyStart": 4336,
+      "Original": "int Parse_StackOpIsEmpty( Parse_StackOp_t * p )\n{\n    return (int)(p-\u003eTop == 0);\n}",
+      "Draft": "func Parse_StackOpIsEmpty(p *Parse_StackOp_t) int32 {\n    return int32((p.Top == 0));\n}"
+    },
+    {
+      "Name": "Parse_StackOpPush",
+      "Start": 4637,
+      "End": 4855,
+      "BodyStart": 4693,
+      "Original": "void Parse_StackOpPush( Parse_StackOp_t * p, int Oper )\n{\n    if ( p-\u003eTop \u003e= p-\u003eSize )\n    {\n        printf( \"Parse_StackOpPush(): Stack size is too small!\\n\" );\n        return;\n    }\n    p-\u003epData[ p-\u003eTop++ ] = Oper;\n}",
+      "Draft": "func Parse_StackOpPush(p *Parse_StackOp_t, Oper int32) {\n    if p.Top \u003e= p.Size {\n        fmt.Printf(\"Parse_StackOpPush(): Stack size is too small!\\n\");\n        return;\n    }\n    p.pData[ p.Top++ ] = Oper;\n}"
+    },
+    {
+      "Name": "Parse_StackOpPop",
+      "Start": 5122,
+      "End": 5345,
+      "BodyStart": 5166,
+      "Original": "int Parse_StackOpPop( Parse_StackOp_t * p )\n{\n    if ( p-\u003eTop == 0 )\n    {\n        printf( \"Parse_StackOpPush(): Trying to extract data from the empty stack!\\n\" );\n        return -1;\n    }\n    return p-\u003epData[ --p-\u003eTop ];\n}",
+      "Draft": "func Parse_StackOpPop(p *Parse_StackOp_t) int32 {\n    if p.Top == 0 {\n        fmt.Printf(\"Parse_StackOpPush(): Trying to extract data from the empty stack!\\n\");\n        return -1;\n    }\n    return p.pData[ --p.Top ];\n}"
+    },
+    {
+      "Name": "Parse_StackOpFree",
+      "Start": 5599,
+      "End": 5693,
+      "BodyStart": 5645,
+      "Original": "void Parse_StackOpFree( Parse_StackOp_t * p )\n{\n    ABC_FREE( p-\u003epData );\n    ABC_FREE( p );\n}",
+      "Draft": "func Parse_StackOpFree(p *Parse_StackOp_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::struct::ParseStackFnStruct",
+      "Category": "struct-review",
+      "Symbol": "ParseStackFnStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 753,
+      "End": 933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::struct::ParseStackOpStruct",
+      "Category": "struct-review",
+      "Symbol": "ParseStackOpStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 935,
+      "End": 1117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::1749",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1676,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::1808",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1727,
+      "End": 1733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::1914",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1769,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::4246",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3862,
+      "End": 3862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::4305",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3913,
+      "End": 3919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::mechanical::sizeof::4408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3955,
+      "End": 3955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::1722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1676,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::1896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1769,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::1920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1769,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::3695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3478,
+      "End": 3478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::3800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3504,
+      "End": 3504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::4219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3862,
+      "End": 3862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::4393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3955,
+      "End": 3955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::6176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5651,
+      "End": 5651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::pointer-cast::6281",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5677,
+      "End": 5677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackFnStart",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackFnStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1590,
+      "End": 1835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackFnIsEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackFnIsEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2105,
+      "End": 2187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::void-pointer::Parse_StackFnPush",
+      "Category": "void-pointer-review",
+      "Symbol": "Parse_StackFnPush",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2454,
+      "End": 2677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackFnPush",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackFnPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2454,
+      "End": 2677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::void-pointer::Parse_StackFnPop",
+      "Category": "void-pointer-review",
+      "Symbol": "Parse_StackFnPop",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2944,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackFnPop",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackFnPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2944,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::ternary::Parse_StackFnFree",
+      "Category": "ternary-review",
+      "Symbol": "Parse_StackFnFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3426,
+      "End": 3520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackFnFree",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackFnFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3426,
+      "End": 3520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackOpStart",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackOpStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3776,
+      "End": 4018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackOpIsEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackOpIsEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4288,
+      "End": 4370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackOpPush",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackOpPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4637,
+      "End": 4855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackOpPop",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackOpPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5122,
+      "End": 5345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::ternary::Parse_StackOpFree",
+      "Category": "ternary-review",
+      "Symbol": "Parse_StackOpFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5599,
+      "End": 5693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::Parse_StackOpFree",
+      "Category": "semantic-review",
+      "Symbol": "Parse_StackOpFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5599,
+      "End": 5693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseStack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5941
+    }
+  ],
+  "Draft": "package parse\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [parseStack.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Stacks used by the formula parser.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 18, 2003.]\n\n  Revision    [$Id: parseStack.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"parseInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype ParseStackFnStruct struct {\n    pData      *any;        // the array of elements\n    Top           int32;          // the index\n    Size           int32;         // the stack size\n}\n\ntype ParseStackOpStruct struct {\n    pData          *int32;        // the array of elements\n    Top           int32;          // the index\n    Size           int32;         // the stack size\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackFnStart(nDepth int32) *Parse_StackFn_t {\n    var p *Parse_StackFn_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Parse_StackFn_t *) malloc(sizeof(Parse_StackFn_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Parse_StackFn_t) );\n    // inlining of macro ABC_ALLOC\n    p.pData = ((void * *) malloc(sizeof(void *) * (size_t)(nDepth)));\n    p.Size = nDepth;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the stack is empty.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackFnIsEmpty(p *Parse_StackFn_t) int32 {\n    return int32((p.Top == 0));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pushes an entry into the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackFnPush(p *Parse_StackFn_t, bFunc any) {\n    if p.Top \u003e= p.Size {\n        fmt.Printf(\"Parse_StackFnPush(): Stack size is too small!\\n\");\n        return;\n    }\n    p.pData[ p.Top++ ] = bFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pops an entry out of the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackFnPop(p *Parse_StackFn_t) any {\n    if p.Top == 0 {\n        fmt.Printf(\"Parse_StackFnPush(): Trying to extract data from the empty stack!\\n\");\n        return nil;\n    }\n    return p.pData[ --p.Top ];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackFnFree(p *Parse_StackFn_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackOpStart(nDepth int32) *Parse_StackOp_t {\n    var p *Parse_StackOp_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Parse_StackOp_t *) malloc(sizeof(Parse_StackOp_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Parse_StackOp_t) );\n    // inlining of macro ABC_ALLOC\n    p.pData = ((int *) malloc(sizeof(int) * (size_t)(nDepth)));\n    p.Size = nDepth;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the stack is empty.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackOpIsEmpty(p *Parse_StackOp_t) int32 {\n    return int32((p.Top == 0));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pushes an entry into the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackOpPush(p *Parse_StackOp_t, Oper int32) {\n    if p.Top \u003e= p.Size {\n        fmt.Printf(\"Parse_StackOpPush(): Stack size is too small!\\n\");\n        return;\n    }\n    p.pData[ p.Top++ ] = Oper;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pops an entry out of the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackOpPop(p *Parse_StackOp_t) int32 {\n    if p.Top == 0 {\n        fmt.Printf(\"Parse_StackOpPush(): Trying to extract data from the empty stack!\\n\");\n        return -1;\n    }\n    return p.pData[ --p.Top ];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Parse_StackOpFree(p *Parse_StackOp_t) {\n    // inlining of macro ABC_FREE\n    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

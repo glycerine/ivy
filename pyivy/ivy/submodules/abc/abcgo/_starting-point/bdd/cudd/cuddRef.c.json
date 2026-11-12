@@ -1,0 +1,417 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c",
+  "SHA256": "e3c46661f5c12b117412d8e72b07b994617db0e4caf2bd028a454b99d73ea2fc",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 94,
+        "Column": 1,
+        "ByteOffset": 3761
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 171,
+        "Column": 1,
+        "ByteOffset": 6002
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 178,
+        "Column": 1,
+        "ByteOffset": 6133
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 234,
+        "Column": 1,
+        "ByteOffset": 7685
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 241,
+        "Column": 1,
+        "ByteOffset": 7816
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 289,
+        "Column": 1,
+        "ByteOffset": 9161
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 293,
+        "Column": 1,
+        "ByteOffset": 9210
+      },
+      "Directive": "#ifdef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 297,
+        "Column": 1,
+        "ByteOffset": 9293
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 308,
+        "Column": 1,
+        "ByteOffset": 9513
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 314,
+        "Column": 1,
+        "ByteOffset": 9634
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 320,
+        "Column": 1,
+        "ByteOffset": 9780
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 332,
+        "Column": 1,
+        "ByteOffset": 10148
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 339,
+        "Column": 1,
+        "ByteOffset": 10317
+      },
+      "Directive": "#if 0"
+    },
+    {
+      "Location": {
+        "Line": 397,
+        "Column": 1,
+        "ByteOffset": 12005
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 405,
+        "Column": 1,
+        "ByteOffset": 12146
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 408,
+        "Column": 1,
+        "ByteOffset": 12204
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 479,
+        "Column": 1,
+        "ByteOffset": 14261
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 596,
+        "Column": 1,
+        "ByteOffset": 17867
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 649,
+        "Column": 1,
+        "ByteOffset": 19006
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 659,
+        "Column": 1,
+        "ByteOffset": 19180
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 691,
+        "Column": 1,
+        "ByteOffset": 19891
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 729,
+        "Column": 1,
+        "ByteOffset": 20939
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 737,
+        "Column": 1,
+        "ByteOffset": 21165
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 766,
+        "Column": 1,
+        "ByteOffset": 21850
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 798,
+        "Column": 1,
+        "ByteOffset": 22483
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_Ref",
+      "Start": 5088,
+      "End": 5172,
+      "BodyStart": 5117,
+      "Original": "void\nCudd_Ref(\n  DdNode * n)\n{\n\n    n = Cudd_Regular(n);\n\n    cuddSatInc(n-\u003eref);\n\n}",
+      "Draft": "func Cudd_Ref(n *DdNode) {\n\n    // inlining of macro Cudd_Regular\n    n = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    cuddSatInc(n.ref);\n\n}"
+    },
+    {
+      "Name": "Cudd_RecursiveDeref",
+      "Start": 5688,
+      "End": 6625,
+      "BodyStart": 5749,
+      "Original": "void\nCudd_RecursiveDeref(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack = table-\u003estack;\n    int SP = 1;\n\n    unsigned int live = table-\u003ekeys - table-\u003edead;\n    if (live \u003e table-\u003epeakLiveNodes) {\n        table-\u003epeakLiveNodes = live;\n    }\n\n    N = Cudd_Regular(n);\n\n    do {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if (N-\u003eref == 1) {\n            N-\u003eref = 0;\n            table-\u003edead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            if (cuddIsConstant(N)) {\n                table-\u003econstants.dead++;\n                N = stack[--SP];\n            } else {\n                ord = table-\u003eperm[N-\u003eindex];\n                stack[SP++] = Cudd_Regular(cuddE(N));\n                table-\u003esubtables[ord].dead++;\n                N = cuddT(N);\n            }\n        } else {\n            cuddSatDec(N-\u003eref);\n            N = stack[--SP];\n        }\n    } while (SP != 0);\n\n}",
+      "Draft": "func Cudd_RecursiveDeref(table *DdManager, n *DdNode) {\n    var N *DdNode;\n    var ord int32;\n    var stack *DdNodePtr  = table.stack;\n    var SP int32  = 1;\n\n    unsigned int live = table.keys - table.dead;\n    if live \u003e table.peakLiveNodes {\n        table.peakLiveNodes = live;\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    for {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if N.ref == 1 {\n            N.ref = 0;\n            table.dead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            // inlining of macro cuddIsConstant\n            if (N).index == CUDD_CONST_INDEX {\n                table.constants.dead++;\n                N = stack[--SP];\n            } else {\n                ord = table.perm[N.index];\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                stack[SP++] = ((DdNode *)((ptruint)(((N).type.kids.E)) \u0026 ~01));\n                table.subtables[ord].dead++;\n                // inlining of macro cuddT\n                N = ((N).type.kids.T);\n            }\n        } else {\n            cuddSatDec(N.ref);\n            N = stack[--SP];\n        }\n    \nif !(SP != 0) { break }\n} \n\n}"
+    },
+    {
+      "Name": "Cudd_IterDerefBdd",
+      "Start": 7373,
+      "End": 8146,
+      "BodyStart": 7432,
+      "Original": "void\nCudd_IterDerefBdd(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack = table-\u003estack;\n    int SP = 1;\n\n    unsigned int live = table-\u003ekeys - table-\u003edead;\n    if (live \u003e table-\u003epeakLiveNodes) {\n        table-\u003epeakLiveNodes = live;\n    }\n\n    N = Cudd_Regular(n);\n\n    do {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if (N-\u003eref == 1) {\n            N-\u003eref = 0;\n            table-\u003edead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            ord = table-\u003eperm[N-\u003eindex];\n            stack[SP++] = Cudd_Regular(cuddE(N));\n            table-\u003esubtables[ord].dead++;\n            N = cuddT(N);\n        } else {\n            cuddSatDec(N-\u003eref);\n            N = stack[--SP];\n        }\n    } while (SP != 0);\n\n}",
+      "Draft": "func Cudd_IterDerefBdd(table *DdManager, n *DdNode) {\n    var N *DdNode;\n    var ord int32;\n    var stack *DdNodePtr  = table.stack;\n    var SP int32  = 1;\n\n    unsigned int live = table.keys - table.dead;\n    if live \u003e table.peakLiveNodes {\n        table.peakLiveNodes = live;\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    for {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if N.ref == 1 {\n            N.ref = 0;\n            table.dead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            ord = table.perm[N.index];\n            // inlining of macro Cudd_Regular\n            // inlining of macro cuddE\n            stack[SP++] = ((DdNode *)((ptruint)(((N).type.kids.E)) \u0026 ~01));\n            table.subtables[ord].dead++;\n            // inlining of macro cuddT\n            N = ((N).type.kids.T);\n        } else {\n            cuddSatDec(N.ref);\n            N = stack[--SP];\n        }\n    \nif !(SP != 0) { break }\n} \n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::mechanical::do::6093",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5997,
+      "End": 5999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::mechanical::do::8113",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7680,
+      "End": 7682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::pointer-cast::5143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5128,
+      "End": 5128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::pointer-cast::6055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5975,
+      "End": 5975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::pointer-cast::6648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6398,
+      "End": 6398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::pointer-cast::8075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7658,
+      "End": 7658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::pointer-cast::8463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7941,
+      "End": 7941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::Cudd_Ref",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_Ref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5088,
+      "End": 5172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::Cudd_RecursiveDeref",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_RecursiveDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5688,
+      "End": 6625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::Cudd_IterDerefBdd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_IterDerefBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7373,
+      "End": 8146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3761,
+      "End": 3869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6002,
+      "End": 6053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6133,
+      "End": 6190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7685,
+      "End": 7736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7816,
+      "End": 7873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8146,
+      "End": 22940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::macro-inline::5150",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5150,
+      "End": 5168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::macro-inline::6541",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6541,
+      "End": 6559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddRef.c::macro-inline::8062",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8062,
+      "End": 8080
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddRef.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions that manipulate the reference counts.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_Ref()\n                    \u003cli\u003e Cudd_RecursiveDeref()\n                    \u003cli\u003e Cudd_IterDerefBdd()\n                    \u003cli\u003e Cudd_DelayedDerefBdd()\n                    \u003cli\u003e Cudd_RecursiveDerefZdd()\n                    \u003cli\u003e Cudd_Deref()\n                    \u003cli\u003e Cudd_CheckZeroRef()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddReclaim()\n                    \u003cli\u003e cuddReclaimZdd()\n                    \u003cli\u003e cuddClearDeathRow()\n                    \u003cli\u003e cuddShrinkDeathRow()\n                    \u003cli\u003e cuddIsInDeathRow()\n                    \u003cli\u003e cuddTimesInDeathRow()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddRef.c,v 1.28 2004/08/13 18:04:50 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Increases the reference count of a node, if it is not\n  saturated.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_RecursiveDeref Cudd_Deref]\n\n******************************************************************************/\nfunc Cudd_Ref(n *DdNode) {\n\n    // inlining of macro Cudd_Regular\n    n = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    cuddSatInc(n.ref);\n\n} /* end of Cudd_Ref */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Decreases the reference count of node n.]\n\n  Description [Decreases the reference count of node n. If n dies,\n  recursively decreases the reference counts of its children.  It is\n  used to dispose of a DD that is no longer needed.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Deref Cudd_Ref Cudd_RecursiveDerefZdd]\n\n******************************************************************************/\nfunc Cudd_RecursiveDeref(table *DdManager, n *DdNode) {\n    var N *DdNode;\n    var ord int32;\n    var stack *DdNodePtr  = table.stack;\n    var SP int32  = 1;\n\n    unsigned int live = table.keys - table.dead;\n    if live \u003e table.peakLiveNodes {\n        table.peakLiveNodes = live;\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    for {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if N.ref == 1 {\n            N.ref = 0;\n            table.dead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            // inlining of macro cuddIsConstant\n            if (N).index == CUDD_CONST_INDEX {\n                table.constants.dead++;\n                N = stack[--SP];\n            } else {\n                ord = table.perm[N.index];\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                stack[SP++] = ((DdNode *)((ptruint)(((N).type.kids.E)) \u0026 ~01));\n                table.subtables[ord].dead++;\n                // inlining of macro cuddT\n                N = ((N).type.kids.T);\n            }\n        } else {\n            cuddSatDec(N.ref);\n            N = stack[--SP];\n        }\n    \nif !(SP != 0) { break }\n} \n\n} /* end of Cudd_RecursiveDeref */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Decreases the reference count of BDD node n.]\n\n  Description [Decreases the reference count of node n. If n dies,\n  recursively decreases the reference counts of its children.  It is\n  used to dispose of a BDD that is no longer needed. It is more\n  efficient than Cudd_RecursiveDeref, but it cannot be used on\n  ADDs. The greater efficiency comes from being able to assume that no\n  constant node will ever die as a result of a call to this\n  procedure.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_RecursiveDeref Cudd_DelayedDerefBdd]\n\n******************************************************************************/\nfunc Cudd_IterDerefBdd(table *DdManager, n *DdNode) {\n    var N *DdNode;\n    var ord int32;\n    var stack *DdNodePtr  = table.stack;\n    var SP int32  = 1;\n\n    unsigned int live = table.keys - table.dead;\n    if live \u003e table.peakLiveNodes {\n        table.peakLiveNodes = live;\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(n) \u0026 ~01));\n\n    for {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        if N.ref == 1 {\n            N.ref = 0;\n            table.dead++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n            ord = table.perm[N.index];\n            // inlining of macro Cudd_Regular\n            // inlining of macro cuddE\n            stack[SP++] = ((DdNode *)((ptruint)(((N).type.kids.E)) \u0026 ~01));\n            table.subtables[ord].dead++;\n            // inlining of macro cuddT\n            N = ((N).type.kids.T);\n        } else {\n            cuddSatDec(N.ref);\n            N = stack[--SP];\n        }\n    \nif !(SP != 0) { break }\n} \n\n} /* end of Cudd_IterDerefBdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Decreases the reference count of BDD node n.]\n\n  Description [Enqueues node n for later dereferencing. If the queue\n  is full decreases the reference count of the oldest node N to make\n  room for n. If N dies, recursively decreases the reference counts of\n  its children.  It is used to dispose of a BDD that is currently not\n  needed, but may be useful again in the near future. The dereferencing\n  proper is done as in Cudd_IterDerefBdd.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_RecursiveDeref Cudd_IterDerefBdd]\n\n******************************************************************************/\nvoid\nCudd_DelayedDerefBdd(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack;\n    int SP;\n\n    unsigned int live = table-\u003ekeys - table-\u003edead;\n    if (live \u003e table-\u003epeakLiveNodes) {\n        table-\u003epeakLiveNodes = live;\n    }\n\n    n = Cudd_Regular(n);\n#ifdef DD_DEBUG\n    assert(n-\u003eref != 0);\n#endif\n\n#ifdef DD_NO_DEATH_ROW\n    N = n;\n#else\n    if (cuddIsConstant(n) || n-\u003eref \u003e 1) {\n#ifdef DD_DEBUG\n        assert(n-\u003eref != 1 \u0026\u0026 (!cuddIsConstant(n) || n == DD_ONE(table)));\n#endif\n        cuddSatDec(n-\u003eref);\n        return;\n    }\n\n    N = table-\u003edeathRow[table-\u003enextDead];\n\n    if (N != NULL) {\n#endif\n#ifdef DD_DEBUG\n        assert(!Cudd_IsComplement(N));\n#endif\n        stack = table-\u003estack;\n        SP = 1;\n        do {\n#ifdef DD_DEBUG\n            assert(N-\u003eref != 0);\n#endif\n            if (N-\u003eref == 1) {\n                N-\u003eref = 0;\n                table-\u003edead++;\n#ifdef DD_STATS\n                table-\u003enodesDropped++;\n#endif\n                ord = table-\u003eperm[N-\u003eindex];\n                stack[SP++] = Cudd_Regular(cuddE(N));\n                table-\u003esubtables[ord].dead++;\n                N = cuddT(N);\n            } else {\n                cuddSatDec(N-\u003eref);\n                N = stack[--SP];\n            }\n        } while (SP != 0);\n#ifndef DD_NO_DEATH_ROW\n    }\n    table-\u003edeathRow[table-\u003enextDead] = n;\n\n    /* Udate insertion point. */\n    table-\u003enextDead++;\n    table-\u003enextDead \u0026= table-\u003edeadMask;\n#if 0\n    if (table-\u003enextDead == table-\u003edeathRowDepth) {\n        if (table-\u003edeathRowDepth \u003c table-\u003elooseUpTo / 2) {\n            extern void (*MMoutOfMemory)(long);\n            void (*saveHandler)(long) = MMoutOfMemory;\n            DdNodePtr *newRow;\n            MMoutOfMemory = Cudd_OutOfMem;\n            newRow = ABC_REALLOC(DdNodePtr,table-\u003edeathRow,2*table-\u003edeathRowDepth);\n            MMoutOfMemory = saveHandler;\n            if (newRow == NULL) {\n                table-\u003enextDead = 0;\n            } else {\n                int i;\n                table-\u003ememused += table-\u003edeathRowDepth;\n                i = table-\u003edeathRowDepth;\n                table-\u003edeathRowDepth \u003c\u003c= 1;\n                for (; i \u003c table-\u003edeathRowDepth; i++) {\n                    newRow[i] = NULL;\n                }\n                table-\u003edeadMask = table-\u003edeathRowDepth - 1;\n                table-\u003edeathRow = newRow;\n            }\n        } else {\n            table-\u003enextDead = 0;\n        }\n    }\n#endif\n#endif\n\n} /* end of Cudd_DelayedDerefBdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Decreases the reference count of ZDD node n.]\n\n  Description [Decreases the reference count of ZDD node n. If n dies,\n  recursively decreases the reference counts of its children.  It is\n  used to dispose of a ZDD that is no longer needed.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Deref Cudd_Ref Cudd_RecursiveDeref]\n\n******************************************************************************/\nvoid\nCudd_RecursiveDerefZdd(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack = table-\u003estack;\n    int SP = 1;\n\n    N = n;\n\n    do {\n#ifdef DD_DEBUG\n        assert(N-\u003eref != 0);\n#endif\n\n        cuddSatDec(N-\u003eref);\n    \n        if (N-\u003eref == 0) {\n            table-\u003edeadZ++;\n#ifdef DD_STATS\n            table-\u003enodesDropped++;\n#endif\n#ifdef DD_DEBUG\n            assert(!cuddIsConstant(N));\n#endif\n            ord = table-\u003epermZ[N-\u003eindex];\n            stack[SP++] = cuddE(N);\n            table-\u003esubtableZ[ord].dead++;\n            N = cuddT(N);\n        } else {\n            N = stack[--SP];\n        }\n    } while (SP != 0);\n\n} /* end of Cudd_RecursiveDerefZdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Decreases the reference count of node.]\n\n  Description [Decreases the reference count of node. It is primarily\n  used in recursive procedures to decrease the ref count of a result\n  node before returning it. This accomplishes the goal of removing the\n  protection applied by a previous Cudd_Ref.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_RecursiveDeref Cudd_RecursiveDerefZdd Cudd_Ref]\n\n******************************************************************************/\nvoid\nCudd_Deref(\n  DdNode * node)\n{\n    node = Cudd_Regular(node);\n    cuddSatDec(node-\u003eref);\n\n} /* end of Cudd_Deref */\n\n\n/**Function********************************************************************\n\n  Synopsis [Checks the unique table for nodes with non-zero reference\n  counts.]\n\n  Description [Checks the unique table for nodes with non-zero\n  reference counts. It is normally called before Cudd_Quit to make sure\n  that there are no memory leaks due to missing Cudd_RecursiveDeref's.\n  Takes into account that reference counts may saturate and that the\n  basic constants and the projection functions are referenced by the\n  manager.  Returns the number of nodes with non-zero reference count.\n  (Except for the cases mentioned above.)]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\nCudd_CheckZeroRef(\n  DdManager * manager)\n{\n    int size;\n    int i, j;\n    int remain; /* the expected number of remaining references to one */\n    DdNodePtr *nodelist;\n    DdNode *node;\n    DdNode *sentinel = \u0026(manager-\u003esentinel);\n    DdSubtable *subtable;\n    int count = 0;\n    int index;\n\n#ifndef DD_NO_DEATH_ROW\n    cuddClearDeathRow(manager);\n#endif\n\n    /* First look at the BDD/ADD subtables. */\n    remain = 1; /* reference from the manager */\n    size = manager-\u003esize;\n    remain += 2 * size; /* reference from the BDD projection functions */\n\n    for (i = 0; i \u003c size; i++) {\n        subtable = \u0026(manager-\u003esubtables[i]);\n        nodelist = subtable-\u003enodelist;\n        for (j = 0; (unsigned) j \u003c subtable-\u003eslots; j++) {\n            node = nodelist[j];\n            while (node != sentinel) {\n                if (node-\u003eref != 0 \u0026\u0026 node-\u003eref != DD_MAXREF) {\n                    index = (int) node-\u003eindex;\n                    if (node != manager-\u003evars[index]) {\n                        count++;\n                    } else {\n                        if (node-\u003eref != 1) {\n                            count++;\n                        }\n                    }\n                }\n                node = node-\u003enext;\n            }\n        }\n    }\n\n    /* Then look at the ZDD subtables. */\n    size = manager-\u003esizeZ;\n    if (size) /* references from ZDD universe */\n        remain += 2;\n\n    for (i = 0; i \u003c size; i++) {\n        subtable = \u0026(manager-\u003esubtableZ[i]);\n        nodelist = subtable-\u003enodelist;\n        for (j = 0; (unsigned) j \u003c subtable-\u003eslots; j++) {\n            node = nodelist[j];\n            while (node != NULL) {\n                if (node-\u003eref != 0 \u0026\u0026 node-\u003eref != DD_MAXREF) {\n                    index = (int) node-\u003eindex;\n                    if (node == manager-\u003euniv[manager-\u003epermZ[index]]) {\n                        if (node-\u003eref \u003e 2) {\n                            count++;\n                        }\n                    } else {\n                        count++;\n                    }\n                }\n                node = node-\u003enext;\n            }\n        }\n    }\n\n    /* Now examine the constant table. Plusinfinity, minusinfinity, and\n    ** zero are referenced by the manager. One is referenced by the\n    ** manager, by the ZDD universe, and by all projection functions.\n    ** All other nodes should have no references.\n    */\n    nodelist = manager-\u003econstants.nodelist;\n    for (j = 0; (unsigned) j \u003c manager-\u003econstants.slots; j++) {\n        node = nodelist[j];\n        while (node != NULL) {\n            if (node-\u003eref != 0 \u0026\u0026 node-\u003eref != DD_MAXREF) {\n                if (node == manager-\u003eone) {\n                    if ((int) node-\u003eref != remain) {\n                        count++;\n                    }\n                } else if (node == manager-\u003ezero ||\n                node == manager-\u003eplusinfinity ||\n                node == manager-\u003eminusinfinity) {\n                    if (node-\u003eref != 1) {\n                        count++;\n                    }\n                } else {\n                    count++;\n                }\n            }\n            node = node-\u003enext;\n        }\n    }\n    return(count);\n\n} /* end of Cudd_CheckZeroRef */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Brings children of a dead node back.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [cuddReclaimZdd]\n\n******************************************************************************/\nvoid\ncuddReclaim(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack = table-\u003estack;\n    int SP = 1;\n    double initialDead = table-\u003edead;\n\n    N = Cudd_Regular(n);\n\n#ifdef DD_DEBUG\n    assert(N-\u003eref == 0);\n#endif\n\n    do {\n        if (N-\u003eref == 0) {\n            N-\u003eref = 1;\n            table-\u003edead--;\n            if (cuddIsConstant(N)) {\n                table-\u003econstants.dead--;\n                N = stack[--SP];\n            } else {\n                ord = table-\u003eperm[N-\u003eindex];\n                stack[SP++] = Cudd_Regular(cuddE(N));\n                table-\u003esubtables[ord].dead--;\n                N = cuddT(N);\n            }\n        } else {\n            cuddSatInc(N-\u003eref);\n            N = stack[--SP];\n        }\n    } while (SP != 0);\n\n    N = Cudd_Regular(n);\n    cuddSatDec(N-\u003eref);\n    table-\u003ereclaimed += initialDead - table-\u003edead;\n\n} /* end of cuddReclaim */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Brings children of a dead ZDD node back.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [cuddReclaim]\n\n******************************************************************************/\nvoid\ncuddReclaimZdd(\n  DdManager * table,\n  DdNode * n)\n{\n    DdNode *N;\n    int ord;\n    DdNodePtr *stack = table-\u003estack;\n    int SP = 1;\n\n    N = n;\n\n#ifdef DD_DEBUG\n    assert(N-\u003eref == 0);\n#endif\n\n    do {\n        cuddSatInc(N-\u003eref);\n\n        if (N-\u003eref == 1) {\n            table-\u003edeadZ--;\n            table-\u003ereclaimed++;\n#ifdef DD_DEBUG\n            assert(!cuddIsConstant(N));\n#endif\n            ord = table-\u003epermZ[N-\u003eindex];\n            stack[SP++] = cuddE(N);\n            table-\u003esubtableZ[ord].dead--;\n            N = cuddT(N);\n        } else {\n            N = stack[--SP];\n        }\n    } while (SP != 0);\n\n    cuddSatDec(n-\u003eref);\n\n} /* end of cuddReclaimZdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Shrinks the death row.]\n\n  Description [Shrinks the death row by a factor of four.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddClearDeathRow]\n\n******************************************************************************/\nvoid\ncuddShrinkDeathRow(\n  DdManager *table)\n{\n#ifndef DD_NO_DEATH_ROW\n    int i;\n\n    if (table-\u003edeathRowDepth \u003e 3) {\n        for (i = table-\u003edeathRowDepth/4; i \u003c table-\u003edeathRowDepth; i++) {\n            if (table-\u003edeathRow[i] == NULL) break;\n            Cudd_IterDerefBdd(table,table-\u003edeathRow[i]);\n            table-\u003edeathRow[i] = NULL;\n        }\n        table-\u003edeathRowDepth /= 4;\n        table-\u003edeadMask = table-\u003edeathRowDepth - 1;\n        if ((unsigned) table-\u003enextDead \u003e table-\u003edeadMask) {\n            table-\u003enextDead = 0;\n        }\n        table-\u003edeathRow = ABC_REALLOC(DdNodePtr, table-\u003edeathRow,\n                                   table-\u003edeathRowDepth);\n    }\n#endif\n\n} /* end of cuddShrinkDeathRow */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Clears the death row.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DelayedDerefBdd Cudd_IterDerefBdd Cudd_CheckZeroRef\n  cuddGarbageCollect]\n\n******************************************************************************/\nvoid\ncuddClearDeathRow(\n  DdManager *table)\n{\n#ifndef DD_NO_DEATH_ROW\n    int i;\n\n    for (i = 0; i \u003c table-\u003edeathRowDepth; i++) {\n        if (table-\u003edeathRow[i] == NULL) break;\n        Cudd_IterDerefBdd(table,table-\u003edeathRow[i]);\n        table-\u003edeathRow[i] = NULL;\n    }\n#ifdef DD_DEBUG\n    for (; i \u003c table-\u003edeathRowDepth; i++) {\n        assert(table-\u003edeathRow[i] == NULL);\n    }\n#endif\n    table-\u003enextDead = 0;\n#endif\n\n} /* end of cuddClearDeathRow */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether a node is in the death row.]\n\n  Description [Checks whether a node is in the death row. Returns the\n  position of the first occurrence if the node is present; -1\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DelayedDerefBdd cuddClearDeathRow]\n\n******************************************************************************/\nint\ncuddIsInDeathRow(\n  DdManager *dd,\n  DdNode *f)\n{\n#ifndef DD_NO_DEATH_ROW\n    int i;\n\n    for (i = 0; i \u003c dd-\u003edeathRowDepth; i++) {\n        if (f == dd-\u003edeathRow[i]) {\n            return(i);\n        }\n    }\n#endif\n\n    return(-1);\n\n} /* end of cuddIsInDeathRow */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts how many times a node is in the death row.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DelayedDerefBdd cuddClearDeathRow cuddIsInDeathRow]\n\n******************************************************************************/\nint\ncuddTimesInDeathRow(\n  DdManager *dd,\n  DdNode *f)\n{\n    int count = 0;\n#ifndef DD_NO_DEATH_ROW\n    int i;\n\n    for (i = 0; i \u003c dd-\u003edeathRowDepth; i++) {\n        count += f == dd-\u003edeathRow[i];\n    }\n#endif\n\n    return(count);\n\n} /* end of cuddTimesInDeathRow */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\nABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1254 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c",
+  "SHA256": "3a4c325ff4da9596849359c146873dd3736c2223909f3a8bcf386c63a12d3602",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 3206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj %6d : Type = %6s  NameId = %5d  InstId = %5d  Fanins = %d : \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 3743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d \", iFanin );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(%d : %d %d) \", pLink[0], "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 3983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 4270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total number of objects = %d.  Objects with non-trivial delay = %d.\\n\", Wln_NtkObjNum(p.pNtk), nCount );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 4468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The following %d objects have non-trivial delays:\\n\", nLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p.pNtk), p.pNtk.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 5131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 6106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d flops and %d flop classes.\\n\", Wln_NtkFfNum(pNtk), nClasses );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 17,
+        "ByteOffset": 6788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Objects without fanout:\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 8343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 211,
+        "Column": 72,
+        "ByteOffset": 8910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 212,
+        "Column": 73,
+        "ByteOffset": 9047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFanouts.pArray) ? (free((char *) (p.vFanouts.pArray)), (p.vFanouts.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 213,
+        "Column": 75,
+        "ByteOffset": 9188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vEdgeLinks.pArray) ? (free((char *) (p.vEdgeLinks.pArray)), (p.vEdgeLinks.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 75,
+        "ByteOffset": 9333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFfClasses.pArray) ? (free((char *) (p.vFfClasses.pArray)), (p.vFfClasses.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 215,
+        "Column": 76,
+        "ByteOffset": 9479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vNodeDelays.pArray) ? (free((char *) (p.vNodeDelays.pArray)), (p.vNodeDelays.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 216,
+        "Column": 76,
+        "ByteOffset": 9627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vPathDelays.pArray) ? (free((char *) (p.vPathDelays.pArray)), (p.vPathDelays.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 217,
+        "Column": 73,
+        "ByteOffset": 9772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vSources.pArray) ? (free((char *) (p.vSources.pArray)), (p.vSources.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 218,
+        "Column": 71,
+        "ByteOffset": 9909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vSinks.pArray) ? (free((char *) (p.vSinks.pArray)), (p.vSinks.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 219,
+        "Column": 71,
+        "ByteOffset": 10042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFront.pArray) ? (free((char *) (p.vFront.pArray)), (p.vFront.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 220,
+        "Column": 71,
+        "ByteOffset": 10175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vMoves.pArray) ? (free((char *) (p.vMoves.pArray)), (p.vMoves.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 221,
+        "Column": 57,
+        "ByteOffset": 10294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 15505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pHead[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 16356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 9,
+        "ByteOffset": 17600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 9,
+        "ByteOffset": 19047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLink[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 19202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 9,
+        "ByteOffset": 19842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLink[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 473,
+        "Column": 9,
+        "ByteOffset": 20000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 20336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 21063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Wln_ObjIsFf( p.pNtk, iFlop ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 9,
+        "ByteOffset": 22575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Move %4d : Recording initial state     (delay = %6d)\\n\", nMoves, Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 22731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Move %4d : Recording %s retiming (delay = %6d) :\", nMoves, fForward ? \"forward \" : \"backward\", Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 13,
+        "ByteOffset": 23365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d (NameID = %d)  \", fForward ? -iObj : iObj, fForward ? -NameId : NameId ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 9,
+        "ByteOffset": 23520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %3d retimed objects\", Vec_IntSize(vSet) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 23579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 9,
+        "ByteOffset": 24048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Using delays given by the user in the input file.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 17,
+        "ByteOffset": 24351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Warning: Object %d of type %s has zero delay. Retiming will not work correctly.\\n\", iObj, Abc_OperName(Wln_ObjType(pNtk, iObj)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 24529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The design has no delay information.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 9,
+        "ByteOffset": 25374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Assuming default delays: 10 units for most nodes and 1 unit for bit-slice, concat, and buffers driving COs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 13,
+        "ByteOffset": 26559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot retime forward and backward.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 13,
+        "ByteOffset": 26704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot reduce delay by retiming.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 13,
+        "ByteOffset": 27664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 13,
+        "ByteOffset": 27809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Sinks: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 13,
+        "ByteOffset": 27881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Sources: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 9,
+        "ByteOffset": 28594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nThe resulting moves recorded in terms of name IDs of the NDR nodes:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 670,
+        "Column": 9,
+        "ByteOffset": 28737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Retiming instruction contains %d moves and %d total retimed objects.\\n\", nMoves, Vec_IntSize(vMoves)-2*nMoves-2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 671,
+        "Column": 9,
+        "ByteOffset": 28869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Initial delay = %d.  The best delay achieved = %d.  Improvement = %d. (%6.2f %%)\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wln_RetFanins",
+      "Start": 1629,
+      "End": 1762,
+      "BodyStart": 1690,
+      "Original": "static inline int *   Wln_RetFanins( Wln_Ret_t * p, int i )  { return Vec_IntEntryP( \u0026p-\u003evFanins,  Vec_IntEntry(\u0026p-\u003evFanins, i) );  }",
+      "Draft": "func Wln_RetFanins(p *Wln_Ret_t, i int32) *int32 { return Vec_IntEntryP( \u0026p.vFanins,  Vec_IntEntry(\u0026p.vFanins, i) );  }"
+    },
+    {
+      "Name": "Wln_RetFanouts",
+      "Start": 1763,
+      "End": 1896,
+      "BodyStart": 1824,
+      "Original": "static inline int *   Wln_RetFanouts( Wln_Ret_t * p, int i ) { return Vec_IntEntryP( \u0026p-\u003evFanouts, Vec_IntEntry(\u0026p-\u003evFanouts, i) ); }",
+      "Draft": "func Wln_RetFanouts(p *Wln_Ret_t, i int32) *int32 { return Vec_IntEntryP( \u0026p.vFanouts, Vec_IntEntry(\u0026p.vFanouts, i) ); }"
+    },
+    {
+      "Name": "Wln_RetPrintObj",
+      "Start": 3015,
+      "End": 3657,
+      "BodyStart": 3063,
+      "Original": "void Wln_RetPrintObj( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, Type = Wln_ObjType(p-\u003epNtk, iObj), * pLink;\n    printf( \"Obj %6d : Type = %6s  NameId = %5d  InstId = %5d  Fanins = %d : \", \n        iObj, Abc_OperName(Type), Wln_ObjNameId(p-\u003epNtk, iObj), Wln_ObjInstId(p-\u003epNtk, iObj), Wln_ObjFaninNum(p-\u003epNtk, iObj) );\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n    {\n        printf( \"%5d \", iFanin );\n        if ( !pLink[0] )\n            continue;\n        printf( \"(%d : %d %d) \", pLink[0], \n            Vec_IntEntry(\u0026p-\u003evEdgeLinks, pLink[0]), \n            Vec_IntEntry(\u0026p-\u003evEdgeLinks, pLink[0]+1) );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_RetPrintObj(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var Type int32 = Wln_ObjType(p.pNtk, iObj);\n    var pLink *int32;\n    fmt.Printf(\"Obj %6d : Type = %6s  NameId = %5d  InstId = %5d  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjNameId(p.pNtk, iObj), Wln_ObjInstId(p.pNtk, iObj), Wln_ObjFaninNum(p.pNtk, iObj));\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        fmt.Printf(\"%5d \", iFanin);\n        if !pLink[0] {\n            continue; }\n        fmt.Printf(\"(%d : %d %d) \", pLink[0], Vec_IntEntry(\u0026p.vEdgeLinks, pLink[0]), Vec_IntEntry(\u0026p.vEdgeLinks, pLink[0]+1));\n    }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Wln_RetPrint",
+      "Start": 3658,
+      "End": 4568,
+      "BodyStart": 3707,
+      "Original": "void Wln_RetPrint( Wln_Ret_t * p, int fVerbose )\n{\n    int iObj, nCount = 0;\n    Wln_NtkForEachObj( p-\u003epNtk, iObj )\n        if ( Wln_ObjInstId(p-\u003epNtk, iObj) \u003e 1 )\n            nCount++;\n    printf( \"Total number of objects = %d.  Objects with non-trivial delay = %d.\\n\", Wln_NtkObjNum(p-\u003epNtk), nCount );\n    if ( !fVerbose )\n    {\n        int nPrints = 0, nLimit = 5;\n        printf( \"The following %d objects have non-trivial delays:\\n\", nLimit );\n        Wln_NtkForEachObj( p-\u003epNtk, iObj )\n        {\n            if ( Wln_ObjInstId(p-\u003epNtk, iObj) \u003c= 1 )\n                continue;\n            Wln_RetPrintObj( p, iObj );\n            if ( ++nPrints == nLimit )\n                break;\n        }\n        return;\n    }\n    printf( \"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p-\u003epNtk), p-\u003epNtk-\u003epName );\n    Wln_NtkForEachObj( p-\u003epNtk, iObj )\n        Wln_RetPrintObj( p, iObj );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_RetPrint(p *Wln_Ret_t, fVerbose int32) {\n    var iObj, nCount int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        if Wln_ObjInstId(p.pNtk, iObj) \u003e 1 {\n            nCount++; }\n    }\n    fmt.Printf(\"Total number of objects = %d.  Objects with non-trivial delay = %d.\\n\", Wln_NtkObjNum(p.pNtk), nCount);\n    if !(fVerbose != 0) {\n        var nPrints int32;\n        var nLimit int32 = 5;\n        fmt.Printf(\"The following %d objects have non-trivial delays:\\n\", nLimit);\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n            if Wln_ObjInstId(p.pNtk, iObj) \u003c= 1 {\n                continue; }\n            Wln_RetPrintObj( p, iObj );\n            if nPrints++; nPrints == nLimit {\n                break; }\n        }\n        return;\n    }\n    fmt.Printf(\"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p.pNtk), p.pNtk.pName);\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        Wln_RetPrintObj( p, iObj );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Wln_RetComputeFfClasses",
+      "Start": 4821,
+      "End": 5510,
+      "BodyStart": 4891,
+      "Original": "int Wln_RetComputeFfClasses( Wln_Ntk_t * pNtk, Vec_Int_t * vClasses )\n{\n    int i, k, iObj, nClasses;\n    Hsh_VecMan_t * p = Hsh_VecManStart( 10 );\n    Vec_Int_t * vFlop = Vec_IntAlloc( 6 ); \n    Vec_IntFill( vClasses, Wln_NtkObjNum(pNtk), -1 );\n    Wln_NtkForEachFf( pNtk, iObj, i )\n    {\n        Vec_IntClear( vFlop );\n        for ( k = 1; k \u003c= 6; k++ )\n            Vec_IntPush( vFlop, Wln_ObjFanin(pNtk, iObj, k) );\n        Vec_IntWriteEntry( vClasses, iObj, Hsh_VecManAdd(p, vFlop) );\n    }\n    nClasses = Hsh_VecSize( p );\n    Hsh_VecManStop( p );\n    Vec_IntFree( vFlop );\n    printf( \"Detected %d flops and %d flop classes.\\n\", Wln_NtkFfNum(pNtk), nClasses );\n    return nClasses;\n}",
+      "Draft": "func Wln_RetComputeFfClasses(pNtk *Wln_Ntk_t, vClasses *Vec_Int_t) int32 {\n    var i, k, iObj, nClasses int32;\n    var p *Hsh_VecMan_t  = Hsh_VecManStart( 10 );\n    var vFlop *Vec_Int_t  = Vec_IntAlloc( 6 ); \n    Vec_IntFill( vClasses, Wln_NtkObjNum(pNtk), -1 );\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(pNtk)) \u0026\u0026 (((iObj) = Wln_NtkFf(pNtk, i)), 1); i++  {\n        Vec_IntClear( vFlop );\n        for  k = 1; k \u003c= 6; k++  {\n            Vec_IntPush( vFlop, Wln_ObjFanin(pNtk, iObj, k) );\n        }\n        Vec_IntWriteEntry( vClasses, iObj, Hsh_VecManAdd(p, vFlop) );\n    }\n    nClasses = Hsh_VecSize( p );\n    Hsh_VecManStop( p );\n    Vec_IntFree( vFlop );\n    fmt.Printf(\"Detected %d flops and %d flop classes.\\n\", Wln_NtkFfNum(pNtk), nClasses);\n    return nClasses;\n}"
+    },
+    {
+      "Name": "Wln_RetAlloc",
+      "Start": 5511,
+      "End": 7622,
+      "BodyStart": 5556,
+      "Original": "Wln_Ret_t * Wln_RetAlloc( Wln_Ntk_t * pNtk )\n{\n    Wln_Ret_t * p; int k, iObj, iFanin, fFirst = 1;\n    Vec_Int_t * vRefsCopy = Vec_IntAlloc(0);\n    p = ABC_CALLOC( Wln_Ret_t, 1 );\n    p-\u003epNtk = pNtk;\n    Wln_NtkCreateRefs( pNtk );\n    // print objects without fanout\n    Wln_NtkForEachObj( pNtk, iObj )\n        if ( Wln_ObjRefs(pNtk, iObj) == 0 \u0026\u0026 !Wln_ObjIsCio(pNtk, iObj) )\n        {\n            if ( fFirst )\n            {\n                fFirst = 0;\n                printf( \"Objects without fanout:\\n\" );\n            }\n            Wln_ObjPrint(pNtk, iObj);\n        }\n    // start fanin/fanout maps\n    Wln_NtkStartFaninMap( pNtk, \u0026p-\u003evFanins, 2 );\n    Wln_NtkStartFanoutMap( pNtk, \u0026p-\u003evFanouts, \u0026pNtk-\u003evRefs, 2 );\n    ABC_SWAP( Vec_Int_t, *vRefsCopy, pNtk-\u003evRefs );\n    Wln_NtkCleanRefs( pNtk );\n    Vec_IntGrow( \u0026p-\u003evEdgeLinks, 10*Wln_NtkFfNum(pNtk) );\n    Vec_IntPushTwo( \u0026p-\u003evEdgeLinks, -1, -1 );\n    Wln_NtkForEachObj( pNtk, iObj )\n        Wln_ObjForEachFanin( pNtk, iObj, iFanin, k )\n        {\n            int * pFanins  = Wln_RetFanins( p, iObj );\n            int * pFanouts = Wln_RetFanouts( p, iFanin );\n            int Index      = Wln_ObjRefsInc( pNtk, iFanin );\n            pFanins[2*k+0]      = iFanin;\n            pFanins[2*k+1]      = Wln_ObjIsFf(pNtk, iFanin) ? Vec_IntSize(\u0026p-\u003evEdgeLinks) : 0;\n            pFanouts[2*Index+0] = iObj;\n            pFanouts[2*Index+1] = Vec_IntEntry(\u0026p-\u003evFanins, iObj) + 2*k + 1;\n            if ( Wln_ObjIsFf(pNtk, iFanin) )\n                Vec_IntPushTwo( \u0026p-\u003evEdgeLinks, 0, iFanin );\n        }\n    // double-check the current number of fanouts added\n    Wln_NtkForEachObj( pNtk, iObj )\n        assert( Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj) );\n    Vec_IntFree( vRefsCopy );\n    // other data\n    p-\u003enClasses = Wln_RetComputeFfClasses( pNtk, \u0026p-\u003evFfClasses );\n    //ABC_SWAP( Vec_Int_t, p-\u003evNodeDelays, pNtk-\u003evInstIds );\n    Vec_IntAppend( \u0026p-\u003evNodeDelays, \u0026pNtk-\u003evInstIds );\n    Vec_IntGrow( \u0026p-\u003evSources, 1000 );\n    Vec_IntGrow( \u0026p-\u003evSinks, 1000 );\n    Vec_IntGrow( \u0026p-\u003evFront, 1000 );\n    Vec_IntGrow( \u0026p-\u003evMoves, 1000 );\n    return p;\n}",
+      "Draft": "func Wln_RetAlloc(pNtk *Wln_Ntk_t) *Wln_Ret_t {\n     var k int32;\nvar iObj int32;\nvar iFanin int32;\nvar fFirst int32 = 1;\n    var vRefsCopy *Vec_Int_t  = Vec_IntAlloc(0);\n    // inlining of macro ABC_CALLOC\n    p := \u0026Wln_Ret_t{};\n    p.pNtk = pNtk;\n    Wln_NtkCreateRefs( pNtk );\n    // print objects without fanout\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        if Wln_ObjRefs(pNtk, iObj) == 0 \u0026\u0026 !Wln_ObjIsCio(pNtk, iObj) {\n            if fFirst != 0 {\n                fFirst = 0;\n                fmt.Printf(\"Objects without fanout:\\n\");\n            }\n            Wln_ObjPrint(pNtk, iObj);\n        }\n    }\n    // start fanin/fanout maps\n    Wln_NtkStartFaninMap( pNtk, \u0026p.vFanins, 2 );\n    Wln_NtkStartFanoutMap( pNtk, \u0026p.vFanouts, \u0026pNtk.vRefs, 2 );\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vRefsCopy; *vRefsCopy = pNtk.vRefs; pNtk.vRefs = t; };\n    Wln_NtkCleanRefs( pNtk );\n    Vec_IntGrow( \u0026p.vEdgeLinks, 10*Wln_NtkFfNum(pNtk) );\n    Vec_IntPushTwo( \u0026p.vEdgeLinks, -1, -1 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(pNtk, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(pNtk, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            var pFanins *int32   = Wln_RetFanins( p, iObj );\n            var pFanouts *int32  = Wln_RetFanouts( p, iFanin );\n            var Index int32       = Wln_ObjRefsInc( pNtk, iFanin );\n            pFanins[2*k+0]      = iFanin;\n            pFanins[2*k+1]      = Wln_ObjIsFf(pNtk, iFanin) ? Vec_IntSize(\u0026p.vEdgeLinks) : 0;\n            pFanouts[2*Index+0] = iObj;\n            pFanouts[2*Index+1] = Vec_IntEntry(\u0026p.vFanins, iObj) + 2*k + 1;\n            if Wln_ObjIsFf(pNtk, iFanin) {\n                Vec_IntPushTwo( \u0026p.vEdgeLinks, 0, iFanin ); }\n        }\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        assert(Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj), \"Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj)\");\n    }\n    Vec_IntFree( vRefsCopy );\n    // other data\n    p.nClasses = Wln_RetComputeFfClasses( pNtk, \u0026p.vFfClasses );\n    //ABC_SWAP( Vec_Int_t, p-\u003evNodeDelays, pNtk-\u003evInstIds );\n    Vec_IntAppend( \u0026p.vNodeDelays, \u0026pNtk.vInstIds );\n    Vec_IntGrow( \u0026p.vSources, 1000 );\n    Vec_IntGrow( \u0026p.vSinks, 1000 );\n    Vec_IntGrow( \u0026p.vFront, 1000 );\n    Vec_IntGrow( \u0026p.vMoves, 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Wln_RetFree",
+      "Start": 7623,
+      "End": 8042,
+      "BodyStart": 7657,
+      "Original": "void Wln_RetFree( Wln_Ret_t * p )\n{\n    ABC_FREE( p-\u003evFanins.pArray );\n    ABC_FREE( p-\u003evFanouts.pArray );\n    ABC_FREE( p-\u003evEdgeLinks.pArray );\n    ABC_FREE( p-\u003evFfClasses.pArray );\n    ABC_FREE( p-\u003evNodeDelays.pArray );\n    ABC_FREE( p-\u003evPathDelays.pArray );\n    ABC_FREE( p-\u003evSources.pArray );\n    ABC_FREE( p-\u003evSinks.pArray );\n    ABC_FREE( p-\u003evFront.pArray );\n    ABC_FREE( p-\u003evMoves.pArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Wln_RetFree(p *Wln_Ret_t) {\n    // inlining of macro ABC_FREE\n    ((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFanouts.pArray) ? (free((char *) (p.vFanouts.pArray)), (p.vFanouts.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEdgeLinks.pArray) ? (free((char *) (p.vEdgeLinks.pArray)), (p.vEdgeLinks.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFfClasses.pArray) ? (free((char *) (p.vFfClasses.pArray)), (p.vFfClasses.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vNodeDelays.pArray) ? (free((char *) (p.vNodeDelays.pArray)), (p.vNodeDelays.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vPathDelays.pArray) ? (free((char *) (p.vPathDelays.pArray)), (p.vPathDelays.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSources.pArray) ? (free((char *) (p.vSources.pArray)), (p.vSources.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSinks.pArray) ? (free((char *) (p.vSinks.pArray)), (p.vSinks.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFront.pArray) ? (free((char *) (p.vFront.pArray)), (p.vFront.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMoves.pArray) ? (free((char *) (p.vMoves.pArray)), (p.vMoves.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Wln_RetMemUsage",
+      "Start": 8043,
+      "End": 8465,
+      "BodyStart": 8080,
+      "Original": "int Wln_RetMemUsage( Wln_Ret_t * p )\n{\n    int Mem = sizeof(Wln_Ret_t);\n    Mem += 4 * p-\u003evFanins.nCap;\n    Mem += 4 * p-\u003evFanouts.nCap;\n    Mem += 4 * p-\u003evEdgeLinks.nCap;\n    Mem += 4 * p-\u003evFfClasses.nCap;\n    Mem += 4 * p-\u003evNodeDelays.nCap;\n    Mem += 4 * p-\u003evPathDelays.nCap;\n    Mem += 4 * p-\u003evSources.nCap;\n    Mem += 4 * p-\u003evSinks.nCap;\n    Mem += 4 * p-\u003evFront.nCap;\n    Mem += 4 * p-\u003evMoves.nCap;\n    return Mem;\n}",
+      "Draft": "func Wln_RetMemUsage(p *Wln_Ret_t) int32 {\n    var Mem int32  = sizeof(Wln_Ret_t);\n    Mem += 4 * p.vFanins.nCap;\n    Mem += 4 * p.vFanouts.nCap;\n    Mem += 4 * p.vEdgeLinks.nCap;\n    Mem += 4 * p.vFfClasses.nCap;\n    Mem += 4 * p.vNodeDelays.nCap;\n    Mem += 4 * p.vPathDelays.nCap;\n    Mem += 4 * p.vSources.nCap;\n    Mem += 4 * p.vSinks.nCap;\n    Mem += 4 * p.vFront.nCap;\n    Mem += 4 * p.vMoves.nCap;\n    return Mem;\n}"
+    },
+    {
+      "Name": "Wln_RetMarkChanges_rec",
+      "Start": 8719,
+      "End": 9044,
+      "BodyStart": 8774,
+      "Original": "void Wln_RetMarkChanges_rec( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanout, * pLink, * pDelay = Vec_IntEntryP( \u0026p-\u003evPathDelays, iObj );\n    if ( *pDelay \u003c 0 )\n        return;\n    *pDelay = -1;\n    Wln_RetForEachFanout( p, iObj, iFanout, pLink, k )\n        if ( !pLink[0] )\n            Wln_RetMarkChanges_rec( p, iFanout );\n}",
+      "Draft": "func Wln_RetMarkChanges_rec(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanout int32;\n    var pLink *int32;\n    var pDelay *int32 = Vec_IntEntryP( \u0026p.vPathDelays, iObj );\n    if *pDelay \u003c 0 {\n        return; }\n    *pDelay = -1;\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanout) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanout != 0) {} else\n        if !pLink[0] {\n            Wln_RetMarkChanges_rec( p, iFanout ); }\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetMarkChanges",
+      "Start": 9045,
+      "End": 9443,
+      "BodyStart": 9106,
+      "Original": "void Wln_RetMarkChanges( Wln_Ret_t * p, Vec_Int_t * vFront )\n{\n    int i, iObj;\n    if ( vFront )\n    {\n        Vec_IntForEachEntry( vFront, iObj, i )\n            Wln_RetMarkChanges_rec( p, iObj );\n    }\n    else\n    {\n        Vec_IntFill( \u0026p-\u003evPathDelays, Wln_NtkObjNum(p-\u003epNtk), -1 );\n        Wln_NtkForEachCi( p-\u003epNtk, iObj, i )\n            Vec_IntWriteEntry( \u0026p-\u003evPathDelays, iObj, 0 );\n    }\n}",
+      "Draft": "func Wln_RetMarkChanges(p *Wln_Ret_t, vFront *Vec_Int_t) {\n    var i, iObj int32;\n    if vFront != nil {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((iObj) = Vec_IntEntry(vFront, i)), 1); i++  {\n            Wln_RetMarkChanges_rec( p, iObj );\n        }\n    \n    } else {\n        Vec_IntFill( \u0026p.vPathDelays, Wln_NtkObjNum(p.pNtk), -1 );\n        // inlining of macro Wln_NtkForEachCi\n        for  i = 0; (i \u003c Wln_NtkCiNum(p.pNtk)) \u0026\u0026 (((iObj) = Wln_NtkCi(p.pNtk, i)), 1); i++  {\n            Vec_IntWriteEntry( \u0026p.vPathDelays, iObj, 0 );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetPropDelay_rec",
+      "Start": 9444,
+      "End": 10014,
+      "BodyStart": 9496,
+      "Original": "int Wln_RetPropDelay_rec( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, * pDelay = Vec_IntEntryP( \u0026p-\u003evPathDelays, iObj );\n    if ( *pDelay \u003e= 0 )\n        return *pDelay;\n    *pDelay = 0;\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n    {\n        if ( Wln_ObjIsFf(p-\u003epNtk, iObj) \u0026\u0026 k \u003e 0 )\n            continue;\n        if ( pLink[0] )\n            *pDelay = Abc_MaxInt(*pDelay, 0);\n        else\n            *pDelay = Abc_MaxInt(*pDelay, Wln_RetPropDelay_rec(p, iFanin));\n    }\n    *pDelay += Vec_IntEntry( \u0026p-\u003evNodeDelays, iObj );\n    return *pDelay;\n}",
+      "Draft": "func Wln_RetPropDelay_rec(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var pDelay *int32 = Vec_IntEntryP( \u0026p.vPathDelays, iObj );\n    if *pDelay \u003e= 0 {\n        return *pDelay; }\n    *pDelay = 0;\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        if pLink[0] {\n            *pDelay = Abc_MaxInt(*pDelay, 0);\n        } else {\n            *pDelay = Abc_MaxInt(*pDelay, Wln_RetPropDelay_rec(p, iFanin)); }\n    }\n    }\n    *pDelay += Vec_IntEntry( \u0026p.vNodeDelays, iObj );\n    return *pDelay;\n}"
+    },
+    {
+      "Name": "Wln_RetPropDelay",
+      "Start": 10015,
+      "End": 10733,
+      "BodyStart": 10053,
+      "Original": "int Wln_RetPropDelay( Wln_Ret_t * p )\n{\n    int iObj, DelayMax = 0;\n    Vec_IntClear( \u0026p-\u003evSinks );\n    Wln_NtkForEachObj( p-\u003epNtk, iObj )\n        if ( !Wln_ObjIsCio(p-\u003epNtk, iObj) )\n        {\n            int Delay = Wln_RetPropDelay_rec(p, iObj);\n            if ( DelayMax == Delay )\n                Vec_IntPush( \u0026p-\u003evSinks, iObj );\n            else if ( DelayMax \u003c Delay )\n            {\n                DelayMax = Delay;\n                Vec_IntFill( \u0026p-\u003evSinks, 1, iObj );\n            }\n        }\n\n//    Vec_IntForEachEntry( \u0026p-\u003evPathDelays, iObj, i )\n//        printf( \"Obj = %d.  Delay = %d.\\n\", i, iObj );\n//    printf( \"\\n\" );\n\n//    printf( \"Sinks: \" );\n//    Vec_IntPrint( \u0026p-\u003evSinks );\n\n    return DelayMax;\n}",
+      "Draft": "func Wln_RetPropDelay(p *Wln_Ret_t) int32 {\n    var iObj, DelayMax int32;\n    Vec_IntClear( \u0026p.vSinks );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        if !Wln_ObjIsCio(p.pNtk, iObj) {\n            var Delay int32  = Wln_RetPropDelay_rec(p, iObj);\n            if DelayMax == Delay {\n                Vec_IntPush( \u0026p.vSinks, iObj );\n            } else if DelayMax \u003c Delay {\n                DelayMax = Delay;\n                Vec_IntFill( \u0026p.vSinks, 1, iObj );\n            }\n        }\n    }\n\n//    Vec_IntForEachEntry( \u0026p-\u003evPathDelays, iObj, i )\n//        printf( \"Obj = %d.  Delay = %d.\\n\", i, iObj );\n//    printf( \"\\n\" );\n\n//    printf( \"Sinks: \" );\n//    Vec_IntPrint( \u0026p-\u003evSinks );\n\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Wln_RetFindSources_rec",
+      "Start": 10735,
+      "End": 11272,
+      "BodyStart": 10790,
+      "Original": "void Wln_RetFindSources_rec( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, FaninDelay;\n    if ( Wln_ObjIsCi(p-\u003epNtk, iObj) || Wln_ObjCheckTravId(p-\u003epNtk, iObj) )\n        return;\n    FaninDelay = Vec_IntEntry( \u0026p-\u003evPathDelays, iObj ) - Vec_IntEntry( \u0026p-\u003evNodeDelays, iObj );\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n        if ( !pLink[0] \u0026\u0026 Vec_IntEntry(\u0026p-\u003evPathDelays, iFanin) == FaninDelay )\n            Wln_RetFindSources_rec( p, iFanin );\n    if ( FaninDelay == 0 )\n        Vec_IntPush( \u0026p-\u003evSources, iObj );\n}",
+      "Draft": "func Wln_RetFindSources_rec(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var FaninDelay int32;\n    if Wln_ObjIsCi(p.pNtk, iObj) || Wln_ObjCheckTravId(p.pNtk, iObj) {\n        return; }\n    FaninDelay = Vec_IntEntry( \u0026p.vPathDelays, iObj ) - Vec_IntEntry( \u0026p.vNodeDelays, iObj );\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else\n        if !pLink[0] \u0026\u0026 Vec_IntEntry(\u0026p.vPathDelays, iFanin) == FaninDelay {\n            Wln_RetFindSources_rec( p, iFanin ); }\n    }\n    if FaninDelay == 0 {\n        Vec_IntPush( \u0026p.vSources, iObj ); }\n}"
+    },
+    {
+      "Name": "Wln_RetFindSources",
+      "Start": 11273,
+      "End": 11563,
+      "BodyStart": 11314,
+      "Original": "void Wln_RetFindSources( Wln_Ret_t * p )\n{\n    int i, iObj;\n    Vec_IntClear( \u0026p-\u003evSources );\n    Wln_NtkIncrementTravId( p-\u003epNtk );\n    Vec_IntForEachEntry( \u0026p-\u003evSinks, iObj, i )\n        Wln_RetFindSources_rec( p, iObj );\n\n//    printf( \"Sources: \" );\n//    Vec_IntPrint( \u0026p-\u003evSources );\n}",
+      "Draft": "func Wln_RetFindSources(p *Wln_Ret_t) {\n    var i, iObj int32;\n    Vec_IntClear( \u0026p.vSources );\n    Wln_NtkIncrementTravId( p.pNtk );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSinks)) \u0026\u0026 (((iObj) = Vec_IntEntry(\u0026p.vSinks, i)), 1); i++  {\n        Wln_RetFindSources_rec( p, iObj );\n    }\n\n//    printf( \"Sources: \" );\n//    Vec_IntPrint( \u0026p-\u003evSources );\n}"
+    },
+    {
+      "Name": "Wln_RetHeadToTail",
+      "Start": 11818,
+      "End": 12060,
+      "BodyStart": 11872,
+      "Original": "int * Wln_RetHeadToTail( Wln_Ret_t * p, int * pHead )\n{\n    int * pLink;\n    assert( pHead[0] );\n    pLink = Vec_IntEntryP( \u0026p-\u003evEdgeLinks, pHead[0] );\n    if ( pLink[0] == 0 )\n        return pHead;\n    return Wln_RetHeadToTail( p, pLink );\n}",
+      "Draft": "func Wln_RetHeadToTail(p *Wln_Ret_t, pHead *int32) *int32 {\n    var pLink *int32;\n    assert(pHead[0], \"pHead[0]\");\n    pLink = Vec_IntEntryP( \u0026p.vEdgeLinks, pHead[0] );\n    if pLink[0] == 0 {\n        return pHead; }\n    return Wln_RetHeadToTail( p, pLink );\n}"
+    },
+    {
+      "Name": "Wln_RetCheckForwardOne",
+      "Start": 12062,
+      "End": 12665,
+      "BodyStart": 12130,
+      "Original": "static inline int Wln_RetCheckForwardOne( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, iFlop, Class = -1;\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n    {\n        if ( Wln_ObjIsFf(p-\u003epNtk, iObj) \u0026\u0026 k \u003e 0 )\n            continue;\n        if ( !pLink[0] )\n            return 0;\n        iFlop = Vec_IntEntry( \u0026p-\u003evEdgeLinks, pLink[0] + 1 );\n        assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n        if ( Class == -1 )\n            Class = Vec_IntEntry( \u0026p-\u003evFfClasses, iFlop );\n        else if ( Class != Vec_IntEntry( \u0026p-\u003evFfClasses, iFlop ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Wln_RetCheckForwardOne(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var Class int32 = -1;\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        if !pLink[0] {\n            return 0; }\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if Class == -1 {\n            Class = Vec_IntEntry( \u0026p.vFfClasses, iFlop );\n        } else if Class != Vec_IntEntry( \u0026p.vFfClasses, iFlop ) {\n            return 0; }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Wln_RetCheckForward",
+      "Start": 12666,
+      "End": 12872,
+      "BodyStart": 12725,
+      "Original": "int Wln_RetCheckForward( Wln_Ret_t * p, Vec_Int_t * vSet )\n{\n    int i, iObj;\n    Vec_IntForEachEntry( vSet, iObj, i )\n        if ( !Wln_RetCheckForwardOne( p, iObj ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Wln_RetCheckForward(p *Wln_Ret_t, vSet *Vec_Int_t) int32 {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        if !(Wln_RetCheckForwardOne( p, iObj ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Wln_RetCheckBackwardOne",
+      "Start": 12874,
+      "End": 13514,
+      "BodyStart": 12943,
+      "Original": "static inline int Wln_RetCheckBackwardOne( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, iFlop, Class = -1;\n    if ( Wln_ObjRefs(p-\u003epNtk, iObj) == 0 )\n        return 0;\n    Wln_RetForEachFanout( p, iObj, iFanin, pLink, k )\n    {\n        if ( !pLink[0] )\n            return 0;\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p-\u003evEdgeLinks, pLink[0] + 1 );\n        assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n        if ( Class == -1 )\n            Class = Vec_IntEntry( \u0026p-\u003evFfClasses, iFlop );\n        else if ( Class != Vec_IntEntry( \u0026p-\u003evFfClasses, iFlop ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Wln_RetCheckBackwardOne(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var Class int32 = -1;\n    if Wln_ObjRefs(p.pNtk, iObj) == 0 {\n        return 0; }\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        if !pLink[0] {\n            return 0; }\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if Class == -1 {\n            Class = Vec_IntEntry( \u0026p.vFfClasses, iFlop );\n        } else if Class != Vec_IntEntry( \u0026p.vFfClasses, iFlop ) {\n            return 0; }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Wln_RetCheckBackward",
+      "Start": 13515,
+      "End": 13723,
+      "BodyStart": 13575,
+      "Original": "int Wln_RetCheckBackward( Wln_Ret_t * p, Vec_Int_t * vSet )\n{\n    int i, iObj;\n    Vec_IntForEachEntry( vSet, iObj, i )\n        if ( !Wln_RetCheckBackwardOne( p, iObj ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Wln_RetCheckBackward(p *Wln_Ret_t, vSet *Vec_Int_t) int32 {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        if !(Wln_RetCheckBackwardOne( p, iObj ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Wln_RetRemoveOneFanin",
+      "Start": 13973,
+      "End": 14543,
+      "BodyStart": 14026,
+      "Original": "int Wln_RetRemoveOneFanin( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, iFlop, iFlop1 = -1;\n    int * pFanins  = Wln_RetFanins( p, iObj );\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n    {\n        if ( Wln_ObjIsFf(p-\u003epNtk, iObj) \u0026\u0026 k \u003e 0 )\n            continue;\n        assert( pLink[0] );\n        iFlop = Vec_IntEntry( \u0026p-\u003evEdgeLinks, pLink[0] + 1 );\n        pFanins[2*k+1] = Vec_IntEntry( \u0026p-\u003evEdgeLinks, pLink[0] );\n        assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n        if ( iFlop1 == -1 )\n            iFlop1 = iFlop;\n    }\n    return iFlop1;\n}",
+      "Draft": "func Wln_RetRemoveOneFanin(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var iFlop1 int32 = -1;\n    var pFanins *int32   = Wln_RetFanins( p, iObj );\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        assert(pLink[0], \"pLink[0]\");\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        pFanins[2*k+1] = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if iFlop1 == -1 {\n            iFlop1 = iFlop; }\n    }\n    }\n    return iFlop1;\n}"
+    },
+    {
+      "Name": "Wln_RetRemoveOneFanout",
+      "Start": 14544,
+      "End": 15047,
+      "BodyStart": 14598,
+      "Original": "int Wln_RetRemoveOneFanout( Wln_Ret_t * p, int iObj )\n{\n    int k, iFanin, * pLink, iFlop, iFlop1 = -1;\n    //int * pFanins  = Wln_RetFanins( p, iObj );\n    Wln_RetForEachFanout( p, iObj, iFanin, pLink, k )\n    {\n        assert( pLink[0] );\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p-\u003evEdgeLinks, pLink[0] + 1 );\n        pLink[0] = 0;\n        assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n        if ( iFlop1 == -1 )\n            iFlop1 = iFlop;\n    }\n    return iFlop1;\n}",
+      "Draft": "func Wln_RetRemoveOneFanout(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var iFlop1 int32 = -1;\n    //int * pFanins  = Wln_RetFanins( p, iObj );\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        assert(pLink[0], \"pLink[0]\");\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        pLink[0] = 0;\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if iFlop1 == -1 {\n            iFlop1 = iFlop; }\n    }\n    }\n    return iFlop1;\n}"
+    },
+    {
+      "Name": "Wln_RetInsertOneFanin",
+      "Start": 15048,
+      "End": 15523,
+      "BodyStart": 15113,
+      "Original": "void Wln_RetInsertOneFanin( Wln_Ret_t * p, int iObj, int iFlop )\n{\n    int k, iHead, iFanin, * pLink;\n    int * pFanins  = Wln_RetFanins( p, iObj );\n    assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n    Wln_RetForEachFanin( p, iObj, iFanin, pLink, k )\n    {\n        if ( Wln_ObjIsFf(p-\u003epNtk, iObj) \u0026\u0026 k \u003e 0 )\n            continue;\n        iHead = pFanins[2*k+1];\n        pFanins[2*k+1] = Vec_IntSize(\u0026p-\u003evEdgeLinks);\n        Vec_IntPushTwo( \u0026p-\u003evEdgeLinks, iHead, iFlop );\n    }\n}",
+      "Draft": "func Wln_RetInsertOneFanin(p *Wln_Ret_t, iObj int32, iFlop int32) {\n    var k int32;\n    var iHead int32;\n    var iFanin int32;\n    var pLink *int32;\n    var pFanins *int32   = Wln_RetFanins( p, iObj );\n    assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        iHead = pFanins[2*k+1];\n        pFanins[2*k+1] = Vec_IntSize(\u0026p.vEdgeLinks);\n        Vec_IntPushTwo( \u0026p.vEdgeLinks, iHead, iFlop );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetInsertOneFanout",
+      "Start": 15524,
+      "End": 15942,
+      "BodyStart": 15590,
+      "Original": "void Wln_RetInsertOneFanout( Wln_Ret_t * p, int iObj, int iFlop )\n{\n    int k, iFanin, * pLink;\n    assert( Wln_ObjIsFf( p-\u003epNtk, iFlop ) );\n    Wln_RetForEachFanout( p, iObj, iFanin, pLink, k )\n    {\n        if ( pLink[0] )\n            pLink = Wln_RetHeadToTail( p, pLink );\n        //assert( pLink[0] == 0 );\n        pLink[0] = Vec_IntSize(\u0026p-\u003evEdgeLinks);\n        Vec_IntPushTwo( \u0026p-\u003evEdgeLinks, 0, iFlop );\n    }\n}",
+      "Draft": "func Wln_RetInsertOneFanout(p *Wln_Ret_t, iObj int32, iFlop int32) {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        if pLink[0] {\n            pLink = Wln_RetHeadToTail( p, pLink ); }\n        //assert( pLink[0] == 0 );\n        pLink[0] = Vec_IntSize(\u0026p.vEdgeLinks);\n        Vec_IntPushTwo( \u0026p.vEdgeLinks, 0, iFlop );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetRetimeForward",
+      "Start": 15943,
+      "End": 16233,
+      "BodyStart": 16004,
+      "Original": "void Wln_RetRetimeForward( Wln_Ret_t * p, Vec_Int_t * vSet )\n{\n    int i, iObj, iFlop;\n    Vec_IntForEachEntry( vSet, iObj, i )\n    {\n        iFlop = Wln_RetRemoveOneFanin( p, iObj );\n        if ( iFlop == -1 )\n            continue;\n        Wln_RetInsertOneFanout( p, iObj, iFlop );\n    }\n}",
+      "Draft": "func Wln_RetRetimeForward(p *Wln_Ret_t, vSet *Vec_Int_t) {\n    var i, iObj, iFlop int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        iFlop = Wln_RetRemoveOneFanin( p, iObj );\n        if iFlop == -1 {\n            continue; }\n        Wln_RetInsertOneFanout( p, iObj, iFlop );\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetRetimeBackward",
+      "Start": 16234,
+      "End": 16525,
+      "BodyStart": 16296,
+      "Original": "void Wln_RetRetimeBackward( Wln_Ret_t * p, Vec_Int_t * vSet )\n{\n    int i, iObj, iFlop;\n    Vec_IntForEachEntry( vSet, iObj, i )\n    {\n        iFlop = Wln_RetRemoveOneFanout( p, iObj );\n        if ( iFlop == -1 )\n            continue;\n        Wln_RetInsertOneFanin( p, iObj, iFlop );\n    }\n}",
+      "Draft": "func Wln_RetRetimeBackward(p *Wln_Ret_t, vSet *Vec_Int_t) {\n    var i, iObj, iFlop int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        iFlop = Wln_RetRemoveOneFanout( p, iObj );\n        if iFlop == -1 {\n            continue; }\n        Wln_RetInsertOneFanin( p, iObj, iFlop );\n    }\n}"
+    },
+    {
+      "Name": "Wln_RetAddToMoves",
+      "Start": 16526,
+      "End": 17635,
+      "BodyStart": 16652,
+      "Original": "void Wln_RetAddToMoves( Wln_Ret_t * p, Vec_Int_t * vSet, int Delay, int fForward, int nMoves, int fSkipSimple, int fVerbose )\n{\n    int i, iObj;\n    if ( vSet == NULL )\n    {\n        printf( \"Move %4d : Recording initial state     (delay = %6d)\\n\", nMoves, Delay );\n        Vec_IntPushTwo( \u0026p-\u003evMoves, Delay, 0 );\n        return;\n    }\n    printf( \"Move %4d : Recording %s retiming (delay = %6d) :\", nMoves, fForward ? \"forward \" : \"backward\", Delay );\n    Vec_IntPush( \u0026p-\u003evMoves, Delay );\n    Vec_IntForEachEntry( vSet, iObj, i )\n    {\n        int NameId = Vec_IntEntry( \u0026p-\u003epNtk-\u003evNameIds, iObj );\n        if ( fSkipSimple \u0026\u0026 (Wln_ObjIsFf(p-\u003epNtk, iObj) || Wln_ObjType(p-\u003epNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(p-\u003epNtk, iObj) == ABC_OPER_CONCAT) )\n            continue;\n        Vec_IntPush( \u0026p-\u003evMoves, fForward ? -NameId : NameId );\n        if ( fVerbose )\n            printf( \" %d (NameID = %d)  \", fForward ? -iObj : iObj, fForward ? -NameId : NameId );\n    }\n    Vec_IntPush( \u0026p-\u003evMoves, 0 );\n    if ( !fVerbose )\n        printf( \" %3d retimed objects\", Vec_IntSize(vSet) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_RetAddToMoves(p *Wln_Ret_t, vSet *Vec_Int_t, Delay int32, fForward int32, nMoves int32, fSkipSimple int32, fVerbose int32) {\n    var i, iObj int32;\n    if vSet == nil {\n        fmt.Printf(\"Move %4d : Recording initial state     (delay = %6d)\\n\", nMoves, Delay);\n        Vec_IntPushTwo( \u0026p.vMoves, Delay, 0 );\n        return;\n    }\n    fmt.Printf(\"Move %4d : Recording %s retiming (delay = %6d) :\", nMoves, fForward ? \"forward \" : \"backward\", Delay);\n    Vec_IntPush( \u0026p.vMoves, Delay );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        var NameId int32  = Vec_IntEntry( \u0026p.pNtk.vNameIds, iObj );\n        if (fSkipSimple != 0) \u0026\u0026 (Wln_ObjIsFf(p.pNtk, iObj) || Wln_ObjType(p.pNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(p.pNtk, iObj) == ABC_OPER_CONCAT) {\n            continue; }\n        Vec_IntPush( \u0026p.vMoves, fForward ? -NameId : NameId );\n        if fVerbose != 0 {\n            fmt.Printf(\" %d (NameID = %d)  \", fForward ? -iObj : iObj, fForward ? -NameId : NameId); }\n    }\n    Vec_IntPush( \u0026p.vMoves, 0 );\n    if !(fVerbose != 0) {\n        fmt.Printf(\" %3d retimed objects\", Vec_IntSize(vSet)); }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Wln_NtkRetimeCreateDelayInfo",
+      "Start": 17892,
+      "End": 19313,
+      "BodyStart": 17946,
+      "Original": "void Wln_NtkRetimeCreateDelayInfo( Wln_Ntk_t * pNtk )\n{\n    int i, iObj;\n//    if ( Wln_NtkHasInstId(pNtk) )\n//        Vec_IntErase( \u0026pNtk-\u003evInstIds );\n    if ( Wln_NtkHasInstId(pNtk) )\n    {\n        printf( \"Using delays given by the user in the input file.\\n\" );\n        Wln_NtkForEachObj( pNtk, iObj )\n            if ( !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 !Wln_ObjIsConst(pNtk, iObj) \u0026\u0026 Wln_ObjInstId(pNtk, iObj) == 0 )\n                printf( \"Warning: Object %d of type %s has zero delay. Retiming will not work correctly.\\n\", iObj, Abc_OperName(Wln_ObjType(pNtk, iObj)) );\n    }\n    else\n    {\n        printf( \"The design has no delay information.\\n\" );\n        Wln_NtkCleanInstId(pNtk);\n        Wln_NtkForEachObj( pNtk, iObj )\n        {\n            if ( Wln_ObjIsFf(pNtk, iObj) || Wln_ObjType(pNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(pNtk, iObj) == ABC_OPER_CONCAT )\n                Wln_ObjSetInstId( pNtk, iObj, 1 );\n            else if ( !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 Wln_ObjFaninNum(pNtk, iObj) \u003e 0 )\n                Wln_ObjSetInstId( pNtk, iObj, 10 );\n        }\n        Wln_NtkForEachCo( pNtk, iObj, i ) \n        {\n            if ( Wln_ObjType(pNtk, Wln_ObjFanin0(pNtk, iObj)) != ABC_OPER_LUT )\n                Wln_ObjSetInstId( pNtk, Wln_ObjFanin0(pNtk, iObj), 1 );\n        }\n        printf( \"Assuming default delays: 10 units for most nodes and 1 unit for bit-slice, concat, and buffers driving COs.\\n\" );\n    }\n}",
+      "Draft": "func Wln_NtkRetimeCreateDelayInfo(pNtk *Wln_Ntk_t) {\n    var i, iObj int32;\n//    if ( Wln_NtkHasInstId(pNtk) )\n//        Vec_IntErase( \u0026pNtk-\u003evInstIds );\n    if Wln_NtkHasInstId(pNtk) {\n        fmt.Printf(\"Using delays given by the user in the input file.\\n\");\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n            if !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 !Wln_ObjIsConst(pNtk, iObj) \u0026\u0026 Wln_ObjInstId(pNtk, iObj) == 0 {\n                fmt.Printf(\"Warning: Object %d of type %s has zero delay. Retiming will not work correctly.\\n\", iObj, Abc_OperName(Wln_ObjType(pNtk, iObj))); }\n        }\n    \n    } else {\n        fmt.Printf(\"The design has no delay information.\\n\");\n        Wln_NtkCleanInstId(pNtk);\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n            if Wln_ObjIsFf(pNtk, iObj) || Wln_ObjType(pNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(pNtk, iObj) == ABC_OPER_CONCAT {\n                Wln_ObjSetInstId( pNtk, iObj, 1 );\n            } else if !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 Wln_ObjFaninNum(pNtk, iObj) \u003e 0 {\n                Wln_ObjSetInstId( pNtk, iObj, 10 ); }\n        }\n        // inlining of macro Wln_NtkForEachCo\n        for  i = 0; (i \u003c Wln_NtkCoNum(pNtk)) \u0026\u0026 (((iObj) = Wln_NtkCo(pNtk, i)), 1); i++  {\n            if Wln_ObjType(pNtk, Wln_ObjFanin0(pNtk, iObj)) != ABC_OPER_LUT {\n                Wln_ObjSetInstId( pNtk, Wln_ObjFanin0(pNtk, iObj), 1 ); }\n        }\n        fmt.Printf(\"Assuming default delays: 10 units for most nodes and 1 unit for bit-slice, concat, and buffers driving COs.\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Wln_NtkRetime",
+      "Start": 19314,
+      "End": 22906,
+      "BodyStart": 19391,
+      "Original": "Vec_Int_t * Wln_NtkRetime( Wln_Ntk_t * pNtk, int fSkipSimple, int fVerbose )\n{\n    Wln_Ret_t * p = Wln_RetAlloc( pNtk );\n    Vec_Int_t * vSources = \u0026p-\u003evSources;\n    Vec_Int_t * vSinks   = \u0026p-\u003evSinks;\n    Vec_Int_t * vFront   = \u0026p-\u003evFront;\n    Vec_Int_t * vMoves   = Vec_IntAlloc(0);\n    int nMoves = 0, fPrevFwd = 0, fPrevBwd = 0, nCountIncrease = 0;\n    int DelayInit = 0, DelayBest = 0, nChange = 0;\n    Wln_RetPrint( p, fVerbose );\n    Wln_RetMarkChanges( p, NULL );\n    p-\u003eDelayMax = DelayInit = DelayBest = Wln_RetPropDelay( p );\n    Wln_RetFindSources( p );\n    Wln_RetAddToMoves( p, NULL, p-\u003eDelayMax, 0, nMoves, fSkipSimple, fVerbose );\n    while ( Vec_IntSize(vSources) || Vec_IntSize(vSinks) )\n    {\n        int DelayMaxPrev = p-\u003eDelayMax;\n        int fForward  = Vec_IntSize(vSources) \u0026\u0026 Wln_RetCheckForward( p, vSources );\n        int fBackward = Vec_IntSize(vSinks)   \u0026\u0026 Wln_RetCheckBackward( p, vSinks );\n        Vec_IntSort( vSources, 0 );\n        Vec_IntSort( vSinks, 0 );\n\n        if ( !fForward \u0026\u0026 !fBackward )\n        {\n            printf( \"Cannot retime forward and backward.\\n\" );\n            break;\n        }\n        if ( Vec_IntTwoCountCommon(vSources, vSinks) )\n        {\n            printf( \"Cannot reduce delay by retiming.\\n\" );\n            break;\n        }\n        nMoves++;\n        Vec_IntClear( vFront );\n        if ( (fPrevFwd \u0026\u0026 fForward) || (!(fPrevBwd \u0026\u0026 fBackward) \u0026\u0026 ((fForward \u0026\u0026 !fBackward) || (fForward \u0026\u0026 fBackward \u0026\u0026 Vec_IntSize(vSources) \u003c Vec_IntSize(vSinks)))) )\n        {\n            Vec_IntAppend( vFront, vSources );\n            Wln_RetMarkChanges( p, vFront );\n            Wln_RetRetimeForward( p, vFront );\n            p-\u003eDelayMax = Wln_RetPropDelay( p );\n            fForward = 1, fBackward = 0;\n            fPrevFwd = 1;\n        }\n        else\n        {\n            Vec_IntAppend( vFront, vSinks );\n            Wln_RetRetimeBackward( p, vFront );\n            Wln_RetMarkChanges( p, vFront );\n            p-\u003eDelayMax = Wln_RetPropDelay( p );\n            fForward = 0, fBackward = 1;\n            fPrevBwd = 1;\n        }\n        DelayBest = Abc_MinInt( DelayBest, p-\u003eDelayMax );\n        //Wln_RetPrint( p );\n        if ( fVerbose )\n            printf( \"\\n\" );\n        Wln_RetAddToMoves( p, vFront, p-\u003eDelayMax, fForward, nMoves, fSkipSimple, fVerbose );\n        if ( fVerbose )\n        {\n            printf( \"Sinks: \" );\n            Vec_IntPrint( \u0026p-\u003evSinks );\n            printf( \"Sources: \" );\n            Vec_IntPrint( \u0026p-\u003evSources );\n        }\n        if ( p-\u003eDelayMax \u003e= DelayMaxPrev )\n            nCountIncrease++;\n        else\n        {\n            if ( nCountIncrease \u003e 0 )\n                nChange++;\n            nCountIncrease = 0;\n        }\n        if ( nCountIncrease \u003e 3 )\n            break;\n        if ( nChange \u003e 5 )\n            break;\n        Wln_RetFindSources( p );\n        if ( 2*Vec_IntSize(\u0026p-\u003evEdgeLinks) \u003e Vec_IntCap(\u0026p-\u003evEdgeLinks) )\n            Vec_IntGrow( \u0026p-\u003evEdgeLinks, 4*Vec_IntSize(\u0026p-\u003evEdgeLinks) );\n    }\n    ABC_SWAP( Vec_Int_t, *vMoves, p-\u003evMoves );\n    Wln_RetFree( p );\n    if ( fVerbose )\n    {\n        printf( \"\\nThe resulting moves recorded in terms of name IDs of the NDR nodes:\\n\" );\n        Vec_IntPrint( vMoves );\n    }\n    else\n    {\n        printf( \"Retiming instruction contains %d moves and %d total retimed objects.\\n\", nMoves, Vec_IntSize(vMoves)-2*nMoves-2 );\n        printf( \"Initial delay = %d.  The best delay achieved = %d.  Improvement = %d. (%6.2f %%)\\n\", \n            DelayInit, DelayBest, DelayInit - DelayBest, 100.0 * (DelayInit - DelayBest) / DelayInit );\n    }\n    return vMoves;\n}",
+      "Draft": "func Wln_NtkRetime(pNtk *Wln_Ntk_t, fSkipSimple int32, fVerbose int32) *Vec_Int_t {\n    var p *Wln_Ret_t  = Wln_RetAlloc( pNtk );\n    var vSources *Vec_Int_t  = \u0026p.vSources;\n    var vSinks *Vec_Int_t    = \u0026p.vSinks;\n    var vFront *Vec_Int_t    = \u0026p.vFront;\n    var vMoves *Vec_Int_t    = Vec_IntAlloc(0);\n    var nMoves, fPrevFwd, fPrevBwd, nCountIncrease int32;\n    var DelayInit, DelayBest, nChange int32;\n    Wln_RetPrint( p, fVerbose );\n    Wln_RetMarkChanges( p, nil );\n    p.DelayMax = DelayInit = DelayBest = Wln_RetPropDelay( p );\n    Wln_RetFindSources( p );\n    Wln_RetAddToMoves( p, nil, p.DelayMax, 0, nMoves, fSkipSimple, fVerbose );\n    for  Vec_IntSize(vSources) || Vec_IntSize(vSinks)  {\n        var DelayMaxPrev int32  = p.DelayMax;\n        var fForward int32   = Vec_IntSize(vSources) \u0026\u0026 Wln_RetCheckForward( p, vSources );\n        var fBackward int32  = Vec_IntSize(vSinks)   \u0026\u0026 Wln_RetCheckBackward( p, vSinks );\n        Vec_IntSort( vSources, 0 );\n        Vec_IntSort( vSinks, 0 );\n\n        if !(fForward != 0) \u0026\u0026 !(fBackward != 0) {\n            fmt.Printf(\"Cannot retime forward and backward.\\n\");\n            break;\n        }\n        if Vec_IntTwoCountCommon(vSources, vSinks) {\n            fmt.Printf(\"Cannot reduce delay by retiming.\\n\");\n            break;\n        }\n        nMoves++;\n        Vec_IntClear( vFront );\n        if (fPrevFwd \u0026\u0026 (fForward != 0)) || (!(fPrevBwd \u0026\u0026 (fBackward != 0)) \u0026\u0026 (((fForward != 0) \u0026\u0026 !(fBackward != 0)) || ((fForward != 0) \u0026\u0026 (fBackward != 0) \u0026\u0026 Vec_IntSize(vSources) \u003c Vec_IntSize(vSinks)))) {\n            Vec_IntAppend( vFront, vSources );\n            Wln_RetMarkChanges( p, vFront );\n            Wln_RetRetimeForward( p, vFront );\n            p.DelayMax = Wln_RetPropDelay( p );\n            fForward = 1;\nfBackward = 0;\n            fPrevFwd = 1;\n        \n        } else {\n            Vec_IntAppend( vFront, vSinks );\n            Wln_RetRetimeBackward( p, vFront );\n            Wln_RetMarkChanges( p, vFront );\n            p.DelayMax = Wln_RetPropDelay( p );\n            fForward = 0;\nfBackward = 1;\n            fPrevBwd = 1;\n        }\n        DelayBest = Abc_MinInt( DelayBest, p.DelayMax );\n        //Wln_RetPrint( p );\n        if fVerbose != 0 {\n            fmt.Printf(\"\\n\"); }\n        Wln_RetAddToMoves( p, vFront, p.DelayMax, fForward, nMoves, fSkipSimple, fVerbose );\n        if fVerbose != 0 {\n            fmt.Printf(\"Sinks: \");\n            Vec_IntPrint( \u0026p.vSinks );\n            fmt.Printf(\"Sources: \");\n            Vec_IntPrint( \u0026p.vSources );\n        }\n        if p.DelayMax \u003e= DelayMaxPrev {\n            nCountIncrease++;\n        } else {\n            if nCountIncrease \u003e 0 {\n                nChange++; }\n            nCountIncrease = 0;\n        }\n        if nCountIncrease \u003e 3 {\n            break; }\n        if nChange \u003e 5 {\n            break; }\n        Wln_RetFindSources( p );\n        if 2*Vec_IntSize(\u0026p.vEdgeLinks) \u003e Vec_IntCap(\u0026p.vEdgeLinks) {\n            Vec_IntGrow( \u0026p.vEdgeLinks, 4*Vec_IntSize(\u0026p.vEdgeLinks) ); }\n    }\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vMoves; *vMoves = p.vMoves; p.vMoves = t; };\n    Wln_RetFree( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nThe resulting moves recorded in terms of name IDs of the NDR nodes:\\n\");\n        Vec_IntPrint( vMoves );\n    \n    } else {\n        fmt.Printf(\"Retiming instruction contains %d moves and %d total retimed objects.\\n\", nMoves, Vec_IntSize(vMoves)-2*nMoves-2);\n        fmt.Printf(\"Initial delay = %d.  The best delay achieved = %d.  Improvement = %d. (%6.2f %%)\\n\", DelayInit, DelayBest, DelayInit - DelayBest, 100.0 * (DelayInit - DelayBest) / DelayInit);\n    }\n    return vMoves;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::struct::Wln_Ret_t",
+      "Category": "struct-review",
+      "Symbol": "Wln_Ret_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 792,
+      "End": 1627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::mechanical::sizeof::6346",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5663,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::mechanical::sizeof::10338",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8096,
+      "End": 8102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::6312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5663,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::8840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7663,
+      "End": 7663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::8980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7698,
+      "End": 7698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7734,
+      "End": 7734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7772,
+      "End": 7772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7810,
+      "End": 7810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7849,
+      "End": 7849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7888,
+      "End": 7888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7924,
+      "End": 7924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::9996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7958,
+      "End": 7958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::10132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7992,
+      "End": 7992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::pointer-cast::10253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8026,
+      "End": 8026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::macro::Wln_RetForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Wln_RetForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1898,
+      "End": 2240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::macro::Wln_RetForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Wln_RetForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2242,
+      "End": 2540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetFanins",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1629,
+      "End": 1762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1763,
+      "End": 1896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetPrintObj",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetPrintObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3015,
+      "End": 3657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetPrint",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3658,
+      "End": 4568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetComputeFfClasses",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetComputeFfClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4821,
+      "End": 5510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::ternary::Wln_RetAlloc",
+      "Category": "ternary-review",
+      "Symbol": "Wln_RetAlloc",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5511,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5511,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::ternary::Wln_RetFree",
+      "Category": "ternary-review",
+      "Symbol": "Wln_RetFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7623,
+      "End": 8042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetFree",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7623,
+      "End": 8042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8043,
+      "End": 8465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetMarkChanges_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetMarkChanges_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8719,
+      "End": 9044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetMarkChanges",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetMarkChanges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9045,
+      "End": 9443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetPropDelay_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetPropDelay_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9444,
+      "End": 10014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetPropDelay",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetPropDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10015,
+      "End": 10733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetFindSources_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetFindSources_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10735,
+      "End": 11272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetFindSources",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetFindSources",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11273,
+      "End": 11563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetHeadToTail",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetHeadToTail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11818,
+      "End": 12060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetCheckForwardOne",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetCheckForwardOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12062,
+      "End": 12665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetCheckForward",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetCheckForward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12666,
+      "End": 12872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetCheckBackwardOne",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetCheckBackwardOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12874,
+      "End": 13514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetCheckBackward",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetCheckBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13515,
+      "End": 13723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetRemoveOneFanin",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetRemoveOneFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13973,
+      "End": 14543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetRemoveOneFanout",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetRemoveOneFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14544,
+      "End": 15047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetInsertOneFanin",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetInsertOneFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15048,
+      "End": 15523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetInsertOneFanout",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetInsertOneFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15524,
+      "End": 15942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetRetimeForward",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetRetimeForward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15943,
+      "End": 16233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetRetimeBackward",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetRetimeBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16234,
+      "End": 16525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::ternary::Wln_RetAddToMoves",
+      "Category": "ternary-review",
+      "Symbol": "Wln_RetAddToMoves",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16526,
+      "End": 17635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_RetAddToMoves",
+      "Category": "semantic-review",
+      "Symbol": "Wln_RetAddToMoves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16526,
+      "End": 17635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_NtkRetimeCreateDelayInfo",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkRetimeCreateDelayInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17892,
+      "End": 19313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::Wln_NtkRetime",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkRetime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19314,
+      "End": 22906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnRetime.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23153
+    }
+  ],
+  "Draft": "package wln\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlnRetime.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Word-level network.]\n\n  Synopsis    [Retiming.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 23, 2018.]\n\n  Revision    [$Id: wlnRetime.c,v 1.00 2018/09/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wln.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Wln_Ret_t struct {\n    pNtk        *Wln_Ntk_t;         // static netlist\n    vFanins         Vec_Int_t;      // fanins and edge places\n    vFanouts         Vec_Int_t;     // fanouts and edge places\n    vEdgeLinks         Vec_Int_t;   // edge links\n    vFfClasses         Vec_Int_t;   // flop classes\n    vNodeDelays         Vec_Int_t;  // object delays\n    vPathDelays         Vec_Int_t;  // delays from sources to sinks\n    vSources         Vec_Int_t;     // critical sources\n    vSinks         Vec_Int_t;       // critical sinks\n    vFront         Vec_Int_t;       // retiming frontier\n    vMoves         Vec_Int_t;       // retiming moves (paired with delay)\n    nClasses               int32;     // the number of flop classes\n    DelayMax               int32;     // critical delay at any time\n}\n\nfunc Wln_RetFanins(p *Wln_Ret_t, i int32) *int32 { return Vec_IntEntryP( \u0026p.vFanins,  Vec_IntEntry(\u0026p.vFanins, i) );  }\nfunc Wln_RetFanouts(p *Wln_Ret_t, i int32) *int32 { return Vec_IntEntryP( \u0026p.vFanouts, Vec_IntEntry(\u0026p.vFanouts, i) ); }\n\n// Original macro:\n// #define Wln_RetForEachFanin( p, iObj, iFanin, pLink, i )    \\\n//     for ( i = 0; (i \u003c Wln_ObjFaninNum(p-\u003epNtk, iObj)) \u0026\u0026    \\\n//          (((iFanin) = Wln_RetFanins(p, iObj)[2*i]), 1) \u0026\u0026   \\\n//            ((pLink) = (Wln_RetFanins(p, iObj)+2*i+1)); i++ ) if ( !iFanin || (!Wln_ObjFaninNum(p-\u003epNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p-\u003epNtk, iFanin)) )  {} else\n\n\n// Original macro:\n// #define Wln_RetForEachFanout( p, iObj, iFanout, pLink, i )  \\\n//     for ( i = 0; (i \u003c Wln_ObjRefs(p-\u003epNtk, iObj)) \u0026\u0026        \\\n//         (((iFanout) = Wln_RetFanouts(p, iObj)[2*i]), 1) \u0026\u0026  \\\n//            ((pLink) = Vec_IntEntryP(\u0026p-\u003evFanins, Wln_RetFanouts(p, iObj)[2*i+1])); i++ ) if ( !iFanout ) {} else\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Printing procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_RetPrintObj(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var Type int32 = Wln_ObjType(p.pNtk, iObj);\n    var pLink *int32;\n    fmt.Printf(\"Obj %6d : Type = %6s  NameId = %5d  InstId = %5d  Fanins = %d : \", iObj, Abc_OperName(Type), Wln_ObjNameId(p.pNtk, iObj), Wln_ObjInstId(p.pNtk, iObj), Wln_ObjFaninNum(p.pNtk, iObj));\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        fmt.Printf(\"%5d \", iFanin);\n        if !pLink[0] {\n            continue; }\n        fmt.Printf(\"(%d : %d %d) \", pLink[0], Vec_IntEntry(\u0026p.vEdgeLinks, pLink[0]), Vec_IntEntry(\u0026p.vEdgeLinks, pLink[0]+1));\n    }\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Wln_RetPrint(p *Wln_Ret_t, fVerbose int32) {\n    var iObj, nCount int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        if Wln_ObjInstId(p.pNtk, iObj) \u003e 1 {\n            nCount++; }\n    }\n    fmt.Printf(\"Total number of objects = %d.  Objects with non-trivial delay = %d.\\n\", Wln_NtkObjNum(p.pNtk), nCount);\n    if !(fVerbose != 0) {\n        var nPrints int32;\n        var nLimit int32 = 5;\n        fmt.Printf(\"The following %d objects have non-trivial delays:\\n\", nLimit);\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n            if Wln_ObjInstId(p.pNtk, iObj) \u003c= 1 {\n                continue; }\n            Wln_RetPrintObj( p, iObj );\n            if nPrints++; nPrints == nLimit {\n                break; }\n        }\n        return;\n    }\n    fmt.Printf(\"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p.pNtk), p.pNtk.pName);\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        Wln_RetPrintObj( p, iObj );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retiming manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_RetComputeFfClasses(pNtk *Wln_Ntk_t, vClasses *Vec_Int_t) int32 {\n    var i, k, iObj, nClasses int32;\n    var p *Hsh_VecMan_t  = Hsh_VecManStart( 10 );\n    var vFlop *Vec_Int_t  = Vec_IntAlloc( 6 ); \n    Vec_IntFill( vClasses, Wln_NtkObjNum(pNtk), -1 );\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(pNtk)) \u0026\u0026 (((iObj) = Wln_NtkFf(pNtk, i)), 1); i++  {\n        Vec_IntClear( vFlop );\n        for  k = 1; k \u003c= 6; k++  {\n            Vec_IntPush( vFlop, Wln_ObjFanin(pNtk, iObj, k) );\n        }\n        Vec_IntWriteEntry( vClasses, iObj, Hsh_VecManAdd(p, vFlop) );\n    }\n    nClasses = Hsh_VecSize( p );\n    Hsh_VecManStop( p );\n    Vec_IntFree( vFlop );\n    fmt.Printf(\"Detected %d flops and %d flop classes.\\n\", Wln_NtkFfNum(pNtk), nClasses);\n    return nClasses;\n}\nfunc Wln_RetAlloc(pNtk *Wln_Ntk_t) *Wln_Ret_t {\n     var k int32;\nvar iObj int32;\nvar iFanin int32;\nvar fFirst int32 = 1;\n    var vRefsCopy *Vec_Int_t  = Vec_IntAlloc(0);\n    // inlining of macro ABC_CALLOC\n    p := \u0026Wln_Ret_t{};\n    p.pNtk = pNtk;\n    Wln_NtkCreateRefs( pNtk );\n    // print objects without fanout\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        if Wln_ObjRefs(pNtk, iObj) == 0 \u0026\u0026 !Wln_ObjIsCio(pNtk, iObj) {\n            if fFirst != 0 {\n                fFirst = 0;\n                fmt.Printf(\"Objects without fanout:\\n\");\n            }\n            Wln_ObjPrint(pNtk, iObj);\n        }\n    }\n    // start fanin/fanout maps\n    Wln_NtkStartFaninMap( pNtk, \u0026p.vFanins, 2 );\n    Wln_NtkStartFanoutMap( pNtk, \u0026p.vFanouts, \u0026pNtk.vRefs, 2 );\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vRefsCopy; *vRefsCopy = pNtk.vRefs; pNtk.vRefs = t; };\n    Wln_NtkCleanRefs( pNtk );\n    Vec_IntGrow( \u0026p.vEdgeLinks, 10*Wln_NtkFfNum(pNtk) );\n    Vec_IntPushTwo( \u0026p.vEdgeLinks, -1, -1 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(pNtk, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(pNtk, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            var pFanins *int32   = Wln_RetFanins( p, iObj );\n            var pFanouts *int32  = Wln_RetFanouts( p, iFanin );\n            var Index int32       = Wln_ObjRefsInc( pNtk, iFanin );\n            pFanins[2*k+0]      = iFanin;\n            pFanins[2*k+1]      = Wln_ObjIsFf(pNtk, iFanin) ? Vec_IntSize(\u0026p.vEdgeLinks) : 0;\n            pFanouts[2*Index+0] = iObj;\n            pFanouts[2*Index+1] = Vec_IntEntry(\u0026p.vFanins, iObj) + 2*k + 1;\n            if Wln_ObjIsFf(pNtk, iFanin) {\n                Vec_IntPushTwo( \u0026p.vEdgeLinks, 0, iFanin ); }\n        }\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n        assert(Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj), \"Wln_ObjRefs(pNtk, iObj) == Vec_IntEntry(vRefsCopy, iObj)\");\n    }\n    Vec_IntFree( vRefsCopy );\n    // other data\n    p.nClasses = Wln_RetComputeFfClasses( pNtk, \u0026p.vFfClasses );\n    //ABC_SWAP( Vec_Int_t, p-\u003evNodeDelays, pNtk-\u003evInstIds );\n    Vec_IntAppend( \u0026p.vNodeDelays, \u0026pNtk.vInstIds );\n    Vec_IntGrow( \u0026p.vSources, 1000 );\n    Vec_IntGrow( \u0026p.vSinks, 1000 );\n    Vec_IntGrow( \u0026p.vFront, 1000 );\n    Vec_IntGrow( \u0026p.vMoves, 1000 );\n    return p;\n}\nfunc Wln_RetFree(p *Wln_Ret_t) {\n    // inlining of macro ABC_FREE\n    ((p.vFanins.pArray) ? (free((char *) (p.vFanins.pArray)), (p.vFanins.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFanouts.pArray) ? (free((char *) (p.vFanouts.pArray)), (p.vFanouts.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vEdgeLinks.pArray) ? (free((char *) (p.vEdgeLinks.pArray)), (p.vEdgeLinks.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFfClasses.pArray) ? (free((char *) (p.vFfClasses.pArray)), (p.vFfClasses.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vNodeDelays.pArray) ? (free((char *) (p.vNodeDelays.pArray)), (p.vNodeDelays.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vPathDelays.pArray) ? (free((char *) (p.vPathDelays.pArray)), (p.vPathDelays.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSources.pArray) ? (free((char *) (p.vSources.pArray)), (p.vSources.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSinks.pArray) ? (free((char *) (p.vSinks.pArray)), (p.vSinks.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFront.pArray) ? (free((char *) (p.vFront.pArray)), (p.vFront.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vMoves.pArray) ? (free((char *) (p.vMoves.pArray)), (p.vMoves.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Wln_RetMemUsage(p *Wln_Ret_t) int32 {\n    var Mem int32  = sizeof(Wln_Ret_t);\n    Mem += 4 * p.vFanins.nCap;\n    Mem += 4 * p.vFanouts.nCap;\n    Mem += 4 * p.vEdgeLinks.nCap;\n    Mem += 4 * p.vFfClasses.nCap;\n    Mem += 4 * p.vNodeDelays.nCap;\n    Mem += 4 * p.vPathDelays.nCap;\n    Mem += 4 * p.vSources.nCap;\n    Mem += 4 * p.vSinks.nCap;\n    Mem += 4 * p.vFront.nCap;\n    Mem += 4 * p.vMoves.nCap;\n    return Mem;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delay propagation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_RetMarkChanges_rec(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanout int32;\n    var pLink *int32;\n    var pDelay *int32 = Vec_IntEntryP( \u0026p.vPathDelays, iObj );\n    if *pDelay \u003c 0 {\n        return; }\n    *pDelay = -1;\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanout) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanout != 0) {} else\n        if !pLink[0] {\n            Wln_RetMarkChanges_rec( p, iFanout ); }\n    }\n}\nfunc Wln_RetMarkChanges(p *Wln_Ret_t, vFront *Vec_Int_t) {\n    var i, iObj int32;\n    if vFront != nil {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((iObj) = Vec_IntEntry(vFront, i)), 1); i++  {\n            Wln_RetMarkChanges_rec( p, iObj );\n        }\n    \n    } else {\n        Vec_IntFill( \u0026p.vPathDelays, Wln_NtkObjNum(p.pNtk), -1 );\n        // inlining of macro Wln_NtkForEachCi\n        for  i = 0; (i \u003c Wln_NtkCiNum(p.pNtk)) \u0026\u0026 (((iObj) = Wln_NtkCi(p.pNtk, i)), 1); i++  {\n            Vec_IntWriteEntry( \u0026p.vPathDelays, iObj, 0 );\n        }\n    }\n}\nfunc Wln_RetPropDelay_rec(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var pDelay *int32 = Vec_IntEntryP( \u0026p.vPathDelays, iObj );\n    if *pDelay \u003e= 0 {\n        return *pDelay; }\n    *pDelay = 0;\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        if pLink[0] {\n            *pDelay = Abc_MaxInt(*pDelay, 0);\n        } else {\n            *pDelay = Abc_MaxInt(*pDelay, Wln_RetPropDelay_rec(p, iFanin)); }\n    }\n    }\n    *pDelay += Vec_IntEntry( \u0026p.vNodeDelays, iObj );\n    return *pDelay;\n}\nfunc Wln_RetPropDelay(p *Wln_Ret_t) int32 {\n    var iObj, DelayMax int32;\n    Vec_IntClear( \u0026p.vSinks );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p.pNtk); iObj++  {\n        if !Wln_ObjIsCio(p.pNtk, iObj) {\n            var Delay int32  = Wln_RetPropDelay_rec(p, iObj);\n            if DelayMax == Delay {\n                Vec_IntPush( \u0026p.vSinks, iObj );\n            } else if DelayMax \u003c Delay {\n                DelayMax = Delay;\n                Vec_IntFill( \u0026p.vSinks, 1, iObj );\n            }\n        }\n    }\n\n//    Vec_IntForEachEntry( \u0026p-\u003evPathDelays, iObj, i )\n//        printf( \"Obj = %d.  Delay = %d.\\n\", i, iObj );\n//    printf( \"\\n\" );\n\n//    printf( \"Sinks: \" );\n//    Vec_IntPrint( \u0026p-\u003evSinks );\n\n    return DelayMax;\n}\n\nfunc Wln_RetFindSources_rec(p *Wln_Ret_t, iObj int32) {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var FaninDelay int32;\n    if Wln_ObjIsCi(p.pNtk, iObj) || Wln_ObjCheckTravId(p.pNtk, iObj) {\n        return; }\n    FaninDelay = Vec_IntEntry( \u0026p.vPathDelays, iObj ) - Vec_IntEntry( \u0026p.vNodeDelays, iObj );\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else\n        if !pLink[0] \u0026\u0026 Vec_IntEntry(\u0026p.vPathDelays, iFanin) == FaninDelay {\n            Wln_RetFindSources_rec( p, iFanin ); }\n    }\n    if FaninDelay == 0 {\n        Vec_IntPush( \u0026p.vSources, iObj ); }\n}\nfunc Wln_RetFindSources(p *Wln_Ret_t) {\n    var i, iObj int32;\n    Vec_IntClear( \u0026p.vSources );\n    Wln_NtkIncrementTravId( p.pNtk );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSinks)) \u0026\u0026 (((iObj) = Vec_IntEntry(\u0026p.vSinks, i)), 1); i++  {\n        Wln_RetFindSources_rec( p, iObj );\n    }\n\n//    printf( \"Sources: \" );\n//    Vec_IntPrint( \u0026p-\u003evSources );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retimability check.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_RetHeadToTail(p *Wln_Ret_t, pHead *int32) *int32 {\n    var pLink *int32;\n    assert(pHead[0], \"pHead[0]\");\n    pLink = Vec_IntEntryP( \u0026p.vEdgeLinks, pHead[0] );\n    if pLink[0] == 0 {\n        return pHead; }\n    return Wln_RetHeadToTail( p, pLink );\n}\n\nfunc Wln_RetCheckForwardOne(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var Class int32 = -1;\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        if !pLink[0] {\n            return 0; }\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if Class == -1 {\n            Class = Vec_IntEntry( \u0026p.vFfClasses, iFlop );\n        } else if Class != Vec_IntEntry( \u0026p.vFfClasses, iFlop ) {\n            return 0; }\n    }\n    }\n    return 1;\n}\nfunc Wln_RetCheckForward(p *Wln_Ret_t, vSet *Vec_Int_t) int32 {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        if !(Wln_RetCheckForwardOne( p, iObj ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\nfunc Wln_RetCheckBackwardOne(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var Class int32 = -1;\n    if Wln_ObjRefs(p.pNtk, iObj) == 0 {\n        return 0; }\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        if !pLink[0] {\n            return 0; }\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if Class == -1 {\n            Class = Vec_IntEntry( \u0026p.vFfClasses, iFlop );\n        } else if Class != Vec_IntEntry( \u0026p.vFfClasses, iFlop ) {\n            return 0; }\n    }\n    }\n    return 1;\n}\nfunc Wln_RetCheckBackward(p *Wln_Ret_t, vSet *Vec_Int_t) int32 {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        if !(Wln_RetCheckBackwardOne( p, iObj ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Moving flops.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_RetRemoveOneFanin(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var iFlop1 int32 = -1;\n    var pFanins *int32   = Wln_RetFanins( p, iObj );\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        assert(pLink[0], \"pLink[0]\");\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        pFanins[2*k+1] = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] );\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if iFlop1 == -1 {\n            iFlop1 = iFlop; }\n    }\n    }\n    return iFlop1;\n}\nfunc Wln_RetRemoveOneFanout(p *Wln_Ret_t, iObj int32) int32 {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    var iFlop int32;\n    var iFlop1 int32 = -1;\n    //int * pFanins  = Wln_RetFanins( p, iObj );\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        assert(pLink[0], \"pLink[0]\");\n        pLink = Wln_RetHeadToTail( p, pLink );\n        iFlop = Vec_IntEntry( \u0026p.vEdgeLinks, pLink[0] + 1 );\n        pLink[0] = 0;\n        assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n        if iFlop1 == -1 {\n            iFlop1 = iFlop; }\n    }\n    }\n    return iFlop1;\n}\nfunc Wln_RetInsertOneFanin(p *Wln_Ret_t, iObj int32, iFlop int32) {\n    var k int32;\n    var iHead int32;\n    var iFanin int32;\n    var pLink *int32;\n    var pFanins *int32   = Wln_RetFanins( p, iObj );\n    assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n    // inlining of macro Wln_RetForEachFanin\n    for  k = 0; (k \u003c Wln_ObjFaninNum(p.pNtk, iObj)) \u0026\u0026             (((iFanin) = Wln_RetFanins(p, iObj)[2*k]), 1) \u0026\u0026              ((pLink) = (Wln_RetFanins(p, iObj)+2*k+1)); k++  { if !(iFanin != 0) || (!Wln_ObjFaninNum(p.pNtk, iFanin) \u0026\u0026 !Wln_ObjIsCi(p.pNtk, iFanin))  {} else {\n        if Wln_ObjIsFf(p.pNtk, iObj) \u0026\u0026 k \u003e 0 {\n            continue; }\n        iHead = pFanins[2*k+1];\n        pFanins[2*k+1] = Vec_IntSize(\u0026p.vEdgeLinks);\n        Vec_IntPushTwo( \u0026p.vEdgeLinks, iHead, iFlop );\n    }\n    }\n}\nfunc Wln_RetInsertOneFanout(p *Wln_Ret_t, iObj int32, iFlop int32) {\n    var k int32;\n    var iFanin int32;\n    var pLink *int32;\n    assert(Wln_ObjIsFf( p.pNtk, iFlop ), \"Wln_ObjIsFf( p.pNtk, iFlop )\");\n    // inlining of macro Wln_RetForEachFanout\n    for  k = 0; (k \u003c Wln_ObjRefs(p.pNtk, iObj)) \u0026\u0026                (((iFanin) = Wln_RetFanouts(p, iObj)[2*k]), 1) \u0026\u0026             ((pLink) = Vec_IntEntryP(\u0026p.vFanins, Wln_RetFanouts(p, iObj)[2*k+1])); k++  { if !(iFanin != 0) {} else {\n        if pLink[0] {\n            pLink = Wln_RetHeadToTail( p, pLink ); }\n        //assert( pLink[0] == 0 );\n        pLink[0] = Vec_IntSize(\u0026p.vEdgeLinks);\n        Vec_IntPushTwo( \u0026p.vEdgeLinks, 0, iFlop );\n    }\n    }\n}\nfunc Wln_RetRetimeForward(p *Wln_Ret_t, vSet *Vec_Int_t) {\n    var i, iObj, iFlop int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        iFlop = Wln_RetRemoveOneFanin( p, iObj );\n        if iFlop == -1 {\n            continue; }\n        Wln_RetInsertOneFanout( p, iObj, iFlop );\n    }\n}\nfunc Wln_RetRetimeBackward(p *Wln_Ret_t, vSet *Vec_Int_t) {\n    var i, iObj, iFlop int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        iFlop = Wln_RetRemoveOneFanout( p, iObj );\n        if iFlop == -1 {\n            continue; }\n        Wln_RetInsertOneFanin( p, iObj, iFlop );\n    }\n}\nfunc Wln_RetAddToMoves(p *Wln_Ret_t, vSet *Vec_Int_t, Delay int32, fForward int32, nMoves int32, fSkipSimple int32, fVerbose int32) {\n    var i, iObj int32;\n    if vSet == nil {\n        fmt.Printf(\"Move %4d : Recording initial state     (delay = %6d)\\n\", nMoves, Delay);\n        Vec_IntPushTwo( \u0026p.vMoves, Delay, 0 );\n        return;\n    }\n    fmt.Printf(\"Move %4d : Recording %s retiming (delay = %6d) :\", nMoves, fForward ? \"forward \" : \"backward\", Delay);\n    Vec_IntPush( \u0026p.vMoves, Delay );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSet)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSet, i)), 1); i++  {\n        var NameId int32  = Vec_IntEntry( \u0026p.pNtk.vNameIds, iObj );\n        if (fSkipSimple != 0) \u0026\u0026 (Wln_ObjIsFf(p.pNtk, iObj) || Wln_ObjType(p.pNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(p.pNtk, iObj) == ABC_OPER_CONCAT) {\n            continue; }\n        Vec_IntPush( \u0026p.vMoves, fForward ? -NameId : NameId );\n        if fVerbose != 0 {\n            fmt.Printf(\" %d (NameID = %d)  \", fForward ? -iObj : iObj, fForward ? -NameId : NameId); }\n    }\n    Vec_IntPush( \u0026p.vMoves, 0 );\n    if !(fVerbose != 0) {\n        fmt.Printf(\" %3d retimed objects\", Vec_IntSize(vSet)); }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retiming computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkRetimeCreateDelayInfo(pNtk *Wln_Ntk_t) {\n    var i, iObj int32;\n//    if ( Wln_NtkHasInstId(pNtk) )\n//        Vec_IntErase( \u0026pNtk-\u003evInstIds );\n    if Wln_NtkHasInstId(pNtk) {\n        fmt.Printf(\"Using delays given by the user in the input file.\\n\");\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n            if !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 !Wln_ObjIsConst(pNtk, iObj) \u0026\u0026 Wln_ObjInstId(pNtk, iObj) == 0 {\n                fmt.Printf(\"Warning: Object %d of type %s has zero delay. Retiming will not work correctly.\\n\", iObj, Abc_OperName(Wln_ObjType(pNtk, iObj))); }\n        }\n    \n    } else {\n        fmt.Printf(\"The design has no delay information.\\n\");\n        Wln_NtkCleanInstId(pNtk);\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(pNtk); iObj++  {\n            if Wln_ObjIsFf(pNtk, iObj) || Wln_ObjType(pNtk, iObj) == ABC_OPER_SLICE || Wln_ObjType(pNtk, iObj) == ABC_OPER_CONCAT {\n                Wln_ObjSetInstId( pNtk, iObj, 1 );\n            } else if !Wln_ObjIsCio(pNtk, iObj) \u0026\u0026 Wln_ObjFaninNum(pNtk, iObj) \u003e 0 {\n                Wln_ObjSetInstId( pNtk, iObj, 10 ); }\n        }\n        // inlining of macro Wln_NtkForEachCo\n        for  i = 0; (i \u003c Wln_NtkCoNum(pNtk)) \u0026\u0026 (((iObj) = Wln_NtkCo(pNtk, i)), 1); i++  {\n            if Wln_ObjType(pNtk, Wln_ObjFanin0(pNtk, iObj)) != ABC_OPER_LUT {\n                Wln_ObjSetInstId( pNtk, Wln_ObjFanin0(pNtk, iObj), 1 ); }\n        }\n        fmt.Printf(\"Assuming default delays: 10 units for most nodes and 1 unit for bit-slice, concat, and buffers driving COs.\\n\");\n    }\n}\nfunc Wln_NtkRetime(pNtk *Wln_Ntk_t, fSkipSimple int32, fVerbose int32) *Vec_Int_t {\n    var p *Wln_Ret_t  = Wln_RetAlloc( pNtk );\n    var vSources *Vec_Int_t  = \u0026p.vSources;\n    var vSinks *Vec_Int_t    = \u0026p.vSinks;\n    var vFront *Vec_Int_t    = \u0026p.vFront;\n    var vMoves *Vec_Int_t    = Vec_IntAlloc(0);\n    var nMoves, fPrevFwd, fPrevBwd, nCountIncrease int32;\n    var DelayInit, DelayBest, nChange int32;\n    Wln_RetPrint( p, fVerbose );\n    Wln_RetMarkChanges( p, nil );\n    p.DelayMax = DelayInit = DelayBest = Wln_RetPropDelay( p );\n    Wln_RetFindSources( p );\n    Wln_RetAddToMoves( p, nil, p.DelayMax, 0, nMoves, fSkipSimple, fVerbose );\n    for  Vec_IntSize(vSources) || Vec_IntSize(vSinks)  {\n        var DelayMaxPrev int32  = p.DelayMax;\n        var fForward int32   = Vec_IntSize(vSources) \u0026\u0026 Wln_RetCheckForward( p, vSources );\n        var fBackward int32  = Vec_IntSize(vSinks)   \u0026\u0026 Wln_RetCheckBackward( p, vSinks );\n        Vec_IntSort( vSources, 0 );\n        Vec_IntSort( vSinks, 0 );\n\n        if !(fForward != 0) \u0026\u0026 !(fBackward != 0) {\n            fmt.Printf(\"Cannot retime forward and backward.\\n\");\n            break;\n        }\n        if Vec_IntTwoCountCommon(vSources, vSinks) {\n            fmt.Printf(\"Cannot reduce delay by retiming.\\n\");\n            break;\n        }\n        nMoves++;\n        Vec_IntClear( vFront );\n        if (fPrevFwd \u0026\u0026 (fForward != 0)) || (!(fPrevBwd \u0026\u0026 (fBackward != 0)) \u0026\u0026 (((fForward != 0) \u0026\u0026 !(fBackward != 0)) || ((fForward != 0) \u0026\u0026 (fBackward != 0) \u0026\u0026 Vec_IntSize(vSources) \u003c Vec_IntSize(vSinks)))) {\n            Vec_IntAppend( vFront, vSources );\n            Wln_RetMarkChanges( p, vFront );\n            Wln_RetRetimeForward( p, vFront );\n            p.DelayMax = Wln_RetPropDelay( p );\n            fForward = 1;\nfBackward = 0;\n            fPrevFwd = 1;\n        \n        } else {\n            Vec_IntAppend( vFront, vSinks );\n            Wln_RetRetimeBackward( p, vFront );\n            Wln_RetMarkChanges( p, vFront );\n            p.DelayMax = Wln_RetPropDelay( p );\n            fForward = 0;\nfBackward = 1;\n            fPrevBwd = 1;\n        }\n        DelayBest = Abc_MinInt( DelayBest, p.DelayMax );\n        //Wln_RetPrint( p );\n        if fVerbose != 0 {\n            fmt.Printf(\"\\n\"); }\n        Wln_RetAddToMoves( p, vFront, p.DelayMax, fForward, nMoves, fSkipSimple, fVerbose );\n        if fVerbose != 0 {\n            fmt.Printf(\"Sinks: \");\n            Vec_IntPrint( \u0026p.vSinks );\n            fmt.Printf(\"Sources: \");\n            Vec_IntPrint( \u0026p.vSources );\n        }\n        if p.DelayMax \u003e= DelayMaxPrev {\n            nCountIncrease++;\n        } else {\n            if nCountIncrease \u003e 0 {\n                nChange++; }\n            nCountIncrease = 0;\n        }\n        if nCountIncrease \u003e 3 {\n            break; }\n        if nChange \u003e 5 {\n            break; }\n        Wln_RetFindSources( p );\n        if 2*Vec_IntSize(\u0026p.vEdgeLinks) \u003e Vec_IntCap(\u0026p.vEdgeLinks) {\n            Vec_IntGrow( \u0026p.vEdgeLinks, 4*Vec_IntSize(\u0026p.vEdgeLinks) ); }\n    }\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vMoves; *vMoves = p.vMoves; p.vMoves = t; };\n    Wln_RetFree( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"\\nThe resulting moves recorded in terms of name IDs of the NDR nodes:\\n\");\n        Vec_IntPrint( vMoves );\n    \n    } else {\n        fmt.Printf(\"Retiming instruction contains %d moves and %d total retimed objects.\\n\", nMoves, Vec_IntSize(vMoves)-2*nMoves-2);\n        fmt.Printf(\"Initial delay = %d.  The best delay achieved = %d.  Improvement = %d. (%6.2f %%)\\n\", DelayInit, DelayBest, DelayInit - DelayBest, 100.0 * (DelayInit - DelayBest) / DelayInit);\n    }\n    return vMoves;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

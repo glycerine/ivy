@@ -1,0 +1,668 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c",
+  "SHA256": "ac195e7b80e083c237120ae87b7ac76e4ed2cbb476a41a00b3f88eb94db6963d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 54,
+        "ByteOffset": 1997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Proof_NodeRead(p *Vec_Set_t, h int32) *satset { assert( h \u003e 0 );     return (satset*)Vec_SetEntry( p, h );  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 45,
+        "ByteOffset": 2103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Proof_NodeWordNum(nEnts int32) int32 { assert( nEnts \u003e 0 ); return 1 + ((nEnts + 1) \u003e\u003e 1);         }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 17,
+        "ByteOffset": 6928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Out of topological order!!!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 13,
+        "ByteOffset": 6985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iPrev \u003c Entry );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 386,
+        "Column": 13,
+        "ByteOffset": 14548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (pNode.pEnts[k] \u003e\u003e 2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 15802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.Id \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 17,
+        "ByteOffset": 16179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pFanin.Id \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 16758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 17157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove( Vec_SetEntry(vProof, hTemp), pNode, sizeof(word)*Proof_NodeWordNum(pNode.nEnts) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 9,
+        "ByteOffset": 17494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 9,
+        "ByteOffset": 17518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The proof was reduced from %6.2f MB to %6.2f MB (by %6.2f %%)  \", "
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 628,
+        "Column": 75,
+        "ByteOffset": 23424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBitMap = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(Abc_BitWordNum(MaxCla) + 1), sizeof(unsigned)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 642,
+        "Column": 63,
+        "ByteOffset": 24274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBitMap) ? (free((char *) (pBitMap)), (pBitMap) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Proof_NodeRead",
+      "Start": 1747,
+      "End": 1878,
+      "BodyStart": 1815,
+      "Original": "static inline satset* Proof_NodeRead    ( Vec_Set_t* p, int h )     { assert( h \u003e 0 );     return (satset*)Vec_SetEntry( p, h );  }",
+      "Draft": "func Proof_NodeRead(p *Vec_Set_t, h int32) *satset { assert(h \u003e 0, \"h \u003e 0\");     return (satset*)Vec_SetEntry( p, h );  }"
+    },
+    {
+      "Name": "Proof_NodeWordNum",
+      "Start": 1879,
+      "End": 2010,
+      "BodyStart": 1947,
+      "Original": "static inline int     Proof_NodeWordNum ( int nEnts )               { assert( nEnts \u003e 0 ); return 1 + ((nEnts + 1) \u003e\u003e 1);         }",
+      "Draft": "func Proof_NodeWordNum(nEnts int32) int32 { assert(nEnts \u003e 0, \"nEnts \u003e 0\"); return 1 + ((nEnts + 1) \u003e\u003e 1);         }"
+    },
+    {
+      "Name": "Proof_ClauseSetEnts",
+      "Start": 2012,
+      "End": 2132,
+      "BodyStart": 2080,
+      "Original": "void Proof_ClauseSetEnts( Vec_Set_t* p, int h, int nEnts )          { Proof_NodeRead(p, h)-\u003enEnts = nEnts;             }",
+      "Draft": "func Proof_ClauseSetEnts(p *Vec_Set_t, h int32, nEnts int32) { Proof_NodeRead(p, h).nEnts = nEnts;             }"
+    },
+    {
+      "Name": "Proof_CleanCollected",
+      "Start": 3923,
+      "End": 4107,
+      "BodyStart": 3990,
+      "Original": "void Proof_CleanCollected( Vec_Set_t * vProof, Vec_Int_t * vUsed )\n{\n    satset * pNode;\n    int hNode;\n    Proof_ForeachNodeVec( vUsed, vProof, pNode, hNode )\n        pNode-\u003eId = 0;\n}",
+      "Draft": "func Proof_CleanCollected(vProof *Vec_Set_t, vUsed *Vec_Int_t) {\n    var pNode *satset;\n    var hNode int32;\n    // inlining of macro Proof_ForeachNodeVec\n    for  hNode = 0; (hNode \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,hNode))); hNode++  {\n        pNode.Id = 0;\n    }\n}"
+    },
+    {
+      "Name": "Proof_CollectUsed_iter",
+      "Start": 4343,
+      "End": 5323,
+      "BodyStart": 4443,
+      "Original": "void Proof_CollectUsed_iter( Vec_Set_t * vProof, int hNode, Vec_Int_t * vUsed, Vec_Int_t * vStack )\n{\n    satset * pNext, * pNode = Proof_NodeRead( vProof, hNode );\n    int i;\n    if ( pNode-\u003eId )\n        return;\n    // start with node\n    pNode-\u003eId = 1;\n    Vec_IntPush( vStack, hNode \u003c\u003c 1 );\n    // perform DFS search\n    while ( Vec_IntSize(vStack) )\n    {\n        hNode = Vec_IntPop( vStack );\n        if ( hNode \u0026 1 ) // extracted second time\n        {\n            Vec_IntPush( vUsed, hNode \u003e\u003e 1 );\n            continue;\n        }\n        // extracted first time        \n        Vec_IntPush( vStack, hNode ^ 1 ); // add second time\n        // add its anticedents        ;\n        pNode = Proof_NodeRead( vProof, hNode \u003e\u003e 1 );\n        Proof_NodeForeachFanin( vProof, pNode, pNext, i )\n            if ( pNext \u0026\u0026 !pNext-\u003eId )\n            {\n                pNext-\u003eId = 1;\n                Vec_IntPush( vStack, (pNode-\u003epEnts[i] \u003e\u003e 2) \u003c\u003c 1 ); // add first time\n            }\n    }\n}",
+      "Draft": "func Proof_CollectUsed_iter(vProof *Vec_Set_t, hNode int32, vUsed *Vec_Int_t, vStack *Vec_Int_t) {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    if pNode.Id {\n        return; }\n    // start with node\n    pNode.Id = 1;\n    Vec_IntPush( vStack, hNode \u003c\u003c 1 );\n    // perform DFS search\n    for  Vec_IntSize(vStack)  {\n        hNode = Vec_IntPop( vStack );\n        if hNode \u0026 1 { // extracted second time\n        \n            Vec_IntPush( vUsed, hNode \u003e\u003e 1 );\n            continue;\n        }\n        // extracted first time        \n        Vec_IntPush( vStack, hNode ^ 1 ); // add second time\n        // add its anticedents        ;\n        pNode = Proof_NodeRead( vProof, hNode \u003e\u003e 1 );\n        // inlining of macro Proof_NodeForeachFanin\n        for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n            if (pNext != nil) \u0026\u0026 !pNext.Id {\n                pNext.Id = 1;\n                Vec_IntPush( vStack, (pNode.pEnts[i] \u003e\u003e 2) \u003c\u003c 1 ); // add first time\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Proof_CollectUsedIter",
+      "Start": 5324,
+      "End": 6333,
+      "BodyStart": 5411,
+      "Original": "Vec_Int_t * Proof_CollectUsedIter( Vec_Set_t * vProof, Vec_Int_t * vRoots, int fSort )\n{\n    int fVerify = 0;\n    Vec_Int_t * vUsed, * vStack;\n    abctime clk = Abc_Clock();\n    int i, Entry, iPrev = 0;\n    vUsed = Vec_IntAlloc( 1000 );\n    vStack = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntry( vRoots, Entry, i )\n        if ( Entry \u003e= 0 )\n            Proof_CollectUsed_iter( vProof, Entry, vUsed, vStack );\n    Vec_IntFree( vStack );\n//    Abc_PrintTime( 1, \"Iterative clause collection time\", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    Abc_MergeSort( Vec_IntArray(vUsed), Vec_IntSize(vUsed) );\n//    Abc_PrintTime( 1, \"Postprocessing with sorting time\", Abc_Clock() - clk );\n    // verify topological order\n    if ( fVerify )\n    {\n        iPrev = 0;\n        Vec_IntForEachEntry( vUsed, Entry, i )\n        {\n            if ( iPrev \u003e= Entry )\n                printf( \"Out of topological order!!!\\n\" );\n            assert( iPrev \u003c Entry );\n            iPrev = Entry;\n        }\n    }\n    return vUsed;\n}",
+      "Draft": "func Proof_CollectUsedIter(vProof *Vec_Set_t, vRoots *Vec_Int_t, fSort int32) *Vec_Int_t {\n    var fVerify int32;\n    var vUsed, vStack *Vec_Int_t;\n    var clk abctime  = Abc_Clock();\n    var i, Entry, iPrev int32;\n    vUsed = Vec_IntAlloc( 1000 );\n    vStack = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Proof_CollectUsed_iter( vProof, Entry, vUsed, vStack ); }\n    }\n    Vec_IntFree( vStack );\n//    Abc_PrintTime( 1, \"Iterative clause collection time\", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    Abc_MergeSort( Vec_IntArray(vUsed), Vec_IntSize(vUsed) );\n//    Abc_PrintTime( 1, \"Postprocessing with sorting time\", Abc_Clock() - clk );\n    // verify topological order\n    if fVerify != 0 {\n        iPrev = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 (((Entry) = Vec_IntEntry(vUsed, i)), 1); i++  {\n            if iPrev \u003e= Entry {\n                fmt.Printf(\"Out of topological order!!!\\n\"); }\n            assert(iPrev \u003c Entry, \"iPrev \u003c Entry\");\n            iPrev = Entry;\n        }\n    }\n    return vUsed;\n}"
+    },
+    {
+      "Name": "Proof_CollectUsed_rec",
+      "Start": 6609,
+      "End": 7017,
+      "BodyStart": 6688,
+      "Original": "void Proof_CollectUsed_rec( Vec_Set_t * vProof, int hNode, Vec_Int_t * vUsed )\n{\n    satset * pNext, * pNode = Proof_NodeRead( vProof, hNode );\n    int i;\n    if ( pNode-\u003eId )\n        return;\n    pNode-\u003eId = 1;\n    Proof_NodeForeachFanin( vProof, pNode, pNext, i )\n        if ( pNext \u0026\u0026 !pNext-\u003eId )\n            Proof_CollectUsed_rec( vProof, pNode-\u003epEnts[i] \u003e\u003e 2, vUsed );\n    Vec_IntPush( vUsed, hNode );\n}",
+      "Draft": "func Proof_CollectUsed_rec(vProof *Vec_Set_t, hNode int32, vUsed *Vec_Int_t) {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    if pNode.Id {\n        return; }\n    pNode.Id = 1;\n    // inlining of macro Proof_NodeForeachFanin\n    for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n        if (pNext != nil) \u0026\u0026 !pNext.Id {\n            Proof_CollectUsed_rec( vProof, pNode.pEnts[i] \u003e\u003e 2, vUsed ); }\n    }\n    Vec_IntPush( vUsed, hNode );\n}"
+    },
+    {
+      "Name": "Proof_CollectUsedRec",
+      "Start": 7018,
+      "End": 7318,
+      "BodyStart": 7093,
+      "Original": "Vec_Int_t * Proof_CollectUsedRec( Vec_Set_t * vProof, Vec_Int_t * vRoots )\n{\n    Vec_Int_t * vUsed;\n    int i, Entry;\n    vUsed = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntry( vRoots, Entry, i )\n        if ( Entry \u003e= 0 )\n            Proof_CollectUsed_rec( vProof, Entry, vUsed );\n    return vUsed;\n}",
+      "Draft": "func Proof_CollectUsedRec(vProof *Vec_Set_t, vRoots *Vec_Int_t) *Vec_Int_t {\n    var vUsed *Vec_Int_t;\n    var i, Entry int32;\n    vUsed = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Proof_CollectUsed_rec( vProof, Entry, vUsed ); }\n    }\n    return vUsed;\n}"
+    },
+    {
+      "Name": "Proof_MarkUsed_rec",
+      "Start": 7592,
+      "End": 7980,
+      "BodyStart": 7648,
+      "Original": "int Proof_MarkUsed_rec( Vec_Set_t * vProof, int hNode )\n{\n    satset * pNext, * pNode = Proof_NodeRead( vProof, hNode );\n    int i, Counter = 1;\n    if ( pNode-\u003eId )\n        return 0;\n    pNode-\u003eId = 1;\n    Proof_NodeForeachFanin( vProof, pNode, pNext, i )\n        if ( pNext \u0026\u0026 !pNext-\u003eId )\n            Counter += Proof_MarkUsed_rec( vProof, pNode-\u003epEnts[i] \u003e\u003e 2 );\n    return Counter;\n}",
+      "Draft": "func Proof_MarkUsed_rec(vProof *Vec_Set_t, hNode int32) int32 {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    var Counter int32 = 1;\n    if pNode.Id {\n        return 0; }\n    pNode.Id = 1;\n    // inlining of macro Proof_NodeForeachFanin\n    for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n        if (pNext != nil) \u0026\u0026 !pNext.Id {\n            Counter += Proof_MarkUsed_rec( vProof, pNode.pEnts[i] \u003e\u003e 2 ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Proof_MarkUsedRec",
+      "Start": 7981,
+      "End": 8229,
+      "BodyStart": 8045,
+      "Original": "int Proof_MarkUsedRec( Vec_Set_t * vProof, Vec_Int_t * vRoots )\n{\n    int i, Entry, Counter = 0;\n    Vec_IntForEachEntry( vRoots, Entry, i )\n        if ( Entry \u003e= 0 )\n            Counter += Proof_MarkUsed_rec( vProof, Entry );\n    return Counter;\n}",
+      "Draft": "func Proof_MarkUsedRec(vProof *Vec_Set_t, vRoots *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Counter += Proof_MarkUsed_rec( vProof, Entry ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sat_ProofCheck0",
+      "Start": 12603,
+      "End": 12936,
+      "BodyStart": 12646,
+      "Original": "void Sat_ProofCheck0( Vec_Set_t * vProof )\n{\n    satset * pNode, * pFanin;\n    int i, j, k, nSize;\n    Vec_SetForEachEntry( satset *, vProof, nSize, pNode, i, j )\n    {\n        nSize = Vec_SetWordNum( 2 + pNode-\u003enEnts );\n        Proof_NodeForeachFanin( vProof, pNode, pFanin, k )\n            assert( (pNode-\u003epEnts[k] \u003e\u003e 2) );\n    }\n}",
+      "Draft": "func Sat_ProofCheck0(vProof *Vec_Set_t) {\n    var pNode, pFanin *satset;\n    var i, j, k, nSize int32;\n    // inlining of macro Vec_SetForEachEntry\n    for  i = 0; i \u003c= vProof.iPage; i++  {                               for  j = 2; j \u003c Vec_SetLimit(vProof.pPages[i]) \u0026\u0026 ((pNode) = (satset *)(vProof.pPages[i] + (j))); j += nSize  {\n        nSize = Vec_SetWordNum( 2 + pNode.nEnts );\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            assert((pNode.pEnts[k] \u003e\u003e 2), \"(pNode.pEnts[k] \u003e\u003e 2)\");\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Sat_ProofReduce",
+      "Start": 12938,
+      "End": 15826,
+      "BodyStart": 13012,
+      "Original": "int Sat_ProofReduce( Vec_Set_t * vProof, void * pRoots, int hProofPivot )\n{\n//    Vec_Set_t * vProof   = (Vec_Set_t *)\u0026s-\u003eProofs;\n//    Vec_Int_t * vRoots   = (Vec_Int_t *)\u0026s-\u003eclaProofs;\n    Vec_Int_t * vRoots   = (Vec_Int_t *)pRoots;\n//    Vec_Int_t * vClauses = (Vec_Int_t *)\u0026s-\u003eclauses;\n    int fVerbose = 0;\n    Vec_Ptr_t * vUsed;\n    satset * pNode, * pFanin, * pPivot;\n    int i, j, k, hTemp, nSize;\n    abctime clk = Abc_Clock();\n    static abctime TimeTotal = 0;\n    int RetValue;\n//Sat_ProofCheck0( vProof );\n\n    // collect visited nodes\n    nSize = Proof_MarkUsedRec( vProof, vRoots );\n    vUsed = Vec_PtrAlloc( nSize );\n//Sat_ProofCheck0( vProof );\n\n    // relabel nodes to use smaller space\n    Vec_SetShrinkS( vProof, 2 );\n    Vec_SetForEachEntry( satset *, vProof, nSize, pNode, i, j )\n    {\n        nSize = Vec_SetWordNum( 2 + pNode-\u003enEnts );\n        if ( pNode-\u003eId == 0 ) \n            continue;\n        pNode-\u003eId = Vec_SetAppendS( vProof, 2 + pNode-\u003enEnts );\n        assert( pNode-\u003eId \u003e 0 );\n        Vec_PtrPush( vUsed, pNode );\n        // update fanins\n        Proof_NodeForeachFanin( vProof, pNode, pFanin, k )\n            if ( (pNode-\u003epEnts[k] \u0026 1) == 0 ) // proof node\n            {\n                assert( pFanin-\u003eId \u003e 0 );\n                pNode-\u003epEnts[k] = (pFanin-\u003eId \u003c\u003c 2) | (pNode-\u003epEnts[k] \u0026 2);\n            }\n//            else // problem clause\n//                assert( (int*)pFanin \u003e= Vec_IntArray(vClauses) \u0026\u0026 (int*)pFanin \u003c Vec_IntArray(vClauses)+Vec_IntSize(vClauses) );\n    }\n    // update roots\n    Proof_ForeachNodeVec1( vRoots, vProof, pNode, i )\n        Vec_IntWriteEntry( vRoots, i, pNode-\u003eId );\n    // determine new pivot\n    assert( hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof) );\n    pPivot = Proof_NodeRead( vProof, hProofPivot );\n    RetValue = Vec_SetHandCurrentS(vProof);\n    // compact the nodes\n    Vec_PtrForEachEntry( satset *, vUsed, pNode, i )\n    {\n        hTemp = pNode-\u003eId; pNode-\u003eId = 0;\n        memmove( Vec_SetEntry(vProof, hTemp), pNode, sizeof(word)*Proof_NodeWordNum(pNode-\u003enEnts) );\n        if ( pPivot \u0026\u0026 pPivot \u003c= pNode )\n        {\n            RetValue = hTemp;\n            pPivot = NULL;\n        }\n    }\n    Vec_SetWriteEntryNum( vProof, Vec_PtrSize(vUsed) );\n    Vec_PtrFree( vUsed );\n\n    // report the result\n    if ( fVerbose )\n    {\n        printf( \"\\n\" );\n        printf( \"The proof was reduced from %6.2f MB to %6.2f MB (by %6.2f %%)  \", \n            1.0 * Vec_SetMemory(vProof) / (1\u003c\u003c20), 1.0 * Vec_SetMemoryS(vProof) / (1\u003c\u003c20), \n            100.0 * (Vec_SetMemory(vProof) - Vec_SetMemoryS(vProof)) / Vec_SetMemory(vProof) );\n        TimeTotal += Abc_Clock() - clk;\n        Abc_PrintTime( 1, \"Time\", TimeTotal );\n    }\n    Vec_SetShrink( vProof, Vec_SetHandCurrentS(vProof) );\n    Vec_SetShrinkLimits( vProof );\n//    Sat_ProofReduceCheck( s );\n//Sat_ProofCheck0( vProof );\n\n    return RetValue;\n}",
+      "Draft": "func Sat_ProofReduce(vProof *Vec_Set_t, pRoots any, hProofPivot int32) int32 {\n//    Vec_Set_t * vProof   = (Vec_Set_t *)\u0026s-\u003eProofs;\n//    Vec_Int_t * vRoots   = (Vec_Int_t *)\u0026s-\u003eclaProofs;\n    var vRoots *Vec_Int_t    = (Vec_Int_t *)pRoots;\n//    Vec_Int_t * vClauses = (Vec_Int_t *)\u0026s-\u003eclauses;\n    var fVerbose int32;\n    var vUsed *Vec_Ptr_t;\n    var pNode, pFanin, pPivot *satset;\n    var i, j, k, hTemp, nSize int32;\n    var clk abctime  = Abc_Clock();\n    \n    var RetValue int32;\n//Sat_ProofCheck0( vProof );\n\n    // collect visited nodes\n    nSize = Proof_MarkUsedRec( vProof, vRoots );\n    vUsed = Vec_PtrAlloc( nSize );\n//Sat_ProofCheck0( vProof );\n\n    // relabel nodes to use smaller space\n    Vec_SetShrinkS( vProof, 2 );\n    // inlining of macro Vec_SetForEachEntry\n    for  i = 0; i \u003c= vProof.iPage; i++  {                               for  j = 2; j \u003c Vec_SetLimit(vProof.pPages[i]) \u0026\u0026 ((pNode) = (satset *)(vProof.pPages[i] + (j))); j += nSize  {\n        nSize = Vec_SetWordNum( 2 + pNode.nEnts );\n        if pNode.Id == 0 { \n            continue; }\n        pNode.Id = Vec_SetAppendS( vProof, 2 + pNode.nEnts );\n        assert(pNode.Id \u003e 0, \"pNode.Id \u003e 0\");\n        Vec_PtrPush( vUsed, pNode );\n        // update fanins\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if (pNode.pEnts[k] \u0026 1) == 0 { // proof node\n            \n                assert(pFanin.Id \u003e 0, \"pFanin.Id \u003e 0\");\n                pNode.pEnts[k] = (pFanin.Id \u003c\u003c 2) | (pNode.pEnts[k] \u0026 2);\n            }\n        }\n//            else // problem clause\n//                assert( (int*)pFanin \u003e= Vec_IntArray(vClauses) \u0026\u0026 (int*)pFanin \u003c Vec_IntArray(vClauses)+Vec_IntSize(vClauses) );\n    }\n    }\n    // update roots\n    // inlining of macro Proof_ForeachNodeVec1\n    for  i = 1; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vRoots,i))); i++  {\n        Vec_IntWriteEntry( vRoots, i, pNode.Id );\n    }\n    // determine new pivot\n    assert(hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof), \"hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof)\");\n    pPivot = Proof_NodeRead( vProof, hProofPivot );\n    RetValue = Vec_SetHandCurrentS(vProof);\n    // compact the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vUsed)) \u0026\u0026 (((pNode) = (satset *)Vec_PtrEntry(vUsed, i)), 1); i++  {\n        hTemp = pNode.Id; pNode.Id = 0;\n        memmove( Vec_SetEntry(vProof, hTemp), pNode, sizeof(word)*Proof_NodeWordNum(pNode.nEnts) );\n        if (pPivot != nil) \u0026\u0026 pPivot \u003c= pNode {\n            RetValue = hTemp;\n            pPivot = nil;\n        }\n    }\n    Vec_SetWriteEntryNum( vProof, Vec_PtrSize(vUsed) );\n    Vec_PtrFree( vUsed );\n\n    // report the result\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The proof was reduced from %6.2f MB to %6.2f MB (by %6.2f %%)  \", 1.0 * Vec_SetMemory(vProof) / (1\u003c\u003c20), 1.0 * Vec_SetMemoryS(vProof) / (1\u003c\u003c20), 100.0 * (Vec_SetMemory(vProof) - Vec_SetMemoryS(vProof)) / Vec_SetMemory(vProof));\n        spStatic_Sat_ProofReduce_TimeTotal += Abc_Clock() - clk;\n        Abc_PrintTime( 1, \"Time\", spStatic_Sat_ProofReduce_TimeTotal );\n    }\n    Vec_SetShrink( vProof, Vec_SetHandCurrentS(vProof) );\n    Vec_SetShrinkLimits( vProof );\n//    Sat_ProofReduceCheck( s );\n//Sat_ProofCheck0( vProof );\n\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Sat_ProofCollectCore",
+      "Start": 20345,
+      "End": 21391,
+      "BodyStart": 20419,
+      "Original": "Vec_Int_t * Sat_ProofCollectCore( Vec_Set_t * vProof, Vec_Int_t * vUsed )\n{\n    Vec_Int_t * vCore;\n    satset * pNode, * pFanin;\n    unsigned * pBitMap;\n    int i, k, MaxCla = 0;\n    // find the largest number\n    Proof_ForeachNodeVec( vUsed, vProof, pNode, i )\n        Proof_NodeForeachFanin( vProof, pNode, pFanin, k )\n            if ( pFanin == NULL )\n                MaxCla = Abc_MaxInt( MaxCla, pNode-\u003epEnts[k] \u003e\u003e 2 );\n    // allocate bitmap\n    pBitMap = ABC_CALLOC( unsigned, Abc_BitWordNum(MaxCla) + 1 );\n    // collect leaves\n    vCore = Vec_IntAlloc( 1000 );\n    Proof_ForeachNodeVec( vUsed, vProof, pNode, i )\n        Proof_NodeForeachFanin( vProof, pNode, pFanin, k )\n            if ( pFanin == NULL )\n            {\n                int Entry = (pNode-\u003epEnts[k] \u003e\u003e 2);\n                if ( Abc_InfoHasBit(pBitMap, Entry) )\n                    continue;\n                Abc_InfoSetBit(pBitMap, Entry);\n                Vec_IntPush( vCore, Entry );\n            }\n    ABC_FREE( pBitMap );\n//    Vec_IntUniqify( vCore );\n    return vCore;\n}",
+      "Draft": "func Sat_ProofCollectCore(vProof *Vec_Set_t, vUsed *Vec_Int_t) *Vec_Int_t {\n    var vCore *Vec_Int_t;\n    var pNode, pFanin *satset;\n    var pBitMap *uint32;\n    var i, k, MaxCla int32;\n    // find the largest number\n    // inlining of macro Proof_ForeachNodeVec\n    for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,i))); i++  {\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if pFanin == nil {\n                MaxCla = Abc_MaxInt( MaxCla, pNode.pEnts[k] \u003e\u003e 2 ); }\n        }\n    }\n    // allocate bitmap\n    // inlining of macro ABC_CALLOC\n    pBitMap = ((unsigned *) calloc((size_t)(Abc_BitWordNum(MaxCla) + 1), sizeof(unsigned)));\n    // collect leaves\n    vCore = Vec_IntAlloc( 1000 );\n    // inlining of macro Proof_ForeachNodeVec\n    for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,i))); i++  {\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if pFanin == nil {\n                var Entry int32  = (pNode.pEnts[k] \u003e\u003e 2);\n                if Abc_InfoHasBit(pBitMap, Entry) {\n                    continue; }\n                Abc_InfoSetBit(pBitMap, Entry);\n                Vec_IntPush( vCore, Entry );\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pBitMap) ? (free((char *) (pBitMap)), (pBitMap) = 0) : 0);\n//    Vec_IntUniqify( vCore );\n    return vCore;\n}"
+    },
+    {
+      "Name": "Proof_DeriveCore",
+      "Start": 31364,
+      "End": 31799,
+      "BodyStart": 31421,
+      "Original": "void * Proof_DeriveCore( Vec_Set_t * vProof, int hRoot )\n{\n    Vec_Int_t Roots = { 1, 1, \u0026hRoot }, * vRoots = \u0026Roots;\n    Vec_Int_t * vCore, * vUsed;\n    if ( hRoot == -1 )\n        return NULL;\n    // collect visited clauses\n    vUsed = Proof_CollectUsedIter( vProof, vRoots, 0 );\n    // collect core clauses \n    vCore = Sat_ProofCollectCore( vProof, vUsed );\n    Vec_IntFree( vUsed );\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}",
+      "Draft": "func Proof_DeriveCore(vProof *Vec_Set_t, hRoot int32) any {\n    var Roots Vec_Int_t = Vec_Int_t{ 1, 1, \u0026hRoot };\n    var vRoots *Vec_Int_t = \u0026Roots;\n    var vCore, vUsed *Vec_Int_t;\n    if hRoot == -1 {\n        return nil; }\n    // collect visited clauses\n    vUsed = Proof_CollectUsedIter( vProof, vRoots, 0 );\n    // collect core clauses \n    vCore = Sat_ProofCollectCore( vProof, vUsed );\n    Vec_IntFree( vUsed );\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset::unsigned learnt :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1110,
+      "End": 1136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset::unsigned mark   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1136,
+      "End": 1162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset::unsigned partA  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1162,
+      "End": 1188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset::unsigned nEnts  : 29;",
+      "Category": "struct-field-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1188,
+      "End": 1214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset::int      pEnts[0];",
+      "Category": "struct-field-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1231,
+      "End": 1254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::struct::satset",
+      "Category": "struct-review",
+      "Symbol": "satset",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1060,
+      "End": 1257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::mechanical::static::14694",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 13379,
+      "End": 13385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::mechanical::sizeof::16813",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14953,
+      "End": 14959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::mechanical::sizeof::23033",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20806,
+      "End": 20806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::1845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1845,
+      "End": 1854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::13882",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12706,
+      "End": 12706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::14467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13152,
+      "End": 13165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::15181",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13679,
+      "End": 13679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::16667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14803,
+      "End": 14803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::22975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20806,
+      "End": 20806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::pointer-cast::23840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21320,
+      "End": 21320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::macro::Proof_ForeachClauseVec",
+      "Category": "macro-review",
+      "Symbol": "Proof_ForeachClauseVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2174,
+      "End": 2341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::macro::Proof_ForeachNodeVec",
+      "Category": "macro-review",
+      "Symbol": "Proof_ForeachNodeVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2342,
+      "End": 2507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::macro::Proof_ForeachNodeVec1",
+      "Category": "macro-review",
+      "Symbol": "Proof_ForeachNodeVec1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2508,
+      "End": 2674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::macro::Proof_NodeForeachFanin",
+      "Category": "macro-review",
+      "Symbol": "Proof_NodeForeachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2720,
+      "End": 2932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_NodeRead",
+      "Category": "semantic-review",
+      "Symbol": "Proof_NodeRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1747,
+      "End": 1878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_NodeWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Proof_NodeWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1879,
+      "End": 2010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_ClauseSetEnts",
+      "Category": "semantic-review",
+      "Symbol": "Proof_ClauseSetEnts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2012,
+      "End": 2132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_CleanCollected",
+      "Category": "semantic-review",
+      "Symbol": "Proof_CleanCollected",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3923,
+      "End": 4107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Proof_CollectUsed_iter",
+      "Category": "ternary-review",
+      "Symbol": "Proof_CollectUsed_iter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4343,
+      "End": 5323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_CollectUsed_iter",
+      "Category": "semantic-review",
+      "Symbol": "Proof_CollectUsed_iter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4343,
+      "End": 5323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_CollectUsedIter",
+      "Category": "semantic-review",
+      "Symbol": "Proof_CollectUsedIter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5324,
+      "End": 6333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Proof_CollectUsed_rec",
+      "Category": "ternary-review",
+      "Symbol": "Proof_CollectUsed_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6609,
+      "End": 7017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_CollectUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Proof_CollectUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6609,
+      "End": 7017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_CollectUsedRec",
+      "Category": "semantic-review",
+      "Symbol": "Proof_CollectUsedRec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7018,
+      "End": 7318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Proof_MarkUsed_rec",
+      "Category": "ternary-review",
+      "Symbol": "Proof_MarkUsed_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7592,
+      "End": 7980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_MarkUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Proof_MarkUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7592,
+      "End": 7980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_MarkUsedRec",
+      "Category": "semantic-review",
+      "Symbol": "Proof_MarkUsedRec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7981,
+      "End": 8229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Sat_ProofCheck0",
+      "Category": "ternary-review",
+      "Symbol": "Sat_ProofCheck0",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12603,
+      "End": 12936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Sat_ProofCheck0",
+      "Category": "semantic-review",
+      "Symbol": "Sat_ProofCheck0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12603,
+      "End": 12936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::void-pointer::Sat_ProofReduce",
+      "Category": "void-pointer-review",
+      "Symbol": "Sat_ProofReduce",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12938,
+      "End": 15826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Sat_ProofReduce",
+      "Category": "ternary-review",
+      "Symbol": "Sat_ProofReduce",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12938,
+      "End": 15826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Sat_ProofReduce",
+      "Category": "semantic-review",
+      "Symbol": "Sat_ProofReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12938,
+      "End": 15826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::ternary::Sat_ProofCollectCore",
+      "Category": "ternary-review",
+      "Symbol": "Sat_ProofCollectCore",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20345,
+      "End": 21391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Sat_ProofCollectCore",
+      "Category": "semantic-review",
+      "Symbol": "Sat_ProofCollectCore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20345,
+      "End": 21391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::void-pointer::Proof_DeriveCore",
+      "Category": "void-pointer-review",
+      "Symbol": "Proof_DeriveCore",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 31364,
+      "End": 31799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::Proof_DeriveCore",
+      "Category": "semantic-review",
+      "Symbol": "Proof_DeriveCore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31364,
+      "End": 31799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32046
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [satProof.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver.]\n\n  Synopsis    [Proof manipulation procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satProof.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecSet.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"satTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*\n    Proof is represented as a vector of records.\n    A resolution record is represented by a handle (an offset in this vector).\n    A resolution record entry is \u003csize\u003e\u003clabel\u003e\u003cant1\u003e\u003cant2\u003e...\u003cantN\u003e\n    Label is initialized to 0. Root clauses are given by their handles.\n    They are marked by bitshifting by 2 bits up and setting the LSB to 1\n*/\n\n   \ntype satset struct {\n    learnt uint32; /* C bitfield: 1 bits; review packing and truncation */\n    mark uint32; /* C bitfield: 1 bits; review packing and truncation */\n    partA uint32; /* C bitfield: 1 bits; review packing and truncation */\n    nEnts uint32; /* C bitfield: 29 bits; review packing and truncation */\n    Id      int32;\n    pEnts [0]int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//static inline satset* Proof_ClauseRead  ( Vec_Int_t* p, int h )     { assert( h \u003e 0 );     return satset_read( (veci *)p, h );    }\n//static inline satset* Proof_ClauseRead  ( Vec_Int_t* p, int h )     { assert( h \u003e 0 );     return (satset *)Vec_IntEntryP( p, h );}\nfunc Proof_NodeRead(p *Vec_Set_t, h int32) *satset { assert(h \u003e 0, \"h \u003e 0\");     return (satset*)Vec_SetEntry( p, h );  }\nfunc Proof_NodeWordNum(nEnts int32) int32 { assert(nEnts \u003e 0, \"nEnts \u003e 0\"); return 1 + ((nEnts + 1) \u003e\u003e 1);         }\n\nfunc Proof_ClauseSetEnts(p *Vec_Set_t, h int32, nEnts int32) { Proof_NodeRead(p, h).nEnts = nEnts;             }\n\n// iterating through nodes in the proof\n// Original macro:\n// #define Proof_ForeachClauseVec( pVec, p, pNode, i )          \\\n//     for ( i = 0; (i \u003c Vec_IntSize(pVec)) \u0026\u0026 ((pNode) = Proof_ClauseRead(p, Vec_IntEntry(pVec,i))); i++ )\n\n// Original macro:\n// #define Proof_ForeachNodeVec( pVec, p, pNode, i )            \\\n//     for ( i = 0; (i \u003c Vec_IntSize(pVec)) \u0026\u0026 ((pNode) = Proof_NodeRead(p, Vec_IntEntry(pVec,i))); i++ )\n\n// Original macro:\n// #define Proof_ForeachNodeVec1( pVec, p, pNode, i )            \\\n//     for ( i = 1; (i \u003c Vec_IntSize(pVec)) \u0026\u0026 ((pNode) = Proof_NodeRead(p, Vec_IntEntry(pVec,i))); i++ )\n\n\n// iterating through fanins of a proof node\n// Original macro:\n// #define Proof_NodeForeachFanin( pProof, pNode, pFanin, i )        \\\n//     for ( i = 0; (i \u003c (int)pNode-\u003enEnts) \u0026\u0026 (((pFanin) = (pNode-\u003epEnts[i] \u0026 1) ? NULL : Proof_NodeRead(pProof, pNode-\u003epEnts[i] \u003e\u003e 2)), 1); i++ )\n\n/*\n#define Proof_NodeForeachLeaf( pClauses, pNode, pLeaf, i )   \\\n    for ( i = 0; (i \u003c (int)pNode-\u003enEnts) \u0026\u0026 (((pLeaf) = (pNode-\u003epEnts[i] \u0026 1) ? Proof_ClauseRead(pClauses, pNode-\u003epEnts[i] \u003e\u003e 2) : NULL), 1); i++ )\n#define Proof_NodeForeachFaninLeaf( pProof, pClauses, pNode, pFanin, i )    \\\n    for ( i = 0; (i \u003c (int)pNode-\u003enEnts) \u0026\u0026 ((pFanin) = (pNode-\u003epEnts[i] \u0026 1) ? Proof_ClauseRead(pClauses, pNode-\u003epEnts[i] \u003e\u003e 2) : Proof_NodeRead(pProof, pNode-\u003epEnts[i] \u003e\u003e 2)); i++ )\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans collected resultion nodes belonging to the proof.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Proof_CleanCollected(vProof *Vec_Set_t, vUsed *Vec_Int_t) {\n    var pNode *satset;\n    var hNode int32;\n    // inlining of macro Proof_ForeachNodeVec\n    for  hNode = 0; (hNode \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,hNode))); hNode++  {\n        pNode.Id = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Proof_CollectUsed_iter(vProof *Vec_Set_t, hNode int32, vUsed *Vec_Int_t, vStack *Vec_Int_t) {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    if pNode.Id {\n        return; }\n    // start with node\n    pNode.Id = 1;\n    Vec_IntPush( vStack, hNode \u003c\u003c 1 );\n    // perform DFS search\n    for  Vec_IntSize(vStack)  {\n        hNode = Vec_IntPop( vStack );\n        if hNode \u0026 1 { // extracted second time\n        \n            Vec_IntPush( vUsed, hNode \u003e\u003e 1 );\n            continue;\n        }\n        // extracted first time        \n        Vec_IntPush( vStack, hNode ^ 1 ); // add second time\n        // add its anticedents        ;\n        pNode = Proof_NodeRead( vProof, hNode \u003e\u003e 1 );\n        // inlining of macro Proof_NodeForeachFanin\n        for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n            if (pNext != nil) \u0026\u0026 !pNext.Id {\n                pNext.Id = 1;\n                Vec_IntPush( vStack, (pNode.pEnts[i] \u003e\u003e 2) \u003c\u003c 1 ); // add first time\n            }\n        }\n    }\n}\nfunc Proof_CollectUsedIter(vProof *Vec_Set_t, vRoots *Vec_Int_t, fSort int32) *Vec_Int_t {\n    var fVerify int32;\n    var vUsed, vStack *Vec_Int_t;\n    var clk abctime  = Abc_Clock();\n    var i, Entry, iPrev int32;\n    vUsed = Vec_IntAlloc( 1000 );\n    vStack = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Proof_CollectUsed_iter( vProof, Entry, vUsed, vStack ); }\n    }\n    Vec_IntFree( vStack );\n//    Abc_PrintTime( 1, \"Iterative clause collection time\", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    Abc_MergeSort( Vec_IntArray(vUsed), Vec_IntSize(vUsed) );\n//    Abc_PrintTime( 1, \"Postprocessing with sorting time\", Abc_Clock() - clk );\n    // verify topological order\n    if fVerify != 0 {\n        iPrev = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 (((Entry) = Vec_IntEntry(vUsed, i)), 1); i++  {\n            if iPrev \u003e= Entry {\n                fmt.Printf(\"Out of topological order!!!\\n\"); }\n            assert(iPrev \u003c Entry, \"iPrev \u003c Entry\");\n            iPrev = Entry;\n        }\n    }\n    return vUsed;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collects useful proof nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Proof_CollectUsed_rec(vProof *Vec_Set_t, hNode int32, vUsed *Vec_Int_t) {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    if pNode.Id {\n        return; }\n    pNode.Id = 1;\n    // inlining of macro Proof_NodeForeachFanin\n    for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n        if (pNext != nil) \u0026\u0026 !pNext.Id {\n            Proof_CollectUsed_rec( vProof, pNode.pEnts[i] \u003e\u003e 2, vUsed ); }\n    }\n    Vec_IntPush( vUsed, hNode );\n}\nfunc Proof_CollectUsedRec(vProof *Vec_Set_t, vRoots *Vec_Int_t) *Vec_Int_t {\n    var vUsed *Vec_Int_t;\n    var i, Entry int32;\n    vUsed = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Proof_CollectUsed_rec( vProof, Entry, vUsed ); }\n    }\n    return vUsed;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively visits useful proof nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Proof_MarkUsed_rec(vProof *Vec_Set_t, hNode int32) int32 {\n    var pNext *satset;\n    var pNode *satset = Proof_NodeRead( vProof, hNode );\n    var i int32;\n    var Counter int32 = 1;\n    if pNode.Id {\n        return 0; }\n    pNode.Id = 1;\n    // inlining of macro Proof_NodeForeachFanin\n    for  i = 0; (i \u003c int32(pNode.nEnts)) \u0026\u0026 (((pNext) = (pNode.pEnts[i] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[i] \u003e\u003e 2)), 1); i++  {\n        if (pNext != nil) \u0026\u0026 !pNext.Id {\n            Counter += Proof_MarkUsed_rec( vProof, pNode.pEnts[i] \u003e\u003e 2 ); }\n    }\n    return Counter;\n}\nfunc Proof_MarkUsedRec(vProof *Vec_Set_t, vRoots *Vec_Int_t) int32 {\n    var i, Entry, Counter int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((Entry) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        if Entry \u003e= 0 {\n            Counter += Proof_MarkUsed_rec( vProof, Entry ); }\n    }\n    return Counter;\n}\n\n\n\n  \n/**Function*************************************************************\n\n  Synopsis    [Checks the validity of the check point.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid Sat_ProofReduceCheck_rec( Vec_Set_t * vProof, Vec_Int_t * vClauses, satset * pNode, int hClausePivot, Vec_Ptr_t * vVisited )\n{\n    satset * pFanin;\n    int k;\n    if ( pNode-\u003eId )\n        return;\n    pNode-\u003eId = -1;\n    Proof_NodeForeachFaninLeaf( vProof, vClauses, pNode, pFanin, k )\n        if ( (pNode-\u003epEnts[k] \u0026 1) == 0 ) // proof node\n            Sat_ProofReduceCheck_rec( vProof, vClauses, pFanin, hClausePivot, vVisited );\n        else // problem clause\n            assert( (pNode-\u003epEnts[k] \u003e\u003e 2) \u003c hClausePivot );\n    Vec_PtrPush( vVisited, pNode );\n}\nvoid Sat_ProofReduceCheckOne( sat_solver2 * s, int iLearnt, Vec_Ptr_t * vVisited )\n{\n    Vec_Set_t * vProof   = (Vec_Set_t *)\u0026s-\u003eProofs;\n    Vec_Int_t * vClauses = (Vec_Int_t *)\u0026s-\u003eclauses;\n    Vec_Int_t * vRoots   = (Vec_Int_t *)\u0026s-\u003eclaProofs;\n    int hProofNode = Vec_IntEntry( vRoots, iLearnt );\n    satset * pNode = Proof_NodeRead( vProof, hProofNode );\n    Sat_ProofReduceCheck_rec( vProof, vClauses, pNode, s-\u003ehClausePivot, vVisited );\n}\nvoid Sat_ProofReduceCheck( sat_solver2 * s )\n{\n    Vec_Ptr_t * vVisited;\n    satset * c;\n    int h, i = 1;\n    vVisited = Vec_PtrAlloc( 1000 );\n    sat_solver_foreach_learnt( s, c, h )\n        if ( h \u003c s-\u003ehLearntPivot )\n            Sat_ProofReduceCheckOne( s, i++, vVisited );\n    Vec_PtrForEachEntry( satset *, vVisited, c, i )\n        c-\u003eId = 0;\n    Vec_PtrFree( vVisited );\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    [Reduces the proof to contain only roots and their children.]\n\n  Description [The result is updated proof and updated roots.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid Sat_ProofReduce2( sat_solver2 * s )\n{\n    Vec_Set_t * vProof   = (Vec_Set_t *)\u0026s-\u003eProofs;\n    Vec_Int_t * vRoots   = (Vec_Int_t *)\u0026s-\u003eclaProofs;\n    Vec_Int_t * vClauses = (Vec_Int_t *)\u0026s-\u003eclauses;\n\n    int fVerbose = 0;\n    Vec_Int_t * vUsed;\n    satset * pNode, * pFanin, * pPivot;\n    int i, k, hTemp;\n    abctime clk = Abc_Clock();\n    static abctime TimeTotal = 0;\n\n    // collect visited nodes\n    vUsed = Proof_CollectUsedIter( vProof, vRoots, 1 );\n\n    // relabel nodes to use smaller space\n    Vec_SetShrinkS( vProof, 2 );\n    Proof_ForeachNodeVec( vUsed, vProof, pNode, i )\n    {\n        pNode-\u003eId = Vec_SetAppendS( vProof, 2+pNode-\u003enEnts );\n        Proof_NodeForeachFaninLeaf( vProof, vClauses, pNode, pFanin, k )\n            if ( (pNode-\u003epEnts[k] \u0026 1) == 0 ) // proof node\n                pNode-\u003epEnts[k] = (pFanin-\u003eId \u003c\u003c 2) | (pNode-\u003epEnts[k] \u0026 2);\n            else // problem clause\n                assert( (int*)pFanin \u003e= Vec_IntArray(vClauses) \u0026\u0026 (int*)pFanin \u003c Vec_IntArray(vClauses)+Vec_IntSize(vClauses) );\n    }\n    // update roots\n    Proof_ForeachNodeVec1( vRoots, vProof, pNode, i )\n        Vec_IntWriteEntry( vRoots, i, pNode-\u003eId );\n    // determine new pivot\n    assert( s-\u003ehProofPivot \u003e= 1 \u0026\u0026 s-\u003ehProofPivot \u003c= Vec_SetHandCurrent(vProof) );\n    pPivot = Proof_NodeRead( vProof, s-\u003ehProofPivot );\n    s-\u003ehProofPivot = Vec_SetHandCurrentS(vProof);\n    // compact the nodes\n    Proof_ForeachNodeVec( vUsed, vProof, pNode, i )\n    {\n        hTemp = pNode-\u003eId; pNode-\u003eId = 0;\n        memmove( Vec_SetEntry(vProof, hTemp), pNode, sizeof(word)*Proof_NodeWordNum(pNode-\u003enEnts) );\n        if ( pPivot \u0026\u0026 pPivot \u003c= pNode )\n        { \n            s-\u003ehProofPivot = hTemp;\n            pPivot = NULL;\n        }\n    }\n    Vec_SetWriteEntryNum( vProof, Vec_IntSize(vUsed) );\n    Vec_IntFree( vUsed );\n\n    // report the result\n    if ( fVerbose )\n    {\n        printf( \"\\n\" );\n        printf( \"The proof was reduced from %6.2f MB to %6.2f MB (by %6.2f %%)  \", \n            1.0 * Vec_SetMemory(vProof) / (1\u003c\u003c20), 1.0 * Vec_SetMemoryS(vProof) / (1\u003c\u003c20), \n            100.0 * (Vec_SetMemory(vProof) - Vec_SetMemoryS(vProof)) / Vec_SetMemory(vProof) );\n        TimeTotal += Abc_Clock() - clk;\n        Abc_PrintTime( 1, \"Time\", TimeTotal );\n    }\n    Vec_SetShrink( vProof, Vec_SetHandCurrentS(vProof) );\n//    Sat_ProofReduceCheck( s );\n} \n*/\n\n\nfunc Sat_ProofCheck0(vProof *Vec_Set_t) {\n    var pNode, pFanin *satset;\n    var i, j, k, nSize int32;\n    // inlining of macro Vec_SetForEachEntry\n    for  i = 0; i \u003c= vProof.iPage; i++  {                               for  j = 2; j \u003c Vec_SetLimit(vProof.pPages[i]) \u0026\u0026 ((pNode) = (satset *)(vProof.pPages[i] + (j))); j += nSize  {\n        nSize = Vec_SetWordNum( 2 + pNode.nEnts );\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            assert((pNode.pEnts[k] \u003e\u003e 2), \"(pNode.pEnts[k] \u003e\u003e 2)\");\n        }\n    }\n    }\n}\n\nvar spStatic_Sat_ProofReduce_TimeTotal abctime;\nfunc Sat_ProofReduce(vProof *Vec_Set_t, pRoots any, hProofPivot int32) int32 {\n//    Vec_Set_t * vProof   = (Vec_Set_t *)\u0026s-\u003eProofs;\n//    Vec_Int_t * vRoots   = (Vec_Int_t *)\u0026s-\u003eclaProofs;\n    var vRoots *Vec_Int_t    = (Vec_Int_t *)pRoots;\n//    Vec_Int_t * vClauses = (Vec_Int_t *)\u0026s-\u003eclauses;\n    var fVerbose int32;\n    var vUsed *Vec_Ptr_t;\n    var pNode, pFanin, pPivot *satset;\n    var i, j, k, hTemp, nSize int32;\n    var clk abctime  = Abc_Clock();\n    \n    var RetValue int32;\n//Sat_ProofCheck0( vProof );\n\n    // collect visited nodes\n    nSize = Proof_MarkUsedRec( vProof, vRoots );\n    vUsed = Vec_PtrAlloc( nSize );\n//Sat_ProofCheck0( vProof );\n\n    // relabel nodes to use smaller space\n    Vec_SetShrinkS( vProof, 2 );\n    // inlining of macro Vec_SetForEachEntry\n    for  i = 0; i \u003c= vProof.iPage; i++  {                               for  j = 2; j \u003c Vec_SetLimit(vProof.pPages[i]) \u0026\u0026 ((pNode) = (satset *)(vProof.pPages[i] + (j))); j += nSize  {\n        nSize = Vec_SetWordNum( 2 + pNode.nEnts );\n        if pNode.Id == 0 { \n            continue; }\n        pNode.Id = Vec_SetAppendS( vProof, 2 + pNode.nEnts );\n        assert(pNode.Id \u003e 0, \"pNode.Id \u003e 0\");\n        Vec_PtrPush( vUsed, pNode );\n        // update fanins\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if (pNode.pEnts[k] \u0026 1) == 0 { // proof node\n            \n                assert(pFanin.Id \u003e 0, \"pFanin.Id \u003e 0\");\n                pNode.pEnts[k] = (pFanin.Id \u003c\u003c 2) | (pNode.pEnts[k] \u0026 2);\n            }\n        }\n//            else // problem clause\n//                assert( (int*)pFanin \u003e= Vec_IntArray(vClauses) \u0026\u0026 (int*)pFanin \u003c Vec_IntArray(vClauses)+Vec_IntSize(vClauses) );\n    }\n    }\n    // update roots\n    // inlining of macro Proof_ForeachNodeVec1\n    for  i = 1; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vRoots,i))); i++  {\n        Vec_IntWriteEntry( vRoots, i, pNode.Id );\n    }\n    // determine new pivot\n    assert(hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof), \"hProofPivot \u003e= 1 \u0026\u0026 hProofPivot \u003c= Vec_SetHandCurrent(vProof)\");\n    pPivot = Proof_NodeRead( vProof, hProofPivot );\n    RetValue = Vec_SetHandCurrentS(vProof);\n    // compact the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vUsed)) \u0026\u0026 (((pNode) = (satset *)Vec_PtrEntry(vUsed, i)), 1); i++  {\n        hTemp = pNode.Id; pNode.Id = 0;\n        memmove( Vec_SetEntry(vProof, hTemp), pNode, sizeof(word)*Proof_NodeWordNum(pNode.nEnts) );\n        if (pPivot != nil) \u0026\u0026 pPivot \u003c= pNode {\n            RetValue = hTemp;\n            pPivot = nil;\n        }\n    }\n    Vec_SetWriteEntryNum( vProof, Vec_PtrSize(vUsed) );\n    Vec_PtrFree( vUsed );\n\n    // report the result\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"The proof was reduced from %6.2f MB to %6.2f MB (by %6.2f %%)  \", 1.0 * Vec_SetMemory(vProof) / (1\u003c\u003c20), 1.0 * Vec_SetMemoryS(vProof) / (1\u003c\u003c20), 100.0 * (Vec_SetMemory(vProof) - Vec_SetMemoryS(vProof)) / Vec_SetMemory(vProof));\n        spStatic_Sat_ProofReduce_TimeTotal += Abc_Clock() - clk;\n        Abc_PrintTime( 1, \"Time\", spStatic_Sat_ProofReduce_TimeTotal );\n    }\n    Vec_SetShrink( vProof, Vec_SetHandCurrentS(vProof) );\n    Vec_SetShrinkLimits( vProof );\n//    Sat_ProofReduceCheck( s );\n//Sat_ProofCheck0( vProof );\n\n    return RetValue;\n}\n\n     \n\n                                                                        \n\n                                            \n\n                                                                          \n               \n                \n\n                \n\n                                                                        \n                                                                                          \n \n               \n                                     \n                               \n                                          \n                                          \n                                                 \n         \n                                      \n                    \n         \n                     \n     \n                                                      \n                 \n     \n                    \n     \n                                                             \n                 \n     \n                         \n                          \n                                           \n                            \n                                          \n                                         \n                                               \n                                          \n                                         \n                                                     \n                                  \n                                                                    \n                           \n                               \n                                    \n             \n \n\n                                                                        \n\n                                                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                                           \n \n                  \n                   \n                                                       \n                       \n                                               \n                           \n                                                 \n \n\n                                                                        \n\n                                                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                      \n \n                                                    \n                                                   \n                                                                  \n                          \n                               \n                                           \n                                         \n                               \n                          \n                      \n               \n                              \n                                                       \n                                          \n                               \n                                 \n                                   \n                                                  \n     \n                    \n                                                                                     \n                                                \n         \n                                                                                          \n                                                                                \n                                                         \n         \n                          \n                  \n     \n                         \n                      \n                                          \n                               \n                                                                                          \n                           \n                                                                                             \n        \n                                                     \n                                                  \n              \n                             \n                         \n \n      \n\n/**Function*************************************************************\n\n  Synopsis    [Collects nodes belonging to the UNSAT core.]\n\n  Description [The resulting array contains 1-based IDs of root clauses.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_ProofCollectCore(vProof *Vec_Set_t, vUsed *Vec_Int_t) *Vec_Int_t {\n    var vCore *Vec_Int_t;\n    var pNode, pFanin *satset;\n    var pBitMap *uint32;\n    var i, k, MaxCla int32;\n    // find the largest number\n    // inlining of macro Proof_ForeachNodeVec\n    for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,i))); i++  {\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if pFanin == nil {\n                MaxCla = Abc_MaxInt( MaxCla, pNode.pEnts[k] \u003e\u003e 2 ); }\n        }\n    }\n    // allocate bitmap\n    // inlining of macro ABC_CALLOC\n    pBitMap = ((unsigned *) calloc((size_t)(Abc_BitWordNum(MaxCla) + 1), sizeof(unsigned)));\n    // collect leaves\n    vCore = Vec_IntAlloc( 1000 );\n    // inlining of macro Proof_ForeachNodeVec\n    for  i = 0; (i \u003c Vec_IntSize(vUsed)) \u0026\u0026 ((pNode) = Proof_NodeRead(vProof, Vec_IntEntry(vUsed,i))); i++  {\n        // inlining of macro Proof_NodeForeachFanin\n        for  k = 0; (k \u003c int32(pNode.nEnts)) \u0026\u0026 (((pFanin) = (pNode.pEnts[k] \u0026 1) ? nil : Proof_NodeRead(vProof, pNode.pEnts[k] \u003e\u003e 2)), 1); k++  {\n            if pFanin == nil {\n                var Entry int32  = (pNode.pEnts[k] \u003e\u003e 2);\n                if Abc_InfoHasBit(pBitMap, Entry) {\n                    continue; }\n                Abc_InfoSetBit(pBitMap, Entry);\n                Vec_IntPush( vCore, Entry );\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pBitMap) ? (free((char *) (pBitMap)), (pBitMap) = 0) : 0);\n//    Vec_IntUniqify( vCore );\n    return vCore;\n}\n\n     \n\n                                                                        \n\n                                                              \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                           \n \n               \n                        \n                             \n                        \n                                                  \n                                      \n                                        \n                                             \n                                                                          \n                        \n                                             \n     \n                                              \n                                             \n                               \n                   \n     \n                                                      \n                                            \n                         \n                        \n                           \n             \n                    \n                                                                                                                   \n                    \n                                                                                                                  \n                    \n                                                                                                                  \n                    \n                                                                                                                                                             \n                    \n                                                                                                                             \n \n\n                                                                        \n\n                                                  \n\n                                                               \n               \n                \n\n                \n\n                                                                        \n                                                               \n \n                                                     \n                                                    \n                                                  \n                                                                  \n                                                       \n                             \n                     \n                            \n                                      \n                               \n                      \n                                                                                         \n                          \n                      \n                    \n\n                                                  \n\n                            \n                                                       \n                                                    \n                                                   \n                                               \n\n                                              \n                                          \n                                              \n                                               \n\n                    \n                                 \n                                               \n                                                  \n                                \n\n                                                          \n                                                   \n                                                       \n     \n                           \n         \n                                         \n                                                  \n                                                                        \n                                                                                                    \n         \n            \n                                         \n                                   \n                                            \n                                       \n     \n                           \n\n                                                              \n                                                   \n     \n                                \n                                   \n                                                                        \n         \n                                                            \n                         \n                                                          \n                                                            \n                                                                              \n                \n                                                                               \n         \n                                   \n                                       \n     \n                      \n                                                         \n                                  \n                           \n\n                            \n                                                       \n                                                 \n                                                   \n                      \n              \n                         \n                         \n                             \n                \n \n\n\n                                                                        \n\n                                                  \n\n                                                               \n               \n                \n\n                \n\n                                                                        \n                                                                    \n \n                                                     \n                                                    \n                                                  \n                                                                  \n                                                       \n                             \n                     \n                                       \n                                                    \n                                            \n                                      \n                                       \n                          \n                      \n                    \n\n                                                  \n\n                            \n                                                       \n                                                    \n                                                     \n                                               \n\n                                              \n                                          \n                                              \n                                               \n\n                    \n                                 \n\n                                                          \n                                                   \n                                                       \n     \n                           \n         \n                                           \n                                         \n                                                  \n                                                                        \n                                                                                                      \n                                                                                                   \n         \n            \n                                           \n                                        \n                                   \n                                            \n                                         \n                                                \n     \n                           \n\n                                                              \n                                                   \n     \n                                \n                                   \n                                                                        \n         \n                                                              \n                                                             \n                         \n                                                            \n                                                                                                              \n                                                            \n                                                                                \n                                                                                                            \n                \n                                                                                 \n                                                                                                             \n         \n                                   \n                                         \n                                                \n     \n                      \n                                                         \n                                    \n                             \n\n                            \n                                                       \n                                                 \n                                                   \n                      \n              \n                         \n                         \n                             \n                        \n                       \n                \n \n\n      \n\n/**Function*************************************************************\n\n  Synopsis    [Computes UNSAT core.]\n\n  Description [The result is the array of root clause indexes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Proof_DeriveCore(vProof *Vec_Set_t, hRoot int32) any {\n    var Roots Vec_Int_t = Vec_Int_t{ 1, 1, \u0026hRoot };\n    var vRoots *Vec_Int_t = \u0026Roots;\n    var vCore, vUsed *Vec_Int_t;\n    if hRoot == -1 {\n        return nil; }\n    // collect visited clauses\n    vUsed = Proof_CollectUsedIter( vProof, vRoots, 0 );\n    // collect core clauses \n    vCore = Sat_ProofCollectCore( vProof, vUsed );\n    Vec_IntFree( vUsed );\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

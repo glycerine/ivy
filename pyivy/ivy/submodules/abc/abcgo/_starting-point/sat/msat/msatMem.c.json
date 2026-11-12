@@ -1,0 +1,1258 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c",
+  "SHA256": "5df24654e7773a09cf76dabfbbcfbd2c6d1af060e51d8d5c4a09cd2f9a51a0bb",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 95,
+        "Column": 74,
+        "ByteOffset": 3698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_MmFixed_t *) malloc(sizeof(Msat_MmFixed_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Msat_MmFixed_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 112,
+        "Column": 80,
+        "ByteOffset": 4223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 4856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\","
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 72,
+        "ByteOffset": 5158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 65,
+        "ByteOffset": 5285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 57,
+        "ByteOffset": 5392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pEntriesFree == nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 169,
+        "Column": 41,
+        "ByteOffset": 6123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 171,
+        "Column": 41,
+        "ByteOffset": 6258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 174,
+        "Column": 81,
+        "ByteOffset": 6415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pEntriesFree = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 235,
+        "Column": 72,
+        "ByteOffset": 8333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 286,
+        "Column": 73,
+        "ByteOffset": 9697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_MmFlex_t *) malloc(sizeof(Msat_MmFlex_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 9747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Msat_MmFlex_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 296,
+        "Column": 80,
+        "ByteOffset": 10030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 10520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 10640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\","
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 325,
+        "Column": 72,
+        "ByteOffset": 10888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 327,
+        "Column": 65,
+        "ByteOffset": 11015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 328,
+        "Column": 57,
+        "ByteOffset": 11122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 350,
+        "Column": 41,
+        "ByteOffset": 11822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 352,
+        "Column": 41,
+        "ByteOffset": 11957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 360,
+        "Column": 77,
+        "ByteOffset": 12327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pCurrent = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 12566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCurrent + nBytes \u003c= p.pEnd );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 419,
+        "Column": 73,
+        "ByteOffset": 14267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_MmStep_t *) malloc(sizeof(Msat_MmStep_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 422,
+        "Column": 82,
+        "ByteOffset": 14455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMems = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMems)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 428,
+        "Column": 81,
+        "ByteOffset": 14798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMap = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMapSize+1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 459,
+        "Column": 63,
+        "ByteOffset": 15680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 460,
+        "Column": 62,
+        "ByteOffset": 15788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 461,
+        "Column": 57,
+        "ByteOffset": 15889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 480,
+        "Column": 71,
+        "ByteOffset": 16443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nBytes)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 501,
+        "Column": 66,
+        "ByteOffset": 17012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_MmFixedStart",
+      "Start": 3469,
+      "End": 4124,
+      "BodyStart": 3522,
+      "Original": "Msat_MmFixed_t * Msat_MmFixedStart( int nEntrySize )\n{\n    Msat_MmFixed_t * p;\n\n    p = ABC_ALLOC( Msat_MmFixed_t, 1 );\n    memset( p, 0, sizeof(Msat_MmFixed_t) );\n\n    p-\u003enEntrySize    = nEntrySize;\n    p-\u003enEntriesAlloc = 0;\n    p-\u003enEntriesUsed  = 0;\n    p-\u003epEntriesFree  = NULL;\n\n    if ( nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) )\n        p-\u003enChunkSize = (1 \u003c\u003c 10);\n    else\n        p-\u003enChunkSize = (1\u003c\u003c16) / nEntrySize;\n    if ( p-\u003enChunkSize \u003c 8 )\n        p-\u003enChunkSize = 8;\n\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enMemoryAlloc  = 0;\n    return p;\n}",
+      "Draft": "func Msat_MmFixedStart(nEntrySize int32) *Msat_MmFixed_t {\n    var p *Msat_MmFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmFixed_t *) malloc(sizeof(Msat_MmFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_MmFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    if nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) {\n        p.nChunkSize = (1 \u003c\u003c 10);\n    } else {\n        p.nChunkSize = (1\u003c\u003c16) / nEntrySize; }\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_MmFixedStop",
+      "Start": 4360,
+      "End": 4966,
+      "BodyStart": 4418,
+      "Original": "void Msat_MmFixedStop( Msat_MmFixed_t * p, int fVerbose )\n{\n    int i;\n    if ( p == NULL )\n        return;\n    if ( fVerbose )\n    {\n        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\",\n            p-\u003enEntrySize, p-\u003enChunkSize, p-\u003enChunks );\n        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\",\n            p-\u003enEntriesUsed, p-\u003enEntriesMax, p-\u003enEntrySize * p-\u003enEntriesUsed, p-\u003enMemoryAlloc );\n    }\n    for ( i = 0; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    ABC_FREE( p-\u003epChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_MmFixedStop(p *Msat_MmFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_MmFixedEntryFetch",
+      "Start": 5202,
+      "End": 6573,
+      "BodyStart": 5254,
+      "Original": "char * Msat_MmFixedEntryFetch( Msat_MmFixed_t * p )\n{\n    char * pTemp;\n    int i;\n\n    // check if there are still free entries\n    if ( p-\u003enEntriesUsed == p-\u003enEntriesAlloc )\n    { // need to allocate more entries\n        assert( p-\u003epEntriesFree == NULL );\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        p-\u003epEntriesFree = ABC_ALLOC( char, p-\u003enEntrySize * p-\u003enChunkSize );\n        p-\u003enMemoryAlloc += p-\u003enEntrySize * p-\u003enChunkSize;\n        // transform these entries into a linked list\n        pTemp = p-\u003epEntriesFree;\n        for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n        {\n            *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n            pTemp += p-\u003enEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = NULL;\n        // add the chunk to the chunk storage\n        p-\u003epChunks[ p-\u003enChunks++ ] = p-\u003epEntriesFree;\n        // add to the number of entries allocated\n        p-\u003enEntriesAlloc += p-\u003enChunkSize;\n    }\n    // incrememt the counter of used entries\n    p-\u003enEntriesUsed++;\n    if ( p-\u003enEntriesMax \u003c p-\u003enEntriesUsed )\n        p-\u003enEntriesMax = p-\u003enEntriesUsed;\n    // return the first entry in the free entry list\n    pTemp = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = *((char **)pTemp);\n    return pTemp;\n}",
+      "Draft": "func Msat_MmFixedEntryFetch(p *Msat_MmFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Msat_MmFixedEntryRecycle",
+      "Start": 6809,
+      "End": 7075,
+      "BodyStart": 6876,
+      "Original": "void Msat_MmFixedEntryRecycle( Msat_MmFixed_t * p, char * pEntry )\n{\n    // decrement the counter of used entries\n    p-\u003enEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = pEntry;\n}",
+      "Draft": "func Msat_MmFixedEntryRecycle(p *Msat_MmFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}"
+    },
+    {
+      "Name": "Msat_MmFixedRestart",
+      "Start": 7359,
+      "End": 8099,
+      "BodyStart": 7406,
+      "Original": "void Msat_MmFixedRestart( Msat_MmFixed_t * p )\n{\n    int i;\n    char * pTemp;\n\n    // deallocate all chunks except the first one\n    for ( i = 1; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    p-\u003enChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p-\u003epChunks[0];\n    for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n    {\n        *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n        pTemp += p-\u003enEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = NULL;\n    // set the free entry list\n    p-\u003epEntriesFree  = p-\u003epChunks[0];\n    // set the correct statistics\n    p-\u003enMemoryAlloc  = p-\u003enEntrySize * p-\u003enChunkSize;\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enEntriesAlloc = p-\u003enChunkSize;\n    p-\u003enEntriesUsed  = 0;\n}",
+      "Draft": "func Msat_MmFixedRestart(p *Msat_MmFixed_t) {\n    var i int32;\n    var pTemp string;\n\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}"
+    },
+    {
+      "Name": "Msat_MmFixedReadMemUsage",
+      "Start": 8335,
+      "End": 8417,
+      "BodyStart": 8386,
+      "Original": "int Msat_MmFixedReadMemUsage( Msat_MmFixed_t * p )\n{\n    return p-\u003enMemoryAlloc;\n}",
+      "Draft": "func Msat_MmFixedReadMemUsage(p *Msat_MmFixed_t) int32 {\n    return p.nMemoryAlloc;\n}"
+    },
+    {
+      "Name": "Msat_MmFlexStart",
+      "Start": 8741,
+      "End": 9186,
+      "BodyStart": 8776,
+      "Original": "Msat_MmFlex_t * Msat_MmFlexStart()\n{\n    Msat_MmFlex_t * p;\n\n    p = ABC_ALLOC( Msat_MmFlex_t, 1 );\n    memset( p, 0, sizeof(Msat_MmFlex_t) );\n\n    p-\u003enEntriesUsed  = 0;\n    p-\u003epCurrent      = NULL;\n    p-\u003epEnd          = NULL;\n\n    p-\u003enChunkSize    = (1 \u003c\u003c 12);\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enMemoryAlloc  = 0;\n    return p;\n}",
+      "Draft": "func Msat_MmFlexStart() *Msat_MmFlex_t {\n    var p *Msat_MmFlex_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmFlex_t *) malloc(sizeof(Msat_MmFlex_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_MmFlex_t) );\n\n    p.nEntriesUsed  = 0;\n    p.pCurrent      = nil;\n    p.pEnd          = nil;\n\n    p.nChunkSize    = (1 \u003c\u003c 12);\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_MmFlexStop",
+      "Start": 9422,
+      "End": 9948,
+      "BodyStart": 9478,
+      "Original": "void Msat_MmFlexStop( Msat_MmFlex_t * p, int fVerbose )\n{\n    int i;\n    if ( p == NULL )\n        return;\n    if ( fVerbose )\n    {\n        printf( \"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\",\n            p-\u003enChunkSize, p-\u003enChunks );\n        printf( \"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\",\n            p-\u003enEntriesUsed, p-\u003enMemoryUsed, p-\u003enMemoryAlloc );\n    }\n    for ( i = 0; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    ABC_FREE( p-\u003epChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_MmFlexStop(p *Msat_MmFlex_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\", p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\", p.nEntriesUsed, p.nMemoryUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_MmFlexEntryFetch",
+      "Start": 10184,
+      "End": 11356,
+      "BodyStart": 10246,
+      "Original": "char * Msat_MmFlexEntryFetch( Msat_MmFlex_t * p, int nBytes )\n{\n    char * pTemp;\n    // check if there are still free entries\n    if ( p-\u003epCurrent == NULL || p-\u003epCurrent + nBytes \u003e p-\u003epEnd )\n    { // need to allocate more entries\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        if ( nBytes \u003e p-\u003enChunkSize )\n        {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p-\u003enChunkSize = 2 * nBytes;\n        }\n        p-\u003epCurrent = ABC_ALLOC( char, p-\u003enChunkSize );\n        p-\u003epEnd     = p-\u003epCurrent + p-\u003enChunkSize;\n        p-\u003enMemoryAlloc += p-\u003enChunkSize;\n        // add the chunk to the chunk storage\n        p-\u003epChunks[ p-\u003enChunks++ ] = p-\u003epCurrent;\n    }\n    assert( p-\u003epCurrent + nBytes \u003c= p-\u003epEnd );\n    // increment the counter of used entries\n    p-\u003enEntriesUsed++;\n    // keep track of the memory used\n    p-\u003enMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p-\u003epCurrent;\n    p-\u003epCurrent += nBytes;\n    return pTemp;\n}",
+      "Draft": "func Msat_MmFlexEntryFetch(p *Msat_MmFlex_t, nBytes int32) string {\n    var pTemp string;\n    // check if there are still free entries\n    if p.pCurrent == nil || p.pCurrent + nBytes \u003e p.pEnd { // need to allocate more entries\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        if nBytes \u003e p.nChunkSize {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p.nChunkSize = 2 * nBytes;\n        }\n        // inlining of macro ABC_ALLOC\n        p.pCurrent = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.pEnd     = p.pCurrent + p.nChunkSize;\n        p.nMemoryAlloc += p.nChunkSize;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pCurrent;\n    }\n    assert(p.pCurrent + nBytes \u003c= p.pEnd, \"p.pCurrent + nBytes \u003c= p.pEnd\");\n    // increment the counter of used entries\n    p.nEntriesUsed++;\n    // keep track of the memory used\n    p.nMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p.pCurrent;\n    p.pCurrent += nBytes;\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Msat_MmFlexReadMemUsage",
+      "Start": 11592,
+      "End": 11672,
+      "BodyStart": 11641,
+      "Original": "int Msat_MmFlexReadMemUsage( Msat_MmFlex_t * p )\n{\n    return p-\u003enMemoryAlloc;\n}",
+      "Draft": "func Msat_MmFlexReadMemUsage(p *Msat_MmFlex_t) int32 {\n    return p.nMemoryAlloc;\n}"
+    },
+    {
+      "Name": "Msat_MmStepStart",
+      "Start": 12611,
+      "End": 13438,
+      "BodyStart": 12658,
+      "Original": "Msat_MmStep_t * Msat_MmStepStart( int nSteps )\n{\n    Msat_MmStep_t * p;\n    int i, k;\n    p = ABC_ALLOC( Msat_MmStep_t, 1 );\n    p-\u003enMems = nSteps;\n    // start the fixed memory managers\n    p-\u003epMems = ABC_ALLOC( Msat_MmFixed_t *, p-\u003enMems );\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        p-\u003epMems[i] = Msat_MmFixedStart( (8\u003c\u003ci) );\n    // set up the mapping of the required memory size into the corresponding manager\n    p-\u003enMapSize = (4\u003c\u003cp-\u003enMems);\n    p-\u003epMap = ABC_ALLOC( Msat_MmFixed_t *, p-\u003enMapSize+1 );\n    p-\u003epMap[0] = NULL;\n    for ( k = 1; k \u003c= 4; k++ )\n        p-\u003epMap[k] = p-\u003epMems[0];\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        for ( k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++ )\n            p-\u003epMap[k] = p-\u003epMems[i];\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    return p;\n}",
+      "Draft": "func Msat_MmStepStart(nSteps int32) *Msat_MmStep_t {\n    var p *Msat_MmStep_t;\n    var i, k int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmStep_t *) malloc(sizeof(Msat_MmStep_t) * (size_t)(1)));\n    p.nMems = nSteps;\n    // start the fixed memory managers\n    // inlining of macro ABC_ALLOC\n    p.pMems = ((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMems)));\n    for  i = 0; i \u003c p.nMems; i++  {\n        p.pMems[i] = Msat_MmFixedStart( (8\u003c\u003ci) );\n    }\n    // set up the mapping of the required memory size into the corresponding manager\n    p.nMapSize = (4\u003c\u003cp.nMems);\n    // inlining of macro ABC_ALLOC\n    p.pMap = ((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMapSize+1)));\n    p.pMap[0] = nil;\n    for  k = 1; k \u003c= 4; k++  {\n        p.pMap[k] = p.pMems[0];\n    }\n    for  i = 0; i \u003c p.nMems; i++  {\n        for  k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++  {\n            p.pMap[k] = p.pMems[i];\n        }\n    }\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_MmStepStop",
+      "Start": 13699,
+      "End": 13927,
+      "BodyStart": 13755,
+      "Original": "void Msat_MmStepStop( Msat_MmStep_t * p, int fVerbose )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        Msat_MmFixedStop( p-\u003epMems[i], fVerbose );\n    ABC_FREE( p-\u003epMems );\n    ABC_FREE( p-\u003epMap );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_MmStepStop(p *Msat_MmStep_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        Msat_MmFixedStop( p.pMems[i], fVerbose );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_MmStepEntryFetch",
+      "Start": 14181,
+      "End": 14484,
+      "BodyStart": 14243,
+      "Original": "char * Msat_MmStepEntryFetch( Msat_MmStep_t * p, int nBytes )\n{\n    if ( nBytes == 0 )\n        return NULL;\n    if ( nBytes \u003e p-\u003enMapSize )\n    {\n//        printf( \"Allocating %d bytes.\\n\", nBytes );\n        return ABC_ALLOC( char, nBytes );\n    }\n    return Msat_MmFixedEntryFetch( p-\u003epMap[nBytes] );\n}",
+      "Draft": "func Msat_MmStepEntryFetch(p *Msat_MmStep_t, nBytes int32) string {\n    if nBytes == 0 {\n        return nil; }\n    if nBytes \u003e p.nMapSize {\n//        printf( \"Allocating %d bytes.\\n\", nBytes );\n        // inlining of macro ABC_ALLOC\n        return ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n    }\n    return Msat_MmFixedEntryFetch( p.pMap[nBytes] );\n}"
+    },
+    {
+      "Name": "Msat_MmStepEntryRecycle",
+      "Start": 14740,
+      "End": 15004,
+      "BodyStart": 14817,
+      "Original": "void Msat_MmStepEntryRecycle( Msat_MmStep_t * p, char * pEntry, int nBytes )\n{\n    if ( nBytes == 0 )\n        return;\n    if ( nBytes \u003e p-\u003enMapSize )\n    {\n        ABC_FREE( pEntry );\n        return;\n    }\n    Msat_MmFixedEntryRecycle( p-\u003epMap[nBytes], pEntry );\n}",
+      "Draft": "func Msat_MmStepEntryRecycle(p *Msat_MmStep_t, pEntry string, nBytes int32) {\n    if nBytes == 0 {\n        return; }\n    if nBytes \u003e p.nMapSize {\n        // inlining of macro ABC_FREE\n        ((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);\n        return;\n    }\n    Msat_MmFixedEntryRecycle( p.pMap[nBytes], pEntry );\n}"
+    },
+    {
+      "Name": "Msat_MmStepReadMemUsage",
+      "Start": 15240,
+      "End": 15425,
+      "BodyStart": 15289,
+      "Original": "int Msat_MmStepReadMemUsage( Msat_MmStep_t * p )\n{\n    int i, nMemTotal = 0;\n    for ( i = 0; i \u003c p-\u003enMems; i++ )\n        nMemTotal += p-\u003epMems[i]-\u003enMemoryAlloc;\n    return nMemTotal;\n}",
+      "Draft": "func Msat_MmStepReadMemUsage(p *Msat_MmStep_t) int32 {\n    var i, nMemTotal int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        nMemTotal += p.pMems[i].nMemoryAlloc;\n    }\n    return nMemTotal;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::struct::Msat_MmFixed_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_MmFixed_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 917,
+      "End": 1771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::struct::Msat_MmFlex_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_MmFlex_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1773,
+      "End": 2507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::struct::Msat_MmStep_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_MmStep_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2510,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::3629",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3557,
+      "End": 3557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::3687",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3607,
+      "End": 3613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::4162",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4018,
+      "End": 4018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::6089",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::6164",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::6310",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5663,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::9632",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8810,
+      "End": 8810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::9689",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8859,
+      "End": 8865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::9974",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9080,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::11794",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::11869",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::12242",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10845,
+      "End": 10845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::14181",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12705,
+      "End": 12705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::14371",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12813,
+      "End": 12813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::14714",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13074,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::mechanical::sizeof::16348",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14396,
+      "End": 14396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::3603",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3557,
+      "End": 3557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::4144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4018,
+      "End": 4018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::4168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4018,
+      "End": 4018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::5112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4891,
+      "End": 4891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::5236",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4922,
+      "End": 4922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::5345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4950,
+      "End": 4950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6095",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5663,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6583",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5928,
+      "End": 5937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::6709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6054,
+      "End": 6063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::7192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6537,
+      "End": 6546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::7663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7008,
+      "End": 7017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::8259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7535,
+      "End": 7535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::8468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7717,
+      "End": 7726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::8578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7827,
+      "End": 7836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::9607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8810,
+      "End": 8810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::9956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9080,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::9980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9080,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::10844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9873,
+      "End": 9873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::10968",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9904,
+      "End": 9904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11077",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9932,
+      "End": 9932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11851",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::11875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10529,
+      "End": 10529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::12226",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10845,
+      "End": 10845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::14156",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12705,
+      "End": 12705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::14343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12813,
+      "End": 12813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::14377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12813,
+      "End": 12813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::14686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13074,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::14720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13074,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::15572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13860,
+      "End": 13860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::15683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13886,
+      "End": 13886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::15786",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13911,
+      "End": 13911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::16332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14396,
+      "End": 14396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::pointer-cast::16926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14904,
+      "End": 14904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedStart",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3469,
+      "End": 4124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::ternary::Msat_MmFixedStop",
+      "Category": "ternary-review",
+      "Symbol": "Msat_MmFixedStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4360,
+      "End": 4966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedStop",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4360,
+      "End": 4966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5202,
+      "End": 6573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedEntryRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedEntryRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6809,
+      "End": 7075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::ternary::Msat_MmFixedRestart",
+      "Category": "ternary-review",
+      "Symbol": "Msat_MmFixedRestart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7359,
+      "End": 8099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedRestart",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7359,
+      "End": 8099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFixedReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFixedReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8335,
+      "End": 8417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFlexStart",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFlexStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8741,
+      "End": 9186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::ternary::Msat_MmFlexStop",
+      "Category": "ternary-review",
+      "Symbol": "Msat_MmFlexStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9422,
+      "End": 9948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFlexStop",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFlexStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9422,
+      "End": 9948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFlexEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFlexEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10184,
+      "End": 11356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmFlexReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmFlexReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11592,
+      "End": 11672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmStepStart",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmStepStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12611,
+      "End": 13438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::ternary::Msat_MmStepStop",
+      "Category": "ternary-review",
+      "Symbol": "Msat_MmStepStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13699,
+      "End": 13927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmStepStop",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmStepStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13699,
+      "End": 13927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmStepEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmStepEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14181,
+      "End": 14484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::ternary::Msat_MmStepEntryRecycle",
+      "Category": "ternary-review",
+      "Symbol": "Msat_MmStepEntryRecycle",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14740,
+      "End": 15004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmStepEntryRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmStepEntryRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14740,
+      "End": 15004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::Msat_MmStepReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Msat_MmStepReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15240,
+      "End": 15425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatMem.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15450
+    }
+  ],
+  "Draft": "package msat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [msatMem.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Memory managers borrowed from Extra.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatMem.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Msat_MmFixed_t_ struct {\n    // information about individual entries\n    nEntrySize           int32;    // the size of one entry\n    nEntriesAlloc           int32; // the total number of entries allocated\n    nEntriesUsed           int32;  // the number of entries in use\n    nEntriesMax           int32;   // the max number of entries in use\n    pEntriesFree         string;  // the linked list of free entries\n\n    // this is where the memory is stored\n    nChunkSize           int32;    // the size of one chunk\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n\n    // statistics\n    nMemoryUsed           int32;   // memory used in the allocated entries\n    nMemoryAlloc           int32;  // memory allocated\n}\n\ntype Msat_MmFlex_t_ struct {\n    // information about individual entries\n    nEntriesUsed           int32;  // the number of entries allocated\n    pCurrent         string;      // the current pointer to free memory\n    pEnd         string;          // the first entry outside the free memory\n\n    // this is where the memory is stored\n    nChunkSize           int32;    // the size of one chunk\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n\n    // statistics\n    nMemoryUsed           int32;   // memory used in the allocated entries\n    nMemoryAlloc           int32;  // memory allocated\n}\n\n\ntype Msat_MmStep_t_ struct {\n    nMems                int32;    // the number of fixed memory managers employed\n    pMems    **Msat_MmFixed_t;    // memory managers: 2^1 words, 2^2 words, etc\n    nMapSize                int32; // the size of the memory array\n    pMap    **Msat_MmFixed_t;     // maps the number of bytes into its memory manager\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates memory pieces of fixed size.]\n\n  Description [The size of the chunk is computed as the minimum of\n  1024 entries and 64K. Can only work with entry size at least 4 byte long.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedStart(nEntrySize int32) *Msat_MmFixed_t {\n    var p *Msat_MmFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmFixed_t *) malloc(sizeof(Msat_MmFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_MmFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    if nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) {\n        p.nChunkSize = (1 \u003c\u003c 10);\n    } else {\n        p.nChunkSize = (1\u003c\u003c16) / nEntrySize; }\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedStop(p *Msat_MmFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedEntryFetch(p *Msat_MmFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedEntryRecycle(p *Msat_MmFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Relocates all the memory except the first chunk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedRestart(p *Msat_MmFixed_t) {\n    var i int32;\n    var pTemp string;\n\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFixedReadMemUsage(p *Msat_MmFixed_t) int32 {\n    return p.nMemoryAlloc;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates entries of flexible size.]\n\n  Description [Can only work with entry size at least 4 byte long.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFlexStart() *Msat_MmFlex_t {\n    var p *Msat_MmFlex_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmFlex_t *) malloc(sizeof(Msat_MmFlex_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_MmFlex_t) );\n\n    p.nEntriesUsed  = 0;\n    p.pCurrent      = nil;\n    p.pEnd          = nil;\n\n    p.nChunkSize    = (1 \u003c\u003c 12);\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFlexStop(p *Msat_MmFlex_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Flexible memory manager: Chunk size = %d. Chunks used = %d.\\n\", p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %d. Memory used = %d. Memory alloc = %d.\\n\", p.nEntriesUsed, p.nMemoryUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFlexEntryFetch(p *Msat_MmFlex_t, nBytes int32) string {\n    var pTemp string;\n    // check if there are still free entries\n    if p.pCurrent == nil || p.pCurrent + nBytes \u003e p.pEnd { // need to allocate more entries\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        if nBytes \u003e p.nChunkSize {\n            // resize the chunk size if more memory is requested than it can give\n            // (ideally, this should never happen)\n            p.nChunkSize = 2 * nBytes;\n        }\n        // inlining of macro ABC_ALLOC\n        p.pCurrent = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));\n        p.pEnd     = p.pCurrent + p.nChunkSize;\n        p.nMemoryAlloc += p.nChunkSize;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pCurrent;\n    }\n    assert(p.pCurrent + nBytes \u003c= p.pEnd, \"p.pCurrent + nBytes \u003c= p.pEnd\");\n    // increment the counter of used entries\n    p.nEntriesUsed++;\n    // keep track of the memory used\n    p.nMemoryUsed += nBytes;\n    // return the next entry\n    pTemp = p.pCurrent;\n    p.pCurrent += nBytes;\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmFlexReadMemUsage(p *Msat_MmFlex_t) int32 {\n    return p.nMemoryAlloc;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hierarchical memory manager.]\n\n  Description [This manager can allocate entries of any size.\n  Iternally they are mapped into the entries with the number of bytes\n  equal to the power of 2. The smallest entry size is 8 bytes. The\n  next one is 16 bytes etc. So, if the user requests 6 bytes, he gets \n  8 byte entry. If we asks for 25 bytes, he gets 32 byte entry etc.\n  The input parameters \"nSteps\" says how many fixed memory managers\n  are employed internally. Calling this procedure with nSteps equal\n  to 10 results in 10 hierarchically arranged internal memory managers, \n  which can allocate up to 4096 (1Kb) entries. Requests for larger \n  entries are handed over to malloc() and then ABC_FREE()ed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmStepStart(nSteps int32) *Msat_MmStep_t {\n    var p *Msat_MmStep_t;\n    var i, k int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_MmStep_t *) malloc(sizeof(Msat_MmStep_t) * (size_t)(1)));\n    p.nMems = nSteps;\n    // start the fixed memory managers\n    // inlining of macro ABC_ALLOC\n    p.pMems = ((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMems)));\n    for  i = 0; i \u003c p.nMems; i++  {\n        p.pMems[i] = Msat_MmFixedStart( (8\u003c\u003ci) );\n    }\n    // set up the mapping of the required memory size into the corresponding manager\n    p.nMapSize = (4\u003c\u003cp.nMems);\n    // inlining of macro ABC_ALLOC\n    p.pMap = ((Msat_MmFixed_t * *) malloc(sizeof(Msat_MmFixed_t *) * (size_t)(p.nMapSize+1)));\n    p.pMap[0] = nil;\n    for  k = 1; k \u003c= 4; k++  {\n        p.pMap[k] = p.pMems[0];\n    }\n    for  i = 0; i \u003c p.nMems; i++  {\n        for  k = (4\u003c\u003ci)+1; k \u003c= (8\u003c\u003ci); k++  {\n            p.pMap[k] = p.pMems[i];\n        }\n    }\n//for ( i = 1; i \u003c 100; i ++ )\n//printf( \"%10d: size = %10d\\n\", i, p-\u003epMap[i]-\u003enEntrySize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmStepStop(p *Msat_MmStep_t, fVerbose int32) {\n    var i int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        Msat_MmFixedStop( p.pMems[i], fVerbose );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmStepEntryFetch(p *Msat_MmStep_t, nBytes int32) string {\n    if nBytes == 0 {\n        return nil; }\n    if nBytes \u003e p.nMapSize {\n//        printf( \"Allocating %d bytes.\\n\", nBytes );\n        // inlining of macro ABC_ALLOC\n        return ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n    }\n    return Msat_MmFixedEntryFetch( p.pMap[nBytes] );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmStepEntryRecycle(p *Msat_MmStep_t, pEntry string, nBytes int32) {\n    if nBytes == 0 {\n        return; }\n    if nBytes \u003e p.nMapSize {\n        // inlining of macro ABC_FREE\n        ((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);\n        return;\n    }\n    Msat_MmFixedEntryRecycle( p.pMap[nBytes], pEntry );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_MmStepReadMemUsage(p *Msat_MmStep_t) int32 {\n    var i, nMemTotal int32;\n    for  i = 0; i \u003c p.nMems; i++  {\n        nMemTotal += p.pMems[i].nMemoryAlloc;\n    }\n    return nMemTotal;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

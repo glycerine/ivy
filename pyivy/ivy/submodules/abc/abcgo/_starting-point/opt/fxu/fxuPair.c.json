@@ -1,0 +1,450 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c",
+  "SHA256": "b4e23f53cbda92d93346fcdfeef1e2fc2c096e90bb214826e8df06677bf451ec",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLit1 \u0026\u0026 pLit2 ); // this is true if the covers are SCC-free"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 8074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Code == 15 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 13,
+        "ByteOffset": 14088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 442,
+        "Column": 85,
+        "ByteOffset": 14865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVar.ppPairs    = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fxu_Pair ** *) malloc(sizeof(Fxu_Pair **) * (size_t)(nCubes)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 443,
+        "Column": 84,
+        "ByteOffset": 14997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVar.ppPairs[0] = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fxu_Pair * *) malloc(sizeof(Fxu_Pair *) * (size_t)(nCubes * nCubes)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 15058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pVar.ppPairs[0], 0, sizeof(Fxu_Pair *) * nCubes * nCubes );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 484,
+        "Column": 75,
+        "ByteOffset": 16161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pVar.ppPairs[0]) ? (free((char *) (pVar.ppPairs[0])), (pVar.ppPairs[0]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 485,
+        "Column": 72,
+        "ByteOffset": 16295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pVar.ppPairs) ? (free((char *) (pVar.ppPairs)), (pVar.ppPairs) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 502,
+        "Column": 8,
+        "ByteOffset": 16734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "       assert( pCube1.pVar == pCube2.pVar );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 504,
+        "Column": 5,
+        "ByteOffset": 16821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPair, 0, sizeof(Fxu_Pair) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 17353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar == pPair.pCube2.pVar );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_PairCanonicize",
+      "Start": 3072,
+      "End": 3820,
+      "BodyStart": 3140,
+      "Original": "void Fxu_PairCanonicize( Fxu_Cube ** ppCube1, Fxu_Cube ** ppCube2 )\n{\n    Fxu_Lit * pLit1, * pLit2;\n    Fxu_Cube * pCubeTemp;\n\n    // walk through the cubes to determine \n    // the one that has higher first variable\n    pLit1 = (*ppCube1)-\u003elLits.pHead;\n    pLit2 = (*ppCube2)-\u003elLits.pHead;\n    while ( 1 )\n    {\n        if ( pLit1-\u003eiVar == pLit2-\u003eiVar )\n        {\n            pLit1 = pLit1-\u003epHNext;\n            pLit2 = pLit2-\u003epHNext;\n            continue;\n        }\n        assert( pLit1 \u0026\u0026 pLit2 ); // this is true if the covers are SCC-free\n        if ( pLit1-\u003eiVar \u003e pLit2-\u003eiVar )\n        { // swap the cubes\n            pCubeTemp = *ppCube1;\n            *ppCube1  = *ppCube2;\n            *ppCube2  = pCubeTemp;\n        }\n        break;\n    }\n}",
+      "Draft": "func Fxu_PairCanonicize(ppCube1 **Fxu_Cube, ppCube2 **Fxu_Cube) {\n    var pLit1, pLit2 *Fxu_Lit;\n    var pCubeTemp *Fxu_Cube;\n\n    // walk through the cubes to determine \n    // the one that has higher first variable\n    pLit1 = (*ppCube1).lLits.pHead;\n    pLit2 = (*ppCube2).lLits.pHead;\n    for {\n        if pLit1.iVar == pLit2.iVar {\n            pLit1 = pLit1.pHNext;\n            pLit2 = pLit2.pHNext;\n            continue;\n        }\n        assert(pLit1 \u0026\u0026 (pLit2 != nil), \"pLit1 \u0026\u0026 pLit2\"); // this is true if the covers are SCC-free\n        if pLit1.iVar \u003e pLit2.iVar { // swap the cubes\n            pCubeTemp = *ppCube1;\n            *ppCube1  = *ppCube2;\n            *ppCube2  = pCubeTemp;\n        }\n        break;\n    }\n}"
+    },
+    {
+      "Name": "Fxu_PairCanonicize2",
+      "Start": 4112,
+      "End": 4429,
+      "BodyStart": 4181,
+      "Original": "void Fxu_PairCanonicize2( Fxu_Cube ** ppCube1, Fxu_Cube ** ppCube2 )\n{\n    Fxu_Cube * pCubeTemp;\n    // canonicize the pair by ordering the cubes\n    if ( (*ppCube1)-\u003eiCube \u003e (*ppCube2)-\u003eiCube )\n    { // swap the cubes\n        pCubeTemp = *ppCube1;\n        *ppCube1  = *ppCube2;\n        *ppCube2  = pCubeTemp;\n    }\n}",
+      "Draft": "func Fxu_PairCanonicize2(ppCube1 **Fxu_Cube, ppCube2 **Fxu_Cube) {\n    var pCubeTemp *Fxu_Cube;\n    // canonicize the pair by ordering the cubes\n    if (*ppCube1).iCube \u003e (*ppCube2).iCube { // swap the cubes\n        pCubeTemp = *ppCube1;\n        *ppCube1  = *ppCube2;\n        *ppCube2  = pCubeTemp;\n    }\n}"
+    },
+    {
+      "Name": "Fxu_PairHashKeyArray",
+      "Start": 4665,
+      "End": 5062,
+      "BodyStart": 4771,
+      "Original": "unsigned Fxu_PairHashKeyArray( Fxu_Matrix * p, int piVarsC1[], int piVarsC2[], int nVarsC1, int nVarsC2 )\n{\n    int Offset1 = 100, Offset2 = 200, i;\n    unsigned Key;\n    // compute the hash key\n    Key = 0;\n    for ( i = 0; i \u003c nVarsC1; i++ )\n        Key ^= s_Primes[Offset1+i] * piVarsC1[i];\n    for ( i = 0; i \u003c nVarsC2; i++ )\n        Key ^= s_Primes[Offset2+i] * piVarsC2[i];\n    return Key;\n}",
+      "Draft": "func Fxu_PairHashKeyArray(p *Fxu_Matrix, piVarsC1 []int32, piVarsC2 []int32, nVarsC1 int32, nVarsC2 int32) uint32 {\n    var Offset1 int32 = 100;\n    var Offset2 int32 = 200;\n    var i int32;\n    var Key uint32;\n    // compute the hash key\n    Key = 0;\n    for  i = 0; i \u003c nVarsC1; i++  {\n        Key ^= s_Primes[Offset1+i] * piVarsC1[i];\n    }\n    for  i = 0; i \u003c nVarsC2; i++  {\n        Key ^= s_Primes[Offset2+i] * piVarsC2[i];\n    }\n    return Key;\n}"
+    },
+    {
+      "Name": "Fxu_PairHashKey",
+      "Start": 5604,
+      "End": 7202,
+      "BodyStart": 5755,
+      "Original": "unsigned Fxu_PairHashKey( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2, \n                         int * pnBase, int * pnLits1, int * pnLits2 )\n{\n    int Offset1 = 100, Offset2 = 200;\n    int nBase, nLits1, nLits2;\n    Fxu_Lit * pLit1, * pLit2;\n    unsigned Key;\n\n    // compute the hash key\n    Key    = 0;\n    nLits1 = 0;\n    nLits2 = 0;\n    nBase  = 0;\n    pLit1  = pCube1-\u003elLits.pHead;\n    pLit2  = pCube2-\u003elLits.pHead;\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003eiVar == pLit2-\u003eiVar )\n            { // ensure cube-free\n                pLit1 = pLit1-\u003epHNext;\n                pLit2 = pLit2-\u003epHNext;\n                // add this literal to the base\n                nBase++;\n            }\n            else if ( pLit1-\u003eiVar \u003c pLit2-\u003eiVar )\n            {\n                Key  ^= s_Primes[Offset1+nLits1] * pLit1-\u003eiVar;\n                pLit1 = pLit1-\u003epHNext;\n                nLits1++;\n            }\n            else\n            {\n                Key  ^= s_Primes[Offset2+nLits2] * pLit2-\u003eiVar;\n                pLit2 = pLit2-\u003epHNext;\n                nLits2++;\n            }\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n        {\n            Key  ^= s_Primes[Offset1+nLits1] * pLit1-\u003eiVar;\n            pLit1 = pLit1-\u003epHNext;\n            nLits1++;\n        }\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n        {\n            Key  ^= s_Primes[Offset2+nLits2] * pLit2-\u003eiVar;\n            pLit2 = pLit2-\u003epHNext;\n            nLits2++;\n        }\n        else\n            break;\n    }\n    *pnBase  = nBase;\n    *pnLits1 = nLits1;\n    *pnLits2 = nLits2;\n    return Key;\n}",
+      "Draft": "func Fxu_PairHashKey(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube, pnBase *int32, pnLits1 *int32, pnLits2 *int32) uint32 {\n    var Offset1 int32 = 100;\n    var Offset2 int32 = 200;\n    var nBase, nLits1, nLits2 int32;\n    var pLit1, pLit2 *Fxu_Lit;\n    var Key uint32;\n\n    // compute the hash key\n    Key    = 0;\n    nLits1 = 0;\n    nLits2 = 0;\n    nBase  = 0;\n    pLit1  = pCube1.lLits.pHead;\n    pLit2  = pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // ensure cube-free\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n                // add this literal to the base\n                nBase++;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {\n                Key  ^= s_Primes[Offset1+nLits1] * pLit1.iVar;\n                pLit1 = pLit1.pHNext;\n                nLits1++;\n            \n            } else {\n                Key  ^= s_Primes[Offset2+nLits2] * pLit2.iVar;\n                pLit2 = pLit2.pHNext;\n                nLits2++;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            Key  ^= s_Primes[Offset1+nLits1] * pLit1.iVar;\n            pLit1 = pLit1.pHNext;\n            nLits1++;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            Key  ^= s_Primes[Offset2+nLits2] * pLit2.iVar;\n            pLit2 = pLit2.pHNext;\n            nLits2++;\n        \n        } else {\n            break; }\n    }\n    *pnBase  = nBase;\n    *pnLits1 = nLits1;\n    *pnLits2 = nLits2;\n    return Key;\n}"
+    },
+    {
+      "Name": "Fxu_PairCompare",
+      "Start": 7526,
+      "End": 14124,
+      "BodyStart": 7586,
+      "Original": "int Fxu_PairCompare( Fxu_Pair * pPair1, Fxu_Pair * pPair2 )\n{\n    Fxu_Lit * pD1C1, * pD1C2;\n    Fxu_Lit * pD2C1, * pD2C2;\n    int TopVar1, TopVar2;\n    int Code;\n\n    if ( pPair1-\u003enLits1 != pPair2-\u003enLits1 )\n        return 0;\n    if ( pPair1-\u003enLits2 != pPair2-\u003enLits2 )\n        return 0;\n\n    pD1C1 = pPair1-\u003epCube1-\u003elLits.pHead;\n    pD1C2 = pPair1-\u003epCube2-\u003elLits.pHead;\n\n    pD2C1 = pPair2-\u003epCube1-\u003elLits.pHead;\n    pD2C2 = pPair2-\u003epCube2-\u003elLits.pHead;\n\n    Code  = pD1C1? 8: 0;\n    Code |= pD1C2? 4: 0;\n    Code |= pD2C1? 2: 0;\n    Code |= pD2C2? 1: 0;\n    assert( Code == 15 );\n\n    while ( 1 )\n    {\n        switch ( Code )\n        {\n        case 0:  // -- --      NULL   NULL     NULL   NULL \n            return 1;\n        case 1:  // -- -1      NULL   NULL     NULL   pD2C2\n            return 0;\n        case 2:  // -- 1-      NULL   NULL     pD2C1  NULL \n            return 0;\n        case 3:  // -- 11      NULL   NULL     pD2C1  pD2C2\n            if ( pD2C1-\u003eiVar != pD2C2-\u003eiVar )\n                return 0;\n            pD2C1 = pD2C1-\u003epHNext;\n            pD2C2 = pD2C2-\u003epHNext;\n            break;\n        case 4:  // -1 --      NULL   pD1C2    NULL   NULL \n            return 0;\n        case 5:  // -1 -1      NULL   pD1C2    NULL   pD2C2\n            if ( pD1C2-\u003eiVar != pD2C2-\u003eiVar )\n                return 0;\n            pD1C2 = pD1C2-\u003epHNext;\n            pD2C2 = pD2C2-\u003epHNext;\n            break;\n        case 6:  // -1 1-      NULL   pD1C2    pD2C1  NULL \n            return 0;\n        case 7:  // -1 11      NULL   pD1C2    pD2C1  pD2C2\n            TopVar2 = Fxu_Min( pD2C1-\u003eiVar, pD2C2-\u003eiVar );\n            if ( TopVar2 == pD1C2-\u003eiVar )\n            {\n                if ( pD2C1-\u003eiVar \u003c= pD2C2-\u003eiVar )\n                    return 0;\n                pD1C2 = pD1C2-\u003epHNext;\n                pD2C2 = pD2C2-\u003epHNext;\n            }\n            else if ( TopVar2 \u003c pD1C2-\u003eiVar )\n            {\n                if ( pD2C1-\u003eiVar != pD2C2-\u003eiVar )\n                    return 0;\n                pD2C1 = pD2C1-\u003epHNext;\n                pD2C2 = pD2C2-\u003epHNext;\n            }\n            else\n                return 0;\n            break;\n        case 8:  // 1- --      pD1C1  NULL     NULL   NULL \n            return 0;\n        case 9:  // 1- -1      pD1C1  NULL     NULL   pD2C2\n            return 0;\n        case 10: // 1- 1-      pD1C1  NULL     pD2C1  NULL \n            if ( pD1C1-\u003eiVar != pD2C1-\u003eiVar )\n                return 0;\n            pD1C1 = pD1C1-\u003epHNext;\n            pD2C1 = pD2C1-\u003epHNext;\n            break;\n        case 11: // 1- 11      pD1C1  NULL     pD2C1  pD2C2\n            TopVar2 = Fxu_Min( pD2C1-\u003eiVar, pD2C2-\u003eiVar );\n            if ( TopVar2 == pD1C1-\u003eiVar )\n            {\n                if ( pD2C1-\u003eiVar \u003e= pD2C2-\u003eiVar )\n                    return 0;\n                pD1C1 = pD1C1-\u003epHNext;\n                pD2C1 = pD2C1-\u003epHNext;\n            }\n            else if ( TopVar2 \u003c pD1C1-\u003eiVar )\n            {\n                if ( pD2C1-\u003eiVar != pD2C2-\u003eiVar )\n                    return 0;\n                pD2C1 = pD2C1-\u003epHNext;\n                pD2C2 = pD2C2-\u003epHNext;\n            }\n            else\n                return 0;\n            break;\n        case 12: // 11 --      pD1C1  pD1C2    NULL   NULL \n            if ( pD1C1-\u003eiVar != pD1C2-\u003eiVar )\n                return 0;\n            pD1C1 = pD1C1-\u003epHNext;\n            pD1C2 = pD1C2-\u003epHNext;\n            break;\n        case 13: // 11 -1      pD1C1  pD1C2    NULL   pD2C2\n            TopVar1 = Fxu_Min( pD1C1-\u003eiVar, pD1C2-\u003eiVar );\n            if ( TopVar1 == pD2C2-\u003eiVar )\n            {\n                if ( pD1C1-\u003eiVar \u003c= pD1C2-\u003eiVar )\n                    return 0;\n                pD1C2 = pD1C2-\u003epHNext;\n                pD2C2 = pD2C2-\u003epHNext;\n            }\n            else if ( TopVar1 \u003c pD2C2-\u003eiVar )\n            {\n                if ( pD1C1-\u003eiVar != pD1C2-\u003eiVar )\n                    return 0;\n                pD1C1 = pD1C1-\u003epHNext;\n                pD1C2 = pD1C2-\u003epHNext;\n            }\n            else\n                return 0;\n            break;\n        case 14: // 11 1-      pD1C1  pD1C2    pD2C1  NULL \n            TopVar1 = Fxu_Min( pD1C1-\u003eiVar, pD1C2-\u003eiVar );\n            if ( TopVar1 == pD2C1-\u003eiVar )\n            {\n                if ( pD1C1-\u003eiVar \u003e= pD1C2-\u003eiVar )\n                    return 0;\n                pD1C1 = pD1C1-\u003epHNext;\n                pD2C1 = pD2C1-\u003epHNext;\n            }\n            else if ( TopVar1 \u003c pD2C1-\u003eiVar )\n            {\n                if ( pD1C1-\u003eiVar != pD1C2-\u003eiVar )\n                    return 0;\n                pD1C1 = pD1C1-\u003epHNext;\n                pD1C2 = pD1C2-\u003epHNext;\n            }\n            else\n                return 0;\n            break;\n        case 15: // 11 11      pD1C1  pD1C2    pD2C1  pD2C2\n            TopVar1 = Fxu_Min( pD1C1-\u003eiVar, pD1C2-\u003eiVar );\n            TopVar2 = Fxu_Min( pD2C1-\u003eiVar, pD2C2-\u003eiVar );\n            if ( TopVar1 == TopVar2 )\n            {\n                if ( pD1C1-\u003eiVar == pD1C2-\u003eiVar )\n                {\n                    if ( pD2C1-\u003eiVar != pD2C2-\u003eiVar )\n                        return 0;\n                    pD1C1 = pD1C1-\u003epHNext;\n                    pD1C2 = pD1C2-\u003epHNext;\n                    pD2C1 = pD2C1-\u003epHNext;\n                    pD2C2 = pD2C2-\u003epHNext;\n                }\n                else\n                {\n                    if ( pD2C1-\u003eiVar == pD2C2-\u003eiVar )\n                        return 0;\n                    if ( pD1C1-\u003eiVar \u003c pD1C2-\u003eiVar )\n                    {\n                        if ( pD2C1-\u003eiVar \u003e pD2C2-\u003eiVar )\n                            return 0;\n                        pD1C1 = pD1C1-\u003epHNext;\n                        pD2C1 = pD2C1-\u003epHNext;\n                    }\n                    else\n                    {\n                        if ( pD2C1-\u003eiVar \u003c pD2C2-\u003eiVar )\n                            return 0;\n                        pD1C2 = pD1C2-\u003epHNext;\n                        pD2C2 = pD2C2-\u003epHNext;\n                    }\n                }\n            }\n            else if ( TopVar1 \u003c TopVar2 )\n            {\n                if ( pD1C1-\u003eiVar != pD1C2-\u003eiVar )\n                    return 0;\n                pD1C1 = pD1C1-\u003epHNext;\n                pD1C2 = pD1C2-\u003epHNext;\n            }\n            else \n            {\n                if ( pD2C1-\u003eiVar != pD2C2-\u003eiVar )\n                    return 0;\n                pD2C1 = pD2C1-\u003epHNext;\n                pD2C2 = pD2C2-\u003epHNext;\n            }\n            break;\n        default:\n            assert( 0 );\n            break;\n        }\n\n        Code  = pD1C1? 8: 0;\n        Code |= pD1C2? 4: 0;\n        Code |= pD2C1? 2: 0;\n        Code |= pD2C2? 1: 0;\n    }\n    return 1;\n}",
+      "Draft": "func Fxu_PairCompare(pPair1 *Fxu_Pair, pPair2 *Fxu_Pair) int32 {\n    var pD1C1, pD1C2 *Fxu_Lit;\n    var pD2C1, pD2C2 *Fxu_Lit;\n    var TopVar1, TopVar2 int32;\n    var Code int32;\n\n    if pPair1.nLits1 != pPair2.nLits1 {\n        return 0; }\n    if pPair1.nLits2 != pPair2.nLits2 {\n        return 0; }\n\n    pD1C1 = pPair1.pCube1.lLits.pHead;\n    pD1C2 = pPair1.pCube2.lLits.pHead;\n\n    pD2C1 = pPair2.pCube1.lLits.pHead;\n    pD2C2 = pPair2.pCube2.lLits.pHead;\n\n    if pD1C1 {\n        Code = 8;\n    } else {\n        Code = 0;\n    }\n    Code |= pD1C2? 4: 0;\n    Code |= pD2C1? 2: 0;\n    Code |= pD2C2? 1: 0;\n    assert(Code == 15, \"Code == 15\");\n\n    for {\n        switch  Code  {\n        case 0:  // -- --      NULL   NULL     NULL   NULL \n            return 1;\n        case 1:  // -- -1      NULL   NULL     NULL   pD2C2\n            return 0;\n        case 2:  // -- 1-      NULL   NULL     pD2C1  NULL \n            return 0;\n        case 3:  // -- 11      NULL   NULL     pD2C1  pD2C2\n            if ( pD2C1.iVar != pD2C2.iVar )\n                return 0;\n            pD2C1 = pD2C1.pHNext;\n            pD2C2 = pD2C2.pHNext;\n            break;\n        case 4:  // -1 --      NULL   pD1C2    NULL   NULL \n            return 0;\n        case 5:  // -1 -1      NULL   pD1C2    NULL   pD2C2\n            if ( pD1C2.iVar != pD2C2.iVar )\n                return 0;\n            pD1C2 = pD1C2.pHNext;\n            pD2C2 = pD2C2.pHNext;\n            break;\n        case 6:  // -1 1-      NULL   pD1C2    pD2C1  NULL \n            return 0;\n        case 7:  // -1 11      NULL   pD1C2    pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar2 = ( ((pD2C1.iVar)\u003c(pD2C2.iVar))? (pD2C1.iVar):(pD2C2.iVar) );\n            if TopVar2 == pD1C2.iVar {\n                if pD2C1.iVar \u003c= pD2C2.iVar {\n                    return 0; }\n                pD1C2 = pD1C2.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else if TopVar2 \u003c pD1C2.iVar {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 8:  // 1- --      pD1C1  NULL     NULL   NULL \n            return 0;\n        case 9:  // 1- -1      pD1C1  NULL     NULL   pD2C2\n            return 0;\n        case 10: // 1- 1-      pD1C1  NULL     pD2C1  NULL \n            if ( pD1C1.iVar != pD2C1.iVar )\n                return 0;\n            pD1C1 = pD1C1.pHNext;\n            pD2C1 = pD2C1.pHNext;\n            break;\n        case 11: // 1- 11      pD1C1  NULL     pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar2 = ( ((pD2C1.iVar)\u003c(pD2C2.iVar))? (pD2C1.iVar):(pD2C2.iVar) );\n            if TopVar2 == pD1C1.iVar {\n                if pD2C1.iVar \u003e= pD2C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD2C1 = pD2C1.pHNext;\n            \n            } else if TopVar2 \u003c pD1C1.iVar {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 12: // 11 --      pD1C1  pD1C2    NULL   NULL \n            if ( pD1C1.iVar != pD1C2.iVar )\n                return 0;\n            pD1C1 = pD1C1.pHNext;\n            pD1C2 = pD1C2.pHNext;\n            break;\n        case 13: // 11 -1      pD1C1  pD1C2    NULL   pD2C2\n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            if TopVar1 == pD2C2.iVar {\n                if pD1C1.iVar \u003c= pD1C2.iVar {\n                    return 0; }\n                pD1C2 = pD1C2.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else if TopVar1 \u003c pD2C2.iVar {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 14: // 11 1-      pD1C1  pD1C2    pD2C1  NULL \n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            if TopVar1 == pD2C1.iVar {\n                if pD1C1.iVar \u003e= pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD2C1 = pD2C1.pHNext;\n            \n            } else if TopVar1 \u003c pD2C1.iVar {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 15: // 11 11      pD1C1  pD1C2    pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            // inlining of macro Fxu_Min\n            \n            if (pD2C1.iVar)\u003c(pD2C2.iVar) {\n                TopVar2 = (pD2C1.iVar);\n            } else {\n                TopVar2 = (pD2C2.iVar);\n            }\n            if TopVar1 == TopVar2 {\n                if pD1C1.iVar == pD1C2.iVar {\n                    if pD2C1.iVar != pD2C2.iVar {\n                        return 0; }\n                    pD1C1 = pD1C1.pHNext;\n                    pD1C2 = pD1C2.pHNext;\n                    pD2C1 = pD2C1.pHNext;\n                    pD2C2 = pD2C2.pHNext;\n                \n                } else {\n                    if pD2C1.iVar == pD2C2.iVar {\n                        return 0; }\n                    if pD1C1.iVar \u003c pD1C2.iVar {\n                        if pD2C1.iVar \u003e pD2C2.iVar {\n                            return 0; }\n                        pD1C1 = pD1C1.pHNext;\n                        pD2C1 = pD2C1.pHNext;\n                    \n                    } else {\n                        if pD2C1.iVar \u003c pD2C2.iVar {\n                            return 0; }\n                        pD1C2 = pD1C2.pHNext;\n                        pD2C2 = pD2C2.pHNext;\n                    }\n                }\n            \n            } else if TopVar1 \u003c TopVar2 {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            }\n            break;\n        default:\n            assert(false, \"0\");\n            break;\n        }\n\n        if pD1C1 {\n            Code = 8;\n        } else {\n            Code = 0;\n        }\n        Code |= pD1C2? 4: 0;\n        Code |= pD2C1? 2: 0;\n        Code |= pD2C2? 1: 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fxu_PairAllocStorage",
+      "Start": 14399,
+      "End": 14860,
+      "BodyStart": 14455,
+      "Original": "void Fxu_PairAllocStorage( Fxu_Var * pVar, int nCubes )\n{\n    int k;\n//    assert( pVar-\u003enCubes == 0 );\n    pVar-\u003enCubes  = nCubes;\n    // allocate memory for all the pairs\n    pVar-\u003eppPairs    = ABC_ALLOC( Fxu_Pair **, nCubes );\n    pVar-\u003eppPairs[0] = ABC_ALLOC( Fxu_Pair *,  nCubes * nCubes );\n    memset( pVar-\u003eppPairs[0], 0, sizeof(Fxu_Pair *) * nCubes * nCubes );\n    for ( k = 1; k \u003c nCubes; k++ )\n        pVar-\u003eppPairs[k] = pVar-\u003eppPairs[k-1] + nCubes;\n}",
+      "Draft": "func Fxu_PairAllocStorage(pVar *Fxu_Var, nCubes int32) {\n    var k int32;\n//    assert( pVar-\u003enCubes == 0 );\n    pVar.nCubes  = nCubes;\n    // allocate memory for all the pairs\n    // inlining of macro ABC_ALLOC\n    pVar.ppPairs    = ((Fxu_Pair ** *) malloc(sizeof(Fxu_Pair **) * (size_t)(nCubes)));\n    // inlining of macro ABC_ALLOC\n    pVar.ppPairs[0] = ((Fxu_Pair * *) malloc(sizeof(Fxu_Pair *) * (size_t)(nCubes * nCubes)));\n    memset( pVar.ppPairs[0], 0, sizeof(Fxu_Pair *) * nCubes * nCubes );\n    for  k = 1; k \u003c nCubes; k++  {\n        pVar.ppPairs[k] = pVar.ppPairs[k-1] + nCubes;\n    }\n}"
+    },
+    {
+      "Name": "Fxu_PairClearStorage",
+      "Start": 15139,
+      "End": 15390,
+      "BodyStart": 15185,
+      "Original": "void Fxu_PairClearStorage( Fxu_Cube * pCube )\n{\n    Fxu_Var * pVar;\n    int i;\n    pVar = pCube-\u003epVar;\n    for ( i = 0; i \u003c pVar-\u003enCubes; i++ )\n    {\n        pVar-\u003eppPairs[pCube-\u003eiCube][i] = NULL;\n        pVar-\u003eppPairs[i][pCube-\u003eiCube] = NULL;\n    }\n}",
+      "Draft": "func Fxu_PairClearStorage(pCube *Fxu_Cube) {\n    var pVar *Fxu_Var;\n    var i int32;\n    pVar = pCube.pVar;\n    for  i = 0; i \u003c pVar.nCubes; i++  {\n        pVar.ppPairs[pCube.iCube][i] = nil;\n        pVar.ppPairs[i][pCube.iCube] = nil;\n    }\n}"
+    },
+    {
+      "Name": "Fxu_PairFreeStorage",
+      "Start": 15669,
+      "End": 15825,
+      "BodyStart": 15712,
+      "Original": "void Fxu_PairFreeStorage( Fxu_Var * pVar )\n{\n    if ( pVar-\u003eppPairs )\n    {\n        ABC_FREE( pVar-\u003eppPairs[0] );\n        ABC_FREE( pVar-\u003eppPairs );\n    }\n}",
+      "Draft": "func Fxu_PairFreeStorage(pVar *Fxu_Var) {\n    if pVar.ppPairs {\n        // inlining of macro ABC_FREE\n        ((pVar.ppPairs[0]) ? (free((char *) (pVar.ppPairs[0])), (pVar.ppPairs[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pVar.ppPairs) ? (free((char *) (pVar.ppPairs)), (pVar.ppPairs) = 0) : 0);\n    }\n}"
+    },
+    {
+      "Name": "Fxu_PairAlloc",
+      "Start": 16086,
+      "End": 16470,
+      "BodyStart": 16167,
+      "Original": "Fxu_Pair * Fxu_PairAlloc( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2 )\n{\n    Fxu_Pair * pPair;\n       assert( pCube1-\u003epVar == pCube2-\u003epVar );\n    pPair = MEM_ALLOC_FXU( p, Fxu_Pair, 1 );\n    memset( pPair, 0, sizeof(Fxu_Pair) );\n    pPair-\u003epCube1 = pCube1;\n    pPair-\u003epCube2 = pCube2;\n    pPair-\u003eiCube1 = pCube1-\u003eiCube;\n    pPair-\u003eiCube2 = pCube2-\u003eiCube;\n    return pPair;\n}",
+      "Draft": "func Fxu_PairAlloc(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube) *Fxu_Pair {\n    var pPair *Fxu_Pair;\n       assert(pCube1.pVar == pCube2.pVar, \"pCube1.pVar == pCube2.pVar\");\n    pPair = MEM_ALLOC_FXU( p, Fxu_Pair, 1 );\n    memset( pPair, 0, sizeof(Fxu_Pair) );\n    pPair.pCube1 = pCube1;\n    pPair.pCube2 = pCube2;\n    pPair.iCube1 = pCube1.iCube;\n    pPair.iCube2 = pCube2.iCube;\n    return pPair;\n}"
+    },
+    {
+      "Name": "Fxu_PairAdd",
+      "Start": 16731,
+      "End": 16982,
+      "BodyStart": 16768,
+      "Original": "void Fxu_PairAdd( Fxu_Pair * pPair )\n{\n    Fxu_Var * pVar;\n\n    pVar = pPair-\u003epCube1-\u003epVar;\n    assert( pVar == pPair-\u003epCube2-\u003epVar );\n\n    pVar-\u003eppPairs[pPair-\u003eiCube1][pPair-\u003eiCube2] = pPair;\n    pVar-\u003eppPairs[pPair-\u003eiCube2][pPair-\u003eiCube1] = pPair;\n}",
+      "Draft": "func Fxu_PairAdd(pPair *Fxu_Pair) {\n    var pVar *Fxu_Var;\n\n    pVar = pPair.pCube1.pVar;\n    assert(pVar == pPair.pCube2.pVar, \"pVar == pPair.pCube2.pVar\");\n\n    pVar.ppPairs[pPair.iCube1][pPair.iCube2] = pPair;\n    pVar.ppPairs[pPair.iCube2][pPair.iCube1] = pPair;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::mechanical::sizeof::15084",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14595,
+      "End": 14595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::mechanical::sizeof::15217",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14652,
+      "End": 14652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::mechanical::sizeof::15300",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14728,
+      "End": 14734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::mechanical::sizeof::17075",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16305,
+      "End": 16311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::15061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14595,
+      "End": 14595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::15090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14595,
+      "End": 14595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::15195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14652,
+      "End": 14652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::15223",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14652,
+      "End": 14652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::15306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14734,
+      "End": 14746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::16397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15753,
+      "End": 15753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::pointer-cast::16534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15791,
+      "End": 15791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairCanonicize",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairCanonicize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3072,
+      "End": 3820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairCanonicize2",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairCanonicize2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4112,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairHashKeyArray",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairHashKeyArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4665,
+      "End": 5062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5604,
+      "End": 7202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::ternary::Fxu_PairCompare",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_PairCompare",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7526,
+      "End": 14124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairCompare",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7526,
+      "End": 14124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairAllocStorage",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairAllocStorage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14399,
+      "End": 14860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairClearStorage",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairClearStorage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15139,
+      "End": 15390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::ternary::Fxu_PairFreeStorage",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_PairFreeStorage",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15669,
+      "End": 15825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairFreeStorage",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairFreeStorage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15669,
+      "End": 15825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16086,
+      "End": 16470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::Fxu_PairAdd",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PairAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16731,
+      "End": 16982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuPair.c::macro-inline::16250",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_ALLOC_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16250,
+      "End": 16281
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxuPair.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Operations on cube pairs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuPair.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst MAX_PRIMES =      304\n\nvar s_Primes [MAX_PRIMES]int32 = [MAX_PRIMES]int32{\n    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, \n    41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, \n    97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, \n    157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, \n    227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, \n    283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, \n    367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, \n    439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, \n    509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, \n    599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, \n    661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, \n    751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, \n    829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, \n    919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997, \n    1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, \n    1087, 1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, \n    1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, \n    1259, 1277, 1279, 1283, 1289, 1291, 1297, 1301, 1303, 1307, 1319, 1321, \n    1327, 1361, 1367, 1373, 1381, 1399, 1409, 1423, 1427, 1429, 1433, 1439, \n    1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, \n    1523, 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597, 1601, \n    1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, \n    1697, 1699, 1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, \n    1787, 1789, 1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, \n    1879, 1889, 1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, \n    1993, 1997, 1999, 2003, \n};\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find the canonical permutation of two cubes in the pair.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairCanonicize(ppCube1 **Fxu_Cube, ppCube2 **Fxu_Cube) {\n    var pLit1, pLit2 *Fxu_Lit;\n    var pCubeTemp *Fxu_Cube;\n\n    // walk through the cubes to determine \n    // the one that has higher first variable\n    pLit1 = (*ppCube1).lLits.pHead;\n    pLit2 = (*ppCube2).lLits.pHead;\n    for {\n        if pLit1.iVar == pLit2.iVar {\n            pLit1 = pLit1.pHNext;\n            pLit2 = pLit2.pHNext;\n            continue;\n        }\n        assert(pLit1 \u0026\u0026 (pLit2 != nil), \"pLit1 \u0026\u0026 pLit2\"); // this is true if the covers are SCC-free\n        if pLit1.iVar \u003e pLit2.iVar { // swap the cubes\n            pCubeTemp = *ppCube1;\n            *ppCube1  = *ppCube2;\n            *ppCube2  = pCubeTemp;\n        }\n        break;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find the canonical permutation of two cubes in the pair.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairCanonicize2(ppCube1 **Fxu_Cube, ppCube2 **Fxu_Cube) {\n    var pCubeTemp *Fxu_Cube;\n    // canonicize the pair by ordering the cubes\n    if (*ppCube1).iCube \u003e (*ppCube2).iCube { // swap the cubes\n        pCubeTemp = *ppCube1;\n        *ppCube1  = *ppCube2;\n        *ppCube2  = pCubeTemp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairHashKeyArray(p *Fxu_Matrix, piVarsC1 []int32, piVarsC2 []int32, nVarsC1 int32, nVarsC2 int32) uint32 {\n    var Offset1 int32 = 100;\n    var Offset2 int32 = 200;\n    var i int32;\n    var Key uint32;\n    // compute the hash key\n    Key = 0;\n    for  i = 0; i \u003c nVarsC1; i++  {\n        Key ^= s_Primes[Offset1+i] * piVarsC1[i];\n    }\n    for  i = 0; i \u003c nVarsC2; i++  {\n        Key ^= s_Primes[Offset2+i] * piVarsC2[i];\n    }\n    return Key;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the hash key of the divisor represented by the pair of cubes.]\n\n  Description [Goes through the variables in both cubes. Skips the identical\n  ones (this corresponds to making the cubes cube-free). Computes the hash \n  value of the cubes. Assigns the number of literals in the base and in the \n  cubes without base.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairHashKey(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube, pnBase *int32, pnLits1 *int32, pnLits2 *int32) uint32 {\n    var Offset1 int32 = 100;\n    var Offset2 int32 = 200;\n    var nBase, nLits1, nLits2 int32;\n    var pLit1, pLit2 *Fxu_Lit;\n    var Key uint32;\n\n    // compute the hash key\n    Key    = 0;\n    nLits1 = 0;\n    nLits2 = 0;\n    nBase  = 0;\n    pLit1  = pCube1.lLits.pHead;\n    pLit2  = pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // ensure cube-free\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n                // add this literal to the base\n                nBase++;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {\n                Key  ^= s_Primes[Offset1+nLits1] * pLit1.iVar;\n                pLit1 = pLit1.pHNext;\n                nLits1++;\n            \n            } else {\n                Key  ^= s_Primes[Offset2+nLits2] * pLit2.iVar;\n                pLit2 = pLit2.pHNext;\n                nLits2++;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            Key  ^= s_Primes[Offset1+nLits1] * pLit1.iVar;\n            pLit1 = pLit1.pHNext;\n            nLits1++;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            Key  ^= s_Primes[Offset2+nLits2] * pLit2.iVar;\n            pLit2 = pLit2.pHNext;\n            nLits2++;\n        \n        } else {\n            break; }\n    }\n    *pnBase  = nBase;\n    *pnLits1 = nLits1;\n    *pnLits2 = nLits2;\n    return Key;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the two pairs.]\n\n  Description [Returns 1 if the divisors represented by these pairs\n  are equal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairCompare(pPair1 *Fxu_Pair, pPair2 *Fxu_Pair) int32 {\n    var pD1C1, pD1C2 *Fxu_Lit;\n    var pD2C1, pD2C2 *Fxu_Lit;\n    var TopVar1, TopVar2 int32;\n    var Code int32;\n\n    if pPair1.nLits1 != pPair2.nLits1 {\n        return 0; }\n    if pPair1.nLits2 != pPair2.nLits2 {\n        return 0; }\n\n    pD1C1 = pPair1.pCube1.lLits.pHead;\n    pD1C2 = pPair1.pCube2.lLits.pHead;\n\n    pD2C1 = pPair2.pCube1.lLits.pHead;\n    pD2C2 = pPair2.pCube2.lLits.pHead;\n\n    if pD1C1 {\n        Code = 8;\n    } else {\n        Code = 0;\n    }\n    Code |= pD1C2? 4: 0;\n    Code |= pD2C1? 2: 0;\n    Code |= pD2C2? 1: 0;\n    assert(Code == 15, \"Code == 15\");\n\n    for {\n        switch  Code  {\n        case 0:  // -- --      NULL   NULL     NULL   NULL \n            return 1;\n        case 1:  // -- -1      NULL   NULL     NULL   pD2C2\n            return 0;\n        case 2:  // -- 1-      NULL   NULL     pD2C1  NULL \n            return 0;\n        case 3:  // -- 11      NULL   NULL     pD2C1  pD2C2\n            if ( pD2C1.iVar != pD2C2.iVar )\n                return 0;\n            pD2C1 = pD2C1.pHNext;\n            pD2C2 = pD2C2.pHNext;\n            break;\n        case 4:  // -1 --      NULL   pD1C2    NULL   NULL \n            return 0;\n        case 5:  // -1 -1      NULL   pD1C2    NULL   pD2C2\n            if ( pD1C2.iVar != pD2C2.iVar )\n                return 0;\n            pD1C2 = pD1C2.pHNext;\n            pD2C2 = pD2C2.pHNext;\n            break;\n        case 6:  // -1 1-      NULL   pD1C2    pD2C1  NULL \n            return 0;\n        case 7:  // -1 11      NULL   pD1C2    pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar2 = ( ((pD2C1.iVar)\u003c(pD2C2.iVar))? (pD2C1.iVar):(pD2C2.iVar) );\n            if TopVar2 == pD1C2.iVar {\n                if pD2C1.iVar \u003c= pD2C2.iVar {\n                    return 0; }\n                pD1C2 = pD1C2.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else if TopVar2 \u003c pD1C2.iVar {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 8:  // 1- --      pD1C1  NULL     NULL   NULL \n            return 0;\n        case 9:  // 1- -1      pD1C1  NULL     NULL   pD2C2\n            return 0;\n        case 10: // 1- 1-      pD1C1  NULL     pD2C1  NULL \n            if ( pD1C1.iVar != pD2C1.iVar )\n                return 0;\n            pD1C1 = pD1C1.pHNext;\n            pD2C1 = pD2C1.pHNext;\n            break;\n        case 11: // 1- 11      pD1C1  NULL     pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar2 = ( ((pD2C1.iVar)\u003c(pD2C2.iVar))? (pD2C1.iVar):(pD2C2.iVar) );\n            if TopVar2 == pD1C1.iVar {\n                if pD2C1.iVar \u003e= pD2C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD2C1 = pD2C1.pHNext;\n            \n            } else if TopVar2 \u003c pD1C1.iVar {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 12: // 11 --      pD1C1  pD1C2    NULL   NULL \n            if ( pD1C1.iVar != pD1C2.iVar )\n                return 0;\n            pD1C1 = pD1C1.pHNext;\n            pD1C2 = pD1C2.pHNext;\n            break;\n        case 13: // 11 -1      pD1C1  pD1C2    NULL   pD2C2\n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            if TopVar1 == pD2C2.iVar {\n                if pD1C1.iVar \u003c= pD1C2.iVar {\n                    return 0; }\n                pD1C2 = pD1C2.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            \n            } else if TopVar1 \u003c pD2C2.iVar {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 14: // 11 1-      pD1C1  pD1C2    pD2C1  NULL \n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            if TopVar1 == pD2C1.iVar {\n                if pD1C1.iVar \u003e= pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD2C1 = pD2C1.pHNext;\n            \n            } else if TopVar1 \u003c pD2C1.iVar {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                return 0; }\n            break;\n        case 15: // 11 11      pD1C1  pD1C2    pD2C1  pD2C2\n            // inlining of macro Fxu_Min\n            TopVar1 = ( ((pD1C1.iVar)\u003c(pD1C2.iVar))? (pD1C1.iVar):(pD1C2.iVar) );\n            // inlining of macro Fxu_Min\n            \n            if (pD2C1.iVar)\u003c(pD2C2.iVar) {\n                TopVar2 = (pD2C1.iVar);\n            } else {\n                TopVar2 = (pD2C2.iVar);\n            }\n            if TopVar1 == TopVar2 {\n                if pD1C1.iVar == pD1C2.iVar {\n                    if pD2C1.iVar != pD2C2.iVar {\n                        return 0; }\n                    pD1C1 = pD1C1.pHNext;\n                    pD1C2 = pD1C2.pHNext;\n                    pD2C1 = pD2C1.pHNext;\n                    pD2C2 = pD2C2.pHNext;\n                \n                } else {\n                    if pD2C1.iVar == pD2C2.iVar {\n                        return 0; }\n                    if pD1C1.iVar \u003c pD1C2.iVar {\n                        if pD2C1.iVar \u003e pD2C2.iVar {\n                            return 0; }\n                        pD1C1 = pD1C1.pHNext;\n                        pD2C1 = pD2C1.pHNext;\n                    \n                    } else {\n                        if pD2C1.iVar \u003c pD2C2.iVar {\n                            return 0; }\n                        pD1C2 = pD1C2.pHNext;\n                        pD2C2 = pD2C2.pHNext;\n                    }\n                }\n            \n            } else if TopVar1 \u003c TopVar2 {\n                if pD1C1.iVar != pD1C2.iVar {\n                    return 0; }\n                pD1C1 = pD1C1.pHNext;\n                pD1C2 = pD1C2.pHNext;\n            \n            } else {\n                if pD2C1.iVar != pD2C2.iVar {\n                    return 0; }\n                pD2C1 = pD2C1.pHNext;\n                pD2C2 = pD2C2.pHNext;\n            }\n            break;\n        default:\n            assert(false, \"0\");\n            break;\n        }\n\n        if pD1C1 {\n            Code = 8;\n        } else {\n            Code = 0;\n        }\n        Code |= pD1C2? 4: 0;\n        Code |= pD2C1? 2: 0;\n        Code |= pD2C2? 1: 0;\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the storage for cubes pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairAllocStorage(pVar *Fxu_Var, nCubes int32) {\n    var k int32;\n//    assert( pVar-\u003enCubes == 0 );\n    pVar.nCubes  = nCubes;\n    // allocate memory for all the pairs\n    // inlining of macro ABC_ALLOC\n    pVar.ppPairs    = ((Fxu_Pair ** *) malloc(sizeof(Fxu_Pair **) * (size_t)(nCubes)));\n    // inlining of macro ABC_ALLOC\n    pVar.ppPairs[0] = ((Fxu_Pair * *) malloc(sizeof(Fxu_Pair *) * (size_t)(nCubes * nCubes)));\n    memset( pVar.ppPairs[0], 0, sizeof(Fxu_Pair *) * nCubes * nCubes );\n    for  k = 1; k \u003c nCubes; k++  {\n        pVar.ppPairs[k] = pVar.ppPairs[k-1] + nCubes;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears all pairs associated with this cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairClearStorage(pCube *Fxu_Cube) {\n    var pVar *Fxu_Var;\n    var i int32;\n    pVar = pCube.pVar;\n    for  i = 0; i \u003c pVar.nCubes; i++  {\n        pVar.ppPairs[pCube.iCube][i] = nil;\n        pVar.ppPairs[i][pCube.iCube] = nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears all pairs associated with this cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairFreeStorage(pVar *Fxu_Var) {\n    if pVar.ppPairs {\n        // inlining of macro ABC_FREE\n        ((pVar.ppPairs[0]) ? (free((char *) (pVar.ppPairs[0])), (pVar.ppPairs[0]) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pVar.ppPairs) ? (free((char *) (pVar.ppPairs)), (pVar.ppPairs) = 0) : 0);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the pair to storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairAlloc(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube) *Fxu_Pair {\n    var pPair *Fxu_Pair;\n       assert(pCube1.pVar == pCube2.pVar, \"pCube1.pVar == pCube2.pVar\");\n    pPair = MEM_ALLOC_FXU( p, Fxu_Pair, 1 );\n    memset( pPair, 0, sizeof(Fxu_Pair) );\n    pPair.pCube1 = pCube1;\n    pPair.pCube2 = pCube2;\n    pPair.iCube1 = pCube1.iCube;\n    pPair.iCube2 = pCube2.iCube;\n    return pPair;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the pair to storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PairAdd(pPair *Fxu_Pair) {\n    var pVar *Fxu_Var;\n\n    pVar = pPair.pCube1.pVar;\n    assert(pVar == pPair.pCube2.pVar, \"pVar == pPair.pCube2.pVar\");\n\n    pVar.ppPairs[pPair.iCube1][pPair.iCube2] = pPair;\n    pVar.ppPairs[pPair.iCube2][pPair.iCube1] = pPair;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

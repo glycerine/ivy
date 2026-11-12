@@ -1,0 +1,308 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c",
+  "SHA256": "27e8f8186022d8b8ddfcae5234643ed2145754c80c8505b602a0b3a02e26bead",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 13,
+        "ByteOffset": 2067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Starting level %d  (at %d nodes).\\n\", LevelOld+1, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 13,
+        "ByteOffset": 2143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 13,
+        "ByteOffset": 3272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 13,
+        "ByteOffset": 3517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total canonical = %4d. Total used = %5d.\\n\", nNodes, p.vForest.nSize );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwr_ManPrecompute",
+      "Start": 1460,
+      "End": 4162,
+      "BodyStart": 1500,
+      "Original": "void Rwr_ManPrecompute( Rwr_Man_t * p )\n{\n    Rwr_Node_t * p0, * p1;\n    int i, k, Level, Volume;\n    int LevelOld = -1;\n    int nNodes;\n\n    Vec_PtrForEachEntryStart( Rwr_Node_t *, p-\u003evForest, p0, i, 1 )\n    Vec_PtrForEachEntryStart( Rwr_Node_t *, p-\u003evForest, p1, k, 1 )\n    {\n        if ( LevelOld \u003c (int)p0-\u003eLevel )\n        {\n            LevelOld = p0-\u003eLevel;\n            printf( \"Starting level %d  (at %d nodes).\\n\", LevelOld+1, i );\n            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", \n                p-\u003enConsidered/1000000, p-\u003evForest-\u003enSize, p-\u003enClasses, i );\n        }\n\n        if ( k == i )\n            break;\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 ) // hard\n//            break;\n\n        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 5 ) // easy \n            break;\n\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 || (p0-\u003eLevel == 3 \u0026\u0026 p1-\u003eLevel == 3) )\n//            break;\n\n        // compute the level and volume of the new nodes\n        Level  = 1 + Abc_MaxInt( p0-\u003eLevel, p1-\u003eLevel );\n        Volume = 1 + Rwr_ManNodeVolume( p, p0, p1 );\n        // try four different AND nodes\n        Rwr_ManTryNode( p,         p0 ,         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0),         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p,         p0 , Rwr_Not(p1), 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0), Rwr_Not(p1), 0, Level, Volume );\n        // try EXOR\n        Rwr_ManTryNode( p,         p0 ,         p1 , 1, Level, Volume + 1 );\n        // report the progress\n        if ( p-\u003enConsidered % 50000000 == 0 )\n            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", \n                p-\u003enConsidered/1000000, p-\u003evForest-\u003enSize, p-\u003enClasses, i );\n        // quit after some time\n        if ( p-\u003evForest-\u003enSize == RWR_LIMIT + 5 )\n        {\n            printf( \"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", \n                p-\u003enConsidered/1000000, p-\u003evForest-\u003enSize, p-\u003enClasses, i );\n            goto save;\n        }\n    }\nsave :\n\n    // mark the relevant ones\n    Rwr_ManIncTravId( p );\n    k = 5;\n    nNodes = 0;\n    Vec_PtrForEachEntryStart( Rwr_Node_t *, p-\u003evForest, p0, i, 5 )\n        if ( p0-\u003euTruth == p-\u003epuCanons[p0-\u003euTruth] )\n        {\n            Rwr_MarkUsed_rec( p, p0 );\n            nNodes++;\n        }\n\n    // compact the array by throwing away non-canonical\n    k = 5;\n    Vec_PtrForEachEntryStart( Rwr_Node_t *, p-\u003evForest, p0, i, 5 )\n        if ( p0-\u003efUsed )\n        {\n            p-\u003evForest-\u003epArray[k] = p0;\n            p0-\u003eId = k++;\n        }\n    p-\u003evForest-\u003enSize = k;\n    printf( \"Total canonical = %4d. Total used = %5d.\\n\", nNodes, p-\u003evForest-\u003enSize );\n}",
+      "Draft": "func Rwr_ManPrecompute(p *Rwr_Man_t) {\n    var p0, p1 *Rwr_Node_t;\n    var i, k, Level, Volume int32;\n    var LevelOld int32  = -1;\n    var nNodes int32;\n\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  k = 1; (k \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p1) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, k)), 1); k++  {\n        if LevelOld \u003c int32(p0.Level) {\n            LevelOld = p0.Level;\n            fmt.Printf(\"Starting level %d  (at %d nodes).\\n\", LevelOld+1, i);\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i);\n        }\n\n        if k == i {\n            break; }\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 ) // hard\n//            break;\n\n        if p0.Level + p1.Level \u003e 5 { // easy \n            break; }\n\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 || (p0-\u003eLevel == 3 \u0026\u0026 p1-\u003eLevel == 3) )\n//            break;\n\n        // compute the level and volume of the new nodes\n        Level  = 1 + Abc_MaxInt( p0.Level, p1.Level );\n        Volume = 1 + Rwr_ManNodeVolume( p, p0, p1 );\n        // try four different AND nodes\n        Rwr_ManTryNode( p,         p0 ,         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0),         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p,         p0 , Rwr_Not(p1), 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0), Rwr_Not(p1), 0, Level, Volume );\n        // try EXOR\n        Rwr_ManTryNode( p,         p0 ,         p1 , 1, Level, Volume + 1 );\n        // report the progress\n        if p.nConsidered % 50000000 == 0 {\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i); }\n        // quit after some time\n        if p.vForest.nSize == RWR_LIMIT + 5 {\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i);\n            goto save;\n        }\n    }\n    }\nsave :\n\n    // mark the relevant ones\n    Rwr_ManIncTravId( p );\n    k = 5;\n    nNodes = 0;\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 5; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        if p0.uTruth == p.puCanons[p0.uTruth] {\n            Rwr_MarkUsed_rec( p, p0 );\n            nNodes++;\n        }\n    }\n\n    // compact the array by throwing away non-canonical\n    k = 5;\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 5; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        if p0.fUsed {\n            p.vForest.pArray[k] = p0;\n            p0.Id = k++;\n        }\n    }\n    p.vForest.nSize = k;\n    fmt.Printf(\"Total canonical = %4d. Total used = %5d.\\n\", nNodes, p.vForest.nSize);\n}"
+    },
+    {
+      "Name": "Rwr_ManTryNode",
+      "Start": 4412,
+      "End": 6656,
+      "BodyStart": 4525,
+      "Original": "Rwr_Node_t * Rwr_ManTryNode( Rwr_Man_t * p, Rwr_Node_t * p0, Rwr_Node_t * p1, int fExor, int Level, int Volume )\n{\n    Rwr_Node_t * pOld, * pNew, ** ppPlace;\n    unsigned uTruth;\n    // compute truth table, level, volume\n    p-\u003enConsidered++;\n    if ( fExor )\n    {\n//        printf( \"Considering EXOR of %d and %d.\\n\", p0-\u003eId, p1-\u003eId );\n        uTruth = (p0-\u003euTruth ^ p1-\u003euTruth);\n    }\n    else\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0)-\u003euTruth : Rwr_Regular(p0)-\u003euTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1)-\u003euTruth : Rwr_Regular(p1)-\u003euTruth) \u0026 0xFFFF;\n    // skip non-practical classes\n    if ( Level \u003e 2 \u0026\u0026 !p-\u003epPractical[p-\u003epuCanons[uTruth]] )\n        return NULL;\n    // enumerate through the nodes with the same canonical form\n    ppPlace = p-\u003epTable + uTruth;\n    for ( pOld = *ppPlace; pOld; ppPlace = \u0026pOld-\u003epNext, pOld = pOld-\u003epNext )\n    {\n        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n        if ( pOld-\u003eLevel == (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n/*\n    // enumerate through the nodes with the opposite polarity\n    for ( pOld = p-\u003epTable[~uTruth \u0026 0xFFFF]; pOld; pOld = pOld-\u003epNext )\n    {\n        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n        if ( pOld-\u003eLevel == (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n*/\n    // count the classes\n    if ( p-\u003epTable[uTruth] == NULL \u0026\u0026 p-\u003epuCanons[uTruth] == uTruth )\n        p-\u003enClasses++;\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p-\u003epMmNode );\n    pNew-\u003eId     = p-\u003evForest-\u003enSize;\n    pNew-\u003eTravId = 0;\n    pNew-\u003euTruth = uTruth;\n    pNew-\u003eLevel  = Level;\n    pNew-\u003eVolume = Volume;\n    pNew-\u003efUsed  = 0;\n    pNew-\u003efExor  = fExor;\n    pNew-\u003ep0     = p0;\n    pNew-\u003ep1     = p1;\n    pNew-\u003epNext  = NULL;\n    Vec_PtrPush( p-\u003evForest, pNew );\n    *ppPlace     = pNew;\n    return pNew;\n}",
+      "Draft": "func Rwr_ManTryNode(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t, fExor int32, Level int32, Volume int32) *Rwr_Node_t {\n    var pOld *Rwr_Node_t;\n    var pNew *Rwr_Node_t;\n    var ppPlace **Rwr_Node_t;\n    var uTruth uint32;\n    // compute truth table, level, volume\n    p.nConsidered++;\n    if fExor != 0 {\n//        printf( \"Considering EXOR of %d and %d.\\n\", p0-\u003eId, p1-\u003eId );\n        uTruth = (p0.uTruth ^ p1.uTruth);\n    \n    } else {\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0).uTruth : Rwr_Regular(p0).uTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1).uTruth : Rwr_Regular(p1).uTruth) \u0026 0xFFFF; }\n    // skip non-practical classes\n    if Level \u003e 2 \u0026\u0026 !p.pPractical[p.puCanons[uTruth]] {\n        return nil; }\n    // enumerate through the nodes with the same canonical form\n    ppPlace = p.pTable + uTruth;\n    for  pOld = *ppPlace; (pOld != nil); ppPlace = \u0026pOld.pNext, pOld = pOld.pNext  {\n        if pOld.Level \u003c  uint32(Level) \u0026\u0026 pOld.Volume \u003c uint32(Volume) {\n            return nil; }\n        if pOld.Level == uint32(Level) \u0026\u0026 pOld.Volume \u003c uint32(Volume) {\n            return nil; }\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n/*\n    // enumerate through the nodes with the opposite polarity\n    for ( pOld = p-\u003epTable[~uTruth \u0026 0xFFFF]; pOld; pOld = pOld-\u003epNext )\n    {\n        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n        if ( pOld-\u003eLevel == (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n*/\n    // count the classes\n    if p.pTable[uTruth] == nil \u0026\u0026 p.puCanons[uTruth] == uTruth {\n        p.nClasses++; }\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = Level;\n    pNew.Volume = Volume;\n    pNew.fUsed  = 0;\n    pNew.fExor  = fExor;\n    pNew.p0     = p0;\n    pNew.p1     = p1;\n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    *ppPlace     = pNew;\n    return pNew;\n}"
+    },
+    {
+      "Name": "Rwr_ManAddNode",
+      "Start": 6906,
+      "End": 8061,
+      "BodyStart": 7019,
+      "Original": "Rwr_Node_t * Rwr_ManAddNode( Rwr_Man_t * p, Rwr_Node_t * p0, Rwr_Node_t * p1, int fExor, int Level, int Volume )\n{\n    Rwr_Node_t * pNew;\n    unsigned uTruth;\n    // compute truth table, leve, volume\n    p-\u003enConsidered++;\n    if ( fExor )\n        uTruth = (p0-\u003euTruth ^ p1-\u003euTruth);\n    else\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0)-\u003euTruth : Rwr_Regular(p0)-\u003euTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1)-\u003euTruth : Rwr_Regular(p1)-\u003euTruth) \u0026 0xFFFF;\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p-\u003epMmNode );\n    pNew-\u003eId     = p-\u003evForest-\u003enSize;\n    pNew-\u003eTravId = 0;\n    pNew-\u003euTruth = uTruth;\n    pNew-\u003eLevel  = Level;\n    pNew-\u003eVolume = Volume;\n    pNew-\u003efUsed  = 0;\n    pNew-\u003efExor  = fExor;\n    pNew-\u003ep0     = p0;\n    pNew-\u003ep1     = p1;\n    pNew-\u003epNext  = NULL;\n    Vec_PtrPush( p-\u003evForest, pNew );\n    // do not add if the node is not essential\n    if ( uTruth != p-\u003epuCanons[uTruth] )\n        return pNew;\n\n    // add to the list\n    p-\u003enAdded++;\n    if ( p-\u003epTable[uTruth] == NULL )\n        p-\u003enClasses++;\n    Rwr_ListAddToTail( p-\u003epTable + uTruth, pNew );\n    return pNew;\n}",
+      "Draft": "func Rwr_ManAddNode(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t, fExor int32, Level int32, Volume int32) *Rwr_Node_t {\n    var pNew *Rwr_Node_t;\n    var uTruth uint32;\n    // compute truth table, leve, volume\n    p.nConsidered++;\n    if fExor != 0 {\n        uTruth = (p0.uTruth ^ p1.uTruth);\n    } else {\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0).uTruth : Rwr_Regular(p0).uTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1).uTruth : Rwr_Regular(p1).uTruth) \u0026 0xFFFF; }\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = Level;\n    pNew.Volume = Volume;\n    pNew.fUsed  = 0;\n    pNew.fExor  = fExor;\n    pNew.p0     = p0;\n    pNew.p1     = p1;\n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    // do not add if the node is not essential\n    if uTruth != p.puCanons[uTruth] {\n        return pNew; }\n\n    // add to the list\n    p.nAdded++;\n    if p.pTable[uTruth] == nil {\n        p.nClasses++; }\n    Rwr_ListAddToTail( p.pTable + uTruth, pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Rwr_ManAddVar",
+      "Start": 8311,
+      "End": 8865,
+      "BodyStart": 8389,
+      "Original": "Rwr_Node_t * Rwr_ManAddVar( Rwr_Man_t * p, unsigned uTruth, int fPrecompute )\n{\n    Rwr_Node_t * pNew;\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p-\u003epMmNode );\n    pNew-\u003eId     = p-\u003evForest-\u003enSize;\n    pNew-\u003eTravId = 0;\n    pNew-\u003euTruth = uTruth;\n    pNew-\u003eLevel  = 0;\n    pNew-\u003eVolume = 0;\n    pNew-\u003efUsed  = 1;\n    pNew-\u003efExor  = 0;\n    pNew-\u003ep0     = NULL;\n    pNew-\u003ep1     = NULL;    \n    pNew-\u003epNext  = NULL;\n    Vec_PtrPush( p-\u003evForest, pNew );\n    if ( fPrecompute )\n        Rwr_ListAddToTail( p-\u003epTable + uTruth, pNew );\n    return pNew;\n}",
+      "Draft": "func Rwr_ManAddVar(p *Rwr_Man_t, uTruth uint32, fPrecompute int32) *Rwr_Node_t {\n    var pNew *Rwr_Node_t;\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = 0;\n    pNew.Volume = 0;\n    pNew.fUsed  = 1;\n    pNew.fExor  = 0;\n    pNew.p0     = nil;\n    pNew.p1     = nil;    \n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    if fPrecompute != 0 {\n        Rwr_ListAddToTail( p.pTable + uTruth, pNew ); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Rwr_MarkUsed_rec",
+      "Start": 9117,
+      "End": 9408,
+      "BodyStart": 9176,
+      "Original": "void Rwr_MarkUsed_rec( Rwr_Man_t * p, Rwr_Node_t * pNode )\n{\n    if ( pNode-\u003efUsed || pNode-\u003eTravId == p-\u003enTravIds )\n        return;\n    pNode-\u003eTravId = p-\u003enTravIds;\n    pNode-\u003efUsed = 1;\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode-\u003ep0) );\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode-\u003ep1) );\n}",
+      "Draft": "func Rwr_MarkUsed_rec(p *Rwr_Man_t, pNode *Rwr_Node_t) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    pNode.fUsed = 1;\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode.p0) );\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode.p1) );\n}"
+    },
+    {
+      "Name": "Rwr_Trav_rec",
+      "Start": 9658,
+      "End": 10012,
+      "BodyStart": 9728,
+      "Original": "void Rwr_Trav_rec( Rwr_Man_t * p, Rwr_Node_t * pNode, int * pVolume )\n{\n    if ( pNode-\u003efUsed || pNode-\u003eTravId == p-\u003enTravIds )\n        return;\n    pNode-\u003eTravId = p-\u003enTravIds;\n    (*pVolume)++;\n    if ( pNode-\u003efExor )\n        (*pVolume)++;\n    Rwr_Trav_rec( p, Rwr_Regular(pNode-\u003ep0), pVolume );\n    Rwr_Trav_rec( p, Rwr_Regular(pNode-\u003ep1), pVolume );\n}",
+      "Draft": "func Rwr_Trav_rec(p *Rwr_Man_t, pNode *Rwr_Node_t, pVolume *int32) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    (*pVolume)++;\n    if pNode.fExor {\n        (*pVolume)++; }\n    Rwr_Trav_rec( p, Rwr_Regular(pNode.p0), pVolume );\n    Rwr_Trav_rec( p, Rwr_Regular(pNode.p1), pVolume );\n}"
+    },
+    {
+      "Name": "Rwr_ManNodeVolume",
+      "Start": 10262,
+      "End": 10476,
+      "BodyStart": 10335,
+      "Original": "int Rwr_ManNodeVolume( Rwr_Man_t * p, Rwr_Node_t * p0, Rwr_Node_t * p1 )\n{\n    int Volume = 0;\n    Rwr_ManIncTravId( p );\n    Rwr_Trav_rec( p, p0, \u0026Volume );\n    Rwr_Trav_rec( p, p1, \u0026Volume );\n    return Volume;\n}",
+      "Draft": "func Rwr_ManNodeVolume(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t) int32 {\n    var Volume int32;\n    Rwr_ManIncTravId( p );\n    Rwr_Trav_rec( p, p0, \u0026Volume );\n    Rwr_Trav_rec( p, p1, \u0026Volume );\n    return Volume;\n}"
+    },
+    {
+      "Name": "Rwr_ManIncTravId",
+      "Start": 10726,
+      "End": 10967,
+      "BodyStart": 10765,
+      "Original": "void Rwr_ManIncTravId( Rwr_Man_t * p )\n{\n    Rwr_Node_t * pNode;\n    int i;\n    if ( p-\u003enTravIds++ \u003c 0x8FFFFFFF )\n        return;\n    Vec_PtrForEachEntry( Rwr_Node_t *, p-\u003evForest, pNode, i )\n        pNode-\u003eTravId = 0;\n    p-\u003enTravIds = 1;\n}",
+      "Draft": "func Rwr_ManIncTravId(p *Rwr_Man_t) {\n    var pNode *Rwr_Node_t;\n    var i int32;\n    if p.nTravIds++ \u003c 0x8FFFFFFF {\n        return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((pNode) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        pNode.TravId = 0;\n    }\n    p.nTravIds = 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::1717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1602,
+      "End": 1602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::1890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1669,
+      "End": 1669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::3931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3604,
+      "End": 3604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::4306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3873,
+      "End": 3873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::6688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6264,
+      "End": 6278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::7857",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7433,
+      "End": 7447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::8849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8425,
+      "End": 8439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::pointer-cast::11397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10860,
+      "End": 10860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManPrecompute",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManPrecompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1460,
+      "End": 4162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::ternary::Rwr_ManTryNode",
+      "Category": "ternary-review",
+      "Symbol": "Rwr_ManTryNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4412,
+      "End": 6656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManTryNode",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManTryNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4412,
+      "End": 6656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::ternary::Rwr_ManAddNode",
+      "Category": "ternary-review",
+      "Symbol": "Rwr_ManAddNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6906,
+      "End": 8061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManAddNode",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManAddNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6906,
+      "End": 8061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManAddVar",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManAddVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8311,
+      "End": 8865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_MarkUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_MarkUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9117,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_Trav_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_Trav_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9658,
+      "End": 10012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManNodeVolume",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManNodeVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10262,
+      "End": 10476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::Rwr_ManIncTravId",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManIncTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10726,
+      "End": 10967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11214
+    }
+  ],
+  "Draft": "package rwr\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [rwrLib.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwrLib.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Rwr_Node_t *        Rwr_ManTryNode( Rwr_Man_t * p, Rwr_Node_t * p0, Rwr_Node_t * p1, int fExor, int Level, int Volume );\n\n// static void                Rwr_MarkUsed_rec( Rwr_Man_t * p, Rwr_Node_t * pNode );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Precomputes the forest in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManPrecompute(p *Rwr_Man_t) {\n    var p0, p1 *Rwr_Node_t;\n    var i, k, Level, Volume int32;\n    var LevelOld int32  = -1;\n    var nNodes int32;\n\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  k = 1; (k \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p1) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, k)), 1); k++  {\n        if LevelOld \u003c int32(p0.Level) {\n            LevelOld = p0.Level;\n            fmt.Printf(\"Starting level %d  (at %d nodes).\\n\", LevelOld+1, i);\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i);\n        }\n\n        if k == i {\n            break; }\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 ) // hard\n//            break;\n\n        if p0.Level + p1.Level \u003e 5 { // easy \n            break; }\n\n//        if ( p0-\u003eLevel + p1-\u003eLevel \u003e 6 || (p0-\u003eLevel == 3 \u0026\u0026 p1-\u003eLevel == 3) )\n//            break;\n\n        // compute the level and volume of the new nodes\n        Level  = 1 + Abc_MaxInt( p0.Level, p1.Level );\n        Volume = 1 + Rwr_ManNodeVolume( p, p0, p1 );\n        // try four different AND nodes\n        Rwr_ManTryNode( p,         p0 ,         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0),         p1 , 0, Level, Volume );\n        Rwr_ManTryNode( p,         p0 , Rwr_Not(p1), 0, Level, Volume );\n        Rwr_ManTryNode( p, Rwr_Not(p0), Rwr_Not(p1), 0, Level, Volume );\n        // try EXOR\n        Rwr_ManTryNode( p,         p0 ,         p1 , 1, Level, Volume + 1 );\n        // report the progress\n        if p.nConsidered % 50000000 == 0 {\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i); }\n        // quit after some time\n        if p.vForest.nSize == RWR_LIMIT + 5 {\n            fmt.Printf(\"Considered = %5d M.   Found = %8d.   Classes = %6d.   Trying %7d.\\n\", p.nConsidered/1000000, p.vForest.nSize, p.nClasses, i);\n            goto save;\n        }\n    }\n    }\nsave :\n\n    // mark the relevant ones\n    Rwr_ManIncTravId( p );\n    k = 5;\n    nNodes = 0;\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 5; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        if p0.uTruth == p.puCanons[p0.uTruth] {\n            Rwr_MarkUsed_rec( p, p0 );\n            nNodes++;\n        }\n    }\n\n    // compact the array by throwing away non-canonical\n    k = 5;\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 5; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((p0) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        if p0.fUsed {\n            p.vForest.pArray[k] = p0;\n            p0.Id = k++;\n        }\n    }\n    p.vForest.nSize = k;\n    fmt.Printf(\"Total canonical = %4d. Total used = %5d.\\n\", nNodes, p.vForest.nSize);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManTryNode(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t, fExor int32, Level int32, Volume int32) *Rwr_Node_t {\n    var pOld *Rwr_Node_t;\n    var pNew *Rwr_Node_t;\n    var ppPlace **Rwr_Node_t;\n    var uTruth uint32;\n    // compute truth table, level, volume\n    p.nConsidered++;\n    if fExor != 0 {\n//        printf( \"Considering EXOR of %d and %d.\\n\", p0-\u003eId, p1-\u003eId );\n        uTruth = (p0.uTruth ^ p1.uTruth);\n    \n    } else {\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0).uTruth : Rwr_Regular(p0).uTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1).uTruth : Rwr_Regular(p1).uTruth) \u0026 0xFFFF; }\n    // skip non-practical classes\n    if Level \u003e 2 \u0026\u0026 !p.pPractical[p.puCanons[uTruth]] {\n        return nil; }\n    // enumerate through the nodes with the same canonical form\n    ppPlace = p.pTable + uTruth;\n    for  pOld = *ppPlace; (pOld != nil); ppPlace = \u0026pOld.pNext, pOld = pOld.pNext  {\n        if pOld.Level \u003c  uint32(Level) \u0026\u0026 pOld.Volume \u003c uint32(Volume) {\n            return nil; }\n        if pOld.Level == uint32(Level) \u0026\u0026 pOld.Volume \u003c uint32(Volume) {\n            return nil; }\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n/*\n    // enumerate through the nodes with the opposite polarity\n    for ( pOld = p-\u003epTable[~uTruth \u0026 0xFFFF]; pOld; pOld = pOld-\u003epNext )\n    {\n        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n        if ( pOld-\u003eLevel == (unsigned)Level \u0026\u0026 pOld-\u003eVolume \u003c (unsigned)Volume )\n            return NULL;\n//        if ( pOld-\u003eLevel \u003c  (unsigned)Level \u0026\u0026 pOld-\u003eVolume == (unsigned)Volume )\n//            return NULL;\n    }\n*/\n    // count the classes\n    if p.pTable[uTruth] == nil \u0026\u0026 p.puCanons[uTruth] == uTruth {\n        p.nClasses++; }\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = Level;\n    pNew.Volume = Volume;\n    pNew.fUsed  = 0;\n    pNew.fExor  = fExor;\n    pNew.p0     = p0;\n    pNew.p1     = p1;\n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    *ppPlace     = pNew;\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManAddNode(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t, fExor int32, Level int32, Volume int32) *Rwr_Node_t {\n    var pNew *Rwr_Node_t;\n    var uTruth uint32;\n    // compute truth table, leve, volume\n    p.nConsidered++;\n    if fExor != 0 {\n        uTruth = (p0.uTruth ^ p1.uTruth);\n    } else {\n        uTruth = (Rwr_IsComplement(p0)? ~Rwr_Regular(p0).uTruth : Rwr_Regular(p0).uTruth) \u0026 \n                 (Rwr_IsComplement(p1)? ~Rwr_Regular(p1).uTruth : Rwr_Regular(p1).uTruth) \u0026 0xFFFF; }\n    // create the new node\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = Level;\n    pNew.Volume = Volume;\n    pNew.fUsed  = 0;\n    pNew.fExor  = fExor;\n    pNew.p0     = p0;\n    pNew.p1     = p1;\n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    // do not add if the node is not essential\n    if uTruth != p.puCanons[uTruth] {\n        return pNew; }\n\n    // add to the list\n    p.nAdded++;\n    if p.pTable[uTruth] == nil {\n        p.nClasses++; }\n    Rwr_ListAddToTail( p.pTable + uTruth, pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManAddVar(p *Rwr_Man_t, uTruth uint32, fPrecompute int32) *Rwr_Node_t {\n    var pNew *Rwr_Node_t;\n    pNew = (Rwr_Node_t *)Extra_MmFixedEntryFetch( p.pMmNode );\n    pNew.Id     = p.vForest.nSize;\n    pNew.TravId = 0;\n    pNew.uTruth = uTruth;\n    pNew.Level  = 0;\n    pNew.Volume = 0;\n    pNew.fUsed  = 1;\n    pNew.fExor  = 0;\n    pNew.p0     = nil;\n    pNew.p1     = nil;    \n    pNew.pNext  = nil;\n    Vec_PtrPush( p.vForest, pNew );\n    if fPrecompute != 0 {\n        Rwr_ListAddToTail( p.pTable + uTruth, pNew ); }\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_MarkUsed_rec(p *Rwr_Man_t, pNode *Rwr_Node_t) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    pNode.fUsed = 1;\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode.p0) );\n    Rwr_MarkUsed_rec( p, Rwr_Regular(pNode.p1) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_Trav_rec(p *Rwr_Man_t, pNode *Rwr_Node_t, pVolume *int32) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    (*pVolume)++;\n    if pNode.fExor {\n        (*pVolume)++; }\n    Rwr_Trav_rec( p, Rwr_Regular(pNode.p0), pVolume );\n    Rwr_Trav_rec( p, Rwr_Regular(pNode.p1), pVolume );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManNodeVolume(p *Rwr_Man_t, p0 *Rwr_Node_t, p1 *Rwr_Node_t) int32 {\n    var Volume int32;\n    Rwr_ManIncTravId( p );\n    Rwr_Trav_rec( p, p0, \u0026Volume );\n    Rwr_Trav_rec( p, p1, \u0026Volume );\n    return Volume;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManIncTravId(p *Rwr_Man_t) {\n    var pNode *Rwr_Node_t;\n    var i int32;\n    if p.nTravIds++ \u003c 0x8FFFFFFF {\n        return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vForest)) \u0026\u0026 (((pNode) = (Rwr_Node_t *)Vec_PtrEntry(p.vForest, i)), 1); i++  {\n        pNode.TravId = 0;\n    }\n    p.nTravIds = 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

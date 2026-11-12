@@ -1,0 +1,467 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c",
+  "SHA256": "6ea8023d16b08d632f60103891fe700012c58f1dbea8ec4098308bd0bb3f5730",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 3575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Scores: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 13,
+        "ByteOffset": 3647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c=%d \", 'a'+i, Score[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 3702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 3727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Prios: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 4474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d=\", PrioCount ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 21,
+        "ByteOffset": 4758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%c\", 'a'+i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 4841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 9,
+        "ByteOffset": 4890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 17,
+        "ByteOffset": 6209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObj.nFans == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 6526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uSupps[i] \u003c= 0xFFFF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVarMax != -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 9,
+        "ByteOffset": 8778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Decision: \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 17,
+        "ByteOffset": 8918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d \", i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 8952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( piLits[i] \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 9,
+        "ByteOffset": 9389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 10265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize == 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 20,
+        "ByteOffset": 11988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppCofs[0][0] = ABC_ALLOC( unsigned, 32 * nMemSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 12175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize == 32 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 13083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cof%d%d: \", nCBars, i );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 420,
+        "Column": 27,
+        "ByteOffset": 13143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Kit_DsdPrint( stdout, ppNtks[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 9,
+        "ByteOffset": 13853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After restructuring with priority:\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 14148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ppNtks[i].pSupps[0] \u003c= 0xFFFF );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 13,
+        "ByteOffset": 14421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cof%d%d: \", nCBars, i );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 458,
+        "Column": 27,
+        "ByteOffset": 14481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Kit_DsdPrint( stdout, ppNtks[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 15155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 495,
+        "Column": 9,
+        "ByteOffset": 15648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 503,
+        "Column": 5,
+        "ByteOffset": 15819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( ppCofs[0][0] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_CreateVarOrder",
+      "Start": 1314,
+      "End": 2293,
+      "BodyStart": 1380,
+      "Original": "void Lpk_CreateVarOrder( Kit_DsdNtk_t * pNtk, char pTable[][16] )\n{\n    Kit_DsdObj_t * pObj;\n    unsigned uSuppFanins, k;\n    int Above[16], Below[16];\n    int nAbove, nBelow, iFaninLit, i, x, y;\n    // iterate through the nodes\n    Kit_DsdNtkForEachObj( pNtk, pObj, i )\n    {\n        // collect fanin support of this node\n        nAbove = 0;\n        uSuppFanins = 0;\n        Kit_DsdObjForEachFanin( pNtk, pObj, iFaninLit, k )\n        {\n            if ( Kit_DsdLitIsLeaf( pNtk, iFaninLit ) )\n                Above[nAbove++] = Abc_Lit2Var(iFaninLit);\n            else\n                uSuppFanins |= Kit_DsdLitSupport( pNtk, iFaninLit );\n        }\n        // find the below variables\n        nBelow = 0;\n        for ( y = 0; y \u003c 16; y++ )\n            if ( uSuppFanins \u0026 (1 \u003c\u003c y) )\n                Below[nBelow++] = y;\n        // create all pairs\n        for ( x = 0; x \u003c nAbove; x++ )\n            for ( y = 0; y \u003c nBelow; y++ )\n                pTable[Above[x]][Below[y]]++;\n    }\n}",
+      "Draft": "func Lpk_CreateVarOrder(pNtk *Kit_DsdNtk_t, pTable [][16]byte) {\n    var pObj *Kit_DsdObj_t;\n    var uSuppFanins, k uint32;\n    var Above, Below [16]int32;\n    var nAbove, nBelow, iFaninLit, i, x, y int32;\n    // iterate through the nodes\n    // inlining of macro Kit_DsdNtkForEachObj\n    for  i = 0; (i \u003c (pNtk).nNodes) \u0026\u0026 ((pObj) = (pNtk).pNodes[i]); i++  {\n        // collect fanin support of this node\n        nAbove = 0;\n        uSuppFanins = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFans)) \u0026\u0026 ((iFaninLit) = (pObj).pFans[k], 1); k++  {\n            if Kit_DsdLitIsLeaf( pNtk, iFaninLit ) {\n                Above[nAbove++] = Abc_Lit2Var(iFaninLit);\n            } else {\n                uSuppFanins |= Kit_DsdLitSupport( pNtk, iFaninLit ); }\n        }\n        // find the below variables\n        nBelow = 0;\n        for  y = 0; y \u003c 16; y++  {\n            if uSuppFanins \u0026 (1 \u003c\u003c y) {\n                Below[nBelow++] = y; }\n        }\n        // create all pairs\n        for  x = 0; x \u003c nAbove; x++  {\n            for  y = 0; y \u003c nBelow; y++  {\n                pTable[Above[x]][Below[y]]++;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Lpk_CreateCommonOrder",
+      "Start": 2560,
+      "End": 4675,
+      "BodyStart": 2675,
+      "Original": "void Lpk_CreateCommonOrder( char pTable[][16], int piCofVar[], int nCBars, int pPrios[], int nVars, int fVerbose )\n{\n    int Score[16] = {0}, pPres[16];\n    int i, y, x, iVarBest, ScoreMax, PrioCount;\n\n    // mark the present variables\n    for ( i = 0; i \u003c nVars; i++ )\n        pPres[i] = 1;\n    // remove cofactored variables\n    for ( i = 0; i \u003c nCBars; i++ )\n        pPres[piCofVar[i]] = 0;\n\n    // compute scores for each leaf\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        if ( pPres[i] == 0 )\n            continue;\n        for ( y = 0; y \u003c nVars; y++ )\n            Score[i] += pTable[i][y];\n        for ( x = 0; x \u003c nVars; x++ )\n            Score[i] -= pTable[x][i];\n    }\n\n    // print the scores\n    if ( fVerbose )\n    {\n        printf( \"Scores: \" );\n        for ( i = 0; i \u003c nVars; i++ )\n            printf( \"%c=%d \", 'a'+i, Score[i] );\n        printf( \"   \" );\n        printf( \"Prios: \" );\n    }\n\n    // derive variable priority\n    // variables with equal score receive the same priority\n    for ( i = 0; i \u003c nVars; i++ )\n        pPrios[i] = 16;\n\n    // iterate until variables remain\n    for ( PrioCount = 1; ; PrioCount++ )\n    {\n        // find the present variable with the highest score\n        iVarBest = -1;\n        ScoreMax = -100000;\n        for ( i = 0; i \u003c nVars; i++ )\n        {\n            if ( pPres[i] == 0 )\n                continue;\n            if ( ScoreMax \u003c Score[i] )\n            {\n                ScoreMax = Score[i];\n                iVarBest = i;\n            }\n        }\n        if ( iVarBest == -1 )\n            break;\n        // give the next priority to all vars having this score\n        if ( fVerbose )\n            printf( \"%d=\", PrioCount );\n        for ( i = 0; i \u003c nVars; i++ )\n        {\n            if ( pPres[i] == 0 )\n                continue;\n            if ( Score[i] == ScoreMax )\n            {\n                pPrios[i] = PrioCount;\n                pPres[i] = 0;\n                if ( fVerbose )\n                    printf( \"%c\", 'a'+i );\n            }\n        }\n        if ( fVerbose )\n            printf( \" \" );\n    }\n    if ( fVerbose )\n        printf( \"\\n\" );\n}",
+      "Draft": "func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pPrios []int32, nVars int32, fVerbose int32) {\n    var Score [16]int32 ;\n    var pPres [16]int32;\n    var i, y, x, iVarBest, ScoreMax, PrioCount int32;\n\n    // mark the present variables\n    for  i = 0; i \u003c nVars; i++  {\n        pPres[i] = 1;\n    }\n    // remove cofactored variables\n    for  i = 0; i \u003c nCBars; i++  {\n        pPres[piCofVar[i]] = 0;\n    }\n\n    // compute scores for each leaf\n    for  i = 0; i \u003c nVars; i++  {\n        if pPres[i] == 0 {\n            continue; }\n        for  y = 0; y \u003c nVars; y++  {\n            Score[i] += pTable[i][y];\n        }\n        for  x = 0; x \u003c nVars; x++  {\n            Score[i] -= pTable[x][i];\n        }\n    }\n\n    // print the scores\n    if fVerbose != 0 {\n        fmt.Printf(\"Scores: \");\n        for  i = 0; i \u003c nVars; i++  {\n            fmt.Printf(\"%c=%d \", 'a'+i, Score[i]);\n        }\n        fmt.Printf(\"   \");\n        fmt.Printf(\"Prios: \");\n    }\n\n    // derive variable priority\n    // variables with equal score receive the same priority\n    for  i = 0; i \u003c nVars; i++  {\n        pPrios[i] = 16;\n    }\n\n    // iterate until variables remain\n    for  PrioCount = 1; ; PrioCount++  {\n        // find the present variable with the highest score\n        iVarBest = -1;\n        ScoreMax = -100000;\n        for  i = 0; i \u003c nVars; i++  {\n            if pPres[i] == 0 {\n                continue; }\n            if ScoreMax \u003c Score[i] {\n                ScoreMax = Score[i];\n                iVarBest = i;\n            }\n        }\n        if iVarBest == -1 {\n            break; }\n        // give the next priority to all vars having this score\n        if fVerbose != 0 {\n            fmt.Printf(\"%d=\", PrioCount); }\n        for  i = 0; i \u003c nVars; i++  {\n            if pPres[i] == 0 {\n                continue; }\n            if Score[i] == ScoreMax {\n                pPrios[i] = PrioCount;\n                pPres[i] = 0;\n                if fVerbose != 0 {\n                    fmt.Printf(\"%c\", 'a'+i); }\n            }\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\" \"); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n}"
+    },
+    {
+      "Name": "Lpk_FindHighest",
+      "Start": 4996,
+      "End": 7602,
+      "BodyStart": 5097,
+      "Original": "int Lpk_FindHighest( Kit_DsdNtk_t ** ppNtks, int * piLits, int nSize, int * pPrio, int * pDecision )\n{\n    Kit_DsdObj_t * pObj;\n    unsigned uSupps[8], uSuppFanin, uSuppTotal, uSuppLarge;\n    int i, pTriv[8], PrioMin, iVarMax, nComps, fOneNonTriv;\n\n    // find individual support and total support \n    uSuppTotal = 0;\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        pTriv[i] = 1;\n        if ( piLits[i] \u003c 0 ) \n            uSupps[i] = 0;\n        else if ( Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) )\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] );\n        else\n        {\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if ( pObj-\u003eType == KIT_DSD_PRIME )\n            {\n                pTriv[i] = 0;\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj-\u003epFans[0] );\n            }\n            else\n            {\n                assert( pObj-\u003enFans == 2 );\n                if ( !Kit_DsdLitIsLeaf(ppNtks[i], pObj-\u003epFans[0]) )\n                    pTriv[i] = 0;\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj-\u003epFans[1] );\n            }\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] ) \u0026 ~uSuppFanin;\n        }\n        assert( uSupps[i] \u003c= 0xFFFF );\n        uSuppTotal |= uSupps[i];\n    }\n    if ( uSuppTotal == 0 )\n        return 0;\n\n    // find one support variable with the highest priority\n    PrioMin = ABC_INFINITY;\n    iVarMax = -1;\n    for ( i = 0; i \u003c 16; i++ )\n        if ( uSuppTotal \u0026 (1 \u003c\u003c i) )\n            if ( PrioMin \u003e pPrio[i] )\n            {\n                PrioMin = pPrio[i];\n                iVarMax = i;\n            }\n    assert( iVarMax != -1 );\n\n    // select components, which have this variable\n    nComps = 0;\n    fOneNonTriv = 0;\n    uSuppLarge = 0;\n    for ( i = 0; i \u003c nSize; i++ )\n        if ( uSupps[i] \u0026 (1\u003c\u003ciVarMax) )\n        {\n            if ( pTriv[i] || !fOneNonTriv )\n            {\n                if ( !pTriv[i] )\n                {\n                    uSuppLarge = uSupps[i];\n                    fOneNonTriv = 1;\n                }\n                pDecision[i] = 1;\n                nComps++;\n            }\n            else\n                pDecision[i] = 0;\n        }\n        else\n            pDecision[i] = 0;\n\n    // add other non-trivial not-taken components whose support is contained in the current large component support\n    if ( fOneNonTriv )\n        for ( i = 0; i \u003c nSize; i++ )\n            if ( !pTriv[i] \u0026\u0026 pDecision[i] == 0 \u0026\u0026 (uSupps[i] \u0026 ~uSuppLarge) == 0 )\n            {\n                pDecision[i] = 1;\n                nComps++;\n            }\n\n    return nComps;\n}",
+      "Draft": "func Lpk_FindHighest(ppNtks **Kit_DsdNtk_t, piLits *int32, nSize int32, pPrio *int32, pDecision *int32) int32 {\n    var pObj *Kit_DsdObj_t;\n    var uSupps [8]uint32;\n    var uSuppFanin uint32;\n    var uSuppTotal uint32;\n    var uSuppLarge uint32;\n    var i int32;\n    var pTriv [8]int32;\n    var PrioMin int32;\n    var iVarMax int32;\n    var nComps int32;\n    var fOneNonTriv int32;\n\n    // find individual support and total support \n    uSuppTotal = 0;\n    for  i = 0; i \u003c nSize; i++  {\n        pTriv[i] = 1;\n        if piLits[i] \u003c 0 { \n            uSupps[i] = 0;\n        } else if Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) {\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] );\n        } else {\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if pObj.Type == KIT_DSD_PRIME {\n                pTriv[i] = 0;\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj.pFans[0] );\n            \n            } else {\n                assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n                if !Kit_DsdLitIsLeaf(ppNtks[i], pObj.pFans[0]) {\n                    pTriv[i] = 0; }\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj.pFans[1] );\n            }\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] ) \u0026 ~uSuppFanin;\n        }\n        assert(uSupps[i] \u003c= 0xFFFF, \"uSupps[i] \u003c= 0xFFFF\");\n        uSuppTotal |= uSupps[i];\n    }\n    if uSuppTotal == 0 {\n        return 0; }\n\n    // find one support variable with the highest priority\n    PrioMin = ABC_INFINITY;\n    iVarMax = -1;\n    for  i = 0; i \u003c 16; i++  {\n        if uSuppTotal \u0026 (1 \u003c\u003c i) {\n            if PrioMin \u003e pPrio[i] {\n                PrioMin = pPrio[i];\n                iVarMax = i;\n            } }\n    }\n    assert(iVarMax != -1, \"iVarMax != -1\");\n\n    // select components, which have this variable\n    nComps = 0;\n    fOneNonTriv = 0;\n    uSuppLarge = 0;\n    for  i = 0; i \u003c nSize; i++  {\n        if uSupps[i] \u0026 (1\u003c\u003ciVarMax) {\n            if pTriv[i] || !(fOneNonTriv != 0) {\n                if !pTriv[i] {\n                    uSuppLarge = uSupps[i];\n                    fOneNonTriv = 1;\n                }\n                pDecision[i] = 1;\n                nComps++;\n            \n            } else {\n                pDecision[i] = 0; }\n        \n        } else {\n            pDecision[i] = 0; }\n    }\n\n    // add other non-trivial not-taken components whose support is contained in the current large component support\n    if fOneNonTriv != 0 {\n        for  i = 0; i \u003c nSize; i++  {\n            if !pTriv[i] \u0026\u0026 pDecision[i] == 0 \u0026\u0026 (uSupps[i] \u0026 ~uSuppLarge) == 0 {\n                pDecision[i] = 1;\n                nComps++;\n            }\n        } }\n\n    return nComps;\n}"
+    },
+    {
+      "Name": "Lpk_MapTreeMulti_rec",
+      "Start": 7867,
+      "End": 10026,
+      "BodyStart": 8030,
+      "Original": "If_Obj_t * Lpk_MapTreeMulti_rec( Lpk_Man_t * p, Kit_DsdNtk_t ** ppNtks, int * piLits, int * piCofVar, int nCBars, If_Obj_t ** ppLeaves, int nLeaves, int * pPrio )\n{\n    Kit_DsdObj_t * pObj;\n    If_Obj_t * pObjsNew[4][8], * pResPrev;\n    int piLitsNew[8], pDecision[8];\n    int i, k, nComps, nSize;\n\n    // find which of the variables is highest in the order\n    nSize = (1 \u003c\u003c nCBars);\n    nComps = Lpk_FindHighest( ppNtks, piLits, nSize, pPrio, pDecision );\n    if ( nComps == 0 )\n        return If_Not( If_ManConst1(p-\u003epIfMan) );\n\n    // iterate over the nodes\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"Decision: \" );\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        if ( pDecision[i] )\n        {\n            if ( p-\u003epPars-\u003efVeryVerbose )\n                printf( \"%d \", i );\n            assert( piLits[i] \u003e= 0 );\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if ( pObj == NULL )\n                piLitsNew[i] = -2;\n            else if ( pObj-\u003eType == KIT_DSD_PRIME )\n                piLitsNew[i] = pObj-\u003epFans[0];\n            else\n                piLitsNew[i] = pObj-\u003epFans[1];\n        }\n        else\n            piLitsNew[i] = piLits[i];\n    }\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"\\n\" );\n\n    // call again\n    pResPrev = Lpk_MapTreeMulti_rec( p, ppNtks, piLitsNew, piCofVar, nCBars, ppLeaves, nLeaves, pPrio );\n\n    // create new set of nodes\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        if ( pDecision[i] )\n            pObjsNew[nCBars][i] = Lpk_MapTree_rec( p, ppNtks[i], ppLeaves, piLits[i], pResPrev );\n        else if ( piLits[i] == -1 )\n            pObjsNew[nCBars][i] = If_ManConst1(p-\u003epIfMan);\n        else if ( piLits[i] == -2 )\n            pObjsNew[nCBars][i] = If_Not( If_ManConst1(p-\u003epIfMan) );\n        else\n            pObjsNew[nCBars][i] = pResPrev;\n    }\n\n    // create MUX using these outputs\n    for ( k = nCBars; k \u003e 0; k-- )\n    {\n        nSize /= 2;\n        for ( i = 0; i \u003c nSize; i++ )\n            pObjsNew[k-1][i] = If_ManCreateMux( p-\u003epIfMan, pObjsNew[k][2*i+0], pObjsNew[k][2*i+1], ppLeaves[piCofVar[k-1]] );\n    }\n    assert( nSize == 1 );\n    return pObjsNew[0][0];  \n}",
+      "Draft": "func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks **Kit_DsdNtk_t, piLits *int32, piCofVar *int32, nCBars int32, ppLeaves **If_Obj_t, nLeaves int32, pPrio *int32) *If_Obj_t {\n    var pObj *Kit_DsdObj_t;\n    var pObjsNew [4][8]*If_Obj_t;\n    var pResPrev *If_Obj_t;\n    var piLitsNew, pDecision [8]int32;\n    var i, k, nComps, nSize int32;\n\n    // find which of the variables is highest in the order\n    nSize = (1 \u003c\u003c nCBars);\n    nComps = Lpk_FindHighest( ppNtks, piLits, nSize, pPrio, pDecision );\n    if nComps == 0 {\n        return If_Not( If_ManConst1(p.pIfMan) ); }\n\n    // iterate over the nodes\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Decision: \"); }\n    for  i = 0; i \u003c nSize; i++  {\n        if pDecision[i] {\n            if p.pPars.fVeryVerbose {\n                fmt.Printf(\"%d \", i); }\n            assert(piLits[i] \u003e= 0, \"piLits[i] \u003e= 0\");\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if pObj == nil {\n                piLitsNew[i] = -2;\n            } else if pObj.Type == KIT_DSD_PRIME {\n                piLitsNew[i] = pObj.pFans[0];\n            } else {\n                piLitsNew[i] = pObj.pFans[1]; }\n        \n        } else {\n            piLitsNew[i] = piLits[i]; }\n    }\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"\\n\"); }\n\n    // call again\n    pResPrev = Lpk_MapTreeMulti_rec( p, ppNtks, piLitsNew, piCofVar, nCBars, ppLeaves, nLeaves, pPrio );\n\n    // create new set of nodes\n    for  i = 0; i \u003c nSize; i++  {\n        if pDecision[i] {\n            pObjsNew[nCBars][i] = Lpk_MapTree_rec( p, ppNtks[i], ppLeaves, piLits[i], pResPrev );\n        } else if piLits[i] == -1 {\n            pObjsNew[nCBars][i] = If_ManConst1(p.pIfMan);\n        } else if piLits[i] == -2 {\n            pObjsNew[nCBars][i] = If_Not( If_ManConst1(p.pIfMan) );\n        } else {\n            pObjsNew[nCBars][i] = pResPrev; }\n    }\n\n    // create MUX using these outputs\n    for  k = nCBars; k \u003e 0; k--  {\n        nSize /= 2;\n        for  i = 0; i \u003c nSize; i++  {\n            pObjsNew[k-1][i] = If_ManCreateMux( p.pIfMan, pObjsNew[k][2*i+0], pObjsNew[k][2*i+1], ppLeaves[piCofVar[k-1]] );\n        }\n    }\n    assert(nSize == 1, \"nSize == 1\");\n    return pObjsNew[0][0];  \n}"
+    },
+    {
+      "Name": "Lpk_MapTreeMulti",
+      "Start": 10291,
+      "End": 15451,
+      "BodyStart": 10388,
+      "Original": "If_Obj_t * Lpk_MapTreeMulti( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves )\n{\n    static int Counter = 0;\n    If_Obj_t * pResult;\n    Kit_DsdNtk_t * ppNtks[8] = {0}, * pTemp;\n    Kit_DsdObj_t * pRoot;\n    int piCofVar[4], pPrios[16], pFreqs[16] = {0}, piLits[16];\n    int i, k, nCBars, nSize, nMemSize;\n    unsigned * ppCofs[4][8], uSupport;\n    char pTable[16][16] = {\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}\n    };\n    int fVerbose = p-\u003epPars-\u003efVeryVerbose;\n\n    Counter++;\n//    printf( \"Run %d.\\n\", Counter );\n\n    // allocate storage for cofactors\n    nMemSize = Kit_TruthWordNum(nVars);\n    ppCofs[0][0] = ABC_ALLOC( unsigned, 32 * nMemSize );\n    nSize = 0;\n    for ( i = 0; i \u003c 4; i++ )\n    for ( k = 0; k \u003c 8; k++ )\n        ppCofs[i][k] = ppCofs[0][0] + nMemSize * nSize++;\n    assert( nSize == 32 );\n\n    // find the best cofactoring variables\n    nCBars = Kit_DsdCofactoring( pTruth, nVars, piCofVar, p-\u003epPars-\u003enVarsShared, 0 );\n//    nCBars = 2;\n//    piCofVar[0] = 0;\n//    piCofVar[1] = 1;\n\n\n    // copy the function\n    Kit_TruthCopy( ppCofs[0][0], pTruth, nVars );\n\n    // decompose w.r.t. these variables\n    for ( k = 0; k \u003c nCBars; k++ )\n    {\n        nSize = (1 \u003c\u003c k);\n        for ( i = 0; i \u003c nSize; i++ )\n        {\n            Kit_TruthCofactor0New( ppCofs[k+1][2*i+0], ppCofs[k][i], nVars, piCofVar[k] );\n            Kit_TruthCofactor1New( ppCofs[k+1][2*i+1], ppCofs[k][i], nVars, piCofVar[k] );\n        }\n    }\n    nSize = (1 \u003c\u003c nCBars);\n    // compute DSD networks\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        ppNtks[i] = Kit_DsdDecompose( ppCofs[nCBars][i], nVars );\n        ppNtks[i] = Kit_DsdExpand( pTemp = ppNtks[i] );\n        Kit_DsdNtkFree( pTemp );\n        if ( fVerbose )\n        {\n            printf( \"Cof%d%d: \", nCBars, i );\n            Kit_DsdPrint( stdout, ppNtks[i] );\n        }\n    }\n\n    // compute variable frequences\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        uSupport = Kit_TruthSupport( ppCofs[nCBars][i], nVars );\n        for ( k = 0; k \u003c nVars; k++ )\n            if ( uSupport \u0026 (1\u003c\u003ck) )\n                pFreqs[k]++;\n    }\n\n    // find common variable order\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        Kit_DsdGetSupports( ppNtks[i] );\n        Lpk_CreateVarOrder( ppNtks[i], pTable );\n    }\n    Lpk_CreateCommonOrder( pTable, piCofVar, nCBars, pPrios, nVars, fVerbose );\n    // update priorities with frequences\n    for ( i = 0; i \u003c nVars; i++ )\n        pPrios[i] = pPrios[i] * 256 + (16 - pFreqs[i]) * 16 + i;\n\n    if ( fVerbose )\n        printf( \"After restructuring with priority:\\n\" );\n\n    // transform all networks according to the variable order\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        ppNtks[i] = Kit_DsdShrink( pTemp = ppNtks[i], pPrios );\n        Kit_DsdNtkFree( pTemp );\n        Kit_DsdGetSupports( ppNtks[i] );\n        assert( ppNtks[i]-\u003epSupps[0] \u003c= 0xFFFF );\n        // undec nodes should be rotated in such a way that the first input has as many shared inputs as possible\n        Kit_DsdRotate( ppNtks[i], pFreqs );\n        // print the resulting networks\n        if ( fVerbose )\n        {\n            printf( \"Cof%d%d: \", nCBars, i );\n            Kit_DsdPrint( stdout, ppNtks[i] );\n        }\n    }\n \n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        // collect the roots\n        pRoot = Kit_DsdNtkRoot(ppNtks[i]);\n        if ( pRoot-\u003eType == KIT_DSD_CONST1 )\n            piLits[i] = Abc_LitIsCompl(ppNtks[i]-\u003eRoot)? -2: -1;\n        else if ( pRoot-\u003eType == KIT_DSD_VAR )\n            piLits[i] = Abc_LitNotCond( pRoot-\u003epFans[0], Abc_LitIsCompl(ppNtks[i]-\u003eRoot) );\n        else\n            piLits[i] = ppNtks[i]-\u003eRoot;\n    }\n\n\n    // recursively construct AIG for mapping\n    p-\u003efCofactoring = 1;\n    pResult = Lpk_MapTreeMulti_rec( p, ppNtks, piLits, piCofVar, nCBars, ppLeaves, nVars, pPrios );\n    p-\u003efCofactoring = 0;\n\n    if ( fVerbose )\n        printf( \"\\n\" );\n\n    // verify the transformations\n    nSize = (1 \u003c\u003c nCBars);\n    for ( i = 0; i \u003c nSize; i++ )\n        Kit_DsdTruth( ppNtks[i], ppCofs[nCBars][i] );\n    // mux the truth tables\n    for ( k = nCBars-1; k \u003e= 0; k-- )\n    {\n        nSize = (1 \u003c\u003c k);\n        for ( i = 0; i \u003c nSize; i++ )\n            Kit_TruthMuxVar( ppCofs[k][i], ppCofs[k+1][2*i+0], ppCofs[k+1][2*i+1], nVars, piCofVar[k] );\n    }\n    if ( !Extra_TruthIsEqual( pTruth, ppCofs[0][0], nVars ) )\n        printf( \"Verification failed.\\n\" );\n\n\n    // free the networks\n    for ( i = 0; i \u003c 8; i++ )\n        if ( ppNtks[i] )\n            Kit_DsdNtkFree( ppNtks[i] );\n    ABC_FREE( ppCofs[0][0] );\n\n    return pResult;\n}",
+      "Draft": "func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    \n    var pResult *If_Obj_t;\n    var ppNtks [8]*Kit_DsdNtk_t ;\n    var pTemp *Kit_DsdNtk_t;\n    var pRoot *Kit_DsdObj_t;\n    var piCofVar [4]int32;\n    var pPrios [16]int32;\n    var pFreqs [16]int32 ;\n    var piLits [16]int32;\n    var i, k, nCBars, nSize, nMemSize int32;\n    var ppCofs [4][8]*uint32;\n    var uSupport uint32;\n    var pTable [16][16]byte = [16][16]byte{\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n    };\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n\n    spStatic_Lpk_MapTreeMulti_Counter++;\n//    printf( \"Run %d.\\n\", Counter );\n\n    // allocate storage for cofactors\n    nMemSize = Kit_TruthWordNum(nVars);\n    ppCofs[0][0] = ABC_ALLOC( unsigned, 32 * nMemSize );\n    nSize = 0;\n    for  i = 0; i \u003c 4; i++  {\n    for  k = 0; k \u003c 8; k++  {\n        ppCofs[i][k] = ppCofs[0][0] + nMemSize * nSize++;\n    }\n    }\n    assert(nSize == 32, \"nSize == 32\");\n\n    // find the best cofactoring variables\n    nCBars = Kit_DsdCofactoring( pTruth, nVars, piCofVar, p.pPars.nVarsShared, 0 );\n//    nCBars = 2;\n//    piCofVar[0] = 0;\n//    piCofVar[1] = 1;\n\n\n    // copy the function\n    Kit_TruthCopy( ppCofs[0][0], pTruth, nVars );\n\n    // decompose w.r.t. these variables\n    for  k = 0; k \u003c nCBars; k++  {\n        nSize = (1 \u003c\u003c k);\n        for  i = 0; i \u003c nSize; i++  {\n            Kit_TruthCofactor0New( ppCofs[k+1][2*i+0], ppCofs[k][i], nVars, piCofVar[k] );\n            Kit_TruthCofactor1New( ppCofs[k+1][2*i+1], ppCofs[k][i], nVars, piCofVar[k] );\n        }\n    }\n    nSize = (1 \u003c\u003c nCBars);\n    // compute DSD networks\n    for  i = 0; i \u003c nSize; i++  {\n        ppNtks[i] = Kit_DsdDecompose( ppCofs[nCBars][i], nVars );\n        ppNtks[i] = Kit_DsdExpand( pTemp = ppNtks[i] );\n        Kit_DsdNtkFree( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cof%d%d: \", nCBars, i);\n            Kit_DsdPrint( os.Stdout, ppNtks[i] );\n        }\n    }\n\n    // compute variable frequences\n    for  i = 0; i \u003c nSize; i++  {\n        uSupport = Kit_TruthSupport( ppCofs[nCBars][i], nVars );\n        for  k = 0; k \u003c nVars; k++  {\n            if uSupport \u0026 (1\u003c\u003ck) {\n                pFreqs[k]++; }\n        }\n    }\n\n    // find common variable order\n    for  i = 0; i \u003c nSize; i++  {\n        Kit_DsdGetSupports( ppNtks[i] );\n        Lpk_CreateVarOrder( ppNtks[i], pTable );\n    }\n    Lpk_CreateCommonOrder( pTable, piCofVar, nCBars, pPrios, nVars, fVerbose );\n    // update priorities with frequences\n    for  i = 0; i \u003c nVars; i++  {\n        pPrios[i] = pPrios[i] * 256 + (16 - pFreqs[i]) * 16 + i;\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"After restructuring with priority:\\n\"); }\n\n    // transform all networks according to the variable order\n    for  i = 0; i \u003c nSize; i++  {\n        ppNtks[i] = Kit_DsdShrink( pTemp = ppNtks[i], pPrios );\n        Kit_DsdNtkFree( pTemp );\n        Kit_DsdGetSupports( ppNtks[i] );\n        assert(ppNtks[i].pSupps[0] \u003c= 0xFFFF, \"ppNtks[i].pSupps[0] \u003c= 0xFFFF\");\n        // undec nodes should be rotated in such a way that the first input has as many shared inputs as possible\n        Kit_DsdRotate( ppNtks[i], pFreqs );\n        // print the resulting networks\n        if fVerbose != 0 {\n            fmt.Printf(\"Cof%d%d: \", nCBars, i);\n            Kit_DsdPrint( os.Stdout, ppNtks[i] );\n        }\n    }\n \n    for  i = 0; i \u003c nSize; i++  {\n        // collect the roots\n        pRoot = Kit_DsdNtkRoot(ppNtks[i]);\n        if pRoot.Type == KIT_DSD_CONST1 {\n            piLits[i] = Abc_LitIsCompl(ppNtks[i].Root)? -2: -1;\n        } else if pRoot.Type == KIT_DSD_VAR {\n            piLits[i] = Abc_LitNotCond( pRoot.pFans[0], Abc_LitIsCompl(ppNtks[i].Root) );\n        } else {\n            piLits[i] = ppNtks[i].Root; }\n    }\n\n\n    // recursively construct AIG for mapping\n    p.fCofactoring = 1;\n    pResult = Lpk_MapTreeMulti_rec( p, ppNtks, piLits, piCofVar, nCBars, ppLeaves, nVars, pPrios );\n    p.fCofactoring = 0;\n\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    // verify the transformations\n    nSize = (1 \u003c\u003c nCBars);\n    for  i = 0; i \u003c nSize; i++  {\n        Kit_DsdTruth( ppNtks[i], ppCofs[nCBars][i] );\n    }\n    // mux the truth tables\n    for  k = nCBars-1; k \u003e= 0; k--  {\n        nSize = (1 \u003c\u003c k);\n        for  i = 0; i \u003c nSize; i++  {\n            Kit_TruthMuxVar( ppCofs[k][i], ppCofs[k+1][2*i+0], ppCofs[k+1][2*i+1], nVars, piCofVar[k] );\n        }\n    }\n    if !Extra_TruthIsEqual( pTruth, ppCofs[0][0], nVars ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n\n\n    // free the networks\n    for  i = 0; i \u003c 8; i++  {\n        if ppNtks[i] {\n            Kit_DsdNtkFree( ppNtks[i] ); }\n    }\n    ABC_FREE( ppCofs[0][0] );\n\n    return pResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::mechanical::static::10576",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 10394,
+      "End": 10400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::Lpk_CreateVarOrder",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CreateVarOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1314,
+      "End": 2293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::Lpk_CreateCommonOrder",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CreateCommonOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2560,
+      "End": 4675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::Lpk_FindHighest",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FindHighest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4996,
+      "End": 7602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::Lpk_MapTreeMulti_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapTreeMulti_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7867,
+      "End": 10026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::ternary::Lpk_MapTreeMulti",
+      "Category": "ternary-review",
+      "Symbol": "Lpk_MapTreeMulti",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10291,
+      "End": 15451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::Lpk_MapTreeMulti",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapTreeMulti",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10291,
+      "End": 15451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::macro-inline::11539",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11539,
+      "End": 11575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMulti.c::macro-inline::15403",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15403,
+      "End": 15427
+    }
+  ],
+  "Draft": "package lpk\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [lpkMulti.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkMulti.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Records variable order.]\n\n  Description [Increaments Order[x][y] by 1 if x should be above y in the DSD.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CreateVarOrder(pNtk *Kit_DsdNtk_t, pTable [][16]byte) {\n    var pObj *Kit_DsdObj_t;\n    var uSuppFanins, k uint32;\n    var Above, Below [16]int32;\n    var nAbove, nBelow, iFaninLit, i, x, y int32;\n    // iterate through the nodes\n    // inlining of macro Kit_DsdNtkForEachObj\n    for  i = 0; (i \u003c (pNtk).nNodes) \u0026\u0026 ((pObj) = (pNtk).pNodes[i]); i++  {\n        // collect fanin support of this node\n        nAbove = 0;\n        uSuppFanins = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFans)) \u0026\u0026 ((iFaninLit) = (pObj).pFans[k], 1); k++  {\n            if Kit_DsdLitIsLeaf( pNtk, iFaninLit ) {\n                Above[nAbove++] = Abc_Lit2Var(iFaninLit);\n            } else {\n                uSuppFanins |= Kit_DsdLitSupport( pNtk, iFaninLit ); }\n        }\n        // find the below variables\n        nBelow = 0;\n        for  y = 0; y \u003c 16; y++  {\n            if uSuppFanins \u0026 (1 \u003c\u003c y) {\n                Below[nBelow++] = y; }\n        }\n        // create all pairs\n        for  x = 0; x \u003c nAbove; x++  {\n            for  y = 0; y \u003c nBelow; y++  {\n                pTable[Above[x]][Below[y]]++;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates commmon variable order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pPrios []int32, nVars int32, fVerbose int32) {\n    var Score [16]int32 ;\n    var pPres [16]int32;\n    var i, y, x, iVarBest, ScoreMax, PrioCount int32;\n\n    // mark the present variables\n    for  i = 0; i \u003c nVars; i++  {\n        pPres[i] = 1;\n    }\n    // remove cofactored variables\n    for  i = 0; i \u003c nCBars; i++  {\n        pPres[piCofVar[i]] = 0;\n    }\n\n    // compute scores for each leaf\n    for  i = 0; i \u003c nVars; i++  {\n        if pPres[i] == 0 {\n            continue; }\n        for  y = 0; y \u003c nVars; y++  {\n            Score[i] += pTable[i][y];\n        }\n        for  x = 0; x \u003c nVars; x++  {\n            Score[i] -= pTable[x][i];\n        }\n    }\n\n    // print the scores\n    if fVerbose != 0 {\n        fmt.Printf(\"Scores: \");\n        for  i = 0; i \u003c nVars; i++  {\n            fmt.Printf(\"%c=%d \", 'a'+i, Score[i]);\n        }\n        fmt.Printf(\"   \");\n        fmt.Printf(\"Prios: \");\n    }\n\n    // derive variable priority\n    // variables with equal score receive the same priority\n    for  i = 0; i \u003c nVars; i++  {\n        pPrios[i] = 16;\n    }\n\n    // iterate until variables remain\n    for  PrioCount = 1; ; PrioCount++  {\n        // find the present variable with the highest score\n        iVarBest = -1;\n        ScoreMax = -100000;\n        for  i = 0; i \u003c nVars; i++  {\n            if pPres[i] == 0 {\n                continue; }\n            if ScoreMax \u003c Score[i] {\n                ScoreMax = Score[i];\n                iVarBest = i;\n            }\n        }\n        if iVarBest == -1 {\n            break; }\n        // give the next priority to all vars having this score\n        if fVerbose != 0 {\n            fmt.Printf(\"%d=\", PrioCount); }\n        for  i = 0; i \u003c nVars; i++  {\n            if pPres[i] == 0 {\n                continue; }\n            if Score[i] == ScoreMax {\n                pPrios[i] = PrioCount;\n                pPres[i] = 0;\n                if fVerbose != 0 {\n                    fmt.Printf(\"%c\", 'a'+i); }\n            }\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\" \"); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds components with the highest priority.]\n\n  Description [Returns the number of components selected.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FindHighest(ppNtks **Kit_DsdNtk_t, piLits *int32, nSize int32, pPrio *int32, pDecision *int32) int32 {\n    var pObj *Kit_DsdObj_t;\n    var uSupps [8]uint32;\n    var uSuppFanin uint32;\n    var uSuppTotal uint32;\n    var uSuppLarge uint32;\n    var i int32;\n    var pTriv [8]int32;\n    var PrioMin int32;\n    var iVarMax int32;\n    var nComps int32;\n    var fOneNonTriv int32;\n\n    // find individual support and total support \n    uSuppTotal = 0;\n    for  i = 0; i \u003c nSize; i++  {\n        pTriv[i] = 1;\n        if piLits[i] \u003c 0 { \n            uSupps[i] = 0;\n        } else if Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) {\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] );\n        } else {\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if pObj.Type == KIT_DSD_PRIME {\n                pTriv[i] = 0;\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj.pFans[0] );\n            \n            } else {\n                assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n                if !Kit_DsdLitIsLeaf(ppNtks[i], pObj.pFans[0]) {\n                    pTriv[i] = 0; }\n                uSuppFanin = Kit_DsdLitSupport( ppNtks[i], pObj.pFans[1] );\n            }\n            uSupps[i] = Kit_DsdLitSupport( ppNtks[i], piLits[i] ) \u0026 ~uSuppFanin;\n        }\n        assert(uSupps[i] \u003c= 0xFFFF, \"uSupps[i] \u003c= 0xFFFF\");\n        uSuppTotal |= uSupps[i];\n    }\n    if uSuppTotal == 0 {\n        return 0; }\n\n    // find one support variable with the highest priority\n    PrioMin = ABC_INFINITY;\n    iVarMax = -1;\n    for  i = 0; i \u003c 16; i++  {\n        if uSuppTotal \u0026 (1 \u003c\u003c i) {\n            if PrioMin \u003e pPrio[i] {\n                PrioMin = pPrio[i];\n                iVarMax = i;\n            } }\n    }\n    assert(iVarMax != -1, \"iVarMax != -1\");\n\n    // select components, which have this variable\n    nComps = 0;\n    fOneNonTriv = 0;\n    uSuppLarge = 0;\n    for  i = 0; i \u003c nSize; i++  {\n        if uSupps[i] \u0026 (1\u003c\u003ciVarMax) {\n            if pTriv[i] || !(fOneNonTriv != 0) {\n                if !pTriv[i] {\n                    uSuppLarge = uSupps[i];\n                    fOneNonTriv = 1;\n                }\n                pDecision[i] = 1;\n                nComps++;\n            \n            } else {\n                pDecision[i] = 0; }\n        \n        } else {\n            pDecision[i] = 0; }\n    }\n\n    // add other non-trivial not-taken components whose support is contained in the current large component support\n    if fOneNonTriv != 0 {\n        for  i = 0; i \u003c nSize; i++  {\n            if !pTriv[i] \u0026\u0026 pDecision[i] == 0 \u0026\u0026 (uSupps[i] \u0026 ~uSuppLarge) == 0 {\n                pDecision[i] = 1;\n                nComps++;\n            }\n        } }\n\n    return nComps;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks **Kit_DsdNtk_t, piLits *int32, piCofVar *int32, nCBars int32, ppLeaves **If_Obj_t, nLeaves int32, pPrio *int32) *If_Obj_t {\n    var pObj *Kit_DsdObj_t;\n    var pObjsNew [4][8]*If_Obj_t;\n    var pResPrev *If_Obj_t;\n    var piLitsNew, pDecision [8]int32;\n    var i, k, nComps, nSize int32;\n\n    // find which of the variables is highest in the order\n    nSize = (1 \u003c\u003c nCBars);\n    nComps = Lpk_FindHighest( ppNtks, piLits, nSize, pPrio, pDecision );\n    if nComps == 0 {\n        return If_Not( If_ManConst1(p.pIfMan) ); }\n\n    // iterate over the nodes\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"Decision: \"); }\n    for  i = 0; i \u003c nSize; i++  {\n        if pDecision[i] {\n            if p.pPars.fVeryVerbose {\n                fmt.Printf(\"%d \", i); }\n            assert(piLits[i] \u003e= 0, \"piLits[i] \u003e= 0\");\n            pObj = Kit_DsdNtkObj( ppNtks[i], Abc_Lit2Var(piLits[i]) );\n            if pObj == nil {\n                piLitsNew[i] = -2;\n            } else if pObj.Type == KIT_DSD_PRIME {\n                piLitsNew[i] = pObj.pFans[0];\n            } else {\n                piLitsNew[i] = pObj.pFans[1]; }\n        \n        } else {\n            piLitsNew[i] = piLits[i]; }\n    }\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"\\n\"); }\n\n    // call again\n    pResPrev = Lpk_MapTreeMulti_rec( p, ppNtks, piLitsNew, piCofVar, nCBars, ppLeaves, nLeaves, pPrio );\n\n    // create new set of nodes\n    for  i = 0; i \u003c nSize; i++  {\n        if pDecision[i] {\n            pObjsNew[nCBars][i] = Lpk_MapTree_rec( p, ppNtks[i], ppLeaves, piLits[i], pResPrev );\n        } else if piLits[i] == -1 {\n            pObjsNew[nCBars][i] = If_ManConst1(p.pIfMan);\n        } else if piLits[i] == -2 {\n            pObjsNew[nCBars][i] = If_Not( If_ManConst1(p.pIfMan) );\n        } else {\n            pObjsNew[nCBars][i] = pResPrev; }\n    }\n\n    // create MUX using these outputs\n    for  k = nCBars; k \u003e 0; k--  {\n        nSize /= 2;\n        for  i = 0; i \u003c nSize; i++  {\n            pObjsNew[k-1][i] = If_ManCreateMux( p.pIfMan, pObjsNew[k][2*i+0], pObjsNew[k][2*i+1], ppLeaves[piCofVar[k-1]] );\n        }\n    }\n    assert(nSize == 1, \"nSize == 1\");\n    return pObjsNew[0][0];  \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Lpk_MapTreeMulti_Counter int32;\nfunc Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    \n    var pResult *If_Obj_t;\n    var ppNtks [8]*Kit_DsdNtk_t ;\n    var pTemp *Kit_DsdNtk_t;\n    var pRoot *Kit_DsdObj_t;\n    var piCofVar [4]int32;\n    var pPrios [16]int32;\n    var pFreqs [16]int32 ;\n    var piLits [16]int32;\n    var i, k, nCBars, nSize, nMemSize int32;\n    var ppCofs [4][8]*uint32;\n    var uSupport uint32;\n    var pTable [16][16]byte = [16][16]byte{\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n      {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\n    };\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n\n    spStatic_Lpk_MapTreeMulti_Counter++;\n//    printf( \"Run %d.\\n\", Counter );\n\n    // allocate storage for cofactors\n    nMemSize = Kit_TruthWordNum(nVars);\n    ppCofs[0][0] = ABC_ALLOC( unsigned, 32 * nMemSize );\n    nSize = 0;\n    for  i = 0; i \u003c 4; i++  {\n    for  k = 0; k \u003c 8; k++  {\n        ppCofs[i][k] = ppCofs[0][0] + nMemSize * nSize++;\n    }\n    }\n    assert(nSize == 32, \"nSize == 32\");\n\n    // find the best cofactoring variables\n    nCBars = Kit_DsdCofactoring( pTruth, nVars, piCofVar, p.pPars.nVarsShared, 0 );\n//    nCBars = 2;\n//    piCofVar[0] = 0;\n//    piCofVar[1] = 1;\n\n\n    // copy the function\n    Kit_TruthCopy( ppCofs[0][0], pTruth, nVars );\n\n    // decompose w.r.t. these variables\n    for  k = 0; k \u003c nCBars; k++  {\n        nSize = (1 \u003c\u003c k);\n        for  i = 0; i \u003c nSize; i++  {\n            Kit_TruthCofactor0New( ppCofs[k+1][2*i+0], ppCofs[k][i], nVars, piCofVar[k] );\n            Kit_TruthCofactor1New( ppCofs[k+1][2*i+1], ppCofs[k][i], nVars, piCofVar[k] );\n        }\n    }\n    nSize = (1 \u003c\u003c nCBars);\n    // compute DSD networks\n    for  i = 0; i \u003c nSize; i++  {\n        ppNtks[i] = Kit_DsdDecompose( ppCofs[nCBars][i], nVars );\n        ppNtks[i] = Kit_DsdExpand( pTemp = ppNtks[i] );\n        Kit_DsdNtkFree( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Cof%d%d: \", nCBars, i);\n            Kit_DsdPrint( os.Stdout, ppNtks[i] );\n        }\n    }\n\n    // compute variable frequences\n    for  i = 0; i \u003c nSize; i++  {\n        uSupport = Kit_TruthSupport( ppCofs[nCBars][i], nVars );\n        for  k = 0; k \u003c nVars; k++  {\n            if uSupport \u0026 (1\u003c\u003ck) {\n                pFreqs[k]++; }\n        }\n    }\n\n    // find common variable order\n    for  i = 0; i \u003c nSize; i++  {\n        Kit_DsdGetSupports( ppNtks[i] );\n        Lpk_CreateVarOrder( ppNtks[i], pTable );\n    }\n    Lpk_CreateCommonOrder( pTable, piCofVar, nCBars, pPrios, nVars, fVerbose );\n    // update priorities with frequences\n    for  i = 0; i \u003c nVars; i++  {\n        pPrios[i] = pPrios[i] * 256 + (16 - pFreqs[i]) * 16 + i;\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"After restructuring with priority:\\n\"); }\n\n    // transform all networks according to the variable order\n    for  i = 0; i \u003c nSize; i++  {\n        ppNtks[i] = Kit_DsdShrink( pTemp = ppNtks[i], pPrios );\n        Kit_DsdNtkFree( pTemp );\n        Kit_DsdGetSupports( ppNtks[i] );\n        assert(ppNtks[i].pSupps[0] \u003c= 0xFFFF, \"ppNtks[i].pSupps[0] \u003c= 0xFFFF\");\n        // undec nodes should be rotated in such a way that the first input has as many shared inputs as possible\n        Kit_DsdRotate( ppNtks[i], pFreqs );\n        // print the resulting networks\n        if fVerbose != 0 {\n            fmt.Printf(\"Cof%d%d: \", nCBars, i);\n            Kit_DsdPrint( os.Stdout, ppNtks[i] );\n        }\n    }\n \n    for  i = 0; i \u003c nSize; i++  {\n        // collect the roots\n        pRoot = Kit_DsdNtkRoot(ppNtks[i]);\n        if pRoot.Type == KIT_DSD_CONST1 {\n            piLits[i] = Abc_LitIsCompl(ppNtks[i].Root)? -2: -1;\n        } else if pRoot.Type == KIT_DSD_VAR {\n            piLits[i] = Abc_LitNotCond( pRoot.pFans[0], Abc_LitIsCompl(ppNtks[i].Root) );\n        } else {\n            piLits[i] = ppNtks[i].Root; }\n    }\n\n\n    // recursively construct AIG for mapping\n    p.fCofactoring = 1;\n    pResult = Lpk_MapTreeMulti_rec( p, ppNtks, piLits, piCofVar, nCBars, ppLeaves, nVars, pPrios );\n    p.fCofactoring = 0;\n\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    // verify the transformations\n    nSize = (1 \u003c\u003c nCBars);\n    for  i = 0; i \u003c nSize; i++  {\n        Kit_DsdTruth( ppNtks[i], ppCofs[nCBars][i] );\n    }\n    // mux the truth tables\n    for  k = nCBars-1; k \u003e= 0; k--  {\n        nSize = (1 \u003c\u003c k);\n        for  i = 0; i \u003c nSize; i++  {\n            Kit_TruthMuxVar( ppCofs[k][i], ppCofs[k+1][2*i+0], ppCofs[k+1][2*i+1], nVars, piCofVar[k] );\n        }\n    }\n    if !Extra_TruthIsEqual( pTruth, ppCofs[0][0], nVars ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n\n\n    // free the networks\n    for  i = 0; i \u003c 8; i++  {\n        if ppNtks[i] {\n            Kit_DsdNtkFree( ppNtks[i] ); }\n    }\n    ABC_FREE( ppCofs[0][0] );\n\n    return pResult;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

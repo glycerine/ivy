@@ -1,0 +1,633 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c",
+  "SHA256": "6793b6c99290da1edf5c8c73cf1d25f3569b2445bd2f619cb61b71c0f1afedeb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 13,
+        "ByteOffset": 2667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nVars \u003c 100 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 67,
+        "ByteOffset": 3068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 3853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 4298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The graph has %d inputs: \", Gia_ManPiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 4400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c \", 'a' + i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 4444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  and %d nodes: \", Gia_ManAndNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 13,
+        "ByteOffset": 4538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c=%c%c \", 'a' + i, 'a' + pN[i][0] , 'a' + pN[i][1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 9,
+        "ByteOffset": 5067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\\n\", iVar, X*Y*T, X*Y*G, X*Y*NCPARS, X*Y ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 73,
+        "ByteOffset": 5735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 73,
+        "ByteOffset": 5974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 69,
+        "ByteOffset": 6195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 71,
+        "ByteOffset": 7300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 67,
+        "ByteOffset": 7596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = sat_solver_addclause( pSat, pLits, pLits+T );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 74,
+        "ByteOffset": 7894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = sat_solver_addclause( pSat, pLits, pLits+NCPARS+1 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 79,
+        "ByteOffset": 8611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 79,
+        "ByteOffset": 8989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 75,
+        "ByteOffset": 9332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 17,
+        "ByteOffset": 9521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 17,
+        "ByteOffset": 9579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 79,
+        "ByteOffset": 9992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 79,
+        "ByteOffset": 10383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 79,
+        "ByteOffset": 10780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 79,
+        "ByteOffset": 11176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 13,
+        "ByteOffset": 11510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Problem has no solution. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 11748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Finished adding %d clauses. Started solving...\\n\", nClauses ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 13,
+        "ByteOffset": 12053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Problem has no solution. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 13,
+        "ByteOffset": 12204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Computation timed out. \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 12320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 13,
+        "ByteOffset": 13243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Adding %d one-hotness clauses.\\n\", nAddClauses );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 13342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Satisfying solution found. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 14488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\\n\", X, Y, T, nNodes+nBuffs, nNodes, nBuffs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 9,
+        "ByteOffset": 14654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" Y\\\\X \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 13,
+        "ByteOffset": 14720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  %-2d \", x );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 9,
+        "ByteOffset": 14762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 13,
+        "ByteOffset": 14824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %-2d  \", y );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 25,
+        "ByteOffset": 15264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \" %c%-2d \", 'a' + g, t );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 21,
+        "ByteOffset": 15546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"  *  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 21,
+        "ByteOffset": 15610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"     \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 13,
+        "ByteOffset": 15657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_MeshTVar",
+      "Start": 871,
+      "End": 996,
+      "BodyStart": 936,
+      "Original": "static inline int Bmc_MeshTVar( int Me[102][102], int x, int y ) { return Me[x][y];                                         }",
+      "Draft": "func Bmc_MeshTVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y];                                         }"
+    },
+    {
+      "Name": "Bmc_MeshGVar",
+      "Start": 997,
+      "End": 1122,
+      "BodyStart": 1062,
+      "Original": "static inline int Bmc_MeshGVar( int Me[102][102], int x, int y ) { return Me[x][y] + Me[101][100];                          }",
+      "Draft": "func Bmc_MeshGVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100];                          }"
+    },
+    {
+      "Name": "Bmc_MeshCVar",
+      "Start": 1123,
+      "End": 1248,
+      "BodyStart": 1188,
+      "Original": "static inline int Bmc_MeshCVar( int Me[102][102], int x, int y ) { return Me[x][y] + Me[101][100] + Me[101][101];           }",
+      "Draft": "func Bmc_MeshCVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101];           }"
+    },
+    {
+      "Name": "Bmc_MeshUVar",
+      "Start": 1249,
+      "End": 1374,
+      "BodyStart": 1314,
+      "Original": "static inline int Bmc_MeshUVar( int Me[102][102], int x, int y ) { return Me[x][y] + Me[101][100] + Me[101][101] + NCPARS;  }",
+      "Draft": "func Bmc_MeshUVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101] + NCPARS;  }"
+    },
+    {
+      "Name": "Bmc_MeshVarValue2",
+      "Start": 1832,
+      "End": 2080,
+      "BodyStart": 1893,
+      "Original": "static inline int Bmc_MeshVarValue2( sat_solver * p, int v )\n{\n//    int value = var_value(p, v) != SATOKO_VAR_UNASSING ? var_value(p, v) : satoko_var_polarity(p, v);\n//    return value == SATOKO_LIT_TRUE;\n    return sat_solver_var_value( p, v );\n}",
+      "Draft": "func Bmc_MeshVarValue2(p *sat_solver, v int32) int32 {\n//    int value = var_value(p, v) != SATOKO_VAR_UNASSING ? var_value(p, v) : satoko_var_polarity(p, v);\n//    return value == SATOKO_LIT_TRUE;\n    return sat_solver_var_value( p, v );\n}"
+    },
+    {
+      "Name": "Bmc_MeshAddOneHotness2",
+      "Start": 2316,
+      "End": 3049,
+      "BodyStart": 2387,
+      "Original": "int Bmc_MeshAddOneHotness2( sat_solver * pSat, int iFirst, int iLast )\n{\n    int i, j, v, pVars[100], nVars  = 0, nCount = 0;\n    assert( iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast );\n    for ( v = iFirst; v \u003c iLast; v++ )\n        if ( Bmc_MeshVarValue2(pSat, v) ) // v = 1\n        {\n            assert( nVars \u003c 100 );\n            pVars[ nVars++ ] = v;\n        }\n    if ( nVars \u003c= 1 )\n        return 0;\n    for ( i = 0;   i \u003c nVars; i++ )\n    for ( j = i+1; j \u003c nVars; j++ )\n    {\n        int pLits[2], RetValue;\n        pLits[0] = Abc_Var2Lit( pVars[i], 1 );\n        pLits[1] = Abc_Var2Lit( pVars[j], 1 );\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );\n        nCount++;\n    }\n    return nCount;\n}",
+      "Draft": "func Bmc_MeshAddOneHotness2(pSat *sat_solver, iFirst int32, iLast int32) int32 {\n    var i int32;\n    var j int32;\n    var v int32;\n    var pVars [100]int32;\n    var nVars int32;\n    var nCount int32;\n    assert(iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast, \"iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast\");\n    for  v = iFirst; v \u003c iLast; v++  {\n        if Bmc_MeshVarValue2(pSat, v) != 0 { // v = 1\n        \n            assert(nVars \u003c 100, \"nVars \u003c 100\");\n            pVars[ nVars++ ] = v;\n        }\n    }\n    if nVars \u003c= 1 {\n        return 0; }\n    for  i = 0;   i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        var pLits [2]int32;\n        var RetValue int32;\n        pLits[0] = Abc_Var2Lit( pVars[i], 1 );\n        pLits[1] = Abc_Var2Lit( pVars[j], 1 );\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n        nCount++;\n    }\n    }\n    return nCount;\n}"
+    },
+    {
+      "Name": "Bmc_MeshTest2",
+      "Start": 3285,
+      "End": 15414,
+      "BodyStart": 3356,
+      "Original": "void Bmc_MeshTest2( Gia_Man_t * p, int X, int Y, int T, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n//    sat_solver * pSat = satoko_create();\n    sat_solver * pSat = sat_solver_new();\n    Gia_Obj_t * pObj;\n    int Me[102][102] = {{0}};\n    int pN[102][2] = {{0}};\n    int I = Gia_ManPiNum(p);\n    int G = I + Gia_ManAndNum(p);\n    int i, x, y, t, g, c, status, RetValue, Lit, iVar, nClauses = 0;\n\n    assert( X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100 );\n\n    // init the graph\n    for ( i = 0; i \u003c I; i++ )\n        pN[i][0] = pN[i][1] = -1;\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        pN[i-1][0] = Gia_ObjFaninId0(pObj, i)-1;\n        pN[i-1][1] = Gia_ObjFaninId1(pObj, i)-1;\n    }\n    if ( fVerbose )\n    {\n        printf( \"The graph has %d inputs: \", Gia_ManPiNum(p) );\n        for ( i = 0; i \u003c I; i++ )\n            printf( \"%c \", 'a' + i );\n        printf( \"  and %d nodes: \", Gia_ManAndNum(p) );\n        for ( i = I; i \u003c G; i++ )\n            printf( \"%c=%c%c \", 'a' + i, 'a' + pN[i][0] , 'a' + pN[i][1] );\n        printf( \"\\n\" );\n    }\n\n    // init SAT variables (time vars + graph vars + config vars)\n    // config variables: 16 = 4 buff vars + 12 node vars\n    iVar = 0;\n    for ( y = 0; y \u003c Y; y++ )\n    for ( x = 0; x \u003c X; x++ )\n    {\n        //printf( \"%3d %3d %3d    %s\", iVar, iVar+T, iVar+T+G, x == X-1 ? \"\\n\":\"\" );\n        Me[x][y] = iVar;\n        iVar += T + G + NCPARS + 1;\n    }\n    Me[101][100] = T;\n    Me[101][101] = G;\n    if ( fVerbose )\n        printf( \"SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\\n\", iVar, X*Y*T, X*Y*G, X*Y*NCPARS, X*Y );\n\n    // add constraints\n\n    // time 0 and primary inputs only on the boundary\n    for ( x = 0; x \u003c X; x++ )\n    for ( y = 0; y \u003c Y; y++ )\n    {\n        int iTVar = Bmc_MeshTVar( Me, x, y );\n        int iGVar = Bmc_MeshGVar( Me, x, y );\n\n        if ( x == 0 || x == X-1 || y == 0 || y == Y-1 ) // boundary\n        {\n            // time 0 is required\n            for ( t = 0; t \u003c T; t++ )\n            {\n                Lit = Abc_Var2Lit( iTVar+t, (int)(t \u003e 0) );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );\n            }\n            // internal nodes are not allowed\n            for ( g = I; g \u003c G; g++ )\n            {\n                Lit = Abc_Var2Lit( iGVar+g, 1 );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );\n            }\n        }\n        else // not a boundary\n        {\n            Lit = Abc_Var2Lit( iTVar, 1 );  // cannot have time 0\n            RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert( RetValue );\n        }\n    }\n    for ( x = 1; x \u003c X-1; x++ )\n    for ( y = 1; y \u003c Y-1; y++ )\n    {\n        int pLits[100], nLits;\n\n        int iTVar = Bmc_MeshTVar( Me, x, y );\n        int iGVar = Bmc_MeshGVar( Me, x, y );\n        int iCVar = Bmc_MeshCVar( Me, x, y );\n        int iUVar = Bmc_MeshUVar( Me, x, y );\n\n        // 0=left  1=up  2=right  3=down\n        int iTVars[4]; \n        int iGVars[4];\n\n        iTVars[0] = Bmc_MeshTVar( Me, x-1, y );\n        iGVars[0] = Bmc_MeshGVar( Me, x-1, y );\n\n        iTVars[1] = Bmc_MeshTVar( Me, x, y-1 );\n        iGVars[1] = Bmc_MeshGVar( Me, x, y-1 );\n\n        iTVars[2] = Bmc_MeshTVar( Me, x+1, y );\n        iGVars[2] = Bmc_MeshGVar( Me, x+1, y );\n\n        iTVars[3] = Bmc_MeshTVar( Me, x, y+1 );\n        iGVars[3] = Bmc_MeshGVar( Me, x, y+1 );\n\n        // condition when cell is used\n        for ( g = 0; g \u003c G; g++ )\n        {\n            pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n            pLits[1] = Abc_Var2Lit( iUVar, 0 );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );\n            nClauses++;\n        }\n\n        // at least one time is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for ( t = 1; t \u003c T; t++ )\n            pLits[t] = Abc_Var2Lit( iTVar+t, 0 );\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+T );  assert( RetValue );\n        nClauses++;\n\n        // at least one config is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for ( c = 0; c \u003c NCPARS; c++ )\n            pLits[c+1] = Abc_Var2Lit( iCVar+c, 0 );\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+NCPARS+1 );  assert( RetValue );\n        nClauses++;\n\n        // constraints for each time\n        for ( t = 1; t \u003c T; t++ )\n        {\n            int Conf[12][2] = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},   {1, 0}, {2, 0}, {3, 0}, {2, 1}, {3, 1}, {3, 2}};\n            // buffer\n            for ( g = 0; g \u003c G; g++ )\n            for ( c = 0; c \u003c 4; c++ )\n            {\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[c]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[c]+g, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n                nClauses += 2;\n            }\n            for ( g = 0; g \u003c I; g++ )\n            for ( c = 4; c \u003c NCPARS; c++ )\n            {\n                pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[1] = Abc_Var2Lit( iCVar+c, 1 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert( RetValue );\n                nClauses++;\n            }\n            // node\n            for ( g = I; g \u003c G; g++ )\n            for ( c = 0; c \u003c 12; c++ )\n            {\n                assert( pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0 );\n                assert( pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g );\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][0]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][1]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][0]]+pN[g][0], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][1]]+pN[g][1], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert( RetValue );\n\n                nClauses += 4;\n            }\n        }\n    }\n\n    // final condition\n    {\n        int iGVar = Bmc_MeshGVar( Me, 1, 1 ) + G-1;\n        Lit = Abc_Var2Lit( iGVar, 0 );\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  \n        if ( RetValue == 0 )\n        {\n            printf( \"Problem has no solution. \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//            satoko_destroy( pSat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n\n    if ( fVerbose )\n        printf( \"Finished adding %d clauses. Started solving...\\n\", nClauses );\n\n    while ( 1 )\n    {\n        int nAddClauses = 0;\n//        status = satoko_solve( pSat );\n        status = sat_solver_solve( pSat, NULL, NULL, 0, 0, 0, 0 );\n//        if ( status == SATOKO_UNSAT )\n        if ( status == l_False )\n        {\n            printf( \"Problem has no solution. \" );\n            break;\n        }\n//        if ( status == SATOKO_UNDEC )\n        if ( status == l_Undef )\n        {\n            printf( \"Computation timed out. \" );\n            break;\n        }\n//        assert( status == SATOKO_SAT );\n        assert( status == l_True );\n        // check if the solution is valid and add constraints\n        for ( x = 0; x \u003c X; x++ )\n        for ( y = 0; y \u003c Y; y++ )\n        {\n            if ( x == 0 || x == X-1 || y == 0 || y == Y-1 ) // boundary\n            {\n                int iGVar = Bmc_MeshGVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n            }\n            else\n            {\n                int iTVar = Bmc_MeshTVar( Me, x, y );\n                int iGVar = Bmc_MeshGVar( Me, x, y );\n                int iCVar = Bmc_MeshCVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iTVar, iTVar + T );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iCVar, iCVar + NCPARS );\n            }\n        }\n        if ( nAddClauses \u003e 0 )\n        {\n            printf( \"Adding %d one-hotness clauses.\\n\", nAddClauses );\n            continue;\n        }\n        printf( \"Satisfying solution found. \" );\n/*\n//        iVar = satoko_varnum(pSat);\n        iVar = sat_solver_nvars(pSat);\n        for ( i = 0; i \u003c iVar; i++ )\n            if ( Bmc_MeshVarValue2(pSat, i) )\n                printf( \"%d \", i );\n        printf( \"\\n\" );\n*/\n        break;\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    if ( status == SATOKO_SAT )\n    if ( status == l_True )\n    {\n        // count the number of nodes and buffers\n        int nBuffs = 0, nNodes = 0;\n        for ( y = 1; y \u003c Y-1; y++ )\n        for ( x = 1; x \u003c X-1; x++ )\n        {\n            int iCVar = Bmc_MeshCVar( Me, x, y );\n            for ( c = 0; c \u003c 4; c++ )\n                if ( Bmc_MeshVarValue2(pSat, iCVar+c) )\n                {\n                    //printf( \"Buffer y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nBuffs++;\n                }\n            for ( c = 4; c \u003c NCPARS; c++ )\n                if ( Bmc_MeshVarValue2(pSat, iCVar+c) )\n                {\n                    //printf( \"Node   y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nNodes++;\n                }\n        }\n        printf( \"The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\\n\", X, Y, T, nNodes+nBuffs, nNodes, nBuffs );\n        // print mesh\n        printf( \" Y\\\\X \" );\n        for ( x = 0; x \u003c X; x++ )\n            printf( \"  %-2d \", x );\n        printf( \"\\n\" );\n        for ( y = 0; y \u003c Y; y++ )\n        {\n            printf( \" %-2d  \", y );\n            for ( x = 0; x \u003c X; x++ )\n            {\n                int iTVar  = Bmc_MeshTVar( Me, x, y );\n                int iGVar  = Bmc_MeshGVar( Me, x, y );\n\n                int fFound = 0;                ;\n                for ( t = 0; t \u003c T; t++ )\n                for ( g = 0; g \u003c G; g++ )\n                    if ( Bmc_MeshVarValue2(pSat, iTVar+t) \u0026\u0026 Bmc_MeshVarValue2(pSat, iGVar+g) )\n                    {\n                        printf( \" %c%-2d \", 'a' + g, t );\n                        fFound = 1;\n                    }\n                if ( fFound )\n                    continue;\n                if ( x == 0 || x == X-1 || y == 0 || y == Y-1 ) // boundary\n                    printf( \"  *  \" );\n                else\n                    printf( \"     \" );\n            }\n            printf( \"\\n\" );\n        }\n    }\n    //satoko_destroy( pSat );\n    sat_solver_delete( pSat );\n}",
+      "Draft": "func Bmc_MeshTest2(p *Gia_Man_t, X int32, Y int32, T int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n//    sat_solver * pSat = satoko_create();\n    var pSat *sat_solver  = sat_solver_new();\n    var pObj *Gia_Obj_t;\n    var Me [102][102]int32 = [102][102]int32{{0}};\n    var pN [102][2]int32 = [102][2]int32{{0}};\n    var I int32  = Gia_ManPiNum(p);\n    var G int32  = I + Gia_ManAndNum(p);\n    var i, x, y, t, g, c, status, RetValue, Lit, iVar, nClauses int32;\n\n    assert(X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100, \"X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100\");\n\n    // init the graph\n    for  i = 0; i \u003c I; i++  {\n        pN[i][0] = pN[i][1] = -1;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pN[i-1][0] = Gia_ObjFaninId0(pObj, i)-1;\n        pN[i-1][1] = Gia_ObjFaninId1(pObj, i)-1;\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"The graph has %d inputs: \", Gia_ManPiNum(p));\n        for  i = 0; i \u003c I; i++  {\n            fmt.Printf(\"%c \", 'a' + i);\n        }\n        fmt.Printf(\"  and %d nodes: \", Gia_ManAndNum(p));\n        for  i = I; i \u003c G; i++  {\n            fmt.Printf(\"%c=%c%c \", 'a' + i, 'a' + pN[i][0], 'a' + pN[i][1]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n    // init SAT variables (time vars + graph vars + config vars)\n    // config variables: 16 = 4 buff vars + 12 node vars\n    iVar = 0;\n    for  y = 0; y \u003c Y; y++  {\n    for  x = 0; x \u003c X; x++  {\n        //printf( \"%3d %3d %3d    %s\", iVar, iVar+T, iVar+T+G, x == X-1 ? \"\\n\":\"\" );\n        Me[x][y] = iVar;\n        iVar += T + G + NCPARS + 1;\n    }\n    }\n    Me[101][100] = T;\n    Me[101][101] = G;\n    if fVerbose != 0 {\n        fmt.Printf(\"SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\\n\", iVar, X*Y*T, X*Y*G, X*Y*NCPARS, X*Y); }\n\n    // add constraints\n\n    // time 0 and primary inputs only on the boundary\n    for  x = 0; x \u003c X; x++  {\n    for  y = 0; y \u003c Y; y++  {\n        var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n        var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n\n        if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n        \n            // time 0 is required\n            for  t = 0; t \u003c T; t++  {\n                Lit = Abc_Var2Lit( iTVar+t, int32((t \u003e 0)) );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n            }\n            // internal nodes are not allowed\n            for  g = I; g \u003c G; g++  {\n                Lit = Abc_Var2Lit( iGVar+g, 1 );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n            }\n        \n        } else { // not a boundary\n        \n            Lit = Abc_Var2Lit( iTVar, 1 );  // cannot have time 0\n            RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n        }\n    }\n    }\n    for  x = 1; x \u003c X-1; x++  {\n    for  y = 1; y \u003c Y-1; y++  {\n        var pLits [100]int32;\n        var nLits int32;\n\n        var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n        var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n        var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n        var iUVar int32  = Bmc_MeshUVar( Me, x, y );\n\n        // 0=left  1=up  2=right  3=down\n        var iTVars [4]int32; \n        var iGVars [4]int32;\n\n        iTVars[0] = Bmc_MeshTVar( Me, x-1, y );\n        iGVars[0] = Bmc_MeshGVar( Me, x-1, y );\n\n        iTVars[1] = Bmc_MeshTVar( Me, x, y-1 );\n        iGVars[1] = Bmc_MeshGVar( Me, x, y-1 );\n\n        iTVars[2] = Bmc_MeshTVar( Me, x+1, y );\n        iGVars[2] = Bmc_MeshGVar( Me, x+1, y );\n\n        iTVars[3] = Bmc_MeshTVar( Me, x, y+1 );\n        iGVars[3] = Bmc_MeshGVar( Me, x, y+1 );\n\n        // condition when cell is used\n        for  g = 0; g \u003c G; g++  {\n            pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n            pLits[1] = Abc_Var2Lit( iUVar, 0 );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n            nClauses++;\n        }\n\n        // at least one time is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for  t = 1; t \u003c T; t++  {\n            pLits[t] = Abc_Var2Lit( iTVar+t, 0 );\n        }\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+T );  assert((RetValue != 0), \"RetValue\");\n        nClauses++;\n\n        // at least one config is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for  c = 0; c \u003c NCPARS; c++  {\n            pLits[c+1] = Abc_Var2Lit( iCVar+c, 0 );\n        }\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+NCPARS+1 );  assert((RetValue != 0), \"RetValue\");\n        nClauses++;\n\n        // constraints for each time\n        for  t = 1; t \u003c T; t++  {\n            var Conf [12][2]int32 = [12][2]int32{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},   {1, 0}, {2, 0}, {3, 0}, {2, 1}, {3, 1}, {3, 2}};\n            // buffer\n            for  g = 0; g \u003c G; g++  {\n            for  c = 0; c \u003c 4; c++  {\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[c]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[c]+g, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nClauses += 2;\n            }\n            }\n            for  g = 0; g \u003c I; g++  {\n            for  c = 4; c \u003c NCPARS; c++  {\n                pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[1] = Abc_Var2Lit( iCVar+c, 1 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n                nClauses++;\n            }\n            }\n            // node\n            for  g = I; g \u003c G; g++  {\n            for  c = 0; c \u003c 12; c++  {\n                assert(pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0, \"pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0\");\n                assert(pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g, \"pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][0]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][1]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][0]]+pN[g][0], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][1]]+pN[g][1], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nClauses += 4;\n            }\n            }\n        }\n    }\n    }\n\n    // final condition\n    {\n        var iGVar int32  = Bmc_MeshGVar( Me, 1, 1 ) + G-1;\n        Lit = Abc_Var2Lit( iGVar, 0 );\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  \n        if RetValue == 0 {\n            fmt.Printf(\"Problem has no solution. \");\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//            satoko_destroy( pSat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Finished adding %d clauses. Started solving...\\n\", nClauses); }\n\n    for {\n        var nAddClauses int32;\n//        status = satoko_solve( pSat );\n        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );\n//        if ( status == SATOKO_UNSAT )\n        if status == l_False {\n            fmt.Printf(\"Problem has no solution. \");\n            break;\n        }\n//        if ( status == SATOKO_UNDEC )\n        if status == l_Undef {\n            fmt.Printf(\"Computation timed out. \");\n            break;\n        }\n//        assert( status == SATOKO_SAT );\n        assert(status == l_True, \"status == l_True\");\n        // check if the solution is valid and add constraints\n        for  x = 0; x \u003c X; x++  {\n        for  y = 0; y \u003c Y; y++  {\n            if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n            \n                var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n            \n            } else {\n                var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n                var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n                var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iTVar, iTVar + T );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iCVar, iCVar + NCPARS );\n            }\n        }\n        }\n        if nAddClauses \u003e 0 {\n            fmt.Printf(\"Adding %d one-hotness clauses.\\n\", nAddClauses);\n            continue;\n        }\n        fmt.Printf(\"Satisfying solution found. \");\n/*\n//        iVar = satoko_varnum(pSat);\n        iVar = sat_solver_nvars(pSat);\n        for ( i = 0; i \u003c iVar; i++ )\n            if ( Bmc_MeshVarValue2(pSat, i) )\n                printf( \"%d \", i );\n        printf( \"\\n\" );\n*/\n        break;\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    if ( status == SATOKO_SAT )\n    if status == l_True {\n        // count the number of nodes and buffers\n        var nBuffs, nNodes int32;\n        for  y = 1; y \u003c Y-1; y++  {\n        for  x = 1; x \u003c X-1; x++  {\n            var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n            for  c = 0; c \u003c 4; c++  {\n                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {\n                    //printf( \"Buffer y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nBuffs++;\n                }\n            }\n            for  c = 4; c \u003c NCPARS; c++  {\n                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {\n                    //printf( \"Node   y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nNodes++;\n                }\n            }\n        }\n        }\n        fmt.Printf(\"The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\\n\", X, Y, T, nNodes+nBuffs, nNodes, nBuffs);\n        // print mesh\n        fmt.Printf(\" Y\\\\X \");\n        for  x = 0; x \u003c X; x++  {\n            fmt.Printf(\"  %-2d \", x);\n        }\n        fmt.Printf(\"\\n\");\n        for  y = 0; y \u003c Y; y++  {\n            fmt.Printf(\" %-2d  \", y);\n            for  x = 0; x \u003c X; x++  {\n                var iTVar int32   = Bmc_MeshTVar( Me, x, y );\n                var iGVar int32   = Bmc_MeshGVar( Me, x, y );\n\n                var fFound int32;                ;\n                for  t = 0; t \u003c T; t++  {\n                for  g = 0; g \u003c G; g++  {\n                    if (Bmc_MeshVarValue2(pSat, iTVar+t) != 0) \u0026\u0026 (Bmc_MeshVarValue2(pSat, iGVar+g) != 0) {\n                        fmt.Printf(\" %c%-2d \", 'a' + g, t);\n                        fFound = 1;\n                    }\n                }\n                }\n                if fFound != 0 {\n                    continue; }\n                if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n                    fmt.Printf(\"  *  \");\n                } else {\n                    fmt.Printf(\"     \"); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n    }\n    //satoko_destroy( pSat );\n    sat_solver_delete( pSat );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshTVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshTVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 871,
+      "End": 996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshGVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshGVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 997,
+      "End": 1122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshCVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshCVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1123,
+      "End": 1248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshUVar",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshUVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1249,
+      "End": 1374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshVarValue2",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshVarValue2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1832,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshAddOneHotness2",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshAddOneHotness2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2316,
+      "End": 3049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::Bmc_MeshTest2",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_MeshTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3285,
+      "End": 15414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMesh2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15664
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcMesh.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Synthesis for mesh of LUTs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcMesh.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/satoko/satoko.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst NCPARS = 16\n\nfunc Bmc_MeshTVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y];                                         }\nfunc Bmc_MeshGVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100];                          }\nfunc Bmc_MeshCVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101];           }\nfunc Bmc_MeshUVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101] + NCPARS;  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_MeshVarValue2(p *sat_solver, v int32) int32 {\n//    int value = var_value(p, v) != SATOKO_VAR_UNASSING ? var_value(p, v) : satoko_var_polarity(p, v);\n//    return value == SATOKO_LIT_TRUE;\n    return sat_solver_var_value( p, v );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_MeshAddOneHotness2(pSat *sat_solver, iFirst int32, iLast int32) int32 {\n    var i int32;\n    var j int32;\n    var v int32;\n    var pVars [100]int32;\n    var nVars int32;\n    var nCount int32;\n    assert(iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast, \"iFirst \u003c iLast \u0026\u0026 iFirst + 110 \u003e iLast\");\n    for  v = iFirst; v \u003c iLast; v++  {\n        if Bmc_MeshVarValue2(pSat, v) != 0 { // v = 1\n        \n            assert(nVars \u003c 100, \"nVars \u003c 100\");\n            pVars[ nVars++ ] = v;\n        }\n    }\n    if nVars \u003c= 1 {\n        return 0; }\n    for  i = 0;   i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        var pLits [2]int32;\n        var RetValue int32;\n        pLits[0] = Abc_Var2Lit( pVars[i], 1 );\n        pLits[1] = Abc_Var2Lit( pVars[j], 1 );\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n        nCount++;\n    }\n    }\n    return nCount;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bmc_MeshTest2(p *Gia_Man_t, X int32, Y int32, T int32, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n//    sat_solver * pSat = satoko_create();\n    var pSat *sat_solver  = sat_solver_new();\n    var pObj *Gia_Obj_t;\n    var Me [102][102]int32 = [102][102]int32{{0}};\n    var pN [102][2]int32 = [102][2]int32{{0}};\n    var I int32  = Gia_ManPiNum(p);\n    var G int32  = I + Gia_ManAndNum(p);\n    var i, x, y, t, g, c, status, RetValue, Lit, iVar, nClauses int32;\n\n    assert(X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100, \"X \u003c= 100 \u0026\u0026 Y \u003c= 100 \u0026\u0026 T \u003c= 100 \u0026\u0026 G \u003c= 100\");\n\n    // init the graph\n    for  i = 0; i \u003c I; i++  {\n        pN[i][0] = pN[i][1] = -1;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pN[i-1][0] = Gia_ObjFaninId0(pObj, i)-1;\n        pN[i-1][1] = Gia_ObjFaninId1(pObj, i)-1;\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"The graph has %d inputs: \", Gia_ManPiNum(p));\n        for  i = 0; i \u003c I; i++  {\n            fmt.Printf(\"%c \", 'a' + i);\n        }\n        fmt.Printf(\"  and %d nodes: \", Gia_ManAndNum(p));\n        for  i = I; i \u003c G; i++  {\n            fmt.Printf(\"%c=%c%c \", 'a' + i, 'a' + pN[i][0], 'a' + pN[i][1]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n    // init SAT variables (time vars + graph vars + config vars)\n    // config variables: 16 = 4 buff vars + 12 node vars\n    iVar = 0;\n    for  y = 0; y \u003c Y; y++  {\n    for  x = 0; x \u003c X; x++  {\n        //printf( \"%3d %3d %3d    %s\", iVar, iVar+T, iVar+T+G, x == X-1 ? \"\\n\":\"\" );\n        Me[x][y] = iVar;\n        iVar += T + G + NCPARS + 1;\n    }\n    }\n    Me[101][100] = T;\n    Me[101][101] = G;\n    if fVerbose != 0 {\n        fmt.Printf(\"SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\\n\", iVar, X*Y*T, X*Y*G, X*Y*NCPARS, X*Y); }\n\n    // add constraints\n\n    // time 0 and primary inputs only on the boundary\n    for  x = 0; x \u003c X; x++  {\n    for  y = 0; y \u003c Y; y++  {\n        var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n        var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n\n        if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n        \n            // time 0 is required\n            for  t = 0; t \u003c T; t++  {\n                Lit = Abc_Var2Lit( iTVar+t, int32((t \u003e 0)) );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n            }\n            // internal nodes are not allowed\n            for  g = I; g \u003c G; g++  {\n                Lit = Abc_Var2Lit( iGVar+g, 1 );\n                RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n            }\n        \n        } else { // not a boundary\n        \n            Lit = Abc_Var2Lit( iTVar, 1 );  // cannot have time 0\n            RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  assert((RetValue != 0), \"RetValue\");\n        }\n    }\n    }\n    for  x = 1; x \u003c X-1; x++  {\n    for  y = 1; y \u003c Y-1; y++  {\n        var pLits [100]int32;\n        var nLits int32;\n\n        var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n        var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n        var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n        var iUVar int32  = Bmc_MeshUVar( Me, x, y );\n\n        // 0=left  1=up  2=right  3=down\n        var iTVars [4]int32; \n        var iGVars [4]int32;\n\n        iTVars[0] = Bmc_MeshTVar( Me, x-1, y );\n        iGVars[0] = Bmc_MeshGVar( Me, x-1, y );\n\n        iTVars[1] = Bmc_MeshTVar( Me, x, y-1 );\n        iGVars[1] = Bmc_MeshGVar( Me, x, y-1 );\n\n        iTVars[2] = Bmc_MeshTVar( Me, x+1, y );\n        iGVars[2] = Bmc_MeshGVar( Me, x+1, y );\n\n        iTVars[3] = Bmc_MeshTVar( Me, x, y+1 );\n        iGVars[3] = Bmc_MeshGVar( Me, x, y+1 );\n\n        // condition when cell is used\n        for  g = 0; g \u003c G; g++  {\n            pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n            pLits[1] = Abc_Var2Lit( iUVar, 0 );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n            nClauses++;\n        }\n\n        // at least one time is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for  t = 1; t \u003c T; t++  {\n            pLits[t] = Abc_Var2Lit( iTVar+t, 0 );\n        }\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+T );  assert((RetValue != 0), \"RetValue\");\n        nClauses++;\n\n        // at least one config is used\n        pLits[0] = Abc_Var2Lit( iUVar, 1 );\n        for  c = 0; c \u003c NCPARS; c++  {\n            pLits[c+1] = Abc_Var2Lit( iCVar+c, 0 );\n        }\n        RetValue = sat_solver_addclause( pSat, pLits, pLits+NCPARS+1 );  assert((RetValue != 0), \"RetValue\");\n        nClauses++;\n\n        // constraints for each time\n        for  t = 1; t \u003c T; t++  {\n            var Conf [12][2]int32 = [12][2]int32{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},   {1, 0}, {2, 0}, {3, 0}, {2, 1}, {3, 1}, {3, 2}};\n            // buffer\n            for  g = 0; g \u003c G; g++  {\n            for  c = 0; c \u003c 4; c++  {\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[c]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[c]+g, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nClauses += 2;\n            }\n            }\n            for  g = 0; g \u003c I; g++  {\n            for  c = 4; c \u003c NCPARS; c++  {\n                pLits[0] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[1] = Abc_Var2Lit( iCVar+c, 1 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), \"RetValue\");\n                nClauses++;\n            }\n            }\n            // node\n            for  g = I; g \u003c G; g++  {\n            for  c = 0; c \u003c 12; c++  {\n                assert(pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0, \"pN[g][0] \u003e= 0 \u0026\u0026 pN[g][1] \u003e= 0\");\n                assert(pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g, \"pN[g][0] \u003c  g \u0026\u0026 pN[g][1] \u003c  g\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][0]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][1]]+t-1, 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][0]]+pN[g][0], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nLits = 0;\n                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );\n                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][1]]+pN[g][1], 0 );\n                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), \"RetValue\");\n\n                nClauses += 4;\n            }\n            }\n        }\n    }\n    }\n\n    // final condition\n    {\n        var iGVar int32  = Bmc_MeshGVar( Me, 1, 1 ) + G-1;\n        Lit = Abc_Var2Lit( iGVar, 0 );\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );  \n        if RetValue == 0 {\n            fmt.Printf(\"Problem has no solution. \");\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//            satoko_destroy( pSat );\n            sat_solver_delete( pSat );\n            return;\n        }\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Finished adding %d clauses. Started solving...\\n\", nClauses); }\n\n    for {\n        var nAddClauses int32;\n//        status = satoko_solve( pSat );\n        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );\n//        if ( status == SATOKO_UNSAT )\n        if status == l_False {\n            fmt.Printf(\"Problem has no solution. \");\n            break;\n        }\n//        if ( status == SATOKO_UNDEC )\n        if status == l_Undef {\n            fmt.Printf(\"Computation timed out. \");\n            break;\n        }\n//        assert( status == SATOKO_SAT );\n        assert(status == l_True, \"status == l_True\");\n        // check if the solution is valid and add constraints\n        for  x = 0; x \u003c X; x++  {\n        for  y = 0; y \u003c Y; y++  {\n            if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n            \n                var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n            \n            } else {\n                var iTVar int32  = Bmc_MeshTVar( Me, x, y );\n                var iGVar int32  = Bmc_MeshGVar( Me, x, y );\n                var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iTVar, iTVar + T );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );\n                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iCVar, iCVar + NCPARS );\n            }\n        }\n        }\n        if nAddClauses \u003e 0 {\n            fmt.Printf(\"Adding %d one-hotness clauses.\\n\", nAddClauses);\n            continue;\n        }\n        fmt.Printf(\"Satisfying solution found. \");\n/*\n//        iVar = satoko_varnum(pSat);\n        iVar = sat_solver_nvars(pSat);\n        for ( i = 0; i \u003c iVar; i++ )\n            if ( Bmc_MeshVarValue2(pSat, i) )\n                printf( \"%d \", i );\n        printf( \"\\n\" );\n*/\n        break;\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    if ( status == SATOKO_SAT )\n    if status == l_True {\n        // count the number of nodes and buffers\n        var nBuffs, nNodes int32;\n        for  y = 1; y \u003c Y-1; y++  {\n        for  x = 1; x \u003c X-1; x++  {\n            var iCVar int32  = Bmc_MeshCVar( Me, x, y );\n            for  c = 0; c \u003c 4; c++  {\n                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {\n                    //printf( \"Buffer y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nBuffs++;\n                }\n            }\n            for  c = 4; c \u003c NCPARS; c++  {\n                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {\n                    //printf( \"Node   y=%d x=%d  (var = %d; config = %d)\\n\", y, x, iCVar+c, c );\n                    nNodes++;\n                }\n            }\n        }\n        }\n        fmt.Printf(\"The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\\n\", X, Y, T, nNodes+nBuffs, nNodes, nBuffs);\n        // print mesh\n        fmt.Printf(\" Y\\\\X \");\n        for  x = 0; x \u003c X; x++  {\n            fmt.Printf(\"  %-2d \", x);\n        }\n        fmt.Printf(\"\\n\");\n        for  y = 0; y \u003c Y; y++  {\n            fmt.Printf(\" %-2d  \", y);\n            for  x = 0; x \u003c X; x++  {\n                var iTVar int32   = Bmc_MeshTVar( Me, x, y );\n                var iGVar int32   = Bmc_MeshGVar( Me, x, y );\n\n                var fFound int32;                ;\n                for  t = 0; t \u003c T; t++  {\n                for  g = 0; g \u003c G; g++  {\n                    if (Bmc_MeshVarValue2(pSat, iTVar+t) != 0) \u0026\u0026 (Bmc_MeshVarValue2(pSat, iGVar+g) != 0) {\n                        fmt.Printf(\" %c%-2d \", 'a' + g, t);\n                        fFound = 1;\n                    }\n                }\n                }\n                if fFound != 0 {\n                    continue; }\n                if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary\n                    fmt.Printf(\"  *  \");\n                } else {\n                    fmt.Printf(\"     \"); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n    }\n    //satoko_destroy( pSat );\n    sat_solver_delete( pSat );\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

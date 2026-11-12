@@ -1,0 +1,106 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h",
+  "SHA256": "9a814c47132a55059ce73b7085befb8e1a52d3f8df975315adb0496c2ad5f247",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 47,
+        "Column": 1,
+        "ByteOffset": 1471
+      },
+      "Directive": "#ifndef _ABC_GATE_TYPE_"
+    },
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 2548
+      },
+      "Directive": "#ifndef _ABC_STATUS_"
+    },
+    {
+      "Location": {
+        "Line": 94,
+        "Column": 1,
+        "ByteOffset": 2805
+      },
+      "Directive": "#ifndef _ABC_CALLER_"
+    },
+    {
+      "Location": {
+        "Line": 107,
+        "Column": 1,
+        "ByteOffset": 3012
+      },
+      "Directive": "#ifndef _ABC_OPTION_"
+    },
+    {
+      "Location": {
+        "Line": 118,
+        "Column": 1,
+        "ByteOffset": 3158
+      },
+      "Directive": "#ifndef _ABC_Target_Result"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1471,
+      "End": 2489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2548,
+      "End": 2760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2805,
+      "End": 2910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3012,
+      "End": 3155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3158,
+      "End": 4515
+    }
+  ],
+  "Draft": "package csat\n\n/**CFile****************************************************************\n\n  FileName    [csat_apis.h]\n\n  PackageName [Interface to CSAT.]\n\n  Synopsis    [APIs, enums, and data structures expected from the use of CSAT.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 28, 2005]\n\n  Revision    [$Id: csat_apis.h,v 1.5 2005/12/30 10:54:40 rmukherj Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\ntype ABC_Manager_t =     ABC_ManagerStruct_t;\ntypedef struct ABC_ManagerStruct_t *   ABC_Manager;\n\n\n// GateType defines the gate type that can be added to circuit by\n// ABC_AddGate();\n#ifndef _ABC_GATE_TYPE_\n#define _ABC_GATE_TYPE_\nenum GateType\n{\n    CSAT_CONST = 0,  // constant gate\n    CSAT_BPI,    // boolean PI\n    CSAT_BPPI,   // bit level PSEUDO PRIMARY INPUT\n    CSAT_BAND,   // bit level AND\n    CSAT_BNAND,  // bit level NAND\n    CSAT_BOR,    // bit level OR\n    CSAT_BNOR,   // bit level NOR\n    CSAT_BXOR,   // bit level XOR\n    CSAT_BXNOR,  // bit level XNOR\n    CSAT_BINV,   // bit level INVERTER\n    CSAT_BBUF,   // bit level BUFFER\n    CSAT_BMUX,   // bit level MUX --not supported \n    CSAT_BDFF,   // bit level D-type FF\n    CSAT_BSDFF,  // bit level scan FF --not supported \n    CSAT_BTRIH,  // bit level TRISTATE gate with active high control --not supported \n    CSAT_BTRIL,  // bit level TRISTATE gate with active low control --not supported \n    CSAT_BBUS,   // bit level BUS --not supported \n    CSAT_BPPO,   // bit level PSEUDO PRIMARY OUTPUT\n    CSAT_BPO,    // boolean PO\n    CSAT_BCNF,   // boolean constraint\n    CSAT_BDC,    // boolean don't care gate (2 input)\n};\n#endif\n\n\n//CSAT_StatusT defines the return value by ABC_Solve();\n#ifndef _ABC_STATUS_\n#define _ABC_STATUS_\nenum CSAT_StatusT \n{\n    UNDETERMINED = 0,\n    UNSATISFIABLE,\n    SATISFIABLE,\n    TIME_OUT,\n    FRAME_OUT,\n    NO_TARGET,\n    ABORTED,\n    SEQ_SATISFIABLE     \n};\n#endif\n\n\n// to identify who called the CSAT solver\n#ifndef _ABC_CALLER_\n#define _ABC_CALLER_\nenum CSAT_CallerT\n{\n    BLS = 0,\n    SATORI,\n    NONE\n};\n#endif\n\n\n// CSAT_OptionT defines the solver option about learning\n// which is used by ABC_SetSolveOption();\n#ifndef _ABC_OPTION_\n#define _ABC_OPTION_\nenum CSAT_OptionT\n{\n    BASE_LINE = 0,\n    IMPLICT_LEARNING, //default\n    EXPLICT_LEARNING\n};\n#endif\n\n\n#ifndef _ABC_Target_Result\n#define _ABC_Target_Result\ntypedef struct _CSAT_Target_ResultT CSAT_Target_ResultT;\nstruct _CSAT_Target_ResultT\n{\n    enum CSAT_StatusT status; // solve status of the target\n    int num_dec;              // num of decisions to solve the target\n    int num_imp;              // num of implications to solve the target\n    int num_cftg;             // num of conflict gates learned \n    int num_cfts;             // num of conflict signals in conflict gates\n    double time;              // time(in second) used to solve the target\n    int no_sig;               // if \"status\" is SATISFIABLE, \"no_sig\" is the number of \n                              // primary inputs, if the \"status\" is TIME_OUT, \"no_sig\" is the\n                              // number of constant signals found.\n    char** names;             // if the \"status\" is SATISFIABLE, \"names\" is the name array of\n                              // primary inputs, \"values\" is the value array of primary \n                              // inputs that satisfy the target. \n                              // if the \"status\" is TIME_OUT, \"names\" is the name array of\n                              // constant signals found (signals at the root of decision \n                              // tree), \"values\" is the value array of constant signals found.\n    int* values;\n};\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// create a new manager\n// extern ABC_Manager          ABC_InitManager(void);\n\n\n// release a manager\n// extern void ABC_ReleaseManager(ABC_Manager mng);\n\n\n// set solver options for learning\n// extern void                  ABC_SetSolveOption(ABC_Manager mng,      CSAT_OptionT option);\n\n\n// enable checking by brute-force SAT solver (MiniSat-1.14)\n// extern void                  ABC_UseOnlyCoreSatSolver(ABC_Manager mng);\n\n\n\n// add a gate to the circuit\n// the meaning of the parameters are:\n// type: the type of the gate to be added\n// name: the name of the gate to be added, name should be unique in a circuit.\n// nofi: number of fanins of the gate to be added;\n// fanins: the name array of fanins of the gate to be added\n// extern int                   ABC_AddGate(ABC_Manager mng,\n//                           GateType type,\n//                      char* name,\n//                      int nofi,\n//                      char** fanins,\n//                      int dc_attr);\n\n\n// check if there are gates that are not used by any primary ouput.\n// if no such gates exist, return 1 else return 0;\n// extern int                   ABC_Check_Integrity(ABC_Manager mng);\n\n\n// THIS PROCEDURE SHOULD BE CALLED AFTER THE NETWORK IS CONSTRUCTED!!!\n// extern void                  ABC_Network_Finalize( ABC_Manager mng );\n\n\n// set time limit for solving a target.\n// runtime: time limit (in second).\n// extern void                  ABC_SetTimeLimit(ABC_Manager mng, int runtime);\n\n// extern void                  ABC_SetLearnLimit(ABC_Manager mng, int num);\n\n// extern void                  ABC_SetSolveBacktrackLimit(ABC_Manager mng, int num);\n\n// extern void                  ABC_SetLearnBacktrackLimit(ABC_Manager mng, int num);\n\n// extern void                  ABC_EnableDump(ABC_Manager mng, char* dump_file);\n\n\n// extern void                  ABC_SetTotalBacktrackLimit( ABC_Manager mng, ABC_UINT64_T num );\n\n// extern void                  ABC_SetTotalInspectLimit( ABC_Manager mng, ABC_UINT64_T num );\n\n// extern ABC_UINT64_T         ABC_GetTotalBacktracksMade( ABC_Manager mng );\n\n// extern ABC_UINT64_T         ABC_GetTotalInspectsMade( ABC_Manager mng );\n\n\n// the meaning of the parameters are:\n// nog: number of gates that are in the targets\n// names: name array of gates\n// values: value array of the corresponding gates given in \"names\" to be\n// solved. the relation of them is AND.\n// extern int                   ABC_AddTarget(ABC_Manager mng, int nog, char**names, int* values);\n\n\n// initialize the solver internal data structure.\n// extern void                  ABC_SolveInit(ABC_Manager mng);\n\n// extern void                  ABC_AnalyzeTargets(ABC_Manager mng);\n\n\n// solve the targets added by ABC_AddTarget()\n// extern      CSAT_StatusT     ABC_Solve(ABC_Manager mng);\n\n\n// get the solve status of a target\n// TargetID: the target id returned by  ABC_AddTarget().\n// extern CSAT_Target_ResultT * ABC_Get_Target_Result(ABC_Manager mng, int TargetID);\n\n// extern void                  ABC_Dump_Bench_File(ABC_Manager mng);\n\n\n// ADDED PROCEDURES:\n// extern void                  ABC_TargetResFree( CSAT_Target_ResultT * p );\n\n\n// extern void CSAT_SetCaller(ABC_Manager mng,      CSAT_CallerT caller);\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

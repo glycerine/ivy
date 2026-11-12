@@ -1,0 +1,424 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c",
+  "SHA256": "5d6f0fee7da01dcf580c1699626a00e06bf3c3eabe9d9988fcfa767474cab86a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rwr_IsComplement(pNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Const1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 3452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c\", 'a' + pNode.Id - 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 3672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\'\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 13,
+        "ByteOffset": 3734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 3832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\\'\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 4028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 4126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 4195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"+\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 4374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\'\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 4436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 4534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\\'\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 4730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 4828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \")\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 5221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%5d : \", pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 5331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" tt=\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 5539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" lev=%d\", pNode.Level );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 5585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" vol=%d\", pNode.Volume );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 5632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 5699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 6149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"graph_lib.txt\", \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 6374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\nClass %3d. Func %6d.  \", p.pMap[i], Counter++ );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 6503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Roots = %3d. Vol = %3d. Sum = %3d.  \", nFuncs, Volume, Rwr_GetBushSumOfVolumes(p, i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 6685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 6903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwr_Trav2_rec",
+      "Start": 1242,
+      "End": 1553,
+      "BodyStart": 1313,
+      "Original": "void Rwr_Trav2_rec( Rwr_Man_t * p, Rwr_Node_t * pNode, int * pVolume )\n{\n    if ( pNode-\u003efUsed || pNode-\u003eTravId == p-\u003enTravIds )\n        return;\n    pNode-\u003eTravId = p-\u003enTravIds;\n    (*pVolume)++;\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode-\u003ep0), pVolume );\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode-\u003ep1), pVolume );\n}",
+      "Draft": "func Rwr_Trav2_rec(p *Rwr_Man_t, pNode *Rwr_Node_t, pVolume *int32) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    (*pVolume)++;\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p0), pVolume );\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p1), pVolume );\n}"
+    },
+    {
+      "Name": "Rwr_GetBushVolume",
+      "Start": 1826,
+      "End": 2268,
+      "BodyStart": 1907,
+      "Original": "void Rwr_GetBushVolume( Rwr_Man_t * p, int Entry, int * pVolume, int * pnFuncs )\n{\n    Rwr_Node_t * pNode;\n    int Volume = 0;\n    int nFuncs = 0;\n    Rwr_ManIncTravId( p );\n    for ( pNode = p-\u003epTable[Entry]; pNode; pNode = pNode-\u003epNext )\n    {\n        if ( pNode-\u003euTruth != p-\u003epuCanons[pNode-\u003euTruth] )\n            continue;\n        nFuncs++;\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n    }\n    *pVolume = Volume;\n    *pnFuncs = nFuncs;\n}",
+      "Draft": "func Rwr_GetBushVolume(p *Rwr_Man_t, Entry int32, pVolume *int32, pnFuncs *int32) {\n    var pNode *Rwr_Node_t;\n    var Volume int32;\n    var nFuncs int32;\n    Rwr_ManIncTravId( p );\n    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {\n        if pNode.uTruth != p.puCanons[pNode.uTruth] {\n            continue; }\n        nFuncs++;\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n    }\n    *pVolume = Volume;\n    *pnFuncs = nFuncs;\n}"
+    },
+    {
+      "Name": "Rwr_GetBushSumOfVolumes",
+      "Start": 2541,
+      "End": 2966,
+      "BodyStart": 2597,
+      "Original": "int Rwr_GetBushSumOfVolumes( Rwr_Man_t * p, int Entry )\n{\n    Rwr_Node_t * pNode;\n    int Volume, VolumeTotal = 0;\n    for ( pNode = p-\u003epTable[Entry]; pNode; pNode = pNode-\u003epNext )\n    {\n        if ( pNode-\u003euTruth != p-\u003epuCanons[pNode-\u003euTruth] )\n            continue;\n        Volume = 0;\n        Rwr_ManIncTravId( p );\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n        VolumeTotal += Volume;\n    }\n    return VolumeTotal;\n}",
+      "Draft": "func Rwr_GetBushSumOfVolumes(p *Rwr_Man_t, Entry int32) int32 {\n    var pNode *Rwr_Node_t;\n    var Volume, VolumeTotal int32;\n    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {\n        if pNode.uTruth != p.puCanons[pNode.uTruth] {\n            continue; }\n        Volume = 0;\n        Rwr_ManIncTravId( p );\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n        VolumeTotal += Volume;\n    }\n    return VolumeTotal;\n}"
+    },
+    {
+      "Name": "Rwr_NodePrint_rec",
+      "Start": 3222,
+      "End": 4988,
+      "BodyStart": 3281,
+      "Original": "void Rwr_NodePrint_rec( FILE * pFile, Rwr_Node_t * pNode )\n{\n    assert( !Rwr_IsComplement(pNode) );\n\n    if ( pNode-\u003eId == 0 )\n    {\n        fprintf( pFile, \"Const1\" );\n        return;\n    }\n\n    if ( pNode-\u003eId \u003c 5 )\n    {\n        fprintf( pFile, \"%c\", 'a' + pNode-\u003eId - 1 );\n        return;\n    }\n\n    if ( Rwr_IsComplement(pNode-\u003ep0) )\n    {\n        if ( Rwr_Regular(pNode-\u003ep0)-\u003eId \u003c 5 )\n        {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep0) );\n            fprintf( pFile, \"\\'\" );\n        }\n        else\n        {\n            fprintf( pFile, \"(\" );\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep0) );\n            fprintf( pFile, \")\\'\" );\n        }\n    }\n    else\n    {\n        if ( Rwr_Regular(pNode-\u003ep0)-\u003eId \u003c 5 )\n        {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep0) );\n        }\n        else\n        {\n            fprintf( pFile, \"(\" );\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep0) );\n            fprintf( pFile, \")\" );\n        }\n    }\n\n    if ( pNode-\u003efExor )\n        fprintf( pFile, \"+\" );\n\n    if ( Rwr_IsComplement(pNode-\u003ep1) )\n    {\n        if ( Rwr_Regular(pNode-\u003ep1)-\u003eId \u003c 5 )\n        {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep1) );\n            fprintf( pFile, \"\\'\" );\n        }\n        else\n        {\n            fprintf( pFile, \"(\" );\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep1) );\n            fprintf( pFile, \")\\'\" );\n        }\n    }\n    else\n    {\n        if ( Rwr_Regular(pNode-\u003ep1)-\u003eId \u003c 5 )\n        {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep1) );\n        }\n        else\n        {\n            fprintf( pFile, \"(\" );\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode-\u003ep1) );\n            fprintf( pFile, \")\" );\n        }\n    }\n}",
+      "Draft": "func Rwr_NodePrint_rec(pFile *os.File, pNode *Rwr_Node_t) {\n    assert(!Rwr_IsComplement(pNode), \"!Rwr_IsComplement(pNode)\");\n\n    if pNode.Id == 0 {\n        fmt.Fprintf(pFile, \"Const1\");\n        return;\n    }\n\n    if pNode.Id \u003c 5 {\n        fmt.Fprintf(pFile, \"%c\", 'a' + pNode.Id - 1);\n        return;\n    }\n\n    if Rwr_IsComplement(pNode.p0) {\n        if Rwr_Regular(pNode.p0).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \"\\'\");\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \")\\'\");\n        }\n    \n    } else {\n        if Rwr_Regular(pNode.p0).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \")\");\n        }\n    }\n\n    if pNode.fExor {\n        fmt.Fprintf(pFile, \"+\"); }\n\n    if Rwr_IsComplement(pNode.p1) {\n        if Rwr_Regular(pNode.p1).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \"\\'\");\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \")\\'\");\n        }\n    \n    } else {\n        if Rwr_Regular(pNode.p1).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \")\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Rwr_NodePrint",
+      "Start": 5244,
+      "End": 5848,
+      "BodyStart": 5314,
+      "Original": "void Rwr_NodePrint( FILE * pFile, Rwr_Man_t * p, Rwr_Node_t * pNode )\n{\n    unsigned uTruth;\n    fprintf( pFile, \"%5d : \", pNode-\u003eId );\n    uTruth = pNode-\u003euTruth;\n    Extra_PrintHex( pFile, \u0026uTruth, 4 );\n    fprintf( pFile, \" tt=\" );\n    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n//    fprintf( pFile, \" cn=\", pNode-\u003eId );\n//    uTruth = p-\u003epuCanons[pNode-\u003euTruth];\n//    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n    fprintf( pFile, \" lev=%d\", pNode-\u003eLevel );\n    fprintf( pFile, \" vol=%d\", pNode-\u003eVolume );\n    fprintf( pFile, \"  \" );\n    Rwr_NodePrint_rec( pFile, pNode );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Rwr_NodePrint(pFile *os.File, p *Rwr_Man_t, pNode *Rwr_Node_t) {\n    var uTruth uint32;\n    fmt.Fprintf(pFile, \"%5d : \", pNode.Id);\n    uTruth = pNode.uTruth;\n    Extra_PrintHex( pFile, \u0026uTruth, 4 );\n    fmt.Fprintf(pFile, \" tt=\");\n    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n//    fprintf( pFile, \" cn=\", pNode-\u003eId );\n//    uTruth = p-\u003epuCanons[pNode-\u003euTruth];\n//    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n    fmt.Fprintf(pFile, \" lev=%d\", pNode.Level);\n    fmt.Fprintf(pFile, \" vol=%d\", pNode.Volume);\n    fmt.Fprintf(pFile, \"  \");\n    Rwr_NodePrint_rec( pFile, pNode );\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Rwr_ManPrint",
+      "Start": 6104,
+      "End": 7036,
+      "BodyStart": 6139,
+      "Original": "void Rwr_ManPrint( Rwr_Man_t * p )\n{\n    FILE * pFile;\n    Rwr_Node_t * pNode;\n    unsigned uTruth;\n    int Limit, Counter, Volume, nFuncs, i;\n    pFile = fopen( \"graph_lib.txt\", \"w\" );\n    Counter = 0;\n    Limit = (1 \u003c\u003c 16);\n    for ( i = 0; i \u003c Limit; i++ )\n    {\n        if ( p-\u003epTable[i] == NULL )\n            continue;\n        if ( i != p-\u003epuCanons[i] )\n            continue;\n        fprintf( pFile, \"\\nClass %3d. Func %6d.  \", p-\u003epMap[i], Counter++ );\n        Rwr_GetBushVolume( p, i, \u0026Volume, \u0026nFuncs );\n        fprintf( pFile, \"Roots = %3d. Vol = %3d. Sum = %3d.  \", nFuncs, Volume, Rwr_GetBushSumOfVolumes(p, i) );\n        uTruth = i;\n        Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n        fprintf( pFile, \"\\n\" );\n        for ( pNode = p-\u003epTable[i]; pNode; pNode = pNode-\u003epNext )\n            if ( pNode-\u003euTruth == p-\u003epuCanons[pNode-\u003euTruth] )\n                Rwr_NodePrint( pFile, p, pNode );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Rwr_ManPrint(p *Rwr_Man_t) {\n    var pFile *os.File;\n    var pNode *Rwr_Node_t;\n    var uTruth uint32;\n    var Limit, Counter, Volume, nFuncs, i int32;\n    pFile = os.OpenFile(\"graph_lib.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Counter = 0;\n    Limit = (1 \u003c\u003c 16);\n    for  i = 0; i \u003c Limit; i++  {\n        if p.pTable[i] == nil {\n            continue; }\n        if i != p.puCanons[i] {\n            continue; }\n        fmt.Fprintf(pFile, \"\\nClass %3d. Func %6d.  \", p.pMap[i], Counter++);\n        Rwr_GetBushVolume( p, i, \u0026Volume, \u0026nFuncs );\n        fmt.Fprintf(pFile, \"Roots = %3d. Vol = %3d. Sum = %3d.  \", nFuncs, Volume, Rwr_GetBushSumOfVolumes(p, i));\n        uTruth = i;\n        Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n        fmt.Fprintf(pFile, \"\\n\");\n        for  pNode = p.pTable[i]; (pNode != nil); pNode = pNode.pNext  {\n            if pNode.uTruth == p.puCanons[pNode.uTruth] {\n                Rwr_NodePrint( pFile, p, pNode ); }\n        }\n    }\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_Trav2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_Trav2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1242,
+      "End": 1553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_GetBushVolume",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_GetBushVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1826,
+      "End": 2268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_GetBushSumOfVolumes",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_GetBushSumOfVolumes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2541,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_NodePrint_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_NodePrint_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3222,
+      "End": 4988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_NodePrint",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_NodePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5244,
+      "End": 5848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::Rwr_ManPrint",
+      "Category": "semantic-review",
+      "Symbol": "Rwr_ManPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6104,
+      "End": 7036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrPrint.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7283
+    }
+  ],
+  "Draft": "package rwr\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [rwrCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [Cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwrCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Adds one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_Trav2_rec(p *Rwr_Man_t, pNode *Rwr_Node_t, pVolume *int32) {\n    if pNode.fUsed || pNode.TravId == p.nTravIds {\n        return; }\n    pNode.TravId = p.nTravIds;\n    (*pVolume)++;\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p0), pVolume );\n    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p1), pVolume );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the node to the end of the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_GetBushVolume(p *Rwr_Man_t, Entry int32, pVolume *int32, pnFuncs *int32) {\n    var pNode *Rwr_Node_t;\n    var Volume int32;\n    var nFuncs int32;\n    Rwr_ManIncTravId( p );\n    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {\n        if pNode.uTruth != p.puCanons[pNode.uTruth] {\n            continue; }\n        nFuncs++;\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n    }\n    *pVolume = Volume;\n    *pnFuncs = nFuncs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the node to the end of the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_GetBushSumOfVolumes(p *Rwr_Man_t, Entry int32) int32 {\n    var pNode *Rwr_Node_t;\n    var Volume, VolumeTotal int32;\n    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {\n        if pNode.uTruth != p.puCanons[pNode.uTruth] {\n            continue; }\n        Volume = 0;\n        Rwr_ManIncTravId( p );\n        Rwr_Trav2_rec( p, pNode, \u0026Volume );\n        VolumeTotal += Volume;\n    }\n    return VolumeTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one rwr node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_NodePrint_rec(pFile *os.File, pNode *Rwr_Node_t) {\n    assert(!Rwr_IsComplement(pNode), \"!Rwr_IsComplement(pNode)\");\n\n    if pNode.Id == 0 {\n        fmt.Fprintf(pFile, \"Const1\");\n        return;\n    }\n\n    if pNode.Id \u003c 5 {\n        fmt.Fprintf(pFile, \"%c\", 'a' + pNode.Id - 1);\n        return;\n    }\n\n    if Rwr_IsComplement(pNode.p0) {\n        if Rwr_Regular(pNode.p0).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \"\\'\");\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \")\\'\");\n        }\n    \n    } else {\n        if Rwr_Regular(pNode.p0).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );\n            fmt.Fprintf(pFile, \")\");\n        }\n    }\n\n    if pNode.fExor {\n        fmt.Fprintf(pFile, \"+\"); }\n\n    if Rwr_IsComplement(pNode.p1) {\n        if Rwr_Regular(pNode.p1).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \"\\'\");\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \")\\'\");\n        }\n    \n    } else {\n        if Rwr_Regular(pNode.p1).Id \u003c 5 {\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n        \n        } else {\n            fmt.Fprintf(pFile, \"(\");\n            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );\n            fmt.Fprintf(pFile, \")\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one rwr node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_NodePrint(pFile *os.File, p *Rwr_Man_t, pNode *Rwr_Node_t) {\n    var uTruth uint32;\n    fmt.Fprintf(pFile, \"%5d : \", pNode.Id);\n    uTruth = pNode.uTruth;\n    Extra_PrintHex( pFile, \u0026uTruth, 4 );\n    fmt.Fprintf(pFile, \" tt=\");\n    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n//    fprintf( pFile, \" cn=\", pNode-\u003eId );\n//    uTruth = p-\u003epuCanons[pNode-\u003euTruth];\n//    Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n    fmt.Fprintf(pFile, \" lev=%d\", pNode.Level);\n    fmt.Fprintf(pFile, \" vol=%d\", pNode.Volume);\n    fmt.Fprintf(pFile, \"  \");\n    Rwr_NodePrint_rec( pFile, pNode );\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints one rwr node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwr_ManPrint(p *Rwr_Man_t) {\n    var pFile *os.File;\n    var pNode *Rwr_Node_t;\n    var uTruth uint32;\n    var Limit, Counter, Volume, nFuncs, i int32;\n    pFile = os.OpenFile(\"graph_lib.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Counter = 0;\n    Limit = (1 \u003c\u003c 16);\n    for  i = 0; i \u003c Limit; i++  {\n        if p.pTable[i] == nil {\n            continue; }\n        if i != p.puCanons[i] {\n            continue; }\n        fmt.Fprintf(pFile, \"\\nClass %3d. Func %6d.  \", p.pMap[i], Counter++);\n        Rwr_GetBushVolume( p, i, \u0026Volume, \u0026nFuncs );\n        fmt.Fprintf(pFile, \"Roots = %3d. Vol = %3d. Sum = %3d.  \", nFuncs, Volume, Rwr_GetBushSumOfVolumes(p, i));\n        uTruth = i;\n        Extra_PrintBinary( pFile, \u0026uTruth, 16 );\n        fmt.Fprintf(pFile, \"\\n\");\n        for  pNode = p.pTable[i]; (pNode != nil); pNode = pNode.pNext  {\n            if pNode.uTruth == p.puCanons[pNode.uTruth] {\n                Rwr_NodePrint( pFile, p, pNode ); }\n        }\n    }\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

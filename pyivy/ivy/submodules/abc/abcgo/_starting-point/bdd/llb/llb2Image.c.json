@@ -1,0 +1,717 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c",
+  "SHA256": "bab50492c69ad518158d61d225ee2a36415a2f902ee1580e5768d932ceb2099c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize == Aig_ManObjNumMax(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj = %4d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 13,
+        "ByteOffset": 3271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"pi  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 13,
+        "ByteOffset": 3342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"lo  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 13,
+        "ByteOffset": 3413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"li  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 3483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"and \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 13,
+        "ByteOffset": 3575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", Vec_IntEntry(vOne, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : Quant0 = \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 5515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 5646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : Quant1 = \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 13,
+        "ByteOffset": 5771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 5803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 221,
+        "Column": 9,
+        "ByteOffset": 7649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 10019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( dd.bFunc2 == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 11621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( dd.bFunc2 != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 1,
+        "ByteOffset": 13465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"   %2d : \", i ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 403,
+        "Column": 1,
+        "ByteOffset": 13749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Pt0 =%6d. Pt1 =%6d. \", Cudd_DagSize(ddPart.bFunc), Cudd_DagSize(bGroup) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 1,
+        "ByteOffset": 14488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Im0 =%6d. Im1 =%6d. \", Cudd_DagSize(bTemp), Cudd_DagSize(bImage) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 1,
+        "ByteOffset": 14900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Supp =%3d. \", Cudd_SupportSize(dd, bImage) ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ImgSupports",
+      "Start": 1477,
+      "End": 3558,
+      "BodyStart": 1609,
+      "Original": "Vec_Ptr_t * Llb_ImgSupports( Aig_Man_t * p, Vec_Ptr_t * vDdMans, Vec_Int_t * vStart, Vec_Int_t * vStop, int fAddPis, int fVerbose )\n{\n    Vec_Ptr_t * vSupps;\n    Vec_Int_t * vOne;\n    Aig_Obj_t * pObj;\n    DdManager * dd;\n    DdNode * bSupp, * bTemp;\n    int i, Entry, nSize;\n    nSize  = Cudd_ReadSize( (DdManager *)Vec_PtrEntry( vDdMans, 0 ) );\n    vSupps = Vec_PtrAlloc( 100 );\n    // create initial\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStart, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    Vec_PtrPush( vSupps, vOne );\n    // create intermediate \n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        vOne  = Vec_IntStart( nSize );\n        bSupp = Cudd_Support( dd, dd-\u003ebFunc );  Cudd_Ref( bSupp );\n        for ( bTemp = bSupp; bTemp != Cudd_ReadOne(dd); bTemp = cuddT(bTemp) )\n            Vec_IntWriteEntry( vOne, bTemp-\u003eindex, 1 );\n        Cudd_RecursiveDeref( dd, bSupp );\n        Vec_PtrPush( vSupps, vOne );\n    }\n    // create final\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStop, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    if ( fAddPis )\n        Saig_ManForEachPi( p, pObj, i )\n            Vec_IntWriteEntry( vOne, Aig_ObjId(pObj), 1 );\n    Vec_PtrPush( vSupps, vOne );\n\n    // print supports\n    assert( nSize == Aig_ManObjNumMax(p) );\n    if ( !fVerbose )\n        return vSupps;\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        int k, Counter = 0;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            Counter += Vec_IntEntry(vOne, i);\n        if ( Counter == 0 ) \n            continue;\n        printf( \"Obj = %4d : \", i );\n        if ( Saig_ObjIsPi(p,pObj) )\n            printf( \"pi  \" );\n        else if ( Saig_ObjIsLo(p,pObj) )\n            printf( \"lo  \" );\n        else if ( Saig_ObjIsLi(p,pObj) )\n            printf( \"li  \" );\n        else if ( Aig_ObjIsNode(pObj) )\n            printf( \"and \" );\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            printf( \"%d\", Vec_IntEntry(vOne, i) );\n        printf( \"\\n\" );\n    }\n    return vSupps;\n}",
+      "Draft": "func Llb_ImgSupports(p *Aig_Man_t, vDdMans *Vec_Ptr_t, vStart *Vec_Int_t, vStop *Vec_Int_t, fAddPis int32, fVerbose int32) *Vec_Ptr_t {\n    var vSupps *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bSupp, bTemp *DdNode;\n    var i, Entry, nSize int32;\n    nSize  = Cudd_ReadSize( (DdManager *)Vec_PtrEntry( vDdMans, 0 ) );\n    vSupps = Vec_PtrAlloc( 100 );\n    // create initial\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStart, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    Vec_PtrPush( vSupps, vOne );\n    // create intermediate \n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        vOne  = Vec_IntStart( nSize );\n        bSupp = Cudd_Support( dd, dd.bFunc );  Cudd_Ref( bSupp );\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != Cudd_ReadOne(dd); bTemp = ((bTemp).type.kids.T)  {\n            Vec_IntWriteEntry( vOne, bTemp.index, 1 );\n        }\n        Cudd_RecursiveDeref( dd, bSupp );\n        Vec_PtrPush( vSupps, vOne );\n    }\n    // create final\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStop, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    if fAddPis != 0 {\n        Saig_ManForEachPi( p, pObj, i )\n            Vec_IntWriteEntry( vOne, Aig_ObjId(pObj), 1 ); }\n    Vec_PtrPush( vSupps, vOne );\n\n    // print supports\n    assert(nSize == Aig_ManObjNumMax(p), \"nSize == Aig_ManObjNumMax(p)\");\n    if !(fVerbose != 0) {\n        return vSupps; }\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        var k, Counter int32;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            Counter += Vec_IntEntry(vOne, i);\n        if Counter == 0 { \n            continue; }\n        fmt.Printf(\"Obj = %4d : \", i);\n        if Saig_ObjIsPi(p,pObj) {\n            fmt.Printf(\"pi  \");\n        } else if Saig_ObjIsLo(p,pObj) {\n            fmt.Printf(\"lo  \");\n        } else if Saig_ObjIsLi(p,pObj) {\n            fmt.Printf(\"li  \");\n        } else if Aig_ObjIsNode(pObj) {\n            fmt.Printf(\"and \"); }\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            fmt.Printf(\"%d\", Vec_IntEntry(vOne, i));\n        fmt.Printf(\"\\n\");\n    }\n    return vSupps;\n}"
+    },
+    {
+      "Name": "Llb_ImgSchedule",
+      "Start": 4030,
+      "End": 5676,
+      "BodyStart": 4133,
+      "Original": "void Llb_ImgSchedule( Vec_Ptr_t * vSupps, Vec_Ptr_t ** pvQuant0, Vec_Ptr_t ** pvQuant1, int fVerbose )\n{\n    Vec_Int_t * vOne;\n    int nVarsAll, Counter, iSupp = -1, Entry, i, k;\n    // start quantification arrays\n    *pvQuant0 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    *pvQuant1 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n    {\n        Vec_PtrPush( *pvQuant0, Vec_IntAlloc(16) );\n        Vec_PtrPush( *pvQuant1, Vec_IntAlloc(16) );\n    }\n    // count how many times each var appears\n    nVarsAll = Vec_IntSize( (Vec_Int_t *)Vec_PtrEntry(vSupps, 0) );\n    for ( i = 0; i \u003c nVarsAll; i++ )\n    {\n        Counter = 0;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            if ( Vec_IntEntry(vOne, i) )\n            {\n                iSupp = k;\n                Counter++;\n            }\n        if ( Counter == 0 )\n            continue;\n        if ( Counter == 1 )\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, iSupp), i );\n        else // if ( Counter \u003e 1 )\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, iSupp), i );\n    }\n\n    if ( fVerbose )\n    for ( i = 0; i \u003c Vec_PtrSize(vSupps); i++ )\n    {\n        printf( \"%2d : Quant0 = \", i );\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, i), Entry, k )\n            printf( \"%d \", Entry );\n        printf( \"\\n\" );\n    }\n\n    if ( fVerbose )\n    for ( i = 0; i \u003c Vec_PtrSize(vSupps); i++ )\n    {\n        printf( \"%2d : Quant1 = \", i );\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, i), Entry, k )\n            printf( \"%d \", Entry );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Llb_ImgSchedule(vSupps *Vec_Ptr_t, pvQuant0 **Vec_Ptr_t, pvQuant1 **Vec_Ptr_t, fVerbose int32) {\n    var vOne *Vec_Int_t;\n    var nVarsAll int32;\n    var Counter int32;\n    var iSupp int32 = -1;\n    var Entry int32;\n    var i int32;\n    var k int32;\n    // start quantification arrays\n    *pvQuant0 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    *pvQuant1 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n    {\n        Vec_PtrPush( *pvQuant0, Vec_IntAlloc(16) );\n        Vec_PtrPush( *pvQuant1, Vec_IntAlloc(16) );\n    }\n    // count how many times each var appears\n    nVarsAll = Vec_IntSize( (Vec_Int_t *)Vec_PtrEntry(vSupps, 0) );\n    for  i = 0; i \u003c nVarsAll; i++  {\n        Counter = 0;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            if Vec_IntEntry(vOne, i) {\n                iSupp = k;\n                Counter++;\n            }\n        if Counter == 0 {\n            continue; }\n        if Counter == 1 {\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, iSupp), i );\n        } else { // if ( Counter \u003e 1 )\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, iSupp), i ); }\n    }\n\n    if fVerbose != 0 {\n    for  i = 0; i \u003c Vec_PtrSize(vSupps); i++  {\n        fmt.Printf(\"%2d : Quant0 = \", i);\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, i), Entry, k )\n            fmt.Printf(\"%d \", Entry);\n        fmt.Printf(\"\\n\");\n    } }\n\n    if fVerbose != 0 {\n    for  i = 0; i \u003c Vec_PtrSize(vSupps); i++  {\n        fmt.Printf(\"%2d : Quant1 = \", i);\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, i), Entry, k )\n            fmt.Printf(\"%d \", Entry);\n        fmt.Printf(\"\\n\");\n    } }\n}"
+    },
+    {
+      "Name": "Llb_ImgPartition",
+      "Start": 5961,
+      "End": 8378,
+      "BodyStart": 6067,
+      "Original": "DdManager * Llb_ImgPartition( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper, abctime TimeTarget )\n{\n    Vec_Ptr_t * vNodes, * vRange;\n    Aig_Obj_t * pObj;\n    DdManager * dd;\n    DdNode * bBdd0, * bBdd1, * bProd, * bRes, * bTemp;\n    int i;\n\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    dd-\u003eTimeStop = TimeTarget;\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bBdd1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n//        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj-\u003epData );\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeTarget );  \n        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );  \n        if ( pObj-\u003epData == NULL )\n        {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vNodes );\n            return NULL;\n        }\n        Cudd_Ref( (DdNode *)pObj-\u003epData );\n    }\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    bRes   = Cudd_ReadOne(dd);   Cudd_Ref( bRes );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vRange, pObj, i )\n    {\n        assert( Aig_ObjIsNode(pObj) );\n        bProd = Cudd_bddXnor( dd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)), (DdNode *)pObj-\u003epData );   Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd ); Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if ( bRes == NULL )\n        {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vRange );\n            Vec_PtrFree( vNodes );\n            return NULL;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n\n    Vec_PtrFree( vRange );\n    Vec_PtrFree( vNodes );\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd-\u003ebFunc = bRes;\n    dd-\u003eTimeStop = 0;\n    return dd;\n}",
+      "Draft": "func Llb_ImgPartition(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t, TimeTarget abctime) *DdManager {\n    var vNodes, vRange *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bBdd0, bBdd1, bProd, bRes, bTemp *DdNode;\n    var i int32;\n\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    dd.TimeStop = TimeTarget;\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n//        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj-\u003epData );\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeTarget );  \n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );  \n        if pObj.pData == nil {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( (DdNode *)pObj.pData );\n    }\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    bRes   = Cudd_ReadOne(dd);   Cudd_Ref( bRes );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vRange, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        bProd = Cudd_bddXnor( dd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)), (DdNode *)pObj.pData );   Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd ); Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if bRes == nil {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vRange );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n\n    Vec_PtrFree( vRange );\n    Vec_PtrFree( vNodes );\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd.bFunc = bRes;\n    dd.TimeStop = 0;\n    return dd;\n}"
+    },
+    {
+      "Name": "Llb_ImgComputeCube",
+      "Start": 8658,
+      "End": 9214,
+      "BodyStart": 8744,
+      "Original": "DdNode * Llb_ImgComputeCube( Aig_Man_t * pAig, Vec_Int_t * vNodeIds, DdManager * dd )\n{\n    DdNode * bProd, * bTemp;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime TimeStop;\n    TimeStop = dd-\u003eTimeStop; dd-\u003eTimeStop = 0;\n    bProd = Cudd_ReadOne(dd);   Cudd_Ref( bProd );\n    Aig_ManForEachObjVec( vNodeIds, pAig, pObj, i )\n    {\n        bProd  = Cudd_bddAnd( dd, bTemp = bProd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)) ); Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bProd );\n    dd-\u003eTimeStop = TimeStop;\n    return bProd;\n}",
+      "Draft": "func Llb_ImgComputeCube(pAig *Aig_Man_t, vNodeIds *Vec_Int_t, dd *DdManager) *DdNode {\n    var bProd, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    bProd = Cudd_ReadOne(dd);   Cudd_Ref( bProd );\n    Aig_ManForEachObjVec( vNodeIds, pAig, pObj, i )\n    {\n        bProd  = Cudd_bddAnd( dd, bTemp = bProd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)) ); Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bProd );\n    dd.TimeStop = TimeStop;\n    return bProd;\n}"
+    },
+    {
+      "Name": "Llb_ImgQuantifyFirst",
+      "Start": 9451,
+      "End": 10977,
+      "BodyStart": 9553,
+      "Original": "void Llb_ImgQuantifyFirst( Aig_Man_t * pAig, Vec_Ptr_t * vDdMans, Vec_Ptr_t * vQuant0, int fVerbose )\n{\n    DdManager * dd;\n    DdNode * bProd, * bRes, * bTemp;\n    int i;\n    abctime clk = Abc_Clock();\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        // remember unquantified ones\n        assert( dd-\u003ebFunc2 == NULL );\n        dd-\u003ebFunc2 = dd-\u003ebFunc;   Cudd_Ref( dd-\u003ebFunc2 );\n\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n\n        bRes = dd-\u003ebFunc;\n        if ( fVerbose )\n            Abc_Print( 1, \"Part %2d : Init =%5d. \", i, Cudd_DagSize(bRes) );\n        bProd = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, i+1), dd );   Cudd_Ref( bProd );\n        bRes  = Cudd_bddExistAbstract( dd, bTemp = bRes, bProd );                          Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n        dd-\u003ebFunc = bRes;\n\n        Cudd_AutodynDisable( dd );\n\n        if ( fVerbose )\n            Abc_Print( 1, \"Quant =%5d. \", Cudd_DagSize(bRes) );\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if ( fVerbose ) \n            Abc_Print( 1, \"Reo = %5d. \", Cudd_DagSize(bRes) );\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if ( fVerbose ) \n            Abc_Print( 1, \"Reo = %5d.  \", Cudd_DagSize(bRes) );\n        if ( fVerbose ) \n            Abc_Print( 1, \"Supp = %3d.  \", Cudd_SupportSize(dd, bRes) );\n        if ( fVerbose ) \n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    }\n}",
+      "Draft": "func Llb_ImgQuantifyFirst(pAig *Aig_Man_t, vDdMans *Vec_Ptr_t, vQuant0 *Vec_Ptr_t, fVerbose int32) {\n    var dd *DdManager;\n    var bProd, bRes, bTemp *DdNode;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        // remember unquantified ones\n        assert(dd.bFunc2 == nil, \"dd.bFunc2 == nil\");\n        dd.bFunc2 = dd.bFunc;   Cudd_Ref( dd.bFunc2 );\n\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n\n        bRes = dd.bFunc;\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Part %2d : Init =%5d. \", i, Cudd_DagSize(bRes) ); }\n        bProd = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, i+1), dd );   Cudd_Ref( bProd );\n        bRes  = Cudd_bddExistAbstract( dd, bTemp = bRes, bProd );                          Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n        dd.bFunc = bRes;\n\n        Cudd_AutodynDisable( dd );\n\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Quant =%5d. \", Cudd_DagSize(bRes) ); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Reo = %5d. \", Cudd_DagSize(bRes) ); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Reo = %5d.  \", Cudd_DagSize(bRes) ); }\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Supp = %3d.  \", Cudd_SupportSize(dd, bRes) ); }\n        if fVerbose != 0 { \n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n\n    }\n}"
+    },
+    {
+      "Name": "Llb_ImgQuantifyReset",
+      "Start": 11213,
+      "End": 11506,
+      "BodyStart": 11262,
+      "Original": "void Llb_ImgQuantifyReset( Vec_Ptr_t * vDdMans )\n{\n    DdManager * dd;\n    int i;\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        assert( dd-\u003ebFunc2 != NULL );\n        Cudd_RecursiveDeref( dd, dd-\u003ebFunc );\n        dd-\u003ebFunc = dd-\u003ebFunc2;\n        dd-\u003ebFunc2 = NULL;\n    }\n}",
+      "Draft": "func Llb_ImgQuantifyReset(vDdMans *Vec_Ptr_t) {\n    var dd *DdManager;\n    var i int32;\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        assert(dd.bFunc2 != nil, \"dd.bFunc2 != nil\");\n        Cudd_RecursiveDeref( dd, dd.bFunc );\n        dd.bFunc = dd.bFunc2;\n        dd.bFunc2 = nil;\n    }\n}"
+    },
+    {
+      "Name": "Llb_ImgComputeImage",
+      "Start": 11786,
+      "End": 16024,
+      "BodyStart": 12025,
+      "Original": "DdNode * Llb_ImgComputeImage( Aig_Man_t * pAig, Vec_Ptr_t * vDdMans, DdManager * dd, DdNode * bInit, \n    Vec_Ptr_t * vQuant0, Vec_Ptr_t * vQuant1, Vec_Int_t * vDriRefs, \n    abctime TimeTarget, int fBackward, int fReorder, int fVerbose )\n{\n//    int fCheckSupport = 0;\n    DdManager * ddPart;\n    DdNode * bImage, * bGroup, * bCube, * bTemp;\n    int i;\n    abctime clk, clk0 = Abc_Clock();\n\n    bImage = bInit;  Cudd_Ref( bImage );\n    if ( fBackward )\n    {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    else\n    {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    \n        if ( bImage == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            return NULL;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    // perform image computation\n    Vec_PtrForEachEntry( DdManager *, vDdMans, ddPart, i )\n    {\n        clk = Abc_Clock();\nif ( fVerbose )\nprintf( \"   %2d : \", i );\n        // transfer the BDD from the group manager to the main manager\n        bGroup = Cudd_bddTransfer( ddPart, dd, ddPart-\u003ebFunc );                           \n        if ( bGroup == NULL )\n            return NULL;\n        Cudd_Ref( bGroup );\nif ( fVerbose )\nprintf( \"Pt0 =%6d. Pt1 =%6d. \", Cudd_DagSize(ddPart-\u003ebFunc), Cudd_DagSize(bGroup) );\n        // perform partial product\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant1, i+1), dd ); Cudd_Ref( bCube );\n//        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );                \n//        bImage = Extra_bddAndAbstractTime( dd, bTemp = bImage, bGroup, bCube, TimeTarget );  \n        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );  \n        if ( bImage == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_RecursiveDeref( dd, bGroup );\n            return NULL;\n        }\n        Cudd_Ref( bImage );\n\nif ( fVerbose )\nprintf( \"Im0 =%6d. Im1 =%6d. \", Cudd_DagSize(bTemp), Cudd_DagSize(bImage) );\n//printf(\"\\n\"); Extra_bddPrintSupport(dd, bImage); printf(\"\\n\");\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n        Cudd_RecursiveDeref( dd, bGroup );\n\n//        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//        Abc_Print( 1, \"Reo =%6d.  \", Cudd_DagSize(bImage) );\n\nif ( fVerbose )\nprintf( \"Supp =%3d. \", Cudd_SupportSize(dd, bImage) );\nif ( fVerbose )\nAbc_PrintTime( 1, \"T\", Abc_Clock() - clk );\n    }\n\n    if ( !fBackward )\n    {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    else\n    {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n\n    if ( fReorder )\n    {\n    if ( fVerbose )\n    Abc_Print( 1, \"        Reordering... Before =%5d. \", Cudd_DagSize(bImage) );\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if ( fVerbose )\n    Abc_Print( 1, \"After =%5d. \", Cudd_DagSize(bImage) );\n//    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//    Abc_Print( 1, \"After =%5d.  \", Cudd_DagSize(bImage) );\n    if ( fVerbose )\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk0 );\n//    Abc_Print( 1, \"\\n\" );\n    }\n\n    Cudd_Deref( bImage );\n    return bImage;\n}",
+      "Draft": "func Llb_ImgComputeImage(pAig *Aig_Man_t, vDdMans *Vec_Ptr_t, dd *DdManager, bInit *DdNode, vQuant0 *Vec_Ptr_t, vQuant1 *Vec_Ptr_t, vDriRefs *Vec_Int_t, TimeTarget abctime, fBackward int32, fReorder int32, fVerbose int32) *DdNode {\n//    int fCheckSupport = 0;\n    var ddPart *DdManager;\n    var bImage, bGroup, bCube, bTemp *DdNode;\n    var i int32;\n    var clk abctime;\n    var clk0 abctime = Abc_Clock();\n\n    bImage = bInit;  Cudd_Ref( bImage );\n    if fBackward != 0 {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    // perform image computation\n    Vec_PtrForEachEntry( DdManager *, vDdMans, ddPart, i )\n    {\n        clk = Abc_Clock();\nif fVerbose != 0 {\nfmt.Printf(\"   %2d : \", i); }\n        // transfer the BDD from the group manager to the main manager\n        bGroup = Cudd_bddTransfer( ddPart, dd, ddPart.bFunc );                           \n        if bGroup == nil {\n            return nil; }\n        Cudd_Ref( bGroup );\nif fVerbose != 0 {\nfmt.Printf(\"Pt0 =%6d. Pt1 =%6d. \", Cudd_DagSize(ddPart.bFunc), Cudd_DagSize(bGroup)); }\n        // perform partial product\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant1, i+1), dd ); Cudd_Ref( bCube );\n//        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );                \n//        bImage = Extra_bddAndAbstractTime( dd, bTemp = bImage, bGroup, bCube, TimeTarget );  \n        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );  \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_RecursiveDeref( dd, bGroup );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n\nif fVerbose != 0 {\nfmt.Printf(\"Im0 =%6d. Im1 =%6d. \", Cudd_DagSize(bTemp), Cudd_DagSize(bImage)); }\n//printf(\"\\n\"); Extra_bddPrintSupport(dd, bImage); printf(\"\\n\");\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n        Cudd_RecursiveDeref( dd, bGroup );\n\n//        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//        Abc_Print( 1, \"Reo =%6d.  \", Cudd_DagSize(bImage) );\n\nif fVerbose != 0 {\nfmt.Printf(\"Supp =%3d. \", Cudd_SupportSize(dd, bImage)); }\nif fVerbose != 0 {\nAbc_PrintTime( 1, \"T\", Abc_Clock() - clk ); }\n    }\n\n    if !(fBackward != 0) {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n\n    if fReorder != 0 {\n    if fVerbose != 0 {\n    Abc_Print( 1, \"        Reordering... Before =%5d. \", Cudd_DagSize(bImage) ); }\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if fVerbose != 0 {\n    Abc_Print( 1, \"After =%5d. \", Cudd_DagSize(bImage) ); }\n//    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//    Abc_Print( 1, \"After =%5d.  \", Cudd_DagSize(bImage) );\n    if fVerbose != 0 {\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk0 ); }\n//    Abc_Print( 1, \"\\n\" );\n    }\n\n    Cudd_Deref( bImage );\n    return bImage;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::1781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1781,
+      "End": 1794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::4646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4595,
+      "End": 4608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::5036",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4985,
+      "End": 4998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::5146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5095,
+      "End": 5108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::5346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5295,
+      "End": 5308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::5608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5557,
+      "End": 5570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::6732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6632,
+      "End": 6632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::6752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6632,
+      "End": 6632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::6883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6724,
+      "End": 6724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::6903",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6724,
+      "End": 6724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::7358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7189,
+      "End": 7199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::7664",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7495,
+      "End": 7505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::8306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8137,
+      "End": 8147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::10247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10078,
+      "End": 10091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::12815",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12646,
+      "End": 12659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::13844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13675,
+      "End": 13688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::pointer-cast::15397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15228,
+      "End": 15241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgSupports",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgSupports",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1477,
+      "End": 3558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgSchedule",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgSchedule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4030,
+      "End": 5676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgPartition",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5961,
+      "End": 8378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgComputeCube",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgComputeCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8658,
+      "End": 9214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgQuantifyFirst",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgQuantifyFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9451,
+      "End": 10977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgQuantifyReset",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgQuantifyReset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11213,
+      "End": 11506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::Llb_ImgComputeImage",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ImgComputeImage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11786,
+      "End": 16024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::1918",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1918,
+      "End": 1957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::2068",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2068,
+      "End": 2118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::2509",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2509,
+      "End": 2547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::2620",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2620,
+      "End": 2651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::2859",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2859,
+      "End": 2890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::2933",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2933,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::3405",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3405,
+      "End": 3456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::4354",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4354,
+      "End": 4405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::4707",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4707,
+      "End": 4758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::5274",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5274,
+      "End": 5346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::5536",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5536,
+      "End": 5608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::6389",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6389,
+      "End": 6440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::6558",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6558,
+      "End": 6609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::7327",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7327,
+      "End": 7378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::8052",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8052,
+      "End": 8103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::8932",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8932,
+      "End": 8979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::9658",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9658,
+      "End": 9708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::11299",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11299,
+      "End": 11349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Image.c::macro-inline::13121",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13121,
+      "End": 13175
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb2Image.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Computes image using partitioned structure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Image.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Vec_Ptr_t * Llb_ManCutNodes( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper );\n\n// extern Vec_Ptr_t * Llb_ManCutRange( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes supports of the partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgSupports(p *Aig_Man_t, vDdMans *Vec_Ptr_t, vStart *Vec_Int_t, vStop *Vec_Int_t, fAddPis int32, fVerbose int32) *Vec_Ptr_t {\n    var vSupps *Vec_Ptr_t;\n    var vOne *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bSupp, bTemp *DdNode;\n    var i, Entry, nSize int32;\n    nSize  = Cudd_ReadSize( (DdManager *)Vec_PtrEntry( vDdMans, 0 ) );\n    vSupps = Vec_PtrAlloc( 100 );\n    // create initial\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStart, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    Vec_PtrPush( vSupps, vOne );\n    // create intermediate \n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        vOne  = Vec_IntStart( nSize );\n        bSupp = Cudd_Support( dd, dd.bFunc );  Cudd_Ref( bSupp );\n        // inlining of macro cuddT\n        for  bTemp = bSupp; bTemp != Cudd_ReadOne(dd); bTemp = ((bTemp).type.kids.T)  {\n            Vec_IntWriteEntry( vOne, bTemp.index, 1 );\n        }\n        Cudd_RecursiveDeref( dd, bSupp );\n        Vec_PtrPush( vSupps, vOne );\n    }\n    // create final\n    vOne = Vec_IntStart( nSize );\n    Vec_IntForEachEntry( vStop, Entry, i )\n        Vec_IntWriteEntry( vOne, Entry, 1 );\n    if fAddPis != 0 {\n        Saig_ManForEachPi( p, pObj, i )\n            Vec_IntWriteEntry( vOne, Aig_ObjId(pObj), 1 ); }\n    Vec_PtrPush( vSupps, vOne );\n\n    // print supports\n    assert(nSize == Aig_ManObjNumMax(p), \"nSize == Aig_ManObjNumMax(p)\");\n    if !(fVerbose != 0) {\n        return vSupps; }\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        var k, Counter int32;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            Counter += Vec_IntEntry(vOne, i);\n        if Counter == 0 { \n            continue; }\n        fmt.Printf(\"Obj = %4d : \", i);\n        if Saig_ObjIsPi(p,pObj) {\n            fmt.Printf(\"pi  \");\n        } else if Saig_ObjIsLo(p,pObj) {\n            fmt.Printf(\"lo  \");\n        } else if Saig_ObjIsLi(p,pObj) {\n            fmt.Printf(\"li  \");\n        } else if Aig_ObjIsNode(pObj) {\n            fmt.Printf(\"and \"); }\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            fmt.Printf(\"%d\", Vec_IntEntry(vOne, i));\n        fmt.Printf(\"\\n\");\n    }\n    return vSupps;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes quantification schedule.]\n\n  Description [Input array contains supports: 0=starting, ... intermediate...\n  N-1=final. Output arrays contain immediately quantifiable vars (vQuant0)\n  and vars that should be quantified after conjunction (vQuant1).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgSchedule(vSupps *Vec_Ptr_t, pvQuant0 **Vec_Ptr_t, pvQuant1 **Vec_Ptr_t, fVerbose int32) {\n    var vOne *Vec_Int_t;\n    var nVarsAll int32;\n    var Counter int32;\n    var iSupp int32 = -1;\n    var Entry int32;\n    var i int32;\n    var k int32;\n    // start quantification arrays\n    *pvQuant0 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    *pvQuant1 = Vec_PtrAlloc( Vec_PtrSize(vSupps) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n    {\n        Vec_PtrPush( *pvQuant0, Vec_IntAlloc(16) );\n        Vec_PtrPush( *pvQuant1, Vec_IntAlloc(16) );\n    }\n    // count how many times each var appears\n    nVarsAll = Vec_IntSize( (Vec_Int_t *)Vec_PtrEntry(vSupps, 0) );\n    for  i = 0; i \u003c nVarsAll; i++  {\n        Counter = 0;\n        Vec_PtrForEachEntry( Vec_Int_t *, vSupps, vOne, k )\n            if Vec_IntEntry(vOne, i) {\n                iSupp = k;\n                Counter++;\n            }\n        if Counter == 0 {\n            continue; }\n        if Counter == 1 {\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, iSupp), i );\n        } else { // if ( Counter \u003e 1 )\n            Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, iSupp), i ); }\n    }\n\n    if fVerbose != 0 {\n    for  i = 0; i \u003c Vec_PtrSize(vSupps); i++  {\n        fmt.Printf(\"%2d : Quant0 = \", i);\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant0, i), Entry, k )\n            fmt.Printf(\"%d \", Entry);\n        fmt.Printf(\"\\n\");\n    } }\n\n    if fVerbose != 0 {\n    for  i = 0; i \u003c Vec_PtrSize(vSupps); i++  {\n        fmt.Printf(\"%2d : Quant1 = \", i);\n        Vec_IntForEachEntry( (Vec_Int_t *)Vec_PtrEntry(*pvQuant1, i), Entry, k )\n            fmt.Printf(\"%d \", Entry);\n        fmt.Printf(\"\\n\");\n    } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes one partition in a separate BDD manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgPartition(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t, TimeTarget abctime) *DdManager {\n    var vNodes, vRange *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var dd *DdManager;\n    var bBdd0, bBdd1, bProd, bRes, bTemp *DdNode;\n    var i int32;\n\n    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    dd.TimeStop = TimeTarget;\n\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );\n\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n//        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj-\u003epData );\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeTarget );  \n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );  \n        if pObj.pData == nil {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( (DdNode *)pObj.pData );\n    }\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    bRes   = Cudd_ReadOne(dd);   Cudd_Ref( bRes );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vRange, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        bProd = Cudd_bddXnor( dd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)), (DdNode *)pObj.pData );   Cudd_Ref( bProd );\n//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd ); Cudd_Ref( bRes );\n//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  \n        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  \n        if bRes == nil {\n            Cudd_Quit( dd );\n            Vec_PtrFree( vRange );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }        \n        Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n\n    Vec_PtrFree( vRange );\n    Vec_PtrFree( vNodes );\n    Cudd_AutodynDisable( dd );\n//    Cudd_RecursiveDeref( dd, bRes );\n//    Extra_StopManager( dd );\n    dd.bFunc = bRes;\n    dd.TimeStop = 0;\n    return dd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives positive cube composed of nodes IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgComputeCube(pAig *Aig_Man_t, vNodeIds *Vec_Int_t, dd *DdManager) *DdNode {\n    var bProd, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    bProd = Cudd_ReadOne(dd);   Cudd_Ref( bProd );\n    Aig_ManForEachObjVec( vNodeIds, pAig, pObj, i )\n    {\n        bProd  = Cudd_bddAnd( dd, bTemp = bProd, Cudd_bddIthVar(dd, Aig_ObjId(pObj)) ); Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bProd );\n    dd.TimeStop = TimeStop;\n    return bProd;\n} \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgQuantifyFirst(pAig *Aig_Man_t, vDdMans *Vec_Ptr_t, vQuant0 *Vec_Ptr_t, fVerbose int32) {\n    var dd *DdManager;\n    var bProd, bRes, bTemp *DdNode;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        // remember unquantified ones\n        assert(dd.bFunc2 == nil, \"dd.bFunc2 == nil\");\n        dd.bFunc2 = dd.bFunc;   Cudd_Ref( dd.bFunc2 );\n\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n\n        bRes = dd.bFunc;\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Part %2d : Init =%5d. \", i, Cudd_DagSize(bRes) ); }\n        bProd = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, i+1), dd );   Cudd_Ref( bProd );\n        bRes  = Cudd_bddExistAbstract( dd, bTemp = bRes, bProd );                          Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bProd );\n        dd.bFunc = bRes;\n\n        Cudd_AutodynDisable( dd );\n\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Quant =%5d. \", Cudd_DagSize(bRes) ); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Reo = %5d. \", Cudd_DagSize(bRes) ); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Reo = %5d.  \", Cudd_DagSize(bRes) ); }\n        if fVerbose != 0 { \n            Abc_Print( 1, \"Supp = %3d.  \", Cudd_SupportSize(dd, bRes) ); }\n        if fVerbose != 0 { \n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgQuantifyReset(vDdMans *Vec_Ptr_t) {\n    var dd *DdManager;\n    var i int32;\n    Vec_PtrForEachEntry( DdManager *, vDdMans, dd, i )\n    {\n        assert(dd.bFunc2 != nil, \"dd.bFunc2 != nil\");\n        Cudd_RecursiveDeref( dd, dd.bFunc );\n        dd.bFunc = dd.bFunc2;\n        dd.bFunc2 = nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes image of the initial set of states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ImgComputeImage(pAig *Aig_Man_t, vDdMans *Vec_Ptr_t, dd *DdManager, bInit *DdNode, vQuant0 *Vec_Ptr_t, vQuant1 *Vec_Ptr_t, vDriRefs *Vec_Int_t, TimeTarget abctime, fBackward int32, fReorder int32, fVerbose int32) *DdNode {\n//    int fCheckSupport = 0;\n    var ddPart *DdManager;\n    var bImage, bGroup, bCube, bTemp *DdNode;\n    var i int32;\n    var clk abctime;\n    var clk0 abctime = Abc_Clock();\n\n    bImage = bInit;  Cudd_Ref( bImage );\n    if fBackward != 0 {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n    // perform image computation\n    Vec_PtrForEachEntry( DdManager *, vDdMans, ddPart, i )\n    {\n        clk = Abc_Clock();\nif fVerbose != 0 {\nfmt.Printf(\"   %2d : \", i); }\n        // transfer the BDD from the group manager to the main manager\n        bGroup = Cudd_bddTransfer( ddPart, dd, ddPart.bFunc );                           \n        if bGroup == nil {\n            return nil; }\n        Cudd_Ref( bGroup );\nif fVerbose != 0 {\nfmt.Printf(\"Pt0 =%6d. Pt1 =%6d. \", Cudd_DagSize(ddPart.bFunc), Cudd_DagSize(bGroup)); }\n        // perform partial product\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant1, i+1), dd ); Cudd_Ref( bCube );\n//        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );                \n//        bImage = Extra_bddAndAbstractTime( dd, bTemp = bImage, bGroup, bCube, TimeTarget );  \n        bImage = Cudd_bddAndAbstract( dd, bTemp = bImage, bGroup, bCube );  \n        if bImage == nil {\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n            Cudd_RecursiveDeref( dd, bGroup );\n            return nil;\n        }\n        Cudd_Ref( bImage );\n\nif fVerbose != 0 {\nfmt.Printf(\"Im0 =%6d. Im1 =%6d. \", Cudd_DagSize(bTemp), Cudd_DagSize(bImage)); }\n//printf(\"\\n\"); Extra_bddPrintSupport(dd, bImage); printf(\"\\n\");\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n        Cudd_RecursiveDeref( dd, bGroup );\n\n//        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//        Abc_Print( 1, \"Reo =%6d.  \", Cudd_DagSize(bImage) );\n\nif fVerbose != 0 {\nfmt.Printf(\"Supp =%3d. \", Cudd_SupportSize(dd, bImage)); }\nif fVerbose != 0 {\nAbc_PrintTime( 1, \"T\", Abc_Clock() - clk ); }\n    }\n\n    if !(fBackward != 0) {\n        // change polarity\n        bCube  = Llb_DriverPhaseCube( pAig, vDriRefs, dd );                Cudd_Ref( bCube );\n        bImage = Extra_bddChangePolarity( dd, bTemp = bImage, bCube );     Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    \n    } else {\n        // quantify unique vriables\n        bCube  = Llb_ImgComputeCube( pAig, (Vec_Int_t *)Vec_PtrEntry(vQuant0, 0), dd ); Cudd_Ref( bCube );\n        bImage = Cudd_bddExistAbstract( dd, bTemp = bImage, bCube );                    Cudd_Ref( bImage );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bCube );\n    }\n\n    if fReorder != 0 {\n    if fVerbose != 0 {\n    Abc_Print( 1, \"        Reordering... Before =%5d. \", Cudd_DagSize(bImage) ); }\n    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n    if fVerbose != 0 {\n    Abc_Print( 1, \"After =%5d. \", Cudd_DagSize(bImage) ); }\n//    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n//    Abc_Print( 1, \"After =%5d.  \", Cudd_DagSize(bImage) );\n    if fVerbose != 0 {\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk0 ); }\n//    Abc_Print( 1, \"\\n\" );\n    }\n\n    Cudd_Deref( bImage );\n    return bImage;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

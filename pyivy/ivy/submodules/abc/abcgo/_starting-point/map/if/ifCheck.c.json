@@ -1,0 +1,336 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c",
+  "SHA256": "b8106dedaa1675efe7e41b9224b9909c9175c18570d83dd3fafb380409ea4a3d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 1745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pPath) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cof == 0 || Cof == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp.fMark == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 3913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k + 1 == If_CutLeaveNum(pCut) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 4992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"DecStr  = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct,   100.0*spStatic_If_ManCutCheck_nDecStruct/spStatic_If_ManCutCheck_nDecCalls );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 9,
+        "ByteOffset": 5155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"DecStr2 = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct2,  100.0*spStatic_If_ManCutCheck_nDecStruct2/spStatic_If_ManCutCheck_nDecCalls );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 9,
+        "ByteOffset": 5319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"DecFunc = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecFunction, 100.0*spStatic_If_ManCutCheck_nDecFunction/spStatic_If_ManCutCheck_nDecCalls );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 5484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total   = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecCalls,    100.0*spStatic_If_ManCutCheck_nDecCalls/spStatic_If_ManCutCheck_nDecCalls );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003c= 7 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 190,
+        "Column": 15,
+        "ByteOffset": 6531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTruths = malloc( sizeof(word) * If_ManObjNum(p) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( pTruths );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 30,
+        "Column": 1,
+        "ByteOffset": 785
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_ManCutReach_rec",
+      "Start": 1583,
+      "End": 1937,
+      "BodyStart": 1644,
+      "Original": "int If_ManCutReach_rec( If_Obj_t * pPath, If_Obj_t * pLeaf )\n{\n    if ( pPath == pLeaf )\n        return 1;\n    if ( pPath-\u003efMark )\n        return 0;\n    assert( If_ObjIsAnd(pPath) );\n    if ( If_ManCutReach_rec( If_ObjFanin0(pPath), pLeaf ) )\n        return 1;\n    if ( If_ManCutReach_rec( If_ObjFanin1(pPath), pLeaf ) )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_ManCutReach_rec(pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {\n    if pPath == pLeaf {\n        return 1; }\n    if pPath.fMark {\n        return 0; }\n    assert(If_ObjIsAnd(pPath), \"If_ObjIsAnd(pPath)\");\n    if If_ManCutReach_rec( If_ObjFanin0(pPath), pLeaf ) != 0 {\n        return 1; }\n    if If_ManCutReach_rec( If_ObjFanin1(pPath), pLeaf ) != 0 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_ManCutReach",
+      "Start": 1938,
+      "End": 2282,
+      "BodyStart": 2026,
+      "Original": "int If_ManCutReach( If_Man_t * p, If_Cut_t * pCut, If_Obj_t * pPath, If_Obj_t * pLeaf )\n{\n    If_Obj_t * pTemp;\n    int i, RetValue;\n    If_CutForEachLeaf( p, pCut, pTemp, i )\n        pTemp-\u003efMark = 1;\n    RetValue = If_ManCutReach_rec( pPath, pLeaf );\n    If_CutForEachLeaf( p, pCut, pTemp, i )\n        pTemp-\u003efMark = 0;\n    return RetValue;\n}",
+      "Draft": "func If_ManCutReach(p *If_Man_t, pCut *If_Cut_t, pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {\n    var pTemp *If_Obj_t;\n    var i, RetValue int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 1;\n    }\n    RetValue = If_ManCutReach_rec( pPath, pLeaf );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 0;\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "If_ManCutTruthCheck_rec",
+      "Start": 2555,
+      "End": 2966,
+      "BodyStart": 2618,
+      "Original": "int If_ManCutTruthCheck_rec( If_Obj_t * pObj, word * pTruths )\n{\n    word T0, T1;\n    if ( pObj-\u003efMark )\n        return pTruths[If_ObjId(pObj)];\n    assert( If_ObjIsAnd(pObj) );\n    T0 = If_ManCutTruthCheck_rec( If_ObjFanin0(pObj), pTruths );\n    T1 = If_ManCutTruthCheck_rec( If_ObjFanin1(pObj), pTruths );\n    T0 = If_ObjFaninC0(pObj) ? ~T0 : T0;\n    T1 = If_ObjFaninC1(pObj) ? ~T1 : T1;\n    return T0 \u0026 T1;\n}",
+      "Draft": "func If_ManCutTruthCheck_rec(pObj *If_Obj_t, pTruths *word) int32 {\n    var T0, T1 word;\n    if pObj.fMark {\n        return pTruths[If_ObjId(pObj)]; }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    T0 = If_ManCutTruthCheck_rec( If_ObjFanin0(pObj), pTruths );\n    T1 = If_ManCutTruthCheck_rec( If_ObjFanin1(pObj), pTruths );\n    if If_ObjFaninC0(pObj) {\n        T0 = ~T0;\n    } else {\n        T0 = T0;\n    }\n    if If_ObjFaninC1(pObj) {\n        T1 = ~T1;\n    } else {\n        T1 = T1;\n    }\n    return T0 \u0026 T1;\n}"
+    },
+    {
+      "Name": "If_ManCutTruthCheck",
+      "Start": 2967,
+      "End": 3698,
+      "BodyStart": 3084,
+      "Original": "int If_ManCutTruthCheck( If_Man_t * p, If_Obj_t * pObj, If_Cut_t * pCut, If_Obj_t * pLeaf, int Cof, word * pTruths )\n{\n    word Truth;\n    If_Obj_t * pTemp;\n    int i, k = 0;\n    assert( Cof == 0 || Cof == 1 );\n    If_CutForEachLeaf( p, pCut, pTemp, i )\n    {\n        assert( pTemp-\u003efMark == 0 );\n        pTemp-\u003efMark = 1;\n        if ( pLeaf == pTemp )\n            pTruths[If_ObjId(pTemp)] = (Cof ? ~((word)0) : 0);\n        else\n            pTruths[If_ObjId(pTemp)] = Truths6[k++] ;\n    }\n    assert( k + 1 == If_CutLeaveNum(pCut) );\n    // compute truth table\n    Truth = If_ManCutTruthCheck_rec( pObj, pTruths );\n    If_CutForEachLeaf( p, pCut, pTemp, i )\n        pTemp-\u003efMark = 0;\n    return Truth == 0 || Truth == ~((word)0);\n}",
+      "Draft": "func If_ManCutTruthCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t, pLeaf *If_Obj_t, Cof int32, pTruths *word) int32 {\n    var Truth word;\n    var pTemp *If_Obj_t;\n    var i, k int32;\n    assert(Cof == 0 || Cof == 1, \"Cof == 0 || Cof == 1\");\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pTemp.fMark == 0, \"pTemp.fMark == 0\");\n        pTemp.fMark = 1;\n        if pLeaf == pTemp {\n            pTruths[If_ObjId(pTemp)] = (Cof ? ~((word)0) : 0);\n        } else {\n            pTruths[If_ObjId(pTemp)] = Truths6[k++] ; }\n    }\n    assert(k + 1 == If_CutLeaveNum(pCut), \"k + 1 == If_CutLeaveNum(pCut)\");\n    // compute truth table\n    Truth = If_ManCutTruthCheck_rec( pObj, pTruths );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 0;\n    }\n    return Truth == 0 || Truth == ~((word)0);\n}"
+    },
+    {
+      "Name": "If_ManCutCheck",
+      "Start": 4051,
+      "End": 5771,
+      "BodyStart": 4121,
+      "Original": "void If_ManCutCheck( If_Man_t * p, If_Obj_t * pObj, If_Cut_t * pCut )\n{\n    static int nDecCalls    = 0;\n    static int nDecStruct   = 0;\n    static int nDecStruct2  = 0;\n    static int nDecFunction = 0;\n    word * pTruths;\n    If_Obj_t * pLeaf, * pPath;\n    int i;\n    if ( pCut == NULL )\n    {\n        printf( \"DecStr  = %9d (%6.2f %%).\\n\", nDecStruct,   100.0*nDecStruct/nDecCalls );\n        printf( \"DecStr2 = %9d (%6.2f %%).\\n\", nDecStruct2,  100.0*nDecStruct2/nDecCalls );\n        printf( \"DecFunc = %9d (%6.2f %%).\\n\", nDecFunction, 100.0*nDecFunction/nDecCalls );\n        printf( \"Total   = %9d (%6.2f %%).\\n\", nDecCalls,    100.0*nDecCalls/nDecCalls );\n        return;\n    }\n    assert( If_ObjIsAnd(pObj) );\n    assert( pCut-\u003enLeaves \u003c= 7 );\n    nDecCalls++;\n    // check structural decomposition\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        if ( pLeaf == If_ObjFanin0(pObj) || pLeaf == If_ObjFanin1(pObj) )\n            break;\n    if ( i \u003c If_CutLeaveNum(pCut) )\n    {\n        pPath = (pLeaf == If_ObjFanin0(pObj)) ? If_ObjFanin1(pObj) : If_ObjFanin0(pObj);\n        if ( !If_ManCutReach( p, pCut, pPath, pLeaf ) )\n        {\n            nDecStruct++;\n//            nDecFunction++;\n//            return;\n        }\n        else\n            nDecStruct2++;\n    }\n    // check functional decomposition\n    pTruths = malloc( sizeof(word) * If_ManObjNum(p) );\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n    {\n        if ( If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 0, pTruths ) )\n        {\n            nDecFunction++;\n            break;\n        }\n        if ( If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 1, pTruths ) )\n        {\n            nDecFunction++;\n            break;\n        }\n    }\n    free( pTruths );\n}",
+      "Draft": "func If_ManCutCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) {\n    \n    \n    \n    \n    var pTruths *word;\n    var pLeaf, pPath *If_Obj_t;\n    var i int32;\n    if pCut == nil {\n        fmt.Printf(\"DecStr  = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct, 100.0*spStatic_If_ManCutCheck_nDecStruct/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"DecStr2 = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct2, 100.0*spStatic_If_ManCutCheck_nDecStruct2/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"DecFunc = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecFunction, 100.0*spStatic_If_ManCutCheck_nDecFunction/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"Total   = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecCalls, 100.0*spStatic_If_ManCutCheck_nDecCalls/spStatic_If_ManCutCheck_nDecCalls);\n        return;\n    }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pCut.nLeaves \u003c= 7, \"pCut.nLeaves \u003c= 7\");\n    spStatic_If_ManCutCheck_nDecCalls++;\n    // check structural decomposition\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf == If_ObjFanin0(pObj) || pLeaf == If_ObjFanin1(pObj) {\n            break; }\n    }\n    if i \u003c If_CutLeaveNum(pCut) {\n        if pLeaf == If_ObjFanin0(pObj) {\n            pPath = If_ObjFanin1(pObj);\n        } else {\n            pPath = If_ObjFanin0(pObj);\n        }\n        if !(If_ManCutReach( p, pCut, pPath, pLeaf ) != 0) {\n            spStatic_If_ManCutCheck_nDecStruct++;\n//            nDecFunction++;\n//            return;\n        \n        } else {\n            spStatic_If_ManCutCheck_nDecStruct2++; }\n    }\n    // check functional decomposition\n    pTruths = malloc( sizeof(word) * If_ManObjNum(p) );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 0, pTruths ) != 0 {\n            spStatic_If_ManCutCheck_nDecFunction++;\n            break;\n        }\n        if If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 1, pTruths ) != 0 {\n            spStatic_If_ManCutCheck_nDecFunction++;\n            break;\n        }\n    }\n    free( pTruths );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::mechanical::static::4548",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4127,
+      "End": 4133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::mechanical::static::4581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4160,
+      "End": 4166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::mechanical::static::4614",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4193,
+      "End": 4199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::mechanical::static::4647",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4226,
+      "End": 4232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::mechanical::sizeof::5914",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5384,
+      "End": 5390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::If_ManCutReach_rec",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutReach_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1583,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::If_ManCutReach",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutReach",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1938,
+      "End": 2282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::If_ManCutTruthCheck_rec",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutTruthCheck_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2555,
+      "End": 2966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::ternary::If_ManCutTruthCheck",
+      "Category": "ternary-review",
+      "Symbol": "If_ManCutTruthCheck",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2967,
+      "End": 3698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::If_ManCutTruthCheck",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutTruthCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2967,
+      "End": 3698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::If_ManCutCheck",
+      "Category": "semantic-review",
+      "Symbol": "If_ManCutCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4051,
+      "End": 5771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCheck.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 785,
+      "End": 874
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Sequential mapping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCheck.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef WIN32\ntypedef unsigned __int64 word;\n#else\ntypedef unsigned long long word;\n#endif\n\n// elementary truth tables\nvar Truths6 [6]word = [6]word{\n    0xAAAAAAAAAAAAAAAA,\n    0xCCCCCCCCCCCCCCCC,\n    0xF0F0F0F0F0F0F0F0,\n    0xFF00FF00FF00FF00,\n    0xFFFF0000FFFF0000,\n    0xFFFFFFFF00000000,\n};\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node Leaf is reachable on the path.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCutReach_rec(pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {\n    if pPath == pLeaf {\n        return 1; }\n    if pPath.fMark {\n        return 0; }\n    assert(If_ObjIsAnd(pPath), \"If_ObjIsAnd(pPath)\");\n    if If_ManCutReach_rec( If_ObjFanin0(pPath), pLeaf ) != 0 {\n        return 1; }\n    if If_ManCutReach_rec( If_ObjFanin1(pPath), pLeaf ) != 0 {\n        return 1; }\n    return 0;\n}\nfunc If_ManCutReach(p *If_Man_t, pCut *If_Cut_t, pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {\n    var pTemp *If_Obj_t;\n    var i, RetValue int32;\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 1;\n    }\n    RetValue = If_ManCutReach_rec( pPath, pLeaf );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 0;\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive truth table for each cofactor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_ManCutTruthCheck_rec(pObj *If_Obj_t, pTruths *word) int32 {\n    var T0, T1 word;\n    if pObj.fMark {\n        return pTruths[If_ObjId(pObj)]; }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    T0 = If_ManCutTruthCheck_rec( If_ObjFanin0(pObj), pTruths );\n    T1 = If_ManCutTruthCheck_rec( If_ObjFanin1(pObj), pTruths );\n    if If_ObjFaninC0(pObj) {\n        T0 = ~T0;\n    } else {\n        T0 = T0;\n    }\n    if If_ObjFaninC1(pObj) {\n        T1 = ~T1;\n    } else {\n        T1 = T1;\n    }\n    return T0 \u0026 T1;\n}\nfunc If_ManCutTruthCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t, pLeaf *If_Obj_t, Cof int32, pTruths *word) int32 {\n    var Truth word;\n    var pTemp *If_Obj_t;\n    var i, k int32;\n    assert(Cof == 0 || Cof == 1, \"Cof == 0 || Cof == 1\");\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        assert(pTemp.fMark == 0, \"pTemp.fMark == 0\");\n        pTemp.fMark = 1;\n        if pLeaf == pTemp {\n            pTruths[If_ObjId(pTemp)] = (Cof ? ~((word)0) : 0);\n        } else {\n            pTruths[If_ObjId(pTemp)] = Truths6[k++] ; }\n    }\n    assert(k + 1 == If_CutLeaveNum(pCut), \"k + 1 == If_CutLeaveNum(pCut)\");\n    // compute truth table\n    Truth = If_ManCutTruthCheck_rec( pObj, pTruths );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pTemp) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        pTemp.fMark = 0;\n    }\n    return Truth == 0 || Truth == ~((word)0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if cut can be structurally/functionally decomposed.]\n\n  Description [The decomposition is Fn(a,b,c,...) = F2(a, Fn-1(b,c,...)).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_If_ManCutCheck_nDecCalls int32;\nvar spStatic_If_ManCutCheck_nDecStruct int32;\nvar spStatic_If_ManCutCheck_nDecStruct2 int32;\nvar spStatic_If_ManCutCheck_nDecFunction int32;\nfunc If_ManCutCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) {\n    \n    \n    \n    \n    var pTruths *word;\n    var pLeaf, pPath *If_Obj_t;\n    var i int32;\n    if pCut == nil {\n        fmt.Printf(\"DecStr  = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct, 100.0*spStatic_If_ManCutCheck_nDecStruct/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"DecStr2 = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecStruct2, 100.0*spStatic_If_ManCutCheck_nDecStruct2/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"DecFunc = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecFunction, 100.0*spStatic_If_ManCutCheck_nDecFunction/spStatic_If_ManCutCheck_nDecCalls);\n        fmt.Printf(\"Total   = %9d (%6.2f %%).\\n\", spStatic_If_ManCutCheck_nDecCalls, 100.0*spStatic_If_ManCutCheck_nDecCalls/spStatic_If_ManCutCheck_nDecCalls);\n        return;\n    }\n    assert(If_ObjIsAnd(pObj), \"If_ObjIsAnd(pObj)\");\n    assert(pCut.nLeaves \u003c= 7, \"pCut.nLeaves \u003c= 7\");\n    spStatic_If_ManCutCheck_nDecCalls++;\n    // check structural decomposition\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if pLeaf == If_ObjFanin0(pObj) || pLeaf == If_ObjFanin1(pObj) {\n            break; }\n    }\n    if i \u003c If_CutLeaveNum(pCut) {\n        if pLeaf == If_ObjFanin0(pObj) {\n            pPath = If_ObjFanin1(pObj);\n        } else {\n            pPath = If_ObjFanin0(pObj);\n        }\n        if !(If_ManCutReach( p, pCut, pPath, pLeaf ) != 0) {\n            spStatic_If_ManCutCheck_nDecStruct++;\n//            nDecFunction++;\n//            return;\n        \n        } else {\n            spStatic_If_ManCutCheck_nDecStruct2++; }\n    }\n    // check functional decomposition\n    pTruths = malloc( sizeof(word) * If_ManObjNum(p) );\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(p, (pCut).pLeaves[i])); i++  {\n        if If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 0, pTruths ) != 0 {\n            spStatic_If_ManCutCheck_nDecFunction++;\n            break;\n        }\n        if If_ManCutTruthCheck( p, pObj, pCut, pLeaf, 1, pTruths ) != 0 {\n            spStatic_If_ManCutCheck_nDecFunction++;\n            break;\n        }\n    }\n    free( pTruths );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

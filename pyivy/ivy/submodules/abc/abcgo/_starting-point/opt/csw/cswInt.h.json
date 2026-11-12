@@ -1,0 +1,331 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h",
+  "SHA256": "b884574ed04cd468461569021703a0a9991c5ce1a3326238d99c70e0006ed12d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 69,
+        "ByteOffset": 4964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Csw_ObjChild0Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 69,
+        "ByteOffset": 5206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Csw_ObjChild1Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Csw_CutLeaveNum",
+      "Start": 3970,
+      "End": 4101,
+      "BodyStart": 4042,
+      "Original": "static inline int          Csw_CutLeaveNum( Csw_Cut_t * pCut )          { return pCut-\u003enFanins;                                   }",
+      "Draft": "func Csw_CutLeaveNum(pCut *Csw_Cut_t) int32 { return pCut.nFanins;                                   }"
+    },
+    {
+      "Name": "Csw_CutLeaves",
+      "Start": 4102,
+      "End": 4233,
+      "BodyStart": 4174,
+      "Original": "static inline int *        Csw_CutLeaves( Csw_Cut_t * pCut )            { return pCut-\u003epFanins;                                   }",
+      "Draft": "func Csw_CutLeaves(pCut *Csw_Cut_t) *int32 { return pCut.pFanins;                                   }"
+    },
+    {
+      "Name": "Csw_CutTruth",
+      "Start": 4234,
+      "End": 4365,
+      "BodyStart": 4306,
+      "Original": "static inline unsigned *   Csw_CutTruth( Csw_Cut_t * pCut )             { return (unsigned *)(pCut-\u003epFanins + pCut-\u003enLeafMax);    }",
+      "Draft": "func Csw_CutTruth(pCut *Csw_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nLeafMax);    }"
+    },
+    {
+      "Name": "Csw_CutNext",
+      "Start": 4366,
+      "End": 4497,
+      "BodyStart": 4438,
+      "Original": "static inline Csw_Cut_t *  Csw_CutNext( Csw_Cut_t * pCut )              { return (Csw_Cut_t *)(((char *)pCut) + pCut-\u003enCutSize);  }",
+      "Draft": "func Csw_CutNext(pCut *Csw_Cut_t) *Csw_Cut_t { return (Csw_Cut_t *)(((char *)pCut) + pCut.nCutSize);  }"
+    },
+    {
+      "Name": "Csw_ObjRefs",
+      "Start": 4499,
+      "End": 4630,
+      "BodyStart": 4597,
+      "Original": "static inline int          Csw_ObjRefs( Csw_Man_t * p, Aig_Obj_t * pObj )                         { return p-\u003epnRefs[pObj-\u003eId];   }",
+      "Draft": "func Csw_ObjRefs(p *Csw_Man_t, pObj *Aig_Obj_t) int32 { return p.pnRefs[pObj.Id];   }"
+    },
+    {
+      "Name": "Csw_ObjAddRefs",
+      "Start": 4631,
+      "End": 4762,
+      "BodyStart": 4729,
+      "Original": "static inline void         Csw_ObjAddRefs( Csw_Man_t * p, Aig_Obj_t * pObj, int nRefs )           { p-\u003epnRefs[pObj-\u003eId] += nRefs; }",
+      "Draft": "func Csw_ObjAddRefs(p *Csw_Man_t, pObj *Aig_Obj_t, nRefs int32) { p.pnRefs[pObj.Id] += nRefs; }"
+    },
+    {
+      "Name": "Csw_ObjCuts",
+      "Start": 4764,
+      "End": 4895,
+      "BodyStart": 4862,
+      "Original": "static inline Csw_Cut_t *  Csw_ObjCuts( Csw_Man_t * p, Aig_Obj_t * pObj )                         { return p-\u003epCuts[pObj-\u003eId];    }",
+      "Draft": "func Csw_ObjCuts(p *Csw_Man_t, pObj *Aig_Obj_t) *Csw_Cut_t { return p.pCuts[pObj.Id];    }"
+    },
+    {
+      "Name": "Csw_ObjSetCuts",
+      "Start": 4896,
+      "End": 5027,
+      "BodyStart": 4994,
+      "Original": "static inline void         Csw_ObjSetCuts( Csw_Man_t * p, Aig_Obj_t * pObj, Csw_Cut_t * pCuts )   { p-\u003epCuts[pObj-\u003eId] = pCuts;   }",
+      "Draft": "func Csw_ObjSetCuts(p *Csw_Man_t, pObj *Aig_Obj_t, pCuts *Csw_Cut_t) { p.pCuts[pObj.Id] = pCuts;   }"
+    },
+    {
+      "Name": "Csw_ObjEquiv",
+      "Start": 5029,
+      "End": 5160,
+      "BodyStart": 5127,
+      "Original": "static inline Aig_Obj_t *  Csw_ObjEquiv( Csw_Man_t * p, Aig_Obj_t * pObj )                        { return p-\u003epEquiv[pObj-\u003eId];   }",
+      "Draft": "func Csw_ObjEquiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return p.pEquiv[pObj.Id];   }"
+    },
+    {
+      "Name": "Csw_ObjSetEquiv",
+      "Start": 5161,
+      "End": 5292,
+      "BodyStart": 5259,
+      "Original": "static inline void         Csw_ObjSetEquiv( Csw_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pEquiv ) { p-\u003epEquiv[pObj-\u003eId] = pEquiv; }",
+      "Draft": "func Csw_ObjSetEquiv(p *Csw_Man_t, pObj *Aig_Obj_t, pEquiv *Aig_Obj_t) { p.pEquiv[pObj.Id] = pEquiv; }"
+    },
+    {
+      "Name": "Csw_ObjChild0Equiv",
+      "Start": 5294,
+      "End": 5522,
+      "BodyStart": 5375,
+      "Original": "static inline Aig_Obj_t *  Csw_ObjChild0Equiv( Csw_Man_t * p, Aig_Obj_t * pObj ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Csw_ObjChild0Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Csw_ObjChild1Equiv",
+      "Start": 5523,
+      "End": 5751,
+      "BodyStart": 5604,
+      "Original": "static inline Aig_Obj_t *  Csw_ObjChild1Equiv( Csw_Man_t * p, Aig_Obj_t * pObj ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Csw_ObjChild1Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::struct::Csw_Cut_t::// the current number of fanins\n    int             pFanins[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Csw_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2075,
+      "End": 2147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::struct::Csw_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Csw_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1476,
+      "End": 2199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::struct::Csw_Man_t_::// memory manager for cuts\n    unsigned *      puTemp[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Csw_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3248,
+      "End": 3313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::struct::Csw_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Csw_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2232,
+      "End": 3968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::pointer-cast::4315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4315,
+      "End": 4327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::pointer-cast::4447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4447,
+      "End": 4460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::pointer-cast::4462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4462,
+      "End": 4470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::macro::Csw_ObjForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Csw_ObjForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6227,
+      "End": 6396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::macro::Csw_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Csw_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6432,
+      "End": 6605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_CutLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3970,
+      "End": 4101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_CutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4102,
+      "End": 4233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4234,
+      "End": 4365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_CutNext",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4366,
+      "End": 4497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjRefs",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4499,
+      "End": 4630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjAddRefs",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjAddRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4631,
+      "End": 4762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjCuts",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4764,
+      "End": 4895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjSetCuts",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjSetCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4896,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5029,
+      "End": 5160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjSetEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjSetEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5161,
+      "End": 5292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjChild0Equiv",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjChild0Equiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5294,
+      "End": 5522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::Csw_ObjChild1Equiv",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjChild1Equiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5523,
+      "End": 5751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7843
+    }
+  ],
+  "Draft": "package csw\n\n/**CFile****************************************************************\n\n  FileName    [cswInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Cut sweeping.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 11, 2007.]\n\n  Revision    [$Id: cswInt.h,v 1.00 2007/07/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/dar.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"csw.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Csw_Man_t =            Csw_Man_t_;\n              \n\n// the cut used to represent node in the AIG\ntype Csw_Cut_t struct {\n    pNext      *Csw_Cut_t;           // the next cut in the table \n    Cost             int32;            // the cost of the cut\n//    float           Cost;            // the cost of the cut\n    uSign        uint32;           // cut signature\n    iNode             int32;           // the node, for which it is the cut\n    nCutSize           int16;        // the number of bytes in the cut\n    nLeafMax            byte;        // the maximum number of fanins\n    nFanins            byte;         // the current number of fanins\n    pFanins [0]int32;      // the fanins (followed by the truth table)\n}\n\n// the CNF computation manager\ntype Csw_Man_t_ struct {\n    // AIG manager\n    pManAig      *Aig_Man_t;         // the input AIG manager\n    pManRes      *Aig_Man_t;         // the output AIG manager\n    pEquiv     **Aig_Obj_t;          // the equivalent nodes in the resulting manager\n    pCuts     **Csw_Cut_t;           // the cuts for each node in the output manager\n    pnRefs            *int32;          // the number of references of each new node\n    // hash table for cuts\n    pTable     **Csw_Cut_t;          // the table composed of cuts \n    nTableSize             int32;      // the size of hash table\n    // parameters\n    nCutsMax             int32;        // the max number of cuts at the node\n    nLeafMax             int32;        // the max number of leaves of a cut\n    fVerbose             int32;        // enables verbose output\n    // internal variables\n    nCutSize             int32;        // the number of bytes needed to store one cut\n    nTruthWords             int32;     // the number of truth table words\n    pMemCuts  *Aig_MmFixed_t;        // memory manager for cuts\n    puTemp [4]*uint32;       // used for the truth table computation\n    // statistics\n    nNodesTriv0             int32;     // the number of trivial nodes\n    nNodesTriv1             int32;     // the number of trivial nodes\n    nNodesTriv2             int32;     // the number of trivial nodes\n    nNodesCuts             int32;      // the number of rewritten nodes\n    nNodesTried             int32;     // the number of nodes tried\n    timeCuts         abctime;        // time to compute the cut and its truth table\n    timeHash         abctime;        // time for hashing cuts\n    timeOther         abctime;       // other time\n    timeTotal         abctime;       // total time\n}\n\nfunc Csw_CutLeaveNum(pCut *Csw_Cut_t) int32 { return pCut.nFanins;                                   }\nfunc Csw_CutLeaves(pCut *Csw_Cut_t) *int32 { return pCut.pFanins;                                   }\nfunc Csw_CutTruth(pCut *Csw_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nLeafMax);    }\nfunc Csw_CutNext(pCut *Csw_Cut_t) *Csw_Cut_t { return (Csw_Cut_t *)(((char *)pCut) + pCut.nCutSize);  }\n\nfunc Csw_ObjRefs(p *Csw_Man_t, pObj *Aig_Obj_t) int32 { return p.pnRefs[pObj.Id];   }\nfunc Csw_ObjAddRefs(p *Csw_Man_t, pObj *Aig_Obj_t, nRefs int32) { p.pnRefs[pObj.Id] += nRefs; }\n\nfunc Csw_ObjCuts(p *Csw_Man_t, pObj *Aig_Obj_t) *Csw_Cut_t { return p.pCuts[pObj.Id];    }\nfunc Csw_ObjSetCuts(p *Csw_Man_t, pObj *Aig_Obj_t, pCuts *Csw_Cut_t) { p.pCuts[pObj.Id] = pCuts;   }\n\nfunc Csw_ObjEquiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return p.pEquiv[pObj.Id];   }\nfunc Csw_ObjSetEquiv(p *Csw_Man_t, pObj *Aig_Obj_t, pEquiv *Aig_Obj_t) { p.pEquiv[pObj.Id] = pEquiv; }\n\nfunc Csw_ObjChild0Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Csw_ObjChild1Equiv(p *Csw_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Csw_ObjEquiv(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                           ITERATORS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over cuts of the node\n// Original macro:\n// #define Csw_ObjForEachCut( p, pObj, pCut, i )                           \\\n//     for ( i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p-\u003enCutsMax; i++, pCut = Csw_CutNext(pCut) ) \n\n// iterator over leaves of the cut\n// Original macro:\n// #define Csw_CutForEachLeaf( p, pCut, pLeaf, i )                         \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enFanins) \u0026\u0026 ((pLeaf) = Aig_ManObj(p, (pCut)-\u003epFanins[i])); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cnfCut.c ========================================================*/\n// extern Csw_Cut_t *    Csw_ObjPrepareCuts( Csw_Man_t * p, Aig_Obj_t * pObj, int fTriv );\n\n// extern Aig_Obj_t *    Csw_ObjSweep( Csw_Man_t * p, Aig_Obj_t * pObj, int fTriv );\n\n/*=== cnfMan.c ========================================================*/\n// extern Csw_Man_t *    Csw_ManStart( Aig_Man_t * pMan, int nCutsMax, int nLeafMax, int fVerbose );\n\n// extern void           Csw_ManStop( Csw_Man_t * p );\n\n/*=== cnfTable.c ========================================================*/\n// extern int            Csw_TableCountCuts( Csw_Man_t * p );\n\n// extern void           Csw_TableCutInsert( Csw_Man_t * p, Csw_Cut_t * pCut );\n\n// extern Aig_Obj_t *    Csw_TableCutLookup( Csw_Man_t * p, Csw_Cut_t * pCut );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

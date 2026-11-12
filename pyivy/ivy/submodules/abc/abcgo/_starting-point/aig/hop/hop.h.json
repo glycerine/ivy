@@ -1,0 +1,1710 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h",
+  "SHA256": "ee11ca22af83ad853386f03296183b16a58f984b6445c218d0c16ec7dbe8044a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 47,
+        "ByteOffset": 7633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjIsConst1(pObj *Hop_Obj_t) int32 { assert(!Hop_IsComplement(pObj)); return pObj.Type == AIG_CONST1; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 38,
+        "ByteOffset": 9579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjDeref(pObj *Hop_Obj_t) { assert( pObj.nRefs \u003e 0 ); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 54,
+        "ByteOffset": 10341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjChild0Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert( !Hop_IsComplement(pObj) ); if Hop_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 54,
+        "ByteOffset": 10570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjChild1Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert( !Hop_IsComplement(pObj) ); if Hop_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 50,
+        "ByteOffset": 10795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjChild0CopyI(pObj *Hop_Obj_t) int32 { assert( !Hop_IsComplement(pObj) ); if Hop_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 50,
+        "ByteOffset": 11021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjChild1CopyI(pObj *Hop_Obj_t) int32 { assert( !Hop_IsComplement(pObj) ); if Hop_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 235,
+        "Column": 38,
+        "ByteOffset": 11630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Hop_ObjClean(pObj *Hop_Obj_t) { memset( pObj, 0, sizeof(Hop_Obj_t) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 11845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 12084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 12275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type != AIG_AND || !Hop_ObjIsConst1(Hop_Regular(p0)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 12343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p1 == nil || !Hop_ObjIsConst1(Hop_Regular(p1)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 12405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 12971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pTemp, 0, sizeof(Hop_Obj_t) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 13036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.nCreated == Vec_PtrSize(p.vObjs) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_BitWordNum",
+      "Start": 4301,
+      "End": 4418,
+      "BodyStart": 4367,
+      "Original": "static inline int          Hop_BitWordNum( int nBits )            { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }",
+      "Draft": "func Hop_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }"
+    },
+    {
+      "Name": "Hop_TruthWordNum",
+      "Start": 4419,
+      "End": 4536,
+      "BodyStart": 4485,
+      "Original": "static inline int          Hop_TruthWordNum( int nVars )          { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5));     }",
+      "Draft": "func Hop_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}     }"
+    },
+    {
+      "Name": "Hop_InfoHasBit",
+      "Start": 4537,
+      "End": 4654,
+      "BodyStart": 4603,
+      "Original": "static inline int          Hop_InfoHasBit( unsigned * p, int i )  { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }",
+      "Draft": "func Hop_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }"
+    },
+    {
+      "Name": "Hop_InfoSetBit",
+      "Start": 4655,
+      "End": 4772,
+      "BodyStart": 4721,
+      "Original": "static inline void         Hop_InfoSetBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }",
+      "Draft": "func Hop_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }"
+    },
+    {
+      "Name": "Hop_InfoXorBit",
+      "Start": 4773,
+      "End": 4890,
+      "BodyStart": 4839,
+      "Original": "static inline void         Hop_InfoXorBit( unsigned * p, int i )  { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }",
+      "Draft": "func Hop_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }"
+    },
+    {
+      "Name": "Hop_Base2Log",
+      "Start": 4891,
+      "End": 5040,
+      "BodyStart": 4957,
+      "Original": "static inline int          Hop_Base2Log( unsigned n )             { int r; if ( n \u003c 2 ) return n; for ( r = 0, n--; n; n \u003e\u003e= 1, r++ ) {}; return r; }",
+      "Draft": "func Hop_Base2Log(n uint32) int32 { var r int32; if n \u003c 2 { return n; }\n for  r, n = 0, n-1; (n != 0); n \u003e\u003e= 1, r++  {}; return r; }"
+    },
+    {
+      "Name": "Hop_Base10Log",
+      "Start": 5041,
+      "End": 5190,
+      "BodyStart": 5107,
+      "Original": "static inline int          Hop_Base10Log( unsigned n )            { int r; if ( n \u003c 2 ) return n; for ( r = 0, n--; n; n /= 10, r++ ) {}; return r; }",
+      "Draft": "func Hop_Base10Log(n uint32) int32 { var r int32; if n \u003c 2 { return n; }\n for  r, n = 0, n-1; (n != 0); n /= 10, r++  {}; return r; }"
+    },
+    {
+      "Name": "Hop_Regular",
+      "Start": 5192,
+      "End": 5309,
+      "BodyStart": 5258,
+      "Original": "static inline Hop_Obj_t *  Hop_Regular( Hop_Obj_t * p )           { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }",
+      "Draft": "func Hop_Regular(p *Hop_Obj_t) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }"
+    },
+    {
+      "Name": "Hop_Not",
+      "Start": 5310,
+      "End": 5427,
+      "BodyStart": 5376,
+      "Original": "static inline Hop_Obj_t *  Hop_Not( Hop_Obj_t * p )               { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }",
+      "Draft": "func Hop_Not(p *Hop_Obj_t) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }"
+    },
+    {
+      "Name": "Hop_NotCond",
+      "Start": 5428,
+      "End": 5545,
+      "BodyStart": 5494,
+      "Original": "static inline Hop_Obj_t *  Hop_NotCond( Hop_Obj_t * p, int c )    { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }",
+      "Draft": "func Hop_NotCond(p *Hop_Obj_t, c int32) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }"
+    },
+    {
+      "Name": "Hop_IsComplement",
+      "Start": 5546,
+      "End": 5663,
+      "BodyStart": 5612,
+      "Original": "static inline int          Hop_IsComplement( Hop_Obj_t * p )      { return (int)((ABC_PTRUINT_T)(p) \u0026 01);          }",
+      "Draft": "func Hop_IsComplement(p *Hop_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));          }"
+    },
+    {
+      "Name": "Hop_ManConst0",
+      "Start": 5665,
+      "End": 5782,
+      "BodyStart": 5731,
+      "Original": "static inline Hop_Obj_t *  Hop_ManConst0( Hop_Man_t * p )         { return Hop_Not(p-\u003epConst1);                     }",
+      "Draft": "func Hop_ManConst0(p *Hop_Man_t) *Hop_Obj_t { return Hop_Not(p.pConst1);                     }"
+    },
+    {
+      "Name": "Hop_ManConst1",
+      "Start": 5783,
+      "End": 5900,
+      "BodyStart": 5849,
+      "Original": "static inline Hop_Obj_t *  Hop_ManConst1( Hop_Man_t * p )         { return p-\u003epConst1;                              }",
+      "Draft": "func Hop_ManConst1(p *Hop_Man_t) *Hop_Obj_t { return p.pConst1;                              }"
+    },
+    {
+      "Name": "Hop_ManGhost",
+      "Start": 5901,
+      "End": 6018,
+      "BodyStart": 5967,
+      "Original": "static inline Hop_Obj_t *  Hop_ManGhost( Hop_Man_t * p )          { return \u0026p-\u003eGhost;                               }",
+      "Draft": "func Hop_ManGhost(p *Hop_Man_t) *Hop_Obj_t { return \u0026p.Ghost;                               }"
+    },
+    {
+      "Name": "Hop_ManPi",
+      "Start": 6019,
+      "End": 6136,
+      "BodyStart": 6085,
+      "Original": "static inline Hop_Obj_t *  Hop_ManPi( Hop_Man_t * p, int i )      { return (Hop_Obj_t *)Vec_PtrEntry(p-\u003evPis, i);   }",
+      "Draft": "func Hop_ManPi(p *Hop_Man_t, i int32) *Hop_Obj_t { return (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i);   }"
+    },
+    {
+      "Name": "Hop_ManPo",
+      "Start": 6137,
+      "End": 6254,
+      "BodyStart": 6203,
+      "Original": "static inline Hop_Obj_t *  Hop_ManPo( Hop_Man_t * p, int i )      { return (Hop_Obj_t *)Vec_PtrEntry(p-\u003evPos, i);   }",
+      "Draft": "func Hop_ManPo(p *Hop_Man_t, i int32) *Hop_Obj_t { return (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i);   }"
+    },
+    {
+      "Name": "Hop_ManObj",
+      "Start": 6255,
+      "End": 6390,
+      "BodyStart": 6321,
+      "Original": "static inline Hop_Obj_t *  Hop_ManObj( Hop_Man_t * p, int i )     { return p-\u003evObjs ? (Hop_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i) : NULL;  }",
+      "Draft": "func Hop_ManObj(p *Hop_Man_t, i int32) *Hop_Obj_t { if p.vObjs {\n    return (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i);\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Hop_EdgeCreate",
+      "Start": 6392,
+      "End": 6509,
+      "BodyStart": 6467,
+      "Original": "static inline Hop_Edge_t   Hop_EdgeCreate( int Id, int fCompl )            { return (Id \u003c\u003c 1) | fCompl;             }",
+      "Draft": "func Hop_EdgeCreate(Id int32, fCompl int32) Hop_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }"
+    },
+    {
+      "Name": "Hop_EdgeId",
+      "Start": 6510,
+      "End": 6627,
+      "BodyStart": 6585,
+      "Original": "static inline int          Hop_EdgeId( Hop_Edge_t Edge )                   { return Edge \u003e\u003e 1;                      }",
+      "Draft": "func Hop_EdgeId(Edge Hop_Edge_t) int32 { return Edge \u003e\u003e 1;                      }"
+    },
+    {
+      "Name": "Hop_EdgeIsComplement",
+      "Start": 6628,
+      "End": 6745,
+      "BodyStart": 6703,
+      "Original": "static inline int          Hop_EdgeIsComplement( Hop_Edge_t Edge )         { return Edge \u0026 1;                       }",
+      "Draft": "func Hop_EdgeIsComplement(Edge Hop_Edge_t) int32 { return Edge \u0026 1;                       }"
+    },
+    {
+      "Name": "Hop_EdgeRegular",
+      "Start": 6746,
+      "End": 6863,
+      "BodyStart": 6821,
+      "Original": "static inline Hop_Edge_t   Hop_EdgeRegular( Hop_Edge_t Edge )              { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }",
+      "Draft": "func Hop_EdgeRegular(Edge Hop_Edge_t) Hop_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }"
+    },
+    {
+      "Name": "Hop_EdgeNot",
+      "Start": 6864,
+      "End": 6981,
+      "BodyStart": 6939,
+      "Original": "static inline Hop_Edge_t   Hop_EdgeNot( Hop_Edge_t Edge )                  { return Edge ^ 1;                       }",
+      "Draft": "func Hop_EdgeNot(Edge Hop_Edge_t) Hop_Edge_t { return Edge ^ 1;                       }"
+    },
+    {
+      "Name": "Hop_EdgeNotCond",
+      "Start": 6982,
+      "End": 7099,
+      "BodyStart": 7057,
+      "Original": "static inline Hop_Edge_t   Hop_EdgeNotCond( Hop_Edge_t Edge, int fCond )   { return Edge ^ fCond;                   }",
+      "Draft": "func Hop_EdgeNotCond(Edge Hop_Edge_t, fCond int32) Hop_Edge_t { return Edge ^ fCond;                   }"
+    },
+    {
+      "Name": "Hop_ManPiNum",
+      "Start": 7101,
+      "End": 7214,
+      "BodyStart": 7167,
+      "Original": "static inline int          Hop_ManPiNum( Hop_Man_t * p )          { return p-\u003enObjs[AIG_PI];                    }",
+      "Draft": "func Hop_ManPiNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_PI];                    }"
+    },
+    {
+      "Name": "Hop_ManPoNum",
+      "Start": 7215,
+      "End": 7328,
+      "BodyStart": 7281,
+      "Original": "static inline int          Hop_ManPoNum( Hop_Man_t * p )          { return p-\u003enObjs[AIG_PO];                    }",
+      "Draft": "func Hop_ManPoNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_PO];                    }"
+    },
+    {
+      "Name": "Hop_ManAndNum",
+      "Start": 7329,
+      "End": 7442,
+      "BodyStart": 7395,
+      "Original": "static inline int          Hop_ManAndNum( Hop_Man_t * p )         { return p-\u003enObjs[AIG_AND];                   }",
+      "Draft": "func Hop_ManAndNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND];                   }"
+    },
+    {
+      "Name": "Hop_ManExorNum",
+      "Start": 7443,
+      "End": 7556,
+      "BodyStart": 7509,
+      "Original": "static inline int          Hop_ManExorNum( Hop_Man_t * p )        { return p-\u003enObjs[AIG_EXOR];                  }",
+      "Draft": "func Hop_ManExorNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_EXOR];                  }"
+    },
+    {
+      "Name": "Hop_ManNodeNum",
+      "Start": 7557,
+      "End": 7670,
+      "BodyStart": 7623,
+      "Original": "static inline int          Hop_ManNodeNum( Hop_Man_t * p )        { return p-\u003enObjs[AIG_AND]+p-\u003enObjs[AIG_EXOR];}",
+      "Draft": "func Hop_ManNodeNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND]+p.nObjs[AIG_EXOR];}"
+    },
+    {
+      "Name": "Hop_ManGetCost",
+      "Start": 7671,
+      "End": 7787,
+      "BodyStart": 7737,
+      "Original": "static inline int          Hop_ManGetCost( Hop_Man_t * p )        { return p-\u003enObjs[AIG_AND]+3*p-\u003enObjs[AIG_EXOR]; }",
+      "Draft": "func Hop_ManGetCost(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND]+3*p.nObjs[AIG_EXOR]; }"
+    },
+    {
+      "Name": "Hop_ManObjNum",
+      "Start": 7788,
+      "End": 7901,
+      "BodyStart": 7854,
+      "Original": "static inline int          Hop_ManObjNum( Hop_Man_t * p )         { return p-\u003enCreated - p-\u003enDeleted;           }",
+      "Draft": "func Hop_ManObjNum(p *Hop_Man_t) int32 { return p.nCreated - p.nDeleted;           }"
+    },
+    {
+      "Name": "Hop_ObjType",
+      "Start": 7903,
+      "End": 8017,
+      "BodyStart": 7969,
+      "Original": "static inline Hop_Type_t   Hop_ObjType( Hop_Obj_t * pObj )        { return (Hop_Type_t)pObj-\u003eType;               }",
+      "Draft": "func Hop_ObjType(pObj *Hop_Obj_t) Hop_Type_t { return (Hop_Type_t)pObj.Type;               }"
+    },
+    {
+      "Name": "Hop_ObjIsNone",
+      "Start": 8018,
+      "End": 8120,
+      "BodyStart": 8084,
+      "Original": "static inline int          Hop_ObjIsNone( Hop_Obj_t * pObj )      { return pObj-\u003eType == AIG_NONE;   }",
+      "Draft": "func Hop_ObjIsNone(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_NONE;   }"
+    },
+    {
+      "Name": "Hop_ObjIsConst1",
+      "Start": 8121,
+      "End": 8256,
+      "BodyStart": 8187,
+      "Original": "static inline int          Hop_ObjIsConst1( Hop_Obj_t * pObj )    { assert(!Hop_IsComplement(pObj)); return pObj-\u003eType == AIG_CONST1; }",
+      "Draft": "func Hop_ObjIsConst1(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); return pObj.Type == AIG_CONST1; }"
+    },
+    {
+      "Name": "Hop_ObjIsPi",
+      "Start": 8257,
+      "End": 8359,
+      "BodyStart": 8323,
+      "Original": "static inline int          Hop_ObjIsPi( Hop_Obj_t * pObj )        { return pObj-\u003eType == AIG_PI;     }",
+      "Draft": "func Hop_ObjIsPi(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PI;     }"
+    },
+    {
+      "Name": "Hop_ObjIsPo",
+      "Start": 8360,
+      "End": 8462,
+      "BodyStart": 8426,
+      "Original": "static inline int          Hop_ObjIsPo( Hop_Obj_t * pObj )        { return pObj-\u003eType == AIG_PO;     }",
+      "Draft": "func Hop_ObjIsPo(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PO;     }"
+    },
+    {
+      "Name": "Hop_ObjIsAnd",
+      "Start": 8463,
+      "End": 8565,
+      "BodyStart": 8529,
+      "Original": "static inline int          Hop_ObjIsAnd( Hop_Obj_t * pObj )       { return pObj-\u003eType == AIG_AND;    }",
+      "Draft": "func Hop_ObjIsAnd(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND;    }"
+    },
+    {
+      "Name": "Hop_ObjIsExor",
+      "Start": 8566,
+      "End": 8668,
+      "BodyStart": 8632,
+      "Original": "static inline int          Hop_ObjIsExor( Hop_Obj_t * pObj )      { return pObj-\u003eType == AIG_EXOR;   }",
+      "Draft": "func Hop_ObjIsExor(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_EXOR;   }"
+    },
+    {
+      "Name": "Hop_ObjIsNode",
+      "Start": 8669,
+      "End": 8796,
+      "BodyStart": 8735,
+      "Original": "static inline int          Hop_ObjIsNode( Hop_Obj_t * pObj )      { return pObj-\u003eType == AIG_AND || pObj-\u003eType == AIG_EXOR;   }",
+      "Draft": "func Hop_ObjIsNode(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND || pObj.Type == AIG_EXOR;   }"
+    },
+    {
+      "Name": "Hop_ObjIsTerm",
+      "Start": 8797,
+      "End": 8948,
+      "BodyStart": 8863,
+      "Original": "static inline int          Hop_ObjIsTerm( Hop_Obj_t * pObj )      { return pObj-\u003eType == AIG_PI  || pObj-\u003eType == AIG_PO || pObj-\u003eType == AIG_CONST1; }",
+      "Draft": "func Hop_ObjIsTerm(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PI  || pObj.Type == AIG_PO || pObj.Type == AIG_CONST1; }"
+    },
+    {
+      "Name": "Hop_ObjIsHash",
+      "Start": 8949,
+      "End": 9076,
+      "BodyStart": 9015,
+      "Original": "static inline int          Hop_ObjIsHash( Hop_Obj_t * pObj )      { return pObj-\u003eType == AIG_AND || pObj-\u003eType == AIG_EXOR;   }",
+      "Draft": "func Hop_ObjIsHash(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND || pObj.Type == AIG_EXOR;   }"
+    },
+    {
+      "Name": "Hop_ObjIsMarkA",
+      "Start": 9078,
+      "End": 9169,
+      "BodyStart": 9144,
+      "Original": "static inline int          Hop_ObjIsMarkA( Hop_Obj_t * pObj )     { return pObj-\u003efMarkA;  }",
+      "Draft": "func Hop_ObjIsMarkA(pObj *Hop_Obj_t) int32 { return pObj.fMarkA;  }"
+    },
+    {
+      "Name": "Hop_ObjSetMarkA",
+      "Start": 9170,
+      "End": 9261,
+      "BodyStart": 9236,
+      "Original": "static inline void         Hop_ObjSetMarkA( Hop_Obj_t * pObj )    { pObj-\u003efMarkA = 1;     }",
+      "Draft": "func Hop_ObjSetMarkA(pObj *Hop_Obj_t) { pObj.fMarkA = 1;     }"
+    },
+    {
+      "Name": "Hop_ObjClearMarkA",
+      "Start": 9262,
+      "End": 9353,
+      "BodyStart": 9328,
+      "Original": "static inline void         Hop_ObjClearMarkA( Hop_Obj_t * pObj )  { pObj-\u003efMarkA = 0;     }",
+      "Draft": "func Hop_ObjClearMarkA(pObj *Hop_Obj_t) { pObj.fMarkA = 0;     }"
+    },
+    {
+      "Name": "Hop_ObjSetTravId",
+      "Start": 9356,
+      "End": 9515,
+      "BodyStart": 9447,
+      "Original": "static inline void         Hop_ObjSetTravId( Hop_Obj_t * pObj, int TravId )                { pObj-\u003epData = (void *)(ABC_PTRINT_T)TravId;                      }",
+      "Draft": "func Hop_ObjSetTravId(pObj *Hop_Obj_t, TravId int32) { pObj.pData = (void *)(ABC_PTRINT_T)TravId;                      }"
+    },
+    {
+      "Name": "Hop_ObjSetTravIdCurrent",
+      "Start": 9516,
+      "End": 9675,
+      "BodyStart": 9607,
+      "Original": "static inline void         Hop_ObjSetTravIdCurrent( Hop_Man_t * p, Hop_Obj_t * pObj )      { pObj-\u003epData = (void *)(ABC_PTRINT_T)p-\u003enTravIds;                 }",
+      "Draft": "func Hop_ObjSetTravIdCurrent(p *Hop_Man_t, pObj *Hop_Obj_t) { pObj.pData = (void *)(ABC_PTRINT_T)p.nTravIds;                 }"
+    },
+    {
+      "Name": "Hop_ObjSetTravIdPrevious",
+      "Start": 9676,
+      "End": 9835,
+      "BodyStart": 9767,
+      "Original": "static inline void         Hop_ObjSetTravIdPrevious( Hop_Man_t * p, Hop_Obj_t * pObj )     { pObj-\u003epData = (void *)(ABC_PTRINT_T)(p-\u003enTravIds - 1);           }",
+      "Draft": "func Hop_ObjSetTravIdPrevious(p *Hop_Man_t, pObj *Hop_Obj_t) { pObj.pData = (void *)(ABC_PTRINT_T)(p.nTravIds - 1);           }"
+    },
+    {
+      "Name": "Hop_ObjIsTravIdCurrent",
+      "Start": 9836,
+      "End": 9995,
+      "BodyStart": 9927,
+      "Original": "static inline int          Hop_ObjIsTravIdCurrent( Hop_Man_t * p, Hop_Obj_t * pObj )       { return (int)((int)(ABC_PTRINT_T)pObj-\u003epData == p-\u003enTravIds);     }",
+      "Draft": "func Hop_ObjIsTravIdCurrent(p *Hop_Man_t, pObj *Hop_Obj_t) int32 { return int32((int32((ABC_PTRINT_T))pObj.pData == p.nTravIds));     }"
+    },
+    {
+      "Name": "Hop_ObjIsTravIdPrevious",
+      "Start": 9996,
+      "End": 10155,
+      "BodyStart": 10087,
+      "Original": "static inline int          Hop_ObjIsTravIdPrevious( Hop_Man_t * p, Hop_Obj_t * pObj )      { return (int)((int)(ABC_PTRINT_T)pObj-\u003epData == p-\u003enTravIds - 1); }",
+      "Draft": "func Hop_ObjIsTravIdPrevious(p *Hop_Man_t, pObj *Hop_Obj_t) int32 { return int32((int32((ABC_PTRINT_T))pObj.pData == p.nTravIds - 1)); }"
+    },
+    {
+      "Name": "Hop_ObjTravId",
+      "Start": 10157,
+      "End": 10272,
+      "BodyStart": 10223,
+      "Original": "static inline int          Hop_ObjTravId( Hop_Obj_t * pObj )      { return (int)(ABC_PTRINT_T)pObj-\u003epData;        }",
+      "Draft": "func Hop_ObjTravId(pObj *Hop_Obj_t) int32 { return int32((ABC_PTRINT_T))pObj.pData;        }"
+    },
+    {
+      "Name": "Hop_ObjPhase",
+      "Start": 10273,
+      "End": 10389,
+      "BodyStart": 10339,
+      "Original": "static inline int          Hop_ObjPhase( Hop_Obj_t * pObj )       { return pObj-\u003efPhase;                           }",
+      "Draft": "func Hop_ObjPhase(pObj *Hop_Obj_t) int32 { return pObj.fPhase;                           }"
+    },
+    {
+      "Name": "Hop_ObjRefs",
+      "Start": 10390,
+      "End": 10506,
+      "BodyStart": 10456,
+      "Original": "static inline int          Hop_ObjRefs( Hop_Obj_t * pObj )        { return pObj-\u003enRefs;                            }",
+      "Draft": "func Hop_ObjRefs(pObj *Hop_Obj_t) int32 { return pObj.nRefs;                            }"
+    },
+    {
+      "Name": "Hop_ObjRef",
+      "Start": 10507,
+      "End": 10623,
+      "BodyStart": 10573,
+      "Original": "static inline void         Hop_ObjRef( Hop_Obj_t * pObj )         { pObj-\u003enRefs++;                                 }",
+      "Draft": "func Hop_ObjRef(pObj *Hop_Obj_t) { pObj.nRefs++;                                 }"
+    },
+    {
+      "Name": "Hop_ObjDeref",
+      "Start": 10624,
+      "End": 10740,
+      "BodyStart": 10690,
+      "Original": "static inline void         Hop_ObjDeref( Hop_Obj_t * pObj )       { assert( pObj-\u003enRefs \u003e 0 ); pObj-\u003enRefs--;      }",
+      "Draft": "func Hop_ObjDeref(pObj *Hop_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "Hop_ObjClearRef",
+      "Start": 10741,
+      "End": 10857,
+      "BodyStart": 10807,
+      "Original": "static inline void         Hop_ObjClearRef( Hop_Obj_t * pObj )    { pObj-\u003enRefs = 0;                               }",
+      "Draft": "func Hop_ObjClearRef(pObj *Hop_Obj_t) { pObj.nRefs = 0;                               }"
+    },
+    {
+      "Name": "Hop_ObjFaninC0",
+      "Start": 10858,
+      "End": 10974,
+      "BodyStart": 10924,
+      "Original": "static inline int          Hop_ObjFaninC0( Hop_Obj_t * pObj )     { return Hop_IsComplement(pObj-\u003epFanin0);        }",
+      "Draft": "func Hop_ObjFaninC0(pObj *Hop_Obj_t) int32 { return Hop_IsComplement(pObj.pFanin0);        }"
+    },
+    {
+      "Name": "Hop_ObjFaninC1",
+      "Start": 10975,
+      "End": 11091,
+      "BodyStart": 11041,
+      "Original": "static inline int          Hop_ObjFaninC1( Hop_Obj_t * pObj )     { return Hop_IsComplement(pObj-\u003epFanin1);        }",
+      "Draft": "func Hop_ObjFaninC1(pObj *Hop_Obj_t) int32 { return Hop_IsComplement(pObj.pFanin1);        }"
+    },
+    {
+      "Name": "Hop_ObjFanin0",
+      "Start": 11092,
+      "End": 11208,
+      "BodyStart": 11158,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjFanin0( Hop_Obj_t * pObj )      { return Hop_Regular(pObj-\u003epFanin0);             }",
+      "Draft": "func Hop_ObjFanin0(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_Regular(pObj.pFanin0);             }"
+    },
+    {
+      "Name": "Hop_ObjFanin1",
+      "Start": 11209,
+      "End": 11325,
+      "BodyStart": 11275,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjFanin1( Hop_Obj_t * pObj )      { return Hop_Regular(pObj-\u003epFanin1);             }",
+      "Draft": "func Hop_ObjFanin1(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_Regular(pObj.pFanin1);             }"
+    },
+    {
+      "Name": "Hop_ObjChild0",
+      "Start": 11326,
+      "End": 11442,
+      "BodyStart": 11392,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjChild0( Hop_Obj_t * pObj )      { return pObj-\u003epFanin0;                          }",
+      "Draft": "func Hop_ObjChild0(pObj *Hop_Obj_t) *Hop_Obj_t { return pObj.pFanin0;                          }"
+    },
+    {
+      "Name": "Hop_ObjChild1",
+      "Start": 11443,
+      "End": 11559,
+      "BodyStart": 11509,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjChild1( Hop_Obj_t * pObj )      { return pObj-\u003epFanin1;                          }",
+      "Draft": "func Hop_ObjChild1(pObj *Hop_Obj_t) *Hop_Obj_t { return pObj.pFanin1;                          }"
+    },
+    {
+      "Name": "Hop_ObjChild0Copy",
+      "Start": 11560,
+      "End": 11776,
+      "BodyStart": 11626,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjChild0Copy( Hop_Obj_t * pObj )  { assert( !Hop_IsComplement(pObj) ); return Hop_ObjFanin0(pObj)? Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin0(pObj)-\u003epData, Hop_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Hop_ObjChild0Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin0(pObj) != nil {\n    return Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin0(pObj).pData, Hop_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Hop_ObjChild1Copy",
+      "Start": 11777,
+      "End": 11993,
+      "BodyStart": 11843,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjChild1Copy( Hop_Obj_t * pObj )  { assert( !Hop_IsComplement(pObj) ); return Hop_ObjFanin1(pObj)? Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin1(pObj)-\u003epData, Hop_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Hop_ObjChild1Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin1(pObj) != nil {\n    return Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin1(pObj).pData, Hop_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Hop_ObjChild0CopyI",
+      "Start": 11994,
+      "End": 12210,
+      "BodyStart": 12060,
+      "Original": "static inline int          Hop_ObjChild0CopyI( Hop_Obj_t * pObj ) { assert( !Hop_IsComplement(pObj) ); return Hop_ObjFanin0(pObj)? Abc_LitNotCond(Hop_ObjFanin0(pObj)-\u003eiData, Hop_ObjFaninC0(pObj)) : -1;              }",
+      "Draft": "func Hop_ObjChild0CopyI(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin0(pObj) != nil {\n    return Abc_LitNotCond(Hop_ObjFanin0(pObj).iData, Hop_ObjFaninC0(pObj));\n} else {\n    return -1;\n}              }"
+    },
+    {
+      "Name": "Hop_ObjChild1CopyI",
+      "Start": 12211,
+      "End": 12427,
+      "BodyStart": 12277,
+      "Original": "static inline int          Hop_ObjChild1CopyI( Hop_Obj_t * pObj ) { assert( !Hop_IsComplement(pObj) ); return Hop_ObjFanin1(pObj)? Abc_LitNotCond(Hop_ObjFanin1(pObj)-\u003eiData, Hop_ObjFaninC1(pObj)) : -1;              }",
+      "Draft": "func Hop_ObjChild1CopyI(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin1(pObj) != nil {\n    return Abc_LitNotCond(Hop_ObjFanin1(pObj).iData, Hop_ObjFaninC1(pObj));\n} else {\n    return -1;\n}              }"
+    },
+    {
+      "Name": "Hop_ObjLevel",
+      "Start": 12428,
+      "End": 12544,
+      "BodyStart": 12494,
+      "Original": "static inline int          Hop_ObjLevel( Hop_Obj_t * pObj )       { return pObj-\u003enRefs;                            }",
+      "Draft": "func Hop_ObjLevel(pObj *Hop_Obj_t) int32 { return pObj.nRefs;                            }"
+    },
+    {
+      "Name": "Hop_ObjLevelNew",
+      "Start": 12545,
+      "End": 12721,
+      "BodyStart": 12611,
+      "Original": "static inline int          Hop_ObjLevelNew( Hop_Obj_t * pObj )    { return 1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Hop_ObjFanin0(pObj)-\u003enRefs, Hop_ObjFanin1(pObj)-\u003enRefs);       }",
+      "Draft": "func Hop_ObjLevelNew(pObj *Hop_Obj_t) int32 { return 1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Hop_ObjFanin0(pObj).nRefs, Hop_ObjFanin1(pObj).nRefs);       }"
+    },
+    {
+      "Name": "Hop_ObjPhaseCompl",
+      "Start": 12722,
+      "End": 12865,
+      "BodyStart": 12788,
+      "Original": "static inline int          Hop_ObjPhaseCompl( Hop_Obj_t * pObj )  { return Hop_IsComplement(pObj)? !Hop_Regular(pObj)-\u003efPhase : pObj-\u003efPhase; }",
+      "Draft": "func Hop_ObjPhaseCompl(pObj *Hop_Obj_t) int32 { if Hop_IsComplement(pObj) != 0 {\n    return !Hop_Regular(pObj).fPhase;\n} else {\n    return pObj.fPhase;\n} }"
+    },
+    {
+      "Name": "Hop_ObjClean",
+      "Start": 12866,
+      "End": 12973,
+      "BodyStart": 12932,
+      "Original": "static inline void         Hop_ObjClean( Hop_Obj_t * pObj )       { memset( pObj, 0, sizeof(Hop_Obj_t) ); }",
+      "Draft": "func Hop_ObjClean(pObj *Hop_Obj_t) { *pObj = Hop_Obj_t{}; }"
+    },
+    {
+      "Name": "Hop_ObjWhatFanin",
+      "Start": 12974,
+      "End": 13197,
+      "BodyStart": 13062,
+      "Original": "static inline int          Hop_ObjWhatFanin( Hop_Obj_t * pObj, Hop_Obj_t * pFanin )    \n{ \n    if ( Hop_ObjFanin0(pObj) == pFanin ) return 0; \n    if ( Hop_ObjFanin1(pObj) == pFanin ) return 1; \n    assert(0); return -1; \n}",
+      "Draft": "func Hop_ObjWhatFanin(pObj *Hop_Obj_t, pFanin *Hop_Obj_t) int32 { \n    if Hop_ObjFanin0(pObj) == pFanin { return 0; } \n    if Hop_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Hop_ObjFanoutC",
+      "Start": 13198,
+      "End": 13460,
+      "BodyStart": 13285,
+      "Original": "static inline int          Hop_ObjFanoutC( Hop_Obj_t * pObj, Hop_Obj_t * pFanout )    \n{ \n    if ( Hop_ObjFanin0(pFanout) == pObj ) return Hop_ObjFaninC0(pObj); \n    if ( Hop_ObjFanin1(pFanout) == pObj ) return Hop_ObjFaninC1(pObj); \n    assert(0); return -1; \n}",
+      "Draft": "func Hop_ObjFanoutC(pObj *Hop_Obj_t, pFanout *Hop_Obj_t) int32 { \n    if Hop_ObjFanin0(pFanout) == pObj { return Hop_ObjFaninC0(pObj); } \n    if Hop_ObjFanin1(pFanout) == pObj { return Hop_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Hop_ObjCreateGhost",
+      "Start": 13498,
+      "End": 14120,
+      "BodyStart": 13614,
+      "Original": "static inline Hop_Obj_t *  Hop_ObjCreateGhost( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1, Hop_Type_t Type )    \n{\n    Hop_Obj_t * pGhost;\n    assert( Type != AIG_AND || !Hop_ObjIsConst1(Hop_Regular(p0)) );\n    assert( p1 == NULL || !Hop_ObjIsConst1(Hop_Regular(p1)) );\n    assert( Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1) );\n    pGhost = Hop_ManGhost(p);\n    pGhost-\u003eType = Type;\n    if ( Hop_Regular(p0)-\u003eId \u003c Hop_Regular(p1)-\u003eId )\n    {\n        pGhost-\u003epFanin0 = p0;\n        pGhost-\u003epFanin1 = p1;\n    }\n    else\n    {\n        pGhost-\u003epFanin0 = p1;\n        pGhost-\u003epFanin1 = p0;\n    }\n    return pGhost;\n}",
+      "Draft": "func Hop_ObjCreateGhost(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t, Type Hop_Type_t) *Hop_Obj_t {\n    var pGhost *Hop_Obj_t;\n    assert(Type != AIG_AND || !(Hop_ObjIsConst1(Hop_Regular(p0)) != 0), \"Type != AIG_AND || !Hop_ObjIsConst1(Hop_Regular(p0))\");\n    assert(p1 == nil || !(Hop_ObjIsConst1(Hop_Regular(p1)) != 0), \"p1 == nil || !Hop_ObjIsConst1(Hop_Regular(p1))\");\n    assert(Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1), \"Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1)\");\n    pGhost = Hop_ManGhost(p);\n    pGhost.Type = Type;\n    if Hop_Regular(p0).Id \u003c Hop_Regular(p1).Id {\n        pGhost.pFanin0 = p0;\n        pGhost.pFanin1 = p1;\n    \n    } else {\n        pGhost.pFanin0 = p1;\n        pGhost.pFanin1 = p0;\n    }\n    return pGhost;\n}"
+    },
+    {
+      "Name": "Hop_ManFetchMemory",
+      "Start": 14149,
+      "End": 14593,
+      "BodyStart": 14213,
+      "Original": "static inline Hop_Obj_t * Hop_ManFetchMemory( Hop_Man_t * p )  \n{ \n    Hop_Obj_t * pTemp;\n    if ( p-\u003epListFree == NULL )\n        Hop_ManAddMemory( p );\n    pTemp = p-\u003epListFree;\n    p-\u003epListFree = *((Hop_Obj_t **)pTemp);\n    memset( pTemp, 0, sizeof(Hop_Obj_t) ); \n    if ( p-\u003evObjs )\n    {\n        assert( p-\u003enCreated == Vec_PtrSize(p-\u003evObjs) );\n        Vec_PtrPush( p-\u003evObjs, pTemp );\n    }\n    pTemp-\u003eId = p-\u003enCreated++;\n    return pTemp;\n}",
+      "Draft": "func Hop_ManFetchMemory(p *Hop_Man_t) *Hop_Obj_t { \n    var pTemp *Hop_Obj_t;\n    if p.pListFree == nil {\n        Hop_ManAddMemory( p ); }\n    pTemp = p.pListFree;\n    p.pListFree = *((Hop_Obj_t **)pTemp);\n    *pTemp = Hop_Obj_t{}; \n    if p.vObjs {\n        assert(p.nCreated == Vec_PtrSize(p.vObjs), \"p.nCreated == Vec_PtrSize(p.vObjs)\");\n        Vec_PtrPush( p.vObjs, pTemp );\n    }\n    pTemp.Id = p.nCreated++;\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Hop_ManRecycleMemory",
+      "Start": 14594,
+      "End": 14816,
+      "BodyStart": 14671,
+      "Original": "static inline void Hop_ManRecycleMemory( Hop_Man_t * p, Hop_Obj_t * pEntry )\n{\n    pEntry-\u003eType = AIG_NONE; // distinquishes dead node from live node\n    *((Hop_Obj_t **)pEntry) = p-\u003epListFree;\n    p-\u003epListFree = pEntry;\n}",
+      "Draft": "func Hop_ManRecycleMemory(p *Hop_Man_t, pEntry *Hop_Obj_t) {\n    pEntry.Type = AIG_NONE; // distinquishes dead node from live node\n    *((Hop_Obj_t **)pEntry) = p.pListFree;\n    p.pListFree = pEntry;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::union { \n        void *       pData;          // misc\n        int          iData; };",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2009,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// misc\n    union { \n        Hop_Obj_t *  pNext;          // strashing table\n        int          PioNum; };",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2098,
+      "End": 2213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// fanin\n    unsigned int     Type    :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2317,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// object type\n    unsigned int     fPhase  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2368,
+      "End": 2420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// value under 000...0 pattern\n    unsigned int     fMarkA  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2420,
+      "End": 2488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// multipurpose mask\n    unsigned int     fMarkB  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2488,
+      "End": 2546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_::// multipurpose mask\n    unsigned int     nRefs   : 26;",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2546,
+      "End": 2604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Hop_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1978,
+      "End": 2698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Man_t_::// the ghost node\n    // AIG node counters\n    int              nObjs[AIG_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "Hop_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3031,
+      "End": 3121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::struct::Hop_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Hop_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2719,
+      "End": 4032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::mechanical::enum::1544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1544,
+      "End": 1548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::mechanical::union::2014",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 2014,
+      "End": 2019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::mechanical::union::2117",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 2117,
+      "End": 2122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::mechanical::sizeof::12951",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12951,
+      "End": 12957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::mechanical::sizeof::14393",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14393,
+      "End": 14399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::5267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5267,
+      "End": 5280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::5385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5385,
+      "End": 5398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::5503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5503,
+      "End": 5516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::6094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6094,
+      "End": 6107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::6212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6212,
+      "End": 6225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::6341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6341,
+      "End": 6354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::9463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9463,
+      "End": 9471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::9623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9623,
+      "End": 9631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::9783",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9783,
+      "End": 9791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::11703",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11703,
+      "End": 11716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::11920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11920,
+      "End": 11933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::14349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14349,
+      "End": 14363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::pointer-cast::14750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14750,
+      "End": 14764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::macro::Hop_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Hop_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15075,
+      "End": 15213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::macro::Hop_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Hop_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15251,
+      "End": 15389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::macro::Hop_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Hop_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15455,
+      "End": 15673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_BitWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_BitWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4301,
+      "End": 4418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_TruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_TruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4419,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_InfoHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Hop_InfoHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4537,
+      "End": 4654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_InfoSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Hop_InfoSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4655,
+      "End": 4772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_InfoXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Hop_InfoXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4773,
+      "End": 4890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_Base2Log",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Base2Log",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4891,
+      "End": 5040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_Base10Log",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Base10Log",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5041,
+      "End": 5190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5192,
+      "End": 5309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_Not",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5310,
+      "End": 5427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Hop_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5428,
+      "End": 5545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Hop_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5546,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManConst0",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5665,
+      "End": 5782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManConst1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5783,
+      "End": 5900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManGhost",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5901,
+      "End": 6018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManPi",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6019,
+      "End": 6136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManPo",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6137,
+      "End": 6254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6255,
+      "End": 6390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6392,
+      "End": 6509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeId",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6510,
+      "End": 6627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6628,
+      "End": 6745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeRegular",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6746,
+      "End": 6863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeNot",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6864,
+      "End": 6981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_EdgeNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Hop_EdgeNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6982,
+      "End": 7099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7101,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7215,
+      "End": 7328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7329,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManExorNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManExorNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7443,
+      "End": 7556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7557,
+      "End": 7670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManGetCost",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManGetCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7671,
+      "End": 7787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7788,
+      "End": 7901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjType",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7903,
+      "End": 8017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsNone",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsNone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8018,
+      "End": 8120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8121,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8257,
+      "End": 8359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8360,
+      "End": 8462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8463,
+      "End": 8565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsExor",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8566,
+      "End": 8668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8669,
+      "End": 8796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8797,
+      "End": 8948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsHash",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8949,
+      "End": 9076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9078,
+      "End": 9169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjSetMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjSetMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9170,
+      "End": 9261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjClearMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjClearMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9262,
+      "End": 9353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjSetTravId",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjSetTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9356,
+      "End": 9515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9516,
+      "End": 9675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjSetTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjSetTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9676,
+      "End": 9835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9836,
+      "End": 9995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9996,
+      "End": 10155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjTravId",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10157,
+      "End": 10272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjPhase",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10273,
+      "End": 10389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjRefs",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10390,
+      "End": 10506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjRef",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10507,
+      "End": 10623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjDeref",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10624,
+      "End": 10740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjClearRef",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjClearRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10741,
+      "End": 10857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjFaninC0",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFaninC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10858,
+      "End": 10974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjFaninC1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFaninC1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10975,
+      "End": 11091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11092,
+      "End": 11208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11209,
+      "End": 11325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild0",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11326,
+      "End": 11442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11443,
+      "End": 11559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11560,
+      "End": 11776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11777,
+      "End": 11993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild0CopyI",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild0CopyI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11994,
+      "End": 12210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjChild1CopyI",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjChild1CopyI",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12211,
+      "End": 12427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12428,
+      "End": 12544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12545,
+      "End": 12721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjPhaseCompl",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjPhaseCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12722,
+      "End": 12865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjClean",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12866,
+      "End": 12973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjWhatFanin",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjWhatFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12974,
+      "End": 13197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjFanoutC",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFanoutC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13198,
+      "End": 13460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ObjCreateGhost",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCreateGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13498,
+      "End": 14120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManFetchMemory",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManFetchMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14149,
+      "End": 14593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::Hop_ManRecycleMemory",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManRecycleMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14594,
+      "End": 14816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hop.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21604
+    }
+  ],
+  "Draft": "package hop\n\n/**CFile****************************************************************\n\n  FileName    [hop.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hop.h,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Hop_Man_t =            Hop_Man_t_;\ntype Hop_Obj_t =            Hop_Obj_t_;\ntypedef int                          Hop_Edge_t;\n\n// object types\n type Hop_Type_t int32\nconst ( \n    AIG_NONE Hop_Type_t = iota\n                        // 0: non-existent object\n    AIG_CONST1\n                      // 1: constant 1 \n    AIG_PI\n                          // 2: primary input\n    AIG_PO\n                          // 3: primary output\n    AIG_AND\n                         // 4: AND node\n    AIG_EXOR\n                        // 5: EXOR node\n    AIG_VOID                         // 6: unused object\n\n)\n\n \n\n// the AIG node\ntype Hop_Obj_t_ struct {  // 6 words\n\n    union { \n        void *       pData;          // misc\n        int          iData; };       // misc\n    union { \n        Hop_Obj_t *  pNext;          // strashing table\n        int          PioNum; };      // the number of PI/PO\n    pFanin0       *Hop_Obj_t;        // fanin\n    pFanin1       *Hop_Obj_t;        // fanin\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */   // object type\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */   // value under 000...0 pattern\n    fMarkA uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask\n    fMarkB uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask\n    nRefs uint32; /* C bitfield: 26 bits; review packing and truncation */   // reference count (level)\n    Id              int32;             // unique ID of the node\n}\n\n// the AIG manager\ntype Hop_Man_t_ struct {\n    // AIG nodes\n    vPis       *Vec_Ptr_t;           // the array of PIs\n    vPos       *Vec_Ptr_t;           // the array of POs\n    vObjs       *Vec_Ptr_t;          // the array of all nodes (optional)\n    pConst1       *Hop_Obj_t;        // the constant 1 node\n    Ghost        Hop_Obj_t;          // the ghost node\n    // AIG node counters\n    nObjs [AIG_VOID]int32;// the number of objects by type\n    nCreated              int32;       // the number of created objects\n    nDeleted              int32;       // the number of deleted objects\n    // stuctural hash table\n    pTable      **Hop_Obj_t;         // structural hash table\n    nTableSize              int32;     // structural hash table size\n    // various data members\n    pData            any;          // the temporary data\n    nTravIds              int32;       // the current traversal ID\n    fRefCount              int32;      // enables reference counting\n    fCatchExor              int32;     // enables EXOR nodes\n    // memory management\n    vChunks       *Vec_Ptr_t;        // allocated memory pieces\n    vPages       *Vec_Ptr_t;         // memory pages used by nodes\n    pListFree       *Hop_Obj_t;      // the list of free nodes \n    // timing statistics\n    time1          abctime;\n    time2          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n// extern void Hop_ManAddMemory( Hop_Man_t * p );\n\n\nfunc Hop_BitWordNum(nBits int32) int32 { return (nBits\u003e\u003e5) + ((nBits\u002631) \u003e 0);           }\nfunc Hop_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}     }\nfunc Hop_InfoHasBit(p *uint32, i int32) int32 { return (p[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;       }\nfunc Hop_InfoSetBit(p *uint32, i int32) { p[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                   }\nfunc Hop_InfoXorBit(p *uint32, i int32) { p[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                   }\nfunc Hop_Base2Log(n uint32) int32 { var r int32; if n \u003c 2 { return n; }\n for  r, n = 0, n-1; (n != 0); n \u003e\u003e= 1, r++  {}; return r; }\nfunc Hop_Base10Log(n uint32) int32 { var r int32; if n \u003c 2 { return n; }\n for  r, n = 0, n-1; (n != 0); n /= 10, r++  {}; return r; }\n\nfunc Hop_Regular(p *Hop_Obj_t) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01); }\nfunc Hop_Not(p *Hop_Obj_t) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^  01); }\nfunc Hop_NotCond(p *Hop_Obj_t, c int32) *Hop_Obj_t { return (Hop_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c)); }\nfunc Hop_IsComplement(p *Hop_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));          }\n\nfunc Hop_ManConst0(p *Hop_Man_t) *Hop_Obj_t { return Hop_Not(p.pConst1);                     }\nfunc Hop_ManConst1(p *Hop_Man_t) *Hop_Obj_t { return p.pConst1;                              }\nfunc Hop_ManGhost(p *Hop_Man_t) *Hop_Obj_t { return \u0026p.Ghost;                               }\nfunc Hop_ManPi(p *Hop_Man_t, i int32) *Hop_Obj_t { return (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i);   }\nfunc Hop_ManPo(p *Hop_Man_t, i int32) *Hop_Obj_t { return (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i);   }\nfunc Hop_ManObj(p *Hop_Man_t, i int32) *Hop_Obj_t { if p.vObjs {\n    return (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i);\n} else {\n    return nil;\n}  }\n\nfunc Hop_EdgeCreate(Id int32, fCompl int32) Hop_Edge_t { return (Id \u003c\u003c 1) | fCompl;             }\nfunc Hop_EdgeId(Edge Hop_Edge_t) int32 { return Edge \u003e\u003e 1;                      }\nfunc Hop_EdgeIsComplement(Edge Hop_Edge_t) int32 { return Edge \u0026 1;                       }\nfunc Hop_EdgeRegular(Edge Hop_Edge_t) Hop_Edge_t { return (Edge \u003e\u003e 1) \u003c\u003c 1;               }\nfunc Hop_EdgeNot(Edge Hop_Edge_t) Hop_Edge_t { return Edge ^ 1;                       }\nfunc Hop_EdgeNotCond(Edge Hop_Edge_t, fCond int32) Hop_Edge_t { return Edge ^ fCond;                   }\n\nfunc Hop_ManPiNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_PI];                    }\nfunc Hop_ManPoNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_PO];                    }\nfunc Hop_ManAndNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND];                   }\nfunc Hop_ManExorNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_EXOR];                  }\nfunc Hop_ManNodeNum(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND]+p.nObjs[AIG_EXOR];}\nfunc Hop_ManGetCost(p *Hop_Man_t) int32 { return p.nObjs[AIG_AND]+3*p.nObjs[AIG_EXOR]; }\nfunc Hop_ManObjNum(p *Hop_Man_t) int32 { return p.nCreated - p.nDeleted;           }\n\nfunc Hop_ObjType(pObj *Hop_Obj_t) Hop_Type_t { return (Hop_Type_t)pObj.Type;               }\nfunc Hop_ObjIsNone(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_NONE;   }\nfunc Hop_ObjIsConst1(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); return pObj.Type == AIG_CONST1; }\nfunc Hop_ObjIsPi(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PI;     }\nfunc Hop_ObjIsPo(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PO;     }\nfunc Hop_ObjIsAnd(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND;    }\nfunc Hop_ObjIsExor(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_EXOR;   }\nfunc Hop_ObjIsNode(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND || pObj.Type == AIG_EXOR;   }\nfunc Hop_ObjIsTerm(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_PI  || pObj.Type == AIG_PO || pObj.Type == AIG_CONST1; }\nfunc Hop_ObjIsHash(pObj *Hop_Obj_t) int32 { return pObj.Type == AIG_AND || pObj.Type == AIG_EXOR;   }\n\nfunc Hop_ObjIsMarkA(pObj *Hop_Obj_t) int32 { return pObj.fMarkA;  }\nfunc Hop_ObjSetMarkA(pObj *Hop_Obj_t) { pObj.fMarkA = 1;     }\nfunc Hop_ObjClearMarkA(pObj *Hop_Obj_t) { pObj.fMarkA = 0;     }\n \nfunc Hop_ObjSetTravId(pObj *Hop_Obj_t, TravId int32) { pObj.pData = (void *)(ABC_PTRINT_T)TravId;                      }\nfunc Hop_ObjSetTravIdCurrent(p *Hop_Man_t, pObj *Hop_Obj_t) { pObj.pData = (void *)(ABC_PTRINT_T)p.nTravIds;                 }\nfunc Hop_ObjSetTravIdPrevious(p *Hop_Man_t, pObj *Hop_Obj_t) { pObj.pData = (void *)(ABC_PTRINT_T)(p.nTravIds - 1);           }\nfunc Hop_ObjIsTravIdCurrent(p *Hop_Man_t, pObj *Hop_Obj_t) int32 { return int32((int32((ABC_PTRINT_T))pObj.pData == p.nTravIds));     }\nfunc Hop_ObjIsTravIdPrevious(p *Hop_Man_t, pObj *Hop_Obj_t) int32 { return int32((int32((ABC_PTRINT_T))pObj.pData == p.nTravIds - 1)); }\n\nfunc Hop_ObjTravId(pObj *Hop_Obj_t) int32 { return int32((ABC_PTRINT_T))pObj.pData;        }\nfunc Hop_ObjPhase(pObj *Hop_Obj_t) int32 { return pObj.fPhase;                           }\nfunc Hop_ObjRefs(pObj *Hop_Obj_t) int32 { return pObj.nRefs;                            }\nfunc Hop_ObjRef(pObj *Hop_Obj_t) { pObj.nRefs++;                                 }\nfunc Hop_ObjDeref(pObj *Hop_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }\nfunc Hop_ObjClearRef(pObj *Hop_Obj_t) { pObj.nRefs = 0;                               }\nfunc Hop_ObjFaninC0(pObj *Hop_Obj_t) int32 { return Hop_IsComplement(pObj.pFanin0);        }\nfunc Hop_ObjFaninC1(pObj *Hop_Obj_t) int32 { return Hop_IsComplement(pObj.pFanin1);        }\nfunc Hop_ObjFanin0(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_Regular(pObj.pFanin0);             }\nfunc Hop_ObjFanin1(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_Regular(pObj.pFanin1);             }\nfunc Hop_ObjChild0(pObj *Hop_Obj_t) *Hop_Obj_t { return pObj.pFanin0;                          }\nfunc Hop_ObjChild1(pObj *Hop_Obj_t) *Hop_Obj_t { return pObj.pFanin1;                          }\nfunc Hop_ObjChild0Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin0(pObj) != nil {\n    return Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin0(pObj).pData, Hop_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Hop_ObjChild1Copy(pObj *Hop_Obj_t) *Hop_Obj_t { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin1(pObj) != nil {\n    return Hop_NotCond((Hop_Obj_t *)Hop_ObjFanin1(pObj).pData, Hop_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\nfunc Hop_ObjChild0CopyI(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin0(pObj) != nil {\n    return Abc_LitNotCond(Hop_ObjFanin0(pObj).iData, Hop_ObjFaninC0(pObj));\n} else {\n    return -1;\n}              }\nfunc Hop_ObjChild1CopyI(pObj *Hop_Obj_t) int32 { assert(!(Hop_IsComplement(pObj) != 0), \"!Hop_IsComplement(pObj)\"); if Hop_ObjFanin1(pObj) != nil {\n    return Abc_LitNotCond(Hop_ObjFanin1(pObj).iData, Hop_ObjFaninC1(pObj));\n} else {\n    return -1;\n}              }\nfunc Hop_ObjLevel(pObj *Hop_Obj_t) int32 { return pObj.nRefs;                            }\nfunc Hop_ObjLevelNew(pObj *Hop_Obj_t) int32 { return 1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Hop_ObjFanin0(pObj).nRefs, Hop_ObjFanin1(pObj).nRefs);       }\nfunc Hop_ObjPhaseCompl(pObj *Hop_Obj_t) int32 { if Hop_IsComplement(pObj) != 0 {\n    return !Hop_Regular(pObj).fPhase;\n} else {\n    return pObj.fPhase;\n} }\nfunc Hop_ObjClean(pObj *Hop_Obj_t) { *pObj = Hop_Obj_t{}; }\nfunc Hop_ObjWhatFanin(pObj *Hop_Obj_t, pFanin *Hop_Obj_t) int32 { \n    if Hop_ObjFanin0(pObj) == pFanin { return 0; } \n    if Hop_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}\nfunc Hop_ObjFanoutC(pObj *Hop_Obj_t, pFanout *Hop_Obj_t) int32 { \n    if Hop_ObjFanin0(pFanout) == pObj { return Hop_ObjFaninC0(pObj); } \n    if Hop_ObjFanin1(pFanout) == pObj { return Hop_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}\n\n// create the ghost of the new node\nfunc Hop_ObjCreateGhost(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t, Type Hop_Type_t) *Hop_Obj_t {\n    var pGhost *Hop_Obj_t;\n    assert(Type != AIG_AND || !(Hop_ObjIsConst1(Hop_Regular(p0)) != 0), \"Type != AIG_AND || !Hop_ObjIsConst1(Hop_Regular(p0))\");\n    assert(p1 == nil || !(Hop_ObjIsConst1(Hop_Regular(p1)) != 0), \"p1 == nil || !Hop_ObjIsConst1(Hop_Regular(p1))\");\n    assert(Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1), \"Type == AIG_PI || Hop_Regular(p0) != Hop_Regular(p1)\");\n    pGhost = Hop_ManGhost(p);\n    pGhost.Type = Type;\n    if Hop_Regular(p0).Id \u003c Hop_Regular(p1).Id {\n        pGhost.pFanin0 = p0;\n        pGhost.pFanin1 = p1;\n    \n    } else {\n        pGhost.pFanin0 = p1;\n        pGhost.pFanin1 = p0;\n    }\n    return pGhost;\n}\n\n// internal memory manager\nfunc Hop_ManFetchMemory(p *Hop_Man_t) *Hop_Obj_t { \n    var pTemp *Hop_Obj_t;\n    if p.pListFree == nil {\n        Hop_ManAddMemory( p ); }\n    pTemp = p.pListFree;\n    p.pListFree = *((Hop_Obj_t **)pTemp);\n    *pTemp = Hop_Obj_t{}; \n    if p.vObjs {\n        assert(p.nCreated == Vec_PtrSize(p.vObjs), \"p.nCreated == Vec_PtrSize(p.vObjs)\");\n        Vec_PtrPush( p.vObjs, pTemp );\n    }\n    pTemp.Id = p.nCreated++;\n    return pTemp;\n}\nfunc Hop_ManRecycleMemory(p *Hop_Man_t, pEntry *Hop_Obj_t) {\n    pEntry.Type = AIG_NONE; // distinquishes dead node from live node\n    *((Hop_Obj_t **)pEntry) = p.pListFree;\n    p.pListFree = pEntry;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the primary inputs\n// Original macro:\n// #define Hop_ManForEachPi( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evPis, pObj, i )\n\n// iterator over the primary outputs\n// Original macro:\n// #define Hop_ManForEachPo( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Hop_Obj_t *, p-\u003evPos, pObj, i )\n\n// iterator over all objects, including those currently not used\n// Original macro:\n// #define Hop_ManForEachNode( p, pObj, i )                                        \\\n//     for ( i = 0; i \u003c p-\u003enTableSize; i++ )                                       \\\n//         if ( ((pObj) = p-\u003epTable[i]) == NULL ) {} else\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== hopBalance.c ========================================================*/\n// extern Hop_Man_t *     Hop_ManBalance( Hop_Man_t * p, int fUpdateLevel );\n\n// extern Hop_Obj_t *     Hop_NodeBalanceBuildSuper( Hop_Man_t * p, Vec_Ptr_t * vSuper, Hop_Type_t Type, int fUpdateLevel );\n\n/*=== hopCheck.c ========================================================*/\n// extern int             Hop_ManCheck( Hop_Man_t * p );\n\n/*=== hopDfs.c ==========================================================*/\n// extern Vec_Ptr_t *     Hop_ManDfs( Hop_Man_t * p );\n\n// extern Vec_Ptr_t *     Hop_ManDfsNode( Hop_Man_t * p, Hop_Obj_t * pNode );\n\n// extern int             Hop_ManCountLevels( Hop_Man_t * p );\n\n// extern void            Hop_ManCreateRefs( Hop_Man_t * p );\n\n// extern int             Hop_DagSize( Hop_Obj_t * pObj );\n\n// extern int             Hop_ObjFanoutCount( Hop_Obj_t * pObj, Hop_Obj_t * pPivot );\n\n// extern void            Hop_ConeUnmark_rec( Hop_Obj_t * pObj );\n\n// extern Hop_Obj_t *     Hop_Transfer( Hop_Man_t * pSour, Hop_Man_t * pDest, Hop_Obj_t * pObj, int nVars );\n\n// extern Hop_Obj_t *     Hop_Compose( Hop_Man_t * p, Hop_Obj_t * pRoot, Hop_Obj_t * pFunc, int iVar );\n\n// extern Hop_Obj_t *     Hop_Complement( Hop_Man_t * p, Hop_Obj_t * pRoot, int iVar );\n\n// extern Hop_Obj_t *     Hop_Remap( Hop_Man_t * p, Hop_Obj_t * pRoot, unsigned uSupp, int nVars );\n\n// extern Hop_Obj_t *     Hop_Permute( Hop_Man_t * p, Hop_Obj_t * pRoot, int nRootVars, int * pPermute );\n\n/*=== hopMan.c ==========================================================*/\n// extern Hop_Man_t *     Hop_ManStart();\n\n// extern Hop_Man_t *     Hop_ManDup( Hop_Man_t * p );\n\n// extern void            Hop_ManStop( Hop_Man_t * p );\n\n// extern int             Hop_ManCleanup( Hop_Man_t * p );\n\n// extern void            Hop_ManPrintStats( Hop_Man_t * p );\n\n/*=== hopMem.c ==========================================================*/\n// extern void            Hop_ManStartMemory( Hop_Man_t * p );\n\n// extern void            Hop_ManStopMemory( Hop_Man_t * p );\n\n/*=== hopObj.c ==========================================================*/\n// extern Hop_Obj_t *     Hop_ObjCreatePi( Hop_Man_t * p );\n\n// extern Hop_Obj_t *     Hop_ObjCreatePo( Hop_Man_t * p, Hop_Obj_t * pDriver );\n\n// extern Hop_Obj_t *     Hop_ObjCreate( Hop_Man_t * p, Hop_Obj_t * pGhost );\n\n// extern void            Hop_ObjConnect( Hop_Man_t * p, Hop_Obj_t * pObj, Hop_Obj_t * pFan0, Hop_Obj_t * pFan1 );\n\n// extern void            Hop_ObjDisconnect( Hop_Man_t * p, Hop_Obj_t * pObj );\n\n// extern void            Hop_ObjDelete( Hop_Man_t * p, Hop_Obj_t * pObj );\n\n// extern void            Hop_ObjDelete_rec( Hop_Man_t * p, Hop_Obj_t * pObj );\n\n// extern Hop_Obj_t *     Hop_ObjRepr( Hop_Obj_t * pObj );\n\n// extern void            Hop_ObjCreateChoice( Hop_Obj_t * pOld, Hop_Obj_t * pNew );\n\n/*=== hopOper.c =========================================================*/\n// extern Hop_Obj_t *     Hop_IthVar( Hop_Man_t * p, int i );\n\n// extern Hop_Obj_t *     Hop_Oper( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1, Hop_Type_t Type );\n\n// extern Hop_Obj_t *     Hop_And( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 );\n\n// extern Hop_Obj_t *     Hop_Or( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 );\n\n// extern Hop_Obj_t *     Hop_Exor( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 );\n\n// extern Hop_Obj_t *     Hop_Mux( Hop_Man_t * p, Hop_Obj_t * pC, Hop_Obj_t * p1, Hop_Obj_t * p0 );\n\n// extern Hop_Obj_t *     Hop_Maj( Hop_Man_t * p, Hop_Obj_t * pA, Hop_Obj_t * pB, Hop_Obj_t * pC );\n\n// extern Hop_Obj_t *     Hop_Miter( Hop_Man_t * p, Vec_Ptr_t * vPairs );\n\n// extern Hop_Obj_t *     Hop_CreateAnd( Hop_Man_t * p, int nVars );\n\n// extern Hop_Obj_t *     Hop_CreateOr( Hop_Man_t * p, int nVars );\n\n// extern Hop_Obj_t *     Hop_CreateExor( Hop_Man_t * p, int nVars );\n\n/*=== hopTable.c ========================================================*/\n// extern Hop_Obj_t *     Hop_TableLookup( Hop_Man_t * p, Hop_Obj_t * pGhost );\n\n// extern void            Hop_TableInsert( Hop_Man_t * p, Hop_Obj_t * pObj );\n\n// extern void            Hop_TableDelete( Hop_Man_t * p, Hop_Obj_t * pObj );\n\n// extern int             Hop_TableCountEntries( Hop_Man_t * p );\n\n// extern void            Hop_TableProfile( Hop_Man_t * p );\n\n/*=== hopTruth.c ========================================================*/\n// extern unsigned *      Hop_ManConvertAigToTruth( Hop_Man_t * p, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, int fMsbFirst );\n\n// extern word            Hop_ManComputeTruth6( Hop_Man_t * p, Hop_Obj_t * pObj, int nVars );\n\n/*=== hopUtil.c =========================================================*/\n// extern void            Hop_ManIncrementTravId( Hop_Man_t * p );\n\n// extern void            Hop_ManCleanData( Hop_Man_t * p );\n\n// extern void            Hop_ObjCleanData_rec( Hop_Obj_t * pObj );\n\n// extern void            Hop_ObjCollectMulti( Hop_Obj_t * pFunc, Vec_Ptr_t * vSuper );\n\n// extern int             Hop_ObjIsMuxType( Hop_Obj_t * pObj );\n\n// extern int             Hop_ObjRecognizeExor( Hop_Obj_t * pObj, Hop_Obj_t ** ppFan0, Hop_Obj_t ** ppFan1 );\n\n// extern Hop_Obj_t *     Hop_ObjRecognizeMux( Hop_Obj_t * pObj, Hop_Obj_t ** ppObjT, Hop_Obj_t ** ppObjE );\n\n// extern void            Hop_ObjPrintEqn( FILE * pFile, Hop_Obj_t * pObj, Vec_Vec_t * vLevels, int Level );\n\n// extern void            Hop_ObjPrintVerilog( FILE * pFile, Hop_Obj_t * pObj, Vec_Vec_t * vLevels, int Level, int fOnlyAnds );\n\n// extern void            Hop_ObjPrintVerbose( Hop_Obj_t * pObj, int fHaig );\n\n// extern void            Hop_ManPrintVerbose( Hop_Man_t * p, int fHaig );\n\n// extern void            Hop_ManDumpBlif( Hop_Man_t * p, char * pFileName );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

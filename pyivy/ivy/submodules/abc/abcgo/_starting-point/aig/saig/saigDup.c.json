@@ -1,0 +1,880 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c",
+  "SHA256": "7ef1c7afe33f7b284ee68df712b1c2ab06335c8734df498fb20583ea3cc77721",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 52,
+        "Column": 9,
+        "ByteOffset": 1472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The AIG manager should have no constraints.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The AIG manager should have no constraints.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 4917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPairs) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 9648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLi.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 9754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLo.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 9853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vCiNumsOrig == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 13986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 16238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 16652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CEX does fail the given sequential miter.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 20123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 9,
+        "ByteOffset": 20256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManExtendCex(): The counter-example is invalid!!!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 5,
+        "ByteOffset": 22473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 23358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 559,
+        "Column": 14,
+        "ByteOffset": 26490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 591,
+        "Column": 1,
+        "ByteOffset": 19889
+      },
+      "Directive": "#ifndef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManDupOrpos",
+      "Start": 1289,
+      "End": 2552,
+      "BodyStart": 1338,
+      "Original": "Aig_Man_t * Saig_ManDupOrpos( Aig_Man_t * pAig )\n{\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pObj, * pMiter;\n    int i;\n    if ( pAig-\u003enConstrs \u003e 0 )\n    {\n        printf( \"The AIG manager should have no constraints.\\n\" );\n        return NULL;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pAigNew-\u003enConstrs = pAig-\u003enConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create PO of the circuit\n    pMiter = Aig_ManConst0( pAigNew );\n    Saig_ManForEachPo( pAig, pObj, i )\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // transfer to register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupOrpos(pAig *Aig_Man_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj, pMiter *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create PO of the circuit\n    pMiter = Aig_ManConst0( pAigNew );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManCreateEquivMiter",
+      "Start": 2841,
+      "End": 4369,
+      "BodyStart": 2932,
+      "Original": "Aig_Man_t * Saig_ManCreateEquivMiter( Aig_Man_t * pAig, Vec_Int_t * vPairs, int fAddOuts )\n{\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pObj, * pObj2, * pMiter;\n    int i;\n    if ( pAig-\u003enConstrs \u003e 0 )\n    {\n        printf( \"The AIG manager should have no constraints.\\n\" );\n        return NULL;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pAigNew-\u003enConstrs = pAig-\u003enConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create POs\n    assert( Vec_IntSize(vPairs) % 2 == 0 );\n    Aig_ManForEachObjVec( vPairs, pAig, pObj, i )\n    {\n        pObj2  = Aig_ManObj( pAig, Vec_IntEntry(vPairs, ++i) );\n        pMiter = Aig_Exor( pAigNew, (Aig_Obj_t *)pObj-\u003epData, (Aig_Obj_t *)pObj2-\u003epData );\n        pMiter = Aig_NotCond( pMiter, pObj-\u003efPhase ^ pObj2-\u003efPhase );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // transfer to register outputs\n    if ( fAddOuts )\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pAigNew );\n    if ( fAddOuts )\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManCreateEquivMiter(pAig *Aig_Man_t, vPairs *Vec_Int_t, fAddOuts int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj, pObj2, pMiter *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create POs\n    assert(Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) % 2 == 0\");\n    // inlining of macro Aig_ManForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vPairs) \u0026\u0026 (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vPairs,i))), 1); i++  {\n        pObj2  = Aig_ManObj( pAig, Vec_IntEntry(vPairs, ++i) );\n        pMiter = Aig_Exor( pAigNew, (Aig_Obj_t *)pObj.pData, (Aig_Obj_t *)pObj2.pData );\n        pMiter = Aig_NotCond( pMiter, pObj.fPhase ^ pObj2.fPhase );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // transfer to register outputs\n    if fAddOuts != 0 {\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    } }\n    Aig_ManCleanup( pAigNew );\n    if fAddOuts != 0 {\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) ); }\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManTrimPis",
+      "Start": 4652,
+      "End": 5852,
+      "BodyStart": 4697,
+      "Original": "Aig_Man_t * Saig_ManTrimPis( Aig_Man_t * p )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i, fAllPisHaveNoRefs;\n    // check the refs of PIs    \n    fAllPisHaveNoRefs = 1;\n    Saig_ManForEachPi( p, pObj, i )\n        if ( pObj-\u003enRefs )\n            fAllPisHaveNoRefs = 0;\n    // start the new manager\n    pNew = Aig_ManStart( Aig_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003enConstrs = p-\u003enConstrs;\n    // start mapping of the CI numbers\n    pNew-\u003evCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // map const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p, pObj, i )\n        if ( fAllPisHaveNoRefs || pObj-\u003enRefs || Saig_ObjIsLo(p, pObj) )\n        {\n            pObj-\u003epData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew-\u003evCiNumsOrig, Vec_IntEntry(p-\u003evCiNumsOrig, i) );\n        }\n    Aig_ManForEachNode( p, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    Aig_ManForEachCo( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Saig_ManTrimPis(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, fAllPisHaveNoRefs int32;\n    // check the refs of PIs    \n    fAllPisHaveNoRefs = 1;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if pObj.nRefs {\n            fAllPisHaveNoRefs = 0; }\n    }\n    // start the new manager\n    pNew = Aig_ManStart( Aig_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.nConstrs = p.nConstrs;\n    // start mapping of the CI numbers\n    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // map const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if (fAllPisHaveNoRefs != 0) || pObj.nRefs || Saig_ObjIsLo(p, pObj) {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, Vec_IntEntry(p.vCiNumsOrig, i) );\n        }\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_ManAbstractionDfs_rec",
+      "Start": 6127,
+      "End": 6500,
+      "BodyStart": 6204,
+      "Original": "Aig_Obj_t * Saig_ManAbstractionDfs_rec( Aig_Man_t * pNew, Aig_Obj_t * pObj )\n{\n    if ( pObj-\u003epData )\n        return (Aig_Obj_t *)pObj-\u003epData;\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}",
+      "Draft": "func Saig_ManAbstractionDfs_rec(pNew *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    if pObj.pData {\n        return (Aig_Obj_t *)pObj.pData; }\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}"
+    },
+    {
+      "Name": "Saig_ManDupAbstraction",
+      "Start": 6799,
+      "End": 8856,
+      "BodyStart": 6871,
+      "Original": "Aig_Man_t * Saig_ManDupAbstraction( Aig_Man_t * p, Vec_Int_t * vFlops )\n{ \n    Aig_Man_t * pNew;//, * pTemp;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, Entry;\n    Aig_ManCleanData( p );\n    // start the new manager\n    pNew = Aig_ManStart( 5000 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    // map the constant node\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1( pNew );\n    // label included flops\n    Vec_IntForEachEntry( vFlops, Entry, i )\n    {\n        pObjLi = Saig_ManLi( p, Entry );\n        assert( pObjLi-\u003efMarkA == 0 );\n        pObjLi-\u003efMarkA = 1;\n        pObjLo = Saig_ManLo( p, Entry );\n        assert( pObjLo-\u003efMarkA == 0 );\n        pObjLo-\u003efMarkA = 1;\n    }\n    // create variables for PIs\n    assert( p-\u003evCiNumsOrig == NULL );\n    pNew-\u003evCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        if ( !pObj-\u003efMarkA )\n        {\n            pObj-\u003epData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew-\u003evCiNumsOrig, i );\n        }\n    // create variables for LOs\n    Aig_ManForEachCi( p, pObj, i )\n        if ( pObj-\u003efMarkA )\n        {\n            pObj-\u003efMarkA = 0;\n            pObj-\u003epData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew-\u003evCiNumsOrig, i );\n        }\n    // add internal nodes \n//    Aig_ManForEachNode( p, pObj, i )\n//        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create POs\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // create LIs\n    Aig_ManForEachCo( p, pObj, i )\n        if ( pObj-\u003efMarkA )\n        {\n            pObj-\u003efMarkA = 0;\n            Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n        }\n    Aig_ManSetRegNum( pNew, Vec_IntSize(vFlops) );\n    Aig_ManSeqCleanup( pNew );\n    // remove PIs without fanout\n//    pNew = Saig_ManTrimPis( pTemp = pNew );\n//    Aig_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Saig_ManDupAbstraction(p *Aig_Man_t, vFlops *Vec_Int_t) *Aig_Man_t { \n    var pNew *Aig_Man_t;//, * pTemp;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, Entry int32;\n    Aig_ManCleanData( p );\n    // start the new manager\n    pNew = Aig_ManStart( 5000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    // map the constant node\n    Aig_ManConst1(p).pData = Aig_ManConst1( pNew );\n    // label included flops\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFlops)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFlops, i)), 1); i++  {\n        pObjLi = Saig_ManLi( p, Entry );\n        assert(pObjLi.fMarkA == 0, \"pObjLi.fMarkA == 0\");\n        pObjLi.fMarkA = 1;\n        pObjLo = Saig_ManLo( p, Entry );\n        assert(pObjLo.fMarkA == 0, \"pObjLo.fMarkA == 0\");\n        pObjLo.fMarkA = 1;\n    }\n    // create variables for PIs\n    assert(p.vCiNumsOrig == nil, \"p.vCiNumsOrig == nil\");\n    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if !pObj.fMarkA {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, i );\n        }\n    }\n    // create variables for LOs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if pObj.fMarkA {\n            pObj.fMarkA = 0;\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, i );\n        }\n    }\n    // add internal nodes \n//    Aig_ManForEachNode( p, pObj, i )\n//        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create POs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // create LIs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if pObj.fMarkA {\n            pObj.fMarkA = 0;\n            Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n        }\n    }\n    Aig_ManSetRegNum( pNew, Vec_IntSize(vFlops) );\n    Aig_ManSeqCleanup( pNew );\n    // remove PIs without fanout\n//    pNew = Saig_ManTrimPis( pTemp = pNew );\n//    Aig_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_ManVerifyCex",
+      "Start": 9124,
+      "End": 10185,
+      "BodyStart": 9181,
+      "Original": "int Saig_ManVerifyCex( Aig_Man_t * pAig, Abc_Cex_t * p )\n{\n    Aig_Obj_t * pObj, * pObjRi, * pObjRo;\n    int RetValue, i, k, iBit = 0;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig)-\u003efMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n        if ( i == p-\u003eiFrame )\n            break;\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo-\u003efMarkB = pObjRi-\u003efMarkB;\n    }\n    assert( iBit == p-\u003enBits );\n    RetValue = Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB;\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}",
+      "Draft": "func Saig_ManVerifyCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_ManVerifyCexNoClear",
+      "Start": 10453,
+      "End": 11523,
+      "BodyStart": 10517,
+      "Original": "int Saig_ManVerifyCexNoClear( Aig_Man_t * pAig, Abc_Cex_t * p )\n{\n    Aig_Obj_t * pObj, * pObjRi, * pObjRo;\n    int RetValue, i, k, iBit = 0;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig)-\u003efMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n        if ( i == p-\u003eiFrame )\n            break;\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo-\u003efMarkB = pObjRi-\u003efMarkB;\n    }\n    assert( iBit == p-\u003enBits );\n    RetValue = Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB;\n    //Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}",
+      "Draft": "func Saig_ManVerifyCexNoClear(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    //Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_ManReturnFailingState",
+      "Start": 11524,
+      "End": 12211,
+      "BodyStart": 11612,
+      "Original": "Vec_Int_t * Saig_ManReturnFailingState( Aig_Man_t * pAig, Abc_Cex_t * p, int fNextOne )\n{\n    Aig_Obj_t * pObj;\n    Vec_Int_t * vState;\n    int i, RetValue = Saig_ManVerifyCexNoClear( pAig, p );\n    if ( RetValue == 0 )\n    {\n        Aig_ManCleanMarkB(pAig);\n        printf( \"CEX does fail the given sequential miter.\\n\" );\n        return NULL;\n    }\n    vState = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    if ( fNextOne )\n    {\n        Saig_ManForEachLi( pAig, pObj, i )\n            Vec_IntPush( vState, pObj-\u003efMarkB );\n    }\n    else\n    {\n        Saig_ManForEachLo( pAig, pObj, i )\n            Vec_IntPush( vState, pObj-\u003efMarkB );\n    }\n    Aig_ManCleanMarkB(pAig);\n    return vState;\n}",
+      "Draft": "func Saig_ManReturnFailingState(pAig *Aig_Man_t, p *Abc_Cex_t, fNextOne int32) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var vState *Vec_Int_t;\n    var i int32;\n    var RetValue int32 = Saig_ManVerifyCexNoClear( pAig, p );\n    if RetValue == 0 {\n        Aig_ManCleanMarkB(pAig);\n        fmt.Printf(\"CEX does fail the given sequential miter.\\n\");\n        return nil;\n    }\n    vState = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    if fNextOne != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Vec_IntPush( vState, pObj.fMarkB );\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            Vec_IntPush( vState, pObj.fMarkB );\n        }\n    }\n    Aig_ManCleanMarkB(pAig);\n    return vState;\n}"
+    },
+    {
+      "Name": "Saig_ManExtendCex",
+      "Start": 12479,
+      "End": 14091,
+      "BodyStart": 12544,
+      "Original": "Abc_Cex_t * Saig_ManExtendCex( Aig_Man_t * pAig, Abc_Cex_t * p )\n{\n    Abc_Cex_t * pNew;\n    Aig_Obj_t * pObj, * pObjRi, * pObjRo;\n    int RetValue, i, k, iBit = 0;\n    // create new counter-example\n    pNew = Abc_CexAlloc( 0, Aig_ManCiNum(pAig), p-\u003eiFrame + 1 );\n    pNew-\u003eiPo = p-\u003eiPo;\n    pNew-\u003eiFrame = p-\u003eiFrame;\n    // simulate the AIG\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig)-\u003efMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n        ///////// write PI+LO values ////////////\n        Aig_ManForEachCi( pAig, pObj, k )\n            if ( pObj-\u003efMarkB )\n                Abc_InfoSetBit(pNew-\u003epData, Aig_ManCiNum(pAig)*i + k);\n        /////////////////////////////////////////\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n        if ( i == p-\u003eiFrame )\n            break;\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo-\u003efMarkB = pObjRi-\u003efMarkB;\n    }\n    assert( iBit == p-\u003enBits );\n    RetValue = Aig_ManCo(pAig, p-\u003eiPo)-\u003efMarkB;\n    Aig_ManCleanMarkB(pAig);\n    if ( RetValue == 0 )\n        printf( \"Saig_ManExtendCex(): The counter-example is invalid!!!\\n\" );\n    return pNew;\n}",
+      "Draft": "func Saig_ManExtendCex(pAig *Aig_Man_t, p *Abc_Cex_t) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    // create new counter-example\n    pNew = Abc_CexAlloc( 0, Aig_ManCiNum(pAig), p.iFrame + 1 );\n    pNew.iPo = p.iPo;\n    pNew.iFrame = p.iFrame;\n    // simulate the AIG\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        ///////// write PI+LO values ////////////\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            if pObj.fMarkB {\n                Abc_InfoSetBit(pNew.pData, Aig_ManCiNum(pAig)*i + k); }\n        }\n        /////////////////////////////////////////\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    Aig_ManCleanMarkB(pAig);\n    if RetValue == 0 {\n        fmt.Printf(\"Saig_ManExtendCex(): The counter-example is invalid!!!\\n\"); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_ManFindFailedPoCex",
+      "Start": 14359,
+      "End": 15573,
+      "BodyStart": 14422,
+      "Original": "int Saig_ManFindFailedPoCex( Aig_Man_t * pAig, Abc_Cex_t * p )\n{\n    Aig_Obj_t * pObj, * pObjRi, * pObjRo;\n    int RetValue, i, k, iBit = 0;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig)-\u003efMarkB = 1;\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n    {\n        Saig_ManForEachPi( pAig, pObj, k )\n            pObj-\u003efMarkB = Abc_InfoHasBit(p-\u003epData, iBit++);\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkB = (Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkB = Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj);\n        if ( i == p-\u003eiFrame )\n            break;\n        Saig_ManForEachLiLo( pAig, pObjRi, pObjRo, k )\n            pObjRo-\u003efMarkB = pObjRi-\u003efMarkB;\n    }\n    assert( iBit == p-\u003enBits );\n    // remember the number of failed output\n    RetValue = -1;\n    Saig_ManForEachPo( pAig, pObj, i )\n        if ( pObj-\u003efMarkB )\n        {\n            RetValue = i;\n            break;\n        }\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}",
+      "Draft": "func Saig_ManFindFailedPoCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    // remember the number of failed output\n    RetValue = -1;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj.fMarkB {\n            RetValue = i;\n            break;\n        }\n    }\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_ManDupWithPhase",
+      "Start": 15862,
+      "End": 17191,
+      "BodyStart": 15934,
+      "Original": "Aig_Man_t * Saig_ManDupWithPhase( Aig_Man_t * pAig, Vec_Int_t * vInit )\n{\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit) );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pAigNew-\u003enConstrs = pAig-\u003enConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // update the flop variables\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_NotCond( (Aig_Obj_t *)pObj-\u003epData, Vec_IntEntry(vInit, i) );\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // transfer to register outputs\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // update the flop variables\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_NotCond(Aig_ObjChild0Copy(pObj), Vec_IntEntry(vInit, i)) );\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupWithPhase(pAig *Aig_Man_t, vInit *Vec_Int_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit), \"Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit)\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // update the flop variables\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_NotCond( (Aig_Obj_t *)pObj.pData, Vec_IntEntry(vInit, i) );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // update the flop variables\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_NotCond(Aig_ObjChild0Copy(pObj), Vec_IntEntry(vInit, i)) );\n    }\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManDupCones_rec",
+      "Start": 17477,
+      "End": 18248,
+      "BodyStart": 17599,
+      "Original": "void Saig_ManDupCones_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vNodes, Vec_Ptr_t * vRoots )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsNode(pObj) )\n    {\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n        Saig_ManDupCones_rec( p, Aig_ObjFanin1(pObj), vLeaves, vNodes, vRoots );\n        Vec_PtrPush( vNodes, pObj );\n    }\n    else if ( Aig_ObjIsCo(pObj) )\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n    else if ( Saig_ObjIsLo(p, pObj) )\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    else if ( Saig_ObjIsPi(p, pObj) )\n        Vec_PtrPush( vLeaves, pObj );\n    else assert( 0 );\n}",
+      "Draft": "func Saig_ManDupCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t, vRoots *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsNode(pObj) {\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n        Saig_ManDupCones_rec( p, Aig_ObjFanin1(pObj), vLeaves, vNodes, vRoots );\n        Vec_PtrPush( vNodes, pObj );\n    \n    } else if Aig_ObjIsCo(pObj) {\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n    } else if Saig_ObjIsLo(p, pObj) {\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    } else if Saig_ObjIsPi(p, pObj) {\n        Vec_PtrPush( vLeaves, pObj );\n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Saig_ManDupCones",
+      "Start": 18249,
+      "End": 19887,
+      "BodyStart": 18320,
+      "Original": "Aig_Man_t * Saig_ManDupCones( Aig_Man_t * pAig, int * pPos, int nPos )\n{\n    Aig_Man_t * pAigNew;\n    Vec_Ptr_t * vLeaves, * vNodes, * vRoots;\n    Aig_Obj_t * pObj;\n    int i;\n\n    // collect initial POs\n    vLeaves = Vec_PtrAlloc( 100 );\n    vNodes = Vec_PtrAlloc( 100 );\n    vRoots = Vec_PtrAlloc( 100 );\n    for ( i = 0; i \u003c nPos; i++ )\n        Vec_PtrPush( vRoots, Aig_ManCo(pAig, pPos[i]) );\n\n    // mark internal nodes\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vRoots, pObj, i )\n        Saig_ManDupCones_rec( pAig, pObj, vLeaves, vNodes, vRoots );\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    // create PIs\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // create LOs\n    Vec_PtrForEachEntryStart( Aig_Obj_t *, vRoots, pObj, i, nPos )\n        Saig_ObjLiToLo(pAig, pObj)-\u003epData = Aig_ObjCreateCi( pAigNew );\n    // create internal nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create COs\n    Vec_PtrForEachEntry( Aig_Obj_t *, vRoots, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    // finalize\n    Aig_ManSetRegNum( pAigNew, Vec_PtrSize(vRoots)-nPos );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vRoots );\n    return pAigNew;\n\n}",
+      "Draft": "func Saig_ManDupCones(pAig *Aig_Man_t, pPos *int32, nPos int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var vLeaves, vNodes, vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    // collect initial POs\n    vLeaves = Vec_PtrAlloc( 100 );\n    vNodes = Vec_PtrAlloc( 100 );\n    vRoots = Vec_PtrAlloc( 100 );\n    for  i = 0; i \u003c nPos; i++  {\n        Vec_PtrPush( vRoots, Aig_ManCo(pAig, pPos[i]) );\n    }\n\n    // mark internal nodes\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Saig_ManDupCones_rec( pAig, pObj, vLeaves, vNodes, vRoots );\n    }\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create PIs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // create LOs\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = nPos; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Saig_ObjLiToLo(pAig, pObj).pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // create internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    // create COs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // finalize\n    Aig_ManSetRegNum( pAigNew, Vec_PtrSize(vRoots)-nPos );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vRoots );\n    return pAigNew;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::1999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1835,
+      "End": 1835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::2313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1963,
+      "End": 1963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::2753",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2166,
+      "End": 2166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::3062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2350,
+      "End": 2350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::4352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3438,
+      "End": 3438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::4666",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3566,
+      "End": 3566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::5198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3912,
+      "End": 3925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::5224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3938,
+      "End": 3951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::5540",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4147,
+      "End": 4147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::6430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4837,
+      "End": 4837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::7071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5299,
+      "End": 5299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::7512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5557,
+      "End": 5557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::7871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5683,
+      "End": 5683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::8451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6244,
+      "End": 6257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::8610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6403,
+      "End": 6416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::10089",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7616,
+      "End": 7616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::10485",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7832,
+      "End": 7832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::11054",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8220,
+      "End": 8220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::11422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8409,
+      "End": 8409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::12468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9329,
+      "End": 9329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::12816",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9474,
+      "End": 9474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::13105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9578,
+      "End": 9578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::13549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9786,
+      "End": 9786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::14700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10665,
+      "End": 10665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::15048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10810,
+      "End": 10810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::15337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10914,
+      "End": 10914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::15781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11122,
+      "End": 11122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::16890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11959,
+      "End": 11959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::17148",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12072,
+      "End": 12072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::18112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12891,
+      "End": 12891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::18460",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13036,
+      "End": 13036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::18796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13190,
+      "End": 13190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::19177",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13385,
+      "End": 13385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::19621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13593,
+      "End": 13593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::20870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14570,
+      "End": 14570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::21218",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14715,
+      "End": 14715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::21507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14819,
+      "End": 14819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::21951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15027,
+      "End": 15027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::22648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15394,
+      "End": 15394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::23784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16348,
+      "End": 16348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::24031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16469,
+      "End": 16469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::24139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16539,
+      "End": 16552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::24402",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16635,
+      "End": 16635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::24807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16803,
+      "End": 16803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::25065",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16936,
+      "End": 16936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::27047",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18772,
+      "End": 18772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::27517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19136,
+      "End": 19136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::27755",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19261,
+      "End": 19261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::28017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19429,
+      "End": 19429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::pointer-cast::28288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19595,
+      "End": 19595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManDupOrpos",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupOrpos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1289,
+      "End": 2552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManCreateEquivMiter",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManCreateEquivMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2841,
+      "End": 4369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManTrimPis",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManTrimPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4652,
+      "End": 5852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManAbstractionDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManAbstractionDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6127,
+      "End": 6500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManDupAbstraction",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupAbstraction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6799,
+      "End": 8856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManVerifyCex",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManVerifyCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9124,
+      "End": 10185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManVerifyCexNoClear",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManVerifyCexNoClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10453,
+      "End": 11523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManReturnFailingState",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReturnFailingState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11524,
+      "End": 12211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManExtendCex",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManExtendCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12479,
+      "End": 14091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManFindFailedPoCex",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManFindFailedPoCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14359,
+      "End": 15573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManDupWithPhase",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupWithPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15862,
+      "End": 17191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManDupCones_rec",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupCones_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17477,
+      "End": 18248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::Saig_ManDupCones",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupCones",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18249,
+      "End": 19887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDup.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19889,
+      "End": 20054
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigDup.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Various duplication procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigDup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates while ORing the POs of sequential circuit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupOrpos(pAig *Aig_Man_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj, pMiter *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create PO of the circuit\n    pMiter = Aig_ManConst0( pAigNew );\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates while ORing the POs of sequential circuit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManCreateEquivMiter(pAig *Aig_Man_t, vPairs *Vec_Int_t, fAddOuts int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj, pObj2, pMiter *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create POs\n    assert(Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) % 2 == 0\");\n    // inlining of macro Aig_ManForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vPairs) \u0026\u0026 (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vPairs,i))), 1); i++  {\n        pObj2  = Aig_ManObj( pAig, Vec_IntEntry(vPairs, ++i) );\n        pMiter = Aig_Exor( pAigNew, (Aig_Obj_t *)pObj.pData, (Aig_Obj_t *)pObj2.pData );\n        pMiter = Aig_NotCond( pMiter, pObj.fPhase ^ pObj2.fPhase );\n        Aig_ObjCreateCo( pAigNew, pMiter );\n    }\n    // transfer to register outputs\n    if fAddOuts != 0 {\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    } }\n    Aig_ManCleanup( pAigNew );\n    if fAddOuts != 0 {\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) ); }\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Trims the model by removing PIs without fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManTrimPis(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, fAllPisHaveNoRefs int32;\n    // check the refs of PIs    \n    fAllPisHaveNoRefs = 1;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if pObj.nRefs {\n            fAllPisHaveNoRefs = 0; }\n    }\n    // start the new manager\n    pNew = Aig_ManStart( Aig_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.nConstrs = p.nConstrs;\n    // start mapping of the CI numbers\n    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // map const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if (fAllPisHaveNoRefs != 0) || pObj.nRefs || Saig_ObjIsLo(p, pObj) {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, Vec_IntEntry(p.vCiNumsOrig, i) );\n        }\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG manager recursively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManAbstractionDfs_rec(pNew *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    if pObj.pData {\n        return (Aig_Obj_t *)pObj.pData; }\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs abstraction of the AIG to preserve the included flops.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupAbstraction(p *Aig_Man_t, vFlops *Vec_Int_t) *Aig_Man_t { \n    var pNew *Aig_Man_t;//, * pTemp;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, Entry int32;\n    Aig_ManCleanData( p );\n    // start the new manager\n    pNew = Aig_ManStart( 5000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    // map the constant node\n    Aig_ManConst1(p).pData = Aig_ManConst1( pNew );\n    // label included flops\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFlops)) \u0026\u0026 (((Entry) = Vec_IntEntry(vFlops, i)), 1); i++  {\n        pObjLi = Saig_ManLi( p, Entry );\n        assert(pObjLi.fMarkA == 0, \"pObjLi.fMarkA == 0\");\n        pObjLi.fMarkA = 1;\n        pObjLo = Saig_ManLo( p, Entry );\n        assert(pObjLo.fMarkA == 0, \"pObjLo.fMarkA == 0\");\n        pObjLo.fMarkA = 1;\n    }\n    // create variables for PIs\n    assert(p.vCiNumsOrig == nil, \"p.vCiNumsOrig == nil\");\n    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if !pObj.fMarkA {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, i );\n        }\n    }\n    // create variables for LOs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        if pObj.fMarkA {\n            pObj.fMarkA = 0;\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            Vec_IntPush( pNew.vCiNumsOrig, i );\n        }\n    }\n    // add internal nodes \n//    Aig_ManForEachNode( p, pObj, i )\n//        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create POs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // create LIs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if pObj.fMarkA {\n            pObj.fMarkA = 0;\n            Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );\n            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n        }\n    }\n    Aig_ManSetRegNum( pNew, Vec_IntSize(vFlops) );\n    Aig_ManSeqCleanup( pNew );\n    // remove PIs without fanout\n//    pNew = Saig_ManTrimPis( pTemp = pNew );\n//    Aig_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManVerifyCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManVerifyCexNoClear(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    //Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}\nfunc Saig_ManReturnFailingState(pAig *Aig_Man_t, p *Abc_Cex_t, fNextOne int32) *Vec_Int_t {\n    var pObj *Aig_Obj_t;\n    var vState *Vec_Int_t;\n    var i int32;\n    var RetValue int32 = Saig_ManVerifyCexNoClear( pAig, p );\n    if RetValue == 0 {\n        Aig_ManCleanMarkB(pAig);\n        fmt.Printf(\"CEX does fail the given sequential miter.\\n\");\n        return nil;\n    }\n    vState = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    if fNextOne != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Vec_IntPush( vState, pObj.fMarkB );\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            Vec_IntPush( vState, pObj.fMarkB );\n        }\n    }\n    Aig_ManCleanMarkB(pAig);\n    return vState;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManExtendCex(pAig *Aig_Man_t, p *Abc_Cex_t) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    // create new counter-example\n    pNew = Abc_CexAlloc( 0, Aig_ManCiNum(pAig), p.iFrame + 1 );\n    pNew.iPo = p.iPo;\n    pNew.iFrame = p.iFrame;\n    // simulate the AIG\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        ///////// write PI+LO values ////////////\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            if pObj.fMarkB {\n                Abc_InfoSetBit(pNew.pData, Aig_ManCiNum(pAig)*i + k); }\n        }\n        /////////////////////////////////////////\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;\n    Aig_ManCleanMarkB(pAig);\n    if RetValue == 0 {\n        fmt.Printf(\"Saig_ManExtendCex(): The counter-example is invalid!!!\\n\"); }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManFindFailedPoCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {\n    var pObj, pObjRi, pObjRo *Aig_Obj_t;\n    var RetValue, i, k, iBit int32;\n    Aig_ManCleanMarkB(pAig);\n    Aig_ManConst1(pAig).fMarkB = 1;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {\n            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) \u0026 \n                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);\n        }\n        if i == p.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjRi) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObjRo.fMarkB = pObjRi.fMarkB;\n        }\n    }\n    assert(iBit == p.nBits, \"iBit == p.nBits\");\n    // remember the number of failed output\n    RetValue = -1;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj.fMarkB {\n            RetValue = i;\n            break;\n        }\n    }\n    Aig_ManCleanMarkB(pAig);\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates while ORing the POs of sequential circuit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupWithPhase(pAig *Aig_Man_t, vInit *Vec_Int_t) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit), \"Aig_ManRegNum(pAig) \u003c= Vec_IntSize(vInit)\");\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    pAigNew.nConstrs = pAig.nConstrs;\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // update the flop variables\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_NotCond( (Aig_Obj_t *)pObj.pData, Vec_IntEntry(vInit, i) );\n    }\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // transfer to register outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // update the flop variables\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_NotCond(Aig_ObjChild0Copy(pObj), Vec_IntEntry(vInit, i)) );\n    }\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Copy an AIG structure related to the selected POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t, vRoots *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsNode(pObj) {\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n        Saig_ManDupCones_rec( p, Aig_ObjFanin1(pObj), vLeaves, vNodes, vRoots );\n        Vec_PtrPush( vNodes, pObj );\n    \n    } else if Aig_ObjIsCo(pObj) {\n        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );\n    } else if Saig_ObjIsLo(p, pObj) {\n        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );\n    } else if Saig_ObjIsPi(p, pObj) {\n        Vec_PtrPush( vLeaves, pObj );\n    } else { assert(false, \"0\"); }\n}\nfunc Saig_ManDupCones(pAig *Aig_Man_t, pPos *int32, nPos int32) *Aig_Man_t {\n    var pAigNew *Aig_Man_t;\n    var vLeaves, vNodes, vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    // collect initial POs\n    vLeaves = Vec_PtrAlloc( 100 );\n    vNodes = Vec_PtrAlloc( 100 );\n    vRoots = Vec_PtrAlloc( 100 );\n    for  i = 0; i \u003c nPos; i++  {\n        Vec_PtrPush( vRoots, Aig_ManCo(pAig, pPos[i]) );\n    }\n\n    // mark internal nodes\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Saig_ManDupCones_rec( pAig, pObj, vLeaves, vNodes, vRoots );\n    }\n\n    // start the new manager\n    pAigNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // create PIs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // create LOs\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = nPos; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Saig_ObjLiToLo(pAig, pObj).pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // create internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    // create COs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vRoots)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // finalize\n    Aig_ManSetRegNum( pAigNew, Vec_PtrSize(vRoots)-nPos );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vRoots );\n    return pAigNew;\n\n}\n\n#ifndef ABC_USE_CUDD\nint Aig_ManVerifyUsingBdds( Aig_Man_t * pInit, Saig_ParBbr_t * pPars ) { return 0; }\nvoid Bbr_ManSetDefaultParams( Saig_ParBbr_t * p ) {}\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

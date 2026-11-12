@@ -1,0 +1,535 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h",
+  "SHA256": "1bd98e7a83173ad68d38c8350d3992945a42cbcde5e331c43fbabfa3ecd88e0d",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Att_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Vec_Att_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 19,
+        "ByteOffset": 4266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArrayPtr = ABC_ALLOC( void *, p.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArrayPtr );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 5778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 19,
+        "ByteOffset": 6752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArrayPtr = ABC_REALLOC( void *, p.pArrayPtr, nCapMin );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 6801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArrayPtr + p.nCap, 0, sizeof(void *) * (size_t)(nCapMin - p.nCap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 7277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArrayPtr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 7304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFuncStartObj == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 7761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArrayPtr );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_AttAlloc",
+      "Start": 3283,
+      "End": 3867,
+      "BodyStart": 3469,
+      "Original": "static inline Vec_Att_t * Vec_AttAlloc( \n    int nSize, void * pMan,\n    void (*pFuncFreeMan) (void *), \n    void*(*pFuncStartObj)(void *), \n    void (*pFuncFreeObj) (void *, void *)  )\n{\n    Vec_Att_t * p;\n    p = ABC_ALLOC( Vec_Att_t, 1 );\n    memset( p, 0, sizeof(Vec_Att_t) );\n    p-\u003epMan          = pMan;\n    p-\u003epFuncFreeMan  = pFuncFreeMan;\n    p-\u003epFuncStartObj = pFuncStartObj;\n    p-\u003epFuncFreeObj  = pFuncFreeObj;\n    p-\u003enCap = nSize? nSize : 16;\n    p-\u003epArrayPtr = ABC_ALLOC( void *, p-\u003enCap );\n    memset( p-\u003epArrayPtr, 0, sizeof(void *) * (size_t)p-\u003enCap );\n    return p;\n}",
+      "Draft": "func Vec_AttAlloc(nSize int32, pMan any, pFuncFreeMan func(any), pFuncStartObj func(any) any, pFuncFreeObj func(any, any)) *Vec_Att_t {\n    var p *Vec_Att_t;\n    p = new(Vec_Att_t);\n    *p = Vec_Att_t{};\n    p.pMan          = pMan;\n    p.pFuncFreeMan  = pFuncFreeMan;\n    p.pFuncStartObj = pFuncStartObj;\n    p.pFuncFreeObj  = pFuncFreeObj;\n    if nSize != 0 {\n        p.nCap = nSize;\n    } else {\n        p.nCap = 16;\n    }\n    p.pArrayPtr = ABC_ALLOC( void *, p.nCap );\n    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_AttFree",
+      "Start": 4120,
+      "End": 4677,
+      "BodyStart": 4184,
+      "Original": "static inline void * Vec_AttFree( Vec_Att_t * p, int fFreeMan )\n{\n    void * pMan;\n    if ( p == NULL )\n        return NULL;\n    // free the attributes of objects\n    if ( p-\u003epFuncFreeObj )\n    {\n        int i;\n        for ( i = 0; i \u003c p-\u003enCap; i++ )\n            if ( p-\u003epArrayPtr[i] )\n                p-\u003epFuncFreeObj( p-\u003epMan, p-\u003epArrayPtr[i] );\n    }\n    // free the memory manager\n    pMan = fFreeMan? NULL : p-\u003epMan;\n    if ( p-\u003epMan \u0026\u0026 fFreeMan )  \n        p-\u003epFuncFreeMan( p-\u003epMan );\n    ABC_FREE( p-\u003epArrayPtr );\n    ABC_FREE( p );\n    return pMan;\n}",
+      "Draft": "func Vec_AttFree(p *Vec_Att_t, fFreeMan int32) any {\n    var pMan any;\n    if p == nil {\n        return nil; }\n    // free the attributes of objects\n    if p.pFuncFreeObj {\n        var i int32;\n        for  i = 0; i \u003c p.nCap; i++  {\n            if p.pArrayPtr[i] {\n                p.pFuncFreeObj( p.pMan, p.pArrayPtr[i] ); }\n        }\n    }\n    // free the memory manager\n    if fFreeMan != 0 {\n        pMan = nil;\n    } else {\n        pMan = p.pMan;\n    }\n    if p.pMan \u0026\u0026 (fFreeMan != 0) {  \n        p.pFuncFreeMan( p.pMan ); }\n    ABC_FREE( p.pArrayPtr );\n    ABC_FREE( p );\n    return pMan;\n}"
+    },
+    {
+      "Name": "Vec_AttClear",
+      "Start": 4931,
+      "End": 5319,
+      "BodyStart": 4980,
+      "Original": "static inline void Vec_AttClear( Vec_Att_t * p )\n{\n    // free the attributes of objects\n    if ( p-\u003epFuncFreeObj )\n    {\n        int i;\n        if ( p-\u003epFuncFreeObj )\n            for ( i = 0; i \u003c p-\u003enCap; i++ )\n                if ( p-\u003epArrayPtr[i] )\n                    p-\u003epFuncFreeObj( p-\u003epMan, p-\u003epArrayPtr[i] );\n    }\n    memset( p-\u003epArrayPtr, 0, sizeof(void *) * (size_t)p-\u003enCap );\n}",
+      "Draft": "func Vec_AttClear(p *Vec_Att_t) {\n    // free the attributes of objects\n    if p.pFuncFreeObj {\n        var i int32;\n        if p.pFuncFreeObj {\n            for  i = 0; i \u003c p.nCap; i++  {\n                if p.pArrayPtr[i] {\n                    p.pFuncFreeObj( p.pMan, p.pArrayPtr[i] ); }\n            } }\n    }\n    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );\n}"
+    },
+    {
+      "Name": "Vec_AttFreeEntry",
+      "Start": 5600,
+      "End": 5877,
+      "BodyStart": 5660,
+      "Original": "static inline void Vec_AttFreeEntry( Vec_Att_t * p, int i )\n{\n    if ( i \u003e= p-\u003enCap )\n        return;\n    if ( p-\u003epMan )\n    {\n        if ( p-\u003epArrayPtr[i] \u0026\u0026 p-\u003epFuncFreeObj )\n            p-\u003epFuncFreeObj( p-\u003epMan, (void *)p-\u003epArrayPtr[i] );\n    }\n    p-\u003epArrayPtr[i] = NULL;\n}",
+      "Draft": "func Vec_AttFreeEntry(p *Vec_Att_t, i int32) {\n    if i \u003e= p.nCap {\n        return; }\n    if p.pMan {\n        if p.pArrayPtr[i] \u0026\u0026 p.pFuncFreeObj {\n            p.pFuncFreeObj( p.pMan, (void *)p.pArrayPtr[i] ); }\n    }\n    p.pArrayPtr[i] = nil;\n}"
+    },
+    {
+      "Name": "Vec_AttGrow",
+      "Start": 6154,
+      "End": 6439,
+      "BodyStart": 6215,
+      "Original": "static inline void Vec_AttGrow( Vec_Att_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArrayPtr = ABC_REALLOC( void *, p-\u003epArrayPtr, nCapMin );\n    memset( p-\u003epArrayPtr + p-\u003enCap, 0, sizeof(void *) * (size_t)(nCapMin - p-\u003enCap) );\n    p-\u003enCap = nCapMin;\n}",
+      "Draft": "func Vec_AttGrow(p *Vec_Att_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArrayPtr = ABC_REALLOC( void *, p.pArrayPtr, nCapMin );\n    memset( p.pArrayPtr + p.nCap, 0, sizeof(void *) * (size_t)(nCapMin - p.nCap) );\n    p.nCap = nCapMin;\n}"
+    },
+    {
+      "Name": "Vec_AttWriteEntry",
+      "Start": 6748,
+      "End": 7016,
+      "BodyStart": 6824,
+      "Original": "static inline void Vec_AttWriteEntry( Vec_Att_t * p, int i, void * pEntry )\n{\n    assert( p-\u003epArrayPtr );\n    assert( p-\u003epFuncStartObj == NULL );\n    if ( i \u003e= p-\u003enCap )\n        Vec_AttGrow( p, (2 * p-\u003enCap \u003e i)? 2 * p-\u003enCap : i + 10 );\n    p-\u003epArrayPtr[i] = pEntry;\n}",
+      "Draft": "func Vec_AttWriteEntry(p *Vec_Att_t, i int32, pEntry any) {\n    assert(p.pArrayPtr, \"p.pArrayPtr\");\n    assert(p.pFuncStartObj == nil, \"p.pFuncStartObj == nil\");\n    if i \u003e= p.nCap {\n        Vec_AttGrow( p, (2 * p.nCap \u003e i)? 2 * p.nCap : i + 10 ); }\n    p.pArrayPtr[i] = pEntry;\n}"
+    },
+    {
+      "Name": "Vec_AttEntry",
+      "Start": 7270,
+      "End": 7588,
+      "BodyStart": 7328,
+      "Original": "static inline void * Vec_AttEntry( Vec_Att_t * p, int i )\n{\n    assert( p-\u003epArrayPtr );\n    if ( i \u003e= p-\u003enCap )\n        Vec_AttGrow( p, (2 * p-\u003enCap \u003e i)? 2 * p-\u003enCap : i + 10 );\n    if ( p-\u003epArrayPtr[i] == NULL \u0026\u0026 p-\u003epFuncStartObj )\n        p-\u003epArrayPtr[i] = p-\u003epFuncStartObj( p-\u003epMan );\n    return p-\u003epArrayPtr[i];\n}",
+      "Draft": "func Vec_AttEntry(p *Vec_Att_t, i int32) any {\n    assert(p.pArrayPtr, \"p.pArrayPtr\");\n    if i \u003e= p.nCap {\n        Vec_AttGrow( p, (2 * p.nCap \u003e i)? 2 * p.nCap : i + 10 ); }\n    if p.pArrayPtr[i] == nil \u0026\u0026 p.pFuncStartObj {\n        p.pArrayPtr[i] = p.pFuncStartObj( p.pMan ); }\n    return p.pArrayPtr[i];\n}"
+    },
+    {
+      "Name": "Vec_AttMan",
+      "Start": 7842,
+      "End": 7914,
+      "BodyStart": 7891,
+      "Original": "static inline void * Vec_AttMan( Vec_Att_t * p )\n{\n    return p-\u003epMan;\n}",
+      "Draft": "func Vec_AttMan(p *Vec_Att_t) any {\n    return p.pMan;\n}"
+    },
+    {
+      "Name": "Vec_AttArray",
+      "Start": 8182,
+      "End": 8262,
+      "BodyStart": 8234,
+      "Original": "static inline void ** Vec_AttArray( Vec_Att_t * p )\n{\n    return p-\u003epArrayPtr;\n}",
+      "Draft": "func Vec_AttArray(p *Vec_Att_t) *any {\n    return p.pArrayPtr;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::struct::Vec_Att_t::// the manager for this attribute\n    void (*pFuncFreeMan) (void *);",
+      "Category": "struct-field-review",
+      "Symbol": "Vec_Att_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2266,
+      "End": 2351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::struct::Vec_Att_t::// the procedure to free the manager\n    void*(*pFuncStartObj)(void *);",
+      "Category": "struct-field-review",
+      "Symbol": "Vec_Att_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2351,
+      "End": 2431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::struct::Vec_Att_t::// the procedure to start one attribute\n    void (*pFuncFreeObj) (void *, void *);",
+      "Category": "struct-field-review",
+      "Symbol": "Vec_Att_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2431,
+      "End": 2522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::struct::Vec_Att_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Att_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1866,
+      "End": 2564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::mechanical::enum::1101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1101,
+      "End": 1105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::mechanical::sizeof::3543",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3543,
+      "End": 3549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::mechanical::sizeof::3816",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3816,
+      "End": 3822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::mechanical::sizeof::5282",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5282,
+      "End": 5288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::mechanical::sizeof::6367",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6367,
+      "End": 6373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::2342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2342,
+      "End": 2350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::2422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2422,
+      "End": 2430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::3377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3377,
+      "End": 3385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::3413",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3413,
+      "End": 3421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::3822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3822,
+      "End": 3830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::5288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5288,
+      "End": 5296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::5815",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5815,
+      "End": 5823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::pointer-cast::6373",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6373,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::void-pointer::Vec_AttAlloc",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_AttAlloc",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3283,
+      "End": 3867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3283,
+      "End": 3867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::void-pointer::Vec_AttFree",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_AttFree",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4120,
+      "End": 4677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4120,
+      "End": 4677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttClear",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4931,
+      "End": 5319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttFreeEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttFreeEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5600,
+      "End": 5877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttGrow",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6154,
+      "End": 6439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::void-pointer::Vec_AttWriteEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_AttWriteEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6748,
+      "End": 7016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::ternary::Vec_AttWriteEntry",
+      "Category": "ternary-review",
+      "Symbol": "Vec_AttWriteEntry",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6748,
+      "End": 7016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6748,
+      "End": 7016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::void-pointer::Vec_AttEntry",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_AttEntry",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7270,
+      "End": 7588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::ternary::Vec_AttEntry",
+      "Category": "ternary-review",
+      "Symbol": "Vec_AttEntry",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7270,
+      "End": 7588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7270,
+      "End": 7588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::void-pointer::Vec_AttMan",
+      "Category": "void-pointer-review",
+      "Symbol": "Vec_AttMan",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7842,
+      "End": 7914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttMan",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7842,
+      "End": 7914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::Vec_AttArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_AttArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8182,
+      "End": 8262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecAtt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8520
+    }
+  ],
+  "Draft": "package vec\n\n/**CFile****************************************************************\n\n  FileName    [vecAtt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Array of user-specified attiributes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecAtt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// various attributes\n type Vec_AttrType_t int32\nconst ( \n    VEC_ATTR_NONE Vec_AttrType_t = 0\n     // 0\n    VEC_ATTR_COPY Vec_AttrType_t = VEC_ATTR_NONE + 1\n         // 1\n    VEC_ATTR_LOCAL_AIG Vec_AttrType_t = VEC_ATTR_COPY + 1\n    // 2\n    VEC_ATTR_LOCAL_SOP Vec_AttrType_t = VEC_ATTR_LOCAL_AIG + 1\n    // 3\n    VEC_ATTR_LOCAL_BDD Vec_AttrType_t = VEC_ATTR_LOCAL_SOP + 1\n    // 4\n    VEC_ATTR_GLOBAL_AIG Vec_AttrType_t = VEC_ATTR_LOCAL_BDD + 1\n   // 5\n    VEC_ATTR_GLOBAL_SOP Vec_AttrType_t = VEC_ATTR_GLOBAL_AIG + 1\n   // 6\n    VEC_ATTR_GLOBAL_BDD Vec_AttrType_t = VEC_ATTR_GLOBAL_SOP + 1\n   // 7\n    VEC_ATTR_LEVEL Vec_AttrType_t = VEC_ATTR_GLOBAL_BDD + 1\n        // 8\n    VEC_ATTR_LEVEL_REV Vec_AttrType_t = VEC_ATTR_LEVEL + 1\n    // 9\n    VEC_ATTR_RETIME_LAG Vec_AttrType_t = VEC_ATTR_LEVEL_REV + 1\n   // 10\n    VEC_ATTR_FRAIG Vec_AttrType_t = VEC_ATTR_RETIME_LAG + 1\n        // 11\n    VEC_ATTR_MVVAR Vec_AttrType_t = VEC_ATTR_FRAIG + 1\n        // 12\n    VEC_ATTR_DATA1 Vec_AttrType_t = VEC_ATTR_MVVAR + 1\n        // 13\n    VEC_ATTR_DATA2 Vec_AttrType_t = VEC_ATTR_DATA1 + 1\n        // 14\n    VEC_ATTR_TOTAL_NUM Vec_AttrType_t = VEC_ATTR_DATA2 + 1     // 15\n\n)\n\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n    \ntype Vec_Att_t struct {\n    // storage for attributes\n    nCap              int32;                 // the size of array allocated\n    // Removed pArrayInt as it's not 64-bit safe, it generates compiler\n    // warnings, and it's unused.\n    pArrayPtr           *any;            // the pointer attribute array\n    // attribute specific info\n    pMan            any;                 // the manager for this attribute\n    void (*pFuncFreeMan) (void *);         // the procedure to free the manager\n    void*(*pFuncStartObj)(void *);         // the procedure to start one attribute\n    void (*pFuncFreeObj) (void *, void *); // the procedure to free one attribute\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttAlloc(nSize int32, pMan any, pFuncFreeMan func(any), pFuncStartObj func(any) any, pFuncFreeObj func(any, any)) *Vec_Att_t {\n    var p *Vec_Att_t;\n    p = new(Vec_Att_t);\n    *p = Vec_Att_t{};\n    p.pMan          = pMan;\n    p.pFuncFreeMan  = pFuncFreeMan;\n    p.pFuncStartObj = pFuncStartObj;\n    p.pFuncFreeObj  = pFuncFreeObj;\n    if nSize != 0 {\n        p.nCap = nSize;\n    } else {\n        p.nCap = 16;\n    }\n    p.pArrayPtr = ABC_ALLOC( void *, p.nCap );\n    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttFree(p *Vec_Att_t, fFreeMan int32) any {\n    var pMan any;\n    if p == nil {\n        return nil; }\n    // free the attributes of objects\n    if p.pFuncFreeObj {\n        var i int32;\n        for  i = 0; i \u003c p.nCap; i++  {\n            if p.pArrayPtr[i] {\n                p.pFuncFreeObj( p.pMan, p.pArrayPtr[i] ); }\n        }\n    }\n    // free the memory manager\n    if fFreeMan != 0 {\n        pMan = nil;\n    } else {\n        pMan = p.pMan;\n    }\n    if p.pMan \u0026\u0026 (fFreeMan != 0) {  \n        p.pFuncFreeMan( p.pMan ); }\n    ABC_FREE( p.pArrayPtr );\n    ABC_FREE( p );\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttClear(p *Vec_Att_t) {\n    // free the attributes of objects\n    if p.pFuncFreeObj {\n        var i int32;\n        if p.pFuncFreeObj {\n            for  i = 0; i \u003c p.nCap; i++  {\n                if p.pArrayPtr[i] {\n                    p.pFuncFreeObj( p.pMan, p.pArrayPtr[i] ); }\n            } }\n    }\n    memset( p.pArrayPtr, 0, sizeof(void *) * (size_t)p.nCap );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes one entry from the attribute manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttFreeEntry(p *Vec_Att_t, i int32) {\n    if i \u003e= p.nCap {\n        return; }\n    if p.pMan {\n        if p.pArrayPtr[i] \u0026\u0026 p.pFuncFreeObj {\n            p.pFuncFreeObj( p.pMan, (void *)p.pArrayPtr[i] ); }\n    }\n    p.pArrayPtr[i] = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttGrow(p *Vec_Att_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArrayPtr = ABC_REALLOC( void *, p.pArrayPtr, nCapMin );\n    memset( p.pArrayPtr + p.nCap, 0, sizeof(void *) * (size_t)(nCapMin - p.nCap) );\n    p.nCap = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the entry into its place.]\n\n  Description [Only works if the manager is not defined.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttWriteEntry(p *Vec_Att_t, i int32, pEntry any) {\n    assert(p.pArrayPtr, \"p.pArrayPtr\");\n    assert(p.pFuncStartObj == nil, \"p.pFuncStartObj == nil\");\n    if i \u003e= p.nCap {\n        Vec_AttGrow( p, (2 * p.nCap \u003e i)? 2 * p.nCap : i + 10 ); }\n    p.pArrayPtr[i] = pEntry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttEntry(p *Vec_Att_t, i int32) any {\n    assert(p.pArrayPtr, \"p.pArrayPtr\");\n    if i \u003e= p.nCap {\n        Vec_AttGrow( p, (2 * p.nCap \u003e i)? 2 * p.nCap : i + 10 ); }\n    if p.pArrayPtr[i] == nil \u0026\u0026 p.pFuncStartObj {\n        p.pArrayPtr[i] = p.pFuncStartObj( p.pMan ); }\n    return p.pArrayPtr[i];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttMan(p *Vec_Att_t) any {\n    return p.pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of attributes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_AttArray(p *Vec_Att_t) *any {\n    return p.pArrayPtr;\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

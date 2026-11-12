@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem.h",
+  "SHA256": "4f20e6b721c8895bbd4b8a73a85b204abddf080edf575fa7c7e510c3dfd6f0e4",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2724
+    }
+  ],
+  "Draft": "package mem\n\n/**CFile****************************************************************\n\n  FileName    [mem.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Memory management.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mem.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Mem_Fixed_t =    Mem_Fixed_t_;    \ntype Mem_Flex_t =     Mem_Flex_t_;     \ntype Mem_Step_t =     Mem_Step_t_;     \n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/*=== mem.c ===========================================================*/\n// fixed-size-block memory manager\n// extern Mem_Fixed_t * Mem_FixedStart( int nEntrySize );\n\n// extern void          Mem_FixedStop( Mem_Fixed_t * p, int fVerbose );\n\n// extern char *        Mem_FixedEntryFetch( Mem_Fixed_t * p );\n\n// extern void          Mem_FixedEntryRecycle( Mem_Fixed_t * p, char * pEntry );\n\n// extern void          Mem_FixedRestart( Mem_Fixed_t * p );\n\n// extern int           Mem_FixedReadMemUsage( Mem_Fixed_t * p );\n\n// extern int           Mem_FixedReadMaxEntriesUsed( Mem_Fixed_t * p );\n\n// flexible-size-block memory manager\n// extern Mem_Flex_t *  Mem_FlexStart();\n\n// extern void          Mem_FlexStop( Mem_Flex_t * p, int fVerbose );\n\n// extern char *        Mem_FlexEntryFetch( Mem_Flex_t * p, int nBytes );\n\n// extern void          Mem_FlexRestart( Mem_Flex_t * p );\n\n// extern int           Mem_FlexReadMemUsage( Mem_Flex_t * p );\n\n// hierarchical memory manager\n// extern Mem_Step_t *  Mem_StepStart( int nSteps );\n\n// extern void          Mem_StepStop( Mem_Step_t * p, int fVerbose );\n\n// extern char *        Mem_StepEntryFetch( Mem_Step_t * p, int nBytes );\n\n// extern void          Mem_StepEntryRecycle( Mem_Step_t * p, char * pEntry, int nBytes );\n\n// extern int           Mem_StepReadMemUsage( Mem_Step_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n"
+}

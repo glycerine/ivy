@@ -1,0 +1,1238 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c",
+  "SHA256": "18962f35e50cbaa63b67a114a9e8db66d9698a136877f192d3d2b5fa7143fe69",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 64,
+        "Column": 78,
+        "ByteOffset": 1935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.vFanins = /*__starting_point_inline_macro:ABC_CALLOC__*/((Wln_Vec_t *) calloc((size_t)(nObjsMax+1), sizeof(Wln_Vec_t)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hash_IntManEntryNum(p.pRanges) == 128 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 86,
+        "ByteOffset": 2490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((p.vFanins[i].pArray[0]) ? (free((char *) (p.vFanins[i].pArray[0])), (p.vFanins[i].pArray[0]) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 65,
+        "ByteOffset": 2639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFanins) ? (free((char *) (p.vFanins)), (p.vFanins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 86,
+        "Column": 69,
+        "ByteOffset": 2861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 69,
+        "ByteOffset": 2988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 69,
+        "ByteOffset": 3115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFfs.pArray) ? (free((char *) (p.vFfs.pArray)), (p.vFfs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 90,
+        "Column": 71,
+        "ByteOffset": 3245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vTypes.pArray) ? (free((char *) (p.vTypes.pArray)), (p.vTypes.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 71,
+        "ByteOffset": 3378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vSigns.pArray) ? (free((char *) (p.vSigns.pArray)), (p.vSigns.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 72,
+        "ByteOffset": 3512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vRanges.pArray) ? (free((char *) (p.vRanges.pArray)), (p.vRanges.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 93,
+        "Column": 73,
+        "ByteOffset": 3649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vNameIds.pArray) ? (free((char *) (p.vNameIds.pArray)), (p.vNameIds.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 94,
+        "Column": 73,
+        "ByteOffset": 3788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vInstIds.pArray) ? (free((char *) (p.vInstIds.pArray)), (p.vInstIds.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 95,
+        "Column": 73,
+        "ByteOffset": 3927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 72,
+        "ByteOffset": 4065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 97,
+        "Column": 70,
+        "ByteOffset": 4199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vBits.pArray) ? (free((char *) (p.vBits.pArray)), (p.vBits.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 98,
+        "Column": 72,
+        "ByteOffset": 4331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 70,
+        "ByteOffset": 4465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vRefs.pArray) ? (free((char *) (p.vRefs.pArray)), (p.vRefs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 100,
+        "Column": 72,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFanout.pArray) ? (free((char *) (p.vFanout.pArray)), (p.vFanout.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 76,
+        "ByteOffset": 4737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFaninAttrs.pArray) ? (free((char *) (p.vFaninAttrs.pArray)), (p.vFaninAttrs.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 76,
+        "ByteOffset": 4885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFaninLists.pArray) ? (free((char *) (p.vFaninLists.pArray)), (p.vFaninLists.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 104,
+        "Column": 63,
+        "ByteOffset": 5021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 63,
+        "ByteOffset": 5130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 57,
+        "ByteOffset": 5233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 5978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 6209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 9,
+        "ByteOffset": 7395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Network contains combinational loop!\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 166,
+        "Column": 18,
+        "ByteOffset": 7404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Network contains combinational loop!\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 7464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node %16s is encountered twice on the following path:\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 167,
+        "Column": 18,
+        "ByteOffset": 7473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node %16s is encountered twice on the following path:\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 9,
+        "ByteOffset": 7572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 168,
+        "Column": 18,
+        "ByteOffset": 7581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 13,
+        "ByteOffset": 8447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 184,
+        "Column": 22,
+        "ByteOffset": 8456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 9,
+        "ByteOffset": 9584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Primary output %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 209,
+        "Column": 18,
+        "ByteOffset": 9593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Primary output %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 10007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Flip-flop %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 217,
+        "Column": 18,
+        "ByteOffset": 10016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Flip-flop %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 10389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The network has %d objects and %d (%6.2f %%) of them are not connected to the outputs.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 13,
+        "ByteOffset": 10896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"These unconnected objects feed into %d sink objects without fanout:\\n\", nSinks );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 21,
+        "ByteOffset": 11240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d)\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 237,
+        "Column": 30,
+        "ByteOffset": 11249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 17,
+        "ByteOffset": 11587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"...\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 17,
+        "ByteOffset": 12057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Unconnected object %s\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 252,
+        "Column": 26,
+        "ByteOffset": 12066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Unconnected object %s\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 12533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.pManName  == nil \u0026\u0026 p.pManName != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 12646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p)   );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 12762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 9,
+        "ByteOffset": 13244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 14781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Wln_ObjIsFf(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 5,
+        "ByteOffset": 17825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iOffset == Vec_IntSize(vFaninMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 18339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iOffset == Vec_IntSize(vFanoutMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 19565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 19858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Printing fanouts of %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 20133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Fanouts : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 13,
+        "ByteOffset": 20337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d \", iFanout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 9,
+        "ByteOffset": 20382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 5,
+        "ByteOffset": 20442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wln_NtkAlloc",
+      "Start": 1253,
+      "End": 2106,
+      "BodyStart": 1308,
+      "Original": "Wln_Ntk_t * Wln_NtkAlloc( char * pName, int nObjsMax )\n{\n    Wln_Ntk_t * p; int i;\n    p = ABC_CALLOC( Wln_Ntk_t, 1 );\n    p-\u003epName = pName ? Extra_FileNameGeneric( pName ) : NULL;\n    Vec_IntGrow( \u0026p-\u003evCis, 111 );\n    Vec_IntGrow( \u0026p-\u003evCos, 111 );\n    Vec_IntGrow( \u0026p-\u003evFfs, 111 );\n    Vec_IntGrow( \u0026p-\u003evTypes,  nObjsMax+1 );\n    Vec_StrGrow( \u0026p-\u003evSigns,  nObjsMax+1 );\n    Vec_IntGrow( \u0026p-\u003evRanges, nObjsMax+1 );\n    Vec_IntPush( \u0026p-\u003evTypes,  -1 );\n    Vec_StrPush( \u0026p-\u003evSigns,  -1 );\n    Vec_IntPush( \u0026p-\u003evRanges, -1 );\n    p-\u003evFanins = ABC_CALLOC( Wln_Vec_t, nObjsMax+1 );\n    p-\u003epRanges = Hash_IntManStart( 1000 );\n    for ( i = 0; i \u003c 65; i++ )\n        Hash_Int2ManInsert( p-\u003epRanges, i, i, 0 );\n    for ( i = 1; i \u003c 64; i++ )\n        Hash_Int2ManInsert( p-\u003epRanges, i, 0, 0 );\n    assert( Hash_IntManEntryNum(p-\u003epRanges) == 128 );\n    return p;\n}",
+      "Draft": "func Wln_NtkAlloc(pName string, nObjsMax int32) *Wln_Ntk_t {\n     var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Wln_Ntk_t{};\n    if pName {\n        p.pName = Extra_FileNameGeneric( pName );\n    } else {\n        p.pName = nil;\n    }\n    Vec_IntGrow( \u0026p.vCis, 111 );\n    Vec_IntGrow( \u0026p.vCos, 111 );\n    Vec_IntGrow( \u0026p.vFfs, 111 );\n    Vec_IntGrow( \u0026p.vTypes,  nObjsMax+1 );\n    Vec_StrGrow( \u0026p.vSigns,  nObjsMax+1 );\n    Vec_IntGrow( \u0026p.vRanges, nObjsMax+1 );\n    Vec_IntPush( \u0026p.vTypes,  -1 );\n    Vec_StrPush( \u0026p.vSigns,  -1 );\n    Vec_IntPush( \u0026p.vRanges, -1 );\n    // inlining of macro ABC_CALLOC\n    p.vFanins = ((Wln_Vec_t *) calloc((size_t)(nObjsMax+1), sizeof(Wln_Vec_t)));\n    p.pRanges = Hash_IntManStart( 1000 );\n    for  i = 0; i \u003c 65; i++  {\n        Hash_Int2ManInsert( p.pRanges, i, i, 0 );\n    }\n    for  i = 1; i \u003c 64; i++  {\n        Hash_Int2ManInsert( p.pRanges, i, 0, 0 );\n    }\n    assert(Hash_IntManEntryNum(p.pRanges) == 128, \"Hash_IntManEntryNum(p.pRanges) == 128\");\n    return p;\n}"
+    },
+    {
+      "Name": "Wln_NtkFree",
+      "Start": 2107,
+      "End": 3055,
+      "BodyStart": 2141,
+      "Original": "void Wln_NtkFree( Wln_Ntk_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c Wln_NtkObjNum(p); i++ )\n        if ( Wln_ObjFaninNum(p, i) \u003e 2 ) \n            ABC_FREE( p-\u003evFanins[i].pArray[0] );\n    ABC_FREE( p-\u003evFanins );\n\n    if ( p-\u003epRanges )  Hash_IntManStop( p-\u003epRanges );\n    if ( p-\u003epManName ) Abc_NamStop( p-\u003epManName );\n\n    ABC_FREE( p-\u003evCis.pArray );\n    ABC_FREE( p-\u003evCos.pArray );\n    ABC_FREE( p-\u003evFfs.pArray );\n\n    ABC_FREE( p-\u003evTypes.pArray );\n    ABC_FREE( p-\u003evSigns.pArray );\n    ABC_FREE( p-\u003evRanges.pArray );\n    ABC_FREE( p-\u003evNameIds.pArray );\n    ABC_FREE( p-\u003evInstIds.pArray );\n    ABC_FREE( p-\u003evTravIds.pArray );\n    ABC_FREE( p-\u003evCopies.pArray );\n    ABC_FREE( p-\u003evBits.pArray );\n    ABC_FREE( p-\u003evLevels.pArray );\n    ABC_FREE( p-\u003evRefs.pArray );\n    ABC_FREE( p-\u003evFanout.pArray );\n    ABC_FREE( p-\u003evFaninAttrs.pArray );\n    ABC_FREE( p-\u003evFaninLists.pArray );\n\n    ABC_FREE( p-\u003epName );\n    ABC_FREE( p-\u003epSpec );\n    ABC_FREE( p );\n}",
+      "Draft": "func Wln_NtkFree(p *Wln_Ntk_t) {\n    var i int32;\n    for  i = 0; i \u003c Wln_NtkObjNum(p); i++  {\n        if Wln_ObjFaninNum(p, i) \u003e 2 { \n            // inlining of macro ABC_FREE\n            ((p.vFanins[i].pArray[0]) ? (free((char *) (p.vFanins[i].pArray[0])), (p.vFanins[i].pArray[0]) = 0) : 0); }\n    }\n    // inlining of macro ABC_FREE\n    ((p.vFanins) ? (free((char *) (p.vFanins)), (p.vFanins) = 0) : 0);\n\n    if p.pRanges {  Hash_IntManStop( p.pRanges ); }\n    if p.pManName { Abc_NamStop( p.pManName ); }\n\n    // inlining of macro ABC_FREE\n    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFfs.pArray) ? (free((char *) (p.vFfs.pArray)), (p.vFfs.pArray) = 0) : 0);\n\n    // inlining of macro ABC_FREE\n    ((p.vTypes.pArray) ? (free((char *) (p.vTypes.pArray)), (p.vTypes.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSigns.pArray) ? (free((char *) (p.vSigns.pArray)), (p.vSigns.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRanges.pArray) ? (free((char *) (p.vRanges.pArray)), (p.vRanges.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vNameIds.pArray) ? (free((char *) (p.vNameIds.pArray)), (p.vNameIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vInstIds.pArray) ? (free((char *) (p.vInstIds.pArray)), (p.vInstIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vBits.pArray) ? (free((char *) (p.vBits.pArray)), (p.vBits.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRefs.pArray) ? (free((char *) (p.vRefs.pArray)), (p.vRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFanout.pArray) ? (free((char *) (p.vFanout.pArray)), (p.vFanout.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFaninAttrs.pArray) ? (free((char *) (p.vFaninAttrs.pArray)), (p.vFaninAttrs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFaninLists.pArray) ? (free((char *) (p.vFaninLists.pArray)), (p.vFaninLists.pArray) = 0) : 0);\n\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Wln_NtkMemUsage",
+      "Start": 3056,
+      "End": 3711,
+      "BodyStart": 3093,
+      "Original": "int Wln_NtkMemUsage( Wln_Ntk_t * p )\n{\n    int Mem = sizeof(Wln_Ntk_t);\n    Mem += 4 * p-\u003evCis.nCap;\n    Mem += 4 * p-\u003evCos.nCap;\n    Mem += 4 * p-\u003evFfs.nCap;\n    Mem += 1 * p-\u003evTypes.nCap;\n    Mem += 4 * p-\u003evRanges.nCap;\n    Mem += 4 * p-\u003evNameIds.nCap;\n    Mem += 4 * p-\u003evInstIds.nCap;\n    Mem += 4 * p-\u003evTravIds.nCap;\n    Mem += 4 * p-\u003evCopies.nCap;\n    Mem += 4 * p-\u003evBits.nCap;\n    Mem += 4 * p-\u003evLevels.nCap;\n    Mem += 4 * p-\u003evRefs.nCap;\n    Mem += 4 * p-\u003evFanout.nCap;\n    Mem += 4 * p-\u003evFaninAttrs.nCap;\n    Mem += 4 * p-\u003evFaninLists.nCap;\n    Mem += 20 * Hash_IntManEntryNum(p-\u003epRanges);\n    Mem += Abc_NamMemUsed(p-\u003epManName);\n    return Mem;\n}",
+      "Draft": "func Wln_NtkMemUsage(p *Wln_Ntk_t) int32 {\n    var Mem int32  = sizeof(Wln_Ntk_t);\n    Mem += 4 * p.vCis.nCap;\n    Mem += 4 * p.vCos.nCap;\n    Mem += 4 * p.vFfs.nCap;\n    Mem += 1 * p.vTypes.nCap;\n    Mem += 4 * p.vRanges.nCap;\n    Mem += 4 * p.vNameIds.nCap;\n    Mem += 4 * p.vInstIds.nCap;\n    Mem += 4 * p.vTravIds.nCap;\n    Mem += 4 * p.vCopies.nCap;\n    Mem += 4 * p.vBits.nCap;\n    Mem += 4 * p.vLevels.nCap;\n    Mem += 4 * p.vRefs.nCap;\n    Mem += 4 * p.vFanout.nCap;\n    Mem += 4 * p.vFaninAttrs.nCap;\n    Mem += 4 * p.vFaninLists.nCap;\n    Mem += 20 * Hash_IntManEntryNum(p.pRanges);\n    Mem += Abc_NamMemUsed(p.pManName);\n    return Mem;\n}"
+    },
+    {
+      "Name": "Wln_NtkPrint",
+      "Start": 3712,
+      "End": 3936,
+      "BodyStart": 3747,
+      "Original": "void Wln_NtkPrint( Wln_Ntk_t * p )\n{\n    int iObj;\n    printf( \"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p-\u003epName );\n    Wln_NtkForEachObj( p, iObj )\n        Wln_ObjPrint( p, iObj );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_NtkPrint(p *Wln_Ntk_t) {\n    var iObj int32;\n    fmt.Printf(\"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName);\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Wln_ObjPrint( p, iObj );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Wln_NtkIsAcyclic_rec",
+      "Start": 4760,
+      "End": 6357,
+      "BodyStart": 4812,
+      "Original": "int Wln_NtkIsAcyclic_rec( Wln_Ntk_t * p, int iObj )\n{\n    int i, iFanin;\n    //printf( \"Visiting node %d\\n\", iObj );\n    // skip the node if it is already visited\n    if ( Wln_ObjIsTravIdPrevious(p, iObj) )\n        return 1;\n    // check if the node is part of the combinational loop\n    if ( Wln_ObjIsTravIdCurrent(p, iObj) )\n    {\n        fprintf( stdout, \"Network contains combinational loop!\\n\" );\n        fprintf( stdout, \"Node %16s is encountered twice on the following path:\\n\", Wln_ObjName(p, iObj) );\n        fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", \n            Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Wln_ObjSetTravIdCurrent( p, iObj );\n    // quit if it is a CI or constant node\n    if ( Wln_ObjIsCi(p, iObj) || Wln_ObjIsFf(p, iObj) || Wln_ObjFaninNum(p, iObj) == 0 )\n    {\n        // mark this node as a visited node\n        Wln_ObjSetTravIdPrevious( p, iObj );\n        return 1;\n    }\n    // traverse the fanin's cone searching for the loop\n    Wln_ObjForEachFanin( p, iObj, iFanin, i )\n    {\n        if ( !Wln_NtkIsAcyclic_rec(p, iFanin) )\n        {\n            // return as soon as the loop is detected\n            fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", \n                Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n            return 0;\n        }\n    }\n    // mark this node as a visited node\n    Wln_ObjSetTravIdPrevious( p, iObj );\n    return 1;\n}",
+      "Draft": "func Wln_NtkIsAcyclic_rec(p *Wln_Ntk_t, iObj int32) int32 {\n    var i, iFanin int32;\n    //printf( \"Visiting node %d\\n\", iObj );\n    // skip the node if it is already visited\n    if Wln_ObjIsTravIdPrevious(p, iObj) {\n        return 1; }\n    // check if the node is part of the combinational loop\n    if Wln_ObjIsTravIdCurrent(p, iObj) {\n        fmt.Fprintf(os.Stdout, \"Network contains combinational loop!\\n\");\n        fmt.Fprintf(os.Stdout, \"Node %16s is encountered twice on the following path:\\n\", Wln_ObjName(p, iObj));\n        fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Wln_ObjSetTravIdCurrent( p, iObj );\n    // quit if it is a CI or constant node\n    if Wln_ObjIsCi(p, iObj) || Wln_ObjIsFf(p, iObj) || Wln_ObjFaninNum(p, iObj) == 0 {\n        // mark this node as a visited node\n        Wln_ObjSetTravIdPrevious( p, iObj );\n        return 1;\n    }\n    // traverse the fanin's cone searching for the loop\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        if !(Wln_NtkIsAcyclic_rec(p, iFanin) != 0) {\n            // return as soon as the loop is detected\n            fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n            return 0;\n        }\n    }\n    }\n    // mark this node as a visited node\n    Wln_ObjSetTravIdPrevious( p, iObj );\n    return 1;\n}"
+    },
+    {
+      "Name": "Wln_NtkIsAcyclic",
+      "Start": 6358,
+      "End": 9331,
+      "BodyStart": 6396,
+      "Original": "int Wln_NtkIsAcyclic( Wln_Ntk_t * p )\n{\n    int fAcyclic, i, iObj, nUnvisited = 0 ;\n    // set the traversal ID for this DFS ordering\n    Wln_NtkIncrementTravId( p );   \n    Wln_NtkIncrementTravId( p );   \n    // iObj-\u003eTravId == pNet-\u003enTravIds      means \"iObj is on the path\"\n    // iObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"iObj is visited but is not on the path\"\n    // iObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"iObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    Wln_NtkForEachCo( p, iObj, i )\n    {\n        // traverse the output logic cone\n        if ( (fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj)) )\n            continue;\n        // stop as soon as the first loop is detected\n        fprintf( stdout, \"Primary output %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );\n        goto finish;\n    }\n    Wln_NtkForEachFf( p, iObj, i )\n    {\n        // traverse the output logic cone\n        if ( (fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj)) )\n            continue;\n        // stop as soon as the first loop is detected\n        fprintf( stdout, \"Flip-flop %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj );\n        goto finish;\n    }\n    Wln_NtkForEachObj( p, iObj )\n        nUnvisited += !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj);\n    if ( nUnvisited )\n    {\n        int nSinks = 0;\n        Wln_NtkCreateRefs(p);\n        printf( \"The network has %d objects and %d (%6.2f %%) of them are not connected to the outputs.\\n\", \n            Wln_NtkObjNum(p), nUnvisited, 100.0*nUnvisited/Wln_NtkObjNum(p) );\n        Wln_NtkForEachObj( p, iObj )\n            if ( !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) )\n                nSinks++;\n        if ( nSinks )\n        {\n            int nPrinted = 0;\n            printf( \"These unconnected objects feed into %d sink objects without fanout:\\n\", nSinks );\n            Wln_NtkForEachObj( p, iObj )\n                if ( !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) )\n                {\n                    fprintf( stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d)\\n\", \n                        Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n                    if ( ++nPrinted == 5 )\n                        break;\n                }\n            if ( nPrinted \u003c nSinks )\n                printf( \"...\\n\" );\n        }\n        Wln_NtkForEachObj( p, iObj )\n            if ( /*!Wln_ObjRefs(p, iObj) \u0026\u0026*/ !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) )\n            {\n                // traverse the output logic cone\n                if ( (fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj)) )\n                    continue;\n                // stop as soon as the first loop is detected\n                fprintf( stdout, \"Unconnected object %s\\n\", Wln_ObjName(p, iObj) );\n                goto finish;\n            }\n    }\nfinish:\n    return fAcyclic;\n}",
+      "Draft": "func Wln_NtkIsAcyclic(p *Wln_Ntk_t) int32 {\n    var fAcyclic, i, iObj, nUnvisited int32;\n    // set the traversal ID for this DFS ordering\n    Wln_NtkIncrementTravId( p );   \n    Wln_NtkIncrementTravId( p );   \n    // iObj-\u003eTravId == pNet-\u003enTravIds      means \"iObj is on the path\"\n    // iObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"iObj is visited but is not on the path\"\n    // iObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"iObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    // inlining of macro Wln_NtkForEachCo\n    for  i = 0; (i \u003c Wln_NtkCoNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCo(p, i)), 1); i++  {\n        // traverse the output logic cone\n        if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \"Primary output %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj);\n        goto finish;\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        // traverse the output logic cone\n        if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \"Flip-flop %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj);\n        goto finish;\n    }\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        nUnvisited += !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj);\n    }\n    if nUnvisited != 0 {\n        var nSinks int32;\n        Wln_NtkCreateRefs(p);\n        fmt.Printf(\"The network has %d objects and %d (%6.2f %%) of them are not connected to the outputs.\\n\", Wln_NtkObjNum(p), nUnvisited, 100.0*nUnvisited/Wln_NtkObjNum(p));\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n            if !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) {\n                nSinks++; }\n        }\n        if nSinks != 0 {\n            var nPrinted int32;\n            fmt.Printf(\"These unconnected objects feed into %d sink objects without fanout:\\n\", nSinks);\n            // inlining of macro Wln_NtkForEachObj\n            for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n                if !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) {\n                    fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d)\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n                    if nPrinted++; nPrinted == 5 {\n                        break; }\n                }\n            }\n            if nPrinted \u003c nSinks {\n                fmt.Printf(\"...\\n\"); }\n        }\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n            if  /*!Wln_ObjRefs(p, iObj) \u0026\u0026*/ !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) {\n                // traverse the output logic cone\n                if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n                    continue; }\n                // stop as soon as the first loop is detected\n                fmt.Fprintf(os.Stdout, \"Unconnected object %s\\n\", Wln_ObjName(p, iObj));\n                goto finish;\n            }\n        }\n    }\nfinish:\n    return fAcyclic;\n}"
+    },
+    {
+      "Name": "Wln_NtkTransferNames",
+      "Start": 9587,
+      "End": 10650,
+      "BodyStart": 9648,
+      "Original": "void Wln_NtkTransferNames( Wln_Ntk_t * pNew, Wln_Ntk_t * p )\n{\n    assert( pNew-\u003epManName  == NULL \u0026\u0026 p-\u003epManName != NULL );\n    pNew-\u003epManName = p-\u003epManName; \n    p-\u003epManName = NULL;\n    assert( !Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p)   );\n    if ( Wln_NtkHasNameId(p) )\n    {\n        int i;\n        assert( !Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p) );\n        Wln_NtkCleanNameId( pNew );\n        Wln_NtkForEachObj( p, i ) \n            if ( Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p-\u003evNameIds) \u0026\u0026 Wln_ObjNameId(p, i) )\n                Wln_ObjSetNameId( pNew, Wln_ObjCopy(p, i), Wln_ObjNameId(p, i) );\n        Vec_IntErase( \u0026p-\u003evNameIds );\n    }\n    if ( Wln_NtkHasInstId(p) )\n    {\n        int i;\n        assert( !Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p) );\n        Wln_NtkCleanInstId( pNew );\n        Wln_NtkForEachObj( p, i ) \n            if ( Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p-\u003evInstIds) \u0026\u0026 Wln_ObjInstId(p, i) )\n                Wln_ObjSetInstId( pNew, Wln_ObjCopy(p, i), Wln_ObjInstId(p, i) );\n        Vec_IntErase( \u0026p-\u003evInstIds );\n    }\n}",
+      "Draft": "func Wln_NtkTransferNames(pNew *Wln_Ntk_t, p *Wln_Ntk_t) {\n    assert(pNew.pManName  == nil \u0026\u0026 p.pManName != nil, \"pNew.pManName  == nil \u0026\u0026 p.pManName != nil\");\n    pNew.pManName = p.pManName; \n    p.pManName = nil;\n    assert(!Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p), \"!Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p)\");\n    if Wln_NtkHasNameId(p) {\n        var i int32;\n        assert(!Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p), \"!Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p)\");\n        Wln_NtkCleanNameId( pNew );\n        // inlining of macro Wln_NtkForEachObj\n        for  i = 1; i \u003c Wln_NtkObjNum(p); i++  { \n            if Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p.vNameIds) \u0026\u0026 Wln_ObjNameId(p, i) {\n                Wln_ObjSetNameId( pNew, Wln_ObjCopy(p, i), Wln_ObjNameId(p, i) ); }\n        }\n        Vec_IntErase( \u0026p.vNameIds );\n    }\n    if Wln_NtkHasInstId(p) {\n        var i int32;\n        assert(!Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p), \"!Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p)\");\n        Wln_NtkCleanInstId( pNew );\n        // inlining of macro Wln_NtkForEachObj\n        for  i = 1; i \u003c Wln_NtkObjNum(p); i++  { \n            if Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p.vInstIds) \u0026\u0026 Wln_ObjInstId(p, i) {\n                Wln_ObjSetInstId( pNew, Wln_ObjCopy(p, i), Wln_ObjInstId(p, i) ); }\n        }\n        Vec_IntErase( \u0026p.vInstIds );\n    }\n}"
+    },
+    {
+      "Name": "Wln_ObjDup",
+      "Start": 10651,
+      "End": 11211,
+      "BodyStart": 10711,
+      "Original": "int Wln_ObjDup( Wln_Ntk_t * pNew, Wln_Ntk_t * p, int iObj )\n{\n    int i, iFanin, iObjNew = Wln_ObjClone( pNew, p, iObj );\n    Wln_ObjForEachFanin( p, iObj, iFanin, i )\n        Wln_ObjAddFanin( pNew, iObjNew, Wln_ObjCopy(p, iFanin) );\n    if ( Wln_ObjIsConst(p, iObj) )\n        Wln_ObjSetConst( pNew, iObjNew, Wln_ObjFanin0(p, iObj) );\n    else if ( Wln_ObjIsSlice(p, iObj) || Wln_ObjIsRotate(p, iObj) || Wln_ObjIsTable(p, iObj) )\n        Wln_ObjSetFanin( pNew, iObjNew, 1, Wln_ObjFanin1(p, iObj) );\n    Wln_ObjSetCopy( p, iObj, iObjNew );\n    return iObjNew;\n}",
+      "Draft": "func Wln_ObjDup(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var iObjNew int32 = Wln_ObjClone( pNew, p, iObj );\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        Wln_ObjAddFanin( pNew, iObjNew, Wln_ObjCopy(p, iFanin) ); }\n    }\n    if Wln_ObjIsConst(p, iObj) {\n        Wln_ObjSetConst( pNew, iObjNew, Wln_ObjFanin0(p, iObj) );\n    } else if Wln_ObjIsSlice(p, iObj) || Wln_ObjIsRotate(p, iObj) || Wln_ObjIsTable(p, iObj) {\n        Wln_ObjSetFanin( pNew, iObjNew, 1, Wln_ObjFanin1(p, iObj) ); }\n    Wln_ObjSetCopy( p, iObj, iObjNew );\n    return iObjNew;\n}"
+    },
+    {
+      "Name": "Wln_NtkDupDfs_rec",
+      "Start": 11212,
+      "End": 11739,
+      "BodyStart": 11279,
+      "Original": "int Wln_NtkDupDfs_rec( Wln_Ntk_t * pNew, Wln_Ntk_t * p, int iObj )\n{\n    int i, iFanin;\n    if ( iObj == 0 )\n        return 0;\n    if ( Wln_ObjCopy(p, iObj) )\n        return Wln_ObjCopy(p, iObj);\n    //printf( \"Visiting node %16s (ID %6d) of type %5s (type ID %2d)\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n    assert( !Wln_ObjIsFf(p, iObj) );\n    Wln_ObjForEachFanin( p, iObj, iFanin, i )\n        Wln_NtkDupDfs_rec( pNew, p, iFanin );\n    return Wln_ObjDup( pNew, p, iObj );\n}",
+      "Draft": "func Wln_NtkDupDfs_rec(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    var i, iFanin int32;\n    if iObj == 0 {\n        return 0; }\n    if Wln_ObjCopy(p, iObj) {\n        return Wln_ObjCopy(p, iObj); }\n    //printf( \"Visiting node %16s (ID %6d) of type %5s (type ID %2d)\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n    assert(!Wln_ObjIsFf(p, iObj), \"!Wln_ObjIsFf(p, iObj)\");\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        Wln_NtkDupDfs_rec( pNew, p, iFanin ); }\n    }\n    return Wln_ObjDup( pNew, p, iObj );\n}"
+    },
+    {
+      "Name": "Wln_NtkDupDfs",
+      "Start": 11740,
+      "End": 12521,
+      "BodyStart": 11783,
+      "Original": "Wln_Ntk_t * Wln_NtkDupDfs( Wln_Ntk_t * p )\n{\n    int i, k, iObj, iFanin;\n    Wln_Ntk_t * pNew = Wln_NtkAlloc( p-\u003epName, Wln_NtkObjNum(p) );\n    pNew-\u003efSmtLib = p-\u003efSmtLib;\n    if ( p-\u003epSpec ) pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Wln_NtkCleanCopy( p );\n    Wln_NtkForEachCi( p, iObj, i )\n        Wln_ObjDup( pNew, p, iObj );\n    Wln_NtkForEachFf( p, iObj, i )\n        Wln_ObjSetCopy( p, iObj, Wln_ObjClone(pNew, p, iObj) );\n    Wln_NtkForEachCo( p, iObj, i )\n        Wln_NtkDupDfs_rec( pNew, p, iObj );\n    Wln_NtkForEachFf( p, iObj, i )\n        Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            Wln_ObjAddFanin( pNew, Wln_ObjCopy(p, iObj), Wln_NtkDupDfs_rec(pNew, p, iFanin) );\n    if ( Wln_NtkHasNameId(p) )\n        Wln_NtkTransferNames( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Wln_NtkDupDfs(p *Wln_Ntk_t) *Wln_Ntk_t {\n    var i, k, iObj, iFanin int32;\n    var pNew *Wln_Ntk_t  = Wln_NtkAlloc( p.pName, Wln_NtkObjNum(p) );\n    pNew.fSmtLib = p.fSmtLib;\n    if p.pSpec { pNew.pSpec = Abc_UtilStrsav( p.pSpec ); }\n    Wln_NtkCleanCopy( p );\n    // inlining of macro Wln_NtkForEachCi\n    for  i = 0; (i \u003c Wln_NtkCiNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCi(p, i)), 1); i++  {\n        Wln_ObjDup( pNew, p, iObj );\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        Wln_ObjSetCopy( p, iObj, Wln_ObjClone(pNew, p, iObj) );\n    }\n    // inlining of macro Wln_NtkForEachCo\n    for  i = 0; (i \u003c Wln_NtkCoNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCo(p, i)), 1); i++  {\n        Wln_NtkDupDfs_rec( pNew, p, iObj );\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjAddFanin( pNew, Wln_ObjCopy(p, iObj), Wln_NtkDupDfs_rec(pNew, p, iFanin) ); }\n        }\n    }\n    if Wln_NtkHasNameId(p) {\n        Wln_NtkTransferNames( pNew, p ); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Wln_NtkCreateRefs",
+      "Start": 12781,
+      "End": 13002,
+      "BodyStart": 12823,
+      "Original": "void Wln_NtkCreateRefs( Wln_Ntk_t * p )  \n{\n    int k, iObj, iFanin;\n    Wln_NtkCleanRefs( p );\n    Wln_NtkForEachObj( p, iObj )\n        Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            Wln_ObjRefsInc( p, iFanin );\n}",
+      "Draft": "func Wln_NtkCreateRefs(p *Wln_Ntk_t) {\n    var k, iObj, iFanin int32;\n    Wln_NtkCleanRefs( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjRefsInc( p, iFanin ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Wln_NtkFaninNum",
+      "Start": 13003,
+      "End": 13165,
+      "BodyStart": 13040,
+      "Original": "int Wln_NtkFaninNum( Wln_Ntk_t * p )\n{\n    int iObj, nEdges = 0;\n    Wln_NtkForEachObj( p, iObj )\n        nEdges += Wln_ObjFaninNum(p, iObj);\n    return nEdges;\n}",
+      "Draft": "func Wln_NtkFaninNum(p *Wln_Ntk_t) int32 {\n    var iObj, nEdges int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        nEdges += Wln_ObjFaninNum(p, iObj);\n    }\n    return nEdges;\n}"
+    },
+    {
+      "Name": "Wln_NtkStartFaninMap",
+      "Start": 13166,
+      "End": 13564,
+      "BodyStart": 13244,
+      "Original": "void Wln_NtkStartFaninMap( Wln_Ntk_t * p, Vec_Int_t * vFaninMap, int nMulti )\n{\n    int iObj, iOffset = Wln_NtkObjNum(p);\n    Vec_IntFill( vFaninMap, iOffset + nMulti * Wln_NtkFaninNum(p), 0 );\n    Wln_NtkForEachObj( p, iObj )\n    {\n        Vec_IntWriteEntry( vFaninMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjFaninNum(p, iObj);\n    }\n    assert( iOffset == Vec_IntSize(vFaninMap) );\n}",
+      "Draft": "func Wln_NtkStartFaninMap(p *Wln_Ntk_t, vFaninMap *Vec_Int_t, nMulti int32) {\n    var iObj int32;\n    var iOffset int32 = Wln_NtkObjNum(p);\n    Vec_IntFill( vFaninMap, iOffset + nMulti * Wln_NtkFaninNum(p), 0 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Vec_IntWriteEntry( vFaninMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjFaninNum(p, iObj);\n    }\n    assert(iOffset == Vec_IntSize(vFaninMap), \"iOffset == Vec_IntSize(vFaninMap)\");\n}"
+    },
+    {
+      "Name": "Wln_NtkStartFanoutMap",
+      "Start": 13565,
+      "End": 13994,
+      "BodyStart": 13670,
+      "Original": "void Wln_NtkStartFanoutMap( Wln_Ntk_t * p, Vec_Int_t * vFanoutMap, Vec_Int_t * vFanoutNums, int nMulti )\n{\n    int iObj, iOffset = Wln_NtkObjNum(p);\n    Vec_IntFill( vFanoutMap, iOffset + nMulti * Vec_IntSum(vFanoutNums), 0 );\n    Wln_NtkForEachObj( p, iObj )\n    {\n        Vec_IntWriteEntry( vFanoutMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjRefs(p, iObj);\n    }\n    assert( iOffset == Vec_IntSize(vFanoutMap) );\n}",
+      "Draft": "func Wln_NtkStartFanoutMap(p *Wln_Ntk_t, vFanoutMap *Vec_Int_t, vFanoutNums *Vec_Int_t, nMulti int32) {\n    var iObj int32;\n    var iOffset int32 = Wln_NtkObjNum(p);\n    Vec_IntFill( vFanoutMap, iOffset + nMulti * Vec_IntSum(vFanoutNums), 0 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Vec_IntWriteEntry( vFanoutMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjRefs(p, iObj);\n    }\n    assert(iOffset == Vec_IntSize(vFanoutMap), \"iOffset == Vec_IntSize(vFanoutMap)\");\n}"
+    },
+    {
+      "Name": "Wln_NtkStaticFanoutStart",
+      "Start": 14244,
+      "End": 14897,
+      "BodyStart": 14291,
+      "Original": "void Wln_NtkStaticFanoutStart( Wln_Ntk_t * p )\n{\n    int k, iObj, iFanin;\n    Vec_Int_t * vRefsCopy = Vec_IntAlloc(0);\n    Wln_NtkCreateRefs( p );\n    Wln_NtkStartFanoutMap( p, \u0026p-\u003evFanout, \u0026p-\u003evRefs, 1 );\n    ABC_SWAP( Vec_Int_t, *vRefsCopy, p-\u003evRefs );\n    // add fanouts\n    Wln_NtkCleanRefs( p );\n    Wln_NtkForEachObj( p, iObj )\n        Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            Wln_ObjSetFanout( p, iFanin, Wln_ObjRefsInc(p, iFanin), iObj );\n    // double-check the current number of fanouts added\n    Wln_NtkForEachObj( p, iObj )\n        assert( Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj) );\n    Vec_IntFree( vRefsCopy );\n}",
+      "Draft": "func Wln_NtkStaticFanoutStart(p *Wln_Ntk_t) {\n    var k, iObj, iFanin int32;\n    var vRefsCopy *Vec_Int_t  = Vec_IntAlloc(0);\n    Wln_NtkCreateRefs( p );\n    Wln_NtkStartFanoutMap( p, \u0026p.vFanout, \u0026p.vRefs, 1 );\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vRefsCopy; *vRefsCopy = p.vRefs; p.vRefs = t; };\n    // add fanouts\n    Wln_NtkCleanRefs( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjSetFanout( p, iFanin, Wln_ObjRefsInc(p, iFanin), iObj ); }\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        assert(Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj), \"Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj)\");\n    }\n    Vec_IntFree( vRefsCopy );\n}"
+    },
+    {
+      "Name": "Wln_NtkStaticFanoutStop",
+      "Start": 14898,
+      "End": 15011,
+      "BodyStart": 14944,
+      "Original": "void Wln_NtkStaticFanoutStop( Wln_Ntk_t * p )\n{\n    Vec_IntErase( \u0026p-\u003evRefs );\n    Vec_IntErase( \u0026p-\u003evFanout );\n}",
+      "Draft": "func Wln_NtkStaticFanoutStop(p *Wln_Ntk_t) {\n    Vec_IntErase( \u0026p.vRefs );\n    Vec_IntErase( \u0026p.vFanout );\n}"
+    },
+    {
+      "Name": "Wln_NtkStaticFanoutTest",
+      "Start": 15012,
+      "End": 15507,
+      "BodyStart": 15058,
+      "Original": "void Wln_NtkStaticFanoutTest( Wln_Ntk_t * p )\n{\n    int k, iObj, iFanout;\n    printf( \"Printing fanouts of %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p-\u003epName );\n    Wln_NtkStaticFanoutStart( p );\n    Wln_NtkForEachObj( p, iObj )\n    {\n        Wln_ObjPrint( p, iObj );\n        printf( \"   Fanouts : \" );\n        Wln_ObjForEachFanoutStatic( p, iObj, iFanout, k )\n            printf( \"%5d \", iFanout );\n        printf( \"\\n\" );\n    }\n    Wln_NtkStaticFanoutStop( p );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Wln_NtkStaticFanoutTest(p *Wln_Ntk_t) {\n    var k, iObj, iFanout int32;\n    fmt.Printf(\"Printing fanouts of %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName);\n    Wln_NtkStaticFanoutStart( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Wln_ObjPrint( p, iObj );\n        fmt.Printf(\"   Fanouts : \");\n        // inlining of macro Wln_ObjForEachFanoutStatic\n        for  k = 0; (k \u003c Wln_ObjRefs(p, iObj)) \u0026\u0026 (((iFanout) = Wln_ObjFanout(p, iObj, k)), 1); k++  {\n            fmt.Printf(\"%5d \", iFanout);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Wln_NtkStaticFanoutStop( p );\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::mechanical::sizeof::1425",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1344,
+      "End": 1344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::mechanical::sizeof::1957",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1793,
+      "End": 1793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::mechanical::sizeof::5363",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3109,
+      "End": 3115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::1391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1344,
+      "End": 1344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::1914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1793,
+      "End": 1793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::2480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2253,
+      "End": 2253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::2624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2294,
+      "End": 2294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::2853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2429,
+      "End": 2429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::2983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2461,
+      "End": 2461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2493,
+      "End": 2493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2526,
+      "End": 2526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2560,
+      "End": 2560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2594,
+      "End": 2594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2629,
+      "End": 2629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2665,
+      "End": 2665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::3943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2701,
+      "End": 2701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2737,
+      "End": 2737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2772,
+      "End": 2772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2805,
+      "End": 2805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2840,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2873,
+      "End": 2873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2908,
+      "End": 2908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::4922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2947,
+      "End": 2947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::5061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2987,
+      "End": 2987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::5173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3013,
+      "End": 3013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::pointer-cast::5278",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3039,
+      "End": 3039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1253,
+      "End": 2106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::ternary::Wln_NtkFree",
+      "Category": "ternary-review",
+      "Symbol": "Wln_NtkFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2107,
+      "End": 3055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkFree",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2107,
+      "End": 3055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3056,
+      "End": 3711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkPrint",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3712,
+      "End": 3936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkIsAcyclic_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkIsAcyclic_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4760,
+      "End": 6357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkIsAcyclic",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkIsAcyclic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6358,
+      "End": 9331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkTransferNames",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkTransferNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9587,
+      "End": 10650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_ObjDup",
+      "Category": "semantic-review",
+      "Symbol": "Wln_ObjDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10651,
+      "End": 11211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkDupDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkDupDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11212,
+      "End": 11739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkDupDfs",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkDupDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11740,
+      "End": 12521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkCreateRefs",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkCreateRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12781,
+      "End": 13002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13003,
+      "End": 13165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkStartFaninMap",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkStartFaninMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13166,
+      "End": 13564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkStartFanoutMap",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkStartFanoutMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13565,
+      "End": 13994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkStaticFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkStaticFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14244,
+      "End": 14897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkStaticFanoutStop",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkStaticFanoutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14898,
+      "End": 15011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::Wln_NtkStaticFanoutTest",
+      "Category": "semantic-review",
+      "Symbol": "Wln_NtkStaticFanoutTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15012,
+      "End": 15507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnNtk.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15754
+    }
+  ],
+  "Draft": "package wln\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [wlnNtk.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Word-level network.]\n\n  Synopsis    [Network construction procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 23, 2018.]\n\n  Revision    [$Id: wlnNtk.c,v 1.00 2018/09/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wln.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creating networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkAlloc(pName string, nObjsMax int32) *Wln_Ntk_t {\n     var i int32;\n    // inlining of macro ABC_CALLOC\n    p := \u0026Wln_Ntk_t{};\n    if pName {\n        p.pName = Extra_FileNameGeneric( pName );\n    } else {\n        p.pName = nil;\n    }\n    Vec_IntGrow( \u0026p.vCis, 111 );\n    Vec_IntGrow( \u0026p.vCos, 111 );\n    Vec_IntGrow( \u0026p.vFfs, 111 );\n    Vec_IntGrow( \u0026p.vTypes,  nObjsMax+1 );\n    Vec_StrGrow( \u0026p.vSigns,  nObjsMax+1 );\n    Vec_IntGrow( \u0026p.vRanges, nObjsMax+1 );\n    Vec_IntPush( \u0026p.vTypes,  -1 );\n    Vec_StrPush( \u0026p.vSigns,  -1 );\n    Vec_IntPush( \u0026p.vRanges, -1 );\n    // inlining of macro ABC_CALLOC\n    p.vFanins = ((Wln_Vec_t *) calloc((size_t)(nObjsMax+1), sizeof(Wln_Vec_t)));\n    p.pRanges = Hash_IntManStart( 1000 );\n    for  i = 0; i \u003c 65; i++  {\n        Hash_Int2ManInsert( p.pRanges, i, i, 0 );\n    }\n    for  i = 1; i \u003c 64; i++  {\n        Hash_Int2ManInsert( p.pRanges, i, 0, 0 );\n    }\n    assert(Hash_IntManEntryNum(p.pRanges) == 128, \"Hash_IntManEntryNum(p.pRanges) == 128\");\n    return p;\n}\nfunc Wln_NtkFree(p *Wln_Ntk_t) {\n    var i int32;\n    for  i = 0; i \u003c Wln_NtkObjNum(p); i++  {\n        if Wln_ObjFaninNum(p, i) \u003e 2 { \n            // inlining of macro ABC_FREE\n            ((p.vFanins[i].pArray[0]) ? (free((char *) (p.vFanins[i].pArray[0])), (p.vFanins[i].pArray[0]) = 0) : 0); }\n    }\n    // inlining of macro ABC_FREE\n    ((p.vFanins) ? (free((char *) (p.vFanins)), (p.vFanins) = 0) : 0);\n\n    if p.pRanges {  Hash_IntManStop( p.pRanges ); }\n    if p.pManName { Abc_NamStop( p.pManName ); }\n\n    // inlining of macro ABC_FREE\n    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFfs.pArray) ? (free((char *) (p.vFfs.pArray)), (p.vFfs.pArray) = 0) : 0);\n\n    // inlining of macro ABC_FREE\n    ((p.vTypes.pArray) ? (free((char *) (p.vTypes.pArray)), (p.vTypes.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vSigns.pArray) ? (free((char *) (p.vSigns.pArray)), (p.vSigns.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRanges.pArray) ? (free((char *) (p.vRanges.pArray)), (p.vRanges.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vNameIds.pArray) ? (free((char *) (p.vNameIds.pArray)), (p.vNameIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vInstIds.pArray) ? (free((char *) (p.vInstIds.pArray)), (p.vInstIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCopies.pArray) ? (free((char *) (p.vCopies.pArray)), (p.vCopies.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vBits.pArray) ? (free((char *) (p.vBits.pArray)), (p.vBits.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vRefs.pArray) ? (free((char *) (p.vRefs.pArray)), (p.vRefs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFanout.pArray) ? (free((char *) (p.vFanout.pArray)), (p.vFanout.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFaninAttrs.pArray) ? (free((char *) (p.vFaninAttrs.pArray)), (p.vFaninAttrs.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFaninLists.pArray) ? (free((char *) (p.vFaninLists.pArray)), (p.vFaninLists.pArray) = 0) : 0);\n\n    // inlining of macro ABC_FREE\n    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Wln_NtkMemUsage(p *Wln_Ntk_t) int32 {\n    var Mem int32  = sizeof(Wln_Ntk_t);\n    Mem += 4 * p.vCis.nCap;\n    Mem += 4 * p.vCos.nCap;\n    Mem += 4 * p.vFfs.nCap;\n    Mem += 1 * p.vTypes.nCap;\n    Mem += 4 * p.vRanges.nCap;\n    Mem += 4 * p.vNameIds.nCap;\n    Mem += 4 * p.vInstIds.nCap;\n    Mem += 4 * p.vTravIds.nCap;\n    Mem += 4 * p.vCopies.nCap;\n    Mem += 4 * p.vBits.nCap;\n    Mem += 4 * p.vLevels.nCap;\n    Mem += 4 * p.vRefs.nCap;\n    Mem += 4 * p.vFanout.nCap;\n    Mem += 4 * p.vFaninAttrs.nCap;\n    Mem += 4 * p.vFaninLists.nCap;\n    Mem += 20 * Hash_IntManEntryNum(p.pRanges);\n    Mem += Abc_NamMemUsed(p.pManName);\n    return Mem;\n}\nfunc Wln_NtkPrint(p *Wln_Ntk_t) {\n    var iObj int32;\n    fmt.Printf(\"Printing %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName);\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Wln_ObjPrint( p, iObj );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Detects combinational loops.]\n\n  Description [This procedure is based on the idea suggested by Donald Chai. \n  As we traverse the network and visit the nodes, we need to distinquish \n  three types of nodes: (1) those that are visited for the first time, \n  (2) those that have been visited in this traversal but are currently not \n  on the traversal path, (3) those that have been visited and are currently \n  on the travesal path. When the node of type (3) is encountered, it means \n  that there is a combinational loop. To mark the three types of nodes, \n  two new values of the traversal IDs are used.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkIsAcyclic_rec(p *Wln_Ntk_t, iObj int32) int32 {\n    var i, iFanin int32;\n    //printf( \"Visiting node %d\\n\", iObj );\n    // skip the node if it is already visited\n    if Wln_ObjIsTravIdPrevious(p, iObj) {\n        return 1; }\n    // check if the node is part of the combinational loop\n    if Wln_ObjIsTravIdCurrent(p, iObj) {\n        fmt.Fprintf(os.Stdout, \"Network contains combinational loop!\\n\");\n        fmt.Fprintf(os.Stdout, \"Node %16s is encountered twice on the following path:\\n\", Wln_ObjName(p, iObj));\n        fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n        return 0;\n    }\n    // mark this node as a node on the current path\n    Wln_ObjSetTravIdCurrent( p, iObj );\n    // quit if it is a CI or constant node\n    if Wln_ObjIsCi(p, iObj) || Wln_ObjIsFf(p, iObj) || Wln_ObjFaninNum(p, iObj) == 0 {\n        // mark this node as a visited node\n        Wln_ObjSetTravIdPrevious( p, iObj );\n        return 1;\n    }\n    // traverse the fanin's cone searching for the loop\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        if !(Wln_NtkIsAcyclic_rec(p, iFanin) != 0) {\n            // return as soon as the loop is detected\n            fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d) -\u003e\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n            return 0;\n        }\n    }\n    }\n    // mark this node as a visited node\n    Wln_ObjSetTravIdPrevious( p, iObj );\n    return 1;\n}\nfunc Wln_NtkIsAcyclic(p *Wln_Ntk_t) int32 {\n    var fAcyclic, i, iObj, nUnvisited int32;\n    // set the traversal ID for this DFS ordering\n    Wln_NtkIncrementTravId( p );   \n    Wln_NtkIncrementTravId( p );   \n    // iObj-\u003eTravId == pNet-\u003enTravIds      means \"iObj is on the path\"\n    // iObj-\u003eTravId == pNet-\u003enTravIds - 1  means \"iObj is visited but is not on the path\"\n    // iObj-\u003eTravId \u003c  pNet-\u003enTravIds - 1  means \"iObj is not visited\"\n    // traverse the network to detect cycles\n    fAcyclic = 1;\n    // inlining of macro Wln_NtkForEachCo\n    for  i = 0; (i \u003c Wln_NtkCoNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCo(p, i)), 1); i++  {\n        // traverse the output logic cone\n        if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \"Primary output %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj);\n        goto finish;\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        // traverse the output logic cone\n        if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n            continue; }\n        // stop as soon as the first loop is detected\n        fmt.Fprintf(os.Stdout, \"Flip-flop %16s (ID %6d)\\n\", Wln_ObjName(p, iObj), iObj);\n        goto finish;\n    }\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        nUnvisited += !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj);\n    }\n    if nUnvisited != 0 {\n        var nSinks int32;\n        Wln_NtkCreateRefs(p);\n        fmt.Printf(\"The network has %d objects and %d (%6.2f %%) of them are not connected to the outputs.\\n\", Wln_NtkObjNum(p), nUnvisited, 100.0*nUnvisited/Wln_NtkObjNum(p));\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n            if !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) {\n                nSinks++; }\n        }\n        if nSinks != 0 {\n            var nPrinted int32;\n            fmt.Printf(\"These unconnected objects feed into %d sink objects without fanout:\\n\", nSinks);\n            // inlining of macro Wln_NtkForEachObj\n            for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n                if !Wln_ObjRefs(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) \u0026\u0026 !Wln_ObjIsCo(p, iObj) \u0026\u0026 !Wln_ObjIsFf(p, iObj) {\n                    fmt.Fprintf(os.Stdout, \"Node %16s (ID %6d) of type %5s (type ID %2d)\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj));\n                    if nPrinted++; nPrinted == 5 {\n                        break; }\n                }\n            }\n            if nPrinted \u003c nSinks {\n                fmt.Printf(\"...\\n\"); }\n        }\n        // inlining of macro Wln_NtkForEachObj\n        for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n            if  /*!Wln_ObjRefs(p, iObj) \u0026\u0026*/ !Wln_ObjIsTravIdPrevious(p, iObj) \u0026\u0026 !Wln_ObjIsCi(p, iObj) {\n                // traverse the output logic cone\n                if fAcyclic = Wln_NtkIsAcyclic_rec(p, iObj) {\n                    continue; }\n                // stop as soon as the first loop is detected\n                fmt.Fprintf(os.Stdout, \"Unconnected object %s\\n\", Wln_ObjName(p, iObj));\n                goto finish;\n            }\n        }\n    }\nfinish:\n    return fAcyclic;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicating network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkTransferNames(pNew *Wln_Ntk_t, p *Wln_Ntk_t) {\n    assert(pNew.pManName  == nil \u0026\u0026 p.pManName != nil, \"pNew.pManName  == nil \u0026\u0026 p.pManName != nil\");\n    pNew.pManName = p.pManName; \n    p.pManName = nil;\n    assert(!Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p), \"!Wln_NtkHasCopy(pNew)   \u0026\u0026 Wln_NtkHasCopy(p)\");\n    if Wln_NtkHasNameId(p) {\n        var i int32;\n        assert(!Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p), \"!Wln_NtkHasNameId(pNew) \u0026\u0026 Wln_NtkHasNameId(p)\");\n        Wln_NtkCleanNameId( pNew );\n        // inlining of macro Wln_NtkForEachObj\n        for  i = 1; i \u003c Wln_NtkObjNum(p); i++  { \n            if Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p.vNameIds) \u0026\u0026 Wln_ObjNameId(p, i) {\n                Wln_ObjSetNameId( pNew, Wln_ObjCopy(p, i), Wln_ObjNameId(p, i) ); }\n        }\n        Vec_IntErase( \u0026p.vNameIds );\n    }\n    if Wln_NtkHasInstId(p) {\n        var i int32;\n        assert(!Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p), \"!Wln_NtkHasInstId(pNew) \u0026\u0026 Wln_NtkHasInstId(p)\");\n        Wln_NtkCleanInstId( pNew );\n        // inlining of macro Wln_NtkForEachObj\n        for  i = 1; i \u003c Wln_NtkObjNum(p); i++  { \n            if Wln_ObjCopy(p, i) \u0026\u0026 i \u003c Vec_IntSize(\u0026p.vInstIds) \u0026\u0026 Wln_ObjInstId(p, i) {\n                Wln_ObjSetInstId( pNew, Wln_ObjCopy(p, i), Wln_ObjInstId(p, i) ); }\n        }\n        Vec_IntErase( \u0026p.vInstIds );\n    }\n}\nfunc Wln_ObjDup(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var iObjNew int32 = Wln_ObjClone( pNew, p, iObj );\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        Wln_ObjAddFanin( pNew, iObjNew, Wln_ObjCopy(p, iFanin) ); }\n    }\n    if Wln_ObjIsConst(p, iObj) {\n        Wln_ObjSetConst( pNew, iObjNew, Wln_ObjFanin0(p, iObj) );\n    } else if Wln_ObjIsSlice(p, iObj) || Wln_ObjIsRotate(p, iObj) || Wln_ObjIsTable(p, iObj) {\n        Wln_ObjSetFanin( pNew, iObjNew, 1, Wln_ObjFanin1(p, iObj) ); }\n    Wln_ObjSetCopy( p, iObj, iObjNew );\n    return iObjNew;\n}\nfunc Wln_NtkDupDfs_rec(pNew *Wln_Ntk_t, p *Wln_Ntk_t, iObj int32) int32 {\n    var i, iFanin int32;\n    if iObj == 0 {\n        return 0; }\n    if Wln_ObjCopy(p, iObj) {\n        return Wln_ObjCopy(p, iObj); }\n    //printf( \"Visiting node %16s (ID %6d) of type %5s (type ID %2d)\\n\", Wln_ObjName(p, iObj), iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjType(p, iObj) );\n    assert(!Wln_ObjIsFf(p, iObj), \"!Wln_ObjIsFf(p, iObj)\");\n    // inlining of macro Wln_ObjForEachFanin\n    for  i = 0; (i \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, i)), 1); i++  { if !(iFanin != 0) {} else {\n        Wln_NtkDupDfs_rec( pNew, p, iFanin ); }\n    }\n    return Wln_ObjDup( pNew, p, iObj );\n}\nfunc Wln_NtkDupDfs(p *Wln_Ntk_t) *Wln_Ntk_t {\n    var i, k, iObj, iFanin int32;\n    var pNew *Wln_Ntk_t  = Wln_NtkAlloc( p.pName, Wln_NtkObjNum(p) );\n    pNew.fSmtLib = p.fSmtLib;\n    if p.pSpec { pNew.pSpec = Abc_UtilStrsav( p.pSpec ); }\n    Wln_NtkCleanCopy( p );\n    // inlining of macro Wln_NtkForEachCi\n    for  i = 0; (i \u003c Wln_NtkCiNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCi(p, i)), 1); i++  {\n        Wln_ObjDup( pNew, p, iObj );\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        Wln_ObjSetCopy( p, iObj, Wln_ObjClone(pNew, p, iObj) );\n    }\n    // inlining of macro Wln_NtkForEachCo\n    for  i = 0; (i \u003c Wln_NtkCoNum(p)) \u0026\u0026 (((iObj) = Wln_NtkCo(p, i)), 1); i++  {\n        Wln_NtkDupDfs_rec( pNew, p, iObj );\n    }\n    // inlining of macro Wln_NtkForEachFf\n    for  i = 0; (i \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, i)), 1); i++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjAddFanin( pNew, Wln_ObjCopy(p, iObj), Wln_NtkDupDfs_rec(pNew, p, iFanin) ); }\n        }\n    }\n    if Wln_NtkHasNameId(p) {\n        Wln_NtkTransferNames( pNew, p ); }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create fanin/fanout map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkCreateRefs(p *Wln_Ntk_t) {\n    var k, iObj, iFanin int32;\n    Wln_NtkCleanRefs( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjRefsInc( p, iFanin ); }\n        }\n    }\n}\nfunc Wln_NtkFaninNum(p *Wln_Ntk_t) int32 {\n    var iObj, nEdges int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        nEdges += Wln_ObjFaninNum(p, iObj);\n    }\n    return nEdges;\n}\nfunc Wln_NtkStartFaninMap(p *Wln_Ntk_t, vFaninMap *Vec_Int_t, nMulti int32) {\n    var iObj int32;\n    var iOffset int32 = Wln_NtkObjNum(p);\n    Vec_IntFill( vFaninMap, iOffset + nMulti * Wln_NtkFaninNum(p), 0 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Vec_IntWriteEntry( vFaninMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjFaninNum(p, iObj);\n    }\n    assert(iOffset == Vec_IntSize(vFaninMap), \"iOffset == Vec_IntSize(vFaninMap)\");\n}\nfunc Wln_NtkStartFanoutMap(p *Wln_Ntk_t, vFanoutMap *Vec_Int_t, vFanoutNums *Vec_Int_t, nMulti int32) {\n    var iObj int32;\n    var iOffset int32 = Wln_NtkObjNum(p);\n    Vec_IntFill( vFanoutMap, iOffset + nMulti * Vec_IntSum(vFanoutNums), 0 );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Vec_IntWriteEntry( vFanoutMap, iObj, iOffset );\n        iOffset += nMulti * Wln_ObjRefs(p, iObj);\n    }\n    assert(iOffset == Vec_IntSize(vFanoutMap), \"iOffset == Vec_IntSize(vFanoutMap)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Static fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_NtkStaticFanoutStart(p *Wln_Ntk_t) {\n    var k, iObj, iFanin int32;\n    var vRefsCopy *Vec_Int_t  = Vec_IntAlloc(0);\n    Wln_NtkCreateRefs( p );\n    Wln_NtkStartFanoutMap( p, \u0026p.vFanout, \u0026p.vRefs, 1 );\n    // inlining of macro ABC_SWAP\n    { var t Vec_Int_t  = *vRefsCopy; *vRefsCopy = p.vRefs; p.vRefs = t; };\n    // add fanouts\n    Wln_NtkCleanRefs( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n            Wln_ObjSetFanout( p, iFanin, Wln_ObjRefsInc(p, iFanin), iObj ); }\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        assert(Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj), \"Wln_ObjRefs(p, iObj) == Vec_IntEntry(vRefsCopy, iObj)\");\n    }\n    Vec_IntFree( vRefsCopy );\n}\nfunc Wln_NtkStaticFanoutStop(p *Wln_Ntk_t) {\n    Vec_IntErase( \u0026p.vRefs );\n    Vec_IntErase( \u0026p.vFanout );\n}\nfunc Wln_NtkStaticFanoutTest(p *Wln_Ntk_t) {\n    var k, iObj, iFanout int32;\n    fmt.Printf(\"Printing fanouts of %d objects of network \\\"%s\\\":\\n\", Wln_NtkObjNum(p), p.pName);\n    Wln_NtkStaticFanoutStart( p );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        Wln_ObjPrint( p, iObj );\n        fmt.Printf(\"   Fanouts : \");\n        // inlining of macro Wln_ObjForEachFanoutStatic\n        for  k = 0; (k \u003c Wln_ObjRefs(p, iObj)) \u0026\u0026 (((iFanout) = Wln_ObjFanout(p, iObj, k)), 1); k++  {\n            fmt.Printf(\"%5d \", iFanout);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Wln_NtkStaticFanoutStop( p );\n    fmt.Printf(\"\\n\");\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,238 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h",
+  "SHA256": "65f119bdb0632aa7c3fb862cdfb4db8f21f37d8ccbe1e7e9a7f5ad47c139a19b",
+  "Functions": [
+    {
+      "Name": "Dar_ObjBestCut",
+      "Start": 3486,
+      "End": 3656,
+      "BodyStart": 3548,
+      "Original": "static inline Dar_Cut_t *  Dar_ObjBestCut( Aig_Obj_t * pObj ) { Dar_Cut_t * pCut; int i; Dar_ObjForEachCut( pObj, pCut, i ) if ( pCut-\u003efBest ) return pCut; return NULL; }",
+      "Draft": "// inlining of macro Dar_ObjForEachCut\nfunc Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { var pCut *Dar_Cut_t; var i int32; for  (pCut) = Dar_ObjCuts(pObj), i = 0; i \u003c int32((pObj).nCuts); i, pCut = i+1, pCut+1  { if (pCut).fUsed==0 {} else if pCut.fBest { return pCut; } }\n return nil; }"
+    },
+    {
+      "Name": "Cnf_CutSopCost",
+      "Start": 3658,
+      "End": 3812,
+      "BodyStart": 3735,
+      "Original": "static inline int          Cnf_CutSopCost( Cnf_Man_t * p, Dar_Cut_t * pCut ) { return p-\u003epSopSizes[pCut-\u003euTruth] + p-\u003epSopSizes[0xFFFF \u0026 ~pCut-\u003euTruth]; }",
+      "Draft": "func Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 { return p.pSopSizes[pCut.uTruth] + p.pSopSizes[0xFFFF \u0026 ~pCut.uTruth]; }"
+    },
+    {
+      "Name": "Cnf_CutLeaveNum",
+      "Start": 3814,
+      "End": 3935,
+      "BodyStart": 3880,
+      "Original": "static inline int          Cnf_CutLeaveNum( Cnf_Cut_t * pCut )    { return pCut-\u003enFanins;                               }",
+      "Draft": "func Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return pCut.nFanins;                               }"
+    },
+    {
+      "Name": "Cnf_CutLeaves",
+      "Start": 3936,
+      "End": 4057,
+      "BodyStart": 4002,
+      "Original": "static inline int *        Cnf_CutLeaves( Cnf_Cut_t * pCut )      { return pCut-\u003epFanins;                               }",
+      "Draft": "func Cnf_CutLeaves(pCut *Cnf_Cut_t) *int32 { return pCut.pFanins;                               }"
+    },
+    {
+      "Name": "Cnf_CutTruth",
+      "Start": 4058,
+      "End": 4179,
+      "BodyStart": 4124,
+      "Original": "static inline unsigned *   Cnf_CutTruth( Cnf_Cut_t * pCut )       { return (unsigned *)(pCut-\u003epFanins + pCut-\u003enFanins); }",
+      "Draft": "func Cnf_CutTruth(pCut *Cnf_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nFanins); }"
+    },
+    {
+      "Name": "Cnf_ObjBestCut",
+      "Start": 4181,
+      "End": 4302,
+      "BodyStart": 4265,
+      "Original": "static inline Cnf_Cut_t *  Cnf_ObjBestCut( Aig_Obj_t * pObj )                       { return (Cnf_Cut_t *)pObj-\u003epData;  }",
+      "Draft": "func Cnf_ObjBestCut(pObj *Aig_Obj_t) *Cnf_Cut_t { return (Cnf_Cut_t *)pObj.pData;  }"
+    },
+    {
+      "Name": "Cnf_ObjSetBestCut",
+      "Start": 4303,
+      "End": 4411,
+      "BodyStart": 4387,
+      "Original": "static inline void         Cnf_ObjSetBestCut( Aig_Obj_t * pObj, Cnf_Cut_t * pCut )  { pObj-\u003epData = pCut;  }",
+      "Draft": "func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Dat_t_::// the mapping of objects into clause number\n    unsigned char * pClaPols;",
+      "Category": "struct-field-review",
+      "Symbol": "Cnf_Dat_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2165,
+      "End": 2245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Dat_t_",
+      "Category": "struct-review",
+      "Symbol": "Cnf_Dat_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1603,
+      "End": 2366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Cut_t_::// the number of words in truth table\n    Vec_Int_t *     vIsop[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Cnf_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2582,
+      "End": 2659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Cut_t_::// neg/pos ISOPs\n    int             pFanins[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Cnf_Cut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2659,
+      "End": 2715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Cut_t_",
+      "Category": "struct-review",
+      "Symbol": "Cnf_Cut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2413,
+      "End": 2767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Man_t_::// the limit on the size of merged cut\n    unsigned *      pTruths[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Cnf_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3200,
+      "End": 3275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::struct::Cnf_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Cnf_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2800,
+      "End": 3483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::pointer-cast::4262",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4133,
+      "End": 4145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::pointer-cast::4403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4274,
+      "End": 4287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::macro::Cnf_CnfForClause",
+      "Category": "macro-review",
+      "Symbol": "Cnf_CnfForClause",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4882,
+      "End": 5048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::macro::Cnf_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Cnf_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5085,
+      "End": 5258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Dar_ObjBestCut",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ObjBestCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3486,
+      "End": 3656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_CutSopCost",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutSopCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3658,
+      "End": 3812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_CutLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3814,
+      "End": 3935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_CutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3936,
+      "End": 4057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4058,
+      "End": 4179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_ObjBestCut",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ObjBestCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4181,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::Cnf_ObjSetBestCut",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_ObjSetBestCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4303,
+      "End": 4411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/cnf/cnf.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10498
+    }
+  ],
+  "Draft": "package cnf\n\n/**CFile****************************************************************\n\n  FileName    [cnf.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: cnf.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/darInt.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Cnf_Man_t =            Cnf_Man_t_;\ntype Cnf_Dat_t =            Cnf_Dat_t_;\ntype Cnf_Cut_t =            Cnf_Cut_t_;\n\n// the CNF asserting outputs of AIG to be 1\ntype Cnf_Dat_t_ struct {\n    pMan      *Aig_Man_t;            // the AIG manager, for which CNF is computed\n    nVars             int32;           // the number of variables\n    nLiterals             int32;       // the number of CNF literals\n    nClauses             int32;        // the number of CNF clauses\n    pClauses           **int32;        // the CNF clauses\n    pVarNums            *int32;        // the number of CNF variable for each node ID (-1 if unused)\n    pObj2Clause            *int32;     // the mapping of objects into clauses\n    pObj2Count            *int32;      // the mapping of objects into clause number\n    unsigned char * pClaPols;        // polarity of input literals in each clause\n    vMapping      *Vec_Int_t;        // mapping of internal nodes\n}\n\n// the cut used to represent node in the AIG\ntype Cnf_Cut_t_ struct {\n    nFanins            byte;         // the number of leaves\n    Cost            byte;            // the cost of this cut\n    nWords           int16;          // the number of words in truth table\n    Vec_Int_t *     vIsop[2];        // neg/pos ISOPs\n    pFanins [0]int32;      // the fanins (followed by the truth table)\n}\n\n// the CNF computation manager\ntype Cnf_Man_t_ struct {\n    pManAig      *Aig_Man_t;         // the underlying AIG manager\n    pSopSizes           string;       // sizes of SOPs for 4-variable functions\n    pSops          *string;           // the SOPs for 4-variable functions\n    aArea             int32;           // the area of the mapping\n    pMemCuts   *Aig_MmFlex_t;        // memory manager for cuts\n    nMergeLimit             int32;     // the limit on the size of merged cut\n    pTruths [4]*uint32;      // temporary truth tables\n    vMemory      *Vec_Int_t;         // memory for intermediate ISOP representation\n    timeCuts         abctime; \n    timeMap         abctime;\n    timeSave         abctime;\n}\n\n\n// inlining of macro Dar_ObjForEachCut\nfunc Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { var pCut *Dar_Cut_t; var i int32; for  (pCut) = Dar_ObjCuts(pObj), i = 0; i \u003c int32((pObj).nCuts); i, pCut = i+1, pCut+1  { if (pCut).fUsed==0 {} else if pCut.fBest { return pCut; } }\n return nil; }\n\nfunc Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 { return p.pSopSizes[pCut.uTruth] + p.pSopSizes[0xFFFF \u0026 ~pCut.uTruth]; }\n\nfunc Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return pCut.nFanins;                               }\nfunc Cnf_CutLeaves(pCut *Cnf_Cut_t) *int32 { return pCut.pFanins;                               }\nfunc Cnf_CutTruth(pCut *Cnf_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nFanins); }\n\nfunc Cnf_ObjBestCut(pObj *Aig_Obj_t) *Cnf_Cut_t { return (Cnf_Cut_t *)pObj.pData;  }\nfunc Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) { pObj.pData = pCut;  }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                           ITERATORS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the clauses\n// Original macro:\n// #define Cnf_CnfForClause( p, pBeg, pEnd, i )                         \\\n//     for ( i = 0; i \u003c p-\u003enClauses \u0026\u0026 (pBeg = p-\u003epClauses[i]) \u0026\u0026 (pEnd = p-\u003epClauses[i+1]); i++ )\n\n\n// iterator over leaves of the cut\n// Original macro:\n// #define Cnf_CutForEachLeaf( p, pCut, pLeaf, i )                         \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enFanins) \u0026\u0026 ((pLeaf) = Aig_ManObj(p, (pCut)-\u003epFanins[i])); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cnfCore.c ========================================================*/\n// extern Vec_Int_t *     Cnf_DeriveMappingArray( Aig_Man_t * pAig );\n\n// extern Cnf_Dat_t *     Cnf_Derive( Aig_Man_t * pAig, int nOutputs );\n\n// extern Cnf_Dat_t *     Cnf_DeriveWithMan( Cnf_Man_t * p, Aig_Man_t * pAig, int nOutputs );\n\n// extern Cnf_Dat_t *     Cnf_DeriveOther( Aig_Man_t * pAig, int fSkipTtMin );\n\n// extern Cnf_Dat_t *     Cnf_DeriveOtherWithMan( Cnf_Man_t * p, Aig_Man_t * pAig, int fSkipTtMin );\n\n// extern void            Cnf_ManPrepare();\n\n// extern Cnf_Man_t *     Cnf_ManRead();\n\n// extern void            Cnf_ManFree();\n\n/*=== cnfCut.c ========================================================*/\n// extern Cnf_Cut_t *     Cnf_CutCreate( Cnf_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Cnf_CutPrint( Cnf_Cut_t * pCut );\n\n// extern void            Cnf_CutFree( Cnf_Cut_t * pCut );\n\n// extern void            Cnf_CutUpdateRefs( Cnf_Man_t * p, Cnf_Cut_t * pCut, Cnf_Cut_t * pCutFan, Cnf_Cut_t * pCutRes );\n\n// extern Cnf_Cut_t *     Cnf_CutCompose( Cnf_Man_t * p, Cnf_Cut_t * pCut, Cnf_Cut_t * pCutFan, int iFan );\n\n/*=== cnfData.c ========================================================*/\n// extern void            Cnf_ReadMsops( char ** ppSopSizes, char *** ppSops );\n\n/*=== cnfFast.c ========================================================*/\n// extern void            Cnf_CollectLeaves( Aig_Obj_t * pRoot, Vec_Ptr_t * vSuper, int fStopCompl );\n\n// extern void            Cnf_ComputeClauses( Aig_Man_t * p, Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, \n//                            Vec_Ptr_t * vNodes, Vec_Int_t * vMap, Vec_Int_t * vCover, Vec_Int_t * vClauses );\n\n// extern void            Cnf_DeriveFastMark( Aig_Man_t * p );\n\n// extern Cnf_Dat_t *     Cnf_DeriveFast( Aig_Man_t * p, int nOutputs );\n\n/*=== cnfMan.c ========================================================*/\n// extern Cnf_Man_t *     Cnf_ManStart();\n\n// extern void            Cnf_ManStop( Cnf_Man_t * p );\n\n// extern Vec_Int_t *     Cnf_DataCollectPiSatNums( Cnf_Dat_t * pCnf, Aig_Man_t * p );\n\n// extern Cnf_Dat_t *     Cnf_DataAlloc( Aig_Man_t * pAig, int nVars, int nClauses, int nLiterals );\n\n// extern Cnf_Dat_t *     Cnf_DataDup( Cnf_Dat_t * p );\n\n// extern void            Cnf_DataFree( Cnf_Dat_t * p );\n\n// extern void            Cnf_DataLift( Cnf_Dat_t * p, int nVarsPlus );\n\n// extern void            Cnf_DataCollectFlipLits( Cnf_Dat_t * p, int iFlipVar, Vec_Int_t * vFlips );\n\n// extern void            Cnf_DataLiftAndFlipLits( Cnf_Dat_t * p, int nVarsPlus, Vec_Int_t * vLits );\n\n// extern void            Cnf_DataPrint( Cnf_Dat_t * p, int fReadable );\n\n// extern void            Cnf_DataWriteIntoFile( Cnf_Dat_t * p, char * pFileName, int fReadable, Vec_Int_t * vForAlls, Vec_Int_t * vExists );\n\n// extern void *          Cnf_DataWriteIntoSolver( Cnf_Dat_t * p, int nFrames, int fInit );\n\n// extern void *          Cnf_DataWriteIntoSolverInt( void * pSat, Cnf_Dat_t * p, int nFrames, int fInit );\n\n// extern int             Cnf_DataWriteOrClause( void * pSat, Cnf_Dat_t * pCnf );\n\n// extern int             Cnf_DataWriteAndClauses( void * p, Cnf_Dat_t * pCnf );\n\n// extern void            Cnf_DataTranformPolarity( Cnf_Dat_t * pCnf, int fTransformPos );\n\n// extern int             Cnf_DataAddXorClause( void * pSat, int iVarA, int iVarB, int iVarC );\n\n/*=== cnfMap.c ========================================================*/\n// extern void            Cnf_DeriveMapping( Cnf_Man_t * p );\n\n// extern int             Cnf_ManMapForCnf( Cnf_Man_t * p );\n\n/*=== cnfPost.c ========================================================*/\n// extern void            Cnf_ManTransferCuts( Cnf_Man_t * p );\n\n// extern void            Cnf_ManFreeCuts( Cnf_Man_t * p );\n\n// extern void            Cnf_ManPostprocess( Cnf_Man_t * p );\n\n/*=== cnfUtil.c ========================================================*/\n// extern Vec_Ptr_t *     Aig_ManScanMapping( Cnf_Man_t * p, int fCollect );\n\n// extern Vec_Ptr_t *     Cnf_ManScanMapping( Cnf_Man_t * p, int fCollect, int fPreorder );\n\n// extern Vec_Int_t *     Cnf_DataCollectCiSatNums( Cnf_Dat_t * pCnf, Aig_Man_t * p );\n\n// extern Vec_Int_t *     Cnf_DataCollectCoSatNums( Cnf_Dat_t * pCnf, Aig_Man_t * p );\n\n// extern unsigned char * Cnf_DataDeriveLitPolarities( Cnf_Dat_t * p );\n\n// extern Cnf_Dat_t *     Cnf_DataReadFromFile( char * pFileName );\n\n/*=== cnfWrite.c ========================================================*/\n// extern Vec_Int_t *     Cnf_ManWriteCnfMapping( Cnf_Man_t * p, Vec_Ptr_t * vMapped );\n\n// extern void            Cnf_SopConvertToVector( char * pSop, int nCubes, Vec_Int_t * vCover );\n\n// extern Cnf_Dat_t *     Cnf_ManWriteCnf( Cnf_Man_t * p, Vec_Ptr_t * vMapped, int nOutputs );\n\n// extern Cnf_Dat_t *     Cnf_ManWriteCnfOther( Cnf_Man_t * p, Vec_Ptr_t * vMapped );\n\n// extern Cnf_Dat_t *     Cnf_DeriveSimple( Aig_Man_t * p, int nOutputs );\n\n// extern Cnf_Dat_t *     Cnf_DeriveSimpleForRetiming( Aig_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

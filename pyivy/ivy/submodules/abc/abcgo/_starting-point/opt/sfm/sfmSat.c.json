@@ -1,0 +1,443 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c",
+  "SHA256": "b4cf12f80b0a33871ebff1331e958b034b109fa78ab6f18ae11d7e8aee0465bf",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pPars.nTfoLevMax \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 3910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vRoots) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 3955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(p.vTfo, 0) != p.iPivotNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 13,
+        "ByteOffset": 4844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 7513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDivIds) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 7840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 8877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 72,
+        "ByteOffset": 9352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iVar = Vec_IntFind( p.vDivIds, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 9619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 9664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 10044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_InfoHasBit( (unsigned *)pSign, p.nCexes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 10970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDivIds) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 11397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 12134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 12734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 12799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iMint \u003c (1 \u003c\u003c Vec_IntSize(p.vDivIds)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 13101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Value != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 13,
+        "ByteOffset": 13277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_InfoHasBit( (unsigned *)pSign, p.nCexes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 13795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == l_False );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 13,
+        "ByteOffset": 15411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The problem is SAT.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 13,
+        "ByteOffset": 15502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The problem is UNDEC.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 1,
+        "ByteOffset": 15617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_NtkWindowToSolver",
+      "Start": 1322,
+      "End": 5473,
+      "BodyStart": 1365,
+      "Original": "int Sfm_NtkWindowToSolver( Sfm_Ntk_t * p )\n{\n    // p-\u003evOrder contains all variables in the window in a good order\n    // p-\u003evDivs is a subset of nodes in p-\u003evOrder used as divisor candidates\n    // p-\u003evTfo contains TFO of the node (does not include node)\n    // p-\u003evRoots contains roots of the TFO of the node (may include node)\n    Vec_Int_t * vClause;\n    int RetValue, iNode = -1, iFanin, i, k;\n    abctime clk = Abc_Clock();\n//    if ( p-\u003epSat )\n//        printf( \"%d  \", p-\u003epSat-\u003estats.learnts );\n    sat_solver_restart( p-\u003epSat );\n    sat_solver_setnvars( p-\u003epSat, 1 + Vec_IntSize(p-\u003evOrder) + Vec_IntSize(p-\u003evTfo) + Vec_IntSize(p-\u003evRoots) + 10 );\n    // create SAT variables\n    Sfm_NtkCleanVars( p );\n    p-\u003enSatVars = 1;\n    Vec_IntForEachEntry( p-\u003evOrder, iNode, i )\n        Sfm_ObjSetSatVar( p, iNode, p-\u003enSatVars++ );\n    // collect divisor variables\n    Vec_IntClear( p-\u003evDivVars );\n    Vec_IntForEachEntry( p-\u003evDivs, iNode, i )\n        Vec_IntPush( p-\u003evDivVars, Sfm_ObjSatVar(p, iNode) );\n    // add CNF clauses for the TFI\n    Vec_IntForEachEntry( p-\u003evOrder, iNode, i )\n    {\n        if ( Sfm_ObjIsPi(p, iNode) )\n            continue;\n        // collect fanin variables\n        Vec_IntClear( p-\u003evFaninMap );\n        Sfm_ObjForEachFanin( p, iNode, iFanin, k )\n            Vec_IntPush( p-\u003evFaninMap, Sfm_ObjSatVar(p, iFanin) );\n        Vec_IntPush( p-\u003evFaninMap, Sfm_ObjSatVar(p, iNode) );\n        // generate CNF \n        Sfm_TranslateCnf( p-\u003evClauses, (Vec_Str_t *)Vec_WecEntry(p-\u003evCnfs, iNode), p-\u003evFaninMap, -1 );\n        // add clauses\n        Vec_WecForEachLevel( p-\u003evClauses, vClause, k )\n        {\n            if ( Vec_IntSize(vClause) == 0 )\n                break;\n            RetValue = sat_solver_addclause( p-\u003epSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n            if ( RetValue == 0 )\n                return 0;\n        }\n    }\n    if ( Vec_IntSize(p-\u003evTfo) \u003e 0 )\n    {\n        assert( p-\u003epPars-\u003enTfoLevMax \u003e 0 );\n        assert( Vec_IntSize(p-\u003evRoots) \u003e 0 );\n        assert( Vec_IntEntry(p-\u003evTfo, 0) != p-\u003eiPivotNode );\n        // collect variables of root nodes\n        Vec_IntClear( p-\u003evLits );\n        Vec_IntForEachEntry( p-\u003evRoots, iNode, i )\n            Vec_IntPush( p-\u003evLits, Sfm_ObjSatVar(p, iNode) );\n        // assign new variables to the TFO nodes\n        Vec_IntForEachEntry( p-\u003evTfo, iNode, i )\n        {\n            Sfm_ObjCleanSatVar( p, Sfm_ObjSatVar(p, iNode) );\n            Sfm_ObjSetSatVar( p, iNode, p-\u003enSatVars++ );\n        }\n        // add CNF clauses for the TFO\n        Vec_IntForEachEntry( p-\u003evTfo, iNode, i )\n        {\n            assert( Sfm_ObjIsNode(p, iNode) );\n            // collect fanin variables\n            Vec_IntClear( p-\u003evFaninMap );\n            Sfm_ObjForEachFanin( p, iNode, iFanin, k )\n                Vec_IntPush( p-\u003evFaninMap, Sfm_ObjSatVar(p, iFanin) );\n            Vec_IntPush( p-\u003evFaninMap, Sfm_ObjSatVar(p, iNode) );\n            // generate CNF \n            Sfm_TranslateCnf( p-\u003evClauses, (Vec_Str_t *)Vec_WecEntry(p-\u003evCnfs, iNode), p-\u003evFaninMap, Sfm_ObjSatVar(p, p-\u003eiPivotNode) );\n            // add clauses\n            Vec_WecForEachLevel( p-\u003evClauses, vClause, k )\n            {\n                if ( Vec_IntSize(vClause) == 0 )\n                    break;\n                RetValue = sat_solver_addclause( p-\u003epSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n                if ( RetValue == 0 )\n                    return 0;\n            }\n        }\n        // create XOR clauses for the roots\n        Vec_IntForEachEntry( p-\u003evRoots, iNode, i )\n        {\n            sat_solver_add_xor( p-\u003epSat, Vec_IntEntry(p-\u003evLits, i), Sfm_ObjSatVar(p, iNode), p-\u003enSatVars++, 0 );\n            Vec_IntWriteEntry( p-\u003evLits, i, Abc_Var2Lit(p-\u003enSatVars-1, 0) );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntArray(p-\u003evLits) + Vec_IntSize(p-\u003evLits) );\n        if ( RetValue == 0 )\n            return 0;\n    }\n    // finalize\n    RetValue = sat_solver_simplify( p-\u003epSat );\n    p-\u003etimeCnf += Abc_Clock() - clk;\n    return RetValue;\n}",
+      "Draft": "func Sfm_NtkWindowToSolver(p *Sfm_Ntk_t) int32 {\n    // p-\u003evOrder contains all variables in the window in a good order\n    // p-\u003evDivs is a subset of nodes in p-\u003evOrder used as divisor candidates\n    // p-\u003evTfo contains TFO of the node (does not include node)\n    // p-\u003evRoots contains roots of the TFO of the node (may include node)\n    var vClause *Vec_Int_t;\n    var RetValue int32;\n    var iNode int32 = -1;\n    var iFanin int32;\n    var i int32;\n    var k int32;\n    var clk abctime  = Abc_Clock();\n//    if ( p-\u003epSat )\n//        printf( \"%d  \", p-\u003epSat-\u003estats.learnts );\n    sat_solver_restart( p.pSat );\n    sat_solver_setnvars( p.pSat, 1 + Vec_IntSize(p.vOrder) + Vec_IntSize(p.vTfo) + Vec_IntSize(p.vRoots) + 10 );\n    // create SAT variables\n    Sfm_NtkCleanVars( p );\n    p.nSatVars = 1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        Sfm_ObjSetSatVar( p, iNode, p.nSatVars++ );\n    }\n    // collect divisor variables\n    Vec_IntClear( p.vDivVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n        Vec_IntPush( p.vDivVars, Sfm_ObjSatVar(p, iNode) );\n    }\n    // add CNF clauses for the TFI\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        if Sfm_ObjIsPi(p, iNode) {\n            continue; }\n        // collect fanin variables\n        Vec_IntClear( p.vFaninMap );\n        // inlining of macro Sfm_ObjForEachFanin\n        for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n            Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iFanin) );\n        }\n        Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iNode) );\n        // generate CNF \n        Sfm_TranslateCnf( p.vClauses, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode), p.vFaninMap, -1 );\n        // add clauses\n        // inlining of macro Vec_WecForEachLevel\n        for  k = 0; (k \u003c Vec_WecSize(p.vClauses)) \u0026\u0026 (((vClause) = Vec_WecEntry(p.vClauses, k)), 1); k++  {\n            if Vec_IntSize(vClause) == 0 {\n                break; }\n            RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n            if RetValue == 0 {\n                return 0; }\n        }\n    }\n    if Vec_IntSize(p.vTfo) \u003e 0 {\n        assert(p.pPars.nTfoLevMax \u003e 0, \"p.pPars.nTfoLevMax \u003e 0\");\n        assert(Vec_IntSize(p.vRoots) \u003e 0, \"Vec_IntSize(p.vRoots) \u003e 0\");\n        assert(Vec_IntEntry(p.vTfo, 0) != p.iPivotNode, \"Vec_IntEntry(p.vTfo, 0) != p.iPivotNode\");\n        // collect variables of root nodes\n        Vec_IntClear( p.vLits );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            Vec_IntPush( p.vLits, Sfm_ObjSatVar(p, iNode) );\n        }\n        // assign new variables to the TFO nodes\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            Sfm_ObjCleanSatVar( p, Sfm_ObjSatVar(p, iNode) );\n            Sfm_ObjSetSatVar( p, iNode, p.nSatVars++ );\n        }\n        // add CNF clauses for the TFO\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n            // collect fanin variables\n            Vec_IntClear( p.vFaninMap );\n            // inlining of macro Sfm_ObjForEachFanin\n            for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n                Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iFanin) );\n            }\n            Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iNode) );\n            // generate CNF \n            Sfm_TranslateCnf( p.vClauses, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode), p.vFaninMap, Sfm_ObjSatVar(p, p.iPivotNode) );\n            // add clauses\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(p.vClauses)) \u0026\u0026 (((vClause) = Vec_WecEntry(p.vClauses, k)), 1); k++  {\n                if Vec_IntSize(vClause) == 0 {\n                    break; }\n                RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n                if RetValue == 0 {\n                    return 0; }\n            }\n        }\n        // create XOR clauses for the roots\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            sat_solver_add_xor( p.pSat, Vec_IntEntry(p.vLits, i), Sfm_ObjSatVar(p, iNode), p.nSatVars++, 0 );\n            Vec_IntWriteEntry( p.vLits, i, Abc_Var2Lit(p.nSatVars-1, 0) );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        if RetValue == 0 {\n            return 0; }\n    }\n    // finalize\n    RetValue = sat_solver_simplify( p.pSat );\n    p.timeCnf += Abc_Clock() - clk;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Sfm_ComputeInterpolant",
+      "Start": 5811,
+      "End": 8601,
+      "BodyStart": 5856,
+      "Original": "word Sfm_ComputeInterpolant( Sfm_Ntk_t * p )\n{\n    word * pSign, uCube, uTruth = 0;\n    int status, i, Div, iVar, nFinal, * pFinal, nIter = 0;\n    int pLits[2], nVars = sat_solver_nvars( p-\u003epSat );\n    sat_solver_setnvars( p-\u003epSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Sfm_ObjSatVar(p, p-\u003eiPivotNode), 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert( Vec_IntSize(p-\u003evDivIds) \u003c= 6 );\n    while ( 1 ) \n    {\n        // find onset minterm\n        p-\u003enSatCalls++;\n        status = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, p-\u003epPars-\u003enBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return SFM_SAT_UNDEC;\n        if ( status == l_False )\n            return uTruth;\n        assert( status == l_True );\n        // remember variable values\n        Vec_IntClear( p-\u003evValues );\n        Vec_IntForEachEntry( p-\u003evDivVars, iVar, i )\n            Vec_IntPush( p-\u003evValues, sat_solver_var_value(p-\u003epSat, iVar) );\n        // collect divisor literals\n        Vec_IntClear( p-\u003evLits );\n        Vec_IntPush( p-\u003evLits, Abc_LitNot(pLits[0]) ); // F = 0\n        Vec_IntForEachEntry( p-\u003evDivIds, Div, i )\n            Vec_IntPush( p-\u003evLits, sat_solver_var_literal(p-\u003epSat, Div) );\n        // check against offset\n        p-\u003enSatCalls++;\n        status = sat_solver_solve( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntArray(p-\u003evLits) + Vec_IntSize(p-\u003evLits), p-\u003epPars-\u003enBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return SFM_SAT_UNDEC;\n        if ( status == l_True )\n            break;\n        assert( status == l_False );\n        // compute cube and add clause\n        nFinal = sat_solver_final( p-\u003epSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( p-\u003evLits );\n        Vec_IntPush( p-\u003evLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for ( i = 0; i \u003c nFinal; i++ )\n        {\n            if ( pFinal[i] == pLits[0] )\n                continue;\n            Vec_IntPush( p-\u003evLits, pFinal[i] );\n            iVar = Vec_IntFind( p-\u003evDivIds, Abc_Lit2Var(pFinal[i]) );   assert( iVar \u003e= 0 );\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntArray(p-\u003evLits) + Vec_IntSize(p-\u003evLits) );\n        assert( status );\n        nIter++;\n    }\n    assert( status == l_True );\n    // store the counter-example\n    Vec_IntForEachEntry( p-\u003evDivVars, iVar, i )\n        if ( Vec_IntEntry(p-\u003evValues, i) ^ sat_solver_var_value(p-\u003epSat, iVar) ) // insert 1\n        {\n            pSign = Vec_WrdEntryP( p-\u003evDivCexes, i );\n            assert( !Abc_InfoHasBit( (unsigned *)pSign, p-\u003enCexes) );\n            Abc_InfoXorBit( (unsigned *)pSign, p-\u003enCexes );\n        }\n    p-\u003enCexes++;\n    return SFM_SAT_SAT;\n}",
+      "Draft": "func Sfm_ComputeInterpolant(p *Sfm_Ntk_t) word {\n    var pSign *word;\n    var uCube word;\n    var uTruth word;\n    var status int32;\n    var i int32;\n    var Div int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var nIter int32;\n    var pLits [2]int32;\n    var nVars int32 = sat_solver_nvars( p.pSat );\n    sat_solver_setnvars( p.pSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Sfm_ObjSatVar(p, p.iPivotNode), 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert(Vec_IntSize(p.vDivIds) \u003c= 6, \"Vec_IntSize(p.vDivIds) \u003c= 6\");\n    for {\n        // find onset minterm\n        p.nSatCalls++;\n        status = sat_solver_solve( p.pSat, pLits, pLits + 2, p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SFM_SAT_UNDEC; }\n        if status == l_False {\n            return uTruth; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        Vec_IntClear( p.vValues );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n            Vec_IntPush( p.vValues, sat_solver_var_value(p.pSat, iVar) );\n        }\n        // collect divisor literals\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(pLits[0]) ); // F = 0\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivIds)) \u0026\u0026 (((Div) = Vec_IntEntry(p.vDivIds, i)), 1); i++  {\n            Vec_IntPush( p.vLits, sat_solver_var_literal(p.pSat, Div) );\n        }\n        // check against offset\n        p.nSatCalls++;\n        status = sat_solver_solve( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits), p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SFM_SAT_UNDEC; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( p.pSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( p.vLits, pFinal[i] );\n            iVar = Vec_IntFind( p.vDivIds, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n        if Vec_IntEntry(p.vValues, i) ^ sat_solver_var_value(p.pSat, iVar) { // insert 1\n        \n            pSign = Vec_WrdEntryP( p.vDivCexes, i );\n            assert(!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes), \"!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes)\");\n            Abc_InfoXorBit( (unsigned *)pSign, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return SFM_SAT_SAT;\n}"
+    },
+    {
+      "Name": "Sfm_ComputeInterpolantInt",
+      "Start": 8938,
+      "End": 11491,
+      "BodyStart": 9000,
+      "Original": "int Sfm_ComputeInterpolantInt( Sfm_Ntk_t * p, word Truth[2] )\n{\n    int fOnSet, iMint, iVar, nVars = sat_solver_nvars( p-\u003epSat );\n    int iVarPivot = Sfm_ObjSatVar( p, p-\u003eiPivotNode );\n    int status, iNewLit, i, Div, nIter = 0;\n    Truth[0] = Truth[1] = 0;\n    sat_solver_setnvars( p-\u003epSat, nVars + 1 );\n    iNewLit = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert( Vec_IntSize(p-\u003evDivIds) \u003c= 6 );\n    Vec_IntFill( p-\u003evValues, (1 \u003c\u003c Vec_IntSize(p-\u003evDivIds)) * Vec_IntSize(p-\u003evDivVars), -1 );\n    while ( 1 ) \n    {\n        // find care minterm\n        p-\u003enSatCalls++; nIter++;\n        status = sat_solver_solve( p-\u003epSat, \u0026iNewLit, \u0026iNewLit + 1, p-\u003epPars-\u003enBTLimit, 0, 0, 0 );\n        if ( status == l_Undef )\n            return l_Undef;\n        if ( status == l_False )\n            return l_False;\n        assert( status == l_True );\n        // collect values\n        iMint = 0;\n        fOnSet = sat_solver_var_value(p-\u003epSat, iVarPivot);\n        Vec_IntClear( p-\u003evLits );\n        Vec_IntPush( p-\u003evLits, Abc_LitNot(iNewLit) ); // NOT(iNewLit)\n        Vec_IntPush( p-\u003evLits, Abc_LitNot(sat_solver_var_literal(p-\u003epSat, iVarPivot)) );\n        Vec_IntForEachEntry( p-\u003evDivIds, Div, i )\n        {\n            Vec_IntPush( p-\u003evLits, Abc_LitNot(sat_solver_var_literal(p-\u003epSat, Div)) );\n            if ( sat_solver_var_value(p-\u003epSat, Div) )\n                iMint |= 1 \u003c\u003c i;\n        }\n        if ( Truth[!fOnSet] \u0026 ((word)1 \u003c\u003c iMint) )\n            break; \n        assert( !(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint)) );\n        Truth[fOnSet] |= ((word)1 \u003c\u003c iMint);\n        // remember variable values\n        Vec_IntForEachEntry( p-\u003evDivVars, iVar, i )\n            Vec_IntWriteEntry( p-\u003evValues, iMint * Vec_IntSize(p-\u003evDivVars) + i, sat_solver_var_value(p-\u003epSat, iVar) );\n        status = sat_solver_addclause( p-\u003epSat, Vec_IntArray(p-\u003evLits), Vec_IntArray(p-\u003evLits) + Vec_IntSize(p-\u003evLits) );\n        if ( status == 0 )\n            return l_False;\n    }\n    assert( status == l_True );\n    // store the counter-example\n    assert( iMint \u003c (1 \u003c\u003c Vec_IntSize(p-\u003evDivIds)) );\n    Vec_IntForEachEntry( p-\u003evDivVars, iVar, i )\n    {\n        int Value = Vec_IntEntry(p-\u003evValues, iMint * Vec_IntSize(p-\u003evDivVars) + i);\n        assert( Value != -1 );\n        if ( Value ^ sat_solver_var_value(p-\u003epSat, iVar) ) // insert 1\n        {\n            word * pSign = Vec_WrdEntryP( p-\u003evDivCexes, i );\n            assert( !Abc_InfoHasBit( (unsigned *)pSign, p-\u003enCexes) );\n            Abc_InfoXorBit( (unsigned *)pSign, p-\u003enCexes );\n        }\n    }\n    p-\u003enCexes++;\n    return l_True;\n}",
+      "Draft": "func Sfm_ComputeInterpolantInt(p *Sfm_Ntk_t, Truth []word) int32 {\n    var fOnSet int32;\n    var iMint int32;\n    var iVar int32;\n    var nVars int32 = sat_solver_nvars( p.pSat );\n    var iVarPivot int32  = Sfm_ObjSatVar( p, p.iPivotNode );\n    var status, iNewLit, i, Div, nIter int32;\n    Truth[0] = Truth[1] = 0;\n    sat_solver_setnvars( p.pSat, nVars + 1 );\n    iNewLit = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert(Vec_IntSize(p.vDivIds) \u003c= 6, \"Vec_IntSize(p.vDivIds) \u003c= 6\");\n    Vec_IntFill( p.vValues, (1 \u003c\u003c Vec_IntSize(p.vDivIds)) * Vec_IntSize(p.vDivVars), -1 );\n    for {\n        // find care minterm\n        p.nSatCalls++; nIter++;\n        status = sat_solver_solve( p.pSat, \u0026iNewLit, \u0026iNewLit + 1, p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return l_Undef; }\n        if status == l_False {\n            return l_False; }\n        assert(status == l_True, \"status == l_True\");\n        // collect values\n        iMint = 0;\n        fOnSet = sat_solver_var_value(p.pSat, iVarPivot);\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(iNewLit) ); // NOT(iNewLit)\n        Vec_IntPush( p.vLits, Abc_LitNot(sat_solver_var_literal(p.pSat, iVarPivot)) );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivIds)) \u0026\u0026 (((Div) = Vec_IntEntry(p.vDivIds, i)), 1); i++  {\n            Vec_IntPush( p.vLits, Abc_LitNot(sat_solver_var_literal(p.pSat, Div)) );\n            if sat_solver_var_value(p.pSat, Div) {\n                iMint |= 1 \u003c\u003c i; }\n        }\n        if Truth[!fOnSet] \u0026 ((word)1 \u003c\u003c iMint) {\n            break; } \n        assert(!(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint)), \"!(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint))\");\n        Truth[fOnSet] |= ((word)1 \u003c\u003c iMint);\n        // remember variable values\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n            Vec_IntWriteEntry( p.vValues, iMint * Vec_IntSize(p.vDivVars) + i, sat_solver_var_value(p.pSat, iVar) );\n        }\n        status = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        if status == 0 {\n            return l_False; }\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    assert(iMint \u003c (1 \u003c\u003c Vec_IntSize(p.vDivIds)), \"iMint \u003c (1 \u003c\u003c Vec_IntSize(p.vDivIds))\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n        var Value int32  = Vec_IntEntry(p.vValues, iMint * Vec_IntSize(p.vDivVars) + i);\n        assert(Value != -1, \"Value != -1\");\n        if Value ^ sat_solver_var_value(p.pSat, iVar) { // insert 1\n        \n            var pSign *word  = Vec_WrdEntryP( p.vDivCexes, i );\n            assert(!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes), \"!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes)\");\n            Abc_InfoXorBit( (unsigned *)pSign, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return l_True;\n}"
+    },
+    {
+      "Name": "Sfm_ComputeInterpolant2",
+      "Start": 11492,
+      "End": 12537,
+      "BodyStart": 11538,
+      "Original": "word Sfm_ComputeInterpolant2( Sfm_Ntk_t * p )\n{\n    word Res, ResP, ResN, Truth[2];\n    int nCubesP = 0, nCubesN = 0;\n    int RetValue = Sfm_ComputeInterpolantInt( p, Truth );\n    if ( RetValue == l_Undef )\n        return SFM_SAT_UNDEC;\n    if ( RetValue == l_True )\n        return SFM_SAT_SAT;\n    assert( RetValue == l_False );\n    //printf( \"Offset = %2d.  Onset = %2d.  DC = %2d.  Total = %2d.\\n\", \n    //    Abc_TtCountOnes(Truth[0]), Abc_TtCountOnes(Truth[1]), \n    //    (1\u003c\u003cVec_IntSize(p-\u003evDivIds)) - (Abc_TtCountOnes(Truth[0]) + Abc_TtCountOnes(Truth[1])), \n    //     1\u003c\u003cVec_IntSize(p-\u003evDivIds) );\n    Truth[0] = Abc_Tt6Stretch( Truth[0], Vec_IntSize(p-\u003evDivIds) );\n    Truth[1] = Abc_Tt6Stretch( Truth[1], Vec_IntSize(p-\u003evDivIds) );\n    ResP = Abc_Tt6Isop( Truth[1], ~Truth[0], Vec_IntSize(p-\u003evDivIds), \u0026nCubesP );\n    ResN = Abc_Tt6Isop( Truth[0], ~Truth[1], Vec_IntSize(p-\u003evDivIds), \u0026nCubesN );\n    Res  = nCubesP \u003c= nCubesN ? ResP : ~ResN;\n    //Dau_DsdPrintFromTruth( \u0026Res, Vec_IntSize(p-\u003evDivIds) );            \n    return Res;\n}",
+      "Draft": "func Sfm_ComputeInterpolant2(p *Sfm_Ntk_t) word {\n    var Res word;\n    var ResP word;\n    var ResN word;\n    var Truth [2]word;\n    var nCubesP, nCubesN int32;\n    var RetValue int32  = Sfm_ComputeInterpolantInt( p, Truth );\n    if RetValue == l_Undef {\n        return SFM_SAT_UNDEC; }\n    if RetValue == l_True {\n        return SFM_SAT_SAT; }\n    assert(RetValue == l_False, \"RetValue == l_False\");\n    //printf( \"Offset = %2d.  Onset = %2d.  DC = %2d.  Total = %2d.\\n\", \n    //    Abc_TtCountOnes(Truth[0]), Abc_TtCountOnes(Truth[1]), \n    //    (1\u003c\u003cVec_IntSize(p-\u003evDivIds)) - (Abc_TtCountOnes(Truth[0]) + Abc_TtCountOnes(Truth[1])), \n    //     1\u003c\u003cVec_IntSize(p-\u003evDivIds) );\n    Truth[0] = Abc_Tt6Stretch( Truth[0], Vec_IntSize(p.vDivIds) );\n    Truth[1] = Abc_Tt6Stretch( Truth[1], Vec_IntSize(p.vDivIds) );\n    ResP = Abc_Tt6Isop( Truth[1], ~Truth[0], Vec_IntSize(p.vDivIds), \u0026nCubesP );\n    ResN = Abc_Tt6Isop( Truth[0], ~Truth[1], Vec_IntSize(p.vDivIds), \u0026nCubesN );\n    if nCubesP \u003c= nCubesN {\n        Res = ResP;\n    } else {\n        Res = ~ResN;\n    }\n    //Dau_DsdPrintFromTruth( \u0026Res, Vec_IntSize(p-\u003evDivIds) );            \n    return Res;\n}"
+    },
+    {
+      "Name": "Sfm_ComputeInterpolantCheck",
+      "Start": 12795,
+      "End": 13577,
+      "BodyStart": 12845,
+      "Original": "void Sfm_ComputeInterpolantCheck( Sfm_Ntk_t * p )\n{\n    int iNode = 3;\n    int iDiv0 = 6;\n    int iDiv1 = 7;\n    word uTruth;\n//    int i;\n//    Sfm_NtkForEachNode( p, i )\n    {\n        Sfm_NtkCreateWindow( p, iNode, 1 );\n        Sfm_NtkWindowToSolver( p );\n\n        // collect SAT variables of divisors\n        Vec_IntClear( p-\u003evDivIds );\n        Vec_IntPush( p-\u003evDivIds, Sfm_ObjSatVar(p, iDiv0) );\n        Vec_IntPush( p-\u003evDivIds, Sfm_ObjSatVar(p, iDiv1) );\n\n        uTruth = Sfm_ComputeInterpolant( p );\n\n        if ( uTruth == SFM_SAT_SAT )\n            printf( \"The problem is SAT.\\n\" );\n        else if ( uTruth == SFM_SAT_UNDEC )\n            printf( \"The problem is UNDEC.\\n\" );\n        else\n            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 2 ), printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Sfm_ComputeInterpolantCheck(p *Sfm_Ntk_t) {\n    var iNode int32  = 3;\n    var iDiv0 int32  = 6;\n    var iDiv1 int32  = 7;\n    var uTruth word;\n//    int i;\n//    Sfm_NtkForEachNode( p, i )\n    {\n        Sfm_NtkCreateWindow( p, iNode, 1 );\n        Sfm_NtkWindowToSolver( p );\n\n        // collect SAT variables of divisors\n        Vec_IntClear( p.vDivIds );\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iDiv0) );\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iDiv1) );\n\n        uTruth = Sfm_ComputeInterpolant( p );\n\n        if uTruth == SFM_SAT_SAT {\n            fmt.Printf(\"The problem is SAT.\\n\");\n        } else if uTruth == SFM_SAT_UNDEC {\n            fmt.Printf(\"The problem is UNDEC.\\n\");\n        } else {\n            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 2 );\nfmt.Printf(\"\\n\"); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::3222",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2790,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::5291",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4320,
+      "End": 4333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::9974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8456,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::10035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8517,
+      "End": 8529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::13192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11345,
+      "End": 11357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::13253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11406,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::pointer-cast::15375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13528,
+      "End": 13540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::Sfm_NtkWindowToSolver",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkWindowToSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1322,
+      "End": 5473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::ternary::Sfm_ComputeInterpolant",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_ComputeInterpolant",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5811,
+      "End": 8601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::Sfm_ComputeInterpolant",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ComputeInterpolant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5811,
+      "End": 8601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::Sfm_ComputeInterpolantInt",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ComputeInterpolantInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8938,
+      "End": 11491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::Sfm_ComputeInterpolant2",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ComputeInterpolant2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11492,
+      "End": 12537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::Sfm_ComputeInterpolantCheck",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ComputeInterpolantCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12795,
+      "End": 13577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13824
+    }
+  ],
+  "Draft": "package sfm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sfmSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [SAT-based procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts a window into a SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkWindowToSolver(p *Sfm_Ntk_t) int32 {\n    // p-\u003evOrder contains all variables in the window in a good order\n    // p-\u003evDivs is a subset of nodes in p-\u003evOrder used as divisor candidates\n    // p-\u003evTfo contains TFO of the node (does not include node)\n    // p-\u003evRoots contains roots of the TFO of the node (may include node)\n    var vClause *Vec_Int_t;\n    var RetValue int32;\n    var iNode int32 = -1;\n    var iFanin int32;\n    var i int32;\n    var k int32;\n    var clk abctime  = Abc_Clock();\n//    if ( p-\u003epSat )\n//        printf( \"%d  \", p-\u003epSat-\u003estats.learnts );\n    sat_solver_restart( p.pSat );\n    sat_solver_setnvars( p.pSat, 1 + Vec_IntSize(p.vOrder) + Vec_IntSize(p.vTfo) + Vec_IntSize(p.vRoots) + 10 );\n    // create SAT variables\n    Sfm_NtkCleanVars( p );\n    p.nSatVars = 1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        Sfm_ObjSetSatVar( p, iNode, p.nSatVars++ );\n    }\n    // collect divisor variables\n    Vec_IntClear( p.vDivVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n        Vec_IntPush( p.vDivVars, Sfm_ObjSatVar(p, iNode) );\n    }\n    // add CNF clauses for the TFI\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        if Sfm_ObjIsPi(p, iNode) {\n            continue; }\n        // collect fanin variables\n        Vec_IntClear( p.vFaninMap );\n        // inlining of macro Sfm_ObjForEachFanin\n        for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n            Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iFanin) );\n        }\n        Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iNode) );\n        // generate CNF \n        Sfm_TranslateCnf( p.vClauses, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode), p.vFaninMap, -1 );\n        // add clauses\n        // inlining of macro Vec_WecForEachLevel\n        for  k = 0; (k \u003c Vec_WecSize(p.vClauses)) \u0026\u0026 (((vClause) = Vec_WecEntry(p.vClauses, k)), 1); k++  {\n            if Vec_IntSize(vClause) == 0 {\n                break; }\n            RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n            if RetValue == 0 {\n                return 0; }\n        }\n    }\n    if Vec_IntSize(p.vTfo) \u003e 0 {\n        assert(p.pPars.nTfoLevMax \u003e 0, \"p.pPars.nTfoLevMax \u003e 0\");\n        assert(Vec_IntSize(p.vRoots) \u003e 0, \"Vec_IntSize(p.vRoots) \u003e 0\");\n        assert(Vec_IntEntry(p.vTfo, 0) != p.iPivotNode, \"Vec_IntEntry(p.vTfo, 0) != p.iPivotNode\");\n        // collect variables of root nodes\n        Vec_IntClear( p.vLits );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            Vec_IntPush( p.vLits, Sfm_ObjSatVar(p, iNode) );\n        }\n        // assign new variables to the TFO nodes\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            Sfm_ObjCleanSatVar( p, Sfm_ObjSatVar(p, iNode) );\n            Sfm_ObjSetSatVar( p, iNode, p.nSatVars++ );\n        }\n        // add CNF clauses for the TFO\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n            // collect fanin variables\n            Vec_IntClear( p.vFaninMap );\n            // inlining of macro Sfm_ObjForEachFanin\n            for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n                Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iFanin) );\n            }\n            Vec_IntPush( p.vFaninMap, Sfm_ObjSatVar(p, iNode) );\n            // generate CNF \n            Sfm_TranslateCnf( p.vClauses, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode), p.vFaninMap, Sfm_ObjSatVar(p, p.iPivotNode) );\n            // add clauses\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(p.vClauses)) \u0026\u0026 (((vClause) = Vec_WecEntry(p.vClauses, k)), 1); k++  {\n                if Vec_IntSize(vClause) == 0 {\n                    break; }\n                RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vClause), Vec_IntArray(vClause) + Vec_IntSize(vClause) );\n                if RetValue == 0 {\n                    return 0; }\n            }\n        }\n        // create XOR clauses for the roots\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iNode) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            sat_solver_add_xor( p.pSat, Vec_IntEntry(p.vLits, i), Sfm_ObjSatVar(p, iNode), p.nSatVars++, 0 );\n            Vec_IntWriteEntry( p.vLits, i, Abc_Var2Lit(p.nSatVars-1, 0) );\n        }\n        // make OR clause for the last nRoots variables\n        RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        if RetValue == 0 {\n            return 0; }\n    }\n    // finalize\n    RetValue = sat_solver_simplify( p.pSat );\n    p.timeCnf += Abc_Clock() - clk;\n    return RetValue;\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Takes SAT solver and returns interpolant.]\n\n  Description [If interpolant does not exist, records difference variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ComputeInterpolant(p *Sfm_Ntk_t) word {\n    var pSign *word;\n    var uCube word;\n    var uTruth word;\n    var status int32;\n    var i int32;\n    var Div int32;\n    var iVar int32;\n    var nFinal int32;\n    var pFinal *int32;\n    var nIter int32;\n    var pLits [2]int32;\n    var nVars int32 = sat_solver_nvars( p.pSat );\n    sat_solver_setnvars( p.pSat, nVars + 1 );\n    pLits[0] = Abc_Var2Lit( Sfm_ObjSatVar(p, p.iPivotNode), 0 ); // F = 1\n    pLits[1] = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert(Vec_IntSize(p.vDivIds) \u003c= 6, \"Vec_IntSize(p.vDivIds) \u003c= 6\");\n    for {\n        // find onset minterm\n        p.nSatCalls++;\n        status = sat_solver_solve( p.pSat, pLits, pLits + 2, p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SFM_SAT_UNDEC; }\n        if status == l_False {\n            return uTruth; }\n        assert(status == l_True, \"status == l_True\");\n        // remember variable values\n        Vec_IntClear( p.vValues );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n            Vec_IntPush( p.vValues, sat_solver_var_value(p.pSat, iVar) );\n        }\n        // collect divisor literals\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(pLits[0]) ); // F = 0\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivIds)) \u0026\u0026 (((Div) = Vec_IntEntry(p.vDivIds, i)), 1); i++  {\n            Vec_IntPush( p.vLits, sat_solver_var_literal(p.pSat, Div) );\n        }\n        // check against offset\n        p.nSatCalls++;\n        status = sat_solver_solve( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits), p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return SFM_SAT_UNDEC; }\n        if status == l_True {\n            break; }\n        assert(status == l_False, \"status == l_False\");\n        // compute cube and add clause\n        nFinal = sat_solver_final( p.pSat, \u0026pFinal );\n        uCube = ~(word)0;\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(pLits[1]) ); // NOT(iNewLit)\n        for  i = 0; i \u003c nFinal; i++  {\n            if pFinal[i] == pLits[0] {\n                continue; }\n            Vec_IntPush( p.vLits, pFinal[i] );\n            iVar = Vec_IntFind( p.vDivIds, Abc_Lit2Var(pFinal[i]) );   assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n            uCube \u0026= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];\n        }\n        uTruth |= uCube;\n        status = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        assert((status != 0), \"status\");\n        nIter++;\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n        if Vec_IntEntry(p.vValues, i) ^ sat_solver_var_value(p.pSat, iVar) { // insert 1\n        \n            pSign = Vec_WrdEntryP( p.vDivCexes, i );\n            assert(!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes), \"!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes)\");\n            Abc_InfoXorBit( (unsigned *)pSign, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return SFM_SAT_SAT;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes SAT solver and returns interpolant.]\n\n  Description [If interpolant does not exist, records difference variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ComputeInterpolantInt(p *Sfm_Ntk_t, Truth []word) int32 {\n    var fOnSet int32;\n    var iMint int32;\n    var iVar int32;\n    var nVars int32 = sat_solver_nvars( p.pSat );\n    var iVarPivot int32  = Sfm_ObjSatVar( p, p.iPivotNode );\n    var status, iNewLit, i, Div, nIter int32;\n    Truth[0] = Truth[1] = 0;\n    sat_solver_setnvars( p.pSat, nVars + 1 );\n    iNewLit = Abc_Var2Lit( nVars, 0 ); // iNewLit\n    assert(Vec_IntSize(p.vDivIds) \u003c= 6, \"Vec_IntSize(p.vDivIds) \u003c= 6\");\n    Vec_IntFill( p.vValues, (1 \u003c\u003c Vec_IntSize(p.vDivIds)) * Vec_IntSize(p.vDivVars), -1 );\n    for {\n        // find care minterm\n        p.nSatCalls++; nIter++;\n        status = sat_solver_solve( p.pSat, \u0026iNewLit, \u0026iNewLit + 1, p.pPars.nBTLimit, 0, 0, 0 );\n        if status == l_Undef {\n            return l_Undef; }\n        if status == l_False {\n            return l_False; }\n        assert(status == l_True, \"status == l_True\");\n        // collect values\n        iMint = 0;\n        fOnSet = sat_solver_var_value(p.pSat, iVarPivot);\n        Vec_IntClear( p.vLits );\n        Vec_IntPush( p.vLits, Abc_LitNot(iNewLit) ); // NOT(iNewLit)\n        Vec_IntPush( p.vLits, Abc_LitNot(sat_solver_var_literal(p.pSat, iVarPivot)) );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivIds)) \u0026\u0026 (((Div) = Vec_IntEntry(p.vDivIds, i)), 1); i++  {\n            Vec_IntPush( p.vLits, Abc_LitNot(sat_solver_var_literal(p.pSat, Div)) );\n            if sat_solver_var_value(p.pSat, Div) {\n                iMint |= 1 \u003c\u003c i; }\n        }\n        if Truth[!fOnSet] \u0026 ((word)1 \u003c\u003c iMint) {\n            break; } \n        assert(!(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint)), \"!(Truth[fOnSet] \u0026 ((word)1 \u003c\u003c iMint))\");\n        Truth[fOnSet] |= ((word)1 \u003c\u003c iMint);\n        // remember variable values\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n            Vec_IntWriteEntry( p.vValues, iMint * Vec_IntSize(p.vDivVars) + i, sat_solver_var_value(p.pSat, iVar) );\n        }\n        status = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits) + Vec_IntSize(p.vLits) );\n        if status == 0 {\n            return l_False; }\n    }\n    assert(status == l_True, \"status == l_True\");\n    // store the counter-example\n    assert(iMint \u003c (1 \u003c\u003c Vec_IntSize(p.vDivIds)), \"iMint \u003c (1 \u003c\u003c Vec_IntSize(p.vDivIds))\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivVars)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vDivVars, i)), 1); i++  {\n        var Value int32  = Vec_IntEntry(p.vValues, iMint * Vec_IntSize(p.vDivVars) + i);\n        assert(Value != -1, \"Value != -1\");\n        if Value ^ sat_solver_var_value(p.pSat, iVar) { // insert 1\n        \n            var pSign *word  = Vec_WrdEntryP( p.vDivCexes, i );\n            assert(!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes), \"!Abc_InfoHasBit( (unsigned *)pSign, p.nCexes)\");\n            Abc_InfoXorBit( (unsigned *)pSign, p.nCexes );\n        }\n    }\n    p.nCexes++;\n    return l_True;\n}\nfunc Sfm_ComputeInterpolant2(p *Sfm_Ntk_t) word {\n    var Res word;\n    var ResP word;\n    var ResN word;\n    var Truth [2]word;\n    var nCubesP, nCubesN int32;\n    var RetValue int32  = Sfm_ComputeInterpolantInt( p, Truth );\n    if RetValue == l_Undef {\n        return SFM_SAT_UNDEC; }\n    if RetValue == l_True {\n        return SFM_SAT_SAT; }\n    assert(RetValue == l_False, \"RetValue == l_False\");\n    //printf( \"Offset = %2d.  Onset = %2d.  DC = %2d.  Total = %2d.\\n\", \n    //    Abc_TtCountOnes(Truth[0]), Abc_TtCountOnes(Truth[1]), \n    //    (1\u003c\u003cVec_IntSize(p-\u003evDivIds)) - (Abc_TtCountOnes(Truth[0]) + Abc_TtCountOnes(Truth[1])), \n    //     1\u003c\u003cVec_IntSize(p-\u003evDivIds) );\n    Truth[0] = Abc_Tt6Stretch( Truth[0], Vec_IntSize(p.vDivIds) );\n    Truth[1] = Abc_Tt6Stretch( Truth[1], Vec_IntSize(p.vDivIds) );\n    ResP = Abc_Tt6Isop( Truth[1], ~Truth[0], Vec_IntSize(p.vDivIds), \u0026nCubesP );\n    ResN = Abc_Tt6Isop( Truth[0], ~Truth[1], Vec_IntSize(p.vDivIds), \u0026nCubesN );\n    if nCubesP \u003c= nCubesN {\n        Res = ResP;\n    } else {\n        Res = ~ResN;\n    }\n    //Dau_DsdPrintFromTruth( \u0026Res, Vec_IntSize(p-\u003evDivIds) );            \n    return Res;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks resubstitution.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ComputeInterpolantCheck(p *Sfm_Ntk_t) {\n    var iNode int32  = 3;\n    var iDiv0 int32  = 6;\n    var iDiv1 int32  = 7;\n    var uTruth word;\n//    int i;\n//    Sfm_NtkForEachNode( p, i )\n    {\n        Sfm_NtkCreateWindow( p, iNode, 1 );\n        Sfm_NtkWindowToSolver( p );\n\n        // collect SAT variables of divisors\n        Vec_IntClear( p.vDivIds );\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iDiv0) );\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iDiv1) );\n\n        uTruth = Sfm_ComputeInterpolant( p );\n\n        if uTruth == SFM_SAT_SAT {\n            fmt.Printf(\"The problem is SAT.\\n\");\n        } else if uTruth == SFM_SAT_UNDEC {\n            fmt.Printf(\"The problem is UNDEC.\\n\");\n        } else {\n            Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, 2 );\nfmt.Printf(\"\\n\"); }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

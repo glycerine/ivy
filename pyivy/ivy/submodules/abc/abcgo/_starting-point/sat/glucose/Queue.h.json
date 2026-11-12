@@ -1,0 +1,93 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Queue.h",
+  "SHA256": "67416fdc5c092a36ca8511b6f293f85445fec994a11efd2a2537e586f5068c5a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 34,
+        "ByteOffset": 1898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026 operator [] (int index) { assert(index \u003e= 0); assert(index \u003c size()); return buf[(first + index) % buf.size()]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 54,
+        "ByteOffset": 1918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026 operator [] (int index) { assert(index \u003e= 0); assert(index \u003c size()); return buf[(first + index) % buf.size()]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 47,
+        "ByteOffset": 2032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026       operator [] (int index)        { assert(index \u003e= 0); assert(index \u003c size()); return buf[(first + index) % buf.size()]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 67,
+        "ByteOffset": 2052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026       operator [] (int index)        { assert(index \u003e= 0); assert(index \u003c size()); return buf[(first + index) % buf.size()]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 21,
+        "ByteOffset": 2141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T    peek  () { assert(first != end); return buf[first]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 21,
+        "ByteOffset": 2204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void pop   () { assert(first != end); first++; if (first == buf.size()) first = 0; }"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Queue.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3064
+    }
+  ],
+  "Draft": "package glucose\n\n/*****************************************************************************************[Queue.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \"sat/glucose/Vec.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//=================================================================================================\n\ntemplate\u003cclass T\u003e\nclass Queue {\n    vec\u003cT\u003e  buf;\n    int     first;\n    int     end;\n\npublic:\n    typedef T Key;\n\n    Queue() : buf(1), first(0), end(0) {}\n\n    void clear (bool dealloc = false) { buf.clear(dealloc); buf.growTo(1); first = end = 0; }\n    int  size  () { return (end \u003e= first) ? end - first : end - first + buf.size(); }\n\n    T\u0026 operator [] (int index) { assert(index \u003e= 0, \"index \u003e= 0\"); assert(index \u003c size(), \"index \u003c size()\"); return buf[(first + index) % buf.size()]; }\n    T\u0026       operator [] (int index)        { assert(index \u003e= 0, \"index \u003e= 0\"); assert(index \u003c size(), \"index \u003c size()\"); return buf[(first + index) % buf.size()]; }\n\n    T    peek  () { assert(first != end, \"first != end\"); return buf[first]; }\n    void pop   () { assert(first != end, \"first != end\"); first++; if (first == buf.size()) first = 0; }\n    void insert(T elem) {   // INVARIANT: buf[end] is always unused\n        buf[end++] = elem;\n        if (end == buf.size()) end = 0;\n        if first == end{  // Resize:\n            vec\u003cT\u003e  tmp((buf.size()*3 + 1) \u003e\u003e 1);\n            //**/printf(\"queue alloc: %d elems (%.1f MB)\\n\", tmp.size(), tmp.size() * sizeof(T) / 1000000.0);\n            int j, i = 0;\n            for (j = first; j \u003c buf.size(); j++) tmp[i++] = buf[j];\n            for (j = 0    ; j \u003c end       ; j++) tmp[i++] = buf[j];\n            first = 0;\n            end   = buf.size();\n            tmp.moveTo(buf);\n        }\n    }\n};\n\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

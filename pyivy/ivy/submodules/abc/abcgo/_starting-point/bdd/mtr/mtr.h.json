@@ -1,0 +1,141 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h",
+  "SHA256": "027c81b26dd06b9384795dd29cc57d659ccbd83fd22f0d33d02f080cbe9c8441",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 72,
+        "Column": 1,
+        "ByteOffset": 3073
+      },
+      "Directive": "#ifndef SIZEOF_VOID_P"
+    },
+    {
+      "Location": {
+        "Line": 75,
+        "Column": 1,
+        "ByteOffset": 3126
+      },
+      "Directive": "#ifndef SIZEOF_INT"
+    },
+    {
+      "Location": {
+        "Line": 86,
+        "Column": 1,
+        "ByteOffset": 3369
+      },
+      "Directive": "#if defined(__GNUC__)"
+    },
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 3421
+      },
+      "Directive": "# if (__GNUC__ \u003e2 || __GNUC_MINOR__ \u003e=7)"
+    },
+    {
+      "Location": {
+        "Line": 109,
+        "Column": 1,
+        "ByteOffset": 3949
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 125,
+        "Column": 1,
+        "ByteOffset": 4582
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::macro::MTR_SET",
+      "Category": "macro-review",
+      "Symbol": "MTR_SET",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5462,
+      "End": 5525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::macro::MTR_RESET",
+      "Category": "macro-review",
+      "Symbol": "MTR_RESET",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5526,
+      "End": 5583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::macro::MTR_TEST",
+      "Category": "macro-review",
+      "Symbol": "MTR_TEST",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5584,
+      "End": 5638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3073,
+      "End": 3125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3126,
+      "End": 3172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3369,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3949,
+      "End": 4096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/mtr/mtr.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4582,
+      "End": 4708
+    }
+  ],
+  "Draft": "package mtr\n\n/**CHeaderFile*****************************************************************\n\n  FileName    [mtr.h]\n\n  PackageName [mtr]\n\n  Synopsis    [Multiway-branch tree manipulation]\n\n  Description [This package provides two layers of functions. Functions\n  of the lower level manipulate multiway-branch trees, implemented\n  according to the classical scheme whereby each node points to its\n  first child and its previous and next siblings. These functions are\n  collected in mtrBasic.c.\u003cp\u003e\n  Functions of the upper layer deal with group trees, that is the trees\n  used by group sifting to represent the grouping of variables. These\n  functions are collected in mtrGroup.c.]\n\n  SeeAlso     [The CUDD package documentation; specifically on group\n  sifting.]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n  Revision    [$Id: mtr.h,v 1.14 2009/02/20 02:03:47 fabio Exp $]\n\n******************************************************************************/\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Nested includes                                                           */\n/*---------------------------------------------------------------------------*/\n\n//ABC_NAMESPACE_HEADER_START\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef SIZEOF_VOID_P\n#define SIZEOF_VOID_P 4\n#endif\n#ifndef SIZEOF_INT\n#define SIZEOF_INT 4\n#endif\n\n//#undef CONST\n//#if defined(__STDC__) || defined(__cplusplus)\n//#define CONST           const\n//#else /* !(__STDC__ || __cplusplus) */\n//#define CONST\n//#endif /* !(__STDC__ || __cplusplus) */\n\n#if defined(__GNUC__)\n#define MTR_INLINE __inline__\n# if (__GNUC__ \u003e2 || __GNUC_MINOR__ \u003e=7)\n#   define MTR_UNUSED __attribute__ ((unused))\n# else\n#   define MTR_UNUSED\n# endif\n#else\n#define MTR_INLINE\n#define MTR_UNUSED\n#endif\n\n/* Flag definitions */\nconst MTR_DEFAULT =     0x00000000\nconst MTR_TERMINAL =    0x00000001\nconst MTR_SOFT =        0x00000002\nconst MTR_FIXED =       0x00000004\nconst MTR_NEWNODE =     0x00000008\n\n/* MTR_MAXHIGH is defined in such a way that on 32-bit and 64-bit\n** machines one can cast a value to (int) without generating a negative\n** number.\n*/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define MTR_MAXHIGH     (((MtrHalfWord) ~0) \u003e\u003e 1)\n#else\n#define MTR_MAXHIGH     ((MtrHalfWord) ~0)\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\ntypedef unsigned int   MtrHalfWord;\n#else\ntypedef unsigned short MtrHalfWord;\n#endif\n\ntypedef struct MtrNode {\n    MtrHalfWord flags;\n    MtrHalfWord low;\n    MtrHalfWord size;\n    MtrHalfWord index;\n    struct MtrNode *parent;\n    struct MtrNode *child;\n    struct MtrNode *elder;\n    struct MtrNode *younger;\n}\n MtrNode;\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/* Flag manipulation macros */\n// Original macro:\n// #define MTR_SET(node, flag)             (node-\u003eflags |= (flag))\n\n// Original macro:\n// #define MTR_RESET(node, flag)   (node-\u003eflags \u0026= ~ (flag))\n\n// Original macro:\n// #define MTR_TEST(node, flag)    (node-\u003eflags \u0026 (flag))\n\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Function prototypes                                                       */\n/*---------------------------------------------------------------------------*/\n\n// extern MtrNode * Mtr_AllocNode (void);\n\n// extern void Mtr_DeallocNode (MtrNode *node);\n\n// extern MtrNode * Mtr_InitTree (void);\n\n// extern void Mtr_FreeTree (MtrNode *node);\n\n// extern MtrNode * Mtr_CopyTree (MtrNode *node, int expansion);\n\n// extern void Mtr_MakeFirstChild (MtrNode *parent, MtrNode *child);\n\n// extern void Mtr_MakeLastChild (MtrNode *parent, MtrNode *child);\n\n// extern MtrNode * Mtr_CreateFirstChild (MtrNode *parent);\n\n// extern MtrNode * Mtr_CreateLastChild (MtrNode *parent);\n\n// extern void Mtr_MakeNextSibling (MtrNode *first, MtrNode *second);\n\n// extern void Mtr_PrintTree (MtrNode *node);\n\n// extern MtrNode * Mtr_InitGroupTree (int lower, int size);\n\n// extern MtrNode * Mtr_MakeGroup (MtrNode *root, unsigned int low, unsigned int high, unsigned int flags);\n\n// extern MtrNode * Mtr_DissolveGroup (MtrNode *group);\n\n// extern MtrNode * Mtr_FindGroup (MtrNode *root, unsigned int low, unsigned int high);\n\n// extern int Mtr_SwapGroups (MtrNode *first, MtrNode *second);\n\n// extern void Mtr_PrintGroups (MtrNode *root, int silent);\n\n// extern MtrNode * Mtr_ReadGroups (FILE *fp, int nleaves);\n\n\n/**AutomaticEnd***************************************************************/\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

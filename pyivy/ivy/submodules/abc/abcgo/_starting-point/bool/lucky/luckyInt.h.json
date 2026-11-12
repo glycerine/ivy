@@ -1,0 +1,123 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h",
+  "SHA256": "5b2aa6f3951d9068749e4a8d3be9ab847bf8c6b8d93a85b4fa01af7d730056e2",
+  "Library": [
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 98,
+        "Column": 74,
+        "ByteOffset": 1753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var time float64  = 1.0*(Abc_Clock() - spStatic_TimePrint_timeBegin)/CLOCKS_PER_SEC ;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 1802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%s = %f sec.\\n\", Message, time); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "TimePrint",
+      "Start": 1642,
+      "End": 1886,
+      "BodyStart": 1688,
+      "Original": "static inline void TimePrint( char* Message )\n{\n    static int timeBegin;\n    double time = 1.0*(Abc_Clock() - timeBegin)/CLOCKS_PER_SEC ;\n    if ( Message != NULL)\n        printf(\"%s = %f sec.\\n\", Message, time);\n    timeBegin = Abc_Clock();\n}",
+      "Draft": "func TimePrint(Message string) {\n    \n    var time float64  = 1.0*(Abc_Clock() - spStatic_TimePrint_timeBegin)/int64(spTime.Second) ;\n    if Message != nil {\n        fmt.Printf(\"%s = %f sec.\\n\", Message, time); }\n    spStatic_TimePrint_timeBegin = Abc_Clock();\n}"
+    },
+    {
+      "Name": "CompareWords",
+      "Start": 1888,
+      "End": 2022,
+      "BodyStart": 1936,
+      "Original": "static inline int CompareWords( word x, word y)\n{\n    if( x \u003e y )\n        return 1;\n    if( x \u003c y )\n        return -1;\n    return 0;\n}",
+      "Draft": "func CompareWords(x word, y word) int32 {\n    if x \u003e y {\n        return 1; }\n    if x \u003c y {\n        return -1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "luckyMin",
+      "Start": 2024,
+      "End": 2100,
+      "BodyStart": 2073,
+      "Original": "static inline int       luckyMin( int x, int y ) { return (x \u003c y) ? x : y; }",
+      "Draft": "func luckyMin(x int32, y int32) int32 { if x \u003c y {\n    return x;\n} else {\n    return y;\n} }"
+    },
+    {
+      "Name": "luckyMax",
+      "Start": 2101,
+      "End": 2177,
+      "BodyStart": 2150,
+      "Original": "static inline int       luckyMax( int x, int y ) { return (x \u003c y) ? y : x; }",
+      "Draft": "func luckyMax(x int32, y int32) int32 { if x \u003c y {\n    return y;\n} else {\n    return x;\n} }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::mechanical::static::1694",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1694,
+      "End": 1700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::TimePrint",
+      "Category": "semantic-review",
+      "Symbol": "TimePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1642,
+      "End": 1886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::CompareWords",
+      "Category": "semantic-review",
+      "Symbol": "CompareWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1888,
+      "End": 2022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::luckyMin",
+      "Category": "semantic-review",
+      "Symbol": "luckyMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2024,
+      "End": 2100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::luckyMax",
+      "Category": "semantic-review",
+      "Symbol": "luckyMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2101,
+      "End": 2177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3906
+    }
+  ],
+  "Draft": "package lucky\n\nimport (\n\t\"fmt\"\n\tspTime \"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [luckyInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Jake]\n\n  Date        [Started - August 2012]\n\n***********************************************************************/\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003ctime.h\u003e\n\n// comment out this line to run Lucky Code outside of ABC\n#define _RUNNING_ABC_\n\n                    \n\n//#include \"misc/util/abc_global.h\"\n//#include \"lucky.h\"\n\n     \n\n                                  \n                                \n                                \n                              \n                               \n                \n               \n              \n                                                     \n                                                                       \n                       \n\n              \n \n             \n                   \n                \n                   \n                   \n                \n                    \n          \n\n      \n\n\n//ABC_NAMESPACE_HEADER_START\n\ntypedef struct  \n{\n    int      nVars;\n    int      nWords;\n    int      nFuncs;\n    word **  pFuncs;\n}\nAbc_TtStore_t;\n\ntypedef struct \n{\n    int direction; \n    int position;\n}\n varInfo;\n\n\ntypedef struct \n{\n    varInfo* posArray;\n    int* realArray;\n    int varN;\n    int positionToSwap1;\n    int positionToSwap2;\n}\n swapInfo;\n\n\nvar spStatic_TimePrint_timeBegin int32;\nfunc TimePrint(Message string) {\n    \n    var time float64  = 1.0*(Abc_Clock() - spStatic_TimePrint_timeBegin)/int64(spTime.Second) ;\n    if Message != nil {\n        fmt.Printf(\"%s = %f sec.\\n\", Message, time); }\n    spStatic_TimePrint_timeBegin = Abc_Clock();\n}\n\nfunc CompareWords(x word, y word) int32 {\n    if x \u003e y {\n        return 1; }\n    if x \u003c y {\n        return -1; }\n    return 0;\n}\n\nfunc luckyMin(x int32, y int32) int32 { if x \u003c y {\n    return x;\n} else {\n    return y;\n} }\nfunc luckyMax(x int32, y int32) int32 { if x \u003c y {\n    return y;\n} else {\n    return x;\n} }\n\n\n// extern  int             memCompare(word* x, word*  y, int nVars);\n\n// extern  int             Kit_TruthWordNum_64bit( int nVars );\n\n// extern  Abc_TtStore_t * setTtStore(char * pFileInput);\n\n// extern  void            Abc_TruthStoreFree( Abc_TtStore_t * p );\n\n// extern  void            Kit_TruthChangePhase_64bit( word * pInOut, int nVars, int iVar );\n\n// extern  void            Kit_TruthNot_64bit(word * pIn, int nVars );\n\n// extern  void            Kit_TruthCopy_64bit( word * pOut, word * pIn, int nVars );\n\n// extern  void            Kit_TruthSwapAdjacentVars_64bit( word * pInOut, int nVars, int iVar );\n\n// extern  int             Kit_TruthCountOnes_64bit( word* pIn, int nVars );\n\n// extern  void            simpleMinimal(word* x, word* pAux,word* minimal, permInfo* pi, int nVars);\n\n// extern  permInfo *      setPermInfoPtr(int var);\n\n// extern  void            freePermInfoPtr(permInfo* x);\n\n// extern  void            Kit_TruthSemiCanonicize_Yasha_simple( word* pInOut, int nVars, int * pStore );\n\n// extern  unsigned        Kit_TruthSemiCanonicize_Yasha( word* pInOut, int nVars, char * pCanonPerm);\n\n// extern  unsigned        Kit_TruthSemiCanonicize_Yasha1( word* pInOut, int nVars, char * pCanonPerm, int * pStore);\n\n// extern  word            luckyCanonicizer_final_fast_6Vars(word InOut, int* pStore, char* pCanonPerm, unsigned* pCanonPhase);\n\n// extern  word            luckyCanonicizer_final_fast_6Vars1(word InOut, int* pStore, char* pCanonPerm, unsigned* pCanonPhase);\n\n// extern  unsigned        adjustInfoAfterSwap(char* pCanonPerm, unsigned uCanonPhase, int iVar, unsigned info);\n\n// extern  void            resetPCanonPermArray_6Vars(char* x);\n\n// extern  void            swap_ij( word* f,int totalVars, int varI, int varJ);\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

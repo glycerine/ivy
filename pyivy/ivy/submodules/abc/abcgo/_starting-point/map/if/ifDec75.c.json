@@ -1,0 +1,400 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c",
+  "SHA256": "47a0b241fccb63a10800379fcb402ad05d73b9a99ef6a5816303ae7eaebf82ed",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 1955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nParts \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 13,
+        "ByteOffset": 2470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sum \u003e 0 \u0026\u0026 Sum \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 2760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 2985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 4174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 4445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nParts \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 17,
+        "ByteOffset": 4811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Sum \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 9,
+        "ByteOffset": 5313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 5541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 5591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 6424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeaves \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 9190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 9715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeaves \u003c= 8 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DsdCheckDecExist_rec",
+      "Start": 1378,
+      "End": 3021,
+      "BodyStart": 1463,
+      "Original": "int Dau_DsdCheckDecExist_rec( char * pStr, char ** p, int * pMatches, int * pnSupp )\n{\n    if ( **p == '!' )\n        (*p)++;\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n        (*p)++;\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n    {\n        (*pnSupp)++;\n        return 0;\n    }\n    if ( **p == '(' || **p == '[' ) // and/xor\n    {\n        unsigned Mask = 0;\n        int m, pSupps[8] = {0}, nParts = 0, nMints;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            *pnSupp += pSupps[nParts++];\n        }\n        assert( *p == q );\n        assert( nParts \u003e 1 );\n        nMints = (1 \u003c\u003c nParts);\n        for ( m = 1; m \u003c nMints; m++ )\n        {\n            int i, Sum = 0;\n            for ( i = 0; i \u003c nParts; i++ )\n                if ( (m \u003e\u003e i) \u0026 1 )\n                    Sum += pSupps[i];\n            assert( Sum \u003e 0 \u0026\u0026 Sum \u003c= 8 );\n            if ( Sum \u003e= 2 )\n                Mask |= (1 \u003c\u003c Sum);\n        }\n        return Mask;\n    }\n    if ( **p == '\u003c' || **p == '{' ) // mux\n    {\n        int uSupp;\n        unsigned Mask = 0;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert( *p == q );\n        Mask |= (1 \u003c\u003c *pnSupp);\n        return Mask;\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dau_DsdCheckDecExist_rec(pStr string, p *string, pMatches *int32, pnSupp *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        (*pnSupp)++;\n        return 0;\n    }\n    if **p == '(' || **p == '[' { // and/xor\n    \n        var Mask uint32;\n        var m int32;\n        var pSupps [8]int32 ;\n        var nParts int32;\n        var nMints int32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            *pnSupp += pSupps[nParts++];\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nParts \u003e 1, \"nParts \u003e 1\");\n        nMints = (1 \u003c\u003c nParts);\n        for  m = 1; m \u003c nMints; m++  {\n            var i, Sum int32;\n            for  i = 0; i \u003c nParts; i++  {\n                if (m \u003e\u003e i) \u0026 1 {\n                    Sum += pSupps[i]; }\n            }\n            assert(Sum \u003e 0 \u0026\u0026 Sum \u003c= 8, \"Sum \u003e 0 \u0026\u0026 Sum \u003c= 8\");\n            if Sum \u003e= 2 {\n                Mask |= (1 \u003c\u003c Sum); }\n        }\n        return Mask;\n    }\n    if **p == '\u003c' || **p == '{' { // mux\n    \n        var uSupp int32;\n        var Mask uint32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert(*p == q, \"*p == q\");\n        Mask |= (1 \u003c\u003c *pnSupp);\n        return Mask;\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdCheckDecExist",
+      "Start": 3022,
+      "End": 3215,
+      "BodyStart": 3062,
+      "Original": "int Dau_DsdCheckDecExist( char * pDsd )\n{\n    int nSupp = 0;\n    if ( pDsd[1] == 0 )\n        return 0;\n    return Dau_DsdCheckDecExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}",
+      "Draft": "func Dau_DsdCheckDecExist(pDsd string) int32 {\n    var nSupp int32;\n    if pDsd[1] == 0 {\n        return 0; }\n    return Dau_DsdCheckDecExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}"
+    },
+    {
+      "Name": "Dau_DsdCheckDecAndExist_rec",
+      "Start": 3506,
+      "End": 5431,
+      "BodyStart": 3594,
+      "Original": "int Dau_DsdCheckDecAndExist_rec( char * pStr, char ** p, int * pMatches, int * pnSupp )\n{\n    if ( **p == '!' )\n        (*p)++;\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n        (*p)++;\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n    {\n        (*pnSupp)++;\n        return 0;\n    }\n    if ( **p == '(' ) // and\n    {\n        unsigned Mask = 0;\n        int m, i, pSupps[8] = {0}, nParts = 0, nSimple = 0, nMints;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            nSimple += (pSupps[nParts] == 1);\n            *pnSupp += pSupps[nParts++];\n        }\n        assert( *p == q );\n        assert( nParts \u003e 1 );\n        if ( nSimple \u003e 0 )\n        {\n            nMints = (1 \u003c\u003c nParts);\n            for ( m = 1; m \u003c nMints; m++ )\n            {\n                int Sum = 0;\n                for ( i = 0; i \u003c nParts; i++ )\n                    if ( pSupps[i] \u003e 1 \u0026\u0026 ((m \u003e\u003e i) \u0026 1) )\n                        Sum += pSupps[i];\n                assert( Sum \u003c= 8 );\n                if ( Sum \u003e= 2 )\n                    for ( i = 0; i \u003c nSimple; i++ )\n                        Mask |= (1 \u003c\u003c (Sum + i));\n            }\n            for ( i = 2; i \u003c nSimple; i++ )\n                Mask |= (1 \u003c\u003c i);\n        }\n        return Mask;\n    }\n    if ( **p == '\u003c' || **p == '{' || **p == '[' ) // mux/xor/nondec\n    {\n        int uSupp;\n        unsigned Mask = 0;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert( *p == q );\n        return Mask;\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dau_DsdCheckDecAndExist_rec(pStr string, p *string, pMatches *int32, pnSupp *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        (*pnSupp)++;\n        return 0;\n    }\n    if **p == '(' { // and\n    \n        var Mask uint32;\n        var m int32;\n        var i int32;\n        var pSupps [8]int32 ;\n        var nParts int32;\n        var nSimple int32;\n        var nMints int32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            nSimple += (pSupps[nParts] == 1);\n            *pnSupp += pSupps[nParts++];\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nParts \u003e 1, \"nParts \u003e 1\");\n        if nSimple \u003e 0 {\n            nMints = (1 \u003c\u003c nParts);\n            for  m = 1; m \u003c nMints; m++  {\n                var Sum int32;\n                for  i = 0; i \u003c nParts; i++  {\n                    if pSupps[i] \u003e 1 \u0026\u0026 ((m \u003e\u003e i) \u0026 1) {\n                        Sum += pSupps[i]; }\n                }\n                assert(Sum \u003c= 8, \"Sum \u003c= 8\");\n                if Sum \u003e= 2 {\n                    for  i = 0; i \u003c nSimple; i++  {\n                        Mask |= (1 \u003c\u003c (Sum + i));\n                    } }\n            }\n            for  i = 2; i \u003c nSimple; i++  {\n                Mask |= (1 \u003c\u003c i);\n            }\n        }\n        return Mask;\n    }\n    if **p == '\u003c' || **p == '{' || **p == '[' { // mux/xor/nondec\n    \n        var uSupp int32;\n        var Mask uint32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert(*p == q, \"*p == q\");\n        return Mask;\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdCheckDecAndExist",
+      "Start": 5432,
+      "End": 5631,
+      "BodyStart": 5475,
+      "Original": "int Dau_DsdCheckDecAndExist( char * pDsd )\n{\n    int nSupp = 0;\n    if ( pDsd[1] == 0 )\n        return 1;\n    return Dau_DsdCheckDecAndExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}",
+      "Draft": "func Dau_DsdCheckDecAndExist(pDsd string) int32 {\n    var nSupp int32;\n    if pDsd[1] == 0 {\n        return 1; }\n    return Dau_DsdCheckDecAndExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}"
+    },
+    {
+      "Name": "If_CutPerformCheck75__",
+      "Start": 5893,
+      "End": 9024,
+      "BodyStart": 5992,
+      "Original": "int If_CutPerformCheck75__( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr )\n{\n    char pDsdStr[1000];\n    int nSizeNonDec, nDecExists, nDecAndExists;\n    static int Counter = 0;\n    Counter++;\n    if ( nLeaves \u003c 6 )\n        return 1;\n    assert( nLeaves \u003c= 8 );\n    if ( nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, pTruth, nVars, nLeaves, \"44\" ) )\n        return 1;\n    // check decomposability\n    nSizeNonDec = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n//    printf( \"Vars = %d  %s\", nLeaves, pDsdStr );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecExists, 8 );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecAndExists, 8 ); printf( \"\\n\" );\n    if ( nLeaves == 8 )\n    {\n        if ( nSizeNonDec \u003e= 5 )\n            return 0;\n        nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n        if ( nDecAndExists \u0026 0x10 ) // bit 4\n            return 1;\n        else\n            return 0;\n    }\n    if ( nLeaves == 7 )\n    {\n        extern void If_Dec7MinimumBase( word uTruth[2], int * pSupp, int nVarsAll, int * pnVars );\n        word * pT = (word *)pTruth;\n        word pCof0[2], pCof1[2];\n        int v, nVarsMin;\n        if ( nSizeNonDec \u003c 5 )\n        {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if ( nDecExists \u0026 0x10 ) // bit 4\n                return 1;\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if ( nDecAndExists \u0026 0x18 ) // bit 4, 3\n                return 1;\n        }\n        // check cofactors\n        for ( v = 0; v \u003c 7; v++ )\n        {\n            pCof0[0] = pCof1[0] = pT[0];\n            pCof0[1] = pCof1[1] = pT[1];\n            Abc_TtCofactor0( pCof0, 2, v );\n            Abc_TtCofactor1( pCof1, 2, v );\n            if ( Abc_TtSupportSize(pCof0, 7) \u003c 4 )\n            {\n                If_Dec7MinimumBase( pCof1, NULL, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof1, nVarsMin, 0, 0, pDsdStr );\n                if ( nSizeNonDec \u003e= 5 )\n                    continue;\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if ( nDecExists \u0026 0x18 ) // bit 4, 3\n                    return 1;\n            }\n            else if ( Abc_TtSupportSize(pCof1, 7) \u003c 4 )\n            {\n                If_Dec7MinimumBase( pCof0, NULL, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof0, nVarsMin, 0, 0, pDsdStr );\n                if ( nSizeNonDec \u003e= 5 )\n                    continue;\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if ( nDecExists \u0026 0x18 ) // bit 4, 3\n                    return 1;\n            }\n        }\n        return 0;\n    }\n    if ( nLeaves == 6 )\n    {\n        if ( nSizeNonDec \u003c 5 )\n        {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if ( nDecExists \u0026 0x18 ) // bit 4, 3\n                return 1;\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if ( nDecAndExists \u0026 0x1C ) // bit 4, 3, 2\n                return 1;\n        }\n        return If_CutPerformCheck07( p, pTruth, nVars, nLeaves, pStr );\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func If_CutPerformCheck75__(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var pDsdStr [1000]byte;\n    var nSizeNonDec, nDecExists, nDecAndExists int32;\n    \n    spStatic_If_CutPerformCheck75___Counter++;\n    if nLeaves \u003c 6 {\n        return 1; }\n    assert(nLeaves \u003c= 8, \"nLeaves \u003c= 8\");\n    if nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, pTruth, nVars, nLeaves, \"44\" ) {\n        return 1; }\n    // check decomposability\n    nSizeNonDec = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n//    printf( \"Vars = %d  %s\", nLeaves, pDsdStr );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecExists, 8 );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecAndExists, 8 ); printf( \"\\n\" );\n    if nLeaves == 8 {\n        if nSizeNonDec \u003e= 5 {\n            return 0; }\n        nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n        if nDecAndExists \u0026 0x10 { // bit 4\n            return 1;\n        } else {\n            return 0; }\n    }\n    if nLeaves == 7 {\n        extern void If_Dec7MinimumBase( word uTruth[2], int * pSupp, int nVarsAll, int * pnVars );\n        var pT *word  = (word *)pTruth;\n        var pCof0, pCof1 [2]word;\n        var v, nVarsMin int32;\n        if nSizeNonDec \u003c 5 {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if nDecExists \u0026 0x10 { // bit 4\n                return 1; }\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if nDecAndExists \u0026 0x18 { // bit 4, 3\n                return 1; }\n        }\n        // check cofactors\n        for  v = 0; v \u003c 7; v++  {\n            pCof0[0] = pCof1[0] = pT[0];\n            pCof0[1] = pCof1[1] = pT[1];\n            Abc_TtCofactor0( pCof0, 2, v );\n            Abc_TtCofactor1( pCof1, 2, v );\n            if Abc_TtSupportSize(pCof0, 7) \u003c 4 {\n                If_Dec7MinimumBase( pCof1, nil, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof1, nVarsMin, 0, 0, pDsdStr );\n                if nSizeNonDec \u003e= 5 {\n                    continue; }\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if nDecExists \u0026 0x18 { // bit 4, 3\n                    return 1; }\n            \n            } else if Abc_TtSupportSize(pCof1, 7) \u003c 4 {\n                If_Dec7MinimumBase( pCof0, nil, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof0, nVarsMin, 0, 0, pDsdStr );\n                if nSizeNonDec \u003e= 5 {\n                    continue; }\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if nDecExists \u0026 0x18 { // bit 4, 3\n                    return 1; }\n            }\n        }\n        return 0;\n    }\n    if nLeaves == 6 {\n        if nSizeNonDec \u003c 5 {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if nDecExists \u0026 0x18 { // bit 4, 3\n                return 1; }\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if nDecAndExists \u0026 0x1C { // bit 4, 3, 2\n                return 1; }\n        }\n        return If_CutPerformCheck07( p, pTruth, nVars, nLeaves, pStr );\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutPerformCheck75",
+      "Start": 9286,
+      "End": 10544,
+      "BodyStart": 9384,
+      "Original": "int If_CutPerformCheck75( If_Man_t * p, unsigned * pTruth0, int nVars, int nLeaves, char * pStr )\n{\n    word * pTruthW = (word *)pTruth0;\n    word pTruth[4] = { pTruthW[0], pTruthW[1], pTruthW[2], pTruthW[3] };\n    assert( nLeaves \u003c= 8 );\n    if ( !p-\u003epPars-\u003efCutMin )\n        Abc_TtMinimumBase( pTruth, NULL, nLeaves, \u0026nLeaves );\n    if ( nLeaves \u003c 6 )\n        return 1;\n//    if ( nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck07( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) )\n    if ( nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) )\n        return 1;\n    // this is faster but not compatible with -z\n    if ( !p-\u003epPars-\u003efDeriveLuts \u0026\u0026 p-\u003epPars-\u003efEnableCheck75 \u0026\u0026 nLeaves == 8 )\n    {\n//        char pDsdStr[1000] = \"(!(abd)!(c!([fe][gh])))\";\n        char pDsdStr[1000];\n        int nSizeNonDec = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n        if ( nSizeNonDec \u003e= 5 )\n            return 0;\n        if ( Dau_DsdCheckDecAndExist(pDsdStr) \u0026 0x10 ) // bit 4\n            return 1;\n        return 0;\n    }\n    if ( If_CutPerformCheck45( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) )\n        return 1;\n    if ( If_CutPerformCheck54( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) )\n        return 1;\n    return 0;\n}",
+      "Draft": "func If_CutPerformCheck75(p *If_Man_t, pTruth0 *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var pTruthW *word  = (word *)pTruth0;\n    var pTruth [4]word = [4]word{ pTruthW[0], pTruthW[1], pTruthW[2], pTruthW[3] };\n    assert(nLeaves \u003c= 8, \"nLeaves \u003c= 8\");\n    if !p.pPars.fCutMin {\n        Abc_TtMinimumBase( pTruth, nil, nLeaves, \u0026nLeaves ); }\n    if nLeaves \u003c 6 {\n        return 1; }\n//    if ( nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck07( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) )\n    if nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) {\n        return 1; }\n    // this is faster but not compatible with -z\n    if !p.pPars.fDeriveLuts \u0026\u0026 p.pPars.fEnableCheck75 \u0026\u0026 nLeaves == 8 {\n//        char pDsdStr[1000] = \"(!(abd)!(c!([fe][gh])))\";\n        var pDsdStr [1000]byte;\n        var nSizeNonDec int32  = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n        if nSizeNonDec \u003e= 5 {\n            return 0; }\n        if Dau_DsdCheckDecAndExist(pDsdStr) \u0026 0x10 { // bit 4\n            return 1; }\n        return 0;\n    }\n    if If_CutPerformCheck45( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) {\n        return 1; }\n    if If_CutPerformCheck54( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) {\n        return 1; }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::mechanical::static::6070",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6070,
+      "End": 6076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::6343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6343,
+      "End": 6351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::6996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6996,
+      "End": 7004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::9407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9407,
+      "End": 9415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::9803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9803,
+      "End": 9815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::10129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10129,
+      "End": 10137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::10369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10369,
+      "End": 10381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::pointer-cast::10466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10466,
+      "End": 10478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::Dau_DsdCheckDecExist_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdCheckDecExist_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1378,
+      "End": 3021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::Dau_DsdCheckDecExist",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdCheckDecExist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3022,
+      "End": 3215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::Dau_DsdCheckDecAndExist_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdCheckDecAndExist_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3506,
+      "End": 5431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::Dau_DsdCheckDecAndExist",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdCheckDecAndExist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5432,
+      "End": 5631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::If_CutPerformCheck75__",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPerformCheck75__",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5893,
+      "End": 9024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::If_CutPerformCheck75",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPerformCheck75",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9286,
+      "End": 10544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec75.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10792
+    }
+  ],
+  "Draft": "package if_\n\n/**CFile****************************************************************\n\n  FileName    [ifDec75.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Performs additional check.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifDec75.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"opt/dau/dau.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Finds all boundsets for which decomposition exists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdCheckDecExist_rec(pStr string, p *string, pMatches *int32, pnSupp *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        (*pnSupp)++;\n        return 0;\n    }\n    if **p == '(' || **p == '[' { // and/xor\n    \n        var Mask uint32;\n        var m int32;\n        var pSupps [8]int32 ;\n        var nParts int32;\n        var nMints int32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            *pnSupp += pSupps[nParts++];\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nParts \u003e 1, \"nParts \u003e 1\");\n        nMints = (1 \u003c\u003c nParts);\n        for  m = 1; m \u003c nMints; m++  {\n            var i, Sum int32;\n            for  i = 0; i \u003c nParts; i++  {\n                if (m \u003e\u003e i) \u0026 1 {\n                    Sum += pSupps[i]; }\n            }\n            assert(Sum \u003e 0 \u0026\u0026 Sum \u003c= 8, \"Sum \u003e 0 \u0026\u0026 Sum \u003c= 8\");\n            if Sum \u003e= 2 {\n                Mask |= (1 \u003c\u003c Sum); }\n        }\n        return Mask;\n    }\n    if **p == '\u003c' || **p == '{' { // mux\n    \n        var uSupp int32;\n        var Mask uint32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert(*p == q, \"*p == q\");\n        Mask |= (1 \u003c\u003c *pnSupp);\n        return Mask;\n    }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Dau_DsdCheckDecExist(pDsd string) int32 {\n    var nSupp int32;\n    if pDsd[1] == 0 {\n        return 0; }\n    return Dau_DsdCheckDecExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds all boundsets for which AND-decomposition exists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdCheckDecAndExist_rec(pStr string, p *string, pMatches *int32, pnSupp *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        (*pnSupp)++;\n        return 0;\n    }\n    if **p == '(' { // and\n    \n        var Mask uint32;\n        var m int32;\n        var i int32;\n        var pSupps [8]int32 ;\n        var nParts int32;\n        var nSimple int32;\n        var nMints int32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026pSupps[nParts] );\n            nSimple += (pSupps[nParts] == 1);\n            *pnSupp += pSupps[nParts++];\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nParts \u003e 1, \"nParts \u003e 1\");\n        if nSimple \u003e 0 {\n            nMints = (1 \u003c\u003c nParts);\n            for  m = 1; m \u003c nMints; m++  {\n                var Sum int32;\n                for  i = 0; i \u003c nParts; i++  {\n                    if pSupps[i] \u003e 1 \u0026\u0026 ((m \u003e\u003e i) \u0026 1) {\n                        Sum += pSupps[i]; }\n                }\n                assert(Sum \u003c= 8, \"Sum \u003c= 8\");\n                if Sum \u003e= 2 {\n                    for  i = 0; i \u003c nSimple; i++  {\n                        Mask |= (1 \u003c\u003c (Sum + i));\n                    } }\n            }\n            for  i = 2; i \u003c nSimple; i++  {\n                Mask |= (1 \u003c\u003c i);\n            }\n        }\n        return Mask;\n    }\n    if **p == '\u003c' || **p == '{' || **p == '[' { // mux/xor/nondec\n    \n        var uSupp int32;\n        var Mask uint32;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            uSupp = 0;\n            Mask |= Dau_DsdCheckDecAndExist_rec( pStr, p, pMatches, \u0026uSupp );\n            *pnSupp += uSupp;\n        }\n        assert(*p == q, \"*p == q\");\n        return Mask;\n    }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Dau_DsdCheckDecAndExist(pDsd string) int32 {\n    var nSupp int32;\n    if pDsd[1] == 0 {\n        return 1; }\n    return Dau_DsdCheckDecAndExist_rec( pDsd, \u0026pDsd, Dau_DsdComputeMatches(pDsd), \u0026nSupp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs additional check.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_If_CutPerformCheck75___Counter int32;\nfunc If_CutPerformCheck75__(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var pDsdStr [1000]byte;\n    var nSizeNonDec, nDecExists, nDecAndExists int32;\n    \n    spStatic_If_CutPerformCheck75___Counter++;\n    if nLeaves \u003c 6 {\n        return 1; }\n    assert(nLeaves \u003c= 8, \"nLeaves \u003c= 8\");\n    if nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, pTruth, nVars, nLeaves, \"44\" ) {\n        return 1; }\n    // check decomposability\n    nSizeNonDec = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n//    printf( \"Vars = %d  %s\", nLeaves, pDsdStr );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecExists, 8 );    printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, \u0026nDecAndExists, 8 ); printf( \"\\n\" );\n    if nLeaves == 8 {\n        if nSizeNonDec \u003e= 5 {\n            return 0; }\n        nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n        if nDecAndExists \u0026 0x10 { // bit 4\n            return 1;\n        } else {\n            return 0; }\n    }\n    if nLeaves == 7 {\n        extern void If_Dec7MinimumBase( word uTruth[2], int * pSupp, int nVarsAll, int * pnVars );\n        var pT *word  = (word *)pTruth;\n        var pCof0, pCof1 [2]word;\n        var v, nVarsMin int32;\n        if nSizeNonDec \u003c 5 {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if nDecExists \u0026 0x10 { // bit 4\n                return 1; }\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if nDecAndExists \u0026 0x18 { // bit 4, 3\n                return 1; }\n        }\n        // check cofactors\n        for  v = 0; v \u003c 7; v++  {\n            pCof0[0] = pCof1[0] = pT[0];\n            pCof0[1] = pCof1[1] = pT[1];\n            Abc_TtCofactor0( pCof0, 2, v );\n            Abc_TtCofactor1( pCof1, 2, v );\n            if Abc_TtSupportSize(pCof0, 7) \u003c 4 {\n                If_Dec7MinimumBase( pCof1, nil, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof1, nVarsMin, 0, 0, pDsdStr );\n                if nSizeNonDec \u003e= 5 {\n                    continue; }\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if nDecExists \u0026 0x18 { // bit 4, 3\n                    return 1; }\n            \n            } else if Abc_TtSupportSize(pCof1, 7) \u003c 4 {\n                If_Dec7MinimumBase( pCof0, nil, 7, \u0026nVarsMin );\n                nSizeNonDec = Dau_DsdDecompose( pCof0, nVarsMin, 0, 0, pDsdStr );\n                if nSizeNonDec \u003e= 5 {\n                    continue; }\n                nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n                if nDecExists \u0026 0x18 { // bit 4, 3\n                    return 1; }\n            }\n        }\n        return 0;\n    }\n    if nLeaves == 6 {\n        if nSizeNonDec \u003c 5 {\n            nDecExists = Dau_DsdCheckDecExist( pDsdStr );\n            if nDecExists \u0026 0x18 { // bit 4, 3\n                return 1; }\n            nDecAndExists = Dau_DsdCheckDecAndExist( pDsdStr );\n            if nDecAndExists \u0026 0x1C { // bit 4, 3, 2\n                return 1; }\n        }\n        return If_CutPerformCheck07( p, pTruth, nVars, nLeaves, pStr );\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs additional check.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPerformCheck75(p *If_Man_t, pTruth0 *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var pTruthW *word  = (word *)pTruth0;\n    var pTruth [4]word = [4]word{ pTruthW[0], pTruthW[1], pTruthW[2], pTruthW[3] };\n    assert(nLeaves \u003c= 8, \"nLeaves \u003c= 8\");\n    if !p.pPars.fCutMin {\n        Abc_TtMinimumBase( pTruth, nil, nLeaves, \u0026nLeaves ); }\n    if nLeaves \u003c 6 {\n        return 1; }\n//    if ( nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck07( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) )\n    if nLeaves \u003c 8 \u0026\u0026 If_CutPerformCheck16( p, (unsigned *)pTruth, nVars, nLeaves, \"44\" ) {\n        return 1; }\n    // this is faster but not compatible with -z\n    if !p.pPars.fDeriveLuts \u0026\u0026 p.pPars.fEnableCheck75 \u0026\u0026 nLeaves == 8 {\n//        char pDsdStr[1000] = \"(!(abd)!(c!([fe][gh])))\";\n        var pDsdStr [1000]byte;\n        var nSizeNonDec int32  = Dau_DsdDecompose( (word *)pTruth, nLeaves, 0, 0, pDsdStr );\n        if nSizeNonDec \u003e= 5 {\n            return 0; }\n        if Dau_DsdCheckDecAndExist(pDsdStr) \u0026 0x10 { // bit 4\n            return 1; }\n        return 0;\n    }\n    if If_CutPerformCheck45( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) {\n        return 1; }\n    if If_CutPerformCheck54( p, (unsigned *)pTruth, nVars, nLeaves, pStr ) {\n        return 1; }\n    return 0;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

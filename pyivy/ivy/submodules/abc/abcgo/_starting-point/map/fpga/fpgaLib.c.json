@@ -1,0 +1,560 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c",
+  "SHA256": "d6cbc21481f3c3cf85313d62778764ffd5009f0145a8c9d7115affb5b8e78a67",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 69,
+        "ByteOffset": 1496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fpga_LutLibReadLutArea(p *Fpga_LutLib_t, Size int32) float32 { assert( Size \u003c= p.LutMax ); return p.pLutAreas[Size];  }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 69,
+        "Column": 13,
+        "ByteOffset": 2049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( FileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open LUT library file \\\"%s\\\".\\n\", FileName );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 73,
+        "ByteOffset": 2264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fpga_LutLib_t) );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 80,
+        "Column": 10,
+        "ByteOffset": 2418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 1000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 18,
+        "ByteOffset": 2475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( pBuffer, \" \\t\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 13,
+        "ByteOffset": 2651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Error in the LUT library file \\\"%s\\\".\\n\", FileName );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 88,
+        "Column": 65,
+        "ByteOffset": 2778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 18,
+        "ByteOffset": 2886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 94,
+        "Column": 34,
+        "ByteOffset": 2943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLutAreas[i] = float32(atof(pToken));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 99,
+        "Column": 44,
+        "ByteOffset": 3088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pLutDelays[i][k++] = float32(atof(pToken));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 13,
+        "ByteOffset": 3179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 13,
+        "ByteOffset": 3435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping LUTs of size more than %d.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 21,
+        "ByteOffset": 3950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Warning: Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 21,
+        "ByteOffset": 4232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Warning: Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 17,
+        "ByteOffset": 4658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Warning: LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 164,
+        "Column": 76,
+        "ByteOffset": 5289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 184,
+        "Column": 69,
+        "ByteOffset": 5833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLutLib.pName) ? (free((char *) (pLutLib.pName)), (pLutLib.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 185,
+        "Column": 63,
+        "ByteOffset": 5954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLutLib) ? (free((char *) (pLutLib)), (pLutLib) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"# The area/delay of k-variable LUTs:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"# k    area     delay\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 6518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d   %7.2f  \", i, pLutLib.pLutAreas[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 17,
+        "ByteOffset": 6623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %7.2f\", pLutLib.pLutDelays[i][k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 6695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 13,
+        "ByteOffset": 6799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d   %7.2f   %7.2f\\n\", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_LutLibReadVarMax",
+      "Start": 1240,
+      "End": 1334,
+      "BodyStart": 1309,
+      "Original": "int         Fpga_LutLibReadVarMax( Fpga_LutLib_t * p )               { return p-\u003eLutMax;     }",
+      "Draft": "func Fpga_LutLibReadVarMax(p *Fpga_LutLib_t) int32 { return p.LutMax;     }"
+    },
+    {
+      "Name": "Fpga_LutLibReadLutAreas",
+      "Start": 1335,
+      "End": 1429,
+      "BodyStart": 1404,
+      "Original": "float *     Fpga_LutLibReadLutAreas( Fpga_LutLib_t * p )             { return p-\u003epLutAreas;  }",
+      "Draft": "func Fpga_LutLibReadLutAreas(p *Fpga_LutLib_t) *float32 { return p.pLutAreas;  }"
+    },
+    {
+      "Name": "Fpga_LutLibReadLutArea",
+      "Start": 1430,
+      "End": 1559,
+      "BodyStart": 1499,
+      "Original": "float       Fpga_LutLibReadLutArea( Fpga_LutLib_t * p, int Size )    { assert( Size \u003c= p-\u003eLutMax ); return p-\u003epLutAreas[Size];  }",
+      "Draft": "func Fpga_LutLibReadLutArea(p *Fpga_LutLib_t, Size int32) float32 { assert(Size \u003c= p.LutMax, \"Size \u003c= p.LutMax\"); return p.pLutAreas[Size];  }"
+    },
+    {
+      "Name": "Fpga_LutLibRead",
+      "Start": 1851,
+      "End": 4779,
+      "BodyStart": 1916,
+      "Original": "Fpga_LutLib_t * Fpga_LutLibRead( char * FileName, int fVerbose )\n{\n    char pBuffer[1000], * pToken;\n    Fpga_LutLib_t * p;\n    FILE * pFile;\n    int i, k;\n\n    pFile = fopen( FileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open LUT library file \\\"%s\\\".\\n\", FileName );\n        return NULL;\n    }\n\n    p = ABC_ALLOC( Fpga_LutLib_t, 1 );\n    memset( p, 0, sizeof(Fpga_LutLib_t) );\n    p-\u003epName = Extra_UtilStrsav( FileName );\n\n    i = 1;\n    while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if ( pToken == NULL )\n            continue;\n        if ( pToken[0] == '#' )\n            continue;\n        if ( i != atoi(pToken) )\n        {\n            printf( \"Error in the LUT library file \\\"%s\\\".\\n\", FileName );\n            ABC_FREE( p );\n            return NULL;\n        }\n\n        // read area\n        pToken = strtok( NULL, \" \\t\\n\" );\n        p-\u003epLutAreas[i] = (float)atof(pToken);\n\n        // read delays\n        k = 0;\n        while ( (pToken = strtok( NULL, \" \\t\\n\" )) )\n            p-\u003epLutDelays[i][k++] = (float)atof(pToken);\n\n        // check for out-of-bound\n        if ( k \u003e i )\n        {\n            printf( \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            return NULL;\n        }\n\n        // check if var delays are specifies\n        if ( k \u003e 1 )\n            p-\u003efVarPinDelays = 1;\n\n        if ( i == FPGA_MAX_LUTSIZE )\n        {\n            printf( \"Skipping LUTs of size more than %d.\\n\", i );\n            return NULL;\n        }\n        i++;\n    }\n    p-\u003eLutMax = i-1;\n/*\n    if ( p-\u003eLutMax \u003e FPGA_MAX_LEAVES )\n    {\n        p-\u003eLutMax = FPGA_MAX_LEAVES;\n        printf( \"Warning: LUTs with more than %d inputs will not be used.\\n\", FPGA_MAX_LEAVES );\n    }\n*/\n    // check the library\n    if ( p-\u003efVarPinDelays )\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n            for ( k = 0; k \u003c i; k++ )\n            {\n                if ( p-\u003epLutDelays[i][k] \u003c= 0.0 )\n                    printf( \"Warning: Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p-\u003epLutDelays[i][k] );\n                if ( k \u0026\u0026 p-\u003epLutDelays[i][k-1] \u003e p-\u003epLutDelays[i][k] )\n                    printf( \"Warning: Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p-\u003epLutDelays[i][k-1], \n                        k, i, p-\u003epLutDelays[i][k] );\n            }\n    }\n    else\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n        {\n            if ( p-\u003epLutDelays[i][0] \u003c= 0.0 )\n                printf( \"Warning: LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p-\u003epLutDelays[i][0] );\n        }\n    }\n\n    return p;\n}",
+      "Draft": "func Fpga_LutLibRead(FileName string, fVerbose int32) *Fpga_LutLib_t {\n    var pBuffer [1000]byte;\n    var pToken string;\n    var p *Fpga_LutLib_t;\n    var pFile *os.File;\n    var i, k int32;\n\n    pFile = os.Open(FileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open LUT library file \\\"%s\\\".\\n\", FileName);\n        return nil;\n    }\n\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_LutLib_t) );\n    p.pName = Extra_UtilStrsav( FileName );\n\n    i = 1;\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            fmt.Printf(\"Error in the LUT library file \\\"%s\\\".\\n\", FileName);\n            // inlining of macro ABC_FREE\n            ((p) ? (free((char *) (p)), (p) = 0) : 0);\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            fmt.Printf(\"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i);\n            return nil;\n        }\n\n        // check if var delays are specifies\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == FPGA_MAX_LUTSIZE {\n            fmt.Printf(\"Skipping LUTs of size more than %d.\\n\", i);\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n/*\n    if ( p-\u003eLutMax \u003e FPGA_MAX_LEAVES )\n    {\n        p-\u003eLutMax = FPGA_MAX_LEAVES;\n        printf( \"Warning: LUTs with more than %d inputs will not be used.\\n\", FPGA_MAX_LEAVES );\n    }\n*/\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    fmt.Printf(\"Warning: Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", k, i, p.pLutDelays[i][k]); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    fmt.Printf(\"Warning: Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", k-1, i, p.pLutDelays[i][k-1], k, i, p.pLutDelays[i][k]); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                fmt.Printf(\"Warning: LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", i, p.pLutDelays[i][0]); }\n        }\n    }\n\n    return p;\n}"
+    },
+    {
+      "Name": "Fpga_LutLibDup",
+      "Start": 5042,
+      "End": 5249,
+      "BodyStart": 5094,
+      "Original": "Fpga_LutLib_t * Fpga_LutLibDup( Fpga_LutLib_t * p )\n{\n    Fpga_LutLib_t * pNew;\n    pNew = ABC_ALLOC( Fpga_LutLib_t, 1 );\n    *pNew = *p;\n    pNew-\u003epName = Extra_UtilStrsav( pNew-\u003epName );\n    return pNew;\n}",
+      "Draft": "func Fpga_LutLibDup(p *Fpga_LutLib_t) *Fpga_LutLib_t {\n    var pNew *Fpga_LutLib_t;\n    // inlining of macro ABC_ALLOC\n    pNew = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));\n    *pNew = *p;\n    pNew.pName = Extra_UtilStrsav( pNew.pName );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Fpga_LutLibFree",
+      "Start": 5507,
+      "End": 5658,
+      "BodyStart": 5555,
+      "Original": "void Fpga_LutLibFree( Fpga_LutLib_t * pLutLib )\n{\n    if ( pLutLib == NULL )\n        return;\n    ABC_FREE( pLutLib-\u003epName );\n    ABC_FREE( pLutLib );\n}",
+      "Draft": "func Fpga_LutLibFree(pLutLib *Fpga_LutLib_t) {\n    if pLutLib == nil {\n        return; }\n    // inlining of macro ABC_FREE\n    ((pLutLib.pName) ? (free((char *) (pLutLib.pName)), (pLutLib.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pLutLib) ? (free((char *) (pLutLib)), (pLutLib) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fpga_LutLibPrint",
+      "Start": 5918,
+      "End": 6546,
+      "BodyStart": 5967,
+      "Original": "void Fpga_LutLibPrint( Fpga_LutLib_t * pLutLib )\n{\n    int i, k;\n    printf( \"# The area/delay of k-variable LUTs:\\n\" );\n    printf( \"# k    area     delay\\n\" );\n    if ( pLutLib-\u003efVarPinDelays )\n    {\n        for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n        {\n            printf( \"%d   %7.2f  \", i, pLutLib-\u003epLutAreas[i] );\n            for ( k = 0; k \u003c i; k++ )\n                printf( \" %7.2f\", pLutLib-\u003epLutDelays[i][k] );\n            printf( \"\\n\" );\n        }\n    }\n    else\n        for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n            printf( \"%d   %7.2f   %7.2f\\n\", i, pLutLib-\u003epLutAreas[i], pLutLib-\u003epLutDelays[i][0] );\n}",
+      "Draft": "func Fpga_LutLibPrint(pLutLib *Fpga_LutLib_t) {\n    var i, k int32;\n    fmt.Printf(\"# The area/delay of k-variable LUTs:\\n\");\n    fmt.Printf(\"# k    area     delay\\n\");\n    if pLutLib.fVarPinDelays {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            fmt.Printf(\"%d   %7.2f  \", i, pLutLib.pLutAreas[i]);\n            for  k = 0; k \u003c i; k++  {\n                fmt.Printf(\" %7.2f\", pLutLib.pLutDelays[i][k]);\n            }\n            fmt.Printf(\"\\n\");\n        }\n    \n    } else {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            fmt.Printf(\"%d   %7.2f   %7.2f\\n\", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0]);\n        } }\n}"
+    },
+    {
+      "Name": "Fpga_LutLibDelaysAreDiscrete",
+      "Start": 6819,
+      "End": 7092,
+      "BodyStart": 6879,
+      "Original": "int Fpga_LutLibDelaysAreDiscrete( Fpga_LutLib_t * pLutLib )\n{\n    float Delay;\n    int i;\n    for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n    {\n        Delay = pLutLib-\u003epLutDelays[i][0];\n        if ( ((float)((int)Delay)) != Delay )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Fpga_LutLibDelaysAreDiscrete(pLutLib *Fpga_LutLib_t) int32 {\n    var Delay float32;\n    var i int32;\n    for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n        Delay = pLutLib.pLutDelays[i][0];\n        if (float32((int32(Delay)))) != Delay {\n            return 0; }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::mechanical::sizeof::2252",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2181,
+      "End": 2181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::mechanical::sizeof::2309",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2230,
+      "End": 2236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::mechanical::sizeof::5355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5133,
+      "End": 5133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::pointer-cast::2227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2181,
+      "End": 2181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::pointer-cast::2787",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2651,
+      "End": 2651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::pointer-cast::5330",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5133,
+      "End": 5133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::pointer-cast::5904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5604,
+      "End": 5604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::pointer-cast::6027",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5636,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibReadVarMax",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibReadVarMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1240,
+      "End": 1334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibReadLutAreas",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibReadLutAreas",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1335,
+      "End": 1429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibReadLutArea",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibReadLutArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1430,
+      "End": 1559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::ternary::Fpga_LutLibRead",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_LutLibRead",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1851,
+      "End": 4779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibRead",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1851,
+      "End": 4779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibDup",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5042,
+      "End": 5249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::ternary::Fpga_LutLibFree",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_LutLibFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5507,
+      "End": 5658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibFree",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5507,
+      "End": 5658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibPrint",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5918,
+      "End": 6546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::Fpga_LutLibDelaysAreDiscrete",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_LutLibDelaysAreDiscrete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6819,
+      "End": 7092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7339
+    }
+  ],
+  "Draft": "package fpga\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fpgaLib.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaLib.c,v 1.4 2005/01/23 06:59:41 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [APIs to access LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibReadVarMax(p *Fpga_LutLib_t) int32 { return p.LutMax;     }\nfunc Fpga_LutLibReadLutAreas(p *Fpga_LutLib_t) *float32 { return p.pLutAreas;  }\nfunc Fpga_LutLibReadLutArea(p *Fpga_LutLib_t, Size int32) float32 { assert(Size \u003c= p.LutMax, \"Size \u003c= p.LutMax\"); return p.pLutAreas[Size];  }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the description of LUTs from the LUT library file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibRead(FileName string, fVerbose int32) *Fpga_LutLib_t {\n    var pBuffer [1000]byte;\n    var pToken string;\n    var p *Fpga_LutLib_t;\n    var pFile *os.File;\n    var i, k int32;\n\n    pFile = os.Open(FileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open LUT library file \\\"%s\\\".\\n\", FileName);\n        return nil;\n    }\n\n    // inlining of macro ABC_ALLOC\n    p = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fpga_LutLib_t) );\n    p.pName = Extra_UtilStrsav( FileName );\n\n    i = 1;\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            fmt.Printf(\"Error in the LUT library file \\\"%s\\\".\\n\", FileName);\n            // inlining of macro ABC_FREE\n            ((p) ? (free((char *) (p)), (p) = 0) : 0);\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            fmt.Printf(\"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i);\n            return nil;\n        }\n\n        // check if var delays are specifies\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == FPGA_MAX_LUTSIZE {\n            fmt.Printf(\"Skipping LUTs of size more than %d.\\n\", i);\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n/*\n    if ( p-\u003eLutMax \u003e FPGA_MAX_LEAVES )\n    {\n        p-\u003eLutMax = FPGA_MAX_LEAVES;\n        printf( \"Warning: LUTs with more than %d inputs will not be used.\\n\", FPGA_MAX_LEAVES );\n    }\n*/\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    fmt.Printf(\"Warning: Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", k, i, p.pLutDelays[i][k]); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    fmt.Printf(\"Warning: Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", k-1, i, p.pLutDelays[i][k-1], k, i, p.pLutDelays[i][k]); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                fmt.Printf(\"Warning: LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", i, p.pLutDelays[i][0]); }\n        }\n    }\n\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibDup(p *Fpga_LutLib_t) *Fpga_LutLib_t {\n    var pNew *Fpga_LutLib_t;\n    // inlining of macro ABC_ALLOC\n    pNew = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));\n    *pNew = *p;\n    pNew.pName = Extra_UtilStrsav( pNew.pName );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibFree(pLutLib *Fpga_LutLib_t) {\n    if pLutLib == nil {\n        return; }\n    // inlining of macro ABC_FREE\n    ((pLutLib.pName) ? (free((char *) (pLutLib.pName)), (pLutLib.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pLutLib) ? (free((char *) (pLutLib)), (pLutLib) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibPrint(pLutLib *Fpga_LutLib_t) {\n    var i, k int32;\n    fmt.Printf(\"# The area/delay of k-variable LUTs:\\n\");\n    fmt.Printf(\"# k    area     delay\\n\");\n    if pLutLib.fVarPinDelays {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            fmt.Printf(\"%d   %7.2f  \", i, pLutLib.pLutAreas[i]);\n            for  k = 0; k \u003c i; k++  {\n                fmt.Printf(\" %7.2f\", pLutLib.pLutDelays[i][k]);\n            }\n            fmt.Printf(\"\\n\");\n        }\n    \n    } else {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            fmt.Printf(\"%d   %7.2f   %7.2f\\n\", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0]);\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the delays are discrete.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_LutLibDelaysAreDiscrete(pLutLib *Fpga_LutLib_t) int32 {\n    var Delay float32;\n    var i int32;\n    for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n        Delay = pLutLib.pLutDelays[i][0];\n        if (float32((int32(Delay)))) != Delay {\n            return 0; }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,127 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h",
+  "SHA256": "b77a12c888b56421eed46ba8c75de524ebdbf1a86b6c519b340ce40d7459d219",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::struct::sm_element_struct",
+      "Category": "struct-review",
+      "Symbol": "sm_element_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 455,
+      "End": 897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::struct::sm_row_struct",
+      "Category": "struct-review",
+      "Symbol": "sm_row_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 922,
+      "End": 1425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::struct::sm_col_struct",
+      "Category": "struct-review",
+      "Symbol": "sm_col_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1453,
+      "End": 1970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::struct::sm_matrix_struct",
+      "Category": "struct-review",
+      "Symbol": "sm_matrix_struct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2000,
+      "End": 2722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_get_col",
+      "Category": "macro-review",
+      "Symbol": "sm_get_col",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2725,
+      "End": 2851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_get_row",
+      "Category": "macro-review",
+      "Symbol": "sm_get_row",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2853,
+      "End": 2979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_foreach_row",
+      "Category": "macro-review",
+      "Symbol": "sm_foreach_row",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2981,
+      "End": 3080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_foreach_col",
+      "Category": "macro-review",
+      "Symbol": "sm_foreach_col",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3082,
+      "End": 3181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_foreach_row_element",
+      "Category": "macro-review",
+      "Symbol": "sm_foreach_row_element",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3183,
+      "End": 3281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_foreach_col_element",
+      "Category": "macro-review",
+      "Symbol": "sm_foreach_col_element",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3283,
+      "End": 3381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_put",
+      "Category": "macro-review",
+      "Symbol": "sm_put",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3383,
+      "End": 3441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::macro::sm_get",
+      "Category": "macro-review",
+      "Symbol": "sm_get",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3443,
+      "End": 3496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sparse.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4570
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n/*\n *  sparse.h -- sparse matrix package header file\n */\n\ntype sm_element = sm_element_struct;\ntype sm_row = sm_row_struct;\ntype sm_col = sm_col_struct;\ntype sm_matrix = sm_matrix_struct;\n\n\n/*\n *  sparse matrix element\n */\ntype sm_element_struct struct {\n    row_num int32;        /* row number of this element */\n    col_num int32;        /* column number of this element */\n    next_row *sm_element;    /* next row in this column */\n    prev_row *sm_element;    /* previous row in this column */\n    next_col *sm_element;    /* next column in this row */\n    prev_col *sm_element;    /* previous column in this row */\n    user_word string;        /* user-defined word */\n}\n\n\n/*\n *  row header\n */\ntype sm_row_struct struct {\n    row_num int32;        /* the row number */\n    length int32;            /* number of elements in this row */\n    flag int32;            /* user-defined word */\n    first_col *sm_element;    /* first element in this row */\n    last_col *sm_element;    /* last element in this row */\n    next_row *sm_row;        /* next row (in sm_matrix linked list) */\n    prev_row *sm_row;        /* previous row (in sm_matrix linked list) */\n    user_word string;        /* user-defined word */\n}\n\n\n/*\n *  column header\n */\ntype sm_col_struct struct {\n    col_num int32;        /* the column number */\n    length int32;            /* number of elements in this column */\n    flag int32;            /* user-defined word */\n    first_row *sm_element;    /* first element in this column */\n    last_row *sm_element;    /* last element in this column */\n    next_col *sm_col;        /* next column (in sm_matrix linked list) */\n    prev_col *sm_col;        /* prev column (in sm_matrix linked list) */\n    user_word string;        /* user-defined word */\n}\n\n\n/*\n *  A sparse matrix\n */\ntype sm_matrix_struct struct {\n    rows **sm_row;        /* pointer to row headers (by row #) */\n    rows_size int32;        /* alloc'ed size of above array */\n    cols **sm_col;        /* pointer to column headers (by col #) */\n    cols_size int32;        /* alloc'ed size of above array */\n    first_row *sm_row;        /* first row (linked list of all rows) */\n    last_row *sm_row;        /* last row (linked list of all rows) */\n    nrows int32;            /* number of rows */\n    first_col *sm_col;        /* first column (linked list of columns) */\n    last_col *sm_col;        /* last column (linked list of columns) */\n    ncols int32;            /* number of columns */\n    user_word string;        /* user-defined word */\n}\n\n\n// Original macro:\n// #define sm_get_col(A, colnum)    \\\n//     (((colnum) \u003e= 0 \u0026\u0026 (colnum) \u003c (A)-\u003ecols_size) ? \\\n//     (A)-\u003ecols[colnum] : (sm_col *) 0)\n\n\n// Original macro:\n// #define sm_get_row(A, rownum)    \\\n//     (((rownum) \u003e= 0 \u0026\u0026 (rownum) \u003c (A)-\u003erows_size) ? \\\n//     (A)-\u003erows[rownum] : (sm_row *) 0)\n\n\n// Original macro:\n// #define sm_foreach_row(A, prow)    \\\n//     for(prow = A-\u003efirst_row; prow != 0; prow = prow-\u003enext_row)\n\n\n// Original macro:\n// #define sm_foreach_col(A, pcol)    \\\n//     for(pcol = A-\u003efirst_col; pcol != 0; pcol = pcol-\u003enext_col)\n\n\n// Original macro:\n// #define sm_foreach_row_element(prow, p)    \\\n//     for(p = prow-\u003efirst_col; p != 0; p = p-\u003enext_col)\n\n\n// Original macro:\n// #define sm_foreach_col_element(pcol, p)    \\\n//     for(p = pcol-\u003efirst_row; p != 0; p = p-\u003enext_row)\n\n\n// Original macro:\n// #define sm_put(x, val) \\\n//     (x-\u003euser_word = (char *) val)\n\n\n// Original macro:\n// #define sm_get(type, x) \\\n//     ((type) (x-\u003euser_word))\n\n\nextern sm_matrix *sm_alloc(), *sm_alloc_size(), *sm_dup();\nextern void sm_free(), sm_delrow(), sm_delcol(), sm_resize();\nextern void sm_write(), sm_print(), sm_dump(), sm_cleanup();\nextern void sm_copy_row(), sm_copy_col();\nextern void sm_remove(), sm_remove_element();\nextern sm_element *sm_insert(), *sm_find();\n// extern sm_row *sm_longest_row();\n\n// extern sm_col *sm_longest_col();\n\nextern int sm_read(), sm_read_compressed();\n\nextern sm_row *sm_row_alloc(), *sm_row_dup(), *sm_row_and();\nextern void sm_row_free(), sm_row_remove(), sm_row_print();\nextern sm_element *sm_row_insert(), *sm_row_find();\nextern int sm_row_contains(), sm_row_intersects();\nextern int sm_row_compare(), sm_row_hash();\n\nextern sm_col *sm_col_alloc(), *sm_col_dup(), *sm_col_and();\nextern void sm_col_free(), sm_col_remove(), sm_col_print();\nextern sm_element *sm_col_insert(), *sm_col_find();\nextern int sm_col_contains(), sm_col_intersects();\nextern int sm_col_compare(), sm_col_hash();\n\nextern int sm_row_dominance(), sm_col_dominance(), sm_block_partition();\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

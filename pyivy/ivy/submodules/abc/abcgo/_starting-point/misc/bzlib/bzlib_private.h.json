@@ -1,0 +1,95 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib_private.h",
+  "SHA256": "b87625156ef665614235b0ad7fa302707eb38cfde40d9dbd3116f705897c3fde",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 22,
+        "Column": 1,
+        "ByteOffset": 814
+      },
+      "Directive": "#ifndef ABC__misc__bzlib__bzlib_private_h"
+    },
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 921
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 54,
+        "Column": 1,
+        "ByteOffset": 1391
+      },
+      "Directive": "#ifndef __GNUC__"
+    },
+    {
+      "Location": {
+        "Line": 58,
+        "Column": 1,
+        "ByteOffset": 1443
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 64,
+        "Column": 1,
+        "ByteOffset": 1603
+      },
+      "Directive": "#if BZ_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 502,
+        "Column": 1,
+        "ByteOffset": 13037
+      },
+      "Directive": "#ifdef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 503,
+        "Column": 1,
+        "ByteOffset": 13056
+      },
+      "Directive": "#ifndef NULL"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib_private.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib_private.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 814,
+      "End": 12963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib_private.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13037,
+      "End": 13098
+    }
+  ],
+  "Draft": "package bzlib\n\n\n/*-------------------------------------------------------------*/\n/*--- Private header file for the library.                  ---*/\n/*---                                       bzlib_private.h ---*/\n/*-------------------------------------------------------------*/\n\n/* ------------------------------------------------------------------\n   This file is part of bzip2/libbzip2, a program and library for\n   lossless, block-sorting data compression.\n\n   bzip2/libbzip2 version 1.0.5 of 10 December 2007\n   Copyright (C) 1996-2007 Julian Seward \u003cjseward@bzip.org\u003e\n\n   Please read the WARNING, DISCLAIMER and PATENTS sections in the \n   README file.\n\n   This program is released under the terms of the license contained\n   in the file LICENSE.\n   ------------------------------------------------------------------ */\n\n\n#ifndef ABC__misc__bzlib__bzlib_private_h\n#define ABC__misc__bzlib__bzlib_private_h\n\n\n#include \u003cstdlib.h\u003e\n\n#ifndef BZ_NO_STDIO\n#include \u003cstdio.h\u003e\n#include \u003cctype.h\u003e\n#include \u003cstring.h\u003e\n#endif\n\n\n#include \"bzlib.h\"\n\nABC_NAMESPACE_HEADER_START\n\n/*-- General stuff. --*/\n\n#define BZ_VERSION  \"1.0.5, 10-Dec-2007\"\n\ntypedef char            Char;\ntypedef unsigned char   Bool;\ntypedef unsigned char   UChar;\ntypedef int             Int32;\ntypedef unsigned int    UInt32;\ntypedef short           Int16;\ntypedef unsigned short  UInt16;\n\n#define True  ((Bool)1)\n#define False ((Bool)0)\n\n#ifndef __GNUC__\n#define __inline__  /* */\n#endif \n\n#ifndef BZ_NO_STDIO\n\nextern void BZ2_bz__AssertH__fail ( int errcode );\n#define AssertH(cond,errcode) \\\n   { if (!(cond)) BZ2_bz__AssertH__fail ( errcode ); }\n\n#if BZ_DEBUG\n#define AssertD(cond,msg) \\\n   { if (!(cond)) {       \\\n      fprintf ( stderr,   \\\n        \"\\n\\nlibbzip2(debug build): internal error\\n\\t%s\\n\", msg );\\\n      exit(1); \\\n   }}\n#else\n#define AssertD(cond,msg) /* */\n#endif\n\n#define VPrintf0(zf) \\\n   fprintf(stderr,zf)\n#define VPrintf1(zf,za1) \\\n   fprintf(stderr,zf,za1)\n#define VPrintf2(zf,za1,za2) \\\n   fprintf(stderr,zf,za1,za2)\n#define VPrintf3(zf,za1,za2,za3) \\\n   fprintf(stderr,zf,za1,za2,za3)\n#define VPrintf4(zf,za1,za2,za3,za4) \\\n   fprintf(stderr,zf,za1,za2,za3,za4)\n#define VPrintf5(zf,za1,za2,za3,za4,za5) \\\n   fprintf(stderr,zf,za1,za2,za3,za4,za5)\n\n#else\n\nextern void bz_internal_error ( int errcode );\n#define AssertH(cond,errcode) \\\n   { if (!(cond)) bz_internal_error ( errcode ); }\n#define AssertD(cond,msg)                do { } while (0)\n#define VPrintf0(zf)                     do { } while (0)\n#define VPrintf1(zf,za1)                 do { } while (0)\n#define VPrintf2(zf,za1,za2)             do { } while (0)\n#define VPrintf3(zf,za1,za2,za3)         do { } while (0)\n#define VPrintf4(zf,za1,za2,za3,za4)     do { } while (0)\n#define VPrintf5(zf,za1,za2,za3,za4,za5) do { } while (0)\n\n#endif\n\n\n#define BZALLOC(nnn) (strm-\u003ebzalloc)(strm-\u003eopaque,(nnn),1)\n#define BZFREE(ppp)  (strm-\u003ebzfree)(strm-\u003eopaque,(ppp))\n\n\n/*-- Header bytes. --*/\n\n#define BZ_HDR_B 0x42   /* 'B' */\n#define BZ_HDR_Z 0x5a   /* 'Z' */\n#define BZ_HDR_h 0x68   /* 'h' */\n#define BZ_HDR_0 0x30   /* '0' */\n  \n/*-- Constants for the back end. --*/\n\n#define BZ_MAX_ALPHA_SIZE 258\n#define BZ_MAX_CODE_LEN    23\n\n#define BZ_RUNA 0\n#define BZ_RUNB 1\n\n#define BZ_N_GROUPS 6\n#define BZ_G_SIZE   50\n#define BZ_N_ITERS  4\n\n#define BZ_MAX_SELECTORS (2 + (900000 / BZ_G_SIZE))\n\n\n\n/*-- Stuff for randomising repetitive blocks. --*/\n\nextern Int32 BZ2_rNums[512];\n\n#define BZ_RAND_DECLS                          \\\n   Int32 rNToGo;                               \\\n   Int32 rTPos                                 \\\n\n#define BZ_RAND_INIT_MASK                      \\\n   s-\u003erNToGo = 0;                              \\\n   s-\u003erTPos  = 0                               \\\n\n#define BZ_RAND_MASK ((s-\u003erNToGo == 1) ? 1 : 0)\n\n#define BZ_RAND_UPD_MASK                       \\\n   if (s-\u003erNToGo == 0) {                       \\\n      s-\u003erNToGo = BZ2_rNums[s-\u003erTPos];         \\\n      s-\u003erTPos++;                              \\\n      if (s-\u003erTPos == 512) s-\u003erTPos = 0;       \\\n   }                                           \\\n   s-\u003erNToGo--;\n\n\n\n/*-- Stuff for doing CRCs. --*/\n\nextern UInt32 BZ2_crc32Table[256];\n\n#define BZ_INITIALISE_CRC(crcVar)              \\\n{                                              \\\n   crcVar = 0xffffffffL;                       \\\n}\n\n#define BZ_FINALISE_CRC(crcVar)                \\\n{                                              \\\n   crcVar = ~(crcVar);                         \\\n}\n\n#define BZ_UPDATE_CRC(crcVar,cha)              \\\n{                                              \\\n   crcVar = (crcVar \u003c\u003c 8) ^                    \\\n            BZ2_crc32Table[(crcVar \u003e\u003e 24) ^    \\\n                           ((UChar)cha)];      \\\n}\n\n\n\n/*-- States and modes for compression. --*/\n\n#define BZ_M_IDLE      1\n#define BZ_M_RUNNING   2\n#define BZ_M_FLUSHING  3\n#define BZ_M_FINISHING 4\n\n#define BZ_S_OUTPUT    1\n#define BZ_S_INPUT     2\n\n#define BZ_N_RADIX 2\n#define BZ_N_QSORT 12\n#define BZ_N_SHELL 18\n#define BZ_N_OVERSHOOT (BZ_N_RADIX + BZ_N_QSORT + BZ_N_SHELL + 2)\n\n\n\n\n/*-- Structure holding all the compression-side stuff. --*/\n\ntypedef\n   struct {\n      /* pointer back to the struct bz_stream */\n      bz_stream* strm;\n\n      /* mode this stream is in, and whether inputting */\n      /* or outputting data */\n      Int32    mode;\n      Int32    state;\n\n      /* remembers avail_in when flush/finish requested */\n      UInt32   avail_in_expect;\n\n      /* for doing the block sorting */\n      UInt32*  arr1;\n      UInt32*  arr2;\n      UInt32*  ftab;\n      Int32    origPtr;\n\n      /* aliases for arr1 and arr2 */\n      UInt32*  ptr;\n      UChar*   block;\n      UInt16*  mtfv;\n      UChar*   zbits;\n\n      /* for deciding when to use the fallback sorting algorithm */\n      Int32    workFactor;\n\n      /* run-length-encoding of the input */\n      UInt32   state_in_ch;\n      Int32    state_in_len;\n      BZ_RAND_DECLS;\n\n      /* input and output limits and current posns */\n      Int32    nblock;\n      Int32    nblockMAX;\n      Int32    numZ;\n      Int32    state_out_pos;\n\n      /* map of bytes used in block */\n      Int32    nInUse;\n      Bool     inUse[256];\n      UChar    unseqToSeq[256];\n\n      /* the buffer for bit stream creation */\n      UInt32   bsBuff;\n      Int32    bsLive;\n\n      /* block and combined CRCs */\n      UInt32   blockCRC;\n      UInt32   combinedCRC;\n\n      /* misc administratium */\n      Int32    verbosity;\n      Int32    blockNo;\n      Int32    blockSize100k;\n\n      /* stuff for coding the MTF values */\n      Int32    nMTF;\n      Int32    mtfFreq    [BZ_MAX_ALPHA_SIZE];\n      UChar    selector   [BZ_MAX_SELECTORS];\n      UChar    selectorMtf[BZ_MAX_SELECTORS];\n\n      UChar    len     [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      Int32    code    [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      Int32    rfreq   [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      /* second dimension: only 3 needed; 4 makes index calculations faster */\n      UInt32   len_pack[BZ_MAX_ALPHA_SIZE][4];\n\n   }\n   EState;\n\n\n\n/*-- externs for compression. --*/\n\nextern void \nBZ2_blockSort ( EState* );\n\nextern void \nBZ2_compressBlock ( EState*, Bool );\n\nextern void \nBZ2_bsInitWrite ( EState* );\n\nextern void \nBZ2_hbAssignCodes ( Int32*, UChar*, Int32, Int32, Int32 );\n\nextern void \nBZ2_hbMakeCodeLengths ( UChar*, Int32*, Int32, Int32 );\n\n\n\n/*-- states for decompression. --*/\n\n#define BZ_X_IDLE        1\n#define BZ_X_OUTPUT      2\n\n#define BZ_X_MAGIC_1     10\n#define BZ_X_MAGIC_2     11\n#define BZ_X_MAGIC_3     12\n#define BZ_X_MAGIC_4     13\n#define BZ_X_BLKHDR_1    14\n#define BZ_X_BLKHDR_2    15\n#define BZ_X_BLKHDR_3    16\n#define BZ_X_BLKHDR_4    17\n#define BZ_X_BLKHDR_5    18\n#define BZ_X_BLKHDR_6    19\n#define BZ_X_BCRC_1      20\n#define BZ_X_BCRC_2      21\n#define BZ_X_BCRC_3      22\n#define BZ_X_BCRC_4      23\n#define BZ_X_RANDBIT     24\n#define BZ_X_ORIGPTR_1   25\n#define BZ_X_ORIGPTR_2   26\n#define BZ_X_ORIGPTR_3   27\n#define BZ_X_MAPPING_1   28\n#define BZ_X_MAPPING_2   29\n#define BZ_X_SELECTOR_1  30\n#define BZ_X_SELECTOR_2  31\n#define BZ_X_SELECTOR_3  32\n#define BZ_X_CODING_1    33\n#define BZ_X_CODING_2    34\n#define BZ_X_CODING_3    35\n#define BZ_X_MTF_1       36\n#define BZ_X_MTF_2       37\n#define BZ_X_MTF_3       38\n#define BZ_X_MTF_4       39\n#define BZ_X_MTF_5       40\n#define BZ_X_MTF_6       41\n#define BZ_X_ENDHDR_2    42\n#define BZ_X_ENDHDR_3    43\n#define BZ_X_ENDHDR_4    44\n#define BZ_X_ENDHDR_5    45\n#define BZ_X_ENDHDR_6    46\n#define BZ_X_CCRC_1      47\n#define BZ_X_CCRC_2      48\n#define BZ_X_CCRC_3      49\n#define BZ_X_CCRC_4      50\n\n\n\n/*-- Constants for the fast MTF decoder. --*/\n\n#define MTFA_SIZE 4096\n#define MTFL_SIZE 16\n\n\n\n/*-- Structure holding all the decompression-side stuff. --*/\n\ntypedef\n   struct {\n      /* pointer back to the struct bz_stream */\n      bz_stream* strm;\n\n      /* state indicator for this stream */\n      Int32    state;\n\n      /* for doing the final run-length decoding */\n      UChar    state_out_ch;\n      Int32    state_out_len;\n      Bool     blockRandomised;\n      BZ_RAND_DECLS;\n\n      /* the buffer for bit stream reading */\n      UInt32   bsBuff;\n      Int32    bsLive;\n\n      /* misc administratium */\n      Int32    blockSize100k;\n      Bool     smallDecompress;\n      Int32    currBlockNo;\n      Int32    verbosity;\n\n      /* for undoing the Burrows-Wheeler transform */\n      Int32    origPtr;\n      UInt32   tPos;\n      Int32    k0;\n      Int32    unzftab[256];\n      Int32    nblock_used;\n      Int32    cftab[257];\n      Int32    cftabCopy[257];\n\n      /* for undoing the Burrows-Wheeler transform (FAST) */\n      UInt32   *tt;\n\n      /* for undoing the Burrows-Wheeler transform (SMALL) */\n      UInt16   *ll16;\n      UChar    *ll4;\n\n      /* stored and calculated CRCs */\n      UInt32   storedBlockCRC;\n      UInt32   storedCombinedCRC;\n      UInt32   calculatedBlockCRC;\n      UInt32   calculatedCombinedCRC;\n\n      /* map of bytes used in block */\n      Int32    nInUse;\n      Bool     inUse[256];\n      Bool     inUse16[16];\n      UChar    seqToUnseq[256];\n\n      /* for decoding the MTF values */\n      UChar    mtfa   [MTFA_SIZE];\n      Int32    mtfbase[256 / MTFL_SIZE];\n      UChar    selector   [BZ_MAX_SELECTORS];\n      UChar    selectorMtf[BZ_MAX_SELECTORS];\n      UChar    len  [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n\n      Int32    limit  [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      Int32    base   [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      Int32    perm   [BZ_N_GROUPS][BZ_MAX_ALPHA_SIZE];\n      Int32    minLens[BZ_N_GROUPS];\n\n      /* save area for scalars in the main decompress code */\n      Int32    save_i;\n      Int32    save_j;\n      Int32    save_t;\n      Int32    save_alphaSize;\n      Int32    save_nGroups;\n      Int32    save_nSelectors;\n      Int32    save_EOB;\n      Int32    save_groupNo;\n      Int32    save_groupPos;\n      Int32    save_nextSym;\n      Int32    save_nblockMAX;\n      Int32    save_nblock;\n      Int32    save_es;\n      Int32    save_N;\n      Int32    save_curr;\n      Int32    save_zt;\n      Int32    save_zn; \n      Int32    save_zvec;\n      Int32    save_zj;\n      Int32    save_gSel;\n      Int32    save_gMinlen;\n      Int32*   save_gLimit;\n      Int32*   save_gBase;\n      Int32*   save_gPerm;\n\n   }\n   DState;\n\n\n\n/*-- Macros for decompression. --*/\n\n#define BZ_GET_FAST(cccc)                     \\\n    /* c_tPos is unsigned, hence test \u003c 0 is pointless. */ \\\n    if (s-\u003etPos \u003e= (UInt32)100000 * (UInt32)s-\u003eblockSize100k) return True; \\\n    s-\u003etPos = s-\u003ett[s-\u003etPos];                 \\\n    cccc = (UChar)(s-\u003etPos \u0026 0xff);           \\\n    s-\u003etPos \u003e\u003e= 8;\n\n#define BZ_GET_FAST_C(cccc)                   \\\n    /* c_tPos is unsigned, hence test \u003c 0 is pointless. */ \\\n    if (c_tPos \u003e= (UInt32)100000 * (UInt32)ro_blockSize100k) return True; \\\n    c_tPos = c_tt[c_tPos];                    \\\n    cccc = (UChar)(c_tPos \u0026 0xff);            \\\n    c_tPos \u003e\u003e= 8;\n\n#define SET_LL4(i,n)                                          \\\n   { if (((i) \u0026 0x1) == 0)                                    \\\n        s-\u003ell4[(i) \u003e\u003e 1] = (s-\u003ell4[(i) \u003e\u003e 1] \u0026 0xf0) | (n); else    \\\n        s-\u003ell4[(i) \u003e\u003e 1] = (s-\u003ell4[(i) \u003e\u003e 1] \u0026 0x0f) | ((n) \u003c\u003c 4);  \\\n   }\n\n#define GET_LL4(i)                             \\\n   ((((UInt32)(s-\u003ell4[(i) \u003e\u003e 1])) \u003e\u003e (((i) \u003c\u003c 2) \u0026 0x4)) \u0026 0xF)\n\n#define SET_LL(i,n)                          \\\n   { s-\u003ell16[i] = (UInt16)(n \u0026 0x0000ffff);  \\\n     SET_LL4(i, n \u003e\u003e 16);                    \\\n   }\n\n#define GET_LL(i) \\\n   (((UInt32)s-\u003ell16[i]) | (GET_LL4(i) \u003c\u003c 16))\n\n#define BZ_GET_SMALL(cccc)                            \\\n    /* c_tPos is unsigned, hence test \u003c 0 is pointless. */ \\\n    if (s-\u003etPos \u003e= (UInt32)100000 * (UInt32)s-\u003eblockSize100k) return True; \\\n    cccc = BZ2_indexIntoF ( s-\u003etPos, s-\u003ecftab );    \\\n    s-\u003etPos = GET_LL(s-\u003etPos);\n\n\n/*-- externs for decompression. --*/\n\nInt32\nBZ2_indexIntoF ( Int32, Int32* );\n\nextern Int32 \nBZ2_decompress ( DState* );\n\nextern void \nBZ2_hbCreateDecodeTables ( Int32*, Int32*, Int32*, UChar*,\n                           Int32,  Int32, Int32 );\n\n\n#endif\n\n\n/*-- BZ_NO_STDIO seems to make NULL disappear on some platforms. --*/\n\n#ifdef BZ_NO_STDIO\n#ifndef NULL\n#define NULL 0\n#endif\n\n#endif\n\n//ABC_NAMESPACE_HEADER_END\n\n/*-------------------------------------------------------------*/\n/*--- end                                   bzlib_private.h ---*/\n/*-------------------------------------------------------------*/\n"
+}

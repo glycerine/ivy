@@ -1,0 +1,241 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c",
+  "SHA256": "29dc3b1128081f0b3d5a1591663398bd52fa52c2729685850c911013cbb67ded",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( cells[pObj.Id].m_id == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free( nets[pObj.Id].m_terms ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pObj) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( cells, 0, sizeof(ConcreteCell) * nAllocSize );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( nets, 0, sizeof(ConcreteNet) * nAllocSize );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_PlaceCreateCell",
+      "Start": 1429,
+      "End": 1743,
+      "BodyStart": 1498,
+      "Original": "static inline void Abc_PlaceCreateCell( Abc_Obj_t * pObj, int fAnd )\n{\n    assert( cells[pObj-\u003eId].m_id == 0 );\n\n    cells[pObj-\u003eId].m_id = pObj-\u003eId;\n    cells[pObj-\u003eId].m_label = \"\";\n    cells[pObj-\u003eId].m_parent = \u0026(abstractCells[fAnd]);\n    cells[pObj-\u003eId].m_fixed = 0;\n    addConcreteCell(\u0026(cells[pObj-\u003eId]));\n}",
+      "Draft": "func Abc_PlaceCreateCell(pObj *Abc_Obj_t, fAnd int32) {\n    assert(cells[pObj.Id].m_id == 0, \"cells[pObj.Id].m_id == 0\");\n\n    cells[pObj.Id].m_id = pObj.Id;\n    cells[pObj.Id].m_label = \"\";\n    cells[pObj.Id].m_parent = \u0026(abstractCells[fAnd]);\n    cells[pObj.Id].m_fixed = 0;\n    addConcreteCell(\u0026(cells[pObj.Id]));\n}"
+    },
+    {
+      "Name": "Abc_PlaceUpdateNet",
+      "Start": 1995,
+      "End": 2611,
+      "BodyStart": 2053,
+      "Original": "static inline void Abc_PlaceUpdateNet( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanout;\n    int k;\n    // free the old array of net terminals\n    if ( nets[pObj-\u003eId].m_terms )\n        free( nets[pObj-\u003eId].m_terms );\n    // fill in the net with the new information\n    nets[pObj-\u003eId].m_id = pObj-\u003eId;\n    nets[pObj-\u003eId].m_weight = 1.0;\n    nets[pObj-\u003eId].m_numTerms = Abc_ObjFanoutNum(pObj); //fanout\n    nets[pObj-\u003eId].m_terms = ALLOC(ConcreteCell*, Abc_ObjFanoutNum(pObj));\n    Abc_ObjForEachFanout( pObj, pFanout, k )\n        nets[pObj-\u003eId].m_terms[k] = \u0026(cells[pFanout-\u003eId]);\n    addConcreteNet(\u0026(nets[pObj-\u003eId]));\n}",
+      "Draft": "func Abc_PlaceUpdateNet(pObj *Abc_Obj_t) {\n    var pFanout *Abc_Obj_t;\n    var k int32;\n    // free the old array of net terminals\n    if nets[pObj.Id].m_terms {\n        free( nets[pObj.Id].m_terms ); }\n    // fill in the net with the new information\n    nets[pObj.Id].m_id = pObj.Id;\n    nets[pObj.Id].m_weight = 1.0;\n    nets[pObj.Id].m_numTerms = Abc_ObjFanoutNum(pObj); //fanout\n    nets[pObj.Id].m_terms = ALLOC(ConcreteCell*, Abc_ObjFanoutNum(pObj));\n    // inlining of macro Abc_ObjForEachFanout\n    for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, k)), 1); k++  {\n        nets[pObj.Id].m_terms[k] = \u0026(cells[pFanout.Id]);\n    }\n    addConcreteNet(\u0026(nets[pObj.Id]));\n}"
+    },
+    {
+      "Name": "Abc_PlaceEvaluateCut",
+      "Start": 2885,
+      "End": 3113,
+      "BodyStart": 2954,
+      "Original": "float Abc_PlaceEvaluateCut( Abc_Obj_t * pRoot, Vec_Ptr_t * vFanins )\n{\n    Abc_Obj_t * pObj;\n//    double x, y;\n    int i;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pObj, i )\n    {\n//        pObj-\u003eId\n    }\n    return 0.0;\n}",
+      "Draft": "func Abc_PlaceEvaluateCut(pRoot *Abc_Obj_t, vFanins *Vec_Ptr_t) float32 {\n    var pObj *Abc_Obj_t;\n//    double x, y;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n//        pObj-\u003eId\n    }\n    return 0.0;\n}"
+    },
+    {
+      "Name": "Abc_PlaceUpdate",
+      "Start": 3395,
+      "End": 4649,
+      "BodyStart": 3469,
+      "Original": "void Abc_PlaceUpdate( Vec_Ptr_t * vAddedCells, Vec_Ptr_t * vUpdatedNets )\n{\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k;\n    Vec_Ptr_t * vCells, * vNets;\n\n    // start the arrays of new cells and nets\n    vCells = Vec_PtrAlloc( 16 );\n    vNets = Vec_PtrAlloc( 32 );\n\n    // go through the new nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vAddedCells, pObj, i )\n    {\n        assert( !Abc_ObjIsComplement(pObj) );\n        Abc_PlaceCreateCell( pObj, 1 );\n        Abc_PlaceUpdateNet( pObj );\n\n        // add the new cell and its fanin nets to temporary storage\n        Vec_PtrPush( vCells, \u0026(cells[pObj-\u003eId]) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_PtrPushUnique( vNets, \u0026(nets[pFanin-\u003eId]) );\n    }\n\n    // go through the modified nets\n    Vec_PtrForEachEntry( Abc_Obj_t *, vUpdatedNets, pObj, i )\n    {\n        assert( !Abc_ObjIsComplement(pObj) );\n        if ( Abc_ObjType(pObj) == ABC_OBJ_NONE ) // dead node\n            continue;\n        Abc_PlaceUpdateNet( pObj );\n    }\n\n    // update the placement\n//    fastPlace( Vec_PtrSize(vCells), (ConcreteCell **)Vec_PtrArray(vCells), \n//               Vec_PtrSize(vNets), (ConcreteNet **)Vec_PtrArray(vNets) );\n\n    // clean up\n    Vec_PtrFree( vCells );\n    Vec_PtrFree( vNets );\n}",
+      "Draft": "func Abc_PlaceUpdate(vAddedCells *Vec_Ptr_t, vUpdatedNets *Vec_Ptr_t) {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    var vCells, vNets *Vec_Ptr_t;\n\n    // start the arrays of new cells and nets\n    vCells = Vec_PtrAlloc( 16 );\n    vNets = Vec_PtrAlloc( 32 );\n\n    // go through the new nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAddedCells)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vAddedCells, i)), 1); i++  {\n        assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n        Abc_PlaceCreateCell( pObj, 1 );\n        Abc_PlaceUpdateNet( pObj );\n\n        // add the new cell and its fanin nets to temporary storage\n        Vec_PtrPush( vCells, \u0026(cells[pObj.Id]) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Vec_PtrPushUnique( vNets, \u0026(nets[pFanin.Id]) );\n        }\n    }\n\n    // go through the modified nets\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vUpdatedNets)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vUpdatedNets, i)), 1); i++  {\n        assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n        if Abc_ObjType(pObj) == ABC_OBJ_NONE { // dead node\n            continue; }\n        Abc_PlaceUpdateNet( pObj );\n    }\n\n    // update the placement\n//    fastPlace( Vec_PtrSize(vCells), (ConcreteCell **)Vec_PtrArray(vCells), \n//               Vec_PtrSize(vNets), (ConcreteNet **)Vec_PtrArray(vNets) );\n\n    // clean up\n    Vec_PtrFree( vCells );\n    Vec_PtrFree( vNets );\n}"
+    },
+    {
+      "Name": "Abc_PlaceBegin",
+      "Start": 4935,
+      "End": 6269,
+      "BodyStart": 4975,
+      "Original": "void Abc_PlaceBegin( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n\n    // allocate and clean internal storage\n    nAllocSize = 5 * Abc_NtkObjNumMax(pNtk);\n    cells = REALLOC(ConcreteCell, cells, nAllocSize);\n    nets  = REALLOC(ConcreteNet, nets, nAllocSize);\n    memset( cells, 0, sizeof(ConcreteCell) * nAllocSize );\n    memset( nets, 0, sizeof(ConcreteNet) * nAllocSize );\n\n    // create AbstractCells\n    //   1: pad\n    //   2: and\n    if (!abstractCells)\n        abstractCells = ALLOC(AbstractCell,2);\n\n    abstractCells[0].m_height = 1.0;\n    abstractCells[0].m_width = 1.0;\n    abstractCells[0].m_label = \"pio\";\n    abstractCells[0].m_pad = 1;\n\n    abstractCells[1].m_height = 1.0;\n    abstractCells[1].m_width = 1.0;\n    abstractCells[1].m_label = \"and\";\n    abstractCells[1].m_pad = 0;\n\n    // input pads\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Abc_PlaceCreateCell( pObj, 0 );\n\n    // ouput pads\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Abc_PlaceCreateCell( pObj, 0 );\n\n    // AND nodes\n    Abc_AigForEachAnd( pNtk, pObj, i )\n        Abc_PlaceCreateCell( pObj, 1 );\n\n    // all nets\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsCi(pObj) \u0026\u0026 !Abc_ObjIsNode(pObj) )\n            continue;\n        Abc_PlaceUpdateNet( pObj );\n    }\n\n    globalPreplace((float)0.8);\n    globalPlace();\n}",
+      "Draft": "func Abc_PlaceBegin(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // allocate and clean internal storage\n    nAllocSize = 5 * Abc_NtkObjNumMax(pNtk);\n    cells = REALLOC(ConcreteCell, cells, nAllocSize);\n    nets  = REALLOC(ConcreteNet, nets, nAllocSize);\n    memset( cells, 0, sizeof(ConcreteCell) * nAllocSize );\n    memset( nets, 0, sizeof(ConcreteNet) * nAllocSize );\n\n    // create AbstractCells\n    //   1: pad\n    //   2: and\n    if !(abstractCells != nil) {\n        abstractCells = ALLOC(AbstractCell,2); }\n\n    abstractCells[0].m_height = 1.0;\n    abstractCells[0].m_width = 1.0;\n    abstractCells[0].m_label = \"pio\";\n    abstractCells[0].m_pad = 1;\n\n    abstractCells[1].m_height = 1.0;\n    abstractCells[1].m_width = 1.0;\n    abstractCells[1].m_label = \"and\";\n    abstractCells[1].m_pad = 0;\n\n    // input pads\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_PlaceCreateCell( pObj, 0 );\n    }\n\n    // ouput pads\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_PlaceCreateCell( pObj, 0 );\n    }\n\n    // AND nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Abc_PlaceCreateCell( pObj, 1 ); }\n    }\n\n    // all nets\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_ObjIsCi(pObj) \u0026\u0026 !Abc_ObjIsNode(pObj) {\n            continue; }\n        Abc_PlaceUpdateNet( pObj );\n    }\n    }\n\n    globalPreplace(float32(0.8));\n    globalPlace();\n}"
+    },
+    {
+      "Name": "Abc_PlaceEnd",
+      "Start": 6558,
+      "End": 6764,
+      "BodyStart": 6596,
+      "Original": "void Abc_PlaceEnd( Abc_Ntk_t * pNtk )\n{\n    int i;\n\n\n    // clean up\n    for ( i = 0; i \u003c nAllocSize; i++ )\n        FREE( nets[i].m_terms );\n    FREE( abstractCells );\n    FREE( cells );\n    FREE( nets );\n}",
+      "Draft": "func Abc_PlaceEnd(pNtk *Abc_Ntk_t) {\n    var i int32;\n\n\n    // clean up\n    for  i = 0; i \u003c nAllocSize; i++  {\n        FREE( nets[i].m_terms );\n    }\n    FREE( abstractCells );\n    FREE( cells );\n    FREE( nets );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::mechanical::sizeof::5770",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5227,
+      "End": 5233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::mechanical::sizeof::5828",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5285,
+      "End": 5291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::pointer-cast::3230",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3012,
+      "End": 3012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::pointer-cast::4027",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3699,
+      "End": 3699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::pointer-cast::4705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4159,
+      "End": 4159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceCreateCell",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceCreateCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1429,
+      "End": 1743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceUpdateNet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceUpdateNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1995,
+      "End": 2611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceEvaluateCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceEvaluateCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2885,
+      "End": 3113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3395,
+      "End": 4649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceBegin",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceBegin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4935,
+      "End": 6269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::Abc_PlaceEnd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_PlaceEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6558,
+      "End": 6764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcPlace.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7011
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcPlace.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface with a placer.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcPlace.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n// placement includes\n//#include \"phys/place/place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar abstractCells *AbstractCell = nil;\nvar cells *ConcreteCell = nil;\nvar nets *ConcreteNet = nil;\nvar nAllocSize int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new cell.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceCreateCell(pObj *Abc_Obj_t, fAnd int32) {\n    assert(cells[pObj.Id].m_id == 0, \"cells[pObj.Id].m_id == 0\");\n\n    cells[pObj.Id].m_id = pObj.Id;\n    cells[pObj.Id].m_label = \"\";\n    cells[pObj.Id].m_parent = \u0026(abstractCells[fAnd]);\n    cells[pObj.Id].m_fixed = 0;\n    addConcreteCell(\u0026(cells[pObj.Id]));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the net.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceUpdateNet(pObj *Abc_Obj_t) {\n    var pFanout *Abc_Obj_t;\n    var k int32;\n    // free the old array of net terminals\n    if nets[pObj.Id].m_terms {\n        free( nets[pObj.Id].m_terms ); }\n    // fill in the net with the new information\n    nets[pObj.Id].m_id = pObj.Id;\n    nets[pObj.Id].m_weight = 1.0;\n    nets[pObj.Id].m_numTerms = Abc_ObjFanoutNum(pObj); //fanout\n    nets[pObj.Id].m_terms = ALLOC(ConcreteCell*, Abc_ObjFanoutNum(pObj));\n    // inlining of macro Abc_ObjForEachFanout\n    for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, k)), 1); k++  {\n        nets[pObj.Id].m_terms[k] = \u0026(cells[pFanout.Id]);\n    }\n    addConcreteNet(\u0026(nets[pObj.Id]));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the placement cost of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceEvaluateCut(pRoot *Abc_Obj_t, vFanins *Vec_Ptr_t) float32 {\n    var pObj *Abc_Obj_t;\n//    double x, y;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n//        pObj-\u003eId\n    }\n    return 0.0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates placement after one step of rewriting.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceUpdate(vAddedCells *Vec_Ptr_t, vUpdatedNets *Vec_Ptr_t) {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    var vCells, vNets *Vec_Ptr_t;\n\n    // start the arrays of new cells and nets\n    vCells = Vec_PtrAlloc( 16 );\n    vNets = Vec_PtrAlloc( 32 );\n\n    // go through the new nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAddedCells)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vAddedCells, i)), 1); i++  {\n        assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n        Abc_PlaceCreateCell( pObj, 1 );\n        Abc_PlaceUpdateNet( pObj );\n\n        // add the new cell and its fanin nets to temporary storage\n        Vec_PtrPush( vCells, \u0026(cells[pObj.Id]) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Vec_PtrPushUnique( vNets, \u0026(nets[pFanin.Id]) );\n        }\n    }\n\n    // go through the modified nets\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vUpdatedNets)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vUpdatedNets, i)), 1); i++  {\n        assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n        if Abc_ObjType(pObj) == ABC_OBJ_NONE { // dead node\n            continue; }\n        Abc_PlaceUpdateNet( pObj );\n    }\n\n    // update the placement\n//    fastPlace( Vec_PtrSize(vCells), (ConcreteCell **)Vec_PtrArray(vCells), \n//               Vec_PtrSize(vNets), (ConcreteNet **)Vec_PtrArray(vNets) );\n\n    // clean up\n    Vec_PtrFree( vCells );\n    Vec_PtrFree( vNets );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure is called before the writing start.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceBegin(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // allocate and clean internal storage\n    nAllocSize = 5 * Abc_NtkObjNumMax(pNtk);\n    cells = REALLOC(ConcreteCell, cells, nAllocSize);\n    nets  = REALLOC(ConcreteNet, nets, nAllocSize);\n    memset( cells, 0, sizeof(ConcreteCell) * nAllocSize );\n    memset( nets, 0, sizeof(ConcreteNet) * nAllocSize );\n\n    // create AbstractCells\n    //   1: pad\n    //   2: and\n    if !(abstractCells != nil) {\n        abstractCells = ALLOC(AbstractCell,2); }\n\n    abstractCells[0].m_height = 1.0;\n    abstractCells[0].m_width = 1.0;\n    abstractCells[0].m_label = \"pio\";\n    abstractCells[0].m_pad = 1;\n\n    abstractCells[1].m_height = 1.0;\n    abstractCells[1].m_width = 1.0;\n    abstractCells[1].m_label = \"and\";\n    abstractCells[1].m_pad = 0;\n\n    // input pads\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Abc_PlaceCreateCell( pObj, 0 );\n    }\n\n    // ouput pads\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_PlaceCreateCell( pObj, 0 );\n    }\n\n    // AND nodes\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Abc_PlaceCreateCell( pObj, 1 ); }\n    }\n\n    // all nets\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        if !Abc_ObjIsCi(pObj) \u0026\u0026 !Abc_ObjIsNode(pObj) {\n            continue; }\n        Abc_PlaceUpdateNet( pObj );\n    }\n    }\n\n    globalPreplace(float32(0.8));\n    globalPlace();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure is called after the writing completes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_PlaceEnd(pNtk *Abc_Ntk_t) {\n    var i int32;\n\n\n    // clean up\n    for  i = 0; i \u003c nAllocSize; i++  {\n        FREE( nets[i].m_terms );\n    }\n    FREE( abstractCells );\n    FREE( cells );\n    FREE( nets );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

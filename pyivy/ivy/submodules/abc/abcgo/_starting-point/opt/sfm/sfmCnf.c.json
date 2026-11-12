@@ -1,0 +1,234 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c",
+  "SHA256": "9650e0e81af55b1c37c62995ae76df31695f4ed4e2b52d0dc43df145b094bbca",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 13,
+        "ByteOffset": 1486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 13,
+        "ByteOffset": 1531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 2884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 13,
+        "ByteOffset": 3621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 25,
+        "ByteOffset": 4191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( 0 ); }"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 5384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_PrintCnf",
+      "Start": 1274,
+      "End": 1579,
+      "BodyStart": 1312,
+      "Original": "void Sfm_PrintCnf( Vec_Str_t * vCnf )\n{\n    signed char Entry;\n    int i, Lit;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = (int)Entry;\n        if ( Lit == -1 )\n            printf( \"\\n\" );\n        else\n            printf( \"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit) );\n    }\n}",
+      "Draft": "func Sfm_PrintCnf(vCnf *Vec_Str_t) {\n    signed char Entry;\n    var i, Lit int32;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = int32(Entry);\n        if Lit == -1 {\n            fmt.Printf(\"\\n\");\n        } else {\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit)); }\n    }\n}"
+    },
+    {
+      "Name": "Sfm_TruthToCnf",
+      "Start": 1815,
+      "End": 4282,
+      "BodyStart": 1912,
+      "Original": "int Sfm_TruthToCnf( word Truth, word * pTruth, int nVars, Vec_Int_t * vCover, Vec_Str_t * vCnf )\n{\n    int w, nWords = Abc_Truth6WordNum( nVars );\n    Vec_StrClear( vCnf );\n    if ( nVars \u003c= 6 )\n    {\n        if ( Truth == 0 || ~Truth == 0 )\n        {\n            //assert( nVars == 0 );\n            Vec_StrPush( vCnf, (char)(Truth == 0) );\n            Vec_StrPush( vCnf, (char)-1 );\n            return 1;\n        }\n    }\n    else\n    {\n        // const0\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( pTruth[w] )\n                break;\n        if ( w == nWords )\n        {\n            Vec_StrPush( vCnf, (char)1 );\n            Vec_StrPush( vCnf, (char)-1 );\n            return 1;\n        }\n        // const1\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( ~pTruth[w] )\n                break;\n        if ( w == nWords )\n        {\n            Vec_StrPush( vCnf, (char)0 );\n            Vec_StrPush( vCnf, (char)-1 );\n            return 1;\n        }\n    }\n    {\n        int i, k, c, RetValue, Literal, Cube, nCubes = 0;\n        assert( nVars \u003e 0 );\n        for ( c = 0; c \u003c 2; c ++ )\n        {\n            if ( nVars \u003c= 6 )\n            {\n                Truth = c ? ~Truth : Truth;\n                RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            }\n            else\n            {\n                if ( c )\n                    for ( k = 0; k \u003c nWords; k++ )\n                        pTruth[k] = ~pTruth[k];\n                RetValue = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 0 );\n                if ( c )\n                    for ( k = 0; k \u003c nWords; k++ )\n                        pTruth[k] = ~pTruth[k];\n            }\n            assert( RetValue == 0 );\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for ( k = 0; k \u003c nVars; k++ )\n                {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if ( Literal == 1 )      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, (char)Abc_Var2Lit(k, 0) );\n                    else if ( Literal == 2 ) // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, (char)Abc_Var2Lit(k, 1) );\n                    else if ( Literal != 0 )\n                        assert( 0 );\n                }\n                Vec_StrPush( vCnf, (char)Abc_Var2Lit(nVars, c) );\n                Vec_StrPush( vCnf, (char)-1 );\n            }\n        }\n        return nCubes;\n    }\n}",
+      "Draft": "func Sfm_TruthToCnf(Truth word, pTruth *word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {\n    var w int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    Vec_StrClear( vCnf );\n    if nVars \u003c= 6 {\n        if Truth == 0 || ~Truth == 0 {\n            //assert( nVars == 0 );\n            Vec_StrPush( vCnf, byte((Truth == 0)) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n    \n    } else {\n        // const0\n        for  w = 0; w \u003c nWords; w++  {\n            if pTruth[w] {\n                break; }\n        }\n        if w == nWords {\n            Vec_StrPush( vCnf, byte(1) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n        // const1\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pTruth[w] {\n                break; }\n        }\n        if w == nWords {\n            Vec_StrPush( vCnf, byte(0) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n    }\n    {\n        var i, k, c, RetValue, Literal, Cube, nCubes int32;\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        for  c = 0; c \u003c 2; c ++  {\n            if nVars \u003c= 6 {\n                if c {\n                    Truth = ~Truth;\n                } else {\n                    Truth = Truth;\n                }\n                RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            \n            } else {\n                if c {\n                    for  k = 0; k \u003c nWords; k++  {\n                        pTruth[k] = ~pTruth[k];\n                    } }\n                RetValue = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 0 );\n                if c {\n                    for  k = 0; k \u003c nWords; k++  {\n                        pTruth[k] = ~pTruth[k];\n                    } }\n            }\n            assert(RetValue == 0, \"RetValue == 0\");\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for  k = 0; k \u003c nVars; k++  {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if Literal == 1 {      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 0)) );\n                    } else if Literal == 2 { // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 1)) );\n                    } else if Literal != 0 {\n                        assert(false, \"0\"); }\n                }\n                Vec_StrPush( vCnf, byte(Abc_Var2Lit(nVars, c)) );\n                Vec_StrPush( vCnf, byte(-1) );\n            }\n        }\n        return nCubes;\n    }\n}"
+    },
+    {
+      "Name": "Sfm_CreateCnf",
+      "Start": 4518,
+      "End": 5362,
+      "BodyStart": 4561,
+      "Original": "Vec_Wec_t * Sfm_CreateCnf( Sfm_Ntk_t * p )\n{\n    Vec_Wec_t * vCnfs;\n    Vec_Str_t * vCnf, * vCnfBase;\n    word uTruth;\n    int i, nCubes;\n    vCnf = Vec_StrAlloc( 100 );\n    vCnfs = Vec_WecStart( p-\u003enObjs );\n    Vec_WrdForEachEntryStartStop( p-\u003evTruths, uTruth, i, p-\u003enPis, Vec_WrdSize(p-\u003evTruths)-p-\u003enPos )\n    {\n        int Offset  = Vec_IntEntry( p-\u003evStarts, i );\n        word * pRes = Vec_WrdSize(p-\u003evTruths2) ? Vec_WrdEntryP( p-\u003evTruths2, Offset ) : NULL;\n        nCubes = Sfm_TruthToCnf( uTruth, pRes, Sfm_ObjFaninNum(p, i), p-\u003evCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase-\u003enSize = Vec_StrSize(vCnf);\n    }\n    Vec_StrFree( vCnf );\n    return vCnfs;\n}",
+      "Draft": "func Sfm_CreateCnf(p *Sfm_Ntk_t) *Vec_Wec_t {\n    var vCnfs *Vec_Wec_t;\n    var vCnf, vCnfBase *Vec_Str_t;\n    var uTruth word;\n    var i, nCubes int32;\n    vCnf = Vec_StrAlloc( 100 );\n    vCnfs = Vec_WecStart( p.nObjs );\n    Vec_WrdForEachEntryStartStop( p.vTruths, uTruth, i, p.nPis, Vec_WrdSize(p.vTruths)-p.nPos )\n    {\n        var Offset int32   = Vec_IntEntry( p.vStarts, i );\n        var pRes *word;\n        if Vec_WrdSize(p.vTruths2) {\n            pRes = Vec_WrdEntryP( p.vTruths2, Offset );\n        } else {\n            pRes = nil;\n        }\n        nCubes = Sfm_TruthToCnf( uTruth, pRes, Sfm_ObjFaninNum(p, i), p.vCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase.nSize = Vec_StrSize(vCnf);\n    }\n    Vec_StrFree( vCnf );\n    return vCnfs;\n}"
+    },
+    {
+      "Name": "Sfm_TranslateCnf",
+      "Start": 5598,
+      "End": 6177,
+      "BodyStart": 5696,
+      "Original": "void Sfm_TranslateCnf( Vec_Wec_t * vRes, Vec_Str_t * vCnf, Vec_Int_t * vFaninMap, int iPivotVar )\n{\n    Vec_Int_t * vClause;\n    signed char Entry;\n    int i, Lit;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if ( (int)Entry == -1 )\n        {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), (int)Entry );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}",
+      "Draft": "func Sfm_TranslateCnf(vRes *Vec_Wec_t, vCnf *Vec_Str_t, vFaninMap *Vec_Int_t, iPivotVar int32) {\n    var vClause *Vec_Int_t;\n    signed char Entry;\n    var i, Lit int32;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if int32(Entry) == -1 {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), int32(Entry) );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::pointer-cast::3053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3053,
+      "End": 3065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::pointer-cast::3304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3304,
+      "End": 3316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::pointer-cast::5087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5087,
+      "End": 5100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::ternary::Sfm_PrintCnf",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_PrintCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1274,
+      "End": 1579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::Sfm_PrintCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_PrintCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1274,
+      "End": 1579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::Sfm_TruthToCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_TruthToCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1815,
+      "End": 4282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::Sfm_CreateCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_CreateCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4518,
+      "End": 5362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::Sfm_TranslateCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_TranslateCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5598,
+      "End": 6177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::macro-inline::1357",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_StrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1357,
+      "End": 1394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::macro-inline::3576",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3576,
+      "End": 3614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::macro-inline::4730",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4730,
+      "End": 4825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCnf.c::macro-inline::5832",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_StrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5832,
+      "End": 5869
+    }
+  ],
+  "Draft": "package sfm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sfmCnf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [CNF computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmCnf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_PrintCnf(vCnf *Vec_Str_t) {\n    signed char Entry;\n    var i, Lit int32;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = int32(Entry);\n        if Lit == -1 {\n            fmt.Printf(\"\\n\");\n        } else {\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit)); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_TruthToCnf(Truth word, pTruth *word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {\n    var w int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    Vec_StrClear( vCnf );\n    if nVars \u003c= 6 {\n        if Truth == 0 || ~Truth == 0 {\n            //assert( nVars == 0 );\n            Vec_StrPush( vCnf, byte((Truth == 0)) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n    \n    } else {\n        // const0\n        for  w = 0; w \u003c nWords; w++  {\n            if pTruth[w] {\n                break; }\n        }\n        if w == nWords {\n            Vec_StrPush( vCnf, byte(1) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n        // const1\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pTruth[w] {\n                break; }\n        }\n        if w == nWords {\n            Vec_StrPush( vCnf, byte(0) );\n            Vec_StrPush( vCnf, byte(-1) );\n            return 1;\n        }\n    }\n    {\n        var i, k, c, RetValue, Literal, Cube, nCubes int32;\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        for  c = 0; c \u003c 2; c ++  {\n            if nVars \u003c= 6 {\n                if c {\n                    Truth = ~Truth;\n                } else {\n                    Truth = Truth;\n                }\n                RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            \n            } else {\n                if c {\n                    for  k = 0; k \u003c nWords; k++  {\n                        pTruth[k] = ~pTruth[k];\n                    } }\n                RetValue = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 0 );\n                if c {\n                    for  k = 0; k \u003c nWords; k++  {\n                        pTruth[k] = ~pTruth[k];\n                    } }\n            }\n            assert(RetValue == 0, \"RetValue == 0\");\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for  k = 0; k \u003c nVars; k++  {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if Literal == 1 {      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 0)) );\n                    } else if Literal == 2 { // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 1)) );\n                    } else if Literal != 0 {\n                        assert(false, \"0\"); }\n                }\n                Vec_StrPush( vCnf, byte(Abc_Var2Lit(nVars, c)) );\n                Vec_StrPush( vCnf, byte(-1) );\n            }\n        }\n        return nCubes;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_CreateCnf(p *Sfm_Ntk_t) *Vec_Wec_t {\n    var vCnfs *Vec_Wec_t;\n    var vCnf, vCnfBase *Vec_Str_t;\n    var uTruth word;\n    var i, nCubes int32;\n    vCnf = Vec_StrAlloc( 100 );\n    vCnfs = Vec_WecStart( p.nObjs );\n    Vec_WrdForEachEntryStartStop( p.vTruths, uTruth, i, p.nPis, Vec_WrdSize(p.vTruths)-p.nPos )\n    {\n        var Offset int32   = Vec_IntEntry( p.vStarts, i );\n        var pRes *word;\n        if Vec_WrdSize(p.vTruths2) {\n            pRes = Vec_WrdEntryP( p.vTruths2, Offset );\n        } else {\n            pRes = nil;\n        }\n        nCubes = Sfm_TruthToCnf( uTruth, pRes, Sfm_ObjFaninNum(p, i), p.vCover, vCnf );\n        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vCnfs, i );\n        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );\n        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );\n        vCnfBase.nSize = Vec_StrSize(vCnf);\n    }\n    Vec_StrFree( vCnf );\n    return vCnfs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_TranslateCnf(vRes *Vec_Wec_t, vCnf *Vec_Str_t, vFaninMap *Vec_Int_t, iPivotVar int32) {\n    var vClause *Vec_Int_t;\n    signed char Entry;\n    var i, Lit int32;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if int32(Entry) == -1 {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), int32(Entry) );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

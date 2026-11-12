@@ -1,0 +1,1052 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c",
+  "SHA256": "eb8047bc471e3ff8766b9e10514e1a0505f56bf3ed876cfb80a903cf24d3f942",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 9,
+        "ByteOffset": 1606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Gia_ObjLevel(p, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 8432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p) == Gia_ManCiNum(pOrder) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 8487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p) == Gia_ManCoNum(pOrder) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 9358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 9394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 9431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManHasChoices(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 10459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == Gia_ManBufNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 11143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 11180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 11217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasChoices(p) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 327,
+        "Column": 78,
+        "ByteOffset": 11489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNew.pSibls = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 12587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nBarBufs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 12784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManBufNum(pNew) == nBarBufs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 12831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(pNew) == nPiReal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 12876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(pNew) == nPoReal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 16030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManBufNum(pGia2) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 16465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 16615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 460,
+        "Column": 9,
+        "ByteOffset": 16765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 473,
+        "Column": 66,
+        "ByteOffset": 17283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 474,
+        "Column": 66,
+        "ByteOffset": 17401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pSpec) ? (free((char *) (pNew.pSpec)), (pNew.pSpec) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 17988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Command, \"\u0026unmap; \u0026lf -K %d -C %d -k %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 498,
+        "Column": 9,
+        "ByteOffset": 18271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"MAPPING:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 9,
+        "ByteOffset": 18303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mapping with \u0026lf -k:\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 502,
+        "Column": 5,
+        "ByteOffset": 18413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Command, \"\u0026unmap; \u0026lf -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 505,
+        "Column": 9,
+        "ByteOffset": 18594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mapping with \u0026lf:\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 18783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"\u0026unmap; \u0026if -sz -S %d%d -K %d -C %d %s\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 514,
+        "Column": 13,
+        "ByteOffset": 19152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Mapping with \u0026if -sz -S %d%d -K %d -C %d %s:\\n\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 9,
+        "ByteOffset": 19565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mapping final:\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 532,
+        "Column": 9,
+        "ByteOffset": 19971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 13,
+        "ByteOffset": 20176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 544,
+        "Column": 9,
+        "ByteOffset": 20549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 13,
+        "ByteOffset": 20754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 568,
+        "Column": 5,
+        "ByteOffset": 21586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Command, \"\u0026blut -a -K %d\", nLutSize );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 607,
+        "Column": 9,
+        "ByteOffset": 23125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm1, \"\u0026synch2 -K 6 -C 500;  \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 608,
+        "Column": 9,
+        "ByteOffset": 23291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm2, \"\u0026dch -C 500;          \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 609,
+        "Column": 9,
+        "ByteOffset": 23457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm3, \"\u0026synch2 -K 6 -C 500;  \u0026lf -m%s  -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 610,
+        "Column": 9,
+        "ByteOffset": 23623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm4, \"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 613,
+        "Column": 9,
+        "ByteOffset": 23807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm1, \"\u0026synch2 -K %d -C 500; \u0026if -m%s       -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 614,
+        "Column": 9,
+        "ByteOffset": 23999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm2, \"\u0026dch -C 500;          \u0026if -m%s       -K %d -C %d; %s \u0026save\",           fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 615,
+        "Column": 9,
+        "ByteOffset": 24191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm3, \"\u0026synch2 -K %d -C 500; \u0026lf -m%s  -E 5 -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 616,
+        "Column": 9,
+        "ByteOffset": 24383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm4, \"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -K %d -C %d; %s \u0026save\",           fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 9,
+        "ByteOffset": 24625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Trying synthesis...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 13,
+        "ByteOffset": 25356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Trying SOP balancing...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 670,
+        "Column": 13,
+        "ByteOffset": 26167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Trying SOP balancing...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 13,
+        "ByteOffset": 26972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Trying SOP balancing...\\n\" ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 734,
+        "Column": 9,
+        "ByteOffset": 28100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm1, \"\u0026st; \u0026if -C %d;       \u0026save; \u0026st; \u0026syn2; \u0026if -C %d;       \u0026save; \u0026load\", nCutNum, nCutNum );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 736,
+        "Column": 9,
+        "ByteOffset": 28231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm1, \"\u0026st; \u0026if -C %d -K %d; \u0026save; \u0026st; \u0026syn2; \u0026if -C %d -K %d; \u0026save; \u0026load\", nCutNum, nLutSize, nCutNum, nLutSize ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 738,
+        "Column": 9,
+        "ByteOffset": 28391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm2, \"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum,           fUseMfs ? \"\u0026mfs; \":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 740,
+        "Column": 9,
+        "ByteOffset": 28571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm2, \"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\" ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 742,
+        "Column": 9,
+        "ByteOffset": 28760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm3, \"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum,           fUseMfs ? \"\u0026mfs; \":\"\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 744,
+        "Column": 9,
+        "ByteOffset": 28940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Comm3, \"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 746,
+        "Column": 19,
+        "ByteOffset": 29120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Trying simple synthesis with %s...\\n\", Abc_NtkRecIsRunning3() ? \"LMS\" : \"SOP balancing\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 23,
+        "ByteOffset": 29464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Trying medium synthesis...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 759,
+        "Column": 23,
+        "ByteOffset": 29767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Trying harder synthesis...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 765,
+        "Column": 19,
+        "ByteOffset": 29988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Final result...\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManAigPrintPiLevels",
+      "Start": 1358,
+      "End": 1543,
+      "BodyStart": 1404,
+      "Original": "void Gia_ManAigPrintPiLevels( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManForEachPi( p, pObj, i )\n        printf( \"%d \", Gia_ObjLevel(p, pObj) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_ManAigPrintPiLevels(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        fmt.Printf(\"%d \", Gia_ObjLevel(p, pObj));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_ManAigSyn2",
+      "Start": 1796,
+      "End": 4669,
+      "BodyStart": 1949,
+      "Original": "Gia_Man_t * Gia_ManAigSyn2( Gia_Man_t * pInit, int fOldAlgo, int fCoarsen, int fCutMin, int nRelaxRatio, int fDelayMin, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * p, * pNew, * pTemp;\n    Jf_Par_t Pars, * pPars = \u0026Pars;\n    if ( fOldAlgo )\n    {\n        Jf_ManSetDefaultPars( pPars );\n        pPars-\u003efCutMin     = fCutMin;\n    }\n    else\n    {\n        Lf_ManSetDefaultPars( pPars );\n        pPars-\u003efCutMin     = fCutMin;\n        pPars-\u003efCoarsen    = fCoarsen;\n        pPars-\u003enRelaxRatio = nRelaxRatio;\n        pPars-\u003enAreaTuner  = 1;\n        pPars-\u003enCutNum     = 4;\n    }\n    if ( fVerbose )  Gia_ManPrintStats( pInit, NULL );\n    p = Gia_ManDup( pInit );\n    Gia_ManTransferTiming( p, pInit );\n    if ( Gia_ManAndNum(p) == 0 )\n    {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        Gia_ManStop( p );\n        return pNew;\n    }\n    // delay optimization\n    if ( fDelayMin \u0026\u0026 p-\u003epManTime == NULL )\n    {\n        int Area0, Area1, Delay0, Delay1;\n        int fCutMin = pPars-\u003efCutMin;\n        int fCoarsen = pPars-\u003efCoarsen;\n        int nRelaxRatio = pPars-\u003enRelaxRatio;\n        pPars-\u003efCutMin = 0;\n        pPars-\u003efCoarsen = 0;\n        pPars-\u003enRelaxRatio = 0;\n        // perform mapping\n        if ( fOldAlgo )\n            Jf_ManPerformMapping( p, pPars );\n        else\n            Lf_ManPerformMapping( p, pPars );\n        Area0  = (int)pPars-\u003eArea;\n        Delay0 = (int)pPars-\u003eDelay;\n        // perform balancing\n        pNew = Gia_ManPerformDsdBalance( p, 6, 4, 0, 0 );\n        // perform mapping again\n        if ( fOldAlgo )\n            Jf_ManPerformMapping( pNew, pPars );\n        else\n            Lf_ManPerformMapping( pNew, pPars );\n        Area1  = (int)pPars-\u003eArea;\n        Delay1 = (int)pPars-\u003eDelay;\n        // choose the best result\n        if ( Delay1 \u003c Delay0 - 1 || (Delay1 == Delay0 + 1 \u0026\u0026 100.0 * (Area1 - Area0) / Area1 \u003c 3.0) )\n        {\n            Gia_ManStop( p );\n            p = pNew;\n        }\n        else\n        {\n            Gia_ManStop( pNew );\n            Vec_IntFreeP( \u0026p-\u003evMapping );\n        }\n        // reset params\n        pPars-\u003efCutMin = fCutMin;\n        pPars-\u003efCoarsen = fCoarsen;\n        pPars-\u003enRelaxRatio = nRelaxRatio;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( p );\n    // perform mapping\n    if ( fOldAlgo )\n        pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    else\n        pNew = Lf_ManPerformMapping( pTemp = pNew, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    if ( pTemp != pNew )\n        Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo int32, fCoarsen int32, fCutMin int32, nRelaxRatio int32, fDelayMin int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var p, pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    if fOldAlgo != 0 {\n        Jf_ManSetDefaultPars( pPars );\n        pPars.fCutMin     = fCutMin;\n    \n    } else {\n        Lf_ManSetDefaultPars( pPars );\n        pPars.fCutMin     = fCutMin;\n        pPars.fCoarsen    = fCoarsen;\n        pPars.nRelaxRatio = nRelaxRatio;\n        pPars.nAreaTuner  = 1;\n        pPars.nCutNum     = 4;\n    }\n    if fVerbose != 0 {  Gia_ManPrintStats( pInit, nil ); }\n    p = Gia_ManDup( pInit );\n    Gia_ManTransferTiming( p, pInit );\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        Gia_ManStop( p );\n        return pNew;\n    }\n    // delay optimization\n    if (fDelayMin != 0) \u0026\u0026 p.pManTime == nil {\n        var Area0, Area1, Delay0, Delay1 int32;\n        var fCutMin int32  = pPars.fCutMin;\n        var fCoarsen int32  = pPars.fCoarsen;\n        var nRelaxRatio int32  = pPars.nRelaxRatio;\n        pPars.fCutMin = 0;\n        pPars.fCoarsen = 0;\n        pPars.nRelaxRatio = 0;\n        // perform mapping\n        if fOldAlgo != 0 {\n            Jf_ManPerformMapping( p, pPars );\n        } else {\n            Lf_ManPerformMapping( p, pPars ); }\n        Area0  = int32(pPars.Area);\n        Delay0 = int32(pPars.Delay);\n        // perform balancing\n        pNew = Gia_ManPerformDsdBalance( p, 6, 4, 0, 0 );\n        // perform mapping again\n        if fOldAlgo != 0 {\n            Jf_ManPerformMapping( pNew, pPars );\n        } else {\n            Lf_ManPerformMapping( pNew, pPars ); }\n        Area1  = int32(pPars.Area);\n        Delay1 = int32(pPars.Delay);\n        // choose the best result\n        if Delay1 \u003c Delay0 - 1 || (Delay1 == Delay0 + 1 \u0026\u0026 100.0 * (Area1 - Area0) / Area1 \u003c 3.0) {\n            Gia_ManStop( p );\n            p = pNew;\n        \n        } else {\n            Gia_ManStop( pNew );\n            Vec_IntFreeP( \u0026p.vMapping );\n        }\n        // reset params\n        pPars.fCutMin = fCutMin;\n        pPars.fCoarsen = fCoarsen;\n        pPars.nRelaxRatio = nRelaxRatio;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( p );\n    // perform mapping\n    if fOldAlgo != 0 {\n        pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    } else {\n        pNew = Lf_ManPerformMapping( pTemp = pNew, pPars ); }\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    if pTemp != pNew {\n        Gia_ManStop( pTemp ); }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManAigSyn3",
+      "Start": 4670,
+      "End": 6025,
+      "BodyStart": 4746,
+      "Original": "Gia_Man_t * Gia_ManAigSyn3( Gia_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Jf_Par_t Pars, * pPars = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars-\u003enRelaxRatio = 40;\n    if ( fVerbose )     Gia_ManPrintStats( p, NULL );\n    if ( Gia_ManAndNum(p) == 0 )\n    {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    // perform mapping\n    pPars-\u003enLutSize = 6;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars-\u003enLutSize = 4;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManAigSyn3(p *Gia_Man_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars.nRelaxRatio = 40;\n    if fVerbose != 0 {     Gia_ManPrintStats( p, nil ); }\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    // perform mapping\n    pPars.nLutSize = 6;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars.nLutSize = 4;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManAigSyn4",
+      "Start": 6026,
+      "End": 7830,
+      "BodyStart": 6102,
+      "Original": "Gia_Man_t * Gia_ManAigSyn4( Gia_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Jf_Par_t Pars, * pPars = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars-\u003enRelaxRatio = 40;\n    if ( fVerbose )     Gia_ManPrintStats( p, NULL );\n    if ( Gia_ManAndNum(p) == 0 )\n    {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n//Gia_ManAigPrintPiLevels( p );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    // perform mapping\n    pPars-\u003enLutSize = 7;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars-\u003enLutSize = 5;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    Gia_ManStop( pTemp );\n//Gia_ManAigPrintPiLevels( pNew );\n    return pNew;\n}",
+      "Draft": "func Gia_ManAigSyn4(p *Gia_Man_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars.nRelaxRatio = 40;\n    if fVerbose != 0 {     Gia_ManPrintStats( p, nil ); }\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n//Gia_ManAigPrintPiLevels( p );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    // perform mapping\n    pPars.nLutSize = 7;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars.nLutSize = 5;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n//Gia_ManAigPrintPiLevels( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManOrderPios",
+      "Start": 8137,
+      "End": 8713,
+      "BodyStart": 8203,
+      "Original": "Vec_Ptr_t * Gia_ManOrderPios( Aig_Man_t * p, Gia_Man_t * pOrder )\n{\n    Vec_Ptr_t * vPios;\n    Gia_Obj_t * pObj;\n    int i;\n    assert( Aig_ManCiNum(p) == Gia_ManCiNum(pOrder) );\n    assert( Aig_ManCoNum(p) == Gia_ManCoNum(pOrder) );\n    vPios = Vec_PtrAlloc( Aig_ManCiNum(p) + Aig_ManCoNum(p) );\n    Gia_ManForEachObj( pOrder, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) )\n            Vec_PtrPush( vPios, Aig_ManCi(p, Gia_ObjCioId(pObj)) );\n        else if ( Gia_ObjIsCo(pObj) )\n            Vec_PtrPush( vPios, Aig_ManCo(p, Gia_ObjCioId(pObj)) );\n    }\n    return vPios;\n}",
+      "Draft": "func Gia_ManOrderPios(p *Aig_Man_t, pOrder *Gia_Man_t) *Vec_Ptr_t {\n    var vPios *Vec_Ptr_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Aig_ManCiNum(p) == Gia_ManCiNum(pOrder), \"Aig_ManCiNum(p) == Gia_ManCiNum(pOrder)\");\n    assert(Aig_ManCoNum(p) == Gia_ManCoNum(pOrder), \"Aig_ManCoNum(p) == Gia_ManCoNum(pOrder)\");\n    vPios = Vec_PtrAlloc( Aig_ManCiNum(p) + Aig_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pOrder.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOrder, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            Vec_PtrPush( vPios, Aig_ManCi(p, Gia_ObjCioId(pObj)) );\n        } else if Gia_ObjIsCo(pObj) {\n            Vec_PtrPush( vPios, Aig_ManCo(p, Gia_ObjCioId(pObj)) ); }\n    }\n    return vPios;\n}"
+    },
+    {
+      "Name": "Gia_ManDupFromBarBufs",
+      "Start": 8949,
+      "End": 10303,
+      "BodyStart": 9000,
+      "Original": "Gia_Man_t * Gia_ManDupFromBarBufs( Gia_Man_t * p )\n{\n    Vec_Int_t * vBufObjs;\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i, k = 0;\n    assert( Gia_ManBufNum(p) \u003e 0 );\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( !Gia_ManHasChoices(p) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    vBufObjs = Vec_IntAlloc( Gia_ManBufNum(p) );\n    for ( i = 0; i \u003c Gia_ManBufNum(p); i++ )\n        Vec_IntPush( vBufObjs, Gia_ManAppendCi(pNew) );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n        {\n            pObj-\u003eValue = Vec_IntEntry( vBufObjs, k );\n            Vec_IntWriteEntry( vBufObjs, k++, Gia_ObjFanin0Copy(pObj) );\n        }\n        else \n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    assert( k == Gia_ManBufNum(p) );\n    for ( i = 0; i \u003c Gia_ManBufNum(p); i++ )\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vBufObjs, i) );\n    Vec_IntFree( vBufObjs );\n    Gia_ManForEachCo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupFromBarBufs(p *Gia_Man_t) *Gia_Man_t {\n    var vBufObjs *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n    assert(Gia_ManBufNum(p) \u003e 0, \"Gia_ManBufNum(p) \u003e 0\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(!Gia_ManHasChoices(p), \"!Gia_ManHasChoices(p)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    vBufObjs = Vec_IntAlloc( Gia_ManBufNum(p) );\n    for  i = 0; i \u003c Gia_ManBufNum(p); i++  {\n        Vec_IntPush( vBufObjs, Gia_ManAppendCi(pNew) );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Vec_IntEntry( vBufObjs, k );\n            Vec_IntWriteEntry( vBufObjs, k++, Gia_ObjFanin0Copy(pObj) );\n        \n        } else { \n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    }\n    assert(k == Gia_ManBufNum(p), \"k == Gia_ManBufNum(p)\");\n    for  i = 0; i \u003c Gia_ManBufNum(p); i++  {\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vBufObjs, i) );\n    }\n    Vec_IntFree( vBufObjs );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDupToBarBufs",
+      "Start": 10304,
+      "End": 12109,
+      "BodyStart": 10367,
+      "Original": "Gia_Man_t * Gia_ManDupToBarBufs( Gia_Man_t * p, int nBarBufs )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int nPiReal = Gia_ManCiNum(p) - nBarBufs;\n    int nPoReal = Gia_ManCoNum(p) - nBarBufs;\n    int i, k = 0;\n    assert( Gia_ManBufNum(p) == 0 );\n    assert( Gia_ManRegNum(p) == 0 );\n    assert( Gia_ManHasChoices(p) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    if ( Gia_ManHasChoices(p) )\n        pNew-\u003epSibls = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p)-\u003eValue = 0;\n    for ( i = 0; i \u003c nPiReal; i++ )\n        Gia_ManCi(p, i)-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        for ( ; k \u003c nBarBufs; k++ )\n            if ( ~Gia_ObjFanin0(Gia_ManCo(p, k))-\u003eValue )\n                Gia_ManCi(p, nPiReal + k)-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) );\n            else\n                break;\n        pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if ( Gia_ObjSibl(p, Gia_ObjId(p, pObj)) )\n            pNew-\u003epSibls[Abc_Lit2Var(pObj-\u003eValue)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj))-\u003eValue);  \n    }\n    for ( ; k \u003c nBarBufs; k++ )\n        if ( ~Gia_ObjFanin0Copy(Gia_ManCo(p, k)) )\n            Gia_ManCi(p, nPiReal + k)-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) );\n    assert( k == nBarBufs );\n    for ( i = 0; i \u003c nPoReal; i++ )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, nBarBufs+i)) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    assert( Gia_ManBufNum(pNew) == nBarBufs );\n    assert( Gia_ManCiNum(pNew) == nPiReal );\n    assert( Gia_ManCoNum(pNew) == nPoReal );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupToBarBufs(p *Gia_Man_t, nBarBufs int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var nPiReal int32  = Gia_ManCiNum(p) - nBarBufs;\n    var nPoReal int32  = Gia_ManCoNum(p) - nBarBufs;\n    var i, k int32;\n    assert(Gia_ManBufNum(p) == 0, \"Gia_ManBufNum(p) == 0\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManHasChoices(p), \"Gia_ManHasChoices(p)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    for  i = 0; i \u003c nPiReal; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        for  ; k \u003c nBarBufs; k++  {\n            if ~Gia_ObjFanin0(Gia_ManCo(p, k)).Value {\n                Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) );\n            } else {\n                break; }\n        }\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n            pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }  \n    }\n    }\n    for  ; k \u003c nBarBufs; k++  {\n        if ~Gia_ObjFanin0Copy(Gia_ManCo(p, k)) {\n            Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) ); }\n    }\n    assert(k == nBarBufs, \"k == nBarBufs\");\n    for  i = 0; i \u003c nPoReal; i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, nBarBufs+i)) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    assert(Gia_ManBufNum(pNew) == nBarBufs, \"Gia_ManBufNum(pNew) == nBarBufs\");\n    assert(Gia_ManCiNum(pNew) == nPiReal, \"Gia_ManCiNum(pNew) == nPiReal\");\n    assert(Gia_ManCoNum(pNew) == nPoReal, \"Gia_ManCoNum(pNew) == nPoReal\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManAigSynch2Choices",
+      "Start": 12345,
+      "End": 13295,
+      "BodyStart": 12460,
+      "Original": "Gia_Man_t * Gia_ManAigSynch2Choices( Gia_Man_t * pGia1, Gia_Man_t * pGia2, Gia_Man_t * pGia3, Dch_Pars_t * pPars )\n{\n    Aig_Man_t * pMan, * pTemp;\n    Gia_Man_t * pGia, * pMiter;\n    // derive miter\n    Vec_Ptr_t * vPios, * vGias = Vec_PtrAlloc( 3 );\n    if ( pGia3 ) Vec_PtrPush( vGias, pGia3 );\n    if ( pGia2 ) Vec_PtrPush( vGias, pGia2 );\n    if ( pGia1 ) Vec_PtrPush( vGias, pGia1 );\n    pMiter = Gia_ManChoiceMiter( vGias );\n    Vec_PtrFree( vGias );\n    // transform into an AIG\n    pMan = Gia_ManToAigSkip( pMiter, 3 );\n    Gia_ManStop( pMiter );\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n    // reconstruct the network\n    vPios = Gia_ManOrderPios( pMan, pGia1 ); \n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n    // convert to GIA\n    pGia = Gia_ManFromAigChoices( pMan );\n    Aig_ManStop( pMan );\n    return pGia;\n}",
+      "Draft": "func Gia_ManAigSynch2Choices(pGia1 *Gia_Man_t, pGia2 *Gia_Man_t, pGia3 *Gia_Man_t, pPars *Dch_Pars_t) *Gia_Man_t {\n    var pMan, pTemp *Aig_Man_t;\n    var pGia, pMiter *Gia_Man_t;\n    // derive miter\n    var vPios *Vec_Ptr_t;\n    var vGias *Vec_Ptr_t = Vec_PtrAlloc( 3 );\n    if pGia3 != nil { Vec_PtrPush( vGias, pGia3 ); }\n    if pGia2 != nil { Vec_PtrPush( vGias, pGia2 ); }\n    if pGia1 != nil { Vec_PtrPush( vGias, pGia1 ); }\n    pMiter = Gia_ManChoiceMiter( vGias );\n    Vec_PtrFree( vGias );\n    // transform into an AIG\n    pMan = Gia_ManToAigSkip( pMiter, 3 );\n    Gia_ManStop( pMiter );\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n    // reconstruct the network\n    vPios = Gia_ManOrderPios( pMan, pGia1 ); \n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n    // convert to GIA\n    pGia = Gia_ManFromAigChoices( pMan );\n    Aig_ManStop( pMan );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManAigSynch2",
+      "Start": 13296,
+      "End": 16614,
+      "BodyStart": 13392,
+      "Original": "Gia_Man_t * Gia_ManAigSynch2( Gia_Man_t * pInit, void * pPars0, int nLutSize, int nRelaxRatio )\n{\n    extern Gia_Man_t * Gia_ManLutBalance( Gia_Man_t * p, int nLutSize, int fUseMuxes, int fRecursive, int fOptArea, int fVerbose );\n    Dch_Pars_t * pParsDch = (Dch_Pars_t *)pPars0;\n    Gia_Man_t * pGia1, * pGia2, * pGia3, * pNew, * pTemp;\n    int fVerbose = pParsDch-\u003efVerbose;\n    Jf_Par_t Pars, * pPars = \u0026Pars;\n    Lf_ManSetDefaultPars( pPars );\n    pPars-\u003efCutMin     = 1;\n    pPars-\u003efCoarsen    = 1;\n    pPars-\u003enRelaxRatio = nRelaxRatio;\n    pPars-\u003enAreaTuner  = 5;\n    pPars-\u003enCutNum     = 12;\n    pPars-\u003efVerbose    = fVerbose;\n    if ( fVerbose )  Gia_ManPrintStats( pInit, NULL );\n    pGia1 = Gia_ManDup( pInit );\n    if ( Gia_ManAndNum(pGia1) == 0 )\n    {\n        Gia_ManTransferTiming( pGia1, pInit );\n        return pGia1;\n    }\n    if ( pGia1-\u003epManTime \u0026\u0026 pGia1-\u003evLevels == NULL )\n        Gia_ManLevelWithBoxes( pGia1 );\n    // unmap if mapped\n    if ( Gia_ManHasMapping(pInit) )\n    {\n        Gia_ManTransferMapping( pGia1, pInit );\n        pGia1 = (Gia_Man_t *)Dsm_ManDeriveGia( pTemp = pGia1, 0 );\n        Gia_ManStop( pTemp );\n    }\n    // perform balancing\n    if ( Gia_ManBufNum(pGia1) || 1 )\n        pGia2 = Gia_ManAreaBalance( pGia1, 0, ABC_INFINITY, 0, 0 );\n    else\n    {\n        pGia2 = Gia_ManLutBalance( pGia1, nLutSize, 1, 1, 1, 0 );\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        Gia_ManStop( pTemp );\n    }\n    if ( fVerbose )     Gia_ManPrintStats( pGia2, NULL );\n    // perform mapping\n    pGia2 = Lf_ManPerformMapping( pTemp = pGia2, pPars );\n    if ( fVerbose )     Gia_ManPrintStats( pGia2, NULL );\n    if ( pTemp != pGia2 )\n        Gia_ManStop( pTemp );\n    // perform balancing\n    if ( pParsDch-\u003efLightSynth || Gia_ManBufNum(pGia2) )\n        pGia3 = Gia_ManAreaBalance( pGia2, 0, ABC_INFINITY, 0, 0 );\n    else\n    {\n        assert( Gia_ManBufNum(pGia2) == 0 );\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        if ( fVerbose )     Gia_ManPrintStats( pGia2, NULL );\n        Gia_ManStop( pTemp );\n        // perform DSD balancing\n        pGia3 = Gia_ManPerformDsdBalance( pGia2, 6, 8, 0, 0 );\n    }\n    if ( fVerbose )     Gia_ManPrintStats( pGia3, NULL );\n    // perform choice computation\n    if ( Gia_ManBufNum(pInit) )\n    {\n        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1) );\n        pGia1 = Gia_ManDupFromBarBufs( pTemp = pGia1 );\n        Gia_ManStop( pTemp );\n        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2) );\n        pGia2 = Gia_ManDupFromBarBufs( pTemp = pGia2 );\n        Gia_ManStop( pTemp );\n        assert( Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3) );\n        pGia3 = Gia_ManDupFromBarBufs( pTemp = pGia3 );\n        Gia_ManStop( pTemp );\n    }\n    pNew = Gia_ManAigSynch2Choices( pGia1, pGia2, pGia3, pParsDch );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pGia2 );\n    Gia_ManStop( pGia3 );\n    if ( Gia_ManBufNum(pInit) )\n    {\n        pNew = Gia_ManDupToBarBufs( pTemp = pNew, Gia_ManBufNum(pInit) );\n        Gia_ManStop( pTemp );\n    }\n    // copy names\n    ABC_FREE( pNew-\u003epName );\n    ABC_FREE( pNew-\u003epSpec );\n    pNew-\u003epName = Abc_UtilStrsav(pInit-\u003epName);\n    pNew-\u003epSpec = Abc_UtilStrsav(pInit-\u003epSpec);\n    Gia_ManTransferTiming( pNew, pInit );\n    return pNew;\n}",
+      "Draft": "func Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio int32) *Gia_Man_t {\n    extern Gia_Man_t * Gia_ManLutBalance( Gia_Man_t * p, int nLutSize, int fUseMuxes, int fRecursive, int fOptArea, int fVerbose );\n    var pParsDch *Dch_Pars_t  = (Dch_Pars_t *)pPars0;\n    var pGia1, pGia2, pGia3, pNew, pTemp *Gia_Man_t;\n    var fVerbose int32  = pParsDch.fVerbose;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Lf_ManSetDefaultPars( pPars );\n    pPars.fCutMin     = 1;\n    pPars.fCoarsen    = 1;\n    pPars.nRelaxRatio = nRelaxRatio;\n    pPars.nAreaTuner  = 5;\n    pPars.nCutNum     = 12;\n    pPars.fVerbose    = fVerbose;\n    if fVerbose != 0 {  Gia_ManPrintStats( pInit, nil ); }\n    pGia1 = Gia_ManDup( pInit );\n    if Gia_ManAndNum(pGia1) == 0 {\n        Gia_ManTransferTiming( pGia1, pInit );\n        return pGia1;\n    }\n    if pGia1.pManTime \u0026\u0026 pGia1.vLevels == nil {\n        Gia_ManLevelWithBoxes( pGia1 ); }\n    // unmap if mapped\n    if Gia_ManHasMapping(pInit) {\n        Gia_ManTransferMapping( pGia1, pInit );\n        pGia1 = (Gia_Man_t *)Dsm_ManDeriveGia( pTemp = pGia1, 0 );\n        Gia_ManStop( pTemp );\n    }\n    // perform balancing\n    if Gia_ManBufNum(pGia1) || true {\n        pGia2 = Gia_ManAreaBalance( pGia1, 0, ABC_INFINITY, 0, 0 );\n    } else {\n        pGia2 = Gia_ManLutBalance( pGia1, nLutSize, 1, 1, 1, 0 );\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        Gia_ManStop( pTemp );\n    }\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n    // perform mapping\n    pGia2 = Lf_ManPerformMapping( pTemp = pGia2, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n    if pTemp != pGia2 {\n        Gia_ManStop( pTemp ); }\n    // perform balancing\n    if pParsDch.fLightSynth || Gia_ManBufNum(pGia2) {\n        pGia3 = Gia_ManAreaBalance( pGia2, 0, ABC_INFINITY, 0, 0 );\n    } else {\n        assert(Gia_ManBufNum(pGia2) == 0, \"Gia_ManBufNum(pGia2) == 0\");\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n        Gia_ManStop( pTemp );\n        // perform DSD balancing\n        pGia3 = Gia_ManPerformDsdBalance( pGia2, 6, 8, 0, 0 );\n    }\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia3, nil ); }\n    // perform choice computation\n    if Gia_ManBufNum(pInit) {\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1)\");\n        pGia1 = Gia_ManDupFromBarBufs( pTemp = pGia1 );\n        Gia_ManStop( pTemp );\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2)\");\n        pGia2 = Gia_ManDupFromBarBufs( pTemp = pGia2 );\n        Gia_ManStop( pTemp );\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3)\");\n        pGia3 = Gia_ManDupFromBarBufs( pTemp = pGia3 );\n        Gia_ManStop( pTemp );\n    }\n    pNew = Gia_ManAigSynch2Choices( pGia1, pGia2, pGia3, pParsDch );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pGia2 );\n    Gia_ManStop( pGia3 );\n    if Gia_ManBufNum(pInit) {\n        pNew = Gia_ManDupToBarBufs( pTemp = pNew, Gia_ManBufNum(pInit) );\n        Gia_ManStop( pTemp );\n    }\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pNew.pSpec) ? (free((char *) (pNew.pSpec)), (pNew.pSpec) = 0) : 0);\n    pNew.pName = Abc_UtilStrsav(pInit.pName);\n    pNew.pSpec = Abc_UtilStrsav(pInit.pSpec);\n    Gia_ManTransferTiming( pNew, pInit );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManPerformMap",
+      "Start": 16850,
+      "End": 18705,
+      "BodyStart": 16953,
+      "Original": "void Gia_ManPerformMap( int nAnds, int nLutSize, int nCutNum, int fMinAve, int fUseMfs, int fVerbose )\n{\n    char Command[200];\n    sprintf( Command, \"\u0026unmap; \u0026lf -K %d -C %d -k %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n//    sprintf( Command, \"\u0026unmap; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if ( fVerbose )\n    {\n        printf( \"MAPPING:\\n\" );\n        printf( \"Mapping with \u0026lf -k:\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    sprintf( Command, \"\u0026unmap; \u0026lf -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if ( fVerbose )\n    {\n        printf( \"Mapping with \u0026lf:\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    if ( (nLutSize == 4 \u0026\u0026 nAnds \u003c 100000) || (nLutSize == 6 \u0026\u0026 nAnds \u003c 2000) )\n    {\n        sprintf( Command, \"\u0026unmap; \u0026if -sz -S %d%d -K %d -C %d %s\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        Vec_IntFreeP( \u0026Abc_FrameReadGia(Abc_FrameGetGlobalFrame())-\u003evPacking );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026save\" );\n        if ( fVerbose )\n        {\n            printf( \"Mapping with \u0026if -sz -S %d%d -K %d -C %d %s:\\n\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\" );\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n    }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if ( fUseMfs )\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m\" );\n    if ( fVerbose )\n    {\n        printf( \"Mapping final:\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n}",
+      "Draft": "func Gia_ManPerformMap(nAnds int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Command string // was [200]byte in C\n\n    Command = fmt.Sprintf(\"\u0026unmap; \u0026lf -K %d -C %d -k %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n//    sprintf( Command, \"\u0026unmap; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if fVerbose != 0 {\n        fmt.Printf(\"MAPPING:\\n\");\n        fmt.Printf(\"Mapping with \u0026lf -k:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    Command = fmt.Sprintf(\"\u0026unmap; \u0026lf -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if fVerbose != 0 {\n        fmt.Printf(\"Mapping with \u0026lf:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    if (nLutSize == 4 \u0026\u0026 nAnds \u003c 100000) || (nLutSize == 6 \u0026\u0026 nAnds \u003c 2000) {\n        Command = fmt.Sprintf(\"\u0026unmap; \u0026if -sz -S %d%d -K %d -C %d %s\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        Vec_IntFreeP( \u0026Abc_FrameReadGia(Abc_FrameGetGlobalFrame()).vPacking );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026save\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026if -sz -S %d%d -K %d -C %d %s:\\n\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n    }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fUseMfs != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m\" ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"Mapping final:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManPerformRound",
+      "Start": 18706,
+      "End": 20876,
+      "BodyStart": 18839,
+      "Original": "void Gia_ManPerformRound( int fIsMapped, int nAnds, int nLevels, int nLutSize, int nCutNum, int fMinAve, int fUseMfs, int fVerbose )\n{\n    char Command[200];\n\n    // perform AIG-based synthesis\n    if ( nAnds \u003c 50000 )\n    {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        sprintf( Command, \"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if ( fVerbose )\n        {\n            printf( \"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform AIG-based synthesis\n    if ( nAnds \u003c 20000 )\n    {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        sprintf( Command, \"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if ( fVerbose )\n        {\n            printf( \"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform first round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026dsdb\" );\n\n    // perform second round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026syn2 -m -R 10; \u0026dsdb\" );\n\n    // prepare for final mapping\n    sprintf( Command, \"\u0026blut -a -K %d\", nLutSize );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n\n    // perform third round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}",
+      "Draft": "func Gia_ManPerformRound(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Command string // was [200]byte in C\n\n\n    // perform AIG-based synthesis\n    if nAnds \u003c 50000 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        Command = fmt.Sprintf(\"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform AIG-based synthesis\n    if nAnds \u003c 20000 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        Command = fmt.Sprintf(\"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform first round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026dsdb\" );\n\n    // perform second round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026syn2 -m -R 10; \u0026dsdb\" );\n\n    // prepare for final mapping\n    Command = fmt.Sprintf(\"\u0026blut -a -K %d\", nLutSize);\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n\n    // perform third round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}"
+    },
+    {
+      "Name": "Gia_ManPerformFlow",
+      "Start": 20877,
+      "End": 21693,
+      "BodyStart": 21009,
+      "Original": "void Gia_ManPerformFlow( int fIsMapped, int nAnds, int nLevels, int nLutSize, int nCutNum, int fMinAve, int fUseMfs, int fVerbose )\n{\n    // remove comb equivs\n    if ( fIsMapped )\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n//    if ( Abc_FrameReadGia(Abc_FrameGetGlobalFrame())-\u003epManTime )\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026sweep\" );\n//    else\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026fraig -c\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}",
+      "Draft": "func Gia_ManPerformFlow(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    // remove comb equivs\n    if fIsMapped != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" ); }\n//    if ( Abc_FrameReadGia(Abc_FrameGetGlobalFrame())-\u003epManTime )\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026sweep\" );\n//    else\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026fraig -c\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}"
+    },
+    {
+      "Name": "Gia_ManPerformFlow2",
+      "Start": 21929,
+      "End": 26739,
+      "BodyStart": 22076,
+      "Original": "void Gia_ManPerformFlow2( int fIsMapped, int nAnds, int nLevels, int nLutSize, int nCutNum, int fBalance, int fMinAve, int fUseMfs, int fVerbose )\n{\n    char Comm1[1000], Comm2[1000], Comm3[1000], Comm4[1000];\n    if ( nLutSize == 0 ) \n    {\n        sprintf( Comm1, \"\u0026synch2 -K 6 -C 500;  \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm2, \"\u0026dch -C 500;          \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm3, \"\u0026synch2 -K 6 -C 500;  \u0026lf -m%s  -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm4, \"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n    }\n    else\n    {\n        sprintf( Comm1, \"\u0026synch2 -K %d -C 500; \u0026if -m%s       -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm2, \"\u0026dch -C 500;          \u0026if -m%s       -K %d -C %d; %s \u0026save\",           fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm3, \"\u0026synch2 -K %d -C 500; \u0026lf -m%s  -E 5 -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum,   fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n        sprintf( Comm4, \"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -K %d -C %d; %s \u0026save\",           fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\" );\n    }\n\n    // perform synthesis\n    if ( fVerbose )\n        printf( \"Trying synthesis...\\n\" );\n    if ( fIsMapped )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n\n    // perform balancing\n    if ( fBalance )\n    {\n        if ( fVerbose )\n            printf( \"Trying SOP balancing...\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10 -C 4\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    if ( nAnds \u003e 100000 )\n        return;\n\n\n    // perform balancing\n    if ( fBalance )\n    {\n        if ( fVerbose )\n            printf( \"Trying SOP balancing...\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    if ( nAnds \u003e 50000 )\n        return;\n\n\n    // perform balancing\n    if ( fBalance )\n    {\n        if ( fVerbose )\n            printf( \"Trying SOP balancing...\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n}",
+      "Draft": "func Gia_ManPerformFlow2(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Comm1, Comm2, Comm3, Comm4 [1000]byte;\n    if nLutSize == 0 {\n        Comm1 = fmt.Sprintf(\"\u0026synch2 -K 6 -C 500;  \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm2 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm3 = fmt.Sprintf(\"\u0026synch2 -K 6 -C 500;  \u0026lf -m%s  -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm4 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n    \n    } else {\n        Comm1 = fmt.Sprintf(\"\u0026synch2 -K %d -C 500; \u0026if -m%s       -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm2 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026if -m%s       -K %d -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm3 = fmt.Sprintf(\"\u0026synch2 -K %d -C 500; \u0026lf -m%s  -E 5 -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm4 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -K %d -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n    }\n\n    // perform synthesis\n    if fVerbose != 0 {\n        fmt.Printf(\"Trying synthesis...\\n\"); }\n    if fIsMapped != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" ); }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10 -C 4\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    if nAnds \u003e 100000 {\n        return; }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    if nAnds \u003e 50000 {\n        return; }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n}"
+    },
+    {
+      "Name": "Gia_ManPerformFlow3",
+      "Start": 26976,
+      "End": 29181,
+      "BodyStart": 27100,
+      "Original": "void Gia_ManPerformFlow3( int nLutSize, int nCutNum, int fBalance, int fMinAve, int fUseMfs, int fUseLutLib, int fVerbose )\n{\n    char Comm1[200], Comm2[200], Comm3[200];\n    if ( fUseLutLib )\n        sprintf( Comm1, \"\u0026st; \u0026if -C %d;       \u0026save; \u0026st; \u0026syn2; \u0026if -C %d;       \u0026save; \u0026load\", nCutNum, nCutNum );\n    else\n        sprintf( Comm1, \"\u0026st; \u0026if -C %d -K %d; \u0026save; \u0026st; \u0026syn2; \u0026if -C %d -K %d; \u0026save; \u0026load\", nCutNum, nLutSize, nCutNum, nLutSize );\n    if ( fUseLutLib )\n        sprintf( Comm2, \"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum,           fUseMfs ? \"\u0026mfs; \":\"\" );\n    else\n        sprintf( Comm2, \"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\" );\n    if ( fUseLutLib )\n        sprintf( Comm3, \"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum,           fUseMfs ? \"\u0026mfs; \":\"\" );\n    else\n        sprintf( Comm3, \"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\" );\n\n    if ( fVerbose ) printf( \"Trying simple synthesis with %s...\\n\", Abc_NtkRecIsRunning3() ? \"LMS\" : \"SOP balancing\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n\n    if ( Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 200000 )\n    {\n        if ( fVerbose ) printf( \"Trying medium synthesis...\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n        if ( fVerbose )\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n\n    if ( Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 10000 )\n    {\n        if ( fVerbose ) printf( \"Trying harder synthesis...\\n\" );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n        if ( fVerbose )\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n\n    if ( fVerbose ) printf( \"Final result...\\n\" );\n    if ( fVerbose )\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n}",
+      "Draft": "func Gia_ManPerformFlow3(nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fUseLutLib int32, fVerbose int32) {\n    var Comm1, Comm2, Comm3 [200]byte;\n    if fUseLutLib != 0 {\n        Comm1 = fmt.Sprintf(\"\u0026st; \u0026if -C %d;       \u0026save; \u0026st; \u0026syn2; \u0026if -C %d;       \u0026save; \u0026load\", nCutNum, nCutNum);\n    } else {\n        Comm1 = fmt.Sprintf(\"\u0026st; \u0026if -C %d -K %d; \u0026save; \u0026st; \u0026syn2; \u0026if -C %d -K %d; \u0026save; \u0026load\", nCutNum, nLutSize, nCutNum, nLutSize); }\n    if fUseLutLib != 0 {\n        Comm2 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, fUseMfs ? \"\u0026mfs; \":\"\");\n    } else {\n        Comm2 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\"); }\n    if fUseLutLib != 0 {\n        Comm3 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, fUseMfs ? \"\u0026mfs; \":\"\");\n    } else {\n        Comm3 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\"); }\n\n    if fVerbose != 0 { fmt.Printf(\"Trying simple synthesis with %s...\\n\", Abc_NtkRecIsRunning3() ? \"LMS\" : \"SOP balancing\"); }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 200000 {\n        if fVerbose != 0 { fmt.Printf(\"Trying medium synthesis...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n        if fVerbose != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    }\n\n    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 10000 {\n        if fVerbose != 0 { fmt.Printf(\"Trying harder synthesis...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n        if fVerbose != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    }\n\n    if fVerbose != 0 { fmt.Printf(\"Final result...\\n\"); }\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::mechanical::sizeof::11423",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10825,
+      "End": 10825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::pointer-cast::11380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10825,
+      "End": 10825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::pointer-cast::14257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13554,
+      "End": 13568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::pointer-cast::15061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14358,
+      "End": 14371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::pointer-cast::17174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16404,
+      "End": 16404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::pointer-cast::17295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16433,
+      "End": 16433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigPrintPiLevels",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigPrintPiLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1358,
+      "End": 1543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigSyn2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigSyn2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1796,
+      "End": 4669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigSyn3",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigSyn3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4670,
+      "End": 6025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigSyn4",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigSyn4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6026,
+      "End": 7830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManOrderPios",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManOrderPios",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8137,
+      "End": 8713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManDupFromBarBufs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupFromBarBufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8949,
+      "End": 10303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManDupToBarBufs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupToBarBufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10304,
+      "End": 12109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigSynch2Choices",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigSynch2Choices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12345,
+      "End": 13295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::void-pointer::Gia_ManAigSynch2",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManAigSynch2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13296,
+      "End": 16614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::ternary::Gia_ManAigSynch2",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManAigSynch2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13296,
+      "End": 16614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManAigSynch2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAigSynch2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13296,
+      "End": 16614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::ternary::Gia_ManPerformMap",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManPerformMap",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16850,
+      "End": 18705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManPerformMap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16850,
+      "End": 18705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::ternary::Gia_ManPerformRound",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManPerformRound",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18706,
+      "End": 20876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManPerformRound",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18706,
+      "End": 20876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManPerformFlow",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20877,
+      "End": 21693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::ternary::Gia_ManPerformFlow2",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManPerformFlow2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21929,
+      "End": 26739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManPerformFlow2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformFlow2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21929,
+      "End": 26739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::ternary::Gia_ManPerformFlow3",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManPerformFlow3",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26976,
+      "End": 29181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::Gia_ManPerformFlow3",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPerformFlow3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26976,
+      "End": 29181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaScript.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29430
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaScript.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Various hardcoded scripts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaScript.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"giaAig.h\"\n//#include \"base/main/main.h\"\n//#include \"base/cmd/cmd.h\"\n//#include \"proof/dch/dch.h\"\n//#include \"opt/dau/dau.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Synthesis script.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAigPrintPiLevels(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        fmt.Printf(\"%d \", Gia_ObjLevel(p, pObj));\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Synthesis script.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo int32, fCoarsen int32, fCutMin int32, nRelaxRatio int32, fDelayMin int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var p, pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    if fOldAlgo != 0 {\n        Jf_ManSetDefaultPars( pPars );\n        pPars.fCutMin     = fCutMin;\n    \n    } else {\n        Lf_ManSetDefaultPars( pPars );\n        pPars.fCutMin     = fCutMin;\n        pPars.fCoarsen    = fCoarsen;\n        pPars.nRelaxRatio = nRelaxRatio;\n        pPars.nAreaTuner  = 1;\n        pPars.nCutNum     = 4;\n    }\n    if fVerbose != 0 {  Gia_ManPrintStats( pInit, nil ); }\n    p = Gia_ManDup( pInit );\n    Gia_ManTransferTiming( p, pInit );\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        Gia_ManStop( p );\n        return pNew;\n    }\n    // delay optimization\n    if (fDelayMin != 0) \u0026\u0026 p.pManTime == nil {\n        var Area0, Area1, Delay0, Delay1 int32;\n        var fCutMin int32  = pPars.fCutMin;\n        var fCoarsen int32  = pPars.fCoarsen;\n        var nRelaxRatio int32  = pPars.nRelaxRatio;\n        pPars.fCutMin = 0;\n        pPars.fCoarsen = 0;\n        pPars.nRelaxRatio = 0;\n        // perform mapping\n        if fOldAlgo != 0 {\n            Jf_ManPerformMapping( p, pPars );\n        } else {\n            Lf_ManPerformMapping( p, pPars ); }\n        Area0  = int32(pPars.Area);\n        Delay0 = int32(pPars.Delay);\n        // perform balancing\n        pNew = Gia_ManPerformDsdBalance( p, 6, 4, 0, 0 );\n        // perform mapping again\n        if fOldAlgo != 0 {\n            Jf_ManPerformMapping( pNew, pPars );\n        } else {\n            Lf_ManPerformMapping( pNew, pPars ); }\n        Area1  = int32(pPars.Area);\n        Delay1 = int32(pPars.Delay);\n        // choose the best result\n        if Delay1 \u003c Delay0 - 1 || (Delay1 == Delay0 + 1 \u0026\u0026 100.0 * (Area1 - Area0) / Area1 \u003c 3.0) {\n            Gia_ManStop( p );\n            p = pNew;\n        \n        } else {\n            Gia_ManStop( pNew );\n            Vec_IntFreeP( \u0026p.vMapping );\n        }\n        // reset params\n        pPars.fCutMin = fCutMin;\n        pPars.fCoarsen = fCoarsen;\n        pPars.nRelaxRatio = nRelaxRatio;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( p );\n    // perform mapping\n    if fOldAlgo != 0 {\n        pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    } else {\n        pNew = Lf_ManPerformMapping( pTemp = pNew, pPars ); }\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    if pTemp != pNew {\n        Gia_ManStop( pTemp ); }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    return pNew;\n}\nfunc Gia_ManAigSyn3(p *Gia_Man_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars.nRelaxRatio = 40;\n    if fVerbose != 0 {     Gia_ManPrintStats( p, nil ); }\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    // perform mapping\n    pPars.nLutSize = 6;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars.nLutSize = 4;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    return pNew;\n}\nfunc Gia_ManAigSyn4(p *Gia_Man_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Jf_ManSetDefaultPars( pPars );\n    pPars.nRelaxRatio = 40;\n    if fVerbose != 0 {     Gia_ManPrintStats( p, nil ); }\n    if Gia_ManAndNum(p) == 0 {\n        pNew = Gia_ManDup(p);\n        Gia_ManTransferTiming( pNew, p );\n        //Gia_ManStop( p );\n        return pNew;\n    }\n//Gia_ManAigPrintPiLevels( p );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( p, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    // perform mapping\n    pPars.nLutSize = 7;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform mapping\n    pPars.nLutSize = 5;\n    pNew = Jf_ManPerformMapping( pTemp = pNew, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n//    Gia_ManStop( pTemp );\n    // perform extraction\n    pNew = Gia_ManPerformFx( pTemp = pNew, ABC_INFINITY, 0, 0, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n    // perform balancing\n    pNew = Gia_ManAreaBalance( pTemp = pNew, 0, ABC_INFINITY, fVeryVerbose, 0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    Gia_ManStop( pTemp );\n//Gia_ManAigPrintPiLevels( pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG manager.]\n\n  Description [This duplicator works for AIGs with choices.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManOrderPios(p *Aig_Man_t, pOrder *Gia_Man_t) *Vec_Ptr_t {\n    var vPios *Vec_Ptr_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Aig_ManCiNum(p) == Gia_ManCiNum(pOrder), \"Aig_ManCiNum(p) == Gia_ManCiNum(pOrder)\");\n    assert(Aig_ManCoNum(p) == Gia_ManCoNum(pOrder), \"Aig_ManCoNum(p) == Gia_ManCoNum(pOrder)\");\n    vPios = Vec_PtrAlloc( Aig_ManCiNum(p) + Aig_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pOrder.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOrder, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            Vec_PtrPush( vPios, Aig_ManCi(p, Gia_ObjCioId(pObj)) );\n        } else if Gia_ObjIsCo(pObj) {\n            Vec_PtrPush( vPios, Aig_ManCo(p, Gia_ObjCioId(pObj)) ); }\n    }\n    return vPios;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupFromBarBufs(p *Gia_Man_t) *Gia_Man_t {\n    var vBufObjs *Vec_Int_t;\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, k int32;\n    assert(Gia_ManBufNum(p) \u003e 0, \"Gia_ManBufNum(p) \u003e 0\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(!Gia_ManHasChoices(p), \"!Gia_ManHasChoices(p)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    vBufObjs = Vec_IntAlloc( Gia_ManBufNum(p) );\n    for  i = 0; i \u003c Gia_ManBufNum(p); i++  {\n        Vec_IntPush( vBufObjs, Gia_ManAppendCi(pNew) );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Vec_IntEntry( vBufObjs, k );\n            Vec_IntWriteEntry( vBufObjs, k++, Gia_ObjFanin0Copy(pObj) );\n        \n        } else { \n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    }\n    assert(k == Gia_ManBufNum(p), \"k == Gia_ManBufNum(p)\");\n    for  i = 0; i \u003c Gia_ManBufNum(p); i++  {\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vBufObjs, i) );\n    }\n    Vec_IntFree( vBufObjs );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}\nfunc Gia_ManDupToBarBufs(p *Gia_Man_t, nBarBufs int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var nPiReal int32  = Gia_ManCiNum(p) - nBarBufs;\n    var nPoReal int32  = Gia_ManCoNum(p) - nBarBufs;\n    var i, k int32;\n    assert(Gia_ManBufNum(p) == 0, \"Gia_ManBufNum(p) == 0\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    assert(Gia_ManHasChoices(p), \"Gia_ManHasChoices(p)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    if Gia_ManHasChoices(p) {\n        // inlining of macro ABC_CALLOC\n        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    for  i = 0; i \u003c nPiReal; i++  {\n        Gia_ManCi(p, i).Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        for  ; k \u003c nBarBufs; k++  {\n            if ~Gia_ObjFanin0(Gia_ManCo(p, k)).Value {\n                Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) );\n            } else {\n                break; }\n        }\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {\n            pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }  \n    }\n    }\n    for  ; k \u003c nBarBufs; k++  {\n        if ~Gia_ObjFanin0Copy(Gia_ManCo(p, k)) {\n            Gia_ManCi(p, nPiReal + k).Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, k)) ); }\n    }\n    assert(k == nBarBufs, \"k == nBarBufs\");\n    for  i = 0; i \u003c nPoReal; i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(Gia_ManCo(p, nBarBufs+i)) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    assert(Gia_ManBufNum(pNew) == nBarBufs, \"Gia_ManBufNum(pNew) == nBarBufs\");\n    assert(Gia_ManCiNum(pNew) == nPiReal, \"Gia_ManCiNum(pNew) == nPiReal\");\n    assert(Gia_ManCoNum(pNew) == nPoReal, \"Gia_ManCoNum(pNew) == nPoReal\");\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAigSynch2Choices(pGia1 *Gia_Man_t, pGia2 *Gia_Man_t, pGia3 *Gia_Man_t, pPars *Dch_Pars_t) *Gia_Man_t {\n    var pMan, pTemp *Aig_Man_t;\n    var pGia, pMiter *Gia_Man_t;\n    // derive miter\n    var vPios *Vec_Ptr_t;\n    var vGias *Vec_Ptr_t = Vec_PtrAlloc( 3 );\n    if pGia3 != nil { Vec_PtrPush( vGias, pGia3 ); }\n    if pGia2 != nil { Vec_PtrPush( vGias, pGia2 ); }\n    if pGia1 != nil { Vec_PtrPush( vGias, pGia1 ); }\n    pMiter = Gia_ManChoiceMiter( vGias );\n    Vec_PtrFree( vGias );\n    // transform into an AIG\n    pMan = Gia_ManToAigSkip( pMiter, 3 );\n    Gia_ManStop( pMiter );\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n    // reconstruct the network\n    vPios = Gia_ManOrderPios( pMan, pGia1 ); \n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n    // convert to GIA\n    pGia = Gia_ManFromAigChoices( pMan );\n    Aig_ManStop( pMan );\n    return pGia;\n}\nfunc Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio int32) *Gia_Man_t {\n    extern Gia_Man_t * Gia_ManLutBalance( Gia_Man_t * p, int nLutSize, int fUseMuxes, int fRecursive, int fOptArea, int fVerbose );\n    var pParsDch *Dch_Pars_t  = (Dch_Pars_t *)pPars0;\n    var pGia1, pGia2, pGia3, pNew, pTemp *Gia_Man_t;\n    var fVerbose int32  = pParsDch.fVerbose;\n    var Pars Jf_Par_t;\n    var pPars *Jf_Par_t = \u0026Pars;\n    Lf_ManSetDefaultPars( pPars );\n    pPars.fCutMin     = 1;\n    pPars.fCoarsen    = 1;\n    pPars.nRelaxRatio = nRelaxRatio;\n    pPars.nAreaTuner  = 5;\n    pPars.nCutNum     = 12;\n    pPars.fVerbose    = fVerbose;\n    if fVerbose != 0 {  Gia_ManPrintStats( pInit, nil ); }\n    pGia1 = Gia_ManDup( pInit );\n    if Gia_ManAndNum(pGia1) == 0 {\n        Gia_ManTransferTiming( pGia1, pInit );\n        return pGia1;\n    }\n    if pGia1.pManTime \u0026\u0026 pGia1.vLevels == nil {\n        Gia_ManLevelWithBoxes( pGia1 ); }\n    // unmap if mapped\n    if Gia_ManHasMapping(pInit) {\n        Gia_ManTransferMapping( pGia1, pInit );\n        pGia1 = (Gia_Man_t *)Dsm_ManDeriveGia( pTemp = pGia1, 0 );\n        Gia_ManStop( pTemp );\n    }\n    // perform balancing\n    if Gia_ManBufNum(pGia1) || true {\n        pGia2 = Gia_ManAreaBalance( pGia1, 0, ABC_INFINITY, 0, 0 );\n    } else {\n        pGia2 = Gia_ManLutBalance( pGia1, nLutSize, 1, 1, 1, 0 );\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        Gia_ManStop( pTemp );\n    }\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n    // perform mapping\n    pGia2 = Lf_ManPerformMapping( pTemp = pGia2, pPars );\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n    if pTemp != pGia2 {\n        Gia_ManStop( pTemp ); }\n    // perform balancing\n    if pParsDch.fLightSynth || Gia_ManBufNum(pGia2) {\n        pGia3 = Gia_ManAreaBalance( pGia2, 0, ABC_INFINITY, 0, 0 );\n    } else {\n        assert(Gia_ManBufNum(pGia2) == 0, \"Gia_ManBufNum(pGia2) == 0\");\n        pGia2 = Gia_ManAreaBalance( pTemp = pGia2, 0, ABC_INFINITY, 0, 0 );\n        if fVerbose != 0 {     Gia_ManPrintStats( pGia2, nil ); }\n        Gia_ManStop( pTemp );\n        // perform DSD balancing\n        pGia3 = Gia_ManPerformDsdBalance( pGia2, 6, 8, 0, 0 );\n    }\n    if fVerbose != 0 {     Gia_ManPrintStats( pGia3, nil ); }\n    // perform choice computation\n    if Gia_ManBufNum(pInit) {\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia1)\");\n        pGia1 = Gia_ManDupFromBarBufs( pTemp = pGia1 );\n        Gia_ManStop( pTemp );\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia2)\");\n        pGia2 = Gia_ManDupFromBarBufs( pTemp = pGia2 );\n        Gia_ManStop( pTemp );\n        assert(Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3), \"Gia_ManBufNum(pInit) == Gia_ManBufNum(pGia3)\");\n        pGia3 = Gia_ManDupFromBarBufs( pTemp = pGia3 );\n        Gia_ManStop( pTemp );\n    }\n    pNew = Gia_ManAigSynch2Choices( pGia1, pGia2, pGia3, pParsDch );\n    Gia_ManStop( pGia1 );\n    Gia_ManStop( pGia2 );\n    Gia_ManStop( pGia3 );\n    if Gia_ManBufNum(pInit) {\n        pNew = Gia_ManDupToBarBufs( pTemp = pNew, Gia_ManBufNum(pInit) );\n        Gia_ManStop( pTemp );\n    }\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pNew.pSpec) ? (free((char *) (pNew.pSpec)), (pNew.pSpec) = 0) : 0);\n    pNew.pName = Abc_UtilStrsav(pInit.pName);\n    pNew.pSpec = Abc_UtilStrsav(pInit.pSpec);\n    Gia_ManTransferTiming( pNew, pInit );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformMap(nAnds int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Command string // was [200]byte in C\n\n    Command = fmt.Sprintf(\"\u0026unmap; \u0026lf -K %d -C %d -k %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n//    sprintf( Command, \"\u0026unmap; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if fVerbose != 0 {\n        fmt.Printf(\"MAPPING:\\n\");\n        fmt.Printf(\"Mapping with \u0026lf -k:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    Command = fmt.Sprintf(\"\u0026unmap; \u0026lf -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n    if fVerbose != 0 {\n        fmt.Printf(\"Mapping with \u0026lf:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n    if (nLutSize == 4 \u0026\u0026 nAnds \u003c 100000) || (nLutSize == 6 \u0026\u0026 nAnds \u003c 2000) {\n        Command = fmt.Sprintf(\"\u0026unmap; \u0026if -sz -S %d%d -K %d -C %d %s\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        Vec_IntFreeP( \u0026Abc_FrameReadGia(Abc_FrameGetGlobalFrame()).vPacking );\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026save\" );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026if -sz -S %d%d -K %d -C %d %s:\\n\", nLutSize, nLutSize, 2*nLutSize-1, 2*nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n    }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fUseMfs != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m\" ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"Mapping final:\\n\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n    }\n}\nfunc Gia_ManPerformRound(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Command string // was [200]byte in C\n\n\n    // perform AIG-based synthesis\n    if nAnds \u003c 50000 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        Command = fmt.Sprintf(\"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform AIG-based synthesis\n    if nAnds \u003c 20000 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\" );\n        Command = fmt.Sprintf(\"\u0026dsdb; \u0026dch -C 500; \u0026if -K %d -C %d %s; \u0026save\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n        if fVerbose != 0 {\n            fmt.Printf(\"Mapping with \u0026dch -C 500; \u0026if -K %d -C %d %s:\\n\", nLutSize, nCutNum, fMinAve?\"-t\":\"\");\n            Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" );\n        }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    }\n\n    // perform first round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026dsdb\" );\n\n    // perform second round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026syn2 -m -R 10; \u0026dsdb\" );\n\n    // prepare for final mapping\n    Command = fmt.Sprintf(\"\u0026blut -a -K %d\", nLutSize);\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Command );\n\n    // perform third round of mapping\n    Gia_ManPerformMap( nAnds, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}\nfunc Gia_ManPerformFlow(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    // remove comb equivs\n    if fIsMapped != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" ); }\n//    if ( Abc_FrameReadGia(Abc_FrameGetGlobalFrame())-\u003epManTime )\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026sweep\" );\n//    else\n//        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026fraig -c\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb\" );\n\n    // perform first round\n    Gia_ManPerformRound( fIsMapped, nAnds, nLevels, nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformFlow2(fIsMapped int32, nAnds int32, nLevels int32, nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fVerbose int32) {\n    var Comm1, Comm2, Comm3, Comm4 [1000]byte;\n    if nLutSize == 0 {\n        Comm1 = fmt.Sprintf(\"\u0026synch2 -K 6 -C 500;  \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm2 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026if -m%s       -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm3 = fmt.Sprintf(\"\u0026synch2 -K 6 -C 500;  \u0026lf -m%s  -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm4 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n    \n    } else {\n        Comm1 = fmt.Sprintf(\"\u0026synch2 -K %d -C 500; \u0026if -m%s       -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm2 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026if -m%s       -K %d -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm3 = fmt.Sprintf(\"\u0026synch2 -K %d -C 500; \u0026lf -m%s  -E 5 -K %d -C %d; %s \u0026save\", nLutSize, fMinAve?\"t\":\"\", nLutSize, nCutNum, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n        Comm4 = fmt.Sprintf(\"\u0026dch -C 500;          \u0026lf -m%sk -E 5 -K %d -C %d; %s \u0026save\", fMinAve?\"t\":\"\", nLutSize, nCutNum+4, fUseMfs ? \"\u0026put; mfs2 -W 4 -M 500 -C 7000; \u0026get -m;\":\"\");\n    }\n\n    // perform synthesis\n    if fVerbose != 0 {\n        fmt.Printf(\"Trying synthesis...\\n\"); }\n    if fIsMapped != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" ); }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10 -C 4\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    if nAnds \u003e 100000 {\n        return; }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    if nAnds \u003e 50000 {\n        return; }\n\n\n    // perform balancing\n    if fBalance != 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"Trying SOP balancing...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st; \u0026sopb -R 10\" );\n    }\n\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // perform synthesis\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026st\" );\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    // return the result\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026load\" );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPerformFlow3(nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fUseLutLib int32, fVerbose int32) {\n    var Comm1, Comm2, Comm3 [200]byte;\n    if fUseLutLib != 0 {\n        Comm1 = fmt.Sprintf(\"\u0026st; \u0026if -C %d;       \u0026save; \u0026st; \u0026syn2; \u0026if -C %d;       \u0026save; \u0026load\", nCutNum, nCutNum);\n    } else {\n        Comm1 = fmt.Sprintf(\"\u0026st; \u0026if -C %d -K %d; \u0026save; \u0026st; \u0026syn2; \u0026if -C %d -K %d; \u0026save; \u0026load\", nCutNum, nLutSize, nCutNum, nLutSize); }\n    if fUseLutLib != 0 {\n        Comm2 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, fUseMfs ? \"\u0026mfs; \":\"\");\n    } else {\n        Comm2 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026dch -f; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\"); }\n    if fUseLutLib != 0 {\n        Comm3 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d;       %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, fUseMfs ? \"\u0026mfs; \":\"\");\n    } else {\n        Comm3 = fmt.Sprintf(\"\u0026st; \u0026if -%s -K 6; \u0026synch2; \u0026if -C %d -K %d; %s\u0026save; \u0026load\", Abc_NtkRecIsRunning3() ? \"y\" : \"g\", nCutNum, nLutSize, fUseMfs ? \"\u0026mfs; \":\"\"); }\n\n    if fVerbose != 0 { fmt.Printf(\"Trying simple synthesis with %s...\\n\", Abc_NtkRecIsRunning3() ? \"LMS\" : \"SOP balancing\"); }\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n\n    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 200000 {\n        if fVerbose != 0 { fmt.Printf(\"Trying medium synthesis...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );\n        if fVerbose != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    }\n\n    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) \u003c 10000 {\n        if fVerbose != 0 { fmt.Printf(\"Trying harder synthesis...\\n\"); }\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );\n        if fVerbose != 0 {\n        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n    }\n\n    if fVerbose != 0 { fmt.Printf(\"Final result...\\n\"); }\n    if fVerbose != 0 {\n    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), \"\u0026ps\" ); }\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

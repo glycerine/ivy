@@ -1,0 +1,1434 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c",
+  "SHA256": "54310a944a8db2623a90e27843f649dae7d2041c937e69ae234436d5abbcb83c",
+  "Library": [
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 63,
+        "Column": 8,
+        "ByteOffset": 2419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pAfter, pBefore, Kit_TruthWordNum_64bit( nVars )*sizeof(word)) == 0 {"
+    },
+    {
+      "Name": "abs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 74,
+        "Column": 74,
+        "ByteOffset": 3026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *pCanonPhase = adjustInfoAfterSwap(pCanonPerm, *pCanonPhase, iVar, ((abs(iQ-jQ)-1)\u003c\u003c2) + iQ );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 4262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 4299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( jQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 4336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( kQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 4373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( lQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 4410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 3*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 5723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 3*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 6604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 2*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 7530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( jQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 8347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( jQ*blockSize \u003c 64 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 12288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-iQ, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 269,
+        "Column": 9,
+        "ByteOffset": 12367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-jQ, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 12446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-kQ, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 12525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-lQ, (size_t)blockSize);        "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 12595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pInOut, temp, start*sizeof(unsigned));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 421,
+        "Column": 9,
+        "ByteOffset": 18503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-iQ*wordBlock, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 18600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-jQ*wordBlock, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 18697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-kQ*wordBlock, (size_t)blockSize);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 18794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(tempPtr, pInOut+i-lQ*wordBlock, (size_t)blockSize);      "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 429,
+        "Column": 5,
+        "ByteOffset": 18872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pInOut, temp, start*sizeof(word));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 606,
+        "Column": 5,
+        "ByteOffset": 26193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pDuplicate,pInOut,nWords*sizeof(word));"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 631,
+        "Column": 8,
+        "ByteOffset": 27081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 641,
+        "Column": 5,
+        "ByteOffset": 27437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(pDuplicate,pInOut,nWords*sizeof(word));"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 663,
+        "Column": 8,
+        "ByteOffset": 28226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 694,
+        "Column": 9,
+        "ByteOffset": 29419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(duplicate, pInOut, sizeof(word)*nWords);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: source must be a known byte array/slice.",
+      "Location": {
+        "Line": 698,
+        "Column": 9,
+        "ByteOffset": 29596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 703,
+        "Column": 13,
+        "ByteOffset": 29956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 704,
+        "Column": 13,
+        "ByteOffset": 30016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(pInOut, duplicate, sizeof(word)*nWords);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 713,
+        "Column": 5,
+        "ByteOffset": 30342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 6 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 727,
+        "Column": 5,
+        "ByteOffset": 30868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 6 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 755,
+        "Column": 14,
+        "ByteOffset": 32149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 771,
+        "Column": 14,
+        "ByteOffset": 32817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 823,
+        "Column": 1,
+        "ByteOffset": 31238
+      },
+      "Directive": "#ifdef LUCKY_VERIFY"
+    },
+    {
+      "Location": {
+        "Line": 836,
+        "Column": 1,
+        "ByteOffset": 31721
+      },
+      "Directive": "#ifdef LUCKY_VERIFY"
+    },
+    {
+      "Location": {
+        "Line": 848,
+        "Column": 1,
+        "ByteOffset": 32056
+      },
+      "Directive": "#ifdef LUCKY_VERIFY"
+    },
+    {
+      "Location": {
+        "Line": 861,
+        "Column": 1,
+        "ByteOffset": 32520
+      },
+      "Directive": "#ifdef LUCKY_VERIFY"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "swapAndFlip",
+      "Start": 1266,
+      "End": 1889,
+      "BodyStart": 1381,
+      "Original": "void swapAndFlip(word* pAfter, int nVars, int iVarInPosition, int jVar, char * pCanonPerm, unsigned* pUCanonPhase)\n{\n    int Temp;\n    swap_ij(pAfter, nVars, iVarInPosition, jVar);\n    \n    Temp = pCanonPerm[iVarInPosition];\n    pCanonPerm[iVarInPosition] = pCanonPerm[jVar];\n    pCanonPerm[jVar] = Temp;\n    \n    if ( ((*pUCanonPhase \u0026 (1 \u003c\u003c iVarInPosition)) \u003e 0) != ((*pUCanonPhase \u0026 (1 \u003c\u003c jVar)) \u003e 0) )\n    {\n        *pUCanonPhase ^= (1 \u003c\u003c iVarInPosition);\n        *pUCanonPhase ^= (1 \u003c\u003c jVar);\n    }\n    if((*pUCanonPhase\u003e\u003eiVarInPosition) \u0026 1)\n        Kit_TruthChangePhase_64bit( pAfter, nVars, iVarInPosition );\n    \n}",
+      "Draft": "func swapAndFlip(pAfter *word, nVars int32, iVarInPosition int32, jVar int32, pCanonPerm string, pUCanonPhase *uint32) {\n    var Temp int32;\n    swap_ij(pAfter, nVars, iVarInPosition, jVar);\n    \n    Temp = pCanonPerm[iVarInPosition];\n    pCanonPerm[iVarInPosition] = pCanonPerm[jVar];\n    pCanonPerm[jVar] = Temp;\n    \n    if ((*pUCanonPhase \u0026 (1 \u003c\u003c iVarInPosition)) \u003e 0) != ((*pUCanonPhase \u0026 (1 \u003c\u003c jVar)) \u003e 0) {\n        *pUCanonPhase ^= (1 \u003c\u003c iVarInPosition);\n        *pUCanonPhase ^= (1 \u003c\u003c jVar);\n    }\n    if (*pUCanonPhase\u003e\u003eiVarInPosition) \u0026 1 {\n        Kit_TruthChangePhase_64bit( pAfter, nVars, iVarInPosition ); }\n    \n}"
+    },
+    {
+      "Name": "luckyCheck",
+      "Start": 1890,
+      "End": 2499,
+      "BodyStart": 1986,
+      "Original": "int luckyCheck(word* pAfter, word* pBefore, int nVars, char * pCanonPerm, unsigned uCanonPhase)\n{\n    int i,j;\n    char tempChar;\n    for(j=0;j\u003cnVars;j++)\n    {\n        tempChar = 'a'+ j;\n        for(i=j;i\u003cnVars;i++)\n        {\n            if(tempChar != pCanonPerm[i])\n                continue;\n            swapAndFlip(pAfter , nVars, j, i, pCanonPerm, \u0026uCanonPhase);\n            break;\n        }\n    }\n    if((uCanonPhase\u003e\u003enVars) \u0026 1)\n        Kit_TruthNot_64bit(pAfter, nVars );\n    if(memcmp(pAfter, pBefore, Kit_TruthWordNum_64bit( nVars )*sizeof(word)) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func luckyCheck(pAfter *word, pBefore *word, nVars int32, pCanonPerm string, uCanonPhase uint32) int32 {\n    var i, j int32;\n    var tempChar byte;\n    for j=0;j\u003cnVars;j++ {\n        tempChar = 'a'+ j;\n        for i=j;i\u003cnVars;i++ {\n            if tempChar != pCanonPerm[i] {\n                continue; }\n            swapAndFlip(pAfter , nVars, j, i, pCanonPerm, \u0026uCanonPhase);\n            break;\n        }\n    }\n    if (uCanonPhase\u003e\u003enVars) \u0026 1 {\n        Kit_TruthNot_64bit(pAfter, nVars ); }\n    if memcmp(pAfter, pBefore, Kit_TruthWordNum_64bit( nVars )*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "updataInfo",
+      "Start": 2814,
+      "End": 3002,
+      "BodyStart": 2899,
+      "Original": "void updataInfo(int iQ, int jQ, int iVar,  char * pCanonPerm, unsigned* pCanonPhase)\n{\n    *pCanonPhase = adjustInfoAfterSwap(pCanonPerm, *pCanonPhase, iVar, ((abs(iQ-jQ)-1)\u003c\u003c2) + iQ );\n\n}",
+      "Draft": "func updataInfo(iQ int32, jQ int32, iVar int32, pCanonPerm string, pCanonPhase *uint32) {\n    *pCanonPhase = adjustInfoAfterSwap(pCanonPerm, *pCanonPhase, iVar, ((abs(iQ-jQ)-1)\u003c\u003c2) + iQ );\n\n}"
+    },
+    {
+      "Name": "firstShiftWithOneBit",
+      "Start": 3106,
+      "End": 3656,
+      "BodyStart": 3154,
+      "Original": "int firstShiftWithOneBit(word x, int blockSize)\n{\n    int n = 0;\n    if(blockSize == 16){ return 0;}     \n    if (x \u003e= ABC_CONST(0x0000000100000000)) {n = n + 32; x = x \u003e\u003e 32;} \n    if(blockSize == 8){ return (64-n)/32;}  \n    if (x \u003e= ABC_CONST(0x0000000000010000)) {n = n + 16; x = x \u003e\u003e 16;} \n    if(blockSize == 4){ return (64-n)/16;}\n    if (x \u003e= ABC_CONST(0x0000000000000100)) {n = n + 8; x = x \u003e\u003e 8;}\n    if(blockSize == 2){ return (64-n)/8;}\n    if (x \u003e= ABC_CONST(0x0000000000000010)) {n = n + 4; x = x \u003e\u003e 4;} \n    return (64-n)/4;    \n    \n}",
+      "Draft": "func firstShiftWithOneBit(x word, blockSize int32) int32 {\n    var n int32;\n    if blockSize == 16{ return 0;}     \n    if x \u003e= ABC_CONST(0x0000000100000000) {n = n + 32; x = x \u003e\u003e 32;} \n    if blockSize == 8{ return (64-n)/32;}  \n    if x \u003e= ABC_CONST(0x0000000000010000) {n = n + 16; x = x \u003e\u003e 16;} \n    if blockSize == 4{ return (64-n)/16;}\n    if x \u003e= ABC_CONST(0x0000000000000100) {n = n + 8; x = x \u003e\u003e 8;}\n    if blockSize == 2{ return (64-n)/8;}\n    if x \u003e= ABC_CONST(0x0000000000000010) {n = n + 4; x = x \u003e\u003e 4;} \n    return (64-n)/4;    \n    \n}"
+    },
+    {
+      "Name": "arrangeQuoters_superFast_lessThen5",
+      "Start": 3762,
+      "End": 4782,
+      "BodyStart": 3923,
+      "Original": "void arrangeQuoters_superFast_lessThen5(word* pInOut, int start, int iQ, int jQ, int kQ, int lQ, int iVar, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int i, blockSize = 1\u003c\u003ciVar;\n//     printf(\"in arrangeQuoters_superFast_lessThen5\\n\");\n//     printf(\"start = %d, iQ = %d,jQ = %d,kQ = %d,lQ = %d, iVar = %d, nWords = %d\\n\", start, iQ, jQ, kQ , lQ, iVar, nWords);\n    for(i=start;i\u003e=0;i--)\n    {   \n        assert( iQ*blockSize \u003c 64 );\n        assert( jQ*blockSize \u003c 64 );\n        assert( kQ*blockSize \u003c 64 );\n        assert( lQ*blockSize \u003c 64 );\n        assert( 3*blockSize \u003c 64 );\n        pInOut[i] = (pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize))\u003e\u003eblockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][kQ])\u003c\u003c(kQ*blockSize))\u003e\u003e2*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][lQ])\u003c\u003c(lQ*blockSize))\u003e\u003e3*blockSize);\n    }\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//     printf(\"out arrangeQuoters_superFast_lessThen5\\n\");\n\n}",
+      "Draft": "func arrangeQuoters_superFast_lessThen5(pInOut *word, start int32, iQ int32, jQ int32, kQ int32, lQ int32, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n//     printf(\"in arrangeQuoters_superFast_lessThen5\\n\");\n//     printf(\"start = %d, iQ = %d,jQ = %d,kQ = %d,lQ = %d, iVar = %d, nWords = %d\\n\", start, iQ, jQ, kQ , lQ, iVar, nWords);\n    for i=start;i\u003e=0;i-- {   \n        assert(iQ*blockSize \u003c 64, \"iQ*blockSize \u003c 64\");\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        assert(kQ*blockSize \u003c 64, \"kQ*blockSize \u003c 64\");\n        assert(lQ*blockSize \u003c 64, \"lQ*blockSize \u003c 64\");\n        assert(3*blockSize \u003c 64, \"3*blockSize \u003c 64\");\n        pInOut[i] = (pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize))\u003e\u003eblockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][kQ])\u003c\u003c(kQ*blockSize))\u003e\u003e2*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][lQ])\u003c\u003c(lQ*blockSize))\u003e\u003e3*blockSize);\n    }\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//     printf(\"out arrangeQuoters_superFast_lessThen5\\n\");\n\n}"
+    },
+    {
+      "Name": "minTemp0_fast",
+      "Start": 5447,
+      "End": 6101,
+      "BodyStart": 5517,
+      "Original": "int minTemp0_fast(word* pInOut, int iVar, int nWords, int* pDifStart)\n{\n    int i, blockSize = 1\u003c\u003ciVar;\n    word temp;\n    for(i=nWords - 1; i\u003e=0; i--)\n    {\n        assert( 3*blockSize \u003c 64 );\n        temp = ((pInOut[i] \u0026 SFmask[iVar][0])) ^ ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize));\n        if( temp == 0)\n            continue;\n        else\n        {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if( ((pInOut[i] \u0026 SFmask[iVar][0])) \u003c ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize)) )\n                return 0;\n            else\n                return 3;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n\n}",
+      "Draft": "func minTemp0_fast(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(3*blockSize \u003c 64, \"3*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][0])) ^ ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][0])) \u003c ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize)) {\n                return 0;\n            } else {\n                return 3; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n\n}"
+    },
+    {
+      "Name": "minTemp1_fast",
+      "Start": 6297,
+      "End": 6976,
+      "BodyStart": 6367,
+      "Original": "int minTemp1_fast(word* pInOut, int iVar, int nWords, int* pDifStart)\n{\n    int i, blockSize = 1\u003c\u003ciVar;\n    word temp;\n    for(i=nWords - 1; i\u003e=0; i--)\n    {\n        assert( 2*blockSize \u003c 64 );\n        temp = ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize));\n        if( temp == 0)\n            continue;\n        else\n        {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if( ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) \u003c ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize)) )\n                return 1;\n            else\n                return 2;\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}",
+      "Draft": "func minTemp1_fast(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(2*blockSize \u003c 64, \"2*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) \u003c ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize)) {\n                return 1;\n            } else {\n                return 2; }\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}"
+    },
+    {
+      "Name": "minTemp2_fast",
+      "Start": 7172,
+      "End": 7881,
+      "BodyStart": 7258,
+      "Original": "int minTemp2_fast(word* pInOut, int iVar, int iQ, int jQ, int nWords, int* pDifStart)\n{\n    int i, blockSize = 1\u003c\u003ciVar;\n    word temp;\n    for(i=nWords - 1; i\u003e=0; i--)\n    {\n        assert( jQ*blockSize \u003c 64 );\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if( temp == 0)\n            continue;\n        else\n        {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if( ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) )\n                return 0;\n            else\n                return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}",
+      "Draft": "func minTemp2_fast(pInOut *word, iVar int32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) {\n                return 0;\n            } else {\n                return 1; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}"
+    },
+    {
+      "Name": "minTemp3_fast",
+      "Start": 7941,
+      "End": 8661,
+      "BodyStart": 8038,
+      "Original": "int minTemp3_fast(word* pInOut, int iVar, int start, int finish, int iQ, int jQ, int* pDifStart)\n{\n    int i, blockSize = 1\u003c\u003ciVar;\n    word temp;\n    for(i=start; i\u003e=finish; i--)\n    {\n        assert( jQ*blockSize \u003c 64 );\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if( temp == 0)\n            continue;\n        else\n        {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if( ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) )\n                return 0;\n            else\n                return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}",
+      "Draft": "func minTemp3_fast(pInOut *word, iVar int32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=start; i\u003e=finish; i-- {\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) {\n                return 0;\n            } else {\n                return 1; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_lessThen5",
+      "Start": 8772,
+      "End": 10996,
+      "BodyStart": 8898,
+      "Original": "void minimalSwapAndFlipIVar_superFast_lessThen5(word* pInOut, int iVar, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int min1, min2, DifStart0, DifStart1, DifStartMin, DifStart4=0;\n    int M[2];   \n    M[0] = minTemp0_fast(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n//     printf(\"\\nDifStart0 = %d, DifStart1 = %d, DifStartMin = %d\\n\",DifStart0, DifStart1, DifStartMin);\n//     printf(\"M[0] = %d, M[1] = %d, min1 = %d\\n\", M[0], M[1], min1);\n    if(DifStart0 != DifStart1)\n    {\n//         printf(\"if\\n\");\n        if( DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 )\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        else if( DifStart0 \u003e DifStart1)\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart0/100), M[0], M[1], 3 - M[1], 3 - M[0], iVar, nWords, pCanonPerm, pCanonPhase);\n        else\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart1/100), M[1], M[0], 3 - M[0], 3 - M[1], iVar, nWords, pCanonPerm, pCanonPhase);\n    }\n    else\n    {\n//         printf(\"else\\n\");\n        if(DifStartMin\u003e=DifStart0)\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        else\n        {\n            min2 = minTemp3_fast(pInOut, iVar, DifStart0/100, DifStartMin/100, 3-M[0], 3-M[1], \u0026DifStart4);  // no reuse DifStart1 because DifStart1 = DifStart1=0\n//             printf(\"after minTemp3_fast min2 = %d, DifStart4 = %d\\n\", min2, DifStart4);\n            if(DifStart4\u003eDifStartMin)\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, nWords, pCanonPerm, pCanonPhase);\n            else\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        }\n    }\n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_lessThen5(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin, DifStart4 int32;\n    var M [2]int32;   \n    M[0] = minTemp0_fast(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n//     printf(\"\\nDifStart0 = %d, DifStart1 = %d, DifStartMin = %d\\n\",DifStart0, DifStart1, DifStartMin);\n//     printf(\"M[0] = %d, M[1] = %d, min1 = %d\\n\", M[0], M[1], min1);\n    if DifStart0 != DifStart1 {\n//         printf(\"if\\n\");\n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart0/100), M[0], M[1], 3 - M[1], 3 - M[0], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart1/100), M[1], M[0], 3 - M[0], 3 - M[1], iVar, nWords, pCanonPerm, pCanonPhase); }\n    \n    } else {\n//         printf(\"else\\n\");\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast(pInOut, iVar, DifStart0/100, DifStartMin/100, 3-M[0], 3-M[1], \u0026DifStart4);  // no reuse DifStart1 because DifStart1 = DifStart1=0\n//             printf(\"after minTemp3_fast min2 = %d, DifStart4 = %d\\n\", min2, DifStart4);\n            if DifStart4\u003eDifStartMin {\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, nWords, pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC",
+      "Start": 10998,
+      "End": 11333,
+      "BodyStart": 11131,
+      "Original": "void minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(word* pInOut, int iVar, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int DifStart1;\n    if(minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1) == 2)\n        arrangeQuoters_superFast_lessThen5(pInOut, DifStart1/100, 0, 2, 1, 3, iVar, nWords, pCanonPerm, pCanonPhase); \n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    if minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_lessThen5(pInOut, DifStart1/100, 0, 2, 1, 3, iVar, nWords, pCanonPerm, pCanonPhase); } \n}"
+    },
+    {
+      "Name": "arrangeQuoters_superFast_iVar5",
+      "Start": 11577,
+      "End": 12446,
+      "BodyStart": 11733,
+      "Original": "void arrangeQuoters_superFast_iVar5(unsigned* pInOut, unsigned* temp, int start,  int iQ, int jQ, int kQ, int lQ, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int i,blockSize,shiftSize;\n    unsigned* tempPtr = temp+start;\n//     printf(\"in arrangeQuoters_superFast_iVar5\\n\");\n\n    if(iQ == 0 \u0026\u0026 jQ == 1)\n        return; \n    blockSize = sizeof(unsigned);\n    shiftSize = 4;\n    for(i=start-1;i\u003e0;i-=shiftSize)\n    {       \n        tempPtr -= 1;       \n        memcpy(tempPtr, pInOut+i-iQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-jQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-kQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-lQ, (size_t)blockSize);        \n    }   \n    memcpy(pInOut, temp, start*sizeof(unsigned));\n    updataInfo(iQ, jQ, 5, pCanonPerm, pCanonPhase);\n}",
+      "Draft": "func arrangeQuoters_superFast_iVar5(pInOut *uint32, temp *uint32, start int32, iQ int32, jQ int32, kQ int32, lQ int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i, blockSize, shiftSize int32;\n    var tempPtr *uint32  = temp+start;\n//     printf(\"in arrangeQuoters_superFast_iVar5\\n\");\n\n    if iQ == 0 \u0026\u0026 jQ == 1 {\n        return; } \n    blockSize = sizeof(unsigned);\n    shiftSize = 4;\n    for i=start-1;i\u003e0;i-=shiftSize {       \n        tempPtr -= 1;       \n        memcpy(tempPtr, pInOut+i-iQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-jQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-kQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-lQ, (size_t)blockSize);        \n    }   \n    memcpy(pInOut, temp, start*sizeof(unsigned));\n    updataInfo(iQ, jQ, 5, pCanonPerm, pCanonPhase);\n}"
+    },
+    {
+      "Name": "minTemp0_fast_iVar5",
+      "Start": 12642,
+      "End": 13141,
+      "BodyStart": 12712,
+      "Original": "int minTemp0_fast_iVar5(unsigned* pInOut, int nWords, int* pDifStart)\n{\n    int i, temp;\n//     printf(\"in minTemp0_fast_iVar5\\n\");\n    for(i=(nWords)*2 - 1; i\u003e=0; i-=4)   \n    {\n        temp = CompareWords(pInOut[i],pInOut[i-3]);\n        if(temp == 0)\n            continue;\n        else if(temp == -1)\n        {\n            *pDifStart = i+1;\n            return 0;\n        }\n        else\n        {\n            *pDifStart = i+1;\n            return 3;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}",
+      "Draft": "func minTemp0_fast_iVar5(pInOut *uint32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp0_fast_iVar5\\n\");\n    for i=(nWords)*2 - 1; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i],pInOut[i-3]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 3;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}"
+    },
+    {
+      "Name": "minTemp1_fast_iVar5",
+      "Start": 13337,
+      "End": 13836,
+      "BodyStart": 13407,
+      "Original": "int minTemp1_fast_iVar5(unsigned* pInOut, int nWords, int* pDifStart)\n{\n    int i, temp;\n//     printf(\"in minTemp1_fast_iVar5\\n\");\n    for(i=(nWords)*2 - 2; i\u003e=0; i-=4)   \n    {\n        temp = CompareWords(pInOut[i],pInOut[i-1]);\n        if(temp == 0)\n            continue;\n        else if(temp == -1)\n        {\n            *pDifStart = i+2;\n            return 1;\n        }\n        else\n        {\n            *pDifStart = i+2;\n            return 2;\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}",
+      "Draft": "func minTemp1_fast_iVar5(pInOut *uint32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp1_fast_iVar5\\n\");\n    for i=(nWords)*2 - 2; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i],pInOut[i-1]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+2;\n            return 1;\n        \n        } else {\n            *pDifStart = i+2;\n            return 2;\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}"
+    },
+    {
+      "Name": "minTemp2_fast_iVar5",
+      "Start": 14032,
+      "End": 14552,
+      "BodyStart": 14118,
+      "Original": "int minTemp2_fast_iVar5(unsigned* pInOut, int iQ, int jQ, int nWords, int* pDifStart)\n{\n    int i, temp;\n//     printf(\"in minTemp2_fast_iVar5\\n\");\n\n    for(i=(nWords)*2 - 1; i\u003e=0; i-=4)   \n    {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if(temp == 0)\n            continue;\n        else if(temp == -1)\n        {\n            *pDifStart = i+1;\n            return 0;\n        }\n        else\n        {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}",
+      "Draft": "func minTemp2_fast_iVar5(pInOut *uint32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp2_fast_iVar5\\n\");\n\n    for i=(nWords)*2 - 1; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}"
+    },
+    {
+      "Name": "minTemp3_fast_iVar5",
+      "Start": 14613,
+      "End": 15140,
+      "BodyStart": 14710,
+      "Original": "int minTemp3_fast_iVar5(unsigned* pInOut, int start, int finish, int iQ, int jQ, int* pDifStart)\n{\n    int i, temp;\n//     printf(\"in minTemp3_fast_iVar5\\n\");\n\n    for(i=start-1; i\u003e=finish; i-=4) \n    {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if(temp == 0)\n            continue;\n        else if(temp == -1)\n        {\n            *pDifStart = i+1;\n            return 0;\n        }\n        else\n        {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}",
+      "Draft": "func minTemp3_fast_iVar5(pInOut *uint32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp3_fast_iVar5\\n\");\n\n    for i=start-1; i\u003e=finish; i-=4 {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_iVar5",
+      "Start": 15250,
+      "End": 17101,
+      "BodyStart": 15366,
+      "Original": "void minimalSwapAndFlipIVar_superFast_iVar5(unsigned* pInOut, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int min1, min2, DifStart0, DifStart1, DifStartMin;\n    int M[2];\n    unsigned temp[2048];\n//     printf(\"in minimalSwapAndFlipIVar_superFast_iVar5\\n\");\n    M[0] = minTemp0_fast_iVar5(pInOut, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_iVar5(pInOut, M[0], M[1], nWords, \u0026DifStartMin);\n    if(DifStart0 != DifStart1)\n    {   \n        if( DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 )\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        else if( DifStart0 \u003e DifStart1)\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], pCanonPerm, pCanonPhase);\n        else\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], pCanonPerm, pCanonPhase);\n    }\n    else\n    {\n        if(DifStartMin\u003e=DifStart0)\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        else\n        {\n            min2 = minTemp3_fast_iVar5(pInOut, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if(DifStart1\u003eDifStartMin)\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], pCanonPerm, pCanonPhase);\n            else\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        }\n    }\n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_iVar5(pInOut *uint32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin int32;\n    var M [2]int32;\n    var temp [2048]uint32;\n//     printf(\"in minimalSwapAndFlipIVar_superFast_iVar5\\n\");\n    M[0] = minTemp0_fast_iVar5(pInOut, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_iVar5(pInOut, M[0], M[1], nWords, \u0026DifStartMin);\n    if DifStart0 != DifStart1 {   \n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], pCanonPerm, pCanonPhase); }\n    \n    } else {\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast_iVar5(pInOut, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if DifStart1\u003eDifStartMin {\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_iVar5_noEBFC",
+      "Start": 17103,
+      "End": 17437,
+      "BodyStart": 17226,
+      "Original": "void minimalSwapAndFlipIVar_superFast_iVar5_noEBFC(unsigned* pInOut, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int DifStart1;\n    unsigned temp[2048];\n    if(minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1) == 2)\n        arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart1, 0, 2, 1, 3, pCanonPerm, pCanonPhase); \n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_iVar5_noEBFC(pInOut *uint32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    var temp [2048]uint32;\n    if minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart1, 0, 2, 1, 3, pCanonPerm, pCanonPhase); } \n}"
+    },
+    {
+      "Name": "arrangeQuoters_superFast_moreThen5",
+      "Start": 17683,
+      "End": 18750,
+      "BodyStart": 17845,
+      "Original": "void arrangeQuoters_superFast_moreThen5(word* pInOut, word* temp, int start,  int iQ, int jQ, int kQ, int lQ, int iVar, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int i,wordBlock,blockSize,shiftSize;\n    word* tempPtr = temp+start;\n//     printf(\"in arrangeQuoters_superFast_moreThen5\\n\");\n\n    if(iQ == 0 \u0026\u0026 jQ == 1)\n        return;\n    wordBlock = (1\u003c\u003c(iVar-6));\n    blockSize = wordBlock*sizeof(word);\n    shiftSize = wordBlock*4;\n    for(i=start-wordBlock;i\u003e0;i-=shiftSize)\n    {       \n        tempPtr -= wordBlock;       \n        memcpy(tempPtr, pInOut+i-iQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-jQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-kQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-lQ*wordBlock, (size_t)blockSize);      \n    }   \n    memcpy(pInOut, temp, start*sizeof(word));\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//    printf(\"out arrangeQuoters_superFast_moreThen5\\n\");\n\n}",
+      "Draft": "func arrangeQuoters_superFast_moreThen5(pInOut *word, temp *word, start int32, iQ int32, jQ int32, kQ int32, lQ int32, iVar int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i, wordBlock, blockSize, shiftSize int32;\n    var tempPtr *word  = temp+start;\n//     printf(\"in arrangeQuoters_superFast_moreThen5\\n\");\n\n    if iQ == 0 \u0026\u0026 jQ == 1 {\n        return; }\n    wordBlock = (1\u003c\u003c(iVar-6));\n    blockSize = wordBlock*sizeof(word);\n    shiftSize = wordBlock*4;\n    for i=start-wordBlock;i\u003e0;i-=shiftSize {       \n        tempPtr -= wordBlock;       \n        memcpy(tempPtr, pInOut+i-iQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-jQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-kQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-lQ*wordBlock, (size_t)blockSize);      \n    }   \n    memcpy(pInOut, temp, start*sizeof(word));\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//    printf(\"out arrangeQuoters_superFast_moreThen5\\n\");\n\n}"
+    },
+    {
+      "Name": "minTemp0_fast_moreThen5",
+      "Start": 18946,
+      "End": 19715,
+      "BodyStart": 19026,
+      "Original": "int minTemp0_fast_moreThen5(word* pInOut, int iVar, int nWords, int* pDifStart)\n{\n    int i, j, temp;\n    int  wordBlock = 1\u003c\u003c(iVar-6);\n    int wordDif = 3*wordBlock;\n    int  shiftBlock = wordBlock*4;\n//    printf(\"in minTemp0_fast_moreThen5\\n\");\n\n    for(i=nWords - 1; i\u003e=0; i-=shiftBlock)\n        for(j=0;j\u003cwordBlock;j++)\n        {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordDif]);\n            if(temp == 0)\n                continue;\n            else if(temp == -1)\n            {\n                *pDifStart = i+1;\n                return 0;\n            }\n            else\n            {\n                *pDifStart = i+1;\n                return 3;\n            }\n        }\n    *pDifStart=0;\n//    printf(\"out minTemp0_fast_moreThen5\\n\");\n\n    return 0;\n}",
+      "Draft": "func minTemp0_fast_moreThen5(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var wordDif int32  = 3*wordBlock;\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp0_fast_moreThen5\\n\");\n\n    for i=nWords - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordDif]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 3;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp0_fast_moreThen5\\n\");\n\n    return 0;\n}"
+    },
+    {
+      "Name": "minTemp1_fast_moreThen5",
+      "Start": 19911,
+      "End": 20683,
+      "BodyStart": 19991,
+      "Original": "int minTemp1_fast_moreThen5(word* pInOut, int iVar, int nWords, int* pDifStart)\n{\n    int i, j, temp;\n    int  wordBlock = 1\u003c\u003c(iVar-6);\n    int  shiftBlock = wordBlock*4;\n//    printf(\"in minTemp1_fast_moreThen5\\n\");\n\n    for(i=nWords - wordBlock - 1; i\u003e=0; i-=shiftBlock)\n        for(j=0;j\u003cwordBlock;j++)\n        {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordBlock]);\n            if(temp == 0)\n                continue;\n            else if(temp == -1)\n            {\n                *pDifStart = i+wordBlock+1;\n                return 1;\n            }\n            else\n            {\n                *pDifStart = i+wordBlock+1;\n                return 2;\n            }\n        }\n    *pDifStart=0;\n//    printf(\"out minTemp1_fast_moreThen5\\n\");\n\n    return 1;\n}",
+      "Draft": "func minTemp1_fast_moreThen5(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp1_fast_moreThen5\\n\");\n\n    for i=nWords - wordBlock - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+wordBlock+1;\n                return 1;\n            \n            } else {\n                *pDifStart = i+wordBlock+1;\n                return 2;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp1_fast_moreThen5\\n\");\n\n    return 1;\n}"
+    },
+    {
+      "Name": "minTemp2_fast_moreThen5",
+      "Start": 20879,
+      "End": 21655,
+      "BodyStart": 20975,
+      "Original": "int minTemp2_fast_moreThen5(word* pInOut, int iVar, int iQ, int jQ, int nWords, int* pDifStart)\n{\n    int i, j, temp;\n    int  wordBlock = 1\u003c\u003c(iVar-6);\n    int  shiftBlock = wordBlock*4;\n//    printf(\"in minTemp2_fast_moreThen5\\n\");\n\n    for(i=nWords - 1; i\u003e=0; i-=shiftBlock)\n        for(j=0;j\u003cwordBlock;j++)\n        {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if(temp == 0)\n                continue;\n            else if(temp == -1)\n            {\n                *pDifStart = i+1;\n                return 0;\n            }\n            else\n            {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    *pDifStart=0;\n//    printf(\"out minTemp2_fast_moreThen5\\n\");\n    \n    return 0;\n}",
+      "Draft": "func minTemp2_fast_moreThen5(pInOut *word, iVar int32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp2_fast_moreThen5\\n\");\n\n    for i=nWords - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp2_fast_moreThen5\\n\");\n    \n    return 0;\n}"
+    },
+    {
+      "Name": "minTemp3_fast_moreThen5",
+      "Start": 21716,
+      "End": 22501,
+      "BodyStart": 21823,
+      "Original": "int minTemp3_fast_moreThen5(word* pInOut, int iVar, int start, int finish, int iQ, int jQ, int* pDifStart)\n{\n    int i, j, temp;\n    int  wordBlock = 1\u003c\u003c(iVar-6);\n    int  shiftBlock = wordBlock*4;\n//    printf(\"in minTemp3_fast_moreThen5\\n\");\n\n    for(i=start-1; i\u003e=finish; i-=shiftBlock)\n        for(j=0;j\u003cwordBlock;j++)\n        {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if(temp == 0)\n                continue;\n            else if(temp == -1)\n            {\n                *pDifStart = i+1;\n                return 0;\n            }\n            else\n            {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    *pDifStart=0;\n//    printf(\"out minTemp3_fast_moreThen5\\n\");\n\n    return 0;\n}",
+      "Draft": "func minTemp3_fast_moreThen5(pInOut *word, iVar int32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp3_fast_moreThen5\\n\");\n\n    for i=start-1; i\u003e=finish; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp3_fast_moreThen5\\n\");\n\n    return 0;\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_moreThen5",
+      "Start": 22611,
+      "End": 24638,
+      "BodyStart": 22737,
+      "Original": "void minimalSwapAndFlipIVar_superFast_moreThen5(word* pInOut, int iVar, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int min1, min2, DifStart0, DifStart1, DifStartMin;\n    int M[2];\n    word temp[1024];\n//    printf(\"in minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n    M[0] = minTemp0_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_moreThen5(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n    if(DifStart0 != DifStart1)\n    {   \n        if( DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 )\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        else if( DifStart0 \u003e DifStart1)\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], iVar, pCanonPerm, pCanonPhase);\n        else\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], iVar, pCanonPerm, pCanonPhase);\n    }\n    else\n    {\n        if(DifStartMin\u003e=DifStart0)\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        else\n        {\n            min2 = minTemp3_fast_moreThen5(pInOut, iVar, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if(DifStart1\u003eDifStartMin)\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, pCanonPerm, pCanonPhase);\n            else\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n\n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_moreThen5(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin int32;\n    var M [2]int32;\n    var temp [1024]word;\n//    printf(\"in minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n    M[0] = minTemp0_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_moreThen5(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n    if DifStart0 != DifStart1 {   \n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], iVar, pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], iVar, pCanonPerm, pCanonPhase); }\n    \n    } else {\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast_moreThen5(pInOut, iVar, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if DifStart1\u003eDifStartMin {\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase); }\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC",
+      "Start": 24640,
+      "End": 25000,
+      "BodyStart": 24773,
+      "Original": "void minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(word* pInOut, int iVar, int nWords, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int DifStart1;\n    word temp[1024];\n    if(minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1) == 2)\n        arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart1, 0, 2, 1, 3, iVar, pCanonPerm, pCanonPhase); \n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    var temp [1024]word;\n    if minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart1, 0, 2, 1, 3, iVar, pCanonPerm, pCanonPhase); } \n}"
+    },
+    {
+      "Name": "minimalInitialFlip_fast_16Vars",
+      "Start": 25140,
+      "End": 25421,
+      "BodyStart": 25225,
+      "Original": "void minimalInitialFlip_fast_16Vars(word* pInOut, int  nVars, unsigned* pCanonPhase)\n{\n    word oneWord=1;\n    if(  (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord )\n    {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        (* pCanonPhase) ^=(1\u003c\u003cnVars);       \n    }\n\n}",
+      "Draft": "func minimalInitialFlip_fast_16Vars(pInOut *word, nVars int32, pCanonPhase *uint32) {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        (* pCanonPhase) ^=(1\u003c\u003cnVars);       \n    }\n\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_all",
+      "Start": 25595,
+      "End": 26809,
+      "BodyStart": 25729,
+      "Original": "int minimalSwapAndFlipIVar_superFast_all(word* pInOut, int nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int i;\n    word pDuplicate[1024];  \n    int bitInfoTemp = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n//    printf(\"in minimalSwapAndFlipIVar_superFast_all\\n\");\n    for(i=0;i\u003c5;i++)\n    {\n        if(bitInfoTemp == pStore[i+1])\n            minimalSwapAndFlipIVar_superFast_lessThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        else\n        {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if(bitInfoTemp == pStore[i+1])\n        minimalSwapAndFlipIVar_superFast_iVar5((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    else    \n        bitInfoTemp = pStore[i+1];\n    \n    for(i=6;i\u003cnVars-1;i++)\n    {\n        if(bitInfoTemp == pStore[i+1])\n            minimalSwapAndFlipIVar_superFast_moreThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        else\n        {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_all\\n\");\n\n    if(memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_all(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) int32 {\n    var i int32;\n    var pDuplicate [1024]word;  \n    var bitInfoTemp int32  = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n//    printf(\"in minimalSwapAndFlipIVar_superFast_all\\n\");\n    for i=0;i\u003c5;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_lessThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if bitInfoTemp == pStore[i+1] {\n        minimalSwapAndFlipIVar_superFast_iVar5((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    } else {    \n        bitInfoTemp = pStore[i+1]; }\n    \n    for i=6;i\u003cnVars-1;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_moreThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_all\\n\");\n\n    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "minimalSwapAndFlipIVar_superFast_all_noEBFC",
+      "Start": 26811,
+      "End": 27933,
+      "BodyStart": 26952,
+      "Original": "int minimalSwapAndFlipIVar_superFast_all_noEBFC(word* pInOut, int nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    int i;\n    word pDuplicate[1024];  \n    int bitInfoTemp = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n    for(i=0;i\u003c5;i++)\n    {\n        if(bitInfoTemp == pStore[i+1])\n            minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        else\n        {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if(bitInfoTemp == pStore[i+1])\n        minimalSwapAndFlipIVar_superFast_iVar5_noEBFC((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    else    \n        bitInfoTemp = pStore[i+1];\n    \n    for(i=6;i\u003cnVars-1;i++)\n    {\n        if(bitInfoTemp == pStore[i+1])\n            minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        else\n        {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if(memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0)\n        return 0;\n    else\n        return 1;\n}",
+      "Draft": "func minimalSwapAndFlipIVar_superFast_all_noEBFC(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) int32 {\n    var i int32;\n    var pDuplicate [1024]word;  \n    var bitInfoTemp int32  = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n    for i=0;i\u003c5;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if bitInfoTemp == pStore[i+1] {\n        minimalSwapAndFlipIVar_superFast_iVar5_noEBFC((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    } else {    \n        bitInfoTemp = pStore[i+1]; }\n    \n    for i=6;i\u003cnVars-1;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}"
+    },
+    {
+      "Name": "luckyCanonicizerS_F_first_16Vars1",
+      "Start": 28247,
+      "End": 28714,
+      "BodyStart": 28380,
+      "Original": "void luckyCanonicizerS_F_first_16Vars1(word* pInOut, int  nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    if(((* pCanonPhase) \u003e\u003e (nVars+1)) \u0026 1)\n        while( minimalSwapAndFlipIVar_superFast_all(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0)\n            continue;\n    else\n        while( minimalSwapAndFlipIVar_superFast_all_noEBFC(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0)\n            continue;\n}",
+      "Draft": "func luckyCanonicizerS_F_first_16Vars1(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    if ((* pCanonPhase) \u003e\u003e (nVars+1)) \u0026 1 {\n        for  minimalSwapAndFlipIVar_superFast_all(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0 {\n            continue;\n        }\n    } else {\n        for  minimalSwapAndFlipIVar_superFast_all_noEBFC(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0 {\n            continue;\n        } }\n}"
+    },
+    {
+      "Name": "luckyCanonicizerS_F_first_16Vars11",
+      "Start": 28716,
+      "End": 29778,
+      "BodyStart": 28850,
+      "Original": "void luckyCanonicizerS_F_first_16Vars11(word* pInOut, int  nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    word duplicate[1024];\n    char pCanonPerm1[16];\n    unsigned uCanonPhase1;\n\n    if((* pCanonPhase) \u003e\u003e (nVars+2) )\n    {  \n        memcpy(duplicate, pInOut, sizeof(word)*nWords);\n        Kit_TruthNot_64bit(duplicate, nVars);\n        uCanonPhase1 = *pCanonPhase;\n        uCanonPhase1 ^= (1 \u003c\u003c nVars);\n        memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase); \n        luckyCanonicizerS_F_first_16Vars1(duplicate, nVars, nWords, pStore, pCanonPerm1, \u0026uCanonPhase1);\n        if(memCompare(pInOut, duplicate,nVars) == 1)\n        {\n            *pCanonPhase = uCanonPhase1;\n            memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n            memcpy(pInOut, duplicate, sizeof(word)*nWords);\n        }\n    }\n    else \n    {\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase);\n    }\n}",
+      "Draft": "func luckyCanonicizerS_F_first_16Vars11(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    var duplicate [1024]word;\n    var pCanonPerm1 [16]byte;\n    var uCanonPhase1 uint32;\n\n    if (* pCanonPhase) \u003e\u003e (nVars+2) {  \n        memcpy(duplicate, pInOut, sizeof(word)*nWords);\n        Kit_TruthNot_64bit(duplicate, nVars);\n        uCanonPhase1 = *pCanonPhase;\n        uCanonPhase1 ^= (1 \u003c\u003c nVars);\n        memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase); \n        luckyCanonicizerS_F_first_16Vars1(duplicate, nVars, nWords, pStore, pCanonPerm1, \u0026uCanonPhase1);\n        if memCompare(pInOut, duplicate,nVars) == 1 {\n            *pCanonPhase = uCanonPhase1;\n            memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n            memcpy(pInOut, duplicate, sizeof(word)*nWords);\n        }\n    \n    } else {\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase);\n    }\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast_16Vars",
+      "Start": 29780,
+      "End": 30145,
+      "BodyStart": 29914,
+      "Original": "void luckyCanonicizer_final_fast_16Vars(word* pInOut, int  nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{\n    assert( nVars \u003e 6 \u0026\u0026 nVars \u003c= 16 );\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n}",
+      "Draft": "func luckyCanonicizer_final_fast_16Vars(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    assert(nVars \u003e 6 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 6 \u0026\u0026 nVars \u003c= 16\");\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n}"
+    },
+    {
+      "Name": "bitReverceOrder",
+      "Start": 30147,
+      "End": 30283,
+      "BodyStart": 30189,
+      "Original": "void bitReverceOrder(word* x, int  nVars)\n{\n    int i;\n    for(i= nVars-1;i\u003e=0;i--)\n        Kit_TruthChangePhase_64bit( x, nVars, i );\n}",
+      "Draft": "func bitReverceOrder(x *word, nVars int32) {\n    var i int32;\n    for i= nVars-1;i\u003e=0;i-- {\n        Kit_TruthChangePhase_64bit( x, nVars, i );\n    }\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast_16Vars1",
+      "Start": 30286,
+      "End": 31005,
+      "BodyStart": 30421,
+      "Original": "void luckyCanonicizer_final_fast_16Vars1(word* pInOut, int  nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n{   \n    assert( nVars \u003e 6 \u0026\u0026 nVars \u003c= 16 );\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n    bitReverceOrder(pInOut, nVars);\n    (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n//     bitReverceOrder(pInOut, nVars);\n//     (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n//     luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n}",
+      "Draft": "func luckyCanonicizer_final_fast_16Vars1(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {   \n    assert(nVars \u003e 6 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 6 \u0026\u0026 nVars \u003c= 16\");\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n    bitReverceOrder(pInOut, nVars);\n    (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n//     bitReverceOrder(pInOut, nVars);\n//     (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n//     luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast",
+      "Start": 31086,
+      "End": 31902,
+      "BodyStart": 31170,
+      "Original": "unsigned luckyCanonicizer_final_fast( word * pInOut, int nVars, char * pCanonPerm )\n{\n    int nWords;\n    int pStore[16];\n    unsigned uCanonPhase = 0;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if ( nVars \u003c= 6 )\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    else if ( nVars \u003c= 16 )\n    {\n        nWords = (nVars \u003c= 6) ? 1 : (1 \u003c\u003c (nVars - 6));\n        luckyCanonicizer_final_fast_16Vars( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    }\n    else assert( 0 );\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n        return uCanonPhase;\n}",
+      "Draft": "func luckyCanonicizer_final_fast(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var nWords int32;\n    var pStore [16]int32;\n    var uCanonPhase uint32;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if nVars \u003c= 6 {\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    } else if nVars \u003c= 16 {\n        if nVars \u003c= 6 {\n            nWords = 1;\n        } else {\n            nWords = (1 \u003c\u003c (nVars - 6));\n        }\n        luckyCanonicizer_final_fast_16Vars( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    \n    } else { assert(false, \"0\"); }\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n        return uCanonPhase;\n}"
+    },
+    {
+      "Name": "luckyCanonicizer_final_fast1",
+      "Start": 31904,
+      "End": 32697,
+      "BodyStart": 31988,
+      "Original": "unsigned luckyCanonicizer_final_fast1( word * pInOut, int nVars, char * pCanonPerm)\n{\n    int nWords;\n    int pStore[16];\n    unsigned uCanonPhase = 0;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if ( nVars \u003c= 6 )\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars1( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    else if ( nVars \u003c= 16 )\n    {\n        nWords = 1 \u003c\u003c (nVars - 6);\n        luckyCanonicizer_final_fast_16Vars1( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    }\n    else assert( 0 );\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n    return uCanonPhase;\n}",
+      "Draft": "func luckyCanonicizer_final_fast1(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var nWords int32;\n    var pStore [16]int32;\n    var uCanonPhase uint32;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if nVars \u003c= 6 {\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars1( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    } else if nVars \u003c= 16 {\n        nWords = 1 \u003c\u003c (nVars - 6);\n        luckyCanonicizer_final_fast_16Vars1( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    \n    } else { assert(false, \"0\"); }\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n    return uCanonPhase;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::2433",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2433,
+      "End": 2439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::11917",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11917,
+      "End": 11923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::12374",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12374,
+      "End": 12380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::18079",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18079,
+      "End": 18085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::18620",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18620,
+      "End": 18626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::25840",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25840,
+      "End": 25846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::26743",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26743,
+      "End": 26749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::27063",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27063,
+      "End": 27069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::27867",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27867,
+      "End": 27873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::29012",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29012,
+      "End": 29018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::29193",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29193,
+      "End": 29199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::29562",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29562,
+      "End": 29568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::mechanical::sizeof::29618",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29618,
+      "End": 29624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::pointer-cast::26262",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26262,
+      "End": 26273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::pointer-cast::27440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27440,
+      "End": 27451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::swapAndFlip",
+      "Category": "semantic-review",
+      "Symbol": "swapAndFlip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1266,
+      "End": 1889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCheck",
+      "Category": "semantic-review",
+      "Symbol": "luckyCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1890,
+      "End": 2499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::updataInfo",
+      "Category": "semantic-review",
+      "Symbol": "updataInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2814,
+      "End": 3002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::firstShiftWithOneBit",
+      "Category": "semantic-review",
+      "Symbol": "firstShiftWithOneBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3106,
+      "End": 3656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::arrangeQuoters_superFast_lessThen5",
+      "Category": "semantic-review",
+      "Symbol": "arrangeQuoters_superFast_lessThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3762,
+      "End": 4782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp0_fast",
+      "Category": "semantic-review",
+      "Symbol": "minTemp0_fast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5447,
+      "End": 6101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp1_fast",
+      "Category": "semantic-review",
+      "Symbol": "minTemp1_fast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6297,
+      "End": 6976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp2_fast",
+      "Category": "semantic-review",
+      "Symbol": "minTemp2_fast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7172,
+      "End": 7881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp3_fast",
+      "Category": "semantic-review",
+      "Symbol": "minTemp3_fast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7941,
+      "End": 8661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_lessThen5",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_lessThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8772,
+      "End": 10996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10998,
+      "End": 11333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::arrangeQuoters_superFast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "arrangeQuoters_superFast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11577,
+      "End": 12446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp0_fast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp0_fast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12642,
+      "End": 13141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp1_fast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp1_fast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13337,
+      "End": 13836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp2_fast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp2_fast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14032,
+      "End": 14552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp3_fast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp3_fast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14613,
+      "End": 15140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_iVar5",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_iVar5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15250,
+      "End": 17101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_iVar5_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_iVar5_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17103,
+      "End": 17437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::arrangeQuoters_superFast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "arrangeQuoters_superFast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17683,
+      "End": 18750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp0_fast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp0_fast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18946,
+      "End": 19715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp1_fast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp1_fast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19911,
+      "End": 20683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp2_fast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp2_fast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20879,
+      "End": 21655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minTemp3_fast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "minTemp3_fast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21716,
+      "End": 22501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_moreThen5",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_moreThen5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22611,
+      "End": 24638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24640,
+      "End": 25000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalInitialFlip_fast_16Vars",
+      "Category": "semantic-review",
+      "Symbol": "minimalInitialFlip_fast_16Vars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25140,
+      "End": 25421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_all",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_all",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25595,
+      "End": 26809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::minimalSwapAndFlipIVar_superFast_all_noEBFC",
+      "Category": "semantic-review",
+      "Symbol": "minimalSwapAndFlipIVar_superFast_all_noEBFC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26811,
+      "End": 27933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizerS_F_first_16Vars1",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizerS_F_first_16Vars1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28247,
+      "End": 28714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizerS_F_first_16Vars11",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizerS_F_first_16Vars11",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28716,
+      "End": 29778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizer_final_fast_16Vars",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast_16Vars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29780,
+      "End": 30145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::bitReverceOrder",
+      "Category": "semantic-review",
+      "Symbol": "bitReverceOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30147,
+      "End": 30283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizer_final_fast_16Vars1",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast_16Vars1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30286,
+      "End": 31005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizer_final_fast",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31086,
+      "End": 31902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::luckyCanonicizer_final_fast1",
+      "Category": "semantic-review",
+      "Symbol": "luckyCanonicizer_final_fast1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31904,
+      "End": 32697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31238,
+      "End": 31376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31721,
+      "End": 31872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32056,
+      "End": 32194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32520,
+      "End": 32671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::543",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 543,
+      "End": 572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::573",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 573,
+      "End": 602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::603",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 603,
+      "End": 632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::633",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 633,
+      "End": 662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::670",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 670,
+      "End": 699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::700",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 700,
+      "End": 729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::730",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 730,
+      "End": 759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::760",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 760,
+      "End": 789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::797",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 797,
+      "End": 826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::827",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 827,
+      "End": 856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::857",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 857,
+      "End": 886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::887",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 887,
+      "End": 916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::924",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 924,
+      "End": 953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::954",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 954,
+      "End": 983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 984,
+      "End": 1013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::1014",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1014,
+      "End": 1043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::1051",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1051,
+      "End": 1080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::1081",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1081,
+      "End": 1110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::1111",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1111,
+      "End": 1140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::1141",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1141,
+      "End": 1170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::3225",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3225,
+      "End": 3254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::3342",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3342,
+      "End": 3371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::3457",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3457,
+      "End": 3486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyFast16.c::macro-inline::3568",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3568,
+      "End": 3597
+    }
+  ],
+  "Draft": "package lucky\n\n/**CFile****************************************************************\n\n  FileName    [luckyFast16.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Truth table minimization procedures for up to  16 vars.]\n\n  Author      [Jake]\n\n  Date        [Started - September 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n//#define LUCKY_VERIFY\n\n//ABC_NAMESPACE_IMPL_START\n\nvar SFmask [5][4]word = [5][4]word{\n    {ABC_CONST(0x8888888888888888),ABC_CONST(0x4444444444444444),ABC_CONST(0x2222222222222222),ABC_CONST(0x1111111111111111)},\n    {ABC_CONST(0xC0C0C0C0C0C0C0C0),ABC_CONST(0x3030303030303030),ABC_CONST(0x0C0C0C0C0C0C0C0C),ABC_CONST(0x0303030303030303)},\n    {ABC_CONST(0xF000F000F000F000),ABC_CONST(0x0F000F000F000F00),ABC_CONST(0x00F000F000F000F0),ABC_CONST(0x000F000F000F000F)},\n    {ABC_CONST(0xFF000000FF000000),ABC_CONST(0x00FF000000FF0000),ABC_CONST(0x0000FF000000FF00),ABC_CONST(0x000000FF000000FF)},\n    {ABC_CONST(0xFFFF000000000000),ABC_CONST(0x0000FFFF00000000),ABC_CONST(0x00000000FFFF0000),ABC_CONST(0x000000000000FFFF)},   \n};\n\n// we need next two functions only for verification of lucky method in debugging mode \nfunc swapAndFlip(pAfter *word, nVars int32, iVarInPosition int32, jVar int32, pCanonPerm string, pUCanonPhase *uint32) {\n    var Temp int32;\n    swap_ij(pAfter, nVars, iVarInPosition, jVar);\n    \n    Temp = pCanonPerm[iVarInPosition];\n    pCanonPerm[iVarInPosition] = pCanonPerm[jVar];\n    pCanonPerm[jVar] = Temp;\n    \n    if ((*pUCanonPhase \u0026 (1 \u003c\u003c iVarInPosition)) \u003e 0) != ((*pUCanonPhase \u0026 (1 \u003c\u003c jVar)) \u003e 0) {\n        *pUCanonPhase ^= (1 \u003c\u003c iVarInPosition);\n        *pUCanonPhase ^= (1 \u003c\u003c jVar);\n    }\n    if (*pUCanonPhase\u003e\u003eiVarInPosition) \u0026 1 {\n        Kit_TruthChangePhase_64bit( pAfter, nVars, iVarInPosition ); }\n    \n}\nfunc luckyCheck(pAfter *word, pBefore *word, nVars int32, pCanonPerm string, uCanonPhase uint32) int32 {\n    var i, j int32;\n    var tempChar byte;\n    for j=0;j\u003cnVars;j++ {\n        tempChar = 'a'+ j;\n        for i=j;i\u003cnVars;i++ {\n            if tempChar != pCanonPerm[i] {\n                continue; }\n            swapAndFlip(pAfter , nVars, j, i, pCanonPerm, \u0026uCanonPhase);\n            break;\n        }\n    }\n    if (uCanonPhase\u003e\u003enVars) \u0026 1 {\n        Kit_TruthNot_64bit(pAfter, nVars ); }\n    if memcmp(pAfter, pBefore, Kit_TruthWordNum_64bit( nVars )*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n\n////////////////////////////////////lessThen5/////////////////////////////////////////////////////////////////////////////////////////////\n\n// there are 4 parts in every block to compare and rearrange - quoters(0Q,1Q,2Q,3Q)\n//updataInfo updates CanonPerm and CanonPhase based on what quoter in position iQ and jQ\nfunc updataInfo(iQ int32, jQ int32, iVar int32, pCanonPerm string, pCanonPhase *uint32) {\n    *pCanonPhase = adjustInfoAfterSwap(pCanonPerm, *pCanonPhase, iVar, ((abs(iQ-jQ)-1)\u003c\u003c2) + iQ );\n\n}\n\n// returns the first shift from the left in word x that has One bit in it.\n// blockSize = ShiftSize/4\nfunc firstShiftWithOneBit(x word, blockSize int32) int32 {\n    var n int32;\n    if blockSize == 16{ return 0;}     \n    if x \u003e= ABC_CONST(0x0000000100000000) {n = n + 32; x = x \u003e\u003e 32;} \n    if blockSize == 8{ return (64-n)/32;}  \n    if x \u003e= ABC_CONST(0x0000000000010000) {n = n + 16; x = x \u003e\u003e 16;} \n    if blockSize == 4{ return (64-n)/16;}\n    if x \u003e= ABC_CONST(0x0000000000000100) {n = n + 8; x = x \u003e\u003e 8;}\n    if blockSize == 2{ return (64-n)/8;}\n    if x \u003e= ABC_CONST(0x0000000000000010) {n = n + 4; x = x \u003e\u003e 4;} \n    return (64-n)/4;    \n    \n}\n\n// It rearranges InOut (swaps and flips through rearrangement of quoters)\n// It updates Info at the end\nfunc arrangeQuoters_superFast_lessThen5(pInOut *word, start int32, iQ int32, jQ int32, kQ int32, lQ int32, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n//     printf(\"in arrangeQuoters_superFast_lessThen5\\n\");\n//     printf(\"start = %d, iQ = %d,jQ = %d,kQ = %d,lQ = %d, iVar = %d, nWords = %d\\n\", start, iQ, jQ, kQ , lQ, iVar, nWords);\n    for i=start;i\u003e=0;i-- {   \n        assert(iQ*blockSize \u003c 64, \"iQ*blockSize \u003c 64\");\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        assert(kQ*blockSize \u003c 64, \"kQ*blockSize \u003c 64\");\n        assert(lQ*blockSize \u003c 64, \"lQ*blockSize \u003c 64\");\n        assert(3*blockSize \u003c 64, \"3*blockSize \u003c 64\");\n        pInOut[i] = (pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize))\u003e\u003eblockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][kQ])\u003c\u003c(kQ*blockSize))\u003e\u003e2*blockSize) |\n            (((pInOut[i] \u0026 SFmask[iVar][lQ])\u003c\u003c(lQ*blockSize))\u003e\u003e3*blockSize);\n    }\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//     printf(\"out arrangeQuoters_superFast_lessThen5\\n\");\n\n}\n// static word SFmask[5][4] = {\n//     {0x8888888888888888,0x4444444444444444,0x2222222222222222,0x1111111111111111},\n//     {0xC0C0C0C0C0C0C0C0,0x3030303030303030,0x0C0C0C0C0C0C0C0C,0x0303030303030303},\n//     {0xF000F000F000F000,0x0F000F000F000F00,0x00F000F000F000F0,0x000F000F000F000F},\n//     {0xFF000000FF000000,0x00FF000000FF0000,0x0000FF000000FF00,0x000000FF000000FF},\n//     {0xFFFF000000000000,0x0000FFFF00000000,0x00000000FFFF0000,0x000000000000FFFF}   \n// };\n//It compares 0Q and 3Q and returns 0 if 0Q is smaller then 3Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 0Q and 3Q\nfunc minTemp0_fast(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(3*blockSize \u003c 64, \"3*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][0])) ^ ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][0])) \u003c ((pInOut[i] \u0026 SFmask[iVar][3])\u003c\u003c(3*blockSize)) {\n                return 0;\n            } else {\n                return 3; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n\n}\n\n//It compares 1Q and 2Q and returns 1 if 1Q is smaller then 2Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 1Q and 2Q\nfunc minTemp1_fast(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(2*blockSize \u003c 64, \"2*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][1])\u003c\u003c(blockSize)) \u003c ((pInOut[i] \u0026 SFmask[iVar][2])\u003c\u003c(2*blockSize)) {\n                return 1;\n            } else {\n                return 2; }\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}\n\n//It compares iQ and jQ and returns 0 if iQ is smaller then jQ ( comparison starts at highest bit) and 1 if jQ is\n// DifStart contains the information about the first different bit in iQ and jQ\nfunc minTemp2_fast(pInOut *word, iVar int32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=nWords - 1; i\u003e=0; i-- {\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) {\n                return 0;\n            } else {\n                return 1; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}\n// same as minTemp2_fast but this one has a start position\nfunc minTemp3_fast(pInOut *word, iVar int32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i int32;\n    var blockSize int32 = 1\u003c\u003ciVar;\n    var temp word;\n    for i=start; i\u003e=finish; i-- {\n        assert(jQ*blockSize \u003c 64, \"jQ*blockSize \u003c 64\");\n        temp = ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) ^ ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize));\n        if temp == 0 {\n            continue;\n        } else {\n            *pDifStart = i*100 + 20 - firstShiftWithOneBit(temp, blockSize);\n            if ((pInOut[i] \u0026 SFmask[iVar][iQ])\u003c\u003c(iQ*blockSize)) \u003c= ((pInOut[i] \u0026 SFmask[iVar][jQ])\u003c\u003c(jQ*blockSize)) {\n                return 0;\n            } else {\n                return 1; }\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}\n\n// It considers all swap and flip possibilities of iVar and iVar+1 and switches InOut to a minimal of them  \nfunc minimalSwapAndFlipIVar_superFast_lessThen5(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin, DifStart4 int32;\n    var M [2]int32;   \n    M[0] = minTemp0_fast(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n//     printf(\"\\nDifStart0 = %d, DifStart1 = %d, DifStartMin = %d\\n\",DifStart0, DifStart1, DifStartMin);\n//     printf(\"M[0] = %d, M[1] = %d, min1 = %d\\n\", M[0], M[1], min1);\n    if DifStart0 != DifStart1 {\n//         printf(\"if\\n\");\n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart0/100), M[0], M[1], 3 - M[1], 3 - M[0], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_lessThen5(pInOut,luckyMax(DifStartMin/100, DifStart1/100), M[1], M[0], 3 - M[0], 3 - M[1], iVar, nWords, pCanonPerm, pCanonPhase); }\n    \n    } else {\n//         printf(\"else\\n\");\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_lessThen5(pInOut, DifStartMin/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast(pInOut, iVar, DifStart0/100, DifStartMin/100, 3-M[0], 3-M[1], \u0026DifStart4);  // no reuse DifStart1 because DifStart1 = DifStart1=0\n//             printf(\"after minTemp3_fast min2 = %d, DifStart4 = %d\\n\", min2, DifStart4);\n            if DifStart4\u003eDifStartMin {\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, nWords, pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_lessThen5(pInOut, DifStart0/100, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, nWords, pCanonPerm, pCanonPhase); }\n        }\n    }\n}\n\nfunc minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    if minTemp1_fast(pInOut, iVar, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_lessThen5(pInOut, DifStart1/100, 0, 2, 1, 3, iVar, nWords, pCanonPerm, pCanonPhase); } \n}\n////////////////////////////////////iVar = 5/////////////////////////////////////////////////////////////////////////////////////////////\n\n// It rearranges InOut (swaps and flips through rearrangement of quoters)\n// It updates Info at the end\nfunc arrangeQuoters_superFast_iVar5(pInOut *uint32, temp *uint32, start int32, iQ int32, jQ int32, kQ int32, lQ int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i, blockSize, shiftSize int32;\n    var tempPtr *uint32  = temp+start;\n//     printf(\"in arrangeQuoters_superFast_iVar5\\n\");\n\n    if iQ == 0 \u0026\u0026 jQ == 1 {\n        return; } \n    blockSize = sizeof(unsigned);\n    shiftSize = 4;\n    for i=start-1;i\u003e0;i-=shiftSize {       \n        tempPtr -= 1;       \n        memcpy(tempPtr, pInOut+i-iQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-jQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-kQ, (size_t)blockSize);\n        tempPtr -= 1;\n        memcpy(tempPtr, pInOut+i-lQ, (size_t)blockSize);        \n    }   \n    memcpy(pInOut, temp, start*sizeof(unsigned));\n    updataInfo(iQ, jQ, 5, pCanonPerm, pCanonPhase);\n}\n\n//It compares 0Q and 3Q and returns 0 if 0Q is smaller then 3Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 0Q and 3Q\nfunc minTemp0_fast_iVar5(pInOut *uint32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp0_fast_iVar5\\n\");\n    for i=(nWords)*2 - 1; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i],pInOut[i-3]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 3;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}\n\n//It compares 1Q and 2Q and returns 1 if 1Q is smaller then 2Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 1Q and 2Q\nfunc minTemp1_fast_iVar5(pInOut *uint32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp1_fast_iVar5\\n\");\n    for i=(nWords)*2 - 2; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i],pInOut[i-1]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+2;\n            return 1;\n        \n        } else {\n            *pDifStart = i+2;\n            return 2;\n        }\n    }\n    *pDifStart=0;\n    return 1;\n}\n\n//It compares iQ and jQ and returns 0 if iQ is smaller then jQ ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in iQ and jQ\nfunc minTemp2_fast_iVar5(pInOut *uint32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp2_fast_iVar5\\n\");\n\n    for i=(nWords)*2 - 1; i\u003e=0; i-=4 {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}\n\n// same as minTemp2_fast but this one has a start position\nfunc minTemp3_fast_iVar5(pInOut *uint32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i, temp int32;\n//     printf(\"in minTemp3_fast_iVar5\\n\");\n\n    for i=start-1; i\u003e=finish; i-=4 {\n        temp = CompareWords(pInOut[i-iQ],pInOut[i-jQ]);\n        if temp == 0 {\n            continue;\n        } else if temp == -1 {\n            *pDifStart = i+1;\n            return 0;\n        \n        } else {\n            *pDifStart = i+1;\n            return 1;\n        }\n    }\n    *pDifStart=0;\n    return 0;\n}\n\n// It considers all swap and flip possibilities of iVar and iVar+1 and switches InOut to a minimal of them \nfunc minimalSwapAndFlipIVar_superFast_iVar5(pInOut *uint32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin int32;\n    var M [2]int32;\n    var temp [2048]uint32;\n//     printf(\"in minimalSwapAndFlipIVar_superFast_iVar5\\n\");\n    M[0] = minTemp0_fast_iVar5(pInOut, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_iVar5(pInOut, M[0], M[1], nWords, \u0026DifStartMin);\n    if DifStart0 != DifStart1 {   \n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], pCanonPerm, pCanonPhase); }\n    \n    } else {\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_iVar5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast_iVar5(pInOut, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if DifStart1\u003eDifStartMin {\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], pCanonPerm, pCanonPhase); }\n        }\n    }\n}\n\nfunc minimalSwapAndFlipIVar_superFast_iVar5_noEBFC(pInOut *uint32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    var temp [2048]uint32;\n    if minTemp1_fast_iVar5(pInOut, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_iVar5(pInOut, temp, DifStart1, 0, 2, 1, 3, pCanonPerm, pCanonPhase); } \n}\n\n////////////////////////////////////moreThen5/////////////////////////////////////////////////////////////////////////////////////////////\n\n// It rearranges InOut (swaps and flips through rearrangement of quoters)\n// It updates Info at the end\nfunc arrangeQuoters_superFast_moreThen5(pInOut *word, temp *word, start int32, iQ int32, jQ int32, kQ int32, lQ int32, iVar int32, pCanonPerm string, pCanonPhase *uint32) {\n    var i, wordBlock, blockSize, shiftSize int32;\n    var tempPtr *word  = temp+start;\n//     printf(\"in arrangeQuoters_superFast_moreThen5\\n\");\n\n    if iQ == 0 \u0026\u0026 jQ == 1 {\n        return; }\n    wordBlock = (1\u003c\u003c(iVar-6));\n    blockSize = wordBlock*sizeof(word);\n    shiftSize = wordBlock*4;\n    for i=start-wordBlock;i\u003e0;i-=shiftSize {       \n        tempPtr -= wordBlock;       \n        memcpy(tempPtr, pInOut+i-iQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-jQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-kQ*wordBlock, (size_t)blockSize);\n        tempPtr -= wordBlock;\n        memcpy(tempPtr, pInOut+i-lQ*wordBlock, (size_t)blockSize);      \n    }   \n    memcpy(pInOut, temp, start*sizeof(word));\n    updataInfo(iQ, jQ, iVar, pCanonPerm, pCanonPhase);\n//    printf(\"out arrangeQuoters_superFast_moreThen5\\n\");\n\n}\n\n//It compares 0Q and 3Q and returns 0 if 0Q is smaller then 3Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 0Q and 3Q\nfunc minTemp0_fast_moreThen5(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var wordDif int32  = 3*wordBlock;\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp0_fast_moreThen5\\n\");\n\n    for i=nWords - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordDif]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 3;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp0_fast_moreThen5\\n\");\n\n    return 0;\n}\n\n//It compares 1Q and 2Q and returns 1 if 1Q is smaller then 2Q ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in 1Q and 2Q\nfunc minTemp1_fast_moreThen5(pInOut *word, iVar int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp1_fast_moreThen5\\n\");\n\n    for i=nWords - wordBlock - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j],pInOut[i-j-wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+wordBlock+1;\n                return 1;\n            \n            } else {\n                *pDifStart = i+wordBlock+1;\n                return 2;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp1_fast_moreThen5\\n\");\n\n    return 1;\n}\n\n//It compares iQ and jQ and returns 0 if iQ is smaller then jQ ( comparison starts at highest bit) and visa versa\n// DifStart contains the information about the first different bit in iQ and jQ\nfunc minTemp2_fast_moreThen5(pInOut *word, iVar int32, iQ int32, jQ int32, nWords int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp2_fast_moreThen5\\n\");\n\n    for i=nWords - 1; i\u003e=0; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp2_fast_moreThen5\\n\");\n    \n    return 0;\n}\n\n// same as minTemp2_fast but this one has a start position\nfunc minTemp3_fast_moreThen5(pInOut *word, iVar int32, start int32, finish int32, iQ int32, jQ int32, pDifStart *int32) int32 {\n    var i, j, temp int32;\n    var wordBlock int32  = 1\u003c\u003c(iVar-6);\n    var shiftBlock int32  = wordBlock*4;\n//    printf(\"in minTemp3_fast_moreThen5\\n\");\n\n    for i=start-1; i\u003e=finish; i-=shiftBlock {\n        for j=0;j\u003cwordBlock;j++ {\n            temp = CompareWords(pInOut[i-j-iQ*wordBlock],pInOut[i-j-jQ*wordBlock]);\n            if temp == 0 {\n                continue;\n            } else if temp == -1 {\n                *pDifStart = i+1;\n                return 0;\n            \n            } else {\n                *pDifStart = i+1;\n                return 1;\n            }\n        }\n    }\n    *pDifStart=0;\n//    printf(\"out minTemp3_fast_moreThen5\\n\");\n\n    return 0;\n}\n\n// It considers all swap and flip possibilities of iVar and iVar+1 and switches InOut to a minimal of them \nfunc minimalSwapAndFlipIVar_superFast_moreThen5(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var min1, min2, DifStart0, DifStart1, DifStartMin int32;\n    var M [2]int32;\n    var temp [1024]word;\n//    printf(\"in minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n    M[0] = minTemp0_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart0); // 0, 3\n    M[1] = minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1); // 1, 2\n    min1 = minTemp2_fast_moreThen5(pInOut, iVar, M[0], M[1], nWords, \u0026DifStartMin);\n    if DifStart0 != DifStart1 {   \n        if DifStartMin\u003e=DifStart1 \u0026\u0026 DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        } else if DifStart0 \u003e DifStart1 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart0), M[0], M[1], 3 - M[1], 3 - M[0], iVar, pCanonPerm, pCanonPhase);\n        } else {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, luckyMax(DifStartMin,DifStart1), M[1], M[0], 3 - M[0], 3 - M[1], iVar, pCanonPerm, pCanonPhase); }\n    \n    } else {\n        if DifStartMin\u003e=DifStart0 {\n            arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStartMin, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase);\n        } else {\n            min2 = minTemp3_fast_moreThen5(pInOut, iVar, DifStart0, DifStartMin, 3-M[0], 3-M[1], \u0026DifStart1);  // reuse DifStart1 because DifStart1 = DifStart1=0\n            if DifStart1\u003eDifStartMin {\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[(min2+1)\u00261], M[min2], 3 - M[min2], 3 - M[(min2+1)\u00261], iVar, pCanonPerm, pCanonPhase);\n            } else {\n                arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart0, M[min1], M[(min1+1)\u00261], 3 - M[(min1+1)\u00261], 3 - M[min1], iVar, pCanonPerm, pCanonPhase); }\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_moreThen5\\n\");\n\n}\n\nfunc minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(pInOut *word, iVar int32, nWords int32, pCanonPerm string, pCanonPhase *uint32) {\n    var DifStart1 int32;\n    var temp [1024]word;\n    if minTemp1_fast_moreThen5(pInOut, iVar, nWords, \u0026DifStart1) == 2 {\n        arrangeQuoters_superFast_moreThen5(pInOut, temp, DifStart1, 0, 2, 1, 3, iVar, pCanonPerm, pCanonPhase); } \n}\n\n/////////////////////////////////// for all /////////////////////////////////////////////////////////////////////////////////////////////\nfunc minimalInitialFlip_fast_16Vars(pInOut *word, nVars int32, pCanonPhase *uint32) {\n    var oneWord word =1;\n    if (pInOut[Kit_TruthWordNum_64bit( nVars ) -1]\u003e\u003e63) \u0026 oneWord {\n        Kit_TruthNot_64bit( pInOut, nVars );\n        (* pCanonPhase) ^=(1\u003c\u003cnVars);       \n    }\n\n}\n\n// this function finds minimal for all TIED(and tied only) iVars \n//it finds tied vars based on rearranged  Store info - group of tied vars has the same bit count in Store\nfunc minimalSwapAndFlipIVar_superFast_all(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) int32 {\n    var i int32;\n    var pDuplicate [1024]word;  \n    var bitInfoTemp int32  = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n//    printf(\"in minimalSwapAndFlipIVar_superFast_all\\n\");\n    for i=0;i\u003c5;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_lessThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if bitInfoTemp == pStore[i+1] {\n        minimalSwapAndFlipIVar_superFast_iVar5((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    } else {    \n        bitInfoTemp = pStore[i+1]; }\n    \n    for i=6;i\u003cnVars-1;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_moreThen5(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n//    printf(\"out minimalSwapAndFlipIVar_superFast_all\\n\");\n\n    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n\nfunc minimalSwapAndFlipIVar_superFast_all_noEBFC(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) int32 {\n    var i int32;\n    var pDuplicate [1024]word;  \n    var bitInfoTemp int32  = pStore[0];\n    memcpy(pDuplicate,pInOut,nWords*sizeof(word));\n    for i=0;i\u003c5;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_lessThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if bitInfoTemp == pStore[i+1] {\n        minimalSwapAndFlipIVar_superFast_iVar5_noEBFC((unsigned*) pInOut, nWords, pCanonPerm, pCanonPhase);\n    } else {    \n        bitInfoTemp = pStore[i+1]; }\n    \n    for i=6;i\u003cnVars-1;i++ {\n        if bitInfoTemp == pStore[i+1] {\n            minimalSwapAndFlipIVar_superFast_moreThen5_noEBFC(pInOut, i, nWords, pCanonPerm, pCanonPhase);\n        } else {\n            bitInfoTemp = pStore[i+1];\n            continue;\n        }\n    }\n    if memcmp(pInOut,pDuplicate , nWords*sizeof(word)) == 0 {\n        return 0;\n    } else {\n        return 1; }\n}\n\n\n// old version with out noEBFC\n// void luckyCanonicizerS_F_first_16Vars(word* pInOut, int  nVars, int nWords, int * pStore, char * pCanonPerm, unsigned* pCanonPhase)\n// {\n//     while( minimalSwapAndFlipIVar_superFast_all(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0)\n//         continue;\n// }\n\nfunc luckyCanonicizerS_F_first_16Vars1(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    if ((* pCanonPhase) \u003e\u003e (nVars+1)) \u0026 1 {\n        for  minimalSwapAndFlipIVar_superFast_all(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0 {\n            continue;\n        }\n    } else {\n        for  minimalSwapAndFlipIVar_superFast_all_noEBFC(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase) != 0 {\n            continue;\n        } }\n}\n\nfunc luckyCanonicizerS_F_first_16Vars11(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    var duplicate [1024]word;\n    var pCanonPerm1 [16]byte;\n    var uCanonPhase1 uint32;\n\n    if (* pCanonPhase) \u003e\u003e (nVars+2) {  \n        memcpy(duplicate, pInOut, sizeof(word)*nWords);\n        Kit_TruthNot_64bit(duplicate, nVars);\n        uCanonPhase1 = *pCanonPhase;\n        uCanonPhase1 ^= (1 \u003c\u003c nVars);\n        memcpy(pCanonPerm1,pCanonPerm,sizeof(char)*16);\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase); \n        luckyCanonicizerS_F_first_16Vars1(duplicate, nVars, nWords, pStore, pCanonPerm1, \u0026uCanonPhase1);\n        if memCompare(pInOut, duplicate,nVars) == 1 {\n            *pCanonPhase = uCanonPhase1;\n            memcpy(pCanonPerm,pCanonPerm1,sizeof(char)*16);\n            memcpy(pInOut, duplicate, sizeof(word)*nWords);\n        }\n    \n    } else {\n        luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase);\n    }\n}\n\nfunc luckyCanonicizer_final_fast_16Vars(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {\n    assert(nVars \u003e 6 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 6 \u0026\u0026 nVars \u003c= 16\");\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars1(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n}\n\nfunc bitReverceOrder(x *word, nVars int32) {\n    var i int32;\n    for i= nVars-1;i\u003e=0;i-- {\n        Kit_TruthChangePhase_64bit( x, nVars, i );\n    }\n}\n\n\nfunc luckyCanonicizer_final_fast_16Vars1(pInOut *word, nVars int32, nWords int32, pStore *int32, pCanonPerm string, pCanonPhase *uint32) {   \n    assert(nVars \u003e 6 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 6 \u0026\u0026 nVars \u003c= 16\");\n    (* pCanonPhase) = Kit_TruthSemiCanonicize_Yasha1( pInOut, nVars, pCanonPerm, pStore );\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase ); \n    bitReverceOrder(pInOut, nVars);\n    (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n    luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n//     bitReverceOrder(pInOut, nVars);\n//     (*pCanonPhase) ^= (1\u003c\u003cnVars) -1;\n//     luckyCanonicizerS_F_first_16Vars11(pInOut, nVars, nWords, pStore, pCanonPerm, pCanonPhase );\n}\n\n\n// top-level procedure calling two special cases (nVars \u003c= 6 and nVars \u003c= 16)\nfunc luckyCanonicizer_final_fast(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var nWords int32;\n    var pStore [16]int32;\n    var uCanonPhase uint32;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if nVars \u003c= 6 {\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    } else if nVars \u003c= 16 {\n        if nVars \u003c= 6 {\n            nWords = 1;\n        } else {\n            nWords = (1 \u003c\u003c (nVars - 6));\n        }\n        luckyCanonicizer_final_fast_16Vars( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    \n    } else { assert(false, \"0\"); }\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n        return uCanonPhase;\n}\n\nfunc luckyCanonicizer_final_fast1(pInOut *word, nVars int32, pCanonPerm string) uint32 {\n    var nWords int32;\n    var pStore [16]int32;\n    var uCanonPhase uint32;\n#ifdef LUCKY_VERIFY\n    word temp[1024] = {0};\n    word duplicate[1024] = {0};\n    Kit_TruthCopy_64bit( duplicate, pInOut, nVars );\n#endif\n    if nVars \u003c= 6 {\n        pInOut[0] = luckyCanonicizer_final_fast_6Vars1( pInOut[0], pStore, pCanonPerm, \u0026uCanonPhase);\n    } else if nVars \u003c= 16 {\n        nWords = 1 \u003c\u003c (nVars - 6);\n        luckyCanonicizer_final_fast_16Vars1( pInOut, nVars, nWords, pStore, pCanonPerm, \u0026uCanonPhase );\n    \n    } else { assert(false, \"0\"); }\n#ifdef LUCKY_VERIFY\n    Kit_TruthCopy_64bit( temp, pInOut, nVars );\n    assert( ! luckyCheck(temp, duplicate, nVars, pCanonPerm, uCanonPhase) );\n#endif\n    return uCanonPhase;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n\n"
+}

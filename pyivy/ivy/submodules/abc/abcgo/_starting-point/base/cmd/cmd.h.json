@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmd.h",
+  "SHA256": "2621c111e0b37dbd1e0a02ebb3cc12dad7e02957fd70cfb4adabced70fcf0b65",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmd.h::mechanical::enum::1397",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1397,
+      "End": 1401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3847
+    }
+  ],
+  "Draft": "package cmd\n\n/**CFile****************************************************************\n\n  FileName    [cmd.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [External declarations of the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmd.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Abc_Command =    MvCommand;  // one command\ntype Abc_Alias =      MvAlias;    // one alias\n\n type Cmd_CommandId_t int32\ntype Cmd_CommandId_t_ = Cmd_CommandId_t\nconst \n(\n    CMD_COMMAND_UNKNOWN Cmd_CommandId_t = 0\n\n    CMD_COMMAND_ALIAS Cmd_CommandId_t = CMD_COMMAND_UNKNOWN + 1\n\n    CMD_COMMAND_SOURCE Cmd_CommandId_t = CMD_COMMAND_ALIAS + 1\n\n    CMD_COMMAND_SET Cmd_CommandId_t = CMD_COMMAND_SOURCE + 1\n\n    CMD_COMMAND_READ_BLIF Cmd_CommandId_t = CMD_COMMAND_SET + 1\n\n    CMD_COMMAND_READ_AIGER Cmd_CommandId_t = CMD_COMMAND_READ_BLIF + 1\n\n    CMD_COMMAND_STRASH Cmd_CommandId_t = CMD_COMMAND_READ_AIGER + 1\n\n    CMD_COMMAND_PRINT_STATS Cmd_CommandId_t = CMD_COMMAND_STRASH + 1\n\n    CMD_COMMAND_PDR Cmd_CommandId_t = CMD_COMMAND_PRINT_STATS + 1\n\n    CMD_COMMAND_WRITE_AIGER_CEX Cmd_CommandId_t = CMD_COMMAND_PDR + 1\n\n)\n\n \n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cmd.c ===========================================================*/\n// extern void        Cmd_Init( Abc_Frame_t * pAbc );\n\n// extern void        Cmd_End( Abc_Frame_t * pAbc );\n\n/*=== cmdApi.c ========================================================*/\ntypedef int (*Cmd_CommandFuncType)(Abc_Frame_t*, int, char**);\n// extern int         Cmd_CommandIsDefined( Abc_Frame_t * pAbc, const char * sName );\n\n// extern void        Cmd_CommandAdd( Abc_Frame_t * pAbc, const char * sGroup, const char * sName, Cmd_CommandFuncType pFunc, int fChanges );\n\nextern ABC_DLL int Cmd_CommandExecute( Abc_Frame_t * pAbc, char * sCommand );\n/*=== cmdFlag.c ========================================================*/\n// extern char *      Cmd_FlagReadByName( Abc_Frame_t * pAbc, char * flag );\n\n// extern void        Cmd_FlagDeleteByName( Abc_Frame_t * pAbc, const char * key );\n\n// extern void        Cmd_FlagUpdateValue( Abc_Frame_t * pAbc, const char * key, char * value );\n\n/*=== cmdHist.c ========================================================*/\n// extern void          Cmd_HistoryAddCommand( Abc_Frame_t * pAbc, const char * command );\n\n// extern void        Cmd_HistoryRead( Abc_Frame_t * p );\n\n// extern void        Cmd_HistoryWrite( Abc_Frame_t * p, int Limit );\n\n// extern void        Cmd_HistoryPrint( Abc_Frame_t * p, int Limit );\n\n/*=== cmdLoad.c ========================================================*/\n// extern int         CmdCommandLoad( Abc_Frame_t * pAbc, int argc, char ** argv );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

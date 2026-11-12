@@ -1,0 +1,97 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h",
+  "SHA256": "36adfc0fcad42ee431b3846436d49f1154a354f632af1793fda5bcb37d7ccaa4",
+  "Functions": [
+    {
+      "Name": "Acec_SignBit",
+      "Start": 1906,
+      "End": 2033,
+      "BodyStart": 1976,
+      "Original": "static inline int Acec_SignBit( Vec_Int_t * vAdds, int iBox, int b )  { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e b)      \u0026 1; }",
+      "Draft": "func Acec_SignBit(vAdds *Vec_Int_t, iBox int32, b int32) int32 { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e b)      \u0026 1; }"
+    },
+    {
+      "Name": "Acec_SignBit2",
+      "Start": 2034,
+      "End": 2161,
+      "BodyStart": 2104,
+      "Original": "static inline int Acec_SignBit2( Vec_Int_t * vAdds, int iBox, int b ) { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e (16+b)) \u0026 1; }",
+      "Draft": "func Acec_SignBit2(vAdds *Vec_Int_t, iBox int32, b int32) int32 { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e (16+b)) \u0026 1; }"
+    },
+    {
+      "Name": "Acec_SignSetBit",
+      "Start": 2163,
+      "End": 2306,
+      "BodyStart": 2244,
+      "Original": "static inline void Acec_SignSetBit( Vec_Int_t * vAdds, int iBox, int b, int v )  { if ( v ) *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c b);      }",
+      "Draft": "func Acec_SignSetBit(vAdds *Vec_Int_t, iBox int32, b int32, v int32) { if v != 0 { *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c b); }      }"
+    },
+    {
+      "Name": "Acec_SignSetBit2",
+      "Start": 2307,
+      "End": 2450,
+      "BodyStart": 2388,
+      "Original": "static inline void Acec_SignSetBit2( Vec_Int_t * vAdds, int iBox, int b, int v ) { if ( v ) *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c (16+b)); }",
+      "Draft": "func Acec_SignSetBit2(vAdds *Vec_Int_t, iBox int32, b int32, v int32) { if v != 0 { *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c (16+b)); } }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::struct::Acec_Box_t",
+      "Category": "struct-review",
+      "Symbol": "Acec_Box_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1105,
+      "End": 1464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::Acec_SignBit",
+      "Category": "semantic-review",
+      "Symbol": "Acec_SignBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1906,
+      "End": 2033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::Acec_SignBit2",
+      "Category": "semantic-review",
+      "Symbol": "Acec_SignBit2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2034,
+      "End": 2161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::Acec_SignSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Acec_SignSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2163,
+      "End": 2306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::Acec_SignSetBit2",
+      "Category": "semantic-review",
+      "Symbol": "Acec_SignSetBit2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2307,
+      "End": 2450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4790
+    }
+  ],
+  "Draft": "package acec\n\n/**CFile****************************************************************\n\n  FileName    [acecInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"acec.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n   \ntype Acec_Box_t struct {\n    pGia     *Gia_Man_t;      // AIG manager\n    vAdds     *Vec_Wec_t;     // adders by rank\n    vLeafLits     *Vec_Wec_t; // leaf literals by rank\n    vRootLits     *Vec_Wec_t; // root literals by rank\n    vShared     *Vec_Wec_t;   // shared leaves\n    vUnique     *Vec_Wec_t;   // unique leaves\n}\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Acec_SignBit(vAdds *Vec_Int_t, iBox int32, b int32) int32 { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e b)      \u0026 1; }\nfunc Acec_SignBit2(vAdds *Vec_Int_t, iBox int32, b int32) int32 { return (Vec_IntEntry(vAdds, 6*iBox+5) \u003e\u003e (16+b)) \u0026 1; }\n\nfunc Acec_SignSetBit(vAdds *Vec_Int_t, iBox int32, b int32, v int32) { if v != 0 { *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c b); }      }\nfunc Acec_SignSetBit2(vAdds *Vec_Int_t, iBox int32, b int32, v int32) { if v != 0 { *Vec_IntEntryP(vAdds, 6*iBox+5) |= (1 \u003c\u003c (16+b)); } }\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== acecCo.c ========================================================*/\n// extern Vec_Int_t *   Gia_PolynCoreOrder( Gia_Man_t * pGia, Vec_Int_t * vAdds, Vec_Int_t * vAddCos, Vec_Int_t ** pvIns, Vec_Int_t ** pvOuts );\n\n// extern Vec_Wec_t *   Gia_PolynCoreOrderArray( Gia_Man_t * pGia, Vec_Int_t * vAdds, Vec_Int_t * vRootBoxes );\n\n/*=== acecMult.c ========================================================*/\n// extern Vec_Int_t *   Acec_MultDetectInputs( Gia_Man_t * p, Vec_Wec_t * vLeafLits, Vec_Wec_t * vRootLits );\n\n// extern Vec_Bit_t *   Acec_BoothFindPPG( Gia_Man_t * p );\n\n// extern Vec_Bit_t *   Acec_MultMarkPPs( Gia_Man_t * p );\n\n/*=== acecNorm.c ========================================================*/\n// extern void          Acec_InsertFadd( Gia_Man_t * pNew, int In[3], int Out[2] );\n\n// extern Gia_Man_t *   Acec_InsertBox( Acec_Box_t * pBox, int fAll );\n\n/*=== acecTree.c ========================================================*/\n// extern void          Acec_PrintAdders( Vec_Wec_t * vBoxes, Vec_Int_t * vAdds );\n\n// extern void          Acec_TreePrintBox( Acec_Box_t * pBox, Vec_Int_t * vAdds );\n\n// extern Acec_Box_t *  Acec_DeriveBox( Gia_Man_t * p, Vec_Bit_t * vIgnore, int fFilterIn, int fFilterOut, int fVerbose );\n\n// extern void          Acec_BoxFreeP( Acec_Box_t ** ppBox );\n\n/*=== acecUtil.c ========================================================*/\n// extern void          Gia_PolynAnalyzeXors( Gia_Man_t * pGia, int fVerbose );\n\n// extern Vec_Int_t *   Gia_PolynCollectLastXor( Gia_Man_t * pGia, int fVerbose );\n\n/*=== acecUtil.c ========================================================*/\n// extern Acec_Box_t *  Acec_ProduceBox( Gia_Man_t * p, int fVerbose );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

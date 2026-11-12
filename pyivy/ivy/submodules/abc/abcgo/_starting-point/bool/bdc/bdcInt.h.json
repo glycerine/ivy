@@ -1,0 +1,276 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h",
+  "SHA256": "53bd40db9cba83cb23f2acd4120982cf3e98fa222f01bd06701d9dbf8a1069f5",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 143,
+        "Column": 47,
+        "ByteOffset": 5006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": " pRes = p.pNodes + p.nNodes++; p.nNodesNew++; memset( pRes, 0, sizeof(Bdc_Fun_t) ); return pRes; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 57,
+        "ByteOffset": 5115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Bdc_FunWithId(p *Bdc_Man_t, Id int32) *Bdc_Fun_t { assert( Id \u003c p.nNodes ); return p.pNodes + Id; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 173,
+        "ByteOffset": 5416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Bdc_IsfStart(p *Bdc_Man_t, pF *Bdc_Isf_t) { pF.uSupp = 0; pF.uUniq = 0; pF.puOn = Vec_IntFetch( p.vMemory, p.nWords ); pF.puOff = Vec_IntFetch( p.vMemory, p.nWords ); assert( pF.puOff \u0026\u0026 pF.puOn ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bdc_FunNew",
+      "Start": 4607,
+      "End": 4879,
+      "BodyStart": 4679,
+      "Original": "static inline Bdc_Fun_t * Bdc_FunNew( Bdc_Man_t * p )                   { Bdc_Fun_t * pRes; if ( p-\u003enNodes \u003e= p-\u003enNodesAlloc || p-\u003enNodesNew \u003e= p-\u003enNodesMax ) return NULL; pRes = p-\u003epNodes + p-\u003enNodes++; p-\u003enNodesNew++; memset( pRes, 0, sizeof(Bdc_Fun_t) ); return pRes; }",
+      "Draft": "func Bdc_FunNew(p *Bdc_Man_t) *Bdc_Fun_t { var pRes *Bdc_Fun_t; if p.nNodes \u003e= p.nNodesAlloc || p.nNodesNew \u003e= p.nNodesMax { return nil; }\n pRes = p.pNodes + p.nNodes++; p.nNodesNew++; memset( pRes, 0, sizeof(Bdc_Fun_t) ); return pRes; }"
+    },
+    {
+      "Name": "Bdc_FunWithId",
+      "Start": 4880,
+      "End": 5004,
+      "BodyStart": 4952,
+      "Original": "static inline Bdc_Fun_t * Bdc_FunWithId( Bdc_Man_t * p, int Id )        { assert( Id \u003c p-\u003enNodes ); return p-\u003epNodes + Id; }",
+      "Draft": "func Bdc_FunWithId(p *Bdc_Man_t, Id int32) *Bdc_Fun_t { assert(Id \u003c p.nNodes, \"Id \u003c p.nNodes\"); return p.pNodes + Id; }"
+    },
+    {
+      "Name": "Bdc_FunId",
+      "Start": 5005,
+      "End": 5105,
+      "BodyStart": 5077,
+      "Original": "static inline int         Bdc_FunId( Bdc_Man_t * p, Bdc_Fun_t * pFun )  { return pFun - p-\u003epNodes; }",
+      "Draft": "func Bdc_FunId(p *Bdc_Man_t, pFun *Bdc_Fun_t) int32 { return pFun - p.pNodes; }"
+    },
+    {
+      "Name": "Bdc_IsfStart",
+      "Start": 5106,
+      "End": 5345,
+      "BodyStart": 5178,
+      "Original": "static inline void        Bdc_IsfStart( Bdc_Man_t * p, Bdc_Isf_t * pF ) { pF-\u003euSupp = 0; pF-\u003euUniq = 0; pF-\u003epuOn = Vec_IntFetch( p-\u003evMemory, p-\u003enWords ); pF-\u003epuOff = Vec_IntFetch( p-\u003evMemory, p-\u003enWords ); assert( pF-\u003epuOff \u0026\u0026 pF-\u003epuOn ); }",
+      "Draft": "func Bdc_IsfStart(p *Bdc_Man_t, pF *Bdc_Isf_t) { pF.uSupp = 0; pF.uUniq = 0; pF.puOn = Vec_IntFetch( p.vMemory, p.nWords ); pF.puOff = Vec_IntFetch( p.vMemory, p.nWords ); assert(pF.puOff \u0026\u0026 pF.puOn, \"pF.puOff \u0026\u0026 pF.puOn\"); }"
+    },
+    {
+      "Name": "Bdc_IsfClean",
+      "Start": 5346,
+      "End": 5486,
+      "BodyStart": 5418,
+      "Original": "static inline void        Bdc_IsfClean( Bdc_Isf_t * p )                 { p-\u003euSupp = 0; p-\u003euUniq = 0;                                      }",
+      "Draft": "func Bdc_IsfClean(p *Bdc_Isf_t) { p.uSupp = 0; p.uUniq = 0;                                      }"
+    },
+    {
+      "Name": "Bdc_IsfCopy",
+      "Start": 5487,
+      "End": 5627,
+      "BodyStart": 5559,
+      "Original": "static inline void        Bdc_IsfCopy( Bdc_Isf_t * p, Bdc_Isf_t * q )   { Bdc_Isf_t T = *p; *p = *q; *q = T;                               }",
+      "Draft": "func Bdc_IsfCopy(p *Bdc_Isf_t, q *Bdc_Isf_t) { var T Bdc_Isf_t  = *p; *p = *q; *q = T;                               }"
+    },
+    {
+      "Name": "Bdc_IsfNot",
+      "Start": 5628,
+      "End": 5768,
+      "BodyStart": 5700,
+      "Original": "static inline void        Bdc_IsfNot( Bdc_Isf_t * p )                   { unsigned * puT = p-\u003epuOn; p-\u003epuOn = p-\u003epuOff; p-\u003epuOff = puT;    }",
+      "Draft": "func Bdc_IsfNot(p *Bdc_Isf_t) { var puT *uint32  = p.puOn; p.puOn = p.puOff; p.puOff = puT;    }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Isf_t",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Isf_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2327,
+      "End": 2631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Fun_t_::// next function with same support\n    union { int      iCopy;        // the literal of the node (AIG)\n    void *           pCopy; };",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Fun_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2135,
+      "End": 2276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Fun_t_",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Fun_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1771,
+      "End": 2325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Man_t_::// temporary truth table\n    // temporary ISFs\n    Bdc_Isf_t * pIsfOL, IsfOL;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3917,
+      "End": 4000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Man_t_::Bdc_Isf_t * pIsfOR, IsfOR;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4000,
+      "End": 4031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Man_t_::Bdc_Isf_t * pIsfAL, IsfAL;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4031,
+      "End": 4062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Man_t_::Bdc_Isf_t * pIsfAR, IsfAR;",
+      "Category": "struct-field-review",
+      "Symbol": "Bdc_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4062,
+      "End": 4093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::struct::Bdc_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Bdc_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2633,
+      "End": 4605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::mechanical::enum::1413",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1413,
+      "End": 1417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::mechanical::union::2182",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 2182,
+      "End": 2187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::mechanical::sizeof::4844",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4844,
+      "End": 4850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_FunNew",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4607,
+      "End": 4879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_FunWithId",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunWithId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4880,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_FunId",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5005,
+      "End": 5105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_IsfStart",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_IsfStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5106,
+      "End": 5345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_IsfClean",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_IsfClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5346,
+      "End": 5486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_IsfCopy",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_IsfCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5487,
+      "End": 5627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::Bdc_IsfNot",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_IsfNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5628,
+      "End": 5768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7191
+    }
+  ],
+  "Draft": "package bdc\n\n/**CFile****************************************************************\n\n  FileName    [bdcInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table-based bi-decomposition engine.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resInt.h,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"bool/kit/kit.h\"\n//#include \"bdc.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nconst BDC_SCALE = 1000  // value used to compute the cost\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// network types\n type Bdc_Type_t int32\nconst ( \n    BDC_TYPE_NONE Bdc_Type_t = 0\n  // 0:  unknown\n    BDC_TYPE_CONST1 Bdc_Type_t = BDC_TYPE_NONE + 1\n    // 1:  constant 1\n    BDC_TYPE_PI Bdc_Type_t = BDC_TYPE_CONST1 + 1\n        // 2:  primary input\n    BDC_TYPE_AND Bdc_Type_t = BDC_TYPE_PI + 1\n       // 3:  AND-gate\n    BDC_TYPE_OR Bdc_Type_t = BDC_TYPE_AND + 1\n        // 4:  OR-gate (temporary)\n    BDC_TYPE_XOR Bdc_Type_t = BDC_TYPE_OR + 1\n       // 5:  XOR-gate\n    BDC_TYPE_MUX Bdc_Type_t = BDC_TYPE_XOR + 1\n       // 6:  MUX-gate\n    BDC_TYPE_OTHER Bdc_Type_t = BDC_TYPE_MUX + 1      // 7:  unused\n\n)\n\n \n\ntype Bdc_Fun_t_ struct {\n    Type              int32;         // Const1, PI, AND, XOR, MUX\n    pFan0       *Bdc_Fun_t;        // fanin of the given node\n    pFan1       *Bdc_Fun_t;        // fanin of the given node\n    uSupp         uint32;        // bit mask of current support\n    puFunc        *uint32;       // the function of the node\n    pNext       *Bdc_Fun_t;        // next function with same support\n    union { int      iCopy;        // the literal of the node (AIG)\n    void *           pCopy; };     // the function of the node (BDD or AIG)\n\n}\n\n   \ntype Bdc_Isf_t struct {\n    uSupp         uint32;        // the complete support of this component\n    uUniq         uint32;        // the unique variables of this component\n    puOn        *uint32;         // on-set\n    puOff        *uint32;        // off-set\n}\n\ntype Bdc_Man_t_ struct {\n    // external parameters\n    pPars       *Bdc_Par_t;        // parameter set\n    nVars              int32;        // the number of variables\n    nWords              int32;       // the number of words \n    nNodesMax              int32;    // the limit on the number of new nodes\n    nDivsLimit              int32;   // the limit on the number of divisors\n    // internal nodes\n    pNodes       *Bdc_Fun_t;       // storage for decomposition nodes\n    nNodesAlloc              int32;  // the number of nodes allocated  \n    nNodes              int32;       // the number of all nodes created so far\n    nNodesNew              int32;    // the number of new AND nodes created so far\n    pRoot       *Bdc_Fun_t;        // the root node\n    // resub candidates\n    pTable      **Bdc_Fun_t;       // hash table of candidates\n    nTableSize              int32;   // hash table size (1 \u003c\u003c nVarsMax)\n    vSpots       *Vec_Int_t;       // the occupied spots in the table\n    // elementary truth tables \n    vTruths       *Vec_Ptr_t;      // for const 1 and elementary variables\n    puTemp1        *uint32;      // temporary truth table\n    puTemp2        *uint32;      // temporary truth table\n    puTemp3        *uint32;      // temporary truth table\n    puTemp4        *uint32;      // temporary truth table\n    // temporary ISFs\n    pIsfOL *Bdc_Isf_t;\nIsfOL Bdc_Isf_t;\n    pIsfOR *Bdc_Isf_t;\nIsfOR Bdc_Isf_t;\n    pIsfAL *Bdc_Isf_t;\nIsfAL Bdc_Isf_t;\n    pIsfAR *Bdc_Isf_t;\nIsfAR Bdc_Isf_t;\n    // internal memory manager\n    vMemory       *Vec_Int_t;      // memory for internal truth tables\n    // statistics\n    numCalls              int32;\n    numNodes              int32;\n    numMuxes              int32;\n    numAnds              int32;\n    numOrs              int32;\n    numWeaks              int32;\n    numReuse              int32;\n    // runtime\n    timeCache          abctime;\n    timeCheck          abctime;\n    timeMuxes          abctime;\n    timeSupps          abctime;\n    timeTotal          abctime;\n}\n\nfunc Bdc_FunNew(p *Bdc_Man_t) *Bdc_Fun_t { var pRes *Bdc_Fun_t; if p.nNodes \u003e= p.nNodesAlloc || p.nNodesNew \u003e= p.nNodesMax { return nil; }\n pRes = p.pNodes + p.nNodes++; p.nNodesNew++; memset( pRes, 0, sizeof(Bdc_Fun_t) ); return pRes; }\nfunc Bdc_FunWithId(p *Bdc_Man_t, Id int32) *Bdc_Fun_t { assert(Id \u003c p.nNodes, \"Id \u003c p.nNodes\"); return p.pNodes + Id; }\nfunc Bdc_FunId(p *Bdc_Man_t, pFun *Bdc_Fun_t) int32 { return pFun - p.pNodes; }\nfunc Bdc_IsfStart(p *Bdc_Man_t, pF *Bdc_Isf_t) { pF.uSupp = 0; pF.uUniq = 0; pF.puOn = Vec_IntFetch( p.vMemory, p.nWords ); pF.puOff = Vec_IntFetch( p.vMemory, p.nWords ); assert(pF.puOff \u0026\u0026 pF.puOn, \"pF.puOff \u0026\u0026 pF.puOn\"); }\nfunc Bdc_IsfClean(p *Bdc_Isf_t) { p.uSupp = 0; p.uUniq = 0;                                      }\nfunc Bdc_IsfCopy(p *Bdc_Isf_t, q *Bdc_Isf_t) { var T Bdc_Isf_t  = *p; *p = *q; *q = T;                               }\nfunc Bdc_IsfNot(p *Bdc_Isf_t) { var puT *uint32  = p.puOn; p.puOn = p.puOff; p.puOff = puT;    }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== bdcDec.c ==========================================================*/\n// extern Bdc_Fun_t *      Bdc_ManDecompose_rec( Bdc_Man_t * p, Bdc_Isf_t * pIsf );\n\n// extern void             Bdc_SuppMinimize( Bdc_Man_t * p, Bdc_Isf_t * pIsf );\n\n// extern int              Bdc_ManNodeVerify( Bdc_Man_t * p, Bdc_Isf_t * pIsf, Bdc_Fun_t * pFunc );\n\n/*=== bdcTable.c ==========================================================*/\n// extern Bdc_Fun_t *      Bdc_TableLookup( Bdc_Man_t * p, Bdc_Isf_t * pIsf );\n\n// extern void             Bdc_TableAdd( Bdc_Man_t * p, Bdc_Fun_t * pFunc );\n\n// extern void             Bdc_TableClear( Bdc_Man_t * p );\n\n// extern int              Bdc_TableCheckContainment( Bdc_Man_t * p, Bdc_Isf_t * pIsf, unsigned * puTruth );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

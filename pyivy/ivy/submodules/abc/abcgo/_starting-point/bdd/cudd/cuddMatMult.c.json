@@ -1,0 +1,616 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c",
+  "SHA256": "afb632b01afeca255bf1d3e0dd5609a9922fba51814a54c5794f9078a1fa4a48",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 12,
+        "ByteOffset": 5798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vars = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 6157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vars);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 12,
+        "ByteOffset": 8977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vars = ABC_ALLOC(int, nvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 9,
+        "ByteOffset": 9266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(vars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vars);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 86,
+        "Column": 1,
+        "ByteOffset": 3406
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addMatrixMultiply",
+      "Start": 5525,
+      "End": 6173,
+      "BodyStart": 5630,
+      "Original": "DdNode *\nCudd_addMatrixMultiply(\n  DdManager * dd,\n  DdNode * A,\n  DdNode * B,\n  DdNode ** z,\n  int  nz)\n{\n    int i, nvars, *vars;\n    DdNode *res; \n\n    /* Array vars says what variables are \"summation\" variables. */\n    nvars = dd-\u003esize;\n    vars = ABC_ALLOC(int,nvars);\n    if (vars == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    for (i = 0; i \u003c nvars; i++) {\n        vars[i] = 0;\n    }\n    for (i = 0; i \u003c nz; i++) {\n        vars[z[i]-\u003eindex] = 1;\n    }\n\n    do {\n        dd-\u003ereordered = 0;\n        res = addMMRecur(dd,A,B,-1,vars);\n    } while (dd-\u003ereordered == 1);\n    ABC_FREE(vars);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addMatrixMultiply(dd *DdManager, A *DdNode, B *DdNode, z **DdNode, nz int32) *DdNode {\n    var i int32;\n    var nvars int32;\n    var vars *int32;\n    var res *DdNode; \n\n    /* Array vars says what variables are \"summation\" variables. */\n    nvars = dd.size;\n    vars = ABC_ALLOC(int,nvars);\n    if vars == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ {\n        vars[i] = 0;\n    }\n    for i = 0; i \u003c nz; i++ {\n        vars[z[i].index] = 1;\n    }\n\n    for {\n        dd.reordered = 0;\n        res = addMMRecur(dd,A,B,-1,vars);\n    \nif !(dd.reordered == 1) { break }\n} \n    ABC_FREE(vars);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addTimesPlus",
+      "Start": 6960,
+      "End": 7816,
+      "BodyStart": 7060,
+      "Original": "DdNode *\nCudd_addTimesPlus(\n  DdManager * dd,\n  DdNode * A,\n  DdNode * B,\n  DdNode ** z,\n  int  nz)\n{\n    DdNode *w, *cube, *tmp, *res; \n    int i;\n    tmp = Cudd_addApply(dd,Cudd_addTimes,A,B);\n    if (tmp == NULL) return(NULL);\n    Cudd_Ref(tmp);\n    Cudd_Ref(cube = DD_ONE(dd));\n    for (i = nz-1; i \u003e= 0; i--) {\n         w = Cudd_addIte(dd,z[i],cube,DD_ZERO(dd));\n         if (w == NULL) {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(NULL);\n         }\n         Cudd_Ref(w);\n         Cudd_RecursiveDeref(dd,cube);\n         cube = w;\n    }\n    res = Cudd_addExistAbstract(dd,tmp,cube);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd,tmp);\n        Cudd_RecursiveDeref(dd,cube);\n        return(NULL);\n    }\n    Cudd_Ref(res);\n    Cudd_RecursiveDeref(dd,cube);\n    Cudd_RecursiveDeref(dd,tmp);\n    Cudd_Deref(res);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addTimesPlus(dd *DdManager, A *DdNode, B *DdNode, z **DdNode, nz int32) *DdNode {\n    var w, cube, tmp, res *DdNode; \n    var i int32;\n    tmp = Cudd_addApply(dd,Cudd_addTimes,A,B);\n    if tmp == nil { return(nil); }\n    Cudd_Ref(tmp);\n    // inlining of macro DD_ONE\n    Cudd_Ref(cube = ((dd).one));\n    for i = nz-1; i \u003e= 0; i-- {\n         // inlining of macro DD_ZERO\n         w = Cudd_addIte(dd,z[i],cube,((dd).zero));\n         if w == nil {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(nil);\n         }\n         Cudd_Ref(w);\n         Cudd_RecursiveDeref(dd,cube);\n         cube = w;\n    }\n    res = Cudd_addExistAbstract(dd,tmp,cube);\n    if res == nil {\n        Cudd_RecursiveDeref(dd,tmp);\n        Cudd_RecursiveDeref(dd,cube);\n        return(nil);\n    }\n    Cudd_Ref(res);\n    Cudd_RecursiveDeref(dd,cube);\n    Cudd_RecursiveDeref(dd,tmp);\n    Cudd_Deref(res);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addTriangle",
+      "Start": 8676,
+      "End": 9491,
+      "BodyStart": 8775,
+      "Original": "DdNode *\nCudd_addTriangle(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode ** z,\n  int  nz)\n{\n    int    i, nvars, *vars;\n    DdNode *res, *cube;\n\n    nvars = dd-\u003esize;\n    vars = ABC_ALLOC(int, nvars);\n    if (vars == NULL) {\n        dd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    for (i = 0; i \u003c nvars; i++) vars[i] = -1;\n    for (i = 0; i \u003c nz; i++) vars[z[i]-\u003eindex] = i;\n    cube = Cudd_addComputeCube(dd, z, NULL, nz);\n    if (cube == NULL) {\n        ABC_FREE(vars);\n        return(NULL);\n    }\n    cuddRef(cube);\n\n    do {\n        dd-\u003ereordered = 0;\n        res = addTriangleRecur(dd, f, g, vars, cube);\n    } while (dd-\u003ereordered == 1);\n    if (res != NULL) cuddRef(res);\n    Cudd_RecursiveDeref(dd,cube);\n    if (res != NULL) cuddDeref(res);\n    ABC_FREE(vars);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addTriangle(dd *DdManager, f *DdNode, g *DdNode, z **DdNode, nz int32) *DdNode {\n    var i int32;\n    var nvars int32;\n    var vars *int32;\n    var res, cube *DdNode;\n\n    nvars = dd.size;\n    vars = ABC_ALLOC(int, nvars);\n    if vars == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ { vars[i] = -1; }\n    for i = 0; i \u003c nz; i++ { vars[z[i].index] = i; }\n    cube = Cudd_addComputeCube(dd, z, nil, nz);\n    if cube == nil {\n        ABC_FREE(vars);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(cube).ref);\n\n    for {\n        dd.reordered = 0;\n        res = addTriangleRecur(dd, f, g, vars, cube);\n    \nif !(dd.reordered == 1) { break }\n} \n    // inlining of macro cuddRef\n    if res != nil { cuddSatInc(Cudd_Regular(res).ref); }\n    Cudd_RecursiveDeref(dd,cube);\n    // inlining of macro cuddDeref\n    if res != nil { cuddSatDec(Cudd_Regular(res).ref); }\n    ABC_FREE(vars);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addOuterSum",
+      "Start": 10047,
+      "End": 10288,
+      "BodyStart": 10130,
+      "Original": "DdNode *\nCudd_addOuterSum(\n  DdManager *dd,\n  DdNode *M,\n  DdNode *r,\n  DdNode *c)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddAddOuterSumRecur(dd, M, r, c);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addOuterSum(dd *DdManager, M *DdNode, r *DdNode, c *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddOuterSumRecur(dd, M, r, c);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "addMMRecur",
+      "Start": 11196,
+      "End": 17392,
+      "BodyStart": 11297,
+      "Original": "static DdNode *\naddMMRecur(\n  DdManager * dd,\n  DdNode * A,\n  DdNode * B,\n  int  topP,\n  int * vars)\n{\n    DdNode *zero,\n           *At,         /* positive cofactor of first operand */\n           *Ae,         /* negative cofactor of first operand */\n           *Bt,         /* positive cofactor of second operand */\n           *Be,         /* negative cofactor of second operand */\n           *t,          /* positive cofactor of result */\n           *e,          /* negative cofactor of result */\n           *scaled,     /* scaled result */\n           *add_scale,  /* ADD representing the scaling factor */\n           *res;\n    int i;              /* loop index */\n    double scale;       /* scaling factor */\n    int index;          /* index of the top variable */\n    CUDD_VALUE_TYPE value;\n    unsigned int topA, topB, topV;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n    zero = DD_ZERO(dd);\n\n    if (A == zero || B == zero) {\n        return(zero);\n    }\n\n    if (cuddIsConstant(A) \u0026\u0026 cuddIsConstant(B)) {\n        /* Compute the scaling factor. It is 2^k, where k is the\n        ** number of summation variables below the current variable.\n        ** Indeed, these constants represent blocks of 2^k identical\n        ** constant values in both A and B.\n        */\n        value = cuddV(A) * cuddV(B);\n        for (i = 0; i \u003c dd-\u003esize; i++) {\n            if (vars[i]) {\n                if (dd-\u003eperm[i] \u003e topP) {\n                    value *= (CUDD_VALUE_TYPE) 2;\n                }\n            }\n        }\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n\n    /* Standardize to increase cache efficiency. Clearly, A*B != B*A\n    ** in matrix multiplication. However, which matrix is which is\n    ** determined by the variables appearing in the ADDs and not by\n    ** which one is passed as first argument.\n    */\n    if (A \u003e B) {\n        DdNode *tmp = A;\n        A = B;\n        B = tmp;\n    }\n\n    topA = cuddI(dd,A-\u003eindex); topB = cuddI(dd,B-\u003eindex);\n    topV = ddMin(topA,topB);\n\n    cacheOp = (DD_CTFP) addMMRecur;\n    res = cuddCacheLookup2(dd,cacheOp,A,B);\n    if (res != NULL) {\n        /* If the result is 0, there is no need to normalize.\n        ** Otherwise we count the number of z variables between\n        ** the current depth and the top of the ADDs. These are\n        ** the missing variables that determine the size of the\n        ** constant blocks.\n        */\n        if (res == zero) return(res);\n        scale = 1.0;\n        for (i = 0; i \u003c dd-\u003esize; i++) {\n            if (vars[i]) {\n                if (dd-\u003eperm[i] \u003e topP \u0026\u0026 (unsigned) dd-\u003eperm[i] \u003c topV) {\n                    scale *= 2;\n                }\n            }\n        }\n        if (scale \u003e 1.0) {\n            cuddRef(res);\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if (add_scale == NULL) {\n                Cudd_RecursiveDeref(dd, res);\n                return(NULL);\n            }\n            cuddRef(add_scale);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if (scaled == NULL) {\n                Cudd_RecursiveDeref(dd, add_scale);\n                Cudd_RecursiveDeref(dd, res);\n                return(NULL);\n            }\n            cuddRef(scaled);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n            cuddDeref(res);\n        }\n        return(res);\n    }\n\n    /* compute the cofactors */\n    if (topV == topA) {\n        At = cuddT(A);\n        Ae = cuddE(A);\n    } else {\n        At = Ae = A;\n    }\n    if (topV == topB) {\n        Bt = cuddT(B);\n        Be = cuddE(B);\n    } else {\n        Bt = Be = B;\n    }\n\n    t = addMMRecur(dd, At, Bt, (int)topV, vars);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = addMMRecur(dd, Ae, Be, (int)topV, vars);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(dd, t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    index = dd-\u003einvperm[topV];\n    if (vars[index] == 0) {\n        /* We have split on either the rows of A or the columns\n        ** of B. We just need to connect the two subresults,\n        ** which correspond to two submatrices of the result.\n        */\n        res = (t == e) ? t : cuddUniqueInter(dd,index,t,e);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(NULL);\n        }\n        cuddRef(res);\n        cuddDeref(t);\n        cuddDeref(e);\n    } else {\n        /* we have simultaneously split on the columns of A and\n        ** the rows of B. The two subresults must be added.\n        */\n        res = cuddAddApplyRecur(dd,Cudd_addPlus,t,e);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n    }\n\n    cuddCacheInsert2(dd,cacheOp,A,B,res);\n\n    /* We have computed (and stored in the computed table) a minimal\n    ** result; that is, a result that assumes no summation variables\n    ** between the current depth of the recursion and its top\n    ** variable. We now take into account the z variables by properly\n    ** scaling the result.\n    */\n    if (res != zero) {\n        scale = 1.0;\n        for (i = 0; i \u003c dd-\u003esize; i++) {\n            if (vars[i]) {\n                if (dd-\u003eperm[i] \u003e topP \u0026\u0026 (unsigned) dd-\u003eperm[i] \u003c topV) {\n                    scale *= 2;\n                }\n            }\n        }\n        if (scale \u003e 1.0) {\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if (add_scale == NULL) {\n                Cudd_RecursiveDeref(dd, res);\n                return(NULL);\n            }\n            cuddRef(add_scale);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if (scaled == NULL) {\n                Cudd_RecursiveDeref(dd, res);\n                Cudd_RecursiveDeref(dd, add_scale);\n                return(NULL);\n            }\n            cuddRef(scaled);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n        }\n    }\n    cuddDeref(res);\n    return(res);\n\n}",
+      "Draft": "func addMMRecur(dd *DdManager, A *DdNode, B *DdNode, topP int32, vars *int32) *DdNode {\n    DdNode *zero,\n           *At,         /* positive cofactor of first operand */\n           *Ae,         /* negative cofactor of first operand */\n           *Bt,         /* positive cofactor of second operand */\n           *Be,         /* negative cofactor of second operand */\n           *t,          /* positive cofactor of result */\n           *e,          /* negative cofactor of result */\n           *scaled,     /* scaled result */\n           *add_scale,  /* ADD representing the scaling factor */\n           *res;\n    var i int32;              /* loop index */\n    var scale float64;       /* scaling factor */\n    var index int32;          /* index of the top variable */\n    CUDD_VALUE_TYPE value;\n    unsigned int topA, topB, topV;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n\n    if A == zero || B == zero {\n        return(zero);\n    }\n\n    // inlining of macro cuddIsConstant\n    if ((A).index == CUDD_CONST_INDEX) \u0026\u0026 ((B).index == CUDD_CONST_INDEX) {\n        /* Compute the scaling factor. It is 2^k, where k is the\n        ** number of summation variables below the current variable.\n        ** Indeed, these constants represent blocks of 2^k identical\n        ** constant values in both A and B.\n        */\n        // inlining of macro cuddV\n        value = ((A).type.value) * ((B).type.value);\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP {\n                    value *= (CUDD_VALUE_TYPE) 2;\n                }\n            }\n        }\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n\n    /* Standardize to increase cache efficiency. Clearly, A*B != B*A\n    ** in matrix multiplication. However, which matrix is which is\n    ** determined by the variables appearing in the ADDs and not by\n    ** which one is passed as first argument.\n    */\n    if A \u003e B {\n        var tmp *DdNode  = A;\n        A = B;\n        B = tmp;\n    }\n\n    // inlining of macro cuddI\n    \n    if (A.index)==CUDD_CONST_INDEX {\n        topA = int32((A.index));\n    } else {\n        topA = (dd).perm[(A.index)];\n    // inlining of macro cuddI\n    } \n    if (B.index)==CUDD_CONST_INDEX {\n        topB = int32((B.index));\n    } else {\n        topB = (dd).perm[(B.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (topB) \u003c (topA) {\n        topV = (topB);\n    } else {\n        topV = (topA);\n    }\n\n    cacheOp = (DD_CTFP) addMMRecur;\n    res = cuddCacheLookup2(dd,cacheOp,A,B);\n    if res != nil {\n        /* If the result is 0, there is no need to normalize.\n        ** Otherwise we count the number of z variables between\n        ** the current depth and the top of the ADDs. These are\n        ** the missing variables that determine the size of the\n        ** constant blocks.\n        */\n        if res == zero { return(res); }\n        scale = 1.0;\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP \u0026\u0026 uint32( dd.perm[i]) \u003c topV {\n                    scale *= 2;\n                }\n            }\n        }\n        if scale \u003e 1.0 {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if add_scale == nil {\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(add_scale).ref);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if scaled == nil {\n                Cudd_RecursiveDeref(dd, add_scale);\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(scaled).ref);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(res).ref);\n        }\n        return(res);\n    }\n\n    /* compute the cofactors */\n    if topV == topA {\n        // inlining of macro cuddT\n        At = ((A).type.kids.T);\n        // inlining of macro cuddE\n        Ae = ((A).type.kids.E);\n    } else {\n        At = Ae = A;\n    }\n    if topV == topB {\n        // inlining of macro cuddT\n        Bt = ((B).type.kids.T);\n        // inlining of macro cuddE\n        Be = ((B).type.kids.E);\n    } else {\n        Bt = Be = B;\n    }\n\n    t = addMMRecur(dd, At, Bt, int32(topV), vars);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = addMMRecur(dd, Ae, Be, int32(topV), vars);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    index = dd.invperm[topV];\n    if vars[index] == 0 {\n        /* We have split on either the rows of A or the columns\n        ** of B. We just need to connect the two subresults,\n        ** which correspond to two submatrices of the result.\n        */\n        if t == e {\n            res = t;\n        } else {\n            res = cuddUniqueInter(dd,index,t,e);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        /* we have simultaneously split on the columns of A and\n        ** the rows of B. The two subresults must be added.\n        */\n        res = cuddAddApplyRecur(dd,Cudd_addPlus,t,e);\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n    }\n\n    cuddCacheInsert2(dd,cacheOp,A,B,res);\n\n    /* We have computed (and stored in the computed table) a minimal\n    ** result; that is, a result that assumes no summation variables\n    ** between the current depth of the recursion and its top\n    ** variable. We now take into account the z variables by properly\n    ** scaling the result.\n    */\n    if res != zero {\n        scale = 1.0;\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP \u0026\u0026 uint32( dd.perm[i]) \u003c topV {\n                    scale *= 2;\n                }\n            }\n        }\n        if scale \u003e 1.0 {\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if add_scale == nil {\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(add_scale).ref);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if scaled == nil {\n                Cudd_RecursiveDeref(dd, res);\n                Cudd_RecursiveDeref(dd, add_scale);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(scaled).ref);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n        }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "addTriangleRecur",
+      "Start": 17799,
+      "End": 19823,
+      "BodyStart": 17909,
+      "Original": "static DdNode *\naddTriangleRecur(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  int * vars,\n  DdNode *cube)\n{\n    DdNode *fv, *fvn, *gv, *gvn, *t, *e, *res;\n    CUDD_VALUE_TYPE value;\n    int top, topf, topg, index;\n\n    statLine(dd);\n    if (f == DD_PLUS_INFINITY(dd) || g == DD_PLUS_INFINITY(dd)) {\n        return(DD_PLUS_INFINITY(dd));\n    }\n\n    if (cuddIsConstant(f) \u0026\u0026 cuddIsConstant(g)) {\n        value = cuddV(f) + cuddV(g);\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n    if (f \u003c g) {\n        DdNode *tmp = f;\n        f = g;\n        g = tmp;\n    }\n\n    if (f-\u003eref != 1 || g-\u003eref != 1) {\n        res = cuddCacheLookup(dd, DD_ADD_TRIANGLE_TAG, f, g, cube);\n        if (res != NULL) {\n            return(res);\n        }\n    }\n\n    topf = cuddI(dd,f-\u003eindex); topg = cuddI(dd,g-\u003eindex);\n    top = ddMin(topf,topg);\n\n    if (top == topf) {fv = cuddT(f); fvn = cuddE(f);} else {fv = fvn = f;}\n    if (top == topg) {gv = cuddT(g); gvn = cuddE(g);} else {gv = gvn = g;}\n\n    t = addTriangleRecur(dd, fv, gv, vars, cube);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n    e = addTriangleRecur(dd, fvn, gvn, vars, cube);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(dd, t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    index = dd-\u003einvperm[top];\n    if (vars[index] \u003c 0) {\n        res = (t == e) ? t : cuddUniqueInter(dd,index,t,e);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    } else {\n        res = cuddAddApplyRecur(dd,Cudd_addMinimum,t,e);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        cuddDeref(res);\n    }\n\n    if (f-\u003eref != 1 || g-\u003eref != 1) {\n        cuddCacheInsert(dd, DD_ADD_TRIANGLE_TAG, f, g, cube, res);\n    }\n\n    return(res);\n\n}",
+      "Draft": "func addTriangleRecur(dd *DdManager, f *DdNode, g *DdNode, vars *int32, cube *DdNode) *DdNode {\n    var fv, fvn, gv, gvn, t, e, res *DdNode;\n    CUDD_VALUE_TYPE value;\n    var top, topf, topg, index int32;\n\n    statLine(dd);\n    // inlining of macro DD_PLUS_INFINITY\n    if f == ((dd).plusinfinity) || g == ((dd).plusinfinity) {\n        // inlining of macro DD_PLUS_INFINITY\n        return(((dd).plusinfinity));\n    }\n\n    // inlining of macro cuddIsConstant\n    if ((f).index == CUDD_CONST_INDEX) \u0026\u0026 ((g).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((f).type.value) + ((g).type.value);\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n    if f \u003c g {\n        var tmp *DdNode  = f;\n        f = g;\n        g = tmp;\n    }\n\n    if f.ref != 1 || g.ref != 1 {\n        res = cuddCacheLookup(dd, DD_ADD_TRIANGLE_TAG, f, g, cube);\n        if res != nil {\n            return(res);\n        }\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    // inlining of macro cuddI\n    } \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if top == topf {fv = ((f).type.kids.T); fvn = ((f).type.kids.E);} else {fv = fvn = f;}\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if top == topg {gv = ((g).type.kids.T); gvn = ((g).type.kids.E);} else {gv = gvn = g;}\n\n    t = addTriangleRecur(dd, fv, gv, vars, cube);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = addTriangleRecur(dd, fvn, gvn, vars, cube);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    index = dd.invperm[top];\n    if vars[index] \u003c 0 {\n        if t == e {\n            res = t;\n        } else {\n            res = cuddUniqueInter(dd,index,t,e);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        res = cuddAddApplyRecur(dd,Cudd_addMinimum,t,e);\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n    }\n\n    if f.ref != 1 || g.ref != 1 {\n        cuddCacheInsert(dd, DD_ADD_TRIANGLE_TAG, f, g, cube, res);\n    }\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddOuterSumRecur",
+      "Start": 20254,
+      "End": 22273,
+      "BodyStart": 20348,
+      "Original": "static DdNode *\ncuddAddOuterSumRecur(\n  DdManager *dd,\n  DdNode *M,\n  DdNode *r,\n  DdNode *c)\n{\n    DdNode *P, *R, *Mt, *Me, *rt, *re, *ct, *ce, *Rt, *Re;\n    int topM, topc, topr;\n    int v, index;\n\n    statLine(dd);\n    /* Check special cases. */\n    if (r == DD_PLUS_INFINITY(dd) || c == DD_PLUS_INFINITY(dd)) return(M); \n\n    if (cuddIsConstant(c) \u0026\u0026 cuddIsConstant(r)) {\n        R = cuddUniqueConst(dd,Cudd_V(c)+Cudd_V(r));\n        cuddRef(R);\n        if (cuddIsConstant(M)) {\n            if (cuddV(R) \u003c= cuddV(M)) {\n                cuddDeref(R);\n                return(R);\n            } else {\n                Cudd_RecursiveDeref(dd,R);       \n                return(M);\n            }\n        } else {\n            P = Cudd_addApply(dd,Cudd_addMinimum,R,M);\n            cuddRef(P);\n            Cudd_RecursiveDeref(dd,R);\n            cuddDeref(P);\n            return(P);\n        }\n    }\n\n    /* Check the cache. */\n    R = cuddCacheLookup(dd,DD_ADD_OUT_SUM_TAG,M,r,c);\n    if (R != NULL) return(R);\n\n    topM = cuddI(dd,M-\u003eindex); topr = cuddI(dd,r-\u003eindex);\n    topc = cuddI(dd,c-\u003eindex);\n    v = ddMin(topM,ddMin(topr,topc));\n\n    /* Compute cofactors. */\n    if (topM == v) { Mt = cuddT(M); Me = cuddE(M); } else { Mt = Me = M; }\n    if (topr == v) { rt = cuddT(r); re = cuddE(r); } else { rt = re = r; }\n    if (topc == v) { ct = cuddT(c); ce = cuddE(c); } else { ct = ce = c; }\n\n    /* Recursively solve. */\n    Rt = cuddAddOuterSumRecur(dd,Mt,rt,ct);\n    if (Rt == NULL) return(NULL);\n    cuddRef(Rt);\n    Re = cuddAddOuterSumRecur(dd,Me,re,ce);\n    if (Re == NULL) {\n        Cudd_RecursiveDeref(dd, Rt);\n        return(NULL);\n    }\n    cuddRef(Re);\n    index = dd-\u003einvperm[v];\n    R = (Rt == Re) ? Rt : cuddUniqueInter(dd,index,Rt,Re);\n    if (R == NULL) {\n        Cudd_RecursiveDeref(dd, Rt);\n        Cudd_RecursiveDeref(dd, Re);\n        return(NULL);\n    }\n    cuddDeref(Rt);\n    cuddDeref(Re);\n\n    /* Store the result in the cache. */\n    cuddCacheInsert(dd,DD_ADD_OUT_SUM_TAG,M,r,c,R);\n\n    return(R);\n\n}",
+      "Draft": "func cuddAddOuterSumRecur(dd *DdManager, M *DdNode, r *DdNode, c *DdNode) *DdNode {\n    var P, R, Mt, Me, rt, re, ct, ce, Rt, Re *DdNode;\n    var topM, topc, topr int32;\n    var v, index int32;\n\n    statLine(dd);\n    /* Check special cases. */\n    // inlining of macro DD_PLUS_INFINITY\n    if r == ((dd).plusinfinity) || c == ((dd).plusinfinity) { return(M); } \n\n    // inlining of macro cuddIsConstant\n    if ((c).index == CUDD_CONST_INDEX) \u0026\u0026 ((r).index == CUDD_CONST_INDEX) {\n        // inlining of macro Cudd_V\n        // inlining of macro Cudd_Regular\n        R = cuddUniqueConst(dd,((((DdNode *)((ptruint)(c) \u0026 ~01))).type.value)+((((DdNode *)((ptruint)(r) \u0026 ~01))).type.value));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(R).ref);\n        // inlining of macro cuddIsConstant\n        if (M).index == CUDD_CONST_INDEX {\n            // inlining of macro cuddV\n            if ((R).type.value) \u003c= ((M).type.value) {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(R).ref);\n                return(R);\n            } else {\n                Cudd_RecursiveDeref(dd,R);       \n                return(M);\n            }\n        } else {\n            P = Cudd_addApply(dd,Cudd_addMinimum,R,M);\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(P).ref);\n            Cudd_RecursiveDeref(dd,R);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(P).ref);\n            return(P);\n        }\n    }\n\n    /* Check the cache. */\n    R = cuddCacheLookup(dd,DD_ADD_OUT_SUM_TAG,M,r,c);\n    if R != nil { return(R); }\n\n    // inlining of macro cuddI\n    \n    if (M.index)==CUDD_CONST_INDEX {\n        topM = int32((M.index));\n    } else {\n        topM = (dd).perm[(M.index)];\n    // inlining of macro cuddI\n    } \n    if (r.index)==CUDD_CONST_INDEX {\n        topr = int32((r.index));\n    } else {\n        topr = (dd).perm[(r.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (c.index)==CUDD_CONST_INDEX {\n        topc = int32((c.index));\n    } else {\n        topc = (dd).perm[(c.index)];\n    }\n    // inlining of macro ddMin\n    \n    // inlining of macro ddMin\n    if ((((topc) \u003c (topr)) ? (topc) : (topr))) \u003c (topM) {\n        // inlining of macro ddMin\n        v = ((((topc) \u003c (topr)) ? (topc) : (topr)));\n    } else {\n        v = (topM);\n    }\n\n    /* Compute cofactors. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topM == v { Mt = ((M).type.kids.T); Me = ((M).type.kids.E); } else { Mt = Me = M; }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topr == v { rt = ((r).type.kids.T); re = ((r).type.kids.E); } else { rt = re = r; }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topc == v { ct = ((c).type.kids.T); ce = ((c).type.kids.E); } else { ct = ce = c; }\n\n    /* Recursively solve. */\n    Rt = cuddAddOuterSumRecur(dd,Mt,rt,ct);\n    if Rt == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(Rt).ref);\n    Re = cuddAddOuterSumRecur(dd,Me,re,ce);\n    if Re == nil {\n        Cudd_RecursiveDeref(dd, Rt);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(Re).ref);\n    index = dd.invperm[v];\n    if Rt == Re {\n        R = Rt;\n    } else {\n        R = cuddUniqueInter(dd,index,Rt,Re);\n    }\n    if R == nil {\n        Cudd_RecursiveDeref(dd, Rt);\n        Cudd_RecursiveDeref(dd, Re);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(Rt).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(Re).ref);\n\n    /* Store the result in the cache. */\n    cuddCacheInsert(dd,DD_ADD_OUT_SUM_TAG,M,r,c,R);\n\n    return(R);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::mechanical::do::5988",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6026,
+      "End": 6028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::mechanical::do::9340",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9226,
+      "End": 9228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::mechanical::do::10398",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10154,
+      "End": 10156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::pointer-cast::24035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20661,
+      "End": 20661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::pointer-cast::24174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20671,
+      "End": 20671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::Cudd_addMatrixMultiply",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addMatrixMultiply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5525,
+      "End": 6173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::Cudd_addTimesPlus",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addTimesPlus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6960,
+      "End": 7816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::Cudd_addTriangle",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addTriangle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8676,
+      "End": 9491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::Cudd_addOuterSum",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addOuterSum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10047,
+      "End": 10288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::addMMRecur",
+      "Category": "semantic-review",
+      "Symbol": "addMMRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11196,
+      "End": 17392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::addTriangleRecur",
+      "Category": "semantic-review",
+      "Symbol": "addTriangleRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17799,
+      "End": 19823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::ternary::cuddAddOuterSumRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddAddOuterSumRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20254,
+      "End": 22273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::cuddAddOuterSumRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddOuterSumRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20254,
+      "End": 22273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3406,
+      "End": 3518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::5777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5777,
+      "End": 5797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::6138",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6138,
+      "End": 6152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::8863",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8863,
+      "End": 8884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::9158",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9158,
+      "End": 9172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::9206",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9206,
+      "End": 9219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::9367",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9367,
+      "End": 9379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::9436",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9436,
+      "End": 9450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::9456",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9456,
+      "End": 9470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::12052",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12052,
+      "End": 12064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::13908",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13908,
+      "End": 13920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::14129",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14129,
+      "End": 14147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::14409",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14409,
+      "End": 14424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::14554",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14554,
+      "End": 14568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::14947",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14947,
+      "End": 14957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::15097",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15097,
+      "End": 15107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::15578",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15578,
+      "End": 15590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::15600",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15600,
+      "End": 15612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::15622",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15622,
+      "End": 15634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::15989",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15989,
+      "End": 16001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::16924",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16924,
+      "End": 16942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::17204",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17204,
+      "End": 17219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::17357",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17357,
+      "End": 17371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::18022",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18022,
+      "End": 18034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::18884",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18884,
+      "End": 18894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::19037",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19037,
+      "End": 19047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::19318",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19318,
+      "End": 19330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::19340",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19340,
+      "End": 19352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::19575",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19575,
+      "End": 19587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::19669",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19669,
+      "End": 19683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::20458",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20458,
+      "End": 20470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::20691",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20691,
+      "End": 20701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::20792",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20792,
+      "End": 20804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::21029",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21029,
+      "End": 21039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::21092",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21092,
+      "End": 21104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::21752",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21752,
+      "End": 21763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::21900",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21900,
+      "End": 21911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::22127",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22127,
+      "End": 22140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddMatMult.c::macro-inline::22146",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22146,
+      "End": 22159
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddMatMult.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Matrix multiplication functions.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addMatrixMultiply()\n                \u003cli\u003e Cudd_addTimesPlus()\n                \u003cli\u003e Cudd_addTriangle()\n                \u003cli\u003e Cudd_addOuterSum()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e addMMRecur()\n                \u003cli\u003e addTriangleRecur()\n                \u003cli\u003e cuddAddOuterSumRecur()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddMatMult.c,v 1.17 2004/08/13 18:04:50 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * addMMRecur (DdManager *dd, DdNode *A, DdNode *B, int topP, int *vars);\n\n// static DdNode * addTriangleRecur (DdManager *dd, DdNode *f, DdNode *g, int *vars, DdNode *cube);\n\n// static DdNode * cuddAddOuterSumRecur (DdManager *dd, DdNode *M, DdNode *r, DdNode *c);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Calculates the product of two matrices represented as\n  ADDs.]\n\n  Description [Calculates the product of two matrices, A and B,\n  represented as ADDs. This procedure implements the quasiring multiplication\n  algorithm.  A is assumed to depend on variables x (rows) and z\n  (columns).  B is assumed to depend on variables z (rows) and y\n  (columns).  The product of A and B then depends on x (rows) and y\n  (columns).  Only the z variables have to be explicitly identified;\n  they are the \"summation\" variables.  Returns a pointer to the\n  result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addTimesPlus Cudd_addTriangle Cudd_bddAndAbstract]\n\n******************************************************************************/\nfunc Cudd_addMatrixMultiply(dd *DdManager, A *DdNode, B *DdNode, z **DdNode, nz int32) *DdNode {\n    var i int32;\n    var nvars int32;\n    var vars *int32;\n    var res *DdNode; \n\n    /* Array vars says what variables are \"summation\" variables. */\n    nvars = dd.size;\n    vars = ABC_ALLOC(int,nvars);\n    if vars == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ {\n        vars[i] = 0;\n    }\n    for i = 0; i \u003c nz; i++ {\n        vars[z[i].index] = 1;\n    }\n\n    for {\n        dd.reordered = 0;\n        res = addMMRecur(dd,A,B,-1,vars);\n    \nif !(dd.reordered == 1) { break }\n} \n    ABC_FREE(vars);\n    return(res);\n\n} /* end of Cudd_addMatrixMultiply */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Calculates the product of two matrices represented as\n  ADDs.]\n\n  Description [Calculates the product of two matrices, A and B,\n  represented as ADDs, using the CMU matrix by matrix multiplication\n  procedure by Clarke et al..  Matrix A has x's as row variables and z's\n  as column variables, while matrix B has z's as row variables and y's\n  as column variables. Returns the pointer to the result if successful;\n  NULL otherwise. The resulting matrix has x's as row variables and y's\n  as column variables.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMatrixMultiply]\n\n******************************************************************************/\nfunc Cudd_addTimesPlus(dd *DdManager, A *DdNode, B *DdNode, z **DdNode, nz int32) *DdNode {\n    var w, cube, tmp, res *DdNode; \n    var i int32;\n    tmp = Cudd_addApply(dd,Cudd_addTimes,A,B);\n    if tmp == nil { return(nil); }\n    Cudd_Ref(tmp);\n    // inlining of macro DD_ONE\n    Cudd_Ref(cube = ((dd).one));\n    for i = nz-1; i \u003e= 0; i-- {\n         // inlining of macro DD_ZERO\n         w = Cudd_addIte(dd,z[i],cube,((dd).zero));\n         if w == nil {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(nil);\n         }\n         Cudd_Ref(w);\n         Cudd_RecursiveDeref(dd,cube);\n         cube = w;\n    }\n    res = Cudd_addExistAbstract(dd,tmp,cube);\n    if res == nil {\n        Cudd_RecursiveDeref(dd,tmp);\n        Cudd_RecursiveDeref(dd,cube);\n        return(nil);\n    }\n    Cudd_Ref(res);\n    Cudd_RecursiveDeref(dd,cube);\n    Cudd_RecursiveDeref(dd,tmp);\n    Cudd_Deref(res);\n    return(res);\n\n} /* end of Cudd_addTimesPlus */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the triangulation step for the shortest path\n  computation.]\n\n  Description [Implements the semiring multiplication algorithm used in\n  the triangulation step for the shortest path computation.  f\n  is assumed to depend on variables x (rows) and z (columns).  g is\n  assumed to depend on variables z (rows) and y (columns).  The product\n  of f and g then depends on x (rows) and y (columns).  Only the z\n  variables have to be explicitly identified; they are the\n  \"abstraction\" variables.  Returns a pointer to the result if\n  successful; NULL otherwise. ]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMatrixMultiply Cudd_bddAndAbstract]\n\n******************************************************************************/\nfunc Cudd_addTriangle(dd *DdManager, f *DdNode, g *DdNode, z **DdNode, nz int32) *DdNode {\n    var i int32;\n    var nvars int32;\n    var vars *int32;\n    var res, cube *DdNode;\n\n    nvars = dd.size;\n    vars = ABC_ALLOC(int, nvars);\n    if vars == nil {\n        dd.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    for i = 0; i \u003c nvars; i++ { vars[i] = -1; }\n    for i = 0; i \u003c nz; i++ { vars[z[i].index] = i; }\n    cube = Cudd_addComputeCube(dd, z, nil, nz);\n    if cube == nil {\n        ABC_FREE(vars);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(cube).ref);\n\n    for {\n        dd.reordered = 0;\n        res = addTriangleRecur(dd, f, g, vars, cube);\n    \nif !(dd.reordered == 1) { break }\n} \n    // inlining of macro cuddRef\n    if res != nil { cuddSatInc(Cudd_Regular(res).ref); }\n    Cudd_RecursiveDeref(dd,cube);\n    // inlining of macro cuddDeref\n    if res != nil { cuddSatDec(Cudd_Regular(res).ref); }\n    ABC_FREE(vars);\n    return(res);\n\n} /* end of Cudd_addTriangle */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Takes the minimum of a matrix and the outer sum of two vectors.]\n\n  Description [Takes the pointwise minimum of a matrix and the outer\n  sum of two vectors.  This procedure is used in the Floyd-Warshall\n  all-pair shortest path algorithm.  Returns a pointer to the result if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_addOuterSum(dd *DdManager, M *DdNode, r *DdNode, c *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddOuterSumRecur(dd, M, r, c);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addOuterSum */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addMatrixMultiply.]\n\n  Description [Performs the recursive step of Cudd_addMatrixMultiply.\n  Returns a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc addMMRecur(dd *DdManager, A *DdNode, B *DdNode, topP int32, vars *int32) *DdNode {\n    DdNode *zero,\n           *At,         /* positive cofactor of first operand */\n           *Ae,         /* negative cofactor of first operand */\n           *Bt,         /* positive cofactor of second operand */\n           *Be,         /* negative cofactor of second operand */\n           *t,          /* positive cofactor of result */\n           *e,          /* negative cofactor of result */\n           *scaled,     /* scaled result */\n           *add_scale,  /* ADD representing the scaling factor */\n           *res;\n    var i int32;              /* loop index */\n    var scale float64;       /* scaling factor */\n    var index int32;          /* index of the top variable */\n    CUDD_VALUE_TYPE value;\n    unsigned int topA, topB, topV;\n    DD_CTFP cacheOp;\n\n    statLine(dd);\n    // inlining of macro DD_ZERO\n    zero = ((dd).zero);\n\n    if A == zero || B == zero {\n        return(zero);\n    }\n\n    // inlining of macro cuddIsConstant\n    if ((A).index == CUDD_CONST_INDEX) \u0026\u0026 ((B).index == CUDD_CONST_INDEX) {\n        /* Compute the scaling factor. It is 2^k, where k is the\n        ** number of summation variables below the current variable.\n        ** Indeed, these constants represent blocks of 2^k identical\n        ** constant values in both A and B.\n        */\n        // inlining of macro cuddV\n        value = ((A).type.value) * ((B).type.value);\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP {\n                    value *= (CUDD_VALUE_TYPE) 2;\n                }\n            }\n        }\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n\n    /* Standardize to increase cache efficiency. Clearly, A*B != B*A\n    ** in matrix multiplication. However, which matrix is which is\n    ** determined by the variables appearing in the ADDs and not by\n    ** which one is passed as first argument.\n    */\n    if A \u003e B {\n        var tmp *DdNode  = A;\n        A = B;\n        B = tmp;\n    }\n\n    // inlining of macro cuddI\n    \n    if (A.index)==CUDD_CONST_INDEX {\n        topA = int32((A.index));\n    } else {\n        topA = (dd).perm[(A.index)];\n    // inlining of macro cuddI\n    } \n    if (B.index)==CUDD_CONST_INDEX {\n        topB = int32((B.index));\n    } else {\n        topB = (dd).perm[(B.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (topB) \u003c (topA) {\n        topV = (topB);\n    } else {\n        topV = (topA);\n    }\n\n    cacheOp = (DD_CTFP) addMMRecur;\n    res = cuddCacheLookup2(dd,cacheOp,A,B);\n    if res != nil {\n        /* If the result is 0, there is no need to normalize.\n        ** Otherwise we count the number of z variables between\n        ** the current depth and the top of the ADDs. These are\n        ** the missing variables that determine the size of the\n        ** constant blocks.\n        */\n        if res == zero { return(res); }\n        scale = 1.0;\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP \u0026\u0026 uint32( dd.perm[i]) \u003c topV {\n                    scale *= 2;\n                }\n            }\n        }\n        if scale \u003e 1.0 {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if add_scale == nil {\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(add_scale).ref);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if scaled == nil {\n                Cudd_RecursiveDeref(dd, add_scale);\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(scaled).ref);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(res).ref);\n        }\n        return(res);\n    }\n\n    /* compute the cofactors */\n    if topV == topA {\n        // inlining of macro cuddT\n        At = ((A).type.kids.T);\n        // inlining of macro cuddE\n        Ae = ((A).type.kids.E);\n    } else {\n        At = Ae = A;\n    }\n    if topV == topB {\n        // inlining of macro cuddT\n        Bt = ((B).type.kids.T);\n        // inlining of macro cuddE\n        Be = ((B).type.kids.E);\n    } else {\n        Bt = Be = B;\n    }\n\n    t = addMMRecur(dd, At, Bt, int32(topV), vars);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = addMMRecur(dd, Ae, Be, int32(topV), vars);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    index = dd.invperm[topV];\n    if vars[index] == 0 {\n        /* We have split on either the rows of A or the columns\n        ** of B. We just need to connect the two subresults,\n        ** which correspond to two submatrices of the result.\n        */\n        if t == e {\n            res = t;\n        } else {\n            res = cuddUniqueInter(dd,index,t,e);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        /* we have simultaneously split on the columns of A and\n        ** the rows of B. The two subresults must be added.\n        */\n        res = cuddAddApplyRecur(dd,Cudd_addPlus,t,e);\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n    }\n\n    cuddCacheInsert2(dd,cacheOp,A,B,res);\n\n    /* We have computed (and stored in the computed table) a minimal\n    ** result; that is, a result that assumes no summation variables\n    ** between the current depth of the recursion and its top\n    ** variable. We now take into account the z variables by properly\n    ** scaling the result.\n    */\n    if res != zero {\n        scale = 1.0;\n        for i = 0; i \u003c dd.size; i++ {\n            if vars[i] {\n                if dd.perm[i] \u003e topP \u0026\u0026 uint32( dd.perm[i]) \u003c topV {\n                    scale *= 2;\n                }\n            }\n        }\n        if scale \u003e 1.0 {\n            add_scale = cuddUniqueConst(dd,(CUDD_VALUE_TYPE)scale);\n            if add_scale == nil {\n                Cudd_RecursiveDeref(dd, res);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(add_scale).ref);\n            scaled = cuddAddApplyRecur(dd,Cudd_addTimes,res,add_scale);\n            if scaled == nil {\n                Cudd_RecursiveDeref(dd, res);\n                Cudd_RecursiveDeref(dd, add_scale);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(scaled).ref);\n            Cudd_RecursiveDeref(dd, add_scale);\n            Cudd_RecursiveDeref(dd, res);\n            res = scaled;\n        }\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n} /* end of addMMRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addTriangle.]\n\n  Description [Performs the recursive step of Cudd_addTriangle. Returns\n  a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc addTriangleRecur(dd *DdManager, f *DdNode, g *DdNode, vars *int32, cube *DdNode) *DdNode {\n    var fv, fvn, gv, gvn, t, e, res *DdNode;\n    CUDD_VALUE_TYPE value;\n    var top, topf, topg, index int32;\n\n    statLine(dd);\n    // inlining of macro DD_PLUS_INFINITY\n    if f == ((dd).plusinfinity) || g == ((dd).plusinfinity) {\n        // inlining of macro DD_PLUS_INFINITY\n        return(((dd).plusinfinity));\n    }\n\n    // inlining of macro cuddIsConstant\n    if ((f).index == CUDD_CONST_INDEX) \u0026\u0026 ((g).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((f).type.value) + ((g).type.value);\n        res = cuddUniqueConst(dd, value);\n        return(res);\n    }\n    if f \u003c g {\n        var tmp *DdNode  = f;\n        f = g;\n        g = tmp;\n    }\n\n    if f.ref != 1 || g.ref != 1 {\n        res = cuddCacheLookup(dd, DD_ADD_TRIANGLE_TAG, f, g, cube);\n        if res != nil {\n            return(res);\n        }\n    }\n\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).perm[(f.index)];\n    // inlining of macro cuddI\n    } \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).perm[(g.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if top == topf {fv = ((f).type.kids.T); fvn = ((f).type.kids.E);} else {fv = fvn = f;}\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if top == topg {gv = ((g).type.kids.T); gvn = ((g).type.kids.E);} else {gv = gvn = g;}\n\n    t = addTriangleRecur(dd, fv, gv, vars, cube);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n    e = addTriangleRecur(dd, fvn, gvn, vars, cube);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    index = dd.invperm[top];\n    if vars[index] \u003c 0 {\n        if t == e {\n            res = t;\n        } else {\n            res = cuddUniqueInter(dd,index,t,e);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        res = cuddAddApplyRecur(dd,Cudd_addMinimum,t,e);\n        if res == nil {\n            Cudd_RecursiveDeref(dd, t);\n            Cudd_RecursiveDeref(dd, e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n    }\n\n    if f.ref != 1 || g.ref != 1 {\n        cuddCacheInsert(dd, DD_ADD_TRIANGLE_TAG, f, g, cube, res);\n    }\n\n    return(res);\n\n} /* end of addTriangleRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addOuterSum.]\n\n  Description [Performs the recursive step of Cudd_addOuterSum.\n  Returns a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddAddOuterSumRecur(dd *DdManager, M *DdNode, r *DdNode, c *DdNode) *DdNode {\n    var P, R, Mt, Me, rt, re, ct, ce, Rt, Re *DdNode;\n    var topM, topc, topr int32;\n    var v, index int32;\n\n    statLine(dd);\n    /* Check special cases. */\n    // inlining of macro DD_PLUS_INFINITY\n    if r == ((dd).plusinfinity) || c == ((dd).plusinfinity) { return(M); } \n\n    // inlining of macro cuddIsConstant\n    if ((c).index == CUDD_CONST_INDEX) \u0026\u0026 ((r).index == CUDD_CONST_INDEX) {\n        // inlining of macro Cudd_V\n        // inlining of macro Cudd_Regular\n        R = cuddUniqueConst(dd,((((DdNode *)((ptruint)(c) \u0026 ~01))).type.value)+((((DdNode *)((ptruint)(r) \u0026 ~01))).type.value));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(R).ref);\n        // inlining of macro cuddIsConstant\n        if (M).index == CUDD_CONST_INDEX {\n            // inlining of macro cuddV\n            if ((R).type.value) \u003c= ((M).type.value) {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(R).ref);\n                return(R);\n            } else {\n                Cudd_RecursiveDeref(dd,R);       \n                return(M);\n            }\n        } else {\n            P = Cudd_addApply(dd,Cudd_addMinimum,R,M);\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(P).ref);\n            Cudd_RecursiveDeref(dd,R);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(P).ref);\n            return(P);\n        }\n    }\n\n    /* Check the cache. */\n    R = cuddCacheLookup(dd,DD_ADD_OUT_SUM_TAG,M,r,c);\n    if R != nil { return(R); }\n\n    // inlining of macro cuddI\n    \n    if (M.index)==CUDD_CONST_INDEX {\n        topM = int32((M.index));\n    } else {\n        topM = (dd).perm[(M.index)];\n    // inlining of macro cuddI\n    } \n    if (r.index)==CUDD_CONST_INDEX {\n        topr = int32((r.index));\n    } else {\n        topr = (dd).perm[(r.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (c.index)==CUDD_CONST_INDEX {\n        topc = int32((c.index));\n    } else {\n        topc = (dd).perm[(c.index)];\n    }\n    // inlining of macro ddMin\n    \n    // inlining of macro ddMin\n    if ((((topc) \u003c (topr)) ? (topc) : (topr))) \u003c (topM) {\n        // inlining of macro ddMin\n        v = ((((topc) \u003c (topr)) ? (topc) : (topr)));\n    } else {\n        v = (topM);\n    }\n\n    /* Compute cofactors. */\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topM == v { Mt = ((M).type.kids.T); Me = ((M).type.kids.E); } else { Mt = Me = M; }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topr == v { rt = ((r).type.kids.T); re = ((r).type.kids.E); } else { rt = re = r; }\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    if topc == v { ct = ((c).type.kids.T); ce = ((c).type.kids.E); } else { ct = ce = c; }\n\n    /* Recursively solve. */\n    Rt = cuddAddOuterSumRecur(dd,Mt,rt,ct);\n    if Rt == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(Rt).ref);\n    Re = cuddAddOuterSumRecur(dd,Me,re,ce);\n    if Re == nil {\n        Cudd_RecursiveDeref(dd, Rt);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(Re).ref);\n    index = dd.invperm[v];\n    if Rt == Re {\n        R = Rt;\n    } else {\n        R = cuddUniqueInter(dd,index,Rt,Re);\n    }\n    if R == nil {\n        Cudd_RecursiveDeref(dd, Rt);\n        Cudd_RecursiveDeref(dd, Re);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(Rt).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(Re).ref);\n\n    /* Store the result in the cache. */\n    cuddCacheInsert(dd,DD_ADD_OUT_SUM_TAG,M,r,c,R);\n\n    return(R);\n\n} /* end of cuddAddOuterSumRecur */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

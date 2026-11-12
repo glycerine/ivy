@@ -1,0 +1,812 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c",
+  "SHA256": "cac4ac3ac0800194b55cbdb85c8a11a273845d4ead605c1022d6b571118ab58a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 8572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsConst0(pObj) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 246,
+        "Column": 57,
+        "ByteOffset": 10470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 10620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Iter %4d :  \", p.nIters++ );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 10662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Entries =%8d.  \", Vec_IntSize(p.vTied) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 10717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Uniques =%8d.  \", p.nUniques );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 10762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Singles =%8d.  \", Vec_PtrSize(p.vSingles) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 10820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%9.2f sec\", float32((Time))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 255,
+        "Column": 51,
+        "ByteOffset": 10866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%9.2f sec\", float32((Time))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 10890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 10910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 10918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 13,
+        "ByteOffset": 11868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTable[k] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 13,
+        "ByteOffset": 12104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.fMark0 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 14090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(p.vUniques, Gia_ObjId(p.pGia, pObj)) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 14,
+        "ByteOffset": 16199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( Gia_ObjIsConst0(pObj) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 14,
+        "ByteOffset": 17913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( Gia_ObjIsConst0(pObj) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 19430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.Value == pObj1.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 21941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vClass) \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 561,
+        "Column": 13,
+        "ByteOffset": 23203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 562,
+        "Column": 1,
+        "ByteOffset": 23281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 562,
+        "Column": 8,
+        "ByteOffset": 23288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 592,
+        "Column": 5,
+        "ByteOffset": 24415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vClass) \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 617,
+        "Column": 13,
+        "ByteOffset": 25781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 618,
+        "Column": 1,
+        "ByteOffset": 25859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 618,
+        "Column": 8,
+        "ByteOffset": 25866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fflush(stdout); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 5,
+        "ByteOffset": 28363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 723,
+        "Column": 5,
+        "ByteOffset": 29322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Reduced %d outputs to %d equivalence classes (%d outputs are in %d non-trivial classes).  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 727,
+        "Column": 9,
+        "ByteOffset": 29575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nontrivial classes:\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_Iso2ManCollectTies",
+      "Start": 5307,
+      "End": 5553,
+      "BodyStart": 5359,
+      "Original": "Vec_Int_t * Gia_Iso2ManCollectTies( Gia_Man_t * p )\n{\n    Vec_Int_t * vTies;\n    Gia_Obj_t * pObj;\n    int i;\n    vTies = Vec_IntAlloc( Gia_ManCandNum(p) );\n    Gia_ManForEachCand( p, pObj, i )\n        Vec_IntPush( vTies, i );\n    return vTies;\n}",
+      "Draft": "func Gia_Iso2ManCollectTies(p *Gia_Man_t) *Vec_Int_t {\n    var vTies *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    vTies = Vec_IntAlloc( Gia_ManCandNum(p) );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        Vec_IntPush( vTies, i ); }\n    }\n    return vTies;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManPrepare",
+      "Start": 5554,
+      "End": 6232,
+      "BodyStart": 5595,
+      "Original": "void Gia_Iso2ManPrepare( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManForEachObj( p, pObj, i )\n        pObj-\u003eValue = Gia_ObjIsAnd(pObj) ? 1 + Abc_MaxInt(Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue) : 0;\n    Gia_ManConst0(p)-\u003eValue = s_256Primes[ISO_MASK];\n    Gia_ManForEachObj1( p, pObj, i )\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = s_256Primes[pObj-\u003eValue \u0026 ISO_MASK] + s_256Primes[ISO_MASK - 10 + Gia_ObjFaninC0(pObj) + Gia_ObjFaninC1(pObj)];\n        else if ( Gia_ObjIsPi(p, pObj) )\n            pObj-\u003eValue = s_256Primes[ISO_MASK-1];\n        else if ( Gia_ObjIsRo(p, pObj) )\n            pObj-\u003eValue = s_256Primes[ISO_MASK-2];\n}",
+      "Draft": "func Gia_Iso2ManPrepare(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = 1 + Abc_MaxInt(Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value);\n        } else {\n            pObj.Value = 0;\n        }\n    }\n    Gia_ManConst0(p).Value = s_256Primes[ISO_MASK];\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = s_256Primes[pObj.Value \u0026 ISO_MASK] + s_256Primes[ISO_MASK - 10 + Gia_ObjFaninC0(pObj) + Gia_ObjFaninC1(pObj)];\n        } else if Gia_ObjIsPi(p, pObj) {\n            pObj.Value = s_256Primes[ISO_MASK-1];\n        } else if Gia_ObjIsRo(p, pObj) {\n            pObj.Value = s_256Primes[ISO_MASK-2]; }\n    }\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManPropagate",
+      "Start": 6233,
+      "End": 7078,
+      "BodyStart": 6276,
+      "Original": "void Gia_Iso2ManPropagate( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj, * pObjRo;\n    int i;\n    Gia_ManForEachObj1( p, pObj, i )\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            pObj-\u003eValue += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj)-\u003eValue + (Gia_ObjFaninC1(pObj) + s_PrimeC) * Gia_ObjFanin1(pObj)-\u003eValue;\n            if ( Gia_ObjFaninC0(pObj) == Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjFanin0(pObj)-\u003eValue == Gia_ObjFanin1(pObj)-\u003eValue )\n                pObj-\u003eValue += s_256Primes[ISO_MASK - 11];\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj)-\u003eValue;\n    Gia_ManForEachRiRo( p, pObj, pObjRo, i )\n    {\n        pObjRo-\u003eValue += pObj-\u003eValue;\n        if ( pObjRo == Gia_ObjFanin0(pObj) )\n            pObjRo-\u003eValue += s_256Primes[ISO_MASK - 12];\n    }\n}",
+      "Draft": "func Gia_Iso2ManPropagate(p *Gia_Man_t) {\n    var pObj, pObjRo *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj).Value + (Gia_ObjFaninC1(pObj) + s_PrimeC) * Gia_ObjFanin1(pObj).Value;\n            if Gia_ObjFaninC0(pObj) == Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjFanin0(pObj).Value == Gia_ObjFanin1(pObj).Value {\n                pObj.Value += s_256Primes[ISO_MASK - 11]; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj).Value; }\n    }\n    // inlining of macro Gia_ManForEachRiRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObjRo.Value += pObj.Value;\n        if pObjRo == Gia_ObjFanin0(pObj) {\n            pObjRo.Value += s_256Primes[ISO_MASK - 12]; }\n    }\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCone_rec",
+      "Start": 7314,
+      "End": 8027,
+      "BodyStart": 7379,
+      "Original": "unsigned Gia_Iso2ManCone_rec( Gia_Man_t * p, int Id, int Level )\n{\n    Gia_Obj_t * pObj;\n    if ( Level == 0 )\n        return 0;\n    if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n        return 0;\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if ( Gia_ObjIsAnd(pObj) )\n        return pObj-\u003eValue + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId0(pObj, Id), Level-1 ) + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId1(pObj, Id), Level-1 );\n    if ( Gia_ObjIsPi(p, pObj) )\n        return pObj-\u003eValue;\n    if ( Gia_ObjIsRo(p, pObj) )\n        return pObj-\u003eValue + Gia_Iso2ManCone_rec( p, Gia_ObjId(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))), Level );\n    assert( Gia_ObjIsConst0(pObj) );\n    return pObj-\u003eValue;\n}",
+      "Draft": "func Gia_Iso2ManCone_rec(p *Gia_Man_t, Id int32, Level int32) uint32 {\n    var pObj *Gia_Obj_t;\n    if Level == 0 {\n        return 0; }\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        return pObj.Value + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId0(pObj, Id), Level-1 ) + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId1(pObj, Id), Level-1 ); }\n    if Gia_ObjIsPi(p, pObj) {\n        return pObj.Value; }\n    if Gia_ObjIsRo(p, pObj) {\n        return pObj.Value + Gia_Iso2ManCone_rec( p, Gia_ObjId(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))), Level ); }\n    assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\");\n    return pObj.Value;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCone",
+      "Start": 8028,
+      "End": 8173,
+      "BodyStart": 8089,
+      "Original": "unsigned Gia_Iso2ManCone( Gia_Man_t * p, int Id, int Level )\n{\n    Gia_ManIncrementTravId( p );\n    return Gia_Iso2ManCone_rec( p, Id, Level );\n}",
+      "Draft": "func Gia_Iso2ManCone(p *Gia_Man_t, Id int32, Level int32) uint32 {\n    Gia_ManIncrementTravId( p );\n    return Gia_Iso2ManCone_rec( p, Id, Level );\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManUpdate",
+      "Start": 8174,
+      "End": 8404,
+      "BodyStart": 8229,
+      "Original": "void Gia_Iso2ManUpdate( Gia_Iso2Man_t * p, int Level )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManForEachObjVec( p-\u003evTied, p-\u003epGia, pObj, i )\n        pObj-\u003eValue += Gia_Iso2ManCone( p-\u003epGia, Gia_ObjId(p-\u003epGia, pObj), Level );\n}",
+      "Draft": "func Gia_Iso2ManUpdate(p *Gia_Iso2Man_t, Level int32) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        pObj.Value += Gia_Iso2ManCone( p.pGia, Gia_ObjId(p.pGia, pObj), Level );\n    }\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManStart",
+      "Start": 8640,
+      "End": 9386,
+      "BodyStart": 8693,
+      "Original": "Gia_Iso2Man_t * Gia_Iso2ManStart( Gia_Man_t * pGia )\n{\n    Gia_Iso2Man_t * p;\n    p = ABC_CALLOC( Gia_Iso2Man_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003enObjs     = Gia_ManObjNum( pGia );\n    p-\u003enUniques  = 0;\n    // internal data\n    p-\u003evUniques  = Vec_IntStartFull( p-\u003enObjs );\n    p-\u003evTied     = Gia_Iso2ManCollectTies( pGia );\n    p-\u003evTable    = Vec_IntStart( Abc_PrimeCudd(1*p-\u003enObjs) );\n    p-\u003evPlaces   = Vec_IntAlloc( 1000 );\n    p-\u003evSingles  = Vec_PtrAlloc( 1000 );\n    p-\u003evVec0     = Vec_IntAlloc( 10000 );\n    p-\u003evVec1     = Vec_IntAlloc( 10000 );\n    p-\u003evMap0     = Vec_IntStart( p-\u003enObjs );\n    p-\u003evMap1     = Vec_IntStart( p-\u003enObjs );\n    // add constant 0 object\n    Vec_IntWriteEntry( p-\u003evUniques, 0, p-\u003enUniques++ );\n    return p;\n}",
+      "Draft": "func Gia_Iso2ManStart(pGia *Gia_Man_t) *Gia_Iso2Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_Iso2Man_t{};\n    p.pGia      = pGia;\n    p.nObjs     = Gia_ManObjNum( pGia );\n    p.nUniques  = 0;\n    // internal data\n    p.vUniques  = Vec_IntStartFull( p.nObjs );\n    p.vTied     = Gia_Iso2ManCollectTies( pGia );\n    p.vTable    = Vec_IntStart( Abc_PrimeCudd(1*p.nObjs) );\n    p.vPlaces   = Vec_IntAlloc( 1000 );\n    p.vSingles  = Vec_PtrAlloc( 1000 );\n    p.vVec0     = Vec_IntAlloc( 10000 );\n    p.vVec1     = Vec_IntAlloc( 10000 );\n    p.vMap0     = Vec_IntStart( p.nObjs );\n    p.vMap1     = Vec_IntStart( p.nObjs );\n    // add constant 0 object\n    Vec_IntWriteEntry( p.vUniques, 0, p.nUniques++ );\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManStop",
+      "Start": 9387,
+      "End": 9721,
+      "BodyStart": 9429,
+      "Original": "void Gia_Iso2ManStop( Gia_Iso2Man_t * p )\n{\n    Vec_IntFree( p-\u003evUniques );\n    Vec_IntFree( p-\u003evTied );\n    Vec_IntFree( p-\u003evTable );\n    Vec_IntFree( p-\u003evPlaces );\n    Vec_PtrFree( p-\u003evSingles );\n    Vec_IntFree( p-\u003evMap0 );\n    Vec_IntFree( p-\u003evMap1 );\n    Vec_IntFree( p-\u003evVec0 );\n    Vec_IntFree( p-\u003evVec1 );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_Iso2ManStop(p *Gia_Iso2Man_t) {\n    Vec_IntFree( p.vUniques );\n    Vec_IntFree( p.vTied );\n    Vec_IntFree( p.vTable );\n    Vec_IntFree( p.vPlaces );\n    Vec_PtrFree( p.vSingles );\n    Vec_IntFree( p.vMap0 );\n    Vec_IntFree( p.vMap1 );\n    Vec_IntFree( p.vVec0 );\n    Vec_IntFree( p.vVec1 );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManPrint",
+      "Start": 9722,
+      "End": 10145,
+      "BodyStart": 9793,
+      "Original": "void Gia_Iso2ManPrint( Gia_Iso2Man_t * p, abctime Time, int fVerbose )\n{\n    if ( !fVerbose )\n        return;\n    printf( \"Iter %4d :  \", p-\u003enIters++ );\n    printf( \"Entries =%8d.  \", Vec_IntSize(p-\u003evTied) );\n    printf( \"Uniques =%8d.  \", p-\u003enUniques );\n    printf( \"Singles =%8d.  \", Vec_PtrSize(p-\u003evSingles) );\n    printf( \"%9.2f sec\", (float)(Time)/(float)(CLOCKS_PER_SEC) );\n    printf( \"\\n\" );\n    fflush( stdout );\n}",
+      "Draft": "func Gia_Iso2ManPrint(p *Gia_Iso2Man_t, Time abctime, fVerbose int32) {\n    if !(fVerbose != 0) {\n        return; }\n    fmt.Printf(\"Iter %4d :  \", p.nIters++);\n    fmt.Printf(\"Entries =%8d.  \", Vec_IntSize(p.vTied));\n    fmt.Printf(\"Uniques =%8d.  \", p.nUniques);\n    fmt.Printf(\"Singles =%8d.  \", Vec_PtrSize(p.vSingles));\n    fmt.Printf(\"%9.2f sec\", float32((Time))/float32((int64(time.Second))));\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Gia_ObjCompareByValue2",
+      "Start": 10661,
+      "End": 10777,
+      "BodyStart": 10726,
+      "Original": "int Gia_ObjCompareByValue2( Gia_Obj_t ** pp1, Gia_Obj_t ** pp2 ) { return (int)(*pp1)-\u003eValue - (int)(*pp2)-\u003eValue; }",
+      "Draft": "func Gia_ObjCompareByValue2(pp1 **Gia_Obj_t, pp2 **Gia_Obj_t) int32 { return int32((*pp1).Value) - int32((*pp2).Value); }"
+    },
+    {
+      "Name": "Gia_Iso2ManUniqify",
+      "Start": 10778,
+      "End": 12926,
+      "BodyStart": 10822,
+      "Original": "int Gia_Iso2ManUniqify( Gia_Iso2Man_t * p )\n{\n    int fVerify = 0;\n    Gia_Obj_t * pObj, * pTemp;\n    int * pTable = Vec_IntArray(p-\u003evTable);\n    int i, k, nSize = Vec_IntSize(p-\u003evTable);\n\n    if ( fVerify )\n        for ( k = 0; k \u003c nSize; k++ )\n            assert( pTable[k] == 0 );\n    if ( fVerify )\n        Gia_ManForEachObjVec( p-\u003evTied, p-\u003epGia, pObj, i )\n            assert( pObj-\u003efMark0 == 0 );\n\n#if 0\n    Gia_ManForEachObjVec( p-\u003evTied, p-\u003epGia, pObj, i )\n    {\n        printf( \"%3d : \", Gia_ObjId(p-\u003epGia, pObj) );\n        Extra_PrintBinary( stdout, \u0026pObj-\u003eValue, 32 );\n        printf( \"\\n\" );\n    }\n#endif\n\n    // add objects to the table\n    Vec_IntClear( p-\u003evPlaces );\n    Gia_ManForEachObjVec( p-\u003evTied, p-\u003epGia, pObj, i )\n    {\n        for ( k = pObj-\u003eValue % nSize; (pTemp = pTable[k] ? Gia_ManObj(p-\u003epGia, pTable[k]) : NULL); k = (k + 1) % nSize )\n            if ( pTemp-\u003eValue == pObj-\u003eValue )\n            {\n                pTemp-\u003efMark0 = 1;\n                pObj-\u003efMark0 = 1;\n                break;\n            }\n        if ( pTemp != NULL )\n            continue;\n        pTable[k] = Gia_ObjId(p-\u003epGia, pObj);\n        Vec_IntPush( p-\u003evPlaces, k );\n    }\n    // clean the table\n    Vec_IntForEachEntry( p-\u003evPlaces, k, i )\n        pTable[k] = 0;\n    // collect singleton objects and compact tied objects\n    k = 0;\n    Vec_PtrClear( p-\u003evSingles );\n    Gia_ManForEachObjVec( p-\u003evTied, p-\u003epGia, pObj, i )\n        if ( pObj-\u003efMark0 == 0 )\n            Vec_PtrPush( p-\u003evSingles, pObj );\n        else \n        {\n            pObj-\u003efMark0 = 0;\n            Vec_IntWriteEntry( p-\u003evTied, k++, Gia_ObjId(p-\u003epGia, pObj) );\n        }\n    Vec_IntShrink( p-\u003evTied, k );\n    // sort singletons\n    Vec_PtrSort( p-\u003evSingles, (int (*)(void))Gia_ObjCompareByValue2 );\n    // add them to unique and increment signature\n    Vec_PtrForEachEntry( Gia_Obj_t *, p-\u003evSingles, pObj, i )\n    {\n        pObj-\u003eValue += s_256Primes[p-\u003enUniques \u0026 ISO_MASK];\n        assert( Vec_IntEntry(p-\u003evUniques, Gia_ObjId(p-\u003epGia, pObj)) == -1 );\n        Vec_IntWriteEntry( p-\u003evUniques, Gia_ObjId(p-\u003epGia, pObj), p-\u003enUniques++ );\n    }\n    return Vec_PtrSize( p-\u003evSingles );\n}",
+      "Draft": "func Gia_Iso2ManUniqify(p *Gia_Iso2Man_t) int32 {\n    var fVerify int32;\n    var pObj, pTemp *Gia_Obj_t;\n    var pTable *int32  = Vec_IntArray(p.vTable);\n    var i int32;\n    var k int32;\n    var nSize int32 = Vec_IntSize(p.vTable);\n\n    if fVerify != 0 {\n        for  k = 0; k \u003c nSize; k++  {\n            assert(pTable[k] == 0, \"pTable[k] == 0\");\n        } }\n    if fVerify != 0 {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n            assert(pObj.fMark0 == 0, \"pObj.fMark0 == 0\");\n        } }\n\n     \n                                                      \n     \n                                                     \n                                                      \n                       \n     \n      \n\n    // add objects to the table\n    Vec_IntClear( p.vPlaces );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        for  k = pObj.Value % nSize; (pTemp = pTable[k] ? Gia_ManObj(p.pGia, pTable[k]) : nil); k = (k + 1) % nSize  {\n            if pTemp.Value == pObj.Value {\n                pTemp.fMark0 = 1;\n                pObj.fMark0 = 1;\n                break;\n            }\n        }\n        if pTemp != nil {\n            continue; }\n        pTable[k] = Gia_ObjId(p.pGia, pObj);\n        Vec_IntPush( p.vPlaces, k );\n    }\n    // clean the table\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPlaces)) \u0026\u0026 (((k) = Vec_IntEntry(p.vPlaces, i)), 1); i++  {\n        pTable[k] = 0;\n    }\n    // collect singleton objects and compact tied objects\n    k = 0;\n    Vec_PtrClear( p.vSingles );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        if pObj.fMark0 == 0 {\n            Vec_PtrPush( p.vSingles, pObj );\n        } else {\n            pObj.fMark0 = 0;\n            Vec_IntWriteEntry( p.vTied, k++, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\n    Vec_IntShrink( p.vTied, k );\n    // sort singletons\n    Vec_PtrSort( p.vSingles, (int (*)(void))Gia_ObjCompareByValue2 );\n    // add them to unique and increment signature\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSingles)) \u0026\u0026 (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(p.vSingles, i)), 1); i++  {\n        pObj.Value += s_256Primes[p.nUniques \u0026 ISO_MASK];\n        assert(Vec_IntEntry(p.vUniques, Gia_ObjId(p.pGia, pObj)) == -1, \"Vec_IntEntry(p.vUniques, Gia_ObjId(p.pGia, pObj)) == -1\");\n        Vec_IntWriteEntry( p.vUniques, Gia_ObjId(p.pGia, pObj), p.nUniques++ );\n    }\n    return Vec_PtrSize( p.vSingles );\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManDerivePoClasses",
+      "Start": 13162,
+      "End": 13629,
+      "BodyStart": 13221,
+      "Original": "Vec_Wec_t * Gia_Iso2ManDerivePoClasses( Gia_Man_t * pGia )\n{\n    Vec_Wec_t * vEquivs;\n    Vec_Int_t * vValues;\n    Vec_Int_t * vMap;\n    Gia_Obj_t * pObj;\n    int i;\n    vValues = Vec_IntAlloc( Gia_ManPoNum(pGia) );\n    Gia_ManForEachPo( pGia, pObj, i )\n        Vec_IntPush( vValues, pObj-\u003eValue );\n    vMap = Hsh_IntManHashArray( vValues, 1 );\n    Vec_IntFree( vValues );\n    vEquivs = Vec_WecCreateClasses( vMap );\n    Vec_IntFree( vMap );\n    return vEquivs;    \n}",
+      "Draft": "func Gia_Iso2ManDerivePoClasses(pGia *Gia_Man_t) *Vec_Wec_t {\n    var vEquivs *Vec_Wec_t;\n    var vValues *Vec_Int_t;\n    var vMap *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Gia_ManPoNum(pGia) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        Vec_IntPush( vValues, pObj.Value );\n    }\n    vMap = Hsh_IntManHashArray( vValues, 1 );\n    Vec_IntFree( vValues );\n    vEquivs = Vec_WecCreateClasses( vMap );\n    Vec_IntFree( vMap );\n    return vEquivs;    \n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCollectOrder2_rec",
+      "Start": 13865,
+      "End": 14825,
+      "BodyStart": 13942,
+      "Original": "void Gia_Iso2ManCollectOrder2_rec( Gia_Man_t * p, int Id, Vec_Int_t * vVec )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        if ( Gia_ObjFanin0(pObj)-\u003eValue \u003c= Gia_ObjFanin1(pObj)-\u003eValue )\n        {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n        }\n        else\n        {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n        }\n    }\n    else if ( Gia_ObjIsCo(pObj) )\n    {\n        Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n    }\n    else if ( Gia_ObjIsPi(p, pObj) )\n    {\n    }\n    else assert( Gia_ObjIsConst0(pObj) );\n    Vec_IntPush( vVec, Id );\n}",
+      "Draft": "func Gia_Iso2ManCollectOrder2_rec(p *Gia_Man_t, Id int32, vVec *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjFanin0(pObj).Value \u003c= Gia_ObjFanin1(pObj).Value {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n        \n        } else {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n        }\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n    \n    } else if Gia_ObjIsPi(p, pObj) {\n    \n    } else { assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\"); }\n    Vec_IntPush( vVec, Id );\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCollectOrder2",
+      "Start": 14826,
+      "End": 15155,
+      "BodyStart": 14905,
+      "Original": "Vec_Int_t * Gia_Iso2ManCollectOrder2( Gia_Man_t * pGia, int * pPos, int nPos )\n{\n    Vec_Int_t * vVec;\n    int i;\n    vVec = Vec_IntAlloc( 1000 );\n    Gia_ManIncrementTravId( pGia );\n    for ( i = 0; i \u003c nPos; i++ )\n        Gia_Iso2ManCollectOrder2_rec( pGia, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])), vVec );\n    return vVec;\n}",
+      "Draft": "func Gia_Iso2ManCollectOrder2(pGia *Gia_Man_t, pPos *int32, nPos int32) *Vec_Int_t {\n    var vVec *Vec_Int_t;\n    var i int32;\n    vVec = Vec_IntAlloc( 1000 );\n    Gia_ManIncrementTravId( pGia );\n    for  i = 0; i \u003c nPos; i++  {\n        Gia_Iso2ManCollectOrder2_rec( pGia, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])), vVec );\n    }\n    return vVec;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCollectOrder_rec",
+      "Start": 15391,
+      "End": 16613,
+      "BodyStart": 15505,
+      "Original": "void Gia_Iso2ManCollectOrder_rec( Gia_Man_t * p, int Id, Vec_Int_t * vRoots, Vec_Int_t * vVec, Vec_Int_t * vMap )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        if ( Gia_ObjFanin0(pObj)-\u003eValue \u003c= Gia_ObjFanin1(pObj)-\u003eValue )\n        {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n        }\n        else\n        {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n        }\n    }\n    else if ( Gia_ObjIsCo(pObj) )\n    {\n        Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n    }\n    else if ( Gia_ObjIsCi(pObj) )\n    {\n        if ( Gia_ObjIsRo(p, pObj) )\n            Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );\n    }\n    else assert( Gia_ObjIsConst0(pObj) );\n    Vec_IntWriteEntry( vMap, Id, Vec_IntSize(vVec) );\n    Vec_IntPush( vVec, Id );\n}",
+      "Draft": "func Gia_Iso2ManCollectOrder_rec(p *Gia_Man_t, Id int32, vRoots *Vec_Int_t, vVec *Vec_Int_t, vMap *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjFanin0(pObj).Value \u003c= Gia_ObjFanin1(pObj).Value {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n        \n        } else {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n        }\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n    \n    } else if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsRo(p, pObj) {\n            Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) ); }\n    \n    } else { assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\"); }\n    Vec_IntWriteEntry( vMap, Id, Vec_IntSize(vVec) );\n    Vec_IntPush( vVec, Id );\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCollectOrder",
+      "Start": 16614,
+      "End": 17075,
+      "BodyStart": 16741,
+      "Original": "void Gia_Iso2ManCollectOrder( Gia_Man_t * pGia, int * pPos, int nPos, Vec_Int_t * vRoots, Vec_Int_t * vVec, Vec_Int_t * vMap )\n{\n    int i, iRoot;\n    Vec_IntClear( vRoots );\n    for ( i = 0; i \u003c nPos; i++ )\n        Vec_IntPush( vRoots, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])) );\n    Vec_IntClear( vVec );\n    Gia_ManIncrementTravId( pGia );\n    Vec_IntForEachEntry( vRoots, iRoot, i )\n        Gia_Iso2ManCollectOrder_rec( pGia, iRoot, vRoots, vVec, vMap );\n}",
+      "Draft": "func Gia_Iso2ManCollectOrder(pGia *Gia_Man_t, pPos *int32, nPos int32, vRoots *Vec_Int_t, vVec *Vec_Int_t, vMap *Vec_Int_t) {\n    var i, iRoot int32;\n    Vec_IntClear( vRoots );\n    for  i = 0; i \u003c nPos; i++  {\n        Vec_IntPush( vRoots, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])) );\n    }\n    Vec_IntClear( vVec );\n    Gia_ManIncrementTravId( pGia );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder_rec( pGia, iRoot, vRoots, vVec, vMap );\n    }\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCheckIsoPair",
+      "Start": 17311,
+      "End": 19919,
+      "BodyStart": 17432,
+      "Original": "int Gia_Iso2ManCheckIsoPair( Gia_Man_t * p, Vec_Int_t * vVec0, Vec_Int_t * vVec1, Vec_Int_t * vMap0, Vec_Int_t * vMap1 )\n{\n    Gia_Obj_t * pObj0, * pObj1;\n    int k, iObj0, iObj1;\n    Vec_IntForEachEntryTwo( vVec0, vVec1, iObj0, iObj1, k )\n    {\n        if ( iObj0 == iObj1 )\n            continue;\n        pObj0 = Gia_ManObj(p, iObj0);\n        pObj1 = Gia_ManObj(p, iObj1);\n        if ( pObj0-\u003eValue != pObj1-\u003eValue )\n            return 0;\n        assert( pObj0-\u003eValue == pObj1-\u003eValue );\n        if ( !Gia_ObjIsAnd(pObj0) )\n            continue;\n        if ( Gia_ObjFanin0(pObj0)-\u003eValue \u003c= Gia_ObjFanin1(pObj0)-\u003eValue )\n        {\n            if ( Gia_ObjFanin0(pObj1)-\u003eValue \u003c= Gia_ObjFanin1(pObj1)-\u003eValue )\n            {\n                if ( Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) )\n                     return 0;\n            }\n            else\n            {\n                if ( Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) )\n                     return 0;\n            }\n        }\n        else\n        {\n            if ( Gia_ObjFanin0(pObj1)-\u003eValue \u003c= Gia_ObjFanin1(pObj1)-\u003eValue )\n            {\n                if ( Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) )\n                     return 0;\n            }\n            else\n            {\n                if ( Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) )\n                     return 0;\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Gia_Iso2ManCheckIsoPair(p *Gia_Man_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t) int32 {\n    var pObj0, pObj1 *Gia_Obj_t;\n    var k, iObj0, iObj1 int32;\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  k = 0; (k \u003c Vec_IntSize(vVec0)) \u0026\u0026 (((iObj0) = Vec_IntEntry(vVec0, k)), 1) \u0026\u0026 (((iObj1) = Vec_IntEntry(vVec1, k)), 1); k++  {\n        if iObj0 == iObj1 {\n            continue; }\n        pObj0 = Gia_ManObj(p, iObj0);\n        pObj1 = Gia_ManObj(p, iObj1);\n        if pObj0.Value != pObj1.Value {\n            return 0; }\n        assert(pObj0.Value == pObj1.Value, \"pObj0.Value == pObj1.Value\");\n        if !Gia_ObjIsAnd(pObj0) {\n            continue; }\n        if Gia_ObjFanin0(pObj0).Value \u003c= Gia_ObjFanin1(pObj0).Value {\n            if Gia_ObjFanin0(pObj1).Value \u003c= Gia_ObjFanin1(pObj1).Value {\n                if Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) {\n                     return 0; }\n            \n            } else {\n                if Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) {\n                     return 0; }\n            }\n        \n        } else {\n            if Gia_ObjFanin0(pObj1).Value \u003c= Gia_ObjFanin1(pObj1).Value {\n                if Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) {\n                     return 0; }\n            \n            } else {\n                if Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) {\n                     return 0; }\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCheckIsoClassOneSkip",
+      "Start": 20156,
+      "End": 20803,
+      "BodyStart": 20325,
+      "Original": "int Gia_Iso2ManCheckIsoClassOneSkip( Gia_Man_t * p, Vec_Int_t * vClass, Vec_Int_t * vRoots, Vec_Int_t * vVec0, Vec_Int_t * vVec1, Vec_Int_t * vMap0, Vec_Int_t * vMap1 )\n{\n    int i, iPo;\n    assert( Vec_IntSize(vClass) \u003e 1 );\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    Vec_IntForEachEntryStart( vClass, iPo, i, 1 )\n    {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if ( Vec_IntSize(vVec0) != Vec_IntSize(vVec1) )\n            return 0;\n        if ( !Gia_Iso2ManCheckIsoPair( p, vVec0, vVec1, vMap0, vMap1 ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Gia_Iso2ManCheckIsoClassOneSkip(p *Gia_Man_t, vClass *Vec_Int_t, vRoots *Vec_Int_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t) int32 {\n    var i, iPo int32;\n    assert(Vec_IntSize(vClass) \u003e 1, \"Vec_IntSize(vClass) \u003e 1\");\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iPo) = Vec_IntEntry(vClass, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if Vec_IntSize(vVec0) != Vec_IntSize(vVec1) {\n            return 0; }\n        if !(Gia_Iso2ManCheckIsoPair( p, vVec0, vVec1, vMap0, vMap1 ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCheckIsoClassesSkip",
+      "Start": 20805,
+      "End": 22204,
+      "BodyStart": 20886,
+      "Original": "Vec_Wec_t * Gia_Iso2ManCheckIsoClassesSkip( Gia_Man_t * p, Vec_Wec_t * vEquivs )\n{\n    Vec_Wec_t * vEquivs2;\n    Vec_Int_t * vRoots = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vVec0 = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vVec1 = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vMap0 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vMap1 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vClass, * vClass2;\n    int i, k, Entry, Counter = 0;\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    Vec_WecForEachLevel( vEquivs, vClass, i )\n    {\n        if ( i % 50 == 0 )\n            printf( \"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p) ), fflush(stdout);\n        Counter += Vec_IntSize(vClass);\n        if ( Vec_IntSize(vClass) \u003c 2 || Gia_Iso2ManCheckIsoClassOneSkip(p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1) )\n        {\n            vClass2 = Vec_WecPushLevel( vEquivs2 );\n            *vClass2 = *vClass;\n            vClass-\u003epArray = NULL;\n            vClass-\u003enSize = vClass-\u003enCap = 0;\n        }\n        else\n        {\n            Vec_IntForEachEntry( vClass, Entry, k )\n            {\n                vClass2 = Vec_WecPushLevel( vEquivs2 );\n                Vec_IntPush( vClass2, Entry );\n            }\n        }\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}",
+      "Draft": "func Gia_Iso2ManCheckIsoClassesSkip(p *Gia_Man_t, vEquivs *Vec_Wec_t) *Vec_Wec_t {\n    var vEquivs2 *Vec_Wec_t;\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec0 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec1 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vMap0 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vMap1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vClass, vClass2 *Vec_Int_t;\n    var i, k, Entry, Counter int32;\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vEquivs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vEquivs, i)), 1); i++  {\n        if i % 50 == 0 {\n            fmt.Printf(\"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p));\nfflush(os.Stdout); }\n        Counter += Vec_IntSize(vClass);\n        if Vec_IntSize(vClass) \u003c 2 || (Gia_Iso2ManCheckIsoClassOneSkip(p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1) != 0) {\n            vClass2 = Vec_WecPushLevel( vEquivs2 );\n            *vClass2 = *vClass;\n            vClass.pArray = nil;\n            vClass.nSize = vClass.nCap = 0;\n        \n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n                vClass2 = Vec_WecPushLevel( vEquivs2 );\n                Vec_IntPush( vClass2, Entry );\n            }\n        }\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCheckIsoClassOne",
+      "Start": 22206,
+      "End": 23029,
+      "BodyStart": 22395,
+      "Original": "void Gia_Iso2ManCheckIsoClassOne( Gia_Man_t * p, Vec_Int_t * vClass, Vec_Int_t * vRoots, Vec_Int_t * vVec0, Vec_Int_t * vVec1, Vec_Int_t * vMap0, Vec_Int_t * vMap1, Vec_Int_t * vNewClass )\n{\n    int i, k = 1, iPo;\n    Vec_IntClear( vNewClass );\n    if ( Vec_IntSize(vClass) \u003c= 1 )\n        return;\n    assert( Vec_IntSize(vClass) \u003e 1 );\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    Vec_IntForEachEntryStart( vClass, iPo, i, 1 )\n    {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if ( Vec_IntSize(vVec0) == Vec_IntSize(vVec1) \u0026\u0026 Gia_Iso2ManCheckIsoPair(p, vVec0, vVec1, vMap0, vMap1) )\n            Vec_IntWriteEntry( vClass, k++, iPo );\n        else\n            Vec_IntPush( vNewClass, iPo );\n    }\n    Vec_IntShrink( vClass, k );\n}",
+      "Draft": "func Gia_Iso2ManCheckIsoClassOne(p *Gia_Man_t, vClass *Vec_Int_t, vRoots *Vec_Int_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vNewClass *Vec_Int_t) {\n    var i int32;\n    var k int32 = 1;\n    var iPo int32;\n    Vec_IntClear( vNewClass );\n    if Vec_IntSize(vClass) \u003c= 1 {\n        return; }\n    assert(Vec_IntSize(vClass) \u003e 1, \"Vec_IntSize(vClass) \u003e 1\");\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iPo) = Vec_IntEntry(vClass, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if Vec_IntSize(vVec0) == Vec_IntSize(vVec1) \u0026\u0026 (Gia_Iso2ManCheckIsoPair(p, vVec0, vVec1, vMap0, vMap1) != 0) {\n            Vec_IntWriteEntry( vClass, k++, iPo );\n        } else {\n            Vec_IntPush( vNewClass, iPo ); }\n    }\n    Vec_IntShrink( vClass, k );\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManCheckIsoClasses",
+      "Start": 23031,
+      "End": 24462,
+      "BodyStart": 23108,
+      "Original": "Vec_Wec_t * Gia_Iso2ManCheckIsoClasses( Gia_Man_t * p, Vec_Wec_t * vEquivs )\n{\n    Vec_Wec_t * vEquivs2;\n    Vec_Int_t * vRoots = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vVec0 = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vVec1 = Vec_IntAlloc( 10000 );\n    Vec_Int_t * vMap0 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vMap1 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vClass, * vClass2, * vNewClass;\n    int i, Counter = 0;\n    vNewClass = Vec_IntAlloc( 100 );\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    Vec_WecForEachLevel( vEquivs, vClass, i )\n    {\n        if ( i % 50 == 0 )\n            printf( \"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p) ), fflush(stdout);\n        // split this class\n        Gia_Iso2ManCheckIsoClassOne( p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1, vNewClass );\n        Counter += Vec_IntSize(vClass);\n        // add remaining class\n        vClass2 = Vec_WecPushLevel( vEquivs2 );\n        *vClass2 = *vClass;\n        vClass-\u003epArray = NULL;\n        vClass-\u003enSize = vClass-\u003enCap = 0;\n        // add new class\n        if ( Vec_IntSize(vNewClass) == 0 )\n            continue;\n        vClass = Vec_WecPushLevel( vEquivs );\n        Vec_IntAppend( vClass, vNewClass );\n    }\n    Vec_IntFree( vNewClass );   \n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}",
+      "Draft": "func Gia_Iso2ManCheckIsoClasses(p *Gia_Man_t, vEquivs *Vec_Wec_t) *Vec_Wec_t {\n    var vEquivs2 *Vec_Wec_t;\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec0 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec1 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vMap0 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vMap1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vClass, vClass2, vNewClass *Vec_Int_t;\n    var i, Counter int32;\n    vNewClass = Vec_IntAlloc( 100 );\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vEquivs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vEquivs, i)), 1); i++  {\n        if i % 50 == 0 {\n            fmt.Printf(\"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p));\nfflush(os.Stdout); }\n        // split this class\n        Gia_Iso2ManCheckIsoClassOne( p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1, vNewClass );\n        Counter += Vec_IntSize(vClass);\n        // add remaining class\n        vClass2 = Vec_WecPushLevel( vEquivs2 );\n        *vClass2 = *vClass;\n        vClass.pArray = nil;\n        vClass.nSize = vClass.nCap = 0;\n        // add new class\n        if Vec_IntSize(vNewClass) == 0 {\n            continue; }\n        vClass = Vec_WecPushLevel( vEquivs );\n        Vec_IntAppend( vClass, vNewClass );\n    }\n    Vec_IntFree( vNewClass );   \n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}"
+    },
+    {
+      "Name": "Gia_Iso2ManPerform",
+      "Start": 24700,
+      "End": 25497,
+      "BodyStart": 24765,
+      "Original": "Vec_Wec_t * Gia_Iso2ManPerform( Gia_Man_t * pGia, int fVerbose )\n{\n    Gia_Iso2Man_t * p;\n    abctime clk = Abc_Clock();\n    p = Gia_Iso2ManStart( pGia );\n    Gia_Iso2ManPrepare( pGia );\n    Gia_Iso2ManPropagate( pGia );\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n    while ( Gia_Iso2ManUniqify( p ) )\n    {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n/*\n    Gia_Iso2ManUpdate( p, 20 );\n    while ( Gia_Iso2ManUniqify( p ) )\n    {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n*/\n    Gia_Iso2ManStop( p );\n    return Gia_Iso2ManDerivePoClasses( pGia );\n}",
+      "Draft": "func Gia_Iso2ManPerform(pGia *Gia_Man_t, fVerbose int32) *Vec_Wec_t {\n    var p *Gia_Iso2Man_t;\n    var clk abctime  = Abc_Clock();\n    p = Gia_Iso2ManStart( pGia );\n    Gia_Iso2ManPrepare( pGia );\n    Gia_Iso2ManPropagate( pGia );\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n    for  Gia_Iso2ManUniqify( p ) != 0  {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n/*\n    Gia_Iso2ManUpdate( p, 20 );\n    while ( Gia_Iso2ManUniqify( p ) )\n    {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n*/\n    Gia_Iso2ManStop( p );\n    return Gia_Iso2ManDerivePoClasses( pGia );\n}"
+    },
+    {
+      "Name": "Gia_ManIsoReduce2",
+      "Start": 25733,
+      "End": 27712,
+      "BodyStart": 25911,
+      "Original": "Gia_Man_t * Gia_ManIsoReduce2( Gia_Man_t * pGia, Vec_Ptr_t ** pvPosEquivs, Vec_Ptr_t ** pvPiPerms, int fEstimate, int fBetterQual, int fDualOut, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pPart;\n    Vec_Wec_t * vEquivs, * vEquivs2;\n    Vec_Int_t * vRemains;\n    int nClasses, nUsedPos;\n    abctime clk = Abc_Clock();\n    vEquivs = Gia_Iso2ManPerform( pGia, fVeryVerbose );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    printf( \"Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  \", \n        Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if ( fEstimate )\n    {\n        Vec_WecFree( vEquivs );\n        return Gia_ManDup(pGia);\n    }\n    // verify classes\n    if ( fBetterQual )\n        vEquivs2 = Gia_Iso2ManCheckIsoClasses( pGia, vEquivs );\n    else\n        vEquivs2 = Gia_Iso2ManCheckIsoClassesSkip( pGia, vEquivs );\n    Vec_WecFree( vEquivs );\n    vEquivs = vEquivs2;\n    // sort equiv classes by the first integer\n    Vec_WecSortByFirstInt( vEquivs, 0 );\n    // find the first outputs\n    vRemains = Vec_WecCollectFirsts( vEquivs );\n    // derive the final GIA\n    pPart = Gia_ManDupCones( pGia, Vec_IntArray(vRemains), Vec_IntSize(vRemains), 0 );\n    Vec_IntFree( vRemains );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    printf( \"Reduced %d outputs to %d equivalence classes (%d outputs are in %d non-trivial classes).  \", \n        Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if ( fVerbose )\n    { \n        printf( \"Nontrivial classes:\\n\" );\n        Vec_WecPrint( vEquivs, 1 );\n    }\n    if ( pvPiPerms )\n        *pvPiPerms = NULL;\n    if ( pvPosEquivs )\n        *pvPosEquivs = Vec_WecConvertToVecPtr( vEquivs );\n    Vec_WecFree( vEquivs );\n//    Gia_ManStopP( \u0026pPart );\n    return pPart;\n}",
+      "Draft": "func Gia_ManIsoReduce2(pGia *Gia_Man_t, pvPosEquivs **Vec_Ptr_t, pvPiPerms **Vec_Ptr_t, fEstimate int32, fBetterQual int32, fDualOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pPart *Gia_Man_t;\n    var vEquivs, vEquivs2 *Vec_Wec_t;\n    var vRemains *Vec_Int_t;\n    var nClasses, nUsedPos int32;\n    var clk abctime  = Abc_Clock();\n    vEquivs = Gia_Iso2ManPerform( pGia, fVeryVerbose );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    fmt.Printf(\"Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  \", Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fEstimate != 0 {\n        Vec_WecFree( vEquivs );\n        return Gia_ManDup(pGia);\n    }\n    // verify classes\n    if fBetterQual != 0 {\n        vEquivs2 = Gia_Iso2ManCheckIsoClasses( pGia, vEquivs );\n    } else {\n        vEquivs2 = Gia_Iso2ManCheckIsoClassesSkip( pGia, vEquivs ); }\n    Vec_WecFree( vEquivs );\n    vEquivs = vEquivs2;\n    // sort equiv classes by the first integer\n    Vec_WecSortByFirstInt( vEquivs, 0 );\n    // find the first outputs\n    vRemains = Vec_WecCollectFirsts( vEquivs );\n    // derive the final GIA\n    pPart = Gia_ManDupCones( pGia, Vec_IntArray(vRemains), Vec_IntSize(vRemains), 0 );\n    Vec_IntFree( vRemains );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    fmt.Printf(\"Reduced %d outputs to %d equivalence classes (%d outputs are in %d non-trivial classes).  \", Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fVerbose != 0 { \n        fmt.Printf(\"Nontrivial classes:\\n\");\n        Vec_WecPrint( vEquivs, 1 );\n    }\n    if pvPiPerms {\n        *pvPiPerms = nil; }\n    if pvPosEquivs {\n        *pvPosEquivs = Vec_WecConvertToVecPtr( vEquivs ); }\n    Vec_WecFree( vEquivs );\n//    Gia_ManStopP( \u0026pPart );\n    return pPart;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::struct::Gia_Iso2Man_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_Iso2Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3903,
+      "End": 4851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::mechanical::sizeof::9463",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8726,
+      "End": 8726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::pointer-cast::9425",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8726,
+      "End": 8726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::pointer-cast::10492",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9705,
+      "End": 9705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::pointer-cast::13960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12597,
+      "End": 12597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCollectTies",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCollectTies",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5307,
+      "End": 5553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5554,
+      "End": 6232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManPropagate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManPropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6233,
+      "End": 7078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7314,
+      "End": 8027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCone",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8028,
+      "End": 8173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8174,
+      "End": 8404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8640,
+      "End": 9386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::ternary::Gia_Iso2ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_Iso2ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9387,
+      "End": 9721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9387,
+      "End": 9721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManPrint",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9722,
+      "End": 10145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_ObjCompareByValue2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjCompareByValue2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10661,
+      "End": 10777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::ternary::Gia_Iso2ManUniqify",
+      "Category": "ternary-review",
+      "Symbol": "Gia_Iso2ManUniqify",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10778,
+      "End": 12926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManUniqify",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManUniqify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10778,
+      "End": 12926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManDerivePoClasses",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManDerivePoClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13162,
+      "End": 13629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCollectOrder2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCollectOrder2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13865,
+      "End": 14825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCollectOrder2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCollectOrder2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14826,
+      "End": 15155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCollectOrder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCollectOrder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15391,
+      "End": 16613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCollectOrder",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCollectOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16614,
+      "End": 17075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCheckIsoPair",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCheckIsoPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17311,
+      "End": 19919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCheckIsoClassOneSkip",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCheckIsoClassOneSkip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20156,
+      "End": 20803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCheckIsoClassesSkip",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCheckIsoClassesSkip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20805,
+      "End": 22204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCheckIsoClassOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCheckIsoClassOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22206,
+      "End": 23029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManCheckIsoClasses",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManCheckIsoClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23031,
+      "End": 24462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_Iso2ManPerform",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Iso2ManPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24700,
+      "End": 25497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::Gia_ManIsoReduce2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIsoReduce2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25733,
+      "End": 27712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIso2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 27960
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [gia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"misc/vec/vecWec.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\nconst ISO_MASK = 0xFF\nstatic unsigned int s_256Primes[ISO_MASK+1] = \n{\n    0x984b6ad9,0x18a6eed3,0x950353e2,0x6222f6eb,0xdfbedd47,0xef0f9023,0xac932a26,0x590eaf55,\n    0x97d0a034,0xdc36cd2e,0x22736b37,0xdc9066b0,0x2eb2f98b,0x5d9c7baf,0x85747c9e,0x8aca1055,\n    0x50d66b74,0x2f01ae9e,0xa1a80123,0x3e1ce2dc,0xebedbc57,0x4e68bc34,0x855ee0cf,0x17275120,\n    0x2ae7f2df,0xf71039eb,0x7c283eec,0x70cd1137,0x7cf651f3,0xa87bfa7a,0x14d87f02,0xe82e197d,\n    0x8d8a5ebe,0x1e6a15dc,0x197d49db,0x5bab9c89,0x4b55dea7,0x55dede49,0x9a6a8080,0xe5e51035,\n    0xe148d658,0x8a17eb3b,0xe22e4b38,0xe5be2a9a,0xbe938cbb,0x3b981069,0x7f9c0c8e,0xf756df10,\n    0x8fa783f7,0x252062ce,0x3dc46b4b,0xf70f6432,0x3f378276,0x44b137a1,0x2bf74b77,0x04892ed6,\n    0xfd318de1,0xd58c235e,0x94c6d25b,0x7aa5f218,0x35c9e921,0x5732fbbb,0x06026481,0xf584a44f,\n    0x946e1b5f,0x8463d5b2,0x4ebca7b2,0x54887b15,0x08d1e804,0x5b22067d,0x794580f6,0xb351ea43,\n    0xbce555b9,0x19ae2194,0xd32f1396,0x6fc1a7f1,0x1fd8a867,0x3a89fdb0,0xea49c61c,0x25f8a879,\n    0xde1e6437,0x7c74afca,0x8ba63e50,0xb1572074,0xe4655092,0xdb6f8b1c,0xc2955f3c,0x327f85ba,\n    0x60a17021,0x95bd261d,0xdea94f28,0x04528b65,0xbe0109cc,0x26dd5688,0x6ab2729d,0xc4f029ce,\n    0xacf7a0be,0x4c912f55,0x34c06e65,0x4fbb938e,0x1533fb5f,0x03da06bd,0x48262889,0xc2523d7d,\n    0x28a71d57,0x89f9713a,0xf574c551,0x7a99deb5,0x52834d91,0x5a6f4484,0xc67ba946,0x13ae698f,\n    0x3e390f34,0x34fc9593,0x894c7932,0x6cf414a3,0xdb7928ab,0x13a3b8a3,0x4b381c1d,0xa10b54cb,\n    0x55359d9d,0x35a3422a,0x58d1b551,0x0fd4de20,0x199eb3f4,0x167e09e2,0x3ee6a956,0x5371a7fa,\n    0xd424efda,0x74f521c5,0xcb899ff6,0x4a42e4f4,0x747917b6,0x4b08df0b,0x090c7a39,0x11e909e4,\n    0x258e2e32,0xd9fad92d,0x48fe5f69,0x0545cde6,0x55937b37,0x9b4ae4e4,0x1332b40e,0xc3792351,\n    0xaff982ef,0x4dba132a,0x38b81ef1,0x28e641bf,0x227208c1,0xec4bbe37,0xc4e1821c,0x512c9d09,\n    0xdaef1257,0xb63e7784,0x043e04d7,0x9c2cea47,0x45a0e59a,0x281315ca,0x849f0aac,0xa4071ed3,\n    0x0ef707b3,0xfe8dac02,0x12173864,0x471f6d46,0x24a53c0a,0x35ab9265,0xbbf77406,0xa2144e79,\n    0xb39a884a,0x0baf5b6d,0xcccee3dd,0x12c77584,0x2907325b,0xfd1adcd2,0xd16ee972,0x345ad6c1,\n    0x315ebe66,0xc7ad2b8d,0x99e82c8d,0xe52da8c8,0xba50f1d3,0x66689cd8,0x2e8e9138,0x43e15e74,\n    0xf1ced14d,0x188ec52a,0xe0ef3cbb,0xa958aedc,0x4107a1bc,0x5a9e7a3e,0x3bde939f,0xb5b28d5a,\n    0x596fe848,0xe85ad00c,0x0b6b3aae,0x44503086,0x25b5695c,0xc0c31dcd,0x5ee617f0,0x74d40c3a,\n    0xd2cb2b9f,0x1e19f5fa,0x81e24faf,0xa01ed68f,0xcee172fc,0x7fdf2e4d,0x002f4774,0x664f82dd,\n    0xc569c39a,0xa2d4dcbe,0xaadea306,0xa4c947bf,0xa413e4e3,0x81fb5486,0x8a404970,0x752c980c,\n    0x98d1d881,0x5c932c1e,0xeee65dfb,0x37592cdd,0x0fd4e65b,0xad1d383f,0x62a1452f,0x8872f68d,\n    0xb58c919b,0x345c8ee3,0xb583a6d6,0x43d72cb3,0x77aaa0aa,0xeb508242,0xf2db64f8,0x86294328,\n    0x82211731,0x1239a9d5,0x673ba5de,0xaf4af007,0x44203b19,0x2399d955,0xa175cd12,0x595928a7,\n    0x6918928b,0xde3126bb,0x6c99835c,0x63ba1fa2,0xdebbdff0,0x3d02e541,0xd6f7aac6,0xe80b4cd0,\n    0xd0fa29f1,0x804cac5e,0x2c226798,0x462f624c,0xad05b377,0x22924fcd,0xfbea205c,0x1b47586d\n};\n\nvar s_PrimeC int32 = 49;\n//static int s_PrimeC = 1;\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Gia_Iso2Man_t struct {\n    pGia       *Gia_Man_t;\n    nObjs              int32;\n    nUniques              int32;\n    // internal data\n    vUniques       *Vec_Int_t;      // unique numbers\n    vTied       *Vec_Int_t;         // tied objects   \n    vTable       *Vec_Int_t;        // hash table\n    vPlaces       *Vec_Int_t;       // used places in the table\n    vSingles       *Vec_Ptr_t;      // singleton objects\n    // isomorphism check\n    vVec0       *Vec_Int_t;         // isomorphism map\n    vVec1       *Vec_Int_t;         // isomorphism map\n    vMap0       *Vec_Int_t;         // isomorphism map\n    vMap1       *Vec_Int_t;         // isomorphism map\n    // statistics \n    nIters              int32;\n    timeStart          abctime;\n    timeSim          abctime;\n    timeRefine          abctime;\n    timeSort          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCollectTies(p *Gia_Man_t) *Vec_Int_t {\n    var vTies *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    vTies = Vec_IntAlloc( Gia_ManCandNum(p) );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        Vec_IntPush( vTies, i ); }\n    }\n    return vTies;\n}\nfunc Gia_Iso2ManPrepare(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = 1 + Abc_MaxInt(Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value);\n        } else {\n            pObj.Value = 0;\n        }\n    }\n    Gia_ManConst0(p).Value = s_256Primes[ISO_MASK];\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = s_256Primes[pObj.Value \u0026 ISO_MASK] + s_256Primes[ISO_MASK - 10 + Gia_ObjFaninC0(pObj) + Gia_ObjFaninC1(pObj)];\n        } else if Gia_ObjIsPi(p, pObj) {\n            pObj.Value = s_256Primes[ISO_MASK-1];\n        } else if Gia_ObjIsRo(p, pObj) {\n            pObj.Value = s_256Primes[ISO_MASK-2]; }\n    }\n}\nfunc Gia_Iso2ManPropagate(p *Gia_Man_t) {\n    var pObj, pObjRo *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj).Value + (Gia_ObjFaninC1(pObj) + s_PrimeC) * Gia_ObjFanin1(pObj).Value;\n            if Gia_ObjFaninC0(pObj) == Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjFanin0(pObj).Value == Gia_ObjFanin1(pObj).Value {\n                pObj.Value += s_256Primes[ISO_MASK - 11]; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value += (Gia_ObjFaninC0(pObj) + s_PrimeC) * Gia_ObjFanin0(pObj).Value; }\n    }\n    // inlining of macro Gia_ManForEachRiRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObjRo.Value += pObj.Value;\n        if pObjRo == Gia_ObjFanin0(pObj) {\n            pObjRo.Value += s_256Primes[ISO_MASK - 12]; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCone_rec(p *Gia_Man_t, Id int32, Level int32) uint32 {\n    var pObj *Gia_Obj_t;\n    if Level == 0 {\n        return 0; }\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        return pObj.Value + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId0(pObj, Id), Level-1 ) + Gia_Iso2ManCone_rec( p, Gia_ObjFaninId1(pObj, Id), Level-1 ); }\n    if Gia_ObjIsPi(p, pObj) {\n        return pObj.Value; }\n    if Gia_ObjIsRo(p, pObj) {\n        return pObj.Value + Gia_Iso2ManCone_rec( p, Gia_ObjId(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))), Level ); }\n    assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\");\n    return pObj.Value;\n}\nfunc Gia_Iso2ManCone(p *Gia_Man_t, Id int32, Level int32) uint32 {\n    Gia_ManIncrementTravId( p );\n    return Gia_Iso2ManCone_rec( p, Id, Level );\n}\nfunc Gia_Iso2ManUpdate(p *Gia_Iso2Man_t, Level int32) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        pObj.Value += Gia_Iso2ManCone( p.pGia, Gia_ObjId(p.pGia, pObj), Level );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManStart(pGia *Gia_Man_t) *Gia_Iso2Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Gia_Iso2Man_t{};\n    p.pGia      = pGia;\n    p.nObjs     = Gia_ManObjNum( pGia );\n    p.nUniques  = 0;\n    // internal data\n    p.vUniques  = Vec_IntStartFull( p.nObjs );\n    p.vTied     = Gia_Iso2ManCollectTies( pGia );\n    p.vTable    = Vec_IntStart( Abc_PrimeCudd(1*p.nObjs) );\n    p.vPlaces   = Vec_IntAlloc( 1000 );\n    p.vSingles  = Vec_PtrAlloc( 1000 );\n    p.vVec0     = Vec_IntAlloc( 10000 );\n    p.vVec1     = Vec_IntAlloc( 10000 );\n    p.vMap0     = Vec_IntStart( p.nObjs );\n    p.vMap1     = Vec_IntStart( p.nObjs );\n    // add constant 0 object\n    Vec_IntWriteEntry( p.vUniques, 0, p.nUniques++ );\n    return p;\n}\nfunc Gia_Iso2ManStop(p *Gia_Iso2Man_t) {\n    Vec_IntFree( p.vUniques );\n    Vec_IntFree( p.vTied );\n    Vec_IntFree( p.vTable );\n    Vec_IntFree( p.vPlaces );\n    Vec_PtrFree( p.vSingles );\n    Vec_IntFree( p.vMap0 );\n    Vec_IntFree( p.vMap1 );\n    Vec_IntFree( p.vVec0 );\n    Vec_IntFree( p.vVec1 );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Gia_Iso2ManPrint(p *Gia_Iso2Man_t, Time abctime, fVerbose int32) {\n    if !(fVerbose != 0) {\n        return; }\n    fmt.Printf(\"Iter %4d :  \", p.nIters++);\n    fmt.Printf(\"Entries =%8d.  \", Vec_IntSize(p.vTied));\n    fmt.Printf(\"Uniques =%8d.  \", p.nUniques);\n    fmt.Printf(\"Singles =%8d.  \", Vec_PtrSize(p.vSingles));\n    fmt.Printf(\"%9.2f sec\", float32((Time))/float32((int64(time.Second))));\n    fmt.Printf(\"\\n\");\n    fflush( os.Stdout );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Uniqifies objects using their signature.]\n\n  Description [Assumes the tied objects are in p-\u003evTied. Assumes that \n  updated signature (pObj-\u003eValue) is assigned to these objects. Returns \n  the array of unique objects p-\u003evSingles sorted by signature.  Compacts \n  the array of tied objects p-\u003evTied.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjCompareByValue2(pp1 **Gia_Obj_t, pp2 **Gia_Obj_t) int32 { return int32((*pp1).Value) - int32((*pp2).Value); }\nfunc Gia_Iso2ManUniqify(p *Gia_Iso2Man_t) int32 {\n    var fVerify int32;\n    var pObj, pTemp *Gia_Obj_t;\n    var pTable *int32  = Vec_IntArray(p.vTable);\n    var i int32;\n    var k int32;\n    var nSize int32 = Vec_IntSize(p.vTable);\n\n    if fVerify != 0 {\n        for  k = 0; k \u003c nSize; k++  {\n            assert(pTable[k] == 0, \"pTable[k] == 0\");\n        } }\n    if fVerify != 0 {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n            assert(pObj.fMark0 == 0, \"pObj.fMark0 == 0\");\n        } }\n\n     \n                                                      \n     \n                                                     \n                                                      \n                       \n     \n      \n\n    // add objects to the table\n    Vec_IntClear( p.vPlaces );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        for  k = pObj.Value % nSize; (pTemp = pTable[k] ? Gia_ManObj(p.pGia, pTable[k]) : nil); k = (k + 1) % nSize  {\n            if pTemp.Value == pObj.Value {\n                pTemp.fMark0 = 1;\n                pObj.fMark0 = 1;\n                break;\n            }\n        }\n        if pTemp != nil {\n            continue; }\n        pTable[k] = Gia_ObjId(p.pGia, pObj);\n        Vec_IntPush( p.vPlaces, k );\n    }\n    // clean the table\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPlaces)) \u0026\u0026 (((k) = Vec_IntEntry(p.vPlaces, i)), 1); i++  {\n        pTable[k] = 0;\n    }\n    // collect singleton objects and compact tied objects\n    k = 0;\n    Vec_PtrClear( p.vSingles );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vTied)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vTied,i))); i++  {\n        if pObj.fMark0 == 0 {\n            Vec_PtrPush( p.vSingles, pObj );\n        } else {\n            pObj.fMark0 = 0;\n            Vec_IntWriteEntry( p.vTied, k++, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\n    Vec_IntShrink( p.vTied, k );\n    // sort singletons\n    Vec_PtrSort( p.vSingles, (int (*)(void))Gia_ObjCompareByValue2 );\n    // add them to unique and increment signature\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSingles)) \u0026\u0026 (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(p.vSingles, i)), 1); i++  {\n        pObj.Value += s_256Primes[p.nUniques \u0026 ISO_MASK];\n        assert(Vec_IntEntry(p.vUniques, Gia_ObjId(p.pGia, pObj)) == -1, \"Vec_IntEntry(p.vUniques, Gia_ObjId(p.pGia, pObj)) == -1\");\n        Vec_IntWriteEntry( p.vUniques, Gia_ObjId(p.pGia, pObj), p.nUniques++ );\n    }\n    return Vec_PtrSize( p.vSingles );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManDerivePoClasses(pGia *Gia_Man_t) *Vec_Wec_t {\n    var vEquivs *Vec_Wec_t;\n    var vValues *Vec_Int_t;\n    var vMap *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Gia_ManPoNum(pGia) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        Vec_IntPush( vValues, pObj.Value );\n    }\n    vMap = Hsh_IntManHashArray( vValues, 1 );\n    Vec_IntFree( vValues );\n    vEquivs = Vec_WecCreateClasses( vMap );\n    Vec_IntFree( vMap );\n    return vEquivs;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCollectOrder2_rec(p *Gia_Man_t, Id int32, vVec *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjFanin0(pObj).Value \u003c= Gia_ObjFanin1(pObj).Value {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n        \n        } else {\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId1(pObj, Id), vVec );\n            Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n        }\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Gia_Iso2ManCollectOrder2_rec( p, Gia_ObjFaninId0(pObj, Id), vVec );\n    \n    } else if Gia_ObjIsPi(p, pObj) {\n    \n    } else { assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\"); }\n    Vec_IntPush( vVec, Id );\n}\nfunc Gia_Iso2ManCollectOrder2(pGia *Gia_Man_t, pPos *int32, nPos int32) *Vec_Int_t {\n    var vVec *Vec_Int_t;\n    var i int32;\n    vVec = Vec_IntAlloc( 1000 );\n    Gia_ManIncrementTravId( pGia );\n    for  i = 0; i \u003c nPos; i++  {\n        Gia_Iso2ManCollectOrder2_rec( pGia, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])), vVec );\n    }\n    return vVec;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCollectOrder_rec(p *Gia_Man_t, Id int32, vRoots *Vec_Int_t, vVec *Vec_Int_t, vMap *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjFanin0(pObj).Value \u003c= Gia_ObjFanin1(pObj).Value {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n        \n        } else {\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId1(pObj, Id), vRoots, vVec, vMap );\n            Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n        }\n    \n    } else if Gia_ObjIsCo(pObj) {\n        Gia_Iso2ManCollectOrder_rec( p, Gia_ObjFaninId0(pObj, Id), vRoots, vVec, vMap );\n    \n    } else if Gia_ObjIsCi(pObj) {\n        if Gia_ObjIsRo(p, pObj) {\n            Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) ); }\n    \n    } else { assert(Gia_ObjIsConst0(pObj), \"Gia_ObjIsConst0(pObj)\"); }\n    Vec_IntWriteEntry( vMap, Id, Vec_IntSize(vVec) );\n    Vec_IntPush( vVec, Id );\n}\nfunc Gia_Iso2ManCollectOrder(pGia *Gia_Man_t, pPos *int32, nPos int32, vRoots *Vec_Int_t, vVec *Vec_Int_t, vMap *Vec_Int_t) {\n    var i, iRoot int32;\n    Vec_IntClear( vRoots );\n    for  i = 0; i \u003c nPos; i++  {\n        Vec_IntPush( vRoots, Gia_ObjId(pGia, Gia_ManPo(pGia, pPos[i])) );\n    }\n    Vec_IntClear( vVec );\n    Gia_ManIncrementTravId( pGia );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder_rec( pGia, iRoot, vRoots, vVec, vMap );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCheckIsoPair(p *Gia_Man_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t) int32 {\n    var pObj0, pObj1 *Gia_Obj_t;\n    var k, iObj0, iObj1 int32;\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  k = 0; (k \u003c Vec_IntSize(vVec0)) \u0026\u0026 (((iObj0) = Vec_IntEntry(vVec0, k)), 1) \u0026\u0026 (((iObj1) = Vec_IntEntry(vVec1, k)), 1); k++  {\n        if iObj0 == iObj1 {\n            continue; }\n        pObj0 = Gia_ManObj(p, iObj0);\n        pObj1 = Gia_ManObj(p, iObj1);\n        if pObj0.Value != pObj1.Value {\n            return 0; }\n        assert(pObj0.Value == pObj1.Value, \"pObj0.Value == pObj1.Value\");\n        if !Gia_ObjIsAnd(pObj0) {\n            continue; }\n        if Gia_ObjFanin0(pObj0).Value \u003c= Gia_ObjFanin1(pObj0).Value {\n            if Gia_ObjFanin0(pObj1).Value \u003c= Gia_ObjFanin1(pObj1).Value {\n                if Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) {\n                     return 0; }\n            \n            } else {\n                if Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) {\n                     return 0; }\n            }\n        \n        } else {\n            if Gia_ObjFanin0(pObj1).Value \u003c= Gia_ObjFanin1(pObj1).Value {\n                if Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC0(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC1(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) {\n                     return 0; }\n            \n            } else {\n                if Gia_ObjFaninC1(pObj0) != Gia_ObjFaninC1(pObj1)  || Gia_ObjFaninC0(pObj0) != Gia_ObjFaninC0(pObj1)   ||\n                     Vec_IntEntry(vMap0, Gia_ObjFaninId1p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId1p(p, pObj1)) || \n                     Vec_IntEntry(vMap0, Gia_ObjFaninId0p(p, pObj0)) != Vec_IntEntry( vMap1, Gia_ObjFaninId0p(p, pObj1)) {\n                     return 0; }\n            }\n        }\n    }\n    return 1;\n} \n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManCheckIsoClassOneSkip(p *Gia_Man_t, vClass *Vec_Int_t, vRoots *Vec_Int_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t) int32 {\n    var i, iPo int32;\n    assert(Vec_IntSize(vClass) \u003e 1, \"Vec_IntSize(vClass) \u003e 1\");\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iPo) = Vec_IntEntry(vClass, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if Vec_IntSize(vVec0) != Vec_IntSize(vVec1) {\n            return 0; }\n        if !(Gia_Iso2ManCheckIsoPair( p, vVec0, vVec1, vMap0, vMap1 ) != 0) {\n            return 0; }\n    }\n    return 1;\n} \nfunc Gia_Iso2ManCheckIsoClassesSkip(p *Gia_Man_t, vEquivs *Vec_Wec_t) *Vec_Wec_t {\n    var vEquivs2 *Vec_Wec_t;\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec0 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec1 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vMap0 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vMap1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vClass, vClass2 *Vec_Int_t;\n    var i, k, Entry, Counter int32;\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vEquivs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vEquivs, i)), 1); i++  {\n        if i % 50 == 0 {\n            fmt.Printf(\"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p));\nfflush(os.Stdout); }\n        Counter += Vec_IntSize(vClass);\n        if Vec_IntSize(vClass) \u003c 2 || (Gia_Iso2ManCheckIsoClassOneSkip(p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1) != 0) {\n            vClass2 = Vec_WecPushLevel( vEquivs2 );\n            *vClass2 = *vClass;\n            vClass.pArray = nil;\n            vClass.nSize = vClass.nCap = 0;\n        \n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n                vClass2 = Vec_WecPushLevel( vEquivs2 );\n                Vec_IntPush( vClass2, Entry );\n            }\n        }\n    }\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}\n\nfunc Gia_Iso2ManCheckIsoClassOne(p *Gia_Man_t, vClass *Vec_Int_t, vRoots *Vec_Int_t, vVec0 *Vec_Int_t, vVec1 *Vec_Int_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vNewClass *Vec_Int_t) {\n    var i int32;\n    var k int32 = 1;\n    var iPo int32;\n    Vec_IntClear( vNewClass );\n    if Vec_IntSize(vClass) \u003c= 1 {\n        return; }\n    assert(Vec_IntSize(vClass) \u003e 1, \"Vec_IntSize(vClass) \u003e 1\");\n    iPo = Vec_IntEntry( vClass, 0 );\n    Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec0, vMap0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iPo) = Vec_IntEntry(vClass, i)), 1); i++  {\n        Gia_Iso2ManCollectOrder( p, \u0026iPo, 1, vRoots, vVec1, vMap1 );\n        if Vec_IntSize(vVec0) == Vec_IntSize(vVec1) \u0026\u0026 (Gia_Iso2ManCheckIsoPair(p, vVec0, vVec1, vMap0, vMap1) != 0) {\n            Vec_IntWriteEntry( vClass, k++, iPo );\n        } else {\n            Vec_IntPush( vNewClass, iPo ); }\n    }\n    Vec_IntShrink( vClass, k );\n} \nfunc Gia_Iso2ManCheckIsoClasses(p *Gia_Man_t, vEquivs *Vec_Wec_t) *Vec_Wec_t {\n    var vEquivs2 *Vec_Wec_t;\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec0 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vVec1 *Vec_Int_t  = Vec_IntAlloc( 10000 );\n    var vMap0 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vMap1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vClass, vClass2, vNewClass *Vec_Int_t;\n    var i, Counter int32;\n    vNewClass = Vec_IntAlloc( 100 );\n    vEquivs2 = Vec_WecAlloc( 2 * Vec_WecSize(vEquivs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vEquivs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vEquivs, i)), 1); i++  {\n        if i % 50 == 0 {\n            fmt.Printf(\"Finished %8d outputs (out of %8d)...\\r\", Counter, Gia_ManPoNum(p));\nfflush(os.Stdout); }\n        // split this class\n        Gia_Iso2ManCheckIsoClassOne( p, vClass, vRoots, vVec0, vVec1, vMap0, vMap1, vNewClass );\n        Counter += Vec_IntSize(vClass);\n        // add remaining class\n        vClass2 = Vec_WecPushLevel( vEquivs2 );\n        *vClass2 = *vClass;\n        vClass.pArray = nil;\n        vClass.nSize = vClass.nCap = 0;\n        // add new class\n        if Vec_IntSize(vNewClass) == 0 {\n            continue; }\n        vClass = Vec_WecPushLevel( vEquivs );\n        Vec_IntAppend( vClass, vNewClass );\n    }\n    Vec_IntFree( vNewClass );   \n    Vec_IntFree( vRoots );\n    Vec_IntFree( vVec0 );\n    Vec_IntFree( vVec1 );\n    Vec_IntFree( vMap0 );\n    Vec_IntFree( vMap1 );\n    return vEquivs2;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_Iso2ManPerform(pGia *Gia_Man_t, fVerbose int32) *Vec_Wec_t {\n    var p *Gia_Iso2Man_t;\n    var clk abctime  = Abc_Clock();\n    p = Gia_Iso2ManStart( pGia );\n    Gia_Iso2ManPrepare( pGia );\n    Gia_Iso2ManPropagate( pGia );\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n    for  Gia_Iso2ManUniqify( p ) != 0  {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n/*\n    Gia_Iso2ManUpdate( p, 20 );\n    while ( Gia_Iso2ManUniqify( p ) )\n    {\n        Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n        Gia_Iso2ManPropagate( pGia );\n    }\n    Gia_Iso2ManPrint( p, Abc_Clock() - clk, fVerbose );\n*/\n    Gia_Iso2ManStop( p );\n    return Gia_Iso2ManDerivePoClasses( pGia );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManIsoReduce2(pGia *Gia_Man_t, pvPosEquivs **Vec_Ptr_t, pvPiPerms **Vec_Ptr_t, fEstimate int32, fBetterQual int32, fDualOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pPart *Gia_Man_t;\n    var vEquivs, vEquivs2 *Vec_Wec_t;\n    var vRemains *Vec_Int_t;\n    var nClasses, nUsedPos int32;\n    var clk abctime  = Abc_Clock();\n    vEquivs = Gia_Iso2ManPerform( pGia, fVeryVerbose );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    fmt.Printf(\"Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  \", Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fEstimate != 0 {\n        Vec_WecFree( vEquivs );\n        return Gia_ManDup(pGia);\n    }\n    // verify classes\n    if fBetterQual != 0 {\n        vEquivs2 = Gia_Iso2ManCheckIsoClasses( pGia, vEquivs );\n    } else {\n        vEquivs2 = Gia_Iso2ManCheckIsoClassesSkip( pGia, vEquivs ); }\n    Vec_WecFree( vEquivs );\n    vEquivs = vEquivs2;\n    // sort equiv classes by the first integer\n    Vec_WecSortByFirstInt( vEquivs, 0 );\n    // find the first outputs\n    vRemains = Vec_WecCollectFirsts( vEquivs );\n    // derive the final GIA\n    pPart = Gia_ManDupCones( pGia, Vec_IntArray(vRemains), Vec_IntSize(vRemains), 0 );\n    Vec_IntFree( vRemains );\n    // report class stats\n    nClasses = Vec_WecCountNonTrivial( vEquivs, \u0026nUsedPos );\n    fmt.Printf(\"Reduced %d outputs to %d equivalence classes (%d outputs are in %d non-trivial classes).  \", Gia_ManPoNum(pGia), Vec_WecSize(vEquivs), nUsedPos, nClasses);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fVerbose != 0 { \n        fmt.Printf(\"Nontrivial classes:\\n\");\n        Vec_WecPrint( vEquivs, 1 );\n    }\n    if pvPiPerms {\n        *pvPiPerms = nil; }\n    if pvPosEquivs {\n        *pvPosEquivs = Vec_WecConvertToVecPtr( vEquivs ); }\n    Vec_WecFree( vEquivs );\n//    Gia_ManStopP( \u0026pPart );\n    return pPart;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

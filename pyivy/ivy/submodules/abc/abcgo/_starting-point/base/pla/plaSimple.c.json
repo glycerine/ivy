@@ -1,0 +1,969 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c",
+  "SHA256": "75ae558fc2b8003ed5e0ccf695b02a2dc6f5eaebdf63310ecb48ea2d1198c288",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 51,
+        "Column": 27,
+        "ByteOffset": 1503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 9,
+        "ByteOffset": 1559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"# PLA file written via PLA package in ABC on \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 1909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 1961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".i %d\\n\", Pla_ManInNum(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 2015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".o %d\\n\", 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".p %d\\n\", Vec_WecSize(\u0026p.vCubeLits) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 13,
+        "ByteOffset": 2587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".e\\n\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Written file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 94,
+        "Column": 27,
+        "ByteOffset": 3079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"# BLIF file written via PLA package in ABC on \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".model %s\\n\", Pla_ManName(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 3683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".outputs o\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 3849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 3937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 3984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" o\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 13,
+        "ByteOffset": 4406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 13,
+        "ByteOffset": 4746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[0]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[1]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 17,
+        "ByteOffset": 4911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[2]) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 4974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\\n\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 17,
+        "ByteOffset": 5060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 17,
+        "ByteOffset": 5219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_LitIsCompl(pLits[0]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 17,
+        "ByteOffset": 5272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_LitIsCompl(pLits[1]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 17,
+        "ByteOffset": 5325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"10 1\\n01 1\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 17,
+        "ByteOffset": 5447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_LitIsCompl(pLits[1]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 17,
+        "ByteOffset": 5500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_LitIsCompl(pLits[2]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 17,
+        "ByteOffset": 5553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d-0 1\\n-11 1\\n\", !Abc_LitIsCompl(pLits[0]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 22,
+        "ByteOffset": 5651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 5684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 5747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Written file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 6436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Pla_TtGetBit(pT, v) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 22,
+        "ByteOffset": 6796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pDc *word  = ABC_CALLOC( word, nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 17,
+        "ByteOffset": 7889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 9053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Truth = %d. \", Pla_TtCountOnes(pOn, nWords) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 9133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cover = %d. \", Pla_TtCountOnes(pDc, nWords) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 9214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Count: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 13,
+        "ByteOffset": 9300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d=%d \", i, Count[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 9345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 9366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cubes: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 13,
+        "ByteOffset": 9452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d=%d \", i, Cubes[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 9497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pDc );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 10745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"primes%02d\", nVars );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 11550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"primesmin%02d.pla\", nVars );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pla_ManDumpPla",
+      "Start": 1260,
+      "End": 2744,
+      "BodyStart": 1315,
+      "Original": "void Pla_ManDumpPla( Pla_Man_t * p, char * pFileName )\n{\n    // find the number of original variables\n    //int nVarsInit = Pla_ManDivNum(p) ? Vec_IntCountZero(\u0026p-\u003evDivs) : Pla_ManInNum(p);\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n    else\n    {\n        //char * pLits = \"-01?\";\n        Vec_Str_t * vStr;\n        Vec_Int_t * vCube;\n        int i, k, Lit;\n        // comment\n        fprintf( pFile, \"# PLA file written via PLA package in ABC on \" );\n        fprintf( pFile, \"%s\", Extra_TimeStamp() );\n        fprintf( pFile, \"\\n\\n\" );\n        // header\n        fprintf( pFile, \".i %d\\n\", Pla_ManInNum(p) );\n        fprintf( pFile, \".o %d\\n\", 1 );\n        fprintf( pFile, \".p %d\\n\", Vec_WecSize(\u0026p-\u003evCubeLits) );\n        // SOP\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p-\u003evCubeLits, vCube, i )\n        {\n            if ( !Vec_IntSize(vCube) )\n                continue;\n            for ( k = 0; k \u003c Pla_ManInNum(p); k++ )\n                Vec_StrWriteEntry( vStr, k, '-' );\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), (char)(Abc_LitIsCompl(Lit) ? '0' : '1') );\n            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );\n        }\n        Vec_StrFree( vStr );\n        fprintf( pFile, \".e\\n\\n\" );\n        fclose( pFile );\n        printf( \"Written file \\\"%s\\\".\\n\", pFileName );\n    }\n}",
+      "Draft": "func Pla_ManDumpPla(p *Pla_Man_t, pFileName string) {\n    // find the number of original variables\n    //int nVarsInit = Pla_ManDivNum(p) ? Vec_IntCountZero(\u0026p-\u003evDivs) : Pla_ManInNum(p);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit int32;\n        // comment\n        fmt.Fprintf(pFile, \"# PLA file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".i %d\\n\", Pla_ManInNum(p));\n        fmt.Fprintf(pFile, \".o %d\\n\", 1);\n        fmt.Fprintf(pFile, \".p %d\\n\", Vec_WecSize(\u0026p.vCubeLits));\n        // SOP\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p.vCubeLits, vCube, i )\n        {\n            if !Vec_IntSize(vCube) {\n                continue; }\n            for  k = 0; k \u003c Pla_ManInNum(p); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        fmt.Fprintf(pFile, \".e\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written file \\\"%s\\\".\\n\", pFileName);\n    }\n}"
+    },
+    {
+      "Name": "Pla_ManDumpBlif",
+      "Start": 2745,
+      "End": 5622,
+      "BodyStart": 2801,
+      "Original": "void Pla_ManDumpBlif( Pla_Man_t * p, char * pFileName )\n{\n    // find the number of original variables\n    int nVarsInit = Pla_ManDivNum(p) ? Vec_IntCountZero(\u0026p-\u003evDivs) : Pla_ManInNum(p);\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n    else\n    {\n        //char * pLits = \"-01?\";\n        Vec_Str_t * vStr;\n        Vec_Int_t * vCube;\n        int i, k, Lit, Div;\n        // comment\n        fprintf( pFile, \"# BLIF file written via PLA package in ABC on \" );\n        fprintf( pFile, \"%s\", Extra_TimeStamp() );\n        fprintf( pFile, \"\\n\\n\" );\n        // header\n        fprintf( pFile, \".model %s\\n\", Pla_ManName(p) );\n        fprintf( pFile, \".inputs\" );\n        for ( i = 0; i \u003c nVarsInit; i++ )\n            fprintf( pFile, \" i%d\", i );\n        fprintf( pFile, \"\\n\" );\n        fprintf( pFile, \".outputs o\" );\n        fprintf( pFile, \"\\n\" );\n        // SOP\n        fprintf( pFile, \".names\" );\n        for ( i = 0; i \u003c Pla_ManInNum(p); i++ )\n            fprintf( pFile, \" i%d\", i );\n        fprintf( pFile, \" o\\n\" );\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p-\u003evCubeLits, vCube, i )\n        {\n            for ( k = 0; k \u003c Pla_ManInNum(p); k++ )\n                Vec_StrWriteEntry( vStr, k, '-' );\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), (char)(Abc_LitIsCompl(Lit) ? '0' : '1') );\n            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_IntForEachEntryStart( \u0026p-\u003evDivs, Div, i, nVarsInit )\n        {\n            int pLits[3] = { (Div \u003e\u003e 2) \u0026 0x3FF, (Div \u003e\u003e 12) \u0026 0x3FF, (Div \u003e\u003e 22) \u0026 0x3FF };\n            fprintf( pFile, \".names\" );\n            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[0]) );\n            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[1]) );\n            if ( (Div \u0026 3) == 3 ) // MUX\n                fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[2]) );\n            fprintf( pFile, \" i%d\\n\", i );\n            if ( (Div \u0026 3) == 1 ) // AND\n                fprintf( pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]) );\n            else if ( (Div \u0026 3) == 2 ) // XOR\n            {\n                assert( !Abc_LitIsCompl(pLits[0]) );\n                assert( !Abc_LitIsCompl(pLits[1]) );\n                fprintf( pFile, \"10 1\\n01 1\\n\" );\n            }\n            else if ( (Div \u0026 3) == 3 ) // MUX\n            {\n                assert( !Abc_LitIsCompl(pLits[1]) );\n                assert( !Abc_LitIsCompl(pLits[2]) );\n                fprintf( pFile, \"%d-0 1\\n-11 1\\n\", !Abc_LitIsCompl(pLits[0]) );\n            }\n            else assert( 0 );\n        }\n        fprintf( pFile, \".end\\n\\n\" );\n        fclose( pFile );\n        printf( \"Written file \\\"%s\\\".\\n\", pFileName );\n    }\n}",
+      "Draft": "func Pla_ManDumpBlif(p *Pla_Man_t, pFileName string) {\n    // find the number of original variables\n    var nVarsInit int32;\n    if Pla_ManDivNum(p) {\n        nVarsInit = Vec_IntCountZero(\u0026p.vDivs);\n    } else {\n        nVarsInit = Pla_ManInNum(p);\n    }\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit, Div int32;\n        // comment\n        fmt.Fprintf(pFile, \"# BLIF file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".model %s\\n\", Pla_ManName(p));\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nVarsInit; i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs o\");\n        fmt.Fprintf(pFile, \"\\n\");\n        // SOP\n        fmt.Fprintf(pFile, \".names\");\n        for  i = 0; i \u003c Pla_ManInNum(p); i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \" o\\n\");\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p.vCubeLits, vCube, i )\n        {\n            for  k = 0; k \u003c Pla_ManInNum(p); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_IntForEachEntryStart( \u0026p.vDivs, Div, i, nVarsInit )\n        {\n            var pLits [3]int32 = [3]int32{ (Div \u003e\u003e 2) \u0026 0x3FF, (Div \u003e\u003e 12) \u0026 0x3FF, (Div \u003e\u003e 22) \u0026 0x3FF };\n            fmt.Fprintf(pFile, \".names\");\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[0]));\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[1]));\n            if (Div \u0026 3) == 3 { // MUX\n                fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[2])); }\n            fmt.Fprintf(pFile, \" i%d\\n\", i);\n            if (Div \u0026 3) == 1 { // AND\n                fmt.Fprintf(pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]));\n            } else if (Div \u0026 3) == 2 { // XOR\n            \n                assert(!Abc_LitIsCompl(pLits[0]), \"!Abc_LitIsCompl(pLits[0])\");\n                assert(!Abc_LitIsCompl(pLits[1]), \"!Abc_LitIsCompl(pLits[1])\");\n                fmt.Fprintf(pFile, \"10 1\\n01 1\\n\");\n            \n            } else if (Div \u0026 3) == 3 { // MUX\n            \n                assert(!Abc_LitIsCompl(pLits[1]), \"!Abc_LitIsCompl(pLits[1])\");\n                assert(!Abc_LitIsCompl(pLits[2]), \"!Abc_LitIsCompl(pLits[2])\");\n                fmt.Fprintf(pFile, \"%d-0 1\\n-11 1\\n\", !Abc_LitIsCompl(pLits[0]));\n            \n            } else { assert(false, \"0\"); }\n        }\n        fmt.Fprintf(pFile, \".end\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written file \\\"%s\\\".\\n\", pFileName);\n    }\n}"
+    },
+    {
+      "Name": "Pla_ManExpendDirNum",
+      "Start": 5901,
+      "End": 6134,
+      "BodyStart": 5974,
+      "Original": "int Pla_ManExpendDirNum( word * pOn, int nBits, int iMint, int * pVars )\n{\n    int v, nVars = 0;\n    for ( v = 0; v \u003c nBits; v++ )\n        if ( Pla_TtGetBit(pOn, iMint ^ (1 \u003c\u003c v)) )\n            pVars[nVars++] = v;\n    return nVars;\n}",
+      "Draft": "func Pla_ManExpendDirNum(pOn *word, nBits int32, iMint int32, pVars *int32) int32 {\n    var v, nVars int32;\n    for  v = 0; v \u003c nBits; v++  {\n        if Pla_TtGetBit(pOn, iMint ^ (1 \u003c\u003c v)) {\n            pVars[nVars++] = v; }\n    }\n    return nVars;\n}"
+    },
+    {
+      "Name": "Pla_PrintBinary",
+      "Start": 6135,
+      "End": 6293,
+      "BodyStart": 6180,
+      "Original": "void Pla_PrintBinary( word * pT, int nBits )\n{\n    int v;\n    for ( v = 0; v \u003c nBits; v++ )\n        printf( \"%d\", Pla_TtGetBit(pT, v) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Pla_PrintBinary(pT *word, nBits int32) {\n    var v int32;\n    for  v = 0; v \u003c nBits; v++  {\n        fmt.Printf(\"%d\", Pla_TtGetBit(pT, v));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Pla_ManFxMinimize",
+      "Start": 6294,
+      "End": 10127,
+      "BodyStart": 6349,
+      "Original": "Vec_Wrd_t * Pla_ManFxMinimize( word * pOn, int nVars )\n{\n    int i, v, iMint, iVar, nMints = (1 \u003c\u003c nVars);\n    int nWords = Abc_Bit6WordNum( nMints );\n    Vec_Wrd_t * vCubes = Vec_WrdAlloc( 1000 );\n    word * pDc = ABC_CALLOC( word, nWords );\n    int Count[32] = {0};\n    int Cubes[32] = {0};\n    Vec_Int_t * vStore = Vec_IntAlloc( 1000 );\n\n    // count the number of expansion directions\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) )\n        {\n            int pDirs[32], nDirs = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            Count[nDirs]++;\n            if ( nDirs == 0 )\n            {\n                Pla_TtSetBit(pDc, i);\n                Cubes[0]++;\n                // save\n                Vec_IntPushTwo( vStore, i, -1 );\n                continue;\n            }\n            if ( nDirs == 1 )\n            {\n                //Pla_PrintBinary( (word *)\u0026i, nVars );\n                //printf( \" %d \\n\", pDirs[0] );\n\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Cubes[1]++;\n                // save\n                Vec_IntPushTwo( vStore, i, pDirs[0] );\n                continue;\n            }\n            if ( nDirs == 2 \u0026\u0026 Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1])) )\n            {\n                assert( 0 );\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[1]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1]));\n                Cubes[2]++;\n                continue;\n            }\n        }\n\n    // go through the remaining cubes\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) )\n        {\n            int pDirs[32], nDirs = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            // find direction, which is not taken\n            for ( v = 0; v \u003c nDirs; v++ )\n                if ( Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[v])) \u0026\u0026 !Pla_TtGetBit(pDc, i ^ (1 \u003c\u003c pDirs[v])) )\n                    break;\n            // if there is no open directions, use any one\n            if ( v == nDirs )\n                v = 0;\n            // mark this one\n            Pla_TtSetBit(pDc, i);\n            Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[v]));\n            Cubes[10]++;\n            // save\n            Vec_IntPushTwo( vStore, i, pDirs[v] );\n            continue;\n        }\n\n    printf( \"\\n\" );\n    printf( \"Truth = %d. \", Pla_TtCountOnes(pOn, nWords) );\n    printf( \"Cover = %d. \", Pla_TtCountOnes(pDc, nWords) );\n    printf( \"\\n\" );\n\n    printf( \"Count: \" );\n    for ( i = 0; i \u003c 16; i++ )\n        if ( Count[i] )\n            printf( \"%d=%d \", i, Count[i] );\n    printf( \"\\n\" );\n\n    printf( \"Cubes: \" );\n    for ( i = 0; i \u003c 16; i++ )\n        if ( Cubes[i] )\n            printf( \"%d=%d \", i, Cubes[i] );\n    printf( \"\\n\" );\n\n/*\n    // extract cubes one at a time\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( Pla_TtGetBit(pOn, i) )\n        {\n            word Cube = 0;\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (i \u003e\u003e v) \u0026 1 )\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n                else\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO );\n            Vec_WrdPush( vCubes, Cube );\n        }\n*/\n    Vec_IntForEachEntryDouble( vStore, iMint, iVar, i )\n    {\n        word Cube = 0;\n        for ( v = 0; v \u003c nVars; v++ )\n        {\n            if ( v == iVar )\n                continue;\n            if ( (iMint \u003e\u003e v) \u0026 1 )\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n            else\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO );\n        }\n        Vec_WrdPush( vCubes, Cube );\n    }\n    Vec_IntFree( vStore );\n\n    // collect the minterms\n    ABC_FREE( pDc );\n    return vCubes;\n}",
+      "Draft": "func Pla_ManFxMinimize(pOn *word, nVars int32) *Vec_Wrd_t {\n    var i int32;\n    var v int32;\n    var iMint int32;\n    var iVar int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var nWords int32  = Abc_Bit6WordNum( nMints );\n    var vCubes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var pDc *word  = ABC_CALLOC( word, nWords );\n    var Count [32]int32 ;\n    var Cubes [32]int32 ;\n    var vStore *Vec_Int_t  = Vec_IntAlloc( 1000 );\n\n    // count the number of expansion directions\n    for  i = 0; i \u003c nMints; i++  {\n        if Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) {\n            var pDirs [32]int32;\n            var nDirs int32 = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            Count[nDirs]++;\n            if nDirs == 0 {\n                Pla_TtSetBit(pDc, i);\n                Cubes[0]++;\n                // save\n                Vec_IntPushTwo( vStore, i, -1 );\n                continue;\n            }\n            if nDirs == 1 {\n                //Pla_PrintBinary( (word *)\u0026i, nVars );\n                //printf( \" %d \\n\", pDirs[0] );\n\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Cubes[1]++;\n                // save\n                Vec_IntPushTwo( vStore, i, pDirs[0] );\n                continue;\n            }\n            if nDirs == 2 \u0026\u0026 Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1])) {\n                assert(false, \"0\");\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[1]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1]));\n                Cubes[2]++;\n                continue;\n            }\n        }\n    }\n\n    // go through the remaining cubes\n    for  i = 0; i \u003c nMints; i++  {\n        if Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) {\n            var pDirs [32]int32;\n            var nDirs int32 = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            // find direction, which is not taken\n            for  v = 0; v \u003c nDirs; v++  {\n                if Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[v])) \u0026\u0026 !Pla_TtGetBit(pDc, i ^ (1 \u003c\u003c pDirs[v])) {\n                    break; }\n            }\n            // if there is no open directions, use any one\n            if v == nDirs {\n                v = 0; }\n            // mark this one\n            Pla_TtSetBit(pDc, i);\n            Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[v]));\n            Cubes[10]++;\n            // save\n            Vec_IntPushTwo( vStore, i, pDirs[v] );\n            continue;\n        }\n    }\n\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Truth = %d. \", Pla_TtCountOnes(pOn, nWords));\n    fmt.Printf(\"Cover = %d. \", Pla_TtCountOnes(pDc, nWords));\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Count: \");\n    for  i = 0; i \u003c 16; i++  {\n        if Count[i] {\n            fmt.Printf(\"%d=%d \", i, Count[i]); }\n    }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Cubes: \");\n    for  i = 0; i \u003c 16; i++  {\n        if Cubes[i] {\n            fmt.Printf(\"%d=%d \", i, Cubes[i]); }\n    }\n    fmt.Printf(\"\\n\");\n\n/*\n    // extract cubes one at a time\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( Pla_TtGetBit(pOn, i) )\n        {\n            word Cube = 0;\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (i \u003e\u003e v) \u0026 1 )\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n                else\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO );\n            Vec_WrdPush( vCubes, Cube );\n        }\n*/\n    Vec_IntForEachEntryDouble( vStore, iMint, iVar, i )\n    {\n        var Cube word;\n        for  v = 0; v \u003c nVars; v++  {\n            if v == iVar {\n                continue; }\n            if (iMint \u003e\u003e v) \u0026 1 {\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n            } else {\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO ); }\n        }\n        Vec_WrdPush( vCubes, Cube );\n    }\n    Vec_IntFree( vStore );\n\n    // collect the minterms\n    ABC_FREE( pDc );\n    return vCubes;\n}"
+    },
+    {
+      "Name": "Pla_ManFxPrepare",
+      "Start": 10128,
+      "End": 10992,
+      "BodyStart": 10170,
+      "Original": "Pla_Man_t * Pla_ManFxPrepare( int nVars )\n{\n    Pla_Man_t * p; char Buffer[1000]; \n    Vec_Bit_t * vFunc = Pla_ManPrimesTable( nVars );\n    Vec_Wrd_t * vSop = Pla_ManFxMinimize( (word *)Vec_BitArray(vFunc), nVars );\n    word Cube, * pCube = \u0026Cube; int i, k, Lit;\n    sprintf( Buffer, \"primes%02d\", nVars );\n    p = Pla_ManAlloc( Buffer, nVars, 1, Vec_WrdSize(vSop) );\n    Vec_WecInit( \u0026p-\u003evCubeLits, Pla_ManCubeNum(p) );\n    Vec_WecInit( \u0026p-\u003evOccurs, 2*Pla_ManInNum(p) );\n    Vec_WrdForEachEntry( vSop, Cube, i )\n        Pla_CubeForEachLit( nVars, pCube, Lit, k )\n            if ( Lit != PLA_LIT_DASH )\n            {\n                Lit = Abc_Var2Lit( k, Lit == PLA_LIT_ZERO );\n                Vec_WecPush( \u0026p-\u003evCubeLits, i, Lit );\n                Vec_WecPush( \u0026p-\u003evOccurs, Lit, i );\n            }\n    Vec_BitFree( vFunc );\n    Vec_WrdFree( vSop );\n    return p;\n}",
+      "Draft": "func Pla_ManFxPrepare(nVars int32) *Pla_Man_t {\n    var p *Pla_Man_t; var Buffer string // was [1000]byte in C\n \n    var vFunc *Vec_Bit_t  = Pla_ManPrimesTable( nVars );\n    var vSop *Vec_Wrd_t  = Pla_ManFxMinimize( (word *)Vec_BitArray(vFunc), nVars );\n    var Cube word;\n    var pCube *word = \u0026Cube; var i, k, Lit int32;\n    Buffer = fmt.Sprintf(\"primes%02d\", nVars);\n    p = Pla_ManAlloc( Buffer, nVars, 1, Vec_WrdSize(vSop) );\n    Vec_WecInit( \u0026p.vCubeLits, Pla_ManCubeNum(p) );\n    Vec_WecInit( \u0026p.vOccurs, 2*Pla_ManInNum(p) );\n    Vec_WrdForEachEntry( vSop, Cube, i )\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c nVars)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            if Lit != PLA_LIT_DASH {\n                Lit = Abc_Var2Lit( k, Lit == PLA_LIT_ZERO );\n                Vec_WecPush( \u0026p.vCubeLits, i, Lit );\n                Vec_WecPush( \u0026p.vOccurs, Lit, i );\n            }\n        }\n    Vec_BitFree( vFunc );\n    Vec_WrdFree( vSop );\n    return p;\n}"
+    },
+    {
+      "Name": "Pla_ManFxPerformSimple",
+      "Start": 10993,
+      "End": 11225,
+      "BodyStart": 11033,
+      "Original": "int Pla_ManFxPerformSimple( int nVars )\n{\n    char Buffer[100];\n    Pla_Man_t * p = Pla_ManFxPrepare( nVars );\n    sprintf( Buffer, \"primesmin%02d.pla\", nVars );\n    Pla_ManDumpPla( p, Buffer );\n    Pla_ManFree( p );\n    return 1;\n}",
+      "Draft": "func Pla_ManFxPerformSimple(nVars int32) int32 {\n    var Buffer string // was [100]byte in C\n\n    var p *Pla_Man_t  = Pla_ManFxPrepare( nVars );\n    Buffer = fmt.Sprintf(\"primesmin%02d.pla\", nVars);\n    Pla_ManDumpPla( p, Buffer );\n    Pla_ManFree( p );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::pointer-cast::10306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10306,
+      "End": 10314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::ternary::Pla_ManDumpPla",
+      "Category": "ternary-review",
+      "Symbol": "Pla_ManDumpPla",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1260,
+      "End": 2744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManDumpPla",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManDumpPla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1260,
+      "End": 2744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::ternary::Pla_ManDumpBlif",
+      "Category": "ternary-review",
+      "Symbol": "Pla_ManDumpBlif",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2745,
+      "End": 5622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManDumpBlif",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManDumpBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2745,
+      "End": 5622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManExpendDirNum",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManExpendDirNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5901,
+      "End": 6134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_PrintBinary",
+      "Category": "semantic-review",
+      "Symbol": "Pla_PrintBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6135,
+      "End": 6293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManFxMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManFxMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6294,
+      "End": 10127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManFxPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManFxPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10128,
+      "End": 10992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::Pla_ManFxPerformSimple",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManFxPerformSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10993,
+      "End": 11225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::2146",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2146,
+      "End": 2192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::2383",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2383,
+      "End": 2419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::3917",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3917,
+      "End": 3963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::4089",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4089,
+      "End": 4125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::4355",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4355,
+      "End": 4411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::6509",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6509,
+      "End": 6535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::9625",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9625,
+      "End": 9676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::10090",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10090,
+      "End": 10105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaSimple.c::macro-inline::10604",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10604,
+      "End": 10640
+    }
+  ],
+  "Draft": "package pla\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [plaSimple.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: plaSimple.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pla.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Dump PLA manager into a BLIF file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_ManDumpPla(p *Pla_Man_t, pFileName string) {\n    // find the number of original variables\n    //int nVarsInit = Pla_ManDivNum(p) ? Vec_IntCountZero(\u0026p-\u003evDivs) : Pla_ManInNum(p);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit int32;\n        // comment\n        fmt.Fprintf(pFile, \"# PLA file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".i %d\\n\", Pla_ManInNum(p));\n        fmt.Fprintf(pFile, \".o %d\\n\", 1);\n        fmt.Fprintf(pFile, \".p %d\\n\", Vec_WecSize(\u0026p.vCubeLits));\n        // SOP\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p.vCubeLits, vCube, i )\n        {\n            if !Vec_IntSize(vCube) {\n                continue; }\n            for  k = 0; k \u003c Pla_ManInNum(p); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        fmt.Fprintf(pFile, \".e\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written file \\\"%s\\\".\\n\", pFileName);\n    }\n}\nfunc Pla_ManDumpBlif(p *Pla_Man_t, pFileName string) {\n    // find the number of original variables\n    var nVarsInit int32;\n    if Pla_ManDivNum(p) {\n        nVarsInit = Vec_IntCountZero(\u0026p.vDivs);\n    } else {\n        nVarsInit = Pla_ManInNum(p);\n    }\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit, Div int32;\n        // comment\n        fmt.Fprintf(pFile, \"# BLIF file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".model %s\\n\", Pla_ManName(p));\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nVarsInit; i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs o\");\n        fmt.Fprintf(pFile, \"\\n\");\n        // SOP\n        fmt.Fprintf(pFile, \".names\");\n        for  i = 0; i \u003c Pla_ManInNum(p); i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \" o\\n\");\n        vStr = Vec_StrStart( Pla_ManInNum(p) + 1 );\n        Vec_WecForEachLevel( \u0026p.vCubeLits, vCube, i )\n        {\n            for  k = 0; k \u003c Pla_ManInNum(p); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_IntForEachEntryStart( \u0026p.vDivs, Div, i, nVarsInit )\n        {\n            var pLits [3]int32 = [3]int32{ (Div \u003e\u003e 2) \u0026 0x3FF, (Div \u003e\u003e 12) \u0026 0x3FF, (Div \u003e\u003e 22) \u0026 0x3FF };\n            fmt.Fprintf(pFile, \".names\");\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[0]));\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[1]));\n            if (Div \u0026 3) == 3 { // MUX\n                fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[2])); }\n            fmt.Fprintf(pFile, \" i%d\\n\", i);\n            if (Div \u0026 3) == 1 { // AND\n                fmt.Fprintf(pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]));\n            } else if (Div \u0026 3) == 2 { // XOR\n            \n                assert(!Abc_LitIsCompl(pLits[0]), \"!Abc_LitIsCompl(pLits[0])\");\n                assert(!Abc_LitIsCompl(pLits[1]), \"!Abc_LitIsCompl(pLits[1])\");\n                fmt.Fprintf(pFile, \"10 1\\n01 1\\n\");\n            \n            } else if (Div \u0026 3) == 3 { // MUX\n            \n                assert(!Abc_LitIsCompl(pLits[1]), \"!Abc_LitIsCompl(pLits[1])\");\n                assert(!Abc_LitIsCompl(pLits[2]), \"!Abc_LitIsCompl(pLits[2])\");\n                fmt.Fprintf(pFile, \"%d-0 1\\n-11 1\\n\", !Abc_LitIsCompl(pLits[0]));\n            \n            } else { assert(false, \"0\"); }\n        }\n        fmt.Fprintf(pFile, \".end\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written file \\\"%s\\\".\\n\", pFileName);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms truth table into an SOP manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_ManExpendDirNum(pOn *word, nBits int32, iMint int32, pVars *int32) int32 {\n    var v, nVars int32;\n    for  v = 0; v \u003c nBits; v++  {\n        if Pla_TtGetBit(pOn, iMint ^ (1 \u003c\u003c v)) {\n            pVars[nVars++] = v; }\n    }\n    return nVars;\n}\nfunc Pla_PrintBinary(pT *word, nBits int32) {\n    var v int32;\n    for  v = 0; v \u003c nBits; v++  {\n        fmt.Printf(\"%d\", Pla_TtGetBit(pT, v));\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Pla_ManFxMinimize(pOn *word, nVars int32) *Vec_Wrd_t {\n    var i int32;\n    var v int32;\n    var iMint int32;\n    var iVar int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var nWords int32  = Abc_Bit6WordNum( nMints );\n    var vCubes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var pDc *word  = ABC_CALLOC( word, nWords );\n    var Count [32]int32 ;\n    var Cubes [32]int32 ;\n    var vStore *Vec_Int_t  = Vec_IntAlloc( 1000 );\n\n    // count the number of expansion directions\n    for  i = 0; i \u003c nMints; i++  {\n        if Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) {\n            var pDirs [32]int32;\n            var nDirs int32 = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            Count[nDirs]++;\n            if nDirs == 0 {\n                Pla_TtSetBit(pDc, i);\n                Cubes[0]++;\n                // save\n                Vec_IntPushTwo( vStore, i, -1 );\n                continue;\n            }\n            if nDirs == 1 {\n                //Pla_PrintBinary( (word *)\u0026i, nVars );\n                //printf( \" %d \\n\", pDirs[0] );\n\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Cubes[1]++;\n                // save\n                Vec_IntPushTwo( vStore, i, pDirs[0] );\n                continue;\n            }\n            if nDirs == 2 \u0026\u0026 Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1])) {\n                assert(false, \"0\");\n                Pla_TtSetBit(pDc, i);\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[1]));\n                Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[0]) ^ (1 \u003c\u003c pDirs[1]));\n                Cubes[2]++;\n                continue;\n            }\n        }\n    }\n\n    // go through the remaining cubes\n    for  i = 0; i \u003c nMints; i++  {\n        if Pla_TtGetBit(pOn, i) \u0026\u0026 !Pla_TtGetBit(pDc, i) {\n            var pDirs [32]int32;\n            var nDirs int32 = Pla_ManExpendDirNum(pOn, nVars, i, pDirs);\n            // find direction, which is not taken\n            for  v = 0; v \u003c nDirs; v++  {\n                if Pla_TtGetBit(pOn, i ^ (1 \u003c\u003c pDirs[v])) \u0026\u0026 !Pla_TtGetBit(pDc, i ^ (1 \u003c\u003c pDirs[v])) {\n                    break; }\n            }\n            // if there is no open directions, use any one\n            if v == nDirs {\n                v = 0; }\n            // mark this one\n            Pla_TtSetBit(pDc, i);\n            Pla_TtSetBit(pDc, i ^ (1 \u003c\u003c pDirs[v]));\n            Cubes[10]++;\n            // save\n            Vec_IntPushTwo( vStore, i, pDirs[v] );\n            continue;\n        }\n    }\n\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Truth = %d. \", Pla_TtCountOnes(pOn, nWords));\n    fmt.Printf(\"Cover = %d. \", Pla_TtCountOnes(pDc, nWords));\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Count: \");\n    for  i = 0; i \u003c 16; i++  {\n        if Count[i] {\n            fmt.Printf(\"%d=%d \", i, Count[i]); }\n    }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Cubes: \");\n    for  i = 0; i \u003c 16; i++  {\n        if Cubes[i] {\n            fmt.Printf(\"%d=%d \", i, Cubes[i]); }\n    }\n    fmt.Printf(\"\\n\");\n\n/*\n    // extract cubes one at a time\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( Pla_TtGetBit(pOn, i) )\n        {\n            word Cube = 0;\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (i \u003e\u003e v) \u0026 1 )\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n                else\n                    Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO );\n            Vec_WrdPush( vCubes, Cube );\n        }\n*/\n    Vec_IntForEachEntryDouble( vStore, iMint, iVar, i )\n    {\n        var Cube word;\n        for  v = 0; v \u003c nVars; v++  {\n            if v == iVar {\n                continue; }\n            if (iMint \u003e\u003e v) \u0026 1 {\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ONE );\n            } else {\n                Pla_CubeSetLit( \u0026Cube, v, PLA_LIT_ZERO ); }\n        }\n        Vec_WrdPush( vCubes, Cube );\n    }\n    Vec_IntFree( vStore );\n\n    // collect the minterms\n    ABC_FREE( pDc );\n    return vCubes;\n}\nfunc Pla_ManFxPrepare(nVars int32) *Pla_Man_t {\n    var p *Pla_Man_t; var Buffer string // was [1000]byte in C\n \n    var vFunc *Vec_Bit_t  = Pla_ManPrimesTable( nVars );\n    var vSop *Vec_Wrd_t  = Pla_ManFxMinimize( (word *)Vec_BitArray(vFunc), nVars );\n    var Cube word;\n    var pCube *word = \u0026Cube; var i, k, Lit int32;\n    Buffer = fmt.Sprintf(\"primes%02d\", nVars);\n    p = Pla_ManAlloc( Buffer, nVars, 1, Vec_WrdSize(vSop) );\n    Vec_WecInit( \u0026p.vCubeLits, Pla_ManCubeNum(p) );\n    Vec_WecInit( \u0026p.vOccurs, 2*Pla_ManInNum(p) );\n    Vec_WrdForEachEntry( vSop, Cube, i )\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c nVars)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCube, k)), 1); k++  {\n            if Lit != PLA_LIT_DASH {\n                Lit = Abc_Var2Lit( k, Lit == PLA_LIT_ZERO );\n                Vec_WecPush( \u0026p.vCubeLits, i, Lit );\n                Vec_WecPush( \u0026p.vOccurs, Lit, i );\n            }\n        }\n    Vec_BitFree( vFunc );\n    Vec_WrdFree( vSop );\n    return p;\n}\nfunc Pla_ManFxPerformSimple(nVars int32) int32 {\n    var Buffer string // was [100]byte in C\n\n    var p *Pla_Man_t  = Pla_ManFxPrepare( nVars );\n    Buffer = fmt.Sprintf(\"primesmin%02d.pla\", nVars);\n    Pla_ManDumpPla( p, Buffer );\n    Pla_ManFree( p );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

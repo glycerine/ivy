@@ -1,0 +1,751 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c",
+  "SHA256": "d00d6f4583afd609311960e668d773280f0d4cf67c1b367de0d41d13c886a836",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 3,
+        "ByteOffset": 7704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tassert( /*__starting_point_inline_macro:cuddT__*/((zS).type.kids.T) != z0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_zddSubSet",
+      "Start": 3554,
+      "End": 3861,
+      "BodyStart": 3626,
+      "Original": "DdNode\t*\nExtra_zddSubSet(\n  DdManager * dd,\n  DdNode * X,\n  DdNode * Y)\n{\n    DdNode\t*res;\n    int\t\tautoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddSubSet(dd, X, Y);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Extra_zddSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddSubSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddSupSet",
+      "Start": 4241,
+      "End": 4548,
+      "BodyStart": 4313,
+      "Original": "DdNode\t*\nExtra_zddSupSet(\n  DdManager * dd,\n  DdNode * X,\n  DdNode * Y)\n{\n    DdNode\t*res;\n    int\t\tautoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddSupSet(dd, X, Y);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Extra_zddSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddNotSubSet",
+      "Start": 4936,
+      "End": 5249,
+      "BodyStart": 5011,
+      "Original": "DdNode\t*\nExtra_zddNotSubSet(\n  DdManager * dd,\n  DdNode * X,\n  DdNode * Y)\n{\n    DdNode\t*res;\n    int\t\tautoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddNotSubSet(dd, X, Y);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Extra_zddNotSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddNotSubSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddNotSupSet",
+      "Start": 5635,
+      "End": 5948,
+      "BodyStart": 5710,
+      "Original": "DdNode\t*\nExtra_zddNotSupSet(\n  DdManager * dd,\n  DdNode * X,\n  DdNode * Y)\n{\n    DdNode\t*res;\n    int\t\tautoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddNotSupSet(dd, X, Y);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Extra_zddNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddNotSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddMaxNotSupSet",
+      "Start": 6364,
+      "End": 6683,
+      "BodyStart": 6442,
+      "Original": "DdNode\t*\nExtra_zddMaxNotSupSet(\n  DdManager * dd,\n  DdNode * X,\n  DdNode * Y)\n{\n    DdNode\t*res;\n    int\t\tautoDynZ;\n\n    autoDynZ = dd-\u003eautoDynZ;\n    dd-\u003eautoDynZ = 0;\n\n    do {\n\tdd-\u003ereordered = 0;\n\tres = extraZddMaxNotSupSet(dd, X, Y);\n    } while (dd-\u003ereordered == 1);\n    dd-\u003eautoDynZ = autoDynZ;\n    return(res);\n\n}",
+      "Draft": "func Extra_zddMaxNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxNotSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Extra_zddEmptyBelongs",
+      "Start": 7015,
+      "End": 7165,
+      "BodyStart": 7076,
+      "Original": "int \nExtra_zddEmptyBelongs(\n  DdManager *dd, \n  DdNode* zS )\n{\n\twhile ( zS-\u003eindex != CUDD_MAXINDEX )\n\t\tzS = cuddE( zS );\n\treturn (int)( zS == z1 );\n\n}",
+      "Draft": "func Extra_zddEmptyBelongs(dd *DdManager, zS *DdNode) int32 {\n\tfor  zS.index != CUDD_MAXINDEX  {\n\t\t// inlining of macro cuddE\n\t\tzS = ((zS).type.kids.E);\n\t}\n\treturn int32(( zS == z1 ));\n\n}"
+    },
+    {
+      "Name": "Extra_zddIsOneSubset",
+      "Start": 7497,
+      "End": 7721,
+      "BodyStart": 7559,
+      "Original": "int \nExtra_zddIsOneSubset(\n  DdManager * dd, \n  DdNode * zS )\n{\n\twhile ( zS-\u003eindex != CUDD_MAXINDEX )\n\t{\n\t\tassert( cuddT(zS) != z0 );\n\t\tif ( cuddE(zS) != z0 )\n\t\t\treturn 0;\n\t\tzS = cuddT( zS );\n\t}\n\treturn (int)( zS == z1 );\n\n}",
+      "Draft": "func Extra_zddIsOneSubset(dd *DdManager, zS *DdNode) int32 {\n\tfor  zS.index != CUDD_MAXINDEX  {\n\t\t// inlining of macro cuddT\n\t\tassert(((zS).type.kids.T) != z0, \"/*__starting_point_inline_macro:cuddT__*/((zS).type.kids.T) != z0\");\n\t\t// inlining of macro cuddE\n\t\tif  ((zS).type.kids.E) != z0 {\n\t\t\treturn 0; }\n\t\t// inlining of macro cuddT\n\t\tzS = ((zS).type.kids.T);\n\t}\n\treturn int32(( zS == z1 ));\n\n}"
+    },
+    {
+      "Name": "extraZddSubSet",
+      "Start": 8281,
+      "End": 10917,
+      "BodyStart": 8343,
+      "Original": "DdNode* extraZddSubSet( DdManager *dd, DdNode *X, DdNode *Y )\n{\t\n\tDdNode *zRes;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif ( X == Y ) \n\t\treturn X;\n\t/* if X is empty, the result is empty */\n\tif ( X == z0 ) \n\t\treturn z0;\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif ( Y == z0 ) \n\t\treturn z0;\n\t/* the empty comb is contained in all combs of Y */\n\tif ( X == z1 ) \n\t\treturn z1;\n\t/* only {()} is the subset of {()} */\n\tif ( Y == z1 ) /* check whether the empty combination is present in X */ \n\t\treturn ( Extra_zddEmptyBelongs( dd, X )? z1: z0 );\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSubSet, X, Y);\n    if (zRes)\n    \treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zRes0, *zRes1, *zTemp;\n\t\tint TopLevelX = dd-\u003epermZ[ X-\u003eindex ];\n\t\tint TopLevelY = dd-\u003epermZ[ Y-\u003eindex ];\n\n\t\tif ( TopLevelX \u003c TopLevelY )\n\t\t{\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\tzRes = extraZddSubSet( dd, cuddE( X ), Y );\n\t\t\tif ( zRes == NULL )  return NULL;\n\t\t}\n\t\telse if ( TopLevelX == TopLevelY )\n\t\t{\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\tzRes0 = extraZddSubSet( dd, cuddE( X ), zTemp );\n\t\t\tif ( zRes0 == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\tzRes1 = extraZddSubSet( dd, cuddT( X ), cuddT( Y ) );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t{\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )  return NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddSubSet( dd, X, zTemp );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\tcuddDeref( zRes );\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif X == Y { \n\t\treturn X; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif Y == z0 { \n\t\treturn z0; }\n\t/* the empty comb is contained in all combs of Y */\n\tif X == z1 { \n\t\treturn z1; }\n\t/* only {()} is the subset of {()} */\n\tif Y == z1 { /* check whether the empty combination is present in X */ \n\t\tif Extra_zddEmptyBelongs( dd, X ) != 0 {\n\t\t\treturn z1;\n\t\t} else {\n\t\t\treturn z0;\n\t\t} }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSubSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddSubSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes == nil {  return nil; }\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSubSet( dd, ((X).type.kids.E), zTemp );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSubSet( dd, ((X).type.kids.T), ((Y).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddSubSet( dd, X, zTemp );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddSupSet",
+      "Start": 11229,
+      "End": 14150,
+      "BodyStart": 11291,
+      "Original": "DdNode* extraZddSupSet( DdManager *dd, DdNode *X, DdNode *Y )\n{\t\n\tDdNode *zRes;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif ( X == Y ) \n\t\treturn X;\n\t/* no comb in X is superset of non-existing combs */\n\tif ( Y == z0 ) \n\t\treturn z0;\t\n\t/* any comb in X is the superset of the empty comb */\n\tif ( Extra_zddEmptyBelongs( dd, Y ) ) \n\t\treturn X;\n\t/* if X is empty, the result is empty */\n\tif ( X == z0 ) \n\t\treturn z0;\n\t/* if X is the empty comb (and Y does not contain it!), return empty */\n\tif ( X == z1 ) \n\t\treturn z0;\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSupSet, X, Y);\n    if (zRes)\n    \treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zRes0, *zRes1, *zTemp;\n\t\tint TopLevelX = dd-\u003epermZ[ X-\u003eindex ];\n\t\tint TopLevelY = dd-\u003epermZ[ Y-\u003eindex ];\n\n\t\tif ( TopLevelX \u003c TopLevelY )\n\t\t{\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\tzRes0 = extraZddSupSet( dd, cuddE( X ), Y );\n\t\t\tif ( zRes0 == NULL )  return NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\tzRes1 = extraZddSupSet( dd, cuddT( X ), Y );\n\t\t\tif ( zRes1 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse if ( TopLevelX == TopLevelY )\n\t\t{\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\tzRes0 = extraZddSupSet( dd, cuddE( X ), cuddE( Y ) );\n\t\t\tif ( zRes0 == NULL )  return NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\tzRes1 = extraZddSupSet( dd, cuddT( X ), zTemp );\n\t\t\tif ( zRes1 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t{\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\tzRes = extraZddSupSet( dd, X, cuddE( Y ) );\n\t\t\tif ( zRes == NULL )  return NULL;\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn X; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn z0; }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn X; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return empty */\n\tif X == z1 { \n\t\treturn z0; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddNotSubSet",
+      "Start": 14465,
+      "End": 17451,
+      "BodyStart": 14530,
+      "Original": "DdNode* extraZddNotSubSet( DdManager *dd, DdNode *X, DdNode *Y )\n{\t\n\tDdNode *zRes;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif ( X == Y ) \n\t\treturn z0;\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif ( Y == z0 ) \n\t\treturn X;\t\n\t/* only {()} is the subset of {()} */\n\tif ( Y == z1 ) /* remove empty combination from X */\n\t\treturn cuddZddDiff( dd, X, z1 );\n\t/* if X is empty, the result is empty */\n\tif ( X == z0 ) \n\t\treturn z0;\n\t/* the empty comb is contained in all combs of Y */\n\tif ( X == z1 ) \n\t\treturn z0;\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSubSet, X, Y);\n    if (zRes)\n    \treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zRes0, *zRes1, *zTemp;\n\t\tint TopLevelX = dd-\u003epermZ[ X-\u003eindex ];\n\t\tint TopLevelY = dd-\u003epermZ[ Y-\u003eindex ];\n\n\t\tif ( TopLevelX \u003c TopLevelY )\n\t\t{\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\tzRes0 = extraZddNotSubSet( dd, cuddE( X ), Y );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* combs of X with var cannot be subsets of combs without var in Y */\n\t\t\tzRes1 = cuddT( X );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t}\n\t\telse if ( TopLevelX == TopLevelY )\n\t\t{\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\tzRes0 = extraZddNotSubSet( dd, cuddE( X ), zTemp );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\tzRes1 = extraZddNotSubSet( dd, cuddT( X ), cuddT( Y ) );\n\t\t\tif ( zRes1 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t{\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddNotSubSet( dd, X, zTemp );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\tcuddDeref( zRes );\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddNotSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif Y == z0 { \n\t\treturn X; }\t\n\t/* only {()} is the subset of {()} */\n\tif Y == z1 { /* remove empty combination from X */\n\t\treturn cuddZddDiff( dd, X, z1 ); }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* the empty comb is contained in all combs of Y */\n\tif X == z1 { \n\t\treturn z0; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSubSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSubSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combs of X with var cannot be subsets of combs without var in Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = ((X).type.kids.T);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSubSet( dd, ((X).type.kids.E), zTemp );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSubSet( dd, ((X).type.kids.T), ((Y).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddNotSubSet( dd, X, zTemp );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddNotSupSet",
+      "Start": 17769,
+      "End": 20717,
+      "BodyStart": 17834,
+      "Original": "DdNode* extraZddNotSupSet( DdManager *dd, DdNode *X, DdNode *Y )\n{\t\n\tDdNode *zRes;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif ( X == Y ) \n\t\treturn z0;\n\t/* no comb in X is superset of non-existing combs */\n\tif ( Y == z0 ) \n\t\treturn X;\t\n\t/* any comb in X is the superset of the empty comb */\n\tif ( Extra_zddEmptyBelongs( dd, Y ) ) \n\t\treturn z0;\n\t/* if X is empty, the result is empty */\n\tif ( X == z0 ) \n\t\treturn z0;\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif ( X == z1 ) \n\t\treturn z1;\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSupSet, X, Y);\n    if (zRes)\n    \treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zRes0, *zRes1, *zTemp;\n\t\tint TopLevelX = dd-\u003epermZ[ X-\u003eindex ];\n\t\tint TopLevelY = dd-\u003epermZ[ Y-\u003eindex ];\n\n\t\tif ( TopLevelX \u003c TopLevelY )\n\t\t{\n\t\t\t/* combinations of X without label that are supersets of combinations of Y */\n\t\t\tzRes0 = extraZddNotSupSet( dd, cuddE( X ), Y );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* combinations of X with label that are supersets of combinations of Y */\n\t\t\tzRes1 = extraZddNotSupSet( dd, cuddT( X ), Y );\n\t\t\tif ( zRes1 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse if ( TopLevelX == TopLevelY )\n\t\t{\n\t\t\t/* combs of X without var that are not supersets of combs of Y without var */\n\t\t\tzRes0 = extraZddNotSupSet( dd, cuddE( X ), cuddE( Y ) );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\tzRes1 = extraZddNotSupSet( dd, cuddT( X ), zTemp );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t{\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\tzRes = extraZddNotSupSet( dd, X, cuddE( Y ) );\n\t\t\tif ( zRes == NULL )  return NULL;\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn X; }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn z0; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif X == z1 { \n\t\treturn z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations of Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations of Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are not supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddNotSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}"
+    },
+    {
+      "Name": "extraZddMaxNotSupSet",
+      "Start": 21039,
+      "End": 24936,
+      "BodyStart": 21107,
+      "Original": "DdNode* extraZddMaxNotSupSet( DdManager *dd, DdNode *X, DdNode *Y )\n{\t\n\tDdNode *zRes;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif ( X == Y ) \n\t\treturn z0;\n\t/* no comb in X is superset of non-existing combs */\n\tif ( Y == z0 ) \n\t\treturn extraZddMaximal( dd, X );\t\n\t/* any comb in X is the superset of the empty comb */\n\tif ( Extra_zddEmptyBelongs( dd, Y ) ) \n\t\treturn z0;\n\t/* if X is empty, the result is empty */\n\tif ( X == z0 ) \n\t\treturn z0;\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif ( X == z1 ) \n\t\treturn z1;\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddMaxNotSupSet, X, Y);\n    if (zRes)\n    \treturn(zRes);\n\telse\n\t{\n\t\tDdNode *zRes0, *zRes1, *zTemp;\n\t\tint TopLevelX = dd-\u003epermZ[ X-\u003eindex ];\n\t\tint TopLevelY = dd-\u003epermZ[ Y-\u003eindex ];\n\n\t\tif ( TopLevelX \u003c TopLevelY )\n\t\t{\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, cuddE( X ), Y );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, cuddT( X ), Y );\n\t\t\tif ( zRes1 == NULL )  \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse if ( TopLevelX == TopLevelY )\n\t\t{\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, cuddE( X ), cuddE( Y ) );\n\t\t\tif ( zRes0 == NULL )  \n\t\t\t\treturn NULL;\n\t\t\tcuddRef( zRes0 );\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\tzTemp = cuddZddUnion( dd, cuddE( Y ), cuddT( Y ) );\n\t\t\tif ( zTemp == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zTemp );\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, cuddT( X ), zTemp );\n\t\t\tif ( zRes1 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes1 );\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif ( zRes0 == NULL )\n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddRef( zRes0 );\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X-\u003eindex, zRes1, zRes0 );\n\t\t\tif ( zRes == NULL ) \n\t\t\t{\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn NULL;\n\t\t\t}\n\t\t\tcuddDeref( zRes0 );\n\t\t\tcuddDeref( zRes1 );\n\t\t}\n\t\telse /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t{\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\tzRes = extraZddMaxNotSupSet( dd, X, cuddE( Y ) );\n\t\t\tif ( zRes == NULL )  return NULL;\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddMaxNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}",
+      "Draft": "func extraZddMaxNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn extraZddMaximal( dd, X ); }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn z0; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif X == z1 { \n\t\treturn z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddMaxNotSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddMaxNotSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddMaxNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::mechanical::do::3721",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3721,
+      "End": 3723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::mechanical::do::4408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4408,
+      "End": 4410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::mechanical::do::5106",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5106,
+      "End": 5108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::mechanical::do::5805",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5805,
+      "End": 5807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::mechanical::do::6537",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6537,
+      "End": 6539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddSubSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddSubSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3554,
+      "End": 3861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddSupSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4241,
+      "End": 4548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddNotSubSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddNotSubSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4936,
+      "End": 5249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddNotSupSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddNotSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5635,
+      "End": 5948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddMaxNotSupSet",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddMaxNotSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6364,
+      "End": 6683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddEmptyBelongs",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddEmptyBelongs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7015,
+      "End": 7165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::Extra_zddIsOneSubset",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddIsOneSubset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7497,
+      "End": 7721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::extraZddSubSet",
+      "Category": "semantic-review",
+      "Symbol": "extraZddSubSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8281,
+      "End": 10917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::extraZddSupSet",
+      "Category": "semantic-review",
+      "Symbol": "extraZddSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11229,
+      "End": 14150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::extraZddNotSubSet",
+      "Category": "semantic-review",
+      "Symbol": "extraZddNotSubSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14465,
+      "End": 17451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::extraZddNotSupSet",
+      "Category": "semantic-review",
+      "Symbol": "extraZddNotSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17769,
+      "End": 20717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::extraZddMaxNotSupSet",
+      "Category": "semantic-review",
+      "Symbol": "extraZddMaxNotSupSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21039,
+      "End": 24936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::8365",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8365,
+      "End": 8377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::9483",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9483,
+      "End": 9499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::9727",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9727,
+      "End": 9743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10010",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10010,
+      "End": 10026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10279",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10279,
+      "End": 10297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10302",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10302,
+      "End": 10320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10515",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10515,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10722",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10722,
+      "End": 10737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::10782",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10782,
+      "End": 10799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::11313",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11313,
+      "End": 11325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::12209",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12209,
+      "End": 12225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::12453",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12453,
+      "End": 12469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::12723",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12723,
+      "End": 12741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::12746",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12746,
+      "End": 12764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::12986",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12986,
+      "End": 13002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::13204",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13204,
+      "End": 13220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::13480",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13480,
+      "End": 13496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::13790",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13790,
+      "End": 13808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::13813",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13813,
+      "End": 13831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::14552",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14552,
+      "End": 14564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::15457",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15457,
+      "End": 15473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::15783",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15783,
+      "End": 15801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::15996",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15996,
+      "End": 16012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::16244",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16244,
+      "End": 16260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::16532",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16532,
+      "End": 16548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::16802",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16802,
+      "End": 16820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::16825",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16825,
+      "End": 16843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::17043",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17043,
+      "End": 17059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::17253",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17253,
+      "End": 17268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::17313",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17313,
+      "End": 17330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::17856",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17856,
+      "End": 17868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::18759",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18759,
+      "End": 18775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::19004",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19004,
+      "End": 19020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::19273",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19273,
+      "End": 19291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::19296",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19296,
+      "End": 19314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::19548",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19548,
+      "End": 19564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::19764",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19764,
+      "End": 19780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::20041",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20041,
+      "End": 20057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::20351",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20351,
+      "End": 20369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::20374",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20374,
+      "End": 20392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::21129",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21129,
+      "End": 21141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::22063",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22063,
+      "End": 22079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::22313",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22313,
+      "End": 22329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::22664",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22664,
+      "End": 22680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::23033",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23033,
+      "End": 23051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::23056",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23056,
+      "End": 23074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::23307",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23307,
+      "End": 23323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::23523",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23523,
+      "End": 23539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::23803",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23803,
+      "End": 23819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::24194",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24194,
+      "End": 24210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::24564",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24564,
+      "End": 24582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddSet.c::macro-inline::24587",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24587,
+      "End": 24605
+    }
+  ],
+  "Draft": "package extrab\n\n/**CFile***********************************************************************\n\n  FileName    [zSubSet.c]\n\n  PackageName [extra]\n\n  Synopsis    [Experimental version of some ZDD operators.]\n\n  Description [External procedures included in this module:\n\t\t    \u003cul\u003e\n\t\t    \u003cli\u003e Extra_zddSubSet();\n\t\t    \u003cli\u003e Extra_zddSupSet();\n\t\t    \u003cli\u003e Extra_zddNotSubSet();\n\t\t    \u003cli\u003e Extra_zddNotSupSet();\n\t\t    \u003cli\u003e Extra_zddMaxNotSupSet();\n\t\t\t\u003cli\u003e Extra_zddEmptyBelongs();\n\t\t\t\u003cli\u003e Extra_zddIsOneSubset();\n\t\t    \u003c/ul\u003e\n\t       Internal procedures included in this module:\n\t\t    \u003cul\u003e\n\t\t    \u003cli\u003e extraZddSubSet();\n\t\t    \u003cli\u003e extraZddSupSet();\n\t\t    \u003cli\u003e extraZddNotSubSet();\n\t\t    \u003cli\u003e extraZddNotSupSet();\n\t\t    \u003cli\u003e extraZddMaxNotSupSet();\n\t\t    \u003c/ul\u003e\n\t       Static procedures included in this module:\n\t\t    \u003cul\u003e\n\t\t    \u003c/ul\u003e\n\n          SubSet, SupSet, NotSubSet, NotSupSet were introduced \n\t\t  by O.Coudert to solve problems arising in two-level SOP \n\t\t  minimization. See O. Coudert, \"Two-Level Logic Minimization: \n\t\t  An Overview\", Integration. Vol. 17, No. 2, pp. 97-140, Oct 1994.\n\t      ]\n\n  SeeAlso     []\n\n  Author      [Alan Mishchenko]\n\n  Copyright   []\n\n  Revision    [$zSubSet.c, v.1.2, November 16, 2000, alanmi $]\n\n******************************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes subsets in X that are contained in some of the subsets of Y.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddNotSubSet, Extra_zddSupSet, Extra_zddNotSupSet]\n\n******************************************************************************/\nfunc Extra_zddSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddSubSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Extra_zddSubSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes subsets in X that contain some of the subsets of Y.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddSubSet, Extra_zddNotSubSet, Extra_zddNotSupSet]\n\n******************************************************************************/\nfunc Extra_zddSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Extra_zddSupSet */\n\n/**Function********************************************************************\n\n  Synopsis    [Computes subsets in X that are not contained in any of the subsets of Y.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddSubSet, Extra_zddSupSet, Extra_zddNotSupSet]\n\n******************************************************************************/\nfunc Extra_zddNotSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddNotSubSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Extra_zddNotSubSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes subsets in X that do not contain any of the subsets of Y.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddSubSet, Extra_zddSupSet, Extra_zddNotSubSet]\n\n******************************************************************************/\nfunc Extra_zddNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddNotSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Extra_zddNotSupSet */\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the maximal of subsets in X not contained in any of the subsets of Y.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     [Extra_zddSubSet, Extra_zddSupSet, Extra_zddSubSet, Extra_zddNotSupSet]\n\n******************************************************************************/\nfunc Extra_zddMaxNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\n    var res *DdNode;\n    var autoDynZ int32;\n\n    autoDynZ = dd.autoDynZ;\n    dd.autoDynZ = 0;\n\n    for {\n\tdd.reordered = 0;\n\tres = extraZddMaxNotSupSet(dd, X, Y);\n    \nif !(dd.reordered == 1) { break }\n} \n    dd.autoDynZ = autoDynZ;\n    return(res);\n\n} /* end of Extra_zddMaxNotSupSet */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns 1 if ZDD contains the empty combination; 0 otherwise.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_zddEmptyBelongs(dd *DdManager, zS *DdNode) int32 {\n\tfor  zS.index != CUDD_MAXINDEX  {\n\t\t// inlining of macro cuddE\n\t\tzS = ((zS).type.kids.E);\n\t}\n\treturn int32(( zS == z1 ));\n\n} /* end of Extra_zddEmptyBelongs */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns 1 if the set is empty or consists of one subset only.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Extra_zddIsOneSubset(dd *DdManager, zS *DdNode) int32 {\n\tfor  zS.index != CUDD_MAXINDEX  {\n\t\t// inlining of macro cuddT\n\t\tassert(((zS).type.kids.T) != z0, \"/*__starting_point_inline_macro:cuddT__*/((zS).type.kids.T) != z0\");\n\t\t// inlining of macro cuddE\n\t\tif  ((zS).type.kids.E) != z0 {\n\t\t\treturn 0; }\n\t\t// inlining of macro cuddT\n\t\tzS = ((zS).type.kids.T);\n\t}\n\treturn int32(( zS == z1 ));\n\n} /* end of Extra_zddEmptyBelongs */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddSubSet.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif X == Y { \n\t\treturn X; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif Y == z0 { \n\t\treturn z0; }\n\t/* the empty comb is contained in all combs of Y */\n\tif X == z1 { \n\t\treturn z1; }\n\t/* only {()} is the subset of {()} */\n\tif Y == z1 { /* check whether the empty combination is present in X */ \n\t\tif Extra_zddEmptyBelongs( dd, X ) != 0 {\n\t\t\treturn z1;\n\t\t} else {\n\t\t\treturn z0;\n\t\t} }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSubSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddSubSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes == nil {  return nil; }\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSubSet( dd, ((X).type.kids.E), zTemp );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSubSet( dd, ((X).type.kids.T), ((Y).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddSubSet( dd, X, zTemp );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddSubSet */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddSupSet.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn X; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn z0; }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn X; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return empty */\n\tif X == z1 { \n\t\treturn z0; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  return nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddSupSet */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddNotSubSet.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddNotSubSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a subset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* combs in X are notsubsets of non-existant combs in Y */\n\tif Y == z0 { \n\t\treturn X; }\t\n\t/* only {()} is the subset of {()} */\n\tif Y == z1 { /* remove empty combination from X */\n\t\treturn cuddZddDiff( dd, X, z1 ); }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* the empty comb is contained in all combs of Y */\n\tif X == z1 { \n\t\treturn z0; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSubSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* compute combs of X without var that are notsubsets of combs with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSubSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combs of X with var cannot be subsets of combs without var in Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = ((X).type.kids.T);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs of X without var that are notsubsets of combs is Temp */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSubSet( dd, ((X).type.kids.E), zTemp );\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* combs of X with var that are notsubsets of combs in Y with var */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSubSet( dd, ((X).type.kids.T), ((Y).type.kids.T) );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* compute combs that are notsubsets of Temp */\n\t\t\tzRes = extraZddNotSubSet( dd, X, zTemp );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes).ref);\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSubSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddNotSubSet */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddNotSupSet.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn X; }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn z0; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif X == z1 { \n\t\treturn z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddNotSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations of Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations of Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are not supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddNotSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddNotSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddNotSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddNotSupSet */\n\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Extra_zddMaxNotSupSet.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraZddMaxNotSupSet(dd *DdManager, X *DdNode, Y *DdNode) *DdNode {\t\n\tvar zRes *DdNode;\n    statLine(dd); \n\t/* any comb is a superset of itself */\n\tif X == Y { \n\t\treturn z0; }\n\t/* no comb in X is superset of non-existing combs */\n\tif Y == z0 { \n\t\treturn extraZddMaximal( dd, X ); }\t\n\t/* any comb in X is the superset of the empty comb */\n\tif Extra_zddEmptyBelongs( dd, Y ) != 0 { \n\t\treturn z0; }\n\t/* if X is empty, the result is empty */\n\tif X == z0 { \n\t\treturn z0; }\n\t/* if X is the empty comb (and Y does not contain it!), return it */\n\tif X == z1 { \n\t\treturn z1; }\n\n    /* check cache */\n    zRes = cuddCacheLookup2Zdd(dd, extraZddMaxNotSupSet, X, Y);\n    if zRes != nil {\n    \treturn(zRes);\n\t} else {\n\t\tvar zRes0, zRes1, zTemp *DdNode;\n\t\tvar TopLevelX int32  = dd.permZ[ X.index ];\n\t\tvar TopLevelY int32  = dd.permZ[ Y.index ];\n\n\t\tif TopLevelX \u003c TopLevelY {\n\t\t\t/* combinations of X without label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, ((X).type.kids.E), Y );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* combinations of X with label that are supersets of combinations with Y */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, ((X).type.kids.T), Y );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else if TopLevelX == TopLevelY {\n\t\t\t/* combs of X without var that are supersets of combs of Y without var */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes0 = extraZddMaxNotSupSet( dd, ((X).type.kids.E), ((Y).type.kids.E) );\n\t\t\tif zRes0 == nil {  \n\t\t\t\treturn nil; }\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\n\t\t\t/* merge combs of Y with and without var */\n\t\t\t// inlining of macro cuddE\n\t\t\t// inlining of macro cuddT\n\t\t\tzTemp = cuddZddUnion( dd, ((Y).type.kids.E), ((Y).type.kids.T) );\n\t\t\tif zTemp == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zTemp).ref);\n\n\t\t\t/* combs of X with label that are supersets of combs in Temp */\n\t\t\t// inlining of macro cuddT\n\t\t\tzRes1 = extraZddMaxNotSupSet( dd, ((X).type.kids.T), zTemp );\n\t\t\tif zRes1 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes1).ref);\n\t\t\tCudd_RecursiveDerefZdd( dd, zTemp );\n\n\t\t\t/* ---------------------------------------------------- */\n\t\t\t/* remove subsets without this element covered by subsets with this element */\n\t\t\tzRes0 = extraZddNotSubSet(dd, zTemp = zRes0, zRes1);\n\t\t\tif zRes0 == nil {\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t\tCudd_RecursiveDerefZdd(dd, zRes1);\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddRef\n\t\t\tcuddSatInc(Cudd_Regular(zRes0).ref);\n\t\t\tCudd_RecursiveDerefZdd(dd, zTemp);\n\t\t\t/* ---------------------------------------------------- */\n\n\t\t\t/* compose Res0 and Res1 with the given ZDD variable */\n\t\t\tzRes = cuddZddGetNode( dd, X.index, zRes1, zRes0 );\n\t\t\tif zRes == nil {\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes0 );\n\t\t\t\tCudd_RecursiveDerefZdd( dd, zRes1 );\n\t\t\t\treturn nil;\n\t\t\t}\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes0).ref);\n\t\t\t// inlining of macro cuddDeref\n\t\t\tcuddSatDec(Cudd_Regular(zRes1).ref);\n\t\t\n\t\t} else { /* if ( TopLevelX \u003e TopLevelY ) */\n\t\t\n\t\t\t/* combs of X that are supersets of combs of Y without label */\n\t\t\t// inlining of macro cuddE\n\t\t\tzRes = extraZddMaxNotSupSet( dd, X, ((Y).type.kids.E) );\n\t\t\tif zRes == nil {  return nil; }\n\t\t}\n\n\t\t/* insert the result into cache */\n\t    cuddCacheInsert2(dd, extraZddMaxNotSupSet, X, Y, zRes);\n\t\treturn zRes;\n\t}\n} /* end of extraZddMaxNotSupSet */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

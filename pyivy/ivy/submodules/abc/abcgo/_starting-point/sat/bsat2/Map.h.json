@@ -1,0 +1,171 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h",
+  "SHA256": "01fb84b82ebaf7ce08a75cbe03a2c60a1f4813003d6f49b520606006e0f15847",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 55,
+        "ByteOffset": 2982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Map\u003cK,D,H,E\u003e\u0026  operator = (Map\u003cK,D,H,E\u003e\u0026 other) { assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 55,
+        "ByteOffset": 3049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                   Map        (Map\u003cK,D,H,E\u003e\u0026 other) { assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 4120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(size != 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 4337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(res != NULL);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 4486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(size != 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(res != NULL);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(table != NULL);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(j \u003c ps.size());"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::1959",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1959,
+      "End": 1965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::2012",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2012,
+      "End": 2018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::2075",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2075,
+      "End": 2081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::2138",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2138,
+      "End": 2144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::2322",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2322,
+      "End": 2328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::mechanical::static::2362",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2362,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Map.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6710
+    }
+  ],
+  "Draft": "package bsat2\n\n/*******************************************************************************************[Map.h]\nCopyright (c) 2006-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \"IntTypes.h\"\n//#include \"Vec.h\"\n\nnamespace Minisat {\n\n//=================================================================================================\n// Default hash/equals functions\n//\n\ntemplate\u003cclass K\u003e struct Hash  { uint32_t operator()(K\u0026 k)               { return hash(k);  } };\ntemplate\u003cclass K\u003e struct Equal { bool     operator()(K\u0026 k1, K\u0026 k2) { return k1 == k2; } };\n\ntemplate\u003cclass K\u003e struct DeepHash  { uint32_t operator()(K* k)               { return hash(*k);  } };\ntemplate\u003cclass K\u003e struct DeepEqual { bool     operator()(K* k1, K* k2) { return *k1 == *k2; } };\n\nstatic inline uint32_t hash(uint32_t x){ return x; }\nstatic inline uint32_t hash(uint64_t x){ return (uint32_t)x; }\nstatic inline uint32_t hash(int32_t x) { return (uint32_t)x; }\nstatic inline uint32_t hash(int64_t x) { return (uint32_t)x; }\n\n\n//=================================================================================================\n// Some primes\n//\n\nstatic int nprimes          = 25;\nstatic int primes [nprimes] = { 31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253 };\n\n//=================================================================================================\n// Hash table implementation of Maps\n//\n\ntemplate\u003cclass K, class D, class H = Hash\u003cK\u003e, class E = Equal\u003cK\u003e \u003e\nclass Map {\n public:\n    struct Pair { K key; D data; };\n\n private:\n    H          hash;\n    E          equals;\n\n    vec\u003cPair\u003e* table;\n    int        cap;\n    int        size;\n\n    // Don't allow copying (error prone):\n    Map\u003cK,D,H,E\u003e\u0026  operator = (Map\u003cK,D,H,E\u003e\u0026 other) { assert(false, \"0\"); }\n                   Map        (Map\u003cK,D,H,E\u003e\u0026 other) { assert(false, \"0\"); }\n\n    bool    checkCap(int new_size) { return new_size \u003e cap; }\n\n    int32_t index  (K\u0026 k) { return hash(k) % cap; }\n    void   _insert (K\u0026 k, D\u0026 d) { \n        vec\u003cPair\u003e\u0026 ps = table[index(k)];\n        ps.push(); ps.last().key = k; ps.last().data = d; }\n\n    void    rehash () {\n        vec\u003cPair\u003e* old = table;\n\n        int old_cap = cap;\n        int newsize = primes[0];\n        for (int i = 1; newsize \u003c= cap \u0026\u0026 i \u003c nprimes; i++)\n           newsize = primes[i];\n\n        table = new vec\u003cPair\u003e[newsize];\n        cap   = newsize;\n\n        for int i = 0; i \u003c old_cap; i++{\n            for int j = 0; j \u003c old[i].size(); j++{\n                _insert(old[i][j].key, old[i][j].data); }}\n\n        delete [] old;\n\n        // printf(\" --- rehashing, old-cap=%d, new-cap=%d\\n\", cap, newsize);\n    }\n\n    \n public:\n\n    Map () : table(NULL), cap(0), size(0) {}\n    Map (H\u0026 h, E\u0026 e) : hash(h), equals(e), table(NULL), cap(0), size(0){}\n    ~Map () { delete [] table; }\n\n    // PRECONDITION: the key must already exist in the map.\n    D\u0026 operator [] (K\u0026 k) \n    {\n        assert(size != 0, \"size != 0\");\n        D*         res = NULL;\n        vec\u003cPair\u003e\u0026 ps  = table[index(k)];\n        for (int i = 0; i \u003c ps.size(); i++)\n            if (equals(ps[i].key, k))\n                res = \u0026ps[i].data;\n        assert(res != NULL, \"res != NULL\");\n        return *res;\n    }\n\n    // PRECONDITION: the key must already exist in the map.\n    D\u0026 operator [] (K\u0026 k)\n    {\n        assert(size != 0, \"size != 0\");\n        D*         res = NULL;\n        vec\u003cPair\u003e\u0026 ps  = table[index(k)];\n        for (int i = 0; i \u003c ps.size(); i++)\n            if (equals(ps[i].key, k))\n                res = \u0026ps[i].data;\n        assert(res != NULL, \"res != NULL\");\n        return *res;\n    }\n\n    // PRECONDITION: the key must *NOT* exist in the map.\n    void insert (K\u0026 k, D\u0026 d) { if (checkCap(size+1)) rehash(); _insert(k, d); size++; }\n    bool peek   (K\u0026 k, D\u0026 d) {\n        if (size == 0) return false;\n        vec\u003cPair\u003e\u0026 ps = table[index(k)];\n        for (int i = 0; i \u003c ps.size(); i++)\n            if equals(ps[i].key, k){\n                d = ps[i].data;\n                return true; } \n        return false;\n    }\n\n    bool has   (K\u0026 k) {\n        if (size == 0) return false;\n        vec\u003cPair\u003e\u0026 ps = table[index(k)];\n        for (int i = 0; i \u003c ps.size(); i++)\n            if (equals(ps[i].key, k))\n                return true;\n        return false;\n    }\n\n    // PRECONDITION: the key must exist in the map.\n    void remove(K\u0026 k) {\n        assert(table != NULL, \"table != NULL\");\n        vec\u003cPair\u003e\u0026 ps = table[index(k)];\n        int j = 0;\n        for (; j \u003c ps.size() \u0026\u0026 !equals(ps[j].key, k); j++);\n        assert(j \u003c ps.size(), \"j \u003c ps.size()\");\n        ps[j] = ps.last();\n        ps.pop();\n        size--;\n    }\n\n    void clear  () {\n        cap = size = 0;\n        delete [] table;\n        table = NULL;\n    }\n\n    int  elems() { return size; }\n    int  bucket_count() { return cap; }\n\n    // NOTE: the hash and equality objects are not moved by this method:\n    void moveTo(Map\u0026 other){\n        delete [] other.table;\n\n        other.table = table;\n        other.cap   = cap;\n        other.size  = size;\n\n        table = NULL;\n        size = cap = 0;\n    }\n\n    // NOTE: given a bit more time, I could make a more C++-style iterator out of this:\n    vec\u003cPair\u003e\u0026 bucket(int i) { return table[i]; }\n};\n\n//=================================================================================================\n}\n\n\n"
+}

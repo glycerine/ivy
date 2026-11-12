@@ -1,0 +1,960 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c",
+  "SHA256": "9b5efbe622943ac9f0491d6aaa4bb6f06132817c9c195163ef629cd7200695ab",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsConst1(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsConst1(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 7492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 7543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 7594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value == 0 || Value == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 8276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 11871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 13623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsTravIdCurrent(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 13674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 14646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsTravIdPrevious(p, pObj) ); // not visited, inside"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 14717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 15353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pRoot) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 505,
+        "Column": 5,
+        "ByteOffset": 16955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 553,
+        "Column": 5,
+        "ByteOffset": 18441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 554,
+        "Column": 5,
+        "ByteOffset": 18480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 670,
+        "Column": 5,
+        "ByteOffset": 22450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Status == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 672,
+        "Column": 58,
+        "ByteOffset": 22531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Aig_ObjPrint( p, Aig_Regular(pRes) );                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 673,
+        "Column": 58,
+        "ByteOffset": 22604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 58,
+        "ByteOffset": 22677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 695,
+        "Column": 5,
+        "ByteOffset": 23341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Status == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 23369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Compl = %d  \", Aig_IsComplement(pRes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 698,
+        "Column": 58,
+        "ByteOffset": 23476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Aig_ObjPrint( p, Aig_Regular(pRes) );                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 62,
+        "ByteOffset": 23595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 701,
+        "Column": 62,
+        "ByteOffset": 23672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManFindImplications_rec",
+      "Start": 1205,
+      "End": 1543,
+      "BodyStart": 1280,
+      "Original": "void Aig_ManFindImplications_rec( Aig_Obj_t * pObj, Vec_Ptr_t * vImplics )\n{\n    if ( Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) )\n    {\n        Vec_PtrPushUnique( vImplics, pObj );\n        return;\n    }\n    Aig_ManFindImplications_rec( Aig_ObjChild0(pObj), vImplics );\n    Aig_ManFindImplications_rec( Aig_ObjChild1(pObj), vImplics );\n}",
+      "Draft": "func Aig_ManFindImplications_rec(pObj *Aig_Obj_t, vImplics *Vec_Ptr_t) {\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) {\n        Vec_PtrPushUnique( vImplics, pObj );\n        return;\n    }\n    Aig_ManFindImplications_rec( Aig_ObjChild0(pObj), vImplics );\n    Aig_ManFindImplications_rec( Aig_ObjChild1(pObj), vImplics );\n}"
+    },
+    {
+      "Name": "Aig_ManFindImplications",
+      "Start": 2042,
+      "End": 2252,
+      "BodyStart": 2114,
+      "Original": "Vec_Ptr_t * Aig_ManFindImplications( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    Vec_Ptr_t * vImplics;\n    vImplics = Vec_PtrAlloc( 100 );\n    Aig_ManFindImplications_rec( pNode, vImplics );\n    return vImplics;\n}",
+      "Draft": "func Aig_ManFindImplications(p *Aig_Man_t, pNode *Aig_Obj_t) *Vec_Ptr_t {\n    var vImplics *Vec_Ptr_t;\n    vImplics = Vec_PtrAlloc( 100 );\n    Aig_ManFindImplications_rec( pNode, vImplics );\n    return vImplics;\n}"
+    },
+    {
+      "Name": "Aig_ManFindConeOverlap_rec",
+      "Start": 2547,
+      "End": 3015,
+      "BodyStart": 2614,
+      "Original": "int Aig_ManFindConeOverlap_rec( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    if ( Aig_ObjIsTravIdPrevious( p, pNode ) )\n        return 1;\n    if ( Aig_ObjIsTravIdCurrent( p, pNode ) )\n        return 0;\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    if ( Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin0(pNode) ) )\n        return 1;\n    if ( Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin1(pNode) ) )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Aig_ManFindConeOverlap_rec(p *Aig_Man_t, pNode *Aig_Obj_t) int32 {\n    if Aig_ObjIsTravIdPrevious( p, pNode ) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin0(pNode) ) != 0 {\n        return 1; }\n    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin1(pNode) ) != 0 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Aig_ManFindConeOverlap",
+      "Start": 3310,
+      "End": 3745,
+      "BodyStart": 3395,
+      "Original": "int Aig_ManFindConeOverlap( Aig_Man_t * p, Vec_Ptr_t * vImplics, Aig_Obj_t * pNode )\n{\n    Aig_Obj_t * pTemp;\n    int i;\n    assert( !Aig_IsComplement(pNode) );\n    assert( !Aig_ObjIsConst1(pNode) );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n    Aig_ManIncrementTravId( p );\n    return Aig_ManFindConeOverlap_rec( p, pNode );\n}",
+      "Draft": "func Aig_ManFindConeOverlap(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) int32 {\n    var pTemp *Aig_Obj_t;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(!Aig_ObjIsConst1(pNode), \"!Aig_ObjIsConst1(pNode)\");\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n    Aig_ManIncrementTravId( p );\n    return Aig_ManFindConeOverlap_rec( p, pNode );\n}"
+    },
+    {
+      "Name": "Aig_ManDeriveNewCone_rec",
+      "Start": 4040,
+      "End": 4548,
+      "BodyStart": 4113,
+      "Original": "Aig_Obj_t * Aig_ManDeriveNewCone_rec( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    if ( Aig_ObjIsTravIdCurrent( p, pNode ) )\n        return (Aig_Obj_t *)pNode-\u003epData;\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if ( Aig_ObjIsCi(pNode) )\n        return (Aig_Obj_t *)(pNode-\u003epData = pNode);\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin0(pNode) );\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin1(pNode) );\n    return (Aig_Obj_t *)(pNode-\u003epData = Aig_And( p, Aig_ObjChild0Copy(pNode), Aig_ObjChild1Copy(pNode) ));\n}",
+      "Draft": "func Aig_ManDeriveNewCone_rec(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return (Aig_Obj_t *)pNode.pData; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return (Aig_Obj_t *)(pNode.pData = pNode); }\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin0(pNode) );\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin1(pNode) );\n    return (Aig_Obj_t *)(pNode.pData = Aig_And( p, Aig_ObjChild0Copy(pNode), Aig_ObjChild1Copy(pNode) ));\n}"
+    },
+    {
+      "Name": "Aig_ManDeriveNewCone",
+      "Start": 4843,
+      "End": 5355,
+      "BodyStart": 4934,
+      "Original": "Aig_Obj_t * Aig_ManDeriveNewCone( Aig_Man_t * p, Vec_Ptr_t * vImplics, Aig_Obj_t * pNode )\n{\n    Aig_Obj_t * pTemp;\n    int i;\n    assert( !Aig_IsComplement(pNode) );\n    assert( !Aig_ObjIsConst1(pNode) );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n    {\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n        Aig_Regular(pTemp)-\u003epData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pTemp) );\n    }\n    return Aig_ManDeriveNewCone_rec( p, pNode );\n}",
+      "Draft": "func Aig_ManDeriveNewCone(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    var pTemp *Aig_Obj_t;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(!Aig_ObjIsConst1(pNode), \"!Aig_ObjIsConst1(pNode)\");\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n    {\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n        Aig_Regular(pTemp).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pTemp) );\n    }\n    return Aig_ManDeriveNewCone_rec( p, pNode );\n}"
+    },
+    {
+      "Name": "Aig_ManFactorAlgebraic_int",
+      "Start": 5764,
+      "End": 6954,
+      "BodyStart": 5867,
+      "Original": "Aig_Obj_t * Aig_ManFactorAlgebraic_int( Aig_Man_t * p, Aig_Obj_t * pPoA, Aig_Obj_t * pPoB, int Value )\n{\n    Aig_Obj_t * pNodeA, * pNodeC;\n    Vec_Ptr_t * vImplics;\n    int RetValue;\n    if ( Aig_ObjIsConst1(Aig_ObjFanin0(pPoA)) || Aig_ObjIsConst1(Aig_ObjFanin0(pPoB)) )\n        return NULL;\n    if ( Aig_ObjIsCi(Aig_ObjFanin0(pPoB)) )\n        return NULL;\n    // get the internal node representing function of A under assignment A = 'Value'\n    pNodeA = Aig_ObjChild0( pPoA );\n    pNodeA = Aig_NotCond( pNodeA, Value==0 );\n    // find implications of this signal (nodes whose value is fixed under assignment A = 'Value')\n    vImplics = Aig_ManFindImplications( p, pNodeA );\n    // check if the TFI cone of B overlaps with the implied nodes\n    RetValue = Aig_ManFindConeOverlap( p, vImplics, Aig_ObjFanin0(pPoB) );\n    if ( RetValue == 0 ) // no overlap\n    {\n        Vec_PtrFree( vImplics );\n        return NULL;\n    }\n    // there is overlap - derive node representing value of B under assignment A = 'Value'\n    pNodeC = Aig_ManDeriveNewCone( p, vImplics, Aig_ObjFanin0(pPoB) );\n    pNodeC = Aig_NotCond( pNodeC, Aig_ObjFaninC0(pPoB) );\n    Vec_PtrFree( vImplics );\n    return pNodeC;\n}",
+      "Draft": "func Aig_ManFactorAlgebraic_int(p *Aig_Man_t, pPoA *Aig_Obj_t, pPoB *Aig_Obj_t, Value int32) *Aig_Obj_t {\n    var pNodeA, pNodeC *Aig_Obj_t;\n    var vImplics *Vec_Ptr_t;\n    var RetValue int32;\n    if Aig_ObjIsConst1(Aig_ObjFanin0(pPoA)) || Aig_ObjIsConst1(Aig_ObjFanin0(pPoB)) {\n        return nil; }\n    if Aig_ObjIsCi(Aig_ObjFanin0(pPoB)) {\n        return nil; }\n    // get the internal node representing function of A under assignment A = 'Value'\n    pNodeA = Aig_ObjChild0( pPoA );\n    pNodeA = Aig_NotCond( pNodeA, Value==0 );\n    // find implications of this signal (nodes whose value is fixed under assignment A = 'Value')\n    vImplics = Aig_ManFindImplications( p, pNodeA );\n    // check if the TFI cone of B overlaps with the implied nodes\n    RetValue = Aig_ManFindConeOverlap( p, vImplics, Aig_ObjFanin0(pPoB) );\n    if RetValue == 0 { // no overlap\n    \n        Vec_PtrFree( vImplics );\n        return nil;\n    }\n    // there is overlap - derive node representing value of B under assignment A = 'Value'\n    pNodeC = Aig_ManDeriveNewCone( p, vImplics, Aig_ObjFanin0(pPoB) );\n    pNodeC = Aig_NotCond( pNodeC, Aig_ObjFaninC0(pPoB) );\n    Vec_PtrFree( vImplics );\n    return pNodeC;\n}"
+    },
+    {
+      "Name": "Aig_ManFactorAlgebraic",
+      "Start": 7363,
+      "End": 7683,
+      "BodyStart": 7446,
+      "Original": "Aig_Obj_t * Aig_ManFactorAlgebraic( Aig_Man_t * p, int iPoA, int iPoB, int Value )\n{\n    assert( iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p) );\n    assert( iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p) );\n    assert( Value == 0 || Value == 1 );\n    return Aig_ManFactorAlgebraic_int( p, Aig_ManCo(p, iPoA), Aig_ManCo(p, iPoB), Value ); \n}",
+      "Draft": "func Aig_ManFactorAlgebraic(p *Aig_Man_t, iPoA int32, iPoB int32, Value int32) *Aig_Obj_t {\n    assert(iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p), \"iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p)\");\n    assert(iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p), \"iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p)\");\n    assert(Value == 0 || Value == 1, \"Value == 0 || Value == 1\");\n    return Aig_ManFactorAlgebraic_int( p, Aig_ManCo(p, iPoA), Aig_ManCo(p, iPoB), Value ); \n}"
+    },
+    {
+      "Name": "Aig_ManFactorAlgebraicTest",
+      "Start": 7937,
+      "End": 8486,
+      "BodyStart": 7986,
+      "Original": "void Aig_ManFactorAlgebraicTest( Aig_Man_t * p )\n{\n    int iPoA  = 0;\n    int iPoB  = 1;\n    int Value = 0;\n    Aig_Obj_t * pRes;\n//    Aig_Obj_t * pObj;\n//    int i;\n    pRes = Aig_ManFactorAlgebraic( p, iPoA, iPoB, Value );\n    Aig_ManShow( p, 0, NULL );\n    Aig_ObjPrint( p, pRes );\n    printf( \"\\n\" );\n/*\n    printf( \"Results:\\n\" );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        printf( \"Object = %d.\\n\", i );\n        Aig_ObjPrint( p, pObj );\n        printf( \"\\n\" );\n        Aig_ObjPrint( p, pObj-\u003epData );\n        printf( \"\\n\" );\n    }\n*/\n}",
+      "Draft": "func Aig_ManFactorAlgebraicTest(p *Aig_Man_t) {\n    var iPoA int32;\n    var iPoB int32   = 1;\n    var Value int32;\n    var pRes *Aig_Obj_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    pRes = Aig_ManFactorAlgebraic( p, iPoA, iPoB, Value );\n    Aig_ManShow( p, 0, nil );\n    Aig_ObjPrint( p, pRes );\n    fmt.Printf(\"\\n\");\n/*\n    printf( \"Results:\\n\" );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        printf( \"Object = %d.\\n\", i );\n        Aig_ObjPrint( p, pObj );\n        printf( \"\\n\" );\n        Aig_ObjPrint( p, pObj-\u003epData );\n        printf( \"\\n\" );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Aig_SuppMinPerform",
+      "Start": 8776,
+      "End": 11225,
+      "BodyStart": 8884,
+      "Original": "Vec_Ptr_t * Aig_SuppMinPerform( Aig_Man_t * p, Vec_Ptr_t * vOrGate, Vec_Ptr_t * vNodes, Vec_Ptr_t * vSupp )\n{\n    Aig_Obj_t * pObj;\n    Vec_Ptr_t * vTrSupp, * vTrNode, * vCofs;\n    unsigned * uFunc = NULL, * uCare, * uFunc0, * uFunc1;\n    unsigned * uCof0, * uCof1, * uCare0, * uCare1;\n    int i, nWords = Abc_TruthWordNum( Vec_PtrSize(vSupp) );\n    // assign support nodes\n    vTrSupp = Vec_PtrAllocTruthTables( Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj-\u003epData = Vec_PtrEntry( vTrSupp, i );\n    // compute internal nodes\n    vTrNode = Vec_PtrAllocSimInfo( Vec_PtrSize(vNodes) + 5, nWords );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        pObj-\u003epData = uFunc = (unsigned *)Vec_PtrEntry( vTrNode, i );\n        uFunc0 = (unsigned *)Aig_ObjFanin0(pObj)-\u003epData;\n        uFunc1 = (unsigned *)Aig_ObjFanin1(pObj)-\u003epData;\n        Kit_TruthAndPhase( uFunc, uFunc0, uFunc1, Vec_PtrSize(vSupp), Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n    }\n    // uFunc contains the result of computation\n    // compute care set\n    uCare = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes) );\n    Kit_TruthClear( uCare, Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        Kit_TruthOrPhase( uCare, uCare, (unsigned *)Aig_Regular(pObj)-\u003epData, Vec_PtrSize(vSupp), 0, Aig_IsComplement(pObj) );\n    // try cofactoring each variable in both polarities\n    vCofs = Vec_PtrAlloc( 10 );\n    uCof0  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+1 );\n    uCof1  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+2 );\n    uCare0 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+3 );\n    uCare1 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n    {\n        Kit_TruthCofactor0New( uCof0, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCof1, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor0New( uCare0, uCare, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCare1, uCare, Vec_PtrSize(vSupp), i );\n        if ( Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare1, Vec_PtrSize(vSupp) ) )\n            Vec_PtrPush( vCofs, Aig_Not(pObj) );\n        else if ( Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare0, Vec_PtrSize(vSupp) ) )\n            Vec_PtrPush( vCofs, pObj );\n    }\n    Vec_PtrFree( vTrNode );\n    Vec_PtrFree( vTrSupp );\n    return vCofs;\n}",
+      "Draft": "func Aig_SuppMinPerform(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Vec_Ptr_t {\n    var pObj *Aig_Obj_t;\n    var vTrSupp, vTrNode, vCofs *Vec_Ptr_t;\n    var uFunc *uint32 = nil;\n    var uCare *uint32;\n    var uFunc0 *uint32;\n    var uFunc1 *uint32;\n    var uCof0, uCof1, uCare0, uCare1 *uint32;\n    var i int32;\n    var nWords int32 = Abc_TruthWordNum( Vec_PtrSize(vSupp) );\n    // assign support nodes\n    vTrSupp = Vec_PtrAllocTruthTables( Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj.pData = Vec_PtrEntry( vTrSupp, i );\n    // compute internal nodes\n    vTrNode = Vec_PtrAllocSimInfo( Vec_PtrSize(vNodes) + 5, nWords );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.pData = uFunc = (unsigned *)Vec_PtrEntry( vTrNode, i );\n        uFunc0 = (unsigned *)Aig_ObjFanin0(pObj).pData;\n        uFunc1 = (unsigned *)Aig_ObjFanin1(pObj).pData;\n        Kit_TruthAndPhase( uFunc, uFunc0, uFunc1, Vec_PtrSize(vSupp), Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n    }\n    // uFunc contains the result of computation\n    // compute care set\n    uCare = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes) );\n    Kit_TruthClear( uCare, Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        Kit_TruthOrPhase( uCare, uCare, (unsigned *)Aig_Regular(pObj).pData, Vec_PtrSize(vSupp), 0, Aig_IsComplement(pObj) );\n    // try cofactoring each variable in both polarities\n    vCofs = Vec_PtrAlloc( 10 );\n    uCof0  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+1 );\n    uCof1  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+2 );\n    uCare0 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+3 );\n    uCare1 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n    {\n        Kit_TruthCofactor0New( uCof0, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCof1, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor0New( uCare0, uCare, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCare1, uCare, Vec_PtrSize(vSupp), i );\n        if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare1, Vec_PtrSize(vSupp) ) {\n            Vec_PtrPush( vCofs, Aig_Not(pObj) );\n        } else if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare0, Vec_PtrSize(vSupp) ) {\n            Vec_PtrPush( vCofs, pObj ); }\n    }\n    Vec_PtrFree( vTrNode );\n    Vec_PtrFree( vTrSupp );\n    return vCofs;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinReconstruct",
+      "Start": 11502,
+      "End": 12286,
+      "BodyStart": 11612,
+      "Original": "Aig_Obj_t * Aig_SuppMinReconstruct( Aig_Man_t * p, Vec_Ptr_t * vCofs, Vec_Ptr_t * vNodes, Vec_Ptr_t * vSupp )\n{\n    Aig_Obj_t * pObj = NULL;\n    int i;\n    // set the value of the support variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        assert( !Aig_IsComplement(pObj) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj-\u003epData = pObj;\n    // set the value of the cofactoring variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCofs, pObj, i )\n        Aig_Regular(pObj)-\u003epData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pObj) );\n    // reconstruct the node\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    return (Aig_Obj_t *)pObj-\u003epData;\n}",
+      "Draft": "func Aig_SuppMinReconstruct(p *Aig_Man_t, vCofs *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Aig_Obj_t {\n    var pObj *Aig_Obj_t  = nil;\n    var i int32;\n    // set the value of the support variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj.pData = pObj;\n    // set the value of the cofactoring variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCofs, pObj, i )\n        Aig_Regular(pObj).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pObj) );\n    // reconstruct the node\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    return (Aig_Obj_t *)pObj.pData;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinGateIsInSupport",
+      "Start": 12569,
+      "End": 12981,
+      "BodyStart": 12657,
+      "Original": "int Aig_SuppMinGateIsInSupport( Aig_Man_t * p, Vec_Ptr_t * vOrGate, Vec_Ptr_t * vSupp )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent( p, Aig_Regular(pObj) ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Aig_SuppMinGateIsInSupport(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vSupp *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent( p, Aig_Regular(pObj) ) )\n            return 0;\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinCollectSupport",
+      "Start": 13254,
+      "End": 14009,
+      "BodyStart": 13329,
+      "Original": "Vec_Ptr_t * Aig_SuppMinCollectSupport( Aig_Man_t * p, Vec_Ptr_t * vNodes )\n{\n    Vec_Ptr_t * vSupp;\n    Aig_Obj_t * pObj, * pFanin;\n    int i;\n    vSupp = Vec_PtrAlloc( 4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert( Aig_ObjIsTravIdCurrent(p, pObj) );\n        assert( Aig_ObjIsNode(pObj) );\n        pFanin = Aig_ObjFanin0( pObj );\n        if ( !Aig_ObjIsTravIdCurrent(p, pFanin) )\n        {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n        pFanin = Aig_ObjFanin1( pObj );\n        if ( !Aig_ObjIsTravIdCurrent(p, pFanin) )\n        {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n    }\n    return vSupp;\n}",
+      "Draft": "func Aig_SuppMinCollectSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    var pObj, pFanin *Aig_Obj_t;\n    var i int32;\n    vSupp = Vec_PtrAlloc( 4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert(Aig_ObjIsTravIdCurrent(p, pObj), \"Aig_ObjIsTravIdCurrent(p, pObj)\");\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        pFanin = Aig_ObjFanin0( pObj );\n        if !Aig_ObjIsTravIdCurrent(p, pFanin) {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n        pFanin = Aig_ObjFanin1( pObj );\n        if !Aig_ObjIsTravIdCurrent(p, pFanin) {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n    }\n    return vSupp;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinCollectCone_rec",
+      "Start": 14294,
+      "End": 14858,
+      "BodyStart": 14381,
+      "Original": "void Aig_SuppMinCollectCone_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( Aig_ObjIsTravIdCurrent( p, pObj ) ) // visited\n        return;\n    if ( !Aig_ObjIsTravIdPrevious( p, pObj ) ) // not visited, but outside\n        return;\n    assert( Aig_ObjIsTravIdPrevious(p, pObj) ); // not visited, inside\n    assert( Aig_ObjIsNode(pObj) );\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Aig_SuppMinCollectCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited\n        return; }\n    if !Aig_ObjIsTravIdPrevious( p, pObj ) { // not visited, but outside\n        return; }\n    assert(Aig_ObjIsTravIdPrevious(p, pObj), \"Aig_ObjIsTravIdPrevious(p, pObj)\"); // not visited, inside\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Aig_SuppMinCollectCone",
+      "Start": 15153,
+      "End": 15493,
+      "BodyStart": 15224,
+      "Original": "Vec_Ptr_t * Aig_SuppMinCollectCone( Aig_Man_t * p, Aig_Obj_t * pRoot )\n{\n    Vec_Ptr_t * vNodes;\n    assert( !Aig_IsComplement(pRoot) ); \n//    assert( Aig_ObjIsTravIdCurrent( p, pRoot ) );\n    vNodes = Vec_PtrAlloc( 4 );\n    Aig_ManIncrementTravId( p );\n    Aig_SuppMinCollectCone_rec( p, Aig_Regular(pRoot), vNodes );\n    return vNodes;\n}",
+      "Draft": "func Aig_SuppMinCollectCone(p *Aig_Man_t, pRoot *Aig_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pRoot), \"!Aig_IsComplement(pRoot)\"); \n//    assert( Aig_ObjIsTravIdCurrent( p, pRoot ) );\n    vNodes = Vec_PtrAlloc( 4 );\n    Aig_ManIncrementTravId( p );\n    Aig_SuppMinCollectCone_rec( p, Aig_Regular(pRoot), vNodes );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinHighlightCone_rec",
+      "Start": 15778,
+      "End": 16415,
+      "BodyStart": 15846,
+      "Original": "int Aig_SuppMinHighlightCone_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    int RetValue;\n    if ( Aig_ObjIsTravIdCurrent( p, pObj ) ) // visited, marks there\n        return 1;\n    if ( Aig_ObjIsTravIdPrevious( p, pObj ) ) // visited, no marks there\n        return 0;\n    Aig_ObjSetTravIdPrevious( p, pObj );\n    if ( Aig_ObjIsCi(pObj) )\n        return 0;\n    RetValue = Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin0(pObj) ) |\n               Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin1(pObj) );\n//    printf( \"%d %d\\n\", Aig_ObjId(pObj), RetValue );\n    if ( RetValue )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    return RetValue;\n}",
+      "Draft": "func Aig_SuppMinHighlightCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var RetValue int32;\n    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited, marks there\n        return 1; }\n    if Aig_ObjIsTravIdPrevious( p, pObj ) { // visited, no marks there\n        return 0; }\n    Aig_ObjSetTravIdPrevious( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    RetValue = Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin0(pObj) ) |\n               Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin1(pObj) );\n//    printf( \"%d %d\\n\", Aig_ObjId(pObj), RetValue );\n    if RetValue != 0 {\n        Aig_ObjSetTravIdCurrent( p, pObj ); }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinHighlightCone",
+      "Start": 16700,
+      "End": 17250,
+      "BodyStart": 16786,
+      "Original": "int Aig_SuppMinHighlightCone( Aig_Man_t * p, Aig_Obj_t * pRoot, Vec_Ptr_t * vOrGate )\n{\n    Aig_Obj_t * pLeaf;\n    int i, RetValue;\n    assert( !Aig_IsComplement(pRoot) );\n    Aig_ManIncrementTravId( p );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pLeaf) );\n    RetValue = Aig_SuppMinHighlightCone_rec( p, pRoot );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdPrevious( p, Aig_Regular(pLeaf) );\n    return RetValue;\n}",
+      "Draft": "func Aig_SuppMinHighlightCone(p *Aig_Man_t, pRoot *Aig_Obj_t, vOrGate *Vec_Ptr_t) int32 {\n    var pLeaf *Aig_Obj_t;\n    var i, RetValue int32;\n    assert(!Aig_IsComplement(pRoot), \"!Aig_IsComplement(pRoot)\");\n    Aig_ManIncrementTravId( p );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pLeaf) );\n    RetValue = Aig_SuppMinHighlightCone_rec( p, pRoot );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdPrevious( p, Aig_Regular(pLeaf) );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Aig_SuppMinCollectSuper_rec",
+      "Start": 17510,
+      "End": 17980,
+      "BodyStart": 17583,
+      "Original": "void Aig_SuppMinCollectSuper_rec( Aig_Obj_t * pObj, Vec_Ptr_t * vSuper )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) ) // || (Aig_ObjRefs(pObj) \u003e 1) )\n    {\n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Aig_SuppMinCollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) { // || (Aig_ObjRefs(pObj) \u003e 1) )\n    \n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Aig_SuppMinCollectSuper",
+      "Start": 18239,
+      "End": 18574,
+      "BodyStart": 18295,
+      "Original": "Vec_Ptr_t * Aig_SuppMinCollectSuper( Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vSuper;\n    assert( !Aig_IsComplement(pObj) );\n    assert( !Aig_ObjIsCi(pObj) );\n    vSuper = Vec_PtrAlloc( 4 );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}",
+      "Draft": "func Aig_SuppMinCollectSuper(pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n    vSuper = Vec_PtrAlloc( 4 );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}"
+    },
+    {
+      "Name": "Aig_ManSupportMinimization",
+      "Start": 19089,
+      "End": 21635,
+      "BodyStart": 19198,
+      "Original": "Aig_Obj_t * Aig_ManSupportMinimization( Aig_Man_t * p, Aig_Obj_t * pCond, Aig_Obj_t * pFunc, int * pStatus )\n{\n    int nSuppMax = 16;\n    Vec_Ptr_t * vOrGate, * vNodes, * vSupp, * vCofs;\n    Aig_Obj_t * pResult;\n    int RetValue;\n    *pStatus = 0;\n    // if pCond is not OR\n    if ( !Aig_IsComplement(pCond) || Aig_ObjIsCi(Aig_Regular(pCond)) || Aig_ObjIsConst1(Aig_Regular(pCond)) )\n    {\n        *pStatus = -1;\n        return NULL;\n    }\n    // if pFunc is not a node\n    if ( !Aig_ObjIsNode(Aig_Regular(pFunc)) )\n    {\n        *pStatus = -2;\n        return NULL;\n    }\n    // collect the multi-input OR gate rooted in the condition\n    vOrGate = Aig_SuppMinCollectSuper( Aig_Regular(pCond) );\n    if ( Vec_PtrSize(vOrGate) \u003e nSuppMax )\n    {\n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return NULL;\n    }\n    // highlight the cone limited by these gates\n    RetValue = Aig_SuppMinHighlightCone( p, Aig_Regular(pFunc), vOrGate );\n    if ( RetValue == 0 ) // no overlap\n    {\n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return NULL;\n    }\n    // collect the cone rooted in pFunc limited by vOrGate\n    vNodes = Aig_SuppMinCollectCone( p, Aig_Regular(pFunc) );\n    // collect the support nodes reachable from the cone\n    vSupp = Aig_SuppMinCollectSupport( p, vNodes );\n    if ( Vec_PtrSize(vSupp) \u003e nSuppMax )\n    {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -2;\n        return NULL;\n    }\n    // check if all nodes belonging to OR gate are included in the support\n    // (if this is not the case, don't-care minimization is not possible)\n    if ( !Aig_SuppMinGateIsInSupport( p, vOrGate, vSupp ) )\n    {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return NULL;\n    }\n    // create truth tables of all nodes and find the maximal number\n    // of support varialbles that can be replaced by constants\n    vCofs = Aig_SuppMinPerform( p, vOrGate, vNodes, vSupp );\n    if ( Vec_PtrSize(vCofs) == 0 )\n    {\n        Vec_PtrFree( vCofs );\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return NULL;\n    }\n    // reconstruct the cone\n    pResult = Aig_SuppMinReconstruct( p, vCofs, vNodes, vSupp );\n    pResult = Aig_NotCond( pResult, Aig_IsComplement(pFunc) );\n    Vec_PtrFree( vCofs );\n    Vec_PtrFree( vOrGate );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSupp );\n    return pResult;\n}",
+      "Draft": "func Aig_ManSupportMinimization(p *Aig_Man_t, pCond *Aig_Obj_t, pFunc *Aig_Obj_t, pStatus *int32) *Aig_Obj_t {\n    var nSuppMax int32  = 16;\n    var vOrGate, vNodes, vSupp, vCofs *Vec_Ptr_t;\n    var pResult *Aig_Obj_t;\n    var RetValue int32;\n    *pStatus = 0;\n    // if pCond is not OR\n    if !Aig_IsComplement(pCond) || Aig_ObjIsCi(Aig_Regular(pCond)) || Aig_ObjIsConst1(Aig_Regular(pCond)) {\n        *pStatus = -1;\n        return nil;\n    }\n    // if pFunc is not a node\n    if !Aig_ObjIsNode(Aig_Regular(pFunc)) {\n        *pStatus = -2;\n        return nil;\n    }\n    // collect the multi-input OR gate rooted in the condition\n    vOrGate = Aig_SuppMinCollectSuper( Aig_Regular(pCond) );\n    if Vec_PtrSize(vOrGate) \u003e nSuppMax {\n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return nil;\n    }\n    // highlight the cone limited by these gates\n    RetValue = Aig_SuppMinHighlightCone( p, Aig_Regular(pFunc), vOrGate );\n    if RetValue == 0 { // no overlap\n    \n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return nil;\n    }\n    // collect the cone rooted in pFunc limited by vOrGate\n    vNodes = Aig_SuppMinCollectCone( p, Aig_Regular(pFunc) );\n    // collect the support nodes reachable from the cone\n    vSupp = Aig_SuppMinCollectSupport( p, vNodes );\n    if Vec_PtrSize(vSupp) \u003e nSuppMax {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -2;\n        return nil;\n    }\n    // check if all nodes belonging to OR gate are included in the support\n    // (if this is not the case, don't-care minimization is not possible)\n    if !(Aig_SuppMinGateIsInSupport( p, vOrGate, vSupp ) != 0) {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return nil;\n    }\n    // create truth tables of all nodes and find the maximal number\n    // of support varialbles that can be replaced by constants\n    vCofs = Aig_SuppMinPerform( p, vOrGate, vNodes, vSupp );\n    if Vec_PtrSize(vCofs) == 0 {\n        Vec_PtrFree( vCofs );\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return nil;\n    }\n    // reconstruct the cone\n    pResult = Aig_SuppMinReconstruct( p, vCofs, vNodes, vSupp );\n    pResult = Aig_NotCond( pResult, Aig_IsComplement(pFunc) );\n    Vec_PtrFree( vCofs );\n    Vec_PtrFree( vOrGate );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSupp );\n    return pResult;\n}"
+    },
+    {
+      "Name": "Aig_ManSupportMinimizationTest",
+      "Start": 21888,
+      "End": 22632,
+      "BodyStart": 21926,
+      "Original": "void Aig_ManSupportMinimizationTest()\n{\n    Aig_Man_t * p;\n    Aig_Obj_t * pFunc, * pCond, * pRes;\n    int i, Status;\n    p = Aig_ManStart( 100 );\n    for ( i = 0; i \u003c 5; i++ )\n        Aig_IthVar(p,i);\n    pFunc = Aig_Mux( p, Aig_IthVar(p,3), Aig_IthVar(p,1), Aig_IthVar(p,0) );\n    pFunc = Aig_Mux( p, Aig_IthVar(p,4), Aig_IthVar(p,2), pFunc );\n    pCond = Aig_Or( p, Aig_IthVar(p,3), Aig_IthVar(p,4) );\n    pRes  = Aig_ManSupportMinimization( p, pCond, pFunc, \u0026Status );\n    assert( Status == 0 );\n\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                printf( \"\\n\" );\n    Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); printf( \"\\n\" );\n    Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); printf( \"\\n\" );\n\n    Aig_ManStop( p );\n}",
+      "Draft": "func Aig_ManSupportMinimizationTest() {\n    var p *Aig_Man_t;\n    var pFunc, pCond, pRes *Aig_Obj_t;\n    var i, Status int32;\n    p = Aig_ManStart( 100 );\n    for  i = 0; i \u003c 5; i++  {\n        Aig_IthVar(p,i);\n    }\n    pFunc = Aig_Mux( p, Aig_IthVar(p,3), Aig_IthVar(p,1), Aig_IthVar(p,0) );\n    pFunc = Aig_Mux( p, Aig_IthVar(p,4), Aig_IthVar(p,2), pFunc );\n    pCond = Aig_Or( p, Aig_IthVar(p,3), Aig_IthVar(p,4) );\n    pRes  = Aig_ManSupportMinimization( p, pCond, pFunc, \u0026Status );\n    assert(Status == 0, \"Status == 0\");\n\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf(\"\\n\");\n    Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n    Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n\n    Aig_ManStop( p );\n}"
+    },
+    {
+      "Name": "Aig_ManSupportMinimizationTest2",
+      "Start": 22633,
+      "End": 23633,
+      "BodyStart": 22672,
+      "Original": "void Aig_ManSupportMinimizationTest2()\n{\n    Aig_Man_t * p;\n    Aig_Obj_t * node09, * node10, * node11, * node12, * node13, * pRes;\n    int i, Status;\n    p = Aig_ManStart( 100 );\n    for ( i = 0; i \u003c 3; i++ )\n        Aig_IthVar(p,i);\n\n    node09 = Aig_And( p, Aig_IthVar(p,0), Aig_Not(Aig_IthVar(p,1)) );\n    node10 = Aig_And( p, Aig_Not(node09), Aig_Not(Aig_IthVar(p,2)) );\n    node11 = Aig_And( p, node10, Aig_IthVar(p,1) );\n\n    node12 = Aig_Or( p, Aig_IthVar(p,1), Aig_IthVar(p,2) );\n    node13 = Aig_Or( p, node12, Aig_IthVar(p,0) );\n\n    pRes  = Aig_ManSupportMinimization( p, node13, node11, \u0026Status );\n    assert( Status == 0 );\n\n    printf( \"Compl = %d  \", Aig_IsComplement(pRes) );\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                printf( \"\\n\" );\n    if ( Aig_ObjIsNode(Aig_Regular(pRes)) )\n    {\n        Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); printf( \"\\n\" );\n        Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); printf( \"\\n\" );\n    }\n\n    Aig_ManStop( p );\n}",
+      "Draft": "func Aig_ManSupportMinimizationTest2() {\n    var p *Aig_Man_t;\n    var node09, node10, node11, node12, node13, pRes *Aig_Obj_t;\n    var i, Status int32;\n    p = Aig_ManStart( 100 );\n    for  i = 0; i \u003c 3; i++  {\n        Aig_IthVar(p,i);\n    }\n\n    node09 = Aig_And( p, Aig_IthVar(p,0), Aig_Not(Aig_IthVar(p,1)) );\n    node10 = Aig_And( p, Aig_Not(node09), Aig_Not(Aig_IthVar(p,2)) );\n    node11 = Aig_And( p, node10, Aig_IthVar(p,1) );\n\n    node12 = Aig_Or( p, Aig_IthVar(p,1), Aig_IthVar(p,2) );\n    node13 = Aig_Or( p, node12, Aig_IthVar(p,0) );\n\n    pRes  = Aig_ManSupportMinimization( p, node13, node11, \u0026Status );\n    assert(Status == 0, \"Status == 0\");\n\n    fmt.Printf(\"Compl = %d  \", Aig_IsComplement(pRes));\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf(\"\\n\");\n    if Aig_ObjIsNode(Aig_Regular(pRes)) {\n        Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n        Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n    }\n\n    Aig_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::4176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4176,
+      "End": 4189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::4289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4289,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::4451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4451,
+      "End": 4464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::9508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9508,
+      "End": 9520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::9565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9565,
+      "End": 9577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::9622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9622,
+      "End": 9634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::9868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9868,
+      "End": 9880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::10072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10072,
+      "End": 10084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::10260",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10260,
+      "End": 10272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::10333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10333,
+      "End": 10345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::10406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10406,
+      "End": 10418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::10479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10479,
+      "End": 10491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::pointer-cast::12259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12259,
+      "End": 12272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFindImplications_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFindImplications_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1205,
+      "End": 1543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFindImplications",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFindImplications",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2042,
+      "End": 2252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFindConeOverlap_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFindConeOverlap_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2547,
+      "End": 3015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFindConeOverlap",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFindConeOverlap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3310,
+      "End": 3745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManDeriveNewCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDeriveNewCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4040,
+      "End": 4548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManDeriveNewCone",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDeriveNewCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4843,
+      "End": 5355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFactorAlgebraic_int",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFactorAlgebraic_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5764,
+      "End": 6954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFactorAlgebraic",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFactorAlgebraic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7363,
+      "End": 7683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManFactorAlgebraicTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFactorAlgebraicTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7937,
+      "End": 8486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinPerform",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8776,
+      "End": 11225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinReconstruct",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinReconstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11502,
+      "End": 12286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinGateIsInSupport",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinGateIsInSupport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12569,
+      "End": 12981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinCollectSupport",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinCollectSupport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13254,
+      "End": 14009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinCollectCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinCollectCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14294,
+      "End": 14858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinCollectCone",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinCollectCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15153,
+      "End": 15493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinHighlightCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinHighlightCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15778,
+      "End": 16415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinHighlightCone",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinHighlightCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16700,
+      "End": 17250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinCollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinCollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17510,
+      "End": 17980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_SuppMinCollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Aig_SuppMinCollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18239,
+      "End": 18574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManSupportMinimization",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManSupportMinimization",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19089,
+      "End": 21635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManSupportMinimizationTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManSupportMinimizationTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21888,
+      "End": 22632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::Aig_ManSupportMinimizationTest2",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManSupportMinimizationTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22633,
+      "End": 23633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::3547",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3547,
+      "End": 3601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::5086",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5086,
+      "End": 5140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::9215",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9215,
+      "End": 9265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::9420",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9420,
+      "End": 9471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::9979",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9979,
+      "End": 10031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::10543",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10543,
+      "End": 10593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::11704",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11704,
+      "End": 11754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::11802",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11802,
+      "End": 11852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::11935",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11935,
+      "End": 11985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::12110",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12110,
+      "End": 12161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::12729",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12729,
+      "End": 12779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::12828",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12828,
+      "End": 12880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::13432",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13432,
+      "End": 13483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::16942",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16942,
+      "End": 16995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFact.c::macro-inline::17115",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17115,
+      "End": 17168
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigFactor.c]\n\n  SystemName  []\n\n  PackageName []\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation []\n\n  Date        [Ver. 1.0. Started - April 17, 2009.]\n\n  Revision    [$Id: aigFactor.c,v 1.00 2009/04/17 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Detects multi-input AND gate rooted at this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFindImplications_rec(pObj *Aig_Obj_t, vImplics *Vec_Ptr_t) {\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) {\n        Vec_PtrPushUnique( vImplics, pObj );\n        return;\n    }\n    Aig_ManFindImplications_rec( Aig_ObjChild0(pObj), vImplics );\n    Aig_ManFindImplications_rec( Aig_ObjChild1(pObj), vImplics );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the nodes whose values are implied by pNode.]\n\n  Description [Attention!  Both pNode and results can be complemented!\n  Also important: Currently, this procedure only does backward propagation. \n  In general, it may find more implications if forward propagation is enabled.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFindImplications(p *Aig_Man_t, pNode *Aig_Obj_t) *Vec_Ptr_t {\n    var vImplics *Vec_Ptr_t;\n    vImplics = Vec_PtrAlloc( 100 );\n    Aig_ManFindImplications_rec( pNode, vImplics );\n    return vImplics;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFindConeOverlap_rec(p *Aig_Man_t, pNode *Aig_Obj_t) int32 {\n    if Aig_ObjIsTravIdPrevious( p, pNode ) {\n        return 1; }\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin0(pNode) ) != 0 {\n        return 1; }\n    if Aig_ManFindConeOverlap_rec( p, Aig_ObjFanin1(pNode) ) != 0 {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFindConeOverlap(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) int32 {\n    var pTemp *Aig_Obj_t;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(!Aig_ObjIsConst1(pNode), \"!Aig_ObjIsConst1(pNode)\");\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n    Aig_ManIncrementTravId( p );\n    return Aig_ManFindConeOverlap_rec( p, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDeriveNewCone_rec(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return (Aig_Obj_t *)pNode.pData; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    if Aig_ObjIsCi(pNode) {\n        return (Aig_Obj_t *)(pNode.pData = pNode); }\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin0(pNode) );\n    Aig_ManDeriveNewCone_rec( p, Aig_ObjFanin1(pNode) );\n    return (Aig_Obj_t *)(pNode.pData = Aig_And( p, Aig_ObjChild0Copy(pNode), Aig_ObjChild1Copy(pNode) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cone of the node overlaps with the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDeriveNewCone(p *Aig_Man_t, vImplics *Vec_Ptr_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    var pTemp *Aig_Obj_t;\n    var i int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(!Aig_ObjIsConst1(pNode), \"!Aig_ObjIsConst1(pNode)\");\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vImplics, pTemp, i )\n    {\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pTemp) );\n        Aig_Regular(pTemp).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pTemp) );\n    }\n    return Aig_ManDeriveNewCone_rec( p, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns algebraic factoring of B in terms of A.]\n\n  Description [Returns internal node C (an AND gate) that is equal to B \n  under assignment A = 'Value', or NULL if there is no such node C. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFactorAlgebraic_int(p *Aig_Man_t, pPoA *Aig_Obj_t, pPoB *Aig_Obj_t, Value int32) *Aig_Obj_t {\n    var pNodeA, pNodeC *Aig_Obj_t;\n    var vImplics *Vec_Ptr_t;\n    var RetValue int32;\n    if Aig_ObjIsConst1(Aig_ObjFanin0(pPoA)) || Aig_ObjIsConst1(Aig_ObjFanin0(pPoB)) {\n        return nil; }\n    if Aig_ObjIsCi(Aig_ObjFanin0(pPoB)) {\n        return nil; }\n    // get the internal node representing function of A under assignment A = 'Value'\n    pNodeA = Aig_ObjChild0( pPoA );\n    pNodeA = Aig_NotCond( pNodeA, Value==0 );\n    // find implications of this signal (nodes whose value is fixed under assignment A = 'Value')\n    vImplics = Aig_ManFindImplications( p, pNodeA );\n    // check if the TFI cone of B overlaps with the implied nodes\n    RetValue = Aig_ManFindConeOverlap( p, vImplics, Aig_ObjFanin0(pPoB) );\n    if RetValue == 0 { // no overlap\n    \n        Vec_PtrFree( vImplics );\n        return nil;\n    }\n    // there is overlap - derive node representing value of B under assignment A = 'Value'\n    pNodeC = Aig_ManDeriveNewCone( p, vImplics, Aig_ObjFanin0(pPoB) );\n    pNodeC = Aig_NotCond( pNodeC, Aig_ObjFaninC0(pPoB) );\n    Vec_PtrFree( vImplics );\n    return pNodeC;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns algebraic factoring of B in terms of A.]\n\n  Description [Returns internal node C (an AND gate) that is equal to B \n  under assignment A = 'Value', or NULL if there is no such node C. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFactorAlgebraic(p *Aig_Man_t, iPoA int32, iPoB int32, Value int32) *Aig_Obj_t {\n    assert(iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p), \"iPoA \u003e= 0 \u0026\u0026 iPoA \u003c Aig_ManCoNum(p)\");\n    assert(iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p), \"iPoB \u003e= 0 \u0026\u0026 iPoB \u003c Aig_ManCoNum(p)\");\n    assert(Value == 0 || Value == 1, \"Value == 0 || Value == 1\");\n    return Aig_ManFactorAlgebraic_int( p, Aig_ManCo(p, iPoA), Aig_ManCo(p, iPoB), Value ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFactorAlgebraicTest(p *Aig_Man_t) {\n    var iPoA int32;\n    var iPoB int32   = 1;\n    var Value int32;\n    var pRes *Aig_Obj_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    pRes = Aig_ManFactorAlgebraic( p, iPoA, iPoB, Value );\n    Aig_ManShow( p, 0, nil );\n    Aig_ObjPrint( p, pRes );\n    fmt.Printf(\"\\n\");\n/*\n    printf( \"Results:\\n\" );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        printf( \"Object = %d.\\n\", i );\n        Aig_ObjPrint( p, pObj );\n        printf( \"\\n\" );\n        Aig_ObjPrint( p, pObj-\u003epData );\n        printf( \"\\n\" );\n    }\n*/\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Determines what support variables can be cofactored.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinPerform(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Vec_Ptr_t {\n    var pObj *Aig_Obj_t;\n    var vTrSupp, vTrNode, vCofs *Vec_Ptr_t;\n    var uFunc *uint32 = nil;\n    var uCare *uint32;\n    var uFunc0 *uint32;\n    var uFunc1 *uint32;\n    var uCof0, uCof1, uCare0, uCare1 *uint32;\n    var i int32;\n    var nWords int32 = Abc_TruthWordNum( Vec_PtrSize(vSupp) );\n    // assign support nodes\n    vTrSupp = Vec_PtrAllocTruthTables( Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj.pData = Vec_PtrEntry( vTrSupp, i );\n    // compute internal nodes\n    vTrNode = Vec_PtrAllocSimInfo( Vec_PtrSize(vNodes) + 5, nWords );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        pObj.pData = uFunc = (unsigned *)Vec_PtrEntry( vTrNode, i );\n        uFunc0 = (unsigned *)Aig_ObjFanin0(pObj).pData;\n        uFunc1 = (unsigned *)Aig_ObjFanin1(pObj).pData;\n        Kit_TruthAndPhase( uFunc, uFunc0, uFunc1, Vec_PtrSize(vSupp), Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n    }\n    // uFunc contains the result of computation\n    // compute care set\n    uCare = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes) );\n    Kit_TruthClear( uCare, Vec_PtrSize(vSupp) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        Kit_TruthOrPhase( uCare, uCare, (unsigned *)Aig_Regular(pObj).pData, Vec_PtrSize(vSupp), 0, Aig_IsComplement(pObj) );\n    // try cofactoring each variable in both polarities\n    vCofs = Vec_PtrAlloc( 10 );\n    uCof0  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+1 );\n    uCof1  = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+2 );\n    uCare0 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+3 );\n    uCare1 = (unsigned *)Vec_PtrEntry( vTrNode, Vec_PtrSize(vNodes)+4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n    {\n        Kit_TruthCofactor0New( uCof0, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCof1, uFunc, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor0New( uCare0, uCare, Vec_PtrSize(vSupp), i );\n        Kit_TruthCofactor1New( uCare1, uCare, Vec_PtrSize(vSupp), i );\n        if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare1, Vec_PtrSize(vSupp) ) {\n            Vec_PtrPush( vCofs, Aig_Not(pObj) );\n        } else if Kit_TruthIsEqualWithCare( uCof0, uCof1, uCare0, Vec_PtrSize(vSupp) ) {\n            Vec_PtrPush( vCofs, pObj ); }\n    }\n    Vec_PtrFree( vTrNode );\n    Vec_PtrFree( vTrSupp );\n    return vCofs;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the new node after cofactoring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinReconstruct(p *Aig_Man_t, vCofs *Vec_Ptr_t, vNodes *Vec_Ptr_t, vSupp *Vec_Ptr_t) *Aig_Obj_t {\n    var pObj *Aig_Obj_t  = nil;\n    var i int32;\n    // set the value of the support variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        pObj.pData = pObj;\n    // set the value of the cofactoring variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCofs, pObj, i )\n        Aig_Regular(pObj).pData = Aig_NotCond( Aig_ManConst1(p), Aig_IsComplement(pObj) );\n    // reconstruct the node\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    return (Aig_Obj_t *)pObj.pData;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if all nodes of vOrGate are in vSupp.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinGateIsInSupport(p *Aig_Man_t, vOrGate *Vec_Ptr_t, vSupp *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSupp, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent( p, Aig_Regular(pObj) ) )\n            return 0;\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects fanins of the marked nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinCollectSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupp *Vec_Ptr_t;\n    var pObj, pFanin *Aig_Obj_t;\n    var i int32;\n    vSupp = Vec_PtrAlloc( 4 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert(Aig_ObjIsTravIdCurrent(p, pObj), \"Aig_ObjIsTravIdCurrent(p, pObj)\");\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        pFanin = Aig_ObjFanin0( pObj );\n        if !Aig_ObjIsTravIdCurrent(p, pFanin) {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n        pFanin = Aig_ObjFanin1( pObj );\n        if !Aig_ObjIsTravIdCurrent(p, pFanin) {\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n            Vec_PtrPush( vSupp, pFanin );\n        }\n    }\n    return vSupp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the nodes in the cone with current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinCollectCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited\n        return; }\n    if !Aig_ObjIsTravIdPrevious( p, pObj ) { // not visited, but outside\n        return; }\n    assert(Aig_ObjIsTravIdPrevious(p, pObj), \"Aig_ObjIsTravIdPrevious(p, pObj)\"); // not visited, inside\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin0(pObj), vNodes );\n    Aig_SuppMinCollectCone_rec( p, Aig_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects nodes with the current trav ID rooted in the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinCollectCone(p *Aig_Man_t, pRoot *Aig_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pRoot), \"!Aig_IsComplement(pRoot)\"); \n//    assert( Aig_ObjIsTravIdCurrent( p, pRoot ) );\n    vNodes = Vec_PtrAlloc( 4 );\n    Aig_ManIncrementTravId( p );\n    Aig_SuppMinCollectCone_rec( p, Aig_Regular(pRoot), vNodes );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the nodes in the cone with current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinHighlightCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var RetValue int32;\n    if Aig_ObjIsTravIdCurrent( p, pObj ) { // visited, marks there\n        return 1; }\n    if Aig_ObjIsTravIdPrevious( p, pObj ) { // visited, no marks there\n        return 0; }\n    Aig_ObjSetTravIdPrevious( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    RetValue = Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin0(pObj) ) |\n               Aig_SuppMinHighlightCone_rec( p, Aig_ObjFanin1(pObj) );\n//    printf( \"%d %d\\n\", Aig_ObjId(pObj), RetValue );\n    if RetValue != 0 {\n        Aig_ObjSetTravIdCurrent( p, pObj ); }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the nodes in the cone with current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinHighlightCone(p *Aig_Man_t, pRoot *Aig_Obj_t, vOrGate *Vec_Ptr_t) int32 {\n    var pLeaf *Aig_Obj_t;\n    var i, RetValue int32;\n    assert(!Aig_IsComplement(pRoot), \"!Aig_IsComplement(pRoot)\");\n    Aig_ManIncrementTravId( p );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdCurrent( p, Aig_Regular(pLeaf) );\n    RetValue = Aig_SuppMinHighlightCone_rec( p, pRoot );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vOrGate, pLeaf, i )\n        Aig_ObjSetTravIdPrevious( p, Aig_Regular(pLeaf) );\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinCollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) { // || (Aig_ObjRefs(pObj) \u003e 1) )\n    \n        Vec_PtrPushUnique( vSuper, Aig_Not(pObj) );\n        return;\n    }\n    // go through the branches\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_SuppMinCollectSuper(pObj *Aig_Obj_t) *Vec_Ptr_t {\n    var vSuper *Vec_Ptr_t;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n    vSuper = Vec_PtrAlloc( 4 );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild0(pObj), vSuper );\n    Aig_SuppMinCollectSuper_rec( Aig_ObjChild1(pObj), vSuper );\n    return vSuper;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the result of support minimization.]\n\n  Description [Returns internal AIG node that is equal to pFunc under \n  assignment pCond == 1, or NULL if there is no such node. status is \n  -1 if condition is not OR; \n  -2 if cone is too large or no cone; \n  -3 if no support reduction is possible.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManSupportMinimization(p *Aig_Man_t, pCond *Aig_Obj_t, pFunc *Aig_Obj_t, pStatus *int32) *Aig_Obj_t {\n    var nSuppMax int32  = 16;\n    var vOrGate, vNodes, vSupp, vCofs *Vec_Ptr_t;\n    var pResult *Aig_Obj_t;\n    var RetValue int32;\n    *pStatus = 0;\n    // if pCond is not OR\n    if !Aig_IsComplement(pCond) || Aig_ObjIsCi(Aig_Regular(pCond)) || Aig_ObjIsConst1(Aig_Regular(pCond)) {\n        *pStatus = -1;\n        return nil;\n    }\n    // if pFunc is not a node\n    if !Aig_ObjIsNode(Aig_Regular(pFunc)) {\n        *pStatus = -2;\n        return nil;\n    }\n    // collect the multi-input OR gate rooted in the condition\n    vOrGate = Aig_SuppMinCollectSuper( Aig_Regular(pCond) );\n    if Vec_PtrSize(vOrGate) \u003e nSuppMax {\n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return nil;\n    }\n    // highlight the cone limited by these gates\n    RetValue = Aig_SuppMinHighlightCone( p, Aig_Regular(pFunc), vOrGate );\n    if RetValue == 0 { // no overlap\n    \n        Vec_PtrFree( vOrGate );\n        *pStatus = -2;\n        return nil;\n    }\n    // collect the cone rooted in pFunc limited by vOrGate\n    vNodes = Aig_SuppMinCollectCone( p, Aig_Regular(pFunc) );\n    // collect the support nodes reachable from the cone\n    vSupp = Aig_SuppMinCollectSupport( p, vNodes );\n    if Vec_PtrSize(vSupp) \u003e nSuppMax {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -2;\n        return nil;\n    }\n    // check if all nodes belonging to OR gate are included in the support\n    // (if this is not the case, don't-care minimization is not possible)\n    if !(Aig_SuppMinGateIsInSupport( p, vOrGate, vSupp ) != 0) {\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return nil;\n    }\n    // create truth tables of all nodes and find the maximal number\n    // of support varialbles that can be replaced by constants\n    vCofs = Aig_SuppMinPerform( p, vOrGate, vNodes, vSupp );\n    if Vec_PtrSize(vCofs) == 0 {\n        Vec_PtrFree( vCofs );\n        Vec_PtrFree( vOrGate );\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n        *pStatus = -3;\n        return nil;\n    }\n    // reconstruct the cone\n    pResult = Aig_SuppMinReconstruct( p, vCofs, vNodes, vSupp );\n    pResult = Aig_NotCond( pResult, Aig_IsComplement(pFunc) );\n    Vec_PtrFree( vCofs );\n    Vec_PtrFree( vOrGate );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSupp );\n    return pResult;\n}\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManSupportMinimizationTest() {\n    var p *Aig_Man_t;\n    var pFunc, pCond, pRes *Aig_Obj_t;\n    var i, Status int32;\n    p = Aig_ManStart( 100 );\n    for  i = 0; i \u003c 5; i++  {\n        Aig_IthVar(p,i);\n    }\n    pFunc = Aig_Mux( p, Aig_IthVar(p,3), Aig_IthVar(p,1), Aig_IthVar(p,0) );\n    pFunc = Aig_Mux( p, Aig_IthVar(p,4), Aig_IthVar(p,2), pFunc );\n    pCond = Aig_Or( p, Aig_IthVar(p,3), Aig_IthVar(p,4) );\n    pRes  = Aig_ManSupportMinimization( p, pCond, pFunc, \u0026Status );\n    assert(Status == 0, \"Status == 0\");\n\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf(\"\\n\");\n    Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n    Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n\n    Aig_ManStop( p );\n}\nfunc Aig_ManSupportMinimizationTest2() {\n    var p *Aig_Man_t;\n    var node09, node10, node11, node12, node13, pRes *Aig_Obj_t;\n    var i, Status int32;\n    p = Aig_ManStart( 100 );\n    for  i = 0; i \u003c 3; i++  {\n        Aig_IthVar(p,i);\n    }\n\n    node09 = Aig_And( p, Aig_IthVar(p,0), Aig_Not(Aig_IthVar(p,1)) );\n    node10 = Aig_And( p, Aig_Not(node09), Aig_Not(Aig_IthVar(p,2)) );\n    node11 = Aig_And( p, node10, Aig_IthVar(p,1) );\n\n    node12 = Aig_Or( p, Aig_IthVar(p,1), Aig_IthVar(p,2) );\n    node13 = Aig_Or( p, node12, Aig_IthVar(p,0) );\n\n    pRes  = Aig_ManSupportMinimization( p, node13, node11, \u0026Status );\n    assert(Status == 0, \"Status == 0\");\n\n    fmt.Printf(\"Compl = %d  \", Aig_IsComplement(pRes));\n    Aig_ObjPrint( p, Aig_Regular(pRes) );                fmt.Printf(\"\\n\");\n    if Aig_ObjIsNode(Aig_Regular(pRes)) {\n        Aig_ObjPrint( p, Aig_ObjFanin0(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n        Aig_ObjPrint( p, Aig_ObjFanin1(Aig_Regular(pRes)) ); fmt.Printf(\"\\n\");\n    }\n\n    Aig_ManStop( p );\n}\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

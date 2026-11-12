@@ -1,0 +1,1729 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c",
+  "SHA256": "d455bb29c7c1191dee7cd4241cbd0eee1323728411278b4d5f957da4edabf6cc",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 16,
+        "ByteOffset": 5295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSupport = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 9,
+        "ByteOffset": 5576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot derive linear space, because DD manager does not have enough variables.\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 5678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 177,
+        "Column": 17,
+        "ByteOffset": 5686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 5704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pSupport );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 20,
+        "ByteOffset": 5809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPermute     = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 20,
+        "ByteOffset": 5855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPermuteBack = ABC_ALLOC( int, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 20,
+        "ByteOffset": 5901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCompose     = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pPermute );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 8304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pPermuteBack );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 8334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCompose );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pSupport );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 19,
+        "ByteOffset": 14815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pVarsNonCan = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 13,
+        "ByteOffset": 14966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pzRes = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 15002
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pzRes, 0, sizeof(DdNode *) * dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 532,
+        "Column": 17,
+        "ByteOffset": 15684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iVarNonCan == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 536,
+        "Column": 9,
+        "ByteOffset": 15788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVarNonCan != -1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 545,
+        "Column": 5,
+        "ByteOffset": 16045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pVarsNonCan );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_bddSpaceFromFunctionFast",
+      "Start": 4919,
+      "End": 8354,
+      "BodyStart": 4993,
+      "Original": "DdNode * Extra_bddSpaceFromFunctionFast( DdManager * dd, DdNode * bFunc )\n{\n    int * pSupport;\n    int * pPermute;\n    int * pPermuteBack;\n    DdNode ** pCompose;\n    DdNode * bCube, * bTemp;\n    DdNode * bSpace, * bFunc1, * bFunc2, * bSpaceShift;\n    int nSupp, Counter;\n    int i, lev;\n\n    // get the support\n    pSupport = ABC_ALLOC( int, ddMax(dd-\u003esize,dd-\u003esizeZ) );\n    Extra_SupportArray( dd, bFunc, pSupport );\n    nSupp = 0;\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        if ( pSupport[i] )\n            nSupp++;\n\n    // make sure the manager has enough variables\n    if ( 2*nSupp \u003e dd-\u003esize )\n    {\n        printf( \"Cannot derive linear space, because DD manager does not have enough variables.\\n\" );\n        fflush( stdout );\n        ABC_FREE( pSupport );\n        return NULL;\n    }\n\n    // create the permutation arrays\n    pPermute     = ABC_ALLOC( int, dd-\u003esize );\n    pPermuteBack = ABC_ALLOC( int, dd-\u003esize );\n    pCompose     = ABC_ALLOC( DdNode *, dd-\u003esize );\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n    {\n        pPermute[i]     = i;\n        pPermuteBack[i] = i;\n        pCompose[i]     = dd-\u003evars[i];   Cudd_Ref( pCompose[i] );\n    }\n\n    // remap the function in such a way that the variables are interleaved\n    Counter = 0;\n    bCube = b1;  Cudd_Ref( bCube );\n    for ( lev = 0; lev \u003c dd-\u003esize; lev++ )\n        if ( pSupport[ dd-\u003einvperm[lev] ] )\n        {   // var \"dd-\u003einvperm[lev]\" on level \"lev\" should go to level 2*Counter;\n            pPermute[ dd-\u003einvperm[lev] ] = dd-\u003einvperm[2*Counter];\n            // var from level 2*Counter+1 should go back to the place of this var\n            pPermuteBack[ dd-\u003einvperm[2*Counter+1] ] = dd-\u003einvperm[lev];\n            // the permutation should be defined in such a way that variable\n            // on level 2*Counter is replaced by an EXOR of itself and var on the next level\n            Cudd_Deref( pCompose[ dd-\u003einvperm[2*Counter] ] );\n            pCompose[ dd-\u003einvperm[2*Counter] ] = \n                Cudd_bddXor( dd, dd-\u003evars[ dd-\u003einvperm[2*Counter] ], dd-\u003evars[ dd-\u003einvperm[2*Counter+1] ] );  \n            Cudd_Ref( pCompose[ dd-\u003einvperm[2*Counter] ] );\n            // add this variable to the cube\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, dd-\u003evars[ dd-\u003einvperm[2*Counter] ] );  Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // increment the counter\n            Counter ++;\n        }\n\n    // permute the functions\n    bFunc1 = Cudd_bddPermute( dd, bFunc, pPermute );         Cudd_Ref( bFunc1 );\n    // compose to gate the function depending on both vars\n    bFunc2 = Cudd_bddVectorCompose( dd, bFunc1, pCompose );  Cudd_Ref( bFunc2 );\n    // gate the vector space\n    // L(a) = ForAll x [ F(x) = F(x+a) ] = Not( Exist x [ F(x) (+) F(x+a) ] )\n    bSpaceShift = Cudd_bddXorExistAbstract( dd, bFunc1, bFunc2, bCube );  Cudd_Ref( bSpaceShift );\n    bSpaceShift = Cudd_Not( bSpaceShift );\n    // permute the space back into the original mapping\n    bSpace = Cudd_bddPermute( dd, bSpaceShift, pPermuteBack ); Cudd_Ref( bSpace );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    Cudd_RecursiveDeref( dd, bFunc2 );\n    Cudd_RecursiveDeref( dd, bSpaceShift );\n    Cudd_RecursiveDeref( dd, bCube );\n\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        Cudd_RecursiveDeref( dd, pCompose[i] );\n    ABC_FREE( pPermute );\n    ABC_FREE( pPermuteBack );\n    ABC_FREE( pCompose );\n    ABC_FREE( pSupport );\n\n    Cudd_Deref( bSpace );\n    return bSpace;\n}",
+      "Draft": "func Extra_bddSpaceFromFunctionFast(dd *DdManager, bFunc *DdNode) *DdNode {\n    var pSupport *int32;\n    var pPermute *int32;\n    var pPermuteBack *int32;\n    var pCompose **DdNode;\n    var bCube, bTemp *DdNode;\n    var bSpace, bFunc1, bFunc2, bSpaceShift *DdNode;\n    var nSupp, Counter int32;\n    var i, lev int32;\n\n    // get the support\n    pSupport = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );\n    Extra_SupportArray( dd, bFunc, pSupport );\n    nSupp = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        if pSupport[i] {\n            nSupp++; }\n    }\n\n    // make sure the manager has enough variables\n    if 2*nSupp \u003e dd.size {\n        fmt.Printf(\"Cannot derive linear space, because DD manager does not have enough variables.\\n\");\n        fflush( os.Stdout );\n        ABC_FREE( pSupport );\n        return nil;\n    }\n\n    // create the permutation arrays\n    pPermute     = ABC_ALLOC( int, dd.size );\n    pPermuteBack = ABC_ALLOC( int, dd.size );\n    pCompose     = ABC_ALLOC( DdNode *, dd.size );\n    for  i = 0; i \u003c dd.size; i++  {\n        pPermute[i]     = i;\n        pPermuteBack[i] = i;\n        pCompose[i]     = dd.vars[i];   Cudd_Ref( pCompose[i] );\n    }\n\n    // remap the function in such a way that the variables are interleaved\n    Counter = 0;\n    bCube = b1;  Cudd_Ref( bCube );\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        if pSupport[ dd.invperm[lev] ] {   // var \"dd-\u003einvperm[lev]\" on level \"lev\" should go to level 2*Counter;\n            pPermute[ dd.invperm[lev] ] = dd.invperm[2*Counter];\n            // var from level 2*Counter+1 should go back to the place of this var\n            pPermuteBack[ dd.invperm[2*Counter+1] ] = dd.invperm[lev];\n            // the permutation should be defined in such a way that variable\n            // on level 2*Counter is replaced by an EXOR of itself and var on the next level\n            Cudd_Deref( pCompose[ dd.invperm[2*Counter] ] );\n            pCompose[ dd.invperm[2*Counter] ] = \n                Cudd_bddXor( dd, dd.vars[ dd.invperm[2*Counter] ], dd.vars[ dd.invperm[2*Counter+1] ] );  \n            Cudd_Ref( pCompose[ dd.invperm[2*Counter] ] );\n            // add this variable to the cube\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[ dd.invperm[2*Counter] ] );  Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // increment the counter\n            Counter ++;\n        }\n    }\n\n    // permute the functions\n    bFunc1 = Cudd_bddPermute( dd, bFunc, pPermute );         Cudd_Ref( bFunc1 );\n    // compose to gate the function depending on both vars\n    bFunc2 = Cudd_bddVectorCompose( dd, bFunc1, pCompose );  Cudd_Ref( bFunc2 );\n    // gate the vector space\n    // L(a) = ForAll x [ F(x) = F(x+a) ] = Not( Exist x [ F(x) (+) F(x+a) ] )\n    bSpaceShift = Cudd_bddXorExistAbstract( dd, bFunc1, bFunc2, bCube );  Cudd_Ref( bSpaceShift );\n    // inlining of macro Cudd_Not\n    bSpaceShift = ((DdNode *)((ptrint)(bSpaceShift) ^ 01));\n    // permute the space back into the original mapping\n    bSpace = Cudd_bddPermute( dd, bSpaceShift, pPermuteBack ); Cudd_Ref( bSpace );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    Cudd_RecursiveDeref( dd, bFunc2 );\n    Cudd_RecursiveDeref( dd, bSpaceShift );\n    Cudd_RecursiveDeref( dd, bCube );\n\n    for  i = 0; i \u003c dd.size; i++  {\n        Cudd_RecursiveDeref( dd, pCompose[i] );\n    }\n    ABC_FREE( pPermute );\n    ABC_FREE( pPermuteBack );\n    ABC_FREE( pCompose );\n    ABC_FREE( pSupport );\n\n    Cudd_Deref( bSpace );\n    return bSpace;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceFromFunction",
+      "Start": 8577,
+      "End": 8822,
+      "BodyStart": 8657,
+      "Original": "DdNode * Extra_bddSpaceFromFunction( DdManager * dd, DdNode * bF, DdNode * bG )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceFromFunction( dd, bF, bG );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunction( dd, bF, bG );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceFromFunctionPos",
+      "Start": 9043,
+      "End": 9283,
+      "BodyStart": 9116,
+      "Original": "DdNode * Extra_bddSpaceFromFunctionPos( DdManager * dd, DdNode * bFunc )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceFromFunctionPos( dd, bFunc );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceFromFunctionPos(dd *DdManager, bFunc *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunctionPos( dd, bFunc );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceFromFunctionNeg",
+      "Start": 9504,
+      "End": 9744,
+      "BodyStart": 9577,
+      "Original": "DdNode * Extra_bddSpaceFromFunctionNeg( DdManager * dd, DdNode * bFunc )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceFromFunctionNeg( dd, bFunc );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceFromFunctionNeg(dd *DdManager, bFunc *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunctionNeg( dd, bFunc );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceCanonVars",
+      "Start": 9965,
+      "End": 10195,
+      "BodyStart": 10033,
+      "Original": "DdNode * Extra_bddSpaceCanonVars( DdManager * dd, DdNode * bSpace )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceCanonVars( dd, bSpace );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceCanonVars(dd *DdManager, bSpace *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceCanonVars( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceReduce",
+      "Start": 10416,
+      "End": 10808,
+      "BodyStart": 10501,
+      "Original": "DdNode * Extra_bddSpaceReduce( DdManager * dd, DdNode * bFunc, DdNode * bCanonVars )\n{\n    DdNode * bNegCube;\n    DdNode * bResult;\n    bNegCube = Extra_bddSupportNegativeCube( dd, bCanonVars );  Cudd_Ref( bNegCube );\n    bResult  = Cudd_Cofactor( dd, bFunc, bNegCube );            Cudd_Ref( bResult );\n    Cudd_RecursiveDeref( dd, bNegCube );\n    Cudd_Deref( bResult );\n    return bResult;\n}",
+      "Draft": "func Extra_bddSpaceReduce(dd *DdManager, bFunc *DdNode, bCanonVars *DdNode) *DdNode {\n    var bNegCube *DdNode;\n    var bResult *DdNode;\n    bNegCube = Extra_bddSupportNegativeCube( dd, bCanonVars );  Cudd_Ref( bNegCube );\n    bResult  = Cudd_Cofactor( dd, bFunc, bNegCube );            Cudd_Ref( bResult );\n    Cudd_RecursiveDeref( dd, bNegCube );\n    Cudd_Deref( bResult );\n    return bResult;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceEquations",
+      "Start": 11031,
+      "End": 11523,
+      "BodyStart": 11099,
+      "Original": "DdNode * Extra_bddSpaceEquations( DdManager * dd, DdNode * bSpace )\n{\n    DdNode * zRes;\n    DdNode * zEquPos;\n    DdNode * zEquNeg;\n    zEquPos = Extra_bddSpaceEquationsPos( dd, bSpace );  Cudd_Ref( zEquPos );\n    zEquNeg = Extra_bddSpaceEquationsNeg( dd, bSpace );  Cudd_Ref( zEquNeg );\n    zRes    = Cudd_zddUnion( dd, zEquPos, zEquNeg );     Cudd_Ref( zRes );\n    Cudd_RecursiveDerefZdd( dd, zEquPos );\n    Cudd_RecursiveDerefZdd( dd, zEquNeg );\n    Cudd_Deref( zRes );\n    return zRes;\n}",
+      "Draft": "func Extra_bddSpaceEquations(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    var zEquPos *DdNode;\n    var zEquNeg *DdNode;\n    zEquPos = Extra_bddSpaceEquationsPos( dd, bSpace );  Cudd_Ref( zEquPos );\n    zEquNeg = Extra_bddSpaceEquationsNeg( dd, bSpace );  Cudd_Ref( zEquNeg );\n    zRes    = Cudd_zddUnion( dd, zEquPos, zEquNeg );     Cudd_Ref( zRes );\n    Cudd_RecursiveDerefZdd( dd, zEquPos );\n    Cudd_RecursiveDerefZdd( dd, zEquNeg );\n    Cudd_Deref( zRes );\n    return zRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceEquationsPos",
+      "Start": 11745,
+      "End": 11981,
+      "BodyStart": 11816,
+      "Original": "DdNode * Extra_bddSpaceEquationsPos( DdManager * dd, DdNode * bSpace )\n{\n    DdNode * zRes;\n    do {\n        dd-\u003ereordered = 0;\n        zRes = extraBddSpaceEquationsPos( dd, bSpace );\n    } while (dd-\u003ereordered == 1);\n    return zRes;\n}",
+      "Draft": "func Extra_bddSpaceEquationsPos(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    for {\n        dd.reordered = 0;\n        zRes = extraBddSpaceEquationsPos( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return zRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceEquationsNeg",
+      "Start": 12203,
+      "End": 12439,
+      "BodyStart": 12274,
+      "Original": "DdNode * Extra_bddSpaceEquationsNeg( DdManager * dd, DdNode * bSpace )\n{\n    DdNode * zRes;\n    do {\n        dd-\u003ereordered = 0;\n        zRes = extraBddSpaceEquationsNeg( dd, bSpace );\n    } while (dd-\u003ereordered == 1);\n    return zRes;\n}",
+      "Draft": "func Extra_bddSpaceEquationsNeg(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    for {\n        dd.reordered = 0;\n        zRes = extraBddSpaceEquationsNeg( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return zRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceFromMatrixPos",
+      "Start": 12661,
+      "End": 12891,
+      "BodyStart": 12729,
+      "Original": "DdNode * Extra_bddSpaceFromMatrixPos( DdManager * dd, DdNode * zA )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceFromMatrixPos( dd, zA );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromMatrixPos( dd, zA );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceFromMatrixNeg",
+      "Start": 13112,
+      "End": 13342,
+      "BodyStart": 13180,
+      "Original": "DdNode * Extra_bddSpaceFromMatrixNeg( DdManager * dd, DdNode * zA )\n{\n    DdNode * bRes;\n    do {\n        dd-\u003ereordered = 0;\n        bRes = extraBddSpaceFromMatrixNeg( dd, zA );\n    } while (dd-\u003ereordered == 1);\n    return bRes;\n}",
+      "Draft": "func Extra_bddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromMatrixNeg( dd, zA );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}"
+    },
+    {
+      "Name": "Extra_zddLitCountComb",
+      "Start": 13612,
+      "End": 13837,
+      "BodyStart": 13672,
+      "Original": "int Extra_zddLitCountComb( DdManager * dd, DdNode * zComb )\n{\n    int Counter;\n    if ( zComb == z0 )\n        return 0;\n    Counter = 0;\n    for ( ; zComb != z1; zComb = cuddT(zComb) )\n        Counter++;\n    return Counter;\n}",
+      "Draft": "func Extra_zddLitCountComb(dd *DdManager, zComb *DdNode) int32 {\n    var Counter int32;\n    if zComb == z0 {\n        return 0; }\n    Counter = 0;\n    // inlining of macro cuddT\n    for  ; zComb != z1; zComb = ((zComb).type.kids.T)  {\n        Counter++;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Extra_bddSpaceExorGates",
+      "Start": 14283,
+      "End": 15817,
+      "BodyStart": 14375,
+      "Original": "DdNode ** Extra_bddSpaceExorGates( DdManager * dd, DdNode * bFuncRed, DdNode * zEquations )\n{\n    DdNode ** pzRes;\n    int * pVarsNonCan;\n    DdNode * zEquRem;\n    int iVarNonCan;\n    DdNode * zExor, * zTemp;\n\n    // get the set of non-canonical variables\n    pVarsNonCan = ABC_ALLOC( int, ddMax(dd-\u003esize,dd-\u003esizeZ) );\n    Extra_SupportArray( dd, bFuncRed, pVarsNonCan );\n\n    // allocate storage for the EXOR sets\n    pzRes = ABC_ALLOC( DdNode *, dd-\u003esize );\n    memset( pzRes, 0, sizeof(DdNode *) * dd-\u003esize );\n\n    // go through all the equations\n    zEquRem = zEquations;  Cudd_Ref( zEquRem );\n    while ( zEquRem != z0 )\n    {\n        // extract one product\n        zExor = Extra_zddSelectOneSubset( dd, zEquRem );   Cudd_Ref( zExor );\n        // remove it from the set\n        zEquRem = Cudd_zddDiff( dd, zTemp = zEquRem, zExor );  Cudd_Ref( zEquRem );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n\n        // locate the non-canonical variable\n        iVarNonCan = -1;\n        for ( zTemp = zExor; zTemp != z1; zTemp = cuddT(zTemp) )\n        {\n            if ( pVarsNonCan[zTemp-\u003eindex/2] == 1 )\n            {\n                assert( iVarNonCan == -1 );\n                iVarNonCan = zTemp-\u003eindex/2;\n            }\n        }\n        assert( iVarNonCan != -1 );\n\n        if ( Extra_zddLitCountComb( dd, zExor ) \u003e 1 )\n            pzRes[ iVarNonCan ] = zExor; // takes ref\n        else\n            Cudd_RecursiveDerefZdd( dd, zExor );\n    }\n    Cudd_RecursiveDerefZdd( dd, zEquRem );\n\n    ABC_FREE( pVarsNonCan );\n    return pzRes;\n}",
+      "Draft": "func Extra_bddSpaceExorGates(dd *DdManager, bFuncRed *DdNode, zEquations *DdNode) **DdNode {\n    var pzRes **DdNode;\n    var pVarsNonCan *int32;\n    var zEquRem *DdNode;\n    var iVarNonCan int32;\n    var zExor, zTemp *DdNode;\n\n    // get the set of non-canonical variables\n    pVarsNonCan = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );\n    Extra_SupportArray( dd, bFuncRed, pVarsNonCan );\n\n    // allocate storage for the EXOR sets\n    pzRes = ABC_ALLOC( DdNode *, dd.size );\n    memset( pzRes, 0, sizeof(DdNode *) * dd.size );\n\n    // go through all the equations\n    zEquRem = zEquations;  Cudd_Ref( zEquRem );\n    for  zEquRem != z0  {\n        // extract one product\n        zExor = Extra_zddSelectOneSubset( dd, zEquRem );   Cudd_Ref( zExor );\n        // remove it from the set\n        zEquRem = Cudd_zddDiff( dd, zTemp = zEquRem, zExor );  Cudd_Ref( zEquRem );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n\n        // locate the non-canonical variable\n        iVarNonCan = -1;\n        // inlining of macro cuddT\n        for  zTemp = zExor; zTemp != z1; zTemp = ((zTemp).type.kids.T)  {\n            if pVarsNonCan[zTemp.index/2] == 1 {\n                assert(iVarNonCan == -1, \"iVarNonCan == -1\");\n                iVarNonCan = zTemp.index/2;\n            }\n        }\n        assert(iVarNonCan != -1, \"iVarNonCan != -1\");\n\n        if Extra_zddLitCountComb( dd, zExor ) \u003e 1 {\n            pzRes[ iVarNonCan ] = zExor; // takes ref\n        } else {\n            Cudd_RecursiveDerefZdd( dd, zExor ); }\n    }\n    Cudd_RecursiveDerefZdd( dd, zEquRem );\n\n    ABC_FREE( pVarsNonCan );\n    return pzRes;\n}"
+    },
+    {
+      "Name": "extraBddSpaceFromFunction",
+      "Start": 16353,
+      "End": 20710,
+      "BodyStart": 16432,
+      "Original": "DdNode * extraBddSpaceFromFunction( DdManager * dd, DdNode * bF, DdNode * bG )\n{\n    DdNode * bRes;\n    DdNode * bFR, * bGR;\n\n    bFR = Cudd_Regular( bF ); \n    bGR = Cudd_Regular( bG ); \n    if ( cuddIsConstant(bFR) )\n    {\n        if ( bF == bG )\n            return b1;\n        else \n            return b0;\n    }\n    if ( cuddIsConstant(bGR) )\n        return b0;\n    // both bFunc and bCore are not constants\n\n    // the operation is commutative - normalize the problem\n    if ( (unsigned)(ABC_PTRUINT_T)bF \u003e (unsigned)(ABC_PTRUINT_T)bG )\n        return extraBddSpaceFromFunction(dd, bG, bF);\n\n\n    if ( (bRes = cuddCacheLookup2(dd, extraBddSpaceFromFunction, bF, bG)) )\n        return bRes;\n    else\n    {\n        DdNode * bF0, * bF1;\n        DdNode * bG0, * bG1;\n        DdNode * bTemp1, * bTemp2;\n        DdNode * bRes0, * bRes1;\n        int LevelF, LevelG;\n        int index;\n\n        LevelF = dd-\u003eperm[bFR-\u003eindex];\n        LevelG = dd-\u003eperm[bGR-\u003eindex];\n        if ( LevelF \u003c= LevelG )\n        {\n            index = dd-\u003einvperm[LevelF];\n            if ( bFR != bF )\n            {\n                bF0 = Cudd_Not( cuddE(bFR) );\n                bF1 = Cudd_Not( cuddT(bFR) );\n            }\n            else\n            {\n                bF0 = cuddE(bFR);\n                bF1 = cuddT(bFR);\n            }\n        }\n        else\n        {\n            index = dd-\u003einvperm[LevelG];\n            bF0 = bF1 = bF;\n        }\n\n        if ( LevelG \u003c= LevelF )\n        {\n            if ( bGR != bG )\n            {\n                bG0 = Cudd_Not( cuddE(bGR) );\n                bG1 = Cudd_Not( cuddT(bGR) );\n            }\n            else\n            {\n                bG0 = cuddE(bGR);\n                bG1 = cuddT(bGR);\n            }\n        }\n        else\n            bG0 = bG1 = bG;\n\n        bTemp1 = extraBddSpaceFromFunction( dd, bF0, bG0 );\n        if ( bTemp1 == NULL ) \n            return NULL;\n        cuddRef( bTemp1 );\n\n        bTemp2 = extraBddSpaceFromFunction( dd, bF1, bG1 );\n        if ( bTemp2 == NULL ) \n        {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return NULL;\n        }\n        cuddRef( bTemp2 );\n\n\n        bRes0  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if ( bRes0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return NULL;\n        }\n        cuddRef( bRes0 );\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n        bTemp1  = extraBddSpaceFromFunction( dd, bF0, bG1 );\n        if ( bTemp1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return NULL;\n        }\n        cuddRef( bTemp1 );\n\n        bTemp2  = extraBddSpaceFromFunction( dd, bF1, bG0 );\n        if ( bTemp2 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return NULL;\n        }\n        cuddRef( bTemp2 );\n\n        bRes1  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if ( bRes1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return NULL;\n        }\n        cuddRef( bRes1 );\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if ( bRes0 == bRes1 )\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        else if ( Cudd_IsComplement(bRes1) ) \n        {\n            bRes = cuddUniqueInter(dd, index, Cudd_Not(bRes1), Cudd_Not(bRes0));\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n            bRes = Cudd_Not(bRes);\n        } \n        else \n        {\n            bRes = cuddUniqueInter( dd, index, bRes1, bRes0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n        }\n        cuddDeref( bRes0 );\n        cuddDeref( bRes1 );\n            \n        // insert the result into cache \n        cuddCacheInsert2(dd, extraBddSpaceFromFunction, bF, bG, bRes);\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {\n    var bRes *DdNode;\n    var bFR, bGR *DdNode;\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    bGR = ((DdNode *)((ptruint)(bG) \u0026 ~01)); \n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        if bF == bG {\n            return b1;\n        } else { \n            return b0; }\n    }\n    // inlining of macro cuddIsConstant\n    if  (bGR).index == CUDD_CONST_INDEX {\n        return b0; }\n    // both bFunc and bCore are not constants\n\n    // the operation is commutative - normalize the problem\n    if uint32((ABC_PTRUINT_T))bF \u003e uint32((ABC_PTRUINT_T))bG {\n        return extraBddSpaceFromFunction(dd, bG, bF); }\n\n\n    if bRes = cuddCacheLookup2(dd, extraBddSpaceFromFunction, bF, bG) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bG0, bG1 *DdNode;\n        var bTemp1, bTemp2 *DdNode;\n        var bRes0, bRes1 *DdNode;\n        var LevelF, LevelG int32;\n        var index int32;\n\n        LevelF = dd.perm[bFR.index];\n        LevelG = dd.perm[bGR.index];\n        if LevelF \u003c= LevelG {\n            index = dd.invperm[LevelF];\n            if bFR != bF {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else {\n            index = dd.invperm[LevelG];\n            bF0 = bF1 = bF;\n        }\n\n        if LevelG \u003c= LevelF {\n            if bGR != bG {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bG0 = ((DdNode *)((ptrint)(((bGR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bG1 = ((DdNode *)((ptrint)(((bGR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bG0 = ((bGR).type.kids.E);\n                // inlining of macro cuddT\n                bG1 = ((bGR).type.kids.T);\n            }\n        \n        } else {\n            bG0 = bG1 = bG; }\n\n        bTemp1 = extraBddSpaceFromFunction( dd, bF0, bG0 );\n        if bTemp1 == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp1).ref);\n\n        bTemp2 = extraBddSpaceFromFunction( dd, bF1, bG1 );\n        if bTemp2 == nil {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp2).ref);\n\n\n        bRes0  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n        bTemp1  = extraBddSpaceFromFunction( dd, bF0, bG1 );\n        if bTemp1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp1).ref);\n\n        bTemp2  = extraBddSpaceFromFunction( dd, bF1, bG0 );\n        if bTemp2 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp2).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter(dd, index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)));\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n            \n        // insert the result into cache \n        cuddCacheInsert2(dd, extraBddSpaceFromFunction, bF, bG, bRes);\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceFromFunctionPos",
+      "Start": 21036,
+      "End": 24229,
+      "BodyStart": 21105,
+      "Original": "DdNode * extraBddSpaceFromFunctionPos( DdManager * dd, DdNode * bF )\n{\n    DdNode * bRes, * bFR;\n    statLine( dd );\n\n    bFR = Cudd_Regular(bF);\n    if ( cuddIsConstant(bFR) )\n        return b1;\n\n    if ( (bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionPos, bF)) )\n        return bRes;\n    else\n    {\n        DdNode * bF0,   * bF1;\n        DdNode * bPos0, * bPos1;\n        DdNode * bNeg0, * bNeg1;\n        DdNode * bRes0, * bRes1; \n\n        if ( bFR != bF ) // bF is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if ( bPos0 == NULL )\n            return NULL;\n        cuddRef( bPos0 );\n\n        bPos1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if ( bPos1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return NULL;\n        }\n        cuddRef( bPos1 );\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if ( bRes0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return NULL;\n        }\n        cuddRef( bRes0 );\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if ( bNeg0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return NULL;\n        }\n        cuddRef( bNeg0 );\n\n        bNeg1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if ( bNeg1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return NULL;\n        }\n        cuddRef( bNeg1 );\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if ( bRes1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return NULL;\n        }\n        cuddRef( bRes1 );\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if ( bRes0 == bRes1 )\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        else if ( Cudd_IsComplement(bRes1) ) \n        {\n            bRes = cuddUniqueInter( dd, bFR-\u003eindex, Cudd_Not(bRes1), Cudd_Not(bRes0) );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n            bRes = Cudd_Not(bRes);\n        } \n        else \n        {\n            bRes = cuddUniqueInter( dd, bFR-\u003eindex, bRes1, bRes0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n        }\n        cuddDeref( bRes0 );\n        cuddDeref( bRes1 );\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionPos, bF, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceFromFunctionPos(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return b1; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionPos, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bPos0, bPos1 *DdNode;\n        var bNeg0, bNeg1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if bPos0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos0).ref);\n\n        bPos1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if bPos1 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if bNeg0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg0).ref);\n\n        bNeg1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if bNeg1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionPos, bF, bRes );\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceFromFunctionNeg",
+      "Start": 24515,
+      "End": 27708,
+      "BodyStart": 24584,
+      "Original": "DdNode * extraBddSpaceFromFunctionNeg( DdManager * dd, DdNode * bF )\n{\n    DdNode * bRes, * bFR;\n    statLine( dd );\n\n    bFR = Cudd_Regular(bF);\n    if ( cuddIsConstant(bFR) )\n        return b0;\n\n    if ( (bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionNeg, bF)) )\n        return bRes;\n    else\n    {\n        DdNode * bF0,   * bF1;\n        DdNode * bPos0, * bPos1;\n        DdNode * bNeg0, * bNeg1;\n        DdNode * bRes0, * bRes1; \n\n        if ( bFR != bF ) // bF is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if ( bPos0 == NULL )\n            return NULL;\n        cuddRef( bPos0 );\n\n        bPos1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if ( bPos1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return NULL;\n        }\n        cuddRef( bPos1 );\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if ( bRes0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return NULL;\n        }\n        cuddRef( bRes0 );\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if ( bNeg0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return NULL;\n        }\n        cuddRef( bNeg0 );\n\n        bNeg1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if ( bNeg1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return NULL;\n        }\n        cuddRef( bNeg1 );\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if ( bRes1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return NULL;\n        }\n        cuddRef( bRes1 );\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if ( bRes0 == bRes1 )\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        else if ( Cudd_IsComplement(bRes1) ) \n        {\n            bRes = cuddUniqueInter( dd, bFR-\u003eindex, Cudd_Not(bRes1), Cudd_Not(bRes0) );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n            bRes = Cudd_Not(bRes);\n        } \n        else \n        {\n            bRes = cuddUniqueInter( dd, bFR-\u003eindex, bRes1, bRes0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n        }\n        cuddDeref( bRes0 );\n        cuddDeref( bRes1 );\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionNeg, bF, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceFromFunctionNeg(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return b0; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionNeg, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bPos0, bPos1 *DdNode;\n        var bNeg0, bNeg1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if bPos0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos0).ref);\n\n        bPos1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if bPos1 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if bNeg0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg0).ref);\n\n        bNeg1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if bNeg1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionNeg, bF, bRes );\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceCanonVars",
+      "Start": 27988,
+      "End": 29431,
+      "BodyStart": 28051,
+      "Original": "DdNode * extraBddSpaceCanonVars( DdManager * dd, DdNode * bF )\n{\n    DdNode * bRes, * bFR;\n    statLine( dd );\n\n    bFR = Cudd_Regular(bF);\n    if ( cuddIsConstant(bFR) )\n        return bF;\n\n    if ( (bRes = cuddCacheLookup1(dd, extraBddSpaceCanonVars, bF)) )\n        return bRes;\n    else\n    {\n        DdNode * bF0,  * bF1;\n        DdNode * bRes, * bRes0; \n\n        if ( bFR != bF ) // bF is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        if ( bF0 == b0 )\n        {\n            bRes = extraBddSpaceCanonVars( dd, bF1 );\n            if ( bRes == NULL )\n                return NULL;\n        }\n        else if ( bF1 == b0 )\n        {\n            bRes = extraBddSpaceCanonVars( dd, bF0 );\n            if ( bRes == NULL )\n                return NULL;\n        }\n        else\n        {\n            bRes0 = extraBddSpaceCanonVars( dd, bF0 );\n            if ( bRes0 == NULL )\n                return NULL;\n            cuddRef( bRes0 );\n\n            bRes = cuddUniqueInter( dd, bFR-\u003eindex, bRes0, b0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref( dd,bRes0 );\n                return NULL;\n            }\n            cuddDeref( bRes0 );\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceCanonVars, bF, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceCanonVars(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return bF; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceCanonVars, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bRes, bRes0 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            bRes = extraBddSpaceCanonVars( dd, bF1 );\n            if bRes == nil {\n                return nil; }\n        \n        } else if bF1 == b0 {\n            bRes = extraBddSpaceCanonVars( dd, bF0 );\n            if bRes == nil {\n                return nil; }\n        \n        } else {\n            bRes0 = extraBddSpaceCanonVars( dd, bF0 );\n            if bRes0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bRes0).ref);\n\n            bRes = cuddUniqueInter( dd, bFR.index, bRes0, b0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref( dd,bRes0 );\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(bRes0).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceCanonVars, bF, bRes );\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceEquationsPos",
+      "Start": 29712,
+      "End": 33102,
+      "BodyStart": 29778,
+      "Original": "DdNode * extraBddSpaceEquationsPos( DdManager * dd, DdNode * bF )\n{\n    DdNode * zRes;\n    statLine( dd );\n\n    if ( bF == b0 )\n        return z1;\n    if ( bF == b1 )\n        return z0;\n    \n    if ( (zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsPos, bF)) )\n        return zRes;\n    else\n    {\n        DdNode * bFR, * bF0,  * bF1;\n        DdNode * zPos0, * zPos1, * zNeg1; \n        DdNode * zRes, * zRes0, * zRes1;\n\n        bFR = Cudd_Regular(bF);\n        if ( bFR != bF ) // bF is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        if ( bF0 == b0 )\n        {\n            zRes1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if ( zRes1 == NULL )\n                return NULL;\n            cuddRef( zRes1 );\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR-\u003eindex, z1, zRes1 );\n            if ( zRes == NULL ) \n            {\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return NULL;\n            }\n            cuddDeref( zRes1 );\n        }\n        else if ( bF1 == b0 )\n        {\n            zRes = extraBddSpaceEquationsPos( dd, bF0 );\n            if ( zRes == NULL )\n                return NULL;\n        }\n        else\n        {\n            zPos0 = extraBddSpaceEquationsPos( dd, bF0 );\n            if ( zPos0 == NULL )\n                return NULL;\n            cuddRef( zPos0 );\n\n            zPos1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if ( zPos1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return NULL;\n            }\n            cuddRef( zPos1 );\n\n            zNeg1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if ( zNeg1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zNeg1 );\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if ( zRes0 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zRes0 );\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if ( zRes1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zRes1 );\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR-\u003eindex, zRes1, zRes0 );\n            if ( zRes == NULL ) \n            {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return NULL;\n            }\n            cuddDeref( zRes0 );\n            cuddDeref( zRes1 );\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsPos, bF, zRes );\n        return zRes;\n    }\n}",
+      "Draft": "func extraBddSpaceEquationsPos(dd *DdManager, bF *DdNode) *DdNode {\n    var zRes *DdNode;\n    statLine( dd );\n\n    if bF == b0 {\n        return z1; }\n    if bF == b1 {\n        return z0; }\n    \n    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsPos, bF) {\n        return zRes;\n    } else {\n        var bFR, bF0, bF1 *DdNode;\n        var zPos0, zPos1, zNeg1 *DdNode; \n        var zRes, zRes0, zRes1 *DdNode;\n\n        // inlining of macro Cudd_Regular\n        bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            zRes1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zRes1 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        \n        } else if bF1 == b0 {\n            zRes = extraBddSpaceEquationsPos( dd, bF0 );\n            if zRes == nil {\n                return nil; }\n        \n        } else {\n            zPos0 = extraBddSpaceEquationsPos( dd, bF0 );\n            if zPos0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos0).ref);\n\n            zPos1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zPos1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos1).ref);\n\n            zNeg1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zNeg1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zNeg1).ref);\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if zRes0 == nil {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsPos, bF, zRes );\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceEquationsNeg",
+      "Start": 33384,
+      "End": 36774,
+      "BodyStart": 33450,
+      "Original": "DdNode * extraBddSpaceEquationsNeg( DdManager * dd, DdNode * bF )\n{\n    DdNode * zRes;\n    statLine( dd );\n\n    if ( bF == b0 )\n        return z1;\n    if ( bF == b1 )\n        return z0;\n    \n    if ( (zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsNeg, bF)) )\n        return zRes;\n    else\n    {\n        DdNode * bFR, * bF0,  * bF1;\n        DdNode * zPos0, * zPos1, * zNeg1; \n        DdNode * zRes, * zRes0, * zRes1;\n\n        bFR = Cudd_Regular(bF);\n        if ( bFR != bF ) // bF is complemented \n        {\n            bF0 = Cudd_Not( cuddE(bFR) );\n            bF1 = Cudd_Not( cuddT(bFR) );\n        }\n        else\n        {\n            bF0 = cuddE(bFR);\n            bF1 = cuddT(bFR);\n        }\n\n        if ( bF0 == b0 )\n        {\n            zRes = extraBddSpaceEquationsNeg( dd, bF1 );\n            if ( zRes == NULL )\n                return NULL;\n        }\n        else if ( bF1 == b0 )\n        {\n            zRes0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if ( zRes0 == NULL )\n                return NULL;\n            cuddRef( zRes0 );\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR-\u003eindex, z1, zRes0 );\n            if ( zRes == NULL ) \n            {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                return NULL;\n            }\n            cuddDeref( zRes0 );\n        }\n        else\n        {\n            zPos0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if ( zPos0 == NULL )\n                return NULL;\n            cuddRef( zPos0 );\n\n            zPos1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if ( zPos1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return NULL;\n            }\n            cuddRef( zPos1 );\n\n            zNeg1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if ( zNeg1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zNeg1 );\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if ( zRes0 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zRes0 );\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if ( zRes1 == NULL )\n            {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return NULL;\n            }\n            cuddRef( zRes1 );\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR-\u003eindex, zRes1, zRes0 );\n            if ( zRes == NULL ) \n            {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return NULL;\n            }\n            cuddDeref( zRes0 );\n            cuddDeref( zRes1 );\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsNeg, bF, zRes );\n        return zRes;\n    }\n}",
+      "Draft": "func extraBddSpaceEquationsNeg(dd *DdManager, bF *DdNode) *DdNode {\n    var zRes *DdNode;\n    statLine( dd );\n\n    if bF == b0 {\n        return z1; }\n    if bF == b1 {\n        return z0; }\n    \n    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsNeg, bF) {\n        return zRes;\n    } else {\n        var bFR, bF0, bF1 *DdNode;\n        var zPos0, zPos1, zNeg1 *DdNode; \n        var zRes, zRes0, zRes1 *DdNode;\n\n        // inlining of macro Cudd_Regular\n        bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            zRes = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zRes == nil {\n                return nil; }\n        \n        } else if bF1 == b0 {\n            zRes0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if zRes0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n        \n        } else {\n            zPos0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if zPos0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos0).ref);\n\n            zPos1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zPos1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos1).ref);\n\n            zNeg1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zNeg1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zNeg1).ref);\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if zRes0 == nil {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsNeg, bF, zRes );\n        return zRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceFromMatrixPos",
+      "Start": 37061,
+      "End": 39921,
+      "BodyStart": 37128,
+      "Original": "DdNode * extraBddSpaceFromMatrixPos( DdManager * dd, DdNode * zA )\n{\n    DdNode * bRes;\n    statLine( dd );\n\n    if ( zA == z0 )\n        return b1;\n    if ( zA == z1 )\n        return b1;\n\n    if ( (bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixPos, zA)) )\n        return bRes;\n    else\n    {\n        DdNode * bP0, * bP1;\n        DdNode * bN0, * bN1;\n        DdNode * bRes0, * bRes1; \n\n        bP0  = extraBddSpaceFromMatrixPos( dd, cuddE(zA) );\n        if ( bP0 == NULL )\n            return NULL;\n        cuddRef( bP0 );\n\n        bP1  = extraBddSpaceFromMatrixPos( dd, cuddT(zA) );\n        if ( bP1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return NULL;\n        }\n        cuddRef( bP1 );\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if ( bRes0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return NULL;\n        }\n        cuddRef( bRes0 );\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        bN0  = extraBddSpaceFromMatrixPos( dd, cuddE(zA) );\n        if ( bN0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return NULL;\n        }\n        cuddRef( bN0 );\n\n        bN1  = extraBddSpaceFromMatrixNeg( dd, cuddT(zA) );\n        if ( bN1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return NULL;\n        }\n        cuddRef( bN1 );\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if ( bRes1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return NULL;\n        }\n        cuddRef( bRes1 );\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if ( bRes0 == bRes1 )\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        else if ( Cudd_IsComplement(bRes1) ) \n        {\n            bRes = cuddUniqueInter( dd, zA-\u003eindex/2, Cudd_Not(bRes1), Cudd_Not(bRes0) );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n            bRes = Cudd_Not(bRes);\n        } \n        else \n        {\n            bRes = cuddUniqueInter( dd, zA-\u003eindex/2, bRes1, bRes0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n        }\n        cuddDeref( bRes0 );\n        cuddDeref( bRes1 );\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixPos, zA, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    statLine( dd );\n\n    if zA == z0 {\n        return b1; }\n    if zA == z1 {\n        return b1; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixPos, zA) {\n        return bRes;\n    } else {\n        var bP0, bP1 *DdNode;\n        var bN0, bN1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        // inlining of macro cuddE\n        bP0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );\n        if bP0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP0).ref);\n\n        // inlining of macro cuddT\n        bP1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );\n        if bP1 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        // inlining of macro cuddE\n        bN0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );\n        if bN0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN0).ref);\n\n        // inlining of macro cuddT\n        bN1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );\n        if bN1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixPos, zA, bRes );\n        return bRes;\n    }\n}"
+    },
+    {
+      "Name": "extraBddSpaceFromMatrixNeg",
+      "Start": 40206,
+      "End": 43066,
+      "BodyStart": 40273,
+      "Original": "DdNode * extraBddSpaceFromMatrixNeg( DdManager * dd, DdNode * zA )\n{\n    DdNode * bRes;\n    statLine( dd );\n\n    if ( zA == z0 )\n        return b1;\n    if ( zA == z1 )\n        return b0;\n\n    if ( (bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixNeg, zA)) )\n        return bRes;\n    else\n    {\n        DdNode * bP0, * bP1;\n        DdNode * bN0, * bN1;\n        DdNode * bRes0, * bRes1; \n\n        bP0  = extraBddSpaceFromMatrixNeg( dd, cuddE(zA) );\n        if ( bP0 == NULL )\n            return NULL;\n        cuddRef( bP0 );\n\n        bP1  = extraBddSpaceFromMatrixNeg( dd, cuddT(zA) );\n        if ( bP1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return NULL;\n        }\n        cuddRef( bP1 );\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if ( bRes0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return NULL;\n        }\n        cuddRef( bRes0 );\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        bN0  = extraBddSpaceFromMatrixNeg( dd, cuddE(zA) );\n        if ( bN0 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return NULL;\n        }\n        cuddRef( bN0 );\n\n        bN1  = extraBddSpaceFromMatrixPos( dd, cuddT(zA) );\n        if ( bN1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return NULL;\n        }\n        cuddRef( bN1 );\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if ( bRes1 == NULL )\n        {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return NULL;\n        }\n        cuddRef( bRes1 );\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if ( bRes0 == bRes1 )\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        else if ( Cudd_IsComplement(bRes1) ) \n        {\n            bRes = cuddUniqueInter( dd, zA-\u003eindex/2, Cudd_Not(bRes1), Cudd_Not(bRes0) );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n            bRes = Cudd_Not(bRes);\n        } \n        else \n        {\n            bRes = cuddUniqueInter( dd, zA-\u003eindex/2, bRes1, bRes0 );\n            if ( bRes == NULL ) \n            {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return NULL;\n            }\n        }\n        cuddDeref( bRes0 );\n        cuddDeref( bRes1 );\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixNeg, zA, bRes );\n        return bRes;\n    }\n}",
+      "Draft": "func extraBddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    statLine( dd );\n\n    if zA == z0 {\n        return b1; }\n    if zA == z1 {\n        return b0; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixNeg, zA) {\n        return bRes;\n    } else {\n        var bP0, bP1 *DdNode;\n        var bN0, bN1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        // inlining of macro cuddE\n        bP0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );\n        if bP0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP0).ref);\n\n        // inlining of macro cuddT\n        bP1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );\n        if bP1 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        // inlining of macro cuddE\n        bN0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );\n        if bN0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN0).ref);\n\n        // inlining of macro cuddT\n        bN1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );\n        if bN1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixNeg, zA, bRes );\n        return bRes;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::8743",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 8682,
+      "End": 8684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::9202",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9141,
+      "End": 9143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::9663",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9602,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::10119",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10058,
+      "End": 10060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::11902",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11841,
+      "End": 11843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::12360",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12299,
+      "End": 12301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::12815",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12754,
+      "End": 12756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::do::13266",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 13205,
+      "End": 13207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::mechanical::sizeof::14877",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14765,
+      "End": 14771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::7834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7789,
+      "End": 7789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::14883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14771,
+      "End": 14781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::16701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16489,
+      "End": 16489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::16795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16520,
+      "End": 16520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::17926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17462,
+      "End": 17462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::18084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17508,
+      "End": 17508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::18669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17879,
+      "End": 17879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::18827",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17925,
+      "End": 17925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::21509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19955,
+      "End": 19955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::21589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19972,
+      "End": 19972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::21873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20193,
+      "End": 20193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::23037",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21164,
+      "End": 21164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::23551",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21552,
+      "End": 21552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::23705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21594,
+      "End": 21594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::26283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23520,
+      "End": 23520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::26363",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23537,
+      "End": 23537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::26648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23759,
+      "End": 23759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::27725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24643,
+      "End": 24643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::28239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25031,
+      "End": 25031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::28393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25073,
+      "End": 25073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::30971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26999,
+      "End": 26999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::31051",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27016,
+      "End": 27016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::31336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27238,
+      "End": 27238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::32401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28110,
+      "End": 28110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::32841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28424,
+      "End": 28424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::32995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28466,
+      "End": 28466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::35023",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30150,
+      "End": 30150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::35178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30244,
+      "End": 30244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::35332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30286,
+      "End": 30286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::39653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33822,
+      "End": 33822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::39808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33916,
+      "End": 33916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::39962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33958,
+      "End": 33958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::46640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39213,
+      "End": 39213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::46720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39230,
+      "End": 39230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::47005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39452,
+      "End": 39452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::50742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42358,
+      "End": 42358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::50822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42375,
+      "End": 42375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::pointer-cast::51107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42597,
+      "End": 42597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromFunctionFast",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromFunctionFast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4919,
+      "End": 8354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromFunction",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8577,
+      "End": 8822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromFunctionPos",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromFunctionPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9043,
+      "End": 9283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromFunctionNeg",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromFunctionNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9504,
+      "End": 9744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceCanonVars",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceCanonVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9965,
+      "End": 10195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceReduce",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10416,
+      "End": 10808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceEquations",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceEquations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11031,
+      "End": 11523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceEquationsPos",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceEquationsPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11745,
+      "End": 11981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceEquationsNeg",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceEquationsNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12203,
+      "End": 12439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromMatrixPos",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromMatrixPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12661,
+      "End": 12891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceFromMatrixNeg",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceFromMatrixNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13112,
+      "End": 13342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_zddLitCountComb",
+      "Category": "semantic-review",
+      "Symbol": "Extra_zddLitCountComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13612,
+      "End": 13837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::Extra_bddSpaceExorGates",
+      "Category": "semantic-review",
+      "Symbol": "Extra_bddSpaceExorGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14283,
+      "End": 15817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceFromFunction",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceFromFunction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16353,
+      "End": 20710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceFromFunctionPos",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceFromFunctionPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21036,
+      "End": 24229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceFromFunctionNeg",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceFromFunctionNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24515,
+      "End": 27708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceCanonVars",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceCanonVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27988,
+      "End": 29431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceEquationsPos",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceEquationsPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29712,
+      "End": 33102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceEquationsNeg",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceEquationsNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33384,
+      "End": 36774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceFromMatrixPos",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceFromMatrixPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37061,
+      "End": 39921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::extraBddSpaceFromMatrixNeg",
+      "Category": "semantic-review",
+      "Symbol": "extraBddSpaceFromMatrixNeg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40206,
+      "End": 43066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 43334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::5247",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5247,
+      "End": 5290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::5662",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5662,
+      "End": 5682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::5768",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5768,
+      "End": 5794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::5815",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5815,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::5862",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5862,
+      "End": 5893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::8203",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8203,
+      "End": 8223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::8229",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8229,
+      "End": 8253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::8259",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8259,
+      "End": 8279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::8285",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8285,
+      "End": 8305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::14557",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14557,
+      "End": 14600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::14710",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14710,
+      "End": 14741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::15773",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15773,
+      "End": 15796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::18252",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18252,
+      "End": 18269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::18463",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18463,
+      "End": 18480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::18716",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18716,
+      "End": 18732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::19012",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19012,
+      "End": 19029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::19269",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19269,
+      "End": 19286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::19567",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19567,
+      "End": 19583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::20509",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20509,
+      "End": 20527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::20537",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20537,
+      "End": 20555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::21137",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21137,
+      "End": 21151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::21843",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21843,
+      "End": 21859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::22048",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22048,
+      "End": 22064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::22295",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22295,
+      "End": 22311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::22585",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22585,
+      "End": 22601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::22836",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22836,
+      "End": 22852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::23129",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23129,
+      "End": 23145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::24080",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24080,
+      "End": 24098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::24108",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24108,
+      "End": 24126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::24616",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24616,
+      "End": 24630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::25322",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25322,
+      "End": 25338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::25527",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25527,
+      "End": 25543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::25774",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25774,
+      "End": 25790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::26064",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26064,
+      "End": 26080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::26315",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26315,
+      "End": 26331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::26608",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26608,
+      "End": 26624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::27559",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27559,
+      "End": 27577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::27587",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27587,
+      "End": 27605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::28083",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28083,
+      "End": 28097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::29071",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29071,
+      "End": 29087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::29306",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29306,
+      "End": 29324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::29803",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29803,
+      "End": 29817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::30581",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30581,
+      "End": 30597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::30869",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30869,
+      "End": 30887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::31222",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 31222,
+      "End": 31238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::31452",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 31452,
+      "End": 31468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::31733",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 31733,
+      "End": 31749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::32066",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32066,
+      "End": 32082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::32449",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32449,
+      "End": 32465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::32942",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32942,
+      "End": 32960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::32974",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 32974,
+      "End": 32992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::33475",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 33475,
+      "End": 33489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::34421",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34421,
+      "End": 34437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::34709",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34709,
+      "End": 34727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::34894",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34894,
+      "End": 34910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::35124",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35124,
+      "End": 35140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::35405",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35405,
+      "End": 35421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::35738",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35738,
+      "End": 35754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::36121",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36121,
+      "End": 36137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::36614",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36614,
+      "End": 36632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::36646",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 36646,
+      "End": 36664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::37153",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 37153,
+      "End": 37167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::37571",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 37571,
+      "End": 37585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::37772",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 37772,
+      "End": 37786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::38009",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38009,
+      "End": 38025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::38295",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38295,
+      "End": 38309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::38542",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38542,
+      "End": 38556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::38825",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38825,
+      "End": 38841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::39774",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 39774,
+      "End": 39792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::39802",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 39802,
+      "End": 39820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::40298",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40298,
+      "End": 40312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::40716",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40716,
+      "End": 40730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::40917",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 40917,
+      "End": 40931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::41154",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 41154,
+      "End": 41170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::41440",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 41440,
+      "End": 41454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::41687",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 41687,
+      "End": 41701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::41970",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 41970,
+      "End": 41986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::42919",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 42919,
+      "End": 42937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddAuto.c::macro-inline::42947",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 42947,
+      "End": 42965
+    }
+  ],
+  "Draft": "package extrab\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraBddAuto.c]\n\n  PackageName [extra]\n\n  Synopsis    [Computation of autosymmetries.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddAuto.c,v 1.0 2003/05/21 18:03:50 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extraBdd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n\n/*\n    LinearSpace(f) = Space(f,f)\n\n    Space(f,g)\n    {\n        if ( f = const )\n        { \n            if ( f = g )  return 1;\n            else          return 0;\n        }\n        if ( g = const )  return 0;\n        return x' * Space(fx',gx') * Space(fx,gx) + x * Space(fx',gx) * Space(fx,gx');\n    }\n\n    Equations(s) = Pos(s) + Neg(s);\n\n    Pos(s)\n    {\n        if ( s  = 0 )   return 1;\n        if ( s  = 1 )   return 0;\n        if ( sx'= 0 )   return Pos(sx) + x;\n        if ( sx = 0 )   return Pos(sx');\n        return 1 * [Pos(sx') \u0026 Pos(sx)] + x * [Pos(sx') \u0026 Neg(sx)];\n    }\n\n    Neg(s)\n    {\n        if ( s  = 0 )   return 1;\n        if ( s  = 1 )   return 0;\n        if ( sx'= 0 )   return Neg(sx);\n        if ( sx = 0 )   return Neg(sx') + x;\n        return 1 * [Neg(sx') \u0026 Neg(sx)] + x * [Neg(sx') \u0026 Pos(sx)];\n    }\n\n\n    SpaceP(A)\n    {\n        if ( A = 0 )    return 1;\n        if ( A = 1 )    return 1;\n        return x' * SpaceP(Ax') * SpaceP(Ax) + x * SpaceP(Ax') * SpaceN(Ax);\n    }\n\n    SpaceN(A)\n    {\n        if ( A = 0 )    return 1;\n        if ( A = 1 )    return 0;\n        return x' * SpaceN(Ax') * SpaceN(Ax) + x * SpaceN(Ax') * SpaceP(Ax);\n    }\n\n\n    LinInd(A)\n    {\n        if ( A = const )     return 1;\n        if ( !LinInd(Ax') )  return 0;\n        if ( !LinInd(Ax)  )  return 0;\n        if (  LinSumOdd(Ax')  \u0026 LinSumEven(Ax) != 0 )  return 0;\n        if (  LinSumEven(Ax') \u0026 LinSumEven(Ax) != 0 )  return 0;\n        return 1;\n    }\n\n    LinSumOdd(A)\n    {\n        if ( A = 0 )    return 0;                 // Odd0  ---e-- Odd1\n        if ( A = 1 )    return 1;                 //       \\   o\n        Odd0  = LinSumOdd(Ax');  // x is absent   //         \\ \n        Even0 = LinSumEven(Ax'); // x is absent   //       /   o  \n        Odd1  = LinSumOdd(Ax);   // x is present  // Even0 ---e-- Even1 \n        Even1 = LinSumEven(Ax);  // x is absent\n        return 1 * [Odd0 + ExorP(Odd0, Even1)] + x * [Odd1 + ExorP(Odd1, Even0)];\n    }\n\n    LinSumEven(A)\n    {\n        if ( A = 0 )    return 0;\n        if ( A = 1 )    return 0;\n        Odd0  = LinSumOdd(Ax');  // x is absent\n        Even0 = LinSumEven(Ax'); // x is absent\n        Odd1  = LinSumOdd(Ax);   // x is present\n        Even1 = LinSumEven(Ax);  // x is absent\n        return 1 * [Even0 + Even1 + ExorP(Even0, Even1)] + x * [ExorP(Odd0, Odd1)];\n    }\n    \n*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromFunctionFast(dd *DdManager, bFunc *DdNode) *DdNode {\n    var pSupport *int32;\n    var pPermute *int32;\n    var pPermuteBack *int32;\n    var pCompose **DdNode;\n    var bCube, bTemp *DdNode;\n    var bSpace, bFunc1, bFunc2, bSpaceShift *DdNode;\n    var nSupp, Counter int32;\n    var i, lev int32;\n\n    // get the support\n    pSupport = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );\n    Extra_SupportArray( dd, bFunc, pSupport );\n    nSupp = 0;\n    for  i = 0; i \u003c dd.size; i++  {\n        if pSupport[i] {\n            nSupp++; }\n    }\n\n    // make sure the manager has enough variables\n    if 2*nSupp \u003e dd.size {\n        fmt.Printf(\"Cannot derive linear space, because DD manager does not have enough variables.\\n\");\n        fflush( os.Stdout );\n        ABC_FREE( pSupport );\n        return nil;\n    }\n\n    // create the permutation arrays\n    pPermute     = ABC_ALLOC( int, dd.size );\n    pPermuteBack = ABC_ALLOC( int, dd.size );\n    pCompose     = ABC_ALLOC( DdNode *, dd.size );\n    for  i = 0; i \u003c dd.size; i++  {\n        pPermute[i]     = i;\n        pPermuteBack[i] = i;\n        pCompose[i]     = dd.vars[i];   Cudd_Ref( pCompose[i] );\n    }\n\n    // remap the function in such a way that the variables are interleaved\n    Counter = 0;\n    bCube = b1;  Cudd_Ref( bCube );\n    for  lev = 0; lev \u003c dd.size; lev++  {\n        if pSupport[ dd.invperm[lev] ] {   // var \"dd-\u003einvperm[lev]\" on level \"lev\" should go to level 2*Counter;\n            pPermute[ dd.invperm[lev] ] = dd.invperm[2*Counter];\n            // var from level 2*Counter+1 should go back to the place of this var\n            pPermuteBack[ dd.invperm[2*Counter+1] ] = dd.invperm[lev];\n            // the permutation should be defined in such a way that variable\n            // on level 2*Counter is replaced by an EXOR of itself and var on the next level\n            Cudd_Deref( pCompose[ dd.invperm[2*Counter] ] );\n            pCompose[ dd.invperm[2*Counter] ] = \n                Cudd_bddXor( dd, dd.vars[ dd.invperm[2*Counter] ], dd.vars[ dd.invperm[2*Counter+1] ] );  \n            Cudd_Ref( pCompose[ dd.invperm[2*Counter] ] );\n            // add this variable to the cube\n            bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[ dd.invperm[2*Counter] ] );  Cudd_Ref( bCube );\n            Cudd_RecursiveDeref( dd, bTemp );\n            // increment the counter\n            Counter ++;\n        }\n    }\n\n    // permute the functions\n    bFunc1 = Cudd_bddPermute( dd, bFunc, pPermute );         Cudd_Ref( bFunc1 );\n    // compose to gate the function depending on both vars\n    bFunc2 = Cudd_bddVectorCompose( dd, bFunc1, pCompose );  Cudd_Ref( bFunc2 );\n    // gate the vector space\n    // L(a) = ForAll x [ F(x) = F(x+a) ] = Not( Exist x [ F(x) (+) F(x+a) ] )\n    bSpaceShift = Cudd_bddXorExistAbstract( dd, bFunc1, bFunc2, bCube );  Cudd_Ref( bSpaceShift );\n    // inlining of macro Cudd_Not\n    bSpaceShift = ((DdNode *)((ptrint)(bSpaceShift) ^ 01));\n    // permute the space back into the original mapping\n    bSpace = Cudd_bddPermute( dd, bSpaceShift, pPermuteBack ); Cudd_Ref( bSpace );\n    Cudd_RecursiveDeref( dd, bFunc1 );\n    Cudd_RecursiveDeref( dd, bFunc2 );\n    Cudd_RecursiveDeref( dd, bSpaceShift );\n    Cudd_RecursiveDeref( dd, bCube );\n\n    for  i = 0; i \u003c dd.size; i++  {\n        Cudd_RecursiveDeref( dd, pCompose[i] );\n    }\n    ABC_FREE( pPermute );\n    ABC_FREE( pPermuteBack );\n    ABC_FREE( pCompose );\n    ABC_FREE( pSupport );\n\n    Cudd_Deref( bSpace );\n    return bSpace;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunction( dd, bF, bG );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromFunctionPos(dd *DdManager, bFunc *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunctionPos( dd, bFunc );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromFunctionNeg(dd *DdManager, bFunc *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromFunctionNeg( dd, bFunc );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceCanonVars(dd *DdManager, bSpace *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceCanonVars( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceReduce(dd *DdManager, bFunc *DdNode, bCanonVars *DdNode) *DdNode {\n    var bNegCube *DdNode;\n    var bResult *DdNode;\n    bNegCube = Extra_bddSupportNegativeCube( dd, bCanonVars );  Cudd_Ref( bNegCube );\n    bResult  = Cudd_Cofactor( dd, bFunc, bNegCube );            Cudd_Ref( bResult );\n    Cudd_RecursiveDeref( dd, bNegCube );\n    Cudd_Deref( bResult );\n    return bResult;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceEquations(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    var zEquPos *DdNode;\n    var zEquNeg *DdNode;\n    zEquPos = Extra_bddSpaceEquationsPos( dd, bSpace );  Cudd_Ref( zEquPos );\n    zEquNeg = Extra_bddSpaceEquationsNeg( dd, bSpace );  Cudd_Ref( zEquNeg );\n    zRes    = Cudd_zddUnion( dd, zEquPos, zEquNeg );     Cudd_Ref( zRes );\n    Cudd_RecursiveDerefZdd( dd, zEquPos );\n    Cudd_RecursiveDerefZdd( dd, zEquNeg );\n    Cudd_Deref( zRes );\n    return zRes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceEquationsPos(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    for {\n        dd.reordered = 0;\n        zRes = extraBddSpaceEquationsPos( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return zRes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceEquationsNeg(dd *DdManager, bSpace *DdNode) *DdNode {\n    var zRes *DdNode;\n    for {\n        dd.reordered = 0;\n        zRes = extraBddSpaceEquationsNeg( dd, bSpace );\n    \nif !(dd.reordered == 1) { break }\n} \n    return zRes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromMatrixPos( dd, zA );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    for {\n        dd.reordered = 0;\n        bRes = extraBddSpaceFromMatrixNeg( dd, zA );\n    \nif !(dd.reordered == 1) { break }\n} \n    return bRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of literals in one combination.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_zddLitCountComb(dd *DdManager, zComb *DdNode) int32 {\n    var Counter int32;\n    if zComb == z0 {\n        return 0; }\n    Counter = 0;\n    // inlining of macro cuddT\n    for  ; zComb != z1; zComb = ((zComb).type.kids.T)  {\n        Counter++;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description [Returns the array of ZDDs with the number equal to the number of \n  vars in the DD manager. If the given var is non-canonical, this array contains\n  the referenced ZDD representing literals in the corresponding EXOR equation.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_bddSpaceExorGates(dd *DdManager, bFuncRed *DdNode, zEquations *DdNode) **DdNode {\n    var pzRes **DdNode;\n    var pVarsNonCan *int32;\n    var zEquRem *DdNode;\n    var iVarNonCan int32;\n    var zExor, zTemp *DdNode;\n\n    // get the set of non-canonical variables\n    pVarsNonCan = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );\n    Extra_SupportArray( dd, bFuncRed, pVarsNonCan );\n\n    // allocate storage for the EXOR sets\n    pzRes = ABC_ALLOC( DdNode *, dd.size );\n    memset( pzRes, 0, sizeof(DdNode *) * dd.size );\n\n    // go through all the equations\n    zEquRem = zEquations;  Cudd_Ref( zEquRem );\n    for  zEquRem != z0  {\n        // extract one product\n        zExor = Extra_zddSelectOneSubset( dd, zEquRem );   Cudd_Ref( zExor );\n        // remove it from the set\n        zEquRem = Cudd_zddDiff( dd, zTemp = zEquRem, zExor );  Cudd_Ref( zEquRem );\n        Cudd_RecursiveDerefZdd( dd, zTemp );\n\n        // locate the non-canonical variable\n        iVarNonCan = -1;\n        // inlining of macro cuddT\n        for  zTemp = zExor; zTemp != z1; zTemp = ((zTemp).type.kids.T)  {\n            if pVarsNonCan[zTemp.index/2] == 1 {\n                assert(iVarNonCan == -1, \"iVarNonCan == -1\");\n                iVarNonCan = zTemp.index/2;\n            }\n        }\n        assert(iVarNonCan != -1, \"iVarNonCan != -1\");\n\n        if Extra_zddLitCountComb( dd, zExor ) \u003e 1 {\n            pzRes[ iVarNonCan ] = zExor; // takes ref\n        } else {\n            Cudd_RecursiveDerefZdd( dd, zExor ); }\n    }\n    Cudd_RecursiveDerefZdd( dd, zEquRem );\n\n    ABC_FREE( pVarsNonCan );\n    return pzRes;\n}\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive steps of Extra_bddSpaceFromFunction.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc extraBddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {\n    var bRes *DdNode;\n    var bFR, bGR *DdNode;\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01)); \n    // inlining of macro Cudd_Regular\n    bGR = ((DdNode *)((ptruint)(bG) \u0026 ~01)); \n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        if bF == bG {\n            return b1;\n        } else { \n            return b0; }\n    }\n    // inlining of macro cuddIsConstant\n    if  (bGR).index == CUDD_CONST_INDEX {\n        return b0; }\n    // both bFunc and bCore are not constants\n\n    // the operation is commutative - normalize the problem\n    if uint32((ABC_PTRUINT_T))bF \u003e uint32((ABC_PTRUINT_T))bG {\n        return extraBddSpaceFromFunction(dd, bG, bF); }\n\n\n    if bRes = cuddCacheLookup2(dd, extraBddSpaceFromFunction, bF, bG) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bG0, bG1 *DdNode;\n        var bTemp1, bTemp2 *DdNode;\n        var bRes0, bRes1 *DdNode;\n        var LevelF, LevelG int32;\n        var index int32;\n\n        LevelF = dd.perm[bFR.index];\n        LevelG = dd.perm[bGR.index];\n        if LevelF \u003c= LevelG {\n            index = dd.invperm[LevelF];\n            if bFR != bF {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bF0 = ((bFR).type.kids.E);\n                // inlining of macro cuddT\n                bF1 = ((bFR).type.kids.T);\n            }\n        \n        } else {\n            index = dd.invperm[LevelG];\n            bF0 = bF1 = bF;\n        }\n\n        if LevelG \u003c= LevelF {\n            if bGR != bG {\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddE\n                bG0 = ((DdNode *)((ptrint)(((bGR).type.kids.E)) ^ 01));\n                // inlining of macro Cudd_Not\n                // inlining of macro cuddT\n                bG1 = ((DdNode *)((ptrint)(((bGR).type.kids.T)) ^ 01));\n            \n            } else {\n                // inlining of macro cuddE\n                bG0 = ((bGR).type.kids.E);\n                // inlining of macro cuddT\n                bG1 = ((bGR).type.kids.T);\n            }\n        \n        } else {\n            bG0 = bG1 = bG; }\n\n        bTemp1 = extraBddSpaceFromFunction( dd, bF0, bG0 );\n        if bTemp1 == nil { \n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp1).ref);\n\n        bTemp2 = extraBddSpaceFromFunction( dd, bF1, bG1 );\n        if bTemp2 == nil {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp2).ref);\n\n\n        bRes0  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n        bTemp1  = extraBddSpaceFromFunction( dd, bF0, bG1 );\n        if bTemp1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp1).ref);\n\n        bTemp2  = extraBddSpaceFromFunction( dd, bF1, bG0 );\n        if bTemp2 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bTemp2).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bTemp1, bTemp2 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bTemp1 );\n            Cudd_RecursiveDeref( dd, bTemp2 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bTemp1 );\n        Cudd_RecursiveDeref( dd, bTemp2 );\n\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter(dd, index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)));\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n            \n        // insert the result into cache \n        cuddCacheInsert2(dd, extraBddSpaceFromFunction, bF, bG, bRes);\n        return bRes;\n    }\n}  /* end of extraBddSpaceFromFunction */\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceFromFunctionPos(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return b1; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionPos, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bPos0, bPos1 *DdNode;\n        var bNeg0, bNeg1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if bPos0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos0).ref);\n\n        bPos1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if bPos1 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if bNeg0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg0).ref);\n\n        bNeg1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if bNeg1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionPos, bF, bRes );\n        return bRes;\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceFromFunctionNeg(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return b0; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionNeg, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bPos0, bPos1 *DdNode;\n        var bNeg0, bNeg1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n\n        bPos0  = extraBddSpaceFromFunctionNeg( dd, bF0 );\n        if bPos0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos0).ref);\n\n        bPos1  = extraBddSpaceFromFunctionNeg( dd, bF1 );\n        if bPos1 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bPos1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bPos0 );\n            Cudd_RecursiveDeref( dd, bPos1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bPos0 );\n        Cudd_RecursiveDeref( dd, bPos1 );\n\n\n        bNeg0  = extraBddSpaceFromFunctionPos( dd, bF0 );\n        if bNeg0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg0).ref);\n\n        bNeg1  = extraBddSpaceFromFunctionPos( dd, bF1 );\n        if bNeg1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bNeg1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bNeg0 );\n            Cudd_RecursiveDeref( dd, bNeg1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bNeg0 );\n        Cudd_RecursiveDeref( dd, bNeg1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromFunctionNeg, bF, bRes );\n        return bRes;\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceCanonVars().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceCanonVars(dd *DdManager, bF *DdNode) *DdNode {\n    var bRes, bFR *DdNode;\n    statLine( dd );\n\n    // inlining of macro Cudd_Regular\n    bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if  (bFR).index == CUDD_CONST_INDEX {\n        return bF; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceCanonVars, bF) {\n        return bRes;\n    } else {\n        var bF0, bF1 *DdNode;\n        var bRes, bRes0 *DdNode; \n\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            bRes = extraBddSpaceCanonVars( dd, bF1 );\n            if bRes == nil {\n                return nil; }\n        \n        } else if bF1 == b0 {\n            bRes = extraBddSpaceCanonVars( dd, bF0 );\n            if bRes == nil {\n                return nil; }\n        \n        } else {\n            bRes0 = extraBddSpaceCanonVars( dd, bF0 );\n            if bRes0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(bRes0).ref);\n\n            bRes = cuddUniqueInter( dd, bFR.index, bRes0, b0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref( dd,bRes0 );\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(bRes0).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceCanonVars, bF, bRes );\n        return bRes;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceEquationsPos().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceEquationsPos(dd *DdManager, bF *DdNode) *DdNode {\n    var zRes *DdNode;\n    statLine( dd );\n\n    if bF == b0 {\n        return z1; }\n    if bF == b1 {\n        return z0; }\n    \n    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsPos, bF) {\n        return zRes;\n    } else {\n        var bFR, bF0, bF1 *DdNode;\n        var zPos0, zPos1, zNeg1 *DdNode; \n        var zRes, zRes0, zRes1 *DdNode;\n\n        // inlining of macro Cudd_Regular\n        bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            zRes1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zRes1 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes1 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        \n        } else if bF1 == b0 {\n            zRes = extraBddSpaceEquationsPos( dd, bF0 );\n            if zRes == nil {\n                return nil; }\n        \n        } else {\n            zPos0 = extraBddSpaceEquationsPos( dd, bF0 );\n            if zPos0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos0).ref);\n\n            zPos1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zPos1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos1).ref);\n\n            zNeg1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zNeg1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zNeg1).ref);\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if zRes0 == nil {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsPos, bF, zRes );\n        return zRes;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceEquationsNev().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceEquationsNeg(dd *DdManager, bF *DdNode) *DdNode {\n    var zRes *DdNode;\n    statLine( dd );\n\n    if bF == b0 {\n        return z1; }\n    if bF == b1 {\n        return z0; }\n    \n    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsNeg, bF) {\n        return zRes;\n    } else {\n        var bFR, bF0, bF1 *DdNode;\n        var zPos0, zPos1, zNeg1 *DdNode; \n        var zRes, zRes0, zRes1 *DdNode;\n\n        // inlining of macro Cudd_Regular\n        bFR = ((DdNode *)((ptruint)(bF) \u0026 ~01));\n        if bFR != bF { // bF is complemented \n        \n            // inlining of macro Cudd_Not\n            // inlining of macro cuddE\n            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));\n            // inlining of macro Cudd_Not\n            // inlining of macro cuddT\n            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));\n        \n        } else {\n            // inlining of macro cuddE\n            bF0 = ((bFR).type.kids.E);\n            // inlining of macro cuddT\n            bF1 = ((bFR).type.kids.T);\n        }\n\n        if bF0 == b0 {\n            zRes = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zRes == nil {\n                return nil; }\n        \n        } else if bF1 == b0 {\n            zRes0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if zRes0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            // add the current element to the set\n            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n        \n        } else {\n            zPos0 = extraBddSpaceEquationsNeg( dd, bF0 );\n            if zPos0 == nil {\n                return nil; }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos0).ref);\n\n            zPos1 = extraBddSpaceEquationsNeg( dd, bF1 );\n            if zPos1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zPos1).ref);\n\n            zNeg1 = extraBddSpaceEquationsPos( dd, bF1 );\n            if zNeg1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zNeg1).ref);\n\n\n            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );\n            if zRes0 == nil {\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes0).ref);\n\n            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );\n            if zRes1 == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zNeg1);\n                Cudd_RecursiveDerefZdd(dd, zPos0);\n                Cudd_RecursiveDerefZdd(dd, zPos1);\n                return nil;\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(zRes1).ref);\n            Cudd_RecursiveDerefZdd(dd, zNeg1);\n            Cudd_RecursiveDerefZdd(dd, zPos0);\n            Cudd_RecursiveDerefZdd(dd, zPos1);\n            // only zRes0 and zRes1 are refed at this point\n\n            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );\n            if zRes == nil {\n                Cudd_RecursiveDerefZdd(dd, zRes0);\n                Cudd_RecursiveDerefZdd(dd, zRes1);\n                return nil;\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes0).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(zRes1).ref);\n        }\n\n        cuddCacheInsert1( dd, extraBddSpaceEquationsNeg, bF, zRes );\n        return zRes;\n    }\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    statLine( dd );\n\n    if zA == z0 {\n        return b1; }\n    if zA == z1 {\n        return b1; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixPos, zA) {\n        return bRes;\n    } else {\n        var bP0, bP1 *DdNode;\n        var bN0, bN1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        // inlining of macro cuddE\n        bP0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );\n        if bP0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP0).ref);\n\n        // inlining of macro cuddT\n        bP1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );\n        if bP1 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        // inlining of macro cuddE\n        bN0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );\n        if bN0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN0).ref);\n\n        // inlining of macro cuddT\n        bN1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );\n        if bN1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixPos, zA, bRes );\n        return bRes;\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc extraBddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {\n    var bRes *DdNode;\n    statLine( dd );\n\n    if zA == z0 {\n        return b1; }\n    if zA == z1 {\n        return b0; }\n\n    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixNeg, zA) {\n        return bRes;\n    } else {\n        var bP0, bP1 *DdNode;\n        var bN0, bN1 *DdNode;\n        var bRes0, bRes1 *DdNode; \n\n        // inlining of macro cuddE\n        bP0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );\n        if bP0 == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP0).ref);\n\n        // inlining of macro cuddT\n        bP1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );\n        if bP1 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bP1).ref);\n\n        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );\n        if bRes0 == nil {\n            Cudd_RecursiveDeref( dd, bP0 );\n            Cudd_RecursiveDeref( dd, bP1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes0).ref);\n        Cudd_RecursiveDeref( dd, bP0 );\n        Cudd_RecursiveDeref( dd, bP1 );\n\n\n        // inlining of macro cuddE\n        bN0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );\n        if bN0 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN0).ref);\n\n        // inlining of macro cuddT\n        bN1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );\n        if bN1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bN1).ref);\n\n        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );\n        if bRes1 == nil {\n            Cudd_RecursiveDeref( dd, bRes0 );\n            Cudd_RecursiveDeref( dd, bN0 );\n            Cudd_RecursiveDeref( dd, bN1 );\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes1).ref);\n        Cudd_RecursiveDeref( dd, bN0 );\n        Cudd_RecursiveDeref( dd, bN1 );\n\n\n        // consider the case when Res0 and Res1 are the same node \n        if bRes0 == bRes1 {\n            bRes = bRes1;\n        // consider the case when Res1 is complemented \n        // inlining of macro Cudd_IsComplement\n        } else if  int32( ((ptrint) (bRes1) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n            // inlining of macro Cudd_Not\n            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));\n         \n        } else {\n            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );\n            if bRes == nil {\n                Cudd_RecursiveDeref(dd,bRes0);\n                Cudd_RecursiveDeref(dd,bRes1);\n                return nil;\n            }\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes0).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(bRes1).ref);\n\n        cuddCacheInsert1( dd, extraBddSpaceFromMatrixNeg, zA, bRes );\n        return bRes;\n    }\n}\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

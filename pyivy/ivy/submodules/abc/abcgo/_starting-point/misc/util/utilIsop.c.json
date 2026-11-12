@@ -1,0 +1,1384 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c",
+  "SHA256": "f64a03e7edde822f0d1bbde297270dd11a300cf8f1968e80a705aac356d79226",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uOn \u0026 ~uOnDc) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 3914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pOn[0] \u0026 ~pOnDc[0]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 5251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pOn[1] \u0026 ~pOnDc[1]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 6062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 6132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 7585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 7709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 9303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 10852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 12404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 9,
+        "ByteOffset": 13956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 15508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 17062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 18616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 20170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 22165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= ABC_ISOP_MAX_VAR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 542,
+        "Column": 9,
+        "ByteOffset": 23141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 564,
+        "Column": 5,
+        "ByteOffset": 23780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= ABC_ISOP_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 5,
+        "ByteOffset": 24838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCover.nSize \u003c= vCover.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 613,
+        "Column": 5,
+        "ByteOffset": 25570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= ABC_ISOP_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 25611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_TtHasVar( pFunc, nVars, nVars - 1 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 666,
+        "Column": 17,
+        "ByteOffset": 27576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 9,
+        "ByteOffset": 27839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Constant %d\\n\", Vec_IntSize(vCover) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 17,
+        "ByteOffset": 28205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 683,
+        "Column": 17,
+        "ByteOffset": 28288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 685,
+        "Column": 17,
+        "ByteOffset": 28357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"-\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 686,
+        "Column": 22,
+        "ByteOffset": 28393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 9,
+        "ByteOffset": 28426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\\n\", !fCompl );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 754,
+        "Column": 5,
+        "ByteOffset": 30348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 761,
+        "Column": 5,
+        "ByteOffset": 30507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 767,
+        "Column": 5,
+        "ByteOffset": 30668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 786,
+        "Column": 5,
+        "ByteOffset": 31567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 787,
+        "Column": 5,
+        "ByteOffset": 31592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_TtHasVar( pOn, nVars, nVars - 1 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 933,
+        "Column": 5,
+        "ByteOffset": 36039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= ABC_ISOP_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1016,
+        "Column": 9,
+        "ByteOffset": 39329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_TtIntersect2(pCube, pOffset, nWords) );        "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1055,
+        "Column": 5,
+        "ByteOffset": 41013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCover.nSize \u003c= vCover.nCap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1056,
+        "Column": 5,
+        "ByteOffset": 41056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cubes = %d.  Lits = %d.\\n\", Abc_CostCubes(Cost), Abc_CostLits(Cost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1093,
+        "Column": 5,
+        "ByteOffset": 42446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= ABC_ISOP_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1100,
+        "Column": 5,
+        "ByteOffset": 42752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCover.nSize \u003c= vCover.nCap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1102,
+        "Column": 5,
+        "ByteOffset": 42813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1113,
+        "Column": 5,
+        "ByteOffset": 43333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCover.nSize \u003c= vCover.nCap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1115,
+        "Column": 5,
+        "ByteOffset": 43394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1172,
+        "Column": 5,
+        "ByteOffset": 45591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1177,
+        "Column": 5,
+        "ByteOffset": 45819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  | %8d %8d %8d %8d %8d %8d\", int32(spStatic_Abc_IsopTest_TotalCost[0]), int32(spStatic_Abc_IsopTest_TotalCost[1]), int32(spStatic_Abc_IsopTest_TotalCost[2]), int32(spStatic_Abc_IsopTest_TotalCost[3]), int32(spStatic_Abc_IsopTest_TotalCost[4]), int32(spStatic_Abc_IsopTest_TotalCost[5]) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1179,
+        "Column": 5,
+        "ByteOffset": 46142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_Cube2Cost",
+      "Start": 2072,
+      "End": 2158,
+      "BodyStart": 2122,
+      "Original": "static inline word Abc_Cube2Cost( int nCubes )    { return (word)nCubes \u003c\u003c 32;       }",
+      "Draft": "func Abc_Cube2Cost(nCubes int32) word { return (word)nCubes \u003c\u003c 32;       }"
+    },
+    {
+      "Name": "Abc_CostCubes",
+      "Start": 2159,
+      "End": 2245,
+      "BodyStart": 2209,
+      "Original": "static inline int  Abc_CostCubes( word Cost )     { return (int)(Cost \u003e\u003e 32);        }",
+      "Draft": "func Abc_CostCubes(Cost word) int32 { return int32((Cost \u003e\u003e 32));        }"
+    },
+    {
+      "Name": "Abc_CostLits",
+      "Start": 2246,
+      "End": 2332,
+      "BodyStart": 2296,
+      "Original": "static inline int  Abc_CostLits( word Cost )      { return (int)(Cost \u0026 0xFFFFFFFF); }",
+      "Draft": "func Abc_CostLits(Cost word) int32 { return int32((Cost \u0026 0xFFFFFFFF)); }"
+    },
+    {
+      "Name": "Abc_IsopAddLits",
+      "Start": 2844,
+      "End": 3271,
+      "BodyStart": 2928,
+      "Original": "static inline void Abc_IsopAddLits( int * pCover, word Cost0, word Cost1, int Var )\n{\n    if ( pCover ) \n    {\n        int c, nCubes0, nCubes1;\n        nCubes0 = Abc_CostCubes( Cost0 );\n        nCubes1 = Abc_CostCubes( Cost1 );\n        for ( c = 0; c \u003c nCubes0; c++ )\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n        for ( c = 0; c \u003c nCubes1; c++ )\n            pCover[nCubes0+c] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n    }\n}",
+      "Draft": "func Abc_IsopAddLits(pCover *int32, Cost0 word, Cost1 word, Var int32) {\n    if pCover != nil {\n        var c, nCubes0, nCubes1 int32;\n        nCubes0 = Abc_CostCubes( Cost0 );\n        nCubes1 = Abc_CostCubes( Cost1 );\n        for  c = 0; c \u003c nCubes0; c++  {\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n        }\n        for  c = 0; c \u003c nCubes1; c++  {\n            pCover[nCubes0+c] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_Isop6Cover",
+      "Start": 3272,
+      "End": 5015,
+      "BodyStart": 3368,
+      "Original": "word Abc_Isop6Cover( word uOn, word uOnDc, word * pRes, int nVars, word CostLim, int * pCover )\n{\n    word uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2;\n    word Cost0, Cost1, Cost2;  int Var; \n    assert( nVars \u003c= 6 );\n    assert( (uOn \u0026 ~uOnDc) == 0 );\n    if ( uOn == 0 )\n    {\n        pRes[0] = 0;\n        return 0;\n    }\n    if ( uOnDc == ~(word)0 )\n    {\n        pRes[0] = ~(word)0;\n        if ( pCover ) pCover[0] = 0;\n        return Abc_Cube2Cost(1);\n    }\n    assert( nVars \u003e 0 );\n    // find the topmost var\n    for ( Var = nVars-1; Var \u003e= 0; Var-- )\n        if ( Abc_Tt6HasVar( uOn, Var ) || Abc_Tt6HasVar( uOnDc, Var ) )\n             break;\n    assert( Var \u003e= 0 );\n    // cofactor\n    uOn0   = Abc_Tt6Cofactor0( uOn,   Var );\n    uOn1   = Abc_Tt6Cofactor1( uOn  , Var );\n    uOnDc0 = Abc_Tt6Cofactor0( uOnDc, Var );\n    uOnDc1 = Abc_Tt6Cofactor1( uOnDc, Var );\n    // solve for cofactors\n    Cost0 = Abc_Isop6Cover( uOn0 \u0026 ~uOnDc1, uOnDc0, \u0026uRes0, Var, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    Cost1 = Abc_Isop6Cover( uOn1 \u0026 ~uOnDc0, uOnDc1, \u0026uRes1, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    Cost2 = Abc_Isop6Cover( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, \u0026uRes2, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    *pRes = uRes2 | (uRes0 \u0026 s_Truths6Neg[Var]) | (uRes1 \u0026 s_Truths6[Var]);\n    assert( (uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, Var );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop6Cover(uOn word, uOnDc word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2 word;\n    var Cost0, Cost1, Cost2 word;  var Var int32; \n    assert(nVars \u003c= 6, \"nVars \u003c= 6\");\n    assert((uOn \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~uOnDc) == 0\");\n    if uOn == 0 {\n        pRes[0] = 0;\n        return 0;\n    }\n    if uOnDc == ~(word)0 {\n        pRes[0] = ~(word)0;\n        if pCover != nil { pCover[0] = 0; }\n        return Abc_Cube2Cost(1);\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Abc_Tt6HasVar( uOn, Var ) || Abc_Tt6HasVar( uOnDc, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    uOn0   = Abc_Tt6Cofactor0( uOn,   Var );\n    uOn1   = Abc_Tt6Cofactor1( uOn  , Var );\n    uOnDc0 = Abc_Tt6Cofactor0( uOnDc, Var );\n    uOnDc1 = Abc_Tt6Cofactor1( uOnDc, Var );\n    // solve for cofactors\n    Cost0 = Abc_Isop6Cover( uOn0 \u0026 ~uOnDc1, uOnDc0, \u0026uRes0, Var, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    Cost1 = Abc_Isop6Cover( uOn1 \u0026 ~uOnDc0, uOnDc1, \u0026uRes1, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    Cost2 = Abc_Isop6Cover( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, \u0026uRes2, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    *pRes = uRes2 | (uRes0 \u0026 s_Truths6Neg[Var]) | (uRes1 \u0026 s_Truths6[Var]);\n    assert((uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, Var );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop7Cover",
+      "Start": 5016,
+      "End": 6337,
+      "BodyStart": 5105,
+      "Original": "word Abc_Isop7Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn0, uOn1, uOn2, uOnDc2, uRes0, uRes1, uRes2;\n    word Cost0, Cost1, Cost2;  int nVars = 6; \n    assert( (pOn[0] \u0026 ~pOnDc[0]) == 0 );\n    assert( (pOn[1] \u0026 ~pOnDc[1]) == 0 );\n    // cofactor\n    uOn0 = pOn[0] \u0026 ~pOnDc[1];\n    uOn1 = pOn[1] \u0026 ~pOnDc[0];\n    // solve for cofactors\n    Cost0 = Abc_IsopCheck( \u0026uOn0, pOnDc,   \u0026uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    Cost1 = Abc_IsopCheck( \u0026uOn1, pOnDc+1, \u0026uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    uOn2 = (pOn[0] \u0026 ~uRes0) | (pOn[1] \u0026 ~uRes1);\n    uOnDc2 = pOnDc[0] \u0026 pOnDc[1];\n    Cost2 = Abc_IsopCheck( \u0026uOn2, \u0026uOnDc2,  \u0026uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    pRes[0] = uRes2 | uRes0;\n    pRes[1] = uRes2 | uRes1;\n    assert( (pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0 );\n    assert( (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop7Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn0, uOn1, uOn2, uOnDc2, uRes0, uRes1, uRes2 word;\n    var Cost0, Cost1, Cost2 word;  var nVars int32  = 6; \n    assert((pOn[0] \u0026 ~pOnDc[0]) == 0, \"(pOn[0] \u0026 ~pOnDc[0]) == 0\");\n    assert((pOn[1] \u0026 ~pOnDc[1]) == 0, \"(pOn[1] \u0026 ~pOnDc[1]) == 0\");\n    // cofactor\n    uOn0 = pOn[0] \u0026 ~pOnDc[1];\n    uOn1 = pOn[1] \u0026 ~pOnDc[0];\n    // solve for cofactors\n    Cost0 = Abc_IsopCheck( \u0026uOn0, pOnDc,   \u0026uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    Cost1 = Abc_IsopCheck( \u0026uOn1, pOnDc+1, \u0026uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    uOn2 = (pOn[0] \u0026 ~uRes0) | (pOn[1] \u0026 ~uRes1);\n    uOnDc2 = pOnDc[0] \u0026 pOnDc[1];\n    Cost2 = Abc_IsopCheck( \u0026uOn2, \u0026uOnDc2,  \u0026uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    pRes[0] = uRes2 | uRes0;\n    pRes[1] = uRes2 | uRes1;\n    assert((pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0, \"(pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0\");\n    assert((pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0, \"(pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop8Cover",
+      "Start": 6338,
+      "End": 7966,
+      "BodyStart": 6427,
+      "Original": "word Abc_Isop8Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[2], uOnDc2[2], uRes0[2], uRes1[2], uRes2[2];\n    word Cost0, Cost1, Cost2;  int nVars = 7;\n    // negative cofactor\n    uOn2[0] = pOn[0] \u0026 ~pOnDc[2];\n    uOn2[1] = pOn[1] \u0026 ~pOnDc[3];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,   uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    uOn2[0] = pOn[2] \u0026 ~pOnDc[0];\n    uOn2[1] = pOn[3] \u0026 ~pOnDc[1];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+2, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    uOn2[0] = (pOn[0] \u0026 ~uRes0[0]) | (pOn[2] \u0026 ~uRes1[0]); uOnDc2[0] = pOnDc[0] \u0026 pOnDc[2];\n    uOn2[1] = (pOn[1] \u0026 ~uRes0[1]) | (pOn[3] \u0026 ~uRes1[1]); uOnDc2[1] = pOnDc[1] \u0026 pOnDc[3];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,  uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    pRes[0] = uRes2[0] | uRes0[0];\n    pRes[1] = uRes2[1] | uRes0[1];\n    pRes[2] = uRes2[0] | uRes1[0];\n    pRes[3] = uRes2[1] | uRes1[1];\n    assert( (pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0 );\n    assert( (pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop8Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [2]word;\n    var Cost0, Cost1, Cost2 word;  var nVars int32  = 7;\n    // negative cofactor\n    uOn2[0] = pOn[0] \u0026 ~pOnDc[2];\n    uOn2[1] = pOn[1] \u0026 ~pOnDc[3];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,   uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    uOn2[0] = pOn[2] \u0026 ~pOnDc[0];\n    uOn2[1] = pOn[3] \u0026 ~pOnDc[1];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+2, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    uOn2[0] = (pOn[0] \u0026 ~uRes0[0]) | (pOn[2] \u0026 ~uRes1[0]); uOnDc2[0] = pOnDc[0] \u0026 pOnDc[2];\n    uOn2[1] = (pOn[1] \u0026 ~uRes0[1]) | (pOn[3] \u0026 ~uRes1[1]); uOnDc2[1] = pOnDc[1] \u0026 pOnDc[3];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,  uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    pRes[0] = uRes2[0] | uRes0[0];\n    pRes[1] = uRes2[1] | uRes0[1];\n    pRes[2] = uRes2[0] | uRes1[0];\n    pRes[3] = uRes2[1] | uRes1[1];\n    assert((pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0, \"(pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0\");\n    assert((pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0, \"(pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop9Cover",
+      "Start": 7967,
+      "End": 9463,
+      "BodyStart": 8056,
+      "Original": "word Abc_Isop9Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[4], uOnDc2[4], uRes0[4], uRes1[4], uRes2[4];\n    word Cost0, Cost1, Cost2; int c, nVars = 8, nWords = 4;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop9Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [4]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 8;\nvar nWords int32 = 4;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop10Cover",
+      "Start": 9464,
+      "End": 10961,
+      "BodyStart": 9554,
+      "Original": "word Abc_Isop10Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[8], uOnDc2[8], uRes0[8], uRes1[8], uRes2[8];\n    word Cost0, Cost1, Cost2; int c, nVars = 9, nWords = 8;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop10Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [8]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 9;\nvar nWords int32 = 8;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop11Cover",
+      "Start": 10962,
+      "End": 12466,
+      "BodyStart": 11052,
+      "Original": "word Abc_Isop11Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[16], uOnDc2[16], uRes0[16], uRes1[16], uRes2[16];\n    word Cost0, Cost1, Cost2; int c, nVars = 10, nWords = 16;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop11Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [16]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 10;\nvar nWords int32 = 16;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop12Cover",
+      "Start": 12467,
+      "End": 13971,
+      "BodyStart": 12557,
+      "Original": "word Abc_Isop12Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[32], uOnDc2[32], uRes0[32], uRes1[32], uRes2[32];\n    word Cost0, Cost1, Cost2; int c, nVars = 11, nWords = 32;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop12Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [32]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 11;\nvar nWords int32 = 32;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop13Cover",
+      "Start": 13972,
+      "End": 15476,
+      "BodyStart": 14062,
+      "Original": "word Abc_Isop13Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[64], uOnDc2[64], uRes0[64], uRes1[64], uRes2[64];\n    word Cost0, Cost1, Cost2; int c, nVars = 12, nWords = 64;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop13Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [64]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 12;\nvar nWords int32 = 64;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop14Cover",
+      "Start": 15477,
+      "End": 16987,
+      "BodyStart": 15567,
+      "Original": "word Abc_Isop14Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[128], uOnDc2[128], uRes0[128], uRes1[128], uRes2[128];\n    word Cost0, Cost1, Cost2; int c, nVars = 13, nWords = 128;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop14Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [128]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 13;\nvar nWords int32 = 128;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop15Cover",
+      "Start": 16988,
+      "End": 18498,
+      "BodyStart": 17078,
+      "Original": "word Abc_Isop15Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[256], uOnDc2[256], uRes0[256], uRes1[256], uRes2[256];\n    word Cost0, Cost1, Cost2; int c, nVars = 14, nWords = 256;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop15Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [256]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 14;\nvar nWords int32 = 256;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_Isop16Cover",
+      "Start": 18499,
+      "End": 20009,
+      "BodyStart": 18589,
+      "Original": "word Abc_Isop16Cover( word * pOn, word * pOnDc, word * pRes, word CostLim, int * pCover )\n{\n    word uOn2[512], uOnDc2[512], uRes0[512], uRes1[512], uRes2[512];\n    word Cost0, Cost1, Cost2; int c, nVars = 15, nWords = 512;\n    // negative cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if ( Cost0 \u003e= CostLim ) return CostLim;\n    // positive cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    if ( Cost0 + Cost1 \u003e= CostLim ) return CostLim;\n    // middle cofactor\n    for ( c = 0; c \u003c nWords; c++ )\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : NULL );\n    if ( Cost0 + Cost1 + Cost2 \u003e= CostLim ) return CostLim;\n    // derive the final truth table\n    for ( c = 0; c \u003c nWords; c++ )\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    // verify\n    for ( c = 0; c \u003c (nWords\u003c\u003c1); c++ )\n        assert( (pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0 );\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}",
+      "Draft": "func Abc_Isop16Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [512]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 15;\nvar nWords int32 = 512;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}"
+    },
+    {
+      "Name": "Abc_IsopCheck",
+      "Start": 20010,
+      "End": 20668,
+      "BodyStart": 20109,
+      "Original": "word Abc_IsopCheck( word * pOn, word * pOnDc, word * pRes, int nVars, word CostLim, int * pCover )\n{\n    int nVarsNew; word Cost;\n    if ( nVars \u003c= 6 )\n        return Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVars, CostLim, pCover );\n    for ( nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew-- )\n        if ( Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) || Abc_TtHasVar( pOnDc, nVars, nVarsNew-1 ) )\n            break;\n    if ( nVarsNew == 6 )\n        Cost = Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVarsNew, CostLim, pCover );\n    else\n        Cost = s_pFuncIsopCover[nVarsNew]( pOn, pOnDc, pRes, CostLim, pCover );\n    Abc_TtStretch6( pRes, nVarsNew, nVars );\n    return Cost;\n}",
+      "Draft": "func Abc_IsopCheck(pOn *word, pOnDc *word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var nVarsNew int32; var Cost word;\n    if nVars \u003c= 6 {\n        return Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVars, CostLim, pCover ); }\n    for  nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew--  {\n        if Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) || Abc_TtHasVar( pOnDc, nVars, nVarsNew-1 ) {\n            break; }\n    }\n    if nVarsNew == 6 {\n        Cost = Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVarsNew, CostLim, pCover );\n    } else {\n        Cost = s_pFuncIsopCover[nVarsNew]( pOn, pOnDc, pRes, CostLim, pCover ); }\n    Abc_TtStretch6( pRes, nVarsNew, nVars );\n    return Cost;\n}"
+    },
+    {
+      "Name": "Abc_IsopTtElems",
+      "Start": 20943,
+      "End": 21312,
+      "BodyStart": 20983,
+      "Original": "static inline word ** Abc_IsopTtElems()\n{\n    static word TtElems[ABC_ISOP_MAX_VAR+1][ABC_ISOP_MAX_WORD], * pTtElems[ABC_ISOP_MAX_VAR+1] = {NULL};\n    if ( pTtElems[0] == NULL )\n    {\n        int v;\n        for ( v = 0; v \u003c= ABC_ISOP_MAX_VAR; v++ )\n            pTtElems[v] = TtElems[v];\n        Abc_TtElemInit( pTtElems, ABC_ISOP_MAX_VAR );\n    }\n    return pTtElems;\n}",
+      "Draft": "func Abc_IsopTtElems() **word {\n    \n    if spStatic_Abc_IsopTtElems_pTtElems[0] == nil {\n        var v int32;\n        for  v = 0; v \u003c= ABC_ISOP_MAX_VAR; v++  {\n            spStatic_Abc_IsopTtElems_pTtElems[v] = spStatic_Abc_IsopTtElems_TtElems[v];\n        }\n        Abc_TtElemInit( spStatic_Abc_IsopTtElems_pTtElems, ABC_ISOP_MAX_VAR );\n    }\n    return spStatic_Abc_IsopTtElems_pTtElems;\n}"
+    },
+    {
+      "Name": "Abc_IsopBuildTruth",
+      "Start": 21313,
+      "End": 22178,
+      "BodyStart": 21405,
+      "Original": "void Abc_IsopBuildTruth( Vec_Int_t * vCover, int nVars, word * pRes, int fXor, int fCompl )\n{\n    word ** pTtElems = Abc_IsopTtElems();\n    word pCube[ABC_ISOP_MAX_WORD];\n    int nWords = Abc_TtWordNum( nVars );\n    int c, v, Cube;\n    assert( nVars \u003c= ABC_ISOP_MAX_VAR );\n    Abc_TtClear( pRes, nWords );\n    Vec_IntForEachEntry( vCover, Cube, c )\n    {\n        Abc_TtFill( pCube, nWords );\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 1 )\n                Abc_TtSharp( pCube, pCube, pTtElems[v], nWords );\n            else if ( ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 2 )\n                Abc_TtAnd( pCube, pCube, pTtElems[v], nWords, 0 );\n        if ( fXor )\n            Abc_TtXor( pRes, pRes, pCube, nWords, 0 );\n        else\n            Abc_TtOr( pRes, pRes, pCube, nWords );\n    }\n    if ( fCompl )\n        Abc_TtNot( pRes, nWords );\n}",
+      "Draft": "func Abc_IsopBuildTruth(vCover *Vec_Int_t, nVars int32, pRes *word, fXor int32, fCompl int32) {\n    var pTtElems **word  = Abc_IsopTtElems();\n    var pCube [ABC_ISOP_MAX_WORD]word;\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var c, v, Cube int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Abc_TtClear( pRes, nWords );\n    // inlining of macro Vec_IntForEachEntry\n    for  c = 0; (c \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Cube) = Vec_IntEntry(vCover, c)), 1); c++  {\n        Abc_TtFill( pCube, nWords );\n        for  v = 0; v \u003c nVars; v++  {\n            if ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 1 {\n                Abc_TtSharp( pCube, pCube, pTtElems[v], nWords );\n            } else if ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 2 {\n                Abc_TtAnd( pCube, pCube, pTtElems[v], nWords, 0 ); }\n        }\n        if fXor != 0 {\n            Abc_TtXor( pRes, pRes, pCube, nWords, 0 );\n        } else {\n            Abc_TtOr( pRes, pRes, pCube, nWords ); }\n    }\n    if fCompl != 0 {\n        Abc_TtNot( pRes, nWords ); }\n}"
+    },
+    {
+      "Name": "Abc_IsopVerify",
+      "Start": 22179,
+      "End": 22524,
+      "BodyStart": 22295,
+      "Original": "static inline void Abc_IsopVerify( word * pFunc, int nVars, word * pRes, Vec_Int_t * vCover, int fXor, int fCompl )\n{\n    Abc_IsopBuildTruth( vCover, nVars, pRes, fXor, fCompl );\n    if ( !Abc_TtEqual( pFunc, pRes, Abc_TtWordNum(nVars) ) )\n        printf( \"Verification failed.\\n\" );\n//    else\n//        printf( \"Verification succeeded.\\n\" );\n}",
+      "Draft": "func Abc_IsopVerify(pFunc *word, nVars int32, pRes *word, vCover *Vec_Int_t, fXor int32, fCompl int32) {\n    Abc_IsopBuildTruth( vCover, nVars, pRes, fXor, fCompl );\n    if !Abc_TtEqual( pFunc, pRes, Abc_TtWordNum(nVars) ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n//    else\n//        printf( \"Verification succeeded.\\n\" );\n}"
+    },
+    {
+      "Name": "Abc_Isop",
+      "Start": 22815,
+      "End": 24240,
+      "BodyStart": 22903,
+      "Original": "int Abc_Isop( word * pFunc, int nVars, int nCubeLim, Vec_Int_t * vCover, int fTryBoth )\n{\n    word pRes[ABC_ISOP_MAX_WORD];\n    word Cost0, Cost1, Cost, CostInit = Abc_Cube2Cost(nCubeLim);\n    assert( nVars \u003c= ABC_ISOP_MAX_VAR );\n    Vec_IntGrow( vCover, 1 \u003c\u003c (nVars-1) );\n    if ( fTryBoth )\n    {\n        Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, NULL );\n        Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        Cost1 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Cost0, NULL );\n        Cost = Abc_MinWord( Cost0, Cost1 );\n        if ( Cost == CostInit )\n        {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            return -1;\n        }\n        if ( Cost == Cost0 )\n        {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        }\n        else // if ( Cost == Cost1 )\n        {\n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        }\n    }\n    else\n    {\n        Cost = Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        if ( Cost == CostInit )\n            return -1;\n    }\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, Cost != Cost0 );\n    return Cost != Cost0;\n}",
+      "Draft": "func Abc_Isop(pFunc *word, nVars int32, nCubeLim int32, vCover *Vec_Int_t, fTryBoth int32) int32 {\n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost0 word;\n    var Cost1 word;\n    var Cost word;\n    var CostInit word = Abc_Cube2Cost(nCubeLim);\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Vec_IntGrow( vCover, 1 \u003c\u003c (nVars-1) );\n    if fTryBoth != 0 {\n        Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, nil );\n        Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        Cost1 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Cost0, nil );\n        Cost = Abc_MinWord( Cost0, Cost1 );\n        if Cost == CostInit {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            return -1;\n        }\n        if Cost == Cost0 {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        \n        } else { // if ( Cost == Cost1 )\n        \n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        }\n    \n    } else {\n        Cost = Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        if Cost == CostInit {\n            return -1; }\n    }\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, Cost != Cost0 );\n    return Cost != Cost0;\n}"
+    },
+    {
+      "Name": "Abc_IsopCnf",
+      "Start": 24588,
+      "End": 25880,
+      "BodyStart": 24659,
+      "Original": "int Abc_IsopCnf( word * pFunc, int nVars, int nCubeLim, int * pCover )\n{\n    word pRes[ABC_ISOP_MAX_WORD];\n    word Cost0, Cost1, CostInit = Abc_Cube2Cost(nCubeLim);\n    int c, nCubes0, nCubes1;\n    assert( nVars \u003c= ABC_ISOP_MAX_VAR );\n    assert( Abc_TtHasVar( pFunc, nVars, nVars - 1 ) );\n    if ( nVars \u003e 6 )\n        Cost0 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover );\n    else\n        Cost0 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover );\n    if ( Cost0 \u003e= CostInit )\n        return CostInit;\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if ( nVars \u003e 6 )\n        Cost1 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    else\n        Cost1 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : NULL );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if ( Cost0 + Cost1 \u003e= CostInit )\n        return CostInit;\n    nCubes0 = Abc_CostCubes(Cost0);\n    nCubes1 = Abc_CostCubes(Cost1);\n    if ( pCover )\n    {\n        for ( c = 0; c \u003c nCubes0; c++ )\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 0));\n        for ( c = 0; c \u003c nCubes1; c++ )\n            pCover[c+nCubes0] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 1));\n    }\n    return nCubes0 + nCubes1;\n}",
+      "Draft": "func Abc_IsopCnf(pFunc *word, nVars int32, nCubeLim int32, pCover *int32) int32 {\n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost0 word;\n    var Cost1 word;\n    var CostInit word = Abc_Cube2Cost(nCubeLim);\n    var c, nCubes0, nCubes1 int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    assert(Abc_TtHasVar( pFunc, nVars, nVars - 1 ), \"Abc_TtHasVar( pFunc, nVars, nVars - 1 )\");\n    if nVars \u003e 6 {\n        Cost0 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover );\n    } else {\n        Cost0 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover ); }\n    if Cost0 \u003e= CostInit {\n        return CostInit; }\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if nVars \u003e 6 {\n        Cost1 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    } else {\n        Cost1 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : nil ); }\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if Cost0 + Cost1 \u003e= CostInit {\n        return CostInit; }\n    nCubes0 = Abc_CostCubes(Cost0);\n    nCubes1 = Abc_CostCubes(Cost1);\n    if pCover != nil {\n        for  c = 0; c \u003c nCubes0; c++  {\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 0));\n        }\n        for  c = 0; c \u003c nCubes1; c++  {\n            pCover[c+nCubes0] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 1));\n        }\n    }\n    return nCubes0 + nCubes1;\n}"
+    },
+    {
+      "Name": "Abc_IsopCountLits",
+      "Start": 26117,
+      "End": 26728,
+      "BodyStart": 26172,
+      "Original": "int Abc_IsopCountLits( Vec_Int_t * vCover, int nVars )\n{\n    int i, k, Entry, Literal, nLits = 0;\n    if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) )\n        return 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 ) // neg literal\n                nLits++;\n            else if ( Literal == 2 ) // pos literal\n                nLits++;\n            else if ( Literal != 0 ) \n                assert( 0 );\n        }\n    }\n    return nLits;\n}",
+      "Draft": "func Abc_IsopCountLits(vCover *Vec_Int_t, nVars int32) int32 {\n    var i, k, Entry, Literal, nLits int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        return 0; }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCover, i)), 1); i++  { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                nLits++;\n            } else if Literal == 2 { // pos literal\n                nLits++;\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n    }\n    return nLits;\n}"
+    },
+    {
+      "Name": "Abc_IsopPrintCover",
+      "Start": 26729,
+      "End": 27471,
+      "BodyStart": 26798,
+      "Original": "void Abc_IsopPrintCover( Vec_Int_t * vCover, int nVars, int fCompl )\n{\n    int i, k, Entry, Literal;\n    if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) )\n    {\n        printf( \"Constant %d\\n\", Vec_IntSize(vCover) );\n        return;\n    }\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 ) // neg literal\n                printf( \"0\" );\n            else if ( Literal == 2 ) // pos literal\n                printf( \"1\" );\n            else if ( Literal == 0 ) \n                printf( \"-\" );\n            else assert( 0 );\n        }\n        printf( \" %d\\n\", !fCompl );\n    }\n}",
+      "Draft": "func Abc_IsopPrintCover(vCover *Vec_Int_t, nVars int32, fCompl int32) {\n    var i, k, Entry, Literal int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        fmt.Printf(\"Constant %d\\n\", Vec_IntSize(vCover));\n        return;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCover, i)), 1); i++  { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                fmt.Printf(\"0\");\n            } else if Literal == 2 { // pos literal\n                fmt.Printf(\"1\");\n            } else if Literal == 0 { \n                fmt.Printf(\"-\");\n            } else { assert(false, \"0\"); }\n        }\n        fmt.Printf(\" %d\\n\", !fCompl);\n    }\n}"
+    },
+    {
+      "Name": "Abc_IsopPrint",
+      "Start": 27472,
+      "End": 27676,
+      "BodyStart": 27548,
+      "Original": "void Abc_IsopPrint( word * t, int nVars, Vec_Int_t * vCover, int fTryBoth )\n{\n    int fCompl = Abc_Isop( t, nVars, ABC_ISOP_MAX_CUBE, vCover, fTryBoth );\n    Abc_IsopPrintCover( vCover, nVars, fCompl );\n}",
+      "Draft": "func Abc_IsopPrint(t *word, nVars int32, vCover *Vec_Int_t, fTryBoth int32) {\n    var fCompl int32  = Abc_Isop( t, nVars, ABC_ISOP_MAX_CUBE, vCover, fTryBoth );\n    Abc_IsopPrintCover( vCover, nVars, fCompl );\n}"
+    },
+    {
+      "Name": "Abc_EsopAddLits",
+      "Start": 27969,
+      "End": 29183,
+      "BodyStart": 28065,
+      "Original": "static inline int Abc_EsopAddLits( int * pCover, word r0, word r1, word r2, word Max, int Var )\n{\n    int i, c0, c1, c2;\n    if ( Max == r0 )\n    {\n        c2 = Abc_CostCubes(r2);\n        if ( pCover )\n        {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for ( i = 0; i \u003c c1; i++ )\n                pCover[i] = pCover[c0+i];\n            for ( i = 0; i \u003c c2; i++ )\n                pCover[c1+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,0));\n        }\n        return c2;\n    }\n    else if ( Max == r1 )\n    {\n        c2 = Abc_CostCubes(r2);\n        if ( pCover )\n        {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for ( i = 0; i \u003c c2; i++ )\n                pCover[c0+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,1));\n        }\n        return c2;\n    }\n    else\n    {\n        c0 = Abc_CostCubes(r0);\n        c1 = Abc_CostCubes(r1);\n        if ( pCover )\n        {\n            c2 = Abc_CostCubes(r2);\n            for ( i = 0; i \u003c c0; i++ )\n                pCover[i] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n            for ( i = 0; i \u003c c1; i++ )\n                pCover[c0+i] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n        }\n        return c0 + c1;\n    }\n}",
+      "Draft": "func Abc_EsopAddLits(pCover *int32, r0 word, r1 word, r2 word, Max word, Var int32) int32 {\n    var i, c0, c1, c2 int32;\n    if Max == r0 {\n        c2 = Abc_CostCubes(r2);\n        if pCover != nil {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for  i = 0; i \u003c c1; i++  {\n                pCover[i] = pCover[c0+i];\n            }\n            for  i = 0; i \u003c c2; i++  {\n                pCover[c1+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,0));\n            }\n        }\n        return c2;\n    \n    } else if Max == r1 {\n        c2 = Abc_CostCubes(r2);\n        if pCover != nil {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for  i = 0; i \u003c c2; i++  {\n                pCover[c0+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,1));\n            }\n        }\n        return c2;\n    \n    } else {\n        c0 = Abc_CostCubes(r0);\n        c1 = Abc_CostCubes(r1);\n        if pCover != nil {\n            c2 = Abc_CostCubes(r2);\n            for  i = 0; i \u003c c0; i++  {\n                pCover[i] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n            }\n            for  i = 0; i \u003c c1; i++  {\n                pCover[c0+i] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n            }\n        }\n        return c0 + c1;\n    }\n}"
+    },
+    {
+      "Name": "Abc_Esop6Cover",
+      "Start": 29184,
+      "End": 30365,
+      "BodyStart": 29253,
+      "Original": "word Abc_Esop6Cover( word t, int nVars, word CostLim, int * pCover )\n{\n    word c0, c1;\n    word r0, r1, r2, Max;\n    int Var;\n    assert( nVars \u003c= 6 );\n    if ( t == 0 )\n        return 0;\n    if ( t == ~(word)0 )\n    {\n        if ( pCover ) *pCover = 0;\n        return Abc_Cube2Cost(1);\n    }\n    assert( nVars \u003e 0 );\n    // find the topmost var\n    for ( Var = nVars-1; Var \u003e= 0; Var-- )\n        if ( Abc_Tt6HasVar( t, Var ) )\n             break;\n    assert( Var \u003e= 0 );\n    // cofactor\n    c0 = Abc_Tt6Cofactor0( t, Var );\n    c1 = Abc_Tt6Cofactor1( t, Var );\n    // call recursively\n    r0 = Abc_Esop6Cover( c0,      Var, CostLim, pCover ? pCover : NULL );\n    if ( r0 \u003e= CostLim ) return CostLim;\n    r1 = Abc_Esop6Cover( c1,      Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) : NULL );\n    if ( r1 \u003e= CostLim ) return CostLim;\n    r2 = Abc_Esop6Cover( c0 ^ c1, Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : NULL );\n    if ( r2 \u003e= CostLim ) return CostLim;\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if ( r0 + r1 + r2 - Max \u003e= CostLim ) return CostLim;\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, Var );\n}",
+      "Draft": "func Abc_Esop6Cover(t word, nVars int32, CostLim word, pCover *int32) word {\n    var c0, c1 word;\n    var r0, r1, r2, Max word;\n    var Var int32;\n    assert(nVars \u003c= 6, \"nVars \u003c= 6\");\n    if t == 0 {\n        return 0; }\n    if t == ~(word)0 {\n        if pCover != nil { *pCover = 0; }\n        return Abc_Cube2Cost(1);\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Abc_Tt6HasVar( t, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    c0 = Abc_Tt6Cofactor0( t, Var );\n    c1 = Abc_Tt6Cofactor1( t, Var );\n    // call recursively\n    r0 = Abc_Esop6Cover( c0,      Var, CostLim, pCover ? pCover : nil );\n    if r0 \u003e= CostLim { return CostLim; }\n    r1 = Abc_Esop6Cover( c1,      Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) : nil );\n    if r1 \u003e= CostLim { return CostLim; }\n    r2 = Abc_Esop6Cover( c0 ^ c1, Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : nil );\n    if r2 \u003e= CostLim { return CostLim; }\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if r0 + r1 + r2 - Max \u003e= CostLim { return CostLim; }\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, Var );\n}"
+    },
+    {
+      "Name": "Abc_EsopCover",
+      "Start": 30366,
+      "End": 31313,
+      "BodyStart": 30438,
+      "Original": "word Abc_EsopCover( word * pOn, int nVars, word CostLim, int * pCover )\n{\n    word r0, r1, r2, Max;\n    int c, nWords = (1 \u003c\u003c (nVars - 7));\n    assert( nVars \u003e 6 );\n    assert( Abc_TtHasVar( pOn, nVars, nVars - 1 ) );\n    r0 = Abc_EsopCheck( pOn,        nVars-1, CostLim, pCover );\n    if ( r0 \u003e= CostLim ) return CostLim;\n    r1 = Abc_EsopCheck( pOn+nWords, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) : NULL );\n    if ( r1 \u003e= CostLim ) return CostLim;\n    for ( c = 0; c \u003c nWords; c++ )\n        pOn[c] ^= pOn[nWords+c];\n    r2 = Abc_EsopCheck( pOn, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : NULL );\n    for ( c = 0; c \u003c nWords; c++ )\n        pOn[c] ^= pOn[nWords+c];\n    if ( r2 \u003e= CostLim ) return CostLim;\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if ( r0 + r1 + r2 - Max \u003e= CostLim ) return CostLim;\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, nVars-1 );\n}",
+      "Draft": "func Abc_EsopCover(pOn *word, nVars int32, CostLim word, pCover *int32) word {\n    var r0, r1, r2, Max word;\n    var c int32;\n    var nWords int32 = (1 \u003c\u003c (nVars - 7));\n    assert(nVars \u003e 6, \"nVars \u003e 6\");\n    assert(Abc_TtHasVar( pOn, nVars, nVars - 1 ), \"Abc_TtHasVar( pOn, nVars, nVars - 1 )\");\n    r0 = Abc_EsopCheck( pOn,        nVars-1, CostLim, pCover );\n    if r0 \u003e= CostLim { return CostLim; }\n    r1 = Abc_EsopCheck( pOn+nWords, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) : nil );\n    if r1 \u003e= CostLim { return CostLim; }\n    for  c = 0; c \u003c nWords; c++  {\n        pOn[c] ^= pOn[nWords+c];\n    }\n    r2 = Abc_EsopCheck( pOn, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : nil );\n    for  c = 0; c \u003c nWords; c++  {\n        pOn[c] ^= pOn[nWords+c];\n    }\n    if r2 \u003e= CostLim { return CostLim; }\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if r0 + r1 + r2 - Max \u003e= CostLim { return CostLim; }\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, nVars-1 );\n}"
+    },
+    {
+      "Name": "Abc_EsopCheck",
+      "Start": 31314,
+      "End": 31812,
+      "BodyStart": 31386,
+      "Original": "word Abc_EsopCheck( word * pOn, int nVars, word CostLim, int * pCover )\n{\n    int nVarsNew; word Cost;\n    if ( nVars \u003c= 6 )\n        return Abc_Esop6Cover( *pOn, nVars, CostLim, pCover );\n    for ( nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew-- )\n        if ( Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) )\n            break;\n    if ( nVarsNew == 6 )\n        Cost = Abc_Esop6Cover( *pOn, nVarsNew, CostLim, pCover );\n    else\n        Cost = Abc_EsopCover( pOn, nVarsNew, CostLim, pCover );\n    return Cost;\n}",
+      "Draft": "func Abc_EsopCheck(pOn *word, nVars int32, CostLim word, pCover *int32) word {\n    var nVarsNew int32; var Cost word;\n    if nVars \u003c= 6 {\n        return Abc_Esop6Cover( *pOn, nVars, CostLim, pCover ); }\n    for  nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew--  {\n        if Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) {\n            break; }\n    }\n    if nVarsNew == 6 {\n        Cost = Abc_Esop6Cover( *pOn, nVarsNew, CostLim, pCover );\n    } else {\n        Cost = Abc_EsopCover( pOn, nVarsNew, CostLim, pCover ); }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Abc_TtIntersect2",
+      "Start": 32095,
+      "End": 32288,
+      "BodyStart": 32170,
+      "Original": "static inline int Abc_TtIntersect2( word * pIn1, word * pIn2, int nWords )\n{\n    int w;\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( pIn1[w] \u0026 pIn2[w] )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Abc_TtIntersect2(pIn1 *word, pIn2 *word, nWords int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        if pIn1[w] \u0026 pIn2[w] {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_TtCheckWithCubePos2Neg",
+      "Start": 32289,
+      "End": 32843,
+      "BodyStart": 32378,
+      "Original": "static inline int Abc_TtCheckWithCubePos2Neg( word * t, word * c, int nWords, int iVar )\n{\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            if ( t[i] \u0026 (c[i] \u003e\u003e Shift) )\n                return 0;\n        return 1;\n    }\n    else\n    {\n        int i, Step = (1 \u003c\u003c (iVar - 6));\n        word * tLimit = t + nWords;\n        for ( ; t \u003c tLimit; t += 2*Step )\n            for ( i = 0; i \u003c Step; i++ )\n                if ( t[Step+i] \u0026 c[i] )\n                    return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Abc_TtCheckWithCubePos2Neg(t *word, c *word, nWords int32, iVar int32) int32 {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if t[i] \u0026 (c[i] \u003e\u003e Shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[Step+i] \u0026 c[i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Abc_TtCheckWithCubeNeg2Pos",
+      "Start": 32844,
+      "End": 33398,
+      "BodyStart": 32933,
+      "Original": "static inline int Abc_TtCheckWithCubeNeg2Pos( word * t, word * c, int nWords, int iVar )\n{\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            if ( t[i] \u0026 (c[i] \u003c\u003c Shift) )\n                return 0;\n        return 1;\n    }\n    else\n    {\n        int i, Step = (1 \u003c\u003c (iVar - 6));\n        word * tLimit = t + nWords;\n        for ( ; t \u003c tLimit; t += 2*Step )\n            for ( i = 0; i \u003c Step; i++ )\n                if ( t[i] \u0026 c[Step+i] )\n                    return 0;\n        return 1;\n    }\n}",
+      "Draft": "func Abc_TtCheckWithCubeNeg2Pos(t *word, c *word, nWords int32, iVar int32) int32 {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if t[i] \u0026 (c[i] \u003c\u003c Shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[i] \u0026 c[Step+i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Abc_TtExpandCubePos2Neg",
+      "Start": 33399,
+      "End": 33838,
+      "BodyStart": 33476,
+      "Original": "static inline void Abc_TtExpandCubePos2Neg( word * t, int nWords, int iVar )\n{\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            t[i] |= (t[i] \u003e\u003e Shift);\n    }\n    else\n    {\n        int i, Step = (1 \u003c\u003c (iVar - 6));\n        word * tLimit = t + nWords;\n        for ( ; t \u003c tLimit; t += 2*Step )\n            for ( i = 0; i \u003c Step; i++ )\n                t[i] = t[Step+i];\n    }\n}",
+      "Draft": "func Abc_TtExpandCubePos2Neg(t *word, nWords int32, iVar int32) {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            t[i] |= (t[i] \u003e\u003e Shift);\n        }\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                t[i] = t[Step+i];\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_TtExpandCubeNeg2Pos",
+      "Start": 33839,
+      "End": 34278,
+      "BodyStart": 33916,
+      "Original": "static inline void Abc_TtExpandCubeNeg2Pos( word * t, int nWords, int iVar )\n{\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            t[i] |= (t[i] \u003c\u003c Shift);\n    }\n    else\n    {\n        int i, Step = (1 \u003c\u003c (iVar - 6));\n        word * tLimit = t + nWords;\n        for ( ; t \u003c tLimit; t += 2*Step )\n            for ( i = 0; i \u003c Step; i++ )\n                t[Step+i] = t[i];\n    }\n}",
+      "Draft": "func Abc_TtExpandCubeNeg2Pos(t *word, nWords int32, iVar int32) {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            t[i] |= (t[i] \u003c\u003c Shift);\n        }\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                t[Step+i] = t[i];\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_IsopNew",
+      "Start": 34279,
+      "End": 38899,
+      "BodyStart": 34376,
+      "Original": "word Abc_IsopNew( word * pOn, word * pOnDc, word * pRes, int nVars, word CostLim, int * pCover )\n{\n    word pCube[ABC_ISOP_MAX_WORD];\n    word pOnset[ABC_ISOP_MAX_WORD];\n    word pOffset[ABC_ISOP_MAX_WORD];\n    int pBlocks[16], nBlocks, vTwo, uTwo;\n    int nWords = Abc_TtWordNum(nVars);\n    int c, v, u, iMint, Cube, nLits = 0;\n    assert( nVars \u003c= ABC_ISOP_MAX_VAR );\n    Abc_TtClear( pRes, nWords );\n    Abc_TtCopy( pOnset, pOn, nWords, 0 ); \n    Abc_TtCopy( pOffset, pOnDc, nWords, 1 ); \n    if ( nVars \u003c 6 )\n        pOnset[0] \u003e\u003e= (64 - (1 \u003c\u003c nVars));\n    for ( c = 0; !Abc_TtIsConst0(pOnset, nWords); c++ )\n    {\n        // pick one minterm\n        iMint = Abc_TtFindFirstBit(pOnset, nVars);\n        for ( Cube = v = 0; v \u003c nVars; v++ )\n            Cube |= (1 \u003c\u003c Abc_Var2Lit(v, (iMint \u003e\u003e v) \u0026 1));\n        // check expansion for the minterm\n        nBlocks = 0;\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( (pBlocks[v] = Abc_TtGetBit(pOffset, iMint ^ (1 \u003c\u003c v))) )\n                nBlocks++;\n        // check second step\n        if ( nBlocks == nVars ) // cannot expand\n        {\n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtXorBit( pOnset, iMint );\n            pCover[c] = Cube;\n            nLits += nVars;\n            continue;\n        }\n        // check dual expansion\n        vTwo = uTwo = -1;\n        if ( nBlocks \u003c nVars - 1 )\n        {\n            for ( v = 0; v \u003c nVars \u0026\u0026 vTwo == -1; v++ )\n            if ( !pBlocks[v] )\n            for ( u = v + 1; u \u003c nVars; u++ )\n            if ( !pBlocks[u] )\n            {\n                if ( Abc_TtGetBit( pOffset, iMint ^ (1 \u003c\u003c v) ^ (1 \u003c\u003c u) ) )\n                    continue;\n                // can expand both directions\n                vTwo = v;\n                uTwo = u;\n                break;\n            }\n        }\n        if ( vTwo == -1 ) // can expand only one\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( !pBlocks[v] )\n                    break;\n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c v) );\n            Abc_TtXorBit( pOnset, iMint );\n            if ( Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c v)) )\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c v) );\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(v, 0));\n            nLits += nVars - 1;\n            continue;\n        }\n        if ( nBlocks == nVars - 2 \u0026\u0026 vTwo \u003e= 0 ) // can expand only these two\n        {\n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c uTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n            Abc_TtXorBit( pOnset, iMint );\n            if ( Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo)) )\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) );\n            if ( Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c uTwo)) )\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c uTwo) );\n            if ( Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo)) )\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n            nLits += nVars - 2;\n            continue;\n        }\n        // can expand others as well\n        Abc_TtClear( pCube, nWords );\n        Abc_TtSetBit( pCube, iMint );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c uTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n        Cube \u0026= ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n        assert( !Abc_TtIntersect2(pCube, pOffset, nWords) );        \n        // expand against offset\n        for ( v = 0; v \u003c nVars; v++ )\n        if ( v != vTwo \u0026\u0026 v != uTwo )\n        {\n            int Shift = Abc_Var2Lit( v, 0 );\n            if ( (Cube \u003e\u003e Shift) == 2 \u0026\u0026 Abc_TtCheckWithCubePos2Neg(pOffset, pCube, nWords, v) ) // pos literal\n            {\n                Abc_TtExpandCubePos2Neg( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            }\n            else if ( (Cube \u003e\u003e Shift) == 1 \u0026\u0026 Abc_TtCheckWithCubeNeg2Pos(pOffset, pCube, nWords, v) ) // neg literal\n            {\n                Abc_TtExpandCubeNeg2Pos( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            }\n            else \n                nLits++;\n        }\n        // add cube to solution\n        Abc_TtOr( pRes, pRes, pCube, nWords );\n        Abc_TtSharp( pOnset, pOnset, pCube, nWords );\n        pCover[c] = Cube;\n    }\n    pRes[0] = Abc_Tt6Stretch( pRes[0], nVars );\n    return Abc_Cube2Cost(c) | nLits;\n}",
+      "Draft": "func Abc_IsopNew(pOn *word, pOnDc *word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var pCube [ABC_ISOP_MAX_WORD]word;\n    var pOnset [ABC_ISOP_MAX_WORD]word;\n    var pOffset [ABC_ISOP_MAX_WORD]word;\n    var pBlocks [16]int32;\n    var nBlocks int32;\n    var vTwo int32;\n    var uTwo int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var c, v, u, iMint, Cube, nLits int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Abc_TtClear( pRes, nWords );\n    Abc_TtCopy( pOnset, pOn, nWords, 0 ); \n    Abc_TtCopy( pOffset, pOnDc, nWords, 1 ); \n    if nVars \u003c 6 {\n        pOnset[0] \u003e\u003e= (64 - (1 \u003c\u003c nVars)); }\n    for  c = 0; !Abc_TtIsConst0(pOnset, nWords); c++  {\n        // pick one minterm\n        iMint = Abc_TtFindFirstBit(pOnset, nVars);\n        for  Cube = v = 0; v \u003c nVars; v++  {\n            Cube |= (1 \u003c\u003c Abc_Var2Lit(v, (iMint \u003e\u003e v) \u0026 1));\n        }\n        // check expansion for the minterm\n        nBlocks = 0;\n        for  v = 0; v \u003c nVars; v++  {\n            if pBlocks[v] = Abc_TtGetBit(pOffset, iMint ^ (1 \u003c\u003c v)) {\n                nBlocks++; }\n        }\n        // check second step\n        if nBlocks == nVars { // cannot expand\n        \n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtXorBit( pOnset, iMint );\n            pCover[c] = Cube;\n            nLits += nVars;\n            continue;\n        }\n        // check dual expansion\n        vTwo = uTwo = -1;\n        if nBlocks \u003c nVars - 1 {\n            for  v = 0; v \u003c nVars \u0026\u0026 vTwo == -1; v++  {\n            if !pBlocks[v] {\n            for  u = v + 1; u \u003c nVars; u++  {\n            if !pBlocks[u] {\n                if Abc_TtGetBit( pOffset, iMint ^ (1 \u003c\u003c v) ^ (1 \u003c\u003c u) ) {\n                    continue; }\n                // can expand both directions\n                vTwo = v;\n                uTwo = u;\n                break;\n            }\n            } }\n            }\n        }\n        if vTwo == -1 { // can expand only one\n        \n            for  v = 0; v \u003c nVars; v++  {\n                if !pBlocks[v] {\n                    break; }\n            }\n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c v) );\n            Abc_TtXorBit( pOnset, iMint );\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c v)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c v) ); }\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(v, 0));\n            nLits += nVars - 1;\n            continue;\n        }\n        if nBlocks == nVars - 2 \u0026\u0026 vTwo \u003e= 0 { // can expand only these two\n        \n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c uTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n            Abc_TtXorBit( pOnset, iMint );\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) ); }\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c uTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c uTwo) ); }\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) ); }\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n            nLits += nVars - 2;\n            continue;\n        }\n        // can expand others as well\n        Abc_TtClear( pCube, nWords );\n        Abc_TtSetBit( pCube, iMint );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c uTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n        Cube \u0026= ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n        assert(!(Abc_TtIntersect2(pCube, pOffset, nWords) != 0), \"!Abc_TtIntersect2(pCube, pOffset, nWords)\");        \n        // expand against offset\n        for  v = 0; v \u003c nVars; v++  {\n        if v != vTwo \u0026\u0026 v != uTwo {\n            var Shift int32  = Abc_Var2Lit( v, 0 );\n            if (Cube \u003e\u003e Shift) == 2 \u0026\u0026 (Abc_TtCheckWithCubePos2Neg(pOffset, pCube, nWords, v) != 0) { // pos literal\n            \n                Abc_TtExpandCubePos2Neg( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            \n            } else if (Cube \u003e\u003e Shift) == 1 \u0026\u0026 (Abc_TtCheckWithCubeNeg2Pos(pOffset, pCube, nWords, v) != 0) { // neg literal\n            \n                Abc_TtExpandCubeNeg2Pos( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            \n            } else { \n                nLits++; }\n        }\n        }\n        // add cube to solution\n        Abc_TtOr( pRes, pRes, pCube, nWords );\n        Abc_TtSharp( pOnset, pOnset, pCube, nWords );\n        pCover[c] = Cube;\n    }\n    pRes[0] = Abc_Tt6Stretch( pRes[0], nVars );\n    return Abc_Cube2Cost(c) | nLits;\n}"
+    },
+    {
+      "Name": "Abc_IsopTestNew",
+      "Start": 38900,
+      "End": 39770,
+      "BodyStart": 38923,
+      "Original": "void Abc_IsopTestNew()\n{\n    int nVars = 4;\n    Vec_Int_t * vCover = Vec_IntAlloc( 1000 );\n    word r, t = (s_Truths6[0] \u0026 s_Truths6[1]) ^ (s_Truths6[2] \u0026 s_Truths6[3]), copy = t;\n//    word r, t = ~s_Truths6[0] | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]), copy = t;\n//    word r, t = 0xABCDABCDABCDABCD, copy = t;\n//    word r, t = 0x6996000000006996, copy = t;\n//    word Cost = Abc_IsopNew( \u0026t, \u0026t, \u0026r, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    word Cost = Abc_EsopCheck( \u0026t, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    printf( \"Cubes = %d.  Lits = %d.\\n\", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n    Abc_IsopPrintCover( vCover, nVars, 0 );\n    Abc_IsopVerify( \u0026copy, nVars, \u0026r, vCover, 1, 0 );\n    Vec_IntFree( vCover );\n}",
+      "Draft": "func Abc_IsopTestNew() {\n    var nVars int32  = 4;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var r word;\n    var t word = (s_Truths6[0] \u0026 s_Truths6[1]) ^ (s_Truths6[2] \u0026 s_Truths6[3]);\n    var copy word = t;\n//    word r, t = ~s_Truths6[0] | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]), copy = t;\n//    word r, t = 0xABCDABCDABCDABCD, copy = t;\n//    word r, t = 0x6996000000006996, copy = t;\n//    word Cost = Abc_IsopNew( \u0026t, \u0026t, \u0026r, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    var Cost word  = Abc_EsopCheck( \u0026t, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    fmt.Printf(\"Cubes = %d.  Lits = %d.\\n\", Abc_CostCubes(Cost), Abc_CostLits(Cost));\n    Abc_IsopPrintCover( vCover, nVars, 0 );\n    Abc_IsopVerify( \u0026copy, nVars, \u0026r, vCover, 1, 0 );\n    Vec_IntFree( vCover );\n}"
+    },
+    {
+      "Name": "Abc_IsopTest",
+      "Start": 40118,
+      "End": 44217,
+      "BodyStart": 40182,
+      "Original": "int Abc_IsopTest( word * pFunc, int nVars, Vec_Int_t * vCover )\n{\n    int fVerbose = 0;    \n    static word TotalCost[6] = {0};\n    static abctime TotalTime[6] = {0};\n    static int Counter;\n    word pRes[ABC_ISOP_MAX_WORD];\n    word Cost;\n    abctime clk;\n    Counter++;\n    if ( Counter == 9999 )\n    {\n        Abc_PrintTime( 1, \"0\", TotalTime[0] );\n        Abc_PrintTime( 1, \"1\", TotalTime[1] );\n        Abc_PrintTime( 1, \"2\", TotalTime[2] );\n        Abc_PrintTime( 1, \"3\", TotalTime[3] );\n        Abc_PrintTime( 1, \"4\", TotalTime[4] );\n        Abc_PrintTime( 1, \"5\", TotalTime[5] );\n    }\n    assert( nVars \u003c= ABC_ISOP_MAX_VAR );\n//    if ( fVerbose )\n//    Dau_DsdPrintFromTruth( pFunc, nVars ), printf( \"         \" );\n\n    clk = Abc_Clock();\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    TotalCost[0] += Abc_CostCubes(Cost);\n    TotalTime[0] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 1 );\n    TotalCost[1] += Abc_CostCubes(Cost);\n    TotalTime[1] += Abc_Clock() - clk;\n\n/*\n    clk = Abc_Clock();\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 0 );\n    TotalCost[2] += Abc_CostCubes(Cost);\n    TotalTime[2] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 1 );\n    TotalCost[3] += Abc_CostCubes(Cost);\n    TotalTime[3] += Abc_Clock() - clk;\n*/\n\n/*\n    // try new computation\n    clk = Abc_Clock();\n    Cost = Abc_IsopNew( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    TotalCost[4] += Abc_CostCubes(Cost);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n/*\n    // try old computation\n    clk = Abc_Clock();\n    Cost = Kit_TruthIsop( (unsigned *)pFunc, nVars, vCover, 1 );\n    vCover-\u003enSize = Vec_IntSize(vCover);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars) );\n    TotalCost[4] += Vec_IntSize(vCover);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n\n    clk = Abc_Clock();\n    Cost = Abc_Isop( pFunc, nVars, ABC_ISOP_MAX_CUBE, vCover, 1 );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars) );\n    TotalCost[5] += Vec_IntSize(vCover);\n    TotalTime[5] += Abc_Clock() - clk;\n\n    if ( fVerbose )\n    printf( \"  | %8d %8d %8d %8d %8d %8d\", (int)TotalCost[0], (int)TotalCost[1], (int)TotalCost[2], (int)TotalCost[3], (int)TotalCost[4], (int)TotalCost[5] );\n    if ( fVerbose )\n    printf( \"\\n\" );\n//Abc_IsopPrintCover( vCover, nVars, 0 );\n    return 1; \n}",
+      "Draft": "func Abc_IsopTest(pFunc *word, nVars int32, vCover *Vec_Int_t) int32 {\n    var fVerbose int32;    \n    \n    \n    \n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost word;\n    var clk abctime;\n    spStatic_Abc_IsopTest_Counter++;\n    if spStatic_Abc_IsopTest_Counter == 9999 {\n        Abc_PrintTime( 1, \"0\", spStatic_Abc_IsopTest_TotalTime[0] );\n        Abc_PrintTime( 1, \"1\", spStatic_Abc_IsopTest_TotalTime[1] );\n        Abc_PrintTime( 1, \"2\", spStatic_Abc_IsopTest_TotalTime[2] );\n        Abc_PrintTime( 1, \"3\", spStatic_Abc_IsopTest_TotalTime[3] );\n        Abc_PrintTime( 1, \"4\", spStatic_Abc_IsopTest_TotalTime[4] );\n        Abc_PrintTime( 1, \"5\", spStatic_Abc_IsopTest_TotalTime[5] );\n    }\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n//    if ( fVerbose )\n//    Dau_DsdPrintFromTruth( pFunc, nVars ), printf( \"         \" );\n\n    clk = Abc_Clock();\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost)); }\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    spStatic_Abc_IsopTest_TotalCost[0] += Abc_CostCubes(Cost);\n    spStatic_Abc_IsopTest_TotalTime[0] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost)); }\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 1 );\n    spStatic_Abc_IsopTest_TotalCost[1] += Abc_CostCubes(Cost);\n    spStatic_Abc_IsopTest_TotalTime[1] += Abc_Clock() - clk;\n\n/*\n    clk = Abc_Clock();\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 0 );\n    TotalCost[2] += Abc_CostCubes(Cost);\n    TotalTime[2] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 1 );\n    TotalCost[3] += Abc_CostCubes(Cost);\n    TotalTime[3] += Abc_Clock() - clk;\n*/\n\n/*\n    // try new computation\n    clk = Abc_Clock();\n    Cost = Abc_IsopNew( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    TotalCost[4] += Abc_CostCubes(Cost);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n/*\n    // try old computation\n    clk = Abc_Clock();\n    Cost = Kit_TruthIsop( (unsigned *)pFunc, nVars, vCover, 1 );\n    vCover-\u003enSize = Vec_IntSize(vCover);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars) );\n    TotalCost[4] += Vec_IntSize(vCover);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n\n    clk = Abc_Clock();\n    Cost = Abc_Isop( pFunc, nVars, ABC_ISOP_MAX_CUBE, vCover, 1 );\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars)); }\n    spStatic_Abc_IsopTest_TotalCost[5] += Vec_IntSize(vCover);\n    spStatic_Abc_IsopTest_TotalTime[5] += Abc_Clock() - clk;\n\n    if fVerbose != 0 {\n    fmt.Printf(\"  | %8d %8d %8d %8d %8d %8d\", int32(spStatic_Abc_IsopTest_TotalCost[0]), int32(spStatic_Abc_IsopTest_TotalCost[1]), int32(spStatic_Abc_IsopTest_TotalCost[2]), int32(spStatic_Abc_IsopTest_TotalCost[3]), int32(spStatic_Abc_IsopTest_TotalCost[4]), int32(spStatic_Abc_IsopTest_TotalCost[5])); }\n    if fVerbose != 0 {\n    fmt.Printf(\"\\n\"); }\n//Abc_IsopPrintCover( vCover, nVars, 0 );\n    return 1; \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::mechanical::static::20989",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 20989,
+      "End": 20995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::mechanical::static::40529",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 40214,
+      "End": 40220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::mechanical::static::40565",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 40250,
+      "End": 40256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::mechanical::static::40604",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 40289,
+      "End": 40295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Cube2Cost",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Cube2Cost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2072,
+      "End": 2158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_CostCubes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CostCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2159,
+      "End": 2245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_CostLits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CostLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2246,
+      "End": 2332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopAddLits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopAddLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2844,
+      "End": 3271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop6Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop6Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3272,
+      "End": 5015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop6Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop6Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3272,
+      "End": 5015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop7Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop7Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5016,
+      "End": 6337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop7Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop7Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5016,
+      "End": 6337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop8Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop8Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6338,
+      "End": 7966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop8Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop8Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6338,
+      "End": 7966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop9Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop9Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7967,
+      "End": 9463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop9Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop9Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7967,
+      "End": 9463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop10Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop10Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9464,
+      "End": 10961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop10Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop10Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9464,
+      "End": 10961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop11Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop11Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10962,
+      "End": 12466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop11Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop11Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10962,
+      "End": 12466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop12Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop12Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12467,
+      "End": 13971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop12Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop12Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12467,
+      "End": 13971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop13Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop13Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13972,
+      "End": 15476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop13Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop13Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13972,
+      "End": 15476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop14Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop14Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15477,
+      "End": 16987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop14Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop14Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15477,
+      "End": 16987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop15Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop15Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16988,
+      "End": 18498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop15Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop15Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16988,
+      "End": 18498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Isop16Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Isop16Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18499,
+      "End": 20009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop16Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop16Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18499,
+      "End": 20009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20010,
+      "End": 20668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopTtElems",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopTtElems",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20943,
+      "End": 21312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopBuildTruth",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopBuildTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21313,
+      "End": 22178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopVerify",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22179,
+      "End": 22524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Isop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Isop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22815,
+      "End": 24240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_IsopCnf",
+      "Category": "ternary-review",
+      "Symbol": "Abc_IsopCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24588,
+      "End": 25880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopCnf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24588,
+      "End": 25880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopCountLits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopCountLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26117,
+      "End": 26728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopPrintCover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopPrintCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26729,
+      "End": 27471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27472,
+      "End": 27676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_EsopAddLits",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EsopAddLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27969,
+      "End": 29183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_Esop6Cover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_Esop6Cover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29184,
+      "End": 30365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_Esop6Cover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Esop6Cover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29184,
+      "End": 30365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::ternary::Abc_EsopCover",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EsopCover",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 30366,
+      "End": 31313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_EsopCover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EsopCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30366,
+      "End": 31313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_EsopCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EsopCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31314,
+      "End": 31812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_TtIntersect2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtIntersect2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32095,
+      "End": 32288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_TtCheckWithCubePos2Neg",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtCheckWithCubePos2Neg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32289,
+      "End": 32843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_TtCheckWithCubeNeg2Pos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtCheckWithCubeNeg2Pos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32844,
+      "End": 33398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_TtExpandCubePos2Neg",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtExpandCubePos2Neg",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33399,
+      "End": 33838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_TtExpandCubeNeg2Pos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TtExpandCubeNeg2Pos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33839,
+      "End": 34278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopNew",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34279,
+      "End": 38899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopTestNew",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopTestNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38900,
+      "End": 39770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::Abc_IsopTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_IsopTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40118,
+      "End": 44217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilIsop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 44465
+    }
+  ],
+  "Draft": "package util\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [utilIsop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [ISOP computation.]\n\n  Synopsis    [ISOP computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 4, 2014.]\n\n  Revision    [$Id: utilIsop.c,v 1.00 2014/10/04 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst ABC_ISOP_MAX_VAR =  16\n#define ABC_ISOP_MAX_WORD (ABC_ISOP_MAX_VAR \u003e 6 ? (1 \u003c\u003c (ABC_ISOP_MAX_VAR-6)) : 1)\nconst ABC_ISOP_MAX_CUBE =  0xFFFF\n\ntypedef word FUNC_ISOP( word *, word *, word *, word, int * );\n\nvar Abc_Isop7Cover FUNC_ISOP; \nvar Abc_Isop8Cover FUNC_ISOP;\nvar Abc_Isop9Cover FUNC_ISOP; \nvar Abc_Isop10Cover FUNC_ISOP;\nvar Abc_Isop11Cover FUNC_ISOP;\nvar Abc_Isop12Cover FUNC_ISOP;\nvar Abc_Isop13Cover FUNC_ISOP;\nvar Abc_Isop14Cover FUNC_ISOP;\nvar Abc_Isop15Cover FUNC_ISOP;\nvar Abc_Isop16Cover FUNC_ISOP;\n\nstatic FUNC_ISOP * s_pFuncIsopCover[17] =\n{\n    NULL, // 0\n    NULL, // 1\n    NULL, // 2\n    NULL, // 3\n    NULL, // 4\n    NULL, // 5\n    NULL, // 6\n    Abc_Isop7Cover,  // 7\n    Abc_Isop8Cover,  // 8\n    Abc_Isop9Cover,  // 9\n    Abc_Isop10Cover, // 10\n    Abc_Isop11Cover, // 11\n    Abc_Isop12Cover, // 12\n    Abc_Isop13Cover, // 13\n    Abc_Isop14Cover, // 14\n    Abc_Isop15Cover, // 15\n    Abc_Isop16Cover  // 16\n};\n\n// extern word Abc_IsopCheck( word * pOn, word * pOnDc, word * pRes, int nVars, word CostLim, int * pCover );\n\n// extern word Abc_EsopCheck( word * pOn,                            int nVars, word CostLim, int * pCover );\n\n\nfunc Abc_Cube2Cost(nCubes int32) word { return (word)nCubes \u003c\u003c 32;       }\nfunc Abc_CostCubes(Cost word) int32 { return int32((Cost \u003e\u003e 32));        }\nfunc Abc_CostLits(Cost word) int32 { return int32((Cost \u0026 0xFFFFFFFF)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [These procedures assume that function has exact support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_IsopAddLits(pCover *int32, Cost0 word, Cost1 word, Var int32) {\n    if pCover != nil {\n        var c, nCubes0, nCubes1 int32;\n        nCubes0 = Abc_CostCubes( Cost0 );\n        nCubes1 = Abc_CostCubes( Cost1 );\n        for  c = 0; c \u003c nCubes0; c++  {\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n        }\n        for  c = 0; c \u003c nCubes1; c++  {\n            pCover[nCubes0+c] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n        }\n    }\n}\nfunc Abc_Isop6Cover(uOn word, uOnDc word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var uOn0, uOn1, uOnDc0, uOnDc1, uRes0, uRes1, uRes2 word;\n    var Cost0, Cost1, Cost2 word;  var Var int32; \n    assert(nVars \u003c= 6, \"nVars \u003c= 6\");\n    assert((uOn \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~uOnDc) == 0\");\n    if uOn == 0 {\n        pRes[0] = 0;\n        return 0;\n    }\n    if uOnDc == ~(word)0 {\n        pRes[0] = ~(word)0;\n        if pCover != nil { pCover[0] = 0; }\n        return Abc_Cube2Cost(1);\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Abc_Tt6HasVar( uOn, Var ) || Abc_Tt6HasVar( uOnDc, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    uOn0   = Abc_Tt6Cofactor0( uOn,   Var );\n    uOn1   = Abc_Tt6Cofactor1( uOn  , Var );\n    uOnDc0 = Abc_Tt6Cofactor0( uOnDc, Var );\n    uOnDc1 = Abc_Tt6Cofactor1( uOnDc, Var );\n    // solve for cofactors\n    Cost0 = Abc_Isop6Cover( uOn0 \u0026 ~uOnDc1, uOnDc0, \u0026uRes0, Var, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    Cost1 = Abc_Isop6Cover( uOn1 \u0026 ~uOnDc0, uOnDc1, \u0026uRes1, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    Cost2 = Abc_Isop6Cover( (uOn0 \u0026 ~uRes0) | (uOn1 \u0026 ~uRes1), uOnDc0 \u0026 uOnDc1, \u0026uRes2, Var, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    *pRes = uRes2 | (uRes0 \u0026 s_Truths6Neg[Var]) | (uRes1 \u0026 s_Truths6[Var]);\n    assert((uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0, \"(uOn \u0026 ~*pRes) == 0 \u0026\u0026 (*pRes \u0026 ~uOnDc) == 0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, Var );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop7Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn0, uOn1, uOn2, uOnDc2, uRes0, uRes1, uRes2 word;\n    var Cost0, Cost1, Cost2 word;  var nVars int32  = 6; \n    assert((pOn[0] \u0026 ~pOnDc[0]) == 0, \"(pOn[0] \u0026 ~pOnDc[0]) == 0\");\n    assert((pOn[1] \u0026 ~pOnDc[1]) == 0, \"(pOn[1] \u0026 ~pOnDc[1]) == 0\");\n    // cofactor\n    uOn0 = pOn[0] \u0026 ~pOnDc[1];\n    uOn1 = pOn[1] \u0026 ~pOnDc[0];\n    // solve for cofactors\n    Cost0 = Abc_IsopCheck( \u0026uOn0, pOnDc,   \u0026uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    Cost1 = Abc_IsopCheck( \u0026uOn1, pOnDc+1, \u0026uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    uOn2 = (pOn[0] \u0026 ~uRes0) | (pOn[1] \u0026 ~uRes1);\n    uOnDc2 = pOnDc[0] \u0026 pOnDc[1];\n    Cost2 = Abc_IsopCheck( \u0026uOn2, \u0026uOnDc2,  \u0026uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    pRes[0] = uRes2 | uRes0;\n    pRes[1] = uRes2 | uRes1;\n    assert((pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0, \"(pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pRes[0] \u0026 ~pOnDc[0]) == 0\");\n    assert((pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0, \"(pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1]) == 0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop8Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [2]word;\n    var Cost0, Cost1, Cost2 word;  var nVars int32  = 7;\n    // negative cofactor\n    uOn2[0] = pOn[0] \u0026 ~pOnDc[2];\n    uOn2[1] = pOn[1] \u0026 ~pOnDc[3];\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,   uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    uOn2[0] = pOn[2] \u0026 ~pOnDc[0];\n    uOn2[1] = pOn[3] \u0026 ~pOnDc[1];\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+2, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    uOn2[0] = (pOn[0] \u0026 ~uRes0[0]) | (pOn[2] \u0026 ~uRes1[0]); uOnDc2[0] = pOnDc[0] \u0026 pOnDc[2];\n    uOn2[1] = (pOn[1] \u0026 ~uRes0[1]) | (pOn[3] \u0026 ~uRes1[1]); uOnDc2[1] = pOnDc[1] \u0026 pOnDc[3];\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,  uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    pRes[0] = uRes2[0] | uRes0[0];\n    pRes[1] = uRes2[1] | uRes0[1];\n    pRes[2] = uRes2[0] | uRes1[0];\n    pRes[3] = uRes2[1] | uRes1[1];\n    assert((pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0, \"(pOn[0] \u0026 ~pRes[0]) == 0 \u0026\u0026 (pOn[1] \u0026 ~pRes[1]) == 0 \u0026\u0026 (pOn[2] \u0026 ~pRes[2]) == 0 \u0026\u0026 (pOn[3] \u0026 ~pRes[3]) == 0\");\n    assert((pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0, \"(pRes[0] \u0026 ~pOnDc[0])==0 \u0026\u0026 (pRes[1] \u0026 ~pOnDc[1])==0 \u0026\u0026 (pRes[2] \u0026 ~pOnDc[2])==0 \u0026\u0026 (pRes[3] \u0026 ~pOnDc[3])==0\");\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop9Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [4]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 8;\nvar nWords int32 = 4;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop10Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [8]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 9;\nvar nWords int32 = 8;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop11Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [16]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 10;\nvar nWords int32 = 16;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop12Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [32]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 11;\nvar nWords int32 = 32;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop13Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [64]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 12;\nvar nWords int32 = 64;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop14Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [128]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 13;\nvar nWords int32 = 128;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop15Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [256]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 14;\nvar nWords int32 = 256;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_Isop16Cover(pOn *word, pOnDc *word, pRes *word, CostLim word, pCover *int32) word {\n    var uOn2, uOnDc2, uRes0, uRes1, uRes2 [512]word;\n    var Cost0, Cost1, Cost2 word; var c int32;\nvar nVars int32 = 15;\nvar nWords int32 = 512;\n    // negative cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c] \u0026 ~pOnDc[c+nWords];\n    }\n    Cost0 = Abc_IsopCheck( uOn2, pOnDc,        uRes0, nVars, CostLim, pCover );\n    if Cost0 \u003e= CostLim { return CostLim; }\n    // positive cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = pOn[c+nWords] \u0026 ~pOnDc[c];\n    }\n    Cost1 = Abc_IsopCheck( uOn2, pOnDc+nWords, uRes1, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    if Cost0 + Cost1 \u003e= CostLim { return CostLim; }\n    // middle cofactor\n    for  c = 0; c \u003c nWords; c++  {\n        uOn2[c] = (pOn[c] \u0026 ~uRes0[c]) | (pOn[c+nWords] \u0026 ~uRes1[c]), uOnDc2[c] = pOnDc[c] \u0026 pOnDc[c+nWords];\n    }\n    Cost2 = Abc_IsopCheck( uOn2, uOnDc2,       uRes2, nVars, CostLim, pCover ? pCover + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1) : nil );\n    if Cost0 + Cost1 + Cost2 \u003e= CostLim { return CostLim; }\n    // derive the final truth table\n    for  c = 0; c \u003c nWords; c++  {\n        pRes[c] = uRes2[c] | uRes0[c], pRes[c+nWords] = uRes2[c] | uRes1[c];\n    }\n    // verify\n    for  c = 0; c \u003c (nWords\u003c\u003c1); c++  {\n        assert((pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0, \"(pOn[c]  \u0026 ~pRes[c] ) == 0 \u0026\u0026 (pRes[c] \u0026 ~pOnDc[c]) == 0\");\n    }\n    Abc_IsopAddLits( pCover, Cost0, Cost1, nVars );\n    return Cost0 + Cost1 + Cost2 + Abc_CostCubes(Cost0) + Abc_CostCubes(Cost1);\n}\nfunc Abc_IsopCheck(pOn *word, pOnDc *word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var nVarsNew int32; var Cost word;\n    if nVars \u003c= 6 {\n        return Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVars, CostLim, pCover ); }\n    for  nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew--  {\n        if Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) || Abc_TtHasVar( pOnDc, nVars, nVarsNew-1 ) {\n            break; }\n    }\n    if nVarsNew == 6 {\n        Cost = Abc_Isop6Cover( *pOn, *pOnDc, pRes, nVarsNew, CostLim, pCover );\n    } else {\n        Cost = s_pFuncIsopCover[nVarsNew]( pOn, pOnDc, pRes, CostLim, pCover ); }\n    Abc_TtStretch6( pRes, nVarsNew, nVars );\n    return Cost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create truth table for the given cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_IsopTtElems_TtElems [ABC_ISOP_MAX_VAR+1][ABC_ISOP_MAX_WORD]word;\nvar spStatic_Abc_IsopTtElems_pTtElems [ABC_ISOP_MAX_VAR+1]*word = [ABC_ISOP_MAX_VAR+1]*word{nil};\nfunc Abc_IsopTtElems() **word {\n    \n    if spStatic_Abc_IsopTtElems_pTtElems[0] == nil {\n        var v int32;\n        for  v = 0; v \u003c= ABC_ISOP_MAX_VAR; v++  {\n            spStatic_Abc_IsopTtElems_pTtElems[v] = spStatic_Abc_IsopTtElems_TtElems[v];\n        }\n        Abc_TtElemInit( spStatic_Abc_IsopTtElems_pTtElems, ABC_ISOP_MAX_VAR );\n    }\n    return spStatic_Abc_IsopTtElems_pTtElems;\n}\nfunc Abc_IsopBuildTruth(vCover *Vec_Int_t, nVars int32, pRes *word, fXor int32, fCompl int32) {\n    var pTtElems **word  = Abc_IsopTtElems();\n    var pCube [ABC_ISOP_MAX_WORD]word;\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var c, v, Cube int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Abc_TtClear( pRes, nWords );\n    // inlining of macro Vec_IntForEachEntry\n    for  c = 0; (c \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Cube) = Vec_IntEntry(vCover, c)), 1); c++  {\n        Abc_TtFill( pCube, nWords );\n        for  v = 0; v \u003c nVars; v++  {\n            if ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 1 {\n                Abc_TtSharp( pCube, pCube, pTtElems[v], nWords );\n            } else if ((Cube \u003e\u003e (v \u003c\u003c 1)) \u0026 3) == 2 {\n                Abc_TtAnd( pCube, pCube, pTtElems[v], nWords, 0 ); }\n        }\n        if fXor != 0 {\n            Abc_TtXor( pRes, pRes, pCube, nWords, 0 );\n        } else {\n            Abc_TtOr( pRes, pRes, pCube, nWords ); }\n    }\n    if fCompl != 0 {\n        Abc_TtNot( pRes, nWords ); }\n}\nfunc Abc_IsopVerify(pFunc *word, nVars int32, pRes *word, vCover *Vec_Int_t, fXor int32, fCompl int32) {\n    Abc_IsopBuildTruth( vCover, nVars, pRes, fXor, fCompl );\n    if !Abc_TtEqual( pFunc, pRes, Abc_TtWordNum(nVars) ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n//    else\n//        printf( \"Verification succeeded.\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure assumes that function has exact support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Isop(pFunc *word, nVars int32, nCubeLim int32, vCover *Vec_Int_t, fTryBoth int32) int32 {\n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost0 word;\n    var Cost1 word;\n    var Cost word;\n    var CostInit word = Abc_Cube2Cost(nCubeLim);\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Vec_IntGrow( vCover, 1 \u003c\u003c (nVars-1) );\n    if fTryBoth != 0 {\n        Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, nil );\n        Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        Cost1 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Cost0, nil );\n        Cost = Abc_MinWord( Cost0, Cost1 );\n        if Cost == CostInit {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            return -1;\n        }\n        if Cost == Cost0 {\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        \n        } else { // if ( Cost == Cost1 )\n        \n            Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n            Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n        }\n    \n    } else {\n        Cost = Cost0 = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, CostInit, Vec_IntArray(vCover) );\n        if Cost == CostInit {\n            return -1; }\n    }\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, Cost != Cost0 );\n    return Cost != Cost0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute CNF assuming it does not exceed the limit.]\n\n  Description [Please note that pCover should have at least 32 extra entries!]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_IsopCnf(pFunc *word, nVars int32, nCubeLim int32, pCover *int32) int32 {\n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost0 word;\n    var Cost1 word;\n    var CostInit word = Abc_Cube2Cost(nCubeLim);\n    var c, nCubes0, nCubes1 int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    assert(Abc_TtHasVar( pFunc, nVars, nVars - 1 ), \"Abc_TtHasVar( pFunc, nVars, nVars - 1 )\");\n    if nVars \u003e 6 {\n        Cost0 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover );\n    } else {\n        Cost0 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover ); }\n    if Cost0 \u003e= CostInit {\n        return CostInit; }\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if nVars \u003e 6 {\n        Cost1 = s_pFuncIsopCover[nVars]( pFunc, pFunc, pRes, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : nil );\n    } else {\n        Cost1 = Abc_Isop6Cover( *pFunc, *pFunc, pRes, nVars, CostInit, pCover ? pCover + Abc_CostCubes(Cost0) : nil ); }\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    if Cost0 + Cost1 \u003e= CostInit {\n        return CostInit; }\n    nCubes0 = Abc_CostCubes(Cost0);\n    nCubes1 = Abc_CostCubes(Cost1);\n    if pCover != nil {\n        for  c = 0; c \u003c nCubes0; c++  {\n            pCover[c] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 0));\n        }\n        for  c = 0; c \u003c nCubes1; c++  {\n            pCover[c+nCubes0] |= (1 \u003c\u003c Abc_Var2Lit(nVars, 1));\n        }\n    }\n    return nCubes0 + nCubes1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_IsopCountLits(vCover *Vec_Int_t, nVars int32) int32 {\n    var i, k, Entry, Literal, nLits int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        return 0; }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCover, i)), 1); i++  { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                nLits++;\n            } else if Literal == 2 { // pos literal\n                nLits++;\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n    }\n    return nLits;\n}\nfunc Abc_IsopPrintCover(vCover *Vec_Int_t, nVars int32, fCompl int32) {\n    var i, k, Entry, Literal int32;\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0) {\n        fmt.Printf(\"Constant %d\\n\", Vec_IntSize(vCover));\n        return;\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCover)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCover, i)), 1); i++  { \n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                fmt.Printf(\"0\");\n            } else if Literal == 2 { // pos literal\n                fmt.Printf(\"1\");\n            } else if Literal == 0 { \n                fmt.Printf(\"-\");\n            } else { assert(false, \"0\"); }\n        }\n        fmt.Printf(\" %d\\n\", !fCompl);\n    }\n}\nfunc Abc_IsopPrint(t *word, nVars int32, vCover *Vec_Int_t, fTryBoth int32) {\n    var fCompl int32  = Abc_Isop( t, nVars, ABC_ISOP_MAX_CUBE, vCover, fTryBoth );\n    Abc_IsopPrintCover( vCover, nVars, fCompl );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [These procedures assume that function has exact support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_EsopAddLits(pCover *int32, r0 word, r1 word, r2 word, Max word, Var int32) int32 {\n    var i, c0, c1, c2 int32;\n    if Max == r0 {\n        c2 = Abc_CostCubes(r2);\n        if pCover != nil {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for  i = 0; i \u003c c1; i++  {\n                pCover[i] = pCover[c0+i];\n            }\n            for  i = 0; i \u003c c2; i++  {\n                pCover[c1+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,0));\n            }\n        }\n        return c2;\n    \n    } else if Max == r1 {\n        c2 = Abc_CostCubes(r2);\n        if pCover != nil {\n            c0 = Abc_CostCubes(r0);\n            c1 = Abc_CostCubes(r1);\n            for  i = 0; i \u003c c2; i++  {\n                pCover[c0+i] = pCover[c0+c1+i] | (1 \u003c\u003c Abc_Var2Lit(Var,1));\n            }\n        }\n        return c2;\n    \n    } else {\n        c0 = Abc_CostCubes(r0);\n        c1 = Abc_CostCubes(r1);\n        if pCover != nil {\n            c2 = Abc_CostCubes(r2);\n            for  i = 0; i \u003c c0; i++  {\n                pCover[i] |= (1 \u003c\u003c Abc_Var2Lit(Var,0));\n            }\n            for  i = 0; i \u003c c1; i++  {\n                pCover[c0+i] |= (1 \u003c\u003c Abc_Var2Lit(Var,1));\n            }\n        }\n        return c0 + c1;\n    }\n}\nfunc Abc_Esop6Cover(t word, nVars int32, CostLim word, pCover *int32) word {\n    var c0, c1 word;\n    var r0, r1, r2, Max word;\n    var Var int32;\n    assert(nVars \u003c= 6, \"nVars \u003c= 6\");\n    if t == 0 {\n        return 0; }\n    if t == ~(word)0 {\n        if pCover != nil { *pCover = 0; }\n        return Abc_Cube2Cost(1);\n    }\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // find the topmost var\n    for  Var = nVars-1; Var \u003e= 0; Var--  {\n        if Abc_Tt6HasVar( t, Var ) {\n             break; }\n    }\n    assert(Var \u003e= 0, \"Var \u003e= 0\");\n    // cofactor\n    c0 = Abc_Tt6Cofactor0( t, Var );\n    c1 = Abc_Tt6Cofactor1( t, Var );\n    // call recursively\n    r0 = Abc_Esop6Cover( c0,      Var, CostLim, pCover ? pCover : nil );\n    if r0 \u003e= CostLim { return CostLim; }\n    r1 = Abc_Esop6Cover( c1,      Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) : nil );\n    if r1 \u003e= CostLim { return CostLim; }\n    r2 = Abc_Esop6Cover( c0 ^ c1, Var, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : nil );\n    if r2 \u003e= CostLim { return CostLim; }\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if r0 + r1 + r2 - Max \u003e= CostLim { return CostLim; }\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, Var );\n}\nfunc Abc_EsopCover(pOn *word, nVars int32, CostLim word, pCover *int32) word {\n    var r0, r1, r2, Max word;\n    var c int32;\n    var nWords int32 = (1 \u003c\u003c (nVars - 7));\n    assert(nVars \u003e 6, \"nVars \u003e 6\");\n    assert(Abc_TtHasVar( pOn, nVars, nVars - 1 ), \"Abc_TtHasVar( pOn, nVars, nVars - 1 )\");\n    r0 = Abc_EsopCheck( pOn,        nVars-1, CostLim, pCover );\n    if r0 \u003e= CostLim { return CostLim; }\n    r1 = Abc_EsopCheck( pOn+nWords, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) : nil );\n    if r1 \u003e= CostLim { return CostLim; }\n    for  c = 0; c \u003c nWords; c++  {\n        pOn[c] ^= pOn[nWords+c];\n    }\n    r2 = Abc_EsopCheck( pOn, nVars-1, CostLim, pCover ? pCover + Abc_CostCubes(r0) + Abc_CostCubes(r1) : nil );\n    for  c = 0; c \u003c nWords; c++  {\n        pOn[c] ^= pOn[nWords+c];\n    }\n    if r2 \u003e= CostLim { return CostLim; }\n    Max = Abc_MaxWord( r0, Abc_MaxWord(r1, r2) );\n    if r0 + r1 + r2 - Max \u003e= CostLim { return CostLim; }\n    return r0 + r1 + r2 - Max + Abc_EsopAddLits( pCover, r0, r1, r2, Max, nVars-1 );\n}\nfunc Abc_EsopCheck(pOn *word, nVars int32, CostLim word, pCover *int32) word {\n    var nVarsNew int32; var Cost word;\n    if nVars \u003c= 6 {\n        return Abc_Esop6Cover( *pOn, nVars, CostLim, pCover ); }\n    for  nVarsNew = nVars; nVarsNew \u003e 6; nVarsNew--  {\n        if Abc_TtHasVar( pOn, nVars, nVarsNew-1 ) {\n            break; }\n    }\n    if nVarsNew == 6 {\n        Cost = Abc_Esop6Cover( *pOn, nVarsNew, CostLim, pCover );\n    } else {\n        Cost = Abc_EsopCover( pOn, nVarsNew, CostLim, pCover ); }\n    return Cost;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Perform ISOP computation by subtracting cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_TtIntersect2(pIn1 *word, pIn2 *word, nWords int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        if pIn1[w] \u0026 pIn2[w] {\n            return 1; }\n    }\n    return 0;\n}\nfunc Abc_TtCheckWithCubePos2Neg(t *word, c *word, nWords int32, iVar int32) int32 {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if t[i] \u0026 (c[i] \u003e\u003e Shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[Step+i] \u0026 c[i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }\n}\nfunc Abc_TtCheckWithCubeNeg2Pos(t *word, c *word, nWords int32, iVar int32) int32 {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if t[i] \u0026 (c[i] \u003c\u003c Shift) {\n                return 0; }\n        }\n        return 1;\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[i] \u0026 c[Step+i] {\n                    return 0; }\n            }\n        }\n        return 1;\n    }\n}\nfunc Abc_TtExpandCubePos2Neg(t *word, nWords int32, iVar int32) {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            t[i] |= (t[i] \u003e\u003e Shift);\n        }\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                t[i] = t[Step+i];\n            }\n        }\n    }\n}\nfunc Abc_TtExpandCubeNeg2Pos(t *word, nWords int32, iVar int32) {\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            t[i] |= (t[i] \u003c\u003c Shift);\n        }\n    \n    } else {\n        var i int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        var tLimit *word  = t + nWords;\n        for  ; t \u003c tLimit; t += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                t[Step+i] = t[i];\n            }\n        }\n    }\n}\nfunc Abc_IsopNew(pOn *word, pOnDc *word, pRes *word, nVars int32, CostLim word, pCover *int32) word {\n    var pCube [ABC_ISOP_MAX_WORD]word;\n    var pOnset [ABC_ISOP_MAX_WORD]word;\n    var pOffset [ABC_ISOP_MAX_WORD]word;\n    var pBlocks [16]int32;\n    var nBlocks int32;\n    var vTwo int32;\n    var uTwo int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var c, v, u, iMint, Cube, nLits int32;\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n    Abc_TtClear( pRes, nWords );\n    Abc_TtCopy( pOnset, pOn, nWords, 0 ); \n    Abc_TtCopy( pOffset, pOnDc, nWords, 1 ); \n    if nVars \u003c 6 {\n        pOnset[0] \u003e\u003e= (64 - (1 \u003c\u003c nVars)); }\n    for  c = 0; !Abc_TtIsConst0(pOnset, nWords); c++  {\n        // pick one minterm\n        iMint = Abc_TtFindFirstBit(pOnset, nVars);\n        for  Cube = v = 0; v \u003c nVars; v++  {\n            Cube |= (1 \u003c\u003c Abc_Var2Lit(v, (iMint \u003e\u003e v) \u0026 1));\n        }\n        // check expansion for the minterm\n        nBlocks = 0;\n        for  v = 0; v \u003c nVars; v++  {\n            if pBlocks[v] = Abc_TtGetBit(pOffset, iMint ^ (1 \u003c\u003c v)) {\n                nBlocks++; }\n        }\n        // check second step\n        if nBlocks == nVars { // cannot expand\n        \n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtXorBit( pOnset, iMint );\n            pCover[c] = Cube;\n            nLits += nVars;\n            continue;\n        }\n        // check dual expansion\n        vTwo = uTwo = -1;\n        if nBlocks \u003c nVars - 1 {\n            for  v = 0; v \u003c nVars \u0026\u0026 vTwo == -1; v++  {\n            if !pBlocks[v] {\n            for  u = v + 1; u \u003c nVars; u++  {\n            if !pBlocks[u] {\n                if Abc_TtGetBit( pOffset, iMint ^ (1 \u003c\u003c v) ^ (1 \u003c\u003c u) ) {\n                    continue; }\n                // can expand both directions\n                vTwo = v;\n                uTwo = u;\n                break;\n            }\n            } }\n            }\n        }\n        if vTwo == -1 { // can expand only one\n        \n            for  v = 0; v \u003c nVars; v++  {\n                if !pBlocks[v] {\n                    break; }\n            }\n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c v) );\n            Abc_TtXorBit( pOnset, iMint );\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c v)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c v) ); }\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(v, 0));\n            nLits += nVars - 1;\n            continue;\n        }\n        if nBlocks == nVars - 2 \u0026\u0026 vTwo \u003e= 0 { // can expand only these two\n        \n            Abc_TtSetBit( pRes, iMint );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c uTwo) );\n            Abc_TtSetBit( pRes, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n            Abc_TtXorBit( pOnset, iMint );\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) ); }\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c uTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c uTwo) ); }\n            if Abc_TtGetBit(pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo)) {\n                Abc_TtXorBit( pOnset, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) ); }\n            pCover[c] = Cube \u0026 ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n            nLits += nVars - 2;\n            continue;\n        }\n        // can expand others as well\n        Abc_TtClear( pCube, nWords );\n        Abc_TtSetBit( pCube, iMint );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c uTwo) );\n        Abc_TtSetBit( pCube, iMint ^ (1 \u003c\u003c vTwo) ^ (1 \u003c\u003c uTwo) );\n        Cube \u0026= ~(3 \u003c\u003c Abc_Var2Lit(vTwo, 0)) \u0026 ~(3 \u003c\u003c Abc_Var2Lit(uTwo, 0));\n        assert(!(Abc_TtIntersect2(pCube, pOffset, nWords) != 0), \"!Abc_TtIntersect2(pCube, pOffset, nWords)\");        \n        // expand against offset\n        for  v = 0; v \u003c nVars; v++  {\n        if v != vTwo \u0026\u0026 v != uTwo {\n            var Shift int32  = Abc_Var2Lit( v, 0 );\n            if (Cube \u003e\u003e Shift) == 2 \u0026\u0026 (Abc_TtCheckWithCubePos2Neg(pOffset, pCube, nWords, v) != 0) { // pos literal\n            \n                Abc_TtExpandCubePos2Neg( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            \n            } else if (Cube \u003e\u003e Shift) == 1 \u0026\u0026 (Abc_TtCheckWithCubeNeg2Pos(pOffset, pCube, nWords, v) != 0) { // neg literal\n            \n                Abc_TtExpandCubeNeg2Pos( pCube, nWords, v );\n                Cube \u0026= ~(3 \u003c\u003c Shift);\n            \n            } else { \n                nLits++; }\n        }\n        }\n        // add cube to solution\n        Abc_TtOr( pRes, pRes, pCube, nWords );\n        Abc_TtSharp( pOnset, pOnset, pCube, nWords );\n        pCover[c] = Cube;\n    }\n    pRes[0] = Abc_Tt6Stretch( pRes[0], nVars );\n    return Abc_Cube2Cost(c) | nLits;\n}\nfunc Abc_IsopTestNew() {\n    var nVars int32  = 4;\n    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var r word;\n    var t word = (s_Truths6[0] \u0026 s_Truths6[1]) ^ (s_Truths6[2] \u0026 s_Truths6[3]);\n    var copy word = t;\n//    word r, t = ~s_Truths6[0] | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]), copy = t;\n//    word r, t = 0xABCDABCDABCDABCD, copy = t;\n//    word r, t = 0x6996000000006996, copy = t;\n//    word Cost = Abc_IsopNew( \u0026t, \u0026t, \u0026r, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    var Cost word  = Abc_EsopCheck( \u0026t, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    fmt.Printf(\"Cubes = %d.  Lits = %d.\\n\", Abc_CostCubes(Cost), Abc_CostLits(Cost));\n    Abc_IsopPrintCover( vCover, nVars, 0 );\n    Abc_IsopVerify( \u0026copy, nVars, \u0026r, vCover, 1, 0 );\n    Vec_IntFree( vCover );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute CNF assuming it does not exceed the limit.]\n\n  Description [Please note that pCover should have at least 32 extra entries!]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_IsopTest_TotalCost [6]word ;\nvar spStatic_Abc_IsopTest_TotalTime [6]abctime ;\nvar spStatic_Abc_IsopTest_Counter int32;\nfunc Abc_IsopTest(pFunc *word, nVars int32, vCover *Vec_Int_t) int32 {\n    var fVerbose int32;    \n    \n    \n    \n    var pRes [ABC_ISOP_MAX_WORD]word;\n    var Cost word;\n    var clk abctime;\n    spStatic_Abc_IsopTest_Counter++;\n    if spStatic_Abc_IsopTest_Counter == 9999 {\n        Abc_PrintTime( 1, \"0\", spStatic_Abc_IsopTest_TotalTime[0] );\n        Abc_PrintTime( 1, \"1\", spStatic_Abc_IsopTest_TotalTime[1] );\n        Abc_PrintTime( 1, \"2\", spStatic_Abc_IsopTest_TotalTime[2] );\n        Abc_PrintTime( 1, \"3\", spStatic_Abc_IsopTest_TotalTime[3] );\n        Abc_PrintTime( 1, \"4\", spStatic_Abc_IsopTest_TotalTime[4] );\n        Abc_PrintTime( 1, \"5\", spStatic_Abc_IsopTest_TotalTime[5] );\n    }\n    assert(nVars \u003c= ABC_ISOP_MAX_VAR, \"nVars \u003c= ABC_ISOP_MAX_VAR\");\n//    if ( fVerbose )\n//    Dau_DsdPrintFromTruth( pFunc, nVars ), printf( \"         \" );\n\n    clk = Abc_Clock();\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost)); }\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    spStatic_Abc_IsopTest_TotalCost[0] += Abc_CostCubes(Cost);\n    spStatic_Abc_IsopTest_TotalTime[0] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_IsopCheck( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover.nSize = Abc_CostCubes(Cost);\n    assert(vCover.nSize \u003c= vCover.nCap, \"vCover.nSize \u003c= vCover.nCap\");\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d  \", Abc_CostCubes(Cost), Abc_CostLits(Cost)); }\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 1 );\n    spStatic_Abc_IsopTest_TotalCost[1] += Abc_CostCubes(Cost);\n    spStatic_Abc_IsopTest_TotalTime[1] += Abc_Clock() - clk;\n\n/*\n    clk = Abc_Clock();\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 0 );\n    TotalCost[2] += Abc_CostCubes(Cost);\n    TotalTime[2] += Abc_Clock() - clk;\n\n\n    clk = Abc_Clock();\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    Cost = Abc_EsopCheck( pFunc, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    Abc_TtNot( pFunc, Abc_TtWordNum(nVars) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n//    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 1, 1 );\n    TotalCost[3] += Abc_CostCubes(Cost);\n    TotalTime[3] += Abc_Clock() - clk;\n*/\n\n/*\n    // try new computation\n    clk = Abc_Clock();\n    Cost = Abc_IsopNew( pFunc, pFunc, pRes, nVars, Abc_Cube2Cost(ABC_ISOP_MAX_CUBE), Vec_IntArray(vCover) );\n    vCover-\u003enSize = Abc_CostCubes(Cost);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Abc_CostCubes(Cost), Abc_CostLits(Cost) );\n    Abc_IsopVerify( pFunc, nVars, pRes, vCover, 0, 0 );\n    TotalCost[4] += Abc_CostCubes(Cost);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n/*\n    // try old computation\n    clk = Abc_Clock();\n    Cost = Kit_TruthIsop( (unsigned *)pFunc, nVars, vCover, 1 );\n    vCover-\u003enSize = Vec_IntSize(vCover);\n    assert( vCover-\u003enSize \u003c= vCover-\u003enCap );\n    if ( fVerbose )\n    printf( \"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars) );\n    TotalCost[4] += Vec_IntSize(vCover);\n    TotalTime[4] += Abc_Clock() - clk;\n*/\n\n    clk = Abc_Clock();\n    Cost = Abc_Isop( pFunc, nVars, ABC_ISOP_MAX_CUBE, vCover, 1 );\n    if fVerbose != 0 {\n    fmt.Printf(\"%5d %7d   \", Vec_IntSize(vCover), Abc_IsopCountLits(vCover, nVars)); }\n    spStatic_Abc_IsopTest_TotalCost[5] += Vec_IntSize(vCover);\n    spStatic_Abc_IsopTest_TotalTime[5] += Abc_Clock() - clk;\n\n    if fVerbose != 0 {\n    fmt.Printf(\"  | %8d %8d %8d %8d %8d %8d\", int32(spStatic_Abc_IsopTest_TotalCost[0]), int32(spStatic_Abc_IsopTest_TotalCost[1]), int32(spStatic_Abc_IsopTest_TotalCost[2]), int32(spStatic_Abc_IsopTest_TotalCost[3]), int32(spStatic_Abc_IsopTest_TotalCost[4]), int32(spStatic_Abc_IsopTest_TotalCost[5])); }\n    if fVerbose != 0 {\n    fmt.Printf(\"\\n\"); }\n//Abc_IsopPrintCover( vCover, nVars, 0 );\n    return 1; \n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

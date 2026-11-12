@@ -1,0 +1,464 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c",
+  "SHA256": "ee570eea61c97603e477aa229b09c5110475f63014e9c417cad5f58a2b89d88c",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(spStatic_Abc_UtilsGetVersion_Version, \"%s (compiled %s %s)\", ABC_VERSION, __DATE__, __TIME__);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Abc_UtilsGetUsersInput_Prompt, \"abc %02d\u003e \", pAbc.nSteps );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Out, \"%s\\n\", pAbc.sVersion );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 2826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 2857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -c cmd\\texecute commands `cmd'\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -q cmd\\texecute commands `cmd' quietly\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -C cmd\\texecute commands `cmd', then continue in interactive mode\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -Q cmd\\texecute commands `cmd' quietly, then continue in interactive mode\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -F script\\texecute commands from a script file and echo commands\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -f script\\texecute commands from a script file\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -h\\t\\tprint the command usage\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -o file\\tspecify output filename to store the result\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -s\\t\\tdo not read any initialization file\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -t type\\tspecify input type (blif_mv (default), blif_mvs, blif, or none)\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -T type\\tspecify output type (blif_mv (default), blif_mvs, blif, or none)\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -x\\t\\tequivalent to '-t none -T none'\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"    -b\\t\\trunning in bridge mode\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"\\n\" );"
+    },
+    {
+      "Name": "sscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 6,
+        "ByteOffset": 5106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  if sscanf(datestr, \"%s %s %2d %2d:%2d:%2d %s %4d\","
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 12,
+        "ByteOffset": 5390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) sprintf(spStatic_DateReadFromDateString_result, \"%d-%3s-%02d at %d:%02d %s\", "
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 557
+      },
+      "Directive": "#ifdef ABC_USE_READLINE"
+    },
+    {
+      "Location": {
+        "Line": 74,
+        "Column": 1,
+        "ByteOffset": 1959
+      },
+      "Directive": "#ifdef ABC_USE_READLINE"
+    },
+    {
+      "Location": {
+        "Line": 155,
+        "Column": 1,
+        "ByteOffset": 4615
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 165,
+        "Column": 1,
+        "ByteOffset": 4990
+      },
+      "Directive": "#if 0"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_UtilsGetVersion",
+      "Start": 1407,
+      "End": 1588,
+      "BodyStart": 1456,
+      "Original": "char * Abc_UtilsGetVersion( Abc_Frame_t * pAbc )\n{\n    static char Version[1000];\n    sprintf(Version, \"%s (compiled %s %s)\", ABC_VERSION, __DATE__, __TIME__);\n    return Version;\n}",
+      "Draft": "func Abc_UtilsGetVersion(pAbc *Abc_Frame_t) string {\n    \n    spStatic_Abc_UtilsGetVersion_Version = fmt.Sprintf(\"%s (compiled %s %s)\", ABC_VERSION, __DATE__, __TIME__);\n    return spStatic_Abc_UtilsGetVersion_Version;\n}"
+    },
+    {
+      "Name": "Abc_UtilsGetUsersInput",
+      "Start": 1824,
+      "End": 2345,
+      "BodyStart": 1876,
+      "Original": "char * Abc_UtilsGetUsersInput( Abc_Frame_t * pAbc )\n{\n    static char Prompt[5000];\n    sprintf( Prompt, \"abc %02d\u003e \", pAbc-\u003enSteps );\n#ifdef ABC_USE_READLINE\n    {\n    static char * line = NULL;\n    if (line != NULL) ABC_FREE(line);\n    line = readline(Prompt);  \n    if (line == NULL){ printf(\"***EOF***\\n\"); exit(0); }\n    add_history(line);\n    return line;\n    }\n#else\n    {\n    char * pRetValue;\n    fprintf( pAbc-\u003eOut, \"%s\", Prompt );\n    pRetValue = fgets( Prompt, 5000, stdin );\n    return Prompt;\n    }\n#endif\n}",
+      "Draft": "func Abc_UtilsGetUsersInput(pAbc *Abc_Frame_t) string {\n    \n    spStatic_Abc_UtilsGetUsersInput_Prompt = fmt.Sprintf(\"abc %02d\u003e \", pAbc.nSteps);\n#ifdef ABC_USE_READLINE\n    {\n    static char * line = NULL;\n    if (line != NULL) ABC_FREE(line);\n    line = readline(Prompt);  \n    if (line == NULL){ printf(\"***EOF***\\n\"); exit(0); }\n    add_history(line);\n    return line;\n    }\n#else\n    {\n    char * pRetValue;\n    fprintf( pAbc-\u003eOut, \"%s\", Prompt );\n    pRetValue = fgets( Prompt, 5000, stdin );\n    return Prompt;\n    }\n#endif\n}"
+    },
+    {
+      "Name": "Abc_UtilsPrintHello",
+      "Start": 2581,
+      "End": 2681,
+      "BodyStart": 2628,
+      "Original": "void Abc_UtilsPrintHello( Abc_Frame_t * pAbc )\n{\n    fprintf( pAbc-\u003eOut, \"%s\\n\", pAbc-\u003esVersion );\n}",
+      "Draft": "func Abc_UtilsPrintHello(pAbc *Abc_Frame_t) {\n    fmt.Fprintf(pAbc.Out, \"%s\\n\", pAbc.sVersion);\n}"
+    },
+    {
+      "Name": "Abc_UtilsPrintUsage",
+      "Start": 2917,
+      "End": 4332,
+      "BodyStart": 2981,
+      "Original": "void Abc_UtilsPrintUsage( Abc_Frame_t * pAbc, char * ProgName )\n{\n    fprintf( pAbc-\u003eErr, \"\\n\" );\n    fprintf( pAbc-\u003eErr,\n             \"usage: %s [-c cmd] [-q cmd] [-C cmd] [-Q cmd] [-f script] [-h] [-o file] [-s] [-t type] [-T type] [-x] [-b] [file]\\n\",\n             ProgName);\n    fprintf( pAbc-\u003eErr, \"    -c cmd\\texecute commands `cmd'\\n\");\n    fprintf( pAbc-\u003eErr, \"    -q cmd\\texecute commands `cmd' quietly\\n\");\n    fprintf( pAbc-\u003eErr, \"    -C cmd\\texecute commands `cmd', then continue in interactive mode\\n\");\n    fprintf( pAbc-\u003eErr, \"    -Q cmd\\texecute commands `cmd' quietly, then continue in interactive mode\\n\");\n    fprintf( pAbc-\u003eErr, \"    -F script\\texecute commands from a script file and echo commands\\n\");\n    fprintf( pAbc-\u003eErr, \"    -f script\\texecute commands from a script file\\n\");\n    fprintf( pAbc-\u003eErr, \"    -h\\t\\tprint the command usage\\n\");\n    fprintf( pAbc-\u003eErr, \"    -o file\\tspecify output filename to store the result\\n\");\n    fprintf( pAbc-\u003eErr, \"    -s\\t\\tdo not read any initialization file\\n\");\n    fprintf( pAbc-\u003eErr, \"    -t type\\tspecify input type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fprintf( pAbc-\u003eErr, \"    -T type\\tspecify output type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fprintf( pAbc-\u003eErr, \"    -x\\t\\tequivalent to '-t none -T none'\\n\");\n    fprintf( pAbc-\u003eErr, \"    -b\\t\\trunning in bridge mode\\n\");\n    fprintf( pAbc-\u003eErr, \"\\n\" );\n}",
+      "Draft": "func Abc_UtilsPrintUsage(pAbc *Abc_Frame_t, ProgName string) {\n    fmt.Fprintf(pAbc.Err, \"\\n\");\n    fmt.Fprintf(pAbc.Err, \"usage: %s [-c cmd] [-q cmd] [-C cmd] [-Q cmd] [-f script] [-h] [-o file] [-s] [-t type] [-T type] [-x] [-b] [file]\\n\", ProgName);\n    fmt.Fprintf(pAbc.Err, \"    -c cmd\\texecute commands `cmd'\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -q cmd\\texecute commands `cmd' quietly\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -C cmd\\texecute commands `cmd', then continue in interactive mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -Q cmd\\texecute commands `cmd' quietly, then continue in interactive mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -F script\\texecute commands from a script file and echo commands\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -f script\\texecute commands from a script file\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -h\\t\\tprint the command usage\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -o file\\tspecify output filename to store the result\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -s\\t\\tdo not read any initialization file\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -t type\\tspecify input type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -T type\\tspecify output type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -x\\t\\tequivalent to '-t none -T none'\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -b\\t\\trunning in bridge mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_UtilsSource",
+      "Start": 4568,
+      "End": 7883,
+      "BodyStart": 4611,
+      "Original": "void Abc_UtilsSource( Abc_Frame_t * pAbc )\n{  \n#ifdef WIN32\n    if ( Cmd_CommandExecute(pAbc, \"source abc.rc\") )\n    {\n        if ( Cmd_CommandExecute(pAbc, \"source ..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the parent directory.\\n\" );\n        else if ( Cmd_CommandExecute(pAbc, \"source ..\\\\..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the grandparent directory.\\n\" );\n    }\n#else\n\n#if 0\n    {\n        char * sPath1, * sPath2;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        sPath1 = Extra_UtilFileSearch(\".rc\", \"~/\", \"r\");\n        sPath2 = Extra_UtilFileSearch(\".rc\", \".\",  \"r\");\n  \n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n        }\n        else {\n            if (sPath1) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n            }\n            if (sPath2) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s .rc\");\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n    \n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n#endif\n\n    {\n        char * sPath1, * sPath2;\n        char * home;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        home = getenv(\"HOME\");\n        if (home){\n            char * sPath3 = ABC_ALLOC(char, strlen(home) + 2);\n            (void) sprintf(sPath3, \"%s/\", home);\n            sPath1 = Extra_UtilFileSearch(\".abc.rc\", sPath3, \"r\");\n            ABC_FREE(sPath3);\n        }else\n            sPath1 = NULL;\n\n        sPath2 = Extra_UtilFileSearch(\".abc.rc\", \".\",  \"r\");\n\n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n            (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n            // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n            (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n            ABC_FREE(tmp_cmd);\n        }\n        else {\n            if (sPath1) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n            if (sPath2) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath2)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath2);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s .abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n\n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n    \n#endif //WIN32\n}",
+      "Draft": "func Abc_UtilsSource(pAbc *Abc_Frame_t) {  \n#ifdef WIN32\n    if ( Cmd_CommandExecute(pAbc, \"source abc.rc\") )\n    {\n        if ( Cmd_CommandExecute(pAbc, \"source ..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the parent directory.\\n\" );\n        else if ( Cmd_CommandExecute(pAbc, \"source ..\\\\..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the grandparent directory.\\n\" );\n    }\n#else\n\n#if 0\n    {\n        char * sPath1, * sPath2;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        sPath1 = Extra_UtilFileSearch(\".rc\", \"~/\", \"r\");\n        sPath2 = Extra_UtilFileSearch(\".rc\", \".\",  \"r\");\n  \n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n        }\n        else {\n            if (sPath1) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n            }\n            if (sPath2) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s .rc\");\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n    \n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n#endif\n\n    {\n        char * sPath1, * sPath2;\n        char * home;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        home = getenv(\"HOME\");\n        if (home){\n            char * sPath3 = ABC_ALLOC(char, strlen(home) + 2);\n            (void) sprintf(sPath3, \"%s/\", home);\n            sPath1 = Extra_UtilFileSearch(\".abc.rc\", sPath3, \"r\");\n            ABC_FREE(sPath3);\n        }else\n            sPath1 = NULL;\n\n        sPath2 = Extra_UtilFileSearch(\".abc.rc\", \".\",  \"r\");\n\n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n            (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n            // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n            (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n            ABC_FREE(tmp_cmd);\n        }\n        else {\n            if (sPath1) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n            if (sPath2) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath2)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath2);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s .abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n\n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n    \n#endif //WIN32\n}"
+    },
+    {
+      "Name": "DateReadFromDateString",
+      "Start": 8189,
+      "End": 8914,
+      "BodyStart": 8237,
+      "Original": "char * DateReadFromDateString( char * datestr )\n{\n  static char result[25];\n  char        day[10];\n  char        month[10];\n  char        zone[10];\n  char       *at;\n  int         date;\n  int         hour;\n  int         minute;\n  int         second;\n  int         year;\n\n  if (sscanf(datestr, \"%s %s %2d %2d:%2d:%2d %s %4d\",\n             day, month, \u0026date, \u0026hour, \u0026minute, \u0026second, zone, \u0026year) == 8) {\n    if (hour \u003e= 12) {\n      if (hour \u003e= 13) hour -= 12;\n      at = \"PM\";\n    }\n    else {\n      if (hour == 0) hour = 12;\n      at = \"AM\";\n    }\n    (void) sprintf(result, \"%d-%3s-%02d at %d:%02d %s\", \n                   date, month, year % 100, hour, minute, at);\n    return result;\n  }\n  else {\n    return datestr;\n  }\n}",
+      "Draft": "func DateReadFromDateString(datestr string) string {\n  \n  var day [10]byte;\n  var month [10]byte;\n  var zone [10]byte;\n  var at string;\n  var date int32;\n  var hour int32;\n  var minute int32;\n  var second int32;\n  var year int32;\n\n  if sscanf(datestr, \"%s %s %2d %2d:%2d:%2d %s %4d\",\n               day, month, \u0026date, \u0026hour, \u0026minute, \u0026second, zone, \u0026year) == 8 {\n    if hour \u003e= 12 {\n      if hour \u003e= 13 { hour -= 12; }\n      at = \"PM\";\n    \n    } else {\n      if hour == 0 { hour = 12; }\n      at = \"AM\";\n    }\n    (void) sprintf(spStatic_DateReadFromDateString_result, \"%d-%3s-%02d at %d:%02d %s\", \n                       date, month, year % 100, hour, minute, at);\n    return spStatic_DateReadFromDateString_result;\n  \n  } else {\n    return datestr;\n  }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::mechanical::static::1445",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1462,
+      "End": 1468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::mechanical::static::1865",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1882,
+      "End": 1888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::mechanical::static::4722",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8241,
+      "End": 8247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::Abc_UtilsGetVersion",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilsGetVersion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1407,
+      "End": 1588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::Abc_UtilsGetUsersInput",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilsGetUsersInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1824,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::Abc_UtilsPrintHello",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilsPrintHello",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2581,
+      "End": 2681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::Abc_UtilsPrintUsage",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilsPrintUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2917,
+      "End": 4332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::Abc_UtilsSource",
+      "Category": "semantic-review",
+      "Symbol": "Abc_UtilsSource",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4568,
+      "End": 7883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::DateReadFromDateString",
+      "Category": "semantic-review",
+      "Symbol": "DateReadFromDateString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8189,
+      "End": 8914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 557,
+      "End": 648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1959,
+      "End": 2343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainUtils.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4615,
+      "End": 7881
+    }
+  ],
+  "Draft": "package main\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [mainUtils.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n \n  PackageName [The main package.]\n\n  Synopsis    [Miscellaneous utilities.]\n \n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mainUtils.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n\n#ifdef ABC_USE_READLINE\n#include \u003creadline/readline.h\u003e\n#include \u003creadline/history.h\u003e\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static char * DateReadFromDateString( char * datestr );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_UtilsGetVersion_Version string // was [1000]byte in C\n\nfunc Abc_UtilsGetVersion(pAbc *Abc_Frame_t) string {\n    \n    spStatic_Abc_UtilsGetVersion_Version = fmt.Sprintf(\"%s (compiled %s %s)\", ABC_VERSION, __DATE__, __TIME__);\n    return spStatic_Abc_UtilsGetVersion_Version;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_UtilsGetUsersInput_Prompt string // was [5000]byte in C\n\nfunc Abc_UtilsGetUsersInput(pAbc *Abc_Frame_t) string {\n    \n    spStatic_Abc_UtilsGetUsersInput_Prompt = fmt.Sprintf(\"abc %02d\u003e \", pAbc.nSteps);\n#ifdef ABC_USE_READLINE\n    {\n    static char * line = NULL;\n    if (line != NULL) ABC_FREE(line);\n    line = readline(Prompt);  \n    if (line == NULL){ printf(\"***EOF***\\n\"); exit(0); }\n    add_history(line);\n    return line;\n    }\n#else\n    {\n    char * pRetValue;\n    fprintf( pAbc-\u003eOut, \"%s\", Prompt );\n    pRetValue = fgets( Prompt, 5000, stdin );\n    return Prompt;\n    }\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_UtilsPrintHello(pAbc *Abc_Frame_t) {\n    fmt.Fprintf(pAbc.Out, \"%s\\n\", pAbc.sVersion);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_UtilsPrintUsage(pAbc *Abc_Frame_t, ProgName string) {\n    fmt.Fprintf(pAbc.Err, \"\\n\");\n    fmt.Fprintf(pAbc.Err, \"usage: %s [-c cmd] [-q cmd] [-C cmd] [-Q cmd] [-f script] [-h] [-o file] [-s] [-t type] [-T type] [-x] [-b] [file]\\n\", ProgName);\n    fmt.Fprintf(pAbc.Err, \"    -c cmd\\texecute commands `cmd'\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -q cmd\\texecute commands `cmd' quietly\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -C cmd\\texecute commands `cmd', then continue in interactive mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -Q cmd\\texecute commands `cmd' quietly, then continue in interactive mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -F script\\texecute commands from a script file and echo commands\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -f script\\texecute commands from a script file\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -h\\t\\tprint the command usage\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -o file\\tspecify output filename to store the result\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -s\\t\\tdo not read any initialization file\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -t type\\tspecify input type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -T type\\tspecify output type (blif_mv (default), blif_mvs, blif, or none)\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -x\\t\\tequivalent to '-t none -T none'\\n\");\n    fmt.Fprintf(pAbc.Err, \"    -b\\t\\trunning in bridge mode\\n\");\n    fmt.Fprintf(pAbc.Err, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_UtilsSource(pAbc *Abc_Frame_t) {  \n#ifdef WIN32\n    if ( Cmd_CommandExecute(pAbc, \"source abc.rc\") )\n    {\n        if ( Cmd_CommandExecute(pAbc, \"source ..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the parent directory.\\n\" );\n        else if ( Cmd_CommandExecute(pAbc, \"source ..\\\\..\\\\abc.rc\") == 0 )\n            printf( \"Loaded \\\"abc.rc\\\" from the grandparent directory.\\n\" );\n    }\n#else\n\n#if 0\n    {\n        char * sPath1, * sPath2;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        sPath1 = Extra_UtilFileSearch(\".rc\", \"~/\", \"r\");\n        sPath2 = Extra_UtilFileSearch(\".rc\", \".\",  \"r\");\n  \n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n        }\n        else {\n            if (sPath1) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s ~/.rc\");\n            }\n            if (sPath2) {\n                (void) Cmd_CommandExecute(pAbc, \"source -s .rc\");\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n    \n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n#endif\n\n    {\n        char * sPath1, * sPath2;\n        char * home;\n\n         // If .rc is present in both the home and current directories, then read\n         // it from the home directory.  Otherwise, read it from wherever it's located.\n        home = getenv(\"HOME\");\n        if (home){\n            char * sPath3 = ABC_ALLOC(char, strlen(home) + 2);\n            (void) sprintf(sPath3, \"%s/\", home);\n            sPath1 = Extra_UtilFileSearch(\".abc.rc\", sPath3, \"r\");\n            ABC_FREE(sPath3);\n        }else\n            sPath1 = NULL;\n\n        sPath2 = Extra_UtilFileSearch(\".abc.rc\", \".\",  \"r\");\n\n        if ( sPath1 \u0026\u0026 sPath2 ) {\n            /* ~/.rc == .rc : Source the file only once */\n            char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n            (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n            // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n            (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n            ABC_FREE(tmp_cmd);\n        }\n        else {\n            if (sPath1) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath1)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath1);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s ~/.abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n            if (sPath2) {\n                char *tmp_cmd = ABC_ALLOC(char, strlen(sPath2)+12);\n                (void) sprintf(tmp_cmd, \"source -s %s\", sPath2);\n                // (void) Cmd_CommandExecute(pAbc, \"source -s .abc.rc\");\n                (void) Cmd_CommandExecute(pAbc, tmp_cmd);\n                ABC_FREE(tmp_cmd);\n            }\n        }\n        if ( sPath1 ) ABC_FREE(sPath1);\n        if ( sPath2 ) ABC_FREE(sPath2);\n\n        /* execute the abc script which can be open with the \"open_path\" */\n        Cmd_CommandExecute( pAbc, \"source -s abc.rc\" );\n    }\n    \n#endif //WIN32\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the date in a brief format assuming its coming from\n  the program `date'.]\n\n  Description [optional]\n\n  SideEffects []\n\n******************************************************************************/\nvar spStatic_DateReadFromDateString_result [25]byte;\nfunc DateReadFromDateString(datestr string) string {\n  \n  var day [10]byte;\n  var month [10]byte;\n  var zone [10]byte;\n  var at string;\n  var date int32;\n  var hour int32;\n  var minute int32;\n  var second int32;\n  var year int32;\n\n  if sscanf(datestr, \"%s %s %2d %2d:%2d:%2d %s %4d\",\n               day, month, \u0026date, \u0026hour, \u0026minute, \u0026second, zone, \u0026year) == 8 {\n    if hour \u003e= 12 {\n      if hour \u003e= 13 { hour -= 12; }\n      at = \"PM\";\n    \n    } else {\n      if hour == 0 { hour = 12; }\n      at = \"AM\";\n    }\n    (void) sprintf(spStatic_DateReadFromDateString_result, \"%d-%3s-%02d at %d:%02d %s\", \n                       date, month, year % 100, hour, minute, at);\n    return spStatic_DateReadFromDateString_result;\n  \n  } else {\n    return datestr;\n  }\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

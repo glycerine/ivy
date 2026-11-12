@@ -1,0 +1,532 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c",
+  "SHA256": "6035d2cee50dd1f9842d3e5c7bfd5ad3d5c6f154be7d253f3269450fc97e4a72",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 2958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigLogic(pNtk1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigLogic(pNtk2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 5074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Index == Abc_NtkCiNum(pNtk1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 5490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Matched %d vars by name.\", nCommon );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 13,
+        "ByteOffset": 5862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" Netlist1 has %d unmatched vars.\", Abc_NtkCiNum(pNtk1) - nCommon ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" Netlist2 has %d unmatched vars.\", Abc_NtkCiNum(pNtk2) - nCommon ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 6084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 9,
+        "ByteOffset": 6334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Matched %d vars by order.\", Abc_MinInt(Abc_NtkCiNum(pNtk1), Abc_NtkCiNum(pNtk2)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 13,
+        "ByteOffset": 6494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" The last %d vars of Netlist2 are unmatched vars.\", Abc_NtkCiNum(pNtk2) - Abc_NtkCiNum(pNtk1) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 13,
+        "ByteOffset": 6669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" The last %d vars of Netlist1 are unmatched vars.\", Abc_NtkCiNum(pNtk1) - Abc_NtkCiNum(pNtk2) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 9,
+        "ByteOffset": 6785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 264,
+        "Column": 27,
+        "ByteOffset": 11011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 23,
+        "ByteOffset": 11059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { printf( \"Cannot open file %s for writing.\\n\", pFileName ); return; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 11132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Node equivalences computed by ABC for networks \\\"%s\\\" and \\\"%s\\\" on %s\\n\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 11710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d:%s:%s%s\\n\", c+1, Abc_NtkName(pNtk), (Entry\u00262) ? \"NOT:\":\"\", pObjName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 11819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 11853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 9,
+        "ByteOffset": 12494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Computing equivalences for networks \\\"%s\\\" and \\\"%s\\\" with conflict limit %d.\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), nConfs ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ConvertHopToGia_rec1",
+      "Start": 1348,
+      "End": 1815,
+      "BodyStart": 1413,
+      "Original": "void Abc_ConvertHopToGia_rec1( Gia_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj-\u003eiData = Gia_ManHashAnd( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_ConvertHopToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_ConvertHopToGia_rec2",
+      "Start": 1816,
+      "End": 2173,
+      "BodyStart": 1866,
+      "Original": "void Abc_ConvertHopToGia_rec2( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert( Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}",
+      "Draft": "func Abc_ConvertHopToGia_rec2(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_ConvertHopToGia",
+      "Start": 2174,
+      "End": 2437,
+      "BodyStart": 2234,
+      "Original": "int Abc_ConvertHopToGia( Gia_Man_t * p, Hop_Obj_t * pRoot )\n{\n    assert( !Hop_IsComplement(pRoot) );\n    if ( Hop_ObjIsConst1( pRoot ) )\n        return 1;\n    Abc_ConvertHopToGia_rec1( p, pRoot );\n    Abc_ConvertHopToGia_rec2( pRoot );\n    return pRoot-\u003eiData;\n}",
+      "Draft": "func Abc_ConvertHopToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    if Hop_ObjIsConst1( pRoot ) {\n        return 1; }\n    Abc_ConvertHopToGia_rec1( p, pRoot );\n    Abc_ConvertHopToGia_rec2( pRoot );\n    return pRoot.iData;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToGiaOne",
+      "Start": 2714,
+      "End": 3929,
+      "BodyStart": 2791,
+      "Original": "void Abc_NtkAigToGiaOne( Gia_Man_t * p, Abc_Ntk_t * pNtk, Vec_Int_t * vMap )\n{\n    Hop_Man_t * pHopMan;\n    Hop_Obj_t * pHopObj;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pFanin;\n    int i, k;\n    assert( Abc_NtkIsAigLogic(pNtk) );\n    pHopMan = (Hop_Man_t *)pNtk-\u003epManFunc;\n    Hop_ManConst1(pHopMan)-\u003eiData = 1;\n    // image primary inputs\n    Abc_NtkCleanCopy( pNtk );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003eiTemp = Gia_ManCiLit(p, Vec_IntEntry(vMap, i));\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Hop_ManPi(pHopMan, k)-\u003eiData = pFanin-\u003eiTemp;\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode-\u003epData );\n        assert( Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan) );\n        if ( Hop_DagSize(pHopObj) \u003e 0 )\n            Abc_ConvertHopToGia( p, pHopObj );\n        pNode-\u003eiTemp = Abc_LitNotCond( pHopObj-\u003eiData, Hop_IsComplement( (Hop_Obj_t *)pNode-\u003epData ) );\n    }\n    Vec_PtrFree( vNodes );\n    // create primary outputs\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        Gia_ManAppendCo( p, Abc_ObjFanin0(pNode)-\u003eiTemp );\n}",
+      "Draft": "func Abc_NtkAigToGiaOne(p *Gia_Man_t, pNtk *Abc_Ntk_t, vMap *Vec_Int_t) {\n    var pHopMan *Hop_Man_t;\n    var pHopObj *Hop_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsAigLogic(pNtk), \"Abc_NtkIsAigLogic(pNtk)\");\n    pHopMan = (Hop_Man_t *)pNtk.pManFunc;\n    Hop_ManConst1(pHopMan).iData = 1;\n    // image primary inputs\n    Abc_NtkCleanCopy( pNtk );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.iTemp = Gia_ManCiLit(p, Vec_IntEntry(vMap, i));\n    }\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;\n        }\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );\n        assert(Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan), \"Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan)\");\n        if Hop_DagSize(pHopObj) \u003e 0 {\n            Abc_ConvertHopToGia( p, pHopObj ); }\n        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );\n    }\n    Vec_PtrFree( vNodes );\n    // create primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( p, Abc_ObjFanin0(pNode).iTemp );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToGiaTwo",
+      "Start": 3930,
+      "End": 6771,
+      "BodyStart": 4014,
+      "Original": "Gia_Man_t * Abc_NtkAigToGiaTwo( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fByName )\n{\n    Gia_Man_t * p;\n    Gia_Obj_t * pObj;\n    Abc_Obj_t * pNode;\n    Vec_Int_t * vMap1, * vMap2;\n    int i, Index = 0;\n    assert( Abc_NtkIsAigLogic(pNtk1) );\n    assert( Abc_NtkIsAigLogic(pNtk2) );\n    // find common variables\n    if ( fByName )\n    {\n        int nCommon = 0;\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntAlloc( Abc_NtkCiNum(pNtk2) );\n        Abc_NtkForEachCi( pNtk1, pNode, i )\n            pNode-\u003eiTemp = Index++;\n        assert( Index == Abc_NtkCiNum(pNtk1) );\n        Abc_NtkForEachCi( pNtk2, pNode, i )\n        {\n            int Num = Nm_ManFindIdByName( pNtk1-\u003epManName, Abc_ObjName(pNode), ABC_OBJ_PI );\n            if ( Num \u003c 0 )\n                Num = Nm_ManFindIdByName( pNtk1-\u003epManName, Abc_ObjName(pNode), ABC_OBJ_BO );\n            assert( Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num)) );\n            if ( Num \u003e= 0 )\n                Vec_IntPush( vMap2, Abc_NtkObj(pNtk1, Num)-\u003eiTemp ), nCommon++;\n            else\n                Vec_IntPush( vMap2, Index++ );\n        }\n        // report\n        printf( \"Matched %d vars by name.\", nCommon );\n        if ( nCommon != Abc_NtkCiNum(pNtk1) )\n            printf( \" Netlist1 has %d unmatched vars.\", Abc_NtkCiNum(pNtk1) - nCommon );\n        if ( nCommon != Abc_NtkCiNum(pNtk2) )\n            printf( \" Netlist2 has %d unmatched vars.\", Abc_NtkCiNum(pNtk2) - nCommon );\n        printf( \"\\n\" );\n    }\n    else\n    {\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk2) );\n        Index = Abc_MaxInt( Vec_IntSize(vMap1), Vec_IntSize(vMap2) );\n        // report\n        printf( \"Matched %d vars by order.\", Abc_MinInt(Abc_NtkCiNum(pNtk1), Abc_NtkCiNum(pNtk2)) );\n        if ( Abc_NtkCiNum(pNtk1) \u003c Abc_NtkCiNum(pNtk2) )\n            printf( \" The last %d vars of Netlist2 are unmatched vars.\", Abc_NtkCiNum(pNtk2) - Abc_NtkCiNum(pNtk1) );\n        if ( Abc_NtkCiNum(pNtk1) \u003e Abc_NtkCiNum(pNtk2) )\n            printf( \" The last %d vars of Netlist1 are unmatched vars.\", Abc_NtkCiNum(pNtk1) - Abc_NtkCiNum(pNtk2) );\n        printf( \"\\n\" );\n    }\n    // create new manager\n    p = Gia_ManStart( 10000 );\n    p-\u003epName = Abc_UtilStrsav( Abc_NtkName(pNtk1) );\n    p-\u003epSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk1) );\n    for ( i = 0; i \u003c Index; i++ )\n        Gia_ManAppendCi(p);\n    // add logic\n    Gia_ManHashAlloc( p );\n    Abc_NtkAigToGiaOne( p, pNtk1, vMap1 );\n    Abc_NtkAigToGiaOne( p, pNtk2, vMap2 );\n    Gia_ManHashStop( p );\n    Vec_IntFree( vMap1 );\n    Vec_IntFree( vMap2 );\n    // add extra POs to dangling nodes\n    Gia_ManCreateValueRefs( p );\n    Gia_ManForEachAnd( p, pObj, i )\n        if ( pObj-\u003eValue == 0 )\n            Gia_ManAppendCo( p, Abc_Var2Lit(i, 0) );\n    return p;\n}",
+      "Draft": "func Abc_NtkAigToGiaTwo(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fByName int32) *Gia_Man_t {\n    var p *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pNode *Abc_Obj_t;\n    var vMap1, vMap2 *Vec_Int_t;\n    var i, Index int32;\n    assert(Abc_NtkIsAigLogic(pNtk1), \"Abc_NtkIsAigLogic(pNtk1)\");\n    assert(Abc_NtkIsAigLogic(pNtk2), \"Abc_NtkIsAigLogic(pNtk2)\");\n    // find common variables\n    if fByName != 0 {\n        var nCommon int32;\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntAlloc( Abc_NtkCiNum(pNtk2) );\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk1)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk1, i)), 1); i++  {\n            pNode.iTemp = Index++;\n        }\n        assert(Index == Abc_NtkCiNum(pNtk1), \"Index == Abc_NtkCiNum(pNtk1)\");\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk2)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk2, i)), 1); i++  {\n            var Num int32  = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_PI );\n            if Num \u003c 0 {\n                Num = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_BO ); }\n            assert(Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num)), \"Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num))\");\n            if Num \u003e= 0 {\n                Vec_IntPush( vMap2, Abc_NtkObj(pNtk1, Num).iTemp );\nnCommon++;\n            } else {\n                Vec_IntPush( vMap2, Index++ ); }\n        }\n        // report\n        fmt.Printf(\"Matched %d vars by name.\", nCommon);\n        if nCommon != Abc_NtkCiNum(pNtk1) {\n            fmt.Printf(\" Netlist1 has %d unmatched vars.\", Abc_NtkCiNum(pNtk1) - nCommon); }\n        if nCommon != Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" Netlist2 has %d unmatched vars.\", Abc_NtkCiNum(pNtk2) - nCommon); }\n        fmt.Printf(\"\\n\");\n    \n    } else {\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk2) );\n        Index = Abc_MaxInt( Vec_IntSize(vMap1), Vec_IntSize(vMap2) );\n        // report\n        fmt.Printf(\"Matched %d vars by order.\", Abc_MinInt(Abc_NtkCiNum(pNtk1), Abc_NtkCiNum(pNtk2)));\n        if Abc_NtkCiNum(pNtk1) \u003c Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" The last %d vars of Netlist2 are unmatched vars.\", Abc_NtkCiNum(pNtk2) - Abc_NtkCiNum(pNtk1)); }\n        if Abc_NtkCiNum(pNtk1) \u003e Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" The last %d vars of Netlist1 are unmatched vars.\", Abc_NtkCiNum(pNtk1) - Abc_NtkCiNum(pNtk2)); }\n        fmt.Printf(\"\\n\");\n    }\n    // create new manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( Abc_NtkName(pNtk1) );\n    p.pSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk1) );\n    for  i = 0; i \u003c Index; i++  {\n        Gia_ManAppendCi(p);\n    }\n    // add logic\n    Gia_ManHashAlloc( p );\n    Abc_NtkAigToGiaOne( p, pNtk1, vMap1 );\n    Abc_NtkAigToGiaOne( p, pNtk2, vMap2 );\n    Gia_ManHashStop( p );\n    Vec_IntFree( vMap1 );\n    Vec_IntFree( vMap2 );\n    // add extra POs to dangling nodes\n    Gia_ManCreateValueRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj.Value == 0 {\n            Gia_ManAppendCo( p, Abc_Var2Lit(i, 0) ); }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectAddOne",
+      "Start": 7206,
+      "End": 7759,
+      "BodyStart": 7344,
+      "Original": "static inline void Abc_NtkCollectAddOne( int iNtk, int iObj, int iGiaLit, Gia_Man_t * pGia, Vec_Int_t * vGia2Cla, Vec_Int_t * vNexts[2] )\n{\n    int iRepr = Gia_ObjReprSelf( pGia, Abc_Lit2Var(iGiaLit) );\n    int Compl = Abc_LitIsCompl(iGiaLit) ^ Gia_ObjPhase(Gia_ManObj(pGia, iRepr)) ^ Gia_ObjPhase(Gia_ManObj(pGia, Abc_Lit2Var(iGiaLit)));\n    int Added = Abc_Var2Lit( Abc_Var2Lit(iObj, Compl), iNtk );\n    int Entry = Vec_IntEntry( vGia2Cla, iRepr );\n    Vec_IntWriteEntry( vNexts[iNtk], iObj, Entry );\n    Vec_IntWriteEntry( vGia2Cla, iRepr, Added );\n}",
+      "Draft": "func Abc_NtkCollectAddOne(iNtk int32, iObj int32, iGiaLit int32, pGia *Gia_Man_t, vGia2Cla *Vec_Int_t, vNexts []*Vec_Int_t) {\n    var iRepr int32  = Gia_ObjReprSelf( pGia, Abc_Lit2Var(iGiaLit) );\n    var Compl int32  = Abc_LitIsCompl(iGiaLit) ^ Gia_ObjPhase(Gia_ManObj(pGia, iRepr)) ^ Gia_ObjPhase(Gia_ManObj(pGia, Abc_Lit2Var(iGiaLit)));\n    var Added int32  = Abc_Var2Lit( Abc_Var2Lit(iObj, Compl), iNtk );\n    var Entry int32  = Vec_IntEntry( vGia2Cla, iRepr );\n    Vec_IntWriteEntry( vNexts[iNtk], iObj, Entry );\n    Vec_IntWriteEntry( vGia2Cla, iRepr, Added );\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectEquivClasses",
+      "Start": 7760,
+      "End": 9225,
+      "BodyStart": 7841,
+      "Original": "Vec_Int_t * Abc_NtkCollectEquivClasses( Abc_Ntk_t * pNtks[2], Gia_Man_t * pGia )\n{\n    Vec_Int_t * vClass = Vec_IntAlloc( 100 );\n    Vec_Int_t * vClasses = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vGia2Cla = Vec_IntStartFull( Gia_ManObjNum(pGia) ); // mapping objId into classId\n    Vec_Int_t * vNexts[2] = { Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[0])), Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[1])) };\n    Abc_Obj_t * pObj;\n    int n, i, k, Entry, fCompl;\n    Abc_NtkForEachCi( pNtks[0], pObj, i )\n        Abc_NtkCollectAddOne( 0, Abc_ObjId(pObj), pObj-\u003eiTemp, pGia, vGia2Cla, vNexts );\n    for ( n = 0; n \u003c 2; n++ )\n        Abc_NtkForEachNode( pNtks[n], pObj, i )\n            Abc_NtkCollectAddOne( n, Abc_ObjId(pObj), pObj-\u003eiTemp, pGia, vGia2Cla, vNexts );\n    Vec_IntForEachEntry( vGia2Cla, Entry, i )\n    {\n        Vec_IntClear( vClass );\n        for ( ; Entry \u003e= 0; Entry = Vec_IntEntry(vNexts[Entry\u00261], Entry\u003e\u003e2) )\n            Vec_IntPush( vClass, Entry );\n        if ( Vec_IntSize(vClass) \u003c 2 )\n            continue;\n        Vec_IntReverseOrder( vClass );\n        fCompl = 2 \u0026 Vec_IntEntry( vClass, 0 );\n        Vec_IntForEachEntry( vClass, Entry, k )\n            Vec_IntWriteEntry( vClass, k, Entry ^ fCompl );        \n        Vec_IntPush( vClasses, Vec_IntSize(vClass) );\n        Vec_IntAppend( vClasses, vClass );\n    }\n    Vec_IntFree( vGia2Cla );\n    Vec_IntFree( vNexts[0] );\n    Vec_IntFree( vNexts[1] );\n    Vec_IntFree( vClass );\n    return vClasses;\n}",
+      "Draft": "func Abc_NtkCollectEquivClasses(pNtks []*Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {\n    var vClass *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vClasses *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vGia2Cla *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pGia) ); // mapping objId into classId\n    var vNexts [2]*Vec_Int_t = [2]*Vec_Int_t{ Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[0])), Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[1])) };\n    var pObj *Abc_Obj_t;\n    var n, i, k, Entry, fCompl int32;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtks[0])) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtks[0], i)), 1); i++  {\n        Abc_NtkCollectAddOne( 0, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts );\n    }\n    for  n = 0; n \u003c 2; n++  {\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtks[n]).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtks[n], i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            Abc_NtkCollectAddOne( n, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts ); }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGia2Cla)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGia2Cla, i)), 1); i++  {\n        Vec_IntClear( vClass );\n        for  ; Entry \u003e= 0; Entry = Vec_IntEntry(vNexts[Entry\u00261], Entry\u003e\u003e2)  {\n            Vec_IntPush( vClass, Entry );\n        }\n        if Vec_IntSize(vClass) \u003c 2 {\n            continue; }\n        Vec_IntReverseOrder( vClass );\n        fCompl = 2 \u0026 Vec_IntEntry( vClass, 0 );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            Vec_IntWriteEntry( vClass, k, Entry ^ fCompl );\n        }        \n        Vec_IntPush( vClasses, Vec_IntSize(vClass) );\n        Vec_IntAppend( vClasses, vClass );\n    }\n    Vec_IntFree( vGia2Cla );\n    Vec_IntFree( vNexts[0] );\n    Vec_IntFree( vNexts[1] );\n    Vec_IntFree( vClass );\n    return vClasses;\n}"
+    },
+    {
+      "Name": "Abc_NtkDumpEquivFile",
+      "Start": 9483,
+      "End": 10409,
+      "BodyStart": 9573,
+      "Original": "void Abc_NtkDumpEquivFile( char * pFileName, Vec_Int_t * vClasses, Abc_Ntk_t * pNtks[2] )\n{\n    int i, c, k, Entry;\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL ) { printf( \"Cannot open file %s for writing.\\n\", pFileName ); return; }\n    fprintf( pFile, \"# Node equivalences computed by ABC for networks \\\"%s\\\" and \\\"%s\\\" on %s\\n\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), Extra_TimeStamp() );\n    for ( i = c = 0; i \u003c Vec_IntSize(vClasses); c++, i += 1 + Vec_IntEntry(vClasses, i) )\n    {\n        Vec_IntForEachEntryStartStop( vClasses, Entry, k, i + 1, i + 1 + Vec_IntEntry(vClasses, i) )\n        {\n            Abc_Ntk_t * pNtk = pNtks[Entry \u0026 1];\n            char * pObjName = Abc_ObjName( Abc_NtkObj(pNtk, Entry\u003e\u003e2) );\n            fprintf( pFile, \"%d:%s:%s%s\\n\", c+1, Abc_NtkName(pNtk), (Entry\u00262) ? \"NOT:\":\"\", pObjName );\n        }\n        fprintf( pFile, \"\\n\" );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Abc_NtkDumpEquivFile(pFileName string, vClasses *Vec_Int_t, pNtks []*Abc_Ntk_t) {\n    var i, c, k, Entry int32;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil { fmt.Printf(\"Cannot open file %s for writing.\\n\", pFileName); return; }\n    fmt.Fprintf(pFile, \"# Node equivalences computed by ABC for networks \\\"%s\\\" and \\\"%s\\\" on %s\\n\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), Extra_TimeStamp());\n    for  i = c = 0; i \u003c Vec_IntSize(vClasses); c++, i += 1 + Vec_IntEntry(vClasses, i)  {\n        // inlining of macro Vec_IntForEachEntryStartStop\n        for  k = i + 1; (k \u003c i + 1 + Vec_IntEntry(vClasses, i)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClasses, k)), 1); k++  {\n            var pNtk *Abc_Ntk_t  = pNtks[Entry \u0026 1];\n            var pObjName string  = Abc_ObjName( Abc_NtkObj(pNtk, Entry\u003e\u003e2) );\n            fmt.Fprintf(pFile, \"%d:%s:%s%s\\n\", c+1, Abc_NtkName(pNtk), (Entry\u00262) ? \"NOT:\":\"\", pObjName);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Abc_NtkDumpEquiv",
+      "Start": 10687,
+      "End": 11721,
+      "BodyStart": 10790,
+      "Original": "void Abc_NtkDumpEquiv( Abc_Ntk_t * pNtks[2], char * pFileName, int nConfs, int fByName, int fVerbose )\n{\n    //abctime clk = Abc_Clock();\n    Gia_Man_t * pTemp;\n    Vec_Int_t * vClasses;\n    // derive shared AIG for the two networks\n    Gia_Man_t * pGia = Abc_NtkAigToGiaTwo( pNtks[0], pNtks[1], fByName );\n    if ( fVerbose )\n        printf( \"Computing equivalences for networks \\\"%s\\\" and \\\"%s\\\" with conflict limit %d.\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), nConfs );\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    if ( fVerbose )\n        Gia_ManPrintStats( pGia, NULL );\n    // collect equivalence class information\n    vClasses = Abc_NtkCollectEquivClasses( pNtks, pGia );\n    Gia_ManStop( pGia );\n    // dump information into the output file\n    Abc_NtkDumpEquivFile( pFileName, vClasses, pNtks );\n    Vec_IntFree( vClasses );\n}",
+      "Draft": "func Abc_NtkDumpEquiv(pNtks []*Abc_Ntk_t, pFileName string, nConfs int32, fByName int32, fVerbose int32) {\n    //abctime clk = Abc_Clock();\n    var pTemp *Gia_Man_t;\n    var vClasses *Vec_Int_t;\n    // derive shared AIG for the two networks\n    var pGia *Gia_Man_t  = Abc_NtkAigToGiaTwo( pNtks[0], pNtks[1], fByName );\n    if fVerbose != 0 {\n        fmt.Printf(\"Computing equivalences for networks \\\"%s\\\" and \\\"%s\\\" with conflict limit %d.\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), nConfs); }\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    if fVerbose != 0 {\n        Gia_ManPrintStats( pGia, nil ); }\n    // collect equivalence class information\n    vClasses = Abc_NtkCollectEquivClasses( pNtks, pGia );\n    Gia_ManStop( pGia );\n    // dump information into the output file\n    Abc_NtkDumpEquivFile( pFileName, vClasses, pNtks );\n    Vec_IntFree( vClasses );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::pointer-cast::2967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2967,
+      "End": 2980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::pointer-cast::3494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3284,
+      "End": 3284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::pointer-cast::3794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3480,
+      "End": 3493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::pointer-cast::4050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3736,
+      "End": 3749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_ConvertHopToGia_rec1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertHopToGia_rec1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1348,
+      "End": 1815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_ConvertHopToGia_rec2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertHopToGia_rec2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1816,
+      "End": 2173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_ConvertHopToGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertHopToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2174,
+      "End": 2437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkAigToGiaOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToGiaOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2714,
+      "End": 3929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkAigToGiaTwo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToGiaTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3930,
+      "End": 6771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkCollectAddOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectAddOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7206,
+      "End": 7759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkCollectEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7760,
+      "End": 9225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::ternary::Abc_NtkDumpEquivFile",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkDumpEquivFile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9483,
+      "End": 10409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkDumpEquivFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDumpEquivFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9483,
+      "End": 10409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::Abc_NtkDumpEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDumpEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10687,
+      "End": 11721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress3.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11969
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcDress3.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Transfers names from one netlist to the other.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcDress3.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/io/ioAbc.h\"\n//#include \"proof/cec/cec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG from HOP to GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertHopToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\nfunc Abc_ConvertHopToGia_rec2(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertHopToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}\nfunc Abc_ConvertHopToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    if Hop_ObjIsConst1( pRoot ) {\n        return 1; }\n    Abc_ConvertHopToGia_rec1( p, pRoot );\n    Abc_ConvertHopToGia_rec2( pRoot );\n    return pRoot.iData;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add logic from pNtk to the AIG manager p.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigToGiaOne(p *Gia_Man_t, pNtk *Abc_Ntk_t, vMap *Vec_Int_t) {\n    var pHopMan *Hop_Man_t;\n    var pHopObj *Hop_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsAigLogic(pNtk), \"Abc_NtkIsAigLogic(pNtk)\");\n    pHopMan = (Hop_Man_t *)pNtk.pManFunc;\n    Hop_ManConst1(pHopMan).iData = 1;\n    // image primary inputs\n    Abc_NtkCleanCopy( pNtk );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.iTemp = Gia_ManCiLit(p, Vec_IntEntry(vMap, i));\n    }\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( pNtk, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {\n            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;\n        }\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );\n        assert(Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan), \"Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan)\");\n        if Hop_DagSize(pHopObj) \u003e 0 {\n            Abc_ConvertHopToGia( p, pHopObj ); }\n        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );\n    }\n    Vec_PtrFree( vNodes );\n    // create primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( p, Abc_ObjFanin0(pNode).iTemp );\n    }\n}\nfunc Abc_NtkAigToGiaTwo(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fByName int32) *Gia_Man_t {\n    var p *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pNode *Abc_Obj_t;\n    var vMap1, vMap2 *Vec_Int_t;\n    var i, Index int32;\n    assert(Abc_NtkIsAigLogic(pNtk1), \"Abc_NtkIsAigLogic(pNtk1)\");\n    assert(Abc_NtkIsAigLogic(pNtk2), \"Abc_NtkIsAigLogic(pNtk2)\");\n    // find common variables\n    if fByName != 0 {\n        var nCommon int32;\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntAlloc( Abc_NtkCiNum(pNtk2) );\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk1)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk1, i)), 1); i++  {\n            pNode.iTemp = Index++;\n        }\n        assert(Index == Abc_NtkCiNum(pNtk1), \"Index == Abc_NtkCiNum(pNtk1)\");\n        // inlining of macro Abc_NtkForEachCi\n        for  i = 0; (i \u003c Abc_NtkCiNum(pNtk2)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk2, i)), 1); i++  {\n            var Num int32  = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_PI );\n            if Num \u003c 0 {\n                Num = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_BO ); }\n            assert(Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num)), \"Num \u003c 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num))\");\n            if Num \u003e= 0 {\n                Vec_IntPush( vMap2, Abc_NtkObj(pNtk1, Num).iTemp );\nnCommon++;\n            } else {\n                Vec_IntPush( vMap2, Index++ ); }\n        }\n        // report\n        fmt.Printf(\"Matched %d vars by name.\", nCommon);\n        if nCommon != Abc_NtkCiNum(pNtk1) {\n            fmt.Printf(\" Netlist1 has %d unmatched vars.\", Abc_NtkCiNum(pNtk1) - nCommon); }\n        if nCommon != Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" Netlist2 has %d unmatched vars.\", Abc_NtkCiNum(pNtk2) - nCommon); }\n        fmt.Printf(\"\\n\");\n    \n    } else {\n        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );\n        vMap2 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk2) );\n        Index = Abc_MaxInt( Vec_IntSize(vMap1), Vec_IntSize(vMap2) );\n        // report\n        fmt.Printf(\"Matched %d vars by order.\", Abc_MinInt(Abc_NtkCiNum(pNtk1), Abc_NtkCiNum(pNtk2)));\n        if Abc_NtkCiNum(pNtk1) \u003c Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" The last %d vars of Netlist2 are unmatched vars.\", Abc_NtkCiNum(pNtk2) - Abc_NtkCiNum(pNtk1)); }\n        if Abc_NtkCiNum(pNtk1) \u003e Abc_NtkCiNum(pNtk2) {\n            fmt.Printf(\" The last %d vars of Netlist1 are unmatched vars.\", Abc_NtkCiNum(pNtk1) - Abc_NtkCiNum(pNtk2)); }\n        fmt.Printf(\"\\n\");\n    }\n    // create new manager\n    p = Gia_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( Abc_NtkName(pNtk1) );\n    p.pSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk1) );\n    for  i = 0; i \u003c Index; i++  {\n        Gia_ManAppendCi(p);\n    }\n    // add logic\n    Gia_ManHashAlloc( p );\n    Abc_NtkAigToGiaOne( p, pNtk1, vMap1 );\n    Abc_NtkAigToGiaOne( p, pNtk2, vMap2 );\n    Gia_ManHashStop( p );\n    Vec_IntFree( vMap1 );\n    Vec_IntFree( vMap2 );\n    // add extra POs to dangling nodes\n    Gia_ManCreateValueRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else\n        if pObj.Value == 0 {\n            Gia_ManAppendCo( p, Abc_Var2Lit(i, 0) ); }\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect equivalence class information.]\n\n  Description [Each class is represented as follows: \n      \u003cnum_entries\u003e\u003centry1\u003e\u003centry2\u003e...\u003centryN\u003e \n  where \u003centry\u003e is nodeId with 1-bit for complement and 1-bit for network.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectAddOne(iNtk int32, iObj int32, iGiaLit int32, pGia *Gia_Man_t, vGia2Cla *Vec_Int_t, vNexts []*Vec_Int_t) {\n    var iRepr int32  = Gia_ObjReprSelf( pGia, Abc_Lit2Var(iGiaLit) );\n    var Compl int32  = Abc_LitIsCompl(iGiaLit) ^ Gia_ObjPhase(Gia_ManObj(pGia, iRepr)) ^ Gia_ObjPhase(Gia_ManObj(pGia, Abc_Lit2Var(iGiaLit)));\n    var Added int32  = Abc_Var2Lit( Abc_Var2Lit(iObj, Compl), iNtk );\n    var Entry int32  = Vec_IntEntry( vGia2Cla, iRepr );\n    Vec_IntWriteEntry( vNexts[iNtk], iObj, Entry );\n    Vec_IntWriteEntry( vGia2Cla, iRepr, Added );\n}\nfunc Abc_NtkCollectEquivClasses(pNtks []*Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {\n    var vClass *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vClasses *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vGia2Cla *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pGia) ); // mapping objId into classId\n    var vNexts [2]*Vec_Int_t = [2]*Vec_Int_t{ Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[0])), Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[1])) };\n    var pObj *Abc_Obj_t;\n    var n, i, k, Entry, fCompl int32;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtks[0])) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtks[0], i)), 1); i++  {\n        Abc_NtkCollectAddOne( 0, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts );\n    }\n    for  n = 0; n \u003c 2; n++  {\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtks[n]).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtks[n], i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            Abc_NtkCollectAddOne( n, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts ); }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGia2Cla)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGia2Cla, i)), 1); i++  {\n        Vec_IntClear( vClass );\n        for  ; Entry \u003e= 0; Entry = Vec_IntEntry(vNexts[Entry\u00261], Entry\u003e\u003e2)  {\n            Vec_IntPush( vClass, Entry );\n        }\n        if Vec_IntSize(vClass) \u003c 2 {\n            continue; }\n        Vec_IntReverseOrder( vClass );\n        fCompl = 2 \u0026 Vec_IntEntry( vClass, 0 );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {\n            Vec_IntWriteEntry( vClass, k, Entry ^ fCompl );\n        }        \n        Vec_IntPush( vClasses, Vec_IntSize(vClass) );\n        Vec_IntAppend( vClasses, vClass );\n    }\n    Vec_IntFree( vGia2Cla );\n    Vec_IntFree( vNexts[0] );\n    Vec_IntFree( vNexts[1] );\n    Vec_IntFree( vClass );\n    return vClasses;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write the output file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDumpEquivFile(pFileName string, vClasses *Vec_Int_t, pNtks []*Abc_Ntk_t) {\n    var i, c, k, Entry int32;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil { fmt.Printf(\"Cannot open file %s for writing.\\n\", pFileName); return; }\n    fmt.Fprintf(pFile, \"# Node equivalences computed by ABC for networks \\\"%s\\\" and \\\"%s\\\" on %s\\n\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), Extra_TimeStamp());\n    for  i = c = 0; i \u003c Vec_IntSize(vClasses); c++, i += 1 + Vec_IntEntry(vClasses, i)  {\n        // inlining of macro Vec_IntForEachEntryStartStop\n        for  k = i + 1; (k \u003c i + 1 + Vec_IntEntry(vClasses, i)) \u0026\u0026 (((Entry) = Vec_IntEntry(vClasses, k)), 1); k++  {\n            var pNtk *Abc_Ntk_t  = pNtks[Entry \u0026 1];\n            var pObjName string  = Abc_ObjName( Abc_NtkObj(pNtk, Entry\u003e\u003e2) );\n            fmt.Fprintf(pFile, \"%d:%s:%s%s\\n\", c+1, Abc_NtkName(pNtk), (Entry\u00262) ? \"NOT:\":\"\", pObjName);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute and dump equivalent name classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDumpEquiv(pNtks []*Abc_Ntk_t, pFileName string, nConfs int32, fByName int32, fVerbose int32) {\n    //abctime clk = Abc_Clock();\n    var pTemp *Gia_Man_t;\n    var vClasses *Vec_Int_t;\n    // derive shared AIG for the two networks\n    var pGia *Gia_Man_t  = Abc_NtkAigToGiaTwo( pNtks[0], pNtks[1], fByName );\n    if fVerbose != 0 {\n        fmt.Printf(\"Computing equivalences for networks \\\"%s\\\" and \\\"%s\\\" with conflict limit %d.\\n\", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), nConfs); }\n    // compute equivalences in this AIG\n    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );\n    Gia_ManStop( pTemp );\n    //if ( fVerbose )\n    //    Abc_PrintTime( 1, \"Equivalence computation time\", Abc_Clock() - clk );\n    if fVerbose != 0 {\n        Gia_ManPrintStats( pGia, nil ); }\n    // collect equivalence class information\n    vClasses = Abc_NtkCollectEquivClasses( pNtks, pGia );\n    Gia_ManStop( pGia );\n    // dump information into the output file\n    Abc_NtkDumpEquivFile( pFileName, vClasses, pNtks );\n    Vec_IntFree( vClasses );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

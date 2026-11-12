@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReorder.c",
+  "SHA256": "b2b93b8cb2f6b7f94e2e37a0d8c817c5564e9c30c0de8b500943b0bc3a71480a",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 555
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 1074
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReorder.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReorder.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 555,
+      "End": 606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcReorder.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1074,
+      "End": 3291
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcReorder.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Reordering local BDDs of the nodes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcReorder.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/reo/reo.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders BDD of the local function of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NodeBddReorder( reo_man * p, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    DdNode * bFunc;\n    int * pOrder, i;\n    // create the temporary array for the variable order\n    pOrder = ABC_ALLOC( int, Abc_ObjFaninNum(pNode) );\n    for ( i = 0; i \u003c Abc_ObjFaninNum(pNode); i++ )\n        pOrder[i] = -1;\n    // reorder the BDD\n    bFunc = Extra_Reorder( p, (DdManager *)pNode-\u003epNtk-\u003epManFunc, (DdNode *)pNode-\u003epData, pOrder ); Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( (DdManager *)pNode-\u003epNtk-\u003epManFunc, (DdNode *)pNode-\u003epData );\n    pNode-\u003epData = bFunc;\n    // update the fanin order\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        pOrder[i] = pNode-\u003evFanins.pArray[ pOrder[i] ];\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        pNode-\u003evFanins.pArray[i] = pOrder[i];\n    ABC_FREE( pOrder );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders BDDs of the local functions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    reo_man * p;\n    Abc_Obj_t * pNode;\n    int i;\n    Abc_NtkRemoveDupFanins( pNtk );\n    Abc_NtkMinimumBase( pNtk );\n    p = Extra_ReorderInit( Abc_NtkGetFaninMax(pNtk), 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjFaninNum(pNode) \u003c 3 )\n            continue;\n        if ( fVerbose )\n            fprintf( stdout, \"%10s: \", Abc_ObjName(pNode) );\n        if ( fVerbose )\n            fprintf( stdout, \"Before = %5d  BDD nodes.  \", Cudd_DagSize((DdNode *)pNode-\u003epData) );\n        Abc_NodeBddReorder( p, pNode );\n        if ( fVerbose )\n            fprintf( stdout, \"After = %5d  BDD nodes.\\n\", Cudd_DagSize((DdNode *)pNode-\u003epData) );\n    }\n    Extra_ReorderQuit( p );\n}\n\n#else\n\nvoid Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose ) {}\n\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

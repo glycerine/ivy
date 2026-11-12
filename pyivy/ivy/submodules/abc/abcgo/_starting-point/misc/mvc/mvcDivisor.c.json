@@ -1,0 +1,68 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivisor.c",
+  "SHA256": "785f96c720e2a928506532dcf85fc221c2d3e770b47b0a57a03fb23812c5fd9e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mvc_CoverReadCubeNum(pKernel) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverDivisor",
+      "Start": 1374,
+      "End": 1852,
+      "BodyStart": 1429,
+      "Original": "Mvc_Cover_t * Mvc_CoverDivisor( Mvc_Cover_t * pCover )\n{\n    Mvc_Cover_t * pKernel;\n    if ( Mvc_CoverReadCubeNum(pCover) \u003c= 1 )\n        return NULL;\n    // allocate the literal array and count literals\n    if ( Mvc_CoverAnyLiteral( pCover, NULL ) == -1 )\n        return NULL;\n    // duplicate the cover\n    pKernel = Mvc_CoverDup(pCover);\n    // perform the kerneling\n    Mvc_CoverDivisorZeroKernel( pKernel );\n    assert( Mvc_CoverReadCubeNum(pKernel) );\n    return pKernel;\n}",
+      "Draft": "func Mvc_CoverDivisor(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pKernel *Mvc_Cover_t;\n    if Mvc_CoverReadCubeNum(pCover) \u003c= 1 {\n        return nil; }\n    // allocate the literal array and count literals\n    if Mvc_CoverAnyLiteral( pCover, nil ) == -1 {\n        return nil; }\n    // duplicate the cover\n    pKernel = Mvc_CoverDup(pCover);\n    // perform the kerneling\n    Mvc_CoverDivisorZeroKernel( pKernel );\n    assert(Mvc_CoverReadCubeNum(pKernel), \"Mvc_CoverReadCubeNum(pKernel)\");\n    return pKernel;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDivisorZeroKernel",
+      "Start": 2169,
+      "End": 2754,
+      "BodyStart": 2225,
+      "Original": "void Mvc_CoverDivisorZeroKernel( Mvc_Cover_t * pCover )\n{\n    int iLit;\n    // find any literal that occurs at least two times\n//    iLit = Mvc_CoverAnyLiteral( pCover, NULL );\n    iLit = Mvc_CoverWorstLiteral( pCover, NULL );\n//    iLit = Mvc_CoverBestLiteral( pCover, NULL );\n    if ( iLit == -1 )\n        return;\n    // derive the cube-free quotient\n    Mvc_CoverDivideByLiteralQuo( pCover, iLit ); // the same cover\n    Mvc_CoverMakeCubeFree( pCover );             // the same cover\n    // call recursively\n    Mvc_CoverDivisorZeroKernel( pCover );              // the same cover\n}",
+      "Draft": "func Mvc_CoverDivisorZeroKernel(pCover *Mvc_Cover_t) {\n    var iLit int32;\n    // find any literal that occurs at least two times\n//    iLit = Mvc_CoverAnyLiteral( pCover, NULL );\n    iLit = Mvc_CoverWorstLiteral( pCover, nil );\n//    iLit = Mvc_CoverBestLiteral( pCover, NULL );\n    if iLit == -1 {\n        return; }\n    // derive the cube-free quotient\n    Mvc_CoverDivideByLiteralQuo( pCover, iLit ); // the same cover\n    Mvc_CoverMakeCubeFree( pCover );             // the same cover\n    // call recursively\n    Mvc_CoverDivisorZeroKernel( pCover );              // the same cover\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivisor.c::Mvc_CoverDivisor",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivisor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1374,
+      "End": 1852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivisor.c::Mvc_CoverDivisorZeroKernel",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDivisorZeroKernel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2169,
+      "End": 2754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcDivisor.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3001
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcDivisor.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures for compute the quick divisor.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcDivisor.c,v 1.1 2003/04/03 15:34:08 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void  Mvc_CoverDivisorZeroKernel( Mvc_Cover_t * pCover );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the quick divisor of the cover.]\n\n  Description [Returns NULL, if there is not divisor other than\n  trivial.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivisor(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pKernel *Mvc_Cover_t;\n    if Mvc_CoverReadCubeNum(pCover) \u003c= 1 {\n        return nil; }\n    // allocate the literal array and count literals\n    if Mvc_CoverAnyLiteral( pCover, nil ) == -1 {\n        return nil; }\n    // duplicate the cover\n    pKernel = Mvc_CoverDup(pCover);\n    // perform the kerneling\n    Mvc_CoverDivisorZeroKernel( pKernel );\n    assert(Mvc_CoverReadCubeNum(pKernel), \"Mvc_CoverReadCubeNum(pKernel)\");\n    return pKernel;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes a level-zero kernel.]\n\n  Description [Modifies the cover to contain one level-zero kernel.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDivisorZeroKernel(pCover *Mvc_Cover_t) {\n    var iLit int32;\n    // find any literal that occurs at least two times\n//    iLit = Mvc_CoverAnyLiteral( pCover, NULL );\n    iLit = Mvc_CoverWorstLiteral( pCover, nil );\n//    iLit = Mvc_CoverBestLiteral( pCover, NULL );\n    if iLit == -1 {\n        return; }\n    // derive the cube-free quotient\n    Mvc_CoverDivideByLiteralQuo( pCover, iLit ); // the same cover\n    Mvc_CoverMakeCubeFree( pCover );             // the same cover\n    // call recursively\n    Mvc_CoverDivisorZeroKernel( pCover );              // the same cover\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

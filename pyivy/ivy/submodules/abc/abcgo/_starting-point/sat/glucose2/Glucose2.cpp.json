@@ -1,0 +1,1664 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp",
+  "SHA256": "3f7dbd9c968d1186f32eab4ac5b45bf92c7fd204d8f6bdb7f34d4d97fa56c403",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 9213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(opt_certified_file_,\"NULL\") {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 170,
+        "Column": 26,
+        "ByteOffset": 9275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      certifiedOutput =  fopen(\"/dev/stdout\", \"wb\");"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 172,
+        "Column": 26,
+        "ByteOffset": 9341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      certifiedOutput =  fopen(opt_certified_file_, \"wb\");           "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 10984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(decisionLevel() == 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 13,
+        "ByteOffset": 11115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", (toInt(ps[i]) \u0026 1) ? \"-\":\"\", toInt(ps[i]) \u003e\u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 11190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 13,
+        "ByteOffset": 11890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", (toInt(ps[i]) \u0026 1) ? \"-\":\"\", toInt(ps[i]) \u003e\u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 11965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 12091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(certifiedOutput, \"%i \", (var(ps[i]) + 1) * (-2 * sign(ps[i]) + 1));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 7,
+        "ByteOffset": 12173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      fprintf(certifiedOutput, \"0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 7,
+        "ByteOffset": 12213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      fprintf(certifiedOutput, \"d \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 9,
+        "ByteOffset": 12310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(certifiedOutput, \"%i \", (var(oc[i]) + 1) * (-2 * sign(oc[i]) + 1));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 7,
+        "ByteOffset": 12392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      fprintf(certifiedOutput, \"0\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 12789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(c.size() \u003e 1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 13230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(c.size() \u003e 1);"
+    },
+    {
+      "Name": "remove",
+      "Status": "review",
+      "Message": "remove requires 1 arguments; got 2.",
+      "Location": {
+        "Line": 323,
+        "Column": 9,
+        "ByteOffset": 13298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        remove(watchesBin[~c[0]], Watcher(cr, c[1]));"
+    },
+    {
+      "Name": "remove",
+      "Status": "review",
+      "Message": "remove requires 1 arguments; got 2.",
+      "Location": {
+        "Line": 324,
+        "Column": 9,
+        "ByteOffset": 13352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        remove(watchesBin[~c[1]], Watcher(cr, c[0]));"
+    },
+    {
+      "Name": "remove",
+      "Status": "review",
+      "Message": "remove requires 1 arguments; got 2.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 13627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        remove(watches[~c[0]], Watcher(cr, c[1]));"
+    },
+    {
+      "Name": "remove",
+      "Status": "review",
+      "Message": "remove requires 1 arguments; got 2.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 13678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        remove(watches[~c[1]], Watcher(cr, c[0]));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 14103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(certifiedOutput, \"d \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 7,
+        "ByteOffset": 14180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      fprintf(certifiedOutput, \"%i \", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 14258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(certifiedOutput, \"0\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 9,
+        "ByteOffset": 20314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(confl != CRef_Undef); // (otherwise should be UIP)"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 11,
+        "ByteOffset": 20625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "          assert(value(c[1])==l_True);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 592,
+        "Column": 19,
+        "ByteOffset": 21374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                  assert(value(q) == l_False);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 710,
+        "Column": 9,
+        "ByteOffset": 25219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(reason(var(analyze_stack.last())) != CRef_Undef);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 713,
+        "Column": 11,
+        "ByteOffset": 25418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "          assert(value(c[1])==l_True);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 762,
+        "Column": 17,
+        "ByteOffset": 27033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(level(x) \u003e 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 783,
+        "Column": 5,
+        "ByteOffset": 27787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(value(p) == l_Undef);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 842,
+        "Column": 13,
+        "ByteOffset": 29809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(c[1] == false_lit);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1008,
+        "Column": 5,
+        "ByteOffset": 35056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(decisionLevel() == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1047,
+        "Column": 5,
+        "ByteOffset": 36404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(ok);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1072,
+        "Column": 13,
+        "ByteOffset": 37090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"c | %8d   %7d    %5d | %7d %8d %8d | %5d %8d   %6d %8d | %6.3f %% \\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1098,
+        "Column": 17,
+        "ByteOffset": 38336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(certifiedOutput, \"%i \" , (var(learnt_clause[i]) + 1) *"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1100,
+        "Column": 15,
+        "ByteOffset": 38478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "              fprintf(certifiedOutput, \"0\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1140,
+        "Column": 17,
+        "ByteOffset": 40027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(learnts.size()\u003e0);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 1192,
+        "Column": 21,
+        "ByteOffset": 41586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        progress += pow(F, i) * (end - beg);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1200,
+        "Column": 3,
+        "ByteOffset": 41694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c---------- Glucose Stats -------------------------\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1201,
+        "Column": 3,
+        "ByteOffset": 41761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c restarts              : %ld\\n\", starts);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1202,
+        "Column": 3,
+        "ByteOffset": 41814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c nb ReduceDB           : %ld\\n\", nbReduceDB);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1203,
+        "Column": 3,
+        "ByteOffset": 41871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c nb removed Clauses    : %ld\\n\", nbRemovedClauses);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1204,
+        "Column": 3,
+        "ByteOffset": 41934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c nb learnts DL2        : %ld\\n\", nbDL2);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1205,
+        "Column": 3,
+        "ByteOffset": 41986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c nb learnts size 2     : %ld\\n\", nbBin);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1206,
+        "Column": 3,
+        "ByteOffset": 42038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c nb learnts size 1     : %ld\\n\", nbUn);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1208,
+        "Column": 3,
+        "ByteOffset": 42090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c conflicts             : %ld\\n\", conflicts);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1209,
+        "Column": 3,
+        "ByteOffset": 42146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c decisions             : %ld\\n\", decisions);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1210,
+        "Column": 3,
+        "ByteOffset": 42202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c propagations          : %ld\\n\", propagations);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1212,
+        "Column": 3,
+        "ByteOffset": 42262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c SAT Calls             : %d in %g seconds\\n\", nbSatCalls,   totalTime4Sat);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1213,
+        "Column": 3,
+        "ByteOffset": 42349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c UNSAT Calls           : %d in %g seconds\\n\", nbUnsatCalls, totalTime4Unsat);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1214,
+        "Column": 3,
+        "ByteOffset": 42438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"c--------------------------------------------------\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1227,
+        "Column": 5,
+        "ByteOffset": 42720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Can not use incremental and certified unsat in the same time\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 1228,
+        "Column": 5,
+        "ByteOffset": 42798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(-1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1243,
+        "Column": 7,
+        "ByteOffset": 43130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c ========================================[ MAGIC CONSTANTS ]==============================================\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1244,
+        "Column": 7,
+        "ByteOffset": 43257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c | Constants are supposed to work well together :-)                                                      |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1245,
+        "Column": 7,
+        "ByteOffset": 43384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c | however, if you find better choices, please let us known...                                           |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1246,
+        "Column": 7,
+        "ByteOffset": 43511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c |-------------------------------------------------------------------------------------------------------|\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1247,
+        "Column": 5,
+        "ByteOffset": 43636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |                                |                                |                                     |\\n\"); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1248,
+        "Column": 5,
+        "ByteOffset": 43762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c | - Restarts:                    | - Reduce Clause DB:            | - Minimize Asserting:               |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1249,
+        "Column": 5,
+        "ByteOffset": 43887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |   * LBD Queue    : %6d      |   * First     : %6d         |    * size \u003c %3d                     |\\n\",lbdQueue.maxSize(),nbclausesbeforereduce,lbSizeMinimizingClause);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1250,
+        "Column": 5,
+        "ByteOffset": 44070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |   * Trail  Queue : %6d      |   * Inc       : %6d         |    * lbd  \u003c %3d                     |\\n\",trailQueue.maxSize(),incReduceDB,lbLBDMinimizingClause);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1251,
+        "Column": 5,
+        "ByteOffset": 44244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |   * K            : %6.2f      |   * Special   : %6d         |                                     |\\n\",K,specialIncReduceDB);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1252,
+        "Column": 5,
+        "ByteOffset": 44386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |   * R            : %6.2f      |   * Protected :  (lbd)\u003c %2d     |                                     |\\n\",R,lbLBDFrozenClause);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1253,
+        "Column": 5,
+        "ByteOffset": 44531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"c |                                |                                |                                     |\\n\"); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1254,
+        "Column": 1,
+        "ByteOffset": 44653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf(\"c ==================================[ Search Statistics (every %6d conflicts) ]=========================\\n\",verbEveryConflicts);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1255,
+        "Column": 7,
+        "ByteOffset": 44796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c |                                                                                                       |\\n\"); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1257,
+        "Column": 7,
+        "ByteOffset": 44925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c |          RESTARTS           |          ORIGINAL         |              LEARNT              | Progress |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1258,
+        "Column": 7,
+        "ByteOffset": 45052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c |       NB   Blocked  Avg Cfc |    Vars  Clauses Literals |   Red   Learnts    LBD2  Removed |          | pol-inconsist\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1259,
+        "Column": 7,
+        "ByteOffset": 45193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c =========================================================================================================\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1272,
+        "Column": 7,
+        "ByteOffset": 45732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf(\"c =========================================================================================================\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1277,
+        "Column": 9,
+        "ByteOffset": 45940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(certifiedOutput, \"0\\n\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1278,
+        "Column": 7,
+        "ByteOffset": 45979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      fclose(certifiedOutput);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1285,
+        "Column": 11,
+        "ByteOffset": 46072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "          assert(jheap.empty());"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1329,
+        "Column": 9,
+        "ByteOffset": 47512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(callback_result == 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1359,
+        "Column": 13,
+        "ByteOffset": 48217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(f, \"%s%d \", sign(c[i]) ? \"-\" : \"\", mapVar(var(c[i]), map, max)+1);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1360,
+        "Column": 5,
+        "ByteOffset": 48296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(f, \"0\\n\");"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Unsupported fopen mode retained (extensions/text translation need review).",
+      "Location": {
+        "Line": 1366,
+        "Column": 15,
+        "ByteOffset": 48388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    FILE* f = fopen(file, \"wr\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1368,
+        "Column": 9,
+        "ByteOffset": 48434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"could not open file %s\\n\", file), exit(1);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 1368,
+        "Column": 17,
+        "ByteOffset": 48442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"could not open file %s\\n\", file), exit(1);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 1368,
+        "Column": 60,
+        "ByteOffset": 48485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, \"could not open file %s\\n\", file), exit(1);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1370,
+        "Column": 5,
+        "ByteOffset": 48524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose(f);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1378,
+        "Column": 9,
+        "ByteOffset": 48669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(f, \"p cnf 1 2\\n1 0\\n-1 0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1401,
+        "Column": 5,
+        "ByteOffset": 49360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(f, \"p cnf %d %d\\n\", max, cnt);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1404,
+        "Column": 9,
+        "ByteOffset": 49452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(value(assumptions[i]) != l_False);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1405,
+        "Column": 9,
+        "ByteOffset": 49502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(f, \"%s%d 0\\n\", sign(assumptions[i]) ? \"-\" : \"\", mapVar(var(assumptions[i]), map, max)+1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1412,
+        "Column": 9,
+        "ByteOffset": 49727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Wrote %d clauses with %d variables.\\n\", cnt, max);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1470,
+        "Column": 9,
+        "ByteOffset": 51504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"|  Garbage collection:   %12d bytes =\u003e %12d bytes             |\\n\", "
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 153,
+        "Column": 3,
+        "ByteOffset": 8807
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 177,
+        "Column": 3,
+        "ByteOffset": 9444
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 10979
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 515,
+        "Column": 9,
+        "ByteOffset": 18614
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 592,
+        "Column": 7,
+        "ByteOffset": 21078
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 610,
+        "Column": 1,
+        "ByteOffset": 21573
+      },
+      "Directive": "#ifdef DYNAMICNBLEVEL"
+    },
+    {
+      "Location": {
+        "Line": 634,
+        "Column": 1,
+        "ByteOffset": 22400
+      },
+      "Directive": "#ifdef UPDATEVARACTIVITY"
+    },
+    {
+      "Location": {
+        "Line": 636,
+        "Column": 9,
+        "ByteOffset": 22513
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 690,
+        "Column": 17,
+        "ByteOffset": 24325
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 751,
+        "Column": 1,
+        "ByteOffset": 26358
+      },
+      "Directive": "#ifdef UPDATEVARACTIVITY"
+    },
+    {
+      "Location": {
+        "Line": 756,
+        "Column": 7,
+        "ByteOffset": 26543
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 786,
+        "Column": 9,
+        "ByteOffset": 27524
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 844,
+        "Column": 15,
+        "ByteOffset": 29518
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 870,
+        "Column": 5,
+        "ByteOffset": 30398
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 903,
+        "Column": 9,
+        "ByteOffset": 31528
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 1262,
+        "Column": 13,
+        "ByteOffset": 43720
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 1336,
+        "Column": 5,
+        "ByteOffset": 45849
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 1542,
+        "Column": 5,
+        "ByteOffset": 53430
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 1571,
+        "Column": 9,
+        "ByteOffset": 54253
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    },
+    {
+      "Location": {
+        "Line": 1657,
+        "Column": 5,
+        "ByteOffset": 57008
+      },
+      "Directive": "#ifdef UPDATEVARACTIVITY"
+    },
+    {
+      "Location": {
+        "Line": 1668,
+        "Column": 5,
+        "ByteOffset": 57369
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "mapVar",
+      "Start": 51289,
+      "End": 51462,
+      "BodyStart": 51339,
+      "Original": "static Var mapVar(Var x, vec\u003cVar\u003e\u0026 map, Var\u0026 max)\n{\n    if (map.size() \u003c= x || map[x] == -1){\n        map.growTo(x+1, -1);\n        map[x] = max++;\n    }\n    return map[x];\n}",
+      "Draft": "static Var mapVar(Var x, vec\u003cVar\u003e\u0026 map, Var\u0026 max)\n{\n    if map.size() \u003c= x || map[x] == -1{\n        map.growTo(x+1, -1);\n        map[x] = max++;\n    }\n    return map[x];\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::struct::reduceDB_lt::ClauseAllocator\u0026 ca;",
+      "Category": "struct-field-review",
+      "Symbol": "reduceDB_lt",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 35174,
+      "End": 35200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::struct::reduceDB_lt",
+      "Category": "struct-review",
+      "Symbol": "reduceDB_lt",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 35154,
+      "End": 35940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2074",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2074,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2108",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2108,
+      "End": 2114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2152",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2152,
+      "End": 2158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2197",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2197,
+      "End": 2203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2242",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2242,
+      "End": 2248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2305",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2305,
+      "End": 2311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2470",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2470,
+      "End": 2476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2678",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2678,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::2886",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2886,
+      "End": 2892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::3075",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3075,
+      "End": 3081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::3265",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3265,
+      "End": 3271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::3453",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3453,
+      "End": 3459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::3641",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3641,
+      "End": 3647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::3829",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3829,
+      "End": 3835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4018",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4018,
+      "End": 4024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4204",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4204,
+      "End": 4210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4391",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4391,
+      "End": 4397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4592",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4592,
+      "End": 4598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4793",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4793,
+      "End": 4799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::4985",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4985,
+      "End": 4991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::5193",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5193,
+      "End": 5199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::5370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5370,
+      "End": 5376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::5547",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5547,
+      "End": 5553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::static::6106",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6106,
+      "End": 6112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mechanical::do::20382",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 21001,
+      "End": 21003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::pointer-cast::29431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32193,
+      "End": 32203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::mapVar",
+      "Category": "semantic-review",
+      "Symbol": "mapVar",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 51289,
+      "End": 51462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 58111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8807,
+      "End": 8873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9444,
+      "End": 9660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10979,
+      "End": 11335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18614,
+      "End": 18891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21078,
+      "End": 21231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21573,
+      "End": 22060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 22400,
+      "End": 22921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24325,
+      "End": 24506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26358,
+      "End": 26916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27524,
+      "End": 27729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29518,
+      "End": 29673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30398,
+      "End": 30675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31528,
+      "End": 31806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 43720,
+      "End": 44110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 45849,
+      "End": 46093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 53430,
+      "End": 53544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 54253,
+      "End": 54343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 57008,
+      "End": 57100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Glucose2.cpp::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 57369,
+      "End": 58084
+    }
+  ],
+  "Draft": "package glucose2\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n\t\"strings\"\n)\n\n/***************************************************************************************[Solver.cc]\n Glucose -- Copyright (c) 2013, Gilles Audemard, Laurent Simon\n                                CRIL - Univ. Artois, France\n                                LRI  - Univ. Paris Sud, France\n \nGlucose sources are based on MiniSat (see below MiniSat copyrights). Permissions and copyrights of\nGlucose are exactly the same as Minisat on which it is based on. (see below).\n\n---------------\n\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n//#include \u003cmath.h\u003e\n\n//#include \"sat/glucose2/Sort.h\"\n//#include \"sat/glucose2/Constants.h\"\n//#include \"sat/glucose2/System.h\"\n//#include \"sat/glucose2/Solver.h\"\n\n//#include \"sat/glucose2/CGlucose.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n//using namespace Gluco2;\n\n\n//=================================================================================================\n// Options:\nnamespace Gluco2 {\nstatic char* _cat = \"CORE\";\nstatic char* _cr = \"CORE -- RESTART\";\nstatic char* _cred = \"CORE -- REDUCE\";\nstatic char* _cm = \"CORE -- MINIMIZE\";\nstatic char* _certified = \"CORE -- CERTIFIED UNSAT\";\n\n\n\n\nstatic BoolOption    opt_incremental              (_cat,\"incremental\",             \"Use incremental SAT solving\",                                            false);\nstatic DoubleOption  opt_K                        (_cr, \"K\",                       \"The constant used to force restart\",                                     0.8,  DoubleRange(0, false, 1, false));           \nstatic DoubleOption  opt_R                        (_cr, \"R\",                       \"The constant used to block restart\",                                     1.4,  DoubleRange(1, false, 5, false));           \nstatic IntOption     opt_size_lbd_queue           (_cr, \"szLBDQueue\",              \"The size of moving average for LBD (restarts)\",                          50,   IntRange(10, INT32_MAX));\nstatic IntOption     opt_size_trail_queue         (_cr, \"szTrailQueue\",            \"The size of moving average for trail (block restarts)\",                  5000, IntRange(10, INT32_MAX));\n\nstatic IntOption     opt_first_reduce_db          (_cred, \"firstReduceDB\",         \"The number of conflicts before the first reduce DB\",                     2000, IntRange(0, INT32_MAX));\nstatic IntOption     opt_inc_reduce_db            (_cred, \"incReduceDB\",           \"Increment for reduce DB\",                                                300,  IntRange(0, INT32_MAX));\nstatic IntOption     opt_spec_inc_reduce_db       (_cred, \"specialIncReduceDB\",    \"Special increment for reduce DB\",                                        1000, IntRange(0, INT32_MAX));\nstatic IntOption     opt_lb_lbd_frozen_clause     (_cred, \"minLBDFrozenClause\",    \"Protect clauses if their LBD decrease and is lower than (for one turn)\", 30,   IntRange(0, INT32_MAX));\n\nstatic IntOption     opt_lb_size_minimzing_clause (_cm, \"minSizeMinimizingClause\", \"The min size required to minimize clause\",                               30, IntRange(3, INT32_MAX));\nstatic IntOption     opt_lb_lbd_minimzing_clause  (_cm, \"minLBDMinimizingClause\",  \"The min LBD required to minimize clause\",                                6, IntRange(3, INT32_MAX));\n\n\nstatic DoubleOption  opt_var_decay         (_cat, \"var-decay\",   \"The variable activity decay factor\",                                                       0.8,      DoubleRange(0, false, 1, false));\nstatic DoubleOption  opt_clause_decay      (_cat, \"cla-decay\",   \"The clause activity decay factor\",                                                         0.999,    DoubleRange(0, false, 1, false));\nstatic DoubleOption  opt_random_var_freq   (_cat, \"rnd-freq\",    \"The frequency with which the decision heuristic tries to choose a random variable\",        0, DoubleRange(0, true, 1, true));\nstatic DoubleOption  opt_random_seed       (_cat, \"rnd-seed\",    \"Used by the random variable selection\",                                                    91648253, DoubleRange(0, false, HUGE_VAL, false));\nstatic IntOption     opt_ccmin_mode        (_cat, \"ccmin-mode\",  \"Controls conflict clause minimization (0=none, 1=basic, 2=deep)\",                          2, IntRange(0, 2));\nstatic IntOption     opt_phase_saving      (_cat, \"phase-saving\", \"Controls the level of phase saving (0=none, 1=limited, 2=full)\",                          2, IntRange(0, 2));\nstatic BoolOption    opt_rnd_init_act      (_cat, \"rnd-init\",    \"Randomize the initial activity\",                                                           false);\n/*\nstatic IntOption     opt_restart_first     (_cat, \"rfirst\",      \"The base restart interval\",                                                                100, IntRange(1, INT32_MAX));\nstatic DoubleOption  opt_restart_inc       (_cat, \"rinc\",        \"Restart interval increase factor\",                                                         2, DoubleRange(1, false, HUGE_VAL, false));\n*/\nstatic DoubleOption  opt_garbage_frac      (_cat, \"gc-frac\",     \"The fraction of wasted memory allowed before a garbage collection is triggered\",           0.20, DoubleRange(0, false, HUGE_VAL, false));\n\n\nBoolOption    opt_certified_      (_certified, \"certified\",         \"Certified UNSAT using DRUP format\", false );\nStringOption  opt_certified_file_ (_certified, \"certified-output\",  \"Certified UNSAT output file\",       \"NULL\");\n};\n\n//=================================================================================================\n// Constructor/Destructor:\n\n\nSolver::Solver() :\n\n    // Parameters (user settable):\n    //\n    SolverType(0)\n    , pCnfFunc(NULL)\n    , nCallConfl(1000)\n    , terminate_search_early(false)\n    , pstop(NULL)\n    , nRuntimeLimit(0)\n\n    , verbosity      (0)\n    , verbEveryConflicts(10000)\n    , showModel      (0)\n    , K              (opt_K)\n    , R              (opt_R)\n    , sizeLBDQueue   (opt_size_lbd_queue)\n    , sizeTrailQueue   (opt_size_trail_queue)\n    , firstReduceDB  (opt_first_reduce_db)\n    , incReduceDB    (opt_inc_reduce_db)\n    , specialIncReduceDB    (opt_spec_inc_reduce_db)\n    , lbLBDFrozenClause (opt_lb_lbd_frozen_clause)\n    , lbSizeMinimizingClause (opt_lb_size_minimzing_clause)\n    , lbLBDMinimizingClause (opt_lb_lbd_minimzing_clause)\n  , var_decay        (opt_var_decay)\n  , clause_decay     (opt_clause_decay)\n  , random_var_freq  (opt_random_var_freq)\n  , random_seed      (opt_random_seed)\n  , ccmin_mode       (opt_ccmin_mode)\n  , phase_saving     (opt_phase_saving)\n  , rnd_pol          (false)\n  , rnd_init_act     (opt_rnd_init_act)\n  , garbage_frac     (opt_garbage_frac)\n  , certifiedOutput  (NULL)\n  , certifiedUNSAT   (opt_certified_) \n    // Statistics: (formerly in 'SolverStats')\n    //\n  ,  nbRemovedClauses(0),nbReducedClauses(0), nbDL2(0),nbBin(0),nbUn(0) , nbReduceDB(0)\n    , solves(0), starts(0), decisions(0), rnd_decisions(0), propagations(0),conflicts(0),conflictsRestarts(0),nbstopsrestarts(0),nbstopsrestartssame(0),lastblockatrestart(0)\n  , dec_vars(0), clauses_literals(0), learnts_literals(0), max_literals(0), tot_literals(0)\n    , curRestart(1)\n\n  , ok                 (true)\n  , cla_inc            (1)\n  , var_inc            (1)\n  , watches            (WatcherDeleted(ca))\n  , watchesBin            (WatcherDeleted(ca))\n  , qhead              (0)\n  , simpDB_assigns     (-1)\n  , simpDB_props       (0)\n  , order_heap         (VarOrderLt(activity))\n  , progress_estimate  (0)\n  , remove_satisfied   (true)\n\n    // Resource constraints:\n    //\n  , conflict_budget    (-1)\n  , propagation_budget (-1)\n  , asynch_interrupt   (false)\n  , incremental(opt_incremental)\n  , nbVarsInitialFormula(INT32_MAX)\n\n  #ifdef CGLUCOSE_EXP\n  , jheap         (JustOrderLt(this))\n  #endif\n{\n  MYFLAG=0;  \n\n  // Initialize only first time. Useful for incremental solving, useless otherwise\n  lbdQueue.initSize(sizeLBDQueue);\n  trailQueue.initSize(sizeTrailQueue);\n  sumLBD = 0;\n  nbclausesbeforereduce = firstReduceDB;\n  totalTime4Sat=0;totalTime4Unsat=0;\n  nbSatCalls=0;nbUnsatCalls=0;\n\n\n  if certifiedUNSAT {\n    if !(int32(strings.Compare(opt_certified_file_, \"NULL\")) != 0) {\n      certifiedOutput =  os.OpenFile(\"/dev/stdout\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n      certifiedOutput =  os.OpenFile(opt_certified_file_, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);           \n    }\n    //    fprintf(certifiedOutput,\"o proof DRUP\\n\");\n  }\n\n  #ifdef CGLUCOSE_EXP\n  jftr = 0;\n  travId = 0;\n  travId_prev = 0;\n\n  // allocate space for clause interpretation \n  vec\u003cLit\u003e tmp; tmp.growTo(3); \n  itpc = ca.alloc(tmp);\n  ca[itpc].shrink( ca[itpc].size() );\n\n  #endif\n}\n\n\nSolver::~Solver()\n{\n}\n\n\n/****************************************************************\n Set the incremental mode\n****************************************************************/\n\n// This function set the incremental mode to true.\n// You can add special code for this mode here.\n\nvoid Solver::setIncrementalMode() {\n  incremental = true;\n}\n\n// Number of variables without selectors\nvoid Solver::initNbInitialVars(int nb) {\n  nbVarsInitialFormula = nb;\n}\n\n\n//=================================================================================================\n// Minor methods:\n\n\n// Creates a new SAT variable in the solver. If 'decision' is cleared, variable will not be\n// used as a decision variable (NOTE! This has effects on the meaning of a SATISFIABLE result).\n//\nVar Solver::newVar(bool sign, bool dvar)\n{\n    int v = nVars();\n    watches  .init(mkLit(v, false));\n    watches  .init(mkLit(v, true ));\n    watchesBin  .init(mkLit(v, false));\n    watchesBin  .init(mkLit(v, true ));\n    assigns  .push(l_Undef);\n    vardata  .push(mkVarData(CRef_Undef, 0));\n    //activity .push(0);\n    activity .push(rnd_init_act ? drand(random_seed) * 0.00001 : 0);\n    seen     .push(0);\n    permDiff .push(0);\n    polarity .push(sign);\n    decision .push();\n    trail    .capacity(v+1);\n    setDecisionVar(v, dvar);\n\n    #ifdef CGLUCOSE_EXP\n    //jreason  .capacity(v+1);\n    if( justUsage() ){\n      jdata    .push(mkJustData(false));\n      jwatch   .push(mkJustWatch());\n      var2FanoutN.growTo( nVars()\u003c\u003c1, toLit(~0));\n      //var2FanoutP.growTo( nVars()\u003c\u003c1, toLit(~0));\n      var2Fanout0.growTo( nVars(), toLit(~0));\n      var2TravId .growTo( nVars(), 0);\n    }\n    #endif\n\n    return v;\n}\n\n\n\nbool Solver::addClause_(vec\u003cLit\u003e\u0026 ps)\n{\n    assert(decisionLevel() == 0, \"decisionLevel() == 0\");\n    if (!ok) return false;\n\n    if false {\n        for ( int i = 0; i \u003c ps.size(); i++ )\n            fmt.Printf(\"%s%d \", (toInt(ps[i]) \u0026 1) ? \"-\":\"\", toInt(ps[i]) \u003e\u003e 1);\n        fmt.Printf(\"\\n\");\n    }\n\n    // Check if clause is satisfied and remove false/duplicate literals:\n    sort(ps);\n\n    vec\u003cLit\u003e    oc;\n    oc.clear();\n\n    Lit p; int i, j, flag = 0;\n    if certifiedUNSAT {\n      for i, p = j = 0, lit_Undef; i \u003c ps.size(); i++ {\n        oc.push(ps[i]);\n        if (value(ps[i]) == l_True || ps[i] == ~p || value(ps[i]) == l_False)\n          flag = 1;\n      }\n    }\n\n    for (i = j = 0, p = lit_Undef; i \u003c ps.size(); i++)\n      if (value(ps[i]) == l_True || ps[i] == ~p)\n        return true;\n      else if (value(ps[i]) != l_False \u0026\u0026 ps[i] != p)\n        ps[j++] = p = ps[i];\n    ps.shrink(i - j);\n\n    if false {\n        for ( int i = 0; i \u003c ps.size(); i++ )\n            fmt.Printf(\"%s%d \", (toInt(ps[i]) \u0026 1) ? \"-\":\"\", toInt(ps[i]) \u003e\u003e 1);\n        fmt.Printf(\"\\n\");\n    }\n    \n    if flag \u0026\u0026 (certifiedUNSAT) {\n      for (i = j = 0, p = lit_Undef; i \u003c ps.size(); i++)\n        fmt.Fprintf(certifiedOutput, \"%d \", (var(ps[i]) + 1) * (-2 * sign(ps[i]) + 1));\n      fmt.Fprintf(certifiedOutput, \"0\\n\");\n\n      fmt.Fprintf(certifiedOutput, \"d \");\n      for (i = j = 0, p = lit_Undef; i \u003c oc.size(); i++)\n        fmt.Fprintf(certifiedOutput, \"%d \", (var(oc[i]) + 1) * (-2 * sign(oc[i]) + 1));\n      fmt.Fprintf(certifiedOutput, \"0\\n\");\n    }\n\n    if (ps.size() == 0)\n        return ok = false;\n    else if ps.size() == 1{\n        uncheckedEnqueue(ps[0]);\n        return ok = (propagate() == CRef_Undef);\n    }else{\n        CRef cr = ca.alloc(ps, false);\n        clauses.push(cr);\n        attachClause(cr);\n    }\n\n    return true;\n}\n\n\nvoid Solver::attachClause(CRef cr) {\n    Clause\u0026 c = ca[cr];\n\n    assert(c.size() \u003e 1, \"c.size() \u003e 1\");\n    if c.size()==2 {\n      watchesBin[~c[0]].push(Watcher(cr, c[1]));\n      watchesBin[~c[1]].push(Watcher(cr, c[0]));\n    } else {\n      watches[~c[0]].push(Watcher(cr, c[1]));\n      watches[~c[1]].push(Watcher(cr, c[0]));\n    }\n    if (c.learnt()) learnts_literals += c.size();\n    else            clauses_literals += c.size(); }\n\n\n\n\nvoid Solver::detachClause(CRef cr, bool strict) {\n    Clause\u0026 c = ca[cr];\n    \n    assert(c.size() \u003e 1, \"c.size() \u003e 1\");\n    if c.size()==2 {\n      if strict{\n        remove(watchesBin[~c[0]], Watcher(cr, c[1]));\n        remove(watchesBin[~c[1]], Watcher(cr, c[0]));\n      }else{\n        // Lazy detaching: (NOTE! Must clean all watcher lists before garbage collecting this clause)\n        watchesBin.smudge(~c[0]);\n        watchesBin.smudge(~c[1]);\n      }\n    } else {\n      if strict{\n        remove(watches[~c[0]], Watcher(cr, c[1]));\n        remove(watches[~c[1]], Watcher(cr, c[0]));\n      }else{\n        // Lazy detaching: (NOTE! Must clean all watcher lists before garbage collecting this clause)\n        watches.smudge(~c[0]);\n        watches.smudge(~c[1]);\n      }\n    }\n    if (c.learnt()) learnts_literals -= c.size();\n    else            clauses_literals -= c.size(); }\n\n\nvoid Solver::removeClause(CRef cr) {\n\n  Clause\u0026 c = ca[cr];\n\n  if certifiedUNSAT {\n    fmt.Fprintf(certifiedOutput, \"d \");\n    for (int i = 0; i \u003c c.size(); i++)\n      fmt.Fprintf(certifiedOutput, \"%d \", (var(c[i]) + 1) * (-2 * sign(c[i]) + 1));\n    fmt.Fprintf(certifiedOutput, \"0\\n\");\n  }\n\n  detachClause(cr);\n  // Don't leave pointers to free'd memory!\n  if (locked(c)) vardata[var(c[0])].reason = CRef_Undef;\n  c.mark(1);\n  ca.free_(cr);\n}\n\n\nbool Solver::satisfied(Clause\u0026 c) {\n  if(incremental)  // Check clauses with many selectors is too time consuming\n    return (value(c[0]) == l_True) || (value(c[1]) == l_True);\n\n  // Default mode.\n    for (int i = 0; i \u003c c.size(); i++)\n        if (value(c[i]) == l_True)\n            return true;\n    return false; \n}\n\n/************************************************************\n * Compute LBD functions\n *************************************************************/\n\ninline unsigned int Solver::computeLBD(vec\u003cLit\u003e \u0026 lits,int end) {\n  int nblevels = 0;\n  MYFLAG++;\n\n  if incremental { // ----------------- INCREMENTAL MODE\n    if(end==-1) end = lits.size();\n    unsigned int nbDone = 0;\n    for int i=0;i\u003clits.size();i++ {\n      if(nbDone\u003e=end) break;\n      if(isSelector(var(lits[i]))) continue;\n      nbDone++;\n      int l = level(var(lits[i]));\n      if permDiff[l] != MYFLAG {\n        permDiff[l] = MYFLAG;\n        nblevels++;\n      }\n    }\n  } else { // -------- DEFAULT MODE. NOT A LOT OF DIFFERENCES... BUT EASIER TO READ\n    for int i=0;i\u003clits.size();i++ {\n      int l = level(var(lits[i]));\n      if permDiff[l] != MYFLAG {\n        permDiff[l] = MYFLAG;\n        nblevels++;\n      }\n    }\n  }\n\n  return nblevels;\n}\n\ninline unsigned int Solver::computeLBD(Clause \u0026c) {\n  int nblevels = 0;\n  MYFLAG++;\n\n  if incremental { // ----------------- INCREMENTAL MODE\n     int nbDone = 0;\n    for int i=0;i\u003cc.size();i++ {\n      if(nbDone\u003e=c.sizeWithoutSelectors()) break;\n      if(isSelector(var(c[i]))) continue;\n      nbDone++;\n      int l = level(var(c[i]));\n      if permDiff[l] != MYFLAG {\n        permDiff[l] = MYFLAG;\n        nblevels++;\n      }\n    }\n  } else { // -------- DEFAULT MODE. NOT A LOT OF DIFFERENCES... BUT EASIER TO READ\n    for int i=0;i\u003cc.size();i++ {\n      int l = level(var(c[i]));\n      if permDiff[l] != MYFLAG {\n        permDiff[l] = MYFLAG;\n        nblevels++;\n      }\n    }\n  }\n  return nblevels;\n}\n\n\n/******************************************************************\n * Minimisation with binary reolution\n ******************************************************************/\nvoid Solver::minimisationWithBinaryResolution(vec\u003cLit\u003e \u0026out_learnt) {\n  \n  // Find the LBD measure                                                                                                         \n  unsigned int lbd = computeLBD(out_learnt);\n  Lit p = ~out_learnt[0];\n  \n  if lbd\u003c=lbLBDMinimizingClause{\n    MYFLAG++;\n    \n    for int i = 1;i\u003cout_learnt.size();i++ {\n      permDiff[var(out_learnt[i])] = MYFLAG;\n    }\n\n    vec\u003cWatcher\u003e\u0026  wbin  = watchesBin[p];\n    int nb = 0;\n    for int k = 0;k\u003cwbin.size();k++ {\n      Lit imp = wbin[k].blocker;\n      if permDiff[var(imp)]==MYFLAG \u0026\u0026 value(imp)==l_True {\n        nb++;\n        permDiff[var(imp)]= MYFLAG-1;\n      }\n      }\n    int l = out_learnt.size()-1;\n    if nb\u003e0 {\n      nbReducedClauses++;\n      for int i = 1;i\u003cout_learnt.size()-nb;i++ {\n        if permDiff[var(out_learnt[i])]!=MYFLAG {\n          Lit p = out_learnt[l];\n          out_learnt[l] = out_learnt[i];\n          out_learnt[i] = p;\n          l--;i--;\n        }\n      }\n      \n      out_learnt.shrink_(nb);\n      \n    }\n  }\n}\n\n// Revert to the state at given level (keeping all assignment at 'level' but not beyond).\n//\nvoid Solver::cancelUntil(int level) {\n    if decisionLevel() \u003e level{\n\n        for int c = trail.size()-1; c \u003e= trail_lim[level]; c--{\n            Var      x  = var(trail[c]);\n            assigns [x] = l_Undef;\n            if (phase_saving \u003e 1 || ((phase_saving == 1) \u0026\u0026 c \u003e trail_lim.last()))\n                polarity[x] = sign(trail[c]);\n            insertVarOrder(x); }\n        qhead = trail_lim[level];\n\n\n\n        #ifdef CGLUCOSE_EXP\n        if( 0 \u003c justUsage() ){\n          for (int c = trail.size()-1; c \u003e= trail_lim[level]; c--){\n              Var      x  = var(trail[c]);\n\n              gateClearJwatch(x, level);\n\n              jdata[x].now = false;\n          }\n        }\n        #endif\n\n        trail.shrink_(trail.size() - trail_lim[level]);\n        trail_lim.shrink_(trail_lim.size() - level);\n        jstack.shrink_( jstack.size() );\n    }\n}\n\n\n//=================================================================================================\n// Major methods:\n\n\nLit Solver::pickBranchLit()\n{\n    Var next = var_Undef;\n\n    // Random decision:\n    if drand(random_seed) \u003c random_var_freq \u0026\u0026 !order_heap.empty(){\n        next = order_heap[irand(random_seed,order_heap.size())];\n        if (value(next) == l_Undef \u0026\u0026 decision[next])\n            rnd_decisions++; }\n\n    // Activity based decision:\n    while (next == var_Undef || value(next) != l_Undef || !decision[next])\n        if order_heap.empty(){\n            next = var_Undef;\n            break;\n        }else\n            next = order_heap.removeMin();\n    \n    return next == var_Undef ? lit_Undef : mkLit(next, rnd_pol ? drand(random_seed) \u003c 0.5 : (polarity[next] != 0));\n}\n\n\n/*_________________________________________________________________________________________________\n|\n|  analyze : (confl : Clause*) (out_learnt : vec\u003cLit\u003e\u0026) (out_btlevel : int\u0026)  -\u003e  [void]\n|  \n|  Description:\n|    Analyze conflict and produce a reason clause.\n|  \n|    Pre-conditions:\n|      * 'out_learnt' is assumed to be cleared.\n|      * Current decision level must be greater than root level.\n|  \n|    Post-conditions:\n|      * 'out_learnt[0]' is the asserting literal at level 'out_btlevel'.\n|      * If out_learnt.size() \u003e 1 then 'out_learnt[1]' has the greatest decision level of the \n|        rest of literals. There may be others from the same level though.\n|  \n|________________________________________________________________________________________________@*/\nvoid Solver::analyze(CRef confl, vec\u003cLit\u003e\u0026 out_learnt,vec\u003cLit\u003e\u0026selectors, int\u0026 out_btlevel,unsigned int \u0026lbd,unsigned int \u0026szWithoutSelectors)\n{\n    //double clk = Abc_Clock();\n\n    int pathC = 0;\n    Lit p     = lit_Undef;\n\n    // Generate conflict clause:\n    //\n    out_learnt.push();      // (leave room for the asserting literal)\n    int index   = trail.size() - 1;\n    \n    for{\n        assert(confl != CRef_Undef, \"confl != CRef_Undef\"); // (otherwise should be UIP)\n\n      #ifdef CGLUCOSE_EXP\n        Clause\u0026 c = ca[ lit_Undef != p ? castCRef(p): getConfClause(confl) ];\n      #else\n        Clause\u0026 c = ca[confl];\n      #endif\n\n        // Special case for binary clauses\n        // The first one has to be SAT\n        if p != lit_Undef \u0026\u0026 c.size()==2 \u0026\u0026 value(c[0])==l_False {\n          \n          assert(value(c[1])==l_True, \"value(c[1])==l_True\");\n          Lit tmp = c[0];\n          c[0] =  c[1], c[1] = tmp;\n        }\n        \n        if (c.learnt()) \n            claBumpActivity(c);\n\n#ifdef DYNAMICNBLEVEL               \n        // DYNAMIC NBLEVEL trick (see competition'09 companion paper)\n        if(c.learnt()  \u0026\u0026 c.lbd()\u003e2) {\n          unsigned int nblevels = computeLBD(c);\n          if(nblevels+1\u003cc.lbd() ) { // improve the LBD\n            if(c.lbd()\u003c=lbLBDFrozenClause) {\n              c.setCanBeDel(false); \n            }\n            // seems to be interesting : keep it for the next round\n            c.setLBD(nblevels); // Update it\n          }\n        }\n#endif\n\n\n        for int j = (p == lit_Undef) ? 0 : 1; j \u003c c.size(); j++{\n            Lit q = c[j];\n\n            if !seen[var(q)] \u0026\u0026 level(var(q)) \u003e 0{\n              if(!isSelector(var(q)))\n                varBumpActivity(var(q));\n              seen[var(q)] = 1;\n              if level(var(q)) \u003e= decisionLevel() {\n                pathC++;\n#ifdef UPDATEVARACTIVITY\n                // UPDATEVARACTIVITY trick (see competition'09 companion paper)\n        #ifdef CGLUCOSE_EXP\n                if(!isSelector(var(q)) \u0026\u0026 (reason(var(q))!= CRef_Undef)  \n                  \u0026\u0026 ! isGateCRef(reason(var(q))) \u0026\u0026 ca[reason(var(q))].learnt()) \n                  lastDecisionLevel.push(q);\n        #else\n                if(!isSelector(var(q)) \u0026\u0026 (reason(var(q))!= CRef_Undef)  \u0026\u0026 ca[reason(var(q))].learnt()) \n                  lastDecisionLevel.push(q);\n        #endif\n#endif\n                \n              } else {\n                if isSelector(var(q)) {\n                  assert(value(q) == l_False, \"value(q) == l_False\");\n                  selectors.push(q);\n                } else \n                  out_learnt.push(q);\n              }\n            }\n        }\n        \n        // Select next clause to look at:\n        while (!seen[var(trail[index--])]);\n        p     = trail[index+1];\n        confl = reason(var(p));\n        seen[var(p)] = 0;\n        pathC--;\n\n    \nif !(pathC \u003e 0) { break }\n}\n    out_learnt[0] = ~p;\n\n    // Simplify conflict clause:\n    //\n    int i, j;\n\n    for(i = 0;i\u003cselectors.size();i++)  \n      out_learnt.push(selectors[i]);       \n\n    out_learnt.copyTo_(analyze_toclear);\n    if ccmin_mode == 2{\n        uint32_t abstract_level = 0;\n        for (i = 1; i \u003c out_learnt.size(); i++)\n            abstract_level |= abstractLevel(var(out_learnt[i])); // (maintain an abstraction of levels involved in conflict)\n\n        for (i = j = 1; i \u003c out_learnt.size(); i++)\n            if (reason(var(out_learnt[i])) == CRef_Undef || !litRedundant(out_learnt[i], abstract_level))\n                out_learnt[j++] = out_learnt[i];\n        \n    }else if ccmin_mode == 1{\n        for i = j = 1; i \u003c out_learnt.size(); i++{\n            Var x = var(out_learnt[i]);\n\n            if (reason(x) == CRef_Undef)\n                out_learnt[j++] = out_learnt[i];\n            else{\n                #ifdef CGLUCOSE_EXP\n                Clause\u0026 c = ca[castCRef(out_learnt[i])];\n                #else\n                Clause\u0026 c = ca[reason(var(out_learnt[i]))];\n                #endif\n                // Thanks to Siert Wieringa for this bug fix!\n                for (int k = ((c.size()==2) ? 0:1); k \u003c c.size(); k++)\n                    if !seen[var(c[k])] \u0026\u0026 level(var(c[k])) \u003e 0{\n                        out_learnt[j++] = out_learnt[i];\n                        break; }\n            }\n        }\n    }else\n        i = j = out_learnt.size();\n\n    max_literals += out_learnt.size();\n    out_learnt.shrink_(i - j);\n    tot_literals += out_learnt.size();\n\n\n    /* ***************************************\n      Minimisation with binary clauses of the asserting clause\n      First of all : we look for small clauses\n      Then, we reduce clauses with small LBD.\n      Otherwise, this can be useless\n     */\n    if !incremental \u0026\u0026 out_learnt.size()\u003c=lbSizeMinimizingClause {\n      minimisationWithBinaryResolution(out_learnt);\n    }\n    // Find correct backtrack level:\n    //\n    if (out_learnt.size() == 1)\n        out_btlevel = 0;\n    else{\n        int max_i = 1;\n        // Find the first literal assigned at the next-highest level:\n        for (int i = 2; i \u003c out_learnt.size(); i++)\n            if (level(var(out_learnt[i])) \u003e level(var(out_learnt[max_i])))\n                max_i = i;\n        // Swap-in this literal at index 1:\n        Lit p             = out_learnt[max_i];\n        out_learnt[max_i] = out_learnt[1];\n        out_learnt[1]     = p;\n        out_btlevel       = level(var(p));\n    }\n\n\n    // Compute the size of the clause without selectors (incremental mode)\n    if incremental {\n      szWithoutSelectors = 0;\n      for int i=0;i\u003cout_learnt.size();i++ {\n        if(!isSelector(var((out_learnt[i])))) szWithoutSelectors++; \n        else if(i\u003e0) break;\n      }\n    } else \n      szWithoutSelectors = out_learnt.size();\n    \n    // Compute LBD\n    lbd = computeLBD(out_learnt,out_learnt.size()-selectors.size());\n\n  \n#ifdef UPDATEVARACTIVITY\n  // UPDATEVARACTIVITY trick (see competition'09 companion paper)\n  if(lastDecisionLevel.size()\u003e0) {\n    for(int i = 0;i\u003clastDecisionLevel.size();i++) {\n\n      #ifdef CGLUCOSE_EXP\n      Lit t = lastDecisionLevel[i];\n      if( isGateCRef(reason(var(t))) || ca[reason(var(t))].lbd()\u003clbd )\n          varBumpActivity(var(lastDecisionLevel[i]));\n      #else\n      if(ca[reason(var(lastDecisionLevel[i]))].lbd()\u003clbd)\n          varBumpActivity(var(lastDecisionLevel[i]));\n      #endif\n\n    }\n    lastDecisionLevel.clear();\n  } \n#endif      \n\n\n\n  for (j = 0; j \u003c analyze_toclear.size(); j++) seen[var(analyze_toclear[j])] = 0;    // ('seen[]' is now cleared)\n  for(j = 0 ; j\u003cselectors.size() ; j++) seen[var(selectors[j])] = 0;  \n\n}\n\n\n// Check if 'p' can be removed. 'abstract_levels' is used to abort early if the algorithm is\n// visiting literals at levels that cannot be removed later.\nbool Solver::litRedundant(Lit p, uint32_t abstract_levels)\n{\n    analyze_stack.clear(); analyze_stack.push(p);\n    int top = analyze_toclear.size();\n    while (analyze_stack.size() \u003e 0){\n        assert(reason(var(analyze_stack.last())) != CRef_Undef, \"reason(var(analyze_stack.last())) != CRef_Undef\");\n        #ifdef CGLUCOSE_EXP\n        Clause\u0026 c = ca[castCRef(analyze_stack.last())]; analyze_stack.pop();\n        #else\n        Clause\u0026 c = ca[reason(var(analyze_stack.last()))]; analyze_stack.pop();\n        #endif\n        if c.size()==2 \u0026\u0026 value(c[0])==l_False {\n          assert(value(c[1])==l_True, \"value(c[1])==l_True\");\n          Lit tmp = c[0];\n          c[0] =  c[1], c[1] = tmp;\n        }\n\n        for int i = 1; i \u003c c.size(); i++{\n            Lit p  = c[i];\n            if !seen[var(p)] \u0026\u0026 level(var(p)) \u003e 0{\n                if reason(var(p)) != CRef_Undef \u0026\u0026 (abstractLevel(var(p)) \u0026 abstract_levels) != 0{\n                    seen[var(p)] = 1;\n                    analyze_stack.push(p);\n                    analyze_toclear.push(p);\n                }else{\n                    for (int j = top; j \u003c analyze_toclear.size(); j++)\n                        seen[var(analyze_toclear[j])] = 0;\n                    analyze_toclear.shrink_(analyze_toclear.size() - top);\n                    return false;\n                }\n            }\n        }\n    }\n\n    return true;\n}\n\n\n/*_________________________________________________________________________________________________\n|\n|  analyzeFinal : (p : Lit)  -\u003e  [void]\n|  \n|  Description:\n|    Specialized analysis procedure to express the final conflict in terms of assumptions.\n|    Calculates the (possibly empty) set of assumptions that led to the assignment of 'p', and\n|    stores the result in 'out_conflict'.\n|________________________________________________________________________________________________@*/\nvoid Solver::analyzeFinal(Lit p, vec\u003cLit\u003e\u0026 out_conflict)\n{\n    out_conflict.clear();\n    out_conflict.push(p);\n\n    if (decisionLevel() == 0)\n        return;\n\n    seen[var(p)] = 1;\n\n    for int i = trail.size()-1; i \u003e= trail_lim[0]; i--{\n        Var x = var(trail[i]);\n        if seen[x]{\n            if reason(x) == CRef_Undef{\n                assert(level(x) \u003e 0, \"level(x) \u003e 0\");\n                out_conflict.push(~trail[i]);\n            }else{\n              #ifdef CGLUCOSE_EXP\n                Clause\u0026 c = ca[castCRef(trail[i])];\n              #else\n                Clause\u0026 c = ca[reason(x)];\n              #endif\n                //                for (int j = 1; j \u003c c.size(); j++) Minisat (glucose 2.0) loop \n                // Bug in case of assumptions due to special data structures for Binary.\n                // Many thanks to Sam Bayless (sbayless@cs.ubc.ca) for discover this bug.\n                for (int j = ((c.size()==2) ? 0:1); j \u003c c.size(); j++)\n                    if (level(var(c[j])) \u003e 0)\n                        seen[var(c[j])] = 1;\n            }  \n\n            seen[x] = 0;\n        }\n    }\n\n    seen[var(p)] = 0;\n}\n\nvoid Solver::uncheckedEnqueue(Lit p, CRef from)\n{\n    assert(value(p) == l_Undef, \"value(p) == l_Undef\");\n    assigns[var(p)] = lbool(!sign(p));\n    vardata[var(p)] = mkVarData(from, decisionLevel());\n    trail.push_(p);\n    #ifdef CGLUCOSE_EXP\n    if( 0 \u003c justUsage() ){\n        jdata[var(p)] = mkJustData( isJReason(var(p)) );\n        if( isJReason(var(p)) \u0026\u0026 l_Undef == value( getFaninVar0(var(p)) ) \u0026\u0026 l_Undef == value( getFaninVar1(var(p)) ) )\n            jstack.push(var(p));\n        }\n    #endif\n}\n\n\n/*_________________________________________________________________________________________________\n|\n|  propagate : [void]  -\u003e  [Clause*]\n|  \n|  Description:\n|    Propagates all enqueued facts. If a conflict arises, the conflicting clause is returned,\n|    otherwise CRef_Undef.\n|  \n|    Post-conditions:\n|      * the propagation queue is empty, even if there was a conflict.\n|________________________________________________________________________________________________@*/\nCRef Solver::propagate()\n{\n    CRef    confl     = CRef_Undef;\n    int     num_props = 0;\n    watches.cleanAll();\n    watchesBin.cleanAll();\n    while (qhead \u003c trail.size()){\n        Lit            p   = trail[qhead++];     // 'p' is enqueued fact to propagate.\n        vec\u003cWatcher\u003e\u0026  ws  = watches[p];\n        Watcher        *i, *j, *end;\n        num_props++;\n\n        #ifdef CGLUCOSE_EXP\n        if( 2 \u003c= justUsage() ){\n          CRef stats;\n          if( CRef_Undef != (stats = gatePropagate(p)) ){\n            confl = stats;\n            if( l_True == value(var(p)) )\n              return confl;\n            \n          }\n        }\n        #endif\n\n        // First, Propagate binary clauses \n        vec\u003cWatcher\u003e\u0026  wbin  = watchesBin[p];\n        for int k = 0;k\u003cwbin.size();k++ {\n          Lit imp = wbin[k].blocker;\n          if value(imp) == l_False {\n            return wbin[k].cref;\n          }\n          if value(imp) == l_Undef {\n            uncheckedEnqueue(imp,wbin[k].cref);\n          }\n        }\n\n\n\n        for i = j = (Watcher*)ws, end = i + ws.size();  i != end;{\n            // Try to avoid inspecting the clause:\n            Lit blocker = i.blocker;\n            if value(blocker) == l_True{\n                *j++ = *i++; continue; }\n\n            // Make sure the false literal is data[1]:\n            CRef     cr        = i.cref;\n            Clause\u0026  c         = ca[cr];\n            Lit      false_lit = ~p;\n            if (c[0] == false_lit)\n                c[0] = c[1], c[1] = false_lit;\n            assert(c[1] == false_lit, \"c[1] == false_lit\");\n            i++;\n\n            // If 0th watch is true, then clause is already satisfied.\n            Lit     first = c[0];\n            Watcher w     = Watcher(cr, first);\n            if first != blocker \u0026\u0026 value(first) == l_True{\n              *j++ = w; continue; }\n\n            // Look for new watch:\n            if incremental { // ----------------- INCREMENTAL MODE\n              int choosenPos = -1;\n              for int k = 2; k \u003c c.size(); k++ {\n                \n                if value(c[k]) != l_False{\n                  if decisionLevel()\u003eassumptions.size() {\n                    choosenPos = k;\n                    break;\n                  } else {\n                    choosenPos = k;\n                    \n                    if value(c[k])==l_True || !isSelector(var(c[k])) {\n                      break;\n                    }\n                  }\n\n                }\n              }\n              if choosenPos!=-1 {\n                c[1] = c[choosenPos]; c[choosenPos] = false_lit;\n                watches[~c[1]].push(w);\n                goto NextClause; }\n            } else {  // ----------------- DEFAULT  MODE (NOT INCREMENTAL)\n              for int k = 2; k \u003c c.size(); k++ {\n                \n                if value(c[k]) != l_False{\n                  c[1] = c[k]; c[k] = false_lit;\n                  watches[~c[1]].push(w);\n                  goto NextClause; }\n              }\n            }\n\n            // Did not find watch -- clause is unit under assignment:\n            *j++ = w;\n            if value(first) == l_False{\n                confl = cr;\n                qhead = trail.size();\n                // Copy the remaining watches:\n                while (i \u003c end)\n                    *j++ = *i++;\n            }else {\n                uncheckedEnqueue(first, cr);\n          \n                \n            }\n        NextClause:;\n        }\n        ws.shrink(i - j);\n    }\n    propagations += num_props;\n    simpDB_props -= num_props;\n\n    return confl;\n}\n\n\n\n\n\n\n/*_________________________________________________________________________________________________\n|\n|  reduceDB : ()  -\u003e  [void]\n|  \n|  Description:\n|    Remove half of the learnt clauses, minus the clauses locked by the current assignment. Locked\n|    clauses are clauses that are reason to some assignment. Binary clauses are never removed.\n|________________________________________________________________________________________________@*/\ntype reduceDB_lt struct { \n    ClauseAllocator\u0026 ca;\n    reduceDB_lt(ClauseAllocator\u0026 ca_) : ca(ca_) {}\n    bool operator () (CRef x, CRef y) { \n \n    // Main criteria... Like in MiniSat we keep all binary clauses\n    if(ca[x].size()\u003e 2 \u0026\u0026 ca[y].size()==2) return 1;\n    \n    if(ca[y].size()\u003e 2 \u0026\u0026 ca[x].size()==2) return 0;\n    if(ca[x].size()==2 \u0026\u0026 ca[y].size()==2) return 0;\n    \n    // Second one  based on literal block distance\n    if(ca[x].lbd()\u003e ca[y].lbd()) return 1;\n    if(ca[x].lbd()\u003c ca[y].lbd()) return 0;    \n    \n    // Finally we can use old activity or size, we choose the last one\n    return ca[x].activity() \u003c ca[y].activity();\n    //return x-\u003esize() \u003c y-\u003esize();\n    //return ca[x].size() \u003e 2 \u0026\u0026 (ca[y].size() == 2 || ca[x].activity() \u003c ca[y].activity()); } \n    }    \n}\n\nvoid Solver::reduceDB()\n{ \n  int i, j;\n  nbReduceDB++;\n  sort(learnts, reduceDB_lt(ca));\n\n  // We have a lot of \"good\" clauses, it is difficult to compare them. Keep more !\n  if(ca[learnts[learnts.size() / RATIOREMOVECLAUSES]].lbd()\u003c=3) nbclausesbeforereduce +=specialIncReduceDB; \n  // Useless :-)\n  if(ca[learnts.last()].lbd()\u003c=5)  nbclausesbeforereduce +=specialIncReduceDB;   \n  \n  // Don't delete binary or locked clauses. From the rest, delete clauses from the first half\n  // Keep clauses which seem to be usefull (their lbd was reduce during this sequence)\n\n  int limit = learnts.size() / 2;\n  for i = j = 0; i \u003c learnts.size(); i++{\n    Clause\u0026 c = ca[learnts[i]];\n    if c.lbd()\u003e2 \u0026\u0026 c.size() \u003e 2 \u0026\u0026 c.canBeDel() \u0026\u0026  !locked(c) \u0026\u0026 (i \u003c limit) {\n      removeClause(learnts[i]);\n      nbRemovedClauses++;\n    }\n    else {\n      if(!c.canBeDel()) limit++; //we keep c, so we can delete an other clause\n      c.setCanBeDel(true);       // At the next step, c can be delete\n      learnts[j++] = learnts[i];\n    }\n  }\n  learnts.shrink(i - j);\n  checkGarbage();\n}\n\n\nvoid Solver::removeSatisfied(vec\u003cCRef\u003e\u0026 cs)\n{\n    int i, j;\n    for i = j = 0; i \u003c cs.size(); i++{\n        Clause\u0026 c = ca[cs[i]];\n        if (satisfied(c)) \n            removeClause(cs[i]);\n        else\n            cs[j++] = cs[i];\n    }\n    cs.shrink(i - j);\n}\n\n\nvoid Solver::rebuildOrderHeap()\n{\n    vec\u003cVar\u003e vs;\n    for (Var v = 0; v \u003c nVars(); v++)\n        if (decision[v] \u0026\u0026 value(v) == l_Undef)\n            vs.push(v);\n    order_heap.build(vs);\n}\n\n\n/*_________________________________________________________________________________________________\n|\n|  simplify : [void]  -\u003e  [bool]\n|  \n|  Description:\n|    Simplify the clause database according to the current top-level assigment. Currently, the only\n|    thing done here is the removal of satisfied clauses, but more things can be put here.\n|________________________________________________________________________________________________@*/\nbool Solver::simplify()\n{\n    assert(decisionLevel() == 0, \"decisionLevel() == 0\");\n\n    if (!ok || propagate() != CRef_Undef)\n        return ok = false;\n\n    if (nAssigns() == simpDB_assigns || (simpDB_props \u003e 0))\n        return true;\n\n    // Remove satisfied clauses:\n    removeSatisfied(learnts);\n    if (remove_satisfied)        // Can be turned off.\n        removeSatisfied(clauses);\n\n    checkGarbage();\n\n    rebuildOrderHeap();\n\n    simpDB_assigns = nAssigns();\n    simpDB_props   = clauses_literals + learnts_literals;   // (shouldn't depend on stats really, but it will do for now)\n\n    return true;\n}\n\n\n/*_________________________________________________________________________________________________\n|\n|  search : (nof_conflicts : int) (params : const SearchParams\u0026)  -\u003e  [lbool]\n|  \n|  Description:\n|    Search for a model the specified number of conflicts. \n|    NOTE! Use negative value for 'nof_conflicts' indicate infinity.\n|  \n|  Output:\n|    'l_True' if a partial assigment that is consistent with respect to the clauseset is found. If\n|    all variables are decision variables, this means that the clause set is satisfiable. 'l_False'\n|    if the clause set is unsatisfiable. 'l_Undef' if the bound on number of conflicts is reached.\n|________________________________________________________________________________________________@*/\nlbool Solver::search(int nof_conflicts)\n{\n    assert(ok, \"ok\");\n    int         backtrack_level;\n    int         conflictC = 0;\n    vec\u003cLit\u003e    learnt_clause,selectors;\n    unsigned int nblevels,szWoutSelectors;\n    bool blocked=false;\n    starts++;\n\n    for {\n        CRef confl = propagate();\n\n        // exact conflict limit\n        if !withinBudget() \u0026\u0026 confl != CRef_Undef {\n          lbdQueue.fastclear();\n          cancelUntil(0);\n          return l_Undef; }\n\n        if confl != CRef_Undef{\n\n            // CONFLICT\n          conflicts++; conflictC++;conflictsRestarts++;\n          if(conflicts%5000==0 \u0026\u0026 var_decay\u003c0.95)\n            var_decay += 0.01;\n\n          if verbosity \u003e= 1 \u0026\u0026 conflicts%verbEveryConflicts==0{\n            fmt.Printf(\"c | %8d   %7d    %5d | %7d %8d %8d | %5d %8d   %6d %8d | %6.3f %% \\n\", int32(starts), int32(nbstopsrestarts), int32((conflicts/starts)), int32(dec_vars) - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]), nClauses(), int32(clauses_literals), int32(nbReduceDB), nLearnts(), int32(nbDL2), int32(nbRemovedClauses), progressEstimate()*100);\n          }\n          if (decisionLevel() == 0) \n            return l_False;\n\n\n          trailQueue.push(trail.size());\n          // BLOCK RESTART (CP 2012 paper)\n          if conflictsRestarts\u003eLOWER_BOUND_FOR_BLOCKING_RESTART \u0026\u0026 lbdQueue.isvalid()  \u0026\u0026 trail.size()\u003eR*trailQueue.getavg() {\n            lbdQueue.fastclear();\n            nbstopsrestarts++;\n            if !blocked {lastblockatrestart=starts;nbstopsrestartssame++;blocked=true;}\n          }\n\n            learnt_clause.clear();\n            selectors.clear();\n            analyze(confl, learnt_clause, selectors,backtrack_level,nblevels,szWoutSelectors);\n\n            lbdQueue.push(nblevels);\n            sumLBD += nblevels;\n            cancelUntil(backtrack_level);\n            if certifiedUNSAT {\n              for (int i = 0; i \u003c learnt_clause.size(); i++)\n                fmt.Fprintf(certifiedOutput, \"%d \", (var(learnt_clause[i]) + 1) *\n                                            (-2 * sign(learnt_clause[i]) + 1));\n              fmt.Fprintf(certifiedOutput, \"0\\n\");\n            }\n\n            if learnt_clause.size() == 1{\n              uncheckedEnqueue(learnt_clause[0]);nbUn++;\n            }else{\n                CRef cr = ca.alloc(learnt_clause, true);\n                ca[cr].setLBD(nblevels); \n                ca[cr].setSizeWithoutSelectors(szWoutSelectors);\n                if(nblevels\u003c=2) nbDL2++; // stats\n                if(ca[cr].size()==2) nbBin++; // stats\n                learnts.push(cr);\n                attachClause(cr);\n\n                claBumpActivity(ca[cr]);\n                uncheckedEnqueue(learnt_clause[0], cr);\n            }\n            varDecayActivity();\n            claDecayActivity();\n\n        }else{\n          // Our dynamic restart, see the SAT09 competition compagnion paper \n          if (conflictsRestarts \u0026\u0026 lbdQueue.isvalid() \u0026\u0026 lbdQueue.getavg()*K \u003e sumLBD/conflictsRestarts) || (pstop \u0026\u0026 *pstop) {\n            lbdQueue.fastclear();\n            progress_estimate = progressEstimate();\n            int bt = 0;\n            if incremental { // DO NOT BACKTRACK UNTIL 0.. USELESS\n              bt = (decisionLevel()\u003cassumptions.size()) ? decisionLevel() : assumptions.size();\n            }\n            cancelUntil(bt);\n            return l_Undef; \n          }\n\n           // Simplify the set of problem clauses:\n          if decisionLevel() == 0 \u0026\u0026 !simplify() {\n            return l_False;\n          }\n            // Perform clause database reduction !\n            if conflicts\u003e=curRestart* nbclausesbeforereduce {\n                  \n                assert(learnts.size()\u003e0, \"learnts.size()\u003e0\");\n                curRestart = (conflicts/ nbclausesbeforereduce)+1;\n                reduceDB();\n                nbclausesbeforereduce += incReduceDB;\n              }\n\n            Lit next = lit_Undef;\n            while (decisionLevel() \u003c assumptions.size()){\n                // Perform user provided assumption:\n                Lit p = assumptions[decisionLevel()];\n                if value(p) == l_True{\n                    // Dummy decision level:\n                    newDecisionLevel();\n                }else if value(p) == l_False{\n                    analyzeFinal(~p, conflict);\n                    return l_False;\n                }else{\n                    next = p;\n                    break;\n                }\n            }\n\n            #ifdef CGLUCOSE_EXP\n            // pick from JustQueue\n            Var j_reason = -1;\n            if (0 \u003c justUsage())\n            if ( next == lit_Undef ){\n              decisions++;\n              next = pickJustLit( j_reason );\n              if(next == lit_Undef)\n                return l_True;\n              addJwatch(var(next), j_reason);\n              \n            }\n            #endif\n\n            if next == lit_Undef{\n                // New variable decision:\n                decisions++;\n                next = pickBranchLit();\n\n                if next == lit_Undef{\n                  // Model found:\n                  return l_True;\n                }\n            }\n\n            // Increase decision level and enqueue 'next'\n            newDecisionLevel();\n            uncheckedEnqueue(next);\n        }\n    }\n}\n\n\n\ndouble Solver::progressEstimate() \n{\n    double  progress = 0;\n    double  F = 1.0 / nVars();\n\n    for int i = 0; i \u003c= decisionLevel(); i++{\n        int beg = i == 0 ? 0 : trail_lim[i - 1];\n        int end = i == decisionLevel() ? trail.size() : trail_lim[i];\n        progress += math.Pow(float64(F), float64(i)) * (end - beg);\n    }\n\n    return progress / nVars();\n}\n\nvoid Solver::printIncrementalStats() {\n\n  fmt.Printf(\"c---------- Glucose Stats -------------------------\\n\");\n  fmt.Printf(\"c restarts              : %d\\n\", starts);\n  fmt.Printf(\"c nb ReduceDB           : %d\\n\", nbReduceDB);\n  fmt.Printf(\"c nb removed Clauses    : %d\\n\", nbRemovedClauses);\n  fmt.Printf(\"c nb learnts DL2        : %d\\n\", nbDL2);\n  fmt.Printf(\"c nb learnts size 2     : %d\\n\", nbBin);\n  fmt.Printf(\"c nb learnts size 1     : %d\\n\", nbUn);\n\n  fmt.Printf(\"c conflicts             : %d\\n\", conflicts);\n  fmt.Printf(\"c decisions             : %d\\n\", decisions);\n  fmt.Printf(\"c propagations          : %d\\n\", propagations);\n\n  fmt.Printf(\"c SAT Calls             : %d in %g seconds\\n\", nbSatCalls, totalTime4Sat);\n  fmt.Printf(\"c UNSAT Calls           : %d in %g seconds\\n\", nbUnsatCalls, totalTime4Unsat);\n  fmt.Printf(\"c--------------------------------------------------\\n\");\n\n\n}\n\n\n// NOTE: assumptions passed in member-variable 'assumptions'.\nlbool Solver::solve_()\n{\n\n    #ifdef CGLUCOSE_EXP\n    ResetJustData(false);\n\n    if( 0 \u003c justUsage() )\n      for(int i=0; i\u003ctrail.size(); i++){ // learnt unit clauses \n        Var v = var(trail[i]);\n          if( isJReason(v) )\n            jstack.push(v);\n      }\n    #endif\n\n  if incremental \u0026\u0026 certifiedUNSAT {\n    fmt.Printf(\"Can not use incremental and certified unsat in the same time\\n\");\n    os.Exit(int(-1));\n  }\n    JustModel.shrink_(JustModel.size());\n    model.shrink_(model.size());\n    conflict.shrink_(conflict.size());\n    if !ok{\n      travId_prev = travId;\n      return l_False;\n    }\n    double curTime = cpuTime();\n    \n    solves++;\n    \n    lbool   status        = l_Undef;\n    if !incremental \u0026\u0026 verbosity\u003e=1 {\n      fmt.Printf(\"c ========================================[ MAGIC CONSTANTS ]==============================================\\n\");\n      fmt.Printf(\"c | Constants are supposed to work well together :-)                                                      |\\n\");\n      fmt.Printf(\"c | however, if you find better choices, please let us known...                                           |\\n\");\n      fmt.Printf(\"c |-------------------------------------------------------------------------------------------------------|\\n\");\n    fmt.Printf(\"c |                                |                                |                                     |\\n\"); \n    fmt.Printf(\"c | - Restarts:                    | - Reduce Clause DB:            | - Minimize Asserting:               |\\n\");\n    fmt.Printf(\"c |   * LBD Queue    : %6d      |   * First     : %6d         |    * size \u003c %3d                     |\\n\", lbdQueue.maxSize(), nbclausesbeforereduce, lbSizeMinimizingClause);\n    fmt.Printf(\"c |   * Trail  Queue : %6d      |   * Inc       : %6d         |    * lbd  \u003c %3d                     |\\n\", trailQueue.maxSize(), incReduceDB, lbLBDMinimizingClause);\n    fmt.Printf(\"c |   * K            : %6.2f      |   * Special   : %6d         |                                     |\\n\", K, specialIncReduceDB);\n    fmt.Printf(\"c |   * R            : %6.2f      |   * Protected :  (lbd)\u003c %2d     |                                     |\\n\", R, lbLBDFrozenClause);\n    fmt.Printf(\"c |                                |                                |                                     |\\n\"); \nfmt.Printf(\"c ==================================[ Search Statistics (every %6d conflicts) ]=========================\\n\", verbEveryConflicts);\n      fmt.Printf(\"c |                                                                                                       |\\n\"); \n\n      fmt.Printf(\"c |          RESTARTS           |          ORIGINAL         |              LEARNT              | Progress |\\n\");\n      fmt.Printf(\"c |       NB   Blocked  Avg Cfc |    Vars  Clauses Literals |   Red   Learnts    LBD2  Removed |          | pol-inconsist\\n\");\n      fmt.Printf(\"c =========================================================================================================\\n\");\n    }\n\n    // Search:\n    int curr_restarts = 0;\n    while (status == l_Undef){\n      status = search(0); // the parameter is useless in glucose, kept to allow modifications\n        if (!withinBudget() || terminate_search_early || (pstop \u0026\u0026 *pstop)) break;\n        if (nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit)                   break;\n        curr_restarts++;\n    }\n\n    if (!incremental \u0026\u0026 verbosity \u003e= 1)\n      fmt.Printf(\"c =========================================================================================================\\n\");\n\n\n    if certifiedUNSAT{ // Want certified output\n      if (status == l_False)\n        fmt.Fprintf(certifiedOutput, \"0\\n\");\n      _ = (certifiedOutput).Close();\n    }\n\n\n    if status == l_True{\n\n        if justUsage(){\n          assert(jheap.empty(), \"jheap.empty()\");\n          //JustModel.growTo(nVars());\n          int i = 0, j = 0;\n          JustModel.push(toLit(0));\n          for (; i \u003c trail.size(); i++) \n            if( isRoundWatch(var(trail[i])) \u0026\u0026 !isTwoFanin(var(trail[i])) )\n              JustModel.push(trail[i]), j++;\n          JustModel[0] = toLit(j);\n        } else {\n          // Extend \u0026 copy model:\n          model.growTo(nVars());\n          for (int i = 0; i \u003c trail.size(); i++) model[ var(trail[i]) ] = value(var(trail[i]));\n        }\n    }else if (status == l_False \u0026\u0026 conflict.size() == 0)\n        ok = false;\n\n    //#ifdef CGLUCOSE_EXP\n    //if(status == l_True \u0026\u0026 0 \u003c justUsage())\n    //  justCheck();\n    //#endif\n\n    cancelUntil(0);\n\n    double finalTime = cpuTime();\n    if status==l_True {\n      nbSatCalls++; \n      totalTime4Sat +=(finalTime-curTime);\n    }\n    if status==l_False {\n      nbUnsatCalls++; \n      totalTime4Unsat +=(finalTime-curTime);\n    }\n\n    // ABC callback\n    if pCnfFunc \u0026\u0026 !terminate_search_early {// hack to avoid calling callback twise if the solver was terminated early\n        int * pCex = NULL;\n        int message = (status == l_True ? 1 : status == l_False ? 0 : -1);\n        if status == l_True {\n            pCex = new int[nVars()];\n            for (int i = 0; i \u003c nVars(); i++)\n                pCex[i] = (model[i] == l_True);\n        }\n        \n        int callback_result = pCnfFunc(pCnfMan, message, pCex);\n        assert(callback_result == 0, \"callback_result == 0\");\n    }\n    else if (pCnfFunc)\n        terminate_search_early = false; // for next run\n\n    travId_prev = travId;\n    return status;\n}\n\n//=================================================================================================\n// Writing CNF to DIMACS:\n// \n// FIXME: this needs to be rewritten completely.\n\nstatic Var mapVar(Var x, vec\u003cVar\u003e\u0026 map, Var\u0026 max)\n{\n    if map.size() \u003c= x || map[x] == -1{\n        map.growTo(x+1, -1);\n        map[x] = max++;\n    }\n    return map[x];\n}\n\n\nvoid Solver::toDimacs(FILE* f, Clause\u0026 c, vec\u003cVar\u003e\u0026 map, Var\u0026 max)\n{\n    if (satisfied(c)) return;\n\n    for (int i = 0; i \u003c c.size(); i++)\n        if (value(c[i]) != l_False)\n            fmt.Fprintf(f, \"%s%d \", sign(c[i]) ? \"-\" : \"\", mapVar(var(c[i]), map, max)+1);\n    fmt.Fprintf(f, \"0\\n\");\n}\n\n\nvoid Solver::toDimacs(char *file, vec\u003cLit\u003e\u0026 assumps)\n{\n    FILE* f = fopen(file, \"wr\");\n    if (f == NULL)\n        fmt.Fprintf(os.Stderr, \"could not open file %s\\n\", file), os.Exit(int(1));\n    toDimacs(f, assumps);\n    _ = (f).Close();\n}\n\n\nvoid Solver::toDimacs(FILE* f, vec\u003cLit\u003e\u0026 assumps)\n{\n    // Handle case when solver is in contradictory state:\n    if !ok{\n        fmt.Fprintf(f, \"p cnf 1 2\\n1 0\\n-1 0\\n\");\n        return; }\n\n    vec\u003cVar\u003e map; Var max = 0;\n\n    // Cannot use removeClauses here because it is not safe\n    // to deallocate them at this point. Could be improved.\n    int i, cnt = 0;\n    for (i = 0; i \u003c clauses.size(); i++)\n        if (!satisfied(ca[clauses[i]]))\n            cnt++;\n        \n    for (i = 0; i \u003c clauses.size(); i++)\n        if !satisfied(ca[clauses[i]]){\n            Clause\u0026 c = ca[clauses[i]];\n            for (int j = 0; j \u003c c.size(); j++)\n                if (value(c[j]) != l_False)\n                    mapVar(var(c[j]), map, max);\n        }\n\n    // Assumptions are added as unit clauses:\n    cnt += assumptions.size();\n\n    fmt.Fprintf(f, \"p cnf %d %d\\n\", max, cnt);\n\n    for i = 0; i \u003c assumptions.size(); i++{\n        assert(value(assumptions[i]) != l_False, \"value(assumptions[i]) != l_False\");\n        fmt.Fprintf(f, \"%s%d 0\\n\", sign(assumptions[i]) ? \"-\" : \"\", mapVar(var(assumptions[i]), map, max)+1);\n    }\n\n    for (i = 0; i \u003c clauses.size(); i++)\n        toDimacs(f, ca[clauses[i]], map, max);\n\n    if (verbosity \u003e 0)\n        fmt.Printf(\"Wrote %d clauses with %d variables.\\n\", cnt, max);\n}\n\n\n//=================================================================================================\n// Garbage Collection methods:\n\nvoid Solver::relocAll(ClauseAllocator\u0026 to)\n{\n    #ifdef CGLUCOSE_EXP\n    if( CRef_Undef != itpc ){\n      setItpcSize(3);\n      ca.reloc(itpc, to);\n    }\n    #endif\n    int v, s, i, j;\n    // All watchers:\n    //\n    // for (int i = 0; i \u003c watches.size(); i++)\n    watches.cleanAll();\n    watchesBin.cleanAll();\n    for (v = 0; v \u003c nVars(); v++)\n        for s = 0; s \u003c 2; s++{\n            Lit p = mkLit(v, s != 0);\n            // printf(\" \u003e\u003e\u003e RELOCING: %s%d\\n\", sign(p)?\"-\":\"\", var(p)+1);\n            vec\u003cWatcher\u003e\u0026 ws = watches[p];\n            for (j = 0; j \u003c ws.size(); j++)\n                ca.reloc(ws[j].cref, to);\n            vec\u003cWatcher\u003e\u0026 ws2 = watchesBin[p];\n            for (j = 0; j \u003c ws2.size(); j++)\n                ca.reloc(ws2[j].cref, to);\n        }\n\n    // All reasons:\n    //\n    for i = 0; i \u003c trail.size(); i++{\n        Var v = var(trail[i]);\n\n        #ifdef CGLUCOSE_EXP\n        if( isGateCRef(reason(v)) )\n          continue;\n        #endif\n        if (reason(v) != CRef_Undef \u0026\u0026 (ca[reason(v)].reloced() || locked(ca[reason(v)])))\n            ca.reloc(vardata[v].reason, to);\n    }\n\n    // All learnt:\n    //\n    for (i = 0; i \u003c learnts.size(); i++)\n        ca.reloc(learnts[i], to);\n\n    // All original:\n    //\n    for (i = 0; i \u003c clauses.size(); i++)\n        ca.reloc(clauses[i], to);\n}\n\n\nvoid Solver::garbageCollect()\n{\n    // Initialize the next region to a size corresponding to the estimated utilization degree. This\n    // is not precise but should avoid some unnecessary reallocations for the new region:\n    ClauseAllocator to(ca.size() - ca.wasted()); \n\n    relocAll(to);\n    if (verbosity \u003e= 2)\n        fmt.Printf(\"|  Garbage collection:   %12d bytes =\u003e %12d bytes             |\\n\", ca.size()*ClauseAllocator::Unit_Size, to.size()*ClauseAllocator::Unit_Size);\n    to.moveTo(ca);\n}\n\nvoid Solver::reset() \n{\n    // Reset everything\n    ok = true;\n    K = float64(opt_K);\n    R = float64(opt_R);\n    firstReduceDB = opt_first_reduce_db;\n    var_decay = float64(opt_var_decay);\n    //max_var_decay = opt_max_var_decay;\n    solves = starts = decisions = propagations = conflicts = conflictsRestarts = 0;\n    curRestart = 1;\n    cla_inc = var_inc = 1;\n    watches.clear(false); // We don't free the memory, new calls should be of the same size order.\n    watchesBin.clear(false); \n    //unaryWatches.clear(false);\n    qhead = 0;\n    simpDB_assigns = -1;\n    simpDB_props = 0;\n    order_heap.clear(false);\n    progress_estimate = 0;\n    //lastLearntClause = CRef_Undef;\n    conflict_budget = -1;\n    propagation_budget = -1;\n    nbVarsInitialFormula = INT32_MAX;\n    totalTime4Sat = 0.;\n    totalTime4Unsat = 0.;\n    nbSatCalls = nbUnsatCalls = 0;\n    MYFLAG = 0;\n    lbdQueue.clear(false);\n    lbdQueue.initSize(sizeLBDQueue);\n    trailQueue.clear(false);\n    trailQueue.initSize(sizeTrailQueue);\n    sumLBD = 0;\n    nbclausesbeforereduce = firstReduceDB;\n    //stats.clear();\n    //stats.growTo(coreStatsSize, 0);\n    clauses.clear(false);\n    learnts.clear(false);\n    //permanentLearnts.clear(false);\n    //unaryWatchedClauses.clear(false);\n    model   .shrink_(model   .size());\n    conflict.shrink_(conflict.size());\n    activity.shrink_(activity.size());\n    assigns .shrink_(assigns .size());\n    polarity.shrink_(polarity.size());\n    //forceUNSAT.clear(false);\n    decision   .shrink_(decision   .size());\n    trail      .shrink_(trail      .size());\n    trail_lim  .shrink_(trail_lim  .size());\n    vardata    .shrink_(vardata    .size());\n    assumptions.shrink_(assumptions.size());\n    nbpos      .shrink_(nbpos      .size());\n    permDiff   .shrink_(permDiff   .size());\n    #ifdef UPDATEVARACTIVITY\n    lastDecisionLevel.shrink_(lastDecisionLevel.size());\n    #endif\n    ca.clear();\n    seen           .shrink_(seen.size());\n    analyze_stack  .shrink_(analyze_stack  .size());\n    analyze_toclear.shrink_(analyze_toclear.size());\n    add_tmp.clear(false);\n    assumptionPositions.clear(false);\n    initialPositions.clear(false);\n\n    #ifdef CGLUCOSE_EXP\n\n    ResetJustData(false);\n\n    jwatch.shrink_(jwatch.size());\n    jdata .shrink_(jdata .size());\n\n\n    travId = 0;\n    travId_prev = 0;\n    var2TravId   .shrink_(var2TravId.size());\n    JustModel    .shrink_(JustModel .size());\n\n    var2FaninLits.shrink_(var2FaninLits.size());\n    var2Fanout0  .shrink_(var2Fanout0  .size());\n    var2FanoutN  .shrink_(var2FanoutN  .size());\n    //var2FanoutP.clear(false);\n    if( CRef_Undef != itpc ){\n      itpc = CRef_Undef;       // clause allocator has been cleared, do not worry \n      // allocate space for clause interpretation \n      vec\u003cLit\u003e tmp; tmp.growTo(3); \n      itpc = ca.alloc(tmp);\n      ca[itpc].shrink( ca[itpc].size() );\n    }\n    #endif\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

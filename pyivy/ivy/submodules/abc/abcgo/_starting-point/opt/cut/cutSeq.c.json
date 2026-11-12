@@ -1,0 +1,131 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c",
+  "SHA256": "13cdf452f521e30ed4941a7e72c5344ac2a7260293419041c791856c2793a2f1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cut_NodeReadCutsTemp(p, CutSetNum) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 5046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cut_NodeReadCutsNew(p, Node) == nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_NodeShiftCutLeaves",
+      "Start": 1309,
+      "End": 1716,
+      "BodyStart": 1382,
+      "Original": "static inline void Cut_NodeShiftCutLeaves( Cut_Cut_t * pList, int nLat )\n{\n    Cut_Cut_t * pTemp;\n    int i;\n    // shift the cuts by as many latches\n    Cut_ListForEachCut( pList, pTemp )\n    {\n        pTemp-\u003euSign = 0;\n        for ( i = 0; i \u003c (int)pTemp-\u003enLeaves; i++ )\n        {\n            pTemp-\u003epLeaves[i] += nLat;\n            pTemp-\u003euSign      |= Cut_NodeSign( pTemp-\u003epLeaves[i] );\n        }\n    }\n}",
+      "Draft": "func Cut_NodeShiftCutLeaves(pList *Cut_Cut_t, nLat int32) {\n    var pTemp *Cut_Cut_t;\n    var i int32;\n    // shift the cuts by as many latches\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        pTemp.uSign = 0;\n        for  i = 0; i \u003c int32(pTemp.nLeaves); i++  {\n            pTemp.pLeaves[i] += nLat;\n            pTemp.uSign      |= Cut_NodeSign( pTemp.pLeaves[i] );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cut_NodeComputeCutsSeq",
+      "Start": 2006,
+      "End": 5150,
+      "BodyStart": 2157,
+      "Original": "void Cut_NodeComputeCutsSeq( Cut_Man_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1, int nLat0, int nLat1, int fTriv, int CutSetNum )\n{\n    Cut_List_t Super, * pSuper = \u0026Super;\n    Cut_Cut_t * pListNew;\n    abctime clk;\n    \n    // get the number of cuts at the node\n    p-\u003enNodeCuts = Cut_CutCountList( Cut_NodeReadCutsOld(p, Node) );\n    if ( p-\u003enNodeCuts \u003e= p-\u003epParams-\u003enKeepMax )\n        return;\n\n    // count only the first visit\n    if ( p-\u003enNodeCuts == 0 )\n        p-\u003enNodes++;\n\n    // store the fanin lists\n    p-\u003epStore0[0] = Cut_NodeReadCutsOld( p, Node0 );\n    p-\u003epStore0[1] = Cut_NodeReadCutsNew( p, Node0 );\n    p-\u003epStore1[0] = Cut_NodeReadCutsOld( p, Node1 );\n    p-\u003epStore1[1] = Cut_NodeReadCutsNew( p, Node1 );\n\n    // duplicate the cut lists if fanin nodes are non-standard\n    if ( Node == Node0 || Node == Node1 || Node0 == Node1 )\n    {\n        p-\u003epStore0[0] = Cut_CutDupList( p, p-\u003epStore0[0] );\n        p-\u003epStore0[1] = Cut_CutDupList( p, p-\u003epStore0[1] );\n        p-\u003epStore1[0] = Cut_CutDupList( p, p-\u003epStore1[0] );\n        p-\u003epStore1[1] = Cut_CutDupList( p, p-\u003epStore1[1] );\n    }\n\n    // shift the cuts by as many latches and recompute signatures\n    if ( nLat0 ) Cut_NodeShiftCutLeaves( p-\u003epStore0[0], nLat0 );\n    if ( nLat0 ) Cut_NodeShiftCutLeaves( p-\u003epStore0[1], nLat0 );\n    if ( nLat1 ) Cut_NodeShiftCutLeaves( p-\u003epStore1[0], nLat1 );\n    if ( nLat1 ) Cut_NodeShiftCutLeaves( p-\u003epStore1[1], nLat1 );\n\n    // store the original lists for comparison\n    p-\u003epCompareOld = Cut_NodeReadCutsOld( p, Node );\n    p-\u003epCompareNew = Cut_NodeReadCutsNew( p, Node );\n\n    // merge the old and the new\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p-\u003epStore0[0], p-\u003epStore1[1], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p-\u003epStore0[1], p-\u003epStore1[0], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p-\u003epStore0[1], p-\u003epStore1[1], fTriv, 0 );\n    pListNew = Cut_ListFinish( pSuper );\np-\u003etimeMerge += Abc_Clock() - clk;\n\n    // shift the cuts by as many latches and recompute signatures\n    if ( Node == Node0 || Node == Node1 || Node0 == Node1 )\n    {\n        Cut_CutRecycleList( p, p-\u003epStore0[0] );\n        Cut_CutRecycleList( p, p-\u003epStore0[1] );\n        Cut_CutRecycleList( p, p-\u003epStore1[0] );\n        Cut_CutRecycleList( p, p-\u003epStore1[1] );\n    }\n    else\n    {\n        if ( nLat0 ) Cut_NodeShiftCutLeaves( p-\u003epStore0[0], -nLat0 );\n        if ( nLat0 ) Cut_NodeShiftCutLeaves( p-\u003epStore0[1], -nLat0 );\n        if ( nLat1 ) Cut_NodeShiftCutLeaves( p-\u003epStore1[0], -nLat1 );\n        if ( nLat1 ) Cut_NodeShiftCutLeaves( p-\u003epStore1[1], -nLat1 );\n    }\n\n    // set the lists at the node\n    if ( CutSetNum \u003e= 0 )\n    {\n        assert( Cut_NodeReadCutsTemp(p, CutSetNum) == NULL );\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pListNew );\n    }\n    else\n    {\n        assert( Cut_NodeReadCutsNew(p, Node) == NULL );\n        Cut_NodeWriteCutsNew( p, Node, pListNew );\n    }\n\n    // mark the node if we exceeded the number of cuts\n    if ( p-\u003enNodeCuts \u003e= p-\u003epParams-\u003enKeepMax )\n        p-\u003enCutsLimit++;\n}",
+      "Draft": "func Cut_NodeComputeCutsSeq(p *Cut_Man_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32, nLat0 int32, nLat1 int32, fTriv int32, CutSetNum int32) {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pListNew *Cut_Cut_t;\n    var clk abctime;\n    \n    // get the number of cuts at the node\n    p.nNodeCuts = Cut_CutCountList( Cut_NodeReadCutsOld(p, Node) );\n    if p.nNodeCuts \u003e= p.pParams.nKeepMax {\n        return; }\n\n    // count only the first visit\n    if p.nNodeCuts == 0 {\n        p.nNodes++; }\n\n    // store the fanin lists\n    p.pStore0[0] = Cut_NodeReadCutsOld( p, Node0 );\n    p.pStore0[1] = Cut_NodeReadCutsNew( p, Node0 );\n    p.pStore1[0] = Cut_NodeReadCutsOld( p, Node1 );\n    p.pStore1[1] = Cut_NodeReadCutsNew( p, Node1 );\n\n    // duplicate the cut lists if fanin nodes are non-standard\n    if Node == Node0 || Node == Node1 || Node0 == Node1 {\n        p.pStore0[0] = Cut_CutDupList( p, p.pStore0[0] );\n        p.pStore0[1] = Cut_CutDupList( p, p.pStore0[1] );\n        p.pStore1[0] = Cut_CutDupList( p, p.pStore1[0] );\n        p.pStore1[1] = Cut_CutDupList( p, p.pStore1[1] );\n    }\n\n    // shift the cuts by as many latches and recompute signatures\n    if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[0], nLat0 ); }\n    if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[1], nLat0 ); }\n    if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[0], nLat1 ); }\n    if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[1], nLat1 ); }\n\n    // store the original lists for comparison\n    p.pCompareOld = Cut_NodeReadCutsOld( p, Node );\n    p.pCompareNew = Cut_NodeReadCutsNew( p, Node );\n\n    // merge the old and the new\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[0], p.pStore1[1], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[1], p.pStore1[0], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[1], p.pStore1[1], fTriv, 0 );\n    pListNew = Cut_ListFinish( pSuper );\np.timeMerge += Abc_Clock() - clk;\n\n    // shift the cuts by as many latches and recompute signatures\n    if Node == Node0 || Node == Node1 || Node0 == Node1 {\n        Cut_CutRecycleList( p, p.pStore0[0] );\n        Cut_CutRecycleList( p, p.pStore0[1] );\n        Cut_CutRecycleList( p, p.pStore1[0] );\n        Cut_CutRecycleList( p, p.pStore1[1] );\n    \n    } else {\n        if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[0], -nLat0 ); }\n        if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[1], -nLat0 ); }\n        if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[0], -nLat1 ); }\n        if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[1], -nLat1 ); }\n    }\n\n    // set the lists at the node\n    if CutSetNum \u003e= 0 {\n        assert(Cut_NodeReadCutsTemp(p, CutSetNum) == nil, \"Cut_NodeReadCutsTemp(p, CutSetNum) == nil\");\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pListNew );\n    \n    } else {\n        assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n        Cut_NodeWriteCutsNew( p, Node, pListNew );\n    }\n\n    // mark the node if we exceeded the number of cuts\n    if p.nNodeCuts \u003e= p.pParams.nKeepMax {\n        p.nCutsLimit++; }\n}"
+    },
+    {
+      "Name": "Cut_NodeNewMergeWithOld",
+      "Start": 5424,
+      "End": 5986,
+      "BodyStart": 5480,
+      "Original": "void Cut_NodeNewMergeWithOld( Cut_Man_t * p, int Node )\n{\n    Cut_Cut_t * pListOld, * pListNew, * pList;\n    // get the new cuts\n    pListNew = Cut_NodeReadCutsNew( p, Node );\n    if ( pListNew == NULL )\n        return;\n    Cut_NodeWriteCutsNew( p, Node, NULL );\n    // get the old cuts\n    pListOld = Cut_NodeReadCutsOld( p, Node );\n    if ( pListOld == NULL )\n    {\n        Cut_NodeWriteCutsOld( p, Node, pListNew );\n        return;\n    }\n    // merge the lists\n    pList = Cut_CutMergeLists( pListOld, pListNew );\n    Cut_NodeWriteCutsOld( p, Node, pList );\n}",
+      "Draft": "func Cut_NodeNewMergeWithOld(p *Cut_Man_t, Node int32) {\n    var pListOld, pListNew, pList *Cut_Cut_t;\n    // get the new cuts\n    pListNew = Cut_NodeReadCutsNew( p, Node );\n    if pListNew == nil {\n        return; }\n    Cut_NodeWriteCutsNew( p, Node, nil );\n    // get the old cuts\n    pListOld = Cut_NodeReadCutsOld( p, Node );\n    if pListOld == nil {\n        Cut_NodeWriteCutsOld( p, Node, pListNew );\n        return;\n    }\n    // merge the lists\n    pList = Cut_CutMergeLists( pListOld, pListNew );\n    Cut_NodeWriteCutsOld( p, Node, pList );\n}"
+    },
+    {
+      "Name": "Cut_NodeTempTransferToNew",
+      "Start": 6310,
+      "End": 6577,
+      "BodyStart": 6382,
+      "Original": "int Cut_NodeTempTransferToNew( Cut_Man_t * p, int Node, int CutSetNum )\n{\n    Cut_Cut_t * pList;\n    pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n    Cut_NodeWriteCutsTemp( p, CutSetNum, NULL );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    return pList != NULL;\n}",
+      "Draft": "func Cut_NodeTempTransferToNew(p *Cut_Man_t, Node int32, CutSetNum int32) int32 {\n    var pList *Cut_Cut_t;\n    pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n    Cut_NodeWriteCutsTemp( p, CutSetNum, nil );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    return pList != nil;\n}"
+    },
+    {
+      "Name": "Cut_NodeOldTransferToNew",
+      "Start": 6855,
+      "End": 7103,
+      "BodyStart": 6912,
+      "Original": "void Cut_NodeOldTransferToNew( Cut_Man_t * p, int Node )\n{\n    Cut_Cut_t * pList;\n    pList = Cut_NodeReadCutsOld( p, Node );\n    Cut_NodeWriteCutsOld( p, Node, NULL );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n//    Cut_CutListVerify( pList );\n}",
+      "Draft": "func Cut_NodeOldTransferToNew(p *Cut_Man_t, Node int32) {\n    var pList *Cut_Cut_t;\n    pList = Cut_NodeReadCutsOld( p, Node );\n    Cut_NodeWriteCutsOld( p, Node, nil );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n//    Cut_CutListVerify( pList );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::Cut_NodeShiftCutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeShiftCutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1309,
+      "End": 1716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::Cut_NodeComputeCutsSeq",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeComputeCutsSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2006,
+      "End": 5150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::Cut_NodeNewMergeWithOld",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeNewMergeWithOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5424,
+      "End": 5986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::Cut_NodeTempTransferToNew",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeTempTransferToNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6310,
+      "End": 6577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::Cut_NodeOldTransferToNew",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeOldTransferToNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6855,
+      "End": 7103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutSeq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7350
+    }
+  ],
+  "Draft": "package cut\n\n/**CFile****************************************************************\n\n  FileName    [cutSeq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Sequential cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutSeq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Shifts all cut leaves of the node by the given number of latches.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeShiftCutLeaves(pList *Cut_Cut_t, nLat int32) {\n    var pTemp *Cut_Cut_t;\n    var i int32;\n    // shift the cuts by as many latches\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        pTemp.uSign = 0;\n        for  i = 0; i \u003c int32(pTemp.nLeaves); i++  {\n            pTemp.pLeaves[i] += nLat;\n            pTemp.uSign      |= Cut_NodeSign( pTemp.pLeaves[i] );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes sequential cuts for the node from its fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeComputeCutsSeq(p *Cut_Man_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32, nLat0 int32, nLat1 int32, fTriv int32, CutSetNum int32) {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pListNew *Cut_Cut_t;\n    var clk abctime;\n    \n    // get the number of cuts at the node\n    p.nNodeCuts = Cut_CutCountList( Cut_NodeReadCutsOld(p, Node) );\n    if p.nNodeCuts \u003e= p.pParams.nKeepMax {\n        return; }\n\n    // count only the first visit\n    if p.nNodeCuts == 0 {\n        p.nNodes++; }\n\n    // store the fanin lists\n    p.pStore0[0] = Cut_NodeReadCutsOld( p, Node0 );\n    p.pStore0[1] = Cut_NodeReadCutsNew( p, Node0 );\n    p.pStore1[0] = Cut_NodeReadCutsOld( p, Node1 );\n    p.pStore1[1] = Cut_NodeReadCutsNew( p, Node1 );\n\n    // duplicate the cut lists if fanin nodes are non-standard\n    if Node == Node0 || Node == Node1 || Node0 == Node1 {\n        p.pStore0[0] = Cut_CutDupList( p, p.pStore0[0] );\n        p.pStore0[1] = Cut_CutDupList( p, p.pStore0[1] );\n        p.pStore1[0] = Cut_CutDupList( p, p.pStore1[0] );\n        p.pStore1[1] = Cut_CutDupList( p, p.pStore1[1] );\n    }\n\n    // shift the cuts by as many latches and recompute signatures\n    if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[0], nLat0 ); }\n    if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[1], nLat0 ); }\n    if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[0], nLat1 ); }\n    if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[1], nLat1 ); }\n\n    // store the original lists for comparison\n    p.pCompareOld = Cut_NodeReadCutsOld( p, Node );\n    p.pCompareNew = Cut_NodeReadCutsNew( p, Node );\n\n    // merge the old and the new\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[0], p.pStore1[1], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[1], p.pStore1[0], 0, 0 );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, p.pStore0[1], p.pStore1[1], fTriv, 0 );\n    pListNew = Cut_ListFinish( pSuper );\np.timeMerge += Abc_Clock() - clk;\n\n    // shift the cuts by as many latches and recompute signatures\n    if Node == Node0 || Node == Node1 || Node0 == Node1 {\n        Cut_CutRecycleList( p, p.pStore0[0] );\n        Cut_CutRecycleList( p, p.pStore0[1] );\n        Cut_CutRecycleList( p, p.pStore1[0] );\n        Cut_CutRecycleList( p, p.pStore1[1] );\n    \n    } else {\n        if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[0], -nLat0 ); }\n        if nLat0 != 0 { Cut_NodeShiftCutLeaves( p.pStore0[1], -nLat0 ); }\n        if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[0], -nLat1 ); }\n        if nLat1 != 0 { Cut_NodeShiftCutLeaves( p.pStore1[1], -nLat1 ); }\n    }\n\n    // set the lists at the node\n    if CutSetNum \u003e= 0 {\n        assert(Cut_NodeReadCutsTemp(p, CutSetNum) == nil, \"Cut_NodeReadCutsTemp(p, CutSetNum) == nil\");\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pListNew );\n    \n    } else {\n        assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n        Cut_NodeWriteCutsNew( p, Node, pListNew );\n    }\n\n    // mark the node if we exceeded the number of cuts\n    if p.nNodeCuts \u003e= p.pParams.nKeepMax {\n        p.nCutsLimit++; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges the new cuts with the old cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeNewMergeWithOld(p *Cut_Man_t, Node int32) {\n    var pListOld, pListNew, pList *Cut_Cut_t;\n    // get the new cuts\n    pListNew = Cut_NodeReadCutsNew( p, Node );\n    if pListNew == nil {\n        return; }\n    Cut_NodeWriteCutsNew( p, Node, nil );\n    // get the old cuts\n    pListOld = Cut_NodeReadCutsOld( p, Node );\n    if pListOld == nil {\n        Cut_NodeWriteCutsOld( p, Node, pListNew );\n        return;\n    }\n    // merge the lists\n    pList = Cut_CutMergeLists( pListOld, pListNew );\n    Cut_NodeWriteCutsOld( p, Node, pList );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the temporary cuts to be the new cuts.]\n\n  Description [Returns 1 if something was transferred.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeTempTransferToNew(p *Cut_Man_t, Node int32, CutSetNum int32) int32 {\n    var pList *Cut_Cut_t;\n    pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n    Cut_NodeWriteCutsTemp( p, CutSetNum, nil );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    return pList != nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the old cuts to be the new cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeOldTransferToNew(p *Cut_Man_t, Node int32) {\n    var pList *Cut_Cut_t;\n    pList = Cut_NodeReadCutsOld( p, Node );\n    Cut_NodeWriteCutsOld( p, Node, nil );\n    Cut_NodeWriteCutsNew( p, Node, pList );\n//    Cut_CutListVerify( pList );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

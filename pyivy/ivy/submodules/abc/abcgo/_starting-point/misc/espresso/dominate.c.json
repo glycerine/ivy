@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c",
+  "SHA256": "3a0a0f7bceae940ac1a37ca218e425e2e44665e7ed3bfbe64455114a67c16372",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 535,
+      "End": 535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::933",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 657,
+      "End": 657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::1335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 941,
+      "End": 941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::2288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1734,
+      "End": 1734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::2514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1856,
+      "End": 1856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::pointer-cast::2892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2116,
+      "End": 2116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/dominate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2575
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"mincov_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\nint \nsm_row_dominance(A)\nvar A *sm_matrix; \n{\n    register sm_row *prow, *prow1;\n    register sm_col *pcol, *least_col;\n    register sm_element *p, *pnext;\n    int rowcnt;\n\n    rowcnt = A.nrows;\n\n    /* Check each row against all other rows */\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n\n    /* Among all columns with a 1 in this row, choose smallest */\n    // inlining of macro sm_get_col\n    least_col = (((prow.first_col.col_num) \u003e= 0 \u0026\u0026 (prow.first_col.col_num) \u003c (A).cols_size) ?     (A).cols[prow.first_col.col_num] : (sm_col *) 0);\n    for p = prow.first_col.next_col; p != 0; p = p.next_col {\n        // inlining of macro sm_get_col\n        pcol = (((p.col_num) \u003e= 0 \u0026\u0026 (p.col_num) \u003c (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);\n        if pcol.length \u003c least_col.length {\n        least_col = pcol;\n        }\n    }\n\n    /* Only check for containment against rows in this column */\n    for p = least_col.first_row; p != 0; p = pnext {\n        pnext = p.next_row;\n\n        // inlining of macro sm_get_row\n        prow1 = (((p.row_num) \u003e= 0 \u0026\u0026 (p.row_num) \u003c (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);\n        if (prow1.length \u003e prow.length) ||\n                  (prow1.length == prow.length \u0026\u0026 \n                  prow1.row_num \u003e prow.row_num) {\n        if sm_row_contains(prow, prow1) {\n            sm_delrow(A, prow1.row_num);\n        }\n        }\n    }\n    }\n\n    return rowcnt - A.nrows;\n}\n\f\nint \nsm_col_dominance(A, weight)\nvar A *sm_matrix;\nvar weight *int32;\n{\n    register sm_row *prow;\n    register sm_col *pcol, *pcol1;\n    register sm_element *p;\n    sm_row *least_row;\n    sm_col *next_col;\n    int colcnt;\n\n    colcnt = A.ncols;\n\n    /* Check each column against all other columns */\n    for pcol = A.first_col; pcol != 0; pcol = next_col {\n    next_col = pcol.next_col;\n\n    /* Check all rows to find the one with fewest elements */\n    // inlining of macro sm_get_row\n    least_row = (((pcol.first_row.row_num) \u003e= 0 \u0026\u0026 (pcol.first_row.row_num) \u003c (A).rows_size) ?     (A).rows[pcol.first_row.row_num] : (sm_row *) 0);\n    for p = pcol.first_row.next_row; p != 0; p = p.next_row {\n        // inlining of macro sm_get_row\n        prow = (((p.row_num) \u003e= 0 \u0026\u0026 (p.row_num) \u003c (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);\n        if prow.length \u003c least_row.length {\n        least_row = prow;\n        }\n    }\n\n    /* Only check for containment against columns in this row */\n    for p = least_row.first_col; p != 0; p = p.next_col {\n        // inlining of macro sm_get_col\n        pcol1 = (((p.col_num) \u003e= 0 \u0026\u0026 (p.col_num) \u003c (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);\n        if (weight != 0 \u0026\u0026 weight[pcol1.col_num] \u003e weight[pcol.col_num])\n        continue;\n        if (pcol1.length \u003e pcol.length) ||\n           (pcol1.length == pcol.length \u0026\u0026 \n                   pcol1.col_num \u003e pcol.col_num) {\n        if sm_col_contains(pcol, pcol1) {\n            sm_delcol(A, pcol.col_num);\n            break;\n        }\n        }\n    }\n    }\n\n    return colcnt - A.ncols;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

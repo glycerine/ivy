@@ -1,0 +1,81 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/equiv.c",
+  "SHA256": "2b978ec399bafcb5a91b9c425e0d74d4778edad81bde72682f9e48941a8ba7cd",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 43,
+        "Column": 16,
+        "ByteOffset": 879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"# Outputs %d and %d (%s and %s) are equivalent\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 47,
+        "Column": 16,
+        "ByteOffset": 1079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"# Outputs %d and NOT %d (%s and %s) are equivalent\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 51,
+        "Column": 16,
+        "ByteOffset": 1283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"# Outputs NOT %d and %d (%s and %s) are equivalent\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 16,
+        "ByteOffset": 1487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"# Outputs NOT %d and NOT %d (%s and %s) are equivalent\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 12,
+        "ByteOffset": 1692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"# No outputs are equivalent\\n\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/equiv.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2344
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\nvoid find_equiv_outputs(PLA)\nvar PLA pPLA;\n{\n    int i, j, ipart, jpart, some_equiv;\n    pcover *R, *F;\n\n    some_equiv = FALSE;\n\n    makeup_labels(PLA);\n\n    F = ALLOC(pcover, cube.part_size[cube.output]);\n    R = ALLOC(pcover, cube.part_size[cube.output]);\n\n    for i = 0; i \u003c cube.part_size[cube.output]; i++ {\n    ipart = cube.first_part[cube.output] + i;\n    R[i] = cof_output(PLA.R, ipart);\n    F[i] = complement(cube1list(R[i]));\n    }\n    \n    for i = 0; i \u003c cube.part_size[cube.output]-1; i++ {\n    for j = i+1; j \u003c cube.part_size[cube.output]; j++ {\n        ipart = cube.first_part[cube.output] + i;\n        jpart = cube.first_part[cube.output] + j;\n\n        if check_equiv(F[i], F[j]) {\n        (void) fmt.Printf(\"# Outputs %d and %d (%s and %s) are equivalent\\n\", i, j, PLA.label[ipart], PLA.label[jpart]);\n        some_equiv = TRUE;\n        } else if check_equiv(F[i], R[j]) {\n        (void) fmt.Printf(\"# Outputs %d and NOT %d (%s and %s) are equivalent\\n\", i, j, PLA.label[ipart], PLA.label[jpart]);\n        some_equiv = TRUE;\n        } else if check_equiv(R[i], F[j]) {\n        (void) fmt.Printf(\"# Outputs NOT %d and %d (%s and %s) are equivalent\\n\", i, j, PLA.label[ipart], PLA.label[jpart]);\n        some_equiv = TRUE;\n        } else if check_equiv(R[i], R[j]) {\n        (void) fmt.Printf(\"# Outputs NOT %d and NOT %d (%s and %s) are equivalent\\n\", i, j, PLA.label[ipart], PLA.label[jpart]);\n        some_equiv = TRUE;\n        }\n    }\n    }\n\n    if ! some_equiv {\n    (void) fmt.Printf(\"# No outputs are equivalent\\n\");\n    }\n\n    for i = 0; i \u003c cube.part_size[cube.output]; i++ {\n    // inlining of macro free_cover\n    sf_free(F[i]);\n    // inlining of macro free_cover\n    sf_free(R[i]);\n    }\n    FREE(F);\n    FREE(R);\n}\n\n\n\nint check_equiv(f1, f2)\npcover f1, f2;\n{\n    register pcube *f1list, *f2list;\n    register pcube p, last;\n\n    f1list = cube1list(f1);\n    // inlining of macro foreach_set\n    for p=f2.data,last=p+f2.count*f2.wsize;p\u003clast;p+=f2.wsize {\n    if ! cube_is_covered(f1list, p) {\n        return FALSE;\n    }\n    }\n    // inlining of macro free_cubelist\n    FREE(f1list[0]); FREE(f1list);;\n\n    f2list = cube1list(f2);\n    // inlining of macro foreach_set\n    for p=f1.data,last=p+f1.count*f1.wsize;p\u003clast;p+=f1.wsize {\n    if ! cube_is_covered(f2list, p) {\n        return FALSE;\n    }\n    }\n    // inlining of macro free_cubelist\n    FREE(f2list[0]); FREE(f2list);;\n\n    return TRUE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

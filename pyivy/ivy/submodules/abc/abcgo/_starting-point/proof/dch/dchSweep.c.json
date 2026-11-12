@@ -1,0 +1,198 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c",
+  "SHA256": "fc56dfc9a8cad698e00cd837b0ce22d9fe3399c76fe402e3922db27a8e3aebb7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 33,
+        "Column": 53,
+        "ByteOffset": 891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Dch_ObjChild0Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 38,
+        "Column": 53,
+        "ByteOffset": 1114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Dch_ObjChild1Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_Regular(pObjFraig) != Aig_ManConst1(p.pAigFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjRepr( p.pAigTotal, pObj ) != pObjRepr );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 126,
+        "Column": 36,
+        "ByteOffset": 4287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p.pAigTotal) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 74,
+        "ByteOffset": 5213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pAigTotal.pReprs) ? (free((char *) (p.pAigTotal.pReprs)), (p.pAigTotal.pReprs) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dch_ObjChild0Fra",
+      "Start": 820,
+      "End": 1027,
+      "BodyStart": 883,
+      "Original": "static inline Aig_Obj_t * Dch_ObjChild0Fra( Aig_Obj_t * pObj ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Dch_ObjChild0Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Dch_ObjChild1Fra",
+      "Start": 1028,
+      "End": 1235,
+      "BodyStart": 1091,
+      "Original": "static inline Aig_Obj_t * Dch_ObjChild1Fra( Aig_Obj_t * pObj ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Dch_ObjChild1Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Dch_ManSweepNode",
+      "Start": 1747,
+      "End": 3307,
+      "BodyStart": 1804,
+      "Original": "void Dch_ManSweepNode( Dch_Man_t * p, Aig_Obj_t * pObj )\n{ \n    Aig_Obj_t * pObjRepr, * pObjFraig, * pObjFraig2, * pObjReprFraig;\n    int RetValue;\n    // get representative of this class\n    pObjRepr = Aig_ObjRepr( p-\u003epAigTotal, pObj );\n    if ( pObjRepr == NULL )\n        return;\n    // get the fraiged node\n    pObjFraig = Dch_ObjFraig( pObj );\n    if ( pObjFraig == NULL )\n        return;\n    // get the fraiged representative\n    pObjReprFraig = Dch_ObjFraig( pObjRepr );\n    if ( pObjReprFraig == NULL )\n        return;\n    // if the fraiged nodes are the same, return\n    if ( Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) )\n    {\n        // remember the proved equivalence\n        p-\u003epReprsProved[ pObj-\u003eId ] = pObjRepr;\n        return;\n    }\n    assert( Aig_Regular(pObjFraig) != Aig_ManConst1(p-\u003epAigFraig) );\n    RetValue = Dch_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if ( RetValue == -1 ) // timed out\n    {\n        Dch_ObjSetFraig( pObj, NULL );\n        return;\n    }\n    if ( RetValue == 1 )  // proved equivalent\n    {\n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj-\u003efPhase ^ pObjRepr-\u003efPhase );\n        Dch_ObjSetFraig( pObj, pObjFraig2 );\n        // remember the proved equivalence\n        p-\u003epReprsProved[ pObj-\u003eId ] = pObjRepr;\n        return;\n    }\n    // disproved the equivalence\n    if ( p-\u003epPars-\u003efSimulateTfo )\n        Dch_ManResimulateCex( p, pObj, pObjRepr );\n    else\n        Dch_ManResimulateCex2( p, pObj, pObjRepr );\n    assert( Aig_ObjRepr( p-\u003epAigTotal, pObj ) != pObjRepr );\n}",
+      "Draft": "func Dch_ManSweepNode(p *Dch_Man_t, pObj *Aig_Obj_t) { \n    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;\n    var RetValue int32;\n    // get representative of this class\n    pObjRepr = Aig_ObjRepr( p.pAigTotal, pObj );\n    if pObjRepr == nil {\n        return; }\n    // get the fraiged node\n    pObjFraig = Dch_ObjFraig( pObj );\n    if pObjFraig == nil {\n        return; }\n    // get the fraiged representative\n    pObjReprFraig = Dch_ObjFraig( pObjRepr );\n    if pObjReprFraig == nil {\n        return; }\n    // if the fraiged nodes are the same, return\n    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {\n        // remember the proved equivalence\n        p.pReprsProved[ pObj.Id ] = pObjRepr;\n        return;\n    }\n    assert(Aig_Regular(pObjFraig) != Aig_ManConst1(p.pAigFraig), \"Aig_Regular(pObjFraig) != Aig_ManConst1(p.pAigFraig)\");\n    RetValue = Dch_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if RetValue == -1 { // timed out\n    \n        Dch_ObjSetFraig( pObj, nil );\n        return;\n    }\n    if RetValue == 1 {  // proved equivalent\n    \n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Dch_ObjSetFraig( pObj, pObjFraig2 );\n        // remember the proved equivalence\n        p.pReprsProved[ pObj.Id ] = pObjRepr;\n        return;\n    }\n    // disproved the equivalence\n    if p.pPars.fSimulateTfo {\n        Dch_ManResimulateCex( p, pObj, pObjRepr );\n    } else {\n        Dch_ManResimulateCex2( p, pObj, pObjRepr ); }\n    assert(Aig_ObjRepr( p.pAigTotal, pObj ) != pObjRepr, \"Aig_ObjRepr( p.pAigTotal, pObj ) != pObjRepr\");\n}"
+    },
+    {
+      "Name": "Dch_ManSweep",
+      "Start": 3584,
+      "End": 4863,
+      "BodyStart": 3619,
+      "Original": "void Dch_ManSweep( Dch_Man_t * p )\n{\n    Bar_Progress_t * pProgress = NULL;\n    Aig_Obj_t * pObj, * pObjNew;\n    int i;\n    // map constants and PIs\n    p-\u003epAigFraig = Aig_ManStart( Aig_ManObjNumMax(p-\u003epAigTotal) );\n    Aig_ManCleanData( p-\u003epAigTotal );\n    Aig_ManConst1(p-\u003epAigTotal)-\u003epData = Aig_ManConst1(p-\u003epAigFraig);\n    Aig_ManForEachCi( p-\u003epAigTotal, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( p-\u003epAigFraig );\n    // sweep internal nodes\n    pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(p-\u003epAigTotal) );\n    Aig_ManForEachNode( p-\u003epAigTotal, pObj, i )\n    {\n        Bar_ProgressUpdate( pProgress, i, NULL );\n        if ( Dch_ObjFraig(Aig_ObjFanin0(pObj)) == NULL || \n             Dch_ObjFraig(Aig_ObjFanin1(pObj)) == NULL )\n            continue;\n        pObjNew = Aig_And( p-\u003epAigFraig, Dch_ObjChild0Fra(pObj), Dch_ObjChild1Fra(pObj) );\n        if ( pObjNew == NULL )\n            continue;\n        Dch_ObjSetFraig( pObj, pObjNew );\n        Dch_ManSweepNode( p, pObj );\n    }\n    Bar_ProgressStop( pProgress );\n    // update the representatives of the nodes (makes classes invalid)\n    ABC_FREE( p-\u003epAigTotal-\u003epReprs );\n    p-\u003epAigTotal-\u003epReprs = p-\u003epReprsProved;\n    p-\u003epReprsProved = NULL;\n    // clean the mark\n    Aig_ManCleanMarkB( p-\u003epAigTotal );\n}",
+      "Draft": "func Dch_ManSweep(p *Dch_Man_t) {\n    var pProgress *Bar_Progress_t  = nil;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i int32;\n    // map constants and PIs\n    p.pAigFraig = Aig_ManStart( Aig_ManObjNumMax(p.pAigTotal) );\n    Aig_ManCleanData( p.pAigTotal );\n    Aig_ManConst1(p.pAigTotal).pData = Aig_ManConst1(p.pAigFraig);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAigTotal.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigTotal.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( p.pAigFraig );\n    }\n    // sweep internal nodes\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAigTotal) );\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAigTotal.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigTotal.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Bar_ProgressUpdate( pProgress, i, nil );\n        if Dch_ObjFraig(Aig_ObjFanin0(pObj)) == nil || \n             Dch_ObjFraig(Aig_ObjFanin1(pObj)) == nil {\n            continue; }\n        pObjNew = Aig_And( p.pAigFraig, Dch_ObjChild0Fra(pObj), Dch_ObjChild1Fra(pObj) );\n        if pObjNew == nil {\n            continue; }\n        Dch_ObjSetFraig( pObj, pObjNew );\n        Dch_ManSweepNode( p, pObj );\n    }\n    }\n    Bar_ProgressStop( pProgress );\n    // update the representatives of the nodes (makes classes invalid)\n    // inlining of macro ABC_FREE\n    ((p.pAigTotal.pReprs) ? (free((char *) (p.pAigTotal.pReprs)), (p.pAigTotal.pReprs) = 0) : 0);\n    p.pAigTotal.pReprs = p.pReprsProved;\n    p.pReprsProved = nil;\n    // clean the mark\n    Aig_ManCleanMarkB( p.pAigTotal );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::pointer-cast::4084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3912,
+      "End": 3912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::pointer-cast::4484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4118,
+      "End": 4118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::pointer-cast::5209",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4695,
+      "End": 4695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::Dch_ObjChild0Fra",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjChild0Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 820,
+      "End": 1027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::Dch_ObjChild1Fra",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjChild1Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1028,
+      "End": 1235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::Dch_ManSweepNode",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManSweepNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1747,
+      "End": 3307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::ternary::Dch_ManSweep",
+      "Category": "ternary-review",
+      "Symbol": "Dch_ManSweep",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3584,
+      "End": 4863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::Dch_ManSweep",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3584,
+      "End": 4863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSweep.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5110
+    }
+  ],
+  "Draft": "package dch\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [dchSweep.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [One round of SAT sweeping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: dchSweep.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dchInt.h\"\n//#include \"misc/bar/bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Dch_ObjChild0Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Dch_ObjChild1Fra(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Dch_ObjFraig(Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for one node.]\n\n  Description [Returns the fraiged node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManSweepNode(p *Dch_Man_t, pObj *Aig_Obj_t) { \n    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;\n    var RetValue int32;\n    // get representative of this class\n    pObjRepr = Aig_ObjRepr( p.pAigTotal, pObj );\n    if pObjRepr == nil {\n        return; }\n    // get the fraiged node\n    pObjFraig = Dch_ObjFraig( pObj );\n    if pObjFraig == nil {\n        return; }\n    // get the fraiged representative\n    pObjReprFraig = Dch_ObjFraig( pObjRepr );\n    if pObjReprFraig == nil {\n        return; }\n    // if the fraiged nodes are the same, return\n    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {\n        // remember the proved equivalence\n        p.pReprsProved[ pObj.Id ] = pObjRepr;\n        return;\n    }\n    assert(Aig_Regular(pObjFraig) != Aig_ManConst1(p.pAigFraig), \"Aig_Regular(pObjFraig) != Aig_ManConst1(p.pAigFraig)\");\n    RetValue = Dch_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );\n    if RetValue == -1 { // timed out\n    \n        Dch_ObjSetFraig( pObj, nil );\n        return;\n    }\n    if RetValue == 1 {  // proved equivalent\n    \n        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );\n        Dch_ObjSetFraig( pObj, pObjFraig2 );\n        // remember the proved equivalence\n        p.pReprsProved[ pObj.Id ] = pObjRepr;\n        return;\n    }\n    // disproved the equivalence\n    if p.pPars.fSimulateTfo {\n        Dch_ManResimulateCex( p, pObj, pObjRepr );\n    } else {\n        Dch_ManResimulateCex2( p, pObj, pObjRepr ); }\n    assert(Aig_ObjRepr( p.pAigTotal, pObj ) != pObjRepr, \"Aig_ObjRepr( p.pAigTotal, pObj ) != pObjRepr\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for the internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManSweep(p *Dch_Man_t) {\n    var pProgress *Bar_Progress_t  = nil;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i int32;\n    // map constants and PIs\n    p.pAigFraig = Aig_ManStart( Aig_ManObjNumMax(p.pAigTotal) );\n    Aig_ManCleanData( p.pAigTotal );\n    Aig_ManConst1(p.pAigTotal).pData = Aig_ManConst1(p.pAigFraig);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAigTotal.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigTotal.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( p.pAigFraig );\n    }\n    // sweep internal nodes\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAigTotal) );\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAigTotal.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAigTotal.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Bar_ProgressUpdate( pProgress, i, nil );\n        if Dch_ObjFraig(Aig_ObjFanin0(pObj)) == nil || \n             Dch_ObjFraig(Aig_ObjFanin1(pObj)) == nil {\n            continue; }\n        pObjNew = Aig_And( p.pAigFraig, Dch_ObjChild0Fra(pObj), Dch_ObjChild1Fra(pObj) );\n        if pObjNew == nil {\n            continue; }\n        Dch_ObjSetFraig( pObj, pObjNew );\n        Dch_ManSweepNode( p, pObj );\n    }\n    }\n    Bar_ProgressStop( pProgress );\n    // update the representatives of the nodes (makes classes invalid)\n    // inlining of macro ABC_FREE\n    ((p.pAigTotal.pReprs) ? (free((char *) (p.pAigTotal.pReprs)), (p.pAigTotal.pReprs) = 0) : 0);\n    p.pAigTotal.pReprs = p.pReprsProved;\n    p.pReprsProved = nil;\n    // clean the mark\n    Aig_ManCleanMarkB( p.pAigTotal );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

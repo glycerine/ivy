@@ -1,0 +1,1878 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c",
+  "SHA256": "d5c89f3d497c58ccec1a29168941659b0ecea0240ba4d8484b00abbf5d3fbdd5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 38,
+        "Column": 5,
+        "ByteOffset": 1132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Llb_ObjGetPath(pObj) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vSupps) == Vec_PtrSize(vResult) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 15,
+        "ByteOffset": 3667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    piFirst = ABC_ALLOC( int, Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 15,
+        "ByteOffset": 3717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    piLast  = ABC_ALLOC( int, Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 4993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( piFirst );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( piLast );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 9,
+        "ByteOffset": 6154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d=%d \", i, Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 6573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj = %4d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 13,
+        "ByteOffset": 6648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"pi  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 6719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"lo  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 13,
+        "ByteOffset": 6789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"and \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 13,
+        "ByteOffset": 6881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", Vec_IntEntry(vMap, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 6928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 9248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 10570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 9,
+        "ByteOffset": 12140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 5,
+        "ByteOffset": 13923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Leaf: %3d=%3d+%3d+%3d  \",  Vec_PtrSize(vLower), Pis, Ffs, And );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 473,
+        "Column": 5,
+        "ByteOffset": 14121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Root: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vUpper), Pis, Ffs, And );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 14364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Supp: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vSupp), Pis, Ffs, And );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 14611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Range: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vRange), Pis, Ffs, And );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 14690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"S =%3d. V =%3d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 543,
+        "Column": 5,
+        "ByteOffset": 16266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 17562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 5,
+        "ByteOffset": 18472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 699,
+        "Column": 5,
+        "ByteOffset": 21431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 755,
+        "Column": 9,
+        "ByteOffset": 23036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 776,
+        "Column": 9,
+        "ByteOffset": 23753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA \u0026\u0026 pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 779,
+        "Column": 13,
+        "ByteOffset": 23919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 783,
+        "Column": 13,
+        "ByteOffset": 24104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 789,
+        "Column": 5,
+        "ByteOffset": 24237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vMinCut) == Flow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 792,
+        "Column": 9,
+        "ByteOffset": 24350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 820,
+        "Column": 9,
+        "ByteOffset": 25111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 844,
+        "Column": 9,
+        "ByteOffset": 25905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 847,
+        "Column": 13,
+        "ByteOffset": 26056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 851,
+        "Column": 13,
+        "ByteOffset": 26241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 856,
+        "Column": 5,
+        "ByteOffset": 26373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vMinCut) == Flow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 862,
+        "Column": 9,
+        "ByteOffset": 26610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 885,
+        "Column": 5,
+        "ByteOffset": 27116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 907,
+        "Column": 5,
+        "ByteOffset": 27687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 949,
+        "Column": 9,
+        "ByteOffset": 28790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkB == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 971,
+        "Column": 9,
+        "ByteOffset": 29318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 972,
+        "Column": 9,
+        "ByteOffset": 29357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkB == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 997,
+        "Column": 9,
+        "ByteOffset": 29938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1023,
+        "Column": 9,
+        "ByteOffset": 30680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA \u0026\u0026 !pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1067,
+        "Column": 5,
+        "ByteOffset": 31677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1128,
+        "Column": 5,
+        "ByteOffset": 33376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vol \u003e nVolMin );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1165,
+        "Column": 5,
+        "ByteOffset": 34732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBest \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1214,
+        "Column": 17,
+        "ByteOffset": 36340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Could not break the cut.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1216,
+        "Column": 17,
+        "ByteOffset": 36432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1226,
+        "Column": 13,
+        "ByteOffset": 36733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1240,
+        "Column": 9,
+        "ByteOffset": 37140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Finished computing %d partitions.  \", Vec_PtrSize(vResult) - 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1259,
+        "Column": 5,
+        "ByteOffset": 37628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Gia_ParLlb_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ObjSetPath",
+      "Start": 772,
+      "End": 895,
+      "BodyStart": 852,
+      "Original": "static inline int         Llb_ObjSetPath( Aig_Obj_t * pObj, Aig_Obj_t * pNext ) { pObj-\u003epData = (void *)pNext; return 1;  }",
+      "Draft": "func Llb_ObjSetPath(pObj *Aig_Obj_t, pNext *Aig_Obj_t) int32 { pObj.pData = (void *)pNext; return 1;  }"
+    },
+    {
+      "Name": "Llb_ObjGetPath",
+      "Start": 896,
+      "End": 1019,
+      "BodyStart": 976,
+      "Original": "static inline Aig_Obj_t * Llb_ObjGetPath( Aig_Obj_t * pObj )                    { return (Aig_Obj_t *)pObj-\u003epData;        }",
+      "Draft": "func Llb_ObjGetPath(pObj *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)pObj.pData;        }"
+    },
+    {
+      "Name": "Llb_ObjGetFanoutPath",
+      "Start": 1020,
+      "End": 1343,
+      "BodyStart": 1103,
+      "Original": "static inline Aig_Obj_t * Llb_ObjGetFanoutPath( Aig_Man_t * p, Aig_Obj_t * pObj ) \n{ \n    Aig_Obj_t * pFanout;\n    int i, iFanout = -1;\n    assert( Llb_ObjGetPath(pObj) ); \n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        if ( Llb_ObjGetPath(pFanout) == pObj )\n            return pFanout;\n    return NULL;\n}",
+      "Draft": "func Llb_ObjGetFanoutPath(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { \n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    assert((Llb_ObjGetPath(pObj) != nil), \"Llb_ObjGetPath(pObj)\"); \n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        if ( Llb_ObjGetPath(pFanout) == pObj )\n            return pFanout;\n    return nil;\n}"
+    },
+    {
+      "Name": "Llb_ManCutSupps",
+      "Start": 1942,
+      "End": 2478,
+      "BodyStart": 2008,
+      "Original": "Vec_Ptr_t * Llb_ManCutSupps( Aig_Man_t * p, Vec_Ptr_t * vResult )\n{\n    Vec_Ptr_t * vSupps, * vOne, * vLower, * vUpper;\n    int i;\n    vSupps = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vSupps, Vec_PtrAlloc(0) );\n    vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n    {\n        vOne  = Llb_ManCutSupp( p, vLower, vUpper );\n        Vec_PtrPush( vSupps, vOne );\n        vLower = vUpper;\n    }\n    assert( Vec_PtrSize(vSupps) == Vec_PtrSize(vResult) );\n    return vSupps;\n}",
+      "Draft": "func Llb_ManCutSupps(p *Aig_Man_t, vResult *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupps, vOne, vLower, vUpper *Vec_Ptr_t;\n    var i int32;\n    vSupps = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vSupps, Vec_PtrAlloc(0) );\n    vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n    {\n        vOne  = Llb_ManCutSupp( p, vLower, vUpper );\n        Vec_PtrPush( vSupps, vOne );\n        vLower = vUpper;\n    }\n    assert(Vec_PtrSize(vSupps) == Vec_PtrSize(vResult), \"Vec_PtrSize(vSupps) == Vec_PtrSize(vResult)\");\n    return vSupps;\n}"
+    },
+    {
+      "Name": "Llb_ManCutMap",
+      "Start": 2763,
+      "End": 6966,
+      "BodyStart": 2847,
+      "Original": "Vec_Ptr_t * Llb_ManCutMap( Aig_Man_t * p, Vec_Ptr_t * vResult, Vec_Ptr_t * vSupps )\n{\n    int fShowMatrix = 1;\n    Vec_Ptr_t * vMaps, * vOne;\n    Vec_Int_t * vMap, * vPrev, * vNext;\n    Aig_Obj_t * pObj;\n    int * piFirst, * piLast;\n    int i, k, CounterPlus, CounterMinus, Counter;\n\n    vMaps = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vResult, vOne, i )\n    {\n        vMap = Vec_IntStart( Aig_ManObjNumMax(p) );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if ( !Saig_ObjIsPi(p, pObj) )\n                Vec_IntWriteEntry( vMap, pObj-\u003eId, 1 );\n//            else\n//printf( \"*\" );\n//printf( \"%d \", pObj-\u003eId );\n        }\n        Vec_PtrPush( vMaps, vMap );\n//printf( \"\\n\" );\n    }\n    Vec_PtrPush( vMaps, Vec_IntStart( Aig_ManObjNumMax(p) ) );\n    assert( Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1 );\n\n    // collect the first and last PIs\n    piFirst = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    piLast  = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    Saig_ManForEachPi( p, pObj, i )\n        piFirst[i] = piLast[i] = -1;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSupps, vOne, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if ( !Saig_ObjIsPi(p, pObj) )\n                continue;\n            if ( piFirst[Aig_ObjCioId(pObj)] == -1 )\n                 piFirst[Aig_ObjCioId(pObj)] = i;\n            piLast[Aig_ObjCioId(pObj)] = i;\n        }\n    }\n    // PIs feeding into the flops should be extended to the last frame\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if ( !Saig_ObjIsPi(p, Aig_ObjFanin0(pObj)) )\n            continue;\n        piLast[Aig_ObjCioId(Aig_ObjFanin0(pObj))] = Vec_PtrSize(vMaps)-1;\n    }\n\n    // set the PI map\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        if ( piFirst[i] == -1 )\n            continue;\n        if ( piFirst[i] == piLast[i] )\n        {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, piFirst[i] );\n            Vec_IntWriteEntry( vMap, pObj-\u003eId, 2 );\n            continue;\n        }\n\n        // set support for all in between        \n        for ( k = piFirst[i]; k \u003c= piLast[i]; k++ )\n        {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, k );\n            Vec_IntWriteEntry( vMap, pObj-\u003eId, 1 );\n        }\n    }\n    ABC_FREE( piFirst );\n    ABC_FREE( piLast );\n\n\n    // find all that will appear here\n    Counter = Aig_ManRegNum(p);\n    printf( \"%d \", Counter );\n    Vec_PtrForEachEntryStart( Vec_Int_t *, vMaps, vMap, i, 1 )\n    {\n        vPrev = (Vec_Int_t *)Vec_PtrEntry( vMaps, i-1 );\n        vNext = (i == Vec_PtrSize(vMaps)-1)? NULL: (Vec_Int_t *)Vec_PtrEntry( vMaps, i+1 );\n\n        CounterPlus = CounterMinus = 0;\n        Aig_ManForEachObj( p, pObj, k )\n        {\n            if ( Saig_ObjIsPi(p, pObj) )\n            {\n                if ( Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 )\n                    CounterPlus++;\n                if ( Vec_IntEntry(vMap, k) == 1 \u0026\u0026 (vNext == NULL || Vec_IntEntry(vNext, k) == 0) )\n                    CounterMinus++;\n            }\n            else\n            {\n                if ( Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 )\n                    CounterPlus++;\n                if ( Vec_IntEntry(vPrev, k) == 1 \u0026\u0026 Vec_IntEntry(vMap, k) == 0 )\n                    CounterMinus++;\n            }\n        }\n        Counter = Counter + CounterPlus - CounterMinus;\n        printf( \"%d=%d \", i, Counter );\n    }\n    printf( \"\\n\" );\n\n    if ( !fShowMatrix )\n        return vMaps;\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            if ( Vec_IntEntry(vMap, i) )\n                break;\n        if ( k == Vec_PtrSize(vMaps) )\n            continue;\n        printf( \"Obj = %4d : \", i );\n        if ( Saig_ObjIsPi(p,pObj) )\n            printf( \"pi  \" );\n        else if ( Saig_ObjIsLo(p,pObj) )\n            printf( \"lo  \" );\n        else if ( Aig_ObjIsNode(pObj) )\n            printf( \"and \" );\n\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            printf( \"%d\", Vec_IntEntry(vMap, i) );\n        printf( \"\\n\" );\n    }\n    return vMaps;\n}",
+      "Draft": "func Llb_ManCutMap(p *Aig_Man_t, vResult *Vec_Ptr_t, vSupps *Vec_Ptr_t) *Vec_Ptr_t {\n    var fShowMatrix int32  = 1;\n    var vMaps, vOne *Vec_Ptr_t;\n    var vMap, vPrev, vNext *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var piFirst, piLast *int32;\n    var i, k, CounterPlus, CounterMinus, Counter int32;\n\n    vMaps = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vResult, vOne, i )\n    {\n        vMap = Vec_IntStart( Aig_ManObjNumMax(p) );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if !Saig_ObjIsPi(p, pObj) {\n                Vec_IntWriteEntry( vMap, pObj.Id, 1 ); }\n//            else\n//printf( \"*\" );\n//printf( \"%d \", pObj-\u003eId );\n        }\n        Vec_PtrPush( vMaps, vMap );\n//printf( \"\\n\" );\n    }\n    Vec_PtrPush( vMaps, Vec_IntStart( Aig_ManObjNumMax(p) ) );\n    assert(Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1, \"Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1\");\n\n    // collect the first and last PIs\n    piFirst = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    piLast  = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    Saig_ManForEachPi( p, pObj, i )\n        piFirst[i] = piLast[i] = -1;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSupps, vOne, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if !Saig_ObjIsPi(p, pObj) {\n                continue; }\n            if piFirst[Aig_ObjCioId(pObj)] == -1 {\n                 piFirst[Aig_ObjCioId(pObj)] = i; }\n            piLast[Aig_ObjCioId(pObj)] = i;\n        }\n    }\n    // PIs feeding into the flops should be extended to the last frame\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if !Saig_ObjIsPi(p, Aig_ObjFanin0(pObj)) {\n            continue; }\n        piLast[Aig_ObjCioId(Aig_ObjFanin0(pObj))] = Vec_PtrSize(vMaps)-1;\n    }\n\n    // set the PI map\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        if piFirst[i] == -1 {\n            continue; }\n        if piFirst[i] == piLast[i] {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, piFirst[i] );\n            Vec_IntWriteEntry( vMap, pObj.Id, 2 );\n            continue;\n        }\n\n        // set support for all in between        \n        for  k = piFirst[i]; k \u003c= piLast[i]; k++  {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, k );\n            Vec_IntWriteEntry( vMap, pObj.Id, 1 );\n        }\n    }\n    ABC_FREE( piFirst );\n    ABC_FREE( piLast );\n\n\n    // find all that will appear here\n    Counter = Aig_ManRegNum(p);\n    fmt.Printf(\"%d \", Counter);\n    Vec_PtrForEachEntryStart( Vec_Int_t *, vMaps, vMap, i, 1 )\n    {\n        vPrev = (Vec_Int_t *)Vec_PtrEntry( vMaps, i-1 );\n        if i == Vec_PtrSize(vMaps)-1 {\n            vNext = nil;\n        } else {\n            vNext = (Vec_Int_t *)Vec_PtrEntry( vMaps, i+1 );\n        }\n\n        CounterPlus = CounterMinus = 0;\n        Aig_ManForEachObj( p, pObj, k )\n        {\n            if Saig_ObjIsPi(p, pObj) {\n                if Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 {\n                    CounterPlus++; }\n                if Vec_IntEntry(vMap, k) == 1 \u0026\u0026 (vNext == nil || Vec_IntEntry(vNext, k) == 0) {\n                    CounterMinus++; }\n            \n            } else {\n                if Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 {\n                    CounterPlus++; }\n                if Vec_IntEntry(vPrev, k) == 1 \u0026\u0026 Vec_IntEntry(vMap, k) == 0 {\n                    CounterMinus++; }\n            }\n        }\n        Counter = Counter + CounterPlus - CounterMinus;\n        fmt.Printf(\"%d=%d \", i, Counter);\n    }\n    fmt.Printf(\"\\n\");\n\n    if !(fShowMatrix != 0) {\n        return vMaps; }\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            if ( Vec_IntEntry(vMap, i) )\n                break;\n        if k == Vec_PtrSize(vMaps) {\n            continue; }\n        fmt.Printf(\"Obj = %4d : \", i);\n        if Saig_ObjIsPi(p,pObj) {\n            fmt.Printf(\"pi  \");\n        } else if Saig_ObjIsLo(p,pObj) {\n            fmt.Printf(\"lo  \");\n        } else if Aig_ObjIsNode(pObj) {\n            fmt.Printf(\"and \"); }\n\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            fmt.Printf(\"%d\", Vec_IntEntry(vMap, i));\n        fmt.Printf(\"\\n\");\n    }\n    return vMaps;\n}"
+    },
+    {
+      "Name": "Llb_ManCutPiNum",
+      "Start": 7237,
+      "End": 7480,
+      "BodyStart": 7295,
+      "Original": "int Llb_ManCutPiNum( Aig_Man_t * p, Vec_Ptr_t * vMinCut )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsPi(p,pObj) )\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func Llb_ManCutPiNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsPi(p,pObj) )\n            Counter++;\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManCutLoNum",
+      "Start": 7751,
+      "End": 7994,
+      "BodyStart": 7809,
+      "Original": "int Llb_ManCutLoNum( Aig_Man_t * p, Vec_Ptr_t * vMinCut )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsLo(p,pObj) )\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func Llb_ManCutLoNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsLo(p,pObj) )\n            Counter++;\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManCutLiNum",
+      "Start": 8265,
+      "End": 8761,
+      "BodyStart": 8323,
+      "Original": "int Llb_ManCutLiNum( Aig_Man_t * p, Vec_Ptr_t * vMinCut )\n{\n    Aig_Obj_t * pFanout;\n    Aig_Obj_t * pObj;\n    int i, k, iFanout = -1, Counter = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n    {\n        if ( Aig_ObjIsCi(pObj) )\n            continue;\n        Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, k )\n        {\n            if ( Saig_ObjIsLi(p, pFanout) )\n            {\n                Counter++;\n                break;\n            }\n        }\n    }\n    return Counter;\n}",
+      "Draft": "func Llb_ManCutLiNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var iFanout int32 = -1;\n    var Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n    {\n        if Aig_ObjIsCi(pObj) {\n            continue; }\n        Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, k )\n        {\n            if Saig_ObjIsLi(p, pFanout) {\n                Counter++;\n                break;\n            }\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManCutVolume_rec",
+      "Start": 9024,
+      "End": 9338,
+      "BodyStart": 9084,
+      "Original": "int Llb_ManCutVolume_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert( Aig_ObjIsNode(pObj) );\n    return 1 + Llb_ManCutVolume_rec(p, Aig_ObjFanin0(pObj)) + \n        Llb_ManCutVolume_rec(p, Aig_ObjFanin1(pObj));\n}",
+      "Draft": "func Llb_ManCutVolume_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    return 1 + Llb_ManCutVolume_rec(p, Aig_ObjFanin0(pObj)) + \n        Llb_ManCutVolume_rec(p, Aig_ObjFanin1(pObj));\n}"
+    },
+    {
+      "Name": "Llb_ManCutVolume",
+      "Start": 9601,
+      "End": 10062,
+      "BodyStart": 9679,
+      "Original": "int Llb_ManCutVolume( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Counter += Llb_ManCutVolume_rec( p, pObj );\n    return Counter;\n}",
+      "Draft": "func Llb_ManCutVolume(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Counter += Llb_ManCutVolume_rec( p, pObj );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManCutNodes_rec",
+      "Start": 10326,
+      "End": 10688,
+      "BodyStart": 10406,
+      "Original": "void Llb_ManCutNodes_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Llb_ManCutNodes_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Llb_ManCutNodes",
+      "Start": 10951,
+      "End": 11459,
+      "BodyStart": 11036,
+      "Original": "Vec_Ptr_t * Llb_ManCutNodes( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_ManCutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}",
+      "Draft": "func Llb_ManCutNodes(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_ManCutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Llb_ManCutSupp",
+      "Start": 11722,
+      "End": 12470,
+      "BodyStart": 11806,
+      "Original": "Vec_Ptr_t * Llb_ManCutSupp( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Vec_Ptr_t * vNodes, * vSupp;\n    Aig_Obj_t * pObj;\n    int i;\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    // mark support of the nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert( Aig_ObjIsNode(pObj) );\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(pObj) );\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // collect the support nodes\n    vSupp = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vSupp, pObj );\n    return vSupp;\n\n}",
+      "Draft": "func Llb_ManCutSupp(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes, vSupp *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    // mark support of the nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(pObj) );\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // collect the support nodes\n    vSupp = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vSupp, pObj );\n    return vSupp;\n\n}"
+    },
+    {
+      "Name": "Llb_ManCutRange",
+      "Start": 12733,
+      "End": 13305,
+      "BodyStart": 12818,
+      "Original": "Vec_Ptr_t * Llb_ManCutRange( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Vec_Ptr_t * vRange;\n    Aig_Obj_t * pObj;\n    int i;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // collect the upper ones that are not marked\n    vRange = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vRange, pObj );\n    return vRange;\n}",
+      "Draft": "func Llb_ManCutRange(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vRange *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // collect the upper ones that are not marked\n    vRange = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vRange, pObj );\n    return vRange;\n}"
+    },
+    {
+      "Name": "Llb_ManCutPrint",
+      "Start": 13569,
+      "End": 15136,
+      "BodyStart": 13647,
+      "Original": "void Llb_ManCutPrint( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Vec_Ptr_t * vSupp, * vRange;\n    int Pis, Ffs, And;\n\n    Pis = Llb_ManCutPiNum(p, vLower);\n    Ffs = Llb_ManCutLoNum(p, vLower);\n    And = Vec_PtrSize(vLower) - Pis - Ffs;\n    printf( \"Leaf: %3d=%3d+%3d+%3d  \",  Vec_PtrSize(vLower), Pis, Ffs, And );\n\n    Pis = Llb_ManCutPiNum(p, vUpper);\n    Ffs = Llb_ManCutLiNum(p, vUpper);\n    And = Vec_PtrSize(vUpper) - Pis - Ffs;\n    printf( \"Root: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vUpper), Pis, Ffs, And );\n\n    vSupp = Llb_ManCutSupp( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vSupp);\n    Ffs = Llb_ManCutLoNum(p, vSupp);\n    And = Vec_PtrSize(vSupp) - Pis - Ffs;\n    printf( \"Supp: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vSupp), Pis, Ffs, And );\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vRange);\n    Ffs = Llb_ManCutLiNum(p, vRange);\n    And = Vec_PtrSize(vRange) - Pis - Ffs;\n    printf( \"Range: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vRange), Pis, Ffs, And );\n\n    printf( \"S =%3d. V =%3d.\\n\", \n        Vec_PtrSize(vSupp)+Vec_PtrSize(vRange), Llb_ManCutVolume(p, vLower, vUpper) );\n    Vec_PtrFree( vSupp );\n    Vec_PtrFree( vRange );\n/*   \n    {\n        Aig_Obj_t * pObj;\n        int i;\n        printf( \"Lower: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"     \" );\n        printf( \"Upper: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"\\n\" );\n    }\n*/\n}",
+      "Draft": "func Llb_ManCutPrint(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) {\n    var vSupp, vRange *Vec_Ptr_t;\n    var Pis, Ffs, And int32;\n\n    Pis = Llb_ManCutPiNum(p, vLower);\n    Ffs = Llb_ManCutLoNum(p, vLower);\n    And = Vec_PtrSize(vLower) - Pis - Ffs;\n    fmt.Printf(\"Leaf: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vLower), Pis, Ffs, And);\n\n    Pis = Llb_ManCutPiNum(p, vUpper);\n    Ffs = Llb_ManCutLiNum(p, vUpper);\n    And = Vec_PtrSize(vUpper) - Pis - Ffs;\n    fmt.Printf(\"Root: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vUpper), Pis, Ffs, And);\n\n    vSupp = Llb_ManCutSupp( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vSupp);\n    Ffs = Llb_ManCutLoNum(p, vSupp);\n    And = Vec_PtrSize(vSupp) - Pis - Ffs;\n    fmt.Printf(\"Supp: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vSupp), Pis, Ffs, And);\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vRange);\n    Ffs = Llb_ManCutLiNum(p, vRange);\n    And = Vec_PtrSize(vRange) - Pis - Ffs;\n    fmt.Printf(\"Range: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vRange), Pis, Ffs, And);\n\n    fmt.Printf(\"S =%3d. V =%3d.\\n\", Vec_PtrSize(vSupp)+Vec_PtrSize(vRange), Llb_ManCutVolume(p, vLower, vUpper));\n    Vec_PtrFree( vSupp );\n    Vec_PtrFree( vRange );\n/*   \n    {\n        Aig_Obj_t * pObj;\n        int i;\n        printf( \"Lower: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"     \" );\n        printf( \"Upper: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"\\n\" );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Llb_ManResultPrint",
+      "Start": 15397,
+      "End": 15711,
+      "BodyStart": 15459,
+      "Original": "void Llb_ManResultPrint( Aig_Man_t * p, Vec_Ptr_t * vResult )\n{\n    Vec_Ptr_t * vLower, * vUpper = NULL;\n    int i;\n    Vec_PtrForEachEntryReverse( Vec_Ptr_t *, vResult, vLower, i )\n    {\n        if ( i \u003c Vec_PtrSize(vResult) - 1 )\n            Llb_ManCutPrint( p, vLower, vUpper );\n        vUpper = vLower;\n    }\n}",
+      "Draft": "func Llb_ManResultPrint(p *Aig_Man_t, vResult *Vec_Ptr_t) {\n    var vLower *Vec_Ptr_t;\n    var vUpper *Vec_Ptr_t = nil;\n    var i int32;\n    Vec_PtrForEachEntryReverse( Vec_Ptr_t *, vResult, vLower, i )\n    {\n        if i \u003c Vec_PtrSize(vResult) - 1 {\n            Llb_ManCutPrint( p, vLower, vUpper ); }\n        vUpper = vLower;\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManFlowBwdPath2_rec",
+      "Start": 16051,
+      "End": 17891,
+      "BodyStart": 16114,
+      "Original": "int Llb_ManFlowBwdPath2_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pFanout;\n    assert( Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) );\n    // skip visited nodes\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // process node without flow\n    if ( !Llb_ObjGetPath(pObj) )\n    {\n        // start the path if we reached a terminal node\n        if ( pObj-\u003efMarkA )\n            return Llb_ObjSetPath( pObj, (Aig_Obj_t *)1 );\n        // explore the fanins\n//        Abc_ObjForEachFanin( pObj, pFanin, i )\n//            if ( Abc_NtkMaxFlowBwdPath2_rec(pFanin) )\n//                return Abc_ObjSetPath( pObj, pFanin );\n        if ( Aig_ObjIsNode(pObj) )\n        {\n            if ( Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) ) )\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin0(pObj) );\n            if ( Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) ) )\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin1(pObj) );\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Llb_ObjGetFanoutPath( p, pObj );\n    if ( pFanout == NULL )\n        return 0;\n    // go through the fanins of the fanout with flow\n//    Abc_ObjForEachFanin( pFanout, pFanin, i )\n//        if ( Abc_NtkMaxFlowBwdPath2_rec( pFanin ) )\n//            return Abc_ObjSetPath( pFanout, pFanin );\n    assert( Aig_ObjIsNode(pFanout) );\n    if ( Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pFanout) ) )\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin0(pFanout) );\n    if ( Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pFanout) ) )\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin1(pFanout) );\n    // try the fanout\n    if ( Llb_ManFlowBwdPath2_rec( p, pFanout ) )\n        return Llb_ObjSetPath( pFanout, NULL );\n    return 0;\n}",
+      "Draft": "func Llb_ManFlowBwdPath2_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj)\");\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // process node without flow\n    if !(Llb_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Llb_ObjSetPath( pObj, (Aig_Obj_t *)1 ); }\n        // explore the fanins\n//        Abc_ObjForEachFanin( pObj, pFanin, i )\n//            if ( Abc_NtkMaxFlowBwdPath2_rec(pFanin) )\n//                return Abc_ObjSetPath( pObj, pFanin );\n        if Aig_ObjIsNode(pObj) {\n            if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) ) != 0 {\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin0(pObj) ); }\n            if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) ) != 0 {\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin1(pObj) ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Llb_ObjGetFanoutPath( p, pObj );\n    if pFanout == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n//    Abc_ObjForEachFanin( pFanout, pFanin, i )\n//        if ( Abc_NtkMaxFlowBwdPath2_rec( pFanin ) )\n//            return Abc_ObjSetPath( pFanout, pFanin );\n    assert(Aig_ObjIsNode(pFanout), \"Aig_ObjIsNode(pFanout)\");\n    if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pFanout) ) != 0 {\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin0(pFanout) ); }\n    if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pFanout) ) != 0 {\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin1(pFanout) ); }\n    // try the fanout\n    if Llb_ManFlowBwdPath2_rec( p, pFanout ) != 0 {\n        return Llb_ObjSetPath( pFanout, nil ); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowLabelTfi_rec",
+      "Start": 18141,
+      "End": 18520,
+      "BodyStart": 18205,
+      "Original": "void Llb_ManFlowLabelTfi_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n        return;\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin1(pObj) );\n}",
+      "Draft": "func Llb_ManFlowLabelTfi_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Llb_ManFlowUpdateCut",
+      "Start": 18756,
+      "End": 19795,
+      "BodyStart": 18820,
+      "Original": "void Llb_ManFlowUpdateCut( Aig_Man_t * p, Vec_Ptr_t * vMinCut )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // label the TFI of the cut nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Llb_ManFlowLabelTfi_rec( p, pObj );\n    // collect labeled fanins of non-labeled nodes\n    Vec_PtrClear( vMinCut );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsCo(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( Aig_ObjIsTravIdCurrent(p, pObj) || Aig_ObjIsTravIdPrevious(p, pObj) )\n            continue;\n        if ( Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin0(pObj)) )\n        {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin0(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin0(pObj) );\n        }\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin1(pObj)) )\n        {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin1(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin1(pObj) );\n        }\n    }\n}",
+      "Draft": "func Llb_ManFlowUpdateCut(p *Aig_Man_t, vMinCut *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // label the TFI of the cut nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Llb_ManFlowLabelTfi_rec( p, pObj );\n    // collect labeled fanins of non-labeled nodes\n    Vec_PtrClear( vMinCut );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsCo(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p, pObj) || Aig_ObjIsTravIdPrevious(p, pObj) {\n            continue; }\n        if Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin0(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin0(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin0(pObj) );\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin1(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin1(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin1(pObj) );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManFlowMinCut",
+      "Start": 20063,
+      "End": 20727,
+      "BodyStart": 20110,
+      "Original": "Vec_Ptr_t * Llb_ManFlowMinCut( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vMinCut;\n    Aig_Obj_t * pObj;\n    int i;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        // node without flow is not a cut node\n        if ( !Llb_ObjGetPath(pObj) )\n            continue;\n        // unvisited node is below the cut\n        if ( !Aig_ObjIsTravIdCurrent(p, pObj) )\n            continue;\n        // add terminal with flow or node whose path is not visited\n        if ( pObj-\u003efMarkA || !Aig_ObjIsTravIdCurrent( p, Llb_ObjGetPath(pObj) ) )\n            Vec_PtrPush( vMinCut, pObj );\n    }\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManFlowMinCut(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        // node without flow is not a cut node\n        if !(Llb_ObjGetPath(pObj) != nil) {\n            continue; }\n        // unvisited node is below the cut\n        if !Aig_ObjIsTravIdCurrent(p, pObj) {\n            continue; }\n        // add terminal with flow or node whose path is not visited\n        if pObj.fMarkA || !Aig_ObjIsTravIdCurrent( p, Llb_ObjGetPath(pObj) ) {\n            Vec_PtrPush( vMinCut, pObj ); }\n    }\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowVerifyCut_rec",
+      "Start": 21000,
+      "End": 21545,
+      "BodyStart": 21064,
+      "Original": "int Llb_ManFlowVerifyCut_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    // skip visited nodes\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 1;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // visit the node\n    if ( Aig_ObjIsConst1(pObj) )\n        return 1;\n    if ( Aig_ObjIsCi(pObj) )\n        return 0;\n    // explore the fanins\n    assert( Aig_ObjIsNode(pObj) );\n    if ( !Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin0(pObj)) )\n        return 0;\n    if ( !Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin1(pObj)) )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Llb_ManFlowVerifyCut_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 1; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // visit the node\n    if Aig_ObjIsConst1(pObj) {\n        return 1; }\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    // explore the fanins\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    if !(Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin0(pObj)) != 0) {\n        return 0; }\n    if !(Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin1(pObj)) != 0) {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowVerifyCut",
+      "Start": 21818,
+      "End": 22307,
+      "BodyStart": 21881,
+      "Original": "int Llb_ManFlowVerifyCut( Aig_Man_t * p, Vec_Ptr_t * vMinCut )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // mark the cut with the current traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // search from the latches for a path to the COs/CIs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if ( !Llb_ManFlowVerifyCut_rec( p, Aig_ObjFanin0(pObj) ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Llb_ManFlowVerifyCut(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the cut with the current traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // search from the latches for a path to the COs/CIs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if !(Llb_ManFlowVerifyCut_rec( p, Aig_ObjFanin0(pObj) ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Llb_ManFlow",
+      "Start": 22590,
+      "End": 24426,
+      "BodyStart": 22667,
+      "Original": "Vec_Ptr_t * Llb_ManFlow( Aig_Man_t * p, Vec_Ptr_t * vSources, int * pnFlow )\n{\n    Vec_Ptr_t * vMinCut;\n    Aig_Obj_t * pObj;\n    int Flow, FlowCur, RetValue, i;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert( !pObj-\u003efMarkA \u0026\u0026 pObj-\u003efMarkB );\n        if ( !Aig_ObjFanin0(pObj)-\u003efMarkB )\n        {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if ( FlowCur )\n                Aig_ManIncrementTravId(p);\n        }\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj)-\u003efMarkB )\n        {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if ( FlowCur )\n                Aig_ManIncrementTravId(p);\n        }\n    }\n    if ( pnFlow )\n        *pnFlow = Flow;\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert( !pObj-\u003efMarkA \u0026\u0026 pObj-\u003efMarkB );\n        if ( !Aig_ObjFanin0(pObj)-\u003efMarkB )\n        {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert( RetValue == 0 );\n        }\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj)-\u003efMarkB )\n        {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert( RetValue == 0 );\n        }\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert( Vec_PtrSize(vMinCut) == Flow );\n    // verify the cut\n    if ( !Llb_ManFlowVerifyCut(p, vMinCut) )\n        printf( \"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\" );\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManFlow(p *Aig_Man_t, vSources *Vec_Ptr_t, pnFlow *int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert(!pObj.fMarkA \u0026\u0026 pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 pObj.fMarkB\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n    }\n    if pnFlow != nil {\n        *pnFlow = Flow; }\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert(!pObj.fMarkA \u0026\u0026 pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 pObj.fMarkB\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert(Vec_PtrSize(vMinCut) == Flow, \"Vec_PtrSize(vMinCut) == Flow\");\n    // verify the cut\n    if !(Llb_ManFlowVerifyCut(p, vMinCut) != 0) {\n        fmt.Printf(\"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\"); }\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowCompute",
+      "Start": 24709,
+      "End": 26729,
+      "BodyStart": 24757,
+      "Original": "Vec_Ptr_t * Llb_ManFlowCompute( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vMinCut;\n    Aig_Obj_t * pObj;\n    int Flow, FlowCur, RetValue, i;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !pObj-\u003efMarkB )\n            continue;\n        assert( !pObj-\u003efMarkA );\n        if ( !Aig_ObjFanin0(pObj)-\u003efMarkB )\n        {\n//printf( \"%d \", Aig_ObjFanin0(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if ( FlowCur )\n                Aig_ManIncrementTravId(p);\n        }\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj)-\u003efMarkB )\n        {\n//printf( \"%d \", Aig_ObjFanin1(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if ( FlowCur )\n                Aig_ManIncrementTravId(p);\n        }\n    }\n//printf( \"\\n\" );\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !pObj-\u003efMarkB )\n            continue;\n        assert( !pObj-\u003efMarkA );\n        if ( !Aig_ObjFanin0(pObj)-\u003efMarkB )\n        {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert( RetValue == 0 );\n        }\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj)-\u003efMarkB )\n        {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert( RetValue == 0 );\n        }\n    }\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert( Vec_PtrSize(vMinCut) == Flow );\n//printf( \"%d \", Vec_PtrSize(vMinCut) );\n    Llb_ManFlowUpdateCut( p, vMinCut );\n//printf( \"%d   \", Vec_PtrSize(vMinCut) );\n    // verify the cut\n    if ( !Llb_ManFlowVerifyCut(p, vMinCut) )\n        printf( \"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\" );\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManFlowCompute(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !pObj.fMarkB {\n            continue; }\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n//printf( \"%d \", Aig_ObjFanin0(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n//printf( \"%d \", Aig_ObjFanin1(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n    }\n//printf( \"\\n\" );\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !pObj.fMarkB {\n            continue; }\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n    }\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert(Vec_PtrSize(vMinCut) == Flow, \"Vec_PtrSize(vMinCut) == Flow\");\n//printf( \"%d \", Vec_PtrSize(vMinCut) );\n    Llb_ManFlowUpdateCut( p, vMinCut );\n//printf( \"%d   \", Vec_PtrSize(vMinCut) );\n    // verify the cut\n    if !(Llb_ManFlowVerifyCut(p, vMinCut) != 0) {\n        fmt.Printf(\"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\"); }\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowCleanMarkB_rec",
+      "Start": 26981,
+      "End": 27245,
+      "BodyStart": 27032,
+      "Original": "void Llb_ManFlowCleanMarkB_rec( Aig_Obj_t * pObj )\n{\n    if ( pObj-\u003efMarkB == 0 )\n        return;\n    pObj-\u003efMarkB = 0;\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin1(pObj) );\n}",
+      "Draft": "func Llb_ManFlowCleanMarkB_rec(pObj *Aig_Obj_t) {\n    if pObj.fMarkB == 0 {\n        return; }\n    pObj.fMarkB = 0;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Llb_ManFlowSetMarkA_rec",
+      "Start": 27494,
+      "End": 27817,
+      "BodyStart": 27543,
+      "Original": "void Llb_ManFlowSetMarkA_rec( Aig_Obj_t * pObj )\n{\n    if ( pObj-\u003efMarkA )\n        return;\n    pObj-\u003efMarkA = 1;\n    if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n        return;\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin1(pObj) );\n}",
+      "Draft": "func Llb_ManFlowSetMarkA_rec(pObj *Aig_Obj_t) {\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Llb_ManFlowPrepareCut",
+      "Start": 28079,
+      "End": 28879,
+      "BodyStart": 28163,
+      "Original": "void Llb_ManFlowPrepareCut( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // reset marks\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pObj-\u003efMarkA = 0;\n        pObj-\u003efMarkB = 1;\n    }\n    // clean PIs and const\n    Aig_ManConst1(p)-\u003efMarkB = 0;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003efMarkB = 0;\n    // clean upper cut\n//printf( \"Upper: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n    {\n        Llb_ManFlowCleanMarkB_rec( pObj );\n//printf( \"%d \", pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // set lower cut\n//printf( \"Lower: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n    {\n//printf( \"%d \", pObj-\u003eId );\n        assert( pObj-\u003efMarkB == 0 );\n        Llb_ManFlowSetMarkA_rec( pObj );\n    }\n//printf( \"\\n\" );\n}",
+      "Draft": "func Llb_ManFlowPrepareCut(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // reset marks\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pObj.fMarkA = 0;\n        pObj.fMarkB = 1;\n    }\n    // clean PIs and const\n    Aig_ManConst1(p).fMarkB = 0;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkB = 0;\n    // clean upper cut\n//printf( \"Upper: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n    {\n        Llb_ManFlowCleanMarkB_rec( pObj );\n//printf( \"%d \", pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // set lower cut\n//printf( \"Lower: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n    {\n//printf( \"%d \", pObj-\u003eId );\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n        Llb_ManFlowSetMarkA_rec( pObj );\n    }\n//printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Llb_ManFlowUnmarkCone",
+      "Start": 29141,
+      "End": 29409,
+      "BodyStart": 29204,
+      "Original": "void Llb_ManFlowUnmarkCone( Aig_Man_t * p, Vec_Ptr_t * vCone )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCone, pObj, i )\n    {\n        assert( Aig_ObjIsNode(pObj) );\n        assert( pObj-\u003efMarkB == 1 );\n        pObj-\u003efMarkB = 0;\n    }\n}",
+      "Draft": "func Llb_ManFlowUnmarkCone(p *Aig_Man_t, vCone *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCone, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        assert(pObj.fMarkB == 1, \"pObj.fMarkB == 1\");\n        pObj.fMarkB = 0;\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManFlowCollectAndMarkCone_rec",
+      "Start": 29645,
+      "End": 30182,
+      "BodyStart": 29738,
+      "Original": "void Llb_ManFlowCollectAndMarkCone_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vCone )\n{\n    Aig_Obj_t * pFanout;\n    int i, iFanout = -1;\n    if ( Saig_ObjIsLi(p, pObj) )\n        return;\n    if ( pObj-\u003efMarkB )\n        return;\n    if ( pObj-\u003efMarkA == 0 )\n    {\n        assert( Aig_ObjIsNode(pObj) );\n        pObj-\u003efMarkB = 1;\n        if ( Aig_ObjIsNode(pObj) )\n            Vec_PtrPush( vCone, pObj );\n    }\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        Llb_ManFlowCollectAndMarkCone_rec( p, pFanout, vCone );\n}",
+      "Draft": "func Llb_ManFlowCollectAndMarkCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vCone *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    if Saig_ObjIsLi(p, pObj) {\n        return; }\n    if pObj.fMarkB {\n        return; }\n    if pObj.fMarkA == 0 {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        pObj.fMarkB = 1;\n        if Aig_ObjIsNode(pObj) {\n            Vec_PtrPush( vCone, pObj ); }\n    }\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        Llb_ManFlowCollectAndMarkCone_rec( p, pFanout, vCone );\n}"
+    },
+    {
+      "Name": "Llb_ManFlowCollectAndMarkCone",
+      "Start": 30436,
+      "End": 30770,
+      "BodyStart": 30528,
+      "Original": "void Llb_ManFlowCollectAndMarkCone( Aig_Man_t * p, Vec_Ptr_t * vStarts, Vec_Ptr_t * vCone )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrClear( vCone );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vStarts, pObj, i )\n    {\n        assert( pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB );\n        Llb_ManFlowCollectAndMarkCone_rec( p, pObj, vCone );\n    }\n}",
+      "Draft": "func Llb_ManFlowCollectAndMarkCone(p *Aig_Man_t, vStarts *Vec_Ptr_t, vCone *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vCone );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vStarts, pObj, i )\n    {\n        assert(pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n        Llb_ManFlowCollectAndMarkCone_rec( p, pObj, vCone );\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManComputeCutLo",
+      "Start": 31028,
+      "End": 31266,
+      "BodyStart": 31077,
+      "Original": "Vec_Ptr_t * Llb_ManComputeCutLo( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vMinCut;\n    Aig_Obj_t * pObj;\n    int i;\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_PtrPush( vMinCut, pObj );\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManComputeCutLo(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_PtrPush( vMinCut, pObj );\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeCutLi",
+      "Start": 31521,
+      "End": 32046,
+      "BodyStart": 31570,
+      "Original": "Vec_Ptr_t * Llb_ManComputeCutLi( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vMinCut;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Saig_ManPoNum(p) == 0 );\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId(p);\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pObj = Aig_ObjFanin0(pObj);\n        if ( Aig_ObjIsConst1(pObj) )\n            continue;\n        if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n            continue;\n        Aig_ObjSetTravIdCurrent(p, pObj);\n        Vec_PtrPush( vMinCut, pObj );\n    }\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManComputeCutLi(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Saig_ManPoNum(p) == 0, \"Saig_ManPoNum(p) == 0\");\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId(p);\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pObj = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsConst1(pObj) {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p, pObj) {\n            continue; }\n        Aig_ObjSetTravIdCurrent(p, pObj);\n        Vec_PtrPush( vMinCut, pObj );\n    }\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManFlowGetObjSet",
+      "Start": 32303,
+      "End": 32638,
+      "BodyStart": 32407,
+      "Original": "void Llb_ManFlowGetObjSet( Aig_Man_t * p, Vec_Ptr_t * vLower, int iStart, int nSize, Vec_Ptr_t * vSet )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrClear( vSet );\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( vLower, (iStart + i) % Vec_PtrSize(vLower) );\n        Vec_PtrPush( vSet, pObj );\n    }\n}",
+      "Draft": "func Llb_ManFlowGetObjSet(p *Aig_Man_t, vLower *Vec_Ptr_t, iStart int32, nSize int32, vSet *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vSet );\n    for  i = 0; i \u003c nSize; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( vLower, (iStart + i) % Vec_PtrSize(vLower) );\n        Vec_PtrPush( vSet, pObj );\n    }\n}"
+    },
+    {
+      "Name": "Llb_ManFlowFindBestCut",
+      "Start": 32893,
+      "End": 34962,
+      "BodyStart": 32994,
+      "Original": "Vec_Ptr_t * Llb_ManFlowFindBestCut( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper, int Num )\n{\n    int nVolMin = Aig_ManNodeNum(p) / Num / 2;\n    Vec_Ptr_t * vMinCut;\n    Vec_Ptr_t * vCone, * vSet;\n    Aig_Obj_t * pObj;\n    int i, s, Vol, VolLower, VolUpper, VolCmp;\n    int iBest = -1, iMinCut = ABC_INFINITY, iVolBest = 0;\n\n    Vol = Llb_ManCutVolume( p, vLower, vUpper );\n    assert( Vol \u003e nVolMin );\n    VolCmp = Abc_MinInt( nVolMin, Vol - nVolMin );\n    vCone = Vec_PtrAlloc( 100 );\n    vSet  = Vec_PtrAlloc( 100 );\n    Llb_ManFlowPrepareCut( p, vLower, vUpper );\n    for ( s = 1; s \u003c Aig_ManRegNum(p); s += 5 )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        {\n            Llb_ManFlowGetObjSet( p, vLower, i, s, vSet );\n            Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n            if ( Vec_PtrSize(vCone) == 0 )\n                continue;\n            vMinCut  = Llb_ManFlowCompute( p );\n            Llb_ManFlowUnmarkCone( p, vCone );\n\n            VolLower = Llb_ManCutVolume( p, vLower, vMinCut );\n            VolUpper = Llb_ManCutVolume( p, vMinCut, vUpper );\n            Vol = Abc_MinInt( VolLower, VolUpper );\n            if ( Vol \u003e= VolCmp \u0026\u0026  (iMinCut == -1 || \n                                    iMinCut \u003e  Vec_PtrSize(vMinCut) || \n                                   (iMinCut == Vec_PtrSize(vMinCut) \u0026\u0026 iVolBest \u003c Vol)) )\n            {\n                iBest = i;\n                iMinCut = Vec_PtrSize(vMinCut);\n                iVolBest = Vol;\n            }\n            Vec_PtrFree( vMinCut );\n        }\n        if ( iBest \u003e= 0 )\n            break;\n    }\n    if ( iBest == -1 )\n    {\n        // cleanup\n        Vec_PtrFree( vCone );\n        Vec_PtrFree( vSet );\n        return NULL;\n    }\n    // get the best cut\n    assert( iBest \u003e= 0 );\n    Llb_ManFlowGetObjSet( p, vLower, iBest, s, vSet );\n    Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n    vMinCut = Llb_ManFlowCompute( p );\n    Llb_ManFlowUnmarkCone( p, vCone );\n    // cleanup\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSet );\n    return vMinCut;\n}",
+      "Draft": "func Llb_ManFlowFindBestCut(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t, Num int32) *Vec_Ptr_t {\n    var nVolMin int32  = Aig_ManNodeNum(p) / Num / 2;\n    var vMinCut *Vec_Ptr_t;\n    var vCone, vSet *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, s, Vol, VolLower, VolUpper, VolCmp int32;\n    var iBest int32 = -1;\n    var iMinCut int32 = ABC_INFINITY;\n    var iVolBest int32;\n\n    Vol = Llb_ManCutVolume( p, vLower, vUpper );\n    assert(Vol \u003e nVolMin, \"Vol \u003e nVolMin\");\n    VolCmp = Abc_MinInt( nVolMin, Vol - nVolMin );\n    vCone = Vec_PtrAlloc( 100 );\n    vSet  = Vec_PtrAlloc( 100 );\n    Llb_ManFlowPrepareCut( p, vLower, vUpper );\n    for  s = 1; s \u003c Aig_ManRegNum(p); s += 5  {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        {\n            Llb_ManFlowGetObjSet( p, vLower, i, s, vSet );\n            Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n            if Vec_PtrSize(vCone) == 0 {\n                continue; }\n            vMinCut  = Llb_ManFlowCompute( p );\n            Llb_ManFlowUnmarkCone( p, vCone );\n\n            VolLower = Llb_ManCutVolume( p, vLower, vMinCut );\n            VolUpper = Llb_ManCutVolume( p, vMinCut, vUpper );\n            Vol = Abc_MinInt( VolLower, VolUpper );\n            if Vol \u003e= VolCmp \u0026\u0026  (iMinCut == -1 || \n                                    iMinCut \u003e  Vec_PtrSize(vMinCut) || \n                                   (iMinCut == Vec_PtrSize(vMinCut) \u0026\u0026 iVolBest \u003c Vol)) {\n                iBest = i;\n                iMinCut = Vec_PtrSize(vMinCut);\n                iVolBest = Vol;\n            }\n            Vec_PtrFree( vMinCut );\n        }\n        if iBest \u003e= 0 {\n            break; }\n    }\n    if iBest == -1 {\n        // cleanup\n        Vec_PtrFree( vCone );\n        Vec_PtrFree( vSet );\n        return nil;\n    }\n    // get the best cut\n    assert(iBest \u003e= 0, \"iBest \u003e= 0\");\n    Llb_ManFlowGetObjSet( p, vLower, iBest, s, vSet );\n    Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n    vMinCut = Llb_ManFlowCompute( p );\n    Llb_ManFlowUnmarkCone( p, vCone );\n    // cleanup\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSet );\n    return vMinCut;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeCuts",
+      "Start": 35217,
+      "End": 37241,
+      "BodyStart": 35306,
+      "Original": "Vec_Ptr_t * Llb_ManComputeCuts( Aig_Man_t * p, int Num, int fVerbose, int fVeryVerbose )\n{\n    int nVolMax = Aig_ManNodeNum(p) / Num;\n    Vec_Ptr_t * vResult, * vMinCut = NULL, * vLower, * vUpper;\n    int i, k, nVol;\n    abctime clk = Abc_Clock();\n    vResult = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLo(p) );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLi(p) );\n    while ( 1 ) \n    {\n        // find a place to insert new cut\n        vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n        Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n        {\n            nVol = Llb_ManCutVolume( p, vLower, vUpper );\n            if ( nVol \u003c= nVolMax )\n            {\n                vLower = vUpper;\n                continue;\n            }\n\n            if ( fVeryVerbose )\n            Llb_ManCutPrint( p, vLower,  vUpper );\n            vMinCut = Llb_ManFlowFindBestCut( p, vLower, vUpper, Num );\n            if ( vMinCut == NULL )\n            {\n                if ( fVeryVerbose )\n                printf( \"Could not break the cut.\\n\" );\n                if ( fVeryVerbose )\n                printf( \"\\n\" );\n                vLower = vUpper;\n                continue;\n            }\n\n            if ( fVeryVerbose )\n            Llb_ManCutPrint( p, vMinCut, vUpper );\n            if ( fVeryVerbose )\n            Llb_ManCutPrint( p, vLower,  vMinCut );\n            if ( fVeryVerbose )\n            printf( \"\\n\" );\n\n            break;\n        }\n        if ( i == Vec_PtrSize(vResult) )\n            break;\n        // insert vMinCut before vUpper\n        Vec_PtrPush( vResult, NULL );\n        for ( k = Vec_PtrSize(vResult) - 1; k \u003e i; k-- )\n            Vec_PtrWriteEntry( vResult, k, Vec_PtrEntry(vResult, k-1) );\n        Vec_PtrWriteEntry( vResult, i, vMinCut );\n    }\n    if ( fVerbose )\n    {\n        printf( \"Finished computing %d partitions.  \", Vec_PtrSize(vResult) - 1 );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        Llb_ManResultPrint( p, vResult );\n    }\n    return vResult;\n}",
+      "Draft": "func Llb_ManComputeCuts(p *Aig_Man_t, Num int32, fVerbose int32, fVeryVerbose int32) *Vec_Ptr_t {\n    var nVolMax int32  = Aig_ManNodeNum(p) / Num;\n    var vResult *Vec_Ptr_t;\n    var vMinCut *Vec_Ptr_t = nil;\n    var vLower *Vec_Ptr_t;\n    var vUpper *Vec_Ptr_t;\n    var i, k, nVol int32;\n    var clk abctime  = Abc_Clock();\n    vResult = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLo(p) );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLi(p) );\n    for {\n        // find a place to insert new cut\n        vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n        Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n        {\n            nVol = Llb_ManCutVolume( p, vLower, vUpper );\n            if nVol \u003c= nVolMax {\n                vLower = vUpper;\n                continue;\n            }\n\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vLower,  vUpper ); }\n            vMinCut = Llb_ManFlowFindBestCut( p, vLower, vUpper, Num );\n            if vMinCut == nil {\n                if fVeryVerbose != 0 {\n                fmt.Printf(\"Could not break the cut.\\n\"); }\n                if fVeryVerbose != 0 {\n                fmt.Printf(\"\\n\"); }\n                vLower = vUpper;\n                continue;\n            }\n\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vMinCut, vUpper ); }\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vLower,  vMinCut ); }\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"\\n\"); }\n\n            break;\n        }\n        if i == Vec_PtrSize(vResult) {\n            break; }\n        // insert vMinCut before vUpper\n        Vec_PtrPush( vResult, nil );\n        for  k = Vec_PtrSize(vResult) - 1; k \u003e i; k--  {\n            Vec_PtrWriteEntry( vResult, k, Vec_PtrEntry(vResult, k-1) );\n        }\n        Vec_PtrWriteEntry( vResult, i, vMinCut );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Finished computing %d partitions.  \", Vec_PtrSize(vResult) - 1);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        Llb_ManResultPrint( p, vResult );\n    }\n    return vResult;\n}"
+    },
+    {
+      "Name": "Llb_BddSetDefaultParams",
+      "Start": 37478,
+      "End": 38311,
+      "BodyStart": 37527,
+      "Original": "void Llb_BddSetDefaultParams( Gia_ParLlb_t * p )\n{\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p-\u003enBddMax       =  1000000;\n    p-\u003enIterMax      = 10000000;\n    p-\u003enClusterMax   =       20;\n    p-\u003enHintDepth    =        0;\n    p-\u003eHintFirst     =        0;\n    p-\u003efUseFlow      =        0;  // use flow \n    p-\u003enVolumeMax    =      100;  // max volume\n    p-\u003enVolumeMin    =       30;  // min volume\n    p-\u003efReorder      =        1;\n    p-\u003efIndConstr    =        0;\n    p-\u003efUsePivots    =        0;\n    p-\u003efCluster      =        0;\n    p-\u003efSchedule     =        0;\n    p-\u003efVerbose      =        0;\n    p-\u003efVeryVerbose  =        0;\n    p-\u003efSilent       =        0;\n    p-\u003eTimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p-\u003eTimeLimitGlo  =        0;\n    p-\u003eTimeTarget    =        0;\n    p-\u003eiFrame        =       -1;\n}",
+      "Draft": "func Llb_BddSetDefaultParams(p *Gia_ParLlb_t) {\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p.nBddMax       =  1000000;\n    p.nIterMax      = 10000000;\n    p.nClusterMax   =       20;\n    p.nHintDepth    =        0;\n    p.HintFirst     =        0;\n    p.fUseFlow      =        0;  // use flow \n    p.nVolumeMax    =      100;  // max volume\n    p.nVolumeMin    =       30;  // min volume\n    p.fReorder      =        1;\n    p.fIndConstr    =        0;\n    p.fUsePivots    =        0;\n    p.fCluster      =        0;\n    p.fSchedule     =        0;\n    p.fVerbose      =        0;\n    p.fVeryVerbose  =        0;\n    p.fSilent       =        0;\n    p.TimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p.TimeLimitGlo  =        0;\n    p.TimeTarget    =        0;\n    p.iFrame        =       -1;\n}"
+    },
+    {
+      "Name": "Llb_ManMinCutTest",
+      "Start": 38566,
+      "End": 39630,
+      "BodyStart": 38618,
+      "Original": "void Llb_ManMinCutTest( Aig_Man_t * pAig, int Num )\n{\n    extern void Llb_BddConstructTest( Aig_Man_t * p, Vec_Ptr_t * vResult );\n    extern void Llb_BddExperiment( Aig_Man_t * pInit, Aig_Man_t * pAig, Gia_ParLlb_t * pPars, Vec_Ptr_t * vResult, Vec_Ptr_t * vMaps );\n \n\n//    int fVerbose = 1;\n    Gia_ParLlb_t Pars, * pPars = \u0026Pars;\n    Vec_Ptr_t * vResult;//, * vSupps, * vMaps;\n    Aig_Man_t * p;\n\n    Llb_BddSetDefaultParams( pPars );\n\n    p = Aig_ManDupFlopsOnly( pAig );\n//Aig_ManShow( p, 0, NULL );\n    Aig_ManPrintStats( pAig );\n    Aig_ManPrintStats( p );\n    Aig_ManFanoutStart( p );\n\n    vResult = Llb_ManComputeCuts( p, Num, 1, 0 );\n//    vSupps  = Llb_ManCutSupps( p, vResult );\n//    vMaps   = Llb_ManCutMap( p, vResult, vSupps );\n\n//    Llb_BddExperiment( pAig, p, pPars, vResult, vMaps );\n    Llb_CoreExperiment( pAig, p, pPars, vResult, 0 );\n\n//    Vec_VecFree( (Vec_Vec_t *)vMaps );\n//    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n\n    Aig_ManFanoutStop( p );\n    Aig_ManCleanMarkAB( p );\n    Aig_ManStop( p );\n}",
+      "Draft": "func Llb_ManMinCutTest(pAig *Aig_Man_t, Num int32) {\n    extern void Llb_BddConstructTest( Aig_Man_t * p, Vec_Ptr_t * vResult );\n    extern void Llb_BddExperiment( Aig_Man_t * pInit, Aig_Man_t * pAig, Gia_ParLlb_t * pPars, Vec_Ptr_t * vResult, Vec_Ptr_t * vMaps );\n \n\n//    int fVerbose = 1;\n    var Pars Gia_ParLlb_t;\n    var pPars *Gia_ParLlb_t = \u0026Pars;\n    var vResult *Vec_Ptr_t;//, * vSupps, * vMaps;\n    var p *Aig_Man_t;\n\n    Llb_BddSetDefaultParams( pPars );\n\n    p = Aig_ManDupFlopsOnly( pAig );\n//Aig_ManShow( p, 0, NULL );\n    Aig_ManPrintStats( pAig );\n    Aig_ManPrintStats( p );\n    Aig_ManFanoutStart( p );\n\n    vResult = Llb_ManComputeCuts( p, Num, 1, 0 );\n//    vSupps  = Llb_ManCutSupps( p, vResult );\n//    vMaps   = Llb_ManCutMap( p, vResult, vSupps );\n\n//    Llb_BddExperiment( pAig, p, pPars, vResult, vMaps );\n    Llb_CoreExperiment( pAig, p, pPars, vResult, 0 );\n\n//    Vec_VecFree( (Vec_Vec_t *)vMaps );\n//    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n\n    Aig_ManFanoutStop( p );\n    Aig_ManCleanMarkAB( p );\n    Aig_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::mechanical::sizeof::37547",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37547,
+      "End": 37553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 868,
+      "End": 876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 985,
+      "End": 998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::2164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2164,
+      "End": 2177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::4647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4647,
+      "End": 4660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::4911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4911,
+      "End": 4924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::5254",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5254,
+      "End": 5267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::5346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5346,
+      "End": 5359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::16544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16544,
+      "End": 16557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::32523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32523,
+      "End": 32536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::35686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35686,
+      "End": 35699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::pointer-cast::39525",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39525,
+      "End": 39538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ObjSetPath",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ObjSetPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 772,
+      "End": 895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ObjGetPath",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ObjGetPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 896,
+      "End": 1019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ObjGetFanoutPath",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ObjGetFanoutPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1020,
+      "End": 1343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutSupps",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutSupps",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1942,
+      "End": 2478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutMap",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2763,
+      "End": 6966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7237,
+      "End": 7480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutLoNum",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutLoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7751,
+      "End": 7994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutLiNum",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutLiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8265,
+      "End": 8761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutVolume_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutVolume_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9024,
+      "End": 9338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutVolume",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9601,
+      "End": 10062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutNodes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutNodes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10326,
+      "End": 10688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutNodes",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10951,
+      "End": 11459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutSupp",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11722,
+      "End": 12470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutRange",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12733,
+      "End": 13305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManCutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13569,
+      "End": 15136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManResultPrint",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManResultPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15397,
+      "End": 15711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowBwdPath2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowBwdPath2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16051,
+      "End": 17891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowLabelTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowLabelTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18141,
+      "End": 18520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowUpdateCut",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowUpdateCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18756,
+      "End": 19795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowMinCut",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowMinCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20063,
+      "End": 20727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowVerifyCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowVerifyCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21000,
+      "End": 21545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowVerifyCut",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowVerifyCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21818,
+      "End": 22307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlow",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22590,
+      "End": 24426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowCompute",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24709,
+      "End": 26729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowCleanMarkB_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowCleanMarkB_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26981,
+      "End": 27245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowSetMarkA_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowSetMarkA_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27494,
+      "End": 27817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowPrepareCut",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowPrepareCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28079,
+      "End": 28879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowUnmarkCone",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowUnmarkCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29141,
+      "End": 29409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowCollectAndMarkCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowCollectAndMarkCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29645,
+      "End": 30182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowCollectAndMarkCone",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowCollectAndMarkCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30436,
+      "End": 30770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManComputeCutLo",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeCutLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31028,
+      "End": 31266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManComputeCutLi",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeCutLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31521,
+      "End": 32046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowGetObjSet",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowGetObjSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32303,
+      "End": 32638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManFlowFindBestCut",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManFlowFindBestCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32893,
+      "End": 34962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35217,
+      "End": 37241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_BddSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Llb_BddSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37478,
+      "End": 38311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::Llb_ManMinCutTest",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManMinCutTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38566,
+      "End": 39630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 39877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::1197",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1197,
+      "End": 1249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::2209",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2209,
+      "End": 2271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3084",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3084,
+      "End": 3136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3203",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3203,
+      "End": 3252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3672",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3672,
+      "End": 3706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3722",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3722,
+      "End": 3756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3762",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3762,
+      "End": 3793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3835",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3835,
+      "End": 3886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::3901",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3901,
+      "End": 3950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::4267",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4267,
+      "End": 4298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::4487",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4487,
+      "End": 4518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::5022",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5022,
+      "End": 5041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::5047",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5047,
+      "End": 5065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::5173",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5173,
+      "End": 5231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::5436",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5436,
+      "End": 5467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::6260",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6260,
+      "End": 6291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::6386",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6386,
+      "End": 6436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::6815",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6815,
+      "End": 6865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::7347",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7347,
+      "End": 7399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::7861",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7861,
+      "End": 7913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::8417",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8417,
+      "End": 8469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::8539",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8539,
+      "End": 8591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::9810",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9810,
+      "End": 9861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::9937",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9937,
+      "End": 9988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::11178",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11178,
+      "End": 11229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::11339",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11339,
+      "End": 11390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::11993",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11993,
+      "End": 12044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::12311",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12311,
+      "End": 12362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::12960",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12960,
+      "End": 13011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::13144",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13144,
+      "End": 13195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::15517",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15517,
+      "End": 15578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::18928",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18928,
+      "End": 18980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::19140",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19140,
+      "End": 19171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::20251",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20251,
+      "End": 20282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::22001",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22001,
+      "End": 22053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::22159",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22159,
+      "End": 22190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::22853",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22853,
+      "End": 22906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::23598",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23598,
+      "End": 23651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::24943",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24943,
+      "End": 24974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::25765",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25765,
+      "End": 25796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::28221",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28221,
+      "End": 28252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::28382",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28382,
+      "End": 28412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::28488",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28488,
+      "End": 28539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::28689",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28689,
+      "End": 28740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::29243",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29243,
+      "End": 29293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::30064",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30064,
+      "End": 30116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::30594",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30594,
+      "End": 30646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::31176",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31176,
+      "End": 31206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::31737",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31737,
+      "End": 31768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::33532",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33532,
+      "End": 33583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Flow.c::macro-inline::35735",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35735,
+      "End": 35797
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb2Flow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Flow computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Flow.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Llb_ObjSetPath(pObj *Aig_Obj_t, pNext *Aig_Obj_t) int32 { pObj.pData = (void *)pNext; return 1;  }\nfunc Llb_ObjGetPath(pObj *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)pObj.pData;        }\nfunc Llb_ObjGetFanoutPath(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { \n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    assert((Llb_ObjGetPath(pObj) != nil), \"Llb_ObjGetPath(pObj)\"); \n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        if ( Llb_ObjGetPath(pFanout) == pObj )\n            return pFanout;\n    return nil;\n}\n\n// extern Vec_Ptr_t * Llb_ManCutSupp( Aig_Man_t * p, Vec_Ptr_t * vLower, Vec_Ptr_t * vUpper );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [For each cut, returns PIs that can be quantified.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutSupps(p *Aig_Man_t, vResult *Vec_Ptr_t) *Vec_Ptr_t {\n    var vSupps, vOne, vLower, vUpper *Vec_Ptr_t;\n    var i int32;\n    vSupps = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vSupps, Vec_PtrAlloc(0) );\n    vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n    {\n        vOne  = Llb_ManCutSupp( p, vLower, vUpper );\n        Vec_PtrPush( vSupps, vOne );\n        vLower = vUpper;\n    }\n    assert(Vec_PtrSize(vSupps) == Vec_PtrSize(vResult), \"Vec_PtrSize(vSupps) == Vec_PtrSize(vResult)\");\n    return vSupps;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [For each cut, returns PIs that can be quantified.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutMap(p *Aig_Man_t, vResult *Vec_Ptr_t, vSupps *Vec_Ptr_t) *Vec_Ptr_t {\n    var fShowMatrix int32  = 1;\n    var vMaps, vOne *Vec_Ptr_t;\n    var vMap, vPrev, vNext *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var piFirst, piLast *int32;\n    var i, k, CounterPlus, CounterMinus, Counter int32;\n\n    vMaps = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vResult, vOne, i )\n    {\n        vMap = Vec_IntStart( Aig_ManObjNumMax(p) );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if !Saig_ObjIsPi(p, pObj) {\n                Vec_IntWriteEntry( vMap, pObj.Id, 1 ); }\n//            else\n//printf( \"*\" );\n//printf( \"%d \", pObj-\u003eId );\n        }\n        Vec_PtrPush( vMaps, vMap );\n//printf( \"\\n\" );\n    }\n    Vec_PtrPush( vMaps, Vec_IntStart( Aig_ManObjNumMax(p) ) );\n    assert(Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1, \"Vec_PtrSize(vMaps) == Vec_PtrSize(vResult)+1\");\n\n    // collect the first and last PIs\n    piFirst = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    piLast  = ABC_ALLOC( int, Saig_ManPiNum(p) );\n    Saig_ManForEachPi( p, pObj, i )\n        piFirst[i] = piLast[i] = -1;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSupps, vOne, i )\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vOne, pObj, k )\n        {\n            if !Saig_ObjIsPi(p, pObj) {\n                continue; }\n            if piFirst[Aig_ObjCioId(pObj)] == -1 {\n                 piFirst[Aig_ObjCioId(pObj)] = i; }\n            piLast[Aig_ObjCioId(pObj)] = i;\n        }\n    }\n    // PIs feeding into the flops should be extended to the last frame\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if !Saig_ObjIsPi(p, Aig_ObjFanin0(pObj)) {\n            continue; }\n        piLast[Aig_ObjCioId(Aig_ObjFanin0(pObj))] = Vec_PtrSize(vMaps)-1;\n    }\n\n    // set the PI map\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        if piFirst[i] == -1 {\n            continue; }\n        if piFirst[i] == piLast[i] {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, piFirst[i] );\n            Vec_IntWriteEntry( vMap, pObj.Id, 2 );\n            continue;\n        }\n\n        // set support for all in between        \n        for  k = piFirst[i]; k \u003c= piLast[i]; k++  {\n            vMap = (Vec_Int_t *)Vec_PtrEntry( vMaps, k );\n            Vec_IntWriteEntry( vMap, pObj.Id, 1 );\n        }\n    }\n    ABC_FREE( piFirst );\n    ABC_FREE( piLast );\n\n\n    // find all that will appear here\n    Counter = Aig_ManRegNum(p);\n    fmt.Printf(\"%d \", Counter);\n    Vec_PtrForEachEntryStart( Vec_Int_t *, vMaps, vMap, i, 1 )\n    {\n        vPrev = (Vec_Int_t *)Vec_PtrEntry( vMaps, i-1 );\n        if i == Vec_PtrSize(vMaps)-1 {\n            vNext = nil;\n        } else {\n            vNext = (Vec_Int_t *)Vec_PtrEntry( vMaps, i+1 );\n        }\n\n        CounterPlus = CounterMinus = 0;\n        Aig_ManForEachObj( p, pObj, k )\n        {\n            if Saig_ObjIsPi(p, pObj) {\n                if Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 {\n                    CounterPlus++; }\n                if Vec_IntEntry(vMap, k) == 1 \u0026\u0026 (vNext == nil || Vec_IntEntry(vNext, k) == 0) {\n                    CounterMinus++; }\n            \n            } else {\n                if Vec_IntEntry(vPrev, k) == 0 \u0026\u0026 Vec_IntEntry(vMap, k) == 1 {\n                    CounterPlus++; }\n                if Vec_IntEntry(vPrev, k) == 1 \u0026\u0026 Vec_IntEntry(vMap, k) == 0 {\n                    CounterMinus++; }\n            }\n        }\n        Counter = Counter + CounterPlus - CounterMinus;\n        fmt.Printf(\"%d=%d \", i, Counter);\n    }\n    fmt.Printf(\"\\n\");\n\n    if !(fShowMatrix != 0) {\n        return vMaps; }\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            if ( Vec_IntEntry(vMap, i) )\n                break;\n        if k == Vec_PtrSize(vMaps) {\n            continue; }\n        fmt.Printf(\"Obj = %4d : \", i);\n        if Saig_ObjIsPi(p,pObj) {\n            fmt.Printf(\"pi  \");\n        } else if Saig_ObjIsLo(p,pObj) {\n            fmt.Printf(\"lo  \");\n        } else if Aig_ObjIsNode(pObj) {\n            fmt.Printf(\"and \"); }\n\n        Vec_PtrForEachEntry( Vec_Int_t *, vMaps, vMap, k )\n            fmt.Printf(\"%d\", Vec_IntEntry(vMap, i));\n        fmt.Printf(\"\\n\");\n    }\n    return vMaps;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of PIs in the cut]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutPiNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsPi(p,pObj) )\n            Counter++;\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of LOs in the cut]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutLoNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        if ( Saig_ObjIsLo(p,pObj) )\n            Counter++;\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of LIs in the cut]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutLiNum(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var iFanout int32 = -1;\n    var Counter int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n    {\n        if Aig_ObjIsCi(pObj) {\n            continue; }\n        Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, k )\n        {\n            if Saig_ObjIsLi(p, pFanout) {\n                Counter++;\n                break;\n            }\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutVolume_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    return 1 + Llb_ManCutVolume_rec(p, Aig_ObjFanin0(pObj)) + \n        Llb_ManCutVolume_rec(p, Aig_ObjFanin1(pObj));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutVolume(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Counter += Llb_ManCutVolume_rec( p, pObj );\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutNodes_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin0(pObj), vNodes);\n    Llb_ManCutNodes_rec(p, Aig_ObjFanin1(pObj), vNodes);\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutNodes(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // count the upper cut\n    vNodes = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        Llb_ManCutNodes_rec( p, pObj, vNodes );\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutSupp(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vNodes, vSupp *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vNodes = Llb_ManCutNodes( p, vLower, vUpper );\n    // mark support of the nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin0(pObj) );\n        Aig_ObjSetTravIdCurrent( p, Aig_ObjFanin1(pObj) );\n    }\n    Vec_PtrFree( vNodes );\n    // collect the support nodes\n    vSupp = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vSupp, pObj );\n    return vSupp;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes volume of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutRange(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) *Vec_Ptr_t {\n    var vRange *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the lower cut with the traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // collect the upper ones that are not marked\n    vRange = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n        if ( !Aig_ObjIsTravIdCurrent(p, pObj) )\n            Vec_PtrPush( vRange, pObj );\n    return vRange;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the given cluster.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCutPrint(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) {\n    var vSupp, vRange *Vec_Ptr_t;\n    var Pis, Ffs, And int32;\n\n    Pis = Llb_ManCutPiNum(p, vLower);\n    Ffs = Llb_ManCutLoNum(p, vLower);\n    And = Vec_PtrSize(vLower) - Pis - Ffs;\n    fmt.Printf(\"Leaf: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vLower), Pis, Ffs, And);\n\n    Pis = Llb_ManCutPiNum(p, vUpper);\n    Ffs = Llb_ManCutLiNum(p, vUpper);\n    And = Vec_PtrSize(vUpper) - Pis - Ffs;\n    fmt.Printf(\"Root: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vUpper), Pis, Ffs, And);\n\n    vSupp = Llb_ManCutSupp( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vSupp);\n    Ffs = Llb_ManCutLoNum(p, vSupp);\n    And = Vec_PtrSize(vSupp) - Pis - Ffs;\n    fmt.Printf(\"Supp: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vSupp), Pis, Ffs, And);\n\n    vRange = Llb_ManCutRange( p, vLower, vUpper );\n    Pis = Llb_ManCutPiNum(p, vRange);\n    Ffs = Llb_ManCutLiNum(p, vRange);\n    And = Vec_PtrSize(vRange) - Pis - Ffs;\n    fmt.Printf(\"Range: %3d=%3d+%3d+%3d  \", Vec_PtrSize(vRange), Pis, Ffs, And);\n\n    fmt.Printf(\"S =%3d. V =%3d.\\n\", Vec_PtrSize(vSupp)+Vec_PtrSize(vRange), Llb_ManCutVolume(p, vLower, vUpper));\n    Vec_PtrFree( vSupp );\n    Vec_PtrFree( vRange );\n/*   \n    {\n        Aig_Obj_t * pObj;\n        int i;\n        printf( \"Lower: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"     \" );\n        printf( \"Upper: \" );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n            printf( \" %d\", pObj-\u003eId );\n        printf( \"\\n\" );\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the given cluster.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManResultPrint(p *Aig_Man_t, vResult *Vec_Ptr_t) {\n    var vLower *Vec_Ptr_t;\n    var vUpper *Vec_Ptr_t = nil;\n    var i int32;\n    Vec_PtrForEachEntryReverse( Vec_Ptr_t *, vResult, vLower, i )\n    {\n        if i \u003c Vec_PtrSize(vResult) - 1 {\n            Llb_ManCutPrint( p, vLower, vUpper ); }\n        vUpper = vLower;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find an augmenting path originating in this node.]\n\n  Description [This procedure works for directed graphs only!]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowBwdPath2_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    assert(Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj), \"Aig_ObjIsNode(pObj) || Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj)\");\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // process node without flow\n    if !(Llb_ObjGetPath(pObj) != nil) {\n        // start the path if we reached a terminal node\n        if pObj.fMarkA {\n            return Llb_ObjSetPath( pObj, (Aig_Obj_t *)1 ); }\n        // explore the fanins\n//        Abc_ObjForEachFanin( pObj, pFanin, i )\n//            if ( Abc_NtkMaxFlowBwdPath2_rec(pFanin) )\n//                return Abc_ObjSetPath( pObj, pFanin );\n        if Aig_ObjIsNode(pObj) {\n            if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) ) != 0 {\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin0(pObj) ); }\n            if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) ) != 0 {\n                return Llb_ObjSetPath( pObj, Aig_ObjFanin1(pObj) ); }\n        }\n        return 0;\n    }\n    // pObj has flow - find the fanout with flow\n    pFanout = Llb_ObjGetFanoutPath( p, pObj );\n    if pFanout == nil {\n        return 0; }\n    // go through the fanins of the fanout with flow\n//    Abc_ObjForEachFanin( pFanout, pFanin, i )\n//        if ( Abc_NtkMaxFlowBwdPath2_rec( pFanin ) )\n//            return Abc_ObjSetPath( pFanout, pFanin );\n    assert(Aig_ObjIsNode(pFanout), \"Aig_ObjIsNode(pFanout)\");\n    if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pFanout) ) != 0 {\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin0(pFanout) ); }\n    if Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pFanout) ) != 0 {\n        return Llb_ObjSetPath( pFanout, Aig_ObjFanin1(pFanout) ); }\n    // try the fanout\n    if Llb_ManFlowBwdPath2_rec( p, pFanout ) != 0 {\n        return Llb_ObjSetPath( pFanout, nil ); }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans markB.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowLabelTfi_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManFlowLabelTfi_rec( p, Aig_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowUpdateCut(p *Aig_Man_t, vMinCut *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // label the TFI of the cut nodes\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Llb_ManFlowLabelTfi_rec( p, pObj );\n    // collect labeled fanins of non-labeled nodes\n    Vec_PtrClear( vMinCut );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !Aig_ObjIsCo(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p, pObj) || Aig_ObjIsTravIdPrevious(p, pObj) {\n            continue; }\n        if Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin0(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin0(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin0(pObj) );\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, Aig_ObjFanin1(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, Aig_ObjFanin1(pObj));\n            Vec_PtrPush( vMinCut, Aig_ObjFanin1(pObj) );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find minimum-volume minumum cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowMinCut(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect the cut nodes\n    vMinCut = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        // node without flow is not a cut node\n        if !(Llb_ObjGetPath(pObj) != nil) {\n            continue; }\n        // unvisited node is below the cut\n        if !Aig_ObjIsTravIdCurrent(p, pObj) {\n            continue; }\n        // add terminal with flow or node whose path is not visited\n        if pObj.fMarkA || !Aig_ObjIsTravIdCurrent( p, Llb_ObjGetPath(pObj) ) {\n            Vec_PtrPush( vMinCut, pObj ); }\n    }\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the min-cut is indeed a cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowVerifyCut_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 1; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // visit the node\n    if Aig_ObjIsConst1(pObj) {\n        return 1; }\n    if Aig_ObjIsCi(pObj) {\n        return 0; }\n    // explore the fanins\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    if !(Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin0(pObj)) != 0) {\n        return 0; }\n    if !(Llb_ManFlowVerifyCut_rec(p, Aig_ObjFanin1(pObj)) != 0) {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the min-cut is indeed a cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowVerifyCut(p *Aig_Man_t, vMinCut *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark the cut with the current traversal ID\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vMinCut, pObj, i )\n        Aig_ObjSetTravIdCurrent( p, pObj );\n    // search from the latches for a path to the COs/CIs\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        if !(Llb_ManFlowVerifyCut_rec( p, Aig_ObjFanin0(pObj) ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of max-flow/min-cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlow(p *Aig_Man_t, vSources *Vec_Ptr_t, pnFlow *int32) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert(!pObj.fMarkA \u0026\u0026 pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 pObj.fMarkB\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n    }\n    if pnFlow != nil {\n        *pnFlow = Flow; }\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vSources, pObj, i )\n    {\n        assert(!pObj.fMarkA \u0026\u0026 pObj.fMarkB, \"!pObj.fMarkA \u0026\u0026 pObj.fMarkB\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n    }\n\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert(Vec_PtrSize(vMinCut) == Flow, \"Vec_PtrSize(vMinCut) == Flow\");\n    // verify the cut\n    if !(Llb_ManFlowVerifyCut(p, vMinCut) != 0) {\n        fmt.Printf(\"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\"); }\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of max-flow/min-cut computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowCompute(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var Flow, FlowCur, RetValue, i int32;\n    // find the max-flow\n    Flow = 0;\n    Aig_ManCleanData( p );\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !pObj.fMarkB {\n            continue; }\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n//printf( \"%d \", Aig_ObjFanin0(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n//printf( \"%d \", Aig_ObjFanin1(pObj)-\u003eId );\n            FlowCur  = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            Flow    += FlowCur;\n            if FlowCur {\n                Aig_ManIncrementTravId(p); }\n        }\n    }\n//printf( \"\\n\" );\n\n    // mark the nodes reachable from the latches\n    Aig_ManIncrementTravId(p);\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if !pObj.fMarkB {\n            continue; }\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\");\n        if !Aig_ObjFanin0(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin0(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n        if Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjFanin1(pObj).fMarkB {\n            RetValue = Llb_ManFlowBwdPath2_rec( p, Aig_ObjFanin1(pObj) );\n            assert(RetValue == 0, \"RetValue == 0\");\n        }\n    }\n    // find the min-cut with the smallest volume\n    vMinCut = Llb_ManFlowMinCut( p );\n    assert(Vec_PtrSize(vMinCut) == Flow, \"Vec_PtrSize(vMinCut) == Flow\");\n//printf( \"%d \", Vec_PtrSize(vMinCut) );\n    Llb_ManFlowUpdateCut( p, vMinCut );\n//printf( \"%d   \", Vec_PtrSize(vMinCut) );\n    // verify the cut\n    if !(Llb_ManFlowVerifyCut(p, vMinCut) != 0) {\n        fmt.Printf(\"Llb_ManFlow() error! The computed min-cut is not a cut!\\n\"); }\n//    Llb_ManFlowPrintCut( p, vMinCut );\n    return vMinCut;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans markB.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowCleanMarkB_rec(pObj *Aig_Obj_t) {\n    if pObj.fMarkB == 0 {\n        return; }\n    pObj.fMarkB = 0;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowCleanMarkB_rec( Aig_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans markB.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowSetMarkA_rec(pObj *Aig_Obj_t) {\n    if pObj.fMarkA {\n        return; }\n    pObj.fMarkA = 1;\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return; }\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin0(pObj) );\n    Llb_ManFlowSetMarkA_rec( Aig_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares flow computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowPrepareCut(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // reset marks\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pObj.fMarkA = 0;\n        pObj.fMarkB = 1;\n    }\n    // clean PIs and const\n    Aig_ManConst1(p).fMarkB = 0;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkB = 0;\n    // clean upper cut\n//printf( \"Upper: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vUpper, pObj, i )\n    {\n        Llb_ManFlowCleanMarkB_rec( pObj );\n//printf( \"%d \", pObj-\u003eId );\n    }\n//printf( \"\\n\" );\n    // set lower cut\n//printf( \"Lower: \");\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n    {\n//printf( \"%d \", pObj-\u003eId );\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n        Llb_ManFlowSetMarkA_rec( pObj );\n    }\n//printf( \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares flow computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowUnmarkCone(p *Aig_Man_t, vCone *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCone, pObj, i )\n    {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        assert(pObj.fMarkB == 1, \"pObj.fMarkB == 1\");\n        pObj.fMarkB = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowCollectAndMarkCone_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vCone *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var iFanout int32 = -1;\n    if Saig_ObjIsLi(p, pObj) {\n        return; }\n    if pObj.fMarkB {\n        return; }\n    if pObj.fMarkA == 0 {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        pObj.fMarkB = 1;\n        if Aig_ObjIsNode(pObj) {\n            Vec_PtrPush( vCone, pObj ); }\n    }\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFanout, i )\n        Llb_ManFlowCollectAndMarkCone_rec( p, pFanout, vCone );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowCollectAndMarkCone(p *Aig_Man_t, vStarts *Vec_Ptr_t, vCone *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vCone );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vStarts, pObj, i )\n    {\n        assert(pObj.fMarkA \u0026\u0026 !pObj.fMarkB, \"pObj.fMarkA \u0026\u0026 !pObj.fMarkB\");\n        Llb_ManFlowCollectAndMarkCone_rec( p, pObj, vCone );\n    }\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeCutLo(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_PtrPush( vMinCut, pObj );\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeCutLi(p *Aig_Man_t) *Vec_Ptr_t {\n    var vMinCut *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Saig_ManPoNum(p) == 0, \"Saig_ManPoNum(p) == 0\");\n    vMinCut = Vec_PtrAlloc( 100 );\n    Aig_ManIncrementTravId(p);\n    Saig_ManForEachLi( p, pObj, i )\n    {\n        pObj = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsConst1(pObj) {\n            continue; }\n        if Aig_ObjIsTravIdCurrent(p, pObj) {\n            continue; }\n        Aig_ObjSetTravIdCurrent(p, pObj);\n        Vec_PtrPush( vMinCut, pObj );\n    }\n    return vMinCut;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowGetObjSet(p *Aig_Man_t, vLower *Vec_Ptr_t, iStart int32, nSize int32, vSet *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vSet );\n    for  i = 0; i \u003c nSize; i++  {\n        pObj = (Aig_Obj_t *)Vec_PtrEntry( vLower, (iStart + i) % Vec_PtrSize(vLower) );\n        Vec_PtrPush( vSet, pObj );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManFlowFindBestCut(p *Aig_Man_t, vLower *Vec_Ptr_t, vUpper *Vec_Ptr_t, Num int32) *Vec_Ptr_t {\n    var nVolMin int32  = Aig_ManNodeNum(p) / Num / 2;\n    var vMinCut *Vec_Ptr_t;\n    var vCone, vSet *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, s, Vol, VolLower, VolUpper, VolCmp int32;\n    var iBest int32 = -1;\n    var iMinCut int32 = ABC_INFINITY;\n    var iVolBest int32;\n\n    Vol = Llb_ManCutVolume( p, vLower, vUpper );\n    assert(Vol \u003e nVolMin, \"Vol \u003e nVolMin\");\n    VolCmp = Abc_MinInt( nVolMin, Vol - nVolMin );\n    vCone = Vec_PtrAlloc( 100 );\n    vSet  = Vec_PtrAlloc( 100 );\n    Llb_ManFlowPrepareCut( p, vLower, vUpper );\n    for  s = 1; s \u003c Aig_ManRegNum(p); s += 5  {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLower, pObj, i )\n        {\n            Llb_ManFlowGetObjSet( p, vLower, i, s, vSet );\n            Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n            if Vec_PtrSize(vCone) == 0 {\n                continue; }\n            vMinCut  = Llb_ManFlowCompute( p );\n            Llb_ManFlowUnmarkCone( p, vCone );\n\n            VolLower = Llb_ManCutVolume( p, vLower, vMinCut );\n            VolUpper = Llb_ManCutVolume( p, vMinCut, vUpper );\n            Vol = Abc_MinInt( VolLower, VolUpper );\n            if Vol \u003e= VolCmp \u0026\u0026  (iMinCut == -1 || \n                                    iMinCut \u003e  Vec_PtrSize(vMinCut) || \n                                   (iMinCut == Vec_PtrSize(vMinCut) \u0026\u0026 iVolBest \u003c Vol)) {\n                iBest = i;\n                iMinCut = Vec_PtrSize(vMinCut);\n                iVolBest = Vol;\n            }\n            Vec_PtrFree( vMinCut );\n        }\n        if iBest \u003e= 0 {\n            break; }\n    }\n    if iBest == -1 {\n        // cleanup\n        Vec_PtrFree( vCone );\n        Vec_PtrFree( vSet );\n        return nil;\n    }\n    // get the best cut\n    assert(iBest \u003e= 0, \"iBest \u003e= 0\");\n    Llb_ManFlowGetObjSet( p, vLower, iBest, s, vSet );\n    Llb_ManFlowCollectAndMarkCone( p, vSet, vCone );\n    vMinCut = Llb_ManFlowCompute( p );\n    Llb_ManFlowUnmarkCone( p, vCone );\n    // cleanup\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSet );\n    return vMinCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeCuts(p *Aig_Man_t, Num int32, fVerbose int32, fVeryVerbose int32) *Vec_Ptr_t {\n    var nVolMax int32  = Aig_ManNodeNum(p) / Num;\n    var vResult *Vec_Ptr_t;\n    var vMinCut *Vec_Ptr_t = nil;\n    var vLower *Vec_Ptr_t;\n    var vUpper *Vec_Ptr_t;\n    var i, k, nVol int32;\n    var clk abctime  = Abc_Clock();\n    vResult = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLo(p) );\n    Vec_PtrPush( vResult, Llb_ManComputeCutLi(p) );\n    for {\n        // find a place to insert new cut\n        vLower = (Vec_Ptr_t *)Vec_PtrEntry( vResult, 0 );\n        Vec_PtrForEachEntryStart( Vec_Ptr_t *, vResult, vUpper, i, 1 )\n        {\n            nVol = Llb_ManCutVolume( p, vLower, vUpper );\n            if nVol \u003c= nVolMax {\n                vLower = vUpper;\n                continue;\n            }\n\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vLower,  vUpper ); }\n            vMinCut = Llb_ManFlowFindBestCut( p, vLower, vUpper, Num );\n            if vMinCut == nil {\n                if fVeryVerbose != 0 {\n                fmt.Printf(\"Could not break the cut.\\n\"); }\n                if fVeryVerbose != 0 {\n                fmt.Printf(\"\\n\"); }\n                vLower = vUpper;\n                continue;\n            }\n\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vMinCut, vUpper ); }\n            if fVeryVerbose != 0 {\n            Llb_ManCutPrint( p, vLower,  vMinCut ); }\n            if fVeryVerbose != 0 {\n            fmt.Printf(\"\\n\"); }\n\n            break;\n        }\n        if i == Vec_PtrSize(vResult) {\n            break; }\n        // insert vMinCut before vUpper\n        Vec_PtrPush( vResult, nil );\n        for  k = Vec_PtrSize(vResult) - 1; k \u003e i; k--  {\n            Vec_PtrWriteEntry( vResult, k, Vec_PtrEntry(vResult, k-1) );\n        }\n        Vec_PtrWriteEntry( vResult, i, vMinCut );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Finished computing %d partitions.  \", Vec_PtrSize(vResult) - 1);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        Llb_ManResultPrint( p, vResult );\n    }\n    return vResult;\n}\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_BddSetDefaultParams(p *Gia_ParLlb_t) {\n    memset( p, 0, sizeof(Gia_ParLlb_t) );\n    p.nBddMax       =  1000000;\n    p.nIterMax      = 10000000;\n    p.nClusterMax   =       20;\n    p.nHintDepth    =        0;\n    p.HintFirst     =        0;\n    p.fUseFlow      =        0;  // use flow \n    p.nVolumeMax    =      100;  // max volume\n    p.nVolumeMin    =       30;  // min volume\n    p.fReorder      =        1;\n    p.fIndConstr    =        0;\n    p.fUsePivots    =        0;\n    p.fCluster      =        0;\n    p.fSchedule     =        0;\n    p.fVerbose      =        0;\n    p.fVeryVerbose  =        0;\n    p.fSilent       =        0;\n    p.TimeLimit     =        0;\n//    p-\u003eTimeLimit     =        0;\n    p.TimeLimitGlo  =        0;\n    p.TimeTarget    =        0;\n    p.iFrame        =       -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds balanced cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManMinCutTest(pAig *Aig_Man_t, Num int32) {\n    extern void Llb_BddConstructTest( Aig_Man_t * p, Vec_Ptr_t * vResult );\n    extern void Llb_BddExperiment( Aig_Man_t * pInit, Aig_Man_t * pAig, Gia_ParLlb_t * pPars, Vec_Ptr_t * vResult, Vec_Ptr_t * vMaps );\n \n\n//    int fVerbose = 1;\n    var Pars Gia_ParLlb_t;\n    var pPars *Gia_ParLlb_t = \u0026Pars;\n    var vResult *Vec_Ptr_t;//, * vSupps, * vMaps;\n    var p *Aig_Man_t;\n\n    Llb_BddSetDefaultParams( pPars );\n\n    p = Aig_ManDupFlopsOnly( pAig );\n//Aig_ManShow( p, 0, NULL );\n    Aig_ManPrintStats( pAig );\n    Aig_ManPrintStats( p );\n    Aig_ManFanoutStart( p );\n\n    vResult = Llb_ManComputeCuts( p, Num, 1, 0 );\n//    vSupps  = Llb_ManCutSupps( p, vResult );\n//    vMaps   = Llb_ManCutMap( p, vResult, vSupps );\n\n//    Llb_BddExperiment( pAig, p, pPars, vResult, vMaps );\n    Llb_CoreExperiment( pAig, p, pPars, vResult, 0 );\n\n//    Vec_VecFree( (Vec_Vec_t *)vMaps );\n//    Vec_VecFree( (Vec_Vec_t *)vSupps );\n    Vec_VecFree( (Vec_Vec_t *)vResult );\n\n    Aig_ManFanoutStop( p );\n    Aig_ManCleanMarkAB( p );\n    Aig_ManStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

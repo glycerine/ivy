@@ -1,0 +1,994 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c",
+  "SHA256": "d7dd04740f0c149e1996ca4e7154a3eb16bd0aa29752f8940d917f55d6772bdc",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 1893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadBench: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 105,
+        "Column": 41,
+        "ByteOffset": 2859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 3118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 117,
+        "Column": 12,
+        "ByteOffset": 3347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( (char *)vTokens.pArray[0], \"INPUT\", 5 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 119,
+        "Column": 19,
+        "ByteOffset": 3485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if strncmp( (char *)vTokens.pArray[0], \"OUTPUT\", 5 ) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 124,
+        "Column": 16,
+        "ByteOffset": 3736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strncmp(pType, \"DFF\", 3) == 0 { // works for both DFF and DFFRSE"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 135,
+        "Column": 25,
+        "ByteOffset": 4565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( pNetName, \"%s_%s\", pFlopOut, pName );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 156,
+        "Column": 23,
+        "ByteOffset": 5585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strcmp(pType, \"LUT\") == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 21,
+        "ByteOffset": 5845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%s: Currently cannot read truth tables with more than 8 inputs (%d).\\n\", Extra_FileReaderGetFileName(p), nNames );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 169,
+        "Column": 20,
+        "ByteOffset": 6216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strncmp( pString, \"0x\", 2 ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 21,
+        "ByteOffset": 6266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%s: The LUT signature (%s) does not look like a hexadecimal beginning with \\\"0x\\\".\\n\", Extra_FileReaderGetFileName(p), pString );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 180,
+        "Column": 20,
+        "ByteOffset": 6761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strlen(pString) \u003c uint32(nDigits) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 181,
+        "Column": 53,
+        "ByteOffset": 6849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    Vec_StrFill( vString, nDigits - strlen(pString), '0' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 21,
+        "ByteOffset": 7196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%s: Reading hexadecimal number (%s) has failed.\\n\", Extra_FileReaderGetFileName(p), pString );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 21,
+        "ByteOffset": 8221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( nNames \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 25,
+        "ByteOffset": 8742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"%s: Reading truth table (%s) of single-input node has failed.\\n\", Extra_FileReaderGetFileName(p), pString );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 226,
+        "Column": 20,
+        "ByteOffset": 9378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp(pType, \"AND\") == 0 || strcmp(pType, \"and\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 226,
+        "Column": 49,
+        "ByteOffset": 9407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strcmp(pType, \"AND\") == 0 || strcmp(pType, \"and\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 228,
+        "Column": 27,
+        "ByteOffset": 9566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"OR\") == 0 || strcmp(pType, \"or\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 228,
+        "Column": 55,
+        "ByteOffset": 9594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"OR\") == 0 || strcmp(pType, \"or\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 230,
+        "Column": 27,
+        "ByteOffset": 9751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NAND\") == 0 || strcmp(pType, \"nand\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 230,
+        "Column": 57,
+        "ByteOffset": 9781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NAND\") == 0 || strcmp(pType, \"nand\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 232,
+        "Column": 27,
+        "ByteOffset": 9937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NOR\") == 0 || strcmp(pType, \"nor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 232,
+        "Column": 56,
+        "ByteOffset": 9966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NOR\") == 0 || strcmp(pType, \"nor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 234,
+        "Column": 27,
+        "ByteOffset": 10120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"XOR\") == 0 || strcmp(pType, \"xor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 234,
+        "Column": 56,
+        "ByteOffset": 10149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"XOR\") == 0 || strcmp(pType, \"xor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 27,
+        "ByteOffset": 10303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NXOR\") == 0 || strcmp(pType, \"XNOR\") == 0 || strcmp(pType, \"nxor\") == 0 || strcmp(pType, \"xnor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 57,
+        "ByteOffset": 10333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NXOR\") == 0 || strcmp(pType, \"XNOR\") == 0 || strcmp(pType, \"nxor\") == 0 || strcmp(pType, \"xnor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 87,
+        "ByteOffset": 10363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NXOR\") == 0 || strcmp(pType, \"XNOR\") == 0 || strcmp(pType, \"nxor\") == 0 || strcmp(pType, \"xnor\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 236,
+        "Column": 117,
+        "ByteOffset": 10393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NXOR\") == 0 || strcmp(pType, \"XNOR\") == 0 || strcmp(pType, \"nxor\") == 0 || strcmp(pType, \"xnor\") == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 238,
+        "Column": 27,
+        "ByteOffset": 10549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"BUF\", 3) == 0 || strcmp(pType, \"buf\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 238,
+        "Column": 60,
+        "ByteOffset": 10582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"BUF\", 3) == 0 || strcmp(pType, \"buf\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 240,
+        "Column": 27,
+        "ByteOffset": 10728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NOT\") == 0 || strcmp(pType, \"not\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 240,
+        "Column": 56,
+        "ByteOffset": 10757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strcmp(pType, \"NOT\") == 0 || strcmp(pType, \"not\") == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 242,
+        "Column": 27,
+        "ByteOffset": 10903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"MUX\", 3) == 0 || strcmp(pType, \"mux\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 242,
+        "Column": 60,
+        "ByteOffset": 10936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"MUX\", 3) == 0 || strcmp(pType, \"mux\") == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 245,
+        "Column": 27,
+        "ByteOffset": 11197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"gnd\", 3) == 0 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 247,
+        "Column": 27,
+        "ByteOffset": 11356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else if strncmp(pType, \"vdd\", 3) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 21,
+        "ByteOffset": 11534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Io_ReadBenchNetwork(): Cannot determine gate type \\\"%s\\\" in line %d.\\n\", pType, Extra_FileReaderGetLineNumber(p, 0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 13,
+        "ByteOffset": 12176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchNetwork(): Adding constant 0 fanin to non-driven net \\\"1\\\".\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 13,
+        "ByteOffset": 12605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchNetwork(): Adding constant 1 fanin to non-driven net \\\"2\\\".\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 13,
+        "ByteOffset": 12923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchNetwork(): Converting to BDD has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 13123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchNetwork(): Converting to SOP has failed.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 320,
+        "Column": 13,
+        "ByteOffset": 13747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 13802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadBenchInit(): Failed to open file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 325,
+        "Column": 10,
+        "ByteOffset": 13907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 999, pFile )  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 18,
+        "ByteOffset": 13956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( pBuffer, \" \\n\\t\\r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 13,
+        "ByteOffset": 14123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchInit(): Cannot find register with output %s.\\n\", pToken );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 14339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchInit(): The signal is not a register output %s.\\n\", pToken );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 18,
+        "ByteOffset": 14508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\n\\t\\r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 14785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_ReadBenchInit(): The signal %s has unknown initial value (%s).\\n\", "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 14968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadBench",
+      "Start": 1352,
+      "End": 1997,
+      "BodyStart": 1409,
+      "Original": "Abc_Ntk_t * Io_ReadBench( char * pFileName, int fCheck )\n{\n    Extra_FileReader_t * p;\n    Abc_Ntk_t * pNtk;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t,()=\" );\n    if ( p == NULL )\n        return NULL;\n\n    // read the network\n    pNtk = Io_ReadBenchNetwork( p );\n    Extra_FileReaderFree( p );\n    if ( pNtk == NULL )\n        return NULL;\n\n    // make sure that everything is okay with the network structure\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pNtk ) )\n    {\n        printf( \"Io_ReadBench: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtk );\n        return NULL;\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_ReadBench(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t,()=\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadBenchNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadBench: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_ReadBenchNetwork",
+      "Start": 2233,
+      "End": 13500,
+      "BodyStart": 2291,
+      "Original": "Abc_Ntk_t * Io_ReadBenchNetwork( Extra_FileReader_t * p )\n{\n    ProgressBar * pProgress;\n    Vec_Ptr_t * vTokens;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode, * pNet;\n    Vec_Str_t * vString;\n    unsigned uTruth[8];\n    char * pType, ** ppNames, * pString;\n    int iLine, nNames, nDigits, fLutsPresent = 0;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n    pNtk-\u003enConstrs = 0;\n\n    // go through the lines of the file\n    vString = Vec_StrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( stdout, Extra_FileReaderGetFileSize(p) );\n    for ( iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++ )\n    {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), NULL );\n\n        if ( vTokens-\u003enSize == 1 )\n        {\n            printf( \"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p) );\n            Vec_StrFree( vString );\n            Abc_NtkDelete( pNtk );\n            return NULL;\n        }\n\n        // get the type of the line\n        if ( strncmp( (char *)vTokens-\u003epArray[0], \"INPUT\", 5 ) == 0 )\n            Io_ReadCreatePi( pNtk, (char *)vTokens-\u003epArray[1] );\n        else if ( strncmp( (char *)vTokens-\u003epArray[0], \"OUTPUT\", 5 ) == 0 )\n            Io_ReadCreatePo( pNtk, (char *)vTokens-\u003epArray[1] );\n        else \n        {\n            // get the node name and the node type\n            pType = (char *)vTokens-\u003epArray[1];\n            if ( strncmp(pType, \"DFF\", 3) == 0 ) // works for both DFF and DFFRSE\n            {\n                if ( Vec_PtrSize(vTokens) == 6 )\n                {\n                    // create primary input to represent flop output\n                    char pNetName[1000]; char * pName; int i;\n                    char * pFlopOut   = (char *)vTokens-\u003epArray[0];\n                    Abc_Obj_t * pNet  = Abc_NtkFindOrCreateNet( pNtk, pFlopOut );\n                    Abc_Obj_t * pTerm = Abc_NtkCreatePi( pNtk );\n                    Abc_ObjAddFanin( pNet, pTerm );\n                    // create four primary outputs to represent flop inputs\n                    Vec_PtrForEachEntryStart( char *, vTokens, pName, i, 2 )\n                    {\n                        sprintf( pNetName, \"%s_%s\", pFlopOut, pName );\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n                        pTerm = Abc_NtkCreateNodeBuf( pNtk, pNet );\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n                        Abc_ObjAddFanin( pNet, pTerm );\n                        pTerm = Abc_NtkCreatePo( pNtk );\n                        Abc_ObjAddFanin( pTerm, pNet );\n                    }\n                    pNtk-\u003enConstrs++;\n                }\n                else\n                {\n                    pNode = Io_ReadCreateLatch( pNtk, (char *)vTokens-\u003epArray[2], (char *)vTokens-\u003epArray[0] );\n    //                Abc_LatchSetInit0( pNode );\n                    if ( pType[3] == '0' )\n                        Abc_LatchSetInit0( pNode );\n                    else if ( pType[3] == '1' )\n                        Abc_LatchSetInit1( pNode );\n                    else\n                        Abc_LatchSetInitDc( pNode );\n                }\n            }\n            else if ( strcmp(pType, \"LUT\") == 0 )\n            {\n                fLutsPresent = 1;\n                ppNames = (char **)vTokens-\u003epArray + 3;\n                nNames  = vTokens-\u003enSize - 3;\n                // check the number of inputs\n                if ( nNames \u003e 8 )\n                {\n                    printf( \"%s: Currently cannot read truth tables with more than 8 inputs (%d).\\n\", Extra_FileReaderGetFileName(p), nNames );\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return NULL;\n                }\n                // get the hex string\n                pString = (char *)vTokens-\u003epArray[2];\n                if ( strncmp( pString, \"0x\", 2 ) )\n                {\n                    printf( \"%s: The LUT signature (%s) does not look like a hexadecimal beginning with \\\"0x\\\".\\n\", Extra_FileReaderGetFileName(p), pString );\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return NULL;\n                }\n                pString += 2;\n                // pad the string with zero's if needed\n                nDigits = (1 \u003c\u003c nNames) / 4;\n                if ( nDigits == 0 )\n                    nDigits = 1;\n                if ( strlen(pString) \u003c (unsigned)nDigits )\n                {\n                    Vec_StrFill( vString, nDigits - strlen(pString), '0' );\n                    Vec_StrPrintStr( vString, pString );\n                    Vec_StrPush( vString, 0 );\n                    pString = Vec_StrArray( vString );\n                }\n                // read the hex number from the string\n                if ( !Extra_ReadHexadecimal( uTruth, pString, nNames ) )\n                {\n                    printf( \"%s: Reading hexadecimal number (%s) has failed.\\n\", Extra_FileReaderGetFileName(p), pString );\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return NULL;\n                }\n                // check if the node is a constant node\n                if ( Extra_TruthIsConst0(uTruth, nNames) )\n                {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens-\u003epArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 0\\n\" ) );\n                }\n                else if ( Extra_TruthIsConst1(uTruth, nNames) )\n                {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens-\u003epArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 1\\n\" ) );\n                }\n                else\n                {\n                    // create the node\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens-\u003epArray[0], ppNames, nNames );\n                    assert( nNames \u003e 0 );\n                    if ( nNames \u003e 1 )\n                        Abc_ObjSetData( pNode, Abc_SopCreateFromTruth((Mem_Flex_t *)pNtk-\u003epManFunc, nNames, uTruth) );\n                    else if ( pString[0] == '2' )\n                        Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk-\u003epManFunc) );\n                    else if ( pString[0] == '1' )\n                        Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk-\u003epManFunc) );\n                    else\n                    {\n                        printf( \"%s: Reading truth table (%s) of single-input node has failed.\\n\", Extra_FileReaderGetFileName(p), pString );\n                        Vec_StrFree( vString );\n                        Abc_NtkDelete( pNtk );\n                        return NULL;\n                    }\n                }\n            }\n            else\n            {\n                // create a new node and add it to the network\n                ppNames = (char **)vTokens-\u003epArray + 2;\n                nNames  = vTokens-\u003enSize - 2;\n                pNode = Io_ReadCreateNode( pNtk, (char *)vTokens-\u003epArray[0], ppNames, nNames );\n                // assign the cover\n                if ( strcmp(pType, \"AND\") == 0 || strcmp(pType, \"and\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateAnd((Mem_Flex_t *)pNtk-\u003epManFunc, nNames, NULL) );\n                else if ( strcmp(pType, \"OR\") == 0 || strcmp(pType, \"or\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateOr((Mem_Flex_t *)pNtk-\u003epManFunc, nNames, NULL) );\n                else if ( strcmp(pType, \"NAND\") == 0 || strcmp(pType, \"nand\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateNand((Mem_Flex_t *)pNtk-\u003epManFunc, nNames) );\n                else if ( strcmp(pType, \"NOR\") == 0 || strcmp(pType, \"nor\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateNor((Mem_Flex_t *)pNtk-\u003epManFunc, nNames) );\n                else if ( strcmp(pType, \"XOR\") == 0 || strcmp(pType, \"xor\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateXor((Mem_Flex_t *)pNtk-\u003epManFunc, nNames) );\n                else if ( strcmp(pType, \"NXOR\") == 0 || strcmp(pType, \"XNOR\") == 0 || strcmp(pType, \"nxor\") == 0 || strcmp(pType, \"xnor\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateNxor((Mem_Flex_t *)pNtk-\u003epManFunc, nNames) );\n                else if ( strncmp(pType, \"BUF\", 3) == 0 || strcmp(pType, \"buf\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk-\u003epManFunc) );\n                else if ( strcmp(pType, \"NOT\") == 0 || strcmp(pType, \"not\") == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk-\u003epManFunc) );\n                else if ( strncmp(pType, \"MUX\", 3) == 0 || strcmp(pType, \"mux\") == 0 )\n//                    Abc_ObjSetData( pNode, Abc_SopRegister(pNtk-\u003epManFunc, \"1-0 1\\n-11 1\\n\") );\n                    Abc_ObjSetData( pNode, Abc_SopRegister((Mem_Flex_t *)pNtk-\u003epManFunc, \"0-1 1\\n11- 1\\n\") );\n                else if ( strncmp(pType, \"gnd\", 3) == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 0\\n\" ) );\n                else if ( strncmp(pType, \"vdd\", 3) == 0 )\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 1\\n\" ) );\n                else\n                {\n                    printf( \"Io_ReadBenchNetwork(): Cannot determine gate type \\\"%s\\\" in line %d.\\n\", pType, Extra_FileReaderGetLineNumber(p, 0) );\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return NULL;\n                }\n            }\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_StrFree( vString );\n\n    // check if constant 0 is present\n    if ( (pNet = Abc_NtkFindNet( pNtk, \"gnd\" )) )\n    {\n        if ( Abc_ObjFaninNum(pNet) == 0 )\n            Io_ReadCreateConst( pNtk, \"gnd\", 0 );\n    }\n    if ( (pNet = Abc_NtkFindNet( pNtk, \"1\" )) )\n    {\n        if ( Abc_ObjFaninNum(pNet) == 0 )\n        {\n            printf( \"Io_ReadBenchNetwork(): Adding constant 0 fanin to non-driven net \\\"1\\\".\\n\" );\n            Io_ReadCreateConst( pNtk, \"1\", 0 );\n        }\n    }\n    // check if constant 1 is present\n    if ( (pNet = Abc_NtkFindNet( pNtk, \"vdd\" )) )\n    {\n        if ( Abc_ObjFaninNum(pNet) == 0 )\n            Io_ReadCreateConst( pNtk, \"vdd\", 1 );\n    }\n    if ( (pNet = Abc_NtkFindNet( pNtk, \"2\" )) )\n    {\n        if ( Abc_ObjFaninNum(pNet) == 0 )\n        {\n            printf( \"Io_ReadBenchNetwork(): Adding constant 1 fanin to non-driven net \\\"2\\\".\\n\" );\n            Io_ReadCreateConst( pNtk, \"2\", 1 );\n        }\n    }\n\n    Abc_NtkFinalizeRead( pNtk );\n\n    // if LUTs are present, collapse the truth tables into cubes\n    if ( fLutsPresent )\n    {\n        if ( !Abc_NtkToBdd(pNtk) )\n        {\n            printf( \"Io_ReadBenchNetwork(): Converting to BDD has failed.\\n\" );\n            Abc_NtkDelete( pNtk );\n            return NULL;\n        }\n        if ( !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) )\n        {\n            printf( \"Io_ReadBenchNetwork(): Converting to SOP has failed.\\n\" );\n            Abc_NtkDelete( pNtk );\n            return NULL;\n        }\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_ReadBenchNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode, pNet *Abc_Obj_t;\n    var vString *Vec_Str_t;\n    var uTruth [8]uint32;\n    var pType string;\n    var ppNames *string;\n    var pString string;\n    var iLine, nNames, nDigits, fLutsPresent int32;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n    pNtk.nConstrs = 0;\n\n    // go through the lines of the file\n    vString = Vec_StrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        if vTokens.nSize == 1 {\n            fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n            Vec_StrFree( vString );\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n\n        // get the type of the line\n        if strncmp( (char *)vTokens.pArray[0], \"INPUT\", 5 ) == 0 {\n            Io_ReadCreatePi( pNtk, (char *)vTokens.pArray[1] );\n        } else if strncmp( (char *)vTokens.pArray[0], \"OUTPUT\", 5 ) == 0 {\n            Io_ReadCreatePo( pNtk, (char *)vTokens.pArray[1] );\n        } else {\n            // get the node name and the node type\n            pType = (char *)vTokens.pArray[1];\n            if strncmp(pType, \"DFF\", 3) == 0 { // works for both DFF and DFFRSE\n            \n                if Vec_PtrSize(vTokens) == 6 {\n                    // create primary input to represent flop output\n                    var pNetName string // was [1000]byte in C\n var pName string; var i int32;\n                    var pFlopOut string    = (char *)vTokens.pArray[0];\n                    var pNet *Abc_Obj_t   = Abc_NtkFindOrCreateNet( pNtk, pFlopOut );\n                    var pTerm *Abc_Obj_t  = Abc_NtkCreatePi( pNtk );\n                    Abc_ObjAddFanin( pNet, pTerm );\n                    // create four primary outputs to represent flop inputs\n                    // inlining of macro Vec_PtrForEachEntryStart\n                    for  i = 2; (i \u003c Vec_PtrSize(vTokens)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vTokens, i)), 1); i++  {\n                        pNetName = fmt.Sprintf(\"%s_%s\", pFlopOut, pName);\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n                        pTerm = Abc_NtkCreateNodeBuf( pNtk, pNet );\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n                        Abc_ObjAddFanin( pNet, pTerm );\n                        pTerm = Abc_NtkCreatePo( pNtk );\n                        Abc_ObjAddFanin( pTerm, pNet );\n                    }\n                    pNtk.nConstrs++;\n                \n                } else {\n                    pNode = Io_ReadCreateLatch( pNtk, (char *)vTokens.pArray[2], (char *)vTokens.pArray[0] );\n    //                Abc_LatchSetInit0( pNode );\n                    if pType[3] == '0' {\n                        Abc_LatchSetInit0( pNode );\n                    } else if pType[3] == '1' {\n                        Abc_LatchSetInit1( pNode );\n                    } else {\n                        Abc_LatchSetInitDc( pNode ); }\n                }\n            \n            } else if int32(strings.Compare(pType, \"LUT\")) == 0 {\n                fLutsPresent = 1;\n                ppNames = (char **)vTokens.pArray + 3;\n                nNames  = vTokens.nSize - 3;\n                // check the number of inputs\n                if nNames \u003e 8 {\n                    fmt.Printf(\"%s: Currently cannot read truth tables with more than 8 inputs (%d).\\n\", Extra_FileReaderGetFileName(p), nNames);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                // get the hex string\n                pString = (char *)vTokens.pArray[2];\n                if strncmp( pString, \"0x\", 2 ) {\n                    fmt.Printf(\"%s: The LUT signature (%s) does not look like a hexadecimal beginning with \\\"0x\\\".\\n\", Extra_FileReaderGetFileName(p), pString);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                pString += 2;\n                // pad the string with zero's if needed\n                nDigits = (1 \u003c\u003c nNames) / 4;\n                if nDigits == 0 {\n                    nDigits = 1; }\n                if len(pString) \u003c uint32(nDigits) {\n                    Vec_StrFill( vString, nDigits - len(pString), '0' );\n                    Vec_StrPrintStr( vString, pString );\n                    Vec_StrPush( vString, 0 );\n                    pString = Vec_StrArray( vString );\n                }\n                // read the hex number from the string\n                if !Extra_ReadHexadecimal( uTruth, pString, nNames ) {\n                    fmt.Printf(\"%s: Reading hexadecimal number (%s) has failed.\\n\", Extra_FileReaderGetFileName(p), pString);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                // check if the node is a constant node\n                if Extra_TruthIsConst0(uTruth, nNames) {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" ) );\n                \n                } else if Extra_TruthIsConst1(uTruth, nNames) {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" ) );\n                \n                } else {\n                    // create the node\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, nNames );\n                    assert(nNames \u003e 0, \"nNames \u003e 0\");\n                    if nNames \u003e 1 {\n                        Abc_ObjSetData( pNode, Abc_SopCreateFromTruth((Mem_Flex_t *)pNtk.pManFunc, nNames, uTruth) );\n                    } else if pString[0] == '2' {\n                        Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n                    } else if pString[0] == '1' {\n                        Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n                    } else {\n                        fmt.Printf(\"%s: Reading truth table (%s) of single-input node has failed.\\n\", Extra_FileReaderGetFileName(p), pString);\n                        Vec_StrFree( vString );\n                        Abc_NtkDelete( pNtk );\n                        return nil;\n                    }\n                }\n            \n            } else {\n                // create a new node and add it to the network\n                ppNames = (char **)vTokens.pArray + 2;\n                nNames  = vTokens.nSize - 2;\n                pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, nNames );\n                // assign the cover\n                if int32(strings.Compare(pType, \"AND\")) == 0 || int32(strings.Compare(pType, \"and\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateAnd((Mem_Flex_t *)pNtk.pManFunc, nNames, nil) );\n                } else if int32(strings.Compare(pType, \"OR\")) == 0 || int32(strings.Compare(pType, \"or\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateOr((Mem_Flex_t *)pNtk.pManFunc, nNames, nil) );\n                } else if int32(strings.Compare(pType, \"NAND\")) == 0 || int32(strings.Compare(pType, \"nand\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNand((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"NOR\")) == 0 || int32(strings.Compare(pType, \"nor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"XOR\")) == 0 || int32(strings.Compare(pType, \"xor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateXor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"NXOR\")) == 0 || int32(strings.Compare(pType, \"XNOR\")) == 0 || int32(strings.Compare(pType, \"nxor\")) == 0 || int32(strings.Compare(pType, \"xnor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNxor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if strncmp(pType, \"BUF\", 3) == 0 || int32(strings.Compare(pType, \"buf\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n                } else if int32(strings.Compare(pType, \"NOT\")) == 0 || int32(strings.Compare(pType, \"not\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n                } else if strncmp(pType, \"MUX\", 3) == 0 || int32(strings.Compare(pType, \"mux\")) == 0 {\n//                    Abc_ObjSetData( pNode, Abc_SopRegister(pNtk-\u003epManFunc, \"1-0 1\\n-11 1\\n\") );\n                    Abc_ObjSetData( pNode, Abc_SopRegister((Mem_Flex_t *)pNtk.pManFunc, \"0-1 1\\n11- 1\\n\") );\n                } else if strncmp(pType, \"gnd\", 3) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" ) );\n                } else if strncmp(pType, \"vdd\", 3) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" ) );\n                } else {\n                    fmt.Printf(\"Io_ReadBenchNetwork(): Cannot determine gate type \\\"%s\\\" in line %d.\\n\", pType, Extra_FileReaderGetLineNumber(p, 0));\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n            }\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_StrFree( vString );\n\n    // check if constant 0 is present\n    if pNet = Abc_NtkFindNet( pNtk, \"gnd\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            Io_ReadCreateConst( pNtk, \"gnd\", 0 ); }\n    }\n    if pNet = Abc_NtkFindNet( pNtk, \"1\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Adding constant 0 fanin to non-driven net \\\"1\\\".\\n\");\n            Io_ReadCreateConst( pNtk, \"1\", 0 );\n        }\n    }\n    // check if constant 1 is present\n    if pNet = Abc_NtkFindNet( pNtk, \"vdd\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            Io_ReadCreateConst( pNtk, \"vdd\", 1 ); }\n    }\n    if pNet = Abc_NtkFindNet( pNtk, \"2\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Adding constant 1 fanin to non-driven net \\\"2\\\".\\n\");\n            Io_ReadCreateConst( pNtk, \"2\", 1 );\n        }\n    }\n\n    Abc_NtkFinalizeRead( pNtk );\n\n    // if LUTs are present, collapse the truth tables into cubes\n    if fLutsPresent != 0 {\n        if !Abc_NtkToBdd(pNtk) {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Converting to BDD has failed.\\n\");\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n        if !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Converting to SOP has failed.\\n\");\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_ReadBenchInit",
+      "Start": 13773,
+      "End": 15233,
+      "BodyStart": 13833,
+      "Original": "void Io_ReadBenchInit( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    char pBuffer[1000];\n    FILE * pFile;\n    char * pToken;\n    Abc_Obj_t * pObj;\n    int Num;\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Io_ReadBenchInit(): Failed to open file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    while ( fgets( pBuffer, 999, pFile ) )\n    {\n        pToken = strtok( pBuffer, \" \\n\\t\\r\" );\n        // find the latch output\n        Num = Nm_ManFindIdByName( pNtk-\u003epManName, pToken, ABC_OBJ_BO );\n        if ( Num \u003c 0 )\n        {\n            printf( \"Io_ReadBenchInit(): Cannot find register with output %s.\\n\", pToken );\n            continue;\n        }\n        pObj = Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) );\n        if ( !Abc_ObjIsLatch(pObj) )\n        {\n            printf( \"Io_ReadBenchInit(): The signal is not a register output %s.\\n\", pToken );\n            continue;\n        }\n        // assign the new init state\n        pToken = strtok( NULL, \" \\n\\t\\r\" );\n        if ( pToken[0] == '0' )\n            Abc_LatchSetInit0( pObj );\n        else if ( pToken[0] == '1' )\n            Abc_LatchSetInit1( pObj );\n        else if ( pToken[0] == '2' )\n            Abc_LatchSetInitDc( pObj );\n        else\n        {\n            printf( \"Io_ReadBenchInit(): The signal %s has unknown initial value (%s).\\n\", \n                Abc_ObjName(Abc_ObjFanout0(pObj)), pToken );\n            continue;\n        }\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Io_ReadBenchInit(pNtk *Abc_Ntk_t, pFileName string) {\n    var pBuffer [1000]byte;\n    var pFile *os.File;\n    var pToken string;\n    var pObj *Abc_Obj_t;\n    var Num int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_ReadBenchInit(): Failed to open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    for  fgets( pBuffer, 999, pFile )  {\n        pToken = strtok( pBuffer, \" \\n\\t\\r\" );\n        // find the latch output\n        Num = Nm_ManFindIdByName( pNtk.pManName, pToken, ABC_OBJ_BO );\n        if Num \u003c 0 {\n            fmt.Printf(\"Io_ReadBenchInit(): Cannot find register with output %s.\\n\", pToken);\n            continue;\n        }\n        pObj = Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) );\n        if !Abc_ObjIsLatch(pObj) {\n            fmt.Printf(\"Io_ReadBenchInit(): The signal is not a register output %s.\\n\", pToken);\n            continue;\n        }\n        // assign the new init state\n        pToken = strtok( nil, \" \\n\\t\\r\" );\n        if pToken[0] == '0' {\n            Abc_LatchSetInit0( pObj );\n        } else if pToken[0] == '1' {\n            Abc_LatchSetInit1( pObj );\n        } else if pToken[0] == '2' {\n            Abc_LatchSetInitDc( pObj );\n        } else {\n            fmt.Printf(\"Io_ReadBenchInit(): The signal %s has unknown initial value (%s).\\n\", Abc_ObjName(Abc_ObjFanout0(pObj)), pToken);\n            continue;\n        }\n    }\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::2856",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2856,
+      "End": 2869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::3302",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3302,
+      "End": 3310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::3385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3385,
+      "End": 3393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::3442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3442,
+      "End": 3450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::3526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3526,
+      "End": 3534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::3651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3651,
+      "End": 3659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::4013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4013,
+      "End": 4021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::4451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4336,
+      "End": 4336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::5142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5039,
+      "End": 5047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::5170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5067,
+      "End": 5075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::5679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5576,
+      "End": 5585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::6199",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6096,
+      "End": 6104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::7717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7614,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::7819",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7716,
+      "End": 7730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8014",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7911,
+      "End": 7919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8013,
+      "End": 8027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8307",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8204,
+      "End": 8212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8401,
+      "End": 8415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8564,
+      "End": 8578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::8814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8711,
+      "End": 8725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::9342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9239,
+      "End": 9248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::9467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9364,
+      "End": 9372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::9688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9585,
+      "End": 9599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::9875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9772,
+      "End": 9786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::10068",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9965,
+      "End": 9979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::10252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10149,
+      "End": 10163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::10436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10333,
+      "End": 10347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::10683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10580,
+      "End": 10594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::10871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10768,
+      "End": 10782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::11047",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10944,
+      "End": 10958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::11324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11221,
+      "End": 11235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::11493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11390,
+      "End": 11404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::pointer-cast::11653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11550,
+      "End": 11564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::Io_ReadBench",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBench",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1352,
+      "End": 1997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::Io_ReadBenchNetwork",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBenchNetwork",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2233,
+      "End": 13500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::Io_ReadBenchInit",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBenchInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13773,
+      "End": 15233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBench.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15482
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioReadBench.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read BENCH files.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadBench.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Abc_Ntk_t * Io_ReadBenchNetwork( Extra_FileReader_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the network from a BENCH file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBench(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Extra_FileReader_t;\n    var pNtk *Abc_Ntk_t;\n\n    // start the file\n    p = Extra_FileReaderAlloc( pFileName, \"#\", \"\\n\\r\", \" \\t,()=\" );\n    if p == nil {\n        return nil; }\n\n    // read the network\n    pNtk = Io_ReadBenchNetwork( p );\n    Extra_FileReaderFree( p );\n    if pNtk == nil {\n        return nil; }\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtk ) {\n        fmt.Printf(\"Io_ReadBench: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBenchNetwork(p *Extra_FileReader_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var vTokens *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode, pNet *Abc_Obj_t;\n    var vString *Vec_Str_t;\n    var uTruth [8]uint32;\n    var pType string;\n    var ppNames *string;\n    var pString string;\n    var iLine, nNames, nDigits, fLutsPresent int32;\n    \n    // allocate the empty network\n    pNtk = Abc_NtkStartRead( Extra_FileReaderGetFileName(p) );\n    pNtk.nConstrs = 0;\n\n    // go through the lines of the file\n    vString = Vec_StrAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Extra_FileReaderGetFileSize(p) );\n    for  iLine = 0; (vTokens = (Vec_Ptr_t *)Extra_FileReaderGetTokens(p)); iLine++  {\n        Extra_ProgressBarUpdate( pProgress, Extra_FileReaderGetCurPosition(p), nil );\n\n        if vTokens.nSize == 1 {\n            fmt.Printf(\"%s: Wrong input file format.\\n\", Extra_FileReaderGetFileName(p));\n            Vec_StrFree( vString );\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n\n        // get the type of the line\n        if strncmp( (char *)vTokens.pArray[0], \"INPUT\", 5 ) == 0 {\n            Io_ReadCreatePi( pNtk, (char *)vTokens.pArray[1] );\n        } else if strncmp( (char *)vTokens.pArray[0], \"OUTPUT\", 5 ) == 0 {\n            Io_ReadCreatePo( pNtk, (char *)vTokens.pArray[1] );\n        } else {\n            // get the node name and the node type\n            pType = (char *)vTokens.pArray[1];\n            if strncmp(pType, \"DFF\", 3) == 0 { // works for both DFF and DFFRSE\n            \n                if Vec_PtrSize(vTokens) == 6 {\n                    // create primary input to represent flop output\n                    var pNetName string // was [1000]byte in C\n var pName string; var i int32;\n                    var pFlopOut string    = (char *)vTokens.pArray[0];\n                    var pNet *Abc_Obj_t   = Abc_NtkFindOrCreateNet( pNtk, pFlopOut );\n                    var pTerm *Abc_Obj_t  = Abc_NtkCreatePi( pNtk );\n                    Abc_ObjAddFanin( pNet, pTerm );\n                    // create four primary outputs to represent flop inputs\n                    // inlining of macro Vec_PtrForEachEntryStart\n                    for  i = 2; (i \u003c Vec_PtrSize(vTokens)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vTokens, i)), 1); i++  {\n                        pNetName = fmt.Sprintf(\"%s_%s\", pFlopOut, pName);\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n                        pTerm = Abc_NtkCreateNodeBuf( pNtk, pNet );\n                        pNet  = Abc_NtkFindOrCreateNet( pNtk, pNetName );\n                        Abc_ObjAddFanin( pNet, pTerm );\n                        pTerm = Abc_NtkCreatePo( pNtk );\n                        Abc_ObjAddFanin( pTerm, pNet );\n                    }\n                    pNtk.nConstrs++;\n                \n                } else {\n                    pNode = Io_ReadCreateLatch( pNtk, (char *)vTokens.pArray[2], (char *)vTokens.pArray[0] );\n    //                Abc_LatchSetInit0( pNode );\n                    if pType[3] == '0' {\n                        Abc_LatchSetInit0( pNode );\n                    } else if pType[3] == '1' {\n                        Abc_LatchSetInit1( pNode );\n                    } else {\n                        Abc_LatchSetInitDc( pNode ); }\n                }\n            \n            } else if int32(strings.Compare(pType, \"LUT\")) == 0 {\n                fLutsPresent = 1;\n                ppNames = (char **)vTokens.pArray + 3;\n                nNames  = vTokens.nSize - 3;\n                // check the number of inputs\n                if nNames \u003e 8 {\n                    fmt.Printf(\"%s: Currently cannot read truth tables with more than 8 inputs (%d).\\n\", Extra_FileReaderGetFileName(p), nNames);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                // get the hex string\n                pString = (char *)vTokens.pArray[2];\n                if strncmp( pString, \"0x\", 2 ) {\n                    fmt.Printf(\"%s: The LUT signature (%s) does not look like a hexadecimal beginning with \\\"0x\\\".\\n\", Extra_FileReaderGetFileName(p), pString);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                pString += 2;\n                // pad the string with zero's if needed\n                nDigits = (1 \u003c\u003c nNames) / 4;\n                if nDigits == 0 {\n                    nDigits = 1; }\n                if len(pString) \u003c uint32(nDigits) {\n                    Vec_StrFill( vString, nDigits - len(pString), '0' );\n                    Vec_StrPrintStr( vString, pString );\n                    Vec_StrPush( vString, 0 );\n                    pString = Vec_StrArray( vString );\n                }\n                // read the hex number from the string\n                if !Extra_ReadHexadecimal( uTruth, pString, nNames ) {\n                    fmt.Printf(\"%s: Reading hexadecimal number (%s) has failed.\\n\", Extra_FileReaderGetFileName(p), pString);\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n                // check if the node is a constant node\n                if Extra_TruthIsConst0(uTruth, nNames) {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" ) );\n                \n                } else if Extra_TruthIsConst1(uTruth, nNames) {\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, 0 );\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" ) );\n                \n                } else {\n                    // create the node\n                    pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, nNames );\n                    assert(nNames \u003e 0, \"nNames \u003e 0\");\n                    if nNames \u003e 1 {\n                        Abc_ObjSetData( pNode, Abc_SopCreateFromTruth((Mem_Flex_t *)pNtk.pManFunc, nNames, uTruth) );\n                    } else if pString[0] == '2' {\n                        Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n                    } else if pString[0] == '1' {\n                        Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n                    } else {\n                        fmt.Printf(\"%s: Reading truth table (%s) of single-input node has failed.\\n\", Extra_FileReaderGetFileName(p), pString);\n                        Vec_StrFree( vString );\n                        Abc_NtkDelete( pNtk );\n                        return nil;\n                    }\n                }\n            \n            } else {\n                // create a new node and add it to the network\n                ppNames = (char **)vTokens.pArray + 2;\n                nNames  = vTokens.nSize - 2;\n                pNode = Io_ReadCreateNode( pNtk, (char *)vTokens.pArray[0], ppNames, nNames );\n                // assign the cover\n                if int32(strings.Compare(pType, \"AND\")) == 0 || int32(strings.Compare(pType, \"and\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateAnd((Mem_Flex_t *)pNtk.pManFunc, nNames, nil) );\n                } else if int32(strings.Compare(pType, \"OR\")) == 0 || int32(strings.Compare(pType, \"or\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateOr((Mem_Flex_t *)pNtk.pManFunc, nNames, nil) );\n                } else if int32(strings.Compare(pType, \"NAND\")) == 0 || int32(strings.Compare(pType, \"nand\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNand((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"NOR\")) == 0 || int32(strings.Compare(pType, \"nor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"XOR\")) == 0 || int32(strings.Compare(pType, \"xor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateXor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if int32(strings.Compare(pType, \"NXOR\")) == 0 || int32(strings.Compare(pType, \"XNOR\")) == 0 || int32(strings.Compare(pType, \"nxor\")) == 0 || int32(strings.Compare(pType, \"xnor\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateNxor((Mem_Flex_t *)pNtk.pManFunc, nNames) );\n                } else if strncmp(pType, \"BUF\", 3) == 0 || int32(strings.Compare(pType, \"buf\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateBuf((Mem_Flex_t *)pNtk.pManFunc) );\n                } else if int32(strings.Compare(pType, \"NOT\")) == 0 || int32(strings.Compare(pType, \"not\")) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopCreateInv((Mem_Flex_t *)pNtk.pManFunc) );\n                } else if strncmp(pType, \"MUX\", 3) == 0 || int32(strings.Compare(pType, \"mux\")) == 0 {\n//                    Abc_ObjSetData( pNode, Abc_SopRegister(pNtk-\u003epManFunc, \"1-0 1\\n-11 1\\n\") );\n                    Abc_ObjSetData( pNode, Abc_SopRegister((Mem_Flex_t *)pNtk.pManFunc, \"0-1 1\\n11- 1\\n\") );\n                } else if strncmp(pType, \"gnd\", 3) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" ) );\n                } else if strncmp(pType, \"vdd\", 3) == 0 {\n                    Abc_ObjSetData( pNode, Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" ) );\n                } else {\n                    fmt.Printf(\"Io_ReadBenchNetwork(): Cannot determine gate type \\\"%s\\\" in line %d.\\n\", pType, Extra_FileReaderGetLineNumber(p, 0));\n                    Vec_StrFree( vString );\n                    Abc_NtkDelete( pNtk );\n                    return nil;\n                }\n            }\n        }\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_StrFree( vString );\n\n    // check if constant 0 is present\n    if pNet = Abc_NtkFindNet( pNtk, \"gnd\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            Io_ReadCreateConst( pNtk, \"gnd\", 0 ); }\n    }\n    if pNet = Abc_NtkFindNet( pNtk, \"1\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Adding constant 0 fanin to non-driven net \\\"1\\\".\\n\");\n            Io_ReadCreateConst( pNtk, \"1\", 0 );\n        }\n    }\n    // check if constant 1 is present\n    if pNet = Abc_NtkFindNet( pNtk, \"vdd\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            Io_ReadCreateConst( pNtk, \"vdd\", 1 ); }\n    }\n    if pNet = Abc_NtkFindNet( pNtk, \"2\" ) {\n        if Abc_ObjFaninNum(pNet) == 0 {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Adding constant 1 fanin to non-driven net \\\"2\\\".\\n\");\n            Io_ReadCreateConst( pNtk, \"2\", 1 );\n        }\n    }\n\n    Abc_NtkFinalizeRead( pNtk );\n\n    // if LUTs are present, collapse the truth tables into cubes\n    if fLutsPresent != 0 {\n        if !Abc_NtkToBdd(pNtk) {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Converting to BDD has failed.\\n\");\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n        if !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) {\n            fmt.Printf(\"Io_ReadBenchNetwork(): Converting to SOP has failed.\\n\");\n            Abc_NtkDelete( pNtk );\n            return nil;\n        }\n    }\n    return pNtk;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads initial state in BENCH format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBenchInit(pNtk *Abc_Ntk_t, pFileName string) {\n    var pBuffer [1000]byte;\n    var pFile *os.File;\n    var pToken string;\n    var pObj *Abc_Obj_t;\n    var Num int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_ReadBenchInit(): Failed to open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    for  fgets( pBuffer, 999, pFile )  {\n        pToken = strtok( pBuffer, \" \\n\\t\\r\" );\n        // find the latch output\n        Num = Nm_ManFindIdByName( pNtk.pManName, pToken, ABC_OBJ_BO );\n        if Num \u003c 0 {\n            fmt.Printf(\"Io_ReadBenchInit(): Cannot find register with output %s.\\n\", pToken);\n            continue;\n        }\n        pObj = Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) );\n        if !Abc_ObjIsLatch(pObj) {\n            fmt.Printf(\"Io_ReadBenchInit(): The signal is not a register output %s.\\n\", pToken);\n            continue;\n        }\n        // assign the new init state\n        pToken = strtok( nil, \" \\n\\t\\r\" );\n        if pToken[0] == '0' {\n            Abc_LatchSetInit0( pObj );\n        } else if pToken[0] == '1' {\n            Abc_LatchSetInit1( pObj );\n        } else if pToken[0] == '2' {\n            Abc_LatchSetInitDc( pObj );\n        } else {\n            fmt.Printf(\"Io_ReadBenchInit(): The signal %s has unknown initial value (%s).\\n\", Abc_ObjName(Abc_ObjFanout0(pObj)), pToken);\n            continue;\n        }\n    }\n    _ = (pFile).Close();\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

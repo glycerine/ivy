@@ -1,0 +1,189 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c",
+  "SHA256": "c3587db2021159ecaab8f0d2ea6fcb117b753e6f79b6b70ea913decf1bbfcf6c",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 61,
+        "Column": 66,
+        "ByteOffset": 2034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 66,
+        "Column": 66,
+        "ByteOffset": 2328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG does not have XORs extracted.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGia.pMuxes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 3059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d=%d  \", i, Vec_IntSize(vXors) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 3150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %d.\\n\", Count );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_PolynCollectXors_rec",
+      "Start": 1233,
+      "End": 1756,
+      "BodyStart": 1312,
+      "Original": "void Gia_PolynCollectXors_rec( Gia_Man_t * pGia, int iObj, Vec_Int_t * vXors )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( pGia, iObj );\n    if ( Gia_ObjIsTravIdCurrent(pGia, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(pGia, pObj);\n    if ( !Gia_ObjIsAnd(pObj) || !Gia_ObjIsXor(pObj) || Gia_ObjRefNum(pGia, pObj) \u003e 1 )\n        return;\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0(pObj, iObj), vXors );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId1(pObj, iObj), vXors );\n    Vec_IntPushUnique( vXors, iObj );\n}",
+      "Draft": "func Gia_PolynCollectXors_rec(pGia *Gia_Man_t, iObj int32, vXors *Vec_Int_t) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n    if Gia_ObjIsTravIdCurrent(pGia, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(pGia, pObj);\n    if !Gia_ObjIsAnd(pObj) || !Gia_ObjIsXor(pObj) || Gia_ObjRefNum(pGia, pObj) \u003e 1 {\n        return; }\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0(pObj, iObj), vXors );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId1(pObj, iObj), vXors );\n    Vec_IntPushUnique( vXors, iObj );\n}"
+    },
+    {
+      "Name": "Gia_PolynCollectLastXor",
+      "Start": 1757,
+      "End": 2191,
+      "BodyStart": 1827,
+      "Original": "Vec_Int_t * Gia_PolynCollectLastXor( Gia_Man_t * pGia, int fVerbose )\n{\n    Vec_Int_t * vXors = Vec_IntAlloc( 100 );\n    Gia_Obj_t * pObj = Gia_ManCo( pGia, Gia_ManCoNum(pGia)-1 );\n    ABC_FREE( pGia-\u003epRefs );\n    Gia_ManCreateRefs( pGia );\n    Gia_ManIncrementTravId( pGia );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0p(pGia, pObj), vXors );\n    Vec_IntReverseOrder( vXors );\n    ABC_FREE( pGia-\u003epRefs );\n    return vXors;\n}",
+      "Draft": "func Gia_PolynCollectLastXor(pGia *Gia_Man_t, fVerbose int32) *Vec_Int_t {\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Gia_Obj_t  = Gia_ManCo( pGia, Gia_ManCoNum(pGia)-1 );\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( pGia );\n    Gia_ManIncrementTravId( pGia );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0p(pGia, pObj), vXors );\n    Vec_IntReverseOrder( vXors );\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return vXors;\n}"
+    },
+    {
+      "Name": "Gia_PolynAnalyzeXors",
+      "Start": 2192,
+      "End": 2885,
+      "BodyStart": 2252,
+      "Original": "void Gia_PolynAnalyzeXors( Gia_Man_t * pGia, int fVerbose )\n{\n    int i, iDriver, Count = 0;\n    Vec_Int_t * vXors = Vec_IntAlloc( 100 );\n    if ( pGia-\u003epMuxes == NULL )\n    {\n        printf( \"AIG does not have XORs extracted.\\n\" );\n        return;\n    }\n    assert( pGia-\u003epMuxes );\n    Gia_ManForEachCoDriverId( pGia, iDriver, i )\n    {\n        Vec_IntClear( vXors );\n        Gia_ManIncrementTravId( pGia );\n        Gia_PolynCollectXors_rec( pGia, iDriver, vXors );\n        //printf( \"%3d : \", i );\n        //Vec_IntPrint( vXors );\n        printf( \"%d=%d  \", i, Vec_IntSize(vXors) );\n        Count += Vec_IntSize(vXors);\n    }\n    printf( \"Total = %d.\\n\", Count );\n    Vec_IntFree( vXors );\n}",
+      "Draft": "func Gia_PolynAnalyzeXors(pGia *Gia_Man_t, fVerbose int32) {\n    var i, iDriver, Count int32;\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    if pGia.pMuxes == nil {\n        fmt.Printf(\"AIG does not have XORs extracted.\\n\");\n        return;\n    }\n    assert(pGia.pMuxes, \"pGia.pMuxes\");\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 (((iDriver) = Gia_ObjFaninId0p(pGia, Gia_ManCo(pGia, i))), 1); i++  {\n        Vec_IntClear( vXors );\n        Gia_ManIncrementTravId( pGia );\n        Gia_PolynCollectXors_rec( pGia, iDriver, vXors );\n        //printf( \"%3d : \", i );\n        //Vec_IntPrint( vXors );\n        fmt.Printf(\"%d=%d  \", i, Vec_IntSize(vXors));\n        Count += Vec_IntSize(vXors);\n    }\n    fmt.Printf(\"Total = %d.\\n\", Count);\n    Vec_IntFree( vXors );\n}"
+    },
+    {
+      "Name": "Gia_ManDupTopMostRange",
+      "Start": 3121,
+      "End": 3493,
+      "BodyStart": 3173,
+      "Original": "Gia_Man_t * Gia_ManDupTopMostRange( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    Vec_Int_t * vTops = Vec_IntAlloc( 10 );\n    int i;\n    for ( i = 45; i \u003c 52; i++ )\n        Vec_IntPush( vTops, Gia_ObjId( p, Gia_ObjFanin0(Gia_ManCo(p, i)) ) );\n    pNew = Gia_ManDupAndConesLimit( p, Vec_IntArray(vTops), Vec_IntSize(vTops), 100 );\n    Vec_IntFree( vTops );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupTopMostRange(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vTops *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var i int32;\n    for  i = 45; i \u003c 52; i++  {\n        Vec_IntPush( vTops, Gia_ObjId( p, Gia_ObjFanin0(Gia_ManCo(p, i)) ) );\n    }\n    pNew = Gia_ManDupAndConesLimit( p, Vec_IntArray(vTops), Vec_IntSize(vTops), 100 );\n    Vec_IntFree( vTops );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::pointer-cast::2009",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1942,
+      "End": 1942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::pointer-cast::2306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2147,
+      "End": 2147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::Gia_PolynCollectXors_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynCollectXors_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1233,
+      "End": 1756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::ternary::Gia_PolynCollectLastXor",
+      "Category": "ternary-review",
+      "Symbol": "Gia_PolynCollectLastXor",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1757,
+      "End": 2191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::Gia_PolynCollectLastXor",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynCollectLastXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1757,
+      "End": 2191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::Gia_PolynAnalyzeXors",
+      "Category": "semantic-review",
+      "Symbol": "Gia_PolynAnalyzeXors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2192,
+      "End": 2885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::Gia_ManDupTopMostRange",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupTopMostRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3121,
+      "End": 3493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3740
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_PolynCollectXors_rec(pGia *Gia_Man_t, iObj int32, vXors *Vec_Int_t) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );\n    if Gia_ObjIsTravIdCurrent(pGia, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(pGia, pObj);\n    if !Gia_ObjIsAnd(pObj) || !Gia_ObjIsXor(pObj) || Gia_ObjRefNum(pGia, pObj) \u003e 1 {\n        return; }\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0(pObj, iObj), vXors );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId1(pObj, iObj), vXors );\n    Vec_IntPushUnique( vXors, iObj );\n}\nfunc Gia_PolynCollectLastXor(pGia *Gia_Man_t, fVerbose int32) *Vec_Int_t {\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Gia_Obj_t  = Gia_ManCo( pGia, Gia_ManCoNum(pGia)-1 );\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( pGia );\n    Gia_ManIncrementTravId( pGia );\n    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0p(pGia, pObj), vXors );\n    Vec_IntReverseOrder( vXors );\n    // inlining of macro ABC_FREE\n    ((pGia.pRefs) ? (free((char *) (pGia.pRefs)), (pGia.pRefs) = 0) : 0);\n    return vXors;\n}\nfunc Gia_PolynAnalyzeXors(pGia *Gia_Man_t, fVerbose int32) {\n    var i, iDriver, Count int32;\n    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );\n    if pGia.pMuxes == nil {\n        fmt.Printf(\"AIG does not have XORs extracted.\\n\");\n        return;\n    }\n    assert(pGia.pMuxes, \"pGia.pMuxes\");\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 (((iDriver) = Gia_ObjFaninId0p(pGia, Gia_ManCo(pGia, i))), 1); i++  {\n        Vec_IntClear( vXors );\n        Gia_ManIncrementTravId( pGia );\n        Gia_PolynCollectXors_rec( pGia, iDriver, vXors );\n        //printf( \"%3d : \", i );\n        //Vec_IntPrint( vXors );\n        fmt.Printf(\"%d=%d  \", i, Vec_IntSize(vXors));\n        Count += Vec_IntSize(vXors);\n    }\n    fmt.Printf(\"Total = %d.\\n\", Count);\n    Vec_IntFree( vXors );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupTopMostRange(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vTops *Vec_Int_t  = Vec_IntAlloc( 10 );\n    var i int32;\n    for  i = 45; i \u003c 52; i++  {\n        Vec_IntPush( vTops, Gia_ObjId( p, Gia_ObjFanin0(Gia_ManCo(p, i)) ) );\n    }\n    pNew = Gia_ManDupAndConesLimit( p, Vec_IntArray(vTops), Vec_IntSize(vTops), 100 );\n    Vec_IntFree( vTops );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

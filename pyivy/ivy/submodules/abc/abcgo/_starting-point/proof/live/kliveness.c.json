@@ -1,0 +1,1324 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c",
+  "SHA256": "a3f2dc4d5de15e1d184438e94e80fcd4c68e89af9490a69c5f87aba6041e0fd5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(*pLiveIndex_0 != -1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 9,
+        "ByteOffset": 6311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pLiveIndex_k == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 9,
+        "ByteOffset": 6363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pLiveIndex_k != -1  ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 210,
+        "Column": 29,
+        "ByteOffset": 6799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_kCS\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 210,
+        "Column": 37,
+        "ByteOffset": 6807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_kCS\") + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 210,
+        "Column": 60,
+        "ByteOffset": 6830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewAig.pName = (char *)malloc( strlen( pAig.pName ) + strlen(\"_kCS\") + 1 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 6856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"kCS\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 9065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pPIn);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 9489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPOut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(pPOutCo == nil);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 9,
+        "ByteOffset": 10729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPOutCo != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 11254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNewAig ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 11294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pLiveIndex_k != - 1);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 365,
+        "Column": 24,
+        "ByteOffset": 12431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fileName = (char *)malloc(sizeof(char) * 50);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 12462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(fileName, \"%s_%d.%s\", \"kLive\", absorberCount, \"blif\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 12697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( safetyInvariantPOIndex != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 13212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pAig ) );"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 13550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 13570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(fileName);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 12,
+        "ByteOffset": 14206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName( pObj ), \"csSafetyInvar_\" ) != nil {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 12,
+        "ByteOffset": 14606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName( pObj ), \"csLevel1Stabil_\" ) != nil {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 13,
+        "ByteOffset": 15565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(vPtr);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 21,
+        "ByteOffset": 15766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf(\"%d - \", iElem);"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 16152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for fgets(stringBuffer, 50, fp) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 12,
+        "ByteOffset": 16193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr(stringBuffer, \":\") {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 551,
+        "Column": 9,
+        "ByteOffset": 17231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( directive == -1 );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 556,
+        "Column": 65,
+        "ByteOffset": 17405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 9,
+        "ByteOffset": 18232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"The input network was not strashed, strashing....\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 594,
+        "Column": 9,
+        "ByteOffset": 18624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( safetyInvariantPO != -1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 601,
+        "Column": 53,
+        "ByteOffset": 18913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        time_spent = float64((endTime - beginTime))/CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 602,
+        "Column": 9,
+        "ByteOffset": 18937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"pre-processing time = %f\\n\",time_spent); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 9,
+        "ByteOffset": 19158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( safetyInvariantPO != -1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 613,
+        "Column": 53,
+        "ByteOffset": 19384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        time_spent = float64((endTime - beginTime))/CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 9,
+        "ByteOffset": 19408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"pre-processing time = %f\\n\",time_spent); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 616,
+        "Column": 9,
+        "ByteOffset": 19467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vMasterBarrierDisjuncts != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 9,
+        "ByteOffset": 19517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 622,
+        "Column": 9,
+        "ByteOffset": 19733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( safetyInvariantPO != -1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 627,
+        "Column": 53,
+        "ByteOffset": 19971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        time_spent = float64((endTime - beginTime))/CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 628,
+        "Column": 9,
+        "ByteOffset": 19995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"pre-processing time = %f\\n\",time_spent); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 630,
+        "Column": 9,
+        "ByteOffset": 20054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vMasterBarrierDisjuncts != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 631,
+        "Column": 9,
+        "ByteOffset": 20104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 635,
+        "Column": 9,
+        "ByteOffset": 20290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vMasterBarrierDisjuncts != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 663,
+        "Column": 17,
+        "ByteOffset": 21445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 685,
+        "Column": 9,
+        "ByteOffset": 22103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"usage: kcs [-cmgCh]\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 685,
+        "Column": 18,
+        "ByteOffset": 22112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"usage: kcs [-cmgCh]\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 13,
+        "ByteOffset": 22159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\timplements Claessen-Sorensson's k-Liveness algorithm\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 686,
+        "Column": 22,
+        "ByteOffset": 22168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\timplements Claessen-Sorensson's k-Liveness algorithm\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 9,
+        "ByteOffset": 22246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 687,
+        "Column": 18,
+        "ByteOffset": 22255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 9,
+        "ByteOffset": 22358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-m : discovers monotone signals\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 688,
+        "Column": 18,
+        "ByteOffset": 22367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-m : discovers monotone signals\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 689,
+        "Column": 13,
+        "ByteOffset": 22427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 689,
+        "Column": 22,
+        "ByteOffset": 22436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 690,
+        "Column": 9,
+        "ByteOffset": 22551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-C : verification with discovered monotone signals\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 690,
+        "Column": 18,
+        "ByteOffset": 22560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-C : verification with discovered monotone signals\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 691,
+        "Column": 9,
+        "ByteOffset": 22635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-h : print usage\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 691,
+        "Column": 18,
+        "ByteOffset": 22644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-h : print usage\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 710,
+        "Column": 9,
+        "ByteOffset": 23174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( directive == -1 );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 715,
+        "Column": 65,
+        "ByteOffset": 23348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 9,
+        "ByteOffset": 24175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"The input network was not strashed, strashing....\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 754,
+        "Column": 5,
+        "ByteOffset": 24609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Enter parameterizedCombK = \" );"
+    },
+    {
+      "Name": "scanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 755,
+        "Column": 8,
+        "ByteOffset": 24656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if scanf(\"%d\", \u0026parameterizedCombK) != 1 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 9,
+        "ByteOffset": 24704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nFailed to read integer!\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 759,
+        "Column": 5,
+        "ByteOffset": 24771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 766,
+        "Column": 13,
+        "ByteOffset": 25094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 766,
+        "Column": 22,
+        "ByteOffset": 25103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 778,
+        "Column": 9,
+        "ByteOffset": 25442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"usage: nck [-cmgCh]\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 778,
+        "Column": 18,
+        "ByteOffset": 25451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"usage: nck [-cmgCh]\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 779,
+        "Column": 13,
+        "ByteOffset": 25498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\tgenerates combinatorial signals for stabilization\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 779,
+        "Column": 22,
+        "ByteOffset": 25507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\tgenerates combinatorial signals for stabilization\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 9,
+        "ByteOffset": 25582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-h : print usage\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 780,
+        "Column": 18,
+        "ByteOffset": 25591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\t-h : print usage\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "readLiveSignal_0",
+      "Start": 2983,
+      "End": 3195,
+      "BodyStart": 3047,
+      "Original": "Aig_Obj_t *readLiveSignal_0( Aig_Man_t *pAig, int liveIndex_0 )\n{\n    Aig_Obj_t *pObj;\n\n    pObj = Aig_ManCo( pAig, liveIndex_0 );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}",
+      "Draft": "func readLiveSignal_0(pAig *Aig_Man_t, liveIndex_0 int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n\n    pObj = Aig_ManCo( pAig, liveIndex_0 );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}"
+    },
+    {
+      "Name": "readLiveSignal_k",
+      "Start": 3197,
+      "End": 3409,
+      "BodyStart": 3261,
+      "Original": "Aig_Obj_t *readLiveSignal_k( Aig_Man_t *pAig, int liveIndex_k )\n{\n    Aig_Obj_t *pObj;\n\n    pObj = Aig_ManCo( pAig, liveIndex_k );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}",
+      "Draft": "func readLiveSignal_k(pAig *Aig_Man_t, liveIndex_k int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n\n    pObj = Aig_ManCo( pAig, liveIndex_k );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}"
+    },
+    {
+      "Name": "introduceAbsorberLogic",
+      "Start": 5653,
+      "End": 11119,
+      "BodyStart": 5767,
+      "Original": "Aig_Man_t *introduceAbsorberLogic( Aig_Man_t *pAig, int *pLiveIndex_0, int *pLiveIndex_k, int nonFirstIteration )\n{\n    Aig_Man_t *pNewAig;\n    Aig_Obj_t *pObj, *pObjAbsorberLo, *pPInNewArg, *pPOutNewArg;\n    Aig_Obj_t *pPIn = NULL, *pPOut = NULL, *pPOutCo = NULL;\n    Aig_Obj_t *pFirstAbsorberOr, *pSecondAbsorberOr;\n    int i;\n    int piCopied = 0, loCreated = 0, loCopied = 0, liCreated = 0, liCopied = 0; \n    int nRegCount;\n\n    assert(*pLiveIndex_0 != -1);\n    if(nonFirstIteration == 0)\n        assert( *pLiveIndex_k == -1 );\n    else\n        assert( *pLiveIndex_k != -1  );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig-\u003epName = (char *)malloc( strlen( pAig-\u003epName ) + strlen(\"_kCS\") + 1 );\n    sprintf(pNewAig-\u003epName, \"%s_%s\", pAig-\u003epName, \"kCS\");\n        pNewAig-\u003epSpec = NULL;\n\n    //****************************************************************\n    // reading the signal pIn, and pOut\n    //****************************************************************\n\n    pPIn = readLiveSignal_0( pAig, *pLiveIndex_0 );\n    if( *pLiveIndex_k == -1 )\n        pPOut = NULL;\n    else\n        pPOut = readLiveSignal_k( pAig, *pLiveIndex_k );\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj-\u003epData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for the ABSORBER logic\n    //****************************************************************\n    loCreated++;\n    pObjAbsorberLo = Aig_ObjCreateCi( pNewAig );\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //****************************************************************\n    // Step 8: create the two OR gates of the OBSERVER logic\n    //****************************************************************\n    if( nonFirstIteration == 0 )\n    {\n        assert(pPIn);\n        \n        pPInNewArg = !Aig_IsComplement(pPIn)? \n                (Aig_Obj_t *)((Aig_Regular(pPIn))-\u003epData) : \n                Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn))-\u003epData));\n\n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPInNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    }\n    else\n    {\n        assert( pPOut );\n\n        pPInNewArg = !Aig_IsComplement(pPIn)? \n                (Aig_Obj_t *)((Aig_Regular(pPIn))-\u003epData) : \n                Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn))-\u003epData));\n        pPOutNewArg = !Aig_IsComplement(pPOut)? \n                (Aig_Obj_t *)((Aig_Regular(pPOut))-\u003epData) : \n                Aig_Not((Aig_Obj_t *)((Aig_Regular(pPOut))-\u003epData));\n        \n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPOutNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    }    \n    \n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n        if( i == *pLiveIndex_k )\n            pPOutCo = (Aig_Obj_t *)(pObj-\u003epData);\n    }\n\n    //create new po\n    if( nonFirstIteration == 0 )\n    {\n        assert(pPOutCo == NULL);\n        pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n\n        *pLiveIndex_k = i;\n    }    \n    else\n    {\n        assert( pPOutCo != NULL );\n        //pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n        //*pLiveIndex_k = Saig_ManPoNum(pAig);\n\n        Aig_ObjPatchFanin0( pNewAig, pPOutCo, pSecondAbsorberOr );\n    }\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //create new li\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pFirstAbsorberOr );\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert( Aig_ManCheck( pNewAig ) );\n\n    assert( *pLiveIndex_k != - 1);\n    return pNewAig;\n}",
+      "Draft": "func introduceAbsorberLogic(pAig *Aig_Man_t, pLiveIndex_0 *int32, pLiveIndex_k *int32, nonFirstIteration int32) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjAbsorberLo, pPInNewArg, pPOutNewArg *Aig_Obj_t;\n    var pPIn *Aig_Obj_t = nil;\n    var pPOut *Aig_Obj_t = nil;\n    var pPOutCo *Aig_Obj_t = nil;\n    var pFirstAbsorberOr, pSecondAbsorberOr *Aig_Obj_t;\n    var i int32;\n    var piCopied, loCreated, loCopied, liCreated, liCopied int32; \n    var nRegCount int32;\n\n    assert(*pLiveIndex_0 != -1, \"*pLiveIndex_0 != -1\");\n    if nonFirstIteration == 0 {\n        assert(*pLiveIndex_k == -1, \"*pLiveIndex_k == -1\");\n    } else {\n        assert(*pLiveIndex_k != -1, \"*pLiveIndex_k != -1\"); }\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_kCS\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"kCS\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // reading the signal pIn, and pOut\n    //****************************************************************\n\n    pPIn = readLiveSignal_0( pAig, *pLiveIndex_0 );\n    if *pLiveIndex_k == -1 {\n        pPOut = nil;\n    } else {\n        pPOut = readLiveSignal_k( pAig, *pLiveIndex_k ); }\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for the ABSORBER logic\n    //****************************************************************\n    loCreated++;\n    pObjAbsorberLo = Aig_ObjCreateCi( pNewAig );\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //****************************************************************\n    // Step 8: create the two OR gates of the OBSERVER logic\n    //****************************************************************\n    if nonFirstIteration == 0 {\n        assert((pPIn != nil), \"pPIn\");\n        \n        if !Aig_IsComplement(pPIn) {\n            pPInNewArg = (Aig_Obj_t *)((Aig_Regular(pPIn)).pData);\n        } else {\n            pPInNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn)).pData));\n        }\n\n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPInNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    \n    } else {\n        assert((pPOut != nil), \"pPOut\");\n\n        if !Aig_IsComplement(pPIn) {\n            pPInNewArg = (Aig_Obj_t *)((Aig_Regular(pPIn)).pData);\n        } else {\n            pPInNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn)).pData));\n        }\n        if !Aig_IsComplement(pPOut) {\n            pPOutNewArg = (Aig_Obj_t *)((Aig_Regular(pPOut)).pData);\n        } else {\n            pPOutNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPOut)).pData));\n        }\n        \n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPOutNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    }    \n    \n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n        if i == *pLiveIndex_k {\n            pPOutCo = (Aig_Obj_t *)(pObj.pData); }\n    }\n\n    //create new po\n    if nonFirstIteration == 0 {\n        assert(pPOutCo == nil, \"pPOutCo == nil\");\n        pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n\n        *pLiveIndex_k = i;\n        \n    } else {\n        assert(pPOutCo != nil, \"pPOutCo != nil\");\n        //pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n        //*pLiveIndex_k = Saig_ManPoNum(pAig);\n\n        Aig_ObjPatchFanin0( pNewAig, pPOutCo, pSecondAbsorberOr );\n    }\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //create new li\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pFirstAbsorberOr );\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n\n    assert(*pLiveIndex_k != - 1, \"*pLiveIndex_k != - 1\");\n    return pNewAig;\n}"
+    },
+    {
+      "Name": "modifyAigToApplySafetyInvar",
+      "Start": 11121,
+      "End": 11816,
+      "BodyStart": 11204,
+      "Original": "void modifyAigToApplySafetyInvar(Aig_Man_t *pAig, int csTarget, int safetyInvarPO)\n{\n    Aig_Obj_t *pObjPOSafetyInvar, *pObjSafetyInvar;\n    Aig_Obj_t *pObjPOCSTarget, *pObjCSTarget;\n    Aig_Obj_t *pObjCSTargetNew;\n\n    pObjPOSafetyInvar = Aig_ManCo( pAig, safetyInvarPO );\n    pObjSafetyInvar =  Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOSafetyInvar), Aig_ObjFaninC0(pObjPOSafetyInvar));    \n    pObjPOCSTarget = Aig_ManCo( pAig, csTarget );\n    pObjCSTarget = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOCSTarget), Aig_ObjFaninC0(pObjPOCSTarget));    \n\n    pObjCSTargetNew = Aig_And( pAig, pObjSafetyInvar, pObjCSTarget );\n    Aig_ObjPatchFanin0( pAig, pObjPOCSTarget, pObjCSTargetNew );\n}",
+      "Draft": "func modifyAigToApplySafetyInvar(pAig *Aig_Man_t, csTarget int32, safetyInvarPO int32) {\n    var pObjPOSafetyInvar, pObjSafetyInvar *Aig_Obj_t;\n    var pObjPOCSTarget, pObjCSTarget *Aig_Obj_t;\n    var pObjCSTargetNew *Aig_Obj_t;\n\n    pObjPOSafetyInvar = Aig_ManCo( pAig, safetyInvarPO );\n    pObjSafetyInvar =  Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOSafetyInvar), Aig_ObjFaninC0(pObjPOSafetyInvar));    \n    pObjPOCSTarget = Aig_ManCo( pAig, csTarget );\n    pObjCSTarget = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOCSTarget), Aig_ObjFaninC0(pObjPOCSTarget));    \n\n    pObjCSTargetNew = Aig_And( pAig, pObjSafetyInvar, pObjCSTarget );\n    Aig_ObjPatchFanin0( pAig, pObjPOCSTarget, pObjCSTargetNew );\n}"
+    },
+    {
+      "Name": "flipConePdr",
+      "Start": 11818,
+      "End": 13521,
+      "BodyStart": 11942,
+      "Original": "int flipConePdr( Aig_Man_t *pAig, int directive, int targetCSPropertyIndex, int safetyInvariantPOIndex, int absorberCount )\n{\n    int RetValue, i;\n    Aig_Obj_t *pObjTargetPo;\n    Aig_Man_t *pAigDupl;\n    Pdr_Par_t Pars, * pPars = \u0026Pars;\n    Abc_Cex_t * pCex = NULL;\n\n    char *fileName;\n    \n    fileName = (char *)malloc(sizeof(char) * 50);\n    sprintf(fileName, \"%s_%d.%s\", \"kLive\", absorberCount, \"blif\" );\n\n    if( directive == kCS_WITH_SAFETY_INVARIANTS || directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS )\n    {\n        assert( safetyInvariantPOIndex != -1 );\n        modifyAigToApplySafetyInvar(pAig, targetCSPropertyIndex, safetyInvariantPOIndex);\n    }\n\n    pAigDupl = pAig;\n    pAig = Aig_ManDupSimple( pAigDupl );\n\n    for( i=0; i\u003cSaig_ManPoNum(pAig); i++ )\n    {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars-\u003efVerbose = 1;\n    pPars-\u003efNotVerbose = 1;\n    pPars-\u003efSolveAll = 1;\n    pAig-\u003evSeqModelVec = NULL;\n\n    Aig_ManCleanup( pAig );\n    assert( Aig_ManCheck( pAig ) );\n\n    Pdr_ManSolve( pAig, pPars );    \n\n    if( pAig-\u003evSeqModelVec )\n    {\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( pAig-\u003evSeqModelVec, targetCSPropertyIndex );\n        if( pCex == NULL )\n        {\n            RetValue = 1;\n        }\n        else\n            RetValue = 0;\n    }\n    else\n    {\n        RetValue = -1;\n        exit(0);\n    }\n\n    free(fileName);\n\n    for( i=0; i\u003cSaig_ManPoNum(pAig); i++ )\n    {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    Aig_ManStop( pAig );\n    return RetValue;\n}",
+      "Draft": "func flipConePdr(pAig *Aig_Man_t, directive int32, targetCSPropertyIndex int32, safetyInvariantPOIndex int32, absorberCount int32) int32 {\n    var RetValue, i int32;\n    var pObjTargetPo *Aig_Obj_t;\n    var pAigDupl *Aig_Man_t;\n    var Pars Pdr_Par_t;\n    var pPars *Pdr_Par_t = \u0026Pars;\n    var pCex *Abc_Cex_t  = nil;\n\n    var fileName string;\n    \n    fileName = (char *)malloc(sizeof(char) * 50);\n    fileName = fmt.Sprintf(\"%s_%d.%s\", \"kLive\", absorberCount, \"blif\");\n\n    if directive == kCS_WITH_SAFETY_INVARIANTS || directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        assert(safetyInvariantPOIndex != -1, \"safetyInvariantPOIndex != -1\");\n        modifyAigToApplySafetyInvar(pAig, targetCSPropertyIndex, safetyInvariantPOIndex);\n    }\n\n    pAigDupl = pAig;\n    pAig = Aig_ManDupSimple( pAigDupl );\n\n    for  i=0; i\u003cSaig_ManPoNum(pAig); i++  {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 1;\n    pPars.fNotVerbose = 1;\n    pPars.fSolveAll = 1;\n    pAig.vSeqModelVec = nil;\n\n    Aig_ManCleanup( pAig );\n    assert(Aig_ManCheck( pAig ), \"Aig_ManCheck( pAig )\");\n\n    Pdr_ManSolve( pAig, pPars );    \n\n    if pAig.vSeqModelVec {\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( pAig.vSeqModelVec, targetCSPropertyIndex );\n        if pCex == nil {\n            RetValue = 1;\n        \n        } else {\n            RetValue = 0; }\n    \n    } else {\n        RetValue = -1;\n        os.Exit(int(0));\n    }\n\n    free(fileName);\n\n    for  i=0; i\u003cSaig_ManPoNum(pAig); i++  {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    Aig_ManStop( pAig );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "collectSafetyInvariantPOIndex",
+      "Start": 13792,
+      "End": 14045,
+      "BodyStart": 13843,
+      "Original": "int collectSafetyInvariantPOIndex(Abc_Ntk_t *pNtk)\n{\n    Abc_Obj_t *pObj;\n    int i;\n\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if( strstr( Abc_ObjName( pObj ), \"csSafetyInvar_\" ) != NULL )\n            return i;\n    }        \n\n    return -1;\n}",
+      "Draft": "func collectSafetyInvariantPOIndex(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if strstr( Abc_ObjName( pObj ), \"csSafetyInvar_\" ) != nil {\n            return i; }\n    }        \n\n    return -1;\n}"
+    },
+    {
+      "Name": "collectUserGivenDisjunctiveMonotoneSignals",
+      "Start": 14047,
+      "End": 14615,
+      "BodyStart": 14120,
+      "Original": "Vec_Ptr_t *collectUserGivenDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk )\n{\n    Abc_Obj_t *pObj;\n    int i;\n    Vec_Ptr_t *monotoneVector;\n    Vec_Int_t *newIntVector;\n\n    monotoneVector = Vec_PtrAlloc(0);    \n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if( strstr( Abc_ObjName( pObj ), \"csLevel1Stabil_\" ) != NULL )\n        {\n            newIntVector = createSingletonIntVector(i);\n            Vec_PtrPush(monotoneVector, newIntVector);\n        }\n    }\n\n    if( Vec_PtrSize(monotoneVector) \u003e 0 )\n        return monotoneVector;\n    else\n        return NULL;\n\n}",
+      "Draft": "func collectUserGivenDisjunctiveMonotoneSignals(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var monotoneVector *Vec_Ptr_t;\n    var newIntVector *Vec_Int_t;\n\n    monotoneVector = Vec_PtrAlloc(0);    \n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if strstr( Abc_ObjName( pObj ), \"csLevel1Stabil_\" ) != nil {\n            newIntVector = createSingletonIntVector(i);\n            Vec_PtrPush(monotoneVector, newIntVector);\n        }\n    }\n\n    if Vec_PtrSize(monotoneVector) \u003e 0 {\n        return monotoneVector;\n    } else {\n        return nil; }\n\n}"
+    },
+    {
+      "Name": "deallocateMasterBarrierDisjunctInt",
+      "Start": 14617,
+      "End": 14961,
+      "BodyStart": 14696,
+      "Original": "void deallocateMasterBarrierDisjunctInt(Vec_Ptr_t *vMasterBarrierDisjunctsArg)\n{\n    Vec_Int_t *vInt;\n    int i;\n\n    if(vMasterBarrierDisjunctsArg)\n    {\n        Vec_PtrForEachEntry(Vec_Int_t *, vMasterBarrierDisjunctsArg, vInt, i)\n        {    \n            Vec_IntFree(vInt);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}",
+      "Draft": "func deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjunctsArg *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var i int32;\n\n    if vMasterBarrierDisjunctsArg != nil {\n        Vec_PtrForEachEntry(Vec_Int_t *, vMasterBarrierDisjunctsArg, vInt, i)\n        {    \n            Vec_IntFree(vInt);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}"
+    },
+    {
+      "Name": "deallocateMasterBarrierDisjunctVecPtrVecInt",
+      "Start": 14963,
+      "End": 15654,
+      "BodyStart": 15051,
+      "Original": "void deallocateMasterBarrierDisjunctVecPtrVecInt(Vec_Ptr_t *vMasterBarrierDisjunctsArg)\n{\n    Vec_Int_t *vInt;\n    Vec_Ptr_t *vPtr;\n    int i, j, k, iElem;\n\n    if(vMasterBarrierDisjunctsArg)\n    {\n        Vec_PtrForEachEntry(Vec_Ptr_t *, vMasterBarrierDisjunctsArg, vPtr, i)\n        {    \n            assert(vPtr);\n            Vec_PtrForEachEntry( Vec_Int_t *, vPtr, vInt, j )\n            {\n                //Vec_IntFree(vInt);\n                Vec_IntForEachEntry( vInt, iElem, k )\n                    printf(\"%d - \", iElem);\n                //printf(\"Chung Chang j = %d\\n\", j);\n            }\n            Vec_PtrFree(vPtr);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}",
+      "Draft": "func deallocateMasterBarrierDisjunctVecPtrVecInt(vMasterBarrierDisjunctsArg *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var vPtr *Vec_Ptr_t;\n    var i, j, k, iElem int32;\n\n    if vMasterBarrierDisjunctsArg != nil {\n        Vec_PtrForEachEntry(Vec_Ptr_t *, vMasterBarrierDisjunctsArg, vPtr, i)\n        {    \n            assert((vPtr != nil), \"vPtr\");\n            Vec_PtrForEachEntry( Vec_Int_t *, vPtr, vInt, j )\n            {\n                //Vec_IntFree(vInt);\n                Vec_IntForEachEntry( vInt, iElem, k )\n                    fmt.Printf(\"%d - \", iElem);\n                //printf(\"Chung Chang j = %d\\n\", j);\n            }\n            Vec_PtrFree(vPtr);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}"
+    },
+    {
+      "Name": "getVecOfVecFairness",
+      "Start": 15656,
+      "End": 16014,
+      "BodyStart": 15697,
+      "Original": "Vec_Ptr_t *getVecOfVecFairness(FILE *fp)\n{\n    Vec_Ptr_t *masterVector = Vec_PtrAlloc(0);\n    //Vec_Ptr_t *currSignalVector;\n    char stringBuffer[100];\n    //int i;\n    \n    while(fgets(stringBuffer, 50, fp))\n    {\n        if(strstr(stringBuffer, \":\"))\n        {\n\n        }\n        else\n        {\n                \n        }\n    }\n\n    return masterVector;\n}",
+      "Draft": "func getVecOfVecFairness(fp *os.File) *Vec_Ptr_t {\n    var masterVector *Vec_Ptr_t  = Vec_PtrAlloc(0);\n    //Vec_Ptr_t *currSignalVector;\n    var stringBuffer [100]byte;\n    //int i;\n    \n    for fgets(stringBuffer, 50, fp) {\n        if strstr(stringBuffer, \":\") {\n\n        \n        } else {\n                \n        }\n    }\n\n    return masterVector;\n}"
+    },
+    {
+      "Name": "Abc_CommandCS_kLiveness",
+      "Start": 16017,
+      "End": 22448,
+      "BodyStart": 16091,
+      "Original": "int Abc_CommandCS_kLiveness( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n        Abc_Ntk_t * pNtk, * pNtkTemp;\n    Aig_Man_t * pAig, *pAigCS, *pAigCSNew;\n    int absorberCount;\n    int absorberLimit = 500;\n    int RetValue;\n    int liveIndex_0 = -1, liveIndex_k = -1;\n    int fVerbose = 1;\n    int directive = -1;\n    int c;\n    int safetyInvariantPO = -1;\n    abctime beginTime, endTime;\n    double time_spent;\n    Vec_Ptr_t *vMasterBarrierDisjuncts = NULL;\n    Aig_Man_t *pWorkingAig;\n    //FILE *fp;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n    //fp = fopen(\"propFile.txt\", \"r\");\n    //if( fp )\n    //    getVecOfVecFairness(fp);\n    //exit(0);\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if( argc == 1 )\n    {\n        assert( directive == -1 );\n        directive = SIMPLE_kCS;\n    }\n    else\n    {\n        Extra_UtilGetoptReset();\n        while ( ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != EOF )\n        {\n            switch( c )\n            {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if( !Abc_NtkIsStrash( pNtk ) )\n    {\n        printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    }\n    else\n    {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    if( directive == kCS_WITH_SAFETY_INVARIANTS )\n    {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert( safetyInvariantPO != -1 );\n    }\n\n    if(directive == kCS_WITH_DISCOVER_MONOTONE_SIGNALS)\n    {\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = (double)(endTime - beginTime)/CLOCKS_PER_SEC;\n        printf(\"pre-processing time = %f\\n\",time_spent); \n        return 0;\n    }\n\n    if(directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS)\n    {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert( safetyInvariantPO != -1 );\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = (double)(endTime - beginTime)/CLOCKS_PER_SEC;\n        printf(\"pre-processing time = %f\\n\",time_spent); \n\n        assert( vMasterBarrierDisjuncts != NULL );\n        assert( Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0 );\n    }\n\n    if(directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS)\n    {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert( safetyInvariantPO != -1 );\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = collectUserGivenDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = (double)(endTime - beginTime)/CLOCKS_PER_SEC;\n        printf(\"pre-processing time = %f\\n\",time_spent); \n\n        assert( vMasterBarrierDisjuncts != NULL );\n        assert( Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0 );\n    }\n\n    if(directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS)\n    {\n        assert( vMasterBarrierDisjuncts != NULL );\n        pWorkingAig = generateWorkingAigWithDSC( pAig, pNtk, \u0026liveIndex_0, vMasterBarrierDisjuncts );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    }\n    else\n    {\n        pWorkingAig = generateWorkingAig( pAig, pNtk, \u0026liveIndex_0 );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    }\n\n    Aig_ManStop(pWorkingAig);\n\n    for( absorberCount=1; absorberCount\u003cabsorberLimit; absorberCount++ )\n    {\n        //printf( \"\\nindex of the liveness output = %d\\n\", liveIndex_k );\n        RetValue = flipConePdr( pAigCS, directive, liveIndex_k, safetyInvariantPO, absorberCount );\n\n        if ( RetValue == 1 )\n        {\n                Abc_Print( 1, \"k = %d, Property proved\\n\", absorberCount );\n            break;\n        }\n            else if ( RetValue == 0 )\n        {\n            if( fVerbose )\n            {\n                Abc_Print( 1, \"k = %d, Property DISPROVED\\n\", absorberCount );\n            }\n        }\n            else if ( RetValue == -1 )\n        {\n                Abc_Print( 1, \"Property UNDECIDED with k = %d.\\n\", absorberCount );\n        }\n            else\n                assert( 0 );\n\n        pAigCSNew = introduceAbsorberLogic(pAigCS, \u0026liveIndex_0, \u0026liveIndex_k, absorberCount);\n        Aig_ManStop(pAigCS);\n        pAigCS = pAigCSNew;\n    }\n\n    Aig_ManStop(pAigCS);\n    Aig_ManStop(pAig);\n\n    if(directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS)\n    {\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    }\n    else\n    {\n        //if(vMasterBarrierDisjuncts)\n        //    Vec_PtrFree(vMasterBarrierDisjuncts);\n        //deallocateMasterBarrierDisjunctVecPtrVecInt(vMasterBarrierDisjuncts);\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    }\n    return 0;\n\n    usage:\n        fprintf( stdout, \"usage: kcs [-cmgCh]\\n\" );\n            fprintf( stdout, \"\\timplements Claessen-Sorensson's k-Liveness algorithm\\n\" );\n        fprintf( stdout, \"\\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\\n\");\n        fprintf( stdout, \"\\t-m : discovers monotone signals\\n\");\n            fprintf( stdout, \"\\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\\n\");\n        fprintf( stdout, \"\\t-C : verification with discovered monotone signals\\n\");\n        fprintf( stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}",
+      "Draft": "func Abc_CommandCS_kLiveness(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n        var pNtk, pNtkTemp *Abc_Ntk_t;\n    var pAig, pAigCS, pAigCSNew *Aig_Man_t;\n    var absorberCount int32;\n    var absorberLimit int32  = 500;\n    var RetValue int32;\n    var liveIndex_0 int32 = -1;\n    var liveIndex_k int32 = -1;\n    var fVerbose int32  = 1;\n    var directive int32  = -1;\n    var c int32;\n    var safetyInvariantPO int32  = -1;\n    var beginTime, endTime abctime;\n    var time_spent float64;\n    var vMasterBarrierDisjuncts *Vec_Ptr_t  = nil;\n    var pWorkingAig *Aig_Man_t;\n    //FILE *fp;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n    //fp = fopen(\"propFile.txt\", \"r\");\n    //if( fp )\n    //    getVecOfVecFairness(fp);\n    //exit(0);\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if argc == 1 {\n        assert(directive == -1, \"directive == -1\");\n        directive = SIMPLE_kCS;\n    \n    } else {\n        Extra_UtilGetoptReset();\n        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != -1  {\n            switch  c  {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    if directive == kCS_WITH_SAFETY_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n    }\n\n    if directive == kCS_WITH_DISCOVER_MONOTONE_SIGNALS {\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n        return 0;\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        assert(Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0, \"Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0\");\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = collectUserGivenDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        assert(Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0, \"Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0\");\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        pWorkingAig = generateWorkingAigWithDSC( pAig, pNtk, \u0026liveIndex_0, vMasterBarrierDisjuncts );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    \n    } else {\n        pWorkingAig = generateWorkingAig( pAig, pNtk, \u0026liveIndex_0 );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    }\n\n    Aig_ManStop(pWorkingAig);\n\n    for  absorberCount=1; absorberCount\u003cabsorberLimit; absorberCount++  {\n        //printf( \"\\nindex of the liveness output = %d\\n\", liveIndex_k );\n        RetValue = flipConePdr( pAigCS, directive, liveIndex_k, safetyInvariantPO, absorberCount );\n\n        if RetValue == 1 {\n                Abc_Print( 1, \"k = %d, Property proved\\n\", absorberCount );\n            break;\n        \n            } else if RetValue == 0 {\n            if fVerbose != 0 {\n                Abc_Print( 1, \"k = %d, Property DISPROVED\\n\", absorberCount );\n            }\n        \n            } else if RetValue == -1 {\n                Abc_Print( 1, \"Property UNDECIDED with k = %d.\\n\", absorberCount );\n        \n            } else {\n                assert(false, \"0\"); }\n\n        pAigCSNew = introduceAbsorberLogic(pAigCS, \u0026liveIndex_0, \u0026liveIndex_k, absorberCount);\n        Aig_ManStop(pAigCS);\n        pAigCS = pAigCSNew;\n    }\n\n    Aig_ManStop(pAigCS);\n    Aig_ManStop(pAig);\n\n    if directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    \n    } else {\n        //if(vMasterBarrierDisjuncts)\n        //    Vec_PtrFree(vMasterBarrierDisjuncts);\n        //deallocateMasterBarrierDisjunctVecPtrVecInt(vMasterBarrierDisjuncts);\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    }\n    return 0;\n\n    usage:\n        fmt.Fprintf(os.Stdout, \"usage: kcs [-cmgCh]\\n\");\n            fmt.Fprintf(os.Stdout, \"\\timplements Claessen-Sorensson's k-Liveness algorithm\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-m : discovers monotone signals\\n\");\n            fmt.Fprintf(os.Stdout, \"\\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-C : verification with discovered monotone signals\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}"
+    },
+    {
+      "Name": "Abc_CommandNChooseK",
+      "Start": 22450,
+      "End": 25422,
+      "BodyStart": 22520,
+      "Original": "int Abc_CommandNChooseK( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Abc_Ntk_t * pNtk, * pNtkTemp, *pNtkCombStabil;\n    Aig_Man_t * pAig, *pAigCombStabil;\n    int directive = -1;\n    int c;\n    int parameterizedCombK;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if( argc == 1 )\n    {\n        assert( directive == -1 );\n        directive = SIMPLE_kCS;\n    }\n    else\n    {\n        Extra_UtilGetoptReset();\n        while ( ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != EOF )\n        {\n            switch( c )\n            {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if( !Abc_NtkIsStrash( pNtk ) )\n    {\n        printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    }\n    else\n    {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n/**********************Code for generation of nCk outputs**/\n    //combCount = countCombination(1000, 3);\n    //pAigCombStabil = generateDisjunctiveTester( pNtk, pAig, 7, 2 );\n    printf(\"Enter parameterizedCombK = \" );\n    if( scanf(\"%d\", \u0026parameterizedCombK) != 1 )\n    {\n        printf(\"\\nFailed to read integer!\\n\");\n        return 0;\n    }\n    printf(\"\\n\");\n\n    pAigCombStabil = generateGeneralDisjunctiveTester( pNtk, pAig, parameterizedCombK );\n    Aig_ManPrintStats(pAigCombStabil);\n    pNtkCombStabil = Abc_NtkFromAigPhase( pAigCombStabil );\n    pNtkCombStabil-\u003epName = Abc_UtilStrsav( pAigCombStabil-\u003epName );\n    if ( !Abc_NtkCheck( pNtkCombStabil ) )\n            fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" );\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkCombStabil );\n\n    Aig_ManStop( pAigCombStabil );\n    Aig_ManStop( pAig );\n\n    return 1;\n    //printf(\"\\ncombCount = %d\\n\", combCount);\n    //exit(0);\n/**********************************************************/\n\n    usage:\n        fprintf( stdout, \"usage: nck [-cmgCh]\\n\" );\n            fprintf( stdout, \"\\tgenerates combinatorial signals for stabilization\\n\" );\n        fprintf( stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}",
+      "Draft": "func Abc_CommandNChooseK(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkTemp, pNtkCombStabil *Abc_Ntk_t;\n    var pAig, pAigCombStabil *Aig_Man_t;\n    var directive int32  = -1;\n    var c int32;\n    var parameterizedCombK int32;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if argc == 1 {\n        assert(directive == -1, \"directive == -1\");\n        directive = SIMPLE_kCS;\n    \n    } else {\n        Extra_UtilGetoptReset();\n        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != -1  {\n            switch  c  {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n/**********************Code for generation of nCk outputs**/\n    //combCount = countCombination(1000, 3);\n    //pAigCombStabil = generateDisjunctiveTester( pNtk, pAig, 7, 2 );\n    fmt.Printf(\"Enter parameterizedCombK = \");\n    if scanf(\"%d\", \u0026parameterizedCombK) != 1 {\n        fmt.Printf(\"\\nFailed to read integer!\\n\");\n        return 0;\n    }\n    fmt.Printf(\"\\n\");\n\n    pAigCombStabil = generateGeneralDisjunctiveTester( pNtk, pAig, parameterizedCombK );\n    Aig_ManPrintStats(pAigCombStabil);\n    pNtkCombStabil = Abc_NtkFromAigPhase( pAigCombStabil );\n    pNtkCombStabil.pName = Abc_UtilStrsav( pAigCombStabil.pName );\n    if !Abc_NtkCheck( pNtkCombStabil ) {\n            fmt.Fprintf(os.Stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\"); }\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkCombStabil );\n\n    Aig_ManStop( pAigCombStabil );\n    Aig_ManStop( pAig );\n\n    return 1;\n    //printf(\"\\ncombCount = %d\\n\", combCount);\n    //exit(0);\n/**********************************************************/\n\n    usage:\n        fmt.Fprintf(os.Stdout, \"usage: nck [-cmgCh]\\n\");\n            fmt.Fprintf(os.Stdout, \"\\tgenerates combinatorial signals for stabilization\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::mechanical::sizeof::12141",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12141,
+      "End": 12147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::3137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3137,
+      "End": 3150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::3351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3351,
+      "End": 3364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::6630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6630,
+      "End": 6638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9002,
+      "End": 9015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9071,
+      "End": 9084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9393,
+      "End": 9406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9462,
+      "End": 9475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9571",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9571,
+      "End": 9584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::9641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9641,
+      "End": 9654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::10243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10243,
+      "End": 10256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::11430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11430,
+      "End": 11443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::11598",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11598,
+      "End": 11611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::12126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12126,
+      "End": 12134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::pointer-cast::13053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13053,
+      "End": 13066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::readLiveSignal_0",
+      "Category": "semantic-review",
+      "Symbol": "readLiveSignal_0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2983,
+      "End": 3195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::readLiveSignal_k",
+      "Category": "semantic-review",
+      "Symbol": "readLiveSignal_k",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3197,
+      "End": 3409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::introduceAbsorberLogic",
+      "Category": "semantic-review",
+      "Symbol": "introduceAbsorberLogic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5653,
+      "End": 11119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::modifyAigToApplySafetyInvar",
+      "Category": "semantic-review",
+      "Symbol": "modifyAigToApplySafetyInvar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11121,
+      "End": 11816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::flipConePdr",
+      "Category": "semantic-review",
+      "Symbol": "flipConePdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11818,
+      "End": 13521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::collectSafetyInvariantPOIndex",
+      "Category": "semantic-review",
+      "Symbol": "collectSafetyInvariantPOIndex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13792,
+      "End": 14045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::collectUserGivenDisjunctiveMonotoneSignals",
+      "Category": "semantic-review",
+      "Symbol": "collectUserGivenDisjunctiveMonotoneSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14047,
+      "End": 14615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::deallocateMasterBarrierDisjunctInt",
+      "Category": "semantic-review",
+      "Symbol": "deallocateMasterBarrierDisjunctInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14617,
+      "End": 14961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::deallocateMasterBarrierDisjunctVecPtrVecInt",
+      "Category": "semantic-review",
+      "Symbol": "deallocateMasterBarrierDisjunctVecPtrVecInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14963,
+      "End": 15654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::getVecOfVecFairness",
+      "Category": "semantic-review",
+      "Symbol": "getVecOfVecFairness",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15656,
+      "End": 16014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::Abc_CommandCS_kLiveness",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandCS_kLiveness",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16017,
+      "End": 22448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::Abc_CommandNChooseK",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandNChooseK",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22450,
+      "End": 25422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::7588",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7588,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::7893",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7893,
+      "End": 7927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::8525",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8525,
+      "End": 8560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::10071",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10071,
+      "End": 10105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::10726",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10726,
+      "End": 10760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::13882",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13882,
+      "End": 13915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::14261",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14261,
+      "End": 14294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::14780",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14780,
+      "End": 14849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::15169",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15169,
+      "End": 15238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::15291",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15291,
+      "End": 15340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/kliveness.c::macro-inline::15408",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15408,
+      "End": 15445
+    }
+  ],
+  "Draft": "package live\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [kliveness.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis        [Main implementation module of the algorithm k-Liveness    ] \n              [invented by Koen Claessen, Niklas Sorensson. Implements]\n              [the code for 'kcs'. 'kcs' pre-processes based on switch]\n        [and then runs the (absorber circuit \u003e\u003e pdr) loop  ]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 31, 2012.]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"base/main/main.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \u003cstring.h\u003e\n//#include \"base/main/mainInt.h\"\n//#include \"proof/pdr/pdr.h\"\n//#include \u003ctime.h\u003e\n\n//#define WITHOUT_CONSTRAINTS\n\n//ABC_NAMESPACE_IMPL_START\n\n/***************** Declaration of standard ABC related functions ********************/\n// extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n// extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n\n// extern Abc_Ntk_t * Abc_NtkMakeOnePo( Abc_Ntk_t * pNtk, int Output, int nRange );\n\n// extern void Aig_ManDumpBlif( Aig_Man_t * p, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames );\n\n/***********************************************************************************/\n\n/***************** Declaration of kLiveness related functions **********************/\n//function defined in kLiveConstraints.c\n// extern Aig_Man_t *generateWorkingAig( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIndex0Live );\n\n\n//function defined in arenaViolation.c\n// extern Aig_Man_t *generateWorkingAigWithDSC( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIndex0Live, Vec_Ptr_t *vMasterBarriers );\n\n\n//function defined in disjunctiveMonotone.c\n// extern Vec_Ptr_t *findDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk );\n\n// extern Vec_Int_t *createSingletonIntVector( int i );\n\n/***********************************************************************************/\n// extern Aig_Man_t *generateDisjunctiveTester( Abc_Ntk_t *pNtk, Aig_Man_t *pAig, int combN, int combK );\n\n// extern Aig_Man_t *generateGeneralDisjunctiveTester( Abc_Ntk_t *pNtk, Aig_Man_t *pAig, int combK );\n\n\n//Definition of some macros pertaining to modes/switches\nconst SIMPLE_kCS = 0\nconst kCS_WITH_SAFETY_INVARIANTS = 1\nconst kCS_WITH_DISCOVER_MONOTONE_SIGNALS = 2\nconst kCS_WITH_SAFETY_AND_DCS_INVARIANTS = 3\nconst kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS = 4\n\n//unused function\n     \n                                                                \n \n                    \n          \n\n                                      \n     \n                                                                                \n         \n                                         \n                                                                                       \n         \n         \n\n                \n \n      \n\nfunc readLiveSignal_0(pAig *Aig_Man_t, liveIndex_0 int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n\n    pObj = Aig_ManCo( pAig, liveIndex_0 );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}\n\nfunc readLiveSignal_k(pAig *Aig_Man_t, liveIndex_k int32) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n\n    pObj = Aig_ManCo( pAig, liveIndex_k );\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj));\n}\n\n//unused funtion\n     \n                                                                                        \n \n                    \n          \n\n                                \n                    \n        \n                                          \n         \n                                                                                    \n             \n                                             \n                                                                                           \n             \n             \n\n                \n \n      \n\n//unused function\n     \n                                                                                             \n                                                                           \n \n                    \n                     \n                    \n\n                                                          \n\n                  \n     \n                                          \n         \n                                                \n                                                                                                                      \n         \n     \n                  \n     \n                                          \n         \n                                                                        \n                                                                                                                      \n         \n     \n\n                  \n     \n                                          \n         \n                                                \n                                                                                                                          \n         \n     \n\n                  \n     \n                                          \n         \n                                                                        \n                                                                                                                      \n         \n     \n\n                               \n                                       \n                                                                                   \n                                                                                               \n \n      \n\nfunc introduceAbsorberLogic(pAig *Aig_Man_t, pLiveIndex_0 *int32, pLiveIndex_k *int32, nonFirstIteration int32) *Aig_Man_t {\n    var pNewAig *Aig_Man_t;\n    var pObj, pObjAbsorberLo, pPInNewArg, pPOutNewArg *Aig_Obj_t;\n    var pPIn *Aig_Obj_t = nil;\n    var pPOut *Aig_Obj_t = nil;\n    var pPOutCo *Aig_Obj_t = nil;\n    var pFirstAbsorberOr, pSecondAbsorberOr *Aig_Obj_t;\n    var i int32;\n    var piCopied, loCreated, loCopied, liCreated, liCopied int32; \n    var nRegCount int32;\n\n    assert(*pLiveIndex_0 != -1, \"*pLiveIndex_0 != -1\");\n    if nonFirstIteration == 0 {\n        assert(*pLiveIndex_k == -1, \"*pLiveIndex_k == -1\");\n    } else {\n        assert(*pLiveIndex_k != -1, \"*pLiveIndex_k != -1\"); }\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNewAig = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNewAig.pName = (char *)malloc( len(pAig.pName) + len(\"_kCS\") + 1 );\n    sprintf(pNewAig.pName, \"%s_%s\", pAig.pName, \"kCS\");\n        pNewAig.pSpec = nil;\n\n    //****************************************************************\n    // reading the signal pIn, and pOut\n    //****************************************************************\n\n    pPIn = readLiveSignal_0( pAig, *pLiveIndex_0 );\n    if *pLiveIndex_k == -1 {\n        pPOut = nil;\n    } else {\n        pPOut = readLiveSignal_k( pAig, *pLiveIndex_k ); }\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n        pObj = Aig_ManConst1( pAig );\n        pObj.pData = Aig_ManConst1( pNewAig );\n\n    //****************************************************************\n        // Step 3: create true PIs\n    //****************************************************************\n        Saig_ManForEachPi( pAig, pObj, i )\n    {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n    }\n\n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n        Saig_ManForEachLo( pAig, pObj, i )\n        {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNewAig);\n        }\n\n    //****************************************************************\n    // Step 6: create \"D\" register output for the ABSORBER logic\n    //****************************************************************\n    loCreated++;\n    pObjAbsorberLo = Aig_ObjCreateCi( pNewAig );\n\n    nRegCount = loCreated + loCopied;\n\n    //********************************************************************\n    // Step 7: create internal nodes\n    //********************************************************************\n        Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pObj.pData = Aig_And( pNewAig, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //****************************************************************\n    // Step 8: create the two OR gates of the OBSERVER logic\n    //****************************************************************\n    if nonFirstIteration == 0 {\n        assert((pPIn != nil), \"pPIn\");\n        \n        if !Aig_IsComplement(pPIn) {\n            pPInNewArg = (Aig_Obj_t *)((Aig_Regular(pPIn)).pData);\n        } else {\n            pPInNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn)).pData));\n        }\n\n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPInNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    \n    } else {\n        assert((pPOut != nil), \"pPOut\");\n\n        if !Aig_IsComplement(pPIn) {\n            pPInNewArg = (Aig_Obj_t *)((Aig_Regular(pPIn)).pData);\n        } else {\n            pPInNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPIn)).pData));\n        }\n        if !Aig_IsComplement(pPOut) {\n            pPOutNewArg = (Aig_Obj_t *)((Aig_Regular(pPOut)).pData);\n        } else {\n            pPOutNewArg = Aig_Not((Aig_Obj_t *)((Aig_Regular(pPOut)).pData));\n        }\n        \n        pFirstAbsorberOr = Aig_Or( pNewAig, Aig_Not(pPOutNewArg), pObjAbsorberLo );\n        pSecondAbsorberOr = Aig_Or( pNewAig, pPInNewArg, Aig_Not(pObjAbsorberLo) );\n    }    \n    \n    //********************************************************************\n    // Step 9: create primary outputs \n    //********************************************************************\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pObj.pData = Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) ); \n        if i == *pLiveIndex_k {\n            pPOutCo = (Aig_Obj_t *)(pObj.pData); }\n    }\n\n    //create new po\n    if nonFirstIteration == 0 {\n        assert(pPOutCo == nil, \"pPOutCo == nil\");\n        pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n\n        *pLiveIndex_k = i;\n        \n    } else {\n        assert(pPOutCo != nil, \"pPOutCo != nil\");\n        //pPOutCo = Aig_ObjCreateCo( pNewAig, pSecondAbsorberOr );     \n        //*pLiveIndex_k = Saig_ManPoNum(pAig);\n\n        Aig_ObjPatchFanin0( pNewAig, pPOutCo, pSecondAbsorberOr );\n    }\n\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        liCopied++;\n        Aig_ObjCreateCo( pNewAig, Aig_ObjChild0Copy(pObj) );\n    }\n\n    //create new li\n    liCreated++;\n    Aig_ObjCreateCo( pNewAig, pFirstAbsorberOr );\n\n    Aig_ManSetRegNum( pNewAig, nRegCount );\n    Aig_ManCleanup( pNewAig );\n    \n    assert(Aig_ManCheck( pNewAig ), \"Aig_ManCheck( pNewAig )\");\n\n    assert(*pLiveIndex_k != - 1, \"*pLiveIndex_k != - 1\");\n    return pNewAig;\n}\n\nfunc modifyAigToApplySafetyInvar(pAig *Aig_Man_t, csTarget int32, safetyInvarPO int32) {\n    var pObjPOSafetyInvar, pObjSafetyInvar *Aig_Obj_t;\n    var pObjPOCSTarget, pObjCSTarget *Aig_Obj_t;\n    var pObjCSTargetNew *Aig_Obj_t;\n\n    pObjPOSafetyInvar = Aig_ManCo( pAig, safetyInvarPO );\n    pObjSafetyInvar =  Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOSafetyInvar), Aig_ObjFaninC0(pObjPOSafetyInvar));    \n    pObjPOCSTarget = Aig_ManCo( pAig, csTarget );\n    pObjCSTarget = Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObjPOCSTarget), Aig_ObjFaninC0(pObjPOCSTarget));    \n\n    pObjCSTargetNew = Aig_And( pAig, pObjSafetyInvar, pObjCSTarget );\n    Aig_ObjPatchFanin0( pAig, pObjPOCSTarget, pObjCSTargetNew );\n}\n\nfunc flipConePdr(pAig *Aig_Man_t, directive int32, targetCSPropertyIndex int32, safetyInvariantPOIndex int32, absorberCount int32) int32 {\n    var RetValue, i int32;\n    var pObjTargetPo *Aig_Obj_t;\n    var pAigDupl *Aig_Man_t;\n    var Pars Pdr_Par_t;\n    var pPars *Pdr_Par_t = \u0026Pars;\n    var pCex *Abc_Cex_t  = nil;\n\n    var fileName string;\n    \n    fileName = (char *)malloc(sizeof(char) * 50);\n    fileName = fmt.Sprintf(\"%s_%d.%s\", \"kLive\", absorberCount, \"blif\");\n\n    if directive == kCS_WITH_SAFETY_INVARIANTS || directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        assert(safetyInvariantPOIndex != -1, \"safetyInvariantPOIndex != -1\");\n        modifyAigToApplySafetyInvar(pAig, targetCSPropertyIndex, safetyInvariantPOIndex);\n    }\n\n    pAigDupl = pAig;\n    pAig = Aig_ManDupSimple( pAigDupl );\n\n    for  i=0; i\u003cSaig_ManPoNum(pAig); i++  {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n\n    Pdr_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 1;\n    pPars.fNotVerbose = 1;\n    pPars.fSolveAll = 1;\n    pAig.vSeqModelVec = nil;\n\n    Aig_ManCleanup( pAig );\n    assert(Aig_ManCheck( pAig ), \"Aig_ManCheck( pAig )\");\n\n    Pdr_ManSolve( pAig, pPars );    \n\n    if pAig.vSeqModelVec {\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( pAig.vSeqModelVec, targetCSPropertyIndex );\n        if pCex == nil {\n            RetValue = 1;\n        \n        } else {\n            RetValue = 0; }\n    \n    } else {\n        RetValue = -1;\n        os.Exit(int(0));\n    }\n\n    free(fileName);\n\n    for  i=0; i\u003cSaig_ManPoNum(pAig); i++  {\n        pObjTargetPo = Aig_ManCo( pAig, i );\n        Aig_ObjChild0Flip( pObjTargetPo );\n    }\n    \n    Aig_ManStop( pAig );\n    return RetValue;\n}\n\n//unused function\n     \n                                     \n \n                    \n          \n\n                                     \n     \n                                                                 \n                     \n             \n\n              \n \n      \n\nfunc collectSafetyInvariantPOIndex(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if strstr( Abc_ObjName( pObj ), \"csSafetyInvar_\" ) != nil {\n            return i; }\n    }        \n\n    return -1;\n}\n\nfunc collectUserGivenDisjunctiveMonotoneSignals(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var monotoneVector *Vec_Ptr_t;\n    var newIntVector *Vec_Int_t;\n\n    monotoneVector = Vec_PtrAlloc(0);    \n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if strstr( Abc_ObjName( pObj ), \"csLevel1Stabil_\" ) != nil {\n            newIntVector = createSingletonIntVector(i);\n            Vec_PtrPush(monotoneVector, newIntVector);\n        }\n    }\n\n    if Vec_PtrSize(monotoneVector) \u003e 0 {\n        return monotoneVector;\n    } else {\n        return nil; }\n\n}\n\nfunc deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjunctsArg *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var i int32;\n\n    if vMasterBarrierDisjunctsArg != nil {\n        Vec_PtrForEachEntry(Vec_Int_t *, vMasterBarrierDisjunctsArg, vInt, i)\n        {    \n            Vec_IntFree(vInt);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}\n\nfunc deallocateMasterBarrierDisjunctVecPtrVecInt(vMasterBarrierDisjunctsArg *Vec_Ptr_t) {\n    var vInt *Vec_Int_t;\n    var vPtr *Vec_Ptr_t;\n    var i, j, k, iElem int32;\n\n    if vMasterBarrierDisjunctsArg != nil {\n        Vec_PtrForEachEntry(Vec_Ptr_t *, vMasterBarrierDisjunctsArg, vPtr, i)\n        {    \n            assert((vPtr != nil), \"vPtr\");\n            Vec_PtrForEachEntry( Vec_Int_t *, vPtr, vInt, j )\n            {\n                //Vec_IntFree(vInt);\n                Vec_IntForEachEntry( vInt, iElem, k )\n                    fmt.Printf(\"%d - \", iElem);\n                //printf(\"Chung Chang j = %d\\n\", j);\n            }\n            Vec_PtrFree(vPtr);\n        }\n        Vec_PtrFree(vMasterBarrierDisjunctsArg);\n    }\n}\n\nfunc getVecOfVecFairness(fp *os.File) *Vec_Ptr_t {\n    var masterVector *Vec_Ptr_t  = Vec_PtrAlloc(0);\n    //Vec_Ptr_t *currSignalVector;\n    var stringBuffer [100]byte;\n    //int i;\n    \n    for fgets(stringBuffer, 50, fp) {\n        if strstr(stringBuffer, \":\") {\n\n        \n        } else {\n                \n        }\n    }\n\n    return masterVector;\n}\n\n\nfunc Abc_CommandCS_kLiveness(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n        var pNtk, pNtkTemp *Abc_Ntk_t;\n    var pAig, pAigCS, pAigCSNew *Aig_Man_t;\n    var absorberCount int32;\n    var absorberLimit int32  = 500;\n    var RetValue int32;\n    var liveIndex_0 int32 = -1;\n    var liveIndex_k int32 = -1;\n    var fVerbose int32  = 1;\n    var directive int32  = -1;\n    var c int32;\n    var safetyInvariantPO int32  = -1;\n    var beginTime, endTime abctime;\n    var time_spent float64;\n    var vMasterBarrierDisjuncts *Vec_Ptr_t  = nil;\n    var pWorkingAig *Aig_Man_t;\n    //FILE *fp;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n    //fp = fopen(\"propFile.txt\", \"r\");\n    //if( fp )\n    //    getVecOfVecFairness(fp);\n    //exit(0);\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if argc == 1 {\n        assert(directive == -1, \"directive == -1\");\n        directive = SIMPLE_kCS;\n    \n    } else {\n        Extra_UtilGetoptReset();\n        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != -1  {\n            switch  c  {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n    if directive == kCS_WITH_SAFETY_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n    }\n\n    if directive == kCS_WITH_DISCOVER_MONOTONE_SIGNALS {\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n        return 0;\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = findDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        assert(Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0, \"Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0\");\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            \n        assert(safetyInvariantPO != -1, \"safetyInvariantPO != -1\");\n\n        beginTime = Abc_Clock();\n        vMasterBarrierDisjuncts = collectUserGivenDisjunctiveMonotoneSignals( pNtk );\n        endTime = Abc_Clock();\n        time_spent = float64((endTime - beginTime))/int64(time.Second);\n        fmt.Printf(\"pre-processing time = %f\\n\", time_spent); \n\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        assert(Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0, \"Vec_PtrSize(vMasterBarrierDisjuncts) \u003e 0\");\n    }\n\n    if directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        assert(vMasterBarrierDisjuncts != nil, \"vMasterBarrierDisjuncts != nil\");\n        pWorkingAig = generateWorkingAigWithDSC( pAig, pNtk, \u0026liveIndex_0, vMasterBarrierDisjuncts );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    \n    } else {\n        pWorkingAig = generateWorkingAig( pAig, pNtk, \u0026liveIndex_0 );\n        pAigCS = introduceAbsorberLogic(pWorkingAig, \u0026liveIndex_0, \u0026liveIndex_k, 0);\n    }\n\n    Aig_ManStop(pWorkingAig);\n\n    for  absorberCount=1; absorberCount\u003cabsorberLimit; absorberCount++  {\n        //printf( \"\\nindex of the liveness output = %d\\n\", liveIndex_k );\n        RetValue = flipConePdr( pAigCS, directive, liveIndex_k, safetyInvariantPO, absorberCount );\n\n        if RetValue == 1 {\n                Abc_Print( 1, \"k = %d, Property proved\\n\", absorberCount );\n            break;\n        \n            } else if RetValue == 0 {\n            if fVerbose != 0 {\n                Abc_Print( 1, \"k = %d, Property DISPROVED\\n\", absorberCount );\n            }\n        \n            } else if RetValue == -1 {\n                Abc_Print( 1, \"Property UNDECIDED with k = %d.\\n\", absorberCount );\n        \n            } else {\n                assert(false, \"0\"); }\n\n        pAigCSNew = introduceAbsorberLogic(pAigCS, \u0026liveIndex_0, \u0026liveIndex_k, absorberCount);\n        Aig_ManStop(pAigCS);\n        pAigCS = pAigCSNew;\n    }\n\n    Aig_ManStop(pAigCS);\n    Aig_ManStop(pAig);\n\n    if directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    \n    } else {\n        //if(vMasterBarrierDisjuncts)\n        //    Vec_PtrFree(vMasterBarrierDisjuncts);\n        //deallocateMasterBarrierDisjunctVecPtrVecInt(vMasterBarrierDisjuncts);\n        deallocateMasterBarrierDisjunctInt(vMasterBarrierDisjuncts);\n    }\n    return 0;\n\n    usage:\n        fmt.Fprintf(os.Stdout, \"usage: kcs [-cmgCh]\\n\");\n            fmt.Fprintf(os.Stdout, \"\\timplements Claessen-Sorensson's k-Liveness algorithm\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-m : discovers monotone signals\\n\");\n            fmt.Fprintf(os.Stdout, \"\\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-C : verification with discovered monotone signals\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}\n\nfunc Abc_CommandNChooseK(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pNtk, pNtkTemp, pNtkCombStabil *Abc_Ntk_t;\n    var pAig, pAigCombStabil *Aig_Man_t;\n    var directive int32  = -1;\n    var c int32;\n    var parameterizedCombK int32;\n\n    pNtk = Abc_FrameReadNtk(pAbc);\n\n\n    /*************************************************\n    Extraction of Command Line Argument    \n    *************************************************/\n    if argc == 1 {\n        assert(directive == -1, \"directive == -1\");\n        directive = SIMPLE_kCS;\n    \n    } else {\n        Extra_UtilGetoptReset();\n        for  ( c = Extra_UtilGetopt( argc, argv, \"cmCgh\" ) ) != -1  {\n            switch  c  {\n            case 'c':\n                directive = kCS_WITH_SAFETY_INVARIANTS; \n                break;\n            case 'm':\n                directive = kCS_WITH_DISCOVER_MONOTONE_SIGNALS; \n                break;\n            case 'C':\n                directive = kCS_WITH_SAFETY_AND_DCS_INVARIANTS;\n                break;\n            case 'g':\n                directive = kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n            }\n        }\n    }\n    /*************************************************\n    Extraction of Command Line Argument Ends    \n    *************************************************/\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"The input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkTemp = pNtk;\n    }\n\n/**********************Code for generation of nCk outputs**/\n    //combCount = countCombination(1000, 3);\n    //pAigCombStabil = generateDisjunctiveTester( pNtk, pAig, 7, 2 );\n    fmt.Printf(\"Enter parameterizedCombK = \");\n    if scanf(\"%d\", \u0026parameterizedCombK) != 1 {\n        fmt.Printf(\"\\nFailed to read integer!\\n\");\n        return 0;\n    }\n    fmt.Printf(\"\\n\");\n\n    pAigCombStabil = generateGeneralDisjunctiveTester( pNtk, pAig, parameterizedCombK );\n    Aig_ManPrintStats(pAigCombStabil);\n    pNtkCombStabil = Abc_NtkFromAigPhase( pAigCombStabil );\n    pNtkCombStabil.pName = Abc_UtilStrsav( pAigCombStabil.pName );\n    if !Abc_NtkCheck( pNtkCombStabil ) {\n            fmt.Fprintf(os.Stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\"); }\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkCombStabil );\n\n    Aig_ManStop( pAigCombStabil );\n    Aig_ManStop( pAig );\n\n    return 1;\n    //printf(\"\\ncombCount = %d\\n\", combCount);\n    //exit(0);\n/**********************************************************/\n\n    usage:\n        fmt.Fprintf(os.Stdout, \"usage: nck [-cmgCh]\\n\");\n            fmt.Fprintf(os.Stdout, \"\\tgenerates combinatorial signals for stabilization\\n\");\n        fmt.Fprintf(os.Stdout, \"\\t-h : print usage\\n\");\n            return 1;\n\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

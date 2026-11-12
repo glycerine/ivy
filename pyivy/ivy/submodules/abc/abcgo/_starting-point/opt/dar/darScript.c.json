@@ -1,0 +1,868 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c",
+  "SHA256": "9933babc1b7afbbfa329c166f2f4cb9bfce3642abdfb85153d457d6897a00bc7",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 19,
+        "ByteOffset": 2662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Starting:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 19,
+        "ByteOffset": 2884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 19,
+        "ByteOffset": 3269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 19,
+        "ByteOffset": 3594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Refactor:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 19,
+        "ByteOffset": 3900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 19,
+        "ByteOffset": 4229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 19,
+        "ByteOffset": 5341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Starting:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 19,
+        "ByteOffset": 5747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 19,
+        "ByteOffset": 5948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Refactor:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 19,
+        "ByteOffset": 6137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 19,
+        "ByteOffset": 6399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 19,
+        "ByteOffset": 7484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Starting:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 19,
+        "ByteOffset": 8061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 19,
+        "ByteOffset": 8262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Refactor:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 19,
+        "ByteOffset": 8461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 19,
+        "ByteOffset": 8666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 19,
+        "ByteOffset": 8922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 19,
+        "ByteOffset": 9111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 19,
+        "ByteOffset": 9318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RefactorZ: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 19,
+        "ByteOffset": 9517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 19,
+        "ByteOffset": 9706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 423,
+        "Column": 73,
+        "ByteOffset": 11917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 436,
+        "Column": 73,
+        "ByteOffset": 12533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 19,
+        "ByteOffset": 13533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Starting:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 483,
+        "Column": 19,
+        "ByteOffset": 13728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 19,
+        "ByteOffset": 13929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Refactor:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 19,
+        "ByteOffset": 14118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 19,
+        "ByteOffset": 14380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 19,
+        "ByteOffset": 15484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Starting:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 560,
+        "Column": 23,
+        "ByteOffset": 16017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 23,
+        "ByteOffset": 16238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Refactor:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 19,
+        "ByteOffset": 16415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 23,
+        "ByteOffset": 16702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Rewrite:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 594,
+        "Column": 19,
+        "ByteOffset": 16964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 603,
+        "Column": 23,
+        "ByteOffset": 17241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 612,
+        "Column": 19,
+        "ByteOffset": 17458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"RefactorZ: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 23,
+        "ByteOffset": 17745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"RewriteZ:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 19,
+        "ByteOffset": 17940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Balance:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 677,
+        "Column": 13,
+        "ByteOffset": 19535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Warning: Due to high fanout count of some nodes, level updating is disabled.\\n\" ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 866,
+        "Column": 66,
+        "ByteOffset": 25359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 867,
+        "Column": 66,
+        "ByteOffset": 25477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 933,
+        "Column": 66,
+        "ByteOffset": 27617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 934,
+        "Column": 66,
+        "ByteOffset": 27735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dar_ManRewriteDefault",
+      "Start": 1351,
+      "End": 1665,
+      "BodyStart": 1405,
+      "Original": "Aig_Man_t * Dar_ManRewriteDefault( Aig_Man_t * pAig )\n{\n    Aig_Man_t * pTemp;\n    Dar_RwrPar_t Pars, * pPars = \u0026Pars;\n    Dar_ManDefaultRwrParams( pPars );\n    pAig = Aig_ManDupDfs( pAig ); \n    Dar_ManRewrite( pAig, pPars );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    return pAig;\n}",
+      "Draft": "func Dar_ManRewriteDefault(pAig *Aig_Man_t) *Aig_Man_t {\n    var pTemp *Aig_Man_t;\n    var Pars Dar_RwrPar_t;\n    var pPars *Dar_RwrPar_t = \u0026Pars;\n    Dar_ManDefaultRwrParams( pPars );\n    pAig = Aig_ManDupDfs( pAig ); \n    Dar_ManRewrite( pAig, pPars );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_ManRwsat",
+      "Start": 1986,
+      "End": 4382,
+      "BodyStart": 2111,
+      "Original": "Aig_Man_t * Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose )\n//alias rwsat       \"st; rw -l; b -l; rw -l; rf -l\"\n{\n    Aig_Man_t * pTemp;\n    abctime Time = pAig-\u003eTime2Quit;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = 0;\n    pParsRef-\u003efUpdateLevel = 0;\n\n    pParsRwr-\u003efVerbose = fVerbose;\n    pParsRef-\u003efVerbose = fVerbose;\n//printf( \"1\" );\n    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) printf( \"Starting:  \" ), Aig_ManPrintStats( pAig );\n\n//printf( \"2\" );\n    // balance\n    if ( fBalance )\n    {\n    pAig-\u003eTime2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    if ( Time \u0026\u0026 Abc_Clock() \u003e Time )\n        { if ( pAig ) Aig_ManStop( pAig ); return NULL; }\n    }\n   \n//Aig_ManDumpBlif( pAig, \"inter.blif\", NULL, NULL );\n//printf( \"3\" );\n    // rewrite\n    pAig-\u003eTime2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    if ( Time \u0026\u0026 Abc_Clock() \u003e Time )\n        { if ( pAig ) Aig_ManStop( pAig ); return NULL; }\n\n//printf( \"4\" );\n    // refactor\n    pAig-\u003eTime2Quit = Time;\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Refactor:  \" ), Aig_ManPrintStats( pAig );\n    if ( Time \u0026\u0026 Abc_Clock() \u003e Time )\n        { if ( pAig ) Aig_ManStop( pAig ); return NULL; }\n\n//printf( \"5\" );\n    // balance\n    if ( fBalance )\n    {\n    pAig-\u003eTime2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    if ( Time \u0026\u0026 Abc_Clock() \u003e Time )\n        { if ( pAig ) Aig_ManStop( pAig ); return NULL; }\n    }\n\n//printf( \"6\" );\n    // rewrite\n    pAig-\u003eTime2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    if ( Time \u0026\u0026 Abc_Clock() \u003e Time )\n        { if ( pAig ) Aig_ManStop( pAig ); return NULL; }\n\n//printf( \"7\" );\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose )\n//alias rwsat       \"st; rw -l; b -l; rw -l; rf -l\"\n{\n    var pTemp *Aig_Man_t;\n    var Time abctime  = pAig.Time2Quit;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = 0;\n    pParsRef.fUpdateLevel = 0;\n\n    pParsRwr.fVerbose = fVerbose;\n    pParsRef.fVerbose = fVerbose;\n//printf( \"1\" );\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n//printf( \"2\" );\n    // balance\n    if fBalance != 0 {\n    pAig.Time2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n    }\n   \n//Aig_ManDumpBlif( pAig, \"inter.blif\", NULL, NULL );\n//printf( \"3\" );\n    // rewrite\n    pAig.Time2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"4\" );\n    // refactor\n    pAig.Time2Quit = Time;\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"5\" );\n    // balance\n    if fBalance != 0 {\n    pAig.Time2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n    }\n\n//printf( \"6\" );\n    // rewrite\n    pAig.Time2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"7\" );\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_ManCompress",
+      "Start": 4647,
+      "End": 6415,
+      "BodyStart": 4815,
+      "Original": "Aig_Man_t * Dar_ManCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) printf( \"Starting:  \" ), Aig_ManPrintStats( pAig );\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Refactor:  \" ), Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Dar_ManCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_ManCompress2",
+      "Start": 6681,
+      "End": 9702,
+      "BodyStart": 6891,
+      "Original": "Aig_Man_t * Dar_ManCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n    pParsRwr-\u003efFanout = fFanout;\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) printf( \"Starting:  \" ), Aig_ManPrintStats( pAig );\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/\n    // rewrite\n//    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr-\u003efUpdateLevel = 0;  // disable level update\n    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Refactor:  \" ), Aig_ManPrintStats( pAig );\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RefactorZ: \" ), Aig_ManPrintStats( pAig );\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Dar_ManCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/\n    // rewrite\n//    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr.fUpdateLevel = 0;  // disable level update\n    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr.fUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RefactorZ: \");\nAig_ManPrintStats( pAig ); }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_ManChoiceSynthesis",
+      "Start": 9968,
+      "End": 10650,
+      "BodyStart": 10179,
+      "Original": "Vec_Ptr_t * Dar_ManChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    Vec_Ptr_t * vAigs;\n\n    vAigs = Vec_PtrAlloc( 3 );\n    pAig = Aig_ManDupDfs(pAig);\n    Vec_PtrPush( vAigs, pAig );\n\n    pAig = Dar_ManCompress(pAig, fBalance, fUpdateLevel, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_ManCompress2(pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = (Aig_Man_t *)Vec_PtrEntry( vAigs, 1 );\n    return vAigs;\n}",
+      "Draft": "Vec_Ptr_t * Dar_ManChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vAigs *Vec_Ptr_t;\n\n    vAigs = Vec_PtrAlloc( 3 );\n    pAig = Aig_ManDupDfs(pAig);\n    Vec_PtrPush( vAigs, pAig );\n\n    pAig = Dar_ManCompress(pAig, fBalance, fUpdateLevel, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_ManCompress2(pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = (Aig_Man_t *)Vec_PtrEntry( vAigs, 1 );\n    return vAigs;\n}"
+    },
+    {
+      "Name": "Dar_ManChoice",
+      "Start": 10916,
+      "End": 12124,
+      "BodyStart": 11053,
+      "Original": "Aig_Man_t * Dar_ManChoice( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fConstruct, int nConfMax, int nLevelMax, int fVerbose )\n{\n    Aig_Man_t * pMan, * pTemp;\n    Vec_Ptr_t * vAigs;\n    int i;\n    abctime clk;\n\nclk = Abc_Clock();\n//    vAigs = Dar_ManChoiceSynthesisExt();\n    vAigs = Dar_ManChoiceSynthesis( pAig, fBalance, fUpdateLevel, 0, fVerbose );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    if ( !fConstruct )\n    {\n        pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n        Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n        Vec_PtrWriteEntry( vAigs, 0, pMan );\n    }\n\nif ( fVerbose )\n{\nABC_PRT( \"Synthesis time\", Abc_Clock() - clk );\n}\nclk = Abc_Clock();\n    if ( fConstruct )\n        pMan = Aig_ManChoiceConstructive( vAigs, fVerbose );\n    else\n        pMan = Aig_ManChoicePartitioned( vAigs, 300, nConfMax, nLevelMax, fVerbose );\n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pTemp, i )\n        Aig_ManStop( pTemp );\n    Vec_PtrFree( vAigs );\nif ( fVerbose )\n{\nABC_PRT( \"Choicing time \", Abc_Clock() - clk );\n}\n    return pMan;\n//    return NULL;\n}",
+      "Draft": "func Dar_ManChoice(pAig *Aig_Man_t, fBalance int32, fUpdateLevel int32, fConstruct int32, nConfMax int32, nLevelMax int32, fVerbose int32) *Aig_Man_t {\n    var pMan, pTemp *Aig_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var i int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n//    vAigs = Dar_ManChoiceSynthesisExt();\n    vAigs = Dar_ManChoiceSynthesis( pAig, fBalance, fUpdateLevel, 0, fVerbose );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    if !(fConstruct != 0) {\n        pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n        Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n        Vec_PtrWriteEntry( vAigs, 0, pMan );\n    }\n\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Synthesis time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\nclk = Abc_Clock();\n    if fConstruct != 0 {\n        pMan = Aig_ManChoiceConstructive( vAigs, fVerbose );\n    } else {\n        pMan = Aig_ManChoicePartitioned( vAigs, 300, nConfMax, nLevelMax, fVerbose ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Choicing time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    return pMan;\n//    return NULL;\n}"
+    },
+    {
+      "Name": "Dar_NewCompress",
+      "Start": 12390,
+      "End": 13949,
+      "BodyStart": 12558,
+      "Original": "Aig_Man_t * Dar_NewCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) printf( \"Starting:  \" ), Aig_ManPrintStats( pAig );\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Refactor:  \" ), Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Dar_NewCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_NewCompress2",
+      "Start": 14215,
+      "End": 17523,
+      "BodyStart": 14442,
+      "Original": "Aig_Man_t * Dar_NewCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fLightSynth, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n    pParsRwr-\u003efFanout = fFanout;\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) printf( \"Starting:  \" ), Aig_ManPrintStats( pAig );\n\n    // skip if lighter synthesis is requested\n    if ( !fLightSynth )\n    {\n        // rewrite\n        //Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = 0;  // disable level update  // this change was requested in July and later disabled\n        Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    \n        // refactor\n        Dar_ManRefactor( pAig, pParsRef );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if ( fVerbose ) printf( \"Refactor:  \" ), Aig_ManPrintStats( pAig );\n    }\n\n    // balance\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    \n    // skip if lighter synthesis is requested\n    if ( !fLightSynth )\n    {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if ( fVerbose ) printf( \"Rewrite:   \" ), Aig_ManPrintStats( pAig );\n    }\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n\n    // skip if lighter synthesis is requested\n    if ( !fLightSynth )\n    {\n        // balance\n        if ( fBalance )\n        {\n        pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n        Aig_ManStop( pTemp );\n        if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n        }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"RefactorZ: \" ), Aig_ManPrintStats( pAig );\n    \n    // skip if lighter synthesis is requested\n    if ( !fLightSynth )\n    {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if ( fVerbose ) printf( \"RewriteZ:  \" ), Aig_ManPrintStats( pAig );\n    }\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Dar_NewCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fLightSynth, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        //Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = 0;  // disable level update  // this change was requested in July and later disabled\n        Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n        // refactor\n        Dar_ManRefactor( pAig, pParsRef );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    // balance\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // balance\n        if fBalance != 0 {\n        pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n        }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RefactorZ: \");\nAig_ManPrintStats( pAig ); }\n    \n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}"
+    },
+    {
+      "Name": "Dar_NewChoiceSynthesisGuard",
+      "Start": 17813,
+      "End": 18069,
+      "BodyStart": 17865,
+      "Original": "int Dar_NewChoiceSynthesisGuard( Aig_Man_t * pAig )\n{\n    Aig_Obj_t * pObj;\n    int i, Count = 0;\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) \u003e 1000 )\n            Count += Aig_ObjRefs(pObj) / 1000;\n    return (int)(Count \u003e 10);\n}",
+      "Draft": "func Dar_NewChoiceSynthesisGuard(pAig *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Count int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjRefs(pObj) \u003e 1000 {\n            Count += Aig_ObjRefs(pObj) / 1000; }\n    }\n    return int32((Count \u003e 10));\n}"
+    },
+    {
+      "Name": "Dar_NewChoiceSynthesis",
+      "Start": 18392,
+      "End": 20012,
+      "BodyStart": 18620,
+      "Original": "Gia_Man_t * Dar_NewChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fLightSynth, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    Vec_Ptr_t * vGias;\n    Gia_Man_t * pGia, * pTemp;\n    int i;\n\n    if ( fUpdateLevel \u0026\u0026 Dar_NewChoiceSynthesisGuard(pAig) )\n    {\n        if ( fVerbose )\n            printf( \"Warning: Due to high fanout count of some nodes, level updating is disabled.\\n\" );\n        fUpdateLevel = 0;\n    }\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Dar_NewCompress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_NewCompress2( pAig, fBalance, fUpdateLevel, 1, fPower, fLightSynth, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n\n    // swap around the first and the last\n    pTemp = (Gia_Man_t *)Vec_PtrPop( vGias );\n    Vec_PtrPush( vGias, Vec_PtrEntry(vGias,0) );\n    Vec_PtrWriteEntry( vGias, 0, pTemp );\n\n//    Aig_Man_t * pAig;\n//    int i;\n//    printf( \"Choicing will be performed with %d AIGs:\\n\", Vec_PtrSize(p-\u003evAigs) );\n//    Vec_PtrForEachEntry( Aig_Man_t *, p-\u003evAigs, pAig, i )\n//        Aig_ManPrintStats( pAig );\n\n    // derive the miter\n    pGia = Gia_ManChoiceMiter( vGias );\n\n    // cleanup\n    Vec_PtrForEachEntry( Gia_Man_t *, vGias, pTemp, i )\n        Gia_ManStop( pTemp );\n    Vec_PtrFree( vGias );\n    return pGia;\n}",
+      "Draft": "Gia_Man_t * Dar_NewChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fLightSynth, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vGias *Vec_Ptr_t;\n    var pGia, pTemp *Gia_Man_t;\n    var i int32;\n\n    if (fUpdateLevel != 0) \u0026\u0026 (Dar_NewChoiceSynthesisGuard(pAig) != 0) {\n        if fVerbose != 0 {\n            fmt.Printf(\"Warning: Due to high fanout count of some nodes, level updating is disabled.\\n\"); }\n        fUpdateLevel = 0;\n    }\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Dar_NewCompress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_NewCompress2( pAig, fBalance, fUpdateLevel, 1, fPower, fLightSynth, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n\n    // swap around the first and the last\n    pTemp = (Gia_Man_t *)Vec_PtrPop( vGias );\n    Vec_PtrPush( vGias, Vec_PtrEntry(vGias,0) );\n    Vec_PtrWriteEntry( vGias, 0, pTemp );\n\n//    Aig_Man_t * pAig;\n//    int i;\n//    printf( \"Choicing will be performed with %d AIGs:\\n\", Vec_PtrSize(p-\u003evAigs) );\n//    Vec_PtrForEachEntry( Aig_Man_t *, p-\u003evAigs, pAig, i )\n//        Aig_ManPrintStats( pAig );\n\n    // derive the miter\n    pGia = Gia_ManChoiceMiter( vGias );\n\n    // cleanup\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pTemp) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        Gia_ManStop( pTemp );\n    }\n    Vec_PtrFree( vGias );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Dar_ManChoiceNewAig",
+      "Start": 22650,
+      "End": 24436,
+      "BodyStart": 22722,
+      "Original": "Aig_Man_t * Dar_ManChoiceNewAig( Aig_Man_t * pAig, Dch_Pars_t * pPars )\n{\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n    int fVerbose = pPars-\u003efVerbose;\n    Aig_Man_t * pMan, * pTemp;\n    Vec_Ptr_t * vAigs;\n    Vec_Ptr_t * vPios;\n    void * pManTime;\n    char * pName, * pSpec;\n    int i;\n    abctime clk;\n\nclk = Abc_Clock();\n    vAigs = Dar_ManChoiceSynthesis( pAig, 1, 1, pPars-\u003efPower, fVerbose );\npPars-\u003etimeSynth = Abc_Clock() - clk;\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n    Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n    Vec_PtrWriteEntry( vAigs, 0, pMan );\n\n    // derive the total AIG\n    pMan = Dch_DeriveTotalAig( vAigs );\n    // cleanup\n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pTemp, i )\n        Aig_ManStop( pTemp );\n    Vec_PtrFree( vAigs );\n\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n\n    // save useful things\n    pManTime = pAig-\u003epManTime; pAig-\u003epManTime = NULL;\n    pName = Abc_UtilStrsav( pAig-\u003epName );\n    pSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan-\u003epManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    ABC_FREE( pMan-\u003epName );\n    ABC_FREE( pMan-\u003epSpec );\n    pMan-\u003epName = pName;\n    pMan-\u003epSpec = pSpec;\n    return pMan;\n}",
+      "Draft": "func Dar_ManChoiceNewAig(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n    var fVerbose int32  = pPars.fVerbose;\n    var pMan, pTemp *Aig_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var vPios *Vec_Ptr_t;\n    var pManTime any;\n    var pName, pSpec string;\n    var i int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n    vAigs = Dar_ManChoiceSynthesis( pAig, 1, 1, pPars.fPower, fVerbose );\npPars.timeSynth = Abc_Clock() - clk;\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n    Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n    Vec_PtrWriteEntry( vAigs, 0, pMan );\n\n    // derive the total AIG\n    pMan = Dch_DeriveTotalAig( vAigs );\n    // cleanup\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\n\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n\n    // save useful things\n    pManTime = pAig.pManTime; pAig.pManTime = nil;\n    pName = Abc_UtilStrsav( pAig.pName );\n    pSpec = Abc_UtilStrsav( pAig.pSpec );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan.pManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);\n    pMan.pName = pName;\n    pMan.pSpec = pSpec;\n    return pMan;\n}"
+    },
+    {
+      "Name": "Dar_ManChoiceNew",
+      "Start": 24748,
+      "End": 26521,
+      "BodyStart": 24817,
+      "Original": "Aig_Man_t * Dar_ManChoiceNew( Aig_Man_t * pAig, Dch_Pars_t * pPars )\n{\n    extern Aig_Man_t * Cec_ComputeChoicesNew( Gia_Man_t * pGia, int fVerbose );\n    extern Aig_Man_t * Cec_ComputeChoices( Gia_Man_t * pGia, Dch_Pars_t * pPars );\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n//    int fVerbose = pPars-\u003efVerbose;\n    Aig_Man_t * pMan, * pTemp;\n    Gia_Man_t * pGia;\n    Vec_Ptr_t * vPios;\n    void * pManTime;\n    char * pName, * pSpec;\n    abctime clk;\n\n    // save useful things\n    pManTime = pAig-\u003epManTime; pAig-\u003epManTime = NULL;\n    pName = Abc_UtilStrsav( pAig-\u003epName );\n    pSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n\n    // perform synthesis\nclk = Abc_Clock();\n    pGia = Dar_NewChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, pPars-\u003efPower, pPars-\u003efLightSynth, pPars-\u003efVerbose );\npPars-\u003etimeSynth = Abc_Clock() - clk;\n\n    // perform choice computation\n    if ( pPars-\u003efUseNew )\n        pMan = Cec_ComputeChoicesNew( pGia, pPars-\u003efVerbose );\n    else if ( pPars-\u003efUseGia )\n        pMan = Cec_ComputeChoices( pGia, pPars );\n    else\n    {\n        pMan = Gia_ManToAigSkip( pGia, 3 );\n        pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n        Aig_ManStop( pTemp );\n    }\n    Gia_ManStop( pGia );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan-\u003epManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    ABC_FREE( pMan-\u003epName );\n    ABC_FREE( pMan-\u003epSpec );\n    pMan-\u003epName = pName;\n    pMan-\u003epSpec = pSpec;\n    return pMan;\n}",
+      "Draft": "func Dar_ManChoiceNew(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {\n    extern Aig_Man_t * Cec_ComputeChoicesNew( Gia_Man_t * pGia, int fVerbose );\n    extern Aig_Man_t * Cec_ComputeChoices( Gia_Man_t * pGia, Dch_Pars_t * pPars );\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n//    int fVerbose = pPars-\u003efVerbose;\n    var pMan, pTemp *Aig_Man_t;\n    var pGia *Gia_Man_t;\n    var vPios *Vec_Ptr_t;\n    var pManTime any;\n    var pName, pSpec string;\n    var clk abctime;\n\n    // save useful things\n    pManTime = pAig.pManTime; pAig.pManTime = nil;\n    pName = Abc_UtilStrsav( pAig.pName );\n    pSpec = Abc_UtilStrsav( pAig.pSpec );\n\n    // perform synthesis\nclk = Abc_Clock();\n    pGia = Dar_NewChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, pPars.fPower, pPars.fLightSynth, pPars.fVerbose );\npPars.timeSynth = Abc_Clock() - clk;\n\n    // perform choice computation\n    if pPars.fUseNew {\n        pMan = Cec_ComputeChoicesNew( pGia, pPars.fVerbose );\n    } else if pPars.fUseGia {\n        pMan = Cec_ComputeChoices( pGia, pPars );\n    } else {\n        pMan = Gia_ManToAigSkip( pGia, 3 );\n        pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n        Aig_ManStop( pTemp );\n    }\n    Gia_ManStop( pGia );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan.pManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);\n    pMan.pName = pName;\n    pMan.pSpec = pSpec;\n    return pMan;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::10592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10592,
+      "End": 10605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::11503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11503,
+      "End": 11516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::12147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11911,
+      "End": 11911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::18442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17915,
+      "End": 17915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::20055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19456,
+      "End": 19469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::20593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19886,
+      "End": 19886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::24086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23383,
+      "End": 23396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::24406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23595,
+      "End": 23595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::25188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24314,
+      "End": 24314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::25309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24343,
+      "End": 24343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::27457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26399,
+      "End": 26399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::pointer-cast::27578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26428,
+      "End": 26428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManRewriteDefault",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRewriteDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1351,
+      "End": 1665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManRwsat",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRwsat",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1986,
+      "End": 4382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManCompress",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManCompress",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4647,
+      "End": 6415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManCompress2",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManCompress2",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6681,
+      "End": 9702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManChoiceSynthesis",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManChoiceSynthesis",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9968,
+      "End": 10650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManChoice",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10916,
+      "End": 12124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_NewCompress",
+      "Category": "semantic-review",
+      "Symbol": "Dar_NewCompress",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12390,
+      "End": 13949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_NewCompress2",
+      "Category": "semantic-review",
+      "Symbol": "Dar_NewCompress2",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14215,
+      "End": 17523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_NewChoiceSynthesisGuard",
+      "Category": "semantic-review",
+      "Symbol": "Dar_NewChoiceSynthesisGuard",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17813,
+      "End": 18069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_NewChoiceSynthesis",
+      "Category": "semantic-review",
+      "Symbol": "Dar_NewChoiceSynthesis",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 18392,
+      "End": 20012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::ternary::Dar_ManChoiceNewAig",
+      "Category": "ternary-review",
+      "Symbol": "Dar_ManChoiceNewAig",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22650,
+      "End": 24436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManChoiceNewAig",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManChoiceNewAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22650,
+      "End": 24436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::ternary::Dar_ManChoiceNew",
+      "Category": "ternary-review",
+      "Symbol": "Dar_ManChoiceNew",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24748,
+      "End": 26521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::Dar_ManChoiceNew",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManChoiceNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24748,
+      "End": 26521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darScript.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26769
+    }
+  ],
+  "Draft": "package dar\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [darScript.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [Rewriting scripts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: darScript.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"darInt.h\"\n//#include \"proof/dch/dch.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one iteration of AIG rewriting.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRewriteDefault(pAig *Aig_Man_t) *Aig_Man_t {\n    var pTemp *Aig_Man_t;\n    var Pars Dar_RwrPar_t;\n    var pPars *Dar_RwrPar_t = \u0026Pars;\n    Dar_ManDefaultRwrParams( pPars );\n    pAig = Aig_ManDupDfs( pAig ); \n    Dar_ManRewrite( pAig, pPars );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"rwsat\".]\n\n  Description []\n               \n  SideEffects [This procedure does not tighten level during restructuring.]\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose )\n//alias rwsat       \"st; rw -l; b -l; rw -l; rf -l\"\n{\n    var pTemp *Aig_Man_t;\n    var Time abctime  = pAig.Time2Quit;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = 0;\n    pParsRef.fUpdateLevel = 0;\n\n    pParsRwr.fVerbose = fVerbose;\n    pParsRef.fVerbose = fVerbose;\n//printf( \"1\" );\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n//printf( \"2\" );\n    // balance\n    if fBalance != 0 {\n    pAig.Time2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n    }\n   \n//Aig_ManDumpBlif( pAig, \"inter.blif\", NULL, NULL );\n//printf( \"3\" );\n    // rewrite\n    pAig.Time2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"4\" );\n    // refactor\n    pAig.Time2Quit = Time;\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"5\" );\n    // balance\n    if fBalance != 0 {\n    pAig.Time2Quit = Time;\n    pAig = Dar_ManBalance( pTemp = pAig, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n    }\n\n//printf( \"6\" );\n    // rewrite\n    pAig.Time2Quit = Time;\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    if Time \u0026\u0026 Abc_Clock() \u003e Time { if pAig != nil { Aig_ManStop( pAig ); }\n return nil; }\n\n//printf( \"7\" );\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Dar_ManCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Dar_ManCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n/*\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) printf( \"Balance:   \" ), Aig_ManPrintStats( pAig );\n    }\n*/\n    // rewrite\n//    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr.fUpdateLevel = 0;  // disable level update\n    Dar_ManRewrite( pAig, pParsRwr );\n    pParsRwr.fUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RefactorZ: \");\nAig_ManPrintStats( pAig ); }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Ptr_t * Dar_ManChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vAigs *Vec_Ptr_t;\n\n    vAigs = Vec_PtrAlloc( 3 );\n    pAig = Aig_ManDupDfs(pAig);\n    Vec_PtrPush( vAigs, pAig );\n\n    pAig = Dar_ManCompress(pAig, fBalance, fUpdateLevel, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_ManCompress2(pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose);\n    Vec_PtrPush( vAigs, pAig );\n//Aig_ManPrintStats( pAig );\n\n    pAig = (Aig_Man_t *)Vec_PtrEntry( vAigs, 1 );\n    return vAigs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManChoice(pAig *Aig_Man_t, fBalance int32, fUpdateLevel int32, fConstruct int32, nConfMax int32, nLevelMax int32, fVerbose int32) *Aig_Man_t {\n    var pMan, pTemp *Aig_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var i int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n//    vAigs = Dar_ManChoiceSynthesisExt();\n    vAigs = Dar_ManChoiceSynthesis( pAig, fBalance, fUpdateLevel, 0, fVerbose );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    if !(fConstruct != 0) {\n        pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n        Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n        Vec_PtrWriteEntry( vAigs, 0, pMan );\n    }\n\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Synthesis time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\nclk = Abc_Clock();\n    if fConstruct != 0 {\n        pMan = Aig_ManChoiceConstructive( vAigs, fVerbose );\n    } else {\n        pMan = Aig_ManChoicePartitioned( vAigs, 300, nConfMax, nLevelMax, fVerbose ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Choicing time \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n}\n    return pMan;\n//    return NULL;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Dar_NewCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Dar_NewCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fLightSynth, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { fmt.Printf(\"Starting:  \");\nAig_ManPrintStats( pAig ); }\n\n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        //Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = 0;  // disable level update  // this change was requested in July and later disabled\n        Dar_ManRewrite( pAig, pParsRwr );\n//        pParsRwr-\u003efUpdateLevel = fUpdateLevel;  // reenable level update if needed\n\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    \n        // refactor\n        Dar_ManRefactor( pAig, pParsRef );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Refactor:  \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    // balance\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    \n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Rewrite:   \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n\n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // balance\n        if fBalance != 0 {\n        pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n        }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"RefactorZ: \");\nAig_ManPrintStats( pAig ); }\n    \n    // skip if lighter synthesis is requested\n    if !fLightSynth {\n        // rewrite\n        Dar_ManRewrite( pAig, pParsRwr );\n        pAig = Aig_ManDupDfs( pTemp = pAig ); \n        Aig_ManStop( pTemp );\n        if fVerbose != 0 { fmt.Printf(\"RewriteZ:  \");\nAig_ManPrintStats( pAig ); }\n    }\n\n    // balance\n    if fBalance != 0 {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { fmt.Printf(\"Balance:   \");\nAig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of nodes with very high fanout count.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_NewChoiceSynthesisGuard(pAig *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Count int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjRefs(pObj) \u003e 1000 {\n            Count += Aig_ObjRefs(pObj) / 1000; }\n    }\n    return int32((Count \u003e 10));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description [Takes AIG manager, consumes it, and produces GIA manager.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nGia_Man_t * Dar_NewChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fLightSynth, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vGias *Vec_Ptr_t;\n    var pGia, pTemp *Gia_Man_t;\n    var i int32;\n\n    if (fUpdateLevel != 0) \u0026\u0026 (Dar_NewChoiceSynthesisGuard(pAig) != 0) {\n        if fVerbose != 0 {\n            fmt.Printf(\"Warning: Due to high fanout count of some nodes, level updating is disabled.\\n\"); }\n        fUpdateLevel = 0;\n    }\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Dar_NewCompress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Dar_NewCompress2( pAig, fBalance, fUpdateLevel, 1, fPower, fLightSynth, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n\n    // swap around the first and the last\n    pTemp = (Gia_Man_t *)Vec_PtrPop( vGias );\n    Vec_PtrPush( vGias, Vec_PtrEntry(vGias,0) );\n    Vec_PtrWriteEntry( vGias, 0, pTemp );\n\n//    Aig_Man_t * pAig;\n//    int i;\n//    printf( \"Choicing will be performed with %d AIGs:\\n\", Vec_PtrSize(p-\u003evAigs) );\n//    Vec_PtrForEachEntry( Aig_Man_t *, p-\u003evAigs, pAig, i )\n//        Aig_ManPrintStats( pAig );\n\n    // derive the miter\n    pGia = Gia_ManChoiceMiter( vGias );\n\n    // cleanup\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pTemp) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        Gia_ManStop( pTemp );\n    }\n    Vec_PtrFree( vGias );\n    return pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nAig_Man_t * Dar_ManChoiceNew( Aig_Man_t * pAig, Dch_Pars_t * pPars )\n{\n    extern Aig_Man_t * Dch_ComputeChoices( Vec_Ptr_t * vAigs, Dch_Pars_t * pPars );\n    extern Aig_Man_t * Cec_ComputeChoices( Vec_Ptr_t * vAigs, Dch_Pars_t * pPars );\n\n    int fVerbose = pPars-\u003efVerbose;\n    int fConstruct = 0;\n    Aig_Man_t * pMan, * pTemp;\n    Vec_Ptr_t * vAigs;\n    int i;\n    abctime clk;\n\nclk = Abc_Clock();\n//    vAigs = Dar_ManChoiceSynthesisExt();\n//    vAigs = Dar_ManChoiceSynthesis( pAig, 1, 1, pPars-\u003efPower, fVerbose );\n    vAigs = Dar_ManChoiceSynthesis( pAig, 1, 1, pPars-\u003efPower, 0 );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    if ( !fConstruct )\n    {\n        pMan = Vec_PtrPop( vAigs );\n        Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n        Vec_PtrWriteEntry( vAigs, 0, pMan );\n    }\n\nif ( fVerbose )\n{\n//ABC_PRT( \"Synthesis time\", Abc_Clock() - clk );\n}\n    pPars-\u003etimeSynth = Abc_Clock() - clk;\n\nclk = Abc_Clock();\n    // perform choice computation\n    if ( pPars-\u003efUseGia )\n        pMan = Cec_ComputeChoices( vAigs, pPars );\n    else\n        pMan = Dch_ComputeChoices( vAigs, pPars );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, Vec_PtrEntry(vAigs,0) );\n    Aig_ManStop( pTemp );\n    // duplicate the timing manager\n    pTemp = Vec_PtrEntry( vAigs, 0 );\n    if ( pTemp-\u003epManTime )\n    {\n        extern void * Tim_ManDup( void * p, int fDiscrete );     \n        pMan-\u003epManTime = Tim_ManDup( pTemp-\u003epManTime, 0 );\n    }\n    // reset levels\n    Aig_ManChoiceLevel( pMan );\n    ABC_FREE( pMan-\u003epName );\n    ABC_FREE( pMan-\u003epSpec );\n    pMan-\u003epName = Abc_UtilStrsav( pTemp-\u003epName );\n    pMan-\u003epSpec = Abc_UtilStrsav( pTemp-\u003epSpec );\n\n    // cleanup\n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pTemp, i )\n        Aig_ManStop( pTemp );\n    Vec_PtrFree( vAigs );\n\nif ( fVerbose )\n{\n//ABC_PRT( \"Choicing time \", Abc_Clock() - clk );\n}\n    return pMan;\n//    return NULL;\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description [Consumes the input AIG to reduce memory usage.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManChoiceNewAig(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n    var fVerbose int32  = pPars.fVerbose;\n    var pMan, pTemp *Aig_Man_t;\n    var vAigs *Vec_Ptr_t;\n    var vPios *Vec_Ptr_t;\n    var pManTime any;\n    var pName, pSpec string;\n    var i int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n    vAigs = Dar_ManChoiceSynthesis( pAig, 1, 1, pPars.fPower, fVerbose );\npPars.timeSynth = Abc_Clock() - clk;\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    // (it is also important when constructing choices)\n    pMan = (Aig_Man_t *)Vec_PtrPop( vAigs );\n    Vec_PtrPush( vAigs, Vec_PtrEntry(vAigs,0) );\n    Vec_PtrWriteEntry( vAigs, 0, pMan );\n\n    // derive the total AIG\n    pMan = Dch_DeriveTotalAig( vAigs );\n    // cleanup\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\n\n    // compute choices\n    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n    Aig_ManStop( pTemp );\n\n    // save useful things\n    pManTime = pAig.pManTime; pAig.pManTime = nil;\n    pName = Abc_UtilStrsav( pAig.pName );\n    pSpec = Abc_UtilStrsav( pAig.pSpec );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan.pManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);\n    pMan.pName = pName;\n    pMan.pSpec = pSpec;\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description [Consumes the input AIG to reduce memory usage.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManChoiceNew(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {\n    extern Aig_Man_t * Cec_ComputeChoicesNew( Gia_Man_t * pGia, int fVerbose );\n    extern Aig_Man_t * Cec_ComputeChoices( Gia_Man_t * pGia, Dch_Pars_t * pPars );\n//    extern Aig_Man_t * Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );\n    extern Aig_Man_t * Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );\n//    int fVerbose = pPars-\u003efVerbose;\n    var pMan, pTemp *Aig_Man_t;\n    var pGia *Gia_Man_t;\n    var vPios *Vec_Ptr_t;\n    var pManTime any;\n    var pName, pSpec string;\n    var clk abctime;\n\n    // save useful things\n    pManTime = pAig.pManTime; pAig.pManTime = nil;\n    pName = Abc_UtilStrsav( pAig.pName );\n    pSpec = Abc_UtilStrsav( pAig.pSpec );\n\n    // perform synthesis\nclk = Abc_Clock();\n    pGia = Dar_NewChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, pPars.fPower, pPars.fLightSynth, pPars.fVerbose );\npPars.timeSynth = Abc_Clock() - clk;\n\n    // perform choice computation\n    if pPars.fUseNew {\n        pMan = Cec_ComputeChoicesNew( pGia, pPars.fVerbose );\n    } else if pPars.fUseGia {\n        pMan = Cec_ComputeChoices( pGia, pPars );\n    } else {\n        pMan = Gia_ManToAigSkip( pGia, 3 );\n        pMan = Dch_ComputeChoices( pTemp = pMan, pPars );\n        Aig_ManStop( pTemp );\n    }\n    Gia_ManStop( pGia );\n\n    // create guidence\n    vPios = Aig_ManOrderPios( pMan, pAig ); \n    Aig_ManStop( pAig );\n\n    // reconstruct the network\n    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );\n    Aig_ManStop( pTemp );\n    Vec_PtrFree( vPios );\n\n    // reset levels\n    pMan.pManTime = pManTime;\n    Aig_ManChoiceLevel( pMan );\n\n    // copy names\n    // inlining of macro ABC_FREE\n    ((pMan.pName) ? (free((char *) (pMan.pName)), (pMan.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pMan.pSpec) ? (free((char *) (pMan.pSpec)), (pMan.pSpec) = 0) : 0);\n    pMan.pName = pName;\n    pMan.pSpec = pSpec;\n    return pMan;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

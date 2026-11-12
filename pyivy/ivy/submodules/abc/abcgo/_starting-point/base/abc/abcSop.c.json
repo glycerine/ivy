@@ -1,0 +1,1819 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c",
+  "SHA256": "ec02b0a3f2647279ad655b43c363d105d3a1fca87aa659e9ac1385e34ed1fff1",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 62,
+        "Column": 42,
+        "ByteOffset": 1744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pRegName = Mem_FlexEntryFetch( pMan, strlen(pName) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pRegName, pName );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pSopCover, '-', (size_t)Length );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 7020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 7546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSop[nVars+2] == '\\n' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 7935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 10012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 10936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCover) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 17,
+        "ByteOffset": 11490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 12029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 12466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 12495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 5,
+        "ByteOffset": 13118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 508,
+        "Column": 17,
+        "ByteOffset": 13575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 596,
+        "Column": 5,
+        "ByteOffset": 15687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 17,
+        "ByteOffset": 16957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 664,
+        "Column": 5,
+        "ByteOffset": 17351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 691,
+        "Column": 5,
+        "ByteOffset": 18019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 834,
+        "Column": 5,
+        "ByteOffset": 21513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 859,
+        "Column": 13,
+        "ByteOffset": 22176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a mismatch between its cover size (%d) and its fanin number (%d).\\n\","
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 859,
+        "Column": 22,
+        "ByteOffset": 22185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a mismatch between its cover size (%d) and its fanin number (%d).\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 870,
+        "Column": 13,
+        "ByteOffset": 22634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a strange character (%c) in the output part of its cube.\\n\", *pCubes );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 870,
+        "Column": 22,
+        "ByteOffset": 22643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a strange character (%c) in the output part of its cube.\\n\", *pCubes );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 876,
+        "Column": 13,
+        "ByteOffset": 22881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a cube without new line in the end.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 876,
+        "Column": 22,
+        "ByteOffset": 22890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Abc_SopCheck: SOP has a cube without new line in the end.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 881,
+        "Column": 9,
+        "ByteOffset": 23037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_SopCheck: SOP has cubes in both phases.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 881,
+        "Column": 18,
+        "ByteOffset": 23046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_SopCheck: SOP has cubes in both phases.\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 905,
+        "Column": 18,
+        "ByteOffset": 23709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nTruthSize = strlen(pTruth);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 908,
+        "Column": 9,
+        "ByteOffset": 23811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 919,
+        "Column": 13,
+        "ByteOffset": 24197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"String %s does not look like a binary representation of the truth table.\\n\", pTruth );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 927,
+        "Column": 9,
+        "ByteOffset": 24528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot create constant function.\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 933,
+        "Column": 17,
+        "ByteOffset": 24720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSopCover = ABC_ALLOC( char, Length + 1 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 970,
+        "Column": 18,
+        "ByteOffset": 25804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nTruthSize = strlen(pTruth);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 977,
+        "Column": 9,
+        "ByteOffset": 25976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 991,
+        "Column": 13,
+        "ByteOffset": 26525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"String %s does not look like a hexadecimal representation of the truth table.\\n\", pTruth );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1002,
+        "Column": 17,
+        "ByteOffset": 26925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSopCover = ABC_ALLOC( char, Length + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1050,
+        "Column": 5,
+        "ByteOffset": 28355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iValue \u003c nValues );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 1051,
+        "Column": 5,
+        "ByteOffset": 28387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"d0\\n%d 1\\n\", iValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1073,
+        "Column": 5,
+        "ByteOffset": 29018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit \u003c nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1117,
+        "Column": 5,
+        "ByteOffset": 30248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nValues \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1152,
+        "Column": 5,
+        "ByteOffset": 31241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1193,
+        "Column": 5,
+        "ByteOffset": 32491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1194,
+        "Column": 5,
+        "ByteOffset": 32531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1203,
+        "Column": 17,
+        "ByteOffset": 32850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1206,
+        "Column": 9,
+        "ByteOffset": 32907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == ' ' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1209,
+        "Column": 9,
+        "ByteOffset": 32973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == '\\n' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1243,
+        "Column": 5,
+        "ByteOffset": 34098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1244,
+        "Column": 5,
+        "ByteOffset": 34138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1258,
+        "Column": 17,
+        "ByteOffset": 34611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1262,
+        "Column": 9,
+        "ByteOffset": 34694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == ' ' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1265,
+        "Column": 9,
+        "ByteOffset": 34760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == '\\n' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1296,
+        "Column": 5,
+        "ByteOffset": 35478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1297,
+        "Column": 5,
+        "ByteOffset": 35519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1317,
+        "Column": 17,
+        "ByteOffset": 36134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1322,
+        "Column": 9,
+        "ByteOffset": 36249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == ' ' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1325,
+        "Column": 9,
+        "ByteOffset": 36315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == '\\n' );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SopRegister",
+      "Start": 1561,
+      "End": 1801,
+      "BodyStart": 1625,
+      "Original": "char * Abc_SopRegister( Mem_Flex_t * pMan, const char * pName )\n{\n    char * pRegName;\n    if ( pName == NULL ) return NULL;\n    pRegName = Mem_FlexEntryFetch( pMan, strlen(pName) + 1 );\n    strcpy( pRegName, pName );\n    return pRegName;\n}",
+      "Draft": "func Abc_SopRegister(pMan *Mem_Flex_t, pName string) string {\n    var pRegName string;\n    if pName == nil { return nil; }\n    pRegName = Mem_FlexEntryFetch( pMan, len(pName) + 1 );\n    pRegName = pName;\n    return pRegName;\n}"
+    },
+    {
+      "Name": "Abc_SopStart",
+      "Start": 2111,
+      "End": 2605,
+      "BodyStart": 2175,
+      "Original": "char * Abc_SopStart( Mem_Flex_t * pMan, int nCubes, int nVars )\n{\n    char * pSopCover, * pCube;\n    int i, Length;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Mem_FlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for ( i = 0; i \u003c nCubes; i++ )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}",
+      "Draft": "func Abc_SopStart(pMan *Mem_Flex_t, nCubes int32, nVars int32) string {\n    var pSopCover, pCube string;\n    var i, Length int32;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Mem_FlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for  i = 0; i \u003c nCubes; i++  {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateConst1",
+      "Start": 2887,
+      "End": 2982,
+      "BodyStart": 2935,
+      "Original": "char * Abc_SopCreateConst1( Mem_Flex_t * pMan )\n{\n    return Abc_SopRegister( pMan, \" 1\\n\" );\n}",
+      "Draft": "func Abc_SopCreateConst1(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister( pMan, \" 1\\n\" );\n}"
+    },
+    {
+      "Name": "Abc_SopCreateConst0",
+      "Start": 3264,
+      "End": 3359,
+      "BodyStart": 3312,
+      "Original": "char * Abc_SopCreateConst0( Mem_Flex_t * pMan )\n{\n    return Abc_SopRegister( pMan, \" 0\\n\" );\n}",
+      "Draft": "func Abc_SopCreateConst0(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister( pMan, \" 0\\n\" );\n}"
+    },
+    {
+      "Name": "Abc_SopCreateAnd2",
+      "Start": 3618,
+      "End": 3902,
+      "BodyStart": 3690,
+      "Original": "char * Abc_SopCreateAnd2( Mem_Flex_t * pMan, int fCompl0, int fCompl1 )\n{\n    char Buffer[6];\n    Buffer[0] = '1' - fCompl0;\n    Buffer[1] = '1' - fCompl1;\n    Buffer[2] = ' ';\n    Buffer[3] = '1';\n    Buffer[4] = '\\n';\n    Buffer[5] = 0;\n    return Abc_SopRegister( pMan, Buffer );\n}",
+      "Draft": "func Abc_SopCreateAnd2(pMan *Mem_Flex_t, fCompl0 int32, fCompl1 int32) string {\n    var Buffer [6]byte;\n    Buffer[0] = '1' - fCompl0;\n    Buffer[1] = '1' - fCompl1;\n    Buffer[2] = ' ';\n    Buffer[3] = '1';\n    Buffer[4] = '\\n';\n    Buffer[5] = 0;\n    return Abc_SopRegister( pMan, Buffer );\n}"
+    },
+    {
+      "Name": "Abc_SopCreateAnd",
+      "Start": 4172,
+      "End": 4446,
+      "BodyStart": 4243,
+      "Original": "char * Abc_SopCreateAnd( Mem_Flex_t * pMan, int nVars, int * pfCompl )\n{\n    char * pSop;\n    int i;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        pSop[i] = '1' - (pfCompl? pfCompl[i] : 0);\n    pSop[nVars + 1] = '1';\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateAnd(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '1' - (pfCompl? pfCompl[i] : 0);\n    }\n    pSop[nVars + 1] = '1';\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateNand",
+      "Start": 4717,
+      "End": 4949,
+      "BodyStart": 4774,
+      "Original": "char * Abc_SopCreateNand( Mem_Flex_t * pMan, int nVars )\n{\n    char * pSop;\n    int i;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        pSop[i] = '1';\n    pSop[nVars + 1] = '0';\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateNand(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '1';\n    }\n    pSop[nVars + 1] = '0';\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateOr",
+      "Start": 5218,
+      "End": 5491,
+      "BodyStart": 5288,
+      "Original": "char * Abc_SopCreateOr( Mem_Flex_t * pMan, int nVars, int * pfCompl )\n{\n    char * pSop;\n    int i;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        pSop[i] = '0' + (pfCompl? pfCompl[i] : 0);\n    pSop[nVars + 1] = '0';\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateOr(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '0' + (pfCompl? pfCompl[i] : 0);\n    }\n    pSop[nVars + 1] = '0';\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateOrMultiCube",
+      "Start": 5760,
+      "End": 6076,
+      "BodyStart": 5839,
+      "Original": "char * Abc_SopCreateOrMultiCube( Mem_Flex_t * pMan, int nVars, int * pfCompl )\n{\n    char * pSop, * pCube;\n    int i;\n    pSop = Abc_SopStart( pMan, nVars, nVars );\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        pCube[i] = '1' - (pfCompl? pfCompl[i] : 0);\n        i++;\n    }\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateOrMultiCube(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop, pCube string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, nVars, nVars );\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        pCube[i] = '1' - (pfCompl? pfCompl[i] : 0);\n        i++;\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateNor",
+      "Start": 6346,
+      "End": 6550,
+      "BodyStart": 6402,
+      "Original": "char * Abc_SopCreateNor( Mem_Flex_t * pMan, int nVars )\n{\n    char * pSop;\n    int i;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        pSop[i] = '0';\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateNor(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '0';\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateXor",
+      "Start": 6820,
+      "End": 6955,
+      "BodyStart": 6876,
+      "Original": "char * Abc_SopCreateXor( Mem_Flex_t * pMan, int nVars )\n{\n    assert( nVars == 2 );\n    return Abc_SopRegister(pMan, \"01 1\\n10 1\\n\");\n}",
+      "Draft": "func Abc_SopCreateXor(pMan *Mem_Flex_t, nVars int32) string {\n    assert(nVars == 2, \"nVars == 2\");\n    return Abc_SopRegister(pMan, \"01 1\\n10 1\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SopCreateXorSpecial",
+      "Start": 7240,
+      "End": 7452,
+      "BodyStart": 7303,
+      "Original": "char * Abc_SopCreateXorSpecial( Mem_Flex_t * pMan, int nVars )\n{\n    char * pSop;\n    pSop = Abc_SopCreateAnd( pMan, nVars, NULL );\n    pSop[nVars+1] = 'x';\n    assert( pSop[nVars+2] == '\\n' );\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateXorSpecial(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    pSop = Abc_SopCreateAnd( pMan, nVars, nil );\n    pSop[nVars+1] = 'x';\n    assert(pSop[nVars+2] == '\\n', \"pSop[nVars+2] == '\\\\n'\");\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateNxor",
+      "Start": 7723,
+      "End": 7859,
+      "BodyStart": 7780,
+      "Original": "char * Abc_SopCreateNxor( Mem_Flex_t * pMan, int nVars )\n{\n    assert( nVars == 2 );\n    return Abc_SopRegister(pMan, \"11 1\\n00 1\\n\");\n}",
+      "Draft": "func Abc_SopCreateNxor(pMan *Mem_Flex_t, nVars int32) string {\n    assert(nVars == 2, \"nVars == 2\");\n    return Abc_SopRegister(pMan, \"11 1\\n00 1\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SopCreateMux",
+      "Start": 8210,
+      "End": 8310,
+      "BodyStart": 8255,
+      "Original": "char * Abc_SopCreateMux( Mem_Flex_t * pMan )\n{\n    return Abc_SopRegister(pMan, \"11- 1\\n0-1 1\\n\");\n}",
+      "Draft": "func Abc_SopCreateMux(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"11- 1\\n0-1 1\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SopCreateInv",
+      "Start": 8568,
+      "End": 8659,
+      "BodyStart": 8613,
+      "Original": "char * Abc_SopCreateInv( Mem_Flex_t * pMan )\n{\n    return Abc_SopRegister(pMan, \"0 1\\n\");\n}",
+      "Draft": "func Abc_SopCreateInv(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"0 1\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SopCreateBuf",
+      "Start": 8917,
+      "End": 9008,
+      "BodyStart": 8962,
+      "Original": "char * Abc_SopCreateBuf( Mem_Flex_t * pMan )\n{\n    return Abc_SopRegister(pMan, \"1 1\\n\");\n}",
+      "Draft": "func Abc_SopCreateBuf(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"1 1\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SopCreateFromTruth",
+      "Start": 9293,
+      "End": 10260,
+      "BodyStart": 9374,
+      "Original": "char * Abc_SopCreateFromTruth( Mem_Flex_t * pMan, int nVars, unsigned * pTruth )\n{\n    char * pSop, * pCube;\n    int nMints, Counter, i, k;\n    if ( nVars == 0 )\n        return pTruth[0] ? Abc_SopCreateConst1(pMan) : Abc_SopCreateConst0(pMan);\n    // count the number of true minterms\n    Counter = 0;\n    nMints = (1 \u003c\u003c nVars);\n    for ( i = 0; i \u003c nMints; i++ )\n        Counter += ((pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0);\n    // SOP is not well-defined if the truth table is constant 0\n    assert( Counter \u003e 0 );\n    if ( Counter == 0 )\n        return NULL;\n    // start the cover\n    pSop = Abc_SopStart( pMan, Counter, nVars );\n    // create true minterms\n    Counter = 0;\n    for ( i = 0; i \u003c nMints; i++ )\n        if ( (pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0 )\n        {\n            pCube = pSop + Counter * (nVars + 3);\n            for ( k = 0; k \u003c nVars; k++ )\n                pCube[k] = '0' + ((i \u0026 (1 \u003c\u003c k)) \u003e 0);\n            Counter++;\n        }\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateFromTruth(pMan *Mem_Flex_t, nVars int32, pTruth *uint32) string {\n    var pSop, pCube string;\n    var nMints, Counter, i, k int32;\n    if nVars == 0 {\n        if pTruth[0] {\n            return Abc_SopCreateConst1(pMan);\n        } else {\n            return Abc_SopCreateConst0(pMan);\n        } }\n    // count the number of true minterms\n    Counter = 0;\n    nMints = (1 \u003c\u003c nVars);\n    for  i = 0; i \u003c nMints; i++  {\n        Counter += ((pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0);\n    }\n    // SOP is not well-defined if the truth table is constant 0\n    assert(Counter \u003e 0, \"Counter \u003e 0\");\n    if Counter == 0 {\n        return nil; }\n    // start the cover\n    pSop = Abc_SopStart( pMan, Counter, nVars );\n    // create true minterms\n    Counter = 0;\n    for  i = 0; i \u003c nMints; i++  {\n        if (pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0 {\n            pCube = pSop + Counter * (nVars + 3);\n            for  k = 0; k \u003c nVars; k++  {\n                pCube[k] = '0' + ((i \u0026 (1 \u003c\u003c k)) \u003e 0);\n            }\n            Counter++;\n        }\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateFromIsop",
+      "Start": 10545,
+      "End": 11302,
+      "BodyStart": 10626,
+      "Original": "char * Abc_SopCreateFromIsop( Mem_Flex_t * pMan, int nVars, Vec_Int_t * vCover )\n{\n    char * pSop, * pCube;\n    int i, k, Entry, Literal;\n    assert( Vec_IntSize(vCover) \u003e 0 );\n    if ( Vec_IntSize(vCover) == 0 )\n        return NULL;\n    // start the cover\n    pSop = Abc_SopStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 )\n                pCube[k] = '0';\n            else if ( Literal == 2 )\n                pCube[k] = '1';\n            else if ( Literal != 0 )\n                assert( 0 );\n        }\n    }\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateFromIsop(pMan *Mem_Flex_t, nVars int32, vCover *Vec_Int_t) string {\n    var pSop, pCube string;\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    // start the cover\n    pSop = Abc_SopStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                pCube[k] = '0';\n            } else if Literal == 2 {\n                pCube[k] = '1';\n            } else if Literal != 0 {\n                assert(false, \"0\"); }\n        }\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopCreateFromTruthIsop",
+      "Start": 11587,
+      "End": 12404,
+      "BodyStart": 11688,
+      "Original": "char * Abc_SopCreateFromTruthIsop( Mem_Flex_t * pMan, int nVars, word * pTruth, Vec_Int_t * vCover )\n{\n    char * pSop = NULL;\n    int w, nWords  = Abc_Truth6WordNum( nVars );\n    assert( nVars \u003c 16 );\n\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( pTruth[w] )\n            break;\n    if ( w == nWords )\n        return Abc_SopRegister( pMan, \" 0\\n\" );\n\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( ~pTruth[w] )\n            break;\n    if ( w == nWords )\n        return Abc_SopRegister( pMan, \" 1\\n\" );\n\n    {\n        int RetValue = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        assert( nVars \u003e 0 );\n        assert( RetValue == 0 || RetValue == 1 );\n        pSop = Abc_SopCreateFromIsop( pMan, nVars, vCover );\n        if ( RetValue )\n            Abc_SopComplement( pSop );\n    }\n    return pSop;\n}",
+      "Draft": "func Abc_SopCreateFromTruthIsop(pMan *Mem_Flex_t, nVars int32, pTruth *word, vCover *Vec_Int_t) string {\n    var pSop string  = nil;\n    var w int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n\n    for  w = 0; w \u003c nWords; w++  {\n        if pTruth[w] {\n            break; }\n    }\n    if w == nWords {\n        return Abc_SopRegister( pMan, \" 0\\n\" ); }\n\n    for  w = 0; w \u003c nWords; w++  {\n        if ~pTruth[w] {\n            break; }\n    }\n    if w == nWords {\n        return Abc_SopRegister( pMan, \" 1\\n\" ); }\n\n    {\n        var RetValue int32  = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n        pSop = Abc_SopCreateFromIsop( pMan, nVars, vCover );\n        if RetValue != 0 {\n            Abc_SopComplement( pSop ); }\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Abc_SopToIsop",
+      "Start": 12689,
+      "End": 13349,
+      "BodyStart": 12743,
+      "Original": "void Abc_SopToIsop( char * pSop, Vec_Int_t * vCover )\n{\n    char * pCube;\n    int k, nVars, Entry;\n    nVars = Abc_SopGetVarNum( pSop );\n    assert( nVars \u003e 0 );\n    // create cubes\n    Vec_IntClear( vCover );\n    for ( pCube = pSop; *pCube; pCube += nVars + 3 )\n    {\n        Entry = 0;\n        for ( k = nVars - 1; k \u003e= 0; k-- )\n            if ( pCube[k] == '0' )\n                Entry = (Entry \u003c\u003c 2) | 1;\n            else if ( pCube[k] == '1' )\n                Entry = (Entry \u003c\u003c 2) | 2;\n            else if ( pCube[k] == '-' )\n                Entry = (Entry \u003c\u003c 2);\n            else \n                assert( 0 );\n        Vec_IntPush( vCover, Entry );\n    }\n}",
+      "Draft": "func Abc_SopToIsop(pSop string, vCover *Vec_Int_t) {\n    var pCube string;\n    var k, nVars, Entry int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // create cubes\n    Vec_IntClear( vCover );\n    for  pCube = pSop; *pCube; pCube += nVars + 3  {\n        Entry = 0;\n        for  k = nVars - 1; k \u003e= 0; k--  {\n            if pCube[k] == '0' {\n                Entry = (Entry \u003c\u003c 2) | 1;\n            } else if pCube[k] == '1' {\n                Entry = (Entry \u003c\u003c 2) | 2;\n            } else if pCube[k] == '-' {\n                Entry = (Entry \u003c\u003c 2);\n            } else { \n                assert(false, \"0\"); }\n        }\n        Vec_IntPush( vCover, Entry );\n    }\n}"
+    },
+    {
+      "Name": "Abc_SopGetCubeNum",
+      "Start": 13624,
+      "End": 13836,
+      "BodyStart": 13661,
+      "Original": "int Abc_SopGetCubeNum( char * pSop )\n{\n    char * pCur;\n    int nCubes = 0;\n    if ( pSop == NULL )\n        return 0;\n    for ( pCur = pSop; *pCur; pCur++ )\n        nCubes += (*pCur == '\\n');\n    return nCubes;\n}",
+      "Draft": "func Abc_SopGetCubeNum(pSop string) int32 {\n    var pCur string;\n    var nCubes int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nCubes += (*pCur == '\\n');\n    }\n    return nCubes;\n}"
+    },
+    {
+      "Name": "Abc_SopGetLitNum",
+      "Start": 14118,
+      "End": 14389,
+      "BodyStart": 14154,
+      "Original": "int Abc_SopGetLitNum( char * pSop )\n{\n    char * pCur;\n    int nLits = 0;\n    if ( pSop == NULL )\n        return 0;\n    for ( pCur = pSop; *pCur; pCur++ )\n    {\n        nLits  -= (*pCur == '\\n');\n        nLits  += (*pCur == '0' || *pCur == '1');\n    }\n    return nLits;\n}",
+      "Draft": "func Abc_SopGetLitNum(pSop string) int32 {\n    var pCur string;\n    var nLits int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nLits  -= (*pCur == '\\n');\n        nLits  += (*pCur == '0' || *pCur == '1');\n    }\n    return nLits;\n}"
+    },
+    {
+      "Name": "Abc_SopGetVarNum",
+      "Start": 14668,
+      "End": 14848,
+      "BodyStart": 14704,
+      "Original": "int Abc_SopGetVarNum( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur != '\\n'; pCur++ )\n        if ( *pCur == 0 )\n            return -1;\n    return pCur - pSop - 2;\n}",
+      "Draft": "func Abc_SopGetVarNum(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur != '\\n'; pCur++  {\n        if *pCur == 0 {\n            return -1; }\n    }\n    return pCur - pSop - 2;\n}"
+    },
+    {
+      "Name": "Abc_SopGetPhase",
+      "Start": 15113,
+      "End": 15373,
+      "BodyStart": 15148,
+      "Original": "int Abc_SopGetPhase( char * pSop )\n{\n    int nVars = Abc_SopGetVarNum( pSop );\n    if ( pSop[nVars+1] == '0' || pSop[nVars+1] == 'n' )\n        return 0;\n    if ( pSop[nVars+1] == '1' || pSop[nVars+1] == 'x' )\n        return 1;\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Abc_SopGetPhase(pSop string) int32 {\n    var nVars int32  = Abc_SopGetVarNum( pSop );\n    if pSop[nVars+1] == '0' || pSop[nVars+1] == 'n' {\n        return 0; }\n    if pSop[nVars+1] == '1' || pSop[nVars+1] == 'x' {\n        return 1; }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Abc_SopGetIthCareLit",
+      "Start": 15647,
+      "End": 15894,
+      "BodyStart": 15694,
+      "Original": "int Abc_SopGetIthCareLit( char * pSop, int i )\n{\n    char * pCube;\n    int nVars;\n    nVars = Abc_SopGetVarNum( pSop );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n        if ( pCube[i] != '-' )\n            return pCube[i] - '0';\n    return -1;\n}",
+      "Draft": "func Abc_SopGetIthCareLit(pSop string, i int32) int32 {\n    var pCube string;\n    var nVars int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n        if ( pCube[i] != '-' )\n            return pCube[i] - '0';\n    return -1;\n}"
+    },
+    {
+      "Name": "Abc_SopComplement",
+      "Start": 16130,
+      "End": 16629,
+      "BodyStart": 16168,
+      "Original": "void Abc_SopComplement( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur; pCur++ )\n        if ( *pCur == '\\n' )\n        {\n            if ( *(pCur - 1) == '0' )\n                *(pCur - 1) = '1';\n            else if ( *(pCur - 1) == '1' )\n                *(pCur - 1) = '0';\n            else if ( *(pCur - 1) == 'x' )\n                *(pCur - 1) = 'n';\n            else if ( *(pCur - 1) == 'n' )\n                *(pCur - 1) = 'x';\n            else\n                assert( 0 );\n        }\n}",
+      "Draft": "func Abc_SopComplement(pSop string) {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            if *(pCur - 1) == '0' {\n                *(pCur - 1) = '1';\n            } else if *(pCur - 1) == '1' {\n                *(pCur - 1) = '0';\n            } else if *(pCur - 1) == 'x' {\n                *(pCur - 1) = 'n';\n            } else if *(pCur - 1) == 'n' {\n                *(pCur - 1) = 'x';\n            } else {\n                assert(false, \"0\"); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SopComplementVar",
+      "Start": 16865,
+      "End": 17197,
+      "BodyStart": 16916,
+      "Original": "void Abc_SopComplementVar( char * pSop, int iVar )\n{\n    char * pCube;\n    int nVars = Abc_SopGetVarNum(pSop);\n    assert( iVar \u003c nVars );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        if ( pCube[iVar] == '0' )\n            pCube[iVar] = '1';\n        else if ( pCube[iVar] == '1' )\n            pCube[iVar] = '0';\n    }\n}",
+      "Draft": "func Abc_SopComplementVar(pSop string, iVar int32) {\n    var pCube string;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        if pCube[iVar] == '0' {\n            pCube[iVar] = '1';\n        } else if pCube[iVar] == '1' {\n            pCube[iVar] = '0'; }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SopIsComplement",
+      "Start": 17433,
+      "End": 17659,
+      "BodyStart": 17472,
+      "Original": "int Abc_SopIsComplement( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur; pCur++ )\n        if ( *pCur == '\\n' )\n            return (int)(*(pCur - 1) == '0' || *(pCur - 1) == 'n');\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_SopIsComplement(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == '0' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_SopIsConst0",
+      "Start": 17929,
+      "End": 18012,
+      "BodyStart": 17964,
+      "Original": "int Abc_SopIsConst0( char * pSop )\n{\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}",
+      "Draft": "func Abc_SopIsConst0(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}"
+    },
+    {
+      "Name": "Abc_SopIsConst1",
+      "Start": 18282,
+      "End": 18365,
+      "BodyStart": 18317,
+      "Original": "int Abc_SopIsConst1( char * pSop )\n{\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}",
+      "Draft": "func Abc_SopIsConst1(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}"
+    },
+    {
+      "Name": "Abc_SopIsBuf",
+      "Start": 18635,
+      "End": 18828,
+      "BodyStart": 18667,
+      "Original": "int Abc_SopIsBuf( char * pSop )\n{\n    if ( pSop[4] != 0 )\n        return 0;\n    if ( (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Abc_SopIsBuf(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_SopIsInv",
+      "Start": 19098,
+      "End": 19291,
+      "BodyStart": 19130,
+      "Original": "int Abc_SopIsInv( char * pSop )\n{\n    if ( pSop[4] != 0 )\n        return 0;\n    if ( (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Abc_SopIsInv(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_SopIsAndType",
+      "Start": 19588,
+      "End": 19856,
+      "BodyStart": 19624,
+      "Original": "int Abc_SopIsAndType( char * pSop )\n{\n    char * pCur;\n    if ( Abc_SopGetCubeNum(pSop) != 1 )\n        return 0;\n    for ( pCur = pSop; *pCur != ' '; pCur++ )\n        if ( *pCur == '-' )\n            return 0;\n    if ( pCur[1] != '1' )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Abc_SopIsAndType(pSop string) int32 {\n    var pCur string;\n    if Abc_SopGetCubeNum(pSop) != 1 {\n        return 0; }\n    for  pCur = pSop; *pCur != ' '; pCur++  {\n        if *pCur == '-' {\n            return 0; }\n    }\n    if pCur[1] != '1' {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_SopIsOrType",
+      "Start": 20152,
+      "End": 20618,
+      "BodyStart": 20187,
+      "Original": "int Abc_SopIsOrType( char * pSop )\n{\n    char * pCube, * pCur;\n    int nVars, nLits;\n    nVars = Abc_SopGetVarNum( pSop );\n    if ( nVars != Abc_SopGetCubeNum(pSop) )\n        return 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // count the number of literals in the cube\n        nLits = 0;\n        for ( pCur = pCube; *pCur != ' '; pCur++ )\n            nLits += ( *pCur != '-' );\n        if ( nLits != 1 )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_SopIsOrType(pSop string) int32 {\n    var pCube, pCur string;\n    var nVars, nLits int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    if nVars != Abc_SopGetCubeNum(pSop) {\n        return 0; }\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // count the number of literals in the cube\n        nLits = 0;\n        for  pCur = pCube; *pCur != ' '; pCur++  {\n            nLits += ( *pCur != '-' );\n        }\n        if nLits != 1 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_SopIsExorType",
+      "Start": 20854,
+      "End": 21078,
+      "BodyStart": 20891,
+      "Original": "int Abc_SopIsExorType( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur; pCur++ )\n        if ( *pCur == '\\n' )\n            return (int)(*(pCur - 1) == 'x' || *(pCur - 1) == 'n');\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_SopIsExorType(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == 'x' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_SopCheck",
+      "Start": 21314,
+      "End": 22722,
+      "BodyStart": 21359,
+      "Original": "int Abc_SopCheck( char * pSop, int nFanins )\n{\n    char * pCubes, * pCubesOld;\n    int fFound0 = 0, fFound1 = 0;\n\n    // check the logic function of the node\n    for ( pCubes = pSop; *pCubes; pCubes++ )\n    {\n        // get the end of the next cube\n        for ( pCubesOld = pCubes; *pCubes != ' '; pCubes++ );\n        // compare the distance\n        if ( pCubes - pCubesOld != nFanins )\n        {\n            fprintf( stdout, \"Abc_SopCheck: SOP has a mismatch between its cover size (%d) and its fanin number (%d).\\n\",\n                (int)(ABC_PTRDIFF_T)(pCubes - pCubesOld), nFanins );\n            return 0;\n        }\n        // check the output values for this cube\n        pCubes++;\n        if ( *pCubes == '0' )\n            fFound0 = 1;\n        else if ( *pCubes == '1' )\n            fFound1 = 1;\n        else if ( *pCubes != 'x' \u0026\u0026 *pCubes != 'n' )\n        {\n            fprintf( stdout, \"Abc_SopCheck: SOP has a strange character (%c) in the output part of its cube.\\n\", *pCubes );\n            return 0;\n        }\n        // check the last symbol (new line)\n        pCubes++;\n        if ( *pCubes != '\\n' )\n        {\n            fprintf( stdout, \"Abc_SopCheck: SOP has a cube without new line in the end.\\n\" );\n            return 0;\n        }\n    }\n    if ( fFound0 \u0026\u0026 fFound1 )\n    {\n        fprintf( stdout, \"Abc_SopCheck: SOP has cubes in both phases.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_SopCheck(pSop string, nFanins int32) int32 {\n    var pCubes, pCubesOld string;\n    var fFound0, fFound1 int32;\n\n    // check the logic function of the node\n    for  pCubes = pSop; *pCubes; pCubes++  {\n        // get the end of the next cube\n        for  pCubesOld = pCubes; *pCubes != ' '; pCubes++  {}\n        // compare the distance\n        if pCubes - pCubesOld != nFanins {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a mismatch between its cover size (%d) and its fanin number (%d).\\n\", int32((ABC_PTRDIFF_T)(pCubes - pCubesOld)), nFanins);\n            return 0;\n        }\n        // check the output values for this cube\n        pCubes++;\n        if *pCubes == '0' {\n            fFound0 = 1;\n        } else if *pCubes == '1' {\n            fFound1 = 1;\n        } else if *pCubes != 'x' \u0026\u0026 *pCubes != 'n' {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a strange character (%c) in the output part of its cube.\\n\", *pCubes);\n            return 0;\n        }\n        // check the last symbol (new line)\n        pCubes++;\n        if *pCubes != '\\n' {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a cube without new line in the end.\\n\");\n            return 0;\n        }\n    }\n    if fFound0 \u0026\u0026 (fFound1 != 0) {\n        fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has cubes in both phases.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_SopFromTruthBin",
+      "Start": 23065,
+      "End": 24823,
+      "BodyStart": 23109,
+      "Original": "char * Abc_SopFromTruthBin( char * pTruth )\n{\n    char * pSopCover, * pCube;\n    int nTruthSize, nVars, Digit, Length, Mint, i, b;\n    Vec_Int_t * vMints;\n\n    // get the number of variables\n    nTruthSize = strlen(pTruth);\n    nVars = Abc_Base2Log( nTruthSize );\n    if ( nTruthSize != (1 \u003c\u003c (nVars)) )\n    {\n        printf( \"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars );\n        return NULL;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for ( i = 0; i \u003c nTruthSize; i++ )\n    {\n        if ( pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '1' )\n            Digit = pTruth[i] - '0';\n        else\n        {\n            Vec_IntFree( vMints );\n            printf( \"String %s does not look like a binary representation of the truth table.\\n\", pTruth );\n            return NULL;\n        }\n        if ( Digit == 1 )\n            Vec_IntPush( vMints, nTruthSize - 1 - i );\n    }\n    if ( Vec_IntSize( vMints ) == 0 || Vec_IntSize( vMints ) == nTruthSize )\n    {\n        Vec_IntFree( vMints );\n        printf( \"Cannot create constant function.\\n\" );\n        return NULL;\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for ( b = 0; b \u003c nVars; b++ )\n            if ( Mint \u0026 (1 \u003c\u003c (nVars-1-b)) )\n//            if ( Mint \u0026 (1 \u003c\u003c b) )\n                pCube[b] = '1';\n            else\n                pCube[b] = '0';\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    Vec_IntFree( vMints );\n    return pSopCover;\n}",
+      "Draft": "func Abc_SopFromTruthBin(pTruth string) string {\n    var pSopCover, pCube string;\n    var nTruthSize, nVars, Digit, Length, Mint, i, b int32;\n    var vMints *Vec_Int_t;\n\n    // get the number of variables\n    nTruthSize = len(pTruth);\n    nVars = Abc_Base2Log( nTruthSize );\n    if nTruthSize != (1 \u003c\u003c (nVars)) {\n        fmt.Printf(\"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars);\n        return nil;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c nTruthSize; i++  {\n        if pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '1' {\n            Digit = pTruth[i] - '0';\n        } else {\n            Vec_IntFree( vMints );\n            fmt.Printf(\"String %s does not look like a binary representation of the truth table.\\n\", pTruth);\n            return nil;\n        }\n        if Digit == 1 {\n            Vec_IntPush( vMints, nTruthSize - 1 - i ); }\n    }\n    if Vec_IntSize( vMints ) == 0 || Vec_IntSize( vMints ) == nTruthSize {\n        Vec_IntFree( vMints );\n        fmt.Printf(\"Cannot create constant function.\\n\");\n        return nil;\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for  b = 0; b \u003c nVars; b++  {\n            if Mint \u0026 (1 \u003c\u003c (nVars-1-b)) {\n//            if ( Mint \u0026 (1 \u003c\u003c b) )\n                pCube[b] = '1';\n            } else {\n                pCube[b] = '0'; }\n        }\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    Vec_IntFree( vMints );\n    return pSopCover;\n}"
+    },
+    {
+      "Name": "Abc_SopFromTruthHex",
+      "Start": 25165,
+      "End": 27469,
+      "BodyStart": 25209,
+      "Original": "char * Abc_SopFromTruthHex( char * pTruth )\n{\n    char * pSopCover, * pCube;\n    int nTruthSize, nVars, Digit, Length, Mint, i, b;\n    Vec_Int_t * vMints;\n\n    // get the number of variables\n    nTruthSize = strlen(pTruth);\n    nVars = (nTruthSize \u003c 2) ? 2 : Abc_Base2Log(nTruthSize) + 2;\n    if ( nTruthSize != (1 \u003c\u003c (nVars-2)) )\n    {\n        printf( \"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars );\n        return NULL;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for ( i = 0; i \u003c nTruthSize; i++ )\n    {\n        if ( pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '9' )\n            Digit = pTruth[i] - '0';\n        else if ( pTruth[i] \u003e= 'a' \u0026\u0026 pTruth[i] \u003c= 'f' )\n            Digit = 10 + pTruth[i] - 'a';\n        else if ( pTruth[i] \u003e= 'A' \u0026\u0026 pTruth[i] \u003c= 'F' )\n            Digit = 10 + pTruth[i] - 'A';\n        else\n        {\n            printf( \"String %s does not look like a hexadecimal representation of the truth table.\\n\", pTruth );\n            return NULL;\n        }\n        for ( b = 0; b \u003c 4; b++ )\n            if ( Digit \u0026 (1 \u003c\u003c b) )\n                Vec_IntPush( vMints, 4*(nTruthSize-1-i)+b );\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for ( b = 0; b \u003c nVars; b++ )\n//            if ( Mint \u0026 (1 \u003c\u003c (nVars-1-b)) )\n            if ( Mint \u0026 (1 \u003c\u003c b) )\n                pCube[b] = '1';\n            else\n                pCube[b] = '0';\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n/*\n    // create TT representation\n    {\n        extern void Bdc_ManDecomposeTest( unsigned uTruth, int nVars );\n        unsigned uTruth = 0;\n        int nVarsAll = 4;\n        assert( nVarsAll == 4 );\n        assert( nVars \u003c= nVarsAll );\n        Vec_IntForEachEntry( vMints, Mint, i )\n            uTruth |= (1 \u003c\u003c Mint);\n//        uTruth = uTruth | (uTruth \u003c\u003c 8) | (uTruth \u003c\u003c 16) | (uTruth \u003c\u003c 24);\n        uTruth = uTruth | (uTruth \u003c\u003c 16);\n        Bdc_ManDecomposeTest( uTruth, nVarsAll );\n    }\n*/\n    Vec_IntFree( vMints );\n    return pSopCover;\n}",
+      "Draft": "func Abc_SopFromTruthHex(pTruth string) string {\n    var pSopCover, pCube string;\n    var nTruthSize, nVars, Digit, Length, Mint, i, b int32;\n    var vMints *Vec_Int_t;\n\n    // get the number of variables\n    nTruthSize = len(pTruth);\n    if nTruthSize \u003c 2 {\n        nVars = 2;\n    } else {\n        nVars = Abc_Base2Log(nTruthSize) + 2;\n    }\n    if nTruthSize != (1 \u003c\u003c (nVars-2)) {\n        fmt.Printf(\"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars);\n        return nil;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c nTruthSize; i++  {\n        if pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '9' {\n            Digit = pTruth[i] - '0';\n        } else if pTruth[i] \u003e= 'a' \u0026\u0026 pTruth[i] \u003c= 'f' {\n            Digit = 10 + pTruth[i] - 'a';\n        } else if pTruth[i] \u003e= 'A' \u0026\u0026 pTruth[i] \u003c= 'F' {\n            Digit = 10 + pTruth[i] - 'A';\n        } else {\n            fmt.Printf(\"String %s does not look like a hexadecimal representation of the truth table.\\n\", pTruth);\n            return nil;\n        }\n        for  b = 0; b \u003c 4; b++  {\n            if Digit \u0026 (1 \u003c\u003c b) {\n                Vec_IntPush( vMints, 4*(nTruthSize-1-i)+b ); }\n        }\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for  b = 0; b \u003c nVars; b++  {\n//            if ( Mint \u0026 (1 \u003c\u003c (nVars-1-b)) )\n            if Mint \u0026 (1 \u003c\u003c b) {\n                pCube[b] = '1';\n            } else {\n                pCube[b] = '0'; }\n        }\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n/*\n    // create TT representation\n    {\n        extern void Bdc_ManDecomposeTest( unsigned uTruth, int nVars );\n        unsigned uTruth = 0;\n        int nVarsAll = 4;\n        assert( nVarsAll == 4 );\n        assert( nVars \u003c= nVarsAll );\n        Vec_IntForEachEntry( vMints, Mint, i )\n            uTruth |= (1 \u003c\u003c Mint);\n//        uTruth = uTruth | (uTruth \u003c\u003c 8) | (uTruth \u003c\u003c 16) | (uTruth \u003c\u003c 24);\n        uTruth = uTruth | (uTruth \u003c\u003c 16);\n        Bdc_ManDecomposeTest( uTruth, nVarsAll );\n    }\n*/\n    Vec_IntFree( vMints );\n    return pSopCover;\n}"
+    },
+    {
+      "Name": "Abc_SopEncoderPos",
+      "Start": 27773,
+      "End": 27989,
+      "BodyStart": 27844,
+      "Original": "char * Abc_SopEncoderPos( Mem_Flex_t * pMan, int iValue, int nValues )\n{\n    char Buffer[32];\n    assert( iValue \u003c nValues );\n    sprintf( Buffer, \"d0\\n%d 1\\n\", iValue );\n    return Abc_SopRegister( pMan, Buffer );\n}",
+      "Draft": "func Abc_SopEncoderPos(pMan *Mem_Flex_t, iValue int32, nValues int32) string {\n    var Buffer string // was [32]byte in C\n\n    assert(iValue \u003c nValues, \"iValue \u003c nValues\");\n    Buffer = fmt.Sprintf(\"d0\\n%d 1\\n\", iValue);\n    return Abc_SopRegister( pMan, Buffer );\n}"
+    },
+    {
+      "Name": "Abc_SopEncoderLog",
+      "Start": 28293,
+      "End": 29257,
+      "BodyStart": 28362,
+      "Original": "char * Abc_SopEncoderLog( Mem_Flex_t * pMan, int iBit, int nValues )\n{\n    char * pResult;\n    Vec_Str_t * vSop;\n    int v, Counter, fFirst = 1, nBits = Abc_Base2Log(nValues);\n    assert( iBit \u003c nBits );\n    // count the number of literals\n    Counter = 0;\n    for ( v = 0; v \u003c nValues; v++ )\n        Counter += ( (v \u0026 (1 \u003c\u003c iBit)) \u003e 0 );\n    // create the cover\n    vSop = Vec_StrAlloc( 100 );\n    Vec_StrPrintStr( vSop, \"d0\\n\" );\n    if ( Counter \u003e 1 )\n        Vec_StrPrintStr( vSop, \"(\" );\n    for ( v = 0; v \u003c nValues; v++ )\n        if ( v \u0026 (1 \u003c\u003c iBit) )\n        {\n            if ( fFirst )\n                fFirst = 0;\n            else\n                Vec_StrPush( vSop, ',' );\n            Vec_StrPrintNum( vSop, v );\n        }\n    if ( Counter \u003e 1 )\n        Vec_StrPrintStr( vSop, \")\" );\n    Vec_StrPrintStr( vSop, \" 1\\n\" );\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}",
+      "Draft": "func Abc_SopEncoderLog(pMan *Mem_Flex_t, iBit int32, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var v int32;\n    var Counter int32;\n    var fFirst int32 = 1;\n    var nBits int32 = Abc_Base2Log(nValues);\n    assert(iBit \u003c nBits, \"iBit \u003c nBits\");\n    // count the number of literals\n    Counter = 0;\n    for  v = 0; v \u003c nValues; v++  {\n        Counter += ( (v \u0026 (1 \u003c\u003c iBit)) \u003e 0 );\n    }\n    // create the cover\n    vSop = Vec_StrAlloc( 100 );\n    Vec_StrPrintStr( vSop, \"d0\\n\" );\n    if Counter \u003e 1 {\n        Vec_StrPrintStr( vSop, \"(\" ); }\n    for  v = 0; v \u003c nValues; v++  {\n        if v \u0026 (1 \u003c\u003c iBit) {\n            if fFirst != 0 {\n                fFirst = 0;\n            } else {\n                Vec_StrPush( vSop, ',' ); }\n            Vec_StrPrintNum( vSop, v );\n        }\n    }\n    if Counter \u003e 1 {\n        Vec_StrPrintStr( vSop, \")\" ); }\n    Vec_StrPrintStr( vSop, \" 1\\n\" );\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}"
+    },
+    {
+      "Name": "Abc_SopDecoderPos",
+      "Start": 29561,
+      "End": 30186,
+      "BodyStart": 29620,
+      "Original": "char * Abc_SopDecoderPos( Mem_Flex_t * pMan, int nValues )\n{\n    char * pResult;\n    Vec_Str_t * vSop;\n    int i, k;\n    assert( nValues \u003e 1 );\n    vSop = Vec_StrAlloc( 100 );\n    for ( i = 0; i \u003c nValues; i++ )\n    {\n        for ( k = 0; k \u003c nValues; k++ )\n        {\n            if ( k == i )\n                Vec_StrPrintStr( vSop, \"1 \" );\n            else\n                Vec_StrPrintStr( vSop, \"- \" );\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}",
+      "Draft": "func Abc_SopDecoderPos(pMan *Mem_Flex_t, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var i, k int32;\n    assert(nValues \u003e 1, \"nValues \u003e 1\");\n    vSop = Vec_StrAlloc( 100 );\n    for  i = 0; i \u003c nValues; i++  {\n        for  k = 0; k \u003c nValues; k++  {\n            if k == i {\n                Vec_StrPrintStr( vSop, \"1 \" );\n            } else {\n                Vec_StrPrintStr( vSop, \"- \" ); }\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}"
+    },
+    {
+      "Name": "Abc_SopDecoderLog",
+      "Start": 30490,
+      "End": 31134,
+      "BodyStart": 30549,
+      "Original": "char * Abc_SopDecoderLog( Mem_Flex_t * pMan, int nValues )\n{\n    char * pResult;\n    Vec_Str_t * vSop;\n    int i, b, nBits = Abc_Base2Log(nValues);\n    assert( nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits) );\n    vSop = Vec_StrAlloc( 100 );\n    for ( i = 0; i \u003c nValues; i++ )\n    {\n        for ( b = 0; b \u003c nBits; b++ )\n        {\n            Vec_StrPrintNum( vSop, (int)((i \u0026 (1 \u003c\u003c b)) \u003e 0) );\n            Vec_StrPush( vSop, ' ' );\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}",
+      "Draft": "func Abc_SopDecoderLog(pMan *Mem_Flex_t, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var i int32;\n    var b int32;\n    var nBits int32 = Abc_Base2Log(nValues);\n    assert(nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits), \"nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits)\");\n    vSop = Vec_StrAlloc( 100 );\n    for  i = 0; i \u003c nValues; i++  {\n        for  b = 0; b \u003c nBits; b++  {\n            Vec_StrPrintNum( vSop, int32(((i \u0026 (1 \u003c\u003c b)) \u003e 0)) );\n            Vec_StrPush( vSop, ' ' );\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}"
+    },
+    {
+      "Name": "Abc_SopToTruth",
+      "Start": 31404,
+      "End": 32528,
+      "BodyStart": 31452,
+      "Original": "word Abc_SopToTruth( char * pSop, int nInputs )\n{\n    static word Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    word Cube, Result = 0;\n    int v, lit = 0;\n    int nVars = Abc_SopGetVarNum(pSop);\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6 );\n    assert( nVars == nInputs );\n    do {\n        Cube = Truth[7];\n        for ( v = 0; v \u003c nVars; v++, lit++ )\n        {\n            if ( pSop[lit] == '1' )\n                Cube \u0026=  Truth[v];\n            else if ( pSop[lit] == '0' )\n                Cube \u0026= ~Truth[v];\n            else if ( pSop[lit] != '-' )\n                assert( 0 );\n        }\n        Result |= Cube;\n        assert( pSop[lit] == ' ' );\n        lit++;\n        lit++;\n        assert( pSop[lit] == '\\n' );\n        lit++;\n    } while ( pSop[lit] );\n    if ( Abc_SopIsComplement(pSop) )\n        Result = ~Result;\n    return Result;\n}",
+      "Draft": "func Abc_SopToTruth(pSop string, nInputs int32) word {\n    static word Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    var Cube, Result word;\n    var v, lit int32;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    for {\n        Cube = Truth[7];\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                Cube \u0026=  Truth[v];\n            } else if pSop[lit] == '0' {\n                Cube \u0026= ~Truth[v];\n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        Result |= Cube;\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        Result = ~Result; }\n    return Result;\n}"
+    },
+    {
+      "Name": "Abc_SopToTruth7",
+      "Start": 32798,
+      "End": 34335,
+      "BodyStart": 32858,
+      "Original": "void Abc_SopToTruth7( char * pSop, int nInputs, word r[2] )\n{\n    static word Truth[7][2] = {\n        {ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA)},\n        {ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC)},\n        {ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0)},\n        {ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00)},\n        {ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000)},\n        {ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000)},\n        {ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    };\n    word Cube[2];\n    int v, lit = 0;\n    int nVars = Abc_SopGetVarNum(pSop);\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7 );\n    assert( nVars == nInputs );\n    r[0] = r[1] = 0;\n    do {\n        Cube[0] = Cube[1] = ~(word)0;\n        for ( v = 0; v \u003c nVars; v++, lit++ )\n        {\n            if ( pSop[lit] == '1' )\n            {\n                Cube[0] \u0026=  Truth[v][0];\n                Cube[1] \u0026=  Truth[v][1];\n            }\n            else if ( pSop[lit] == '0' )\n            {\n                Cube[0] \u0026= ~Truth[v][0];\n                Cube[1] \u0026= ~Truth[v][1];\n            }\n            else if ( pSop[lit] != '-' )\n                assert( 0 );\n        }\n        r[0] |= Cube[0];\n        r[1] |= Cube[1];\n        assert( pSop[lit] == ' ' );\n        lit++;\n        lit++;\n        assert( pSop[lit] == '\\n' );\n        lit++;\n    } while ( pSop[lit] );\n    if ( Abc_SopIsComplement(pSop) )\n    {\n        r[0] = ~r[0];\n        r[1] = ~r[1];\n    }\n}",
+      "Draft": "func Abc_SopToTruth7(pSop string, nInputs int32, r []word) {\n    static word Truth[7][2] = {\n        {ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA)},\n        {ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC)},\n        {ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0)},\n        {ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00)},\n        {ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000)},\n        {ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000)},\n        {ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    };\n    var Cube [2]word;\n    var v, lit int32;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    r[0] = r[1] = 0;\n    for {\n        Cube[0] = Cube[1] = ~(word)0;\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                Cube[0] \u0026=  Truth[v][0];\n                Cube[1] \u0026=  Truth[v][1];\n            \n            } else if pSop[lit] == '0' {\n                Cube[0] \u0026= ~Truth[v][0];\n                Cube[1] \u0026= ~Truth[v][1];\n            \n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        r[0] |= Cube[0];\n        r[1] |= Cube[1];\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        r[0] = ~r[0];\n        r[1] = ~r[1];\n    }\n}"
+    },
+    {
+      "Name": "Abc_SopToTruthBig",
+      "Start": 34605,
+      "End": 35814,
+      "BodyStart": 34698,
+      "Original": "void Abc_SopToTruthBig( char * pSop, int nInputs, word ** pVars, word * pCube, word * pRes )\n{\n    int nVars = Abc_SopGetVarNum(pSop);\n    int nWords = nVars \u003c= 6 ? 1 : 1 \u003c\u003c (nVars-6);\n    int v, i, lit = 0;\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16 );\n    assert( nVars == nInputs );\n    for ( i = 0; i \u003c nWords; i++ )\n        pRes[i] = 0;\n    do {\n        for ( i = 0; i \u003c nWords; i++ )\n            pCube[i] = ~(word)0;\n        for ( v = 0; v \u003c nVars; v++, lit++ )\n        {\n            if ( pSop[lit] == '1' )\n            {\n                for ( i = 0; i \u003c nWords; i++ )\n                    pCube[i] \u0026= pVars[v][i];\n            }\n            else if ( pSop[lit] == '0' )\n            {\n                for ( i = 0; i \u003c nWords; i++ )\n                    pCube[i] \u0026= ~pVars[v][i];\n            }\n            else if ( pSop[lit] != '-' )\n                assert( 0 );\n        }\n        for ( i = 0; i \u003c nWords; i++ )\n            pRes[i] |= pCube[i];\n        assert( pSop[lit] == ' ' );\n        lit++;\n        lit++;\n        assert( pSop[lit] == '\\n' );\n        lit++;\n    } while ( pSop[lit] );\n    if ( Abc_SopIsComplement(pSop) )\n    {\n        for ( i = 0; i \u003c nWords; i++ )\n            pRes[i] = ~pRes[i];\n    }\n}",
+      "Draft": "func Abc_SopToTruthBig(pSop string, nInputs int32, pVars **word, pCube *word, pRes *word) {\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = 1 \u003c\u003c (nVars-6);\n    }\n    var v, i, lit int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    for  i = 0; i \u003c nWords; i++  {\n        pRes[i] = 0;\n    }\n    for {\n        for  i = 0; i \u003c nWords; i++  {\n            pCube[i] = ~(word)0;\n        }\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                for  i = 0; i \u003c nWords; i++  {\n                    pCube[i] \u0026= pVars[v][i];\n                }\n            \n            } else if pSop[lit] == '0' {\n                for  i = 0; i \u003c nWords; i++  {\n                    pCube[i] \u0026= ~pVars[v][i];\n                }\n            \n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        for  i = 0; i \u003c nWords; i++  {\n            pRes[i] |= pCube[i];\n        }\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        for  i = 0; i \u003c nWords; i++  {\n            pRes[i] = ~pRes[i];\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::mechanical::static::31458",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 31458,
+      "End": 31464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::mechanical::do::31964",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 31964,
+      "End": 31966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::mechanical::static::32864",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 32864,
+      "End": 32870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::mechanical::do::33571",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 33571,
+      "End": 33573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::mechanical::do::34946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 34946,
+      "End": 34948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::pointer-cast::12137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12137,
+      "End": 12149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopRegister",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopRegister",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1561,
+      "End": 1801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2111,
+      "End": 2605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateConst1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2887,
+      "End": 2982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateConst0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3264,
+      "End": 3359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateAnd2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateAnd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3618,
+      "End": 3902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::ternary::Abc_SopCreateAnd",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SopCreateAnd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4172,
+      "End": 4446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4172,
+      "End": 4446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateNand",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateNand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4717,
+      "End": 4949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::ternary::Abc_SopCreateOr",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SopCreateOr",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5218,
+      "End": 5491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateOr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5218,
+      "End": 5491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::ternary::Abc_SopCreateOrMultiCube",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SopCreateOrMultiCube",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5760,
+      "End": 6076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateOrMultiCube",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateOrMultiCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5760,
+      "End": 6076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateNor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateNor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6346,
+      "End": 6550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateXor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6820,
+      "End": 6955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateXorSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateXorSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7240,
+      "End": 7452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateNxor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateNxor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7723,
+      "End": 7859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8210,
+      "End": 8310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8568,
+      "End": 8659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateBuf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8917,
+      "End": 9008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateFromTruth",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateFromTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9293,
+      "End": 10260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateFromIsop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateFromIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10545,
+      "End": 11302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCreateFromTruthIsop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCreateFromTruthIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11587,
+      "End": 12404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopToIsop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopToIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12689,
+      "End": 13349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopGetCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopGetCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13624,
+      "End": 13836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopGetLitNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopGetLitNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14118,
+      "End": 14389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopGetVarNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopGetVarNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14668,
+      "End": 14848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopGetPhase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopGetPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15113,
+      "End": 15373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopGetIthCareLit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopGetIthCareLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15647,
+      "End": 15894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopComplement",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16130,
+      "End": 16629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopComplementVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopComplementVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16865,
+      "End": 17197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17433,
+      "End": 17659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17929,
+      "End": 18012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18282,
+      "End": 18365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18635,
+      "End": 18828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19098,
+      "End": 19291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsAndType",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsAndType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19588,
+      "End": 19856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsOrType",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsOrType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20152,
+      "End": 20618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopIsExorType",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopIsExorType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20854,
+      "End": 21078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21314,
+      "End": 22722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopFromTruthBin",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopFromTruthBin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23065,
+      "End": 24823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopFromTruthHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopFromTruthHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25165,
+      "End": 27469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopEncoderPos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopEncoderPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27773,
+      "End": 27989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopEncoderLog",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopEncoderLog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28293,
+      "End": 29257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopDecoderPos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopDecoderPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29561,
+      "End": 30186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopDecoderLog",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopDecoderLog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30490,
+      "End": 31134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopToTruth",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopToTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31404,
+      "End": 32528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopToTruth7",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopToTruth7",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32798,
+      "End": 34335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::Abc_SopToTruthBig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SopToTruthBig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34605,
+      "End": 35814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::5940",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5940,
+      "End": 5980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::10888",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10888,
+      "End": 10927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::15771",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15771,
+      "End": 15811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::17008",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17008,
+      "End": 17048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::20341",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20341,
+      "End": 20381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::24317",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24317,
+      "End": 24346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::24379",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24379,
+      "End": 24417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::26465",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26465,
+      "End": 26494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::26527",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26527,
+      "End": 26565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31491",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31491,
+      "End": 31520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31530",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31530,
+      "End": 31559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31569",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31569,
+      "End": 31598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31608",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31608,
+      "End": 31637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31647,
+      "End": 31676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31686",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31686,
+      "End": 31715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31725",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31725,
+      "End": 31754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::31764",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31764,
+      "End": 31793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::32901",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32901,
+      "End": 32930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::32931",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32931,
+      "End": 32960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::32972",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32972,
+      "End": 33001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33002",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33002,
+      "End": 33031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33043",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33043,
+      "End": 33072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33073",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33073,
+      "End": 33102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33114",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33114,
+      "End": 33143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33144",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33144,
+      "End": 33173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33185",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33185,
+      "End": 33214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33215",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33215,
+      "End": 33244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33256",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33256,
+      "End": 33285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33286",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33286,
+      "End": 33315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33327",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33327,
+      "End": 33356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcSop.c::macro-inline::33357",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33357,
+      "End": 33386
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcSop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Implementation of a simple SOP representation of nodes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcSop.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* \n    The SOPs in this package are represented using char * strings.\n    For example, the SOP of the node: \n\n       .names c d0 d1 MUX\n       01- 1\n       1-1 1\n\n    is the string: \"01- 1\\n1-1 1\\n\" where '\\n' is a single char.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Registers the cube string with the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopRegister(pMan *Mem_Flex_t, pName string) string {\n    var pRegName string;\n    if pName == nil { return nil; }\n    pRegName = Mem_FlexEntryFetch( pMan, len(pName) + 1 );\n    pRegName = pName;\n    return pRegName;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 cover with the given number of variables and cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopStart(pMan *Mem_Flex_t, nCubes int32, nVars int32) string {\n    var pSopCover, pCube string;\n    var i, Length int32;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Mem_FlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for  i = 0; i \u003c nCubes; i++  {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 cover with 0 variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateConst1(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister( pMan, \" 1\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 cover with 0 variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateConst0(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister( pMan, \" 0\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the AND2 cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateAnd2(pMan *Mem_Flex_t, fCompl0 int32, fCompl1 int32) string {\n    var Buffer [6]byte;\n    Buffer[0] = '1' - fCompl0;\n    Buffer[1] = '1' - fCompl1;\n    Buffer[2] = ' ';\n    Buffer[3] = '1';\n    Buffer[4] = '\\n';\n    Buffer[5] = 0;\n    return Abc_SopRegister( pMan, Buffer );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input AND cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateAnd(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '1' - (pfCompl? pfCompl[i] : 0);\n    }\n    pSop[nVars + 1] = '1';\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input NAND cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateNand(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '1';\n    }\n    pSop[nVars + 1] = '0';\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input OR cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateOr(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '0' + (pfCompl? pfCompl[i] : 0);\n    }\n    pSop[nVars + 1] = '0';\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input OR cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateOrMultiCube(pMan *Mem_Flex_t, nVars int32, pfCompl *int32) string {\n    var pSop, pCube string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, nVars, nVars );\n    i = 0;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        pCube[i] = '1' - (pfCompl? pfCompl[i] : 0);\n        i++;\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input NOR cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateNor(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    var i int32;\n    pSop = Abc_SopStart( pMan, 1, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        pSop[i] = '0';\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input XOR cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateXor(pMan *Mem_Flex_t, nVars int32) string {\n    assert(nVars == 2, \"nVars == 2\");\n    return Abc_SopRegister(pMan, \"01 1\\n10 1\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input XOR cover (special case).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateXorSpecial(pMan *Mem_Flex_t, nVars int32) string {\n    var pSop string;\n    pSop = Abc_SopCreateAnd( pMan, nVars, nil );\n    pSop[nVars+1] = 'x';\n    assert(pSop[nVars+2] == '\\n', \"pSop[nVars+2] == '\\\\n'\");\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the multi-input XNOR cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateNxor(pMan *Mem_Flex_t, nVars int32) string {\n    assert(nVars == 2, \"nVars == 2\");\n    return Abc_SopRegister(pMan, \"11 1\\n00 1\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the MUX cover.]\n\n  Description [The first input of MUX is the control. The second input\n  is DATA1. The third input is DATA0.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateMux(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"11- 1\\n0-1 1\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the inv cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateInv(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"0 1\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the buf cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateBuf(pMan *Mem_Flex_t) string {\n    return Abc_SopRegister(pMan, \"1 1\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the arbitrary cover from the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateFromTruth(pMan *Mem_Flex_t, nVars int32, pTruth *uint32) string {\n    var pSop, pCube string;\n    var nMints, Counter, i, k int32;\n    if nVars == 0 {\n        if pTruth[0] {\n            return Abc_SopCreateConst1(pMan);\n        } else {\n            return Abc_SopCreateConst0(pMan);\n        } }\n    // count the number of true minterms\n    Counter = 0;\n    nMints = (1 \u003c\u003c nVars);\n    for  i = 0; i \u003c nMints; i++  {\n        Counter += ((pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0);\n    }\n    // SOP is not well-defined if the truth table is constant 0\n    assert(Counter \u003e 0, \"Counter \u003e 0\");\n    if Counter == 0 {\n        return nil; }\n    // start the cover\n    pSop = Abc_SopStart( pMan, Counter, nVars );\n    // create true minterms\n    Counter = 0;\n    for  i = 0; i \u003c nMints; i++  {\n        if (pTruth[i\u003e\u003e5] \u0026 (1 \u003c\u003c (i\u002631))) \u003e 0 {\n            pCube = pSop + Counter * (nVars + 3);\n            for  k = 0; k \u003c nVars; k++  {\n                pCube[k] = '0' + ((i \u0026 (1 \u003c\u003c k)) \u003e 0);\n            }\n            Counter++;\n        }\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateFromIsop(pMan *Mem_Flex_t, nVars int32, vCover *Vec_Int_t) string {\n    var pSop, pCube string;\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    // start the cover\n    pSop = Abc_SopStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                pCube[k] = '0';\n            } else if Literal == 2 {\n                pCube[k] = '1';\n            } else if Literal != 0 {\n                assert(false, \"0\"); }\n        }\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCreateFromTruthIsop(pMan *Mem_Flex_t, nVars int32, pTruth *word, vCover *Vec_Int_t) string {\n    var pSop string  = nil;\n    var w int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n\n    for  w = 0; w \u003c nWords; w++  {\n        if pTruth[w] {\n            break; }\n    }\n    if w == nWords {\n        return Abc_SopRegister( pMan, \" 0\\n\" ); }\n\n    for  w = 0; w \u003c nWords; w++  {\n        if ~pTruth[w] {\n            break; }\n    }\n    if w == nWords {\n        return Abc_SopRegister( pMan, \" 1\\n\" ); }\n\n    {\n        var RetValue int32  = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 1 );\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n        pSop = Abc_SopCreateFromIsop( pMan, nVars, vCover );\n        if RetValue != 0 {\n            Abc_SopComplement( pSop ); }\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopToIsop(pSop string, vCover *Vec_Int_t) {\n    var pCube string;\n    var k, nVars, Entry int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // create cubes\n    Vec_IntClear( vCover );\n    for  pCube = pSop; *pCube; pCube += nVars + 3  {\n        Entry = 0;\n        for  k = nVars - 1; k \u003e= 0; k--  {\n            if pCube[k] == '0' {\n                Entry = (Entry \u003c\u003c 2) | 1;\n            } else if pCube[k] == '1' {\n                Entry = (Entry \u003c\u003c 2) | 2;\n            } else if pCube[k] == '-' {\n                Entry = (Entry \u003c\u003c 2);\n            } else { \n                assert(false, \"0\"); }\n        }\n        Vec_IntPush( vCover, Entry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of cubes in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopGetCubeNum(pSop string) int32 {\n    var pCur string;\n    var nCubes int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nCubes += (*pCur == '\\n');\n    }\n    return nCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of SOP literals in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopGetLitNum(pSop string) int32 {\n    var pCur string;\n    var nLits int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nLits  -= (*pCur == '\\n');\n        nLits  += (*pCur == '0' || *pCur == '1');\n    }\n    return nLits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of variables in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopGetVarNum(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur != '\\n'; pCur++  {\n        if *pCur == 0 {\n            return -1; }\n    }\n    return pCur - pSop - 2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the phase of the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopGetPhase(pSop string) int32 {\n    var nVars int32  = Abc_SopGetVarNum( pSop );\n    if pSop[nVars+1] == '0' || pSop[nVars+1] == 'n' {\n        return 0; }\n    if pSop[nVars+1] == '1' || pSop[nVars+1] == 'x' {\n        return 1; }\n    assert(false, \"0\");\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the i-th literal of the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopGetIthCareLit(pSop string, i int32) int32 {\n    var pCube string;\n    var nVars int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n        if ( pCube[i] != '-' )\n            return pCube[i] - '0';\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopComplement(pSop string) {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            if *(pCur - 1) == '0' {\n                *(pCur - 1) = '1';\n            } else if *(pCur - 1) == '1' {\n                *(pCur - 1) = '0';\n            } else if *(pCur - 1) == 'x' {\n                *(pCur - 1) = 'n';\n            } else if *(pCur - 1) == 'n' {\n                *(pCur - 1) = 'x';\n            } else {\n                assert(false, \"0\"); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopComplementVar(pSop string, iVar int32) {\n    var pCube string;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        if pCube[iVar] == '0' {\n            pCube[iVar] = '1';\n        } else if pCube[iVar] == '1' {\n            pCube[iVar] = '0'; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsComplement(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == '0' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsConst0(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsConst1(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsBuf(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsInv(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is AND with possibly complemented inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsAndType(pSop string) int32 {\n    var pCur string;\n    if Abc_SopGetCubeNum(pSop) != 1 {\n        return 0; }\n    for  pCur = pSop; *pCur != ' '; pCur++  {\n        if *pCur == '-' {\n            return 0; }\n    }\n    if pCur[1] != '1' {\n        return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is OR with possibly complemented inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsOrType(pSop string) int32 {\n    var pCube, pCur string;\n    var nVars, nLits int32;\n    nVars = Abc_SopGetVarNum( pSop );\n    if nVars != Abc_SopGetCubeNum(pSop) {\n        return 0; }\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        // count the number of literals in the cube\n        nLits = 0;\n        for  pCur = pCube; *pCur != ' '; pCur++  {\n            nLits += ( *pCur != '-' );\n        }\n        if nLits != 1 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopIsExorType(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == 'x' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopCheck(pSop string, nFanins int32) int32 {\n    var pCubes, pCubesOld string;\n    var fFound0, fFound1 int32;\n\n    // check the logic function of the node\n    for  pCubes = pSop; *pCubes; pCubes++  {\n        // get the end of the next cube\n        for  pCubesOld = pCubes; *pCubes != ' '; pCubes++  {}\n        // compare the distance\n        if pCubes - pCubesOld != nFanins {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a mismatch between its cover size (%d) and its fanin number (%d).\\n\", int32((ABC_PTRDIFF_T)(pCubes - pCubesOld)), nFanins);\n            return 0;\n        }\n        // check the output values for this cube\n        pCubes++;\n        if *pCubes == '0' {\n            fFound0 = 1;\n        } else if *pCubes == '1' {\n            fFound1 = 1;\n        } else if *pCubes != 'x' \u0026\u0026 *pCubes != 'n' {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a strange character (%c) in the output part of its cube.\\n\", *pCubes);\n            return 0;\n        }\n        // check the last symbol (new line)\n        pCubes++;\n        if *pCubes != '\\n' {\n            fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has a cube without new line in the end.\\n\");\n            return 0;\n        }\n    }\n    if fFound0 \u0026\u0026 (fFound1 != 0) {\n        fmt.Fprintf(os.Stdout, \"Abc_SopCheck: SOP has cubes in both phases.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives SOP from the truth table representation.]\n\n  Description [Truth table is expected to be in the hexadecimal notation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopFromTruthBin(pTruth string) string {\n    var pSopCover, pCube string;\n    var nTruthSize, nVars, Digit, Length, Mint, i, b int32;\n    var vMints *Vec_Int_t;\n\n    // get the number of variables\n    nTruthSize = len(pTruth);\n    nVars = Abc_Base2Log( nTruthSize );\n    if nTruthSize != (1 \u003c\u003c (nVars)) {\n        fmt.Printf(\"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars);\n        return nil;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c nTruthSize; i++  {\n        if pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '1' {\n            Digit = pTruth[i] - '0';\n        } else {\n            Vec_IntFree( vMints );\n            fmt.Printf(\"String %s does not look like a binary representation of the truth table.\\n\", pTruth);\n            return nil;\n        }\n        if Digit == 1 {\n            Vec_IntPush( vMints, nTruthSize - 1 - i ); }\n    }\n    if Vec_IntSize( vMints ) == 0 || Vec_IntSize( vMints ) == nTruthSize {\n        Vec_IntFree( vMints );\n        fmt.Printf(\"Cannot create constant function.\\n\");\n        return nil;\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for  b = 0; b \u003c nVars; b++  {\n            if Mint \u0026 (1 \u003c\u003c (nVars-1-b)) {\n//            if ( Mint \u0026 (1 \u003c\u003c b) )\n                pCube[b] = '1';\n            } else {\n                pCube[b] = '0'; }\n        }\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    Vec_IntFree( vMints );\n    return pSopCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives SOP from the truth table representation.]\n\n  Description [Truth table is expected to be in the hexadecimal notation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopFromTruthHex(pTruth string) string {\n    var pSopCover, pCube string;\n    var nTruthSize, nVars, Digit, Length, Mint, i, b int32;\n    var vMints *Vec_Int_t;\n\n    // get the number of variables\n    nTruthSize = len(pTruth);\n    if nTruthSize \u003c 2 {\n        nVars = 2;\n    } else {\n        nVars = Abc_Base2Log(nTruthSize) + 2;\n    }\n    if nTruthSize != (1 \u003c\u003c (nVars-2)) {\n        fmt.Printf(\"String %s does not look like a truth table of a %d-variable function.\\n\", pTruth, nVars);\n        return nil;\n    }\n\n    // collect the on-set minterms\n    vMints = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c nTruthSize; i++  {\n        if pTruth[i] \u003e= '0' \u0026\u0026 pTruth[i] \u003c= '9' {\n            Digit = pTruth[i] - '0';\n        } else if pTruth[i] \u003e= 'a' \u0026\u0026 pTruth[i] \u003c= 'f' {\n            Digit = 10 + pTruth[i] - 'a';\n        } else if pTruth[i] \u003e= 'A' \u0026\u0026 pTruth[i] \u003c= 'F' {\n            Digit = 10 + pTruth[i] - 'A';\n        } else {\n            fmt.Printf(\"String %s does not look like a hexadecimal representation of the truth table.\\n\", pTruth);\n            return nil;\n        }\n        for  b = 0; b \u003c 4; b++  {\n            if Digit \u0026 (1 \u003c\u003c b) {\n                Vec_IntPush( vMints, 4*(nTruthSize-1-i)+b ); }\n        }\n    }\n\n    // create the SOP representation of the minterms\n    Length = Vec_IntSize(vMints) * (nVars + 3);\n    pSopCover = ABC_ALLOC( char, Length + 1 );\n    pSopCover[Length] = 0;\n    Vec_IntForEachEntry( vMints, Mint, i )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        for  b = 0; b \u003c nVars; b++  {\n//            if ( Mint \u0026 (1 \u003c\u003c (nVars-1-b)) )\n            if Mint \u0026 (1 \u003c\u003c b) {\n                pCube[b] = '1';\n            } else {\n                pCube[b] = '0'; }\n        }\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n/*\n    // create TT representation\n    {\n        extern void Bdc_ManDecomposeTest( unsigned uTruth, int nVars );\n        unsigned uTruth = 0;\n        int nVarsAll = 4;\n        assert( nVarsAll == 4 );\n        assert( nVars \u003c= nVarsAll );\n        Vec_IntForEachEntry( vMints, Mint, i )\n            uTruth |= (1 \u003c\u003c Mint);\n//        uTruth = uTruth | (uTruth \u003c\u003c 8) | (uTruth \u003c\u003c 16) | (uTruth \u003c\u003c 24);\n        uTruth = uTruth | (uTruth \u003c\u003c 16);\n        Bdc_ManDecomposeTest( uTruth, nVarsAll );\n    }\n*/\n    Vec_IntFree( vMints );\n    return pSopCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one encoder node.]\n\n  Description [Produces MV-SOP for BLIF-MV representation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopEncoderPos(pMan *Mem_Flex_t, iValue int32, nValues int32) string {\n    var Buffer string // was [32]byte in C\n\n    assert(iValue \u003c nValues, \"iValue \u003c nValues\");\n    Buffer = fmt.Sprintf(\"d0\\n%d 1\\n\", iValue);\n    return Abc_SopRegister( pMan, Buffer );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one encoder node.]\n\n  Description [Produces MV-SOP for BLIF-MV representation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopEncoderLog(pMan *Mem_Flex_t, iBit int32, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var v int32;\n    var Counter int32;\n    var fFirst int32 = 1;\n    var nBits int32 = Abc_Base2Log(nValues);\n    assert(iBit \u003c nBits, \"iBit \u003c nBits\");\n    // count the number of literals\n    Counter = 0;\n    for  v = 0; v \u003c nValues; v++  {\n        Counter += ( (v \u0026 (1 \u003c\u003c iBit)) \u003e 0 );\n    }\n    // create the cover\n    vSop = Vec_StrAlloc( 100 );\n    Vec_StrPrintStr( vSop, \"d0\\n\" );\n    if Counter \u003e 1 {\n        Vec_StrPrintStr( vSop, \"(\" ); }\n    for  v = 0; v \u003c nValues; v++  {\n        if v \u0026 (1 \u003c\u003c iBit) {\n            if fFirst != 0 {\n                fFirst = 0;\n            } else {\n                Vec_StrPush( vSop, ',' ); }\n            Vec_StrPrintNum( vSop, v );\n        }\n    }\n    if Counter \u003e 1 {\n        Vec_StrPrintStr( vSop, \")\" ); }\n    Vec_StrPrintStr( vSop, \" 1\\n\" );\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the decoder node.]\n\n  Description [Produces MV-SOP for BLIF-MV representation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopDecoderPos(pMan *Mem_Flex_t, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var i, k int32;\n    assert(nValues \u003e 1, \"nValues \u003e 1\");\n    vSop = Vec_StrAlloc( 100 );\n    for  i = 0; i \u003c nValues; i++  {\n        for  k = 0; k \u003c nValues; k++  {\n            if k == i {\n                Vec_StrPrintStr( vSop, \"1 \" );\n            } else {\n                Vec_StrPrintStr( vSop, \"- \" ); }\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the decover node.]\n\n  Description [Produces MV-SOP for BLIF-MV representation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopDecoderLog(pMan *Mem_Flex_t, nValues int32) string {\n    var pResult string;\n    var vSop *Vec_Str_t;\n    var i int32;\n    var b int32;\n    var nBits int32 = Abc_Base2Log(nValues);\n    assert(nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits), \"nValues \u003e 1 \u0026\u0026 nValues \u003c= (1\u003c\u003cnBits)\");\n    vSop = Vec_StrAlloc( 100 );\n    for  i = 0; i \u003c nValues; i++  {\n        for  b = 0; b \u003c nBits; b++  {\n            Vec_StrPrintNum( vSop, int32(((i \u0026 (1 \u003c\u003c b)) \u003e 0)) );\n            Vec_StrPush( vSop, ' ' );\n        }\n        Vec_StrPrintNum( vSop, i );\n        Vec_StrPush( vSop, '\\n' );\n    }\n    Vec_StrPush( vSop, 0 );\n    pResult = Abc_SopRegister( pMan, Vec_StrArray(vSop) );\n    Vec_StrFree( vSop );\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the node.]\n \n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopToTruth(pSop string, nInputs int32) word {\n    static word Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    var Cube, Result word;\n    var v, lit int32;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 6\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    for {\n        Cube = Truth[7];\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                Cube \u0026=  Truth[v];\n            } else if pSop[lit] == '0' {\n                Cube \u0026= ~Truth[v];\n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        Result |= Cube;\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        Result = ~Result; }\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the node.]\n \n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopToTruth7(pSop string, nInputs int32, r []word) {\n    static word Truth[7][2] = {\n        {ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA)},\n        {ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC)},\n        {ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0)},\n        {ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00)},\n        {ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000)},\n        {ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000)},\n        {ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    };\n    var Cube [2]word;\n    var v, lit int32;\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 7\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    r[0] = r[1] = 0;\n    for {\n        Cube[0] = Cube[1] = ~(word)0;\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                Cube[0] \u0026=  Truth[v][0];\n                Cube[1] \u0026=  Truth[v][1];\n            \n            } else if pSop[lit] == '0' {\n                Cube[0] \u0026= ~Truth[v][0];\n                Cube[1] \u0026= ~Truth[v][1];\n            \n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        r[0] |= Cube[0];\n        r[1] |= Cube[1];\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        r[0] = ~r[0];\n        r[1] = ~r[1];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the node.]\n \n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SopToTruthBig(pSop string, nInputs int32, pVars **word, pCube *word, pRes *word) {\n    var nVars int32  = Abc_SopGetVarNum(pSop);\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = 1 \u003c\u003c (nVars-6);\n    }\n    var v, i, lit int32;\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= 16\");\n    assert(nVars == nInputs, \"nVars == nInputs\");\n    for  i = 0; i \u003c nWords; i++  {\n        pRes[i] = 0;\n    }\n    for {\n        for  i = 0; i \u003c nWords; i++  {\n            pCube[i] = ~(word)0;\n        }\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                for  i = 0; i \u003c nWords; i++  {\n                    pCube[i] \u0026= pVars[v][i];\n                }\n            \n            } else if pSop[lit] == '0' {\n                for  i = 0; i \u003c nWords; i++  {\n                    pCube[i] \u0026= ~pVars[v][i];\n                }\n            \n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        for  i = 0; i \u003c nWords; i++  {\n            pRes[i] |= pCube[i];\n        }\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Abc_SopIsComplement(pSop) != 0 {\n        for  i = 0; i \u003c nWords; i++  {\n            pRes[i] = ~pRes[i];\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,119 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.h",
+  "SHA256": "c4009111bd3e1444d41db059ed874cc05543e2fb941f04e8db6da094b77bd8e7",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 21,
+        "Column": 1,
+        "ByteOffset": 813
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 22,
+        "Column": 1,
+        "ByteOffset": 827
+      },
+      "Directive": "#ifdef __STDC__"
+    },
+    {
+      "Location": {
+        "Line": 27,
+        "Column": 1,
+        "ByteOffset": 874
+      },
+      "Directive": "#ifndef ABC__misc__bzlib__bzlib_h"
+    },
+    {
+      "Location": {
+        "Line": 70,
+        "Column": 1,
+        "ByteOffset": 1901
+      },
+      "Directive": "#ifndef BZ_IMPORT"
+    },
+    {
+      "Location": {
+        "Line": 74,
+        "Column": 1,
+        "ByteOffset": 1945
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 79,
+        "Column": 1,
+        "ByteOffset": 2027
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 81,
+        "Column": 1,
+        "ByteOffset": 2065
+      },
+      "Directive": "#   ifdef small"
+    },
+    {
+      "Location": {
+        "Line": 85,
+        "Column": 1,
+        "ByteOffset": 2153
+      },
+      "Directive": "#   ifdef BZ_EXPORT"
+    },
+    {
+      "Location": {
+        "Line": 139,
+        "Column": 1,
+        "ByteOffset": 3204
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    },
+    {
+      "Location": {
+        "Line": 242,
+        "Column": 1,
+        "ByteOffset": 5520
+      },
+      "Directive": "#ifndef BZ_NO_STDIO"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 813,
+      "End": 872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/bzlib.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 874,
+      "End": 6179
+    }
+  ],
+  "Draft": "package bzlib\n\n\n/*-------------------------------------------------------------*/\n/*--- Public header file for the library.                   ---*/\n/*---                                               bzlib.h ---*/\n/*-------------------------------------------------------------*/\n\n/* ------------------------------------------------------------------\n   This file is part of bzip2/libbzip2, a program and library for\n   lossless, block-sorting data compression.\n\n   bzip2/libbzip2 version 1.0.5 of 10 December 2007\n   Copyright (C) 1996-2007 Julian Seward \u003cjseward@bzip.org\u003e\n\n   Please read the WARNING, DISCLAIMER and PATENTS sections in the \n   README file.\n\n   This program is released under the terms of the license contained\n   in the file LICENSE.\n   ------------------------------------------------------------------ */\n\n#ifdef _WIN32\n#ifdef __STDC__\n#undef __STDC__\n#endif\n#endif\n\n#ifndef ABC__misc__bzlib__bzlib_h\n#define ABC__misc__bzlib__bzlib_h\n\n#define BZ_RUN               0\n#define BZ_FLUSH             1\n#define BZ_FINISH            2\n\n#define BZ_OK                0\n#define BZ_RUN_OK            1\n#define BZ_FLUSH_OK          2\n#define BZ_FINISH_OK         3\n#define BZ_STREAM_END        4\n#define BZ_SEQUENCE_ERROR    (-1)\n#define BZ_PARAM_ERROR       (-2)\n#define BZ_MEM_ERROR         (-3)\n#define BZ_DATA_ERROR        (-4)\n#define BZ_DATA_ERROR_MAGIC  (-5)\n#define BZ_IO_ERROR          (-6)\n#define BZ_UNEXPECTED_EOF    (-7)\n#define BZ_OUTBUFF_FULL      (-8)\n#define BZ_CONFIG_ERROR      (-9)\n\ntypedef \n   struct {\n      char *next_in;\n      unsigned int avail_in;\n      unsigned int total_in_lo32;\n      unsigned int total_in_hi32;\n\n      char *next_out;\n      unsigned int avail_out;\n      unsigned int total_out_lo32;\n      unsigned int total_out_hi32;\n\n      void *state;\n\n      void *(*bzalloc)(void *,int,int);\n      void (*bzfree)(void *,void *);\n      void *opaque;\n   } \n   bz_stream;\n\n\n#ifndef BZ_IMPORT\n#define BZ_EXPORT\n#endif\n\n#ifndef BZ_NO_STDIO\n/* Need a definitition for FILE */\n#include \u003cstdio.h\u003e\n#endif\n\n#ifdef _WIN32\n#   include \u003cwindows.h\u003e\n#   ifdef small\n      /* windows.h define small to char */\n#      undef small\n#   endif\n#   ifdef BZ_EXPORT\n#   define BZ_API(func) WINAPI func\n#   define BZ_EXTERN extern\n#   else\n   /* import windows dll dynamically */\n#   define BZ_API(func) (WINAPI * func)\n#   define BZ_EXTERN\n#   endif\n#else\n#   define BZ_API(func) func\n#   define BZ_EXTERN extern\n#endif\n\n#include \u003cstdio.h\u003e\n#include \"misc/util/abc_global.h\"\n\nABC_NAMESPACE_HEADER_START\n\n/*-- Core (low-level) library functions --*/\n\nBZ_EXTERN int BZ_API(BZ2_bzCompressInit) ( \n      bz_stream* strm, \n      int        blockSize100k, \n      int        verbosity, \n      int        workFactor \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzCompress) ( \n      bz_stream* strm, \n      int action \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzCompressEnd) ( \n      bz_stream* strm \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzDecompressInit) ( \n      bz_stream *strm, \n      int       verbosity, \n      int       small\n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzDecompress) ( \n      bz_stream* strm \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzDecompressEnd) ( \n      bz_stream *strm \n   );\n\n\n\n/*-- High(er) level library functions --*/\n\n#ifndef BZ_NO_STDIO\n#define BZ_MAX_UNUSED 5000\n\ntypedef void BZFILE;\n\nBZ_EXTERN BZFILE* BZ_API(BZ2_bzReadOpen) ( \n      int*  bzerror,   \n      FILE* f, \n      int   verbosity, \n      int   small,\n      void* unused,    \n      int   nUnused \n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzReadClose) ( \n      int*    bzerror, \n      BZFILE* b \n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzReadGetUnused) ( \n      int*    bzerror, \n      BZFILE* b, \n      void**  unused,  \n      int*    nUnused \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzRead) ( \n      int*    bzerror, \n      BZFILE* b, \n      void*   buf, \n      int     len \n   );\n\nBZ_EXTERN BZFILE* BZ_API(BZ2_bzWriteOpen) ( \n      int*  bzerror,      \n      FILE* f, \n      int   blockSize100k, \n      int   verbosity, \n      int   workFactor \n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzWrite) ( \n      int*    bzerror, \n      BZFILE* b, \n      void*   buf, \n      int     len \n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzWriteClose) ( \n      int*          bzerror, \n      BZFILE*       b, \n      int           abandon, \n      unsigned int* nbytes_in, \n      unsigned int* nbytes_out \n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzWriteClose64) ( \n      int*          bzerror, \n      BZFILE*       b, \n      int           abandon, \n      unsigned int* nbytes_in_lo32, \n      unsigned int* nbytes_in_hi32, \n      unsigned int* nbytes_out_lo32, \n      unsigned int* nbytes_out_hi32\n   );\n#endif\n\n\n/*-- Utility functions --*/\n\nBZ_EXTERN int BZ_API(BZ2_bzBuffToBuffCompress) ( \n      char*         dest, \n      unsigned int* destLen,\n      char*         source, \n      unsigned int  sourceLen,\n      int           blockSize100k, \n      int           verbosity, \n      int           workFactor \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzBuffToBuffDecompress) ( \n      char*         dest, \n      unsigned int* destLen,\n      char*         source, \n      unsigned int  sourceLen,\n      int           small, \n      int           verbosity \n   );\n\n\n/*--\n   Code contributed by Yoshioka Tsuneo (tsuneo@rr.iij4u.or.jp)\n   to support better zlib compatibility.\n   This code is not _officially_ part of libbzip2 (yet);\n   I haven't tested it, documented it, or considered the\n   threading-safeness of it.\n   If this code breaks, please contact both Yoshioka and me.\n--*/\n\nBZ_EXTERN const char * BZ_API(BZ2_bzlibVersion) (\n      void\n   );\n\n#ifndef BZ_NO_STDIO\nBZ_EXTERN BZFILE * BZ_API(BZ2_bzopen) (\n      const char *path,\n      const char *mode\n   );\n\nBZ_EXTERN BZFILE * BZ_API(BZ2_bzdopen) (\n      int        fd,\n      const char *mode\n   );\n         \nBZ_EXTERN int BZ_API(BZ2_bzread) (\n      BZFILE* b, \n      void* buf, \n      int len \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzwrite) (\n      BZFILE* b, \n      void*   buf, \n      int     len \n   );\n\nBZ_EXTERN int BZ_API(BZ2_bzflush) (\n      BZFILE* b\n   );\n\nBZ_EXTERN void BZ_API(BZ2_bzclose) (\n      BZFILE* b\n   );\n\nBZ_EXTERN const char * BZ_API(BZ2_bzerror) (\n      BZFILE *b, \n      int    *errnum\n   );\n#endif\n\n\nABC_NAMESPACE_HEADER_END\n\n\n#endif\n\n/*-------------------------------------------------------------*/\n/*--- end                                           bzlib.h ---*/\n/*-------------------------------------------------------------*/\n"
+}

@@ -1,0 +1,448 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c",
+  "SHA256": "6a59448fa44bc548c47f6e72c1ee1bcdcc255773f840c506f28b4e15483b81d9",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 5,
+        "ByteOffset": 1345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pCutBest[0] || pNode.pCutBest[1] ); // at least one assigned"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pCutBest[0] || pNode.pCutBest[1] ); // at least one assigned"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pCutBest[0] || pNode.pCutBest[1] ); // at least one assigned"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pCutBest[0] || pNode.pCutBest[1] ); // at least one assigned"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 10944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNodeChild.nRefAct[fPhaseChild] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 14877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_NodeIsAnd(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 16897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 17022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_NodeReadRefPhaseAct",
+      "Start": 1251,
+      "End": 1575,
+      "BodyStart": 1313,
+      "Original": "int Map_NodeReadRefPhaseAct( Map_Node_t * pNode, int fPhase )\n{\n    assert( !Map_IsComplement(pNode) );\n    if ( pNode-\u003epCutBest[0] \u0026\u0026 pNode-\u003epCutBest[1] ) // both assigned\n        return pNode-\u003enRefAct[fPhase];\n    assert( pNode-\u003epCutBest[0] || pNode-\u003epCutBest[1] ); // at least one assigned\n    return pNode-\u003enRefAct[2];\n}",
+      "Draft": "func Map_NodeReadRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefAct[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return pNode.nRefAct[2];\n}"
+    },
+    {
+      "Name": "Map_NodeReadRefPhaseEst",
+      "Start": 1860,
+      "End": 2238,
+      "BodyStart": 1924,
+      "Original": "float Map_NodeReadRefPhaseEst( Map_Node_t * pNode, int fPhase )\n{\n    assert( !Map_IsComplement(pNode) );\n    if ( pNode-\u003epCutBest[0] \u0026\u0026 pNode-\u003epCutBest[1] ) // both assigned\n        return pNode-\u003enRefEst[fPhase];\n    assert( pNode-\u003epCutBest[0] || pNode-\u003epCutBest[1] ); // at least one assigned\n//    return pNode-\u003enRefEst[0] + pNode-\u003enRefEst[1];\n    return pNode-\u003enRefEst[2];\n}",
+      "Draft": "func Map_NodeReadRefPhaseEst(pNode *Map_Node_t, fPhase int32) float32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefEst[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n//    return pNode-\u003enRefEst[0] + pNode-\u003enRefEst[1];\n    return pNode.nRefEst[2];\n}"
+    },
+    {
+      "Name": "Map_NodeIncRefPhaseAct",
+      "Start": 2560,
+      "End": 2887,
+      "BodyStart": 2621,
+      "Original": "int Map_NodeIncRefPhaseAct( Map_Node_t * pNode, int fPhase )\n{\n    assert( !Map_IsComplement(pNode) );\n    if ( pNode-\u003epCutBest[0] \u0026\u0026 pNode-\u003epCutBest[1] ) // both assigned\n        return pNode-\u003enRefAct[fPhase]++;\n    assert( pNode-\u003epCutBest[0] || pNode-\u003epCutBest[1] ); // at least one assigned\n    return pNode-\u003enRefAct[2]++;\n}",
+      "Draft": "func Map_NodeIncRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefAct[fPhase]++; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return pNode.nRefAct[2]++;\n}"
+    },
+    {
+      "Name": "Map_NodeDecRefPhaseAct",
+      "Start": 3208,
+      "End": 3535,
+      "BodyStart": 3269,
+      "Original": "int Map_NodeDecRefPhaseAct( Map_Node_t * pNode, int fPhase )\n{\n    assert( !Map_IsComplement(pNode) );\n    if ( pNode-\u003epCutBest[0] \u0026\u0026 pNode-\u003epCutBest[1] ) // both assigned\n        return --pNode-\u003enRefAct[fPhase];\n    assert( pNode-\u003epCutBest[0] || pNode-\u003epCutBest[1] ); // at least one assigned\n    return --pNode-\u003enRefAct[2];\n}",
+      "Draft": "func Map_NodeDecRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return --pNode.nRefAct[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return --pNode.nRefAct[2];\n}"
+    },
+    {
+      "Name": "Map_MappingEstimateRefsInit",
+      "Start": 3821,
+      "End": 4183,
+      "BodyStart": 3871,
+      "Original": "void Map_MappingEstimateRefsInit( Map_Man_t * p )\n{\n    Map_Node_t * pNode;\n    int i;\n    for ( i = 0; i \u003c p-\u003evMapObjs-\u003enSize; i++ )\n    {\n        pNode = p-\u003evMapObjs-\u003epArray[i];\n//        pNode-\u003enRefEst[0] = pNode-\u003enRefEst[1] = ((float)pNode-\u003enRefs)*(float)2.0;\n        pNode-\u003enRefEst[0] = pNode-\u003enRefEst[1] = pNode-\u003enRefEst[2] = ((float)pNode-\u003enRefs);\n    }\n}",
+      "Draft": "func Map_MappingEstimateRefsInit(p *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    for  i = 0; i \u003c p.vMapObjs.nSize; i++  {\n        pNode = p.vMapObjs.pArray[i];\n//        pNode-\u003enRefEst[0] = pNode-\u003enRefEst[1] = ((float)pNode-\u003enRefs)*(float)2.0;\n        pNode.nRefEst[0] = pNode.nRefEst[1] = pNode.nRefEst[2] = (float32(pNode.nRefs));\n    }\n}"
+    },
+    {
+      "Name": "Map_MappingEstimateRefs",
+      "Start": 4646,
+      "End": 5411,
+      "BodyStart": 4692,
+      "Original": "void Map_MappingEstimateRefs( Map_Man_t * p )\n{\n    Map_Node_t * pNode;\n    int i;\n    for ( i = 0; i \u003c p-\u003evMapObjs-\u003enSize; i++ )\n    {\n        pNode = p-\u003evMapObjs-\u003epArray[i];\n//        pNode-\u003enRefEst[0] = (float)((2.0 * pNode-\u003enRefEst[0] + 1.0 * pNode-\u003enRefAct[0]) / 3.0);\n//        pNode-\u003enRefEst[1] = (float)((2.0 * pNode-\u003enRefEst[1] + 1.0 * pNode-\u003enRefAct[1]) / 3.0);\n//        pNode-\u003enRefEst[2] = (float)((2.0 * pNode-\u003enRefEst[2] + 1.0 * pNode-\u003enRefAct[2]) / 3.0);\n        pNode-\u003enRefEst[0] = (float)((3.0 * pNode-\u003enRefEst[0] + 1.0 * pNode-\u003enRefAct[0]) / 4.0);\n        pNode-\u003enRefEst[1] = (float)((3.0 * pNode-\u003enRefEst[1] + 1.0 * pNode-\u003enRefAct[1]) / 4.0);\n        pNode-\u003enRefEst[2] = (float)((3.0 * pNode-\u003enRefEst[2] + 1.0 * pNode-\u003enRefAct[2]) / 4.0);\n    }\n}",
+      "Draft": "func Map_MappingEstimateRefs(p *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    for  i = 0; i \u003c p.vMapObjs.nSize; i++  {\n        pNode = p.vMapObjs.pArray[i];\n//        pNode-\u003enRefEst[0] = (float)((2.0 * pNode-\u003enRefEst[0] + 1.0 * pNode-\u003enRefAct[0]) / 3.0);\n//        pNode-\u003enRefEst[1] = (float)((2.0 * pNode-\u003enRefEst[1] + 1.0 * pNode-\u003enRefAct[1]) / 3.0);\n//        pNode-\u003enRefEst[2] = (float)((2.0 * pNode-\u003enRefEst[2] + 1.0 * pNode-\u003enRefAct[2]) / 3.0);\n        pNode.nRefEst[0] = float32(((3.0 * pNode.nRefEst[0] + 1.0 * pNode.nRefAct[0]) / 4.0));\n        pNode.nRefEst[1] = float32(((3.0 * pNode.nRefEst[1] + 1.0 * pNode.nRefAct[1]) / 4.0));\n        pNode.nRefEst[2] = float32(((3.0 * pNode.nRefEst[2] + 1.0 * pNode.nRefAct[2]) / 4.0));\n    }\n}"
+    },
+    {
+      "Name": "Map_CutGetAreaFlow",
+      "Start": 5784,
+      "End": 7172,
+      "BodyStart": 5841,
+      "Original": "float Map_CutGetAreaFlow( Map_Cut_t * pCut, int fPhase )\n{\n    Map_Match_t * pM = pCut-\u003eM + fPhase;\n    Map_Super_t * pSuper = pM-\u003epSuperBest;\n    unsigned uPhaseTot = pM-\u003euPhaseBest;\n    Map_Cut_t * pCutFanin;\n    float aFlowRes, aFlowFanin, nRefs;\n    int i, fPinPhasePos;\n\n    // start the resulting area flow\n    aFlowRes = pSuper-\u003eArea;\n    // iterate through the leaves\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        // get the phase of this fanin\n        fPinPhasePos = ((uPhaseTot \u0026 (1 \u003c\u003c i)) == 0);\n        // get the cut implementing this phase of the fanin\n        pCutFanin = pCut-\u003eppLeaves[i]-\u003epCutBest[fPinPhasePos];\n        // if the cut is not available, we have to use the opposite phase\n        if ( pCutFanin == NULL )\n        {\n            fPinPhasePos = !fPinPhasePos;\n            pCutFanin = pCut-\u003eppLeaves[i]-\u003epCutBest[fPinPhasePos];\n        }\n        aFlowFanin = pCutFanin-\u003eM[fPinPhasePos].AreaFlow; // ignores the area of the interter\n        // get the fanout count of the cut in the given phase\n        nRefs = Map_NodeReadRefPhaseEst( pCut-\u003eppLeaves[i], fPinPhasePos );\n        // if the node does no fanout, assume fanout count equal to 1\n        if ( nRefs == (float)0.0 )\n            nRefs = (float)1.0;\n        // add the area flow due to the fanin\n        aFlowRes += aFlowFanin / nRefs;\n    }\n    pM-\u003eAreaFlow = aFlowRes;\n    return aFlowRes;\n}",
+      "Draft": "func Map_CutGetAreaFlow(pCut *Map_Cut_t, fPhase int32) float32 {\n    var pM *Map_Match_t  = pCut.M + fPhase;\n    var pSuper *Map_Super_t  = pM.pSuperBest;\n    var uPhaseTot uint32  = pM.uPhaseBest;\n    var pCutFanin *Map_Cut_t;\n    var aFlowRes, aFlowFanin, nRefs float32;\n    var i, fPinPhasePos int32;\n\n    // start the resulting area flow\n    aFlowRes = pSuper.Area;\n    // iterate through the leaves\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        // get the phase of this fanin\n        fPinPhasePos = ((uPhaseTot \u0026 (1 \u003c\u003c i)) == 0);\n        // get the cut implementing this phase of the fanin\n        pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos];\n        // if the cut is not available, we have to use the opposite phase\n        if pCutFanin == nil {\n            fPinPhasePos = !fPinPhasePos;\n            pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos];\n        }\n        aFlowFanin = pCutFanin.M[fPinPhasePos].AreaFlow; // ignores the area of the interter\n        // get the fanout count of the cut in the given phase\n        nRefs = Map_NodeReadRefPhaseEst( pCut.ppLeaves[i], fPinPhasePos );\n        // if the node does no fanout, assume fanout count equal to 1\n        if nRefs == float32(0.0) {\n            nRefs = float32(1.0); }\n        // add the area flow due to the fanin\n        aFlowRes += aFlowFanin / nRefs;\n    }\n    pM.AreaFlow = aFlowRes;\n    return aFlowRes;\n}"
+    },
+    {
+      "Name": "Map_CutRefDeref",
+      "Start": 7558,
+      "End": 11223,
+      "BodyStart": 7645,
+      "Original": "float Map_CutRefDeref( Map_Cut_t * pCut, int fPhase, int fReference, int fUpdateProf )\n{\n    Map_Node_t * pNodeChild;\n    Map_Cut_t * pCutChild;\n    float aArea;\n    int i, fPhaseChild;\n//    int nRefs;\n\n    // consider the elementary variable\n    if ( pCut-\u003enLeaves == 1 )\n        return 0;\n    // start the area of this cut\n    aArea = Map_CutGetRootArea( pCut, fPhase );\n    if ( fUpdateProf )\n    {\n        if ( fReference )\n            Mio_GateIncProfile2( pCut-\u003eM[fPhase].pSuperBest-\u003epRoot );\n        else\n            Mio_GateDecProfile2( pCut-\u003eM[fPhase].pSuperBest-\u003epRoot );\n    }\n    // go through the children\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild  = pCut-\u003eppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n/*\n        // this code does not take inverters into account\n        // the quality of area recovery seems to always be a little worse\n        if ( fReference )\n            nRefs = Map_NodeIncRefPhaseAct( pNodeChild, fPhaseChild );\n        else\n            nRefs = Map_NodeDecRefPhaseAct( pNodeChild, fPhaseChild );\n        assert( nRefs \u003e= 0 );\n        // skip if the child was already reference before\n        if ( nRefs \u003e 0 )\n            continue;\n*/\n\n        if ( fReference )\n        {\n            if ( pNodeChild-\u003epCutBest[0] \u0026\u0026 pNodeChild-\u003epCutBest[1] ) // both phases are present\n            {\n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild-\u003enRefAct[2]++;\n                if ( pNodeChild-\u003enRefAct[fPhaseChild]++ \u003e 0 )\n                    continue;\n            }\n            else // only one phase is present\n            {\n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if ( pNodeChild-\u003enRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild-\u003epCutBest[fPhaseChild] == NULL )\n                    aArea += pNodeChild-\u003ep-\u003epSuperLib-\u003eAreaInv;\n                // if the node is referenced, there is no recursive call\n                if ( pNodeChild-\u003enRefAct[2]++ \u003e 0 )\n                    continue;\n            }\n        }\n        else\n        {\n            if ( pNodeChild-\u003epCutBest[0] \u0026\u0026 pNodeChild-\u003epCutBest[1] ) // both phases are present\n            {\n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild-\u003enRefAct[2];\n                if ( --pNodeChild-\u003enRefAct[fPhaseChild] \u003e 0 )\n                    continue;\n            }\n            else // only one phase is present\n            {\n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if ( --pNodeChild-\u003enRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild-\u003epCutBest[fPhaseChild] == NULL )\n                    aArea += pNodeChild-\u003ep-\u003epSuperLib-\u003eAreaInv;\n                // if the node is referenced, there is no recursive call\n                if ( --pNodeChild-\u003enRefAct[2] \u003e 0 )\n                    continue;\n            }\n            assert( pNodeChild-\u003enRefAct[fPhaseChild] \u003e= 0 );\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild-\u003epCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if ( pCutChild == NULL )\n        {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild-\u003epCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aArea += Map_CutRefDeref( pCutChild, fPhaseChild, fReference, fUpdateProf );\n    }\n    return aArea;\n}",
+      "Draft": "func Map_CutRefDeref(pCut *Map_Cut_t, fPhase int32, fReference int32, fUpdateProf int32) float32 {\n    var pNodeChild *Map_Node_t;\n    var pCutChild *Map_Cut_t;\n    var aArea float32;\n    var i, fPhaseChild int32;\n//    int nRefs;\n\n    // consider the elementary variable\n    if pCut.nLeaves == 1 {\n        return 0; }\n    // start the area of this cut\n    aArea = Map_CutGetRootArea( pCut, fPhase );\n    if fUpdateProf != 0 {\n        if fReference != 0 {\n            Mio_GateIncProfile2( pCut.M[fPhase].pSuperBest.pRoot );\n        } else {\n            Mio_GateDecProfile2( pCut.M[fPhase].pSuperBest.pRoot ); }\n    }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild  = pCut.ppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n/*\n        // this code does not take inverters into account\n        // the quality of area recovery seems to always be a little worse\n        if ( fReference )\n            nRefs = Map_NodeIncRefPhaseAct( pNodeChild, fPhaseChild );\n        else\n            nRefs = Map_NodeDecRefPhaseAct( pNodeChild, fPhaseChild );\n        assert( nRefs \u003e= 0 );\n        // skip if the child was already reference before\n        if ( nRefs \u003e 0 )\n            continue;\n*/\n\n        if fReference != 0 {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild.nRefAct[2]++;\n                if pNodeChild.nRefAct[fPhaseChild]++ \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if pNodeChild.nRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aArea += pNodeChild.p.pSuperLib.AreaInv; }\n                // if the node is referenced, there is no recursive call\n                if pNodeChild.nRefAct[2]++ \u003e 0 {\n                    continue; }\n            }\n        \n        } else {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild.nRefAct[2];\n                if --pNodeChild.nRefAct[fPhaseChild] \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if --pNodeChild.nRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aArea += pNodeChild.p.pSuperLib.AreaInv; }\n                // if the node is referenced, there is no recursive call\n                if --pNodeChild.nRefAct[2] \u003e 0 {\n                    continue; }\n            }\n            assert(pNodeChild.nRefAct[fPhaseChild] \u003e= 0, \"pNodeChild.nRefAct[fPhaseChild] \u003e= 0\");\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild.pCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if pCutChild == nil {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild.pCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aArea += Map_CutRefDeref( pCutChild, fPhaseChild, fReference, fUpdateProf );\n    }\n    return aArea;\n}"
+    },
+    {
+      "Name": "Map_CutGetAreaRefed",
+      "Start": 11542,
+      "End": 11825,
+      "BodyStart": 11600,
+      "Original": "float Map_CutGetAreaRefed( Map_Cut_t * pCut, int fPhase )\n{\n    float aResult, aResult2;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n//    assert( aResult == aResult2 );\n    return aResult;\n}",
+      "Draft": "func Map_CutGetAreaRefed(pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n//    assert( aResult == aResult2 );\n    return aResult;\n}"
+    },
+    {
+      "Name": "Map_CutGetAreaDerefed",
+      "Start": 12109,
+      "End": 12394,
+      "BodyStart": 12169,
+      "Original": "float Map_CutGetAreaDerefed( Map_Cut_t * pCut, int fPhase )\n{\n    float aResult, aResult2;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}",
+      "Draft": "func Map_CutGetAreaDerefed(pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}"
+    },
+    {
+      "Name": "Map_CutRef",
+      "Start": 12649,
+      "End": 12785,
+      "BodyStart": 12712,
+      "Original": "float Map_CutRef( Map_Cut_t * pCut, int fPhase, int fProfile )\n{\n    return Map_CutRefDeref( pCut, fPhase, 1, fProfile ); // reference\n}",
+      "Draft": "func Map_CutRef(pCut *Map_Cut_t, fPhase int32, fProfile int32) float32 {\n    return Map_CutRefDeref( pCut, fPhase, 1, fProfile ); // reference\n}"
+    },
+    {
+      "Name": "Map_CutDeref",
+      "Start": 13042,
+      "End": 13182,
+      "BodyStart": 13107,
+      "Original": "float Map_CutDeref( Map_Cut_t * pCut, int fPhase, int fProfile )\n{\n    return Map_CutRefDeref( pCut, fPhase, 0, fProfile ); // dereference\n}",
+      "Draft": "func Map_CutDeref(pCut *Map_Cut_t, fPhase int32, fProfile int32) float32 {\n    return Map_CutRefDeref( pCut, fPhase, 0, fProfile ); // dereference\n}"
+    },
+    {
+      "Name": "Map_MappingSetRefs_rec",
+      "Start": 13620,
+      "End": 14889,
+      "BodyStart": 13688,
+      "Original": "void Map_MappingSetRefs_rec( Map_Man_t * pMan, Map_Node_t * pNode )\n{\n    Map_Cut_t * pCut;\n    Map_Node_t * pNodeR;\n    unsigned uPhase;\n    int i, fPhase, fInvPin;\n    // get the regular node and its phase\n    pNodeR = Map_Regular(pNode);\n    fPhase = !Map_IsComplement(pNode);\n    pNodeR-\u003enRefAct[2]++;\n    // quit if the node was already visited in this phase\n    if ( pNodeR-\u003enRefAct[fPhase]++ )\n        return;\n    // quit if this is a PI node\n    if ( Map_NodeIsVar(pNodeR) )\n        return;\n    // propagate through buffer\n    if ( Map_NodeIsBuf(pNodeR) )\n    {\n        Map_MappingSetRefs_rec( pMan, Map_NotCond(pNodeR-\u003ep1, Map_IsComplement(pNode)) );\n        return;\n    }\n    assert( Map_NodeIsAnd(pNode) );\n    // get the cut implementing this or opposite polarity\n    pCut = pNodeR-\u003epCutBest[fPhase];\n    if ( pCut == NULL )\n    {\n        fPhase = !fPhase;\n        pCut   = pNodeR-\u003epCutBest[fPhase];\n    }\n    if ( pMan-\u003efUseProfile )\n        Mio_GateIncProfile2( pCut-\u003eM[fPhase].pSuperBest-\u003epRoot );\n    // visit the transitive fanin\n    uPhase = pCut-\u003eM[fPhase].uPhaseBest;\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        fInvPin = ((uPhase \u0026 (1 \u003c\u003c i)) \u003e 0);\n        Map_MappingSetRefs_rec( pMan, Map_NotCond(pCut-\u003eppLeaves[i], fInvPin) );\n    }\n}",
+      "Draft": "func Map_MappingSetRefs_rec(pMan *Map_Man_t, pNode *Map_Node_t) {\n    var pCut *Map_Cut_t;\n    var pNodeR *Map_Node_t;\n    var uPhase uint32;\n    var i, fPhase, fInvPin int32;\n    // get the regular node and its phase\n    // inlining of macro Map_Regular\n    pNodeR = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // inlining of macro Map_IsComplement\n    fPhase = !((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    pNodeR.nRefAct[2]++;\n    // quit if the node was already visited in this phase\n    if pNodeR.nRefAct[fPhase]++ {\n        return; }\n    // quit if this is a PI node\n    if Map_NodeIsVar(pNodeR) {\n        return; }\n    // propagate through buffer\n    if Map_NodeIsBuf(pNodeR) {\n        // inlining of macro Map_NotCond\n        // inlining of macro Map_IsComplement\n        Map_MappingSetRefs_rec( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeR.p1) ^ (((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))))) );\n        return;\n    }\n    assert(Map_NodeIsAnd(pNode), \"Map_NodeIsAnd(pNode)\");\n    // get the cut implementing this or opposite polarity\n    pCut = pNodeR.pCutBest[fPhase];\n    if pCut == nil {\n        fPhase = !fPhase;\n        pCut   = pNodeR.pCutBest[fPhase];\n    }\n    if pMan.fUseProfile {\n        Mio_GateIncProfile2( pCut.M[fPhase].pSuperBest.pRoot ); }\n    // visit the transitive fanin\n    uPhase = pCut.M[fPhase].uPhaseBest;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fInvPin = ((uPhase \u0026 (1 \u003c\u003c i)) \u003e 0);\n        // inlining of macro Map_NotCond\n        Map_MappingSetRefs_rec( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(pCut.ppLeaves[i]) ^ (fInvPin))) );\n    }\n}"
+    },
+    {
+      "Name": "Map_MappingSetRefs",
+      "Start": 14890,
+      "End": 15546,
+      "BodyStart": 14934,
+      "Original": "void Map_MappingSetRefs( Map_Man_t * pMan )\n{\n    Map_Node_t * pNode;\n    int i;\n    if ( pMan-\u003efUseProfile )\n        Mio_LibraryCleanProfile2( pMan-\u003epSuperLib-\u003epGenlib );\n    // clean all references\n    for ( i = 0; i \u003c pMan-\u003evMapObjs-\u003enSize; i++ )\n    {\n        pNode = pMan-\u003evMapObjs-\u003epArray[i];\n        pNode-\u003enRefAct[0] = 0;\n        pNode-\u003enRefAct[1] = 0;\n        pNode-\u003enRefAct[2] = 0;\n    }\n    // visit nodes reachable from POs in the DFS order through the best cuts\n    for ( i = 0; i \u003c pMan-\u003enOutputs; i++ )\n    {\n        pNode = pMan-\u003epOutputs[i];\n        if ( !Map_NodeIsConst(pNode) )\n            Map_MappingSetRefs_rec( pMan, pNode );\n    }\n}",
+      "Draft": "func Map_MappingSetRefs(pMan *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    if pMan.fUseProfile {\n        Mio_LibraryCleanProfile2( pMan.pSuperLib.pGenlib ); }\n    // clean all references\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        pNode.nRefAct[0] = 0;\n        pNode.nRefAct[1] = 0;\n        pNode.nRefAct[2] = 0;\n    }\n    // visit nodes reachable from POs in the DFS order through the best cuts\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        pNode = pMan.pOutputs[i];\n        if !Map_NodeIsConst(pNode) {\n            Map_MappingSetRefs_rec( pMan, pNode ); }\n    }\n}"
+    },
+    {
+      "Name": "Map_MappingGetArea",
+      "Start": 15813,
+      "End": 17838,
+      "BodyStart": 15858,
+      "Original": "float Map_MappingGetArea( Map_Man_t * pMan )\n{\n    Map_Node_t * pNode;\n    float Area = 0.0;\n    int i;\n    if ( pMan-\u003efUseProfile )\n        Mio_LibraryCleanProfile2( pMan-\u003epSuperLib-\u003epGenlib );\n    for ( i = 0; i \u003c pMan-\u003evMapObjs-\u003enSize; i++ )\n    {\n        pNode = pMan-\u003evMapObjs-\u003epArray[i];\n        if ( pNode-\u003enRefAct[2] == 0 )\n            continue;\n        if ( Map_NodeIsBuf(pNode) )\n            continue;\n        // at least one phase has the best cut assigned\n        assert( pNode-\u003epCutBest[0] != NULL || pNode-\u003epCutBest[1] != NULL );\n        // at least one phase is used in the mapping\n        assert( pNode-\u003enRefAct[0] \u003e 0 || pNode-\u003enRefAct[1] \u003e 0 );\n        // compute the array due to the supergate\n        if ( Map_NodeIsAnd(pNode) )\n        {\n            // count area of the negative phase\n            if ( pNode-\u003epCutBest[0] \u0026\u0026 (pNode-\u003enRefAct[0] \u003e 0 || pNode-\u003epCutBest[1] == NULL) )\n            {\n                Area += pNode-\u003epCutBest[0]-\u003eM[0].pSuperBest-\u003eArea;\n                if ( pMan-\u003efUseProfile )\n                    Mio_GateIncProfile2( pNode-\u003epCutBest[0]-\u003eM[0].pSuperBest-\u003epRoot );\n            }\n            // count area of the positive phase\n            if ( pNode-\u003epCutBest[1] \u0026\u0026 (pNode-\u003enRefAct[1] \u003e 0 || pNode-\u003epCutBest[0] == NULL) )\n            {\n                Area += pNode-\u003epCutBest[1]-\u003eM[1].pSuperBest-\u003eArea;\n                if ( pMan-\u003efUseProfile )\n                    Mio_GateIncProfile2( pNode-\u003epCutBest[1]-\u003eM[1].pSuperBest-\u003epRoot );\n            }\n        }\n        // count area of the interver if we need to implement one phase with another phase\n        if ( (pNode-\u003epCutBest[0] == NULL \u0026\u0026 pNode-\u003enRefAct[0] \u003e 0) || \n             (pNode-\u003epCutBest[1] == NULL \u0026\u0026 pNode-\u003enRefAct[1] \u003e 0) )\n            Area += pMan-\u003epSuperLib-\u003eAreaInv;\n    }\n    // add buffers for each CO driven by a CI\n    for ( i = 0; i \u003c pMan-\u003enOutputs; i++ )\n        if ( Map_NodeIsVar(pMan-\u003epOutputs[i]) \u0026\u0026 !Map_IsComplement(pMan-\u003epOutputs[i]) )\n            Area += pMan-\u003epSuperLib-\u003eAreaBuf;\n    return Area;\n}",
+      "Draft": "func Map_MappingGetArea(pMan *Map_Man_t) float32 {\n    var pNode *Map_Node_t;\n    var Area float32  = 0.0;\n    var i int32;\n    if pMan.fUseProfile {\n        Mio_LibraryCleanProfile2( pMan.pSuperLib.pGenlib ); }\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if pNode.nRefAct[2] == 0 {\n            continue; }\n        if Map_NodeIsBuf(pNode) {\n            continue; }\n        // at least one phase has the best cut assigned\n        assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, \"pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0, \"pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0\");\n        // compute the array due to the supergate\n        if Map_NodeIsAnd(pNode) {\n            // count area of the negative phase\n            if pNode.pCutBest[0] \u0026\u0026 (pNode.nRefAct[0] \u003e 0 || pNode.pCutBest[1] == nil) {\n                Area += pNode.pCutBest[0].M[0].pSuperBest.Area;\n                if pMan.fUseProfile {\n                    Mio_GateIncProfile2( pNode.pCutBest[0].M[0].pSuperBest.pRoot ); }\n            }\n            // count area of the positive phase\n            if pNode.pCutBest[1] \u0026\u0026 (pNode.nRefAct[1] \u003e 0 || pNode.pCutBest[0] == nil) {\n                Area += pNode.pCutBest[1].M[1].pSuperBest.Area;\n                if pMan.fUseProfile {\n                    Mio_GateIncProfile2( pNode.pCutBest[1].M[1].pSuperBest.pRoot ); }\n            }\n        }\n        // count area of the interver if we need to implement one phase with another phase\n        if (pNode.pCutBest[0] == nil \u0026\u0026 pNode.nRefAct[0] \u003e 0) || \n             (pNode.pCutBest[1] == nil \u0026\u0026 pNode.nRefAct[1] \u003e 0) {\n            Area += pMan.pSuperLib.AreaInv; }\n    }\n    // add buffers for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Map_IsComplement\n        if Map_NodeIsVar(pMan.pOutputs[i]) \u0026\u0026 !(((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)) != 0))) {\n            Area += pMan.pSuperLib.AreaBuf; }\n    }\n    return Area;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::pointer-cast::14161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13841,
+      "End": 13841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::pointer-cast::14692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14228,
+      "End": 14228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::pointer-cast::15443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14839,
+      "End": 14839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_NodeReadRefPhaseAct",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadRefPhaseAct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1251,
+      "End": 1575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_NodeReadRefPhaseEst",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadRefPhaseEst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1860,
+      "End": 2238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_NodeIncRefPhaseAct",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeIncRefPhaseAct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2560,
+      "End": 2887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_NodeDecRefPhaseAct",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeDecRefPhaseAct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3208,
+      "End": 3535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_MappingEstimateRefsInit",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingEstimateRefsInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3821,
+      "End": 4183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_MappingEstimateRefs",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingEstimateRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4646,
+      "End": 5411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutGetAreaFlow",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutGetAreaFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5784,
+      "End": 7172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutRefDeref",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutRefDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7558,
+      "End": 11223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutGetAreaRefed",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutGetAreaRefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11542,
+      "End": 11825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutGetAreaDerefed",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutGetAreaDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12109,
+      "End": 12394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutRef",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12649,
+      "End": 12785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_CutDeref",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13042,
+      "End": 13182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_MappingSetRefs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingSetRefs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13620,
+      "End": 14889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_MappingSetRefs",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingSetRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14890,
+      "End": 15546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::Map_MappingGetArea",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingGetArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15813,
+      "End": 17838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperRefs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18086
+    }
+  ],
+  "Draft": "package mapper\n\n/**CFile****************************************************************\n\n  FileName    [mapperRefs.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperRefs.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the actual reference counter of a phase.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeReadRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefAct[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return pNode.nRefAct[2];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the estimated reference counter of a phase.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeReadRefPhaseEst(pNode *Map_Node_t, fPhase int32) float32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefEst[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n//    return pNode-\u003enRefEst[0] + pNode-\u003enRefEst[1];\n    return pNode.nRefEst[2];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Increments the actual reference counter of a phase.]\n\n  Description [Returns the old reference counter.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeIncRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return pNode.nRefAct[fPhase]++; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return pNode.nRefAct[2]++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Decrements the actual reference counter of a phase.]\n\n  Description [Returns the new reference counter.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeDecRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {\n    // inlining of macro Map_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n    if pNode.pCutBest[0] \u0026\u0026 pNode.pCutBest[1] { // both assigned\n        return --pNode.nRefAct[fPhase]; }\n    assert(pNode.pCutBest[0] || pNode.pCutBest[1], \"pNode.pCutBest[0] || pNode.pCutBest[1]\"); // at least one assigned\n    return --pNode.nRefAct[2];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the estimated reference counter for the PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingEstimateRefsInit(p *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    for  i = 0; i \u003c p.vMapObjs.nSize; i++  {\n        pNode = p.vMapObjs.pArray[i];\n//        pNode-\u003enRefEst[0] = pNode-\u003enRefEst[1] = ((float)pNode-\u003enRefs)*(float)2.0;\n        pNode.nRefEst[0] = pNode.nRefEst[1] = pNode.nRefEst[2] = (float32(pNode.nRefs));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the estimated reference counter.]\n\n  Description [When this procedure is called for the first time,\n  the reference counter is estimated from the AIG. Otherwise, it is\n  a linear combination of reference counters in the last two iterations.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingEstimateRefs(p *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    for  i = 0; i \u003c p.vMapObjs.nSize; i++  {\n        pNode = p.vMapObjs.pArray[i];\n//        pNode-\u003enRefEst[0] = (float)((2.0 * pNode-\u003enRefEst[0] + 1.0 * pNode-\u003enRefAct[0]) / 3.0);\n//        pNode-\u003enRefEst[1] = (float)((2.0 * pNode-\u003enRefEst[1] + 1.0 * pNode-\u003enRefAct[1]) / 3.0);\n//        pNode-\u003enRefEst[2] = (float)((2.0 * pNode-\u003enRefEst[2] + 1.0 * pNode-\u003enRefAct[2]) / 3.0);\n        pNode.nRefEst[0] = float32(((3.0 * pNode.nRefEst[0] + 1.0 * pNode.nRefAct[0]) / 4.0));\n        pNode.nRefEst[1] = float32(((3.0 * pNode.nRefEst[1] + 1.0 * pNode.nRefAct[1]) / 4.0));\n        pNode.nRefEst[2] = float32(((3.0 * pNode.nRefEst[2] + 1.0 * pNode.nRefAct[2]) / 4.0));\n    }\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the area flow of the cut.]\n\n  description [Computes the area flow of the cut if it is implemented using \n  the best supergate with the best phase.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutGetAreaFlow(pCut *Map_Cut_t, fPhase int32) float32 {\n    var pM *Map_Match_t  = pCut.M + fPhase;\n    var pSuper *Map_Super_t  = pM.pSuperBest;\n    var uPhaseTot uint32  = pM.uPhaseBest;\n    var pCutFanin *Map_Cut_t;\n    var aFlowRes, aFlowFanin, nRefs float32;\n    var i, fPinPhasePos int32;\n\n    // start the resulting area flow\n    aFlowRes = pSuper.Area;\n    // iterate through the leaves\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        // get the phase of this fanin\n        fPinPhasePos = ((uPhaseTot \u0026 (1 \u003c\u003c i)) == 0);\n        // get the cut implementing this phase of the fanin\n        pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos];\n        // if the cut is not available, we have to use the opposite phase\n        if pCutFanin == nil {\n            fPinPhasePos = !fPinPhasePos;\n            pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos];\n        }\n        aFlowFanin = pCutFanin.M[fPinPhasePos].AreaFlow; // ignores the area of the interter\n        // get the fanout count of the cut in the given phase\n        nRefs = Map_NodeReadRefPhaseEst( pCut.ppLeaves[i], fPinPhasePos );\n        // if the node does no fanout, assume fanout count equal to 1\n        if nRefs == float32(0.0) {\n            nRefs = float32(1.0); }\n        // add the area flow due to the fanin\n        aFlowRes += aFlowFanin / nRefs;\n    }\n    pM.AreaFlow = aFlowRes;\n    return aFlowRes;\n}\n\n\n/**function*************************************************************\n\n  synopsis    [References or dereferences the cut.]\n\n  description [This reference part is similar to Cudd_NodeReclaim(). \n  The dereference part is similar to Cudd_RecursiveDeref().]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutRefDeref(pCut *Map_Cut_t, fPhase int32, fReference int32, fUpdateProf int32) float32 {\n    var pNodeChild *Map_Node_t;\n    var pCutChild *Map_Cut_t;\n    var aArea float32;\n    var i, fPhaseChild int32;\n//    int nRefs;\n\n    // consider the elementary variable\n    if pCut.nLeaves == 1 {\n        return 0; }\n    // start the area of this cut\n    aArea = Map_CutGetRootArea( pCut, fPhase );\n    if fUpdateProf != 0 {\n        if fReference != 0 {\n            Mio_GateIncProfile2( pCut.M[fPhase].pSuperBest.pRoot );\n        } else {\n            Mio_GateDecProfile2( pCut.M[fPhase].pSuperBest.pRoot ); }\n    }\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild  = pCut.ppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n/*\n        // this code does not take inverters into account\n        // the quality of area recovery seems to always be a little worse\n        if ( fReference )\n            nRefs = Map_NodeIncRefPhaseAct( pNodeChild, fPhaseChild );\n        else\n            nRefs = Map_NodeDecRefPhaseAct( pNodeChild, fPhaseChild );\n        assert( nRefs \u003e= 0 );\n        // skip if the child was already reference before\n        if ( nRefs \u003e 0 )\n            continue;\n*/\n\n        if fReference != 0 {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild.nRefAct[2]++;\n                if pNodeChild.nRefAct[fPhaseChild]++ \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if pNodeChild.nRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aArea += pNodeChild.p.pSuperLib.AreaInv; }\n                // if the node is referenced, there is no recursive call\n                if pNodeChild.nRefAct[2]++ \u003e 0 {\n                    continue; }\n            }\n        \n        } else {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild.nRefAct[2];\n                if --pNodeChild.nRefAct[fPhaseChild] \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if --pNodeChild.nRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aArea += pNodeChild.p.pSuperLib.AreaInv; }\n                // if the node is referenced, there is no recursive call\n                if --pNodeChild.nRefAct[2] \u003e 0 {\n                    continue; }\n            }\n            assert(pNodeChild.nRefAct[fPhaseChild] \u003e= 0, \"pNodeChild.nRefAct[fPhaseChild] \u003e= 0\");\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild.pCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if pCutChild == nil {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild.pCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aArea += Map_CutRefDeref( pCutChild, fPhaseChild, fReference, fUpdateProf );\n    }\n    return aArea;\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description [Assumes that the cut is referenced.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutGetAreaRefed(pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n//    assert( aResult == aResult2 );\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutGetAreaDerefed(pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n    aResult2 = Map_CutRefDeref( pCut, fPhase, 1, 0 ); // reference\n    aResult  = Map_CutRefDeref( pCut, fPhase, 0, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [References the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutRef(pCut *Map_Cut_t, fPhase int32, fProfile int32) float32 {\n    return Map_CutRefDeref( pCut, fPhase, 1, fProfile ); // reference\n}\n\n/**function*************************************************************\n\n  synopsis    [Dereferences the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutDeref(pCut *Map_Cut_t, fPhase int32, fProfile int32) float32 {\n    return Map_CutRefDeref( pCut, fPhase, 0, fProfile ); // dereference\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes actual reference counters.]\n\n  Description [Collects the nodes used in the mapping in array pMan-\u003evMapping.\n  Nodes are collected in reverse topological order to facilitate the \n  computation of required times.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingSetRefs_rec(pMan *Map_Man_t, pNode *Map_Node_t) {\n    var pCut *Map_Cut_t;\n    var pNodeR *Map_Node_t;\n    var uPhase uint32;\n    var i, fPhase, fInvPin int32;\n    // get the regular node and its phase\n    // inlining of macro Map_Regular\n    pNodeR = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode) \u0026 ~01)) ;\n    // inlining of macro Map_IsComplement\n    fPhase = !((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))));\n    pNodeR.nRefAct[2]++;\n    // quit if the node was already visited in this phase\n    if pNodeR.nRefAct[fPhase]++ {\n        return; }\n    // quit if this is a PI node\n    if Map_NodeIsVar(pNodeR) {\n        return; }\n    // propagate through buffer\n    if Map_NodeIsBuf(pNodeR) {\n        // inlining of macro Map_NotCond\n        // inlining of macro Map_IsComplement\n        Map_MappingSetRefs_rec( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeR.p1) ^ (((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))))) );\n        return;\n    }\n    assert(Map_NodeIsAnd(pNode), \"Map_NodeIsAnd(pNode)\");\n    // get the cut implementing this or opposite polarity\n    pCut = pNodeR.pCutBest[fPhase];\n    if pCut == nil {\n        fPhase = !fPhase;\n        pCut   = pNodeR.pCutBest[fPhase];\n    }\n    if pMan.fUseProfile {\n        Mio_GateIncProfile2( pCut.M[fPhase].pSuperBest.pRoot ); }\n    // visit the transitive fanin\n    uPhase = pCut.M[fPhase].uPhaseBest;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fInvPin = ((uPhase \u0026 (1 \u003c\u003c i)) \u003e 0);\n        // inlining of macro Map_NotCond\n        Map_MappingSetRefs_rec( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(pCut.ppLeaves[i]) ^ (fInvPin))) );\n    }\n}\nfunc Map_MappingSetRefs(pMan *Map_Man_t) {\n    var pNode *Map_Node_t;\n    var i int32;\n    if pMan.fUseProfile {\n        Mio_LibraryCleanProfile2( pMan.pSuperLib.pGenlib ); }\n    // clean all references\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        pNode.nRefAct[0] = 0;\n        pNode.nRefAct[1] = 0;\n        pNode.nRefAct[2] = 0;\n    }\n    // visit nodes reachable from POs in the DFS order through the best cuts\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        pNode = pMan.pOutputs[i];\n        if !Map_NodeIsConst(pNode) {\n            Map_MappingSetRefs_rec( pMan, pNode ); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the array of mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingGetArea(pMan *Map_Man_t) float32 {\n    var pNode *Map_Node_t;\n    var Area float32  = 0.0;\n    var i int32;\n    if pMan.fUseProfile {\n        Mio_LibraryCleanProfile2( pMan.pSuperLib.pGenlib ); }\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if pNode.nRefAct[2] == 0 {\n            continue; }\n        if Map_NodeIsBuf(pNode) {\n            continue; }\n        // at least one phase has the best cut assigned\n        assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, \"pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0, \"pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0\");\n        // compute the array due to the supergate\n        if Map_NodeIsAnd(pNode) {\n            // count area of the negative phase\n            if pNode.pCutBest[0] \u0026\u0026 (pNode.nRefAct[0] \u003e 0 || pNode.pCutBest[1] == nil) {\n                Area += pNode.pCutBest[0].M[0].pSuperBest.Area;\n                if pMan.fUseProfile {\n                    Mio_GateIncProfile2( pNode.pCutBest[0].M[0].pSuperBest.pRoot ); }\n            }\n            // count area of the positive phase\n            if pNode.pCutBest[1] \u0026\u0026 (pNode.nRefAct[1] \u003e 0 || pNode.pCutBest[0] == nil) {\n                Area += pNode.pCutBest[1].M[1].pSuperBest.Area;\n                if pMan.fUseProfile {\n                    Mio_GateIncProfile2( pNode.pCutBest[1].M[1].pSuperBest.pRoot ); }\n            }\n        }\n        // count area of the interver if we need to implement one phase with another phase\n        if (pNode.pCutBest[0] == nil \u0026\u0026 pNode.nRefAct[0] \u003e 0) || \n             (pNode.pCutBest[1] == nil \u0026\u0026 pNode.nRefAct[1] \u003e 0) {\n            Area += pMan.pSuperLib.AreaInv; }\n    }\n    // add buffers for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Map_IsComplement\n        if Map_NodeIsVar(pMan.pOutputs[i]) \u0026\u0026 !(((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)) != 0))) {\n            Area += pMan.pSuperLib.AreaBuf; }\n    }\n    return Area;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

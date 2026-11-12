@@ -1,0 +1,599 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c",
+  "SHA256": "f9af1bfefbdc6829ce37e287bc023220c817e2cac456aa8233f3d5de333b8096",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 == nConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 == nConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 == nConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 4498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode0.vFanouts.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 4543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode1.vFanouts.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 5794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode0.vFanouts.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 9,
+        "ByteOffset": 5839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode1.vFanouts.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 6773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanin.vFanouts.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 9103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 9139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 9963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node = %6s : Supp = %3d  Cone = %3d  (\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 9,
+        "ByteOffset": 10251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %s\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 10297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" )\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 11333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == Count2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 12333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == Count2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 439,
+        "Column": 5,
+        "ByteOffset": 14117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == Count2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeMffcSize",
+      "Start": 1430,
+      "End": 1916,
+      "BodyStart": 1472,
+      "Original": "int Abc_NodeMffcSize( Abc_Obj_t * pNode )\n{\n    int nConeSize1, nConeSize2;\n//    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n//    assert( !Abc_ObjIsComplement( pNode ) );\n    assert( Abc_ObjIsNode( pNode ) );\n    if ( Abc_ObjFaninNum(pNode) == 0 )\n        return 0;\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert( nConeSize1 == nConeSize2 );\n    assert( nConeSize1 \u003e 0 );\n    return nConeSize1;\n}",
+      "Draft": "func Abc_NodeMffcSize(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n//    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n//    assert( !Abc_ObjIsComplement( pNode ) );\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcSizeStop",
+      "Start": 2215,
+      "End": 2703,
+      "BodyStart": 2261,
+      "Original": "int Abc_NodeMffcSizeStop( Abc_Obj_t * pNode )\n{\n    int nConeSize1, nConeSize2;\n    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n    assert( !Abc_ObjIsComplement( pNode ) );\n    assert( Abc_ObjIsNode( pNode ) );\n    if ( Abc_ObjFaninNum(pNode) == 0 )\n        return 0;\n    nConeSize1 = Abc_NodeRefDerefStop( pNode, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDerefStop( pNode, 1 ); // reference\n    assert( nConeSize1 == nConeSize2 );\n    assert( nConeSize1 \u003e 0 );\n    return nConeSize1;\n}",
+      "Draft": "func Abc_NodeMffcSizeStop(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDerefStop( pNode, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDerefStop( pNode, 1 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcLabelAig",
+      "Start": 2981,
+      "End": 3467,
+      "BodyStart": 3027,
+      "Original": "int Abc_NodeMffcLabelAig( Abc_Obj_t * pNode )\n{\n    int nConeSize1, nConeSize2;\n    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n    assert( !Abc_ObjIsComplement( pNode ) );\n    assert( Abc_ObjIsNode( pNode ) );\n    if ( Abc_ObjFaninNum(pNode) == 0 )\n        return 0;\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 1 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert( nConeSize1 == nConeSize2 );\n    assert( nConeSize1 \u003e 0 );\n    return nConeSize1;\n}",
+      "Draft": "func Abc_NodeMffcLabelAig(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 1 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}"
+    },
+    {
+      "Name": "Abc_NodeRefDeref",
+      "Start": 3756,
+      "End": 4786,
+      "BodyStart": 3826,
+      "Original": "int Abc_NodeRefDeref( Abc_Obj_t * pNode, int fReference, int fLabel )\n{\n    Abc_Obj_t * pNode0, * pNode1;\n    int Counter;\n    // label visited nodes\n    if ( fLabel )\n        Abc_NodeSetTravIdCurrent( pNode );\n    // skip the CI\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if ( fReference )\n    {\n        if ( pNode0-\u003evFanouts.nSize++ == 0 )\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel );\n        if ( pNode1-\u003evFanouts.nSize++ == 0 )\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel );\n    }\n    else\n    {\n        assert( pNode0-\u003evFanouts.nSize \u003e 0 );\n        assert( pNode1-\u003evFanouts.nSize \u003e 0 );\n        if ( --pNode0-\u003evFanouts.nSize == 0 )\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel );\n        if ( --pNode1-\u003evFanouts.nSize == 0 )\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NodeRefDeref(pNode *Abc_Obj_t, fReference int32, fLabel int32) int32 {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var Counter int32;\n    // label visited nodes\n    if fLabel != 0 {\n        Abc_NodeSetTravIdCurrent( pNode ); }\n    // skip the CI\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if fReference != 0 {\n        if pNode0.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }\n        if pNode1.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }\n    \n    } else {\n        assert(pNode0.vFanouts.nSize \u003e 0, \"pNode0.vFanouts.nSize \u003e 0\");\n        assert(pNode1.vFanouts.nSize \u003e 0, \"pNode1.vFanouts.nSize \u003e 0\");\n        if --pNode0.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }\n        if --pNode1.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeRefDerefStop",
+      "Start": 5108,
+      "End": 6130,
+      "BodyStart": 5170,
+      "Original": "int Abc_NodeRefDerefStop( Abc_Obj_t * pNode, int fReference )\n{\n    Abc_Obj_t * pNode0, * pNode1;\n    int Counter;\n    // skip the CI\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if ( fReference )\n    {\n        if ( !Abc_ObjFaninC0(pNode) \u0026\u0026 pNode0-\u003evFanouts.nSize++ == 0 )\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference );\n        if ( !Abc_ObjFaninC1(pNode) \u0026\u0026 pNode1-\u003evFanouts.nSize++ == 0 )\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference );\n    }\n    else\n    {\n        assert( pNode0-\u003evFanouts.nSize \u003e 0 );\n        assert( pNode1-\u003evFanouts.nSize \u003e 0 );\n        if ( !Abc_ObjFaninC0(pNode) \u0026\u0026 --pNode0-\u003evFanouts.nSize == 0 )\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference );\n        if ( !Abc_ObjFaninC1(pNode) \u0026\u0026 --pNode1-\u003evFanouts.nSize == 0 )\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NodeRefDerefStop(pNode *Abc_Obj_t, fReference int32) int32 {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var Counter int32;\n    // skip the CI\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if fReference != 0 {\n        if !Abc_ObjFaninC0(pNode) \u0026\u0026 pNode0.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }\n        if !Abc_ObjFaninC1(pNode) \u0026\u0026 pNode1.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }\n    \n    } else {\n        assert(pNode0.vFanouts.nSize \u003e 0, \"pNode0.vFanouts.nSize \u003e 0\");\n        assert(pNode1.vFanouts.nSize \u003e 0, \"pNode1.vFanouts.nSize \u003e 0\");\n        if !Abc_ObjFaninC0(pNode) \u0026\u0026 --pNode0.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }\n        if !Abc_ObjFaninC1(pNode) \u0026\u0026 --pNode1.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeDeref_rec",
+      "Start": 6398,
+      "End": 6759,
+      "BodyStart": 6441,
+      "Original": "int Abc_NodeDeref_rec( Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    int i, Counter = 1;\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        assert( pFanin-\u003evFanouts.nSize \u003e 0 );\n        if ( --pFanin-\u003evFanouts.nSize == 0 )\n            Counter += Abc_NodeDeref_rec( pFanin );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NodeDeref_rec(pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = 1;\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        assert(pFanin.vFanouts.nSize \u003e 0, \"pFanin.vFanouts.nSize \u003e 0\");\n        if --pFanin.vFanouts.nSize == 0 {\n            Counter += Abc_NodeDeref_rec( pFanin ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeRef_rec",
+      "Start": 7022,
+      "End": 7333,
+      "BodyStart": 7063,
+      "Original": "int Abc_NodeRef_rec( Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pFanin;\n    int i, Counter = 1;\n    if ( Abc_ObjIsCi(pNode) )\n        return 0;\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( pFanin-\u003evFanouts.nSize++ == 0 )\n            Counter += Abc_NodeRef_rec( pFanin );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NodeRef_rec(pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = 1;\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if pFanin.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRef_rec( pFanin ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcConeSupp_rec",
+      "Start": 7630,
+      "End": 8327,
+      "BodyStart": 7733,
+      "Original": "void Abc_NodeMffcConeSupp_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vCone, Vec_Ptr_t * vSupp, int fTopmost )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return;\n    Abc_NodeSetTravIdCurrent(pNode);\n    // add to the new support nodes\n    if ( !fTopmost \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode-\u003evFanouts.nSize \u003e 0) )\n    {\n        if ( vSupp ) Vec_PtrPush( vSupp, pNode );\n        return;\n    }\n    // recur on the children\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Abc_NodeMffcConeSupp_rec( pFanin, vCone, vSupp, 0 );\n    // collect the internal node\n    if ( vCone ) Vec_PtrPush( vCone, pNode );\n//    printf( \"%d \", pNode-\u003eId );\n}",
+      "Draft": "func Abc_NodeMffcConeSupp_rec(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t, fTopmost int32) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize \u003e 0) {\n        if vSupp != nil { Vec_PtrPush( vSupp, pNode ); }\n        return;\n    }\n    // recur on the children\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NodeMffcConeSupp_rec( pFanin, vCone, vSupp, 0 );\n    }\n    // collect the internal node\n    if vCone != nil { Vec_PtrPush( vCone, pNode ); }\n//    printf( \"%d \", pNode-\u003eId );\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcConeSupp",
+      "Start": 8604,
+      "End": 8972,
+      "BodyStart": 8689,
+      "Original": "void Abc_NodeMffcConeSupp( Abc_Obj_t * pNode, Vec_Ptr_t * vCone, Vec_Ptr_t * vSupp )\n{\n    assert( Abc_ObjIsNode(pNode) );\n    assert( !Abc_ObjIsComplement(pNode) );\n    if ( vCone ) Vec_PtrClear( vCone );\n    if ( vSupp ) Vec_PtrClear( vSupp );\n    Abc_NtkIncrementTravId( pNode-\u003epNtk );\n    Abc_NodeMffcConeSupp_rec( pNode, vCone, vSupp, 1 );\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NodeMffcConeSupp(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t) {\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if vCone != nil { Vec_PtrClear( vCone ); }\n    if vSupp != nil { Vec_PtrClear( vSupp ); }\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    Abc_NodeMffcConeSupp_rec( pNode, vCone, vSupp, 1 );\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcConeSuppPrint",
+      "Start": 9249,
+      "End": 9844,
+      "BodyStart": 9301,
+      "Original": "void Abc_NodeMffcConeSuppPrint( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vCone, * vSupp;\n    Abc_Obj_t * pObj;\n    int i;\n    vCone = Vec_PtrAlloc( 100 );\n    vSupp = Vec_PtrAlloc( 100 );\n    Abc_NodeDeref_rec( pNode );\n    Abc_NodeMffcConeSupp( pNode, vCone, vSupp );\n    Abc_NodeRef_rec( pNode );\n    printf( \"Node = %6s : Supp = %3d  Cone = %3d  (\", \n        Abc_ObjName(pNode), Vec_PtrSize(vSupp), Vec_PtrSize(vCone) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vCone, pObj, i )\n        printf( \" %s\", Abc_ObjName(pObj) );\n    printf( \" )\\n\" );\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSupp );\n}",
+      "Draft": "func Abc_NodeMffcConeSuppPrint(pNode *Abc_Obj_t) {\n    var vCone, vSupp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCone = Vec_PtrAlloc( 100 );\n    vSupp = Vec_PtrAlloc( 100 );\n    Abc_NodeDeref_rec( pNode );\n    Abc_NodeMffcConeSupp( pNode, vCone, vSupp );\n    Abc_NodeRef_rec( pNode );\n    fmt.Printf(\"Node = %6s : Supp = %3d  Cone = %3d  (\", Abc_ObjName(pNode), Vec_PtrSize(vSupp), Vec_PtrSize(vCone));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        fmt.Printf(\" %s\", Abc_ObjName(pObj));\n    }\n    fmt.Printf(\" )\\n\");\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSupp );\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcInside",
+      "Start": 10182,
+      "End": 10858,
+      "BodyStart": 10268,
+      "Original": "int Abc_NodeMffcInside( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vInside )\n{\n    Abc_Obj_t * pObj;\n    int i, Count1, Count2;\n    // increment the fanout counters for the leaves\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003evFanouts.nSize++;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NodeMffcConeSupp( pNode, vInside, NULL );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert( Count1 == Count2 );\n    // remove the extra counters\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003evFanouts.nSize--;\n    return Count1;\n}",
+      "Draft": "func Abc_NodeMffcInside(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vInside *Vec_Ptr_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i, Count1, Count2 int32;\n    // increment the fanout counters for the leaves\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.vFanouts.nSize++;\n    }\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NodeMffcConeSupp( pNode, vInside, nil );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    // remove the extra counters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.vFanouts.nSize--;\n    }\n    return Count1;\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcInsideCollect",
+      "Start": 11196,
+      "End": 11617,
+      "BodyStart": 11255,
+      "Original": "Vec_Ptr_t * Abc_NodeMffcInsideCollect( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vInside;\n    int Count1, Count2;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    vInside = Vec_PtrAlloc( 10 );\n    Abc_NodeMffcConeSupp( pNode, vInside, NULL );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert( Count1 == Count2 );\n    return vInside;\n}",
+      "Draft": "func Abc_NodeMffcInsideCollect(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vInside *Vec_Ptr_t;\n    var Count1, Count2 int32;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    vInside = Vec_PtrAlloc( 10 );\n    Abc_NodeMffcConeSupp( pNode, vInside, nil );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return vInside;\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcLabel_rec",
+      "Start": 11914,
+      "End": 12529,
+      "BodyStart": 11996,
+      "Original": "void Abc_NodeMffcLabel_rec( Abc_Obj_t * pNode, int fTopmost, Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    // add to the new support nodes\n    if ( !fTopmost \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode-\u003evFanouts.nSize \u003e 0) )\n        return;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return;\n    Abc_NodeSetTravIdCurrent(pNode);\n    // recur on the children\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Abc_NodeMffcLabel_rec( pFanin, 0, vNodes );\n    // collect the internal node\n//    printf( \"%d \", pNode-\u003eId );\n    if ( vNodes )\n        Vec_PtrPush( vNodes, pNode );\n}",
+      "Draft": "func Abc_NodeMffcLabel_rec(pNode *Abc_Obj_t, fTopmost int32, vNodes *Vec_Ptr_t) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize \u003e 0) {\n        return; }\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    // recur on the children\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NodeMffcLabel_rec( pFanin, 0, vNodes );\n    }\n    // collect the internal node\n//    printf( \"%d \", pNode-\u003eId );\n    if vNodes != nil {\n        Vec_PtrPush( vNodes, pNode ); }\n}"
+    },
+    {
+      "Name": "Abc_NodeMffcLabel",
+      "Start": 12867,
+      "End": 13272,
+      "BodyStart": 12930,
+      "Original": "int Abc_NodeMffcLabel( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes )\n{\n    int Count1, Count2;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NtkIncrementTravId( pNode-\u003epNtk );\n    Abc_NodeMffcLabel_rec( pNode, 1, vNodes );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert( Count1 == Count2 );\n    return Count1;\n}",
+      "Draft": "func Abc_NodeMffcLabel(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {\n    var Count1, Count2 int32;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    Abc_NodeMffcLabel_rec( pNode, 1, vNodes );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::pointer-cast::10105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9674,
+      "End": 9674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::pointer-cast::10912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10375,
+      "End": 10375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::pointer-cast::11396",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10753,
+      "End": 10753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcSize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1430,
+      "End": 1916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcSizeStop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcSizeStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2215,
+      "End": 2703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcLabelAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcLabelAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2981,
+      "End": 3467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeRefDeref",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeRefDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3756,
+      "End": 4786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeRefDerefStop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeRefDerefStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5108,
+      "End": 6130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeDeref_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeref_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6398,
+      "End": 6759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeRef_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeRef_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7022,
+      "End": 7333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcConeSupp_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcConeSupp_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7630,
+      "End": 8327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcConeSupp",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcConeSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8604,
+      "End": 8972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcConeSuppPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcConeSuppPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9249,
+      "End": 9844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcInside",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcInside",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10182,
+      "End": 10858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcInsideCollect",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcInsideCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11196,
+      "End": 11617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcLabel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcLabel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11914,
+      "End": 12529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::Abc_NodeMffcLabel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMffcLabel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12867,
+      "End": 13272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcRefs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13519
+    }
+  ],
+  "Draft": "package abc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcRefs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures using reference counting of the AIG nodes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcRefs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Abc_NodeRefDeref( Abc_Obj_t * pNode, int fReference, int fLabel );\n\n// static int Abc_NodeRefDerefStop( Abc_Obj_t * pNode, int fReference );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the MFFC size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcSize(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n//    assert( Abc_NtkIsStrash(pNode-\u003epNtk) );\n//    assert( !Abc_ObjIsComplement( pNode ) );\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the MFFC size while stopping at the complemented edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcSizeStop(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDerefStop( pNode, 0 ); // dereference\n    nConeSize2 = Abc_NodeRefDerefStop( pNode, 1 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Labels MFFC with the current traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcLabelAig(pNode *Abc_Obj_t) int32 {\n    var nConeSize1, nConeSize2 int32;\n    assert(Abc_NtkIsStrash(pNode.pNtk), \"Abc_NtkIsStrash(pNode.pNtk)\");\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    if Abc_ObjFaninNum(pNode) == 0 {\n        return 0; }\n    nConeSize1 = Abc_NodeRefDeref( pNode, 0, 1 ); // dereference\n    nConeSize2 = Abc_NodeRefDeref( pNode, 1, 0 ); // reference\n    assert(nConeSize1 == nConeSize2, \"nConeSize1 == nConeSize2\");\n    assert(nConeSize1 \u003e 0, \"nConeSize1 \u003e 0\");\n    return nConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References/references the node and returns MFFC size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeRefDeref(pNode *Abc_Obj_t, fReference int32, fLabel int32) int32 {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var Counter int32;\n    // label visited nodes\n    if fLabel != 0 {\n        Abc_NodeSetTravIdCurrent( pNode ); }\n    // skip the CI\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if fReference != 0 {\n        if pNode0.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }\n        if pNode1.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }\n    \n    } else {\n        assert(pNode0.vFanouts.nSize \u003e 0, \"pNode0.vFanouts.nSize \u003e 0\");\n        assert(pNode1.vFanouts.nSize \u003e 0, \"pNode1.vFanouts.nSize \u003e 0\");\n        if --pNode0.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDeref( pNode0, fReference, fLabel ); }\n        if --pNode1.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDeref( pNode1, fReference, fLabel ); }\n    }\n    return Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [References/references the node and returns MFFC size.]\n\n  Description [Stops at the complemented edges.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeRefDerefStop(pNode *Abc_Obj_t, fReference int32) int32 {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var Counter int32;\n    // skip the CI\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // process the internal node\n    pNode0 = Abc_ObjFanin0(pNode);\n    pNode1 = Abc_ObjFanin1(pNode);\n    Counter = 1;\n    if fReference != 0 {\n        if !Abc_ObjFaninC0(pNode) \u0026\u0026 pNode0.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }\n        if !Abc_ObjFaninC1(pNode) \u0026\u0026 pNode1.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }\n    \n    } else {\n        assert(pNode0.vFanouts.nSize \u003e 0, \"pNode0.vFanouts.nSize \u003e 0\");\n        assert(pNode1.vFanouts.nSize \u003e 0, \"pNode1.vFanouts.nSize \u003e 0\");\n        if !Abc_ObjFaninC0(pNode) \u0026\u0026 --pNode0.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode0, fReference ); }\n        if !Abc_ObjFaninC1(pNode) \u0026\u0026 --pNode1.vFanouts.nSize == 0 {\n            Counter += Abc_NodeRefDerefStop( pNode1, fReference ); }\n    }\n    return Counter;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeref_rec(pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = 1;\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        assert(pFanin.vFanouts.nSize \u003e 0, \"pFanin.vFanouts.nSize \u003e 0\");\n        if --pFanin.vFanouts.nSize == 0 {\n            Counter += Abc_NodeDeref_rec( pFanin ); }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeRef_rec(pNode *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var Counter int32 = 1;\n    if Abc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if pFanin.vFanouts.nSize++ == 0 {\n            Counter += Abc_NodeRef_rec( pFanin ); }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal and boundary nodes in the derefed MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcConeSupp_rec(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t, fTopmost int32) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize \u003e 0) {\n        if vSupp != nil { Vec_PtrPush( vSupp, pNode ); }\n        return;\n    }\n    // recur on the children\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NodeMffcConeSupp_rec( pFanin, vCone, vSupp, 0 );\n    }\n    // collect the internal node\n    if vCone != nil { Vec_PtrPush( vCone, pNode ); }\n//    printf( \"%d \", pNode-\u003eId );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the support of the derefed MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcConeSupp(pNode *Abc_Obj_t, vCone *Vec_Ptr_t, vSupp *Vec_Ptr_t) {\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if vCone != nil { Vec_PtrClear( vCone ); }\n    if vSupp != nil { Vec_PtrClear( vSupp ); }\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    Abc_NodeMffcConeSupp_rec( pNode, vCone, vSupp, 1 );\n//    printf( \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the support of the derefed MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcConeSuppPrint(pNode *Abc_Obj_t) {\n    var vCone, vSupp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCone = Vec_PtrAlloc( 100 );\n    vSupp = Vec_PtrAlloc( 100 );\n    Abc_NodeDeref_rec( pNode );\n    Abc_NodeMffcConeSupp( pNode, vCone, vSupp );\n    Abc_NodeRef_rec( pNode );\n    fmt.Printf(\"Node = %6s : Supp = %3d  Cone = %3d  (\", Abc_ObjName(pNode), Vec_PtrSize(vSupp), Vec_PtrSize(vCone));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCone)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {\n        fmt.Printf(\" %s\", Abc_ObjName(pObj));\n    }\n    fmt.Printf(\" )\\n\");\n    Vec_PtrFree( vCone );\n    Vec_PtrFree( vSupp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]\n\n  Description []\n               \n  SideEffects [Increments the trav ID and marks visited nodes.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcInside(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vInside *Vec_Ptr_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i, Count1, Count2 int32;\n    // increment the fanout counters for the leaves\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.vFanouts.nSize++;\n    }\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NodeMffcConeSupp( pNode, vInside, nil );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    // remove the extra counters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.vFanouts.nSize--;\n    }\n    return Count1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]\n\n  Description []\n               \n  SideEffects [Increments the trav ID and marks visited nodes.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcInsideCollect(pNode *Abc_Obj_t) *Vec_Ptr_t {\n    var vInside *Vec_Ptr_t;\n    var Count1, Count2 int32;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    vInside = Vec_PtrAlloc( 10 );\n    Abc_NodeMffcConeSupp( pNode, vInside, nil );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return vInside;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal and boundary nodes in the derefed MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcLabel_rec(pNode *Abc_Obj_t, fTopmost int32, vNodes *Vec_Ptr_t) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 (Abc_ObjIsCi(pNode) || pNode.vFanouts.nSize \u003e 0) {\n        return; }\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    // recur on the children\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_NodeMffcLabel_rec( pFanin, 0, vNodes );\n    }\n    // collect the internal node\n//    printf( \"%d \", pNode-\u003eId );\n    if vNodes != nil {\n        Vec_PtrPush( vNodes, pNode ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal nodes of the MFFC limited by cut.]\n\n  Description []\n               \n  SideEffects [Increments the trav ID and marks visited nodes.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeMffcLabel(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {\n    var Count1, Count2 int32;\n    // dereference the node\n    Count1 = Abc_NodeDeref_rec( pNode );\n    // collect the nodes inside the MFFC\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    Abc_NodeMffcLabel_rec( pNode, 1, vNodes );\n    // reference it back\n    Count2 = Abc_NodeRef_rec( pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

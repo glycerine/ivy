@@ -1,0 +1,281 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaDeep.c",
+  "SHA256": "7cbbb14abf68ff752c55b622d6b8ada3e6b8aca72269e059e947c84a7f9556e5",
+  "Library": [
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 51,
+        "Column": 47,
+        "ByteOffset": 1517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = Abc_Clock() + TimeOut * CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 2761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"\u0026dch%s; \u0026if -a -K %d; \u0026mfs -e -W 20 -L 20%s%s\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 3983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Iter %6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 13,
+        "ByteOffset": 4023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Time %8.2f sec : \", float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 119,
+        "Column": 80,
+        "ByteOffset": 4090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Time %8.2f sec : \", float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 13,
+        "ByteOffset": 4120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"And = %6d  \", Gia_ManAndNum(pNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 4178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Lev = %3d  \", Gia_ManLevelNum(pNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 17,
+        "ByteOffset": 4268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\u003c== best : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 17,
+        "ByteOffset": 4342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"           \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 126,
+        "Column": 13,
+        "ByteOffset": 4381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s\", Command );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 13,
+        "ByteOffset": 4418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 4510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Runtime limit (%d sec) is reached after %d iterations.\\n\", TimeOut, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 13,
+        "ByteOffset": 4670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Completed %d iterations without improvement in %.2f seconds.\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 135,
+        "Column": 64,
+        "ByteOffset": 4808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nNoImpr, float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 4891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iteration limit (%d iters) is reached after %.2f seconds.\\n\", IterMax, float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 140,
+        "Column": 127,
+        "ByteOffset": 5009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iteration limit (%d iters) is reached after %.2f seconds.\\n\", IterMax, float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 5078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quality goal (%d nodes \u003c= %d nodes) is achieved after %d iterations and %.2f seconds.\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 143,
+        "Column": 71,
+        "ByteOffset": 5248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            nAndsMin, nAnds, i, float32(1.0)*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManDeepSynOne",
+      "Start": 1282,
+      "End": 5097,
+      "BodyStart": 1388,
+      "Original": "Gia_Man_t * Gia_ManDeepSynOne( int nNoImpr, int TimeOut, int nAnds, int Seed, int fUseTwo, int fVerbose )\n{\n    abctime nTimeToStop = TimeOut ? Abc_Clock() + TimeOut * CLOCKS_PER_SEC : 0;\n    abctime clkStart    = Abc_Clock();\n    int s, i, IterMax   = 100000, nAndsMin = -1, iIterLast = -1;\n    Gia_Man_t * pTemp   = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n    Gia_Man_t * pNew    = Gia_ManDup( pTemp );\n    Abc_Random(1);\n    for ( s = 0; s \u003c 10+Seed; s++ )\n        Abc_Random(0);\n    for ( i = 0; i \u003c IterMax; i++ )\n    {\n        unsigned Rand = Abc_Random(0);\n        int fDch = Rand \u0026 1;\n        //int fCom = (Rand \u003e\u003e 1) \u0026 3;\n        int fCom = (Rand \u003e\u003e 1) \u0026 1;\n        int fFx  = (Rand \u003e\u003e 2) \u0026 1;\n        int KLut = fUseTwo ? 2 + (i % 5) : 3 + (i % 4);\n        int fChange = 0;\n        char Command[1000];\n        char * pComp = NULL;\n        if ( fCom == 3 )\n            pComp = \"; \u0026put; compress2rs; compress2rs; compress2rs; \u0026get\";\n        else if ( fCom == 2 )\n            pComp = \"; \u0026put; compress2rs; compress2rs; \u0026get\";\n        else if ( fCom == 1 )\n            pComp = \"; \u0026put; compress2rs; \u0026get\";\n        else if ( fCom == 0 )\n            pComp = \"; \u0026dc2\";\n        sprintf( Command, \"\u0026dch%s; \u0026if -a -K %d; \u0026mfs -e -W 20 -L 20%s%s\",\n            fDch ? \" -f\" : \"\", KLut, fFx ? \"; \u0026fx\" : \"\", pComp );\n        if ( Abc_FrameIsBatchMode() )\n        {\n            if ( Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) )\n            {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return NULL;\n            }\n        }\n        else\n        {\n            Abc_FrameSetBatchMode( 1 );\n            if ( Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) )\n            {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return NULL;\n            }\n            Abc_FrameSetBatchMode( 0 );\n        }\n        pTemp = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n        if ( Gia_ManAndNum(pNew) \u003e Gia_ManAndNum(pTemp) )\n        {\n            Gia_ManStop( pNew );\n            pNew = Gia_ManDup( pTemp );\n            fChange = 1;\n            iIterLast = i;\n        }\n        else if ( Gia_ManAndNum(pNew) + Gia_ManAndNum(pNew)/10 \u003c Gia_ManAndNum(pTemp) ) \n        {\n            //printf( \"Updating\\n\" );\n            //Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pNew) );\n        }\n        if ( fChange \u0026\u0026 fVerbose )\n        {\n            printf( \"Iter %6d : \", i );\n            printf( \"Time %8.2f sec : \", (float)1.0*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );\n            printf( \"And = %6d  \", Gia_ManAndNum(pNew) );\n            printf( \"Lev = %3d  \", Gia_ManLevelNum(pNew) );\n            if ( fChange ) \n                printf( \"\u003c== best : \" );\n            else if ( fVerbose )\n                printf( \"           \" );\n            printf( \"%s\", Command );\n            printf( \"\\n\" );\n        }\n        if ( nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop )\n        {\n            printf( \"Runtime limit (%d sec) is reached after %d iterations.\\n\", TimeOut, i );\n            break;\n        }\n        if ( i - iIterLast \u003e nNoImpr )\n        {\n            printf( \"Completed %d iterations without improvement in %.2f seconds.\\n\", \n                nNoImpr, (float)1.0*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );\n            break;\n        }\n    }\n    if ( i == IterMax )\n        printf( \"Iteration limit (%d iters) is reached after %.2f seconds.\\n\", IterMax, (float)1.0*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );\n    else if ( nAnds \u0026\u0026 nAndsMin \u003c= nAnds )\n        printf( \"Quality goal (%d nodes \u003c= %d nodes) is achieved after %d iterations and %.2f seconds.\\n\", \n            nAndsMin, nAnds, i, (float)1.0*(Abc_Clock() - clkStart)/CLOCKS_PER_SEC );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDeepSynOne(nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = Abc_Clock() + TimeOut * int64(time.Second);\n    } else {\n        nTimeToStop = 0;\n    }\n    var clkStart abctime     = Abc_Clock();\n    var s int32;\n    var i int32;\n    var IterMax int32 = 100000;\n    var nAndsMin int32 = -1;\n    var iIterLast int32 = -1;\n    var pTemp *Gia_Man_t    = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n    var pNew *Gia_Man_t     = Gia_ManDup( pTemp );\n    Abc_Random(1);\n    for  s = 0; s \u003c 10+Seed; s++  {\n        Abc_Random(0);\n    }\n    for  i = 0; i \u003c IterMax; i++  {\n        var Rand uint32  = Abc_Random(0);\n        var fDch int32  = Rand \u0026 1;\n        //int fCom = (Rand \u003e\u003e 1) \u0026 3;\n        var fCom int32  = (Rand \u003e\u003e 1) \u0026 1;\n        var fFx int32   = (Rand \u003e\u003e 2) \u0026 1;\n        var KLut int32;\n        if fUseTwo != 0 {\n            KLut = 2 + (i % 5);\n        } else {\n            KLut = 3 + (i % 4);\n        }\n        var fChange int32;\n        var Command string // was [1000]byte in C\n\n        var pComp string  = nil;\n        if fCom == 3 {\n            pComp = \"; \u0026put; compress2rs; compress2rs; compress2rs; \u0026get\";\n        } else if fCom == 2 {\n            pComp = \"; \u0026put; compress2rs; compress2rs; \u0026get\";\n        } else if fCom == 1 {\n            pComp = \"; \u0026put; compress2rs; \u0026get\";\n        } else if fCom == 0 {\n            pComp = \"; \u0026dc2\"; }\n        Command = fmt.Sprintf(\"\u0026dch%s; \u0026if -a -K %d; \u0026mfs -e -W 20 -L 20%s%s\", fDch ? \" -f\" : \"\", KLut, fFx ? \"; \u0026fx\" : \"\", pComp);\n        if Abc_FrameIsBatchMode() {\n            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return nil;\n            }\n        \n        } else {\n            Abc_FrameSetBatchMode( 1 );\n            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return nil;\n            }\n            Abc_FrameSetBatchMode( 0 );\n        }\n        pTemp = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n        if Gia_ManAndNum(pNew) \u003e Gia_ManAndNum(pTemp) {\n            Gia_ManStop( pNew );\n            pNew = Gia_ManDup( pTemp );\n            fChange = 1;\n            iIterLast = i;\n        \n        } else if Gia_ManAndNum(pNew) + Gia_ManAndNum(pNew)/10 \u003c Gia_ManAndNum(pTemp) {\n            //printf( \"Updating\\n\" );\n            //Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pNew) );\n        }\n        if (fChange != 0) \u0026\u0026 (fVerbose != 0) {\n            fmt.Printf(\"Iter %6d : \", i);\n            fmt.Printf(\"Time %8.2f sec : \", float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n            fmt.Printf(\"And = %6d  \", Gia_ManAndNum(pNew));\n            fmt.Printf(\"Lev = %3d  \", Gia_ManLevelNum(pNew));\n            if fChange != 0 { \n                fmt.Printf(\"\u003c== best : \");\n            } else if fVerbose != 0 {\n                fmt.Printf(\"           \"); }\n            printf( \"%s\", Command );\n            fmt.Printf(\"\\n\");\n        }\n        if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            fmt.Printf(\"Runtime limit (%d sec) is reached after %d iterations.\\n\", TimeOut, i);\n            break;\n        }\n        if i - iIterLast \u003e nNoImpr {\n            fmt.Printf(\"Completed %d iterations without improvement in %.2f seconds.\\n\", nNoImpr, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n            break;\n        }\n    }\n    if i == IterMax {\n        fmt.Printf(\"Iteration limit (%d iters) is reached after %.2f seconds.\\n\", IterMax, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n    } else if (nAnds != 0) \u0026\u0026 nAndsMin \u003c= nAnds {\n        fmt.Printf(\"Quality goal (%d nodes \u003c= %d nodes) is achieved after %d iterations and %.2f seconds.\\n\", nAndsMin, nAnds, i, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second)); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDeepSyn",
+      "Start": 5098,
+      "End": 5806,
+      "BodyStart": 5231,
+      "Original": "Gia_Man_t * Gia_ManDeepSyn( Gia_Man_t * pGia, int nIters, int nNoImpr, int TimeOut, int nAnds, int Seed, int fUseTwo, int fVerbose )\n{\n    Gia_Man_t * pInit = Gia_ManDup(pGia);\n    Gia_Man_t * pBest = Gia_ManDup(pGia);\n    Gia_Man_t * pThis;\n    int i;\n    for ( i = 0; i \u003c nIters; i++ )\n    {\n        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pInit) );\n        pThis = Gia_ManDeepSynOne( nNoImpr, TimeOut, nAnds, Seed+i, fUseTwo, fVerbose );\n        if ( Gia_ManAndNum(pBest) \u003e Gia_ManAndNum(pThis) ) \n        {\n            Gia_ManStop( pBest );\n            pBest = pThis;\n        }\n        else \n            Gia_ManStop( pThis );\n        \n    }\n    Gia_ManStop( pInit );\n    return pBest;\n}",
+      "Draft": "func Gia_ManDeepSyn(pGia *Gia_Man_t, nIters int32, nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {\n    var pInit *Gia_Man_t  = Gia_ManDup(pGia);\n    var pBest *Gia_Man_t  = Gia_ManDup(pGia);\n    var pThis *Gia_Man_t;\n    var i int32;\n    for  i = 0; i \u003c nIters; i++  {\n        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pInit) );\n        pThis = Gia_ManDeepSynOne( nNoImpr, TimeOut, nAnds, Seed+i, fUseTwo, fVerbose );\n        if Gia_ManAndNum(pBest) \u003e Gia_ManAndNum(pThis) {\n            Gia_ManStop( pBest );\n            pBest = pThis;\n        \n        } else { \n            Gia_ManStop( pThis ); }\n        \n    }\n    Gia_ManStop( pInit );\n    return pBest;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaDeep.c::ternary::Gia_ManDeepSynOne",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManDeepSynOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1282,
+      "End": 5097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaDeep.c::Gia_ManDeepSynOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDeepSynOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1282,
+      "End": 5097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaDeep.c::Gia_ManDeepSyn",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDeepSyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5098,
+      "End": 5806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaDeep.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6053
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaDeep.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Experiments with synthesis.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaDeep.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"base/main/main.h\"\n//#include \"base/cmd/cmd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDeepSynOne(nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = Abc_Clock() + TimeOut * int64(time.Second);\n    } else {\n        nTimeToStop = 0;\n    }\n    var clkStart abctime     = Abc_Clock();\n    var s int32;\n    var i int32;\n    var IterMax int32 = 100000;\n    var nAndsMin int32 = -1;\n    var iIterLast int32 = -1;\n    var pTemp *Gia_Man_t    = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n    var pNew *Gia_Man_t     = Gia_ManDup( pTemp );\n    Abc_Random(1);\n    for  s = 0; s \u003c 10+Seed; s++  {\n        Abc_Random(0);\n    }\n    for  i = 0; i \u003c IterMax; i++  {\n        var Rand uint32  = Abc_Random(0);\n        var fDch int32  = Rand \u0026 1;\n        //int fCom = (Rand \u003e\u003e 1) \u0026 3;\n        var fCom int32  = (Rand \u003e\u003e 1) \u0026 1;\n        var fFx int32   = (Rand \u003e\u003e 2) \u0026 1;\n        var KLut int32;\n        if fUseTwo != 0 {\n            KLut = 2 + (i % 5);\n        } else {\n            KLut = 3 + (i % 4);\n        }\n        var fChange int32;\n        var Command string // was [1000]byte in C\n\n        var pComp string  = nil;\n        if fCom == 3 {\n            pComp = \"; \u0026put; compress2rs; compress2rs; compress2rs; \u0026get\";\n        } else if fCom == 2 {\n            pComp = \"; \u0026put; compress2rs; compress2rs; \u0026get\";\n        } else if fCom == 1 {\n            pComp = \"; \u0026put; compress2rs; \u0026get\";\n        } else if fCom == 0 {\n            pComp = \"; \u0026dc2\"; }\n        Command = fmt.Sprintf(\"\u0026dch%s; \u0026if -a -K %d; \u0026mfs -e -W 20 -L 20%s%s\", fDch ? \" -f\" : \"\", KLut, fFx ? \"; \u0026fx\" : \"\", pComp);\n        if Abc_FrameIsBatchMode() {\n            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return nil;\n            }\n        \n        } else {\n            Abc_FrameSetBatchMode( 1 );\n            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {\n                Abc_Print( 1, \"Something did not work out with the command \\\"%s\\\".\\n\", Command );\n                return nil;\n            }\n            Abc_FrameSetBatchMode( 0 );\n        }\n        pTemp = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());\n        if Gia_ManAndNum(pNew) \u003e Gia_ManAndNum(pTemp) {\n            Gia_ManStop( pNew );\n            pNew = Gia_ManDup( pTemp );\n            fChange = 1;\n            iIterLast = i;\n        \n        } else if Gia_ManAndNum(pNew) + Gia_ManAndNum(pNew)/10 \u003c Gia_ManAndNum(pTemp) {\n            //printf( \"Updating\\n\" );\n            //Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pNew) );\n        }\n        if (fChange != 0) \u0026\u0026 (fVerbose != 0) {\n            fmt.Printf(\"Iter %6d : \", i);\n            fmt.Printf(\"Time %8.2f sec : \", float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n            fmt.Printf(\"And = %6d  \", Gia_ManAndNum(pNew));\n            fmt.Printf(\"Lev = %3d  \", Gia_ManLevelNum(pNew));\n            if fChange != 0 { \n                fmt.Printf(\"\u003c== best : \");\n            } else if fVerbose != 0 {\n                fmt.Printf(\"           \"); }\n            printf( \"%s\", Command );\n            fmt.Printf(\"\\n\");\n        }\n        if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            fmt.Printf(\"Runtime limit (%d sec) is reached after %d iterations.\\n\", TimeOut, i);\n            break;\n        }\n        if i - iIterLast \u003e nNoImpr {\n            fmt.Printf(\"Completed %d iterations without improvement in %.2f seconds.\\n\", nNoImpr, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n            break;\n        }\n    }\n    if i == IterMax {\n        fmt.Printf(\"Iteration limit (%d iters) is reached after %.2f seconds.\\n\", IterMax, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));\n    } else if (nAnds != 0) \u0026\u0026 nAndsMin \u003c= nAnds {\n        fmt.Printf(\"Quality goal (%d nodes \u003c= %d nodes) is achieved after %d iterations and %.2f seconds.\\n\", nAndsMin, nAnds, i, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second)); }\n    return pNew;\n}\nfunc Gia_ManDeepSyn(pGia *Gia_Man_t, nIters int32, nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {\n    var pInit *Gia_Man_t  = Gia_ManDup(pGia);\n    var pBest *Gia_Man_t  = Gia_ManDup(pGia);\n    var pThis *Gia_Man_t;\n    var i int32;\n    for  i = 0; i \u003c nIters; i++  {\n        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pInit) );\n        pThis = Gia_ManDeepSynOne( nNoImpr, TimeOut, nAnds, Seed+i, fUseTwo, fVerbose );\n        if Gia_ManAndNum(pBest) \u003e Gia_ManAndNum(pThis) {\n            Gia_ManStop( pBest );\n            pBest = pThis;\n        \n        } else { \n            Gia_ManStop( pThis ); }\n        \n    }\n    Gia_ManStop( pInit );\n    return pBest;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

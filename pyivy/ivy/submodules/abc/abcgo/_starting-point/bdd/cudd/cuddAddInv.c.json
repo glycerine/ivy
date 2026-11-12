@@ -1,0 +1,150 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c",
+  "SHA256": "b8b51c2dc6c0eb44ea620069394c3d823cdd3f9c4efa1dc94ed64f600b958f73",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 16,
+        "ByteOffset": 4965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.err,\"Invalid epsilon\\n\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 81,
+        "Column": 1,
+        "ByteOffset": 3237
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addScalarInverse",
+      "Start": 4766,
+      "End": 5132,
+      "BodyStart": 4850,
+      "Original": "DdNode *\nCudd_addScalarInverse(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * epsilon)\n{\n    DdNode *res;\n\n    if (!cuddIsConstant(epsilon)) {\n        (void) fprintf(dd-\u003eerr,\"Invalid epsilon\\n\");\n        return(NULL);\n    }\n    do {\n        dd-\u003ereordered = 0;\n        res  = cuddAddScalarInverseRecur(dd,f,epsilon);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addScalarInverse(dd *DdManager, f *DdNode, epsilon *DdNode) *DdNode {\n    var res *DdNode;\n\n    // inlining of macro cuddIsConstant\n    if !((epsilon).index == CUDD_CONST_INDEX) {\n        (void) fmt.Fprintf(dd.err, \"Invalid epsilon\\n\");\n        return(nil);\n    }\n    for {\n        dd.reordered = 0;\n        res  = cuddAddScalarInverseRecur(dd,f,epsilon);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddScalarInverseRecur",
+      "Start": 5811,
+      "End": 6831,
+      "BodyStart": 5899,
+      "Original": "DdNode *\ncuddAddScalarInverseRecur(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * epsilon)\n{\n    DdNode *t, *e, *res;\n    CUDD_VALUE_TYPE value;\n\n    statLine(dd);\n    if (cuddIsConstant(f)) {\n        if (ddAbs(cuddV(f)) \u003c cuddV(epsilon)) return(NULL);\n        value = 1.0 / cuddV(f);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n\n    res = cuddCacheLookup2(dd,Cudd_addScalarInverse,f,epsilon);\n    if (res != NULL) return(res);\n\n    t = cuddAddScalarInverseRecur(dd,cuddT(f),epsilon);\n    if (t == NULL) return(NULL);\n    cuddRef(t);\n\n    e = cuddAddScalarInverseRecur(dd,cuddE(f),epsilon);\n    if (e == NULL) {\n        Cudd_RecursiveDeref(dd, t);\n        return(NULL);\n    }\n    cuddRef(e);\n\n    res = (t == e) ? t : cuddUniqueInter(dd,(int)f-\u003eindex,t,e);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(NULL);\n    }\n    cuddDeref(t);\n    cuddDeref(e);\n\n    cuddCacheInsert2(dd,Cudd_addScalarInverse,f,epsilon,res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddAddScalarInverseRecur(dd *DdManager, f *DdNode, epsilon *DdNode) *DdNode {\n    var t, e, res *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro ddAbs\n        // inlining of macro cuddV\n        if (((((f).type.value))\u003c0) ? -(((f).type.value)) : (((f).type.value))) \u003c ((epsilon).type.value) { return(nil); }\n        // inlining of macro cuddV\n        value = 1.0 / ((f).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n\n    res = cuddCacheLookup2(dd,Cudd_addScalarInverse,f,epsilon);\n    if res != nil { return(res); }\n\n    // inlining of macro cuddT\n    t = cuddAddScalarInverseRecur(dd,((f).type.kids.T),epsilon);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    // inlining of macro cuddE\n    e = cuddAddScalarInverseRecur(dd,((f).type.kids.E),epsilon);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        res = t;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),t,e);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n\n    cuddCacheInsert2(dd,Cudd_addScalarInverse,f,epsilon,res);\n\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::mechanical::do::5020",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4991,
+      "End": 4993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::Cudd_addScalarInverse",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addScalarInverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4766,
+      "End": 5132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::ternary::cuddAddScalarInverseRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddAddScalarInverseRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5811,
+      "End": 6831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::cuddAddScalarInverseRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddScalarInverseRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5811,
+      "End": 6831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3237,
+      "End": 3347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::macro-inline::5958",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5958,
+      "End": 5970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::macro-inline::6354",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6354,
+      "End": 6364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::macro-inline::6512",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6512,
+      "End": 6522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::macro-inline::6716",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6716,
+      "End": 6728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddInv.c::macro-inline::6734",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6734,
+      "End": 6746
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddInv.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Function to compute the scalar inverse of an ADD.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addScalarInverse()\n                \u003c/ul\u003e\n            Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddAddScalarInverseRecur()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddInv.c,v 1.9 2004/08/13 18:04:45 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the scalar inverse of an ADD.]\n  \n  Description [Computes an n ADD where the discriminants are the\n  multiplicative inverses of the corresponding discriminants of the\n  argument ADD.  Returns a pointer to the resulting ADD in case of\n  success. Returns NULL if any discriminants smaller than epsilon is\n  encountered.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_addScalarInverse(dd *DdManager, f *DdNode, epsilon *DdNode) *DdNode {\n    var res *DdNode;\n\n    // inlining of macro cuddIsConstant\n    if !((epsilon).index == CUDD_CONST_INDEX) {\n        (void) fmt.Fprintf(dd.err, \"Invalid epsilon\\n\");\n        return(nil);\n    }\n    for {\n        dd.reordered = 0;\n        res  = cuddAddScalarInverseRecur(dd,f,epsilon);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addScalarInverse */\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of addScalarInverse.]\n\n  Description [Returns a pointer to the resulting ADD in case of\n  success. Returns NULL if any discriminants smaller than epsilon is\n  encountered.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddAddScalarInverseRecur(dd *DdManager, f *DdNode, epsilon *DdNode) *DdNode {\n    var t, e, res *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    statLine(dd);\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro ddAbs\n        // inlining of macro cuddV\n        if (((((f).type.value))\u003c0) ? -(((f).type.value)) : (((f).type.value))) \u003c ((epsilon).type.value) { return(nil); }\n        // inlining of macro cuddV\n        value = 1.0 / ((f).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n\n    res = cuddCacheLookup2(dd,Cudd_addScalarInverse,f,epsilon);\n    if res != nil { return(res); }\n\n    // inlining of macro cuddT\n    t = cuddAddScalarInverseRecur(dd,((f).type.kids.T),epsilon);\n    if t == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(t).ref);\n\n    // inlining of macro cuddE\n    e = cuddAddScalarInverseRecur(dd,((f).type.kids.E),epsilon);\n    if e == nil {\n        Cudd_RecursiveDeref(dd, t);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(e).ref);\n\n    if t == e {\n        res = t;\n    } else {\n        res = cuddUniqueInter(dd,int32(f.index),t,e);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, t);\n        Cudd_RecursiveDeref(dd, e);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(t).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(e).ref);\n\n    cuddCacheInsert2(dd,Cudd_addScalarInverse,f,epsilon,res);\n\n    return(res);\n\n} /* end of cuddAddScalarInverseRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

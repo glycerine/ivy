@@ -1,0 +1,2074 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c",
+  "SHA256": "6a052bb7a8720883f55b224338b36b49286ea319e0cefb0e72b6a3540a5b100b",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Unknown network type.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 113,
+        "Column": 18,
+        "ByteOffset": 3322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Unknown network type.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 3567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Unknown functionality type.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 117,
+        "Column": 18,
+        "ByteOffset": 3576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Unknown functionality type.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 13,
+        "ByteOffset": 3754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: The library of the mapped network is not the global library.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 122,
+        "Column": 22,
+        "ByteOffset": 3763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: The library of the mapped network is not the global library.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 13,
+        "ByteOffset": 4053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Number of CIs does not match number of PIs and latches.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 130,
+        "Column": 22,
+        "ByteOffset": 4062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Number of CIs does not match number of PIs and latches.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 4159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 131,
+        "Column": 22,
+        "ByteOffset": 4168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 13,
+        "ByteOffset": 4248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 132,
+        "Column": 22,
+        "ByteOffset": 4257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Number of COs does not match number of POs, asserts, and latches.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 136,
+        "Column": 22,
+        "ByteOffset": 4459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Number of COs does not match number of POs, asserts, and latches.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 13,
+        "ByteOffset": 4566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 137,
+        "Column": 22,
+        "ByteOffset": 4575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 138,
+        "Column": 22,
+        "ByteOffset": 4664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 13,
+        "ByteOffset": 5354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Warning! Netlist has no nets.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 165,
+        "Column": 22,
+        "ByteOffset": 5363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Warning! Netlist has no nets.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 13,
+        "ByteOffset": 5637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A network that is not a netlist has nets.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 173,
+        "Column": 22,
+        "ByteOffset": 5646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A network that is not a netlist has nets.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 6256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Network contains a combinational loop.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 195,
+        "Column": 18,
+        "ByteOffset": 6265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Network contains a combinational loop.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 13,
+        "ByteOffset": 7915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: CI with ID %d is in the network but not in the name table.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 253,
+        "Column": 22,
+        "ByteOffset": 7924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: CI with ID %d is in the network but not in the name table.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 8222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: CO with ID %d is in the network but not in the name table.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 261,
+        "Column": 22,
+        "ByteOffset": 8231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: CO with ID %d is in the network but not in the name table.\\n\", pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 8371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pObj); // pObj should point to something here."
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 13,
+        "ByteOffset": 8816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object with ID %d is deleted but its name \\\"%s\\\" remains in the name table.\\n\", NameId, pName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 276,
+        "Column": 22,
+        "ByteOffset": 8825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object with ID %d is deleted but its name \\\"%s\\\" remains in the name table.\\n\", NameId, pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 13,
+        "ByteOffset": 9858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is in the PI list but is not a PI.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 317,
+        "Column": 22,
+        "ByteOffset": 9867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is in the PI list but is not a PI.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 13,
+        "ByteOffset": 10049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 321,
+        "Column": 22,
+        "ByteOffset": 10058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 13,
+        "ByteOffset": 10223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has fanins.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 325,
+        "Column": 22,
+        "ByteOffset": 10232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has fanins.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 10488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is a PI but is not in the PI list.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 333,
+        "Column": 22,
+        "ByteOffset": 10497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is a PI but is not in the PI list.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 13,
+        "ByteOffset": 11170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in the PO list but is not a PO.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 360,
+        "Column": 22,
+        "ByteOffset": 11179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in the PO list but is not a PO.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 13,
+        "ByteOffset": 11358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 364,
+        "Column": 22,
+        "ByteOffset": 11367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 13,
+        "ByteOffset": 11533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" does not have one fanin (but %d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 368,
+        "Column": 22,
+        "ByteOffset": 11542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" does not have one fanin (but %d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 372,
+        "Column": 13,
+        "ByteOffset": 11743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has %d fanout(s).\\n\", Abc_ObjName(pObj), Abc_ObjFanoutNum(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 372,
+        "Column": 22,
+        "ByteOffset": 11752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has %d fanout(s).\\n\", Abc_ObjName(pObj), Abc_ObjFanoutNum(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 13,
+        "ByteOffset": 12038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in a PO but is not in the PO list.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 380,
+        "Column": 22,
+        "ByteOffset": 12047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in a PO but is not in the PO list.\\n\", Abc_ObjName(pObj), pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 12721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" does not belong to the network.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 407,
+        "Column": 18,
+        "ByteOffset": 12730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" does not belong to the network.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 12948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" has incorrect ID.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 412,
+        "Column": 18,
+        "ByteOffset": 12957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" has incorrect ID.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 13346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanin \", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 423,
+        "Column": 22,
+        "ByteOffset": 13355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanin \", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 13,
+        "ByteOffset": 13435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\\"%s\\\" but the fanin does not have it as a fanout.\\n\", Abc_ObjName(pFanin) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 424,
+        "Column": 22,
+        "ByteOffset": 13444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\\"%s\\\" but the fanin does not have it as a fanout.\\n\", Abc_ObjName(pFanin) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 13,
+        "ByteOffset": 13787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanout \", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 432,
+        "Column": 22,
+        "ByteOffset": 13796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanout \", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 13,
+        "ByteOffset": 13877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\\"%s\\\" but the fanout does not have it as a fanin.\\n\", Abc_ObjName(pFanout) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 433,
+        "Column": 22,
+        "ByteOffset": 13886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\\"%s\\\" but the fanout does not have it as a fanin.\\n\", Abc_ObjName(pFanout) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 17,
+        "ByteOffset": 14241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Warning: Node %s has\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 443,
+        "Column": 17,
+        "ByteOffset": 14310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" duplicated fanin %s.\\n\", Abc_ObjName(Abc_ObjFanin(pObj,k)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 17,
+        "ByteOffset": 14755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Warning: Node %s has\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 17,
+        "ByteOffset": 14824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" duplicated fanout %s.\\n\", Abc_ObjName(Abc_ObjFanout(pObj,k)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 9,
+        "ByteOffset": 15321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" is not driven.\\n\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 478,
+        "Column": 18,
+        "ByteOffset": 15330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" is not driven.\\n\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 15471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" has more than one driver.\\n\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 482,
+        "Column": 18,
+        "ByteOffset": 15480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" has more than one driver.\\n\", Abc_ObjName(pNet) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 9,
+        "ByteOffset": 16059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node (id = %d) has no net to drive.\\n\", pNode.Id );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 502,
+        "Column": 18,
+        "ByteOffset": 16068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Node (id = %d) has no net to drive.\\n\", pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 16317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: An internal node \\\"%s\\\" does not have a logic function.\\n\", Abc_ObjNameNet(pNode) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 509,
+        "Column": 18,
+        "ByteOffset": 16326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: An internal node \\\"%s\\\" does not have a logic function.\\n\", Abc_ObjNameNet(pNode) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 515,
+        "Column": 13,
+        "ByteOffset": 16628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: SOP check for node \\\"%s\\\" has failed.\\n\", Abc_ObjNameNet(pNode) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 515,
+        "Column": 22,
+        "ByteOffset": 16637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"NodeCheck: SOP check for node \\\"%s\\\" has failed.\\n\", Abc_ObjNameNet(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 523,
+        "Column": 9,
+        "ByteOffset": 16977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 9,
+        "ByteOffset": 17456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" is in a latch list but is not a latch.\\n\", Abc_ObjName(pLatch) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 543,
+        "Column": 18,
+        "ByteOffset": 17465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" is in a latch list but is not a latch.\\n\", Abc_ObjName(pLatch) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 548,
+        "Column": 9,
+        "ByteOffset": 17764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has incorrect reset value (%d).\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 548,
+        "Column": 18,
+        "ByteOffset": 17773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has incorrect reset value (%d).\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 9,
+        "ByteOffset": 18030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(pLatch), Abc_ObjFaninNum(pLatch) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 554,
+        "Column": 18,
+        "ByteOffset": 18039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(pLatch), Abc_ObjFaninNum(pLatch) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 559,
+        "Column": 9,
+        "ByteOffset": 18276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(pLatch), Abc_ObjFanoutNum(pLatch) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 559,
+        "Column": 18,
+        "ByteOffset": 18285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(pLatch), Abc_ObjFanoutNum(pLatch) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 564,
+        "Column": 9,
+        "ByteOffset": 18543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 564,
+        "Column": 18,
+        "ByteOffset": 18552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 9,
+        "ByteOffset": 18862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 570,
+        "Column": 18,
+        "ByteOffset": 18871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 9,
+        "ByteOffset": 19183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Output of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 576,
+        "Column": 18,
+        "ByteOffset": 19192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"NodeCheck: Output of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 9,
+        "ByteOffset": 19868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks have different number of primary inputs.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 607,
+        "Column": 12,
+        "ByteOffset": 20090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)) ) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 608,
+        "Column": 13,
+        "ByteOffset": 20171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Primary input #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 9,
+        "ByteOffset": 20849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks have different number of primary outputs.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 637,
+        "Column": 12,
+        "ByteOffset": 21072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)) ) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 13,
+        "ByteOffset": 21153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Primary output #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 660,
+        "Column": 5,
+        "ByteOffset": 21782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasOnlyLatchBoxes(pNtk1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 661,
+        "Column": 5,
+        "ByteOffset": 21829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasOnlyLatchBoxes(pNtk2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 665,
+        "Column": 9,
+        "ByteOffset": 21970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks have different number of latches.\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 671,
+        "Column": 12,
+        "ByteOffset": 22186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))) ) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 672,
+        "Column": 13,
+        "ByteOffset": 22300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Box #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 728,
+        "Column": 5,
+        "ByteOffset": 23978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 735,
+        "Column": 9,
+        "ByteOffset": 24211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNtkNext != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 760,
+        "Column": 5,
+        "ByteOffset": 24848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk.pDesign );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 786,
+        "Column": 12,
+        "ByteOffset": 25673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp( *pName1, *pName2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 805,
+        "Column": 5,
+        "ByteOffset": 26131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 811,
+        "Column": 13,
+        "ByteOffset": 26421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp( (char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i) ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 812,
+        "Column": 13,
+        "ByteOffset": 26510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkCheck: Repeated CI names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 836,
+        "Column": 5,
+        "ByteOffset": 27155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 843,
+        "Column": 13,
+        "ByteOffset": 27497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp( (char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i) ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 844,
+        "Column": 13,
+        "ByteOffset": 27586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkCheck: Repeated CO names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 868,
+        "Column": 5,
+        "ByteOffset": 28285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 875,
+        "Column": 9,
+        "ByteOffset": 28569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !strcmp( Abc_ObjName(pObj), Abc_ObjName(pObjCi) ) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 875,
+        "Column": 18,
+        "ByteOffset": 28578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !strcmp( Abc_ObjName(pObj), Abc_ObjName(pObjCi) ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 878,
+        "Column": 13,
+        "ByteOffset": 28710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkCheck: A CI/CO pair share the name (%s) but do not link directly. The name of the CO fanin is %s.\\n\", "
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 567
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 549,
+        "Column": 1,
+        "ByteOffset": 17027
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjNameNet",
+      "Start": 1542,
+      "End": 1719,
+      "BodyStart": 1598,
+      "Original": "static inline char * Abc_ObjNameNet( Abc_Obj_t * pObj ) { return (Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NtkIsNetlist(pObj-\u003epNtk)) ? Abc_ObjName(Abc_ObjFanout0(pObj)) : Abc_ObjName(pObj); }",
+      "Draft": "func Abc_ObjNameNet(pObj *Abc_Obj_t) string { if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NtkIsNetlist(pObj.pNtk) {\n    return Abc_ObjName(Abc_ObjFanout0(pObj));\n} else {\n    return Abc_ObjName(pObj);\n} }"
+    },
+    {
+      "Name": "Abc_NtkCheck",
+      "Start": 2211,
+      "End": 2324,
+      "BodyStart": 2248,
+      "Original": "int Abc_NtkCheck( Abc_Ntk_t * pNtk )\n{ \n   return !Abc_FrameIsFlagEnabled( \"check\" ) || Abc_NtkDoCheck( pNtk );\n}",
+      "Draft": "func Abc_NtkCheck(pNtk *Abc_Ntk_t) int32 { \n   return !Abc_FrameIsFlagEnabled( \"check\" ) || Abc_NtkDoCheck( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckRead",
+      "Start": 2610,
+      "End": 2730,
+      "BodyStart": 2651,
+      "Original": "int Abc_NtkCheckRead( Abc_Ntk_t * pNtk )\n{\n   return !Abc_FrameIsFlagEnabled( \"checkread\" ) || Abc_NtkDoCheck( pNtk );\n}",
+      "Draft": "func Abc_NtkCheckRead(pNtk *Abc_Ntk_t) int32 {\n   return !Abc_FrameIsFlagEnabled( \"checkread\" ) || Abc_NtkDoCheck( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_NtkDoCheck",
+      "Start": 3002,
+      "End": 7214,
+      "BodyStart": 3041,
+      "Original": "int Abc_NtkDoCheck( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pNet, * pNode;\n    int i;\n\n    // check network types\n    if ( !Abc_NtkIsNetlist(pNtk) \u0026\u0026 !Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNtk) )\n    {\n        fprintf( stdout, \"NetworkCheck: Unknown network type.\\n\" );\n        return 0;\n    }\n    if ( !Abc_NtkHasSop(pNtk) \u0026\u0026 !Abc_NtkHasBdd(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasBlackbox(pNtk) )\n    {\n        fprintf( stdout, \"NetworkCheck: Unknown functionality type.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkHasMapping(pNtk) )\n    {\n        if ( pNtk-\u003epManFunc != Abc_FrameReadLibGen() )\n        {\n            fprintf( stdout, \"NetworkCheck: The library of the mapped network is not the global library.\\n\" );\n            return 0;\n        }\n    }\n\n    if ( Abc_NtkHasOnlyLatchBoxes(pNtk) )\n    {\n        // check CI/CO numbers\n        if ( Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCiNum(pNtk) )\n        {\n            fprintf( stdout, \"NetworkCheck: Number of CIs does not match number of PIs and latches.\\n\" );\n            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );\n            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );\n            return 0;\n        }\n        if ( Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCoNum(pNtk) )\n        {\n            fprintf( stdout, \"NetworkCheck: Number of COs does not match number of POs, asserts, and latches.\\n\" );\n            fprintf( stdout, \"One possible reason is that latches are added twice:\\n\" );\n            fprintf( stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\" );\n            return 0;\n        }\n    }\n\n    // check the names\n    if ( !Abc_NtkCheckNames( pNtk ) )\n        return 0;\n\n    // check PIs and POs\n    Abc_NtkCleanCopy( pNtk );\n    if ( !Abc_NtkCheckPis( pNtk ) )\n        return 0;\n    if ( !Abc_NtkCheckPos( pNtk ) )\n        return 0;\n\n    if ( Abc_NtkHasBlackbox(pNtk) )\n        return 1;\n\n    // check the connectivity of objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NtkCheckObj( pNtk, pObj ) )\n            return 0;\n\n    // if it is a netlist change nets and latches\n    if ( Abc_NtkIsNetlist(pNtk) )\n    {\n        if ( Abc_NtkNetNum(pNtk) == 0 )\n            fprintf( stdout, \"NetworkCheck: Warning! Netlist has no nets.\\n\" );\n        // check the nets\n        Abc_NtkForEachNet( pNtk, pNet, i )\n            if ( !Abc_NtkCheckNet( pNtk, pNet ) )\n                return 0;\n    }\n    else\n    {\n        if ( Abc_NtkNetNum(pNtk) != 0 )\n        {\n            fprintf( stdout, \"NetworkCheck: A network that is not a netlist has nets.\\n\" );\n            return 0;\n        }\n    }\n\n    // check the nodes\n    if ( Abc_NtkIsStrash(pNtk) )\n        Abc_AigCheck( (Abc_Aig_t *)pNtk-\u003epManFunc );\n    else\n    {\n        Abc_NtkForEachNode( pNtk, pNode, i )\n            if ( !Abc_NtkCheckNode( pNtk, pNode ) )\n                return 0;\n    }\n\n    // check the latches\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        if ( !Abc_NtkCheckLatch( pNtk, pNode ) )\n            return 0;\n\n    // finally, check for combinational loops\n//  clk = Abc_Clock();\n    if ( !Abc_NtkIsAcyclic( pNtk ) )\n    {\n        fprintf( stdout, \"NetworkCheck: Network contains a combinational loop.\\n\" );\n        return 0;\n    }\n//  ABC_PRT( \"Acyclic  \", Abc_Clock() - clk );\n\n    // check the EXDC network if present\n    if ( pNtk-\u003epExdc )\n        Abc_NtkCheck( pNtk-\u003epExdc );\n/*\n    // check the hierarchy\n    if ( Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk-\u003etName2Model )\n    {\n        stmm_generator * gen;\n        Abc_Ntk_t * pNtkTemp;\n        char * pName;\n        // check other networks\n        stmm_foreach_item( pNtk-\u003etName2Model, gen, \u0026pName, (char **)\u0026pNtkTemp )\n        {\n            pNtkTemp-\u003efHiePath = pNtkTemp-\u003efHieVisited = 0;\n            if ( !Abc_NtkCheck( pNtkTemp ) )\n                return 0;\n        }\n        // check acyclic dependency of the models\n        if ( !Abc_NtkIsAcyclicHierarchy( pNtk ) )\n        {\n            fprintf( stdout, \"NetworkCheck: Network hierarchical dependences contains a cycle.\\n\" );\n            return 0;\n        }\n    }\n*/\n    return 1;\n}",
+      "Draft": "func Abc_NtkDoCheck(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pNet, pNode *Abc_Obj_t;\n    var i int32;\n\n    // check network types\n    if !Abc_NtkIsNetlist(pNtk) \u0026\u0026 !Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Unknown network type.\\n\");\n        return 0;\n    }\n    if !Abc_NtkHasSop(pNtk) \u0026\u0026 !Abc_NtkHasBdd(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasBlackbox(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Unknown functionality type.\\n\");\n        return 0;\n    }\n    if Abc_NtkHasMapping(pNtk) {\n        if pNtk.pManFunc != Abc_FrameReadLibGen() {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: The library of the mapped network is not the global library.\\n\");\n            return 0;\n        }\n    }\n\n    if Abc_NtkHasOnlyLatchBoxes(pNtk) {\n        // check CI/CO numbers\n        if Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCiNum(pNtk) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Number of CIs does not match number of PIs and latches.\\n\");\n            fmt.Fprintf(os.Stdout, \"One possible reason is that latches are added twice:\\n\");\n            fmt.Fprintf(os.Stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\");\n            return 0;\n        }\n        if Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCoNum(pNtk) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Number of COs does not match number of POs, asserts, and latches.\\n\");\n            fmt.Fprintf(os.Stdout, \"One possible reason is that latches are added twice:\\n\");\n            fmt.Fprintf(os.Stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\");\n            return 0;\n        }\n    }\n\n    // check the names\n    if !(Abc_NtkCheckNames( pNtk ) != 0) {\n        return 0; }\n\n    // check PIs and POs\n    Abc_NtkCleanCopy( pNtk );\n    if !(Abc_NtkCheckPis( pNtk ) != 0) {\n        return 0; }\n    if !(Abc_NtkCheckPos( pNtk ) != 0) {\n        return 0; }\n\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n\n    // check the connectivity of objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NtkCheckObj( pNtk, pObj ) )\n            return 0;\n\n    // if it is a netlist change nets and latches\n    if Abc_NtkIsNetlist(pNtk) {\n        if Abc_NtkNetNum(pNtk) == 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Warning! Netlist has no nets.\\n\"); }\n        // check the nets\n        Abc_NtkForEachNet( pNtk, pNet, i )\n            if ( !Abc_NtkCheckNet( pNtk, pNet ) )\n                return 0;\n    \n    } else {\n        if Abc_NtkNetNum(pNtk) != 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A network that is not a netlist has nets.\\n\");\n            return 0;\n        }\n    }\n\n    // check the nodes\n    if Abc_NtkIsStrash(pNtk) {\n        Abc_AigCheck( (Abc_Aig_t *)pNtk.pManFunc );\n    } else {\n        Abc_NtkForEachNode( pNtk, pNode, i )\n            if ( !Abc_NtkCheckNode( pNtk, pNode ) )\n                return 0;\n    }\n\n    // check the latches\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        if ( !Abc_NtkCheckLatch( pNtk, pNode ) )\n            return 0;\n\n    // finally, check for combinational loops\n//  clk = Abc_Clock();\n    if !Abc_NtkIsAcyclic( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Network contains a combinational loop.\\n\");\n        return 0;\n    }\n//  ABC_PRT( \"Acyclic  \", Abc_Clock() - clk );\n\n    // check the EXDC network if present\n    if pNtk.pExdc {\n        Abc_NtkCheck( pNtk.pExdc ); }\n/*\n    // check the hierarchy\n    if ( Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk-\u003etName2Model )\n    {\n        stmm_generator * gen;\n        Abc_Ntk_t * pNtkTemp;\n        char * pName;\n        // check other networks\n        stmm_foreach_item( pNtk-\u003etName2Model, gen, \u0026pName, (char **)\u0026pNtkTemp )\n        {\n            pNtkTemp-\u003efHiePath = pNtkTemp-\u003efHieVisited = 0;\n            if ( !Abc_NtkCheck( pNtkTemp ) )\n                return 0;\n        }\n        // check acyclic dependency of the models\n        if ( !Abc_NtkIsAcyclicHierarchy( pNtk ) )\n        {\n            fprintf( stdout, \"NetworkCheck: Network hierarchical dependences contains a cycle.\\n\" );\n            return 0;\n        }\n    }\n*/\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckNames",
+      "Start": 7467,
+      "End": 9415,
+      "BodyStart": 7509,
+      "Original": "int Abc_NtkCheckNames( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj = NULL; // Ensure pObj isn't used uninitialized.\n    Vec_Int_t * vNameIds;\n    char * pName;\n    int i, NameId;\n\n    if ( Abc_NtkIsNetlist(pNtk) )\n        return 1;\n\n    // check that each CI/CO has a name\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanout0Ntk(pObj);\n        if ( Nm_ManFindNameById(pObj-\u003epNtk-\u003epManName, pObj-\u003eId) == NULL )\n        {\n            fprintf( stdout, \"NetworkCheck: CI with ID %d is in the network but not in the name table.\\n\", pObj-\u003eId );\n            return 0;\n        }\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanin0Ntk(pObj);\n        if ( Nm_ManFindNameById(pObj-\u003epNtk-\u003epManName, pObj-\u003eId) == NULL )\n        {\n            fprintf( stdout, \"NetworkCheck: CO with ID %d is in the network but not in the name table.\\n\", pObj-\u003eId );\n            return 0;\n        }\n    }\n\n    assert(pObj); // pObj should point to something here.\n\n    // return the array of all IDs, which have names\n    vNameIds = Nm_ManReturnNameIds( pNtk-\u003epManName );\n    // make sure that these IDs correspond to live objects\n    Vec_IntForEachEntry( vNameIds, NameId, i )\n    {\n        if ( Vec_PtrEntry( pNtk-\u003evObjs, NameId ) == NULL )\n        {\n            Vec_IntFree( vNameIds );\n            pName = Nm_ManFindNameById(pObj-\u003epNtk-\u003epManName, NameId);\n            fprintf( stdout, \"NetworkCheck: Object with ID %d is deleted but its name \\\"%s\\\" remains in the name table.\\n\", NameId, pName );\n            return 0;\n        }\n    }\n    Vec_IntFree( vNameIds );\n\n    // make sure the CI names are unique\n    if ( !Abc_NtkCheckUniqueCiNames(pNtk) )\n        return 0;\n\n    // make sure the CO names are unique\n    if ( !Abc_NtkCheckUniqueCoNames(pNtk) )\n        return 0;\n\n    // make sure that if a CO has the same name as a CI, they point directly\n    if ( !Abc_NtkCheckUniqueCioNames(pNtk) )\n        return 0;\n\n    return 1;\n}",
+      "Draft": "func Abc_NtkCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t  = nil; // Ensure pObj isn't used uninitialized.\n    var vNameIds *Vec_Int_t;\n    var pName string;\n    var i, NameId int32;\n\n    if Abc_NtkIsNetlist(pNtk) {\n        return 1; }\n\n    // check that each CI/CO has a name\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanout0Ntk(pObj);\n        if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) == nil {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: CI with ID %d is in the network but not in the name table.\\n\", pObj.Id);\n            return 0;\n        }\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanin0Ntk(pObj);\n        if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) == nil {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: CO with ID %d is in the network but not in the name table.\\n\", pObj.Id);\n            return 0;\n        }\n    }\n\n    assert((pObj != nil), \"pObj\"); // pObj should point to something here.\n\n    // return the array of all IDs, which have names\n    vNameIds = Nm_ManReturnNameIds( pNtk.pManName );\n    // make sure that these IDs correspond to live objects\n    Vec_IntForEachEntry( vNameIds, NameId, i )\n    {\n        if Vec_PtrEntry( pNtk.vObjs, NameId ) == nil {\n            Vec_IntFree( vNameIds );\n            pName = Nm_ManFindNameById(pObj.pNtk.pManName, NameId);\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object with ID %d is deleted but its name \\\"%s\\\" remains in the name table.\\n\", NameId, pName);\n            return 0;\n        }\n    }\n    Vec_IntFree( vNameIds );\n\n    // make sure the CI names are unique\n    if !(Abc_NtkCheckUniqueCiNames(pNtk) != 0) {\n        return 0; }\n\n    // make sure the CO names are unique\n    if !(Abc_NtkCheckUniqueCoNames(pNtk) != 0) {\n        return 0; }\n\n    // make sure that if a CO has the same name as a CI, they point directly\n    if !(Abc_NtkCheckUniqueCioNames(pNtk) != 0) {\n        return 0; }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckPis",
+      "Start": 9682,
+      "End": 10771,
+      "BodyStart": 9722,
+      "Original": "int Abc_NtkCheckPis( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n\n    // check that PIs are indeed PIs\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsPi(pObj) )\n        {\n            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is in the PI list but is not a PI.\\n\", Abc_ObjName(pObj), pObj-\u003eId );\n            return 0;\n        }\n        if ( pObj-\u003epData )\n        {\n            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );\n            return 0;\n        }\n        if ( Abc_ObjFaninNum(pObj) \u003e 0 )\n        {\n            fprintf( stdout, \"NetworkCheck: A PI \\\"%s\\\" has fanins.\\n\", Abc_ObjName(pObj) );\n            return 0;\n        }\n        pObj-\u003epCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( pObj-\u003epCopy == NULL \u0026\u0026 Abc_ObjIsPi(pObj) )\n        {\n            fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is a PI but is not in the PI list.\\n\", Abc_ObjName(pObj), pObj-\u003eId );\n            return 0;\n        }\n        pObj-\u003epCopy = NULL;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCheckPis(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that PIs are indeed PIs\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        if !Abc_ObjIsPi(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is in the PI list but is not a PI.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        if pObj.pData {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PI \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        if Abc_ObjFaninNum(pObj) \u003e 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PI \\\"%s\\\" has fanins.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        pObj.pCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if pObj.pCopy == nil \u0026\u0026 Abc_ObjIsPi(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is a PI but is not in the PI list.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        pObj.pCopy = nil;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckPos",
+      "Start": 11037,
+      "End": 12376,
+      "BodyStart": 11077,
+      "Original": "int Abc_NtkCheckPos( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n\n    // check that POs are indeed POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsPo(pObj) )\n        {\n            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in the PO list but is not a PO.\\n\", Abc_ObjName(pObj), pObj-\u003eId );\n            return 0;\n        }\n        if ( pObj-\u003epData )\n        {\n            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj) );\n            return 0;\n        }\n        if ( Abc_ObjFaninNum(pObj) != 1 )\n        {\n            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" does not have one fanin (but %d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj) );\n            return 0;\n        }\n        if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        {\n            fprintf( stdout, \"NetworkCheck: A PO \\\"%s\\\" has %d fanout(s).\\n\", Abc_ObjName(pObj), Abc_ObjFanoutNum(pObj) );\n            return 0;\n        }\n        pObj-\u003epCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if ( pObj-\u003epCopy == NULL \u0026\u0026 Abc_ObjIsPo(pObj) )\n        {\n            fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in a PO but is not in the PO list.\\n\", Abc_ObjName(pObj), pObj-\u003eId );\n            return 0;\n        }\n        pObj-\u003epCopy = NULL;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCheckPos(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that POs are indeed POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if !Abc_ObjIsPo(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in the PO list but is not a PO.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        if pObj.pData {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        if Abc_ObjFaninNum(pObj) != 1 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" does not have one fanin (but %d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj));\n            return 0;\n        }\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" has %d fanout(s).\\n\", Abc_ObjName(pObj), Abc_ObjFanoutNum(pObj));\n            return 0;\n        }\n        pObj.pCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if pObj.pCopy == nil \u0026\u0026 Abc_ObjIsPo(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in a PO but is not in the PO list.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        pObj.pCopy = nil;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckObj",
+      "Start": 12651,
+      "End": 15121,
+      "BodyStart": 12709,
+      "Original": "int Abc_NtkCheckObj( Abc_Ntk_t * pNtk, Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pFanin, * pFanout;\n    int Value = 1;\n    int i, k;\n\n    // check the network\n    if ( pObj-\u003epNtk != pNtk )\n    {\n        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" does not belong to the network.\\n\", Abc_ObjName(pObj) );\n        return 0;\n    }\n    // check the object ID\n    if ( pObj-\u003eId \u003c 0 || (int)pObj-\u003eId \u003e= Abc_NtkObjNumMax(pNtk) )\n    {\n        fprintf( stdout, \"NetworkCheck: Object \\\"%s\\\" has incorrect ID.\\n\", Abc_ObjName(pObj) );\n        return 0;\n    }\n\n    if ( !Abc_FrameIsFlagEnabled(\"checkfio\") )\n        return Value;\n\n    // go through the fanins of the object and make sure fanins have this object as a fanout\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if ( Vec_IntFind( \u0026pFanin-\u003evFanouts, pObj-\u003eId ) == -1 )\n        {\n            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanin \", Abc_ObjName(pObj) );\n            fprintf( stdout, \"\\\"%s\\\" but the fanin does not have it as a fanout.\\n\", Abc_ObjName(pFanin) );\n            Value = 0;\n        }\n    }\n    // go through the fanouts of the object and make sure fanouts have this object as a fanin\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        if ( Vec_IntFind( \u0026pFanout-\u003evFanins, pObj-\u003eId ) == -1 )\n        {\n            fprintf( stdout, \"NodeCheck: Object \\\"%s\\\" has fanout \", Abc_ObjName(pObj) );\n            fprintf( stdout, \"\\\"%s\\\" but the fanout does not have it as a fanin.\\n\", Abc_ObjName(pFanout) );\n            Value = 0;\n        }\n    }\n\n    // make sure fanins are not duplicated\n    for ( i = 0; i \u003c pObj-\u003evFanins.nSize; i++ )\n        for ( k = i + 1; k \u003c pObj-\u003evFanins.nSize; k++ )\n            if ( pObj-\u003evFanins.pArray[k] == pObj-\u003evFanins.pArray[i] )\n            {\n                printf( \"Warning: Node %s has\", Abc_ObjName(pObj) );\n                printf( \" duplicated fanin %s.\\n\", Abc_ObjName(Abc_ObjFanin(pObj,k)) );\n            }\n\n    // save time: do not check large fanout lists\n    if ( pObj-\u003evFanouts.nSize \u003e 100 )\n        return Value;\n\n    // make sure fanouts are not duplicated\n    for ( i = 0; i \u003c pObj-\u003evFanouts.nSize; i++ )\n        for ( k = i + 1; k \u003c pObj-\u003evFanouts.nSize; k++ )\n            if ( pObj-\u003evFanouts.pArray[k] == pObj-\u003evFanouts.pArray[i] )\n            {\n                printf( \"Warning: Node %s has\", Abc_ObjName(pObj) );\n                printf( \" duplicated fanout %s.\\n\", Abc_ObjName(Abc_ObjFanout(pObj,k)) );\n            }\n\n    return Value;\n}",
+      "Draft": "func Abc_NtkCheckObj(pNtk *Abc_Ntk_t, pObj *Abc_Obj_t) int32 {\n    var pFanin, pFanout *Abc_Obj_t;\n    var Value int32  = 1;\n    var i, k int32;\n\n    // check the network\n    if pObj.pNtk != pNtk {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" does not belong to the network.\\n\", Abc_ObjName(pObj));\n        return 0;\n    }\n    // check the object ID\n    if pObj.Id \u003c 0 || int32(pObj.Id) \u003e= Abc_NtkObjNumMax(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" has incorrect ID.\\n\", Abc_ObjName(pObj));\n        return 0;\n    }\n\n    if !Abc_FrameIsFlagEnabled(\"checkfio\") {\n        return Value; }\n\n    // go through the fanins of the object and make sure fanins have this object as a fanout\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if Vec_IntFind( \u0026pFanin.vFanouts, pObj.Id ) == -1 {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: Object \\\"%s\\\" has fanin \", Abc_ObjName(pObj));\n            fmt.Fprintf(os.Stdout, \"\\\"%s\\\" but the fanin does not have it as a fanout.\\n\", Abc_ObjName(pFanin));\n            Value = 0;\n        }\n    }\n    // go through the fanouts of the object and make sure fanouts have this object as a fanin\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        if Vec_IntFind( \u0026pFanout.vFanins, pObj.Id ) == -1 {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: Object \\\"%s\\\" has fanout \", Abc_ObjName(pObj));\n            fmt.Fprintf(os.Stdout, \"\\\"%s\\\" but the fanout does not have it as a fanin.\\n\", Abc_ObjName(pFanout));\n            Value = 0;\n        }\n    }\n\n    // make sure fanins are not duplicated\n    for  i = 0; i \u003c pObj.vFanins.nSize; i++  {\n        for  k = i + 1; k \u003c pObj.vFanins.nSize; k++  {\n            if pObj.vFanins.pArray[k] == pObj.vFanins.pArray[i] {\n                fmt.Printf(\"Warning: Node %s has\", Abc_ObjName(pObj));\n                fmt.Printf(\" duplicated fanin %s.\\n\", Abc_ObjName(Abc_ObjFanin(pObj,k)));\n            }\n        }\n    }\n\n    // save time: do not check large fanout lists\n    if pObj.vFanouts.nSize \u003e 100 {\n        return Value; }\n\n    // make sure fanouts are not duplicated\n    for  i = 0; i \u003c pObj.vFanouts.nSize; i++  {\n        for  k = i + 1; k \u003c pObj.vFanouts.nSize; k++  {\n            if pObj.vFanouts.pArray[k] == pObj.vFanouts.pArray[i] {\n                fmt.Printf(\"Warning: Node %s has\", Abc_ObjName(pObj));\n                fmt.Printf(\" duplicated fanout %s.\\n\", Abc_ObjName(Abc_ObjFanout(pObj,k)));\n            }\n        }\n    }\n\n    return Value;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckNet",
+      "Start": 15387,
+      "End": 15790,
+      "BodyStart": 15445,
+      "Original": "int Abc_NtkCheckNet( Abc_Ntk_t * pNtk, Abc_Obj_t * pNet )\n{\n    if ( Abc_ObjFaninNum(pNet) == 0 )\n    {\n        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" is not driven.\\n\", Abc_ObjName(pNet) );\n        return 0;\n    }\n    if ( Abc_ObjFaninNum(pNet) \u003e 1 )\n    {\n        fprintf( stdout, \"NetworkCheck: Net \\\"%s\\\" has more than one driver.\\n\", Abc_ObjName(pNet) );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCheckNet(pNtk *Abc_Ntk_t, pNet *Abc_Obj_t) int32 {\n    if Abc_ObjFaninNum(pNet) == 0 {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" is not driven.\\n\", Abc_ObjName(pNet));\n        return 0;\n    }\n    if Abc_ObjFaninNum(pNet) \u003e 1 {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" has more than one driver.\\n\", Abc_ObjName(pNet));\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckNode",
+      "Start": 16057,
+      "End": 17508,
+      "BodyStart": 16117,
+      "Original": "int Abc_NtkCheckNode( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode )\n{\n    // detect internal nodes that do not have nets\n    if ( Abc_NtkIsNetlist(pNtk) \u0026\u0026 Abc_ObjFanoutNum(pNode) == 0 )\n    {\n        fprintf( stdout, \"Node (id = %d) has no net to drive.\\n\", pNode-\u003eId );\n        return 0;\n    }\n    // the node should have a function assigned unless it is an AIG\n    if ( pNode-\u003epData == NULL )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            return 1;\n        fprintf( stdout, \"NodeCheck: An internal node \\\"%s\\\" does not have a logic function.\\n\", Abc_ObjNameNet(pNode) );\n        return 0;\n    }\n    // the netlist and SOP logic network should have SOPs\n    if ( Abc_NtkHasSop(pNtk) )\n    {\n        if ( !Abc_SopCheck( (char *)pNode-\u003epData, Abc_ObjFaninNum(pNode) ) )\n        {\n            fprintf( stdout, \"NodeCheck: SOP check for node \\\"%s\\\" has failed.\\n\", Abc_ObjNameNet(pNode) );\n            return 0;\n        }\n    }\n    else if ( Abc_NtkHasBdd(pNtk) )\n    {\n#ifdef ABC_USE_CUDD\n        int nSuppSize = Cudd_SupportSize((DdManager *)pNtk-\u003epManFunc, (DdNode *)pNode-\u003epData);\n        if ( nSuppSize \u003e Abc_ObjFaninNum(pNode) )\n        {\n            fprintf( stdout, \"NodeCheck: BDD of the node \\\"%s\\\" has incorrect support size.\\n\", Abc_ObjNameNet(pNode) );\n            return 0;\n        }\n#endif\n    }\n    else if ( !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) )\n    {\n        assert( 0 );\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCheckNode(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t) int32 {\n    // detect internal nodes that do not have nets\n    if Abc_NtkIsNetlist(pNtk) \u0026\u0026 Abc_ObjFanoutNum(pNode) == 0 {\n        fmt.Fprintf(os.Stdout, \"Node (id = %d) has no net to drive.\\n\", pNode.Id);\n        return 0;\n    }\n    // the node should have a function assigned unless it is an AIG\n    if pNode.pData == nil {\n        if Abc_ObjIsBarBuf(pNode) {\n            return 1; }\n        fmt.Fprintf(os.Stdout, \"NodeCheck: An internal node \\\"%s\\\" does not have a logic function.\\n\", Abc_ObjNameNet(pNode));\n        return 0;\n    }\n    // the netlist and SOP logic network should have SOPs\n    if Abc_NtkHasSop(pNtk) {\n        if !Abc_SopCheck( (char *)pNode.pData, Abc_ObjFaninNum(pNode) ) {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: SOP check for node \\\"%s\\\" has failed.\\n\", Abc_ObjNameNet(pNode));\n            return 0;\n        }\n    \n    } else if Abc_NtkHasBdd(pNtk) {\n#ifdef ABC_USE_CUDD\n        int nSuppSize = Cudd_SupportSize((DdManager *)pNtk-\u003epManFunc, (DdNode *)pNode-\u003epData);\n        if ( nSuppSize \u003e Abc_ObjFaninNum(pNode) )\n        {\n            fprintf( stdout, \"NodeCheck: BDD of the node \\\"%s\\\" has incorrect support size.\\n\", Abc_ObjNameNet(pNode) );\n            return 0;\n        }\n#endif\n    \n    } else if !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) {\n        assert(false, \"0\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckLatch",
+      "Start": 17776,
+      "End": 19949,
+      "BodyStart": 17838,
+      "Original": "int Abc_NtkCheckLatch( Abc_Ntk_t * pNtk, Abc_Obj_t * pLatch )\n{\n    int Value = 1;\n    // check whether the object is a latch\n    if ( !Abc_ObjIsLatch(pLatch) )\n    {\n        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" is in a latch list but is not a latch.\\n\", Abc_ObjName(pLatch) );\n        Value = 0;\n    }\n    // make sure the latch has a reasonable return value\n    if ( (int)(ABC_PTRINT_T)pLatch-\u003epData \u003c ABC_INIT_ZERO || (int)(ABC_PTRINT_T)pLatch-\u003epData \u003e ABC_INIT_DC )\n    {\n        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has incorrect reset value (%d).\\n\", \n            Abc_ObjName(pLatch), (int)(ABC_PTRINT_T)pLatch-\u003epData );\n        Value = 0;\n    }\n    // make sure the latch has only one fanin\n    if ( Abc_ObjFaninNum(pLatch) != 1 )\n    {\n        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(pLatch), Abc_ObjFaninNum(pLatch) );\n        Value = 0;\n    }\n    // make sure the latch has only one fanout\n    if ( Abc_ObjFanoutNum(pLatch) != 1 )\n    {\n        fprintf( stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(pLatch), Abc_ObjFanoutNum(pLatch) );\n        Value = 0;\n    }\n    // make sure the latch input has only one fanin\n    if ( Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)) != 1 )\n    {\n        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", \n            Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)) );\n        Value = 0;\n    }\n    // make sure the latch input has only one fanout\n    if ( Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)) != 1 )\n    {\n        fprintf( stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", \n            Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)) );\n        Value = 0;\n    }\n    // make sure the latch output has only one fanin\n    if ( Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)) != 1 )\n    {\n        fprintf( stdout, \"NodeCheck: Output of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", \n            Abc_ObjName(Abc_ObjFanout0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)) );\n        Value = 0;\n    }\n    return Value;\n}",
+      "Draft": "func Abc_NtkCheckLatch(pNtk *Abc_Ntk_t, pLatch *Abc_Obj_t) int32 {\n    var Value int32  = 1;\n    // check whether the object is a latch\n    if !Abc_ObjIsLatch(pLatch) {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" is in a latch list but is not a latch.\\n\", Abc_ObjName(pLatch));\n        Value = 0;\n    }\n    // make sure the latch has a reasonable return value\n    if int32((ABC_PTRINT_T))pLatch.pData \u003c ABC_INIT_ZERO || int32((ABC_PTRINT_T))pLatch.pData \u003e ABC_INIT_DC {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has incorrect reset value (%d).\\n\", Abc_ObjName(pLatch), int32((ABC_PTRINT_T))pLatch.pData);\n        Value = 0;\n    }\n    // make sure the latch has only one fanin\n    if Abc_ObjFaninNum(pLatch) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(pLatch), Abc_ObjFaninNum(pLatch));\n        Value = 0;\n    }\n    // make sure the latch has only one fanout\n    if Abc_ObjFanoutNum(pLatch) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(pLatch), Abc_ObjFanoutNum(pLatch));\n        Value = 0;\n    }\n    // make sure the latch input has only one fanin\n    if Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)));\n        Value = 0;\n    }\n    // make sure the latch input has only one fanout\n    if Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)));\n        Value = 0;\n    }\n    // make sure the latch output has only one fanin\n    if Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Output of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(Abc_ObjFanout0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)));\n        Value = 0;\n    }\n    return Value;\n}"
+    },
+    {
+      "Name": "Abc_NtkComparePis",
+      "Start": 20225,
+      "End": 20939,
+      "BodyStart": 20298,
+      "Original": "int Abc_NtkComparePis( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb )\n{\n    Abc_Obj_t * pObj1;\n    int i;\n    if ( Abc_NtkPiNum(pNtk1) != Abc_NtkPiNum(pNtk2) )\n    {\n        printf( \"Networks have different number of primary inputs.\\n\" );\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachPi( pNtk1, pObj1, i )\n    {\n        if ( strcmp( Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)) ) != 0 )\n        {\n            printf( \"Primary input #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", \n                i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)) );\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkComparePis(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkPiNum(pNtk1) != Abc_NtkPiNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of primary inputs.\\n\");\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachPi( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)))) != 0 {\n            fmt.Printf(\"Primary input #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)));\n            return 0;\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkComparePos",
+      "Start": 21212,
+      "End": 21928,
+      "BodyStart": 21285,
+      "Original": "int Abc_NtkComparePos( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb )\n{\n    Abc_Obj_t * pObj1;\n    int i;\n    if ( Abc_NtkPoNum(pNtk1) != Abc_NtkPoNum(pNtk2) )\n    {\n        printf( \"Networks have different number of primary outputs.\\n\" );\n        return 0;\n    }\n    // for each PO of pNet1 find corresponding PO of pNet2 and reorder them\n    Abc_NtkForEachPo( pNtk1, pObj1, i )\n    {\n        if ( strcmp( Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)) ) != 0 )\n        {\n            printf( \"Primary output #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", \n                i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)) );\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkComparePos(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkPoNum(pNtk1) != Abc_NtkPoNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of primary outputs.\\n\");\n        return 0;\n    }\n    // for each PO of pNet1 find corresponding PO of pNet2 and reorder them\n    Abc_NtkForEachPo( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)))) != 0 {\n            fmt.Printf(\"Primary output #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)));\n            return 0;\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCompareBoxes",
+      "Start": 22205,
+      "End": 23103,
+      "BodyStart": 22280,
+      "Original": "int Abc_NtkCompareBoxes( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb )\n{\n    Abc_Obj_t * pObj1;\n    int i;\n    assert( Abc_NtkHasOnlyLatchBoxes(pNtk1) );\n    assert( Abc_NtkHasOnlyLatchBoxes(pNtk2) );\n    if ( !fComb )\n        return 1;\n    if ( Abc_NtkBoxNum(pNtk1) != Abc_NtkBoxNum(pNtk2) )\n    {\n        printf( \"Networks have different number of latches.\\n\" );\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachBox( pNtk1, pObj1, i )\n    {\n        if ( strcmp( Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))) ) != 0 )\n        {\n            printf( \"Box #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", \n                i, Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))) );\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCompareBoxes(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasOnlyLatchBoxes(pNtk1), \"Abc_NtkHasOnlyLatchBoxes(pNtk1)\");\n    assert(Abc_NtkHasOnlyLatchBoxes(pNtk2), \"Abc_NtkHasOnlyLatchBoxes(pNtk2)\");\n    if !(fComb != 0) {\n        return 1; }\n    if Abc_NtkBoxNum(pNtk1) != Abc_NtkBoxNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of latches.\\n\");\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachBox( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))))) != 0 {\n            fmt.Printf(\"Box #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))));\n            return 0;\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkCompareSignals",
+      "Start": 23477,
+      "End": 23937,
+      "BodyStart": 23568,
+      "Original": "int Abc_NtkCompareSignals( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fOnlyPis, int fComb )\n{\n    Abc_NtkOrderObjsByName( pNtk1, fComb );\n    Abc_NtkOrderObjsByName( pNtk2, fComb );\n    if ( !Abc_NtkComparePis( pNtk1, pNtk2, fComb ) )\n        return 0;\n    if ( !fOnlyPis )\n    {\n        if ( !Abc_NtkCompareBoxes( pNtk1, pNtk2, fComb ) )\n            return 0;\n        if ( !Abc_NtkComparePos( pNtk1, pNtk2, fComb ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkCompareSignals(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fOnlyPis int32, fComb int32) int32 {\n    Abc_NtkOrderObjsByName( pNtk1, fComb );\n    Abc_NtkOrderObjsByName( pNtk2, fComb );\n    if !(Abc_NtkComparePis( pNtk1, pNtk2, fComb ) != 0) {\n        return 0; }\n    if !(fOnlyPis != 0) {\n        if !(Abc_NtkCompareBoxes( pNtk1, pNtk2, fComb ) != 0) {\n            return 0; }\n        if !(Abc_NtkComparePos( pNtk1, pNtk2, fComb ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkIsAcyclicHierarchy_rec",
+      "Start": 24224,
+      "End": 24998,
+      "BodyStart": 24278,
+      "Original": "int Abc_NtkIsAcyclicHierarchy_rec( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNext;\n    Abc_Obj_t * pObj;\n    int i;\n    // return if visited\n    if ( pNtk-\u003efHieVisited )\n        return 1;\n    pNtk-\u003efHieVisited = 1;\n    // return if black box\n    if ( Abc_NtkHasBlackbox(pNtk) )\n        return 1;\n    assert( Abc_NtkIsNetlist(pNtk) );\n    // go through all the children networks\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        pNtkNext = (Abc_Ntk_t *)pObj-\u003epData;\n        assert( pNtkNext != NULL );\n        if ( pNtkNext-\u003efHiePath )\n            return 0;\n        pNtk-\u003efHiePath = 1;\n        if ( !Abc_NtkIsAcyclicHierarchy_rec( pNtkNext ) )\n            return 0;\n        pNtk-\u003efHiePath = 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkIsAcyclicHierarchy_rec(pNtk *Abc_Ntk_t) int32 {\n    var pNtkNext *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // return if visited\n    if pNtk.fHieVisited {\n        return 1; }\n    pNtk.fHieVisited = 1;\n    // return if black box\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // go through all the children networks\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkNext = (Abc_Ntk_t *)pObj.pData;\n        assert(pNtkNext != nil, \"pNtkNext != nil\");\n        if pNtkNext.fHiePath {\n            return 0; }\n        pNtk.fHiePath = 1;\n        if !(Abc_NtkIsAcyclicHierarchy_rec( pNtkNext ) != 0) {\n            return 0; }\n        pNtk.fHiePath = 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkIsAcyclicHierarchy",
+      "Start": 25285,
+      "End": 25874,
+      "BodyStart": 25335,
+      "Original": "int Abc_NtkIsAcyclicHierarchy( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pTemp;\n    int i, RetValue;\n    assert( Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk-\u003epDesign );\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pTemp, i )\n        pTemp-\u003efHieVisited = pTemp-\u003efHiePath = 0;\n    // traverse\n    pNtk-\u003efHiePath = 1;\n    RetValue = Abc_NtkIsAcyclicHierarchy_rec( pNtk );\n    pNtk-\u003efHiePath = 0;\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pTemp, i )\n        pTemp-\u003efHieVisited = pTemp-\u003efHiePath = 0;\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkIsAcyclicHierarchy(pNtk *Abc_Ntk_t) int32 {\n    var pTemp *Abc_Ntk_t;\n    var i, RetValue int32;\n    assert(Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk.pDesign, \"Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk.pDesign\");\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        pTemp.fHieVisited = pTemp.fHiePath = 0;\n    // traverse\n    pNtk.fHiePath = 1;\n    RetValue = Abc_NtkIsAcyclicHierarchy_rec( pNtk );\n    pNtk.fHiePath = 0;\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        pTemp.fHieVisited = pTemp.fHiePath = 0;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkNamesCompare",
+      "Start": 26145,
+      "End": 26245,
+      "BodyStart": 26203,
+      "Original": "int Abc_NtkNamesCompare( char ** pName1, char ** pName2 )\n{\n    return strcmp( *pName1, *pName2 );\n}",
+      "Draft": "func Abc_NtkNamesCompare(pName1 *string, pName2 *string) int32 {\n    return int32(strings.Compare(*pName1, *pName2));\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckUniqueCiNames",
+      "Start": 26516,
+      "End": 27257,
+      "BodyStart": 26566,
+      "Original": "int Abc_NtkCheckUniqueCiNames( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNames;\n    Abc_Obj_t * pObj;\n    int i, fRetValue = 1;\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    vNames = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for ( i = 1; i \u003c Abc_NtkCiNum(pNtk); i++ )\n        if ( !strcmp( (const char *)Vec_PtrEntry(vNames,i-1), (const char *)Vec_PtrEntry(vNames,i) ) )\n        {\n            printf( \"Abc_NtkCheck: Repeated CI names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i) );\n            fRetValue = 0;\n        }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}",
+      "Draft": "func Abc_NtkCheckUniqueCiNames(pNtk *Abc_Ntk_t) int32 {\n    var vNames *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    vNames = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for  i = 1; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        if !int32(strings.Compare((char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i))) {\n            fmt.Printf(\"Abc_NtkCheck: Repeated CI names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i));\n            fRetValue = 0;\n        }\n    }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckUniqueCoNames",
+      "Start": 27528,
+      "End": 28333,
+      "BodyStart": 27578,
+      "Original": "int Abc_NtkCheckUniqueCoNames( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNames;\n    Abc_Obj_t * pObj;\n    int i, fRetValue = 1;\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    vNames = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for ( i = 1; i \u003c Abc_NtkCoNum(pNtk); i++ )\n    {\n//        printf( \"%s\\n\", Vec_PtrEntry(vNames,i) );\n        if ( !strcmp( (const char *)Vec_PtrEntry(vNames,i-1), (const char *)Vec_PtrEntry(vNames,i) ) )\n        {\n            printf( \"Abc_NtkCheck: Repeated CO names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i) );\n            fRetValue = 0;\n        }\n    }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}",
+      "Draft": "func Abc_NtkCheckUniqueCoNames(pNtk *Abc_Ntk_t) int32 {\n    var vNames *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    vNames = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for  i = 1; i \u003c Abc_NtkCoNum(pNtk); i++  {\n//        printf( \"%s\\n\", Vec_PtrEntry(vNames,i) );\n        if !int32(strings.Compare((char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i))) {\n            fmt.Printf(\"Abc_NtkCheck: Repeated CO names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i));\n            fRetValue = 0;\n        }\n    }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkCheckUniqueCioNames",
+      "Start": 28647,
+      "End": 29473,
+      "BodyStart": 28698,
+      "Original": "int Abc_NtkCheckUniqueCioNames( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pObjCi, * pFanin;\n    int i, nCiId, fRetValue = 1;\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        nCiId = Nm_ManFindIdByNameTwoTypes( pNtk-\u003epManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n        if ( nCiId == -1 )\n            continue;\n        pObjCi = Abc_NtkObj( pNtk, nCiId );\n        assert( !strcmp( Abc_ObjName(pObj), Abc_ObjName(pObjCi) ) );\n        pFanin = Abc_ObjFanin0(pObj);\n        if ( pFanin != pObjCi )\n        {\n            printf( \"Abc_NtkCheck: A CI/CO pair share the name (%s) but do not link directly. The name of the CO fanin is %s.\\n\", \n                Abc_ObjName(pObj), Abc_ObjName(Abc_ObjFanin0(pObj)) );\n            fRetValue = 0;\n        }\n    }\n    return fRetValue;\n}",
+      "Draft": "func Abc_NtkCheckUniqueCioNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pObjCi, pFanin *Abc_Obj_t;\n    var i int32;\n    var nCiId int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        nCiId = Nm_ManFindIdByNameTwoTypes( pNtk.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n        if nCiId == -1 {\n            continue; }\n        pObjCi = Abc_NtkObj( pNtk, nCiId );\n        assert(!(int32(strings.Compare(Abc_ObjName(pObj), Abc_ObjName(pObjCi))) != 0), \"!strcmp( Abc_ObjName(pObj), Abc_ObjName(pObjCi) )\");\n        pFanin = Abc_ObjFanin0(pObj);\n        if pFanin != pObjCi {\n            fmt.Printf(\"Abc_NtkCheck: A CI/CO pair share the name (%s) but do not link directly. The name of the CO fanin is %s.\\n\", Abc_ObjName(pObj), Abc_ObjName(Abc_ObjFanin0(pObj)));\n            fRetValue = 0;\n        }\n    }\n    return fRetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::5841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5826,
+      "End": 5839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::10436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10421,
+      "End": 10434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::12041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12026,
+      "End": 12039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::16795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16780,
+      "End": 16788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::24478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24723,
+      "End": 24736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::26859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27104,
+      "End": 27111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::26892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27137,
+      "End": 27144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::27929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28174,
+      "End": 28181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::pointer-cast::27962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28207,
+      "End": 28214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_ObjNameNet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjNameNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1542,
+      "End": 1719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2211,
+      "End": 2324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckRead",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2610,
+      "End": 2730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkDoCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDoCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3002,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7467,
+      "End": 9415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckPis",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9682,
+      "End": 10771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckPos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11037,
+      "End": 12376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12651,
+      "End": 15121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckNet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15387,
+      "End": 15790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16057,
+      "End": 17508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckLatch",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17776,
+      "End": 19949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkComparePis",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkComparePis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20225,
+      "End": 20939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkComparePos",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkComparePos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21212,
+      "End": 21928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCompareBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCompareBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22205,
+      "End": 23103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCompareSignals",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCompareSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23477,
+      "End": 23937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkIsAcyclicHierarchy_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIsAcyclicHierarchy_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24224,
+      "End": 24998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkIsAcyclicHierarchy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkIsAcyclicHierarchy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25285,
+      "End": 25874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkNamesCompare",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkNamesCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26145,
+      "End": 26245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckUniqueCiNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckUniqueCiNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26516,
+      "End": 27257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckUniqueCoNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckUniqueCoNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27528,
+      "End": 28333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::Abc_NtkCheckUniqueCioNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCheckUniqueCioNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28647,
+      "End": 29473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 567,
+      "End": 626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17027,
+      "End": 17361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::5087",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5087,
+      "End": 5121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::5435",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNet",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5435,
+      "End": 5469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::5880",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5880,
+      "End": 5916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::6031",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachLatch",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6031,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::7742",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7742,
+      "End": 7775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::8067",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8067,
+      "End": 8100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::8617",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8617,
+      "End": 8659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::9799",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9799,
+      "End": 9832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::10447",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10447,
+      "End": 10481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::11154",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11154,
+      "End": 11187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::12052",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12052,
+      "End": 12086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::13365",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13365,
+      "End": 13403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::13818",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13818,
+      "End": 13858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::20571",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20571,
+      "End": 20606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::21559",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21559,
+      "End": 21594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::22678",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22678,
+      "End": 22714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::24605",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24605,
+      "End": 24639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::25465",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25465,
+      "End": 25534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::25732",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25732,
+      "End": 25801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::26732",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26732,
+      "End": 26765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::27744",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27744,
+      "End": 27777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcCheck.c::macro-inline::28818",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28818,
+      "End": 28851
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Consistency checking procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcCheck.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n//#include \"base/main/main.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Abc_NtkCheckNames( Abc_Ntk_t * pNtk );\n\n// static int Abc_NtkCheckPis( Abc_Ntk_t * pNtk );\n\n// static int Abc_NtkCheckPos( Abc_Ntk_t * pNtk );\n\n//static int Abc_NtkCheckObj( Abc_Ntk_t * pNtk, Abc_Obj_t * pObj );\n// static int Abc_NtkCheckNet( Abc_Ntk_t * pNtk, Abc_Obj_t * pNet );\n\n// static int Abc_NtkCheckNode( Abc_Ntk_t * pNtk, Abc_Obj_t * pNode );\n\n// static int Abc_NtkCheckLatch( Abc_Ntk_t * pNtk, Abc_Obj_t * pLatch );\n\n\n// static int Abc_NtkComparePis( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb );\n\n// static int Abc_NtkComparePos( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb );\n\n// static int Abc_NtkCompareLatches( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int fComb );\n\n\nfunc Abc_ObjNameNet(pObj *Abc_Obj_t) string { if Abc_ObjIsNode(pObj) \u0026\u0026 Abc_NtkIsNetlist(pObj.pNtk) {\n    return Abc_ObjName(Abc_ObjFanout0(pObj));\n} else {\n    return Abc_ObjName(pObj);\n} }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheck(pNtk *Abc_Ntk_t) int32 { \n   return !Abc_FrameIsFlagEnabled( \"check\" ) || Abc_NtkDoCheck( pNtk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of the network after reading.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckRead(pNtk *Abc_Ntk_t) int32 {\n   return !Abc_FrameIsFlagEnabled( \"checkread\" ) || Abc_NtkDoCheck( pNtk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDoCheck(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pNet, pNode *Abc_Obj_t;\n    var i int32;\n\n    // check network types\n    if !Abc_NtkIsNetlist(pNtk) \u0026\u0026 !Abc_NtkIsLogic(pNtk) \u0026\u0026 !Abc_NtkIsStrash(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Unknown network type.\\n\");\n        return 0;\n    }\n    if !Abc_NtkHasSop(pNtk) \u0026\u0026 !Abc_NtkHasBdd(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) \u0026\u0026 !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasBlackbox(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Unknown functionality type.\\n\");\n        return 0;\n    }\n    if Abc_NtkHasMapping(pNtk) {\n        if pNtk.pManFunc != Abc_FrameReadLibGen() {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: The library of the mapped network is not the global library.\\n\");\n            return 0;\n        }\n    }\n\n    if Abc_NtkHasOnlyLatchBoxes(pNtk) {\n        // check CI/CO numbers\n        if Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCiNum(pNtk) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Number of CIs does not match number of PIs and latches.\\n\");\n            fmt.Fprintf(os.Stdout, \"One possible reason is that latches are added twice:\\n\");\n            fmt.Fprintf(os.Stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\");\n            return 0;\n        }\n        if Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) != Abc_NtkCoNum(pNtk) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Number of COs does not match number of POs, asserts, and latches.\\n\");\n            fmt.Fprintf(os.Stdout, \"One possible reason is that latches are added twice:\\n\");\n            fmt.Fprintf(os.Stdout, \"in procedure Abc_NtkCreateObj() and in the user's code.\\n\");\n            return 0;\n        }\n    }\n\n    // check the names\n    if !(Abc_NtkCheckNames( pNtk ) != 0) {\n        return 0; }\n\n    // check PIs and POs\n    Abc_NtkCleanCopy( pNtk );\n    if !(Abc_NtkCheckPis( pNtk ) != 0) {\n        return 0; }\n    if !(Abc_NtkCheckPos( pNtk ) != 0) {\n        return 0; }\n\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n\n    // check the connectivity of objects\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( !Abc_NtkCheckObj( pNtk, pObj ) )\n            return 0;\n\n    // if it is a netlist change nets and latches\n    if Abc_NtkIsNetlist(pNtk) {\n        if Abc_NtkNetNum(pNtk) == 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Warning! Netlist has no nets.\\n\"); }\n        // check the nets\n        Abc_NtkForEachNet( pNtk, pNet, i )\n            if ( !Abc_NtkCheckNet( pNtk, pNet ) )\n                return 0;\n    \n    } else {\n        if Abc_NtkNetNum(pNtk) != 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A network that is not a netlist has nets.\\n\");\n            return 0;\n        }\n    }\n\n    // check the nodes\n    if Abc_NtkIsStrash(pNtk) {\n        Abc_AigCheck( (Abc_Aig_t *)pNtk.pManFunc );\n    } else {\n        Abc_NtkForEachNode( pNtk, pNode, i )\n            if ( !Abc_NtkCheckNode( pNtk, pNode ) )\n                return 0;\n    }\n\n    // check the latches\n    Abc_NtkForEachLatch( pNtk, pNode, i )\n        if ( !Abc_NtkCheckLatch( pNtk, pNode ) )\n            return 0;\n\n    // finally, check for combinational loops\n//  clk = Abc_Clock();\n    if !Abc_NtkIsAcyclic( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Network contains a combinational loop.\\n\");\n        return 0;\n    }\n//  ABC_PRT( \"Acyclic  \", Abc_Clock() - clk );\n\n    // check the EXDC network if present\n    if pNtk.pExdc {\n        Abc_NtkCheck( pNtk.pExdc ); }\n/*\n    // check the hierarchy\n    if ( Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk-\u003etName2Model )\n    {\n        stmm_generator * gen;\n        Abc_Ntk_t * pNtkTemp;\n        char * pName;\n        // check other networks\n        stmm_foreach_item( pNtk-\u003etName2Model, gen, \u0026pName, (char **)\u0026pNtkTemp )\n        {\n            pNtkTemp-\u003efHiePath = pNtkTemp-\u003efHieVisited = 0;\n            if ( !Abc_NtkCheck( pNtkTemp ) )\n                return 0;\n        }\n        // check acyclic dependency of the models\n        if ( !Abc_NtkIsAcyclicHierarchy( pNtk ) )\n        {\n            fprintf( stdout, \"NetworkCheck: Network hierarchical dependences contains a cycle.\\n\" );\n            return 0;\n        }\n    }\n*/\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t  = nil; // Ensure pObj isn't used uninitialized.\n    var vNameIds *Vec_Int_t;\n    var pName string;\n    var i, NameId int32;\n\n    if Abc_NtkIsNetlist(pNtk) {\n        return 1; }\n\n    // check that each CI/CO has a name\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanout0Ntk(pObj);\n        if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) == nil {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: CI with ID %d is in the network but not in the name table.\\n\", pObj.Id);\n            return 0;\n        }\n    }\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pObj = Abc_ObjFanin0Ntk(pObj);\n        if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) == nil {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: CO with ID %d is in the network but not in the name table.\\n\", pObj.Id);\n            return 0;\n        }\n    }\n\n    assert((pObj != nil), \"pObj\"); // pObj should point to something here.\n\n    // return the array of all IDs, which have names\n    vNameIds = Nm_ManReturnNameIds( pNtk.pManName );\n    // make sure that these IDs correspond to live objects\n    Vec_IntForEachEntry( vNameIds, NameId, i )\n    {\n        if Vec_PtrEntry( pNtk.vObjs, NameId ) == nil {\n            Vec_IntFree( vNameIds );\n            pName = Nm_ManFindNameById(pObj.pNtk.pManName, NameId);\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object with ID %d is deleted but its name \\\"%s\\\" remains in the name table.\\n\", NameId, pName);\n            return 0;\n        }\n    }\n    Vec_IntFree( vNameIds );\n\n    // make sure the CI names are unique\n    if !(Abc_NtkCheckUniqueCiNames(pNtk) != 0) {\n        return 0; }\n\n    // make sure the CO names are unique\n    if !(Abc_NtkCheckUniqueCoNames(pNtk) != 0) {\n        return 0; }\n\n    // make sure that if a CO has the same name as a CI, they point directly\n    if !(Abc_NtkCheckUniqueCioNames(pNtk) != 0) {\n        return 0; }\n\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the PIs of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckPis(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that PIs are indeed PIs\n    Abc_NtkForEachPi( pNtk, pObj, i )\n    {\n        if !Abc_ObjIsPi(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is in the PI list but is not a PI.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        if pObj.pData {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PI \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        if Abc_ObjFaninNum(pObj) \u003e 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PI \\\"%s\\\" has fanins.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        pObj.pCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if pObj.pCopy == nil \u0026\u0026 Abc_ObjIsPi(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" (id=%d) is a PI but is not in the PI list.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        pObj.pCopy = nil;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the POs of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckPos(pNtk *Abc_Ntk_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that POs are indeed POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if !Abc_ObjIsPo(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in the PO list but is not a PO.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        if pObj.pData {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" has a logic function.\\n\", Abc_ObjName(pObj));\n            return 0;\n        }\n        if Abc_ObjFaninNum(pObj) != 1 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" does not have one fanin (but %d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj));\n            return 0;\n        }\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: A PO \\\"%s\\\" has %d fanout(s).\\n\", Abc_ObjName(pObj), Abc_ObjFanoutNum(pObj));\n            return 0;\n        }\n        pObj.pCopy = (Abc_Obj_t *)1;\n    }\n    Abc_NtkForEachObj( pNtk, pObj, i )\n    {\n        if pObj.pCopy == nil \u0026\u0026 Abc_ObjIsPo(pObj) {\n            fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" (id=%d) is in a PO but is not in the PO list.\\n\", Abc_ObjName(pObj), pObj.Id);\n            return 0;\n        }\n        pObj.pCopy = nil;\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the connectivity of the object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckObj(pNtk *Abc_Ntk_t, pObj *Abc_Obj_t) int32 {\n    var pFanin, pFanout *Abc_Obj_t;\n    var Value int32  = 1;\n    var i, k int32;\n\n    // check the network\n    if pObj.pNtk != pNtk {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" does not belong to the network.\\n\", Abc_ObjName(pObj));\n        return 0;\n    }\n    // check the object ID\n    if pObj.Id \u003c 0 || int32(pObj.Id) \u003e= Abc_NtkObjNumMax(pNtk) {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Object \\\"%s\\\" has incorrect ID.\\n\", Abc_ObjName(pObj));\n        return 0;\n    }\n\n    if !Abc_FrameIsFlagEnabled(\"checkfio\") {\n        return Value; }\n\n    // go through the fanins of the object and make sure fanins have this object as a fanout\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if Vec_IntFind( \u0026pFanin.vFanouts, pObj.Id ) == -1 {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: Object \\\"%s\\\" has fanin \", Abc_ObjName(pObj));\n            fmt.Fprintf(os.Stdout, \"\\\"%s\\\" but the fanin does not have it as a fanout.\\n\", Abc_ObjName(pFanin));\n            Value = 0;\n        }\n    }\n    // go through the fanouts of the object and make sure fanouts have this object as a fanin\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n    {\n        if Vec_IntFind( \u0026pFanout.vFanins, pObj.Id ) == -1 {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: Object \\\"%s\\\" has fanout \", Abc_ObjName(pObj));\n            fmt.Fprintf(os.Stdout, \"\\\"%s\\\" but the fanout does not have it as a fanin.\\n\", Abc_ObjName(pFanout));\n            Value = 0;\n        }\n    }\n\n    // make sure fanins are not duplicated\n    for  i = 0; i \u003c pObj.vFanins.nSize; i++  {\n        for  k = i + 1; k \u003c pObj.vFanins.nSize; k++  {\n            if pObj.vFanins.pArray[k] == pObj.vFanins.pArray[i] {\n                fmt.Printf(\"Warning: Node %s has\", Abc_ObjName(pObj));\n                fmt.Printf(\" duplicated fanin %s.\\n\", Abc_ObjName(Abc_ObjFanin(pObj,k)));\n            }\n        }\n    }\n\n    // save time: do not check large fanout lists\n    if pObj.vFanouts.nSize \u003e 100 {\n        return Value; }\n\n    // make sure fanouts are not duplicated\n    for  i = 0; i \u003c pObj.vFanouts.nSize; i++  {\n        for  k = i + 1; k \u003c pObj.vFanouts.nSize; k++  {\n            if pObj.vFanouts.pArray[k] == pObj.vFanouts.pArray[i] {\n                fmt.Printf(\"Warning: Node %s has\", Abc_ObjName(pObj));\n                fmt.Printf(\" duplicated fanout %s.\\n\", Abc_ObjName(Abc_ObjFanout(pObj,k)));\n            }\n        }\n    }\n\n    return Value;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of a net.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckNet(pNtk *Abc_Ntk_t, pNet *Abc_Obj_t) int32 {\n    if Abc_ObjFaninNum(pNet) == 0 {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" is not driven.\\n\", Abc_ObjName(pNet));\n        return 0;\n    }\n    if Abc_ObjFaninNum(pNet) \u003e 1 {\n        fmt.Fprintf(os.Stdout, \"NetworkCheck: Net \\\"%s\\\" has more than one driver.\\n\", Abc_ObjName(pNet));\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckNode(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t) int32 {\n    // detect internal nodes that do not have nets\n    if Abc_NtkIsNetlist(pNtk) \u0026\u0026 Abc_ObjFanoutNum(pNode) == 0 {\n        fmt.Fprintf(os.Stdout, \"Node (id = %d) has no net to drive.\\n\", pNode.Id);\n        return 0;\n    }\n    // the node should have a function assigned unless it is an AIG\n    if pNode.pData == nil {\n        if Abc_ObjIsBarBuf(pNode) {\n            return 1; }\n        fmt.Fprintf(os.Stdout, \"NodeCheck: An internal node \\\"%s\\\" does not have a logic function.\\n\", Abc_ObjNameNet(pNode));\n        return 0;\n    }\n    // the netlist and SOP logic network should have SOPs\n    if Abc_NtkHasSop(pNtk) {\n        if !Abc_SopCheck( (char *)pNode.pData, Abc_ObjFaninNum(pNode) ) {\n            fmt.Fprintf(os.Stdout, \"NodeCheck: SOP check for node \\\"%s\\\" has failed.\\n\", Abc_ObjNameNet(pNode));\n            return 0;\n        }\n    \n    } else if Abc_NtkHasBdd(pNtk) {\n#ifdef ABC_USE_CUDD\n        int nSuppSize = Cudd_SupportSize((DdManager *)pNtk-\u003epManFunc, (DdNode *)pNode-\u003epData);\n        if ( nSuppSize \u003e Abc_ObjFaninNum(pNode) )\n        {\n            fprintf( stdout, \"NodeCheck: BDD of the node \\\"%s\\\" has incorrect support size.\\n\", Abc_ObjNameNet(pNode) );\n            return 0;\n        }\n#endif\n    \n    } else if !Abc_NtkHasMapping(pNtk) \u0026\u0026 !Abc_NtkHasBlifMv(pNtk) \u0026\u0026 !Abc_NtkHasAig(pNtk) {\n        assert(false, \"0\");\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the integrity of a latch.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckLatch(pNtk *Abc_Ntk_t, pLatch *Abc_Obj_t) int32 {\n    var Value int32  = 1;\n    // check whether the object is a latch\n    if !Abc_ObjIsLatch(pLatch) {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" is in a latch list but is not a latch.\\n\", Abc_ObjName(pLatch));\n        Value = 0;\n    }\n    // make sure the latch has a reasonable return value\n    if int32((ABC_PTRINT_T))pLatch.pData \u003c ABC_INIT_ZERO || int32((ABC_PTRINT_T))pLatch.pData \u003e ABC_INIT_DC {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has incorrect reset value (%d).\\n\", Abc_ObjName(pLatch), int32((ABC_PTRINT_T))pLatch.pData);\n        Value = 0;\n    }\n    // make sure the latch has only one fanin\n    if Abc_ObjFaninNum(pLatch) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(pLatch), Abc_ObjFaninNum(pLatch));\n        Value = 0;\n    }\n    // make sure the latch has only one fanout\n    if Abc_ObjFanoutNum(pLatch) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(pLatch), Abc_ObjFanoutNum(pLatch));\n        Value = 0;\n    }\n    // make sure the latch input has only one fanin\n    if Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanin0(pLatch)));\n        Value = 0;\n    }\n    // make sure the latch input has only one fanout\n    if Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Input of latch \\\"%s\\\" has wrong number (%d) of fanouts.\\n\", Abc_ObjName(Abc_ObjFanin0(pLatch)), Abc_ObjFanoutNum(Abc_ObjFanin0(pLatch)));\n        Value = 0;\n    }\n    // make sure the latch output has only one fanin\n    if Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)) != 1 {\n        fmt.Fprintf(os.Stdout, \"NodeCheck: Output of latch \\\"%s\\\" has wrong number (%d) of fanins.\\n\", Abc_ObjName(Abc_ObjFanout0(pLatch)), Abc_ObjFaninNum(Abc_ObjFanout0(pLatch)));\n        Value = 0;\n    }\n    return Value;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the PIs of the two networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkComparePis(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkPiNum(pNtk1) != Abc_NtkPiNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of primary inputs.\\n\");\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachPi( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)))) != 0 {\n            fmt.Printf(\"Primary input #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPi(pNtk2,i)));\n            return 0;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the POs of the two networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkComparePos(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkPoNum(pNtk1) != Abc_NtkPoNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of primary outputs.\\n\");\n        return 0;\n    }\n    // for each PO of pNet1 find corresponding PO of pNet2 and reorder them\n    Abc_NtkForEachPo( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)))) != 0 {\n            fmt.Printf(\"Primary output #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(pObj1), Abc_ObjName(Abc_NtkPo(pNtk2,i)));\n            return 0;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the latches of the two networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCompareBoxes(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32) int32 {\n    var pObj1 *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasOnlyLatchBoxes(pNtk1), \"Abc_NtkHasOnlyLatchBoxes(pNtk1)\");\n    assert(Abc_NtkHasOnlyLatchBoxes(pNtk2), \"Abc_NtkHasOnlyLatchBoxes(pNtk2)\");\n    if !(fComb != 0) {\n        return 1; }\n    if Abc_NtkBoxNum(pNtk1) != Abc_NtkBoxNum(pNtk2) {\n        fmt.Printf(\"Networks have different number of latches.\\n\");\n        return 0;\n    }\n    // for each PI of pNet1 find corresponding PI of pNet2 and reorder them\n    Abc_NtkForEachBox( pNtk1, pObj1, i )\n    {\n        if int32(strings.Compare(Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))))) != 0 {\n            fmt.Printf(\"Box #%d is different in network 1 ( \\\"%s\\\") and in network 2 (\\\"%s\\\").\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj1)), Abc_ObjName(Abc_ObjFanout0(Abc_NtkBox(pNtk2,i))));\n            return 0;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the signals of the networks.]\n\n  Description []\n               \n  SideEffects [Ordering POs by name is a very bad idea! It destroys\n  the natural order of the logic in the circuit.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCompareSignals(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fOnlyPis int32, fComb int32) int32 {\n    Abc_NtkOrderObjsByName( pNtk1, fComb );\n    Abc_NtkOrderObjsByName( pNtk2, fComb );\n    if !(Abc_NtkComparePis( pNtk1, pNtk2, fComb ) != 0) {\n        return 0; }\n    if !(fOnlyPis != 0) {\n        if !(Abc_NtkCompareBoxes( pNtk1, pNtk2, fComb ) != 0) {\n            return 0; }\n        if !(Abc_NtkComparePos( pNtk1, pNtk2, fComb ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if the network hierachy contains a cycle.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIsAcyclicHierarchy_rec(pNtk *Abc_Ntk_t) int32 {\n    var pNtkNext *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // return if visited\n    if pNtk.fHieVisited {\n        return 1; }\n    pNtk.fHieVisited = 1;\n    // return if black box\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // go through all the children networks\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkNext = (Abc_Ntk_t *)pObj.pData;\n        assert(pNtkNext != nil, \"pNtkNext != nil\");\n        if pNtkNext.fHiePath {\n            return 0; }\n        pNtk.fHiePath = 1;\n        if !(Abc_NtkIsAcyclicHierarchy_rec( pNtkNext ) != 0) {\n            return 0; }\n        pNtk.fHiePath = 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if the network hierachy contains a cycle.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkIsAcyclicHierarchy(pNtk *Abc_Ntk_t) int32 {\n    var pTemp *Abc_Ntk_t;\n    var i, RetValue int32;\n    assert(Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk.pDesign, \"Abc_NtkIsNetlist(pNtk) \u0026\u0026 pNtk.pDesign\");\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        pTemp.fHieVisited = pTemp.fHiePath = 0;\n    // traverse\n    pNtk.fHiePath = 1;\n    RetValue = Abc_NtkIsAcyclicHierarchy_rec( pNtk );\n    pNtk.fHiePath = 0;\n    // clear the modules\n    Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk.pDesign.vModules, pTemp, i )\n        pTemp.fHieVisited = pTemp.fHiePath = 0;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if CI names are repeated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkNamesCompare(pName1 *string, pName2 *string) int32 {\n    return int32(strings.Compare(*pName1, *pName2));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if CI names are repeated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckUniqueCiNames(pNtk *Abc_Ntk_t) int32 {\n    var vNames *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    vNames = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for  i = 1; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        if !int32(strings.Compare((char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i))) {\n            fmt.Printf(\"Abc_NtkCheck: Repeated CI names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i));\n            fRetValue = 0;\n        }\n    }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if CO names are repeated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckUniqueCoNames(pNtk *Abc_Ntk_t) int32 {\n    var vNames *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    vNames = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_PtrPush( vNames, Abc_ObjName(pObj) );\n    Vec_PtrSort( vNames, (int (*)())Abc_NtkNamesCompare );\n    for  i = 1; i \u003c Abc_NtkCoNum(pNtk); i++  {\n//        printf( \"%s\\n\", Vec_PtrEntry(vNames,i) );\n        if !int32(strings.Compare((char *)Vec_PtrEntry(vNames,i-1), (char *)Vec_PtrEntry(vNames,i))) {\n            fmt.Printf(\"Abc_NtkCheck: Repeated CO names: %s and %s.\\n\", (char*)Vec_PtrEntry(vNames,i-1), (char*)Vec_PtrEntry(vNames,i));\n            fRetValue = 0;\n        }\n    }\n    Vec_PtrFree( vNames );\n    return fRetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if there is a pair of CI/CO with the same name and logic in between.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCheckUniqueCioNames(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pObjCi, pFanin *Abc_Obj_t;\n    var i int32;\n    var nCiId int32;\n    var fRetValue int32 = 1;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        nCiId = Nm_ManFindIdByNameTwoTypes( pNtk.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );\n        if nCiId == -1 {\n            continue; }\n        pObjCi = Abc_NtkObj( pNtk, nCiId );\n        assert(!(int32(strings.Compare(Abc_ObjName(pObj), Abc_ObjName(pObjCi))) != 0), \"!strcmp( Abc_ObjName(pObj), Abc_ObjName(pObjCi) )\");\n        pFanin = Abc_ObjFanin0(pObj);\n        if pFanin != pObjCi {\n            fmt.Printf(\"Abc_NtkCheck: A CI/CO pair share the name (%s) but do not link directly. The name of the CO fanin is %s.\\n\", Abc_ObjName(pObj), Abc_ObjName(Abc_ObjFanin0(pObj)));\n            fRetValue = 0;\n        }\n    }\n    return fRetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,743 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c",
+  "SHA256": "bad829455dcd3c523f4c5ef4d1e349fb03cd8bed31b0c004930bb5dac4245ca5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(pMan) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 13,
+        "ByteOffset": 2205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 104,
+        "Column": 73,
+        "ByteOffset": 3465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 147,
+        "Column": 36,
+        "ByteOffset": 5079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Sat_Solver2PrintStats( stdout, pSat ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 9,
+        "ByteOffset": 5472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(pMan) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 5786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 13,
+        "ByteOffset": 8395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 256,
+        "Column": 35,
+        "ByteOffset": 8834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Sat_SolverPrintStats( stdout, pSat ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 10585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original miter:   Nodes = %6d.\\n\", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 317,
+        "Column": 76,
+        "ByteOffset": 10834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pAig.pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(pAig))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 10895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pAig.pData, 0, sizeof(int) * Aig_ManCiNum(pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 9,
+        "ByteOffset": 11179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Initial SAT:      Nodes = %6d.  \", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 328,
+        "Column": 73,
+        "ByteOffset": 11394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 11614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 340,
+        "Column": 73,
+        "ByteOffset": 11829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 17,
+        "ByteOffset": 12452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Balance-X:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 359,
+        "Column": 73,
+        "ByteOffset": 12667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 13,
+        "ByteOffset": 12878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fraiging (i=%d):   Nodes = %6d.  \", i+1, Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 370,
+        "Column": 73,
+        "ByteOffset": 13099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 13428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 385,
+        "Column": 73,
+        "ByteOffset": 13643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 14224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Final SAT:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 406,
+        "Column": 73,
+        "ByteOffset": 14439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 13,
+        "ByteOffset": 15372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verifying part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", "
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 441,
+        "Column": 13,
+        "ByteOffset": 15620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 441,
+        "Column": 21,
+        "ByteOffset": 15628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 16069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"                                                                                          \\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 459,
+        "Column": 9,
+        "ByteOffset": 16183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 459,
+        "Column": 17,
+        "ByteOffset": 16191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 16265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Timed out after verifying %d partitions (out of %d).\\n\", nOutputs, Vec_PtrSize(vParts) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 16372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 464,
+        "Column": 17,
+        "ByteOffset": 16380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 492,
+        "Column": 9,
+        "ByteOffset": 17251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_CommandAbc8Cec(): Miters have different number of PIs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 9,
+        "ByteOffset": 17409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_CommandAbc8Cec(): Miters have different number of POs.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 499,
+        "Column": 5,
+        "ByteOffset": 17511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 17569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 508,
+        "Column": 5,
+        "ByteOffset": 17811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 18186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks are equivalent.  \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 519,
+        "Column": 78,
+        "ByteOffset": 18378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 9,
+        "ByteOffset": 18441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks are NOT EQUIVALENT.  \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 524,
+        "Column": 78,
+        "ByteOffset": 18637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 527,
+        "Column": 9,
+        "ByteOffset": 18683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks are UNDECIDED.  \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 529,
+        "Column": 78,
+        "ByteOffset": 18874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 531,
+        "Column": 5,
+        "ByteOffset": 18904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 531,
+        "Column": 13,
+        "ByteOffset": 18912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_FraigSat",
+      "Start": 1285,
+      "End": 9133,
+      "BodyStart": 1485,
+      "Original": "int Fra_FraigSat( Aig_Man_t * pMan, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, int nLearnedStart, int nLearnedDelta, int nLearnedPerce, int fFlipBits, int fAndOuts, int fNewSolver, int fVerbose )\n{\n    if ( fNewSolver )\n    {\n        extern void * Cnf_DataWriteIntoSolver2( Cnf_Dat_t * p, int nFrames, int fInit );\n        extern int    Cnf_DataWriteOrClause2( void * pSat, Cnf_Dat_t * pCnf );\n\n        sat_solver2 * pSat;\n        Cnf_Dat_t * pCnf;\n        int status, RetValue = 0;\n        abctime clk = Abc_Clock();\n        Vec_Int_t * vCiIds;\n\n        assert( Aig_ManRegNum(pMan) == 0 );\n        pMan-\u003epData = NULL;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if ( fFlipBits ) \n            Cnf_DataTranformPolarity( pCnf, 0 );\n\n        if ( fVerbose )\n        {\n            printf( \"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf-\u003enVars, pCnf-\u003enClauses, pCnf-\u003enLiterals );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver2 *)Cnf_DataWriteIntoSolver2( pCnf, 1, 0 );\n        if ( pSat == NULL )\n        {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if ( fAndOuts )\n        {\n            // assert each output independently\n            if ( !Cnf_DataWriteAndClauses( pSat, pCnf ) )\n            {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        else\n        {\n            // add the OR clause for the outputs\n            if ( !Cnf_DataWriteOrClause2( pSat, pCnf ) )\n            {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n        printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver2_simplify(pSat);\n//        printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat) );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if ( status == 0 )\n        {\n            Vec_IntFree( vCiIds );\n            sat_solver2_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n        if ( fVerbose )\n            pSat-\u003everbosity = 1;\n        status = sat_solver2_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( status == l_Undef )\n        {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        }\n        else if ( status == l_True )\n        {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        }\n        else if ( status == l_False )\n        {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        }\n        else\n            assert( 0 );\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if ( status == l_True )\n        {\n            pMan-\u003epData = Sat_Solver2GetModel( pSat, vCiIds-\u003epArray, vCiIds-\u003enSize );\n        }\n        // free the sat_solver2\n        if ( fVerbose )\n            Sat_Solver2PrintStats( stdout, pSat );\n    //sat_solver2_store_write( pSat, \"trace.cnf\" );\n    //sat_solver2_store_free( pSat );\n        sat_solver2_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    }\n    else\n    {\n        sat_solver * pSat;\n        Cnf_Dat_t * pCnf;\n        int status, RetValue = 0;\n        abctime clk = Abc_Clock();\n        Vec_Int_t * vCiIds;\n\n        assert( Aig_ManRegNum(pMan) == 0 );\n        pMan-\u003epData = NULL;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if ( fFlipBits ) \n            Cnf_DataTranformPolarity( pCnf, 0 );\n\n        if ( fVerbose )\n        {\n            printf( \"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf-\u003enVars, pCnf-\u003enClauses, pCnf-\u003enLiterals );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        if ( pSat == NULL )\n        {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if ( nLearnedStart )\n            pSat-\u003enLearntStart = pSat-\u003enLearntMax = nLearnedStart;\n        if ( nLearnedDelta )\n            pSat-\u003enLearntDelta = nLearnedDelta;\n        if ( nLearnedPerce )\n            pSat-\u003enLearntRatio = nLearnedPerce;\n        if ( fVerbose )\n            pSat-\u003efVerbose = fVerbose;\n\n        if ( fAndOuts )\n        {\n            // assert each output independently\n            if ( !Cnf_DataWriteAndClauses( pSat, pCnf ) )\n            {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        else\n        {\n            // add the OR clause for the outputs\n            if ( !Cnf_DataWriteOrClause( pSat, pCnf ) )\n            {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n    //    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver_simplify(pSat);\n    //    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if ( status == 0 )\n        {\n            Vec_IntFree( vCiIds );\n            sat_solver_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n//        if ( fVerbose )\n//            pSat-\u003everbosity = 1;\n        status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( status == l_Undef )\n        {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        }\n        else if ( status == l_True )\n        {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        }\n        else if ( status == l_False )\n        {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        }\n        else\n            assert( 0 );\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if ( status == l_True )\n        {\n            pMan-\u003epData = Sat_SolverGetModel( pSat, vCiIds-\u003epArray, vCiIds-\u003enSize );\n        }\n        // free the sat_solver\n        if ( fVerbose )\n            Sat_SolverPrintStats( stdout, pSat );\n    //sat_solver_store_write( pSat, \"trace.cnf\" );\n    //sat_solver_store_free( pSat );\n        sat_solver_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    }\n}",
+      "Draft": "func Fra_FraigSat(pMan *Aig_Man_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T, nLearnedStart int32, nLearnedDelta int32, nLearnedPerce int32, fFlipBits int32, fAndOuts int32, fNewSolver int32, fVerbose int32) int32 {\n    if fNewSolver != 0 {\n        extern void * Cnf_DataWriteIntoSolver2( Cnf_Dat_t * p, int nFrames, int fInit );\n        extern int    Cnf_DataWriteOrClause2( void * pSat, Cnf_Dat_t * pCnf );\n\n        var pSat *sat_solver2;\n        var pCnf *Cnf_Dat_t;\n        var status, RetValue int32;\n        var clk abctime  = Abc_Clock();\n        var vCiIds *Vec_Int_t;\n\n        assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n        pMan.pData = nil;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if fFlipBits != 0 { \n            Cnf_DataTranformPolarity( pCnf, 0 ); }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver2 *)Cnf_DataWriteIntoSolver2( pCnf, 1, 0 );\n        if pSat == nil {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if fAndOuts != 0 {\n            // assert each output independently\n            if !Cnf_DataWriteAndClauses( pSat, pCnf ) {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        \n        } else {\n            // add the OR clause for the outputs\n            if !Cnf_DataWriteOrClause2( pSat, pCnf ) {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n        fmt.Printf(\"Created SAT problem with %d variable and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver2_simplify(pSat);\n//        printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat) );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if status == 0 {\n            Vec_IntFree( vCiIds );\n            sat_solver2_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n        if fVerbose != 0 {\n            pSat.verbosity = 1; }\n        status = sat_solver2_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_Undef {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        \n        } else if status == l_True {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        \n        } else if status == l_False {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        \n        } else {\n            assert(false, \"0\"); }\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if status == l_True {\n            pMan.pData = Sat_Solver2GetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        }\n        // free the sat_solver2\n        if fVerbose != 0 {\n            Sat_Solver2PrintStats( os.Stdout, pSat ); }\n    //sat_solver2_store_write( pSat, \"trace.cnf\" );\n    //sat_solver2_store_free( pSat );\n        sat_solver2_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    \n    } else {\n        var pSat *sat_solver;\n        var pCnf *Cnf_Dat_t;\n        var status, RetValue int32;\n        var clk abctime  = Abc_Clock();\n        var vCiIds *Vec_Int_t;\n\n        assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n        pMan.pData = nil;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if fFlipBits != 0 { \n            Cnf_DataTranformPolarity( pCnf, 0 ); }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        if pSat == nil {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if nLearnedStart != 0 {\n            pSat.nLearntStart = pSat.nLearntMax = nLearnedStart; }\n        if nLearnedDelta != 0 {\n            pSat.nLearntDelta = nLearnedDelta; }\n        if nLearnedPerce != 0 {\n            pSat.nLearntRatio = nLearnedPerce; }\n        if fVerbose != 0 {\n            pSat.fVerbose = fVerbose; }\n\n        if fAndOuts != 0 {\n            // assert each output independently\n            if !Cnf_DataWriteAndClauses( pSat, pCnf ) {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        \n        } else {\n            // add the OR clause for the outputs\n            if !Cnf_DataWriteOrClause( pSat, pCnf ) {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n    //    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver_simplify(pSat);\n    //    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if status == 0 {\n            Vec_IntFree( vCiIds );\n            sat_solver_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n//        if ( fVerbose )\n//            pSat-\u003everbosity = 1;\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_Undef {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        \n        } else if status == l_True {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        \n        } else if status == l_False {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        \n        } else {\n            assert(false, \"0\"); }\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if status == l_True {\n            pMan.pData = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        }\n        // free the sat_solver\n        if fVerbose != 0 {\n            Sat_SolverPrintStats( os.Stdout, pSat ); }\n    //sat_solver_store_write( pSat, \"trace.cnf\" );\n    //sat_solver_store_free( pSat );\n        sat_solver_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManCountXors",
+      "Start": 9414,
+      "End": 9684,
+      "BodyStart": 9452,
+      "Original": "int Aig_ManCountXors( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pFan0, * pFan1;\n    int i, Counter = 0;\n    Aig_ManForEachNode( p, pObj, i )\n        if ( Aig_ObjIsMuxType(pObj) \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) )\n            Counter++;\n    return Counter;\n\n}",
+      "Draft": "func Aig_ManCountXors(p *Aig_Man_t) int32 {\n    var pObj, pFan0, pFan1 *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjIsMuxType(pObj) \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            Counter++; }\n    }\n    return Counter;\n\n}"
+    },
+    {
+      "Name": "Fra_FraigCec",
+      "Start": 9920,
+      "End": 13569,
+      "BodyStart": 9989,
+      "Original": "int Fra_FraigCec( Aig_Man_t ** ppAig, int nConfLimit, int fVerbose )\n{\n    int nBTLimitStart =        300;   // starting SAT run\n    int nBTLimitFirst =          2;   // first fraiging iteration\n    int nBTLimitLast  = nConfLimit;   // the last-gasp SAT run\n\n    Fra_Par_t Params, * pParams = \u0026Params;\n    Aig_Man_t * pAig = *ppAig, * pTemp;\n    int i, RetValue;\n    abctime clk;\n\n    // report the original miter\n    if ( fVerbose )\n    {\n        printf( \"Original miter:   Nodes = %6d.\\n\", Aig_ManNodeNum(pAig) );\n    }\n    RetValue = Fra_FraigMiterStatus( pAig );\n//    assert( RetValue == -1 );\n    if ( RetValue == 0 )\n    {\n        pAig-\u003epData = ABC_ALLOC( int, Aig_ManCiNum(pAig) );\n        memset( pAig-\u003epData, 0, sizeof(int) * Aig_ManCiNum(pAig) );\n        return RetValue;\n    }\n\n    // if SAT only, solve without iteration\nclk = Abc_Clock();\n    RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)2*nBTLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n    if ( fVerbose )\n    {\n        printf( \"Initial SAT:      Nodes = %6d.  \", Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    if ( RetValue \u003e= 0 )\n        return RetValue;\n\n    // duplicate the AIG\nclk = Abc_Clock();\n    pAig = Dar_ManRwsat( pTemp = pAig, 1, 0 );\n    Aig_ManStop( pTemp );\n    if ( fVerbose )\n    {\n        printf( \"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // perform the loop\n    Fra_ParamsDefault( pParams );\n    pParams-\u003enBTLimitNode = nBTLimitFirst;\n    pParams-\u003enBTLimitMiter = nBTLimitStart;\n    pParams-\u003efDontShowBar = 1;\n    pParams-\u003efProve = 1;\n    for ( i = 0; i \u003c 6; i++ )\n    {\n//printf( \"Running fraiging with %d BTnode and %d BTmiter.\\n\", pParams-\u003enBTLimitNode, pParams-\u003enBTLimitMiter );\n        // try XOR balancing\n        if ( Aig_ManCountXors(pAig) * 30 \u003e Aig_ManNodeNum(pAig) + 300 )\n        {\nclk = Abc_Clock();\n            pAig = Dar_ManBalanceXor( pTemp = pAig, 1, 0, 0 );\n            Aig_ManStop( pTemp );\n            if ( fVerbose )\n            {\n                printf( \"Balance-X:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n            } \n        }\n\n        // run fraiging\nclk = Abc_Clock();\n        pAig = Fra_FraigPerform( pTemp = pAig, pParams );\n        Aig_ManStop( pTemp );\n        if ( fVerbose )\n        {\n            printf( \"Fraiging (i=%d):   Nodes = %6d.  \", i+1, Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if ( RetValue \u003e= 0 )\n            break;\n\n        // perform rewriting\nclk = Abc_Clock();\n        pAig = Dar_ManRewriteDefault( pTemp = pAig );\n        Aig_ManStop( pTemp );\n        if ( fVerbose )\n        {\n            printf( \"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        } \n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if ( RetValue \u003e= 0 )\n            break;\n        // try simulation\n\n        // set the parameters for the next run\n        pParams-\u003enBTLimitNode = 8 * pParams-\u003enBTLimitNode;\n        pParams-\u003enBTLimitMiter = 2 * pParams-\u003enBTLimitMiter;\n    }\n\n    // if still unsolved try last gasp\n    if ( RetValue == -1 )\n    {\nclk = Abc_Clock();\n        RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)nBTLimitLast, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n        if ( fVerbose )\n        {\n            printf( \"Final SAT:        Nodes = %6d.  \", Aig_ManNodeNum(pAig) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    *ppAig = pAig;\n    return RetValue;\n}",
+      "Draft": "func Fra_FraigCec(ppAig **Aig_Man_t, nConfLimit int32, fVerbose int32) int32 {\n    var nBTLimitStart int32  =        300;   // starting SAT run\n    var nBTLimitFirst int32  =          2;   // first fraiging iteration\n    var nBTLimitLast int32   = nConfLimit;   // the last-gasp SAT run\n\n    var Params Fra_Par_t;\n    var pParams *Fra_Par_t = \u0026Params;\n    var pAig *Aig_Man_t = *ppAig;\n    var pTemp *Aig_Man_t;\n    var i, RetValue int32;\n    var clk abctime;\n\n    // report the original miter\n    if fVerbose != 0 {\n        fmt.Printf(\"Original miter:   Nodes = %6d.\\n\", Aig_ManNodeNum(pAig));\n    }\n    RetValue = Fra_FraigMiterStatus( pAig );\n//    assert( RetValue == -1 );\n    if RetValue == 0 {\n        // inlining of macro ABC_ALLOC\n        pAig.pData = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(pAig))));\n        memset( pAig.pData, 0, sizeof(int) * Aig_ManCiNum(pAig) );\n        return RetValue;\n    }\n\n    // if SAT only, solve without iteration\nclk = Abc_Clock();\n    RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)2*nBTLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Initial SAT:      Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    if RetValue \u003e= 0 {\n        return RetValue; }\n\n    // duplicate the AIG\nclk = Abc_Clock();\n    pAig = Dar_ManRwsat( pTemp = pAig, 1, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 {\n        fmt.Printf(\"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // perform the loop\n    Fra_ParamsDefault( pParams );\n    pParams.nBTLimitNode = nBTLimitFirst;\n    pParams.nBTLimitMiter = nBTLimitStart;\n    pParams.fDontShowBar = 1;\n    pParams.fProve = 1;\n    for  i = 0; i \u003c 6; i++  {\n//printf( \"Running fraiging with %d BTnode and %d BTmiter.\\n\", pParams-\u003enBTLimitNode, pParams-\u003enBTLimitMiter );\n        // try XOR balancing\n        if Aig_ManCountXors(pAig) * 30 \u003e Aig_ManNodeNum(pAig) + 300 {\nclk = Abc_Clock();\n            pAig = Dar_ManBalanceXor( pTemp = pAig, 1, 0, 0 );\n            Aig_ManStop( pTemp );\n            if fVerbose != 0 {\n                fmt.Printf(\"Balance-X:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            } \n        }\n\n        // run fraiging\nclk = Abc_Clock();\n        pAig = Fra_FraigPerform( pTemp = pAig, pParams );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Fraiging (i=%d):   Nodes = %6d.  \", i+1, Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue \u003e= 0 {\n            break; }\n\n        // perform rewriting\nclk = Abc_Clock();\n        pAig = Dar_ManRewriteDefault( pTemp = pAig );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        } \n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue \u003e= 0 {\n            break; }\n        // try simulation\n\n        // set the parameters for the next run\n        pParams.nBTLimitNode = 8 * pParams.nBTLimitNode;\n        pParams.nBTLimitMiter = 2 * pParams.nBTLimitMiter;\n    }\n\n    // if still unsolved try last gasp\n    if RetValue == -1 {\nclk = Abc_Clock();\n        RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)nBTLimitLast, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Final SAT:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n    }\n\n    *ppAig = pAig;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fra_FraigCecPartitioned",
+      "Start": 13805,
+      "End": 15493,
+      "BodyStart": 13930,
+      "Original": "int Fra_FraigCecPartitioned( Aig_Man_t * pMan1, Aig_Man_t * pMan2, int nConfLimit, int nPartSize, int fSmart, int fVerbose )\n{\n    Aig_Man_t * pAig;\n    Vec_Ptr_t * vParts;\n    int i, RetValue = 1, nOutputs;\n    // create partitions\n    vParts = Aig_ManMiterPartitioned( pMan1, pMan2, nPartSize, fSmart );\n    // solve the partitions\n    nOutputs = -1;\n    Vec_PtrForEachEntry( Aig_Man_t *, vParts, pAig, i )\n    {\n        nOutputs++;\n        if ( fVerbose )\n        {\n            printf( \"Verifying part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", \n                i+1, Vec_PtrSize(vParts), Aig_ManCiNum(pAig), Aig_ManCoNum(pAig), \n                Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig) );\n            fflush( stdout );\n        }\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if ( RetValue == 1 )\n            continue;\n        if ( RetValue == 0 )\n            break;\n        RetValue = Fra_FraigCec( \u0026pAig, nConfLimit, 0 );\n        Vec_PtrWriteEntry( vParts, i, pAig );\n        if ( RetValue == 1 )\n            continue;\n        if ( RetValue == 0 )\n            break;\n        break;\n    }\n    // clear the result\n    if ( fVerbose )\n    {\n        printf( \"                                                                                          \\r\" );\n        fflush( stdout );\n    }\n    // report the timeout\n    if ( RetValue == -1 )\n    {\n        printf( \"Timed out after verifying %d partitions (out of %d).\\n\", nOutputs, Vec_PtrSize(vParts) );\n        fflush( stdout );\n    }\n    // free intermediate results\n    Vec_PtrForEachEntry( Aig_Man_t *, vParts, pAig, i )\n        Aig_ManStop( pAig );\n    Vec_PtrFree( vParts );\n    return RetValue;\n}",
+      "Draft": "func Fra_FraigCecPartitioned(pMan1 *Aig_Man_t, pMan2 *Aig_Man_t, nConfLimit int32, nPartSize int32, fSmart int32, fVerbose int32) int32 {\n    var pAig *Aig_Man_t;\n    var vParts *Vec_Ptr_t;\n    var i int32;\n    var RetValue int32 = 1;\n    var nOutputs int32;\n    // create partitions\n    vParts = Aig_ManMiterPartitioned( pMan1, pMan2, nPartSize, fSmart );\n    // solve the partitions\n    nOutputs = -1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        nOutputs++;\n        if fVerbose != 0 {\n            fmt.Printf(\"Verifying part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", i+1, Vec_PtrSize(vParts), Aig_ManCiNum(pAig), Aig_ManCoNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n            fflush( os.Stdout );\n        }\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue == 1 {\n            continue; }\n        if RetValue == 0 {\n            break; }\n        RetValue = Fra_FraigCec( \u0026pAig, nConfLimit, 0 );\n        Vec_PtrWriteEntry( vParts, i, pAig );\n        if RetValue == 1 {\n            continue; }\n        if RetValue == 0 {\n            break; }\n        break;\n    }\n    // clear the result\n    if fVerbose != 0 {\n        fmt.Printf(\"                                                                                          \\r\");\n        fflush( os.Stdout );\n    }\n    // report the timeout\n    if RetValue == -1 {\n        fmt.Printf(\"Timed out after verifying %d partitions (out of %d).\\n\", nOutputs, Vec_PtrSize(vParts));\n        fflush( os.Stdout );\n    }\n    // free intermediate results\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        Aig_ManStop( pAig );\n    }\n    Vec_PtrFree( vParts );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Fra_FraigCecTop",
+      "Start": 15729,
+      "End": 17389,
+      "BodyStart": 15846,
+      "Original": "int Fra_FraigCecTop( Aig_Man_t * pMan1, Aig_Man_t * pMan2, int nConfLimit, int nPartSize, int fSmart, int fVerbose )\n{\n    Aig_Man_t * pTemp;\n    //Abc_NtkDarCec( pNtk1, pNtk2, fPartition, fVerbose );\n    int RetValue;\n    abctime clkTotal = Abc_Clock();\n\n    if ( Aig_ManCiNum(pMan1) != Aig_ManCiNum(pMan1) )\n    {\n        printf( \"Abc_CommandAbc8Cec(): Miters have different number of PIs.\\n\" );\n        return 0;\n    }\n    if ( Aig_ManCoNum(pMan1) != Aig_ManCoNum(pMan1) )\n    {\n        printf( \"Abc_CommandAbc8Cec(): Miters have different number of POs.\\n\" );\n        return 0;\n    }\n    assert( Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1) );\n    assert( Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1) );\n\n    // make sure that the first miter has more nodes\n    if ( Aig_ManNodeNum(pMan1) \u003c Aig_ManNodeNum(pMan2) )\n    {\n        pTemp = pMan1;\n        pMan1 = pMan2;\n        pMan2 = pTemp;\n    }\n    assert( Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2) );\n\n    if ( nPartSize )\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, nPartSize, fSmart, fVerbose );\n    else // no partitioning\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, Aig_ManCoNum(pMan1), 0, fVerbose );\n\n    // report the miter\n    if ( RetValue == 1 )\n    {\n        printf( \"Networks are equivalent.  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n    }\n    else if ( RetValue == 0 )\n    {\n        printf( \"Networks are NOT EQUIVALENT.  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n    }\n    else\n    {\n        printf( \"Networks are UNDECIDED.  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n    }\n    fflush( stdout );\n    return RetValue;\n}",
+      "Draft": "func Fra_FraigCecTop(pMan1 *Aig_Man_t, pMan2 *Aig_Man_t, nConfLimit int32, nPartSize int32, fSmart int32, fVerbose int32) int32 {\n    var pTemp *Aig_Man_t;\n    //Abc_NtkDarCec( pNtk1, pNtk2, fPartition, fVerbose );\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n\n    if Aig_ManCiNum(pMan1) != Aig_ManCiNum(pMan1) {\n        fmt.Printf(\"Abc_CommandAbc8Cec(): Miters have different number of PIs.\\n\");\n        return 0;\n    }\n    if Aig_ManCoNum(pMan1) != Aig_ManCoNum(pMan1) {\n        fmt.Printf(\"Abc_CommandAbc8Cec(): Miters have different number of POs.\\n\");\n        return 0;\n    }\n    assert(Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1), \"Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1)\");\n    assert(Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1), \"Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1)\");\n\n    // make sure that the first miter has more nodes\n    if Aig_ManNodeNum(pMan1) \u003c Aig_ManNodeNum(pMan2) {\n        pTemp = pMan1;\n        pMan1 = pMan2;\n        pMan2 = pTemp;\n    }\n    assert(Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2), \"Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2)\");\n\n    if nPartSize != 0 {\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, nPartSize, fSmart, fVerbose );\n    } else { // no partitioning\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, Aig_ManCoNum(pMan1), 0, fVerbose ); }\n\n    // report the miter\n    if RetValue == 1 {\n        fmt.Printf(\"Networks are equivalent.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    \n    } else if RetValue == 0 {\n        fmt.Printf(\"Networks are NOT EQUIVALENT.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"Networks are UNDECIDED.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    fflush( os.Stdout );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::mechanical::sizeof::10997",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10572,
+      "End": 10572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::mechanical::sizeof::11075",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10642,
+      "End": 10648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::2406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2406,
+      "End": 2421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::6113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5985,
+      "End": 5999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::9814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9522,
+      "End": 9522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::10982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10572,
+      "End": 10572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::15471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14162,
+      "End": 14162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::pointer-cast::16777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15363,
+      "End": 15363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::Fra_FraigSat",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1285,
+      "End": 9133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::Aig_ManCountXors",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCountXors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9414,
+      "End": 9684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::Fra_FraigCec",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigCec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9920,
+      "End": 13569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::Fra_FraigCecPartitioned",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigCecPartitioned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13805,
+      "End": 15493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::Fra_FraigCecTop",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigCecTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15729,
+      "End": 17389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraCec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17637
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraCec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [CEC engined based on fraiging.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraCec.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver2.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigSat(pMan *Aig_Man_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T, nLearnedStart int32, nLearnedDelta int32, nLearnedPerce int32, fFlipBits int32, fAndOuts int32, fNewSolver int32, fVerbose int32) int32 {\n    if fNewSolver != 0 {\n        extern void * Cnf_DataWriteIntoSolver2( Cnf_Dat_t * p, int nFrames, int fInit );\n        extern int    Cnf_DataWriteOrClause2( void * pSat, Cnf_Dat_t * pCnf );\n\n        var pSat *sat_solver2;\n        var pCnf *Cnf_Dat_t;\n        var status, RetValue int32;\n        var clk abctime  = Abc_Clock();\n        var vCiIds *Vec_Int_t;\n\n        assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n        pMan.pData = nil;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if fFlipBits != 0 { \n            Cnf_DataTranformPolarity( pCnf, 0 ); }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver2 *)Cnf_DataWriteIntoSolver2( pCnf, 1, 0 );\n        if pSat == nil {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if fAndOuts != 0 {\n            // assert each output independently\n            if !Cnf_DataWriteAndClauses( pSat, pCnf ) {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        \n        } else {\n            // add the OR clause for the outputs\n            if !Cnf_DataWriteOrClause2( pSat, pCnf ) {\n                sat_solver2_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n        fmt.Printf(\"Created SAT problem with %d variable and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver2_simplify(pSat);\n//        printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver2_nvars(pSat), sat_solver2_nclauses(pSat) );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if status == 0 {\n            Vec_IntFree( vCiIds );\n            sat_solver2_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n        if fVerbose != 0 {\n            pSat.verbosity = 1; }\n        status = sat_solver2_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_Undef {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        \n        } else if status == l_True {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        \n        } else if status == l_False {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        \n        } else {\n            assert(false, \"0\"); }\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if status == l_True {\n            pMan.pData = Sat_Solver2GetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        }\n        // free the sat_solver2\n        if fVerbose != 0 {\n            Sat_Solver2PrintStats( os.Stdout, pSat ); }\n    //sat_solver2_store_write( pSat, \"trace.cnf\" );\n    //sat_solver2_store_free( pSat );\n        sat_solver2_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    \n    } else {\n        var pSat *sat_solver;\n        var pCnf *Cnf_Dat_t;\n        var status, RetValue int32;\n        var clk abctime  = Abc_Clock();\n        var vCiIds *Vec_Int_t;\n\n        assert(Aig_ManRegNum(pMan) == 0, \"Aig_ManRegNum(pMan) == 0\");\n        pMan.pData = nil;\n\n        // derive CNF\n        pCnf = Cnf_Derive( pMan, Aig_ManCoNum(pMan) );\n    //    pCnf = Cnf_DeriveSimple( pMan, Aig_ManCoNum(pMan) );\n\n        if fFlipBits != 0 { \n            Cnf_DataTranformPolarity( pCnf, 0 ); }\n\n        if fVerbose != 0 {\n            fmt.Printf(\"CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. \", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n\n        // convert into SAT solver\n        pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n        if pSat == nil {\n            Cnf_DataFree( pCnf );\n            return 1;\n        }\n\n        if nLearnedStart != 0 {\n            pSat.nLearntStart = pSat.nLearntMax = nLearnedStart; }\n        if nLearnedDelta != 0 {\n            pSat.nLearntDelta = nLearnedDelta; }\n        if nLearnedPerce != 0 {\n            pSat.nLearntRatio = nLearnedPerce; }\n        if fVerbose != 0 {\n            pSat.fVerbose = fVerbose; }\n\n        if fAndOuts != 0 {\n            // assert each output independently\n            if !Cnf_DataWriteAndClauses( pSat, pCnf ) {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        \n        } else {\n            // add the OR clause for the outputs\n            if !Cnf_DataWriteOrClause( pSat, pCnf ) {\n                sat_solver_delete( pSat );\n                Cnf_DataFree( pCnf );\n                return 1;\n            }\n        }\n        vCiIds = Cnf_DataCollectPiSatNums( pCnf, pMan );\n        Cnf_DataFree( pCnf );\n\n\n    //    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n        // simplify the problem\n        clk = Abc_Clock();\n        status = sat_solver_simplify(pSat);\n    //    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n    //    ABC_PRT( \"Time\", Abc_Clock() - clk );\n        if status == 0 {\n            Vec_IntFree( vCiIds );\n            sat_solver_delete( pSat );\n    //        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n            return 1;\n        }\n\n        // solve the miter\n        clk = Abc_Clock();\n//        if ( fVerbose )\n//            pSat-\u003everbosity = 1;\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if status == l_Undef {\n    //        printf( \"The problem timed out.\\n\" );\n            RetValue = -1;\n        \n        } else if status == l_True {\n    //        printf( \"The problem is SATISFIABLE.\\n\" );\n            RetValue = 0;\n        \n        } else if status == l_False {\n    //        printf( \"The problem is UNSATISFIABLE.\\n\" );\n            RetValue = 1;\n        \n        } else {\n            assert(false, \"0\"); }\n\n    //    Abc_Print( 1, \"The number of conflicts = %6d.  \", (int)pSat-\u003estats.conflicts );\n    //    Abc_PrintTime( 1, \"Solving time\", Abc_Clock() - clk );\n \n        // if the problem is SAT, get the counterexample\n        if status == l_True {\n            pMan.pData = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        }\n        // free the sat_solver\n        if fVerbose != 0 {\n            Sat_SolverPrintStats( os.Stdout, pSat ); }\n    //sat_solver_store_write( pSat, \"trace.cnf\" );\n    //sat_solver_store_free( pSat );\n        sat_solver_delete( pSat );\n        Vec_IntFree( vCiIds );\n        return RetValue;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recognizes what nodes are inputs of the EXOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCountXors(p *Aig_Man_t) int32 {\n    var pObj, pFan0, pFan1 *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjIsMuxType(pObj) \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            Counter++; }\n    }\n    return Counter;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigCec(ppAig **Aig_Man_t, nConfLimit int32, fVerbose int32) int32 {\n    var nBTLimitStart int32  =        300;   // starting SAT run\n    var nBTLimitFirst int32  =          2;   // first fraiging iteration\n    var nBTLimitLast int32   = nConfLimit;   // the last-gasp SAT run\n\n    var Params Fra_Par_t;\n    var pParams *Fra_Par_t = \u0026Params;\n    var pAig *Aig_Man_t = *ppAig;\n    var pTemp *Aig_Man_t;\n    var i, RetValue int32;\n    var clk abctime;\n\n    // report the original miter\n    if fVerbose != 0 {\n        fmt.Printf(\"Original miter:   Nodes = %6d.\\n\", Aig_ManNodeNum(pAig));\n    }\n    RetValue = Fra_FraigMiterStatus( pAig );\n//    assert( RetValue == -1 );\n    if RetValue == 0 {\n        // inlining of macro ABC_ALLOC\n        pAig.pData = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(pAig))));\n        memset( pAig.pData, 0, sizeof(int) * Aig_ManCiNum(pAig) );\n        return RetValue;\n    }\n\n    // if SAT only, solve without iteration\nclk = Abc_Clock();\n    RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)2*nBTLimitStart, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Initial SAT:      Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    if RetValue \u003e= 0 {\n        return RetValue; }\n\n    // duplicate the AIG\nclk = Abc_Clock();\n    pAig = Dar_ManRwsat( pTemp = pAig, 1, 0 );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 {\n        fmt.Printf(\"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // perform the loop\n    Fra_ParamsDefault( pParams );\n    pParams.nBTLimitNode = nBTLimitFirst;\n    pParams.nBTLimitMiter = nBTLimitStart;\n    pParams.fDontShowBar = 1;\n    pParams.fProve = 1;\n    for  i = 0; i \u003c 6; i++  {\n//printf( \"Running fraiging with %d BTnode and %d BTmiter.\\n\", pParams-\u003enBTLimitNode, pParams-\u003enBTLimitMiter );\n        // try XOR balancing\n        if Aig_ManCountXors(pAig) * 30 \u003e Aig_ManNodeNum(pAig) + 300 {\nclk = Abc_Clock();\n            pAig = Dar_ManBalanceXor( pTemp = pAig, 1, 0, 0 );\n            Aig_ManStop( pTemp );\n            if fVerbose != 0 {\n                fmt.Printf(\"Balance-X:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            } \n        }\n\n        // run fraiging\nclk = Abc_Clock();\n        pAig = Fra_FraigPerform( pTemp = pAig, pParams );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Fraiging (i=%d):   Nodes = %6d.  \", i+1, Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue \u003e= 0 {\n            break; }\n\n        // perform rewriting\nclk = Abc_Clock();\n        pAig = Dar_ManRewriteDefault( pTemp = pAig );\n        Aig_ManStop( pTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Rewriting:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        } \n\n        // check the miter status\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue \u003e= 0 {\n            break; }\n        // try simulation\n\n        // set the parameters for the next run\n        pParams.nBTLimitNode = 8 * pParams.nBTLimitNode;\n        pParams.nBTLimitMiter = 2 * pParams.nBTLimitMiter;\n    }\n\n    // if still unsolved try last gasp\n    if RetValue == -1 {\nclk = Abc_Clock();\n        RetValue = Fra_FraigSat( pAig, (ABC_INT64_T)nBTLimitLast, (ABC_INT64_T)0, 0, 0, 0, 1, 0, 0, 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Final SAT:        Nodes = %6d.  \", Aig_ManNodeNum(pAig));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n    }\n\n    *ppAig = pAig;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigCecPartitioned(pMan1 *Aig_Man_t, pMan2 *Aig_Man_t, nConfLimit int32, nPartSize int32, fSmart int32, fVerbose int32) int32 {\n    var pAig *Aig_Man_t;\n    var vParts *Vec_Ptr_t;\n    var i int32;\n    var RetValue int32 = 1;\n    var nOutputs int32;\n    // create partitions\n    vParts = Aig_ManMiterPartitioned( pMan1, pMan2, nPartSize, fSmart );\n    // solve the partitions\n    nOutputs = -1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        nOutputs++;\n        if fVerbose != 0 {\n            fmt.Printf(\"Verifying part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\\r\", i+1, Vec_PtrSize(vParts), Aig_ManCiNum(pAig), Aig_ManCoNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n            fflush( os.Stdout );\n        }\n        RetValue = Fra_FraigMiterStatus( pAig );\n        if RetValue == 1 {\n            continue; }\n        if RetValue == 0 {\n            break; }\n        RetValue = Fra_FraigCec( \u0026pAig, nConfLimit, 0 );\n        Vec_PtrWriteEntry( vParts, i, pAig );\n        if RetValue == 1 {\n            continue; }\n        if RetValue == 0 {\n            break; }\n        break;\n    }\n    // clear the result\n    if fVerbose != 0 {\n        fmt.Printf(\"                                                                                          \\r\");\n        fflush( os.Stdout );\n    }\n    // report the timeout\n    if RetValue == -1 {\n        fmt.Printf(\"Timed out after verifying %d partitions (out of %d).\\n\", nOutputs, Vec_PtrSize(vParts));\n        fflush( os.Stdout );\n    }\n    // free intermediate results\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vParts)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vParts, i)), 1); i++  {\n        Aig_ManStop( pAig );\n    }\n    Vec_PtrFree( vParts );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_FraigCecTop(pMan1 *Aig_Man_t, pMan2 *Aig_Man_t, nConfLimit int32, nPartSize int32, fSmart int32, fVerbose int32) int32 {\n    var pTemp *Aig_Man_t;\n    //Abc_NtkDarCec( pNtk1, pNtk2, fPartition, fVerbose );\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n\n    if Aig_ManCiNum(pMan1) != Aig_ManCiNum(pMan1) {\n        fmt.Printf(\"Abc_CommandAbc8Cec(): Miters have different number of PIs.\\n\");\n        return 0;\n    }\n    if Aig_ManCoNum(pMan1) != Aig_ManCoNum(pMan1) {\n        fmt.Printf(\"Abc_CommandAbc8Cec(): Miters have different number of POs.\\n\");\n        return 0;\n    }\n    assert(Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1), \"Aig_ManCiNum(pMan1) == Aig_ManCiNum(pMan1)\");\n    assert(Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1), \"Aig_ManCoNum(pMan1) == Aig_ManCoNum(pMan1)\");\n\n    // make sure that the first miter has more nodes\n    if Aig_ManNodeNum(pMan1) \u003c Aig_ManNodeNum(pMan2) {\n        pTemp = pMan1;\n        pMan1 = pMan2;\n        pMan2 = pTemp;\n    }\n    assert(Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2), \"Aig_ManNodeNum(pMan1) \u003e= Aig_ManNodeNum(pMan2)\");\n\n    if nPartSize != 0 {\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, nPartSize, fSmart, fVerbose );\n    } else { // no partitioning\n        RetValue = Fra_FraigCecPartitioned( pMan1, pMan2, nConfLimit, Aig_ManCoNum(pMan1), 0, fVerbose ); }\n\n    // report the miter\n    if RetValue == 1 {\n        fmt.Printf(\"Networks are equivalent.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    \n    } else if RetValue == 0 {\n        fmt.Printf(\"Networks are NOT EQUIVALENT.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"Networks are UNDECIDED.  \");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    fflush( os.Stdout );\n    return RetValue;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

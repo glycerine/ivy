@@ -1,0 +1,1710 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c",
+  "SHA256": "eb5000af33b8195c8a48543585069a070fc7d9ec07c5a483955ef238dab37376",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 6292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", pSig );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 6423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".subckt\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 6456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 0) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 6677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s=%s\", pName, (char *)Vec_PtrEntry(vBox, i+1) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 6754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 7048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", (char *)Vec_PtrEntry(vNtk, 0) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 7225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 7253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 7363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 7391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0 ); // no nodes; only boxes"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 7718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 7858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 8091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 8556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", pSig, (fAlwaysComma || i \u003c Vec_PtrSize(vSigs) - 1) ? \",\":\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  %s\", (char *)Vec_PtrEntry(vBox, 0) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 8808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" %s (\", (char *)Vec_PtrEntry(vBox, 1) ); // write intance name in Verilog"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".%s(%s)%s\", pName, (char *)Vec_PtrEntry(vBox, i+1), i \u003c Vec_PtrSize(vBox) - 2 ? \", \":\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 9387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s (\\n    \", (char *)Vec_PtrEntry(vNtk, 0) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 9619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n  );\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 9653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  input\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 9794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  output\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 9907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 9936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0 ); // no nodes; only boxes"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 10102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 265,
+        "Column": 13,
+        "ByteOffset": 10274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 10330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 10650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 330,
+        "Column": 9,
+        "ByteOffset": 13108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pName, \"Const0T\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 332,
+        "Column": 16,
+        "ByteOffset": 13217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"Const1T\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 334,
+        "Column": 16,
+        "ByteOffset": 13326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"BufT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 336,
+        "Column": 16,
+        "ByteOffset": 13433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"InvT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 338,
+        "Column": 16,
+        "ByteOffset": 13540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"AndT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 340,
+        "Column": 16,
+        "ByteOffset": 13647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"NandT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 342,
+        "Column": 16,
+        "ByteOffset": 13756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"OrT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 344,
+        "Column": 16,
+        "ByteOffset": 13861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"NorT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 346,
+        "Column": 16,
+        "ByteOffset": 13968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"XorT\") {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 348,
+        "Column": 16,
+        "ByteOffset": 14075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if !strcmp(pName, \"XnorT\") {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 14222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 14376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 9,
+        "ByteOffset": 14812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 5,
+        "ByteOffset": 15137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 2 * i == Vec_PtrSize(vBox) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 9,
+        "ByteOffset": 17157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not started.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 9,
+        "ByteOffset": 17308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Standard cell library is not entered.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bac_PtrFreeNtk",
+      "Start": 3474,
+      "End": 3946,
+      "BodyStart": 3514,
+      "Original": "void Bac_PtrFreeNtk( Vec_Ptr_t * vNtk )\n{\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 3) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 4) );\n    if ( Vec_PtrSize(vNtk) \u003e 5 )\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 5) );\n    if ( Vec_PtrSize(vNtk) \u003e 6 )\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 6) );\n    Vec_PtrFree( vNtk );\n}",
+      "Draft": "func Bac_PtrFreeNtk(vNtk *Vec_Ptr_t) {\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 3) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 4) );\n    if Vec_PtrSize(vNtk) \u003e 5 {\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 5) ); }\n    if Vec_PtrSize(vNtk) \u003e 6 {\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 6) ); }\n    Vec_PtrFree( vNtk );\n}"
+    },
+    {
+      "Name": "Bac_PtrFree",
+      "Start": 3947,
+      "End": 4160,
+      "BodyStart": 3984,
+      "Original": "void Bac_PtrFree( Vec_Ptr_t * vDes )\n{\n    Vec_Ptr_t * vNtk; int i;\n    if ( !vDes ) return;\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrFreeNtk( vNtk );\n    Vec_PtrFree( vDes );\n}",
+      "Draft": "func Bac_PtrFree(vDes *Vec_Ptr_t) {\n    var vNtk *Vec_Ptr_t; var i int32;\n    if !(vDes != nil) { return; }\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrFreeNtk( vNtk );\n    Vec_PtrFree( vDes );\n}"
+    },
+    {
+      "Name": "Bac_PtrMemoryArray",
+      "Start": 4421,
+      "End": 4508,
+      "BodyStart": 4466,
+      "Original": "int Bac_PtrMemoryArray( Vec_Ptr_t * vArray )\n{\n    return (int)Vec_PtrMemory(vArray);\n}",
+      "Draft": "func Bac_PtrMemoryArray(vArray *Vec_Ptr_t) int32 {\n    return int32(Vec_PtrMemory(vArray));\n}"
+    },
+    {
+      "Name": "Bac_PtrMemoryArrayArray",
+      "Start": 4509,
+      "End": 4738,
+      "BodyStart": 4564,
+      "Original": "int Bac_PtrMemoryArrayArray( Vec_Ptr_t * vArrayArray )\n{\n    Vec_Ptr_t * vArray; int i, nBytes = 0;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vArrayArray, vArray, i )\n        nBytes += Bac_PtrMemoryArray(vArray);\n    return nBytes;\n}",
+      "Draft": "func Bac_PtrMemoryArrayArray(vArrayArray *Vec_Ptr_t) int32 {\n    var vArray *Vec_Ptr_t; var i, nBytes int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vArrayArray, vArray, i )\n        nBytes += Bac_PtrMemoryArray(vArray);\n    return nBytes;\n}"
+    },
+    {
+      "Name": "Bac_PtrMemoryNtk",
+      "Start": 4739,
+      "End": 5143,
+      "BodyStart": 4780,
+      "Original": "int Bac_PtrMemoryNtk( Vec_Ptr_t * vNtk )\n{\n    int nBytes = (int)Vec_PtrMemory(vNtk);\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    return nBytes;\n}",
+      "Draft": "func Bac_PtrMemoryNtk(vNtk *Vec_Ptr_t) int32 {\n    var nBytes int32  = int32(Vec_PtrMemory(vNtk));\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    return nBytes;\n}"
+    },
+    {
+      "Name": "Bac_PtrMemory",
+      "Start": 5144,
+      "End": 5372,
+      "BodyStart": 5182,
+      "Original": "int Bac_PtrMemory( Vec_Ptr_t * vDes )\n{\n    Vec_Ptr_t * vNtk; int i, nBytes = (int)Vec_PtrMemory(vDes);\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        nBytes += Bac_PtrMemoryNtk(vNtk);\n    return nBytes;\n}",
+      "Draft": "func Bac_PtrMemory(vDes *Vec_Ptr_t) int32 {\n    var vNtk *Vec_Ptr_t; var i int32;\nvar nBytes int32 = int32(Vec_PtrMemory(vDes));\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        nBytes += Bac_PtrMemoryNtk(vNtk);\n    return nBytes;\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpSignalsBlif",
+      "Start": 5637,
+      "End": 5836,
+      "BodyStart": 5720,
+      "Original": "void Bac_PtrDumpSignalsBlif( FILE * pFile, Vec_Ptr_t * vSigs, int fSkipLastComma )\n{\n    char * pSig; int i;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fprintf( pFile, \" %s\", pSig );\n}",
+      "Draft": "func Bac_PtrDumpSignalsBlif(pFile *os.File, vSigs *Vec_Ptr_t, fSkipLastComma int32) {\n    var pSig string; var i int32;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fmt.Fprintf(pFile, \" %s\", pSig);\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpBoxBlif",
+      "Start": 5837,
+      "End": 6282,
+      "BodyStart": 5895,
+      "Original": "void Bac_PtrDumpBoxBlif( FILE * pFile, Vec_Ptr_t * vBox )\n{\n    char * pName; int i;\n    fprintf( pFile, \".subckt\" );\n    fprintf( pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 0) );\n    //fprintf( pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 1) ); // do not write intance name in BLIF\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fprintf( pFile, \" %s=%s\", pName, (char *)Vec_PtrEntry(vBox, i+1) ), i++;\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Bac_PtrDumpBoxBlif(pFile *os.File, vBox *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Fprintf(pFile, \".subckt\");\n    fmt.Fprintf(pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 0));\n    //fprintf( pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 1) ); // do not write intance name in BLIF\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fmt.Fprintf(pFile, \" %s=%s\", pName, (char *)Vec_PtrEntry(vBox, i+1));\ni++;\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpBoxesBlif",
+      "Start": 6283,
+      "End": 6476,
+      "BodyStart": 6345,
+      "Original": "void Bac_PtrDumpBoxesBlif( FILE * pFile, Vec_Ptr_t * vBoxes )\n{\n    Vec_Ptr_t * vBox; int i;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxBlif( pFile, vBox );\n}",
+      "Draft": "func Bac_PtrDumpBoxesBlif(pFile *os.File, vBoxes *Vec_Ptr_t) {\n    var vBox *Vec_Ptr_t; var i int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxBlif( pFile, vBox );\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpModuleBlif",
+      "Start": 6477,
+      "End": 7081,
+      "BodyStart": 6538,
+      "Original": "void Bac_PtrDumpModuleBlif( FILE * pFile, Vec_Ptr_t * vNtk )\n{\n    fprintf( pFile, \".model %s\\n\", (char *)Vec_PtrEntry(vNtk, 0) );\n    fprintf( pFile, \".inputs\" );\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \".outputs\" );\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 1 );\n    fprintf( pFile, \"\\n\" );\n    assert( Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0 ); // no nodes; only boxes\n    Bac_PtrDumpBoxesBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fprintf( pFile, \".end\\n\\n\" );\n}",
+      "Draft": "func Bac_PtrDumpModuleBlif(pFile *os.File, vNtk *Vec_Ptr_t) {\n    fmt.Fprintf(pFile, \".model %s\\n\", (char *)Vec_PtrEntry(vNtk, 0));\n    fmt.Fprintf(pFile, \".inputs\");\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".outputs\");\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 1 );\n    fmt.Fprintf(pFile, \"\\n\");\n    assert(Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0, \"Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0\"); // no nodes; only boxes\n    Bac_PtrDumpBoxesBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpBlif",
+      "Start": 7082,
+      "End": 7602,
+      "BodyStart": 7141,
+      "Original": "void Bac_PtrDumpBlif( char * pFileName, Vec_Ptr_t * vDes )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNtk; int i;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp() );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleBlif( pFile, vNtk );\n    fclose( pFile );\n}",
+      "Draft": "func Bac_PtrDumpBlif(pFileName string, vDes *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNtk *Vec_Ptr_t; var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp());\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleBlif( pFile, vNtk );\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpSignalsVerilog",
+      "Start": 7870,
+      "End": 8127,
+      "BodyStart": 7954,
+      "Original": "void Bac_PtrDumpSignalsVerilog( FILE * pFile, Vec_Ptr_t * vSigs, int fAlwaysComma )\n{\n    char * pSig; int i;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fprintf( pFile, \" %s%s\", pSig, (fAlwaysComma || i \u003c Vec_PtrSize(vSigs) - 1) ? \",\":\"\" );\n}",
+      "Draft": "func Bac_PtrDumpSignalsVerilog(pFile *os.File, vSigs *Vec_Ptr_t, fAlwaysComma int32) {\n    var pSig string; var i int32;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fmt.Fprintf(pFile, \" %s%s\", pSig, (fAlwaysComma || i \u003c Vec_PtrSize(vSigs) - 1) ? \",\":\"\");\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpBoxVerilog",
+      "Start": 8128,
+      "End": 8582,
+      "BodyStart": 8189,
+      "Original": "void Bac_PtrDumpBoxVerilog( FILE * pFile, Vec_Ptr_t * vBox )\n{\n    char * pName; int i;\n    fprintf( pFile, \"  %s\", (char *)Vec_PtrEntry(vBox, 0) );\n    fprintf( pFile, \" %s (\", (char *)Vec_PtrEntry(vBox, 1) ); // write intance name in Verilog\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fprintf( pFile, \".%s(%s)%s\", pName, (char *)Vec_PtrEntry(vBox, i+1), i \u003c Vec_PtrSize(vBox) - 2 ? \", \":\"\" ), i++;\n    fprintf( pFile, \");\\n\" );\n}",
+      "Draft": "func Bac_PtrDumpBoxVerilog(pFile *os.File, vBox *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Fprintf(pFile, \"  %s\", (char *)Vec_PtrEntry(vBox, 0));\n    fmt.Fprintf(pFile, \" %s (\", (char *)Vec_PtrEntry(vBox, 1)); // write intance name in Verilog\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fmt.Fprintf(pFile, \".%s(%s)%s\", pName, (char *)Vec_PtrEntry(vBox, i+1), i \u003c Vec_PtrSize(vBox) - 2 ? \", \":\"\");\ni++;\n    fmt.Fprintf(pFile, \");\\n\");\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpBoxesVerilog",
+      "Start": 8583,
+      "End": 8782,
+      "BodyStart": 8648,
+      "Original": "void Bac_PtrDumpBoxesVerilog( FILE * pFile, Vec_Ptr_t * vBoxes )\n{\n    Vec_Ptr_t * vBox; int i;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxVerilog( pFile, vBox );\n}",
+      "Draft": "func Bac_PtrDumpBoxesVerilog(pFile *os.File, vBoxes *Vec_Ptr_t) {\n    var vBox *Vec_Ptr_t; var i int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxVerilog( pFile, vBox );\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpModuleVerilog",
+      "Start": 8783,
+      "End": 9604,
+      "BodyStart": 8847,
+      "Original": "void Bac_PtrDumpModuleVerilog( FILE * pFile, Vec_Ptr_t * vNtk )\n{\n    fprintf( pFile, \"module %s (\\n    \", (char *)Vec_PtrEntry(vNtk, 0) );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 1 );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fprintf( pFile, \"\\n  );\\n\" );\n    fprintf( pFile, \"  input\" );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fprintf( pFile, \";\\n\" );\n    fprintf( pFile, \"  output\" );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fprintf( pFile, \";\\n\" );\n    assert( Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0 ); // no nodes; only boxes\n    Bac_PtrDumpBoxesVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fprintf( pFile, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Bac_PtrDumpModuleVerilog(pFile *os.File, vNtk *Vec_Ptr_t) {\n    fmt.Fprintf(pFile, \"module %s (\\n    \", (char *)Vec_PtrEntry(vNtk, 0));\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 1 );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fmt.Fprintf(pFile, \"\\n  );\\n\");\n    fmt.Fprintf(pFile, \"  input\");\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fmt.Fprintf(pFile, \";\\n\");\n    fmt.Fprintf(pFile, \"  output\");\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fmt.Fprintf(pFile, \";\\n\");\n    assert(Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0, \"Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0\"); // no nodes; only boxes\n    Bac_PtrDumpBoxesVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Bac_PtrDumpVerilog",
+      "Start": 9605,
+      "End": 10131,
+      "BodyStart": 9667,
+      "Original": "void Bac_PtrDumpVerilog( char * pFileName, Vec_Ptr_t * vDes )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNtk; int i;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp() );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleVerilog( pFile, vNtk );\n    fclose( pFile );\n}",
+      "Draft": "func Bac_PtrDumpVerilog(pFileName string, vDes *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNtk *Vec_Ptr_t; var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp());\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleVerilog( pFile, vNtk );\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Bac_ManCollectGateNameOne",
+      "Start": 10410,
+      "End": 10689,
+      "BodyStart": 10521,
+      "Original": "void Bac_ManCollectGateNameOne( Mio_Library_t * pLib, Ptr_ObjType_t Type, word Truth, Vec_Ptr_t * vGateNames )\n{\n    Mio_Gate_t * pGate = Mio_LibraryReadGateByTruth( pLib, Truth );\n    if ( pGate != NULL )\n        Vec_PtrWriteEntry( vGateNames, Type, Mio_GateReadName(pGate) );\n}",
+      "Draft": "func Bac_ManCollectGateNameOne(pLib *Mio_Library_t, Type Ptr_ObjType_t, Truth word, vGateNames *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t  = Mio_LibraryReadGateByTruth( pLib, Truth );\n    if pGate != nil {\n        Vec_PtrWriteEntry( vGateNames, Type, Mio_GateReadName(pGate) ); }\n}"
+    },
+    {
+      "Name": "Bac_ManCollectGateNamesByTruth",
+      "Start": 10690,
+      "End": 11962,
+      "BodyStart": 10757,
+      "Original": "Vec_Ptr_t * Bac_ManCollectGateNamesByTruth( Mio_Library_t * pLib )\n{\n    static word uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    Vec_Ptr_t * vGateNames = Vec_PtrStart( PTR_GATE_UNKNOWN );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C0,              0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C1,       ~(word)0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_BUF,    uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_INV,   ~uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_AND,   (uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NAND, ~(uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_OR,    (uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NOR,  ~(uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XOR,   (uTruths6[0] ^ uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XNOR, ~(uTruths6[0] ^ uTruths6[1]), vGateNames );\n    return vGateNames;\n}",
+      "Draft": "func Bac_ManCollectGateNamesByTruth(pLib *Mio_Library_t) *Vec_Ptr_t {\n    static word uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    var vGateNames *Vec_Ptr_t  = Vec_PtrStart( PTR_GATE_UNKNOWN );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C0,              0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C1,       ~(word)0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_BUF,    uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_INV,   ~uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_AND,   (uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NAND, ~(uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_OR,    (uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NOR,  ~(uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XOR,   (uTruths6[0] ^ uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XNOR, ~(uTruths6[0] ^ uTruths6[1]), vGateNames );\n    return vGateNames;\n}"
+    },
+    {
+      "Name": "Bac_PtrUpdateBox",
+      "Start": 12253,
+      "End": 14425,
+      "BodyStart": 12320,
+      "Original": "void Bac_PtrUpdateBox( Vec_Ptr_t * vBox, Vec_Ptr_t * vGatesNames )\n{\n    Mio_Gate_t * pGate;  Mio_Pin_t * pPin; int i = 1;\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    // update gate name\n    char * pNameNew, * pName = (char *)Vec_PtrEntry(vBox, 0);\n    if ( !strcmp(pName, \"Const0T\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C0);\n    else if ( !strcmp(pName, \"Const1T\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C1);\n    else if ( !strcmp(pName, \"BufT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_BUF);\n    else if ( !strcmp(pName, \"InvT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_INV);\n    else if ( !strcmp(pName, \"AndT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_AND);\n    else if ( !strcmp(pName, \"NandT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NAND);\n    else if ( !strcmp(pName, \"OrT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_OR);\n    else if ( !strcmp(pName, \"NorT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NOR);\n    else if ( !strcmp(pName, \"XorT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XOR);\n    else if ( !strcmp(pName, \"XnorT\") )\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XNOR);\n    else // user hierarchy\n        return;\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 0, Abc_UtilStrsav(pNameNew) );\n    // remove instance name\n    pName = (char *)Vec_PtrEntry(vBox, 1);\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 1, NULL );\n    // update formal input names\n    pGate = Mio_LibraryReadGateByName( pLib, pNameNew, NULL );\n    Mio_GateForEachPin( pGate, pPin )\n    {\n        pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n        ABC_FREE( pName );\n        pNameNew = Mio_PinReadName(pPin);\n        Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    }\n    // update output name\n    pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n    pNameNew = Mio_GateReadOutName(pGate);\n    Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    assert( 2 * i == Vec_PtrSize(vBox) );\n}",
+      "Draft": "func Bac_PtrUpdateBox(vBox *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t;  var pPin *Mio_Pin_t; var i int32  = 1;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    // update gate name\n    var pNameNew string;\n    var pName string = (char *)Vec_PtrEntry(vBox, 0);\n    if !(int32(strings.Compare(pName, \"Const0T\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C0);\n    } else if !(int32(strings.Compare(pName, \"Const1T\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C1);\n    } else if !(int32(strings.Compare(pName, \"BufT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_BUF);\n    } else if !(int32(strings.Compare(pName, \"InvT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_INV);\n    } else if !(int32(strings.Compare(pName, \"AndT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_AND);\n    } else if !(int32(strings.Compare(pName, \"NandT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NAND);\n    } else if !(int32(strings.Compare(pName, \"OrT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_OR);\n    } else if !(int32(strings.Compare(pName, \"NorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NOR);\n    } else if !(int32(strings.Compare(pName, \"XorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XOR);\n    } else if !(int32(strings.Compare(pName, \"XnorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XNOR);\n    } else { // user hierarchy\n        return; }\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 0, Abc_UtilStrsav(pNameNew) );\n    // remove instance name\n    pName = (char *)Vec_PtrEntry(vBox, 1);\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 1, nil );\n    // update formal input names\n    pGate = Mio_LibraryReadGateByName( pLib, pNameNew, nil );\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n        ABC_FREE( pName );\n        pNameNew = Mio_PinReadName(pPin);\n        Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    }\n    // update output name\n    pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n    pNameNew = Mio_GateReadOutName(pGate);\n    Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    assert(2 * i == Vec_PtrSize(vBox), \"2 * i == Vec_PtrSize(vBox)\");\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformSigs",
+      "Start": 14426,
+      "End": 14689,
+      "BodyStart": 14479,
+      "Original": "Vec_Ptr_t * Bac_PtrTransformSigs( Vec_Ptr_t * vSig )\n{\n    char * pName; int i;\n    Vec_Ptr_t * vNew = Vec_PtrAllocExact( Vec_PtrSize(vSig) );\n    Vec_PtrForEachEntry( char *, vSig, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    return vNew;\n}",
+      "Draft": "func Bac_PtrTransformSigs(vSig *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vSig) );\n    Vec_PtrForEachEntry( char *, vSig, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    return vNew;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformBox",
+      "Start": 14690,
+      "End": 15047,
+      "BodyStart": 14767,
+      "Original": "Vec_Ptr_t * Bac_PtrTransformBox( Vec_Ptr_t * vBox, Vec_Ptr_t * vGatesNames )\n{\n    char * pName; int i;\n    Vec_Ptr_t * vNew = Vec_PtrAllocExact( Vec_PtrSize(vBox) );\n    Vec_PtrForEachEntry( char *, vBox, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    if ( vGatesNames )\n        Bac_PtrUpdateBox( vNew, vGatesNames );\n    return vNew;\n}",
+      "Draft": "func Bac_PtrTransformBox(vBox *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vBox) );\n    Vec_PtrForEachEntry( char *, vBox, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    if vGatesNames != nil {\n        Bac_PtrUpdateBox( vNew, vGatesNames ); }\n    return vNew;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformBoxes",
+      "Start": 15048,
+      "End": 15368,
+      "BodyStart": 15129,
+      "Original": "Vec_Ptr_t * Bac_PtrTransformBoxes( Vec_Ptr_t * vBoxes, Vec_Ptr_t * vGatesNames )\n{\n    Vec_Ptr_t * vBox; int i;\n    Vec_Ptr_t * vNew = Vec_PtrAllocExact( Vec_PtrSize(vBoxes) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Vec_PtrPush( vNew, Bac_PtrTransformBox(vBox, vGatesNames) );\n    return vNew;\n}",
+      "Draft": "func Bac_PtrTransformBoxes(vBoxes *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var vBox *Vec_Ptr_t; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vBoxes) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Vec_PtrPush( vNew, Bac_PtrTransformBox(vBox, vGatesNames) );\n    return vNew;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformNtk",
+      "Start": 15369,
+      "End": 16049,
+      "BodyStart": 15446,
+      "Original": "Vec_Ptr_t * Bac_PtrTransformNtk( Vec_Ptr_t * vNtk, Vec_Ptr_t * vGatesNames )\n{\n    char * pName = (char *)Vec_PtrEntry(vNtk, 0);\n    Vec_Ptr_t * vInputs  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    Vec_Ptr_t * vOutputs = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    Vec_Ptr_t * vBoxes   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    Vec_Ptr_t * vNew     = Vec_PtrAllocExact( Vec_PtrSize(vNtk) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vInputs) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vOutputs) );\n    Vec_PtrPush( vNew, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNew, Bac_PtrTransformBoxes(vBoxes, vGatesNames) );\n    return vNew;\n}",
+      "Draft": "func Bac_PtrTransformNtk(vNtk *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string  = (char *)Vec_PtrEntry(vNtk, 0);\n    var vInputs *Vec_Ptr_t   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vBoxes *Vec_Ptr_t    = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vNew *Vec_Ptr_t      = Vec_PtrAllocExact( Vec_PtrSize(vNtk) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vInputs) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vOutputs) );\n    Vec_PtrPush( vNew, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNew, Bac_PtrTransformBoxes(vBoxes, vGatesNames) );\n    return vNew;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformTest",
+      "Start": 16050,
+      "End": 17039,
+      "BodyStart": 16103,
+      "Original": "Vec_Ptr_t * Bac_PtrTransformTest( Vec_Ptr_t * vDes )\n{\n    Mio_Library_t * pLib;\n    Vec_Ptr_t * vGatesNames;\n    Vec_Ptr_t * vNtk, * vNew; int i;\n    // dump BLIF before transformation\n    Bac_PtrDumpBlif( \"test1.blif\", vDes );\n    if ( Abc_FrameGetGlobalFrame() == NULL )\n    {\n        printf( \"ABC framework is not started.\\n\" );\n        return NULL;\n    }\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if ( pLib == NULL )\n    {\n        printf( \"Standard cell library is not entered.\\n\" );\n        return NULL;\n    }\n    vGatesNames = Bac_ManCollectGateNamesByTruth( pLib );\n    // transform\n    vNew = Vec_PtrAllocExact( Vec_PtrSize(vDes) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav((char *)Vec_PtrEntry(vDes, 0)) );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Vec_PtrPush( vNew, Bac_PtrTransformNtk(vNtk, vGatesNames) );\n    // dump BLIF after transformation\n    Bac_PtrDumpBlif( \"test2.blif\", vNew );\n    Vec_PtrFree( vGatesNames );\n    return vNew;\n}",
+      "Draft": "func Bac_PtrTransformTest(vDes *Vec_Ptr_t) *Vec_Ptr_t {\n    var pLib *Mio_Library_t;\n    var vGatesNames *Vec_Ptr_t;\n    var vNtk, vNew *Vec_Ptr_t; var i int32;\n    // dump BLIF before transformation\n    Bac_PtrDumpBlif( \"test1.blif\", vDes );\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return nil;\n    }\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Printf(\"Standard cell library is not entered.\\n\");\n        return nil;\n    }\n    vGatesNames = Bac_ManCollectGateNamesByTruth( pLib );\n    // transform\n    vNew = Vec_PtrAllocExact( Vec_PtrSize(vDes) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav((char *)Vec_PtrEntry(vDes, 0)) );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Vec_PtrPush( vNew, Bac_PtrTransformNtk(vNtk, vGatesNames) );\n    // dump BLIF after transformation\n    Bac_PtrDumpBlif( \"test2.blif\", vNew );\n    Vec_PtrFree( vGatesNames );\n    return vNew;\n}"
+    },
+    {
+      "Name": "Bac_PtrTransformTestTest",
+      "Start": 17302,
+      "End": 17684,
+      "BodyStart": 17334,
+      "Original": "void Bac_PtrTransformTestTest()\n{\n    char * pFileName = \"c/hie/dump/1/netlist_1.v\";\n    Abc_Ntk_t * pNtk = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n    extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n    Vec_Ptr_t * vDes = Ptr_AbcDeriveDes( pNtk );\n    Vec_Ptr_t * vNew = Bac_PtrTransformTest( vDes );\n    Bac_PtrFree( vDes );\n    Bac_PtrFree( vNew );\n}",
+      "Draft": "func Bac_PtrTransformTestTest() {\n    var pFileName string  = \"c/hie/dump/1/netlist_1.v\";\n    var pNtk *Abc_Ntk_t  = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n    extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n    var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pNtk );\n    var vNew *Vec_Ptr_t  = Bac_PtrTransformTest( vDes );\n    Bac_PtrFree( vDes );\n    Bac_PtrFree( vNew );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::mechanical::enum::2585",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2585,
+      "End": 2589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::mechanical::static::10763",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 10763,
+      "End": 10769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3533,
+      "End": 3546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3588",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3588,
+      "End": 3601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3643,
+      "End": 3656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3698",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3698,
+      "End": 3711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3790,
+      "End": 3803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::3882",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3882,
+      "End": 3895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::4859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4859,
+      "End": 4872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::4931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4931,
+      "End": 4944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::5008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5008,
+      "End": 5021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::5085",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5085,
+      "End": 5098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::5982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5982,
+      "End": 5990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::6213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6213,
+      "End": 6221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::6575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6575,
+      "End": 6583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::6676",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6676,
+      "End": 6689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::6814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6814,
+      "End": 6827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::6907",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6907,
+      "End": 6920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::7008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7008,
+      "End": 7021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::7420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7420,
+      "End": 7428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::8244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8244,
+      "End": 8252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::8306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8306,
+      "End": 8314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::8474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8474,
+      "End": 8482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::8890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8890,
+      "End": 8898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::8961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8961,
+      "End": 8974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9040,
+      "End": 9053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9186",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9186,
+      "End": 9199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9328,
+      "End": 9341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9422,
+      "End": 9435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9526,
+      "End": 9539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::9946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9946,
+      "End": 9954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12403,
+      "End": 12420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12498,
+      "End": 12506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12585,
+      "End": 12593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12694",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12694,
+      "End": 12702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12800,
+      "End": 12808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::12907",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12907,
+      "End": 12915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13014",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13014,
+      "End": 13022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13122,
+      "End": 13130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13229,
+      "End": 13237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13335,
+      "End": 13343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13442,
+      "End": 13450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13550,
+      "End": 13558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::13766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13766,
+      "End": 13774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::14200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14016,
+      "End": 14024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::14420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14236,
+      "End": 14244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::15651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15467,
+      "End": 15475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::15709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15525,
+      "End": 15538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::15772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15588,
+      "End": 15601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::15835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15651,
+      "End": 15664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::16605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16421,
+      "End": 16438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::pointer-cast::16927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16743,
+      "End": 16751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrFreeNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrFreeNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3474,
+      "End": 3946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrFree",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3947,
+      "End": 4160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrMemoryArray",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrMemoryArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4421,
+      "End": 4508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrMemoryArrayArray",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrMemoryArrayArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4509,
+      "End": 4738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrMemoryNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrMemoryNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4739,
+      "End": 5143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrMemory",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5144,
+      "End": 5372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpSignalsBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpSignalsBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5637,
+      "End": 5836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpBoxBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpBoxBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5837,
+      "End": 6282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpBoxesBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpBoxesBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6283,
+      "End": 6476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpModuleBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpModuleBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6477,
+      "End": 7081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7082,
+      "End": 7602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::ternary::Bac_PtrDumpSignalsVerilog",
+      "Category": "ternary-review",
+      "Symbol": "Bac_PtrDumpSignalsVerilog",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7870,
+      "End": 8127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpSignalsVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpSignalsVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7870,
+      "End": 8127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::ternary::Bac_PtrDumpBoxVerilog",
+      "Category": "ternary-review",
+      "Symbol": "Bac_PtrDumpBoxVerilog",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8128,
+      "End": 8582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpBoxVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpBoxVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8128,
+      "End": 8582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpBoxesVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpBoxesVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8583,
+      "End": 8782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpModuleVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpModuleVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8783,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrDumpVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrDumpVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 10131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_ManCollectGateNameOne",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManCollectGateNameOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10410,
+      "End": 10689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_ManCollectGateNamesByTruth",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManCollectGateNamesByTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10690,
+      "End": 11962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrUpdateBox",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrUpdateBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12253,
+      "End": 14425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformSigs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformSigs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14426,
+      "End": 14689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformBox",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14690,
+      "End": 15047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformBoxes",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformBoxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15048,
+      "End": 15368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15369,
+      "End": 16049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformTest",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16050,
+      "End": 17039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::Bac_PtrTransformTestTest",
+      "Category": "semantic-review",
+      "Symbol": "Bac_PtrTransformTestTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17302,
+      "End": 17684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::4044",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4044,
+      "End": 4101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::4613",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4613,
+      "End": 4671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::5252",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5252,
+      "End": 5309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::5750",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5750,
+      "End": 5795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::6118",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6118,
+      "End": 6171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::6380",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6380,
+      "End": 6431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::7476",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7476,
+      "End": 7533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::7984",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7984,
+      "End": 8029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::8376",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8376,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::8683",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8683,
+      "End": 8734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::10002",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10002,
+      "End": 10059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::10799",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10799,
+      "End": 10828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::10838",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10838,
+      "End": 10867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::10877",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10877,
+      "End": 10906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::13647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13647,
+      "End": 13664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::13801",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13801,
+      "End": 13818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::14061",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14061,
+      "End": 14078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::14573",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14573,
+      "End": 14618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::14861",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14861,
+      "End": 14906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::15229",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15229,
+      "End": 15280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacPtr.c::macro-inline::16781",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16781,
+      "End": 16838
+    }
+  ],
+  "Draft": "package bac\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bacPtr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Simple interface with external tools.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacPtr.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"map/mio/mio.h\"\n//#include \"bac.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\ndesign = array containing design name (as the first entry in the array) followed by pointers to modules\nmodule = array containing module name (as the first entry in the array) followed by pointers to 6 arrays: \n         {array of input names; array of output names; array of nodes; array of boxes, \n          array of floating-point input-arrival times; array of floating-point output-required times}\nnode   = array containing output name, followed by node type, followed by input names\nbox    = array containing model name, instance name, followed by pairs of formal/actual names for each port\n\n  Comments:\n  - in describing boxes\n     - input formal/actual name pairs should be listed before output name pairs\n     - the order of formal names should be the same as the order of inputs/outputs in the module description\n     - all formal names present in the module description should be listed\n     - if an input pin is not driven or an output pin has no fanout, the actual pin name is NULL\n     - word-level formal name \"a\" is written as bit-level names (a[0]. a[1], etc) ordered LSB to MSB\n     - the boxes can appear in any order (topological order is not expected)\n  - in description of nodes and boxes, primitive names should be given as char*-strings (\"AndT\", \"OrT\", etc)\n  - constant 0/1 nets should be driven by constant nodes having primitive names \"Const0T\" and \"Const1T\"\n  - primitive modules should not be written, but the list of primitives and formal names should be provided\n  - currently only \"boxes\" are supported (the array of \"nodes\" should contain no entries)\n  - arrays of input-arrival/output-required times in the module description are optional\n*/\n\n// elementary gates\n type Ptr_ObjType_t int32\nconst ( \n    PTR_GATE_NONE Ptr_ObjType_t = 0\n\n    PTR_GATE_C0 Ptr_ObjType_t = PTR_GATE_NONE + 1\n         // Const0T\n    PTR_GATE_C1 Ptr_ObjType_t = PTR_GATE_C0 + 1\n         // Const1T   \n    PTR_GATE_BUF Ptr_ObjType_t = PTR_GATE_C1 + 1\n        // BufT  \n    PTR_GATE_INV Ptr_ObjType_t = PTR_GATE_BUF + 1\n        // InvT  \n    PTR_GATE_AND Ptr_ObjType_t = PTR_GATE_INV + 1\n        // AndT  \n    PTR_GATE_NAND Ptr_ObjType_t = PTR_GATE_AND + 1\n       // NandT \n    PTR_GATE_OR Ptr_ObjType_t = PTR_GATE_NAND + 1\n         // OrT   \n    PTR_GATE_NOR Ptr_ObjType_t = PTR_GATE_OR + 1\n        // NorT  \n    PTR_GATE_XOR Ptr_ObjType_t = PTR_GATE_NOR + 1\n        // XorT  \n    PTR_GATE_XNOR Ptr_ObjType_t = PTR_GATE_XOR + 1\n       // XnorT \n    PTR_GATE_UNKNOWN Ptr_ObjType_t = PTR_GATE_XNOR + 1\n\n)\n\n  \n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Free Ptr.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrFreeNtk(vNtk *Vec_Ptr_t) {\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    Vec_PtrFree( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 3) );\n    Vec_VecFree( (Vec_Vec_t *)Vec_PtrEntry(vNtk, 4) );\n    if Vec_PtrSize(vNtk) \u003e 5 {\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 5) ); }\n    if Vec_PtrSize(vNtk) \u003e 6 {\n        Vec_FltFree( (Vec_Flt_t *)Vec_PtrEntry(vNtk, 6) ); }\n    Vec_PtrFree( vNtk );\n}\nfunc Bac_PtrFree(vDes *Vec_Ptr_t) {\n    var vNtk *Vec_Ptr_t; var i int32;\n    if !(vDes != nil) { return; }\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrFreeNtk( vNtk );\n    Vec_PtrFree( vDes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count memory used by Ptr.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrMemoryArray(vArray *Vec_Ptr_t) int32 {\n    return int32(Vec_PtrMemory(vArray));\n}\nfunc Bac_PtrMemoryArrayArray(vArrayArray *Vec_Ptr_t) int32 {\n    var vArray *Vec_Ptr_t; var i, nBytes int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vArrayArray, vArray, i )\n        nBytes += Bac_PtrMemoryArray(vArray);\n    return nBytes;\n}\nfunc Bac_PtrMemoryNtk(vNtk *Vec_Ptr_t) int32 {\n    var nBytes int32  = int32(Vec_PtrMemory(vNtk));\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1) );\n    nBytes += Bac_PtrMemoryArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3) );\n    nBytes += Bac_PtrMemoryArrayArray( (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    return nBytes;\n}\nfunc Bac_PtrMemory(vDes *Vec_Ptr_t) int32 {\n    var vNtk *Vec_Ptr_t; var i int32;\nvar nBytes int32 = int32(Vec_PtrMemory(vDes));\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        nBytes += Bac_PtrMemoryNtk(vNtk);\n    return nBytes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumping Ptr into a BLIF file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrDumpSignalsBlif(pFile *os.File, vSigs *Vec_Ptr_t, fSkipLastComma int32) {\n    var pSig string; var i int32;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fmt.Fprintf(pFile, \" %s\", pSig);\n}\nfunc Bac_PtrDumpBoxBlif(pFile *os.File, vBox *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Fprintf(pFile, \".subckt\");\n    fmt.Fprintf(pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 0));\n    //fprintf( pFile, \" %s\", (char *)Vec_PtrEntry(vBox, 1) ); // do not write intance name in BLIF\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fmt.Fprintf(pFile, \" %s=%s\", pName, (char *)Vec_PtrEntry(vBox, i+1));\ni++;\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Bac_PtrDumpBoxesBlif(pFile *os.File, vBoxes *Vec_Ptr_t) {\n    var vBox *Vec_Ptr_t; var i int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxBlif( pFile, vBox );\n}\nfunc Bac_PtrDumpModuleBlif(pFile *os.File, vNtk *Vec_Ptr_t) {\n    fmt.Fprintf(pFile, \".model %s\\n\", (char *)Vec_PtrEntry(vNtk, 0));\n    fmt.Fprintf(pFile, \".inputs\");\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \".outputs\");\n    Bac_PtrDumpSignalsBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 1 );\n    fmt.Fprintf(pFile, \"\\n\");\n    assert(Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0, \"Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0\"); // no nodes; only boxes\n    Bac_PtrDumpBoxesBlif( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}\nfunc Bac_PtrDumpBlif(pFileName string, vDes *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNtk *Vec_Ptr_t; var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp());\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleBlif( pFile, vNtk );\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumping Ptr into a Verilog file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrDumpSignalsVerilog(pFile *os.File, vSigs *Vec_Ptr_t, fAlwaysComma int32) {\n    var pSig string; var i int32;\n    Vec_PtrForEachEntry( char *, vSigs, pSig, i )\n        fmt.Fprintf(pFile, \" %s%s\", pSig, (fAlwaysComma || i \u003c Vec_PtrSize(vSigs) - 1) ? \",\":\"\");\n}\nfunc Bac_PtrDumpBoxVerilog(pFile *os.File, vBox *Vec_Ptr_t) {\n    var pName string; var i int32;\n    fmt.Fprintf(pFile, \"  %s\", (char *)Vec_PtrEntry(vBox, 0));\n    fmt.Fprintf(pFile, \" %s (\", (char *)Vec_PtrEntry(vBox, 1)); // write intance name in Verilog\n    Vec_PtrForEachEntryStart( char *, vBox, pName, i, 2 )\n        fmt.Fprintf(pFile, \".%s(%s)%s\", pName, (char *)Vec_PtrEntry(vBox, i+1), i \u003c Vec_PtrSize(vBox) - 2 ? \", \":\"\");\ni++;\n    fmt.Fprintf(pFile, \");\\n\");\n}\nfunc Bac_PtrDumpBoxesVerilog(pFile *os.File, vBoxes *Vec_Ptr_t) {\n    var vBox *Vec_Ptr_t; var i int32;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Bac_PtrDumpBoxVerilog( pFile, vBox );\n}\nfunc Bac_PtrDumpModuleVerilog(pFile *os.File, vNtk *Vec_Ptr_t) {\n    fmt.Fprintf(pFile, \"module %s (\\n    \", (char *)Vec_PtrEntry(vNtk, 0));\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 1 );\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fmt.Fprintf(pFile, \"\\n  );\\n\");\n    fmt.Fprintf(pFile, \"  input\");\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1), 0 );\n    fmt.Fprintf(pFile, \";\\n\");\n    fmt.Fprintf(pFile, \"  output\");\n    Bac_PtrDumpSignalsVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2), 0 );\n    fmt.Fprintf(pFile, \";\\n\");\n    assert(Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0, \"Vec_PtrSize((Vec_Ptr_t *)Vec_PtrEntry(vNtk, 3)) == 0\"); // no nodes; only boxes\n    Bac_PtrDumpBoxesVerilog( pFile, (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4) );\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}\nfunc Bac_PtrDumpVerilog(pFileName string, vDes *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNtk *Vec_Ptr_t; var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Design \\\"%s\\\" written via Ptr in ABC on %s\\n\\n\", (char *)Vec_PtrEntry(vDes, 0), Extra_TimeStamp());\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Bac_PtrDumpModuleVerilog( pFile, vNtk );\n    _ = (pFile).Close();\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collect elementary gates from the library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManCollectGateNameOne(pLib *Mio_Library_t, Type Ptr_ObjType_t, Truth word, vGateNames *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t  = Mio_LibraryReadGateByTruth( pLib, Truth );\n    if pGate != nil {\n        Vec_PtrWriteEntry( vGateNames, Type, Mio_GateReadName(pGate) ); }\n}\nfunc Bac_ManCollectGateNamesByTruth(pLib *Mio_Library_t) *Vec_Ptr_t {\n    static word uTruths6[3] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    };\n    var vGateNames *Vec_Ptr_t  = Vec_PtrStart( PTR_GATE_UNKNOWN );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C0,              0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_C1,       ~(word)0,                 vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_BUF,    uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_INV,   ~uTruths6[0],                vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_AND,   (uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NAND, ~(uTruths6[0] \u0026 uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_OR,    (uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_NOR,  ~(uTruths6[0] | uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XOR,   (uTruths6[0] ^ uTruths6[1]), vGateNames );\n    Bac_ManCollectGateNameOne( pLib, PTR_GATE_XNOR, ~(uTruths6[0] ^ uTruths6[1]), vGateNames );\n    return vGateNames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure transforms tech-ind Ptr into mapped Ptr.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrUpdateBox(vBox *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) {\n    var pGate *Mio_Gate_t;  var pPin *Mio_Pin_t; var i int32  = 1;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    // update gate name\n    var pNameNew string;\n    var pName string = (char *)Vec_PtrEntry(vBox, 0);\n    if !(int32(strings.Compare(pName, \"Const0T\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C0);\n    } else if !(int32(strings.Compare(pName, \"Const1T\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_C1);\n    } else if !(int32(strings.Compare(pName, \"BufT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_BUF);\n    } else if !(int32(strings.Compare(pName, \"InvT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_INV);\n    } else if !(int32(strings.Compare(pName, \"AndT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_AND);\n    } else if !(int32(strings.Compare(pName, \"NandT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NAND);\n    } else if !(int32(strings.Compare(pName, \"OrT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_OR);\n    } else if !(int32(strings.Compare(pName, \"NorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_NOR);\n    } else if !(int32(strings.Compare(pName, \"XorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XOR);\n    } else if !(int32(strings.Compare(pName, \"XnorT\")) != 0) {\n        pNameNew = (char *)Vec_PtrEntry(vGatesNames, PTR_GATE_XNOR);\n    } else { // user hierarchy\n        return; }\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 0, Abc_UtilStrsav(pNameNew) );\n    // remove instance name\n    pName = (char *)Vec_PtrEntry(vBox, 1);\n    ABC_FREE( pName );\n    Vec_PtrWriteEntry( vBox, 1, nil );\n    // update formal input names\n    pGate = Mio_LibraryReadGateByName( pLib, pNameNew, nil );\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n        ABC_FREE( pName );\n        pNameNew = Mio_PinReadName(pPin);\n        Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    }\n    // update output name\n    pName = (char *)Vec_PtrEntry( vBox, 2 * i );\n    pNameNew = Mio_GateReadOutName(pGate);\n    Vec_PtrWriteEntry( vBox, 2 * i++, Abc_UtilStrsav(pNameNew) );\n    assert(2 * i == Vec_PtrSize(vBox), \"2 * i == Vec_PtrSize(vBox)\");\n}\nfunc Bac_PtrTransformSigs(vSig *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vSig) );\n    Vec_PtrForEachEntry( char *, vSig, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    return vNew;\n}\nfunc Bac_PtrTransformBox(vBox *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vBox) );\n    Vec_PtrForEachEntry( char *, vBox, pName, i )\n        Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    if vGatesNames != nil {\n        Bac_PtrUpdateBox( vNew, vGatesNames ); }\n    return vNew;\n}\nfunc Bac_PtrTransformBoxes(vBoxes *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var vBox *Vec_Ptr_t; var i int32;\n    var vNew *Vec_Ptr_t  = Vec_PtrAllocExact( Vec_PtrSize(vBoxes) );\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vBoxes, vBox, i )\n        Vec_PtrPush( vNew, Bac_PtrTransformBox(vBox, vGatesNames) );\n    return vNew;\n}\nfunc Bac_PtrTransformNtk(vNtk *Vec_Ptr_t, vGatesNames *Vec_Ptr_t) *Vec_Ptr_t {\n    var pName string  = (char *)Vec_PtrEntry(vNtk, 0);\n    var vInputs *Vec_Ptr_t   = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 1);\n    var vOutputs *Vec_Ptr_t  = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 2);\n    var vBoxes *Vec_Ptr_t    = (Vec_Ptr_t *)Vec_PtrEntry(vNtk, 4);\n    var vNew *Vec_Ptr_t      = Vec_PtrAllocExact( Vec_PtrSize(vNtk) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav(pName) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vInputs) );\n    Vec_PtrPush( vNew, Bac_PtrTransformSigs(vOutputs) );\n    Vec_PtrPush( vNew, Vec_PtrAllocExact(0) );\n    Vec_PtrPush( vNew, Bac_PtrTransformBoxes(vBoxes, vGatesNames) );\n    return vNew;\n}\nfunc Bac_PtrTransformTest(vDes *Vec_Ptr_t) *Vec_Ptr_t {\n    var pLib *Mio_Library_t;\n    var vGatesNames *Vec_Ptr_t;\n    var vNtk, vNew *Vec_Ptr_t; var i int32;\n    // dump BLIF before transformation\n    Bac_PtrDumpBlif( \"test1.blif\", vDes );\n    if Abc_FrameGetGlobalFrame() == nil {\n        fmt.Printf(\"ABC framework is not started.\\n\");\n        return nil;\n    }\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Printf(\"Standard cell library is not entered.\\n\");\n        return nil;\n    }\n    vGatesNames = Bac_ManCollectGateNamesByTruth( pLib );\n    // transform\n    vNew = Vec_PtrAllocExact( Vec_PtrSize(vDes) );\n    Vec_PtrPush( vNew, Abc_UtilStrsav((char *)Vec_PtrEntry(vDes, 0)) );\n    Vec_PtrForEachEntryStart( Vec_Ptr_t *, vDes, vNtk, i, 1 )\n        Vec_PtrPush( vNew, Bac_PtrTransformNtk(vNtk, vGatesNames) );\n    // dump BLIF after transformation\n    Bac_PtrDumpBlif( \"test2.blif\", vNew );\n    Vec_PtrFree( vGatesNames );\n    return vNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test the testing procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_PtrTransformTestTest() {\n    var pFileName string  = \"c/hie/dump/1/netlist_1.v\";\n    var pNtk *Abc_Ntk_t  = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 0 );\n    extern Vec_Ptr_t * Ptr_AbcDeriveDes( Abc_Ntk_t * pNtk );\n    var vDes *Vec_Ptr_t  = Ptr_AbcDeriveDes( pNtk );\n    var vNew *Vec_Ptr_t  = Bac_PtrTransformTest( vDes );\n    Bac_PtrFree( vDes );\n    Bac_PtrFree( vNew );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

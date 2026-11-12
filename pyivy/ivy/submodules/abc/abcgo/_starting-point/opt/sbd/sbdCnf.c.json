@@ -1,0 +1,178 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c",
+  "SHA256": "7b8901369054734b242e9c7e9268ce9f11be693d6c3f25d0e1ff359e054a40f3",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 13,
+        "ByteOffset": 1458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 13,
+        "ByteOffset": 1503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 25,
+        "ByteOffset": 3022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( 0 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_PrintCnf",
+      "Start": 1248,
+      "End": 1553,
+      "BodyStart": 1286,
+      "Original": "void Sbd_PrintCnf( Vec_Str_t * vCnf )\n{\n    signed char Entry;\n    int i, Lit;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = (int)Entry;\n        if ( Lit == -1 )\n            printf( \"\\n\" );\n        else\n            printf( \"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit) );\n    }\n}",
+      "Draft": "func Sbd_PrintCnf(vCnf *Vec_Str_t) {\n    signed char Entry;\n    var i, Lit int32;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = int32(Entry);\n        if Lit == -1 {\n            fmt.Printf(\"\\n\");\n        } else {\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit)); }\n    }\n}"
+    },
+    {
+      "Name": "Sbd_TruthToCnf",
+      "Start": 1789,
+      "End": 3152,
+      "BodyStart": 1871,
+      "Original": "int Sbd_TruthToCnf( word Truth, int nVars, Vec_Int_t * vCover, Vec_Str_t * vCnf )\n{\n    Vec_StrClear( vCnf );\n    if ( Truth == 0 || ~Truth == 0 )\n    {\n//        assert( nVars == 0 );\n        Vec_StrPush( vCnf, (char)(Truth == 0) );\n        Vec_StrPush( vCnf, (char)-1 );\n        return 1;\n    }\n    else \n    {\n        int i, k, c, RetValue, Literal, Cube, nCubes = 0;\n        assert( nVars \u003e 0 );\n        for ( c = 0; c \u003c 2; c ++ )\n        {\n            Truth = c ? ~Truth : Truth;\n            RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            assert( RetValue == 0 );\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for ( k = 0; k \u003c nVars; k++ )\n                {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if ( Literal == 1 )      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, (char)Abc_Var2Lit(k, 0) );\n                    else if ( Literal == 2 ) // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, (char)Abc_Var2Lit(k, 1) );\n                    else if ( Literal != 0 )\n                        assert( 0 );\n                }\n                Vec_StrPush( vCnf, (char)Abc_Var2Lit(nVars, c) );\n                Vec_StrPush( vCnf, (char)-1 );\n            }\n        }\n        return nCubes;\n    }\n}",
+      "Draft": "func Sbd_TruthToCnf(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {\n    Vec_StrClear( vCnf );\n    if Truth == 0 || ~Truth == 0 {\n//        assert( nVars == 0 );\n        Vec_StrPush( vCnf, byte((Truth == 0)) );\n        Vec_StrPush( vCnf, byte(-1) );\n        return 1;\n    \n    } else {\n        var i, k, c, RetValue, Literal, Cube, nCubes int32;\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        for  c = 0; c \u003c 2; c ++  {\n            if c {\n                Truth = ~Truth;\n            } else {\n                Truth = Truth;\n            }\n            RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            assert(RetValue == 0, \"RetValue == 0\");\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for  k = 0; k \u003c nVars; k++  {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if Literal == 1 {      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 0)) );\n                    } else if Literal == 2 { // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 1)) );\n                    } else if Literal != 0 {\n                        assert(false, \"0\"); }\n                }\n                Vec_StrPush( vCnf, byte(Abc_Var2Lit(nVars, c)) );\n                Vec_StrPush( vCnf, byte(-1) );\n            }\n        }\n        return nCubes;\n    }\n}"
+    },
+    {
+      "Name": "Sbd_TranslateCnf",
+      "Start": 3388,
+      "End": 3967,
+      "BodyStart": 3486,
+      "Original": "void Sbd_TranslateCnf( Vec_Wec_t * vRes, Vec_Str_t * vCnf, Vec_Int_t * vFaninMap, int iPivotVar )\n{\n    Vec_Int_t * vClause;\n    signed char Entry;\n    int i, Lit;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if ( (int)Entry == -1 )\n        {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), (int)Entry );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}",
+      "Draft": "func Sbd_TranslateCnf(vRes *Vec_Wec_t, vCnf *Vec_Str_t, vFaninMap *Vec_Int_t, iPivotVar int32) {\n    var vClause *Vec_Int_t;\n    signed char Entry;\n    var i, Lit int32;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if int32(Entry) == -1 {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), int32(Entry) );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::pointer-cast::2312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2312,
+      "End": 2324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::ternary::Sbd_PrintCnf",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_PrintCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1248,
+      "End": 1553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::Sbd_PrintCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_PrintCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1248,
+      "End": 1553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::Sbd_TruthToCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_TruthToCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1789,
+      "End": 3152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::Sbd_TranslateCnf",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_TranslateCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3388,
+      "End": 3967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::macro-inline::1331",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_StrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1331,
+      "End": 1368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::macro-inline::2446",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2446,
+      "End": 2484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCnf.c::macro-inline::3622",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_StrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3622,
+      "End": 3659
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbdCnf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [CNF computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbdCnf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_PrintCnf(vCnf *Vec_Str_t) {\n    signed char Entry;\n    var i, Lit int32;\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        Lit = int32(Entry);\n        if Lit == -1 {\n            fmt.Printf(\"\\n\");\n        } else {\n            fmt.Printf(\"%s%d \", Abc_LitIsCompl(Lit) ? \"-\":\"\", Abc_Lit2Var(Lit)); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_TruthToCnf(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {\n    Vec_StrClear( vCnf );\n    if Truth == 0 || ~Truth == 0 {\n//        assert( nVars == 0 );\n        Vec_StrPush( vCnf, byte((Truth == 0)) );\n        Vec_StrPush( vCnf, byte(-1) );\n        return 1;\n    \n    } else {\n        var i, k, c, RetValue, Literal, Cube, nCubes int32;\n        assert(nVars \u003e 0, \"nVars \u003e 0\");\n        for  c = 0; c \u003c 2; c ++  {\n            if c {\n                Truth = ~Truth;\n            } else {\n                Truth = Truth;\n            }\n            RetValue = Kit_TruthIsop( (unsigned *)\u0026Truth, nVars, vCover, 0 );\n            assert(RetValue == 0, \"RetValue == 0\");\n            nCubes += Vec_IntSize( vCover );\n            Vec_IntForEachEntry( vCover, Cube, i )\n            {\n                for  k = 0; k \u003c nVars; k++  {\n                    Literal = 3 \u0026 (Cube \u003e\u003e (k \u003c\u003c 1));\n                    if Literal == 1 {      // '0'  -\u003e pos lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 0)) );\n                    } else if Literal == 2 { // '1'  -\u003e neg lit\n                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 1)) );\n                    } else if Literal != 0 {\n                        assert(false, \"0\"); }\n                }\n                Vec_StrPush( vCnf, byte(Abc_Var2Lit(nVars, c)) );\n                Vec_StrPush( vCnf, byte(-1) );\n            }\n        }\n        return nCubes;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_TranslateCnf(vRes *Vec_Wec_t, vCnf *Vec_Str_t, vFaninMap *Vec_Int_t, iPivotVar int32) {\n    var vClause *Vec_Int_t;\n    signed char Entry;\n    var i, Lit int32;\n    Vec_WecClear( vRes );\n    vClause = Vec_WecPushLevel( vRes );\n    Vec_StrForEachEntry( vCnf, Entry, i )\n    {\n        if int32(Entry) == -1 {\n            vClause = Vec_WecPushLevel( vRes );\n            continue;\n        }\n        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), int32(Entry) );\n        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );\n        Vec_IntPush( vClause, Lit );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1010 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c",
+  "SHA256": "a08f402ee6b9237d1762f52b739a53fae86986acb52929a8236010ab58f2b4b5",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(p.vClauses) == k + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue != -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 17,
+        "ByteOffset": 5308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cube[%d][%d] not inductive!\\n\", k, j );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vSolvers) == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 6813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vActVars) == k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 7883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(vClauses) \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 7925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(p.vClauses) == 0 ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 8363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 9925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(vClauses);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 384,
+        "Column": 43,
+        "ByteOffset": 11180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.timeToStop = p.pPars.nTimeOut * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 396,
+        "Column": 44,
+        "ByteOffset": 11722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    Gia_ManToBridgeResult( stdout, 1, nil, iFrame ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 13,
+        "ByteOffset": 13033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.vAbsFlops == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 13,
+        "ByteOffset": 13465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.vAbsFlops == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 9,
+        "ByteOffset": 14087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFrame == Vec_PtrSize(p.vSolvers)-1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 17,
+        "ByteOffset": 15818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_PtrEntry(p.vCexes, p.iOutCur) == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 493,
+        "Column": 44,
+        "ByteOffset": 15953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    Gia_ManToBridgeResult( stdout, 0, pCexNew, pCexNew.iPo ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 17,
+        "ByteOffset": 17010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( p.pTime4Outs[p.iOutCur] \u003e 0 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 519,
+        "Column": 130,
+        "ByteOffset": 17321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 535,
+        "Column": 141,
+        "ByteOffset": 18360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 556,
+        "Column": 145,
+        "ByteOffset": 19744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 583,
+        "Column": 33,
+        "ByteOffset": 21363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                assert( p.pPars.fUseAbs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 25,
+        "ByteOffset": 22341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( Vec_PtrEntry(p.vCexes, p.iOutCur) == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 604,
+        "Column": 52,
+        "ByteOffset": 22492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            Gia_ManToBridgeResult( stdout, 0, pCexNew, pCexNew.iPo ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 631,
+        "Column": 17,
+        "ByteOffset": 24078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( p.pTime4Outs[p.iOutCur] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 670,
+        "Column": 9,
+        "ByteOffset": 25931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 708,
+        "Column": 52,
+        "ByteOffset": 27763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            Gia_ManToBridgeResult( stdout, 1, nil, iFrame ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 737,
+        "Column": 122,
+        "ByteOffset": 28961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 758,
+        "Column": 5,
+        "ByteOffset": 29854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 795,
+        "Column": 5,
+        "ByteOffset": 31118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pAig.pSeqModel );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 816,
+        "Column": 13,
+        "ByteOffset": 31638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pAig.pSeqModel != nil || p.vCexes != nil ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 818,
+        "Column": 13,
+        "ByteOffset": 31726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pAig.vSeqModelVec == nil );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 850,
+        "Column": 31,
+        "ByteOffset": 32836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Gia_ManToBridgeAbort( stdout, 7, (unsigned char *)\"timeout\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 884,
+        "Column": 9,
+        "ByteOffset": 33862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 898,
+        "Column": 13,
+        "ByteOffset": 34438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 911,
+        "Column": 5,
+        "ByteOffset": 34838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue != l_Undef );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1004,
+        "Column": 13,
+        "ByteOffset": 37848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1009,
+        "Column": 5,
+        "ByteOffset": 37917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pNtk.pSeqModel );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "IPdr_ManPushClausesK",
+      "Start": 1468,
+      "End": 3485,
+      "BodyStart": 1525,
+      "Original": "Vec_Ptr_t * IPdr_ManPushClausesK( Pdr_Man_t * p, int k )\n{\n    Pdr_Set_t * pTemp, * pCubeK, * pCubeK1;\n    Vec_Ptr_t * vArrayK, * vArrayK1;\n    int i, j, m, RetValue;\n\n    assert( Vec_VecSize(p-\u003evClauses) == k + 1 );\n    vArrayK = Vec_VecEntry( p-\u003evClauses, k );\n    Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n    vArrayK1 = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n    {\n        // remove cubes in the same frame that are contained by pCubeK\n        Vec_PtrForEachEntryStart( Pdr_Set_t *, vArrayK, pTemp, m, j+1 )\n        {\n            if ( !Pdr_SetContains( pTemp, pCubeK ) ) // pCubeK contains pTemp\n                continue;\n            Pdr_SetDeref( pTemp );\n            Vec_PtrWriteEntry( vArrayK, m, Vec_PtrEntryLast(vArrayK) );\n            Vec_PtrPop(vArrayK);\n            m--;\n        }\n\n        // check if the clause can be moved to the next frame\n        RetValue = Pdr_ManCheckCube( p, k, pCubeK, NULL, 0, 0, 1 );\n        assert( RetValue != -1 );\n        if ( !RetValue )\n            continue;\n\n        {\n            Pdr_Set_t * pCubeMin;\n            pCubeMin = Pdr_ManReduceClause( p, k, pCubeK );\n            if ( pCubeMin != NULL )\n            {\n                //                Abc_Print( 1, \"%d \", pCubeK-\u003enLits - pCubeMin-\u003enLits );\n                Pdr_SetDeref( pCubeK );\n                pCubeK = pCubeMin;\n            }\n        }\n\n        // check if the clause subsumes others\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK1, pCubeK1, i )\n        {\n            if ( !Pdr_SetContains( pCubeK1, pCubeK ) ) // pCubeK contains pCubeK1\n                continue;\n            Pdr_SetDeref( pCubeK1 );\n            Vec_PtrWriteEntry( vArrayK1, i, Vec_PtrEntryLast(vArrayK1) );\n            Vec_PtrPop(vArrayK1);\n            i--;\n        }\n        // add the last clause\n        Vec_PtrPush( vArrayK1, pCubeK );\n        Vec_PtrWriteEntry( vArrayK, j, Vec_PtrEntryLast(vArrayK) );\n        Vec_PtrPop(vArrayK);\n        j--;\n    }\n\n    return vArrayK1;\n}",
+      "Draft": "func IPdr_ManPushClausesK(p *Pdr_Man_t, k int32) *Vec_Ptr_t {\n    var pTemp, pCubeK, pCubeK1 *Pdr_Set_t;\n    var vArrayK, vArrayK1 *Vec_Ptr_t;\n    var i, j, m, RetValue int32;\n\n    assert(Vec_VecSize(p.vClauses) == k + 1, \"Vec_VecSize(p.vClauses) == k + 1\");\n    vArrayK = Vec_VecEntry( p.vClauses, k );\n    Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n    vArrayK1 = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n    {\n        // remove cubes in the same frame that are contained by pCubeK\n        Vec_PtrForEachEntryStart( Pdr_Set_t *, vArrayK, pTemp, m, j+1 )\n        {\n            if !Pdr_SetContains( pTemp, pCubeK ) { // pCubeK contains pTemp\n                continue; }\n            Pdr_SetDeref( pTemp );\n            Vec_PtrWriteEntry( vArrayK, m, Vec_PtrEntryLast(vArrayK) );\n            Vec_PtrPop(vArrayK);\n            m--;\n        }\n\n        // check if the clause can be moved to the next frame\n        RetValue = Pdr_ManCheckCube( p, k, pCubeK, nil, 0, 0, 1 );\n        assert(RetValue != -1, \"RetValue != -1\");\n        if !(RetValue != 0) {\n            continue; }\n\n        {\n            var pCubeMin *Pdr_Set_t;\n            pCubeMin = Pdr_ManReduceClause( p, k, pCubeK );\n            if pCubeMin != nil {\n                //                Abc_Print( 1, \"%d \", pCubeK-\u003enLits - pCubeMin-\u003enLits );\n                Pdr_SetDeref( pCubeK );\n                pCubeK = pCubeMin;\n            }\n        }\n\n        // check if the clause subsumes others\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK1, pCubeK1, i )\n        {\n            if !Pdr_SetContains( pCubeK1, pCubeK ) { // pCubeK contains pCubeK1\n                continue; }\n            Pdr_SetDeref( pCubeK1 );\n            Vec_PtrWriteEntry( vArrayK1, i, Vec_PtrEntryLast(vArrayK1) );\n            Vec_PtrPop(vArrayK1);\n            i--;\n        }\n        // add the last clause\n        Vec_PtrPush( vArrayK1, pCubeK );\n        Vec_PtrWriteEntry( vArrayK, j, Vec_PtrEntryLast(vArrayK) );\n        Vec_PtrPop(vArrayK);\n        j--;\n    }\n\n    return vArrayK1;\n}"
+    },
+    {
+      "Name": "IPdr_ManPrintClauses",
+      "Start": 3721,
+      "End": 4292,
+      "BodyStart": 3794,
+      "Original": "void IPdr_ManPrintClauses( Vec_Vec_t * vClauses, int kStart, int nRegs )\n{\n    Vec_Ptr_t * vArrayK;\n    Pdr_Set_t * pCube;\n    int i, k, Counter = 0;\n    Vec_VecForEachLevelStart( vClauses, vArrayK, k, kStart )\n    {\n        Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, i )\n        {\n            Abc_Print( 1, \"Frame[%4d]Cube[%4d] = \", k, Counter++ );\n            // Pdr_SetPrint( stdout, pCube, nRegs, NULL );  \n            ZPdr_SetPrint( pCube );  \n            Abc_Print( 1, \"\\n\" ); \n        }\n    }\n}",
+      "Draft": "func IPdr_ManPrintClauses(vClauses *Vec_Vec_t, kStart int32, nRegs int32) {\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, k, Counter int32;\n    Vec_VecForEachLevelStart( vClauses, vArrayK, k, kStart )\n    {\n        Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, i )\n        {\n            Abc_Print( 1, \"Frame[%4d]Cube[%4d] = \", k, Counter++ );\n            // Pdr_SetPrint( stdout, pCube, nRegs, NULL );  \n            ZPdr_SetPrint( pCube );  \n            Abc_Print( 1, \"\\n\" ); \n        }\n    }\n}"
+    },
+    {
+      "Name": "IPdr_ManCheckClauses",
+      "Start": 4702,
+      "End": 5361,
+      "BodyStart": 4744,
+      "Original": "int IPdr_ManCheckClauses( Pdr_Man_t * p )\n{\n    Pdr_Set_t * pCubeK;\n    Vec_Ptr_t * vArrayK;\n    int j, k, RetValue, kMax = Vec_PtrSize(p-\u003evSolvers);\n    int iStartFrame = 1;\n    int counter = 0;\n\n    Vec_VecForEachLevelStartStop( p-\u003evClauses, vArrayK, k, iStartFrame, kMax )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n        {\n            ++counter;\n            RetValue = Pdr_ManCheckCube( p, k - 1, pCubeK, NULL, 0, 0, 1 );\n\n            if ( !RetValue ) {\n                printf( \"Cube[%d][%d] not inductive!\\n\", k, j );\n            }\n\n            if ( RetValue == -1 )\n                return -1;\n        }\n    }\n\n    return 1;\n}",
+      "Draft": "func IPdr_ManCheckClauses(p *Pdr_Man_t) int32 {\n    var pCubeK *Pdr_Set_t;\n    var vArrayK *Vec_Ptr_t;\n    var j int32;\n    var k int32;\n    var RetValue int32;\n    var kMax int32 = Vec_PtrSize(p.vSolvers);\n    var iStartFrame int32  = 1;\n    var counter int32;\n\n    Vec_VecForEachLevelStartStop( p.vClauses, vArrayK, k, iStartFrame, kMax )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n        {\n            ++counter;\n            RetValue = Pdr_ManCheckCube( p, k - 1, pCubeK, nil, 0, 0, 1 );\n\n            if !(RetValue != 0) {\n                fmt.Printf(\"Cube[%d][%d] not inductive!\\n\", k, j);\n            }\n\n            if RetValue == -1 {\n                return -1; }\n        }\n    }\n\n    return 1;\n}"
+    },
+    {
+      "Name": "IPdr_ManSaveClauses",
+      "Start": 5597,
+      "End": 6229,
+      "BodyStart": 5661,
+      "Original": "Vec_Vec_t * IPdr_ManSaveClauses( Pdr_Man_t * p, int fDropLast )\n{\n    int i, k;\n    Vec_Vec_t * vClausesSaved;\n    Pdr_Set_t * pCla;\n\n    if ( Vec_VecSize( p-\u003evClauses ) == 1 )\n        return NULL;\n    if ( Vec_VecSize( p-\u003evClauses ) == 2 \u0026\u0026 fDropLast )\n        return NULL;\n\n    if ( fDropLast )\n        vClausesSaved = Vec_VecStart( Vec_VecSize(p-\u003evClauses)-1 );\n    else \n        vClausesSaved = Vec_VecStart( Vec_VecSize(p-\u003evClauses) );\n\n    Vec_VecForEachEntryStartStop( Pdr_Set_t *, p-\u003evClauses, pCla, i, k, 0, Vec_VecSize(vClausesSaved) )\n        Vec_VecPush(vClausesSaved, i, Pdr_SetDup(pCla));\n \n    return vClausesSaved;\n}",
+      "Draft": "func IPdr_ManSaveClauses(p *Pdr_Man_t, fDropLast int32) *Vec_Vec_t {\n    var i, k int32;\n    var vClausesSaved *Vec_Vec_t;\n    var pCla *Pdr_Set_t;\n\n    if Vec_VecSize( p.vClauses ) == 1 {\n        return nil; }\n    if Vec_VecSize( p.vClauses ) == 2 \u0026\u0026 (fDropLast != 0) {\n        return nil; }\n\n    if fDropLast != 0 {\n        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses)-1 );\n    } else { \n        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses) ); }\n\n    Vec_VecForEachEntryStartStop( Pdr_Set_t *, p.vClauses, pCla, i, k, 0, Vec_VecSize(vClausesSaved) )\n        Vec_VecPush(vClausesSaved, i, Pdr_SetDup(pCla));\n \n    return vClausesSaved;\n}"
+    },
+    {
+      "Name": "IPdr_ManSetSolver",
+      "Start": 6466,
+      "End": 7259,
+      "BodyStart": 6541,
+      "Original": "sat_solver * IPdr_ManSetSolver( Pdr_Man_t * p, int k, int fSetPropOutput )\n{\n    sat_solver * pSat;\n    Vec_Ptr_t * vArrayK;\n    Pdr_Set_t * pCube;\n    int i, j;\n\n    assert( Vec_PtrSize(p-\u003evSolvers) == k );\n    assert( Vec_IntSize(p-\u003evActVars) == k );\n\n    pSat = zsat_solver_new_seed(p-\u003epPars-\u003enRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, (int)(k == 0) );\n    Vec_PtrPush( p-\u003evSolvers, pSat );\n    Vec_IntPush( p-\u003evActVars, 0 );\n\n    // set the property output\n    if ( fSetPropOutput )\n        Pdr_ManSetPropertyOutput( p, k );\n\n    if (k == 0)\n        return pSat;\n\n    // add the clauses\n    Vec_VecForEachLevelStart( p-\u003evClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}",
+      "Draft": "func IPdr_ManSetSolver(p *Pdr_Man_t, k int32, fSetPropOutput int32) *sat_solver {\n    var pSat *sat_solver;\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n\n    assert(Vec_PtrSize(p.vSolvers) == k, \"Vec_PtrSize(p.vSolvers) == k\");\n    assert(Vec_IntSize(p.vActVars) == k, \"Vec_IntSize(p.vActVars) == k\");\n\n    pSat = zsat_solver_new_seed(p.pPars.nRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    Vec_PtrPush( p.vSolvers, pSat );\n    Vec_IntPush( p.vActVars, 0 );\n\n    // set the property output\n    if fSetPropOutput != 0 {\n        Pdr_ManSetPropertyOutput( p, k ); }\n\n    if k == 0 {\n        return pSat; }\n\n    // add the clauses\n    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}"
+    },
+    {
+      "Name": "IPdr_ManRebuildClauses",
+      "Start": 7495,
+      "End": 9359,
+      "BodyStart": 7561,
+      "Original": "int IPdr_ManRebuildClauses( Pdr_Man_t * p, Vec_Vec_t * vClauses )\n{\n    Vec_Ptr_t * vArrayK;\n    Pdr_Set_t * pCube;\n    int i, j;\n    int RetValue = -1;\n    int nCubes = 0;\n\n    if ( vClauses == NULL )\n        return RetValue;\n\n    assert( Vec_VecSize(vClauses) \u003e= 2 );\n    assert( Vec_VecSize(p-\u003evClauses) == 0 ); \n    Vec_VecExpand( p-\u003evClauses, 1 );\n\n    IPdr_ManSetSolver( p, 0, 1 );\n\n    // push clauses from R0 to R1\n    Vec_VecForEachLevelStart( vClauses, vArrayK, i, 1 )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n        {\n            ++nCubes;\n\n            RetValue = Pdr_ManCheckCube( p, 0, pCube, NULL, 0, 0, 1 );\n            Vec_IntWriteEntry( p-\u003evActVars, 0, 0 );\n\n            assert( RetValue != -1 );\n\n            if ( RetValue == 0 )\n            {\n                Abc_Print( 1, \"Cube[%d][%d] cannot be pushed from R0 to R1.\\n\", i, j );\n                Pdr_SetDeref( pCube );\n                continue;\n            }\n\n            Vec_VecPush( p-\u003evClauses, 1, pCube );\n        }\n    }\n    Abc_Print( 1, \"RebuildClauses: %d out of %d cubes reused in R1.\\n\", Vec_PtrSize(Vec_VecEntry(p-\u003evClauses, 1)), nCubes );\n    IPdr_ManSetSolver( p, 1, 0 );\n    Vec_VecFree( vClauses );\n\n    /*\n    for ( i = 1; i \u003c Vec_VecSize( vClauses ) - 1; ++i )\n    {\n        vArrayK = IPdr_ManPushClausesK( p, i );\n        if ( Vec_PtrSize(vArrayK) == 0 )\n        {\n            Abc_Print( 1, \"RebuildClauses: stopped at frame %d.\\n\", i );\n            break;\n        }\n\n        Vec_PtrGrow( (Vec_Ptr_t *)(p-\u003evClauses), i + 2 );\n        p-\u003evClauses-\u003enSize = i + 2;\n        p-\u003evClauses-\u003epArray[i+1] = vArrayK;\n        IPdr_ManSetSolver( p, i + 1, 0 );\n    }\n\n    Abc_Print( 1, \"After rebuild:\" );\n    Vec_VecForEachLevel( p-\u003evClauses, vArrayK, i )\n        Abc_Print( 1, \" %d\", Vec_PtrSize( vArrayK ) );\n    Abc_Print( 1, \"\\n\" );\n    */\n\n    return 0;\n}",
+      "Draft": "func IPdr_ManRebuildClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t) int32 {\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n    var RetValue int32  = -1;\n    var nCubes int32;\n\n    if vClauses == nil {\n        return RetValue; }\n\n    assert(Vec_VecSize(vClauses) \u003e= 2, \"Vec_VecSize(vClauses) \u003e= 2\");\n    assert(Vec_VecSize(p.vClauses) == 0, \"Vec_VecSize(p.vClauses) == 0\"); \n    Vec_VecExpand( p.vClauses, 1 );\n\n    IPdr_ManSetSolver( p, 0, 1 );\n\n    // push clauses from R0 to R1\n    Vec_VecForEachLevelStart( vClauses, vArrayK, i, 1 )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n        {\n            ++nCubes;\n\n            RetValue = Pdr_ManCheckCube( p, 0, pCube, nil, 0, 0, 1 );\n            Vec_IntWriteEntry( p.vActVars, 0, 0 );\n\n            assert(RetValue != -1, \"RetValue != -1\");\n\n            if RetValue == 0 {\n                Abc_Print( 1, \"Cube[%d][%d] cannot be pushed from R0 to R1.\\n\", i, j );\n                Pdr_SetDeref( pCube );\n                continue;\n            }\n\n            Vec_VecPush( p.vClauses, 1, pCube );\n        }\n    }\n    Abc_Print( 1, \"RebuildClauses: %d out of %d cubes reused in R1.\\n\", Vec_PtrSize(Vec_VecEntry(p.vClauses, 1)), nCubes );\n    IPdr_ManSetSolver( p, 1, 0 );\n    Vec_VecFree( vClauses );\n\n    /*\n    for ( i = 1; i \u003c Vec_VecSize( vClauses ) - 1; ++i )\n    {\n        vArrayK = IPdr_ManPushClausesK( p, i );\n        if ( Vec_PtrSize(vArrayK) == 0 )\n        {\n            Abc_Print( 1, \"RebuildClauses: stopped at frame %d.\\n\", i );\n            break;\n        }\n\n        Vec_PtrGrow( (Vec_Ptr_t *)(p-\u003evClauses), i + 2 );\n        p-\u003evClauses-\u003enSize = i + 2;\n        p-\u003evClauses-\u003epArray[i+1] = vArrayK;\n        IPdr_ManSetSolver( p, i + 1, 0 );\n    }\n\n    Abc_Print( 1, \"After rebuild:\" );\n    Vec_VecForEachLevel( p-\u003evClauses, vArrayK, i )\n        Abc_Print( 1, \" %d\", Vec_PtrSize( vArrayK ) );\n    Abc_Print( 1, \"\\n\" );\n    */\n\n    return 0;\n}"
+    },
+    {
+      "Name": "IPdr_ManRestoreAbsFlops",
+      "Start": 9361,
+      "End": 9680,
+      "BodyStart": 9406,
+      "Original": "int IPdr_ManRestoreAbsFlops( Pdr_Man_t * p )\n{\n    Pdr_Set_t * pSet; int i, j, k;   \n\n    Vec_VecForEachEntry( Pdr_Set_t *, p-\u003evClauses, pSet, i, j )\n    {\n        for ( k = 0; k \u003c pSet-\u003enLits; k++ )\n        {\n            Vec_IntWriteEntry( p-\u003evAbsFlops, Abc_Lit2Var(pSet-\u003eLits[k]), 1 );\n        }\n    }\n    return 0;\n}",
+      "Draft": "func IPdr_ManRestoreAbsFlops(p *Pdr_Man_t) int32 {\n    var pSet *Pdr_Set_t; var i, j, k int32;   \n\n    Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pSet, i, j )\n    {\n        for  k = 0; k \u003c pSet.nLits; k++  {\n            Vec_IntWriteEntry( p.vAbsFlops, Abc_Lit2Var(pSet.Lits[k]), 1 );\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "IPdr_ManRestoreClauses",
+      "Start": 9682,
+      "End": 10352,
+      "BodyStart": 9766,
+      "Original": "int IPdr_ManRestoreClauses( Pdr_Man_t * p, Vec_Vec_t * vClauses, Vec_Int_t * vMap )\n{\n    int i;\n\n    assert(vClauses);\n\n    Vec_VecFree(p-\u003evClauses);\n    p-\u003evClauses = vClauses;\n\n    // remap clause literals using mapping (old flop -\u003e new flop) found in array vMap\n    if ( vMap )\n    {\n        Pdr_Set_t * pSet; int j, k;   \n        Vec_VecForEachEntry( Pdr_Set_t *, vClauses, pSet, i, j )\n            for ( k = 0; k \u003c pSet-\u003enLits; k++ )\n                pSet-\u003eLits[k] = Abc_Lit2LitV( Vec_IntArray(vMap), pSet-\u003eLits[k] );\n    }\n\n    for ( i = 0; i \u003c Vec_VecSize(p-\u003evClauses); ++i )\n        IPdr_ManSetSolver( p, i, i \u003c Vec_VecSize( p-\u003evClauses ) - 1 );\n\n    return 0;\n}",
+      "Draft": "func IPdr_ManRestoreClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t, vMap *Vec_Int_t) int32 {\n    var i int32;\n\n    assert(vClauses, \"vClauses\");\n\n    Vec_VecFree(p.vClauses);\n    p.vClauses = vClauses;\n\n    // remap clause literals using mapping (old flop -\u003e new flop) found in array vMap\n    if vMap != nil {\n        var pSet *Pdr_Set_t; var j, k int32;   \n        Vec_VecForEachEntry( Pdr_Set_t *, vClauses, pSet, i, j )\n            for ( k = 0; k \u003c pSet.nLits; k++ )\n                pSet.Lits[k] = Abc_Lit2LitV( Vec_IntArray(vMap), pSet.Lits[k] );\n    }\n\n    for  i = 0; i \u003c Vec_VecSize(p.vClauses); ++i  {\n        IPdr_ManSetSolver( p, i, i \u003c Vec_VecSize( p.vClauses ) - 1 );\n    }\n\n    return 0;\n}"
+    },
+    {
+      "Name": "IPdr_ManSolveInt",
+      "Start": 10588,
+      "End": 30321,
+      "BodyStart": 10663,
+      "Original": "int IPdr_ManSolveInt( Pdr_Man_t * p, int fCheckClauses, int fPushClauses )\n{\n    int fPrintClauses = 0;\n    Pdr_Set_t * pCube = NULL;\n    Aig_Obj_t * pObj;\n    Abc_Cex_t * pCexNew;\n    int iFrame, RetValue = -1;\n    int nOutDigits = Abc_Base10Log( Saig_ManPoNum(p-\u003epAig) );\n    abctime clkStart = Abc_Clock(), clkOne = 0;\n    p-\u003etimeToStop = p-\u003epPars-\u003enTimeOut ? p-\u003epPars-\u003enTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0;\n    // assert( Vec_PtrSize(p-\u003evSolvers) == 0 );\n    // in the multi-output mode, mark trivial POs (those fed by const0) as solved \n    if ( p-\u003epPars-\u003efSolveAll )\n        Saig_ManForEachPo( p-\u003epAig, pObj, iFrame )\n            if ( Aig_ObjChild0(pObj) == Aig_ManConst0(p-\u003epAig) )\n            {\n                Vec_IntWriteEntry( p-\u003epPars-\u003evOutMap, iFrame, 1 ); // unsat\n                p-\u003epPars-\u003enProveOuts++;\n                if ( p-\u003epPars-\u003efUseBridge )\n                    Gia_ManToBridgeResult( stdout, 1, NULL, iFrame );\n            }\n    // create the first timeframe\n    p-\u003epPars-\u003etimeLastSolved = Abc_Clock();\n\n    if ( Vec_VecSize(p-\u003evClauses) == 0 )\n        Pdr_ManCreateSolver( p, (iFrame = 0) );\n    else {\n        iFrame = Vec_VecSize(p-\u003evClauses) - 1;\n\n        if ( fCheckClauses )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n               Abc_Print( 1, \"IPDR: Checking the reloaded length-%d trace...\", iFrame + 1 ) ;\n            IPdr_ManCheckClauses( p );\n            if ( p-\u003epPars-\u003efVerbose )\n               Abc_Print( 1, \" Passed!\\n\" ) ;\n        }\n\n        if ( fPushClauses )\n        {\n            p-\u003eiUseFrame = Abc_MaxInt(iFrame, 1);\n\n            if ( p-\u003epPars-\u003efVerbose ) \n            {\n                Abc_Print( 1, \"IPDR: Pushing the reloaded clauses. Before:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            RetValue = Pdr_ManPushClauses( p );\n\n            if ( p-\u003epPars-\u003efVerbose ) \n            {\n                Abc_Print( 1, \"IPDR: Finished pushing. After:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            if ( RetValue ) \n            {\n                Pdr_ManReportInvariant( p );\n                Pdr_ManVerifyInvariant( p );\n                return 1;\n            }\n        }\n\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops == NULL \u0026\u0026 iFrame \u003e= 1 )\n        {\n            assert( p-\u003evAbsFlops == NULL );\n            p-\u003evAbsFlops  = Vec_IntStart( Saig_ManRegNum(p-\u003epAig) );\n            p-\u003evMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p-\u003epAig) );\n            p-\u003evMapPpi2Ff = Vec_IntAlloc( 100 );\n            \n            IPdr_ManRestoreAbsFlops( p );\n        }\n \n    }\n    while ( 1 )\n    {\n        int fRefined = 0;\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops == NULL \u0026\u0026 iFrame == 1 )\n        {\n//            int i, Prio;\n            assert( p-\u003evAbsFlops == NULL );\n            p-\u003evAbsFlops  = Vec_IntStart( Saig_ManRegNum(p-\u003epAig) );\n            p-\u003evMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p-\u003epAig) );\n            p-\u003evMapPpi2Ff = Vec_IntAlloc( 100 );\n//            Vec_IntForEachEntry( p-\u003evPrio, Prio, i )\n//                if ( Prio \u003e\u003e p-\u003enPrioShift  )\n//                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 1 );\n        }\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Starting frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        p-\u003enFrames = iFrame;\n        assert( iFrame == Vec_PtrSize(p-\u003evSolvers)-1 );\n        p-\u003eiUseFrame = Abc_MaxInt(iFrame, 1);\n        Saig_ManForEachPo( p-\u003epAig, pObj, p-\u003eiOutCur )\n        {\n            // skip disproved outputs\n            if ( p-\u003evCexes \u0026\u0026 Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) )\n                continue;\n            // skip output whose time has run out\n            if ( p-\u003epTime4Outs \u0026\u0026 p-\u003epTime4Outs[p-\u003eiOutCur] == 0 )\n                continue;\n            // check if the output is trivially solved\n            if ( Aig_ObjChild0(pObj) == Aig_ManConst0(p-\u003epAig) )\n                continue;\n            // check if the output is trivially solved\n            if ( Aig_ObjChild0(pObj) == Aig_ManConst1(p-\u003epAig) )\n            {\n                if ( !p-\u003epPars-\u003efSolveAll )\n                {\n                    pCexNew = Abc_CexMakeTriv( Aig_ManRegNum(p-\u003epAig), Saig_ManPiNum(p-\u003epAig), Saig_ManPoNum(p-\u003epAig), iFrame*Saig_ManPoNum(p-\u003epAig)+p-\u003eiOutCur );\n                    p-\u003epAig-\u003epSeqModel = pCexNew;\n                    return 0; // SAT\n                }\n                pCexNew = (p-\u003epPars-\u003efUseBridge || p-\u003epPars-\u003efStoreCex) ? Abc_CexMakeTriv( Aig_ManRegNum(p-\u003epAig), Saig_ManPiNum(p-\u003epAig), Saig_ManPoNum(p-\u003epAig), iFrame*Saig_ManPoNum(p-\u003epAig)+p-\u003eiOutCur ) : (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                p-\u003epPars-\u003enFailOuts++;\n                if ( p-\u003epPars-\u003evOutMap ) Vec_IntWriteEntry( p-\u003epPars-\u003evOutMap, p-\u003eiOutCur, 0 );\n                if ( !p-\u003epPars-\u003efNotVerbose )\n                Abc_Print( 1, \"Output %*d was trivially asserted in frame %2d (solved %*d out of %*d outputs).\\n\",\n                    nOutDigits, p-\u003eiOutCur, iFrame, nOutDigits, p-\u003epPars-\u003enFailOuts, nOutDigits, Saig_ManPoNum(p-\u003epAig) );\n                assert( Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) == NULL );\n                if ( p-\u003epPars-\u003efUseBridge )\n                    Gia_ManToBridgeResult( stdout, 0, pCexNew, pCexNew-\u003eiPo );\n                Vec_PtrWriteEntry( p-\u003evCexes, p-\u003eiOutCur, pCexNew );\n                if ( p-\u003epPars-\u003epFuncOnFail \u0026\u0026 p-\u003epPars-\u003epFuncOnFail(p-\u003eiOutCur, p-\u003epPars-\u003efStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) : NULL) )\n                {\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n                    if ( !p-\u003epPars-\u003efSilent )\n                        Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame );\n                    p-\u003epPars-\u003eiFrame = iFrame;\n                    return -1;\n                }\n                if ( p-\u003epPars-\u003enFailOuts + p-\u003epPars-\u003enDropOuts == Saig_ManPoNum(p-\u003epAig) )\n                    return p-\u003epPars-\u003enFailOuts ? 0 : -1; // SAT or UNDEC\n                p-\u003epPars-\u003etimeLastSolved = Abc_Clock();\n                continue;\n            }\n            // try to solve this output\n            if ( p-\u003epTime4Outs )\n            {\n                assert( p-\u003epTime4Outs[p-\u003eiOutCur] \u003e 0 );\n                clkOne = Abc_Clock();\n                p-\u003etimeToStopOne = p-\u003epTime4Outs[p-\u003eiOutCur] + Abc_Clock();\n            }\n            while ( 1 )\n            {\n                if ( p-\u003epPars-\u003enTimeOutGap \u0026\u0026 p-\u003epPars-\u003etimeLastSolved \u0026\u0026 Abc_Clock() \u003e p-\u003epPars-\u003etimeLastSolved + p-\u003epPars-\u003enTimeOutGap * CLOCKS_PER_SEC )\n                {\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n                    if ( !p-\u003epPars-\u003efSilent )\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOutGap, iFrame );\n                    p-\u003epPars-\u003eiFrame = iFrame;\n                    return -1;\n                }\n                RetValue = Pdr_ManCheckCube( p, iFrame, NULL, \u0026pCube, p-\u003epPars-\u003enConfLimit, 0, 1 );\n                if ( RetValue == 1 )\n                    break;\n                if ( RetValue == -1 )\n                {\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n                    if ( p-\u003etimeToStop \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStop )\n                        Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOut, iFrame );\n                    else if ( p-\u003epPars-\u003enTimeOutGap \u0026\u0026 p-\u003epPars-\u003etimeLastSolved \u0026\u0026 Abc_Clock() \u003e p-\u003epPars-\u003etimeLastSolved + p-\u003epPars-\u003enTimeOutGap * CLOCKS_PER_SEC )\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOutGap, iFrame );\n                    else if ( p-\u003etimeToStopOne \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStopOne )\n                    {\n                        Pdr_QueueClean( p );\n                        pCube = NULL;\n                        break; // keep solving\n                    }\n                    else if ( p-\u003epPars-\u003enConfLimit )\n                        Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p-\u003epPars-\u003enConfLimit, iFrame );\n                    else if ( p-\u003epPars-\u003efVerbose )\n                        Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame );\n                    p-\u003epPars-\u003eiFrame = iFrame;\n                    return -1;\n                }\n                if ( RetValue == 0 )\n                {\n                    RetValue = Pdr_ManBlockCube( p, pCube );\n                    if ( RetValue == -1 )\n                    {\n                        if ( p-\u003epPars-\u003efVerbose )\n                            Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n                        if ( p-\u003etimeToStop \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStop )\n                            Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOut, iFrame );\n                        else if ( p-\u003epPars-\u003enTimeOutGap \u0026\u0026 p-\u003epPars-\u003etimeLastSolved \u0026\u0026 Abc_Clock() \u003e p-\u003epPars-\u003etimeLastSolved + p-\u003epPars-\u003enTimeOutGap * CLOCKS_PER_SEC )\n                            Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOutGap, iFrame );\n                        else if ( p-\u003etimeToStopOne \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStopOne )\n                        {\n                            Pdr_QueueClean( p );\n                            pCube = NULL;\n                            break; // keep solving\n                        }\n                        else if ( p-\u003epPars-\u003enConfLimit )\n                            Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p-\u003epPars-\u003enConfLimit, iFrame );\n                        else if ( p-\u003epPars-\u003efVerbose )\n                            Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame );\n                        p-\u003epPars-\u003eiFrame = iFrame;\n                        return -1;\n                    }\n                    if ( RetValue == 0 )\n                    {\n                        if ( fPrintClauses )\n                        {\n                            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                            Pdr_ManPrintClauses( p, 0 );\n                        }\n                        if ( p-\u003epPars-\u003efVerbose \u0026\u0026 !p-\u003epPars-\u003efUseAbs )\n                            Pdr_ManPrintProgress( p, !p-\u003epPars-\u003efSolveAll, Abc_Clock() - clkStart );\n                        p-\u003epPars-\u003eiFrame = iFrame;\n                        if ( !p-\u003epPars-\u003efSolveAll )\n                        {\n                            abctime clk = Abc_Clock();\n                            Abc_Cex_t * pCex = Pdr_ManDeriveCexAbs(p);\n                            p-\u003etAbs += Abc_Clock() - clk;\n                            if ( pCex == NULL )\n                            {\n                                assert( p-\u003epPars-\u003efUseAbs );\n                                Pdr_QueueClean( p );\n                                pCube = NULL;\n                                fRefined = 1;\n                                break; // keep solving\n                            }\n                            p-\u003epAig-\u003epSeqModel = pCex;\n\n                            if ( p-\u003epPars-\u003efVerbose \u0026\u0026 p-\u003epPars-\u003efUseAbs )\n                                Pdr_ManPrintProgress( p, !p-\u003epPars-\u003efSolveAll, Abc_Clock() - clkStart );\n                            return 0; // SAT\n                        }\n                        p-\u003epPars-\u003enFailOuts++;\n                        pCexNew = (p-\u003epPars-\u003efUseBridge || p-\u003epPars-\u003efStoreCex) ? Pdr_ManDeriveCex(p) : (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                        if ( p-\u003epPars-\u003evOutMap ) Vec_IntWriteEntry( p-\u003epPars-\u003evOutMap, p-\u003eiOutCur, 0 );\n                        assert( Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) == NULL );\n                        if ( p-\u003epPars-\u003efUseBridge )\n                            Gia_ManToBridgeResult( stdout, 0, pCexNew, pCexNew-\u003eiPo );\n                        Vec_PtrWriteEntry( p-\u003evCexes, p-\u003eiOutCur, pCexNew );\n                        if ( p-\u003epPars-\u003epFuncOnFail \u0026\u0026 p-\u003epPars-\u003epFuncOnFail(p-\u003eiOutCur, p-\u003epPars-\u003efStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) : NULL) )\n                        {\n                            if ( p-\u003epPars-\u003efVerbose )\n                                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n                            if ( !p-\u003epPars-\u003efSilent )\n                                Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame );\n                            p-\u003epPars-\u003eiFrame = iFrame;\n                            return -1;\n                        }\n                        if ( !p-\u003epPars-\u003efNotVerbose )\n                            Abc_Print( 1, \"Output %*d was asserted in frame %2d (%2d) (solved %*d out of %*d outputs).\\n\",\n                                nOutDigits, p-\u003eiOutCur, iFrame, iFrame, nOutDigits, p-\u003epPars-\u003enFailOuts, nOutDigits, Saig_ManPoNum(p-\u003epAig) );\n                        if ( p-\u003epPars-\u003enFailOuts == Saig_ManPoNum(p-\u003epAig) )\n                            return 0; // all SAT\n                        Pdr_QueueClean( p );\n                        pCube = NULL;\n                        break; // keep solving\n                    }\n                    if ( p-\u003epPars-\u003efVerbose )\n                        Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart );\n                }\n            }\n            if ( fRefined )\n                break;\n            if ( p-\u003epTime4Outs )\n            {\n                abctime timeSince = Abc_Clock() - clkOne;\n                assert( p-\u003epTime4Outs[p-\u003eiOutCur] \u003e 0 );\n                p-\u003epTime4Outs[p-\u003eiOutCur] = (p-\u003epTime4Outs[p-\u003eiOutCur] \u003e timeSince) ? p-\u003epTime4Outs[p-\u003eiOutCur] - timeSince : 0;\n                if ( p-\u003epTime4Outs[p-\u003eiOutCur] == 0 \u0026\u0026 Vec_PtrEntry(p-\u003evCexes, p-\u003eiOutCur) == NULL ) // undecided\n                {\n                    p-\u003epPars-\u003enDropOuts++;\n                    if ( p-\u003epPars-\u003evOutMap ) \n                        Vec_IntWriteEntry( p-\u003epPars-\u003evOutMap, p-\u003eiOutCur, -1 );\n                    if ( !p-\u003epPars-\u003efNotVerbose ) \n                        Abc_Print( 1, \"Timing out on output %*d in frame %d.\\n\", nOutDigits, p-\u003eiOutCur, iFrame );\n                }\n                p-\u003etimeToStopOne = 0;\n            }\n        }\n        /*\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops \u0026\u0026 !fRefined )\n        {\n            int i, Used;\n            Vec_IntForEachEntry( p-\u003evAbsFlops, Used, i )\n                if ( Used \u0026\u0026 (Vec_IntEntry(p-\u003evPrio, i) \u003e\u003e p-\u003enPrioShift) == 0 )\n                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 0 );\n        }\n        */\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops \u0026\u0026 !fRefined )\n        {\n            Pdr_Set_t * pSet;\n            int i, j, k;\n            Vec_IntFill( p-\u003evAbsFlops, Vec_IntSize( p-\u003evAbsFlops ), 0 );\n            Vec_VecForEachEntry( Pdr_Set_t *, p-\u003evClauses, pSet, i, j )\n                for ( k = 0; k \u003c pSet-\u003enLits; k++ )\n                    Vec_IntWriteEntry( p-\u003evAbsFlops, Abc_Lit2Var(pSet-\u003eLits[k]), 1 );\n        }\n\n        if ( p-\u003epPars-\u003efVerbose )\n            Pdr_ManPrintProgress( p, !fRefined, Abc_Clock() - clkStart );\n        if ( fRefined )\n            continue;\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Finished frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        // open a new timeframe\n        p-\u003enQueLim = p-\u003epPars-\u003enRestLimit;\n        assert( pCube == NULL );\n        Pdr_ManSetPropertyOutput( p, iFrame );\n        Pdr_ManCreateSolver( p, ++iFrame );\n        if ( fPrintClauses )\n        {\n            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n            Pdr_ManPrintClauses( p, 0 );\n        }\n        // push clauses into this timeframe\n        RetValue = Pdr_ManPushClauses( p );\n        if ( RetValue == -1 )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            if ( !p-\u003epPars-\u003efSilent )\n            {\n                if ( p-\u003etimeToStop \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStop )\n                    Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOut, iFrame );\n                else\n                    Abc_Print( 1, \"Reached conflict limit (%d) in frame.\\n\",  p-\u003epPars-\u003enConfLimit, iFrame );\n            }\n            p-\u003epPars-\u003eiFrame = iFrame;\n            return -1;\n        }\n        if ( RetValue )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            if ( !p-\u003epPars-\u003efSilent )\n                Pdr_ManReportInvariant( p );\n            if ( !p-\u003epPars-\u003efSilent )\n                Pdr_ManVerifyInvariant( p );\n            p-\u003epPars-\u003eiFrame = iFrame;\n            // count the number of UNSAT outputs\n            p-\u003epPars-\u003enProveOuts = Saig_ManPoNum(p-\u003epAig) - p-\u003epPars-\u003enFailOuts - p-\u003epPars-\u003enDropOuts;\n            // convert previously 'unknown' into 'unsat'\n            if ( p-\u003epPars-\u003evOutMap )\n                for ( iFrame = 0; iFrame \u003c Saig_ManPoNum(p-\u003epAig); iFrame++ )\n                    if ( Vec_IntEntry(p-\u003epPars-\u003evOutMap, iFrame) == -2 ) // unknown\n                    {\n                        Vec_IntWriteEntry( p-\u003epPars-\u003evOutMap, iFrame, 1 ); // unsat\n                        if ( p-\u003epPars-\u003efUseBridge )\n                            Gia_ManToBridgeResult( stdout, 1, NULL, iFrame );\n                    }\n            if ( p-\u003epPars-\u003enProveOuts == Saig_ManPoNum(p-\u003epAig) )\n                return 1; // UNSAT\n            if ( p-\u003epPars-\u003enFailOuts \u003e 0 )\n                return 0; // SAT\n            return -1;\n        }\n        if ( p-\u003epPars-\u003efVerbose )\n            Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart );\n\n        // check termination\n        if ( p-\u003epPars-\u003epFuncStop \u0026\u0026 p-\u003epPars-\u003epFuncStop(p-\u003epPars-\u003eRunId) )\n        {\n            p-\u003epPars-\u003eiFrame = iFrame;\n            return -1;\n        }\n        if ( p-\u003etimeToStop \u0026\u0026 Abc_Clock() \u003e p-\u003etimeToStop )\n        {\n            if ( fPrintClauses )\n            {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if ( p-\u003epPars-\u003efVerbose )\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            if ( !p-\u003epPars-\u003efSilent )\n                Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOut, iFrame );\n            p-\u003epPars-\u003eiFrame = iFrame;\n            return -1;\n        }\n        if ( p-\u003epPars-\u003enTimeOutGap \u0026\u0026 p-\u003epPars-\u003etimeLastSolved \u0026\u0026 Abc_Clock() \u003e p-\u003epPars-\u003etimeLastSolved + p-\u003epPars-\u003enTimeOutGap * CLOCKS_PER_SEC )\n        {\n            if ( fPrintClauses )\n            {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if ( p-\u003epPars-\u003efVerbose )\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            if ( !p-\u003epPars-\u003efSilent )\n                Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p-\u003epPars-\u003enTimeOutGap, iFrame );\n            p-\u003epPars-\u003eiFrame = iFrame;\n            return -1;\n        }\n        if ( p-\u003epPars-\u003enFrameMax \u0026\u0026 iFrame \u003e= p-\u003epPars-\u003enFrameMax )\n        {\n            if ( p-\u003epPars-\u003efVerbose )\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            if ( !p-\u003epPars-\u003efSilent )\n                Abc_Print( 1, \"Reached limit on the number of timeframes (%d).\\n\", p-\u003epPars-\u003enFrameMax );\n            p-\u003epPars-\u003eiFrame = iFrame;\n            return -1;\n        }\n    }\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func IPdr_ManSolveInt(p *Pdr_Man_t, fCheckClauses int32, fPushClauses int32) int32 {\n    var fPrintClauses int32;\n    var pCube *Pdr_Set_t  = nil;\n    var pObj *Aig_Obj_t;\n    var pCexNew *Abc_Cex_t;\n    var iFrame int32;\n    var RetValue int32 = -1;\n    var nOutDigits int32  = Abc_Base10Log( Saig_ManPoNum(p.pAig) );\n    var clkStart abctime = Abc_Clock();\n    var clkOne abctime;\n    if p.pPars.nTimeOut {\n        p.timeToStop = p.pPars.nTimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        p.timeToStop = 0;\n    }\n    // assert( Vec_PtrSize(p-\u003evSolvers) == 0 );\n    // in the multi-output mode, mark trivial POs (those fed by const0) as solved \n    if ( p.pPars.fSolveAll )\n        Saig_ManForEachPo( p.pAig, pObj, iFrame )\n            if Aig_ObjChild0(pObj) == Aig_ManConst0(p.pAig) {\n                Vec_IntWriteEntry( p.pPars.vOutMap, iFrame, 1 ); // unsat\n                p.pPars.nProveOuts++;\n                if p.pPars.fUseBridge {\n                    Gia_ManToBridgeResult( os.Stdout, 1, nil, iFrame ); }\n            }\n    // create the first timeframe\n    p.pPars.timeLastSolved = Abc_Clock();\n\n    if Vec_VecSize(p.vClauses) == 0 {\n        Pdr_ManCreateSolver( p, (iFrame = 0) );\n    } else {\n        iFrame = Vec_VecSize(p.vClauses) - 1;\n\n        if fCheckClauses != 0 {\n            if p.pPars.fVerbose {\n               Abc_Print( 1, \"IPDR: Checking the reloaded length-%d trace...\", iFrame + 1 ) ; }\n            IPdr_ManCheckClauses( p );\n            if p.pPars.fVerbose {\n               Abc_Print( 1, \" Passed!\\n\" ) ; }\n        }\n\n        if fPushClauses != 0 {\n            p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"IPDR: Pushing the reloaded clauses. Before:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            RetValue = Pdr_ManPushClauses( p );\n\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"IPDR: Finished pushing. After:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            if RetValue != 0 {\n                Pdr_ManReportInvariant( p );\n                Pdr_ManVerifyInvariant( p );\n                return 1;\n            }\n        }\n\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops == nil \u0026\u0026 iFrame \u003e= 1 {\n            assert(p.vAbsFlops == nil, \"p.vAbsFlops == nil\");\n            p.vAbsFlops  = Vec_IntStart( Saig_ManRegNum(p.pAig) );\n            p.vMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p.pAig) );\n            p.vMapPpi2Ff = Vec_IntAlloc( 100 );\n            \n            IPdr_ManRestoreAbsFlops( p );\n        }\n \n    }\n    for {\n        var fRefined int32;\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops == nil \u0026\u0026 iFrame == 1 {\n//            int i, Prio;\n            assert(p.vAbsFlops == nil, \"p.vAbsFlops == nil\");\n            p.vAbsFlops  = Vec_IntStart( Saig_ManRegNum(p.pAig) );\n            p.vMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p.pAig) );\n            p.vMapPpi2Ff = Vec_IntAlloc( 100 );\n//            Vec_IntForEachEntry( p-\u003evPrio, Prio, i )\n//                if ( Prio \u003e\u003e p-\u003enPrioShift  )\n//                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 1 );\n        }\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Starting frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        p.nFrames = iFrame;\n        assert(iFrame == Vec_PtrSize(p.vSolvers)-1, \"iFrame == Vec_PtrSize(p.vSolvers)-1\");\n        p.iUseFrame = Abc_MaxInt(iFrame, 1);\n        Saig_ManForEachPo( p.pAig, pObj, p.iOutCur )\n        {\n            // skip disproved outputs\n            if p.vCexes \u0026\u0026 Vec_PtrEntry(p.vCexes, p.iOutCur) {\n                continue; }\n            // skip output whose time has run out\n            if p.pTime4Outs \u0026\u0026 p.pTime4Outs[p.iOutCur] == 0 {\n                continue; }\n            // check if the output is trivially solved\n            if Aig_ObjChild0(pObj) == Aig_ManConst0(p.pAig) {\n                continue; }\n            // check if the output is trivially solved\n            if Aig_ObjChild0(pObj) == Aig_ManConst1(p.pAig) {\n                if !p.pPars.fSolveAll {\n                    pCexNew = Abc_CexMakeTriv( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), iFrame*Saig_ManPoNum(p.pAig)+p.iOutCur );\n                    p.pAig.pSeqModel = pCexNew;\n                    return 0; // SAT\n                }\n                if p.pPars.fUseBridge || p.pPars.fStoreCex {\n                    pCexNew = Abc_CexMakeTriv( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), iFrame*Saig_ManPoNum(p.pAig)+p.iOutCur );\n                } else {\n                    pCexNew = (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                }\n                p.pPars.nFailOuts++;\n                if p.pPars.vOutMap { Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, 0 ); }\n                if !p.pPars.fNotVerbose {\n                Abc_Print( 1, \"Output %*d was trivially asserted in frame %2d (solved %*d out of %*d outputs).\\n\",\n                    nOutDigits, p.iOutCur, iFrame, nOutDigits, p.pPars.nFailOuts, nOutDigits, Saig_ManPoNum(p.pAig) ); }\n                assert(Vec_PtrEntry(p.vCexes, p.iOutCur) == nil, \"Vec_PtrEntry(p.vCexes, p.iOutCur) == nil\");\n                if p.pPars.fUseBridge {\n                    Gia_ManToBridgeResult( os.Stdout, 0, pCexNew, pCexNew.iPo ); }\n                Vec_PtrWriteEntry( p.vCexes, p.iOutCur, pCexNew );\n                if p.pPars.pFuncOnFail \u0026\u0026 p.pPars.pFuncOnFail(p.iOutCur, p.pPars.fStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p.vCexes, p.iOutCur) : nil) {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if !p.pPars.fSilent {\n                        Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                if p.pPars.nFailOuts + p.pPars.nDropOuts == Saig_ManPoNum(p.pAig) {\n                    if p.pPars.nFailOuts {\n                        return 0;\n                    } else {\n                        return -1;\n                    } } // SAT or UNDEC\n                p.pPars.timeLastSolved = Abc_Clock();\n                continue;\n            }\n            // try to solve this output\n            if p.pTime4Outs {\n                assert(p.pTime4Outs[p.iOutCur] \u003e 0, \"p.pTime4Outs[p.iOutCur] \u003e 0\");\n                clkOne = Abc_Clock();\n                p.timeToStopOne = p.pTime4Outs[p.iOutCur] + Abc_Clock();\n            }\n            for {\n                if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if !p.pPars.fSilent {\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                RetValue = Pdr_ManCheckCube( p, iFrame, nil, \u0026pCube, p.pPars.nConfLimit, 0, 1 );\n                if RetValue == 1 {\n                    break; }\n                if RetValue == -1 {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                        Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                    } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame );\n                    } else if p.timeToStopOne \u0026\u0026 Abc_Clock() \u003e p.timeToStopOne {\n                        Pdr_QueueClean( p );\n                        pCube = nil;\n                        break; // keep solving\n                    \n                    } else if p.pPars.nConfLimit {\n                        Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p.pPars.nConfLimit, iFrame );\n                    } else if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                if RetValue == 0 {\n                    RetValue = Pdr_ManBlockCube( p, pCube );\n                    if RetValue == -1 {\n                        if p.pPars.fVerbose {\n                            Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                        if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                            Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                        } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                            Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame );\n                        } else if p.timeToStopOne \u0026\u0026 Abc_Clock() \u003e p.timeToStopOne {\n                            Pdr_QueueClean( p );\n                            pCube = nil;\n                            break; // keep solving\n                        \n                        } else if p.pPars.nConfLimit {\n                            Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p.pPars.nConfLimit, iFrame );\n                        } else if p.pPars.fVerbose {\n                            Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame ); }\n                        p.pPars.iFrame = iFrame;\n                        return -1;\n                    }\n                    if RetValue == 0 {\n                        if fPrintClauses != 0 {\n                            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                            Pdr_ManPrintClauses( p, 0 );\n                        }\n                        if p.pPars.fVerbose \u0026\u0026 !p.pPars.fUseAbs {\n                            Pdr_ManPrintProgress( p, !p.pPars.fSolveAll, Abc_Clock() - clkStart ); }\n                        p.pPars.iFrame = iFrame;\n                        if !p.pPars.fSolveAll {\n                            var clk abctime  = Abc_Clock();\n                            var pCex *Abc_Cex_t  = Pdr_ManDeriveCexAbs(p);\n                            p.tAbs += Abc_Clock() - clk;\n                            if pCex == nil {\n                                assert(p.pPars.fUseAbs, \"p.pPars.fUseAbs\");\n                                Pdr_QueueClean( p );\n                                pCube = nil;\n                                fRefined = 1;\n                                break; // keep solving\n                            }\n                            p.pAig.pSeqModel = pCex;\n\n                            if p.pPars.fVerbose \u0026\u0026 p.pPars.fUseAbs {\n                                Pdr_ManPrintProgress( p, !p.pPars.fSolveAll, Abc_Clock() - clkStart ); }\n                            return 0; // SAT\n                        }\n                        p.pPars.nFailOuts++;\n                        if p.pPars.fUseBridge || p.pPars.fStoreCex {\n                            pCexNew = Pdr_ManDeriveCex(p);\n                        } else {\n                            pCexNew = (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                        }\n                        if p.pPars.vOutMap { Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, 0 ); }\n                        assert(Vec_PtrEntry(p.vCexes, p.iOutCur) == nil, \"Vec_PtrEntry(p.vCexes, p.iOutCur) == nil\");\n                        if p.pPars.fUseBridge {\n                            Gia_ManToBridgeResult( os.Stdout, 0, pCexNew, pCexNew.iPo ); }\n                        Vec_PtrWriteEntry( p.vCexes, p.iOutCur, pCexNew );\n                        if p.pPars.pFuncOnFail \u0026\u0026 p.pPars.pFuncOnFail(p.iOutCur, p.pPars.fStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p.vCexes, p.iOutCur) : nil) {\n                            if p.pPars.fVerbose {\n                                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                            if !p.pPars.fSilent {\n                                Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame ); }\n                            p.pPars.iFrame = iFrame;\n                            return -1;\n                        }\n                        if !p.pPars.fNotVerbose {\n                            Abc_Print( 1, \"Output %*d was asserted in frame %2d (%2d) (solved %*d out of %*d outputs).\\n\",\n                                nOutDigits, p.iOutCur, iFrame, iFrame, nOutDigits, p.pPars.nFailOuts, nOutDigits, Saig_ManPoNum(p.pAig) ); }\n                        if p.pPars.nFailOuts == Saig_ManPoNum(p.pAig) {\n                            return 0; } // all SAT\n                        Pdr_QueueClean( p );\n                        pCube = nil;\n                        break; // keep solving\n                    }\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart ); }\n                }\n            }\n            if fRefined != 0 {\n                break; }\n            if p.pTime4Outs {\n                var timeSince abctime  = Abc_Clock() - clkOne;\n                assert(p.pTime4Outs[p.iOutCur] \u003e 0, \"p.pTime4Outs[p.iOutCur] \u003e 0\");\n                p.pTime4Outs[p.iOutCur] = (p.pTime4Outs[p.iOutCur] \u003e timeSince) ? p.pTime4Outs[p.iOutCur] - timeSince : 0;\n                if p.pTime4Outs[p.iOutCur] == 0 \u0026\u0026 Vec_PtrEntry(p.vCexes, p.iOutCur) == nil { // undecided\n                \n                    p.pPars.nDropOuts++;\n                    if p.pPars.vOutMap { \n                        Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, -1 ); }\n                    if !p.pPars.fNotVerbose { \n                        Abc_Print( 1, \"Timing out on output %*d in frame %d.\\n\", nOutDigits, p.iOutCur, iFrame ); }\n                }\n                p.timeToStopOne = 0;\n            }\n        }\n        /*\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops \u0026\u0026 !fRefined )\n        {\n            int i, Used;\n            Vec_IntForEachEntry( p-\u003evAbsFlops, Used, i )\n                if ( Used \u0026\u0026 (Vec_IntEntry(p-\u003evPrio, i) \u003e\u003e p-\u003enPrioShift) == 0 )\n                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 0 );\n        }\n        */\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops \u0026\u0026 !(fRefined != 0) {\n            var pSet *Pdr_Set_t;\n            var i, j, k int32;\n            Vec_IntFill( p.vAbsFlops, Vec_IntSize( p.vAbsFlops ), 0 );\n            Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pSet, i, j )\n                for ( k = 0; k \u003c pSet.nLits; k++ )\n                    Vec_IntWriteEntry( p.vAbsFlops, Abc_Lit2Var(pSet.Lits[k]), 1 );\n        }\n\n        if p.pPars.fVerbose {\n            Pdr_ManPrintProgress( p, !fRefined, Abc_Clock() - clkStart ); }\n        if fRefined != 0 {\n            continue; }\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Finished frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        // open a new timeframe\n        p.nQueLim = p.pPars.nRestLimit;\n        assert(pCube == nil, \"pCube == nil\");\n        Pdr_ManSetPropertyOutput( p, iFrame );\n        Pdr_ManCreateSolver( p, ++iFrame );\n        if fPrintClauses != 0 {\n            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n            Pdr_ManPrintClauses( p, 0 );\n        }\n        // push clauses into this timeframe\n        RetValue = Pdr_ManPushClauses( p );\n        if RetValue == -1 {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                    Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                } else {\n                    Abc_Print( 1, \"Reached conflict limit (%d) in frame.\\n\",  p.pPars.nConfLimit, iFrame ); }\n            }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if RetValue != 0 {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Pdr_ManReportInvariant( p ); }\n            if !p.pPars.fSilent {\n                Pdr_ManVerifyInvariant( p ); }\n            p.pPars.iFrame = iFrame;\n            // count the number of UNSAT outputs\n            p.pPars.nProveOuts = Saig_ManPoNum(p.pAig) - p.pPars.nFailOuts - p.pPars.nDropOuts;\n            // convert previously 'unknown' into 'unsat'\n            if p.pPars.vOutMap {\n                for  iFrame = 0; iFrame \u003c Saig_ManPoNum(p.pAig); iFrame++  {\n                    if Vec_IntEntry(p.pPars.vOutMap, iFrame) == -2 { // unknown\n                    \n                        Vec_IntWriteEntry( p.pPars.vOutMap, iFrame, 1 ); // unsat\n                        if p.pPars.fUseBridge {\n                            Gia_ManToBridgeResult( os.Stdout, 1, nil, iFrame ); }\n                    }\n                } }\n            if p.pPars.nProveOuts == Saig_ManPoNum(p.pAig) {\n                return 1; } // UNSAT\n            if p.pPars.nFailOuts \u003e 0 {\n                return 0; } // SAT\n            return -1;\n        }\n        if p.pPars.fVerbose {\n            Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart ); }\n\n        // check termination\n        if p.pPars.pFuncStop \u0026\u0026 p.pPars.pFuncStop(p.pPars.RunId) {\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n            if fPrintClauses != 0 {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n            if fPrintClauses != 0 {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.pPars.nFrameMax \u0026\u0026 iFrame \u003e= p.pPars.nFrameMax {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached limit on the number of timeframes (%d).\\n\", p.pPars.nFrameMax ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n    }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "IPdr_ManSolve",
+      "Start": 30557,
+      "End": 33290,
+      "BodyStart": 30614,
+      "Original": "int IPdr_ManSolve( Aig_Man_t * pAig, Pdr_Par_t * pPars )\n{\n    Pdr_Man_t * p;\n    int k, RetValue;\n    Vec_Vec_t * vClausesSaved;\n\n    abctime clk = Abc_Clock();\n    if ( pPars-\u003enTimeOutOne \u0026\u0026 !pPars-\u003efSolveAll )\n        pPars-\u003enTimeOutOne = 0;\n    if ( pPars-\u003enTimeOutOne \u0026\u0026 pPars-\u003enTimeOut == 0 )\n        pPars-\u003enTimeOut = pPars-\u003enTimeOutOne * Saig_ManPoNum(pAig) / 1000 + (int)((pPars-\u003enTimeOutOne * Saig_ManPoNum(pAig) % 1000) \u003e 0);\n    if ( pPars-\u003efVerbose )\n    {\n//    Abc_Print( 1, \"Running PDR by Niklas Een (aka IC3 by Aaron Bradley) with these parameters:\\n\" );\n        Abc_Print( 1, \"VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. \",\n            pPars-\u003enRecycle,\n            pPars-\u003enFrameMax,\n            pPars-\u003enRestLimit,\n            pPars-\u003enTimeOut );\n        Abc_Print( 1, \"MonoCNF = %s. SkipGen = %s. SolveAll = %s.\\n\",\n            pPars-\u003efMonoCnf ?     \"yes\" : \"no\",\n            pPars-\u003efSkipGeneral ? \"yes\" : \"no\",\n            pPars-\u003efSolveAll ?    \"yes\" : \"no\" );\n    }\n    ABC_FREE( pAig-\u003epSeqModel );\n\n\n    p = Pdr_ManStart( pAig, pPars, NULL );\n    while ( 1 ) {\n        RetValue = IPdr_ManSolveInt( p, 1, 0 );\n\n        if ( RetValue == -1 \u0026\u0026 pPars-\u003eiFrame == pPars-\u003enFrameMax) {\n            vClausesSaved = IPdr_ManSaveClauses( p, 1 );\n\n            Pdr_ManStop( p );\n\n            p = Pdr_ManStart( pAig, pPars, NULL );\n            IPdr_ManRestoreClauses( p, vClausesSaved, NULL );\n\n            pPars-\u003enFrameMax = pPars-\u003enFrameMax \u003c\u003c 1;\n\n            continue;\n        }\n\n        if ( RetValue == 0 )\n            assert( pAig-\u003epSeqModel != NULL || p-\u003evCexes != NULL );\n        if ( p-\u003evCexes )\n        {\n            assert( p-\u003epAig-\u003evSeqModelVec == NULL );\n            p-\u003epAig-\u003evSeqModelVec = p-\u003evCexes;\n            p-\u003evCexes = NULL;\n        }\n        if ( p-\u003epPars-\u003efDumpInv )\n        {\n            char * pFileName = pPars-\u003epInvFileName ? pPars-\u003epInvFileName : Extra_FileNameGenericAppend(p-\u003epAig-\u003epName, \"_inv.pla\");\n                Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );\n                Pdr_ManDumpClauses( p, pFileName, RetValue==1 );\n        }\n        else if ( RetValue == 1 )\n            Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );\n\n        p-\u003etTotal += Abc_Clock() - clk;\n        Pdr_ManStop( p );\n\n        break;\n    }\n    \n    \n    pPars-\u003eiFrame--;\n    // convert all -2 (unknown) entries into -1 (undec)\n    if ( pPars-\u003evOutMap )\n        for ( k = 0; k \u003c Saig_ManPoNum(pAig); k++ )\n            if ( Vec_IntEntry(pPars-\u003evOutMap, k) == -2 ) // unknown\n                Vec_IntWriteEntry( pPars-\u003evOutMap, k, -1 ); // undec\n    if ( pPars-\u003efUseBridge )\n        Gia_ManToBridgeAbort( stdout, 7, (unsigned char *)\"timeout\" );\n    return RetValue;\n}",
+      "Draft": "func IPdr_ManSolve(pAig *Aig_Man_t, pPars *Pdr_Par_t) int32 {\n    var p *Pdr_Man_t;\n    var k, RetValue int32;\n    var vClausesSaved *Vec_Vec_t;\n\n    var clk abctime  = Abc_Clock();\n    if pPars.nTimeOutOne \u0026\u0026 !pPars.fSolveAll {\n        pPars.nTimeOutOne = 0; }\n    if pPars.nTimeOutOne \u0026\u0026 pPars.nTimeOut == 0 {\n        pPars.nTimeOut = pPars.nTimeOutOne * Saig_ManPoNum(pAig) / 1000 + int32(((pPars.nTimeOutOne * Saig_ManPoNum(pAig) % 1000) \u003e 0)); }\n    if pPars.fVerbose {\n//    Abc_Print( 1, \"Running PDR by Niklas Een (aka IC3 by Aaron Bradley) with these parameters:\\n\" );\n        Abc_Print( 1, \"VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. \",\n            pPars.nRecycle,\n            pPars.nFrameMax,\n            pPars.nRestLimit,\n            pPars.nTimeOut );\n        Abc_Print( 1, \"MonoCNF = %s. SkipGen = %s. SolveAll = %s.\\n\",\n            pPars.fMonoCnf ?     \"yes\" : \"no\",\n            pPars.fSkipGeneral ? \"yes\" : \"no\",\n            pPars.fSolveAll ?    \"yes\" : \"no\" );\n    }\n    ABC_FREE( pAig.pSeqModel );\n\n\n    p = Pdr_ManStart( pAig, pPars, nil );\n    for {\n        RetValue = IPdr_ManSolveInt( p, 1, 0 );\n\n        if RetValue == -1 \u0026\u0026 pPars.iFrame == pPars.nFrameMax {\n            vClausesSaved = IPdr_ManSaveClauses( p, 1 );\n\n            Pdr_ManStop( p );\n\n            p = Pdr_ManStart( pAig, pPars, nil );\n            IPdr_ManRestoreClauses( p, vClausesSaved, nil );\n\n            pPars.nFrameMax = pPars.nFrameMax \u003c\u003c 1;\n\n            continue;\n        }\n\n        if RetValue == 0 {\n            assert(pAig.pSeqModel != nil || p.vCexes != nil, \"pAig.pSeqModel != nil || p.vCexes != nil\"); }\n        if p.vCexes {\n            assert(p.pAig.vSeqModelVec == nil, \"p.pAig.vSeqModelVec == nil\");\n            p.pAig.vSeqModelVec = p.vCexes;\n            p.vCexes = nil;\n        }\n        if p.pPars.fDumpInv {\n            var pFileName string;\n            if pPars.pInvFileName {\n                pFileName = pPars.pInvFileName;\n            } else {\n                pFileName = Extra_FileNameGenericAppend(p.pAig.pName, \"_inv.pla\");\n            }\n                Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );\n                Pdr_ManDumpClauses( p, pFileName, RetValue==1 );\n        \n        } else if RetValue == 1 {\n            Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) ); }\n\n        p.tTotal += Abc_Clock() - clk;\n        Pdr_ManStop( p );\n\n        break;\n    }\n    \n    \n    pPars.iFrame--;\n    // convert all -2 (unknown) entries into -1 (undec)\n    if pPars.vOutMap {\n        for  k = 0; k \u003c Saig_ManPoNum(pAig); k++  {\n            if Vec_IntEntry(pPars.vOutMap, k) == -2 { // unknown\n                Vec_IntWriteEntry( pPars.vOutMap, k, -1 ); }\n        } } // undec\n    if pPars.fUseBridge {\n        Gia_ManToBridgeAbort( os.Stdout, 7, (unsigned char *)\"timeout\" ); }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "IPdr_ManCheckCombUnsat",
+      "Start": 33292,
+      "End": 33635,
+      "BodyStart": 33336,
+      "Original": "int IPdr_ManCheckCombUnsat( Pdr_Man_t * p )\n{\n    int iFrame, RetValue = -1;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p-\u003enFrames = iFrame;\n    p-\u003eiUseFrame = Abc_MaxInt(iFrame, 1);\n\n    RetValue = Pdr_ManCheckCube( p, iFrame, NULL, NULL, p-\u003epPars-\u003enConfLimit, 0, 1 );\n    return RetValue;\n}",
+      "Draft": "func IPdr_ManCheckCombUnsat(p *Pdr_Man_t) int32 {\n    var iFrame int32;\n    var RetValue int32 = -1;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p.nFrames = iFrame;\n    p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n    RetValue = Pdr_ManCheckCube( p, iFrame, nil, nil, p.pPars.nConfLimit, 0, 1 );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "IPdr_ManCheckCubeReduce",
+      "Start": 33637,
+      "End": 36541,
+      "BodyStart": 33739,
+      "Original": "int IPdr_ManCheckCubeReduce( Pdr_Man_t * p, Vec_Ptr_t * vClauses, Pdr_Set_t * pCube, int nConfLimit )\n{ \n    sat_solver * pSat;\n    Vec_Int_t * vLits, * vLitsA;\n    int Lit, RetValue = l_True;\n    int i;\n    Pdr_Set_t * pCla;\n    int iActVar = 0;\n    abctime clk = Abc_Clock();\n\n    pSat = Pdr_ManSolver( p, 1 );\n\n    if ( pCube == NULL ) // solve the property\n    {\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, 1, 2, Aig_ManCo(p-\u003epAig, p-\u003eiOutCur)), 0 ); // pos literal (property fails)\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );\n        assert( RetValue == 1 );\n\n        vLitsA = Vec_IntStart( Vec_PtrSize( vClauses ) );\n        iActVar = Pdr_ManFreeVar( p, 1 );\n        for ( i = 1; i \u003c Vec_PtrSize( vClauses ); ++i )\n            Pdr_ManFreeVar( p, 1 );\n        Vec_PtrForEachEntry( Pdr_Set_t *, vClauses, pCla, i )\n        {\n            vLits = Pdr_ManCubeToLits( p, 1, pCla, 1, 0 );\n            Lit = Abc_Var2Lit( iActVar + i, 1 );\n            Vec_IntPush( vLits, Lit );\n\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert( RetValue == 1 );\n            Vec_IntWriteEntry( vLitsA, i, Abc_Var2Lit( iActVar + i, 0 )  );\n        }\n        sat_solver_compress( pSat );\n\n        // solve \n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLitsA), Vec_IntArray(vLitsA) + Vec_IntSize(vLitsA), nConfLimit, 0, 0, 0 );\n        Vec_IntFree( vLitsA );\n\n        if ( RetValue == l_Undef )\n            return -1;\n    }\n\n    assert( RetValue != l_Undef );\n    if ( RetValue == l_False ) // UNSAT\n    {\n        int ncorelits, *pcorelits;\n        Vec_Ptr_t * vTemp = NULL;\n        Vec_Bit_t * vMark = NULL;\n\n        ncorelits = sat_solver_final(pSat, \u0026pcorelits);\n        Abc_Print( 1, \"UNSAT at the last frame. nCores = %d (out of %d).\", ncorelits, Vec_PtrSize( vClauses ) );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n\n        vTemp = Vec_PtrDup( vClauses );\n        vMark = Vec_BitStart( Vec_PtrSize( vClauses) );\n        Vec_PtrClear( vClauses );\n        for ( i = 0; i \u003c ncorelits; ++i )\n        {\n            //Abc_Print( 1, \"Core[%d] = lit(%d) = var(%d) = %d-th set\\n\", i, pcorelits[i], Abc_Lit2Var(pcorelits[i]), Abc_Lit2Var(pcorelits[i]) - iActVar );\n            Vec_BitWriteEntry( vMark, Abc_Lit2Var( pcorelits[i] ) - iActVar, 1 );\n        }\n        \n        Vec_PtrForEachEntry( Pdr_Set_t *, vTemp, pCla, i )\n        {\n            if ( Vec_BitEntry( vMark, i ) )\n            { \n                Vec_PtrPush( vClauses, pCla );\n                continue;\n            }\n            Pdr_SetDeref( pCla );\n        }\n\n        Vec_PtrFree( vTemp );\n        Vec_BitFree( vMark );\n        RetValue = 1;\n    }\n    else // SAT\n    {\n        Abc_Print( 1, \"SAT at the last frame.\" );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n        RetValue = 0;\n    }\n\n    return RetValue;\n}",
+      "Draft": "func IPdr_ManCheckCubeReduce(p *Pdr_Man_t, vClauses *Vec_Ptr_t, pCube *Pdr_Set_t, nConfLimit int32) int32 { \n    var pSat *sat_solver;\n    var vLits, vLitsA *Vec_Int_t;\n    var Lit int32;\n    var RetValue int32 = l_True;\n    var i int32;\n    var pCla *Pdr_Set_t;\n    var iActVar int32;\n    var clk abctime  = Abc_Clock();\n\n    pSat = Pdr_ManSolver( p, 1 );\n\n    if pCube == nil { // solve the property\n    \n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, 1, 2, Aig_ManCo(p.pAig, p.iOutCur)), 0 ); // pos literal (property fails)\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );\n        assert(RetValue == 1, \"RetValue == 1\");\n\n        vLitsA = Vec_IntStart( Vec_PtrSize( vClauses ) );\n        iActVar = Pdr_ManFreeVar( p, 1 );\n        for  i = 1; i \u003c Vec_PtrSize( vClauses ); ++i  {\n            Pdr_ManFreeVar( p, 1 );\n        }\n        Vec_PtrForEachEntry( Pdr_Set_t *, vClauses, pCla, i )\n        {\n            vLits = Pdr_ManCubeToLits( p, 1, pCla, 1, 0 );\n            Lit = Abc_Var2Lit( iActVar + i, 1 );\n            Vec_IntPush( vLits, Lit );\n\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert(RetValue == 1, \"RetValue == 1\");\n            Vec_IntWriteEntry( vLitsA, i, Abc_Var2Lit( iActVar + i, 0 )  );\n        }\n        sat_solver_compress( pSat );\n\n        // solve \n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLitsA), Vec_IntArray(vLitsA) + Vec_IntSize(vLitsA), nConfLimit, 0, 0, 0 );\n        Vec_IntFree( vLitsA );\n\n        if RetValue == l_Undef {\n            return -1; }\n    }\n\n    assert(RetValue != l_Undef, \"RetValue != l_Undef\");\n    if RetValue == l_False { // UNSAT\n    \n        var ncorelits int32;\n        var pcorelits *int32;\n        var vTemp *Vec_Ptr_t  = nil;\n        var vMark *Vec_Bit_t  = nil;\n\n        ncorelits = sat_solver_final(pSat, \u0026pcorelits);\n        Abc_Print( 1, \"UNSAT at the last frame. nCores = %d (out of %d).\", ncorelits, Vec_PtrSize( vClauses ) );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n\n        vTemp = Vec_PtrDup( vClauses );\n        vMark = Vec_BitStart( Vec_PtrSize( vClauses) );\n        Vec_PtrClear( vClauses );\n        for  i = 0; i \u003c ncorelits; ++i  {\n            //Abc_Print( 1, \"Core[%d] = lit(%d) = var(%d) = %d-th set\\n\", i, pcorelits[i], Abc_Lit2Var(pcorelits[i]), Abc_Lit2Var(pcorelits[i]) - iActVar );\n            Vec_BitWriteEntry( vMark, Abc_Lit2Var( pcorelits[i] ) - iActVar, 1 );\n        }\n        \n        Vec_PtrForEachEntry( Pdr_Set_t *, vTemp, pCla, i )\n        {\n            if Vec_BitEntry( vMark, i ) { \n                Vec_PtrPush( vClauses, pCla );\n                continue;\n            }\n            Pdr_SetDeref( pCla );\n        }\n\n        Vec_PtrFree( vTemp );\n        Vec_BitFree( vMark );\n        RetValue = 1;\n    \n    } else { // SAT\n    \n        Abc_Print( 1, \"SAT at the last frame.\" );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n        RetValue = 0;\n    }\n\n    return RetValue;\n}"
+    },
+    {
+      "Name": "IPdr_ManReduceClauses",
+      "Start": 36543,
+      "End": 36998,
+      "BodyStart": 36608,
+      "Original": "int IPdr_ManReduceClauses( Pdr_Man_t * p, Vec_Vec_t * vClauses )\n{\n    int iFrame, RetValue = -1;\n    Vec_Ptr_t * vLast = NULL;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p-\u003enFrames = iFrame;\n    p-\u003eiUseFrame = Abc_MaxInt(iFrame, 1);\n\n    vLast = Vec_VecEntry( vClauses, Vec_VecSize( vClauses ) - 1 );\n    RetValue = IPdr_ManCheckCubeReduce( p, vLast, NULL, p-\u003epPars-\u003enConfLimit );\n    return RetValue;\n}",
+      "Draft": "func IPdr_ManReduceClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t) int32 {\n    var iFrame int32;\n    var RetValue int32 = -1;\n    var vLast *Vec_Ptr_t  = nil;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p.nFrames = iFrame;\n    p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n    vLast = Vec_VecEntry( vClauses, Vec_VecSize( vClauses ) - 1 );\n    RetValue = IPdr_ManCheckCubeReduce( p, vLast, nil, p.pPars.nConfLimit );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkDarIPdr",
+      "Start": 37234,
+      "End": 38527,
+      "BodyStart": 37293,
+      "Original": "int Abc_NtkDarIPdr ( Abc_Ntk_t * pNtk, Pdr_Par_t * pPars )\n{\n    int RetValue = -1;\n    abctime clk = Abc_Clock();\n    Aig_Man_t * pMan;\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n\n    RetValue = IPdr_ManSolve( pMan, pPars );\n \n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Property proved.  \" );\n    else \n    {\n        if ( RetValue == 0 )\n        {\n            if ( pMan-\u003epSeqModel == NULL )\n                Abc_Print( 1, \"Counter-example is not available.\\n\" );\n            else\n            {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", pMan-\u003epSeqModel-\u003eiPo, pNtk-\u003epName, pMan-\u003epSeqModel-\u003eiFrame );\n                if ( !Saig_ManVerifyCex( pMan, pMan-\u003epSeqModel ) )\n                    Abc_Print( 1, \"Counter-example verification has FAILED.\\n\" );\n            }\n        }\n        else if ( RetValue == -1 )\n            Abc_Print( 1, \"Property UNDECIDED.  \" );\n        else\n            assert( 0 );\n    }\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n\n    ABC_FREE( pNtk-\u003epSeqModel );\n    pNtk-\u003epSeqModel = pMan-\u003epSeqModel;\n    pMan-\u003epSeqModel = NULL;\n    if ( pNtk-\u003evSeqModelVec )\n        Vec_PtrFreeFree( pNtk-\u003evSeqModelVec );\n    pNtk-\u003evSeqModelVec = pMan-\u003evSeqModelVec;\n    pMan-\u003evSeqModelVec = NULL;\n    Aig_ManStop( pMan );\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkDarIPdr(pNtk *Abc_Ntk_t, pPars *Pdr_Par_t) int32 {\n    var RetValue int32  = -1;\n    var clk abctime  = Abc_Clock();\n    var pMan *Aig_Man_t;\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n\n    RetValue = IPdr_ManSolve( pMan, pPars );\n \n    if RetValue == 1 {\n        Abc_Print( 1, \"Property proved.  \" );\n    } else {\n        if RetValue == 0 {\n            if pMan.pSeqModel == nil {\n                Abc_Print( 1, \"Counter-example is not available.\\n\" );\n            } else {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", pMan.pSeqModel.iPo, pNtk.pName, pMan.pSeqModel.iFrame );\n                if !Saig_ManVerifyCex( pMan, pMan.pSeqModel ) {\n                    Abc_Print( 1, \"Counter-example verification has FAILED.\\n\" ); }\n            }\n        \n        } else if RetValue == -1 {\n            Abc_Print( 1, \"Property UNDECIDED.  \" );\n        } else {\n            assert(false, \"0\"); }\n    }\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n\n    ABC_FREE( pNtk.pSeqModel );\n    pNtk.pSeqModel = pMan.pSeqModel;\n    pMan.pSeqModel = nil;\n    if pNtk.vSeqModelVec {\n        Vec_PtrFreeFree( pNtk.vSeqModelVec ); }\n    pNtk.vSeqModelVec = pMan.vSeqModelVec;\n    pMan.vSeqModelVec = nil;\n    Aig_ManStop( pMan );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::pointer-cast::15261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15261,
+      "End": 15274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::pointer-cast::16075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16075,
+      "End": 16088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::pointer-cast::22297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22297,
+      "End": 22310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::pointer-cast::22836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22836,
+      "End": 22849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManPushClausesK",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManPushClausesK",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1468,
+      "End": 3485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManPrintClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManPrintClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3721,
+      "End": 4292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManCheckClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManCheckClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4702,
+      "End": 5361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManSaveClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManSaveClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5597,
+      "End": 6229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManSetSolver",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManSetSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6466,
+      "End": 7259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManRebuildClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManRebuildClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7495,
+      "End": 9359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManRestoreAbsFlops",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManRestoreAbsFlops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9361,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManRestoreClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManRestoreClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9682,
+      "End": 10352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::ternary::IPdr_ManSolveInt",
+      "Category": "ternary-review",
+      "Symbol": "IPdr_ManSolveInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10588,
+      "End": 30321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManSolveInt",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManSolveInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10588,
+      "End": 30321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::ternary::IPdr_ManSolve",
+      "Category": "ternary-review",
+      "Symbol": "IPdr_ManSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 30557,
+      "End": 33290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManSolve",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30557,
+      "End": 33290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManCheckCombUnsat",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManCheckCombUnsat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33292,
+      "End": 33635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManCheckCubeReduce",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManCheckCubeReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33637,
+      "End": 36541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::IPdr_ManReduceClauses",
+      "Category": "semantic-review",
+      "Symbol": "IPdr_ManReduceClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36543,
+      "End": 36998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::Abc_NtkDarIPdr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDarIPdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37234,
+      "End": 38527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::1830",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1830,
+      "End": 1884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::1970",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1970,
+      "End": 2033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::2927",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2927,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::3875",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3875,
+      "End": 3931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::4009",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4009,
+      "End": 4062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::4903",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4903,
+      "End": 4977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::4992",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4992,
+      "End": 5046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::6043",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6043,
+      "End": 6142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::6731",
+      "Category": "macro-inline-review",
+      "Symbol": "zsat_solver_new_seed",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6731,
+      "End": 6774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::7073",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7073,
+      "End": 7127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::7136",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7136,
+      "End": 7189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::7922",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevelStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7922,
+      "End": 7973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::7988",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7988,
+      "End": 8041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::9451",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9451,
+      "End": 9510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::10017",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10017,
+      "End": 10073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::11175",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11175,
+      "End": 11217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::14111",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14111,
+      "End": 14157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::25525",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25525,
+      "End": 25584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::31558",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31558,
+      "End": 31585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::34143",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34143,
+      "End": 34185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::34421",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34421,
+      "End": 34474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::34656",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34656,
+      "End": 34747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::34880",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_compress",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34880,
+      "End": 34907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::34947",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 34947,
+      "End": 35058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::35362",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_final",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 35362,
+      "End": 35396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::36019",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36019,
+      "End": 36069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::38187",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 38187,
+      "End": 38223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrIncr.c::macro-inline::38231",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 38231,
+      "End": 38258
+    }
+  ],
+  "Draft": "package pdr\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [pdrIncr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [PDR with incremental solving.]\n\n  Author      [Yen-Sheng Ho, Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Feb. 17, 2017.]\n\n  Revision    [$Id: pdrIncr.c$]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n// extern int Pdr_ManBlockCube( Pdr_Man_t * p, Pdr_Set_t * pCube );\n\n// extern int Pdr_ManPushClauses( Pdr_Man_t * p );\n\n// extern Pdr_Set_t * Pdr_ManReduceClause( Pdr_Man_t * p, int k, Pdr_Set_t * pCube );\n\n// extern int Gia_ManToBridgeAbort( FILE * pFile, int Size, unsigned char * pBuffer );\n\n// extern int Gia_ManToBridgeResult( FILE * pFile, int Result, Abc_Cex_t * pCex, int iPoProved );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nfunc IPdr_ManPushClausesK(p *Pdr_Man_t, k int32) *Vec_Ptr_t {\n    var pTemp, pCubeK, pCubeK1 *Pdr_Set_t;\n    var vArrayK, vArrayK1 *Vec_Ptr_t;\n    var i, j, m, RetValue int32;\n\n    assert(Vec_VecSize(p.vClauses) == k + 1, \"Vec_VecSize(p.vClauses) == k + 1\");\n    vArrayK = Vec_VecEntry( p.vClauses, k );\n    Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n    vArrayK1 = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n    {\n        // remove cubes in the same frame that are contained by pCubeK\n        Vec_PtrForEachEntryStart( Pdr_Set_t *, vArrayK, pTemp, m, j+1 )\n        {\n            if !Pdr_SetContains( pTemp, pCubeK ) { // pCubeK contains pTemp\n                continue; }\n            Pdr_SetDeref( pTemp );\n            Vec_PtrWriteEntry( vArrayK, m, Vec_PtrEntryLast(vArrayK) );\n            Vec_PtrPop(vArrayK);\n            m--;\n        }\n\n        // check if the clause can be moved to the next frame\n        RetValue = Pdr_ManCheckCube( p, k, pCubeK, nil, 0, 0, 1 );\n        assert(RetValue != -1, \"RetValue != -1\");\n        if !(RetValue != 0) {\n            continue; }\n\n        {\n            var pCubeMin *Pdr_Set_t;\n            pCubeMin = Pdr_ManReduceClause( p, k, pCubeK );\n            if pCubeMin != nil {\n                //                Abc_Print( 1, \"%d \", pCubeK-\u003enLits - pCubeMin-\u003enLits );\n                Pdr_SetDeref( pCubeK );\n                pCubeK = pCubeMin;\n            }\n        }\n\n        // check if the clause subsumes others\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK1, pCubeK1, i )\n        {\n            if !Pdr_SetContains( pCubeK1, pCubeK ) { // pCubeK contains pCubeK1\n                continue; }\n            Pdr_SetDeref( pCubeK1 );\n            Vec_PtrWriteEntry( vArrayK1, i, Vec_PtrEntryLast(vArrayK1) );\n            Vec_PtrPop(vArrayK1);\n            i--;\n        }\n        // add the last clause\n        Vec_PtrPush( vArrayK1, pCubeK );\n        Vec_PtrWriteEntry( vArrayK, j, Vec_PtrEntryLast(vArrayK) );\n        Vec_PtrPop(vArrayK);\n        j--;\n    }\n\n    return vArrayK1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManPrintClauses(vClauses *Vec_Vec_t, kStart int32, nRegs int32) {\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, k, Counter int32;\n    Vec_VecForEachLevelStart( vClauses, vArrayK, k, kStart )\n    {\n        Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, i )\n        {\n            Abc_Print( 1, \"Frame[%4d]Cube[%4d] = \", k, Counter++ );\n            // Pdr_SetPrint( stdout, pCube, nRegs, NULL );  \n            ZPdr_SetPrint( pCube );  \n            Abc_Print( 1, \"\\n\" ); \n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [ Check if each cube c_k in frame k satisfies the query\n                R_{k-1} \u0026\u0026 T \u0026\u0026 !c_k \u0026\u0026 c_k' (must be UNSAT).\n                Return True if all cubes pass the check. ]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManCheckClauses(p *Pdr_Man_t) int32 {\n    var pCubeK *Pdr_Set_t;\n    var vArrayK *Vec_Ptr_t;\n    var j int32;\n    var k int32;\n    var RetValue int32;\n    var kMax int32 = Vec_PtrSize(p.vSolvers);\n    var iStartFrame int32  = 1;\n    var counter int32;\n\n    Vec_VecForEachLevelStartStop( p.vClauses, vArrayK, k, iStartFrame, kMax )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )\n        {\n            ++counter;\n            RetValue = Pdr_ManCheckCube( p, k - 1, pCubeK, nil, 0, 0, 1 );\n\n            if !(RetValue != 0) {\n                fmt.Printf(\"Cube[%d][%d] not inductive!\\n\", k, j);\n            }\n\n            if RetValue == -1 {\n                return -1; }\n        }\n    }\n\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManSaveClauses(p *Pdr_Man_t, fDropLast int32) *Vec_Vec_t {\n    var i, k int32;\n    var vClausesSaved *Vec_Vec_t;\n    var pCla *Pdr_Set_t;\n\n    if Vec_VecSize( p.vClauses ) == 1 {\n        return nil; }\n    if Vec_VecSize( p.vClauses ) == 2 \u0026\u0026 (fDropLast != 0) {\n        return nil; }\n\n    if fDropLast != 0 {\n        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses)-1 );\n    } else { \n        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses) ); }\n\n    Vec_VecForEachEntryStartStop( Pdr_Set_t *, p.vClauses, pCla, i, k, 0, Vec_VecSize(vClausesSaved) )\n        Vec_VecPush(vClausesSaved, i, Pdr_SetDup(pCla));\n \n    return vClausesSaved;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManSetSolver(p *Pdr_Man_t, k int32, fSetPropOutput int32) *sat_solver {\n    var pSat *sat_solver;\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n\n    assert(Vec_PtrSize(p.vSolvers) == k, \"Vec_PtrSize(p.vSolvers) == k\");\n    assert(Vec_IntSize(p.vActVars) == k, \"Vec_IntSize(p.vActVars) == k\");\n\n    pSat = zsat_solver_new_seed(p.pPars.nRandomSeed);\n    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );\n    Vec_PtrPush( p.vSolvers, pSat );\n    Vec_IntPush( p.vActVars, 0 );\n\n    // set the property output\n    if fSetPropOutput != 0 {\n        Pdr_ManSetPropertyOutput( p, k ); }\n\n    if k == 0 {\n        return pSat; }\n\n    // add the clauses\n    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, k )\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n            Pdr_ManSolverAddClause( p, k, pCube );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManRebuildClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t) int32 {\n    var vArrayK *Vec_Ptr_t;\n    var pCube *Pdr_Set_t;\n    var i, j int32;\n    var RetValue int32  = -1;\n    var nCubes int32;\n\n    if vClauses == nil {\n        return RetValue; }\n\n    assert(Vec_VecSize(vClauses) \u003e= 2, \"Vec_VecSize(vClauses) \u003e= 2\");\n    assert(Vec_VecSize(p.vClauses) == 0, \"Vec_VecSize(p.vClauses) == 0\"); \n    Vec_VecExpand( p.vClauses, 1 );\n\n    IPdr_ManSetSolver( p, 0, 1 );\n\n    // push clauses from R0 to R1\n    Vec_VecForEachLevelStart( vClauses, vArrayK, i, 1 )\n    {\n        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )\n        {\n            ++nCubes;\n\n            RetValue = Pdr_ManCheckCube( p, 0, pCube, nil, 0, 0, 1 );\n            Vec_IntWriteEntry( p.vActVars, 0, 0 );\n\n            assert(RetValue != -1, \"RetValue != -1\");\n\n            if RetValue == 0 {\n                Abc_Print( 1, \"Cube[%d][%d] cannot be pushed from R0 to R1.\\n\", i, j );\n                Pdr_SetDeref( pCube );\n                continue;\n            }\n\n            Vec_VecPush( p.vClauses, 1, pCube );\n        }\n    }\n    Abc_Print( 1, \"RebuildClauses: %d out of %d cubes reused in R1.\\n\", Vec_PtrSize(Vec_VecEntry(p.vClauses, 1)), nCubes );\n    IPdr_ManSetSolver( p, 1, 0 );\n    Vec_VecFree( vClauses );\n\n    /*\n    for ( i = 1; i \u003c Vec_VecSize( vClauses ) - 1; ++i )\n    {\n        vArrayK = IPdr_ManPushClausesK( p, i );\n        if ( Vec_PtrSize(vArrayK) == 0 )\n        {\n            Abc_Print( 1, \"RebuildClauses: stopped at frame %d.\\n\", i );\n            break;\n        }\n\n        Vec_PtrGrow( (Vec_Ptr_t *)(p-\u003evClauses), i + 2 );\n        p-\u003evClauses-\u003enSize = i + 2;\n        p-\u003evClauses-\u003epArray[i+1] = vArrayK;\n        IPdr_ManSetSolver( p, i + 1, 0 );\n    }\n\n    Abc_Print( 1, \"After rebuild:\" );\n    Vec_VecForEachLevel( p-\u003evClauses, vArrayK, i )\n        Abc_Print( 1, \" %d\", Vec_PtrSize( vArrayK ) );\n    Abc_Print( 1, \"\\n\" );\n    */\n\n    return 0;\n}\n\nfunc IPdr_ManRestoreAbsFlops(p *Pdr_Man_t) int32 {\n    var pSet *Pdr_Set_t; var i, j, k int32;   \n\n    Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pSet, i, j )\n    {\n        for  k = 0; k \u003c pSet.nLits; k++  {\n            Vec_IntWriteEntry( p.vAbsFlops, Abc_Lit2Var(pSet.Lits[k]), 1 );\n        }\n    }\n    return 0;\n}\n\nfunc IPdr_ManRestoreClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t, vMap *Vec_Int_t) int32 {\n    var i int32;\n\n    assert(vClauses, \"vClauses\");\n\n    Vec_VecFree(p.vClauses);\n    p.vClauses = vClauses;\n\n    // remap clause literals using mapping (old flop -\u003e new flop) found in array vMap\n    if vMap != nil {\n        var pSet *Pdr_Set_t; var j, k int32;   \n        Vec_VecForEachEntry( Pdr_Set_t *, vClauses, pSet, i, j )\n            for ( k = 0; k \u003c pSet.nLits; k++ )\n                pSet.Lits[k] = Abc_Lit2LitV( Vec_IntArray(vMap), pSet.Lits[k] );\n    }\n\n    for  i = 0; i \u003c Vec_VecSize(p.vClauses); ++i  {\n        IPdr_ManSetSolver( p, i, i \u003c Vec_VecSize( p.vClauses ) - 1 );\n    }\n\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManSolveInt(p *Pdr_Man_t, fCheckClauses int32, fPushClauses int32) int32 {\n    var fPrintClauses int32;\n    var pCube *Pdr_Set_t  = nil;\n    var pObj *Aig_Obj_t;\n    var pCexNew *Abc_Cex_t;\n    var iFrame int32;\n    var RetValue int32 = -1;\n    var nOutDigits int32  = Abc_Base10Log( Saig_ManPoNum(p.pAig) );\n    var clkStart abctime = Abc_Clock();\n    var clkOne abctime;\n    if p.pPars.nTimeOut {\n        p.timeToStop = p.pPars.nTimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        p.timeToStop = 0;\n    }\n    // assert( Vec_PtrSize(p-\u003evSolvers) == 0 );\n    // in the multi-output mode, mark trivial POs (those fed by const0) as solved \n    if ( p.pPars.fSolveAll )\n        Saig_ManForEachPo( p.pAig, pObj, iFrame )\n            if Aig_ObjChild0(pObj) == Aig_ManConst0(p.pAig) {\n                Vec_IntWriteEntry( p.pPars.vOutMap, iFrame, 1 ); // unsat\n                p.pPars.nProveOuts++;\n                if p.pPars.fUseBridge {\n                    Gia_ManToBridgeResult( os.Stdout, 1, nil, iFrame ); }\n            }\n    // create the first timeframe\n    p.pPars.timeLastSolved = Abc_Clock();\n\n    if Vec_VecSize(p.vClauses) == 0 {\n        Pdr_ManCreateSolver( p, (iFrame = 0) );\n    } else {\n        iFrame = Vec_VecSize(p.vClauses) - 1;\n\n        if fCheckClauses != 0 {\n            if p.pPars.fVerbose {\n               Abc_Print( 1, \"IPDR: Checking the reloaded length-%d trace...\", iFrame + 1 ) ; }\n            IPdr_ManCheckClauses( p );\n            if p.pPars.fVerbose {\n               Abc_Print( 1, \" Passed!\\n\" ) ; }\n        }\n\n        if fPushClauses != 0 {\n            p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"IPDR: Pushing the reloaded clauses. Before:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            RetValue = Pdr_ManPushClauses( p );\n\n            if p.pPars.fVerbose {\n                Abc_Print( 1, \"IPDR: Finished pushing. After:\\n\" );\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart );\n            }\n\n            if RetValue != 0 {\n                Pdr_ManReportInvariant( p );\n                Pdr_ManVerifyInvariant( p );\n                return 1;\n            }\n        }\n\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops == nil \u0026\u0026 iFrame \u003e= 1 {\n            assert(p.vAbsFlops == nil, \"p.vAbsFlops == nil\");\n            p.vAbsFlops  = Vec_IntStart( Saig_ManRegNum(p.pAig) );\n            p.vMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p.pAig) );\n            p.vMapPpi2Ff = Vec_IntAlloc( 100 );\n            \n            IPdr_ManRestoreAbsFlops( p );\n        }\n \n    }\n    for {\n        var fRefined int32;\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops == nil \u0026\u0026 iFrame == 1 {\n//            int i, Prio;\n            assert(p.vAbsFlops == nil, \"p.vAbsFlops == nil\");\n            p.vAbsFlops  = Vec_IntStart( Saig_ManRegNum(p.pAig) );\n            p.vMapFf2Ppi = Vec_IntStartFull( Saig_ManRegNum(p.pAig) );\n            p.vMapPpi2Ff = Vec_IntAlloc( 100 );\n//            Vec_IntForEachEntry( p-\u003evPrio, Prio, i )\n//                if ( Prio \u003e\u003e p-\u003enPrioShift  )\n//                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 1 );\n        }\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Starting frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        p.nFrames = iFrame;\n        assert(iFrame == Vec_PtrSize(p.vSolvers)-1, \"iFrame == Vec_PtrSize(p.vSolvers)-1\");\n        p.iUseFrame = Abc_MaxInt(iFrame, 1);\n        Saig_ManForEachPo( p.pAig, pObj, p.iOutCur )\n        {\n            // skip disproved outputs\n            if p.vCexes \u0026\u0026 Vec_PtrEntry(p.vCexes, p.iOutCur) {\n                continue; }\n            // skip output whose time has run out\n            if p.pTime4Outs \u0026\u0026 p.pTime4Outs[p.iOutCur] == 0 {\n                continue; }\n            // check if the output is trivially solved\n            if Aig_ObjChild0(pObj) == Aig_ManConst0(p.pAig) {\n                continue; }\n            // check if the output is trivially solved\n            if Aig_ObjChild0(pObj) == Aig_ManConst1(p.pAig) {\n                if !p.pPars.fSolveAll {\n                    pCexNew = Abc_CexMakeTriv( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), iFrame*Saig_ManPoNum(p.pAig)+p.iOutCur );\n                    p.pAig.pSeqModel = pCexNew;\n                    return 0; // SAT\n                }\n                if p.pPars.fUseBridge || p.pPars.fStoreCex {\n                    pCexNew = Abc_CexMakeTriv( Aig_ManRegNum(p.pAig), Saig_ManPiNum(p.pAig), Saig_ManPoNum(p.pAig), iFrame*Saig_ManPoNum(p.pAig)+p.iOutCur );\n                } else {\n                    pCexNew = (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                }\n                p.pPars.nFailOuts++;\n                if p.pPars.vOutMap { Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, 0 ); }\n                if !p.pPars.fNotVerbose {\n                Abc_Print( 1, \"Output %*d was trivially asserted in frame %2d (solved %*d out of %*d outputs).\\n\",\n                    nOutDigits, p.iOutCur, iFrame, nOutDigits, p.pPars.nFailOuts, nOutDigits, Saig_ManPoNum(p.pAig) ); }\n                assert(Vec_PtrEntry(p.vCexes, p.iOutCur) == nil, \"Vec_PtrEntry(p.vCexes, p.iOutCur) == nil\");\n                if p.pPars.fUseBridge {\n                    Gia_ManToBridgeResult( os.Stdout, 0, pCexNew, pCexNew.iPo ); }\n                Vec_PtrWriteEntry( p.vCexes, p.iOutCur, pCexNew );\n                if p.pPars.pFuncOnFail \u0026\u0026 p.pPars.pFuncOnFail(p.iOutCur, p.pPars.fStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p.vCexes, p.iOutCur) : nil) {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if !p.pPars.fSilent {\n                        Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                if p.pPars.nFailOuts + p.pPars.nDropOuts == Saig_ManPoNum(p.pAig) {\n                    if p.pPars.nFailOuts {\n                        return 0;\n                    } else {\n                        return -1;\n                    } } // SAT or UNDEC\n                p.pPars.timeLastSolved = Abc_Clock();\n                continue;\n            }\n            // try to solve this output\n            if p.pTime4Outs {\n                assert(p.pTime4Outs[p.iOutCur] \u003e 0, \"p.pTime4Outs[p.iOutCur] \u003e 0\");\n                clkOne = Abc_Clock();\n                p.timeToStopOne = p.pTime4Outs[p.iOutCur] + Abc_Clock();\n            }\n            for {\n                if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if !p.pPars.fSilent {\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                RetValue = Pdr_ManCheckCube( p, iFrame, nil, \u0026pCube, p.pPars.nConfLimit, 0, 1 );\n                if RetValue == 1 {\n                    break; }\n                if RetValue == -1 {\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                    if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                        Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                    } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                        Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame );\n                    } else if p.timeToStopOne \u0026\u0026 Abc_Clock() \u003e p.timeToStopOne {\n                        Pdr_QueueClean( p );\n                        pCube = nil;\n                        break; // keep solving\n                    \n                    } else if p.pPars.nConfLimit {\n                        Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p.pPars.nConfLimit, iFrame );\n                    } else if p.pPars.fVerbose {\n                        Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame ); }\n                    p.pPars.iFrame = iFrame;\n                    return -1;\n                }\n                if RetValue == 0 {\n                    RetValue = Pdr_ManBlockCube( p, pCube );\n                    if RetValue == -1 {\n                        if p.pPars.fVerbose {\n                            Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                        if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                            Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                        } else if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n                            Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame );\n                        } else if p.timeToStopOne \u0026\u0026 Abc_Clock() \u003e p.timeToStopOne {\n                            Pdr_QueueClean( p );\n                            pCube = nil;\n                            break; // keep solving\n                        \n                        } else if p.pPars.nConfLimit {\n                            Abc_Print( 1, \"Reached conflict limit (%d) in frame %d.\\n\",  p.pPars.nConfLimit, iFrame );\n                        } else if p.pPars.fVerbose {\n                            Abc_Print( 1, \"Computation cancelled by the callback in frame %d.\\n\", iFrame ); }\n                        p.pPars.iFrame = iFrame;\n                        return -1;\n                    }\n                    if RetValue == 0 {\n                        if fPrintClauses != 0 {\n                            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                            Pdr_ManPrintClauses( p, 0 );\n                        }\n                        if p.pPars.fVerbose \u0026\u0026 !p.pPars.fUseAbs {\n                            Pdr_ManPrintProgress( p, !p.pPars.fSolveAll, Abc_Clock() - clkStart ); }\n                        p.pPars.iFrame = iFrame;\n                        if !p.pPars.fSolveAll {\n                            var clk abctime  = Abc_Clock();\n                            var pCex *Abc_Cex_t  = Pdr_ManDeriveCexAbs(p);\n                            p.tAbs += Abc_Clock() - clk;\n                            if pCex == nil {\n                                assert(p.pPars.fUseAbs, \"p.pPars.fUseAbs\");\n                                Pdr_QueueClean( p );\n                                pCube = nil;\n                                fRefined = 1;\n                                break; // keep solving\n                            }\n                            p.pAig.pSeqModel = pCex;\n\n                            if p.pPars.fVerbose \u0026\u0026 p.pPars.fUseAbs {\n                                Pdr_ManPrintProgress( p, !p.pPars.fSolveAll, Abc_Clock() - clkStart ); }\n                            return 0; // SAT\n                        }\n                        p.pPars.nFailOuts++;\n                        if p.pPars.fUseBridge || p.pPars.fStoreCex {\n                            pCexNew = Pdr_ManDeriveCex(p);\n                        } else {\n                            pCexNew = (Abc_Cex_t *)(ABC_PTRINT_T)1;\n                        }\n                        if p.pPars.vOutMap { Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, 0 ); }\n                        assert(Vec_PtrEntry(p.vCexes, p.iOutCur) == nil, \"Vec_PtrEntry(p.vCexes, p.iOutCur) == nil\");\n                        if p.pPars.fUseBridge {\n                            Gia_ManToBridgeResult( os.Stdout, 0, pCexNew, pCexNew.iPo ); }\n                        Vec_PtrWriteEntry( p.vCexes, p.iOutCur, pCexNew );\n                        if p.pPars.pFuncOnFail \u0026\u0026 p.pPars.pFuncOnFail(p.iOutCur, p.pPars.fStoreCex ? (Abc_Cex_t *)Vec_PtrEntry(p.vCexes, p.iOutCur) : nil) {\n                            if p.pPars.fVerbose {\n                                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n                            if !p.pPars.fSilent {\n                                Abc_Print( 1, \"Quitting due to callback on fail in frame %d.\\n\", iFrame ); }\n                            p.pPars.iFrame = iFrame;\n                            return -1;\n                        }\n                        if !p.pPars.fNotVerbose {\n                            Abc_Print( 1, \"Output %*d was asserted in frame %2d (%2d) (solved %*d out of %*d outputs).\\n\",\n                                nOutDigits, p.iOutCur, iFrame, iFrame, nOutDigits, p.pPars.nFailOuts, nOutDigits, Saig_ManPoNum(p.pAig) ); }\n                        if p.pPars.nFailOuts == Saig_ManPoNum(p.pAig) {\n                            return 0; } // all SAT\n                        Pdr_QueueClean( p );\n                        pCube = nil;\n                        break; // keep solving\n                    }\n                    if p.pPars.fVerbose {\n                        Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart ); }\n                }\n            }\n            if fRefined != 0 {\n                break; }\n            if p.pTime4Outs {\n                var timeSince abctime  = Abc_Clock() - clkOne;\n                assert(p.pTime4Outs[p.iOutCur] \u003e 0, \"p.pTime4Outs[p.iOutCur] \u003e 0\");\n                p.pTime4Outs[p.iOutCur] = (p.pTime4Outs[p.iOutCur] \u003e timeSince) ? p.pTime4Outs[p.iOutCur] - timeSince : 0;\n                if p.pTime4Outs[p.iOutCur] == 0 \u0026\u0026 Vec_PtrEntry(p.vCexes, p.iOutCur) == nil { // undecided\n                \n                    p.pPars.nDropOuts++;\n                    if p.pPars.vOutMap { \n                        Vec_IntWriteEntry( p.pPars.vOutMap, p.iOutCur, -1 ); }\n                    if !p.pPars.fNotVerbose { \n                        Abc_Print( 1, \"Timing out on output %*d in frame %d.\\n\", nOutDigits, p.iOutCur, iFrame ); }\n                }\n                p.timeToStopOne = 0;\n            }\n        }\n        /*\n        if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops \u0026\u0026 !fRefined )\n        {\n            int i, Used;\n            Vec_IntForEachEntry( p-\u003evAbsFlops, Used, i )\n                if ( Used \u0026\u0026 (Vec_IntEntry(p-\u003evPrio, i) \u003e\u003e p-\u003enPrioShift) == 0 )\n                    Vec_IntWriteEntry( p-\u003evAbsFlops, i, 0 );\n        }\n        */\n        if p.pPars.fUseAbs \u0026\u0026 p.vAbsFlops \u0026\u0026 !(fRefined != 0) {\n            var pSet *Pdr_Set_t;\n            var i, j, k int32;\n            Vec_IntFill( p.vAbsFlops, Vec_IntSize( p.vAbsFlops ), 0 );\n            Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pSet, i, j )\n                for ( k = 0; k \u003c pSet.nLits; k++ )\n                    Vec_IntWriteEntry( p.vAbsFlops, Abc_Lit2Var(pSet.Lits[k]), 1 );\n        }\n\n        if p.pPars.fVerbose {\n            Pdr_ManPrintProgress( p, !fRefined, Abc_Clock() - clkStart ); }\n        if fRefined != 0 {\n            continue; }\n        //if ( p-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003evAbsFlops )\n        //    printf( \"Finished frame %d with %d (%d) flops.\\n\", iFrame, Vec_IntCountPositive(p-\u003evAbsFlops), Vec_IntCountPositive(p-\u003evPrio) );\n        // open a new timeframe\n        p.nQueLim = p.pPars.nRestLimit;\n        assert(pCube == nil, \"pCube == nil\");\n        Pdr_ManSetPropertyOutput( p, iFrame );\n        Pdr_ManCreateSolver( p, ++iFrame );\n        if fPrintClauses != 0 {\n            Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n            Pdr_ManPrintClauses( p, 0 );\n        }\n        // push clauses into this timeframe\n        RetValue = Pdr_ManPushClauses( p );\n        if RetValue == -1 {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n                    Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame );\n                } else {\n                    Abc_Print( 1, \"Reached conflict limit (%d) in frame.\\n\",  p.pPars.nConfLimit, iFrame ); }\n            }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if RetValue != 0 {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Pdr_ManReportInvariant( p ); }\n            if !p.pPars.fSilent {\n                Pdr_ManVerifyInvariant( p ); }\n            p.pPars.iFrame = iFrame;\n            // count the number of UNSAT outputs\n            p.pPars.nProveOuts = Saig_ManPoNum(p.pAig) - p.pPars.nFailOuts - p.pPars.nDropOuts;\n            // convert previously 'unknown' into 'unsat'\n            if p.pPars.vOutMap {\n                for  iFrame = 0; iFrame \u003c Saig_ManPoNum(p.pAig); iFrame++  {\n                    if Vec_IntEntry(p.pPars.vOutMap, iFrame) == -2 { // unknown\n                    \n                        Vec_IntWriteEntry( p.pPars.vOutMap, iFrame, 1 ); // unsat\n                        if p.pPars.fUseBridge {\n                            Gia_ManToBridgeResult( os.Stdout, 1, nil, iFrame ); }\n                    }\n                } }\n            if p.pPars.nProveOuts == Saig_ManPoNum(p.pAig) {\n                return 1; } // UNSAT\n            if p.pPars.nFailOuts \u003e 0 {\n                return 0; } // SAT\n            return -1;\n        }\n        if p.pPars.fVerbose {\n            Pdr_ManPrintProgress( p, 0, Abc_Clock() - clkStart ); }\n\n        // check termination\n        if p.pPars.pFuncStop \u0026\u0026 p.pPars.pFuncStop(p.pPars.RunId) {\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.timeToStop \u0026\u0026 Abc_Clock() \u003e p.timeToStop {\n            if fPrintClauses != 0 {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOut, iFrame ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.pPars.nTimeOutGap \u0026\u0026 p.pPars.timeLastSolved \u0026\u0026 Abc_Clock() \u003e p.pPars.timeLastSolved + p.pPars.nTimeOutGap * int64(time.Second) {\n            if fPrintClauses != 0 {\n                Abc_Print( 1, \"*** Clauses after frame %d:\\n\", iFrame );\n                Pdr_ManPrintClauses( p, 0 );\n            }\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached gap timeout (%d seconds) in frame %d.\\n\",  p.pPars.nTimeOutGap, iFrame ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n        if p.pPars.nFrameMax \u0026\u0026 iFrame \u003e= p.pPars.nFrameMax {\n            if p.pPars.fVerbose {\n                Pdr_ManPrintProgress( p, 1, Abc_Clock() - clkStart ); }\n            if !p.pPars.fSilent {\n                Abc_Print( 1, \"Reached limit on the number of timeframes (%d).\\n\", p.pPars.nFrameMax ); }\n            p.pPars.iFrame = iFrame;\n            return -1;\n        }\n    }\n    assert(false, \"0\");\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc IPdr_ManSolve(pAig *Aig_Man_t, pPars *Pdr_Par_t) int32 {\n    var p *Pdr_Man_t;\n    var k, RetValue int32;\n    var vClausesSaved *Vec_Vec_t;\n\n    var clk abctime  = Abc_Clock();\n    if pPars.nTimeOutOne \u0026\u0026 !pPars.fSolveAll {\n        pPars.nTimeOutOne = 0; }\n    if pPars.nTimeOutOne \u0026\u0026 pPars.nTimeOut == 0 {\n        pPars.nTimeOut = pPars.nTimeOutOne * Saig_ManPoNum(pAig) / 1000 + int32(((pPars.nTimeOutOne * Saig_ManPoNum(pAig) % 1000) \u003e 0)); }\n    if pPars.fVerbose {\n//    Abc_Print( 1, \"Running PDR by Niklas Een (aka IC3 by Aaron Bradley) with these parameters:\\n\" );\n        Abc_Print( 1, \"VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. \",\n            pPars.nRecycle,\n            pPars.nFrameMax,\n            pPars.nRestLimit,\n            pPars.nTimeOut );\n        Abc_Print( 1, \"MonoCNF = %s. SkipGen = %s. SolveAll = %s.\\n\",\n            pPars.fMonoCnf ?     \"yes\" : \"no\",\n            pPars.fSkipGeneral ? \"yes\" : \"no\",\n            pPars.fSolveAll ?    \"yes\" : \"no\" );\n    }\n    ABC_FREE( pAig.pSeqModel );\n\n\n    p = Pdr_ManStart( pAig, pPars, nil );\n    for {\n        RetValue = IPdr_ManSolveInt( p, 1, 0 );\n\n        if RetValue == -1 \u0026\u0026 pPars.iFrame == pPars.nFrameMax {\n            vClausesSaved = IPdr_ManSaveClauses( p, 1 );\n\n            Pdr_ManStop( p );\n\n            p = Pdr_ManStart( pAig, pPars, nil );\n            IPdr_ManRestoreClauses( p, vClausesSaved, nil );\n\n            pPars.nFrameMax = pPars.nFrameMax \u003c\u003c 1;\n\n            continue;\n        }\n\n        if RetValue == 0 {\n            assert(pAig.pSeqModel != nil || p.vCexes != nil, \"pAig.pSeqModel != nil || p.vCexes != nil\"); }\n        if p.vCexes {\n            assert(p.pAig.vSeqModelVec == nil, \"p.pAig.vSeqModelVec == nil\");\n            p.pAig.vSeqModelVec = p.vCexes;\n            p.vCexes = nil;\n        }\n        if p.pPars.fDumpInv {\n            var pFileName string;\n            if pPars.pInvFileName {\n                pFileName = pPars.pInvFileName;\n            } else {\n                pFileName = Extra_FileNameGenericAppend(p.pAig.pName, \"_inv.pla\");\n            }\n                Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) );\n                Pdr_ManDumpClauses( p, pFileName, RetValue==1 );\n        \n        } else if RetValue == 1 {\n            Abc_FrameSetInv( Pdr_ManDeriveInfinityClauses( p, RetValue!=1 ) ); }\n\n        p.tTotal += Abc_Clock() - clk;\n        Pdr_ManStop( p );\n\n        break;\n    }\n    \n    \n    pPars.iFrame--;\n    // convert all -2 (unknown) entries into -1 (undec)\n    if pPars.vOutMap {\n        for  k = 0; k \u003c Saig_ManPoNum(pAig); k++  {\n            if Vec_IntEntry(pPars.vOutMap, k) == -2 { // unknown\n                Vec_IntWriteEntry( pPars.vOutMap, k, -1 ); }\n        } } // undec\n    if pPars.fUseBridge {\n        Gia_ManToBridgeAbort( os.Stdout, 7, (unsigned char *)\"timeout\" ); }\n    return RetValue;\n}\n\nfunc IPdr_ManCheckCombUnsat(p *Pdr_Man_t) int32 {\n    var iFrame int32;\n    var RetValue int32 = -1;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p.nFrames = iFrame;\n    p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n    RetValue = Pdr_ManCheckCube( p, iFrame, nil, nil, p.pPars.nConfLimit, 0, 1 );\n    return RetValue;\n}\n\nfunc IPdr_ManCheckCubeReduce(p *Pdr_Man_t, vClauses *Vec_Ptr_t, pCube *Pdr_Set_t, nConfLimit int32) int32 { \n    var pSat *sat_solver;\n    var vLits, vLitsA *Vec_Int_t;\n    var Lit int32;\n    var RetValue int32 = l_True;\n    var i int32;\n    var pCla *Pdr_Set_t;\n    var iActVar int32;\n    var clk abctime  = Abc_Clock();\n\n    pSat = Pdr_ManSolver( p, 1 );\n\n    if pCube == nil { // solve the property\n    \n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, 1, 2, Aig_ManCo(p.pAig, p.iOutCur)), 0 ); // pos literal (property fails)\n        RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit+1 );\n        assert(RetValue == 1, \"RetValue == 1\");\n\n        vLitsA = Vec_IntStart( Vec_PtrSize( vClauses ) );\n        iActVar = Pdr_ManFreeVar( p, 1 );\n        for  i = 1; i \u003c Vec_PtrSize( vClauses ); ++i  {\n            Pdr_ManFreeVar( p, 1 );\n        }\n        Vec_PtrForEachEntry( Pdr_Set_t *, vClauses, pCla, i )\n        {\n            vLits = Pdr_ManCubeToLits( p, 1, pCla, 1, 0 );\n            Lit = Abc_Var2Lit( iActVar + i, 1 );\n            Vec_IntPush( vLits, Lit );\n\n            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n            assert(RetValue == 1, \"RetValue == 1\");\n            Vec_IntWriteEntry( vLitsA, i, Abc_Var2Lit( iActVar + i, 0 )  );\n        }\n        sat_solver_compress( pSat );\n\n        // solve \n        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLitsA), Vec_IntArray(vLitsA) + Vec_IntSize(vLitsA), nConfLimit, 0, 0, 0 );\n        Vec_IntFree( vLitsA );\n\n        if RetValue == l_Undef {\n            return -1; }\n    }\n\n    assert(RetValue != l_Undef, \"RetValue != l_Undef\");\n    if RetValue == l_False { // UNSAT\n    \n        var ncorelits int32;\n        var pcorelits *int32;\n        var vTemp *Vec_Ptr_t  = nil;\n        var vMark *Vec_Bit_t  = nil;\n\n        ncorelits = sat_solver_final(pSat, \u0026pcorelits);\n        Abc_Print( 1, \"UNSAT at the last frame. nCores = %d (out of %d).\", ncorelits, Vec_PtrSize( vClauses ) );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n\n        vTemp = Vec_PtrDup( vClauses );\n        vMark = Vec_BitStart( Vec_PtrSize( vClauses) );\n        Vec_PtrClear( vClauses );\n        for  i = 0; i \u003c ncorelits; ++i  {\n            //Abc_Print( 1, \"Core[%d] = lit(%d) = var(%d) = %d-th set\\n\", i, pcorelits[i], Abc_Lit2Var(pcorelits[i]), Abc_Lit2Var(pcorelits[i]) - iActVar );\n            Vec_BitWriteEntry( vMark, Abc_Lit2Var( pcorelits[i] ) - iActVar, 1 );\n        }\n        \n        Vec_PtrForEachEntry( Pdr_Set_t *, vTemp, pCla, i )\n        {\n            if Vec_BitEntry( vMark, i ) { \n                Vec_PtrPush( vClauses, pCla );\n                continue;\n            }\n            Pdr_SetDeref( pCla );\n        }\n\n        Vec_PtrFree( vTemp );\n        Vec_BitFree( vMark );\n        RetValue = 1;\n    \n    } else { // SAT\n    \n        Abc_Print( 1, \"SAT at the last frame.\" );\n        Abc_PrintTime( 1, \"    Time\", Abc_Clock() - clk );\n        RetValue = 0;\n    }\n\n    return RetValue;\n}\n\nfunc IPdr_ManReduceClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t) int32 {\n    var iFrame int32;\n    var RetValue int32 = -1;\n    var vLast *Vec_Ptr_t  = nil;\n\n    Pdr_ManCreateSolver( p, (iFrame = 0) );\n    Pdr_ManCreateSolver( p, (iFrame = 1) );\n\n    p.nFrames = iFrame;\n    p.iUseFrame = Abc_MaxInt(iFrame, 1);\n\n    vLast = Vec_VecEntry( vClauses, Vec_VecSize( vClauses ) - 1 );\n    RetValue = IPdr_ManCheckCubeReduce( p, vLast, nil, p.pPars.nConfLimit );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDarIPdr(pNtk *Abc_Ntk_t, pPars *Pdr_Par_t) int32 {\n    var RetValue int32  = -1;\n    var clk abctime  = Abc_Clock();\n    var pMan *Aig_Man_t;\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n\n    RetValue = IPdr_ManSolve( pMan, pPars );\n \n    if RetValue == 1 {\n        Abc_Print( 1, \"Property proved.  \" );\n    } else {\n        if RetValue == 0 {\n            if pMan.pSeqModel == nil {\n                Abc_Print( 1, \"Counter-example is not available.\\n\" );\n            } else {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d.  \", pMan.pSeqModel.iPo, pNtk.pName, pMan.pSeqModel.iFrame );\n                if !Saig_ManVerifyCex( pMan, pMan.pSeqModel ) {\n                    Abc_Print( 1, \"Counter-example verification has FAILED.\\n\" ); }\n            }\n        \n        } else if RetValue == -1 {\n            Abc_Print( 1, \"Property UNDECIDED.  \" );\n        } else {\n            assert(false, \"0\"); }\n    }\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n\n    ABC_FREE( pNtk.pSeqModel );\n    pNtk.pSeqModel = pMan.pSeqModel;\n    pMan.pSeqModel = nil;\n    if pNtk.vSeqModelVec {\n        Vec_PtrFreeFree( pNtk.vSeqModelVec ); }\n    pNtk.vSeqModelVec = pMan.vSeqModelVec;\n    pMan.vSeqModelVec = nil;\n    Aig_ManStop( pMan );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,93 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkCheck.c",
+  "SHA256": "f63bd77ad2a8ce42abf972e4fb8ccde51bdcfddb7d3b846849d4d766688334a8",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 21,
+        "ByteOffset": 1841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Node %d has duplicated fanin %d.\\n\", pObj.Id, pObj.pFanio[k].Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 17,
+        "ByteOffset": 2468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Nwk_ManCheck(): Object %d has fanin %d which does not have a corresponding fanout.\\n\", pObj.Id, pNext.Id ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 17,
+        "ByteOffset": 2828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Nwk_ManCheck(): Object %d has fanout %d which does not have a corresponding fanin.\\n\", pObj.Id, pNext.Id ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManCheck",
+      "Start": 1287,
+      "End": 2371,
+      "BodyStart": 1321,
+      "Original": "int Nwk_ManCheck( Nwk_Man_t * p )\n{\n    Nwk_Obj_t * pObj, * pNext;\n    int i, k, m;\n    // check if the nodes have duplicated fanins\n    Nwk_ManForEachNode( p, pObj, i )\n    {\n        for ( k = 0; k \u003c pObj-\u003enFanins; k++ )\n            for ( m = k + 1; m \u003c pObj-\u003enFanins; m++ )\n                if ( pObj-\u003epFanio[k] == pObj-\u003epFanio[m] )\n                    printf( \"Node %d has duplicated fanin %d.\\n\", pObj-\u003eId, pObj-\u003epFanio[k]-\u003eId );\n    }\n    // check if all nodes are in the correct fanin/fanout relationship\n    Nwk_ManForEachObj( p, pObj, i )\n    {\n        Nwk_ObjForEachFanin( pObj, pNext, k )\n            if ( Nwk_ObjFanoutNum(pNext) \u003c 100 \u0026\u0026 Nwk_ObjFindFanout( pNext, pObj ) == -1 )\n                printf( \"Nwk_ManCheck(): Object %d has fanin %d which does not have a corresponding fanout.\\n\", pObj-\u003eId, pNext-\u003eId );\n        Nwk_ObjForEachFanout( pObj, pNext, k )\n            if ( Nwk_ObjFindFanin( pNext, pObj ) == -1 )\n                printf( \"Nwk_ManCheck(): Object %d has fanout %d which does not have a corresponding fanin.\\n\", pObj-\u003eId, pNext-\u003eId );\n    }\n    return 1;\n}",
+      "Draft": "func Nwk_ManCheck(p *Nwk_Man_t) int32 {\n    var pObj, pNext *Nwk_Obj_t;\n    var i, k, m int32;\n    // check if the nodes have duplicated fanins\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        for  k = 0; k \u003c pObj.nFanins; k++  {\n            for  m = k + 1; m \u003c pObj.nFanins; m++  {\n                if pObj.pFanio[k] == pObj.pFanio[m] {\n                    fmt.Printf(\"Node %d has duplicated fanin %d.\\n\", pObj.Id, pObj.pFanio[k].Id); }\n            }\n        }\n    }\n    }\n    // check if all nodes are in the correct fanin/fanout relationship\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjFanoutNum(pNext) \u003c 100 \u0026\u0026 Nwk_ObjFindFanout( pNext, pObj ) == -1 {\n                fmt.Printf(\"Nwk_ManCheck(): Object %d has fanin %d which does not have a corresponding fanout.\\n\", pObj.Id, pNext.Id); }\n        }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if Nwk_ObjFindFanin( pNext, pObj ) == -1 {\n                fmt.Printf(\"Nwk_ManCheck(): Object %d has fanout %d which does not have a corresponding fanin.\\n\", pObj.Id, pNext.Id); }\n        }\n    }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkCheck.c::pointer-cast::1533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1424,
+      "End": 1424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkCheck.c::pointer-cast::2098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1801,
+      "End": 1801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkCheck.c::Nwk_ManCheck",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 2371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2618
+    }
+  ],
+  "Draft": "package nwk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Consistency checking procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkCheck.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checking the logic network for consistency.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCheck(p *Nwk_Man_t) int32 {\n    var pObj, pNext *Nwk_Obj_t;\n    var i, k, m int32;\n    // check if the nodes have duplicated fanins\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        for  k = 0; k \u003c pObj.nFanins; k++  {\n            for  m = k + 1; m \u003c pObj.nFanins; m++  {\n                if pObj.pFanio[k] == pObj.pFanio[m] {\n                    fmt.Printf(\"Node %d has duplicated fanin %d.\\n\", pObj.Id, pObj.pFanio[k].Id); }\n            }\n        }\n    }\n    }\n    // check if all nodes are in the correct fanin/fanout relationship\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjFanoutNum(pNext) \u003c 100 \u0026\u0026 Nwk_ObjFindFanout( pNext, pObj ) == -1 {\n                fmt.Printf(\"Nwk_ManCheck(): Object %d has fanin %d which does not have a corresponding fanout.\\n\", pObj.Id, pNext.Id); }\n        }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if Nwk_ObjFindFanin( pNext, pObj ) == -1 {\n                fmt.Printf(\"Nwk_ManCheck(): Object %d has fanout %d which does not have a corresponding fanin.\\n\", pObj.Id, pNext.Id); }\n        }\n    }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

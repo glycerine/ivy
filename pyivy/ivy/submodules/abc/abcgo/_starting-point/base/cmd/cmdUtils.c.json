@@ -1,0 +1,1674 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c",
+  "SHA256": "5b3c695f4846aaf6b0207efe4ed8a945a5cf3b35767db32e96c78bbf74f169c3",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 30,
+        "ByteOffset": 1690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var buffer string  = ABC_ALLOC(char, 10000);"
+    },
+    {
+      "Name": "strncpy",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strncpy (buffer, \u0026argv[0][1], size);"
+    },
+    {
+      "Name": "strncat",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 17,
+        "ByteOffset": 1810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                strncat (buffer, \" \", size);"
+    },
+    {
+      "Name": "strncat",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 17,
+        "ByteOffset": 1855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                strncat (buffer, argv[i], size);"
+    },
+    {
+      "Name": "strncpy",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 13,
+        "ByteOffset": 1939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            strncpy (buffer, \"/bin/sh\", size); }"
+    },
+    {
+      "Name": "system",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 68,
+        "Column": 20,
+        "ByteOffset": 1995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = system (buffer);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( buffer );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 25,
+        "ByteOffset": 3271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if argc == 1 \u0026\u0026 strstr( argv[0], \".\" ) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 17,
+        "ByteOffset": 3653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 13,
+        "ByteOffset": 3706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Err, \"** cmd error: unknown command '%s'\\n\", argv[0] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 13,
+        "ByteOffset": 3788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Err, \"(this is likely caused by using an alias defined in \\\"abc.rc\\\"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 13,
+        "ByteOffset": 3889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Err, \"without having this file in the current or parent directory)\\n\" );"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 190,
+        "Column": 14,
+        "ByteOffset": 5773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  isspace( int32(   *p) )  {"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 197,
+        "Column": 40,
+        "ByteOffset": 6000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if c == ';' || c == '#' || isspace( int32(   c) ) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 22,
+        "ByteOffset": 6382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ( void ) fprintf( pAbc.Err, \"** cmd warning: ignoring unbalanced quote ...\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 19,
+        "ByteOffset": 6528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        new_arg = ABC_ALLOC( char, p - start + 1 );"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 220,
+        "Column": 32,
+        "ByteOffset": 6724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                new_arg[j++] = isspace( int32(   c) ) ? ' ' : start[i];"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 265,
+        "Column": 12,
+        "ByteOffset": 7914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp( argv[0], alias.argv[0] ) == 0 {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 7996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( argv[0] );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 20,
+        "ByteOffset": 8144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            argv = ABC_REALLOC( char *, argv, argc + added );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 24,
+        "ByteOffset": 9704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                argv = ABC_REALLOC( char *, argv, argc + added );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 13,
+        "ByteOffset": 10024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( newv );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 17,
+        "ByteOffset": 10167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( argv[i] );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 10296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Err, \"** cmd warning: alias loop\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 378,
+        "Column": 8,
+        "ByteOffset": 11297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(sFileName, \"-\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 379,
+        "Column": 12,
+        "ByteOffset": 11338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(sMode, \"w\") == 0 {"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 381,
+        "Column": 21,
+        "ByteOffset": 11438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFile = stdout;"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 385,
+        "Column": 21,
+        "ByteOffset": 11545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFile = stdin;"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 390,
+        "Column": 12,
+        "ByteOffset": 11616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(sMode, \"r\") == 0 {"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 28,
+        "ByteOffset": 12201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sPathAll = ABC_ALLOC( char, strlen(sPathLib)+strlen(sPathUsr)+5 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 406,
+        "Column": 45,
+        "ByteOffset": 12218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sPathAll = ABC_ALLOC( char, strlen(sPathLib)+strlen(sPathUsr)+5 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 406,
+        "Column": 62,
+        "ByteOffset": 12235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sPathAll = ABC_ALLOC( char, strlen(sPathLib)+strlen(sPathUsr)+5 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 407,
+        "Column": 17,
+        "ByteOffset": 12273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( sPathAll, \"%s:%s\",sPathUsr, sPathLib );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 17,
+        "ByteOffset": 12461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE( sPathAll );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Dynamic fopen mode retained; choose OpenFile flags explicitly.",
+      "Location": {
+        "Line": 418,
+        "Column": 21,
+        "ByteOffset": 12626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (pFile = fopen(sRealName, sMode)) == nil {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 426,
+        "Column": 27,
+        "ByteOffset": 12948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !silent \u0026\u0026 strlen(sRealName) \u003e= 6 \u0026\u0026 strcmp( sRealName + strlen(sRealName) - 6, \"abc.rc\" ) == 0 {            "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 426,
+        "Column": 53,
+        "ByteOffset": 12974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !silent \u0026\u0026 strlen(sRealName) \u003e= 6 \u0026\u0026 strcmp( sRealName + strlen(sRealName) - 6, \"abc.rc\" ) == 0 {            "
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 426,
+        "Column": 73,
+        "ByteOffset": 12994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !silent \u0026\u0026 strlen(sRealName) \u003e= 6 \u0026\u0026 strcmp( sRealName + strlen(sRealName) - 6, \"abc.rc\" ) == 0 {            "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 13223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(sRealName); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 13651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( argv[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 13682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( argv );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 28,
+        "ByteOffset": 13781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var argvNew *string  = ABC_ALLOC( char *, argc );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 13,
+        "ByteOffset": 14317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    argv2 = ABC_ALLOC( char *, argc + 1 ); "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 14870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCommand.sGroup );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 501,
+        "Column": 5,
+        "ByteOffset": 14903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCommand.sName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 5,
+        "ByteOffset": 14935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pCommand );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 530,
+        "Column": 18,
+        "ByteOffset": 15694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppCommands = ABC_ALLOC( Abc_Command *, nCommands );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 541,
+        "Column": 5,
+        "ByteOffset": 16037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)ppCommands, (size_t)nCommands, sizeof(Abc_Command *), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 543,
+        "Column": 5,
+        "ByteOffset": 16175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 548,
+        "Column": 30,
+        "ByteOffset": 16379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if LenghtMax \u003c int32(strlen(ppCommands[i].sName)) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 549,
+        "Column": 32,
+        "ByteOffset": 16441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "             LenghtMax = int32(strlen(ppCommands[i].sName)); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 5,
+        "ByteOffset": 16590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Out, \"      Welcome to ABC compiled on %s %s!\", __DATE__, __TIME__ );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 562,
+        "Column": 25,
+        "ByteOffset": 16838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if sGroupCur \u0026\u0026 strcmp( sGroupCur, ppCommands[i].sGroup ) == 0 { // this command belongs to the same group as the previous one"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 564,
+        "Column": 17,
+        "ByteOffset": 17005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pAbc.Out, \"\\n\" ); } "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 566,
+        "Column": 13,
+        "ByteOffset": 17081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 17,
+        "ByteOffset": 17378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 21,
+        "ByteOffset": 17517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 31,
+        "ByteOffset": 17657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j].sName)+4);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 576,
+        "Column": 47,
+        "ByteOffset": 17673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j].sName)+4);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 28,
+        "ByteOffset": 17732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 21,
+        "ByteOffset": 17864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(tmp_cmd);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 17,
+        "ByteOffset": 17917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 17,
+        "ByteOffset": 17960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pAbc.Out, \"   ----------------------------------------------------------------------\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 13,
+        "ByteOffset": 18117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 13,
+        "ByteOffset": 18156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 13,
+        "ByteOffset": 18195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \"%s commands:\\n\", ppCommands[i].sGroup );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 13,
+        "ByteOffset": 18302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 18644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 13,
+        "ByteOffset": 18759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 602,
+        "Column": 23,
+        "ByteOffset": 18883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j].sName)+4);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 602,
+        "Column": 39,
+        "ByteOffset": 18899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j].sName)+4);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 603,
+        "Column": 20,
+        "ByteOffset": 18950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 13,
+        "ByteOffset": 19066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(tmp_cmd);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 609,
+        "Column": 5,
+        "ByteOffset": 19131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pAbc.Out, \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 5,
+        "ByteOffset": 19162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( ppCommands );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 629,
+        "Column": 16,
+        "ByteOffset": 19658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = strcmp( pC1.sGroup, pC2.sGroup );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 642,
+        "Column": 16,
+        "ByteOffset": 20035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = strcmp( pC1.sName, pC2.sName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 648,
+        "Column": 5,
+        "ByteOffset": 20202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 664,
+        "Column": 12,
+        "ByteOffset": 20587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp( *ppC1, *ppC2 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 686,
+        "Column": 15,
+        "ByteOffset": 21112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppNames = ABC_ALLOC( char *, st__count(tTable) );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 692,
+        "Column": 5,
+        "ByteOffset": 21282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)ppNames, (size_t)nNames, sizeof(char *), "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 701,
+        "Column": 13,
+        "ByteOffset": 21642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"%-15s %-15s\\n\", ppNames[i], value ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 701,
+        "Column": 22,
+        "ByteOffset": 21651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"%-15s %-15s\\n\", ppNames[i], value ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 703,
+        "Column": 5,
+        "ByteOffset": 21709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( ppNames );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 152,
+        "Column": 1,
+        "ByteOffset": 4518
+      },
+      "Directive": "#ifdef __EMSCRIPTEN__"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cmdCheckShellEscape",
+      "Start": 1446,
+      "End": 2291,
+      "BodyStart": 1515,
+      "Original": "int cmdCheckShellEscape( Abc_Frame_t * pAbc, int argc, char ** argv)\n{\n    int RetValue;\n    if (argv[0][0] == '!') \n    {\n        const int size = 4096;\n        int i;\n        char * buffer = ABC_ALLOC(char, 10000);\n        strncpy (buffer, \u0026argv[0][1], size);\n        for (i = 1; i \u003c argc; ++i)\n        {\n                strncat (buffer, \" \", size);\n                strncat (buffer, argv[i], size);\n        }\n        if (buffer[0] == 0) \n            strncpy (buffer, \"/bin/sh\", size);\n        RetValue = system (buffer);\n        ABC_FREE( buffer );\n\n        // NOTE: Since we reconstruct the cmdline by concatenating\n        // the parts, we lose information. So a command like\n        // `!ls \"file name\"` will be sent to the system as\n        // `ls file name` which is a BUG\n\n        return 1;\n    }\n    else\n    {\n        return 0;\n    }\n}",
+      "Draft": "func cmdCheckShellEscape(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var RetValue int32;\n    if argv[0][0] == '!' {\n        int size = 4096;\n        var i int32;\n        var buffer string  = ABC_ALLOC(char, 10000);\n        strncpy (buffer, \u0026argv[0][1], size);\n        for i = 1; i \u003c argc; ++i {\n                strncat (buffer, \" \", size);\n                strncat (buffer, argv[i], size);\n        }\n        if buffer[0] == 0 { \n            strncpy (buffer, \"/bin/sh\", size); }\n        RetValue = system (buffer);\n        ABC_FREE( buffer );\n\n        // NOTE: Since we reconstruct the cmdline by concatenating\n        // the parts, we lose information. So a command like\n        // `!ls \"file name\"` will be sent to the system as\n        // `ls file name` which is a BUG\n\n        return 1;\n    \n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "CmdCommandDispatch",
+      "Start": 2548,
+      "End": 5465,
+      "BodyStart": 2622,
+      "Original": "int CmdCommandDispatch( Abc_Frame_t * pAbc, int * pargc, char *** pargv )\n{\n    int argc = *pargc;\n    char ** argv = *pargv;\n    char ** argv2;\n\n    Abc_Ntk_t * pNetCopy;\n    Cmd_CommandFuncType pFunc;\n    Abc_Command * pCommand;\n    char * value;\n    int fError;\n    double clk;\n\n    if ( argc == 0 )\n        return 0;\n\n    if ( cmdCheckShellEscape( pAbc, argc, argv ) == 1 )\n        return 0;\n\n    // get the command\n    if ( ! st__lookup( pAbc-\u003etCommands, argv[0], (char **)\u0026pCommand ) )\n    {   // the command is not in the table\n        // if there is only one word with an extension, assume this is file to be read\n        if ( argc == 1 \u0026\u0026 strstr( argv[0], \".\" ) )\n        {\n            // add command 'read' assuming that this is the file name\n            argv2 = CmdAddToArgv( argc, argv );\n            CmdFreeArgv( argc, argv );\n            argc = argc+1;\n            argv = argv2;\n            *pargc = argc;\n            *pargv = argv;\n            if ( ! st__lookup( pAbc-\u003etCommands, argv[0], (char **)\u0026pCommand ) )\n                assert( 0 );\n        }\n        else\n        {\n            fprintf( pAbc-\u003eErr, \"** cmd error: unknown command '%s'\\n\", argv[0] );\n            fprintf( pAbc-\u003eErr, \"(this is likely caused by using an alias defined in \\\"abc.rc\\\"\\n\" );\n            fprintf( pAbc-\u003eErr, \"without having this file in the current or parent directory)\\n\" );\n            return 1;\n        }\n    }\n\n    // get the backup network if the command is going to change the network\n    if ( pCommand-\u003efChange ) \n    {\n        if ( pAbc-\u003epNtkCur \u0026\u0026 Abc_FrameIsFlagEnabled( \"backup\" ) )\n        {\n            pNetCopy = Abc_NtkDup( pAbc-\u003epNtkCur );\n            Abc_FrameSetCurrentNetwork( pAbc, pNetCopy );\n            // swap the current network and the backup network \n            // to prevent the effect of resetting the short names\n            Abc_FrameSwapCurrentAndBackup( pAbc );\n        }\n    }\n\n    // execute the command\n    clk = Extra_CpuTimeDouble();\n#ifdef __EMSCRIPTEN__\n    Cmd_CommandId_t CommandId;\n    CommandId = Cmd_CommandNameToId( argv[0] );\n    if ( CmdCommandDispatchBasicById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         IoCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         AbcCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) )\n    {\n        pAbc-\u003eTimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n    else\n#endif\n    {\n    pFunc = pCommand-\u003epFunc;\n    fError = (*pFunc)( pAbc, argc, argv );\n    pAbc-\u003eTimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n\n    // automatic execution of arbitrary command after each command \n    // usually this is a passive command ... \n    if ( fError == 0 \u0026\u0026 !pAbc-\u003efAutoexac )\n    {\n        if ( st__lookup( pAbc-\u003etFlags, \"autoexec\", \u0026value ) )\n        {\n            pAbc-\u003efAutoexac = 1;\n            fError = Cmd_CommandExecute( pAbc, value );\n            pAbc-\u003efAutoexac = 0;\n        }\n    }\n    return fError;\n}",
+      "Draft": "func CmdCommandDispatch(pAbc *Abc_Frame_t, pargc *int32, pargv **string) int32 {\n    var argc int32  = *pargc;\n    var argv *string  = *pargv;\n    var argv2 *string;\n\n    var pNetCopy *Abc_Ntk_t;\n    var pFunc Cmd_CommandFuncType;\n    var pCommand *Abc_Command;\n    var value string;\n    var fError int32;\n    var clk float64;\n\n    if argc == 0 {\n        return 0; }\n\n    if cmdCheckShellEscape( pAbc, argc, argv ) == 1 {\n        return 0; }\n\n    // get the command\n    if ! st__lookup( pAbc.tCommands, argv[0], (char **)\u0026pCommand ) {   // the command is not in the table\n        // if there is only one word with an extension, assume this is file to be read\n        if argc == 1 \u0026\u0026 strstr( argv[0], \".\" ) {\n            // add command 'read' assuming that this is the file name\n            argv2 = CmdAddToArgv( argc, argv );\n            CmdFreeArgv( argc, argv );\n            argc = argc+1;\n            argv = argv2;\n            *pargc = argc;\n            *pargv = argv;\n            if ! st__lookup( pAbc.tCommands, argv[0], (char **)\u0026pCommand ) {\n                assert(false, \"0\"); }\n        \n        } else {\n            fmt.Fprintf(pAbc.Err, \"** cmd error: unknown command '%s'\\n\", argv[0]);\n            fmt.Fprintf(pAbc.Err, \"(this is likely caused by using an alias defined in \\\"abc.rc\\\"\\n\");\n            fmt.Fprintf(pAbc.Err, \"without having this file in the current or parent directory)\\n\");\n            return 1;\n        }\n    }\n\n    // get the backup network if the command is going to change the network\n    if pCommand.fChange {\n        if pAbc.pNtkCur \u0026\u0026 Abc_FrameIsFlagEnabled( \"backup\" ) {\n            pNetCopy = Abc_NtkDup( pAbc.pNtkCur );\n            Abc_FrameSetCurrentNetwork( pAbc, pNetCopy );\n            // swap the current network and the backup network \n            // to prevent the effect of resetting the short names\n            Abc_FrameSwapCurrentAndBackup( pAbc );\n        }\n    }\n\n    // execute the command\n    clk = Extra_CpuTimeDouble();\n#ifdef __EMSCRIPTEN__\n    Cmd_CommandId_t CommandId;\n    CommandId = Cmd_CommandNameToId( argv[0] );\n    if ( CmdCommandDispatchBasicById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         IoCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         AbcCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) )\n    {\n        pAbc-\u003eTimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n    else\n#endif\n    {\n    pFunc = pCommand.pFunc;\n    fError = (*pFunc)( pAbc, argc, argv );\n    pAbc.TimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n\n    // automatic execution of arbitrary command after each command \n    // usually this is a passive command ... \n    if fError == 0 \u0026\u0026 !pAbc.fAutoexac {\n        if st__lookup( pAbc.tFlags, \"autoexec\", \u0026value ) {\n            pAbc.fAutoexac = 1;\n            fError = Cmd_CommandExecute( pAbc, value );\n            pAbc.fAutoexac = 0;\n        }\n    }\n    return fError;\n}"
+    },
+    {
+      "Name": "CmdSplitLine",
+      "Start": 5757,
+      "End": 7578,
+      "BodyStart": 5852,
+      "Original": "const char * CmdSplitLine( Abc_Frame_t * pAbc, const char *sCommand, int *argc, char ***argv )\n{\n    const char *p, *start;\n    char c;\n    int i, j;\n    char *new_arg;\n    Vec_Ptr_t * vArgs;\n    int single_quote, double_quote;\n\n    vArgs = Vec_PtrAlloc( 10 );\n\n    p = sCommand;\n    for ( ;; )\n    {\n        // skip leading white space \n        while ( isspace( ( int ) *p ) )\n        {\n            p++;\n        }\n\n        // skip until end of this token \n        single_quote = double_quote = 0;\n        for ( start = p; ( c = *p ) != '\\0'; p++ )\n        {\n            if ( c == ';' || c == '#' || isspace( ( int ) c ) )\n            {\n                if ( !single_quote \u0026\u0026 !double_quote )\n                {\n                    break;\n                }\n            }\n            if ( c == '\\'' )\n            {\n                single_quote = !single_quote;\n            }\n            if ( c == '\"' )\n            {\n                double_quote = !double_quote;\n            }\n        }\n        if ( single_quote || double_quote )\n        {\n            ( void ) fprintf( pAbc-\u003eErr, \"** cmd warning: ignoring unbalanced quote ...\\n\" );\n        }\n        if ( start == p )\n            break;\n\n        new_arg = ABC_ALLOC( char, p - start + 1 );\n        j = 0;\n        for ( i = 0; i \u003c p - start; i++ )\n        {\n            c = start[i];\n            if ( ( c != '\\'' ) \u0026\u0026 ( c != '\\\"' ) )\n            {\n                new_arg[j++] = isspace( ( int ) c ) ? ' ' : start[i];\n            }\n        }\n        new_arg[j] = '\\0';\n        Vec_PtrPush( vArgs, new_arg );\n    }\n\n    *argc = vArgs-\u003enSize;\n    *argv = (char **)Vec_PtrReleaseArray( vArgs );\n    Vec_PtrFree( vArgs );\n    if ( *p == ';' )\n    {\n        p++;\n    }\n    else if ( *p == '#' )\n    {\n        for ( ; *p != 0; p++ ); // skip to end of line \n    }\n    return p;\n}",
+      "Draft": "func CmdSplitLine(pAbc *Abc_Frame_t, sCommand string, argc *int32, argv **string) string {\n    char *p, *start;\n    var c byte;\n    var i, j int32;\n    var new_arg string;\n    var vArgs *Vec_Ptr_t;\n    var single_quote, double_quote int32;\n\n    vArgs = Vec_PtrAlloc( 10 );\n\n    p = sCommand;\n    for {\n        // skip leading white space \n        for  isspace( int32(   *p) )  {\n            p++;\n        }\n\n        // skip until end of this token \n        single_quote = double_quote = 0;\n        for  start = p; ( c = *p ) != '\\0'; p++  {\n            if c == ';' || c == '#' || isspace( int32(   c) ) {\n                if !single_quote \u0026\u0026 !(double_quote != 0) {\n                    break;\n                }\n            }\n            if c == '\\'' {\n                single_quote = !single_quote;\n            }\n            if c == '\"' {\n                double_quote = !double_quote;\n            }\n        }\n        if single_quote || (double_quote != 0) {\n            ( void ) fmt.Fprintf(pAbc.Err, \"** cmd warning: ignoring unbalanced quote ...\\n\");\n        }\n        if start == p {\n            break; }\n\n        new_arg = ABC_ALLOC( char, p - start + 1 );\n        j = 0;\n        for  i = 0; i \u003c p - start; i++  {\n            c = start[i];\n            if ( c != '\\'' ) \u0026\u0026 ( c != '\\\"' ) {\n                new_arg[j++] = isspace( int32(   c) ) ? ' ' : start[i];\n            }\n        }\n        new_arg[j] = '\\0';\n        Vec_PtrPush( vArgs, new_arg );\n    }\n\n    *argc = vArgs.nSize;\n    *argv = (char **)Vec_PtrReleaseArray( vArgs );\n    Vec_PtrFree( vArgs );\n    if *p == ';' {\n        p++;\n    \n    } else if *p == '#' {\n        for  ; *p != 0; p++  {} // skip to end of line \n    }\n    return p;\n}"
+    },
+    {
+      "Name": "CmdApplyAlias",
+      "Start": 7876,
+      "End": 11051,
+      "BodyStart": 7954,
+      "Original": "int CmdApplyAlias( Abc_Frame_t * pAbc, int *argcp, char ***argvp, int *loop )\n{\n    int i, argc, stopit, added, offset, did_subst, subst, fError, newc, j;\n    const char *arg;\n    char **argv, **newv;\n    Abc_Alias *alias;\n\n    argc = *argcp;\n    argv = *argvp;\n    stopit = 0;\n    for ( ; *loop \u003c 200; ( *loop )++ )\n    {\n        if ( argc == 0 )\n            return 0;\n        if ( stopit != 0 || st__lookup( pAbc-\u003etAliases, argv[0],  (char **) \u0026alias ) == 0 )\n        {\n            return 0;\n        }\n        if ( strcmp( argv[0], alias-\u003eargv[0] ) == 0 )\n        {\n            stopit = 1;\n        }\n        ABC_FREE( argv[0] );\n        added = alias-\u003eargc - 1;\n\n        /* shift all the arguments to the right */\n        if ( added != 0 )\n        {\n            argv = ABC_REALLOC( char *, argv, argc + added );\n            for ( i = argc - 1; i \u003e= 1; i-- )\n            {\n                argv[i + added] = argv[i];\n            }\n            for ( i = 1; i \u003c= added; i++ )\n            {\n                argv[i] = NULL;\n            }\n            argc += added;\n        }\n        subst = 0;\n        for ( i = 0, offset = 0; i \u003c alias-\u003eargc; i++, offset++ )\n        {\n            arg = CmdHistorySubstitution( pAbc, alias-\u003eargv[i], \u0026did_subst );\n            if ( arg == NULL )\n            {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            if ( did_subst != 0 )\n            {\n                subst = 1;\n            }\n            fError = 0;\n            do\n            {\n                arg = CmdSplitLine( pAbc, arg, \u0026newc, \u0026newv );\n                /*\n                 * If there's a complete `;' terminated command in `arg',\n                 * when split_line() returns arg[0] != '\\0'.\n                 */\n                if ( arg[0] == '\\0' )\n                { /* just a bunch of words */\n                    break;\n                }\n                fError = CmdApplyAlias( pAbc, \u0026newc, \u0026newv, loop );\n                if ( fError == 0 )\n                {\n                       fError = CmdCommandDispatch( pAbc, \u0026newc, \u0026newv );\n                }\n                CmdFreeArgv( newc, newv );\n            }\n            while ( fError == 0 );\n            if ( fError != 0 )\n            {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            added = newc - 1;\n            if ( added != 0 )\n            {\n                argv = ABC_REALLOC( char *, argv, argc + added );\n                for ( j = argc - 1; j \u003e offset; j-- )\n                {\n                    argv[j + added] = argv[j];\n                }\n                argc += added;\n            }\n            for ( j = 0; j \u003c= added; j++ )\n            {\n                argv[j + offset] = newv[j];\n            }\n            ABC_FREE( newv );\n            offset += added;\n        }\n        if ( subst == 1 )\n        {\n            for ( i = offset; i \u003c argc; i++ )\n            {\n                ABC_FREE( argv[i] );\n            }\n            argc = offset;\n        }\n        *argcp = argc;\n        *argvp = argv;\n    }\n\n    fprintf( pAbc-\u003eErr, \"** cmd warning: alias loop\\n\" );\n    return 1;\n}",
+      "Draft": "func CmdApplyAlias(pAbc *Abc_Frame_t, argcp *int32, argvp **string, loop *int32) int32 {\n    var i, argc, stopit, added, offset, did_subst, subst, fError, newc, j int32;\n    char *arg;\n    var argv, newv *string;\n    var alias *Abc_Alias;\n\n    argc = *argcp;\n    argv = *argvp;\n    stopit = 0;\n    for  ; *loop \u003c 200; ( *loop )++  {\n        if argc == 0 {\n            return 0; }\n        if stopit != 0 || st__lookup( pAbc.tAliases, argv[0],  (char **) \u0026alias ) == 0 {\n            return 0;\n        }\n        if int32(strings.Compare(argv[0], alias.argv[0])) == 0 {\n            stopit = 1;\n        }\n        ABC_FREE( argv[0] );\n        added = alias.argc - 1;\n\n        /* shift all the arguments to the right */\n        if added != 0 {\n            argv = ABC_REALLOC( char *, argv, argc + added );\n            for  i = argc - 1; i \u003e= 1; i--  {\n                argv[i + added] = argv[i];\n            }\n            for  i = 1; i \u003c= added; i++  {\n                argv[i] = nil;\n            }\n            argc += added;\n        }\n        subst = 0;\n        for  i, offset = 0, 0; i \u003c alias.argc; i, offset = i+1, offset+1  {\n            arg = CmdHistorySubstitution( pAbc, alias.argv[i], \u0026did_subst );\n            if arg == nil {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            if did_subst != 0 {\n                subst = 1;\n            }\n            fError = 0;\n            for\n            {\n                arg = CmdSplitLine( pAbc, arg, \u0026newc, \u0026newv );\n                /*\n                 * If there's a complete `;' terminated command in `arg',\n                 * when split_line() returns arg[0] != '\\0'.\n                 */\n                if arg[0] == '\\0' { /* just a bunch of words */\n                    break;\n                }\n                fError = CmdApplyAlias( pAbc, \u0026newc, \u0026newv, loop );\n                if fError == 0 {\n                       fError = CmdCommandDispatch( pAbc, \u0026newc, \u0026newv );\n                }\n                CmdFreeArgv( newc, newv );\n            \nif !( fError == 0 ) { break }\n}\n            \n            if fError != 0 {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            added = newc - 1;\n            if added != 0 {\n                argv = ABC_REALLOC( char *, argv, argc + added );\n                for  j = argc - 1; j \u003e offset; j--  {\n                    argv[j + added] = argv[j];\n                }\n                argc += added;\n            }\n            for  j = 0; j \u003c= added; j++  {\n                argv[j + offset] = newv[j];\n            }\n            ABC_FREE( newv );\n            offset += added;\n        }\n        if subst == 1 {\n            for  i = offset; i \u003c argc; i++  {\n                ABC_FREE( argv[i] );\n            }\n            argc = offset;\n        }\n        *argcp = argc;\n        *argvp = argv;\n    }\n\n    fmt.Fprintf(pAbc.Err, \"** cmd warning: alias loop\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "CmdHistorySubstitution",
+      "Start": 11333,
+      "End": 11494,
+      "BodyStart": 11411,
+      "Original": "char * CmdHistorySubstitution( Abc_Frame_t * pAbc, char *line, int *changed )\n{\n    // as of today, no history substitution \n    *changed = 0;\n    return line;\n}",
+      "Draft": "func CmdHistorySubstitution(pAbc *Abc_Frame_t, line string, changed *int32) string {\n    // as of today, no history substitution \n    *changed = 0;\n    return line;\n}"
+    },
+    {
+      "Name": "CmdFileOpen",
+      "Start": 11771,
+      "End": 13974,
+      "BodyStart": 11876,
+      "Original": "FILE * CmdFileOpen( Abc_Frame_t * pAbc, char *sFileName, char *sMode, char **pFileNameReal, int silent )\n{\n    char * sRealName, * sPathUsr, * sPathLib, * sPathAll;\n    FILE * pFile;\n    \n    if (strcmp(sFileName, \"-\") == 0) {\n        if (strcmp(sMode, \"w\") == 0) {\n            sRealName = Extra_UtilStrsav( \"stdout\" );\n            pFile = stdout;\n        }\n        else {\n            sRealName = Extra_UtilStrsav( \"stdin\" );\n            pFile = stdin;\n        }\n    }\n    else {\n        sRealName = NULL;\n        if (strcmp(sMode, \"r\") == 0) {\n            \n            /* combine both pathes if exist */\n            sPathUsr = Cmd_FlagReadByName(pAbc,\"open_path\");\n            sPathLib = Cmd_FlagReadByName(pAbc,\"lib_path\");\n            \n            if ( sPathUsr == NULL \u0026\u0026 sPathLib == NULL ) {\n                sPathAll = NULL;\n            }\n            else if ( sPathUsr == NULL ) {\n                sPathAll = Extra_UtilStrsav( sPathLib );\n            }\n            else if ( sPathLib == NULL ) {\n                sPathAll = Extra_UtilStrsav( sPathUsr );\n            }\n            else {\n                sPathAll = ABC_ALLOC( char, strlen(sPathLib)+strlen(sPathUsr)+5 );\n                sprintf( sPathAll, \"%s:%s\",sPathUsr, sPathLib );\n            }\n            if ( sPathAll != NULL ) {\n                sRealName = Extra_UtilFileSearch(sFileName, sPathAll, \"r\");\n                ABC_FREE( sPathAll );\n            }\n        }\n        if (sRealName == NULL) {\n            sRealName = Extra_UtilTildeExpand(sFileName);\n        }\n\n        if ((pFile = fopen(sRealName, sMode)) == NULL) {\n            if (! silent) {\n//                perror(sRealName);\n                Abc_Print( 1, \"Cannot open file \\\"%s\\\".\\n\", sRealName );\n            }\n        }\n        else\n        {\n            // print the path/name of the resource file 'abc.rc' that is being loaded\n            if ( !silent \u0026\u0026 strlen(sRealName) \u003e= 6 \u0026\u0026 strcmp( sRealName + strlen(sRealName) - 6, \"abc.rc\" ) == 0 )            \n                Abc_Print( 1, \"Loading resource file \\\"%s\\\".\\n\", sRealName );\n        }\n    }\n    if ( pFileNameReal )\n        *pFileNameReal = sRealName;\n    else\n        ABC_FREE(sRealName);\n    \n    return pFile;\n}",
+      "Draft": "func CmdFileOpen(pAbc *Abc_Frame_t, sFileName string, sMode string, pFileNameReal *string, silent int32) *os.File {\n    var sRealName, sPathUsr, sPathLib, sPathAll string;\n    var pFile *os.File;\n    \n    if int32(strings.Compare(sFileName, \"-\")) == 0 {\n        if int32(strings.Compare(sMode, \"w\")) == 0 {\n            sRealName = Extra_UtilStrsav( \"stdout\" );\n            pFile = os.Stdout;\n        \n        } else {\n            sRealName = Extra_UtilStrsav( \"stdin\" );\n            pFile = os.Stdin;\n        }\n    \n    } else {\n        sRealName = nil;\n        if int32(strings.Compare(sMode, \"r\")) == 0 {\n            \n            /* combine both pathes if exist */\n            sPathUsr = Cmd_FlagReadByName(pAbc,\"open_path\");\n            sPathLib = Cmd_FlagReadByName(pAbc,\"lib_path\");\n            \n            if sPathUsr == nil \u0026\u0026 sPathLib == nil {\n                sPathAll = nil;\n            \n            } else if sPathUsr == nil {\n                sPathAll = Extra_UtilStrsav( sPathLib );\n            \n            } else if sPathLib == nil {\n                sPathAll = Extra_UtilStrsav( sPathUsr );\n            \n            } else {\n                sPathAll = ABC_ALLOC( char, len(sPathLib)+len(sPathUsr)+5 );\n                sPathAll = fmt.Sprintf(\"%s:%s\", sPathUsr, sPathLib);\n            }\n            if sPathAll != nil {\n                sRealName = Extra_UtilFileSearch(sFileName, sPathAll, \"r\");\n                ABC_FREE( sPathAll );\n            }\n        }\n        if sRealName == nil {\n            sRealName = Extra_UtilTildeExpand(sFileName);\n        }\n\n        if (pFile = fopen(sRealName, sMode)) == nil {\n            if ! (silent != 0) {\n//                perror(sRealName);\n                Abc_Print( 1, \"Cannot open file \\\"%s\\\".\\n\", sRealName );\n            }\n        \n        } else {\n            // print the path/name of the resource file 'abc.rc' that is being loaded\n            if !(silent != 0) \u0026\u0026 len(sRealName) \u003e= 6 \u0026\u0026 int32(strings.Compare(sRealName + len(sRealName) - 6, \"abc.rc\")) == 0 {            \n                Abc_Print( 1, \"Loading resource file \\\"%s\\\".\\n\", sRealName ); }\n        }\n    }\n    if pFileNameReal != nil {\n        *pFileNameReal = sRealName;\n    } else {\n        ABC_FREE(sRealName); }\n    \n    return pFile;\n}"
+    },
+    {
+      "Name": "CmdFreeArgv",
+      "Start": 14252,
+      "End": 14392,
+      "BodyStart": 14294,
+      "Original": "void CmdFreeArgv( int argc, char **argv )\n{\n    int i;\n    for ( i = 0; i \u003c argc; i++ )\n        ABC_FREE( argv[i] );\n    ABC_FREE( argv );\n}",
+      "Draft": "func CmdFreeArgv(argc int32, argv *string) {\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        ABC_FREE( argv[i] );\n    }\n    ABC_FREE( argv );\n}"
+    },
+    {
+      "Name": "CmdDupArgv",
+      "Start": 14393,
+      "End": 14601,
+      "BodyStart": 14437,
+      "Original": "char ** CmdDupArgv( int argc, char **argv )\n{\n    char ** argvNew = ABC_ALLOC( char *, argc );\n    int i;\n    for ( i = 0; i \u003c argc; i++ )\n        argvNew[i] = Abc_UtilStrsav( argv[i] );\n    return argvNew;\n}",
+      "Draft": "func CmdDupArgv(argc int32, argv *string) *string {\n    var argvNew *string  = ABC_ALLOC( char *, argc );\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        argvNew[i] = Abc_UtilStrsav( argv[i] );\n    }\n    return argvNew;\n}"
+    },
+    {
+      "Name": "CmdAddToArgv",
+      "Start": 14879,
+      "End": 15193,
+      "BodyStart": 14926,
+      "Original": "char ** CmdAddToArgv( int argc, char ** argv )\n{\n    char ** argv2;\n    int i;\n    argv2 = ABC_ALLOC( char *, argc + 1 ); \n    argv2[0] = Extra_UtilStrsav( \"read\" ); \n//    argv2[0] = Extra_UtilStrsav( \"\u0026r\" ); \n    for ( i = 0; i \u003c argc; i++ )\n        argv2[i+1] = Extra_UtilStrsav( argv[i] ); \n    return argv2;\n}",
+      "Draft": "func CmdAddToArgv(argc int32, argv *string) *string {\n    var argv2 *string;\n    var i int32;\n    argv2 = ABC_ALLOC( char *, argc + 1 ); \n    argv2[0] = Extra_UtilStrsav( \"read\" ); \n//    argv2[0] = Extra_UtilStrsav( \"\u0026r\" ); \n    for  i = 0; i \u003c argc; i++  {\n        argv2[i+1] = Extra_UtilStrsav( argv[i] );\n    } \n    return argv2;\n}"
+    },
+    {
+      "Name": "CmdCommandFree",
+      "Start": 15468,
+      "End": 15610,
+      "BodyStart": 15514,
+      "Original": "void CmdCommandFree( Abc_Command * pCommand )\n{\n    ABC_FREE( pCommand-\u003esGroup );\n    ABC_FREE( pCommand-\u003esName );\n    ABC_FREE( pCommand );\n}",
+      "Draft": "func CmdCommandFree(pCommand *Abc_Command) {\n    ABC_FREE( pCommand.sGroup );\n    ABC_FREE( pCommand.sName );\n    ABC_FREE( pCommand );\n}"
+    },
+    {
+      "Name": "CmdCommandPrint",
+      "Start": 15887,
+      "End": 19900,
+      "BodyStart": 15959,
+      "Original": "void CmdCommandPrint( Abc_Frame_t * pAbc, int fPrintAll, int fDetails )\n{\n    const char *key;\n    char *value;\n    st__generator * gen;\n    Abc_Command ** ppCommands;\n    Abc_Command * pCommands;\n    int nCommands, iGroupStart, i, j;\n    char * sGroupCur;\n    int LenghtMax, nColumns, iCom = 0;\n    FILE *backupErr = pAbc-\u003eErr;\n\n    // put all commands into one array\n    nCommands = st__count( pAbc-\u003etCommands );\n    ppCommands = ABC_ALLOC( Abc_Command *, nCommands );\n    i = 0;\n    st__foreach_item( pAbc-\u003etCommands, gen, \u0026key, \u0026value )\n    {\n        pCommands = (Abc_Command *)value;\n        if ( fPrintAll || pCommands-\u003esName[0] != '_' )\n            ppCommands[i++] = pCommands;\n    }\n    nCommands = i;\n\n    // sort command by group and then by name, alphabetically\n    qsort( (void *)ppCommands, (size_t)nCommands, sizeof(Abc_Command *), \n            (int (*)(const void *, const void *)) CmdCommandPrintCompare );\n    assert( CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0 );\n\n    // get the longest command name\n    LenghtMax = 0;\n    for ( i = 0; i \u003c nCommands; i++ )\n        if ( LenghtMax \u003c (int)strlen(ppCommands[i]-\u003esName) )\n             LenghtMax = (int)strlen(ppCommands[i]-\u003esName); \n    // get the number of columns\n    nColumns = 79 / (LenghtMax + 2);\n\n    // print the starting message \n    fprintf( pAbc-\u003eOut, \"      Welcome to ABC compiled on %s %s!\", __DATE__, __TIME__ );\n\n    // print the command by group\n    sGroupCur = NULL;\n    iGroupStart = 0;\n    pAbc-\u003eErr = pAbc-\u003eOut;\n    for ( i = 0; i \u003c nCommands; i++ )\n        if ( sGroupCur \u0026\u0026 strcmp( sGroupCur, ppCommands[i]-\u003esGroup ) == 0 )\n        { // this command belongs to the same group as the previous one\n            if ( iCom++ % nColumns == 0 )\n                fprintf( pAbc-\u003eOut, \"\\n\" ); \n            // print this command\n            fprintf( pAbc-\u003eOut, \" %-*s\", LenghtMax, ppCommands[i]-\u003esName );\n        }\n        else\n        { // this command starts the new group of commands\n            // start the new group\n            if ( fDetails \u0026\u0026 i != iGroupStart )\n            { // print help messages for all commands in the previous groups\n                fprintf( pAbc-\u003eOut, \"\\n\" );\n                for ( j = iGroupStart; j \u003c i; j++ )\n                {\n                    char *tmp_cmd;\n                    fprintf( pAbc-\u003eOut, \"\\n\" );\n                    // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n                    tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j]-\u003esName)+4);\n                    (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j]-\u003esName);\n                    (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n                    ABC_FREE(tmp_cmd);\n                }\n                fprintf( pAbc-\u003eOut, \"\\n\" );\n                fprintf( pAbc-\u003eOut, \"   ----------------------------------------------------------------------\" );\n                iGroupStart = i;\n            }\n            fprintf( pAbc-\u003eOut, \"\\n\" );\n            fprintf( pAbc-\u003eOut, \"\\n\" );\n            fprintf( pAbc-\u003eOut, \"%s commands:\\n\", ppCommands[i]-\u003esGroup );\n            // print this command\n            fprintf( pAbc-\u003eOut, \" %-*s\", LenghtMax, ppCommands[i]-\u003esName );\n            // remember current command group\n            sGroupCur = ppCommands[i]-\u003esGroup;\n            // reset the command counter\n            iCom = 1;\n        }\n    if ( fDetails \u0026\u0026 i != iGroupStart )\n    { // print help messages for all commands in the previous groups\n        fprintf( pAbc-\u003eOut, \"\\n\" );\n        for ( j = iGroupStart; j \u003c i; j++ )\n        {\n            char *tmp_cmd;\n            fprintf( pAbc-\u003eOut, \"\\n\" );\n            // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n            tmp_cmd = ABC_ALLOC(char, strlen(ppCommands[j]-\u003esName)+4);\n            (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j]-\u003esName);\n            (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n            ABC_FREE(tmp_cmd);\n        }\n    }\n    pAbc-\u003eErr = backupErr;\n    fprintf( pAbc-\u003eOut, \"\\n\" );\n    ABC_FREE( ppCommands );\n}",
+      "Draft": "func CmdCommandPrint(pAbc *Abc_Frame_t, fPrintAll int32, fDetails int32) {\n    char *key;\n    var value string;\n    var gen *st__generator;\n    var ppCommands **Abc_Command;\n    var pCommands *Abc_Command;\n    var nCommands, iGroupStart, i, j int32;\n    var sGroupCur string;\n    var LenghtMax, nColumns, iCom int32;\n    var backupErr *os.File  = pAbc.Err;\n\n    // put all commands into one array\n    nCommands = st__count( pAbc.tCommands );\n    ppCommands = ABC_ALLOC( Abc_Command *, nCommands );\n    i = 0;\n    st__foreach_item( pAbc.tCommands, gen, \u0026key, \u0026value )\n    {\n        pCommands = (Abc_Command *)value;\n        if (fPrintAll != 0) || pCommands.sName[0] != '_' {\n            ppCommands[i++] = pCommands; }\n    }\n    nCommands = i;\n\n    // sort command by group and then by name, alphabetically\n    qsort( (void *)ppCommands, (size_t)nCommands, sizeof(Abc_Command *), \n                (int (*)(void *, void *)) CmdCommandPrintCompare );\n    assert(CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0, \"CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0\");\n\n    // get the longest command name\n    LenghtMax = 0;\n    for  i = 0; i \u003c nCommands; i++  {\n        if LenghtMax \u003c int32(len(ppCommands[i].sName)) {\n             LenghtMax = int32(len(ppCommands[i].sName)); }\n    } \n    // get the number of columns\n    nColumns = 79 / (LenghtMax + 2);\n\n    // print the starting message \n    fmt.Fprintf(pAbc.Out, \"      Welcome to ABC compiled on %s %s!\", __DATE__, __TIME__);\n\n    // print the command by group\n    sGroupCur = nil;\n    iGroupStart = 0;\n    pAbc.Err = pAbc.Out;\n    for  i = 0; i \u003c nCommands; i++  {\n        if sGroupCur \u0026\u0026 int32(strings.Compare(sGroupCur, ppCommands[i].sGroup)) == 0 { // this command belongs to the same group as the previous one\n            if iCom++ % nColumns == 0 {\n                fmt.Fprintf(pAbc.Out, \"\\n\"); } \n            // print this command\n            fmt.Fprintf(pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName);\n        \n        } else { // this command starts the new group of commands\n            // start the new group\n            if (fDetails != 0) \u0026\u0026 i != iGroupStart { // print help messages for all commands in the previous groups\n                fmt.Fprintf(pAbc.Out, \"\\n\");\n                for  j = iGroupStart; j \u003c i; j++  {\n                    var tmp_cmd string;\n                    fmt.Fprintf(pAbc.Out, \"\\n\");\n                    // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n                    tmp_cmd = ABC_ALLOC(char, len(ppCommands[j].sName)+4);\n                    (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);\n                    (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n                    ABC_FREE(tmp_cmd);\n                }\n                fmt.Fprintf(pAbc.Out, \"\\n\");\n                fmt.Fprintf(pAbc.Out, \"   ----------------------------------------------------------------------\");\n                iGroupStart = i;\n            }\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            fmt.Fprintf(pAbc.Out, \"%s commands:\\n\", ppCommands[i].sGroup);\n            // print this command\n            fmt.Fprintf(pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName);\n            // remember current command group\n            sGroupCur = ppCommands[i].sGroup;\n            // reset the command counter\n            iCom = 1;\n        }\n    }\n    if (fDetails != 0) \u0026\u0026 i != iGroupStart { // print help messages for all commands in the previous groups\n        fmt.Fprintf(pAbc.Out, \"\\n\");\n        for  j = iGroupStart; j \u003c i; j++  {\n            var tmp_cmd string;\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n            tmp_cmd = ABC_ALLOC(char, len(ppCommands[j].sName)+4);\n            (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);\n            (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n            ABC_FREE(tmp_cmd);\n        }\n    }\n    pAbc.Err = backupErr;\n    fmt.Fprintf(pAbc.Out, \"\\n\");\n    ABC_FREE( ppCommands );\n}"
+    },
+    {
+      "Name": "CmdCommandPrintCompare",
+      "Start": 20185,
+      "End": 20934,
+      "BodyStart": 20256,
+      "Original": "int CmdCommandPrintCompare( Abc_Command ** ppC1, Abc_Command ** ppC2 )\n{\n    Abc_Command * pC1 = *ppC1;\n    Abc_Command * pC2 = *ppC2;\n    int RetValue;\n\n    RetValue = strcmp( pC1-\u003esGroup, pC2-\u003esGroup );\n    if ( RetValue \u003c 0 )\n        return -1;\n    if ( RetValue \u003e 0 )\n        return 1;\n    // the command belong to the same group\n\n    // put commands with \"_\" at the end of the list\n    if ( pC1-\u003esName[0] != '_' \u0026\u0026 pC2-\u003esName[0] == '_' )\n        return -1;\n    if ( pC1-\u003esName[0] == '_' \u0026\u0026 pC2-\u003esName[0] != '_' )\n        return 1;\n\n    RetValue = strcmp( pC1-\u003esName, pC2-\u003esName );\n    if ( RetValue \u003c 0 )\n        return -1;\n    if ( RetValue \u003e 0 )\n        return 1;\n     // should not be two indentical commands\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func CmdCommandPrintCompare(ppC1 **Abc_Command, ppC2 **Abc_Command) int32 {\n    var pC1 *Abc_Command  = *ppC1;\n    var pC2 *Abc_Command  = *ppC2;\n    var RetValue int32;\n\n    RetValue = int32(strings.Compare(pC1.sGroup, pC2.sGroup));\n    if RetValue \u003c 0 {\n        return -1; }\n    if RetValue \u003e 0 {\n        return 1; }\n    // the command belong to the same group\n\n    // put commands with \"_\" at the end of the list\n    if pC1.sName[0] != '_' \u0026\u0026 pC2.sName[0] == '_' {\n        return -1; }\n    if pC1.sName[0] == '_' \u0026\u0026 pC2.sName[0] != '_' {\n        return 1; }\n\n    RetValue = int32(strings.Compare(pC1.sName, pC2.sName));\n    if RetValue \u003c 0 {\n        return -1; }\n    if RetValue \u003e 0 {\n        return 1; }\n     // should not be two indentical commands\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "CmdNamePrintCompare",
+      "Start": 21219,
+      "End": 21311,
+      "BodyStart": 21273,
+      "Original": "int CmdNamePrintCompare( char ** ppC1, char ** ppC2 )\n{\n    return strcmp( *ppC1, *ppC2 );\n}",
+      "Draft": "func CmdNamePrintCompare(ppC1 *string, ppC2 *string) int32 {\n    return int32(strings.Compare(*ppC1, *ppC2));\n}"
+    },
+    {
+      "Name": "CmdPrintTable",
+      "Start": 21595,
+      "End": 22449,
+      "BodyStart": 21650,
+      "Original": "void CmdPrintTable( st__table * tTable, int fAliases )\n{\n    st__generator * gen;\n    const char ** ppNames;\n    const char * key;\n    char* value;\n    int nNames, i;\n\n    // collect keys in the array\n    ppNames = ABC_ALLOC( const char *, st__count(tTable) );\n    nNames = 0;\n    st__foreach_item( tTable, gen, \u0026key, \u0026value )\n        ppNames[nNames++] = key;\n\n    // sort array by name\n    qsort( (void *)ppNames, (size_t)nNames, sizeof(char *), \n        (int (*)(const void *, const void *))CmdNamePrintCompare );\n\n    // print in this order\n    for ( i = 0; i \u003c nNames; i++ )\n    {\n        st__lookup( tTable, ppNames[i], \u0026value );\n        if ( fAliases )\n            CmdCommandAliasPrint( Abc_FrameGetGlobalFrame(), (Abc_Alias *)value );\n        else\n            fprintf( stdout, \"%-15s %-15s\\n\", ppNames[i], value );\n    }\n    ABC_FREE( ppNames );\n}",
+      "Draft": "func CmdPrintTable(tTable *st__table, fAliases int32) {\n    var gen *st__generator;\n    char ** ppNames;\n    char * key;\n    var value string;\n    var nNames, i int32;\n\n    // collect keys in the array\n    ppNames = ABC_ALLOC( char *, st__count(tTable) );\n    nNames = 0;\n    st__foreach_item( tTable, gen, \u0026key, \u0026value )\n        ppNames[nNames++] = key;\n\n    // sort array by name\n    qsort( (void *)ppNames, (size_t)nNames, sizeof(char *), \n            (int (*)(void *, void *))CmdNamePrintCompare );\n\n    // print in this order\n    for  i = 0; i \u003c nNames; i++  {\n        st__lookup( tTable, ppNames[i], \u0026value );\n        if fAliases != 0 {\n            CmdCommandAliasPrint( Abc_FrameGetGlobalFrame(), (Abc_Alias *)value );\n        } else {\n            fmt.Fprintf(os.Stdout, \"%-15s %-15s\\n\", ppNames[i], value); }\n    }\n    ABC_FREE( ppNames );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::mechanical::do::9056",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9396,
+      "End": 9398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::mechanical::sizeof::16370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16710,
+      "End": 16716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::mechanical::sizeof::21686",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22026,
+      "End": 22032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::3017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3017,
+      "End": 3026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::3552",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3552,
+      "End": 3561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::7018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7358,
+      "End": 7367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::7972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8312,
+      "End": 8321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::16114",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16454,
+      "End": 16469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::16331",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16671,
+      "End": 16679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::16376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16716,
+      "End": 16731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::21653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21993,
+      "End": 22001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::21692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22032,
+      "End": 22040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::pointer-cast::21975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22315,
+      "End": 22328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::cmdCheckShellEscape",
+      "Category": "semantic-review",
+      "Symbol": "cmdCheckShellEscape",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1446,
+      "End": 2291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdCommandDispatch",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandDispatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2548,
+      "End": 5465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::ternary::CmdSplitLine",
+      "Category": "ternary-review",
+      "Symbol": "CmdSplitLine",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5757,
+      "End": 7578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdSplitLine",
+      "Category": "semantic-review",
+      "Symbol": "CmdSplitLine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5757,
+      "End": 7578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdApplyAlias",
+      "Category": "semantic-review",
+      "Symbol": "CmdApplyAlias",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7876,
+      "End": 11051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdHistorySubstitution",
+      "Category": "semantic-review",
+      "Symbol": "CmdHistorySubstitution",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11333,
+      "End": 11494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdFileOpen",
+      "Category": "semantic-review",
+      "Symbol": "CmdFileOpen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11771,
+      "End": 13974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdFreeArgv",
+      "Category": "semantic-review",
+      "Symbol": "CmdFreeArgv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14252,
+      "End": 14392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdDupArgv",
+      "Category": "semantic-review",
+      "Symbol": "CmdDupArgv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14393,
+      "End": 14601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdAddToArgv",
+      "Category": "semantic-review",
+      "Symbol": "CmdAddToArgv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14879,
+      "End": 15193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdCommandFree",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15468,
+      "End": 15610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdCommandPrint",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15887,
+      "End": 19900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdCommandPrintCompare",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandPrintCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20185,
+      "End": 20934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdNamePrintCompare",
+      "Category": "semantic-review",
+      "Symbol": "CmdNamePrintCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21219,
+      "End": 21311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::CmdPrintTable",
+      "Category": "semantic-review",
+      "Symbol": "CmdPrintTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21595,
+      "End": 22449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4518,
+      "End": 4932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::1639",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1639,
+      "End": 1661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::1977",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1977,
+      "End": 1995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::6962",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6962,
+      "End": 6994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::8486",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8486,
+      "End": 8505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::8647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8647,
+      "End": 8688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::10332",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10332,
+      "End": 10373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::10684",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10684,
+      "End": 10700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::10853",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10853,
+      "End": 10872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::12889",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12889,
+      "End": 12943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::13154",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13154,
+      "End": 13174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::13929",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13929,
+      "End": 13948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::14348",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14348,
+      "End": 14367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::14373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14373,
+      "End": 14389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::14461",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14461,
+      "End": 14486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::14970",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14970,
+      "End": 14999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::15520",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15520,
+      "End": 15548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::15554",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15554,
+      "End": 15581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::15587",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15587,
+      "End": 15607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::16272",
+      "Category": "macro-inline-review",
+      "Symbol": "st__count",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16272,
+      "End": 16300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::16319",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16319,
+      "End": 16356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::16373",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16373,
+      "End": 16427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::18346",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18346,
+      "End": 18393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::18555",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18555,
+      "End": 18572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::19592",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19592,
+      "End": 19639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::19777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19777,
+      "End": 19794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::19875",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19875,
+      "End": 19897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::21810",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21810,
+      "End": 21854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::21876",
+      "Category": "macro-inline-review",
+      "Symbol": "st__foreach_item",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21876,
+      "End": 21921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdUtils.c::macro-inline::22427",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22427,
+      "End": 22446
+    }
+  ],
+  "Draft": "package cmd\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cmdUtils.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Various utilities of the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdUtils.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"cmdInt.h\"\n//#include \u003cctype.h\u003e\n\n//ABC_NAMESPACE_IMPL_START\n    // proper declaration of isspace\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int CmdCommandPrintCompare( Abc_Command ** ppC1, Abc_Command ** ppC2 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc cmdCheckShellEscape(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var RetValue int32;\n    if argv[0][0] == '!' {\n        int size = 4096;\n        var i int32;\n        var buffer string  = ABC_ALLOC(char, 10000);\n        strncpy (buffer, \u0026argv[0][1], size);\n        for i = 1; i \u003c argc; ++i {\n                strncat (buffer, \" \", size);\n                strncat (buffer, argv[i], size);\n        }\n        if buffer[0] == 0 { \n            strncpy (buffer, \"/bin/sh\", size); }\n        RetValue = system (buffer);\n        ABC_FREE( buffer );\n\n        // NOTE: Since we reconstruct the cmdline by concatenating\n        // the parts, we lose information. So a command like\n        // `!ls \"file name\"` will be sent to the system as\n        // `ls file name` which is a BUG\n\n        return 1;\n    \n    } else {\n        return 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Executes one command.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandDispatch(pAbc *Abc_Frame_t, pargc *int32, pargv **string) int32 {\n    var argc int32  = *pargc;\n    var argv *string  = *pargv;\n    var argv2 *string;\n\n    var pNetCopy *Abc_Ntk_t;\n    var pFunc Cmd_CommandFuncType;\n    var pCommand *Abc_Command;\n    var value string;\n    var fError int32;\n    var clk float64;\n\n    if argc == 0 {\n        return 0; }\n\n    if cmdCheckShellEscape( pAbc, argc, argv ) == 1 {\n        return 0; }\n\n    // get the command\n    if ! st__lookup( pAbc.tCommands, argv[0], (char **)\u0026pCommand ) {   // the command is not in the table\n        // if there is only one word with an extension, assume this is file to be read\n        if argc == 1 \u0026\u0026 strstr( argv[0], \".\" ) {\n            // add command 'read' assuming that this is the file name\n            argv2 = CmdAddToArgv( argc, argv );\n            CmdFreeArgv( argc, argv );\n            argc = argc+1;\n            argv = argv2;\n            *pargc = argc;\n            *pargv = argv;\n            if ! st__lookup( pAbc.tCommands, argv[0], (char **)\u0026pCommand ) {\n                assert(false, \"0\"); }\n        \n        } else {\n            fmt.Fprintf(pAbc.Err, \"** cmd error: unknown command '%s'\\n\", argv[0]);\n            fmt.Fprintf(pAbc.Err, \"(this is likely caused by using an alias defined in \\\"abc.rc\\\"\\n\");\n            fmt.Fprintf(pAbc.Err, \"without having this file in the current or parent directory)\\n\");\n            return 1;\n        }\n    }\n\n    // get the backup network if the command is going to change the network\n    if pCommand.fChange {\n        if pAbc.pNtkCur \u0026\u0026 Abc_FrameIsFlagEnabled( \"backup\" ) {\n            pNetCopy = Abc_NtkDup( pAbc.pNtkCur );\n            Abc_FrameSetCurrentNetwork( pAbc, pNetCopy );\n            // swap the current network and the backup network \n            // to prevent the effect of resetting the short names\n            Abc_FrameSwapCurrentAndBackup( pAbc );\n        }\n    }\n\n    // execute the command\n    clk = Extra_CpuTimeDouble();\n#ifdef __EMSCRIPTEN__\n    Cmd_CommandId_t CommandId;\n    CommandId = Cmd_CommandNameToId( argv[0] );\n    if ( CmdCommandDispatchBasicById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         IoCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) ||\n         AbcCommandDispatchById( CommandId, pAbc, argc, argv, \u0026fError ) )\n    {\n        pAbc-\u003eTimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n    else\n#endif\n    {\n    pFunc = pCommand.pFunc;\n    fError = (*pFunc)( pAbc, argc, argv );\n    pAbc.TimeCommand += Extra_CpuTimeDouble() - clk;\n    }\n\n    // automatic execution of arbitrary command after each command \n    // usually this is a passive command ... \n    if fError == 0 \u0026\u0026 !pAbc.fAutoexac {\n        if st__lookup( pAbc.tFlags, \"autoexec\", \u0026value ) {\n            pAbc.fAutoexac = 1;\n            fError = Cmd_CommandExecute( pAbc, value );\n            pAbc.fAutoexac = 0;\n        }\n    }\n    return fError;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Splits the command line string into individual commands.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdSplitLine(pAbc *Abc_Frame_t, sCommand string, argc *int32, argv **string) string {\n    char *p, *start;\n    var c byte;\n    var i, j int32;\n    var new_arg string;\n    var vArgs *Vec_Ptr_t;\n    var single_quote, double_quote int32;\n\n    vArgs = Vec_PtrAlloc( 10 );\n\n    p = sCommand;\n    for {\n        // skip leading white space \n        for  isspace( int32(   *p) )  {\n            p++;\n        }\n\n        // skip until end of this token \n        single_quote = double_quote = 0;\n        for  start = p; ( c = *p ) != '\\0'; p++  {\n            if c == ';' || c == '#' || isspace( int32(   c) ) {\n                if !single_quote \u0026\u0026 !(double_quote != 0) {\n                    break;\n                }\n            }\n            if c == '\\'' {\n                single_quote = !single_quote;\n            }\n            if c == '\"' {\n                double_quote = !double_quote;\n            }\n        }\n        if single_quote || (double_quote != 0) {\n            ( void ) fmt.Fprintf(pAbc.Err, \"** cmd warning: ignoring unbalanced quote ...\\n\");\n        }\n        if start == p {\n            break; }\n\n        new_arg = ABC_ALLOC( char, p - start + 1 );\n        j = 0;\n        for  i = 0; i \u003c p - start; i++  {\n            c = start[i];\n            if ( c != '\\'' ) \u0026\u0026 ( c != '\\\"' ) {\n                new_arg[j++] = isspace( int32(   c) ) ? ' ' : start[i];\n            }\n        }\n        new_arg[j] = '\\0';\n        Vec_PtrPush( vArgs, new_arg );\n    }\n\n    *argc = vArgs.nSize;\n    *argv = (char **)Vec_PtrReleaseArray( vArgs );\n    Vec_PtrFree( vArgs );\n    if *p == ';' {\n        p++;\n    \n    } else if *p == '#' {\n        for  ; *p != 0; p++  {} // skip to end of line \n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces parts of the command line string by aliases if given.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdApplyAlias(pAbc *Abc_Frame_t, argcp *int32, argvp **string, loop *int32) int32 {\n    var i, argc, stopit, added, offset, did_subst, subst, fError, newc, j int32;\n    char *arg;\n    var argv, newv *string;\n    var alias *Abc_Alias;\n\n    argc = *argcp;\n    argv = *argvp;\n    stopit = 0;\n    for  ; *loop \u003c 200; ( *loop )++  {\n        if argc == 0 {\n            return 0; }\n        if stopit != 0 || st__lookup( pAbc.tAliases, argv[0],  (char **) \u0026alias ) == 0 {\n            return 0;\n        }\n        if int32(strings.Compare(argv[0], alias.argv[0])) == 0 {\n            stopit = 1;\n        }\n        ABC_FREE( argv[0] );\n        added = alias.argc - 1;\n\n        /* shift all the arguments to the right */\n        if added != 0 {\n            argv = ABC_REALLOC( char *, argv, argc + added );\n            for  i = argc - 1; i \u003e= 1; i--  {\n                argv[i + added] = argv[i];\n            }\n            for  i = 1; i \u003c= added; i++  {\n                argv[i] = nil;\n            }\n            argc += added;\n        }\n        subst = 0;\n        for  i, offset = 0, 0; i \u003c alias.argc; i, offset = i+1, offset+1  {\n            arg = CmdHistorySubstitution( pAbc, alias.argv[i], \u0026did_subst );\n            if arg == nil {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            if did_subst != 0 {\n                subst = 1;\n            }\n            fError = 0;\n            for\n            {\n                arg = CmdSplitLine( pAbc, arg, \u0026newc, \u0026newv );\n                /*\n                 * If there's a complete `;' terminated command in `arg',\n                 * when split_line() returns arg[0] != '\\0'.\n                 */\n                if arg[0] == '\\0' { /* just a bunch of words */\n                    break;\n                }\n                fError = CmdApplyAlias( pAbc, \u0026newc, \u0026newv, loop );\n                if fError == 0 {\n                       fError = CmdCommandDispatch( pAbc, \u0026newc, \u0026newv );\n                }\n                CmdFreeArgv( newc, newv );\n            \nif !( fError == 0 ) { break }\n}\n            \n            if fError != 0 {\n                *argcp = argc;\n                *argvp = argv;\n                return ( 1 );\n            }\n            added = newc - 1;\n            if added != 0 {\n                argv = ABC_REALLOC( char *, argv, argc + added );\n                for  j = argc - 1; j \u003e offset; j--  {\n                    argv[j + added] = argv[j];\n                }\n                argc += added;\n            }\n            for  j = 0; j \u003c= added; j++  {\n                argv[j + offset] = newv[j];\n            }\n            ABC_FREE( newv );\n            offset += added;\n        }\n        if subst == 1 {\n            for  i = offset; i \u003c argc; i++  {\n                ABC_FREE( argv[i] );\n            }\n            argc = offset;\n        }\n        *argcp = argc;\n        *argvp = argv;\n    }\n\n    fmt.Fprintf(pAbc.Err, \"** cmd warning: alias loop\\n\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs history substitution (now, disabled).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdHistorySubstitution(pAbc *Abc_Frame_t, line string, changed *int32) string {\n    // as of today, no history substitution \n    *changed = 0;\n    return line;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Opens the file with path (now, disabled).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdFileOpen(pAbc *Abc_Frame_t, sFileName string, sMode string, pFileNameReal *string, silent int32) *os.File {\n    var sRealName, sPathUsr, sPathLib, sPathAll string;\n    var pFile *os.File;\n    \n    if int32(strings.Compare(sFileName, \"-\")) == 0 {\n        if int32(strings.Compare(sMode, \"w\")) == 0 {\n            sRealName = Extra_UtilStrsav( \"stdout\" );\n            pFile = os.Stdout;\n        \n        } else {\n            sRealName = Extra_UtilStrsav( \"stdin\" );\n            pFile = os.Stdin;\n        }\n    \n    } else {\n        sRealName = nil;\n        if int32(strings.Compare(sMode, \"r\")) == 0 {\n            \n            /* combine both pathes if exist */\n            sPathUsr = Cmd_FlagReadByName(pAbc,\"open_path\");\n            sPathLib = Cmd_FlagReadByName(pAbc,\"lib_path\");\n            \n            if sPathUsr == nil \u0026\u0026 sPathLib == nil {\n                sPathAll = nil;\n            \n            } else if sPathUsr == nil {\n                sPathAll = Extra_UtilStrsav( sPathLib );\n            \n            } else if sPathLib == nil {\n                sPathAll = Extra_UtilStrsav( sPathUsr );\n            \n            } else {\n                sPathAll = ABC_ALLOC( char, len(sPathLib)+len(sPathUsr)+5 );\n                sPathAll = fmt.Sprintf(\"%s:%s\", sPathUsr, sPathLib);\n            }\n            if sPathAll != nil {\n                sRealName = Extra_UtilFileSearch(sFileName, sPathAll, \"r\");\n                ABC_FREE( sPathAll );\n            }\n        }\n        if sRealName == nil {\n            sRealName = Extra_UtilTildeExpand(sFileName);\n        }\n\n        if (pFile = fopen(sRealName, sMode)) == nil {\n            if ! (silent != 0) {\n//                perror(sRealName);\n                Abc_Print( 1, \"Cannot open file \\\"%s\\\".\\n\", sRealName );\n            }\n        \n        } else {\n            // print the path/name of the resource file 'abc.rc' that is being loaded\n            if !(silent != 0) \u0026\u0026 len(sRealName) \u003e= 6 \u0026\u0026 int32(strings.Compare(sRealName + len(sRealName) - 6, \"abc.rc\")) == 0 {            \n                Abc_Print( 1, \"Loading resource file \\\"%s\\\".\\n\", sRealName ); }\n        }\n    }\n    if pFileNameReal != nil {\n        *pFileNameReal = sRealName;\n    } else {\n        ABC_FREE(sRealName); }\n    \n    return pFile;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the previously allocated argv array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdFreeArgv(argc int32, argv *string) {\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        ABC_FREE( argv[i] );\n    }\n    ABC_FREE( argv );\n}\nfunc CmdDupArgv(argc int32, argv *string) *string {\n    var argvNew *string  = ABC_ALLOC( char *, argc );\n    var i int32;\n    for  i = 0; i \u003c argc; i++  {\n        argvNew[i] = Abc_UtilStrsav( argv[i] );\n    }\n    return argvNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the previously allocated argv array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdAddToArgv(argc int32, argv *string) *string {\n    var argv2 *string;\n    var i int32;\n    argv2 = ABC_ALLOC( char *, argc + 1 ); \n    argv2[0] = Extra_UtilStrsav( \"read\" ); \n//    argv2[0] = Extra_UtilStrsav( \"\u0026r\" ); \n    for  i = 0; i \u003c argc; i++  {\n        argv2[i+1] = Extra_UtilStrsav( argv[i] );\n    } \n    return argv2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the previously allocated command.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandFree(pCommand *Abc_Command) {\n    ABC_FREE( pCommand.sGroup );\n    ABC_FREE( pCommand.sName );\n    ABC_FREE( pCommand );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints commands alphabetically by group.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandPrint(pAbc *Abc_Frame_t, fPrintAll int32, fDetails int32) {\n    char *key;\n    var value string;\n    var gen *st__generator;\n    var ppCommands **Abc_Command;\n    var pCommands *Abc_Command;\n    var nCommands, iGroupStart, i, j int32;\n    var sGroupCur string;\n    var LenghtMax, nColumns, iCom int32;\n    var backupErr *os.File  = pAbc.Err;\n\n    // put all commands into one array\n    nCommands = st__count( pAbc.tCommands );\n    ppCommands = ABC_ALLOC( Abc_Command *, nCommands );\n    i = 0;\n    st__foreach_item( pAbc.tCommands, gen, \u0026key, \u0026value )\n    {\n        pCommands = (Abc_Command *)value;\n        if (fPrintAll != 0) || pCommands.sName[0] != '_' {\n            ppCommands[i++] = pCommands; }\n    }\n    nCommands = i;\n\n    // sort command by group and then by name, alphabetically\n    qsort( (void *)ppCommands, (size_t)nCommands, sizeof(Abc_Command *), \n                (int (*)(void *, void *)) CmdCommandPrintCompare );\n    assert(CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0, \"CmdCommandPrintCompare( ppCommands, ppCommands + nCommands - 1 ) \u003c= 0\");\n\n    // get the longest command name\n    LenghtMax = 0;\n    for  i = 0; i \u003c nCommands; i++  {\n        if LenghtMax \u003c int32(len(ppCommands[i].sName)) {\n             LenghtMax = int32(len(ppCommands[i].sName)); }\n    } \n    // get the number of columns\n    nColumns = 79 / (LenghtMax + 2);\n\n    // print the starting message \n    fmt.Fprintf(pAbc.Out, \"      Welcome to ABC compiled on %s %s!\", __DATE__, __TIME__);\n\n    // print the command by group\n    sGroupCur = nil;\n    iGroupStart = 0;\n    pAbc.Err = pAbc.Out;\n    for  i = 0; i \u003c nCommands; i++  {\n        if sGroupCur \u0026\u0026 int32(strings.Compare(sGroupCur, ppCommands[i].sGroup)) == 0 { // this command belongs to the same group as the previous one\n            if iCom++ % nColumns == 0 {\n                fmt.Fprintf(pAbc.Out, \"\\n\"); } \n            // print this command\n            fmt.Fprintf(pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName);\n        \n        } else { // this command starts the new group of commands\n            // start the new group\n            if (fDetails != 0) \u0026\u0026 i != iGroupStart { // print help messages for all commands in the previous groups\n                fmt.Fprintf(pAbc.Out, \"\\n\");\n                for  j = iGroupStart; j \u003c i; j++  {\n                    var tmp_cmd string;\n                    fmt.Fprintf(pAbc.Out, \"\\n\");\n                    // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n                    tmp_cmd = ABC_ALLOC(char, len(ppCommands[j].sName)+4);\n                    (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);\n                    (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n                    ABC_FREE(tmp_cmd);\n                }\n                fmt.Fprintf(pAbc.Out, \"\\n\");\n                fmt.Fprintf(pAbc.Out, \"   ----------------------------------------------------------------------\");\n                iGroupStart = i;\n            }\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            fmt.Fprintf(pAbc.Out, \"%s commands:\\n\", ppCommands[i].sGroup);\n            // print this command\n            fmt.Fprintf(pAbc.Out, \" %-*s\", LenghtMax, ppCommands[i].sName);\n            // remember current command group\n            sGroupCur = ppCommands[i].sGroup;\n            // reset the command counter\n            iCom = 1;\n        }\n    }\n    if (fDetails != 0) \u0026\u0026 i != iGroupStart { // print help messages for all commands in the previous groups\n        fmt.Fprintf(pAbc.Out, \"\\n\");\n        for  j = iGroupStart; j \u003c i; j++  {\n            var tmp_cmd string;\n            fmt.Fprintf(pAbc.Out, \"\\n\");\n            // fprintf( pAbc-\u003eOut, \"--- %s ---\\n\", ppCommands[j]-\u003esName );\n            tmp_cmd = ABC_ALLOC(char, len(ppCommands[j].sName)+4);\n            (void) sprintf(tmp_cmd, \"%s -h\", ppCommands[j].sName);\n            (void) Cmd_CommandExecute( pAbc, tmp_cmd );\n            ABC_FREE(tmp_cmd);\n        }\n    }\n    pAbc.Err = backupErr;\n    fmt.Fprintf(pAbc.Out, \"\\n\");\n    ABC_FREE( ppCommands );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Comparision function used for sorting commands.]\n\n  Description []\n                \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdCommandPrintCompare(ppC1 **Abc_Command, ppC2 **Abc_Command) int32 {\n    var pC1 *Abc_Command  = *ppC1;\n    var pC2 *Abc_Command  = *ppC2;\n    var RetValue int32;\n\n    RetValue = int32(strings.Compare(pC1.sGroup, pC2.sGroup));\n    if RetValue \u003c 0 {\n        return -1; }\n    if RetValue \u003e 0 {\n        return 1; }\n    // the command belong to the same group\n\n    // put commands with \"_\" at the end of the list\n    if pC1.sName[0] != '_' \u0026\u0026 pC2.sName[0] == '_' {\n        return -1; }\n    if pC1.sName[0] == '_' \u0026\u0026 pC2.sName[0] != '_' {\n        return 1; }\n\n    RetValue = int32(strings.Compare(pC1.sName, pC2.sName));\n    if RetValue \u003c 0 {\n        return -1; }\n    if RetValue \u003e 0 {\n        return 1; }\n     // should not be two indentical commands\n    assert(false, \"0\");\n    return 0;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Comparision function used for sorting commands.]\n\n  Description []\n                \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdNamePrintCompare(ppC1 *string, ppC2 *string) int32 {\n    return int32(strings.Compare(*ppC1, *ppC2));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparision function used for sorting commands.]\n\n  Description []\n                \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc CmdPrintTable(tTable *st__table, fAliases int32) {\n    var gen *st__generator;\n    char ** ppNames;\n    char * key;\n    var value string;\n    var nNames, i int32;\n\n    // collect keys in the array\n    ppNames = ABC_ALLOC( char *, st__count(tTable) );\n    nNames = 0;\n    st__foreach_item( tTable, gen, \u0026key, \u0026value )\n        ppNames[nNames++] = key;\n\n    // sort array by name\n    qsort( (void *)ppNames, (size_t)nNames, sizeof(char *), \n            (int (*)(void *, void *))CmdNamePrintCompare );\n\n    // print in this order\n    for  i = 0; i \u003c nNames; i++  {\n        st__lookup( tTable, ppNames[i], \u0026value );\n        if fAliases != 0 {\n            CmdCommandAliasPrint( Abc_FrameGetGlobalFrame(), (Abc_Alias *)value );\n        } else {\n            fmt.Fprintf(os.Stdout, \"%-15s %-15s\\n\", ppNames[i], value); }\n    }\n    ABC_FREE( ppNames );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n"
+}

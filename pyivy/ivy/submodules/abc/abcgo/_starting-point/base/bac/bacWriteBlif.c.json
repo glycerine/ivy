@@ -1,0 +1,846 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c",
+  "SHA256": "8b5e998a4c62d52c5bb610d2acecc6d23230256cd2196f589484d06210e7d538",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 9,
+        "ByteOffset": 1647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Psr_NtkStr(p, NameId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 2037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Psr_BoxIONum(p, i) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 2079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vBox) % 2 == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 13,
+        "ByteOffset": 2172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".latch\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 13,
+        "ByteOffset": 2212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 1)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 13,
+        "ByteOffset": 2287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 3)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 13,
+        "ByteOffset": 2362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %c\\n\", '0' + Psr_BoxName(p, i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 13,
+        "ByteOffset": 2492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 17,
+        "ByteOffset": 2745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s\", Psr_NtkStr(p, ActId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 13,
+        "ByteOffset": 2818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n%s\", Psr_NtkStr(p, NtkId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 2920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".subckt\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 13,
+        "ByteOffset": 2961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Psr_NtkStr(p, NtkId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 17,
+        "ByteOffset": 3233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s=%s\", Psr_NtkStr(p, FormId), Psr_NtkStr(p, ActId) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 13,
+        "ByteOffset": 3332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", Psr_NtkStr(p, p.iModuleName) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inouts\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 108,
+        "Column": 27,
+        "ByteOffset": 4069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" ); var i int32;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 4138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 4222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 5124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s=%s\", Mio_GateReadPinName(pGate, i), Bac_ObjNameStr(p, iFanin) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 5607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iFanin) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 5692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iObj) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 6076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBi(p, iObj, i)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 6337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBo(p, iObj, i)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 6448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 13,
+        "ByteOffset": 6741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".subckt\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 6782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Bac_NtkName(Bac_BoxNtk(p, i)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 13,
+        "ByteOffset": 7202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".gate %s\", pGateName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 17,
+        "ByteOffset": 7413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s=%s\", Mio_GateReadPinName(pGate, k), Bac_ObjNameStr(p, iTerm) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 17,
+        "ByteOffset": 7696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iTerm) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 13,
+        "ByteOffset": 7804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 13,
+        "ByteOffset": 7866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 17,
+        "ByteOffset": 8064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s\", Bac_ObjNameStr(p, Bac_ObjFanin(p, iTerm)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 8330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iTerm) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 13,
+        "ByteOffset": 8407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n%s\",  Ptr_TypeToSop(Bac_ObjType(p, i)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 8553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 8631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", Bac_NtkName(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 8684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 8772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 8922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 9,
+        "ByteOffset": 9167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Genlib library used in the mapped design is not longer a current library.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 216,
+        "Column": 13,
+        "ByteOffset": 9290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 9346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 9430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# Design \\\"%s\\\" written via CBA package in ABC on %s\\n\\n\", Bac_ManName(p), Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 9774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Psr_ManWriteBlifArray",
+      "Start": 1347,
+      "End": 1585,
+      "BodyStart": 1433,
+      "Original": "static void Psr_ManWriteBlifArray( FILE * pFile, Psr_Ntk_t * p, Vec_Int_t * vFanins )\n{\n    int i, NameId;\n    Vec_IntForEachEntry( vFanins, NameId, i )\n        fprintf( pFile, \" %s\", Psr_NtkStr(p, NameId) );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Psr_ManWriteBlifArray(pFile *os.File, p *Psr_Ntk_t, vFanins *Vec_Int_t) {\n    var i, NameId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((NameId) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, NameId));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Psr_ManWriteBlifLines",
+      "Start": 1586,
+      "End": 2814,
+      "BodyStart": 1651,
+      "Original": "static void Psr_ManWriteBlifLines( FILE * pFile, Psr_Ntk_t * p )\n{\n    Vec_Int_t * vBox; \n    int i, k, FormId, ActId;\n    Psr_NtkForEachBox( p, vBox, i )\n    {\n        int NtkId = Psr_BoxNtk(p, i);\n        assert( Psr_BoxIONum(p, i) \u003e 0 );\n        assert( Vec_IntSize(vBox) % 2 == 0 );\n        if ( NtkId == -1 ) // latch\n        {\n            fprintf( pFile, \".latch\" );\n            fprintf( pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 1)) );\n            fprintf( pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 3)) );\n            fprintf( pFile, \" %c\\n\", '0' + Psr_BoxName(p, i) );\n        }\n        else if ( Psr_BoxIsNode(p, i) ) // node\n        {\n            fprintf( pFile, \".names\" );\n            Vec_IntForEachEntryDouble( vBox, FormId, ActId, k )\n                fprintf( pFile, \" %s\", Psr_NtkStr(p, ActId) );\n            fprintf( pFile, \"\\n%s\", Psr_NtkStr(p, NtkId) );\n        }\n        else // box\n        {\n            fprintf( pFile, \".subckt\" );\n            fprintf( pFile, \" %s\", Psr_NtkStr(p, NtkId) );\n            Vec_IntForEachEntryDouble( vBox, FormId, ActId, k )\n                fprintf( pFile, \" %s=%s\", Psr_NtkStr(p, FormId), Psr_NtkStr(p, ActId) );\n            fprintf( pFile, \"\\n\" );\n        }\n    }\n}",
+      "Draft": "func Psr_ManWriteBlifLines(pFile *os.File, p *Psr_Ntk_t) {\n    var vBox *Vec_Int_t; \n    var i, k, FormId, ActId int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(p) \u0026\u0026 ((vBox) = Psr_BoxSignals(p, i)); i++  {\n        var NtkId int32  = Psr_BoxNtk(p, i);\n        assert(Psr_BoxIONum(p, i) \u003e 0, \"Psr_BoxIONum(p, i) \u003e 0\");\n        assert(Vec_IntSize(vBox) % 2 == 0, \"Vec_IntSize(vBox) % 2 == 0\");\n        if NtkId == -1 { // latch\n        \n            fmt.Fprintf(pFile, \".latch\");\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 1)));\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 3)));\n            fmt.Fprintf(pFile, \" %c\\n\", '0' + Psr_BoxName(p, i));\n        \n        } else if Psr_BoxIsNode(p, i) { // node\n        \n            fmt.Fprintf(pFile, \".names\");\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, ActId));\n            }\n            fmt.Fprintf(pFile, \"\\n%s\", Psr_NtkStr(p, NtkId));\n        \n        } else { // box\n        \n            fmt.Fprintf(pFile, \".subckt\");\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, NtkId));\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                fmt.Fprintf(pFile, \" %s=%s\", Psr_NtkStr(p, FormId), Psr_NtkStr(p, ActId));\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Psr_ManWriteBlifNtk",
+      "Start": 2815,
+      "End": 3392,
+      "BodyStart": 2878,
+      "Original": "static void Psr_ManWriteBlifNtk( FILE * pFile, Psr_Ntk_t * p )\n{\n    // write header\n    fprintf( pFile, \".model %s\\n\", Psr_NtkStr(p, p-\u003eiModuleName) );\n    if ( Vec_IntSize(\u0026p-\u003evInouts) )\n    fprintf( pFile, \".inouts\" );\n    if ( Vec_IntSize(\u0026p-\u003evInouts) )\n    Psr_ManWriteBlifArray( pFile, p, \u0026p-\u003evInouts );\n    fprintf( pFile, \".inputs\" );\n    Psr_ManWriteBlifArray( pFile, p, \u0026p-\u003evInputs );\n    fprintf( pFile, \".outputs\" );\n    Psr_ManWriteBlifArray( pFile, p, \u0026p-\u003evOutputs );\n    // write objects\n    Psr_ManWriteBlifLines( pFile, p );\n    fprintf( pFile, \".end\\n\\n\" );\n}",
+      "Draft": "func Psr_ManWriteBlifNtk(pFile *os.File, p *Psr_Ntk_t) {\n    // write header\n    fmt.Fprintf(pFile, \".model %s\\n\", Psr_NtkStr(p, p.iModuleName));\n    if Vec_IntSize(\u0026p.vInouts) {\n    fmt.Fprintf(pFile, \".inouts\"); }\n    if Vec_IntSize(\u0026p.vInouts) {\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vInouts ); }\n    fmt.Fprintf(pFile, \".inputs\");\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vInputs );\n    fmt.Fprintf(pFile, \".outputs\");\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vOutputs );\n    // write objects\n    Psr_ManWriteBlifLines( pFile, p );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}"
+    },
+    {
+      "Name": "Psr_ManWriteBlif",
+      "Start": 3393,
+      "End": 3910,
+      "BodyStart": 3453,
+      "Original": "void Psr_ManWriteBlif( char * pFileName, Vec_Ptr_t * vPrs )\n{\n    Psr_Ntk_t * pNtk = Psr_ManRoot(vPrs);\n    FILE * pFile = fopen( pFileName, \"wb\" ); int i;\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"# Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk-\u003eiModuleName), Extra_TimeStamp() );\n    Vec_PtrForEachEntry( Psr_Ntk_t *, vPrs, pNtk, i )\n        Psr_ManWriteBlifNtk( pFile, pNtk );\n    fclose( pFile );\n}",
+      "Draft": "func Psr_ManWriteBlif(pFileName string, vPrs *Vec_Ptr_t) {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot(vPrs);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666); var i int32;\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp());\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Psr_ManWriteBlifNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlifGate",
+      "Start": 4172,
+      "End": 4555,
+      "BodyStart": 4280,
+      "Original": "void Bac_ManWriteBlifGate( FILE * pFile, Bac_Ntk_t * p, Mio_Gate_t * pGate, Vec_Int_t * vFanins, int iObj )\n{\n    int iFanin, i;\n    Vec_IntForEachEntry( vFanins, iFanin, i )\n        fprintf( pFile, \" %s=%s\", Mio_GateReadPinName(pGate, i), Bac_ObjNameStr(p, iFanin) );\n    fprintf( pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iObj) );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Bac_ManWriteBlifGate(pFile *os.File, p *Bac_Ntk_t, pGate *Mio_Gate_t, vFanins *Vec_Int_t, iObj int32) {\n    var iFanin, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadPinName(pGate, i), Bac_ObjNameStr(p, iFanin));\n    }\n    fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iObj));\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlifArray",
+      "Start": 4556,
+      "End": 4880,
+      "BodyStart": 4645,
+      "Original": "void Bac_ManWriteBlifArray( FILE * pFile, Bac_Ntk_t * p, Vec_Int_t * vFanins, int iObj )\n{\n    int iFanin, i;\n    Vec_IntForEachEntry( vFanins, iFanin, i )\n        fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iFanin) );\n    if ( iObj \u003e= 0 )\n        fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iObj) );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Bac_ManWriteBlifArray(pFile *os.File, p *Bac_Ntk_t, vFanins *Vec_Int_t, iObj int32) {\n    var iFanin, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iFanin));\n    }\n    if iObj \u003e= 0 {\n        fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iObj)); }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlifArray2",
+      "Start": 4881,
+      "End": 5347,
+      "BodyStart": 4950,
+      "Original": "void Bac_ManWriteBlifArray2( FILE * pFile, Bac_Ntk_t * p, int iObj )\n{\n    int iTerm, i;\n    Bac_Ntk_t * pModel = Bac_BoxNtk( p, iObj );\n    Bac_NtkForEachPi( pModel, iTerm, i )\n        fprintf( pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBi(p, iObj, i)) );\n    Bac_NtkForEachPo( pModel, iTerm, i )\n        fprintf( pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBo(p, iObj, i)) );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Bac_ManWriteBlifArray2(pFile *os.File, p *Bac_Ntk_t, iObj int32) {\n    var iTerm, i int32;\n    var pModel *Bac_Ntk_t  = Bac_BoxNtk( p, iObj );\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(pModel))  \u0026\u0026 (((iTerm) = Bac_NtkPi(pModel, i)), 1); i++  { \n        fmt.Fprintf(pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBi(p, iObj, i)));\n    }\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(pModel))  \u0026\u0026 (((iTerm) = Bac_NtkPo(pModel, i)), 1); i++  { \n        fmt.Fprintf(pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBo(p, iObj, i)));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlifLines",
+      "Start": 5348,
+      "End": 6765,
+      "BodyStart": 5406,
+      "Original": "void Bac_ManWriteBlifLines( FILE * pFile, Bac_Ntk_t * p )\n{\n    int i, k, iTerm;\n    Bac_NtkForEachBox( p, i )\n    {\n        if ( Bac_ObjIsBoxUser(p, i) )\n        {\n            fprintf( pFile, \".subckt\" );\n            fprintf( pFile, \" %s\", Bac_NtkName(Bac_BoxNtk(p, i)) );\n            Bac_ManWriteBlifArray2( pFile, p, i );\n        }\n        else if ( Bac_ObjIsGate(p, i) )\n        {\n            char * pGateName = Abc_NamStr(p-\u003epDesign-\u003epMods, Bac_BoxNtkId(p, i));\n            Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n            Mio_Gate_t * pGate = Mio_LibraryReadGateByName( pLib, pGateName, NULL );\n            fprintf( pFile, \".gate %s\", pGateName );\n            Bac_BoxForEachBi( p, i, iTerm, k )\n                fprintf( pFile, \" %s=%s\", Mio_GateReadPinName(pGate, k), Bac_ObjNameStr(p, iTerm) );\n            Bac_BoxForEachBo( p, i, iTerm, k )\n                fprintf( pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iTerm) );\n            fprintf( pFile, \"\\n\" );\n        }\n        else\n        {\n            fprintf( pFile, \".names\" );\n            Bac_BoxForEachBi( p, i, iTerm, k )\n                fprintf( pFile, \" %s\", Bac_ObjNameStr(p, Bac_ObjFanin(p, iTerm)) );\n            Bac_BoxForEachBo( p, i, iTerm, k )\n                fprintf( pFile, \" %s\", Bac_ObjNameStr(p, iTerm) );\n            fprintf( pFile, \"\\n%s\",  Ptr_TypeToSop(Bac_ObjType(p, i)) );\n        }\n    }\n}",
+      "Draft": "func Bac_ManWriteBlifLines(pFile *os.File, p *Bac_Ntk_t) {\n    var i, k, iTerm int32;\n    // inlining of macro Bac_NtkForEachBox\n    for  i = 0; (i \u003c Bac_NtkObjNum(p)); i++  { if !Bac_ObjIsBox(p, i) {} else {\n        if Bac_ObjIsBoxUser(p, i) {\n            fmt.Fprintf(pFile, \".subckt\");\n            fmt.Fprintf(pFile, \" %s\", Bac_NtkName(Bac_BoxNtk(p, i)));\n            Bac_ManWriteBlifArray2( pFile, p, i );\n        \n        } else if Bac_ObjIsGate(p, i) {\n            var pGateName string  = Abc_NamStr(p.pDesign.pMods, Bac_BoxNtkId(p, i));\n            var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n            var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGateName, nil );\n            fmt.Fprintf(pFile, \".gate %s\", pGateName);\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, k = i - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n                fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadPinName(pGate, k), Bac_ObjNameStr(p, iTerm));\n            }\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = i + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n                fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iTerm));\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        \n        } else {\n            fmt.Fprintf(pFile, \".names\");\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, k = i - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n                fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, Bac_ObjFanin(p, iTerm)));\n            }\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = i + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n                fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iTerm));\n            }\n            fmt.Fprintf(pFile, \"\\n%s\", Ptr_TypeToSop(Bac_ObjType(p, i)));\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlifNtk",
+      "Start": 6766,
+      "End": 7231,
+      "BodyStart": 6822,
+      "Original": "void Bac_ManWriteBlifNtk( FILE * pFile, Bac_Ntk_t * p )\n{\n    assert( Vec_IntSize(\u0026p-\u003evFanin) == Bac_NtkObjNum(p) );\n    // write header\n    fprintf( pFile, \".model %s\\n\", Bac_NtkName(p) );\n    fprintf( pFile, \".inputs\" );\n    Bac_ManWriteBlifArray( pFile, p, \u0026p-\u003evInputs, -1 );\n    fprintf( pFile, \".outputs\" );\n    Bac_ManWriteBlifArray( pFile, p, \u0026p-\u003evOutputs, -1 );\n    // write objects\n    Bac_ManWriteBlifLines( pFile, p );\n    fprintf( pFile, \".end\\n\\n\" );\n}",
+      "Draft": "func Bac_ManWriteBlifNtk(pFile *os.File, p *Bac_Ntk_t) {\n    assert(Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p), \"Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p)\");\n    // write header\n    fmt.Fprintf(pFile, \".model %s\\n\", Bac_NtkName(p));\n    fmt.Fprintf(pFile, \".inputs\");\n    Bac_ManWriteBlifArray( pFile, p, \u0026p.vInputs, -1 );\n    fmt.Fprintf(pFile, \".outputs\");\n    Bac_ManWriteBlifArray( pFile, p, \u0026p.vOutputs, -1 );\n    // write objects\n    Bac_ManWriteBlifLines( pFile, p );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}"
+    },
+    {
+      "Name": "Bac_ManWriteBlif",
+      "Start": 7232,
+      "End": 7969,
+      "BodyStart": 7289,
+      "Original": "void Bac_ManWriteBlif( char * pFileName, Bac_Man_t * p )\n{\n    FILE * pFile;\n    Bac_Ntk_t * pNtk; \n    int i;\n    // check the library\n    if ( p-\u003epMioLib \u0026\u0026 p-\u003epMioLib != Abc_FrameReadLibGen() )\n    {\n        printf( \"Genlib library used in the mapped design is not longer a current library.\\n\" );\n        return;\n    }\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"# Design \\\"%s\\\" written via CBA package in ABC on %s\\n\\n\", Bac_ManName(p), Extra_TimeStamp() );\n    Bac_ManAssignInternWordNames( p );\n    Bac_ManForEachNtk( p, pNtk, i )\n        Bac_ManWriteBlifNtk( pFile, pNtk );\n    fclose( pFile );\n}",
+      "Draft": "func Bac_ManWriteBlif(pFileName string, p *Bac_Man_t) {\n    var pFile *os.File;\n    var pNtk *Bac_Ntk_t; \n    var i int32;\n    // check the library\n    if p.pMioLib \u0026\u0026 p.pMioLib != Abc_FrameReadLibGen() {\n        fmt.Printf(\"Genlib library used in the mapped design is not longer a current library.\\n\");\n        return;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Design \\\"%s\\\" written via CBA package in ABC on %s\\n\\n\", Bac_ManName(p), Extra_TimeStamp());\n    Bac_ManAssignInternWordNames( p );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteBlifNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::pointer-cast::4393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3794,
+      "End": 3794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::pointer-cast::6973",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5850,
+      "End": 5867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Psr_ManWriteBlifArray",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteBlifArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1347,
+      "End": 1585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Psr_ManWriteBlifLines",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteBlifLines",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1586,
+      "End": 2814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Psr_ManWriteBlifNtk",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteBlifNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2815,
+      "End": 3392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Psr_ManWriteBlif",
+      "Category": "semantic-review",
+      "Symbol": "Psr_ManWriteBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3393,
+      "End": 3910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlifGate",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlifGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4172,
+      "End": 4555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlifArray",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlifArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4556,
+      "End": 4880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlifArray2",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlifArray2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4881,
+      "End": 5347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlifLines",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlifLines",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5348,
+      "End": 6765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlifNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlifNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6766,
+      "End": 7231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::Bac_ManWriteBlif",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManWriteBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7232,
+      "End": 7969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacWriteBlif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8217
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bacWriteBlif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Verilog parser.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacWriteBlif.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"bacPrs.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writing parser state into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Psr_ManWriteBlifArray(pFile *os.File, p *Psr_Ntk_t, vFanins *Vec_Int_t) {\n    var i, NameId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((NameId) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, NameId));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Psr_ManWriteBlifLines(pFile *os.File, p *Psr_Ntk_t) {\n    var vBox *Vec_Int_t; \n    var i, k, FormId, ActId int32;\n    // inlining of macro Psr_NtkForEachBox\n    for  i = 0; i \u003c Psr_NtkBoxNum(p) \u0026\u0026 ((vBox) = Psr_BoxSignals(p, i)); i++  {\n        var NtkId int32  = Psr_BoxNtk(p, i);\n        assert(Psr_BoxIONum(p, i) \u003e 0, \"Psr_BoxIONum(p, i) \u003e 0\");\n        assert(Vec_IntSize(vBox) % 2 == 0, \"Vec_IntSize(vBox) % 2 == 0\");\n        if NtkId == -1 { // latch\n        \n            fmt.Fprintf(pFile, \".latch\");\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 1)));\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, Vec_IntEntry(vBox, 3)));\n            fmt.Fprintf(pFile, \" %c\\n\", '0' + Psr_BoxName(p, i));\n        \n        } else if Psr_BoxIsNode(p, i) { // node\n        \n            fmt.Fprintf(pFile, \".names\");\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, ActId));\n            }\n            fmt.Fprintf(pFile, \"\\n%s\", Psr_NtkStr(p, NtkId));\n        \n        } else { // box\n        \n            fmt.Fprintf(pFile, \".subckt\");\n            fmt.Fprintf(pFile, \" %s\", Psr_NtkStr(p, NtkId));\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                fmt.Fprintf(pFile, \" %s=%s\", Psr_NtkStr(p, FormId), Psr_NtkStr(p, ActId));\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        }\n    }\n}\nfunc Psr_ManWriteBlifNtk(pFile *os.File, p *Psr_Ntk_t) {\n    // write header\n    fmt.Fprintf(pFile, \".model %s\\n\", Psr_NtkStr(p, p.iModuleName));\n    if Vec_IntSize(\u0026p.vInouts) {\n    fmt.Fprintf(pFile, \".inouts\"); }\n    if Vec_IntSize(\u0026p.vInouts) {\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vInouts ); }\n    fmt.Fprintf(pFile, \".inputs\");\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vInputs );\n    fmt.Fprintf(pFile, \".outputs\");\n    Psr_ManWriteBlifArray( pFile, p, \u0026p.vOutputs );\n    // write objects\n    Psr_ManWriteBlifLines( pFile, p );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}\nfunc Psr_ManWriteBlif(pFileName string, vPrs *Vec_Ptr_t) {\n    var pNtk *Psr_Ntk_t  = Psr_ManRoot(vPrs);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666); var i int32;\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Design \\\"%s\\\" written by ABC on %s\\n\\n\", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp());\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Psr_ManWriteBlifNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Write elaborated design.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManWriteBlifGate(pFile *os.File, p *Bac_Ntk_t, pGate *Mio_Gate_t, vFanins *Vec_Int_t, iObj int32) {\n    var iFanin, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadPinName(pGate, i), Bac_ObjNameStr(p, iFanin));\n    }\n    fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iObj));\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Bac_ManWriteBlifArray(pFile *os.File, p *Bac_Ntk_t, vFanins *Vec_Int_t, iObj int32) {\n    var iFanin, i int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iFanin));\n    }\n    if iObj \u003e= 0 {\n        fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iObj)); }\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Bac_ManWriteBlifArray2(pFile *os.File, p *Bac_Ntk_t, iObj int32) {\n    var iTerm, i int32;\n    var pModel *Bac_Ntk_t  = Bac_BoxNtk( p, iObj );\n    // inlining of macro Bac_NtkForEachPi\n    for  i = 0; (i \u003c Bac_NtkPiNum(pModel))  \u0026\u0026 (((iTerm) = Bac_NtkPi(pModel, i)), 1); i++  { \n        fmt.Fprintf(pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBi(p, iObj, i)));\n    }\n    // inlining of macro Bac_NtkForEachPo\n    for  i = 0; (i \u003c Bac_NtkPoNum(pModel))  \u0026\u0026 (((iTerm) = Bac_NtkPo(pModel, i)), 1); i++  { \n        fmt.Fprintf(pFile, \" %s=%s\", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBo(p, iObj, i)));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Bac_ManWriteBlifLines(pFile *os.File, p *Bac_Ntk_t) {\n    var i, k, iTerm int32;\n    // inlining of macro Bac_NtkForEachBox\n    for  i = 0; (i \u003c Bac_NtkObjNum(p)); i++  { if !Bac_ObjIsBox(p, i) {} else {\n        if Bac_ObjIsBoxUser(p, i) {\n            fmt.Fprintf(pFile, \".subckt\");\n            fmt.Fprintf(pFile, \" %s\", Bac_NtkName(Bac_BoxNtk(p, i)));\n            Bac_ManWriteBlifArray2( pFile, p, i );\n        \n        } else if Bac_ObjIsGate(p, i) {\n            var pGateName string  = Abc_NamStr(p.pDesign.pMods, Bac_BoxNtkId(p, i));\n            var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n            var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGateName, nil );\n            fmt.Fprintf(pFile, \".gate %s\", pGateName);\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, k = i - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n                fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadPinName(pGate, k), Bac_ObjNameStr(p, iTerm));\n            }\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = i + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n                fmt.Fprintf(pFile, \" %s=%s\", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iTerm));\n            }\n            fmt.Fprintf(pFile, \"\\n\");\n        \n        } else {\n            fmt.Fprintf(pFile, \".names\");\n            // inlining of macro Bac_BoxForEachBi\n            for  iTerm, k = i - 1, 0; iTerm \u003e= 0 \u0026\u0026 Bac_ObjIsBi(p, iTerm); iTerm, k = iTerm-1, k+1  {\n                fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, Bac_ObjFanin(p, iTerm)));\n            }\n            // inlining of macro Bac_BoxForEachBo\n            for  iTerm, k = i + 1, 0; iTerm \u003c Bac_NtkObjNum(p) \u0026\u0026 Bac_ObjIsBo(p, iTerm); iTerm, k = iTerm+1, k+1  {\n                fmt.Fprintf(pFile, \" %s\", Bac_ObjNameStr(p, iTerm));\n            }\n            fmt.Fprintf(pFile, \"\\n%s\", Ptr_TypeToSop(Bac_ObjType(p, i)));\n        }\n    }\n    }\n}\nfunc Bac_ManWriteBlifNtk(pFile *os.File, p *Bac_Ntk_t) {\n    assert(Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p), \"Vec_IntSize(\u0026p.vFanin) == Bac_NtkObjNum(p)\");\n    // write header\n    fmt.Fprintf(pFile, \".model %s\\n\", Bac_NtkName(p));\n    fmt.Fprintf(pFile, \".inputs\");\n    Bac_ManWriteBlifArray( pFile, p, \u0026p.vInputs, -1 );\n    fmt.Fprintf(pFile, \".outputs\");\n    Bac_ManWriteBlifArray( pFile, p, \u0026p.vOutputs, -1 );\n    // write objects\n    Bac_ManWriteBlifLines( pFile, p );\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n}\nfunc Bac_ManWriteBlif(pFileName string, p *Bac_Man_t) {\n    var pFile *os.File;\n    var pNtk *Bac_Ntk_t; \n    var i int32;\n    // check the library\n    if p.pMioLib \u0026\u0026 p.pMioLib != Abc_FrameReadLibGen() {\n        fmt.Printf(\"Genlib library used in the mapped design is not longer a current library.\\n\");\n        return;\n    }\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"# Design \\\"%s\\\" written via CBA package in ABC on %s\\n\\n\", Bac_ManName(p), Extra_TimeStamp());\n    Bac_ManAssignInternWordNames( p );\n    // inlining of macro Bac_ManForEachNtk\n    for  i = 1; (i \u003c= Bac_ManNtkNum(p)) \u0026\u0026 (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { \n        Bac_ManWriteBlifNtk( pFile, pNtk );\n    }\n    _ = (pFile).Close();\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

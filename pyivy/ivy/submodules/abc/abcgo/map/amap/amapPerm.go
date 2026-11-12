@@ -1,0 +1,369 @@
+package amap
+
+import "fmt"
+
+/**CFile****************************************************************
+
+  FileName    [amapPerm.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Technology mapper for standard cells.]
+
+  Synopsis    [Deriving permutation for the gate.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: amapPerm.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include "amapInt.h"
+//#include "bool/kit/kit.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+
+////////////////////////////////////////////////////////////////////////
+///                        DECLARATIONS                              ///
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+///                     FUNCTION DEFINITIONS                         ///
+////////////////////////////////////////////////////////////////////////
+
+/**Function*************************************************************
+
+  Synopsis    [Collects fanins of the node.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibCollectFanins_rec(pLib *Amap_Lib_t, pNod *Amap_Nod_t, vFanins *Vec_Int_t) {
+    var pFan0, pFan1 *Amap_Nod_t;
+    if pNod.Id == 0 {
+        Vec_IntPush( vFanins, 0 );
+        return;
+    }
+    pFan0 = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan0) );
+    if Abc_LitIsCompl(pNod.iFan0) || pFan0.Type != pNod.Type {
+        Vec_IntPush( vFanins, pNod.iFan0 );
+    } else {
+        Amap_LibCollectFanins_rec( pLib, pFan0, vFanins ); }
+    pFan1 = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan1) );
+    if Abc_LitIsCompl(pNod.iFan1) || pFan1.Type != pNod.Type {
+        Vec_IntPush( vFanins, pNod.iFan1 );
+    } else {
+        Amap_LibCollectFanins_rec( pLib, pFan1, vFanins ); }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Collects fanins of the node.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibCollectFanins(pLib *Amap_Lib_t, pNod *Amap_Nod_t) *Vec_Int_t {
+    var vFanins *Vec_Int_t  = Vec_IntAlloc( 10 );
+    Amap_LibCollectFanins_rec( pLib, pNod, vFanins );
+    return vFanins;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Matches the node with the DSD node.]
+
+  Description [Returns perm if the node can be matched.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibDeriveGatePerm_rec(pLib *Amap_Lib_t, pNtk *Kit_DsdNtk_t, iLit int32, pNod *Amap_Nod_t) *Vec_Int_t {
+    var vPerm, vPermFanin, vNodFanin, vDsdLits *Vec_Int_t;
+    var pDsdObj, pDsdFanin *Kit_DsdObj_t;
+    var pNodFanin *Amap_Nod_t;
+    var iDsdFanin, iNodFanin, Value, iDsdLit, i, k, j int32;
+//    assert( !Abc_LitIsCompl(iLit) );
+    pDsdObj = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iLit) );
+    if pDsdObj == nil {
+        vPerm = Vec_IntAlloc( 1 );
+        Vec_IntPush( vPerm, iLit );
+        return vPerm;
+    }
+    if pDsdObj.Type == KIT_DSD_PRIME && pNod.Type == AMAP_OBJ_MUX {
+        vPerm = Vec_IntAlloc( 10 );
+
+        iDsdFanin  = pDsdObj.pFans[0];
+        pNodFanin  = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan0) );
+        vPermFanin = Amap_LibDeriveGatePerm_rec( pLib, pNtk, iDsdFanin, pNodFanin );
+        if vPermFanin == nil {
+            Vec_IntFree( vPerm );
+            return nil;
+        }
+        Vec_IntForEachEntry( vPermFanin, Value, k )
+            Vec_IntPush( vPerm, Value );
+        Vec_IntFree( vPermFanin );
+
+        iDsdFanin  = pDsdObj.pFans[1];
+        pNodFanin  = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan1) );
+        vPermFanin = Amap_LibDeriveGatePerm_rec( pLib, pNtk, iDsdFanin, pNodFanin );
+        if vPermFanin == nil {
+            Vec_IntFree( vPerm );
+            return nil;
+        }
+        Vec_IntForEachEntry( vPermFanin, Value, k )
+            Vec_IntPush( vPerm, Value );
+        Vec_IntFree( vPermFanin );
+
+        iDsdFanin  = pDsdObj.pFans[2];
+        pNodFanin  = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan2) );
+        vPermFanin = Amap_LibDeriveGatePerm_rec( pLib, pNtk, iDsdFanin, pNodFanin );
+        if vPermFanin == nil {
+            Vec_IntFree( vPerm );
+            return nil;
+        }
+        Vec_IntForEachEntry( vPermFanin, Value, k )
+            Vec_IntPush( vPerm, Value );
+        Vec_IntFree( vPermFanin );
+
+        return vPerm;
+    }
+    // return if wrong types
+    if pDsdObj.Type == KIT_DSD_PRIME || pNod.Type == AMAP_OBJ_MUX {
+        return nil; }
+    // return if sizes do not agree
+    vNodFanin = Amap_LibCollectFanins( pLib, pNod );
+    if Vec_IntSize(vNodFanin) != int32(pDsdObj.nFans) {
+        Vec_IntFree( vNodFanin );
+        return nil;
+    }
+    // match fanins of DSD with fanins of nodes
+    // clean the mark and save variable literals
+    vPerm = Vec_IntAlloc( 10 );
+    vDsdLits = Vec_IntAlloc( 10 );
+    // inlining of macro Kit_DsdObjForEachFaninReverse
+    for  i = int32((pDsdObj).nFans) - 1; (i >= 0) && ((iDsdFanin) = (pDsdObj).pFans[i], 1); i--  {
+        pDsdFanin = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iDsdFanin) );
+        if pDsdFanin != nil {
+            pDsdFanin.fMark = 0;
+        } else {
+            Vec_IntPush( vDsdLits, iDsdFanin ); }
+    }
+    // match each fanins of the node
+    iDsdLit = 0;
+    Vec_IntForEachEntry( vNodFanin, iNodFanin, k )
+    {
+        if iNodFanin == 0 {
+            if iDsdLit >= Vec_IntSize(vDsdLits) {
+                Vec_IntFree( vPerm );
+                Vec_IntFree( vDsdLits );
+                Vec_IntFree( vNodFanin );
+                return nil;
+            }
+            iDsdFanin = Vec_IntEntry( vDsdLits, iDsdLit++ );
+            Vec_IntPush( vPerm, iDsdFanin );
+            continue;
+        }
+        // find a matching component
+        pNodFanin = Amap_LibNod( pLib, Abc_Lit2Var(iNodFanin) );
+        // inlining of macro Kit_DsdObjForEachFaninReverse
+        for  i = int32((pDsdObj).nFans) - 1; (i >= 0) && ((iDsdFanin) = (pDsdObj).pFans[i], 1); i--  {
+            pDsdFanin = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iDsdFanin) );
+            if pDsdFanin == nil {
+                continue; }
+            if pDsdFanin.fMark == 1 {
+                continue; }
+            if !((pDsdFanin.Type == KIT_DSD_AND && pNodFanin.Type == AMAP_OBJ_AND) ||
+                   (pDsdFanin.Type == KIT_DSD_XOR && pNodFanin.Type == AMAP_OBJ_XOR) ||
+                   (pDsdFanin.Type == KIT_DSD_PRIME && pNodFanin.Type == AMAP_OBJ_MUX)) {
+                   continue; }
+            vPermFanin = Amap_LibDeriveGatePerm_rec( pLib, pNtk, Abc_LitRegular(iDsdFanin), pNodFanin );
+            if vPermFanin == nil {
+                Vec_IntFree( vNodFanin );
+                Vec_IntFree( vDsdLits );
+                Vec_IntFree( vPerm );
+                return nil;
+            }
+            pDsdFanin.fMark = 1;
+            Vec_IntForEachEntry( vPermFanin, Value, j )
+                Vec_IntPush( vPerm, Value );
+            Vec_IntFree( vPermFanin );
+            break;
+        }
+    }
+//    assert( iDsdLit == Vec_IntSize(vDsdLits) );
+    if iDsdLit != Vec_IntSize(vDsdLits) {
+        Vec_IntFreeP( &vPerm ); }
+    Vec_IntFree( vNodFanin );
+    Vec_IntFree( vDsdLits );
+    return vPerm;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Performs verification of one gate and one node.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibVerifyPerm_rec(pLib *Amap_Lib_t, pNod *Amap_Nod_t, vTtElems *Vec_Ptr_t, vTruth *Vec_Int_t, nWords int32, piInput *int32) *uint32 {
+    var pFan0, pFan1 *Amap_Nod_t;
+    var pTruth0, pTruth1, pTruth *uint32;
+    var i int32;
+    assert(pNod.Type != AMAP_OBJ_MUX, "pNod.Type != AMAP_OBJ_MUX");
+    if pNod.Id == 0 {
+        return (unsigned *)Vec_PtrEntry( vTtElems, (*piInput)++ ); }
+    pFan0 = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan0) );
+    pTruth0 = Amap_LibVerifyPerm_rec( pLib, pFan0, vTtElems, vTruth, nWords, piInput );
+    pFan1 = Amap_LibNod( pLib, Abc_Lit2Var(pNod.iFan1) );
+    pTruth1 = Amap_LibVerifyPerm_rec( pLib, pFan1, vTtElems, vTruth, nWords, piInput );
+    pTruth  = Vec_IntFetch( vTruth, nWords );
+    if pNod.Type == AMAP_OBJ_XOR {
+        for  i = 0; i < nWords; i++  {
+            pTruth[i] = pTruth0[i] ^ pTruth1[i];
+        }
+    } else if !Abc_LitIsCompl(pNod.iFan0) && !Abc_LitIsCompl(pNod.iFan1) {
+        for  i = 0; i < nWords; i++  {
+            pTruth[i] = pTruth0[i] & pTruth1[i];
+        }
+    } else if !Abc_LitIsCompl(pNod.iFan0) && Abc_LitIsCompl(pNod.iFan1) {
+        for  i = 0; i < nWords; i++  {
+            pTruth[i] = pTruth0[i] & ~pTruth1[i];
+        }
+    } else if Abc_LitIsCompl(pNod.iFan0) && !Abc_LitIsCompl(pNod.iFan1) {
+        for  i = 0; i < nWords; i++  {
+            pTruth[i] = ~pTruth0[i] & pTruth1[i];
+        }
+    } else { // if ( Abc_LitIsCompl(pNod->iFan0) && Hop_ObjFaninC1(pObj) )
+        for  i = 0; i < nWords; i++  {
+            pTruth[i] = ~pTruth0[i] & ~pTruth1[i];
+        } }
+    return pTruth;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Performs verification of one gate and one node.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibVerifyPerm(pLib *Amap_Lib_t, pGate *Amap_Gat_t, pNtk *Kit_DsdNtk_t, pNod *Amap_Nod_t, pArray *int32) {
+    var vTtElems *Vec_Ptr_t;
+    var vTtElemsPol *Vec_Ptr_t;
+    var vTruth *Vec_Int_t;
+    var pTruth *uint32;
+    var i, nWords int32;
+    var iInput int32;
+
+    // allocate storage for truth tables
+    assert(pGate.nPins > 1, "pGate.nPins > 1");
+    nWords = Kit_TruthWordNum( pGate.nPins );
+    vTruth = Vec_IntAlloc( nWords * AMAP_MAXINS );
+    vTtElems = Vec_PtrAllocTruthTables( pGate.nPins );
+    vTtElemsPol = Vec_PtrAlloc( pGate.nPins );
+    for  i = 0; i < int32(pGate.nPins); i++  {
+        pTruth = (unsigned *)Vec_PtrEntry( vTtElems, Abc_Lit2Var(pArray[i]) );
+        if Abc_LitIsCompl( pArray[i] ) {
+            Kit_TruthNot( pTruth, pTruth, pGate.nPins ); }
+        Vec_PtrPush( vTtElemsPol, pTruth );
+    }
+//Extra_PrintBinary( stdout, Vec_PtrEntry(vTtElemsPol, 0), 4 ); printf("\n" );
+//Extra_PrintBinary( stdout, Vec_PtrEntry(vTtElemsPol, 1), 4 ); printf("\n" );
+    // compute the truth table recursively
+    pTruth = Amap_LibVerifyPerm_rec( pLib, pNod, vTtElemsPol, vTruth, nWords, &iInput );
+    assert(iInput == int32(pGate.nPins), "iInput == int32(pGate.nPins)");
+    if Abc_LitIsCompl(pNtk.Root) {
+        Kit_TruthNot( pTruth, pTruth, pGate.nPins ); }
+//Extra_PrintBinary( stdout, pTruth, 4 ); printf("\n" );
+//Extra_PrintBinary( stdout, pGate->pFunc, 4 ); printf("\n" );
+    // compare
+    if !Kit_TruthIsEqual(pGate.pFunc, pTruth, pGate.nPins) {
+        fmt.Printf("Verification failed for gate %d (%s) and node %d.\n", pGate.Id, pGate.pForm, pNod.Id); }
+    Vec_IntFree( vTruth );
+    Vec_PtrFree( vTtElems );
+    Vec_PtrFree( vTtElemsPol );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Matches the node with the DSD of a gate.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Amap_LibDeriveGatePerm(pLib *Amap_Lib_t, pGate *Amap_Gat_t, pNtk *Kit_DsdNtk_t, pNod *Amap_Nod_t, pArray string) int32 {
+    var fVerbose int32;
+    var vPerm *Vec_Int_t;
+    var Entry, Entry2, i, k int32;
+//    Kit_DsdPrint( stdout, pNtk );
+
+    vPerm = Amap_LibDeriveGatePerm_rec( pLib, pNtk, Abc_LitRegular(pNtk.Root), pNod );
+    if vPerm == nil {
+        return 0; }
+    // check that the permutation is valid
+    assert(Vec_IntSize(vPerm) == int32(pNod.nSuppSize), "Vec_IntSize(vPerm) == int32(pNod.nSuppSize)");
+    Vec_IntForEachEntry( vPerm, Entry, i )
+        Vec_IntForEachEntryStart( vPerm, Entry2, k, i+1 )
+            if Abc_Lit2Var(Entry) == Abc_Lit2Var(Entry2) {
+                Vec_IntFree( vPerm );
+                return 0;
+            }
+
+    // reverse the permutation
+    Vec_IntForEachEntry( vPerm, Entry, i )
+    {
+        assert(Entry < 2 * int32(pNod.nSuppSize), "Entry < 2 * int32(pNod.nSuppSize)");
+        pArray[Abc_Lit2Var(Entry)] = Abc_Var2Lit( i, Abc_LitIsCompl(Entry) );
+//        pArray[i] = Entry;
+//printf( "%d=%d%c ", Abc_Lit2Var(Entry), i, Abc_LitIsCompl(Entry)?'-':'+' );
+    }
+//printf( "\n" );
+//    if ( Kit_DsdNonDsdSizeMax(pNtk) < 3 )
+//        Amap_LibVerifyPerm( pLib, pGate, pNtk, pNod, Vec_IntArray(vPerm) );
+    Vec_IntFree( vPerm );
+    // print the result
+    if fVerbose != 0 {
+    fmt.Printf("node %4d : ", pNod.Id);
+    for  i = 0; i < int32(pNod.nSuppSize); i++  {
+        fmt.Printf("%d=%d%c ", i, Abc_Lit2Var(pArray[i]), Abc_LitIsCompl(pArray[i])?'-':'+');
+    }
+    fmt.Printf("\n");
+    }
+    return 1;
+}
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+
+//ABC_NAMESPACE_IMPL_END
+

@@ -1,0 +1,496 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c",
+  "SHA256": "befc457a9e904373896474e8b2db81fc2f5b1773433f8a638d5ed2ad08e800d0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew != pOld );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 74,
+        "Column": 26,
+        "ByteOffset": 2265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nBTLimit = int32(pow(nBTLimit, 0.7));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 2888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pSat.qtail == p.pSat.qhead );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 9,
+        "ByteOffset": 3784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 6559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 6598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew != pOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 9,
+        "ByteOffset": 7739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 7770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pSat.qtail == p.pSat.qhead );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 8759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 9955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 9994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 10033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew != pOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 11174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 11205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pSat.qtail == p.pSat.qhead );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 12194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 5,
+        "ByteOffset": 13290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 13329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew != p.pManFraig.pConst1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 14454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 15467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 15506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fra_ObjSatNum(pObj) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 509,
+        "Column": 84,
+        "ByteOffset": 16041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSat.factors = /*__starting_point_inline_macro:ABC_CALLOC__*/((double *) calloc((size_t)(p.pSat.cap), sizeof(double))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 17029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pOld || pNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 541,
+        "Column": 5,
+        "ByteOffset": 17269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.dActConeRatio \u003e 0 \u0026\u0026 p.pPars.dActConeRatio \u003c 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_NodesAreEquiv",
+      "Start": 1344,
+      "End": 5957,
+      "BodyStart": 1419,
+      "Original": "int Fra_NodesAreEquiv( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew )\n{\n    int pLits[4], RetValue, RetValue1, nBTLimit;\n    abctime clk;//, clk2 = Abc_Clock();\n    int status;\n\n    // make sure the nodes are not complemented\n    assert( !Aig_IsComplement(pNew) );\n    assert( !Aig_IsComplement(pOld) );\n    assert( pNew != pOld );\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p-\u003epPars-\u003enBTLimitNode;\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n\n    p-\u003enSatCalls++;\n    p-\u003enSatCallsRecent++;\n\n    // make sure the solver is allocated and has enough variables\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003epSat = sat_solver_new();\n        p-\u003enSatVars = 1;\n        sat_solver_setnvars( p-\u003epSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        status = sat_solver_simplify(p-\u003epSat);\n        assert( status != 0 );\n        assert( p-\u003epSat-\u003eqtail == p-\u003epSat-\u003eqhead );\n    }\n\n    // prepare variable activity\n    if ( p-\u003epPars-\u003efConeBias )\n        Fra_SetActivityFactors( p, pOld, pNew ); \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p-\u003enBTLimitGlobal, p-\u003enInsLimitGlobal );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue1 == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        // continue solving the other implication\n        p-\u003enSatCallsUnsat++;\n    }\n    else if ( RetValue1 == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p-\u003enSatCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if ( pOld != p-\u003epManFraig-\u003epConst1 ) \n            pOld-\u003efMarkB = 1;\n        pNew-\u003efMarkB = 1;\n        p-\u003enSatFailsReal++;\n        return -1;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if ( pOld == p-\u003epManFraig-\u003epConst1 )\n    {\n        p-\u003enSatProof++;\n        return 1;\n    }\n\n    // solve under assumptions\n    // A = 0; B = 1     OR     A = 0; B = 0 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 1 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase ^ pNew-\u003efPhase );\n    RetValue1 = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p-\u003enBTLimitGlobal, p-\u003enInsLimitGlobal );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue1 == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        p-\u003enSatCallsUnsat++;\n    }\n    else if ( RetValue1 == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p-\u003enSatCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pOld-\u003efMarkB = 1;\n        pNew-\u003efMarkB = 1;\n        p-\u003enSatFailsReal++;\n        return -1;\n    }\n/*\n    // check BDD proof\n    {\n        int RetVal;\n        ABC_PRT( \"Sat\", Abc_Clock() - clk2 );\n        clk2 = Abc_Clock();\n        RetVal = Fra_NodesAreEquivBdd( pOld, pNew );\n//        printf( \"%d \", RetVal );\n        assert( RetVal );\n        ABC_PRT( \"Bdd\", Abc_Clock() - clk2 );\n        printf( \"\\n\" );\n    }\n*/\n    // return SAT proof\n    p-\u003enSatProof++;\n    return 1;\n}",
+      "Draft": "func Fra_NodesAreEquiv(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n    if !p.pPars.fSpeculate \u0026\u0026 p.pPars.nFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld.fMarkB || pNew.fMarkB)) {\n        p.nSatFails++;\n        // fail immediately\n//        return -1;\n        if nBTLimit \u003c= 10 {\n            return -1; }\n        nBTLimit = int32(math.Pow(float64(nBTLimit), float64(0.7)));\n    }\n\n    p.nSatCalls++;\n    p.nSatCallsRecent++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld.fPhase == pNew.fPhase );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if pOld == p.pManFraig.pConst1 {\n        p.nSatProof++;\n        return 1;\n    }\n\n    // solve under assumptions\n    // A = 0; B = 1     OR     A = 0; B = 0 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 1 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld.fPhase ^ pNew.fPhase );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pOld.fMarkB = 1;\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n/*\n    // check BDD proof\n    {\n        int RetVal;\n        ABC_PRT( \"Sat\", Abc_Clock() - clk2 );\n        clk2 = Abc_Clock();\n        RetVal = Fra_NodesAreEquivBdd( pOld, pNew );\n//        printf( \"%d \", RetVal );\n        assert( RetVal );\n        ABC_PRT( \"Bdd\", Abc_Clock() - clk2 );\n        printf( \"\\n\" );\n    }\n*/\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_NodesAreImp",
+      "Start": 6234,
+      "End": 9390,
+      "BodyStart": 6333,
+      "Original": "int Fra_NodesAreImp( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew, int fComplL, int fComplR )\n{\n    int pLits[4], RetValue, RetValue1, nBTLimit;\n    abctime clk;//, clk2 = Abc_Clock();\n    int status;\n\n    // make sure the nodes are not complemented\n    assert( !Aig_IsComplement(pNew) );\n    assert( !Aig_IsComplement(pOld) );\n    assert( pNew != pOld );\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p-\u003epPars-\u003enBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p-\u003enSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003epSat = sat_solver_new();\n        p-\u003enSatVars = 1;\n        sat_solver_setnvars( p-\u003epSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        status = sat_solver_simplify(p-\u003epSat);\n        assert( status != 0 );\n        assert( p-\u003epSat-\u003eqtail == p-\u003epSat-\u003eqhead );\n    }\n\n    // prepare variable activity\n    if ( p-\u003epPars-\u003efConeBias )\n        Fra_SetActivityFactors( p, pOld, pNew ); \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld),  fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p-\u003enBTLimitGlobal, p-\u003enInsLimitGlobal );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue1 == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        // continue solving the other implication\n        p-\u003enSatCallsUnsat++;\n    }\n    else if ( RetValue1 == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p-\u003enSatCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if ( pOld != p-\u003epManFraig-\u003epConst1 ) \n            pOld-\u003efMarkB = 1;\n        pNew-\u003efMarkB = 1;\n        p-\u003enSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p-\u003enSatProof++;\n    return 1;\n}",
+      "Draft": "func Fra_NodesAreImp(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t, fComplL int32, fComplR int32) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld),  fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_NodesAreClause",
+      "Start": 9667,
+      "End": 12826,
+      "BodyStart": 9769,
+      "Original": "int Fra_NodesAreClause( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew, int fComplL, int fComplR )\n{\n    int pLits[4], RetValue, RetValue1, nBTLimit;\n    abctime clk;//, clk2 = Abc_Clock();\n    int status;\n\n    // make sure the nodes are not complemented\n    assert( !Aig_IsComplement(pNew) );\n    assert( !Aig_IsComplement(pOld) );\n    assert( pNew != pOld );\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p-\u003epPars-\u003enBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p-\u003enSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003epSat = sat_solver_new();\n        p-\u003enSatVars = 1;\n        sat_solver_setnvars( p-\u003epSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        status = sat_solver_simplify(p-\u003epSat);\n        assert( status != 0 );\n        assert( p-\u003epSat-\u003eqtail == p-\u003epSat-\u003eqhead );\n    }\n\n    // prepare variable activity\n    if ( p-\u003epPars-\u003efConeBias )\n        Fra_SetActivityFactors( p, pOld, pNew ); \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), !fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p-\u003epSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p-\u003enBTLimitGlobal, p-\u003enInsLimitGlobal );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue1 == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 2 );\n        assert( RetValue );\n        // continue solving the other implication\n        p-\u003enSatCallsUnsat++;\n    }\n    else if ( RetValue1 == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p-\u003enSatCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if ( pOld != p-\u003epManFraig-\u003epConst1 ) \n            pOld-\u003efMarkB = 1;\n        pNew-\u003efMarkB = 1;\n        p-\u003enSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p-\u003enSatProof++;\n    return 1;\n}",
+      "Draft": "func Fra_NodesAreClause(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t, fComplL int32, fComplR int32) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), !fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_NodeIsConst",
+      "Start": 13122,
+      "End": 15055,
+      "BodyStart": 13177,
+      "Original": "int Fra_NodeIsConst( Fra_Man_t * p, Aig_Obj_t * pNew )\n{\n    int pLits[2], RetValue1, RetValue;\n    abctime clk;\n\n    // make sure the nodes are not complemented\n    assert( !Aig_IsComplement(pNew) );\n    assert( pNew != p-\u003epManFraig-\u003epConst1 );\n    p-\u003enSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if ( p-\u003epSat == NULL )\n    {\n        p-\u003epSat = sat_solver_new();\n        p-\u003enSatVars = 1;\n        sat_solver_setnvars( p-\u003epSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, NULL, pNew );\n\n    // prepare variable activity\n    if ( p-\u003epPars-\u003efConeBias )\n        Fra_SetActivityFactors( p, NULL, pNew ); \n\n    // solve under assumptions\nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pNew), pNew-\u003efPhase );\n    RetValue1 = sat_solver_solve( p-\u003epSat, pLits, pLits + 1, \n        (ABC_INT64_T)p-\u003epPars-\u003enBTLimitMiter, (ABC_INT64_T)0, \n        p-\u003enBTLimitGlobal, p-\u003enInsLimitGlobal );\np-\u003etimeSat += Abc_Clock() - clk;\n    if ( RetValue1 == l_False )\n    {\np-\u003etimeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n        assert( RetValue );\n        // continue solving the other implication\n        p-\u003enSatCallsUnsat++;\n    }\n    else if ( RetValue1 == l_True )\n    {\np-\u003etimeSatSat += Abc_Clock() - clk;\n        if ( p-\u003epPatWords )\n            Fra_SmlSavePattern( p );\n        p-\u003enSatCallsSat++;\n        return 0;\n    }\n    else // if ( RetValue1 == l_Undef )\n    {\np-\u003etimeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pNew-\u003efMarkB = 1;\n        p-\u003enSatFailsReal++;\n        return -1;\n    }\n\n    // return SAT proof\n    p-\u003enSatProof++;\n    return 1;\n}",
+      "Draft": "func Fra_NodeIsConst(p *Fra_Man_t, pNew *Aig_Obj_t) int32 {\n    var pLits [2]int32;\n    var RetValue1 int32;\n    var RetValue int32;\n    var clk abctime;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(pNew != p.pManFraig.pConst1, \"pNew != p.pManFraig.pConst1\");\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, nil, pNew );\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, nil, pNew ); } \n\n    // solve under assumptions\nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pNew), pNew.fPhase );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 1, \n        (ABC_INT64_T)p.pPars.nBTLimitMiter, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        if p.pPatWords {\n            Fra_SmlSavePattern( p ); }\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_SetActivityFactors_rec",
+      "Start": 15328,
+      "End": 16483,
+      "BodyStart": 15422,
+      "Original": "int Fra_SetActivityFactors_rec( Fra_Man_t * p, Aig_Obj_t * pObj, int LevelMin, int LevelMax )\n{\n    Vec_Ptr_t * vFanins;\n    Aig_Obj_t * pFanin;\n    int i, Counter = 0;\n    assert( !Aig_IsComplement(pObj) );\n    assert( Fra_ObjSatNum(pObj) );\n    // skip visited variables\n    if ( Aig_ObjIsTravIdCurrent(p-\u003epManFraig, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p-\u003epManFraig, pObj);\n    // add the PI to the list\n    if ( pObj-\u003eLevel \u003c= (unsigned)LevelMin || Aig_ObjIsCi(pObj) )\n        return 0;\n    // set the factor of this variable\n    // (LevelMax-LevelMin) / (pObj-\u003eLevel-LevelMin) = p-\u003epPars-\u003edActConeBumpMax / ThisBump\n    if ( p-\u003epSat-\u003efactors == NULL )\n        p-\u003epSat-\u003efactors = ABC_CALLOC( double, p-\u003epSat-\u003ecap );\n    p-\u003epSat-\u003efactors[Fra_ObjSatNum(pObj)] = p-\u003epPars-\u003edActConeBumpMax * (pObj-\u003eLevel - LevelMin)/(LevelMax - LevelMin);\n    veci_push(\u0026p-\u003epSat-\u003eact_vars, Fra_ObjSatNum(pObj));\n    // explore the fanins\n    vFanins = Fra_ObjFaninVec( pObj );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vFanins, pFanin, i )\n        Counter += Fra_SetActivityFactors_rec( p, Aig_Regular(pFanin), LevelMin, LevelMax );\n    return 1 + Counter;\n}",
+      "Draft": "func Fra_SetActivityFactors_rec(p *Fra_Man_t, pObj *Aig_Obj_t, LevelMin int32, LevelMax int32) int32 {\n    var vFanins *Vec_Ptr_t;\n    var pFanin *Aig_Obj_t;\n    var i, Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Fra_ObjSatNum(pObj), \"Fra_ObjSatNum(pObj)\");\n    // skip visited variables\n    if Aig_ObjIsTravIdCurrent(p.pManFraig, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p.pManFraig, pObj);\n    // add the PI to the list\n    if pObj.Level \u003c= uint32(LevelMin) || Aig_ObjIsCi(pObj) {\n        return 0; }\n    // set the factor of this variable\n    // (LevelMax-LevelMin) / (pObj-\u003eLevel-LevelMin) = p-\u003epPars-\u003edActConeBumpMax / ThisBump\n    if p.pSat.factors == nil {\n        // inlining of macro ABC_CALLOC\n        p.pSat.factors = ((double *) calloc((size_t)(p.pSat.cap), sizeof(double))); }\n    p.pSat.factors[Fra_ObjSatNum(pObj)] = p.pPars.dActConeBumpMax * (pObj.Level - LevelMin)/(LevelMax - LevelMin);\n    veci_push(\u0026p.pSat.act_vars, Fra_ObjSatNum(pObj));\n    // explore the fanins\n    vFanins = Fra_ObjFaninVec( pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Counter += Fra_SetActivityFactors_rec( p, Aig_Regular(pFanin), LevelMin, LevelMax );\n    }\n    return 1 + Counter;\n}"
+    },
+    {
+      "Name": "Fra_SetActivityFactors",
+      "Start": 16756,
+      "End": 17656,
+      "BodyStart": 16836,
+      "Original": "int Fra_SetActivityFactors( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew )\n{\n    int LevelMin, LevelMax;\n    abctime clk;\n    assert( pOld || pNew );\nclk = Abc_Clock(); \n    // reset the active variables\n    veci_resize(\u0026p-\u003epSat-\u003eact_vars, 0);\n    // prepare for traversal\n    Aig_ManIncrementTravId( p-\u003epManFraig );\n    // determine the min and max level to visit\n    assert( p-\u003epPars-\u003edActConeRatio \u003e 0 \u0026\u0026 p-\u003epPars-\u003edActConeRatio \u003c 1 );\n    LevelMax = Abc_MaxInt( (pNew ? pNew-\u003eLevel : 0), (pOld ? pOld-\u003eLevel : 0) );\n    LevelMin = (int)(LevelMax * (1.0 - p-\u003epPars-\u003edActConeRatio));\n    // traverse\n    if ( pOld \u0026\u0026 !Aig_ObjIsConst1(pOld) )\n        Fra_SetActivityFactors_rec( p, pOld, LevelMin, LevelMax );\n    if ( pNew \u0026\u0026 !Aig_ObjIsConst1(pNew) )\n        Fra_SetActivityFactors_rec( p, pNew, LevelMin, LevelMax );\n//Fra_PrintActivity( p );\np-\u003etimeTrav += Abc_Clock() - clk;\n    return 1;\n}",
+      "Draft": "func Fra_SetActivityFactors(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {\n    var LevelMin, LevelMax int32;\n    var clk abctime;\n    assert((pOld != nil) || (pNew != nil), \"pOld || pNew\");\nclk = Abc_Clock(); \n    // reset the active variables\n    veci_resize(\u0026p.pSat.act_vars, 0);\n    // prepare for traversal\n    Aig_ManIncrementTravId( p.pManFraig );\n    // determine the min and max level to visit\n    assert(p.pPars.dActConeRatio \u003e 0 \u0026\u0026 p.pPars.dActConeRatio \u003c 1, \"p.pPars.dActConeRatio \u003e 0 \u0026\u0026 p.pPars.dActConeRatio \u003c 1\");\n    LevelMax = Abc_MaxInt( (pNew ? pNew.Level : 0), (pOld ? pOld.Level : 0) );\n    LevelMin = int32((LevelMax * (1.0 - p.pPars.dActConeRatio)));\n    // traverse\n    if (pOld != nil) \u0026\u0026 !Aig_ObjIsConst1(pOld) {\n        Fra_SetActivityFactors_rec( p, pOld, LevelMin, LevelMax ); }\n    if (pNew != nil) \u0026\u0026 !Aig_ObjIsConst1(pNew) {\n        Fra_SetActivityFactors_rec( p, pNew, LevelMin, LevelMax ); }\n//Fra_PrintActivity( p );\np.timeTrav += Abc_Clock() - clk;\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::mechanical::sizeof::16118",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16029,
+      "End": 16029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::pointer-cast::16076",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16029,
+      "End": 16029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::pointer-cast::16492",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16310,
+      "End": 16310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_NodesAreEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Fra_NodesAreEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1344,
+      "End": 5957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_NodesAreImp",
+      "Category": "semantic-review",
+      "Symbol": "Fra_NodesAreImp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6234,
+      "End": 9390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_NodesAreClause",
+      "Category": "semantic-review",
+      "Symbol": "Fra_NodesAreClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9667,
+      "End": 12826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fra_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13122,
+      "End": 15055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_SetActivityFactors_rec",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SetActivityFactors_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15328,
+      "End": 16483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::ternary::Fra_SetActivityFactors",
+      "Category": "ternary-review",
+      "Symbol": "Fra_SetActivityFactors",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16756,
+      "End": 17656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::Fra_SetActivityFactors",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SetActivityFactors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16756,
+      "End": 17656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17904
+    }
+  ],
+  "Draft": "package fra\n\nimport \"math\"\n\n/**CFile****************************************************************\n\n  FileName    [fraSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraSat.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cmath.h\u003e\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Fra_SetActivityFactors( Fra_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Runs equivalence test for the two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_NodesAreEquiv(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n    if !p.pPars.fSpeculate \u0026\u0026 p.pPars.nFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld.fMarkB || pNew.fMarkB)) {\n        p.nSatFails++;\n        // fail immediately\n//        return -1;\n        if nBTLimit \u003c= 10 {\n            return -1; }\n        nBTLimit = int32(math.Pow(float64(nBTLimit), float64(0.7)));\n    }\n\n    p.nSatCalls++;\n    p.nSatCallsRecent++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld.fPhase == pNew.fPhase );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n\n    // if the old node was constant 0, we already know the answer\n    if pOld == p.pManFraig.pConst1 {\n        p.nSatProof++;\n        return 1;\n    }\n\n    // solve under assumptions\n    // A = 0; B = 1     OR     A = 0; B = 0 \nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 1 );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld.fPhase ^ pNew.fPhase );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pOld.fMarkB = 1;\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n/*\n    // check BDD proof\n    {\n        int RetVal;\n        ABC_PRT( \"Sat\", Abc_Clock() - clk2 );\n        clk2 = Abc_Clock();\n        RetVal = Fra_NodesAreEquivBdd( pOld, pNew );\n//        printf( \"%d \", RetVal );\n        assert( RetVal );\n        ABC_PRT( \"Bdd\", Abc_Clock() - clk2 );\n        printf( \"\\n\" );\n    }\n*/\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs the result of test for pObj =\u003e pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_NodesAreImp(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t, fComplL int32, fComplR int32) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld),  fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs the result of test for pObj =\u003e pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_NodesAreClause(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t, fComplL int32, fComplR int32) int32 {\n    var pLits [4]int32;\n    var RetValue int32;\n    var RetValue1 int32;\n    var nBTLimit int32;\n    var clk abctime;//, clk2 = Abc_Clock();\n    var status int32;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    assert(pNew != pOld, \"pNew != pOld\");\n\n    // if at least one of the nodes is a failed node, perform adjustments:\n    // if the backtrack limit is small, simply skip this node\n    // if the backtrack limit is \u003e 10, take the quare root of the limit\n    nBTLimit = p.pPars.nBTLimitNode;\n/*\n    if ( !p-\u003epPars-\u003efSpeculate \u0026\u0026 p-\u003epPars-\u003enFramesK == 0 \u0026\u0026 (nBTLimit \u003e 0 \u0026\u0026 (pOld-\u003efMarkB || pNew-\u003efMarkB)) )\n    {\n        p-\u003enSatFails++;\n        // fail immediately\n//        return -1;\n        if ( nBTLimit \u003c= 10 )\n            return -1;\n        nBTLimit = (int)pow(nBTLimit, 0.7);\n    }\n*/\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, pOld, pNew );\n\n    if p.pSat.qtail != p.pSat.qhead {\n        status = sat_solver_simplify(p.pSat);\n        assert(status != 0, \"status != 0\");\n        assert(p.pSat.qtail == p.pSat.qhead, \"p.pSat.qtail == p.pSat.qhead\");\n    }\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, pOld, pNew ); } \n\n    // solve under assumptions\n    // A = 1; B = 0     OR     A = 1; B = 1 \nclk = Abc_Clock();\n//    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), 0 );\n//    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), pOld-\u003efPhase == pNew-\u003efPhase );\n    pLits[0] = toLitCond( Fra_ObjSatNum(pOld), !fComplL );\n    pLits[1] = toLitCond( Fra_ObjSatNum(pNew), !fComplR );\n//Sat_SolverWriteDimacs( p-\u003epSat, \"temp.cnf\", pLits, pLits + 2, 1 );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 2, \n        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        pLits[1] = lit_neg( pLits[1] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        Fra_SmlSavePattern( p );\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        if pOld != p.pManFraig.pConst1 { \n            pOld.fMarkB = 1; }\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs equivalence test for one node.]\n\n  Description [Returns the fraiged node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_NodeIsConst(p *Fra_Man_t, pNew *Aig_Obj_t) int32 {\n    var pLits [2]int32;\n    var RetValue1 int32;\n    var RetValue int32;\n    var clk abctime;\n\n    // make sure the nodes are not complemented\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(pNew != p.pManFraig.pConst1, \"pNew != p.pManFraig.pConst1\");\n    p.nSatCalls++;\n\n    // make sure the solver is allocated and has enough variables\n    if p.pSat == nil {\n        p.pSat = sat_solver_new();\n        p.nSatVars = 1;\n        sat_solver_setnvars( p.pSat, 1000 );\n        // var 0 is reserved for const1 node - add the clause\n        pLits[0] = toLit( 0 );\n        sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n    }\n\n    // if the nodes do not have SAT variables, allocate them\n    Fra_CnfNodeAddToSolver( p, nil, pNew );\n\n    // prepare variable activity\n    if p.pPars.fConeBias {\n        Fra_SetActivityFactors( p, nil, pNew ); } \n\n    // solve under assumptions\nclk = Abc_Clock();\n    pLits[0] = toLitCond( Fra_ObjSatNum(pNew), pNew.fPhase );\n    RetValue1 = sat_solver_solve( p.pSat, pLits, pLits + 1, \n        (ABC_INT64_T)p.pPars.nBTLimitMiter, (ABC_INT64_T)0, \n        p.nBTLimitGlobal, p.nInsLimitGlobal );\np.timeSat += Abc_Clock() - clk;\n    if RetValue1 == l_False {\np.timeSatUnsat += Abc_Clock() - clk;\n        pLits[0] = lit_neg( pLits[0] );\n        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 1 );\n        assert((RetValue != 0), \"RetValue\");\n        // continue solving the other implication\n        p.nSatCallsUnsat++;\n    \n    } else if RetValue1 == l_True {\np.timeSatSat += Abc_Clock() - clk;\n        if p.pPatWords {\n            Fra_SmlSavePattern( p ); }\n        p.nSatCallsSat++;\n        return 0;\n    \n    } else { // if ( RetValue1 == l_Undef )\n    \np.timeSatFail += Abc_Clock() - clk;\n        // mark the node as the failed node\n        pNew.fMarkB = 1;\n        p.nSatFailsReal++;\n        return -1;\n    }\n\n    // return SAT proof\n    p.nSatProof++;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets variable activities in the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SetActivityFactors_rec(p *Fra_Man_t, pObj *Aig_Obj_t, LevelMin int32, LevelMax int32) int32 {\n    var vFanins *Vec_Ptr_t;\n    var pFanin *Aig_Obj_t;\n    var i, Counter int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Fra_ObjSatNum(pObj), \"Fra_ObjSatNum(pObj)\");\n    // skip visited variables\n    if Aig_ObjIsTravIdCurrent(p.pManFraig, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p.pManFraig, pObj);\n    // add the PI to the list\n    if pObj.Level \u003c= uint32(LevelMin) || Aig_ObjIsCi(pObj) {\n        return 0; }\n    // set the factor of this variable\n    // (LevelMax-LevelMin) / (pObj-\u003eLevel-LevelMin) = p-\u003epPars-\u003edActConeBumpMax / ThisBump\n    if p.pSat.factors == nil {\n        // inlining of macro ABC_CALLOC\n        p.pSat.factors = ((double *) calloc((size_t)(p.pSat.cap), sizeof(double))); }\n    p.pSat.factors[Fra_ObjSatNum(pObj)] = p.pPars.dActConeBumpMax * (pObj.Level - LevelMin)/(LevelMax - LevelMin);\n    veci_push(\u0026p.pSat.act_vars, Fra_ObjSatNum(pObj));\n    // explore the fanins\n    vFanins = Fra_ObjFaninVec( pObj );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        Counter += Fra_SetActivityFactors_rec( p, Aig_Regular(pFanin), LevelMin, LevelMax );\n    }\n    return 1 + Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets variable activities in the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SetActivityFactors(p *Fra_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {\n    var LevelMin, LevelMax int32;\n    var clk abctime;\n    assert((pOld != nil) || (pNew != nil), \"pOld || pNew\");\nclk = Abc_Clock(); \n    // reset the active variables\n    veci_resize(\u0026p.pSat.act_vars, 0);\n    // prepare for traversal\n    Aig_ManIncrementTravId( p.pManFraig );\n    // determine the min and max level to visit\n    assert(p.pPars.dActConeRatio \u003e 0 \u0026\u0026 p.pPars.dActConeRatio \u003c 1, \"p.pPars.dActConeRatio \u003e 0 \u0026\u0026 p.pPars.dActConeRatio \u003c 1\");\n    LevelMax = Abc_MaxInt( (pNew ? pNew.Level : 0), (pOld ? pOld.Level : 0) );\n    LevelMin = int32((LevelMax * (1.0 - p.pPars.dActConeRatio)));\n    // traverse\n    if (pOld != nil) \u0026\u0026 !Aig_ObjIsConst1(pOld) {\n        Fra_SetActivityFactors_rec( p, pOld, LevelMin, LevelMax ); }\n    if (pNew != nil) \u0026\u0026 !Aig_ObjIsConst1(pNew) {\n        Fra_SetActivityFactors_rec( p, pNew, LevelMin, LevelMax ); }\n//Fra_PrintActivity( p );\np.timeTrav += Abc_Clock() - clk;\n    return 1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

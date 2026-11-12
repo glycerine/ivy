@@ -1,0 +1,565 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp",
+  "SHA256": "a3177734d30c092193359c4f18167e62e847bde500564df01e82a7d1b4085cb6",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 2349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 19,
+        "ByteOffset": 2363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 2462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 23,
+        "ByteOffset": 2476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 4962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Reading from standard input... Use '--help' for help.\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 13,
+        "ByteOffset": 5245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"ERROR! Could not open file: %s\\n\", argc == 1 ? \"\u003cstdin\u003e\" : argv[1]);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 129,
+        "Column": 1,
+        "ByteOffset": 5322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "exit(1); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 13,
+        "ByteOffset": 5382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"============================[ Problem Statistics ]=============================\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 13,
+        "ByteOffset": 5487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|                                                                             |\\n\"); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 137,
+        "Column": 43,
+        "ByteOffset": 5683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var res *os.File  = (argc \u003e= 3) ? fopen(argv[2], \"wb\") : nil;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 13,
+        "ByteOffset": 5752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|  Number of variables:  %12d                                         |\\n\", S.nVars());"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 5860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|  Number of clauses:    %12d                                         |\\n\", S.nClauses()); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 13,
+        "ByteOffset": 6057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|  Parse time:           %12.2f s                                       |\\n\", parsed_time - initial_time); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 6501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|  Simplification time:  %12.2f s                                       |\\n\", simplified_time - parsed_time);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 13,
+        "ByteOffset": 6631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"|                                                                             |\\n\"); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 29,
+        "ByteOffset": 6777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if res != nil { fprintf(res, \"UNSAT\\n\");"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 160,
+        "Column": 1,
+        "ByteOffset": 6802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "fclose(res); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 17,
+        "ByteOffset": 6865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"===============================================================================\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 17,
+        "ByteOffset": 6974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"Solved by simplification\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 17,
+        "ByteOffset": 7059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"\\n\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 7087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"UNSATISFIABLE\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 167,
+        "Column": 13,
+        "ByteOffset": 7126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(20);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 17,
+        "ByteOffset": 7215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"==============================[ Writing DIMACS ]===============================\\n\"); }"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 7427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 13,
+        "ByteOffset": 7595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"\\n\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 7619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(ret == l_True ? \"SATISFIABLE\\n\" : ret == l_False ? \"UNSATISFIABLE\\n\" : \"INDETERMINATE\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 7786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(res, \"SAT\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 25,
+        "ByteOffset": 7939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf(res, \"%s%s%d\", (i==0)?\"\":\" \", (S.model[i]==l_True)?\"\":\"-\", i+1); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 17,
+        "ByteOffset": 8048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(res, \" 0\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 17,
+        "ByteOffset": 8124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(res, \"UNSAT\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 17,
+        "ByteOffset": 8186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(res, \"INDET\\n\"); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 8225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose(res);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 8664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"===============================================================================\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 8765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"INDETERMINATE\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 8800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(0);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 1390
+      },
+      "Directive": "#ifndef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 67,
+        "Column": 1,
+        "ByteOffset": 2835
+      },
+      "Directive": "#if defined(__linux__)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "SIGINT_interrupt",
+      "Start": 1930,
+      "End": 1995,
+      "BodyStart": 1971,
+      "Original": "static void SIGINT_interrupt(int signum) { solver-\u003einterrupt(); }",
+      "Draft": "func SIGINT_interrupt(signum int32) { solver.interrupt(); }"
+    },
+    {
+      "Name": "SIGINT_exit",
+      "Start": 2243,
+      "End": 2465,
+      "BodyStart": 2279,
+      "Original": "static void SIGINT_exit(int signum) {\n    printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\");\n    if (solver-\u003everbosity \u003e 0){\n        printStats(*solver);\n        printf(\"\\n\"); printf(\"*** INTERRUPTED ***\\n\"); }\n    _exit(1); }",
+      "Draft": "func SIGINT_exit(signum int32) {\n    fmt.Printf(\"\\n\"); fmt.Printf(\"*** INTERRUPTED ***\\n\");\n    if solver.verbosity \u003e 0{\n        printStats(*solver);\n        fmt.Printf(\"\\n\"); fmt.Printf(\"*** INTERRUPTED ***\\n\"); }\n    _exit(1); }"
+    },
+    {
+      "Name": "MainSimp",
+      "Start": 2578,
+      "End": 8683,
+      "BodyStart": 2625,
+      "Original": "extern \"C\" int MainSimp(int argc, char** argv)\n{\n    try {\n        setUsageHelp(\"USAGE: %s [options] \u003cinput-file\u003e \u003cresult-output-file\u003e\\n\\n  where input may be either in plain or gzipped DIMACS.\\n\");\n        // printf(\"This is MiniSat 2.0 beta\\n\");\n        \n#if defined(__linux__)\n        fpu_control_t oldcw, newcw;\n        _FPU_GETCW(oldcw); newcw = (oldcw \u0026 ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);\n        printf(\"WARNING: for repeatability, setting FPU to use double precision\\n\");\n#endif\n        // Extra options:\n        //\n        IntOption    verb   (\"MAIN\", \"verb\",   \"Verbosity level (0=silent, 1=some, 2=more).\", 1, IntRange(0, 2));\n        BoolOption   pre    (\"MAIN\", \"pre\",    \"Completely turn on/off any preprocessing.\", true);\n        StringOption dimacs (\"MAIN\", \"dimacs\", \"If given, stop after preprocessing and write the result to this file.\");\n        IntOption    cpu_lim(\"MAIN\", \"cpu-lim\",\"Limit on CPU time allowed in seconds.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n        IntOption    mem_lim(\"MAIN\", \"mem-lim\",\"Limit on memory usage in megabytes.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n\n        if ( !parseOptions(argc, argv, true) )\n            return 1;\n        \n        SimpSolver  S;\n        double      initial_time = cpuTime();\n\n        if (!pre) S.eliminate(true);\n\n        S.verbosity = verb;\n        \n        solver = \u0026S;\n/*\n        // Use signal handlers that forcibly quit until the solver will be able to respond to\n        // interrupts:\n        signal(SIGINT, SIGINT_exit);\n        signal(SIGXCPU,SIGINT_exit);\n\n        // Set limit on CPU-time:\n        if (cpu_lim != INT32_MAX){\n            rlimit rl;\n            getrlimit(RLIMIT_CPU, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || (rlim_t)cpu_lim \u003c rl.rlim_max){\n                rl.rlim_cur = cpu_lim;\n                if (setrlimit(RLIMIT_CPU, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: CPU-time.\\n\");\n            } }\n\n        // Set limit on virtual memory:\n        if (mem_lim != INT32_MAX){\n            rlim_t new_mem_lim = (rlim_t)mem_lim * 1024*1024;\n            rlimit rl;\n            getrlimit(RLIMIT_AS, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || new_mem_lim \u003c rl.rlim_max){\n                rl.rlim_cur = new_mem_lim;\n                if (setrlimit(RLIMIT_AS, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: Virtual memory.\\n\");\n            } }\n*/        \n        if (argc == 1)\n        {\n            printf(\"Reading from standard input... Use '--help' for help.\\n\");\n            return 1;\n        }\n\n        gzFile in = (argc == 1) ? gzdopen(0, \"rb\") : gzopen(argv[1], \"rb\");\n        if (in == NULL)\n            printf(\"ERROR! Could not open file: %s\\n\", argc == 1 ? \"\u003cstdin\u003e\" : argv[1]), exit(1);\n        \n        if (S.verbosity \u003e 0){\n            printf(\"============================[ Problem Statistics ]=============================\\n\");\n            printf(\"|                                                                             |\\n\"); }\n        \n        parse_DIMACS(in, S);\n        gzclose(in);\n        FILE* res = (argc \u003e= 3) ? fopen(argv[2], \"wb\") : NULL;\n\n        if (S.verbosity \u003e 0){\n            printf(\"|  Number of variables:  %12d                                         |\\n\", S.nVars());\n            printf(\"|  Number of clauses:    %12d                                         |\\n\", S.nClauses()); }\n        \n        double parsed_time = cpuTime();\n        if (S.verbosity \u003e 0)\n            printf(\"|  Parse time:           %12.2f s                                       |\\n\", parsed_time - initial_time);\n\n        // Change to signal-handlers that will only notify the solver and allow it to terminate\n        // voluntarily:\n//        signal(SIGINT, SIGINT_interrupt);\n//        signal(SIGXCPU,SIGINT_interrupt);\n\n        S.eliminate(true);\n        double simplified_time = cpuTime();\n        if (S.verbosity \u003e 0){\n            printf(\"|  Simplification time:  %12.2f s                                       |\\n\", simplified_time - parsed_time);\n            printf(\"|                                                                             |\\n\"); }\n\n        if (!S.okay()){\n            if (res != NULL) fprintf(res, \"UNSAT\\n\"), fclose(res);\n            if (S.verbosity \u003e 0){\n                printf(\"===============================================================================\\n\");\n                printf(\"Solved by simplification\\n\");\n                printStats(S);\n                printf(\"\\n\"); }\n            printf(\"UNSATISFIABLE\\n\");\n            exit(20);\n        }\n\n        if (dimacs){\n            if (S.verbosity \u003e 0)\n                printf(\"==============================[ Writing DIMACS ]===============================\\n\");\n            S.toDimacs((const char*)dimacs);\n            if (S.verbosity \u003e 0)\n                printStats(S);\n            exit(0);\n        }\n\n        vec\u003cLit\u003e dummy;\n        lbool ret = S.solveLimited(dummy);\n        \n        if (S.verbosity \u003e 0){\n            printStats(S);\n            printf(\"\\n\"); }\n        printf(ret == l_True ? \"SATISFIABLE\\n\" : ret == l_False ? \"UNSATISFIABLE\\n\" : \"INDETERMINATE\\n\");\n        if (res != NULL){\n            if (ret == l_True){\n                fprintf(res, \"SAT\\n\");\n                for (int i = 0; i \u003c S.nVars(); i++)\n                    if (S.model[i] != l_Undef)\n                        fprintf(res, \"%s%s%d\", (i==0)?\"\":\" \", (S.model[i]==l_True)?\"\":\"-\", i+1);\n                fprintf(res, \" 0\\n\");\n            }else if (ret == l_False)\n                fprintf(res, \"UNSAT\\n\");\n            else\n                fprintf(res, \"INDET\\n\");\n            fclose(res);\n        }\n\n//#ifdef NDEBUG\n//        exit(ret == l_True ? 10 : ret == l_False ? 20 : 0);     // (faster than \"return\", which will invoke the destructor for 'Solver')\n//#else\n        return (ret == l_True ? 10 : ret == l_False ? 20 : 0);\n//#endif\n    } catch (OutOfMemoryException\u0026){\n        printf(\"===============================================================================\\n\");\n        printf(\"INDETERMINATE\\n\");\n        exit(0);\n    }\n}",
+      "Draft": "func MainSimp(argc int32, argv *string) int32 {\n    try {\n        setUsageHelp(\"USAGE: %s [options] \u003cinput-file\u003e \u003cresult-output-file\u003e\\n\\n  where input may be either in plain or gzipped DIMACS.\\n\");\n        // printf(\"This is MiniSat 2.0 beta\\n\");\n        \n#if defined(__linux__)\n        fpu_control_t oldcw, newcw;\n        _FPU_GETCW(oldcw); newcw = (oldcw \u0026 ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);\n        printf(\"WARNING: for repeatability, setting FPU to use double precision\\n\");\n#endif\n        // Extra options:\n        //\n        IntOption    verb   (\"MAIN\", \"verb\",   \"Verbosity level (0=silent, 1=some, 2=more).\", 1, IntRange(0, 2));\n        BoolOption   pre    (\"MAIN\", \"pre\",    \"Completely turn on/off any preprocessing.\", true);\n        StringOption dimacs (\"MAIN\", \"dimacs\", \"If given, stop after preprocessing and write the result to this file.\");\n        IntOption    cpu_lim(\"MAIN\", \"cpu-lim\",\"Limit on CPU time allowed in seconds.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n        IntOption    mem_lim(\"MAIN\", \"mem-lim\",\"Limit on memory usage in megabytes.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n\n        if !parseOptions(argc, argv, true) {\n            return 1; }\n        \n        var S SimpSolver;\n        var initial_time float64  = cpuTime();\n\n        if !pre { S.eliminate(true); }\n\n        S.verbosity = verb;\n        \n        solver = \u0026S;\n/*\n        // Use signal handlers that forcibly quit until the solver will be able to respond to\n        // interrupts:\n        signal(SIGINT, SIGINT_exit);\n        signal(SIGXCPU,SIGINT_exit);\n\n        // Set limit on CPU-time:\n        if (cpu_lim != INT32_MAX){\n            rlimit rl;\n            getrlimit(RLIMIT_CPU, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || (rlim_t)cpu_lim \u003c rl.rlim_max){\n                rl.rlim_cur = cpu_lim;\n                if (setrlimit(RLIMIT_CPU, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: CPU-time.\\n\");\n            } }\n\n        // Set limit on virtual memory:\n        if (mem_lim != INT32_MAX){\n            rlim_t new_mem_lim = (rlim_t)mem_lim * 1024*1024;\n            rlimit rl;\n            getrlimit(RLIMIT_AS, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || new_mem_lim \u003c rl.rlim_max){\n                rl.rlim_cur = new_mem_lim;\n                if (setrlimit(RLIMIT_AS, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: Virtual memory.\\n\");\n            } }\n*/        \n        if argc == 1 {\n            fmt.Printf(\"Reading from standard input... Use '--help' for help.\\n\");\n            return 1;\n        }\n\n        var in gzFile;\n        if argc == 1 {\n            in = gzdopen(0, \"rb\");\n        } else {\n            in = gzopen(argv[1], \"rb\");\n        }\n        if in == nil {\n            fmt.Printf(\"ERROR! Could not open file: %s\\n\", argc == 1 ? \"\u003cstdin\u003e\" : argv[1]);\nos.Exit(int(1)); }\n        \n        if S.verbosity \u003e 0{\n            fmt.Printf(\"============================[ Problem Statistics ]=============================\\n\");\n            fmt.Printf(\"|                                                                             |\\n\"); }\n        \n        parse_DIMACS(in, S);\n        gzclose(in);\n        var res *os.File  = (argc \u003e= 3) ? os.OpenFile(argv[2], os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : nil;\n\n        if S.verbosity \u003e 0{\n            fmt.Printf(\"|  Number of variables:  %12d                                         |\\n\", S.nVars());\n            fmt.Printf(\"|  Number of clauses:    %12d                                         |\\n\", S.nClauses()); }\n        \n        var parsed_time float64  = cpuTime();\n        if S.verbosity \u003e 0 {\n            fmt.Printf(\"|  Parse time:           %12.2f s                                       |\\n\", parsed_time - initial_time); }\n\n        // Change to signal-handlers that will only notify the solver and allow it to terminate\n        // voluntarily:\n//        signal(SIGINT, SIGINT_interrupt);\n//        signal(SIGXCPU,SIGINT_interrupt);\n\n        S.eliminate(true);\n        var simplified_time float64  = cpuTime();\n        if S.verbosity \u003e 0{\n            fmt.Printf(\"|  Simplification time:  %12.2f s                                       |\\n\", simplified_time - parsed_time);\n            fmt.Printf(\"|                                                                             |\\n\"); }\n\n        if !S.okay(){\n            if res != nil { fmt.Fprintf(res, \"UNSAT\\n\");\n_ = (res).Close(); }\n            if S.verbosity \u003e 0{\n                fmt.Printf(\"===============================================================================\\n\");\n                fmt.Printf(\"Solved by simplification\\n\");\n                printStats(S);\n                fmt.Printf(\"\\n\"); }\n            fmt.Printf(\"UNSATISFIABLE\\n\");\n            os.Exit(int(20));\n        }\n\n        if dimacs{\n            if S.verbosity \u003e 0 {\n                fmt.Printf(\"==============================[ Writing DIMACS ]===============================\\n\"); }\n            S.toDimacs((char*)dimacs);\n            if S.verbosity \u003e 0 {\n                printStats(S); }\n            os.Exit(int(0));\n        }\n\n        vec\u003cLit\u003e dummy;\n        var ret lbool  = S.solveLimited(dummy);\n        \n        if S.verbosity \u003e 0{\n            printStats(S);\n            fmt.Printf(\"\\n\"); }\n        fmt.Printf(ret == l_True ? \"SATISFIABLE\\n\" : ret == l_False ? \"UNSATISFIABLE\\n\" : \"INDETERMINATE\\n\");\n        if res != nil{\n            if ret == l_True{\n                fmt.Fprintf(res, \"SAT\\n\");\n                for var i int32  = 0; i \u003c S.nVars(); i++ {\n                    if S.model[i] != l_Undef {\n                        fmt.Fprintf(res, \"%s%s%d\", (i==0)?\"\":\" \", (S.model[i]==l_True)?\"\":\"-\", i+1); }\n                }\n                fmt.Fprintf(res, \" 0\\n\");\n            }else if ret == l_False {\n                fmt.Fprintf(res, \"UNSAT\\n\");\n            } else {\n                fmt.Fprintf(res, \"INDET\\n\"); }\n            _ = (res).Close();\n        }\n\n//#ifdef NDEBUG\n//        exit(ret == l_True ? 10 : ret == l_False ? 20 : 0);     // (faster than \"return\", which will invoke the destructor for 'Solver')\n//#else\n        if ret == l_True {\n            return 10;\n        } else {\n            if ret == l_False {\n                return 20;\n            } else {\n                return 0;\n            }\n        }\n//#endif\n    }\n catch (OutOfMemoryException\u0026){\n        fmt.Printf(\"===============================================================================\\n\");\n        fmt.Printf(\"INDETERMINATE\\n\");\n        os.Exit(int(0));\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::SIGINT_interrupt",
+      "Category": "semantic-review",
+      "Symbol": "SIGINT_interrupt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1930,
+      "End": 1995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::SIGINT_exit",
+      "Category": "semantic-review",
+      "Symbol": "SIGINT_exit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2243,
+      "End": 2465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::ternary::MainSimp",
+      "Category": "ternary-review",
+      "Symbol": "MainSimp",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2578,
+      "End": 8683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::MainSimp",
+      "Category": "semantic-review",
+      "Symbol": "MainSimp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2578,
+      "End": 8683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1390,
+      "End": 1437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2835,
+      "End": 3079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::macro-inline::5210",
+      "Category": "macro-inline-review",
+      "Symbol": "gzdopen",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5210,
+      "End": 5226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::macro-inline::5229",
+      "Category": "macro-inline-review",
+      "Symbol": "gzopen",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5229,
+      "End": 5250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/MainSimp.cpp::macro-inline::5671",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5671,
+      "End": 5682
+    }
+  ],
+  "Draft": "package bsat2\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*****************************************************************************************[Main.cc]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007,      Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n//#include \u003cerrno.h\u003e\n\n//#include \u003csignal.h\u003e\n//#include \"misc/zlib/zlib.h\"\n\n#ifndef _WIN32\n#include \u003csys/resource.h\u003e\n#endif\n\n//#include \"System.h\"\n//#include \"ParseUtils.h\"\n//#include \"Options.h\"\n//#include \"Dimacs.h\"\n//#include \"SimpSolver.h\"\n\n//using namespace Minisat;\n\n\n//=================================================================================================\n\n// extern void printStats(Solver\u0026 solver);\n\n\nstatic Solver* solver;\n// Terminate by notifying the solver and back out gracefully. This is mainly to have a test-case\n// for this feature of the Solver as it may take longer than an immediate call to '_exit()'.\nfunc SIGINT_interrupt(signum int32) { solver.interrupt(); }\n\n// Note that '_exit()' rather than 'exit()' has to be used. The reason is that 'exit()' calls\n// destructors and may cause deadlocks if a malloc/free function happens to be running (these\n// functions are guarded by locks for multithreaded use).\nfunc SIGINT_exit(signum int32) {\n    fmt.Printf(\"\\n\"); fmt.Printf(\"*** INTERRUPTED ***\\n\");\n    if solver.verbosity \u003e 0{\n        printStats(*solver);\n        fmt.Printf(\"\\n\"); fmt.Printf(\"*** INTERRUPTED ***\\n\"); }\n    _exit(1); }\n\n\n//=================================================================================================\n// Main:\n\nfunc MainSimp(argc int32, argv *string) int32 {\n    try {\n        setUsageHelp(\"USAGE: %s [options] \u003cinput-file\u003e \u003cresult-output-file\u003e\\n\\n  where input may be either in plain or gzipped DIMACS.\\n\");\n        // printf(\"This is MiniSat 2.0 beta\\n\");\n        \n#if defined(__linux__)\n        fpu_control_t oldcw, newcw;\n        _FPU_GETCW(oldcw); newcw = (oldcw \u0026 ~_FPU_EXTENDED) | _FPU_DOUBLE; _FPU_SETCW(newcw);\n        printf(\"WARNING: for repeatability, setting FPU to use double precision\\n\");\n#endif\n        // Extra options:\n        //\n        IntOption    verb   (\"MAIN\", \"verb\",   \"Verbosity level (0=silent, 1=some, 2=more).\", 1, IntRange(0, 2));\n        BoolOption   pre    (\"MAIN\", \"pre\",    \"Completely turn on/off any preprocessing.\", true);\n        StringOption dimacs (\"MAIN\", \"dimacs\", \"If given, stop after preprocessing and write the result to this file.\");\n        IntOption    cpu_lim(\"MAIN\", \"cpu-lim\",\"Limit on CPU time allowed in seconds.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n        IntOption    mem_lim(\"MAIN\", \"mem-lim\",\"Limit on memory usage in megabytes.\\n\", INT32_MAX, IntRange(0, INT32_MAX));\n\n        if !parseOptions(argc, argv, true) {\n            return 1; }\n        \n        var S SimpSolver;\n        var initial_time float64  = cpuTime();\n\n        if !pre { S.eliminate(true); }\n\n        S.verbosity = verb;\n        \n        solver = \u0026S;\n/*\n        // Use signal handlers that forcibly quit until the solver will be able to respond to\n        // interrupts:\n        signal(SIGINT, SIGINT_exit);\n        signal(SIGXCPU,SIGINT_exit);\n\n        // Set limit on CPU-time:\n        if (cpu_lim != INT32_MAX){\n            rlimit rl;\n            getrlimit(RLIMIT_CPU, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || (rlim_t)cpu_lim \u003c rl.rlim_max){\n                rl.rlim_cur = cpu_lim;\n                if (setrlimit(RLIMIT_CPU, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: CPU-time.\\n\");\n            } }\n\n        // Set limit on virtual memory:\n        if (mem_lim != INT32_MAX){\n            rlim_t new_mem_lim = (rlim_t)mem_lim * 1024*1024;\n            rlimit rl;\n            getrlimit(RLIMIT_AS, \u0026rl);\n            if (rl.rlim_max == RLIM_INFINITY || new_mem_lim \u003c rl.rlim_max){\n                rl.rlim_cur = new_mem_lim;\n                if (setrlimit(RLIMIT_AS, \u0026rl) == -1)\n                    printf(\"WARNING! Could not set resource limit: Virtual memory.\\n\");\n            } }\n*/        \n        if argc == 1 {\n            fmt.Printf(\"Reading from standard input... Use '--help' for help.\\n\");\n            return 1;\n        }\n\n        var in gzFile;\n        if argc == 1 {\n            in = gzdopen(0, \"rb\");\n        } else {\n            in = gzopen(argv[1], \"rb\");\n        }\n        if in == nil {\n            fmt.Printf(\"ERROR! Could not open file: %s\\n\", argc == 1 ? \"\u003cstdin\u003e\" : argv[1]);\nos.Exit(int(1)); }\n        \n        if S.verbosity \u003e 0{\n            fmt.Printf(\"============================[ Problem Statistics ]=============================\\n\");\n            fmt.Printf(\"|                                                                             |\\n\"); }\n        \n        parse_DIMACS(in, S);\n        gzclose(in);\n        var res *os.File  = (argc \u003e= 3) ? os.OpenFile(argv[2], os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : nil;\n\n        if S.verbosity \u003e 0{\n            fmt.Printf(\"|  Number of variables:  %12d                                         |\\n\", S.nVars());\n            fmt.Printf(\"|  Number of clauses:    %12d                                         |\\n\", S.nClauses()); }\n        \n        var parsed_time float64  = cpuTime();\n        if S.verbosity \u003e 0 {\n            fmt.Printf(\"|  Parse time:           %12.2f s                                       |\\n\", parsed_time - initial_time); }\n\n        // Change to signal-handlers that will only notify the solver and allow it to terminate\n        // voluntarily:\n//        signal(SIGINT, SIGINT_interrupt);\n//        signal(SIGXCPU,SIGINT_interrupt);\n\n        S.eliminate(true);\n        var simplified_time float64  = cpuTime();\n        if S.verbosity \u003e 0{\n            fmt.Printf(\"|  Simplification time:  %12.2f s                                       |\\n\", simplified_time - parsed_time);\n            fmt.Printf(\"|                                                                             |\\n\"); }\n\n        if !S.okay(){\n            if res != nil { fmt.Fprintf(res, \"UNSAT\\n\");\n_ = (res).Close(); }\n            if S.verbosity \u003e 0{\n                fmt.Printf(\"===============================================================================\\n\");\n                fmt.Printf(\"Solved by simplification\\n\");\n                printStats(S);\n                fmt.Printf(\"\\n\"); }\n            fmt.Printf(\"UNSATISFIABLE\\n\");\n            os.Exit(int(20));\n        }\n\n        if dimacs{\n            if S.verbosity \u003e 0 {\n                fmt.Printf(\"==============================[ Writing DIMACS ]===============================\\n\"); }\n            S.toDimacs((char*)dimacs);\n            if S.verbosity \u003e 0 {\n                printStats(S); }\n            os.Exit(int(0));\n        }\n\n        vec\u003cLit\u003e dummy;\n        var ret lbool  = S.solveLimited(dummy);\n        \n        if S.verbosity \u003e 0{\n            printStats(S);\n            fmt.Printf(\"\\n\"); }\n        fmt.Printf(ret == l_True ? \"SATISFIABLE\\n\" : ret == l_False ? \"UNSATISFIABLE\\n\" : \"INDETERMINATE\\n\");\n        if res != nil{\n            if ret == l_True{\n                fmt.Fprintf(res, \"SAT\\n\");\n                for var i int32  = 0; i \u003c S.nVars(); i++ {\n                    if S.model[i] != l_Undef {\n                        fmt.Fprintf(res, \"%s%s%d\", (i==0)?\"\":\" \", (S.model[i]==l_True)?\"\":\"-\", i+1); }\n                }\n                fmt.Fprintf(res, \" 0\\n\");\n            }else if ret == l_False {\n                fmt.Fprintf(res, \"UNSAT\\n\");\n            } else {\n                fmt.Fprintf(res, \"INDET\\n\"); }\n            _ = (res).Close();\n        }\n\n//#ifdef NDEBUG\n//        exit(ret == l_True ? 10 : ret == l_False ? 20 : 0);     // (faster than \"return\", which will invoke the destructor for 'Solver')\n//#else\n        if ret == l_True {\n            return 10;\n        } else {\n            if ret == l_False {\n                return 20;\n            } else {\n                return 0;\n            }\n        }\n//#endif\n    }\n catch (OutOfMemoryException\u0026){\n        fmt.Printf(\"===============================================================================\\n\");\n        fmt.Printf(\"INDETERMINATE\\n\");\n        os.Exit(int(0));\n    }\n}\n"
+}

@@ -1,0 +1,332 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c",
+  "SHA256": "5e02e0d7372b42b20076456c0538fe808e11118e3e74c1e8496d7fc8639c4239",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 17,
+        "ByteOffset": 2825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Div %5d : Best single = %5d.%s\", Counter++, Weight1, fScrollLines?\"\\n\":\"\\r\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 17,
+        "ByteOffset": 3351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Div %5d : Best double = %5d.%s\", Counter++, Weight2, fScrollLines?\"\\n\":\"\\r\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 17,
+        "ByteOffset": 3950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Div %5d : Best double = %5d. Best single = %5d.%s\", Counter++, Weight2, Weight1, fScrollLines?\"\\n\":\"\\r\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 17,
+        "ByteOffset": 5004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Div %5d : Best double = %5d. Best single = %5d. Best complement = %5d.%s\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 9,
+        "ByteOffset": 5462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total single = %3d. Total double = %3d. Total compl = %3d.                    \\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 5879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The limit on the number of extracted divisors has been reached.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_FastExtract",
+      "Start": 2073,
+      "End": 5986,
+      "BodyStart": 2115,
+      "Original": "int Fxu_FastExtract( Fxu_Data_t * pData )\n{\n    int fScrollLines = 0;\n    Fxu_Matrix * p;\n    Fxu_Single * pSingle;\n    Fxu_Double * pDouble;\n    int Weight1, Weight2, Weight3;\n    int Counter = 0;\n\n    s_MemoryTotal = 0;\n    s_MemoryPeak  = 0;\n\n    // create the matrix\n    p = Fxu_CreateMatrix( pData );\n    if ( p == NULL )\n        return -1;\n//    if ( pData-\u003efVerbose )\n//        printf( \"Memory usage after construction: Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n//Fxu_MatrixPrint( NULL, p );\n\n    if ( pData-\u003efOnlyS )\n    {\n        pData-\u003enNodesNew = 0;\n        do\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p-\u003epHeapSingle );\n            if ( pData-\u003efVerbose )\n                printf( \"Div %5d : Best single = %5d.%s\", Counter++, Weight1, fScrollLines?\"\\n\":\"\\r\" );\n            if ( Weight1 \u003e pData-\u003eWeightMin || (Weight1 == 0 \u0026\u0026 pData-\u003efUse0) )\n                Fxu_UpdateSingle( p );\n            else\n                break;\n        }\n        while ( ++pData-\u003enNodesNew \u003c pData-\u003enNodesExt );\n    }\n    else if ( pData-\u003efOnlyD )\n    {\n        pData-\u003enNodesNew = 0;\n        do\n        {\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p-\u003epHeapDouble );\n            if ( pData-\u003efVerbose )\n                printf( \"Div %5d : Best double = %5d.%s\", Counter++, Weight2, fScrollLines?\"\\n\":\"\\r\" );\n            if ( Weight2 \u003e pData-\u003eWeightMin || (Weight2 == 0 \u0026\u0026 pData-\u003efUse0) )\n                Fxu_UpdateDouble( p );\n            else\n                break;\n        }\n        while ( ++pData-\u003enNodesNew \u003c pData-\u003enNodesExt );\n    }\n    else if ( !pData-\u003efUseCompl )\n    {\n        pData-\u003enNodesNew = 0;\n        do\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p-\u003epHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p-\u003epHeapDouble );\n\n            if ( pData-\u003efVerbose )\n                printf( \"Div %5d : Best double = %5d. Best single = %5d.%s\", Counter++, Weight2, Weight1, fScrollLines?\"\\n\":\"\\r\" );\n//Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n\n            if ( Weight1 \u003e= Weight2 )\n            {\n                if ( Weight1 \u003e pData-\u003eWeightMin || (Weight1 == 0 \u0026\u0026 pData-\u003efUse0) )\n                    Fxu_UpdateSingle( p );\n                else\n                    break;\n            }\n            else\n            {\n                if ( Weight2 \u003e pData-\u003eWeightMin || (Weight2 == 0 \u0026\u0026 pData-\u003efUse0) )\n                    Fxu_UpdateDouble( p );\n                else\n                    break;\n            }\n        }\n        while ( ++pData-\u003enNodesNew \u003c pData-\u003enNodesExt );\n    }\n    else\n    { // use the complement\n        pData-\u003enNodesNew = 0;\n        do\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p-\u003epHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p-\u003epHeapDouble );\n\n            // select the best single and double\n            Weight3 = Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n            if ( pData-\u003efVerbose )\n                printf( \"Div %5d : Best double = %5d. Best single = %5d. Best complement = %5d.%s\", \n                    Counter++, Weight2, Weight1, Weight3, fScrollLines?\"\\n\":\"\\r\" );\n\n            if ( Weight3 \u003e pData-\u003eWeightMin || (Weight3 == 0 \u0026\u0026 pData-\u003efUse0) )\n                Fxu_Update( p, pSingle, pDouble );\n            else\n                break;\n        }\n        while ( ++pData-\u003enNodesNew \u003c pData-\u003enNodesExt );\n    }\n\n    if ( pData-\u003efVerbose )\n        printf( \"Total single = %3d. Total double = %3d. Total compl = %3d.                    \\n\", \n        p-\u003enDivs1, p-\u003enDivs2, p-\u003enDivs3 );\n\n    // create the new covers\n    if ( pData-\u003enNodesNew )\n        Fxu_CreateCovers( p, pData );\n    Fxu_MatrixDelete( p );\n//    printf( \"Memory usage after deallocation:   Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n    if ( pData-\u003enNodesNew == pData-\u003enNodesExt )\n        printf( \"Warning: The limit on the number of extracted divisors has been reached.\\n\" );\n    return pData-\u003enNodesNew;\n}",
+      "Draft": "func Fxu_FastExtract(pData *Fxu_Data_t) int32 {\n    var fScrollLines int32;\n    var p *Fxu_Matrix;\n    var pSingle *Fxu_Single;\n    var pDouble *Fxu_Double;\n    var Weight1, Weight2, Weight3 int32;\n    var Counter int32;\n\n    s_MemoryTotal = 0;\n    s_MemoryPeak  = 0;\n\n    // create the matrix\n    p = Fxu_CreateMatrix( pData );\n    if p == nil {\n        return -1; }\n//    if ( pData-\u003efVerbose )\n//        printf( \"Memory usage after construction: Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n//Fxu_MatrixPrint( NULL, p );\n\n    if pData.fOnlyS {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best single = %5d.%s\", Counter++, Weight1, fScrollLines?\"\\n\":\"\\r\"); }\n            if Weight1 \u003e pData.WeightMin || (Weight1 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_UpdateSingle( p );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else if pData.fOnlyD {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d.%s\", Counter++, Weight2, fScrollLines?\"\\n\":\"\\r\"); }\n            if Weight2 \u003e pData.WeightMin || (Weight2 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_UpdateDouble( p );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else if !pData.fUseCompl {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d. Best single = %5d.%s\", Counter++, Weight2, Weight1, fScrollLines?\"\\n\":\"\\r\"); }\n//Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n\n            if Weight1 \u003e= Weight2 {\n                if Weight1 \u003e pData.WeightMin || (Weight1 == 0 \u0026\u0026 pData.fUse0) {\n                    Fxu_UpdateSingle( p );\n                } else {\n                    break; }\n            \n            } else {\n                if Weight2 \u003e pData.WeightMin || (Weight2 == 0 \u0026\u0026 pData.fUse0) {\n                    Fxu_UpdateDouble( p );\n                } else {\n                    break; }\n            }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else { // use the complement\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n\n            // select the best single and double\n            Weight3 = Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d. Best single = %5d. Best complement = %5d.%s\", Counter++, Weight2, Weight1, Weight3, fScrollLines?\"\\n\":\"\\r\"); }\n\n            if Weight3 \u003e pData.WeightMin || (Weight3 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_Update( p, pSingle, pDouble );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    }\n\n    if pData.fVerbose {\n        fmt.Printf(\"Total single = %3d. Total double = %3d. Total compl = %3d.                    \\n\", p.nDivs1, p.nDivs2, p.nDivs3); }\n\n    // create the new covers\n    if pData.nNodesNew {\n        Fxu_CreateCovers( p, pData ); }\n    Fxu_MatrixDelete( p );\n//    printf( \"Memory usage after deallocation:   Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n    if pData.nNodesNew == pData.nNodesExt {\n        fmt.Printf(\"Warning: The limit on the number of extracted divisors has been reached.\\n\"); }\n    return pData.nNodesNew;\n}"
+    },
+    {
+      "Name": "Fxu_MatrixRingCubesUnmark",
+      "Start": 6238,
+      "End": 6467,
+      "BodyStart": 6287,
+      "Original": "void Fxu_MatrixRingCubesUnmark( Fxu_Matrix * p )\n{\n    Fxu_Cube * pCube, * pCube2;\n    // unmark the cubes\n    Fxu_MatrixForEachCubeInRingSafe( p, pCube, pCube2 )\n        pCube-\u003epOrder = NULL;\n    Fxu_MatrixRingCubesReset( p );\n}",
+      "Draft": "func Fxu_MatrixRingCubesUnmark(p *Fxu_Matrix) {\n    var pCube, pCube2 *Fxu_Cube;\n    // unmark the cubes\n    // inlining of macro Fxu_MatrixForEachCubeInRingSafe\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes, pCube2 = ((pCube != (Fxu_Cube *)1)? pCube.pOrder: (Fxu_Cube *)1);          pCube != (Fxu_Cube *)1;          pCube = pCube2, pCube2 = ((pCube != (Fxu_Cube *)1)? pCube.pOrder: (Fxu_Cube *)1)  {\n        pCube.pOrder = nil;\n    } }\n    // inlining of macro Fxu_MatrixRingCubesReset\n    ((p).pOrderCubes = nil);\n((p).ppTailCubes = nil);;\n}"
+    },
+    {
+      "Name": "Fxu_MatrixRingVarsUnmark",
+      "Start": 6718,
+      "End": 6937,
+      "BodyStart": 6766,
+      "Original": "void Fxu_MatrixRingVarsUnmark( Fxu_Matrix * p )\n{\n    Fxu_Var * pVar, * pVar2;\n    // unmark the vars\n    Fxu_MatrixForEachVarInRingSafe( p, pVar, pVar2 )\n        pVar-\u003epOrder = NULL;\n    Fxu_MatrixRingVarsReset( p );\n}",
+      "Draft": "func Fxu_MatrixRingVarsUnmark(p *Fxu_Matrix) {\n    var pVar, pVar2 *Fxu_Var;\n    // unmark the vars\n    // inlining of macro Fxu_MatrixForEachVarInRingSafe\n    if (p).pOrderVars {    for  pVar = (p).pOrderVars, pVar2 = ((pVar != (Fxu_Var *)1)? pVar.pOrder: (Fxu_Var *)1);          pVar != (Fxu_Var *)1;          pVar = pVar2, pVar2 = ((pVar != (Fxu_Var *)1)? pVar.pOrder: (Fxu_Var *)1)  {\n        pVar.pOrder = nil;\n    } }\n    // inlining of macro Fxu_MatrixRingVarsReset\n    ((p).pOrderVars  = nil);\n((p).ppTailVars  = nil);;\n}"
+    },
+    {
+      "Name": "Fxu_MemFetch",
+      "Start": 7174,
+      "End": 7424,
+      "BodyStart": 7224,
+      "Original": "char * Fxu_MemFetch( Fxu_Matrix * p, int nBytes )\n{\n    s_MemoryTotal += nBytes;\n    if ( s_MemoryPeak \u003c s_MemoryTotal )\n        s_MemoryPeak = s_MemoryTotal;\n//    return ABC_ALLOC( char, nBytes );\n    return Extra_MmFixedEntryFetch( p-\u003epMemMan );\n}",
+      "Draft": "func Fxu_MemFetch(p *Fxu_Matrix, nBytes int32) string {\n    s_MemoryTotal += nBytes;\n    if s_MemoryPeak \u003c s_MemoryTotal {\n        s_MemoryPeak = s_MemoryTotal; }\n//    return ABC_ALLOC( char, nBytes );\n    return Extra_MmFixedEntryFetch( p.pMemMan );\n}"
+    },
+    {
+      "Name": "Fxu_MemRecycle",
+      "Start": 7660,
+      "End": 7833,
+      "BodyStart": 7724,
+      "Original": "void Fxu_MemRecycle( Fxu_Matrix * p, char * pItem, int nBytes )\n{\n    s_MemoryTotal -= nBytes;\n//    ABC_FREE( pItem );\n    Extra_MmFixedEntryRecycle( p-\u003epMemMan, pItem );\n}",
+      "Draft": "func Fxu_MemRecycle(p *Fxu_Matrix, pItem string, nBytes int32) {\n    s_MemoryTotal -= nBytes;\n//    ABC_FREE( pItem );\n    Extra_MmFixedEntryRecycle( p.pMemMan, pItem );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::mechanical::do::2658",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2658,
+      "End": 2660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::mechanical::do::3185",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3185,
+      "End": 3187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::mechanical::do::3716",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3716,
+      "End": 3718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::mechanical::do::4684",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4684,
+      "End": 4686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::6495",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::6526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::6560",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::6620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::6651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6349,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::7316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::7345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::7377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::7432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::pointer-cast::7461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::ternary::Fxu_FastExtract",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_FastExtract",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2073,
+      "End": 5986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::Fxu_FastExtract",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_FastExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2073,
+      "End": 5986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::ternary::Fxu_MatrixRingCubesUnmark",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_MatrixRingCubesUnmark",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6238,
+      "End": 6467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::Fxu_MatrixRingCubesUnmark",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixRingCubesUnmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6238,
+      "End": 6467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::ternary::Fxu_MatrixRingVarsUnmark",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_MatrixRingVarsUnmark",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6718,
+      "End": 6937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::Fxu_MatrixRingVarsUnmark",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixRingVarsUnmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6718,
+      "End": 6937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::Fxu_MemFetch",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MemFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7174,
+      "End": 7424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::Fxu_MemRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MemRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7660,
+      "End": 7833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8080
+    }
+  ],
+  "Draft": "package fxu\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fxu.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [The entrance into the fast extract module.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxu.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\" \n//#include \"fxu.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*===== fxuCreate.c ====================================================*/\n// extern Fxu_Matrix * Fxu_CreateMatrix( Fxu_Data_t * pData );\n\n// extern void         Fxu_CreateCovers( Fxu_Matrix * p, Fxu_Data_t * pData );\n\n\nvar s_MemoryTotal int32;\nvar s_MemoryPeak int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fast_extract on a set of covers.]\n\n  Description [All the covers are given in the array p-\u003evSops. \n  The resulting covers are returned in the array p-\u003evSopsNew.\n  The entries in these arrays correspond to objects in the network.\n  The entries corresponding to the PI and objects with trivial covers are NULL.\n  The number of extracted covers (not exceeding p-\u003enNodesExt) is returned. \n  Two other things are important for the correct operation of this procedure:\n  (1) The input covers do not have duplicated fanins and are SCC-free. \n  (2) The fanins array contains the numbers of the fanin objects.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_FastExtract(pData *Fxu_Data_t) int32 {\n    var fScrollLines int32;\n    var p *Fxu_Matrix;\n    var pSingle *Fxu_Single;\n    var pDouble *Fxu_Double;\n    var Weight1, Weight2, Weight3 int32;\n    var Counter int32;\n\n    s_MemoryTotal = 0;\n    s_MemoryPeak  = 0;\n\n    // create the matrix\n    p = Fxu_CreateMatrix( pData );\n    if p == nil {\n        return -1; }\n//    if ( pData-\u003efVerbose )\n//        printf( \"Memory usage after construction: Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n//Fxu_MatrixPrint( NULL, p );\n\n    if pData.fOnlyS {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best single = %5d.%s\", Counter++, Weight1, fScrollLines?\"\\n\":\"\\r\"); }\n            if Weight1 \u003e pData.WeightMin || (Weight1 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_UpdateSingle( p );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else if pData.fOnlyD {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d.%s\", Counter++, Weight2, fScrollLines?\"\\n\":\"\\r\"); }\n            if Weight2 \u003e pData.WeightMin || (Weight2 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_UpdateDouble( p );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else if !pData.fUseCompl {\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d. Best single = %5d.%s\", Counter++, Weight2, Weight1, fScrollLines?\"\\n\":\"\\r\"); }\n//Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n\n            if Weight1 \u003e= Weight2 {\n                if Weight1 \u003e pData.WeightMin || (Weight1 == 0 \u0026\u0026 pData.fUse0) {\n                    Fxu_UpdateSingle( p );\n                } else {\n                    break; }\n            \n            } else {\n                if Weight2 \u003e pData.WeightMin || (Weight2 == 0 \u0026\u0026 pData.fUse0) {\n                    Fxu_UpdateDouble( p );\n                } else {\n                    break; }\n            }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    \n    } else { // use the complement\n        pData.nNodesNew = 0;\n        for\n        {\n            Weight1 = Fxu_HeapSingleReadMaxWeight( p.pHeapSingle );\n            Weight2 = Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble );\n\n            // select the best single and double\n            Weight3 = Fxu_Select( p, \u0026pSingle, \u0026pDouble );\n            if pData.fVerbose {\n                fmt.Printf(\"Div %5d : Best double = %5d. Best single = %5d. Best complement = %5d.%s\", Counter++, Weight2, Weight1, Weight3, fScrollLines?\"\\n\":\"\\r\"); }\n\n            if Weight3 \u003e pData.WeightMin || (Weight3 == 0 \u0026\u0026 pData.fUse0) {\n                Fxu_Update( p, pSingle, pDouble );\n            } else {\n                break; }\n        \nif !( ++pData.nNodesNew \u003c pData.nNodesExt ) { break }\n}\n        \n    }\n\n    if pData.fVerbose {\n        fmt.Printf(\"Total single = %3d. Total double = %3d. Total compl = %3d.                    \\n\", p.nDivs1, p.nDivs2, p.nDivs3); }\n\n    // create the new covers\n    if pData.nNodesNew {\n        Fxu_CreateCovers( p, pData ); }\n    Fxu_MatrixDelete( p );\n//    printf( \"Memory usage after deallocation:   Total = %d. Peak = %d.\\n\", s_MemoryTotal, s_MemoryPeak );\n    if pData.nNodesNew == pData.nNodesExt {\n        fmt.Printf(\"Warning: The limit on the number of extracted divisors has been reached.\\n\"); }\n    return pData.nNodesNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Unmarks the cubes in the ring.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixRingCubesUnmark(p *Fxu_Matrix) {\n    var pCube, pCube2 *Fxu_Cube;\n    // unmark the cubes\n    // inlining of macro Fxu_MatrixForEachCubeInRingSafe\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes, pCube2 = ((pCube != (Fxu_Cube *)1)? pCube.pOrder: (Fxu_Cube *)1);          pCube != (Fxu_Cube *)1;          pCube = pCube2, pCube2 = ((pCube != (Fxu_Cube *)1)? pCube.pOrder: (Fxu_Cube *)1)  {\n        pCube.pOrder = nil;\n    } }\n    // inlining of macro Fxu_MatrixRingCubesReset\n    ((p).pOrderCubes = nil);\n((p).ppTailCubes = nil);;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Unmarks the vars in the ring.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixRingVarsUnmark(p *Fxu_Matrix) {\n    var pVar, pVar2 *Fxu_Var;\n    // unmark the vars\n    // inlining of macro Fxu_MatrixForEachVarInRingSafe\n    if (p).pOrderVars {    for  pVar = (p).pOrderVars, pVar2 = ((pVar != (Fxu_Var *)1)? pVar.pOrder: (Fxu_Var *)1);          pVar != (Fxu_Var *)1;          pVar = pVar2, pVar2 = ((pVar != (Fxu_Var *)1)? pVar.pOrder: (Fxu_Var *)1)  {\n        pVar.pOrder = nil;\n    } }\n    // inlining of macro Fxu_MatrixRingVarsReset\n    ((p).pOrderVars  = nil);\n((p).ppTailVars  = nil);;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MemFetch(p *Fxu_Matrix, nBytes int32) string {\n    s_MemoryTotal += nBytes;\n    if s_MemoryPeak \u003c s_MemoryTotal {\n        s_MemoryPeak = s_MemoryTotal; }\n//    return ABC_ALLOC( char, nBytes );\n    return Extra_MmFixedEntryFetch( p.pMemMan );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MemRecycle(p *Fxu_Matrix, pItem string, nBytes int32) {\n    s_MemoryTotal -= nBytes;\n//    ABC_FREE( pItem );\n    Extra_MmFixedEntryRecycle( p.pMemMan, pItem );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

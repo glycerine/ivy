@@ -1,0 +1,123 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c",
+  "SHA256": "e3e69509f8d14d3292708b481200385cb5a89d0c0639222c05e1aa98449020e8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pTable[pIsf.uSupp] == p.pNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Kit_TruthIsConst1( pIsf.puOff, p.nVars ) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bdc_TableCheckContainment",
+      "Start": 1311,
+      "End": 1527,
+      "BodyStart": 1396,
+      "Original": "int Bdc_TableCheckContainment( Bdc_Man_t * p, Bdc_Isf_t * pIsf, unsigned * puTruth )\n{\n    return Kit_TruthIsImply( pIsf-\u003epuOn, puTruth, p-\u003enVars ) \u0026\u0026\n         Kit_TruthIsDisjoint( puTruth, pIsf-\u003epuOff, p-\u003enVars );\n}",
+      "Draft": "func Bdc_TableCheckContainment(p *Bdc_Man_t, pIsf *Bdc_Isf_t, puTruth *uint32) int32 {\n    return Kit_TruthIsImply( pIsf.puOn, puTruth, p.nVars ) \u0026\u0026\n         Kit_TruthIsDisjoint( puTruth, pIsf.puOff, p.nVars );\n}"
+    },
+    {
+      "Name": "Bdc_TableLookup",
+      "Start": 1800,
+      "End": 2736,
+      "BodyStart": 1863,
+      "Original": "Bdc_Fun_t * Bdc_TableLookup( Bdc_Man_t * p, Bdc_Isf_t * pIsf )\n{\n    int fDisableCache = 0;\n    Bdc_Fun_t * pFunc;\n    if ( fDisableCache \u0026\u0026 Kit_WordCountOnes(pIsf-\u003euSupp) \u003e 1 )\n        return NULL;\n    if ( pIsf-\u003euSupp == 0 )\n    {\n        assert( p-\u003epTable[pIsf-\u003euSupp] == p-\u003epNodes );\n        if ( Kit_TruthIsConst1( pIsf-\u003epuOn, p-\u003enVars ) )\n            return p-\u003epNodes;\n        assert( Kit_TruthIsConst1( pIsf-\u003epuOff, p-\u003enVars ) );\n        return Bdc_Not(p-\u003epNodes);\n    }\n    for ( pFunc = p-\u003epTable[pIsf-\u003euSupp]; pFunc; pFunc = pFunc-\u003epNext )\n        if ( Bdc_TableCheckContainment( p, pIsf, pFunc-\u003epuFunc ) )\n             return pFunc;\n    Bdc_IsfNot( pIsf );\n    for ( pFunc = p-\u003epTable[pIsf-\u003euSupp]; pFunc; pFunc = pFunc-\u003epNext )\n        if ( Bdc_TableCheckContainment( p, pIsf, pFunc-\u003epuFunc ) )\n        {\n            Bdc_IsfNot( pIsf );\n            return Bdc_Not(pFunc);\n        }\n    Bdc_IsfNot( pIsf );\n    return NULL;\n}",
+      "Draft": "func Bdc_TableLookup(p *Bdc_Man_t, pIsf *Bdc_Isf_t) *Bdc_Fun_t {\n    var fDisableCache int32;\n    var pFunc *Bdc_Fun_t;\n    if (fDisableCache != 0) \u0026\u0026 Kit_WordCountOnes(pIsf.uSupp) \u003e 1 {\n        return nil; }\n    if pIsf.uSupp == 0 {\n        assert(p.pTable[pIsf.uSupp] == p.pNodes, \"p.pTable[pIsf.uSupp] == p.pNodes\");\n        if Kit_TruthIsConst1( pIsf.puOn, p.nVars ) {\n            return p.pNodes; }\n        assert(Kit_TruthIsConst1( pIsf.puOff, p.nVars ), \"Kit_TruthIsConst1( pIsf.puOff, p.nVars )\");\n        return Bdc_Not(p.pNodes);\n    }\n    for  pFunc = p.pTable[pIsf.uSupp]; (pFunc != nil); pFunc = pFunc.pNext  {\n        if Bdc_TableCheckContainment( p, pIsf, pFunc.puFunc ) != 0 {\n             return pFunc; }\n    }\n    Bdc_IsfNot( pIsf );\n    for  pFunc = p.pTable[pIsf.uSupp]; (pFunc != nil); pFunc = pFunc.pNext  {\n        if Bdc_TableCheckContainment( p, pIsf, pFunc.puFunc ) != 0 {\n            Bdc_IsfNot( pIsf );\n            return Bdc_Not(pFunc);\n        }\n    }\n    Bdc_IsfNot( pIsf );\n    return nil;\n}"
+    },
+    {
+      "Name": "Bdc_TableAdd",
+      "Start": 3009,
+      "End": 3238,
+      "BodyStart": 3063,
+      "Original": "void Bdc_TableAdd( Bdc_Man_t * p, Bdc_Fun_t * pFunc )\n{\n    if ( p-\u003epTable[pFunc-\u003euSupp] == NULL )\n        Vec_IntPush( p-\u003evSpots, pFunc-\u003euSupp );\n    pFunc-\u003epNext = p-\u003epTable[pFunc-\u003euSupp];\n    p-\u003epTable[pFunc-\u003euSupp] = pFunc;\n}",
+      "Draft": "func Bdc_TableAdd(p *Bdc_Man_t, pFunc *Bdc_Fun_t) {\n    if p.pTable[pFunc.uSupp] == nil {\n        Vec_IntPush( p.vSpots, pFunc.uSupp ); }\n    pFunc.pNext = p.pTable[pFunc.uSupp];\n    p.pTable[pFunc.uSupp] = pFunc;\n}"
+    },
+    {
+      "Name": "Bdc_TableClear",
+      "Start": 3511,
+      "End": 3677,
+      "BodyStart": 3548,
+      "Original": "void Bdc_TableClear( Bdc_Man_t * p )\n{\n    int Spot, i;\n    Vec_IntForEachEntry( p-\u003evSpots, Spot, i )\n        p-\u003epTable[Spot] = NULL;\n    Vec_IntClear( p-\u003evSpots );\n}",
+      "Draft": "func Bdc_TableClear(p *Bdc_Man_t) {\n    var Spot, i int32;\n    Vec_IntForEachEntry( p.vSpots, Spot, i )\n        p.pTable[Spot] = nil;\n    Vec_IntClear( p.vSpots );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::Bdc_TableCheckContainment",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_TableCheckContainment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1311,
+      "End": 1527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::Bdc_TableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_TableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1800,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::Bdc_TableAdd",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_TableAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3009,
+      "End": 3238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::Bdc_TableClear",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_TableClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3511,
+      "End": 3677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/bdc/bdcTable.c::macro-inline::3571",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3571,
+      "End": 3612
+    }
+  ],
+  "Draft": "package bdc\n\n/**CFile****************************************************************\n\n  FileName    [bdcTable.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table-based bi-decomposition engine.]\n\n  Synopsis    [Hash table for intermediate nodes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 30, 2007.]\n\n  Revision    [$Id: bdcTable.c,v 1.00 2007/01/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bdcInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks containment of the function in the ISF.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_TableCheckContainment(p *Bdc_Man_t, pIsf *Bdc_Isf_t, puTruth *uint32) int32 {\n    return Kit_TruthIsImply( pIsf.puOn, puTruth, p.nVars ) \u0026\u0026\n         Kit_TruthIsDisjoint( puTruth, pIsf.puOff, p.nVars );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the new entry to the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_TableLookup(p *Bdc_Man_t, pIsf *Bdc_Isf_t) *Bdc_Fun_t {\n    var fDisableCache int32;\n    var pFunc *Bdc_Fun_t;\n    if (fDisableCache != 0) \u0026\u0026 Kit_WordCountOnes(pIsf.uSupp) \u003e 1 {\n        return nil; }\n    if pIsf.uSupp == 0 {\n        assert(p.pTable[pIsf.uSupp] == p.pNodes, \"p.pTable[pIsf.uSupp] == p.pNodes\");\n        if Kit_TruthIsConst1( pIsf.puOn, p.nVars ) {\n            return p.pNodes; }\n        assert(Kit_TruthIsConst1( pIsf.puOff, p.nVars ), \"Kit_TruthIsConst1( pIsf.puOff, p.nVars )\");\n        return Bdc_Not(p.pNodes);\n    }\n    for  pFunc = p.pTable[pIsf.uSupp]; (pFunc != nil); pFunc = pFunc.pNext  {\n        if Bdc_TableCheckContainment( p, pIsf, pFunc.puFunc ) != 0 {\n             return pFunc; }\n    }\n    Bdc_IsfNot( pIsf );\n    for  pFunc = p.pTable[pIsf.uSupp]; (pFunc != nil); pFunc = pFunc.pNext  {\n        if Bdc_TableCheckContainment( p, pIsf, pFunc.puFunc ) != 0 {\n            Bdc_IsfNot( pIsf );\n            return Bdc_Not(pFunc);\n        }\n    }\n    Bdc_IsfNot( pIsf );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the new entry to the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_TableAdd(p *Bdc_Man_t, pFunc *Bdc_Fun_t) {\n    if p.pTable[pFunc.uSupp] == nil {\n        Vec_IntPush( p.vSpots, pFunc.uSupp ); }\n    pFunc.pNext = p.pTable[pFunc.uSupp];\n    p.pTable[pFunc.uSupp] = pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the new entry to the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_TableClear(p *Bdc_Man_t) {\n    var Spot, i int32;\n    Vec_IntForEachEntry( p.vSpots, Spot, i )\n        p.pTable[Spot] = nil;\n    Vec_IntClear( p.vSpots );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

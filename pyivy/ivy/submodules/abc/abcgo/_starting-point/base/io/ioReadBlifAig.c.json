@@ -1,0 +1,1970 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c",
+  "SHA256": "5819d5ebac75bc575d88961b5320528788f1ba952bca1249b220fe1fd364213f",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 144,
+        "Column": 13,
+        "ByteOffset": 5602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 5658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_Blif(): The file is unavailable (absent or open).\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 6134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"%s\\n\", p.sError ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 164,
+        "Column": 18,
+        "ByteOffset": 6143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"%s\\n\", p.sError ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 9,
+        "ByteOffset": 6360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_Blif: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 191,
+        "Column": 72,
+        "ByteOffset": 6894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Io_BlifMan_t *) malloc(sizeof(Io_BlifMan_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Io_BlifMan_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 220,
+        "Column": 81,
+        "ByteOffset": 7812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pBuffer {  /*__starting_point_inline_macro:ABC_FREE__*/((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 221,
+        "Column": 82,
+        "ByteOffset": 7946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pObjects { /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjects) ? (free((char *) (p.pObjects)), (p.pObjects) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 80,
+        "ByteOffset": 8080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pTable {   /*__starting_point_inline_macro:ABC_FREE__*/((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 233,
+        "Column": 57,
+        "ByteOffset": 8475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 9650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strcmp((*ppEntry).pName, pName) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 10188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.iObjNext \u003c p.nObjects ); "
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 418,
+        "Column": 34,
+        "ByteOffset": 13495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  pCur = pObj.pName + strlen(pObj.pName); *pCur != '.'; pCur++  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 444,
+        "Column": 13,
+        "ByteOffset": 14153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 9,
+        "ByteOffset": 14209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_BlifLoadFile(): The file is unavailable (absent or open).\\n\" );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 14315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 450,
+        "Column": 17,
+        "ByteOffset": 14362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile ); "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 14411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 14436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_BlifLoadFile(): The file is empty.\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 456,
+        "Column": 72,
+        "ByteOffset": 14586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pContents = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 14640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 458,
+        "Column": 16,
+        "ByteOffset": 14672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pContents, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 459,
+        "Column": 5,
+        "ByteOffset": 14717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 14850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pContents + nFileSize, \"\\n.end\\n\" );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 523,
+        "Column": 13,
+        "ByteOffset": 16839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !strncmp(pCur, \"names\", 5) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 525,
+        "Column": 20,
+        "ByteOffset": 16929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"latch\", 5) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 527,
+        "Column": 20,
+        "ByteOffset": 17021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"inputs\", 6) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 529,
+        "Column": 20,
+        "ByteOffset": 17113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"outputs\", 7) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 531,
+        "Column": 20,
+        "ByteOffset": 17207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"model\", 5) { "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 533,
+        "Column": 20,
+        "ByteOffset": 17284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"end\", 3) || !strncmp(pCur, \"exdc\", 4) {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 533,
+        "Column": 48,
+        "ByteOffset": 17312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !strncmp(pCur, \"end\", 3) || !strncmp(pCur, \"exdc\", 4) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 537,
+        "Column": 21,
+        "ByteOffset": 17415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pCur[strlen(pCur)-1] == '\\r' {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 538,
+        "Column": 22,
+        "ByteOffset": 17462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                pCur[strlen(pCur)-1] = 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 13,
+        "ByteOffset": 17497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Line %d: Skipping line \\\"%s\\\".\\n\", Io_BlifGetLine(p, pCur), pCur );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 539,
+        "Column": 22,
+        "ByteOffset": 17506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Line %d: Skipping line \\\"%s\\\".\\n\", Io_BlifGetLine(p, pCur), pCur );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 547,
+        "Column": 81,
+        "ByteOffset": 17849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjects = /*__starting_point_inline_macro:ABC_ALLOC__*/((Io_BlifObj_t *) malloc(sizeof(Io_BlifObj_t) * (size_t)(p.nObjects)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 17907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pObjects, 0, p.nObjects * sizeof(Io_BlifObj_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 552,
+        "Column": 81,
+        "ByteOffset": 18127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((Io_BlifObj_t * *) malloc(sizeof(Io_BlifObj_t *) * (size_t)(p.nTableSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 553,
+        "Column": 5,
+        "ByteOffset": 18189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTable, 0, p.nTableSize * sizeof(Io_BlifObj_t *) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 20406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"model\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 619,
+        "Column": 14,
+        "ByteOffset": 20415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"model\") );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 9,
+        "ByteOffset": 20487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Model line has %d entries while it should have 2.\", Io_BlifGetLine(p, pToken), Vec_PtrSize(p.vTokens) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 5,
+        "ByteOffset": 21197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"inputs\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 645,
+        "Column": 14,
+        "ByteOffset": 21206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"inputs\") );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 13,
+        "ByteOffset": 21487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( p.sError, \"Line %d: Primary input (%s) is defined more than once.\", Io_BlifGetLine(p, pToken), pToken );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 675,
+        "Column": 5,
+        "ByteOffset": 22199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"outputs\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 675,
+        "Column": 14,
+        "ByteOffset": 22208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"outputs\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 679,
+        "Column": 13,
+        "ByteOffset": 22490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Line %d: Primary output (%s) is defined more than once (warning only).\\n\", Io_BlifGetLine(p, pToken), pToken ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 679,
+        "Column": 22,
+        "ByteOffset": 22499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Line %d: Primary output (%s) is defined more than once (warning only).\\n\", Io_BlifGetLine(p, pToken), pToken ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 703,
+        "Column": 5,
+        "ByteOffset": 23188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"latch\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 703,
+        "Column": 14,
+        "ByteOffset": 23197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp(pToken, \"latch\") );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 705,
+        "Column": 9,
+        "ByteOffset": 23268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Latch does not have input name and output name.\", Io_BlifGetLine(p, pToken) );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 710,
+        "Column": 16,
+        "ByteOffset": 23476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Init = atoi( (char *)Vec_PtrEntry(p.vTokens,3) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 714,
+        "Column": 9,
+        "ByteOffset": 23590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Initial state of the latch is incorrect (%s).\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,3) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 9,
+        "ByteOffset": 24225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Primary input (%s) is also defined latch output.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 9,
+        "ByteOffset": 24418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Latch output (%s) is defined as the output of another latch.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 5,
+        "ByteOffset": 25100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp((char *)Vec_PtrEntry(p.vTokens,0), \"names\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 759,
+        "Column": 14,
+        "ByteOffset": 25109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !strcmp((char *)Vec_PtrEntry(p.vTokens,0), \"names\") );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 763,
+        "Column": 9,
+        "ByteOffset": 25285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Primary input (%s) has a table.\", Io_BlifGetLine(p, pName), pName );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 767,
+        "Column": 9,
+        "ByteOffset": 25433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Latch output (%s) has a table.\", Io_BlifGetLine(p, pName), pName );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 771,
+        "Column": 9,
+        "ByteOffset": 25581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Signal (%s) is defined more than once.\", Io_BlifGetLine(p, pName), pName );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 808,
+        "Column": 13,
+        "ByteOffset": 26717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( p.sError, \"Line %d: Constant table has wrong output value (%s).\", Io_BlifGetLine(p, pOutput), pOutput );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 815,
+        "Column": 9,
+        "ByteOffset": 27048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Table has odd number of tokens (%d).\", Io_BlifGetLine(p, pProduct), Vec_PtrSize(p.vTokens) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 823,
+        "Column": 12,
+        "ByteOffset": 27458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strlen(pProduct) != uint32(Vec_PtrSize(vFanins)) {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 824,
+        "Column": 13,
+        "ByteOffset": 27521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( p.sError, \"Line %d: Cube (%s) has size different from the fanin count (%d).\", Io_BlifGetLine(p, pProduct), pProduct, Vec_PtrSize(vFanins) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 828,
+        "Column": 13,
+        "ByteOffset": 27772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( p.sError, \"Line %d: Output value (%s) is incorrect.\", Io_BlifGetLine(p, pProduct), pOutput );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 834,
+        "Column": 13,
+        "ByteOffset": 28039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( p.sError, \"Line %d: Output value (%s) differs from the value in the first line of the table (%d).\", Io_BlifGetLine(p, pProduct), pOutput, Polarity );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 845,
+        "Column": 17,
+        "ByteOffset": 28724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( p.sError, \"Line %d: Product term (%s) contains character (%c).\", Io_BlifGetLine(p, pProduct), pProduct, pProduct[k] );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 875,
+        "Column": 9,
+        "ByteOffset": 29641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Signal (%s) is not defined as a table.\", Io_BlifGetLine(p, pName), pName );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 880,
+        "Column": 9,
+        "ByteOffset": 29824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( p.sError, \"Line %d: Signal (%s) appears twice on a combinational path.\", Io_BlifGetLine(p, pName), pName );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 900,
+        "Column": 58,
+        "ByteOffset": 30762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pObjIo.pEquiv = Io_BlifParseTable( p, pObjIo.pName + strlen(pObjIo.pName), vFanins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 977,
+        "Column": 9,
+        "ByteOffset": 34062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of dangling tables = %d.\\n\", p.nTablesLeft ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 978,
+        "Column": 5,
+        "ByteOffset": 34134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"AND nodes = %6d.  Estimate = %6d.\\n\", Abc_NtkNodeNum(p.pAig), Io_BlifEstimateAndNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_BlifCharIsSpace",
+      "Start": 4393,
+      "End": 4507,
+      "BodyStart": 4447,
+      "Original": "static int               Io_BlifCharIsSpace( char s ) { return s == ' ' || s == '\\t' || s == '\\r' || s == '\\n';  }",
+      "Draft": "func Io_BlifCharIsSpace(s byte) int32 { return s == ' ' || s == '\\t' || s == '\\r' || s == '\\n';  }"
+    },
+    {
+      "Name": "Io_ReadBlifAsAig",
+      "Start": 5010,
+      "End": 6110,
+      "BodyStart": 5071,
+      "Original": "Abc_Ntk_t * Io_ReadBlifAsAig( char * pFileName, int fCheck )\n{\n    FILE * pFile;\n    Io_BlifMan_t * p;\n    Abc_Ntk_t * pAig;\n\n    // check that the file is available\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Io_Blif(): The file is unavailable (absent or open).\\n\" );\n        return 0;\n    }\n    fclose( pFile );\n\n    // start the file reader\n    p = Io_BlifAlloc();\n    p-\u003epFileName = pFileName;\n    p-\u003epBuffer   = Io_BlifLoadFile( pFileName );\n    if ( p-\u003epBuffer == NULL )\n    {\n        Io_BlifFree( p );\n        return NULL;\n    }\n    // prepare the file for parsing\n    Io_BlifReadPreparse( p );\n    // construct the network\n    pAig = Io_BlifParse( p );\n    if ( p-\u003esError[0] )\n        fprintf( stdout, \"%s\\n\", p-\u003esError );\n    if ( pAig == NULL )\n        return NULL;\n    Io_BlifFree( p );\n\n    // make sure that everything is okay with the network structure\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pAig ) )\n    {\n        printf( \"Io_Blif: The network check has failed.\\n\" );\n        Abc_NtkDelete( pAig );\n        return NULL;\n    }\n    return pAig;\n}",
+      "Draft": "func Io_ReadBlifAsAig(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pFile *os.File;\n    var p *Io_BlifMan_t;\n    var pAig *Abc_Ntk_t;\n\n    // check that the file is available\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_Blif(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    _ = (pFile).Close();\n\n    // start the file reader\n    p = Io_BlifAlloc();\n    p.pFileName = pFileName;\n    p.pBuffer   = Io_BlifLoadFile( pFileName );\n    if p.pBuffer == nil {\n        Io_BlifFree( p );\n        return nil;\n    }\n    // prepare the file for parsing\n    Io_BlifReadPreparse( p );\n    // construct the network\n    pAig = Io_BlifParse( p );\n    if p.sError[0] {\n        fmt.Fprintf(os.Stdout, \"%s\\n\", p.sError); }\n    if pAig == nil {\n        return nil; }\n    Io_BlifFree( p );\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pAig ) {\n        fmt.Printf(\"Io_Blif: The network check has failed.\\n\");\n        Abc_NtkDelete( pAig );\n        return nil;\n    }\n    return pAig;\n}"
+    },
+    {
+      "Name": "Io_BlifAlloc",
+      "Start": 6383,
+      "End": 6929,
+      "BodyStart": 6420,
+      "Original": "static Io_BlifMan_t * Io_BlifAlloc()\n{\n    Io_BlifMan_t * p;\n    p = ABC_ALLOC( Io_BlifMan_t, 1 );\n    memset( p, 0, sizeof(Io_BlifMan_t) );\n    p-\u003evLines   = Vec_PtrAlloc( 512 );\n    p-\u003evInputs  = Vec_PtrAlloc( 512 );\n    p-\u003evOutputs = Vec_PtrAlloc( 512 );\n    p-\u003evLatches = Vec_PtrAlloc( 512 );\n    p-\u003evNames   = Vec_PtrAlloc( 512 );\n    p-\u003evTokens  = Vec_PtrAlloc( 512 );\n    p-\u003evPis     = Vec_PtrAlloc( 512 );\n    p-\u003evPos     = Vec_PtrAlloc( 512 );\n    p-\u003evLis     = Vec_PtrAlloc( 512 );\n    p-\u003evLos     = Vec_PtrAlloc( 512 );\n    return p;\n}",
+      "Draft": "func Io_BlifAlloc() *Io_BlifMan_t {\n    var p *Io_BlifMan_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Io_BlifMan_t *) malloc(sizeof(Io_BlifMan_t) * (size_t)(1)));\n    *p = Io_BlifMan_t{};\n    p.vLines   = Vec_PtrAlloc( 512 );\n    p.vInputs  = Vec_PtrAlloc( 512 );\n    p.vOutputs = Vec_PtrAlloc( 512 );\n    p.vLatches = Vec_PtrAlloc( 512 );\n    p.vNames   = Vec_PtrAlloc( 512 );\n    p.vTokens  = Vec_PtrAlloc( 512 );\n    p.vPis     = Vec_PtrAlloc( 512 );\n    p.vPos     = Vec_PtrAlloc( 512 );\n    p.vLis     = Vec_PtrAlloc( 512 );\n    p.vLos     = Vec_PtrAlloc( 512 );\n    return p;\n}"
+    },
+    {
+      "Name": "Io_BlifFree",
+      "Start": 7198,
+      "End": 7756,
+      "BodyStart": 7242,
+      "Original": "static void Io_BlifFree( Io_BlifMan_t * p )\n{\n    if ( p-\u003epAig )\n        Abc_NtkDelete( p-\u003epAig );\n    if ( p-\u003epBuffer )  ABC_FREE( p-\u003epBuffer );\n    if ( p-\u003epObjects ) ABC_FREE( p-\u003epObjects );\n    if ( p-\u003epTable )   ABC_FREE( p-\u003epTable );\n    Vec_PtrFree( p-\u003evLines );\n    Vec_PtrFree( p-\u003evInputs );\n    Vec_PtrFree( p-\u003evOutputs );\n    Vec_PtrFree( p-\u003evLatches );\n    Vec_PtrFree( p-\u003evNames );\n    Vec_PtrFree( p-\u003evTokens );\n    Vec_PtrFree( p-\u003evPis );\n    Vec_PtrFree( p-\u003evPos );\n    Vec_PtrFree( p-\u003evLis );\n    Vec_PtrFree( p-\u003evLos );\n    ABC_FREE( p );\n}",
+      "Draft": "func Io_BlifFree(p *Io_BlifMan_t) {\n    if p.pAig {\n        Abc_NtkDelete( p.pAig ); }\n    // inlining of macro ABC_FREE\n    if p.pBuffer {  ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pObjects { ((p.pObjects) ? (free((char *) (p.pObjects)), (p.pObjects) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pTable {   ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0); }\n    Vec_PtrFree( p.vLines );\n    Vec_PtrFree( p.vInputs );\n    Vec_PtrFree( p.vOutputs );\n    Vec_PtrFree( p.vLatches );\n    Vec_PtrFree( p.vNames );\n    Vec_PtrFree( p.vTokens );\n    Vec_PtrFree( p.vPis );\n    Vec_PtrFree( p.vPos );\n    Vec_PtrFree( p.vLis );\n    Vec_PtrFree( p.vLos );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Io_BlifHashString",
+      "Start": 8010,
+      "End": 8338,
+      "BodyStart": 8076,
+      "Original": "static unsigned Io_BlifHashString( char * pName, int TableSize ) \n{\n    static int s_Primes[10] = { \n        1291, 1699, 2357, 4177, 5147, \n        5647, 6343, 7103, 7873, 8147\n    };\n    unsigned i, Key = 0;\n    for ( i = 0; pName[i] != '\\0'; i++ )\n        Key ^= s_Primes[i%10]*pName[i]*pName[i];\n    return Key % TableSize;\n}",
+      "Draft": "func Io_BlifHashString(pName string, TableSize int32) uint32 {\n    \n    var i, Key uint32;\n    for  i = 0; pName[i] != '\\0'; i++  {\n        Key ^= spStatic_Io_BlifHashString_s_Primes[i%10]*pName[i]*pName[i];\n    }\n    return Key % TableSize;\n}"
+    },
+    {
+      "Name": "Io_BlifHashLookup",
+      "Start": 8606,
+      "End": 8924,
+      "BodyStart": 8681,
+      "Original": "static Io_BlifObj_t ** Io_BlifHashLookup( Io_BlifMan_t * p, char * pName )\n{\n    Io_BlifObj_t ** ppEntry;\n    for ( ppEntry = p-\u003epTable + Io_BlifHashString(pName, p-\u003enTableSize); *ppEntry; ppEntry = \u0026(*ppEntry)-\u003epNext )\n        if ( !strcmp((*ppEntry)-\u003epName, pName) )\n            return ppEntry;\n    return ppEntry;\n}",
+      "Draft": "func Io_BlifHashLookup(p *Io_BlifMan_t, pName string) **Io_BlifObj_t {\n    var ppEntry **Io_BlifObj_t;\n    for  ppEntry = p.pTable + Io_BlifHashString(pName, p.nTableSize); *ppEntry; ppEntry = \u0026(*ppEntry).pNext  {\n        if !(int32(strings.Compare((*ppEntry).pName, pName)) != 0) {\n            return ppEntry; }\n    }\n    return ppEntry;\n}"
+    },
+    {
+      "Name": "Io_BlifHashFindOrAdd",
+      "Start": 9188,
+      "End": 9532,
+      "BodyStart": 9265,
+      "Original": "static Io_BlifObj_t * Io_BlifHashFindOrAdd( Io_BlifMan_t * p, char * pName )\n{\n    Io_BlifObj_t ** ppEntry;\n    ppEntry = Io_BlifHashLookup( p, pName );\n    if ( *ppEntry == NULL )\n    {\n        assert( p-\u003eiObjNext \u003c p-\u003enObjects ); \n        *ppEntry = p-\u003epObjects + p-\u003eiObjNext++;\n        (*ppEntry)-\u003epName = pName;\n    }\n    return *ppEntry;\n}",
+      "Draft": "func Io_BlifHashFindOrAdd(p *Io_BlifMan_t, pName string) *Io_BlifObj_t {\n    var ppEntry **Io_BlifObj_t;\n    ppEntry = Io_BlifHashLookup( p, pName );\n    if *ppEntry == nil {\n        assert(p.iObjNext \u003c p.nObjects, \"p.iObjNext \u003c p.nObjects\"); \n        *ppEntry = p.pObjects + p.iObjNext++;\n        (*ppEntry).pName = pName;\n    }\n    return *ppEntry;\n}"
+    },
+    {
+      "Name": "Io_BlifCollectTokens",
+      "Start": 9790,
+      "End": 10101,
+      "BodyStart": 9877,
+      "Original": "static void Io_BlifCollectTokens( Vec_Ptr_t * vTokens, char * pInput, char * pOutput )\n{\n    char * pCur;\n    Vec_PtrClear( vTokens );\n    for ( pCur = pInput; pCur \u003c pOutput; pCur++ )\n    {\n        if ( *pCur == 0 )\n            continue;\n        Vec_PtrPush( vTokens, pCur );\n        while ( *++pCur );\n    }\n}",
+      "Draft": "func Io_BlifCollectTokens(vTokens *Vec_Ptr_t, pInput string, pOutput string) {\n    var pCur string;\n    Vec_PtrClear( vTokens );\n    for  pCur = pInput; pCur \u003c pOutput; pCur++  {\n        if *pCur == 0 {\n            continue; }\n        Vec_PtrPush( vTokens, pCur );\n        for  *++pCur  {; }\n    }\n}"
+    },
+    {
+      "Name": "Io_BlifSplitIntoTokens",
+      "Start": 10352,
+      "End": 10659,
+      "BodyStart": 10435,
+      "Original": "static void Io_BlifSplitIntoTokens( Vec_Ptr_t * vTokens, char * pLine, char Stop )\n{\n    char * pCur;\n    // clear spaces\n    for ( pCur = pLine; *pCur != Stop; pCur++ )\n        if ( Io_BlifCharIsSpace(*pCur) )\n            *pCur = 0;\n    // collect tokens\n    Io_BlifCollectTokens( vTokens, pLine, pCur );\n}",
+      "Draft": "func Io_BlifSplitIntoTokens(vTokens *Vec_Ptr_t, pLine string, Stop byte) {\n    var pCur string;\n    // clear spaces\n    for  pCur = pLine; *pCur != Stop; pCur++  {\n        if Io_BlifCharIsSpace(*pCur) != 0 {\n            *pCur = 0; }\n    }\n    // collect tokens\n    Io_BlifCollectTokens( vTokens, pLine, pCur );\n}"
+    },
+    {
+      "Name": "Io_BlifGetLine",
+      "Start": 10947,
+      "End": 11162,
+      "BodyStart": 11008,
+      "Original": "static int Io_BlifGetLine( Io_BlifMan_t * p, char * pToken )\n{\n    char * pLine;\n    int i;\n    Vec_PtrForEachEntry( char *, p-\u003evLines, pLine, i )\n        if ( pToken \u003c pLine )\n            return i;\n    return -1;\n}",
+      "Draft": "func Io_BlifGetLine(p *Io_BlifMan_t, pToken string) int32 {\n    var pLine string;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLines)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vLines, i)), 1); i++  {\n        if pToken \u003c pLine {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Io_BlifEstimatePiNum",
+      "Start": 11439,
+      "End": 11901,
+      "BodyStart": 11491,
+      "Original": "static int Io_BlifEstimatePiNum( Io_BlifMan_t * p )\n{\n    char * pCur;\n    int i, fSpaces;\n    int Counter = 0;\n    Vec_PtrForEachEntry( char *, p-\u003evInputs, pCur, i )\n        for ( fSpaces = 0; *pCur; pCur++ )\n        {\n            if ( Io_BlifCharIsSpace(*pCur) )\n            {\n                if ( !fSpaces )\n                    Counter++;\n                fSpaces = 1;\n            }\n            else\n                fSpaces = 0;\n        }\n    return Counter;\n}",
+      "Draft": "func Io_BlifEstimatePiNum(p *Io_BlifMan_t) int32 {\n    var pCur string;\n    var i, fSpaces int32;\n    var Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vInputs)) \u0026\u0026 (((pCur) = (char *)Vec_PtrEntry(p.vInputs, i)), 1); i++  {\n        for  fSpaces = 0; *pCur; pCur++  {\n            if Io_BlifCharIsSpace(*pCur) != 0 {\n                if !(fSpaces != 0) {\n                    Counter++; }\n                fSpaces = 1;\n            \n            } else {\n                fSpaces = 0; }\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Io_BlifEstimateAndNum",
+      "Start": 12173,
+      "End": 12706,
+      "BodyStart": 12226,
+      "Original": "static int Io_BlifEstimateAndNum( Io_BlifMan_t * p )\n{\n    Io_BlifObj_t * pObj;\n    char * pCur;\n    int i, CounterOne, Counter = 0;\n    for ( i = 0; i \u003c p-\u003eiObjNext; i++ )\n    {\n        pObj = p-\u003epObjects + i;\n        if ( !pObj-\u003efDef )\n            continue;\n        CounterOne = 0;\n        for ( pCur = pObj-\u003epName + strlen(pObj-\u003epName); *pCur != '.'; pCur++ )\n            if ( *pCur == '0' || *pCur == '1' )\n                CounterOne++;\n        if ( CounterOne )\n            Counter += CounterOne - 1;\n    }\n    return Counter;\n}",
+      "Draft": "func Io_BlifEstimateAndNum(p *Io_BlifMan_t) int32 {\n    var pObj *Io_BlifObj_t;\n    var pCur string;\n    var i, CounterOne, Counter int32;\n    for  i = 0; i \u003c p.iObjNext; i++  {\n        pObj = p.pObjects + i;\n        if !pObj.fDef {\n            continue; }\n        CounterOne = 0;\n        for  pCur = pObj.pName + len(pObj.pName); *pCur != '.'; pCur++  {\n            if *pCur == '0' || *pCur == '1' {\n                CounterOne++; }\n        }\n        if CounterOne {\n            Counter += CounterOne - 1; }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Io_BlifLoadFile",
+      "Start": 12981,
+      "End": 13836,
+      "BodyStart": 13031,
+      "Original": "static char * Io_BlifLoadFile( char * pFileName )\n{\n    FILE * pFile;\n    int nFileSize;\n    char * pContents;\n    int RetValue;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Io_BlifLoadFile(): The file is unavailable (absent or open).\\n\" );\n        return NULL;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    if ( nFileSize == 0 )\n    {\n        fclose( pFile );\n        printf( \"Io_BlifLoadFile(): The file is empty.\\n\" );\n        return NULL;\n    }\n    pContents = ABC_ALLOC( char, nFileSize + 10 );\n    rewind( pFile );\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    fclose( pFile );\n    // finish off the file with the spare .end line\n    // some benchmarks suddenly break off without this line\n    strcpy( pContents + nFileSize, \"\\n.end\\n\" );\n    return pContents;\n}",
+      "Draft": "func Io_BlifLoadFile(pFileName string) string {\n    var pFile *os.File;\n    var nFileSize int32;\n    var pContents string;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_BlifLoadFile(): The file is unavailable (absent or open).\\n\");\n        return nil;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    if nFileSize == 0 {\n        _ = (pFile).Close();\n        fmt.Printf(\"Io_BlifLoadFile(): The file is empty.\\n\");\n        return nil;\n    }\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));\n    rewind( pFile );\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n    // finish off the file with the spare .end line\n    // some benchmarks suddenly break off without this line\n    strcpy( pContents + nFileSize, \"\\n.end\\n\" );\n    return pContents;\n}"
+    },
+    {
+      "Name": "Io_BlifReadPreparse",
+      "Start": 14363,
+      "End": 16954,
+      "BodyStart": 14415,
+      "Original": "static void Io_BlifReadPreparse( Io_BlifMan_t * p )\n{\n    char * pCur, * pPrev;\n    int i, fComment = 0;\n    // parse the buffer into lines and remove comments\n    Vec_PtrPush( p-\u003evLines, p-\u003epBuffer );\n    for ( pCur = p-\u003epBuffer; *pCur; pCur++ )\n    {\n        if ( *pCur == '\\n' )\n        {\n            *pCur = 0;\n            fComment = 0;\n            Vec_PtrPush( p-\u003evLines, pCur + 1 );\n        }\n        else if ( *pCur == '#' )\n            fComment = 1;\n        // remove comments\n        if ( fComment )\n            *pCur = 0;\n    }\n\n    // unfold the line extensions and sort lines by directive\n    Vec_PtrForEachEntry( char *, p-\u003evLines, pCur, i )\n    {\n        if ( *pCur == 0 )\n            continue;\n        // find previous non-space character\n        for ( pPrev = pCur - 2; pPrev \u003e= p-\u003epBuffer; pPrev-- )\n            if ( !Io_BlifCharIsSpace(*pPrev) )\n                break;\n        // if it is the line extender, overwrite it with spaces\n        if ( *pPrev == '\\\\' )\n        {\n            for ( ; *pPrev; pPrev++ )\n                *pPrev = ' ';\n            *pPrev = ' ';\n            continue;\n        }\n        // skip spaces at the beginning of the line\n        while ( Io_BlifCharIsSpace(*pCur++) );\n        // parse directives\n        if ( *(pCur-1) != '.' )\n            continue;\n        if ( !strncmp(pCur, \"names\", 5) )\n            Vec_PtrPush( p-\u003evNames, pCur );\n        else if ( !strncmp(pCur, \"latch\", 5) )\n            Vec_PtrPush( p-\u003evLatches, pCur );\n        else if ( !strncmp(pCur, \"inputs\", 6) )\n            Vec_PtrPush( p-\u003evInputs, pCur );\n        else if ( !strncmp(pCur, \"outputs\", 7) )\n            Vec_PtrPush( p-\u003evOutputs, pCur );\n        else if ( !strncmp(pCur, \"model\", 5) ) \n            p-\u003epModel = pCur;\n        else if ( !strncmp(pCur, \"end\", 3) || !strncmp(pCur, \"exdc\", 4) )\n            break;\n        else\n        {\n            pCur--;\n            if ( pCur[strlen(pCur)-1] == '\\r' )\n                pCur[strlen(pCur)-1] = 0;\n            fprintf( stdout, \"Line %d: Skipping line \\\"%s\\\".\\n\", Io_BlifGetLine(p, pCur), pCur );\n        }\n    }\n\n    // count the number of objects\n    p-\u003enObjects = Io_BlifEstimatePiNum(p) + Vec_PtrSize(p-\u003evLatches) + Vec_PtrSize(p-\u003evNames) + 512;\n\n    // allocate memory for objects\n    p-\u003epObjects = ABC_ALLOC( Io_BlifObj_t, p-\u003enObjects );\n    memset( p-\u003epObjects, 0, p-\u003enObjects * sizeof(Io_BlifObj_t) );\n\n    // allocate memory for the hash table\n    p-\u003enTableSize = p-\u003enObjects/2 + 1;\n    p-\u003epTable = ABC_ALLOC( Io_BlifObj_t *, p-\u003enTableSize );\n    memset( p-\u003epTable, 0, p-\u003enTableSize * sizeof(Io_BlifObj_t *) );\n}",
+      "Draft": "func Io_BlifReadPreparse(p *Io_BlifMan_t) {\n    var pCur, pPrev string;\n    var i, fComment int32;\n    // parse the buffer into lines and remove comments\n    Vec_PtrPush( p.vLines, p.pBuffer );\n    for  pCur = p.pBuffer; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            *pCur = 0;\n            fComment = 0;\n            Vec_PtrPush( p.vLines, pCur + 1 );\n        \n        } else if *pCur == '#' {\n            fComment = 1; }\n        // remove comments\n        if fComment != 0 {\n            *pCur = 0; }\n    }\n\n    // unfold the line extensions and sort lines by directive\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLines)) \u0026\u0026 (((pCur) = (char *)Vec_PtrEntry(p.vLines, i)), 1); i++  {\n        if *pCur == 0 {\n            continue; }\n        // find previous non-space character\n        for  pPrev = pCur - 2; pPrev \u003e= p.pBuffer; pPrev--  {\n            if !(Io_BlifCharIsSpace(*pPrev) != 0) {\n                break; }\n        }\n        // if it is the line extender, overwrite it with spaces\n        if *pPrev == '\\\\' {\n            for  ; *pPrev; pPrev++  {\n                *pPrev = ' ';\n            }\n            *pPrev = ' ';\n            continue;\n        }\n        // skip spaces at the beginning of the line\n        for  Io_BlifCharIsSpace(*pCur++)  {; }\n        // parse directives\n        if *(pCur-1) != '.' {\n            continue; }\n        if !strncmp(pCur, \"names\", 5) {\n            Vec_PtrPush( p.vNames, pCur );\n        } else if !strncmp(pCur, \"latch\", 5) {\n            Vec_PtrPush( p.vLatches, pCur );\n        } else if !strncmp(pCur, \"inputs\", 6) {\n            Vec_PtrPush( p.vInputs, pCur );\n        } else if !strncmp(pCur, \"outputs\", 7) {\n            Vec_PtrPush( p.vOutputs, pCur );\n        } else if !strncmp(pCur, \"model\", 5) { \n            p.pModel = pCur;\n        } else if !strncmp(pCur, \"end\", 3) || !strncmp(pCur, \"exdc\", 4) {\n            break;\n        } else {\n            pCur--;\n            if pCur[len(pCur)-1] == '\\r' {\n                pCur[len(pCur)-1] = 0; }\n            fmt.Fprintf(os.Stdout, \"Line %d: Skipping line \\\"%s\\\".\\n\", Io_BlifGetLine(p, pCur), pCur);\n        }\n    }\n\n    // count the number of objects\n    p.nObjects = Io_BlifEstimatePiNum(p) + Vec_PtrSize(p.vLatches) + Vec_PtrSize(p.vNames) + 512;\n\n    // allocate memory for objects\n    // inlining of macro ABC_ALLOC\n    p.pObjects = ((Io_BlifObj_t *) malloc(sizeof(Io_BlifObj_t) * (size_t)(p.nObjects)));\n    memset( p.pObjects, 0, p.nObjects * sizeof(Io_BlifObj_t) );\n\n    // allocate memory for the hash table\n    p.nTableSize = p.nObjects/2 + 1;\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Io_BlifObj_t * *) malloc(sizeof(Io_BlifObj_t *) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, p.nTableSize * sizeof(Io_BlifObj_t *) );\n}"
+    },
+    {
+      "Name": "Io_BlifParse",
+      "Start": 17219,
+      "End": 18219,
+      "BodyStart": 17271,
+      "Original": "static Abc_Ntk_t * Io_BlifParse( Io_BlifMan_t * p )\n{\n    Abc_Ntk_t * pAig;\n    char * pLine;\n    int i;\n    // parse the model\n    if ( !Io_BlifParseModel( p, p-\u003epModel ) )\n        return NULL;\n    // parse the inputs\n    Vec_PtrForEachEntry( char *, p-\u003evInputs, pLine, i )\n        if ( !Io_BlifParseInputs( p, pLine ) )\n            return NULL;\n    // parse the outputs\n    Vec_PtrForEachEntry( char *, p-\u003evOutputs, pLine, i )\n        if ( !Io_BlifParseOutputs( p, pLine ) )\n            return NULL;\n    // parse the latches\n    Vec_PtrForEachEntry( char *, p-\u003evLatches, pLine, i )\n        if ( !Io_BlifParseLatch( p, pLine ) )\n            return NULL;\n    // parse the nodes\n    Vec_PtrForEachEntry( char *, p-\u003evNames, pLine, i )\n        if ( !Io_BlifParseNames( p, pLine ) )\n            return NULL;\n    // reconstruct the network from the parsed data\n    if ( !Io_BlifParseConstruct( p ) )\n        return NULL;\n    // return the network\n    pAig = p-\u003epAig;\n    p-\u003epAig = NULL;\n    return pAig;\n}",
+      "Draft": "func Io_BlifParse(p *Io_BlifMan_t) *Abc_Ntk_t {\n    var pAig *Abc_Ntk_t;\n    var pLine string;\n    var i int32;\n    // parse the model\n    if !(Io_BlifParseModel( p, p.pModel ) != 0) {\n        return nil; }\n    // parse the inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vInputs)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vInputs, i)), 1); i++  {\n        if !(Io_BlifParseInputs( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the outputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vOutputs)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vOutputs, i)), 1); i++  {\n        if !(Io_BlifParseOutputs( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the latches\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLatches)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vLatches, i)), 1); i++  {\n        if !(Io_BlifParseLatch( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNames)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vNames, i)), 1); i++  {\n        if !(Io_BlifParseNames( p, pLine ) != 0) {\n            return nil; }\n    }\n    // reconstruct the network from the parsed data\n    if !(Io_BlifParseConstruct( p ) != 0) {\n        return nil; }\n    // return the network\n    pAig = p.pAig;\n    p.pAig = nil;\n    return pAig;\n}"
+    },
+    {
+      "Name": "Io_BlifParseModel",
+      "Start": 18464,
+      "End": 18979,
+      "BodyStart": 18527,
+      "Original": "static int Io_BlifParseModel( Io_BlifMan_t * p, char * pLine )\n{\n    char * pToken;\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry( p-\u003evTokens, 0 );\n    assert( !strcmp(pToken, \"model\") );\n    if ( Vec_PtrSize(p-\u003evTokens) != 2 )\n    {\n        sprintf( p-\u003esError, \"Line %d: Model line has %d entries while it should have 2.\", Io_BlifGetLine(p, pToken), Vec_PtrSize(p-\u003evTokens) );\n        return 0;\n    }\n    p-\u003epModel = (char *)Vec_PtrEntry( p-\u003evTokens, 1 );\n    return 1;\n}",
+      "Draft": "func Io_BlifParseModel(p *Io_BlifMan_t, pLine string) int32 {\n    var pToken string;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry( p.vTokens, 0 );\n    assert(!(int32(strings.Compare(pToken, \"model\")) != 0), \"!strcmp(pToken, \\\"model\\\")\");\n    if Vec_PtrSize(p.vTokens) != 2 {\n        sprintf( p.sError, \"Line %d: Model line has %d entries while it should have 2.\", Io_BlifGetLine(p, pToken), Vec_PtrSize(p.vTokens) );\n        return 0;\n    }\n    p.pModel = (char *)Vec_PtrEntry( p.vTokens, 1 );\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_BlifParseInputs",
+      "Start": 19225,
+      "End": 19889,
+      "BodyStart": 19289,
+      "Original": "static int Io_BlifParseInputs( Io_BlifMan_t * p, char * pLine )\n{\n    Io_BlifObj_t * pObj;\n    char * pToken;\n    int i;\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p-\u003evTokens, 0);\n    assert( !strcmp(pToken, \"inputs\") );\n    Vec_PtrForEachEntryStart( char *, p-\u003evTokens, pToken, i, 1 )\n    {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if ( pObj-\u003efPi )\n        {\n            sprintf( p-\u003esError, \"Line %d: Primary input (%s) is defined more than once.\", Io_BlifGetLine(p, pToken), pToken );\n            return 0;\n        }\n        pObj-\u003efPi = 1;\n        Vec_PtrPush( p-\u003evPis, pObj );\n    }\n    return 1;\n}",
+      "Draft": "func Io_BlifParseInputs(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var i int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens, 0);\n    assert(!(int32(strings.Compare(pToken, \"inputs\")) != 0), \"!strcmp(pToken, \\\"inputs\\\")\");\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(p.vTokens, i)), 1); i++  {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if pObj.fPi {\n            sprintf( p.sError, \"Line %d: Primary input (%s) is defined more than once.\", Io_BlifGetLine(p, pToken), pToken );\n            return 0;\n        }\n        pObj.fPi = 1;\n        Vec_PtrPush( p.vPis, pObj );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_BlifParseOutputs",
+      "Start": 20136,
+      "End": 20775,
+      "BodyStart": 20201,
+      "Original": "static int Io_BlifParseOutputs( Io_BlifMan_t * p, char * pLine )\n{\n    Io_BlifObj_t * pObj;\n    char * pToken;\n    int i;\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p-\u003evTokens, 0);\n    assert( !strcmp(pToken, \"outputs\") );\n    Vec_PtrForEachEntryStart( char *, p-\u003evTokens, pToken, i, 1 )\n    {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if ( pObj-\u003efPo )\n            fprintf( stdout, \"Line %d: Primary output (%s) is defined more than once (warning only).\\n\", Io_BlifGetLine(p, pToken), pToken );\n        pObj-\u003efPo = 1;\n        Vec_PtrPush( p-\u003evPos, pObj );\n    }\n    return 1;\n}",
+      "Draft": "func Io_BlifParseOutputs(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var i int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens, 0);\n    assert(!(int32(strings.Compare(pToken, \"outputs\")) != 0), \"!strcmp(pToken, \\\"outputs\\\")\");\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(p.vTokens, i)), 1); i++  {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if pObj.fPo {\n            fmt.Fprintf(os.Stdout, \"Line %d: Primary output (%s) is defined more than once (warning only).\\n\", Io_BlifGetLine(p, pToken), pToken); }\n        pObj.fPo = 1;\n        Vec_PtrPush( p.vPos, pObj );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_BlifParseLatch",
+      "Start": 21022,
+      "End": 22794,
+      "BodyStart": 21085,
+      "Original": "static int Io_BlifParseLatch( Io_BlifMan_t * p, char * pLine )\n{\n    Io_BlifObj_t * pObj;\n    char * pToken;\n    int Init;\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p-\u003evTokens,0);\n    assert( !strcmp(pToken, \"latch\") );\n    if ( Vec_PtrSize(p-\u003evTokens) \u003c 3 )\n    {\n        sprintf( p-\u003esError, \"Line %d: Latch does not have input name and output name.\", Io_BlifGetLine(p, pToken) );\n        return 0;\n    }\n    // get initial value\n    if ( Vec_PtrSize(p-\u003evTokens) \u003e 3 )\n        Init = atoi( (char *)Vec_PtrEntry(p-\u003evTokens,3) );\n    else\n        Init = 2;\n    if ( Init \u003c 0 || Init \u003e 2 )\n    {\n        sprintf( p-\u003esError, \"Line %d: Initial state of the latch is incorrect (%s).\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p-\u003evTokens,3) );\n        return 0;\n    }\n    if ( Init == 0 )\n        Init = IO_BLIF_INIT_ZERO;\n    else if ( Init == 1 )\n        Init = IO_BLIF_INIT_ONE;\n    else // if ( Init == 2 )\n        Init = IO_BLIF_INIT_DC;\n    // get latch input\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p-\u003evTokens,1) );\n    pObj-\u003efLi = 1;\n    Vec_PtrPush( p-\u003evLis, pObj );\n    pObj-\u003eInit = Init;\n    // get latch output\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p-\u003evTokens,2) );\n    if ( pObj-\u003efPi )\n    {\n        sprintf( p-\u003esError, \"Line %d: Primary input (%s) is also defined latch output.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p-\u003evTokens,2) );\n        return 0;\n    }\n    if ( pObj-\u003efLo )\n    {\n        sprintf( p-\u003esError, \"Line %d: Latch output (%s) is defined as the output of another latch.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p-\u003evTokens,2) );\n        return 0;\n    }\n    pObj-\u003efLo = 1;\n    Vec_PtrPush( p-\u003evLos, pObj );\n    pObj-\u003eInit = Init;\n    return 1;\n}",
+      "Draft": "func Io_BlifParseLatch(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var Init int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens,0);\n    assert(!(int32(strings.Compare(pToken, \"latch\")) != 0), \"!strcmp(pToken, \\\"latch\\\")\");\n    if Vec_PtrSize(p.vTokens) \u003c 3 {\n        sprintf( p.sError, \"Line %d: Latch does not have input name and output name.\", Io_BlifGetLine(p, pToken) );\n        return 0;\n    }\n    // get initial value\n    if Vec_PtrSize(p.vTokens) \u003e 3 {\n        Init = strconv.Atoi((char *)Vec_PtrEntry(p.vTokens,3));\n    } else {\n        Init = 2; }\n    if Init \u003c 0 || Init \u003e 2 {\n        sprintf( p.sError, \"Line %d: Initial state of the latch is incorrect (%s).\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,3) );\n        return 0;\n    }\n    if Init == 0 {\n        Init = IO_BLIF_INIT_ZERO;\n    } else if Init == 1 {\n        Init = IO_BLIF_INIT_ONE;\n    } else { // if ( Init == 2 )\n        Init = IO_BLIF_INIT_DC; }\n    // get latch input\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p.vTokens,1) );\n    pObj.fLi = 1;\n    Vec_PtrPush( p.vLis, pObj );\n    pObj.Init = Init;\n    // get latch output\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p.vTokens,2) );\n    if pObj.fPi {\n        sprintf( p.sError, \"Line %d: Primary input (%s) is also defined latch output.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );\n        return 0;\n    }\n    if pObj.fLo {\n        sprintf( p.sError, \"Line %d: Latch output (%s) is defined as the output of another latch.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );\n        return 0;\n    }\n    pObj.fLo = 1;\n    Vec_PtrPush( p.vLos, pObj );\n    pObj.Init = Init;\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_BlifParseNames",
+      "Start": 23039,
+      "End": 24024,
+      "BodyStart": 23102,
+      "Original": "static int Io_BlifParseNames( Io_BlifMan_t * p, char * pLine )\n{\n    Io_BlifObj_t * pObj;\n    char * pName;\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pLine, '\\0' );\n    assert( !strcmp((char *)Vec_PtrEntry(p-\u003evTokens,0), \"names\") );\n    pName = (char *)Vec_PtrEntryLast( p-\u003evTokens );\n    pObj = Io_BlifHashFindOrAdd( p, pName );\n    if ( pObj-\u003efPi )\n    {\n        sprintf( p-\u003esError, \"Line %d: Primary input (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if ( pObj-\u003efLo )\n    {\n        sprintf( p-\u003esError, \"Line %d: Latch output (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if ( pObj-\u003efDef )\n    {\n        sprintf( p-\u003esError, \"Line %d: Signal (%s) is defined more than once.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    pObj-\u003efDef = 1;\n    // remember offset to the first fanin name\n    pObj-\u003epName = pName;\n    pObj-\u003eOffset = pObj-\u003epName - (char *)Vec_PtrEntry(p-\u003evTokens,1);\n    return 1;\n}",
+      "Draft": "func Io_BlifParseNames(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pName string;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    assert(!int32(strings.Compare((char *)Vec_PtrEntry(p.vTokens,0), \"names\")), \"!strcmp((char *)Vec_PtrEntry(p.vTokens,0), \\\"names\\\")\");\n    pName = (char *)Vec_PtrEntryLast( p.vTokens );\n    pObj = Io_BlifHashFindOrAdd( p, pName );\n    if pObj.fPi {\n        sprintf( p.sError, \"Line %d: Primary input (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if pObj.fLo {\n        sprintf( p.sError, \"Line %d: Latch output (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if pObj.fDef {\n        sprintf( p.sError, \"Line %d: Signal (%s) is defined more than once.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    pObj.fDef = 1;\n    // remember offset to the first fanin name\n    pObj.pName = pName;\n    pObj.Offset = pObj.pName - (char *)Vec_PtrEntry(p.vTokens,1);\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_BlifParseTable",
+      "Start": 24294,
+      "End": 27293,
+      "BodyStart": 24387,
+      "Original": "static Abc_Obj_t * Io_BlifParseTable( Io_BlifMan_t * p, char * pTable, Vec_Ptr_t * vFanins )\n{\n    char * pProduct, * pOutput;\n    Abc_Obj_t * pRes, * pCube;\n    int i, k, Polarity = -1;\n\n    p-\u003enTablesRead++;\n    // get the tokens\n    Io_BlifSplitIntoTokens( p-\u003evTokens, pTable, '.' );\n    if ( Vec_PtrSize(p-\u003evTokens) == 0 )\n        return Abc_ObjNot( Abc_AigConst1(p-\u003epAig) );\n    if ( Vec_PtrSize(p-\u003evTokens) == 1 )\n    {\n        pOutput = (char *)Vec_PtrEntry( p-\u003evTokens, 0 );\n        if ( ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] )\n        {\n            sprintf( p-\u003esError, \"Line %d: Constant table has wrong output value (%s).\", Io_BlifGetLine(p, pOutput), pOutput );\n            return NULL;\n        }\n        return Abc_ObjNotCond( Abc_AigConst1(p-\u003epAig), pOutput[0] == '0' );\n    }\n    pProduct = (char *)Vec_PtrEntry( p-\u003evTokens, 0 );\n    if ( Vec_PtrSize(p-\u003evTokens) % 2 == 1 )\n    {\n        sprintf( p-\u003esError, \"Line %d: Table has odd number of tokens (%d).\", Io_BlifGetLine(p, pProduct), Vec_PtrSize(p-\u003evTokens) );\n        return NULL;\n    }\n    // parse the table\n    pRes = Abc_ObjNot( Abc_AigConst1(p-\u003epAig) );\n    for ( i = 0; i \u003c Vec_PtrSize(p-\u003evTokens)/2; i++ )\n    {\n        pProduct = (char *)Vec_PtrEntry( p-\u003evTokens, 2*i + 0 );\n        pOutput  = (char *)Vec_PtrEntry( p-\u003evTokens, 2*i + 1 );\n        if ( strlen(pProduct) != (unsigned)Vec_PtrSize(vFanins) )\n        {\n            sprintf( p-\u003esError, \"Line %d: Cube (%s) has size different from the fanin count (%d).\", Io_BlifGetLine(p, pProduct), pProduct, Vec_PtrSize(vFanins) );\n            return NULL;\n        }\n        if ( ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] )\n        {\n            sprintf( p-\u003esError, \"Line %d: Output value (%s) is incorrect.\", Io_BlifGetLine(p, pProduct), pOutput );\n            return NULL;\n        }\n        if ( Polarity == -1 )\n            Polarity = pOutput[0] - '0';\n        else if ( Polarity != pOutput[0] - '0' )\n        {\n            sprintf( p-\u003esError, \"Line %d: Output value (%s) differs from the value in the first line of the table (%d).\", Io_BlifGetLine(p, pProduct), pOutput, Polarity );\n            return NULL;\n        }\n        // parse one product product\n        pCube = Abc_AigConst1(p-\u003epAig);\n        for ( k = 0; pProduct[k]; k++ )\n        {\n            if ( pProduct[k] == '0' )\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p-\u003epAig-\u003epManFunc, pCube, Abc_ObjNot((Abc_Obj_t *)Vec_PtrEntry(vFanins,k)) );\n            else if ( pProduct[k] == '1' )\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p-\u003epAig-\u003epManFunc, pCube, (Abc_Obj_t *)Vec_PtrEntry(vFanins,k) );\n            else if ( pProduct[k] != '-' )\n            {\n                sprintf( p-\u003esError, \"Line %d: Product term (%s) contains character (%c).\", Io_BlifGetLine(p, pProduct), pProduct, pProduct[k] );\n                return NULL;\n            }\n        }\n        pRes = Abc_AigOr( (Abc_Aig_t *)p-\u003epAig-\u003epManFunc, pRes, pCube );\n    }\n    pRes = Abc_ObjNotCond( pRes, Polarity == 0 );\n    return pRes;\n}",
+      "Draft": "func Io_BlifParseTable(p *Io_BlifMan_t, pTable string, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pProduct, pOutput string;\n    var pRes, pCube *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var Polarity int32 = -1;\n\n    p.nTablesRead++;\n    // get the tokens\n    Io_BlifSplitIntoTokens( p.vTokens, pTable, '.' );\n    if Vec_PtrSize(p.vTokens) == 0 {\n        return Abc_ObjNot( Abc_AigConst1(p.pAig) ); }\n    if Vec_PtrSize(p.vTokens) == 1 {\n        pOutput = (char *)Vec_PtrEntry( p.vTokens, 0 );\n        if ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] {\n            sprintf( p.sError, \"Line %d: Constant table has wrong output value (%s).\", Io_BlifGetLine(p, pOutput), pOutput );\n            return nil;\n        }\n        return Abc_ObjNotCond( Abc_AigConst1(p.pAig), pOutput[0] == '0' );\n    }\n    pProduct = (char *)Vec_PtrEntry( p.vTokens, 0 );\n    if Vec_PtrSize(p.vTokens) % 2 == 1 {\n        sprintf( p.sError, \"Line %d: Table has odd number of tokens (%d).\", Io_BlifGetLine(p, pProduct), Vec_PtrSize(p.vTokens) );\n        return nil;\n    }\n    // parse the table\n    pRes = Abc_ObjNot( Abc_AigConst1(p.pAig) );\n    for  i = 0; i \u003c Vec_PtrSize(p.vTokens)/2; i++  {\n        pProduct = (char *)Vec_PtrEntry( p.vTokens, 2*i + 0 );\n        pOutput  = (char *)Vec_PtrEntry( p.vTokens, 2*i + 1 );\n        if len(pProduct) != uint32(Vec_PtrSize(vFanins)) {\n            sprintf( p.sError, \"Line %d: Cube (%s) has size different from the fanin count (%d).\", Io_BlifGetLine(p, pProduct), pProduct, Vec_PtrSize(vFanins) );\n            return nil;\n        }\n        if ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] {\n            sprintf( p.sError, \"Line %d: Output value (%s) is incorrect.\", Io_BlifGetLine(p, pProduct), pOutput );\n            return nil;\n        }\n        if Polarity == -1 {\n            Polarity = pOutput[0] - '0';\n        } else if Polarity != pOutput[0] - '0' {\n            sprintf( p.sError, \"Line %d: Output value (%s) differs from the value in the first line of the table (%d).\", Io_BlifGetLine(p, pProduct), pOutput, Polarity );\n            return nil;\n        }\n        // parse one product product\n        pCube = Abc_AigConst1(p.pAig);\n        for  k = 0; pProduct[k]; k++  {\n            if pProduct[k] == '0' {\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p.pAig.pManFunc, pCube, Abc_ObjNot((Abc_Obj_t *)Vec_PtrEntry(vFanins,k)) );\n            } else if pProduct[k] == '1' {\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p.pAig.pManFunc, pCube, (Abc_Obj_t *)Vec_PtrEntry(vFanins,k) );\n            } else if pProduct[k] != '-' {\n                sprintf( p.sError, \"Line %d: Product term (%s) contains character (%c).\", Io_BlifGetLine(p, pProduct), pProduct, pProduct[k] );\n                return nil;\n            }\n        }\n        pRes = Abc_AigOr( (Abc_Aig_t *)p.pAig.pManFunc, pRes, pCube );\n    }\n    pRes = Abc_ObjNotCond( pRes, Polarity == 0 );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Io_BlifParseConstruct_rec",
+      "Start": 27562,
+      "End": 29128,
+      "BodyStart": 27641,
+      "Original": "static Abc_Obj_t * Io_BlifParseConstruct_rec( Io_BlifMan_t * p, char * pName )\n{\n    Vec_Ptr_t * vFanins;\n    Abc_Obj_t * pFaninAbc;\n    Io_BlifObj_t * pObjIo;\n    char * pNameFanin;\n    int i;\n    // get the IO object with this name\n    pObjIo = *Io_BlifHashLookup( p, pName );\n    if ( pObjIo == NULL )\n    {\n        sprintf( p-\u003esError, \"Line %d: Signal (%s) is not defined as a table.\", Io_BlifGetLine(p, pName), pName );\n        return NULL;\n    }\n    // loop detection\n    if ( pObjIo-\u003efLoop )\n    {\n        sprintf( p-\u003esError, \"Line %d: Signal (%s) appears twice on a combinational path.\", Io_BlifGetLine(p, pName), pName );\n        return NULL;\n    }\n    // check if the AIG is already constructed\n    if ( pObjIo-\u003epEquiv )\n        return (Abc_Obj_t *)pObjIo-\u003epEquiv;\n    // mark this node on the path\n    pObjIo-\u003efLoop = 1;\n    // construct the AIGs for the fanins\n    vFanins = Vec_PtrAlloc( 8 );\n    Io_BlifCollectTokens( vFanins, pObjIo-\u003epName - pObjIo-\u003eOffset, pObjIo-\u003epName );\n    Vec_PtrForEachEntry( char *, vFanins, pNameFanin, i )\n    {\n        pFaninAbc = Io_BlifParseConstruct_rec( p, pNameFanin );\n        if ( pFaninAbc == NULL )\n        {\n            Vec_PtrFree( vFanins );\n            return NULL;\n        }\n        Vec_PtrWriteEntry( vFanins, i, pFaninAbc );\n    }\n    // construct the node\n    pObjIo-\u003epEquiv = Io_BlifParseTable( p, pObjIo-\u003epName + strlen(pObjIo-\u003epName), vFanins );\n    Vec_PtrFree( vFanins );\n    // unmark this node on the path\n    pObjIo-\u003efLoop = 0;\n    // remember the new node\n    return (Abc_Obj_t *)pObjIo-\u003epEquiv;\n}",
+      "Draft": "func Io_BlifParseConstruct_rec(p *Io_BlifMan_t, pName string) *Abc_Obj_t {\n    var vFanins *Vec_Ptr_t;\n    var pFaninAbc *Abc_Obj_t;\n    var pObjIo *Io_BlifObj_t;\n    var pNameFanin string;\n    var i int32;\n    // get the IO object with this name\n    pObjIo = *Io_BlifHashLookup( p, pName );\n    if pObjIo == nil {\n        sprintf( p.sError, \"Line %d: Signal (%s) is not defined as a table.\", Io_BlifGetLine(p, pName), pName );\n        return nil;\n    }\n    // loop detection\n    if pObjIo.fLoop {\n        sprintf( p.sError, \"Line %d: Signal (%s) appears twice on a combinational path.\", Io_BlifGetLine(p, pName), pName );\n        return nil;\n    }\n    // check if the AIG is already constructed\n    if pObjIo.pEquiv {\n        return (Abc_Obj_t *)pObjIo.pEquiv; }\n    // mark this node on the path\n    pObjIo.fLoop = 1;\n    // construct the AIGs for the fanins\n    vFanins = Vec_PtrAlloc( 8 );\n    Io_BlifCollectTokens( vFanins, pObjIo.pName - pObjIo.Offset, pObjIo.pName );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pNameFanin) = (char *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        pFaninAbc = Io_BlifParseConstruct_rec( p, pNameFanin );\n        if pFaninAbc == nil {\n            Vec_PtrFree( vFanins );\n            return nil;\n        }\n        Vec_PtrWriteEntry( vFanins, i, pFaninAbc );\n    }\n    // construct the node\n    pObjIo.pEquiv = Io_BlifParseTable( p, pObjIo.pName + len(pObjIo.pName), vFanins );\n    Vec_PtrFree( vFanins );\n    // unmark this node on the path\n    pObjIo.fLoop = 0;\n    // remember the new node\n    return (Abc_Obj_t *)pObjIo.pEquiv;\n}"
+    },
+    {
+      "Name": "Io_BlifParseConstruct",
+      "Start": 29397,
+      "End": 31959,
+      "BodyStart": 29450,
+      "Original": "static int Io_BlifParseConstruct( Io_BlifMan_t * p )\n{\n    Abc_Ntk_t * pAig;\n    Io_BlifObj_t * pObjIo, * pObjIoInput;\n    Abc_Obj_t * pObj, * pLatch;\n    int i;\n    // allocate the empty AIG\n    pAig = p-\u003epAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig-\u003epName = Extra_UtilStrsav( p-\u003epModel );\n    pAig-\u003epSpec = Extra_UtilStrsav( p-\u003epFileName );\n    // create PIs\n    Vec_PtrForEachEntry( Io_BlifObj_t *, p-\u003evPis, pObjIo, i )\n    {\n        pObj = Abc_NtkCreatePi( pAig );\n        Abc_ObjAssignName( pObj, pObjIo-\u003epName, NULL );\n        pObjIo-\u003epEquiv = pObj;\n    }\n    // create POs\n    Vec_PtrForEachEntry( Io_BlifObj_t *, p-\u003evPos, pObjIo, i )\n    {\n        pObj = Abc_NtkCreatePo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo-\u003epName, NULL );\n    }\n    // create latches\n    Vec_PtrForEachEntry( Io_BlifObj_t *, p-\u003evLos, pObjIo, i )\n    {\n        // add the latch input terminal\n        pObj = Abc_NtkCreateBi( pAig );\n        pObjIoInput = (Io_BlifObj_t *)Vec_PtrEntry( p-\u003evLis, i );\n        Abc_ObjAssignName( pObj, pObjIoInput-\u003epName, NULL );\n        \n        // add the latch box\n        pLatch = Abc_NtkCreateLatch( pAig );\n        pLatch-\u003epData = (void *)(ABC_PTRUINT_T)pObjIo-\u003eInit;\n        Abc_ObjAssignName( pLatch, pObjIo-\u003epName, \"L\" );\n        Abc_ObjAddFanin( pLatch, pObj  );\n\n        // add the latch output terminal\n        pObj = Abc_NtkCreateBo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo-\u003epName, NULL );\n        Abc_ObjAddFanin( pObj, pLatch );\n        // set the value of the latch output\n//        pObjIo-\u003epEquiv = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        pObjIo-\u003epEquiv = pObj;\n    }\n    // traverse the nodes from the POs\n    Vec_PtrForEachEntry( Io_BlifObj_t *, p-\u003evPos, pObjIo, i )\n    {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo-\u003epName );\n        if ( pObj == NULL )\n            return 0;\n        Abc_ObjAddFanin( Abc_NtkPo(p-\u003epAig, i), pObj );\n    }\n    // traverse the nodes from the latch inputs\n    Vec_PtrForEachEntry( Io_BlifObj_t *, p-\u003evLis, pObjIo, i )\n    {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo-\u003epName );\n        if ( pObj == NULL )\n            return 0;\n//        pObj = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(p-\u003epAig, i)), pObj );\n    }\n    p-\u003enTablesLeft = Vec_PtrSize(p-\u003evNames) - p-\u003enTablesRead; \n    if ( p-\u003enTablesLeft ) \n        printf( \"The number of dangling tables = %d.\\n\", p-\u003enTablesLeft );\n    printf( \"AND nodes = %6d.  Estimate = %6d.\\n\", Abc_NtkNodeNum(p-\u003epAig), Io_BlifEstimateAndNum(p) );\n    return 1;\n}",
+      "Draft": "func Io_BlifParseConstruct(p *Io_BlifMan_t) int32 {\n    var pAig *Abc_Ntk_t;\n    var pObjIo, pObjIoInput *Io_BlifObj_t;\n    var pObj, pLatch *Abc_Obj_t;\n    var i int32;\n    // allocate the empty AIG\n    pAig = p.pAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig.pName = Extra_UtilStrsav( p.pModel );\n    pAig.pSpec = Extra_UtilStrsav( p.pFileName );\n    // create PIs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj = Abc_NtkCreatePi( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n        pObjIo.pEquiv = pObj;\n    }\n    // create POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj = Abc_NtkCreatePo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n    }\n    // create latches\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vLos, i)), 1); i++  {\n        // add the latch input terminal\n        pObj = Abc_NtkCreateBi( pAig );\n        pObjIoInput = (Io_BlifObj_t *)Vec_PtrEntry( p.vLis, i );\n        Abc_ObjAssignName( pObj, pObjIoInput.pName, nil );\n        \n        // add the latch box\n        pLatch = Abc_NtkCreateLatch( pAig );\n        pLatch.pData = (void *)(ABC_PTRUINT_T)pObjIo.Init;\n        Abc_ObjAssignName( pLatch, pObjIo.pName, \"L\" );\n        Abc_ObjAddFanin( pLatch, pObj  );\n\n        // add the latch output terminal\n        pObj = Abc_NtkCreateBo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n        Abc_ObjAddFanin( pObj, pLatch );\n        // set the value of the latch output\n//        pObjIo-\u003epEquiv = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        pObjIo.pEquiv = pObj;\n    }\n    // traverse the nodes from the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo.pName );\n        if pObj == nil {\n            return 0; }\n        Abc_ObjAddFanin( Abc_NtkPo(p.pAig, i), pObj );\n    }\n    // traverse the nodes from the latch inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLis)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vLis, i)), 1); i++  {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo.pName );\n        if pObj == nil {\n            return 0; }\n//        pObj = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(p.pAig, i)), pObj );\n    }\n    p.nTablesLeft = Vec_PtrSize(p.vNames) - p.nTablesRead; \n    if p.nTablesLeft { \n        fmt.Printf(\"The number of dangling tables = %d.\\n\", p.nTablesLeft); }\n    fmt.Printf(\"AND nodes = %6d.  Estimate = %6d.\\n\", Abc_NtkNodeNum(p.pAig), Io_BlifEstimateAndNum(p));\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::unsigned             fPi    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1156,
+      "End": 1194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the object is a primary input\n    unsigned             fPo    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1194,
+      "End": 1266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the object is a primary output\n    unsigned             fLi    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1266,
+      "End": 1339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the object is a latch input\n    unsigned             fLo    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1339,
+      "End": 1409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the object is a latch output\n    unsigned             fDef   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1409,
+      "End": 1480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the object is defined as a table (node, PO, LI)\n    unsigned             fLoop  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1480,
+      "End": 1570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// flag for loop detection\n    unsigned             Init   :  2;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1570,
+      "End": 1636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t::// the latch initial state\n    unsigned             Offset : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1636,
+      "End": 1702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifObj_t",
+      "Category": "struct-review",
+      "Symbol": "Io_BlifObj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1072,
+      "End": 1947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifMan_t::// the current tokens\n    char                 sError[512];",
+      "Category": "struct-field-review",
+      "Symbol": "Io_BlifMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3346,
+      "End": 3411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::struct::Io_BlifMan_t",
+      "Category": "struct-review",
+      "Symbol": "Io_BlifMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1949,
+      "End": 3624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::enum::878",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 878,
+      "End": 882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::6522",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6452,
+      "End": 6452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::6578",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6500,
+      "End": 6506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::static::8502",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8082,
+      "End": 8088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::14218",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13519,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::17522",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16637,
+      "End": 16637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::17612",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16719,
+      "End": 16725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::17806",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16841,
+      "End": 16841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::mechanical::sizeof::17900",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16927,
+      "End": 16933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::6498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6452,
+      "End": 6452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::7464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7320,
+      "End": 7320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::7602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7367,
+      "End": 7367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::7740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7415,
+      "End": 7415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::8145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7740,
+      "End": 7740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::11575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11043,
+      "End": 11043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::12195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11555,
+      "End": 11555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::14202",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13519,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::15786",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14968,
+      "End": 14968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::17498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16637,
+      "End": 16637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::17780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16841,
+      "End": 16841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::17812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16841,
+      "End": 16841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::17906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16933,
+      "End": 16949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::18528",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17442,
+      "End": 17442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::18791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17595,
+      "End": 17595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::19056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17750,
+      "End": 17750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::19315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17901,
+      "End": 17901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::20026",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18616,
+      "End": 18624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::20335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18925,
+      "End": 18933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::20824",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19414,
+      "End": 19422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::21025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19496,
+      "End": 19496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::21842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20326,
+      "End": 20334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::22044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20409,
+      "End": 20409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::22835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21213,
+      "End": 21221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::23182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21560,
+      "End": 21568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::23398",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21776,
+      "End": 21783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::23693",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22071,
+      "End": 22079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::23867",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22245,
+      "End": 22253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::24048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22426,
+      "End": 22433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::24264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22642,
+      "End": 22649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::24844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23222,
+      "End": 23230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::24904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23282,
+      "End": 23290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::25595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23973,
+      "End": 23981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::26360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24738,
+      "End": 24746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::26725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25103,
+      "End": 25111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::27125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25503,
+      "End": 25511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::27189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25567,
+      "End": 25575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::28264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26642,
+      "End": 26655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::28314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26692,
+      "End": 26705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::28434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26812,
+      "End": 26825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::28473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26851,
+      "End": 26864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::28794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27172,
+      "End": 27185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::29930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28308,
+      "End": 28321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::30293",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28556,
+      "End": 28556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::30826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29098,
+      "End": 29111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::31621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29782,
+      "End": 29782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::31946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30001,
+      "End": 30001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::32244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30193,
+      "End": 30193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::32405",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30359,
+      "End": 30375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::32617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30571,
+      "End": 30579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::33233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31076,
+      "End": 31076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::pointer-cast::33629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31366,
+      "End": 31366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifCharIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifCharIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4393,
+      "End": 4507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_ReadBlifAsAig",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBlifAsAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5010,
+      "End": 6110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6383,
+      "End": 6929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::ternary::Io_BlifFree",
+      "Category": "ternary-review",
+      "Symbol": "Io_BlifFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7198,
+      "End": 7756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifFree",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7198,
+      "End": 7756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifHashString",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifHashString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8010,
+      "End": 8338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifHashLookup",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifHashLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8606,
+      "End": 8924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifHashFindOrAdd",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifHashFindOrAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9188,
+      "End": 9532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifCollectTokens",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifCollectTokens",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9790,
+      "End": 10101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifSplitIntoTokens",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifSplitIntoTokens",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10352,
+      "End": 10659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifGetLine",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifGetLine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10947,
+      "End": 11162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifEstimatePiNum",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifEstimatePiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11439,
+      "End": 11901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifEstimateAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifEstimateAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12173,
+      "End": 12706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifLoadFile",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifLoadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12981,
+      "End": 13836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifReadPreparse",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifReadPreparse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14363,
+      "End": 16954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParse",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17219,
+      "End": 18219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseModel",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18464,
+      "End": 18979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseInputs",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19225,
+      "End": 19889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20136,
+      "End": 20775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseLatch",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21022,
+      "End": 22794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseNames",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23039,
+      "End": 24024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseTable",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24294,
+      "End": 27293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseConstruct_rec",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseConstruct_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27562,
+      "End": 29128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::Io_BlifParseConstruct",
+      "Category": "semantic-review",
+      "Symbol": "Io_BlifParseConstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29397,
+      "End": 31959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBlifAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32206
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioReadBlifAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read BLIF file into AIG.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - December 23, 2006.]\n\n  Revision    [$Id: ioReadBlifAig.c,v 1.00 2006/12/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"misc/vec/vecPtr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// latch initial values\n type Io_BlifInit_t int32\nconst ( \n    IO_BLIF_INIT_NONE Io_BlifInit_t = 0\n  // 0:  unknown\n    IO_BLIF_INIT_ZERO Io_BlifInit_t = IO_BLIF_INIT_NONE + 1\n      // 1:  zero\n    IO_BLIF_INIT_ONE Io_BlifInit_t = IO_BLIF_INIT_ZERO + 1\n       // 2:  one\n    IO_BLIF_INIT_DC Io_BlifInit_t = IO_BLIF_INIT_ONE + 1         // 3:  don't-care\n\n)\n\n \n\n     // parsing object\ntype Io_BlifObj_t struct {\n    fPi uint32; /* C bitfield: 1 bits; review packing and truncation */  // the object is a primary input\n    fPo uint32; /* C bitfield: 1 bits; review packing and truncation */  // the object is a primary output\n    fLi uint32; /* C bitfield: 1 bits; review packing and truncation */  // the object is a latch input\n    fLo uint32; /* C bitfield: 1 bits; review packing and truncation */  // the object is a latch output\n    fDef uint32; /* C bitfield: 1 bits; review packing and truncation */  // the object is defined as a table (node, PO, LI)\n    fLoop uint32; /* C bitfield: 1 bits; review packing and truncation */  // flag for loop detection\n    Init uint32; /* C bitfield: 2 bits; review packing and truncation */  // the latch initial state\n    Offset uint32; /* C bitfield: 24 bits; review packing and truncation */  // temporary number\n    pName                string;        // the name of this object\n    pEquiv                any;       // the AIG node representing this line    \n    pNext        *Io_BlifObj_t;        // the next obj in the hash table\n}\n\n     // parsing manager\ntype Io_BlifMan_t struct {\n    // general info about file\n    pFileName                string;    // the name of the file\n    pBuffer                string;      // the begining of the file buffer\n    vLines           *Vec_Ptr_t;       // the line beginnings\n    // temporary objects\n    pObjects        *Io_BlifObj_t;     // the storage for objects\n    nObjects                  int32;     // the number of objects allocated\n    iObjNext                  int32;     // the next free object\n    // file lines\n    pModel                string;       // .model line\n    vInputs           *Vec_Ptr_t;      // .inputs lines\n    vOutputs           *Vec_Ptr_t;     // .outputs lines\n    vLatches           *Vec_Ptr_t;     // .latches lines\n    vNames           *Vec_Ptr_t;       // .names lines\n    // network objects\n    vPis           *Vec_Ptr_t;         // the PI structures\n    vPos           *Vec_Ptr_t;         // the PO structures\n    vLis           *Vec_Ptr_t;         // the LI structures\n    vLos           *Vec_Ptr_t;         // the LO structures\n    // mapping of names into objects\n    pTable       **Io_BlifObj_t;       // the hash table\n    nTableSize                  int32;   // the hash table size\n    // current processing info\n    pAig           *Abc_Ntk_t;         // the network under construction\n    vTokens           *Vec_Ptr_t;      // the current tokens\n    sError [512]byte;  // the error string generated during parsing\n    // statistics \n    nTablesRead                  int32;  // the number of processed tables\n    nTablesLeft                  int32;  // the number of dangling tables\n}\n\n// static functions\n// static Io_BlifMan_t *    Io_BlifAlloc();\n\n// static void              Io_BlifFree( Io_BlifMan_t * p );\n\n// static char *            Io_BlifLoadFile( char * pFileName );\n\n// static void              Io_BlifReadPreparse( Io_BlifMan_t * p );\n\n// static Abc_Ntk_t *       Io_BlifParse( Io_BlifMan_t * p );\n\n// static int               Io_BlifParseModel( Io_BlifMan_t * p, char * pLine );\n\n// static int               Io_BlifParseInputs( Io_BlifMan_t * p, char * pLine );\n\n// static int               Io_BlifParseOutputs( Io_BlifMan_t * p, char * pLine );\n\n// static int               Io_BlifParseLatch( Io_BlifMan_t * p, char * pLine );\n\n// static int               Io_BlifParseNames( Io_BlifMan_t * p, char * pLine );\n\n// static int               Io_BlifParseConstruct( Io_BlifMan_t * p );\n\nfunc Io_BlifCharIsSpace(s byte) int32 { return s == ' ' || s == '\\t' || s == '\\r' || s == '\\n';  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the network from the BLIF file as an AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBlifAsAig(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pFile *os.File;\n    var p *Io_BlifMan_t;\n    var pAig *Abc_Ntk_t;\n\n    // check that the file is available\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_Blif(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    _ = (pFile).Close();\n\n    // start the file reader\n    p = Io_BlifAlloc();\n    p.pFileName = pFileName;\n    p.pBuffer   = Io_BlifLoadFile( pFileName );\n    if p.pBuffer == nil {\n        Io_BlifFree( p );\n        return nil;\n    }\n    // prepare the file for parsing\n    Io_BlifReadPreparse( p );\n    // construct the network\n    pAig = Io_BlifParse( p );\n    if p.sError[0] {\n        fmt.Fprintf(os.Stdout, \"%s\\n\", p.sError); }\n    if pAig == nil {\n        return nil; }\n    Io_BlifFree( p );\n\n    // make sure that everything is okay with the network structure\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pAig ) {\n        fmt.Printf(\"Io_Blif: The network check has failed.\\n\");\n        Abc_NtkDelete( pAig );\n        return nil;\n    }\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the BLIF parsing structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifAlloc() *Io_BlifMan_t {\n    var p *Io_BlifMan_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Io_BlifMan_t *) malloc(sizeof(Io_BlifMan_t) * (size_t)(1)));\n    *p = Io_BlifMan_t{};\n    p.vLines   = Vec_PtrAlloc( 512 );\n    p.vInputs  = Vec_PtrAlloc( 512 );\n    p.vOutputs = Vec_PtrAlloc( 512 );\n    p.vLatches = Vec_PtrAlloc( 512 );\n    p.vNames   = Vec_PtrAlloc( 512 );\n    p.vTokens  = Vec_PtrAlloc( 512 );\n    p.vPis     = Vec_PtrAlloc( 512 );\n    p.vPos     = Vec_PtrAlloc( 512 );\n    p.vLis     = Vec_PtrAlloc( 512 );\n    p.vLos     = Vec_PtrAlloc( 512 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the BLIF parsing structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifFree(p *Io_BlifMan_t) {\n    if p.pAig {\n        Abc_NtkDelete( p.pAig ); }\n    // inlining of macro ABC_FREE\n    if p.pBuffer {  ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pObjects { ((p.pObjects) ? (free((char *) (p.pObjects)), (p.pObjects) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pTable {   ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0); }\n    Vec_PtrFree( p.vLines );\n    Vec_PtrFree( p.vInputs );\n    Vec_PtrFree( p.vOutputs );\n    Vec_PtrFree( p.vLatches );\n    Vec_PtrFree( p.vNames );\n    Vec_PtrFree( p.vTokens );\n    Vec_PtrFree( p.vPis );\n    Vec_PtrFree( p.vPos );\n    Vec_PtrFree( p.vLis );\n    Vec_PtrFree( p.vLos );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing for character strings.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Io_BlifHashString_s_Primes [10]int32 = [10]int32{ \n        1291, 1699, 2357, 4177, 5147, \n        5647, 6343, 7103, 7873, 8147,\n    };\nfunc Io_BlifHashString(pName string, TableSize int32) uint32 {\n    \n    var i, Key uint32;\n    for  i = 0; pName[i] != '\\0'; i++  {\n        Key ^= spStatic_Io_BlifHashString_s_Primes[i%10]*pName[i]*pName[i];\n    }\n    return Key % TableSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the given name exists in the table.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifHashLookup(p *Io_BlifMan_t, pName string) **Io_BlifObj_t {\n    var ppEntry **Io_BlifObj_t;\n    for  ppEntry = p.pTable + Io_BlifHashString(pName, p.nTableSize); *ppEntry; ppEntry = \u0026(*ppEntry).pNext  {\n        if !(int32(strings.Compare((*ppEntry).pName, pName)) != 0) {\n            return ppEntry; }\n    }\n    return ppEntry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or add the given name to the table.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifHashFindOrAdd(p *Io_BlifMan_t, pName string) *Io_BlifObj_t {\n    var ppEntry **Io_BlifObj_t;\n    ppEntry = Io_BlifHashLookup( p, pName );\n    if *ppEntry == nil {\n        assert(p.iObjNext \u003c p.nObjects, \"p.iObjNext \u003c p.nObjects\"); \n        *ppEntry = p.pObjects + p.iObjNext++;\n        (*ppEntry).pName = pName;\n    }\n    return *ppEntry;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the already split tokens.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifCollectTokens(vTokens *Vec_Ptr_t, pInput string, pOutput string) {\n    var pCur string;\n    Vec_PtrClear( vTokens );\n    for  pCur = pInput; pCur \u003c pOutput; pCur++  {\n        if *pCur == 0 {\n            continue; }\n        Vec_PtrPush( vTokens, pCur );\n        for  *++pCur  {; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Splits the line into tokens.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifSplitIntoTokens(vTokens *Vec_Ptr_t, pLine string, Stop byte) {\n    var pCur string;\n    // clear spaces\n    for  pCur = pLine; *pCur != Stop; pCur++  {\n        if Io_BlifCharIsSpace(*pCur) != 0 {\n            *pCur = 0; }\n    }\n    // collect tokens\n    Io_BlifCollectTokens( vTokens, pLine, pCur );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the 1-based number of the line in which the token occurs.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifGetLine(p *Io_BlifMan_t, pToken string) int32 {\n    var pLine string;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLines)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vLines, i)), 1); i++  {\n        if pToken \u003c pLine {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Conservatively estimates the number of primary inputs.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifEstimatePiNum(p *Io_BlifMan_t) int32 {\n    var pCur string;\n    var i, fSpaces int32;\n    var Counter int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vInputs)) \u0026\u0026 (((pCur) = (char *)Vec_PtrEntry(p.vInputs, i)), 1); i++  {\n        for  fSpaces = 0; *pCur; pCur++  {\n            if Io_BlifCharIsSpace(*pCur) != 0 {\n                if !(fSpaces != 0) {\n                    Counter++; }\n                fSpaces = 1;\n            \n            } else {\n                fSpaces = 0; }\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Conservatively estimates the number of AIG nodes.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifEstimateAndNum(p *Io_BlifMan_t) int32 {\n    var pObj *Io_BlifObj_t;\n    var pCur string;\n    var i, CounterOne, Counter int32;\n    for  i = 0; i \u003c p.iObjNext; i++  {\n        pObj = p.pObjects + i;\n        if !pObj.fDef {\n            continue; }\n        CounterOne = 0;\n        for  pCur = pObj.pName + len(pObj.pName); *pCur != '.'; pCur++  {\n            if *pCur == '0' || *pCur == '1' {\n                CounterOne++; }\n        }\n        if CounterOne {\n            Counter += CounterOne - 1; }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the file into a character buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifLoadFile(pFileName string) string {\n    var pFile *os.File;\n    var nFileSize int32;\n    var pContents string;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Io_BlifLoadFile(): The file is unavailable (absent or open).\\n\");\n        return nil;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    if nFileSize == 0 {\n        _ = (pFile).Close();\n        fmt.Printf(\"Io_BlifLoadFile(): The file is empty.\\n\");\n        return nil;\n    }\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 10)));\n    rewind( pFile );\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n    // finish off the file with the spare .end line\n    // some benchmarks suddenly break off without this line\n    strcpy( pContents + nFileSize, \"\\n.end\\n\" );\n    return pContents;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the parsing.]\n\n  Description [Performs several preliminary operations:\n  - Cuts the file buffer into separate lines.\n  - Removes comments and line extenders.\n  - Sorts lines by directives.\n  - Estimates the number of objects.\n  - Allocates room for the objects.\n  - Allocates room for the hash table.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifReadPreparse(p *Io_BlifMan_t) {\n    var pCur, pPrev string;\n    var i, fComment int32;\n    // parse the buffer into lines and remove comments\n    Vec_PtrPush( p.vLines, p.pBuffer );\n    for  pCur = p.pBuffer; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            *pCur = 0;\n            fComment = 0;\n            Vec_PtrPush( p.vLines, pCur + 1 );\n        \n        } else if *pCur == '#' {\n            fComment = 1; }\n        // remove comments\n        if fComment != 0 {\n            *pCur = 0; }\n    }\n\n    // unfold the line extensions and sort lines by directive\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLines)) \u0026\u0026 (((pCur) = (char *)Vec_PtrEntry(p.vLines, i)), 1); i++  {\n        if *pCur == 0 {\n            continue; }\n        // find previous non-space character\n        for  pPrev = pCur - 2; pPrev \u003e= p.pBuffer; pPrev--  {\n            if !(Io_BlifCharIsSpace(*pPrev) != 0) {\n                break; }\n        }\n        // if it is the line extender, overwrite it with spaces\n        if *pPrev == '\\\\' {\n            for  ; *pPrev; pPrev++  {\n                *pPrev = ' ';\n            }\n            *pPrev = ' ';\n            continue;\n        }\n        // skip spaces at the beginning of the line\n        for  Io_BlifCharIsSpace(*pCur++)  {; }\n        // parse directives\n        if *(pCur-1) != '.' {\n            continue; }\n        if !strncmp(pCur, \"names\", 5) {\n            Vec_PtrPush( p.vNames, pCur );\n        } else if !strncmp(pCur, \"latch\", 5) {\n            Vec_PtrPush( p.vLatches, pCur );\n        } else if !strncmp(pCur, \"inputs\", 6) {\n            Vec_PtrPush( p.vInputs, pCur );\n        } else if !strncmp(pCur, \"outputs\", 7) {\n            Vec_PtrPush( p.vOutputs, pCur );\n        } else if !strncmp(pCur, \"model\", 5) { \n            p.pModel = pCur;\n        } else if !strncmp(pCur, \"end\", 3) || !strncmp(pCur, \"exdc\", 4) {\n            break;\n        } else {\n            pCur--;\n            if pCur[len(pCur)-1] == '\\r' {\n                pCur[len(pCur)-1] = 0; }\n            fmt.Fprintf(os.Stdout, \"Line %d: Skipping line \\\"%s\\\".\\n\", Io_BlifGetLine(p, pCur), pCur);\n        }\n    }\n\n    // count the number of objects\n    p.nObjects = Io_BlifEstimatePiNum(p) + Vec_PtrSize(p.vLatches) + Vec_PtrSize(p.vNames) + 512;\n\n    // allocate memory for objects\n    // inlining of macro ABC_ALLOC\n    p.pObjects = ((Io_BlifObj_t *) malloc(sizeof(Io_BlifObj_t) * (size_t)(p.nObjects)));\n    memset( p.pObjects, 0, p.nObjects * sizeof(Io_BlifObj_t) );\n\n    // allocate memory for the hash table\n    p.nTableSize = p.nObjects/2 + 1;\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Io_BlifObj_t * *) malloc(sizeof(Io_BlifObj_t *) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, p.nTableSize * sizeof(Io_BlifObj_t *) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParse(p *Io_BlifMan_t) *Abc_Ntk_t {\n    var pAig *Abc_Ntk_t;\n    var pLine string;\n    var i int32;\n    // parse the model\n    if !(Io_BlifParseModel( p, p.pModel ) != 0) {\n        return nil; }\n    // parse the inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vInputs)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vInputs, i)), 1); i++  {\n        if !(Io_BlifParseInputs( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the outputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vOutputs)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vOutputs, i)), 1); i++  {\n        if !(Io_BlifParseOutputs( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the latches\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLatches)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vLatches, i)), 1); i++  {\n        if !(Io_BlifParseLatch( p, pLine ) != 0) {\n            return nil; }\n    }\n    // parse the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNames)) \u0026\u0026 (((pLine) = (char *)Vec_PtrEntry(p.vNames, i)), 1); i++  {\n        if !(Io_BlifParseNames( p, pLine ) != 0) {\n            return nil; }\n    }\n    // reconstruct the network from the parsed data\n    if !(Io_BlifParseConstruct( p ) != 0) {\n        return nil; }\n    // return the network\n    pAig = p.pAig;\n    p.pAig = nil;\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses the model line.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseModel(p *Io_BlifMan_t, pLine string) int32 {\n    var pToken string;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry( p.vTokens, 0 );\n    assert(!(int32(strings.Compare(pToken, \"model\")) != 0), \"!strcmp(pToken, \\\"model\\\")\");\n    if Vec_PtrSize(p.vTokens) != 2 {\n        sprintf( p.sError, \"Line %d: Model line has %d entries while it should have 2.\", Io_BlifGetLine(p, pToken), Vec_PtrSize(p.vTokens) );\n        return 0;\n    }\n    p.pModel = (char *)Vec_PtrEntry( p.vTokens, 1 );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses the inputs line.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseInputs(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var i int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens, 0);\n    assert(!(int32(strings.Compare(pToken, \"inputs\")) != 0), \"!strcmp(pToken, \\\"inputs\\\")\");\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(p.vTokens, i)), 1); i++  {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if pObj.fPi {\n            sprintf( p.sError, \"Line %d: Primary input (%s) is defined more than once.\", Io_BlifGetLine(p, pToken), pToken );\n            return 0;\n        }\n        pObj.fPi = 1;\n        Vec_PtrPush( p.vPis, pObj );\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses the outputs line.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseOutputs(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var i int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens, 0);\n    assert(!(int32(strings.Compare(pToken, \"outputs\")) != 0), \"!strcmp(pToken, \\\"outputs\\\")\");\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = 1; (i \u003c Vec_PtrSize(p.vTokens)) \u0026\u0026 (((pToken) = (char *)Vec_PtrEntry(p.vTokens, i)), 1); i++  {\n        pObj = Io_BlifHashFindOrAdd( p, pToken );\n        if pObj.fPo {\n            fmt.Fprintf(os.Stdout, \"Line %d: Primary output (%s) is defined more than once (warning only).\\n\", Io_BlifGetLine(p, pToken), pToken); }\n        pObj.fPo = 1;\n        Vec_PtrPush( p.vPos, pObj );\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses the latches line.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseLatch(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pToken string;\n    var Init int32;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    pToken = (char *)Vec_PtrEntry(p.vTokens,0);\n    assert(!(int32(strings.Compare(pToken, \"latch\")) != 0), \"!strcmp(pToken, \\\"latch\\\")\");\n    if Vec_PtrSize(p.vTokens) \u003c 3 {\n        sprintf( p.sError, \"Line %d: Latch does not have input name and output name.\", Io_BlifGetLine(p, pToken) );\n        return 0;\n    }\n    // get initial value\n    if Vec_PtrSize(p.vTokens) \u003e 3 {\n        Init = strconv.Atoi((char *)Vec_PtrEntry(p.vTokens,3));\n    } else {\n        Init = 2; }\n    if Init \u003c 0 || Init \u003e 2 {\n        sprintf( p.sError, \"Line %d: Initial state of the latch is incorrect (%s).\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,3) );\n        return 0;\n    }\n    if Init == 0 {\n        Init = IO_BLIF_INIT_ZERO;\n    } else if Init == 1 {\n        Init = IO_BLIF_INIT_ONE;\n    } else { // if ( Init == 2 )\n        Init = IO_BLIF_INIT_DC; }\n    // get latch input\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p.vTokens,1) );\n    pObj.fLi = 1;\n    Vec_PtrPush( p.vLis, pObj );\n    pObj.Init = Init;\n    // get latch output\n    pObj = Io_BlifHashFindOrAdd( p, (char *)Vec_PtrEntry(p.vTokens,2) );\n    if pObj.fPi {\n        sprintf( p.sError, \"Line %d: Primary input (%s) is also defined latch output.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );\n        return 0;\n    }\n    if pObj.fLo {\n        sprintf( p.sError, \"Line %d: Latch output (%s) is defined as the output of another latch.\", Io_BlifGetLine(p, pToken), (char*)Vec_PtrEntry(p.vTokens,2) );\n        return 0;\n    }\n    pObj.fLo = 1;\n    Vec_PtrPush( p.vLos, pObj );\n    pObj.Init = Init;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses the nodes line.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseNames(p *Io_BlifMan_t, pLine string) int32 {\n    var pObj *Io_BlifObj_t;\n    var pName string;\n    Io_BlifSplitIntoTokens( p.vTokens, pLine, '\\0' );\n    assert(!int32(strings.Compare((char *)Vec_PtrEntry(p.vTokens,0), \"names\")), \"!strcmp((char *)Vec_PtrEntry(p.vTokens,0), \\\"names\\\")\");\n    pName = (char *)Vec_PtrEntryLast( p.vTokens );\n    pObj = Io_BlifHashFindOrAdd( p, pName );\n    if pObj.fPi {\n        sprintf( p.sError, \"Line %d: Primary input (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if pObj.fLo {\n        sprintf( p.sError, \"Line %d: Latch output (%s) has a table.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    if pObj.fDef {\n        sprintf( p.sError, \"Line %d: Signal (%s) is defined more than once.\", Io_BlifGetLine(p, pName), pName );\n        return 0;\n    }\n    pObj.fDef = 1;\n    // remember offset to the first fanin name\n    pObj.pName = pName;\n    pObj.Offset = pObj.pName - (char *)Vec_PtrEntry(p.vTokens,1);\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the AIG from the file parsing info.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseTable(p *Io_BlifMan_t, pTable string, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pProduct, pOutput string;\n    var pRes, pCube *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var Polarity int32 = -1;\n\n    p.nTablesRead++;\n    // get the tokens\n    Io_BlifSplitIntoTokens( p.vTokens, pTable, '.' );\n    if Vec_PtrSize(p.vTokens) == 0 {\n        return Abc_ObjNot( Abc_AigConst1(p.pAig) ); }\n    if Vec_PtrSize(p.vTokens) == 1 {\n        pOutput = (char *)Vec_PtrEntry( p.vTokens, 0 );\n        if ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] {\n            sprintf( p.sError, \"Line %d: Constant table has wrong output value (%s).\", Io_BlifGetLine(p, pOutput), pOutput );\n            return nil;\n        }\n        return Abc_ObjNotCond( Abc_AigConst1(p.pAig), pOutput[0] == '0' );\n    }\n    pProduct = (char *)Vec_PtrEntry( p.vTokens, 0 );\n    if Vec_PtrSize(p.vTokens) % 2 == 1 {\n        sprintf( p.sError, \"Line %d: Table has odd number of tokens (%d).\", Io_BlifGetLine(p, pProduct), Vec_PtrSize(p.vTokens) );\n        return nil;\n    }\n    // parse the table\n    pRes = Abc_ObjNot( Abc_AigConst1(p.pAig) );\n    for  i = 0; i \u003c Vec_PtrSize(p.vTokens)/2; i++  {\n        pProduct = (char *)Vec_PtrEntry( p.vTokens, 2*i + 0 );\n        pOutput  = (char *)Vec_PtrEntry( p.vTokens, 2*i + 1 );\n        if len(pProduct) != uint32(Vec_PtrSize(vFanins)) {\n            sprintf( p.sError, \"Line %d: Cube (%s) has size different from the fanin count (%d).\", Io_BlifGetLine(p, pProduct), pProduct, Vec_PtrSize(vFanins) );\n            return nil;\n        }\n        if ((pOutput[0] - '0') \u0026 0x8E) || pOutput[1] {\n            sprintf( p.sError, \"Line %d: Output value (%s) is incorrect.\", Io_BlifGetLine(p, pProduct), pOutput );\n            return nil;\n        }\n        if Polarity == -1 {\n            Polarity = pOutput[0] - '0';\n        } else if Polarity != pOutput[0] - '0' {\n            sprintf( p.sError, \"Line %d: Output value (%s) differs from the value in the first line of the table (%d).\", Io_BlifGetLine(p, pProduct), pOutput, Polarity );\n            return nil;\n        }\n        // parse one product product\n        pCube = Abc_AigConst1(p.pAig);\n        for  k = 0; pProduct[k]; k++  {\n            if pProduct[k] == '0' {\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p.pAig.pManFunc, pCube, Abc_ObjNot((Abc_Obj_t *)Vec_PtrEntry(vFanins,k)) );\n            } else if pProduct[k] == '1' {\n                pCube = Abc_AigAnd( (Abc_Aig_t *)p.pAig.pManFunc, pCube, (Abc_Obj_t *)Vec_PtrEntry(vFanins,k) );\n            } else if pProduct[k] != '-' {\n                sprintf( p.sError, \"Line %d: Product term (%s) contains character (%c).\", Io_BlifGetLine(p, pProduct), pProduct, pProduct[k] );\n                return nil;\n            }\n        }\n        pRes = Abc_AigOr( (Abc_Aig_t *)p.pAig.pManFunc, pRes, pCube );\n    }\n    pRes = Abc_ObjNotCond( pRes, Polarity == 0 );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the AIG from the file parsing info.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseConstruct_rec(p *Io_BlifMan_t, pName string) *Abc_Obj_t {\n    var vFanins *Vec_Ptr_t;\n    var pFaninAbc *Abc_Obj_t;\n    var pObjIo *Io_BlifObj_t;\n    var pNameFanin string;\n    var i int32;\n    // get the IO object with this name\n    pObjIo = *Io_BlifHashLookup( p, pName );\n    if pObjIo == nil {\n        sprintf( p.sError, \"Line %d: Signal (%s) is not defined as a table.\", Io_BlifGetLine(p, pName), pName );\n        return nil;\n    }\n    // loop detection\n    if pObjIo.fLoop {\n        sprintf( p.sError, \"Line %d: Signal (%s) appears twice on a combinational path.\", Io_BlifGetLine(p, pName), pName );\n        return nil;\n    }\n    // check if the AIG is already constructed\n    if pObjIo.pEquiv {\n        return (Abc_Obj_t *)pObjIo.pEquiv; }\n    // mark this node on the path\n    pObjIo.fLoop = 1;\n    // construct the AIGs for the fanins\n    vFanins = Vec_PtrAlloc( 8 );\n    Io_BlifCollectTokens( vFanins, pObjIo.pName - pObjIo.Offset, pObjIo.pName );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanins)) \u0026\u0026 (((pNameFanin) = (char *)Vec_PtrEntry(vFanins, i)), 1); i++  {\n        pFaninAbc = Io_BlifParseConstruct_rec( p, pNameFanin );\n        if pFaninAbc == nil {\n            Vec_PtrFree( vFanins );\n            return nil;\n        }\n        Vec_PtrWriteEntry( vFanins, i, pFaninAbc );\n    }\n    // construct the node\n    pObjIo.pEquiv = Io_BlifParseTable( p, pObjIo.pName + len(pObjIo.pName), vFanins );\n    Vec_PtrFree( vFanins );\n    // unmark this node on the path\n    pObjIo.fLoop = 0;\n    // remember the new node\n    return (Abc_Obj_t *)pObjIo.pEquiv;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the AIG from the file parsing info.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_BlifParseConstruct(p *Io_BlifMan_t) int32 {\n    var pAig *Abc_Ntk_t;\n    var pObjIo, pObjIoInput *Io_BlifObj_t;\n    var pObj, pLatch *Abc_Obj_t;\n    var i int32;\n    // allocate the empty AIG\n    pAig = p.pAig = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pAig.pName = Extra_UtilStrsav( p.pModel );\n    pAig.pSpec = Extra_UtilStrsav( p.pFileName );\n    // create PIs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj = Abc_NtkCreatePi( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n        pObjIo.pEquiv = pObj;\n    }\n    // create POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj = Abc_NtkCreatePo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n    }\n    // create latches\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vLos, i)), 1); i++  {\n        // add the latch input terminal\n        pObj = Abc_NtkCreateBi( pAig );\n        pObjIoInput = (Io_BlifObj_t *)Vec_PtrEntry( p.vLis, i );\n        Abc_ObjAssignName( pObj, pObjIoInput.pName, nil );\n        \n        // add the latch box\n        pLatch = Abc_NtkCreateLatch( pAig );\n        pLatch.pData = (void *)(ABC_PTRUINT_T)pObjIo.Init;\n        Abc_ObjAssignName( pLatch, pObjIo.pName, \"L\" );\n        Abc_ObjAddFanin( pLatch, pObj  );\n\n        // add the latch output terminal\n        pObj = Abc_NtkCreateBo( pAig );\n        Abc_ObjAssignName( pObj, pObjIo.pName, nil );\n        Abc_ObjAddFanin( pObj, pLatch );\n        // set the value of the latch output\n//        pObjIo-\u003epEquiv = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        pObjIo.pEquiv = pObj;\n    }\n    // traverse the nodes from the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo.pName );\n        if pObj == nil {\n            return 0; }\n        Abc_ObjAddFanin( Abc_NtkPo(p.pAig, i), pObj );\n    }\n    // traverse the nodes from the latch inputs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLis)) \u0026\u0026 (((pObjIo) = (Io_BlifObj_t *)Vec_PtrEntry(p.vLis, i)), 1); i++  {\n        pObj = Io_BlifParseConstruct_rec( p, pObjIo.pName );\n        if pObj == nil {\n            return 0; }\n//        pObj = Abc_ObjNotCond( pObj, pObjIo-\u003eInit );\n        Abc_ObjAddFanin( Abc_ObjFanin0(Abc_NtkBox(p.pAig, i)), pObj );\n    }\n    p.nTablesLeft = Vec_PtrSize(p.vNames) - p.nTablesRead; \n    if p.nTablesLeft { \n        fmt.Printf(\"The number of dangling tables = %d.\\n\", p.nTablesLeft); }\n    fmt.Printf(\"AND nodes = %6d.  Estimate = %6d.\\n\", Abc_NtkNodeNum(p.pAig), Io_BlifEstimateAndNum(p));\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,844 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c",
+  "SHA256": "233a859e7fd3b537de457d28d6e37b2f0c5d0c4bcc8a6d82769291d552188264",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 116,
+        "Column": 81,
+        "ByteOffset": 4148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pArray *word  = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(2 * Vec_WrdSize(p)), sizeof(word)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p) % nObjs == 0 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pArray + 2*i*nWords, p.pArray + i*nWords, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 64,
+        "ByteOffset": 4494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0); p.pArray = pArray;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 5042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords == Gia_ObjSimWords( p ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPat) == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 5348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iPatsPi \u003c 64 * Gia_ObjSimWords(p) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 204,
+        "Column": 69,
+        "ByteOffset": 7340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 218,
+        "Column": 65,
+        "ByteOffset": 8001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 8352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 8732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 9090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSim == Gia_ObjSimObj( p, pObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 9476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSim == Gia_ObjSim( p, i ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 9957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSim == Gia_ObjSimObj( p, pObj ) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 293,
+        "Column": 79,
+        "ByteOffset": 10692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pRes *word  = /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(nWords)), 0xff, sizeof(word) * (size_t)(nWords)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 293,
+        "Column": 86,
+        "ByteOffset": 10699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pRes *word  = /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(nWords)), 0xff, sizeof(word) * (size_t)(nWords)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 307,
+        "Column": 60,
+        "ByteOffset": 11337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 339,
+        "Column": 60,
+        "ByteOffset": 12391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssc_Random",
+      "Start": 781,
+      "End": 911,
+      "BodyStart": 824,
+      "Original": "static inline word Ssc_Random()            { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 0);              }",
+      "Draft": "func Ssc_Random() word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 0);              }"
+    },
+    {
+      "Name": "Ssc_Random1",
+      "Start": 912,
+      "End": 1042,
+      "BodyStart": 955,
+      "Original": "static inline word Ssc_Random1( int Bit )  { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 1) | (word)Bit;  }",
+      "Draft": "func Ssc_Random1(Bit int32) word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 1) | (word)Bit;  }"
+    },
+    {
+      "Name": "Ssc_Random2",
+      "Start": 1043,
+      "End": 1173,
+      "BodyStart": 1086,
+      "Original": "static inline word Ssc_Random2()           { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 2) | (word)2;    }",
+      "Draft": "func Ssc_Random2() word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 2) | (word)2;    }"
+    },
+    {
+      "Name": "Ssc_SimAnd",
+      "Start": 1175,
+      "End": 1671,
+      "BodyStart": 1284,
+      "Original": "static inline void Ssc_SimAnd( word * pSim, word * pSim0, word * pSim1, int nWords, int fComp0, int fComp1 )\n{\n    int w;\n    if ( fComp0 \u0026\u0026 fComp1 ) for ( w = 0; w \u003c nWords; w++ )  pSim[w] = ~(pSim0[w] | pSim1[w]);\n    else if ( fComp0 )      for ( w = 0; w \u003c nWords; w++ )  pSim[w] =  ~pSim0[w] \u0026 pSim1[w];\n    else if ( fComp1 )      for ( w = 0; w \u003c nWords; w++ )  pSim[w] =   pSim0[w] \u0026~pSim1[w];\n    else                    for ( w = 0; w \u003c nWords; w++ )  pSim[w] =   pSim0[w] \u0026 pSim1[w];\n}",
+      "Draft": "func Ssc_SimAnd(pSim *word, pSim0 *word, pSim1 *word, nWords int32, fComp0 int32, fComp1 int32) {\n    var w int32;\n    if (fComp0 != 0) \u0026\u0026 (fComp1 != 0) { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~(pSim0[w] | pSim1[w]); }\n    } else if fComp0 != 0 {      for  w = 0; w \u003c nWords; w++  {  pSim[w] =  ~pSim0[w] \u0026 pSim1[w]; }\n    } else if fComp1 != 0 {      for  w = 0; w \u003c nWords; w++  {  pSim[w] =   pSim0[w] \u0026~pSim1[w]; }\n    } else {                    for  w = 0; w \u003c nWords; w++  {  pSim[w] =   pSim0[w] \u0026 pSim1[w]; } }\n}"
+    },
+    {
+      "Name": "Ssc_SimDup",
+      "Start": 1673,
+      "End": 1912,
+      "BodyStart": 1756,
+      "Original": "static inline void Ssc_SimDup( word * pSim, word * pSim0, int nWords, int fComp0 )\n{\n    int w;\n    if ( fComp0 ) for ( w = 0; w \u003c nWords; w++ )  pSim[w] = ~pSim0[w];\n    else          for ( w = 0; w \u003c nWords; w++ )  pSim[w] =  pSim0[w];\n}",
+      "Draft": "func Ssc_SimDup(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~pSim0[w]; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] =  pSim0[w]; } }\n}"
+    },
+    {
+      "Name": "Ssc_SimConst",
+      "Start": 1914,
+      "End": 2132,
+      "BodyStart": 1985,
+      "Original": "static inline void Ssc_SimConst( word * pSim, int nWords, int fComp0 )\n{\n    int w;\n    if ( fComp0 ) for ( w = 0; w \u003c nWords; w++ )  pSim[w] = ~(word)0;\n    else          for ( w = 0; w \u003c nWords; w++ )  pSim[w] = 0;\n}",
+      "Draft": "func Ssc_SimConst(pSim *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~(word)0; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] = 0; } }\n}"
+    },
+    {
+      "Name": "Ssc_SimOr",
+      "Start": 2134,
+      "End": 2374,
+      "BodyStart": 2216,
+      "Original": "static inline void Ssc_SimOr( word * pSim, word * pSim0, int nWords, int fComp0 )\n{\n    int w;\n    if ( fComp0 ) for ( w = 0; w \u003c nWords; w++ )  pSim[w] |= ~pSim0[w];\n    else          for ( w = 0; w \u003c nWords; w++ )  pSim[w] |=  pSim0[w];\n}",
+      "Draft": "func Ssc_SimOr(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] |= ~pSim0[w]; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] |=  pSim0[w]; } }\n}"
+    },
+    {
+      "Name": "Ssc_SimFindBitWord",
+      "Start": 2376,
+      "End": 2854,
+      "BodyStart": 2423,
+      "Original": "static inline int Ssc_SimFindBitWord( word t )\n{\n    int n = 0;\n    if ( t == 0 ) return -1;\n    if ( (t \u0026 0x00000000FFFFFFFF) == 0 ) { n += 32; t \u003e\u003e= 32; }\n    if ( (t \u0026 0x000000000000FFFF) == 0 ) { n += 16; t \u003e\u003e= 16; }\n    if ( (t \u0026 0x00000000000000FF) == 0 ) { n +=  8; t \u003e\u003e=  8; }\n    if ( (t \u0026 0x000000000000000F) == 0 ) { n +=  4; t \u003e\u003e=  4; }\n    if ( (t \u0026 0x0000000000000003) == 0 ) { n +=  2; t \u003e\u003e=  2; }\n    if ( (t \u0026 0x0000000000000001) == 0 ) { n++; }\n    return n;\n}",
+      "Draft": "func Ssc_SimFindBitWord(t word) int32 {\n    var n int32;\n    if t == 0 { return -1; }\n    if (t \u0026 0x00000000FFFFFFFF) == 0 { n += 32; t \u003e\u003e= 32; }\n    if (t \u0026 0x000000000000FFFF) == 0 { n += 16; t \u003e\u003e= 16; }\n    if (t \u0026 0x00000000000000FF) == 0 { n +=  8; t \u003e\u003e=  8; }\n    if (t \u0026 0x000000000000000F) == 0 { n +=  4; t \u003e\u003e=  4; }\n    if (t \u0026 0x0000000000000003) == 0 { n +=  2; t \u003e\u003e=  2; }\n    if (t \u0026 0x0000000000000001) == 0 { n++; }\n    return n;\n}"
+    },
+    {
+      "Name": "Ssc_SimFindBit",
+      "Start": 2855,
+      "End": 3057,
+      "BodyStart": 2915,
+      "Original": "static inline int Ssc_SimFindBit( word * pSim, int nWords )\n{\n    int w;\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( pSim[w] )\n            return 64*w + Ssc_SimFindBitWord(pSim[w]);\n    return -1;\n}",
+      "Draft": "func Ssc_SimFindBit(pSim *word, nWords int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        if pSim[w] {\n            return 64*w + Ssc_SimFindBitWord(pSim[w]); }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Ssc_SimCountBitsWord",
+      "Start": 3059,
+      "End": 3421,
+      "BodyStart": 3108,
+      "Original": "static inline int Ssc_SimCountBitsWord( word x )\n{\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return (int)(x \u0026 0xFF);\n}",
+      "Draft": "func Ssc_SimCountBitsWord(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return int32((x \u0026 0xFF));\n}"
+    },
+    {
+      "Name": "Ssc_SimCountBits",
+      "Start": 3422,
+      "End": 3616,
+      "BodyStart": 3484,
+      "Original": "static inline int Ssc_SimCountBits( word * pSim, int nWords )\n{\n    int w, Counter = 0;\n    for ( w = 0; w \u003c nWords; w++ )\n        Counter += Ssc_SimCountBitsWord(pSim[w]);\n    return Counter;\n}",
+      "Draft": "func Ssc_SimCountBits(pSim *word, nWords int32) int32 {\n    var w, Counter int32;\n    for  w = 0; w \u003c nWords; w++  {\n        Counter += Ssc_SimCountBitsWord(pSim[w]);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Vec_WrdDoubleSimInfo",
+      "Start": 4073,
+      "End": 4483,
+      "BodyStart": 4127,
+      "Original": "void Vec_WrdDoubleSimInfo( Vec_Wrd_t * p, int nObjs )\n{\n    word * pArray = ABC_CALLOC( word, 2 * Vec_WrdSize(p) );\n    int i, nWords = Vec_WrdSize(p) / nObjs;\n    assert( Vec_WrdSize(p) % nObjs == 0 );\n    for ( i = 0; i \u003c nObjs; i++ )\n        memcpy( pArray + 2*i*nWords, p-\u003epArray + i*nWords, sizeof(word) * nWords );\n    ABC_FREE( p-\u003epArray ); p-\u003epArray = pArray;\n    p-\u003enSize = p-\u003enCap = 2*nWords*nObjs;\n}",
+      "Draft": "func Vec_WrdDoubleSimInfo(p *Vec_Wrd_t, nObjs int32) {\n    // inlining of macro ABC_CALLOC\n    var pArray *word  = ((word *) calloc((size_t)(2 * Vec_WrdSize(p)), sizeof(word)));\n    var i int32;\n    var nWords int32 = Vec_WrdSize(p) / nObjs;\n    assert(Vec_WrdSize(p) % nObjs == 0, \"Vec_WrdSize(p) % nObjs == 0\");\n    for  i = 0; i \u003c nObjs; i++  {\n        memcpy( pArray + 2*i*nWords, p.pArray + i*nWords, sizeof(word) * nWords );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0); p.pArray = pArray;\n    p.nSize = p.nCap = 2*nWords*nObjs;\n}"
+    },
+    {
+      "Name": "Ssc_GiaResetPiPattern",
+      "Start": 4719,
+      "End": 4972,
+      "BodyStart": 4775,
+      "Original": "void Ssc_GiaResetPiPattern( Gia_Man_t * p, int nWords )\n{\n    p-\u003eiPatsPi = 0;\n    if ( p-\u003evSimsPi == NULL )\n        p-\u003evSimsPi = Vec_WrdStart(0);\n    Vec_WrdFill( p-\u003evSimsPi, nWords * Gia_ManCiNum(p), 0 );\n    assert( nWords == Gia_ObjSimWords( p ) );\n}",
+      "Draft": "func Ssc_GiaResetPiPattern(p *Gia_Man_t, nWords int32) {\n    p.iPatsPi = 0;\n    if p.vSimsPi == nil {\n        p.vSimsPi = Vec_WrdStart(0); }\n    Vec_WrdFill( p.vSimsPi, nWords * Gia_ManCiNum(p), 0 );\n    assert(nWords == Gia_ObjSimWords( p ), \"nWords == Gia_ObjSimWords( p )\");\n}"
+    },
+    {
+      "Name": "Ssc_GiaSavePiPattern",
+      "Start": 4973,
+      "End": 5507,
+      "BodyStart": 5034,
+      "Original": "void Ssc_GiaSavePiPattern( Gia_Man_t * p, Vec_Int_t * vPat )\n{\n    word * pSimPi;\n    int i;\n    assert( Vec_IntSize(vPat) == Gia_ManCiNum(p) );\n    if ( p-\u003eiPatsPi == 64 * Gia_ObjSimWords(p) )\n        Vec_WrdDoubleSimInfo( p-\u003evSimsPi, Gia_ManCiNum(p) );\n    assert( p-\u003eiPatsPi \u003c 64 * Gia_ObjSimWords(p) );\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for ( i = 0; i \u003c Gia_ManCiNum(p); i++, pSimPi += Gia_ObjSimWords(p) )\n        if ( Vec_IntEntry(vPat, i) )\n            Abc_InfoSetBit( (unsigned *)pSimPi, p-\u003eiPatsPi );\n    p-\u003eiPatsPi++;\n}",
+      "Draft": "func Ssc_GiaSavePiPattern(p *Gia_Man_t, vPat *Vec_Int_t) {\n    var pSimPi *word;\n    var i int32;\n    assert(Vec_IntSize(vPat) == Gia_ManCiNum(p), \"Vec_IntSize(vPat) == Gia_ManCiNum(p)\");\n    if p.iPatsPi == 64 * Gia_ObjSimWords(p) {\n        Vec_WrdDoubleSimInfo( p.vSimsPi, Gia_ManCiNum(p) ); }\n    assert(p.iPatsPi \u003c 64 * Gia_ObjSimWords(p), \"p.iPatsPi \u003c 64 * Gia_ObjSimWords(p)\");\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++, pSimPi += Gia_ObjSimWords(p)  {\n        if Vec_IntEntry(vPat, i) {\n            Abc_InfoSetBit( (unsigned *)pSimPi, p.iPatsPi ); }\n    }\n    p.iPatsPi++;\n}"
+    },
+    {
+      "Name": "Ssc_GiaRandomPiPattern",
+      "Start": 5508,
+      "End": 6037,
+      "BodyStart": 5585,
+      "Original": "void Ssc_GiaRandomPiPattern( Gia_Man_t * p, int nWords, Vec_Int_t * vPivot )\n{\n    word * pSimPi;\n    int i, w;\n    Ssc_GiaResetPiPattern( p, nWords );\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for ( i = 0; i \u003c Gia_ManPiNum(p); i++, pSimPi += nWords )\n    {\n        pSimPi[0] = vPivot ? Ssc_Random1(Vec_IntEntry(vPivot, i)) : Ssc_Random2();\n        for ( w = 1; w \u003c nWords; w++ )\n            pSimPi[w] = Ssc_Random();\n//        if ( i \u003c 10 )\n//            Extra_PrintBinary( stdout, (unsigned *)pSimPi, 64 ), printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Ssc_GiaRandomPiPattern(p *Gia_Man_t, nWords int32, vPivot *Vec_Int_t) {\n    var pSimPi *word;\n    var i, w int32;\n    Ssc_GiaResetPiPattern( p, nWords );\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for  i = 0; i \u003c Gia_ManPiNum(p); i++, pSimPi += nWords  {\n        pSimPi[0] = vPivot ? Ssc_Random1(Vec_IntEntry(vPivot, i)) : Ssc_Random2();\n        for  w = 1; w \u003c nWords; w++  {\n            pSimPi[w] = Ssc_Random();\n        }\n//        if ( i \u003c 10 )\n//            Extra_PrintBinary( stdout, (unsigned *)pSimPi, 64 ), printf( \"\\n\" );\n    }\n}"
+    },
+    {
+      "Name": "Ssc_GiaPrintPiPatterns",
+      "Start": 6038,
+      "End": 6325,
+      "BodyStart": 6083,
+      "Original": "void Ssc_GiaPrintPiPatterns( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    word * pSimAig;\n    int i;//, nWords = Gia_ObjSimWords( p );\n    Gia_ManForEachCi( p, pObj, i )\n    {\n        pSimAig = Gia_ObjSimObj( p, pObj );\n//        Extra_PrintBinary( stdout, pSimAig, 64 * nWords );\n    }\n}",
+      "Draft": "func Ssc_GiaPrintPiPatterns(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var pSimAig *word;\n    var i int32;//, nWords = Gia_ObjSimWords( p );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pSimAig = Gia_ObjSimObj( p, pObj );\n//        Extra_PrintBinary( stdout, pSimAig, 64 * nWords );\n    }\n}"
+    },
+    {
+      "Name": "Ssc_GiaTransferPiPattern",
+      "Start": 6612,
+      "End": 7513,
+      "BodyStart": 6700,
+      "Original": "int Ssc_GiaTransferPiPattern( Gia_Man_t * pAig, Gia_Man_t * pCare, Vec_Int_t * vPivot )\n{\n    extern word * Ssc_GiaGetCareMask( Gia_Man_t * p );\n    Gia_Obj_t * pObj;\n    int i, w, nWords = Gia_ObjSimWords( pCare );\n    word * pCareMask = Ssc_GiaGetCareMask( pCare );\n    int Count = Ssc_SimCountBits( pCareMask, nWords );\n    word * pSimPiCare, * pSimPiAig;\n    if ( Count == 0 )\n    {\n        ABC_FREE( pCareMask );\n        return 0;\n    }\n    Ssc_GiaResetPiPattern( pAig, nWords );\n    Gia_ManForEachCi( pCare, pObj, i )\n    {\n        pSimPiAig  = Gia_ObjSimPi( pAig, i );\n        pSimPiCare = Gia_ObjSimObj( pCare, pObj );\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( Vec_IntEntry(vPivot, i) )\n                pSimPiAig[w] = pSimPiCare[w] | ~pCareMask[w];\n            else\n                pSimPiAig[w] = pSimPiCare[w] \u0026 pCareMask[w];\n    }\n    ABC_FREE( pCareMask );\n    return Count;\n}",
+      "Draft": "func Ssc_GiaTransferPiPattern(pAig *Gia_Man_t, pCare *Gia_Man_t, vPivot *Vec_Int_t) int32 {\n    extern word * Ssc_GiaGetCareMask( Gia_Man_t * p );\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords( pCare );\n    var pCareMask *word  = Ssc_GiaGetCareMask( pCare );\n    var Count int32  = Ssc_SimCountBits( pCareMask, nWords );\n    var pSimPiCare, pSimPiAig *word;\n    if Count == 0 {\n        // inlining of macro ABC_FREE\n        ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);\n        return 0;\n    }\n    Ssc_GiaResetPiPattern( pAig, nWords );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pCare.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pCare, i)); i++  {\n        pSimPiAig  = Gia_ObjSimPi( pAig, i );\n        pSimPiCare = Gia_ObjSimObj( pCare, pObj );\n        for  w = 0; w \u003c nWords; w++  {\n            if Vec_IntEntry(vPivot, i) {\n                pSimPiAig[w] = pSimPiCare[w] | ~pCareMask[w];\n            } else {\n                pSimPiAig[w] = pSimPiCare[w] \u0026 pCareMask[w]; }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);\n    return Count;\n}"
+    },
+    {
+      "Name": "Ssc_GiaResetSimInfo",
+      "Start": 7749,
+      "End": 7991,
+      "BodyStart": 7791,
+      "Original": "void Ssc_GiaResetSimInfo( Gia_Man_t * p )\n{\n    assert( Vec_WrdSize(p-\u003evSimsPi) % Gia_ManCiNum(p) == 0 );\n    if ( p-\u003evSims == NULL )\n        p-\u003evSims = Vec_WrdAlloc(0);\n    Vec_WrdFill( p-\u003evSims, Gia_ObjSimWords(p) * Gia_ManObjNum(p), 0 );\n}",
+      "Draft": "func Ssc_GiaResetSimInfo(p *Gia_Man_t) {\n    assert(Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0, \"Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0\");\n    if p.vSims == nil {\n        p.vSims = Vec_WrdAlloc(0); }\n    Vec_WrdFill( p.vSims, Gia_ObjSimWords(p) * Gia_ManObjNum(p), 0 );\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimRound",
+      "Start": 7992,
+      "End": 9340,
+      "BodyStart": 8030,
+      "Original": "void Ssc_GiaSimRound( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    word * pSim, * pSim0, * pSim1;\n    int i, nWords = Gia_ObjSimWords(p);\n    Ssc_GiaResetSimInfo( p );\n    assert( nWords == Vec_WrdSize(p-\u003evSims) / Gia_ManObjNum(p) );\n    // constant node\n    Ssc_SimConst( Gia_ObjSim(p, 0), nWords, 0 );\n    // primary inputs\n    pSim = Gia_ObjSim( p, 1 );\n    pSim0 = Gia_ObjSimPi( p, 0 );\n    Gia_ManForEachCi( p, pObj, i )\n    {\n        assert( pSim == Gia_ObjSimObj( p, pObj ) );\n        Ssc_SimDup( pSim, pSim0, nWords, 0 );\n        pSim += nWords;\n        pSim0 += nWords;\n    }\n    // intermediate nodes\n    pSim = Gia_ObjSim( p, 1+Gia_ManCiNum(p) );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        assert( pSim == Gia_ObjSim( p, i ) );\n        pSim0 = pSim - pObj-\u003eiDiff0 * nWords;\n        pSim1 = pSim - pObj-\u003eiDiff1 * nWords;\n        Ssc_SimAnd( pSim, pSim0, pSim1, nWords, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj) );\n        pSim += nWords;\n    }\n    // primary outputs\n    pSim = Gia_ObjSim( p, Gia_ManObjNum(p) - Gia_ManPoNum(p) );\n    Gia_ManForEachPo( p, pObj, i )\n    {\n        assert( pSim == Gia_ObjSimObj( p, pObj ) );\n        pSim0 = pSim - pObj-\u003eiDiff0 * nWords;\n        Ssc_SimDup( pSim, pSim0, nWords, Gia_ObjFaninC0(pObj) );\n//        Extra_PrintBinary( stdout, pSim, 64 ), printf( \"\\n\" );\n        pSim += nWords;\n    }\n}",
+      "Draft": "func Ssc_GiaSimRound(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var pSim, pSim0, pSim1 *word;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    Ssc_GiaResetSimInfo( p );\n    assert(nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p), \"nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p)\");\n    // constant node\n    Ssc_SimConst( Gia_ObjSim(p, 0), nWords, 0 );\n    // primary inputs\n    pSim = Gia_ObjSim( p, 1 );\n    pSim0 = Gia_ObjSimPi( p, 0 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        assert(pSim == Gia_ObjSimObj( p, pObj ), \"pSim == Gia_ObjSimObj( p, pObj )\");\n        Ssc_SimDup( pSim, pSim0, nWords, 0 );\n        pSim += nWords;\n        pSim0 += nWords;\n    }\n    // intermediate nodes\n    pSim = Gia_ObjSim( p, 1+Gia_ManCiNum(p) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(pSim == Gia_ObjSim( p, i ), \"pSim == Gia_ObjSim( p, i )\");\n        pSim0 = pSim - pObj.iDiff0 * nWords;\n        pSim1 = pSim - pObj.iDiff1 * nWords;\n        Ssc_SimAnd( pSim, pSim0, pSim1, nWords, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj) );\n        pSim += nWords;\n    }\n    }\n    // primary outputs\n    pSim = Gia_ObjSim( p, Gia_ManObjNum(p) - Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        assert(pSim == Gia_ObjSimObj( p, pObj ), \"pSim == Gia_ObjSimObj( p, pObj )\");\n        pSim0 = pSim - pObj.iDiff0 * nWords;\n        Ssc_SimDup( pSim, pSim0, nWords, Gia_ObjFaninC0(pObj) );\n//        Extra_PrintBinary( stdout, pSim, 64 ), printf( \"\\n\" );\n        pSim += nWords;\n    }\n}"
+    },
+    {
+      "Name": "Ssc_GiaGetCareMask",
+      "Start": 9614,
+      "End": 9894,
+      "BodyStart": 9657,
+      "Original": "word * Ssc_GiaGetCareMask( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, nWords = Gia_ObjSimWords( p );\n    word * pRes = ABC_FALLOC( word, nWords );\n    Gia_ManForEachPo( p, pObj, i )\n        Ssc_SimAnd( pRes, pRes, Gia_ObjSimObj(p, pObj), nWords, 0, 0 );\n    return pRes;\n}",
+      "Draft": "func Ssc_GiaGetCareMask(p *Gia_Man_t) *word {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords( p );\n    // inlining of macro ABC_FALLOC\n    var pRes *word  = ((word *) memset(malloc(sizeof(word) * (size_t)(nWords)), 0xff, sizeof(word) * (size_t)(nWords)));\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Ssc_SimAnd( pRes, pRes, Gia_ObjSimObj(p, pObj), nWords, 0, 0 );\n    }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Ssc_GiaGetOneSim",
+      "Start": 9895,
+      "End": 10362,
+      "BodyStart": 9941,
+      "Original": "Vec_Int_t * Ssc_GiaGetOneSim( Gia_Man_t * p )\n{\n    Vec_Int_t * vInit;\n    Gia_Obj_t * pObj;\n    int i, iBit, nWords = Gia_ObjSimWords( p );\n    word * pRes = Ssc_GiaGetCareMask( p );\n    iBit = Ssc_SimFindBit( pRes, nWords );\n    ABC_FREE( pRes );\n    if ( iBit == -1 )\n        return NULL;\n    vInit = Vec_IntAlloc( 100 );\n    Gia_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vInit, Abc_InfoHasBit((unsigned *)Gia_ObjSimObj(p, pObj), iBit) );\n    return vInit;\n}",
+      "Draft": "func Ssc_GiaGetOneSim(p *Gia_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iBit int32;\n    var nWords int32 = Gia_ObjSimWords( p );\n    var pRes *word  = Ssc_GiaGetCareMask( p );\n    iBit = Ssc_SimFindBit( pRes, nWords );\n    // inlining of macro ABC_FREE\n    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);\n    if iBit == -1 {\n        return nil; }\n    vInit = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntPush( vInit, Abc_InfoHasBit((unsigned *)Gia_ObjSimObj(p, pObj), iBit) );\n    }\n    return vInit;\n}"
+    },
+    {
+      "Name": "Ssc_GiaFindPivotSim",
+      "Start": 10363,
+      "End": 10559,
+      "BodyStart": 10412,
+      "Original": "Vec_Int_t * Ssc_GiaFindPivotSim( Gia_Man_t * p )\n{\n    Vec_Int_t * vInit;\n    Ssc_GiaRandomPiPattern( p, 1, NULL );\n    Ssc_GiaSimRound( p );\n    vInit = Ssc_GiaGetOneSim( p );\n    return vInit;\n}",
+      "Draft": "func Ssc_GiaFindPivotSim(p *Gia_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    Ssc_GiaRandomPiPattern( p, 1, nil );\n    Ssc_GiaSimRound( p );\n    vInit = Ssc_GiaGetOneSim( p );\n    return vInit;\n}"
+    },
+    {
+      "Name": "Ssc_GiaCountCaresSim",
+      "Start": 10795,
+      "End": 11012,
+      "BodyStart": 10837,
+      "Original": "int Ssc_GiaCountCaresSim( Gia_Man_t * p )\n{\n    word * pRes = Ssc_GiaGetCareMask( p );\n    int nWords = Gia_ObjSimWords( p );\n    int Count = Ssc_SimCountBits( pRes, nWords );\n    ABC_FREE( pRes );\n    return Count;\n}",
+      "Draft": "func Ssc_GiaCountCaresSim(p *Gia_Man_t) int32 {\n    var pRes *word  = Ssc_GiaGetCareMask( p );\n    var nWords int32  = Gia_ObjSimWords( p );\n    var Count int32  = Ssc_SimCountBits( pRes, nWords );\n    // inlining of macro ABC_FREE\n    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);\n    return Count;\n}"
+    },
+    {
+      "Name": "Ssc_GiaEstimateCare",
+      "Start": 11013,
+      "End": 11180,
+      "BodyStart": 11066,
+      "Original": "int Ssc_GiaEstimateCare( Gia_Man_t * p, int nWords )\n{\n    Ssc_GiaRandomPiPattern( p, nWords, NULL );\n    Ssc_GiaSimRound( p );\n    return Ssc_GiaCountCaresSim( p );\n}",
+      "Draft": "func Ssc_GiaEstimateCare(p *Gia_Man_t, nWords int32) int32 {\n    Ssc_GiaRandomPiPattern( p, nWords, nil );\n    Ssc_GiaSimRound( p );\n    return Ssc_GiaCountCaresSim( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::mechanical::sizeof::4242",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4149,
+      "End": 4149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::mechanical::sizeof::4438",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4369,
+      "End": 4375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::mechanical::sizeof::10662",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9741,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::mechanical::sizeof::10702",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9741,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::4196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4149,
+      "End": 4149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::4532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4398,
+      "End": 4398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::5611",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5454,
+      "End": 5466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::7327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7007,
+      "End": 7007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::7981",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7471,
+      "End": 7471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::10639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9741,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::11247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10126,
+      "End": 10126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::11535",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10298,
+      "End": 10310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::pointer-cast::12272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10975,
+      "End": 10975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_Random",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_Random",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 781,
+      "End": 911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_Random1",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_Random1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 912,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_Random2",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_Random2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1043,
+      "End": 1173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimAnd",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1175,
+      "End": 1671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimDup",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1673,
+      "End": 1912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimConst",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1914,
+      "End": 2132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimOr",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2134,
+      "End": 2374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimFindBitWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimFindBitWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2376,
+      "End": 2854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimFindBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimFindBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2855,
+      "End": 3057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimCountBitsWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimCountBitsWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3059,
+      "End": 3421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_SimCountBits",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_SimCountBits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3422,
+      "End": 3616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::ternary::Vec_WrdDoubleSimInfo",
+      "Category": "ternary-review",
+      "Symbol": "Vec_WrdDoubleSimInfo",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4073,
+      "End": 4483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Vec_WrdDoubleSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdDoubleSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4073,
+      "End": 4483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaResetPiPattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaResetPiPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4719,
+      "End": 4972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaSavePiPattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSavePiPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4973,
+      "End": 5507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::ternary::Ssc_GiaRandomPiPattern",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaRandomPiPattern",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5508,
+      "End": 6037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaRandomPiPattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaRandomPiPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5508,
+      "End": 6037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaPrintPiPatterns",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaPrintPiPatterns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6038,
+      "End": 6325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::ternary::Ssc_GiaTransferPiPattern",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaTransferPiPattern",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6612,
+      "End": 7513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaTransferPiPattern",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaTransferPiPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6612,
+      "End": 7513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaResetSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaResetSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7749,
+      "End": 7991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaSimRound",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7992,
+      "End": 9340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaGetCareMask",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaGetCareMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9614,
+      "End": 9894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::ternary::Ssc_GiaGetOneSim",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaGetOneSim",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9895,
+      "End": 10362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaGetOneSim",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaGetOneSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9895,
+      "End": 10362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaFindPivotSim",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaFindPivotSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10363,
+      "End": 10559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::ternary::Ssc_GiaCountCaresSim",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_GiaCountCaresSim",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10795,
+      "End": 11012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaCountCaresSim",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaCountCaresSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10795,
+      "End": 11012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::Ssc_GiaEstimateCare",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaEstimateCare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11013,
+      "End": 11180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::macro-inline::3134",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3134,
+      "End": 3163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::macro-inline::3182",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3182,
+      "End": 3211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::macro-inline::3227",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3227,
+      "End": 3256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscSim.c::macro-inline::3288",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3288,
+      "End": 3317
+    }
+  ],
+  "Draft": "package ssc\n\n/**CFile****************************************************************\n\n  FileName    [sscSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [Simulation procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscSim.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sscInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Ssc_Random() word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 0);              }\nfunc Ssc_Random1(Bit int32) word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 1) | (word)Bit;  }\nfunc Ssc_Random2() word { return ((word)Gia_ManRandom(0) \u003c\u003c 32) | ((word)Gia_ManRandom(0) \u003c\u003c 2) | (word)2;    }\n\nfunc Ssc_SimAnd(pSim *word, pSim0 *word, pSim1 *word, nWords int32, fComp0 int32, fComp1 int32) {\n    var w int32;\n    if (fComp0 != 0) \u0026\u0026 (fComp1 != 0) { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~(pSim0[w] | pSim1[w]); }\n    } else if fComp0 != 0 {      for  w = 0; w \u003c nWords; w++  {  pSim[w] =  ~pSim0[w] \u0026 pSim1[w]; }\n    } else if fComp1 != 0 {      for  w = 0; w \u003c nWords; w++  {  pSim[w] =   pSim0[w] \u0026~pSim1[w]; }\n    } else {                    for  w = 0; w \u003c nWords; w++  {  pSim[w] =   pSim0[w] \u0026 pSim1[w]; } }\n}\n\nfunc Ssc_SimDup(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~pSim0[w]; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] =  pSim0[w]; } }\n}\n\nfunc Ssc_SimConst(pSim *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] = ~(word)0; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] = 0; } }\n}\n\nfunc Ssc_SimOr(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 { for  w = 0; w \u003c nWords; w++  {  pSim[w] |= ~pSim0[w]; }\n    } else {          for  w = 0; w \u003c nWords; w++  {  pSim[w] |=  pSim0[w]; } }\n}\n\nfunc Ssc_SimFindBitWord(t word) int32 {\n    var n int32;\n    if t == 0 { return -1; }\n    if (t \u0026 0x00000000FFFFFFFF) == 0 { n += 32; t \u003e\u003e= 32; }\n    if (t \u0026 0x000000000000FFFF) == 0 { n += 16; t \u003e\u003e= 16; }\n    if (t \u0026 0x00000000000000FF) == 0 { n +=  8; t \u003e\u003e=  8; }\n    if (t \u0026 0x000000000000000F) == 0 { n +=  4; t \u003e\u003e=  4; }\n    if (t \u0026 0x0000000000000003) == 0 { n +=  2; t \u003e\u003e=  2; }\n    if (t \u0026 0x0000000000000001) == 0 { n++; }\n    return n;\n}\nfunc Ssc_SimFindBit(pSim *word, nWords int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        if pSim[w] {\n            return 64*w + Ssc_SimFindBitWord(pSim[w]); }\n    }\n    return -1;\n}\n\nfunc Ssc_SimCountBitsWord(x word) int32 {\n    x = x - ((x \u003e\u003e 1) \u0026 ABC_CONST(0x5555555555555555));   \n    x = (x \u0026 ABC_CONST(0x3333333333333333)) + ((x \u003e\u003e 2) \u0026 ABC_CONST(0x3333333333333333));    \n    x = (x + (x \u003e\u003e 4)) \u0026 ABC_CONST(0x0F0F0F0F0F0F0F0F);    \n    x = x + (x \u003e\u003e 8);\n    x = x + (x \u003e\u003e 16);\n    x = x + (x \u003e\u003e 32); \n    return int32((x \u0026 0xFF));\n}\nfunc Ssc_SimCountBits(pSim *word, nWords int32) int32 {\n    var w, Counter int32;\n    for  w = 0; w \u003c nWords; w++  {\n        Counter += Ssc_SimCountBitsWord(pSim[w]);\n    }\n    return Counter;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdDoubleSimInfo(p *Vec_Wrd_t, nObjs int32) {\n    // inlining of macro ABC_CALLOC\n    var pArray *word  = ((word *) calloc((size_t)(2 * Vec_WrdSize(p)), sizeof(word)));\n    var i int32;\n    var nWords int32 = Vec_WrdSize(p) / nObjs;\n    assert(Vec_WrdSize(p) % nObjs == 0, \"Vec_WrdSize(p) % nObjs == 0\");\n    for  i = 0; i \u003c nObjs; i++  {\n        memcpy( pArray + 2*i*nWords, p.pArray + i*nWords, sizeof(word) * nWords );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0); p.pArray = pArray;\n    p.nSize = p.nCap = 2*nWords*nObjs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaResetPiPattern(p *Gia_Man_t, nWords int32) {\n    p.iPatsPi = 0;\n    if p.vSimsPi == nil {\n        p.vSimsPi = Vec_WrdStart(0); }\n    Vec_WrdFill( p.vSimsPi, nWords * Gia_ManCiNum(p), 0 );\n    assert(nWords == Gia_ObjSimWords( p ), \"nWords == Gia_ObjSimWords( p )\");\n}\nfunc Ssc_GiaSavePiPattern(p *Gia_Man_t, vPat *Vec_Int_t) {\n    var pSimPi *word;\n    var i int32;\n    assert(Vec_IntSize(vPat) == Gia_ManCiNum(p), \"Vec_IntSize(vPat) == Gia_ManCiNum(p)\");\n    if p.iPatsPi == 64 * Gia_ObjSimWords(p) {\n        Vec_WrdDoubleSimInfo( p.vSimsPi, Gia_ManCiNum(p) ); }\n    assert(p.iPatsPi \u003c 64 * Gia_ObjSimWords(p), \"p.iPatsPi \u003c 64 * Gia_ObjSimWords(p)\");\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++, pSimPi += Gia_ObjSimWords(p)  {\n        if Vec_IntEntry(vPat, i) {\n            Abc_InfoSetBit( (unsigned *)pSimPi, p.iPatsPi ); }\n    }\n    p.iPatsPi++;\n}\nfunc Ssc_GiaRandomPiPattern(p *Gia_Man_t, nWords int32, vPivot *Vec_Int_t) {\n    var pSimPi *word;\n    var i, w int32;\n    Ssc_GiaResetPiPattern( p, nWords );\n    pSimPi = Gia_ObjSimPi( p, 0 );\n    for  i = 0; i \u003c Gia_ManPiNum(p); i++, pSimPi += nWords  {\n        pSimPi[0] = vPivot ? Ssc_Random1(Vec_IntEntry(vPivot, i)) : Ssc_Random2();\n        for  w = 1; w \u003c nWords; w++  {\n            pSimPi[w] = Ssc_Random();\n        }\n//        if ( i \u003c 10 )\n//            Extra_PrintBinary( stdout, (unsigned *)pSimPi, 64 ), printf( \"\\n\" );\n    }\n}\nfunc Ssc_GiaPrintPiPatterns(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var pSimAig *word;\n    var i int32;//, nWords = Gia_ObjSimWords( p );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pSimAig = Gia_ObjSimObj( p, pObj );\n//        Extra_PrintBinary( stdout, pSimAig, 64 * nWords );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer the simulation pattern from pCare to pAig.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaTransferPiPattern(pAig *Gia_Man_t, pCare *Gia_Man_t, vPivot *Vec_Int_t) int32 {\n    extern word * Ssc_GiaGetCareMask( Gia_Man_t * p );\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var w int32;\n    var nWords int32 = Gia_ObjSimWords( pCare );\n    var pCareMask *word  = Ssc_GiaGetCareMask( pCare );\n    var Count int32  = Ssc_SimCountBits( pCareMask, nWords );\n    var pSimPiCare, pSimPiAig *word;\n    if Count == 0 {\n        // inlining of macro ABC_FREE\n        ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);\n        return 0;\n    }\n    Ssc_GiaResetPiPattern( pAig, nWords );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pCare.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pCare, i)); i++  {\n        pSimPiAig  = Gia_ObjSimPi( pAig, i );\n        pSimPiCare = Gia_ObjSimObj( pCare, pObj );\n        for  w = 0; w \u003c nWords; w++  {\n            if Vec_IntEntry(vPivot, i) {\n                pSimPiAig[w] = pSimPiCare[w] | ~pCareMask[w];\n            } else {\n                pSimPiAig[w] = pSimPiCare[w] \u0026 pCareMask[w]; }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pCareMask) ? (free((char *) (pCareMask)), (pCareMask) = 0) : 0);\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaResetSimInfo(p *Gia_Man_t) {\n    assert(Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0, \"Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0\");\n    if p.vSims == nil {\n        p.vSims = Vec_WrdAlloc(0); }\n    Vec_WrdFill( p.vSims, Gia_ObjSimWords(p) * Gia_ManObjNum(p), 0 );\n}\nfunc Ssc_GiaSimRound(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var pSim, pSim0, pSim1 *word;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords(p);\n    Ssc_GiaResetSimInfo( p );\n    assert(nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p), \"nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p)\");\n    // constant node\n    Ssc_SimConst( Gia_ObjSim(p, 0), nWords, 0 );\n    // primary inputs\n    pSim = Gia_ObjSim( p, 1 );\n    pSim0 = Gia_ObjSimPi( p, 0 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        assert(pSim == Gia_ObjSimObj( p, pObj ), \"pSim == Gia_ObjSimObj( p, pObj )\");\n        Ssc_SimDup( pSim, pSim0, nWords, 0 );\n        pSim += nWords;\n        pSim0 += nWords;\n    }\n    // intermediate nodes\n    pSim = Gia_ObjSim( p, 1+Gia_ManCiNum(p) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        assert(pSim == Gia_ObjSim( p, i ), \"pSim == Gia_ObjSim( p, i )\");\n        pSim0 = pSim - pObj.iDiff0 * nWords;\n        pSim1 = pSim - pObj.iDiff1 * nWords;\n        Ssc_SimAnd( pSim, pSim0, pSim1, nWords, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj) );\n        pSim += nWords;\n    }\n    }\n    // primary outputs\n    pSim = Gia_ObjSim( p, Gia_ManObjNum(p) - Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        assert(pSim == Gia_ObjSimObj( p, pObj ), \"pSim == Gia_ObjSimObj( p, pObj )\");\n        pSim0 = pSim - pObj.iDiff0 * nWords;\n        Ssc_SimDup( pSim, pSim0, nWords, Gia_ObjFaninC0(pObj) );\n//        Extra_PrintBinary( stdout, pSim, 64 ), printf( \"\\n\" );\n        pSim += nWords;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one SAT assignment of the PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaGetCareMask(p *Gia_Man_t) *word {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var nWords int32 = Gia_ObjSimWords( p );\n    // inlining of macro ABC_FALLOC\n    var pRes *word  = ((word *) memset(malloc(sizeof(word) * (size_t)(nWords)), 0xff, sizeof(word) * (size_t)(nWords)));\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Ssc_SimAnd( pRes, pRes, Gia_ObjSimObj(p, pObj), nWords, 0, 0 );\n    }\n    return pRes;\n}\nfunc Ssc_GiaGetOneSim(p *Gia_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iBit int32;\n    var nWords int32 = Gia_ObjSimWords( p );\n    var pRes *word  = Ssc_GiaGetCareMask( p );\n    iBit = Ssc_SimFindBit( pRes, nWords );\n    // inlining of macro ABC_FREE\n    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);\n    if iBit == -1 {\n        return nil; }\n    vInit = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntPush( vInit, Abc_InfoHasBit((unsigned *)Gia_ObjSimObj(p, pObj), iBit) );\n    }\n    return vInit;\n}\nfunc Ssc_GiaFindPivotSim(p *Gia_Man_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    Ssc_GiaRandomPiPattern( p, 1, nil );\n    Ssc_GiaSimRound( p );\n    vInit = Ssc_GiaGetOneSim( p );\n    return vInit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaCountCaresSim(p *Gia_Man_t) int32 {\n    var pRes *word  = Ssc_GiaGetCareMask( p );\n    var nWords int32  = Gia_ObjSimWords( p );\n    var Count int32  = Ssc_SimCountBits( pRes, nWords );\n    // inlining of macro ABC_FREE\n    ((pRes) ? (free((char *) (pRes)), (pRes) = 0) : 0);\n    return Count;\n}\nfunc Ssc_GiaEstimateCare(p *Gia_Man_t, nWords int32) int32 {\n    Ssc_GiaRandomPiPattern( p, nWords, nil );\n    Ssc_GiaSimRound( p );\n    return Ssc_GiaCountCaresSim( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

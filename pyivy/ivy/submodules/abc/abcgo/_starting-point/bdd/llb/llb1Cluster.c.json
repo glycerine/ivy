@@ -1,0 +1,372 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c",
+  "SHA256": "d3d91bf5adedef60e54796a9b5389b3efff61581f4a54ce25edb94fad14d64e4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 6495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p.nCols - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 6544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p.nCols - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 6593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pColGrps[iGrp1] != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 6633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pColGrps[iGrp2] != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 7519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Combining %d and %d\\n\", iCol1, iCol2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 13,
+        "ByteOffset": 7733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : %c%c\\n\", iVar, "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 13,
+        "ByteOffset": 8472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pColSums[i] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 299,
+        "Column": 13,
+        "ByteOffset": 8514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pMatrix[i] != nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 13,
+        "ByteOffset": 8557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pMatrix[i] );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManComputeCommonQuant",
+      "Start": 1237,
+      "End": 1825,
+      "BodyStart": 1306,
+      "Original": "int Llb_ManComputeCommonQuant( Llb_Mtr_t * p, int iCol1, int iCol2 )\n{\n    int iVar, Weight = 0;\n    for ( iVar = 0; iVar \u003c p-\u003enRows - p-\u003enFfs; iVar++ )\n    {\n        // count each removed variable as 2\n        if ( p-\u003epMatrix[iCol1][iVar] == 1 \u0026\u0026 p-\u003epMatrix[iCol2][iVar] == 1 \u0026\u0026 p-\u003epRowSums[iVar] == 2 )\n            Weight += 2;\n        // count each added variale as -1\n        else if ( (p-\u003epMatrix[iCol1][iVar] == 1 \u0026\u0026 p-\u003epMatrix[iCol2][iVar] == 0) || \n                  (p-\u003epMatrix[iCol1][iVar] == 0 \u0026\u0026 p-\u003epMatrix[iCol2][iVar] == 1) )\n            Weight--;\n    }\n    return Weight;\n}",
+      "Draft": "func Llb_ManComputeCommonQuant(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) int32 {\n    var iVar, Weight int32;\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  {\n        // count each removed variable as 2\n        if p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1 \u0026\u0026 p.pRowSums[iVar] == 2 {\n            Weight += 2;\n        // count each added variale as -1\n        } else if (p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 0) || \n                  (p.pMatrix[iCol1][iVar] == 0 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1) {\n            Weight--; }\n    }\n    return Weight;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeBestQuant",
+      "Start": 2061,
+      "End": 2802,
+      "BodyStart": 2106,
+      "Original": "int Llb_ManComputeBestQuant( Llb_Mtr_t * p )\n{\n    int i, k, WeightBest = -100000, WeightCur, RetValue = -1;\n    for ( i = 1; i \u003c p-\u003enCols-1; i++ )\n    for ( k = i+1; k \u003c p-\u003enCols-1; k++ )\n    {\n        if ( p-\u003epColSums[i] == 0 || p-\u003epColSums[i] \u003e p-\u003epMan-\u003epPars-\u003enClusterMax )\n            continue;\n        if ( p-\u003epColSums[k] == 0 || p-\u003epColSums[k] \u003e p-\u003epMan-\u003epPars-\u003enClusterMax )\n            continue;\n\n        WeightCur = Llb_ManComputeCommonQuant( p, i, k );\n        if ( WeightCur \u003c= 0 )\n            continue;\n        if ( WeightBest \u003c WeightCur )\n        {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n//    printf( \"Choosing best quant Weight %4d\\n\", WeightCur );\n    return RetValue;\n}",
+      "Draft": "func Llb_ManComputeBestQuant(p *Llb_Mtr_t) int32 {\n    var i int32;\n    var k int32;\n    var WeightBest int32 = -100000;\n    var WeightCur int32;\n    var RetValue int32 = -1;\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        if p.pColSums[i] == 0 || p.pColSums[i] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        if p.pColSums[k] == 0 || p.pColSums[k] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n\n        WeightCur = Llb_ManComputeCommonQuant( p, i, k );\n        if WeightCur \u003c= 0 {\n            continue; }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n    }\n//    printf( \"Choosing best quant Weight %4d\\n\", WeightCur );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeQuant",
+      "Start": 3038,
+      "End": 3515,
+      "BodyStart": 3084,
+      "Original": "float ** Llb_ManComputeQuant( Llb_Mtr_t * p )\n{\n    float ** pCosts;\n    int i, k;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p-\u003enCols, p-\u003enCols, sizeof(float) );\n    for ( i = 0; i \u003c p-\u003enCols; i++ )\n    for ( k = 0; k \u003c p-\u003enCols; k++ )\n        pCosts[i][i] = 0.0;\n    // fill up\n    for ( i = 1; i \u003c p-\u003enCols-1; i++ )\n    for ( k = i+1; k \u003c p-\u003enCols-1; k++ )\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonQuant( p, i, k );\n    return pCosts;\n}",
+      "Draft": "func Llb_ManComputeQuant(p *Llb_Mtr_t) **float32 {\n    var pCosts **float32;\n    var i, k int32;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );\n    for  i = 0; i \u003c p.nCols; i++  {\n    for  k = 0; k \u003c p.nCols; k++  {\n        pCosts[i][i] = 0.0;\n    }\n    }\n    // fill up\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonQuant( p, i, k );\n    }\n    }\n    return pCosts;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeCommonAttr",
+      "Start": 3751,
+      "End": 4378,
+      "BodyStart": 3821,
+      "Original": "float Llb_ManComputeCommonAttr( Llb_Mtr_t * p, int iCol1, int iCol2 )\n{\n    int iVar, CountComm = 0, CountDiff = 0;\n    for ( iVar = 0; iVar \u003c p-\u003enRows - p-\u003enFfs; iVar++ )\n    {\n        if ( p-\u003epMatrix[iCol1][iVar] == 1 \u0026\u0026 p-\u003epMatrix[iCol2][iVar] == 1 )\n            CountComm++;\n        else if ( p-\u003epMatrix[iCol1][iVar] == 1 || p-\u003epMatrix[iCol2][iVar] == 1 )\n            CountDiff++;\n    }\n/*\n    printf( \"Attr cost for %4d and %4d:  %4d %4d (%5.2f)\\n\", \n        iCol1, iCol2, \n        CountDiff, CountComm, \n        -1.0 * CountDiff / ( CountComm + CountDiff ) );\n*/\n    return -1.0 * CountDiff / ( CountComm + CountDiff );\n}",
+      "Draft": "func Llb_ManComputeCommonAttr(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) float32 {\n    var iVar, CountComm, CountDiff int32;\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  {\n        if p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1 {\n            CountComm++;\n        } else if p.pMatrix[iCol1][iVar] == 1 || p.pMatrix[iCol2][iVar] == 1 {\n            CountDiff++; }\n    }\n/*\n    printf( \"Attr cost for %4d and %4d:  %4d %4d (%5.2f)\\n\", \n        iCol1, iCol2, \n        CountDiff, CountComm, \n        -1.0 * CountDiff / ( CountComm + CountDiff ) );\n*/\n    return -1.0 * CountDiff / ( CountComm + CountDiff );\n}"
+    },
+    {
+      "Name": "Llb_ManComputeBestAttr",
+      "Start": 4614,
+      "End": 5247,
+      "BodyStart": 4658,
+      "Original": "int Llb_ManComputeBestAttr( Llb_Mtr_t * p )\n{\n    float WeightBest = -100000, WeightCur;\n    int i, k, RetValue = -1;\n    for ( i = 1; i \u003c p-\u003enCols-1; i++ )\n    for ( k = i+1; k \u003c p-\u003enCols-1; k++ )\n    {\n        if ( p-\u003epColSums[i] == 0 || p-\u003epColSums[i] \u003e p-\u003epMan-\u003epPars-\u003enClusterMax )\n            continue;\n        if ( p-\u003epColSums[k] == 0 || p-\u003epColSums[k] \u003e p-\u003epMan-\u003epPars-\u003enClusterMax )\n            continue;\n        WeightCur = Llb_ManComputeCommonAttr( p, i, k );\n        if ( WeightBest \u003c WeightCur )\n        {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n    return RetValue;\n}",
+      "Draft": "func Llb_ManComputeBestAttr(p *Llb_Mtr_t) int32 {\n    var WeightBest float32 = -100000;\n    var WeightCur float32;\n    var i int32;\n    var k int32;\n    var RetValue int32 = -1;\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        if p.pColSums[i] == 0 || p.pColSums[i] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        if p.pColSums[k] == 0 || p.pColSums[k] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        WeightCur = Llb_ManComputeCommonAttr( p, i, k );\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Llb_ManComputeAttr",
+      "Start": 5483,
+      "End": 5958,
+      "BodyStart": 5528,
+      "Original": "float ** Llb_ManComputeAttr( Llb_Mtr_t * p )\n{\n    float ** pCosts;\n    int i, k;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p-\u003enCols, p-\u003enCols, sizeof(float) );\n    for ( i = 0; i \u003c p-\u003enCols; i++ )\n    for ( k = 0; k \u003c p-\u003enCols; k++ )\n        pCosts[i][i] = 0.0;\n    // fill up\n    for ( i = 1; i \u003c p-\u003enCols-1; i++ )\n    for ( k = i+1; k \u003c p-\u003enCols-1; k++ )\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonAttr( p, i, k );\n    return pCosts;\n}",
+      "Draft": "func Llb_ManComputeAttr(p *Llb_Mtr_t) **float32 {\n    var pCosts **float32;\n    var i, k int32;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );\n    for  i = 0; i \u003c p.nCols; i++  {\n    for  k = 0; k \u003c p.nCols; k++  {\n        pCosts[i][i] = 0.0;\n    }\n    }\n    // fill up\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonAttr( p, i, k );\n    }\n    }\n    return pCosts;\n}"
+    },
+    {
+      "Name": "Llb_MtrCombineSelectedColumns",
+      "Start": 6246,
+      "End": 6972,
+      "BodyStart": 6320,
+      "Original": "void Llb_MtrCombineSelectedColumns( Llb_Mtr_t * p, int iGrp1, int iGrp2 )\n{\n    int iVar;\n    assert( iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p-\u003enCols - 1 );\n    assert( iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p-\u003enCols - 1 );\n    assert( p-\u003epColGrps[iGrp1] != NULL );\n    assert( p-\u003epColGrps[iGrp2] != NULL );\n    for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n    {\n        if ( p-\u003epMatrix[iGrp1][iVar] == 1 \u0026\u0026 p-\u003epMatrix[iGrp2][iVar] == 1 )\n            p-\u003epRowSums[iVar]--;\n        if ( p-\u003epMatrix[iGrp1][iVar] == 0 \u0026\u0026 p-\u003epMatrix[iGrp2][iVar] == 1 )\n        {\n            p-\u003epMatrix[iGrp1][iVar] = 1;\n            p-\u003epColSums[iGrp1]++;\n        }\n        if ( p-\u003epMatrix[iGrp2][iVar] == 1 )\n            p-\u003epMatrix[iGrp2][iVar] = 0;\n    }\n    p-\u003epColSums[iGrp2] = 0;\n}",
+      "Draft": "func Llb_MtrCombineSelectedColumns(p *Llb_Mtr_t, iGrp1 int32, iGrp2 int32) {\n    var iVar int32;\n    assert(iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p.nCols - 1, \"iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p.nCols - 1\");\n    assert(iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p.nCols - 1, \"iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p.nCols - 1\");\n    assert(p.pColGrps[iGrp1] != nil, \"p.pColGrps[iGrp1] != nil\");\n    assert(p.pColGrps[iGrp2] != nil, \"p.pColGrps[iGrp2] != nil\");\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pMatrix[iGrp1][iVar] == 1 \u0026\u0026 p.pMatrix[iGrp2][iVar] == 1 {\n            p.pRowSums[iVar]--; }\n        if p.pMatrix[iGrp1][iVar] == 0 \u0026\u0026 p.pMatrix[iGrp2][iVar] == 1 {\n            p.pMatrix[iGrp1][iVar] = 1;\n            p.pColSums[iGrp1]++;\n        }\n        if p.pMatrix[iGrp2][iVar] == 1 {\n            p.pMatrix[iGrp2][iVar] = 0; }\n    }\n    p.pColSums[iGrp2] = 0;\n}"
+    },
+    {
+      "Name": "Llb_ManClusterOne",
+      "Start": 7238,
+      "End": 7964,
+      "BodyStart": 7300,
+      "Original": "void Llb_ManClusterOne( Llb_Mtr_t * p, int iCol1, int iCol2 )\n{\n    int fVerbose = 0;\n    Llb_Grp_t * pGrp;\n    int iVar;\n\n    if ( fVerbose )\n    {\n        printf( \"Combining %d and %d\\n\", iCol1, iCol2 );\n        for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n        {\n            if ( p-\u003epMatrix[iCol1][iVar] == 0 \u0026\u0026 p-\u003epMatrix[iCol2][iVar] == 0 )\n                continue;\n            printf( \"%3d : %c%c\\n\", iVar, \n                p-\u003epMatrix[iCol1][iVar]? '*':' ', \n                p-\u003epMatrix[iCol2][iVar]? '*':' ' );\n        }\n    }\n    pGrp = Llb_ManGroupsCombine( p-\u003epColGrps[iCol1], p-\u003epColGrps[iCol2] );\n    Llb_MtrCombineSelectedColumns( p, iCol1, iCol2 );\n    p-\u003epColGrps[iCol1] = pGrp;\n    p-\u003epColGrps[iCol2] = NULL;\n}",
+      "Draft": "func Llb_ManClusterOne(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) {\n    var fVerbose int32;\n    var pGrp *Llb_Grp_t;\n    var iVar int32;\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Combining %d and %d\\n\", iCol1, iCol2);\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if p.pMatrix[iCol1][iVar] == 0 \u0026\u0026 p.pMatrix[iCol2][iVar] == 0 {\n                continue; }\n            fmt.Printf(\"%3d : %c%c\\n\", iVar, p.pMatrix[iCol1][iVar]? '*':' ', p.pMatrix[iCol2][iVar]? '*':' ');\n        }\n    }\n    pGrp = Llb_ManGroupsCombine( p.pColGrps[iCol1], p.pColGrps[iCol2] );\n    Llb_MtrCombineSelectedColumns( p, iCol1, iCol2 );\n    p.pColGrps[iCol1] = pGrp;\n    p.pColGrps[iCol2] = nil;\n}"
+    },
+    {
+      "Name": "Llb_ManClusterCompress",
+      "Start": 8222,
+      "End": 8697,
+      "BodyStart": 8267,
+      "Original": "void Llb_ManClusterCompress( Llb_Mtr_t * p )\n{\n    int i, k = 0;\n    for ( i = 0; i \u003c p-\u003enCols; i++ )\n    {\n        if ( p-\u003epColGrps[i] == NULL )\n        {\n            assert( p-\u003epColSums[i] == 0 );\n            assert( p-\u003epMatrix[i] != NULL );\n            ABC_FREE( p-\u003epMatrix[i] );\n            continue;\n        }\n        p-\u003epMatrix[k]  = p-\u003epMatrix[i];\n        p-\u003epColGrps[k] = p-\u003epColGrps[i];\n        p-\u003epColSums[k] = p-\u003epColSums[i];\n        k++;\n    }\n    p-\u003enCols = k;\n}",
+      "Draft": "func Llb_ManClusterCompress(p *Llb_Mtr_t) {\n    var i, k int32;\n    for  i = 0; i \u003c p.nCols; i++  {\n        if p.pColGrps[i] == nil {\n            assert(p.pColSums[i] == 0, \"p.pColSums[i] == 0\");\n            assert(p.pMatrix[i] != nil, \"p.pMatrix[i] != nil\");\n            ABC_FREE( p.pMatrix[i] );\n            continue;\n        }\n        p.pMatrix[k]  = p.pMatrix[i];\n        p.pColGrps[k] = p.pColGrps[i];\n        p.pColSums[k] = p.pColSums[i];\n        k++;\n    }\n    p.nCols = k;\n}"
+    },
+    {
+      "Name": "Llb_ManCluster",
+      "Start": 8962,
+      "End": 9530,
+      "BodyStart": 8999,
+      "Original": "void Llb_ManCluster( Llb_Mtr_t * p )\n{\n    int RetValue;\n    do\n    {\n        do {\n            RetValue = Llb_ManComputeBestQuant( p );\n            if ( RetValue \u003e 0 )\n                Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff );\n        }\n        while ( RetValue \u003e 0 );\n\n        RetValue = Llb_ManComputeBestAttr( p );\n        if ( RetValue \u003e 0 )\n            Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff );\n\n        Llb_MtrVerifyMatrix( p );\n    }\n    while ( RetValue \u003e 0 );\n\n    Llb_ManClusterCompress( p );\n\n    Llb_MtrVerifyMatrix( p );\n}",
+      "Draft": "func Llb_ManCluster(p *Llb_Mtr_t) {\n    var RetValue int32;\n    for\n    {\n        for {\n            RetValue = Llb_ManComputeBestQuant( p );\n            if RetValue \u003e 0 {\n                Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff ); }\n        \nif !( RetValue \u003e 0 ) { break }\n}\n        \n\n        RetValue = Llb_ManComputeBestAttr( p );\n        if RetValue \u003e 0 {\n            Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff ); }\n\n        Llb_MtrVerifyMatrix( p );\n    \nif !( RetValue \u003e 0 ) { break }\n}\n    \n\n    Llb_ManClusterCompress( p );\n\n    Llb_MtrVerifyMatrix( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::mechanical::sizeof::3205",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3205,
+      "End": 3211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::mechanical::sizeof::5649",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5649,
+      "End": 5655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::mechanical::do::9023",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9023,
+      "End": 9025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::mechanical::do::9040",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9040,
+      "End": 9042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::pointer-cast::3157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3157,
+      "End": 3167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::pointer-cast::5601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5601,
+      "End": 5611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeCommonQuant",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeCommonQuant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1237,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeBestQuant",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeBestQuant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2061,
+      "End": 2802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeQuant",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeQuant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3038,
+      "End": 3515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeCommonAttr",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeCommonAttr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3751,
+      "End": 4378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeBestAttr",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeBestAttr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4614,
+      "End": 5247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManComputeAttr",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManComputeAttr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5483,
+      "End": 5958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_MtrCombineSelectedColumns",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrCombineSelectedColumns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6246,
+      "End": 6972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::ternary::Llb_ManClusterOne",
+      "Category": "ternary-review",
+      "Symbol": "Llb_ManClusterOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7238,
+      "End": 7964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManClusterOne",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManClusterOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7238,
+      "End": 7964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManClusterCompress",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManClusterCompress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8222,
+      "End": 8697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::Llb_ManCluster",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManCluster",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8962,
+      "End": 9530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Cluster.c::macro-inline::8478",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8478,
+      "End": 8503
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb1Cluster.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Clustering algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n \n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Cluster.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeCommonQuant(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) int32 {\n    var iVar, Weight int32;\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  {\n        // count each removed variable as 2\n        if p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1 \u0026\u0026 p.pRowSums[iVar] == 2 {\n            Weight += 2;\n        // count each added variale as -1\n        } else if (p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 0) || \n                  (p.pMatrix[iCol1][iVar] == 0 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1) {\n            Weight--; }\n    }\n    return Weight;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeBestQuant(p *Llb_Mtr_t) int32 {\n    var i int32;\n    var k int32;\n    var WeightBest int32 = -100000;\n    var WeightCur int32;\n    var RetValue int32 = -1;\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        if p.pColSums[i] == 0 || p.pColSums[i] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        if p.pColSums[k] == 0 || p.pColSums[k] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n\n        WeightCur = Llb_ManComputeCommonQuant( p, i, k );\n        if WeightCur \u003c= 0 {\n            continue; }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n    }\n//    printf( \"Choosing best quant Weight %4d\\n\", WeightCur );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeQuant(p *Llb_Mtr_t) **float32 {\n    var pCosts **float32;\n    var i, k int32;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );\n    for  i = 0; i \u003c p.nCols; i++  {\n    for  k = 0; k \u003c p.nCols; k++  {\n        pCosts[i][i] = 0.0;\n    }\n    }\n    // fill up\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonQuant( p, i, k );\n    }\n    }\n    return pCosts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeCommonAttr(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) float32 {\n    var iVar, CountComm, CountDiff int32;\n    for  iVar = 0; iVar \u003c p.nRows - p.nFfs; iVar++  {\n        if p.pMatrix[iCol1][iVar] == 1 \u0026\u0026 p.pMatrix[iCol2][iVar] == 1 {\n            CountComm++;\n        } else if p.pMatrix[iCol1][iVar] == 1 || p.pMatrix[iCol2][iVar] == 1 {\n            CountDiff++; }\n    }\n/*\n    printf( \"Attr cost for %4d and %4d:  %4d %4d (%5.2f)\\n\", \n        iCol1, iCol2, \n        CountDiff, CountComm, \n        -1.0 * CountDiff / ( CountComm + CountDiff ) );\n*/\n    return -1.0 * CountDiff / ( CountComm + CountDiff );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeBestAttr(p *Llb_Mtr_t) int32 {\n    var WeightBest float32 = -100000;\n    var WeightCur float32;\n    var i int32;\n    var k int32;\n    var RetValue int32 = -1;\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        if p.pColSums[i] == 0 || p.pColSums[i] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        if p.pColSums[k] == 0 || p.pColSums[k] \u003e p.pMan.pPars.nClusterMax {\n            continue; }\n        WeightCur = Llb_ManComputeCommonAttr( p, i, k );\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            RetValue   = (i \u003c\u003c 16) | k;\n        }\n    }\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManComputeAttr(p *Llb_Mtr_t) **float32 {\n    var pCosts **float32;\n    var i, k int32;\n    // alloc and clean\n    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );\n    for  i = 0; i \u003c p.nCols; i++  {\n    for  k = 0; k \u003c p.nCols; k++  {\n        pCosts[i][i] = 0.0;\n    }\n    }\n    // fill up\n    for  i = 1; i \u003c p.nCols-1; i++  {\n    for  k = i+1; k \u003c p.nCols-1; k++  {\n        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonAttr( p, i, k );\n    }\n    }\n    return pCosts;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of variables that will be saved.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrCombineSelectedColumns(p *Llb_Mtr_t, iGrp1 int32, iGrp2 int32) {\n    var iVar int32;\n    assert(iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p.nCols - 1, \"iGrp1 \u003e= 1 \u0026\u0026 iGrp1 \u003c p.nCols - 1\");\n    assert(iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p.nCols - 1, \"iGrp2 \u003e= 1 \u0026\u0026 iGrp2 \u003c p.nCols - 1\");\n    assert(p.pColGrps[iGrp1] != nil, \"p.pColGrps[iGrp1] != nil\");\n    assert(p.pColGrps[iGrp2] != nil, \"p.pColGrps[iGrp2] != nil\");\n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pMatrix[iGrp1][iVar] == 1 \u0026\u0026 p.pMatrix[iGrp2][iVar] == 1 {\n            p.pRowSums[iVar]--; }\n        if p.pMatrix[iGrp1][iVar] == 0 \u0026\u0026 p.pMatrix[iGrp2][iVar] == 1 {\n            p.pMatrix[iGrp1][iVar] = 1;\n            p.pColSums[iGrp1]++;\n        }\n        if p.pMatrix[iGrp2][iVar] == 1 {\n            p.pMatrix[iGrp2][iVar] = 0; }\n    }\n    p.pColSums[iGrp2] = 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Combines one pair of columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManClusterOne(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) {\n    var fVerbose int32;\n    var pGrp *Llb_Grp_t;\n    var iVar int32;\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Combining %d and %d\\n\", iCol1, iCol2);\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if p.pMatrix[iCol1][iVar] == 0 \u0026\u0026 p.pMatrix[iCol2][iVar] == 0 {\n                continue; }\n            fmt.Printf(\"%3d : %c%c\\n\", iVar, p.pMatrix[iCol1][iVar]? '*':' ', p.pMatrix[iCol2][iVar]? '*':' ');\n        }\n    }\n    pGrp = Llb_ManGroupsCombine( p.pColGrps[iCol1], p.pColGrps[iCol2] );\n    Llb_MtrCombineSelectedColumns( p, iCol1, iCol2 );\n    p.pColGrps[iCol1] = pGrp;\n    p.pColGrps[iCol2] = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes empty columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManClusterCompress(p *Llb_Mtr_t) {\n    var i, k int32;\n    for  i = 0; i \u003c p.nCols; i++  {\n        if p.pColGrps[i] == nil {\n            assert(p.pColSums[i] == 0, \"p.pColSums[i] == 0\");\n            assert(p.pMatrix[i] != nil, \"p.pMatrix[i] != nil\");\n            ABC_FREE( p.pMatrix[i] );\n            continue;\n        }\n        p.pMatrix[k]  = p.pMatrix[i];\n        p.pColGrps[k] = p.pColGrps[i];\n        p.pColSums[k] = p.pColSums[i];\n        k++;\n    }\n    p.nCols = k;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Combines one pair of columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManCluster(p *Llb_Mtr_t) {\n    var RetValue int32;\n    for\n    {\n        for {\n            RetValue = Llb_ManComputeBestQuant( p );\n            if RetValue \u003e 0 {\n                Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff ); }\n        \nif !( RetValue \u003e 0 ) { break }\n}\n        \n\n        RetValue = Llb_ManComputeBestAttr( p );\n        if RetValue \u003e 0 {\n            Llb_ManClusterOne( p, RetValue \u003e\u003e 16, RetValue \u0026 0xffff ); }\n\n        Llb_MtrVerifyMatrix( p );\n    \nif !( RetValue \u003e 0 ) { break }\n}\n    \n\n    Llb_ManClusterCompress( p );\n\n    Llb_MtrVerifyMatrix( p );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

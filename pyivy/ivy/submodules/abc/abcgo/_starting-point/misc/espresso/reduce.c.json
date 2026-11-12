@@ -1,0 +1,207 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c",
+  "SHA256": "dae958300f2c9fe040b9887bbd74d125c2c3efd53cc7eacc04f433f039f1d6d9",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"REDUCE: %s to %s %s\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"SCCC[%d]: result is %s\\n\", --sccc_level, pc1(r));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::mechanical::static::3915",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3476,
+      "End": 3482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::pointer-cast::9380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7126,
+      "End": 7126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::2565",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2565,
+      "End": 2584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::3635",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3635,
+      "End": 3645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::3656",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3656,
+      "End": 3666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::4141",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4141,
+      "End": 4170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::4176",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4176,
+      "End": 4207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::4213",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4213,
+      "End": 4244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::5080",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_xor",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5080,
+      "End": 5108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::5114",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5114,
+      "End": 5149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::5628",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5628,
+      "End": 5650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::5848",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5848,
+      "End": 5858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6166",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6166,
+      "End": 6188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6418",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6418,
+      "End": 6431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6480",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6480,
+      "End": 6507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6583",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6583,
+      "End": 6605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6763",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6763,
+      "End": 6785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/reduce.c::macro-inline::6999",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6999,
+      "End": 7009
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: reduce.c\n    purpose: Perform the Espresso-II reduction step\n\n    Reduction is a technique used to explore larger regions of the\n    optimization space.  We replace each cube of F with a smaller\n    cube while still maintaining a cover of the same logic function.\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvar toggle bool = TRUE;\n\n\n/*\n    reduce -- replace each cube in F with its reduction\n\n    The reduction of a cube is the smallest cube contained in the cube\n    which can replace the cube in the original cover without changing\n    the cover.  This is equivalent to the super cube of all of the\n    essential points in the cube.  This can be computed directly.\n\n    The problem is that the order in which the cubes are reduced can\n    greatly affect the final result.  We alternate between two ordering\n    strategies:\n\n    (1) Order the cubes in ascending order of distance from the\n    largest cube breaking ties by ordering cubes of equal distance\n    in descending order of size (sort_reduce)\n\n    (2) Order the cubes in descending order of the inner-product of\n    the cube and the column sums (mini_sort)\n\n    The real workhorse of this section is the routine SCCC which is\n    used to find the Smallest Cube Containing the Complement of a cover.\n    Reduction as proposed by Espresso-II takes a cube and computes its\n    maximal reduction as the intersection between the cube and the\n    smallest cube containing the complement of (F u D - {c}) cofactored\n    against c.\n\n    As usual, the unate-recursive paradigm is used to compute SCCC.\n    The SCCC of a unate cover is trivial to compute, and thus we perform\n    Shannon Cofactor expansion attempting to drive the cover to be unate\n    as fast as possible.\n*/\n\npcover reduce(F, D)\nINOUT pcover F;\nIN pcover D;\n{\n    register pcube last, p, cunder, *FD;\n\n    /* Order the cubes */\n    if (use_random_order)\n    F = random_order(F);\n    else {\n    F = toggle ? sort_reduce(F) : mini_sort(F, descend);\n    toggle = ! toggle;\n    }\n\n    /* Try to reduce each cube */\n    FD = cube2list(F, D);\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    cunder = reduce_cube(FD, p);        /* reduce the cube */\n    if setp_equal(cunder, p) {            /* see if it actually did */\n        // inlining of macro SET\n        (p[0] |= (ACTIVE));    /* cube remains active */\n        // inlining of macro SET\n        (p[0] |= (PRIME));    /* cube remains prime ? */\n    } else {\n        if debug \u0026 REDUCE {\n        fmt.Printf(\"REDUCE: %s to %s %s\\n\", pc1(p), pc2(cunder), print_time(ptime()));\n        }\n        set_copy(p, cunder);                /* save reduced version */\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (PRIME));                    /* cube is no longer prime */\n        if (setp_empty(cunder))\n        // inlining of macro RESET\n        (p[0] \u0026= ~ (ACTIVE));               /* if null, kill the cube */\n        else\n        // inlining of macro SET\n        (p[0] |= (ACTIVE));                 /* cube is active */\n    }\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cunder);\n    }\n    // inlining of macro free_cubelist\n    FREE(FD[0]); FREE(FD);;\n\n    /* Delete any cubes of F which reduced to the empty cube */\n    return sf_inactive(F);\n}\n\f\n/* reduce_cube -- find the maximal reduction of a cube */\npcube reduce_cube(FD, p)\nIN pcube *FD, p;\n{\n    pcube cunder;\n\n    cunder = sccc(cofactor(FD, p));\n    return set_and(cunder, cunder, p);\n}\n\n\n/* sccc -- find Smallest Cube Containing the Complement of a cover */\npcube sccc(T)\nINOUT pcube *T;         /* T will be disposed of */\n{\n    pcube r;\n    register pcube cl, cr;\n    register int best;\n    static int sccc_level = 0;\n\n    if debug \u0026 REDUCE1 {\n    debug_print(T, \"SCCC\", sccc_level++);\n    }\n\n    if sccc_special_cases(T, \u0026r) == MAYBE {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cl = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cr = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    best = binate_split_select(T, cl, cr, REDUCE1);\n    r = sccc_merge(sccc(scofactor(T, cl, best)),\n               sccc(scofactor(T, cr, best)), cl, cr);\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    }\n\n    if (debug \u0026 REDUCE1)\n    fmt.Printf(\"SCCC[%d]: result is %s\\n\", --sccc_level, pc1(r));\n    return r;\n}\n\n\npcube sccc_merge(left, right, cl, cr)\nINOUT register pcube left, right;       /* will be disposed of ... */\nINOUT register pcube cl, cr;            /* will be disposed of ... */\n{\n    INLINEset_and(left, left, cl);\n    INLINEset_and(right, right, cr);\n    INLINEset_or(left, left, right);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(right);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cl);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cr);\n    return left;\n}\n\n\n/*\n    sccc_cube -- find the smallest cube containing the complement of a cube\n\n    By DeMorgan's law and the fact that the smallest cube containing a\n    cover is the \"or\" of the positional cubes, it is simple to see that\n    the SCCC is the universe if the cube has more than two active\n    variables.  If there is only a single active variable, then the\n    SCCC is merely the bitwise complement of the cube in that\n    variable.  A last special case is no active variables, in which\n    case the SCCC is empty.\n\n    This is \"anded\" with the incoming cube result.\n*/\npcube sccc_cube(result, p)\nregister pcube result, p;\n{\n    register pcube temp=cube.temp[0], mask;\n    int var;\n\n    if (var = cactive(p)) \u003e= 0 {\n    mask = cube.var_mask[var];\n    INLINEset_xor(temp, p, mask);\n    INLINEset_and(result, result, temp);\n    }\n    return result;\n}\n\f\n/*\n *   sccc_special_cases -- check the special cases for sccc\n */\n\nbool sccc_special_cases(T, result)\nINOUT pcube *T;                 /* will be disposed if answer is determined */\nOUT pcube *result;              /* returned only if answer determined */\n{\n    register pcube *T1, p, temp = cube.temp[1], ceil, cof = T[0];\n    pcube *A, *B;\n\n    /* empty cover =\u003e complement is universe =\u003e SCCC is universe */\n    if T[2] == NULL {\n    // inlining of macro set_save\n    *result = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n    }\n\n    /* row of 1's =\u003e complement is empty =\u003e SCCC is empty */\n    for T1 = T+2; (p = *T1++) != NULL;  {\n    if full_row(p, cof) {\n        // inlining of macro new_cube\n        // inlining of macro set_new\n        *result = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n        // inlining of macro free_cubelist\n        FREE(T[0]); FREE(T);;\n        return TRUE;\n    }\n    }\n\n    /* Collect column counts, determine unate variables, etc. */\n    massive_count(T);\n\n    /* If cover is unate (or single cube), apply simple rules to find SCCCU */\n    if cdata.vars_unate == cdata.vars_active || T[3] == NULL {\n    // inlining of macro set_save\n    *result = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    for T1 = T+2; (p = *T1++) != NULL;  {\n        (void) sccc_cube(*result, set_or(temp, p, cof));\n    }\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n    }\n\n    /* Check for column of 0's (which can be easily factored( */\n    // inlining of macro set_save\n    ceil = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cof))), cof);\n    for T1 = T+2; (p = *T1++) != NULL;  {\n    INLINEset_or(ceil, ceil, p);\n    }\n    if ! setp_equal(ceil, cube.fullset) {\n    // inlining of macro set_save\n    *result = sccc_cube(set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset), ceil);\n    if setp_equal(*result, cube.fullset) {\n        // inlining of macro free_cube\n        // inlining of macro set_free\n        FREE(ceil);\n    } else {\n        *result = sccc_merge(sccc(cofactor(T,ceil)),\n             // inlining of macro set_save\n             set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset), ceil, *result);\n    }\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n    }\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(ceil);\n\n    /* Single active column at this point =\u003e tautology =\u003e SCCC is empty */\n    if cdata.vars_active == 1 {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    *result = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n    }\n\n    /* Check for components */\n    // inlining of macro CUBELISTSIZE\n    if cdata.var_zeros[cdata.best] \u003c (((pcube *) T[1] - T) - 3)/2 {\n    if cubelist_partition(T, \u0026A, \u0026B, debug \u0026 REDUCE1) == 0 {\n        return MAYBE;\n    } else {\n        // inlining of macro free_cubelist\n        FREE(T[0]); FREE(T);;\n        *result = sccc(A);\n        ceil = sccc(B);\n        (void) set_and(*result, *result, ceil);\n        // inlining of macro set_free\n        FREE(ceil);\n        return TRUE;\n    }\n    }\n\n    /* Not much we can do about it */\n    return MAYBE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

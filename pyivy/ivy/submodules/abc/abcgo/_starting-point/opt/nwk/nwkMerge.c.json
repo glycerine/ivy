@@ -1,0 +1,1733 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c",
+  "SHA256": "3a73dc4dcc078a4c1698887eb9a17e6b7472b96adb96071ddba03c1507f1d915",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 52,
+        "Column": 69,
+        "ByteOffset": 1445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nwk_Grf_t *) malloc(sizeof(Nwk_Grf_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Nwk_Grf_t) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 82,
+        "ByteOffset": 1686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pEdgeHash = /*__starting_point_inline_macro:ABC_CALLOC__*/((Nwk_Edg_t * *) calloc((size_t)(p.nEdgeHash), sizeof(Nwk_Edg_t *)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 77,
+        "Column": 64,
+        "ByteOffset": 2386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pVerts) ? (free((char *) (p.pVerts)), (p.pVerts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 67,
+        "ByteOffset": 2501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 68,
+        "ByteOffset": 2623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMapLut2Id) ? (free((char *) (p.pMapLut2Id)), (p.pMapLut2Id) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 80,
+        "Column": 68,
+        "ByteOffset": 2747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMapId2Lut) ? (free((char *) (p.pMapId2Lut)), (p.pMapId2Lut) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 57,
+        "ByteOffset": 2860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory usage stats:  Preprocessing = %.2f MB.  Solving = %.2f MB.\\n\","
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLut1 \u003c iLut2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pList );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 6384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVertex.nEdges \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 7312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVertex.nEdges \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 272,
+        "Column": 74,
+        "ByteOffset": 8432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMapLut2Id = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 273,
+        "Column": 74,
+        "ByteOffset": 8549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMapId2Lut = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nVertsMax+1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 8601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMapLut2Id, 0xff, sizeof(int) * (p.nObjs+1) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 8662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMapId2Lut, 0xff, sizeof(int) * (p.nVertsMax+1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 8941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode1 \u003c= p.nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 8985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode2 \u003c= p.nObjs );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 293,
+        "Column": 70,
+        "ByteOffset": 9442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pnEdges = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nVerts+1), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 9711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode1 \u003c= p.nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 9,
+        "ByteOffset": 9755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode2 \u003c= p.nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 9932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode1 \u003c= p.nVerts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 9977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pEntry.iNode2 \u003c= p.nVerts );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 309,
+        "Column": 78,
+        "ByteOffset": 10240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pVerts = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nwk_Vrt_t * *) malloc(sizeof(Nwk_Vrt_t *) * (size_t)(p.nVerts + 1)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 10364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pnEdges[i] \u003e 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 315,
+        "Column": 9,
+        "ByteOffset": 10541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pVerts[i], 0, nBytes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 11134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pVerts[i].nEdges == pnEdges[i] );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 333,
+        "Column": 67,
+        "ByteOffset": 11374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 335,
+        "Column": 63,
+        "ByteOffset": 11515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pnEdges) ? (free((char *) (pnEdges)), (pnEdges) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 354,
+        "Column": 71,
+        "ByteOffset": 12081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pIdToPair = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 9,
+        "ByteOffset": 12271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIdToPair[ p.vPairs.pArray[i] ] == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 367,
+        "Column": 13,
+        "ByteOffset": 12522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i \u003c pIdToPair[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 12661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize == Vec_IntSize(p.vPairs) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 373,
+        "Column": 65,
+        "ByteOffset": 12767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pIdToPair) ? (free((char *) (pIdToPair)), (pIdToPair) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 391,
+        "Column": 5,
+        "ByteOffset": 13206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pLists1[0] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 13,
+        "ByteOffset": 13363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pVertex.nEdges == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 13,
+        "ByteOffset": 13457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNext.nEdges == i || pNext.nEdges \u003e NWK_MAX_LIST );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 13577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pLists2[0] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 13610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pLists2[1] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 13,
+        "ByteOffset": 13767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pVertex.nEdges == j || pVertex.nEdges \u003e NWK_MAX_LIST );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 14333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c pThis.nEdges );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 462,
+        "Column": 13,
+        "ByteOffset": 15630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pOther.nEdges == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 13,
+        "ByteOffset": 16668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pOther.nEdges == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 525,
+        "Column": 13,
+        "ByteOffset": 18074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", p.pVerts[pThis.pEdges[0]].nEdges ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 529,
+        "Column": 9,
+        "ByteOffset": 18178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 9,
+        "ByteOffset": 20402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pLists1[0] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 17,
+        "ByteOffset": 20717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pVertex.nEdges == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 9,
+        "ByteOffset": 21016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pLists2[0] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 9,
+        "ByteOffset": 21053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pLists2[1] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 624,
+        "Column": 17,
+        "ByteOffset": 21390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pVertex.nEdges == j || j == NWK_MAX_LIST );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 653,
+        "Column": 13,
+        "ByteOffset": 22181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 16,
+        "ByteOffset": 22221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nNodes );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 16,
+        "ByteOffset": 22279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nEdges );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 657,
+        "Column": 10,
+        "ByteOffset": 22368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fscanf( pFile, \"%s %d %d\", Buffer, \u0026iNode1, \u0026iNode2 ) == 3  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 660,
+        "Column": 5,
+        "ByteOffset": 22491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nEdges == nEdges );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 661,
+        "Column": 5,
+        "ByteOffset": 22525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 682,
+        "Column": 73,
+        "ByteOffset": 23164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 23239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 688,
+        "Column": 73,
+        "ByteOffset": 23509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 809,
+        "Column": 5,
+        "ByteOffset": 27462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nMaxDistance \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 975,
+        "Column": 9,
+        "ByteOffset": 34536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 985,
+        "Column": 9,
+        "ByteOffset": 34904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 987,
+        "Column": 73,
+        "ByteOffset": 35144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 993,
+        "Column": 9,
+        "ByteOffset": 35284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 996,
+        "Column": 73,
+        "ByteOffset": 35562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManGraphAlloc",
+      "Start": 1270,
+      "End": 1681,
+      "BodyStart": 1317,
+      "Original": "Nwk_Grf_t * Nwk_ManGraphAlloc( int nVertsMax )\n{\n    Nwk_Grf_t * p;\n    p = ABC_ALLOC( Nwk_Grf_t, 1 );\n    memset( p, 0, sizeof(Nwk_Grf_t) );\n    p-\u003enVertsMax = nVertsMax;\n    p-\u003enEdgeHash = Abc_PrimeCudd( 3 * nVertsMax );\n    p-\u003epEdgeHash = ABC_CALLOC( Nwk_Edg_t *, p-\u003enEdgeHash );\n    p-\u003epMemEdges = Aig_MmFixedStart( sizeof(Nwk_Edg_t), p-\u003enEdgeHash );\n    p-\u003evPairs    = Vec_IntAlloc( 1000 );\n    return p;\n}",
+      "Draft": "func Nwk_ManGraphAlloc(nVertsMax int32) *Nwk_Grf_t {\n    var p *Nwk_Grf_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Nwk_Grf_t *) malloc(sizeof(Nwk_Grf_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nwk_Grf_t) );\n    p.nVertsMax = nVertsMax;\n    p.nEdgeHash = Abc_PrimeCudd( 3 * nVertsMax );\n    // inlining of macro ABC_CALLOC\n    p.pEdgeHash = ((Nwk_Edg_t * *) calloc((size_t)(p.nEdgeHash), sizeof(Nwk_Edg_t *)));\n    p.pMemEdges = Aig_MmFixedStart( sizeof(Nwk_Edg_t), p.nEdgeHash );\n    p.vPairs    = Vec_IntAlloc( 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphFree",
+      "Start": 1939,
+      "End": 2288,
+      "BodyStart": 1978,
+      "Original": "void Nwk_ManGraphFree( Nwk_Grf_t * p )\n{\n    if ( p-\u003evPairs )    Vec_IntFree( p-\u003evPairs );\n    if ( p-\u003epMemEdges ) Aig_MmFixedStop( p-\u003epMemEdges, 0 );\n    if ( p-\u003epMemVerts ) Aig_MmFlexStop( p-\u003epMemVerts, 0 );\n    ABC_FREE( p-\u003epVerts );\n    ABC_FREE( p-\u003epEdgeHash );\n    ABC_FREE( p-\u003epMapLut2Id );\n    ABC_FREE( p-\u003epMapId2Lut );\n    ABC_FREE( p );\n}",
+      "Draft": "func Nwk_ManGraphFree(p *Nwk_Grf_t) {\n    if p.vPairs {    Vec_IntFree( p.vPairs ); }\n    if p.pMemEdges { Aig_MmFixedStop( p.pMemEdges, 0 ); }\n    if p.pMemVerts { Aig_MmFlexStop( p.pMemVerts, 0 ); }\n    // inlining of macro ABC_FREE\n    ((p.pVerts) ? (free((char *) (p.pVerts)), (p.pVerts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMapLut2Id) ? (free((char *) (p.pMapLut2Id)), (p.pMapLut2Id) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMapId2Lut) ? (free((char *) (p.pMapId2Lut)), (p.pMapId2Lut) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphReportMemoryUsage",
+      "Start": 2567,
+      "End": 3055,
+      "BodyStart": 2619,
+      "Original": "void Nwk_ManGraphReportMemoryUsage( Nwk_Grf_t * p )\n{\n    p-\u003enMemBytes1 = \n        sizeof(Nwk_Grf_t) +\n        sizeof(void *) * p-\u003enEdgeHash + \n        sizeof(int) * (p-\u003enObjs + p-\u003enVertsMax) +\n        sizeof(Nwk_Edg_t) * p-\u003enEdges;\n    p-\u003enMemBytes2 = \n        sizeof(Nwk_Vrt_t) * p-\u003enVerts + \n        sizeof(int) * 2 * p-\u003enEdges;\n    printf( \"Memory usage stats:  Preprocessing = %.2f MB.  Solving = %.2f MB.\\n\",\n        1.0 * p-\u003enMemBytes1 / (1\u003c\u003c20), 1.0 * p-\u003enMemBytes2 / (1\u003c\u003c20) );\n}",
+      "Draft": "func Nwk_ManGraphReportMemoryUsage(p *Nwk_Grf_t) {\n    p.nMemBytes1 = \n        sizeof(Nwk_Grf_t) +\n        sizeof(void *) * p.nEdgeHash + \n        sizeof(int) * (p.nObjs + p.nVertsMax) +\n        sizeof(Nwk_Edg_t) * p.nEdges;\n    p.nMemBytes2 = \n        sizeof(Nwk_Vrt_t) * p.nVerts + \n        sizeof(int) * 2 * p.nEdges;\n    fmt.Printf(\"Memory usage stats:  Preprocessing = %.2f MB.  Solving = %.2f MB.\\n\", 1.0 * p.nMemBytes1 / (1\u003c\u003c20), 1.0 * p.nMemBytes2 / (1\u003c\u003c20));\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphHashEdge",
+      "Start": 3328,
+      "End": 4102,
+      "BodyStart": 3393,
+      "Original": "void Nwk_ManGraphHashEdge( Nwk_Grf_t * p, int iLut1, int iLut2 )\n{\n    Nwk_Edg_t * pEntry;\n    unsigned Key;\n    if ( iLut1 == iLut2 )\n        return;\n    if ( iLut1 \u003e iLut2 )\n    {\n        Key = iLut1;\n        iLut1 = iLut2;\n        iLut2 = Key;\n    }\n    assert( iLut1 \u003c iLut2 );\n    if ( p-\u003enObjs \u003c iLut2 )\n        p-\u003enObjs = iLut2;\n    Key = (unsigned)(741457 * iLut1 + 4256249 * iLut2) % p-\u003enEdgeHash;\n    for ( pEntry = p-\u003epEdgeHash[Key]; pEntry; pEntry = pEntry-\u003epNext )\n        if ( pEntry-\u003eiNode1 == iLut1 \u0026\u0026 pEntry-\u003eiNode2 == iLut2 )\n            return;\n    pEntry = (Nwk_Edg_t *)Aig_MmFixedEntryFetch( p-\u003epMemEdges );\n    pEntry-\u003eiNode1 = iLut1;\n    pEntry-\u003eiNode2 = iLut2;\n    pEntry-\u003epNext = p-\u003epEdgeHash[Key];\n    p-\u003epEdgeHash[Key] = pEntry;\n    p-\u003enEdges++;\n}",
+      "Draft": "func Nwk_ManGraphHashEdge(p *Nwk_Grf_t, iLut1 int32, iLut2 int32) {\n    var pEntry *Nwk_Edg_t;\n    var Key uint32;\n    if iLut1 == iLut2 {\n        return; }\n    if iLut1 \u003e iLut2 {\n        Key = iLut1;\n        iLut1 = iLut2;\n        iLut2 = Key;\n    }\n    assert(iLut1 \u003c iLut2, \"iLut1 \u003c iLut2\");\n    if p.nObjs \u003c iLut2 {\n        p.nObjs = iLut2; }\n    Key = uint32((741457 * iLut1 + 4256249 * iLut2)) % p.nEdgeHash;\n    for  pEntry = p.pEdgeHash[Key]; (pEntry != nil); pEntry = pEntry.pNext  {\n        if pEntry.iNode1 == iLut1 \u0026\u0026 pEntry.iNode2 == iLut2 {\n            return; }\n    }\n    pEntry = (Nwk_Edg_t *)Aig_MmFixedEntryFetch( p.pMemEdges );\n    pEntry.iNode1 = iLut1;\n    pEntry.iNode2 = iLut2;\n    pEntry.pNext = p.pEdgeHash[Key];\n    p.pEdgeHash[Key] = pEntry;\n    p.nEdges++;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListAdd",
+      "Start": 4365,
+      "End": 4676,
+      "BodyStart": 4455,
+      "Original": "static inline void Nwk_ManGraphListAdd( Nwk_Grf_t * p, int * pList, Nwk_Vrt_t * pVertex )\n{\n    if ( *pList )\n    {\n        Nwk_Vrt_t * pHead;\n        pHead = p-\u003epVerts[*pList];\n        pVertex-\u003eiPrev = 0;\n        pVertex-\u003eiNext = pHead-\u003eId;\n        pHead-\u003eiPrev = pVertex-\u003eId;\n    }\n    *pList = pVertex-\u003eId;\n}",
+      "Draft": "func Nwk_ManGraphListAdd(p *Nwk_Grf_t, pList *int32, pVertex *Nwk_Vrt_t) {\n    if *pList {\n        var pHead *Nwk_Vrt_t;\n        pHead = p.pVerts[*pList];\n        pVertex.iPrev = 0;\n        pVertex.iNext = pHead.Id;\n        pHead.iPrev = pVertex.Id;\n    }\n    *pList = pVertex.Id;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListDelete",
+      "Start": 4944,
+      "End": 5501,
+      "BodyStart": 5037,
+      "Original": "static inline void Nwk_ManGraphListDelete( Nwk_Grf_t * p, int * pList, Nwk_Vrt_t * pVertex )\n{\n    assert( *pList );\n    if ( pVertex-\u003eiPrev )\n    {\n//        assert( p-\u003epVerts[pVertex-\u003eiPrev]-\u003eiNext == pVertex-\u003eId );\n        p-\u003epVerts[pVertex-\u003eiPrev]-\u003eiNext = pVertex-\u003eiNext;\n    }\n    if ( pVertex-\u003eiNext )\n    {\n//        assert( p-\u003epVerts[pVertex-\u003eiNext]-\u003eiPrev == pVertex-\u003eId );\n        p-\u003epVerts[pVertex-\u003eiNext]-\u003eiPrev = pVertex-\u003eiPrev;\n    }\n    if ( *pList == pVertex-\u003eId )\n        *pList = pVertex-\u003eiNext;\n    pVertex-\u003eiPrev = pVertex-\u003eiNext = 0;\n}",
+      "Draft": "func Nwk_ManGraphListDelete(p *Nwk_Grf_t, pList *int32, pVertex *Nwk_Vrt_t) {\n    assert(*pList, \"*pList\");\n    if pVertex.iPrev {\n//        assert( p-\u003epVerts[pVertex-\u003eiPrev]-\u003eiNext == pVertex-\u003eId );\n        p.pVerts[pVertex.iPrev].iNext = pVertex.iNext;\n    }\n    if pVertex.iNext {\n//        assert( p-\u003epVerts[pVertex-\u003eiNext]-\u003eiPrev == pVertex-\u003eId );\n        p.pVerts[pVertex.iNext].iPrev = pVertex.iPrev;\n    }\n    if *pList == pVertex.Id {\n        *pList = pVertex.iNext; }\n    pVertex.iPrev = pVertex.iNext = 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListInsert",
+      "Start": 5783,
+      "End": 6457,
+      "BodyStart": 5863,
+      "Original": "static inline void Nwk_ManGraphListInsert( Nwk_Grf_t * p, Nwk_Vrt_t * pVertex )\n{\n    Nwk_Vrt_t * pNext;\n    assert( pVertex-\u003enEdges \u003e 0 );\n\n    if ( pVertex-\u003enEdges == 1 )\n    {\n        pNext = p-\u003epVerts[ pVertex-\u003epEdges[0] ];\n        if ( pNext-\u003enEdges \u003e= NWK_MAX_LIST )\n            Nwk_ManGraphListAdd( p, p-\u003epLists1 + NWK_MAX_LIST, pVertex );\n        else\n            Nwk_ManGraphListAdd( p, p-\u003epLists1 + pNext-\u003enEdges, pVertex );\n    }\n    else\n    {\n        if ( pVertex-\u003enEdges \u003e= NWK_MAX_LIST )\n            Nwk_ManGraphListAdd( p, p-\u003epLists2 + NWK_MAX_LIST, pVertex );\n        else\n            Nwk_ManGraphListAdd( p, p-\u003epLists2 + pVertex-\u003enEdges, pVertex );\n    }\n}",
+      "Draft": "func Nwk_ManGraphListInsert(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t) {\n    var pNext *Nwk_Vrt_t;\n    assert(pVertex.nEdges \u003e 0, \"pVertex.nEdges \u003e 0\");\n\n    if pVertex.nEdges == 1 {\n        pNext = p.pVerts[ pVertex.pEdges[0] ];\n        if pNext.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListAdd( p, p.pLists1 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListAdd( p, p.pLists1 + pNext.nEdges, pVertex ); }\n    \n    } else {\n        if pVertex.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListAdd( p, p.pLists2 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListAdd( p, p.pLists2 + pVertex.nEdges, pVertex ); }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListExtract",
+      "Start": 6740,
+      "End": 7427,
+      "BodyStart": 6821,
+      "Original": "static inline void Nwk_ManGraphListExtract( Nwk_Grf_t * p, Nwk_Vrt_t * pVertex )\n{\n    Nwk_Vrt_t * pNext;\n    assert( pVertex-\u003enEdges \u003e 0 );\n\n    if ( pVertex-\u003enEdges == 1 )\n    {\n        pNext = p-\u003epVerts[ pVertex-\u003epEdges[0] ];\n        if ( pNext-\u003enEdges \u003e= NWK_MAX_LIST )\n            Nwk_ManGraphListDelete( p, p-\u003epLists1 + NWK_MAX_LIST, pVertex );\n        else\n            Nwk_ManGraphListDelete( p, p-\u003epLists1 + pNext-\u003enEdges, pVertex );\n    }\n    else\n    {\n        if ( pVertex-\u003enEdges \u003e= NWK_MAX_LIST )\n            Nwk_ManGraphListDelete( p, p-\u003epLists2 + NWK_MAX_LIST, pVertex );\n        else\n            Nwk_ManGraphListDelete( p, p-\u003epLists2 + pVertex-\u003enEdges, pVertex );\n    }\n}",
+      "Draft": "func Nwk_ManGraphListExtract(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t) {\n    var pNext *Nwk_Vrt_t;\n    assert(pVertex.nEdges \u003e 0, \"pVertex.nEdges \u003e 0\");\n\n    if pVertex.nEdges == 1 {\n        pNext = p.pVerts[ pVertex.pEdges[0] ];\n        if pNext.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListDelete( p, p.pLists1 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListDelete( p, p.pLists1 + pNext.nEdges, pVertex ); }\n    \n    } else {\n        if pVertex.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListDelete( p, p.pLists2 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListDelete( p, p.pLists2 + pVertex.nEdges, pVertex ); }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphPrepare",
+      "Start": 7706,
+      "End": 10297,
+      "BodyStart": 7748,
+      "Original": "void Nwk_ManGraphPrepare( Nwk_Grf_t * p )\n{\n    Nwk_Edg_t * pEntry;\n    Nwk_Vrt_t * pVertex;\n    int * pnEdges, nBytes, i;\n    // allocate memory for the present objects\n    p-\u003epMapLut2Id = ABC_ALLOC( int, p-\u003enObjs+1 );\n    p-\u003epMapId2Lut = ABC_ALLOC( int, p-\u003enVertsMax+1 );\n    memset( p-\u003epMapLut2Id, 0xff, sizeof(int) * (p-\u003enObjs+1) );\n    memset( p-\u003epMapId2Lut, 0xff, sizeof(int) * (p-\u003enVertsMax+1) );\n    // mark present objects\n    Nwk_GraphForEachEdge( p, pEntry, i )\n    {\n        assert( pEntry-\u003eiNode1 \u003c= p-\u003enObjs );\n        assert( pEntry-\u003eiNode2 \u003c= p-\u003enObjs );\n        p-\u003epMapLut2Id[ pEntry-\u003eiNode1 ] = 0;\n        p-\u003epMapLut2Id[ pEntry-\u003eiNode2 ] = 0;\n    }\n    // map objects\n    p-\u003enVerts = 0;\n    for ( i = 0; i \u003c= p-\u003enObjs; i++ )\n    {\n        if ( p-\u003epMapLut2Id[i] == 0 )\n        {\n            p-\u003epMapLut2Id[i] = ++p-\u003enVerts;\n            p-\u003epMapId2Lut[p-\u003enVerts] = i;\n        }\n    }\n    // count the edges and mark present objects\n    pnEdges = ABC_CALLOC( int, p-\u003enVerts+1 );\n    Nwk_GraphForEachEdge( p, pEntry, i )\n    {\n        // translate into vertices\n        assert( pEntry-\u003eiNode1 \u003c= p-\u003enObjs );\n        assert( pEntry-\u003eiNode2 \u003c= p-\u003enObjs );\n        pEntry-\u003eiNode1 = p-\u003epMapLut2Id[pEntry-\u003eiNode1];\n        pEntry-\u003eiNode2 = p-\u003epMapLut2Id[pEntry-\u003eiNode2];\n        // count the edges\n        assert( pEntry-\u003eiNode1 \u003c= p-\u003enVerts );\n        assert( pEntry-\u003eiNode2 \u003c= p-\u003enVerts );\n        pnEdges[pEntry-\u003eiNode1]++;\n        pnEdges[pEntry-\u003eiNode2]++;\n    }\n    // allocate the real graph\n    p-\u003epMemVerts  = Aig_MmFlexStart();\n    p-\u003epVerts = ABC_ALLOC( Nwk_Vrt_t *, p-\u003enVerts + 1 );\n    p-\u003epVerts[0] = NULL;\n    for ( i = 1; i \u003c= p-\u003enVerts; i++ )\n    {\n        assert( pnEdges[i] \u003e 0 );\n        nBytes = sizeof(Nwk_Vrt_t) + sizeof(int) * pnEdges[i];\n        p-\u003epVerts[i] = (Nwk_Vrt_t *)Aig_MmFlexEntryFetch( p-\u003epMemVerts, nBytes );\n        memset( p-\u003epVerts[i], 0, nBytes );\n        p-\u003epVerts[i]-\u003eId = i;\n    }\n    // add edges to the real graph\n    Nwk_GraphForEachEdge( p, pEntry, i )\n    {\n        pVertex = p-\u003epVerts[pEntry-\u003eiNode1];\n        pVertex-\u003epEdges[ pVertex-\u003enEdges++ ] = pEntry-\u003eiNode2;\n        pVertex = p-\u003epVerts[pEntry-\u003eiNode2];\n        pVertex-\u003epEdges[ pVertex-\u003enEdges++ ] = pEntry-\u003eiNode1;\n    }\n    // put vertices into the data structure\n    for ( i = 1; i \u003c= p-\u003enVerts; i++ )\n    {\n        assert( p-\u003epVerts[i]-\u003enEdges == pnEdges[i] );\n        Nwk_ManGraphListInsert( p, p-\u003epVerts[i] );\n    }\n    // clean up\n    Aig_MmFixedStop( p-\u003epMemEdges, 0 ); p-\u003epMemEdges = NULL;\n    ABC_FREE( p-\u003epEdgeHash );\n//    p-\u003enEdgeHash = 0;\n    ABC_FREE( pnEdges );\n}",
+      "Draft": "func Nwk_ManGraphPrepare(p *Nwk_Grf_t) {\n    var pEntry *Nwk_Edg_t;\n    var pVertex *Nwk_Vrt_t;\n    var pnEdges *int32;\n    var nBytes int32;\n    var i int32;\n    // allocate memory for the present objects\n    // inlining of macro ABC_ALLOC\n    p.pMapLut2Id = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));\n    // inlining of macro ABC_ALLOC\n    p.pMapId2Lut = ((int *) malloc(sizeof(int) * (size_t)(p.nVertsMax+1)));\n    memset( p.pMapLut2Id, 0xff, sizeof(int) * (p.nObjs+1) );\n    memset( p.pMapId2Lut, 0xff, sizeof(int) * (p.nVertsMax+1) );\n    // mark present objects\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        assert(pEntry.iNode1 \u003c= p.nObjs, \"pEntry.iNode1 \u003c= p.nObjs\");\n        assert(pEntry.iNode2 \u003c= p.nObjs, \"pEntry.iNode2 \u003c= p.nObjs\");\n        p.pMapLut2Id[ pEntry.iNode1 ] = 0;\n        p.pMapLut2Id[ pEntry.iNode2 ] = 0;\n    }\n    }\n    // map objects\n    p.nVerts = 0;\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        if p.pMapLut2Id[i] == 0 {\n            p.pMapLut2Id[i] = ++p.nVerts;\n            p.pMapId2Lut[p.nVerts] = i;\n        }\n    }\n    // count the edges and mark present objects\n    // inlining of macro ABC_CALLOC\n    pnEdges = ((int *) calloc((size_t)(p.nVerts+1), sizeof(int)));\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        // translate into vertices\n        assert(pEntry.iNode1 \u003c= p.nObjs, \"pEntry.iNode1 \u003c= p.nObjs\");\n        assert(pEntry.iNode2 \u003c= p.nObjs, \"pEntry.iNode2 \u003c= p.nObjs\");\n        pEntry.iNode1 = p.pMapLut2Id[pEntry.iNode1];\n        pEntry.iNode2 = p.pMapLut2Id[pEntry.iNode2];\n        // count the edges\n        assert(pEntry.iNode1 \u003c= p.nVerts, \"pEntry.iNode1 \u003c= p.nVerts\");\n        assert(pEntry.iNode2 \u003c= p.nVerts, \"pEntry.iNode2 \u003c= p.nVerts\");\n        pnEdges[pEntry.iNode1]++;\n        pnEdges[pEntry.iNode2]++;\n    }\n    }\n    // allocate the real graph\n    p.pMemVerts  = Aig_MmFlexStart();\n    // inlining of macro ABC_ALLOC\n    p.pVerts = ((Nwk_Vrt_t * *) malloc(sizeof(Nwk_Vrt_t *) * (size_t)(p.nVerts + 1)));\n    p.pVerts[0] = nil;\n    for  i = 1; i \u003c= p.nVerts; i++  {\n        assert(pnEdges[i] \u003e 0, \"pnEdges[i] \u003e 0\");\n        nBytes = sizeof(Nwk_Vrt_t) + sizeof(int) * pnEdges[i];\n        p.pVerts[i] = (Nwk_Vrt_t *)Aig_MmFlexEntryFetch( p.pMemVerts, nBytes );\n        memset( p.pVerts[i], 0, nBytes );\n        p.pVerts[i].Id = i;\n    }\n    // add edges to the real graph\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        pVertex = p.pVerts[pEntry.iNode1];\n        pVertex.pEdges[ pVertex.nEdges++ ] = pEntry.iNode2;\n        pVertex = p.pVerts[pEntry.iNode2];\n        pVertex.pEdges[ pVertex.nEdges++ ] = pEntry.iNode1;\n    }\n    }\n    // put vertices into the data structure\n    for  i = 1; i \u003c= p.nVerts; i++  {\n        assert(p.pVerts[i].nEdges == pnEdges[i], \"p.pVerts[i].nEdges == pnEdges[i]\");\n        Nwk_ManGraphListInsert( p, p.pVerts[i] );\n    }\n    // clean up\n    Aig_MmFixedStop( p.pMemEdges, 0 ); p.pMemEdges = nil;\n    // inlining of macro ABC_FREE\n    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);\n//    p-\u003enEdgeHash = 0;\n    // inlining of macro ABC_FREE\n    ((pnEdges) ? (free((char *) (pnEdges)), (pnEdges) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphSortPairs",
+      "Start": 10589,
+      "End": 11395,
+      "BodyStart": 10633,
+      "Original": "void Nwk_ManGraphSortPairs( Nwk_Grf_t * p )\n{\n    int nSize = Vec_IntSize(p-\u003evPairs);\n    int * pIdToPair, i;\n    // allocate storage\n    pIdToPair = ABC_ALLOC( int, p-\u003enObjs+1 );\n    for ( i = 0; i \u003c= p-\u003enObjs; i++ )\n        pIdToPair[i] = -1;\n    // create mapping\n    for ( i = 0; i \u003c p-\u003evPairs-\u003enSize; i += 2 )\n    {\n        assert( pIdToPair[ p-\u003evPairs-\u003epArray[i] ] == -1 );\n        pIdToPair[ p-\u003evPairs-\u003epArray[i] ] = p-\u003evPairs-\u003epArray[i+1];\n    }\n    // recreate pairs\n    Vec_IntClear( p-\u003evPairs );\n    for ( i = 0; i \u003c= p-\u003enObjs; i++ )\n        if ( pIdToPair[i] \u003e= 0 )\n        {\n            assert( i \u003c pIdToPair[i] );\n            Vec_IntPush( p-\u003evPairs, i );\n            Vec_IntPush( p-\u003evPairs, pIdToPair[i] );\n        }\n    assert( nSize == Vec_IntSize(p-\u003evPairs) );\n    ABC_FREE( pIdToPair );\n}",
+      "Draft": "func Nwk_ManGraphSortPairs(p *Nwk_Grf_t) {\n    var nSize int32  = Vec_IntSize(p.vPairs);\n    var pIdToPair *int32;\n    var i int32;\n    // allocate storage\n    // inlining of macro ABC_ALLOC\n    pIdToPair = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        pIdToPair[i] = -1;\n    }\n    // create mapping\n    for  i = 0; i \u003c p.vPairs.nSize; i += 2  {\n        assert(pIdToPair[ p.vPairs.pArray[i] ] == -1, \"pIdToPair[ p.vPairs.pArray[i] ] == -1\");\n        pIdToPair[ p.vPairs.pArray[i] ] = p.vPairs.pArray[i+1];\n    }\n    // recreate pairs\n    Vec_IntClear( p.vPairs );\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        if pIdToPair[i] \u003e= 0 {\n            assert(i \u003c pIdToPair[i], \"i \u003c pIdToPair[i]\");\n            Vec_IntPush( p.vPairs, i );\n            Vec_IntPush( p.vPairs, pIdToPair[i] );\n        }\n    }\n    assert(nSize == Vec_IntSize(p.vPairs), \"nSize == Vec_IntSize(p.vPairs)\");\n    // inlining of macro ABC_FREE\n    ((pIdToPair) ? (free((char *) (pIdToPair)), (pIdToPair) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphCheckLists",
+      "Start": 11679,
+      "End": 12448,
+      "BodyStart": 11724,
+      "Original": "void Nwk_ManGraphCheckLists( Nwk_Grf_t * p )\n{\n    Nwk_Vrt_t * pVertex, * pNext;\n    int i, j;\n    assert( p-\u003epLists1[0] == 0 );\n    for ( i = 1; i \u003c= NWK_MAX_LIST; i++ )\n        if ( p-\u003epLists1[i] )\n        {\n            pVertex = p-\u003epVerts[ p-\u003epLists1[i] ];\n            assert( pVertex-\u003enEdges == 1 );\n            pNext = p-\u003epVerts[ pVertex-\u003epEdges[0] ];\n            assert( pNext-\u003enEdges == i || pNext-\u003enEdges \u003e NWK_MAX_LIST );\n        }\n    // find the next vertext to extract\n    assert( p-\u003epLists2[0] == 0 );\n    assert( p-\u003epLists2[1] == 0 );\n    for ( j = 2; j \u003c= NWK_MAX_LIST; j++ )\n        if ( p-\u003epLists2[j] )\n        {\n            pVertex = p-\u003epVerts[ p-\u003epLists2[j] ];\n            assert( pVertex-\u003enEdges == j || pVertex-\u003enEdges \u003e NWK_MAX_LIST );\n        }\n}",
+      "Draft": "func Nwk_ManGraphCheckLists(p *Nwk_Grf_t) {\n    var pVertex, pNext *Nwk_Vrt_t;\n    var i, j int32;\n    assert(p.pLists1[0] == 0, \"p.pLists1[0] == 0\");\n    for  i = 1; i \u003c= NWK_MAX_LIST; i++  {\n        if p.pLists1[i] {\n            pVertex = p.pVerts[ p.pLists1[i] ];\n            assert(pVertex.nEdges == 1, \"pVertex.nEdges == 1\");\n            pNext = p.pVerts[ pVertex.pEdges[0] ];\n            assert(pNext.nEdges == i || pNext.nEdges \u003e NWK_MAX_LIST, \"pNext.nEdges == i || pNext.nEdges \u003e NWK_MAX_LIST\");\n        }\n    }\n    // find the next vertext to extract\n    assert(p.pLists2[0] == 0, \"p.pLists2[0] == 0\");\n    assert(p.pLists2[1] == 0, \"p.pLists2[1] == 0\");\n    for  j = 2; j \u003c= NWK_MAX_LIST; j++  {\n        if p.pLists2[j] {\n            pVertex = p.pVerts[ p.pLists2[j] ];\n            assert(pVertex.nEdges == j || pVertex.nEdges \u003e NWK_MAX_LIST, \"pVertex.nEdges == j || pVertex.nEdges \u003e NWK_MAX_LIST\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphVertexRemoveEdge",
+      "Start": 12731,
+      "End": 13077,
+      "BodyStart": 12819,
+      "Original": "static inline void Nwk_ManGraphVertexRemoveEdge( Nwk_Vrt_t * pThis, Nwk_Vrt_t * pNext )\n{\n    int k;\n    for ( k = 0; k \u003c pThis-\u003enEdges; k++ )\n        if ( pThis-\u003epEdges[k] == pNext-\u003eId )\n            break;\n    assert( k \u003c pThis-\u003enEdges );\n    pThis-\u003enEdges--;\n    for ( ; k \u003c pThis-\u003enEdges; k++ )\n        pThis-\u003epEdges[k] = pThis-\u003epEdges[k+1];\n}",
+      "Draft": "func Nwk_ManGraphVertexRemoveEdge(pThis *Nwk_Vrt_t, pNext *Nwk_Vrt_t) {\n    var k int32;\n    for  k = 0; k \u003c pThis.nEdges; k++  {\n        if pThis.pEdges[k] == pNext.Id {\n            break; }\n    }\n    assert(k \u003c pThis.nEdges, \"k \u003c pThis.nEdges\");\n    pThis.nEdges--;\n    for  ; k \u003c pThis.nEdges; k++  {\n        pThis.pEdges[k] = pThis.pEdges[k+1];\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphUpdate",
+      "Start": 13360,
+      "End": 15713,
+      "BodyStart": 13441,
+      "Original": "void Nwk_ManGraphUpdate( Nwk_Grf_t * p, Nwk_Vrt_t * pVertex, Nwk_Vrt_t * pNext )\n{\n    Nwk_Vrt_t * pChanged, * pOther;\n    int i, k;\n//    Nwk_ManGraphCheckLists( p );\n    Nwk_ManGraphListExtract( p, pVertex );\n    Nwk_ManGraphListExtract( p, pNext );\n    // update neihbors of pVertex\n    Nwk_VertexForEachAdjacent( p, pVertex, pChanged, i )\n    {\n        if ( pChanged == pNext )\n            continue;\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if ( pChanged-\u003enEdges \u003e 1 )\n        Nwk_VertexForEachAdjacent( p, pChanged, pOther, k )\n        {\n            if ( pOther == pVertex || pOther-\u003enEdges \u003e 1 )\n                continue;\n            assert( pOther-\u003enEdges == 1 );\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged-\u003enEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged-\u003enEdges++;\n        }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pVertex );\n        // add the changed vertex back\n        if ( pChanged-\u003enEdges \u003e 0 )\n            Nwk_ManGraphListInsert( p, pChanged );\n    }\n    // update neihbors of pNext\n    Nwk_VertexForEachAdjacent( p, pNext, pChanged, i )\n    {\n        if ( pChanged == pVertex )\n            continue;\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if ( pChanged-\u003enEdges \u003e 1 )\n        Nwk_VertexForEachAdjacent( p, pChanged, pOther, k )\n        {\n            if ( pOther == pNext || pOther-\u003enEdges \u003e 1 )\n                continue;\n            assert( pOther-\u003enEdges == 1 );\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged-\u003enEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged-\u003enEdges++;\n        }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pNext );\n        // add the changed vertex back\n        if ( pChanged-\u003enEdges \u003e 0 )\n            Nwk_ManGraphListInsert( p, pChanged );\n    }\n    // add to the result\n    if ( pVertex-\u003eId \u003c pNext-\u003eId )\n    {\n        Vec_IntPush( p-\u003evPairs, p-\u003epMapId2Lut[pVertex-\u003eId] ); \n        Vec_IntPush( p-\u003evPairs, p-\u003epMapId2Lut[pNext-\u003eId] ); \n    }\n    else\n    {\n        Vec_IntPush( p-\u003evPairs, p-\u003epMapId2Lut[pNext-\u003eId] ); \n        Vec_IntPush( p-\u003evPairs, p-\u003epMapId2Lut[pVertex-\u003eId] ); \n    }\n//    Nwk_ManGraphCheckLists( p );\n}",
+      "Draft": "func Nwk_ManGraphUpdate(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t, pNext *Nwk_Vrt_t) {\n    var pChanged, pOther *Nwk_Vrt_t;\n    var i, k int32;\n//    Nwk_ManGraphCheckLists( p );\n    Nwk_ManGraphListExtract( p, pVertex );\n    Nwk_ManGraphListExtract( p, pNext );\n    // update neihbors of pVertex\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  i = 0; (i \u003c pVertex.nEdges) \u0026\u0026 (((pChanged) = p.pVerts[pVertex.pEdges[i]]), 1); i++  {\n        if pChanged == pNext {\n            continue; }\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if pChanged.nEdges \u003e 1 {\n        // inlining of macro Nwk_VertexForEachAdjacent\n        for  k = 0; (k \u003c pChanged.nEdges) \u0026\u0026 (((pOther) = p.pVerts[pChanged.pEdges[k]]), 1); k++  {\n            if pOther == pVertex || pOther.nEdges \u003e 1 {\n                continue; }\n            assert(pOther.nEdges == 1, \"pOther.nEdges == 1\");\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged.nEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged.nEdges++;\n        } }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pVertex );\n        // add the changed vertex back\n        if pChanged.nEdges \u003e 0 {\n            Nwk_ManGraphListInsert( p, pChanged ); }\n    }\n    // update neihbors of pNext\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  i = 0; (i \u003c pNext.nEdges) \u0026\u0026 (((pChanged) = p.pVerts[pNext.pEdges[i]]), 1); i++  {\n        if pChanged == pVertex {\n            continue; }\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if pChanged.nEdges \u003e 1 {\n        // inlining of macro Nwk_VertexForEachAdjacent\n        for  k = 0; (k \u003c pChanged.nEdges) \u0026\u0026 (((pOther) = p.pVerts[pChanged.pEdges[k]]), 1); k++  {\n            if pOther == pNext || pOther.nEdges \u003e 1 {\n                continue; }\n            assert(pOther.nEdges == 1, \"pOther.nEdges == 1\");\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged.nEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged.nEdges++;\n        } }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pNext );\n        // add the changed vertex back\n        if pChanged.nEdges \u003e 0 {\n            Nwk_ManGraphListInsert( p, pChanged ); }\n    }\n    // add to the result\n    if pVertex.Id \u003c pNext.Id {\n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pVertex.Id] ); \n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pNext.Id] ); \n    \n    } else {\n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pNext.Id] ); \n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pVertex.Id] ); \n    }\n//    Nwk_ManGraphCheckLists( p );\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListLength",
+      "Start": 15990,
+      "End": 16358,
+      "BodyStart": 16044,
+      "Original": "int Nwk_ManGraphListLength( Nwk_Grf_t * p, int List )\n{\n    Nwk_Vrt_t * pThis;\n    int fVerbose = 0;\n    int Counter = 0;\n    Nwk_ListForEachVertex( p, List, pThis )\n    {\n        if ( fVerbose \u0026\u0026 Counter \u003c 20 )\n            printf( \"%d \", p-\u003epVerts[pThis-\u003epEdges[0]]-\u003enEdges );\n        Counter++;\n    }\n    if ( fVerbose )\n        printf( \"\\n\" );\n    return Counter;\n}",
+      "Draft": "func Nwk_ManGraphListLength(p *Nwk_Grf_t, List int32) int32 {\n    var pThis *Nwk_Vrt_t;\n    var fVerbose int32;\n    var Counter int32;\n    // inlining of macro Nwk_ListForEachVertex\n    for  pThis = List? p.pVerts[List] : nil;  (pThis != nil);             pThis = pThis.iNext? p.pVerts[pThis.iNext] : nil  {\n        if (fVerbose != 0) \u0026\u0026 Counter \u003c 20 {\n            fmt.Printf(\"%d \", p.pVerts[pThis.pEdges[0]].nEdges); }\n        Counter++;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListFindMinEdge",
+      "Start": 16655,
+      "End": 16970,
+      "BodyStart": 16731,
+      "Original": "Nwk_Vrt_t * Nwk_ManGraphListFindMinEdge( Nwk_Grf_t * p, Nwk_Vrt_t * pVert )\n{\n    Nwk_Vrt_t * pThis, * pMinCost = NULL;\n    int k;\n    Nwk_VertexForEachAdjacent( p, pVert, pThis, k )\n    {\n        if ( pMinCost == NULL || pMinCost-\u003enEdges \u003e pThis-\u003enEdges )\n            pMinCost = pThis;\n    }\n    return pMinCost;\n}",
+      "Draft": "func Nwk_ManGraphListFindMinEdge(p *Nwk_Grf_t, pVert *Nwk_Vrt_t) *Nwk_Vrt_t {\n    var pThis *Nwk_Vrt_t;\n    var pMinCost *Nwk_Vrt_t = nil;\n    var k int32;\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  k = 0; (k \u003c pVert.nEdges) \u0026\u0026 (((pThis) = p.pVerts[pVert.pEdges[k]]), 1); k++  {\n        if pMinCost == nil || pMinCost.nEdges \u003e pThis.nEdges {\n            pMinCost = pThis; }\n    }\n    return pMinCost;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphListFindMin",
+      "Start": 17241,
+      "End": 17801,
+      "BodyStart": 17304,
+      "Original": "Nwk_Vrt_t * Nwk_ManGraphListFindMin( Nwk_Grf_t * p, int List )\n{\n    Nwk_Vrt_t * pThis, * pMinCost = NULL;\n    int k, Counter = 10000, BestCost = 1000000;\n    Nwk_ListForEachVertex( p, List, pThis )\n    {\n        for ( k = 0; k \u003c pThis-\u003enEdges; k++ )\n        {\n            if ( pMinCost == NULL || BestCost \u003e p-\u003epVerts[pThis-\u003epEdges[k]]-\u003enEdges )\n            {\n                BestCost = p-\u003epVerts[pThis-\u003epEdges[k]]-\u003enEdges;\n                pMinCost = pThis;\n            }\n        }\n        if ( --Counter == 0 )\n            break;\n    }\n    return pMinCost;\n}",
+      "Draft": "func Nwk_ManGraphListFindMin(p *Nwk_Grf_t, List int32) *Nwk_Vrt_t {\n    var pThis *Nwk_Vrt_t;\n    var pMinCost *Nwk_Vrt_t = nil;\n    var k int32;\n    var Counter int32 = 10000;\n    var BestCost int32 = 1000000;\n    // inlining of macro Nwk_ListForEachVertex\n    for  pThis = List? p.pVerts[List] : nil;  (pThis != nil);             pThis = pThis.iNext? p.pVerts[pThis.iNext] : nil  {\n        for  k = 0; k \u003c pThis.nEdges; k++  {\n            if pMinCost == nil || BestCost \u003e p.pVerts[pThis.pEdges[k]].nEdges {\n                BestCost = p.pVerts[pThis.pEdges[k]].nEdges;\n                pMinCost = pThis;\n            }\n        }\n        if Counter--; Counter == 0 {\n            break; }\n    }\n    return pMinCost;\n}"
+    },
+    {
+      "Name": "Nwk_ManGraphSolve",
+      "Start": 18089,
+      "End": 19612,
+      "BodyStart": 18129,
+      "Original": "void Nwk_ManGraphSolve( Nwk_Grf_t * p )\n{\n    Nwk_Vrt_t * pVertex, * pNext;\n    int i, j;\n    Nwk_ManGraphPrepare( p );\n    while ( 1 )\n    {\n        // find the next vertex to extract\n        assert( p-\u003epLists1[0] == 0 );\n        for ( i = 1; i \u003c= NWK_MAX_LIST; i++ )\n            if ( p-\u003epLists1[i] )\n            {\n//                printf( \"%d \", i );\n//                printf( \"ListA = %2d. Length = %5d.\\n\", i, Nwk_ManGraphListLength(p,p-\u003epLists1[i]) );\n                pVertex = p-\u003epVerts[ p-\u003epLists1[i] ];\n                assert( pVertex-\u003enEdges == 1 );\n                pNext = p-\u003epVerts[ pVertex-\u003epEdges[0] ];\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        if ( i \u003c NWK_MAX_LIST + 1 )\n            continue;\n        // find the next vertex to extract\n        assert( p-\u003epLists2[0] == 0 );\n        assert( p-\u003epLists2[1] == 0 );\n        for ( j = 2; j \u003c= NWK_MAX_LIST; j++ )\n            if ( p-\u003epLists2[j] )\n            {\n//                printf( \"***%d \", j );\n//                printf( \"ListB = %2d. Length = %5d.\\n\", j, Nwk_ManGraphListLength(p,p-\u003epLists2[j]) );\n                pVertex = Nwk_ManGraphListFindMin( p, p-\u003epLists2[j] ); \n                assert( pVertex-\u003enEdges == j || j == NWK_MAX_LIST );\n                pNext = Nwk_ManGraphListFindMinEdge( p, pVertex );\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        if ( j == NWK_MAX_LIST + 1 )\n            break;\n    }\n    Nwk_ManGraphSortPairs( p );\n}",
+      "Draft": "func Nwk_ManGraphSolve(p *Nwk_Grf_t) {\n    var pVertex, pNext *Nwk_Vrt_t;\n    var i, j int32;\n    Nwk_ManGraphPrepare( p );\n    for {\n        // find the next vertex to extract\n        assert(p.pLists1[0] == 0, \"p.pLists1[0] == 0\");\n        for  i = 1; i \u003c= NWK_MAX_LIST; i++  {\n            if p.pLists1[i] {\n//                printf( \"%d \", i );\n//                printf( \"ListA = %2d. Length = %5d.\\n\", i, Nwk_ManGraphListLength(p,p-\u003epLists1[i]) );\n                pVertex = p.pVerts[ p.pLists1[i] ];\n                assert(pVertex.nEdges == 1, \"pVertex.nEdges == 1\");\n                pNext = p.pVerts[ pVertex.pEdges[0] ];\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        }\n        if i \u003c NWK_MAX_LIST + 1 {\n            continue; }\n        // find the next vertex to extract\n        assert(p.pLists2[0] == 0, \"p.pLists2[0] == 0\");\n        assert(p.pLists2[1] == 0, \"p.pLists2[1] == 0\");\n        for  j = 2; j \u003c= NWK_MAX_LIST; j++  {\n            if p.pLists2[j] {\n//                printf( \"***%d \", j );\n//                printf( \"ListB = %2d. Length = %5d.\\n\", j, Nwk_ManGraphListLength(p,p-\u003epLists2[j]) );\n                pVertex = Nwk_ManGraphListFindMin( p, p.pLists2[j] ); \n                assert(pVertex.nEdges == j || j == NWK_MAX_LIST, \"pVertex.nEdges == j || j == NWK_MAX_LIST\");\n                pNext = Nwk_ManGraphListFindMinEdge( p, pVertex );\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        }\n        if j == NWK_MAX_LIST + 1 {\n            break; }\n    }\n    Nwk_ManGraphSortPairs( p );\n}"
+    },
+    {
+      "Name": "Nwk_ManLutMergeReadGraph",
+      "Start": 19870,
+      "End": 20431,
+      "BodyStart": 19927,
+      "Original": "Nwk_Grf_t * Nwk_ManLutMergeReadGraph( char * pFileName )\n{\n    Nwk_Grf_t * p;\n    FILE * pFile;\n    char Buffer[100];\n    int nNodes, nEdges, iNode1, iNode2;\n    int RetValue;\n    pFile = fopen( pFileName, \"r\" );\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nNodes );\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nEdges );\n    p = Nwk_ManGraphAlloc( nNodes );\n    while ( fscanf( pFile, \"%s %d %d\", Buffer, \u0026iNode1, \u0026iNode2 ) == 3 )\n        Nwk_ManGraphHashEdge( p, iNode1, iNode2 );\n    assert( p-\u003enEdges == nEdges );\n    fclose( pFile );\n    return p;\n}",
+      "Draft": "func Nwk_ManLutMergeReadGraph(pFileName string) *Nwk_Grf_t {\n    var p *Nwk_Grf_t;\n    var pFile *os.File;\n    var Buffer [100]byte;\n    var nNodes, nEdges, iNode1, iNode2 int32;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nNodes );\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nEdges );\n    p = Nwk_ManGraphAlloc( nNodes );\n    for  fscanf( pFile, \"%s %d %d\", Buffer, \u0026iNode1, \u0026iNode2 ) == 3  {\n        Nwk_ManGraphHashEdge( p, iNode1, iNode2 );\n    }\n    assert(p.nEdges == nEdges, \"p.nEdges == nEdges\");\n    _ = (pFile).Close();\n    return p;\n}"
+    },
+    {
+      "Name": "Nwk_ManLutMergeGraphTest",
+      "Start": 20701,
+      "End": 21255,
+      "BodyStart": 20750,
+      "Original": "int Nwk_ManLutMergeGraphTest( char * pFileName )\n{\n    int nPairs;\n    Nwk_Grf_t * p;\n    abctime clk = Abc_Clock();\n    p = Nwk_ManLutMergeReadGraph( pFileName );\n    ABC_PRT( \"Reading\", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", \n        p-\u003enVerts, p-\u003enEdges, Vec_IntSize(p-\u003evPairs)/2 );\n    ABC_PRT( \"Solving\", Abc_Clock() - clk );\n    nPairs = Vec_IntSize(p-\u003evPairs)/2;\n    Nwk_ManGraphReportMemoryUsage( p );\n    Nwk_ManGraphFree( p );\n    return nPairs;\n}",
+      "Draft": "func Nwk_ManLutMergeGraphTest(pFileName string) int32 {\n    var nPairs int32;\n    var p *Nwk_Grf_t;\n    var clk abctime  = Abc_Clock();\n    p = Nwk_ManLutMergeReadGraph( pFileName );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Reading\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    nPairs = Vec_IntSize(p.vPairs)/2;\n    Nwk_ManGraphReportMemoryUsage( p );\n    Nwk_ManGraphFree( p );\n    return nPairs;\n}"
+    },
+    {
+      "Name": "Nwk_ManMarkFanins_rec",
+      "Start": 21548,
+      "End": 21935,
+      "BodyStart": 21608,
+      "Original": "void Nwk_ManMarkFanins_rec( Nwk_Obj_t * pLut, int nLevMin )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( !Nwk_ObjIsNode(pLut) )\n        return;\n    if ( Nwk_ObjIsTravIdCurrent( pLut ) )\n        return;\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if ( Nwk_ObjLevel(pLut) \u003c nLevMin )\n        return;\n    Nwk_ObjForEachFanin( pLut, pNext, i )\n        Nwk_ManMarkFanins_rec( pNext, nLevMin );\n}",
+      "Draft": "func Nwk_ManMarkFanins_rec(pLut *Nwk_Obj_t, nLevMin int32) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if !Nwk_ObjIsNode(pLut) {\n        return; }\n    if Nwk_ObjIsTravIdCurrent( pLut ) {\n        return; }\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if Nwk_ObjLevel(pLut) \u003c nLevMin {\n        return; }\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pNext) = (pLut).pFanio[i]); i++  {\n        Nwk_ManMarkFanins_rec( pNext, nLevMin );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManMarkFanouts_rec",
+      "Start": 22226,
+      "End": 22698,
+      "BodyStart": 22300,
+      "Original": "void Nwk_ManMarkFanouts_rec( Nwk_Obj_t * pLut, int nLevMax, int nFanMax )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( !Nwk_ObjIsNode(pLut) )\n        return;\n    if ( Nwk_ObjIsTravIdCurrent( pLut ) )\n        return;\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if ( Nwk_ObjLevel(pLut) \u003e nLevMax )\n        return;\n    if ( Nwk_ObjFanoutNum(pLut) \u003e nFanMax )\n        return;\n    Nwk_ObjForEachFanout( pLut, pNext, i )\n        Nwk_ManMarkFanouts_rec( pNext, nLevMax, nFanMax );\n}",
+      "Draft": "func Nwk_ManMarkFanouts_rec(pLut *Nwk_Obj_t, nLevMax int32, nFanMax int32) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if !Nwk_ObjIsNode(pLut) {\n        return; }\n    if Nwk_ObjIsTravIdCurrent( pLut ) {\n        return; }\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if Nwk_ObjLevel(pLut) \u003e nLevMax {\n        return; }\n    if Nwk_ObjFanoutNum(pLut) \u003e nFanMax {\n        return; }\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pLut).nFanouts)) \u0026\u0026 ((pNext) = (pLut).pFanio[(pLut).nFanins+i]); i++  {\n        Nwk_ManMarkFanouts_rec( pNext, nLevMax, nFanMax );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManCollectCircle",
+      "Start": 22984,
+      "End": 23881,
+      "BodyStart": 23064,
+      "Original": "void Nwk_ManCollectCircle( Vec_Ptr_t * vStart, Vec_Ptr_t * vNext, int nFanMax )\n{\n    Nwk_Obj_t * pObj, * pNext;\n    int i, k;\n    Vec_PtrClear( vNext );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vStart, pObj, i )\n    {\n        Nwk_ObjForEachFanin( pObj, pNext, k )\n        {\n            if ( !Nwk_ObjIsNode(pNext) )\n                continue;\n            if ( Nwk_ObjIsTravIdCurrent( pNext ) )\n                continue;\n            Nwk_ObjSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        Nwk_ObjForEachFanout( pObj, pNext, k )\n        {\n            if ( !Nwk_ObjIsNode(pNext) )\n                continue;\n            if ( Nwk_ObjIsTravIdCurrent( pNext ) )\n                continue;\n            Nwk_ObjSetTravIdCurrent( pNext );\n            if ( Nwk_ObjFanoutNum(pNext) \u003e nFanMax )\n                continue;\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}",
+      "Draft": "func Nwk_ManCollectCircle(vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, nFanMax int32) {\n    var pObj, pNext *Nwk_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vNext );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vStart, i)), 1); i++  {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n            if !Nwk_ObjIsNode(pNext) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pNext ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if !Nwk_ObjIsNode(pNext) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pNext ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pNext );\n            if Nwk_ObjFanoutNum(pNext) \u003e nFanMax {\n                continue; }\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManCollectNonOverlapCands",
+      "Start": 24173,
+      "End": 26256,
+      "BodyStart": 24309,
+      "Original": "void Nwk_ManCollectNonOverlapCands( Nwk_Obj_t * pLut, Vec_Ptr_t * vStart, Vec_Ptr_t * vNext, Vec_Ptr_t * vCands, Nwk_LMPars_t * pPars )\n{\n    Vec_Ptr_t * vTemp;\n    Nwk_Obj_t * pObj;\n    int i, k;\n    Vec_PtrClear( vCands );\n    if ( pPars-\u003enMaxSuppSize - Nwk_ObjFaninNum(pLut) \u003c= 1 )\n        return;\n\n    // collect nodes removed by this distance\n    assert( pPars-\u003enMaxDistance \u003e 0 );\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Nwk_ManIncrementTravId( pLut-\u003epMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    for ( i = 1; i \u003c= pPars-\u003enMaxDistance; i++ )\n    {\n        Nwk_ManCollectCircle( vStart, vNext, pPars-\u003enMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        Vec_PtrForEachEntry( Nwk_Obj_t *, vStart, pObj, k )\n            Vec_PtrPush( vCands, pObj );\n    }\n\n    // mark the TFI/TFO nodes\n    Nwk_ManIncrementTravId( pLut-\u003epMan );\n    if ( pPars-\u003efUseTfiTfo )\n        Nwk_ObjSetTravIdCurrent( pLut );\n    else\n    {\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanins_rec( pLut, Nwk_ObjLevel(pLut) - pPars-\u003enMaxDistance );\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanouts_rec( pLut, Nwk_ObjLevel(pLut) + pPars-\u003enMaxDistance, pPars-\u003enMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vCands, pObj, i )\n    {\n        if ( Nwk_ObjIsTravIdCurrent(pObj) )\n            continue;\n        if ( Nwk_ObjFaninNum(pLut) + Nwk_ObjFaninNum(pObj) \u003e pPars-\u003enMaxSuppSize )\n            continue;\n        if ( Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars-\u003enMaxLevelDiff || \n             Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars-\u003enMaxLevelDiff )\n             continue;\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}",
+      "Draft": "func Nwk_ManCollectNonOverlapCands(pLut *Nwk_Obj_t, vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var vTemp *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vCands );\n    if pPars.nMaxSuppSize - Nwk_ObjFaninNum(pLut) \u003c= 1 {\n        return; }\n\n    // collect nodes removed by this distance\n    assert(pPars.nMaxDistance \u003e 0, \"pPars.nMaxDistance \u003e 0\");\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Nwk_ManIncrementTravId( pLut.pMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    for  i = 1; i \u003c= pPars.nMaxDistance; i++  {\n        Nwk_ManCollectCircle( vStart, vNext, pPars.nMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vStart, k)), 1); k++  {\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n\n    // mark the TFI/TFO nodes\n    Nwk_ManIncrementTravId( pLut.pMan );\n    if pPars.fUseTfiTfo {\n        Nwk_ObjSetTravIdCurrent( pLut );\n    } else {\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanins_rec( pLut, Nwk_ObjLevel(pLut) - pPars.nMaxDistance );\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanouts_rec( pLut, Nwk_ObjLevel(pLut) + pPars.nMaxDistance, pPars.nMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vCands, i)), 1); i++  {\n        if Nwk_ObjIsTravIdCurrent(pObj) {\n            continue; }\n        if Nwk_ObjFaninNum(pLut) + Nwk_ObjFaninNum(pObj) \u003e pPars.nMaxSuppSize {\n            continue; }\n        if Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n             Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n             continue; }\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}"
+    },
+    {
+      "Name": "Nwk_ManCountTotalFanins",
+      "Start": 26526,
+      "End": 26766,
+      "BodyStart": 26593,
+      "Original": "int Nwk_ManCountTotalFanins( Nwk_Obj_t * pLut, Nwk_Obj_t * pCand )\n{\n    Nwk_Obj_t * pFanin;\n    int i, nCounter = Nwk_ObjFaninNum(pLut);\n    Nwk_ObjForEachFanin( pCand, pFanin, i )\n        nCounter += !pFanin-\u003eMarkC;\n    return nCounter;\n}",
+      "Draft": "func Nwk_ManCountTotalFanins(pLut *Nwk_Obj_t, pCand *Nwk_Obj_t) int32 {\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    var nCounter int32 = Nwk_ObjFaninNum(pLut);\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pCand).nFanins)) \u0026\u0026 ((pFanin) = (pCand).pFanio[i]); i++  {\n        nCounter += !pFanin.MarkC;\n    }\n    return nCounter;\n}"
+    },
+    {
+      "Name": "Nwk_ManCollectOverlapCands",
+      "Start": 27034,
+      "End": 28436,
+      "BodyStart": 27128,
+      "Original": "void Nwk_ManCollectOverlapCands( Nwk_Obj_t * pLut, Vec_Ptr_t * vCands, Nwk_LMPars_t * pPars )\n{\n    Nwk_Obj_t * pFanin, * pObj;\n    int i, k;\n    // mark fanins of pLut\n    Nwk_ObjForEachFanin( pLut, pFanin, i )\n        pFanin-\u003eMarkC = 1;\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Nwk_ManIncrementTravId( pLut-\u003epMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    Nwk_ObjForEachFanin( pLut, pFanin, i )\n    {\n        if ( !Nwk_ObjIsNode(pFanin) )\n            continue;\n        if ( Nwk_ObjFanoutNum(pFanin) \u003e pPars-\u003enMaxFanout )\n            continue;\n        Nwk_ObjForEachFanout( pFanin, pObj, k )\n        {\n            if ( !Nwk_ObjIsNode(pObj) )\n                continue;\n            if ( Nwk_ObjIsTravIdCurrent( pObj ) )\n                continue;\n            Nwk_ObjSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if ( Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars-\u003enMaxLevelDiff || \n                 Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars-\u003enMaxLevelDiff )\n                 continue;\n            // check the total number of fanins of the node\n            if ( Nwk_ManCountTotalFanins(pLut, pObj) \u003e pPars-\u003enMaxSuppSize )\n                continue;\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    Nwk_ObjForEachFanin( pLut, pFanin, i )\n        pFanin-\u003eMarkC = 0;\n}",
+      "Draft": "func Nwk_ManCollectOverlapCands(pLut *Nwk_Obj_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var pFanin, pObj *Nwk_Obj_t;\n    var i, k int32;\n    // mark fanins of pLut\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        pFanin.MarkC = 1;\n    }\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Nwk_ManIncrementTravId( pLut.pMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        if !Nwk_ObjIsNode(pFanin) {\n            continue; }\n        if Nwk_ObjFanoutNum(pFanin) \u003e pPars.nMaxFanout {\n            continue; }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pFanin).nFanouts)) \u0026\u0026 ((pObj) = (pFanin).pFanio[(pFanin).nFanins+k]); k++  {\n            if !Nwk_ObjIsNode(pObj) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pObj ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n                 Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n                 continue; }\n            // check the total number of fanins of the node\n            if Nwk_ManCountTotalFanins(pLut, pObj) \u003e pPars.nMaxSuppSize {\n                continue; }\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        pFanin.MarkC = 0;\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManLutMerge",
+      "Start": 28709,
+      "End": 31345,
+      "BodyStart": 28775,
+      "Original": "Vec_Int_t * Nwk_ManLutMerge( Nwk_Man_t * pNtk, void * pParsInit )\n{\n    Nwk_LMPars_t * pPars = (Nwk_LMPars_t *)pParsInit;\n    Nwk_Grf_t * p;\n    Vec_Int_t * vResult;\n    Vec_Ptr_t * vStart, * vNext, * vCands1, * vCands2;\n    Nwk_Obj_t * pLut, * pCand;\n    int i, k, nVertsMax, nCands;\n    abctime clk = Abc_Clock();\n    // count the number of vertices\n    nVertsMax = 0;\n    Nwk_ManForEachNode( pNtk, pLut, i )\n        nVertsMax += (int)(Nwk_ObjFaninNum(pLut) \u003c= pPars-\u003enMaxLutSize);\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    Nwk_ManForEachNode( pNtk, pLut, i )\n    {\n        if ( Nwk_ObjFaninNum(pLut) \u003e pPars-\u003enMaxLutSize )\n            continue;\n        Nwk_ManCollectOverlapCands( pLut, vCands1, pPars );\n        if ( pPars-\u003efUseDiffSupp )\n            Nwk_ManCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars );\n        if ( Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 )\n            continue;\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        Vec_PtrForEachEntry( Nwk_Obj_t *, vCands1, pCand, k )\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        Vec_PtrForEachEntry( Nwk_Obj_t *, vCands2, pCand, k )\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        // print statistics about this node\n        if ( pPars-\u003efVeryVerbose )\n        printf( \"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\",\n            Nwk_ObjId(pLut), Nwk_ObjFaninNum(pLut), Nwk_ObjFaninNum(pLut), \n            Vec_PtrSize(vCands1), Vec_PtrSize(vCands2) );\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"Mergable LUTs = %6d. Total cands = %6d. \", p-\u003enVertsMax, nCands );\n        ABC_PRT( \"Deriving graph\", Abc_Clock() - clk );\n    }\n    // solve the graph problem\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", \n            p-\u003enVerts, p-\u003enEdges, Vec_IntSize(p-\u003evPairs)/2 );\n        ABC_PRT( \"Solving\", Abc_Clock() - clk );\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p-\u003evPairs; p-\u003evPairs = NULL;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}",
+      "Draft": "func Nwk_ManLutMerge(pNtk *Nwk_Man_t, pParsInit any) *Vec_Int_t {\n    var pPars *Nwk_LMPars_t  = (Nwk_LMPars_t *)pParsInit;\n    var p *Nwk_Grf_t;\n    var vResult *Vec_Int_t;\n    var vStart, vNext, vCands1, vCands2 *Vec_Ptr_t;\n    var pLut, pCand *Nwk_Obj_t;\n    var i, k, nVertsMax, nCands int32;\n    var clk abctime  = Abc_Clock();\n    // count the number of vertices\n    nVertsMax = 0;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pLut) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pLut) == nil || !Nwk_ObjIsNode(pLut) {} else {\n        nVertsMax += int32((Nwk_ObjFaninNum(pLut) \u003c= pPars.nMaxLutSize)); }\n    }\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pLut) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pLut) == nil || !Nwk_ObjIsNode(pLut) {} else {\n        if Nwk_ObjFaninNum(pLut) \u003e pPars.nMaxLutSize {\n            continue; }\n        Nwk_ManCollectOverlapCands( pLut, vCands1, pPars );\n        if pPars.fUseDiffSupp {\n            Nwk_ManCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars ); }\n        if Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 {\n            continue; }\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands1)) \u0026\u0026 (((pCand) = (Nwk_Obj_t *)Vec_PtrEntry(vCands1, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands2)) \u0026\u0026 (((pCand) = (Nwk_Obj_t *)Vec_PtrEntry(vCands2, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        }\n        // print statistics about this node\n        if pPars.fVeryVerbose {\n        fmt.Printf(\"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\", Nwk_ObjId(pLut), Nwk_ObjFaninNum(pLut), Nwk_ObjFaninNum(pLut), Vec_PtrSize(vCands1), Vec_PtrSize(vCands2)); }\n    }\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if pPars.fVerbose {\n        fmt.Printf(\"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Deriving graph\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // solve the graph problem\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    if pPars.fVerbose {\n        fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p.vPairs; p.vPairs = nil;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::1413",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1346,
+      "End": 1346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::1466",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1391,
+      "End": 1397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::1681",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1512,
+      "End": 1512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::1741",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1590,
+      "End": 1596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3247",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2650,
+      "End": 2656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3275",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2678,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3316",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2719,
+      "End": 2725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3366",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2769,
+      "End": 2775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3426",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2829,
+      "End": 2835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::3467",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2870,
+      "End": 2876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::8554",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7896,
+      "End": 7896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::8673",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7946,
+      "End": 7946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::8748",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8013,
+      "End": 8019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::8811",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8076,
+      "End": 8082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::9630",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8666,
+      "End": 8666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::10427",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9267,
+      "End": 9267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::10597",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9429,
+      "End": 9435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::10617",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9449,
+      "End": 9455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::mechanical::sizeof::12290",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10739,
+      "End": 10739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::1392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1346,
+      "End": 1346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::1634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1512,
+      "End": 1512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::1687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1512,
+      "End": 1512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::2369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2153,
+      "End": 2153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::2487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2180,
+      "End": 2180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::2612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2210,
+      "End": 2210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::2739",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2241,
+      "End": 2241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::2854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2272,
+      "End": 2272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::3281",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2684,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::4502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3905,
+      "End": 3918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::8539",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7896,
+      "End": 7896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::8658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7946,
+      "End": 7946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::9592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8666,
+      "End": 8666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::10404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9267,
+      "End": 9267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::10433",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9267,
+      "End": 9267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::10666",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9498,
+      "End": 9511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::11601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10221,
+      "End": 10221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::11744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10275,
+      "End": 10275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::12275",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10739,
+      "End": 10739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::12995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11371,
+      "End": 11371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::26149",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23142,
+      "End": 23142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::28264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24941,
+      "End": 24941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::29187",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25759,
+      "End": 25759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::32736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28804,
+      "End": 28820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::33128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29084,
+      "End": 29084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::33654",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29418,
+      "End": 29418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::34333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29907,
+      "End": 29907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::pointer-cast::34575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30043,
+      "End": 30043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1270,
+      "End": 1681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::ternary::Nwk_ManGraphFree",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManGraphFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1939,
+      "End": 2288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphFree",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1939,
+      "End": 2288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphReportMemoryUsage",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphReportMemoryUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2567,
+      "End": 3055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphHashEdge",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphHashEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3328,
+      "End": 4102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListAdd",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4365,
+      "End": 4676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListDelete",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4944,
+      "End": 5501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListInsert",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5783,
+      "End": 6457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListExtract",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6740,
+      "End": 7427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::ternary::Nwk_ManGraphPrepare",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManGraphPrepare",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7706,
+      "End": 10297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7706,
+      "End": 10297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::ternary::Nwk_ManGraphSortPairs",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManGraphSortPairs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10589,
+      "End": 11395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphSortPairs",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphSortPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10589,
+      "End": 11395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphCheckLists",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphCheckLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11679,
+      "End": 12448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphVertexRemoveEdge",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphVertexRemoveEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12731,
+      "End": 13077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13360,
+      "End": 15713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::ternary::Nwk_ManGraphListLength",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManGraphListLength",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15990,
+      "End": 16358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListLength",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListLength",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15990,
+      "End": 16358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListFindMinEdge",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListFindMinEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16655,
+      "End": 16970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::ternary::Nwk_ManGraphListFindMin",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManGraphListFindMin",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17241,
+      "End": 17801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphListFindMin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphListFindMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17241,
+      "End": 17801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManGraphSolve",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGraphSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18089,
+      "End": 19612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManLutMergeReadGraph",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManLutMergeReadGraph",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19870,
+      "End": 20431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManLutMergeGraphTest",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManLutMergeGraphTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20701,
+      "End": 21255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManMarkFanins_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMarkFanins_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21548,
+      "End": 21935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManMarkFanouts_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMarkFanouts_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22226,
+      "End": 22698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManCollectCircle",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCollectCircle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22984,
+      "End": 23881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManCollectNonOverlapCands",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCollectNonOverlapCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24173,
+      "End": 26256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManCountTotalFanins",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCountTotalFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26526,
+      "End": 26766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManCollectOverlapCands",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCollectOverlapCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27034,
+      "End": 28436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::void-pointer::Nwk_ManLutMerge",
+      "Category": "void-pointer-review",
+      "Symbol": "Nwk_ManLutMerge",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 28709,
+      "End": 31345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::Nwk_ManLutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManLutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28709,
+      "End": 31345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMerge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31592
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkMerge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Netlist representation.]\n\n  Synopsis    [LUT merging algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkMerge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n//#include \"nwkMerge.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphAlloc(nVertsMax int32) *Nwk_Grf_t {\n    var p *Nwk_Grf_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Nwk_Grf_t *) malloc(sizeof(Nwk_Grf_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nwk_Grf_t) );\n    p.nVertsMax = nVertsMax;\n    p.nEdgeHash = Abc_PrimeCudd( 3 * nVertsMax );\n    // inlining of macro ABC_CALLOC\n    p.pEdgeHash = ((Nwk_Edg_t * *) calloc((size_t)(p.nEdgeHash), sizeof(Nwk_Edg_t *)));\n    p.pMemEdges = Aig_MmFixedStart( sizeof(Nwk_Edg_t), p.nEdgeHash );\n    p.vPairs    = Vec_IntAlloc( 1000 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphFree(p *Nwk_Grf_t) {\n    if p.vPairs {    Vec_IntFree( p.vPairs ); }\n    if p.pMemEdges { Aig_MmFixedStop( p.pMemEdges, 0 ); }\n    if p.pMemVerts { Aig_MmFlexStop( p.pMemVerts, 0 ); }\n    // inlining of macro ABC_FREE\n    ((p.pVerts) ? (free((char *) (p.pVerts)), (p.pVerts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMapLut2Id) ? (free((char *) (p.pMapLut2Id)), (p.pMapLut2Id) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMapId2Lut) ? (free((char *) (p.pMapId2Lut)), (p.pMapId2Lut) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the graph for solving the problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphReportMemoryUsage(p *Nwk_Grf_t) {\n    p.nMemBytes1 = \n        sizeof(Nwk_Grf_t) +\n        sizeof(void *) * p.nEdgeHash + \n        sizeof(int) * (p.nObjs + p.nVertsMax) +\n        sizeof(Nwk_Edg_t) * p.nEdges;\n    p.nMemBytes2 = \n        sizeof(Nwk_Vrt_t) * p.nVerts + \n        sizeof(int) * 2 * p.nEdges;\n    fmt.Printf(\"Memory usage stats:  Preprocessing = %.2f MB.  Solving = %.2f MB.\\n\", 1.0 * p.nMemBytes1 / (1\u003c\u003c20), 1.0 * p.nMemBytes2 / (1\u003c\u003c20));\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or adds the edge to the graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphHashEdge(p *Nwk_Grf_t, iLut1 int32, iLut2 int32) {\n    var pEntry *Nwk_Edg_t;\n    var Key uint32;\n    if iLut1 == iLut2 {\n        return; }\n    if iLut1 \u003e iLut2 {\n        Key = iLut1;\n        iLut1 = iLut2;\n        iLut2 = Key;\n    }\n    assert(iLut1 \u003c iLut2, \"iLut1 \u003c iLut2\");\n    if p.nObjs \u003c iLut2 {\n        p.nObjs = iLut2; }\n    Key = uint32((741457 * iLut1 + 4256249 * iLut2)) % p.nEdgeHash;\n    for  pEntry = p.pEdgeHash[Key]; (pEntry != nil); pEntry = pEntry.pNext  {\n        if pEntry.iNode1 == iLut1 \u0026\u0026 pEntry.iNode2 == iLut2 {\n            return; }\n    }\n    pEntry = (Nwk_Edg_t *)Aig_MmFixedEntryFetch( p.pMemEdges );\n    pEntry.iNode1 = iLut1;\n    pEntry.iNode2 = iLut2;\n    pEntry.pNext = p.pEdgeHash[Key];\n    p.pEdgeHash[Key] = pEntry;\n    p.nEdges++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one entry to the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListAdd(p *Nwk_Grf_t, pList *int32, pVertex *Nwk_Vrt_t) {\n    if *pList {\n        var pHead *Nwk_Vrt_t;\n        pHead = p.pVerts[*pList];\n        pVertex.iPrev = 0;\n        pVertex.iNext = pHead.Id;\n        pHead.iPrev = pVertex.Id;\n    }\n    *pList = pVertex.Id;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes one entry from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListDelete(p *Nwk_Grf_t, pList *int32, pVertex *Nwk_Vrt_t) {\n    assert(*pList, \"*pList\");\n    if pVertex.iPrev {\n//        assert( p-\u003epVerts[pVertex-\u003eiPrev]-\u003eiNext == pVertex-\u003eId );\n        p.pVerts[pVertex.iPrev].iNext = pVertex.iNext;\n    }\n    if pVertex.iNext {\n//        assert( p-\u003epVerts[pVertex-\u003eiNext]-\u003eiPrev == pVertex-\u003eId );\n        p.pVerts[pVertex.iNext].iPrev = pVertex.iPrev;\n    }\n    if *pList == pVertex.Id {\n        *pList = pVertex.iNext; }\n    pVertex.iPrev = pVertex.iNext = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the edge into one of the linked lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListInsert(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t) {\n    var pNext *Nwk_Vrt_t;\n    assert(pVertex.nEdges \u003e 0, \"pVertex.nEdges \u003e 0\");\n\n    if pVertex.nEdges == 1 {\n        pNext = p.pVerts[ pVertex.pEdges[0] ];\n        if pNext.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListAdd( p, p.pLists1 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListAdd( p, p.pLists1 + pNext.nEdges, pVertex ); }\n    \n    } else {\n        if pVertex.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListAdd( p, p.pLists2 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListAdd( p, p.pLists2 + pVertex.nEdges, pVertex ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts the edge from one of the linked lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListExtract(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t) {\n    var pNext *Nwk_Vrt_t;\n    assert(pVertex.nEdges \u003e 0, \"pVertex.nEdges \u003e 0\");\n\n    if pVertex.nEdges == 1 {\n        pNext = p.pVerts[ pVertex.pEdges[0] ];\n        if pNext.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListDelete( p, p.pLists1 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListDelete( p, p.pLists1 + pNext.nEdges, pVertex ); }\n    \n    } else {\n        if pVertex.nEdges \u003e= NWK_MAX_LIST {\n            Nwk_ManGraphListDelete( p, p.pLists2 + NWK_MAX_LIST, pVertex );\n        } else {\n            Nwk_ManGraphListDelete( p, p.pLists2 + pVertex.nEdges, pVertex ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the graph for solving the problem.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphPrepare(p *Nwk_Grf_t) {\n    var pEntry *Nwk_Edg_t;\n    var pVertex *Nwk_Vrt_t;\n    var pnEdges *int32;\n    var nBytes int32;\n    var i int32;\n    // allocate memory for the present objects\n    // inlining of macro ABC_ALLOC\n    p.pMapLut2Id = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));\n    // inlining of macro ABC_ALLOC\n    p.pMapId2Lut = ((int *) malloc(sizeof(int) * (size_t)(p.nVertsMax+1)));\n    memset( p.pMapLut2Id, 0xff, sizeof(int) * (p.nObjs+1) );\n    memset( p.pMapId2Lut, 0xff, sizeof(int) * (p.nVertsMax+1) );\n    // mark present objects\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        assert(pEntry.iNode1 \u003c= p.nObjs, \"pEntry.iNode1 \u003c= p.nObjs\");\n        assert(pEntry.iNode2 \u003c= p.nObjs, \"pEntry.iNode2 \u003c= p.nObjs\");\n        p.pMapLut2Id[ pEntry.iNode1 ] = 0;\n        p.pMapLut2Id[ pEntry.iNode2 ] = 0;\n    }\n    }\n    // map objects\n    p.nVerts = 0;\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        if p.pMapLut2Id[i] == 0 {\n            p.pMapLut2Id[i] = ++p.nVerts;\n            p.pMapId2Lut[p.nVerts] = i;\n        }\n    }\n    // count the edges and mark present objects\n    // inlining of macro ABC_CALLOC\n    pnEdges = ((int *) calloc((size_t)(p.nVerts+1), sizeof(int)));\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        // translate into vertices\n        assert(pEntry.iNode1 \u003c= p.nObjs, \"pEntry.iNode1 \u003c= p.nObjs\");\n        assert(pEntry.iNode2 \u003c= p.nObjs, \"pEntry.iNode2 \u003c= p.nObjs\");\n        pEntry.iNode1 = p.pMapLut2Id[pEntry.iNode1];\n        pEntry.iNode2 = p.pMapLut2Id[pEntry.iNode2];\n        // count the edges\n        assert(pEntry.iNode1 \u003c= p.nVerts, \"pEntry.iNode1 \u003c= p.nVerts\");\n        assert(pEntry.iNode2 \u003c= p.nVerts, \"pEntry.iNode2 \u003c= p.nVerts\");\n        pnEdges[pEntry.iNode1]++;\n        pnEdges[pEntry.iNode2]++;\n    }\n    }\n    // allocate the real graph\n    p.pMemVerts  = Aig_MmFlexStart();\n    // inlining of macro ABC_ALLOC\n    p.pVerts = ((Nwk_Vrt_t * *) malloc(sizeof(Nwk_Vrt_t *) * (size_t)(p.nVerts + 1)));\n    p.pVerts[0] = nil;\n    for  i = 1; i \u003c= p.nVerts; i++  {\n        assert(pnEdges[i] \u003e 0, \"pnEdges[i] \u003e 0\");\n        nBytes = sizeof(Nwk_Vrt_t) + sizeof(int) * pnEdges[i];\n        p.pVerts[i] = (Nwk_Vrt_t *)Aig_MmFlexEntryFetch( p.pMemVerts, nBytes );\n        memset( p.pVerts[i], 0, nBytes );\n        p.pVerts[i].Id = i;\n    }\n    // add edges to the real graph\n    // inlining of macro Nwk_GraphForEachEdge\n    for  i = 0; i \u003c p.nEdgeHash; i++  {                        for  pEntry = p.pEdgeHash[i]; (pEntry != nil); pEntry = pEntry.pNext  {\n        pVertex = p.pVerts[pEntry.iNode1];\n        pVertex.pEdges[ pVertex.nEdges++ ] = pEntry.iNode2;\n        pVertex = p.pVerts[pEntry.iNode2];\n        pVertex.pEdges[ pVertex.nEdges++ ] = pEntry.iNode1;\n    }\n    }\n    // put vertices into the data structure\n    for  i = 1; i \u003c= p.nVerts; i++  {\n        assert(p.pVerts[i].nEdges == pnEdges[i], \"p.pVerts[i].nEdges == pnEdges[i]\");\n        Nwk_ManGraphListInsert( p, p.pVerts[i] );\n    }\n    // clean up\n    Aig_MmFixedStop( p.pMemEdges, 0 ); p.pMemEdges = nil;\n    // inlining of macro ABC_FREE\n    ((p.pEdgeHash) ? (free((char *) (p.pEdgeHash)), (p.pEdgeHash) = 0) : 0);\n//    p-\u003enEdgeHash = 0;\n    // inlining of macro ABC_FREE\n    ((pnEdges) ? (free((char *) (pnEdges)), (pnEdges) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort pairs by the first vertex in the topological order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphSortPairs(p *Nwk_Grf_t) {\n    var nSize int32  = Vec_IntSize(p.vPairs);\n    var pIdToPair *int32;\n    var i int32;\n    // allocate storage\n    // inlining of macro ABC_ALLOC\n    pIdToPair = ((int *) malloc(sizeof(int) * (size_t)(p.nObjs+1)));\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        pIdToPair[i] = -1;\n    }\n    // create mapping\n    for  i = 0; i \u003c p.vPairs.nSize; i += 2  {\n        assert(pIdToPair[ p.vPairs.pArray[i] ] == -1, \"pIdToPair[ p.vPairs.pArray[i] ] == -1\");\n        pIdToPair[ p.vPairs.pArray[i] ] = p.vPairs.pArray[i+1];\n    }\n    // recreate pairs\n    Vec_IntClear( p.vPairs );\n    for  i = 0; i \u003c= p.nObjs; i++  {\n        if pIdToPair[i] \u003e= 0 {\n            assert(i \u003c pIdToPair[i], \"i \u003c pIdToPair[i]\");\n            Vec_IntPush( p.vPairs, i );\n            Vec_IntPush( p.vPairs, pIdToPair[i] );\n        }\n    }\n    assert(nSize == Vec_IntSize(p.vPairs), \"nSize == Vec_IntSize(p.vPairs)\");\n    // inlining of macro ABC_FREE\n    ((pIdToPair) ? (free((char *) (pIdToPair)), (pIdToPair) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the problem after pulling out one edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphCheckLists(p *Nwk_Grf_t) {\n    var pVertex, pNext *Nwk_Vrt_t;\n    var i, j int32;\n    assert(p.pLists1[0] == 0, \"p.pLists1[0] == 0\");\n    for  i = 1; i \u003c= NWK_MAX_LIST; i++  {\n        if p.pLists1[i] {\n            pVertex = p.pVerts[ p.pLists1[i] ];\n            assert(pVertex.nEdges == 1, \"pVertex.nEdges == 1\");\n            pNext = p.pVerts[ pVertex.pEdges[0] ];\n            assert(pNext.nEdges == i || pNext.nEdges \u003e NWK_MAX_LIST, \"pNext.nEdges == i || pNext.nEdges \u003e NWK_MAX_LIST\");\n        }\n    }\n    // find the next vertext to extract\n    assert(p.pLists2[0] == 0, \"p.pLists2[0] == 0\");\n    assert(p.pLists2[1] == 0, \"p.pLists2[1] == 0\");\n    for  j = 2; j \u003c= NWK_MAX_LIST; j++  {\n        if p.pLists2[j] {\n            pVertex = p.pVerts[ p.pLists2[j] ];\n            assert(pVertex.nEdges == j || pVertex.nEdges \u003e NWK_MAX_LIST, \"pVertex.nEdges == j || pVertex.nEdges \u003e NWK_MAX_LIST\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts the edge from one of the linked lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphVertexRemoveEdge(pThis *Nwk_Vrt_t, pNext *Nwk_Vrt_t) {\n    var k int32;\n    for  k = 0; k \u003c pThis.nEdges; k++  {\n        if pThis.pEdges[k] == pNext.Id {\n            break; }\n    }\n    assert(k \u003c pThis.nEdges, \"k \u003c pThis.nEdges\");\n    pThis.nEdges--;\n    for  ; k \u003c pThis.nEdges; k++  {\n        pThis.pEdges[k] = pThis.pEdges[k+1];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the problem after pulling out one edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphUpdate(p *Nwk_Grf_t, pVertex *Nwk_Vrt_t, pNext *Nwk_Vrt_t) {\n    var pChanged, pOther *Nwk_Vrt_t;\n    var i, k int32;\n//    Nwk_ManGraphCheckLists( p );\n    Nwk_ManGraphListExtract( p, pVertex );\n    Nwk_ManGraphListExtract( p, pNext );\n    // update neihbors of pVertex\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  i = 0; (i \u003c pVertex.nEdges) \u0026\u0026 (((pChanged) = p.pVerts[pVertex.pEdges[i]]), 1); i++  {\n        if pChanged == pNext {\n            continue; }\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if pChanged.nEdges \u003e 1 {\n        // inlining of macro Nwk_VertexForEachAdjacent\n        for  k = 0; (k \u003c pChanged.nEdges) \u0026\u0026 (((pOther) = p.pVerts[pChanged.pEdges[k]]), 1); k++  {\n            if pOther == pVertex || pOther.nEdges \u003e 1 {\n                continue; }\n            assert(pOther.nEdges == 1, \"pOther.nEdges == 1\");\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged.nEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged.nEdges++;\n        } }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pVertex );\n        // add the changed vertex back\n        if pChanged.nEdges \u003e 0 {\n            Nwk_ManGraphListInsert( p, pChanged ); }\n    }\n    // update neihbors of pNext\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  i = 0; (i \u003c pNext.nEdges) \u0026\u0026 (((pChanged) = p.pVerts[pNext.pEdges[i]]), 1); i++  {\n        if pChanged == pVertex {\n            continue; }\n        Nwk_ManGraphListExtract( p, pChanged );\n        // move those that use this one\n        if pChanged.nEdges \u003e 1 {\n        // inlining of macro Nwk_VertexForEachAdjacent\n        for  k = 0; (k \u003c pChanged.nEdges) \u0026\u0026 (((pOther) = p.pVerts[pChanged.pEdges[k]]), 1); k++  {\n            if pOther == pNext || pOther.nEdges \u003e 1 {\n                continue; }\n            assert(pOther.nEdges == 1, \"pOther.nEdges == 1\");\n            Nwk_ManGraphListExtract( p, pOther );\n            pChanged.nEdges--;\n            Nwk_ManGraphListInsert( p, pOther );\n            pChanged.nEdges++;\n        } }\n        // remove the edge\n        Nwk_ManGraphVertexRemoveEdge( pChanged, pNext );\n        // add the changed vertex back\n        if pChanged.nEdges \u003e 0 {\n            Nwk_ManGraphListInsert( p, pChanged ); }\n    }\n    // add to the result\n    if pVertex.Id \u003c pNext.Id {\n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pVertex.Id] ); \n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pNext.Id] ); \n    \n    } else {\n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pNext.Id] ); \n        Vec_IntPush( p.vPairs, p.pMapId2Lut[pVertex.Id] ); \n    }\n//    Nwk_ManGraphCheckLists( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of entries in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListLength(p *Nwk_Grf_t, List int32) int32 {\n    var pThis *Nwk_Vrt_t;\n    var fVerbose int32;\n    var Counter int32;\n    // inlining of macro Nwk_ListForEachVertex\n    for  pThis = List? p.pVerts[List] : nil;  (pThis != nil);             pThis = pThis.iNext? p.pVerts[pThis.iNext] : nil  {\n        if (fVerbose != 0) \u0026\u0026 Counter \u003c 20 {\n            fmt.Printf(\"%d \", p.pVerts[pThis.pEdges[0]].nEdges); }\n        Counter++;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the adjacent vertex with the mininum number of edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListFindMinEdge(p *Nwk_Grf_t, pVert *Nwk_Vrt_t) *Nwk_Vrt_t {\n    var pThis *Nwk_Vrt_t;\n    var pMinCost *Nwk_Vrt_t = nil;\n    var k int32;\n    // inlining of macro Nwk_VertexForEachAdjacent\n    for  k = 0; (k \u003c pVert.nEdges) \u0026\u0026 (((pThis) = p.pVerts[pVert.pEdges[k]]), 1); k++  {\n        if pMinCost == nil || pMinCost.nEdges \u003e pThis.nEdges {\n            pMinCost = pThis; }\n    }\n    return pMinCost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds the best vertext in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphListFindMin(p *Nwk_Grf_t, List int32) *Nwk_Vrt_t {\n    var pThis *Nwk_Vrt_t;\n    var pMinCost *Nwk_Vrt_t = nil;\n    var k int32;\n    var Counter int32 = 10000;\n    var BestCost int32 = 1000000;\n    // inlining of macro Nwk_ListForEachVertex\n    for  pThis = List? p.pVerts[List] : nil;  (pThis != nil);             pThis = pThis.iNext? p.pVerts[pThis.iNext] : nil  {\n        for  k = 0; k \u003c pThis.nEdges; k++  {\n            if pMinCost == nil || BestCost \u003e p.pVerts[pThis.pEdges[k]].nEdges {\n                BestCost = p.pVerts[pThis.pEdges[k]].nEdges;\n                pMinCost = pThis;\n            }\n        }\n        if Counter--; Counter == 0 {\n            break; }\n    }\n    return pMinCost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves the problem by extracting one edge at a time.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGraphSolve(p *Nwk_Grf_t) {\n    var pVertex, pNext *Nwk_Vrt_t;\n    var i, j int32;\n    Nwk_ManGraphPrepare( p );\n    for {\n        // find the next vertex to extract\n        assert(p.pLists1[0] == 0, \"p.pLists1[0] == 0\");\n        for  i = 1; i \u003c= NWK_MAX_LIST; i++  {\n            if p.pLists1[i] {\n//                printf( \"%d \", i );\n//                printf( \"ListA = %2d. Length = %5d.\\n\", i, Nwk_ManGraphListLength(p,p-\u003epLists1[i]) );\n                pVertex = p.pVerts[ p.pLists1[i] ];\n                assert(pVertex.nEdges == 1, \"pVertex.nEdges == 1\");\n                pNext = p.pVerts[ pVertex.pEdges[0] ];\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        }\n        if i \u003c NWK_MAX_LIST + 1 {\n            continue; }\n        // find the next vertex to extract\n        assert(p.pLists2[0] == 0, \"p.pLists2[0] == 0\");\n        assert(p.pLists2[1] == 0, \"p.pLists2[1] == 0\");\n        for  j = 2; j \u003c= NWK_MAX_LIST; j++  {\n            if p.pLists2[j] {\n//                printf( \"***%d \", j );\n//                printf( \"ListB = %2d. Length = %5d.\\n\", j, Nwk_ManGraphListLength(p,p-\u003epLists2[j]) );\n                pVertex = Nwk_ManGraphListFindMin( p, p.pLists2[j] ); \n                assert(pVertex.nEdges == j || j == NWK_MAX_LIST, \"pVertex.nEdges == j || j == NWK_MAX_LIST\");\n                pNext = Nwk_ManGraphListFindMinEdge( p, pVertex );\n                Nwk_ManGraphUpdate( p, pVertex, pNext );\n                break;\n            }\n        }\n        if j == NWK_MAX_LIST + 1 {\n            break; }\n    }\n    Nwk_ManGraphSortPairs( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads graph from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManLutMergeReadGraph(pFileName string) *Nwk_Grf_t {\n    var p *Nwk_Grf_t;\n    var pFile *os.File;\n    var Buffer [100]byte;\n    var nNodes, nEdges, iNode1, iNode2 int32;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nNodes );\n    RetValue = fscanf( pFile, \"%s %d\", Buffer, \u0026nEdges );\n    p = Nwk_ManGraphAlloc( nNodes );\n    for  fscanf( pFile, \"%s %d %d\", Buffer, \u0026iNode1, \u0026iNode2 ) == 3  {\n        Nwk_ManGraphHashEdge( p, iNode1, iNode2 );\n    }\n    assert(p.nEdges == nEdges, \"p.nEdges == nEdges\");\n    _ = (pFile).Close();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves the graph coming from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManLutMergeGraphTest(pFileName string) int32 {\n    var nPairs int32;\n    var p *Nwk_Grf_t;\n    var clk abctime  = Abc_Clock();\n    p = Nwk_ManLutMergeReadGraph( pFileName );\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Reading\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    nPairs = Vec_IntSize(p.vPairs)/2;\n    Nwk_ManGraphReportMemoryUsage( p );\n    Nwk_ManGraphFree( p );\n    return nPairs;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the fanins of the node with the current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMarkFanins_rec(pLut *Nwk_Obj_t, nLevMin int32) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if !Nwk_ObjIsNode(pLut) {\n        return; }\n    if Nwk_ObjIsTravIdCurrent( pLut ) {\n        return; }\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if Nwk_ObjLevel(pLut) \u003c nLevMin {\n        return; }\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pNext) = (pLut).pFanio[i]); i++  {\n        Nwk_ManMarkFanins_rec( pNext, nLevMin );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the fanouts of the node with the current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMarkFanouts_rec(pLut *Nwk_Obj_t, nLevMax int32, nFanMax int32) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if !Nwk_ObjIsNode(pLut) {\n        return; }\n    if Nwk_ObjIsTravIdCurrent( pLut ) {\n        return; }\n    Nwk_ObjSetTravIdCurrent( pLut );\n    if Nwk_ObjLevel(pLut) \u003e nLevMax {\n        return; }\n    if Nwk_ObjFanoutNum(pLut) \u003e nFanMax {\n        return; }\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pLut).nFanouts)) \u0026\u0026 ((pNext) = (pLut).pFanio[(pLut).nFanins+i]); i++  {\n        Nwk_ManMarkFanouts_rec( pNext, nLevMax, nFanMax );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the circle of nodes around the given set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCollectCircle(vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, nFanMax int32) {\n    var pObj, pNext *Nwk_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vNext );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vStart, i)), 1); i++  {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n            if !Nwk_ObjIsNode(pNext) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pNext ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if !Nwk_ObjIsNode(pNext) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pNext ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pNext );\n            if Nwk_ObjFanoutNum(pNext) \u003e nFanMax {\n                continue; }\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the circle of nodes removes from the given one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCollectNonOverlapCands(pLut *Nwk_Obj_t, vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var vTemp *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vCands );\n    if pPars.nMaxSuppSize - Nwk_ObjFaninNum(pLut) \u003c= 1 {\n        return; }\n\n    // collect nodes removed by this distance\n    assert(pPars.nMaxDistance \u003e 0, \"pPars.nMaxDistance \u003e 0\");\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Nwk_ManIncrementTravId( pLut.pMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    for  i = 1; i \u003c= pPars.nMaxDistance; i++  {\n        Nwk_ManCollectCircle( vStart, vNext, pPars.nMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vStart, k)), 1); k++  {\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n\n    // mark the TFI/TFO nodes\n    Nwk_ManIncrementTravId( pLut.pMan );\n    if pPars.fUseTfiTfo {\n        Nwk_ObjSetTravIdCurrent( pLut );\n    } else {\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanins_rec( pLut, Nwk_ObjLevel(pLut) - pPars.nMaxDistance );\n        Nwk_ObjSetTravIdPrevious( pLut );\n        Nwk_ManMarkFanouts_rec( pLut, Nwk_ObjLevel(pLut) + pPars.nMaxDistance, pPars.nMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vCands, i)), 1); i++  {\n        if Nwk_ObjIsTravIdCurrent(pObj) {\n            continue; }\n        if Nwk_ObjFaninNum(pLut) + Nwk_ObjFaninNum(pObj) \u003e pPars.nMaxSuppSize {\n            continue; }\n        if Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n             Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n             continue; }\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count the total number of fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCountTotalFanins(pLut *Nwk_Obj_t, pCand *Nwk_Obj_t) int32 {\n    var pFanin *Nwk_Obj_t;\n    var i int32;\n    var nCounter int32 = Nwk_ObjFaninNum(pLut);\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pCand).nFanins)) \u0026\u0026 ((pFanin) = (pCand).pFanio[i]); i++  {\n        nCounter += !pFanin.MarkC;\n    }\n    return nCounter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects overlapping candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCollectOverlapCands(pLut *Nwk_Obj_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var pFanin, pObj *Nwk_Obj_t;\n    var i, k int32;\n    // mark fanins of pLut\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        pFanin.MarkC = 1;\n    }\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Nwk_ManIncrementTravId( pLut.pMan );\n    Nwk_ObjSetTravIdCurrent( pLut );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        if !Nwk_ObjIsNode(pFanin) {\n            continue; }\n        if Nwk_ObjFanoutNum(pFanin) \u003e pPars.nMaxFanout {\n            continue; }\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pFanin).nFanouts)) \u0026\u0026 ((pObj) = (pFanin).pFanio[(pFanin).nFanins+k]); k++  {\n            if !Nwk_ObjIsNode(pObj) {\n                continue; }\n            if Nwk_ObjIsTravIdCurrent( pObj ) {\n                continue; }\n            Nwk_ObjSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if Nwk_ObjLevel(pLut) - Nwk_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n                 Nwk_ObjLevel(pObj) - Nwk_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n                 continue; }\n            // check the total number of fanins of the node\n            if Nwk_ManCountTotalFanins(pLut, pObj) \u003e pPars.nMaxSuppSize {\n                continue; }\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pLut).nFanins)) \u0026\u0026 ((pFanin) = (pLut).pFanio[i]); i++  {\n        pFanin.MarkC = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs LUT merging with parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManLutMerge(pNtk *Nwk_Man_t, pParsInit any) *Vec_Int_t {\n    var pPars *Nwk_LMPars_t  = (Nwk_LMPars_t *)pParsInit;\n    var p *Nwk_Grf_t;\n    var vResult *Vec_Int_t;\n    var vStart, vNext, vCands1, vCands2 *Vec_Ptr_t;\n    var pLut, pCand *Nwk_Obj_t;\n    var i, k, nVertsMax, nCands int32;\n    var clk abctime  = Abc_Clock();\n    // count the number of vertices\n    nVertsMax = 0;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pLut) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pLut) == nil || !Nwk_ObjIsNode(pLut) {} else {\n        nVertsMax += int32((Nwk_ObjFaninNum(pLut) \u003c= pPars.nMaxLutSize)); }\n    }\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pLut) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pLut) == nil || !Nwk_ObjIsNode(pLut) {} else {\n        if Nwk_ObjFaninNum(pLut) \u003e pPars.nMaxLutSize {\n            continue; }\n        Nwk_ManCollectOverlapCands( pLut, vCands1, pPars );\n        if pPars.fUseDiffSupp {\n            Nwk_ManCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars ); }\n        if Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 {\n            continue; }\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands1)) \u0026\u0026 (((pCand) = (Nwk_Obj_t *)Vec_PtrEntry(vCands1, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands2)) \u0026\u0026 (((pCand) = (Nwk_Obj_t *)Vec_PtrEntry(vCands2, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Nwk_ObjId(pLut), Nwk_ObjId(pCand) );\n        }\n        // print statistics about this node\n        if pPars.fVeryVerbose {\n        fmt.Printf(\"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\", Nwk_ObjId(pLut), Nwk_ObjFaninNum(pLut), Nwk_ObjFaninNum(pLut), Vec_PtrSize(vCands1), Vec_PtrSize(vCands2)); }\n    }\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if pPars.fVerbose {\n        fmt.Printf(\"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Deriving graph\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    // solve the graph problem\n    clk = Abc_Clock();\n    Nwk_ManGraphSolve( p );\n    if pPars.fVerbose {\n        fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p.vPairs; p.vPairs = nil;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

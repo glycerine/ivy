@@ -1,0 +1,168 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c",
+  "SHA256": "3638ff24f84a84f009f1fb2c25336c72ce09cbfa27e9d891f461369e2000ff55",
+  "Library": [
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 347,
+        "Column": 5,
+        "ByteOffset": 9992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort((char *) A1, (size_t)A.count, sizeof(pset), compare);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::mechanical::sizeof::10036",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9954,
+      "End": 9960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::pointer-cast::10005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9923,
+      "End": 9931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::6499",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6499,
+      "End": 6506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::6541",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6541,
+      "End": 6548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::6628",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEsetp_implies",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6628,
+      "End": 6682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::7341",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7341,
+      "End": 7348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::7383",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7383,
+      "End": 7390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::7470",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEsetp_implies",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7470,
+      "End": 7524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::8985",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8985,
+      "End": 8992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::8995",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8995,
+      "End": 9002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::9016",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEsetp_implies",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9016,
+      "End": 9070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::9682",
+      "Category": "macro-inline-review",
+      "Symbol": "PUTSIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9682,
+      "End": 9704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::10732",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10732,
+      "End": 10753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::11272",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11272,
+      "End": 11293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/contain.c::macro-inline::12405",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12405,
+      "End": 12427
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    contain.c -- set containment routines\n\n    These are complex routines for performing containment over a\n    family of sets, but they have the advantage of being much faster\n    than a straightforward n*n routine.\n\n    First the cubes are sorted by size, and as a secondary key they are\n    sorted so that if two cubes are equal they end up adjacent.  We can\n    than quickly remove equal cubes from further consideration by\n    comparing each cube to its neighbor.  Finally, because the cubes\n    are sorted by size, we need only check cubes which are larger (or\n    smaller) than a given cube for containment.\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*\n    sf_contain -- perform containment on a set family (delete sets which\n    are contained by some larger set in the family).  No assumptions are\n    made about A, and the result will be returned in decreasing order of\n    set size.\n*/\npset_family sf_contain(A)\nINOUT pset_family A;            /* disposes of A */\n{\n    int cnt;\n    pset *A1;\n    pset_family R;\n\n    A1 = sf_sort(A, descend);           /* sort into descending order */\n    cnt = rm_equal(A1, descend);        /* remove duplicates */\n    cnt = rm_contain(A1);               /* remove contained sets */\n    R = sf_unlist(A1, cnt, A.sf_size); /* recreate the set family */\n    sf_free(A);\n    return R;\n}\n\n\n/*\n    sf_rev_contain -- perform containment on a set family (delete sets which\n    contain some smaller set in the family).  No assumptions are made about\n    A, and the result will be returned in increasing order of set size\n*/\npset_family sf_rev_contain(A)\nINOUT pset_family A;            /* disposes of A */\n{\n    int cnt;\n    pset *A1;\n    pset_family R;\n\n    A1 = sf_sort(A, ascend);            /* sort into ascending order */\n    cnt = rm_equal(A1, ascend);         /* remove duplicates */\n    cnt = rm_rev_contain(A1);           /* remove containing sets */\n    R = sf_unlist(A1, cnt, A.sf_size); /* recreate the set family */\n    sf_free(A);\n    return R;\n}\n\n\n/*\n    sf_ind_contain -- perform containment on a set family (delete sets which\n    are contained by some larger set in the family).  No assumptions are\n    made about A, and the result will be returned in decreasing order of\n    set size.  Also maintains a set of row_indices to track which rows\n    disappear and how the rows end up permuted.\n*/\npset_family sf_ind_contain(A, row_indices)\nINOUT pset_family A;            /* disposes of A */\nINOUT int *row_indices;         /* updated with the new values */\n{\n    int cnt;\n    pset *A1;\n    pset_family R;\n\n    A1 = sf_sort(A, descend);           /* sort into descending order */\n    cnt = rm_equal(A1, descend);        /* remove duplicates */\n    cnt = rm_contain(A1);               /* remove contained sets */\n    R = sf_ind_unlist(A1, cnt, A.sf_size, row_indices, A.data);\n    sf_free(A);\n    return R;\n}\n\n\n/* sf_dupl -- delete duplicate sets in a set family */\npset_family sf_dupl(A)\nINOUT pset_family A;            /* disposes of A */\n{\n    register int cnt;\n    register pset *A1;\n    pset_family R;\n\n    A1 = sf_sort(A, descend);           /* sort the set family */\n    cnt = rm_equal(A1, descend);        /* remove duplicates */\n    R = sf_unlist(A1, cnt, A.sf_size); /* recreate the set family */\n    sf_free(A);\n    return R;\n}\n\n\n/*\n    sf_union -- form the contained union of two set families (delete\n    sets which are contained by some larger set in the family).  A and\n    B are assumed already sorted in decreasing order of set size (and\n    the SIZE field is assumed to contain the set size), and the result\n    will be returned sorted likewise.\n*/\npset_family sf_union(A, B)\nINOUT pset_family A, B;         /* disposes of A and B */\n{\n    int cnt;\n    pset_family R;\n    pset *A1 = sf_list(A), *B1 = sf_list(B), *E1;\n\n    E1 = ALLOC(pset, MAX(A.count, B.count) + 1);\n    cnt = rm2_equal(A1, B1, E1, descend);\n    cnt += rm2_contain(A1, B1) + rm2_contain(B1, A1);\n    R = sf_merge(A1, B1, E1, cnt, A.sf_size);\n    sf_free(A); sf_free(B);\n    return R;\n}\n\n\n/*\n    dist_merge -- consider all sets to be \"or\"-ed with \"mask\" and then\n    delete duplicates from the set family.\n*/\npset_family dist_merge(A, mask)\nINOUT pset_family A;            /* disposes of A */\nIN pset mask;                   /* defines variables to mask out */\n{\n    pset *A1;\n    int cnt;\n    pset_family R;\n\n    (void) set_copy(cube.temp[0], mask);\n    A1 = sf_sort(A, d1_order);\n    cnt = d1_rm_equal(A1, d1_order);\n    R = sf_unlist(A1, cnt, A.sf_size);\n    sf_free(A);\n    return R;\n}\n\n\n/*\n    d1merge -- perform an efficient distance-1 merge of cubes of A\n*/\npset_family d1merge(A, var)\nINOUT pset_family A;            /* disposes of A */\nIN int var;\n{\n    return dist_merge(A, cube.var_mask[var]);\n}\n\n\n\n/* d1_rm_equal -- distance-1 merge (merge cubes which are equal under a mask) */\nint d1_rm_equal(A1, compare)\nregister pset *A1;                /* array of set pointers */\nint (*compare)();                /* comparison function */\n{\n    register int i, j, dest;\n\n    dest = 0;\n    if A1[0] != (pcube) NULL {\n    for(i = 0, j = 1; A1[j] != (pcube) NULL; j++)\n        if (*compare)(\u0026A1[i], \u0026A1[j]) == 0 {\n        /* if sets are equal (under the mask) merge them */\n        (void) set_or(A1[i], A1[i], A1[j]);\n        } else {\n        /* sets are unequal, so save the set i */\n        A1[dest++] = A1[i];\n        i = j;\n        }\n    A1[dest++] = A1[i];\n    }\n    A1[dest] = (pcube) NULL;\n    return dest;\n}\n\n\n/* rm_equal -- scan a sorted array of set pointers for duplicate sets */\nint rm_equal(A1, compare)\nINOUT pset *A1;                 /* updated in place */\nIN int (*compare)();\n{\n    register pset *p, *pdest = A1;\n\n    if *A1 != NULL {                  /* If more than one set */\n    for(p = A1+1; *p != NULL; p++)\n        if ((*compare)(p, p-1) != 0)\n        *pdest++ = *(p-1);\n    *pdest++ = *(p-1);\n    *pdest = NULL;\n    }\n    return pdest - A1;\n}\n\n\n/* rm_contain -- perform containment over a sorted array of set pointers */\nint rm_contain(A1)\nINOUT pset *A1;                 /* updated in place */\n{\n    register pset *pa, *pb;\n    register pset *pcheck = NULL; // Suppress \"might be used uninitialized\"\n    register pset a, b;\n    pset *pdest = A1;\n    int last_size = -1;\n\n    /* Loop for all cubes of A1 */\n    for pa = A1; (a = *pa++) != NULL;  {\n    /* Update the check pointer if the size has changed */\n    if (SIZE(a) != last_size)\n        last_size = SIZE(a), pcheck = pdest;\n    for pb = A1; pb != pcheck;  {\n        b = *pb++;\n        INLINEsetp_implies(a, b, /* when_false =\u003e */ continue);\n        goto lnext1;\n    }\n    /* set a was not contained by some larger set, so save it */\n    *pdest++ = a;\n    lnext1: ;\n    }\n\n    *pdest = NULL;\n    return pdest - A1;\n}\n\n\n/* rm_rev_contain -- perform rcontainment over a sorted array of set pointers */\nint rm_rev_contain(A1)\nINOUT pset *A1;                 /* updated in place */\n{\n    register pset *pa, *pb;\n    register pset *pcheck = NULL; // Suppress \"might be used uninitialized\"\n    register pset a, b;\n    pset *pdest = A1;\n    int last_size = -1;\n\n    /* Loop for all cubes of A1 */\n    for pa = A1; (a = *pa++) != NULL;  {\n    /* Update the check pointer if the size has changed */\n    if (SIZE(a) != last_size)\n        last_size = SIZE(a), pcheck = pdest;\n    for pb = A1; pb != pcheck;  {\n        b = *pb++;\n        INLINEsetp_implies(b, a, /* when_false =\u003e */ continue);\n        goto lnext1;\n    }\n    /* the set a did not contain some smaller set, so save it */\n    *pdest++ = a;\n    lnext1: ;\n    }\n\n    *pdest = NULL;\n    return pdest - A1;\n}\n\n\n/* rm2_equal -- check two sorted arrays of set pointers for equal cubes */\nint rm2_equal(A1, B1, E1, compare)\nINOUT register pset *A1, *B1;           /* updated in place */\nOUT pset *E1;\nIN int (*compare)();\n{\n    register pset *pda = A1, *pdb = B1, *pde = E1;\n\n    /* Walk through the arrays advancing pointer to larger cube */\n    for(; *A1 != NULL \u0026\u0026 *B1 != NULL; )\n    switch (*compare)(A1, B1) {\n        case -1:    /* \"a\" comes before \"b\" */\n        *pda++ = *A1++; break;\n        case 0:     /* equal cubes */\n        *pde++ = *A1++; B1++; break;\n        case 1:     /* \"a\" is to follow \"b\" */\n        *pdb++ = *B1++; break;\n    }\n\n    /* Finish moving down the pointers of A and B */\n    while (*A1 != NULL)\n    *pda++ = *A1++;\n    while (*B1 != NULL)\n    *pdb++ = *B1++;\n    *pda = *pdb = *pde = NULL;\n\n    return pde - E1;\n}\n\n\n/* rm2_contain -- perform containment between two arrays of set pointers */\nint rm2_contain(A1, B1)\nINOUT pset *A1;                 /* updated in place */\nIN pset *B1;                    /* unchanged */\n{\n    register pset *pa, *pb, a, b, *pdest = A1;\n\n    /* for each set in the first array ... */\n    for pa = A1; (a = *pa++) != NULL;  {\n    /* for each set in the second array which is larger ... */\n    for pb = B1; (b = *pb++) != NULL \u0026\u0026 SIZE(b) \u003e SIZE(a);  {\n        INLINEsetp_implies(a, b, /* when_false =\u003e */ continue);\n        /* set was contained in some set of B, so don't save pointer */\n        goto lnext1;\n    }\n    /* set wasn't contained in any set of B, so save the pointer */\n    *pdest++ = a;\n    lnext1: ;\n    }\n\n    *pdest = NULL;                      /* sentinel */\n    return pdest - A1;                  /* # elements in A1 */\n}\n\n\n\n/* sf_sort -- sort the sets of A */\npset *sf_sort(A, compare)\nIN pset_family A;\nIN int (*compare)();\n{\n    register pset p, last, *pdest, *A1;\n\n    /* Create a single array pointing to each cube of A */\n    pdest = A1 = ALLOC(pset, A.count + 1);\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    PUTSIZE(p, set_ord(p));         /* compute the set size */\n    *pdest++ = p;                   /* save the pointer */\n    }\n    *pdest = NULL;                      /* Sentinel -- never seen by sort */\n\n    /* Sort cubes by size */\n    qsort((char *) A1, (size_t)A.count, sizeof(pset), compare);\n    return A1;\n}\n\n\n/* sf_list -- make a list of pointers to the sets in a set family */\npset *sf_list(A)\nIN register pset_family A;\n{\n    register pset p, last, *pdest, *A1;\n\n    /* Create a single array pointing to each cube of A */\n    pdest = A1 = ALLOC(pset, A.count + 1);\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    *pdest++ = p;                   /* save the pointer */\n    *pdest = NULL;                      /* Sentinel */\n    return A1;\n}\n\n\n/* sf_unlist -- make a set family out of a list of pointers to sets */\npset_family sf_unlist(A1, totcnt, size)\nIN pset *A1;\nIN int totcnt, size;\n{\n    register pset pr, p, *pa;\n    pset_family R = sf_new(totcnt, size);\n\n    R.count = totcnt;\n    for(pr = R.data, pa = A1; (p = *pa++) != NULL; pr += R.wsize)\n    INLINEset_copy(pr, p);\n    FREE(A1);\n    return R;\n}\n\n\n/* sf_ind_unlist -- make a set family out of a list of pointers to sets */\npset_family sf_ind_unlist(A1, totcnt, size, row_indices, pfirst)\nIN pset *A1;\nIN int totcnt, size;\nINOUT int *row_indices;\nIN register pset pfirst;\n{\n    register pset pr, p, *pa;\n    register int i, *new_row_indices;\n    pset_family R = sf_new(totcnt, size);\n\n    R.count = totcnt;\n    new_row_indices = ALLOC(int, totcnt);\n    for pr, pa, i = R.data, A1, 0; (p = *pa++) != NULL; pr += R.wsize, i++ {\n    INLINEset_copy(pr, p);\n    new_row_indices[i] = row_indices[(p - pfirst)/R.wsize];\n    }\n    for(i = 0; i \u003c totcnt; i++)\n    row_indices[i] = new_row_indices[i];\n    FREE(new_row_indices);\n    FREE(A1);\n    return R;\n}\n\n\n/* sf_merge -- merge three sorted lists of set pointers */\npset_family sf_merge(A1, B1, E1, totcnt, size)\nINOUT pset *A1, *B1, *E1;               /* will be disposed of */\nIN int totcnt, size;\n{\n    register pset pr, ps, *pmin, *pmid, *pmax;\n    pset_family R;\n    pset *temp[3], *swap;\n    int i, j, n;\n\n    /* Allocate the result set_family */\n    R = sf_new(totcnt, size);\n    R.count = totcnt;\n    pr = R.data;\n\n    /* Quick bubble sort to order the top member of the three arrays */\n    n = 3;  temp[0] = A1;  temp[1] = B1;  temp[2] = E1;\n    for(i = 0; i \u003c n-1; i++)\n    for(j = i+1; j \u003c n; j++)\n        if desc1(*temp[i], *temp[j]) \u003e 0 {\n        swap = temp[j];\n        temp[j] = temp[i];\n        temp[i] = swap;\n        }\n    pmin = temp[0];  pmid = temp[1];  pmax = temp[2];\n\n    /* Save the minimum element, then update pmin, pmid, pmax */\n    while (*pmin != (pset) NULL) {\n    ps = *pmin++;\n    INLINEset_copy(pr, ps);\n    pr += R.wsize;\n    if desc1(*pmin, *pmax) \u003e 0 {\n        swap = pmax; pmax = pmin; pmin = pmid; pmid = swap;\n    } else if desc1(*pmin, *pmid) \u003e 0 {\n        swap = pmin; pmin = pmid; pmid = swap;\n    }\n    }\n\n    FREE(A1);\n    FREE(B1);\n    FREE(E1);\n    return R;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

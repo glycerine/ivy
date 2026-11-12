@@ -1,0 +1,532 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c",
+  "SHA256": "1034945660379b08fe9cd85bd7f153e29d6b56559a206f75bf8541f1c07303d7",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 67,
+        "Column": 76,
+        "ByteOffset": 2404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fraig_MemFixed_t *) malloc(sizeof(Fraig_MemFixed_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fraig_MemFixed_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 84,
+        "Column": 80,
+        "ByteOffset": 2933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pChunks       = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 3604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\","
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 113,
+        "Column": 72,
+        "ByteOffset": 3906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 115,
+        "Column": 65,
+        "ByteOffset": 4033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 116,
+        "Column": 57,
+        "ByteOffset": 4140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pEntriesFree == nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 41,
+        "ByteOffset": 4918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 41,
+        "ByteOffset": 5053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 81,
+        "ByteOffset": 5210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pEntriesFree = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 72,
+        "ByteOffset": 7229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_MemFixedStart",
+      "Start": 2193,
+      "End": 2858,
+      "BodyStart": 2250,
+      "Original": "Fraig_MemFixed_t * Fraig_MemFixedStart( int nEntrySize )\n{\n    Fraig_MemFixed_t * p;\n\n    p = ABC_ALLOC( Fraig_MemFixed_t, 1 );\n    memset( p, 0, sizeof(Fraig_MemFixed_t) );\n\n    p-\u003enEntrySize    = nEntrySize;\n    p-\u003enEntriesAlloc = 0;\n    p-\u003enEntriesUsed  = 0;\n    p-\u003epEntriesFree  = NULL;\n\n    if ( nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) )\n        p-\u003enChunkSize = (1 \u003c\u003c 10);\n    else\n        p-\u003enChunkSize = (1\u003c\u003c16) / nEntrySize;\n    if ( p-\u003enChunkSize \u003c 8 )\n        p-\u003enChunkSize = 8;\n\n    p-\u003enChunksAlloc  = 64;\n    p-\u003enChunks       = 0;\n    p-\u003epChunks       = ABC_ALLOC( char *, p-\u003enChunksAlloc );\n\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enMemoryAlloc  = 0;\n    return p;\n}",
+      "Draft": "func Fraig_MemFixedStart(nEntrySize int32) *Fraig_MemFixed_t {\n    var p *Fraig_MemFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Fraig_MemFixed_t *) malloc(sizeof(Fraig_MemFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fraig_MemFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    if nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) {\n        p.nChunkSize = (1 \u003c\u003c 10);\n    } else {\n        p.nChunkSize = (1\u003c\u003c16) / nEntrySize; }\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}"
+    },
+    {
+      "Name": "Fraig_MemFixedStop",
+      "Start": 3128,
+      "End": 3738,
+      "BodyStart": 3190,
+      "Original": "void Fraig_MemFixedStop( Fraig_MemFixed_t * p, int fVerbose )\n{\n    int i;\n    if ( p == NULL )\n        return;\n    if ( fVerbose )\n    {\n        printf( \"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\",\n            p-\u003enEntrySize, p-\u003enChunkSize, p-\u003enChunks );\n        printf( \"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\",\n            p-\u003enEntriesUsed, p-\u003enEntriesMax, p-\u003enEntrySize * p-\u003enEntriesUsed, p-\u003enMemoryAlloc );\n    }\n    for ( i = 0; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    ABC_FREE( p-\u003epChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fraig_MemFixedStop(p *Fraig_MemFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fraig_MemFixedEntryFetch",
+      "Start": 4017,
+      "End": 5392,
+      "BodyStart": 4073,
+      "Original": "char * Fraig_MemFixedEntryFetch( Fraig_MemFixed_t * p )\n{\n    char * pTemp;\n    int i;\n\n    // check if there are still free entries\n    if ( p-\u003enEntriesUsed == p-\u003enEntriesAlloc )\n    { // need to allocate more entries\n        assert( p-\u003epEntriesFree == NULL );\n        if ( p-\u003enChunks == p-\u003enChunksAlloc )\n        {\n            p-\u003enChunksAlloc *= 2;\n            p-\u003epChunks = ABC_REALLOC( char *, p-\u003epChunks, p-\u003enChunksAlloc ); \n        }\n        p-\u003epEntriesFree = ABC_ALLOC( char, p-\u003enEntrySize * p-\u003enChunkSize );\n        p-\u003enMemoryAlloc += p-\u003enEntrySize * p-\u003enChunkSize;\n        // transform these entries into a linked list\n        pTemp = p-\u003epEntriesFree;\n        for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n        {\n            *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n            pTemp += p-\u003enEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = NULL;\n        // add the chunk to the chunk storage\n        p-\u003epChunks[ p-\u003enChunks++ ] = p-\u003epEntriesFree;\n        // add to the number of entries allocated\n        p-\u003enEntriesAlloc += p-\u003enChunkSize;\n    }\n    // incrememt the counter of used entries\n    p-\u003enEntriesUsed++;\n    if ( p-\u003enEntriesMax \u003c p-\u003enEntriesUsed )\n        p-\u003enEntriesMax = p-\u003enEntriesUsed;\n    // return the first entry in the free entry list\n    pTemp = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = *((char **)pTemp);\n    return pTemp;\n}",
+      "Draft": "func Fraig_MemFixedEntryFetch(p *Fraig_MemFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Fraig_MemFixedEntryRecycle",
+      "Start": 5670,
+      "End": 5940,
+      "BodyStart": 5741,
+      "Original": "void Fraig_MemFixedEntryRecycle( Fraig_MemFixed_t * p, char * pEntry )\n{\n    // decrement the counter of used entries\n    p-\u003enEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p-\u003epEntriesFree;\n    p-\u003epEntriesFree = pEntry;\n}",
+      "Draft": "func Fraig_MemFixedEntryRecycle(p *Fraig_MemFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}"
+    },
+    {
+      "Name": "Fraig_MemFixedRestart",
+      "Start": 6275,
+      "End": 7019,
+      "BodyStart": 6326,
+      "Original": "void Fraig_MemFixedRestart( Fraig_MemFixed_t * p )\n{\n    int i;\n    char * pTemp;\n\n    // deallocate all chunks except the first one\n    for ( i = 1; i \u003c p-\u003enChunks; i++ )\n        ABC_FREE( p-\u003epChunks[i] );\n    p-\u003enChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p-\u003epChunks[0];\n    for ( i = 1; i \u003c p-\u003enChunkSize; i++ )\n    {\n        *((char **)pTemp) = pTemp + p-\u003enEntrySize;\n        pTemp += p-\u003enEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = NULL;\n    // set the free entry list\n    p-\u003epEntriesFree  = p-\u003epChunks[0];\n    // set the correct statistics\n    p-\u003enMemoryAlloc  = p-\u003enEntrySize * p-\u003enChunkSize;\n    p-\u003enMemoryUsed   = 0;\n    p-\u003enEntriesAlloc = p-\u003enChunkSize;\n    p-\u003enEntriesUsed  = 0;\n}",
+      "Draft": "func Fraig_MemFixedRestart(p *Fraig_MemFixed_t) {\n    var i int32;\n    var pTemp string;\n\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}"
+    },
+    {
+      "Name": "Fraig_MemFixedReadMemUsage",
+      "Start": 7280,
+      "End": 7366,
+      "BodyStart": 7335,
+      "Original": "int Fraig_MemFixedReadMemUsage( Fraig_MemFixed_t * p )\n{\n    return p-\u003enMemoryAlloc;\n}",
+      "Draft": "func Fraig_MemFixedReadMemUsage(p *Fraig_MemFixed_t) int32 {\n    return p.nMemoryAlloc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::struct::Fraig_MemFixed_t_",
+      "Category": "struct-review",
+      "Symbol": "Fraig_MemFixed_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 795,
+      "End": 1651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::2361",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2287,
+      "End": 2287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::2421",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2339,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::2898",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2752,
+      "End": 2752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::4910",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::4985",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::mechanical::sizeof::5131",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4482,
+      "End": 4482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::2333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2287,
+      "End": 2287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::2880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2752,
+      "End": 2752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::2904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2752,
+      "End": 2752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::3886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3663,
+      "End": 3663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3694,
+      "End": 3694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3722,
+      "End": 3722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4869",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4916",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::4991",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4393,
+      "End": 4393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::5115",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4482,
+      "End": 4482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::5404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4747,
+      "End": 4756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::5530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4873,
+      "End": 4882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::6013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5356,
+      "End": 5365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::6530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5873,
+      "End": 5882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::7181",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6455,
+      "End": 6455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::7390",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6637,
+      "End": 6646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::pointer-cast::7500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6747,
+      "End": 6756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedStart",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2193,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::ternary::Fraig_MemFixedStop",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_MemFixedStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3128,
+      "End": 3738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedStop",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3128,
+      "End": 3738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedEntryFetch",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedEntryFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4017,
+      "End": 5392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedEntryRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedEntryRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5670,
+      "End": 5940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::ternary::Fraig_MemFixedRestart",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_MemFixedRestart",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6275,
+      "End": 7019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedRestart",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6275,
+      "End": 7019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::Fraig_MemFixedReadMemUsage",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_MemFixedReadMemUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7280,
+      "End": 7366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigMem.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7613
+    }
+  ],
+  "Draft": "package fraig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fraigMem.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Fixed-size-entry memory manager for the FRAIG package.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigMem.c,v 1.4 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Fraig_MemFixed_t_ struct {\n    // information about individual entries\n    nEntrySize           int32;    // the size of one entry\n    nEntriesAlloc           int32; // the total number of entries allocated\n    nEntriesUsed           int32;  // the number of entries in use\n    nEntriesMax           int32;   // the max number of entries in use\n    pEntriesFree         string;  // the linked list of free entries\n\n    // this is where the memory is stored\n    nChunkSize           int32;    // the size of one chunk\n    nChunksAlloc           int32;  // the maximum number of memory chunks \n    nChunks           int32;       // the current number of memory chunks \n    pChunks        *string;       // the allocated memory\n\n    // statistics\n    nMemoryUsed           int32;   // memory used in the allocated entries\n    nMemoryAlloc           int32;  // memory allocated\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the internal memory manager.]\n\n  Description [Can only work with entry size at least 4 byte long.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedStart(nEntrySize int32) *Fraig_MemFixed_t {\n    var p *Fraig_MemFixed_t;\n\n    // inlining of macro ABC_ALLOC\n    p = ((Fraig_MemFixed_t *) malloc(sizeof(Fraig_MemFixed_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fraig_MemFixed_t) );\n\n    p.nEntrySize    = nEntrySize;\n    p.nEntriesAlloc = 0;\n    p.nEntriesUsed  = 0;\n    p.pEntriesFree  = nil;\n\n    if nEntrySize * (1 \u003c\u003c 10) \u003c (1\u003c\u003c16) {\n        p.nChunkSize = (1 \u003c\u003c 10);\n    } else {\n        p.nChunkSize = (1\u003c\u003c16) / nEntrySize; }\n    if p.nChunkSize \u003c 8 {\n        p.nChunkSize = 8; }\n\n    p.nChunksAlloc  = 64;\n    p.nChunks       = 0;\n    // inlining of macro ABC_ALLOC\n    p.pChunks       = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n\n    p.nMemoryUsed   = 0;\n    p.nMemoryAlloc  = 0;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the internal memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedStop(p *Fraig_MemFixed_t, fVerbose int32) {\n    var i int32;\n    if p == nil {\n        return; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fixed memory manager: Entry = %5d. Chunk = %5d. Chunks used = %5d.\\n\", p.nEntrySize, p.nChunkSize, p.nChunks);\n        fmt.Printf(\"   Entries used = %8d. Entries peak = %8d. Memory used = %8d. Memory alloc = %8d.\\n\", p.nEntriesUsed, p.nEntriesMax, p.nEntrySize * p.nEntriesUsed, p.nMemoryAlloc);\n    }\n    for  i = 0; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.pChunks) ? (free((char *) (p.pChunks)), (p.pChunks) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts one entry from the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedEntryFetch(p *Fraig_MemFixed_t) string {\n    var pTemp string;\n    var i int32;\n\n    // check if there are still free entries\n    if p.nEntriesUsed == p.nEntriesAlloc { // need to allocate more entries\n        assert(p.pEntriesFree == nil, \"p.pEntriesFree == nil\");\n        if p.nChunks == p.nChunksAlloc {\n            p.nChunksAlloc *= 2;\n            // inlining of macro ABC_REALLOC\n            \n            if p.pChunks {\n                p.pChunks = ((char * *) realloc((char *)(p.pChunks), sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } else {\n                p.pChunks = ((char * *) malloc(sizeof(char *) * (size_t)(p.nChunksAlloc)));\n            } \n        }\n        // inlining of macro ABC_ALLOC\n        p.pEntriesFree = ((char *) malloc(sizeof(char) * (size_t)(p.nEntrySize * p.nChunkSize)));\n        p.nMemoryAlloc += p.nEntrySize * p.nChunkSize;\n        // transform these entries into a linked list\n        pTemp = p.pEntriesFree;\n        for  i = 1; i \u003c p.nChunkSize; i++  {\n            *((char **)pTemp) = pTemp + p.nEntrySize;\n            pTemp += p.nEntrySize;\n        }\n        // set the last link\n        *((char **)pTemp) = nil;\n        // add the chunk to the chunk storage\n        p.pChunks[ p.nChunks++ ] = p.pEntriesFree;\n        // add to the number of entries allocated\n        p.nEntriesAlloc += p.nChunkSize;\n    }\n    // incrememt the counter of used entries\n    p.nEntriesUsed++;\n    if p.nEntriesMax \u003c p.nEntriesUsed {\n        p.nEntriesMax = p.nEntriesUsed; }\n    // return the first entry in the free entry list\n    pTemp = p.pEntriesFree;\n    p.pEntriesFree = *((char **)pTemp);\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one entry into the memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedEntryRecycle(p *Fraig_MemFixed_t, pEntry string) {\n    // decrement the counter of used entries\n    p.nEntriesUsed--;\n    // add the entry to the linked list of free entries\n    *((char **)pEntry) = p.pEntriesFree;\n    p.pEntriesFree = pEntry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees all associated memory and resets the manager.]\n\n  Description [Relocates all the memory except the first chunk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedRestart(p *Fraig_MemFixed_t) {\n    var i int32;\n    var pTemp string;\n\n    // deallocate all chunks except the first one\n    for  i = 1; i \u003c p.nChunks; i++  {\n        // inlining of macro ABC_FREE\n        ((p.pChunks[i]) ? (free((char *) (p.pChunks[i])), (p.pChunks[i]) = 0) : 0);\n    }\n    p.nChunks = 1;\n    // transform these entries into a linked list\n    pTemp = p.pChunks[0];\n    for  i = 1; i \u003c p.nChunkSize; i++  {\n        *((char **)pTemp) = pTemp + p.nEntrySize;\n        pTemp += p.nEntrySize;\n    }\n    // set the last link\n    *((char **)pTemp) = nil;\n    // set the free entry list\n    p.pEntriesFree  = p.pChunks[0];\n    // set the correct statistics\n    p.nMemoryAlloc  = p.nEntrySize * p.nChunkSize;\n    p.nMemoryUsed   = 0;\n    p.nEntriesAlloc = p.nChunkSize;\n    p.nEntriesUsed  = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports the memory usage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_MemFixedReadMemUsage(p *Fraig_MemFixed_t) int32 {\n    return p.nMemoryAlloc;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1080 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c",
+  "SHA256": "f32261d6461e00366627ae608d6c93f73cfd0723747cca8a4bf71c610411d79b",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 81,
+        "ByteOffset": 1993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pNodes *int32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nSize+1), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 62,
+        "ByteOffset": 3062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pNodes) ? (free((char *) (pNodes)), (pNodes) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 18,
+        "ByteOffset": 6757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 9,
+        "ByteOffset": 6862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", Box[y][x] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 6905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\\n=================================\\n\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 18,
+        "ByteOffset": 7893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 7998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", Box[y][x] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 8041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\\n=================================\\n\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 289,
+        "Column": 88,
+        "ByteOffset": 9300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pCache **float64  = /*__starting_point_inline_macro:ABC_ALLOC__*/((double * *) malloc(sizeof(double *) * (size_t)(Vec_WecSize(vNodes))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 292,
+        "Column": 78,
+        "ByteOffset": 9634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCache[i] = /*__starting_point_inline_macro:ABC_ALLOC__*/((double *) malloc(sizeof(double) * (size_t)(Vec_IntSize(vLevel))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 299,
+        "Column": 69,
+        "ByteOffset": 9986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 301,
+        "Column": 62,
+        "ByteOffset": 10104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 345,
+        "Column": 70,
+        "ByteOffset": 11675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCache = /*__starting_point_inline_macro:ABC_ALLOC__*/((int * *) malloc(sizeof(int *) * (size_t)(Vec_WecSize(vNodes))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 347,
+        "Column": 76,
+        "ByteOffset": 11956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCache[i] = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Vec_IntSize(vLevel))), 0xff, sizeof(int) * (size_t)(Vec_IntSize(vLevel))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 347,
+        "Column": 83,
+        "ByteOffset": 11963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCache[i] = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(Vec_IntSize(vLevel))), 0xff, sizeof(int) * (size_t)(Vec_IntSize(vLevel))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 351,
+        "Column": 69,
+        "ByteOffset": 12271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 353,
+        "Column": 62,
+        "ByteOffset": 12389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 12739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pFileName, \"grid_%dx%d_e%03d.aig\", Size, Size, Vec_IntSize(vEdges)/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 12897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished dumping AIG into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 13715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodes[0] \u003c pNodes[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 391,
+        "Column": 19,
+        "ByteOffset": 13766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Edge = %d. Arc = %d.\\nCurrent state: \", e, x ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 23,
+        "ByteOffset": 14043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 19,
+        "ByteOffset": 14133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 424,
+        "Column": 17,
+        "ByteOffset": 15477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Node != pNodes[n] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 448,
+        "Column": 19,
+        "ByteOffset": 16384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"Next state: \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 23,
+        "ByteOffset": 16632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fVerbose { printf( \"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 19,
+        "ByteOffset": 16722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fVerbose { printf( \"\\n\\n\" ); }"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 464,
+        "Column": 90,
+        "ByteOffset": 17283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    int e, s, x, Next, * pFront = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nNodes), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 473,
+        "Column": 13,
+        "ByteOffset": 17697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 474,
+        "Column": 13,
+        "ByteOffset": 17725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Processing edge %d = {%d %d}\\n\", e, Vec_IntEntry(vEdges, 2*e), Vec_IntEntry(vEdges, 2*e+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 13,
+        "ByteOffset": 17840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Frontier: \" );  Vec_IntPrint( Vec_WecEntry(vFronts, e) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 13,
+        "ByteOffset": 17919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 31,
+        "ByteOffset": 18474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if fVerbose { printf( \"Return value = %d\\n\", Next ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 18740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"States = %8d   Paths = %24.0f  \", Vec_IntSum(vStateCount), nPaths ); "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 502,
+        "Column": 62,
+        "ByteOffset": 19041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 539,
+        "Column": 20,
+        "ByteOffset": 20091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Res += pow(2,i); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 562,
+        "Column": 13,
+        "ByteOffset": 20821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 21231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Status == l_True );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 5,
+        "ByteOffset": 22410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vars = %d   Iters = %d   Ave = %.0f   Total = %.0f  \", nVars, nIters, Abc_Word2Double(Mint2-Mint1), Abc_Word2Double(Total) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 5,
+        "ByteOffset": 22549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Estimate = %.0f\\n\", (pow(2,nVars)-Abc_Word2Double(Mint1))/Abc_Word2Double((Mint2-Mint1)/nIters) );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 599,
+        "Column": 35,
+        "ByteOffset": 22579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Estimate = %.0f\\n\", (pow(2,nVars)-Abc_Word2Double(Mint1))/Abc_Word2Double((Mint2-Mint1)/nIters) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeVarX",
+      "Start": 1520,
+      "End": 1611,
+      "BodyStart": 1564,
+      "Original": "int Abc_NodeVarX( int nSize, int y, int x )\n{\n    return Abc_Var2Lit( nSize * y + x, 0 );\n}",
+      "Draft": "func Abc_NodeVarX(nSize int32, y int32, x int32) int32 {\n    return Abc_Var2Lit( nSize * y + x, 0 );\n}"
+    },
+    {
+      "Name": "Abc_NodeVarY",
+      "Start": 1612,
+      "End": 1725,
+      "BodyStart": 1656,
+      "Original": "int Abc_NodeVarY( int nSize, int y, int x )\n{\n    return Abc_Var2Lit( nSize * (nSize + 1) + nSize * x + y, 0 );\n}",
+      "Draft": "func Abc_NodeVarY(nSize int32, y int32, x int32) int32 {\n    return Abc_Var2Lit( nSize * (nSize + 1) + nSize * x + y, 0 );\n}"
+    },
+    {
+      "Name": "Abc_EnumeratePaths",
+      "Start": 1727,
+      "End": 2840,
+      "BodyStart": 1771,
+      "Original": "Gia_Man_t * Abc_EnumeratePaths( int nSize )\n{\n    Gia_Man_t * pTemp, * pGia = Gia_ManStart( 10000 );\n    int * pNodes = ABC_CALLOC( int, nSize+1 );\n    int x, y, nVars = 2*nSize*(nSize+1);\n    for ( x = 0; x \u003c nVars; x++ )\n        Gia_ManAppendCi( pGia );\n    Gia_ManHashAlloc( pGia );\n    // y = 0; x = 0;\n    pNodes[0] = 1;\n    // y = 0; x \u003e 0 \n    for ( x = 1; x \u003c= nSize; x++ )\n        pNodes[x] = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, 0, x) );\n    // y \u003e 0; x \u003e= 0\n    for ( y = 1; y \u003c= nSize; y++ )\n    {\n        // y \u003e 0; x = 0\n        pNodes[0] = Gia_ManHashAnd( pGia, pNodes[0], Abc_NodeVarY(nSize, y, 0) );\n        // y \u003e 0; x \u003e 0\n        for ( x = 1; x \u003c= nSize; x++ )\n        {\n            int iHor  = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, y, x) );\n            int iVer  = Gia_ManHashAnd( pGia, pNodes[x],   Abc_NodeVarY(nSize, y, x) );\n            pNodes[x] = Gia_ManHashOr( pGia, iHor, iVer );\n        }\n    }\n    Gia_ManAppendCo( pGia, pNodes[nSize] );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    ABC_FREE( pNodes );\n    return pGia;\n}",
+      "Draft": "func Abc_EnumeratePaths(nSize int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t = Gia_ManStart( 10000 );\n    // inlining of macro ABC_CALLOC\n    var pNodes *int32  = ((int *) calloc((size_t)(nSize+1), sizeof(int)));\n    var x int32;\n    var y int32;\n    var nVars int32 = 2*nSize*(nSize+1);\n    for  x = 0; x \u003c nVars; x++  {\n        Gia_ManAppendCi( pGia );\n    }\n    Gia_ManHashAlloc( pGia );\n    // y = 0; x = 0;\n    pNodes[0] = 1;\n    // y = 0; x \u003e 0 \n    for  x = 1; x \u003c= nSize; x++  {\n        pNodes[x] = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, 0, x) );\n    }\n    // y \u003e 0; x \u003e= 0\n    for  y = 1; y \u003c= nSize; y++  {\n        // y \u003e 0; x = 0\n        pNodes[0] = Gia_ManHashAnd( pGia, pNodes[0], Abc_NodeVarY(nSize, y, 0) );\n        // y \u003e 0; x \u003e 0\n        for  x = 1; x \u003c= nSize; x++  {\n            var iHor int32   = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, y, x) );\n            var iVer int32   = Gia_ManHashAnd( pGia, pNodes[x],   Abc_NodeVarY(nSize, y, x) );\n            pNodes[x] = Gia_ManHashOr( pGia, iHor, iVer );\n        }\n    }\n    Gia_ManAppendCo( pGia, pNodes[nSize] );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    // inlining of macro ABC_FREE\n    ((pNodes) ? (free((char *) (pNodes)), (pNodes) = 0) : 0);\n    return pGia;\n}"
+    },
+    {
+      "Name": "Abc_EnumeratePathsTest",
+      "Start": 2841,
+      "End": 3023,
+      "BodyStart": 2871,
+      "Original": "void Abc_EnumeratePathsTest()\n{\n    int nSize = 2;\n    Gia_Man_t * pGia = Abc_EnumeratePaths( nSize );\n    Gia_AigerWrite( pGia, \"testpath.aig\", 0, 0, 0 );\n    Gia_ManStop( pGia );\n}",
+      "Draft": "func Abc_EnumeratePathsTest() {\n    var nSize int32  = 2;\n    var pGia *Gia_Man_t  = Abc_EnumeratePaths( nSize );\n    Gia_AigerWrite( pGia, \"testpath.aig\", 0, 0, 0 );\n    Gia_ManStop( pGia );\n}"
+    },
+    {
+      "Name": "Abc_GraphGrid",
+      "Start": 3278,
+      "End": 3704,
+      "BodyStart": 3313,
+      "Original": "Vec_Int_t * Abc_GraphGrid( int n )\n{\n    Vec_Int_t * vEdges = Vec_IntAlloc( 4*n*(n-1) ); // two nodes per edge\n    int i, k;\n    for ( i = 0; i \u003c n; i++ )\n    {\n        for ( k = 0; k \u003c n-1; k++ )\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+1 );\n        if ( i == n-1 ) break;\n        for ( k = 0; k \u003c n; k++ )\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+n );\n    }\n    //Vec_IntPrint( vEdges );\n    return vEdges;\n}",
+      "Draft": "func Abc_GraphGrid(n int32) *Vec_Int_t {\n    var vEdges *Vec_Int_t  = Vec_IntAlloc( 4*n*(n-1) ); // two nodes per edge\n    var i, k int32;\n    for  i = 0; i \u003c n; i++  {\n        for  k = 0; k \u003c n-1; k++  {\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+1 );\n        }\n        if i == n-1 { break; }\n        for  k = 0; k \u003c n; k++  {\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+n );\n        }\n    }\n    //Vec_IntPrint( vEdges );\n    return vEdges;\n}"
+    },
+    {
+      "Name": "Abc_GraphNodeLife",
+      "Start": 3705,
+      "End": 4266,
+      "BodyStart": 3764,
+      "Original": "Vec_Int_t * Abc_GraphNodeLife( Vec_Int_t * vEdges, int n )\n{\n    Vec_Int_t * vLife = Vec_IntStartFull( 2*n*n ); // start/stop per node\n    int One, Two, i;\n    Vec_IntForEachEntryDouble( vEdges, One, Two, i )\n    {\n        if ( Vec_IntEntry(vLife, 2*One) == -1 )\n            Vec_IntWriteEntry(vLife, 2*One, i/2);\n        if ( Vec_IntEntry(vLife, 2*Two) == -1 )\n            Vec_IntWriteEntry(vLife, 2*Two, i/2);\n        Vec_IntWriteEntry(vLife, 2*One+1, i/2);\n        Vec_IntWriteEntry(vLife, 2*Two+1, i/2);\n    }\n    //Vec_IntPrint( vLife );\n    return vLife;\n}",
+      "Draft": "func Abc_GraphNodeLife(vEdges *Vec_Int_t, n int32) *Vec_Int_t {\n    var vLife *Vec_Int_t  = Vec_IntStartFull( 2*n*n ); // start/stop per node\n    var One, Two, i int32;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((One) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((Two) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        if Vec_IntEntry(vLife, 2*One) == -1 {\n            Vec_IntWriteEntry(vLife, 2*One, i/2); }\n        if Vec_IntEntry(vLife, 2*Two) == -1 {\n            Vec_IntWriteEntry(vLife, 2*Two, i/2); }\n        Vec_IntWriteEntry(vLife, 2*One+1, i/2);\n        Vec_IntWriteEntry(vLife, 2*Two+1, i/2);\n    }\n    //Vec_IntPrint( vLife );\n    return vLife;\n}"
+    },
+    {
+      "Name": "Abc_GraphFrontiers",
+      "Start": 4267,
+      "End": 5075,
+      "BodyStart": 4339,
+      "Original": "Vec_Wec_t * Abc_GraphFrontiers( Vec_Int_t * vEdges, Vec_Int_t * vLife )\n{\n    Vec_Wec_t * vFronts = Vec_WecAlloc( Vec_IntSize(vEdges)/2 ); // front for each edge\n    Vec_Int_t * vTemp = Vec_IntAlloc( Vec_IntSize(vLife)/2 );\n    int e, n;    \n    Vec_WecPushLevel(vFronts);\n    for ( e = 0; e \u003c Vec_IntSize(vEdges)/2; e++ )\n    {\n        int * pNodes = Vec_IntEntryP(vEdges, 2*e);\n        for ( n = 0; n \u003c 2; n++ )\n            if ( Vec_IntEntry(vLife, 2*pNodes[n]) == e ) // first time\n                Vec_IntPush( vTemp, pNodes[n] );\n            else if ( Vec_IntEntry(vLife, 2*pNodes[n]+1) == e ) // last time\n                Vec_IntRemove( vTemp, pNodes[n] );\n        Vec_IntAppend( Vec_WecPushLevel(vFronts), vTemp );\n    }\n    //Vec_WecPrint( vFronts, 0 );\n    Vec_IntFree( vTemp );\n    return vFronts;\n}",
+      "Draft": "func Abc_GraphFrontiers(vEdges *Vec_Int_t, vLife *Vec_Int_t) *Vec_Wec_t {\n    var vFronts *Vec_Wec_t  = Vec_WecAlloc( Vec_IntSize(vEdges)/2 ); // front for each edge\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vLife)/2 );\n    var e, n int32;    \n    Vec_WecPushLevel(vFronts);\n    for  e = 0; e \u003c Vec_IntSize(vEdges)/2; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        for  n = 0; n \u003c 2; n++  {\n            if Vec_IntEntry(vLife, 2*pNodes[n]) == e { // first time\n                Vec_IntPush( vTemp, pNodes[n] );\n            } else if Vec_IntEntry(vLife, 2*pNodes[n]+1) == e { // last time\n                Vec_IntRemove( vTemp, pNodes[n] ); }\n        }\n        Vec_IntAppend( Vec_WecPushLevel(vFronts), vTemp );\n    }\n    //Vec_WecPrint( vFronts, 0 );\n    Vec_IntFree( vTemp );\n    return vFronts;\n}"
+    },
+    {
+      "Name": "Abc_GraphPathPrint4",
+      "Start": 5322,
+      "End": 6363,
+      "BodyStart": 5384,
+      "Original": "void Abc_GraphPathPrint4( int * pBuffer, Vec_Int_t * vEdges )\n{\n    char Box[13][13];\n    int x, y;\n    int e, nEdges = Vec_IntSize(vEdges)/2;\n    for ( y = 0; y \u003c 13; y++ )\n    for ( x = 0; x \u003c 13; x++ )\n        if ( y % 4 == 0 \u0026\u0026 x % 4 == 0 )\n            Box[y][x] = '*';\n        else\n            Box[y][x] = ' ';\n    for ( e = 0; e \u003c nEdges; e++ )\n    {\n        int * pNodes = Vec_IntEntryP(vEdges, 2*e);\n        int y0 = 4*(pNodes[0]/4);\n        int x0 = 4*(pNodes[0]%4);\n        int y1 = 4*(pNodes[1]/4);\n        int x1 = 4*(pNodes[1]%4);\n        if ( !pBuffer[e] )\n            continue;\n        if ( y0 == y1 )\n        {\n            for ( x = x0+1; x \u003c x1; x++ )\n                Box[y0][x] = '-';\n        }\n        else if ( x0 == x1 )\n        {\n            for ( y = y0+1; y \u003c y1; y++ )\n                Box[y][x0] = '|';\n        }\n        else assert( 0 );\n    }\n    for ( y = 0; y \u003c 13; y++, printf(\"\\n\") )\n    for ( x = 0; x \u003c 13; x++ )\n        printf( \"%c\", Box[y][x] );\n    printf( \"\\n\\n=================================\\n\\n\" );\n}",
+      "Draft": "func Abc_GraphPathPrint4(pBuffer *int32, vEdges *Vec_Int_t) {\n    var Box [13][13]byte;\n    var x, y int32;\n    var e int32;\n    var nEdges int32 = Vec_IntSize(vEdges)/2;\n    for  y = 0; y \u003c 13; y++  {\n    for  x = 0; x \u003c 13; x++  {\n        if y % 4 == 0 \u0026\u0026 x % 4 == 0 {\n            Box[y][x] = '*';\n        } else {\n            Box[y][x] = ' '; }\n    }\n    }\n    for  e = 0; e \u003c nEdges; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        var y0 int32  = 4*(pNodes[0]/4);\n        var x0 int32  = 4*(pNodes[0]%4);\n        var y1 int32  = 4*(pNodes[1]/4);\n        var x1 int32  = 4*(pNodes[1]%4);\n        if !pBuffer[e] {\n            continue; }\n        if y0 == y1 {\n            for  x = x0+1; x \u003c x1; x++  {\n                Box[y0][x] = '-';\n            }\n        \n        } else if x0 == x1 {\n            for  y = y0+1; y \u003c y1; y++  {\n                Box[y][x0] = '|';\n            }\n        \n        } else { assert(false, \"0\"); }\n    }\n    for  y = 0; y \u003c 13; y++, printf(\"\\n\")  {\n    for  x = 0; x \u003c 13; x++  {\n        fmt.Printf(\"%c\", Box[y][x]);\n    }\n    }\n    fmt.Printf(\"\\n\\n=================================\\n\\n\");\n}"
+    },
+    {
+      "Name": "Abc_GraphPathPrint5",
+      "Start": 6364,
+      "End": 7405,
+      "BodyStart": 6426,
+      "Original": "void Abc_GraphPathPrint5( int * pBuffer, Vec_Int_t * vEdges )\n{\n    char Box[17][17];\n    int x, y;\n    int e, nEdges = Vec_IntSize(vEdges)/2;\n    for ( y = 0; y \u003c 17; y++ )\n    for ( x = 0; x \u003c 17; x++ )\n        if ( y % 4 == 0 \u0026\u0026 x % 4 == 0 )\n            Box[y][x] = '*';\n        else\n            Box[y][x] = ' ';\n    for ( e = 0; e \u003c nEdges; e++ )\n    {\n        int * pNodes = Vec_IntEntryP(vEdges, 2*e);\n        int y0 = 4*(pNodes[0]/5);\n        int x0 = 4*(pNodes[0]%5);\n        int y1 = 4*(pNodes[1]/5);\n        int x1 = 4*(pNodes[1]%5);\n        if ( !pBuffer[e] )\n            continue;\n        if ( y0 == y1 )\n        {\n            for ( x = x0+1; x \u003c x1; x++ )\n                Box[y0][x] = '-';\n        }\n        else if ( x0 == x1 )\n        {\n            for ( y = y0+1; y \u003c y1; y++ )\n                Box[y][x0] = '|';\n        }\n        else assert( 0 );\n    }\n    for ( y = 0; y \u003c 17; y++, printf(\"\\n\") )\n    for ( x = 0; x \u003c 17; x++ )\n        printf( \"%c\", Box[y][x] );\n    printf( \"\\n\\n=================================\\n\\n\" );\n}",
+      "Draft": "func Abc_GraphPathPrint5(pBuffer *int32, vEdges *Vec_Int_t) {\n    var Box [17][17]byte;\n    var x, y int32;\n    var e int32;\n    var nEdges int32 = Vec_IntSize(vEdges)/2;\n    for  y = 0; y \u003c 17; y++  {\n    for  x = 0; x \u003c 17; x++  {\n        if y % 4 == 0 \u0026\u0026 x % 4 == 0 {\n            Box[y][x] = '*';\n        } else {\n            Box[y][x] = ' '; }\n    }\n    }\n    for  e = 0; e \u003c nEdges; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        var y0 int32  = 4*(pNodes[0]/5);\n        var x0 int32  = 4*(pNodes[0]%5);\n        var y1 int32  = 4*(pNodes[1]/5);\n        var x1 int32  = 4*(pNodes[1]%5);\n        if !pBuffer[e] {\n            continue; }\n        if y0 == y1 {\n            for  x = x0+1; x \u003c x1; x++  {\n                Box[y0][x] = '-';\n            }\n        \n        } else if x0 == x1 {\n            for  y = y0+1; y \u003c y1; y++  {\n                Box[y][x0] = '|';\n            }\n        \n        } else { assert(false, \"0\"); }\n    }\n    for  y = 0; y \u003c 17; y++, printf(\"\\n\")  {\n    for  x = 0; x \u003c 17; x++  {\n        fmt.Printf(\"%c\", Box[y][x]);\n    }\n    }\n    fmt.Printf(\"\\n\\n=================================\\n\\n\");\n}"
+    },
+    {
+      "Name": "Abc_GraphCountPaths_rec",
+      "Start": 7653,
+      "End": 8371,
+      "BodyStart": 7778,
+      "Original": "double Abc_GraphCountPaths_rec( int Lev, int Node, Vec_Wec_t * vNodes, double ** pCache, int * pBuffer, Vec_Int_t * vEdges )\n{\n    double Res0, Res1;\n//    if ( Node == -2 ) Abc_GraphPathPrint4( pBuffer, vEdges );\n    if ( Node == -2 )\n        return 1;\n    if ( Node == -1 )\n        return 0;\n    if ( pCache[Lev][Node] != -1.0 )\n        return pCache[Lev][Node];\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return (pCache[Lev][Node] = Res0 + Res1);\n}",
+      "Draft": "func Abc_GraphCountPaths_rec(Lev int32, Node int32, vNodes *Vec_Wec_t, pCache **float64, pBuffer *int32, vEdges *Vec_Int_t) float64 {\n    var Res0, Res1 float64;\n//    if ( Node == -2 ) Abc_GraphPathPrint4( pBuffer, vEdges );\n    if Node == -2 {\n        return 1; }\n    if Node == -1 {\n        return 0; }\n    if pCache[Lev][Node] != -1.0 {\n        return pCache[Lev][Node]; }\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return (pCache[Lev][Node] = Res0 + Res1);\n}"
+    },
+    {
+      "Name": "Abc_GraphCountPaths",
+      "Start": 8372,
+      "End": 8989,
+      "BodyStart": 8441,
+      "Original": "double Abc_GraphCountPaths( Vec_Wec_t * vNodes, Vec_Int_t * vEdges )\n{\n    int i, k, pBuffer[1000] = {0};\n    double ** pCache = ABC_ALLOC( double *, Vec_WecSize(vNodes) );\n    Vec_Int_t * vLevel;   double Value;\n    Vec_WecForEachLevel( vNodes, vLevel, i )\n    {\n        pCache[i] = ABC_ALLOC( double, Vec_IntSize(vLevel) );\n        for ( k = 0; k \u003c Vec_IntSize(vLevel); k++ )\n            pCache[i][k] = -1.0;\n    }\n    Value = Abc_GraphCountPaths_rec( 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for ( i = 0; i \u003c Vec_WecSize(vNodes); i++ )\n        ABC_FREE( pCache[i] );\n    ABC_FREE( pCache );\n    return Value;\n}",
+      "Draft": "func Abc_GraphCountPaths(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) float64 {\n    var i int32;\n    var k int32;\n    var pBuffer [1000]int32 ;\n    // inlining of macro ABC_ALLOC\n    var pCache **float64  = ((double * *) malloc(sizeof(double *) * (size_t)(Vec_WecSize(vNodes))));\n    var vLevel *Vec_Int_t;   var Value float64;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vNodes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_ALLOC\n        pCache[i] = ((double *) malloc(sizeof(double) * (size_t)(Vec_IntSize(vLevel))));\n        for  k = 0; k \u003c Vec_IntSize(vLevel); k++  {\n            pCache[i][k] = -1.0;\n        }\n    }\n    Value = Abc_GraphCountPaths_rec( 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for  i = 0; i \u003c Vec_WecSize(vNodes); i++  {\n        // inlining of macro ABC_FREE\n        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);\n    return Value;\n}"
+    },
+    {
+      "Name": "Abc_GraphDeriveGia_rec",
+      "Start": 9245,
+      "End": 9961,
+      "BodyStart": 9378,
+      "Original": "int Abc_GraphDeriveGia_rec( Gia_Man_t * p, int Lev, int Node, Vec_Wec_t * vNodes, int ** pCache, int * pBuffer, Vec_Int_t * vEdges )\n{\n    int Res0, Res1;\n    if ( Node == -2 )\n        return 1;\n    if ( Node == -1 )\n        return 0;\n    if ( pCache[Lev][Node] != -1 )\n        return pCache[Lev][Node];\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return ( pCache[Lev][Node] = Gia_ManHashMux(p, Gia_Obj2Lit(p, Gia_ManCi(p, Lev)), Res1, Res0) );\n}",
+      "Draft": "func Abc_GraphDeriveGia_rec(p *Gia_Man_t, Lev int32, Node int32, vNodes *Vec_Wec_t, pCache **int32, pBuffer *int32, vEdges *Vec_Int_t) int32 {\n    var Res0, Res1 int32;\n    if Node == -2 {\n        return 1; }\n    if Node == -1 {\n        return 0; }\n    if pCache[Lev][Node] != -1 {\n        return pCache[Lev][Node]; }\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return ( pCache[Lev][Node] = Gia_ManHashMux(p, Gia_Obj2Lit(p, Gia_ManCi(p, Lev)), Res1, Res0) );\n}"
+    },
+    {
+      "Name": "Abc_GraphDeriveGia",
+      "Start": 9962,
+      "End": 10819,
+      "BodyStart": 10035,
+      "Original": "Gia_Man_t * Abc_GraphDeriveGia( Vec_Wec_t * vNodes, Vec_Int_t * vEdges )\n{\n    int ** pCache;\n    int i, Value, pBuffer[1000] = {0};  \n    Vec_Int_t * vLevel;\n    // start AIG\n    Gia_Man_t * pTemp, * p = Gia_ManStart( 1000 );\n    p-\u003epName = Abc_UtilStrsav(\"paths\");\n    for ( i = 0; i \u003c Vec_IntSize(vEdges)/2; i++ )\n        Gia_ManAppendCi(p);\n    Gia_ManHashAlloc(p);\n    // alloc cache\n    pCache = ABC_ALLOC( int *, Vec_WecSize(vNodes) );\n    Vec_WecForEachLevel( vNodes, vLevel, i )\n        pCache[i] = ABC_FALLOC( int, Vec_IntSize(vLevel) );\n    Value = Abc_GraphDeriveGia_rec( p, 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for ( i = 0; i \u003c Vec_WecSize(vNodes); i++ )\n        ABC_FREE( pCache[i] );\n    ABC_FREE( pCache );\n    // cleanup\n    Gia_ManAppendCo( p, Value );\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    return p;\n}",
+      "Draft": "func Abc_GraphDeriveGia(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) *Gia_Man_t {\n    var pCache **int32;\n    var i int32;\n    var Value int32;\n    var pBuffer [1000]int32 ;  \n    var vLevel *Vec_Int_t;\n    // start AIG\n    var pTemp *Gia_Man_t;\n    var p *Gia_Man_t = Gia_ManStart( 1000 );\n    p.pName = Abc_UtilStrsav(\"paths\");\n    for  i = 0; i \u003c Vec_IntSize(vEdges)/2; i++  {\n        Gia_ManAppendCi(p);\n    }\n    Gia_ManHashAlloc(p);\n    // alloc cache\n    // inlining of macro ABC_ALLOC\n    pCache = ((int * *) malloc(sizeof(int *) * (size_t)(Vec_WecSize(vNodes))));\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vNodes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_FALLOC\n        pCache[i] = ((int *) memset(malloc(sizeof(int) * (size_t)(Vec_IntSize(vLevel))), 0xff, sizeof(int) * (size_t)(Vec_IntSize(vLevel))));\n    }\n    Value = Abc_GraphDeriveGia_rec( p, 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for  i = 0; i \u003c Vec_WecSize(vNodes); i++  {\n        // inlining of macro ABC_FREE\n        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);\n    // cleanup\n    Gia_ManAppendCo( p, Value );\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_GraphDeriveGiaDump",
+      "Start": 10820,
+      "End": 11216,
+      "BodyStart": 10900,
+      "Original": "void Abc_GraphDeriveGiaDump( Vec_Wec_t * vNodes, Vec_Int_t * vEdges, int Size )\n{\n    char pFileName[100];\n    Gia_Man_t * pGia = Abc_GraphDeriveGia( vNodes, vEdges );\n    sprintf( pFileName, \"grid_%dx%d_e%03d.aig\", Size, Size, Vec_IntSize(vEdges)/2 );\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    Gia_ManStop( pGia );\n    printf( \"Finished dumping AIG into file \\\"%s\\\".\\n\", pFileName );\n}",
+      "Draft": "func Abc_GraphDeriveGiaDump(vNodes *Vec_Wec_t, vEdges *Vec_Int_t, Size int32) {\n    var pFileName string // was [100]byte in C\n\n    var pGia *Gia_Man_t  = Abc_GraphDeriveGia( vNodes, vEdges );\n    pFileName = fmt.Sprintf(\"grid_%dx%d_e%03d.aig\", Size, Size, Vec_IntSize(vEdges)/2);\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    Gia_ManStop( pGia );\n    printf( \"Finished dumping AIG into file \\\"%s\\\".\\n\", pFileName );\n}"
+    },
+    {
+      "Name": "Abc_GraphBuildState",
+      "Start": 11467,
+      "End": 14545,
+      "BodyStart": 11638,
+      "Original": "int Abc_GraphBuildState( Vec_Int_t * vState, int e, int x, Vec_Int_t * vEdges, Vec_Int_t * vLife, Vec_Wec_t * vFronts, int * pFront, Vec_Int_t * vStateNew, int fVerbose )\n{\n    Vec_Int_t * vFront = Vec_WecEntry( vFronts, e );\n    Vec_Int_t * vFront2 = Vec_WecEntry( vFronts, e+1 );\n    int * pNodes = Vec_IntEntryP(vEdges, 2*e);\n    int nNodes = Vec_IntSize(vLife)/2;\n    int i, n, Node, First, pEquivs[2];\n    assert( pNodes[0] \u003c pNodes[1] );\n    if ( fVerbose ) printf( \"Edge = %d. Arc = %d.\\nCurrent state: \", e, x );\n    Vec_IntForEachEntry( vFront, Node, i )\n    {\n        pFront[Node] = Vec_IntEntry(vState, i);\n        if ( fVerbose ) printf( \"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16 );\n    }\n    if ( fVerbose ) printf( \"\\n\" );\n    for ( n = 0; n \u003c 2; n++ )\n        if ( Vec_IntEntry(vLife, 2*pNodes[n]) == e ) // first time\n            pFront[pNodes[n]] = pNodes[n]; // degree = 0; comp = singleton\n    if ( x )\n    {\n        if ( (pFront[pNodes[0]] \u0026 0xFFFF) == (pFront[pNodes[1]] \u0026 0xFFFF) ) // the same comp\n            return -1; // const 0\n        for ( n = 0; n \u003c 2; n++ )\n        {\n            int Degree = pFront[pNodes[n]] \u003e\u003e 16;\n            if ( (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree \u003e= 1 : Degree \u003e= 2 )\n                return -1; // const 0\n            pFront[pNodes[n]] += (1 \u003c\u003c 16); // degree++\n        }\n    }\n    // remember equivalence classes\n    pEquivs[0] = pFront[pNodes[0]] \u0026 0xFFFF;\n    pEquivs[1] = pFront[pNodes[1]] \u0026 0xFFFF;\n    // remove some nodes from the frontier\n    for ( n = 0; n \u003c 2; n++ )\n        if ( Vec_IntEntry(vLife, 2*pNodes[n]+1) == e ) // last time\n        {\n            int Degree = pFront[pNodes[n]] \u003e\u003e 16;\n            if ( (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree != 1 : Degree != 0 \u0026\u0026 Degree != 2 )\n                return -1; // const 0\n            // if it is part of the comp, update\n            First = -1;\n            Vec_IntForEachEntry( vFront2, Node, i )\n            {\n                assert( Node != pNodes[n] );\n                if ( (pFront[Node] \u0026 0xFFFF) == pEquivs[n] )\n                {\n                    if ( First == -1 )\n                        First = Node;\n                    pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n                }\n            }\n            if ( First != -1 )\n                pEquivs[n] = First;\n        }\n    if ( x )\n    {\n        // union comp\n        int First = -1;\n        Vec_IntForEachEntry( vFront2, Node, i )\n            if ( (pFront[Node] \u0026 0xFFFF) == pEquivs[0] || (pFront[Node] \u0026 0xFFFF) == pEquivs[1] )\n            {\n                if ( First == -1 )\n                    First = Node;\n                pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n            }\n    }\n    // create next state\n    Vec_IntClear( vStateNew );\n    if ( fVerbose ) printf( \"Next state: \" );\n    Vec_IntForEachEntry( vFront2, Node, i )\n    {\n        Vec_IntPush( vStateNew, pFront[Node] );\n        if ( fVerbose ) printf( \"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16 );\n    }\n    if ( fVerbose ) printf( \"\\n\\n\" );\n    return 1;\n}",
+      "Draft": "func Abc_GraphBuildState(vState *Vec_Int_t, e int32, x int32, vEdges *Vec_Int_t, vLife *Vec_Int_t, vFronts *Vec_Wec_t, pFront *int32, vStateNew *Vec_Int_t, fVerbose int32) int32 {\n    var vFront *Vec_Int_t  = Vec_WecEntry( vFronts, e );\n    var vFront2 *Vec_Int_t  = Vec_WecEntry( vFronts, e+1 );\n    var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n    var nNodes int32  = Vec_IntSize(vLife)/2;\n    var i int32;\n    var n int32;\n    var Node int32;\n    var First int32;\n    var pEquivs [2]int32;\n    assert(pNodes[0] \u003c pNodes[1], \"pNodes[0] \u003c pNodes[1]\");\n    if fVerbose != 0 { fmt.Printf(\"Edge = %d. Arc = %d.\\nCurrent state: \", e, x); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront, i)), 1); i++  {\n        pFront[Node] = Vec_IntEntry(vState, i);\n        if fVerbose != 0 { fmt.Printf(\"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16); }\n    }\n    if fVerbose != 0 { fmt.Printf(\"\\n\"); }\n    for  n = 0; n \u003c 2; n++  {\n        if Vec_IntEntry(vLife, 2*pNodes[n]) == e { // first time\n            pFront[pNodes[n]] = pNodes[n]; }\n    } // degree = 0; comp = singleton\n    if x != 0 {\n        if (pFront[pNodes[0]] \u0026 0xFFFF) == (pFront[pNodes[1]] \u0026 0xFFFF) { // the same comp\n            return -1; } // const 0\n        for  n = 0; n \u003c 2; n++  {\n            var Degree int32  = pFront[pNodes[n]] \u003e\u003e 16;\n            if (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree \u003e= 1 : Degree \u003e= 2 {\n                return -1; } // const 0\n            pFront[pNodes[n]] += (1 \u003c\u003c 16); // degree++\n        }\n    }\n    // remember equivalence classes\n    pEquivs[0] = pFront[pNodes[0]] \u0026 0xFFFF;\n    pEquivs[1] = pFront[pNodes[1]] \u0026 0xFFFF;\n    // remove some nodes from the frontier\n    for  n = 0; n \u003c 2; n++  {\n        if Vec_IntEntry(vLife, 2*pNodes[n]+1) == e { // last time\n        \n            var Degree int32  = pFront[pNodes[n]] \u003e\u003e 16;\n            if (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree != 1 : Degree != 0 \u0026\u0026 Degree != 2 {\n                return -1; } // const 0\n            // if it is part of the comp, update\n            First = -1;\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n                assert(Node != pNodes[n], \"Node != pNodes[n]\");\n                if (pFront[Node] \u0026 0xFFFF) == pEquivs[n] {\n                    if First == -1 {\n                        First = Node; }\n                    pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n                }\n            }\n            if First != -1 {\n                pEquivs[n] = First; }\n        }\n    }\n    if x != 0 {\n        // union comp\n        var First int32  = -1;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n            if (pFront[Node] \u0026 0xFFFF) == pEquivs[0] || (pFront[Node] \u0026 0xFFFF) == pEquivs[1] {\n                if First == -1 {\n                    First = Node; }\n                pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n            }\n        }\n    }\n    // create next state\n    Vec_IntClear( vStateNew );\n    if fVerbose != 0 { fmt.Printf(\"Next state: \"); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n        Vec_IntPush( vStateNew, pFront[Node] );\n        if fVerbose != 0 { fmt.Printf(\"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16); }\n    }\n    if fVerbose != 0 { fmt.Printf(\"\\n\\n\"); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_GraphBuildFrontier",
+      "Start": 14546,
+      "End": 16872,
+      "BodyStart": 14661,
+      "Original": "void Abc_GraphBuildFrontier( int nSize, Vec_Int_t * vEdges, Vec_Int_t * vLife, Vec_Wec_t * vFronts, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    double nPaths;\n    int nEdges = Vec_IntSize(vEdges)/2;\n    int nNodes = Vec_IntSize(vLife)/2;\n    Vec_Wec_t * vNodes = Vec_WecAlloc( nEdges );\n    Vec_Int_t * vStateNew = Vec_IntAlloc( nNodes );\n    Vec_Int_t * vStateCount = Vec_IntAlloc( nEdges );\n    int e, s, x, Next, * pFront = ABC_CALLOC( int, nNodes );\n    Hsh_VecMan_t * pThis = Hsh_VecManStart( 1000 );\n    Hsh_VecMan_t * pNext = Hsh_VecManStart( 1000 );\n    Hsh_VecManAdd( pThis, vStateNew );\n    for ( e = 0; e \u003c nEdges; e++ )\n    {\n        Vec_Int_t * vNode = Vec_WecPushLevel(vNodes);\n        int nStates = Hsh_VecSize( pThis );\n        Vec_IntPush( vStateCount, nStates );\n        if ( fVerbose )\n        {\n            printf( \"\\n\" );\n            printf( \"Processing edge %d = {%d %d}\\n\", e, Vec_IntEntry(vEdges, 2*e), Vec_IntEntry(vEdges, 2*e+1) );\n            printf( \"Frontier: \" );  Vec_IntPrint( Vec_WecEntry(vFronts, e) );\n            printf( \"\\n\" );\n        }\n        for ( s = 0; s \u003c nStates; s++ )\n        {\n            Vec_Int_t * vState = Hsh_VecReadEntry(pThis, s);\n            for ( x = 0; x \u003c 2; x++ )\n            {\n                Next = Abc_GraphBuildState(vState, e, x, vEdges, vLife, vFronts, pFront, vStateNew, fVerbose);\n                if ( Next == 1 )\n                {\n                    if ( e == nEdges - 1 ) // last edge\n                        Next = -2; // const1\n                    else\n                        Next = Hsh_VecManAdd( pNext, vStateNew );\n                }\n                if ( fVerbose ) printf( \"Return value = %d\\n\", Next );\n                Vec_IntPush( vNode, Next );\n            }\n        }\n        Hsh_VecManStop( pThis );\n        pThis = pNext;\n        pNext = Hsh_VecManStart( 1000 );\n    }\n    nPaths = Abc_GraphCountPaths(vNodes, vEdges);\n    printf( \"States = %8d   Paths = %24.0f  \", Vec_IntSum(vStateCount), nPaths ); \n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if ( fVerbose )\n        Vec_IntPrint( vStateCount );\n    Abc_GraphDeriveGiaDump( vNodes, vEdges, nSize );\n    ABC_FREE( pFront );\n    Vec_WecFree( vNodes );\n    Vec_IntFree( vStateNew );\n    Vec_IntFree( vStateCount );\n    Hsh_VecManStop( pThis );\n    Hsh_VecManStop( pNext );\n}",
+      "Draft": "func Abc_GraphBuildFrontier(nSize int32, vEdges *Vec_Int_t, vLife *Vec_Int_t, vFronts *Vec_Wec_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var nPaths float64;\n    var nEdges int32  = Vec_IntSize(vEdges)/2;\n    var nNodes int32  = Vec_IntSize(vLife)/2;\n    var vNodes *Vec_Wec_t  = Vec_WecAlloc( nEdges );\n    var vStateNew *Vec_Int_t  = Vec_IntAlloc( nNodes );\n    var vStateCount *Vec_Int_t  = Vec_IntAlloc( nEdges );\n    // inlining of macro ABC_CALLOC\n    int e, s, x, Next, * pFront = ((int *) calloc((size_t)(nNodes), sizeof(int)));\n    var pThis *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );\n    var pNext *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );\n    Hsh_VecManAdd( pThis, vStateNew );\n    for  e = 0; e \u003c nEdges; e++  {\n        var vNode *Vec_Int_t  = Vec_WecPushLevel(vNodes);\n        var nStates int32  = Hsh_VecSize( pThis );\n        Vec_IntPush( vStateCount, nStates );\n        if fVerbose != 0 {\n            fmt.Printf(\"\\n\");\n            fmt.Printf(\"Processing edge %d = {%d %d}\\n\", e, Vec_IntEntry(vEdges, 2*e), Vec_IntEntry(vEdges, 2*e+1));\n            fmt.Printf(\"Frontier: \");  Vec_IntPrint( Vec_WecEntry(vFronts, e) );\n            fmt.Printf(\"\\n\");\n        }\n        for  s = 0; s \u003c nStates; s++  {\n            var vState *Vec_Int_t  = Hsh_VecReadEntry(pThis, s);\n            for  x = 0; x \u003c 2; x++  {\n                Next = Abc_GraphBuildState(vState, e, x, vEdges, vLife, vFronts, pFront, vStateNew, fVerbose);\n                if Next == 1 {\n                    if e == nEdges - 1 { // last edge\n                        Next = -2; // const1\n                    } else {\n                        Next = Hsh_VecManAdd( pNext, vStateNew ); }\n                }\n                if fVerbose != 0 { fmt.Printf(\"Return value = %d\\n\", Next); }\n                Vec_IntPush( vNode, Next );\n            }\n        }\n        Hsh_VecManStop( pThis );\n        pThis = pNext;\n        pNext = Hsh_VecManStart( 1000 );\n    }\n    nPaths = Abc_GraphCountPaths(vNodes, vEdges);\n    fmt.Printf(\"States = %8d   Paths = %24.0f  \", Vec_IntSum(vStateCount), nPaths); \n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fVerbose != 0 {\n        Vec_IntPrint( vStateCount ); }\n    Abc_GraphDeriveGiaDump( vNodes, vEdges, nSize );\n    // inlining of macro ABC_FREE\n    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);\n    Vec_WecFree( vNodes );\n    Vec_IntFree( vStateNew );\n    Vec_IntFree( vStateCount );\n    Hsh_VecManStop( pThis );\n    Hsh_VecManStop( pNext );\n}"
+    },
+    {
+      "Name": "Abc_EnumerateFrontierTest",
+      "Start": 16873,
+      "End": 17292,
+      "BodyStart": 16917,
+      "Original": "void Abc_EnumerateFrontierTest( int nSize )\n{\n    //int nSize    = 3;\n    int fVerbose = 0;\n    Vec_Int_t * vEdges = Abc_GraphGrid( nSize );\n    Vec_Int_t * vLife = Abc_GraphNodeLife( vEdges, nSize );\n    Vec_Wec_t * vFronts = Abc_GraphFrontiers( vEdges, vLife );\n\n    Abc_GraphBuildFrontier( nSize, vEdges, vLife, vFronts, fVerbose );\n\n    Vec_WecFree( vFronts );\n    Vec_IntFree( vLife );\n    Vec_IntFree( vEdges );\n}",
+      "Draft": "func Abc_EnumerateFrontierTest(nSize int32) {\n    //int nSize    = 3;\n    var fVerbose int32;\n    var vEdges *Vec_Int_t  = Abc_GraphGrid( nSize );\n    var vLife *Vec_Int_t  = Abc_GraphNodeLife( vEdges, nSize );\n    var vFronts *Vec_Wec_t  = Abc_GraphFrontiers( vEdges, vLife );\n\n    Abc_GraphBuildFrontier( nSize, vEdges, vLife, vFronts, fVerbose );\n\n    Vec_WecFree( vFronts );\n    Vec_IntFree( vLife );\n    Vec_IntFree( vEdges );\n}"
+    },
+    {
+      "Name": "Abc_Word2Double",
+      "Start": 17565,
+      "End": 17733,
+      "BodyStart": 17598,
+      "Original": "double Abc_Word2Double( word w )\n{\n    double Res = 0;  int i;\n    for ( i = 0; i \u003c 64; i++ )\n        if ( (w \u003e\u003e i) \u0026 1 )\n            Res += pow(2,i);\n    return Res;\n}",
+      "Draft": "func Abc_Word2Double(w word) float64 {\n    var Res float64;  var i int32;\n    for  i = 0; i \u003c 64; i++  {\n        if (w \u003e\u003e i) \u0026 1 {\n            Res += math.Pow(float64(2), float64(i)); }\n    }\n    return Res;\n}"
+    },
+    {
+      "Name": "Abc_GraphSolve",
+      "Start": 17734,
+      "End": 19929,
+      "BodyStart": 17774,
+      "Original": "void Abc_GraphSolve( Gia_Man_t * pGia )\n{\n    int nIters = 1000;\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    sat_solver * pSat; Vec_Int_t * vLits = Vec_IntAlloc( 100 );\n    int i, k, iLit, nVars = Gia_ManCiNum(pGia);\n    int iCiVarBeg = pCnf-\u003enVars - nVars;\n    word Total = 0;\n    word Mint1 = 0;\n    word Mint2 = 0;\n\n    // restart the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf-\u003enVars );\n    // add timeframe clauses\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n            assert( 0 );\n    // create trivial assignment\n    Vec_IntClear( vLits );\n    for ( k = 0; k \u003c nVars; k++ )\n        Vec_IntPush( vLits, Abc_Var2Lit(iCiVarBeg+k, 1) );\n    // generate random assignment\n    for ( i = 0; i \u003c nIters; i++ )\n    {\n        int Status = sat_solver_solve_lexsat( pSat, Vec_IntArray(vLits), Vec_IntSize(vLits) );\n        if ( Status != l_True )\n            break;\n        assert( Status == l_True );\n        // block this assignment\n        Vec_IntForEachEntry( vLits, iLit, k )\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        if ( !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) ) )\n            break;\n        Vec_IntForEachEntry( vLits, iLit, k )\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        // collect new minterm\n        Mint2 = 0;\n        Vec_IntForEachEntry( vLits, iLit, k )\n            if ( !Abc_LitIsCompl(iLit) )\n                Mint2 |= ((word)1) \u003c\u003c (nVars-1-k);\n        if ( Mint1 == 0 )\n            Mint1 = Mint2;\n        // report\n        //printf( \"Iter %3d : \", i );\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026Mint2, Abc_MinInt(64, nVars) ); printf( \"\\n\" );\n    }\n    //Mint1 = 0;\n    Total = (Mint2-Mint1)/nIters;\n    printf( \"Vars = %d   Iters = %d   Ave = %.0f   Total = %.0f  \", nVars, nIters, Abc_Word2Double(Mint2-Mint1), Abc_Word2Double(Total) );\n    printf( \"Estimate = %.0f\\n\", (pow(2,nVars)-Abc_Word2Double(Mint1))/Abc_Word2Double((Mint2-Mint1)/nIters) );\n\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vLits );\n}",
+      "Draft": "func Abc_GraphSolve(pGia *Gia_Man_t) {\n    var nIters int32  = 1000;\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    var pSat *sat_solver; var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var nVars int32 = Gia_ManCiNum(pGia);\n    var iCiVarBeg int32  = pCnf.nVars - nVars;\n    var Total word;\n    var Mint1 word;\n    var Mint2 word;\n\n    // restart the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    // add timeframe clauses\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // create trivial assignment\n    Vec_IntClear( vLits );\n    for  k = 0; k \u003c nVars; k++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(iCiVarBeg+k, 1) );\n    }\n    // generate random assignment\n    for  i = 0; i \u003c nIters; i++  {\n        var Status int32  = sat_solver_solve_lexsat( pSat, Vec_IntArray(vLits), Vec_IntSize(vLits) );\n        if Status != l_True {\n            break; }\n        assert(Status == l_True, \"Status == l_True\");\n        // block this assignment\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        }\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) ) {\n            break; }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        }\n        // collect new minterm\n        Mint2 = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            if !Abc_LitIsCompl(iLit) {\n                Mint2 |= ((word)1) \u003c\u003c (nVars-1-k); }\n        }\n        if Mint1 == 0 {\n            Mint1 = Mint2; }\n        // report\n        //printf( \"Iter %3d : \", i );\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026Mint2, Abc_MinInt(64, nVars) ); printf( \"\\n\" );\n    }\n    //Mint1 = 0;\n    Total = (Mint2-Mint1)/nIters;\n    fmt.Printf(\"Vars = %d   Iters = %d   Ave = %.0f   Total = %.0f  \", nVars, nIters, Abc_Word2Double(Mint2-Mint1), Abc_Word2Double(Total));\n    fmt.Printf(\"Estimate = %.0f\\n\", (math.Pow(float64(2), float64(nVars))-Abc_Word2Double(Mint1))/Abc_Word2Double((Mint2-Mint1)/nIters));\n\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vLits );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::1928",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1847,
+      "End": 1847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::8866",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8501,
+      "End": 8501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::9198",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8656,
+      "End": 8656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::11147",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10364,
+      "End": 10364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::11435",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10470,
+      "End": 10470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::11487",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10470,
+      "End": 10470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::mechanical::sizeof::16678",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14981,
+      "End": 14981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::1894",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1847,
+      "End": 1847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::2932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2802,
+      "End": 2802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::8846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8501,
+      "End": 8501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::8872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8501,
+      "End": 8501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::9180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8656,
+      "End": 8656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::9538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8923,
+      "End": 8923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::9650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8950,
+      "End": 8950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::11130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10364,
+      "End": 10364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::11153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10364,
+      "End": 10364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::11413",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10470,
+      "End": 10470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::11735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10646,
+      "End": 10646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::11847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10673,
+      "End": 10673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::16645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14981,
+      "End": 14981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::18451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16704,
+      "End": 16704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::pointer-cast::19589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17822,
+      "End": 17835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_NodeVarX",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeVarX",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1520,
+      "End": 1611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_NodeVarY",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeVarY",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1612,
+      "End": 1725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::ternary::Abc_EnumeratePaths",
+      "Category": "ternary-review",
+      "Symbol": "Abc_EnumeratePaths",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1727,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_EnumeratePaths",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumeratePaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1727,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_EnumeratePathsTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumeratePathsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2841,
+      "End": 3023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphGrid",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphGrid",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3278,
+      "End": 3704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphNodeLife",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphNodeLife",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3705,
+      "End": 4266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphFrontiers",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphFrontiers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4267,
+      "End": 5075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphPathPrint4",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphPathPrint4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5322,
+      "End": 6363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphPathPrint5",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphPathPrint5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6364,
+      "End": 7405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphCountPaths_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphCountPaths_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7653,
+      "End": 8371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::ternary::Abc_GraphCountPaths",
+      "Category": "ternary-review",
+      "Symbol": "Abc_GraphCountPaths",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8372,
+      "End": 8989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphCountPaths",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphCountPaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8372,
+      "End": 8989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphDeriveGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphDeriveGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9245,
+      "End": 9961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::ternary::Abc_GraphDeriveGia",
+      "Category": "ternary-review",
+      "Symbol": "Abc_GraphDeriveGia",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9962,
+      "End": 10819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphDeriveGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphDeriveGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9962,
+      "End": 10819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphDeriveGiaDump",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphDeriveGiaDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10820,
+      "End": 11216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::ternary::Abc_GraphBuildState",
+      "Category": "ternary-review",
+      "Symbol": "Abc_GraphBuildState",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11467,
+      "End": 14545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphBuildState",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphBuildState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11467,
+      "End": 14545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::ternary::Abc_GraphBuildFrontier",
+      "Category": "ternary-review",
+      "Symbol": "Abc_GraphBuildFrontier",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14546,
+      "End": 16872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphBuildFrontier",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphBuildFrontier",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14546,
+      "End": 16872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_EnumerateFrontierTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_EnumerateFrontierTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16873,
+      "End": 17292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_Word2Double",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Word2Double",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17565,
+      "End": 17733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::Abc_GraphSolve",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GraphSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17734,
+      "End": 19929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilPath.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20176
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilPath.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Path enumeration.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilPath.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"aig/gia/gia.h\"\n//#include \"misc/vec/vecHsh.h\"\n\n//#include \u003cmath.h\u003e\n//#include \"sat/bmc/bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n//#include \"misc/extra/extra.h\"\n\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes AIG representing the set of all paths in the graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeVarX(nSize int32, y int32, x int32) int32 {\n    return Abc_Var2Lit( nSize * y + x, 0 );\n}\nfunc Abc_NodeVarY(nSize int32, y int32, x int32) int32 {\n    return Abc_Var2Lit( nSize * (nSize + 1) + nSize * x + y, 0 );\n}\n\nfunc Abc_EnumeratePaths(nSize int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t = Gia_ManStart( 10000 );\n    // inlining of macro ABC_CALLOC\n    var pNodes *int32  = ((int *) calloc((size_t)(nSize+1), sizeof(int)));\n    var x int32;\n    var y int32;\n    var nVars int32 = 2*nSize*(nSize+1);\n    for  x = 0; x \u003c nVars; x++  {\n        Gia_ManAppendCi( pGia );\n    }\n    Gia_ManHashAlloc( pGia );\n    // y = 0; x = 0;\n    pNodes[0] = 1;\n    // y = 0; x \u003e 0 \n    for  x = 1; x \u003c= nSize; x++  {\n        pNodes[x] = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, 0, x) );\n    }\n    // y \u003e 0; x \u003e= 0\n    for  y = 1; y \u003c= nSize; y++  {\n        // y \u003e 0; x = 0\n        pNodes[0] = Gia_ManHashAnd( pGia, pNodes[0], Abc_NodeVarY(nSize, y, 0) );\n        // y \u003e 0; x \u003e 0\n        for  x = 1; x \u003c= nSize; x++  {\n            var iHor int32   = Gia_ManHashAnd( pGia, pNodes[x-1], Abc_NodeVarX(nSize, y, x) );\n            var iVer int32   = Gia_ManHashAnd( pGia, pNodes[x],   Abc_NodeVarY(nSize, y, x) );\n            pNodes[x] = Gia_ManHashOr( pGia, iHor, iVer );\n        }\n    }\n    Gia_ManAppendCo( pGia, pNodes[nSize] );\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    // inlining of macro ABC_FREE\n    ((pNodes) ? (free((char *) (pNodes)), (pNodes) = 0) : 0);\n    return pGia;\n}\nfunc Abc_EnumeratePathsTest() {\n    var nSize int32  = 2;\n    var pGia *Gia_Man_t  = Abc_EnumeratePaths( nSize );\n    Gia_AigerWrite( pGia, \"testpath.aig\", 0, 0, 0 );\n    Gia_ManStop( pGia );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generate NxN grid.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GraphGrid(n int32) *Vec_Int_t {\n    var vEdges *Vec_Int_t  = Vec_IntAlloc( 4*n*(n-1) ); // two nodes per edge\n    var i, k int32;\n    for  i = 0; i \u003c n; i++  {\n        for  k = 0; k \u003c n-1; k++  {\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+1 );\n        }\n        if i == n-1 { break; }\n        for  k = 0; k \u003c n; k++  {\n            Vec_IntPushTwo( vEdges, i*n+k, i*n+k+n );\n        }\n    }\n    //Vec_IntPrint( vEdges );\n    return vEdges;\n}\nfunc Abc_GraphNodeLife(vEdges *Vec_Int_t, n int32) *Vec_Int_t {\n    var vLife *Vec_Int_t  = Vec_IntStartFull( 2*n*n ); // start/stop per node\n    var One, Two, i int32;\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((One) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((Two) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        if Vec_IntEntry(vLife, 2*One) == -1 {\n            Vec_IntWriteEntry(vLife, 2*One, i/2); }\n        if Vec_IntEntry(vLife, 2*Two) == -1 {\n            Vec_IntWriteEntry(vLife, 2*Two, i/2); }\n        Vec_IntWriteEntry(vLife, 2*One+1, i/2);\n        Vec_IntWriteEntry(vLife, 2*Two+1, i/2);\n    }\n    //Vec_IntPrint( vLife );\n    return vLife;\n}\nfunc Abc_GraphFrontiers(vEdges *Vec_Int_t, vLife *Vec_Int_t) *Vec_Wec_t {\n    var vFronts *Vec_Wec_t  = Vec_WecAlloc( Vec_IntSize(vEdges)/2 ); // front for each edge\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( Vec_IntSize(vLife)/2 );\n    var e, n int32;    \n    Vec_WecPushLevel(vFronts);\n    for  e = 0; e \u003c Vec_IntSize(vEdges)/2; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        for  n = 0; n \u003c 2; n++  {\n            if Vec_IntEntry(vLife, 2*pNodes[n]) == e { // first time\n                Vec_IntPush( vTemp, pNodes[n] );\n            } else if Vec_IntEntry(vLife, 2*pNodes[n]+1) == e { // last time\n                Vec_IntRemove( vTemp, pNodes[n] ); }\n        }\n        Vec_IntAppend( Vec_WecPushLevel(vFronts), vTemp );\n    }\n    //Vec_WecPrint( vFronts, 0 );\n    Vec_IntFree( vTemp );\n    return vFronts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Print grid.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GraphPathPrint4(pBuffer *int32, vEdges *Vec_Int_t) {\n    var Box [13][13]byte;\n    var x, y int32;\n    var e int32;\n    var nEdges int32 = Vec_IntSize(vEdges)/2;\n    for  y = 0; y \u003c 13; y++  {\n    for  x = 0; x \u003c 13; x++  {\n        if y % 4 == 0 \u0026\u0026 x % 4 == 0 {\n            Box[y][x] = '*';\n        } else {\n            Box[y][x] = ' '; }\n    }\n    }\n    for  e = 0; e \u003c nEdges; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        var y0 int32  = 4*(pNodes[0]/4);\n        var x0 int32  = 4*(pNodes[0]%4);\n        var y1 int32  = 4*(pNodes[1]/4);\n        var x1 int32  = 4*(pNodes[1]%4);\n        if !pBuffer[e] {\n            continue; }\n        if y0 == y1 {\n            for  x = x0+1; x \u003c x1; x++  {\n                Box[y0][x] = '-';\n            }\n        \n        } else if x0 == x1 {\n            for  y = y0+1; y \u003c y1; y++  {\n                Box[y][x0] = '|';\n            }\n        \n        } else { assert(false, \"0\"); }\n    }\n    for  y = 0; y \u003c 13; y++, printf(\"\\n\")  {\n    for  x = 0; x \u003c 13; x++  {\n        fmt.Printf(\"%c\", Box[y][x]);\n    }\n    }\n    fmt.Printf(\"\\n\\n=================================\\n\\n\");\n}\nfunc Abc_GraphPathPrint5(pBuffer *int32, vEdges *Vec_Int_t) {\n    var Box [17][17]byte;\n    var x, y int32;\n    var e int32;\n    var nEdges int32 = Vec_IntSize(vEdges)/2;\n    for  y = 0; y \u003c 17; y++  {\n    for  x = 0; x \u003c 17; x++  {\n        if y % 4 == 0 \u0026\u0026 x % 4 == 0 {\n            Box[y][x] = '*';\n        } else {\n            Box[y][x] = ' '; }\n    }\n    }\n    for  e = 0; e \u003c nEdges; e++  {\n        var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n        var y0 int32  = 4*(pNodes[0]/5);\n        var x0 int32  = 4*(pNodes[0]%5);\n        var y1 int32  = 4*(pNodes[1]/5);\n        var x1 int32  = 4*(pNodes[1]%5);\n        if !pBuffer[e] {\n            continue; }\n        if y0 == y1 {\n            for  x = x0+1; x \u003c x1; x++  {\n                Box[y0][x] = '-';\n            }\n        \n        } else if x0 == x1 {\n            for  y = y0+1; y \u003c y1; y++  {\n                Box[y][x0] = '|';\n            }\n        \n        } else { assert(false, \"0\"); }\n    }\n    for  y = 0; y \u003c 17; y++, printf(\"\\n\")  {\n    for  x = 0; x \u003c 17; x++  {\n        fmt.Printf(\"%c\", Box[y][x]);\n    }\n    }\n    fmt.Printf(\"\\n\\n=================================\\n\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count paths.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GraphCountPaths_rec(Lev int32, Node int32, vNodes *Vec_Wec_t, pCache **float64, pBuffer *int32, vEdges *Vec_Int_t) float64 {\n    var Res0, Res1 float64;\n//    if ( Node == -2 ) Abc_GraphPathPrint4( pBuffer, vEdges );\n    if Node == -2 {\n        return 1; }\n    if Node == -1 {\n        return 0; }\n    if pCache[Lev][Node] != -1.0 {\n        return pCache[Lev][Node]; }\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphCountPaths_rec( Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return (pCache[Lev][Node] = Res0 + Res1);\n}\nfunc Abc_GraphCountPaths(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) float64 {\n    var i int32;\n    var k int32;\n    var pBuffer [1000]int32 ;\n    // inlining of macro ABC_ALLOC\n    var pCache **float64  = ((double * *) malloc(sizeof(double *) * (size_t)(Vec_WecSize(vNodes))));\n    var vLevel *Vec_Int_t;   var Value float64;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vNodes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_ALLOC\n        pCache[i] = ((double *) malloc(sizeof(double) * (size_t)(Vec_IntSize(vLevel))));\n        for  k = 0; k \u003c Vec_IntSize(vLevel); k++  {\n            pCache[i][k] = -1.0;\n        }\n    }\n    Value = Abc_GraphCountPaths_rec( 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for  i = 0; i \u003c Vec_WecSize(vNodes); i++  {\n        // inlining of macro ABC_FREE\n        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);\n    return Value;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Build AIG for paths.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GraphDeriveGia_rec(p *Gia_Man_t, Lev int32, Node int32, vNodes *Vec_Wec_t, pCache **int32, pBuffer *int32, vEdges *Vec_Int_t) int32 {\n    var Res0, Res1 int32;\n    if Node == -2 {\n        return 1; }\n    if Node == -1 {\n        return 0; }\n    if pCache[Lev][Node] != -1 {\n        return pCache[Lev][Node]; }\n    pBuffer[Lev] = 0;\n    Res0 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node   ), vNodes, pCache, pBuffer, vEdges );\n    pBuffer[Lev] = 1;\n    Res1 = Abc_GraphDeriveGia_rec( p, Lev+1, Vec_IntEntry( Vec_WecEntry(vNodes, Lev), 2*Node+1 ), vNodes, pCache, pBuffer, vEdges );\n    return ( pCache[Lev][Node] = Gia_ManHashMux(p, Gia_Obj2Lit(p, Gia_ManCi(p, Lev)), Res1, Res0) );\n}\nfunc Abc_GraphDeriveGia(vNodes *Vec_Wec_t, vEdges *Vec_Int_t) *Gia_Man_t {\n    var pCache **int32;\n    var i int32;\n    var Value int32;\n    var pBuffer [1000]int32 ;  \n    var vLevel *Vec_Int_t;\n    // start AIG\n    var pTemp *Gia_Man_t;\n    var p *Gia_Man_t = Gia_ManStart( 1000 );\n    p.pName = Abc_UtilStrsav(\"paths\");\n    for  i = 0; i \u003c Vec_IntSize(vEdges)/2; i++  {\n        Gia_ManAppendCi(p);\n    }\n    Gia_ManHashAlloc(p);\n    // alloc cache\n    // inlining of macro ABC_ALLOC\n    pCache = ((int * *) malloc(sizeof(int *) * (size_t)(Vec_WecSize(vNodes))));\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vNodes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_FALLOC\n        pCache[i] = ((int *) memset(malloc(sizeof(int) * (size_t)(Vec_IntSize(vLevel))), 0xff, sizeof(int) * (size_t)(Vec_IntSize(vLevel))));\n    }\n    Value = Abc_GraphDeriveGia_rec( p, 0, 0, vNodes, pCache, pBuffer, vEdges );\n    for  i = 0; i \u003c Vec_WecSize(vNodes); i++  {\n        // inlining of macro ABC_FREE\n        ((pCache[i]) ? (free((char *) (pCache[i])), (pCache[i]) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((pCache) ? (free((char *) (pCache)), (pCache) = 0) : 0);\n    // cleanup\n    Gia_ManAppendCo( p, Value );\n    p = Gia_ManCleanup( pTemp = p );\n    Gia_ManStop( pTemp );\n    return p;\n}\nfunc Abc_GraphDeriveGiaDump(vNodes *Vec_Wec_t, vEdges *Vec_Int_t, Size int32) {\n    var pFileName string // was [100]byte in C\n\n    var pGia *Gia_Man_t  = Abc_GraphDeriveGia( vNodes, vEdges );\n    pFileName = fmt.Sprintf(\"grid_%dx%d_e%03d.aig\", Size, Size, Vec_IntSize(vEdges)/2);\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    Gia_ManStop( pGia );\n    printf( \"Finished dumping AIG into file \\\"%s\\\".\\n\", pFileName );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Build frontier.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_GraphBuildState(vState *Vec_Int_t, e int32, x int32, vEdges *Vec_Int_t, vLife *Vec_Int_t, vFronts *Vec_Wec_t, pFront *int32, vStateNew *Vec_Int_t, fVerbose int32) int32 {\n    var vFront *Vec_Int_t  = Vec_WecEntry( vFronts, e );\n    var vFront2 *Vec_Int_t  = Vec_WecEntry( vFronts, e+1 );\n    var pNodes *int32  = Vec_IntEntryP(vEdges, 2*e);\n    var nNodes int32  = Vec_IntSize(vLife)/2;\n    var i int32;\n    var n int32;\n    var Node int32;\n    var First int32;\n    var pEquivs [2]int32;\n    assert(pNodes[0] \u003c pNodes[1], \"pNodes[0] \u003c pNodes[1]\");\n    if fVerbose != 0 { fmt.Printf(\"Edge = %d. Arc = %d.\\nCurrent state: \", e, x); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront, i)), 1); i++  {\n        pFront[Node] = Vec_IntEntry(vState, i);\n        if fVerbose != 0 { fmt.Printf(\"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16); }\n    }\n    if fVerbose != 0 { fmt.Printf(\"\\n\"); }\n    for  n = 0; n \u003c 2; n++  {\n        if Vec_IntEntry(vLife, 2*pNodes[n]) == e { // first time\n            pFront[pNodes[n]] = pNodes[n]; }\n    } // degree = 0; comp = singleton\n    if x != 0 {\n        if (pFront[pNodes[0]] \u0026 0xFFFF) == (pFront[pNodes[1]] \u0026 0xFFFF) { // the same comp\n            return -1; } // const 0\n        for  n = 0; n \u003c 2; n++  {\n            var Degree int32  = pFront[pNodes[n]] \u003e\u003e 16;\n            if (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree \u003e= 1 : Degree \u003e= 2 {\n                return -1; } // const 0\n            pFront[pNodes[n]] += (1 \u003c\u003c 16); // degree++\n        }\n    }\n    // remember equivalence classes\n    pEquivs[0] = pFront[pNodes[0]] \u0026 0xFFFF;\n    pEquivs[1] = pFront[pNodes[1]] \u0026 0xFFFF;\n    // remove some nodes from the frontier\n    for  n = 0; n \u003c 2; n++  {\n        if Vec_IntEntry(vLife, 2*pNodes[n]+1) == e { // last time\n        \n            var Degree int32  = pFront[pNodes[n]] \u003e\u003e 16;\n            if (pNodes[n] == 0 || pNodes[n] == nNodes-1) ? Degree != 1 : Degree != 0 \u0026\u0026 Degree != 2 {\n                return -1; } // const 0\n            // if it is part of the comp, update\n            First = -1;\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n                assert(Node != pNodes[n], \"Node != pNodes[n]\");\n                if (pFront[Node] \u0026 0xFFFF) == pEquivs[n] {\n                    if First == -1 {\n                        First = Node; }\n                    pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n                }\n            }\n            if First != -1 {\n                pEquivs[n] = First; }\n        }\n    }\n    if x != 0 {\n        // union comp\n        var First int32  = -1;\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n            if (pFront[Node] \u0026 0xFFFF) == pEquivs[0] || (pFront[Node] \u0026 0xFFFF) == pEquivs[1] {\n                if First == -1 {\n                    First = Node; }\n                pFront[Node] = (pFront[Node] \u0026 0xFFFF0000) | First;\n            }\n        }\n    }\n    // create next state\n    Vec_IntClear( vStateNew );\n    if fVerbose != 0 { fmt.Printf(\"Next state: \"); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFront2)) \u0026\u0026 (((Node) = Vec_IntEntry(vFront2, i)), 1); i++  {\n        Vec_IntPush( vStateNew, pFront[Node] );\n        if fVerbose != 0 { fmt.Printf(\"%d(%d) \", pFront[Node] \u0026 0xFFFF, pFront[Node] \u003e\u003e 16); }\n    }\n    if fVerbose != 0 { fmt.Printf(\"\\n\\n\"); }\n    return 1;\n}\nfunc Abc_GraphBuildFrontier(nSize int32, vEdges *Vec_Int_t, vLife *Vec_Int_t, vFronts *Vec_Wec_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var nPaths float64;\n    var nEdges int32  = Vec_IntSize(vEdges)/2;\n    var nNodes int32  = Vec_IntSize(vLife)/2;\n    var vNodes *Vec_Wec_t  = Vec_WecAlloc( nEdges );\n    var vStateNew *Vec_Int_t  = Vec_IntAlloc( nNodes );\n    var vStateCount *Vec_Int_t  = Vec_IntAlloc( nEdges );\n    // inlining of macro ABC_CALLOC\n    int e, s, x, Next, * pFront = ((int *) calloc((size_t)(nNodes), sizeof(int)));\n    var pThis *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );\n    var pNext *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );\n    Hsh_VecManAdd( pThis, vStateNew );\n    for  e = 0; e \u003c nEdges; e++  {\n        var vNode *Vec_Int_t  = Vec_WecPushLevel(vNodes);\n        var nStates int32  = Hsh_VecSize( pThis );\n        Vec_IntPush( vStateCount, nStates );\n        if fVerbose != 0 {\n            fmt.Printf(\"\\n\");\n            fmt.Printf(\"Processing edge %d = {%d %d}\\n\", e, Vec_IntEntry(vEdges, 2*e), Vec_IntEntry(vEdges, 2*e+1));\n            fmt.Printf(\"Frontier: \");  Vec_IntPrint( Vec_WecEntry(vFronts, e) );\n            fmt.Printf(\"\\n\");\n        }\n        for  s = 0; s \u003c nStates; s++  {\n            var vState *Vec_Int_t  = Hsh_VecReadEntry(pThis, s);\n            for  x = 0; x \u003c 2; x++  {\n                Next = Abc_GraphBuildState(vState, e, x, vEdges, vLife, vFronts, pFront, vStateNew, fVerbose);\n                if Next == 1 {\n                    if e == nEdges - 1 { // last edge\n                        Next = -2; // const1\n                    } else {\n                        Next = Hsh_VecManAdd( pNext, vStateNew ); }\n                }\n                if fVerbose != 0 { fmt.Printf(\"Return value = %d\\n\", Next); }\n                Vec_IntPush( vNode, Next );\n            }\n        }\n        Hsh_VecManStop( pThis );\n        pThis = pNext;\n        pNext = Hsh_VecManStart( 1000 );\n    }\n    nPaths = Abc_GraphCountPaths(vNodes, vEdges);\n    fmt.Printf(\"States = %8d   Paths = %24.0f  \", Vec_IntSum(vStateCount), nPaths); \n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    if fVerbose != 0 {\n        Vec_IntPrint( vStateCount ); }\n    Abc_GraphDeriveGiaDump( vNodes, vEdges, nSize );\n    // inlining of macro ABC_FREE\n    ((pFront) ? (free((char *) (pFront)), (pFront) = 0) : 0);\n    Vec_WecFree( vNodes );\n    Vec_IntFree( vStateNew );\n    Vec_IntFree( vStateCount );\n    Hsh_VecManStop( pThis );\n    Hsh_VecManStop( pNext );\n}\nfunc Abc_EnumerateFrontierTest(nSize int32) {\n    //int nSize    = 3;\n    var fVerbose int32;\n    var vEdges *Vec_Int_t  = Abc_GraphGrid( nSize );\n    var vLife *Vec_Int_t  = Abc_GraphNodeLife( vEdges, nSize );\n    var vFronts *Vec_Wec_t  = Abc_GraphFrontiers( vEdges, vLife );\n\n    Abc_GraphBuildFrontier( nSize, vEdges, vLife, vFronts, fVerbose );\n\n    Vec_WecFree( vFronts );\n    Vec_IntFree( vLife );\n    Vec_IntFree( vEdges );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs SAT-based path enumeration.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Word2Double(w word) float64 {\n    var Res float64;  var i int32;\n    for  i = 0; i \u003c 64; i++  {\n        if (w \u003e\u003e i) \u0026 1 {\n            Res += math.Pow(float64(2), float64(i)); }\n    }\n    return Res;\n}\nfunc Abc_GraphSolve(pGia *Gia_Man_t) {\n    var nIters int32  = 1000;\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );\n    var pSat *sat_solver; var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var nVars int32 = Gia_ManCiNum(pGia);\n    var iCiVarBeg int32  = pCnf.nVars - nVars;\n    var Total word;\n    var Mint1 word;\n    var Mint2 word;\n\n    // restart the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    // add timeframe clauses\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n    // create trivial assignment\n    Vec_IntClear( vLits );\n    for  k = 0; k \u003c nVars; k++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(iCiVarBeg+k, 1) );\n    }\n    // generate random assignment\n    for  i = 0; i \u003c nIters; i++  {\n        var Status int32  = sat_solver_solve_lexsat( pSat, Vec_IntArray(vLits), Vec_IntSize(vLits) );\n        if Status != l_True {\n            break; }\n        assert(Status == l_True, \"Status == l_True\");\n        // block this assignment\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        }\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) ) {\n            break; }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            Vec_IntWriteEntry( vLits, k, Abc_LitNot(iLit) );\n        }\n        // collect new minterm\n        Mint2 = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, k)), 1); k++  {\n            if !Abc_LitIsCompl(iLit) {\n                Mint2 |= ((word)1) \u003c\u003c (nVars-1-k); }\n        }\n        if Mint1 == 0 {\n            Mint1 = Mint2; }\n        // report\n        //printf( \"Iter %3d : \", i );\n        //Extra_PrintBinary( stdout, (unsigned *)\u0026Mint2, Abc_MinInt(64, nVars) ); printf( \"\\n\" );\n    }\n    //Mint1 = 0;\n    Total = (Mint2-Mint1)/nIters;\n    fmt.Printf(\"Vars = %d   Iters = %d   Ave = %.0f   Total = %.0f  \", nVars, nIters, Abc_Word2Double(Mint2-Mint1), Abc_Word2Double(Total));\n    fmt.Printf(\"Estimate = %.0f\\n\", (math.Pow(float64(2), float64(nVars))-Abc_Word2Double(Mint1))/Abc_Word2Double((Mint2-Mint1)/nIters));\n\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Vec_IntFree( vLits );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

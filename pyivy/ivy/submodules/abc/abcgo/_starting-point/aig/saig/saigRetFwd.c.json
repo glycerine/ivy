@@ -1,0 +1,360 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c",
+  "SHA256": "40a90c2339889e0985bb796f6c3163e15b7c138c27c3c0a8a064e538d496144a",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 61,
+        "Column": 79,
+        "ByteOffset": 2074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppFanouts = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFanoutsAlloc)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanouts \u003c nFanoutsAlloc ); "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 65,
+        "ByteOffset": 5076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppFanouts) ? (free((char *) (ppFanouts)), (ppFanouts) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 5381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjLo.pFanin0 \u0026\u0026 pObjLi.nRefs == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 9028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 228,
+        "Column": 73,
+        "ByteOffset": 9345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 237,
+        "Column": 73,
+        "ByteOffset": 9704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjFanoutStatic",
+      "Start": 779,
+      "End": 920,
+      "BodyStart": 866,
+      "Original": "static inline Aig_Obj_t * Aig_ObjFanoutStatic( Aig_Obj_t * pObj, int i )               { return ((Aig_Obj_t **)pObj-\u003epData)[i];             }",
+      "Draft": "func Aig_ObjFanoutStatic(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Aig_Obj_t **)pObj.pData)[i];             }"
+    },
+    {
+      "Name": "Aig_ObjSetFanoutStatic",
+      "Start": 921,
+      "End": 1062,
+      "BodyStart": 1008,
+      "Original": "static inline void        Aig_ObjSetFanoutStatic( Aig_Obj_t * pObj, Aig_Obj_t * pFan ) { ((Aig_Obj_t **)pObj-\u003epData)[pObj-\u003enRefs++] = pFan; }",
+      "Draft": "func Aig_ObjSetFanoutStatic(pObj *Aig_Obj_t, pFan *Aig_Obj_t) { ((Aig_Obj_t **)pObj.pData)[pObj.nRefs++] = pFan; }"
+    },
+    {
+      "Name": "Aig_ManStaticFanoutStart",
+      "Start": 1744,
+      "End": 2559,
+      "BodyStart": 1799,
+      "Original": "Aig_Obj_t ** Aig_ManStaticFanoutStart( Aig_Man_t * p )\n{\n    Aig_Obj_t ** ppFanouts, * pObj;\n    int i, nFanouts, nFanoutsAlloc;\n    // allocate fanouts\n    nFanoutsAlloc = 2 * Aig_ManObjNumMax(p) - Aig_ManCiNum(p) - Aig_ManCoNum(p);\n    ppFanouts = ABC_ALLOC( Aig_Obj_t *, nFanoutsAlloc );\n    // mark up storage\n    nFanouts = 0;\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pObj-\u003epData = ppFanouts + nFanouts;\n        nFanouts += pObj-\u003enRefs;  \n        pObj-\u003enRefs = 0;\n    }\n    assert( nFanouts \u003c nFanoutsAlloc ); \n    // add fanouts\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjChild0(pObj) )\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin0(pObj), pObj );\n        if ( Aig_ObjChild1(pObj) )\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin1(pObj), pObj );\n    }\n    return ppFanouts;\n}",
+      "Draft": "func Aig_ManStaticFanoutStart(p *Aig_Man_t) **Aig_Obj_t {\n    var ppFanouts **Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i, nFanouts, nFanoutsAlloc int32;\n    // allocate fanouts\n    nFanoutsAlloc = 2 * Aig_ManObjNumMax(p) - Aig_ManCiNum(p) - Aig_ManCoNum(p);\n    // inlining of macro ABC_ALLOC\n    ppFanouts = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFanoutsAlloc)));\n    // mark up storage\n    nFanouts = 0;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = ppFanouts + nFanouts;\n        nFanouts += pObj.nRefs;  \n        pObj.nRefs = 0;\n    }\n    }\n    assert(nFanouts \u003c nFanoutsAlloc, \"nFanouts \u003c nFanoutsAlloc\"); \n    // add fanouts\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjChild0(pObj) {\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin0(pObj), pObj ); }\n        if Aig_ObjChild1(pObj) {\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin1(pObj), pObj ); }\n    }\n    }\n    return ppFanouts;\n}"
+    },
+    {
+      "Name": "Aig_ManMarkAutonomous_rec",
+      "Start": 2845,
+      "End": 3147,
+      "BodyStart": 2911,
+      "Original": "void Aig_ManMarkAutonomous_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pFanout;\n    int i;\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    Aig_ObjForEachFanoutStatic( pObj, pFanout, i )\n        Aig_ManMarkAutonomous_rec( p, pFanout );\n}",
+      "Draft": "func Aig_ManMarkAutonomous_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // inlining of macro Aig_ObjForEachFanoutStatic\n    for  i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026 ((pFanout) = Aig_ObjFanoutStatic(pObj, i)); i++  {\n        Aig_ManMarkAutonomous_rec( p, pFanout );\n    }\n}"
+    },
+    {
+      "Name": "Saig_ManMarkAutonomous",
+      "Start": 3490,
+      "End": 4328,
+      "BodyStart": 3535,
+      "Original": "void Saig_ManMarkAutonomous( Aig_Man_t * p )\n{\n    Aig_Obj_t ** ppFanouts;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i;\n    // temporarily connect register outputs to register inputs\n    Saig_ManForEachLiLo( p, pObjLi, pObjLo, i )\n    {\n        pObjLo-\u003epFanin0 = pObjLi;\n        pObjLi-\u003enRefs = 1;\n    }\n    // mark nodes reachable from Const1 and PIs\n    Aig_ManIncrementTravId( p );\n    ppFanouts = Aig_ManStaticFanoutStart( p );\n    Aig_ManMarkAutonomous_rec( p, Aig_ManConst1(p) );\n    Saig_ManForEachPi( p, pObj, i )\n        Aig_ManMarkAutonomous_rec( p, pObj );\n    ABC_FREE( ppFanouts );\n    // disconnect LIs/LOs and label unreachable registers\n    Saig_ManForEachLiLo( p, pObjLi, pObjLo, i )\n    {\n        assert( pObjLo-\u003epFanin0 \u0026\u0026 pObjLi-\u003enRefs == 1 );\n        pObjLo-\u003epFanin0 = NULL;\n        pObjLi-\u003enRefs = 0;\n    }\n}",
+      "Draft": "func Saig_ManMarkAutonomous(p *Aig_Man_t) {\n    var ppFanouts **Aig_Obj_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    // temporarily connect register outputs to register inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n        pObjLo.pFanin0 = pObjLi;\n        pObjLi.nRefs = 1;\n    }\n    // mark nodes reachable from Const1 and PIs\n    Aig_ManIncrementTravId( p );\n    ppFanouts = Aig_ManStaticFanoutStart( p );\n    Aig_ManMarkAutonomous_rec( p, Aig_ManConst1(p) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ManMarkAutonomous_rec( p, pObj );\n    }\n    // inlining of macro ABC_FREE\n    ((ppFanouts) ? (free((char *) (ppFanouts)), (ppFanouts) = 0) : 0);\n    // disconnect LIs/LOs and label unreachable registers\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n        assert(pObjLo.pFanin0 \u0026\u0026 pObjLi.nRefs == 1, \"pObjLo.pFanin0 \u0026\u0026 pObjLi.nRefs == 1\");\n        pObjLo.pFanin0 = nil;\n        pObjLi.nRefs = 0;\n    }\n}"
+    },
+    {
+      "Name": "Saig_ManRetimeForwardOne",
+      "Start": 4643,
+      "End": 6414,
+      "BodyStart": 4733,
+      "Original": "Aig_Man_t * Saig_ManRetimeForwardOne( Aig_Man_t * p, int * pnRegFixed, int * pnRegMoves )\n{\n    Aig_Man_t * pNew;\n    Vec_Ptr_t * vCut;\n    Aig_Obj_t * pObj, * pFanin;\n    int i;\n    // mark the retimable nodes\n    Saig_ManMarkAutonomous( p );\n    // mark the retimable registers with the fresh trav ID\n    Aig_ManIncrementTravId( p );\n    *pnRegFixed = 0;\n    Saig_ManForEachLo( p, pObj, i )\n        if ( Aig_ObjIsTravIdPrevious(p, pObj) )\n            Aig_ObjSetTravIdCurrent(p, pObj);\n        else\n            (*pnRegFixed)++;\n    // mark all the nodes that can be retimed forward\n    *pnRegMoves = 0;\n    Aig_ManForEachNode( p, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin0(pObj)) \u0026\u0026 Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin1(pObj)) )\n        {\n            Aig_ObjSetTravIdCurrent(p, pObj);\n            (*pnRegMoves)++;\n        }\n    // mark the remaining registers\n    Saig_ManForEachLo( p, pObj, i )\n        Aig_ObjSetTravIdCurrent(p, pObj);\n    // find the cut (all such marked objects that fanout into unmarked nodes)\n    vCut = Vec_PtrAlloc( 1000 );\n    Aig_ManIncrementTravId( p );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjIsTravIdPrevious(p, pObj) )\n            continue;\n        pFanin = Aig_ObjFanin0(pObj);\n        if ( pFanin \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) )\n        {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n        pFanin = Aig_ObjFanin1(pObj);\n        if ( pFanin \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) )\n        {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n    }\n    // finally derive the new manager\n    pNew = Saig_ManRetimeDupForward( p, vCut );\n    Vec_PtrFree( vCut );\n    return pNew;\n}",
+      "Draft": "func Saig_ManRetimeForwardOne(p *Aig_Man_t, pnRegFixed *int32, pnRegMoves *int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var vCut *Vec_Ptr_t;\n    var pObj, pFanin *Aig_Obj_t;\n    var i int32;\n    // mark the retimable nodes\n    Saig_ManMarkAutonomous( p );\n    // mark the retimable registers with the fresh trav ID\n    Aig_ManIncrementTravId( p );\n    *pnRegFixed = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        if Aig_ObjIsTravIdPrevious(p, pObj) {\n            Aig_ObjSetTravIdCurrent(p, pObj);\n        } else {\n            (*pnRegFixed)++; }\n    }\n    // mark all the nodes that can be retimed forward\n    *pnRegMoves = 0;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin0(pObj)) \u0026\u0026 Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin1(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, pObj);\n            (*pnRegMoves)++;\n        }\n    }\n    // mark the remaining registers\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        Aig_ObjSetTravIdCurrent(p, pObj);\n    }\n    // find the cut (all such marked objects that fanout into unmarked nodes)\n    vCut = Vec_PtrAlloc( 1000 );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsTravIdPrevious(p, pObj) {\n            continue; }\n        pFanin = Aig_ObjFanin0(pObj);\n        if (pFanin != nil) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n        pFanin = Aig_ObjFanin1(pObj);\n        if (pFanin != nil) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n    }\n    }\n    // finally derive the new manager\n    pNew = Saig_ManRetimeDupForward( p, vCut );\n    Vec_PtrFree( vCut );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_ManRetimeForward",
+      "Start": 6729,
+      "End": 7595,
+      "BodyStart": 6809,
+      "Original": "Aig_Man_t * Saig_ManRetimeForward( Aig_Man_t * p, int nMaxIters, int fVerbose )\n{\n    Aig_Man_t * pNew, * pTemp;\n    int i, nRegFixed, nRegMoves = 1;\n    abctime clk;\n    pNew = p;\n    for ( i = 0; i \u003c nMaxIters \u0026\u0026 nRegMoves \u003e 0; i++ )\n    {\n        clk = Abc_Clock();\n        pNew = Saig_ManRetimeForwardOne( pTemp = pNew, \u0026nRegFixed, \u0026nRegMoves );\n        if ( fVerbose )\n        {\n            printf( \"%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. \", \n                i + 1, Aig_ManNodeNum(pTemp), Aig_ManRegNum(pTemp), nRegFixed, nRegMoves );\n            ABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if ( pTemp != p )\n            Aig_ManStop( pTemp );\n    }\n    clk = Abc_Clock();\n    pNew = Aig_ManReduceLaches( pNew, fVerbose );\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Register sharing time\", Abc_Clock() - clk );\n    }\n    return pNew;\n}",
+      "Draft": "func Saig_ManRetimeForward(p *Aig_Man_t, nMaxIters int32, fVerbose int32) *Aig_Man_t {\n    var pNew, pTemp *Aig_Man_t;\n    var i int32;\n    var nRegFixed int32;\n    var nRegMoves int32 = 1;\n    var clk abctime;\n    pNew = p;\n    for  i = 0; i \u003c nMaxIters \u0026\u0026 nRegMoves \u003e 0; i++  {\n        clk = Abc_Clock();\n        pNew = Saig_ManRetimeForwardOne( pTemp = pNew, \u0026nRegFixed, \u0026nRegMoves );\n        if fVerbose != 0 {\n            fmt.Printf(\"%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. \", i + 1, Aig_ManNodeNum(pTemp), Aig_ManRegNum(pTemp), nRegFixed, nRegMoves);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        if pTemp != p {\n            Aig_ManStop( pTemp ); }\n    }\n    clk = Abc_Clock();\n    pNew = Aig_ManReduceLaches( pNew, fVerbose );\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Register sharing time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::mechanical::sizeof::2063",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1994,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::876",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 876,
+      "End": 890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::1011",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1011,
+      "End": 1025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::2040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1994,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::2069",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1994,
+      "End": 1994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::2320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2080,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::2744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2292,
+      "End": 2292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::4897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3988,
+      "End": 3988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::5062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4070,
+      "End": 4070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::6263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5004,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::6709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5251,
+      "End": 5251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::7165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5531,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::pointer-cast::7585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5753,
+      "End": 5753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::macro::Aig_ObjForEachFanoutStatic",
+      "Category": "macro-review",
+      "Symbol": "Aig_ObjForEachFanoutStatic",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1064,
+      "End": 1232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Aig_ObjFanoutStatic",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanoutStatic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 779,
+      "End": 920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Aig_ObjSetFanoutStatic",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetFanoutStatic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 921,
+      "End": 1062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Aig_ManStaticFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManStaticFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1744,
+      "End": 2559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Aig_ManMarkAutonomous_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManMarkAutonomous_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2845,
+      "End": 3147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::ternary::Saig_ManMarkAutonomous",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManMarkAutonomous",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3490,
+      "End": 4328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Saig_ManMarkAutonomous",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManMarkAutonomous",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3490,
+      "End": 4328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Saig_ManRetimeForwardOne",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManRetimeForwardOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4643,
+      "End": 6414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::Saig_ManRetimeForward",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManRetimeForward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6729,
+      "End": 7595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigRetFwd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7843
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [saigRetFwd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Most-forward retiming.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigRetFwd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjFanoutStatic(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Aig_Obj_t **)pObj.pData)[i];             }\nfunc Aig_ObjSetFanoutStatic(pObj *Aig_Obj_t, pFan *Aig_Obj_t) { ((Aig_Obj_t **)pObj.pData)[pObj.nRefs++] = pFan; }\n\n// Original macro:\n// #define Aig_ObjForEachFanoutStatic( pObj, pFan, i )                        \\\n//     for ( i = 0; (i \u003c (int)(pObj)-\u003enRefs) \u0026\u0026 ((pFan) = Aig_ObjFanoutStatic(pObj, i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate static fanout for all nodes in the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManStaticFanoutStart(p *Aig_Man_t) **Aig_Obj_t {\n    var ppFanouts **Aig_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i, nFanouts, nFanoutsAlloc int32;\n    // allocate fanouts\n    nFanoutsAlloc = 2 * Aig_ManObjNumMax(p) - Aig_ManCiNum(p) - Aig_ManCoNum(p);\n    // inlining of macro ABC_ALLOC\n    ppFanouts = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFanoutsAlloc)));\n    // mark up storage\n    nFanouts = 0;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = ppFanouts + nFanouts;\n        nFanouts += pObj.nRefs;  \n        pObj.nRefs = 0;\n    }\n    }\n    assert(nFanouts \u003c nFanoutsAlloc, \"nFanouts \u003c nFanoutsAlloc\"); \n    // add fanouts\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjChild0(pObj) {\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin0(pObj), pObj ); }\n        if Aig_ObjChild1(pObj) {\n            Aig_ObjSetFanoutStatic( Aig_ObjFanin1(pObj), pObj ); }\n    }\n    }\n    return ppFanouts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the objects reachable from the given object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManMarkAutonomous_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    // inlining of macro Aig_ObjForEachFanoutStatic\n    for  i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026 ((pFanout) = Aig_ObjFanoutStatic(pObj, i)); i++  {\n        Aig_ManMarkAutonomous_rec( p, pFanout );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks with current trav ID nodes reachable from Const1 and PIs.]\n\n  Description [Returns the number of unreachable registers.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManMarkAutonomous(p *Aig_Man_t) {\n    var ppFanouts **Aig_Obj_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    // temporarily connect register outputs to register inputs\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n        pObjLo.pFanin0 = pObjLi;\n        pObjLi.nRefs = 1;\n    }\n    // mark nodes reachable from Const1 and PIs\n    Aig_ManIncrementTravId( p );\n    ppFanouts = Aig_ManStaticFanoutStart( p );\n    Aig_ManMarkAutonomous_rec( p, Aig_ManConst1(p) );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Aig_ManMarkAutonomous_rec( p, pObj );\n    }\n    // inlining of macro ABC_FREE\n    ((ppFanouts) ? (free((char *) (ppFanouts)), (ppFanouts) = 0) : 0);\n    // disconnect LIs/LOs and label unreachable registers\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {\n        assert(pObjLo.pFanin0 \u0026\u0026 pObjLi.nRefs == 1, \"pObjLo.pFanin0 \u0026\u0026 pObjLi.nRefs == 1\");\n        pObjLo.pFanin0 = nil;\n        pObjLi.nRefs = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the cut for forward retiming.]\n\n  Description [Assumes topological ordering of the nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManRetimeForwardOne(p *Aig_Man_t, pnRegFixed *int32, pnRegMoves *int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var vCut *Vec_Ptr_t;\n    var pObj, pFanin *Aig_Obj_t;\n    var i int32;\n    // mark the retimable nodes\n    Saig_ManMarkAutonomous( p );\n    // mark the retimable registers with the fresh trav ID\n    Aig_ManIncrementTravId( p );\n    *pnRegFixed = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        if Aig_ObjIsTravIdPrevious(p, pObj) {\n            Aig_ObjSetTravIdCurrent(p, pObj);\n        } else {\n            (*pnRegFixed)++; }\n    }\n    // mark all the nodes that can be retimed forward\n    *pnRegMoves = 0;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else\n        if Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin0(pObj)) \u0026\u0026 Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin1(pObj)) {\n            Aig_ObjSetTravIdCurrent(p, pObj);\n            (*pnRegMoves)++;\n        }\n    }\n    // mark the remaining registers\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        Aig_ObjSetTravIdCurrent(p, pObj);\n    }\n    // find the cut (all such marked objects that fanout into unmarked nodes)\n    vCut = Vec_PtrAlloc( 1000 );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsTravIdPrevious(p, pObj) {\n            continue; }\n        pFanin = Aig_ObjFanin0(pObj);\n        if (pFanin != nil) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n        pFanin = Aig_ObjFanin1(pObj);\n        if (pFanin != nil) \u0026\u0026 Aig_ObjIsTravIdPrevious(p, pFanin) {\n            Vec_PtrPush( vCut, pFanin );\n            Aig_ObjSetTravIdCurrent( p, pFanin );\n        }\n    }\n    }\n    // finally derive the new manager\n    pNew = Saig_ManRetimeDupForward( p, vCut );\n    Vec_PtrFree( vCut );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the cut for forward retiming.]\n\n  Description [Assumes topological ordering of the nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManRetimeForward(p *Aig_Man_t, nMaxIters int32, fVerbose int32) *Aig_Man_t {\n    var pNew, pTemp *Aig_Man_t;\n    var i int32;\n    var nRegFixed int32;\n    var nRegMoves int32 = 1;\n    var clk abctime;\n    pNew = p;\n    for  i = 0; i \u003c nMaxIters \u0026\u0026 nRegMoves \u003e 0; i++  {\n        clk = Abc_Clock();\n        pNew = Saig_ManRetimeForwardOne( pTemp = pNew, \u0026nRegFixed, \u0026nRegMoves );\n        if fVerbose != 0 {\n            fmt.Printf(\"%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. \", i + 1, Aig_ManNodeNum(pTemp), Aig_ManRegNum(pTemp), nRegFixed, nRegMoves);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        if pTemp != p {\n            Aig_ManStop( pTemp ); }\n    }\n    clk = Abc_Clock();\n    pNew = Aig_ManReduceLaches( pNew, fVerbose );\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Register sharing time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

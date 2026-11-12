@@ -1,0 +1,560 @@
+package acec
+
+import (
+	"fmt"
+	"os"
+)
+
+/**CFile****************************************************************
+
+  FileName    [acecCore.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [CEC for arithmetic circuits.]
+
+  Synopsis    [Core procedures.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: acecCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include "acecInt.h"
+//#include "proof/cec/cec.h"
+//#include "misc/util/utilTruth.h"
+//#include "misc/extra/extra.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+
+////////////////////////////////////////////////////////////////////////
+///                        DECLARATIONS                              ///
+////////////////////////////////////////////////////////////////////////
+
+const TRUTH_UNUSED = 0x1234567812345678
+
+////////////////////////////////////////////////////////////////////////
+///                     FUNCTION DEFINITIONS                         ///
+////////////////////////////////////////////////////////////////////////
+
+/**Function*************************************************************
+
+  Synopsis    [This procedure sets default parameters.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) {
+    memset( p, 0, sizeof(Acec_ParCec_t) );
+    p.nBTLimit       =    1000;    // conflict limit at a node
+    p.TimeLimit      =       0;    // the runtime limit in seconds
+    p.fMiter         =       0;    // input circuit is a miter
+    p.fDualOutput    =       0;    // dual-output miter
+    p.fTwoOutput     =       0;    // two-output miter
+    p.fSilent        =       0;    // print no messages
+    p.fVeryVerbose   =       0;    // verbose stats
+    p.fVerbose       =       0;    // verbose stats
+    p.iOutFail       =      -1;    // the number of failed output
+}  
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Acec_VerifyClasses(p *Gia_Man_t, vLits *Vec_Wec_t, vReprs *Vec_Wec_t) {
+    var vFunc *Vec_Ptr_t  = Vec_PtrAlloc( Vec_WecSize(vLits) );
+    var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );
+    var vTemp *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );
+    var vLevel *Vec_Int_t;
+    var i, j, k, Entry, Entry2, nOvers, nErrors int32;
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {
+        var vTruths *Vec_Wrd_t  = Vec_WrdAlloc( Vec_IntSize(vLevel) );
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel)) && (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {
+            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );
+            if Vec_IntSize(vSupp) > 6 {
+                nOvers++;
+                Vec_WrdPush( vTruths, TRUTH_UNUSED );
+                continue;
+            }
+            vSupp.nSize = Abc_Tt6MinBase( &Truth, vSupp.pArray, vSupp.nSize );
+            if Vec_IntSize(vSupp) > 5 {
+                nOvers++;
+                Vec_WrdPush( vTruths, TRUTH_UNUSED );
+                continue;
+            }
+            Vec_WrdPush( vTruths, Truth );
+        }
+        Vec_PtrPush( vFunc, vTruths );
+    }
+    if nOvers {
+        fmt.Printf("Detected %d oversize support nodes.\n", nOvers); }
+    Vec_IntFree( vSupp );
+    Vec_WrdFree( vTemp );
+    // verify the classes
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vReprs)) && (((vLevel) = Vec_WecEntry(vReprs, i)), 1); i++  {
+        var vTruths *Vec_Wrd_t  = (Vec_Wrd_t *)Vec_PtrEntry( vFunc, i );
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel)) && (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {
+        // inlining of macro Vec_IntForEachEntryStart
+        for  j = k+1; (j < Vec_IntSize(vLevel)) && (((Entry2) = Vec_IntEntry(vLevel, j)), 1); j++  {
+            var Truth word  = Vec_WrdEntry( vTruths, k );
+            var Truth2 word  = Vec_WrdEntry( vTruths, j );
+            if Entry == Entry2 {
+                nErrors++;
+                if Truth != Truth2 && Truth != TRUTH_UNUSED && Truth2 != TRUTH_UNUSED {
+                    fmt.Printf("Rank %d:  Lit %d and %d do not pass verification.\n", i, k, j); }
+            }
+            if Entry == Abc_LitNot(Entry2) {
+                nErrors++;
+                if Truth != ~Truth2 && Truth != TRUTH_UNUSED && Truth2 != TRUTH_UNUSED {
+                    fmt.Printf("Rank %d:  Lit %d and %d do not pass verification.\n", i, k, j); }
+            }
+        }
+        }
+    }
+    if nErrors != 0 {
+        fmt.Printf("Total errors in equivalence classes = %d.\n", nErrors); }
+    Vec_VecFree( (Vec_Vec_t *)vFunc );
+}
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Acec_CommonStart(pBase *Gia_Man_t, pAdd *Gia_Man_t) *Gia_Man_t {
+    var pObj *Gia_Obj_t;
+    var i int32;
+    Gia_ManFillValue( pAdd );
+    Gia_ManConst0(pAdd).Value = 0;
+    if pBase == nil {
+        pBase = Gia_ManStart( Gia_ManObjNum(pAdd) );
+        pBase.pName = Abc_UtilStrsav( pAdd.pName );
+        pBase.pSpec = Abc_UtilStrsav( pAdd.pSpec );
+        // inlining of macro Gia_ManForEachCi
+        for  i = 0; (i < Vec_IntSize(pAdd.vCis)) && ((pObj) = Gia_ManCi(pAdd, i)); i++  {
+            pObj.Value = Gia_ManAppendCi(pBase);
+        }
+        Gia_ManHashAlloc( pBase );
+    
+    } else {
+        assert(Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd), "Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd)");
+        // inlining of macro Gia_ManForEachCi
+        for  i = 0; (i < Vec_IntSize(pAdd.vCis)) && ((pObj) = Gia_ManCi(pAdd, i)); i++  {
+            pObj.Value = Gia_Obj2Lit( pBase, Gia_ManCi(pBase, i) );
+        }
+    }
+    // inlining of macro Gia_ManForEachAnd
+    for  i = 0; (i < pAdd.nObjs) && ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        pObj.Value = Gia_ManHashAnd( pBase, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
+    }
+    return pBase;
+}
+func Acec_CommonFinish(pBase *Gia_Man_t) {
+    var Id int32;
+    Gia_ManCreateRefs( pBase );
+    // inlining of macro Gia_ManForEachAndId
+    for  Id = 0; (Id < pBase.nObjs); Id++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pBase, Id)) {} else
+        if Gia_ObjRefNumId(pBase, Id) == 0 {
+            Gia_ManAppendCo( pBase, Abc_Var2Lit(Id,0) ); }
+    }
+}
+func Acec_CountRemap(pAdd *Gia_Man_t, pBase *Gia_Man_t) *Vec_Int_t {
+    var pObj *Gia_Obj_t; var i int32;
+    var vMapNew *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pAdd) );
+    Gia_ManSetPhase( pAdd );
+    Vec_IntWriteEntry( vMapNew, 0, 0 );
+    // inlining of macro Gia_ManForEachCand
+    for  i = 0; (i < pAdd.nObjs) && ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {
+        var iObjBase int32  = Abc_Lit2Var(pObj.Value);
+        var pObjBase *Gia_Obj_t  = Gia_ManObj( pBase, iObjBase );
+        var iObjRepr int32  = Abc_Lit2Var(pObjBase.Value);
+        Vec_IntWriteEntry( vMapNew, i, Abc_Var2Lit(iObjRepr, Gia_ObjPhase(pObj)) );
+    }
+    }
+    return vMapNew;
+}
+func Acec_ComputeEquivClasses(pOne *Gia_Man_t, pTwo *Gia_Man_t, pvMap1 **Vec_Int_t, pvMap2 **Vec_Int_t) {
+    var clk abctime  = Abc_Clock();
+    var pBase, pRepr *Gia_Man_t;
+    pBase = Acec_CommonStart( nil, pOne );
+    pBase = Acec_CommonStart( pBase, pTwo );
+    Acec_CommonFinish( pBase );
+    //Gia_ManShow( pBase, NULL, 0, 0, 0 );
+    pRepr = Gia_ManComputeGiaEquivs( pBase, 100, 0 );
+    *pvMap1 = Acec_CountRemap( pOne, pBase );
+    *pvMap2 = Acec_CountRemap( pTwo, pBase );
+    Gia_ManStop( pBase );
+    Gia_ManStop( pRepr );
+    fmt.Printf("Finished computing equivalent nodes.  ");
+    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+}
+func Acec_MatchBoxesSort(pArray *int32, nSize int32, pCostLits *int32) {
+    var i, j, best_i int32;
+    for  i = 0; i < nSize-1; i++  {
+        best_i = i;
+        for  j = i+1; j < nSize; j++  {
+            if Abc_Lit2LitL(pCostLits, pArray[j]) > Abc_Lit2LitL(pCostLits, pArray[best_i]) {
+                best_i = j; }
+        }
+        // inlining of macro ABC_SWAP
+        { var t int32  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };
+    }
+}
+func Acec_MatchPrintEquivLits(p *Gia_Man_t, vLits *Vec_Wec_t, pCostLits *int32, fVerbose int32) {
+    var vSupp *Vec_Int_t;
+    var vTemp *Vec_Wrd_t;
+    var vLevel *Vec_Int_t;
+    var i, k, Entry int32;
+    fmt.Printf("Leaf literals and their classes:\n");
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {
+        if Vec_IntSize(vLevel) == 0 {
+            continue; }
+        fmt.Printf("Rank %2d : %2d  ", i, Vec_IntSize(vLevel));
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel)) && (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {
+            fmt.Printf("%s%d(%d) ", Abc_LitIsCompl(Entry) ? "-":"+", Abc_Lit2Var(Entry), Abc_Lit2LitL(pCostLits, Entry));
+        }
+        fmt.Printf("\n");
+    }
+    if !(fVerbose != 0) {
+        return; }
+    vSupp = Vec_IntAlloc( 100 );
+    vTemp = Vec_WrdStart( Gia_ManObjNum(p) );
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {
+        //if ( i != 20 )
+        //    continue;
+        if Vec_IntSize(vLevel) == 0 {
+            continue; }
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel)) && (((Entry) = Vec_IntEntry(vLevel, k)), 1); k++  {
+            var Truth word  = Gia_ObjComputeTruth6Cis( p, Entry, vSupp, vTemp );
+/*
+            {
+                int iObj = Abc_Lit2Var(Entry);
+                Gia_Man_t * pGia0 = Gia_ManDupAndCones( p, &iObj, 1, 1 );
+                Gia_ManShow( pGia0, NULL, 0, 0, 0 );
+                Gia_ManStop( pGia0 );
+            }
+*/
+            fmt.Printf("Rank = %4d : ", i);
+            fmt.Printf("Obj = %4d  ", Abc_Lit2Var(Entry));
+            if Vec_IntSize(vSupp) > 6 {
+                fmt.Printf("Supp = %d.\n", Vec_IntSize(vSupp));
+                continue;
+            }
+            vSupp.nSize = Abc_Tt6MinBase( &Truth, vSupp.pArray, vSupp.nSize );
+            if Vec_IntSize(vSupp) > 5 {
+                fmt.Printf("Supp = %d.\n", Vec_IntSize(vSupp));
+                continue;
+            }
+            Extra_PrintHex( os.Stdout, (unsigned*)&Truth, Vec_IntSize(vSupp) );
+            if Vec_IntSize(vSupp) == 4 { fmt.Printf("    "); }
+            if Vec_IntSize(vSupp) == 3 { fmt.Printf("      "); }
+            if Vec_IntSize(vSupp) <= 2 { fmt.Printf("       "); }
+            fmt.Printf("  ");
+            Vec_IntPrint( vSupp );
+        }
+        fmt.Printf("\n");
+    }
+    Vec_IntFree( vSupp );
+    Vec_WrdFree( vTemp );
+}
+func Acec_MatchCopy(vLits *Vec_Wec_t, vMap *Vec_Int_t) *Vec_Wec_t {
+    var vRes *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLits) );
+    var vLevel *Vec_Int_t; var i, k, iLit int32;
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel)) && (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {
+            Vec_WecPush( vRes, i, Abc_Lit2LitL(Vec_IntArray(vMap), iLit) );
+        }
+    }
+    return vRes;
+}
+func Acec_MatchCountCommon(vLits1 *Vec_Wec_t, vLits2 *Vec_Wec_t, Shift int32) int32 {
+    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );
+    var vLevel1, vLevel2 *Vec_Int_t; 
+    var i, nCommon int32;
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits1)) && (((vLevel1) = Vec_WecEntry(vLits1, i)), 1); i++  {
+        if i+Shift < 0 || i+Shift >= Vec_WecSize(vLits2) {
+            continue; }
+        vLevel2 = Vec_WecEntry( vLits2, i+Shift );
+        nCommon += Vec_IntTwoFindCommonReverse( vLevel1, vLevel2, vRes );
+    }
+    Vec_IntFree( vRes );
+    return nCommon;
+}
+func Vec_IntInsertOrder(vLits *Vec_Int_t, vClasses *Vec_Int_t, Lit int32, Class int32) {
+    var i int32;
+    for  i = Vec_IntSize(vClasses)-1; i >= 0; i--  {
+        if Vec_IntEntry(vClasses,i) >= Class {
+            break; }
+    }
+    Vec_IntInsert( vLits, i+1, Lit );
+    Vec_IntInsert( vClasses, i+1, Class );
+}
+func Acec_MoveDuplicates(vLits *Vec_Wec_t, vClasses *Vec_Wec_t) {
+    var vLevel1, vLevel2 *Vec_Int_t; 
+    var i, k, Prev, This, Entry, Counter int32;
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel1) = Vec_WecEntry(vLits, i)), 1); i++  {
+        if i == Vec_WecSize(vLits) - 1 {
+            break; }
+        vLevel2 = Vec_WecEntry(vClasses, i);
+        assert(Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2), "Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2)");
+        Prev = -1;
+        // inlining of macro Vec_IntForEachEntry
+        for  k = 0; (k < Vec_IntSize(vLevel2)) && (((This) = Vec_IntEntry(vLevel2, k)), 1); k++  {
+            if Prev != This {
+                Prev = This;
+                continue;
+            }
+            Prev = -1;
+            Entry = Vec_IntEntry( vLevel1, k );
+
+            Vec_IntDrop( vLevel1, k );
+            Vec_IntDrop( vLevel2, k-- );
+
+            Vec_IntDrop( vLevel1, k );
+            Vec_IntDrop( vLevel2, k-- );
+
+            Vec_IntInsertOrder( Vec_WecEntry(vLits, i+1), Vec_WecEntry(vClasses, i+1), Entry, This );
+
+            assert(Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2), "Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2)");
+            assert(Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)), "Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1))");
+            Counter++;
+        }
+    }
+    fmt.Printf("Moved %d pairs of PPs to normalize the matrix.\n", Counter);
+}
+
+func Acec_MatchCheckShift(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, vLits0 *Vec_Wec_t, vLits1 *Vec_Wec_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vRoots0 *Vec_Wec_t, vRoots1 *Vec_Wec_t) {
+    var vRes0 *Vec_Wec_t  = Acec_MatchCopy( vLits0, vMap0 );
+    var vRes1 *Vec_Wec_t  = Acec_MatchCopy( vLits1, vMap1 );
+    var nCommon int32       = Acec_MatchCountCommon( vRes0, vRes1,  0 );
+    var nCommonPlus int32   = Acec_MatchCountCommon( vRes0, vRes1,  1 );
+    var nCommonMinus int32  = Acec_MatchCountCommon( vRes0, vRes1, -1 );
+    if nCommonPlus >= nCommonMinus && nCommonPlus > nCommon {
+        Vec_WecInsertLevel( vLits0, 0 );
+        Vec_WecInsertLevel( vRoots0, 0 );
+        Vec_WecInsertLevel( vRes0, 0 );
+        fmt.Printf("Shifted one level up.\n");
+    
+    } else if nCommonMinus > nCommonPlus && nCommonMinus > nCommon {
+        Vec_WecInsertLevel( vLits1, 0 );
+        Vec_WecInsertLevel( vRoots1, 0 );
+        Vec_WecInsertLevel( vRes1, 0 );
+        fmt.Printf("Shifted one level down.\n");
+    }
+    Acec_MoveDuplicates( vLits0, vRes0 );
+    Acec_MoveDuplicates( vLits1, vRes1 );
+
+    //Vec_WecPrintLits( vLits1 );
+    //printf( "Input literals:\n" );
+    //Vec_WecPrintLits( vLits0 );
+    //printf( "Equiv classes:\n" );
+    //Vec_WecPrintLits( vRes0 );
+    //printf( "Input literals:\n" );
+    //Vec_WecPrintLits( vLits1 );
+    //printf( "Equiv classes:\n" );
+    //Vec_WecPrintLits( vRes1 );
+    //Acec_VerifyClasses( pGia0, vLits0, vRes0 );
+    //Acec_VerifyClasses( pGia1, vLits1, vRes1 );
+    Vec_WecFree( vRes0 );
+    Vec_WecFree( vRes1 );
+}
+func Acec_MatchBoxes(pBox0 *Acec_Box_t, pBox1 *Acec_Box_t) int32 {
+    var vMap0, vMap1, vLevel *Vec_Int_t; 
+    var i, nSize, nTotal int32;
+    Acec_ComputeEquivClasses( pBox0.pGia, pBox1.pGia, &vMap0, &vMap1 );
+    // sort nodes in the classes by their equivalences
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(pBox0.vLeafLits)) && (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {
+        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap0) );
+    }
+    // inlining of macro Vec_WecForEachLevel
+    for  i = 0; (i < Vec_WecSize(pBox1.vLeafLits)) && (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {
+        Acec_MatchBoxesSort( Vec_IntArray(vLevel), Vec_IntSize(vLevel), Vec_IntArray(vMap1) );
+    }
+    Acec_MatchCheckShift( pBox0.pGia, pBox1.pGia, pBox0.vLeafLits, pBox1.vLeafLits, vMap0, vMap1, pBox0.vRootLits, pBox1.vRootLits );
+    
+    //Acec_MatchPrintEquivLits( pBox0->pGia, pBox0->vLeafLits, Vec_IntArray(vMap0), 0 );
+    //Acec_MatchPrintEquivLits( pBox1->pGia, pBox1->vLeafLits, Vec_IntArray(vMap1), 0 );
+    //printf( "Outputs:\n" );
+    //Vec_WecPrintLits( pBox0->vRootLits );
+    //printf( "Outputs:\n" );
+    //Vec_WecPrintLits( pBox1->vRootLits );
+
+    // reorder nodes to have the same order
+    assert(pBox0.vShared == nil, "pBox0.vShared == nil");
+    assert(pBox1.vShared == nil, "pBox1.vShared == nil");
+    pBox0.vShared = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );
+    pBox1.vShared = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );
+    pBox0.vUnique = Vec_WecStart( Vec_WecSize(pBox0.vLeafLits) );
+    pBox1.vUnique = Vec_WecStart( Vec_WecSize(pBox1.vLeafLits) );
+    nSize = Abc_MinInt( Vec_WecSize(pBox0.vLeafLits), Vec_WecSize(pBox1.vLeafLits) );
+    // inlining of macro Vec_WecForEachLevelStart
+    for  i = nSize; (i < Vec_WecSize(pBox0.vLeafLits)) && (((vLevel) = Vec_WecEntry(pBox0.vLeafLits, i)), 1); i++  {
+        Vec_IntAppend( Vec_WecEntry(pBox0.vUnique, i), vLevel );
+    }
+    // inlining of macro Vec_WecForEachLevelStart
+    for  i = nSize; (i < Vec_WecSize(pBox1.vLeafLits)) && (((vLevel) = Vec_WecEntry(pBox1.vLeafLits, i)), 1); i++  {
+        Vec_IntAppend( Vec_WecEntry(pBox1.vUnique, i), vLevel );
+    }
+    for  i = 0; i < nSize; i++  {
+        var vShared0 *Vec_Int_t  = Vec_WecEntry( pBox0.vShared, i );
+        var vShared1 *Vec_Int_t  = Vec_WecEntry( pBox1.vShared, i );
+        var vUnique0 *Vec_Int_t  = Vec_WecEntry( pBox0.vUnique, i );
+        var vUnique1 *Vec_Int_t  = Vec_WecEntry( pBox1.vUnique, i );
+
+        var vLevel0 *Vec_Int_t  = Vec_WecEntry( pBox0.vLeafLits, i );
+        var vLevel1 *Vec_Int_t  = Vec_WecEntry( pBox1.vLeafLits, i );
+        var pBeg0 *int32  = Vec_IntArray(vLevel0);
+        var pBeg1 *int32  = Vec_IntArray(vLevel1);
+        var pEnd0 *int32  = Vec_IntLimit(vLevel0);
+        var pEnd1 *int32  = Vec_IntLimit(vLevel1);
+        for  pBeg0 < pEnd0 && pBeg1 < pEnd1  {
+            var Entry0 int32  = Abc_Lit2LitL( Vec_IntArray(vMap0), *pBeg0 );
+            var Entry1 int32  = Abc_Lit2LitL( Vec_IntArray(vMap1), *pBeg1 );
+            assert(*pBeg0 && *pBeg1, "*pBeg0 && *pBeg1");
+            if Entry0 == Entry1 {
+                Vec_IntPush( vShared0, *pBeg0++ );
+                Vec_IntPush( vShared1, *pBeg1++ );
+            
+            } else if Entry0 > Entry1 {
+                Vec_IntPush( vUnique0, *pBeg0++ );
+            } else { 
+                Vec_IntPush( vUnique1, *pBeg1++ ); }
+        }
+        for  pBeg0 < pEnd0  {
+            Vec_IntPush( vUnique0, *pBeg0++ );
+        }
+        for  pBeg1 < pEnd1  {
+            Vec_IntPush( vUnique1, *pBeg1++ );
+        }
+        assert(Vec_IntSize(vShared0) == Vec_IntSize(vShared1), "Vec_IntSize(vShared0) == Vec_IntSize(vShared1)");
+        assert(Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0), "Vec_IntSize(vShared0) + Vec_IntSize(vUnique0) == Vec_IntSize(vLevel0)");
+        assert(Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1), "Vec_IntSize(vShared1) + Vec_IntSize(vUnique1) == Vec_IntSize(vLevel1)");
+    }
+    nTotal = Vec_WecSizeSize(pBox0.vShared);
+    fmt.Printf("Box0: Matched %d entries out of %d.\n", nTotal, Vec_WecSizeSize(pBox0.vLeafLits));
+    fmt.Printf("Box1: Matched %d entries out of %d.\n", nTotal, Vec_WecSizeSize(pBox1.vLeafLits));
+
+    //Acec_MatchPrintEquivLits( pBox0->pGia, pBox0->vShared, Vec_IntArray(vMap0), 0 );
+    //Acec_MatchPrintEquivLits( pBox1->pGia, pBox1->vShared, Vec_IntArray(vMap1), 0 );
+    //printf( "\n" );
+
+    //Acec_MatchPrintEquivLits( pBox0->pGia, pBox0->vUnique, Vec_IntArray(vMap0), 0 );
+    //Acec_MatchPrintEquivLits( pBox1->pGia, pBox1->vUnique, Vec_IntArray(vMap1), 0 );
+
+    Vec_IntFree( vMap0 );
+    Vec_IntFree( vMap1 );
+    return nTotal;
+}
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Acec_Solve(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, pPars *Acec_ParCec_t) int32 {
+    var status int32  = -1;
+    var clk abctime  = Abc_Clock();
+    var pMiter *Gia_Man_t;
+    var pGia0n *Gia_Man_t = pGia0;
+    var pGia1n *Gia_Man_t = pGia1;
+    var ParsCec Cec_ParCec_t;
+    var pCecPars *Cec_ParCec_t = &ParsCec;
+//    Vec_Bit_t * vIgnore0 = pPars->fBooth ? Acec_BoothFindPPG(pGia0) : NULL;
+//    Vec_Bit_t * vIgnore1 = pPars->fBooth ? Acec_BoothFindPPG(pGia1) : NULL;
+//    Acec_Box_t * pBox0 = Acec_DeriveBox( pGia0, vIgnore0, 0, 0, pPars->fVerbose );
+//    Acec_Box_t * pBox1 = Acec_DeriveBox( pGia1, vIgnore1, 0, 0, pPars->fVerbose );
+//    Vec_BitFreeP( &vIgnore0 );
+//    Vec_BitFreeP( &vIgnore1 );
+    var pBox0 *Acec_Box_t  = Acec_ProduceBox( pGia0, pPars.fVerbose );
+    var pBox1 *Acec_Box_t  = Acec_ProduceBox( pGia1, pPars.fVerbose );
+    if pBox0 == nil || pBox1 == nil { // cannot match
+        fmt.Printf("Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.\n");
+    } else if !(Acec_MatchBoxes( pBox0, pBox1 ) != 0) { // cannot find matching
+        fmt.Printf("Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.\n");
+    } else {
+        pGia0n = Acec_InsertBox( pBox0, 0 );
+        pGia1n = Acec_InsertBox( pBox1, 0 );
+        fmt.Printf("Matching of adder trees in LHS and RHS succeeded.  ");
+        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+        // remove the last output
+        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-1, 0 );
+        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-1, 0 );
+
+        Gia_ManPatchCoDriver( pGia0n, Gia_ManCoNum(pGia0n)-2, 0 );
+        Gia_ManPatchCoDriver( pGia1n, Gia_ManCoNum(pGia1n)-2, 0 );
+    }
+    // solve regular CEC problem 
+    Cec_ManCecSetDefaultParams( pCecPars );
+    pCecPars.nBTLimit = pPars.nBTLimit;
+    pMiter = Gia_ManMiter( pGia0n, pGia1n, 0, 1, 0, 0, pPars.fVerbose );
+    if pMiter != nil {
+        var fDumpMiter int32;
+        if fDumpMiter != 0 {
+            Abc_Print( 0, "The verification miter is written into file \"%s\".\n", "acec_miter.aig" );
+            Gia_AigerWrite( pMiter, "acec_miter.aig", 0, 0, 0 );
+        }
+        status = Cec_ManVerify( pMiter, pCecPars );
+        // inlining of macro ABC_SWAP
+        { var t *Abc_Cex_t  = pGia0.pCexComb; pGia0.pCexComb = pMiter.pCexComb; pMiter.pCexComb = t; };
+        Gia_ManStop( pMiter );
+    
+    } else {
+        fmt.Printf("Miter computation has failed.\n"); }
+    if pGia0n != pGia0 {
+        Gia_ManStop( pGia0n ); }
+    if pGia1n != pGia1 {
+        Gia_ManStop( pGia1n ); }
+    Acec_BoxFreeP( &pBox0 );
+    Acec_BoxFreeP( &pBox1 );
+    return status;
+}
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+
+//ABC_NAMESPACE_IMPL_END
+

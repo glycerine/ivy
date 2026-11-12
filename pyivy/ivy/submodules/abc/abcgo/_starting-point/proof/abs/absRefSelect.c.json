@@ -1,0 +1,303 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c",
+  "SHA256": "373cbb6ac26ad6bb554bf28983fed6a1b535b47bb928dcc9b5bbac2f313103fe",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 52,
+        "Column": 13,
+        "ByteOffset": 1634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 13,
+        "ByteOffset": 1747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 13,
+        "ByteOffset": 1802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"0\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %3d\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Selected PPI %3d : \", i+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d \",  Gia_ObjId(p, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 13,
+        "ByteOffset": 3701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 13,
+        "ByteOffset": 3731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%6d \", Gia_ObjId(p, pFanin) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 17,
+        "ByteOffset": 3835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"selected PPI\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 17,
+        "ByteOffset": 3933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"frontier (original PI or PPI)\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 17,
+        "ByteOffset": 4049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"abstracted node\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 17,
+        "ByteOffset": 4151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"free variable\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 4192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 7158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 7573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 12552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rnm_ManPrintSelected",
+      "Start": 1286,
+      "End": 1722,
+      "BodyStart": 1351,
+      "Original": "void Rnm_ManPrintSelected( Rnm_Man_t * p, Vec_Int_t * vNewPPis )\n{\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        if ( Gia_ObjIsPi(p-\u003epGia, pObj) ) \n            printf( \"-\" );\n        else if ( Vec_IntFind(vNewPPis, Gia_ObjId(p-\u003epGia, pObj)) \u003e= 0 )// this is PPI\n            printf( \"1\" ), Counter++;\n        else\n            printf( \"0\" );\n    printf( \" %3d\\n\", Counter );\n}",
+      "Draft": "func Rnm_ManPrintSelected(p *Rnm_Man_t, vNewPPis *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if Gia_ObjIsPi(p.pGia, pObj) { \n            fmt.Printf(\"-\");\n        } else if Vec_IntFind(vNewPPis, Gia_ObjId(p.pGia, pObj)) \u003e= 0 {// this is PPI\n            fmt.Printf(\"1\");\nCounter++;\n        } else {\n            fmt.Printf(\"0\"); }\n    }\n    fmt.Printf(\" %3d\\n\", Counter);\n}"
+    },
+    {
+      "Name": "Ga2_StructAnalize",
+      "Start": 1986,
+      "End": 3446,
+      "BodyStart": 2088,
+      "Original": "void Ga2_StructAnalize( Gia_Man_t * p, Vec_Int_t * vFront, Vec_Int_t * vInter, Vec_Int_t * vNewPPis )\n{\n    Vec_Int_t * vFanins;\n    Gia_Obj_t * pObj, * pFanin;\n    int i, k;\n    // clean labels\n    Gia_ManForEachObj( p, pObj, i )\n        pObj-\u003efMark0 = pObj-\u003efMark1 = 0;\n    // label frontier\n    Gia_ManForEachObjVec( vFront, p, pObj, i )\n        pObj-\u003efMark0 = 1, pObj-\u003efMark1 = 0;\n    // label objects\n    Gia_ManForEachObjVec( vInter, p, pObj, i )\n        pObj-\u003efMark1 = 0, pObj-\u003efMark1 = 1;\n    // label selected\n    Gia_ManForEachObjVec( vNewPPis, p, pObj, i )\n        pObj-\u003efMark1 = 1, pObj-\u003efMark1 = 1;\n    // explore selected\n    Gia_ManForEachObjVec( vNewPPis, p, pObj, i )\n    {\n        printf( \"Selected PPI %3d : \", i+1 );\n        printf( \"%6d \",  Gia_ObjId(p, pObj) );\n        printf( \"\\n\" );\n        vFanins = Ga2_ObjLeaves( p, pObj );\n        Gia_ManForEachObjVec( vFanins, p, pFanin, k )\n        {\n            printf( \"    \" );\n            printf( \"%6d \", Gia_ObjId(p, pFanin) );\n            if ( pFanin-\u003efMark0 \u0026\u0026 pFanin-\u003efMark1 )\n                printf( \"selected PPI\" );\n            else if ( pFanin-\u003efMark0 \u0026\u0026 !pFanin-\u003efMark1 )\n                printf( \"frontier (original PI or PPI)\" );\n            else if ( !pFanin-\u003efMark0 \u0026\u0026  pFanin-\u003efMark1 )\n                printf( \"abstracted node\" );\n            else if ( !pFanin-\u003efMark0 \u0026\u0026 !pFanin-\u003efMark1 )\n                printf( \"free variable\" );\n            printf( \"\\n\" );\n        }\n    }\n}",
+      "Draft": "func Ga2_StructAnalize(p *Gia_Man_t, vFront *Vec_Int_t, vInter *Vec_Int_t, vNewPPis *Vec_Int_t) {\n    var vFanins *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k int32;\n    // clean labels\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = pObj.fMark1 = 0;\n    }\n    // label frontier\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vFront,i))); i++  {\n        pObj.fMark0 = 1, pObj.fMark1 = 0;\n    }\n    // label objects\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vInter)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vInter,i))); i++  {\n        pObj.fMark1 = 0, pObj.fMark1 = 1;\n    }\n    // label selected\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNewPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNewPPis,i))); i++  {\n        pObj.fMark1 = 1, pObj.fMark1 = 1;\n    }\n    // explore selected\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNewPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNewPPis,i))); i++  {\n        fmt.Printf(\"Selected PPI %3d : \", i+1);\n        fmt.Printf(\"%6d \", Gia_ObjId(p, pObj));\n        fmt.Printf(\"\\n\");\n        vFanins = Ga2_ObjLeaves( p, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vFanins,k))); k++  {\n            fmt.Printf(\"    \");\n            fmt.Printf(\"%6d \", Gia_ObjId(p, pFanin));\n            if pFanin.fMark0 \u0026\u0026 pFanin.fMark1 {\n                fmt.Printf(\"selected PPI\");\n            } else if pFanin.fMark0 \u0026\u0026 !pFanin.fMark1 {\n                fmt.Printf(\"frontier (original PI or PPI)\");\n            } else if !pFanin.fMark0 \u0026\u0026  pFanin.fMark1 {\n                fmt.Printf(\"abstracted node\");\n            } else if !pFanin.fMark0 \u0026\u0026 !pFanin.fMark1 {\n                fmt.Printf(\"free variable\"); }\n            fmt.Printf(\"\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Rnm_ManFilterSelected",
+      "Start": 3949,
+      "End": 6599,
+      "BodyStart": 4022,
+      "Original": "Vec_Int_t * Rnm_ManFilterSelected( Rnm_Man_t * p, Vec_Int_t * vOldPPis )\n{\n    int fVerbose = 0;\n    Vec_Int_t * vNewPPis, * vFanins;\n    Gia_Obj_t * pObj, * pFanin;\n    int i, k, RetValue, Counters[3] = {0};\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment PPI fanin counters\n    Vec_IntClear( p-\u003evFanins );\n    Gia_ManForEachObjVec( vOldPPis, p-\u003epGia, pObj, i )\n    {\n        vFanins = Ga2_ObjLeaves( p-\u003epGia, pObj );\n        Gia_ManForEachObjVec( vFanins, p-\u003epGia, pFanin, k )\n            if ( Rnm_ObjAddToCount(p, pFanin) == 0 ) // fanin counter is 0 -- save it\n                Vec_IntPush( p-\u003evFanins, Gia_ObjId(p-\u003epGia, pFanin) );\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects\n    // - objects whose fanin belongs to the justified area\n    // - objects whose fanins overlap\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    Gia_ManForEachObjVec( vOldPPis, p-\u003epGia, pObj, i )\n    {\n        if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n        {\n            if ( fVerbose )\n                Counters[0]++;\n            Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pObj) );\n            continue;\n        }\n        vFanins = Ga2_ObjLeaves( p-\u003epGia, pObj );\n        Gia_ManForEachObjVec( vFanins, p-\u003epGia, pFanin, k )\n        {\n            if ( Rnm_ObjIsJust(p, pFanin) || Rnm_ObjCount(p, pFanin) \u003e 1 )\n            {\n                if ( fVerbose )\n                    Counters[1] += Rnm_ObjIsJust(p, pFanin);\n                if ( fVerbose )\n                    Counters[2] += (Rnm_ObjCount(p, pFanin) \u003e 1);\n                Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pObj) );\n                break;\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n    assert( RetValue == 0 );\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    Gia_ManForEachObjVec( p-\u003evFanins, p-\u003epGia, pObj, i )\n        Rnm_ObjSetCount( p, pObj, 0 );\n\n    // visualize\n    if ( fVerbose )\n        printf( \"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", \n            p-\u003enRefId, Vec_IntSize(p-\u003evMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2] );\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}",
+      "Draft": "func Rnm_ManFilterSelected(p *Rnm_Man_t, vOldPPis *Vec_Int_t) *Vec_Int_t {\n    var fVerbose int32;\n    var vNewPPis, vFanins *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var RetValue int32;\n    var Counters [3]int32 ;\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment PPI fanin counters\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjAddToCount(p, pFanin) == 0 { // fanin counter is 0 -- save it\n                Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin) ); }\n        }\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects\n    // - objects whose fanin belongs to the justified area\n    // - objects whose fanins overlap\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            if fVerbose != 0 {\n                Counters[0]++; }\n            Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n            continue;\n        }\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjIsJust(p, pFanin) || Rnm_ObjCount(p, pFanin) \u003e 1 {\n                if fVerbose != 0 {\n                    Counters[1] += Rnm_ObjIsJust(p, pFanin); }\n                if fVerbose != 0 {\n                    Counters[2] += (Rnm_ObjCount(p, pFanin) \u003e 1); }\n                Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n                break;\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        Rnm_ObjSetCount( p, pObj, 0 );\n    }\n\n    // visualize\n    if fVerbose != 0 {\n        fmt.Printf(\"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", p.nRefId, Vec_IntSize(p.vMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2]); }\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}"
+    },
+    {
+      "Name": "Rnm_ManFilterSelectedNew",
+      "Start": 6876,
+      "End": 10727,
+      "BodyStart": 6952,
+      "Original": "Vec_Int_t * Rnm_ManFilterSelectedNew( Rnm_Man_t * p, Vec_Int_t * vOldPPis )\n{\n    static int Counter = 0;\n    int fVerbose = 0;\n    Vec_Int_t * vNewPPis, * vFanins, * vFanins2;\n    Gia_Obj_t * pObj, * pFanin, * pFanin2;\n    int i, k, k2, RetValue, Counters[3] = {0};\n\n    // return full set of PPIs once in a while\n    if ( ++Counter % 9 == 0 )\n        return Vec_IntDup( vOldPPis );\n    return Rnm_ManFilterSelected( p, vOldPPis );\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment two levels of PPI fanin counters\n    Vec_IntClear( p-\u003evFanins );\n    Gia_ManForEachObjVec( vOldPPis, p-\u003epGia, pObj, i )\n    {\n        // go through the fanins\n        vFanins = Ga2_ObjLeaves( p-\u003epGia, pObj );\n        Gia_ManForEachObjVec( vFanins, p-\u003epGia, pFanin, k )\n        {\n            Rnm_ObjAddToCount(p, pFanin);\n            if ( Rnm_ObjIsJust(p, pFanin) )   // included in the abstraction\n                Rnm_ObjAddToCount(p, pFanin); // count it second time!\n            Vec_IntPush( p-\u003evFanins, Gia_ObjId(p-\u003epGia, pFanin) );\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p-\u003epGia, pFanin );\n            Gia_ManForEachObjVec( vFanins2, p-\u003epGia, pFanin2, k2 )\n            {\n                Rnm_ObjAddToCount(p, pFanin2);\n                if ( Rnm_ObjIsJust(p, pFanin2) )   // included in the abstraction\n                    Rnm_ObjAddToCount(p, pFanin2); // count it second time!\n                Vec_IntPush( p-\u003evFanins, Gia_ObjId(p-\u003epGia, pFanin2) );\n            }\n        }\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects - yes\n    // - objects whose fanin (or fanins' fanin) belongs to the justified area - yes\n    // - objects whose fanins (or fanins' fanin) overlap - yes\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    Gia_ManForEachObjVec( vOldPPis, p-\u003epGia, pObj, i )\n    {\n        if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n        {\n            if ( fVerbose )\n                Counters[0]++;\n            Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pObj) );\n            continue;\n        } \n        // go through the first fanins\n        vFanins = Ga2_ObjLeaves( p-\u003epGia, pObj );\n        Gia_ManForEachObjVec( vFanins, p-\u003epGia, pFanin, k )\n        {\n            if ( Rnm_ObjCount(p, pFanin) \u003e 1 )\n                Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pObj) );\n            continue;\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p-\u003epGia, pFanin );\n            Gia_ManForEachObjVec( vFanins2, p-\u003epGia, pFanin2, k2 )\n            {\n                if ( Rnm_ObjCount(p, pFanin2) \u003e 1 )\n                {\n//                    Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pFanin) );\n                    Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pObj) );\n                }\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n//    assert( RetValue == 0 ); // we will have duplicated entries here!\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    Gia_ManForEachObjVec( p-\u003evFanins, p-\u003epGia, pObj, i )\n        Rnm_ObjSetCount( p, pObj, 0 );\n\n    // visualize\n    if ( fVerbose )\n        printf( \"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", \n            p-\u003enRefId, Vec_IntSize(p-\u003evMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2] );\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}",
+      "Draft": "func Rnm_ManFilterSelectedNew(p *Rnm_Man_t, vOldPPis *Vec_Int_t) *Vec_Int_t {\n    \n    var fVerbose int32;\n    var vNewPPis, vFanins, vFanins2 *Vec_Int_t;\n    var pObj, pFanin, pFanin2 *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var k2 int32;\n    var RetValue int32;\n    var Counters [3]int32 ;\n\n    // return full set of PPIs once in a while\n    if spStatic_Rnm_ManFilterSelectedNew_Counter++; spStatic_Rnm_ManFilterSelectedNew_Counter % 9 == 0 {\n        return Vec_IntDup( vOldPPis ); }\n    return Rnm_ManFilterSelected( p, vOldPPis );\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment two levels of PPI fanin counters\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        // go through the fanins\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            Rnm_ObjAddToCount(p, pFanin);\n            if Rnm_ObjIsJust(p, pFanin) {   // included in the abstraction\n                Rnm_ObjAddToCount(p, pFanin); } // count it second time!\n            Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin) );\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p.pGia, pFanin );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k2 = 0; (k2 \u003c Vec_IntSize(vFanins2)) \u0026\u0026 ((pFanin2) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins2,k2))); k2++  {\n                Rnm_ObjAddToCount(p, pFanin2);\n                if Rnm_ObjIsJust(p, pFanin2) {   // included in the abstraction\n                    Rnm_ObjAddToCount(p, pFanin2); } // count it second time!\n                Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin2) );\n            }\n        }\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects - yes\n    // - objects whose fanin (or fanins' fanin) belongs to the justified area - yes\n    // - objects whose fanins (or fanins' fanin) overlap - yes\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            if fVerbose != 0 {\n                Counters[0]++; }\n            Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n            continue;\n        } \n        // go through the first fanins\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjCount(p, pFanin) \u003e 1 {\n                Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) ); }\n            continue;\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p.pGia, pFanin );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k2 = 0; (k2 \u003c Vec_IntSize(vFanins2)) \u0026\u0026 ((pFanin2) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins2,k2))); k2++  {\n                if Rnm_ObjCount(p, pFanin2) \u003e 1 {\n//                    Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pFanin) );\n                    Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n                }\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n//    assert( RetValue == 0 ); // we will have duplicated entries here!\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        Rnm_ObjSetCount( p, pObj, 0 );\n    }\n\n    // visualize\n    if fVerbose != 0 {\n        fmt.Printf(\"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", p.nRefId, Vec_IntSize(p.vMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2]); }\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::mechanical::static::8282",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6958,
+      "End": 6964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::Rnm_ManPrintSelected",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManPrintSelected",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1286,
+      "End": 1722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::Ga2_StructAnalize",
+      "Category": "semantic-review",
+      "Symbol": "Ga2_StructAnalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1986,
+      "End": 3446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::Rnm_ManFilterSelected",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManFilterSelected",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3949,
+      "End": 6599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::Rnm_ManFilterSelectedNew",
+      "Category": "semantic-review",
+      "Symbol": "Rnm_ManFilterSelectedNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6876,
+      "End": 10727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefSelect.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10974
+    }
+  ],
+  "Draft": "package abs\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [absRefSelect.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Post-processes the set of selected refinement objects.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absRefSelect.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"abs.h\"\n//#include \"absRef.h\"\n\n//ABC_NAMESPACE_IMPL_START \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManPrintSelected(p *Rnm_Man_t, vNewPPis *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if Gia_ObjIsPi(p.pGia, pObj) { \n            fmt.Printf(\"-\");\n        } else if Vec_IntFind(vNewPPis, Gia_ObjId(p.pGia, pObj)) \u003e= 0 {// this is PPI\n            fmt.Printf(\"1\");\nCounter++;\n        } else {\n            fmt.Printf(\"0\"); }\n    }\n    fmt.Printf(\" %3d\\n\", Counter);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform structural analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ga2_StructAnalize(p *Gia_Man_t, vFront *Vec_Int_t, vInter *Vec_Int_t, vNewPPis *Vec_Int_t) {\n    var vFanins *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k int32;\n    // clean labels\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = pObj.fMark1 = 0;\n    }\n    // label frontier\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFront)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vFront,i))); i++  {\n        pObj.fMark0 = 1, pObj.fMark1 = 0;\n    }\n    // label objects\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vInter)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vInter,i))); i++  {\n        pObj.fMark1 = 0, pObj.fMark1 = 1;\n    }\n    // label selected\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNewPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNewPPis,i))); i++  {\n        pObj.fMark1 = 1, pObj.fMark1 = 1;\n    }\n    // explore selected\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNewPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNewPPis,i))); i++  {\n        fmt.Printf(\"Selected PPI %3d : \", i+1);\n        fmt.Printf(\"%6d \", Gia_ObjId(p, pObj));\n        fmt.Printf(\"\\n\");\n        vFanins = Ga2_ObjLeaves( p, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(vFanins,k))); k++  {\n            fmt.Printf(\"    \");\n            fmt.Printf(\"%6d \", Gia_ObjId(p, pFanin));\n            if pFanin.fMark0 \u0026\u0026 pFanin.fMark1 {\n                fmt.Printf(\"selected PPI\");\n            } else if pFanin.fMark0 \u0026\u0026 !pFanin.fMark1 {\n                fmt.Printf(\"frontier (original PI or PPI)\");\n            } else if !pFanin.fMark0 \u0026\u0026  pFanin.fMark1 {\n                fmt.Printf(\"abstracted node\");\n            } else if !pFanin.fMark0 \u0026\u0026 !pFanin.fMark1 {\n                fmt.Printf(\"free variable\"); }\n            fmt.Printf(\"\\n\");\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Postprocessing the set of PPIs using structural analysis.]\n\n  Description [The following sets are used:\n  The set of all PI+PPI is in p-\u003evMap.\n  The set of all abstracted objects is in p-\u003evObjs;\n  The set of important PPIs is in vOldPPis.\n  The new set of selected PPIs is in vNewPPis.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rnm_ManFilterSelected(p *Rnm_Man_t, vOldPPis *Vec_Int_t) *Vec_Int_t {\n    var fVerbose int32;\n    var vNewPPis, vFanins *Vec_Int_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var RetValue int32;\n    var Counters [3]int32 ;\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment PPI fanin counters\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjAddToCount(p, pFanin) == 0 { // fanin counter is 0 -- save it\n                Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin) ); }\n        }\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects\n    // - objects whose fanin belongs to the justified area\n    // - objects whose fanins overlap\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            if fVerbose != 0 {\n                Counters[0]++; }\n            Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n            continue;\n        }\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjIsJust(p, pFanin) || Rnm_ObjCount(p, pFanin) \u003e 1 {\n                if fVerbose != 0 {\n                    Counters[1] += Rnm_ObjIsJust(p, pFanin); }\n                if fVerbose != 0 {\n                    Counters[2] += (Rnm_ObjCount(p, pFanin) \u003e 1); }\n                Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n                break;\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        Rnm_ObjSetCount( p, pObj, 0 );\n    }\n\n    // visualize\n    if fVerbose != 0 {\n        fmt.Printf(\"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", p.nRefId, Vec_IntSize(p.vMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2]); }\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Improved postprocessing the set of PPIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Rnm_ManFilterSelectedNew_Counter int32;\nfunc Rnm_ManFilterSelectedNew(p *Rnm_Man_t, vOldPPis *Vec_Int_t) *Vec_Int_t {\n    \n    var fVerbose int32;\n    var vNewPPis, vFanins, vFanins2 *Vec_Int_t;\n    var pObj, pFanin, pFanin2 *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var k2 int32;\n    var RetValue int32;\n    var Counters [3]int32 ;\n\n    // return full set of PPIs once in a while\n    if spStatic_Rnm_ManFilterSelectedNew_Counter++; spStatic_Rnm_ManFilterSelectedNew_Counter % 9 == 0 {\n        return Vec_IntDup( vOldPPis ); }\n    return Rnm_ManFilterSelected( p, vOldPPis );\n\n    // (0) make sure fanin counters are 0 at the beginning\n//    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n//        assert( Rnm_ObjCount(p, pObj) == 0 );\n\n    // (1) increment two levels of PPI fanin counters\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        // go through the fanins\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            Rnm_ObjAddToCount(p, pFanin);\n            if Rnm_ObjIsJust(p, pFanin) {   // included in the abstraction\n                Rnm_ObjAddToCount(p, pFanin); } // count it second time!\n            Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin) );\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p.pGia, pFanin );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k2 = 0; (k2 \u003c Vec_IntSize(vFanins2)) \u0026\u0026 ((pFanin2) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins2,k2))); k2++  {\n                Rnm_ObjAddToCount(p, pFanin2);\n                if Rnm_ObjIsJust(p, pFanin2) {   // included in the abstraction\n                    Rnm_ObjAddToCount(p, pFanin2); } // count it second time!\n                Vec_IntPush( p.vFanins, Gia_ObjId(p.pGia, pFanin2) );\n            }\n        }\n    }\n\n    // (3) select objects with reconvergence, which create potential constraints\n    // - flop objects - yes\n    // - objects whose fanin (or fanins' fanin) belongs to the justified area - yes\n    // - objects whose fanins (or fanins' fanin) overlap - yes\n    // (these do not guantee reconvergence, but may potentially have it)\n    // (other objects cannot have reconvergence, even if they are added)\n    vNewPPis = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vOldPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vOldPPis,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            if fVerbose != 0 {\n                Counters[0]++; }\n            Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n            continue;\n        } \n        // go through the first fanins\n        vFanins = Ga2_ObjLeaves( p.pGia, pObj );\n        // inlining of macro Gia_ManForEachObjVec\n        for  k = 0; (k \u003c Vec_IntSize(vFanins)) \u0026\u0026 ((pFanin) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins,k))); k++  {\n            if Rnm_ObjCount(p, pFanin) \u003e 1 {\n                Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) ); }\n            continue;\n\n            // go through the fanins of the fanins\n            vFanins2 = Ga2_ObjLeaves( p.pGia, pFanin );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k2 = 0; (k2 \u003c Vec_IntSize(vFanins2)) \u0026\u0026 ((pFanin2) = Gia_ManObj(p.pGia, Vec_IntEntry(vFanins2,k2))); k2++  {\n                if Rnm_ObjCount(p, pFanin2) \u003e 1 {\n//                    Vec_IntPush( vNewPPis, Gia_ObjId(p-\u003epGia, pFanin) );\n                    Vec_IntPush( vNewPPis, Gia_ObjId(p.pGia, pObj) );\n                }\n            }\n        }\n    }\n    RetValue = Vec_IntUniqify( vNewPPis );\n//    assert( RetValue == 0 ); // we will have duplicated entries here!\n\n    // (4) clear fanin counters\n    // this is important for counters to be correctly set in the future iterations -- see step (0)\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        Rnm_ObjSetCount( p, pObj, 0 );\n    }\n\n    // visualize\n    if fVerbose != 0 {\n        fmt.Printf(\"*** Refinement %3d : PI+PPI =%4d. Old =%4d. New =%4d.   FF =%4d. Just =%4d. Shared =%4d.\\n\", p.nRefId, Vec_IntSize(p.vMap), Vec_IntSize(vOldPPis), Vec_IntSize(vNewPPis), Counters[0], Counters[1], Counters[2]); }\n\n//    Rnm_ManPrintSelected( p, vNewPPis );\n//    Ga2_StructAnalize( p-\u003epGia, p-\u003evMap, p-\u003evObjs, vNewPPis );\n    return vNewPPis;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

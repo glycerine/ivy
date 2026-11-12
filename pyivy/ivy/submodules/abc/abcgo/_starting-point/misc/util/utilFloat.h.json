@@ -1,0 +1,733 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h",
+  "SHA256": "175ba982b6b9a86a8b9d26974af87bd48c310cefb50f05760b2409bb4c7e7752",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 45,
+        "ByteOffset": 3100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func xSat_Float2Float(a xFloat_t) float32 { assert(a.Exp \u003c 127); return Abc_Int2Float(((a.Exp + 127) \u003c\u003c 23) | ((a.Mnt \u0026 0x7FFF) \u003c\u003c 8)); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 81,
+        "ByteOffset": 3274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func xSat_FloatFromFloat(a float32) xFloat_t { var A int32  = Abc_Float2Int(a); assert(a \u003e= 1.0); return xSat_FloatCreate((A \u003e\u003e 23)-127, 0x8000 | ((A \u003e\u003e 8) \u0026 0x7FFF)); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( a.Exp \u003e= b.Exp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 4377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Exp \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 4416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Mnt \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 4455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mnt \u0026 0x00008000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( a.Exp \u003e= b.Exp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Exp \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Mnt \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mnt \u0026 0x00008000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Deg2 \u003c 0xFFFF );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 7299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1 = %f\\n\",   xSat_Float2Float(c1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 7349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2 = %f\\n\",   xSat_Float2Float(c2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 7399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"3 = %f\\n\",   xSat_Float2Float(c3) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"12 = %f\\n\",  xSat_Float2Float(c12) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 = %f\\n\", xSat_Float2Float(c1p5) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 7552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2.5 = %f\\n\", xSat_Float2Float(c2p5) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 7605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 1 = %f\\n\",   xSat_Float2Float(c1_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 2 = %f\\n\",   xSat_Float2Float(c2_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 3 = %f\\n\",   xSat_Float2Float(c3_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 12 = %f\\n\",  xSat_Float2Float(c12_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 7850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 1.5 = %f\\n\", xSat_Float2Float(c1p5_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 2.5 = %f\\n\", xSat_Float2Float(c2p5_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 7977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.0 + 1.5 = %f\\n\", xSat_Float2Float(sum1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 8035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2.0 * 1.5 = %f\\n\", xSat_Float2Float(mul1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 8094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 + 2.5 = %f\\n\", xSat_Float2Float(sum2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 8152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 * 2.5 = %f\\n\", xSat_Float2Float(mul2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 8210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"12 / 2^2  = %f\\n\", xSat_Float2Float(xSat_FloatDiv(c12, 2)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 8286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( xSat_Equal(sum1, c2p5) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 8324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( xSat_Equal(mul1, c3) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSat_Float2Uint",
+      "Start": 1648,
+      "End": 1791,
+      "BodyStart": 1721,
+      "Original": "static inline unsigned   xSat_Float2Uint( xFloat_t f )                   { union { xFloat_t f; unsigned u; } temp; temp.f = f; return temp.u; }",
+      "Draft": "func xSat_Float2Uint(f xFloat_t) uint32 { union { var f xFloat_t; var u uint32; }\n temp; temp.f = f; return temp.u; }"
+    },
+    {
+      "Name": "xSat_Uint2Float",
+      "Start": 1792,
+      "End": 1935,
+      "BodyStart": 1865,
+      "Original": "static inline xFloat_t   xSat_Uint2Float( unsigned u )                   { union { xFloat_t f; unsigned u; } temp; temp.u = u; return temp.f; }",
+      "Draft": "func xSat_Uint2Float(u uint32) xFloat_t { union { var f xFloat_t; var u uint32; }\n temp; temp.u = u; return temp.f; }"
+    },
+    {
+      "Name": "xSat_LessThan",
+      "Start": 1936,
+      "End": 2079,
+      "BodyStart": 2009,
+      "Original": "static inline int        xSat_LessThan( xFloat_t a, xFloat_t b )         { return a.Exp \u003c b.Exp || (a.Exp == b.Exp \u0026\u0026 a.Mnt \u003c b.Mnt);         }",
+      "Draft": "func xSat_LessThan(a xFloat_t, b xFloat_t) int32 { return a.Exp \u003c b.Exp || (a.Exp == b.Exp \u0026\u0026 a.Mnt \u003c b.Mnt);         }"
+    },
+    {
+      "Name": "xSat_Equal",
+      "Start": 2080,
+      "End": 2223,
+      "BodyStart": 2153,
+      "Original": "static inline int        xSat_Equal( xFloat_t a, xFloat_t b )            { return a.Exp == b.Exp \u0026\u0026 a.Mnt == b.Mnt;                           }",
+      "Draft": "func xSat_Equal(a xFloat_t, b xFloat_t) int32 { return a.Exp == b.Exp \u0026\u0026 a.Mnt == b.Mnt;                           }"
+    },
+    {
+      "Name": "xSat_FloatCreate",
+      "Start": 2225,
+      "End": 2368,
+      "BodyStart": 2298,
+      "Original": "static inline xFloat_t   xSat_FloatCreate( unsigned Exp, unsigned Mnt )  { xFloat_t res; res.Exp = Exp; res.Mnt = Mnt; return res;            }",
+      "Draft": "func xSat_FloatCreate(Exp uint32, Mnt uint32) xFloat_t { var res xFloat_t; res.Exp = Exp; res.Mnt = Mnt; return res;            }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst1",
+      "Start": 2370,
+      "End": 2513,
+      "BodyStart": 2443,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst1()                        { return xSat_FloatCreate( 0, 1 \u003c\u003c 15 );                             }",
+      "Draft": "func xSat_FloatCreateConst1() xFloat_t { return xSat_FloatCreate( 0, 1 \u003c\u003c 15 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst2",
+      "Start": 2514,
+      "End": 2657,
+      "BodyStart": 2587,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst2()                        { return xSat_FloatCreate( 1, 1 \u003c\u003c 15 );                             }",
+      "Draft": "func xSat_FloatCreateConst2() xFloat_t { return xSat_FloatCreate( 1, 1 \u003c\u003c 15 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst3",
+      "Start": 2658,
+      "End": 2801,
+      "BodyStart": 2731,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst3()                        { return xSat_FloatCreate( 1, 3 \u003c\u003c 14 );                             }",
+      "Draft": "func xSat_FloatCreateConst3() xFloat_t { return xSat_FloatCreate( 1, 3 \u003c\u003c 14 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst12",
+      "Start": 2802,
+      "End": 2945,
+      "BodyStart": 2875,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst12()                       { return xSat_FloatCreate( 3, 3 \u003c\u003c 14 );                             }",
+      "Draft": "func xSat_FloatCreateConst12() xFloat_t { return xSat_FloatCreate( 3, 3 \u003c\u003c 14 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst1point5",
+      "Start": 2946,
+      "End": 3089,
+      "BodyStart": 3019,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst1point5()                  { return xSat_FloatCreate( 0, 3 \u003c\u003c 14 );                             }",
+      "Draft": "func xSat_FloatCreateConst1point5() xFloat_t { return xSat_FloatCreate( 0, 3 \u003c\u003c 14 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateConst2point5",
+      "Start": 3090,
+      "End": 3233,
+      "BodyStart": 3163,
+      "Original": "static inline xFloat_t   xSat_FloatCreateConst2point5()                  { return xSat_FloatCreate( 1, 5 \u003c\u003c 13 );                             }",
+      "Draft": "func xSat_FloatCreateConst2point5() xFloat_t { return xSat_FloatCreate( 1, 5 \u003c\u003c 13 );                             }"
+    },
+    {
+      "Name": "xSat_FloatCreateMaximum",
+      "Start": 3234,
+      "End": 3377,
+      "BodyStart": 3307,
+      "Original": "static inline xFloat_t   xSat_FloatCreateMaximum()                       { return xSat_Uint2Float( 0xFFFFFFFF );                              }",
+      "Draft": "func xSat_FloatCreateMaximum() xFloat_t { return xSat_Uint2Float( 0xFFFFFFFF );                              }"
+    },
+    {
+      "Name": "xSat_Float2Float",
+      "Start": 3379,
+      "End": 3547,
+      "BodyStart": 3452,
+      "Original": "static inline float      xSat_Float2Float( xFloat_t a )                  { assert(a.Exp \u003c 127); return Abc_Int2Float(((a.Exp + 127) \u003c\u003c 23) | ((a.Mnt \u0026 0x7FFF) \u003c\u003c 8)); }",
+      "Draft": "func xSat_Float2Float(a xFloat_t) float32 { assert(a.Exp \u003c 127, \"a.Exp \u003c 127\"); return Abc_Int2Float(((a.Exp + 127) \u003c\u003c 23) | ((a.Mnt \u0026 0x7FFF) \u003c\u003c 8)); }"
+    },
+    {
+      "Name": "xSat_FloatFromFloat",
+      "Start": 3548,
+      "End": 3738,
+      "BodyStart": 3621,
+      "Original": "static inline xFloat_t   xSat_FloatFromFloat( float a )                  { int A = Abc_Float2Int(a); assert(a \u003e= 1.0); return xSat_FloatCreate((A \u003e\u003e 23)-127, 0x8000 | ((A \u003e\u003e 8) \u0026 0x7FFF)); }",
+      "Draft": "func xSat_FloatFromFloat(a float32) xFloat_t { var A int32  = Abc_Float2Int(a); assert(a \u003e= 1.0, \"a \u003e= 1.0\"); return xSat_FloatCreate((A \u003e\u003e 23)-127, 0x8000 | ((A \u003e\u003e 8) \u0026 0x7FFF)); }"
+    },
+    {
+      "Name": "xSat_FloatAdd",
+      "Start": 4213,
+      "End": 4909,
+      "BodyStart": 4276,
+      "Original": "static inline xFloat_t xSat_FloatAdd( xFloat_t a, xFloat_t b )\n{\n    unsigned Exp, Mnt;\n    if ( a.Exp \u003c b.Exp )\n        return xSat_FloatAdd(b, a);\n    assert( a.Exp \u003e= b.Exp );\n    // compute new mantissa\n    Mnt = a.Mnt + (b.Mnt \u003e\u003e (a.Exp - b.Exp));\n    // compute new exponent\n    Exp = a.Exp;\n    // update exponent and mantissa if new MSB is created\n    if ( Mnt \u0026 0xFFFF0000 ) // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1;\n    // check overflow\n    if ( Exp \u0026 0xFFFF0000 ) // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF );\n    assert( (Exp \u0026 0xFFFF0000) == 0 );\n    assert( (Mnt \u0026 0xFFFF0000) == 0 );\n    assert( Mnt \u0026 0x00008000 );\n    return xSat_FloatCreate( Exp, Mnt );\n}",
+      "Draft": "func xSat_FloatAdd(a xFloat_t, b xFloat_t) xFloat_t {\n    var Exp, Mnt uint32;\n    if a.Exp \u003c b.Exp {\n        return xSat_FloatAdd(b, a); }\n    assert(a.Exp \u003e= b.Exp, \"a.Exp \u003e= b.Exp\");\n    // compute new mantissa\n    Mnt = a.Mnt + (b.Mnt \u003e\u003e (a.Exp - b.Exp));\n    // compute new exponent\n    Exp = a.Exp;\n    // update exponent and mantissa if new MSB is created\n    if Mnt \u0026 0xFFFF0000 { // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    // check overflow\n    if Exp \u0026 0xFFFF0000 { // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF ); }\n    assert((Exp \u0026 0xFFFF0000) == 0, \"(Exp \u0026 0xFFFF0000) == 0\");\n    assert((Mnt \u0026 0xFFFF0000) == 0, \"(Mnt \u0026 0xFFFF0000) == 0\");\n    assert(Mnt \u0026 0x00008000, \"Mnt \u0026 0x00008000\");\n    return xSat_FloatCreate( Exp, Mnt );\n}"
+    },
+    {
+      "Name": "xSat_FloatMul",
+      "Start": 5169,
+      "End": 5860,
+      "BodyStart": 5232,
+      "Original": "static inline xFloat_t xSat_FloatMul( xFloat_t a, xFloat_t b )\n{\n    unsigned Exp, Mnt;\n    if ( a.Exp \u003c b.Exp )\n        return xSat_FloatMul(b, a);\n    assert( a.Exp \u003e= b.Exp );\n    // compute new mantissa\n    Mnt = (a.Mnt * b.Mnt) \u003e\u003e 15;\n    // compute new exponent\n    Exp = a.Exp + b.Exp;\n    // update exponent and mantissa if new MSB is created\n    if ( Mnt \u0026 0xFFFF0000 ) // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1;\n    // check overflow\n    if ( Exp \u0026 0xFFFF0000 ) // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF );\n    assert( (Exp \u0026 0xFFFF0000) == 0 );\n    assert( (Mnt \u0026 0xFFFF0000) == 0 );\n    assert( Mnt \u0026 0x00008000 );\n    return xSat_FloatCreate( Exp, Mnt );\n}",
+      "Draft": "func xSat_FloatMul(a xFloat_t, b xFloat_t) xFloat_t {\n    var Exp, Mnt uint32;\n    if a.Exp \u003c b.Exp {\n        return xSat_FloatMul(b, a); }\n    assert(a.Exp \u003e= b.Exp, \"a.Exp \u003e= b.Exp\");\n    // compute new mantissa\n    Mnt = (a.Mnt * b.Mnt) \u003e\u003e 15;\n    // compute new exponent\n    Exp = a.Exp + b.Exp;\n    // update exponent and mantissa if new MSB is created\n    if Mnt \u0026 0xFFFF0000 { // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    // check overflow\n    if Exp \u0026 0xFFFF0000 { // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF ); }\n    assert((Exp \u0026 0xFFFF0000) == 0, \"(Exp \u0026 0xFFFF0000) == 0\");\n    assert((Mnt \u0026 0xFFFF0000) == 0, \"(Mnt \u0026 0xFFFF0000) == 0\");\n    assert(Mnt \u0026 0x00008000, \"Mnt \u0026 0x00008000\");\n    return xSat_FloatCreate( Exp, Mnt );\n}"
+    },
+    {
+      "Name": "xSat_FloatDiv",
+      "Start": 6129,
+      "End": 6358,
+      "BodyStart": 6195,
+      "Original": "static inline xFloat_t xSat_FloatDiv( xFloat_t a, unsigned Deg2 )\n{\n    assert( Deg2 \u003c 0xFFFF );\n    if ( a.Exp \u003e= Deg2 )\n        return xSat_FloatCreate( a.Exp - Deg2, a.Mnt );\n    return xSat_FloatCreateConst1(); // underflow\n}",
+      "Draft": "func xSat_FloatDiv(a xFloat_t, Deg2 uint32) xFloat_t {\n    assert(Deg2 \u003c 0xFFFF, \"Deg2 \u003c 0xFFFF\");\n    if a.Exp \u003e= Deg2 {\n        return xSat_FloatCreate( a.Exp - Deg2, a.Mnt ); }\n    return xSat_FloatCreateConst1(); // underflow\n}"
+    },
+    {
+      "Name": "xSat_FloatTest",
+      "Start": 6663,
+      "End": 8697,
+      "BodyStart": 6699,
+      "Original": "static inline void xSat_FloatTest()\n{\n    xFloat_t c1   = xSat_FloatCreateConst1();\n    xFloat_t c2   = xSat_FloatCreateConst2();\n    xFloat_t c3   = xSat_FloatCreateConst3();\n    xFloat_t c12  = xSat_FloatCreateConst12();\n    xFloat_t c1p5 = xSat_FloatCreateConst1point5();\n    xFloat_t c2p5 = xSat_FloatCreateConst2point5();\n\n    xFloat_t c1_   = xSat_FloatFromFloat(1.0);\n    xFloat_t c2_   = xSat_FloatFromFloat(2.0);\n    xFloat_t c3_   = xSat_FloatFromFloat(3.0);\n    xFloat_t c12_  = xSat_FloatFromFloat(12.0);\n    xFloat_t c1p5_ = xSat_FloatFromFloat(1.5);\n    xFloat_t c2p5_ = xSat_FloatFromFloat(2.5);\n\n    xFloat_t sum1 = xSat_FloatAdd(c1, c1p5);\n    xFloat_t mul1 = xSat_FloatMul(c2, c1p5);\n\n    xFloat_t sum2 = xSat_FloatAdd(c1p5, c2p5);\n    xFloat_t mul2 = xSat_FloatMul(c1p5, c2p5);\n\n//    float f1 = xSat_Float2Float(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    printf( \"1 = %f\\n\",   xSat_Float2Float(c1) );\n    printf( \"2 = %f\\n\",   xSat_Float2Float(c2) );\n    printf( \"3 = %f\\n\",   xSat_Float2Float(c3) );\n    printf( \"12 = %f\\n\",  xSat_Float2Float(c12) );\n    printf( \"1.5 = %f\\n\", xSat_Float2Float(c1p5) );\n    printf( \"2.5 = %f\\n\", xSat_Float2Float(c2p5) );\n\n    printf( \"Converted 1 = %f\\n\",   xSat_Float2Float(c1_) );\n    printf( \"Converted 2 = %f\\n\",   xSat_Float2Float(c2_) );\n    printf( \"Converted 3 = %f\\n\",   xSat_Float2Float(c3_) );\n    printf( \"Converted 12 = %f\\n\",  xSat_Float2Float(c12_) );\n    printf( \"Converted 1.5 = %f\\n\", xSat_Float2Float(c1p5_) );\n    printf( \"Converted 2.5 = %f\\n\", xSat_Float2Float(c2p5_) );\n\n    printf( \"1.0 + 1.5 = %f\\n\", xSat_Float2Float(sum1) );\n    printf( \"2.0 * 1.5 = %f\\n\", xSat_Float2Float(mul1) );\n\n    printf( \"1.5 + 2.5 = %f\\n\", xSat_Float2Float(sum2) );\n    printf( \"1.5 * 2.5 = %f\\n\", xSat_Float2Float(mul2) );\n    printf( \"12 / 2^2  = %f\\n\", xSat_Float2Float(xSat_FloatDiv(c12, 2)) );\n\n    assert( xSat_Equal(sum1, c2p5) );\n    assert( xSat_Equal(mul1, c3) );\n}",
+      "Draft": "func xSat_FloatTest() {\n    var c1 xFloat_t    = xSat_FloatCreateConst1();\n    var c2 xFloat_t    = xSat_FloatCreateConst2();\n    var c3 xFloat_t    = xSat_FloatCreateConst3();\n    var c12 xFloat_t   = xSat_FloatCreateConst12();\n    var c1p5 xFloat_t  = xSat_FloatCreateConst1point5();\n    var c2p5 xFloat_t  = xSat_FloatCreateConst2point5();\n\n    var c1_ xFloat_t    = xSat_FloatFromFloat(1.0);\n    var c2_ xFloat_t    = xSat_FloatFromFloat(2.0);\n    var c3_ xFloat_t    = xSat_FloatFromFloat(3.0);\n    var c12_ xFloat_t   = xSat_FloatFromFloat(12.0);\n    var c1p5_ xFloat_t  = xSat_FloatFromFloat(1.5);\n    var c2p5_ xFloat_t  = xSat_FloatFromFloat(2.5);\n\n    var sum1 xFloat_t  = xSat_FloatAdd(c1, c1p5);\n    var mul1 xFloat_t  = xSat_FloatMul(c2, c1p5);\n\n    var sum2 xFloat_t  = xSat_FloatAdd(c1p5, c2p5);\n    var mul2 xFloat_t  = xSat_FloatMul(c1p5, c2p5);\n\n//    float f1 = xSat_Float2Float(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    fmt.Printf(\"1 = %f\\n\", xSat_Float2Float(c1));\n    fmt.Printf(\"2 = %f\\n\", xSat_Float2Float(c2));\n    fmt.Printf(\"3 = %f\\n\", xSat_Float2Float(c3));\n    fmt.Printf(\"12 = %f\\n\", xSat_Float2Float(c12));\n    fmt.Printf(\"1.5 = %f\\n\", xSat_Float2Float(c1p5));\n    fmt.Printf(\"2.5 = %f\\n\", xSat_Float2Float(c2p5));\n\n    fmt.Printf(\"Converted 1 = %f\\n\", xSat_Float2Float(c1_));\n    fmt.Printf(\"Converted 2 = %f\\n\", xSat_Float2Float(c2_));\n    fmt.Printf(\"Converted 3 = %f\\n\", xSat_Float2Float(c3_));\n    fmt.Printf(\"Converted 12 = %f\\n\", xSat_Float2Float(c12_));\n    fmt.Printf(\"Converted 1.5 = %f\\n\", xSat_Float2Float(c1p5_));\n    fmt.Printf(\"Converted 2.5 = %f\\n\", xSat_Float2Float(c2p5_));\n\n    fmt.Printf(\"1.0 + 1.5 = %f\\n\", xSat_Float2Float(sum1));\n    fmt.Printf(\"2.0 * 1.5 = %f\\n\", xSat_Float2Float(mul1));\n\n    fmt.Printf(\"1.5 + 2.5 = %f\\n\", xSat_Float2Float(sum2));\n    fmt.Printf(\"1.5 * 2.5 = %f\\n\", xSat_Float2Float(mul2));\n    fmt.Printf(\"12 / 2^2  = %f\\n\", xSat_Float2Float(xSat_FloatDiv(c12, 2)));\n\n    assert((xSat_Equal(sum1, c2p5) != 0), \"xSat_Equal(sum1, c2p5)\");\n    assert((xSat_Equal(mul1, c3) != 0), \"xSat_Equal(mul1, c3)\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::struct::xFloat_t::unsigned  Mnt : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "xFloat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1595,
+      "End": 1619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::struct::xFloat_t::unsigned  Exp : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "xFloat_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1619,
+      "End": 1643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::struct::xFloat_t",
+      "Category": "struct-review",
+      "Symbol": "xFloat_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1542,
+      "End": 1646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::mechanical::union::1723",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1723,
+      "End": 1728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::mechanical::union::1867",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1867,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_Float2Uint",
+      "Category": "semantic-review",
+      "Symbol": "xSat_Float2Uint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1648,
+      "End": 1791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_Uint2Float",
+      "Category": "semantic-review",
+      "Symbol": "xSat_Uint2Float",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1792,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_LessThan",
+      "Category": "semantic-review",
+      "Symbol": "xSat_LessThan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1936,
+      "End": 2079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_Equal",
+      "Category": "semantic-review",
+      "Symbol": "xSat_Equal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2080,
+      "End": 2223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreate",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2225,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst1",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2370,
+      "End": 2513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst2",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2514,
+      "End": 2657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst3",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2658,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst12",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst12",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2802,
+      "End": 2945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst1point5",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst1point5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2946,
+      "End": 3089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateConst2point5",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateConst2point5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3090,
+      "End": 3233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatCreateMaximum",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatCreateMaximum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3234,
+      "End": 3377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_Float2Float",
+      "Category": "semantic-review",
+      "Symbol": "xSat_Float2Float",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3379,
+      "End": 3547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatFromFloat",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatFromFloat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3548,
+      "End": 3738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatAdd",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4213,
+      "End": 4909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatMul",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatMul",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5169,
+      "End": 5860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatDiv",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatDiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6129,
+      "End": 6358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::xSat_FloatTest",
+      "Category": "semantic-review",
+      "Symbol": "xSat_FloatTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6663,
+      "End": 8697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFloat.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8732
+    }
+  ],
+  "Draft": "package util\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [utilFloat.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName []\n\n  Synopsis    [Floating point number implementation.]\n\n  Author      [Alan Mishchenko, Bruno Schmitt]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - January 28, 2017.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/* \n    The xFloat_t floating-point number is represented as a 32-bit unsigned int.\n    The number is (2^Exp)*Mnt, where Exp is a 16-bit exponent and Mnt is a \n    16-bit mantissa.  The decimal point is located between the MSB of Mnt,\n    which is always 1, and the remaining 15 digits of Mnt.\n\n    Currently, only positive numbers are represented.\n\n    The range of possible values is [1.0; 2^(2^16-1)*1.111111111111111]\n    that is, the smallest possible number is 1.0 and the largest possible \n    number is 2^(---16 ones---).(1.---15 ones---)\n\n    Comparison of numbers can be done by comparing the underlying unsigned ints.\n\n    Only addition, multiplication, and division by 2^n are currently implemented.\n*/\n\n   \ntype xFloat_t struct {\n    Mnt uint32; /* C bitfield: 16 bits; review packing and truncation */\n    Exp uint32; /* C bitfield: 16 bits; review packing and truncation */\n}\n\nfunc xSat_Float2Uint(f xFloat_t) uint32 { union { var f xFloat_t; var u uint32; }\n temp; temp.f = f; return temp.u; }\nfunc xSat_Uint2Float(u uint32) xFloat_t { union { var f xFloat_t; var u uint32; }\n temp; temp.u = u; return temp.f; }\nfunc xSat_LessThan(a xFloat_t, b xFloat_t) int32 { return a.Exp \u003c b.Exp || (a.Exp == b.Exp \u0026\u0026 a.Mnt \u003c b.Mnt);         }\nfunc xSat_Equal(a xFloat_t, b xFloat_t) int32 { return a.Exp == b.Exp \u0026\u0026 a.Mnt == b.Mnt;                           }\n\nfunc xSat_FloatCreate(Exp uint32, Mnt uint32) xFloat_t { var res xFloat_t; res.Exp = Exp; res.Mnt = Mnt; return res;            }\n\nfunc xSat_FloatCreateConst1() xFloat_t { return xSat_FloatCreate( 0, 1 \u003c\u003c 15 );                             }\nfunc xSat_FloatCreateConst2() xFloat_t { return xSat_FloatCreate( 1, 1 \u003c\u003c 15 );                             }\nfunc xSat_FloatCreateConst3() xFloat_t { return xSat_FloatCreate( 1, 3 \u003c\u003c 14 );                             }\nfunc xSat_FloatCreateConst12() xFloat_t { return xSat_FloatCreate( 3, 3 \u003c\u003c 14 );                             }\nfunc xSat_FloatCreateConst1point5() xFloat_t { return xSat_FloatCreate( 0, 3 \u003c\u003c 14 );                             }\nfunc xSat_FloatCreateConst2point5() xFloat_t { return xSat_FloatCreate( 1, 5 \u003c\u003c 13 );                             }\nfunc xSat_FloatCreateMaximum() xFloat_t { return xSat_Uint2Float( 0xFFFFFFFF );                              }\n\nfunc xSat_Float2Float(a xFloat_t) float32 { assert(a.Exp \u003c 127, \"a.Exp \u003c 127\"); return Abc_Int2Float(((a.Exp + 127) \u003c\u003c 23) | ((a.Mnt \u0026 0x7FFF) \u003c\u003c 8)); }\nfunc xSat_FloatFromFloat(a float32) xFloat_t { var A int32  = Abc_Float2Int(a); assert(a \u003e= 1.0, \"a \u003e= 1.0\"); return xSat_FloatCreate((A \u003e\u003e 23)-127, 0x8000 | ((A \u003e\u003e 8) \u0026 0x7FFF)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Adding two floating-point numbers.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSat_FloatAdd(a xFloat_t, b xFloat_t) xFloat_t {\n    var Exp, Mnt uint32;\n    if a.Exp \u003c b.Exp {\n        return xSat_FloatAdd(b, a); }\n    assert(a.Exp \u003e= b.Exp, \"a.Exp \u003e= b.Exp\");\n    // compute new mantissa\n    Mnt = a.Mnt + (b.Mnt \u003e\u003e (a.Exp - b.Exp));\n    // compute new exponent\n    Exp = a.Exp;\n    // update exponent and mantissa if new MSB is created\n    if Mnt \u0026 0xFFFF0000 { // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    // check overflow\n    if Exp \u0026 0xFFFF0000 { // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF ); }\n    assert((Exp \u0026 0xFFFF0000) == 0, \"(Exp \u0026 0xFFFF0000) == 0\");\n    assert((Mnt \u0026 0xFFFF0000) == 0, \"(Mnt \u0026 0xFFFF0000) == 0\");\n    assert(Mnt \u0026 0x00008000, \"Mnt \u0026 0x00008000\");\n    return xSat_FloatCreate( Exp, Mnt );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiplying two floating-point numbers.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSat_FloatMul(a xFloat_t, b xFloat_t) xFloat_t {\n    var Exp, Mnt uint32;\n    if a.Exp \u003c b.Exp {\n        return xSat_FloatMul(b, a); }\n    assert(a.Exp \u003e= b.Exp, \"a.Exp \u003e= b.Exp\");\n    // compute new mantissa\n    Mnt = (a.Mnt * b.Mnt) \u003e\u003e 15;\n    // compute new exponent\n    Exp = a.Exp + b.Exp;\n    // update exponent and mantissa if new MSB is created\n    if Mnt \u0026 0xFFFF0000 { // new MSB bit is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    // check overflow\n    if Exp \u0026 0xFFFF0000 { // overflow\n        return xSat_Uint2Float( 0xFFFFFFFF ); }\n    assert((Exp \u0026 0xFFFF0000) == 0, \"(Exp \u0026 0xFFFF0000) == 0\");\n    assert((Mnt \u0026 0xFFFF0000) == 0, \"(Mnt \u0026 0xFFFF0000) == 0\");\n    assert(Mnt \u0026 0x00008000, \"Mnt \u0026 0x00008000\");\n    return xSat_FloatCreate( Exp, Mnt );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dividing floating point number by a degree of 2.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSat_FloatDiv(a xFloat_t, Deg2 uint32) xFloat_t {\n    assert(Deg2 \u003c 0xFFFF, \"Deg2 \u003c 0xFFFF\");\n    if a.Exp \u003e= Deg2 {\n        return xSat_FloatCreate( a.Exp - Deg2, a.Mnt ); }\n    return xSat_FloatCreateConst1(); // underflow\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description [Helpful link https://www.h-schmidt.net/FloatConverter/IEEE754.html]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSat_FloatTest() {\n    var c1 xFloat_t    = xSat_FloatCreateConst1();\n    var c2 xFloat_t    = xSat_FloatCreateConst2();\n    var c3 xFloat_t    = xSat_FloatCreateConst3();\n    var c12 xFloat_t   = xSat_FloatCreateConst12();\n    var c1p5 xFloat_t  = xSat_FloatCreateConst1point5();\n    var c2p5 xFloat_t  = xSat_FloatCreateConst2point5();\n\n    var c1_ xFloat_t    = xSat_FloatFromFloat(1.0);\n    var c2_ xFloat_t    = xSat_FloatFromFloat(2.0);\n    var c3_ xFloat_t    = xSat_FloatFromFloat(3.0);\n    var c12_ xFloat_t   = xSat_FloatFromFloat(12.0);\n    var c1p5_ xFloat_t  = xSat_FloatFromFloat(1.5);\n    var c2p5_ xFloat_t  = xSat_FloatFromFloat(2.5);\n\n    var sum1 xFloat_t  = xSat_FloatAdd(c1, c1p5);\n    var mul1 xFloat_t  = xSat_FloatMul(c2, c1p5);\n\n    var sum2 xFloat_t  = xSat_FloatAdd(c1p5, c2p5);\n    var mul2 xFloat_t  = xSat_FloatMul(c1p5, c2p5);\n\n//    float f1 = xSat_Float2Float(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    fmt.Printf(\"1 = %f\\n\", xSat_Float2Float(c1));\n    fmt.Printf(\"2 = %f\\n\", xSat_Float2Float(c2));\n    fmt.Printf(\"3 = %f\\n\", xSat_Float2Float(c3));\n    fmt.Printf(\"12 = %f\\n\", xSat_Float2Float(c12));\n    fmt.Printf(\"1.5 = %f\\n\", xSat_Float2Float(c1p5));\n    fmt.Printf(\"2.5 = %f\\n\", xSat_Float2Float(c2p5));\n\n    fmt.Printf(\"Converted 1 = %f\\n\", xSat_Float2Float(c1_));\n    fmt.Printf(\"Converted 2 = %f\\n\", xSat_Float2Float(c2_));\n    fmt.Printf(\"Converted 3 = %f\\n\", xSat_Float2Float(c3_));\n    fmt.Printf(\"Converted 12 = %f\\n\", xSat_Float2Float(c12_));\n    fmt.Printf(\"Converted 1.5 = %f\\n\", xSat_Float2Float(c1p5_));\n    fmt.Printf(\"Converted 2.5 = %f\\n\", xSat_Float2Float(c2p5_));\n\n    fmt.Printf(\"1.0 + 1.5 = %f\\n\", xSat_Float2Float(sum1));\n    fmt.Printf(\"2.0 * 1.5 = %f\\n\", xSat_Float2Float(mul1));\n\n    fmt.Printf(\"1.5 + 2.5 = %f\\n\", xSat_Float2Float(sum2));\n    fmt.Printf(\"1.5 * 2.5 = %f\\n\", xSat_Float2Float(mul2));\n    fmt.Printf(\"12 / 2^2  = %f\\n\", xSat_Float2Float(xSat_FloatDiv(c12, 2)));\n\n    assert((xSat_Equal(sum1, c2p5) != 0), \"xSat_Equal(sum1, c2p5)\");\n    assert((xSat_Equal(mul1, c3) != 0), \"xSat_Equal(mul1, c3)\");\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

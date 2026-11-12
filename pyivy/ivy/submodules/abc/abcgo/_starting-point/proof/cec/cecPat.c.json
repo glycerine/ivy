@@ -1,0 +1,552 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c",
+  "SHA256": "3f329b671f37639b5a9632a52e589552e8d430fb7ab9a389d330cd3442f730c6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPat) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 2600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( NumberPrev \u003c Number );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPat) == Size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 3927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 4858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 5082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 6277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 7285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 8796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value == GIA_ONE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 9296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 9748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 10304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 10561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 472,
+        "Column": 73,
+        "ByteOffset": 15148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 15825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003c= nInputs );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ManPatStoreNum",
+      "Start": 1231,
+      "End": 1514,
+      "BodyStart": 1298,
+      "Original": "static inline void Cec_ManPatStoreNum( Cec_ManPat_t * p, int Num )\n{\n    unsigned x = (unsigned)Num;\n    assert( Num \u003e= 0 );\n    while ( x \u0026 ~0x7f )\n    {\n        Vec_StrPush( p-\u003evStorage, (char)((x \u0026 0x7f) | 0x80) );\n        x \u003e\u003e= 7;\n    }\n    Vec_StrPush( p-\u003evStorage, (char)x );\n}",
+      "Draft": "func Cec_ManPatStoreNum(p *Cec_ManPat_t, Num int32) {\n    var x uint32  = uint32(Num);\n    assert(Num \u003e= 0, \"Num \u003e= 0\");\n    for  x \u0026 ~0x7f  {\n        Vec_StrPush( p.vStorage, byte(((x \u0026 0x7f) | 0x80)) );\n        x \u003e\u003e= 7;\n    }\n    Vec_StrPush( p.vStorage, byte(x) );\n}"
+    },
+    {
+      "Name": "Cec_ManPatRestoreNum",
+      "Start": 1737,
+      "End": 1967,
+      "BodyStart": 1796,
+      "Original": "static inline int Cec_ManPatRestoreNum( Cec_ManPat_t * p )\n{\n    int ch, i, x = 0;\n    for ( i = 0; (ch = Vec_StrEntry(p-\u003evStorage, p-\u003eiStart++)) \u0026 0x80; i++ )\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i);\n    return x | (ch \u003c\u003c (7 * i));\n}",
+      "Draft": "func Cec_ManPatRestoreNum(p *Cec_ManPat_t) int32 {\n    var ch, i, x int32;\n    for  i = 0; (ch = Vec_StrEntry(p.vStorage, p.iStart++)) \u0026 0x80; i++  {\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i);\n    }\n    return x | (ch \u003c\u003c (7 * i));\n}"
+    },
+    {
+      "Name": "Cec_ManPatStore",
+      "Start": 2190,
+      "End": 2650,
+      "BodyStart": 2263,
+      "Original": "static inline void Cec_ManPatStore( Cec_ManPat_t * p, Vec_Int_t * vPat )\n{\n    int i, Number, NumberPrev;\n    assert( Vec_IntSize(vPat) \u003e 0 );\n    Cec_ManPatStoreNum( p, Vec_IntSize(vPat) );\n    NumberPrev = Vec_IntEntry( vPat, 0 );\n    Cec_ManPatStoreNum( p, NumberPrev );\n    Vec_IntForEachEntryStart( vPat, Number, i, 1 )\n    {\n        assert( NumberPrev \u003c Number );\n        Cec_ManPatStoreNum( p, Number - NumberPrev );\n        NumberPrev = Number;\n    }\n}",
+      "Draft": "func Cec_ManPatStore(p *Cec_ManPat_t, vPat *Vec_Int_t) {\n    var i, Number, NumberPrev int32;\n    assert(Vec_IntSize(vPat) \u003e 0, \"Vec_IntSize(vPat) \u003e 0\");\n    Cec_ManPatStoreNum( p, Vec_IntSize(vPat) );\n    NumberPrev = Vec_IntEntry( vPat, 0 );\n    Cec_ManPatStoreNum( p, NumberPrev );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vPat)) \u0026\u0026 (((Number) = Vec_IntEntry(vPat, i)), 1); i++  {\n        assert(NumberPrev \u003c Number, \"NumberPrev \u003c Number\");\n        Cec_ManPatStoreNum( p, Number - NumberPrev );\n        NumberPrev = Number;\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManPatRestore",
+      "Start": 2873,
+      "End": 3281,
+      "BodyStart": 2948,
+      "Original": "static inline void Cec_ManPatRestore( Cec_ManPat_t * p, Vec_Int_t * vPat )\n{\n    int i, Size, Number;\n    Vec_IntClear( vPat );\n    Size = Cec_ManPatRestoreNum( p );\n    Number = Cec_ManPatRestoreNum( p );\n    Vec_IntPush( vPat, Number );\n    for ( i = 1; i \u003c Size; i++ )\n    {\n        Number += Cec_ManPatRestoreNum( p );\n        Vec_IntPush( vPat, Number );\n    }\n    assert( Vec_IntSize(vPat) == Size );\n}",
+      "Draft": "func Cec_ManPatRestore(p *Cec_ManPat_t, vPat *Vec_Int_t) {\n    var i, Size, Number int32;\n    Vec_IntClear( vPat );\n    Size = Cec_ManPatRestoreNum( p );\n    Number = Cec_ManPatRestoreNum( p );\n    Vec_IntPush( vPat, Number );\n    for  i = 1; i \u003c Size; i++  {\n        Number += Cec_ManPatRestoreNum( p );\n        Vec_IntPush( vPat, Number );\n    }\n    assert(Vec_IntSize(vPat) == Size, \"Vec_IntSize(vPat) == Size\");\n}"
+    },
+    {
+      "Name": "Cec_ManPatComputePattern_rec",
+      "Start": 3548,
+      "End": 4232,
+      "BodyStart": 3637,
+      "Original": "int Cec_ManPatComputePattern_rec( Cec_ManSat_t * pSat, Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int Counter = 0;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        pObj-\u003efMark1 = Cec_ObjSatVarValue( pSat, pObj );\n        return 1;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin0(pObj) );\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin1(pObj) );\n    pObj-\u003efMark1 = (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                   (Gia_ObjFanin1(pObj)-\u003efMark1 ^ Gia_ObjFaninC1(pObj));\n    return Counter;\n}",
+      "Draft": "func Cec_ManPatComputePattern_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Counter int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        pObj.fMark1 = Cec_ObjSatVarValue( pSat, pObj );\n        return 1;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin0(pObj) );\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin1(pObj) );\n    pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                   (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj));\n    return Counter;\n}"
+    },
+    {
+      "Name": "Cec_ManPatComputePattern1_rec",
+      "Start": 4498,
+      "End": 5452,
+      "BodyStart": 4586,
+      "Original": "void Cec_ManPatComputePattern1_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vPat )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj-\u003efMark1==0 ) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( pObj-\u003efMark1 == 1 )\n    {\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat );\n    }\n    else\n    {\n        assert( (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                (Gia_ObjFanin1(pObj)-\u003efMark1 ^ Gia_ObjFaninC1(pObj)) == 0 );\n        if ( (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) == 0 )\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        else\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat );\n    }\n}",
+      "Draft": "func Cec_ManPatComputePattern1_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark1 == 1 {\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat );\n    \n    } else {\n        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0\");\n        if (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 {\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        } else {\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat ); }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManPatComputePattern2_rec",
+      "Start": 5718,
+      "End": 6672,
+      "BodyStart": 5806,
+      "Original": "void Cec_ManPatComputePattern2_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vPat )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj-\u003efMark1==0 ) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( pObj-\u003efMark1 == 1 )\n    {\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n    }\n    else\n    {\n        assert( (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                (Gia_ObjFanin1(pObj)-\u003efMark1 ^ Gia_ObjFaninC1(pObj)) == 0 );\n        if ( (Gia_ObjFanin1(pObj)-\u003efMark1 ^ Gia_ObjFaninC1(pObj)) == 0 )\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n        else\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat );\n    }\n}",
+      "Draft": "func Cec_ManPatComputePattern2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark1 == 1 {\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n    \n    } else {\n        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0\");\n        if (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0 {\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n        } else {\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat ); }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManPatComputePattern3_rec",
+      "Start": 6938,
+      "End": 7645,
+      "BodyStart": 7007,
+      "Original": "int Cec_ManPatComputePattern3_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int Value0, Value1, Value;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return (pObj-\u003efMark1 \u003c\u003c 1) | pObj-\u003efMark0;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        pObj-\u003efMark0 = 1;\n        pObj-\u003efMark1 = 1;\n        return GIA_UND;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Value0 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value1 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin1(pObj) );\n    Value = Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) );\n    pObj-\u003efMark0 =  (Value \u0026 1);\n    pObj-\u003efMark1 = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}",
+      "Draft": "func Cec_ManPatComputePattern3_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Value0, Value1, Value int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return (pObj.fMark1 \u003c\u003c 1) | pObj.fMark0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        pObj.fMark0 = 1;\n        pObj.fMark1 = 1;\n        return GIA_UND;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Value0 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value1 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin1(pObj) );\n    Value = Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) );\n    pObj.fMark0 =  (Value \u0026 1);\n    pObj.fMark1 = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}"
+    },
+    {
+      "Name": "Cec_ManPatVerifyPattern",
+      "Start": 7911,
+      "End": 8758,
+      "BodyStart": 7993,
+      "Original": "void Cec_ManPatVerifyPattern( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vPat )\n{\n    Gia_Obj_t * pTemp;\n    int i, Value;\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vPat, Value, i )\n    {\n        pTemp = Gia_ManCi( p, Abc_Lit2Var(Value) );\n//        assert( Abc_LitIsCompl(Value) != (int)pTemp-\u003efMark1 );\n        if ( pTemp-\u003efMark1 )\n        {\n            pTemp-\u003efMark0 = 0;\n            pTemp-\u003efMark1 = 1;\n        }\n        else\n        {\n            pTemp-\u003efMark0 = 1;\n            pTemp-\u003efMark1 = 0;\n        }\n        Gia_ObjSetTravIdCurrent( p, pTemp );\n    }\n    Value = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value = Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) );\n    if ( Value != GIA_ONE )\n        Abc_Print( 1, \"Cec_ManPatVerifyPattern(): Verification failed.\\n\" );\n    assert( Value == GIA_ONE );\n}",
+      "Draft": "func Cec_ManPatVerifyPattern(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    var pTemp *Gia_Obj_t;\n    var i, Value int32;\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPat)) \u0026\u0026 (((Value) = Vec_IntEntry(vPat, i)), 1); i++  {\n        pTemp = Gia_ManCi( p, Abc_Lit2Var(Value) );\n//        assert( Abc_LitIsCompl(Value) != (int)pTemp-\u003efMark1 );\n        if pTemp.fMark1 {\n            pTemp.fMark0 = 0;\n            pTemp.fMark1 = 1;\n        \n        } else {\n            pTemp.fMark0 = 1;\n            pTemp.fMark1 = 0;\n        }\n        Gia_ObjSetTravIdCurrent( p, pTemp );\n    }\n    Value = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value = Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) );\n    if Value != GIA_ONE {\n        Abc_Print( 1, \"Cec_ManPatVerifyPattern(): Verification failed.\\n\" ); }\n    assert(Value == GIA_ONE, \"Value == GIA_ONE\");\n}"
+    },
+    {
+      "Name": "Cec_ManPatComputePattern4_rec",
+      "Start": 8994,
+      "End": 9387,
+      "BodyStart": 9064,
+      "Original": "void Cec_ManPatComputePattern4_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj-\u003efMark0 = 0;\n    if ( Gia_ObjIsCi(pObj) )\n        return;\n    assert( Gia_ObjIsAnd(pObj) );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin1(pObj) );\n}",
+      "Draft": "func Cec_ManPatComputePattern4_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = 0;\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Cec_ManPatCleanMark0",
+      "Start": 9623,
+      "End": 9814,
+      "BodyStart": 9684,
+      "Original": "void Cec_ManPatCleanMark0( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    assert( Gia_ObjIsCo(pObj) );\n    Gia_ManIncrementTravId( p );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n}",
+      "Draft": "func Cec_ManPatCleanMark0(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    Gia_ManIncrementTravId( p );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n}"
+    },
+    {
+      "Name": "Cec_ManPatSavePattern",
+      "Start": 10050,
+      "End": 11717,
+      "BodyStart": 10137,
+      "Original": "void Cec_ManPatSavePattern( Cec_ManPat_t * pMan, Cec_ManSat_t *  p, Gia_Obj_t * pObj )\n{\n    Vec_Int_t * vPat;\n    int nPatLits;\n    abctime clkTotal = Abc_Clock();\n//    abctime clk;\n    assert( Gia_ObjIsCo(pObj) );\n    pMan-\u003enPats++;\n    pMan-\u003enPatsAll++;\n    // compute values in the cone of influence\n//clk = Abc_Clock();\n    Gia_ManIncrementTravId( p-\u003epAig );\n    nPatLits = Cec_ManPatComputePattern_rec( p, p-\u003epAig, Gia_ObjFanin0(pObj) );\n    assert( (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) == 1 );\n    pMan-\u003enPatLits += nPatLits;\n    pMan-\u003enPatLitsAll += nPatLits;\n//pMan-\u003etimeFind += Abc_Clock() - clk;\n    // compute sensitizing path\n//clk = Abc_Clock();\n    Vec_IntClear( pMan-\u003evPattern1 );\n    Gia_ManIncrementTravId( p-\u003epAig );\n    Cec_ManPatComputePattern1_rec( p-\u003epAig, Gia_ObjFanin0(pObj), pMan-\u003evPattern1 );\n    // compute sensitizing path\n    Vec_IntClear( pMan-\u003evPattern2 );\n    Gia_ManIncrementTravId( p-\u003epAig );\n    Cec_ManPatComputePattern2_rec( p-\u003epAig, Gia_ObjFanin0(pObj), pMan-\u003evPattern2 );\n    // compare patterns\n    vPat = Vec_IntSize(pMan-\u003evPattern1) \u003c Vec_IntSize(pMan-\u003evPattern2) ? pMan-\u003evPattern1 : pMan-\u003evPattern2;\n    pMan-\u003enPatLitsMin += Vec_IntSize(vPat);\n    pMan-\u003enPatLitsMinAll += Vec_IntSize(vPat);\n//pMan-\u003etimeShrink += Abc_Clock() - clk;\n    // verify pattern using ternary simulation\n//clk = Abc_Clock();\n//    Cec_ManPatVerifyPattern( p-\u003epAig, pObj, vPat );\n//pMan-\u003etimeVerify += Abc_Clock() - clk;\n    // sort pattern\n//clk = Abc_Clock();\n    Vec_IntSort( vPat, 0 );\n//pMan-\u003etimeSort += Abc_Clock() - clk;\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n    pMan-\u003etimeTotal += Abc_Clock() - clkTotal;\n}",
+      "Draft": "func Cec_ManPatSavePattern(pMan *Cec_ManPat_t, p *Cec_ManSat_t, pObj *Gia_Obj_t) {\n    var vPat *Vec_Int_t;\n    var nPatLits int32;\n    var clkTotal abctime  = Abc_Clock();\n//    abctime clk;\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    pMan.nPats++;\n    pMan.nPatsAll++;\n    // compute values in the cone of influence\n//clk = Abc_Clock();\n    Gia_ManIncrementTravId( p.pAig );\n    nPatLits = Cec_ManPatComputePattern_rec( p, p.pAig, Gia_ObjFanin0(pObj) );\n    assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1\");\n    pMan.nPatLits += nPatLits;\n    pMan.nPatLitsAll += nPatLits;\n//pMan-\u003etimeFind += Abc_Clock() - clk;\n    // compute sensitizing path\n//clk = Abc_Clock();\n    Vec_IntClear( pMan.vPattern1 );\n    Gia_ManIncrementTravId( p.pAig );\n    Cec_ManPatComputePattern1_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern1 );\n    // compute sensitizing path\n    Vec_IntClear( pMan.vPattern2 );\n    Gia_ManIncrementTravId( p.pAig );\n    Cec_ManPatComputePattern2_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern2 );\n    // compare patterns\n    if Vec_IntSize(pMan.vPattern1) \u003c Vec_IntSize(pMan.vPattern2) {\n        vPat = pMan.vPattern1;\n    } else {\n        vPat = pMan.vPattern2;\n    }\n    pMan.nPatLitsMin += Vec_IntSize(vPat);\n    pMan.nPatLitsMinAll += Vec_IntSize(vPat);\n//pMan-\u003etimeShrink += Abc_Clock() - clk;\n    // verify pattern using ternary simulation\n//clk = Abc_Clock();\n//    Cec_ManPatVerifyPattern( p-\u003epAig, pObj, vPat );\n//pMan-\u003etimeVerify += Abc_Clock() - clk;\n    // sort pattern\n//clk = Abc_Clock();\n    Vec_IntSort( vPat, 0 );\n//pMan-\u003etimeSort += Abc_Clock() - clk;\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n    pMan.timeTotal += Abc_Clock() - clkTotal;\n}"
+    },
+    {
+      "Name": "Cec_ManPatSavePatternCSat",
+      "Start": 11718,
+      "End": 11896,
+      "BodyStart": 11790,
+      "Original": "void Cec_ManPatSavePatternCSat( Cec_ManPat_t * pMan, Vec_Int_t * vPat )\n{\n    // sort pattern\n    Vec_IntSort( vPat, 0 );\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n}",
+      "Draft": "func Cec_ManPatSavePatternCSat(pMan *Cec_ManPat_t, vPat *Vec_Int_t) {\n    // sort pattern\n    Vec_IntSort( vPat, 0 );\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n}"
+    },
+    {
+      "Name": "Cec_ManPatCollectTry",
+      "Start": 12178,
+      "End": 13014,
+      "BodyStart": 12277,
+      "Original": "int Cec_ManPatCollectTry( Vec_Ptr_t * vInfo, Vec_Ptr_t * vPres, int iBit, int * pLits, int nLits )\n{\n    unsigned * pInfo, * pPres;\n    int i;\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        if ( Abc_InfoHasBit( pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) )\n             return 0;\n    }\n    for ( i = 0; i \u003c nLits; i++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        Abc_InfoSetBit( pPres, iBit );\n        if ( Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) )\n            Abc_InfoXorBit( pInfo, iBit );\n    }\n    return 1;\n}",
+      "Draft": "func Cec_ManPatCollectTry(vInfo *Vec_Ptr_t, vPres *Vec_Ptr_t, iBit int32, pLits *int32, nLits int32) int32 {\n    var pInfo, pPres *uint32;\n    var i int32;\n    for  i = 0; i \u003c nLits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        if Abc_InfoHasBit( pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {\n             return 0; }\n    }\n    for  i = 0; i \u003c nLits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        Abc_InfoSetBit( pPres, iBit );\n        if Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {\n            Abc_InfoXorBit( pInfo, iBit ); }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cec_ManPatCollectPatterns",
+      "Start": 13295,
+      "End": 14980,
+      "BodyStart": 13386,
+      "Original": "Vec_Ptr_t * Cec_ManPatCollectPatterns( Cec_ManPat_t *  pMan, int nInputs, int nWordsInit )\n{\n    Vec_Int_t * vPat = pMan-\u003evPattern1;\n    Vec_Ptr_t * vInfo, * vPres;\n    int k, kMax = -1, nPatterns = 0;\n    int iStartOld = pMan-\u003eiStart;\n    int nWords = nWordsInit;\n    int nBits = 32 * nWords;\n    abctime clk = Abc_Clock();\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Gia_ManRandomInfo( vInfo, 0, 0, nWords );\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    while ( pMan-\u003eiStart \u003c Vec_StrSize(pMan-\u003evStorage) )\n    {\n        nPatterns++;\n        Cec_ManPatRestore( pMan, vPat );\n        for ( k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0) )\n            if ( Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) )\n                break;\n        kMax = Abc_MaxInt( kMax, k );\n        if ( k == nBits-1 )\n        {\n            Vec_PtrReallocSimInfo( vInfo );\n            Gia_ManRandomInfo( vInfo, 0, nWords, 2*nWords );\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n    Vec_PtrFree( vPres );\n    pMan-\u003enSeries = Vec_PtrReadWordsSimInfo(vInfo) / nWordsInit;\n    pMan-\u003etimePack += Abc_Clock() - clk;\n    pMan-\u003etimeTotal += Abc_Clock() - clk;\n    pMan-\u003eiStart = iStartOld;\n    if ( pMan-\u003efVerbose )\n    {\n        Abc_Print( 1, \"Total = %5d. Max used = %5d. Full = %5d. Series = %d. \", \n            nPatterns, kMax, nWordsInit*32, pMan-\u003enSeries );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        Cec_ManPatPrintStats( pMan );\n    }\n    return vInfo;\n}",
+      "Draft": "func Cec_ManPatCollectPatterns(pMan *Cec_ManPat_t, nInputs int32, nWordsInit int32) *Vec_Ptr_t {\n    var vPat *Vec_Int_t  = pMan.vPattern1;\n    var vInfo, vPres *Vec_Ptr_t;\n    var k int32;\n    var kMax int32 = -1;\n    var nPatterns int32;\n    var iStartOld int32  = pMan.iStart;\n    var nWords int32  = nWordsInit;\n    var nBits int32  = 32 * nWords;\n    var clk abctime  = Abc_Clock();\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Gia_ManRandomInfo( vInfo, 0, 0, nWords );\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    for  pMan.iStart \u003c Vec_StrSize(pMan.vStorage)  {\n        nPatterns++;\n        Cec_ManPatRestore( pMan, vPat );\n        for  k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {\n            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {\n                break; }\n        }\n        kMax = Abc_MaxInt( kMax, k );\n        if k == nBits-1 {\n            Vec_PtrReallocSimInfo( vInfo );\n            Gia_ManRandomInfo( vInfo, 0, nWords, 2*nWords );\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n    Vec_PtrFree( vPres );\n    pMan.nSeries = Vec_PtrReadWordsSimInfo(vInfo) / nWordsInit;\n    pMan.timePack += Abc_Clock() - clk;\n    pMan.timeTotal += Abc_Clock() - clk;\n    pMan.iStart = iStartOld;\n    if pMan.fVerbose {\n        Abc_Print( 1, \"Total = %5d. Max used = %5d. Full = %5d. Series = %d. \", \n            nPatterns, kMax, nWordsInit*32, pMan.nSeries );\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        Cec_ManPatPrintStats( pMan );\n    }\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Cec_ManPatPackPatterns",
+      "Start": 15262,
+      "End": 17289,
+      "BodyStart": 15362,
+      "Original": "Vec_Ptr_t * Cec_ManPatPackPatterns( Vec_Int_t * vCexStore, int nInputs, int nRegs, int nWordsInit )\n{\n    Vec_Int_t * vPat;\n    Vec_Ptr_t * vInfo, * vPres;\n    int k, nSize, iStart, kMax = 0, nPatterns = 0;\n    int nWords = nWordsInit;\n    int nBits = 32 * nWords;\n//    int RetValue;\n    assert( nRegs \u003c= nInputs );\n    vPat  = Vec_IntAlloc( 100 );\n\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    Gia_ManRandomInfo( vInfo, nRegs, 0, nWords );\n\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    iStart = 0;\n    while ( iStart \u003c Vec_IntSize(vCexStore) )\n    {\n        nPatterns++;\n        // skip the output number\n        iStart++;\n        // get the number of items\n        nSize = Vec_IntEntry( vCexStore, iStart++ );\n        if ( nSize \u003c= 0 )\n            continue;\n        // extract pattern\n        Vec_IntClear( vPat );\n        for ( k = 0; k \u003c nSize; k++ )\n            Vec_IntPush( vPat, Vec_IntEntry( vCexStore, iStart++ ) );\n        // add pattern to storage\n        for ( k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0) )\n            if ( Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) )\n                break;\n\n//        k = kMax + 1;\n//        RetValue = Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) );\n//        assert( RetValue == 1 );\n\n        kMax = Abc_MaxInt( kMax, k );\n        if ( k == nBits-1 )\n        {\n            Vec_PtrReallocSimInfo( vInfo );\n            Vec_PtrCleanSimInfo( vInfo, nWords, 2*nWords );\n            Gia_ManRandomInfo( vInfo, nRegs, nWords, 2*nWords );\n\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n//    Abc_Print( 1, \"packed %d patterns into %d vectors (out of %d)\\n\", nPatterns, kMax, nBits );\n    Vec_PtrFree( vPres );\n    Vec_IntFree( vPat );\n    return vInfo;\n}",
+      "Draft": "func Cec_ManPatPackPatterns(vCexStore *Vec_Int_t, nInputs int32, nRegs int32, nWordsInit int32) *Vec_Ptr_t {\n    var vPat *Vec_Int_t;\n    var vInfo, vPres *Vec_Ptr_t;\n    var k, nSize, iStart, kMax, nPatterns int32;\n    var nWords int32  = nWordsInit;\n    var nBits int32  = 32 * nWords;\n//    int RetValue;\n    assert(nRegs \u003c= nInputs, \"nRegs \u003c= nInputs\");\n    vPat  = Vec_IntAlloc( 100 );\n\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    Gia_ManRandomInfo( vInfo, nRegs, 0, nWords );\n\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    iStart = 0;\n    for  iStart \u003c Vec_IntSize(vCexStore)  {\n        nPatterns++;\n        // skip the output number\n        iStart++;\n        // get the number of items\n        nSize = Vec_IntEntry( vCexStore, iStart++ );\n        if nSize \u003c= 0 {\n            continue; }\n        // extract pattern\n        Vec_IntClear( vPat );\n        for  k = 0; k \u003c nSize; k++  {\n            Vec_IntPush( vPat, Vec_IntEntry( vCexStore, iStart++ ) );\n        }\n        // add pattern to storage\n        for  k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {\n            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {\n                break; }\n        }\n\n//        k = kMax + 1;\n//        RetValue = Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) );\n//        assert( RetValue == 1 );\n\n        kMax = Abc_MaxInt( kMax, k );\n        if k == nBits-1 {\n            Vec_PtrReallocSimInfo( vInfo );\n            Vec_PtrCleanSimInfo( vInfo, nWords, 2*nWords );\n            Gia_ManRandomInfo( vInfo, nRegs, nWords, 2*nWords );\n\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n//    Abc_Print( 1, \"packed %d patterns into %d vectors (out of %d)\\n\", nPatterns, kMax, nBits );\n    Vec_PtrFree( vPres );\n    Vec_IntFree( vPat );\n    return vInfo;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::12580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12377,
+      "End": 12389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::12652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12449,
+      "End": 12461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::12913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12710,
+      "End": 12722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::12985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12782,
+      "End": 12794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::14274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14071,
+      "End": 14078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::pointer-cast::16796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16465,
+      "End": 16472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatStoreNum",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatStoreNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1231,
+      "End": 1514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatRestoreNum",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatRestoreNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1737,
+      "End": 1967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatStore",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2190,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatRestore",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatRestore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2873,
+      "End": 3281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatComputePattern_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatComputePattern_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3548,
+      "End": 4232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatComputePattern1_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatComputePattern1_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4498,
+      "End": 5452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatComputePattern2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatComputePattern2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5718,
+      "End": 6672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatComputePattern3_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatComputePattern3_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6938,
+      "End": 7645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatVerifyPattern",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatVerifyPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7911,
+      "End": 8758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatComputePattern4_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatComputePattern4_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8994,
+      "End": 9387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatCleanMark0",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatCleanMark0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9623,
+      "End": 9814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10050,
+      "End": 11717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatSavePatternCSat",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatSavePatternCSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11718,
+      "End": 11896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatCollectTry",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatCollectTry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12178,
+      "End": 13014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatCollectPatterns",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatCollectPatterns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13295,
+      "End": 14980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::Cec_ManPatPackPatterns",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManPatPackPatterns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15262,
+      "End": 17289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecPat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17536
+    }
+  ],
+  "Draft": "package cec\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [cecPat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Simulation pattern manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecPat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatStoreNum(p *Cec_ManPat_t, Num int32) {\n    var x uint32  = uint32(Num);\n    assert(Num \u003e= 0, \"Num \u003e= 0\");\n    for  x \u0026 ~0x7f  {\n        Vec_StrPush( p.vStorage, byte(((x \u0026 0x7f) | 0x80)) );\n        x \u003e\u003e= 7;\n    }\n    Vec_StrPush( p.vStorage, byte(x) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatRestoreNum(p *Cec_ManPat_t) int32 {\n    var ch, i, x int32;\n    for  i = 0; (ch = Vec_StrEntry(p.vStorage, p.iStart++)) \u0026 0x80; i++  {\n        x |= (ch \u0026 0x7f) \u003c\u003c (7 * i);\n    }\n    return x | (ch \u003c\u003c (7 * i));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatStore(p *Cec_ManPat_t, vPat *Vec_Int_t) {\n    var i, Number, NumberPrev int32;\n    assert(Vec_IntSize(vPat) \u003e 0, \"Vec_IntSize(vPat) \u003e 0\");\n    Cec_ManPatStoreNum( p, Vec_IntSize(vPat) );\n    NumberPrev = Vec_IntEntry( vPat, 0 );\n    Cec_ManPatStoreNum( p, NumberPrev );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vPat)) \u0026\u0026 (((Number) = Vec_IntEntry(vPat, i)), 1); i++  {\n        assert(NumberPrev \u003c Number, \"NumberPrev \u003c Number\");\n        Cec_ManPatStoreNum( p, Number - NumberPrev );\n        NumberPrev = Number;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatRestore(p *Cec_ManPat_t, vPat *Vec_Int_t) {\n    var i, Size, Number int32;\n    Vec_IntClear( vPat );\n    Size = Cec_ManPatRestoreNum( p );\n    Number = Cec_ManPatRestoreNum( p );\n    Vec_IntPush( vPat, Number );\n    for  i = 1; i \u003c Size; i++  {\n        Number += Cec_ManPatRestoreNum( p );\n        Vec_IntPush( vPat, Number );\n    }\n    assert(Vec_IntSize(vPat) == Size, \"Vec_IntSize(vPat) == Size\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatComputePattern_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Counter int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        pObj.fMark1 = Cec_ObjSatVarValue( pSat, pObj );\n        return 1;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin0(pObj) );\n    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin1(pObj) );\n    pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                   (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj));\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatComputePattern1_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark1 == 1 {\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat );\n    \n    } else {\n        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0\");\n        if (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 {\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );\n        } else {\n            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatComputePattern2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark1 == 1 {\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat );\n        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n    \n    } else {\n        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0\");\n        if (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0 {\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );\n        } else {\n            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatComputePattern3_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Value0, Value1, Value int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return (pObj.fMark1 \u003c\u003c 1) | pObj.fMark0; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        pObj.fMark0 = 1;\n        pObj.fMark1 = 1;\n        return GIA_UND;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Value0 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value1 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin1(pObj) );\n    Value = Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) );\n    pObj.fMark0 =  (Value \u0026 1);\n    pObj.fMark1 = ((Value \u003e\u003e 1) \u0026 1);\n    return Value;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives satisfying assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatVerifyPattern(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {\n    var pTemp *Gia_Obj_t;\n    var i, Value int32;\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPat)) \u0026\u0026 (((Value) = Vec_IntEntry(vPat, i)), 1); i++  {\n        pTemp = Gia_ManCi( p, Abc_Lit2Var(Value) );\n//        assert( Abc_LitIsCompl(Value) != (int)pTemp-\u003efMark1 );\n        if pTemp.fMark1 {\n            pTemp.fMark0 = 0;\n            pTemp.fMark1 = 1;\n        \n        } else {\n            pTemp.fMark0 = 1;\n            pTemp.fMark1 = 0;\n        }\n        Gia_ObjSetTravIdCurrent( p, pTemp );\n    }\n    Value = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );\n    Value = Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) );\n    if Value != GIA_ONE {\n        Abc_Print( 1, \"Cec_ManPatVerifyPattern(): Verification failed.\\n\" ); }\n    assert(Value == GIA_ONE, \"Value == GIA_ONE\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatComputePattern4_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    pObj.fMark0 = 0;\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatCleanMark0(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    Gia_ManIncrementTravId( p );\n    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatSavePattern(pMan *Cec_ManPat_t, p *Cec_ManSat_t, pObj *Gia_Obj_t) {\n    var vPat *Vec_Int_t;\n    var nPatLits int32;\n    var clkTotal abctime  = Abc_Clock();\n//    abctime clk;\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n    pMan.nPats++;\n    pMan.nPatsAll++;\n    // compute values in the cone of influence\n//clk = Abc_Clock();\n    Gia_ManIncrementTravId( p.pAig );\n    nPatLits = Cec_ManPatComputePattern_rec( p, p.pAig, Gia_ObjFanin0(pObj) );\n    assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1, \"(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1\");\n    pMan.nPatLits += nPatLits;\n    pMan.nPatLitsAll += nPatLits;\n//pMan-\u003etimeFind += Abc_Clock() - clk;\n    // compute sensitizing path\n//clk = Abc_Clock();\n    Vec_IntClear( pMan.vPattern1 );\n    Gia_ManIncrementTravId( p.pAig );\n    Cec_ManPatComputePattern1_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern1 );\n    // compute sensitizing path\n    Vec_IntClear( pMan.vPattern2 );\n    Gia_ManIncrementTravId( p.pAig );\n    Cec_ManPatComputePattern2_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern2 );\n    // compare patterns\n    if Vec_IntSize(pMan.vPattern1) \u003c Vec_IntSize(pMan.vPattern2) {\n        vPat = pMan.vPattern1;\n    } else {\n        vPat = pMan.vPattern2;\n    }\n    pMan.nPatLitsMin += Vec_IntSize(vPat);\n    pMan.nPatLitsMinAll += Vec_IntSize(vPat);\n//pMan-\u003etimeShrink += Abc_Clock() - clk;\n    // verify pattern using ternary simulation\n//clk = Abc_Clock();\n//    Cec_ManPatVerifyPattern( p-\u003epAig, pObj, vPat );\n//pMan-\u003etimeVerify += Abc_Clock() - clk;\n    // sort pattern\n//clk = Abc_Clock();\n    Vec_IntSort( vPat, 0 );\n//pMan-\u003etimeSort += Abc_Clock() - clk;\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n    pMan.timeTotal += Abc_Clock() - clkTotal;\n}\nfunc Cec_ManPatSavePatternCSat(pMan *Cec_ManPat_t, vPat *Vec_Int_t) {\n    // sort pattern\n    Vec_IntSort( vPat, 0 );\n    // save pattern\n    Cec_ManPatStore( pMan, vPat );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Packs patterns into array of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n*************************************`**********************************/\nfunc Cec_ManPatCollectTry(vInfo *Vec_Ptr_t, vPres *Vec_Ptr_t, iBit int32, pLits *int32, nLits int32) int32 {\n    var pInfo, pPres *uint32;\n    var i int32;\n    for  i = 0; i \u003c nLits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        if Abc_InfoHasBit( pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {\n             return 0; }\n    }\n    for  i = 0; i \u003c nLits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));\n        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));\n        Abc_InfoSetBit( pPres, iBit );\n        if Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {\n            Abc_InfoXorBit( pInfo, iBit ); }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Packs patterns into array of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatCollectPatterns(pMan *Cec_ManPat_t, nInputs int32, nWordsInit int32) *Vec_Ptr_t {\n    var vPat *Vec_Int_t  = pMan.vPattern1;\n    var vInfo, vPres *Vec_Ptr_t;\n    var k int32;\n    var kMax int32 = -1;\n    var nPatterns int32;\n    var iStartOld int32  = pMan.iStart;\n    var nWords int32  = nWordsInit;\n    var nBits int32  = 32 * nWords;\n    var clk abctime  = Abc_Clock();\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Gia_ManRandomInfo( vInfo, 0, 0, nWords );\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    for  pMan.iStart \u003c Vec_StrSize(pMan.vStorage)  {\n        nPatterns++;\n        Cec_ManPatRestore( pMan, vPat );\n        for  k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {\n            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {\n                break; }\n        }\n        kMax = Abc_MaxInt( kMax, k );\n        if k == nBits-1 {\n            Vec_PtrReallocSimInfo( vInfo );\n            Gia_ManRandomInfo( vInfo, 0, nWords, 2*nWords );\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n    Vec_PtrFree( vPres );\n    pMan.nSeries = Vec_PtrReadWordsSimInfo(vInfo) / nWordsInit;\n    pMan.timePack += Abc_Clock() - clk;\n    pMan.timeTotal += Abc_Clock() - clk;\n    pMan.iStart = iStartOld;\n    if pMan.fVerbose {\n        Abc_Print( 1, \"Total = %5d. Max used = %5d. Full = %5d. Series = %d. \", \n            nPatterns, kMax, nWordsInit*32, pMan.nSeries );\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        Cec_ManPatPrintStats( pMan );\n    }\n    return vInfo;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Packs patterns into array of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManPatPackPatterns(vCexStore *Vec_Int_t, nInputs int32, nRegs int32, nWordsInit int32) *Vec_Ptr_t {\n    var vPat *Vec_Int_t;\n    var vInfo, vPres *Vec_Ptr_t;\n    var k, nSize, iStart, kMax, nPatterns int32;\n    var nWords int32  = nWordsInit;\n    var nBits int32  = 32 * nWords;\n//    int RetValue;\n    assert(nRegs \u003c= nInputs, \"nRegs \u003c= nInputs\");\n    vPat  = Vec_IntAlloc( 100 );\n\n    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vInfo, 0, nWords );\n    Gia_ManRandomInfo( vInfo, nRegs, 0, nWords );\n\n    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );\n    Vec_PtrCleanSimInfo( vPres, 0, nWords );\n    iStart = 0;\n    for  iStart \u003c Vec_IntSize(vCexStore)  {\n        nPatterns++;\n        // skip the output number\n        iStart++;\n        // get the number of items\n        nSize = Vec_IntEntry( vCexStore, iStart++ );\n        if nSize \u003c= 0 {\n            continue; }\n        // extract pattern\n        Vec_IntClear( vPat );\n        for  k = 0; k \u003c nSize; k++  {\n            Vec_IntPush( vPat, Vec_IntEntry( vCexStore, iStart++ ) );\n        }\n        // add pattern to storage\n        for  k = 1; k \u003c nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {\n            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {\n                break; }\n        }\n\n//        k = kMax + 1;\n//        RetValue = Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) );\n//        assert( RetValue == 1 );\n\n        kMax = Abc_MaxInt( kMax, k );\n        if k == nBits-1 {\n            Vec_PtrReallocSimInfo( vInfo );\n            Vec_PtrCleanSimInfo( vInfo, nWords, 2*nWords );\n            Gia_ManRandomInfo( vInfo, nRegs, nWords, 2*nWords );\n\n            Vec_PtrReallocSimInfo( vPres );\n            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );\n            nWords *= 2;\n            nBits *= 2;\n        }\n    }\n//    Abc_Print( 1, \"packed %d patterns into %d vectors (out of %d)\\n\", nPatterns, kMax, nBits );\n    Vec_PtrFree( vPres );\n    Vec_IntFree( vPat );\n    return vInfo;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

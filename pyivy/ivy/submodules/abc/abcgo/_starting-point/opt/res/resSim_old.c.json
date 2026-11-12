@@ -1,0 +1,541 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c",
+  "SHA256": "6ef1ae7380201a5abccee37c786ab2218935f0e138e6ce5467e660d20ecbfa62",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Res_Sim_t) );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 0xABC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pAig) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 5467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 6712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsCo(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 10031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * int32( sizeof(unsigned)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 5,
+        "ByteOffset": 13332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"On = %3d (%7.2f %%)  \",  nOnes,  100.0*nOnes/p.nPats );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 5,
+        "ByteOffset": 13401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Off = %3d (%7.2f %%)  \", nZeros, 100.0*nZeros/p.nPats );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 5,
+        "ByteOffset": 13471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dc = %3d (%7.2f %%)  \",  nDcs,   100.0*nDcs/p.nPats );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 5,
+        "ByteOffset": 13539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"P0 = %3d \", p.nPats0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 13576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"P1 = %3d \", p.nPats1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 9,
+        "ByteOffset": 13655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 5,
+        "ByteOffset": 13676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 449,
+        "Column": 28,
+        "ByteOffset": 14291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, pInfo2, p.nPatsOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 450,
+        "Column": 9,
+        "ByteOffset": 14329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Res_SimAlloc",
+      "Start": 1277,
+      "End": 1937,
+      "BodyStart": 1316,
+      "Original": "Res_Sim_t * Res_SimAlloc( int nWords )\n{\n    Res_Sim_t * p;\n    p = ALLOC( Res_Sim_t, 1 );\n    memset( p, 0, sizeof(Res_Sim_t) );\n    // simulation parameters\n    p-\u003enWords    = nWords;\n    p-\u003enPats     = 8 * sizeof(unsigned) * p-\u003enWords;\n    p-\u003enWordsOut = p-\u003enPats * p-\u003enWords;\n    p-\u003enPatsOut  = p-\u003enPats * p-\u003enPats;\n    // simulation info\n    p-\u003evPats     = Vec_PtrAllocSimInfo( 1024, p-\u003enWords );\n    p-\u003evPats0    = Vec_PtrAllocSimInfo( 128,  p-\u003enWords );\n    p-\u003evPats1    = Vec_PtrAllocSimInfo( 128,  p-\u003enWords );\n    p-\u003evOuts     = Vec_PtrAllocSimInfo( 128,  p-\u003enWordsOut );\n    // resub candidates\n    p-\u003evCands    = Vec_VecStart( 16 );\n    return p;\n}",
+      "Draft": "func Res_SimAlloc(nWords int32) *Res_Sim_t {\n    var p *Res_Sim_t;\n    p = ALLOC( Res_Sim_t, 1 );\n    memset( p, 0, sizeof(Res_Sim_t) );\n    // simulation parameters\n    p.nWords    = nWords;\n    p.nPats     = 8 * sizeof(unsigned) * p.nWords;\n    p.nWordsOut = p.nPats * p.nWords;\n    p.nPatsOut  = p.nPats * p.nPats;\n    // simulation info\n    p.vPats     = Vec_PtrAllocSimInfo( 1024, p.nWords );\n    p.vPats0    = Vec_PtrAllocSimInfo( 128,  p.nWords );\n    p.vPats1    = Vec_PtrAllocSimInfo( 128,  p.nWords );\n    p.vOuts     = Vec_PtrAllocSimInfo( 128,  p.nWordsOut );\n    // resub candidates\n    p.vCands    = Vec_VecStart( 16 );\n    return p;\n}"
+    },
+    {
+      "Name": "Res_SimAdjust",
+      "Start": 2200,
+      "End": 3281,
+      "BodyStart": 2254,
+      "Original": "void Res_SimAdjust( Res_Sim_t * p, Abc_Ntk_t * pAig )\n{\n    srand( 0xABC );\n\n    assert( Abc_NtkIsStrash(pAig) );\n    p-\u003epAig = pAig;\n    if ( Vec_PtrSize(p-\u003evPats) \u003c Abc_NtkObjNumMax(pAig)+1 )\n    {\n        Vec_PtrFree( p-\u003evPats );\n        p-\u003evPats = Vec_PtrAllocSimInfo( Abc_NtkObjNumMax(pAig)+1, p-\u003enWords );\n    }\n    if ( Vec_PtrSize(p-\u003evPats0) \u003c Abc_NtkPiNum(pAig) )\n    {\n        Vec_PtrFree( p-\u003evPats0 );\n        p-\u003evPats0 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p-\u003enWords );\n    }\n    if ( Vec_PtrSize(p-\u003evPats1) \u003c Abc_NtkPiNum(pAig) )\n    {\n        Vec_PtrFree( p-\u003evPats1 );\n        p-\u003evPats1 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p-\u003enWords );\n    }\n    if ( Vec_PtrSize(p-\u003evOuts) \u003c Abc_NtkPoNum(pAig) )\n    {\n        Vec_PtrFree( p-\u003evOuts );\n        p-\u003evOuts = Vec_PtrAllocSimInfo( Abc_NtkPoNum(pAig), p-\u003enWordsOut );\n    }\n    // clean storage info for patterns\n    Abc_InfoClear( Vec_PtrEntry(p-\u003evPats0,0), p-\u003enWords * Abc_NtkPiNum(pAig) );\n    Abc_InfoClear( Vec_PtrEntry(p-\u003evPats1,0), p-\u003enWords * Abc_NtkPiNum(pAig) );\n    p-\u003enPats0 = 0;\n    p-\u003enPats1 = 0;\n}",
+      "Draft": "func Res_SimAdjust(p *Res_Sim_t, pAig *Abc_Ntk_t) {\n    srand( 0xABC );\n\n    assert(Abc_NtkIsStrash(pAig), \"Abc_NtkIsStrash(pAig)\");\n    p.pAig = pAig;\n    if Vec_PtrSize(p.vPats) \u003c Abc_NtkObjNumMax(pAig)+1 {\n        Vec_PtrFree( p.vPats );\n        p.vPats = Vec_PtrAllocSimInfo( Abc_NtkObjNumMax(pAig)+1, p.nWords );\n    }\n    if Vec_PtrSize(p.vPats0) \u003c Abc_NtkPiNum(pAig) {\n        Vec_PtrFree( p.vPats0 );\n        p.vPats0 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p.nWords );\n    }\n    if Vec_PtrSize(p.vPats1) \u003c Abc_NtkPiNum(pAig) {\n        Vec_PtrFree( p.vPats1 );\n        p.vPats1 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p.nWords );\n    }\n    if Vec_PtrSize(p.vOuts) \u003c Abc_NtkPoNum(pAig) {\n        Vec_PtrFree( p.vOuts );\n        p.vOuts = Vec_PtrAllocSimInfo( Abc_NtkPoNum(pAig), p.nWordsOut );\n    }\n    // clean storage info for patterns\n    Abc_InfoClear( Vec_PtrEntry(p.vPats0,0), p.nWords * Abc_NtkPiNum(pAig) );\n    Abc_InfoClear( Vec_PtrEntry(p.vPats1,0), p.nWords * Abc_NtkPiNum(pAig) );\n    p.nPats0 = 0;\n    p.nPats1 = 0;\n}"
+    },
+    {
+      "Name": "Res_SimFree",
+      "Start": 3540,
+      "End": 3740,
+      "BodyStart": 3574,
+      "Original": "void Res_SimFree( Res_Sim_t * p )\n{\n    Vec_PtrFree( p-\u003evPats );\n    Vec_PtrFree( p-\u003evPats0 );\n    Vec_PtrFree( p-\u003evPats1 );\n    Vec_PtrFree( p-\u003evOuts );\n    Vec_VecFree( p-\u003evCands );\n    free( p );\n}",
+      "Draft": "func Res_SimFree(p *Res_Sim_t) {\n    Vec_PtrFree( p.vPats );\n    Vec_PtrFree( p.vPats0 );\n    Vec_PtrFree( p.vPats1 );\n    Vec_PtrFree( p.vOuts );\n    Vec_VecFree( p.vCands );\n    free( p );\n}"
+    },
+    {
+      "Name": "Res_SimSetRandom",
+      "Start": 4008,
+      "End": 4254,
+      "BodyStart": 4047,
+      "Original": "void Res_SimSetRandom( Res_Sim_t * p )\n{\n    Abc_Obj_t * pObj;\n    unsigned * pInfo;\n    int i;\n    Abc_NtkForEachPi( p-\u003epAig, pObj, i )\n    {\n        pInfo = Vec_PtrEntry( p-\u003evPats, pObj-\u003eId );\n        Abc_InfoRandom( pInfo, p-\u003enWords );\n    }\n}",
+      "Draft": "func Res_SimSetRandom(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        Abc_InfoRandom( pInfo, p.nWords );\n    }\n}"
+    },
+    {
+      "Name": "Res_SimSetGiven",
+      "Start": 4520,
+      "End": 4872,
+      "BodyStart": 4577,
+      "Original": "void Res_SimSetGiven( Res_Sim_t * p, Vec_Ptr_t * vInfo )\n{\n    Abc_Obj_t * pObj;\n    unsigned * pInfo, * pInfo2;\n    int i, w;\n    Abc_NtkForEachPi( p-\u003epAig, pObj, i )\n    {\n        pInfo = Vec_PtrEntry( p-\u003evPats, pObj-\u003eId );\n        pInfo2 = Vec_PtrEntry( vInfo, i );\n        for ( w = 0; w \u003c p-\u003enWords; w++ )\n            pInfo[w] = pInfo2[w];\n    }\n}",
+      "Draft": "func Res_SimSetGiven(p *Res_Sim_t, vInfo *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo, pInfo2 *uint32;\n    var i, w int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( vInfo, i );\n        for  w = 0; w \u003c p.nWords; w++  {\n            pInfo[w] = pInfo2[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Res_SimPerformOne",
+      "Start": 5127,
+      "End": 6085,
+      "BodyStart": 5208,
+      "Original": "void Res_SimPerformOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords )\n{\n    unsigned * pInfo, * pInfo1, * pInfo2;\n    int k, fComp1, fComp2;\n    // simulate the internal nodes\n    assert( Abc_ObjIsNode(pNode) );\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pInfo2 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if ( fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] = ~pInfo1[k] \u0026 ~pInfo2[k];\n    else if ( fComp1 \u0026\u0026 !fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] = ~pInfo1[k] \u0026  pInfo2[k];\n    else if ( !fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] =  pInfo1[k] \u0026 ~pInfo2[k];\n    else // if ( fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] =  pInfo1[k] \u0026  pInfo2[k];\n}",
+      "Draft": "func Res_SimPerformOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) {\n    var pInfo, pInfo1, pInfo2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode.Id);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pInfo2 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k] \u0026 ~pInfo2[k];\n        }\n    } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k] \u0026  pInfo2[k];\n        }\n    } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k] \u0026 ~pInfo2[k];\n        }\n    } else { // if ( fComp1 \u0026\u0026 fComp2 )\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k] \u0026  pInfo2[k];\n        } }\n}"
+    },
+    {
+      "Name": "Res_SimTransferOne",
+      "Start": 6343,
+      "End": 6875,
+      "BodyStart": 6425,
+      "Original": "void Res_SimTransferOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords )\n{\n    unsigned * pInfo, * pInfo1;\n    int k, fComp1;\n    // simulate the internal nodes\n    assert( Abc_ObjIsCo(pNode) );\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if ( fComp1 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] = ~pInfo1[k];\n    else \n        for ( k = 0; k \u003c nSimWords; k++ )\n            pInfo[k] =  pInfo1[k];\n}",
+      "Draft": "func Res_SimTransferOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) {\n    var pInfo, pInfo1 *uint32;\n    var k, fComp1 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsCo(pNode), \"Abc_ObjIsCo(pNode)\");\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode.Id);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if fComp1 != 0 {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k];\n        }\n    } else { \n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k];\n        } }\n}"
+    },
+    {
+      "Name": "Res_SimPerformRound",
+      "Start": 7144,
+      "End": 7475,
+      "BodyStart": 7186,
+      "Original": "void Res_SimPerformRound( Res_Sim_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_InfoFill( Vec_PtrEntry(p-\u003evPats,0), p-\u003enWords );\n    Abc_AigForEachAnd( p-\u003epAig, pObj, i )\n        Res_SimPerformOne( pObj, p-\u003evPats, p-\u003enWords );\n    Abc_NtkForEachPo( p-\u003epAig, pObj, i )\n        Res_SimTransferOne( pObj, p-\u003evPats, p-\u003enWords );\n}",
+      "Draft": "func Res_SimPerformRound(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_InfoFill( Vec_PtrEntry(p.vPats,0), p.nWords );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((p.pAig).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pAig, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Res_SimPerformOne( pObj, p.vPats, p.nWords ); }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        Res_SimTransferOne( pObj, p.vPats, p.nWords );\n    }\n}"
+    },
+    {
+      "Name": "Res_SimProcessPats",
+      "Start": 7741,
+      "End": 8934,
+      "BodyStart": 7782,
+      "Original": "void Res_SimProcessPats( Res_Sim_t * p )\n{\n    Abc_Obj_t * pObj;\n    unsigned * pInfoCare, * pInfoNode;\n    int i, j, nDcs = 0;\n    pInfoCare = Vec_PtrEntry( p-\u003evPats, Abc_NtkPo(p-\u003epAig, 0)-\u003eId );\n    pInfoNode = Vec_PtrEntry( p-\u003evPats, Abc_NtkPo(p-\u003epAig, 1)-\u003eId );\n    for ( i = 0; i \u003c p-\u003enPats; i++ )\n    {\n        // skip don't-care patterns\n        if ( !Abc_InfoHasBit(pInfoCare, i) )\n        {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if ( !Abc_InfoHasBit(pInfoNode, i) )\n        {\n            if ( p-\u003enPats0 \u003e= p-\u003enPats )\n                continue;\n            Abc_NtkForEachPi( p-\u003epAig, pObj, j )\n                if ( Abc_InfoHasBit( Vec_PtrEntry(p-\u003evPats, pObj-\u003eId), i ) )\n                    Abc_InfoSetBit( Vec_PtrEntry(p-\u003evPats0, j), p-\u003enPats0 );\n            p-\u003enPats0++;\n        }\n        else\n        {\n            if ( p-\u003enPats1 \u003e= p-\u003enPats )\n                continue;\n            Abc_NtkForEachPi( p-\u003epAig, pObj, j )\n                if ( Abc_InfoHasBit( Vec_PtrEntry(p-\u003evPats, pObj-\u003eId), i ) )\n                    Abc_InfoSetBit( Vec_PtrEntry(p-\u003evPats1, j), p-\u003enPats1 );\n            p-\u003enPats1++;\n        }\n    }\n}",
+      "Draft": "func Res_SimProcessPats(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var pInfoCare, pInfoNode *uint32;\n    var i, j, nDcs int32;\n    pInfoCare = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 0).Id );\n    pInfoNode = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 1).Id );\n    for  i = 0; i \u003c p.nPats; i++  {\n        // skip don't-care patterns\n        if !Abc_InfoHasBit(pInfoCare, i) {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if !Abc_InfoHasBit(pInfoNode, i) {\n            if p.nPats0 \u003e= p.nPats {\n                continue; }\n            // inlining of macro Abc_NtkForEachPi\n            for  j = 0; (j \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, j)), 1); j++  {\n                if Abc_InfoHasBit( Vec_PtrEntry(p.vPats, pObj.Id), i ) {\n                    Abc_InfoSetBit( Vec_PtrEntry(p.vPats0, j), p.nPats0 ); }\n            }\n            p.nPats0++;\n        \n        } else {\n            if p.nPats1 \u003e= p.nPats {\n                continue; }\n            // inlining of macro Abc_NtkForEachPi\n            for  j = 0; (j \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, j)), 1); j++  {\n                if Abc_InfoHasBit( Vec_PtrEntry(p.vPats, pObj.Id), i ) {\n                    Abc_InfoSetBit( Vec_PtrEntry(p.vPats1, j), p.nPats1 ); }\n            }\n            p.nPats1++;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Res_SimPadSimInfo",
+      "Start": 9223,
+      "End": 9877,
+      "BodyStart": 9290,
+      "Original": "void Res_SimPadSimInfo( Vec_Ptr_t * vPats, int nPats, int nWords )\n{\n    unsigned * pInfo;\n    int i, w, iWords;\n    assert( nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * (int) sizeof(unsigned) );\n    // pad the first word\n    if ( nPats \u003c 8 * sizeof(unsigned) )\n    {\n        Vec_PtrForEachEntry( unsigned *, vPats, pInfo, i )\n            if ( pInfo[0] \u0026 1 )\n                pInfo[0] |= ((~0) \u003c\u003c nPats);\n        nPats = 8 * sizeof(unsigned);\n    }\n    // pad the empty words\n    iWords = nPats / (8 * sizeof(unsigned));\n    Vec_PtrForEachEntry( unsigned *, vPats, pInfo, i )\n    {\n        for ( w = iWords; w \u003c nWords; w++ )\n            pInfo[w] = pInfo[0];\n    }\n}",
+      "Draft": "func Res_SimPadSimInfo(vPats *Vec_Ptr_t, nPats int32, nWords int32) {\n    var pInfo *uint32;\n    var i, w, iWords int32;\n    assert(nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * int32( sizeof(unsigned)), \"nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * int32( sizeof(unsigned))\");\n    // pad the first word\n    if nPats \u003c 8 * sizeof(unsigned) {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vPats)) \u0026\u0026 (((pInfo) = (unsigned *)Vec_PtrEntry(vPats, i)), 1); i++  {\n            if pInfo[0] \u0026 1 {\n                pInfo[0] |= ((~0) \u003c\u003c nPats); }\n        }\n        nPats = 8 * sizeof(unsigned);\n    }\n    // pad the empty words\n    iWords = nPats / (8 * sizeof(unsigned));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPats)) \u0026\u0026 (((pInfo) = (unsigned *)Vec_PtrEntry(vPats, i)), 1); i++  {\n        for  w = iWords; w \u003c nWords; w++  {\n            pInfo[w] = pInfo[0];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Res_SimDeriveInfoReplicate",
+      "Start": 10162,
+      "End": 10561,
+      "BodyStart": 10211,
+      "Original": "void Res_SimDeriveInfoReplicate( Res_Sim_t * p )\n{\n    unsigned * pInfo, * pInfo2;\n    Abc_Obj_t * pObj;\n    int i, j, w;\n    Abc_NtkForEachPo( p-\u003epAig, pObj, i )\n    {\n        pInfo = Vec_PtrEntry( p-\u003evPats, pObj-\u003eId );\n        pInfo2 = Vec_PtrEntry( p-\u003evOuts, i );\n        for ( j = 0; j \u003c p-\u003enPats; j++ )\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                *pInfo2++ = pInfo[w];\n    }\n}",
+      "Draft": "func Res_SimDeriveInfoReplicate(p *Res_Sim_t) {\n    var pInfo, pInfo2 *uint32;\n    var pObj *Abc_Obj_t;\n    var i, j, w int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        for  j = 0; j \u003c p.nPats; j++  {\n            for  w = 0; w \u003c p.nWords; w++  {\n                *pInfo2++ = pInfo[w];\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Res_SimDeriveInfoComplement",
+      "Start": 10841,
+      "End": 11318,
+      "BodyStart": 10891,
+      "Original": "void Res_SimDeriveInfoComplement( Res_Sim_t * p )\n{\n    unsigned * pInfo, * pInfo2;\n    Abc_Obj_t * pObj;\n    int i, j, w;\n    Abc_NtkForEachPo( p-\u003epAig, pObj, i )\n    {\n        pInfo = Vec_PtrEntry( p-\u003evPats, pObj-\u003eId );\n        pInfo2 = Vec_PtrEntry( p-\u003evOuts, i );\n        for ( j = 0; j \u003c p-\u003enPats; j++, pInfo2 += p-\u003enWords )\n            if ( Abc_InfoHasBit( pInfo, j ) )\n                for ( w = 0; w \u003c p-\u003enWords; w++ )\n                    pInfo2[w] = ~pInfo2[w];\n    }\n}",
+      "Draft": "func Res_SimDeriveInfoComplement(p *Res_Sim_t) {\n    var pInfo, pInfo2 *uint32;\n    var pObj *Abc_Obj_t;\n    var i, j, w int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        for  j = 0; j \u003c p.nPats; j++, pInfo2 += p.nWords  {\n            if Abc_InfoHasBit( pInfo, j ) {\n                for  w = 0; w \u003c p.nWords; w++  {\n                    pInfo2[w] = ~pInfo2[w];\n                } }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Res_SimReportOne",
+      "Start": 11577,
+      "End": 12569,
+      "BodyStart": 11616,
+      "Original": "void Res_SimReportOne( Res_Sim_t * p )\n{\n    unsigned * pInfoCare, * pInfoNode;\n    int i, nDcs, nOnes, nZeros;\n    pInfoCare = Vec_PtrEntry( p-\u003evPats, Abc_NtkPo(p-\u003epAig, 0)-\u003eId );\n    pInfoNode = Vec_PtrEntry( p-\u003evPats, Abc_NtkPo(p-\u003epAig, 1)-\u003eId );\n    nDcs = nOnes = nZeros = 0;\n    for ( i = 0; i \u003c p-\u003enPats; i++ )\n    {\n        // skip don't-care patterns\n        if ( !Abc_InfoHasBit(pInfoCare, i) )\n        {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if ( !Abc_InfoHasBit(pInfoNode, i) )\n            nZeros++;\n        else\n            nOnes++;\n    }\n    printf( \"On = %3d (%7.2f %%)  \",  nOnes,  100.0*nOnes/p-\u003enPats );\n    printf( \"Off = %3d (%7.2f %%)  \", nZeros, 100.0*nZeros/p-\u003enPats );\n    printf( \"Dc = %3d (%7.2f %%)  \",  nDcs,   100.0*nDcs/p-\u003enPats );\n    printf( \"P0 = %3d \", p-\u003enPats0 );\n    printf( \"P1 = %3d \", p-\u003enPats1 );\n    if ( p-\u003enPats0 \u003c 4 || p-\u003enPats1 \u003c 4 )\n        printf( \"*\" );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Res_SimReportOne(p *Res_Sim_t) {\n    var pInfoCare, pInfoNode *uint32;\n    var i, nDcs, nOnes, nZeros int32;\n    pInfoCare = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 0).Id );\n    pInfoNode = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 1).Id );\n    nDcs = nOnes = nZeros = 0;\n    for  i = 0; i \u003c p.nPats; i++  {\n        // skip don't-care patterns\n        if !Abc_InfoHasBit(pInfoCare, i) {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if !Abc_InfoHasBit(pInfoNode, i) {\n            nZeros++;\n        } else {\n            nOnes++; }\n    }\n    fmt.Printf(\"On = %3d (%7.2f %%)  \", nOnes, 100.0*nOnes/p.nPats);\n    fmt.Printf(\"Off = %3d (%7.2f %%)  \", nZeros, 100.0*nZeros/p.nPats);\n    fmt.Printf(\"Dc = %3d (%7.2f %%)  \", nDcs, 100.0*nDcs/p.nPats);\n    fmt.Printf(\"P0 = %3d \", p.nPats0);\n    fmt.Printf(\"P1 = %3d \", p.nPats1);\n    if p.nPats0 \u003c 4 || p.nPats1 \u003c 4 {\n        fmt.Printf(\"*\"); }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Res_SimPrintOutPatterns",
+      "Start": 12828,
+      "End": 13129,
+      "BodyStart": 12892,
+      "Original": "void Res_SimPrintOutPatterns( Res_Sim_t * p, Abc_Ntk_t * pAig )\n{\n    Abc_Obj_t * pObj;\n    unsigned * pInfo2;\n    int i;\n    Abc_NtkForEachPo( pAig, pObj, i )\n    {\n        pInfo2 = Vec_PtrEntry( p-\u003evOuts, i );\n        Extra_PrintBinary( stdout, pInfo2, p-\u003enPatsOut );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Res_SimPrintOutPatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo2 *uint32;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(pAig, i)), 1); i++  {\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        Extra_PrintBinary( os.Stdout, pInfo2, p.nPatsOut );\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Res_SimPrepare",
+      "Start": 13414,
+      "End": 14717,
+      "BodyStart": 13496,
+      "Original": "int Res_SimPrepare( Res_Sim_t * p, Abc_Ntk_t * pAig, int nTruePis, int fVerbose )\n{\n    int Limit;\n    // prepare the manager\n    Res_SimAdjust( p, pAig );\n    // collect 0/1 simulation info\n    for ( Limit = 0; Limit \u003c 10; Limit++ )\n    {\n        Res_SimSetRandom( p );\n        Res_SimPerformRound( p );\n        Res_SimProcessPats( p );\n        if ( !(p-\u003enPats0 \u003c p-\u003enPats || p-\u003enPats1 \u003c p-\u003enPats) )\n            break;\n    }\n//    printf( \"%d   \", Limit );\n    // report the last set of patterns\n//    Res_SimReportOne( p );\n//    printf( \"\\n\" );\n    // quit if there is not enough\n//    if ( p-\u003enPats0 \u003c 4 || p-\u003enPats1 \u003c 4 )\n    if ( p-\u003enPats0 \u003c 4 || p-\u003enPats1 \u003c 4 )\n    {\n//        Res_SimReportOne( p );\n        return 0;\n    }\n    // create bit-matrix info\n    if ( p-\u003enPats0 \u003c p-\u003enPats )\n        Res_SimPadSimInfo( p-\u003evPats0, p-\u003enPats0, p-\u003enWords );\n    if ( p-\u003enPats1 \u003c p-\u003enPats )\n        Res_SimPadSimInfo( p-\u003evPats1, p-\u003enPats1, p-\u003enWords );\n    // resimulate 0-patterns\n    Res_SimSetGiven( p, p-\u003evPats0 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoReplicate( p );\n    // resimulate 1-patterns\n    Res_SimSetGiven( p, p-\u003evPats1 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoComplement( p );\n    // print output patterns\n//    Res_SimPrintOutPatterns( p, pAig );\n    return 1;\n}",
+      "Draft": "func Res_SimPrepare(p *Res_Sim_t, pAig *Abc_Ntk_t, nTruePis int32, fVerbose int32) int32 {\n    var Limit int32;\n    // prepare the manager\n    Res_SimAdjust( p, pAig );\n    // collect 0/1 simulation info\n    for  Limit = 0; Limit \u003c 10; Limit++  {\n        Res_SimSetRandom( p );\n        Res_SimPerformRound( p );\n        Res_SimProcessPats( p );\n        if !(p.nPats0 \u003c p.nPats || p.nPats1 \u003c p.nPats) {\n            break; }\n    }\n//    printf( \"%d   \", Limit );\n    // report the last set of patterns\n//    Res_SimReportOne( p );\n//    printf( \"\\n\" );\n    // quit if there is not enough\n//    if ( p-\u003enPats0 \u003c 4 || p-\u003enPats1 \u003c 4 )\n    if p.nPats0 \u003c 4 || p.nPats1 \u003c 4 {\n//        Res_SimReportOne( p );\n        return 0;\n    }\n    // create bit-matrix info\n    if p.nPats0 \u003c p.nPats {\n        Res_SimPadSimInfo( p.vPats0, p.nPats0, p.nWords ); }\n    if p.nPats1 \u003c p.nPats {\n        Res_SimPadSimInfo( p.vPats1, p.nPats1, p.nWords ); }\n    // resimulate 0-patterns\n    Res_SimSetGiven( p, p.vPats0 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoReplicate( p );\n    // resimulate 1-patterns\n    Res_SimSetGiven( p, p.vPats1 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoComplement( p );\n    // print output patterns\n//    Res_SimPrintOutPatterns( p, pAig );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::1386",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1386,
+      "End": 1392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::1486",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1486,
+      "End": 1492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::10088",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9388,
+      "End": 9394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::10155",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9455,
+      "End": 9461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::10440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9636,
+      "End": 9642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::mechanical::sizeof::10517",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9713,
+      "End": 9719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::pointer-cast::10296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9488,
+      "End": 9488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::pointer-cast::10648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9736,
+      "End": 9736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1277,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimAdjust",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimAdjust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2200,
+      "End": 3281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimFree",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3540,
+      "End": 3740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimSetRandom",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimSetRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4008,
+      "End": 4254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimSetGiven",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimSetGiven",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4520,
+      "End": 4872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimPerformOne",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimPerformOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5127,
+      "End": 6085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimTransferOne",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimTransferOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6343,
+      "End": 6875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimPerformRound",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimPerformRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7144,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimProcessPats",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimProcessPats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7741,
+      "End": 8934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimPadSimInfo",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimPadSimInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9223,
+      "End": 9877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimDeriveInfoReplicate",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimDeriveInfoReplicate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10162,
+      "End": 10561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimDeriveInfoComplement",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimDeriveInfoComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10841,
+      "End": 11318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimReportOne",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimReportOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11577,
+      "End": 12569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimPrintOutPatterns",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimPrintOutPatterns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12828,
+      "End": 13129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::Res_SimPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Res_SimPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13414,
+      "End": 14717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resSim_old.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14964
+    }
+  ],
+  "Draft": "package res\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [resSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [Simulation engine.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resSim.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"resInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Res_SimAlloc(nWords int32) *Res_Sim_t {\n    var p *Res_Sim_t;\n    p = ALLOC( Res_Sim_t, 1 );\n    memset( p, 0, sizeof(Res_Sim_t) );\n    // simulation parameters\n    p.nWords    = nWords;\n    p.nPats     = 8 * sizeof(unsigned) * p.nWords;\n    p.nWordsOut = p.nPats * p.nWords;\n    p.nPatsOut  = p.nPats * p.nPats;\n    // simulation info\n    p.vPats     = Vec_PtrAllocSimInfo( 1024, p.nWords );\n    p.vPats0    = Vec_PtrAllocSimInfo( 128,  p.nWords );\n    p.vPats1    = Vec_PtrAllocSimInfo( 128,  p.nWords );\n    p.vOuts     = Vec_PtrAllocSimInfo( 128,  p.nWordsOut );\n    // resub candidates\n    p.vCands    = Vec_VecStart( 16 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocate simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimAdjust(p *Res_Sim_t, pAig *Abc_Ntk_t) {\n    srand( 0xABC );\n\n    assert(Abc_NtkIsStrash(pAig), \"Abc_NtkIsStrash(pAig)\");\n    p.pAig = pAig;\n    if Vec_PtrSize(p.vPats) \u003c Abc_NtkObjNumMax(pAig)+1 {\n        Vec_PtrFree( p.vPats );\n        p.vPats = Vec_PtrAllocSimInfo( Abc_NtkObjNumMax(pAig)+1, p.nWords );\n    }\n    if Vec_PtrSize(p.vPats0) \u003c Abc_NtkPiNum(pAig) {\n        Vec_PtrFree( p.vPats0 );\n        p.vPats0 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p.nWords );\n    }\n    if Vec_PtrSize(p.vPats1) \u003c Abc_NtkPiNum(pAig) {\n        Vec_PtrFree( p.vPats1 );\n        p.vPats1 = Vec_PtrAllocSimInfo( Abc_NtkPiNum(pAig), p.nWords );\n    }\n    if Vec_PtrSize(p.vOuts) \u003c Abc_NtkPoNum(pAig) {\n        Vec_PtrFree( p.vOuts );\n        p.vOuts = Vec_PtrAllocSimInfo( Abc_NtkPoNum(pAig), p.nWordsOut );\n    }\n    // clean storage info for patterns\n    Abc_InfoClear( Vec_PtrEntry(p.vPats0,0), p.nWords * Abc_NtkPiNum(pAig) );\n    Abc_InfoClear( Vec_PtrEntry(p.vPats1,0), p.nWords * Abc_NtkPiNum(pAig) );\n    p.nPats0 = 0;\n    p.nPats1 = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Free simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimFree(p *Res_Sim_t) {\n    Vec_PtrFree( p.vPats );\n    Vec_PtrFree( p.vPats0 );\n    Vec_PtrFree( p.vPats1 );\n    Vec_PtrFree( p.vOuts );\n    Vec_VecFree( p.vCands );\n    free( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets random PI simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimSetRandom(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        Abc_InfoRandom( pInfo, p.nWords );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets given PI simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimSetGiven(p *Res_Sim_t, vInfo *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo, pInfo2 *uint32;\n    var i, w int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( vInfo, i );\n        for  w = 0; w \u003c p.nWords; w++  {\n            pInfo[w] = pInfo2[w];\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimPerformOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) {\n    var pInfo, pInfo1, pInfo2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode.Id);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pInfo2 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k] \u0026 ~pInfo2[k];\n        }\n    } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k] \u0026  pInfo2[k];\n        }\n    } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k] \u0026 ~pInfo2[k];\n        }\n    } else { // if ( fComp1 \u0026\u0026 fComp2 )\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k] \u0026  pInfo2[k];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one CO node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimTransferOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) {\n    var pInfo, pInfo1 *uint32;\n    var k, fComp1 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsCo(pNode), \"Abc_ObjIsCo(pNode)\");\n    pInfo  = Vec_PtrEntry(vSimInfo, pNode.Id);\n    pInfo1 = Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if fComp1 != 0 {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] = ~pInfo1[k];\n        }\n    } else { \n        for  k = 0; k \u003c nSimWords; k++  {\n            pInfo[k] =  pInfo1[k];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs one round of simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimPerformRound(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    Abc_InfoFill( Vec_PtrEntry(p.vPats,0), p.nWords );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((p.pAig).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pAig, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Res_SimPerformOne( pObj, p.vPats, p.nWords ); }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        Res_SimTransferOne( pObj, p.vPats, p.nWords );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Processes simulation patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimProcessPats(p *Res_Sim_t) {\n    var pObj *Abc_Obj_t;\n    var pInfoCare, pInfoNode *uint32;\n    var i, j, nDcs int32;\n    pInfoCare = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 0).Id );\n    pInfoNode = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 1).Id );\n    for  i = 0; i \u003c p.nPats; i++  {\n        // skip don't-care patterns\n        if !Abc_InfoHasBit(pInfoCare, i) {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if !Abc_InfoHasBit(pInfoNode, i) {\n            if p.nPats0 \u003e= p.nPats {\n                continue; }\n            // inlining of macro Abc_NtkForEachPi\n            for  j = 0; (j \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, j)), 1); j++  {\n                if Abc_InfoHasBit( Vec_PtrEntry(p.vPats, pObj.Id), i ) {\n                    Abc_InfoSetBit( Vec_PtrEntry(p.vPats0, j), p.nPats0 ); }\n            }\n            p.nPats0++;\n        \n        } else {\n            if p.nPats1 \u003e= p.nPats {\n                continue; }\n            // inlining of macro Abc_NtkForEachPi\n            for  j = 0; (j \u003c Abc_NtkPiNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pAig, j)), 1); j++  {\n                if Abc_InfoHasBit( Vec_PtrEntry(p.vPats, pObj.Id), i ) {\n                    Abc_InfoSetBit( Vec_PtrEntry(p.vPats1, j), p.nPats1 ); }\n            }\n            p.nPats1++;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pads the extra space with duplicated simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimPadSimInfo(vPats *Vec_Ptr_t, nPats int32, nWords int32) {\n    var pInfo *uint32;\n    var i, w, iWords int32;\n    assert(nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * int32( sizeof(unsigned)), \"nPats \u003e 0 \u0026\u0026 nPats \u003c nWords * 8 * int32( sizeof(unsigned))\");\n    // pad the first word\n    if nPats \u003c 8 * sizeof(unsigned) {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vPats)) \u0026\u0026 (((pInfo) = (unsigned *)Vec_PtrEntry(vPats, i)), 1); i++  {\n            if pInfo[0] \u0026 1 {\n                pInfo[0] |= ((~0) \u003c\u003c nPats); }\n        }\n        nPats = 8 * sizeof(unsigned);\n    }\n    // pad the empty words\n    iWords = nPats / (8 * sizeof(unsigned));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPats)) \u0026\u0026 (((pInfo) = (unsigned *)Vec_PtrEntry(vPats, i)), 1); i++  {\n        for  w = iWords; w \u003c nWords; w++  {\n            pInfo[w] = pInfo[0];\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the simulation info to fill the space.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimDeriveInfoReplicate(p *Res_Sim_t) {\n    var pInfo, pInfo2 *uint32;\n    var pObj *Abc_Obj_t;\n    var i, j, w int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        for  j = 0; j \u003c p.nPats; j++  {\n            for  w = 0; w \u003c p.nWords; w++  {\n                *pInfo2++ = pInfo[w];\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Complement the simulation info if necessary.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimDeriveInfoComplement(p *Res_Sim_t) {\n    var pInfo, pInfo2 *uint32;\n    var pObj *Abc_Obj_t;\n    var i, j, w int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(p.pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(p.pAig, i)), 1); i++  {\n        pInfo = Vec_PtrEntry( p.vPats, pObj.Id );\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        for  j = 0; j \u003c p.nPats; j++, pInfo2 += p.nWords  {\n            if Abc_InfoHasBit( pInfo, j ) {\n                for  w = 0; w \u003c p.nWords; w++  {\n                    pInfo2[w] = ~pInfo2[w];\n                } }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Free simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimReportOne(p *Res_Sim_t) {\n    var pInfoCare, pInfoNode *uint32;\n    var i, nDcs, nOnes, nZeros int32;\n    pInfoCare = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 0).Id );\n    pInfoNode = Vec_PtrEntry( p.vPats, Abc_NtkPo(p.pAig, 1).Id );\n    nDcs = nOnes = nZeros = 0;\n    for  i = 0; i \u003c p.nPats; i++  {\n        // skip don't-care patterns\n        if !Abc_InfoHasBit(pInfoCare, i) {\n            nDcs++;\n            continue;\n        }\n        // separate offset and onset patterns\n        if !Abc_InfoHasBit(pInfoNode, i) {\n            nZeros++;\n        } else {\n            nOnes++; }\n    }\n    fmt.Printf(\"On = %3d (%7.2f %%)  \", nOnes, 100.0*nOnes/p.nPats);\n    fmt.Printf(\"Off = %3d (%7.2f %%)  \", nZeros, 100.0*nZeros/p.nPats);\n    fmt.Printf(\"Dc = %3d (%7.2f %%)  \", nDcs, 100.0*nDcs/p.nPats);\n    fmt.Printf(\"P0 = %3d \", p.nPats0);\n    fmt.Printf(\"P1 = %3d \", p.nPats1);\n    if p.nPats0 \u003c 4 || p.nPats1 \u003c 4 {\n        fmt.Printf(\"*\"); }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints output patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimPrintOutPatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var pInfo2 *uint32;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pAig)) \u0026\u0026 (((pObj) = Abc_NtkPo(pAig, i)), 1); i++  {\n        pInfo2 = Vec_PtrEntry( p.vOuts, i );\n        Extra_PrintBinary( os.Stdout, pInfo2, p.nPatsOut );\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares simulation info for candidate filtering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_SimPrepare(p *Res_Sim_t, pAig *Abc_Ntk_t, nTruePis int32, fVerbose int32) int32 {\n    var Limit int32;\n    // prepare the manager\n    Res_SimAdjust( p, pAig );\n    // collect 0/1 simulation info\n    for  Limit = 0; Limit \u003c 10; Limit++  {\n        Res_SimSetRandom( p );\n        Res_SimPerformRound( p );\n        Res_SimProcessPats( p );\n        if !(p.nPats0 \u003c p.nPats || p.nPats1 \u003c p.nPats) {\n            break; }\n    }\n//    printf( \"%d   \", Limit );\n    // report the last set of patterns\n//    Res_SimReportOne( p );\n//    printf( \"\\n\" );\n    // quit if there is not enough\n//    if ( p-\u003enPats0 \u003c 4 || p-\u003enPats1 \u003c 4 )\n    if p.nPats0 \u003c 4 || p.nPats1 \u003c 4 {\n//        Res_SimReportOne( p );\n        return 0;\n    }\n    // create bit-matrix info\n    if p.nPats0 \u003c p.nPats {\n        Res_SimPadSimInfo( p.vPats0, p.nPats0, p.nWords ); }\n    if p.nPats1 \u003c p.nPats {\n        Res_SimPadSimInfo( p.vPats1, p.nPats1, p.nWords ); }\n    // resimulate 0-patterns\n    Res_SimSetGiven( p, p.vPats0 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoReplicate( p );\n    // resimulate 1-patterns\n    Res_SimSetGiven( p, p.vPats1 );\n    Res_SimPerformRound( p );\n    Res_SimDeriveInfoComplement( p );\n    // print output patterns\n//    Res_SimPrintOutPatterns( p, pAig );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

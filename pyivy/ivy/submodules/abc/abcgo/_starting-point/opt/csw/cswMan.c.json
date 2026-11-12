@@ -1,0 +1,542 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c",
+  "SHA256": "bdc7bd829b68f6c5ef0ca72e1a6f237d79ca501de74397b5981983f1fa588cb8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutsMax \u003e= 2  );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeafMax \u003c= 16 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 54,
+        "Column": 9,
+        "ByteOffset": 1509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Csw_Man_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Csw_Man_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p.pManAig) == Aig_ManCiNum(p.pManRes) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 18,
+        "ByteOffset": 1886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pnRefs   = ABC_ALLOC( int, Aig_ManObjNumMax(pMan) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 18,
+        "ByteOffset": 1945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pEquiv   = ABC_ALLOC( Aig_Obj_t *, Aig_ManObjNumMax(pMan) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 18,
+        "ByteOffset": 2012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts    = ABC_ALLOC( Csw_Cut_t *, Aig_ManObjNumMax(pMan) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pCuts, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(pMan) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pnRefs, 0, sizeof(int) * Aig_ManObjNumMax(pMan) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 16,
+        "ByteOffset": 2567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = ABC_ALLOC( Csw_Cut_t *, p.nTableSize );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTable, 0, sizeof(Aig_Obj_t *) * p.nTableSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 19,
+        "ByteOffset": 2962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.puTemp[0] = ABC_ALLOC( unsigned, 4 * p.nTruthWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Beg = %7d.  End = %7d.  (%6.2f %%)  Try = %7d.  Cuts = %8d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Triv0 = %6d.  Triv1 = %6d.  Triv2 = %6d.  Cut-replace = %6d.\\n\", "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 4211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.puTemp[0] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 4278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pnRefs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 4304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pEquiv );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 4330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pCuts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTable );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Csw_ManStart",
+      "Start": 1227,
+      "End": 3163,
+      "BodyStart": 1314,
+      "Original": "Csw_Man_t * Csw_ManStart( Aig_Man_t * pMan, int nCutsMax, int nLeafMax, int fVerbose )\n{\n    Csw_Man_t * p;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( nCutsMax \u003e= 2  );\n    assert( nLeafMax \u003c= 16 );\n    // allocate the fraiging manager\n    p = ABC_ALLOC( Csw_Man_t, 1 );\n    memset( p, 0, sizeof(Csw_Man_t) );\n    p-\u003enCutsMax = nCutsMax;\n    p-\u003enLeafMax = nLeafMax;\n    p-\u003efVerbose = fVerbose;\n    p-\u003epManAig  = pMan;\n    // create the new manager\n    p-\u003epManRes  = Aig_ManStartFrom( pMan );\n    assert( Aig_ManCiNum(p-\u003epManAig) == Aig_ManCiNum(p-\u003epManRes) );\n    // allocate room for cuts and equivalent nodes\n    p-\u003epnRefs   = ABC_ALLOC( int, Aig_ManObjNumMax(pMan) );\n    p-\u003epEquiv   = ABC_ALLOC( Aig_Obj_t *, Aig_ManObjNumMax(pMan) );\n    p-\u003epCuts    = ABC_ALLOC( Csw_Cut_t *, Aig_ManObjNumMax(pMan) );\n    memset( p-\u003epCuts, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(pMan) );\n    memset( p-\u003epnRefs, 0, sizeof(int) * Aig_ManObjNumMax(pMan) );\n    // allocate memory manager\n    p-\u003enTruthWords = Abc_TruthWordNum(nLeafMax);\n    p-\u003enCutSize = sizeof(Csw_Cut_t) + sizeof(int) * nLeafMax + sizeof(unsigned) * p-\u003enTruthWords;\n    p-\u003epMemCuts = Aig_MmFixedStart( p-\u003enCutSize * p-\u003enCutsMax, 512 );\n    // allocate hash table for cuts\n    p-\u003enTableSize = Abc_PrimeCudd( Aig_ManNodeNum(pMan) * p-\u003enCutsMax / 2 );\n    p-\u003epTable = ABC_ALLOC( Csw_Cut_t *, p-\u003enTableSize );\n    memset( p-\u003epTable, 0, sizeof(Aig_Obj_t *) * p-\u003enTableSize );\n    // set the pointers to the available fraig nodes\n    Csw_ObjSetEquiv( p, Aig_ManConst1(p-\u003epManAig), Aig_ManConst1(p-\u003epManRes) );\n    Aig_ManForEachCi( p-\u003epManAig, pObj, i )\n        Csw_ObjSetEquiv( p, pObj, Aig_ManCi(p-\u003epManRes, i) );\n    // room for temporary truth tables\n    p-\u003epuTemp[0] = ABC_ALLOC( unsigned, 4 * p-\u003enTruthWords );\n    p-\u003epuTemp[1] = p-\u003epuTemp[0] + p-\u003enTruthWords;\n    p-\u003epuTemp[2] = p-\u003epuTemp[1] + p-\u003enTruthWords;\n    p-\u003epuTemp[3] = p-\u003epuTemp[2] + p-\u003enTruthWords;\n    return p;\n}",
+      "Draft": "func Csw_ManStart(pMan *Aig_Man_t, nCutsMax int32, nLeafMax int32, fVerbose int32) *Csw_Man_t {\n    var p *Csw_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(nCutsMax \u003e= 2, \"nCutsMax \u003e= 2\");\n    assert(nLeafMax \u003c= 16, \"nLeafMax \u003c= 16\");\n    // allocate the fraiging manager\n    p = new(Csw_Man_t);\n    memset( p, 0, sizeof(Csw_Man_t) );\n    p.nCutsMax = nCutsMax;\n    p.nLeafMax = nLeafMax;\n    p.fVerbose = fVerbose;\n    p.pManAig  = pMan;\n    // create the new manager\n    p.pManRes  = Aig_ManStartFrom( pMan );\n    assert(Aig_ManCiNum(p.pManAig) == Aig_ManCiNum(p.pManRes), \"Aig_ManCiNum(p.pManAig) == Aig_ManCiNum(p.pManRes)\");\n    // allocate room for cuts and equivalent nodes\n    p.pnRefs   = ABC_ALLOC( int, Aig_ManObjNumMax(pMan) );\n    p.pEquiv   = ABC_ALLOC( Aig_Obj_t *, Aig_ManObjNumMax(pMan) );\n    p.pCuts    = ABC_ALLOC( Csw_Cut_t *, Aig_ManObjNumMax(pMan) );\n    memset( p.pCuts, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(pMan) );\n    memset( p.pnRefs, 0, sizeof(int) * Aig_ManObjNumMax(pMan) );\n    // allocate memory manager\n    p.nTruthWords = Abc_TruthWordNum(nLeafMax);\n    p.nCutSize = sizeof(Csw_Cut_t) + sizeof(int) * nLeafMax + sizeof(unsigned) * p.nTruthWords;\n    p.pMemCuts = Aig_MmFixedStart( p.nCutSize * p.nCutsMax, 512 );\n    // allocate hash table for cuts\n    p.nTableSize = Abc_PrimeCudd( Aig_ManNodeNum(pMan) * p.nCutsMax / 2 );\n    p.pTable = ABC_ALLOC( Csw_Cut_t *, p.nTableSize );\n    memset( p.pTable, 0, sizeof(Aig_Obj_t *) * p.nTableSize );\n    // set the pointers to the available fraig nodes\n    Csw_ObjSetEquiv( p, Aig_ManConst1(p.pManAig), Aig_ManConst1(p.pManRes) );\n    Aig_ManForEachCi( p.pManAig, pObj, i )\n        Csw_ObjSetEquiv( p, pObj, Aig_ManCi(p.pManRes, i) );\n    // room for temporary truth tables\n    p.puTemp[0] = ABC_ALLOC( unsigned, 4 * p.nTruthWords );\n    p.puTemp[1] = p.puTemp[0] + p.nTruthWords;\n    p.puTemp[2] = p.puTemp[1] + p.nTruthWords;\n    p.puTemp[3] = p.puTemp[2] + p.nTruthWords;\n    return p;\n}"
+    },
+    {
+      "Name": "Csw_ManStop",
+      "Start": 3426,
+      "End": 4419,
+      "BodyStart": 3460,
+      "Original": "void Csw_ManStop( Csw_Man_t * p )\n{\n    if ( p-\u003efVerbose )\n    {\n        int nNodesBeg = Aig_ManNodeNum(p-\u003epManAig);\n        int nNodesEnd = Aig_ManNodeNum(p-\u003epManRes);\n        printf( \"Beg = %7d.  End = %7d.  (%6.2f %%)  Try = %7d.  Cuts = %8d.\\n\", \n            nNodesBeg, nNodesEnd, 100.0*(nNodesBeg-nNodesEnd)/nNodesBeg,\n            p-\u003enNodesTried, Csw_TableCountCuts( p ) );\n        printf( \"Triv0 = %6d.  Triv1 = %6d.  Triv2 = %6d.  Cut-replace = %6d.\\n\", \n            p-\u003enNodesTriv0, p-\u003enNodesTriv1, p-\u003enNodesTriv2, p-\u003enNodesCuts );\n        ABC_PRTP( \"Cuts    \", p-\u003etimeCuts,     p-\u003etimeTotal );\n        ABC_PRTP( \"Hashing \", p-\u003etimeHash,     p-\u003etimeTotal );\n        ABC_PRTP( \"Other   \", p-\u003etimeOther,    p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL   \", p-\u003etimeTotal,    p-\u003etimeTotal );\n    }\n    ABC_FREE( p-\u003epuTemp[0] );\n    Aig_MmFixedStop( p-\u003epMemCuts, 0 );\n    ABC_FREE( p-\u003epnRefs );\n    ABC_FREE( p-\u003epEquiv );\n    ABC_FREE( p-\u003epCuts );\n    ABC_FREE( p-\u003epTable );\n    ABC_FREE( p );\n}",
+      "Draft": "func Csw_ManStop(p *Csw_Man_t) {\n    if p.fVerbose {\n        var nNodesBeg int32  = Aig_ManNodeNum(p.pManAig);\n        var nNodesEnd int32  = Aig_ManNodeNum(p.pManRes);\n        fmt.Printf(\"Beg = %7d.  End = %7d.  (%6.2f %%)  Try = %7d.  Cuts = %8d.\\n\", nNodesBeg, nNodesEnd, 100.0*(nNodesBeg-nNodesEnd)/nNodesBeg, p.nNodesTried, Csw_TableCountCuts( p ));\n        fmt.Printf(\"Triv0 = %6d.  Triv1 = %6d.  Triv2 = %6d.  Cut-replace = %6d.\\n\", p.nNodesTriv0, p.nNodesTriv1, p.nNodesTriv2, p.nNodesCuts);\n        ABC_PRTP( \"Cuts    \", p.timeCuts,     p.timeTotal );\n        ABC_PRTP( \"Hashing \", p.timeHash,     p.timeTotal );\n        ABC_PRTP( \"Other   \", p.timeOther,    p.timeTotal );\n        ABC_PRTP( \"TOTAL   \", p.timeTotal,    p.timeTotal );\n    }\n    ABC_FREE( p.puTemp[0] );\n    Aig_MmFixedStop( p.pMemCuts, 0 );\n    ABC_FREE( p.pnRefs );\n    ABC_FREE( p.pEquiv );\n    ABC_FREE( p.pCuts );\n    ABC_FREE( p.pTable );\n    ABC_FREE( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::1518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1518,
+      "End": 1524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2061",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2061,
+      "End": 2067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2135",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2135,
+      "End": 2141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2273",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2273,
+      "End": 2279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2293",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2293,
+      "End": 2299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2318",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2318,
+      "End": 2324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::mechanical::sizeof::2619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2619,
+      "End": 2625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::pointer-cast::2067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2067,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::pointer-cast::2625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2625,
+      "End": 2638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::Csw_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1227,
+      "End": 3163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::Csw_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3426,
+      "End": 4419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::1473",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1473,
+      "End": 1498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::1858",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1858,
+      "End": 1898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::1918",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1918,
+      "End": 1966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::1986",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1986,
+      "End": 2034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::2552",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2552,
+      "End": 2591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::2795",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2795,
+      "End": 2834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::2955",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2955,
+      "End": 2996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::3973",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3973,
+      "End": 4026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4036",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4036,
+      "End": 4089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4099",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4099,
+      "End": 4152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4162",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4162,
+      "End": 4215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4227",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4227,
+      "End": 4251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4296",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4296,
+      "End": 4317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4323",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4323,
+      "End": 4344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4350",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4350,
+      "End": 4370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4376",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4376,
+      "End": 4397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswMan.c::macro-inline::4403",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4403,
+      "End": 4416
+    }
+  ],
+  "Draft": "package csw\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cswMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Cut sweeping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 11, 2007.]\n\n  Revision    [$Id: cswMan.c,v 1.00 2007/07/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the cut sweeping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_ManStart(pMan *Aig_Man_t, nCutsMax int32, nLeafMax int32, fVerbose int32) *Csw_Man_t {\n    var p *Csw_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(nCutsMax \u003e= 2, \"nCutsMax \u003e= 2\");\n    assert(nLeafMax \u003c= 16, \"nLeafMax \u003c= 16\");\n    // allocate the fraiging manager\n    p = new(Csw_Man_t);\n    memset( p, 0, sizeof(Csw_Man_t) );\n    p.nCutsMax = nCutsMax;\n    p.nLeafMax = nLeafMax;\n    p.fVerbose = fVerbose;\n    p.pManAig  = pMan;\n    // create the new manager\n    p.pManRes  = Aig_ManStartFrom( pMan );\n    assert(Aig_ManCiNum(p.pManAig) == Aig_ManCiNum(p.pManRes), \"Aig_ManCiNum(p.pManAig) == Aig_ManCiNum(p.pManRes)\");\n    // allocate room for cuts and equivalent nodes\n    p.pnRefs   = ABC_ALLOC( int, Aig_ManObjNumMax(pMan) );\n    p.pEquiv   = ABC_ALLOC( Aig_Obj_t *, Aig_ManObjNumMax(pMan) );\n    p.pCuts    = ABC_ALLOC( Csw_Cut_t *, Aig_ManObjNumMax(pMan) );\n    memset( p.pCuts, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(pMan) );\n    memset( p.pnRefs, 0, sizeof(int) * Aig_ManObjNumMax(pMan) );\n    // allocate memory manager\n    p.nTruthWords = Abc_TruthWordNum(nLeafMax);\n    p.nCutSize = sizeof(Csw_Cut_t) + sizeof(int) * nLeafMax + sizeof(unsigned) * p.nTruthWords;\n    p.pMemCuts = Aig_MmFixedStart( p.nCutSize * p.nCutsMax, 512 );\n    // allocate hash table for cuts\n    p.nTableSize = Abc_PrimeCudd( Aig_ManNodeNum(pMan) * p.nCutsMax / 2 );\n    p.pTable = ABC_ALLOC( Csw_Cut_t *, p.nTableSize );\n    memset( p.pTable, 0, sizeof(Aig_Obj_t *) * p.nTableSize );\n    // set the pointers to the available fraig nodes\n    Csw_ObjSetEquiv( p, Aig_ManConst1(p.pManAig), Aig_ManConst1(p.pManRes) );\n    Aig_ManForEachCi( p.pManAig, pObj, i )\n        Csw_ObjSetEquiv( p, pObj, Aig_ManCi(p.pManRes, i) );\n    // room for temporary truth tables\n    p.puTemp[0] = ABC_ALLOC( unsigned, 4 * p.nTruthWords );\n    p.puTemp[1] = p.puTemp[0] + p.nTruthWords;\n    p.puTemp[2] = p.puTemp[1] + p.nTruthWords;\n    p.puTemp[3] = p.puTemp[2] + p.nTruthWords;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_ManStop(p *Csw_Man_t) {\n    if p.fVerbose {\n        var nNodesBeg int32  = Aig_ManNodeNum(p.pManAig);\n        var nNodesEnd int32  = Aig_ManNodeNum(p.pManRes);\n        fmt.Printf(\"Beg = %7d.  End = %7d.  (%6.2f %%)  Try = %7d.  Cuts = %8d.\\n\", nNodesBeg, nNodesEnd, 100.0*(nNodesBeg-nNodesEnd)/nNodesBeg, p.nNodesTried, Csw_TableCountCuts( p ));\n        fmt.Printf(\"Triv0 = %6d.  Triv1 = %6d.  Triv2 = %6d.  Cut-replace = %6d.\\n\", p.nNodesTriv0, p.nNodesTriv1, p.nNodesTriv2, p.nNodesCuts);\n        ABC_PRTP( \"Cuts    \", p.timeCuts,     p.timeTotal );\n        ABC_PRTP( \"Hashing \", p.timeHash,     p.timeTotal );\n        ABC_PRTP( \"Other   \", p.timeOther,    p.timeTotal );\n        ABC_PRTP( \"TOTAL   \", p.timeTotal,    p.timeTotal );\n    }\n    ABC_FREE( p.puTemp[0] );\n    Aig_MmFixedStop( p.pMemCuts, 0 );\n    ABC_FREE( p.pnRefs );\n    ABC_FREE( p.pEquiv );\n    ABC_FREE( p.pCuts );\n    ABC_FREE( p.pTable );\n    ABC_FREE( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

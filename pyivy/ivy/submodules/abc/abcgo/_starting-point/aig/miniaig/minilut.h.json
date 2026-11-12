@@ -1,0 +1,1369 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h",
+  "SHA256": "34e736dc487694c1d22341411c15ba34f678dc37e9a2960c814f61aba6ed3416",
+  "Library": [
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 29,
+        "ByteOffset": 2973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin * p.LutSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 29,
+        "ByteOffset": 3081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin * p.LutSize)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 35,
+        "ByteOffset": 3244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pTruths = ((unsigned *) realloc((char *)(p.pTruths), sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 35,
+        "ByteOffset": 3381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArray );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pTruths );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 3712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.LutSize*p.nSize \u003c MINI_LUT_NULL/2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 59,
+        "ByteOffset": 4937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_LutNodeIsConst(p *Mini_Lut_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id == 0 || Id == 1; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 56,
+        "ByteOffset": 5040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_LutNodeIsPi(p *Mini_Lut_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) == MINI_LUT_NULL; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 56,
+        "ByteOffset": 5181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_LutNodeIsPo(p *Mini_Lut_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) == MINI_LUT_NULL2; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 58,
+        "ByteOffset": 5375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mini_LutNodeIsNode(p *Mini_Lut_t, Id int32) int32 { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) != MINI_LUT_NULL2; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 187,
+        "Column": 76,
+        "ByteOffset": 6764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray  = /*__starting_point_inline_macro:MINI_LUT_ALLOC__*/((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 188,
+        "Column": 81,
+        "ByteOffset": 6889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruths = /*__starting_point_inline_macro:MINI_LUT_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 200,
+        "Column": 69,
+        "ByteOffset": 7371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MINI_LUT_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 201,
+        "Column": 70,
+        "ByteOffset": 7489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MINI_LUT_FREE__*/((p.pTruths) ? (free((char *) (p.pTruths)), (p.pTruths) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 202,
+        "Column": 62,
+        "ByteOffset": 7601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MINI_LUT_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 8253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI = %d. PO = %d. LUT = %d.\\n\", nPis, nPos, nNodes );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 8449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 8505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file for writing \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 230,
+        "Column": 22,
+        "ByteOffset": 8611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( \u0026p.nSize,   sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 231,
+        "Column": 22,
+        "ByteOffset": 8678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( \u0026p.nRegs,   sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 232,
+        "Column": 22,
+        "ByteOffset": 8745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( \u0026p.LutSize, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 233,
+        "Column": 22,
+        "ByteOffset": 8812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( p.pArray,   sizeof(int), p.nSize * p.LutSize, pFile ));"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 234,
+        "Column": 22,
+        "ByteOffset": 8897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fwrite( p.pTruths,  sizeof(int), p.nSize * Mini_LutWordNum(p.LutSize), pFile ));"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 241,
+        "Column": 13,
+        "ByteOffset": 9141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 9197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file for reading \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 246,
+        "Column": 22,
+        "ByteOffset": 9307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 249,
+        "Column": 22,
+        "ByteOffset": 9475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( \u0026p.nRegs,   sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 250,
+        "Column": 22,
+        "ByteOffset": 9541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( \u0026p.LutSize, sizeof(int), 1, pFile ));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 251,
+        "Column": 76,
+        "ByteOffset": 9661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray  = /*__starting_point_inline_macro:MINI_LUT_ALLOC__*/((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 252,
+        "Column": 81,
+        "ByteOffset": 9786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruths = /*__starting_point_inline_macro:MINI_LUT_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 253,
+        "Column": 22,
+        "ByteOffset": 9874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( p.pArray,   sizeof(int), p.nCap * p.LutSize, pFile ));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 254,
+        "Column": 22,
+        "ByteOffset": 9957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = int32(fread( p.pTruths,  sizeof(int), p.nCap * Mini_LutWordNum(p.LutSize), pFile ));"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 10040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 10322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 10654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= p.LutSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 17,
+        "ByteOffset": 11305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fanin %d of LUT node %d is not in a topological order.\\n\", k, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 13,
+        "ByteOffset": 11656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fanin %d of PO node %d is not in a topological order.\\n\", k, i );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mini_LutWordNum",
+      "Start": 2534,
+      "End": 2628,
+      "BodyStart": 2578,
+      "Original": "static int  Mini_LutWordNum( int LutSize ) \n{\n    return LutSize \u003e 5 ? 1 \u003c\u003c (LutSize-5) : 1;\n}",
+      "Draft": "func Mini_LutWordNum(LutSize int32) int32 {\n    if LutSize \u003e 5 {\n        return 1 \u003c\u003c (LutSize-5);\n    } else {\n        return 1;\n    }\n}"
+    },
+    {
+      "Name": "Mini_LutGrow",
+      "Start": 2653,
+      "End": 3015,
+      "BodyStart": 2709,
+      "Original": "static void Mini_LutGrow( Mini_Lut_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray  = MINI_LUT_REALLOC( int,      p-\u003epArray,  nCapMin * p-\u003eLutSize ); \n    p-\u003epTruths = MINI_LUT_REALLOC( unsigned, p-\u003epTruths, nCapMin * Mini_LutWordNum(p-\u003eLutSize) ); \n    p-\u003enCap   = nCapMin;\n    assert( p-\u003epArray );\n    assert( p-\u003epTruths );\n}",
+      "Draft": "func Mini_LutGrow(p *Mini_Lut_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro MINI_LUT_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin * p.LutSize)));\n    } else {\n        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin * p.LutSize)));\n    } \n    // inlining of macro MINI_LUT_REALLOC\n    \n    if p.pTruths {\n        p.pTruths = ((unsigned *) realloc((char *)(p.pTruths), sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));\n    } else {\n        p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));\n    } \n    p.nCap   = nCapMin;\n    assert(p.pArray, \"p.pArray\");\n    assert(p.pTruths, \"p.pTruths\");\n}"
+    },
+    {
+      "Name": "Mini_LutPush",
+      "Start": 3016,
+      "End": 3803,
+      "BodyStart": 3102,
+      "Original": "static void Mini_LutPush( Mini_Lut_t * p, int nVars, int * pVars, unsigned * pTruth )\n{\n    int i, nWords = Mini_LutWordNum(p-\u003eLutSize);\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        assert( p-\u003eLutSize*p-\u003enSize \u003c MINI_LUT_NULL/2 );\n        if ( p-\u003enCap \u003c MINI_LUT_START_SIZE )\n            Mini_LutGrow( p, MINI_LUT_START_SIZE );\n        else\n            Mini_LutGrow( p, 2 * p-\u003enCap );\n    }\n    for ( i = 0; i \u003c nVars; i++ )\n        assert( pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p-\u003enSize );\n    for ( i = 0; i \u003c nVars; i++ )\n        p-\u003epArray[p-\u003eLutSize * p-\u003enSize + i] = pVars[i];\n    for ( ; i \u003c p-\u003eLutSize; i++ )\n        p-\u003epArray[p-\u003eLutSize * p-\u003enSize + i] = MINI_LUT_NULL;\n    for ( i = 0; i \u003c nWords; i++ )\n        p-\u003epTruths[nWords * p-\u003enSize + i] = pTruth? pTruth[i] : 0;\n    p-\u003enSize++;\n}",
+      "Draft": "func Mini_LutPush(p *Mini_Lut_t, nVars int32, pVars *int32, pTruth *uint32) {\n    var i int32;\n    var nWords int32 = Mini_LutWordNum(p.LutSize);\n    if p.nSize == p.nCap {\n        assert(p.LutSize*p.nSize \u003c MINI_LUT_NULL/2, \"p.LutSize*p.nSize \u003c MINI_LUT_NULL/2\");\n        if p.nCap \u003c MINI_LUT_START_SIZE {\n            Mini_LutGrow( p, MINI_LUT_START_SIZE );\n        } else {\n            Mini_LutGrow( p, 2 * p.nCap ); }\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p.nSize, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p.nSize\");\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        p.pArray[p.LutSize * p.nSize + i] = pVars[i];\n    }\n    for  ; i \u003c p.LutSize; i++  {\n        p.pArray[p.LutSize * p.nSize + i] = MINI_LUT_NULL;\n    }\n    for  i = 0; i \u003c nWords; i++  {\n        p.pTruths[nWords * p.nSize + i] = pTruth? pTruth[i] : 0;\n    }\n    p.nSize++;\n}"
+    },
+    {
+      "Name": "Mini_LutNodeFanin",
+      "Start": 3825,
+      "End": 3969,
+      "BodyStart": 3887,
+      "Original": "static int Mini_LutNodeFanin( Mini_Lut_t * p, int Id, int k )\n{\n    assert( Id \u003e= 0 \u0026\u0026 Id \u003c p-\u003enSize );\n    return p-\u003epArray[p-\u003eLutSize*Id+k];\n}",
+      "Draft": "func Mini_LutNodeFanin(p *Mini_Lut_t, Id int32, k int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize\");\n    return p.pArray[p.LutSize*Id+k];\n}"
+    },
+    {
+      "Name": "Mini_LutNodeTruth",
+      "Start": 3970,
+      "End": 4139,
+      "BodyStart": 4036,
+      "Original": "static unsigned * Mini_LutNodeTruth( Mini_Lut_t * p, int Id )    \n{ \n    assert( Id \u003e= 0 \u0026\u0026 Id \u003c p-\u003enSize ); \n    return p-\u003epTruths + Id * Mini_LutWordNum(p-\u003eLutSize);\n}",
+      "Draft": "func Mini_LutNodeTruth(p *Mini_Lut_t, Id int32) *uint32 { \n    assert(Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize\"); \n    return p.pTruths + Id * Mini_LutWordNum(p.LutSize);\n}"
+    },
+    {
+      "Name": "Mini_LutNodeConst0",
+      "Start": 4162,
+      "End": 4257,
+      "BodyStart": 4225,
+      "Original": "static int      Mini_LutNodeConst0()                           { return 0;                    }",
+      "Draft": "func Mini_LutNodeConst0() int32 { return 0;                    }"
+    },
+    {
+      "Name": "Mini_LutNodeConst1",
+      "Start": 4258,
+      "End": 4353,
+      "BodyStart": 4321,
+      "Original": "static int      Mini_LutNodeConst1()                           { return 1;                    }",
+      "Draft": "func Mini_LutNodeConst1() int32 { return 1;                    }"
+    },
+    {
+      "Name": "Mini_LutNodeNum",
+      "Start": 4355,
+      "End": 4450,
+      "BodyStart": 4418,
+      "Original": "static int      Mini_LutNodeNum( Mini_Lut_t * p )              { return p-\u003enSize;             }",
+      "Draft": "func Mini_LutNodeNum(p *Mini_Lut_t) int32 { return p.nSize;             }"
+    },
+    {
+      "Name": "Mini_LutNodeIsConst",
+      "Start": 4451,
+      "End": 4563,
+      "BodyStart": 4514,
+      "Original": "static int      Mini_LutNodeIsConst( Mini_Lut_t * p, int Id )  { assert( Id \u003e= 0 ); return Id == 0 || Id == 1; }",
+      "Draft": "func Mini_LutNodeIsConst(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id == 0 || Id == 1; }"
+    },
+    {
+      "Name": "Mini_LutNodeIsPi",
+      "Start": 4564,
+      "End": 4714,
+      "BodyStart": 4627,
+      "Original": "static int      Mini_LutNodeIsPi( Mini_Lut_t * p, int Id )     { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) == MINI_LUT_NULL; }",
+      "Draft": "func Mini_LutNodeIsPi(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) == MINI_LUT_NULL; }"
+    },
+    {
+      "Name": "Mini_LutNodeIsPo",
+      "Start": 4715,
+      "End": 4916,
+      "BodyStart": 4778,
+      "Original": "static int      Mini_LutNodeIsPo( Mini_Lut_t * p, int Id )     { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) == MINI_LUT_NULL2; }",
+      "Draft": "func Mini_LutNodeIsPo(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) == MINI_LUT_NULL2; }"
+    },
+    {
+      "Name": "Mini_LutNodeIsNode",
+      "Start": 4917,
+      "End": 5118,
+      "BodyStart": 4980,
+      "Original": "static int      Mini_LutNodeIsNode( Mini_Lut_t * p, int Id )   { assert( Id \u003e= 0 ); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) != MINI_LUT_NULL2; }",
+      "Draft": "func Mini_LutNodeIsNode(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) != MINI_LUT_NULL2; }"
+    },
+    {
+      "Name": "Mini_LutSize",
+      "Start": 5120,
+      "End": 5215,
+      "BodyStart": 5183,
+      "Original": "static int      Mini_LutSize( Mini_Lut_t * p )                 { return p-\u003eLutSize;           }",
+      "Draft": "func Mini_LutSize(p *Mini_Lut_t) int32 { return p.LutSize;           }"
+    },
+    {
+      "Name": "Mini_LutRegNum",
+      "Start": 5249,
+      "End": 5344,
+      "BodyStart": 5312,
+      "Original": "static int      Mini_LutRegNum( Mini_Lut_t * p )               { return p-\u003enRegs;             }",
+      "Draft": "func Mini_LutRegNum(p *Mini_Lut_t) int32 { return p.nRegs;             }"
+    },
+    {
+      "Name": "Mini_LutSetRegNum",
+      "Start": 5345,
+      "End": 5440,
+      "BodyStart": 5408,
+      "Original": "static void     Mini_LutSetRegNum( Mini_Lut_t * p, int n )     { p-\u003enRegs = n;                }",
+      "Draft": "func Mini_LutSetRegNum(p *Mini_Lut_t, n int32) { p.nRegs = n;                }"
+    },
+    {
+      "Name": "Mini_LutStart",
+      "Start": 6021,
+      "End": 6709,
+      "BodyStart": 6070,
+      "Original": "static Mini_Lut_t * Mini_LutStart( int LutSize )\n{\n    Mini_Lut_t * p; int i;\n    assert( LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16 );\n    p = MINI_LUT_CALLOC( Mini_Lut_t, 1 );\n    p-\u003eLutSize = LutSize;\n    p-\u003enCap    = MINI_LUT_START_SIZE;\n    p-\u003epArray  = MINI_LUT_ALLOC( int,      p-\u003enCap * p-\u003eLutSize );\n    p-\u003epTruths = MINI_LUT_ALLOC( unsigned, p-\u003enCap * Mini_LutWordNum(p-\u003eLutSize) );\n    Mini_LutPush( p, 0, NULL, NULL ); // const0\n    Mini_LutPush( p, 0, NULL, NULL ); // const1\n    for ( i = 0; i \u003c Mini_LutWordNum(p-\u003eLutSize); i++ )\n        p-\u003epTruths[i] = 0;\n    for ( i = 0; i \u003c Mini_LutWordNum(p-\u003eLutSize); i++ )\n        p-\u003epTruths[Mini_LutWordNum(p-\u003eLutSize) + i] = ~0;\n    return p;\n}",
+      "Draft": "func Mini_LutStart(LutSize int32) *Mini_Lut_t {\n     var i int32;\n    assert(LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16, \"LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16\");\n    // inlining of macro MINI_LUT_CALLOC\n    p := \u0026Mini_Lut_t{};\n    p.LutSize = LutSize;\n    p.nCap    = MINI_LUT_START_SIZE;\n    // inlining of macro MINI_LUT_ALLOC\n    p.pArray  = ((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));\n    Mini_LutPush( p, 0, nil, nil ); // const0\n    Mini_LutPush( p, 0, nil, nil ); // const1\n    for  i = 0; i \u003c Mini_LutWordNum(p.LutSize); i++  {\n        p.pTruths[i] = 0;\n    }\n    for  i = 0; i \u003c Mini_LutWordNum(p.LutSize); i++  {\n        p.pTruths[Mini_LutWordNum(p.LutSize) + i] = ~0;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Mini_LutStop",
+      "Start": 6710,
+      "End": 6845,
+      "BodyStart": 6753,
+      "Original": "static void Mini_LutStop( Mini_Lut_t * p )\n{\n    MINI_LUT_FREE( p-\u003epArray );\n    MINI_LUT_FREE( p-\u003epTruths );\n    MINI_LUT_FREE( p );\n}",
+      "Draft": "func Mini_LutStop(p *Mini_Lut_t) {\n    // inlining of macro MINI_LUT_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro MINI_LUT_FREE\n    ((p.pTruths) ? (free((char *) (p.pTruths)), (p.pTruths) = 0) : 0);\n    // inlining of macro MINI_LUT_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Mini_LutPrintStats",
+      "Start": 6846,
+      "End": 7182,
+      "BodyStart": 6895,
+      "Original": "static void Mini_LutPrintStats( Mini_Lut_t * p )\n{\n    int i, nPis, nPos, nNodes;\n    nPis = 0;\n    Mini_LutForEachPi( p, i )\n        nPis++;\n    nPos = 0;\n    Mini_LutForEachPo( p, i )\n        nPos++;\n    nNodes = 0;\n    Mini_LutForEachNode( p, i )\n        nNodes++;\n    printf( \"PI = %d. PO = %d. LUT = %d.\\n\", nPis, nPos, nNodes );\n}",
+      "Draft": "func Mini_LutPrintStats(p *Mini_Lut_t) {\n    var i, nPis, nPos, nNodes int32;\n    nPis = 0;\n    // inlining of macro Mini_LutForEachPi\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPi(p, i) != 0)   {} else { \n        nPis++; }\n    }\n    nPos = 0;\n    // inlining of macro Mini_LutForEachPo\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPo(p, i) != 0)   {} else { \n        nPos++; }\n    }\n    nNodes = 0;\n    // inlining of macro Mini_LutForEachNode\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsNode(p, i) != 0) {} else {\n        nNodes++; }\n    }\n    fmt.Printf(\"PI = %d. PO = %d. LUT = %d.\\n\", nPis, nPos, nNodes);\n}"
+    },
+    {
+      "Name": "Mini_LutDump",
+      "Start": 7201,
+      "End": 7871,
+      "BodyStart": 7262,
+      "Original": "static void Mini_LutDump( Mini_Lut_t * p, char * pFileName )\n{\n    FILE * pFile;\n    int RetValue;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file for writing \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    RetValue = (int)fwrite( \u0026p-\u003enSize,   sizeof(int), 1, pFile );\n    RetValue = (int)fwrite( \u0026p-\u003enRegs,   sizeof(int), 1, pFile );\n    RetValue = (int)fwrite( \u0026p-\u003eLutSize, sizeof(int), 1, pFile );\n    RetValue = (int)fwrite( p-\u003epArray,   sizeof(int), p-\u003enSize * p-\u003eLutSize, pFile );\n    RetValue = (int)fwrite( p-\u003epTruths,  sizeof(int), p-\u003enSize * Mini_LutWordNum(p-\u003eLutSize), pFile );\n    fclose( pFile );\n}",
+      "Draft": "func Mini_LutDump(p *Mini_Lut_t, pFileName string) {\n    var pFile *os.File;\n    var RetValue int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    RetValue = int32(fwrite( \u0026p.nSize,   sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.nRegs,   sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.LutSize, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( p.pArray,   sizeof(int), p.nSize * p.LutSize, pFile ));\n    RetValue = int32(fwrite( p.pTruths,  sizeof(int), p.nSize * Mini_LutWordNum(p.LutSize), pFile ));\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Mini_LutLoad",
+      "Start": 7872,
+      "End": 8795,
+      "BodyStart": 7925,
+      "Original": "static Mini_Lut_t * Mini_LutLoad( char * pFileName )\n{\n    Mini_Lut_t * p;\n    FILE * pFile;\n    int RetValue, nSize;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file for reading \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    RetValue = (int)fread( \u0026nSize, sizeof(int), 1, pFile );\n    p = MINI_LUT_CALLOC( Mini_Lut_t, 1 );\n    p-\u003enSize   = p-\u003enCap = nSize;\n    RetValue = (int)fread( \u0026p-\u003enRegs,   sizeof(int), 1, pFile );\n    RetValue = (int)fread( \u0026p-\u003eLutSize, sizeof(int), 1, pFile );\n    p-\u003epArray  = MINI_LUT_ALLOC( int,      p-\u003enCap * p-\u003eLutSize );\n    p-\u003epTruths = MINI_LUT_ALLOC( unsigned, p-\u003enCap * Mini_LutWordNum(p-\u003eLutSize) );\n    RetValue = (int)fread( p-\u003epArray,   sizeof(int), p-\u003enCap * p-\u003eLutSize, pFile );\n    RetValue = (int)fread( p-\u003epTruths,  sizeof(int), p-\u003enCap * Mini_LutWordNum(p-\u003eLutSize), pFile );\n    fclose( pFile );\n    return p;\n}",
+      "Draft": "func Mini_LutLoad(pFileName string) *Mini_Lut_t {\n    var p *Mini_Lut_t;\n    var pFile *os.File;\n    var RetValue, nSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for reading \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_LUT_CALLOC\n    p = \u0026Mini_Lut_t{};\n    p.nSize   = p.nCap = nSize;\n    RetValue = int32(fread( \u0026p.nRegs,   sizeof(int), 1, pFile ));\n    RetValue = int32(fread( \u0026p.LutSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pArray  = ((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));\n    RetValue = int32(fread( p.pArray,   sizeof(int), p.nCap * p.LutSize, pFile ));\n    RetValue = int32(fread( p.pTruths,  sizeof(int), p.nCap * Mini_LutWordNum(p.LutSize), pFile ));\n    _ = (pFile).Close();\n    return p;\n}"
+    },
+    {
+      "Name": "Mini_LutCreatePi",
+      "Start": 8877,
+      "End": 8989,
+      "BodyStart": 8923,
+      "Original": "static int Mini_LutCreatePi( Mini_Lut_t * p )\n{\n    Mini_LutPush( p, 0, NULL, NULL );\n    return p-\u003enSize - 1;\n}",
+      "Draft": "func Mini_LutCreatePi(p *Mini_Lut_t) int32 {\n    Mini_LutPush( p, 0, nil, nil );\n    return p.nSize - 1;\n}"
+    },
+    {
+      "Name": "Mini_LutCreatePo",
+      "Start": 8990,
+      "End": 9280,
+      "BodyStart": 9046,
+      "Original": "static int Mini_LutCreatePo( Mini_Lut_t * p, int Var0 )\n{\n    assert( Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p-\u003enSize );\n    Mini_LutPush( p, 1, \u0026Var0, NULL );\n    // mark PO by setting its 2nd fanin to the special number\n    p-\u003epArray[p-\u003eLutSize*(p-\u003enSize - 1)+1] = MINI_LUT_NULL2;\n    return p-\u003enSize - 1;\n}",
+      "Draft": "func Mini_LutCreatePo(p *Mini_Lut_t, Var0 int32) int32 {\n    assert(Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p.nSize, \"Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p.nSize\");\n    Mini_LutPush( p, 1, \u0026Var0, nil );\n    // mark PO by setting its 2nd fanin to the special number\n    p.pArray[p.LutSize*(p.nSize - 1)+1] = MINI_LUT_NULL2;\n    return p.nSize - 1;\n}"
+    },
+    {
+      "Name": "Mini_LutCreateNode",
+      "Start": 9296,
+      "End": 9509,
+      "BodyStart": 9387,
+      "Original": "static int Mini_LutCreateNode( Mini_Lut_t * p, int nVars, int * pVars, unsigned * pTruth )\n{\n    assert( nVars \u003e= 0 \u0026\u0026 nVars \u003c= p-\u003eLutSize );\n    Mini_LutPush( p, nVars, pVars, pTruth );\n    return p-\u003enSize - 1;\n}",
+      "Draft": "func Mini_LutCreateNode(p *Mini_Lut_t, nVars int32, pVars *int32, pTruth *uint32) int32 {\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= p.LutSize, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= p.LutSize\");\n    Mini_LutPush( p, nVars, pVars, pTruth );\n    return p.nSize - 1;\n}"
+    },
+    {
+      "Name": "Mini_LutCheck",
+      "Start": 9579,
+      "End": 10307,
+      "BodyStart": 9622,
+      "Original": "static int Mini_LutCheck( Mini_Lut_t * p )\n{\n    int status = 1;\n    int i, k, iFaninVar;\n    Mini_LutForEachNode( p, i )\n    {\n        for ( k = 0; k \u003c p-\u003eLutSize; k++ )\n        {\n            iFaninVar = Mini_LutNodeFanin( p, i, k );\n            if ( iFaninVar == MINI_LUT_NULL )\n                continue;\n            if ( iFaninVar \u003e= p-\u003eLutSize * i )\n                printf( \"Fanin %d of LUT node %d is not in a topological order.\\n\", k, i ), status = 0;\n        }\n    }\n    Mini_LutForEachPo( p, i )\n    {\n        iFaninVar = Mini_LutNodeFanin( p, i, 0 );\n        if ( iFaninVar \u003e= p-\u003eLutSize * i )\n            printf( \"Fanin %d of PO node %d is not in a topological order.\\n\", k, i ), status = 0;\n    }\n    return status;\n}",
+      "Draft": "func Mini_LutCheck(p *Mini_Lut_t) int32 {\n    var status int32  = 1;\n    var i, k, iFaninVar int32;\n    // inlining of macro Mini_LutForEachNode\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsNode(p, i) != 0) {} else {\n        for  k = 0; k \u003c p.LutSize; k++  {\n            iFaninVar = Mini_LutNodeFanin( p, i, k );\n            if iFaninVar == MINI_LUT_NULL {\n                continue; }\n            if iFaninVar \u003e= p.LutSize * i {\n                fmt.Printf(\"Fanin %d of LUT node %d is not in a topological order.\\n\", k, i);\nstatus = 0; }\n        }\n    }\n    }\n    // inlining of macro Mini_LutForEachPo\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPo(p, i) != 0)   {} else {\n        iFaninVar = Mini_LutNodeFanin( p, i, 0 );\n        if iFaninVar \u003e= p.LutSize * i {\n            fmt.Printf(\"Fanin %d of PO node %d is not in a topological order.\\n\", k, i);\nstatus = 0; }\n    }\n    }\n    return status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::struct::Mini_Lut_t",
+      "Category": "struct-review",
+      "Symbol": "Mini_Lut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1491,
+      "End": 1714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::2879",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2774,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::2945",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2774,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::3116",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2856,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::3209",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2856,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::6566",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6152,
+      "End": 6152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::6735",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6267,
+      "End": 6267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::6863",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6334,
+      "End": 6334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::8606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7503,
+      "End": 7509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::8672",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7569,
+      "End": 7575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::8738",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7635,
+      "End": 7641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::8804",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7701,
+      "End": 7707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::8890",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7787,
+      "End": 7793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9295",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8192,
+      "End": 8198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9407",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8225,
+      "End": 8225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9503",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8333,
+      "End": 8339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9568",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8398,
+      "End": 8404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9676",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8440,
+      "End": 8440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9804",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8507,
+      "End": 8507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9906",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8614,
+      "End": 8620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::mechanical::sizeof::9990",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8698,
+      "End": 8704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::2842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2774,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::2858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2774,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::2930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2774,
+      "End": 2774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::3073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2856,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::3094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2856,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::3189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2856,
+      "End": 2856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::6539",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6152,
+      "End": 6152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::6720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6267,
+      "End": 6267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::6843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6334,
+      "End": 6334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::7353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6759,
+      "End": 6759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::7474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6791,
+      "End": 6791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::7588",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6824,
+      "End": 6824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::9380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8225,
+      "End": 8225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::9661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8440,
+      "End": 8440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::pointer-cast::9784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8507,
+      "End": 8507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::MINI_LUT_ALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_LUT_ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1957,
+      "End": 2034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::MINI_LUT_CALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_LUT_CALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2035,
+      "End": 2111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::MINI_LUT_FALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_LUT_FALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2112,
+      "End": 2225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::MINI_LUT_FREE",
+      "Category": "macro-review",
+      "Symbol": "MINI_LUT_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2226,
+      "End": 2311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::MINI_LUT_REALLOC",
+      "Category": "macro-review",
+      "Symbol": "MINI_LUT_REALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2312,
+      "End": 2481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::Mini_LutForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Mini_LutForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5471,
+      "End": 5590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::Mini_LutForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Mini_LutForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5591,
+      "End": 5710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::Mini_LutForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Mini_LutForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5711,
+      "End": 5829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::macro::Mini_LutForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Mini_LutForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5858,
+      "End": 5993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2534,
+      "End": 2628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutGrow",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2653,
+      "End": 3015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::ternary::Mini_LutPush",
+      "Category": "ternary-review",
+      "Symbol": "Mini_LutPush",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3016,
+      "End": 3803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutPush",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3016,
+      "End": 3803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeFanin",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3825,
+      "End": 3969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3970,
+      "End": 4139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeConst0",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4162,
+      "End": 4257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeConst1",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4258,
+      "End": 4353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4355,
+      "End": 4450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4451,
+      "End": 4563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4564,
+      "End": 4714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4715,
+      "End": 4916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutNodeIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutNodeIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4917,
+      "End": 5118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutSize",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5120,
+      "End": 5215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5249,
+      "End": 5344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutSetRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutSetRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5345,
+      "End": 5440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutStart",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6021,
+      "End": 6709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::ternary::Mini_LutStop",
+      "Category": "ternary-review",
+      "Symbol": "Mini_LutStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6710,
+      "End": 6845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutStop",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6710,
+      "End": 6845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6846,
+      "End": 7182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutDump",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7201,
+      "End": 7871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutLoad",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7872,
+      "End": 8795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8877,
+      "End": 8989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8990,
+      "End": 9280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutCreateNode",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutCreateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9296,
+      "End": 9509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::Mini_LutCheck",
+      "Category": "semantic-review",
+      "Symbol": "Mini_LutCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9579,
+      "End": 10307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/miniaig/minilut.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10785
+    }
+  ],
+  "Draft": "package miniaig\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [minilut.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic representation of LUT mapped network.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 29, 2012.]\n\n  Revision    [$Id: minilut.h,v 1.00 2012/09/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n#define MINI_LUT_NULL       (0x7FFFFFFF)\n#define MINI_LUT_NULL2      (0x7FFFFFFE)\n#define MINI_LUT_START_SIZE (0x000000FF)\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Mini_Lut_t struct {\n    nCap           int32;\n    nSize           int32;\n    nRegs           int32;\n    LutSize           int32;\n    pArray          *int32;\n    pTruths     *uint32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// memory management\n// Original macro:\n// #define MINI_LUT_ALLOC(type, num)     ((type *) malloc(sizeof(type) * (num)))\n\n// Original macro:\n// #define MINI_LUT_CALLOC(type, num)    ((type *) calloc((num), sizeof(type)))\n\n// Original macro:\n// #define MINI_LUT_FALLOC(type, num)    ((type *) memset(malloc(sizeof(type) * (num)), 0xff, sizeof(type) * (num)))\n\n// Original macro:\n// #define MINI_LUT_FREE(obj)            ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)\n\n// Original macro:\n// #define MINI_LUT_REALLOC(type, obj, num) \\\n//         ((obj) ? ((type *) realloc((char *)(obj), sizeof(type) * (num))) : \\\n//          ((type *) malloc(sizeof(type) * (num))))\n\n\n// compute truth table size measured in unsigned's\nfunc Mini_LutWordNum(LutSize int32) int32 {\n    if LutSize \u003e 5 {\n        return 1 \u003c\u003c (LutSize-5);\n    } else {\n        return 1;\n    }\n}\n\n// internal procedures\nfunc Mini_LutGrow(p *Mini_Lut_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    // inlining of macro MINI_LUT_REALLOC\n    \n    if p.pArray {\n        p.pArray = ((int *) realloc((char *)(p.pArray), sizeof(int) * (nCapMin * p.LutSize)));\n    } else {\n        p.pArray = ((int *) malloc(sizeof(int) * (nCapMin * p.LutSize)));\n    } \n    // inlining of macro MINI_LUT_REALLOC\n    \n    if p.pTruths {\n        p.pTruths = ((unsigned *) realloc((char *)(p.pTruths), sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));\n    } else {\n        p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (nCapMin * Mini_LutWordNum(p.LutSize))));\n    } \n    p.nCap   = nCapMin;\n    assert(p.pArray, \"p.pArray\");\n    assert(p.pTruths, \"p.pTruths\");\n}\nfunc Mini_LutPush(p *Mini_Lut_t, nVars int32, pVars *int32, pTruth *uint32) {\n    var i int32;\n    var nWords int32 = Mini_LutWordNum(p.LutSize);\n    if p.nSize == p.nCap {\n        assert(p.LutSize*p.nSize \u003c MINI_LUT_NULL/2, \"p.LutSize*p.nSize \u003c MINI_LUT_NULL/2\");\n        if p.nCap \u003c MINI_LUT_START_SIZE {\n            Mini_LutGrow( p, MINI_LUT_START_SIZE );\n        } else {\n            Mini_LutGrow( p, 2 * p.nCap ); }\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        assert(pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p.nSize, \"pVars[i] \u003e= 0 \u0026\u0026 pVars[i] \u003c p.nSize\");\n    }\n    for  i = 0; i \u003c nVars; i++  {\n        p.pArray[p.LutSize * p.nSize + i] = pVars[i];\n    }\n    for  ; i \u003c p.LutSize; i++  {\n        p.pArray[p.LutSize * p.nSize + i] = MINI_LUT_NULL;\n    }\n    for  i = 0; i \u003c nWords; i++  {\n        p.pTruths[nWords * p.nSize + i] = pTruth? pTruth[i] : 0;\n    }\n    p.nSize++;\n}\n\n// accessing fanins\nfunc Mini_LutNodeFanin(p *Mini_Lut_t, Id int32, k int32) int32 {\n    assert(Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize\");\n    return p.pArray[p.LutSize*Id+k];\n}\nfunc Mini_LutNodeTruth(p *Mini_Lut_t, Id int32) *uint32 { \n    assert(Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize, \"Id \u003e= 0 \u0026\u0026 Id \u003c p.nSize\"); \n    return p.pTruths + Id * Mini_LutWordNum(p.LutSize);\n}\n\n// working with LUTs\nfunc Mini_LutNodeConst0() int32 { return 0;                    }\nfunc Mini_LutNodeConst1() int32 { return 1;                    }\n\nfunc Mini_LutNodeNum(p *Mini_Lut_t) int32 { return p.nSize;             }\nfunc Mini_LutNodeIsConst(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id == 0 || Id == 1; }\nfunc Mini_LutNodeIsPi(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) == MINI_LUT_NULL; }\nfunc Mini_LutNodeIsPo(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) == MINI_LUT_NULL2; }\nfunc Mini_LutNodeIsNode(p *Mini_Lut_t, Id int32) int32 { assert(Id \u003e= 0, \"Id \u003e= 0\"); return Id \u003e 1 \u0026\u0026 Mini_LutNodeFanin( p, Id, 0 ) != MINI_LUT_NULL \u0026\u0026 Mini_LutNodeFanin( p, Id, 1 ) != MINI_LUT_NULL2; }\n\nfunc Mini_LutSize(p *Mini_Lut_t) int32 { return p.LutSize;           }\n\n// working with sequential AIGs\nfunc Mini_LutRegNum(p *Mini_Lut_t) int32 { return p.nRegs;             }\nfunc Mini_LutSetRegNum(p *Mini_Lut_t, n int32) { p.nRegs = n;                }\n\n// iterators through objects\n// Original macro:\n// #define Mini_LutForEachPi( p, i )    for (i = 2; i \u003c Mini_LutNodeNum(p); i++) if ( !Mini_LutNodeIsPi(p, i) )   {} else \n\n// Original macro:\n// #define Mini_LutForEachPo( p, i )    for (i = 2; i \u003c Mini_LutNodeNum(p); i++) if ( !Mini_LutNodeIsPo(p, i) )   {} else \n\n// Original macro:\n// #define Mini_LutForEachNode( p, i )  for (i = 2; i \u003c Mini_LutNodeNum(p); i++) if ( !Mini_LutNodeIsNode(p, i) ) {} else\n\n\n// iterator through fanins\n// Original macro:\n// #define Mini_LutForEachFanin( p, i, Fan, k ) for (k = 0; (k \u003c p-\u003eLutSize) \u0026\u0026 (Fan = Mini_LutNodeFanin(p, i, k)) \u003c MINI_LUT_NULL2; k++) \n\n\n// constructor/destructor\nfunc Mini_LutStart(LutSize int32) *Mini_Lut_t {\n     var i int32;\n    assert(LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16, \"LutSize \u003e= 2 \u0026\u0026 LutSize \u003c= 16\");\n    // inlining of macro MINI_LUT_CALLOC\n    p := \u0026Mini_Lut_t{};\n    p.LutSize = LutSize;\n    p.nCap    = MINI_LUT_START_SIZE;\n    // inlining of macro MINI_LUT_ALLOC\n    p.pArray  = ((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));\n    Mini_LutPush( p, 0, nil, nil ); // const0\n    Mini_LutPush( p, 0, nil, nil ); // const1\n    for  i = 0; i \u003c Mini_LutWordNum(p.LutSize); i++  {\n        p.pTruths[i] = 0;\n    }\n    for  i = 0; i \u003c Mini_LutWordNum(p.LutSize); i++  {\n        p.pTruths[Mini_LutWordNum(p.LutSize) + i] = ~0;\n    }\n    return p;\n}\nfunc Mini_LutStop(p *Mini_Lut_t) {\n    // inlining of macro MINI_LUT_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro MINI_LUT_FREE\n    ((p.pTruths) ? (free((char *) (p.pTruths)), (p.pTruths) = 0) : 0);\n    // inlining of macro MINI_LUT_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Mini_LutPrintStats(p *Mini_Lut_t) {\n    var i, nPis, nPos, nNodes int32;\n    nPis = 0;\n    // inlining of macro Mini_LutForEachPi\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPi(p, i) != 0)   {} else { \n        nPis++; }\n    }\n    nPos = 0;\n    // inlining of macro Mini_LutForEachPo\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPo(p, i) != 0)   {} else { \n        nPos++; }\n    }\n    nNodes = 0;\n    // inlining of macro Mini_LutForEachNode\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsNode(p, i) != 0) {} else {\n        nNodes++; }\n    }\n    fmt.Printf(\"PI = %d. PO = %d. LUT = %d.\\n\", nPis, nPos, nNodes);\n}\n\n// serialization\nfunc Mini_LutDump(p *Mini_Lut_t, pFileName string) {\n    var pFile *os.File;\n    var RetValue int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for writing \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    RetValue = int32(fwrite( \u0026p.nSize,   sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.nRegs,   sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( \u0026p.LutSize, sizeof(int), 1, pFile ));\n    RetValue = int32(fwrite( p.pArray,   sizeof(int), p.nSize * p.LutSize, pFile ));\n    RetValue = int32(fwrite( p.pTruths,  sizeof(int), p.nSize * Mini_LutWordNum(p.LutSize), pFile ));\n    _ = (pFile).Close();\n}\nfunc Mini_LutLoad(pFileName string) *Mini_Lut_t {\n    var p *Mini_Lut_t;\n    var pFile *os.File;\n    var RetValue, nSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file for reading \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    RetValue = int32(fread( \u0026nSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_LUT_CALLOC\n    p = \u0026Mini_Lut_t{};\n    p.nSize   = p.nCap = nSize;\n    RetValue = int32(fread( \u0026p.nRegs,   sizeof(int), 1, pFile ));\n    RetValue = int32(fread( \u0026p.LutSize, sizeof(int), 1, pFile ));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pArray  = ((int *) malloc(sizeof(int) * (p.nCap * p.LutSize)));\n    // inlining of macro MINI_LUT_ALLOC\n    p.pTruths = ((unsigned *) malloc(sizeof(unsigned) * (p.nCap * Mini_LutWordNum(p.LutSize))));\n    RetValue = int32(fread( p.pArray,   sizeof(int), p.nCap * p.LutSize, pFile ));\n    RetValue = int32(fread( p.pTruths,  sizeof(int), p.nCap * Mini_LutWordNum(p.LutSize), pFile ));\n    _ = (pFile).Close();\n    return p;\n}\n\n\n// creating nodes \n// (constant nodes are created when LUT manager is created)\nfunc Mini_LutCreatePi(p *Mini_Lut_t) int32 {\n    Mini_LutPush( p, 0, nil, nil );\n    return p.nSize - 1;\n}\nfunc Mini_LutCreatePo(p *Mini_Lut_t, Var0 int32) int32 {\n    assert(Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p.nSize, \"Var0 \u003e= 0 \u0026\u0026 Var0 \u003c p.nSize\");\n    Mini_LutPush( p, 1, \u0026Var0, nil );\n    // mark PO by setting its 2nd fanin to the special number\n    p.pArray[p.LutSize*(p.nSize - 1)+1] = MINI_LUT_NULL2;\n    return p.nSize - 1;\n}\n\n// create LUT\nfunc Mini_LutCreateNode(p *Mini_Lut_t, nVars int32, pVars *int32, pTruth *uint32) int32 {\n    assert(nVars \u003e= 0 \u0026\u0026 nVars \u003c= p.LutSize, \"nVars \u003e= 0 \u0026\u0026 nVars \u003c= p.LutSize\");\n    Mini_LutPush( p, nVars, pVars, pTruth );\n    return p.nSize - 1;\n}\n\n// procedure to check the topological order during AIG construction\nfunc Mini_LutCheck(p *Mini_Lut_t) int32 {\n    var status int32  = 1;\n    var i, k, iFaninVar int32;\n    // inlining of macro Mini_LutForEachNode\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsNode(p, i) != 0) {} else {\n        for  k = 0; k \u003c p.LutSize; k++  {\n            iFaninVar = Mini_LutNodeFanin( p, i, k );\n            if iFaninVar == MINI_LUT_NULL {\n                continue; }\n            if iFaninVar \u003e= p.LutSize * i {\n                fmt.Printf(\"Fanin %d of LUT node %d is not in a topological order.\\n\", k, i);\nstatus = 0; }\n        }\n    }\n    }\n    // inlining of macro Mini_LutForEachPo\n    for i = 2; i \u003c Mini_LutNodeNum(p); i++ { if !(Mini_LutNodeIsPo(p, i) != 0)   {} else {\n        iFaninVar = Mini_LutNodeFanin( p, i, 0 );\n        if iFaninVar \u003e= p.LutSize * i {\n            fmt.Printf(\"Fanin %d of PO node %d is not in a topological order.\\n\", k, i);\nstatus = 0; }\n    }\n    }\n    return status;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

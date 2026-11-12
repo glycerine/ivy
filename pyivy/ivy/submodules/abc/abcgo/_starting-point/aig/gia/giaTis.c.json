@@ -1,0 +1,251 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c",
+  "SHA256": "eb63baf3055eba78ab78e003e8ebf594efc80b1af58ffb941fd5c64b92042d73",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMuxes == nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 52,
+        "Column": 63,
+        "ByteOffset": 1512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 58,
+        "Column": 79,
+        "ByteOffset": 1816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew.pMuxes = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 4144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"MFFC %d has %d nodes and %d leaves:\\n\", Id, Vec_IntSize(vMffc), Vec_IntSize(vLeaves) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %2d : \", Vec_IntSize(vMffc) - 1 - i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 5945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Leaf %2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 6016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManTisDupMuxes",
+      "Start": 1256,
+      "End": 2990,
+      "BodyStart": 1304,
+      "Original": "Gia_Man_t * Gia_ManTisDupMuxes( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pFan0, * pFan1, * pFanC;\n    int i;\n    assert( p-\u003epMuxes == NULL );\n    ABC_FREE( p-\u003epRefs );\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( 5000 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003epMuxes = ABC_CALLOC( unsigned, pNew-\u003enObjsAlloc );\n    // create constant\n    Gia_ManConst0(p)-\u003eValue = 0;\n    // create PIs\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        if ( !Gia_ObjIsMuxType(pObj) || (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) \u003e 1 \u0026\u0026 Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) \u003e 1) )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) )\n            pObj-\u003eValue = Gia_ManHashXorReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)) );\n        else\n        {\n            pFanC = Gia_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            pObj-\u003eValue = Gia_ManHashMuxReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    // create ROs\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManTisDupMuxes(p *Gia_Man_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pFan0, pFan1, pFanC *Gia_Obj_t;\n    var i int32;\n    assert(p.pMuxes == nil, \"p.pMuxes == nil\");\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( 5000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    // create constant\n    Gia_ManConst0(p).Value = 0;\n    // create PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !Gia_ObjIsMuxType(pObj) || (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) \u003e 1 \u0026\u0026 Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) \u003e 1) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            pObj.Value = Gia_ManHashXorReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)) );\n        } else {\n            pFanC = Gia_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)) );\n        }\n    }\n    }\n    Gia_ManHashStop( pNew );\n    // create ROs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManTisCollectMffc_rec",
+      "Start": 3226,
+      "End": 4006,
+      "BodyStart": 3322,
+      "Original": "void Gia_ManTisCollectMffc_rec( Gia_Man_t * p, int Id, Vec_Int_t * vMffc, Vec_Int_t * vLeaves )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n        return;\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    if ( Gia_ObjRefNumId(p, Id) \u003e 1 )\n    {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    pObj = Gia_ManObj( p, Id );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if ( Gia_ObjIsMuxId(p, Id) )\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves );\n    Vec_IntPush( vMffc, Id );\n}",
+      "Draft": "func Gia_ManTisCollectMffc_rec(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    if Gia_ObjRefNumId(p, Id) \u003e 1 {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if Gia_ObjIsMuxId(p, Id) {\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves ); }\n    Vec_IntPush( vMffc, Id );\n}"
+    },
+    {
+      "Name": "Gia_ManTisCollectMffc",
+      "Start": 4007,
+      "End": 4570,
+      "BodyStart": 4099,
+      "Original": "void Gia_ManTisCollectMffc( Gia_Man_t * p, int Id, Vec_Int_t * vMffc, Vec_Int_t * vLeaves )\n{\n    Gia_Obj_t * pObj = Gia_ManObj( p, Id );\n    assert( Gia_ObjIsAnd(pObj) );\n    Vec_IntClear( vMffc );\n    Vec_IntClear( vLeaves );\n    Gia_ManIncrementTravId( p );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if ( Gia_ObjIsMuxId(p, Id) )\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves );\n    Vec_IntPush( vMffc, Id );\n}",
+      "Draft": "func Gia_ManTisCollectMffc(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, Id );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Vec_IntClear( vMffc );\n    Vec_IntClear( vLeaves );\n    Gia_ManIncrementTravId( p );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if Gia_ObjIsMuxId(p, Id) {\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves ); }\n    Vec_IntPush( vMffc, Id );\n}"
+    },
+    {
+      "Name": "Gia_ManTisPrintMffc",
+      "Start": 4806,
+      "End": 5341,
+      "BodyStart": 4896,
+      "Original": "void Gia_ManTisPrintMffc( Gia_Man_t * p, int Id, Vec_Int_t * vMffc, Vec_Int_t * vLeaves )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    printf( \"MFFC %d has %d nodes and %d leaves:\\n\", Id, Vec_IntSize(vMffc), Vec_IntSize(vLeaves) );\n    Gia_ManForEachObjVecReverse( vMffc, p, pObj, i )\n    {\n        printf( \"Node %2d : \", Vec_IntSize(vMffc) - 1 - i );\n        Gia_ObjPrint( p, pObj );\n    }\n    Gia_ManForEachObjVec( vLeaves, p, pObj, i )\n    {\n        printf( \"Leaf %2d : \", i );\n        Gia_ObjPrint( p, pObj );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_ManTisPrintMffc(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    fmt.Printf(\"MFFC %d has %d nodes and %d leaves:\\n\", Id, Vec_IntSize(vMffc), Vec_IntSize(vLeaves));\n    // inlining of macro Gia_ManForEachObjVecReverse\n    for  i = Vec_IntSize(vMffc) - 1; (i \u003e= 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMffc,i))); i--  {\n        fmt.Printf(\"Node %2d : \", Vec_IntSize(vMffc) - 1 - i);\n        Gia_ObjPrint( p, pObj );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {\n        fmt.Printf(\"Leaf %2d : \", i);\n        Gia_ObjPrint( p, pObj );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_ManTisTest",
+      "Start": 5577,
+      "End": 6424,
+      "BodyStart": 5618,
+      "Original": "void Gia_ManTisTest( Gia_Man_t * pInit )\n{\n    Gia_Man_t * p;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vMffc, * vLeaves;\n    int i;\n    vMffc = Vec_IntAlloc( 10 );\n    vLeaves = Vec_IntAlloc( 10 );\n    p = Gia_ManTisDupMuxes( pInit );\n    Gia_ManCreateRefs( p );\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        if ( Gia_ObjRefNumId(p, i) == 1 )\n            continue;\n        Gia_ManTisCollectMffc( p, i, vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, i, vMffc, vLeaves );\n    }\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        if ( Gia_ObjRefNumId(p, Gia_ObjFaninId0p(p, pObj)) \u003e 1 )\n            continue;\n        Gia_ManTisCollectMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n    }\n    Gia_ManStop( p );\n    Vec_IntFree( vMffc );\n    Vec_IntFree( vLeaves );\n}",
+      "Draft": "func Gia_ManTisTest(pInit *Gia_Man_t) {\n    var p *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var vMffc, vLeaves *Vec_Int_t;\n    var i int32;\n    vMffc = Vec_IntAlloc( 10 );\n    vLeaves = Vec_IntAlloc( 10 );\n    p = Gia_ManTisDupMuxes( pInit );\n    Gia_ManCreateRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjRefNumId(p, i) == 1 {\n            continue; }\n        Gia_ManTisCollectMffc( p, i, vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, i, vMffc, vLeaves );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if Gia_ObjRefNumId(p, Gia_ObjFaninId0p(p, pObj)) \u003e 1 {\n            continue; }\n        Gia_ManTisCollectMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n    }\n    Gia_ManStop( p );\n    Vec_IntFree( vMffc );\n    Vec_IntFree( vLeaves );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::mechanical::sizeof::1839",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1658,
+      "End": 1658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::pointer-cast::1498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1434,
+      "End": 1434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::pointer-cast::1791",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1658,
+      "End": 1658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::ternary::Gia_ManTisDupMuxes",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManTisDupMuxes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1256,
+      "End": 2990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::Gia_ManTisDupMuxes",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTisDupMuxes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1256,
+      "End": 2990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::Gia_ManTisCollectMffc_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTisCollectMffc_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3226,
+      "End": 4006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::Gia_ManTisCollectMffc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTisCollectMffc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4007,
+      "End": 4570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::Gia_ManTisPrintMffc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTisPrintMffc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4806,
+      "End": 5341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::Gia_ManTisTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTisTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5577,
+      "End": 6424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaTis.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6672
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaTis.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Technology independent synthesis.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaTis.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA with MUXes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTisDupMuxes(p *Gia_Man_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pFan0, pFan1, pFanC *Gia_Obj_t;\n    var i int32;\n    assert(p.pMuxes == nil, \"p.pMuxes == nil\");\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( 5000 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    // create constant\n    Gia_ManConst0(p).Value = 0;\n    // create PIs\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !Gia_ObjIsMuxType(pObj) || (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) \u003e 1 \u0026\u0026 Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) \u003e 1) {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            pObj.Value = Gia_ManHashXorReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)) );\n        } else {\n            pFanC = Gia_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)) );\n        }\n    }\n    }\n    Gia_ManHashStop( pNew );\n    // create ROs\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTisCollectMffc_rec(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId(p, Id) {\n        return; }\n    Gia_ObjSetTravIdCurrentId(p, Id);\n    if Gia_ObjRefNumId(p, Id) \u003e 1 {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    pObj = Gia_ManObj( p, Id );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vLeaves, Id );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if Gia_ObjIsMuxId(p, Id) {\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves ); }\n    Vec_IntPush( vMffc, Id );\n}\nfunc Gia_ManTisCollectMffc(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, Id );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Vec_IntClear( vMffc );\n    Vec_IntClear( vLeaves );\n    Gia_ManIncrementTravId( p );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId0(pObj, Id), vMffc, vLeaves );\n    Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId1(pObj, Id), vMffc, vLeaves );\n    if Gia_ObjIsMuxId(p, Id) {\n        Gia_ManTisCollectMffc_rec( p, Gia_ObjFaninId2(p, Id), vMffc, vLeaves ); }\n    Vec_IntPush( vMffc, Id );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTisPrintMffc(p *Gia_Man_t, Id int32, vMffc *Vec_Int_t, vLeaves *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    fmt.Printf(\"MFFC %d has %d nodes and %d leaves:\\n\", Id, Vec_IntSize(vMffc), Vec_IntSize(vLeaves));\n    // inlining of macro Gia_ManForEachObjVecReverse\n    for  i = Vec_IntSize(vMffc) - 1; (i \u003e= 0) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMffc,i))); i--  {\n        fmt.Printf(\"Node %2d : \", Vec_IntSize(vMffc) - 1 - i);\n        Gia_ObjPrint( p, pObj );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {\n        fmt.Printf(\"Leaf %2d : \", i);\n        Gia_ObjPrint( p, pObj );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTisTest(pInit *Gia_Man_t) {\n    var p *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var vMffc, vLeaves *Vec_Int_t;\n    var i int32;\n    vMffc = Vec_IntAlloc( 10 );\n    vLeaves = Vec_IntAlloc( 10 );\n    p = Gia_ManTisDupMuxes( pInit );\n    Gia_ManCreateRefs( p );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjRefNumId(p, i) == 1 {\n            continue; }\n        Gia_ManTisCollectMffc( p, i, vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, i, vMffc, vLeaves );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if Gia_ObjRefNumId(p, Gia_ObjFaninId0p(p, pObj)) \u003e 1 {\n            continue; }\n        Gia_ManTisCollectMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n        Gia_ManTisPrintMffc( p, Gia_ObjFaninId0p(p, pObj), vMffc, vLeaves );\n    }\n    Gia_ManStop( p );\n    Vec_IntFree( vMffc );\n    Vec_IntFree( vLeaves );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

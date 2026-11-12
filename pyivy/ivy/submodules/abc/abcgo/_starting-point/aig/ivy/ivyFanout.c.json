@@ -1,0 +1,632 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c",
+  "SHA256": "98ad5441dcc89a144bddc42557879ebbca7596ac2a13f1b8de1b05f4745eca61",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 34,
+        "Column": 5,
+        "ByteOffset": 928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 35,
+        "Column": 5,
+        "ByteOffset": 967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 40,
+        "Column": 5,
+        "ByteOffset": 1131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pFanout) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 5,
+        "ByteOffset": 1334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 47,
+        "Column": 5,
+        "ByteOffset": 1373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pFanout) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pFanout) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pFanout) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pTemp) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pTemp) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.fFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 6870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.pFanout != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *ppPlaceN == pFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 7228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ppPlaceN == nil || *ppPlaceN == pFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 7855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *ppPlace == pFanoutOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ppPlace == nil || *ppPlace == pFanoutOld );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 8660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fFanout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 8685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ObjNextFanout",
+      "Start": 834,
+      "End": 1205,
+      "BodyStart": 919,
+      "Original": "static inline Ivy_Obj_t * Ivy_ObjNextFanout( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    if ( pFanout == NULL )\n        return NULL;\n    if ( Ivy_ObjFanin0(pFanout) == pObj )\n        return pFanout-\u003epNextFan0;\n    assert( Ivy_ObjFanin1(pFanout) == pObj );\n    return pFanout-\u003epNextFan1;\n}",
+      "Draft": "func Ivy_ObjNextFanout(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) *Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if pFanout == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return pFanout.pNextFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return pFanout.pNextFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ObjPrevFanout",
+      "Start": 1258,
+      "End": 1629,
+      "BodyStart": 1343,
+      "Original": "static inline Ivy_Obj_t * Ivy_ObjPrevFanout( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    if ( pFanout == NULL )\n        return NULL;\n    if ( Ivy_ObjFanin0(pFanout) == pObj )\n        return pFanout-\u003epPrevFan0;\n    assert( Ivy_ObjFanin1(pFanout) == pObj );\n    return pFanout-\u003epPrevFan1;\n}",
+      "Draft": "func Ivy_ObjPrevFanout(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) *Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if pFanout == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return pFanout.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return pFanout.pPrevFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ObjNextFanoutPlace",
+      "Start": 1699,
+      "End": 2030,
+      "BodyStart": 1790,
+      "Original": "static inline Ivy_Obj_t ** Ivy_ObjNextFanoutPlace( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    if ( Ivy_ObjFanin0(pFanout) == pObj )\n        return \u0026pFanout-\u003epNextFan0;\n    assert( Ivy_ObjFanin1(pFanout) == pObj );\n    return \u0026pFanout-\u003epNextFan1;\n}",
+      "Draft": "func Ivy_ObjNextFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return \u0026pFanout.pNextFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return \u0026pFanout.pNextFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ObjPrevFanoutPlace",
+      "Start": 2100,
+      "End": 2431,
+      "BodyStart": 2191,
+      "Original": "static inline Ivy_Obj_t ** Ivy_ObjPrevFanoutPlace( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    if ( Ivy_ObjFanin0(pFanout) == pObj )\n        return \u0026pFanout-\u003epPrevFan0;\n    assert( Ivy_ObjFanin1(pFanout) == pObj );\n    return \u0026pFanout-\u003epPrevFan1;\n}",
+      "Draft": "func Ivy_ObjPrevFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return \u0026pFanout.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return \u0026pFanout.pPrevFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ObjPrevNextFanoutPlace",
+      "Start": 2501,
+      "End": 2953,
+      "BodyStart": 2596,
+      "Original": "static inline Ivy_Obj_t ** Ivy_ObjPrevNextFanoutPlace( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    Ivy_Obj_t * pTemp;\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    pTemp = Ivy_ObjPrevFanout(pObj, pFanout);\n    if ( pTemp == NULL )\n        return \u0026pObj-\u003epFanout;\n    if ( Ivy_ObjFanin0(pTemp) == pObj )\n        return \u0026pTemp-\u003epNextFan0;\n    assert( Ivy_ObjFanin1(pTemp) == pObj );\n    return \u0026pTemp-\u003epNextFan1;\n}",
+      "Draft": "func Ivy_ObjPrevNextFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    pTemp = Ivy_ObjPrevFanout(pObj, pFanout);\n    if pTemp == nil {\n        return \u0026pObj.pFanout; }\n    if Ivy_ObjFanin0(pTemp) == pObj {\n        return \u0026pTemp.pNextFan0; }\n    assert(Ivy_ObjFanin1(pTemp) == pObj, \"Ivy_ObjFanin1(pTemp) == pObj\");\n    return \u0026pTemp.pNextFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ObjNextPrevFanoutPlace",
+      "Start": 3023,
+      "End": 3465,
+      "BodyStart": 3118,
+      "Original": "static inline Ivy_Obj_t ** Ivy_ObjNextPrevFanoutPlace( Ivy_Obj_t * pObj, Ivy_Obj_t * pFanout )\n{\n    Ivy_Obj_t * pTemp;\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_IsComplement(pFanout) );\n    pTemp = Ivy_ObjNextFanout(pObj, pFanout);\n    if ( pTemp == NULL )\n        return NULL;\n    if ( Ivy_ObjFanin0(pTemp) == pObj )\n        return \u0026pTemp-\u003epPrevFan0;\n    assert( Ivy_ObjFanin1(pTemp) == pObj );\n    return \u0026pTemp-\u003epPrevFan1;\n}",
+      "Draft": "func Ivy_ObjNextPrevFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    pTemp = Ivy_ObjNextFanout(pObj, pFanout);\n    if pTemp == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pTemp) == pObj {\n        return \u0026pTemp.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pTemp) == pObj, \"Ivy_ObjFanin1(pTemp) == pObj\");\n    return \u0026pTemp.pPrevFan1;\n}"
+    },
+    {
+      "Name": "Ivy_ManStartFanout",
+      "Start": 4629,
+      "End": 4995,
+      "BodyStart": 4670,
+      "Original": "void Ivy_ManStartFanout( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj;\n    int i;\n    assert( !p-\u003efFanout );\n    p-\u003efFanout = 1;\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        if ( Ivy_ObjFanin0(pObj) )\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj );\n        if ( Ivy_ObjFanin1(pObj) )\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj );\n    }\n}",
+      "Draft": "func Ivy_ManStartFanout(p *Ivy_Man_t) {\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(!p.fFanout, \"!p.fFanout\");\n    p.fFanout = 1;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Ivy_ObjFanin0(pObj) {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n        if Ivy_ObjFanin1(pObj) {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ManStopFanout",
+      "Start": 5263,
+      "End": 5523,
+      "BodyStart": 5303,
+      "Original": "void Ivy_ManStopFanout( Ivy_Man_t * p )\n{\n    Ivy_Obj_t * pObj;\n    int i;\n    assert( p-\u003efFanout );\n    p-\u003efFanout = 0;\n    Ivy_ManForEachObj( p, pObj, i )\n        pObj-\u003epFanout = pObj-\u003epNextFan0 = pObj-\u003epNextFan1 = pObj-\u003epPrevFan0 = pObj-\u003epPrevFan1 = NULL;\n}",
+      "Draft": "func Ivy_ManStopFanout(p *Ivy_Man_t) {\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(p.fFanout, \"p.fFanout\");\n    p.fFanout = 0;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pFanout = pObj.pNextFan0 = pObj.pNextFan1 = pObj.pPrevFan0 = pObj.pPrevFan1 = nil; }\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ObjAddFanout",
+      "Start": 5774,
+      "End": 6089,
+      "BodyStart": 5854,
+      "Original": "void Ivy_ObjAddFanout( Ivy_Man_t * p, Ivy_Obj_t * pFanin, Ivy_Obj_t * pFanout )\n{\n    assert( p-\u003efFanout );\n    if ( pFanin-\u003epFanout )\n    {\n        *Ivy_ObjNextFanoutPlace(pFanin, pFanout) = pFanin-\u003epFanout;\n        *Ivy_ObjPrevFanoutPlace(pFanin, pFanin-\u003epFanout) = pFanout;\n    }\n    pFanin-\u003epFanout = pFanout;\n}",
+      "Draft": "func Ivy_ObjAddFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanout *Ivy_Obj_t) {\n    assert(p.fFanout, \"p.fFanout\");\n    if pFanin.pFanout {\n        *Ivy_ObjNextFanoutPlace(pFanin, pFanout) = pFanin.pFanout;\n        *Ivy_ObjPrevFanoutPlace(pFanin, pFanin.pFanout) = pFanout;\n    }\n    pFanin.pFanout = pFanout;\n}"
+    },
+    {
+      "Name": "Ivy_ObjDeleteFanout",
+      "Start": 6344,
+      "End": 6995,
+      "BodyStart": 6427,
+      "Original": "void Ivy_ObjDeleteFanout( Ivy_Man_t * p, Ivy_Obj_t * pFanin, Ivy_Obj_t * pFanout )\n{\n    Ivy_Obj_t ** ppPlace1, ** ppPlace2, ** ppPlaceN;\n    assert( pFanin-\u003epFanout != NULL );\n\n    ppPlace1 = Ivy_ObjNextFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanout);\n    assert( *ppPlaceN == pFanout );\n    if ( ppPlaceN )\n        *ppPlaceN = *ppPlace1;\n\n    ppPlace2 = Ivy_ObjPrevFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanout);\n    assert( ppPlaceN == NULL || *ppPlaceN == pFanout );\n    if ( ppPlaceN )\n        *ppPlaceN = *ppPlace2;\n\n    *ppPlace1 = NULL;\n    *ppPlace2 = NULL;\n}",
+      "Draft": "func Ivy_ObjDeleteFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanout *Ivy_Obj_t) {\n    var ppPlace1, ppPlace2, ppPlaceN **Ivy_Obj_t;\n    assert(pFanin.pFanout != nil, \"pFanin.pFanout != nil\");\n\n    ppPlace1 = Ivy_ObjNextFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanout);\n    assert(*ppPlaceN == pFanout, \"*ppPlaceN == pFanout\");\n    if ppPlaceN {\n        *ppPlaceN = *ppPlace1; }\n\n    ppPlace2 = Ivy_ObjPrevFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanout);\n    assert(ppPlaceN == nil || *ppPlaceN == pFanout, \"ppPlaceN == nil || *ppPlaceN == pFanout\");\n    if ppPlaceN {\n        *ppPlaceN = *ppPlace2; }\n\n    *ppPlace1 = nil;\n    *ppPlace2 = nil;\n}"
+    },
+    {
+      "Name": "Ivy_ObjPatchFanout",
+      "Start": 7276,
+      "End": 7799,
+      "BodyStart": 7385,
+      "Original": "void Ivy_ObjPatchFanout( Ivy_Man_t * p, Ivy_Obj_t * pFanin, Ivy_Obj_t * pFanoutOld, Ivy_Obj_t * pFanoutNew )\n{\n    Ivy_Obj_t ** ppPlace;\n    ppPlace = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanoutOld);\n    assert( *ppPlace == pFanoutOld );\n    if ( ppPlace )\n        *ppPlace = pFanoutNew;\n    ppPlace = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanoutOld);\n    assert( ppPlace == NULL || *ppPlace == pFanoutOld );\n    if ( ppPlace )\n        *ppPlace = pFanoutNew;\n    // assuming that pFanoutNew already points to the next fanout\n}",
+      "Draft": "func Ivy_ObjPatchFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanoutOld *Ivy_Obj_t, pFanoutNew *Ivy_Obj_t) {\n    var ppPlace **Ivy_Obj_t;\n    ppPlace = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanoutOld);\n    assert(*ppPlace == pFanoutOld, \"*ppPlace == pFanoutOld\");\n    if ppPlace {\n        *ppPlace = pFanoutNew; }\n    ppPlace = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanoutOld);\n    assert(ppPlace == nil || *ppPlace == pFanoutOld, \"ppPlace == nil || *ppPlace == pFanoutOld\");\n    if ppPlace {\n        *ppPlace = pFanoutNew; }\n    // assuming that pFanoutNew already points to the next fanout\n}"
+    },
+    {
+      "Name": "Ivy_ObjCollectFanouts",
+      "Start": 8174,
+      "End": 8462,
+      "BodyStart": 8256,
+      "Original": "void Ivy_ObjCollectFanouts( Ivy_Man_t * p, Ivy_Obj_t * pObj, Vec_Ptr_t * vArray )\n{\n    Ivy_Obj_t * pFanout;\n    assert( p-\u003efFanout );\n    assert( !Ivy_IsComplement(pObj) );\n    Vec_PtrClear( vArray );\n    Ivy_ObjForEachFanoutInt( pObj, pFanout )\n        Vec_PtrPush( vArray, pFanout );\n}",
+      "Draft": "func Ivy_ObjCollectFanouts(p *Ivy_Man_t, pObj *Ivy_Obj_t, vArray *Vec_Ptr_t) {\n    var pFanout *Ivy_Obj_t;\n    assert(p.fFanout, \"p.fFanout\");\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    Vec_PtrClear( vArray );\n    // inlining of macro Ivy_ObjForEachFanoutInt\n    for  pFanout = (pObj).pFanout; (pFanout != nil);                              pFanout = Ivy_ObjNextFanout(pObj, pFanout)  {\n        Vec_PtrPush( vArray, pFanout );\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ObjReadFirstFanout",
+      "Start": 8758,
+      "End": 8857,
+      "BodyStart": 8828,
+      "Original": "Ivy_Obj_t * Ivy_ObjReadFirstFanout( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    return pObj-\u003epFanout;\n}",
+      "Draft": "func Ivy_ObjReadFirstFanout(p *Ivy_Man_t, pObj *Ivy_Obj_t) *Ivy_Obj_t {\n    return pObj.pFanout;\n}"
+    },
+    {
+      "Name": "Ivy_ObjFanoutNum",
+      "Start": 9153,
+      "End": 9342,
+      "BodyStart": 9209,
+      "Original": "int Ivy_ObjFanoutNum( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    Ivy_Obj_t * pFanout;\n    int Counter = 0;\n    Ivy_ObjForEachFanoutInt( pObj, pFanout )\n        Counter++;\n    return Counter;\n}",
+      "Draft": "func Ivy_ObjFanoutNum(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {\n    var pFanout *Ivy_Obj_t;\n    var Counter int32;\n    // inlining of macro Ivy_ObjForEachFanoutInt\n    for  pFanout = (pObj).pFanout; (pFanout != nil);                              pFanout = Ivy_ObjNextFanout(pObj, pFanout)  {\n        Counter++;\n    }\n    return Counter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::pointer-cast::4919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4756,
+      "End": 4756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::pointer-cast::5763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5388,
+      "End": 5388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::macro::Ivy_ObjForEachFanoutInt",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ObjForEachFanoutInt",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3511,
+      "End": 3699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::macro::Ivy_ObjForEachFanoutIntSafe",
+      "Category": "macro-review",
+      "Symbol": "Ivy_ObjForEachFanoutIntSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3750,
+      "End": 4140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjNextFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjNextFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 834,
+      "End": 1205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjPrevFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPrevFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1258,
+      "End": 1629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjNextFanoutPlace",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjNextFanoutPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1699,
+      "End": 2030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjPrevFanoutPlace",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPrevFanoutPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2100,
+      "End": 2431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjPrevNextFanoutPlace",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPrevNextFanoutPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2501,
+      "End": 2953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjNextPrevFanoutPlace",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjNextPrevFanoutPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3023,
+      "End": 3465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ManStartFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManStartFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4629,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ManStopFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManStopFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5263,
+      "End": 5523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjAddFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjAddFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5774,
+      "End": 6089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjDeleteFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjDeleteFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6344,
+      "End": 6995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjPatchFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPatchFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7276,
+      "End": 7799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjCollectFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjCollectFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8174,
+      "End": 8462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjReadFirstFanout",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjReadFirstFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8758,
+      "End": 8857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::Ivy_ObjFanoutNum",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjFanoutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9153,
+      "End": 9342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9589
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivyFanout.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Representation of the fanouts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyFanout.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// getting hold of the next fanout of the node\nfunc Ivy_ObjNextFanout(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) *Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if pFanout == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return pFanout.pNextFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return pFanout.pNextFan1;\n}\n\n// getting hold of the previous fanout of the node\nfunc Ivy_ObjPrevFanout(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) *Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if pFanout == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return pFanout.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return pFanout.pPrevFan1;\n}\n\n// getting hold of the place where the next fanout will be attached\nfunc Ivy_ObjNextFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return \u0026pFanout.pNextFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return \u0026pFanout.pNextFan1;\n}\n\n// getting hold of the place where the next fanout will be attached\nfunc Ivy_ObjPrevFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    if Ivy_ObjFanin0(pFanout) == pObj {\n        return \u0026pFanout.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pFanout) == pObj, \"Ivy_ObjFanin1(pFanout) == pObj\");\n    return \u0026pFanout.pPrevFan1;\n}\n\n// getting hold of the place where the next fanout will be attached\nfunc Ivy_ObjPrevNextFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    pTemp = Ivy_ObjPrevFanout(pObj, pFanout);\n    if pTemp == nil {\n        return \u0026pObj.pFanout; }\n    if Ivy_ObjFanin0(pTemp) == pObj {\n        return \u0026pTemp.pNextFan0; }\n    assert(Ivy_ObjFanin1(pTemp) == pObj, \"Ivy_ObjFanin1(pTemp) == pObj\");\n    return \u0026pTemp.pNextFan1;\n}\n\n// getting hold of the place where the next fanout will be attached\nfunc Ivy_ObjNextPrevFanoutPlace(pObj *Ivy_Obj_t, pFanout *Ivy_Obj_t) **Ivy_Obj_t {\n    var pTemp *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_IsComplement(pFanout), \"!Ivy_IsComplement(pFanout)\");\n    pTemp = Ivy_ObjNextFanout(pObj, pFanout);\n    if pTemp == nil {\n        return nil; }\n    if Ivy_ObjFanin0(pTemp) == pObj {\n        return \u0026pTemp.pPrevFan0; }\n    assert(Ivy_ObjFanin1(pTemp) == pObj, \"Ivy_ObjFanin1(pTemp) == pObj\");\n    return \u0026pTemp.pPrevFan1;\n}\n\n// iterator through the fanouts of the node\n// Original macro:\n// #define Ivy_ObjForEachFanoutInt( pObj, pFanout )                 \\\n//     for ( pFanout = (pObj)-\u003epFanout; pFanout;                    \\\n//           pFanout = Ivy_ObjNextFanout(pObj, pFanout) )\n\n\n// safe iterator through the fanouts of the node\n// Original macro:\n// #define Ivy_ObjForEachFanoutIntSafe( pObj, pFanout, pFanout2 )   \\\n//     for ( pFanout  = (pObj)-\u003epFanout,                            \\\n//           pFanout2 = Ivy_ObjNextFanout(pObj, pFanout);           \\\n//           pFanout;                                               \\\n//           pFanout  = pFanout2,                                   \\\n//           pFanout2 = Ivy_ObjNextFanout(pObj, pFanout) )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the fanout representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManStartFanout(p *Ivy_Man_t) {\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(!p.fFanout, \"!p.fFanout\");\n    p.fFanout = 1;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Ivy_ObjFanin0(pObj) {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n        if Ivy_ObjFanin1(pObj) {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the fanout representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManStopFanout(p *Ivy_Man_t) {\n    var pObj *Ivy_Obj_t;\n    var i int32;\n    assert(p.fFanout, \"p.fFanout\");\n    p.fFanout = 0;\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pFanout = pObj.pNextFan0 = pObj.pNextFan1 = pObj.pPrevFan0 = pObj.pPrevFan1 = nil; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjAddFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanout *Ivy_Obj_t) {\n    assert(p.fFanout, \"p.fFanout\");\n    if pFanin.pFanout {\n        *Ivy_ObjNextFanoutPlace(pFanin, pFanout) = pFanin.pFanout;\n        *Ivy_ObjPrevFanoutPlace(pFanin, pFanin.pFanout) = pFanout;\n    }\n    pFanin.pFanout = pFanout;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjDeleteFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanout *Ivy_Obj_t) {\n    var ppPlace1, ppPlace2, ppPlaceN **Ivy_Obj_t;\n    assert(pFanin.pFanout != nil, \"pFanin.pFanout != nil\");\n\n    ppPlace1 = Ivy_ObjNextFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanout);\n    assert(*ppPlaceN == pFanout, \"*ppPlaceN == pFanout\");\n    if ppPlaceN {\n        *ppPlaceN = *ppPlace1; }\n\n    ppPlace2 = Ivy_ObjPrevFanoutPlace(pFanin, pFanout);\n    ppPlaceN = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanout);\n    assert(ppPlaceN == nil || *ppPlaceN == pFanout, \"ppPlaceN == nil || *ppPlaceN == pFanout\");\n    if ppPlaceN {\n        *ppPlaceN = *ppPlace2; }\n\n    *ppPlace1 = nil;\n    *ppPlace2 = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the fanout of pOld to be pFanoutNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjPatchFanout(p *Ivy_Man_t, pFanin *Ivy_Obj_t, pFanoutOld *Ivy_Obj_t, pFanoutNew *Ivy_Obj_t) {\n    var ppPlace **Ivy_Obj_t;\n    ppPlace = Ivy_ObjPrevNextFanoutPlace(pFanin, pFanoutOld);\n    assert(*ppPlace == pFanoutOld, \"*ppPlace == pFanoutOld\");\n    if ppPlace {\n        *ppPlace = pFanoutNew; }\n    ppPlace = Ivy_ObjNextPrevFanoutPlace(pFanin, pFanoutOld);\n    assert(ppPlace == nil || *ppPlace == pFanoutOld, \"ppPlace == nil || *ppPlace == pFanoutOld\");\n    if ppPlace {\n        *ppPlace = pFanoutNew; }\n    // assuming that pFanoutNew already points to the next fanout\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts iteration through the fanouts.]\n\n  Description [Copies the currently available fanouts into the array.]\n               \n  SideEffects [Can be used while the fanouts are being removed.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjCollectFanouts(p *Ivy_Man_t, pObj *Ivy_Obj_t, vArray *Vec_Ptr_t) {\n    var pFanout *Ivy_Obj_t;\n    assert(p.fFanout, \"p.fFanout\");\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    Vec_PtrClear( vArray );\n    // inlining of macro Ivy_ObjForEachFanoutInt\n    for  pFanout = (pObj).pFanout; (pFanout != nil);                              pFanout = Ivy_ObjNextFanout(pObj, pFanout)  {\n        Vec_PtrPush( vArray, pFanout );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads one fanout.]\n\n  Description [Returns fanout if there is only one fanout.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjReadFirstFanout(p *Ivy_Man_t, pObj *Ivy_Obj_t) *Ivy_Obj_t {\n    return pObj.pFanout;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads one fanout.]\n\n  Description [Returns fanout if there is only one fanout.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjFanoutNum(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {\n    var pFanout *Ivy_Obj_t;\n    var Counter int32;\n    // inlining of macro Ivy_ObjForEachFanoutInt\n    for  pFanout = (pObj).pFanout; (pFanout != nil);                              pFanout = Ivy_ObjNextFanout(pObj, pFanout)  {\n        Counter++;\n    }\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

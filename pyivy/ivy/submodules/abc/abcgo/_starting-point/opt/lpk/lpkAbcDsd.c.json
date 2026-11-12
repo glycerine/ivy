@@ -1,0 +1,668 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c",
+  "SHA256": "d0f2c5e703256f42dc91b709df53c4d6eff430f12883da07fa2d9275b5090fef",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTruths \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 5020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Type == KIT_DSD_PRIME );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 6434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (uSupport \u0026 0xFFFF0000) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 13,
+        "ByteOffset": 7213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a'+k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Subsets(%d): \", Vec_IntSize(vSets) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 9154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pRes, 0, sizeof(Lpk_Res_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 9709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 291,
+        "Column": 9,
+        "ByteOffset": 9874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVarsBS \u003c= int32(p.nLutK) - nCofDepth );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 1,
+        "ByteOffset": 10103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"area = %d limit = %d  delay = %d limit = %d\\n\", Area, int32(p.nAreaLim), Delay, int32(p.nDelayLim) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 1,
+        "ByteOffset": 10716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Found bound set \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 1,
+        "ByteOffset": 10778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 1,
+        "ByteOffset": 10804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Did not find boundsets.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 1,
+        "ByteOffset": 10845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 10892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRes.DelayEst \u003c= int32(p.nDelayLim) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 10947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRes.AreaEst \u003c= int32(p.nAreaLim) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 12206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 12254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCofDepth \u003c int32(p.nLutK) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 12300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fSupports );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 13063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pRes, 0, sizeof(Lpk_Res_t) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 395,
+        "Column": 15,
+        "ByteOffset": 13570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Kit_DsdPrint( stdout, pNtks[i] ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 15554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLutK \u003e= 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 15582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 15626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.uSupp == Kit_BitMask(p.nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 16624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( spStatic_Lpk_DsdAnalize_pRes1.nBSVars \u003c= int32(p.nLutK) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 490,
+        "Column": 9,
+        "ByteOffset": 17291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( spStatic_Lpk_DsdAnalize_pRes2.nBSVars \u003c= int32(p.nLutK) - 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 499,
+        "Column": 9,
+        "ByteOffset": 17974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nShared == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 9,
+        "ByteOffset": 18189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( spStatic_Lpk_DsdAnalize_pRes3.nBSVars \u003c= int32(p.nLutK) - 3 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_FunComputeMinSuppSizeVar",
+      "Start": 1504,
+      "End": 3443,
+      "BodyStart": 1631,
+      "Original": "int Lpk_FunComputeMinSuppSizeVar( Lpk_Fun_t * p, unsigned ** ppTruths, int nTruths, unsigned ** ppCofs, unsigned uNonDecSupp )\n{\n    int i, Var, VarBest, nSuppSize0, nSuppSize1;\n    int nSuppTotalMin = -1; // Suppress \"might be used uninitialized\"\n    int nSuppTotalCur;\n    int nSuppMaxMin = -1; // Suppress \"might be used uninitialized\"\n    int nSuppMaxCur;\n    assert( nTruths \u003e 0 );\n    VarBest = -1;\n    Lpk_SuppForEachVar( p-\u003euSupp, Var )\n    {\n        if ( (uNonDecSupp \u0026 (1 \u003c\u003c Var)) == 0 )\n            continue;\n        nSuppMaxCur = 0;\n        nSuppTotalCur = 0;\n        for ( i = 0; i \u003c nTruths; i++ )\n        {\n            if ( nTruths == 1 )\n            {\n                nSuppSize0 = Kit_WordCountOnes( p-\u003epuSupps[2*Var+0] );\n                nSuppSize1 = Kit_WordCountOnes( p-\u003epuSupps[2*Var+1] );\n            }\n            else\n            {\n                Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p-\u003enVars, Var );\n                Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p-\u003enVars, Var );\n                nSuppSize0 = Kit_TruthSupportSize( ppCofs[2*i+0], p-\u003enVars );\n                nSuppSize1 = Kit_TruthSupportSize( ppCofs[2*i+1], p-\u003enVars );\n            }        \n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize0 );\n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize1 );\n            nSuppTotalCur += nSuppSize0 + nSuppSize1;\n        }\n        if ( VarBest == -1 || nSuppMaxMin \u003e nSuppMaxCur ||\n             (nSuppMaxMin == nSuppMaxCur \u0026\u0026 nSuppTotalMin \u003e nSuppTotalCur) )\n        {\n            VarBest = Var;\n            nSuppMaxMin = nSuppMaxCur;\n            nSuppTotalMin = nSuppTotalCur;\n        }\n    }\n    // recompute cofactors for the best var\n    for ( i = 0; i \u003c nTruths; i++ )\n    {\n        Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p-\u003enVars, VarBest );\n        Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p-\u003enVars, VarBest );\n    }\n    return VarBest;\n}",
+      "Draft": "func Lpk_FunComputeMinSuppSizeVar(p *Lpk_Fun_t, ppTruths **uint32, nTruths int32, ppCofs **uint32, uNonDecSupp uint32) int32 {\n    var i, Var, VarBest, nSuppSize0, nSuppSize1 int32;\n    var nSuppTotalMin int32  = -1; // Suppress \"might be used uninitialized\"\n    var nSuppTotalCur int32;\n    var nSuppMaxMin int32  = -1; // Suppress \"might be used uninitialized\"\n    var nSuppMaxCur int32;\n    assert(nTruths \u003e 0, \"nTruths \u003e 0\");\n    VarBest = -1;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(p.uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        if (uNonDecSupp \u0026 (1 \u003c\u003c Var)) == 0 {\n            continue; }\n        nSuppMaxCur = 0;\n        nSuppTotalCur = 0;\n        for  i = 0; i \u003c nTruths; i++  {\n            if nTruths == 1 {\n                nSuppSize0 = Kit_WordCountOnes( p.puSupps[2*Var+0] );\n                nSuppSize1 = Kit_WordCountOnes( p.puSupps[2*Var+1] );\n            \n            } else {\n                Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p.nVars, Var );\n                Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p.nVars, Var );\n                nSuppSize0 = Kit_TruthSupportSize( ppCofs[2*i+0], p.nVars );\n                nSuppSize1 = Kit_TruthSupportSize( ppCofs[2*i+1], p.nVars );\n            }        \n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize0 );\n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize1 );\n            nSuppTotalCur += nSuppSize0 + nSuppSize1;\n        }\n        if VarBest == -1 || nSuppMaxMin \u003e nSuppMaxCur ||\n             (nSuppMaxMin == nSuppMaxCur \u0026\u0026 nSuppTotalMin \u003e nSuppTotalCur) {\n            VarBest = Var;\n            nSuppMaxMin = nSuppMaxCur;\n            nSuppTotalMin = nSuppTotalCur;\n        }\n    }\n    }\n    // recompute cofactors for the best var\n    for  i = 0; i \u003c nTruths; i++  {\n        Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p.nVars, VarBest );\n        Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p.nVars, VarBest );\n    }\n    return VarBest;\n}"
+    },
+    {
+      "Name": "Lpk_ComputeBoundSets_rec",
+      "Start": 3721,
+      "End": 5219,
+      "BodyStart": 3818,
+      "Original": "unsigned Lpk_ComputeBoundSets_rec( Kit_DsdNtk_t * p, int iLit, Vec_Int_t * vSets, int nSizeMax )\n{\n    unsigned i, iLitFanin, uSupport, uSuppCur;\n    Kit_DsdObj_t * pObj;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if ( pObj == NULL )\n        return (1 \u003c\u003c Abc_Lit2Var(iLit));\n    if ( pObj-\u003eType == KIT_DSD_AND || pObj-\u003eType == KIT_DSD_XOR )\n    {\n        unsigned uSupps[16], Limit, s;\n        uSupport = 0;\n        Kit_DsdObjForEachFanin( p, pObj, iLitFanin, i )\n        {\n            uSupps[i] = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj-\u003enFans) - 1;\n        for ( s = 1; s \u003c Limit; s++ )\n        {\n            uSuppCur = 0;\n            for ( i = 0; i \u003c pObj-\u003enFans; i++ )\n                if ( s \u0026 (1 \u003c\u003c i) )\n                    uSuppCur |= uSupps[i];\n            if ( Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax )\n                Vec_IntPush( vSets, uSuppCur );\n        }\n        return uSupport;\n    }\n    assert( pObj-\u003eType == KIT_DSD_PRIME );\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    Kit_DsdObjForEachFanin( p, pObj, iLitFanin, i )\n    {\n        uSuppCur  = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n        uSupport |= uSuppCur;\n        if ( Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax )\n            Vec_IntPush( vSets, uSuppCur );\n    }\n    return uSupport;\n}",
+      "Draft": "func Lpk_ComputeBoundSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t, nSizeMax int32) uint32 {\n    var i, iLitFanin, uSupport, uSuppCur uint32;\n    var pObj *Kit_DsdObj_t;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return (1 \u003c\u003c Abc_Lit2Var(iLit)); }\n    if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {\n        var uSupps [16]uint32;\n        var Limit uint32;\n        var s uint32;\n        uSupport = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n            uSupps[i] = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj.nFans) - 1;\n        for  s = 1; s \u003c Limit; s++  {\n            uSuppCur = 0;\n            for  i = 0; i \u003c pObj.nFans; i++  {\n                if s \u0026 (1 \u003c\u003c i) {\n                    uSuppCur |= uSupps[i]; }\n            }\n            if Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax {\n                Vec_IntPush( vSets, uSuppCur ); }\n        }\n        return uSupport;\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        uSuppCur  = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n        uSupport |= uSuppCur;\n        if Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax {\n            Vec_IntPush( vSets, uSuppCur ); }\n    }\n    return uSupport;\n}"
+    },
+    {
+      "Name": "Lpk_ComputeBoundSets",
+      "Start": 5509,
+      "End": 6531,
+      "BodyStart": 5576,
+      "Original": "Vec_Int_t * Lpk_ComputeBoundSets( Kit_DsdNtk_t * p, int nSizeMax )\n{\n    Vec_Int_t * vSets;\n    unsigned uSupport, Entry;\n    int Number, i;\n    assert( p-\u003enVars \u003c= 16 );\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntPush( vSets, 0 );\n    if ( Kit_DsdNtkRoot(p)-\u003eType == KIT_DSD_CONST1 )\n        return vSets;\n    if ( Kit_DsdNtkRoot(p)-\u003eType == KIT_DSD_VAR )\n    {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p)-\u003epFans[0]) );\n        if ( Kit_WordCountOnes(uSupport) \u003c= nSizeMax )\n            Vec_IntPush( vSets, uSupport );\n        return vSets;\n    }\n    uSupport = Lpk_ComputeBoundSets_rec( p, p-\u003eRoot, vSets, nSizeMax );\n    assert( (uSupport \u0026 0xFFFF0000) == 0 );\n    // add the total support of the network\n    if ( Kit_WordCountOnes(uSupport) \u003c= nSizeMax )\n        Vec_IntPush( vSets, uSupport );\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return vSets;\n}",
+      "Draft": "func Lpk_ComputeBoundSets(p *Kit_DsdNtk_t, nSizeMax int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var uSupport, Entry uint32;\n    var Number, i int32;\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntPush( vSets, 0 );\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {\n        return vSets; }\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p).pFans[0]) );\n        if Kit_WordCountOnes(uSupport) \u003c= nSizeMax {\n            Vec_IntPush( vSets, uSupport ); }\n        return vSets;\n    }\n    uSupport = Lpk_ComputeBoundSets_rec( p, p.Root, vSets, nSizeMax );\n    assert((uSupport \u0026 0xFFFF0000) == 0, \"(uSupport \u0026 0xFFFF0000) == 0\");\n    // add the total support of the network\n    if Kit_WordCountOnes(uSupport) \u003c= nSizeMax {\n        Vec_IntPush( vSets, uSupport ); }\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return vSets;\n}"
+    },
+    {
+      "Name": "Lpk_PrintSetOne",
+      "Start": 6794,
+      "End": 6975,
+      "BodyStart": 6838,
+      "Original": "static void Lpk_PrintSetOne( int uSupport )\n{\n    unsigned k;\n    for ( k = 0; k \u003c 16; k++ )\n        if ( uSupport \u0026 (1\u003c\u003ck) )\n            printf( \"%c\", 'a'+k );\n    printf( \" \" );\n}",
+      "Draft": "func Lpk_PrintSetOne(uSupport int32) {\n    var k uint32;\n    for  k = 0; k \u003c 16; k++  {\n        if uSupport \u0026 (1\u003c\u003ck) {\n            fmt.Printf(\"%c\", 'a'+k); }\n    }\n    fmt.Printf(\" \");\n}"
+    },
+    {
+      "Name": "Lpk_PrintSets",
+      "Start": 7237,
+      "End": 7520,
+      "BodyStart": 7284,
+      "Original": "static void Lpk_PrintSets( Vec_Int_t * vSets )\n{\n    unsigned uSupport;\n    int Number, i;\n    printf( \"Subsets(%d): \", Vec_IntSize(vSets) );\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Lpk_PrintSets(vSets *Vec_Int_t) {\n    var uSupport uint32;\n    var Number, i int32;\n    fmt.Printf(\"Subsets(%d): \", Vec_IntSize(vSets));\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Lpk_MergeBoundSets",
+      "Start": 7778,
+      "End": 8285,
+      "BodyStart": 7865,
+      "Original": "Vec_Int_t * Lpk_MergeBoundSets( Vec_Int_t * vSets0, Vec_Int_t * vSets1, int nSizeMax )\n{\n    Vec_Int_t * vSets;\n    int Entry0, Entry1, Entry;\n    int i, k;\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        Entry = Entry0 | Entry1;\n        if ( (Entry \u0026 (Entry \u003e\u003e 16)) )\n            continue;\n        if ( Kit_WordCountOnes(Entry \u0026 0xffff) \u003c= nSizeMax )\n            Vec_IntPush( vSets, Entry );\n    }\n    return vSets;\n}",
+      "Draft": "func Lpk_MergeBoundSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nSizeMax int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var Entry0, Entry1, Entry int32;\n    var i, k int32;\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        Entry = Entry0 | Entry1;\n        if Entry \u0026 (Entry \u003e\u003e 16) {\n            continue; }\n        if Kit_WordCountOnes(Entry \u0026 0xffff) \u003c= nSizeMax {\n            Vec_IntPush( vSets, Entry ); }\n    }\n    return vSets;\n}"
+    },
+    {
+      "Name": "Lpk_FunCompareBoundSets",
+      "Start": 8570,
+      "End": 10734,
+      "BodyStart": 8714,
+      "Original": "void Lpk_FunCompareBoundSets( Lpk_Fun_t * p, Vec_Int_t * vBSets, int nCofDepth, unsigned uNonDecSupp, unsigned uLateArrSupp, Lpk_Res_t * pRes )\n{\n    int fVerbose = 0;\n    unsigned uBoundSet;\n    int i, nVarsBS, nVarsRem, Delay, Area;\n\n    // compare the resulting boundsets\n    memset( pRes, 0, sizeof(Lpk_Res_t) );\n    Vec_IntForEachEntry( vBSets, uBoundSet, i )\n    {\n        if ( (uBoundSet \u0026 0xFFFF) == 0 ) // skip empty boundset\n            continue;\n        if ( (uBoundSet \u0026 uNonDecSupp) == 0 ) // skip those boundsets that are not in the domain of interest\n            continue;\n        if ( (uBoundSet \u0026 uLateArrSupp) ) // skip those boundsets that are late arriving\n            continue;\nif ( fVerbose )\n{\nLpk_PrintSetOne( uBoundSet \u0026 0xFFFF );\n//printf( \"\\n\" );\n//Lpk_PrintSetOne( uBoundSet \u003e\u003e 16 );\n//printf( \"\\n\" );\n}\n        assert( (uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0 );\n        nVarsBS = Kit_WordCountOnes( uBoundSet \u0026 0xFFFF );\n        if ( nVarsBS == 1 )\n            continue;\n        assert( nVarsBS \u003c= (int)p-\u003enLutK - nCofDepth );\n        nVarsRem = p-\u003enVars - nVarsBS + 1;\n        Area = 1 + Lpk_LutNumLuts( nVarsRem, p-\u003enLutK );\n        Delay = 1 + Lpk_SuppDelay( uBoundSet \u0026 0xFFFF, p-\u003epDelays );\nif ( fVerbose )\nprintf( \"area = %d limit = %d  delay = %d limit = %d\\n\", Area, (int)p-\u003enAreaLim, Delay, (int)p-\u003enDelayLim );\n        if ( Area \u003e (int)p-\u003enAreaLim || Delay \u003e (int)p-\u003enDelayLim )\n            continue;\n        if ( pRes-\u003eBSVars == 0 || pRes-\u003enSuppSizeL \u003e nVarsRem || (pRes-\u003enSuppSizeL == nVarsRem \u0026\u0026 pRes-\u003eDelayEst \u003e Delay) )\n        {\n            pRes-\u003enBSVars = nVarsBS;\n            pRes-\u003eBSVars = (uBoundSet \u0026 0xFFFF);\n            pRes-\u003enSuppSizeS = nVarsBS + nCofDepth;\n            pRes-\u003enSuppSizeL = nVarsRem;\n            pRes-\u003eDelayEst = Delay;\n            pRes-\u003eAreaEst = Area;\n        }\n    }\nif ( fVerbose )\n{\nif ( pRes-\u003eBSVars )\n{\nprintf( \"Found bound set \" );\nLpk_PrintSetOne( pRes-\u003eBSVars );\nprintf( \"\\n\" );\n}\nelse\nprintf( \"Did not find boundsets.\\n\" );\nprintf( \"\\n\" );\n}\n    if ( pRes-\u003eBSVars )\n    {\n        assert( pRes-\u003eDelayEst \u003c= (int)p-\u003enDelayLim );\n        assert( pRes-\u003eAreaEst \u003c= (int)p-\u003enAreaLim );\n    }\n}",
+      "Draft": "func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, uNonDecSupp uint32, uLateArrSupp uint32, pRes *Lpk_Res_t) {\n    var fVerbose int32;\n    var uBoundSet uint32;\n    var i, nVarsBS, nVarsRem, Delay, Area int32;\n\n    // compare the resulting boundsets\n    memset( pRes, 0, sizeof(Lpk_Res_t) );\n    Vec_IntForEachEntry( vBSets, uBoundSet, i )\n    {\n        if (uBoundSet \u0026 0xFFFF) == 0 { // skip empty boundset\n            continue; }\n        if (uBoundSet \u0026 uNonDecSupp) == 0 { // skip those boundsets that are not in the domain of interest\n            continue; }\n        if uBoundSet \u0026 uLateArrSupp { // skip those boundsets that are late arriving\n            continue; }\nif fVerbose != 0 {\nLpk_PrintSetOne( uBoundSet \u0026 0xFFFF );\n//printf( \"\\n\" );\n//Lpk_PrintSetOne( uBoundSet \u003e\u003e 16 );\n//printf( \"\\n\" );\n}\n        assert((uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0, \"(uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0\");\n        nVarsBS = Kit_WordCountOnes( uBoundSet \u0026 0xFFFF );\n        if nVarsBS == 1 {\n            continue; }\n        assert(nVarsBS \u003c= int32(p.nLutK) - nCofDepth, \"nVarsBS \u003c= int32(p.nLutK) - nCofDepth\");\n        nVarsRem = p.nVars - nVarsBS + 1;\n        Area = 1 + Lpk_LutNumLuts( nVarsRem, p.nLutK );\n        Delay = 1 + Lpk_SuppDelay( uBoundSet \u0026 0xFFFF, p.pDelays );\nif fVerbose != 0 {\nfmt.Printf(\"area = %d limit = %d  delay = %d limit = %d\\n\", Area, int32(p.nAreaLim), Delay, int32(p.nDelayLim)); }\n        if Area \u003e int32(p.nAreaLim) || Delay \u003e int32(p.nDelayLim) {\n            continue; }\n        if pRes.BSVars == 0 || pRes.nSuppSizeL \u003e nVarsRem || (pRes.nSuppSizeL == nVarsRem \u0026\u0026 pRes.DelayEst \u003e Delay) {\n            pRes.nBSVars = nVarsBS;\n            pRes.BSVars = (uBoundSet \u0026 0xFFFF);\n            pRes.nSuppSizeS = nVarsBS + nCofDepth;\n            pRes.nSuppSizeL = nVarsRem;\n            pRes.DelayEst = Delay;\n            pRes.AreaEst = Area;\n        }\n    }\nif fVerbose != 0 {\nif pRes.BSVars {\nfmt.Printf(\"Found bound set \");\nLpk_PrintSetOne( pRes.BSVars );\nfmt.Printf(\"\\n\");\n\n} else {\nfmt.Printf(\"Did not find boundsets.\\n\"); }\nfmt.Printf(\"\\n\");\n}\n    if pRes.BSVars {\n        assert(pRes.DelayEst \u003c= int32(p.nDelayLim), \"pRes.DelayEst \u003c= int32(p.nDelayLim)\");\n        assert(pRes.AreaEst \u003c= int32(p.nAreaLim), \"pRes.AreaEst \u003c= int32(p.nAreaLim)\");\n    }\n}"
+    },
+    {
+      "Name": "Lpk_DsdLateArriving",
+      "Start": 11032,
+      "End": 11271,
+      "BodyStart": 11078,
+      "Original": "unsigned Lpk_DsdLateArriving( Lpk_Fun_t * p )\n{\n    unsigned i, uLateArrSupp = 0;\n    Lpk_SuppForEachVar( p-\u003euSupp, i )\n        if ( p-\u003epDelays[i] \u003e (int)p-\u003enDelayLim - 2 )\n            uLateArrSupp |= (1 \u003c\u003c i);  \n    return uLateArrSupp;\n}",
+      "Draft": "func Lpk_DsdLateArriving(p *Lpk_Fun_t) uint32 {\n    var i, uLateArrSupp uint32;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(p.uSupp \u0026 (1\u003c\u003ci)) {} else\n        if p.pDelays[i] \u003e int32(p.nDelayLim) - 2 {\n            uLateArrSupp |= (1 \u003c\u003c i); }\n    }  \n    return uLateArrSupp;\n}"
+    },
+    {
+      "Name": "Lpk_DsdAnalizeOne",
+      "Start": 11556,
+      "End": 14119,
+      "BodyStart": 11697,
+      "Original": "int Lpk_DsdAnalizeOne( Lpk_Fun_t * p, unsigned * ppTruths[5][16], Kit_DsdNtk_t * pNtks[], char pCofVars[], int nCofDepth, Lpk_Res_t * pRes )\n{\n    int fVerbose = 0;\n    Vec_Int_t * pvBSets[4][8];\n    unsigned uNonDecSupp, uLateArrSupp;\n    int i, k, nNonDecSize, nNonDecSizeMax;\n    assert( nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3 );\n    assert( nCofDepth \u003c (int)p-\u003enLutK - 1 );\n    assert( p-\u003efSupports );\n\n    // find the support of the largest non-DSD block\n    nNonDecSizeMax = 0;\n    uNonDecSupp = p-\u003euSupp;\n    for ( i = 0; i \u003c (1\u003c\u003c(nCofDepth-1)); i++ )\n    {\n        nNonDecSize = Kit_DsdNonDsdSizeMax( pNtks[i] );\n        if ( nNonDecSizeMax \u003c nNonDecSize )\n        {\n            nNonDecSizeMax = nNonDecSize;\n            uNonDecSupp = Kit_DsdNonDsdSupports( pNtks[i] );\n        }\n        else if ( nNonDecSizeMax == nNonDecSize )\n            uNonDecSupp |= Kit_DsdNonDsdSupports( pNtks[i] );\n    }\n\n    // remove those variables that cannot be used because of delay constraints\n    // if variables arrival time is more than p-\u003eDelayLim - 2, it cannot be used\n    uLateArrSupp = Lpk_DsdLateArriving( p );\n    if ( (uNonDecSupp \u0026 ~uLateArrSupp) == 0 )\n    {\n        memset( pRes, 0, sizeof(Lpk_Res_t) );\n        return 0;\n    }\n\n    // find the next cofactoring variable\n    pCofVars[nCofDepth-1] = Lpk_FunComputeMinSuppSizeVar( p, ppTruths[nCofDepth-1], 1\u003c\u003c(nCofDepth-1), ppTruths[nCofDepth], uNonDecSupp \u0026 ~uLateArrSupp );\n\n    // derive decomposed networks\n    for ( i = 0; i \u003c (1\u003c\u003cnCofDepth); i++ )\n    {\n        if ( pNtks[i] )\n            Kit_DsdNtkFree( pNtks[i] );\n        pNtks[i] = Kit_DsdDecomposeExpand( ppTruths[nCofDepth][i], p-\u003enVars );\nif ( fVerbose )\nKit_DsdPrint( stdout, pNtks[i] );\n        pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets( pNtks[i], p-\u003enLutK - nCofDepth ); // try restricting to those in uNonDecSupp!!!\n    }\n\n    // derive the set of feasible boundsets\n    for ( i = nCofDepth - 1; i \u003e= 0; i-- )\n        for ( k = 0; k \u003c (1\u003c\u003ci); k++ )\n            pvBSets[i][k] = Lpk_MergeBoundSets( pvBSets[i+1][2*k+0], pvBSets[i+1][2*k+1], p-\u003enLutK - nCofDepth );\n    // compare bound-sets\n    Lpk_FunCompareBoundSets( p, pvBSets[0][0], nCofDepth, uNonDecSupp, uLateArrSupp, pRes );\n    // free the bound sets\n    for ( i = nCofDepth; i \u003e= 0; i-- )\n        for ( k = 0; k \u003c (1\u003c\u003ci); k++ )\n            Vec_IntFree( pvBSets[i][k] );\n \n    // copy the cofactoring variables\n    if ( pRes-\u003eBSVars )\n    {\n        pRes-\u003enCofVars = nCofDepth;\n        for ( i = 0; i \u003c nCofDepth; i++ )\n            pRes-\u003epCofVars[i] = pCofVars[i];\n    }\n    return 1;\n}",
+      "Draft": "func Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16]*uint32, pNtks []*Kit_DsdNtk_t, pCofVars []byte, nCofDepth int32, pRes *Lpk_Res_t) int32 {\n    var fVerbose int32;\n    var pvBSets [4][8]*Vec_Int_t;\n    var uNonDecSupp, uLateArrSupp uint32;\n    var i, k, nNonDecSize, nNonDecSizeMax int32;\n    assert(nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3, \"nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3\");\n    assert(nCofDepth \u003c int32(p.nLutK) - 1, \"nCofDepth \u003c int32(p.nLutK) - 1\");\n    assert(p.fSupports, \"p.fSupports\");\n\n    // find the support of the largest non-DSD block\n    nNonDecSizeMax = 0;\n    uNonDecSupp = p.uSupp;\n    for  i = 0; i \u003c (1\u003c\u003c(nCofDepth-1)); i++  {\n        nNonDecSize = Kit_DsdNonDsdSizeMax( pNtks[i] );\n        if nNonDecSizeMax \u003c nNonDecSize {\n            nNonDecSizeMax = nNonDecSize;\n            uNonDecSupp = Kit_DsdNonDsdSupports( pNtks[i] );\n        \n        } else if nNonDecSizeMax == nNonDecSize {\n            uNonDecSupp |= Kit_DsdNonDsdSupports( pNtks[i] ); }\n    }\n\n    // remove those variables that cannot be used because of delay constraints\n    // if variables arrival time is more than p-\u003eDelayLim - 2, it cannot be used\n    uLateArrSupp = Lpk_DsdLateArriving( p );\n    if (uNonDecSupp \u0026 ~uLateArrSupp) == 0 {\n        memset( pRes, 0, sizeof(Lpk_Res_t) );\n        return 0;\n    }\n\n    // find the next cofactoring variable\n    pCofVars[nCofDepth-1] = Lpk_FunComputeMinSuppSizeVar( p, ppTruths[nCofDepth-1], 1\u003c\u003c(nCofDepth-1), ppTruths[nCofDepth], uNonDecSupp \u0026 ~uLateArrSupp );\n\n    // derive decomposed networks\n    for  i = 0; i \u003c (1\u003c\u003cnCofDepth); i++  {\n        if pNtks[i] {\n            Kit_DsdNtkFree( pNtks[i] ); }\n        pNtks[i] = Kit_DsdDecomposeExpand( ppTruths[nCofDepth][i], p.nVars );\nif fVerbose != 0 {\nKit_DsdPrint( os.Stdout, pNtks[i] ); }\n        pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets( pNtks[i], p.nLutK - nCofDepth ); // try restricting to those in uNonDecSupp!!!\n    }\n\n    // derive the set of feasible boundsets\n    for  i = nCofDepth - 1; i \u003e= 0; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            pvBSets[i][k] = Lpk_MergeBoundSets( pvBSets[i+1][2*k+0], pvBSets[i+1][2*k+1], p.nLutK - nCofDepth );\n        }\n    }\n    // compare bound-sets\n    Lpk_FunCompareBoundSets( p, pvBSets[0][0], nCofDepth, uNonDecSupp, uLateArrSupp, pRes );\n    // free the bound sets\n    for  i = nCofDepth; i \u003e= 0; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Vec_IntFree( pvBSets[i][k] );\n        }\n    }\n \n    // copy the cofactoring variables\n    if pRes.BSVars {\n        pRes.nCofVars = nCofDepth;\n        for  i = 0; i \u003c nCofDepth; i++  {\n            pRes.pCofVars[i] = pCofVars[i];\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_DsdAnalize",
+      "Start": 14404,
+      "End": 17853,
+      "BodyStart": 14479,
+      "Original": "Lpk_Res_t * Lpk_DsdAnalize( Lpk_Man_t * pMan, Lpk_Fun_t * p, int nShared )\n{ \n    static Lpk_Res_t Res0, * pRes0 = \u0026Res0;\n    static Lpk_Res_t Res1, * pRes1 = \u0026Res1;\n    static Lpk_Res_t Res2, * pRes2 = \u0026Res2;\n    static Lpk_Res_t Res3, * pRes3 = \u0026Res3;\n    int fUseBackLooking = 1;\n    Lpk_Res_t * pRes = NULL;\n    Vec_Int_t * vBSets;\n    Kit_DsdNtk_t * pNtks[8] = {NULL};\n    char pCofVars[5];\n    int i;\n\n    assert( p-\u003enLutK \u003e= 3 );\n    assert( nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3 );\n    assert( p-\u003euSupp == Kit_BitMask(p-\u003enVars) );\n\n    // try decomposition without cofactoring\n    pNtks[0] = Kit_DsdDecomposeExpand( Lpk_FunTruth( p, 0 ), p-\u003enVars );\n    if ( pMan-\u003epPars-\u003efVerbose )\n        pMan-\u003enBlocks[ Kit_DsdNonDsdSizeMax(pNtks[0]) ]++;\n    vBSets = Lpk_ComputeBoundSets( pNtks[0], p-\u003enLutK );\n    Lpk_FunCompareBoundSets( p, vBSets, 0, 0xFFFF, Lpk_DsdLateArriving(p), pRes0 );\n    Vec_IntFree( vBSets );\n\n    // check the result\n    if ( pRes0-\u003enBSVars == (int)p-\u003enLutK )\n        { pRes = pRes0; goto finish; }\n    if ( pRes0-\u003enBSVars == (int)p-\u003enLutK - 1 )\n        { pRes = pRes0; goto finish; }\n    if ( nShared == 0 )\n        goto finish;\n\n    // prepare storage\n    Kit_TruthCopy( pMan-\u003eppTruths[0][0], Lpk_FunTruth( p, 0 ), p-\u003enVars );\n\n    // cofactor 1 time\n    if ( !Lpk_DsdAnalizeOne( p, pMan-\u003eppTruths, pNtks, pCofVars, 1, pRes1 ) )\n        goto finish;\n    assert( pRes1-\u003enBSVars \u003c= (int)p-\u003enLutK - 1 );\n    if ( pRes1-\u003enBSVars == (int)p-\u003enLutK - 1 )\n        { pRes = pRes1; goto finish; }\n    if ( pRes0-\u003enBSVars == (int)p-\u003enLutK - 2 )\n        { pRes = pRes0; goto finish; }\n    if ( pRes1-\u003enBSVars == (int)p-\u003enLutK - 2 )\n        { pRes = pRes1; goto finish; }\n    if ( nShared == 1 )\n        goto finish;\n\n    // cofactor 2 times\n    if ( p-\u003enLutK \u003e= 4 ) \n    {\n        if ( !Lpk_DsdAnalizeOne( p, pMan-\u003eppTruths, pNtks, pCofVars, 2, pRes2 ) )\n            goto finish;\n        assert( pRes2-\u003enBSVars \u003c= (int)p-\u003enLutK - 2 );\n        if ( pRes2-\u003enBSVars == (int)p-\u003enLutK - 2 )\n            { pRes = pRes2; goto finish; }\n        if ( fUseBackLooking )\n        {\n            if ( pRes0-\u003enBSVars == (int)p-\u003enLutK - 3 )\n                { pRes = pRes0; goto finish; }\n            if ( pRes1-\u003enBSVars == (int)p-\u003enLutK - 3 )\n                { pRes = pRes1; goto finish; }\n        }\n        if ( pRes2-\u003enBSVars == (int)p-\u003enLutK - 3 )\n            { pRes = pRes2; goto finish; }\n        if ( nShared == 2 )\n            goto finish;\n        assert( nShared == 3 );\n    }\n\n    // cofactor 3 times\n    if ( p-\u003enLutK \u003e= 5 ) \n    {\n        if ( !Lpk_DsdAnalizeOne( p, pMan-\u003eppTruths, pNtks, pCofVars, 3, pRes3 ) )\n            goto finish;\n        assert( pRes3-\u003enBSVars \u003c= (int)p-\u003enLutK - 3 );\n        if ( pRes3-\u003enBSVars == (int)p-\u003enLutK - 3 )\n            { pRes = pRes3; goto finish; }\n        if ( fUseBackLooking )\n        {\n            if ( pRes0-\u003enBSVars == (int)p-\u003enLutK - 4 )\n                { pRes = pRes0; goto finish; }\n            if ( pRes1-\u003enBSVars == (int)p-\u003enLutK - 4 )\n                { pRes = pRes1; goto finish; }\n            if ( pRes2-\u003enBSVars == (int)p-\u003enLutK - 4 )\n                { pRes = pRes2; goto finish; }\n        }\n        if ( pRes3-\u003enBSVars == (int)p-\u003enLutK - 4 )\n            { pRes = pRes3; goto finish; }\n    }\n\nfinish:\n    // free the networks\n    for ( i = 0; i \u003c (1\u003c\u003cnShared); i++ )\n        if ( pNtks[i] )\n            Kit_DsdNtkFree( pNtks[i] );\n    // choose the best under these conditions\n    return pRes;\n}",
+      "Draft": "func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t { \n    \n    \n    \n    \n    var fUseBackLooking int32  = 1;\n    var pRes *Lpk_Res_t  = nil;\n    var vBSets *Vec_Int_t;\n    var pNtks [8]*Kit_DsdNtk_t = [8]*Kit_DsdNtk_t{nil};\n    var pCofVars [5]byte;\n    var i int32;\n\n    assert(p.nLutK \u003e= 3, \"p.nLutK \u003e= 3\");\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3\");\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n\n    // try decomposition without cofactoring\n    pNtks[0] = Kit_DsdDecomposeExpand( Lpk_FunTruth( p, 0 ), p.nVars );\n    if pMan.pPars.fVerbose {\n        pMan.nBlocks[ Kit_DsdNonDsdSizeMax(pNtks[0]) ]++; }\n    vBSets = Lpk_ComputeBoundSets( pNtks[0], p.nLutK );\n    Lpk_FunCompareBoundSets( p, vBSets, 0, 0xFFFF, Lpk_DsdLateArriving(p), spStatic_Lpk_DsdAnalize_pRes0 );\n    Vec_IntFree( vBSets );\n\n    // check the result\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 1 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if nShared == 0 {\n        goto finish; }\n\n    // prepare storage\n    Kit_TruthCopy( pMan.ppTruths[0][0], Lpk_FunTruth( p, 0 ), p.nVars );\n\n    // cofactor 1 time\n    if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 1, spStatic_Lpk_DsdAnalize_pRes1 ) != 0) {\n        goto finish; }\n    assert(spStatic_Lpk_DsdAnalize_pRes1.nBSVars \u003c= int32(p.nLutK) - 1, \"spStatic_Lpk_DsdAnalize_pRes1.nBSVars \u003c= int32(p.nLutK) - 1\");\n    if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 1 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n    if nShared == 1 {\n        goto finish; }\n\n    // cofactor 2 times\n    if p.nLutK \u003e= 4 {\n        if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 2, spStatic_Lpk_DsdAnalize_pRes2 ) != 0) {\n            goto finish; }\n        assert(spStatic_Lpk_DsdAnalize_pRes2.nBSVars \u003c= int32(p.nLutK) - 2, \"spStatic_Lpk_DsdAnalize_pRes2.nBSVars \u003c= int32(p.nLutK) - 2\");\n        if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        if fUseBackLooking != 0 {\n            if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n        }\n        if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        if nShared == 2 {\n            goto finish; }\n        assert(nShared == 3, \"nShared == 3\");\n    }\n\n    // cofactor 3 times\n    if p.nLutK \u003e= 5 {\n        if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 3, spStatic_Lpk_DsdAnalize_pRes3 ) != 0) {\n            goto finish; }\n        assert(spStatic_Lpk_DsdAnalize_pRes3.nBSVars \u003c= int32(p.nLutK) - 3, \"spStatic_Lpk_DsdAnalize_pRes3.nBSVars \u003c= int32(p.nLutK) - 3\");\n        if spStatic_Lpk_DsdAnalize_pRes3.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes3; goto finish; }\n        if fUseBackLooking != 0 {\n            if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        }\n        if spStatic_Lpk_DsdAnalize_pRes3.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes3; goto finish; }\n    }\n\nfinish:\n    // free the networks\n    for  i = 0; i \u003c (1\u003c\u003cnShared); i++  {\n        if pNtks[i] {\n            Kit_DsdNtkFree( pNtks[i] ); }\n    }\n    // choose the best under these conditions\n    return pRes;\n}"
+    },
+    {
+      "Name": "Lpk_DsdSplit",
+      "Start": 18141,
+      "End": 20255,
+      "BodyStart": 18252,
+      "Original": "Lpk_Fun_t * Lpk_DsdSplit( Lpk_Man_t * pMan, Lpk_Fun_t * p, char * pCofVars, int nCofVars, unsigned uBoundSet )\n{\n    Lpk_Fun_t * pNew;\n    Kit_DsdNtk_t * pNtkDec;\n    int i, k, iVacVar, nCofs;\n    // prepare storage\n    Kit_TruthCopy( pMan-\u003eppTruths[0][0], Lpk_FunTruth(p, 0), p-\u003enVars );\n    // get the vacuous variable\n    iVacVar = Kit_WordFindFirstBit( uBoundSet );\n    // compute the cofactors\n    for ( i = 0; i \u003c nCofVars; i++ )\n        for ( k = 0; k \u003c (1\u003c\u003ci); k++ )\n        {\n            Kit_TruthCofactor0New( pMan-\u003eppTruths[i+1][2*k+0], pMan-\u003eppTruths[i][k], p-\u003enVars, pCofVars[i] );\n            Kit_TruthCofactor1New( pMan-\u003eppTruths[i+1][2*k+1], pMan-\u003eppTruths[i][k], p-\u003enVars, pCofVars[i] );\n        }\n    // decompose each cofactor w.r.t. the bound set\n    nCofs = (1\u003c\u003cnCofVars);\n    for ( k = 0; k \u003c nCofs; k++ )\n    {\n        pNtkDec = Kit_DsdDecomposeExpand( pMan-\u003eppTruths[nCofVars][k], p-\u003enVars );\n        Kit_DsdTruthPartialTwo( pMan-\u003epDsdMan, pNtkDec, uBoundSet, iVacVar, pMan-\u003eppTruths[nCofVars+1][k], pMan-\u003eppTruths[nCofVars+1][nCofs+k] );\n        Kit_DsdNtkFree( pNtkDec );\n    }\n    // compute the composition/decomposition functions (they will be in pMan-\u003eppTruths[1][0]/pMan-\u003eppTruths[1][1])\n    for ( i = nCofVars; i \u003e= 1; i-- )\n        for ( k = 0; k \u003c (1\u003c\u003ci); k++ )\n            Kit_TruthMuxVar( pMan-\u003eppTruths[i][k], pMan-\u003eppTruths[i+1][2*k+0], pMan-\u003eppTruths[i+1][2*k+1], p-\u003enVars, pCofVars[i-1] );\n\n    // derive the new component (decomposition function)\n    pNew = Lpk_FunDup( p, pMan-\u003eppTruths[1][1] );\n    // update the old component (composition function)\n    Kit_TruthCopy( Lpk_FunTruth(p, 0), pMan-\u003eppTruths[1][0], p-\u003enVars );\n    p-\u003euSupp = Kit_TruthSupport( Lpk_FunTruth(p, 0), p-\u003enVars );\n    p-\u003epFanins[iVacVar] = pNew-\u003eId;\n    p-\u003epDelays[iVacVar] = Lpk_SuppDelay( pNew-\u003euSupp, pNew-\u003epDelays );\n    // support minimize both\n    p-\u003efSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew-\u003enDelayLim = p-\u003epDelays[iVacVar];\n    pNew-\u003enAreaLim = 1;\n    p-\u003enAreaLim = p-\u003enAreaLim - 1;\n    return pNew;\n}",
+      "Draft": "func Lpk_DsdSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, pCofVars string, nCofVars int32, uBoundSet uint32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    var pNtkDec *Kit_DsdNtk_t;\n    var i, k, iVacVar, nCofs int32;\n    // prepare storage\n    Kit_TruthCopy( pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), p.nVars );\n    // get the vacuous variable\n    iVacVar = Kit_WordFindFirstBit( uBoundSet );\n    // compute the cofactors\n    for  i = 0; i \u003c nCofVars; i++  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Kit_TruthCofactor0New( pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i][k], p.nVars, pCofVars[i] );\n            Kit_TruthCofactor1New( pMan.ppTruths[i+1][2*k+1], pMan.ppTruths[i][k], p.nVars, pCofVars[i] );\n        }\n    }\n    // decompose each cofactor w.r.t. the bound set\n    nCofs = (1\u003c\u003cnCofVars);\n    for  k = 0; k \u003c nCofs; k++  {\n        pNtkDec = Kit_DsdDecomposeExpand( pMan.ppTruths[nCofVars][k], p.nVars );\n        Kit_DsdTruthPartialTwo( pMan.pDsdMan, pNtkDec, uBoundSet, iVacVar, pMan.ppTruths[nCofVars+1][k], pMan.ppTruths[nCofVars+1][nCofs+k] );\n        Kit_DsdNtkFree( pNtkDec );\n    }\n    // compute the composition/decomposition functions (they will be in pMan-\u003eppTruths[1][0]/pMan-\u003eppTruths[1][1])\n    for  i = nCofVars; i \u003e= 1; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Kit_TruthMuxVar( pMan.ppTruths[i][k], pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i+1][2*k+1], p.nVars, pCofVars[i-1] );\n        }\n    }\n\n    // derive the new component (decomposition function)\n    pNew = Lpk_FunDup( p, pMan.ppTruths[1][1] );\n    // update the old component (composition function)\n    Kit_TruthCopy( Lpk_FunTruth(p, 0), pMan.ppTruths[1][0], p.nVars );\n    p.uSupp = Kit_TruthSupport( Lpk_FunTruth(p, 0), p.nVars );\n    p.pFanins[iVacVar] = pNew.Id;\n    p.pDelays[iVacVar] = Lpk_SuppDelay( pNew.uSupp, pNew.pDelays );\n    // support minimize both\n    p.fSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew.nDelayLim = p.pDelays[iVacVar];\n    pNew.nAreaLim = 1;\n    p.nAreaLim = p.nAreaLim - 1;\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::sizeof::9150",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8866,
+      "End": 8872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::sizeof::13113",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12739,
+      "End": 12745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::static::14860",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14486,
+      "End": 14492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::static::14904",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14530,
+      "End": 14536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::static::14948",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14574,
+      "End": 14580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::mechanical::static::14992",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14618,
+      "End": 14624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_FunComputeMinSuppSizeVar",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunComputeMinSuppSizeVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1504,
+      "End": 3443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_ComputeBoundSets_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComputeBoundSets_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3721,
+      "End": 5219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_ComputeBoundSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ComputeBoundSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5509,
+      "End": 6531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_PrintSetOne",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_PrintSetOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6794,
+      "End": 6975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_PrintSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_PrintSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7237,
+      "End": 7520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_MergeBoundSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MergeBoundSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7778,
+      "End": 8285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_FunCompareBoundSets",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunCompareBoundSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8570,
+      "End": 10734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_DsdLateArriving",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_DsdLateArriving",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11032,
+      "End": 11271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_DsdAnalizeOne",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_DsdAnalizeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11556,
+      "End": 14119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_DsdAnalize",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_DsdAnalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14404,
+      "End": 17853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::Lpk_DsdSplit",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_DsdSplit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18141,
+      "End": 20255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::macro-inline::6360",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6360,
+      "End": 6399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::macro-inline::7383",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7383,
+      "End": 7422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::macro-inline::7972",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7972,
+      "End": 8012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::macro-inline::8017",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8017,
+      "End": 8057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkAbcDsd.c::macro-inline::8891",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8891,
+      "End": 8934
+    }
+  ],
+  "Draft": "package lpk\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [lpkAbcDsd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    [LUT-decomposition based on recursive DSD.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkAbcDsd.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Cofactors TTs w.r.t. all vars and finds the best var.]\n\n  Description [The best variable is the variable with the minimum \n  sum total of the support sizes of all truth tables. This procedure \n  computes and returns cofactors w.r.t. the best variable.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunComputeMinSuppSizeVar(p *Lpk_Fun_t, ppTruths **uint32, nTruths int32, ppCofs **uint32, uNonDecSupp uint32) int32 {\n    var i, Var, VarBest, nSuppSize0, nSuppSize1 int32;\n    var nSuppTotalMin int32  = -1; // Suppress \"might be used uninitialized\"\n    var nSuppTotalCur int32;\n    var nSuppMaxMin int32  = -1; // Suppress \"might be used uninitialized\"\n    var nSuppMaxCur int32;\n    assert(nTruths \u003e 0, \"nTruths \u003e 0\");\n    VarBest = -1;\n    // inlining of macro Lpk_SuppForEachVar\n    for  Var = 0; Var \u003c 16; Var++  {        if !(p.uSupp \u0026 (1\u003c\u003cVar)) {} else {\n        if (uNonDecSupp \u0026 (1 \u003c\u003c Var)) == 0 {\n            continue; }\n        nSuppMaxCur = 0;\n        nSuppTotalCur = 0;\n        for  i = 0; i \u003c nTruths; i++  {\n            if nTruths == 1 {\n                nSuppSize0 = Kit_WordCountOnes( p.puSupps[2*Var+0] );\n                nSuppSize1 = Kit_WordCountOnes( p.puSupps[2*Var+1] );\n            \n            } else {\n                Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p.nVars, Var );\n                Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p.nVars, Var );\n                nSuppSize0 = Kit_TruthSupportSize( ppCofs[2*i+0], p.nVars );\n                nSuppSize1 = Kit_TruthSupportSize( ppCofs[2*i+1], p.nVars );\n            }        \n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize0 );\n            nSuppMaxCur = Abc_MaxInt( nSuppMaxCur, nSuppSize1 );\n            nSuppTotalCur += nSuppSize0 + nSuppSize1;\n        }\n        if VarBest == -1 || nSuppMaxMin \u003e nSuppMaxCur ||\n             (nSuppMaxMin == nSuppMaxCur \u0026\u0026 nSuppTotalMin \u003e nSuppTotalCur) {\n            VarBest = Var;\n            nSuppMaxMin = nSuppMaxCur;\n            nSuppTotalMin = nSuppTotalCur;\n        }\n    }\n    }\n    // recompute cofactors for the best var\n    for  i = 0; i \u003c nTruths; i++  {\n        Kit_TruthCofactor0New( ppCofs[2*i+0], ppTruths[i], p.nVars, VarBest );\n        Kit_TruthCofactor1New( ppCofs[2*i+1], ppTruths[i], p.nVars, VarBest );\n    }\n    return VarBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively computes decomposable subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ComputeBoundSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t, nSizeMax int32) uint32 {\n    var i, iLitFanin, uSupport, uSuppCur uint32;\n    var pObj *Kit_DsdObj_t;\n    // consider the case of simple gate\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return (1 \u003c\u003c Abc_Lit2Var(iLit)); }\n    if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {\n        var uSupps [16]uint32;\n        var Limit uint32;\n        var s uint32;\n        uSupport = 0;\n        // inlining of macro Kit_DsdObjForEachFanin\n        for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n            uSupps[i] = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n            uSupport |= uSupps[i];\n        }\n        // create all subsets, except empty and full\n        Limit = (1 \u003c\u003c pObj.nFans) - 1;\n        for  s = 1; s \u003c Limit; s++  {\n            uSuppCur = 0;\n            for  i = 0; i \u003c pObj.nFans; i++  {\n                if s \u0026 (1 \u003c\u003c i) {\n                    uSuppCur |= uSupps[i]; }\n            }\n            if Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax {\n                Vec_IntPush( vSets, uSuppCur ); }\n        }\n        return uSupport;\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    // get the cumulative support of all fanins\n    uSupport = 0;\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        uSuppCur  = Lpk_ComputeBoundSets_rec( p, iLitFanin, vSets, nSizeMax );\n        uSupport |= uSuppCur;\n        if Kit_WordCountOnes(uSuppCur) \u003c= nSizeMax {\n            Vec_IntPush( vSets, uSuppCur ); }\n    }\n    return uSupport;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of subsets of decomposable variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ComputeBoundSets(p *Kit_DsdNtk_t, nSizeMax int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var uSupport, Entry uint32;\n    var Number, i int32;\n    assert(p.nVars \u003c= 16, \"p.nVars \u003c= 16\");\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntPush( vSets, 0 );\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {\n        return vSets; }\n    if Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {\n        uSupport = ( 1 \u003c\u003c Abc_Lit2Var(Kit_DsdNtkRoot(p).pFans[0]) );\n        if Kit_WordCountOnes(uSupport) \u003c= nSizeMax {\n            Vec_IntPush( vSets, uSupport ); }\n        return vSets;\n    }\n    uSupport = Lpk_ComputeBoundSets_rec( p, p.Root, vSets, nSizeMax );\n    assert((uSupport \u0026 0xFFFF0000) == 0, \"(uSupport \u0026 0xFFFF0000) == 0\");\n    // add the total support of the network\n    if Kit_WordCountOnes(uSupport) \u003c= nSizeMax {\n        Vec_IntPush( vSets, uSupport ); }\n    // set the remaining variables\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        Entry = Number;\n        Vec_IntWriteEntry( vSets, i, Entry | ((uSupport \u0026 ~Entry) \u003c\u003c 16) );\n    }\n    return vSets;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the sets of subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_PrintSetOne(uSupport int32) {\n    var k uint32;\n    for  k = 0; k \u003c 16; k++  {\n        if uSupport \u0026 (1\u003c\u003ck) {\n            fmt.Printf(\"%c\", 'a'+k); }\n    }\n    fmt.Printf(\" \");\n}\n/**Function*************************************************************\n\n  Synopsis    [Prints the sets of subsets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_PrintSets(vSets *Vec_Int_t) {\n    var uSupport uint32;\n    var Number, i int32;\n    fmt.Printf(\"Subsets(%d): \", Vec_IntSize(vSets));\n    Vec_IntForEachEntry( vSets, Number, i )\n    {\n        uSupport = Number;\n        Lpk_PrintSetOne( uSupport );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two bound sets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MergeBoundSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nSizeMax int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var Entry0, Entry1, Entry int32;\n    var i, k int32;\n    vSets = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vSets0, Entry0, i )\n    Vec_IntForEachEntry( vSets1, Entry1, k )\n    {\n        Entry = Entry0 | Entry1;\n        if Entry \u0026 (Entry \u003e\u003e 16) {\n            continue; }\n        if Kit_WordCountOnes(Entry \u0026 0xffff) \u003c= nSizeMax {\n            Vec_IntPush( vSets, Entry ); }\n    }\n    return vSets;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs DSD-based decomposition of the function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, uNonDecSupp uint32, uLateArrSupp uint32, pRes *Lpk_Res_t) {\n    var fVerbose int32;\n    var uBoundSet uint32;\n    var i, nVarsBS, nVarsRem, Delay, Area int32;\n\n    // compare the resulting boundsets\n    memset( pRes, 0, sizeof(Lpk_Res_t) );\n    Vec_IntForEachEntry( vBSets, uBoundSet, i )\n    {\n        if (uBoundSet \u0026 0xFFFF) == 0 { // skip empty boundset\n            continue; }\n        if (uBoundSet \u0026 uNonDecSupp) == 0 { // skip those boundsets that are not in the domain of interest\n            continue; }\n        if uBoundSet \u0026 uLateArrSupp { // skip those boundsets that are late arriving\n            continue; }\nif fVerbose != 0 {\nLpk_PrintSetOne( uBoundSet \u0026 0xFFFF );\n//printf( \"\\n\" );\n//Lpk_PrintSetOne( uBoundSet \u003e\u003e 16 );\n//printf( \"\\n\" );\n}\n        assert((uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0, \"(uBoundSet \u0026 (uBoundSet \u003e\u003e 16)) == 0\");\n        nVarsBS = Kit_WordCountOnes( uBoundSet \u0026 0xFFFF );\n        if nVarsBS == 1 {\n            continue; }\n        assert(nVarsBS \u003c= int32(p.nLutK) - nCofDepth, \"nVarsBS \u003c= int32(p.nLutK) - nCofDepth\");\n        nVarsRem = p.nVars - nVarsBS + 1;\n        Area = 1 + Lpk_LutNumLuts( nVarsRem, p.nLutK );\n        Delay = 1 + Lpk_SuppDelay( uBoundSet \u0026 0xFFFF, p.pDelays );\nif fVerbose != 0 {\nfmt.Printf(\"area = %d limit = %d  delay = %d limit = %d\\n\", Area, int32(p.nAreaLim), Delay, int32(p.nDelayLim)); }\n        if Area \u003e int32(p.nAreaLim) || Delay \u003e int32(p.nDelayLim) {\n            continue; }\n        if pRes.BSVars == 0 || pRes.nSuppSizeL \u003e nVarsRem || (pRes.nSuppSizeL == nVarsRem \u0026\u0026 pRes.DelayEst \u003e Delay) {\n            pRes.nBSVars = nVarsBS;\n            pRes.BSVars = (uBoundSet \u0026 0xFFFF);\n            pRes.nSuppSizeS = nVarsBS + nCofDepth;\n            pRes.nSuppSizeL = nVarsRem;\n            pRes.DelayEst = Delay;\n            pRes.AreaEst = Area;\n        }\n    }\nif fVerbose != 0 {\nif pRes.BSVars {\nfmt.Printf(\"Found bound set \");\nLpk_PrintSetOne( pRes.BSVars );\nfmt.Printf(\"\\n\");\n\n} else {\nfmt.Printf(\"Did not find boundsets.\\n\"); }\nfmt.Printf(\"\\n\");\n}\n    if pRes.BSVars {\n        assert(pRes.DelayEst \u003c= int32(p.nDelayLim), \"pRes.DelayEst \u003c= int32(p.nDelayLim)\");\n        assert(pRes.AreaEst \u003c= int32(p.nAreaLim), \"pRes.AreaEst \u003c= int32(p.nAreaLim)\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds late arriving inputs, which cannot be in the bound set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_DsdLateArriving(p *Lpk_Fun_t) uint32 {\n    var i, uLateArrSupp uint32;\n    // inlining of macro Lpk_SuppForEachVar\n    for  i = 0; i \u003c 16; i++  {        if !(p.uSupp \u0026 (1\u003c\u003ci)) {} else\n        if p.pDelays[i] \u003e int32(p.nDelayLim) - 2 {\n            uLateArrSupp |= (1 \u003c\u003c i); }\n    }  \n    return uLateArrSupp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs DSD-based decomposition of the function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16]*uint32, pNtks []*Kit_DsdNtk_t, pCofVars []byte, nCofDepth int32, pRes *Lpk_Res_t) int32 {\n    var fVerbose int32;\n    var pvBSets [4][8]*Vec_Int_t;\n    var uNonDecSupp, uLateArrSupp uint32;\n    var i, k, nNonDecSize, nNonDecSizeMax int32;\n    assert(nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3, \"nCofDepth \u003e= 1 \u0026\u0026 nCofDepth \u003c= 3\");\n    assert(nCofDepth \u003c int32(p.nLutK) - 1, \"nCofDepth \u003c int32(p.nLutK) - 1\");\n    assert(p.fSupports, \"p.fSupports\");\n\n    // find the support of the largest non-DSD block\n    nNonDecSizeMax = 0;\n    uNonDecSupp = p.uSupp;\n    for  i = 0; i \u003c (1\u003c\u003c(nCofDepth-1)); i++  {\n        nNonDecSize = Kit_DsdNonDsdSizeMax( pNtks[i] );\n        if nNonDecSizeMax \u003c nNonDecSize {\n            nNonDecSizeMax = nNonDecSize;\n            uNonDecSupp = Kit_DsdNonDsdSupports( pNtks[i] );\n        \n        } else if nNonDecSizeMax == nNonDecSize {\n            uNonDecSupp |= Kit_DsdNonDsdSupports( pNtks[i] ); }\n    }\n\n    // remove those variables that cannot be used because of delay constraints\n    // if variables arrival time is more than p-\u003eDelayLim - 2, it cannot be used\n    uLateArrSupp = Lpk_DsdLateArriving( p );\n    if (uNonDecSupp \u0026 ~uLateArrSupp) == 0 {\n        memset( pRes, 0, sizeof(Lpk_Res_t) );\n        return 0;\n    }\n\n    // find the next cofactoring variable\n    pCofVars[nCofDepth-1] = Lpk_FunComputeMinSuppSizeVar( p, ppTruths[nCofDepth-1], 1\u003c\u003c(nCofDepth-1), ppTruths[nCofDepth], uNonDecSupp \u0026 ~uLateArrSupp );\n\n    // derive decomposed networks\n    for  i = 0; i \u003c (1\u003c\u003cnCofDepth); i++  {\n        if pNtks[i] {\n            Kit_DsdNtkFree( pNtks[i] ); }\n        pNtks[i] = Kit_DsdDecomposeExpand( ppTruths[nCofDepth][i], p.nVars );\nif fVerbose != 0 {\nKit_DsdPrint( os.Stdout, pNtks[i] ); }\n        pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets( pNtks[i], p.nLutK - nCofDepth ); // try restricting to those in uNonDecSupp!!!\n    }\n\n    // derive the set of feasible boundsets\n    for  i = nCofDepth - 1; i \u003e= 0; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            pvBSets[i][k] = Lpk_MergeBoundSets( pvBSets[i+1][2*k+0], pvBSets[i+1][2*k+1], p.nLutK - nCofDepth );\n        }\n    }\n    // compare bound-sets\n    Lpk_FunCompareBoundSets( p, pvBSets[0][0], nCofDepth, uNonDecSupp, uLateArrSupp, pRes );\n    // free the bound sets\n    for  i = nCofDepth; i \u003e= 0; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Vec_IntFree( pvBSets[i][k] );\n        }\n    }\n \n    // copy the cofactoring variables\n    if pRes.BSVars {\n        pRes.nCofVars = nCofDepth;\n        for  i = 0; i \u003c nCofDepth; i++  {\n            pRes.pCofVars[i] = pCofVars[i];\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs DSD-based decomposition of the function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Lpk_DsdAnalize_Res0 Lpk_Res_t;\nvar spStatic_Lpk_DsdAnalize_pRes0 *Lpk_Res_t = \u0026spStatic_Lpk_DsdAnalize_Res0;\nvar spStatic_Lpk_DsdAnalize_Res1 Lpk_Res_t;\nvar spStatic_Lpk_DsdAnalize_pRes1 *Lpk_Res_t = \u0026spStatic_Lpk_DsdAnalize_Res1;\nvar spStatic_Lpk_DsdAnalize_Res2 Lpk_Res_t;\nvar spStatic_Lpk_DsdAnalize_pRes2 *Lpk_Res_t = \u0026spStatic_Lpk_DsdAnalize_Res2;\nvar spStatic_Lpk_DsdAnalize_Res3 Lpk_Res_t;\nvar spStatic_Lpk_DsdAnalize_pRes3 *Lpk_Res_t = \u0026spStatic_Lpk_DsdAnalize_Res3;\nfunc Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t { \n    \n    \n    \n    \n    var fUseBackLooking int32  = 1;\n    var pRes *Lpk_Res_t  = nil;\n    var vBSets *Vec_Int_t;\n    var pNtks [8]*Kit_DsdNtk_t = [8]*Kit_DsdNtk_t{nil};\n    var pCofVars [5]byte;\n    var i int32;\n\n    assert(p.nLutK \u003e= 3, \"p.nLutK \u003e= 3\");\n    assert(nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3, \"nShared \u003e= 0 \u0026\u0026 nShared \u003c= 3\");\n    assert(p.uSupp == Kit_BitMask(p.nVars), \"p.uSupp == Kit_BitMask(p.nVars)\");\n\n    // try decomposition without cofactoring\n    pNtks[0] = Kit_DsdDecomposeExpand( Lpk_FunTruth( p, 0 ), p.nVars );\n    if pMan.pPars.fVerbose {\n        pMan.nBlocks[ Kit_DsdNonDsdSizeMax(pNtks[0]) ]++; }\n    vBSets = Lpk_ComputeBoundSets( pNtks[0], p.nLutK );\n    Lpk_FunCompareBoundSets( p, vBSets, 0, 0xFFFF, Lpk_DsdLateArriving(p), spStatic_Lpk_DsdAnalize_pRes0 );\n    Vec_IntFree( vBSets );\n\n    // check the result\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 1 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if nShared == 0 {\n        goto finish; }\n\n    // prepare storage\n    Kit_TruthCopy( pMan.ppTruths[0][0], Lpk_FunTruth( p, 0 ), p.nVars );\n\n    // cofactor 1 time\n    if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 1, spStatic_Lpk_DsdAnalize_pRes1 ) != 0) {\n        goto finish; }\n    assert(spStatic_Lpk_DsdAnalize_pRes1.nBSVars \u003c= int32(p.nLutK) - 1, \"spStatic_Lpk_DsdAnalize_pRes1.nBSVars \u003c= int32(p.nLutK) - 1\");\n    if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 1 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n    if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n    if nShared == 1 {\n        goto finish; }\n\n    // cofactor 2 times\n    if p.nLutK \u003e= 4 {\n        if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 2, spStatic_Lpk_DsdAnalize_pRes2 ) != 0) {\n            goto finish; }\n        assert(spStatic_Lpk_DsdAnalize_pRes2.nBSVars \u003c= int32(p.nLutK) - 2, \"spStatic_Lpk_DsdAnalize_pRes2.nBSVars \u003c= int32(p.nLutK) - 2\");\n        if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 2 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        if fUseBackLooking != 0 {\n            if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n        }\n        if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        if nShared == 2 {\n            goto finish; }\n        assert(nShared == 3, \"nShared == 3\");\n    }\n\n    // cofactor 3 times\n    if p.nLutK \u003e= 5 {\n        if !(Lpk_DsdAnalizeOne( p, pMan.ppTruths, pNtks, pCofVars, 3, spStatic_Lpk_DsdAnalize_pRes3 ) != 0) {\n            goto finish; }\n        assert(spStatic_Lpk_DsdAnalize_pRes3.nBSVars \u003c= int32(p.nLutK) - 3, \"spStatic_Lpk_DsdAnalize_pRes3.nBSVars \u003c= int32(p.nLutK) - 3\");\n        if spStatic_Lpk_DsdAnalize_pRes3.nBSVars == int32(p.nLutK) - 3 { pRes = spStatic_Lpk_DsdAnalize_pRes3; goto finish; }\n        if fUseBackLooking != 0 {\n            if spStatic_Lpk_DsdAnalize_pRes0.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes0; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes1.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes1; goto finish; }\n            if spStatic_Lpk_DsdAnalize_pRes2.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes2; goto finish; }\n        }\n        if spStatic_Lpk_DsdAnalize_pRes3.nBSVars == int32(p.nLutK) - 4 { pRes = spStatic_Lpk_DsdAnalize_pRes3; goto finish; }\n    }\n\nfinish:\n    // free the networks\n    for  i = 0; i \u003c (1\u003c\u003cnShared); i++  {\n        if pNtks[i] {\n            Kit_DsdNtkFree( pNtks[i] ); }\n    }\n    // choose the best under these conditions\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Splits the function into two subfunctions using DSD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_DsdSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, pCofVars string, nCofVars int32, uBoundSet uint32) *Lpk_Fun_t {\n    var pNew *Lpk_Fun_t;\n    var pNtkDec *Kit_DsdNtk_t;\n    var i, k, iVacVar, nCofs int32;\n    // prepare storage\n    Kit_TruthCopy( pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), p.nVars );\n    // get the vacuous variable\n    iVacVar = Kit_WordFindFirstBit( uBoundSet );\n    // compute the cofactors\n    for  i = 0; i \u003c nCofVars; i++  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Kit_TruthCofactor0New( pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i][k], p.nVars, pCofVars[i] );\n            Kit_TruthCofactor1New( pMan.ppTruths[i+1][2*k+1], pMan.ppTruths[i][k], p.nVars, pCofVars[i] );\n        }\n    }\n    // decompose each cofactor w.r.t. the bound set\n    nCofs = (1\u003c\u003cnCofVars);\n    for  k = 0; k \u003c nCofs; k++  {\n        pNtkDec = Kit_DsdDecomposeExpand( pMan.ppTruths[nCofVars][k], p.nVars );\n        Kit_DsdTruthPartialTwo( pMan.pDsdMan, pNtkDec, uBoundSet, iVacVar, pMan.ppTruths[nCofVars+1][k], pMan.ppTruths[nCofVars+1][nCofs+k] );\n        Kit_DsdNtkFree( pNtkDec );\n    }\n    // compute the composition/decomposition functions (they will be in pMan-\u003eppTruths[1][0]/pMan-\u003eppTruths[1][1])\n    for  i = nCofVars; i \u003e= 1; i--  {\n        for  k = 0; k \u003c (1\u003c\u003ci); k++  {\n            Kit_TruthMuxVar( pMan.ppTruths[i][k], pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i+1][2*k+1], p.nVars, pCofVars[i-1] );\n        }\n    }\n\n    // derive the new component (decomposition function)\n    pNew = Lpk_FunDup( p, pMan.ppTruths[1][1] );\n    // update the old component (composition function)\n    Kit_TruthCopy( Lpk_FunTruth(p, 0), pMan.ppTruths[1][0], p.nVars );\n    p.uSupp = Kit_TruthSupport( Lpk_FunTruth(p, 0), p.nVars );\n    p.pFanins[iVacVar] = pNew.Id;\n    p.pDelays[iVacVar] = Lpk_SuppDelay( pNew.uSupp, pNew.pDelays );\n    // support minimize both\n    p.fSupports = 0;\n    Lpk_FunSuppMinimize( p );\n    Lpk_FunSuppMinimize( pNew );\n    // update delay and area requirements\n    pNew.nDelayLim = p.pDelays[iVacVar];\n    pNew.nAreaLim = 1;\n    p.nAreaLim = p.nAreaLim - 1;\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,289 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c",
+  "SHA256": "99f3fa643b19dd3e65c317ed6f47ba8c845145be8091a34fe111c1ed03837272",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Int2_ManPars_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pSuff) == Gia_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 9312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 271,
+        "Column": 41,
+        "ByteOffset": 10124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = pPars.nSecLimit * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 10224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pInit) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 10263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pInit) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 10302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pInit) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 21,
+        "ByteOffset": 11516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Satisfiable in frame %d.\\n\", f );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int2_ManSetDefaultParams",
+      "Start": 1285,
+      "End": 2045,
+      "BodyStart": 1337,
+      "Original": "void Int2_ManSetDefaultParams( Int2_ManPars_t * p )\n{ \n    memset( p, 0, sizeof(Int2_ManPars_t) );\n    p-\u003enBTLimit      =  0;     // limit on the number of conflicts\n    p-\u003enFramesS      =  1;     // the starting number timeframes\n    p-\u003enFramesMax    =  0;     // the max number timeframes to unroll\n    p-\u003enSecLimit     =  0;     // time limit in seconds\n    p-\u003enFramesK      =  1;     // the number of timeframes to use in induction\n    p-\u003efRewrite      =  0;     // use additional rewriting to simplify timeframes\n    p-\u003efTransLoop    =  0;     // add transition into the init state under new PI var\n    p-\u003efDropInvar    =  0;     // dump inductive invariant into file\n    p-\u003efVerbose      =  0;     // print verbose statistics\n    p-\u003eiFrameMax     = -1;\n}",
+      "Draft": "func Int2_ManSetDefaultParams(p *Int2_ManPars_t) { \n    memset( p, 0, sizeof(Int2_ManPars_t) );\n    p.nBTLimit      =  0;     // limit on the number of conflicts\n    p.nFramesS      =  1;     // the starting number timeframes\n    p.nFramesMax    =  0;     // the max number timeframes to unroll\n    p.nSecLimit     =  0;     // time limit in seconds\n    p.nFramesK      =  1;     // the number of timeframes to use in induction\n    p.fRewrite      =  0;     // use additional rewriting to simplify timeframes\n    p.fTransLoop    =  0;     // add transition into the init state under new PI var\n    p.fDropInvar    =  0;     // dump inductive invariant into file\n    p.fVerbose      =  0;     // print verbose statistics\n    p.iFrameMax     = -1;\n}"
+    },
+    {
+      "Name": "Int2_ManUnroll",
+      "Start": 2280,
+      "End": 3382,
+      "BodyStart": 2337,
+      "Original": "Gia_Man_t * Int2_ManUnroll( Gia_Man_t * p, int nFrames )\n{\n    Gia_Man_t * pFrames, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, f;\n    assert( Gia_ManRegNum(pAig) \u003e 0 );\n    pFrames = Gia_ManStart( Gia_ManObjNum(pAig) );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pFrames-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pAig)-\u003eValue = 0;\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Gia_ManForEachRo( pAig, pObj, i )\n            pObj-\u003eValue = f ? Gia_ObjRoToRi( pAig, pObj )-\u003eValue : 0;\n        Gia_ManForEachPi( pAig, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCi( pFrames );\n        Gia_ManForEachAnd( pAig, pObj, i )\n            pObj-\u003eValue = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachRi( pAig, pObj, i )\n            pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n    }\n    Gia_ManForEachRi( pAig, pObj, i )\n        Gia_ManAppendCo( pFrames, pObj-\u003eValue );\n    Gia_ManHashStop( pFrames );\n    pFrames = Gia_ManCleanup( pTemp = pFrames );\n    Gia_ManStop( pTemp );\n    return pFrames;\n}",
+      "Draft": "func Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pFrames, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, f int32;\n    assert(Gia_ManRegNum(pAig) \u003e 0, \"Gia_ManRegNum(pAig) \u003e 0\");\n    pFrames = Gia_ManStart( Gia_ManObjNum(pAig) );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pAig).Value = 0;\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, Gia_ManPiNum(pAig)+i)); i++  {\n            if f != 0 {\n                pObj.Value = Gia_ObjRoToRi( pAig, pObj ).Value;\n            } else {\n                pObj.Value = 0;\n            }\n        }\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n            pObj.Value = Gia_ManAppendCi( pFrames );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachRi\n        for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)); i++  {\n        Gia_ManAppendCo( pFrames, pObj.Value );\n    }\n    Gia_ManHashStop( pFrames );\n    pFrames = Gia_ManCleanup( pTemp = pFrames );\n    Gia_ManStop( pTemp );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Int2_ManPreparePrefix",
+      "Start": 3383,
+      "End": 4115,
+      "BodyStart": 3464,
+      "Original": "sat_solver * Int2_ManPreparePrefix( Gia_Man_t * p, int f, Vec_Int_t ** pvCiMap )\n{\n    Gia_Man_t * pPref, * pNew;\n    sat_solver * pSat;\n    // create subset of the timeframe\n    pPref = Int2_ManUnroll( p, f );\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pPref, 0 );  \n    pCnf = (Cnf_Dat_t *)pPref-\u003epData; pPref-\u003epData = NULL;\n    Gia_ManStop( pPref );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // collect indexes of CO variables\n    *pvCiMap = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( pNew, pObj, i )     \n        Vec_IntPush( *pvCiMap, pCnf-\u003epVarNums[ Gia_ObjId(pNew, pObj) ] );\n    // cleanup\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pNew );\n    return pSat;\n}",
+      "Draft": "func Int2_ManPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solver {\n    var pPref, pNew *Gia_Man_t;\n    var pSat *sat_solver;\n    // create subset of the timeframe\n    pPref = Int2_ManUnroll( p, f );\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pPref, 0 );  \n    pCnf = (Cnf_Dat_t *)pPref.pData; pPref.pData = nil;\n    Gia_ManStop( pPref );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // collect indexes of CO variables\n    *pvCiMap = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pNew)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {     \n        Vec_IntPush( *pvCiMap, pCnf.pVarNums[ Gia_ObjId(pNew, pObj) ] );\n    }\n    // cleanup\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pNew );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Int2_ManPrepareSuffix",
+      "Start": 4351,
+      "End": 6074,
+      "BodyStart": 4493,
+      "Original": "sat_solver * Int2_ManPrepareSuffix( Gia_Man_t * p, Vec_Int_t * vImageOne, Vec_Int_t * vImagesAll, Vec_Int_t ** pvCoMap, Gia_Man_t ** ppSuff )\n{\n    Gia_Man_t * pSuff, * pNew;\n    Gia_Obj_t * pObj;\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    Vec_Int_t * vLits;\n    int i, Lit, Limit;\n    // create subset of the timeframe\n    pSuff = Int2_ManProbToGia( p, vImageOne );\n    assert( Gia_ManPiNum(pSuff) == Gia_ManCiNum(p) );\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pSuff, 0 );  \n    pCnf = (Cnf_Dat_t *)pSuff-\u003epData; pSuff-\u003epData = NULL;\n    Gia_ManStop( pSuff );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // create new constraints\n    vLits = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntryStart( vImagesAll, Limit, i, 1 )\n    {\n        Vec_IntClear( vLits );\n        for ( k = 0; k \u003c Limit; k++ )\n        {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        }\n        if ( !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) )  )  // UNSAT\n        {\n            Vec_IntFree( vLits );\n            Cnf_DataFree( pCnf );\n            Gia_ManStop( pNew );\n            *pvCoMap = NULL;\n            return NULL;\n        }\n    }\n    Vec_IntFree( vLits );\n    // collect indexes of CO variables\n    *pvCoMap = Vec_IntAlloc( 100 );\n    Gia_ManForEachRo( p, pObj, i )     \n    {\n        pObj = Gia_ManPi( pNew, i + Gia_ManPiNum(p) );\n        Vec_IntPush( *pvCoMap, pCnf-\u003epVarNums[ Gia_ObjId(pNew, pObj) ] );\n    }\n    // cleanup\n    Cnf_DataFree( pCnf );\n    if ( ppSuff )\n        *ppSuff = pNew;\n    else\n        Gia_ManStop( pNew );\n    return pSat;\n}",
+      "Draft": "func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_Int_t, pvCoMap **Vec_Int_t, ppSuff **Gia_Man_t) *sat_solver {\n    var pSuff, pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var i, Lit, Limit int32;\n    // create subset of the timeframe\n    pSuff = Int2_ManProbToGia( p, vImageOne );\n    assert(Gia_ManPiNum(pSuff) == Gia_ManCiNum(p), \"Gia_ManPiNum(pSuff) == Gia_ManCiNum(p)\");\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pSuff, 0 );  \n    pCnf = (Cnf_Dat_t *)pSuff.pData; pSuff.pData = nil;\n    Gia_ManStop( pSuff );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // create new constraints\n    vLits = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vImagesAll)) \u0026\u0026 (((Limit) = Vec_IntEntry(vImagesAll, i)), 1); i++  {\n        Vec_IntClear( vLits );\n        for  k = 0; k \u003c Limit; k++  {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        }\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) {  // UNSAT\n        \n            Vec_IntFree( vLits );\n            Cnf_DataFree( pCnf );\n            Gia_ManStop( pNew );\n            *pvCoMap = nil;\n            return nil;\n        }\n    }\n    Vec_IntFree( vLits );\n    // collect indexes of CO variables\n    *pvCoMap = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj = Gia_ManPi( pNew, i + Gia_ManPiNum(p) );\n        Vec_IntPush( *pvCoMap, pCnf.pVarNums[ Gia_ObjId(pNew, pObj) ] );\n    }\n    // cleanup\n    Cnf_DataFree( pCnf );\n    if ppSuff {\n        *ppSuff = pNew;\n    } else {\n        Gia_ManStop( pNew ); }\n    return pSat;\n}"
+    },
+    {
+      "Name": "Int2_ManComputePreimage",
+      "Start": 6344,
+      "End": 8284,
+      "BodyStart": 6506,
+      "Original": "Vec_Int_t * Int2_ManComputePreimage( Gia_Man_t * pSuff, sat_solver * pSatPref, sat_solver * pSatSuff, Vec_Int_t * vCiMap, Vec_Int_t * vCoMap, Vec_Int_t * vPrio )\n{\n    int i, iVar, status;\n    Vec_IntClear( p-\u003evImage );\n    while ( 1 )\n    {\n        // run suffix solver\n        status = sat_solver_solve( p-\u003epSatSuff, NULL, NULL, 0, 0, 0, 0 );\n        if ( status == l_Undef )\n            return NULL; // timeout\n        if ( status == l_False )\n            return INT2_COMPUTED;\n        assert( status == l_True );\n        // collect assignment\n        Vec_IntClear( p-\u003evAssign );\n        Vec_IntForEachEntry( p-\u003evCiMap, iVar, i )\n            Vec_IntPush( p-\u003evAssign, sat_solver_var_value(p-\u003epSatSuff, iVar) );\n        // derive initial cube\n        vCube = Int2_ManRefineCube( p-\u003epSuff, p-\u003evAssign, p-\u003evPrio );\n        // expend the cube using prefix\n        status = sat_solver_solve( p-\u003epSatPref, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube), 0, 0, 0, 0 );\n        if ( status == l_False )\n        {\n            int k, nCoreLits, * pCoreLits;\n            nCoreLits = sat_solver_final( p-\u003epSatPref, \u0026pCoreLits );\n            // create cube\n            Vec_IntClear( vCube );\n            Vec_IntPush( vImage, nCoreLits );\n            for ( k = 0; k \u003c nCoreLits; k++ )\n            {\n                Vec_IntPush( vCube, pCoreLits[k] );\n                Vec_IntPush( vImage, pCoreLits[k] );\n            }\n            // add cube to the solver\n            if ( !sat_solver_addclause( p-\u003epSatSuff, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube) ) )\n            {\n                Vec_IntFree( vCube );\n                return INT2_COMPUTED;\n            }\n        }\n        Vec_IntFree( vCube );\n        if ( status == l_Undef )\n            return INT2_TIME_OUT;\n        if ( status == l_True )\n            return INT2_FALSE_NEG;\n        assert( status == l_False );\n        continue;\n    }\n    return p-\u003evImage;\n}",
+      "Draft": "func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref *sat_solver, pSatSuff *sat_solver, vCiMap *Vec_Int_t, vCoMap *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {\n    var i, iVar, status int32;\n    Vec_IntClear( p.vImage );\n    for {\n        // run suffix solver\n        status = sat_solver_solve( p.pSatSuff, nil, nil, 0, 0, 0, 0 );\n        if status == l_Undef {\n            return nil; } // timeout\n        if status == l_False {\n            return INT2_COMPUTED; }\n        assert(status == l_True, \"status == l_True\");\n        // collect assignment\n        Vec_IntClear( p.vAssign );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vCiMap)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vCiMap, i)), 1); i++  {\n            Vec_IntPush( p.vAssign, sat_solver_var_value(p.pSatSuff, iVar) );\n        }\n        // derive initial cube\n        vCube = Int2_ManRefineCube( p.pSuff, p.vAssign, p.vPrio );\n        // expend the cube using prefix\n        status = sat_solver_solve( p.pSatPref, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube), 0, 0, 0, 0 );\n        if status == l_False {\n            var k int32;\n            var nCoreLits int32;\n            var pCoreLits *int32;\n            nCoreLits = sat_solver_final( p.pSatPref, \u0026pCoreLits );\n            // create cube\n            Vec_IntClear( vCube );\n            Vec_IntPush( vImage, nCoreLits );\n            for  k = 0; k \u003c nCoreLits; k++  {\n                Vec_IntPush( vCube, pCoreLits[k] );\n                Vec_IntPush( vImage, pCoreLits[k] );\n            }\n            // add cube to the solver\n            if !sat_solver_addclause( p.pSatSuff, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube) ) {\n                Vec_IntFree( vCube );\n                return INT2_COMPUTED;\n            }\n        }\n        Vec_IntFree( vCube );\n        if status == l_Undef {\n            return INT2_TIME_OUT; }\n        if status == l_True {\n            return INT2_FALSE_NEG; }\n        assert(status == l_False, \"status == l_False\");\n        continue;\n    }\n    return p.vImage;\n}"
+    },
+    {
+      "Name": "Int2_ManPerformInterpolation",
+      "Start": 8671,
+      "End": 10960,
+      "BodyStart": 8749,
+      "Original": "int Int2_ManPerformInterpolation( Gia_Man_t * pInit, Int2_ManPars_t * pPars )\n{\n    Int2_Man_t * p;\n    int f, i, RetValue = -1;\n    abctime clk, clkTotal = Abc_Clock(), timeTemp = 0;\n    abctime nTimeToStop = pPars-\u003enSecLimit ? pPars-\u003enSecLimit * CLOCKS_PER_SEC + Abc_Clock() : 0;\n\n    // sanity checks\n    assert( Gia_ManPiNum(pInit) \u003e 0 );\n    assert( Gia_ManPoNum(pInit) \u003e 0 );\n    assert( Gia_ManRegNum(pInit) \u003e 0 );\n\n    // create manager\n    p = Int2_ManCreate( pInit, pPars );\n\n    // create SAT solver\n    p-\u003epSatPref = sat_solver_new();\n    sat_solver_setnvars( p-\u003epSatPref, 1000 );\n    sat_solver_set_runtime_limit( p-\u003epSatPref, nTimeToStop );\n\n    // check outputs in the first frame\n    for ( i = 0; i \u003c Gia_ManPoNum(pInit); i++ )\n        Vec_IntPush( p-\u003evPrefCos, i );\n    Int2_ManCreateFrames( p, 0, p-\u003evPrefCos );\n    RetValue = Int2_ManCheckBmc( p, NULL );\n    if ( RetValue != 1 )\n        return RetValue;\n\n    // create original image\n    for ( f = pPars-\u003enFramesS; f \u003c p-\u003enFramesMax; f++ )\n    {\n        for ( i = 0; i \u003c p-\u003enFramesMax; i++ )\n        {\n            p-\u003epSatSuff = Int2_ManPrepareSuffix( p, vImageOne. vImagesAll, \u0026vCoMap, \u0026pGiaSuff );\n            sat_solver_set_runtime_limit( p-\u003epSatSuff, nTimeToStop );\n            Vec_IntFreeP( \u0026vImageOne );\n            vImageOne = Int2_ManComputePreimage( pGiaSuff, p-\u003epSatPref, p-\u003epSatSuff, vCiMap, vCoMap );\n            Vec_IntFree( vCoMap );\n            Gia_ManStop( pGiaSuff );\n            if ( nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop )\n                return -1;\n            if ( vImageOne == NULL )\n            {\n                if ( i == 0 )\n                {\n                    printf( \"Satisfiable in frame %d.\\n\", f );\n                    Vec_IntFree( vCiMap );\n                    sat_solver_delete( p-\u003epSatPref ); p-\u003epSatPref = NULL;\n                    return 0;\n                }\n                f += i;\n                break;\n            }\n            Vec_IntAppend( vImagesAll, vImageOne );\n            sat_solver_delete( p-\u003epSatSuff ); p-\u003epSatSuff = NULL;\n        }\n        Vec_IntFree( vCiMap );\n        sat_solver_delete( p-\u003epSatPref ); p-\u003epSatPref = NULL;\n    }\n    Abc_PrintTime( \"Time\", Abc_Clock() - clk );\n\n\np-\u003etimeSatPref += Abc_Clock() - clk;\n\n    Int2_ManStop( p );\n    return RetValue;\n}",
+      "Draft": "func Int2_ManPerformInterpolation(pInit *Gia_Man_t, pPars *Int2_ManPars_t) int32 {\n    var p *Int2_Man_t;\n    var f int32;\n    var i int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var timeTemp abctime;\n    var nTimeToStop abctime;\n    if pPars.nSecLimit {\n        nTimeToStop = pPars.nSecLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n\n    // sanity checks\n    assert(Gia_ManPiNum(pInit) \u003e 0, \"Gia_ManPiNum(pInit) \u003e 0\");\n    assert(Gia_ManPoNum(pInit) \u003e 0, \"Gia_ManPoNum(pInit) \u003e 0\");\n    assert(Gia_ManRegNum(pInit) \u003e 0, \"Gia_ManRegNum(pInit) \u003e 0\");\n\n    // create manager\n    p = Int2_ManCreate( pInit, pPars );\n\n    // create SAT solver\n    p.pSatPref = sat_solver_new();\n    sat_solver_setnvars( p.pSatPref, 1000 );\n    sat_solver_set_runtime_limit( p.pSatPref, nTimeToStop );\n\n    // check outputs in the first frame\n    for  i = 0; i \u003c Gia_ManPoNum(pInit); i++  {\n        Vec_IntPush( p.vPrefCos, i );\n    }\n    Int2_ManCreateFrames( p, 0, p.vPrefCos );\n    RetValue = Int2_ManCheckBmc( p, nil );\n    if RetValue != 1 {\n        return RetValue; }\n\n    // create original image\n    for  f = pPars.nFramesS; f \u003c p.nFramesMax; f++  {\n        for  i = 0; i \u003c p.nFramesMax; i++  {\n            p.pSatSuff = Int2_ManPrepareSuffix( p, vImageOne. vImagesAll, \u0026vCoMap, \u0026pGiaSuff );\n            sat_solver_set_runtime_limit( p.pSatSuff, nTimeToStop );\n            Vec_IntFreeP( \u0026vImageOne );\n            vImageOne = Int2_ManComputePreimage( pGiaSuff, p.pSatPref, p.pSatSuff, vCiMap, vCoMap );\n            Vec_IntFree( vCoMap );\n            Gia_ManStop( pGiaSuff );\n            if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n                return -1; }\n            if vImageOne == nil {\n                if i == 0 {\n                    fmt.Printf(\"Satisfiable in frame %d.\\n\", f);\n                    Vec_IntFree( vCiMap );\n                    sat_solver_delete( p.pSatPref ); p.pSatPref = nil;\n                    return 0;\n                }\n                f += i;\n                break;\n            }\n            Vec_IntAppend( vImagesAll, vImageOne );\n            sat_solver_delete( p.pSatSuff ); p.pSatSuff = nil;\n        }\n        Vec_IntFree( vCiMap );\n        sat_solver_delete( p.pSatPref ); p.pSatPref = nil;\n    }\n    Abc_PrintTime( \"Time\", Abc_Clock() - clk );\n\n\np.timeSatPref += Abc_Clock() - clk;\n\n    Int2_ManStop( p );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::mechanical::sizeof::1358",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1358,
+      "End": 1364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::pointer-cast::4246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3672,
+      "End": 3685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::pointer-cast::4360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3786,
+      "End": 3800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::pointer-cast::5526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4856,
+      "End": 4869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::pointer-cast::5640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4970,
+      "End": 4984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1285,
+      "End": 2045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManUnroll",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManUnroll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2280,
+      "End": 3382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManPreparePrefix",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManPreparePrefix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3383,
+      "End": 4115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManPrepareSuffix",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManPrepareSuffix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4351,
+      "End": 6074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManComputePreimage",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManComputePreimage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6344,
+      "End": 8284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::Int2_ManPerformInterpolation",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManPerformInterpolation",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8671,
+      "End": 10960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Core.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11209
+    }
+  ],
+  "Draft": "package int2\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [int2Core.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 1, 2013.]\n\n  Revision    [$Id: int2Core.c,v 1.00 2013/12/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"int2Int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default values of interpolation parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManSetDefaultParams(p *Int2_ManPars_t) { \n    memset( p, 0, sizeof(Int2_ManPars_t) );\n    p.nBTLimit      =  0;     // limit on the number of conflicts\n    p.nFramesS      =  1;     // the starting number timeframes\n    p.nFramesMax    =  0;     // the max number timeframes to unroll\n    p.nSecLimit     =  0;     // time limit in seconds\n    p.nFramesK      =  1;     // the number of timeframes to use in induction\n    p.fRewrite      =  0;     // use additional rewriting to simplify timeframes\n    p.fTransLoop    =  0;     // add transition into the init state under new PI var\n    p.fDropInvar    =  0;     // dump inductive invariant into file\n    p.fVerbose      =  0;     // print verbose statistics\n    p.iFrameMax     = -1;\n}\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pFrames, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, f int32;\n    assert(Gia_ManRegNum(pAig) \u003e 0, \"Gia_ManRegNum(pAig) \u003e 0\");\n    pFrames = Gia_ManStart( Gia_ManObjNum(pAig) );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pAig).Value = 0;\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, Gia_ManPiNum(pAig)+i)); i++  {\n            if f != 0 {\n                pObj.Value = Gia_ObjRoToRi( pAig, pObj ).Value;\n            } else {\n                pObj.Value = 0;\n            }\n        }\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n            pObj.Value = Gia_ManAppendCi( pFrames );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachRi\n        for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)); i++  {\n        Gia_ManAppendCo( pFrames, pObj.Value );\n    }\n    Gia_ManHashStop( pFrames );\n    pFrames = Gia_ManCleanup( pTemp = pFrames );\n    Gia_ManStop( pTemp );\n    return pFrames;\n}\nfunc Int2_ManPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solver {\n    var pPref, pNew *Gia_Man_t;\n    var pSat *sat_solver;\n    // create subset of the timeframe\n    pPref = Int2_ManUnroll( p, f );\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pPref, 0 );  \n    pCnf = (Cnf_Dat_t *)pPref.pData; pPref.pData = nil;\n    Gia_ManStop( pPref );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // collect indexes of CO variables\n    *pvCiMap = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pNew)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {     \n        Vec_IntPush( *pvCiMap, pCnf.pVarNums[ Gia_ObjId(pNew, pObj) ] );\n    }\n    // cleanup\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pNew );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_Int_t, pvCoMap **Vec_Int_t, ppSuff **Gia_Man_t) *sat_solver {\n    var pSuff, pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var vLits *Vec_Int_t;\n    var i, Lit, Limit int32;\n    // create subset of the timeframe\n    pSuff = Int2_ManProbToGia( p, vImageOne );\n    assert(Gia_ManPiNum(pSuff) == Gia_ManCiNum(p), \"Gia_ManPiNum(pSuff) == Gia_ManCiNum(p)\");\n    // create SAT solver\n    pNew = Jf_ManDeriveCnf( pSuff, 0 );  \n    pCnf = (Cnf_Dat_t *)pSuff.pData; pSuff.pData = nil;\n    Gia_ManStop( pSuff );\n    // derive the SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    // create new constraints\n    vLits = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vImagesAll)) \u0026\u0026 (((Limit) = Vec_IntEntry(vImagesAll, i)), 1); i++  {\n        Vec_IntClear( vLits );\n        for  k = 0; k \u003c Limit; k++  {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            Vec_IntPush( vLits, Abc_LitNot(Lit) );\n        }\n        if !sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) ) {  // UNSAT\n        \n            Vec_IntFree( vLits );\n            Cnf_DataFree( pCnf );\n            Gia_ManStop( pNew );\n            *pvCoMap = nil;\n            return nil;\n        }\n    }\n    Vec_IntFree( vLits );\n    // collect indexes of CO variables\n    *pvCoMap = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj = Gia_ManPi( pNew, i + Gia_ManPiNum(p) );\n        Vec_IntPush( *pvCoMap, pCnf.pVarNums[ Gia_ObjId(pNew, pObj) ] );\n    }\n    // cleanup\n    Cnf_DataFree( pCnf );\n    if ppSuff {\n        *ppSuff = pNew;\n    } else {\n        Gia_ManStop( pNew ); }\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the cube cover and status.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref *sat_solver, pSatSuff *sat_solver, vCiMap *Vec_Int_t, vCoMap *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {\n    var i, iVar, status int32;\n    Vec_IntClear( p.vImage );\n    for {\n        // run suffix solver\n        status = sat_solver_solve( p.pSatSuff, nil, nil, 0, 0, 0, 0 );\n        if status == l_Undef {\n            return nil; } // timeout\n        if status == l_False {\n            return INT2_COMPUTED; }\n        assert(status == l_True, \"status == l_True\");\n        // collect assignment\n        Vec_IntClear( p.vAssign );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vCiMap)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vCiMap, i)), 1); i++  {\n            Vec_IntPush( p.vAssign, sat_solver_var_value(p.pSatSuff, iVar) );\n        }\n        // derive initial cube\n        vCube = Int2_ManRefineCube( p.pSuff, p.vAssign, p.vPrio );\n        // expend the cube using prefix\n        status = sat_solver_solve( p.pSatPref, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube), 0, 0, 0, 0 );\n        if status == l_False {\n            var k int32;\n            var nCoreLits int32;\n            var pCoreLits *int32;\n            nCoreLits = sat_solver_final( p.pSatPref, \u0026pCoreLits );\n            // create cube\n            Vec_IntClear( vCube );\n            Vec_IntPush( vImage, nCoreLits );\n            for  k = 0; k \u003c nCoreLits; k++  {\n                Vec_IntPush( vCube, pCoreLits[k] );\n                Vec_IntPush( vImage, pCoreLits[k] );\n            }\n            // add cube to the solver\n            if !sat_solver_addclause( p.pSatSuff, Vec_IntArray(vCube), Vec_IntArray(vCube) + Vec_IntSize(vCube) ) {\n                Vec_IntFree( vCube );\n                return INT2_COMPUTED;\n            }\n        }\n        Vec_IntFree( vCube );\n        if status == l_Undef {\n            return INT2_TIME_OUT; }\n        if status == l_True {\n            return INT2_FALSE_NEG; }\n        assert(status == l_False, \"status == l_False\");\n        continue;\n    }\n    return p.vImage;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interpolates while the number of conflicts is not exceeded.]\n\n  Description [Returns 1 if proven. 0 if failed. -1 if undecided.]\n               \n  SideEffects [Does not check the property in 0-th frame.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManPerformInterpolation(pInit *Gia_Man_t, pPars *Int2_ManPars_t) int32 {\n    var p *Int2_Man_t;\n    var f int32;\n    var i int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var timeTemp abctime;\n    var nTimeToStop abctime;\n    if pPars.nSecLimit {\n        nTimeToStop = pPars.nSecLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n\n    // sanity checks\n    assert(Gia_ManPiNum(pInit) \u003e 0, \"Gia_ManPiNum(pInit) \u003e 0\");\n    assert(Gia_ManPoNum(pInit) \u003e 0, \"Gia_ManPoNum(pInit) \u003e 0\");\n    assert(Gia_ManRegNum(pInit) \u003e 0, \"Gia_ManRegNum(pInit) \u003e 0\");\n\n    // create manager\n    p = Int2_ManCreate( pInit, pPars );\n\n    // create SAT solver\n    p.pSatPref = sat_solver_new();\n    sat_solver_setnvars( p.pSatPref, 1000 );\n    sat_solver_set_runtime_limit( p.pSatPref, nTimeToStop );\n\n    // check outputs in the first frame\n    for  i = 0; i \u003c Gia_ManPoNum(pInit); i++  {\n        Vec_IntPush( p.vPrefCos, i );\n    }\n    Int2_ManCreateFrames( p, 0, p.vPrefCos );\n    RetValue = Int2_ManCheckBmc( p, nil );\n    if RetValue != 1 {\n        return RetValue; }\n\n    // create original image\n    for  f = pPars.nFramesS; f \u003c p.nFramesMax; f++  {\n        for  i = 0; i \u003c p.nFramesMax; i++  {\n            p.pSatSuff = Int2_ManPrepareSuffix( p, vImageOne. vImagesAll, \u0026vCoMap, \u0026pGiaSuff );\n            sat_solver_set_runtime_limit( p.pSatSuff, nTimeToStop );\n            Vec_IntFreeP( \u0026vImageOne );\n            vImageOne = Int2_ManComputePreimage( pGiaSuff, p.pSatPref, p.pSatSuff, vCiMap, vCoMap );\n            Vec_IntFree( vCoMap );\n            Gia_ManStop( pGiaSuff );\n            if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n                return -1; }\n            if vImageOne == nil {\n                if i == 0 {\n                    fmt.Printf(\"Satisfiable in frame %d.\\n\", f);\n                    Vec_IntFree( vCiMap );\n                    sat_solver_delete( p.pSatPref ); p.pSatPref = nil;\n                    return 0;\n                }\n                f += i;\n                break;\n            }\n            Vec_IntAppend( vImagesAll, vImageOne );\n            sat_solver_delete( p.pSatSuff ); p.pSatSuff = nil;\n        }\n        Vec_IntFree( vCiMap );\n        sat_solver_delete( p.pSatPref ); p.pSatPref = nil;\n    }\n    Abc_PrintTime( \"Time\", Abc_Clock() - clk );\n\n\np.timeSatPref += Abc_Clock() - clk;\n\n    Int2_ManStop( p );\n    return RetValue;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

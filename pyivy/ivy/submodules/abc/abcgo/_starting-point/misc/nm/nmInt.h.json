@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmInt.h",
+  "SHA256": "a7786a2233e92bbe5ebb4ab23faba30aab9251df305bcd89f95d43bd08649623",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmInt.h::struct::Nm_Entry_t::// the next entry with the same name\n    char             Name[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Nm_Entry_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1665,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmInt.h::struct::Nm_Entry_t",
+      "Category": "struct-review",
+      "Symbol": "Nm_Entry_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1322,
+      "End": 1767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmInt.h::struct::Nm_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Nm_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1769,
+      "End": 2298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3383
+    }
+  ],
+  "Draft": "package nm\n\n/**CFile****************************************************************\n\n  FileName    [nmInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Name manager.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nmInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/extra/extra.h\"\n//#include \"misc/vec/vec.h\"\n//#include \"nm.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Nm_Entry_t struct {\n    Type         uint32;          // object type\n    ObjId         uint32;         // object ID\n    pNextI2N      *Nm_Entry_t;      // the next entry in the ID hash table\n    pNextN2I      *Nm_Entry_t;      // the next entry in the name hash table\n    pNameSake      *Nm_Entry_t;     // the next entry with the same name\n    Name [0]byte;       // name of the object\n}\n\ntype Nm_Man_t_ struct {\n    pBinsI2N     **Nm_Entry_t;      // mapping IDs into names\n    pBinsN2I     **Nm_Entry_t;      // mapping names into IDs \n    nBins              int32;         // the number of bins in tables\n    nEntries              int32;      // the number of entries\n    nSizeFactor              int32;   // determined how much larger the table should be\n    nGrowthFactor              int32; // determined how much the table grows after resizing\n    pMem  *Extra_MmFlex_t;          // memory manager for entries (and names)\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== nmTable.c ==========================================================*/\n// extern int              Nm_ManTableAdd( Nm_Man_t * p, Nm_Entry_t * pEntry );\n\n// extern int              Nm_ManTableDelete( Nm_Man_t * p, int ObjId );\n\n// extern Nm_Entry_t *     Nm_ManTableLookupId( Nm_Man_t * p, int ObjId );\n\n// extern Nm_Entry_t *     Nm_ManTableLookupName( Nm_Man_t * p, char * pName, int Type );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n"
+}

@@ -1,0 +1,1904 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h",
+  "SHA256": "ef06ebda7aef7181c54ccd2b399c5157e84acc9714311743c53411ca4632384e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 2,
+        "ByteOffset": 7153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": " assert(Abc_Lit2Att2(i) == CBA_PRS_NAME); return Abc_Lit2Var2(i); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 10428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.ErrorStr[0] );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 10458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( p.ErrorStr, \"%s\", pError );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 10855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Line %d: %s\\n\", iLine, p.ErrorStr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 11011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pNtk == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 11383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pNtk != nil );"
+    },
+    {
+      "Name": "va_start",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 281,
+        "Column": 21,
+        "ByteOffset": 11662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_list args;   va_start( args, format );"
+    },
+    {
+      "Name": "vsnprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 14,
+        "ByteOffset": 11753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nAdded = vsnprintf( Vec_StrLimit(vBuf), nSize, format, args );"
+    },
+    {
+      "Name": "vsnprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 17,
+        "ByteOffset": 11912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nSize = vsnprintf( Vec_StrLimit(vBuf), nAdded, format, args );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 11975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize == nAdded );"
+    },
+    {
+      "Name": "va_end",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 12012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_end( args );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 12554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value \u0026 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 12797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vTemp) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 12953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value \u0026 1 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 326,
+        "Column": 27,
+        "ByteOffset": 13352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 13408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open input file.\\n\" );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 332,
+        "Column": 5,
+        "ByteOffset": 13512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 333,
+        "Column": 17,
+        "ByteOffset": 13559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 13644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 337,
+        "Column": 70,
+        "ByteOffset": 13780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 16)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 339,
+        "Column": 16,
+        "ByteOffset": 13868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer+1, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 13913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 384,
+        "Column": 57,
+        "ByteOffset": 15325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 409,
+        "Column": 65,
+        "ByteOffset": 16208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 410,
+        "Column": 57,
+        "ByteOffset": 16315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 17648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \" 0\\n\") {         return CBA_BOX_CF; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 17708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \" 1\\n\") {         return CBA_BOX_CT; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 17768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"1 1\\n\") {        return CBA_BOX_BUF; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 455,
+        "Column": 9,
+        "ByteOffset": 17829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"0 1\\n\") {        return CBA_BOX_INV; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 456,
+        "Column": 9,
+        "ByteOffset": 17890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"11 1\\n\") {       return CBA_BOX_AND; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 17951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 1\\n\") {       return CBA_BOX_NOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 18012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 0\\n\") {       return CBA_BOX_OR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 459,
+        "Column": 9,
+        "ByteOffset": 18072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"-1 1\\n1- 1\\n\") { return CBA_BOX_OR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 460,
+        "Column": 9,
+        "ByteOffset": 18132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"1- 1\\n-1 1\\n\") { return CBA_BOX_OR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 461,
+        "Column": 9,
+        "ByteOffset": 18192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"01 1\\n10 1\\n\") { return CBA_BOX_XOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 462,
+        "Column": 9,
+        "ByteOffset": 18253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"10 1\\n01 1\\n\") { return CBA_BOX_XOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 18314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"11 1\\n00 1\\n\") { return CBA_BOX_XNOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 18376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 1\\n11 1\\n\") { return CBA_BOX_XNOR; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 465,
+        "Column": 9,
+        "ByteOffset": 18438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"10 1\\n\") {       return CBA_BOX_SHARP; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 466,
+        "Column": 9,
+        "ByteOffset": 18501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"01 1\\n\") {       return CBA_BOX_SHARPL; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 5,
+        "ByteOffset": 18561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 18654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \" 0\\n\") {         return \"CBA_BOX_C0\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 18716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \" 1\\n\") {         return \"CBA_BOX_C1\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 473,
+        "Column": 9,
+        "ByteOffset": 18778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"1 1\\n\") {        return \"CBA_BOX_BUF\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 18841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"0 1\\n\") {        return \"CBA_BOX_INV\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 475,
+        "Column": 9,
+        "ByteOffset": 18904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"11 1\\n\") {       return \"CBA_BOX_AND\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 476,
+        "Column": 9,
+        "ByteOffset": 18967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 1\\n\") {       return \"CBA_BOX_NOR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 19030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 0\\n\") {       return \"CBA_BOX_OR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 478,
+        "Column": 9,
+        "ByteOffset": 19092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"-1 1\\n1- 1\\n\") { return \"CBA_BOX_OR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 479,
+        "Column": 9,
+        "ByteOffset": 19154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"1- 1\\n-1 1\\n\") { return \"CBA_BOX_OR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 19216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"01 1\\n10 1\\n\") { return \"CBA_BOX_XOR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 481,
+        "Column": 9,
+        "ByteOffset": 19279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"10 1\\n01 1\\n\") { return \"CBA_BOX_XOR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 19342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"11 1\\n00 1\\n\") { return \"CBA_BOX_XNOR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 483,
+        "Column": 9,
+        "ByteOffset": 19406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"00 1\\n11 1\\n\") { return \"CBA_BOX_XNOR\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 484,
+        "Column": 9,
+        "ByteOffset": 19470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"10 1\\n\") {       return \"CBA_BOX_SHARP\"; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 485,
+        "Column": 9,
+        "ByteOffset": 19535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pSop, \"01 1\\n\") {       return \"CBA_BOX_SHARPL\"; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 19597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 20503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 21414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Prs_ManNtk",
+      "Start": 4644,
+      "End": 4802,
+      "BodyStart": 4715,
+      "Original": "static inline Prs_Ntk_t * Prs_ManNtk( Vec_Ptr_t * vPrs, int i )        { return i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(vPrs) ? (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i) : NULL; }",
+      "Draft": "func Prs_ManNtk(vPrs *Vec_Ptr_t, i int32) *Prs_Ntk_t { if i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(vPrs) {\n    return (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i);\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Prs_ManRoot",
+      "Start": 4803,
+      "End": 4933,
+      "BodyStart": 4874,
+      "Original": "static inline Prs_Ntk_t * Prs_ManRoot( Vec_Ptr_t * vPrs )              { return Prs_ManNtk(vPrs, 0);                             }",
+      "Draft": "func Prs_ManRoot(vPrs *Vec_Ptr_t) *Prs_Ntk_t { return Prs_ManNtk(vPrs, 0);                             }"
+    },
+    {
+      "Name": "Prs_ManNameMan",
+      "Start": 4934,
+      "End": 5064,
+      "BodyStart": 5005,
+      "Original": "static inline Abc_Nam_t * Prs_ManNameMan( Vec_Ptr_t * vPrs )           { return Prs_ManRoot(vPrs)-\u003epStrs;                        }",
+      "Draft": "func Prs_ManNameMan(vPrs *Vec_Ptr_t) *Abc_Nam_t { return Prs_ManRoot(vPrs).pStrs;                        }"
+    },
+    {
+      "Name": "Prs_ManFuncMan",
+      "Start": 5065,
+      "End": 5195,
+      "BodyStart": 5136,
+      "Original": "static inline Abc_Nam_t * Prs_ManFuncMan( Vec_Ptr_t * vPrs )           { return Prs_ManRoot(vPrs)-\u003epFuns;                        }",
+      "Draft": "func Prs_ManFuncMan(vPrs *Vec_Ptr_t) *Abc_Nam_t { return Prs_ManRoot(vPrs).pFuns;                        }"
+    },
+    {
+      "Name": "Prs_NtkId",
+      "Start": 5197,
+      "End": 5327,
+      "BodyStart": 5268,
+      "Original": "static inline int         Prs_NtkId( Prs_Ntk_t * p )                   { return p-\u003eiModuleName;                                  }",
+      "Draft": "func Prs_NtkId(p *Prs_Ntk_t) int32 { return p.iModuleName;                                  }"
+    },
+    {
+      "Name": "Prs_NtkPioNum",
+      "Start": 5328,
+      "End": 5458,
+      "BodyStart": 5399,
+      "Original": "static inline int         Prs_NtkPioNum( Prs_Ntk_t * p )               { return Vec_IntSize(\u0026p-\u003evInouts);                        }",
+      "Draft": "func Prs_NtkPioNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vInouts);                        }"
+    },
+    {
+      "Name": "Prs_NtkPiNum",
+      "Start": 5459,
+      "End": 5589,
+      "BodyStart": 5530,
+      "Original": "static inline int         Prs_NtkPiNum( Prs_Ntk_t * p )                { return Vec_IntSize(\u0026p-\u003evInputs);                        }",
+      "Draft": "func Prs_NtkPiNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vInputs);                        }"
+    },
+    {
+      "Name": "Prs_NtkPoNum",
+      "Start": 5590,
+      "End": 5720,
+      "BodyStart": 5661,
+      "Original": "static inline int         Prs_NtkPoNum( Prs_Ntk_t * p )                { return Vec_IntSize(\u0026p-\u003evOutputs);                       }",
+      "Draft": "func Prs_NtkPoNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vOutputs);                       }"
+    },
+    {
+      "Name": "Prs_NtkBoxNum",
+      "Start": 5721,
+      "End": 5851,
+      "BodyStart": 5792,
+      "Original": "static inline int         Prs_NtkBoxNum( Prs_Ntk_t * p )               { return Vec_IntSize(\u0026p-\u003evObjs);                          }",
+      "Draft": "func Prs_NtkBoxNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vObjs);                          }"
+    },
+    {
+      "Name": "Prs_NtkObjNum",
+      "Start": 5852,
+      "End": 6006,
+      "BodyStart": 5923,
+      "Original": "static inline int         Prs_NtkObjNum( Prs_Ntk_t * p )               { return Prs_NtkPioNum(p) + Prs_NtkPiNum(p) + Prs_NtkPoNum(p) + Prs_NtkBoxNum(p); }",
+      "Draft": "func Prs_NtkObjNum(p *Prs_Ntk_t) int32 { return Prs_NtkPioNum(p) + Prs_NtkPiNum(p) + Prs_NtkPoNum(p) + Prs_NtkBoxNum(p); }"
+    },
+    {
+      "Name": "Prs_NtkStr",
+      "Start": 6007,
+      "End": 6137,
+      "BodyStart": 6078,
+      "Original": "static inline char *      Prs_NtkStr( Prs_Ntk_t * p, int h )           { return Abc_NamStr(p-\u003epStrs, h);                         }",
+      "Draft": "func Prs_NtkStr(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pStrs, h);                         }"
+    },
+    {
+      "Name": "Prs_NtkSop",
+      "Start": 6138,
+      "End": 6268,
+      "BodyStart": 6209,
+      "Original": "static inline char *      Prs_NtkSop( Prs_Ntk_t * p, int h )           { return Abc_NamStr(p-\u003epFuns, h);                         }",
+      "Draft": "func Prs_NtkSop(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pFuns, h);                         }"
+    },
+    {
+      "Name": "Prs_NtkConst",
+      "Start": 6269,
+      "End": 6399,
+      "BodyStart": 6340,
+      "Original": "static inline char *      Prs_NtkConst( Prs_Ntk_t * p, int h )         { return Abc_NamStr(p-\u003epFuns, h);                         }",
+      "Draft": "func Prs_NtkConst(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pFuns, h);                         }"
+    },
+    {
+      "Name": "Prs_NtkName",
+      "Start": 6400,
+      "End": 6530,
+      "BodyStart": 6471,
+      "Original": "static inline char *      Prs_NtkName( Prs_Ntk_t * p )                 { return Prs_NtkStr(p, Prs_NtkId(p));                     }",
+      "Draft": "func Prs_NtkName(p *Prs_Ntk_t) string { return Prs_NtkStr(p, Prs_NtkId(p));                     }"
+    },
+    {
+      "Name": "Prs_NtkSigName",
+      "Start": 6531,
+      "End": 6697,
+      "BodyStart": 6602,
+      "Original": "static inline int         Prs_NtkSigName( Prs_Ntk_t * p, int i )       { if (!p-\u003efSlices) return i; assert(Abc_Lit2Att2(i) == CBA_PRS_NAME); return Abc_Lit2Var2(i); }",
+      "Draft": "func Prs_NtkSigName(p *Prs_Ntk_t, i int32) int32 { if !p.fSlices { return i; }\n assert(Abc_Lit2Att2(i) == CBA_PRS_NAME, \"Abc_Lit2Att2(i) == CBA_PRS_NAME\"); return Abc_Lit2Var2(i); }"
+    },
+    {
+      "Name": "Ptr_NtkRangeSize",
+      "Start": 6698,
+      "End": 6878,
+      "BodyStart": 6769,
+      "Original": "static inline int         Ptr_NtkRangeSize( Prs_Ntk_t * p, int h )     { int l = Hash_IntObjData0(p-\u003evHash, h), r = Hash_IntObjData1(p-\u003evHash, h); return 1 + (l \u003e r ? l-r : r-l); }",
+      "Draft": "func Ptr_NtkRangeSize(p *Prs_Ntk_t, h int32) int32 { var l int32 = Hash_IntObjData0(p.vHash, h);\nvar r int32 = Hash_IntObjData1(p.vHash, h); return 1 + (l \u003e r ? l-r : r-l); }"
+    },
+    {
+      "Name": "Prs_SliceName",
+      "Start": 6880,
+      "End": 7010,
+      "BodyStart": 6951,
+      "Original": "static inline int         Prs_SliceName( Prs_Ntk_t * p, int h )        { return Vec_IntEntry(\u0026p-\u003evSlices, h);                    }",
+      "Draft": "func Prs_SliceName(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vSlices, h);                    }"
+    },
+    {
+      "Name": "Prs_SliceRange",
+      "Start": 7011,
+      "End": 7141,
+      "BodyStart": 7082,
+      "Original": "static inline int         Prs_SliceRange( Prs_Ntk_t * p, int h )       { return Vec_IntEntry(\u0026p-\u003evSlices, h+1);                  }",
+      "Draft": "func Prs_SliceRange(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vSlices, h+1);                  }"
+    },
+    {
+      "Name": "Prs_CatSize",
+      "Start": 7143,
+      "End": 7273,
+      "BodyStart": 7214,
+      "Original": "static inline int         Prs_CatSize( Prs_Ntk_t * p, int h )          { return Vec_IntEntry(\u0026p-\u003evConcats, h);                   }",
+      "Draft": "func Prs_CatSize(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vConcats, h);                   }"
+    },
+    {
+      "Name": "Prs_CatArray",
+      "Start": 7274,
+      "End": 7404,
+      "BodyStart": 7345,
+      "Original": "static inline int *       Prs_CatArray( Prs_Ntk_t * p, int h )         { return Vec_IntEntryP(\u0026p-\u003evConcats, h+1);                }",
+      "Draft": "func Prs_CatArray(p *Prs_Ntk_t, h int32) *int32 { return Vec_IntEntryP(\u0026p.vConcats, h+1);                }"
+    },
+    {
+      "Name": "Prs_CatSignals",
+      "Start": 7405,
+      "End": 7579,
+      "BodyStart": 7476,
+      "Original": "static inline Vec_Int_t * Prs_CatSignals( Prs_Ntk_t * p, int h )       { static Vec_Int_t V; V.nSize = V.nCap = Prs_CatSize(p, h); V.pArray = Prs_CatArray(p, h); return \u0026V; }",
+      "Draft": "func Prs_CatSignals(p *Prs_Ntk_t, h int32) *Vec_Int_t {  spStatic_Prs_CatSignals_V.nSize = spStatic_Prs_CatSignals_V.nCap = Prs_CatSize(p, h); spStatic_Prs_CatSignals_V.pArray = Prs_CatArray(p, h); return \u0026spStatic_Prs_CatSignals_V; }"
+    },
+    {
+      "Name": "Prs_BoxHand",
+      "Start": 7581,
+      "End": 7711,
+      "BodyStart": 7652,
+      "Original": "static inline int         Prs_BoxHand( Prs_Ntk_t * p, int i )          { return Vec_IntEntry(\u0026p-\u003evObjs, i);                      }",
+      "Draft": "func Prs_BoxHand(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vObjs, i);                      }"
+    },
+    {
+      "Name": "Prs_BoxSize",
+      "Start": 7712,
+      "End": 7842,
+      "BodyStart": 7783,
+      "Original": "static inline int         Prs_BoxSize( Prs_Ntk_t * p, int i )          { return Vec_IntEntry(\u0026p-\u003evBoxes, Prs_BoxHand(p, i))-2;   }",
+      "Draft": "func Prs_BoxSize(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i))-2;   }"
+    },
+    {
+      "Name": "Prs_BoxIONum",
+      "Start": 7843,
+      "End": 7973,
+      "BodyStart": 7914,
+      "Original": "static inline int         Prs_BoxIONum( Prs_Ntk_t * p, int i )         { return Prs_BoxSize(p, i) / 2;                           }",
+      "Draft": "func Prs_BoxIONum(p *Prs_Ntk_t, i int32) int32 { return Prs_BoxSize(p, i) / 2;                           }"
+    },
+    {
+      "Name": "Prs_BoxNtk",
+      "Start": 7974,
+      "End": 8104,
+      "BodyStart": 8045,
+      "Original": "static inline int         Prs_BoxNtk( Prs_Ntk_t * p, int i )           { return Vec_IntEntry(\u0026p-\u003evBoxes, Prs_BoxHand(p, i)+1);   }",
+      "Draft": "func Prs_BoxNtk(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+1);   }"
+    },
+    {
+      "Name": "Prs_BoxSetNtk",
+      "Start": 8105,
+      "End": 8235,
+      "BodyStart": 8176,
+      "Original": "static inline void        Prs_BoxSetNtk( Prs_Ntk_t * p, int i, int m ) { Vec_IntWriteEntry(\u0026p-\u003evBoxes, Prs_BoxHand(p, i)+1, m);  }",
+      "Draft": "func Prs_BoxSetNtk(p *Prs_Ntk_t, i int32, m int32) { Vec_IntWriteEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+1, m);  }"
+    },
+    {
+      "Name": "Prs_BoxName",
+      "Start": 8236,
+      "End": 8366,
+      "BodyStart": 8307,
+      "Original": "static inline int         Prs_BoxName( Prs_Ntk_t * p, int i )          { return Vec_IntEntry(\u0026p-\u003evBoxes, Prs_BoxHand(p, i)+2);   }",
+      "Draft": "func Prs_BoxName(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+2);   }"
+    },
+    {
+      "Name": "Prs_BoxIsNode",
+      "Start": 8367,
+      "End": 8497,
+      "BodyStart": 8438,
+      "Original": "static inline int         Prs_BoxIsNode( Prs_Ntk_t * p, int i )        { return!Vec_IntEntry(\u0026p-\u003evBoxes, Prs_BoxHand(p, i)+3);   }",
+      "Draft": "func Prs_BoxIsNode(p *Prs_Ntk_t, i int32) int32 { return!Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+3);   }"
+    },
+    {
+      "Name": "Prs_BoxArray",
+      "Start": 8517,
+      "End": 8647,
+      "BodyStart": 8588,
+      "Original": "static inline int *       Prs_BoxArray( Prs_Ntk_t * p, int i )         { return Vec_IntEntryP(\u0026p-\u003evBoxes, Prs_BoxHand(p, i)+3);  }",
+      "Draft": "func Prs_BoxArray(p *Prs_Ntk_t, i int32) *int32 { return Vec_IntEntryP(\u0026p.vBoxes, Prs_BoxHand(p, i)+3);  }"
+    },
+    {
+      "Name": "Prs_BoxSignals",
+      "Start": 8648,
+      "End": 8822,
+      "BodyStart": 8719,
+      "Original": "static inline Vec_Int_t * Prs_BoxSignals( Prs_Ntk_t * p, int i )       { static Vec_Int_t V; V.nSize = V.nCap = Prs_BoxSize(p, i); V.pArray = Prs_BoxArray(p, i); return \u0026V; }",
+      "Draft": "func Prs_BoxSignals(p *Prs_Ntk_t, i int32) *Vec_Int_t {  spStatic_Prs_BoxSignals_V.nSize = spStatic_Prs_BoxSignals_V.nCap = Prs_BoxSize(p, i); spStatic_Prs_BoxSignals_V.pArray = Prs_BoxArray(p, i); return \u0026spStatic_Prs_BoxSignals_V; }"
+    },
+    {
+      "Name": "Prs_ManErrorSet",
+      "Start": 9800,
+      "End": 9971,
+      "BodyStart": 9877,
+      "Original": "static inline int Prs_ManErrorSet( Prs_Man_t * p, char * pError, int Value )\n{\n    assert( !p-\u003eErrorStr[0] );\n    sprintf( p-\u003eErrorStr, \"%s\", pError );\n    return Value;\n}",
+      "Draft": "func Prs_ManErrorSet(p *Prs_Man_t, pError string, Value int32) int32 {\n    assert(!p.ErrorStr[0], \"!p.ErrorStr[0]\");\n    sprintf( p.ErrorStr, \"%s\", pError );\n    return Value;\n}"
+    },
+    {
+      "Name": "Prs_ManErrorClear",
+      "Start": 9995,
+      "End": 10079,
+      "BodyStart": 10049,
+      "Original": "static inline void Prs_ManErrorClear( Prs_Man_t * p )\n{\n    p-\u003eErrorStr[0] = '\\0';\n}",
+      "Draft": "func Prs_ManErrorClear(p *Prs_Man_t) {\n    p.ErrorStr[0] = '\\0';\n}"
+    },
+    {
+      "Name": "Prs_ManErrorPrint",
+      "Start": 10103,
+      "End": 10391,
+      "BodyStart": 10156,
+      "Original": "static inline int Prs_ManErrorPrint( Prs_Man_t * p )\n{\n    char * pThis; int iLine = 0;\n    if ( !p-\u003eErrorStr[0] ) return 1;\n    for ( pThis = p-\u003epBuffer; pThis \u003c p-\u003epCur; pThis++ )\n        iLine += (int)(*pThis == '\\n');\n    printf( \"Line %d: %s\\n\", iLine, p-\u003eErrorStr );\n    return 0;\n}",
+      "Draft": "func Prs_ManErrorPrint(p *Prs_Man_t) int32 {\n    var pThis string; var iLine int32;\n    if !p.ErrorStr[0] { return 1; }\n    for  pThis = p.pBuffer; pThis \u003c p.pCur; pThis++  {\n        iLine += int32((*pThis == '\\n'));\n    }\n    fmt.Printf(\"Line %d: %s\\n\", iLine, p.ErrorStr);\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManInitializeNtk",
+      "Start": 10412,
+      "End": 10812,
+      "BodyStart": 10493,
+      "Original": "static inline void Prs_ManInitializeNtk( Prs_Man_t * p, int iName, int fSlices )\n{\n    assert( p-\u003epNtk == NULL );\n    p-\u003epNtk = ABC_CALLOC( Prs_Ntk_t, 1 );\n    p-\u003epNtk-\u003eiModuleName = iName;\n    p-\u003epNtk-\u003efSlices = fSlices;\n    p-\u003epNtk-\u003epStrs = Abc_NamRef( p-\u003epStrs );\n    p-\u003epNtk-\u003epFuns = Abc_NamRef( p-\u003epFuns );\n    p-\u003epNtk-\u003evHash = Hash_IntManRef( p-\u003evHash );\n    Vec_PtrPush( p-\u003evNtks, p-\u003epNtk );\n}",
+      "Draft": "func Prs_ManInitializeNtk(p *Prs_Man_t, iName int32, fSlices int32) {\n    assert(p.pNtk == nil, \"p.pNtk == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pNtk = \u0026Prs_Ntk_t{};\n    p.pNtk.iModuleName = iName;\n    p.pNtk.fSlices = fSlices;\n    p.pNtk.pStrs = Abc_NamRef( p.pStrs );\n    p.pNtk.pFuns = Abc_NamRef( p.pFuns );\n    p.pNtk.vHash = Hash_IntManRef( p.vHash );\n    Vec_PtrPush( p.vNtks, p.pNtk );\n}"
+    },
+    {
+      "Name": "Prs_ManFinalizeNtk",
+      "Start": 10813,
+      "End": 10922,
+      "BodyStart": 10868,
+      "Original": "static inline void Prs_ManFinalizeNtk( Prs_Man_t * p )\n{\n    assert( p-\u003epNtk != NULL );\n    p-\u003epNtk = NULL;\n}",
+      "Draft": "func Prs_ManFinalizeNtk(p *Prs_Man_t) {\n    assert(p.pNtk != nil, \"p.pNtk != nil\");\n    p.pNtk = nil;\n}"
+    },
+    {
+      "Name": "Prs_ManNewStrId",
+      "Start": 10924,
+      "End": 11610,
+      "BodyStart": 11002,
+      "Original": "static inline int Prs_ManNewStrId( Prs_Man_t * p, const char * format, ...  )\n{\n    Abc_Nam_t * pStrs = p-\u003epStrs;\n    Vec_Str_t * vBuf = Abc_NamBuffer( pStrs );\n    int nAdded, nSize = 1000; \n    va_list args;   va_start( args, format );\n    Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(vBuf), nSize, format, args );\n    if ( nAdded \u003e nSize )\n    {\n        Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(vBuf), nAdded, format, args );\n        assert( nSize == nAdded );\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( pStrs, Vec_StrLimit(vBuf), Vec_StrLimit(vBuf) + nAdded, NULL );\n}",
+      "Draft": "static inline int Prs_ManNewStrId( Prs_Man_t * p, char * format, ...  )\n{\n    var pStrs *Abc_Nam_t  = p.pStrs;\n    var vBuf *Vec_Str_t  = Abc_NamBuffer( pStrs );\n    var nAdded int32;\n    var nSize int32 = 1000; \n    va_list args;   va_start( args, format );\n    Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(vBuf), nSize, format, args );\n    if nAdded \u003e nSize {\n        Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(vBuf), nAdded, format, args );\n        assert(nSize == nAdded, \"nSize == nAdded\");\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( pStrs, Vec_StrLimit(vBuf), Vec_StrLimit(vBuf) + nAdded, nil );\n}"
+    },
+    {
+      "Name": "Prs_NtkAddSlice",
+      "Start": 11648,
+      "End": 11831,
+      "BodyStart": 11720,
+      "Original": "static inline int Prs_NtkAddSlice( Prs_Ntk_t * p, int Name, int Range )\n{\n    int Value = Vec_IntSize(\u0026p-\u003evSlices);\n    Vec_IntPushTwo( \u0026p-\u003evSlices, Name, Range );\n    return Value;\n}",
+      "Draft": "func Prs_NtkAddSlice(p *Prs_Ntk_t, Name int32, Range int32) int32 {\n    var Value int32  = Vec_IntSize(\u0026p.vSlices);\n    Vec_IntPushTwo( \u0026p.vSlices, Name, Range );\n    return Value;\n}"
+    },
+    {
+      "Name": "Prs_NtkAddConcat",
+      "Start": 11832,
+      "End": 12181,
+      "BodyStart": 11903,
+      "Original": "static inline int Prs_NtkAddConcat( Prs_Ntk_t * p, Vec_Int_t * vTemp )\n{\n    int Value;\n    if ( !(Vec_IntSize(\u0026p-\u003evConcats) \u0026 1) )\n        Vec_IntPush(\u0026p-\u003evConcats, -1);\n    Value = Vec_IntSize(\u0026p-\u003evConcats);\n    assert( Value \u0026 1 );\n    Vec_IntPush( \u0026p-\u003evConcats, Vec_IntSize(vTemp) );\n    Vec_IntAppend( \u0026p-\u003evConcats, vTemp );\n    return Value;\n}",
+      "Draft": "func Prs_NtkAddConcat(p *Prs_Ntk_t, vTemp *Vec_Int_t) int32 {\n    var Value int32;\n    if !(Vec_IntSize(\u0026p.vConcats) \u0026 1) {\n        Vec_IntPush(\u0026p.vConcats, -1); }\n    Value = Vec_IntSize(\u0026p.vConcats);\n    assert(Value \u0026 1, \"Value \u0026 1\");\n    Vec_IntPush( \u0026p.vConcats, Vec_IntSize(vTemp) );\n    Vec_IntAppend( \u0026p.vConcats, vTemp );\n    return Value;\n}"
+    },
+    {
+      "Name": "Prs_NtkAddBox",
+      "Start": 12182,
+      "End": 12711,
+      "BodyStart": 12278,
+      "Original": "static inline void Prs_NtkAddBox( Prs_Ntk_t * p, int ModName, int InstName, Vec_Int_t * vTemp )\n{\n    int Value;\n    assert( Vec_IntSize(vTemp) % 2 == 0 );\n    if ( !(Vec_IntSize(\u0026p-\u003evBoxes) \u0026 1) )\n        Vec_IntPush(\u0026p-\u003evBoxes, -1);\n    Value = Vec_IntSize(\u0026p-\u003evBoxes);\n    assert( Value \u0026 1 );\n    Vec_IntPush( \u0026p-\u003evObjs, Value );\n    // create entry\n    Vec_IntPush( \u0026p-\u003evBoxes, Vec_IntSize(vTemp)+2 );\n    Vec_IntPush( \u0026p-\u003evBoxes, ModName );\n    Vec_IntPush( \u0026p-\u003evBoxes, InstName );\n    Vec_IntAppend( \u0026p-\u003evBoxes, vTemp );\n}",
+      "Draft": "func Prs_NtkAddBox(p *Prs_Ntk_t, ModName int32, InstName int32, vTemp *Vec_Int_t) {\n    var Value int32;\n    assert(Vec_IntSize(vTemp) % 2 == 0, \"Vec_IntSize(vTemp) % 2 == 0\");\n    if !(Vec_IntSize(\u0026p.vBoxes) \u0026 1) {\n        Vec_IntPush(\u0026p.vBoxes, -1); }\n    Value = Vec_IntSize(\u0026p.vBoxes);\n    assert(Value \u0026 1, \"Value \u0026 1\");\n    Vec_IntPush( \u0026p.vObjs, Value );\n    // create entry\n    Vec_IntPush( \u0026p.vBoxes, Vec_IntSize(vTemp)+2 );\n    Vec_IntPush( \u0026p.vBoxes, ModName );\n    Vec_IntPush( \u0026p.vBoxes, InstName );\n    Vec_IntAppend( \u0026p.vBoxes, vTemp );\n}"
+    },
+    {
+      "Name": "Prs_ManLoadFile",
+      "Start": 12712,
+      "End": 13543,
+      "BodyStart": 12786,
+      "Original": "static inline char * Prs_ManLoadFile( char * pFileName, char ** ppLimit )\n{\n    char * pBuffer;\n    int nFileSize, RetValue;\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open input file.\\n\" );\n        return NULL;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer = ABC_ALLOC( char, nFileSize + 16 );\n    pBuffer[0] = '\\n';\n    RetValue = fread( pBuffer+1, nFileSize, 1, pFile );\n    fclose( pFile );\n    // terminate the string with '\\0'\n    pBuffer[nFileSize + 1] = '\\n';\n    pBuffer[nFileSize + 2] = '\\0';\n    *ppLimit = pBuffer + nFileSize + 3;\n    return pBuffer;\n}",
+      "Draft": "func Prs_ManLoadFile(pFileName string, ppLimit *string) string {\n    var pBuffer string;\n    var nFileSize, RetValue int32;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file.\\n\");\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 16)));\n    pBuffer[0] = '\\n';\n    RetValue = fread( pBuffer+1, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n    // terminate the string with '\\0'\n    pBuffer[nFileSize + 1] = '\\n';\n    pBuffer[nFileSize + 2] = '\\0';\n    *ppLimit = pBuffer + nFileSize + 3;\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Prs_ManAlloc",
+      "Start": 13544,
+      "End": 14134,
+      "BodyStart": 13603,
+      "Original": "static inline Prs_Man_t * Prs_ManAlloc( char * pFileName )\n{\n    Prs_Man_t * p;\n    p = ABC_CALLOC( Prs_Man_t, 1 );\n    if ( pFileName )\n    {\n        char * pBuffer, * pLimit;\n        pBuffer = Prs_ManLoadFile( pFileName, \u0026pLimit );\n        if ( pBuffer == NULL )\n            return NULL;\n        p-\u003epName   = pFileName;\n        p-\u003epBuffer = pBuffer;\n        p-\u003epLimit  = pLimit;\n        p-\u003epCur    = pBuffer;\n    }\n    p-\u003epStrs = Abc_NamStart( 1000, 24 );\n    p-\u003epFuns = Abc_NamStart( 100, 24 );\n    p-\u003evHash = Hash_IntManStart( 1000 );\n    p-\u003evNtks = Vec_PtrAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Prs_ManAlloc(pFileName string) *Prs_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Prs_Man_t{};\n    if pFileName {\n        var pBuffer, pLimit string;\n        pBuffer = Prs_ManLoadFile( pFileName, \u0026pLimit );\n        if pBuffer == nil {\n            return nil; }\n        p.pName   = pFileName;\n        p.pBuffer = pBuffer;\n        p.pLimit  = pLimit;\n        p.pCur    = pBuffer;\n    }\n    p.pStrs = Abc_NamStart( 1000, 24 );\n    p.pFuns = Abc_NamStart( 100, 24 );\n    p.vHash = Hash_IntManStart( 1000 );\n    p.vNtks = Vec_PtrAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Prs_NtkFree",
+      "Start": 14136,
+      "End": 14778,
+      "BodyStart": 14184,
+      "Original": "static inline void Prs_NtkFree( Prs_Ntk_t * p )\n{\n    if ( p-\u003epStrs ) Abc_NamDeref( p-\u003epStrs );\n    if ( p-\u003epFuns ) Abc_NamDeref( p-\u003epFuns );\n    if ( p-\u003evHash ) Hash_IntManDeref( p-\u003evHash );\n    Vec_IntErase( \u0026p-\u003evOrder );\n    Vec_IntErase( \u0026p-\u003evInouts );\n    Vec_IntErase( \u0026p-\u003evInputs );\n    Vec_IntErase( \u0026p-\u003evOutputs );\n    Vec_IntErase( \u0026p-\u003evWires );\n    Vec_IntErase( \u0026p-\u003evInoutsR );\n    Vec_IntErase( \u0026p-\u003evInputsR );\n    Vec_IntErase( \u0026p-\u003evOutputsR );\n    Vec_IntErase( \u0026p-\u003evWiresR );\n    Vec_IntErase( \u0026p-\u003evSlices );\n    Vec_IntErase( \u0026p-\u003evConcats );\n    Vec_IntErase( \u0026p-\u003evBoxes );\n    Vec_IntErase( \u0026p-\u003evObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Prs_NtkFree(p *Prs_Ntk_t) {\n    if p.pStrs { Abc_NamDeref( p.pStrs ); }\n    if p.pFuns { Abc_NamDeref( p.pFuns ); }\n    if p.vHash { Hash_IntManDeref( p.vHash ); }\n    Vec_IntErase( \u0026p.vOrder );\n    Vec_IntErase( \u0026p.vInouts );\n    Vec_IntErase( \u0026p.vInputs );\n    Vec_IntErase( \u0026p.vOutputs );\n    Vec_IntErase( \u0026p.vWires );\n    Vec_IntErase( \u0026p.vInoutsR );\n    Vec_IntErase( \u0026p.vInputsR );\n    Vec_IntErase( \u0026p.vOutputsR );\n    Vec_IntErase( \u0026p.vWiresR );\n    Vec_IntErase( \u0026p.vSlices );\n    Vec_IntErase( \u0026p.vConcats );\n    Vec_IntErase( \u0026p.vBoxes );\n    Vec_IntErase( \u0026p.vObjs );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Prs_ManVecFree",
+      "Start": 14780,
+      "End": 14974,
+      "BodyStart": 14834,
+      "Original": "static inline void Prs_ManVecFree( Vec_Ptr_t * vPrs )\n{\n    Prs_Ntk_t * pNtk; int i;\n    Vec_PtrForEachEntry( Prs_Ntk_t *, vPrs, pNtk, i )\n        Prs_NtkFree( pNtk );\n    Vec_PtrFree( vPrs );\n}",
+      "Draft": "func Prs_ManVecFree(vPrs *Vec_Ptr_t) {\n    var pNtk *Prs_Ntk_t; var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Prs_NtkFree( pNtk );\n    }\n    Vec_PtrFree( vPrs );\n}"
+    },
+    {
+      "Name": "Prs_ManFree",
+      "Start": 14976,
+      "End": 15541,
+      "BodyStart": 15024,
+      "Original": "static inline void Prs_ManFree( Prs_Man_t * p )\n{\n    if ( p-\u003epStrs ) Abc_NamDeref( p-\u003epStrs );\n    if ( p-\u003epFuns ) Abc_NamDeref( p-\u003epFuns );\n    if ( p-\u003evHash ) Hash_IntManDeref( p-\u003evHash );\n    if ( p-\u003evNtks ) Prs_ManVecFree( p-\u003evNtks );\n    // temporary\n    Vec_StrErase( \u0026p-\u003evCover );\n    Vec_IntErase( \u0026p-\u003evTemp );\n    Vec_IntErase( \u0026p-\u003evTemp2 );\n    Vec_IntErase( \u0026p-\u003evTemp3 );\n    Vec_IntErase( \u0026p-\u003evTemp4 );\n    Vec_IntErase( \u0026p-\u003evKnown );\n    Vec_IntErase( \u0026p-\u003evFailed );\n    Vec_IntErase( \u0026p-\u003evSucceeded );\n    ABC_FREE( p-\u003epBuffer );\n    ABC_FREE( p );\n}",
+      "Draft": "func Prs_ManFree(p *Prs_Man_t) {\n    if p.pStrs { Abc_NamDeref( p.pStrs ); }\n    if p.pFuns { Abc_NamDeref( p.pFuns ); }\n    if p.vHash { Hash_IntManDeref( p.vHash ); }\n    if p.vNtks { Prs_ManVecFree( p.vNtks ); }\n    // temporary\n    Vec_StrErase( \u0026p.vCover );\n    Vec_IntErase( \u0026p.vTemp );\n    Vec_IntErase( \u0026p.vTemp2 );\n    Vec_IntErase( \u0026p.vTemp3 );\n    Vec_IntErase( \u0026p.vTemp4 );\n    Vec_IntErase( \u0026p.vKnown );\n    Vec_IntErase( \u0026p.vFailed );\n    Vec_IntErase( \u0026p.vSucceeded );\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Prs_NtkMemory",
+      "Start": 15543,
+      "End": 16153,
+      "BodyStart": 15592,
+      "Original": "static inline int Prs_NtkMemory( Prs_Ntk_t * p )\n{\n    int nMem = sizeof(Prs_Ntk_t);\n    nMem += Vec_IntMemory( \u0026p-\u003evOrder );\n    nMem += Vec_IntMemory( \u0026p-\u003evInouts );\n    nMem += Vec_IntMemory( \u0026p-\u003evInputs );\n    nMem += Vec_IntMemory( \u0026p-\u003evOutputs );\n    nMem += Vec_IntMemory( \u0026p-\u003evWires );\n    nMem += Vec_IntMemory( \u0026p-\u003evInoutsR );\n    nMem += Vec_IntMemory( \u0026p-\u003evInputsR );\n    nMem += Vec_IntMemory( \u0026p-\u003evOutputsR );\n    nMem += Vec_IntMemory( \u0026p-\u003evWiresR );\n    nMem += Vec_IntMemory( \u0026p-\u003evSlices );\n    nMem += Vec_IntMemory( \u0026p-\u003evBoxes );\n    nMem += Vec_IntMemory( \u0026p-\u003evConcats );\n    return nMem;\n}",
+      "Draft": "func Prs_NtkMemory(p *Prs_Ntk_t) int32 {\n    var nMem int32  = sizeof(Prs_Ntk_t);\n    nMem += Vec_IntMemory( \u0026p.vOrder );\n    nMem += Vec_IntMemory( \u0026p.vInouts );\n    nMem += Vec_IntMemory( \u0026p.vInputs );\n    nMem += Vec_IntMemory( \u0026p.vOutputs );\n    nMem += Vec_IntMemory( \u0026p.vWires );\n    nMem += Vec_IntMemory( \u0026p.vInoutsR );\n    nMem += Vec_IntMemory( \u0026p.vInputsR );\n    nMem += Vec_IntMemory( \u0026p.vOutputsR );\n    nMem += Vec_IntMemory( \u0026p.vWiresR );\n    nMem += Vec_IntMemory( \u0026p.vSlices );\n    nMem += Vec_IntMemory( \u0026p.vBoxes );\n    nMem += Vec_IntMemory( \u0026p.vConcats );\n    return nMem;\n}"
+    },
+    {
+      "Name": "Prs_ManMemory",
+      "Start": 16154,
+      "End": 16434,
+      "BodyStart": 16206,
+      "Original": "static inline int Prs_ManMemory( Vec_Ptr_t * vPrs )\n{\n    Prs_Ntk_t * pNtk; int i;\n    int nMem = Vec_PtrMemory(vPrs);\n    Vec_PtrForEachEntry( Prs_Ntk_t *, vPrs, pNtk, i )\n        nMem += Prs_NtkMemory( pNtk );\n    nMem += Abc_NamMemUsed(Prs_ManNameMan(vPrs));\n    return nMem;\n}",
+      "Draft": "func Prs_ManMemory(vPrs *Vec_Ptr_t) int32 {\n    var pNtk *Prs_Ntk_t; var i int32;\n    var nMem int32  = Vec_PtrMemory(vPrs);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        nMem += Prs_NtkMemory( pNtk );\n    }\n    nMem += Abc_NamMemUsed(Prs_ManNameMan(vPrs));\n    return nMem;\n}"
+    },
+    {
+      "Name": "Ptr_SopToType",
+      "Start": 16682,
+      "End": 17701,
+      "BodyStart": 16739,
+      "Original": "static inline Cba_ObjType_t Ptr_SopToType( char * pSop )\n{\n    if ( !strcmp(pSop, \" 0\\n\") )         return CBA_BOX_CF;\n    if ( !strcmp(pSop, \" 1\\n\") )         return CBA_BOX_CT;\n    if ( !strcmp(pSop, \"1 1\\n\") )        return CBA_BOX_BUF;\n    if ( !strcmp(pSop, \"0 1\\n\") )        return CBA_BOX_INV;\n    if ( !strcmp(pSop, \"11 1\\n\") )       return CBA_BOX_AND;\n    if ( !strcmp(pSop, \"00 1\\n\") )       return CBA_BOX_NOR;\n    if ( !strcmp(pSop, \"00 0\\n\") )       return CBA_BOX_OR;\n    if ( !strcmp(pSop, \"-1 1\\n1- 1\\n\") ) return CBA_BOX_OR;\n    if ( !strcmp(pSop, \"1- 1\\n-1 1\\n\") ) return CBA_BOX_OR;\n    if ( !strcmp(pSop, \"01 1\\n10 1\\n\") ) return CBA_BOX_XOR;\n    if ( !strcmp(pSop, \"10 1\\n01 1\\n\") ) return CBA_BOX_XOR;\n    if ( !strcmp(pSop, \"11 1\\n00 1\\n\") ) return CBA_BOX_XNOR;\n    if ( !strcmp(pSop, \"00 1\\n11 1\\n\") ) return CBA_BOX_XNOR;\n    if ( !strcmp(pSop, \"10 1\\n\") )       return CBA_BOX_SHARP;\n    if ( !strcmp(pSop, \"01 1\\n\") )       return CBA_BOX_SHARPL;\n    assert( 0 );\n    return CBA_OBJ_NONE;\n}",
+      "Draft": "func Ptr_SopToType(pSop string) Cba_ObjType_t {\n    if !(int32(strings.Compare(pSop, \" 0\\n\")) != 0) {         return CBA_BOX_CF; }\n    if !(int32(strings.Compare(pSop, \" 1\\n\")) != 0) {         return CBA_BOX_CT; }\n    if !(int32(strings.Compare(pSop, \"1 1\\n\")) != 0) {        return CBA_BOX_BUF; }\n    if !(int32(strings.Compare(pSop, \"0 1\\n\")) != 0) {        return CBA_BOX_INV; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n\")) != 0) {       return CBA_BOX_AND; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n\")) != 0) {       return CBA_BOX_NOR; }\n    if !(int32(strings.Compare(pSop, \"00 0\\n\")) != 0) {       return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"-1 1\\n1- 1\\n\")) != 0) { return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"1- 1\\n-1 1\\n\")) != 0) { return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n10 1\\n\")) != 0) { return CBA_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n01 1\\n\")) != 0) { return CBA_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n00 1\\n\")) != 0) { return CBA_BOX_XNOR; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n11 1\\n\")) != 0) { return CBA_BOX_XNOR; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n\")) != 0) {       return CBA_BOX_SHARP; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n\")) != 0) {       return CBA_BOX_SHARPL; }\n    assert(false, \"0\");\n    return CBA_OBJ_NONE;\n}"
+    },
+    {
+      "Name": "Ptr_SopToTypeName",
+      "Start": 17702,
+      "End": 18740,
+      "BodyStart": 17756,
+      "Original": "static inline char * Ptr_SopToTypeName( char * pSop )\n{\n    if ( !strcmp(pSop, \" 0\\n\") )         return \"CBA_BOX_C0\";\n    if ( !strcmp(pSop, \" 1\\n\") )         return \"CBA_BOX_C1\";\n    if ( !strcmp(pSop, \"1 1\\n\") )        return \"CBA_BOX_BUF\";\n    if ( !strcmp(pSop, \"0 1\\n\") )        return \"CBA_BOX_INV\";\n    if ( !strcmp(pSop, \"11 1\\n\") )       return \"CBA_BOX_AND\";\n    if ( !strcmp(pSop, \"00 1\\n\") )       return \"CBA_BOX_NOR\";\n    if ( !strcmp(pSop, \"00 0\\n\") )       return \"CBA_BOX_OR\";\n    if ( !strcmp(pSop, \"-1 1\\n1- 1\\n\") ) return \"CBA_BOX_OR\";\n    if ( !strcmp(pSop, \"1- 1\\n-1 1\\n\") ) return \"CBA_BOX_OR\";\n    if ( !strcmp(pSop, \"01 1\\n10 1\\n\") ) return \"CBA_BOX_XOR\";\n    if ( !strcmp(pSop, \"10 1\\n01 1\\n\") ) return \"CBA_BOX_XOR\";\n    if ( !strcmp(pSop, \"11 1\\n00 1\\n\") ) return \"CBA_BOX_XNOR\";\n    if ( !strcmp(pSop, \"00 1\\n11 1\\n\") ) return \"CBA_BOX_XNOR\";\n    if ( !strcmp(pSop, \"10 1\\n\") )       return \"CBA_BOX_SHARP\";\n    if ( !strcmp(pSop, \"01 1\\n\") )       return \"CBA_BOX_SHARPL\";\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Ptr_SopToTypeName(pSop string) string {\n    if !(int32(strings.Compare(pSop, \" 0\\n\")) != 0) {         return \"CBA_BOX_C0\"; }\n    if !(int32(strings.Compare(pSop, \" 1\\n\")) != 0) {         return \"CBA_BOX_C1\"; }\n    if !(int32(strings.Compare(pSop, \"1 1\\n\")) != 0) {        return \"CBA_BOX_BUF\"; }\n    if !(int32(strings.Compare(pSop, \"0 1\\n\")) != 0) {        return \"CBA_BOX_INV\"; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n\")) != 0) {       return \"CBA_BOX_AND\"; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n\")) != 0) {       return \"CBA_BOX_NOR\"; }\n    if !(int32(strings.Compare(pSop, \"00 0\\n\")) != 0) {       return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"-1 1\\n1- 1\\n\")) != 0) { return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"1- 1\\n-1 1\\n\")) != 0) { return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n10 1\\n\")) != 0) { return \"CBA_BOX_XOR\"; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n01 1\\n\")) != 0) { return \"CBA_BOX_XOR\"; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n00 1\\n\")) != 0) { return \"CBA_BOX_XNOR\"; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n11 1\\n\")) != 0) { return \"CBA_BOX_XNOR\"; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n\")) != 0) {       return \"CBA_BOX_SHARP\"; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n\")) != 0) {       return \"CBA_BOX_SHARPL\"; }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Ptr_TypeToName",
+      "Start": 18741,
+      "End": 19657,
+      "BodyStart": 18799,
+      "Original": "static inline char * Ptr_TypeToName( Cba_ObjType_t Type )\n{\n    if ( Type == CBA_BOX_CF )    return \"const0\";\n    if ( Type == CBA_BOX_CT )    return \"const1\";\n    if ( Type == CBA_BOX_CX )    return \"constX\";\n    if ( Type == CBA_BOX_CZ )    return \"constZ\";\n    if ( Type == CBA_BOX_BUF )   return \"buf\";\n    if ( Type == CBA_BOX_INV )   return \"not\";\n    if ( Type == CBA_BOX_AND )   return \"and\";\n    if ( Type == CBA_BOX_NAND )  return \"nand\";\n    if ( Type == CBA_BOX_OR )    return \"or\";\n    if ( Type == CBA_BOX_NOR )   return \"nor\";\n    if ( Type == CBA_BOX_XOR )   return \"xor\";\n    if ( Type == CBA_BOX_XNOR )  return \"xnor\";\n    if ( Type == CBA_BOX_MUX )   return \"mux\";\n    if ( Type == CBA_BOX_MAJ )   return \"maj\";\n    if ( Type == CBA_BOX_SHARP ) return \"sharp\";\n    if ( Type == CBA_BOX_SHARPL) return \"sharpl\";\n    if ( Type == CBA_BOX_TRI)    return \"bufifl\";\n    assert( 0 );\n    return \"???\";\n}",
+      "Draft": "func Ptr_TypeToName(Type Cba_ObjType_t) string {\n    if Type == CBA_BOX_CF {    return \"const0\"; }\n    if Type == CBA_BOX_CT {    return \"const1\"; }\n    if Type == CBA_BOX_CX {    return \"constX\"; }\n    if Type == CBA_BOX_CZ {    return \"constZ\"; }\n    if Type == CBA_BOX_BUF {   return \"buf\"; }\n    if Type == CBA_BOX_INV {   return \"not\"; }\n    if Type == CBA_BOX_AND {   return \"and\"; }\n    if Type == CBA_BOX_NAND {  return \"nand\"; }\n    if Type == CBA_BOX_OR {    return \"or\"; }\n    if Type == CBA_BOX_NOR {   return \"nor\"; }\n    if Type == CBA_BOX_XOR {   return \"xor\"; }\n    if Type == CBA_BOX_XNOR {  return \"xnor\"; }\n    if Type == CBA_BOX_MUX {   return \"mux\"; }\n    if Type == CBA_BOX_MAJ {   return \"maj\"; }\n    if Type == CBA_BOX_SHARP { return \"sharp\"; }\n    if Type == CBA_BOX_SHARPL { return \"sharpl\"; }\n    if Type == CBA_BOX_TRI {    return \"bufifl\"; }\n    assert(false, \"0\");\n    return \"???\";\n}"
+    },
+    {
+      "Name": "Ptr_TypeToSop",
+      "Start": 19658,
+      "End": 20578,
+      "BodyStart": 19715,
+      "Original": "static inline char * Ptr_TypeToSop( Cba_ObjType_t Type )\n{\n    if ( Type == CBA_BOX_CF )    return \" 0\\n\";\n    if ( Type == CBA_BOX_CT )    return \" 1\\n\";\n    if ( Type == CBA_BOX_CX )    return \" 0\\n\";\n    if ( Type == CBA_BOX_CZ )    return \" 0\\n\";\n    if ( Type == CBA_BOX_BUF )   return \"1 1\\n\";\n    if ( Type == CBA_BOX_INV )   return \"0 1\\n\";\n    if ( Type == CBA_BOX_AND )   return \"11 1\\n\";\n    if ( Type == CBA_BOX_NAND )  return \"11 0\\n\";\n    if ( Type == CBA_BOX_OR )    return \"00 0\\n\";\n    if ( Type == CBA_BOX_NOR )   return \"00 1\\n\";\n    if ( Type == CBA_BOX_XOR )   return \"01 1\\n10 1\\n\";\n    if ( Type == CBA_BOX_XNOR )  return \"00 1\\n11 1\\n\";\n    if ( Type == CBA_BOX_SHARP ) return \"10 1\\n\";\n    if ( Type == CBA_BOX_SHARPL) return \"01 1\\n\";\n    if ( Type == CBA_BOX_MUX )   return \"11- 1\\n0-1 1\\n\";\n    if ( Type == CBA_BOX_MAJ )   return \"11- 1\\n1-1 1\\n-11 1\\n\";\n    assert( 0 );\n    return \"???\";\n}",
+      "Draft": "func Ptr_TypeToSop(Type Cba_ObjType_t) string {\n    if Type == CBA_BOX_CF {    return \" 0\\n\"; }\n    if Type == CBA_BOX_CT {    return \" 1\\n\"; }\n    if Type == CBA_BOX_CX {    return \" 0\\n\"; }\n    if Type == CBA_BOX_CZ {    return \" 0\\n\"; }\n    if Type == CBA_BOX_BUF {   return \"1 1\\n\"; }\n    if Type == CBA_BOX_INV {   return \"0 1\\n\"; }\n    if Type == CBA_BOX_AND {   return \"11 1\\n\"; }\n    if Type == CBA_BOX_NAND {  return \"11 0\\n\"; }\n    if Type == CBA_BOX_OR {    return \"00 0\\n\"; }\n    if Type == CBA_BOX_NOR {   return \"00 1\\n\"; }\n    if Type == CBA_BOX_XOR {   return \"01 1\\n10 1\\n\"; }\n    if Type == CBA_BOX_XNOR {  return \"00 1\\n11 1\\n\"; }\n    if Type == CBA_BOX_SHARP { return \"10 1\\n\"; }\n    if Type == CBA_BOX_SHARPL { return \"01 1\\n\"; }\n    if Type == CBA_BOX_MUX {   return \"11- 1\\n0-1 1\\n\"; }\n    if Type == CBA_BOX_MAJ {   return \"11- 1\\n1-1 1\\n-11 1\\n\"; }\n    assert(false, \"0\");\n    return \"???\";\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fMapped : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2380,
+      "End": 2413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fSlices : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2413,
+      "End": 2446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fHasC0s : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2446,
+      "End": 2479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fHasC1s : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2479,
+      "End": 2512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fHasCXs : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2512,
+      "End": 2545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t::unsigned        fHasCZs : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2545,
+      "End": 2578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Ntk_t",
+      "Category": "struct-review",
+      "Symbol": "Prs_Ntk_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2271,
+      "End": 3448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Man_t::// temp value\n    char ErrorStr[1000];",
+      "Category": "struct-field-review",
+      "Symbol": "Prs_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4583,
+      "End": 4622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::struct::Prs_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Prs_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3460,
+      "End": 4642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::enum::1132",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1132,
+      "End": 1136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::enum::1849",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1849,
+      "End": 1853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::static::7478",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 7478,
+      "End": 7484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::static::8721",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8721,
+      "End": 8727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::sizeof::10621",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10540,
+      "End": 10540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::sizeof::13375",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13239,
+      "End": 13239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::sizeof::13857",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13632,
+      "End": 13632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::mechanical::sizeof::16164",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15609,
+      "End": 15615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::4758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4758,
+      "End": 4771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::10587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10540,
+      "End": 10540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::13359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13239,
+      "End": 13239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::13823",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13632,
+      "End": 13632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::15037",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14762,
+      "End": 14762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::15265",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14869,
+      "End": 14869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::15956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15497,
+      "End": 15497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::16065",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15525,
+      "End": 15525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::pointer-cast::16938",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16277,
+      "End": 16277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro::Prs_ManForEachNameVec",
+      "Category": "macro-review",
+      "Symbol": "Prs_ManForEachNameVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8824,
+      "End": 8984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro::Prs_NtkForEachPio",
+      "Category": "macro-review",
+      "Symbol": "Prs_NtkForEachPio",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8986,
+      "End": 9130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro::Prs_NtkForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Prs_NtkForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9131,
+      "End": 9274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro::Prs_NtkForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Prs_NtkForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9275,
+      "End": 9419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro::Prs_NtkForEachBox",
+      "Category": "macro-review",
+      "Symbol": "Prs_NtkForEachBox",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9420,
+      "End": 9554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4644,
+      "End": 4802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManRoot",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4803,
+      "End": 4933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManNameMan",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManNameMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4934,
+      "End": 5064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManFuncMan",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManFuncMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5065,
+      "End": 5195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkId",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5197,
+      "End": 5327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkPioNum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkPioNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5328,
+      "End": 5458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5459,
+      "End": 5589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5590,
+      "End": 5720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5721,
+      "End": 5851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5852,
+      "End": 6006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkStr",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6007,
+      "End": 6137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkSop",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6138,
+      "End": 6268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkConst",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6269,
+      "End": 6399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkName",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6400,
+      "End": 6530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkSigName",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkSigName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6531,
+      "End": 6697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::ternary::Ptr_NtkRangeSize",
+      "Category": "ternary-review",
+      "Symbol": "Ptr_NtkRangeSize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6698,
+      "End": 6878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Ptr_NtkRangeSize",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_NtkRangeSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6698,
+      "End": 6878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_SliceName",
+      "Category": "semantic-review",
+      "Symbol": "Prs_SliceName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6880,
+      "End": 7010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_SliceRange",
+      "Category": "semantic-review",
+      "Symbol": "Prs_SliceRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7011,
+      "End": 7141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_CatSize",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CatSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7143,
+      "End": 7273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_CatArray",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CatArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7274,
+      "End": 7404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_CatSignals",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CatSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7405,
+      "End": 7579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxHand",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxHand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7581,
+      "End": 7711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxSize",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7712,
+      "End": 7842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxIONum",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxIONum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7843,
+      "End": 7973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7974,
+      "End": 8104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxSetNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxSetNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8105,
+      "End": 8235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxName",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8236,
+      "End": 8366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8367,
+      "End": 8497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxArray",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8517,
+      "End": 8647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_BoxSignals",
+      "Category": "semantic-review",
+      "Symbol": "Prs_BoxSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8648,
+      "End": 8822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManErrorSet",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManErrorSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9800,
+      "End": 9971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManErrorClear",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManErrorClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9995,
+      "End": 10079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManErrorPrint",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManErrorPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10103,
+      "End": 10391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManInitializeNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManInitializeNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10412,
+      "End": 10812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManFinalizeNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManFinalizeNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10813,
+      "End": 10922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManNewStrId",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManNewStrId",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10924,
+      "End": 11610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkAddSlice",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkAddSlice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11648,
+      "End": 11831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkAddConcat",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkAddConcat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11832,
+      "End": 12181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkAddBox",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkAddBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12182,
+      "End": 12711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManLoadFile",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManLoadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12712,
+      "End": 13543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13544,
+      "End": 14134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::ternary::Prs_NtkFree",
+      "Category": "ternary-review",
+      "Symbol": "Prs_NtkFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14136,
+      "End": 14778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkFree",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14136,
+      "End": 14778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManVecFree",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManVecFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14780,
+      "End": 14974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::ternary::Prs_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Prs_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14976,
+      "End": 15541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14976,
+      "End": 15541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_NtkMemory",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15543,
+      "End": 16153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Prs_ManMemory",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16154,
+      "End": 16434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Ptr_SopToType",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_SopToType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16682,
+      "End": 17701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Ptr_SopToTypeName",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_SopToTypeName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17702,
+      "End": 18740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Ptr_TypeToName",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_TypeToName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18741,
+      "End": 19657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::Ptr_TypeToSop",
+      "Category": "semantic-review",
+      "Symbol": "Ptr_TypeToSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19658,
+      "End": 20578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro-inline::11227",
+      "Category": "macro-inline-review",
+      "Symbol": "vsnprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11227,
+      "End": 11279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaPrs.h::macro-inline::11394",
+      "Category": "macro-inline-review",
+      "Symbol": "vsnprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11394,
+      "End": 11447
+    }
+  ],
+  "Draft": "package cba\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cbaPrs.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Parser declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: cbaPrs.h,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"misc/util/utilNam.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START \n\n// Verilog keywords\n type Cba_VerType_t int32\nconst ( \n    PRS_VER_NONE Cba_VerType_t = 0\n  // 0:  unused\n    PRS_VER_INPUT Cba_VerType_t = PRS_VER_NONE + 1\n     // 1:  input\n    PRS_VER_OUTPUT Cba_VerType_t = PRS_VER_INPUT + 1\n    // 2:  output\n    PRS_VER_INOUT Cba_VerType_t = PRS_VER_OUTPUT + 1\n     // 3:  inout\n    PRS_VER_WIRE Cba_VerType_t = PRS_VER_INOUT + 1\n      // 4:  wire\n    PRS_VER_REG Cba_VerType_t = PRS_VER_WIRE + 1\n       // 5:  reg\n    PRS_VER_MODULE Cba_VerType_t = PRS_VER_REG + 1\n    // 6:  module\n    PRS_VER_ASSIGN Cba_VerType_t = PRS_VER_MODULE + 1\n    // 7:  assign\n    PRS_VER_ALWAYS Cba_VerType_t = PRS_VER_ASSIGN + 1\n    // 8:  always\n    PRS_VER_FUNCTION Cba_VerType_t = PRS_VER_ALWAYS + 1\n  // 9:  function\n    PRS_VER_DEFPARAM Cba_VerType_t = PRS_VER_FUNCTION + 1\n  // 10: defparam\n    PRS_VER_BEGIN Cba_VerType_t = PRS_VER_DEFPARAM + 1\n     // 11: begin\n    PRS_VER_END Cba_VerType_t = PRS_VER_BEGIN + 1\n       // 12: end\n    PRS_VER_CASE Cba_VerType_t = PRS_VER_END + 1\n      // 13: case\n    PRS_VER_ENDCASE Cba_VerType_t = PRS_VER_CASE + 1\n   // 14: endcase\n    PRS_VER_SIGNED Cba_VerType_t = PRS_VER_ENDCASE + 1\n    // 15: signed\n    PRS_VER_ENDMODULE Cba_VerType_t = PRS_VER_SIGNED + 1\n // 16: endmodule\n    PRS_VER_UNKNOWN Cba_VerType_t = PRS_VER_ENDMODULE + 1    // 17: unknown\n\n)\n\n \n\n// parser name types\n type Prs_ManType_t int32\nconst ( \n    CBA_PRS_NAME Prs_ManType_t = 0\n  // 0:  name/variable\n    CBA_PRS_SLICE Prs_ManType_t = CBA_PRS_NAME + 1\n     // 1:  slice\n    CBA_PRS_CONST Prs_ManType_t = CBA_PRS_SLICE + 1\n     // 2:  constant\n    CBA_PRS_CONCAT Prs_ManType_t = CBA_PRS_CONST + 1\n    // 3:  concatentation\n\n)\n\n  \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// network\n   \ntype Prs_Ntk_t struct {\n    // general info\n    iModuleName             int32;\n    fMapped uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fSlices uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fHasC0s uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fHasC1s uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fHasCXs uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fHasCZs uint32; /* C bitfield: 1 bits; review packing and truncation */\n    pStrs      *Abc_Nam_t;\n    pFuns      *Abc_Nam_t;\n    vHash  *Hash_IntMan_t;\n    // interface\n    vOrder       Vec_Int_t;     // order of signals\n    // signal names\n    vInouts       Vec_Int_t;    // inouts \n    vInputs       Vec_Int_t;    // inputs \n    vOutputs       Vec_Int_t;   // outputs\n    vWires       Vec_Int_t;     // wires  \n    // signal ranges\n    vInoutsR       Vec_Int_t;   // inouts \n    vInputsR       Vec_Int_t;   // inputs \n    vOutputsR       Vec_Int_t;  // outputs\n    vWiresR       Vec_Int_t;    // wires  \n    // slices/concatenations/objects\n    vSlices       Vec_Int_t;    // NameId + RangeId\n    vConcats       Vec_Int_t;   // array of NameId/SliceId/ConstId\n    vBoxes       Vec_Int_t;     // ModuleId + InstId + array of pairs {FormNameId, ActSignalId(NameId/SliceId/ConstId/ConcatId)}\n    vObjs       Vec_Int_t;      // box handles\n}\n\n// parser\n   \ntype Prs_Man_t struct {\n    // input data\n    pName           string;       // file name\n    pBuffer           string;     // file contents\n    pLimit           string;      // end of file\n    pCur           string;        // current position\n    pStrs      *Abc_Nam_t;       // string manager\n    pFuns      *Abc_Nam_t;       // cover manager\n    vHash  *Hash_IntMan_t;       // variable ranges\n    pNtk      *Prs_Ntk_t;        // current network\n    vNtks      *Vec_Ptr_t;       // input networks\n    // temporary data\n    vCover       Vec_Str_t;      // one SOP cover\n    vTemp       Vec_Int_t;       // array of tokens\n    vTemp2       Vec_Int_t;      // array of tokens\n    vTemp3       Vec_Int_t;      // array of tokens\n    vTemp4       Vec_Int_t;      // array of tokens\n    // statistics\n    vKnown       Vec_Int_t;\n    vFailed       Vec_Int_t;\n    vSucceeded       Vec_Int_t;\n    // error handling\n    nOpens             int32;      // open port counter\n    fUsingTemp2             int32; // vTemp2 is in use\n    FuncNameId             int32;  // temp value\n    FuncRangeId             int32; // temp value\n    ErrorStr [1000]byte;         // error\n}\n\nfunc Prs_ManNtk(vPrs *Vec_Ptr_t, i int32) *Prs_Ntk_t { if i \u003e= 0 \u0026\u0026 i \u003c Vec_PtrSize(vPrs) {\n    return (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i);\n} else {\n    return nil;\n} }\nfunc Prs_ManRoot(vPrs *Vec_Ptr_t) *Prs_Ntk_t { return Prs_ManNtk(vPrs, 0);                             }\nfunc Prs_ManNameMan(vPrs *Vec_Ptr_t) *Abc_Nam_t { return Prs_ManRoot(vPrs).pStrs;                        }\nfunc Prs_ManFuncMan(vPrs *Vec_Ptr_t) *Abc_Nam_t { return Prs_ManRoot(vPrs).pFuns;                        }\n\nfunc Prs_NtkId(p *Prs_Ntk_t) int32 { return p.iModuleName;                                  }\nfunc Prs_NtkPioNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vInouts);                        }\nfunc Prs_NtkPiNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vInputs);                        }\nfunc Prs_NtkPoNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vOutputs);                       }\nfunc Prs_NtkBoxNum(p *Prs_Ntk_t) int32 { return Vec_IntSize(\u0026p.vObjs);                          }\nfunc Prs_NtkObjNum(p *Prs_Ntk_t) int32 { return Prs_NtkPioNum(p) + Prs_NtkPiNum(p) + Prs_NtkPoNum(p) + Prs_NtkBoxNum(p); }\nfunc Prs_NtkStr(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pStrs, h);                         }\nfunc Prs_NtkSop(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pFuns, h);                         }\nfunc Prs_NtkConst(p *Prs_Ntk_t, h int32) string { return Abc_NamStr(p.pFuns, h);                         }\nfunc Prs_NtkName(p *Prs_Ntk_t) string { return Prs_NtkStr(p, Prs_NtkId(p));                     }\nfunc Prs_NtkSigName(p *Prs_Ntk_t, i int32) int32 { if !p.fSlices { return i; }\n assert(Abc_Lit2Att2(i) == CBA_PRS_NAME, \"Abc_Lit2Att2(i) == CBA_PRS_NAME\"); return Abc_Lit2Var2(i); }\nfunc Ptr_NtkRangeSize(p *Prs_Ntk_t, h int32) int32 { var l int32 = Hash_IntObjData0(p.vHash, h);\nvar r int32 = Hash_IntObjData1(p.vHash, h); return 1 + (l \u003e r ? l-r : r-l); }\n\nfunc Prs_SliceName(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vSlices, h);                    }\nfunc Prs_SliceRange(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vSlices, h+1);                  }\n\nfunc Prs_CatSize(p *Prs_Ntk_t, h int32) int32 { return Vec_IntEntry(\u0026p.vConcats, h);                   }\nfunc Prs_CatArray(p *Prs_Ntk_t, h int32) *int32 { return Vec_IntEntryP(\u0026p.vConcats, h+1);                }\nvar spStatic_Prs_CatSignals_V Vec_Int_t;\nfunc Prs_CatSignals(p *Prs_Ntk_t, h int32) *Vec_Int_t {  spStatic_Prs_CatSignals_V.nSize = spStatic_Prs_CatSignals_V.nCap = Prs_CatSize(p, h); spStatic_Prs_CatSignals_V.pArray = Prs_CatArray(p, h); return \u0026spStatic_Prs_CatSignals_V; }\n\nfunc Prs_BoxHand(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vObjs, i);                      }\nfunc Prs_BoxSize(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i))-2;   }\nfunc Prs_BoxIONum(p *Prs_Ntk_t, i int32) int32 { return Prs_BoxSize(p, i) / 2;                           }\nfunc Prs_BoxNtk(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+1);   }\nfunc Prs_BoxSetNtk(p *Prs_Ntk_t, i int32, m int32) { Vec_IntWriteEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+1, m);  }\nfunc Prs_BoxName(p *Prs_Ntk_t, i int32) int32 { return Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+2);   }\nfunc Prs_BoxIsNode(p *Prs_Ntk_t, i int32) int32 { return!Vec_IntEntry(\u0026p.vBoxes, Prs_BoxHand(p, i)+3);   } // no formal names\nfunc Prs_BoxArray(p *Prs_Ntk_t, i int32) *int32 { return Vec_IntEntryP(\u0026p.vBoxes, Prs_BoxHand(p, i)+3);  }\nvar spStatic_Prs_BoxSignals_V Vec_Int_t;\nfunc Prs_BoxSignals(p *Prs_Ntk_t, i int32) *Vec_Int_t {  spStatic_Prs_BoxSignals_V.nSize = spStatic_Prs_BoxSignals_V.nCap = Prs_BoxSize(p, i); spStatic_Prs_BoxSignals_V.pArray = Prs_BoxArray(p, i); return \u0026spStatic_Prs_BoxSignals_V; }\n\n// Original macro:\n// #define Prs_ManForEachNameVec( vVec, p, pName, i )   \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 ((pName) = Abc_NamStr(p-\u003epStrs, Vec_IntEntry(vVec,i))); i++ )\n\n\n// Original macro:\n// #define Prs_NtkForEachPio( p, NameId, i )            \\\n//     for ( i = 0; i \u003c Prs_NtkPioNum(p) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026p-\u003evInouts, i)); i++ )\n\n// Original macro:\n// #define Prs_NtkForEachPi( p, NameId, i )             \\\n//     for ( i = 0; i \u003c Prs_NtkPiNum(p) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026p-\u003evInputs, i)); i++ )\n\n// Original macro:\n// #define Prs_NtkForEachPo( p, NameId, i )             \\\n//     for ( i = 0; i \u003c Prs_NtkPoNum(p) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026p-\u003evOutputs, i)); i++ )\n\n// Original macro:\n// #define Prs_NtkForEachBox( p, vVec, i )              \\\n//     for ( i = 0; i \u003c Prs_NtkBoxNum(p) \u0026\u0026 ((vVec) = Prs_BoxSignals(p, i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// create error message\nfunc Prs_ManErrorSet(p *Prs_Man_t, pError string, Value int32) int32 {\n    assert(!p.ErrorStr[0], \"!p.ErrorStr[0]\");\n    sprintf( p.ErrorStr, \"%s\", pError );\n    return Value;\n}\n// clear error message\nfunc Prs_ManErrorClear(p *Prs_Man_t) {\n    p.ErrorStr[0] = '\\0';\n}\n// print error message\nfunc Prs_ManErrorPrint(p *Prs_Man_t) int32 {\n    var pThis string; var iLine int32;\n    if !p.ErrorStr[0] { return 1; }\n    for  pThis = p.pBuffer; pThis \u003c p.pCur; pThis++  {\n        iLine += int32((*pThis == '\\n'));\n    }\n    fmt.Printf(\"Line %d: %s\\n\", iLine, p.ErrorStr);\n    return 0;\n}\n\n// parsing network\nfunc Prs_ManInitializeNtk(p *Prs_Man_t, iName int32, fSlices int32) {\n    assert(p.pNtk == nil, \"p.pNtk == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pNtk = \u0026Prs_Ntk_t{};\n    p.pNtk.iModuleName = iName;\n    p.pNtk.fSlices = fSlices;\n    p.pNtk.pStrs = Abc_NamRef( p.pStrs );\n    p.pNtk.pFuns = Abc_NamRef( p.pFuns );\n    p.pNtk.vHash = Hash_IntManRef( p.vHash );\n    Vec_PtrPush( p.vNtks, p.pNtk );\n}\nfunc Prs_ManFinalizeNtk(p *Prs_Man_t) {\n    assert(p.pNtk != nil, \"p.pNtk != nil\");\n    p.pNtk = nil;\n}\n\nstatic inline int Prs_ManNewStrId( Prs_Man_t * p, char * format, ...  )\n{\n    var pStrs *Abc_Nam_t  = p.pStrs;\n    var vBuf *Vec_Str_t  = Abc_NamBuffer( pStrs );\n    var nAdded int32;\n    var nSize int32 = 1000; \n    va_list args;   va_start( args, format );\n    Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(vBuf), nSize, format, args );\n    if nAdded \u003e nSize {\n        Vec_StrGrow( vBuf, Vec_StrSize(vBuf) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(vBuf), nAdded, format, args );\n        assert(nSize == nAdded, \"nSize == nAdded\");\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( pStrs, Vec_StrLimit(vBuf), Vec_StrLimit(vBuf) + nAdded, nil );\n}\n\n// parsing slice/concatentation/box\nfunc Prs_NtkAddSlice(p *Prs_Ntk_t, Name int32, Range int32) int32 {\n    var Value int32  = Vec_IntSize(\u0026p.vSlices);\n    Vec_IntPushTwo( \u0026p.vSlices, Name, Range );\n    return Value;\n}\nfunc Prs_NtkAddConcat(p *Prs_Ntk_t, vTemp *Vec_Int_t) int32 {\n    var Value int32;\n    if !(Vec_IntSize(\u0026p.vConcats) \u0026 1) {\n        Vec_IntPush(\u0026p.vConcats, -1); }\n    Value = Vec_IntSize(\u0026p.vConcats);\n    assert(Value \u0026 1, \"Value \u0026 1\");\n    Vec_IntPush( \u0026p.vConcats, Vec_IntSize(vTemp) );\n    Vec_IntAppend( \u0026p.vConcats, vTemp );\n    return Value;\n}\nfunc Prs_NtkAddBox(p *Prs_Ntk_t, ModName int32, InstName int32, vTemp *Vec_Int_t) {\n    var Value int32;\n    assert(Vec_IntSize(vTemp) % 2 == 0, \"Vec_IntSize(vTemp) % 2 == 0\");\n    if !(Vec_IntSize(\u0026p.vBoxes) \u0026 1) {\n        Vec_IntPush(\u0026p.vBoxes, -1); }\n    Value = Vec_IntSize(\u0026p.vBoxes);\n    assert(Value \u0026 1, \"Value \u0026 1\");\n    Vec_IntPush( \u0026p.vObjs, Value );\n    // create entry\n    Vec_IntPush( \u0026p.vBoxes, Vec_IntSize(vTemp)+2 );\n    Vec_IntPush( \u0026p.vBoxes, ModName );\n    Vec_IntPush( \u0026p.vBoxes, InstName );\n    Vec_IntAppend( \u0026p.vBoxes, vTemp );\n}\nfunc Prs_ManLoadFile(pFileName string, ppLimit *string) string {\n    var pBuffer string;\n    var nFileSize, RetValue int32;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open input file.\\n\");\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 16)));\n    pBuffer[0] = '\\n';\n    RetValue = fread( pBuffer+1, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n    // terminate the string with '\\0'\n    pBuffer[nFileSize + 1] = '\\n';\n    pBuffer[nFileSize + 2] = '\\0';\n    *ppLimit = pBuffer + nFileSize + 3;\n    return pBuffer;\n}\nfunc Prs_ManAlloc(pFileName string) *Prs_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Prs_Man_t{};\n    if pFileName {\n        var pBuffer, pLimit string;\n        pBuffer = Prs_ManLoadFile( pFileName, \u0026pLimit );\n        if pBuffer == nil {\n            return nil; }\n        p.pName   = pFileName;\n        p.pBuffer = pBuffer;\n        p.pLimit  = pLimit;\n        p.pCur    = pBuffer;\n    }\n    p.pStrs = Abc_NamStart( 1000, 24 );\n    p.pFuns = Abc_NamStart( 100, 24 );\n    p.vHash = Hash_IntManStart( 1000 );\n    p.vNtks = Vec_PtrAlloc( 100 );\n    return p;\n}\n\nfunc Prs_NtkFree(p *Prs_Ntk_t) {\n    if p.pStrs { Abc_NamDeref( p.pStrs ); }\n    if p.pFuns { Abc_NamDeref( p.pFuns ); }\n    if p.vHash { Hash_IntManDeref( p.vHash ); }\n    Vec_IntErase( \u0026p.vOrder );\n    Vec_IntErase( \u0026p.vInouts );\n    Vec_IntErase( \u0026p.vInputs );\n    Vec_IntErase( \u0026p.vOutputs );\n    Vec_IntErase( \u0026p.vWires );\n    Vec_IntErase( \u0026p.vInoutsR );\n    Vec_IntErase( \u0026p.vInputsR );\n    Vec_IntErase( \u0026p.vOutputsR );\n    Vec_IntErase( \u0026p.vWiresR );\n    Vec_IntErase( \u0026p.vSlices );\n    Vec_IntErase( \u0026p.vConcats );\n    Vec_IntErase( \u0026p.vBoxes );\n    Vec_IntErase( \u0026p.vObjs );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\nfunc Prs_ManVecFree(vPrs *Vec_Ptr_t) {\n    var pNtk *Prs_Ntk_t; var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        Prs_NtkFree( pNtk );\n    }\n    Vec_PtrFree( vPrs );\n}\n\nfunc Prs_ManFree(p *Prs_Man_t) {\n    if p.pStrs { Abc_NamDeref( p.pStrs ); }\n    if p.pFuns { Abc_NamDeref( p.pFuns ); }\n    if p.vHash { Hash_IntManDeref( p.vHash ); }\n    if p.vNtks { Prs_ManVecFree( p.vNtks ); }\n    // temporary\n    Vec_StrErase( \u0026p.vCover );\n    Vec_IntErase( \u0026p.vTemp );\n    Vec_IntErase( \u0026p.vTemp2 );\n    Vec_IntErase( \u0026p.vTemp3 );\n    Vec_IntErase( \u0026p.vTemp4 );\n    Vec_IntErase( \u0026p.vKnown );\n    Vec_IntErase( \u0026p.vFailed );\n    Vec_IntErase( \u0026p.vSucceeded );\n    // inlining of macro ABC_FREE\n    ((p.pBuffer) ? (free((char *) (p.pBuffer)), (p.pBuffer) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\nfunc Prs_NtkMemory(p *Prs_Ntk_t) int32 {\n    var nMem int32  = sizeof(Prs_Ntk_t);\n    nMem += Vec_IntMemory( \u0026p.vOrder );\n    nMem += Vec_IntMemory( \u0026p.vInouts );\n    nMem += Vec_IntMemory( \u0026p.vInputs );\n    nMem += Vec_IntMemory( \u0026p.vOutputs );\n    nMem += Vec_IntMemory( \u0026p.vWires );\n    nMem += Vec_IntMemory( \u0026p.vInoutsR );\n    nMem += Vec_IntMemory( \u0026p.vInputsR );\n    nMem += Vec_IntMemory( \u0026p.vOutputsR );\n    nMem += Vec_IntMemory( \u0026p.vWiresR );\n    nMem += Vec_IntMemory( \u0026p.vSlices );\n    nMem += Vec_IntMemory( \u0026p.vBoxes );\n    nMem += Vec_IntMemory( \u0026p.vConcats );\n    return nMem;\n}\nfunc Prs_ManMemory(vPrs *Vec_Ptr_t) int32 {\n    var pNtk *Prs_Ntk_t; var i int32;\n    var nMem int32  = Vec_PtrMemory(vPrs);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPrs)) \u0026\u0026 (((pNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {\n        nMem += Prs_NtkMemory( pNtk );\n    }\n    nMem += Abc_NamMemUsed(Prs_ManNameMan(vPrs));\n    return nMem;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Other APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ptr_SopToType(pSop string) Cba_ObjType_t {\n    if !(int32(strings.Compare(pSop, \" 0\\n\")) != 0) {         return CBA_BOX_CF; }\n    if !(int32(strings.Compare(pSop, \" 1\\n\")) != 0) {         return CBA_BOX_CT; }\n    if !(int32(strings.Compare(pSop, \"1 1\\n\")) != 0) {        return CBA_BOX_BUF; }\n    if !(int32(strings.Compare(pSop, \"0 1\\n\")) != 0) {        return CBA_BOX_INV; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n\")) != 0) {       return CBA_BOX_AND; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n\")) != 0) {       return CBA_BOX_NOR; }\n    if !(int32(strings.Compare(pSop, \"00 0\\n\")) != 0) {       return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"-1 1\\n1- 1\\n\")) != 0) { return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"1- 1\\n-1 1\\n\")) != 0) { return CBA_BOX_OR; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n10 1\\n\")) != 0) { return CBA_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n01 1\\n\")) != 0) { return CBA_BOX_XOR; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n00 1\\n\")) != 0) { return CBA_BOX_XNOR; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n11 1\\n\")) != 0) { return CBA_BOX_XNOR; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n\")) != 0) {       return CBA_BOX_SHARP; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n\")) != 0) {       return CBA_BOX_SHARPL; }\n    assert(false, \"0\");\n    return CBA_OBJ_NONE;\n}\nfunc Ptr_SopToTypeName(pSop string) string {\n    if !(int32(strings.Compare(pSop, \" 0\\n\")) != 0) {         return \"CBA_BOX_C0\"; }\n    if !(int32(strings.Compare(pSop, \" 1\\n\")) != 0) {         return \"CBA_BOX_C1\"; }\n    if !(int32(strings.Compare(pSop, \"1 1\\n\")) != 0) {        return \"CBA_BOX_BUF\"; }\n    if !(int32(strings.Compare(pSop, \"0 1\\n\")) != 0) {        return \"CBA_BOX_INV\"; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n\")) != 0) {       return \"CBA_BOX_AND\"; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n\")) != 0) {       return \"CBA_BOX_NOR\"; }\n    if !(int32(strings.Compare(pSop, \"00 0\\n\")) != 0) {       return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"-1 1\\n1- 1\\n\")) != 0) { return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"1- 1\\n-1 1\\n\")) != 0) { return \"CBA_BOX_OR\"; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n10 1\\n\")) != 0) { return \"CBA_BOX_XOR\"; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n01 1\\n\")) != 0) { return \"CBA_BOX_XOR\"; }\n    if !(int32(strings.Compare(pSop, \"11 1\\n00 1\\n\")) != 0) { return \"CBA_BOX_XNOR\"; }\n    if !(int32(strings.Compare(pSop, \"00 1\\n11 1\\n\")) != 0) { return \"CBA_BOX_XNOR\"; }\n    if !(int32(strings.Compare(pSop, \"10 1\\n\")) != 0) {       return \"CBA_BOX_SHARP\"; }\n    if !(int32(strings.Compare(pSop, \"01 1\\n\")) != 0) {       return \"CBA_BOX_SHARPL\"; }\n    assert(false, \"0\");\n    return nil;\n}\nfunc Ptr_TypeToName(Type Cba_ObjType_t) string {\n    if Type == CBA_BOX_CF {    return \"const0\"; }\n    if Type == CBA_BOX_CT {    return \"const1\"; }\n    if Type == CBA_BOX_CX {    return \"constX\"; }\n    if Type == CBA_BOX_CZ {    return \"constZ\"; }\n    if Type == CBA_BOX_BUF {   return \"buf\"; }\n    if Type == CBA_BOX_INV {   return \"not\"; }\n    if Type == CBA_BOX_AND {   return \"and\"; }\n    if Type == CBA_BOX_NAND {  return \"nand\"; }\n    if Type == CBA_BOX_OR {    return \"or\"; }\n    if Type == CBA_BOX_NOR {   return \"nor\"; }\n    if Type == CBA_BOX_XOR {   return \"xor\"; }\n    if Type == CBA_BOX_XNOR {  return \"xnor\"; }\n    if Type == CBA_BOX_MUX {   return \"mux\"; }\n    if Type == CBA_BOX_MAJ {   return \"maj\"; }\n    if Type == CBA_BOX_SHARP { return \"sharp\"; }\n    if Type == CBA_BOX_SHARPL { return \"sharpl\"; }\n    if Type == CBA_BOX_TRI {    return \"bufifl\"; }\n    assert(false, \"0\");\n    return \"???\";\n}\nfunc Ptr_TypeToSop(Type Cba_ObjType_t) string {\n    if Type == CBA_BOX_CF {    return \" 0\\n\"; }\n    if Type == CBA_BOX_CT {    return \" 1\\n\"; }\n    if Type == CBA_BOX_CX {    return \" 0\\n\"; }\n    if Type == CBA_BOX_CZ {    return \" 0\\n\"; }\n    if Type == CBA_BOX_BUF {   return \"1 1\\n\"; }\n    if Type == CBA_BOX_INV {   return \"0 1\\n\"; }\n    if Type == CBA_BOX_AND {   return \"11 1\\n\"; }\n    if Type == CBA_BOX_NAND {  return \"11 0\\n\"; }\n    if Type == CBA_BOX_OR {    return \"00 0\\n\"; }\n    if Type == CBA_BOX_NOR {   return \"00 1\\n\"; }\n    if Type == CBA_BOX_XOR {   return \"01 1\\n10 1\\n\"; }\n    if Type == CBA_BOX_XNOR {  return \"00 1\\n11 1\\n\"; }\n    if Type == CBA_BOX_SHARP { return \"10 1\\n\"; }\n    if Type == CBA_BOX_SHARPL { return \"01 1\\n\"; }\n    if Type == CBA_BOX_MUX {   return \"11- 1\\n0-1 1\\n\"; }\n    if Type == CBA_BOX_MAJ {   return \"11- 1\\n1-1 1\\n-11 1\\n\"; }\n    assert(false, \"0\");\n    return \"???\";\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cbaReadVer.c ========================================================*/\n// extern void Prs_NtkAddVerilogDirectives( Prs_Man_t * p );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

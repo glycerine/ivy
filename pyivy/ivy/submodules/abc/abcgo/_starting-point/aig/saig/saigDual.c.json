@@ -1,0 +1,230 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c",
+  "SHA256": "7c49dddea7916524136e42776dc0955b20863590be6a56be3f087b61b812c765",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 39,
+        "Column": 5,
+        "ByteOffset": 1280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin == 0 || iFanin == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 3085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 3149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vDcFlops == nil || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 8388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCycles \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ObjSetDual",
+      "Start": 784,
+      "End": 945,
+      "BodyStart": 886,
+      "Original": "static inline void        Saig_ObjSetDual( Vec_Ptr_t * vCopies, int Id, int fPos, Aig_Obj_t * pItem ) { Vec_PtrWriteEntry( vCopies, 2*Id+fPos, pItem );         }",
+      "Draft": "func Saig_ObjSetDual(vCopies *Vec_Ptr_t, Id int32, fPos int32, pItem *Aig_Obj_t) { Vec_PtrWriteEntry( vCopies, 2*Id+fPos, pItem );         }"
+    },
+    {
+      "Name": "Saig_ObjDual",
+      "Start": 946,
+      "End": 1107,
+      "BodyStart": 1048,
+      "Original": "static inline Aig_Obj_t * Saig_ObjDual( Vec_Ptr_t * vCopies, int Id, int fPos )                       { return (Aig_Obj_t *)Vec_PtrEntry( vCopies, 2*Id+fPos ); }",
+      "Draft": "func Saig_ObjDual(vCopies *Vec_Ptr_t, Id int32, fPos int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry( vCopies, 2*Id+fPos ); }"
+    },
+    {
+      "Name": "Saig_ObjDualFanin",
+      "Start": 1109,
+      "End": 2046,
+      "BodyStart": 1269,
+      "Original": "static inline void        Saig_ObjDualFanin( Aig_Man_t * pAigNew, Vec_Ptr_t * vCopies, Aig_Obj_t * pObj, int iFanin, Aig_Obj_t ** ppRes0, Aig_Obj_t ** ppRes1 ) {\n\n    Aig_Obj_t * pTemp0, * pTemp1, * pCare;\n    int fCompl;\n    assert( iFanin == 0 || iFanin == 1 );\n    if ( iFanin == 0 )\n    {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 1 );\n        fCompl = Aig_ObjFaninC0( pObj );\n    }\n    else\n    {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 1 );\n        fCompl = Aig_ObjFaninC1( pObj );\n    }\n    if ( fCompl )\n    {\n        pCare   = Aig_Or( pAigNew, pTemp0, pTemp1 );\n        *ppRes0 = Aig_And( pAigNew, pTemp1, pCare );\n        *ppRes1 = Aig_And( pAigNew, pTemp0, pCare );\n    }\n    else\n    {\n        *ppRes0 = pTemp0;\n        *ppRes1 = pTemp1;\n    }\n}",
+      "Draft": "func Saig_ObjDualFanin(pAigNew *Aig_Man_t, vCopies *Vec_Ptr_t, pObj *Aig_Obj_t, iFanin int32, ppRes0 **Aig_Obj_t, ppRes1 **Aig_Obj_t) {\n\n    var pTemp0, pTemp1, pCare *Aig_Obj_t;\n    var fCompl int32;\n    assert(iFanin == 0 || iFanin == 1, \"iFanin == 0 || iFanin == 1\");\n    if iFanin == 0 {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 1 );\n        fCompl = Aig_ObjFaninC0( pObj );\n    \n    } else {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 1 );\n        fCompl = Aig_ObjFaninC1( pObj );\n    }\n    if fCompl != 0 {\n        pCare   = Aig_Or( pAigNew, pTemp0, pTemp1 );\n        *ppRes0 = Aig_And( pAigNew, pTemp1, pCare );\n        *ppRes1 = Aig_And( pAigNew, pTemp0, pCare );\n    \n    } else {\n        *ppRes0 = pTemp0;\n        *ppRes1 = pTemp1;\n    }\n}"
+    },
+    {
+      "Name": "Saig_ManDupDual",
+      "Start": 2802,
+      "End": 7151,
+      "BodyStart": 2960,
+      "Original": "Aig_Man_t * Saig_ManDupDual( Aig_Man_t * pAig, Vec_Int_t * vDcFlops, int nDualPis, int fDualFfs, int fMiterFfs, int fComplPo, int fCheckZero, int fCheckOne )\n{\n    Vec_Ptr_t * vCopies;\n    Aig_Man_t * pAigNew;\n    Aig_Obj_t * pObj, * pTemp0, * pTemp1, * pTemp2, * pTemp3, * pCare, * pMiter;\n    int i;\n    assert( Saig_ManPoNum(pAig) \u003e 0 );\n    assert( nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig) );\n    assert( vDcFlops == NULL || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig) );\n    vCopies = Vec_PtrStart( 2*Aig_ManObjNum(pAig) );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // map the constant node\n    Saig_ObjSetDual( vCopies, 0, 0, Aig_ManConst0(pAigNew) );\n    Saig_ObjSetDual( vCopies, 0, 1, Aig_ManConst1(pAigNew) );\n    // create variables for PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n    {\n        if ( i \u003c nDualPis )\n        {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n        }\n        else if ( i \u003c Saig_ManPiNum(pAig) )\n        {\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            pTemp0 = Aig_Not( pTemp1 );\n        }\n        else\n        {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            if ( vDcFlops )\n                pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i-Saig_ManPiNum(pAig)) );\n            else\n                pTemp0 = Aig_NotCond( pTemp0, !fDualFfs );\n        }\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_And(pAigNew, pTemp0, Aig_Not(pTemp1)) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, Aig_Not(pTemp0)) );\n    }\n    // create internal nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 1, \u0026pTemp2, \u0026pTemp3 );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_Or (pAigNew, pTemp0, pTemp2) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, pTemp3) );\n    }\n    // create miter and flops\n    pMiter = Aig_ManConst0(pAigNew);\n    if ( fMiterFfs )\n    {\n        Saig_ManForEachLi( pAig, pObj, i )\n        {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if ( fCheckZero )\n            {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n            else if ( fCheckOne )\n            {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n            else // check X\n            {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    }\n    else\n    {\n        Saig_ManForEachPo( pAig, pObj, i )\n        {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if ( fCheckZero )\n            {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n            else if ( fCheckOne )\n            {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n            else // check X\n            {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    }\n    // create PO\n    pMiter = Aig_NotCond( pMiter, fComplPo );\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // create flops\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        if ( vDcFlops )\n            pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i) );\n        else\n            pTemp0 = Aig_NotCond( pTemp0, !fDualFfs );\n        Aig_ObjCreateCo( pAigNew, pTemp0 );\n        Aig_ObjCreateCo( pAigNew, pTemp1 );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAigNew, 2 * Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Vec_PtrFree( vCopies );\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManDupDual(pAig *Aig_Man_t, vDcFlops *Vec_Int_t, nDualPis int32, fDualFfs int32, fMiterFfs int32, fComplPo int32, fCheckZero int32, fCheckOne int32) *Aig_Man_t {\n    var vCopies *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pObj, pTemp0, pTemp1, pTemp2, pTemp3, pCare, pMiter *Aig_Obj_t;\n    var i int32;\n    assert(Saig_ManPoNum(pAig) \u003e 0, \"Saig_ManPoNum(pAig) \u003e 0\");\n    assert(nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig), \"nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig)\");\n    assert(vDcFlops == nil || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig), \"vDcFlops == nil || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig)\");\n    vCopies = Vec_PtrStart( 2*Aig_ManObjNum(pAig) );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Saig_ObjSetDual( vCopies, 0, 0, Aig_ManConst0(pAigNew) );\n    Saig_ObjSetDual( vCopies, 0, 1, Aig_ManConst1(pAigNew) );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if i \u003c nDualPis {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n        \n        } else if i \u003c Saig_ManPiNum(pAig) {\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            pTemp0 = Aig_Not( pTemp1 );\n        \n        } else {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            if vDcFlops != nil {\n                pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i-Saig_ManPiNum(pAig)) );\n            } else {\n                pTemp0 = Aig_NotCond( pTemp0, !fDualFfs ); }\n        }\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_And(pAigNew, pTemp0, Aig_Not(pTemp1)) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, Aig_Not(pTemp0)) );\n    }\n    // create internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 1, \u0026pTemp2, \u0026pTemp3 );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_Or (pAigNew, pTemp0, pTemp2) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, pTemp3) );\n    }\n    }\n    // create miter and flops\n    pMiter = Aig_ManConst0(pAigNew);\n    if fMiterFfs != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if fCheckZero != 0 {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else if fCheckOne != 0 {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else { // check X\n            \n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if fCheckZero != 0 {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else if fCheckOne != 0 {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else { // check X\n            \n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    }\n    // create PO\n    pMiter = Aig_NotCond( pMiter, fComplPo );\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // create flops\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        if vDcFlops != nil {\n            pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i) );\n        } else {\n            pTemp0 = Aig_NotCond( pTemp0, !fDualFfs ); }\n        Aig_ObjCreateCo( pAigNew, pTemp0 );\n        Aig_ObjCreateCo( pAigNew, pTemp1 );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAigNew, 2 * Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Vec_PtrFree( vCopies );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Saig_ManBlockPo",
+      "Start": 7569,
+      "End": 8303,
+      "BodyStart": 7623,
+      "Original": "void Saig_ManBlockPo( Aig_Man_t * pAig, int nCycles )\n{\n    Aig_Obj_t * pObj, * pCond, * pPrev, * pTemp;\n    int i;\n    assert( nCycles \u003e 0 );\n    // add N flops (assuming 1-hot encoding of cycles)\n    pPrev = Aig_ManConst1(pAig);\n    pCond = Aig_ManConst1(pAig);\n    for ( i = 0; i \u003c nCycles; i++ )\n    {\n        Aig_ObjCreateCo( pAig, pPrev );\n        pPrev = Aig_ObjCreateCi( pAig );\n        pCond = Aig_And( pAig, pCond, pPrev );\n    }\n    // update the POs\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pTemp = Aig_And( pAig, Aig_ObjChild0(pObj), pCond );\n        Aig_ObjPatchFanin0( pAig, pObj, pTemp );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAig, Aig_ManRegNum(pAig) + nCycles );\n    Aig_ManCleanup( pAig );\n}",
+      "Draft": "func Saig_ManBlockPo(pAig *Aig_Man_t, nCycles int32) {\n    var pObj, pCond, pPrev, pTemp *Aig_Obj_t;\n    var i int32;\n    assert(nCycles \u003e 0, \"nCycles \u003e 0\");\n    // add N flops (assuming 1-hot encoding of cycles)\n    pPrev = Aig_ManConst1(pAig);\n    pCond = Aig_ManConst1(pAig);\n    for  i = 0; i \u003c nCycles; i++  {\n        Aig_ObjCreateCo( pAig, pPrev );\n        pPrev = Aig_ObjCreateCi( pAig );\n        pCond = Aig_And( pAig, pCond, pPrev );\n    }\n    // update the POs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pTemp = Aig_And( pAig, Aig_ObjChild0(pObj), pCond );\n        Aig_ObjPatchFanin0( pAig, pObj, pTemp );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAig, Aig_ManRegNum(pAig) + nCycles );\n    Aig_ManCleanup( pAig );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::1057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1057,
+      "End": 1070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::3826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3662,
+      "End": 3662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::4919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4569,
+      "End": 4569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::5576",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5047,
+      "End": 5047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::6513",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5781,
+      "End": 5781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::7476",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6619,
+      "End": 6619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::pointer-cast::9095",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8035,
+      "End": 8035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::Saig_ObjSetDual",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjSetDual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 784,
+      "End": 945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::Saig_ObjDual",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjDual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 946,
+      "End": 1107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::Saig_ObjDualFanin",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjDualFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1109,
+      "End": 2046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::Saig_ManDupDual",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupDual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2802,
+      "End": 7151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::Saig_ManBlockPo",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManBlockPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7569,
+      "End": 8303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigDual.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8550
+    }
+  ],
+  "Draft": "package saig\n\n/**CFile****************************************************************\n\n  FileName    [saigDual.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Various duplication procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigDual.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Saig_ObjSetDual(vCopies *Vec_Ptr_t, Id int32, fPos int32, pItem *Aig_Obj_t) { Vec_PtrWriteEntry( vCopies, 2*Id+fPos, pItem );         }\nfunc Saig_ObjDual(vCopies *Vec_Ptr_t, Id int32, fPos int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry( vCopies, 2*Id+fPos ); }\n\nfunc Saig_ObjDualFanin(pAigNew *Aig_Man_t, vCopies *Vec_Ptr_t, pObj *Aig_Obj_t, iFanin int32, ppRes0 **Aig_Obj_t, ppRes1 **Aig_Obj_t) {\n\n    var pTemp0, pTemp1, pCare *Aig_Obj_t;\n    var fCompl int32;\n    assert(iFanin == 0 || iFanin == 1, \"iFanin == 0 || iFanin == 1\");\n    if iFanin == 0 {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId0(pObj), 1 );\n        fCompl = Aig_ObjFaninC0( pObj );\n    \n    } else {\n        pTemp0 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 0 );\n        pTemp1 = Saig_ObjDual( vCopies, Aig_ObjFaninId1(pObj), 1 );\n        fCompl = Aig_ObjFaninC1( pObj );\n    }\n    if fCompl != 0 {\n        pCare   = Aig_Or( pAigNew, pTemp0, pTemp1 );\n        *ppRes0 = Aig_And( pAigNew, pTemp1, pCare );\n        *ppRes1 = Aig_And( pAigNew, pTemp0, pCare );\n    \n    } else {\n        *ppRes0 = pTemp0;\n        *ppRes1 = pTemp1;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms sequential AIG into dual-rail miter.]\n\n  Description [Transforms sequential AIG into a miter encoding ternary\n  problem formulated as follows \"none of the POs has a ternary value\".\n  Interprets the first nDualPis as having ternary value.  Sets flops\n  to have ternary intial value when fDualFfs is set to 1.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupDual(pAig *Aig_Man_t, vDcFlops *Vec_Int_t, nDualPis int32, fDualFfs int32, fMiterFfs int32, fComplPo int32, fCheckZero int32, fCheckOne int32) *Aig_Man_t {\n    var vCopies *Vec_Ptr_t;\n    var pAigNew *Aig_Man_t;\n    var pObj, pTemp0, pTemp1, pTemp2, pTemp3, pCare, pMiter *Aig_Obj_t;\n    var i int32;\n    assert(Saig_ManPoNum(pAig) \u003e 0, \"Saig_ManPoNum(pAig) \u003e 0\");\n    assert(nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig), \"nDualPis \u003e= 0 \u0026\u0026 nDualPis \u003c= Saig_ManPiNum(pAig)\");\n    assert(vDcFlops == nil || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig), \"vDcFlops == nil || Vec_IntSize(vDcFlops) == Aig_ManRegNum(pAig)\");\n    vCopies = Vec_PtrStart( 2*Aig_ManObjNum(pAig) );\n    // start the new manager\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node\n    Saig_ObjSetDual( vCopies, 0, 0, Aig_ManConst0(pAigNew) );\n    Saig_ObjSetDual( vCopies, 0, 1, Aig_ManConst1(pAigNew) );\n    // create variables for PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if i \u003c nDualPis {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n        \n        } else if i \u003c Saig_ManPiNum(pAig) {\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            pTemp0 = Aig_Not( pTemp1 );\n        \n        } else {\n            pTemp0 = Aig_ObjCreateCi( pAigNew );\n            pTemp1 = Aig_ObjCreateCi( pAigNew );\n            if vDcFlops != nil {\n                pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i-Saig_ManPiNum(pAig)) );\n            } else {\n                pTemp0 = Aig_NotCond( pTemp0, !fDualFfs ); }\n        }\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_And(pAigNew, pTemp0, Aig_Not(pTemp1)) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, Aig_Not(pTemp0)) );\n    }\n    // create internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 1, \u0026pTemp2, \u0026pTemp3 );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 0, Aig_Or (pAigNew, pTemp0, pTemp2) );\n        Saig_ObjSetDual( vCopies, Aig_ObjId(pObj), 1, Aig_And(pAigNew, pTemp1, pTemp3) );\n    }\n    }\n    // create miter and flops\n    pMiter = Aig_ManConst0(pAigNew);\n    if fMiterFfs != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if fCheckZero != 0 {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else if fCheckOne != 0 {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else { // check X\n            \n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n            if fCheckZero != 0 {\n                pCare  = Aig_And( pAigNew, pTemp0, Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else if fCheckOne != 0 {\n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), pTemp1 );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            \n            } else { // check X\n            \n                pCare  = Aig_And( pAigNew, Aig_Not(pTemp0), Aig_Not(pTemp1) );\n                pMiter = Aig_Or( pAigNew, pMiter, pCare );\n            }\n        }\n    }\n    // create PO\n    pMiter = Aig_NotCond( pMiter, fComplPo );\n    Aig_ObjCreateCo( pAigNew, pMiter );\n    // create flops\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Saig_ObjDualFanin( pAigNew, vCopies, pObj, 0, \u0026pTemp0, \u0026pTemp1 );\n        if vDcFlops != nil {\n            pTemp0 = Aig_NotCond( pTemp0, !Vec_IntEntry(vDcFlops, i) );\n        } else {\n            pTemp0 = Aig_NotCond( pTemp0, !fDualFfs ); }\n        Aig_ObjCreateCo( pAigNew, pTemp0 );\n        Aig_ObjCreateCo( pAigNew, pTemp1 );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAigNew, 2 * Aig_ManRegNum(pAig) );\n    Aig_ManCleanup( pAigNew );\n    Vec_PtrFree( vCopies );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms sequential AIG to block the PO for N cycles.]\n\n  Description [This procedure should be applied to a safety property \n  miter to make the propetry 'true' (const 0) during the first N cycles.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManBlockPo(pAig *Aig_Man_t, nCycles int32) {\n    var pObj, pCond, pPrev, pTemp *Aig_Obj_t;\n    var i int32;\n    assert(nCycles \u003e 0, \"nCycles \u003e 0\");\n    // add N flops (assuming 1-hot encoding of cycles)\n    pPrev = Aig_ManConst1(pAig);\n    pCond = Aig_ManConst1(pAig);\n    for  i = 0; i \u003c nCycles; i++  {\n        Aig_ObjCreateCo( pAig, pPrev );\n        pPrev = Aig_ObjCreateCi( pAig );\n        pCond = Aig_And( pAig, pCond, pPrev );\n    }\n    // update the POs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pTemp = Aig_And( pAig, Aig_ObjChild0(pObj), pCond );\n        Aig_ObjPatchFanin0( pAig, pObj, pTemp );\n    }\n    // set the flops\n    Aig_ManSetRegNum( pAig, Aig_ManRegNum(pAig) + nCycles );\n    Aig_ManCleanup( pAig );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

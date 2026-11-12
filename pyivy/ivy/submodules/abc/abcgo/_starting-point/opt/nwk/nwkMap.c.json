@@ -1,0 +1,532 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c",
+  "SHA256": "9b74940dbd63b9c99b0915cab2642d0ca86f4bb0caf000034af7ff3d0e1d3a47",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(If_Par_t) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 121,
+        "Column": 73,
+        "ByteOffset": 3729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 13,
+        "ByteOffset": 5430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 5480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrEntry(vAigToIf, i) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 8372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 8880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nwk_NodeIfToHop(): Computing local AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 10080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p) == If_ManCiNum(pIfMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 10134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p) == If_ManCoNum(pIfMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 10188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManNodeNum(p) == If_ManAndNum(pIfMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 332,
+        "Column": 13,
+        "ByteOffset": 12621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 12817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ManCheck( pNtk ) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 360,
+        "Column": 79,
+        "ByteOffset": 13414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pPars.pTimesArr = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(Aig_ManCiNum(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 13470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars.pTimesArr, 0, sizeof(float) * Aig_ManCiNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManSetIfParsDefault",
+      "Start": 1298,
+      "End": 2577,
+      "BodyStart": 1347,
+      "Original": "void Nwk_ManSetIfParsDefault( If_Par_t * pPars )\n{\n//    extern void * Abc_FrameReadLibLut();\n    // set defaults\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n//    pPars-\u003enLutSize    = -1;\n    pPars-\u003enLutSize    =  6;\n    pPars-\u003enCutsMax    =  8;\n    pPars-\u003enFlowIters  =  1;\n    pPars-\u003enAreaIters  =  2;\n    pPars-\u003eDelayTarget = -1;\n    pPars-\u003eEpsilon     =  (float)0.005;\n    pPars-\u003efPreprocess =  1;\n    pPars-\u003efArea       =  0;\n    pPars-\u003efFancy      =  0;\n    pPars-\u003efExpRed     =  1; ////\n    pPars-\u003efLatchPaths =  0;\n    pPars-\u003efEdge       =  1;\n    pPars-\u003efPower      =  0;\n    pPars-\u003efCutMin     =  0;\n    pPars-\u003efVerbose    =  0;\n    // internal parameters\n    pPars-\u003efTruth      =  0;\n    pPars-\u003enLatchesCi  =  0;\n    pPars-\u003enLatchesCo  =  0;\n    pPars-\u003efLiftLeaves =  0;\n//    pPars-\u003epLutLib     =  Abc_FrameReadLibLut();\n    pPars-\u003epLutLib     =  NULL;\n    pPars-\u003epTimesArr   =  NULL; \n    pPars-\u003epTimesArr   =  NULL;   \n    pPars-\u003epFuncCost   =  NULL;   \n/*\n    if ( pPars-\u003enLutSize == -1 )\n    {\n        if ( pPars-\u003epLutLib == NULL )\n        {\n            printf( \"The LUT library is not given.\\n\" );\n            return;\n        }\n        // get LUT size from the library\n        pPars-\u003enLutSize = pPars-\u003epLutLib-\u003eLutMax;\n    }\n*/\n}",
+      "Draft": "func Nwk_ManSetIfParsDefault(pPars *If_Par_t) {\n//    extern void * Abc_FrameReadLibLut();\n    // set defaults\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n//    pPars-\u003enLutSize    = -1;\n    pPars.nLutSize    =  6;\n    pPars.nCutsMax    =  8;\n    pPars.nFlowIters  =  1;\n    pPars.nAreaIters  =  2;\n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  1;\n    pPars.fArea       =  0;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  1; ////\n    pPars.fLatchPaths =  0;\n    pPars.fEdge       =  1;\n    pPars.fPower      =  0;\n    pPars.fCutMin     =  0;\n    pPars.fVerbose    =  0;\n    // internal parameters\n    pPars.fTruth      =  0;\n    pPars.nLatchesCi  =  0;\n    pPars.nLatchesCo  =  0;\n    pPars.fLiftLeaves =  0;\n//    pPars-\u003epLutLib     =  Abc_FrameReadLibLut();\n    pPars.pLutLib     =  nil;\n    pPars.pTimesArr   =  nil; \n    pPars.pTimesArr   =  nil;   \n    pPars.pFuncCost   =  nil;   \n/*\n    if ( pPars-\u003enLutSize == -1 )\n    {\n        if ( pPars-\u003epLutLib == NULL )\n        {\n            printf( \"The LUT library is not given.\\n\" );\n            return;\n        }\n        // get LUT size from the library\n        pPars-\u003enLutSize = pPars-\u003epLutLib-\u003eLutMax;\n    }\n*/\n}"
+    },
+    {
+      "Name": "Nwk_ManToIf",
+      "Start": 2848,
+      "End": 5915,
+      "BodyStart": 2928,
+      "Original": "If_Man_t * Nwk_ManToIf( Aig_Man_t * p, If_Par_t * pPars, Vec_Ptr_t * vAigToIf )\n{\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    Vec_Int_t * vSwitching = NULL, * vSwitching2 = NULL;\n    float * pSwitching = NULL, * pSwitching2 = NULL;\n    If_Man_t * pIfMan;\n    If_Obj_t * pIfObj = NULL;\n    Aig_Obj_t * pNode, * pFanin, * pPrev;\n    int i;\n    abctime clk = Abc_Clock();\n    // set the number of registers (switch activity will be combinational)\n    Aig_ManSetRegNum( p, 0 );\n    if ( pPars-\u003efPower )\n    {\n        vSwitching  = Saig_ManComputeSwitchProbs( p, 48, 16, 0 );\n        if ( pPars-\u003efVerbose )\n        {\n            ABC_PRT( \"Computing switching activity\", Abc_Clock() - clk );\n        }\n        pSwitching  = (float *)vSwitching-\u003epArray;\n        vSwitching2 = Vec_IntStart( Aig_ManObjNumMax(p) );\n        pSwitching2 = (float *)vSwitching2-\u003epArray;\n    }\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan-\u003evSwitching = vSwitching2;\n    // load the AIG into the mapper\n    Aig_ManForEachObj( p, pNode, i )\n    {\n        if ( Aig_ObjIsAnd(pNode) )\n        {\n            pIfObj = If_ManCreateAnd( pIfMan, \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode)-\u003epData, Aig_ObjFaninC0(pNode) ), \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin1(pNode)-\u003epData, Aig_ObjFaninC1(pNode) ) );\n//            printf( \"no%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        }\n        else if ( Aig_ObjIsCi(pNode) )\n        {\n            pIfObj = If_ManCreateCi( pIfMan );\n            If_ObjSetLevel( pIfObj, Aig_ObjLevel(pNode) );\n//            printf( \"pi%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n            if ( pIfMan-\u003enLevelMax \u003c (int)pIfObj-\u003eLevel )\n                pIfMan-\u003enLevelMax = (int)pIfObj-\u003eLevel;\n        }\n        else if ( Aig_ObjIsCo(pNode) )\n        {\n            pIfObj = If_ManCreateCo( pIfMan, If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode)-\u003epData, Aig_ObjFaninC0(pNode) ) );\n//            printf( \"po%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        }\n        else if ( Aig_ObjIsConst1(pNode) )\n            pIfObj = If_ManConst1( pIfMan );\n        else // add the node to the mapper\n            assert( 0 );\n        // save the result\n        assert( Vec_PtrEntry(vAigToIf, i) == NULL );\n        Vec_PtrWriteEntry( vAigToIf, i, pIfObj );\n        pNode-\u003epData = pIfObj;\n        if ( vSwitching2 )\n            pSwitching2[pIfObj-\u003eId] = pSwitching[pNode-\u003eId];            \n        // set up the choice node\n        if ( Aig_ObjIsChoice( p, pNode ) )\n        {\n            for ( pPrev = pNode, pFanin = Aig_ObjEquiv(p, pNode); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(p, pFanin) )\n                If_ObjSetChoice( (If_Obj_t *)pPrev-\u003epData, (If_Obj_t *)pFanin-\u003epData );\n            If_ManCreateChoice( pIfMan, (If_Obj_t *)pNode-\u003epData );\n        }\n//        assert( If_ObjLevel(pIfObj) == Aig_ObjLevel(pNode) );\n    }\n    if ( vSwitching )\n        Vec_IntFree( vSwitching );\n    return pIfMan;\n}",
+      "Draft": "func Nwk_ManToIf(p *Aig_Man_t, pPars *If_Par_t, vAigToIf *Vec_Ptr_t) *If_Man_t {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vSwitching *Vec_Int_t = nil;\n    var vSwitching2 *Vec_Int_t = nil;\n    var pSwitching *float32 = nil;\n    var pSwitching2 *float32 = nil;\n    var pIfMan *If_Man_t;\n    var pIfObj *If_Obj_t  = nil;\n    var pNode, pFanin, pPrev *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    // set the number of registers (switch activity will be combinational)\n    Aig_ManSetRegNum( p, 0 );\n    if pPars.fPower {\n        vSwitching  = Saig_ManComputeSwitchProbs( p, 48, 16, 0 );\n        if pPars.fVerbose {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Computing switching activity\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        pSwitching  = (float *)vSwitching.pArray;\n        vSwitching2 = Vec_IntStart( Aig_ManObjNumMax(p) );\n        pSwitching2 = (float *)vSwitching2.pArray;\n    }\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan.vSwitching = vSwitching2;\n    // load the AIG into the mapper\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        if Aig_ObjIsAnd(pNode) {\n            pIfObj = If_ManCreateAnd( pIfMan, \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ), \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin1(pNode).pData, Aig_ObjFaninC1(pNode) ) );\n//            printf( \"no%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        \n        } else if Aig_ObjIsCi(pNode) {\n            pIfObj = If_ManCreateCi( pIfMan );\n            If_ObjSetLevel( pIfObj, Aig_ObjLevel(pNode) );\n//            printf( \"pi%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n            if pIfMan.nLevelMax \u003c int32(pIfObj.Level) {\n                pIfMan.nLevelMax = int32(pIfObj.Level); }\n        \n        } else if Aig_ObjIsCo(pNode) {\n            pIfObj = If_ManCreateCo( pIfMan, If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ) );\n//            printf( \"po%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        \n        } else if Aig_ObjIsConst1(pNode) {\n            pIfObj = If_ManConst1( pIfMan );\n        } else { // add the node to the mapper\n            assert(false, \"0\"); }\n        // save the result\n        assert(Vec_PtrEntry(vAigToIf, i) == nil, \"Vec_PtrEntry(vAigToIf, i) == nil\");\n        Vec_PtrWriteEntry( vAigToIf, i, pIfObj );\n        pNode.pData = pIfObj;\n        if vSwitching2 != nil {\n            pSwitching2[pIfObj.Id] = pSwitching[pNode.Id]; }            \n        // set up the choice node\n        if Aig_ObjIsChoice( p, pNode ) {\n            for  pPrev = pNode, pFanin = Aig_ObjEquiv(p, pNode); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(p, pFanin)  {\n                If_ObjSetChoice( (If_Obj_t *)pPrev.pData, (If_Obj_t *)pFanin.pData );\n            }\n            If_ManCreateChoice( pIfMan, (If_Obj_t *)pNode.pData );\n        }\n//        assert( If_ObjLevel(pIfObj) == Aig_ObjLevel(pNode) );\n    }\n    }\n    if vSwitching != nil {\n        Vec_IntFree( vSwitching ); }\n    return pIfMan;\n}"
+    },
+    {
+      "Name": "Nwk_NodeIfToHop2_rec",
+      "Start": 6198,
+      "End": 7551,
+      "BodyStart": 6314,
+      "Original": "Hop_Obj_t * Nwk_NodeIfToHop2_rec( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj, Vec_Ptr_t * vVisited )\n{\n    If_Cut_t * pCut;\n    If_Obj_t * pTemp;\n    Hop_Obj_t * gFunc, * gFunc0, * gFunc1;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if ( If_CutData(pCut) )\n        return (Hop_Obj_t *)If_CutData(pCut);\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if ( If_ObjIsCi(pIfObj) )\n        return (Hop_Obj_t *)If_CutData(pCut);\n    // compute the functions of the children\n    for ( pTemp = pIfObj; pTemp; pTemp = pTemp-\u003epEquiv )\n    {\n        gFunc0 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp-\u003epFanin0, vVisited );\n        if ( gFunc0 == (void *)1 )\n            continue;\n        gFunc1 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp-\u003epFanin1, vVisited );\n        if ( gFunc1 == (void *)1 )\n            continue;\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp-\u003efCompl0), Hop_NotCond(gFunc1, pTemp-\u003efCompl1) ); \n        if ( pTemp-\u003efPhase != pIfObj-\u003efPhase )\n            gFunc = Hop_Not(gFunc);\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}",
+      "Draft": "func Nwk_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var pTemp *If_Obj_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if If_ObjIsCi(pIfObj) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    for  pTemp = pIfObj; (pTemp != nil); pTemp = pTemp.pEquiv  {\n        gFunc0 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );\n        if gFunc0 == (void *)1 {\n            continue; }\n        gFunc1 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );\n        if gFunc1 == (void *)1 {\n            continue; }\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); \n        if pTemp.fPhase != pIfObj.fPhase {\n            gFunc = Hop_Not(gFunc); }\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}"
+    },
+    {
+      "Name": "Nwk_NodeIfToHop",
+      "Start": 7821,
+      "End": 8835,
+      "BodyStart": 7910,
+      "Original": "Hop_Obj_t * Nwk_NodeIfToHop( Hop_Man_t * pHopMan, If_Man_t * pIfMan, If_Obj_t * pIfObj )\n{\n    If_Cut_t * pCut;\n    Hop_Obj_t * gFunc;\n    If_Obj_t * pLeaf;\n    int i;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert( pCut-\u003enLeaves \u003e 1 );\n    // set the leaf variables\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan-\u003evTemp );\n    gFunc = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan-\u003evTemp ); \n    if ( gFunc == (void *)1 )\n    {\n        printf( \"Nwk_NodeIfToHop(): Computing local AIG has failed.\\n\" );\n        return NULL;\n    }\n//    printf( \"%d \", Vec_PtrSize(p-\u003evTemp) );\n    // clean the cuts\n    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )\n        If_CutSetData( If_ObjCutBest(pLeaf), NULL );\n    Vec_PtrForEachEntry( If_Cut_t *, pIfMan-\u003evTemp, pCut, i )\n        If_CutSetData( pCut, NULL );\n    return gFunc;\n}",
+      "Draft": "func Nwk_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc *Hop_Obj_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    }\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan.vTemp );\n    gFunc = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); \n    if gFunc == (void *)1 {\n        fmt.Printf(\"Nwk_NodeIfToHop(): Computing local AIG has failed.\\n\");\n        return nil;\n    }\n//    printf( \"%d \", Vec_PtrSize(p-\u003evTemp) );\n    // clean the cuts\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {\n        If_CutSetData( If_ObjCutBest(pLeaf), nil );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pIfMan.vTemp)) \u0026\u0026 (((pCut) = (If_Cut_t *)Vec_PtrEntry(pIfMan.vTemp, i)), 1); i++  {\n        If_CutSetData( pCut, nil );\n    }\n    return gFunc;\n}"
+    },
+    {
+      "Name": "Nwk_ManFromIf",
+      "Start": 9071,
+      "End": 11800,
+      "BodyStart": 9155,
+      "Original": "Nwk_Man_t * Nwk_ManFromIf( If_Man_t * pIfMan, Aig_Man_t * p, Vec_Ptr_t * vAigToIf )\n{\n    Vec_Ptr_t * vIfToAig;\n    Nwk_Man_t * pNtk;\n    Nwk_Obj_t * pObjNew = NULL;\n    Aig_Obj_t * pObj, * pObjRepr;\n    If_Obj_t * pIfObj = NULL;\n    If_Cut_t * pCutBest;\n    int i, k, nLeaves, * ppLeaves;\n    assert( Aig_ManCiNum(p) == If_ManCiNum(pIfMan) );\n    assert( Aig_ManCoNum(p) == If_ManCoNum(pIfMan) );\n    assert( Aig_ManNodeNum(p) == If_ManAndNum(pIfMan) );\n    Aig_ManCleanData( p );\n    If_ManCleanCutData( pIfMan );\n    // create mapping of IF to AIG\n    vIfToAig = Vec_PtrStart( If_ManObjNum(pIfMan) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        Vec_PtrWriteEntry( vIfToAig, pIfObj-\u003eId, pObj );\n    }\n    // construct the network\n    pNtk = Nwk_ManAlloc();\n    pNtk-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNtk-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n//    pNtk-\u003enLatches = Aig_ManRegNum(p);\n//    pNtk-\u003enTruePis = Nwk_ManCiNum(pNtk) - pNtk-\u003enLatches;\n//    pNtk-\u003enTruePos = Nwk_ManCoNum(pNtk) - pNtk-\u003enLatches;\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        if ( pIfObj-\u003enRefs == 0 \u0026\u0026 !If_ObjIsTerm(pIfObj) )\n            continue;\n        if ( Aig_ObjIsNode(pObj) )\n        {\n            pCutBest = If_ObjCutBest( pIfObj );\n            nLeaves  = If_CutLeaveNum( pCutBest ); \n            ppLeaves = If_CutLeaves( pCutBest );\n            // create node\n            pObjNew = Nwk_ManCreateNode( pNtk, nLeaves, pIfObj-\u003enRefs );\n            for ( k = 0; k \u003c nLeaves; k++ )\n            {\n                pObjRepr = (Aig_Obj_t *)Vec_PtrEntry( vIfToAig, ppLeaves[k] );\n                Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)pObjRepr-\u003epData );\n            }\n            // get the functionality\n            pObjNew-\u003epFunc = Nwk_NodeIfToHop( pNtk-\u003epManHop, pIfMan, pIfObj );\n        }\n        else if ( Aig_ObjIsCi(pObj) )\n            pObjNew = Nwk_ManCreateCi( pNtk, pIfObj-\u003enRefs );\n        else if ( Aig_ObjIsCo(pObj) )\n        {\n            pObjNew = Nwk_ManCreateCo( pNtk );\n            pObjNew-\u003efInvert = Aig_ObjFaninC0(pObj);\n            Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n//printf( \"%d \", pObjNew-\u003eId );\n        }\n        else if ( Aig_ObjIsConst1(pObj) )\n        {\n            pObjNew = Nwk_ManCreateNode( pNtk, 0, pIfObj-\u003enRefs );\n            pObjNew-\u003epFunc = Hop_ManConst1( pNtk-\u003epManHop );\n        }\n        else\n            assert( 0 );\n        pObj-\u003epData = pObjNew;\n    }\n//printf( \"\\n\" );\n    Vec_PtrFree( vIfToAig );\n    pNtk-\u003epManTime = Tim_ManDup( pIfMan-\u003epManTim, 0 );\n    Nwk_ManMinimumBase( pNtk, 0 );\n    assert( Nwk_ManCheck( pNtk ) );\n    return pNtk;\n}",
+      "Draft": "func Nwk_ManFromIf(pIfMan *If_Man_t, p *Aig_Man_t, vAigToIf *Vec_Ptr_t) *Nwk_Man_t {\n    var vIfToAig *Vec_Ptr_t;\n    var pNtk *Nwk_Man_t;\n    var pObjNew *Nwk_Obj_t  = nil;\n    var pObj, pObjRepr *Aig_Obj_t;\n    var pIfObj *If_Obj_t  = nil;\n    var pCutBest *If_Cut_t;\n    var i int32;\n    var k int32;\n    var nLeaves int32;\n    var ppLeaves *int32;\n    assert(Aig_ManCiNum(p) == If_ManCiNum(pIfMan), \"Aig_ManCiNum(p) == If_ManCiNum(pIfMan)\");\n    assert(Aig_ManCoNum(p) == If_ManCoNum(pIfMan), \"Aig_ManCoNum(p) == If_ManCoNum(pIfMan)\");\n    assert(Aig_ManNodeNum(p) == If_ManAndNum(pIfMan), \"Aig_ManNodeNum(p) == If_ManAndNum(pIfMan)\");\n    Aig_ManCleanData( p );\n    If_ManCleanCutData( pIfMan );\n    // create mapping of IF to AIG\n    vIfToAig = Vec_PtrStart( If_ManObjNum(pIfMan) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        Vec_PtrWriteEntry( vIfToAig, pIfObj.Id, pObj );\n    }\n    }\n    // construct the network\n    pNtk = Nwk_ManAlloc();\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );\n//    pNtk-\u003enLatches = Aig_ManRegNum(p);\n//    pNtk-\u003enTruePis = Nwk_ManCiNum(pNtk) - pNtk-\u003enLatches;\n//    pNtk-\u003enTruePos = Nwk_ManCoNum(pNtk) - pNtk-\u003enLatches;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        if pIfObj.nRefs == 0 \u0026\u0026 !If_ObjIsTerm(pIfObj) {\n            continue; }\n        if Aig_ObjIsNode(pObj) {\n            pCutBest = If_ObjCutBest( pIfObj );\n            nLeaves  = If_CutLeaveNum( pCutBest ); \n            ppLeaves = If_CutLeaves( pCutBest );\n            // create node\n            pObjNew = Nwk_ManCreateNode( pNtk, nLeaves, pIfObj.nRefs );\n            for  k = 0; k \u003c nLeaves; k++  {\n                pObjRepr = (Aig_Obj_t *)Vec_PtrEntry( vIfToAig, ppLeaves[k] );\n                Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)pObjRepr.pData );\n            }\n            // get the functionality\n            pObjNew.pFunc = Nwk_NodeIfToHop( pNtk.pManHop, pIfMan, pIfObj );\n        \n        } else if Aig_ObjIsCi(pObj) {\n            pObjNew = Nwk_ManCreateCi( pNtk, pIfObj.nRefs );\n        } else if Aig_ObjIsCo(pObj) {\n            pObjNew = Nwk_ManCreateCo( pNtk );\n            pObjNew.fInvert = Aig_ObjFaninC0(pObj);\n            Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n//printf( \"%d \", pObjNew-\u003eId );\n        \n        } else if Aig_ObjIsConst1(pObj) {\n            pObjNew = Nwk_ManCreateNode( pNtk, 0, pIfObj.nRefs );\n            pObjNew.pFunc = Hop_ManConst1( pNtk.pManHop );\n        \n        } else {\n            assert(false, \"0\"); }\n        pObj.pData = pObjNew;\n    }\n    }\n//printf( \"\\n\" );\n    Vec_PtrFree( vIfToAig );\n    pNtk.pManTime = Tim_ManDup( pIfMan.pManTim, 0 );\n    Nwk_ManMinimumBase( pNtk, 0 );\n    assert(Nwk_ManCheck( pNtk ), \"Nwk_ManCheck( pNtk )\");\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Nwk_MappingIf",
+      "Start": 12076,
+      "End": 13071,
+      "BodyStart": 12159,
+      "Original": "Nwk_Man_t * Nwk_MappingIf( Aig_Man_t * p, Tim_Man_t * pManTime, If_Par_t * pPars )\n{\n    Nwk_Man_t * pNtk;\n    If_Man_t * pIfMan;\n    Vec_Ptr_t * vAigToIf;\n    // set the arrival times\n    pPars-\u003epTimesArr = ABC_ALLOC( float, Aig_ManCiNum(p) );\n    memset( pPars-\u003epTimesArr, 0, sizeof(float) * Aig_ManCiNum(p) );\n    // translate into the mapper\n    vAigToIf = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    pIfMan = Nwk_ManToIf( p, pPars, vAigToIf );    \n    if ( pIfMan == NULL )\n        return NULL;\n    pIfMan-\u003epManTim = Tim_ManDup( pManTime, 0 );\n    pIfMan-\u003epPars-\u003efCutMin = 0; // is not compatible with deriving result\n    if ( !If_ManPerformMapping( pIfMan ) )\n    {\n        If_ManStop( pIfMan );\n        return NULL;\n    }\n    // transform the result of mapping into the new network\n    pNtk = Nwk_ManFromIf( pIfMan, p, vAigToIf );\n    if ( pPars-\u003efBidec \u0026\u0026 pPars-\u003enLutSize \u003c= 8 )\n        Nwk_ManBidecResyn( pNtk, 0 );\n    If_ManStop( pIfMan );\n    Vec_PtrFree( vAigToIf );\n    return pNtk;\n}",
+      "Draft": "func Nwk_MappingIf(p *Aig_Man_t, pManTime *Tim_Man_t, pPars *If_Par_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var pIfMan *If_Man_t;\n    var vAigToIf *Vec_Ptr_t;\n    // set the arrival times\n    // inlining of macro ABC_ALLOC\n    pPars.pTimesArr = ((float *) malloc(sizeof(float) * (size_t)(Aig_ManCiNum(p))));\n    memset( pPars.pTimesArr, 0, sizeof(float) * Aig_ManCiNum(p) );\n    // translate into the mapper\n    vAigToIf = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    pIfMan = Nwk_ManToIf( p, pPars, vAigToIf );    \n    if pIfMan == nil {\n        return nil; }\n    pIfMan.pManTim = Tim_ManDup( pManTime, 0 );\n    pIfMan.pPars.fCutMin = 0; // is not compatible with deriving result\n    if !If_ManPerformMapping( pIfMan ) {\n        If_ManStop( pIfMan );\n        return nil;\n    }\n    // transform the result of mapping into the new network\n    pNtk = Nwk_ManFromIf( pIfMan, p, vAigToIf );\n    if pPars.fBidec \u0026\u0026 pPars.nLutSize \u003c= 8 {\n        Nwk_ManBidecResyn( pNtk, 0 ); }\n    If_ManStop( pIfMan );\n    Vec_PtrFree( vAigToIf );\n    return pNtk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::mechanical::sizeof::1434",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1434,
+      "End": 1440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::mechanical::sizeof::13442",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12284,
+      "End": 12284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::mechanical::sizeof::13520",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12354,
+      "End": 12360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::3760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3632,
+      "End": 3641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::3870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3742,
+      "End": 3751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::4239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3947,
+      "End": 3947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::4447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4106,
+      "End": 4118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::4542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4201,
+      "End": 4213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::5159",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4818,
+      "End": 4830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::5976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5635,
+      "End": 5647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::6002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5661,
+      "End": 5673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::6071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5730,
+      "End": 5742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::6892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6551,
+      "End": 6564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::7044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6703,
+      "End": 6711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::7139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6798,
+      "End": 6811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::7385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7044,
+      "End": 7052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::7526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7185,
+      "End": 7193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::7860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7519,
+      "End": 7532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::8879",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8429,
+      "End": 8437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::9395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8721,
+      "End": 8721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::10513",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9679,
+      "End": 9679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::10617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9734,
+      "End": 9746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::11197",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10151,
+      "End": 10151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::11301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10206,
+      "End": 10218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::11802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10707,
+      "End": 10720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::11896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10801,
+      "End": 10814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::12354",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11259,
+      "End": 11272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::pointer-cast::13425",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12284,
+      "End": 12284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_ManSetIfParsDefault",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManSetIfParsDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 2577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_ManToIf",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManToIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2848,
+      "End": 5915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_NodeIfToHop2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeIfToHop2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6198,
+      "End": 7551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_NodeIfToHop",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeIfToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7821,
+      "End": 8835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_ManFromIf",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManFromIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9071,
+      "End": 11800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::Nwk_MappingIf",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_MappingIf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12076,
+      "End": 13071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13319
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [nwkMap.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Interface to technology mapping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkMap.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n//#include \"map/if/if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into FPGA manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManSetIfParsDefault(pPars *If_Par_t) {\n//    extern void * Abc_FrameReadLibLut();\n    // set defaults\n    memset( pPars, 0, sizeof(If_Par_t) );\n    // user-controlable paramters\n//    pPars-\u003enLutSize    = -1;\n    pPars.nLutSize    =  6;\n    pPars.nCutsMax    =  8;\n    pPars.nFlowIters  =  1;\n    pPars.nAreaIters  =  2;\n    pPars.DelayTarget = -1;\n    pPars.Epsilon     =  float32(0.005);\n    pPars.fPreprocess =  1;\n    pPars.fArea       =  0;\n    pPars.fFancy      =  0;\n    pPars.fExpRed     =  1; ////\n    pPars.fLatchPaths =  0;\n    pPars.fEdge       =  1;\n    pPars.fPower      =  0;\n    pPars.fCutMin     =  0;\n    pPars.fVerbose    =  0;\n    // internal parameters\n    pPars.fTruth      =  0;\n    pPars.nLatchesCi  =  0;\n    pPars.nLatchesCo  =  0;\n    pPars.fLiftLeaves =  0;\n//    pPars-\u003epLutLib     =  Abc_FrameReadLibLut();\n    pPars.pLutLib     =  nil;\n    pPars.pTimesArr   =  nil; \n    pPars.pTimesArr   =  nil;   \n    pPars.pFuncCost   =  nil;   \n/*\n    if ( pPars-\u003enLutSize == -1 )\n    {\n        if ( pPars-\u003epLutLib == NULL )\n        {\n            printf( \"The LUT library is not given.\\n\" );\n            return;\n        }\n        // get LUT size from the library\n        pPars-\u003enLutSize = pPars-\u003epLutLib-\u003eLutMax;\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into FPGA manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManToIf(p *Aig_Man_t, pPars *If_Par_t, vAigToIf *Vec_Ptr_t) *If_Man_t {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vSwitching *Vec_Int_t = nil;\n    var vSwitching2 *Vec_Int_t = nil;\n    var pSwitching *float32 = nil;\n    var pSwitching2 *float32 = nil;\n    var pIfMan *If_Man_t;\n    var pIfObj *If_Obj_t  = nil;\n    var pNode, pFanin, pPrev *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    // set the number of registers (switch activity will be combinational)\n    Aig_ManSetRegNum( p, 0 );\n    if pPars.fPower {\n        vSwitching  = Saig_ManComputeSwitchProbs( p, 48, 16, 0 );\n        if pPars.fVerbose {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Computing switching activity\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        pSwitching  = (float *)vSwitching.pArray;\n        vSwitching2 = Vec_IntStart( Aig_ManObjNumMax(p) );\n        pSwitching2 = (float *)vSwitching2.pArray;\n    }\n    // start the mapping manager and set its parameters\n    pIfMan = If_ManStart( pPars );\n    pIfMan.vSwitching = vSwitching2;\n    // load the AIG into the mapper\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        if Aig_ObjIsAnd(pNode) {\n            pIfObj = If_ManCreateAnd( pIfMan, \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ), \n                If_NotCond( (If_Obj_t *)Aig_ObjFanin1(pNode).pData, Aig_ObjFaninC1(pNode) ) );\n//            printf( \"no%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        \n        } else if Aig_ObjIsCi(pNode) {\n            pIfObj = If_ManCreateCi( pIfMan );\n            If_ObjSetLevel( pIfObj, Aig_ObjLevel(pNode) );\n//            printf( \"pi%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n            if pIfMan.nLevelMax \u003c int32(pIfObj.Level) {\n                pIfMan.nLevelMax = int32(pIfObj.Level); }\n        \n        } else if Aig_ObjIsCo(pNode) {\n            pIfObj = If_ManCreateCo( pIfMan, If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ) );\n//            printf( \"po%d=%d\\n \", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );\n        \n        } else if Aig_ObjIsConst1(pNode) {\n            pIfObj = If_ManConst1( pIfMan );\n        } else { // add the node to the mapper\n            assert(false, \"0\"); }\n        // save the result\n        assert(Vec_PtrEntry(vAigToIf, i) == nil, \"Vec_PtrEntry(vAigToIf, i) == nil\");\n        Vec_PtrWriteEntry( vAigToIf, i, pIfObj );\n        pNode.pData = pIfObj;\n        if vSwitching2 != nil {\n            pSwitching2[pIfObj.Id] = pSwitching[pNode.Id]; }            \n        // set up the choice node\n        if Aig_ObjIsChoice( p, pNode ) {\n            for  pPrev = pNode, pFanin = Aig_ObjEquiv(p, pNode); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(p, pFanin)  {\n                If_ObjSetChoice( (If_Obj_t *)pPrev.pData, (If_Obj_t *)pFanin.pData );\n            }\n            If_ManCreateChoice( pIfMan, (If_Obj_t *)pNode.pData );\n        }\n//        assert( If_ObjLevel(pIfObj) == Aig_ObjLevel(pNode) );\n    }\n    }\n    if vSwitching != nil {\n        Vec_IntFree( vSwitching ); }\n    return pIfMan;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the local AIG for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var pTemp *If_Obj_t;\n    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    // if the cut is visited, return the result\n    if If_CutData(pCut) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    If_CutSetData( pCut, (void *)1 );\n    // skip in case of primary input\n    if If_ObjIsCi(pIfObj) {\n        return (Hop_Obj_t *)If_CutData(pCut); }\n    // compute the functions of the children\n    for  pTemp = pIfObj; (pTemp != nil); pTemp = pTemp.pEquiv  {\n        gFunc0 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );\n        if gFunc0 == (void *)1 {\n            continue; }\n        gFunc1 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );\n        if gFunc1 == (void *)1 {\n            continue; }\n        // both branches are solved\n        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); \n        if pTemp.fPhase != pIfObj.fPhase {\n            gFunc = Hop_Not(gFunc); }\n        If_CutSetData( pCut, gFunc );\n        break;\n    }\n    return (Hop_Obj_t *)If_CutData(pCut);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the local AIG for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {\n    var pCut *If_Cut_t;\n    var gFunc *Hop_Obj_t;\n    var pLeaf *If_Obj_t;\n    var i int32;\n    // get the best cut\n    pCut = If_ObjCutBest(pIfObj);\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {\n        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );\n    }\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pIfMan.vTemp );\n    gFunc = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); \n    if gFunc == (void *)1 {\n        fmt.Printf(\"Nwk_NodeIfToHop(): Computing local AIG has failed.\\n\");\n        return nil;\n    }\n//    printf( \"%d \", Vec_PtrSize(p-\u003evTemp) );\n    // clean the cuts\n    // inlining of macro If_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {\n        If_CutSetData( If_ObjCutBest(pLeaf), nil );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pIfMan.vTemp)) \u0026\u0026 (((pCut) = (If_Cut_t *)Vec_PtrEntry(pIfMan.vTemp, i)), 1); i++  {\n        If_CutSetData( pCut, nil );\n    }\n    return gFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManFromIf(pIfMan *If_Man_t, p *Aig_Man_t, vAigToIf *Vec_Ptr_t) *Nwk_Man_t {\n    var vIfToAig *Vec_Ptr_t;\n    var pNtk *Nwk_Man_t;\n    var pObjNew *Nwk_Obj_t  = nil;\n    var pObj, pObjRepr *Aig_Obj_t;\n    var pIfObj *If_Obj_t  = nil;\n    var pCutBest *If_Cut_t;\n    var i int32;\n    var k int32;\n    var nLeaves int32;\n    var ppLeaves *int32;\n    assert(Aig_ManCiNum(p) == If_ManCiNum(pIfMan), \"Aig_ManCiNum(p) == If_ManCiNum(pIfMan)\");\n    assert(Aig_ManCoNum(p) == If_ManCoNum(pIfMan), \"Aig_ManCoNum(p) == If_ManCoNum(pIfMan)\");\n    assert(Aig_ManNodeNum(p) == If_ManAndNum(pIfMan), \"Aig_ManNodeNum(p) == If_ManAndNum(pIfMan)\");\n    Aig_ManCleanData( p );\n    If_ManCleanCutData( pIfMan );\n    // create mapping of IF to AIG\n    vIfToAig = Vec_PtrStart( If_ManObjNum(pIfMan) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        Vec_PtrWriteEntry( vIfToAig, pIfObj.Id, pObj );\n    }\n    }\n    // construct the network\n    pNtk = Nwk_ManAlloc();\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );\n//    pNtk-\u003enLatches = Aig_ManRegNum(p);\n//    pNtk-\u003enTruePis = Nwk_ManCiNum(pNtk) - pNtk-\u003enLatches;\n//    pNtk-\u003enTruePos = Nwk_ManCoNum(pNtk) - pNtk-\u003enLatches;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );\n        if pIfObj.nRefs == 0 \u0026\u0026 !If_ObjIsTerm(pIfObj) {\n            continue; }\n        if Aig_ObjIsNode(pObj) {\n            pCutBest = If_ObjCutBest( pIfObj );\n            nLeaves  = If_CutLeaveNum( pCutBest ); \n            ppLeaves = If_CutLeaves( pCutBest );\n            // create node\n            pObjNew = Nwk_ManCreateNode( pNtk, nLeaves, pIfObj.nRefs );\n            for  k = 0; k \u003c nLeaves; k++  {\n                pObjRepr = (Aig_Obj_t *)Vec_PtrEntry( vIfToAig, ppLeaves[k] );\n                Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)pObjRepr.pData );\n            }\n            // get the functionality\n            pObjNew.pFunc = Nwk_NodeIfToHop( pNtk.pManHop, pIfMan, pIfObj );\n        \n        } else if Aig_ObjIsCi(pObj) {\n            pObjNew = Nwk_ManCreateCi( pNtk, pIfObj.nRefs );\n        } else if Aig_ObjIsCo(pObj) {\n            pObjNew = Nwk_ManCreateCo( pNtk );\n            pObjNew.fInvert = Aig_ObjFaninC0(pObj);\n            Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n//printf( \"%d \", pObjNew-\u003eId );\n        \n        } else if Aig_ObjIsConst1(pObj) {\n            pObjNew = Nwk_ManCreateNode( pNtk, 0, pIfObj.nRefs );\n            pObjNew.pFunc = Hop_ManConst1( pNtk.pManHop );\n        \n        } else {\n            assert(false, \"0\"); }\n        pObj.pData = pObjNew;\n    }\n    }\n//printf( \"\\n\" );\n    Vec_PtrFree( vIfToAig );\n    pNtk.pManTime = Tim_ManDup( pIfMan.pManTim, 0 );\n    Nwk_ManMinimumBase( pNtk, 0 );\n    assert(Nwk_ManCheck( pNtk ), \"Nwk_ManCheck( pNtk )\");\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interface with the FPGA mapping package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_MappingIf(p *Aig_Man_t, pManTime *Tim_Man_t, pPars *If_Par_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var pIfMan *If_Man_t;\n    var vAigToIf *Vec_Ptr_t;\n    // set the arrival times\n    // inlining of macro ABC_ALLOC\n    pPars.pTimesArr = ((float *) malloc(sizeof(float) * (size_t)(Aig_ManCiNum(p))));\n    memset( pPars.pTimesArr, 0, sizeof(float) * Aig_ManCiNum(p) );\n    // translate into the mapper\n    vAigToIf = Vec_PtrStart( Aig_ManObjNumMax(p) );\n    pIfMan = Nwk_ManToIf( p, pPars, vAigToIf );    \n    if pIfMan == nil {\n        return nil; }\n    pIfMan.pManTim = Tim_ManDup( pManTime, 0 );\n    pIfMan.pPars.fCutMin = 0; // is not compatible with deriving result\n    if !If_ManPerformMapping( pIfMan ) {\n        If_ManStop( pIfMan );\n        return nil;\n    }\n    // transform the result of mapping into the new network\n    pNtk = Nwk_ManFromIf( pIfMan, p, vAigToIf );\n    if pPars.fBidec \u0026\u0026 pPars.nLutSize \u003c= 8 {\n        Nwk_ManBidecResyn( pNtk, 0 ); }\n    If_ManStop( pIfMan );\n    Vec_PtrFree( vAigToIf );\n    return pNtk;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

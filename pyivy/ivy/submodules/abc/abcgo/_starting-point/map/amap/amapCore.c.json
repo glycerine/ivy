@@ -1,0 +1,179 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c",
+  "SHA256": "22067f9b45eb0bc571e54926bc611bda1d1e4f415e17e4a9247041403cf318d5",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Amap_Par_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library is not available.\\n\" );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 84,
+        "ByteOffset": 2918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.ppCutsTemp = /*__starting_point_inline_macro:ABC_CALLOC__*/((Amap_Cut_t * *) calloc((size_t)(2 * pLib.nNodes), sizeof(Amap_Cut_t *)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 93,
+        "Column": 74,
+        "ByteOffset": 3049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMatsTemp = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(2 * pLib.nNodes), sizeof(int)));"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 101,
+        "Column": 78,
+        "ByteOffset": 3410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_ManSetDefaultParams",
+      "Start": 1315,
+      "End": 1920,
+      "BodyStart": 1363,
+      "Original": "void Amap_ManSetDefaultParams( Amap_Par_t * p )\n{\n    memset( p, 0, sizeof(Amap_Par_t) );\n    p-\u003enIterFlow = 1;            // iterations of area flow\n    p-\u003enIterArea = 4;            // iteratoins of exact area\n    p-\u003enCutsMax  = 500;          // the maximum number of cuts at a node\n    p-\u003efUseMuxes = 0;            // enables the use of MUXes\n    p-\u003efUseXors  = 1;            // enables the use of XORs\n    p-\u003efFreeInvs = 0;            // assume inverters are free (area = 0)\n    p-\u003efEpsilon  = (float)0.001; // used to compare floating point numbers\n    p-\u003efVerbose  = 0;            // verbosity flag\n}",
+      "Draft": "func Amap_ManSetDefaultParams(p *Amap_Par_t) {\n    memset( p, 0, sizeof(Amap_Par_t) );\n    p.nIterFlow = 1;            // iterations of area flow\n    p.nIterArea = 4;            // iteratoins of exact area\n    p.nCutsMax  = 500;          // the maximum number of cuts at a node\n    p.fUseMuxes = 0;            // enables the use of MUXes\n    p.fUseXors  = 1;            // enables the use of XORs\n    p.fFreeInvs = 0;            // assume inverters are free (area = 0)\n    p.fEpsilon  = float32(0.001); // used to compare floating point numbers\n    p.fVerbose  = 0;            // verbosity flag\n}"
+    },
+    {
+      "Name": "Amap_ManTest",
+      "Start": 2156,
+      "End": 3132,
+      "BodyStart": 2221,
+      "Original": "Vec_Ptr_t * Amap_ManTest( Aig_Man_t * pAig, Amap_Par_t * pPars )\n{\n//    extern void * Abc_FrameReadLibGen2();\n    Vec_Ptr_t * vRes;\n    Amap_Man_t * p;\n    Amap_Lib_t * pLib;\n    abctime clkTotal = Abc_Clock();\n    pLib = (Amap_Lib_t *)Abc_FrameReadLibGen2();\n    if ( pLib == NULL )\n    {\n        printf( \"Library is not available.\\n\" );\n        return NULL;\n    }\n    p = Amap_ManStart( Aig_ManNodeNum(pAig) );\n    p-\u003epPars = pPars;\n    p-\u003epLib  = pLib;\n    p-\u003efAreaInv = pPars-\u003efFreeInvs? 0.0 : pLib-\u003epGateInv-\u003edArea;\n    p-\u003efUseMux = pPars-\u003efUseMuxes \u0026\u0026 pLib-\u003efHasMux;\n    p-\u003efUseXor = pPars-\u003efUseXors \u0026\u0026 pLib-\u003efHasXor;\n    p-\u003eppCutsTemp = ABC_CALLOC( Amap_Cut_t *, 2 * pLib-\u003enNodes );\n    p-\u003epMatsTemp = ABC_CALLOC( int, 2 * pLib-\u003enNodes );\n    Amap_ManCreate( p, pAig );\n    Amap_ManMap( p );\n    vRes = NULL;\n    vRes = Amap_ManProduceMapped( p );\n    Amap_ManStop( p );\nif ( pPars-\u003efVerbose )\n{\nABC_PRT( \"Total runtime\", Abc_Clock() - clkTotal );\n}\n    return vRes;\n}",
+      "Draft": "func Amap_ManTest(pAig *Aig_Man_t, pPars *Amap_Par_t) *Vec_Ptr_t {\n//    extern void * Abc_FrameReadLibGen2();\n    var vRes *Vec_Ptr_t;\n    var p *Amap_Man_t;\n    var pLib *Amap_Lib_t;\n    var clkTotal abctime  = Abc_Clock();\n    pLib = (Amap_Lib_t *)Abc_FrameReadLibGen2();\n    if pLib == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return nil;\n    }\n    p = Amap_ManStart( Aig_ManNodeNum(pAig) );\n    p.pPars = pPars;\n    p.pLib  = pLib;\n    if pPars.fFreeInvs {\n        p.fAreaInv = 0.0;\n    } else {\n        p.fAreaInv = pLib.pGateInv.dArea;\n    }\n    p.fUseMux = pPars.fUseMuxes \u0026\u0026 pLib.fHasMux;\n    p.fUseXor = pPars.fUseXors \u0026\u0026 pLib.fHasXor;\n    // inlining of macro ABC_CALLOC\n    p.ppCutsTemp = ((Amap_Cut_t * *) calloc((size_t)(2 * pLib.nNodes), sizeof(Amap_Cut_t *)));\n    // inlining of macro ABC_CALLOC\n    p.pMatsTemp = ((int *) calloc((size_t)(2 * pLib.nNodes), sizeof(int)));\n    Amap_ManCreate( p, pAig );\n    Amap_ManMap( p );\n    vRes = nil;\n    vRes = Amap_ManProduceMapped( p );\n    Amap_ManStop( p );\nif pPars.fVerbose {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n}\n    return vRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::mechanical::sizeof::1383",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1383,
+      "End": 1389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::mechanical::sizeof::2900",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2801,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::mechanical::sizeof::3033",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2866,
+      "End": 2866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::pointer-cast::2379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2379,
+      "End": 2393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::pointer-cast::2848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2801,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::pointer-cast::2906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2801,
+      "End": 2801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::pointer-cast::2990",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2866,
+      "End": 2866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::Amap_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1315,
+      "End": 1920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::Amap_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2156,
+      "End": 3132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3380
+    }
+  ],
+  "Draft": "package amap\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [amapCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Core mapping procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManSetDefaultParams(p *Amap_Par_t) {\n    memset( p, 0, sizeof(Amap_Par_t) );\n    p.nIterFlow = 1;            // iterations of area flow\n    p.nIterArea = 4;            // iteratoins of exact area\n    p.nCutsMax  = 500;          // the maximum number of cuts at a node\n    p.fUseMuxes = 0;            // enables the use of MUXes\n    p.fUseXors  = 1;            // enables the use of XORs\n    p.fFreeInvs = 0;            // assume inverters are free (area = 0)\n    p.fEpsilon  = float32(0.001); // used to compare floating point numbers\n    p.fVerbose  = 0;            // verbosity flag\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManTest(pAig *Aig_Man_t, pPars *Amap_Par_t) *Vec_Ptr_t {\n//    extern void * Abc_FrameReadLibGen2();\n    var vRes *Vec_Ptr_t;\n    var p *Amap_Man_t;\n    var pLib *Amap_Lib_t;\n    var clkTotal abctime  = Abc_Clock();\n    pLib = (Amap_Lib_t *)Abc_FrameReadLibGen2();\n    if pLib == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return nil;\n    }\n    p = Amap_ManStart( Aig_ManNodeNum(pAig) );\n    p.pPars = pPars;\n    p.pLib  = pLib;\n    if pPars.fFreeInvs {\n        p.fAreaInv = 0.0;\n    } else {\n        p.fAreaInv = pLib.pGateInv.dArea;\n    }\n    p.fUseMux = pPars.fUseMuxes \u0026\u0026 pLib.fHasMux;\n    p.fUseXor = pPars.fUseXors \u0026\u0026 pLib.fHasXor;\n    // inlining of macro ABC_CALLOC\n    p.ppCutsTemp = ((Amap_Cut_t * *) calloc((size_t)(2 * pLib.nNodes), sizeof(Amap_Cut_t *)));\n    // inlining of macro ABC_CALLOC\n    p.pMatsTemp = ((int *) calloc((size_t)(2 * pLib.nNodes), sizeof(int)));\n    Amap_ManCreate( p, pAig );\n    Amap_ManMap( p );\n    vRes = nil;\n    vRes = Amap_ManProduceMapped( p );\n    Amap_ManStop( p );\nif pPars.fVerbose {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n}\n    return vRes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

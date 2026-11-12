@@ -1,0 +1,536 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c",
+  "SHA256": "b1c4fabf961a2324638ea75a98de6c8192e3433f46aadbe3a5875732f47a2a98",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pCexComb == nil );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 119,
+        "Column": 13,
+        "ByteOffset": 4016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 5834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 13,
+        "ByteOffset": 6584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 222,
+        "Column": 59,
+        "ByteOffset": 7944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pProgress *ProgressBar  = Extra_ProgressBarStart( stdout, nPairs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 7966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) % 2 == 0 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 234,
+        "Column": 56,
+        "ByteOffset": 8388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars.TimeLimit {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 13,
+        "ByteOffset": 8436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Timeout (%d sec) is reached.\\n\", pPars.TimeLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 8690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 9164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 9242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Output %d is SAT.\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 13,
+        "ByteOffset": 9715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 9793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Output %d is SAT.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 10022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  \", nUnsats, nSats, nUndecs, nTrivs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 370,
+        "Column": 71,
+        "ByteOffset": 13004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pReprs) ? (free((char *) (pNew.pReprs)), (pNew.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 371,
+        "Column": 71,
+        "ByteOffset": 13129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pNew.pNexts) ? (free((char *) (pNew.pNexts)), (pNew.pNexts) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 375,
+        "Column": 52,
+        "ByteOffset": 13401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/CLOCKS_PER_SEC \u003e= pPars.TimeLimit {"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 382,
+        "Column": 5,
+        "ByteOffset": 13603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 13611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 14408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p) == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 14444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ManTransformPattern",
+      "Start": 1417,
+      "End": 1757,
+      "BodyStart": 1488,
+      "Original": "void Cec_ManTransformPattern( Gia_Man_t * p, int iOut, int * pValues )\n{\n    int i;\n    assert( p-\u003epCexComb == NULL );\n    p-\u003epCexComb = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    p-\u003epCexComb-\u003eiPo = iOut;\n    for ( i = 0; i \u003c Gia_ManCiNum(p); i++ )\n        if ( pValues \u0026\u0026 pValues[i] )\n            Abc_InfoSetBit( p-\u003epCexComb-\u003epData, i );\n}",
+      "Draft": "func Cec_ManTransformPattern(p *Gia_Man_t, iOut int32, pValues *int32) {\n    var i int32;\n    assert(p.pCexComb == nil, \"p.pCexComb == nil\");\n    p.pCexComb = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    p.pCexComb.iPo = iOut;\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n        if (pValues != nil) \u0026\u0026 pValues[i] {\n            Abc_InfoSetBit( p.pCexComb.pData, i ); }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManVerifyOld",
+      "Start": 2024,
+      "End": 4116,
+      "BodyStart": 2129,
+      "Original": "int Cec_ManVerifyOld( Gia_Man_t * pMiter, int fVerbose, int * piOutFail, abctime clkTotal, int fSilent )\n{\n//    extern int Fra_FraigCec( Aig_Man_t ** ppAig, int nConfLimit, int fVerbose );\n    extern int Ssw_SecCexResimulate( Aig_Man_t * p, int * pModel, int * pnOutputs );\n    Gia_Man_t * pTemp = Gia_ManTransformMiter( pMiter );\n    Aig_Man_t * pMiterCec = Gia_ManToAig( pTemp, 0 );\n    int RetValue, iOut, nOuts;\n    if ( piOutFail )\n        *piOutFail = -1;\n    Gia_ManStop( pTemp );\n    // run CEC on this miter\n    RetValue = Fra_FraigCec( \u0026pMiterCec, 10000000, fVerbose );\n    // report the miter\n    if ( RetValue == 1 )\n    {\n        if ( !fSilent )\n        {\n            Abc_Print( 1, \"Networks are equivalent.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n    }\n    else if ( RetValue == 0 )\n    {\n        if ( !fSilent )\n        {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n        if ( pMiterCec-\u003epData == NULL )\n            Abc_Print( 1, \"Counter-example is not available.\\n\" );\n        else\n        {\n            iOut = Ssw_SecCexResimulate( pMiterCec, (int *)pMiterCec-\u003epData, \u0026nOuts );\n            if ( iOut == -1 )\n                Abc_Print( 1, \"Counter-example verification has failed.\\n\" );\n            else \n            {\n                if ( !fSilent )\n                {\n                    Abc_Print( 1, \"Primary output %d has failed\", iOut );\n                    if ( nOuts-1 \u003e= 0 )\n                        Abc_Print( 1, \", along with other %d incorrect outputs\", nOuts-1 );\n                    Abc_Print( 1, \".\\n\" );\n                }\n                if ( piOutFail )\n                    *piOutFail = iOut;\n            }\n            Cec_ManTransformPattern( pMiter, iOut, (int *)pMiterCec-\u003epData );\n        }\n    }\n    else if ( !fSilent )\n    {\n        Abc_Print( 1, \"Networks are UNDECIDED.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    fflush( stdout );\n    Aig_ManStop( pMiterCec );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManVerifyOld(pMiter *Gia_Man_t, fVerbose int32, piOutFail *int32, clkTotal abctime, fSilent int32) int32 {\n//    extern int Fra_FraigCec( Aig_Man_t ** ppAig, int nConfLimit, int fVerbose );\n    extern int Ssw_SecCexResimulate( Aig_Man_t * p, int * pModel, int * pnOutputs );\n    var pTemp *Gia_Man_t  = Gia_ManTransformMiter( pMiter );\n    var pMiterCec *Aig_Man_t  = Gia_ManToAig( pTemp, 0 );\n    var RetValue, iOut, nOuts int32;\n    if piOutFail != nil {\n        *piOutFail = -1; }\n    Gia_ManStop( pTemp );\n    // run CEC on this miter\n    RetValue = Fra_FraigCec( \u0026pMiterCec, 10000000, fVerbose );\n    // report the miter\n    if RetValue == 1 {\n        if !(fSilent != 0) {\n            Abc_Print( 1, \"Networks are equivalent.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else if RetValue == 0 {\n        if !(fSilent != 0) {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pMiterCec.pData == nil {\n            Abc_Print( 1, \"Counter-example is not available.\\n\" );\n        } else {\n            iOut = Ssw_SecCexResimulate( pMiterCec, (int *)pMiterCec.pData, \u0026nOuts );\n            if iOut == -1 {\n                Abc_Print( 1, \"Counter-example verification has failed.\\n\" );\n            } else {\n                if !(fSilent != 0) {\n                    Abc_Print( 1, \"Primary output %d has failed\", iOut );\n                    if nOuts-1 \u003e= 0 {\n                        Abc_Print( 1, \", along with other %d incorrect outputs\", nOuts-1 ); }\n                    Abc_Print( 1, \".\\n\" );\n                }\n                if piOutFail != nil {\n                    *piOutFail = iOut; }\n            }\n            Cec_ManTransformPattern( pMiter, iOut, (int *)pMiterCec.pData );\n        }\n    \n    } else if !(fSilent != 0) {\n        Abc_Print( 1, \"Networks are UNDECIDED.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    fflush( os.Stdout );\n    Aig_ManStop( pMiterCec );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManHandleSpecialCases",
+      "Start": 4352,
+      "End": 7157,
+      "BodyStart": 4421,
+      "Original": "int Cec_ManHandleSpecialCases( Gia_Man_t * p, Cec_ParCec_t * pPars )\n{\n    Gia_Obj_t * pObj1, * pObj2;\n    Gia_Obj_t * pDri1, * pDri2;\n    int i;\n    abctime clk = Abc_Clock();\n    Gia_ManSetPhase( p );\n    Gia_ManForEachPo( p, pObj1, i )\n    {\n        pObj2 = Gia_ManPo( p, ++i );\n        // check if they different on all-0 pattern\n        // (for example, when they have the same driver but complemented)\n        if ( Gia_ObjPhase(pObj1) != Gia_ObjPhase(pObj2) )\n        {\n            if ( !pPars-\u003efSilent )\n            {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars-\u003eiOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, NULL );\n            return 0;\n        }\n        // get the drivers\n        pDri1 = Gia_ObjFanin0(pObj1);\n        pDri2 = Gia_ObjFanin0(pObj2);\n        // drivers are different PIs\n        if ( Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsPi(p, pDri2) \u0026\u0026 pDri1 != pDri2 )\n        {\n            if ( !pPars-\u003efSilent )\n            {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different PIs).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars-\u003eiOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, NULL );\n            // if their compl attributes are the same - one should be complemented\n            assert( Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2) );\n            Abc_InfoSetBit( p-\u003epCexComb-\u003epData, Gia_ObjCioId(pDri1) );\n            return 0;\n        }\n        // one of the drivers is a PI; another is a constant 0\n        if ( (Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsConst0(pDri2)) || \n             (Gia_ObjIsPi(p, pDri2) \u0026\u0026 Gia_ObjIsConst0(pDri1)) )\n        {\n            if ( !pPars-\u003efSilent )\n            {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (PI vs. constant).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars-\u003eiOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, NULL );\n            // the compl attributes are the same - the PI should be complemented\n            assert( Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2) );\n            if ( Gia_ObjIsPi(p, pDri1) )\n                Abc_InfoSetBit( p-\u003epCexComb-\u003epData, Gia_ObjCioId(pDri1) );\n            else\n                Abc_InfoSetBit( p-\u003epCexComb-\u003epData, Gia_ObjCioId(pDri2) );\n            return 0;\n        }\n    }\n    if ( Gia_ManAndNum(p) == 0 )\n    {\n        if ( !pPars-\u003efSilent )\n        {\n        Abc_Print( 1, \"Networks are equivalent.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n        return 1;\n    }\n    return -1;\n}",
+      "Draft": "func Cec_ManHandleSpecialCases(p *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var pObj1, pObj2 *Gia_Obj_t;\n    var pDri1, pDri2 *Gia_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Gia_ManSetPhase( p );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj1) = Gia_ManCo(p, i)); i++  {\n        pObj2 = Gia_ManPo( p, ++i );\n        // check if they different on all-0 pattern\n        // (for example, when they have the same driver but complemented)\n        if Gia_ObjPhase(pObj1) != Gia_ObjPhase(pObj2) {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            return 0;\n        }\n        // get the drivers\n        pDri1 = Gia_ObjFanin0(pObj1);\n        pDri2 = Gia_ObjFanin0(pObj2);\n        // drivers are different PIs\n        if Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsPi(p, pDri2) \u0026\u0026 pDri1 != pDri2 {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different PIs).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            // if their compl attributes are the same - one should be complemented\n            assert(Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2), \"Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)\");\n            Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri1) );\n            return 0;\n        }\n        // one of the drivers is a PI; another is a constant 0\n        if (Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsConst0(pDri2)) || \n             (Gia_ObjIsPi(p, pDri2) \u0026\u0026 Gia_ObjIsConst0(pDri1)) {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (PI vs. constant).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            // the compl attributes are the same - the PI should be complemented\n            assert(Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2), \"Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)\");\n            if Gia_ObjIsPi(p, pDri1) {\n                Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri1) );\n            } else {\n                Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri2) ); }\n            return 0;\n        }\n    }\n    if Gia_ManAndNum(p) == 0 {\n        if !pPars.fSilent {\n        Abc_Print( 1, \"Networks are equivalent.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n        return 1;\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Cec_ManVerifyNaive",
+      "Start": 7417,
+      "End": 10382,
+      "BodyStart": 7479,
+      "Original": "int Cec_ManVerifyNaive( Gia_Man_t * p, Cec_ParCec_t * pPars )\n{\n    Cnf_Dat_t * pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    sat_solver * pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Gia_Obj_t * pObj0, * pObj1;\n    abctime clkStart = Abc_Clock();\n    int nPairs = Gia_ManPoNum(p)/2;\n    int nUnsats = 0, nSats = 0, nUndecs = 0, nTrivs = 0;\n    int i, iVar0, iVar1, pLits[2], status, RetValue;\n    ProgressBar * pProgress = Extra_ProgressBarStart( stdout, nPairs );\n    assert( Gia_ManPoNum(p) % 2 == 0 );\n    for ( i = 0; i \u003c nPairs; i++ )\n    {\n        if ( (i \u0026 0xFF) == 0 )\n            Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pObj0 = Gia_ManPo(p, 2*i);\n        pObj1 = Gia_ManPo(p, 2*i+1);\n        if ( Gia_ObjChild0(pObj0) == Gia_ObjChild0(pObj1) )\n        {\n            nUnsats++;\n            nTrivs++;\n            continue;\n        }\n        if ( pPars-\u003eTimeLimit \u0026\u0026 (Abc_Clock() - clkStart)/CLOCKS_PER_SEC \u003e= pPars-\u003eTimeLimit )\n        {\n            printf( \"Timeout (%d sec) is reached.\\n\", pPars-\u003eTimeLimit );\n            nUndecs = nPairs - nUnsats - nSats;\n            break;\n        }\n        iVar0 = pCnf-\u003epVarNums[ Gia_ObjId(p, pObj0) ];\n        iVar1 = pCnf-\u003epVarNums[ Gia_ObjId(p, pObj1) ];\n        assert( iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0 );\n        pLits[0] = Abc_Var2Lit( iVar0, 0 );\n        pLits[1] = Abc_Var2Lit( iVar1, 0 );\n        // check direct\n        pLits[0] = lit_neg(pLits[0]);\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars-\u003enBTLimit, 0, 0, 0 );\n        if ( status == l_False )\n        {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert( RetValue );\n        }\n        else if ( status == l_True )\n        {\n            printf( \"Output %d is SAT.\\n\", i );\n            nSats++;\n            continue;\n        }\n        else\n        {\n            nUndecs++;\n            continue;\n        }\n        // check inverse\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars-\u003enBTLimit, 0, 0, 0 );\n        if ( status == l_False )\n        {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert( RetValue );\n        }\n        else if ( status == l_True )\n        {\n            printf( \"Output %d is SAT.\\n\", i );\n            nSats++;\n            continue;\n        }\n        else\n        {\n            nUndecs++;\n            continue;\n        }\n        nUnsats++;\n    }\n    Extra_ProgressBarStop( pProgress );\n    printf( \"UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  \", nUnsats, nSats, nUndecs, nTrivs );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if ( nSats )\n        return 0;\n    if ( nUndecs )\n        return -1;\n    return 1;\n}",
+      "Draft": "func Cec_ManVerifyNaive(p *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    var pObj0, pObj1 *Gia_Obj_t;\n    var clkStart abctime  = Abc_Clock();\n    var nPairs int32  = Gia_ManPoNum(p)/2;\n    var nUnsats, nSats, nUndecs, nTrivs int32;\n    var i int32;\n    var iVar0 int32;\n    var iVar1 int32;\n    var pLits [2]int32;\n    var status int32;\n    var RetValue int32;\n    var pProgress *ProgressBar  = Extra_ProgressBarStart( os.Stdout, nPairs );\n    assert(Gia_ManPoNum(p) % 2 == 0, \"Gia_ManPoNum(p) % 2 == 0\");\n    for  i = 0; i \u003c nPairs; i++  {\n        if (i \u0026 0xFF) == 0 {\n            Extra_ProgressBarUpdate( pProgress, i, nil ); }\n        pObj0 = Gia_ManPo(p, 2*i);\n        pObj1 = Gia_ManPo(p, 2*i+1);\n        if Gia_ObjChild0(pObj0) == Gia_ObjChild0(pObj1) {\n            nUnsats++;\n            nTrivs++;\n            continue;\n        }\n        if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.TimeLimit {\n            fmt.Printf(\"Timeout (%d sec) is reached.\\n\", pPars.TimeLimit);\n            nUndecs = nPairs - nUnsats - nSats;\n            break;\n        }\n        iVar0 = pCnf.pVarNums[ Gia_ObjId(p, pObj0) ];\n        iVar1 = pCnf.pVarNums[ Gia_ObjId(p, pObj1) ];\n        assert(iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0, \"iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0\");\n        pLits[0] = Abc_Var2Lit( iVar0, 0 );\n        pLits[1] = Abc_Var2Lit( iVar1, 0 );\n        // check direct\n        pLits[0] = lit_neg(pLits[0]);\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars.nBTLimit, 0, 0, 0 );\n        if status == l_False {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        \n        } else if status == l_True {\n            fmt.Printf(\"Output %d is SAT.\\n\", i);\n            nSats++;\n            continue;\n        \n        } else {\n            nUndecs++;\n            continue;\n        }\n        // check inverse\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars.nBTLimit, 0, 0, 0 );\n        if status == l_False {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        \n        } else if status == l_True {\n            fmt.Printf(\"Output %d is SAT.\\n\", i);\n            nSats++;\n            continue;\n        \n        } else {\n            nUndecs++;\n            continue;\n        }\n        nUnsats++;\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Printf(\"UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  \", nUnsats, nSats, nUndecs, nTrivs);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if nSats {\n        return 0; }\n    if nUndecs {\n        return -1; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cec_ManVerify",
+      "Start": 10633,
+      "End": 13897,
+      "BodyStart": 10694,
+      "Original": "int Cec_ManVerify( Gia_Man_t * pInit, Cec_ParCec_t * pPars )\n{\n    int fDumpUndecided = 0;\n    Cec_ParFra_t ParsFra, * pParsFra = \u0026ParsFra;\n    Gia_Man_t * p, * pNew;\n    int RetValue;\n    abctime clk = Abc_Clock();\n    abctime clkTotal = Abc_Clock();\n    // consider special cases:\n    // 1) (SAT) a pair of POs have different value under all-0 pattern\n    // 2) (SAT) a pair of POs has different PI/Const drivers\n    // 3) (UNSAT) 1-2 do not hold and there is no nodes\n    RetValue = Cec_ManHandleSpecialCases( pInit, pPars );\n    if ( RetValue == 0 || RetValue == 1 )\n        return RetValue;\n    // preprocess \n    p = Gia_ManDup( pInit );\n    Gia_ManEquivFixOutputPairs( p );\n    p = Gia_ManCleanup( pNew = p );\n    Gia_ManStop( pNew );\n    if ( pPars-\u003efNaive )\n    {\n        RetValue = Cec_ManVerifyNaive( p, pPars );\n        Gia_ManStop( p );\n        return RetValue;\n    }\n    if ( pInit-\u003evSimsPi )\n    {\n        p-\u003evSimsPi = Vec_WrdDup(pInit-\u003evSimsPi); \n        p-\u003enSimWords = pInit-\u003enSimWords;\n    }\n    // sweep for equivalences\n    Cec_ManFraSetDefaultParams( pParsFra );\n    pParsFra-\u003enItersMax    = 1000;\n    pParsFra-\u003enBTLimit     = pPars-\u003enBTLimit;\n    pParsFra-\u003eTimeLimit    = pPars-\u003eTimeLimit;\n    pParsFra-\u003efVerbose     = pPars-\u003efVerbose;\n    pParsFra-\u003efVeryVerbose = pPars-\u003efVeryVerbose;\n    pParsFra-\u003efCheckMiter  = 1;\n    pParsFra-\u003efDualOut     = 1;\n    pNew = Cec_ManSatSweeping( p, pParsFra, pPars-\u003efSilent );\n    pPars-\u003eiOutFail = pParsFra-\u003eiOutFail;\n    // update\n    pInit-\u003epCexComb = p-\u003epCexComb; p-\u003epCexComb = NULL;\n    Gia_ManStop( p );\n    p = pInit;\n    // continue\n    if ( pNew == NULL )\n    {\n        if ( p-\u003epCexComb != NULL )\n        {\n            if ( p-\u003epCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p-\u003epCexComb, 1 ) )\n                Abc_Print( 1, \"Counter-example simulation has failed.\\n\" );\n            if ( !pPars-\u003efSilent )\n            {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            return 0;\n        }\n        p = Gia_ManDup( pInit );\n        Gia_ManEquivFixOutputPairs( p );\n        p = Gia_ManCleanup( pNew = p );\n        Gia_ManStop( pNew );\n        pNew = p;\n    }\n    if ( pPars-\u003efVerbose )\n    {\n        Abc_Print( 1, \"Networks are UNDECIDED after the new CEC engine.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if ( fDumpUndecided )\n    {\n        ABC_FREE( pNew-\u003epReprs );\n        ABC_FREE( pNew-\u003epNexts );\n        Gia_AigerWrite( pNew, \"gia_cec_undecided.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_undecided.aig\" );\n    }\n    if ( pPars-\u003eTimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/CLOCKS_PER_SEC \u003e= pPars-\u003eTimeLimit )\n    {\n        Gia_ManStop( pNew );\n        return -1;\n    }\n    // call other solver\n    if ( pPars-\u003efVerbose )\n        Abc_Print( 1, \"Calling the old CEC engine.\\n\" );\n    fflush( stdout );\n    RetValue = Cec_ManVerifyOld( pNew, pPars-\u003efVerbose, \u0026pPars-\u003eiOutFail, clkTotal, pPars-\u003efSilent );\n    p-\u003epCexComb = pNew-\u003epCexComb; pNew-\u003epCexComb = NULL;\n    if ( p-\u003epCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p-\u003epCexComb, 1 ) )\n        Abc_Print( 1, \"Counter-example simulation has failed.\\n\" );\n    Gia_ManStop( pNew );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManVerify(pInit *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var fDumpUndecided int32;\n    var ParsFra Cec_ParFra_t;\n    var pParsFra *Cec_ParFra_t = \u0026ParsFra;\n    var p, pNew *Gia_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    var clkTotal abctime  = Abc_Clock();\n    // consider special cases:\n    // 1) (SAT) a pair of POs have different value under all-0 pattern\n    // 2) (SAT) a pair of POs has different PI/Const drivers\n    // 3) (UNSAT) 1-2 do not hold and there is no nodes\n    RetValue = Cec_ManHandleSpecialCases( pInit, pPars );\n    if RetValue == 0 || RetValue == 1 {\n        return RetValue; }\n    // preprocess \n    p = Gia_ManDup( pInit );\n    Gia_ManEquivFixOutputPairs( p );\n    p = Gia_ManCleanup( pNew = p );\n    Gia_ManStop( pNew );\n    if pPars.fNaive {\n        RetValue = Cec_ManVerifyNaive( p, pPars );\n        Gia_ManStop( p );\n        return RetValue;\n    }\n    if pInit.vSimsPi {\n        p.vSimsPi = Vec_WrdDup(pInit.vSimsPi); \n        p.nSimWords = pInit.nSimWords;\n    }\n    // sweep for equivalences\n    Cec_ManFraSetDefaultParams( pParsFra );\n    pParsFra.nItersMax    = 1000;\n    pParsFra.nBTLimit     = pPars.nBTLimit;\n    pParsFra.TimeLimit    = pPars.TimeLimit;\n    pParsFra.fVerbose     = pPars.fVerbose;\n    pParsFra.fVeryVerbose = pPars.fVeryVerbose;\n    pParsFra.fCheckMiter  = 1;\n    pParsFra.fDualOut     = 1;\n    pNew = Cec_ManSatSweeping( p, pParsFra, pPars.fSilent );\n    pPars.iOutFail = pParsFra.iOutFail;\n    // update\n    pInit.pCexComb = p.pCexComb; p.pCexComb = nil;\n    Gia_ManStop( p );\n    p = pInit;\n    // continue\n    if pNew == nil {\n        if p.pCexComb != nil {\n            if p.pCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p.pCexComb, 1 ) {\n                Abc_Print( 1, \"Counter-example simulation has failed.\\n\" ); }\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            return 0;\n        }\n        p = Gia_ManDup( pInit );\n        Gia_ManEquivFixOutputPairs( p );\n        p = Gia_ManCleanup( pNew = p );\n        Gia_ManStop( pNew );\n        pNew = p;\n    }\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Networks are UNDECIDED after the new CEC engine.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if fDumpUndecided != 0 {\n        // inlining of macro ABC_FREE\n        ((pNew.pReprs) ? (free((char *) (pNew.pReprs)), (pNew.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pNew.pNexts) ? (free((char *) (pNew.pNexts)), (pNew.pNexts) = 0) : 0);\n        Gia_AigerWrite( pNew, \"gia_cec_undecided.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_undecided.aig\" );\n    }\n    if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/int64(time.Second) \u003e= pPars.TimeLimit {\n        Gia_ManStop( pNew );\n        return -1;\n    }\n    // call other solver\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Calling the old CEC engine.\\n\" ); }\n    fflush( os.Stdout );\n    RetValue = Cec_ManVerifyOld( pNew, pPars.fVerbose, \u0026pPars.iOutFail, clkTotal, pPars.fSilent );\n    p.pCexComb = pNew.pCexComb; pNew.pCexComb = nil;\n    if p.pCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p.pCexComb, 1 ) {\n        Abc_Print( 1, \"Counter-example simulation has failed.\\n\" ); }\n    Gia_ManStop( pNew );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManVerifySimple",
+      "Start": 14169,
+      "End": 14435,
+      "BodyStart": 14210,
+      "Original": "int Cec_ManVerifySimple( Gia_Man_t * p )\n{\n    Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars-\u003efSilent = 1;\n    assert( Gia_ManCoNum(p) == 2 );\n    assert( Gia_ManRegNum(p) == 0 );\n    return Cec_ManVerify( p, pPars );\n}",
+      "Draft": "func Cec_ManVerifySimple(p *Gia_Man_t) int32 {\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars.fSilent = 1;\n    assert(Gia_ManCoNum(p) == 2, \"Gia_ManCoNum(p) == 2\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    return Cec_ManVerify( p, pPars );\n}"
+    },
+    {
+      "Name": "Cec_ManVerifyTwo",
+      "Start": 14710,
+      "End": 15211,
+      "BodyStart": 14779,
+      "Original": "int Cec_ManVerifyTwo( Gia_Man_t * p0, Gia_Man_t * p1, int fVerbose )\n{\n    Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n    Gia_Man_t * pMiter;\n    int RetValue;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars-\u003efVerbose = fVerbose;\n    pMiter = Gia_ManMiter( p0, p1, 0, 1, 0, 0, pPars-\u003efVerbose );\n    if ( pMiter == NULL )\n        return -1;\n    RetValue = Cec_ManVerify( pMiter, pPars );\n    p0-\u003epCexComb = pMiter-\u003epCexComb; pMiter-\u003epCexComb = NULL;\n    Gia_ManStop( pMiter );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManVerifyTwo(p0 *Gia_Man_t, p1 *Gia_Man_t, fVerbose int32) int32 {\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var pMiter *Gia_Man_t;\n    var RetValue int32;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars.fVerbose = fVerbose;\n    pMiter = Gia_ManMiter( p0, p1, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter == nil {\n        return -1; }\n    RetValue = Cec_ManVerify( pMiter, pPars );\n    p0.pCexComb = pMiter.pCexComb; pMiter.pCexComb = nil;\n    Gia_ManStop( pMiter );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManVerifyTwoAigs",
+      "Start": 15688,
+      "End": 16202,
+      "BodyStart": 15767,
+      "Original": "int Cec_ManVerifyTwoAigs( Aig_Man_t * pAig0, Aig_Man_t * pAig1, int fVerbose )\n{\n    Gia_Man_t * p0, * p1, * pTemp;\n    int RetValue;\n\n    p0 = Gia_ManFromAig( pAig0 );\n    p0 = Gia_ManCleanup( pTemp = p0 );\n    Gia_ManStop( pTemp );\n\n    p1 = Gia_ManFromAig( pAig1 );\n    p1 = Gia_ManCleanup( pTemp = p1 );\n    Gia_ManStop( pTemp );\n\n    RetValue = Cec_ManVerifyTwo( p0, p1, fVerbose );\n    pAig0-\u003epSeqModel = p0-\u003epCexComb; p0-\u003epCexComb = NULL;\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManVerifyTwoAigs(pAig0 *Aig_Man_t, pAig1 *Aig_Man_t, fVerbose int32) int32 {\n    var p0, p1, pTemp *Gia_Man_t;\n    var RetValue int32;\n\n    p0 = Gia_ManFromAig( pAig0 );\n    p0 = Gia_ManCleanup( pTemp = p0 );\n    Gia_ManStop( pTemp );\n\n    p1 = Gia_ManFromAig( pAig1 );\n    p1 = Gia_ManCleanup( pTemp = p1 );\n    Gia_ManStop( pTemp );\n\n    RetValue = Cec_ManVerifyTwo( p0, p1, fVerbose );\n    pAig0.pSeqModel = p0.pCexComb; p0.pCexComb = nil;\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_LatchCorrespondence",
+      "Start": 16481,
+      "End": 16980,
+      "BodyStart": 16563,
+      "Original": "Aig_Man_t * Cec_LatchCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat )\n{\n    Gia_Man_t * pGia;\n    Cec_ParCor_t CorPars, * pCorPars = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars-\u003efLatchCorr = 1;\n    pCorPars-\u003efUseCSat   = fUseCSat;\n    pCorPars-\u003enBTLimit   = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}",
+      "Draft": "func Cec_LatchCorrespondence(pAig *Aig_Man_t, nConfs int32, fUseCSat int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var CorPars Cec_ParCor_t;\n    var pCorPars *Cec_ParCor_t = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars.fLatchCorr = 1;\n    pCorPars.fUseCSat   = fUseCSat;\n    pCorPars.nBTLimit   = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}"
+    },
+    {
+      "Name": "Cec_SignalCorrespondence",
+      "Start": 17259,
+      "End": 17727,
+      "BodyStart": 17342,
+      "Original": "Aig_Man_t * Cec_SignalCorrespondence( Aig_Man_t * pAig, int nConfs, int fUseCSat )\n{\n    Gia_Man_t * pGia;\n    Cec_ParCor_t CorPars, * pCorPars = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars-\u003efUseCSat  = fUseCSat;\n    pCorPars-\u003enBTLimit  = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}",
+      "Draft": "func Cec_SignalCorrespondence(pAig *Aig_Man_t, nConfs int32, fUseCSat int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var CorPars Cec_ParCor_t;\n    var pCorPars *Cec_ParCor_t = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars.fUseCSat  = fUseCSat;\n    pCorPars.nBTLimit  = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}"
+    },
+    {
+      "Name": "Cec_FraigCombinational",
+      "Start": 17990,
+      "End": 18509,
+      "BodyStart": 18071,
+      "Original": "Aig_Man_t * Cec_FraigCombinational( Aig_Man_t * pAig, int nConfs, int fVerbose )\n{\n    Gia_Man_t * pGia;\n    Cec_ParFra_t FraPars, * pFraPars = \u0026FraPars;\n    Cec_ManFraSetDefaultParams( pFraPars );\n    pFraPars-\u003efSatSweeping = 1;\n    pFraPars-\u003enBTLimit  = nConfs;\n    pFraPars-\u003enItersMax = 20;\n    pFraPars-\u003efVerbose  = fVerbose;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManSatSweeping( pGia, pFraPars, 0 );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}",
+      "Draft": "func Cec_FraigCombinational(pAig *Aig_Man_t, nConfs int32, fVerbose int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var FraPars Cec_ParFra_t;\n    var pFraPars *Cec_ParFra_t = \u0026FraPars;\n    Cec_ManFraSetDefaultParams( pFraPars );\n    pFraPars.fSatSweeping = 1;\n    pFraPars.nBTLimit  = nConfs;\n    pFraPars.nItersMax = 20;\n    pFraPars.fVerbose  = fVerbose;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManSatSweeping( pGia, pFraPars, 0 );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::3220",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3220,
+      "End": 3227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::3849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3849,
+      "End": 3856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::7597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7504,
+      "End": 7517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::7673",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7580,
+      "End": 7594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::13211",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13050,
+      "End": 13050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::pointer-cast::13339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13084,
+      "End": 13084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManTransformPattern",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManTransformPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1417,
+      "End": 1757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerifyOld",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerifyOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2024,
+      "End": 4116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManHandleSpecialCases",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManHandleSpecialCases",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4352,
+      "End": 7157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerifyNaive",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerifyNaive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7417,
+      "End": 10382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::ternary::Cec_ManVerify",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManVerify",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10633,
+      "End": 13897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerify",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10633,
+      "End": 13897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerifySimple",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerifySimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14169,
+      "End": 14435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerifyTwo",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerifyTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14710,
+      "End": 15211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_ManVerifyTwoAigs",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManVerifyTwoAigs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15688,
+      "End": 16202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_LatchCorrespondence",
+      "Category": "semantic-review",
+      "Symbol": "Cec_LatchCorrespondence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16481,
+      "End": 16980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_SignalCorrespondence",
+      "Category": "semantic-review",
+      "Symbol": "Cec_SignalCorrespondence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17259,
+      "End": 17727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::Cec_FraigCombinational",
+      "Category": "semantic-review",
+      "Symbol": "Cec_FraigCombinational",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17990,
+      "End": 18509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecCec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18756
+    }
+  ],
+  "Draft": "package cec\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cecCec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Integrated combinatinal equivalence checker.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecCec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n//#include \"proof/fra/fra.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"sat/cnf/cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the input pattern with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManTransformPattern(p *Gia_Man_t, iOut int32, pValues *int32) {\n    var i int32;\n    assert(p.pCexComb == nil, \"p.pCexComb == nil\");\n    p.pCexComb = Abc_CexAlloc( 0, Gia_ManCiNum(p), 1 );\n    p.pCexComb.iPo = iOut;\n    for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n        if (pValues != nil) \u0026\u0026 pValues[i] {\n            Abc_InfoSetBit( p.pCexComb.pData, i ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interface to the old CEC engine]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerifyOld(pMiter *Gia_Man_t, fVerbose int32, piOutFail *int32, clkTotal abctime, fSilent int32) int32 {\n//    extern int Fra_FraigCec( Aig_Man_t ** ppAig, int nConfLimit, int fVerbose );\n    extern int Ssw_SecCexResimulate( Aig_Man_t * p, int * pModel, int * pnOutputs );\n    var pTemp *Gia_Man_t  = Gia_ManTransformMiter( pMiter );\n    var pMiterCec *Aig_Man_t  = Gia_ManToAig( pTemp, 0 );\n    var RetValue, iOut, nOuts int32;\n    if piOutFail != nil {\n        *piOutFail = -1; }\n    Gia_ManStop( pTemp );\n    // run CEC on this miter\n    RetValue = Fra_FraigCec( \u0026pMiterCec, 10000000, fVerbose );\n    // report the miter\n    if RetValue == 1 {\n        if !(fSilent != 0) {\n            Abc_Print( 1, \"Networks are equivalent.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else if RetValue == 0 {\n        if !(fSilent != 0) {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pMiterCec.pData == nil {\n            Abc_Print( 1, \"Counter-example is not available.\\n\" );\n        } else {\n            iOut = Ssw_SecCexResimulate( pMiterCec, (int *)pMiterCec.pData, \u0026nOuts );\n            if iOut == -1 {\n                Abc_Print( 1, \"Counter-example verification has failed.\\n\" );\n            } else {\n                if !(fSilent != 0) {\n                    Abc_Print( 1, \"Primary output %d has failed\", iOut );\n                    if nOuts-1 \u003e= 0 {\n                        Abc_Print( 1, \", along with other %d incorrect outputs\", nOuts-1 ); }\n                    Abc_Print( 1, \".\\n\" );\n                }\n                if piOutFail != nil {\n                    *piOutFail = iOut; }\n            }\n            Cec_ManTransformPattern( pMiter, iOut, (int *)pMiterCec.pData );\n        }\n    \n    } else if !(fSilent != 0) {\n        Abc_Print( 1, \"Networks are UNDECIDED.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    fflush( os.Stdout );\n    Aig_ManStop( pMiterCec );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManHandleSpecialCases(p *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var pObj1, pObj2 *Gia_Obj_t;\n    var pDri1, pDri2 *Gia_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    Gia_ManSetPhase( p );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj1) = Gia_ManCo(p, i)); i++  {\n        pObj2 = Gia_ManPo( p, ++i );\n        // check if they different on all-0 pattern\n        // (for example, when they have the same driver but complemented)\n        if Gia_ObjPhase(pObj1) != Gia_ObjPhase(pObj2) {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            return 0;\n        }\n        // get the drivers\n        pDri1 = Gia_ObjFanin0(pObj1);\n        pDri2 = Gia_ObjFanin0(pObj2);\n        // drivers are different PIs\n        if Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsPi(p, pDri2) \u0026\u0026 pDri1 != pDri2 {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (different PIs).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            // if their compl attributes are the same - one should be complemented\n            assert(Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2), \"Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)\");\n            Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri1) );\n            return 0;\n        }\n        // one of the drivers is a PI; another is a constant 0\n        if (Gia_ObjIsPi(p, pDri1) \u0026\u0026 Gia_ObjIsConst0(pDri2)) || \n             (Gia_ObjIsPi(p, pDri2) \u0026\u0026 Gia_ObjIsConst0(pDri1)) {\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT. Output %d trivially differs (PI vs. constant).  \", i/2 );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            pPars.iOutFail = i/2;\n            Cec_ManTransformPattern( p, i/2, nil );\n            // the compl attributes are the same - the PI should be complemented\n            assert(Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2), \"Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)\");\n            if Gia_ObjIsPi(p, pDri1) {\n                Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri1) );\n            } else {\n                Abc_InfoSetBit( p.pCexComb.pData, Gia_ObjCioId(pDri2) ); }\n            return 0;\n        }\n    }\n    if Gia_ManAndNum(p) == 0 {\n        if !pPars.fSilent {\n        Abc_Print( 1, \"Networks are equivalent.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        }\n        return 1;\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs naive checking.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerifyNaive(p *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );\n    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    var pObj0, pObj1 *Gia_Obj_t;\n    var clkStart abctime  = Abc_Clock();\n    var nPairs int32  = Gia_ManPoNum(p)/2;\n    var nUnsats, nSats, nUndecs, nTrivs int32;\n    var i int32;\n    var iVar0 int32;\n    var iVar1 int32;\n    var pLits [2]int32;\n    var status int32;\n    var RetValue int32;\n    var pProgress *ProgressBar  = Extra_ProgressBarStart( os.Stdout, nPairs );\n    assert(Gia_ManPoNum(p) % 2 == 0, \"Gia_ManPoNum(p) % 2 == 0\");\n    for  i = 0; i \u003c nPairs; i++  {\n        if (i \u0026 0xFF) == 0 {\n            Extra_ProgressBarUpdate( pProgress, i, nil ); }\n        pObj0 = Gia_ManPo(p, 2*i);\n        pObj1 = Gia_ManPo(p, 2*i+1);\n        if Gia_ObjChild0(pObj0) == Gia_ObjChild0(pObj1) {\n            nUnsats++;\n            nTrivs++;\n            continue;\n        }\n        if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkStart)/int64(time.Second) \u003e= pPars.TimeLimit {\n            fmt.Printf(\"Timeout (%d sec) is reached.\\n\", pPars.TimeLimit);\n            nUndecs = nPairs - nUnsats - nSats;\n            break;\n        }\n        iVar0 = pCnf.pVarNums[ Gia_ObjId(p, pObj0) ];\n        iVar1 = pCnf.pVarNums[ Gia_ObjId(p, pObj1) ];\n        assert(iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0, \"iVar0 \u003e= 0 \u0026\u0026 iVar1 \u003e= 0\");\n        pLits[0] = Abc_Var2Lit( iVar0, 0 );\n        pLits[1] = Abc_Var2Lit( iVar1, 0 );\n        // check direct\n        pLits[0] = lit_neg(pLits[0]);\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars.nBTLimit, 0, 0, 0 );\n        if status == l_False {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        \n        } else if status == l_True {\n            fmt.Printf(\"Output %d is SAT.\\n\", i);\n            nSats++;\n            continue;\n        \n        } else {\n            nUndecs++;\n            continue;\n        }\n        // check inverse\n        status = sat_solver_solve( pSat, pLits, pLits + 2, pPars.nBTLimit, 0, 0, 0 );\n        if status == l_False {\n            pLits[0] = lit_neg( pLits[0] );\n            pLits[1] = lit_neg( pLits[1] );\n            RetValue = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((RetValue != 0), \"RetValue\");\n        \n        } else if status == l_True {\n            fmt.Printf(\"Output %d is SAT.\\n\", i);\n            nSats++;\n            continue;\n        \n        } else {\n            nUndecs++;\n            continue;\n        }\n        nUnsats++;\n    }\n    Extra_ProgressBarStop( pProgress );\n    fmt.Printf(\"UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  \", nUnsats, nSats, nUndecs, nTrivs);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    Cnf_DataFree( pCnf );\n    sat_solver_delete( pSat );\n    if nSats {\n        return 0; }\n    if nUndecs {\n        return -1; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [New CEC engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerify(pInit *Gia_Man_t, pPars *Cec_ParCec_t) int32 {\n    var fDumpUndecided int32;\n    var ParsFra Cec_ParFra_t;\n    var pParsFra *Cec_ParFra_t = \u0026ParsFra;\n    var p, pNew *Gia_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    var clkTotal abctime  = Abc_Clock();\n    // consider special cases:\n    // 1) (SAT) a pair of POs have different value under all-0 pattern\n    // 2) (SAT) a pair of POs has different PI/Const drivers\n    // 3) (UNSAT) 1-2 do not hold and there is no nodes\n    RetValue = Cec_ManHandleSpecialCases( pInit, pPars );\n    if RetValue == 0 || RetValue == 1 {\n        return RetValue; }\n    // preprocess \n    p = Gia_ManDup( pInit );\n    Gia_ManEquivFixOutputPairs( p );\n    p = Gia_ManCleanup( pNew = p );\n    Gia_ManStop( pNew );\n    if pPars.fNaive {\n        RetValue = Cec_ManVerifyNaive( p, pPars );\n        Gia_ManStop( p );\n        return RetValue;\n    }\n    if pInit.vSimsPi {\n        p.vSimsPi = Vec_WrdDup(pInit.vSimsPi); \n        p.nSimWords = pInit.nSimWords;\n    }\n    // sweep for equivalences\n    Cec_ManFraSetDefaultParams( pParsFra );\n    pParsFra.nItersMax    = 1000;\n    pParsFra.nBTLimit     = pPars.nBTLimit;\n    pParsFra.TimeLimit    = pPars.TimeLimit;\n    pParsFra.fVerbose     = pPars.fVerbose;\n    pParsFra.fVeryVerbose = pPars.fVeryVerbose;\n    pParsFra.fCheckMiter  = 1;\n    pParsFra.fDualOut     = 1;\n    pNew = Cec_ManSatSweeping( p, pParsFra, pPars.fSilent );\n    pPars.iOutFail = pParsFra.iOutFail;\n    // update\n    pInit.pCexComb = p.pCexComb; p.pCexComb = nil;\n    Gia_ManStop( p );\n    p = pInit;\n    // continue\n    if pNew == nil {\n        if p.pCexComb != nil {\n            if p.pCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p.pCexComb, 1 ) {\n                Abc_Print( 1, \"Counter-example simulation has failed.\\n\" ); }\n            if !pPars.fSilent {\n            Abc_Print( 1, \"Networks are NOT EQUIVALENT.  \" );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            return 0;\n        }\n        p = Gia_ManDup( pInit );\n        Gia_ManEquivFixOutputPairs( p );\n        p = Gia_ManCleanup( pNew = p );\n        Gia_ManStop( pNew );\n        pNew = p;\n    }\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Networks are UNDECIDED after the new CEC engine.  \" );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if fDumpUndecided != 0 {\n        // inlining of macro ABC_FREE\n        ((pNew.pReprs) ? (free((char *) (pNew.pReprs)), (pNew.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pNew.pNexts) ? (free((char *) (pNew.pNexts)), (pNew.pNexts) = 0) : 0);\n        Gia_AigerWrite( pNew, \"gia_cec_undecided.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"The result is written into file \\\"%s\\\".\\n\", \"gia_cec_undecided.aig\" );\n    }\n    if pPars.TimeLimit \u0026\u0026 (Abc_Clock() - clkTotal)/int64(time.Second) \u003e= pPars.TimeLimit {\n        Gia_ManStop( pNew );\n        return -1;\n    }\n    // call other solver\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Calling the old CEC engine.\\n\" ); }\n    fflush( os.Stdout );\n    RetValue = Cec_ManVerifyOld( pNew, pPars.fVerbose, \u0026pPars.iOutFail, clkTotal, pPars.fSilent );\n    p.pCexComb = pNew.pCexComb; pNew.pCexComb = nil;\n    if p.pCexComb \u0026\u0026 !Gia_ManVerifyCex( p, p.pCexComb, 1 ) {\n        Abc_Print( 1, \"Counter-example simulation has failed.\\n\" ); }\n    Gia_ManStop( pNew );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simple SAT run to check equivalence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerifySimple(p *Gia_Man_t) int32 {\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars.fSilent = 1;\n    assert(Gia_ManCoNum(p) == 2, \"Gia_ManCoNum(p) == 2\");\n    assert(Gia_ManRegNum(p) == 0, \"Gia_ManRegNum(p) == 0\");\n    return Cec_ManVerify( p, pPars );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [New CEC engine applied to two circuits.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerifyTwo(p0 *Gia_Man_t, p1 *Gia_Man_t, fVerbose int32) int32 {\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    var pMiter *Gia_Man_t;\n    var RetValue int32;\n    Cec_ManCecSetDefaultParams( pPars );\n    pPars.fVerbose = fVerbose;\n    pMiter = Gia_ManMiter( p0, p1, 0, 1, 0, 0, pPars.fVerbose );\n    if pMiter == nil {\n        return -1; }\n    RetValue = Cec_ManVerify( pMiter, pPars );\n    p0.pCexComb = pMiter.pCexComb; pMiter.pCexComb = nil;\n    Gia_ManStop( pMiter );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [New CEC engine applied to two circuits.]\n\n  Description [Returns 1 if equivalent, 0 if counter-example, -1 if undecided.\n  Counter-example is returned in the first manager as pAig0-\u003epSeqModel.\n  The format is given in Abc_Cex_t (file \"abc\\src\\aig\\gia\\gia.h\").]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManVerifyTwoAigs(pAig0 *Aig_Man_t, pAig1 *Aig_Man_t, fVerbose int32) int32 {\n    var p0, p1, pTemp *Gia_Man_t;\n    var RetValue int32;\n\n    p0 = Gia_ManFromAig( pAig0 );\n    p0 = Gia_ManCleanup( pTemp = p0 );\n    Gia_ManStop( pTemp );\n\n    p1 = Gia_ManFromAig( pAig1 );\n    p1 = Gia_ManCleanup( pTemp = p1 );\n    Gia_ManStop( pTemp );\n\n    RetValue = Cec_ManVerifyTwo( p0, p1, fVerbose );\n    pAig0.pSeqModel = p0.pCexComb; p0.pCexComb = nil;\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of new signal correspodence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_LatchCorrespondence(pAig *Aig_Man_t, nConfs int32, fUseCSat int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var CorPars Cec_ParCor_t;\n    var pCorPars *Cec_ParCor_t = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars.fLatchCorr = 1;\n    pCorPars.fUseCSat   = fUseCSat;\n    pCorPars.nBTLimit   = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of new signal correspodence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_SignalCorrespondence(pAig *Aig_Man_t, nConfs int32, fUseCSat int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var CorPars Cec_ParCor_t;\n    var pCorPars *Cec_ParCor_t = \u0026CorPars;\n    Cec_ManCorSetDefaultParams( pCorPars );\n    pCorPars.fUseCSat  = fUseCSat;\n    pCorPars.nBTLimit  = nConfs;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManLSCorrespondenceClasses( pGia, pCorPars );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of fraiging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_FraigCombinational(pAig *Aig_Man_t, nConfs int32, fVerbose int32) *Aig_Man_t {\n    var pGia *Gia_Man_t;\n    var FraPars Cec_ParFra_t;\n    var pFraPars *Cec_ParFra_t = \u0026FraPars;\n    Cec_ManFraSetDefaultParams( pFraPars );\n    pFraPars.fSatSweeping = 1;\n    pFraPars.nBTLimit  = nConfs;\n    pFraPars.nItersMax = 20;\n    pFraPars.fVerbose  = fVerbose;\n    pGia = Gia_ManFromAigSimple( pAig );\n    Cec_ManSatSweeping( pGia, pFraPars, 0 );\n    Gia_ManReprToAigRepr( pAig, pGia );\n    Gia_ManStop( pGia );\n    return Aig_ManDupSimple( pAig );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

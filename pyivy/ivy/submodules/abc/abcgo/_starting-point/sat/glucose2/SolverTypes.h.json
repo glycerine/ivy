@@ -1,0 +1,301 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h",
+  "SHA256": "4a74bdfa600082a09d21f7c9def4c91757e122832e5007a055e3f82147fbed0d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 6877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(header.has_extra);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 48,
+        "ByteOffset": 7193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void         shrink      (int i)         { assert(i \u003c= size()); if (header.has_extra) data[header.size-i] = data[header.size]; header.size -= i; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 48,
+        "ByteOffset": 8288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    float\u0026       activity    ()              { assert(header.has_extra); return data[header.size].act; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 35,
+        "ByteOffset": 8380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    uint32_t     abstraction () { assert(header.has_extra); return data[header.size].abs; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 9,
+        "ByteOffset": 9867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(sizeof(Lit)      == sizeof(uint32_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 9921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(sizeof(float)    == sizeof(uint32_t));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 9,
+        "ByteOffset": 14785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" --- size = %d, bucket_count = %d\\n\", size(), map.bucket_count()); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 15686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!header.learnt);   assert(!other.header.learnt);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 31,
+        "ByteOffset": 15712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!header.learnt);   assert(!other.header.learnt);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 15746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(header.has_extra); assert(other.header.has_extra);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 31,
+        "ByteOffset": 15772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(header.has_extra); assert(other.header.has_extra);"
+    },
+    {
+      "Name": "remove",
+      "Status": "review",
+      "Message": "remove requires 1 arguments; got 2.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 16482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    remove(*this, p);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 5841
+      },
+      "Directive": "#ifdef CGLUCOSE_EXP"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::union::5738",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 5738,
+      "End": 5743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::static::9147",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9128,
+      "End": 9134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9218",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9199,
+      "End": 9205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9236",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9217,
+      "End": 9223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9278",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9259,
+      "End": 9265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9736",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9717,
+      "End": 9723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9756",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9737,
+      "End": 9743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9790",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9771,
+      "End": 9777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::mechanical::sizeof::9810",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9791,
+      "End": 9797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::pointer-cast::8028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8009,
+      "End": 8015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::pointer-cast::10384",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10365,
+      "End": 10374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::pointer-cast::10481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10462,
+      "End": 10471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::pointer-cast::10612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10593,
+      "End": 10604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/SolverTypes.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5841,
+      "End": 5896
+    }
+  ],
+  "Draft": "package glucose2\n\nimport \"fmt\"\n\n/***********************************************************************************[SolverTypes.h]\n Glucose -- Copyright (c) 2009, Gilles Audemard, Laurent Simon\n                CRIL - Univ. Artois, France\n                LRI  - Univ. Paris Sud, France\n \nGlucose sources are based on MiniSat (see below MiniSat copyrights). Permissions and copyrights of\nGlucose are exactly the same as Minisat on which it is based on. (see below).\n\n---------------\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n\n//#include \u003cassert.h\u003e\n\n//#include \"sat/glucose2/IntTypes.h\"\n//#include \"sat/glucose2/Alg.h\"\n//#include \"sat/glucose2/Vec.h\"\n//#include \"sat/glucose2/Map.h\"\n//#include \"sat/glucose2/Alloc.h\"\n\n//#include \"sat/glucose2/CGlucose.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco2 {\n\n//=================================================================================================\n// Variables, literals, lifted booleans, clauses:\n\n\n// NOTE! Variables are just integers. No abstraction here. They should be chosen from 0..N,\n// so that they can be used as array indices.\n\ntypedef int Var;\n#define var_Undef (-1)\n\n\nstruct Lit {\n    int     x;\n\n    // Use this as a constructor:\n    friend Lit mkLit(Var var, bool sign);\n    bool operator == (Lit p) { return x == p.x; }\n    bool operator != (Lit p) { return x != p.x; }\n    bool operator \u003c  (Lit p) { return x \u003c p.x;  } // '\u003c' makes p, ~p adjacent in the ordering.\n};\n\n\ninline  Lit  mkLit     (Var var, bool sign = false) { Lit p; p.x = var + var + int32(sign); return p; }\ninline  Lit  operator ~(Lit p)              { Lit q; q.x = p.x ^ 1; return q; }\ninline  Lit  operator ^(Lit p, bool b)      { Lit q; q.x = p.x ^ (unsigned int)b; return q; }\ninline  bool sign      (Lit p)              { return p.x \u0026 1; }\ninline  int  var       (Lit p)              { return p.x \u003e\u003e 1; }\n\n// Mapping Literals to and from compact integers suitable for array indexing:\ninline  int  toInt     (Var v)              { return v; } \ninline  int  toInt     (Lit p)              { return p.x; } \ninline  Lit  toLit     (int i)              { Lit p; p.x = i; return p; } \n\n//const Lit lit_Undef = mkLit(var_Undef, false);  // }- Useful special constants.\n//const Lit lit_Error = mkLit(var_Undef, true );  // }\n\nLit lit_Undef = { -2 };  // }- Useful special constants.\nLit lit_Error = { -1 };  // }\n\n\n//=================================================================================================\n// Lifted booleans:\n//\n// NOTE: this implementation is optimized for the case when comparisons between values are mostly\n//       between one variable and one constant. Some care had to be taken to make sure that gcc \n//       does enough constant propagation to produce sensible code, and this appears to be somewhat\n//       fragile unfortunately.\n\n#define l_True  (Gluco2::lbool((uint8_t)0)) // gcc does not do constant propagation if these are real constants.\n#define l_False (Gluco2::lbool((uint8_t)1))\n#define l_Undef (Gluco2::lbool((uint8_t)2))\n\nclass lbool {\n    uint8_t value;\n\npublic:\n    explicit lbool(uint8_t v) : value(v) { }\n\n    lbool()       : value(0) { }\n    explicit lbool(bool x) : value(!x) { }\n\n    bool  operator == (lbool b) { return (((b.value\u00262) \u0026 (value\u00262)) | (!(b.value\u00262)\u0026(value == b.value))) != 0; }\n    bool  operator != (lbool b) { return !(*this == b); }\n    lbool operator ^  (bool  b) { return lbool((uint8_t)(value^(uint8_t)b)); }\n\n    lbool operator \u0026\u0026 (lbool b) { \n        uint8_t sel = (this.value \u003c\u003c 1) | (b.value \u003c\u003c 3);\n        uint8_t v   = (0xF7F755F4 \u003e\u003e sel) \u0026 3;\n        return lbool(v); }\n\n    lbool operator || (lbool b) {\n        uint8_t sel = (this.value \u003c\u003c 1) | (b.value \u003c\u003c 3);\n        uint8_t v   = (0xFCFCF400 \u003e\u003e sel) \u0026 3;\n        return lbool(v); }\n\n    friend int   toInt  (lbool l);\n    friend lbool toLbool(int   v);\n};\ninline int   toInt  (lbool l) { return l.value; }\ninline lbool toLbool(int   v) { return lbool((uint8_t)v);  }\n\n//=================================================================================================\n// Clause -- a simple class for representing a clause:\n\nclass Clause;\ntypedef RegionAllocator\u003cuint32_t\u003e::Ref CRef;\n\nclass Clause {\n    struct {\n      mark uint32; /* C bitfield: 2 bits; review packing and truncation */\n      learnt uint32; /* C bitfield: 1 bits; review packing and truncation */\n      has_extra uint32; /* C bitfield: 1 bits; review packing and truncation */\n      reloced uint32; /* C bitfield: 1 bits; review packing and truncation */\n      lbd uint32; /* C bitfield: 26 bits; review packing and truncation */\n      canbedel uint32; /* C bitfield: 1 bits; review packing and truncation */\n      size uint32; /* C bitfield: 32 bits; review packing and truncation */\n      szWithoutSelectors uint32; /* C bitfield: 32 bits; review packing and truncation */\n\n    }\n                            header;\n    union { Lit lit; float act; uint32_t abs; CRef rel; }\n data[0];\n\n    friend class ClauseAllocator;\n\n    #ifdef CGLUCOSE_EXP\n    friend class Solver;\n    #endif\n\n    // NOTE: This constructor cannot be used directly (doesn't allocate enough memory).\n    template\u003cclass V\u003e\n    Clause(V\u0026 ps, bool use_extra, bool learnt) {\n        header.mark      = 0;\n        header.learnt    = learnt;\n        header.has_extra = use_extra;\n        header.reloced   = 0;\n        header.size      = ps.size();\n    header.lbd = 0;\n    header.canbedel = 1;\n        for (int i = 0; i \u003c ps.size(); i++) \n            data[i].lit = ps[i];\n    \n        if header.has_extra{\n      if (header.learnt) \n                data[header.size].act = 0; \n            else \n                calcAbstraction(); }\n    }\n\npublic:\n    void calcAbstraction() {\n        assert(header.has_extra, \"header.has_extra\");\n        uint32_t abstraction = 0;\n        for (int i = 0; i \u003c size(); i++)\n            abstraction |= 1 \u003c\u003c (var(data[i].lit) \u0026 31);\n        data[header.size].abs = abstraction;  }\n\n\n    int          size        ()      { return header.size; }\n    void         shrink      (int i)         { assert(i \u003c= size(), \"i \u003c= size()\"); if (header.has_extra) data[header.size-i] = data[header.size]; header.size -= i; }\n    void         pop         ()              { shrink(1); }\n    bool         learnt      ()      { return header.learnt; }\n    bool         has_extra   ()      { return header.has_extra; }\n    uint32_t     mark        ()      { return header.mark; }\n    void         mark        (uint32_t m)    { header.mark = m; }\n    Lit\u0026   last        ()      { return data[header.size-1].lit; }\n\n    bool         reloced     ()      { return header.reloced; }\n    CRef         relocation  ()      { return data[0].rel; }\n    void         relocate    (CRef c)        { header.reloced = 1; data[0].rel = c; }\n\n    // NOTE: somewhat unsafe to change the clause in-place! Must manually call 'calcAbstraction' afterwards for\n    //       subsumption operations to behave correctly.\n    Lit\u0026         operator [] (int i)         { return data[i].lit; }\n    Lit          operator [] (int i) { return data[i].lit; }\n    operator Lit* (void) { return (Lit*)data; }\n\n    float\u0026       activity    ()              { assert(header.has_extra, \"header.has_extra\"); return data[header.size].act; }\n    uint32_t     abstraction () { assert(header.has_extra, \"header.has_extra\"); return data[header.size].abs; }\n\n    Lit          subsumes    (Clause\u0026 other) ;\n    void         strengthen  (Lit p);\n    void         setLBD(int i)  {header.lbd = i;} \n    // unsigned int\u0026       lbd    ()              { return header.lbd; }\n    unsigned int        lbd    () { return header.lbd; }\n    void setCanBeDel(bool b) {header.canbedel = b;}\n    bool canBeDel() {return header.canbedel;}\n    void setSizeWithoutSelectors   (unsigned int n)              {header.szWithoutSelectors = n; }\n    unsigned int        sizeWithoutSelectors   () { return header.szWithoutSelectors; }\n\n};\n\n\n//=================================================================================================\n// ClauseAllocator -- a simple class for allocating memory for clauses:\n\n\nCRef CRef_Undef = RegionAllocator\u003cuint32_t\u003e::Ref_Undef;\nclass ClauseAllocator : public RegionAllocator\u003cuint32_t\u003e\n{\n    static int clauseWord32Size(int size, bool has_extra){\n        return (sizeof(Clause) + (sizeof(Lit) * (size + int32(has_extra)))) / sizeof(uint32_t); }\n public:\n    bool extra_clause_field;\n\n    ClauseAllocator(uint32_t start_cap) : RegionAllocator\u003cuint32_t\u003e(start_cap), extra_clause_field(false){}\n    ClauseAllocator() : extra_clause_field(false){}\n\n    void moveTo(ClauseAllocator\u0026 to){\n        to.extra_clause_field = extra_clause_field;\n        RegionAllocator\u003cuint32_t\u003e::moveTo(to); }\n\n    template\u003cclass Lits\u003e\n    CRef alloc(Lits\u0026 ps, bool learnt = false)\n    {\n        assert(sizeof(Lit)      == sizeof(uint32_t), \"sizeof(Lit)      == sizeof(uint32_t)\");\n        assert(sizeof(float)    == sizeof(uint32_t), \"sizeof(float)    == sizeof(uint32_t)\");\n        bool use_extra = learnt | extra_clause_field;\n\n        CRef cid = RegionAllocator\u003cuint32_t\u003e::alloc(clauseWord32Size(ps.size(), use_extra));\n        new (lea(cid)) Clause(ps, use_extra, learnt);\n\n        return cid;\n    }\n\n    // Deref, Load Effective Address (LEA), Inverse of LEA (AEL):\n    Clause\u0026       operator[](Ref r)       { return (Clause\u0026)RegionAllocator\u003cuint32_t\u003e::operator[](r); }\n    Clause\u0026 operator[](Ref r) { return (Clause\u0026)RegionAllocator\u003cuint32_t\u003e::operator[](r); }\n    Clause*       lea       (Ref r)       { return (Clause*)RegionAllocator\u003cuint32_t\u003e::lea(r); }\n    Clause* lea       (Ref r) { return (Clause*)RegionAllocator\u003cuint32_t\u003e::lea(r); }\n    Ref           ael       (Clause* t){ return RegionAllocator\u003cuint32_t\u003e::ael((uint32_t*)t); }\n\n    void free_(CRef cid)\n    {\n        Clause\u0026 c = operator[](cid);\n        RegionAllocator\u003cuint32_t\u003e::free_(clauseWord32Size(c.size(), c.has_extra()));\n    }\n\n    void reloc(CRef\u0026 cr, ClauseAllocator\u0026 to)\n    {\n        Clause\u0026 c = operator[](cr);\n        \n        if c.reloced() { cr = c.relocation(); return; }\n        \n        cr = to.alloc(c, c.learnt());\n        c.relocate(cr);\n        \n        // Copy extra data-fields: \n        // (This could be cleaned-up. Generalize Clause-constructor to be applicable here instead?)\n        to[cr].mark(c.mark());\n        if to[cr].learnt()        {\n      to[cr].activity() = c.activity();\n      to[cr].setLBD(c.lbd());\n      to[cr].setSizeWithoutSelectors(c.sizeWithoutSelectors());\n      to[cr].setCanBeDel(c.canBeDel());\n    }\n        else if (to[cr].has_extra()) to[cr].calcAbstraction();\n    }\n};\n\n\n//=================================================================================================\n// OccLists -- a class for maintaining occurence lists with lazy deletion:\n\ntemplate\u003cclass Idx, class Vec, class Deleted\u003e\nclass OccLists\n{\n    vec\u003cVec\u003e  occs;\n    vec\u003cchar\u003e dirty;\n    vec\u003cIdx\u003e  dirties;\n    Deleted   deleted;\n\n public:\n    OccLists(Deleted\u0026 d) : deleted(d) {}\n    \n    void  init      (Idx\u0026 idx){ occs.growTo(toInt(idx)+1); dirty.growTo(toInt(idx)+1, 0); }\n    // Vec\u0026  operator[](const Idx\u0026 idx){ return occs[toInt(idx)]; }\n    Vec\u0026  operator[](Idx\u0026 idx){ return occs[toInt(idx)]; }\n    Vec\u0026  lookup    (Idx\u0026 idx){ if (dirty[toInt(idx)]) clean(idx); return occs[toInt(idx)]; }\n\n    void  cleanAll  ();\n    void  clean     (Idx\u0026 idx);\n    void  smudge    (Idx\u0026 idx){\n        if dirty[toInt(idx)] == 0{\n            dirty[toInt(idx)] = 1;\n            dirties.push(idx);\n        }\n    }\n\n    void  clear(bool free = true){\n        if free{\n            occs   .clear(free);\n            dirty  .clear(free);\n            dirties.clear(free);\n        } else {\n            occs   .shrink_(occs   .size());\n            dirty  .shrink_(dirty  .size());\n            dirties.shrink_(dirties.size());\n        }\n    }\n};\n\n\ntemplate\u003cclass Idx, class Vec, class Deleted\u003e\nvoid OccLists\u003cIdx,Vec,Deleted\u003e::cleanAll()\n{\n    for (int i = 0; i \u003c dirties.size(); i++)\n        // Dirties may contain duplicates so check here if a variable is already cleaned:\n        if (dirty[toInt(dirties[i])])\n            clean(dirties[i]);\n    dirties.clear();\n}\n\n\ntemplate\u003cclass Idx, class Vec, class Deleted\u003e\nvoid OccLists\u003cIdx,Vec,Deleted\u003e::clean(Idx\u0026 idx)\n{\n    Vec\u0026 vec = occs[toInt(idx)];\n    int  i, j;\n    for (i = j = 0; i \u003c vec.size(); i++)\n        if (!deleted(vec[i]))\n            vec[j++] = vec[i];\n    vec.shrink(i - j);\n    dirty[toInt(idx)] = 0;\n}\n\n\n//=================================================================================================\n// CMap -- a class for mapping clauses to values:\n\n\ntemplate\u003cclass T\u003e\nclass CMap\n{\n    struct CRefHash {\n        uint32_t operator()(CRef cr) { return (uint32_t)cr; } };\n\n    typedef Map\u003cCRef, T, CRefHash\u003e HashTable;\n    HashTable map;\n        \n public:\n    // Size-operations:\n    void     clear       ()                           { map.clear(); }\n    int      size        ()                { return map.elems(); }\n\n    \n    // Insert/Remove/Test mapping:\n    void     insert      (CRef cr, T\u0026 t){ map.insert(cr, t); }\n    void     growTo      (CRef cr, T\u0026 t){ map.insert(cr, t); } // NOTE: for compatibility\n    void     remove      (CRef cr)            { map.remove(cr); }\n    bool     has         (CRef cr, T\u0026 t)      { return map.peek(cr, t); }\n\n    // Vector interface (the clause 'c' must already exist):\n    T\u0026 operator [] (CRef cr) { return map[cr]; }\n    T\u0026       operator [] (CRef cr)            { return map[cr]; }\n\n    // Iteration (not transparent at all at the moment):\n    int  bucket_count() { return map.bucket_count(); }\n    vec\u003ctypename HashTable::Pair\u003e\u0026 bucket(int i) { return map.bucket(i); }\n\n    // Move contents to other map:\n    void moveTo(CMap\u0026 other){ map.moveTo(other.map); }\n\n    // TMP debug:\n    void debug(){\n        fmt.Printf(\" --- size = %d, bucket_count = %d\\n\", size(), map.bucket_count()); }\n};\n\n\n/*_________________________________________________________________________________________________\n|\n|  subsumes : (other : const Clause\u0026)  -\u003e  Lit\n|  \n|  Description:\n|       Checks if clause subsumes 'other', and at the same time, if it can be used to simplify 'other'\n|       by subsumption resolution.\n|  \n|    Result:\n|       lit_Error  - No subsumption or simplification\n|       lit_Undef  - Clause subsumes 'other'\n|       p          - The literal p can be deleted from 'other'\n|________________________________________________________________________________________________@*/\ninline Lit Clause::subsumes(Clause\u0026 other) \n{\n    //if (other.size() \u003c size() || (extra.abst \u0026 ~other.extra.abst) != 0)\n    //if (other.size() \u003c size() || (!learnt() \u0026\u0026 !other.learnt() \u0026\u0026 (extra.abst \u0026 ~other.extra.abst) != 0))\n    assert(!header.learnt, \"!header.learnt\");   assert(!other.header.learnt, \"!other.header.learnt\");\n    assert(header.has_extra, \"header.has_extra\"); assert(other.header.has_extra, \"other.header.has_extra\");\n    if (other.header.size \u003c header.size || (data[header.size].abs \u0026 ~other.data[other.header.size].abs) != 0)\n        return lit_Error;\n\n    Lit        ret = lit_Undef;\n    Lit* c   = (Lit*)(*this);\n    Lit* d   = (Lit*)other;\n\n    for unsigned i = 0; i \u003c header.size; i++ {\n        // search for c[i] or ~c[i]\n        for (unsigned j = 0; j \u003c other.header.size; j++)\n            if (c[i] == d[j])\n                goto ok;\n            else if ret == lit_Undef \u0026\u0026 c[i] == ~d[j]{\n                ret = c[i];\n                goto ok;\n            }\n\n        // did not find it\n        return lit_Error;\n    ok:;\n    }\n\n    return ret;\n}\n\ninline void Clause::strengthen(Lit p)\n{\n    remove(*this, p);\n    calcAbstraction();\n}\n \n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

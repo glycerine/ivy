@@ -1,0 +1,426 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c",
+  "SHA256": "1f4b249886aa42e07909f83670cefee04844d0b31a9b189f54b1ffdcceb03c9f",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 13,
+        "ByteOffset": 2060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping cell %s with %d inputs and %d outputs\\n\", pRepr.pName, pRepr.n_inputs, pRepr.n_outputs ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 13,
+        "ByteOffset": 2388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Skipping cell %s with non-DSD function\\n\", pRepr.pName ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gate %5d  %-30s : \", pRepr.Id, pRepr.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Class %3d  \", iClass );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Area %10.3f  \", pRepr.area );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 84,
+        "Column": 28,
+        "ByteOffset": 2948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)\u0026Config, 17 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 2991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 70,
+        "ByteOffset": 3077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth, pRepr.n_inputs ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pMioGate != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iObjId \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 6168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Genlib library does not match SCL library.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 9,
+        "ByteOffset": 8166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 219,
+        "Column": 13,
+        "ByteOffset": 8379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (Config \u003e\u003e 6) \u003c 720 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 9609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.fMap4Gates );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 10135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pMio != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 10162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.pLib.LutMax \u003c= MPM_VAR_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 10210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nNumCuts \u003c= MPM_CUT_MAX );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_ManFindDsdMatches",
+      "Start": 1379,
+      "End": 2916,
+      "BodyStart": 1443,
+      "Original": "Vec_Wec_t * Mpm_ManFindDsdMatches( Mpm_Man_t * p, void * pScl )\n{\n    int fVerbose = p-\u003epPars-\u003efVeryVerbose;\n    SC_Lib * pLib = (SC_Lib *)pScl;\n    Vec_Wec_t * vClasses;\n    Vec_Int_t * vClass;\n    SC_Cell * pRepr;\n    int i, Config, iClass;\n    word Truth;\n    vClasses = Vec_WecStart( 600 );\n    SC_LibForEachCellClass( pLib, pRepr, i )\n    {\n        if ( pRepr-\u003en_inputs \u003e 6 || pRepr-\u003en_outputs \u003e 1 )\n        {\n            if ( fVerbose )\n            printf( \"Skipping cell %s with %d inputs and %d outputs\\n\", pRepr-\u003epName, pRepr-\u003en_inputs, pRepr-\u003en_outputs );\n            continue;\n        }\n        Truth = *Vec_WrdArray( \u0026SC_CellPin(pRepr, pRepr-\u003en_inputs)-\u003evFunc );\n        Config = Mpm_CutCheckDsd6( p, Truth );\n        if ( Config == -1 )\n        {\n            if ( fVerbose )\n            printf( \"Skipping cell %s with non-DSD function\\n\", pRepr-\u003epName );\n            continue;\n        }\n        iClass = Config \u003e\u003e 17;\n        Config = (pRepr-\u003eId \u003c\u003c 17) | (Config \u0026 0x1FFFF);\n        // write gate and NPN config for this DSD class\n        vClass = Vec_WecEntry( vClasses, iClass );\n        Vec_IntPush( vClass, Config );\n        if ( !fVerbose )\n            continue;\n\n        printf( \"Gate %5d  %-30s : \", pRepr-\u003eId, pRepr-\u003epName );\n        printf( \"Class %3d  \", iClass );\n        printf( \"Area %10.3f  \", pRepr-\u003earea );\n        Extra_PrintBinary( stdout, (unsigned *)\u0026Config, 17 );\n        printf( \"   \" );\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth, pRepr-\u003en_inputs ); printf( \"\\n\" );\n    }\n    return vClasses;\n}",
+      "Draft": "func Mpm_ManFindDsdMatches(p *Mpm_Man_t, pScl any) *Vec_Wec_t {\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n    var pLib *SC_Lib  = (SC_Lib *)pScl;\n    var vClasses *Vec_Wec_t;\n    var vClass *Vec_Int_t;\n    var pRepr *SC_Cell;\n    var i, Config, iClass int32;\n    var Truth word;\n    vClasses = Vec_WecStart( 600 );\n    // inlining of macro SC_LibForEachCellClass\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026pLib.vCellClasses)) \u0026\u0026 (((pRepr) = (SC_Cell *)Vec_PtrEntry(\u0026pLib.vCellClasses, i)), 1); i++  {\n        if pRepr.n_inputs \u003e 6 || pRepr.n_outputs \u003e 1 {\n            if fVerbose != 0 {\n            fmt.Printf(\"Skipping cell %s with %d inputs and %d outputs\\n\", pRepr.pName, pRepr.n_inputs, pRepr.n_outputs); }\n            continue;\n        }\n        Truth = *Vec_WrdArray( \u0026SC_CellPin(pRepr, pRepr.n_inputs).vFunc );\n        Config = Mpm_CutCheckDsd6( p, Truth );\n        if Config == -1 {\n            if fVerbose != 0 {\n            fmt.Printf(\"Skipping cell %s with non-DSD function\\n\", pRepr.pName); }\n            continue;\n        }\n        iClass = Config \u003e\u003e 17;\n        Config = (pRepr.Id \u003c\u003c 17) | (Config \u0026 0x1FFFF);\n        // write gate and NPN config for this DSD class\n        vClass = Vec_WecEntry( vClasses, iClass );\n        Vec_IntPush( vClass, Config );\n        if !(fVerbose != 0) {\n            continue; }\n\n        fmt.Printf(\"Gate %5d  %-30s : \", pRepr.Id, pRepr.pName);\n        fmt.Printf(\"Class %3d  \", iClass);\n        fmt.Printf(\"Area %10.3f  \", pRepr.area);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026Config, 17 );\n        fmt.Printf(\"   \");\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth, pRepr.n_inputs ); fmt.Printf(\"\\n\");\n    }\n    return vClasses;\n}"
+    },
+    {
+      "Name": "Mpm_ManFindCells",
+      "Start": 3206,
+      "End": 4026,
+      "BodyStart": 3299,
+      "Original": "Vec_Ptr_t * Mpm_ManFindCells( Mio_Library_t * pMio, SC_Lib * pScl, Vec_Wec_t * vNpnConfigs )\n{\n    Vec_Ptr_t * vNpnGatesMio;\n    Vec_Int_t * vClass;\n    Mio_Gate_t * pMioGate;\n    SC_Cell * pCell;\n    int Config, iClass;\n    vNpnGatesMio = Vec_PtrStart( Vec_WecSize(vNpnConfigs) );\n    Vec_WecForEachLevel( vNpnConfigs, vClass, iClass )\n    {\n        if ( Vec_IntSize(vClass) == 0 )\n            continue;\n        Config = Vec_IntEntry(vClass, 0);\n        pCell = SC_LibCell( pScl, (Config \u003e\u003e 17) );\n        pMioGate = Mio_LibraryReadGateByName( pMio, pCell-\u003epName, NULL );\n        if ( pMioGate == NULL )\n        {\n            Vec_PtrFree( vNpnGatesMio );\n            return NULL;\n        }\n        assert( pMioGate != NULL );\n        Vec_PtrWriteEntry( vNpnGatesMio, iClass, pMioGate );\n    }\n    return vNpnGatesMio;\n}",
+      "Draft": "func Mpm_ManFindCells(pMio *Mio_Library_t, pScl *SC_Lib, vNpnConfigs *Vec_Wec_t) *Vec_Ptr_t {\n    var vNpnGatesMio *Vec_Ptr_t;\n    var vClass *Vec_Int_t;\n    var pMioGate *Mio_Gate_t;\n    var pCell *SC_Cell;\n    var Config, iClass int32;\n    vNpnGatesMio = Vec_PtrStart( Vec_WecSize(vNpnConfigs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  iClass = 0; (iClass \u003c Vec_WecSize(vNpnConfigs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vNpnConfigs, iClass)), 1); iClass++  {\n        if Vec_IntSize(vClass) == 0 {\n            continue; }\n        Config = Vec_IntEntry(vClass, 0);\n        pCell = SC_LibCell( pScl, (Config \u003e\u003e 17) );\n        pMioGate = Mio_LibraryReadGateByName( pMio, pCell.pName, nil );\n        if pMioGate == nil {\n            Vec_PtrFree( vNpnGatesMio );\n            return nil;\n        }\n        assert(pMioGate != nil, \"pMioGate != nil\");\n        Vec_PtrWriteEntry( vNpnGatesMio, iClass, pMioGate );\n    }\n    return vNpnGatesMio;\n}"
+    },
+    {
+      "Name": "Mpm_ManFindMappedNodes",
+      "Start": 4302,
+      "End": 4609,
+      "BodyStart": 4354,
+      "Original": "Vec_Int_t * Mpm_ManFindMappedNodes( Mpm_Man_t * p )\n{\n    Vec_Int_t * vNodes;\n    Mig_Obj_t * pObj;\n    vNodes = Vec_IntAlloc( 1000 );\n    Mig_ManForEachObj( p-\u003epMig, pObj )\n        if ( Mig_ObjIsNode(pObj) \u0026\u0026 Mpm_ObjMapRef(p, pObj) )\n            Vec_IntPush( vNodes, Mig_ObjId(pObj) );\n    return vNodes;\n}",
+      "Draft": "func Mpm_ManFindMappedNodes(p *Mpm_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Mig_Obj_t;\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Mig_ManForEachObj\n    for  p.pMig.iPage = 0; p.pMig.iPage \u003c Vec_PtrSize(\u0026p.pMig.vPages) \u0026\u0026                   ((p.pMig.pPage) = (Mig_Obj_t *)Vec_PtrEntry(\u0026p.pMig.vPages, p.pMig.iPage)); p.pMig.iPage++  {         for  pObj = p.pMig.pPage; !Mig_ObjIsNone(pObj); pObj++  {\n        if Mig_ObjIsNode(pObj) \u0026\u0026 Mpm_ObjMapRef(p, pObj) {\n            Vec_IntPush( vNodes, Mig_ObjId(pObj) ); }\n    }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Mpm_ManGetAbcNode",
+      "Start": 4610,
+      "End": 5058,
+      "BodyStart": 4692,
+      "Original": "Abc_Obj_t * Mpm_ManGetAbcNode( Abc_Ntk_t * pNtk, Vec_Int_t * vCopy, int iMigLit )\n{\n    Abc_Obj_t * pObj;\n    int iObjId = Vec_IntEntry( vCopy, iMigLit );\n    if ( iObjId \u003e= 0 )\n        return Abc_NtkObj( pNtk, iObjId );\n    iObjId = Vec_IntEntry( vCopy, Abc_LitNot(iMigLit) );\n    assert( iObjId \u003e= 0 );\n    pObj = Abc_NtkCreateNodeInv( pNtk, Abc_NtkObj(pNtk, iObjId) );\n    Vec_IntWriteEntry( vCopy, iMigLit, Abc_ObjId(pObj) );\n    return pObj;\n}",
+      "Draft": "func Mpm_ManGetAbcNode(pNtk *Abc_Ntk_t, vCopy *Vec_Int_t, iMigLit int32) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    var iObjId int32  = Vec_IntEntry( vCopy, iMigLit );\n    if iObjId \u003e= 0 {\n        return Abc_NtkObj( pNtk, iObjId ); }\n    iObjId = Vec_IntEntry( vCopy, Abc_LitNot(iMigLit) );\n    assert(iObjId \u003e= 0, \"iObjId \u003e= 0\");\n    pObj = Abc_NtkCreateNodeInv( pNtk, Abc_NtkObj(pNtk, iObjId) );\n    Vec_IntWriteEntry( vCopy, iMigLit, Abc_ObjId(pObj) );\n    return pObj;\n}"
+    },
+    {
+      "Name": "Mpm_ManDeriveMappedAbcNtk",
+      "Start": 5059,
+      "End": 8137,
+      "BodyStart": 5136,
+      "Original": "Abc_Ntk_t * Mpm_ManDeriveMappedAbcNtk( Mpm_Man_t * p, Mio_Library_t * pMio )\n{\n    Abc_Ntk_t * pNtk;\n    Vec_Ptr_t * vNpnGatesMio;\n    Vec_Int_t * vNodes, * vCopy, * vClass;\n    Abc_Obj_t * pObj, * pFanin;\n    Mig_Obj_t * pNode;\n    Mpm_Cut_t * pCutBest;\n    int i, k, iNode, iMigLit, fCompl, Config;\n\n    // find mapping of SCL cells into MIO cells\n    vNpnGatesMio = Mpm_ManFindCells( pMio, (SC_Lib *)p-\u003epPars-\u003epScl, p-\u003evNpnConfigs );\n    if ( vNpnGatesMio == NULL )\n    {\n        printf( \"Genlib library does not match SCL library.\\n\" );\n        return NULL;\n    }\n\n    // create mapping for each phase of each node\n    vCopy = Vec_IntStartFull( 2 * Mig_ManObjNum(p-\u003epMig) );\n\n    // get internal nodes\n    vNodes = Mpm_ManFindMappedNodes( p );\n\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_MAP, 1 );\n    pNtk-\u003epName = Extra_UtilStrsav( p-\u003epMig-\u003epName );\n    pNtk-\u003epManFunc = pMio;\n\n    // create primary inputs\n    Mig_ManForEachCi( p-\u003epMig, pNode, i )\n    {\n        pObj = Abc_NtkCreatePi(pNtk);\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit( Mig_ObjId(pNode), 0 ), Abc_ObjId(pObj) );\n    }\n    Abc_NtkAddDummyPiNames( pNtk );\n\n    // create constant nodes\n    Mig_ManForEachCo( p-\u003epMig, pNode, i )\n        if ( Mig_ObjFaninLit(pNode, 0) == 0 )\n        {\n            pObj = Abc_NtkCreateNodeConst0(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 0 ), Abc_ObjId(pObj) );\n            break;\n        }\n    Mig_ManForEachCo( p-\u003epMig, pNode, i )\n        if ( Mig_ObjFaninLit(pNode, 0) == 1 )\n        {\n            pObj = Abc_NtkCreateNodeConst1(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 1 ), Abc_ObjId(pObj) );\n            break;\n        }\n\n    // create internal nodes\n    Vec_IntForEachEntry( vNodes, iNode, i )\n    {\n        pCutBest = Mpm_ObjCutBestP( p, Mig_ManObj(p-\u003epMig, iNode) );\n        vClass = Vec_WecEntry( p-\u003evNpnConfigs, Abc_Lit2Var(pCutBest-\u003eiFunc) );\n        Config = Vec_IntEntry( vClass, 0 );\n        pObj = Abc_NtkCreateNode( pNtk );\n        pObj-\u003epData = Vec_PtrEntry( vNpnGatesMio, Abc_Lit2Var(pCutBest-\u003eiFunc) );\n        assert( pObj-\u003epData != NULL );\n        fCompl = pCutBest-\u003efCompl ^ Abc_LitIsCompl(pCutBest-\u003eiFunc) ^ ((Config \u003e\u003e 16) \u0026 1);\n        Config \u0026= 0xFFFF;\n        for ( k = 0; k \u003c (int)pCutBest-\u003enLeaves; k++ )\n        {\n            assert( (Config \u003e\u003e 6) \u003c 720 );\n            iMigLit = pCutBest-\u003epLeaves[ (int)(p-\u003ePerm6[Config \u003e\u003e 6][k]) ];\n            pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Abc_LitNotCond(iMigLit, (Config \u003e\u003e k) \u0026 1) );\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit(iNode, fCompl), Abc_ObjId(pObj) );\n    }\n\n    // create primary outputs\n    Mig_ManForEachCo( p-\u003epMig, pNode, i )\n    {\n        pObj = Abc_NtkCreatePo(pNtk);\n        pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Mig_ObjFaninLit(pNode, 0) );\n        Abc_ObjAddFanin( pObj, pFanin );\n    }\n    Abc_NtkAddDummyPoNames( pNtk );\n\n    // clean up\n    Vec_PtrFree( vNpnGatesMio );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vCopy );\n    return pNtk;\n}",
+      "Draft": "func Mpm_ManDeriveMappedAbcNtk(p *Mpm_Man_t, pMio *Mio_Library_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var vNpnGatesMio *Vec_Ptr_t;\n    var vNodes, vCopy, vClass *Vec_Int_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pNode *Mig_Obj_t;\n    var pCutBest *Mpm_Cut_t;\n    var i, k, iNode, iMigLit, fCompl, Config int32;\n\n    // find mapping of SCL cells into MIO cells\n    vNpnGatesMio = Mpm_ManFindCells( pMio, (SC_Lib *)p.pPars.pScl, p.vNpnConfigs );\n    if vNpnGatesMio == nil {\n        fmt.Printf(\"Genlib library does not match SCL library.\\n\");\n        return nil;\n    }\n\n    // create mapping for each phase of each node\n    vCopy = Vec_IntStartFull( 2 * Mig_ManObjNum(p.pMig) );\n\n    // get internal nodes\n    vNodes = Mpm_ManFindMappedNodes( p );\n\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_MAP, 1 );\n    pNtk.pName = Extra_UtilStrsav( p.pMig.pName );\n    pNtk.pManFunc = pMio;\n\n    // create primary inputs\n    // inlining of macro Mig_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCis)) \u0026\u0026 ((pNode) = Mig_ManCi(p.pMig, i)); i++  {\n        pObj = Abc_NtkCreatePi(pNtk);\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit( Mig_ObjId(pNode), 0 ), Abc_ObjId(pObj) );\n    }\n    Abc_NtkAddDummyPiNames( pNtk );\n\n    // create constant nodes\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        if Mig_ObjFaninLit(pNode, 0) == 0 {\n            pObj = Abc_NtkCreateNodeConst0(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 0 ), Abc_ObjId(pObj) );\n            break;\n        }\n    }\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        if Mig_ObjFaninLit(pNode, 0) == 1 {\n            pObj = Abc_NtkCreateNodeConst1(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 1 ), Abc_ObjId(pObj) );\n            break;\n        }\n    }\n\n    // create internal nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iNode) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        pCutBest = Mpm_ObjCutBestP( p, Mig_ManObj(p.pMig, iNode) );\n        vClass = Vec_WecEntry( p.vNpnConfigs, Abc_Lit2Var(pCutBest.iFunc) );\n        Config = Vec_IntEntry( vClass, 0 );\n        pObj = Abc_NtkCreateNode( pNtk );\n        pObj.pData = Vec_PtrEntry( vNpnGatesMio, Abc_Lit2Var(pCutBest.iFunc) );\n        assert(pObj.pData != nil, \"pObj.pData != nil\");\n        fCompl = pCutBest.fCompl ^ Abc_LitIsCompl(pCutBest.iFunc) ^ ((Config \u003e\u003e 16) \u0026 1);\n        Config \u0026= 0xFFFF;\n        for  k = 0; k \u003c int32(pCutBest.nLeaves); k++  {\n            assert((Config \u003e\u003e 6) \u003c 720, \"(Config \u003e\u003e 6) \u003c 720\");\n            iMigLit = pCutBest.pLeaves[ int32((p.Perm6[Config \u003e\u003e 6][k])) ];\n            pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Abc_LitNotCond(iMigLit, (Config \u003e\u003e k) \u0026 1) );\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit(iNode, fCompl), Abc_ObjId(pObj) );\n    }\n\n    // create primary outputs\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        pObj = Abc_NtkCreatePo(pNtk);\n        pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Mig_ObjFaninLit(pNode, 0) );\n        Abc_ObjAddFanin( pObj, pFanin );\n    }\n    Abc_NtkAddDummyPoNames( pNtk );\n\n    // clean up\n    Vec_PtrFree( vNpnGatesMio );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vCopy );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Mpm_ManPerformCellMapping",
+      "Start": 8373,
+      "End": 8919,
+      "BodyStart": 8472,
+      "Original": "Abc_Ntk_t * Mpm_ManPerformCellMapping( Mig_Man_t * pMig, Mpm_Par_t * pPars, Mio_Library_t * pMio )\n{\n    Abc_Ntk_t * pNew;\n    Mpm_Man_t * p;\n    assert( pPars-\u003efMap4Gates );\n    p = Mpm_ManStart( pMig, pPars );\n    if ( p-\u003epPars-\u003efVerbose ) \n        Mpm_ManPrintStatsInit( p );\n    p-\u003evNpnConfigs = Mpm_ManFindDsdMatches( p, p-\u003epPars-\u003epScl );\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if ( p-\u003epPars-\u003efVerbose ) \n        Mpm_ManPrintStats( p );\n    pNew = Mpm_ManDeriveMappedAbcNtk( p, pMio );\n    Mpm_ManStop( p );\n    return pNew;\n}",
+      "Draft": "func Mpm_ManPerformCellMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t, pMio *Mio_Library_t) *Abc_Ntk_t {\n    var pNew *Abc_Ntk_t;\n    var p *Mpm_Man_t;\n    assert(pPars.fMap4Gates, \"pPars.fMap4Gates\");\n    p = Mpm_ManStart( pMig, pPars );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStatsInit( p ); }\n    p.vNpnConfigs = Mpm_ManFindDsdMatches( p, p.pPars.pScl );\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStats( p ); }\n    pNew = Mpm_ManDeriveMappedAbcNtk( p, pMio );\n    Mpm_ManStop( p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Mpm_ManCellMapping",
+      "Start": 8920,
+      "End": 9474,
+      "BodyStart": 9003,
+      "Original": "Abc_Ntk_t * Mpm_ManCellMapping( Gia_Man_t * pGia, Mpm_Par_t * pPars, void * pMio )\n{\n    Mig_Man_t * p;\n    Abc_Ntk_t * pNew;\n    assert( pMio != NULL );\n    assert( pPars-\u003epLib-\u003eLutMax \u003c= MPM_VAR_MAX );\n    assert( pPars-\u003enNumCuts \u003c= MPM_CUT_MAX );\n    if ( pPars-\u003efUseGates )\n    {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    }\n    else\n        p = Mig_ManCreate( pGia );\n    pNew = Mpm_ManPerformCellMapping( p, pPars, (Mio_Library_t *)pMio );\n    Mig_ManStop( p );\n    return pNew;\n}",
+      "Draft": "func Mpm_ManCellMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t, pMio any) *Abc_Ntk_t {\n    var p *Mig_Man_t;\n    var pNew *Abc_Ntk_t;\n    assert(pMio != nil, \"pMio != nil\");\n    assert(pPars.pLib.LutMax \u003c= MPM_VAR_MAX, \"pPars.pLib.LutMax \u003c= MPM_VAR_MAX\");\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    if pPars.fUseGates {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    \n    } else {\n        p = Mig_ManCreate( pGia ); }\n    pNew = Mpm_ManPerformCellMapping( p, pPars, (Mio_Library_t *)pMio );\n    Mig_ManStop( p );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::1508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1508,
+      "End": 1518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::1858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1678,
+      "End": 1678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::2949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2750,
+      "End": 2762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::3032",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2833,
+      "End": 2845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::4932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4441,
+      "End": 4441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::6057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5452,
+      "End": 5462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::pointer-cast::10539",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9409,
+      "End": 9426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::void-pointer::Mpm_ManFindDsdMatches",
+      "Category": "void-pointer-review",
+      "Symbol": "Mpm_ManFindDsdMatches",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1379,
+      "End": 2916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManFindDsdMatches",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManFindDsdMatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1379,
+      "End": 2916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManFindCells",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManFindCells",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3206,
+      "End": 4026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManFindMappedNodes",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManFindMappedNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4302,
+      "End": 4609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManGetAbcNode",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManGetAbcNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4610,
+      "End": 5058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManDeriveMappedAbcNtk",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManDeriveMappedAbcNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5059,
+      "End": 8137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManPerformCellMapping",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManPerformCellMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8373,
+      "End": 8919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::void-pointer::Mpm_ManCellMapping",
+      "Category": "void-pointer-review",
+      "Symbol": "Mpm_ManCellMapping",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8920,
+      "End": 9474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::Mpm_ManCellMapping",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManCellMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8920,
+      "End": 9474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmGates.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9721
+    }
+  ],
+  "Draft": "package mpm\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mpmGates.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [Standard-cell mapping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmGates.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mpmInt.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n//#include \"map/scl/sclSize.h\"\n//#include \"map/scl/sclTime.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Finds matches fore each DSD class.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManFindDsdMatches(p *Mpm_Man_t, pScl any) *Vec_Wec_t {\n    var fVerbose int32  = p.pPars.fVeryVerbose;\n    var pLib *SC_Lib  = (SC_Lib *)pScl;\n    var vClasses *Vec_Wec_t;\n    var vClass *Vec_Int_t;\n    var pRepr *SC_Cell;\n    var i, Config, iClass int32;\n    var Truth word;\n    vClasses = Vec_WecStart( 600 );\n    // inlining of macro SC_LibForEachCellClass\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026pLib.vCellClasses)) \u0026\u0026 (((pRepr) = (SC_Cell *)Vec_PtrEntry(\u0026pLib.vCellClasses, i)), 1); i++  {\n        if pRepr.n_inputs \u003e 6 || pRepr.n_outputs \u003e 1 {\n            if fVerbose != 0 {\n            fmt.Printf(\"Skipping cell %s with %d inputs and %d outputs\\n\", pRepr.pName, pRepr.n_inputs, pRepr.n_outputs); }\n            continue;\n        }\n        Truth = *Vec_WrdArray( \u0026SC_CellPin(pRepr, pRepr.n_inputs).vFunc );\n        Config = Mpm_CutCheckDsd6( p, Truth );\n        if Config == -1 {\n            if fVerbose != 0 {\n            fmt.Printf(\"Skipping cell %s with non-DSD function\\n\", pRepr.pName); }\n            continue;\n        }\n        iClass = Config \u003e\u003e 17;\n        Config = (pRepr.Id \u003c\u003c 17) | (Config \u0026 0x1FFFF);\n        // write gate and NPN config for this DSD class\n        vClass = Vec_WecEntry( vClasses, iClass );\n        Vec_IntPush( vClass, Config );\n        if !(fVerbose != 0) {\n            continue; }\n\n        fmt.Printf(\"Gate %5d  %-30s : \", pRepr.Id, pRepr.pName);\n        fmt.Printf(\"Class %3d  \", iClass);\n        fmt.Printf(\"Area %10.3f  \", pRepr.area);\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026Config, 17 );\n        fmt.Printf(\"   \");\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth, pRepr.n_inputs ); fmt.Printf(\"\\n\");\n    }\n    return vClasses;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find mapping of DSD classes into Genlib library cells.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManFindCells(pMio *Mio_Library_t, pScl *SC_Lib, vNpnConfigs *Vec_Wec_t) *Vec_Ptr_t {\n    var vNpnGatesMio *Vec_Ptr_t;\n    var vClass *Vec_Int_t;\n    var pMioGate *Mio_Gate_t;\n    var pCell *SC_Cell;\n    var Config, iClass int32;\n    vNpnGatesMio = Vec_PtrStart( Vec_WecSize(vNpnConfigs) );\n    // inlining of macro Vec_WecForEachLevel\n    for  iClass = 0; (iClass \u003c Vec_WecSize(vNpnConfigs)) \u0026\u0026 (((vClass) = Vec_WecEntry(vNpnConfigs, iClass)), 1); iClass++  {\n        if Vec_IntSize(vClass) == 0 {\n            continue; }\n        Config = Vec_IntEntry(vClass, 0);\n        pCell = SC_LibCell( pScl, (Config \u003e\u003e 17) );\n        pMioGate = Mio_LibraryReadGateByName( pMio, pCell.pName, nil );\n        if pMioGate == nil {\n            Vec_PtrFree( vNpnGatesMio );\n            return nil;\n        }\n        assert(pMioGate != nil, \"pMioGate != nil\");\n        Vec_PtrWriteEntry( vNpnGatesMio, iClass, pMioGate );\n    }\n    return vNpnGatesMio;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive mapped network as an ABC network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManFindMappedNodes(p *Mpm_Man_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Mig_Obj_t;\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Mig_ManForEachObj\n    for  p.pMig.iPage = 0; p.pMig.iPage \u003c Vec_PtrSize(\u0026p.pMig.vPages) \u0026\u0026                   ((p.pMig.pPage) = (Mig_Obj_t *)Vec_PtrEntry(\u0026p.pMig.vPages, p.pMig.iPage)); p.pMig.iPage++  {         for  pObj = p.pMig.pPage; !Mig_ObjIsNone(pObj); pObj++  {\n        if Mig_ObjIsNode(pObj) \u0026\u0026 Mpm_ObjMapRef(p, pObj) {\n            Vec_IntPush( vNodes, Mig_ObjId(pObj) ); }\n    }\n    }\n    return vNodes;\n}\nfunc Mpm_ManGetAbcNode(pNtk *Abc_Ntk_t, vCopy *Vec_Int_t, iMigLit int32) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    var iObjId int32  = Vec_IntEntry( vCopy, iMigLit );\n    if iObjId \u003e= 0 {\n        return Abc_NtkObj( pNtk, iObjId ); }\n    iObjId = Vec_IntEntry( vCopy, Abc_LitNot(iMigLit) );\n    assert(iObjId \u003e= 0, \"iObjId \u003e= 0\");\n    pObj = Abc_NtkCreateNodeInv( pNtk, Abc_NtkObj(pNtk, iObjId) );\n    Vec_IntWriteEntry( vCopy, iMigLit, Abc_ObjId(pObj) );\n    return pObj;\n}\nfunc Mpm_ManDeriveMappedAbcNtk(p *Mpm_Man_t, pMio *Mio_Library_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var vNpnGatesMio *Vec_Ptr_t;\n    var vNodes, vCopy, vClass *Vec_Int_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pNode *Mig_Obj_t;\n    var pCutBest *Mpm_Cut_t;\n    var i, k, iNode, iMigLit, fCompl, Config int32;\n\n    // find mapping of SCL cells into MIO cells\n    vNpnGatesMio = Mpm_ManFindCells( pMio, (SC_Lib *)p.pPars.pScl, p.vNpnConfigs );\n    if vNpnGatesMio == nil {\n        fmt.Printf(\"Genlib library does not match SCL library.\\n\");\n        return nil;\n    }\n\n    // create mapping for each phase of each node\n    vCopy = Vec_IntStartFull( 2 * Mig_ManObjNum(p.pMig) );\n\n    // get internal nodes\n    vNodes = Mpm_ManFindMappedNodes( p );\n\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_MAP, 1 );\n    pNtk.pName = Extra_UtilStrsav( p.pMig.pName );\n    pNtk.pManFunc = pMio;\n\n    // create primary inputs\n    // inlining of macro Mig_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCis)) \u0026\u0026 ((pNode) = Mig_ManCi(p.pMig, i)); i++  {\n        pObj = Abc_NtkCreatePi(pNtk);\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit( Mig_ObjId(pNode), 0 ), Abc_ObjId(pObj) );\n    }\n    Abc_NtkAddDummyPiNames( pNtk );\n\n    // create constant nodes\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        if Mig_ObjFaninLit(pNode, 0) == 0 {\n            pObj = Abc_NtkCreateNodeConst0(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 0 ), Abc_ObjId(pObj) );\n            break;\n        }\n    }\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        if Mig_ObjFaninLit(pNode, 0) == 1 {\n            pObj = Abc_NtkCreateNodeConst1(pNtk);\n            Vec_IntWriteEntry( vCopy, Abc_Var2Lit( 0, 1 ), Abc_ObjId(pObj) );\n            break;\n        }\n    }\n\n    // create internal nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iNode) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        pCutBest = Mpm_ObjCutBestP( p, Mig_ManObj(p.pMig, iNode) );\n        vClass = Vec_WecEntry( p.vNpnConfigs, Abc_Lit2Var(pCutBest.iFunc) );\n        Config = Vec_IntEntry( vClass, 0 );\n        pObj = Abc_NtkCreateNode( pNtk );\n        pObj.pData = Vec_PtrEntry( vNpnGatesMio, Abc_Lit2Var(pCutBest.iFunc) );\n        assert(pObj.pData != nil, \"pObj.pData != nil\");\n        fCompl = pCutBest.fCompl ^ Abc_LitIsCompl(pCutBest.iFunc) ^ ((Config \u003e\u003e 16) \u0026 1);\n        Config \u0026= 0xFFFF;\n        for  k = 0; k \u003c int32(pCutBest.nLeaves); k++  {\n            assert((Config \u003e\u003e 6) \u003c 720, \"(Config \u003e\u003e 6) \u003c 720\");\n            iMigLit = pCutBest.pLeaves[ int32((p.Perm6[Config \u003e\u003e 6][k])) ];\n            pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Abc_LitNotCond(iMigLit, (Config \u003e\u003e k) \u0026 1) );\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        Vec_IntWriteEntry( vCopy, Abc_Var2Lit(iNode, fCompl), Abc_ObjId(pObj) );\n    }\n\n    // create primary outputs\n    // inlining of macro Mig_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.pMig.vCos)) \u0026\u0026 ((pNode) = Mig_ManCo(p.pMig, i)); i++  {\n        pObj = Abc_NtkCreatePo(pNtk);\n        pFanin = Mpm_ManGetAbcNode( pNtk, vCopy, Mig_ObjFaninLit(pNode, 0) );\n        Abc_ObjAddFanin( pObj, pFanin );\n    }\n    Abc_NtkAddDummyPoNames( pNtk );\n\n    // clean up\n    Vec_PtrFree( vNpnGatesMio );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vCopy );\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManPerformCellMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t, pMio *Mio_Library_t) *Abc_Ntk_t {\n    var pNew *Abc_Ntk_t;\n    var p *Mpm_Man_t;\n    assert(pPars.fMap4Gates, \"pPars.fMap4Gates\");\n    p = Mpm_ManStart( pMig, pPars );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStatsInit( p ); }\n    p.vNpnConfigs = Mpm_ManFindDsdMatches( p, p.pPars.pScl );\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStats( p ); }\n    pNew = Mpm_ManDeriveMappedAbcNtk( p, pMio );\n    Mpm_ManStop( p );\n    return pNew;\n}\nfunc Mpm_ManCellMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t, pMio any) *Abc_Ntk_t {\n    var p *Mig_Man_t;\n    var pNew *Abc_Ntk_t;\n    assert(pMio != nil, \"pMio != nil\");\n    assert(pPars.pLib.LutMax \u003c= MPM_VAR_MAX, \"pPars.pLib.LutMax \u003c= MPM_VAR_MAX\");\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    if pPars.fUseGates {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    \n    } else {\n        p = Mig_ManCreate( pGia ); }\n    pNew = Mpm_ManPerformCellMapping( p, pPars, (Mio_Library_t *)pMio );\n    Mig_ManStop( p );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

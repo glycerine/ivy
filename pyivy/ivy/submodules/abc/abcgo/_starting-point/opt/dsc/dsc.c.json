@@ -1,0 +1,799 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c",
+  "SHA256": "e721b83a57e5747bbba13e3fd5feb0417f94d62158cd632b5e74e6db1566baba",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Node:\\t%s\\n\",pNode.exp);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tneg cof:\\t\");Abc_TtPrintHexRev(stdout, pNode.pNegCof, nVars);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 65,
+        "Column": 46,
+        "ByteOffset": 2297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tneg cof:\\t\");Abc_TtPrintHexRev(stdout, pNode.pNegCof, nVars);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tpos cof:\\t\");Abc_TtPrintHexRev(stdout, pNode.pPosCof, nVars);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 66,
+        "Column": 46,
+        "ByteOffset": 2373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tpos cof:\\t\");Abc_TtPrintHexRev(stdout, pNode.pPosCof, nVars);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tbool diff:\\t\");Abc_TtPrintHexRev(stdout, pNode.pBoolDiff, nVars);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 67,
+        "Column": 48,
+        "ByteOffset": 2451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\tbool diff:\\t\");Abc_TtPrintHexRev(stdout, pNode.pBoolDiff, nVars);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\toff:\\t\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 2557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%c%c\", (pNode.off[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.off[i] \u003e\u003e 1));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\ton:\\t\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%c%c\", (pNode.on[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.on[i] \u003e\u003e 1));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 310,
+        "Column": 67,
+        "ByteOffset": 10102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return /*__starting_point_inline_macro:ABC_ALLOC__*/((word *) malloc(sizeof(word) * (size_t)(3 * Abc_TtWordNum(nVars) * nVars)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 317,
+        "Column": 60,
+        "ByteOffset": 10302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 347,
+        "Column": 71,
+        "ByteOffset": 11951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pool = /*__starting_point_inline_macro:ABC_ALLOC__*/((word *) malloc(sizeof(word) * (size_t)(3 * TRUTH_WORDS * nVarsInit))); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 388,
+        "Column": 68,
+        "ByteOffset": 13790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 441,
+        "Column": 17,
+        "ByteOffset": 15712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                strcpy( pRes, solution.exp); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 443,
+        "Column": 72,
+        "ByteOffset": 15847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 449,
+        "Column": 17,
+        "ByteOffset": 16140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                strcpy( \u0026pRes[1], solution.exp);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 452,
+        "Column": 72,
+        "ByteOffset": 16291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 13,
+        "ByteOffset": 16385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"DSC ERROR: Final DSC node found, but differs from target function.\\n\");"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 457,
+        "Column": 72,
+        "ByteOffset": 16569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 462,
+        "Column": 64,
+        "ByteOffset": 16739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 17590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nNested \u003c DSC_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 17633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNested == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 9,
+        "ByteOffset": 18633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 18801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 526,
+        "Column": 9,
+        "ByteOffset": 18998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 530,
+        "Column": 9,
+        "ByteOffset": 19158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 533,
+        "Column": 5,
+        "ByteOffset": 19211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xorInPlace",
+      "Start": 1991,
+      "End": 2137,
+      "BodyStart": 2060,
+      "Original": "static inline void xorInPlace( word * pOut, word * pIn2, int nWords)\n{\n    int w;\n    for ( w = 0; w \u003c nWords; w++ )\n        pOut[w] ^= pIn2[w];\n}",
+      "Draft": "func xorInPlace(pOut *word, pIn2 *word, nWords int32) {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        pOut[w] ^= pIn2[w];\n    }\n}"
+    },
+    {
+      "Name": "dsc_debug_node",
+      "Start": 2139,
+      "End": 2840,
+      "BodyStart": 2227,
+      "Original": "static inline void dsc_debug_node(Dsc_node_t * pNode, int nVars, const int TRUTH_WORDS) {\n    int i;\n    printf(\"Node:\\t%s\\n\",pNode-\u003eexp);\n    printf(\"\\tneg cof:\\t\");Abc_TtPrintHexRev(stdout, pNode-\u003epNegCof, nVars);\n    printf(\"\\tpos cof:\\t\");Abc_TtPrintHexRev(stdout, pNode-\u003epPosCof, nVars);\n    printf(\"\\tbool diff:\\t\");Abc_TtPrintHexRev(stdout, pNode-\u003epBoolDiff, nVars);\n    printf(\"\\toff:\\t\");\n    for (i=1;i\u003c=(int)pNode-\u003eoff[0];i++) {\n        printf(\"%c%c\", (pNode-\u003eoff[i] \u0026 1U) ? ' ' : '!', 'a'+(pNode-\u003eoff[i] \u003e\u003e 1));\n    }\n    printf(\"\\ton:\\t\");\n    for (i=1;i\u003c=(int)pNode-\u003eon[0];i++) {\n        printf(\"%c%c\", (pNode-\u003eon[i] \u0026 1U) ? ' ' : '!', 'a'+(pNode-\u003eon[i] \u003e\u003e 1));\n    }\n    printf(\"\\n\");\n}",
+      "Draft": "func dsc_debug_node(pNode *Dsc_node_t, nVars int32, TRUTH_WORDS int32) {\n    var i int32;\n    fmt.Printf(\"Node:\\t%s\\n\", pNode.exp);\n    fmt.Printf(\"\\tneg cof:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pNegCof, nVars);\n    fmt.Printf(\"\\tpos cof:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pPosCof, nVars);\n    fmt.Printf(\"\\tbool diff:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pBoolDiff, nVars);\n    fmt.Printf(\"\\toff:\\t\");\n    for i=1;i\u003c=int32(pNode.off[0]);i++ {\n        fmt.Printf(\"%c%c\", (pNode.off[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.off[i] \u003e\u003e 1));\n    }\n    fmt.Printf(\"\\ton:\\t\");\n    for i=1;i\u003c=int32(pNode.on[0]);i++ {\n        fmt.Printf(\"%c%c\", (pNode.on[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.on[i] \u003e\u003e 1));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "dsc_and_test",
+      "Start": 2842,
+      "End": 3342,
+      "BodyStart": 2946,
+      "Original": "static inline int dsc_and_test(Dsc_node_t *ni, Dsc_node_t *nj, const int TRUTH_WORDS, int* ci, int* cj) {\n            if (Abc_TtEqual(ni-\u003epNegCof, nj-\u003epNegCof, TRUTH_WORDS)) {*ci=1; *cj=1; return 1;}\n    else     if (Abc_TtEqual(ni-\u003epNegCof, nj-\u003epPosCof, TRUTH_WORDS)) {*ci=1; *cj=0; return 1;}\n    else     if (Abc_TtEqual(ni-\u003epPosCof, nj-\u003epNegCof, TRUTH_WORDS)) {*ci=0; *cj=1; return 1;}\n    else     if (Abc_TtEqual(ni-\u003epPosCof, nj-\u003epPosCof, TRUTH_WORDS)) {*ci=0; *cj=0; return 1;}\n    return 0;\n}",
+      "Draft": "func dsc_and_test(ni *Dsc_node_t, nj *Dsc_node_t, TRUTH_WORDS int32, ci *int32, cj *int32) int32 {\n            if Abc_TtEqual(ni.pNegCof, nj.pNegCof, TRUTH_WORDS) {*ci=1; *cj=1; return 1;\n    } else     if Abc_TtEqual(ni.pNegCof, nj.pPosCof, TRUTH_WORDS) {*ci=1; *cj=0; return 1;\n    } else     if Abc_TtEqual(ni.pPosCof, nj.pNegCof, TRUTH_WORDS) {*ci=0; *cj=1; return 1;\n    } else     if Abc_TtEqual(ni.pPosCof, nj.pPosCof, TRUTH_WORDS) {*ci=0; *cj=0; return 1;}\n    return 0;\n}"
+    },
+    {
+      "Name": "dsc_xor_test",
+      "Start": 3344,
+      "End": 3500,
+      "BodyStart": 3430,
+      "Original": "static inline int dsc_xor_test(Dsc_node_t *ni, Dsc_node_t *nj, const int TRUTH_WORDS) {\n    return Abc_TtEqual(ni-\u003epBoolDiff, nj-\u003epBoolDiff, TRUTH_WORDS);\n}",
+      "Draft": "func dsc_xor_test(ni *Dsc_node_t, nj *Dsc_node_t, TRUTH_WORDS int32) int32 {\n    return Abc_TtEqual(ni.pBoolDiff, nj.pBoolDiff, TRUTH_WORDS);\n}"
+    },
+    {
+      "Name": "concat",
+      "Start": 3502,
+      "End": 3907,
+      "BodyStart": 3616,
+      "Original": "static inline void concat(char* target, char begin, char end, char* s1, int s1Polarity, char* s2, int s2Polarity) {\n    *target++ = begin;\n    //s1\n    if (!s1Polarity)\n        *target++ = '!';\n    while (*s1 != '\\0')\n        *target++ = *s1++;\n    // s2\n    if (!s2Polarity)\n        *target++ = '!';\n    while (*s2 != '\\0')\n        *target++ = *s2++;\n    // end\n    *target++ = end;\n    *target = '\\0';\n}",
+      "Draft": "func concat(target string, begin byte, end byte, s1 string, s1Polarity int32, s2 string, s2Polarity int32) {\n    *target++ = begin;\n    //s1\n    if !(s1Polarity != 0) {\n        *target++ = '!'; }\n    for *s1 != '\\0' {\n        *target++ = *s1++;\n    }\n    // s2\n    if !(s2Polarity != 0) {\n        *target++ = '!'; }\n    for *s2 != '\\0' {\n        *target++ = *s2++;\n    }\n    // end\n    *target++ = end;\n    *target = '\\0';\n}"
+    },
+    {
+      "Name": "cubeCofactor",
+      "Start": 3909,
+      "End": 4304,
+      "BodyStart": 4021,
+      "Original": "static inline void cubeCofactor(word * const pTruth, const unsigned int * const cubeCof, const int TRUTH_WORDS) {\n    int size = cubeCof[0];\n    int i;\n    for (i = 1; i \u003c= size; i++) {\n        unsigned int c = cubeCof[i];\n        if (c \u0026 1U) {\n            Abc_TtCofactor1(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        } else {\n            Abc_TtCofactor0(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        }\n    }\n}",
+      "Draft": "static inline void cubeCofactor(word * pTruth, unsigned int * cubeCof, int TRUTH_WORDS) {\n    var size int32  = cubeCof[0];\n    var i int32;\n    for i = 1; i \u003c= size; i++ {\n        unsigned int c = cubeCof[i];\n        if c \u0026 uint32(1) {\n            Abc_TtCofactor1(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        } else {\n            Abc_TtCofactor0(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        }\n    }\n}"
+    },
+    {
+      "Name": "merge",
+      "Start": 4306,
+      "End": 4573,
+      "BodyStart": 4390,
+      "Original": "static inline void merge(unsigned int * const pOut, const unsigned int * const pIn) {\n    const int elementsToCopy = pIn[0];\n    int i, j;\n    for (i = pOut[0]+1, j = 1; j \u003c= elementsToCopy; i++, j++) {\n        pOut[i] = pIn[j];\n    }\n    pOut[0] += elementsToCopy;\n}",
+      "Draft": "static inline void merge(unsigned int * pOut, unsigned int * pIn) {\n    int elementsToCopy = pIn[0];\n    var i, j int32;\n    for i = pOut[0]+1, j = 1; j \u003c= elementsToCopy; i, j = i+1, j+1 {\n        pOut[i] = pIn[j];\n    }\n    pOut[0] += elementsToCopy;\n}"
+    },
+    {
+      "Name": "dsc_and_group",
+      "Start": 4575,
+      "End": 6934,
+      "BodyStart": 4713,
+      "Original": "void dsc_and_group(Dsc_node_t * pOut, Dsc_node_t * ni, int niPolarity, Dsc_node_t * nj, int njPolarity, int nVars, const int TRUTH_WORDS) {\n    unsigned int* xiOFF, * xiON, * xjOFF, * xjON;\n    // expression\n    concat(pOut-\u003eexp, '(', ')', ni-\u003eexp, niPolarity, nj-\u003eexp, njPolarity);\n    // ON-OFF\n    if (niPolarity) {\n        xiOFF = ni-\u003eoff;\n        xiON = ni-\u003eon;\n    } else {\n        xiOFF = ni-\u003eon;\n        xiON = ni-\u003eoff;\n    }\n    if (njPolarity) {\n        xjOFF = nj-\u003eoff;\n        xjON = nj-\u003eon;\n    } else {\n        xjOFF = nj-\u003eon;\n        xjON = nj-\u003eoff;\n    }\n    // creating both the new OFF specification and negative cofactor of the new group\n    {\n        // first element of the array represents the size of the cube-cofactor\n        int xiOFFSize = xiOFF[0];\n        int xjOFFSize = xjOFF[0];\n        if (xiOFFSize \u003c= xjOFFSize) {\n            int i;\n            pOut-\u003eoff[0] = xiOFFSize; // set the number of elements\n            for (i = 1; i \u003c= xiOFFSize; i++) {\n                pOut-\u003eoff[i] = xiOFF[i];\n            }\n        } else {\n            int i;\n            pOut-\u003eoff[0] = xjOFFSize; // set the number of elements\n            for (i = 1; i \u003c= xjOFFSize; i++) {\n                pOut-\u003eoff[i] = xjOFF[i];\n            }\n        }\n        // set the negative cofactor of the new group\n        pOut-\u003epNegCof = niPolarity ? ni-\u003epNegCof : ni-\u003epPosCof;\n    }\n    // creating both new ON specification and positive cofactor of the new group\n    {\n        int i;\n        int j;\n        unsigned int xiONSize = xiON[0];\n        unsigned int xjONSize = xjON[0];\n        pOut-\u003eon[0] = xiONSize + xjONSize;\n        for (i = 1; i \u003c= (int)xiONSize; i++) {\n            pOut-\u003eon[i] = xiON[i];\n        }\n        for (j = 1; j \u003c= (int)xjONSize; j++) {\n            pOut-\u003eon[i++] = xjON[j];\n        }\n        // set the positive cofactor of the new group\n        if (xiONSize \u003e= xjONSize) {\n            pOut-\u003epPosCof = niPolarity ? ni-\u003epPosCof : ni-\u003epNegCof;\n            cubeCofactor(pOut-\u003epPosCof, xjON, TRUTH_WORDS);\n        } else {\n            pOut-\u003epPosCof = njPolarity ? nj-\u003epPosCof : nj-\u003epNegCof;\n            cubeCofactor(pOut-\u003epPosCof, xiON, TRUTH_WORDS);\n        }\n    }\n    // set the boolean difference of the new group\n    pOut-\u003epBoolDiff = njPolarity ? nj-\u003epNegCof : nj-\u003epPosCof;\n    xorInPlace(pOut-\u003epBoolDiff, pOut-\u003epPosCof, TRUTH_WORDS);\n}",
+      "Draft": "func dsc_and_group(pOut *Dsc_node_t, ni *Dsc_node_t, niPolarity int32, nj *Dsc_node_t, njPolarity int32, nVars int32, TRUTH_WORDS int32) {\n    unsigned int* xiOFF, * xiON, * xjOFF, * xjON;\n    // expression\n    concat(pOut.exp, '(', ')', ni.exp, niPolarity, nj.exp, njPolarity);\n    // ON-OFF\n    if niPolarity != 0 {\n        xiOFF = ni.off;\n        xiON = ni.on;\n    } else {\n        xiOFF = ni.on;\n        xiON = ni.off;\n    }\n    if njPolarity != 0 {\n        xjOFF = nj.off;\n        xjON = nj.on;\n    } else {\n        xjOFF = nj.on;\n        xjON = nj.off;\n    }\n    // creating both the new OFF specification and negative cofactor of the new group\n    {\n        // first element of the array represents the size of the cube-cofactor\n        var xiOFFSize int32  = xiOFF[0];\n        var xjOFFSize int32  = xjOFF[0];\n        if xiOFFSize \u003c= xjOFFSize {\n            var i int32;\n            pOut.off[0] = xiOFFSize; // set the number of elements\n            for i = 1; i \u003c= xiOFFSize; i++ {\n                pOut.off[i] = xiOFF[i];\n            }\n        } else {\n            var i int32;\n            pOut.off[0] = xjOFFSize; // set the number of elements\n            for i = 1; i \u003c= xjOFFSize; i++ {\n                pOut.off[i] = xjOFF[i];\n            }\n        }\n        // set the negative cofactor of the new group\n        if niPolarity != 0 {\n            pOut.pNegCof = ni.pNegCof;\n        } else {\n            pOut.pNegCof = ni.pPosCof;\n        }\n    }\n    // creating both new ON specification and positive cofactor of the new group\n    {\n        var i int32;\n        var j int32;\n        unsigned int xiONSize = xiON[0];\n        unsigned int xjONSize = xjON[0];\n        pOut.on[0] = xiONSize + xjONSize;\n        for i = 1; i \u003c= int32(xiONSize); i++ {\n            pOut.on[i] = xiON[i];\n        }\n        for j = 1; j \u003c= int32(xjONSize); j++ {\n            pOut.on[i++] = xjON[j];\n        }\n        // set the positive cofactor of the new group\n        if xiONSize \u003e= xjONSize {\n            if niPolarity != 0 {\n                pOut.pPosCof = ni.pPosCof;\n            } else {\n                pOut.pPosCof = ni.pNegCof;\n            }\n            cubeCofactor(pOut.pPosCof, xjON, TRUTH_WORDS);\n        } else {\n            if njPolarity != 0 {\n                pOut.pPosCof = nj.pPosCof;\n            } else {\n                pOut.pPosCof = nj.pNegCof;\n            }\n            cubeCofactor(pOut.pPosCof, xiON, TRUTH_WORDS);\n        }\n    }\n    // set the boolean difference of the new group\n    if njPolarity != 0 {\n        pOut.pBoolDiff = nj.pNegCof;\n    } else {\n        pOut.pBoolDiff = nj.pPosCof;\n    }\n    xorInPlace(pOut.pBoolDiff, pOut.pPosCof, TRUTH_WORDS);\n}"
+    },
+    {
+      "Name": "dsc_xor_group",
+      "Start": 6936,
+      "End": 9712,
+      "BodyStart": 7042,
+      "Original": "void dsc_xor_group(Dsc_node_t * pOut, Dsc_node_t * ni, Dsc_node_t * nj, int nVars, const int TRUTH_WORDS) {\n    //\n    const unsigned int * xiOFF = ni-\u003eoff;\n    const unsigned int * xiON = ni-\u003eon;\n    const unsigned int * xjOFF = nj-\u003eoff;\n    const unsigned int * xjON = nj-\u003eon;\n    //\n    const int xiOFFSize = xiOFF[0];\n    const int xiONSize = xiON[0];\n    const int xjOFFSize = xjOFF[0];\n    const int xjONSize = xjON[0];\n    // minCubeCofs\n    int minCCSize = xiOFFSize;\n    int minCCPolarity = 0;\n    Dsc_node_t * minCCNode = ni;\n    // expression\n    concat(pOut-\u003eexp, '[', ']', ni-\u003eexp, 1, nj-\u003eexp, 1);\n    if (minCCSize \u003e xiONSize) {\n        minCCSize = xiONSize;\n        minCCPolarity = 1;\n        //minCCNode = ni;\n    }\n    if (minCCSize \u003e xjOFFSize) {\n        minCCSize = xjOFFSize;\n        minCCPolarity = 0;\n        minCCNode = nj;\n    }\n    if (minCCSize \u003e xjONSize) {\n        minCCSize = xjONSize;\n        minCCPolarity = 1;\n        minCCNode = nj;\n    }\n    //\n    if (minCCNode == ni) {\n        if (minCCPolarity) {\n            // gOFF = xiON, xjON\n            pOut-\u003epNegCof = nj-\u003epPosCof;\n            cubeCofactor(pOut-\u003epNegCof, xiON, TRUTH_WORDS);\n            // gON = xiON, xjOFF\n            pOut-\u003epPosCof = nj-\u003epNegCof;\n            cubeCofactor(pOut-\u003epPosCof, xiON, TRUTH_WORDS);\n        } else {\n            // gOFF = xiOFF, xjOFF\n            pOut-\u003epNegCof = nj-\u003epNegCof;\n            cubeCofactor(pOut-\u003epNegCof, xiOFF, TRUTH_WORDS);\n            // gON = xiOFF, xjON\n            pOut-\u003epPosCof = nj-\u003epPosCof;\n            cubeCofactor(pOut-\u003epPosCof, xiOFF, TRUTH_WORDS);\n        }\n    }else  {\n        if (minCCPolarity) {\n            // gOFF = xjON, xiON\n            pOut-\u003epNegCof = ni-\u003epPosCof;\n            cubeCofactor(pOut-\u003epNegCof, xjON, TRUTH_WORDS);\n            // gON = xjON, xiOFF\n            pOut-\u003epPosCof = ni-\u003epNegCof;\n            cubeCofactor(pOut-\u003epPosCof, xjON, TRUTH_WORDS);\n        } else {\n            // gOFF = xjOFF, xiOFF\n            pOut-\u003epNegCof = ni-\u003epNegCof;\n            cubeCofactor(pOut-\u003epNegCof, xjOFF, TRUTH_WORDS);\n            // gON = xjOFF, xiON\n            pOut-\u003epPosCof = ni-\u003epPosCof;\n            cubeCofactor(pOut-\u003epPosCof, xjOFF, TRUTH_WORDS);\n        }\n    }\n    // bool diff\n    pOut-\u003epBoolDiff = ni-\u003epBoolDiff;\n    // evaluating specs\n    // off spec\n    pOut-\u003eoff[0] = 0;\n    if ((xiOFFSize+xjOFFSize) \u003c= (xiONSize+xjONSize)) {\n        merge(pOut-\u003eoff, xiOFF);\n        merge(pOut-\u003eoff, xjOFF);\n    } else {\n        merge(pOut-\u003eoff, xiON);\n        merge(pOut-\u003eoff, xjON);\n    }\n    // on spec\n    pOut-\u003eon[0] = 0;\n    if ((xiOFFSize+xjONSize) \u003c= (xiONSize+xjOFFSize)) {\n        merge(pOut-\u003eon, xiOFF);\n        merge(pOut-\u003eon, xjON);\n    } else {\n        merge(pOut-\u003eon, xiON);\n        merge(pOut-\u003eon, xjOFF);\n    }\n}",
+      "Draft": "func dsc_xor_group(pOut *Dsc_node_t, ni *Dsc_node_t, nj *Dsc_node_t, nVars int32, TRUTH_WORDS int32) {\n    //\n    unsigned int * xiOFF = ni.off;\n    unsigned int * xiON = ni.on;\n    unsigned int * xjOFF = nj.off;\n    unsigned int * xjON = nj.on;\n    //\n    int xiOFFSize = xiOFF[0];\n    int xiONSize = xiON[0];\n    int xjOFFSize = xjOFF[0];\n    int xjONSize = xjON[0];\n    // minCubeCofs\n    var minCCSize int32  = xiOFFSize;\n    var minCCPolarity int32;\n    var minCCNode *Dsc_node_t  = ni;\n    // expression\n    concat(pOut.exp, '[', ']', ni.exp, 1, nj.exp, 1);\n    if minCCSize \u003e xiONSize {\n        minCCSize = xiONSize;\n        minCCPolarity = 1;\n        //minCCNode = ni;\n    }\n    if minCCSize \u003e xjOFFSize {\n        minCCSize = xjOFFSize;\n        minCCPolarity = 0;\n        minCCNode = nj;\n    }\n    if minCCSize \u003e xjONSize {\n        minCCSize = xjONSize;\n        minCCPolarity = 1;\n        minCCNode = nj;\n    }\n    //\n    if minCCNode == ni {\n        if minCCPolarity != 0 {\n            // gOFF = xiON, xjON\n            pOut.pNegCof = nj.pPosCof;\n            cubeCofactor(pOut.pNegCof, xiON, TRUTH_WORDS);\n            // gON = xiON, xjOFF\n            pOut.pPosCof = nj.pNegCof;\n            cubeCofactor(pOut.pPosCof, xiON, TRUTH_WORDS);\n        } else {\n            // gOFF = xiOFF, xjOFF\n            pOut.pNegCof = nj.pNegCof;\n            cubeCofactor(pOut.pNegCof, xiOFF, TRUTH_WORDS);\n            // gON = xiOFF, xjON\n            pOut.pPosCof = nj.pPosCof;\n            cubeCofactor(pOut.pPosCof, xiOFF, TRUTH_WORDS);\n        }\n    }else  {\n        if minCCPolarity != 0 {\n            // gOFF = xjON, xiON\n            pOut.pNegCof = ni.pPosCof;\n            cubeCofactor(pOut.pNegCof, xjON, TRUTH_WORDS);\n            // gON = xjON, xiOFF\n            pOut.pPosCof = ni.pNegCof;\n            cubeCofactor(pOut.pPosCof, xjON, TRUTH_WORDS);\n        } else {\n            // gOFF = xjOFF, xiOFF\n            pOut.pNegCof = ni.pNegCof;\n            cubeCofactor(pOut.pNegCof, xjOFF, TRUTH_WORDS);\n            // gON = xjOFF, xiON\n            pOut.pPosCof = ni.pPosCof;\n            cubeCofactor(pOut.pPosCof, xjOFF, TRUTH_WORDS);\n        }\n    }\n    // bool diff\n    pOut.pBoolDiff = ni.pBoolDiff;\n    // evaluating specs\n    // off spec\n    pOut.off[0] = 0;\n    if (xiOFFSize+xjOFFSize) \u003c= (xiONSize+xjONSize) {\n        merge(pOut.off, xiOFF);\n        merge(pOut.off, xjOFF);\n    } else {\n        merge(pOut.off, xiON);\n        merge(pOut.off, xjON);\n    }\n    // on spec\n    pOut.on[0] = 0;\n    if (xiOFFSize+xjONSize) \u003c= (xiONSize+xjOFFSize) {\n        merge(pOut.on, xiOFF);\n        merge(pOut.on, xjON);\n    } else {\n        merge(pOut.on, xiON);\n        merge(pOut.on, xjOFF);\n    }\n}"
+    },
+    {
+      "Name": "Dsc_alloc_pool",
+      "Start": 9883,
+      "End": 9988,
+      "BodyStart": 9923,
+      "Original": "extern word * Dsc_alloc_pool(int nVars) {\n    return ABC_ALLOC(word, 3 * Abc_TtWordNum(nVars) * nVars);\n}",
+      "Draft": "func Dsc_alloc_pool(nVars int32) *word {\n    // inlining of macro ABC_ALLOC\n    return ((word *) malloc(sizeof(word) * (size_t)(3 * Abc_TtWordNum(nVars) * nVars)));\n}"
+    },
+    {
+      "Name": "Dsc_free_pool",
+      "Start": 10027,
+      "End": 10089,
+      "BodyStart": 10066,
+      "Original": "extern void Dsc_free_pool(word * pool) {\n    ABC_FREE(pool);\n}",
+      "Draft": "func Dsc_free_pool(pool *word) {\n    // inlining of macro ABC_FREE\n    ((pool) ? (free((char *) (pool)), (pool) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Dsc_Decompose",
+      "Start": 10944,
+      "End": 16038,
+      "BodyStart": 11036,
+      "Original": "extern int Dsc_Decompose(word * pTruth, const int nVarsInit, char * const pRes, word *pool) {\n    const int TRUTH_WORDS = Abc_TtWordNum(nVarsInit);\n    const int NEED_POOL_ALLOC = (pool == NULL);\n\n    Dsc_node_t nodes[DSC_MAX_VAR];\n    Dsc_node_t *newNodes[DSC_MAX_VAR];\n    Dsc_node_t *oldNodes[DSC_MAX_VAR];\n\n    Dsc_node_t freeNodes[DSC_MAX_VAR]; // N is the maximum number of possible groups.\n    int f = 0; // f represent the next free position in the freeNodes array\n    int o = 0; // o stands for the number of already tested nodes\n    int n = 0; // n will represent the number of current nodes (i.e. support)\n\n    pRes[0] = '\\0';\n    pRes[1] = '\\0';\n\n    if (NEED_POOL_ALLOC)\n        pool = ABC_ALLOC(word, 3 * TRUTH_WORDS * nVarsInit);\n\n    // block for the node data allocation\n    {\n        // pointer for the next free truth word\n        word *pNextTruth = pool;\n        int iVar;\n        for (iVar = 0; iVar \u003c nVarsInit; iVar++) {\n            // negative cofactor\n            Abc_TtCofactor0p(pNextTruth, pTruth, TRUTH_WORDS, iVar);\n            // dont care test\n            if (!Abc_TtEqual(pNextTruth, pTruth, TRUTH_WORDS)) {\n                Dsc_node_t *node = \u0026nodes[iVar];\n                node-\u003epNegCof = pNextTruth;\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // positive cofactor\n                node-\u003epPosCof = pNextTruth;\n                Abc_TtCofactor1p(node-\u003epPosCof, pTruth, TRUTH_WORDS, iVar);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // boolean difference\n                node-\u003epBoolDiff = pNextTruth;\n                Abc_TtXor(node-\u003epBoolDiff, node-\u003epNegCof, node-\u003epPosCof, TRUTH_WORDS, 0);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // define on spec -\n                node-\u003eon[0] = 1; node-\u003eon[1] = (iVar \u003c\u003c 1) | 1u; // lit = i*2+1, when polarity=true\n                // define off spec\n                node-\u003eoff[0] = 1; node-\u003eoff[1] = iVar \u003c\u003c 1;// lit=i*2 otherwise\n                // store the node expression\n                node-\u003eexp[0] = 'a'+iVar; // TODO fix the variable names\n                node-\u003eexp[1] = '\\0';\n                // add the node to the newNodes array\n                newNodes[n++] = node;\n            }\n        }\n    }\n    //const int initialSupport = n;\n    if (n == 0) {\n        if (NEED_POOL_ALLOC)\n            ABC_FREE(pool);\n        if (Abc_TtIsConst0(pTruth, TRUTH_WORDS)) {\n            { if ( pRes ) pRes[0] = '0', pRes[1] = '\\0'; }\n            return 0;\n        } else if (Abc_TtIsConst1(pTruth, TRUTH_WORDS)) {\n            { if ( pRes ) pRes[0] = '1', pRes[1] = '\\0'; }\n            return 0;\n        } else {\n            Abc_Print(-1, \"ERROR. No variable in the support of f, but f isn't constant!\\n\");\n            return -1;\n        }\n    }\n    while (n \u003e 0) {\n        int tempN = 0;\n        int i, j, iPolarity, jPolarity;\n        Dsc_node_t *ni, *nj, *newNode = NULL;\n        for (i = 0; i \u003c n; i++) {\n            ni = newNodes[i];\n            newNode = NULL;\n            j = 0;\n            while (j \u003c o) {\n                nj = oldNodes[j];\n                if (dsc_and_test(ni, nj, TRUTH_WORDS, \u0026iPolarity, \u0026jPolarity)) {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_and_group(newNode, ni, iPolarity, nj, jPolarity, nVarsInit, TRUTH_WORDS);\n                }\n                // XOR test\n                if ((newNode == NULL)  \u0026\u0026 (dsc_xor_test(ni, nj, TRUTH_WORDS))) {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_xor_group(newNode, ni, nj, nVarsInit, TRUTH_WORDS);\n                }\n                if (newNode != NULL) {\n                    oldNodes[j] = oldNodes[--o];\n                    break;\n                } else {\n                    j++;\n                }\n            }\n            if (newNode != NULL) {\n                newNodes[tempN++] = newNode;\n            } else {\n                oldNodes[o++] = ni;\n            }\n        }\n        n = tempN;\n    }\n    if (o == 1) {\n        Dsc_node_t * solution = oldNodes[0];\n        if (Abc_TtIsConst0(solution-\u003epNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst1(solution-\u003epPosCof, TRUTH_WORDS)) {\n            // Direct solution found\n            if ( pRes )\n                strcpy( pRes, solution-\u003eexp);\n            if (NEED_POOL_ALLOC)\n                ABC_FREE(pool);\n            return 0;\n        } else if (Abc_TtIsConst1(solution-\u003epNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst0(solution-\u003epPosCof, TRUTH_WORDS)) {\n            // Complementary solution found\n            if ( pRes ) {\n                pRes[0] = '!';\n                strcpy( \u0026pRes[1], solution-\u003eexp);\n            }\n            if (NEED_POOL_ALLOC)\n                ABC_FREE(pool);\n            return 0;\n        } else {\n            printf(\"DSC ERROR: Final DSC node found, but differs from target function.\\n\");\n            if (NEED_POOL_ALLOC)\n                ABC_FREE(pool);\n            return -1;\n        }\n    }\n    if (NEED_POOL_ALLOC)\n        ABC_FREE(pool);\n    return -1;\n}",
+      "Draft": "func Dsc_Decompose(pTruth *word, nVarsInit int32, pRes string, pool *word) int32 {\n    int TRUTH_WORDS = Abc_TtWordNum(nVarsInit);\n    int NEED_POOL_ALLOC = (pool == nil);\n\n    var nodes [DSC_MAX_VAR]Dsc_node_t;\n    var newNodes [DSC_MAX_VAR]*Dsc_node_t;\n    var oldNodes [DSC_MAX_VAR]*Dsc_node_t;\n\n    var freeNodes [DSC_MAX_VAR]Dsc_node_t; // N is the maximum number of possible groups.\n    var f int32; // f represent the next free position in the freeNodes array\n    var o int32; // o stands for the number of already tested nodes\n    var n int32; // n will represent the number of current nodes (i.e. support)\n\n    pRes[0] = '\\0';\n    pRes[1] = '\\0';\n\n    if NEED_POOL_ALLOC {\n        // inlining of macro ABC_ALLOC\n        pool = ((word *) malloc(sizeof(word) * (size_t)(3 * TRUTH_WORDS * nVarsInit))); }\n\n    // block for the node data allocation\n    {\n        // pointer for the next free truth word\n        var pNextTruth *word  = pool;\n        var iVar int32;\n        for iVar = 0; iVar \u003c nVarsInit; iVar++ {\n            // negative cofactor\n            Abc_TtCofactor0p(pNextTruth, pTruth, TRUTH_WORDS, iVar);\n            // dont care test\n            if !Abc_TtEqual(pNextTruth, pTruth, TRUTH_WORDS) {\n                var node *Dsc_node_t  = \u0026nodes[iVar];\n                node.pNegCof = pNextTruth;\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // positive cofactor\n                node.pPosCof = pNextTruth;\n                Abc_TtCofactor1p(node.pPosCof, pTruth, TRUTH_WORDS, iVar);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // boolean difference\n                node.pBoolDiff = pNextTruth;\n                Abc_TtXor(node.pBoolDiff, node.pNegCof, node.pPosCof, TRUTH_WORDS, 0);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // define on spec -\n                node.on[0] = 1; node.on[1] = (iVar \u003c\u003c 1) | uint32(1); // lit = i*2+1, when polarity=true\n                // define off spec\n                node.off[0] = 1; node.off[1] = iVar \u003c\u003c 1;// lit=i*2 otherwise\n                // store the node expression\n                node.exp[0] = 'a'+iVar; // TODO fix the variable names\n                node.exp[1] = '\\0';\n                // add the node to the newNodes array\n                newNodes[n++] = node;\n            }\n        }\n    }\n    //const int initialSupport = n;\n    if n == 0 {\n        if NEED_POOL_ALLOC {\n            // inlining of macro ABC_FREE\n            ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n        if Abc_TtIsConst0(pTruth, TRUTH_WORDS) {\n            { if pRes { pRes[0] = '0', pRes[1] = '\\0'; } }\n            return 0;\n        } else if Abc_TtIsConst1(pTruth, TRUTH_WORDS) {\n            { if pRes { pRes[0] = '1', pRes[1] = '\\0'; } }\n            return 0;\n        } else {\n            Abc_Print(-1, \"ERROR. No variable in the support of f, but f isn't constant!\\n\");\n            return -1;\n        }\n    }\n    for n \u003e 0 {\n        var tempN int32;\n        var i, j, iPolarity, jPolarity int32;\n        var ni *Dsc_node_t;\n        var nj *Dsc_node_t;\n        var newNode *Dsc_node_t = nil;\n        for i = 0; i \u003c n; i++ {\n            ni = newNodes[i];\n            newNode = nil;\n            j = 0;\n            for j \u003c o {\n                nj = oldNodes[j];\n                if dsc_and_test(ni, nj, TRUTH_WORDS, \u0026iPolarity, \u0026jPolarity) != 0 {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_and_group(newNode, ni, iPolarity, nj, jPolarity, nVarsInit, TRUTH_WORDS);\n                }\n                // XOR test\n                if (newNode == nil)  \u0026\u0026 ((dsc_xor_test(ni, nj, TRUTH_WORDS) != 0)) {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_xor_group(newNode, ni, nj, nVarsInit, TRUTH_WORDS);\n                }\n                if newNode != nil {\n                    oldNodes[j] = oldNodes[--o];\n                    break;\n                } else {\n                    j++;\n                }\n            }\n            if newNode != nil {\n                newNodes[tempN++] = newNode;\n            } else {\n                oldNodes[o++] = ni;\n            }\n        }\n        n = tempN;\n    }\n    if o == 1 {\n        var solution *Dsc_node_t  = oldNodes[0];\n        if Abc_TtIsConst0(solution.pNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst1(solution.pPosCof, TRUTH_WORDS) {\n            // Direct solution found\n            if pRes {\n                pRes = solution.exp; }\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return 0;\n        } else if Abc_TtIsConst1(solution.pNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst0(solution.pPosCof, TRUTH_WORDS) {\n            // Complementary solution found\n            if pRes {\n                pRes[0] = '!';\n                strcpy( \u0026pRes[1], solution.exp);\n            }\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return 0;\n        } else {\n            fmt.Printf(\"DSC ERROR: Final DSC node found, but differs from target function.\\n\");\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return -1;\n        }\n    }\n    if NEED_POOL_ALLOC {\n        // inlining of macro ABC_FREE\n        ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n    return -1;\n}"
+    },
+    {
+      "Name": "Dsc_ComputeMatches",
+      "Start": 16310,
+      "End": 16829,
+      "BodyStart": 16347,
+      "Original": "int * Dsc_ComputeMatches( char * p )\n{\n    static int pMatches[DSC_MAX_VAR];\n    int pNested[DSC_MAX_VAR];\n    int v, nNested = 0;\n    for ( v = 0; p[v]; v++ )\n    {\n        pMatches[v] = 0;\n        if ( p[v] == '(' || p[v] == '[' || p[v] == '\u003c' || p[v] == '{' )\n            pNested[nNested++] = v;\n        else if ( p[v] == ')' || p[v] == ']' || p[v] == '\u003e' || p[v] == '}' )\n            pMatches[pNested[--nNested]] = v;\n        assert( nNested \u003c DSC_MAX_VAR );\n    }\n    assert( nNested == 0 );\n    return pMatches;\n}",
+      "Draft": "func Dsc_ComputeMatches(p string) *int32 {\n    \n    var pNested [DSC_MAX_VAR]int32;\n    var v, nNested int32;\n    for  v = 0; p[v]; v++  {\n        spStatic_Dsc_ComputeMatches_pMatches[v] = 0;\n        if p[v] == '(' || p[v] == '[' || p[v] == '\u003c' || p[v] == '{' {\n            pNested[nNested++] = v;\n        } else if p[v] == ')' || p[v] == ']' || p[v] == '\u003e' || p[v] == '}' {\n            spStatic_Dsc_ComputeMatches_pMatches[pNested[--nNested]] = v; }\n        assert(nNested \u003c DSC_MAX_VAR, \"nNested \u003c DSC_MAX_VAR\");\n    }\n    assert(nNested == 0, \"nNested == 0\");\n    return spStatic_Dsc_ComputeMatches_pMatches;\n}"
+    },
+    {
+      "Name": "Dsc_CountAnds_rec",
+      "Start": 17100,
+      "End": 18228,
+      "BodyStart": 17164,
+      "Original": "int Dsc_CountAnds_rec( char * pStr, char ** p, int * pMatches )\n{\n    if ( **p == '!' )\n        (*p)++;\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n        (*p)++;\n    if ( **p == '\u003c' )\n    {\n        char * q = pStr + pMatches[*p - pStr];\n        if ( *(q+1) == '{' )\n            *p = q+1;\n    }\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n        return 0;\n    if ( **p == '(' || **p == '[' ) // and/or/xor\n    {\n        int Counter = 0, AddOn = (**p == '(')? 1 : 3;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n            Counter += AddOn + Dsc_CountAnds_rec( pStr, p, pMatches );\n        assert( *p == q );\n        return Counter - AddOn;\n    }\n    if ( **p == '\u003c' || **p == '{' ) // mux\n    {\n        int Counter = 3;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n            Counter += Dsc_CountAnds_rec( pStr, p, pMatches );\n        assert( *p == q );\n        return Counter;\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dsc_CountAnds_rec(pStr string, p *string, pMatches *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[*p - pStr];\n        if *(q+1) == '{' {\n            *p = q+1; }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        return 0; }\n    if **p == '(' || **p == '[' { // and/or/xor\n    \n        var Counter int32;\n        var AddOn int32;\n        if **p == '(' {\n            AddOn = 1;\n        } else {\n            AddOn = 3;\n        }\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Counter += AddOn + Dsc_CountAnds_rec( pStr, p, pMatches );\n        }\n        assert(*p == q, \"*p == q\");\n        return Counter - AddOn;\n    }\n    if **p == '\u003c' || **p == '{' { // mux\n    \n        var Counter int32  = 3;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Counter += Dsc_CountAnds_rec( pStr, p, pMatches );\n        }\n        assert(*p == q, \"*p == q\");\n        return Counter;\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dsc_CountAnds",
+      "Start": 18498,
+      "End": 18654,
+      "BodyStart": 18538,
+      "Original": "extern int Dsc_CountAnds( char * pDsd )\n{\n    if ( pDsd[1] == 0 )\n        return 0;\n    return Dsc_CountAnds_rec( pDsd, \u0026pDsd, Dsc_ComputeMatches(pDsd) );\n}",
+      "Draft": "func Dsc_CountAnds(pDsd string) int32 {\n    if pDsd[1] == 0 {\n        return 0; }\n    return Dsc_CountAnds_rec( pDsd, \u0026pDsd, Dsc_ComputeMatches(pDsd) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::struct::Dsc_node_t::unsigned int on[DSC_MAX_VAR+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Dsc_node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1532,
+      "End": 1568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::struct::Dsc_node_t::// pos cofactor spec - first element denotes the size of the array\n    unsigned int off[DSC_MAX_VAR+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Dsc_node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1568,
+      "End": 1672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::struct::Dsc_node_t::// neg cofactor spec - first element denotes the size of the array\n    char exp[DSC_MAX_STR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dsc_node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1672,
+      "End": 1766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::struct::Dsc_node_t",
+      "Category": "struct-review",
+      "Symbol": "Dsc_node_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1414,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::mechanical::sizeof::9998",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9936,
+      "End": 9936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::mechanical::sizeof::11857",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11643,
+      "End": 11643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::mechanical::static::16977",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 16353,
+      "End": 16359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::9982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9936,
+      "End": 9936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::10204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10072,
+      "End": 10072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::11841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11643,
+      "End": 11643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::13688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13404,
+      "End": 13404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::15715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15351,
+      "End": 15351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::16166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15722,
+      "End": 15722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::16442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15918,
+      "End": 15918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::pointer-cast::16610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16006,
+      "End": 16006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::xorInPlace",
+      "Category": "semantic-review",
+      "Symbol": "xorInPlace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1991,
+      "End": 2137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::ternary::dsc_debug_node",
+      "Category": "ternary-review",
+      "Symbol": "dsc_debug_node",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2139,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::dsc_debug_node",
+      "Category": "semantic-review",
+      "Symbol": "dsc_debug_node",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2139,
+      "End": 2840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::dsc_and_test",
+      "Category": "semantic-review",
+      "Symbol": "dsc_and_test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2842,
+      "End": 3342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::dsc_xor_test",
+      "Category": "semantic-review",
+      "Symbol": "dsc_xor_test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3344,
+      "End": 3500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::concat",
+      "Category": "semantic-review",
+      "Symbol": "concat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3502,
+      "End": 3907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::cubeCofactor",
+      "Category": "semantic-review",
+      "Symbol": "cubeCofactor",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3909,
+      "End": 4304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::merge",
+      "Category": "semantic-review",
+      "Symbol": "merge",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4306,
+      "End": 4573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::dsc_and_group",
+      "Category": "semantic-review",
+      "Symbol": "dsc_and_group",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4575,
+      "End": 6934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::dsc_xor_group",
+      "Category": "semantic-review",
+      "Symbol": "dsc_xor_group",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6936,
+      "End": 9712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_alloc_pool",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_alloc_pool",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9883,
+      "End": 9988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::ternary::Dsc_free_pool",
+      "Category": "ternary-review",
+      "Symbol": "Dsc_free_pool",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10027,
+      "End": 10089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_free_pool",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_free_pool",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10027,
+      "End": 10089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::ternary::Dsc_Decompose",
+      "Category": "ternary-review",
+      "Symbol": "Dsc_Decompose",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10944,
+      "End": 16038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_Decompose",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_Decompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10944,
+      "End": 16038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_ComputeMatches",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_ComputeMatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16310,
+      "End": 16829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_CountAnds_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_CountAnds_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17100,
+      "End": 18228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::Dsc_CountAnds",
+      "Category": "semantic-review",
+      "Symbol": "Dsc_CountAnds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18498,
+      "End": 18654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dsc/dsc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18900
+    }
+  ],
+  "Draft": "package dsc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [dsc.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Disjoint support decomposition - ICCD'15]\n\n  Synopsis    [Disjoint-support decomposition with cofactoring and boolean difference analysis\n               from V. Callegaro, F. S. Marranghello, M. G. A. Martins, R. P. Ribas and A. I. Reis,\n               \"Bottom-up disjoint-support decomposition based on cofactor and boolean difference analysis,\" ICCD'15]\n\n  Author      [Vinicius Callegaro, Mayler G. A. Martins, Felipe S. Marranghello, Renato P. Ribas and Andre I. Reis]\n\n  Affiliation [UFRGS - Federal University of Rio Grande do Sul - Brazil]\n\n  Date        [Ver. 1.0. Started - October 24, 2014.]\n\n  Revision    [$Id: dsc.h,v 1.00 2014/10/24 00:00:00 vcallegaro Exp $]\n\n***********************************************************************/\n\n//#include \"dsc.h\"\n//#include \u003cassert.h\u003e\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n/*\n    This code performs truth-table-based decomposition for 6-variable functions.\n    Representation of operations:\n    ! = not;\n    (ab) = a and b;\n    [ab] = a xor b;\n*/\n   \ntype Dsc_node_t struct {\n    pNegCof *word;\n    pPosCof *word;\n    pBoolDiff *word;\n    unsigned int on[DSC_MAX_VAR+1]; // pos cofactor spec - first element denotes the size of the array\n    unsigned int off[DSC_MAX_VAR+1]; // neg cofactor spec - first element denotes the size of the array\n    exp [DSC_MAX_STR]byte;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nfunc xorInPlace(pOut *word, pIn2 *word, nWords int32) {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        pOut[w] ^= pIn2[w];\n    }\n}\n\nfunc dsc_debug_node(pNode *Dsc_node_t, nVars int32, TRUTH_WORDS int32) {\n    var i int32;\n    fmt.Printf(\"Node:\\t%s\\n\", pNode.exp);\n    fmt.Printf(\"\\tneg cof:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pNegCof, nVars);\n    fmt.Printf(\"\\tpos cof:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pPosCof, nVars);\n    fmt.Printf(\"\\tbool diff:\\t\");Abc_TtPrintHexRev(os.Stdout, pNode.pBoolDiff, nVars);\n    fmt.Printf(\"\\toff:\\t\");\n    for i=1;i\u003c=int32(pNode.off[0]);i++ {\n        fmt.Printf(\"%c%c\", (pNode.off[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.off[i] \u003e\u003e 1));\n    }\n    fmt.Printf(\"\\ton:\\t\");\n    for i=1;i\u003c=int32(pNode.on[0]);i++ {\n        fmt.Printf(\"%c%c\", (pNode.on[i] \u0026 uint32(1)) ? ' ' : '!', 'a'+(pNode.on[i] \u003e\u003e 1));\n    }\n    fmt.Printf(\"\\n\");\n}\n\nfunc dsc_and_test(ni *Dsc_node_t, nj *Dsc_node_t, TRUTH_WORDS int32, ci *int32, cj *int32) int32 {\n            if Abc_TtEqual(ni.pNegCof, nj.pNegCof, TRUTH_WORDS) {*ci=1; *cj=1; return 1;\n    } else     if Abc_TtEqual(ni.pNegCof, nj.pPosCof, TRUTH_WORDS) {*ci=1; *cj=0; return 1;\n    } else     if Abc_TtEqual(ni.pPosCof, nj.pNegCof, TRUTH_WORDS) {*ci=0; *cj=1; return 1;\n    } else     if Abc_TtEqual(ni.pPosCof, nj.pPosCof, TRUTH_WORDS) {*ci=0; *cj=0; return 1;}\n    return 0;\n}\n\nfunc dsc_xor_test(ni *Dsc_node_t, nj *Dsc_node_t, TRUTH_WORDS int32) int32 {\n    return Abc_TtEqual(ni.pBoolDiff, nj.pBoolDiff, TRUTH_WORDS);\n}\n\nfunc concat(target string, begin byte, end byte, s1 string, s1Polarity int32, s2 string, s2Polarity int32) {\n    *target++ = begin;\n    //s1\n    if !(s1Polarity != 0) {\n        *target++ = '!'; }\n    for *s1 != '\\0' {\n        *target++ = *s1++;\n    }\n    // s2\n    if !(s2Polarity != 0) {\n        *target++ = '!'; }\n    for *s2 != '\\0' {\n        *target++ = *s2++;\n    }\n    // end\n    *target++ = end;\n    *target = '\\0';\n}\n\nstatic inline void cubeCofactor(word * pTruth, unsigned int * cubeCof, int TRUTH_WORDS) {\n    var size int32  = cubeCof[0];\n    var i int32;\n    for i = 1; i \u003c= size; i++ {\n        unsigned int c = cubeCof[i];\n        if c \u0026 uint32(1) {\n            Abc_TtCofactor1(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        } else {\n            Abc_TtCofactor0(pTruth, TRUTH_WORDS, c \u003e\u003e 1);\n        }\n    }\n}\n\nstatic inline void merge(unsigned int * pOut, unsigned int * pIn) {\n    int elementsToCopy = pIn[0];\n    var i, j int32;\n    for i = pOut[0]+1, j = 1; j \u003c= elementsToCopy; i, j = i+1, j+1 {\n        pOut[i] = pIn[j];\n    }\n    pOut[0] += elementsToCopy;\n}\n\nfunc dsc_and_group(pOut *Dsc_node_t, ni *Dsc_node_t, niPolarity int32, nj *Dsc_node_t, njPolarity int32, nVars int32, TRUTH_WORDS int32) {\n    unsigned int* xiOFF, * xiON, * xjOFF, * xjON;\n    // expression\n    concat(pOut.exp, '(', ')', ni.exp, niPolarity, nj.exp, njPolarity);\n    // ON-OFF\n    if niPolarity != 0 {\n        xiOFF = ni.off;\n        xiON = ni.on;\n    } else {\n        xiOFF = ni.on;\n        xiON = ni.off;\n    }\n    if njPolarity != 0 {\n        xjOFF = nj.off;\n        xjON = nj.on;\n    } else {\n        xjOFF = nj.on;\n        xjON = nj.off;\n    }\n    // creating both the new OFF specification and negative cofactor of the new group\n    {\n        // first element of the array represents the size of the cube-cofactor\n        var xiOFFSize int32  = xiOFF[0];\n        var xjOFFSize int32  = xjOFF[0];\n        if xiOFFSize \u003c= xjOFFSize {\n            var i int32;\n            pOut.off[0] = xiOFFSize; // set the number of elements\n            for i = 1; i \u003c= xiOFFSize; i++ {\n                pOut.off[i] = xiOFF[i];\n            }\n        } else {\n            var i int32;\n            pOut.off[0] = xjOFFSize; // set the number of elements\n            for i = 1; i \u003c= xjOFFSize; i++ {\n                pOut.off[i] = xjOFF[i];\n            }\n        }\n        // set the negative cofactor of the new group\n        if niPolarity != 0 {\n            pOut.pNegCof = ni.pNegCof;\n        } else {\n            pOut.pNegCof = ni.pPosCof;\n        }\n    }\n    // creating both new ON specification and positive cofactor of the new group\n    {\n        var i int32;\n        var j int32;\n        unsigned int xiONSize = xiON[0];\n        unsigned int xjONSize = xjON[0];\n        pOut.on[0] = xiONSize + xjONSize;\n        for i = 1; i \u003c= int32(xiONSize); i++ {\n            pOut.on[i] = xiON[i];\n        }\n        for j = 1; j \u003c= int32(xjONSize); j++ {\n            pOut.on[i++] = xjON[j];\n        }\n        // set the positive cofactor of the new group\n        if xiONSize \u003e= xjONSize {\n            if niPolarity != 0 {\n                pOut.pPosCof = ni.pPosCof;\n            } else {\n                pOut.pPosCof = ni.pNegCof;\n            }\n            cubeCofactor(pOut.pPosCof, xjON, TRUTH_WORDS);\n        } else {\n            if njPolarity != 0 {\n                pOut.pPosCof = nj.pPosCof;\n            } else {\n                pOut.pPosCof = nj.pNegCof;\n            }\n            cubeCofactor(pOut.pPosCof, xiON, TRUTH_WORDS);\n        }\n    }\n    // set the boolean difference of the new group\n    if njPolarity != 0 {\n        pOut.pBoolDiff = nj.pNegCof;\n    } else {\n        pOut.pBoolDiff = nj.pPosCof;\n    }\n    xorInPlace(pOut.pBoolDiff, pOut.pPosCof, TRUTH_WORDS);\n}\n\nfunc dsc_xor_group(pOut *Dsc_node_t, ni *Dsc_node_t, nj *Dsc_node_t, nVars int32, TRUTH_WORDS int32) {\n    //\n    unsigned int * xiOFF = ni.off;\n    unsigned int * xiON = ni.on;\n    unsigned int * xjOFF = nj.off;\n    unsigned int * xjON = nj.on;\n    //\n    int xiOFFSize = xiOFF[0];\n    int xiONSize = xiON[0];\n    int xjOFFSize = xjOFF[0];\n    int xjONSize = xjON[0];\n    // minCubeCofs\n    var minCCSize int32  = xiOFFSize;\n    var minCCPolarity int32;\n    var minCCNode *Dsc_node_t  = ni;\n    // expression\n    concat(pOut.exp, '[', ']', ni.exp, 1, nj.exp, 1);\n    if minCCSize \u003e xiONSize {\n        minCCSize = xiONSize;\n        minCCPolarity = 1;\n        //minCCNode = ni;\n    }\n    if minCCSize \u003e xjOFFSize {\n        minCCSize = xjOFFSize;\n        minCCPolarity = 0;\n        minCCNode = nj;\n    }\n    if minCCSize \u003e xjONSize {\n        minCCSize = xjONSize;\n        minCCPolarity = 1;\n        minCCNode = nj;\n    }\n    //\n    if minCCNode == ni {\n        if minCCPolarity != 0 {\n            // gOFF = xiON, xjON\n            pOut.pNegCof = nj.pPosCof;\n            cubeCofactor(pOut.pNegCof, xiON, TRUTH_WORDS);\n            // gON = xiON, xjOFF\n            pOut.pPosCof = nj.pNegCof;\n            cubeCofactor(pOut.pPosCof, xiON, TRUTH_WORDS);\n        } else {\n            // gOFF = xiOFF, xjOFF\n            pOut.pNegCof = nj.pNegCof;\n            cubeCofactor(pOut.pNegCof, xiOFF, TRUTH_WORDS);\n            // gON = xiOFF, xjON\n            pOut.pPosCof = nj.pPosCof;\n            cubeCofactor(pOut.pPosCof, xiOFF, TRUTH_WORDS);\n        }\n    }else  {\n        if minCCPolarity != 0 {\n            // gOFF = xjON, xiON\n            pOut.pNegCof = ni.pPosCof;\n            cubeCofactor(pOut.pNegCof, xjON, TRUTH_WORDS);\n            // gON = xjON, xiOFF\n            pOut.pPosCof = ni.pNegCof;\n            cubeCofactor(pOut.pPosCof, xjON, TRUTH_WORDS);\n        } else {\n            // gOFF = xjOFF, xiOFF\n            pOut.pNegCof = ni.pNegCof;\n            cubeCofactor(pOut.pNegCof, xjOFF, TRUTH_WORDS);\n            // gON = xjOFF, xiON\n            pOut.pPosCof = ni.pPosCof;\n            cubeCofactor(pOut.pPosCof, xjOFF, TRUTH_WORDS);\n        }\n    }\n    // bool diff\n    pOut.pBoolDiff = ni.pBoolDiff;\n    // evaluating specs\n    // off spec\n    pOut.off[0] = 0;\n    if (xiOFFSize+xjOFFSize) \u003c= (xiONSize+xjONSize) {\n        merge(pOut.off, xiOFF);\n        merge(pOut.off, xjOFF);\n    } else {\n        merge(pOut.off, xiON);\n        merge(pOut.off, xjON);\n    }\n    // on spec\n    pOut.on[0] = 0;\n    if (xiOFFSize+xjONSize) \u003c= (xiONSize+xjOFFSize) {\n        merge(pOut.on, xiOFF);\n        merge(pOut.on, xjON);\n    } else {\n        merge(pOut.on, xiON);\n        merge(pOut.on, xjOFF);\n    }\n}\n\n/**\n * memory allocator with a capacity of storing 3*nVars\n * truth-tables for negative and positive cofactors and\n * the boolean difference for each input variable\n */\nfunc Dsc_alloc_pool(nVars int32) *word {\n    // inlining of macro ABC_ALLOC\n    return ((word *) malloc(sizeof(word) * (size_t)(3 * Abc_TtWordNum(nVars) * nVars)));\n}\n\n/**\n * just free the memory pool\n */\nfunc Dsc_free_pool(pool *word) {\n    // inlining of macro ABC_FREE\n    ((pool) ? (free((char *) (pool)), (pool) = 0) : 0);\n}\n\n/**\n * This method implements the paper proposed by V. Callegaro, F. S. Marranghello, M. G. A. Martins, R. P. Ribas and A. I. Reis,\n * entitled \"Bottom-up disjoint-support decomposition based on cofactor and boolean difference analysis\", presented at ICCD 2015.\n * pTruth: pointer for the truth table representing the target function.\n * nVarsInit: the number of variables of the truth table of the target function.\n * pRes: pointer for storing the resulting decomposition, whenever a decomposition can be found.\n * pool: NULL or a pointer for with a capacity of storing 3*nVars truth-tables. IF NULL, the function will allocate and free the memory of each call.\n * (the results presented on ICCD paper are running this method with NULL for the memory pool).\n * The method returns 0 if a full decomposition was found and a negative value otherwise.\n */\nfunc Dsc_Decompose(pTruth *word, nVarsInit int32, pRes string, pool *word) int32 {\n    int TRUTH_WORDS = Abc_TtWordNum(nVarsInit);\n    int NEED_POOL_ALLOC = (pool == nil);\n\n    var nodes [DSC_MAX_VAR]Dsc_node_t;\n    var newNodes [DSC_MAX_VAR]*Dsc_node_t;\n    var oldNodes [DSC_MAX_VAR]*Dsc_node_t;\n\n    var freeNodes [DSC_MAX_VAR]Dsc_node_t; // N is the maximum number of possible groups.\n    var f int32; // f represent the next free position in the freeNodes array\n    var o int32; // o stands for the number of already tested nodes\n    var n int32; // n will represent the number of current nodes (i.e. support)\n\n    pRes[0] = '\\0';\n    pRes[1] = '\\0';\n\n    if NEED_POOL_ALLOC {\n        // inlining of macro ABC_ALLOC\n        pool = ((word *) malloc(sizeof(word) * (size_t)(3 * TRUTH_WORDS * nVarsInit))); }\n\n    // block for the node data allocation\n    {\n        // pointer for the next free truth word\n        var pNextTruth *word  = pool;\n        var iVar int32;\n        for iVar = 0; iVar \u003c nVarsInit; iVar++ {\n            // negative cofactor\n            Abc_TtCofactor0p(pNextTruth, pTruth, TRUTH_WORDS, iVar);\n            // dont care test\n            if !Abc_TtEqual(pNextTruth, pTruth, TRUTH_WORDS) {\n                var node *Dsc_node_t  = \u0026nodes[iVar];\n                node.pNegCof = pNextTruth;\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // positive cofactor\n                node.pPosCof = pNextTruth;\n                Abc_TtCofactor1p(node.pPosCof, pTruth, TRUTH_WORDS, iVar);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // boolean difference\n                node.pBoolDiff = pNextTruth;\n                Abc_TtXor(node.pBoolDiff, node.pNegCof, node.pPosCof, TRUTH_WORDS, 0);\n                // increment next truth pointer\n                pNextTruth += TRUTH_WORDS;\n                // define on spec -\n                node.on[0] = 1; node.on[1] = (iVar \u003c\u003c 1) | uint32(1); // lit = i*2+1, when polarity=true\n                // define off spec\n                node.off[0] = 1; node.off[1] = iVar \u003c\u003c 1;// lit=i*2 otherwise\n                // store the node expression\n                node.exp[0] = 'a'+iVar; // TODO fix the variable names\n                node.exp[1] = '\\0';\n                // add the node to the newNodes array\n                newNodes[n++] = node;\n            }\n        }\n    }\n    //const int initialSupport = n;\n    if n == 0 {\n        if NEED_POOL_ALLOC {\n            // inlining of macro ABC_FREE\n            ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n        if Abc_TtIsConst0(pTruth, TRUTH_WORDS) {\n            { if pRes { pRes[0] = '0', pRes[1] = '\\0'; } }\n            return 0;\n        } else if Abc_TtIsConst1(pTruth, TRUTH_WORDS) {\n            { if pRes { pRes[0] = '1', pRes[1] = '\\0'; } }\n            return 0;\n        } else {\n            Abc_Print(-1, \"ERROR. No variable in the support of f, but f isn't constant!\\n\");\n            return -1;\n        }\n    }\n    for n \u003e 0 {\n        var tempN int32;\n        var i, j, iPolarity, jPolarity int32;\n        var ni *Dsc_node_t;\n        var nj *Dsc_node_t;\n        var newNode *Dsc_node_t = nil;\n        for i = 0; i \u003c n; i++ {\n            ni = newNodes[i];\n            newNode = nil;\n            j = 0;\n            for j \u003c o {\n                nj = oldNodes[j];\n                if dsc_and_test(ni, nj, TRUTH_WORDS, \u0026iPolarity, \u0026jPolarity) != 0 {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_and_group(newNode, ni, iPolarity, nj, jPolarity, nVarsInit, TRUTH_WORDS);\n                }\n                // XOR test\n                if (newNode == nil)  \u0026\u0026 ((dsc_xor_test(ni, nj, TRUTH_WORDS) != 0)) {\n                    newNode = \u0026freeNodes[f++];\n                    dsc_xor_group(newNode, ni, nj, nVarsInit, TRUTH_WORDS);\n                }\n                if newNode != nil {\n                    oldNodes[j] = oldNodes[--o];\n                    break;\n                } else {\n                    j++;\n                }\n            }\n            if newNode != nil {\n                newNodes[tempN++] = newNode;\n            } else {\n                oldNodes[o++] = ni;\n            }\n        }\n        n = tempN;\n    }\n    if o == 1 {\n        var solution *Dsc_node_t  = oldNodes[0];\n        if Abc_TtIsConst0(solution.pNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst1(solution.pPosCof, TRUTH_WORDS) {\n            // Direct solution found\n            if pRes {\n                pRes = solution.exp; }\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return 0;\n        } else if Abc_TtIsConst1(solution.pNegCof, TRUTH_WORDS) \u0026\u0026 Abc_TtIsConst0(solution.pPosCof, TRUTH_WORDS) {\n            // Complementary solution found\n            if pRes {\n                pRes[0] = '!';\n                strcpy( \u0026pRes[1], solution.exp);\n            }\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return 0;\n        } else {\n            fmt.Printf(\"DSC ERROR: Final DSC node found, but differs from target function.\\n\");\n            if NEED_POOL_ALLOC {\n                // inlining of macro ABC_FREE\n                ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n            return -1;\n        }\n    }\n    if NEED_POOL_ALLOC {\n        // inlining of macro ABC_FREE\n        ((pool) ? (free((char *) (pool)), (pool) = 0) : 0); }\n    return -1;\n}\n\n\n/**Function*************************************************************\n  Synopsis    [DSD formula manipulation.]\n  Description [Code copied from dauDsd.c but changed DAU_MAX_VAR to DSC_MAX_VAR]\n***********************************************************************/\nvar spStatic_Dsc_ComputeMatches_pMatches [DSC_MAX_VAR]int32;\nfunc Dsc_ComputeMatches(p string) *int32 {\n    \n    var pNested [DSC_MAX_VAR]int32;\n    var v, nNested int32;\n    for  v = 0; p[v]; v++  {\n        spStatic_Dsc_ComputeMatches_pMatches[v] = 0;\n        if p[v] == '(' || p[v] == '[' || p[v] == '\u003c' || p[v] == '{' {\n            pNested[nNested++] = v;\n        } else if p[v] == ')' || p[v] == ']' || p[v] == '\u003e' || p[v] == '}' {\n            spStatic_Dsc_ComputeMatches_pMatches[pNested[--nNested]] = v; }\n        assert(nNested \u003c DSC_MAX_VAR, \"nNested \u003c DSC_MAX_VAR\");\n    }\n    assert(nNested == 0, \"nNested == 0\");\n    return spStatic_Dsc_ComputeMatches_pMatches;\n}\n\n/**Function*************************************************************\n  Synopsis    [DSD formula manipulation.]\n  Description [Code copied from dauDsd.c but changed DAU_MAX_VAR to DSC_MAX_VAR]\n***********************************************************************/\nfunc Dsc_CountAnds_rec(pStr string, p *string, pMatches *int32) int32 {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[*p - pStr];\n        if *(q+1) == '{' {\n            *p = q+1; }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        return 0; }\n    if **p == '(' || **p == '[' { // and/or/xor\n    \n        var Counter int32;\n        var AddOn int32;\n        if **p == '(' {\n            AddOn = 1;\n        } else {\n            AddOn = 3;\n        }\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Counter += AddOn + Dsc_CountAnds_rec( pStr, p, pMatches );\n        }\n        assert(*p == q, \"*p == q\");\n        return Counter - AddOn;\n    }\n    if **p == '\u003c' || **p == '{' { // mux\n    \n        var Counter int32  = 3;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Counter += Dsc_CountAnds_rec( pStr, p, pMatches );\n        }\n        assert(*p == q, \"*p == q\");\n        return Counter;\n    }\n    assert(false, \"0\");\n    return 0;\n}\n/**Function*************************************************************\n  Synopsis    [DSD formula manipulation.]\n  Description [Code copied from dauDsd.c but changed DAU_MAX_VAR to DSC_MAX_VAR]\n***********************************************************************/\nfunc Dsc_CountAnds(pDsd string) int32 {\n    if pDsd[1] == 0 {\n        return 0; }\n    return Dsc_CountAnds_rec( pDsd, \u0026pDsd, Dsc_ComputeMatches(pDsd) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

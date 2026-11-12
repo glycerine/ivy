@@ -1,0 +1,198 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c",
+  "SHA256": "57e4683c47a5882c5c728a7b1d5255721cf61c74fe225e2c38946160b07e854b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 3564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPhases \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 6554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pCounters[uTruth0] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsMax == 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsReal == 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 7794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pCounters[uTruth1] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 17,
+        "ByteOffset": 8140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( uPhaseBest \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pCounters[uTruth0] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 17,
+        "ByteOffset": 8726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( uPhaseBest \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 9,
+        "ByteOffset": 8956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_CanonComputeSlow",
+      "Start": 1682,
+      "End": 3515,
+      "BodyStart": 1828,
+      "Original": "int Map_CanonComputeSlow( unsigned uTruths[][2], int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    unsigned  uTruthPerm[2];\n    int nMints, nPhases, m;\n\n    nPhases = 0;\n    nMints = (1 \u003c\u003c nVarsReal);\n    if ( nVarsMax \u003c 6 )\n    {\n        uTruthRes[0] = MAP_MASK(32);\n        for ( m = 0; m \u003c nMints; m++ )\n        {\n            uTruthPerm[0] = Map_CanonComputePhase( uTruths, nVarsMax, uTruth[0], m );\n            if ( uTruthRes[0] \u003e uTruthPerm[0] )\n            {\n                uTruthRes[0] = uTruthPerm[0];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            }\n            else if ( uTruthRes[0] == uTruthPerm[0] )\n            {\n                if ( nPhases \u003c 4 ) // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m;\n            }\n        }\n        uTruthRes[1] = uTruthRes[0];\n    }\n    else\n    {\n        uTruthRes[0] = MAP_MASK(32);\n        uTruthRes[1] = MAP_MASK(32);\n        for ( m = 0; m \u003c nMints; m++ )\n        {\n            Map_CanonComputePhase6( uTruths, nVarsMax, uTruth, m, uTruthPerm );\n            if ( uTruthRes[1] \u003e uTruthPerm[1] || (uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] \u003e uTruthPerm[0]) )\n            {\n                uTruthRes[0] = uTruthPerm[0];\n                uTruthRes[1] = uTruthPerm[1];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            }\n            else if ( uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] == uTruthPerm[0] )\n            {\n                if ( nPhases \u003c 4 ) // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m;\n            }\n        }\n    }\n    assert( nPhases \u003e 0 );\n//    printf( \"%d \", nPhases );\n    return nPhases;\n}",
+      "Draft": "int Map_CanonComputeSlow( unsigned uTruths[][2], int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    var uTruthPerm [2]uint32;\n    var nMints, nPhases, m int32;\n\n    nPhases = 0;\n    nMints = (1 \u003c\u003c nVarsReal);\n    if nVarsMax \u003c 6 {\n        // inlining of macro MAP_MASK\n        uTruthRes[0] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        for  m = 0; m \u003c nMints; m++  {\n            uTruthPerm[0] = Map_CanonComputePhase( uTruths, nVarsMax, uTruth[0], m );\n            if uTruthRes[0] \u003e uTruthPerm[0] {\n                uTruthRes[0] = uTruthPerm[0];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            \n            } else if uTruthRes[0] == uTruthPerm[0] {\n                if nPhases \u003c 4 { // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m; }\n            }\n        }\n        uTruthRes[1] = uTruthRes[0];\n    \n    } else {\n        // inlining of macro MAP_MASK\n        uTruthRes[0] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        // inlining of macro MAP_MASK\n        uTruthRes[1] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        for  m = 0; m \u003c nMints; m++  {\n            Map_CanonComputePhase6( uTruths, nVarsMax, uTruth, m, uTruthPerm );\n            if uTruthRes[1] \u003e uTruthPerm[1] || (uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] \u003e uTruthPerm[0]) {\n                uTruthRes[0] = uTruthPerm[0];\n                uTruthRes[1] = uTruthPerm[1];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            \n            } else if uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] == uTruthPerm[0] {\n                if nPhases \u003c 4 { // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m; }\n            }\n        }\n    }\n    assert(nPhases \u003e 0, \"nPhases \u003e 0\");\n//    printf( \"%d \", nPhases );\n    return nPhases;\n}"
+    },
+    {
+      "Name": "Map_CanonComputePhase",
+      "Start": 3823,
+      "End": 4151,
+      "BodyStart": 3924,
+      "Original": "unsigned Map_CanonComputePhase( unsigned uTruths[][2], int nVars, unsigned uTruth, unsigned uPhase )\n{\n    int v, Shift;\n    for ( v = 0, Shift = 1; v \u003c nVars; v++, Shift \u003c\u003c= 1 )\n        if ( uPhase \u0026 Shift )\n            uTruth = (((uTruth \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruth \u0026 uTruths[v][0]) \u003e\u003e Shift));\n    return uTruth;\n}",
+      "Draft": "func Map_CanonComputePhase(uTruths [][2]uint32, nVars int32, uTruth uint32, uPhase uint32) uint32 {\n    var v, Shift int32;\n    for  v, Shift = 0, 1; v \u003c nVars; v++, Shift \u003c\u003c= 1  {\n        if uPhase \u0026 Shift {\n            uTruth = (((uTruth \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruth \u0026 uTruths[v][0]) \u003e\u003e Shift)); }\n    }\n    return uTruth;\n}"
+    },
+    {
+      "Name": "Map_CanonComputePhase6",
+      "Start": 4449,
+      "End": 5348,
+      "BodyStart": 4571,
+      "Original": "void Map_CanonComputePhase6( unsigned uTruths[][2], int nVars, unsigned uTruth[], unsigned uPhase, unsigned uTruthRes[] )\n{\n    unsigned uTemp;\n    int v, Shift;\n\n    // initialize the result\n    uTruthRes[0] = uTruth[0];\n    uTruthRes[1] = uTruth[1];\n    if ( uPhase == 0 )\n        return;\n    // compute the phase \n    for ( v = 0, Shift = 1; v \u003c nVars; v++, Shift \u003c\u003c= 1 )\n        if ( uPhase \u0026 Shift )\n        {\n            if ( Shift \u003c 32 )\n            {\n                uTruthRes[0] = (((uTruthRes[0] \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruthRes[0] \u0026 uTruths[v][0]) \u003e\u003e Shift));\n                uTruthRes[1] = (((uTruthRes[1] \u0026 ~uTruths[v][1]) \u003c\u003c Shift) | ((uTruthRes[1] \u0026 uTruths[v][1]) \u003e\u003e Shift));\n            }\n            else\n            {\n                uTemp        = uTruthRes[0];\n                uTruthRes[0] = uTruthRes[1];\n                uTruthRes[1] = uTemp;\n            }\n        }\n}",
+      "Draft": "func Map_CanonComputePhase6(uTruths [][2]uint32, nVars int32, uTruth []uint32, uPhase uint32, uTruthRes []uint32) {\n    var uTemp uint32;\n    var v, Shift int32;\n\n    // initialize the result\n    uTruthRes[0] = uTruth[0];\n    uTruthRes[1] = uTruth[1];\n    if uPhase == 0 {\n        return; }\n    // compute the phase \n    for  v, Shift = 0, 1; v \u003c nVars; v++, Shift \u003c\u003c= 1  {\n        if uPhase \u0026 Shift {\n            if Shift \u003c 32 {\n                uTruthRes[0] = (((uTruthRes[0] \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruthRes[0] \u0026 uTruths[v][0]) \u003e\u003e Shift));\n                uTruthRes[1] = (((uTruthRes[1] \u0026 ~uTruths[v][1]) \u003c\u003c Shift) | ((uTruthRes[1] \u0026 uTruths[v][1]) \u003e\u003e Shift));\n            \n            } else {\n                uTemp        = uTruthRes[0];\n                uTruthRes[0] = uTruthRes[1];\n                uTruthRes[1] = uTemp;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Map_CanonComputeFast",
+      "Start": 5815,
+      "End": 8956,
+      "BodyStart": 5953,
+      "Original": "int Map_CanonComputeFast( Map_Man_t * p, int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    unsigned uTruth0, uTruth1;\n    unsigned uCanon0, uCanon1, uCanonBest;\n    unsigned uPhaseBest = 16; // Suppress \"might be used uninitialized\" (asserts require \u003c 16)\n    int i, Limit;\n\n    if ( nVarsMax == 6 )\n        return Map_CanonComputeSlow( p-\u003euTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n\n    if ( nVarsReal \u003c 5 )\n    {\n//        return Map_CanonComputeSlow( p-\u003euTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n\n        uTruth0 = uTruth[0] \u0026 0xFFFF;\n        assert( p-\u003epCounters[uTruth0] \u003e 0 );\n        uTruthRes[0] = (p-\u003euCanons[uTruth0] \u003c\u003c 16) | p-\u003euCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = p-\u003euPhases[uTruth0][0];\n        return 1;\n    }\n\n    assert( nVarsMax == 5 );\n    assert( nVarsReal == 5 );\n    uTruth0 = uTruth[0] \u0026 0xFFFF;\n    uTruth1 = (uTruth[0] \u003e\u003e 16);\n    if ( uTruth1 == 0 )\n    {\n        uTruthRes[0] = p-\u003euCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        Limit = (p-\u003epCounters[uTruth0] \u003e 4)? 4 : p-\u003epCounters[uTruth0];\n        for ( i = 0; i \u003c Limit; i++ )\n            puPhases[i] = p-\u003euPhases[uTruth0][i];\n        return Limit;\n    }\n    else if ( uTruth0 == 0 )\n    {\n        uTruthRes[0] = p-\u003euCanons[uTruth1];\n        uTruthRes[1] = uTruthRes[0];\n        Limit = (p-\u003epCounters[uTruth1] \u003e 4)? 4 : p-\u003epCounters[uTruth1];\n        for ( i = 0; i \u003c Limit; i++ )\n        {\n            puPhases[i] = p-\u003euPhases[uTruth1][i];\n            puPhases[i] |= (1 \u003c\u003c 4);\n        }\n        return Limit;\n    }\n    uCanon0 = p-\u003euCanons[uTruth0];\n    uCanon1 = p-\u003euCanons[uTruth1];\n    if ( uCanon0 \u003e= uCanon1 ) // using nCanon1 as the main one\n    {\n        assert( p-\u003epCounters[uTruth1] \u003e 0 );\n        uCanonBest = 0xFFFFFFFF;\n        for ( i = 0; i \u003c p-\u003epCounters[uTruth1]; i++ )\n        {\n            uCanon0 = Extra_TruthPolarize( uTruth0, p-\u003euPhases[uTruth1][i], 4 );\n            if ( uCanonBest \u003e uCanon0 )\n            {\n                uCanonBest = uCanon0;\n                uPhaseBest = p-\u003euPhases[uTruth1][i];\n                assert( uPhaseBest \u003c 16 );\n            }\n        }\n        uTruthRes[0] = (uCanon1 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest;\n        return 1;\n    }\n    else if ( uCanon0 \u003c uCanon1 )\n    {\n        assert( p-\u003epCounters[uTruth0] \u003e 0 );\n        uCanonBest = 0xFFFFFFFF;\n        for ( i = 0; i \u003c p-\u003epCounters[uTruth0]; i++ )\n        {\n            uCanon1 = Extra_TruthPolarize( uTruth1, p-\u003euPhases[uTruth0][i], 4 );\n            if ( uCanonBest \u003e uCanon1 )\n            {\n                uCanonBest = uCanon1;\n                uPhaseBest = p-\u003euPhases[uTruth0][i];\n                assert( uPhaseBest \u003c 16 );\n            }\n        }\n        uTruthRes[0] = (uCanon0 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest | (1 \u003c\u003c 4);\n        return 1;\n    }\n    else\n    {\n        assert( 0 );\n        return Map_CanonComputeSlow( p-\u003euTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n    }\n}",
+      "Draft": "int Map_CanonComputeFast( Map_Man_t * p, int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    var uTruth0, uTruth1 uint32;\n    var uCanon0, uCanon1, uCanonBest uint32;\n    var uPhaseBest uint32  = 16; // Suppress \"might be used uninitialized\" (asserts require \u003c 16)\n    var i, Limit int32;\n\n    if nVarsMax == 6 {\n        return Map_CanonComputeSlow( p.uTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes ); }\n\n    if nVarsReal \u003c 5 {\n//        return Map_CanonComputeSlow( p-\u003euTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n\n        uTruth0 = uTruth[0] \u0026 0xFFFF;\n        assert(p.pCounters[uTruth0] \u003e 0, \"p.pCounters[uTruth0] \u003e 0\");\n        uTruthRes[0] = (p.uCanons[uTruth0] \u003c\u003c 16) | p.uCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = p.uPhases[uTruth0][0];\n        return 1;\n    }\n\n    assert(nVarsMax == 5, \"nVarsMax == 5\");\n    assert(nVarsReal == 5, \"nVarsReal == 5\");\n    uTruth0 = uTruth[0] \u0026 0xFFFF;\n    uTruth1 = (uTruth[0] \u003e\u003e 16);\n    if uTruth1 == 0 {\n        uTruthRes[0] = p.uCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        if p.pCounters[uTruth0] \u003e 4 {\n            Limit = 4;\n        } else {\n            Limit = p.pCounters[uTruth0];\n        }\n        for  i = 0; i \u003c Limit; i++  {\n            puPhases[i] = p.uPhases[uTruth0][i];\n        }\n        return Limit;\n    \n    } else if uTruth0 == 0 {\n        uTruthRes[0] = p.uCanons[uTruth1];\n        uTruthRes[1] = uTruthRes[0];\n        if p.pCounters[uTruth1] \u003e 4 {\n            Limit = 4;\n        } else {\n            Limit = p.pCounters[uTruth1];\n        }\n        for  i = 0; i \u003c Limit; i++  {\n            puPhases[i] = p.uPhases[uTruth1][i];\n            puPhases[i] |= (1 \u003c\u003c 4);\n        }\n        return Limit;\n    }\n    uCanon0 = p.uCanons[uTruth0];\n    uCanon1 = p.uCanons[uTruth1];\n    if uCanon0 \u003e= uCanon1 { // using nCanon1 as the main one\n    \n        assert(p.pCounters[uTruth1] \u003e 0, \"p.pCounters[uTruth1] \u003e 0\");\n        uCanonBest = 0xFFFFFFFF;\n        for  i = 0; i \u003c p.pCounters[uTruth1]; i++  {\n            uCanon0 = Extra_TruthPolarize( uTruth0, p.uPhases[uTruth1][i], 4 );\n            if uCanonBest \u003e uCanon0 {\n                uCanonBest = uCanon0;\n                uPhaseBest = p.uPhases[uTruth1][i];\n                assert(uPhaseBest \u003c 16, \"uPhaseBest \u003c 16\");\n            }\n        }\n        uTruthRes[0] = (uCanon1 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest;\n        return 1;\n    \n    } else if uCanon0 \u003c uCanon1 {\n        assert(p.pCounters[uTruth0] \u003e 0, \"p.pCounters[uTruth0] \u003e 0\");\n        uCanonBest = 0xFFFFFFFF;\n        for  i = 0; i \u003c p.pCounters[uTruth0]; i++  {\n            uCanon1 = Extra_TruthPolarize( uTruth1, p.uPhases[uTruth0][i], 4 );\n            if uCanonBest \u003e uCanon1 {\n                uCanonBest = uCanon1;\n                uPhaseBest = p.uPhases[uTruth0][i];\n                assert(uPhaseBest \u003c 16, \"uPhaseBest \u003c 16\");\n            }\n        }\n        uTruthRes[0] = (uCanon0 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest | (1 \u003c\u003c 4);\n        return 1;\n    \n    } else {\n        assert(false, \"0\");\n        return Map_CanonComputeSlow( p.uTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c::Map_CanonComputeSlow",
+      "Category": "semantic-review",
+      "Symbol": "Map_CanonComputeSlow",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1682,
+      "End": 3515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c::Map_CanonComputePhase",
+      "Category": "semantic-review",
+      "Symbol": "Map_CanonComputePhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3823,
+      "End": 4151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c::Map_CanonComputePhase6",
+      "Category": "semantic-review",
+      "Symbol": "Map_CanonComputePhase6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4449,
+      "End": 5348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c::Map_CanonComputeFast",
+      "Category": "semantic-review",
+      "Symbol": "Map_CanonComputeFast",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5815,
+      "End": 8956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCanon.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9207
+    }
+  ],
+  "Draft": "package mapper\n\n/**CFile****************************************************************\n\n  FileName    [mapperCanon.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperCanon.c,v 1.2 2005/01/23 06:59:42 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static unsigned Map_CanonComputePhase( unsigned uTruths[][2], int nVars, unsigned uTruth, unsigned uPhase );\n\n// static void     Map_CanonComputePhase6( unsigned uTruths[][2], int nVars, unsigned uTruth[], unsigned uPhase, unsigned uTruthRes[] );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the N-canonical form of the Boolean function.]\n\n  Description [The N-canonical form is defined as the truth table with \n  the minimum integer value. This function exhaustively enumerates \n  through the complete set of 2^N phase assignments.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Map_CanonComputeSlow( unsigned uTruths[][2], int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    var uTruthPerm [2]uint32;\n    var nMints, nPhases, m int32;\n\n    nPhases = 0;\n    nMints = (1 \u003c\u003c nVarsReal);\n    if nVarsMax \u003c 6 {\n        // inlining of macro MAP_MASK\n        uTruthRes[0] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        for  m = 0; m \u003c nMints; m++  {\n            uTruthPerm[0] = Map_CanonComputePhase( uTruths, nVarsMax, uTruth[0], m );\n            if uTruthRes[0] \u003e uTruthPerm[0] {\n                uTruthRes[0] = uTruthPerm[0];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            \n            } else if uTruthRes[0] == uTruthPerm[0] {\n                if nPhases \u003c 4 { // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m; }\n            }\n        }\n        uTruthRes[1] = uTruthRes[0];\n    \n    } else {\n        // inlining of macro MAP_MASK\n        uTruthRes[0] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        // inlining of macro MAP_MASK\n        uTruthRes[1] = ((~(uint32(0))) \u003e\u003e (32-(32)));\n        for  m = 0; m \u003c nMints; m++  {\n            Map_CanonComputePhase6( uTruths, nVarsMax, uTruth, m, uTruthPerm );\n            if uTruthRes[1] \u003e uTruthPerm[1] || (uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] \u003e uTruthPerm[0]) {\n                uTruthRes[0] = uTruthPerm[0];\n                uTruthRes[1] = uTruthPerm[1];\n                nPhases      = 0;\n                puPhases[nPhases++] = (unsigned char)m;\n            \n            } else if uTruthRes[1] == uTruthPerm[1] \u0026\u0026 uTruthRes[0] == uTruthPerm[0] {\n                if nPhases \u003c 4 { // the max number of phases in Map_Super_t\n                    puPhases[nPhases++] = (unsigned char)m; }\n            }\n        }\n    }\n    assert(nPhases \u003e 0, \"nPhases \u003e 0\");\n//    printf( \"%d \", nPhases );\n    return nPhases;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs phase transformation for one function of less than 6 variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CanonComputePhase(uTruths [][2]uint32, nVars int32, uTruth uint32, uPhase uint32) uint32 {\n    var v, Shift int32;\n    for  v, Shift = 0, 1; v \u003c nVars; v++, Shift \u003c\u003c= 1  {\n        if uPhase \u0026 Shift {\n            uTruth = (((uTruth \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruth \u0026 uTruths[v][0]) \u003e\u003e Shift)); }\n    }\n    return uTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs phase transformation for one function of 6 variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CanonComputePhase6(uTruths [][2]uint32, nVars int32, uTruth []uint32, uPhase uint32, uTruthRes []uint32) {\n    var uTemp uint32;\n    var v, Shift int32;\n\n    // initialize the result\n    uTruthRes[0] = uTruth[0];\n    uTruthRes[1] = uTruth[1];\n    if uPhase == 0 {\n        return; }\n    // compute the phase \n    for  v, Shift = 0, 1; v \u003c nVars; v++, Shift \u003c\u003c= 1  {\n        if uPhase \u0026 Shift {\n            if Shift \u003c 32 {\n                uTruthRes[0] = (((uTruthRes[0] \u0026 ~uTruths[v][0]) \u003c\u003c Shift) | ((uTruthRes[0] \u0026 uTruths[v][0]) \u003e\u003e Shift));\n                uTruthRes[1] = (((uTruthRes[1] \u0026 ~uTruths[v][1]) \u003c\u003c Shift) | ((uTruthRes[1] \u0026 uTruths[v][1]) \u003e\u003e Shift));\n            \n            } else {\n                uTemp        = uTruthRes[0];\n                uTruthRes[0] = uTruthRes[1];\n                uTruthRes[1] = uTemp;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the N-canonical form of the Boolean function.]\n\n  Description [The N-canonical form is defined as the truth table with \n  the minimum integer value. This function exhaustively enumerates \n  through the complete set of 2^N phase assignments.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Map_CanonComputeFast( Map_Man_t * p, int nVarsMax, int nVarsReal, unsigned uTruth[], unsigned char * puPhases, unsigned uTruthRes[] )\n{\n    var uTruth0, uTruth1 uint32;\n    var uCanon0, uCanon1, uCanonBest uint32;\n    var uPhaseBest uint32  = 16; // Suppress \"might be used uninitialized\" (asserts require \u003c 16)\n    var i, Limit int32;\n\n    if nVarsMax == 6 {\n        return Map_CanonComputeSlow( p.uTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes ); }\n\n    if nVarsReal \u003c 5 {\n//        return Map_CanonComputeSlow( p-\u003euTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n\n        uTruth0 = uTruth[0] \u0026 0xFFFF;\n        assert(p.pCounters[uTruth0] \u003e 0, \"p.pCounters[uTruth0] \u003e 0\");\n        uTruthRes[0] = (p.uCanons[uTruth0] \u003c\u003c 16) | p.uCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = p.uPhases[uTruth0][0];\n        return 1;\n    }\n\n    assert(nVarsMax == 5, \"nVarsMax == 5\");\n    assert(nVarsReal == 5, \"nVarsReal == 5\");\n    uTruth0 = uTruth[0] \u0026 0xFFFF;\n    uTruth1 = (uTruth[0] \u003e\u003e 16);\n    if uTruth1 == 0 {\n        uTruthRes[0] = p.uCanons[uTruth0];\n        uTruthRes[1] = uTruthRes[0];\n        if p.pCounters[uTruth0] \u003e 4 {\n            Limit = 4;\n        } else {\n            Limit = p.pCounters[uTruth0];\n        }\n        for  i = 0; i \u003c Limit; i++  {\n            puPhases[i] = p.uPhases[uTruth0][i];\n        }\n        return Limit;\n    \n    } else if uTruth0 == 0 {\n        uTruthRes[0] = p.uCanons[uTruth1];\n        uTruthRes[1] = uTruthRes[0];\n        if p.pCounters[uTruth1] \u003e 4 {\n            Limit = 4;\n        } else {\n            Limit = p.pCounters[uTruth1];\n        }\n        for  i = 0; i \u003c Limit; i++  {\n            puPhases[i] = p.uPhases[uTruth1][i];\n            puPhases[i] |= (1 \u003c\u003c 4);\n        }\n        return Limit;\n    }\n    uCanon0 = p.uCanons[uTruth0];\n    uCanon1 = p.uCanons[uTruth1];\n    if uCanon0 \u003e= uCanon1 { // using nCanon1 as the main one\n    \n        assert(p.pCounters[uTruth1] \u003e 0, \"p.pCounters[uTruth1] \u003e 0\");\n        uCanonBest = 0xFFFFFFFF;\n        for  i = 0; i \u003c p.pCounters[uTruth1]; i++  {\n            uCanon0 = Extra_TruthPolarize( uTruth0, p.uPhases[uTruth1][i], 4 );\n            if uCanonBest \u003e uCanon0 {\n                uCanonBest = uCanon0;\n                uPhaseBest = p.uPhases[uTruth1][i];\n                assert(uPhaseBest \u003c 16, \"uPhaseBest \u003c 16\");\n            }\n        }\n        uTruthRes[0] = (uCanon1 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest;\n        return 1;\n    \n    } else if uCanon0 \u003c uCanon1 {\n        assert(p.pCounters[uTruth0] \u003e 0, \"p.pCounters[uTruth0] \u003e 0\");\n        uCanonBest = 0xFFFFFFFF;\n        for  i = 0; i \u003c p.pCounters[uTruth0]; i++  {\n            uCanon1 = Extra_TruthPolarize( uTruth1, p.uPhases[uTruth0][i], 4 );\n            if uCanonBest \u003e uCanon1 {\n                uCanonBest = uCanon1;\n                uPhaseBest = p.uPhases[uTruth0][i];\n                assert(uPhaseBest \u003c 16, \"uPhaseBest \u003c 16\");\n            }\n        }\n        uTruthRes[0] = (uCanon0 \u003c\u003c 16) | uCanonBest;\n        uTruthRes[1] = uTruthRes[0];\n        puPhases[0] = uPhaseBest | (1 \u003c\u003c 4);\n        return 1;\n    \n    } else {\n        assert(false, \"0\");\n        return Map_CanonComputeSlow( p.uTruths, nVarsMax, nVarsReal, uTruth, puPhases, uTruthRes );\n    }\n}\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

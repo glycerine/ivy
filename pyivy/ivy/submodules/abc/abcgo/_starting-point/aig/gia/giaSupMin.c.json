@@ -1,0 +1,249 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c",
+  "SHA256": "4505d07f35ba311b990f890302a6aca07fdaec9391dfdd7d0cba89e43ff4231c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsMax \u003c= 20 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 68,
+        "Column": 9,
+        "ByteOffset": 1973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Gia_ManSup_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 21,
+        "ByteOffset": 2308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruthIn    = ABC_ALLOC( unsigned, p.nWordsMax );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 21,
+        "ByteOffset": 2364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruthOut   = ABC_ALLOC( unsigned, p.nWordsMax );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTruthIn );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTruthOut );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 2913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPairs) % 2 == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManSupStart",
+      "Start": 1871,
+      "End": 2435,
+      "BodyStart": 1918,
+      "Original": "Gia_ManSup_t * Gia_ManSupStart( int nVarsMax )\n{\n    Gia_ManSup_t * p;\n    assert( nVarsMax \u003c= 20 );\n    p = ABC_CALLOC( Gia_ManSup_t, 1 );\n    p-\u003enVarsMax    = nVarsMax;\n    p-\u003enWordsMax   = Kit_TruthWordNum( p-\u003enVarsMax );\n    p-\u003evTruthVars  = Vec_PtrAllocTruthTables( p-\u003enVarsMax );\n    p-\u003evTruthNodes = Vec_PtrAllocSimInfo( 512, p-\u003enWordsMax );\n    p-\u003evConeCare   = Vec_IntAlloc( 512 );\n    p-\u003evConeData   = Vec_IntAlloc( 512 );\n    p-\u003epTruthIn    = ABC_ALLOC( unsigned, p-\u003enWordsMax );\n    p-\u003epTruthOut   = ABC_ALLOC( unsigned, p-\u003enWordsMax );\n    return p;\n}",
+      "Draft": "func Gia_ManSupStart(nVarsMax int32) *Gia_ManSup_t {\n    var p *Gia_ManSup_t;\n    assert(nVarsMax \u003c= 20, \"nVarsMax \u003c= 20\");\n    p = new(Gia_ManSup_t);\n    p.nVarsMax    = nVarsMax;\n    p.nWordsMax   = Kit_TruthWordNum( p.nVarsMax );\n    p.vTruthVars  = Vec_PtrAllocTruthTables( p.nVarsMax );\n    p.vTruthNodes = Vec_PtrAllocSimInfo( 512, p.nWordsMax );\n    p.vConeCare   = Vec_IntAlloc( 512 );\n    p.vConeData   = Vec_IntAlloc( 512 );\n    p.pTruthIn    = ABC_ALLOC( unsigned, p.nWordsMax );\n    p.pTruthOut   = ABC_ALLOC( unsigned, p.nWordsMax );\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManSupStop",
+      "Start": 2694,
+      "End": 2958,
+      "BodyStart": 2734,
+      "Original": "void Gia_ManSupStop( Gia_ManSup_t * p )\n{\n    ABC_FREE( p-\u003epTruthIn );\n    ABC_FREE( p-\u003epTruthOut );\n    Vec_IntFreeP( \u0026p-\u003evConeCare );\n    Vec_IntFreeP( \u0026p-\u003evConeData );\n    Vec_PtrFreeP( \u0026p-\u003evTruthVars );\n    Vec_PtrFreeP( \u0026p-\u003evTruthNodes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_ManSupStop(p *Gia_ManSup_t) {\n    ABC_FREE( p.pTruthIn );\n    ABC_FREE( p.pTruthOut );\n    Vec_IntFreeP( \u0026p.vConeCare );\n    Vec_IntFreeP( \u0026p.vConeData );\n    Vec_PtrFreeP( \u0026p.vTruthVars );\n    Vec_PtrFreeP( \u0026p.vTruthNodes );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Gia_ManSupExperimentOne",
+      "Start": 3194,
+      "End": 3828,
+      "BodyStart": 3281,
+      "Original": "void Gia_ManSupExperimentOne( Gia_ManSup_t * p, Gia_Obj_t * pData, Gia_Obj_t * pCare )\n{\n    int iData = Gia_ObjId( p-\u003epGia, Gia_Regular(pData) );\n    int iCare = Gia_ObjId( p-\u003epGia, Gia_Regular(pCare) );\n    if ( !Gia_ObjIsAnd(Gia_Regular(pCare)) )\n    {\n        Abc_Print( 1, \"Enable is not an AND.\\n\" );\n        return;\n    }\n    Abc_Print( 1, \"DataSupp = %6d. DataCone = %6d.   CareSupp = %6d. CareCone = %6d.\", \n        Gia_ManSuppSize( p-\u003epGia, \u0026iData, 1 ),\n        Gia_ManConeSize( p-\u003epGia, \u0026iData, 1 ),\n        Gia_ManSuppSize( p-\u003epGia, \u0026iCare, 1 ),\n        Gia_ManConeSize( p-\u003epGia, \u0026iCare, 1 ) );\n    Abc_Print( 1, \"\\n\" );\n}",
+      "Draft": "func Gia_ManSupExperimentOne(p *Gia_ManSup_t, pData *Gia_Obj_t, pCare *Gia_Obj_t) {\n    var iData int32  = Gia_ObjId( p.pGia, Gia_Regular(pData) );\n    var iCare int32  = Gia_ObjId( p.pGia, Gia_Regular(pCare) );\n    if !Gia_ObjIsAnd(Gia_Regular(pCare)) {\n        Abc_Print( 1, \"Enable is not an AND.\\n\" );\n        return;\n    }\n    Abc_Print( 1, \"DataSupp = %6d. DataCone = %6d.   CareSupp = %6d. CareCone = %6d.\", \n        Gia_ManSuppSize( p.pGia, \u0026iData, 1 ),\n        Gia_ManConeSize( p.pGia, \u0026iData, 1 ),\n        Gia_ManSuppSize( p.pGia, \u0026iCare, 1 ),\n        Gia_ManConeSize( p.pGia, \u0026iCare, 1 ) );\n    Abc_Print( 1, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Gia_ManSupExperiment",
+      "Start": 4064,
+      "End": 4627,
+      "BodyStart": 4130,
+      "Original": "void Gia_ManSupExperiment( Gia_Man_t * pGia, Vec_Int_t * vPairs )\n{\n    Gia_ManSup_t * p;\n    Gia_Obj_t * pData, * pCare;\n    int i;\n    p = Gia_ManSupStart( 16 );\n    p-\u003epGia = pGia;\n    assert( Vec_IntSize(vPairs) % 2 == 0 );\n    for ( i = 0; i \u003c Vec_IntSize(vPairs)/2; i++ )\n    {\n        Abc_Print( 1, \"%6d : \", i );\n        pData = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+0) );\n        pCare = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+1) );\n        Gia_ManSupExperimentOne( p, Gia_ObjChild0(pData), Gia_ObjChild0(pCare) );\n    }\n    Gia_ManSupStop( p );\n}",
+      "Draft": "func Gia_ManSupExperiment(pGia *Gia_Man_t, vPairs *Vec_Int_t) {\n    var p *Gia_ManSup_t;\n    var pData, pCare *Gia_Obj_t;\n    var i int32;\n    p = Gia_ManSupStart( 16 );\n    p.pGia = pGia;\n    assert(Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) % 2 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vPairs)/2; i++  {\n        Abc_Print( 1, \"%6d : \", i );\n        pData = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+0) );\n        pCare = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+1) );\n        Gia_ManSupExperimentOne( p, Gia_ObjChild0(pData), Gia_ObjChild0(pCare) );\n    }\n    Gia_ManSupStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::struct::Gia_ManSup_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_ManSup_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 850,
+      "End": 1391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::Gia_ManSupStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSupStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1871,
+      "End": 2435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::Gia_ManSupStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSupStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2694,
+      "End": 2958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::Gia_ManSupExperimentOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSupExperimentOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3194,
+      "End": 3828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::Gia_ManSupExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSupExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4064,
+      "End": 4627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::1980",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1980,
+      "End": 2009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::2325",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2325,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::2383",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2383,
+      "End": 2418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::2740",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2740,
+      "End": 2763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::2769",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2769,
+      "End": 2793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSupMin.c::macro-inline::2942",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2942,
+      "End": 2955
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaSupMin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Support minimization for AIGs with don't-cares.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSupMin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// decomposition manager\n   \ntype Gia_ManSup_t struct {\n    nVarsMax             int32;     // the max number of variables\n    nWordsMax             int32;    // the max number of words\n    vTruthVars      *Vec_Ptr_t;   // elementary truth tables\n    vTruthNodes      *Vec_Ptr_t;  // internal truth tables\n    // current problem\n    pGia      *Gia_Man_t;\n    iData             int32;\n    iCare             int32;\n    vConeCare      *Vec_Int_t;\n    vConeData      *Vec_Int_t;\n    pTruthIn       *uint32;\n    pTruthOut       *uint32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts Decmetry manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSupStart(nVarsMax int32) *Gia_ManSup_t {\n    var p *Gia_ManSup_t;\n    assert(nVarsMax \u003c= 20, \"nVarsMax \u003c= 20\");\n    p = new(Gia_ManSup_t);\n    p.nVarsMax    = nVarsMax;\n    p.nWordsMax   = Kit_TruthWordNum( p.nVarsMax );\n    p.vTruthVars  = Vec_PtrAllocTruthTables( p.nVarsMax );\n    p.vTruthNodes = Vec_PtrAllocSimInfo( 512, p.nWordsMax );\n    p.vConeCare   = Vec_IntAlloc( 512 );\n    p.vConeData   = Vec_IntAlloc( 512 );\n    p.pTruthIn    = ABC_ALLOC( unsigned, p.nWordsMax );\n    p.pTruthOut   = ABC_ALLOC( unsigned, p.nWordsMax );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops Decmetry manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSupStop(p *Gia_ManSup_t) {\n    ABC_FREE( p.pTruthIn );\n    ABC_FREE( p.pTruthOut );\n    Vec_IntFreeP( \u0026p.vConeCare );\n    Vec_IntFreeP( \u0026p.vConeData );\n    Vec_PtrFreeP( \u0026p.vTruthVars );\n    Vec_PtrFreeP( \u0026p.vTruthNodes );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSupExperimentOne(p *Gia_ManSup_t, pData *Gia_Obj_t, pCare *Gia_Obj_t) {\n    var iData int32  = Gia_ObjId( p.pGia, Gia_Regular(pData) );\n    var iCare int32  = Gia_ObjId( p.pGia, Gia_Regular(pCare) );\n    if !Gia_ObjIsAnd(Gia_Regular(pCare)) {\n        Abc_Print( 1, \"Enable is not an AND.\\n\" );\n        return;\n    }\n    Abc_Print( 1, \"DataSupp = %6d. DataCone = %6d.   CareSupp = %6d. CareCone = %6d.\", \n        Gia_ManSuppSize( p.pGia, \u0026iData, 1 ),\n        Gia_ManConeSize( p.pGia, \u0026iData, 1 ),\n        Gia_ManSuppSize( p.pGia, \u0026iCare, 1 ),\n        Gia_ManConeSize( p.pGia, \u0026iCare, 1 ) );\n    Abc_Print( 1, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSupExperiment(pGia *Gia_Man_t, vPairs *Vec_Int_t) {\n    var p *Gia_ManSup_t;\n    var pData, pCare *Gia_Obj_t;\n    var i int32;\n    p = Gia_ManSupStart( 16 );\n    p.pGia = pGia;\n    assert(Vec_IntSize(vPairs) % 2 == 0, \"Vec_IntSize(vPairs) % 2 == 0\");\n    for  i = 0; i \u003c Vec_IntSize(vPairs)/2; i++  {\n        Abc_Print( 1, \"%6d : \", i );\n        pData = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+0) );\n        pCare = Gia_ManPo( pGia, Vec_IntEntry(vPairs, 2*i+1) );\n        Gia_ManSupExperimentOne( p, Gia_ObjChild0(pData), Gia_ObjChild0(pCare) );\n    }\n    Gia_ManSupStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

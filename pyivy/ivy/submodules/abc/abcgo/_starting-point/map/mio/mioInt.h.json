@@ -1,0 +1,91 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h",
+  "SHA256": "e0d554826b707a89fbeefef910c07a75b80c181cdb726d7e6a5069257c88cee4",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_LibraryStruct_t_::Vec_Mem_t *        vTtMem2[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_LibraryStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3457,
+      "End": 3492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_LibraryStruct_t_::Vec_Int_t *        vTt2Match2[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_LibraryStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3492,
+      "End": 3531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_LibraryStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Mio_LibraryStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1876,
+      "End": 3534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_GateStruct_t_::// boolean expression\n    union { word       uTruth;      // truth table\n    word *             pTruth; };",
+      "Category": "struct-field-review",
+      "Symbol": "Mio_GateStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4572,
+      "End": 4685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_GateStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Mio_GateStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3537,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::struct::Mio_PinStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Mio_PinStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4780,
+      "End": 5173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::mechanical::union::4605",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 4605,
+      "End": 4610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::macro::MIO_MASK",
+      "Category": "macro-review",
+      "Symbol": "MIO_MASK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1544,
+      "End": 1605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6328
+    }
+  ],
+  "Draft": "package mio\n\n/**CFile****************************************************************\n\n  FileName    [mioInt.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mioInt.h,v 1.4 2004/06/28 14:20:25 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"misc/mem/mem.h\"\n//#include \"misc/st/st.h\"\n//#include \"mio.h\"\n \n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\nconst MIO_STRING_GATE =       \"GATE\"\nconst MIO_STRING_LATCH =      \"LATCH\"\nconst MIO_STRING_PIN =        \"PIN\"\nconst MIO_STRING_NONINV =     \"NONINV\"\nconst MIO_STRING_INV =        \"INV\"\nconst MIO_STRING_UNKNOWN =    \"UNKNOWN\"\n\nconst MIO_STRING_CONST0 =     \"CONST0\"\nconst MIO_STRING_CONST1 =     \"CONST1\"\n \n// the bit masks\n// Original macro:\n// #define    MIO_MASK(n)         ((~((unsigned)0)) \u003e\u003e (32-(n)))\n\n#define    MIO_FULL             (~((unsigned)0))\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype  Mio_LibraryStruct_t_ struct {\n    pName              string;       // the name of the library\n    nGates                int32;      // the number of the gates\n    ppGates0       **Mio_Gate_t;    // the array of gates in the original order\n    ppGatesName       **Mio_Gate_t; // the array of gates sorted by name\n    pGates        *Mio_Gate_t;      // the linked list of all gates in no particular order\n    pGate0        *Mio_Gate_t;      // the constant zero gate\n    pGate1        *Mio_Gate_t;      // the constant one gate\n    pGateBuf        *Mio_Gate_t;    // the buffer\n    pGateInv        *Mio_Gate_t;    // the inverter\n    pGateNand2        *Mio_Gate_t;  // the NAND2 gate\n    pGateAnd2        *Mio_Gate_t;   // the AND2 gate\n    pGateNor2        *Mio_Gate_t;   // the NOR2 gate\n    pGateOr2        *Mio_Gate_t;    // the OR2 gate\n    tName2Gate          *st__table;  // the mapping of gate names into their pointer\n    pMmFlex        *Mem_Flex_t;     // the memory manaqer for SOPs\n    vCube         *Vec_Str_t;       // temporary cube\n    // matching\n    fPinFilter                int32;  // pin filtering\n    fPinPerm                int32;    // pin permutation\n    fPinQuick                int32;   // pin permutation\n    vTtMem         *Vec_Mem_t;      // truth tables\n    vTt2Match         *Vec_Wec_t;   // matches for truth tables\n    pCells       *Mio_Cell2_t;      // library gates\n    nCells                int32;      // library gate count\n    vNames         *Vec_Ptr_t;\n    vTruths         *Vec_Wrd_t; \n    vTt2Match4         *Vec_Int_t;\n    vConfigs         *Vec_Int_t;\n    Vec_Mem_t *        vTtMem2[3]; \n    Vec_Int_t *        vTt2Match2[3];\n} \n\ntype  Mio_GateStruct_t_ struct {\n    // information derived from the genlib file\n    pName              string;       // the name of the gate\n    dArea             float64;       // the area of the gate\n    pForm              string;       // the formula describing functionality of the gate\n    pPins         *Mio_Pin_t;       // the linked list of all pins (one pin if info is the same)\n    pOutName              string;    // the name of the output pin \n    // the library to which this gate belongs\n    pLib     *Mio_Library_t; \n    // the next gate in the list\n    pNext        *Mio_Gate_t;    \n    pTwin        *Mio_Gate_t;    \n\n    // the derived information\n    Cell                int32;        // cell id\n    nInputs                int32;     // the number of inputs\n    Profile                int32;     // the number of occurrences\n    Profile2                int32;    // the number of occurrences\n    dDelayMax             float64;   // the maximum delay\n    pSop              string;        // sum-of-products\n    vExpr         *Vec_Int_t;       // boolean expression\n    union { word       uTruth;      // truth table\n    word *             pTruth; };   // pointer to the truth table\n    Value                int32;       // user's information\n}\n\ntype  Mio_PinStruct_t_ struct {\n    pName              string;\n    Phase     Mio_PinPhase_t;\n    dLoadInput             float64;\n    dLoadMax             float64;\n    dDelayBlockRise             float64;\n    dDelayFanoutRise             float64;\n    dDelayBlockFall             float64;\n    dDelayFanoutFall             float64;\n    dDelayBlockMax             float64;\n    pNext         *Mio_Pin_t;     \n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mio.c =============================================================*/\n/*=== mioRead.c =============================================================*/\n/*=== mioUtils.c =============================================================*/\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

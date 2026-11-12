@@ -1,0 +1,928 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c",
+  "SHA256": "e6e42f5d637b2ebf91b09e4945385bb8eb13ce2fe7ef6c60801809bddb89143a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 3723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 130,
+        "Column": 31,
+        "ByteOffset": 4279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Sat_SolverPrintStats( stdout, pSat ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 7300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 9695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 9740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NodeIsMuxType( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 13171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 13559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 13602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 14430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 14631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vNodes.nSize \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 15391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pObj.Level) \u003c= nLevelMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 5,
+        "ByteOffset": 16211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 9,
+        "ByteOffset": 17789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 21004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 668,
+        "Column": 9,
+        "ByteOffset": 22481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of queens (Q = %d) should belong to the interval: 0 \u003c Q \u003c %d.\\n\", nQueens, nQueens);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 671,
+        "Column": 5,
+        "ByteOffset": 22612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 674,
+        "Column": 5,
+        "ByteOffset": 22719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Command, \"gen -s -N %d sorter%d.blif\", nVars, nVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 676,
+        "Column": 9,
+        "ByteOffset": 22851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 676,
+        "Column": 18,
+        "ByteOffset": 22860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 680,
+        "Column": 5,
+        "ByteOffset": 22962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Command, \"read sorter%d.blif; strash\", nVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 682,
+        "Column": 9,
+        "ByteOffset": 23087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 682,
+        "Column": 18,
+        "ByteOffset": 23096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 724,
+        "Column": 13,
+        "ByteOffset": 24592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 725,
+        "Column": 5,
+        "ByteOffset": 24621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"c CNF for %d-bit sorter with %d bits set to 1 generated by ABC.\\n\", nVars, nQueens );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 726,
+        "Column": 5,
+        "ByteOffset": 24728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", Counter, 3 * Vec_PtrSize(vNodes) + 2 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 24897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d %s%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 9,
+        "ByteOffset": 25192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"-%d %s%d 0\\n\",     1+int32((ABC_PTRINT_T))pObj.pCopy,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 736,
+        "Column": 9,
+        "ByteOffset": 25367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"-%d %s%d 0\\n\",     1+int32((ABC_PTRINT_T))pObj.pCopy,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 746,
+        "Column": 5,
+        "ByteOffset": 25691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s%d 0\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 749,
+        "Column": 5,
+        "ByteOffset": 25868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s%d 0\\n\", "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 751,
+        "Column": 5,
+        "ByteOffset": 26005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 662
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 663,
+        "Column": 1,
+        "ByteOffset": 21787
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMiterSat",
+      "Start": 1698,
+      "End": 4536,
+      "BodyStart": 1852,
+      "Original": "int Abc_NtkMiterSat( Abc_Ntk_t * pNtk, ABC_INT64_T nConfLimit, ABC_INT64_T nInsLimit, int fVerbose, ABC_INT64_T * pNumConfs, ABC_INT64_T * pNumInspects )\n{\n    sat_solver * pSat;\n    lbool   status;\n    int RetValue = 0;\n    abctime clk;\n \n    if ( pNumConfs )\n        *pNumConfs = 0;\n    if ( pNumInspects )\n        *pNumInspects = 0;\n\n    assert( Abc_NtkLatchNum(pNtk) == 0 );\n\n//    if ( Abc_NtkPoNum(pNtk) \u003e 1 )\n//        fprintf( stdout, \"Warning: The miter has %d outputs. SAT will try to prove all of them.\\n\", Abc_NtkPoNum(pNtk) );\n\n    // load clauses into the sat_solver\n    clk = Abc_Clock();\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, 0 );\n    if ( pSat == NULL )\n        return 1;\n//printf( \"%d \\n\", pSat-\u003eclauses.size );\n//sat_solver_delete( pSat );\n//return 1;\n\n//    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n    // simplify the problem\n    clk = Abc_Clock();\n    status = sat_solver_simplify(pSat);\n//    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if ( status == 0 )\n    {\n        sat_solver_delete( pSat );\n//        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n        return 1;\n    }\n\n    // solve the miter\n    clk = Abc_Clock();\n    if ( fVerbose )\n        pSat-\u003everbosity = 1;\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( status == l_Undef )\n    {\n//        printf( \"The problem timed out.\\n\" );\n        RetValue = -1;\n    }\n    else if ( status == l_True )\n    {\n//        printf( \"The problem is SATISFIABLE.\\n\" );\n        RetValue = 0;\n    }\n    else if ( status == l_False )\n    {\n//        printf( \"The problem is UNSATISFIABLE.\\n\" );\n        RetValue = 1;\n    }\n    else\n        assert( 0 );\n//    ABC_PRT( \"SAT sat_solver time\", Abc_Clock() - clk );\n//    printf( \"The number of conflicts = %d.\\n\", (int)pSat-\u003esat_solver_stats.conflicts );\n\n    // if the problem is SAT, get the counterexample\n    if ( status == l_True )\n    {\n//        Vec_Int_t * vCiIds = Abc_NtkGetCiIds( pNtk );\n        Vec_Int_t * vCiIds = Abc_NtkGetCiSatVarNums( pNtk );\n        pNtk-\u003epModel = Sat_SolverGetModel( pSat, vCiIds-\u003epArray, vCiIds-\u003enSize );\n        Vec_IntFree( vCiIds );\n    }\n    // free the sat_solver\n    if ( fVerbose )\n        Sat_SolverPrintStats( stdout, pSat );\n\n    if ( pNumConfs )\n        *pNumConfs = (int)pSat-\u003estats.conflicts;\n    if ( pNumInspects )\n        *pNumInspects = (int)pSat-\u003estats.inspects;\n\nsat_solver_store_write( pSat, \"trace.cnf\" );\nsat_solver_store_free( pSat );\n\n    sat_solver_delete( pSat );\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkMiterSat(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T, fVerbose int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) int32 {\n    var pSat *sat_solver;\n    var status lbool;\n    var RetValue int32;\n    var clk abctime;\n \n    if pNumConfs != nil {\n        *pNumConfs = 0; }\n    if pNumInspects != nil {\n        *pNumInspects = 0; }\n\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n\n//    if ( Abc_NtkPoNum(pNtk) \u003e 1 )\n//        fprintf( stdout, \"Warning: The miter has %d outputs. SAT will try to prove all of them.\\n\", Abc_NtkPoNum(pNtk) );\n\n    // load clauses into the sat_solver\n    clk = Abc_Clock();\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, 0 );\n    if pSat == nil {\n        return 1; }\n//printf( \"%d \\n\", pSat-\u003eclauses.size );\n//sat_solver_delete( pSat );\n//return 1;\n\n//    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n    // simplify the problem\n    clk = Abc_Clock();\n    status = sat_solver_simplify(pSat);\n//    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if status == 0 {\n        sat_solver_delete( pSat );\n//        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n        return 1;\n    }\n\n    // solve the miter\n    clk = Abc_Clock();\n    if fVerbose != 0 {\n        pSat.verbosity = 1; }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_Undef {\n//        printf( \"The problem timed out.\\n\" );\n        RetValue = -1;\n    \n    } else if status == l_True {\n//        printf( \"The problem is SATISFIABLE.\\n\" );\n        RetValue = 0;\n    \n    } else if status == l_False {\n//        printf( \"The problem is UNSATISFIABLE.\\n\" );\n        RetValue = 1;\n    \n    } else {\n        assert(false, \"0\"); }\n//    ABC_PRT( \"SAT sat_solver time\", Abc_Clock() - clk );\n//    printf( \"The number of conflicts = %d.\\n\", (int)pSat-\u003esat_solver_stats.conflicts );\n\n    // if the problem is SAT, get the counterexample\n    if status == l_True {\n//        Vec_Int_t * vCiIds = Abc_NtkGetCiIds( pNtk );\n        var vCiIds *Vec_Int_t  = Abc_NtkGetCiSatVarNums( pNtk );\n        pNtk.pModel = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        Vec_IntFree( vCiIds );\n    }\n    // free the sat_solver\n    if fVerbose != 0 {\n        Sat_SolverPrintStats( os.Stdout, pSat ); }\n\n    if pNumConfs != nil {\n        *pNumConfs = int32(pSat.stats.conflicts); }\n    if pNumInspects != nil {\n        *pNumInspects = int32(pSat.stats.inspects); }\n\nsat_solver_store_write( pSat, \"trace.cnf\" );\nsat_solver_store_free( pSat );\n\n    sat_solver_delete( pSat );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkGetCiSatVarNums",
+      "Start": 4800,
+      "End": 5084,
+      "BodyStart": 4855,
+      "Original": "Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vCiIds;\n    Abc_Obj_t * pObj;\n    int i;\n    vCiIds = Vec_IntAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_IntPush( vCiIds, (int)(ABC_PTRINT_T)pObj-\u003epCopy );\n    return vCiIds;\n}",
+      "Draft": "func Abc_NtkGetCiSatVarNums(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vCiIds *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCiIds = Vec_IntAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_IntPush( vCiIds, int32((ABC_PTRINT_T))pObj.pCopy );\n    return vCiIds;\n}"
+    },
+    {
+      "Name": "Abc_NtkClauseTriv",
+      "Start": 5343,
+      "End": 5860,
+      "BodyStart": 5424,
+      "Original": "int Abc_NtkClauseTriv( sat_solver * pSat, Abc_Obj_t * pNode, Vec_Int_t * vVars )\n{\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond( (int)(ABC_PTRINT_T)Abc_ObjRegular(pNode)-\u003epCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n}",
+      "Draft": "func Abc_NtkClauseTriv(pSat *sat_solver, pNode *Abc_Obj_t, vVars *Vec_Int_t) int32 {\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond( int32((ABC_PTRINT_T))Abc_ObjRegular(pNode).pCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}"
+    },
+    {
+      "Name": "Abc_NtkClauseTop",
+      "Start": 6117,
+      "End": 6729,
+      "BodyStart": 6198,
+      "Original": "int Abc_NtkClauseTop( sat_solver * pSat, Vec_Ptr_t * vNodes, Vec_Int_t * vVars )\n{\n    Abc_Obj_t * pNode;\n    int i;\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars-\u003enSize = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntPush( vVars, toLitCond( (int)(ABC_PTRINT_T)Abc_ObjRegular(pNode)-\u003epCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n}",
+      "Draft": "func Abc_NtkClauseTop(pSat *sat_solver, vNodes *Vec_Ptr_t, vVars *Vec_Int_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i int32;\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars.nSize = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntPush( vVars, toLitCond( int32((ABC_PTRINT_T))Abc_ObjRegular(pNode).pCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}"
+    },
+    {
+      "Name": "Abc_NtkClauseAnd",
+      "Start": 6986,
+      "End": 9102,
+      "BodyStart": 7086,
+      "Original": "int Abc_NtkClauseAnd( sat_solver * pSat, Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, Vec_Int_t * vVars )\n{\n    int fComp1, Var, Var1, i;\n//printf( \"Adding AND %d.  (%d)    %d\\n\", pNode-\u003eId, vSuper-\u003enSize+1, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert( !Abc_ObjIsComplement( pNode ) );\n    assert( Abc_ObjIsNode( pNode ) );\n\n//    nVars = sat_solver_nvars(pSat);\n    Var = (int)(ABC_PTRINT_T)pNode-\u003epCopy;\n//    Var = pNode-\u003eId;\n\n//    assert( Var  \u003c nVars ); \n    for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n    {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper-\u003epArray[i]);\n        // determine the variable numbers\n        Var1 = (int)(ABC_PTRINT_T)Abc_ObjRegular((Abc_Obj_t *)vSuper-\u003epArray[i])-\u003epCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n\n        // check that the variables are in the SAT manager\n//        assert( Var1 \u003c nVars );\n\n        // suppose the AND-gate is A * B = C\n        // add !A =\u003e !C   or   A + !C\n    //  fprintf( pFile, \"%d %d 0%c\", Var1, -Var, 10 );\n        vVars-\u003enSize = 0;\n        Vec_IntPush( vVars, toLitCond(Var1, fComp1) );\n        Vec_IntPush( vVars, toLitCond(Var,  1     ) );\n        if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n            return 0;\n    }\n\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n//  fprintf( pFile, \"%d %d %d 0%c\", -Var1, -Var2, Var, 10 );\n    vVars-\u003enSize = 0;\n    for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n    {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper-\u003epArray[i]);\n        // determine the variable numbers\n        Var1 = (int)(ABC_PTRINT_T)Abc_ObjRegular((Abc_Obj_t *)vSuper-\u003epArray[i])-\u003epCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n        // add this variable to the array\n        Vec_IntPush( vVars, toLitCond(Var1, !fComp1) );\n    }\n    Vec_IntPush( vVars, toLitCond(Var, 0) );\n    return sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n}",
+      "Draft": "func Abc_NtkClauseAnd(pSat *sat_solver, pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, vVars *Vec_Int_t) int32 {\n    var fComp1, Var, Var1, i int32;\n//printf( \"Adding AND %d.  (%d)    %d\\n\", pNode-\u003eId, vSuper-\u003enSize+1, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n\n//    nVars = sat_solver_nvars(pSat);\n    Var = int32((ABC_PTRINT_T))pNode.pCopy;\n//    Var = pNode-\u003eId;\n\n//    assert( Var  \u003c nVars ); \n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]);\n        // determine the variable numbers\n        Var1 = int32((ABC_PTRINT_T))Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]).pCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n\n        // check that the variables are in the SAT manager\n//        assert( Var1 \u003c nVars );\n\n        // suppose the AND-gate is A * B = C\n        // add !A =\u003e !C   or   A + !C\n    //  fprintf( pFile, \"%d %d 0%c\", Var1, -Var, 10 );\n        vVars.nSize = 0;\n        Vec_IntPush( vVars, toLitCond(Var1, fComp1) );\n        Vec_IntPush( vVars, toLitCond(Var,  1     ) );\n        if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n            return 0; }\n    }\n\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n//  fprintf( pFile, \"%d %d %d 0%c\", -Var1, -Var2, Var, 10 );\n    vVars.nSize = 0;\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]);\n        // determine the variable numbers\n        Var1 = int32((ABC_PTRINT_T))Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]).pCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n        // add this variable to the array\n        Vec_IntPush( vVars, toLitCond(Var1, !fComp1) );\n    }\n    Vec_IntPush( vVars, toLitCond(Var, 0) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}"
+    },
+    {
+      "Name": "Abc_NtkClauseMux",
+      "Start": 9359,
+      "End": 12223,
+      "BodyStart": 9499,
+      "Original": "int Abc_NtkClauseMux( sat_solver * pSat, Abc_Obj_t * pNode, Abc_Obj_t * pNodeC, Abc_Obj_t * pNodeT, Abc_Obj_t * pNodeE, Vec_Int_t * vVars )\n{\n    int VarF, VarI, VarT, VarE, fCompT, fCompE;\n//printf( \"Adding mux %d.         %d\\n\", pNode-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert( !Abc_ObjIsComplement( pNode ) );\n    assert( Abc_NodeIsMuxType( pNode ) );\n    // get the variable numbers\n    VarF = (int)(ABC_PTRINT_T)pNode-\u003epCopy;\n    VarI = (int)(ABC_PTRINT_T)pNodeC-\u003epCopy;\n    VarT = (int)(ABC_PTRINT_T)Abc_ObjRegular(pNodeT)-\u003epCopy;\n    VarE = (int)(ABC_PTRINT_T)Abc_ObjRegular(pNodeE)-\u003epCopy;\n//    VarF = (int)pNode-\u003eId;\n//    VarI = (int)pNodeC-\u003eId;\n//    VarT = (int)Abc_ObjRegular(pNodeT)-\u003eId;\n//    VarE = (int)Abc_ObjRegular(pNodeE)-\u003eId;\n\n    // get the complementation flags\n    fCompT = Abc_ObjIsComplement(pNodeT);\n    fCompE = Abc_ObjIsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n    // create four clauses\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n        return 0;\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n        return 0;\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n        return 0;\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n        return 0;\n \n    if ( VarT == VarE )\n    {\n//        assert( fCompT == !fCompE );\n        return 1;\n    }\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'       t  + e   + f'\n    // t  \u0026 e  -\u003e f        t' + e'  + f \n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if ( !sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize ) )\n        return 0;\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    return sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n}",
+      "Draft": "func Abc_NtkClauseMux(pSat *sat_solver, pNode *Abc_Obj_t, pNodeC *Abc_Obj_t, pNodeT *Abc_Obj_t, pNodeE *Abc_Obj_t, vVars *Vec_Int_t) int32 {\n    var VarF, VarI, VarT, VarE, fCompT, fCompE int32;\n//printf( \"Adding mux %d.         %d\\n\", pNode-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_NodeIsMuxType( pNode ), \"Abc_NodeIsMuxType( pNode )\");\n    // get the variable numbers\n    VarF = int32((ABC_PTRINT_T))pNode.pCopy;\n    VarI = int32((ABC_PTRINT_T))pNodeC.pCopy;\n    VarT = int32((ABC_PTRINT_T))Abc_ObjRegular(pNodeT).pCopy;\n    VarE = int32((ABC_PTRINT_T))Abc_ObjRegular(pNodeE).pCopy;\n//    VarF = (int)pNode-\u003eId;\n//    VarI = (int)pNodeC-\u003eId;\n//    VarT = (int)Abc_ObjRegular(pNodeT)-\u003eId;\n//    VarE = (int)Abc_ObjRegular(pNodeE)-\u003eId;\n\n    // get the complementation flags\n    fCompT = Abc_ObjIsComplement(pNodeT);\n    fCompE = Abc_ObjIsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n    // create four clauses\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n \n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return 1;\n    }\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'       t  + e   + f'\n    // t  \u0026 e  -\u003e f        t' + e'  + f \n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectSupergate_rec",
+      "Start": 12531,
+      "End": 13976,
+      "BodyStart": 12632,
+      "Original": "int Abc_NtkCollectSupergate_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, int fFirst, int fStopAtMux )\n{\n    int RetValue1, RetValue2, i;\n    // check if the node is visited\n    if ( Abc_ObjRegular(pNode)-\u003efMarkB )\n    {\n        // check if the node occurs in the same polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == pNode )\n                return 1;\n        // check if the node is present in the opposite polarity\n        for ( i = 0; i \u003c vSuper-\u003enSize; i++ )\n            if ( vSuper-\u003epArray[i] == Abc_ObjNot(pNode) )\n                return -1;\n        assert( 0 );\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if ( !fFirst )\n        if ( Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || Abc_ObjFanoutNum(pNode) \u003e 1 || (fStopAtMux \u0026\u0026 Abc_NodeIsMuxType(pNode)) )\n        {\n            Vec_PtrPush( vSuper, pNode );\n            Abc_ObjRegular(pNode)-\u003efMarkB = 1;\n            return 0;\n        }\n    assert( !Abc_ObjIsComplement(pNode) );\n    assert( Abc_ObjIsNode(pNode) );\n    // go through the branches\n    RetValue1 = Abc_NtkCollectSupergate_rec( Abc_ObjChild0(pNode), vSuper, 0, fStopAtMux );\n    RetValue2 = Abc_NtkCollectSupergate_rec( Abc_ObjChild1(pNode), vSuper, 0, fStopAtMux );\n    if ( RetValue1 == -1 || RetValue2 == -1 )\n        return -1;\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}",
+      "Draft": "func Abc_NtkCollectSupergate_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fStopAtMux int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Abc_ObjRegular(pNode).fMarkB {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pNode {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Abc_ObjNot(pNode) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) {\n        if Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || Abc_ObjFanoutNum(pNode) \u003e 1 || ((fStopAtMux != 0) \u0026\u0026 Abc_NodeIsMuxType(pNode)) {\n            Vec_PtrPush( vSuper, pNode );\n            Abc_ObjRegular(pNode).fMarkB = 1;\n            return 0;\n        } }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // go through the branches\n    RetValue1 = Abc_NtkCollectSupergate_rec( Abc_ObjChild0(pNode), vSuper, 0, fStopAtMux );\n    RetValue2 = Abc_NtkCollectSupergate_rec( Abc_ObjChild1(pNode), vSuper, 0, fStopAtMux );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectSupergate",
+      "Start": 14284,
+      "End": 14984,
+      "BodyStart": 14370,
+      "Original": "void Abc_NtkCollectSupergate( Abc_Obj_t * pNode, int fStopAtMux, Vec_Ptr_t * vNodes )\n{\n    int RetValue, i;\n    assert( !Abc_ObjIsComplement(pNode) );\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vNodes );\n    RetValue = Abc_NtkCollectSupergate_rec( pNode, vNodes, 1, fStopAtMux );\n    assert( vNodes-\u003enSize \u003e 1 );\n    // unmark the visited nodes\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n        Abc_ObjRegular((Abc_Obj_t *)vNodes-\u003epArray[i])-\u003efMarkB = 0;\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if ( RetValue == -1 )\n        vNodes-\u003enSize = 0;\n}",
+      "Draft": "func Abc_NtkCollectSupergate(pNode *Abc_Obj_t, fStopAtMux int32, vNodes *Vec_Ptr_t) {\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vNodes );\n    RetValue = Abc_NtkCollectSupergate_rec( pNode, vNodes, 1, fStopAtMux );\n    assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n    // unmark the visited nodes\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjRegular((Abc_Obj_t *)vNodes.pArray[i]).fMarkB = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vNodes.nSize = 0; }\n}"
+    },
+    {
+      "Name": "Abc_NtkNodeFactor",
+      "Start": 15253,
+      "End": 15589,
+      "BodyStart": 15310,
+      "Original": "int Abc_NtkNodeFactor( Abc_Obj_t * pObj, int nLevelMax )\n{\n//  nLevelMax = ((nLevelMax)/2)*3;\n    assert( (int)pObj-\u003eLevel \u003c= nLevelMax );\n//    return (int)(100000000.0 * pow(0.999, nLevelMax - pObj-\u003eLevel));\n    return (int)(100000000.0 * (1 + 0.01 * pObj-\u003eLevel));\n//    return (int)(100000000.0 / ((nLevelMax)/2)*3 - pObj-\u003eLevel);\n}",
+      "Draft": "func Abc_NtkNodeFactor(pObj *Abc_Obj_t, nLevelMax int32) int32 {\n//  nLevelMax = ((nLevelMax)/2)*3;\n    assert(int32(pObj.Level) \u003c= nLevelMax, \"int32(pObj.Level) \u003c= nLevelMax\");\n//    return (int)(100000000.0 * pow(0.999, nLevelMax - pObj-\u003eLevel));\n    return int32((100000000.0 * (1 + 0.01 * pObj.Level)));\n//    return (int)(100000000.0 / ((nLevelMax)/2)*3 - pObj-\u003eLevel);\n}"
+    },
+    {
+      "Name": "Abc_NtkMiterSatCreateInt",
+      "Start": 15852,
+      "End": 20602,
+      "BodyStart": 15920,
+      "Original": "int Abc_NtkMiterSatCreateInt( sat_solver * pSat, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode, * pFanin, * pNodeC, * pNodeT, * pNodeE;\n    Vec_Ptr_t * vNodes, * vSuper;\n    Vec_Int_t * vVars;\n    int i, k, fUseMuxes = 1;\n//    int fOrderCiVarsFirst = 0;\n    int RetValue = 0;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // clean the CI node pointers\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = NULL;\n\n    // start the data structures\n    vNodes  = Vec_PtrAlloc( 1000 );   // the nodes corresponding to vars in the sat_solver\n    vSuper  = Vec_PtrAlloc( 100 );    // the nodes belonging to the given implication supergate\n    vVars   = Vec_IntAlloc( 100 );    // the temporary array for variables in the clause\n\n    // add the clause for the constant node\n    pNode = Abc_AigConst1(pNtk);\n    pNode-\u003efMarkA = 1;\n    pNode-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes-\u003enSize;\n    Vec_PtrPush( vNodes, pNode );\n    Abc_NtkClauseTriv( pSat, pNode, vVars );\n/*\n    // add the PI variables first\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode-\u003efMarkA = 1;\n        pNode-\u003epCopy = (Abc_Obj_t *)vNodes-\u003enSize;\n        Vec_PtrPush( vNodes, pNode );\n    }\n*/\n    // collect the nodes that need clauses and top-level assignments\n    Vec_PtrClear( vSuper );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // get the fanin\n        pFanin = Abc_ObjFanin0(pNode);\n        // create the node's variable\n        if ( pFanin-\u003efMarkA == 0 )\n        {\n            pFanin-\u003efMarkA = 1;\n            pFanin-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes-\u003enSize;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        // add the trivial clause\n        Vec_PtrPush( vSuper, Abc_ObjChild0(pNode) );\n    }\n    if ( !Abc_NtkClauseTop( pSat, vSuper, vVars ) )\n        goto Quits;\n\n\n    // add the clauses\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        assert( !Abc_ObjIsComplement(pNode) );\n        if ( !Abc_AigNodeIsAnd(pNode) )\n            continue;\n//printf( \"%d \", pNode-\u003eId );\n\n        // add the clauses\n        if ( fUseMuxes \u0026\u0026 Abc_NodeIsMuxType(pNode) )\n        {\n            nMuxes++;\n\n            pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n            Vec_PtrClear( vSuper );\n            Vec_PtrPush( vSuper, pNodeC );\n            Vec_PtrPush( vSuper, pNodeT );\n            Vec_PtrPush( vSuper, pNodeE );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if ( pFanin-\u003efMarkA == 0 )\n                {\n                    pFanin-\u003efMarkA = 1;\n                    pFanin-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes-\u003enSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if ( !Abc_NtkClauseMux( pSat, pNode, pNodeC, pNodeT, pNodeE, vVars ) )\n                goto Quits;\n        }\n        else\n        {\n            // get the supergate\n            Abc_NtkCollectSupergate( pNode, fUseMuxes, vSuper );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if ( pFanin-\u003efMarkA == 0 )\n                {\n                    pFanin-\u003efMarkA = 1;\n                    pFanin-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes-\u003enSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if ( vSuper-\u003enSize == 0 )\n            {\n                if ( !Abc_NtkClauseTriv( pSat, Abc_ObjNot(pNode), vVars ) )\n//                if ( !Abc_NtkClauseTriv( pSat, pNode, vVars ) )\n                    goto Quits;\n            }\n            else\n            {\n                if ( !Abc_NtkClauseAnd( pSat, pNode, vSuper, vVars ) )\n                    goto Quits;\n            }\n        }\n    }\n/*\n    // set preferred variables\n    if ( fOrderCiVarsFirst )\n    {\n        int * pPrefVars = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        int nVars = 0;\n        Abc_NtkForEachCi( pNtk, pNode, i )\n        {\n            if ( pNode-\u003efMarkA == 0 )\n                continue;\n            pPrefVars[nVars++] = (int)pNode-\u003epCopy;\n        }\n        nVars = Abc_MinInt( nVars, 10 );\n        ASat_SolverSetPrefVars( pSat, pPrefVars, nVars );\n    }\n*/\n/*\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        if ( !pNode-\u003efMarkA )\n            continue;\n        printf( \"%10s : \", Abc_ObjName(pNode) );\n        printf( \"%3d\\n\", (int)pNode-\u003epCopy );\n    }\n    printf( \"\\n\" );\n*/\n    RetValue = 1;\nQuits :\n    // delete\n    Vec_IntFree( vVars );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSuper );\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkMiterSatCreateInt(pSat *sat_solver, pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin, pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var vNodes, vSuper *Vec_Ptr_t;\n    var vVars *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n//    int fOrderCiVarsFirst = 0;\n    var RetValue int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // clean the CI node pointers\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n\n    // start the data structures\n    vNodes  = Vec_PtrAlloc( 1000 );   // the nodes corresponding to vars in the sat_solver\n    vSuper  = Vec_PtrAlloc( 100 );    // the nodes belonging to the given implication supergate\n    vVars   = Vec_IntAlloc( 100 );    // the temporary array for variables in the clause\n\n    // add the clause for the constant node\n    pNode = Abc_AigConst1(pNtk);\n    pNode.fMarkA = 1;\n    pNode.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n    Vec_PtrPush( vNodes, pNode );\n    Abc_NtkClauseTriv( pSat, pNode, vVars );\n/*\n    // add the PI variables first\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode-\u003efMarkA = 1;\n        pNode-\u003epCopy = (Abc_Obj_t *)vNodes-\u003enSize;\n        Vec_PtrPush( vNodes, pNode );\n    }\n*/\n    // collect the nodes that need clauses and top-level assignments\n    Vec_PtrClear( vSuper );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // get the fanin\n        pFanin = Abc_ObjFanin0(pNode);\n        // create the node's variable\n        if pFanin.fMarkA == 0 {\n            pFanin.fMarkA = 1;\n            pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        // add the trivial clause\n        Vec_PtrPush( vSuper, Abc_ObjChild0(pNode) );\n    }\n    if !(Abc_NtkClauseTop( pSat, vSuper, vVars ) != 0) {\n        goto Quits; }\n\n\n    // add the clauses\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n        if !Abc_AigNodeIsAnd(pNode) {\n            continue; }\n//printf( \"%d \", pNode-\u003eId );\n\n        // add the clauses\n        if (fUseMuxes != 0) \u0026\u0026 Abc_NodeIsMuxType(pNode) {\n            nMuxes++;\n\n            pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n            Vec_PtrClear( vSuper );\n            Vec_PtrPush( vSuper, pNodeC );\n            Vec_PtrPush( vSuper, pNodeT );\n            Vec_PtrPush( vSuper, pNodeE );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if pFanin.fMarkA == 0 {\n                    pFanin.fMarkA = 1;\n                    pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if !(Abc_NtkClauseMux( pSat, pNode, pNodeC, pNodeT, pNodeE, vVars ) != 0) {\n                goto Quits; }\n        \n        } else {\n            // get the supergate\n            Abc_NtkCollectSupergate( pNode, fUseMuxes, vSuper );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if pFanin.fMarkA == 0 {\n                    pFanin.fMarkA = 1;\n                    pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if vSuper.nSize == 0 {\n                if !(Abc_NtkClauseTriv( pSat, Abc_ObjNot(pNode), vVars ) != 0) {\n//                if ( !Abc_NtkClauseTriv( pSat, pNode, vVars ) )\n                    goto Quits; }\n            \n            } else {\n                if !(Abc_NtkClauseAnd( pSat, pNode, vSuper, vVars ) != 0) {\n                    goto Quits; }\n            }\n        }\n    }\n/*\n    // set preferred variables\n    if ( fOrderCiVarsFirst )\n    {\n        int * pPrefVars = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        int nVars = 0;\n        Abc_NtkForEachCi( pNtk, pNode, i )\n        {\n            if ( pNode-\u003efMarkA == 0 )\n                continue;\n            pPrefVars[nVars++] = (int)pNode-\u003epCopy;\n        }\n        nVars = Abc_MinInt( nVars, 10 );\n        ASat_SolverSetPrefVars( pSat, pPrefVars, nVars );\n    }\n*/\n/*\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        if ( !pNode-\u003efMarkA )\n            continue;\n        printf( \"%10s : \", Abc_ObjName(pNode) );\n        printf( \"%3d\\n\", (int)pNode-\u003epCopy );\n    }\n    printf( \"\\n\" );\n*/\n    RetValue = 1;\nQuits :\n    // delete\n    Vec_IntFree( vVars );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSuper );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkMiterSatCreate",
+      "Start": 20865,
+      "End": 21783,
+      "BodyStart": 20930,
+      "Original": "void * Abc_NtkMiterSatCreate( Abc_Ntk_t * pNtk, int fAllPrimes )\n{\n    sat_solver * pSat;\n    Abc_Obj_t * pNode;\n    int RetValue, i; //, clk = Abc_Clock();\n\n    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk) );\n    if ( Abc_NtkIsBddLogic(pNtk) )\n        return Abc_NtkMiterSatCreateLogic(pNtk, fAllPrimes);\n\n    nMuxes = 0;\n    pSat = sat_solver_new();\n//sat_solver_store_alloc( pSat );\n    RetValue = Abc_NtkMiterSatCreateInt( pSat, pNtk );\nsat_solver_store_mark_roots( pSat );\n\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode-\u003efMarkA = 0;\n//    ASat_SolverWriteDimacs( pSat, \"temp_sat.cnf\", NULL, NULL, 1 );\n    if ( RetValue == 0 )\n    {\n        sat_solver_delete(pSat);\n        return NULL;\n    }\n//    printf( \"Ands = %6d.  Muxes = %6d (%5.2f %%).  \", Abc_NtkNodeNum(pNtk), nMuxes, 300.0*nMuxes/Abc_NtkNodeNum(pNtk) );\n//    ABC_PRT( \"Creating sat_solver\", Abc_Clock() - clk );\n    return pSat;\n}",
+      "Draft": "func Abc_NtkMiterSatCreate(pNtk *Abc_Ntk_t, fAllPrimes int32) any {\n    var pSat *sat_solver;\n    var pNode *Abc_Obj_t;\n    var RetValue, i int32; //, clk = Abc_Clock();\n\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        return Abc_NtkMiterSatCreateLogic(pNtk, fAllPrimes); }\n\n    nMuxes = 0;\n    pSat = sat_solver_new();\n//sat_solver_store_alloc( pSat );\n    RetValue = Abc_NtkMiterSatCreateInt( pSat, pNtk );\nsat_solver_store_mark_roots( pSat );\n\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode.fMarkA = 0;\n//    ASat_SolverWriteDimacs( pSat, \"temp_sat.cnf\", NULL, NULL, 1 );\n    if RetValue == 0 {\n        sat_solver_delete(pSat);\n        return nil;\n    }\n//    printf( \"Ands = %6d.  Muxes = %6d (%5.2f %%).  \", Abc_NtkNodeNum(pNtk), nMuxes, 300.0*nMuxes/Abc_NtkNodeNum(pNtk) );\n//    ABC_PRT( \"Creating sat_solver\", Abc_Clock() - clk );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Abc_NtkWriteSorterCnf",
+      "Start": 28882,
+      "End": 32740,
+      "BodyStart": 28953,
+      "Original": "void Abc_NtkWriteSorterCnf( char * pFileName, int nVars, int nQueens )\n{\n    char Command[100];\n    void * pAbc;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObj, * ppNodes[2], * ppRoots[2];\n    Vec_Ptr_t * vNodes;\n    FILE * pFile;\n    int i, Counter;\n\n    if ( nQueens \u003c= 0 \u0026\u0026 nQueens \u003e= nVars )\n    {\n        printf( \"The number of queens (Q = %d) should belong to the interval: 0 \u003c Q \u003c %d.\\n\", nQueens, nQueens);\n        return;\n    }\n    assert( nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars );\n    pAbc = Abc_FrameGetGlobalFrame();\n    // generate sorter\n    sprintf( Command, \"gen -s -N %d sorter%d.blif\", nVars, nVars );\n    if ( Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) )\n    {\n        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n    // read the file\n    sprintf( Command, \"read sorter%d.blif; strash\", nVars );\n    if ( Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) )\n    {\n        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n\n    // get the current network\n    pNtk = Abc_FrameReadNtk((Abc_Frame_t *)pAbc);\n    // collect the nodes for the given two primary outputs\n    ppNodes[0] = Abc_NtkPo( pNtk, nVars - nQueens - 1 );\n    ppNodes[1] = Abc_NtkPo( pNtk, nVars - nQueens );\n    ppRoots[0] = Abc_ObjFanin0( ppNodes[0] );\n    ppRoots[1] = Abc_ObjFanin0( ppNodes[1] );\n    vNodes = Abc_NtkDfsNodes( pNtk, ppRoots, 2 );\n\n    // assign CNF variables\n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)~0;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n\n/*\n        OutVar   = pCnf-\u003epVarNums[ pObj-\u003eId ];\n        pVars[0] = pCnf-\u003epVarNums[ Aig_ObjFanin0(pObj)-\u003eId ];\n        pVars[1] = pCnf-\u003epVarNums[ Aig_ObjFanin1(pObj)-\u003eId ];\n\n        // positive phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar; \n        *pLits++ = 2 * pVars[0] + !Aig_ObjFaninC0(pObj); \n        *pLits++ = 2 * pVars[1] + !Aig_ObjFaninC1(pObj); \n        // negative phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[0] + Aig_ObjFaninC0(pObj); \n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[1] + Aig_ObjFaninC1(pObj); \n*/\n\n    // add clauses for these nodes\n    pFile = fopen( pFileName, \"w\" );\n    fprintf( pFile, \"c CNF for %d-bit sorter with %d bits set to 1 generated by ABC.\\n\", nVars, nQueens );\n    fprintf( pFile, \"p cnf %d %d\\n\", Counter, 3 * Vec_PtrSize(vNodes) + 2 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // positive phase\n        fprintf( pFile, \"%d %s%d %s%d 0\\n\", 1+(int)(ABC_PTRINT_T)pObj-\u003epCopy,\n            Abc_ObjFaninC0(pObj)? \"\" : \"-\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin0(pObj)-\u003epCopy,\n            Abc_ObjFaninC1(pObj)? \"\" : \"-\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin1(pObj)-\u003epCopy );\n        // negative phase\n        fprintf( pFile, \"-%d %s%d 0\\n\",     1+(int)(ABC_PTRINT_T)pObj-\u003epCopy,\n            Abc_ObjFaninC0(pObj)? \"-\" : \"\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin0(pObj)-\u003epCopy );\n        fprintf( pFile, \"-%d %s%d 0\\n\",     1+(int)(ABC_PTRINT_T)pObj-\u003epCopy,\n            Abc_ObjFaninC1(pObj)? \"-\" : \"\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin1(pObj)-\u003epCopy );\n    }\n    Vec_PtrFree( vNodes );\n\n/*\n    *pClas++ = pLits;\n    *pLits++ = 2 * OutVar + Aig_ObjFaninC0(pObj); \n*/\n    // assert the first literal to zero\n    fprintf( pFile, \"%s%d 0\\n\", \n        Abc_ObjFaninC0(ppNodes[0])? \"\" : \"-\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin0(ppNodes[0])-\u003epCopy );\n    // assert the second literal to one\n    fprintf( pFile, \"%s%d 0\\n\", \n        Abc_ObjFaninC0(ppNodes[1])? \"-\" : \"\", 1+(int)(ABC_PTRINT_T)Abc_ObjFanin0(ppNodes[1])-\u003epCopy );\n    fclose( pFile );\n}",
+      "Draft": "func Abc_NtkWriteSorterCnf(pFileName string, nVars int32, nQueens int32) {\n    var Command string // was [100]byte in C\n\n    var pAbc any;\n    var pNtk *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var ppNodes [2]*Abc_Obj_t;\n    var ppRoots [2]*Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var pFile *os.File;\n    var i, Counter int32;\n\n    if nQueens \u003c= 0 \u0026\u0026 nQueens \u003e= nVars {\n        fmt.Printf(\"The number of queens (Q = %d) should belong to the interval: 0 \u003c Q \u003c %d.\\n\", nQueens, nQueens);\n        return;\n    }\n    assert(nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars, \"nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars\");\n    pAbc = Abc_FrameGetGlobalFrame();\n    // generate sorter\n    Command = fmt.Sprintf(\"gen -s -N %d sorter%d.blif\", nVars, nVars);\n    if Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) {\n        fprintf( os.Stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n    // read the file\n    Command = fmt.Sprintf(\"read sorter%d.blif; strash\", nVars);\n    if Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) {\n        fprintf( os.Stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n\n    // get the current network\n    pNtk = Abc_FrameReadNtk((Abc_Frame_t *)pAbc);\n    // collect the nodes for the given two primary outputs\n    ppNodes[0] = Abc_NtkPo( pNtk, nVars - nQueens - 1 );\n    ppNodes[1] = Abc_NtkPo( pNtk, nVars - nQueens );\n    ppRoots[0] = Abc_ObjFanin0( ppNodes[0] );\n    ppRoots[1] = Abc_ObjFanin0( ppNodes[1] );\n    vNodes = Abc_NtkDfsNodes( pNtk, ppRoots, 2 );\n\n    // assign CNF variables\n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)~0;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n\n/*\n        OutVar   = pCnf-\u003epVarNums[ pObj-\u003eId ];\n        pVars[0] = pCnf-\u003epVarNums[ Aig_ObjFanin0(pObj)-\u003eId ];\n        pVars[1] = pCnf-\u003epVarNums[ Aig_ObjFanin1(pObj)-\u003eId ];\n\n        // positive phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar; \n        *pLits++ = 2 * pVars[0] + !Aig_ObjFaninC0(pObj); \n        *pLits++ = 2 * pVars[1] + !Aig_ObjFaninC1(pObj); \n        // negative phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[0] + Aig_ObjFaninC0(pObj); \n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[1] + Aig_ObjFaninC1(pObj); \n*/\n\n    // add clauses for these nodes\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"c CNF for %d-bit sorter with %d bits set to 1 generated by ABC.\\n\", nVars, nQueens);\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", Counter, 3 * Vec_PtrSize(vNodes) + 2);\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // positive phase\n        fmt.Fprintf(pFile, \"%d %s%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC0(pObj)? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC1(pObj)? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin1(pObj).pCopy);\n        // negative phase\n        fmt.Fprintf(pFile, \"-%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC0(pObj)? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(pObj).pCopy);\n        fmt.Fprintf(pFile, \"-%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC1(pObj)? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin1(pObj).pCopy);\n    }\n    Vec_PtrFree( vNodes );\n\n/*\n    *pClas++ = pLits;\n    *pLits++ = 2 * OutVar + Aig_ObjFaninC0(pObj); \n*/\n    // assert the first literal to zero\n    fmt.Fprintf(pFile, \"%s%d 0\\n\", Abc_ObjFaninC0(ppNodes[0])? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(ppNodes[0]).pCopy);\n    // assert the second literal to one\n    fmt.Fprintf(pFile, \"%s%d 0\\n\", Abc_ObjFaninC0(ppNodes[1])? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(ppNodes[1]).pCopy);\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::2328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2313,
+      "End": 2327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::7641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7626,
+      "End": 7639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::7765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7750,
+      "End": 7763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::8656",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8641,
+      "End": 8654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::8780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8765,
+      "End": 8778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::14739",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14724,
+      "End": 14737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::16712",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16697,
+      "End": 16710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::17389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17374,
+      "End": 17387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::18537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18522,
+      "End": 18535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::19247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19232,
+      "End": 19245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::22806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29519,
+      "End": 29534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::23050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29763,
+      "End": 29778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::23243",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29956,
+      "End": 29971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::23683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30396,
+      "End": 30409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::23760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30473,
+      "End": 30486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::pointer-cast::23876",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30589,
+      "End": 30602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkMiterSat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1698,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkGetCiSatVarNums",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkGetCiSatVarNums",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4800,
+      "End": 5084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkClauseTriv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClauseTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5343,
+      "End": 5860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkClauseTop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClauseTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6117,
+      "End": 6729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkClauseAnd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClauseAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6986,
+      "End": 9102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkClauseMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClauseMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9359,
+      "End": 12223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkCollectSupergate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectSupergate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12531,
+      "End": 13976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkCollectSupergate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectSupergate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14284,
+      "End": 14984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkNodeFactor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkNodeFactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15253,
+      "End": 15589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkMiterSatCreateInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterSatCreateInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15852,
+      "End": 20602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::void-pointer::Abc_NtkMiterSatCreate",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkMiterSatCreate",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 20865,
+      "End": 21783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkMiterSatCreate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterSatCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20865,
+      "End": 21783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::ternary::Abc_NtkWriteSorterCnf",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkWriteSorterCnf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 28882,
+      "End": 32740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::Abc_NtkWriteSorterCnf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkWriteSorterCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28882,
+      "End": 32740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 662,
+      "End": 721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21787,
+      "End": 28589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::4967",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4967,
+      "End": 5000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::6368",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6368,
+      "End": 6420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::16203",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16203,
+      "End": 16237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::17126",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17126,
+      "End": 17160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::17663",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17663,
+      "End": 17715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::18268",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18268,
+      "End": 18321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::18978",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18978,
+      "End": 19031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::21360",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21360,
+      "End": 21395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::30339",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30339,
+      "End": 30373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::30417",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30417,
+      "End": 30450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::30515",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30515,
+      "End": 30566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSat.c::macro-inline::31531",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31531,
+      "End": 31582
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures to solve the miter using the internal SAT sat_solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcSat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"base/cmd/cmd.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static sat_solver * Abc_NtkMiterSatCreateLogic( Abc_Ntk_t * pNtk, int fAllPrimes );\n\n// extern Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk );\n\nvar nMuxes int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Attempts to solve the miter using an internal SAT sat_solver.]\n\n  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterSat(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T, fVerbose int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) int32 {\n    var pSat *sat_solver;\n    var status lbool;\n    var RetValue int32;\n    var clk abctime;\n \n    if pNumConfs != nil {\n        *pNumConfs = 0; }\n    if pNumInspects != nil {\n        *pNumInspects = 0; }\n\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n\n//    if ( Abc_NtkPoNum(pNtk) \u003e 1 )\n//        fprintf( stdout, \"Warning: The miter has %d outputs. SAT will try to prove all of them.\\n\", Abc_NtkPoNum(pNtk) );\n\n    // load clauses into the sat_solver\n    clk = Abc_Clock();\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, 0 );\n    if pSat == nil {\n        return 1; }\n//printf( \"%d \\n\", pSat-\u003eclauses.size );\n//sat_solver_delete( pSat );\n//return 1;\n\n//    printf( \"Created SAT problem with %d variable and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n    // simplify the problem\n    clk = Abc_Clock();\n    status = sat_solver_simplify(pSat);\n//    printf( \"Simplified the problem to %d variables and %d clauses. \", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    if status == 0 {\n        sat_solver_delete( pSat );\n//        printf( \"The problem is UNSATISFIABLE after simplification.\\n\" );\n        return 1;\n    }\n\n    // solve the miter\n    clk = Abc_Clock();\n    if fVerbose != 0 {\n        pSat.verbosity = 1; }\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_Undef {\n//        printf( \"The problem timed out.\\n\" );\n        RetValue = -1;\n    \n    } else if status == l_True {\n//        printf( \"The problem is SATISFIABLE.\\n\" );\n        RetValue = 0;\n    \n    } else if status == l_False {\n//        printf( \"The problem is UNSATISFIABLE.\\n\" );\n        RetValue = 1;\n    \n    } else {\n        assert(false, \"0\"); }\n//    ABC_PRT( \"SAT sat_solver time\", Abc_Clock() - clk );\n//    printf( \"The number of conflicts = %d.\\n\", (int)pSat-\u003esat_solver_stats.conflicts );\n\n    // if the problem is SAT, get the counterexample\n    if status == l_True {\n//        Vec_Int_t * vCiIds = Abc_NtkGetCiIds( pNtk );\n        var vCiIds *Vec_Int_t  = Abc_NtkGetCiSatVarNums( pNtk );\n        pNtk.pModel = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        Vec_IntFree( vCiIds );\n    }\n    // free the sat_solver\n    if fVerbose != 0 {\n        Sat_SolverPrintStats( os.Stdout, pSat ); }\n\n    if pNumConfs != nil {\n        *pNumConfs = int32(pSat.stats.conflicts); }\n    if pNumInspects != nil {\n        *pNumInspects = int32(pSat.stats.inspects); }\n\nsat_solver_store_write( pSat, \"trace.cnf\" );\nsat_solver_store_free( pSat );\n\n    sat_solver_delete( pSat );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of CI IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkGetCiSatVarNums(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vCiIds *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCiIds = Vec_IntAlloc( Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Vec_IntPush( vCiIds, int32((ABC_PTRINT_T))pObj.pCopy );\n    return vCiIds;\n}\n\n\n \n/**Function*************************************************************\n\n  Synopsis    [Adds trivial clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClauseTriv(pSat *sat_solver, pNode *Abc_Obj_t, vVars *Vec_Int_t) int32 {\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond( int32((ABC_PTRINT_T))Abc_ObjRegular(pNode).pCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Adds trivial clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClauseTop(pSat *sat_solver, vNodes *Vec_Ptr_t, vVars *Vec_Int_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i int32;\n//printf( \"Adding triv %d.         %d\\n\", Abc_ObjRegular(pNode)-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n    vVars.nSize = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntPush( vVars, toLitCond( int32((ABC_PTRINT_T))Abc_ObjRegular(pNode).pCopy, Abc_ObjIsComplement(pNode) ) );\n//    Vec_IntPush( vVars, toLitCond( (int)Abc_ObjRegular(pNode)-\u003eId, Abc_ObjIsComplement(pNode) ) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Adds trivial clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClauseAnd(pSat *sat_solver, pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, vVars *Vec_Int_t) int32 {\n    var fComp1, Var, Var1, i int32;\n//printf( \"Adding AND %d.  (%d)    %d\\n\", pNode-\u003eId, vSuper-\u003enSize+1, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n\n//    nVars = sat_solver_nvars(pSat);\n    Var = int32((ABC_PTRINT_T))pNode.pCopy;\n//    Var = pNode-\u003eId;\n\n//    assert( Var  \u003c nVars ); \n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]);\n        // determine the variable numbers\n        Var1 = int32((ABC_PTRINT_T))Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]).pCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n\n        // check that the variables are in the SAT manager\n//        assert( Var1 \u003c nVars );\n\n        // suppose the AND-gate is A * B = C\n        // add !A =\u003e !C   or   A + !C\n    //  fprintf( pFile, \"%d %d 0%c\", Var1, -Var, 10 );\n        vVars.nSize = 0;\n        Vec_IntPush( vVars, toLitCond(Var1, fComp1) );\n        Vec_IntPush( vVars, toLitCond(Var,  1     ) );\n        if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n            return 0; }\n    }\n\n    // add A \u0026 B =\u003e C   or   !A + !B + C\n//  fprintf( pFile, \"%d %d %d 0%c\", -Var1, -Var2, Var, 10 );\n    vVars.nSize = 0;\n    for  i = 0; i \u003c vSuper.nSize; i++  {\n        // get the predecessor nodes\n        // get the complemented attributes of the nodes\n        fComp1 = Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]);\n        // determine the variable numbers\n        Var1 = int32((ABC_PTRINT_T))Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]).pCopy;\n//        Var1 = (int)Abc_ObjRegular(vSuper-\u003epArray[i])-\u003eId;\n        // add this variable to the array\n        Vec_IntPush( vVars, toLitCond(Var1, !fComp1) );\n    }\n    Vec_IntPush( vVars, toLitCond(Var, 0) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Adds trivial clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClauseMux(pSat *sat_solver, pNode *Abc_Obj_t, pNodeC *Abc_Obj_t, pNodeT *Abc_Obj_t, pNodeE *Abc_Obj_t, vVars *Vec_Int_t) int32 {\n    var VarF, VarI, VarT, VarE, fCompT, fCompE int32;\n//printf( \"Adding mux %d.         %d\\n\", pNode-\u003eId, (int)pSat-\u003esat_solver_stats.clauses );\n\n    assert(!Abc_ObjIsComplement( pNode ), \"!Abc_ObjIsComplement( pNode )\");\n    assert(Abc_NodeIsMuxType( pNode ), \"Abc_NodeIsMuxType( pNode )\");\n    // get the variable numbers\n    VarF = int32((ABC_PTRINT_T))pNode.pCopy;\n    VarI = int32((ABC_PTRINT_T))pNodeC.pCopy;\n    VarT = int32((ABC_PTRINT_T))Abc_ObjRegular(pNodeT).pCopy;\n    VarE = int32((ABC_PTRINT_T))Abc_ObjRegular(pNodeE).pCopy;\n//    VarF = (int)pNode-\u003eId;\n//    VarI = (int)pNodeC-\u003eId;\n//    VarT = (int)Abc_ObjRegular(pNodeT)-\u003eId;\n//    VarE = (int)Abc_ObjRegular(pNodeE)-\u003eId;\n\n    // get the complementation flags\n    fCompT = Abc_ObjIsComplement(pNodeT);\n    fCompE = Abc_ObjIsComplement(pNodeE);\n\n    // f = ITE(i, t, e)\n    // i' + t' + f\n    // i' + t  + f'\n    // i  + e' + f\n    // i  + e  + f'\n    // create four clauses\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  1) );\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarI,  0) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n \n    if VarT == VarE {\n//        assert( fCompT == !fCompE );\n        return 1;\n    }\n\n    // two additional clauses\n    // t' \u0026 e' -\u003e f'       t  + e   + f'\n    // t  \u0026 e  -\u003e f        t' + e'  + f \n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  0^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  0^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  1) );\n    if !sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize ) {\n        return 0; }\n    vVars.nSize = 0;\n    Vec_IntPush( vVars, toLitCond(VarT,  1^fCompT) );\n    Vec_IntPush( vVars, toLitCond(VarE,  1^fCompE) );\n    Vec_IntPush( vVars, toLitCond(VarF,  0) );\n    return sat_solver_addclause( pSat, vVars.pArray, vVars.pArray + vVars.nSize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectSupergate_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fStopAtMux int32) int32 {\n    var RetValue1, RetValue2, i int32;\n    // check if the node is visited\n    if Abc_ObjRegular(pNode).fMarkB {\n        // check if the node occurs in the same polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == pNode {\n                return 1; }\n        }\n        // check if the node is present in the opposite polarity\n        for  i = 0; i \u003c vSuper.nSize; i++  {\n            if vSuper.pArray[i] == Abc_ObjNot(pNode) {\n                return -1; }\n        }\n        assert(false, \"0\");\n        return 0;\n    }\n    // if the new node is complemented or a PI, another gate begins\n    if !(fFirst != 0) {\n        if Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || Abc_ObjFanoutNum(pNode) \u003e 1 || ((fStopAtMux != 0) \u0026\u0026 Abc_NodeIsMuxType(pNode)) {\n            Vec_PtrPush( vSuper, pNode );\n            Abc_ObjRegular(pNode).fMarkB = 1;\n            return 0;\n        } }\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // go through the branches\n    RetValue1 = Abc_NtkCollectSupergate_rec( Abc_ObjChild0(pNode), vSuper, 0, fStopAtMux );\n    RetValue2 = Abc_NtkCollectSupergate_rec( Abc_ObjChild1(pNode), vSuper, 0, fStopAtMux );\n    if RetValue1 == -1 || RetValue2 == -1 {\n        return -1; }\n    // return 1 if at least one branch has a duplicate\n    return RetValue1 || RetValue2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectSupergate(pNode *Abc_Obj_t, fStopAtMux int32, vNodes *Vec_Ptr_t) {\n    var RetValue, i int32;\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    // collect the nodes in the implication supergate\n    Vec_PtrClear( vNodes );\n    RetValue = Abc_NtkCollectSupergate_rec( pNode, vNodes, 1, fStopAtMux );\n    assert(vNodes.nSize \u003e 1, \"vNodes.nSize \u003e 1\");\n    // unmark the visited nodes\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjRegular((Abc_Obj_t *)vNodes.pArray[i]).fMarkB = 0;\n    }\n    // if we found the node and its complement in the same implication supergate, \n    // return empty set of nodes (meaning that we should use constant-0 node)\n    if RetValue == -1 {\n        vNodes.nSize = 0; }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the factor of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkNodeFactor(pObj *Abc_Obj_t, nLevelMax int32) int32 {\n//  nLevelMax = ((nLevelMax)/2)*3;\n    assert(int32(pObj.Level) \u003c= nLevelMax, \"int32(pObj.Level) \u003c= nLevelMax\");\n//    return (int)(100000000.0 * pow(0.999, nLevelMax - pObj-\u003eLevel));\n    return int32((100000000.0 * (1 + 0.01 * pObj.Level)));\n//    return (int)(100000000.0 / ((nLevelMax)/2)*3 - pObj-\u003eLevel);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets up the SAT sat_solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterSatCreateInt(pSat *sat_solver, pNtk *Abc_Ntk_t) int32 {\n    var pNode, pFanin, pNodeC, pNodeT, pNodeE *Abc_Obj_t;\n    var vNodes, vSuper *Vec_Ptr_t;\n    var vVars *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var fUseMuxes int32 = 1;\n//    int fOrderCiVarsFirst = 0;\n    var RetValue int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // clean the CI node pointers\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.pCopy = nil;\n\n    // start the data structures\n    vNodes  = Vec_PtrAlloc( 1000 );   // the nodes corresponding to vars in the sat_solver\n    vSuper  = Vec_PtrAlloc( 100 );    // the nodes belonging to the given implication supergate\n    vVars   = Vec_IntAlloc( 100 );    // the temporary array for variables in the clause\n\n    // add the clause for the constant node\n    pNode = Abc_AigConst1(pNtk);\n    pNode.fMarkA = 1;\n    pNode.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n    Vec_PtrPush( vNodes, pNode );\n    Abc_NtkClauseTriv( pSat, pNode, vVars );\n/*\n    // add the PI variables first\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pNode-\u003efMarkA = 1;\n        pNode-\u003epCopy = (Abc_Obj_t *)vNodes-\u003enSize;\n        Vec_PtrPush( vNodes, pNode );\n    }\n*/\n    // collect the nodes that need clauses and top-level assignments\n    Vec_PtrClear( vSuper );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        // get the fanin\n        pFanin = Abc_ObjFanin0(pNode);\n        // create the node's variable\n        if pFanin.fMarkA == 0 {\n            pFanin.fMarkA = 1;\n            pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        // add the trivial clause\n        Vec_PtrPush( vSuper, Abc_ObjChild0(pNode) );\n    }\n    if !(Abc_NtkClauseTop( pSat, vSuper, vVars ) != 0) {\n        goto Quits; }\n\n\n    // add the clauses\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n        if !Abc_AigNodeIsAnd(pNode) {\n            continue; }\n//printf( \"%d \", pNode-\u003eId );\n\n        // add the clauses\n        if (fUseMuxes != 0) \u0026\u0026 Abc_NodeIsMuxType(pNode) {\n            nMuxes++;\n\n            pNodeC = Abc_NodeRecognizeMux( pNode, \u0026pNodeT, \u0026pNodeE );\n            Vec_PtrClear( vSuper );\n            Vec_PtrPush( vSuper, pNodeC );\n            Vec_PtrPush( vSuper, pNodeT );\n            Vec_PtrPush( vSuper, pNodeE );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if pFanin.fMarkA == 0 {\n                    pFanin.fMarkA = 1;\n                    pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if !(Abc_NtkClauseMux( pSat, pNode, pNodeC, pNodeT, pNodeE, vVars ) != 0) {\n                goto Quits; }\n        \n        } else {\n            // get the supergate\n            Abc_NtkCollectSupergate( pNode, fUseMuxes, vSuper );\n            // add the fanin nodes to explore\n            Vec_PtrForEachEntry( Abc_Obj_t *, vSuper, pFanin, k )\n            {\n                pFanin = Abc_ObjRegular(pFanin);\n                if pFanin.fMarkA == 0 {\n                    pFanin.fMarkA = 1;\n                    pFanin.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)vNodes.nSize;\n                    Vec_PtrPush( vNodes, pFanin );\n                }\n            }\n            // add the clauses\n            if vSuper.nSize == 0 {\n                if !(Abc_NtkClauseTriv( pSat, Abc_ObjNot(pNode), vVars ) != 0) {\n//                if ( !Abc_NtkClauseTriv( pSat, pNode, vVars ) )\n                    goto Quits; }\n            \n            } else {\n                if !(Abc_NtkClauseAnd( pSat, pNode, vSuper, vVars ) != 0) {\n                    goto Quits; }\n            }\n        }\n    }\n/*\n    // set preferred variables\n    if ( fOrderCiVarsFirst )\n    {\n        int * pPrefVars = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        int nVars = 0;\n        Abc_NtkForEachCi( pNtk, pNode, i )\n        {\n            if ( pNode-\u003efMarkA == 0 )\n                continue;\n            pPrefVars[nVars++] = (int)pNode-\u003epCopy;\n        }\n        nVars = Abc_MinInt( nVars, 10 );\n        ASat_SolverSetPrefVars( pSat, pPrefVars, nVars );\n    }\n*/\n/*\n    Abc_NtkForEachObj( pNtk, pNode, i )\n    {\n        if ( !pNode-\u003efMarkA )\n            continue;\n        printf( \"%10s : \", Abc_ObjName(pNode) );\n        printf( \"%3d\\n\", (int)pNode-\u003epCopy );\n    }\n    printf( \"\\n\" );\n*/\n    RetValue = 1;\nQuits :\n    // delete\n    Vec_IntFree( vVars );\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vSuper );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets up the SAT sat_solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterSatCreate(pNtk *Abc_Ntk_t, fAllPrimes int32) any {\n    var pSat *sat_solver;\n    var pNode *Abc_Obj_t;\n    var RetValue, i int32; //, clk = Abc_Clock();\n\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsBddLogic(pNtk)\");\n    if Abc_NtkIsBddLogic(pNtk) {\n        return Abc_NtkMiterSatCreateLogic(pNtk, fAllPrimes); }\n\n    nMuxes = 0;\n    pSat = sat_solver_new();\n//sat_solver_store_alloc( pSat );\n    RetValue = Abc_NtkMiterSatCreateInt( pSat, pNtk );\nsat_solver_store_mark_roots( pSat );\n\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode.fMarkA = 0;\n//    ASat_SolverWriteDimacs( pSat, \"temp_sat.cnf\", NULL, NULL, 1 );\n    if RetValue == 0 {\n        sat_solver_delete(pSat);\n        return nil;\n    }\n//    printf( \"Ands = %6d.  Muxes = %6d (%5.2f %%).  \", Abc_NtkNodeNum(pNtk), nMuxes, 300.0*nMuxes/Abc_NtkNodeNum(pNtk) );\n//    ABC_PRT( \"Creating sat_solver\", Abc_Clock() - clk );\n    return pSat;\n}\n\n\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses for the internal node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NodeAddClauses( sat_solver * pSat, char * pSop0, char * pSop1, Abc_Obj_t * pNode, Vec_Int_t * vVars )\n{\n    Abc_Obj_t * pFanin;\n    int i, c, nFanins;\n    int RetValue = 0;\n    char * pCube;\n\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert( nFanins == Abc_SopGetVarNum( pSop0 ) );\n\n//    if ( nFanins == 0 )\n    if ( Cudd_Regular((Abc_Obj_t *)pNode-\u003epData) == Cudd_ReadOne((DdManager *)pNode-\u003epNtk-\u003epManFunc) )\n    {\n        vVars-\u003enSize = 0;\n//        if ( Abc_SopIsConst1(pSop1) )\n        if ( !Cudd_IsComplement(pNode-\u003epData) )\n            Vec_IntPush( vVars, toLit(pNode-\u003eId) );\n        else\n            Vec_IntPush( vVars, lit_neg(toLit(pNode-\u003eId)) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n        return 1;\n    }\n \n    // add clauses for the negative phase\n    for ( c = 0; ; c++ )\n    {\n        // get the cube\n        pCube = pSop0 + c * (nFanins + 3);\n        if ( *pCube == 0 )\n            break;\n        // add the clause\n        vVars-\u003enSize = 0;\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n        {\n            if ( pCube[i] == '0' )\n                Vec_IntPush( vVars, toLit(pFanin-\u003eId) );\n            else if ( pCube[i] == '1' )\n                Vec_IntPush( vVars, lit_neg(toLit(pFanin-\u003eId)) );\n        }\n        Vec_IntPush( vVars, lit_neg(toLit(pNode-\u003eId)) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n    }\n\n    // add clauses for the positive phase\n    for ( c = 0; ; c++ )\n    {\n        // get the cube\n        pCube = pSop1 + c * (nFanins + 3);\n        if ( *pCube == 0 )\n            break;\n        // add the clause\n        vVars-\u003enSize = 0;\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n        {\n            if ( pCube[i] == '0' )\n                Vec_IntPush( vVars, toLit(pFanin-\u003eId) );\n            else if ( pCube[i] == '1' )\n                Vec_IntPush( vVars, lit_neg(toLit(pFanin-\u003eId)) );\n        }\n        Vec_IntPush( vVars, toLit(pNode-\u003eId) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds clauses for the PO node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NodeAddClausesTop( sat_solver * pSat, Abc_Obj_t * pNode, Vec_Int_t * vVars )\n{\n    Abc_Obj_t * pFanin;\n    int RetValue = 0;\n\n    pFanin = Abc_ObjFanin0(pNode);\n    if ( Abc_ObjFaninC0(pNode) )\n    {\n        vVars-\u003enSize = 0;\n        Vec_IntPush( vVars, toLit(pFanin-\u003eId) );\n        Vec_IntPush( vVars, toLit(pNode-\u003eId) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n\n        vVars-\u003enSize = 0;\n        Vec_IntPush( vVars, lit_neg(toLit(pFanin-\u003eId)) );\n        Vec_IntPush( vVars, lit_neg(toLit(pNode-\u003eId)) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n    }\n    else\n    {\n        vVars-\u003enSize = 0;\n        Vec_IntPush( vVars, lit_neg(toLit(pFanin-\u003eId)) );\n        Vec_IntPush( vVars, toLit(pNode-\u003eId) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n\n        vVars-\u003enSize = 0;\n        Vec_IntPush( vVars, toLit(pFanin-\u003eId) );\n        Vec_IntPush( vVars, lit_neg(toLit(pNode-\u003eId)) );\n        RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n        if ( !RetValue ) \n        {\n            printf( \"The CNF is trivially UNSAT.\\n\" );\n            return 0;\n        }\n    }\n\n    vVars-\u003enSize = 0;\n    Vec_IntPush( vVars, toLit(pNode-\u003eId) );\n    RetValue = sat_solver_addclause( pSat, vVars-\u003epArray, vVars-\u003epArray + vVars-\u003enSize );\n    if ( !RetValue ) \n    {\n        printf( \"The CNF is trivially UNSAT.\\n\" );\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets up the SAT sat_solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nsat_solver * Abc_NtkMiterSatCreateLogic( Abc_Ntk_t * pNtk, int fAllPrimes )\n{\n    sat_solver * pSat;\n    Mem_Flex_t * pMmFlex;\n    Abc_Obj_t * pNode;\n    Vec_Str_t * vCube;\n    Vec_Int_t * vVars;\n    char * pSop0, * pSop1;\n    int i;\n\n    assert( Abc_NtkIsBddLogic(pNtk) );\n\n    // transfer the IDs to the copy field\n    Abc_NtkForEachPi( pNtk, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)pNode-\u003eId;\n\n    // start the data structures\n    pSat    = sat_solver_new();\nsat_solver_store_alloc( pSat );\n    pMmFlex = Mem_FlexStart();\n    vCube   = Vec_StrAlloc( 100 );\n    vVars   = Vec_IntAlloc( 100 );\n\n    // add clauses for each internal nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // derive SOPs for both phases of the node\n        Abc_NodeBddToCnf( pNode, pMmFlex, vCube, fAllPrimes, \u0026pSop0, \u0026pSop1 );\n        // add the clauses to the sat_solver\n        if ( !Abc_NodeAddClauses( pSat, pSop0, pSop1, pNode, vVars ) )\n        {\n            sat_solver_delete( pSat );\n            pSat = NULL;\n            goto finish;\n        }\n    }\n    // add clauses for each PO\n    Abc_NtkForEachPo( pNtk, pNode, i )\n    {\n        if ( !Abc_NodeAddClausesTop( pSat, pNode, vVars ) )\n        {\n            sat_solver_delete( pSat );\n            pSat = NULL;\n            goto finish;\n        }\n    }\nsat_solver_store_mark_roots( pSat );\n\nfinish:\n    // delete\n    Vec_StrFree( vCube );\n    Vec_IntFree( vVars );\n    Mem_FlexStop( pMmFlex, 0 );\n    return pSat;\n}\n\n#else\n\nsat_solver * Abc_NtkMiterSatCreateLogic( Abc_Ntk_t * pNtk, int fAllPrimes ) { return NULL; }\n\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Writes CNF for the sorter with N inputs asserting Q ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkWriteSorterCnf(pFileName string, nVars int32, nQueens int32) {\n    var Command string // was [100]byte in C\n\n    var pAbc any;\n    var pNtk *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var ppNodes [2]*Abc_Obj_t;\n    var ppRoots [2]*Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var pFile *os.File;\n    var i, Counter int32;\n\n    if nQueens \u003c= 0 \u0026\u0026 nQueens \u003e= nVars {\n        fmt.Printf(\"The number of queens (Q = %d) should belong to the interval: 0 \u003c Q \u003c %d.\\n\", nQueens, nQueens);\n        return;\n    }\n    assert(nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars, \"nQueens \u003e 0 \u0026\u0026 nQueens \u003c nVars\");\n    pAbc = Abc_FrameGetGlobalFrame();\n    // generate sorter\n    Command = fmt.Sprintf(\"gen -s -N %d sorter%d.blif\", nVars, nVars);\n    if Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) {\n        fprintf( os.Stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n    // read the file\n    Command = fmt.Sprintf(\"read sorter%d.blif; strash\", nVars);\n    if Cmd_CommandExecute( (Abc_Frame_t *)pAbc, Command ) {\n        fprintf( os.Stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return;\n    }\n\n    // get the current network\n    pNtk = Abc_FrameReadNtk((Abc_Frame_t *)pAbc);\n    // collect the nodes for the given two primary outputs\n    ppNodes[0] = Abc_NtkPo( pNtk, nVars - nQueens - 1 );\n    ppNodes[1] = Abc_NtkPo( pNtk, nVars - nQueens );\n    ppRoots[0] = Abc_ObjFanin0( ppNodes[0] );\n    ppRoots[1] = Abc_ObjFanin0( ppNodes[1] );\n    vNodes = Abc_NtkDfsNodes( pNtk, ppRoots, 2 );\n\n    // assign CNF variables\n    Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)~0;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Counter++;\n\n/*\n        OutVar   = pCnf-\u003epVarNums[ pObj-\u003eId ];\n        pVars[0] = pCnf-\u003epVarNums[ Aig_ObjFanin0(pObj)-\u003eId ];\n        pVars[1] = pCnf-\u003epVarNums[ Aig_ObjFanin1(pObj)-\u003eId ];\n\n        // positive phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar; \n        *pLits++ = 2 * pVars[0] + !Aig_ObjFaninC0(pObj); \n        *pLits++ = 2 * pVars[1] + !Aig_ObjFaninC1(pObj); \n        // negative phase\n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[0] + Aig_ObjFaninC0(pObj); \n        *pClas++ = pLits;\n        *pLits++ = 2 * OutVar + 1; \n        *pLits++ = 2 * pVars[1] + Aig_ObjFaninC1(pObj); \n*/\n\n    // add clauses for these nodes\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"c CNF for %d-bit sorter with %d bits set to 1 generated by ABC.\\n\", nVars, nQueens);\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", Counter, 3 * Vec_PtrSize(vNodes) + 2);\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // positive phase\n        fmt.Fprintf(pFile, \"%d %s%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC0(pObj)? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC1(pObj)? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin1(pObj).pCopy);\n        // negative phase\n        fmt.Fprintf(pFile, \"-%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC0(pObj)? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(pObj).pCopy);\n        fmt.Fprintf(pFile, \"-%d %s%d 0\\n\", 1+int32((ABC_PTRINT_T))pObj.pCopy, Abc_ObjFaninC1(pObj)? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin1(pObj).pCopy);\n    }\n    Vec_PtrFree( vNodes );\n\n/*\n    *pClas++ = pLits;\n    *pLits++ = 2 * OutVar + Aig_ObjFaninC0(pObj); \n*/\n    // assert the first literal to zero\n    fmt.Fprintf(pFile, \"%s%d 0\\n\", Abc_ObjFaninC0(ppNodes[0])? \"\" : \"-\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(ppNodes[0]).pCopy);\n    // assert the second literal to one\n    fmt.Fprintf(pFile, \"%s%d 0\\n\", Abc_ObjFaninC0(ppNodes[1])? \"-\" : \"\", 1+int32((ABC_PTRINT_T))Abc_ObjFanin0(ppNodes[1]).pCopy);\n    _ = (pFile).Close();\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

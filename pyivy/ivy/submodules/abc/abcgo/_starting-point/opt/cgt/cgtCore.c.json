@@ -1,0 +1,341 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c",
+  "SHA256": "ae3a0ea5c436fb64a35b19cb81d3eb333db57783cd4539bcb00330e0cb9dacd0",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Cgt_Par_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(p.vGatesAll) == Aig_ManCoNum(p.pFrame) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 7779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : D =%4d. C =%5d. Var =%6d. Pr =%5d. Cex =%5d. F =%4d. Saved =%6d. \","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 219,
+        "Column": 78,
+        "ByteOffset": 8266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 9236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p.pFrame) == Saig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 254,
+        "Column": 36,
+        "ByteOffset": 9331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p.pFrame) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 10967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes: Before CG = %6d. After CG = %6d. (%6.2f %%).  Total after CG = %6d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cgt_SetDefaultParams",
+      "Start": 1270,
+      "End": 1932,
+      "BodyStart": 1313,
+      "Original": "void Cgt_SetDefaultParams( Cgt_Par_t * p )\n{\n    memset( p, 0, sizeof(Cgt_Par_t) );\n    p-\u003enLevelMax  =    25;   // the max number of levels to look for clock-gates\n    p-\u003enCandMax   =  1000;   // the max number of candidates at each node\n    p-\u003enOdcMax    =     0;   // the max number of ODC levels to consider\n    p-\u003enConfMax   =    10;   // the max number of conflicts at a node\n    p-\u003enVarsMin   =  1000;   // the min number of vars to recycle the SAT solver\n    p-\u003enFlopsMin  =    10;   // the min number of flops to recycle the SAT solver\n    p-\u003efAreaOnly  =     0;   // derive clock-gating to minimize area\n    p-\u003efVerbose   =     0;   // verbosity flag\n}",
+      "Draft": "func Cgt_SetDefaultParams(p *Cgt_Par_t) {\n    memset( p, 0, sizeof(Cgt_Par_t) );\n    p.nLevelMax  =    25;   // the max number of levels to look for clock-gates\n    p.nCandMax   =  1000;   // the max number of candidates at each node\n    p.nOdcMax    =     0;   // the max number of ODC levels to consider\n    p.nConfMax   =    10;   // the max number of conflicts at a node\n    p.nVarsMin   =  1000;   // the min number of vars to recycle the SAT solver\n    p.nFlopsMin  =    10;   // the min number of flops to recycle the SAT solver\n    p.fAreaOnly  =     0;   // derive clock-gating to minimize area\n    p.fVerbose   =     0;   // verbosity flag\n}"
+    },
+    {
+      "Name": "Cgt_SimulationFilter",
+      "Start": 2227,
+      "End": 2952,
+      "BodyStart": 2316,
+      "Original": "int Cgt_SimulationFilter( Cgt_Man_t * p, Aig_Obj_t * pCandPart, Aig_Obj_t * pMiterPart )\n{\n    unsigned * pInfoCand, * pInfoMiter;\n    int w, nWords = Abc_BitWordNum( p-\u003enPatts );  \n    pInfoCand  = (unsigned *)Vec_PtrEntry( p-\u003evPatts, Aig_ObjId(Aig_Regular(pCandPart)) );\n    pInfoMiter = (unsigned *)Vec_PtrEntry( p-\u003evPatts, Aig_ObjId(pMiterPart) );\n    // C =\u003e !M -- true   is the same as    C \u0026 M -- false\n    if ( !Aig_IsComplement(pCandPart) )\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( pInfoCand[w] \u0026 pInfoMiter[w] )\n                return 0;\n    }\n    else\n    {\n        for ( w = 0; w \u003c nWords; w++ )\n            if ( ~pInfoCand[w] \u0026 pInfoMiter[w] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Cgt_SimulationFilter(p *Cgt_Man_t, pCandPart *Aig_Obj_t, pMiterPart *Aig_Obj_t) int32 {\n    var pInfoCand, pInfoMiter *uint32;\n    var w int32;\n    var nWords int32 = Abc_BitWordNum( p.nPatts );  \n    pInfoCand  = (unsigned *)Vec_PtrEntry( p.vPatts, Aig_ObjId(Aig_Regular(pCandPart)) );\n    pInfoMiter = (unsigned *)Vec_PtrEntry( p.vPatts, Aig_ObjId(pMiterPart) );\n    // C =\u003e !M -- true   is the same as    C \u0026 M -- false\n    if !Aig_IsComplement(pCandPart) {\n        for  w = 0; w \u003c nWords; w++  {\n            if pInfoCand[w] \u0026 pInfoMiter[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pInfoCand[w] \u0026 pInfoMiter[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Cgt_SimulationRecord",
+      "Start": 3217,
+      "End": 3709,
+      "BodyStart": 3260,
+      "Original": "void Cgt_SimulationRecord( Cgt_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( p-\u003epPart, pObj, i )\n        if ( sat_solver_var_value( p-\u003epSat, p-\u003epCnf-\u003epVarNums[i] ) )\n            Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(p-\u003evPatts, i), p-\u003enPatts );\n    p-\u003enPatts++;\n    if ( p-\u003enPatts == 32 * p-\u003enPattWords )\n    {\n        Vec_PtrReallocSimInfo( p-\u003evPatts );\n        Vec_PtrCleanSimInfo( p-\u003evPatts, p-\u003enPattWords, 2 * p-\u003enPattWords );\n        p-\u003enPattWords *= 2;\n    }\n}",
+      "Draft": "func Cgt_SimulationRecord(p *Cgt_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pPart.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if sat_solver_var_value( p.pSat, p.pCnf.pVarNums[i] ) {\n            Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(p.vPatts, i), p.nPatts ); }\n    }\n    p.nPatts++;\n    if p.nPatts == 32 * p.nPattWords {\n        Vec_PtrReallocSimInfo( p.vPatts );\n        Vec_PtrCleanSimInfo( p.vPatts, p.nPattWords, 2 * p.nPattWords );\n        p.nPattWords *= 2;\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ClockGatingRangeCheck",
+      "Start": 3979,
+      "End": 6336,
+      "BodyStart": 4053,
+      "Original": "void Cgt_ClockGatingRangeCheck( Cgt_Man_t * p, int iStart, int nOutputs )\n{\n    Vec_Ptr_t * vNodes = p-\u003evFanout;\n    Aig_Obj_t * pMiter, * pCand, * pMiterFrame, * pCandFrame, * pMiterPart, * pCandPart;\n    int i, k, RetValue, nCalls;\n    assert( Vec_VecSize(p-\u003evGatesAll) == Aig_ManCoNum(p-\u003epFrame) );\n    // go through all the registers inputs of this range\n    for ( i = iStart; i \u003c iStart + nOutputs; i++ )\n    {\n        nCalls = p-\u003enCalls;\n        pMiter = Saig_ManLi( p-\u003epAig, i );\n        Cgt_ManDetectCandidates( p-\u003epAig, p-\u003evUseful, Aig_ObjFanin0(pMiter), p-\u003epPars-\u003enLevelMax, vNodes );\n        // go through the candidates of this PO\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pCand, k )\n        {\n            // get the corresponding nodes from the frames\n            pCandFrame  = (Aig_Obj_t *)pCand-\u003epData;\n            pMiterFrame = (Aig_Obj_t *)pMiter-\u003epData;\n            // get the corresponding nodes from the part\n            pCandPart   = (Aig_Obj_t *)pCandFrame-\u003epData;\n            pMiterPart  = (Aig_Obj_t *)pMiterFrame-\u003epData;\n            // try direct polarity\n            if ( Cgt_SimulationFilter( p, pCandPart, pMiterPart ) )\n            {\n                RetValue = Cgt_CheckImplication( p, pCandPart, pMiterPart );\n                if ( RetValue == 1 )\n                {\n                    Vec_VecPush( p-\u003evGatesAll, i, pCand );\n                    continue;\n                }\n                if ( RetValue == 0 )\n                    Cgt_SimulationRecord( p );\n            }\n            else\n                p-\u003enCallsFiltered++;\n            // try reverse polarity\n            if ( Cgt_SimulationFilter( p, Aig_Not(pCandPart), pMiterPart ) )\n            {\n                RetValue = Cgt_CheckImplication( p, Aig_Not(pCandPart), pMiterPart );\n                if ( RetValue == 1 )\n                {\n                    Vec_VecPush( p-\u003evGatesAll, i, Aig_Not(pCand) );\n                    continue;\n                }\n                if ( RetValue == 0 )\n                    Cgt_SimulationRecord( p );\n            }\n            else\n                p-\u003enCallsFiltered++;\n        }\n\n        if ( p-\u003epPars-\u003efVerbose )\n        {\n//            printf( \"Flop %3d : Cand = %4d. Gate = %4d. SAT calls = %3d.\\n\", \n//                i, Vec_PtrSize(vNodes), Vec_PtrSize(Vec_VecEntry(p-\u003evGatesAll, i)), p-\u003enCalls-nCalls );\n        }\n\n    }\n}",
+      "Draft": "func Cgt_ClockGatingRangeCheck(p *Cgt_Man_t, iStart int32, nOutputs int32) {\n    var vNodes *Vec_Ptr_t  = p.vFanout;\n    var pMiter, pCand, pMiterFrame, pCandFrame, pMiterPart, pCandPart *Aig_Obj_t;\n    var i, k, RetValue, nCalls int32;\n    assert(Vec_VecSize(p.vGatesAll) == Aig_ManCoNum(p.pFrame), \"Vec_VecSize(p.vGatesAll) == Aig_ManCoNum(p.pFrame)\");\n    // go through all the registers inputs of this range\n    for  i = iStart; i \u003c iStart + nOutputs; i++  {\n        nCalls = p.nCalls;\n        pMiter = Saig_ManLi( p.pAig, i );\n        Cgt_ManDetectCandidates( p.pAig, p.vUseful, Aig_ObjFanin0(pMiter), p.pPars.nLevelMax, vNodes );\n        // go through the candidates of this PO\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pCand) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            // get the corresponding nodes from the frames\n            pCandFrame  = (Aig_Obj_t *)pCand.pData;\n            pMiterFrame = (Aig_Obj_t *)pMiter.pData;\n            // get the corresponding nodes from the part\n            pCandPart   = (Aig_Obj_t *)pCandFrame.pData;\n            pMiterPart  = (Aig_Obj_t *)pMiterFrame.pData;\n            // try direct polarity\n            if Cgt_SimulationFilter( p, pCandPart, pMiterPart ) != 0 {\n                RetValue = Cgt_CheckImplication( p, pCandPart, pMiterPart );\n                if RetValue == 1 {\n                    Vec_VecPush( p.vGatesAll, i, pCand );\n                    continue;\n                }\n                if RetValue == 0 {\n                    Cgt_SimulationRecord( p ); }\n            \n            } else {\n                p.nCallsFiltered++; }\n            // try reverse polarity\n            if Cgt_SimulationFilter( p, Aig_Not(pCandPart), pMiterPart ) != 0 {\n                RetValue = Cgt_CheckImplication( p, Aig_Not(pCandPart), pMiterPart );\n                if RetValue == 1 {\n                    Vec_VecPush( p.vGatesAll, i, Aig_Not(pCand) );\n                    continue;\n                }\n                if RetValue == 0 {\n                    Cgt_SimulationRecord( p ); }\n            \n            } else {\n                p.nCallsFiltered++; }\n        }\n\n        if p.pPars.fVerbose {\n//            printf( \"Flop %3d : Cand = %4d. Gate = %4d. SAT calls = %3d.\\n\", \n//                i, Vec_PtrSize(vNodes), Vec_PtrSize(Vec_VecEntry(p-\u003evGatesAll, i)), p-\u003enCalls-nCalls );\n        }\n\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ClockGatingRange",
+      "Start": 6607,
+      "End": 7969,
+      "BodyStart": 6661,
+      "Original": "int Cgt_ClockGatingRange( Cgt_Man_t * p, int iStart )\n{\n    int nOutputs, iStop;\n    abctime clk, clkTotal = Abc_Clock();\n    int nCallsUnsat    = p-\u003enCallsUnsat;\n    int nCallsSat      = p-\u003enCallsSat;\n    int nCallsUndec    = p-\u003enCallsUndec;\n    int nCallsFiltered = p-\u003enCallsFiltered;\nclk = Abc_Clock();\n    p-\u003epPart = Cgt_ManDupPartition( p-\u003epFrame, p-\u003epPars-\u003enVarsMin, p-\u003epPars-\u003enFlopsMin, iStart, p-\u003epCare, p-\u003evSuppsInv, \u0026nOutputs );\n    p-\u003epCnf  = Cnf_DeriveSimple( p-\u003epPart, nOutputs );\n    p-\u003epSat  = (sat_solver *)Cnf_DataWriteIntoSolver( p-\u003epCnf, 1, 0 );\n    sat_solver_compress( p-\u003epSat );\n    p-\u003evPatts = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p-\u003epPart), p-\u003enPattWords );\n    Vec_PtrCleanSimInfo( p-\u003evPatts, 0, p-\u003enPattWords );\np-\u003etimePrepare += Abc_Clock() - clk;\n    Cgt_ClockGatingRangeCheck( p, iStart, nOutputs );\n    iStop = iStart + nOutputs;\n    if ( p-\u003epPars-\u003efVeryVerbose )\n    {\n        printf( \"%5d : D =%4d. C =%5d. Var =%6d. Pr =%5d. Cex =%5d. F =%4d. Saved =%6d. \",\n            iStart, iStop-iStart, Aig_ManCoNum(p-\u003epPart)-nOutputs, p-\u003epSat-\u003esize, \n            p-\u003enCallsUnsat-nCallsUnsat, \n            p-\u003enCallsSat  -nCallsSat, \n            p-\u003enCallsUndec-nCallsUndec,\n            p-\u003enCallsFiltered-nCallsFiltered );\n        ABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n    }\n    Cgt_ManClean( p );\n    p-\u003enRecycles++;\n    return iStop;\n}",
+      "Draft": "func Cgt_ClockGatingRange(p *Cgt_Man_t, iStart int32) int32 {\n    var nOutputs, iStop int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var nCallsUnsat int32     = p.nCallsUnsat;\n    var nCallsSat int32       = p.nCallsSat;\n    var nCallsUndec int32     = p.nCallsUndec;\n    var nCallsFiltered int32  = p.nCallsFiltered;\nclk = Abc_Clock();\n    p.pPart = Cgt_ManDupPartition( p.pFrame, p.pPars.nVarsMin, p.pPars.nFlopsMin, iStart, p.pCare, p.vSuppsInv, \u0026nOutputs );\n    p.pCnf  = Cnf_DeriveSimple( p.pPart, nOutputs );\n    p.pSat  = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    sat_solver_compress( p.pSat );\n    p.vPatts = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p.pPart), p.nPattWords );\n    Vec_PtrCleanSimInfo( p.vPatts, 0, p.nPattWords );\np.timePrepare += Abc_Clock() - clk;\n    Cgt_ClockGatingRangeCheck( p, iStart, nOutputs );\n    iStop = iStart + nOutputs;\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : D =%4d. C =%5d. Var =%6d. Pr =%5d. Cex =%5d. F =%4d. Saved =%6d. \", iStart, iStop-iStart, Aig_ManCoNum(p.pPart)-nOutputs, p.pSat.size, p.nCallsUnsat-nCallsUnsat, p.nCallsSat  -nCallsSat, p.nCallsUndec-nCallsUndec, p.nCallsFiltered-nCallsFiltered);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    Cgt_ManClean( p );\n    p.nRecycles++;\n    return iStop;\n}"
+    },
+    {
+      "Name": "Cgt_ClockGatingCandidates",
+      "Start": 8239,
+      "End": 9302,
+      "BodyStart": 8356,
+      "Original": "Vec_Vec_t * Cgt_ClockGatingCandidates( Aig_Man_t * pAig, Aig_Man_t * pCare, Cgt_Par_t * pPars, Vec_Int_t * vUseful )\n{\n    Bar_Progress_t * pProgress = NULL;\n    Cgt_Par_t Pars; \n    Cgt_Man_t * p;\n    Vec_Vec_t * vGatesAll;\n    int iStart;\n    abctime clk = Abc_Clock(), clkTotal = Abc_Clock();\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    if ( pPars == NULL )\n        Cgt_SetDefaultParams( pPars = \u0026Pars );    \n    p = Cgt_ManCreate( pAig, pCare, pPars );\n    p-\u003evUseful = vUseful;\n    p-\u003epFrame = Cgt_ManDeriveAigForGating( p );\np-\u003etimeAig += Abc_Clock() - clk;\n    assert( Aig_ManCoNum(p-\u003epFrame) == Saig_ManRegNum(p-\u003epAig) );\n    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p-\u003epFrame) );\n    for ( iStart = 0; iStart \u003c Aig_ManCoNum(p-\u003epFrame); )\n    {\n        Bar_ProgressUpdate( pProgress, iStart, NULL );\n        iStart = Cgt_ClockGatingRange( p, iStart );\n    }\n    Bar_ProgressStop( pProgress );\n    vGatesAll = p-\u003evGatesAll;\n    p-\u003evGatesAll = NULL;\np-\u003etimeTotal = Abc_Clock() - clkTotal;\n    Cgt_ManStop( p );\n    return vGatesAll;\n}",
+      "Draft": "func Cgt_ClockGatingCandidates(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t, vUseful *Vec_Int_t) *Vec_Vec_t {\n    var pProgress *Bar_Progress_t  = nil;\n    var Pars Cgt_Par_t; \n    var p *Cgt_Man_t;\n    var vGatesAll *Vec_Vec_t;\n    var iStart int32;\n    var clk abctime = Abc_Clock();\n    var clkTotal abctime = Abc_Clock();\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    if pPars == nil {\n        Cgt_SetDefaultParams( pPars = \u0026Pars ); }    \n    p = Cgt_ManCreate( pAig, pCare, pPars );\n    p.vUseful = vUseful;\n    p.pFrame = Cgt_ManDeriveAigForGating( p );\np.timeAig += Abc_Clock() - clk;\n    assert(Aig_ManCoNum(p.pFrame) == Saig_ManRegNum(p.pAig), \"Aig_ManCoNum(p.pFrame) == Saig_ManRegNum(p.pAig)\");\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManCoNum(p.pFrame) );\n    for  iStart = 0; iStart \u003c Aig_ManCoNum(p.pFrame);  {\n        Bar_ProgressUpdate( pProgress, iStart, nil );\n        iStart = Cgt_ClockGatingRange( p, iStart );\n    }\n    Bar_ProgressStop( pProgress );\n    vGatesAll = p.vGatesAll;\n    p.vGatesAll = nil;\np.timeTotal = Abc_Clock() - clkTotal;\n    Cgt_ManStop( p );\n    return vGatesAll;\n}"
+    },
+    {
+      "Name": "Cgt_ClockGatingInt",
+      "Start": 9572,
+      "End": 10060,
+      "BodyStart": 9682,
+      "Original": "Vec_Vec_t * Cgt_ClockGatingInt( Aig_Man_t * pAig, Aig_Man_t * pCare, Cgt_Par_t * pPars, Vec_Int_t * vUseful )\n{\n    Vec_Vec_t * vGatesAll, * vGates;\n    vGatesAll = Cgt_ClockGatingCandidates( pAig, pCare, pPars, vUseful );\n    if ( pPars-\u003efAreaOnly )\n        vGates = Cgt_ManDecideArea( pAig, vGatesAll, pPars-\u003enOdcMax, pPars-\u003efVerbose );\n    else\n        vGates = Cgt_ManDecideSimple( pAig, vGatesAll, pPars-\u003enOdcMax, pPars-\u003efVerbose );\n    Vec_VecFree( vGatesAll );\n    return vGates;\n}",
+      "Draft": "func Cgt_ClockGatingInt(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t, vUseful *Vec_Int_t) *Vec_Vec_t {\n    var vGatesAll, vGates *Vec_Vec_t;\n    vGatesAll = Cgt_ClockGatingCandidates( pAig, pCare, pPars, vUseful );\n    if pPars.fAreaOnly {\n        vGates = Cgt_ManDecideArea( pAig, vGatesAll, pPars.nOdcMax, pPars.fVerbose );\n    } else {\n        vGates = Cgt_ManDecideSimple( pAig, vGatesAll, pPars.nOdcMax, pPars.fVerbose ); }\n    Vec_VecFree( vGatesAll );\n    return vGates;\n}"
+    },
+    {
+      "Name": "Cgt_ClockGating",
+      "Start": 10061,
+      "End": 10854,
+      "BodyStart": 10147,
+      "Original": "Aig_Man_t * Cgt_ClockGating( Aig_Man_t * pAig, Aig_Man_t * pCare, Cgt_Par_t * pPars )\n{\n    Aig_Man_t * pGated;\n    Vec_Vec_t * vGates = Cgt_ClockGatingInt( pAig, pCare, pPars, NULL );\n    int nNodesUsed;\n    if ( pPars-\u003efVerbose )\n    {\n//        printf( \"Before CG: \" );\n//        Aig_ManPrintStats( pAig );\n    }\n    pGated = Cgt_ManDeriveGatedAig( pAig, vGates, pPars-\u003efAreaOnly, \u0026nNodesUsed );\n    if ( pPars-\u003efVerbose )\n    {\n//        printf( \"After  CG: \" );\n//        Aig_ManPrintStats( pGated );\n        printf( \"Nodes: Before CG = %6d. After CG = %6d. (%6.2f %%).  Total after CG = %6d.\\n\", \n            Aig_ManNodeNum(pAig), nNodesUsed, \n            100.0*nNodesUsed/Aig_ManNodeNum(pAig), \n            Aig_ManNodeNum(pGated) );\n    }\n    Vec_VecFree( vGates );\n    return pGated;\n}",
+      "Draft": "func Cgt_ClockGating(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t) *Aig_Man_t {\n    var pGated *Aig_Man_t;\n    var vGates *Vec_Vec_t  = Cgt_ClockGatingInt( pAig, pCare, pPars, nil );\n    var nNodesUsed int32;\n    if pPars.fVerbose {\n//        printf( \"Before CG: \" );\n//        Aig_ManPrintStats( pAig );\n    }\n    pGated = Cgt_ManDeriveGatedAig( pAig, vGates, pPars.fAreaOnly, \u0026nNodesUsed );\n    if pPars.fVerbose {\n//        printf( \"After  CG: \" );\n//        Aig_ManPrintStats( pGated );\n        fmt.Printf(\"Nodes: Before CG = %6d. After CG = %6d. (%6.2f %%).  Total after CG = %6d.\\n\", Aig_ManNodeNum(pAig), nNodesUsed, 100.0*nNodesUsed/Aig_ManNodeNum(pAig), Aig_ManNodeNum(pGated));\n    }\n    Vec_VecFree( vGates );\n    return pGated;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::mechanical::sizeof::1333",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1333,
+      "End": 1339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::2426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2426,
+      "End": 2438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::2517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2517,
+      "End": 2529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::3469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3299,
+      "End": 3299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::3654",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3435,
+      "End": 3447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::4958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4630,
+      "End": 4630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::5102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4778,
+      "End": 4791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::5155",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4831,
+      "End": 4844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::5266",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4942,
+      "End": 4955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::5324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5000,
+      "End": 5013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::pointer-cast::7440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7116,
+      "End": 7130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_SetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_SetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1270,
+      "End": 1932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_SimulationFilter",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_SimulationFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2227,
+      "End": 2952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_SimulationRecord",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_SimulationRecord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3217,
+      "End": 3709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_ClockGatingRangeCheck",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ClockGatingRangeCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3979,
+      "End": 6336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_ClockGatingRange",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ClockGatingRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6607,
+      "End": 7969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_ClockGatingCandidates",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ClockGatingCandidates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8239,
+      "End": 9302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_ClockGatingInt",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ClockGatingInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9572,
+      "End": 10060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::Cgt_ClockGating",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ClockGating",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10061,
+      "End": 10854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11101
+    }
+  ],
+  "Draft": "package cgt\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [cgtCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Clock gating package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cgtCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cgtInt.h\"\n//#include \"misc/bar/bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_SetDefaultParams(p *Cgt_Par_t) {\n    memset( p, 0, sizeof(Cgt_Par_t) );\n    p.nLevelMax  =    25;   // the max number of levels to look for clock-gates\n    p.nCandMax   =  1000;   // the max number of candidates at each node\n    p.nOdcMax    =     0;   // the max number of ODC levels to consider\n    p.nConfMax   =    10;   // the max number of conflicts at a node\n    p.nVarsMin   =  1000;   // the min number of vars to recycle the SAT solver\n    p.nFlopsMin  =    10;   // the min number of flops to recycle the SAT solver\n    p.fAreaOnly  =     0;   // derive clock-gating to minimize area\n    p.fVerbose   =     0;   // verbosity flag\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation does not filter out this candidate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_SimulationFilter(p *Cgt_Man_t, pCandPart *Aig_Obj_t, pMiterPart *Aig_Obj_t) int32 {\n    var pInfoCand, pInfoMiter *uint32;\n    var w int32;\n    var nWords int32 = Abc_BitWordNum( p.nPatts );  \n    pInfoCand  = (unsigned *)Vec_PtrEntry( p.vPatts, Aig_ObjId(Aig_Regular(pCandPart)) );\n    pInfoMiter = (unsigned *)Vec_PtrEntry( p.vPatts, Aig_ObjId(pMiterPart) );\n    // C =\u003e !M -- true   is the same as    C \u0026 M -- false\n    if !Aig_IsComplement(pCandPart) {\n        for  w = 0; w \u003c nWords; w++  {\n            if pInfoCand[w] \u0026 pInfoMiter[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            if ~pInfoCand[w] \u0026 pInfoMiter[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Saves one simulation pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_SimulationRecord(p *Cgt_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pPart.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if sat_solver_var_value( p.pSat, p.pCnf.pVarNums[i] ) {\n            Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(p.vPatts, i), p.nPatts ); }\n    }\n    p.nPatts++;\n    if p.nPatts == 32 * p.nPattWords {\n        Vec_PtrReallocSimInfo( p.vPatts );\n        Vec_PtrCleanSimInfo( p.vPatts, p.nPattWords, 2 * p.nPattWords );\n        p.nPattWords *= 2;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs clock-gating for the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ClockGatingRangeCheck(p *Cgt_Man_t, iStart int32, nOutputs int32) {\n    var vNodes *Vec_Ptr_t  = p.vFanout;\n    var pMiter, pCand, pMiterFrame, pCandFrame, pMiterPart, pCandPart *Aig_Obj_t;\n    var i, k, RetValue, nCalls int32;\n    assert(Vec_VecSize(p.vGatesAll) == Aig_ManCoNum(p.pFrame), \"Vec_VecSize(p.vGatesAll) == Aig_ManCoNum(p.pFrame)\");\n    // go through all the registers inputs of this range\n    for  i = iStart; i \u003c iStart + nOutputs; i++  {\n        nCalls = p.nCalls;\n        pMiter = Saig_ManLi( p.pAig, i );\n        Cgt_ManDetectCandidates( p.pAig, p.vUseful, Aig_ObjFanin0(pMiter), p.pPars.nLevelMax, vNodes );\n        // go through the candidates of this PO\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pCand) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {\n            // get the corresponding nodes from the frames\n            pCandFrame  = (Aig_Obj_t *)pCand.pData;\n            pMiterFrame = (Aig_Obj_t *)pMiter.pData;\n            // get the corresponding nodes from the part\n            pCandPart   = (Aig_Obj_t *)pCandFrame.pData;\n            pMiterPart  = (Aig_Obj_t *)pMiterFrame.pData;\n            // try direct polarity\n            if Cgt_SimulationFilter( p, pCandPart, pMiterPart ) != 0 {\n                RetValue = Cgt_CheckImplication( p, pCandPart, pMiterPart );\n                if RetValue == 1 {\n                    Vec_VecPush( p.vGatesAll, i, pCand );\n                    continue;\n                }\n                if RetValue == 0 {\n                    Cgt_SimulationRecord( p ); }\n            \n            } else {\n                p.nCallsFiltered++; }\n            // try reverse polarity\n            if Cgt_SimulationFilter( p, Aig_Not(pCandPart), pMiterPart ) != 0 {\n                RetValue = Cgt_CheckImplication( p, Aig_Not(pCandPart), pMiterPart );\n                if RetValue == 1 {\n                    Vec_VecPush( p.vGatesAll, i, Aig_Not(pCand) );\n                    continue;\n                }\n                if RetValue == 0 {\n                    Cgt_SimulationRecord( p ); }\n            \n            } else {\n                p.nCallsFiltered++; }\n        }\n\n        if p.pPars.fVerbose {\n//            printf( \"Flop %3d : Cand = %4d. Gate = %4d. SAT calls = %3d.\\n\", \n//                i, Vec_PtrSize(vNodes), Vec_PtrSize(Vec_VecEntry(p-\u003evGatesAll, i)), p-\u003enCalls-nCalls );\n        }\n\n    }\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Performs clock-gating for the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ClockGatingRange(p *Cgt_Man_t, iStart int32) int32 {\n    var nOutputs, iStop int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var nCallsUnsat int32     = p.nCallsUnsat;\n    var nCallsSat int32       = p.nCallsSat;\n    var nCallsUndec int32     = p.nCallsUndec;\n    var nCallsFiltered int32  = p.nCallsFiltered;\nclk = Abc_Clock();\n    p.pPart = Cgt_ManDupPartition( p.pFrame, p.pPars.nVarsMin, p.pPars.nFlopsMin, iStart, p.pCare, p.vSuppsInv, \u0026nOutputs );\n    p.pCnf  = Cnf_DeriveSimple( p.pPart, nOutputs );\n    p.pSat  = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );\n    sat_solver_compress( p.pSat );\n    p.vPatts = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p.pPart), p.nPattWords );\n    Vec_PtrCleanSimInfo( p.vPatts, 0, p.nPattWords );\np.timePrepare += Abc_Clock() - clk;\n    Cgt_ClockGatingRangeCheck( p, iStart, nOutputs );\n    iStop = iStart + nOutputs;\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : D =%4d. C =%5d. Var =%6d. Pr =%5d. Cex =%5d. F =%4d. Saved =%6d. \", iStart, iStop-iStart, Aig_ManCoNum(p.pPart)-nOutputs, p.pSat.size, p.nCallsUnsat-nCallsUnsat, p.nCallsSat  -nCallsSat, p.nCallsUndec-nCallsUndec, p.nCallsFiltered-nCallsFiltered);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    Cgt_ManClean( p );\n    p.nRecycles++;\n    return iStop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs clock-gating for the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ClockGatingCandidates(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t, vUseful *Vec_Int_t) *Vec_Vec_t {\n    var pProgress *Bar_Progress_t  = nil;\n    var Pars Cgt_Par_t; \n    var p *Cgt_Man_t;\n    var vGatesAll *Vec_Vec_t;\n    var iStart int32;\n    var clk abctime = Abc_Clock();\n    var clkTotal abctime = Abc_Clock();\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    if pPars == nil {\n        Cgt_SetDefaultParams( pPars = \u0026Pars ); }    \n    p = Cgt_ManCreate( pAig, pCare, pPars );\n    p.vUseful = vUseful;\n    p.pFrame = Cgt_ManDeriveAigForGating( p );\np.timeAig += Abc_Clock() - clk;\n    assert(Aig_ManCoNum(p.pFrame) == Saig_ManRegNum(p.pAig), \"Aig_ManCoNum(p.pFrame) == Saig_ManRegNum(p.pAig)\");\n    pProgress = Bar_ProgressStart( os.Stdout, Aig_ManCoNum(p.pFrame) );\n    for  iStart = 0; iStart \u003c Aig_ManCoNum(p.pFrame);  {\n        Bar_ProgressUpdate( pProgress, iStart, nil );\n        iStart = Cgt_ClockGatingRange( p, iStart );\n    }\n    Bar_ProgressStop( pProgress );\n    vGatesAll = p.vGatesAll;\n    p.vGatesAll = nil;\np.timeTotal = Abc_Clock() - clkTotal;\n    Cgt_ManStop( p );\n    return vGatesAll;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs clock-gating for the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ClockGatingInt(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t, vUseful *Vec_Int_t) *Vec_Vec_t {\n    var vGatesAll, vGates *Vec_Vec_t;\n    vGatesAll = Cgt_ClockGatingCandidates( pAig, pCare, pPars, vUseful );\n    if pPars.fAreaOnly {\n        vGates = Cgt_ManDecideArea( pAig, vGatesAll, pPars.nOdcMax, pPars.fVerbose );\n    } else {\n        vGates = Cgt_ManDecideSimple( pAig, vGatesAll, pPars.nOdcMax, pPars.fVerbose ); }\n    Vec_VecFree( vGatesAll );\n    return vGates;\n}\nfunc Cgt_ClockGating(pAig *Aig_Man_t, pCare *Aig_Man_t, pPars *Cgt_Par_t) *Aig_Man_t {\n    var pGated *Aig_Man_t;\n    var vGates *Vec_Vec_t  = Cgt_ClockGatingInt( pAig, pCare, pPars, nil );\n    var nNodesUsed int32;\n    if pPars.fVerbose {\n//        printf( \"Before CG: \" );\n//        Aig_ManPrintStats( pAig );\n    }\n    pGated = Cgt_ManDeriveGatedAig( pAig, vGates, pPars.fAreaOnly, \u0026nNodesUsed );\n    if pPars.fVerbose {\n//        printf( \"After  CG: \" );\n//        Aig_ManPrintStats( pGated );\n        fmt.Printf(\"Nodes: Before CG = %6d. After CG = %6d. (%6.2f %%).  Total after CG = %6d.\\n\", Aig_ManNodeNum(pAig), nNodesUsed, 100.0*nNodesUsed/Aig_ManNodeNum(pAig), Aig_ManNodeNum(pGated));\n    }\n    Vec_VecFree( vGates );\n    return pGated;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

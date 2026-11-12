@@ -1,0 +1,437 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c",
+  "SHA256": "393cdafd29e790af79e9eec97379853370e72ae98d28e6f5fd005a7a1d8b449b",
+  "Library": [
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 67,
+        "Column": 73,
+        "ByteOffset": 1993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 86,
+        "Column": 73,
+        "ByteOffset": 3144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 5513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 5544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"S = %5d. \", Vec_IntSize(vSup) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 5594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SNew = %5d. \", Vec_IntSize(vSupNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"R = %7.2f. \", R );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 5686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Over = %5d. \", CountOver );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quant = %5d. \", CountQuant );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 160,
+        "Column": 73,
+        "ByteOffset": 6103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 6163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\\n\","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 201,
+        "Column": 73,
+        "ByteOffset": 7313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 222,
+        "Column": 73,
+        "ByteOffset": 8514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 226,
+        "Column": 68,
+        "ByteOffset": 8654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSupp = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Aig_ManCiNum(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 9020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pSupp, 0, sizeof(char) * Aig_ManCiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 9,
+        "ByteOffset": 10067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d(%d) \", Vec_IntSize(vSup), Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 10126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 254,
+        "Column": 73,
+        "ByteOffset": 10295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 61,
+        "ByteOffset": 10376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pSupp) ? (free((char *) (pSupp)), (pSupp) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_ManPartitionTest",
+      "Start": 1226,
+      "End": 5344,
+      "BodyStart": 1282,
+      "Original": "void Fra_ManPartitionTest( Aig_Man_t * p, int nComLim )\n{\n//    Bar_Progress_t * pProgress;\n    Vec_Vec_t * vSupps, * vSuppsIn;\n    Vec_Ptr_t * vSuppsNew;\n    Vec_Int_t * vSupNew, * vSup, * vSup2, * vTemp;//, * vSupIn;\n    Vec_Int_t * vOverNew, * vQuantNew;\n    Aig_Obj_t * pObj;\n    int i, k, nCommon, CountOver, CountQuant;\n    int nTotalSupp, nTotalSupp2, Entry, Largest;//, iVar;\n    double Ratio, R;\n    abctime clk;\n\n    nTotalSupp = 0;\n    nTotalSupp2 = 0;\n    Ratio = 0.0;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\nABC_PRT( \"Supports\", Abc_Clock() - clk );\n    // remove last entry\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntForEachEntry( vSup, Entry, k )\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n    }\nABC_PRT( \"Inverse \", Abc_Clock() - clk );\n\nclk = Abc_Clock();\n    // compute extended supports\n    Largest = 0;\n    vSuppsNew = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    vOverNew  = Vec_IntAlloc( Aig_ManCoNum(p) );\n    vQuantNew = Vec_IntAlloc( Aig_ManCoNum(p) );\n//    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        // get old supports\n        vSup = Vec_VecEntryInt( vSupps, i );\n        if ( Vec_IntSize(vSup) \u003c 2 )\n            continue;\n        // compute new supports\n        CountOver = CountQuant = 0;\n        vSupNew = Vec_IntDup( vSup );\n        // go through the nodes where the first var appears\n        Aig_ManForEachCo( p, pObj, k )\n//        iVar = Vec_IntEntry( vSup, 0 );\n//        vSupIn = Vec_VecEntry( vSuppsIn, iVar );\n//        Vec_IntForEachEntry( vSupIn, Entry, k )\n        {\n//            pObj = Aig_ManObj( p, Entry );\n            // get support of this output\n//            vSup2 = (Vec_Int_t *)pObj-\u003epNext;\n            vSup2 = Vec_VecEntryInt( vSupps, k );\n            // count the number of common vars\n            nCommon = Vec_IntTwoCountCommon(vSup, vSup2);\n            if ( nCommon \u003c 2 )\n                continue;\n            if ( nCommon \u003e nComLim )\n            {\n                vSupNew = Vec_IntTwoMerge( vTemp = vSupNew, vSup2 );\n                Vec_IntFree( vTemp );\n                CountOver++;\n            }\n            else\n                CountQuant++;\n        }\n        // save the results\n        Vec_PtrPush( vSuppsNew, vSupNew );\n        Vec_IntPush( vOverNew, CountOver );\n        Vec_IntPush( vQuantNew, CountQuant );\n\n        if ( Largest \u003c Vec_IntSize(vSupNew) )\n            Largest = Vec_IntSize(vSupNew);\n\n        nTotalSupp  += Vec_IntSize(vSup);\n        nTotalSupp2 += Vec_IntSize(vSupNew);\n        if ( Vec_IntSize(vSup) )\n            R = Vec_IntSize(vSupNew) / Vec_IntSize(vSup);\n        else\n            R = 0;\n        Ratio += R;\n\n        if ( R \u003c 5.0 )\n            continue;\n\n        printf( \"%6d : \", i );\n        printf( \"S = %5d. \", Vec_IntSize(vSup) );\n        printf( \"SNew = %5d. \", Vec_IntSize(vSupNew) );\n        printf( \"R = %7.2f. \", R );\n        printf( \"Over = %5d. \", CountOver );\n        printf( \"Quant = %5d. \", CountQuant );\n        printf( \"\\n\" );\n/*\n        Vec_IntForEachEntry( vSupNew, Entry, k )\n            printf( \"%d \", Entry );\n        printf( \"\\n\" );\n*/\n    }\n//    Bar_ProgressStop( pProgress );\nABC_PRT( \"Scanning\", Abc_Clock() - clk );\n\n    // print cumulative statistics\n    printf( \"PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\\n\",\n        Aig_ManCiNum(p), Aig_ManCoNum(p), nComLim,\n        nTotalSupp/Aig_ManCoNum(p), nTotalSupp2/Aig_ManCoNum(p),\n        Ratio/Aig_ManCoNum(p), Largest );\n\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n    Vec_VecFree( (Vec_Vec_t *)vSuppsNew );\n    Vec_IntFree( vOverNew );\n    Vec_IntFree( vQuantNew );\n}",
+      "Draft": "func Fra_ManPartitionTest(p *Aig_Man_t, nComLim int32) {\n//    Bar_Progress_t * pProgress;\n    var vSupps, vSuppsIn *Vec_Vec_t;\n    var vSuppsNew *Vec_Ptr_t;\n    var vSupNew, vSup, vSup2, vTemp *Vec_Int_t;//, * vSupIn;\n    var vOverNew, vQuantNew *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, k, nCommon, CountOver, CountQuant int32;\n    var nTotalSupp, nTotalSupp2, Entry, Largest int32;//, iVar;\n    var Ratio, R float64;\n    var clk abctime;\n\n    nTotalSupp = 0;\n    nTotalSupp2 = 0;\n    Ratio = 0.0;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supports\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // remove last entry\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Inverse \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    // compute extended supports\n    Largest = 0;\n    vSuppsNew = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    vOverNew  = Vec_IntAlloc( Aig_ManCoNum(p) );\n    vQuantNew = Vec_IntAlloc( Aig_ManCoNum(p) );\n//    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        // get old supports\n        vSup = Vec_VecEntryInt( vSupps, i );\n        if Vec_IntSize(vSup) \u003c 2 {\n            continue; }\n        // compute new supports\n        CountOver = CountQuant = 0;\n        vSupNew = Vec_IntDup( vSup );\n        // go through the nodes where the first var appears\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, k)), 1); k++  {\n//        iVar = Vec_IntEntry( vSup, 0 );\n//        vSupIn = Vec_VecEntry( vSuppsIn, iVar );\n//        Vec_IntForEachEntry( vSupIn, Entry, k )\n        \n//            pObj = Aig_ManObj( p, Entry );\n            // get support of this output\n//            vSup2 = (Vec_Int_t *)pObj-\u003epNext;\n            vSup2 = Vec_VecEntryInt( vSupps, k );\n            // count the number of common vars\n            nCommon = Vec_IntTwoCountCommon(vSup, vSup2);\n            if nCommon \u003c 2 {\n                continue; }\n            if nCommon \u003e nComLim {\n                vSupNew = Vec_IntTwoMerge( vTemp = vSupNew, vSup2 );\n                Vec_IntFree( vTemp );\n                CountOver++;\n            \n            } else {\n                CountQuant++; }\n        }\n        // save the results\n        Vec_PtrPush( vSuppsNew, vSupNew );\n        Vec_IntPush( vOverNew, CountOver );\n        Vec_IntPush( vQuantNew, CountQuant );\n\n        if Largest \u003c Vec_IntSize(vSupNew) {\n            Largest = Vec_IntSize(vSupNew); }\n\n        nTotalSupp  += Vec_IntSize(vSup);\n        nTotalSupp2 += Vec_IntSize(vSupNew);\n        if Vec_IntSize(vSup) {\n            R = Vec_IntSize(vSupNew) / Vec_IntSize(vSup);\n        } else {\n            R = 0; }\n        Ratio += R;\n\n        if R \u003c 5.0 {\n            continue; }\n\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"S = %5d. \", Vec_IntSize(vSup));\n        fmt.Printf(\"SNew = %5d. \", Vec_IntSize(vSupNew));\n        fmt.Printf(\"R = %7.2f. \", R);\n        fmt.Printf(\"Over = %5d. \", CountOver);\n        fmt.Printf(\"Quant = %5d. \", CountQuant);\n        fmt.Printf(\"\\n\");\n/*\n        Vec_IntForEachEntry( vSupNew, Entry, k )\n            printf( \"%d \", Entry );\n        printf( \"\\n\" );\n*/\n    }\n//    Bar_ProgressStop( pProgress );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Scanning\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // print cumulative statistics\n    fmt.Printf(\"PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\\n\", Aig_ManCiNum(p), Aig_ManCoNum(p), nComLim, nTotalSupp/Aig_ManCoNum(p), nTotalSupp2/Aig_ManCoNum(p), Ratio/Aig_ManCoNum(p), Largest);\n\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n    Vec_VecFree( (Vec_Vec_t *)vSuppsNew );\n    Vec_IntFree( vOverNew );\n    Vec_IntFree( vQuantNew );\n}"
+    },
+    {
+      "Name": "Fra_ManPartitionTest2",
+      "Start": 5582,
+      "End": 7784,
+      "BodyStart": 5626,
+      "Original": "void Fra_ManPartitionTest2( Aig_Man_t * p )\n{\n    Vec_Vec_t * vSupps, * vSuppsIn;\n    Vec_Int_t * vSup, * vSup2, * vSup3;\n    Aig_Obj_t * pObj;\n    int Entry, Entry2, Entry3, Counter;\n    int i, k, m, n;\n    abctime clk;\n    char * pSupp;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\nABC_PRT( \"Supports\", Abc_Clock() - clk );\n    // remove last entry\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        if ( i == p-\u003enAsserts )\n            break;\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntForEachEntry( vSup, Entry, k )\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n    }\nABC_PRT( \"Inverse \", Abc_Clock() - clk );\n\n    // create affective supports\nclk = Abc_Clock();\n    pSupp = ABC_ALLOC( char, Aig_ManCiNum(p) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        if ( i % 50 != 0 )\n            continue;\n        vSup = Vec_VecEntryInt( vSupps, i );\n        memset( pSupp, 0, sizeof(char) * Aig_ManCiNum(p) );\n        // go through each input of this output\n        Vec_IntForEachEntry( vSup, Entry, k )\n        {\n            pSupp[Entry] = 1;\n            vSup2 = Vec_VecEntryInt( vSuppsIn, Entry );\n            // go though each assert of this input\n            Vec_IntForEachEntry( vSup2, Entry2, m )\n            {\n                vSup3 = Vec_VecEntryInt( vSupps, Entry2 );\n                // go through each input of this assert\n                Vec_IntForEachEntry( vSup3, Entry3, n )\n                {\n                    pSupp[Entry3] = 1;\n                }\n            }\n        }\n        // count the entries\n        Counter = 0;\n        for ( m = 0; m \u003c Aig_ManCiNum(p); m++ )\n            Counter += pSupp[m];\n        printf( \"%d(%d) \", Vec_IntSize(vSup), Counter );\n    }\n    printf( \"\\n\" );\nABC_PRT( \"Extension \", Abc_Clock() - clk );\n\n    ABC_FREE( pSupp );\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n}",
+      "Draft": "func Fra_ManPartitionTest2(p *Aig_Man_t) {\n    var vSupps, vSuppsIn *Vec_Vec_t;\n    var vSup, vSup2, vSup3 *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var Entry, Entry2, Entry3, Counter int32;\n    var i, k, m, n int32;\n    var clk abctime;\n    var pSupp string;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supports\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // remove last entry\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i == p.nAsserts {\n            break; }\n        vSup = Vec_VecEntryInt( vSupps, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Inverse \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // create affective supports\nclk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    pSupp = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManCiNum(p))));\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i % 50 != 0 {\n            continue; }\n        vSup = Vec_VecEntryInt( vSupps, i );\n        memset( pSupp, 0, sizeof(char) * Aig_ManCiNum(p) );\n        // go through each input of this output\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            pSupp[Entry] = 1;\n            vSup2 = Vec_VecEntryInt( vSuppsIn, Entry );\n            // go though each assert of this input\n            // inlining of macro Vec_IntForEachEntry\n            for  m = 0; (m \u003c Vec_IntSize(vSup2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vSup2, m)), 1); m++  {\n                vSup3 = Vec_VecEntryInt( vSupps, Entry2 );\n                // go through each input of this assert\n                // inlining of macro Vec_IntForEachEntry\n                for  n = 0; (n \u003c Vec_IntSize(vSup3)) \u0026\u0026 (((Entry3) = Vec_IntEntry(vSup3, n)), 1); n++  {\n                    pSupp[Entry3] = 1;\n                }\n            }\n        }\n        // count the entries\n        Counter = 0;\n        for  m = 0; m \u003c Aig_ManCiNum(p); m++  {\n            Counter += pSupp[m];\n        }\n        fmt.Printf(\"%d(%d) \", Vec_IntSize(vSup), Counter);\n    }\n    fmt.Printf(\"\\n\");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Extension \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // inlining of macro ABC_FREE\n    ((pSupp) ? (free((char *) (pSupp)), (pSupp) = 0) : 0);\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::mechanical::sizeof::8625",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6637,
+      "End": 6637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::mechanical::sizeof::9010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6834,
+      "End": 6840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::1765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1765,
+      "End": 1778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::2160",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1871,
+      "End": 1871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::2630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2161,
+      "End": 2161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::2922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2331,
+      "End": 2339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::3572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2692,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::4147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3087,
+      "End": 3087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::6465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5258,
+      "End": 5271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::7086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5879,
+      "End": 5892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::7481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5985,
+      "End": 5985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::7951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6275,
+      "End": 6275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::8294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6496,
+      "End": 6504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::8609",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6637,
+      "End": 6637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::8834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6677,
+      "End": 6677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::pointer-cast::10384",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7708,
+      "End": 7708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::Fra_ManPartitionTest",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManPartitionTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1226,
+      "End": 5344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::ternary::Fra_ManPartitionTest2",
+      "Category": "ternary-review",
+      "Symbol": "Fra_ManPartitionTest2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5582,
+      "End": 7784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::Fra_ManPartitionTest2",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManPartitionTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5582,
+      "End": 7784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraPart.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8032
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraPart.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Partitioning for induction.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraPart.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManPartitionTest(p *Aig_Man_t, nComLim int32) {\n//    Bar_Progress_t * pProgress;\n    var vSupps, vSuppsIn *Vec_Vec_t;\n    var vSuppsNew *Vec_Ptr_t;\n    var vSupNew, vSup, vSup2, vTemp *Vec_Int_t;//, * vSupIn;\n    var vOverNew, vQuantNew *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, k, nCommon, CountOver, CountQuant int32;\n    var nTotalSupp, nTotalSupp2, Entry, Largest int32;//, iVar;\n    var Ratio, R float64;\n    var clk abctime;\n\n    nTotalSupp = 0;\n    nTotalSupp2 = 0;\n    Ratio = 0.0;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supports\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // remove last entry\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Inverse \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\nclk = Abc_Clock();\n    // compute extended supports\n    Largest = 0;\n    vSuppsNew = Vec_PtrAlloc( Aig_ManCoNum(p) );\n    vOverNew  = Vec_IntAlloc( Aig_ManCoNum(p) );\n    vQuantNew = Vec_IntAlloc( Aig_ManCoNum(p) );\n//    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        // get old supports\n        vSup = Vec_VecEntryInt( vSupps, i );\n        if Vec_IntSize(vSup) \u003c 2 {\n            continue; }\n        // compute new supports\n        CountOver = CountQuant = 0;\n        vSupNew = Vec_IntDup( vSup );\n        // go through the nodes where the first var appears\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, k)), 1); k++  {\n//        iVar = Vec_IntEntry( vSup, 0 );\n//        vSupIn = Vec_VecEntry( vSuppsIn, iVar );\n//        Vec_IntForEachEntry( vSupIn, Entry, k )\n        \n//            pObj = Aig_ManObj( p, Entry );\n            // get support of this output\n//            vSup2 = (Vec_Int_t *)pObj-\u003epNext;\n            vSup2 = Vec_VecEntryInt( vSupps, k );\n            // count the number of common vars\n            nCommon = Vec_IntTwoCountCommon(vSup, vSup2);\n            if nCommon \u003c 2 {\n                continue; }\n            if nCommon \u003e nComLim {\n                vSupNew = Vec_IntTwoMerge( vTemp = vSupNew, vSup2 );\n                Vec_IntFree( vTemp );\n                CountOver++;\n            \n            } else {\n                CountQuant++; }\n        }\n        // save the results\n        Vec_PtrPush( vSuppsNew, vSupNew );\n        Vec_IntPush( vOverNew, CountOver );\n        Vec_IntPush( vQuantNew, CountQuant );\n\n        if Largest \u003c Vec_IntSize(vSupNew) {\n            Largest = Vec_IntSize(vSupNew); }\n\n        nTotalSupp  += Vec_IntSize(vSup);\n        nTotalSupp2 += Vec_IntSize(vSupNew);\n        if Vec_IntSize(vSup) {\n            R = Vec_IntSize(vSupNew) / Vec_IntSize(vSup);\n        } else {\n            R = 0; }\n        Ratio += R;\n\n        if R \u003c 5.0 {\n            continue; }\n\n        fmt.Printf(\"%6d : \", i);\n        fmt.Printf(\"S = %5d. \", Vec_IntSize(vSup));\n        fmt.Printf(\"SNew = %5d. \", Vec_IntSize(vSupNew));\n        fmt.Printf(\"R = %7.2f. \", R);\n        fmt.Printf(\"Over = %5d. \", CountOver);\n        fmt.Printf(\"Quant = %5d. \", CountQuant);\n        fmt.Printf(\"\\n\");\n/*\n        Vec_IntForEachEntry( vSupNew, Entry, k )\n            printf( \"%d \", Entry );\n        printf( \"\\n\" );\n*/\n    }\n//    Bar_ProgressStop( pProgress );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Scanning\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // print cumulative statistics\n    fmt.Printf(\"PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\\n\", Aig_ManCiNum(p), Aig_ManCoNum(p), nComLim, nTotalSupp/Aig_ManCoNum(p), nTotalSupp2/Aig_ManCoNum(p), Ratio/Aig_ManCoNum(p), Largest);\n\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n    Vec_VecFree( (Vec_Vec_t *)vSuppsNew );\n    Vec_IntFree( vOverNew );\n    Vec_IntFree( vQuantNew );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManPartitionTest2(p *Aig_Man_t) {\n    var vSupps, vSuppsIn *Vec_Vec_t;\n    var vSup, vSup2, vSup3 *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var Entry, Entry2, Entry3, Counter int32;\n    var i, k, m, n int32;\n    var clk abctime;\n    var pSupp string;\n \n    // compute supports\nclk = Abc_Clock();\n    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Supports\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // remove last entry\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        vSup = Vec_VecEntryInt( vSupps, i );\n        Vec_IntPop( vSup );\n        // remember support\n//        pObj-\u003epNext = (Aig_Obj_t *)vSup;\n    }\n\n    // create reverse supports\nclk = Abc_Clock();\n    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i == p.nAsserts {\n            break; }\n        vSup = Vec_VecEntryInt( vSupps, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );\n        }\n    }\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Inverse \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // create affective supports\nclk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    pSupp = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManCiNum(p))));\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        if i % 50 != 0 {\n            continue; }\n        vSup = Vec_VecEntryInt( vSupps, i );\n        memset( pSupp, 0, sizeof(char) * Aig_ManCiNum(p) );\n        // go through each input of this output\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSup)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {\n            pSupp[Entry] = 1;\n            vSup2 = Vec_VecEntryInt( vSuppsIn, Entry );\n            // go though each assert of this input\n            // inlining of macro Vec_IntForEachEntry\n            for  m = 0; (m \u003c Vec_IntSize(vSup2)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vSup2, m)), 1); m++  {\n                vSup3 = Vec_VecEntryInt( vSupps, Entry2 );\n                // go through each input of this assert\n                // inlining of macro Vec_IntForEachEntry\n                for  n = 0; (n \u003c Vec_IntSize(vSup3)) \u0026\u0026 (((Entry3) = Vec_IntEntry(vSup3, n)), 1); n++  {\n                    pSupp[Entry3] = 1;\n                }\n            }\n        }\n        // count the entries\n        Counter = 0;\n        for  m = 0; m \u003c Aig_ManCiNum(p); m++  {\n            Counter += pSupp[m];\n        }\n        fmt.Printf(\"%d(%d) \", Vec_IntSize(vSup), Counter);\n    }\n    fmt.Printf(\"\\n\");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Extension \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // inlining of macro ABC_FREE\n    ((pSupp) ? (free((char *) (pSupp)), (pSupp) = 0) : 0);\n    Vec_VecFree( vSupps );\n    Vec_VecFree( vSuppsIn );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

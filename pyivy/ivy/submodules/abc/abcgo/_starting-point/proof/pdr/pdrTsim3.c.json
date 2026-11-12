@@ -1,0 +1,440 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c",
+  "SHA256": "e739bdde2387c51f8dbde0442ed1335965aa2815e07b45901e6c8c8e41cebb01",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPrio) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Txs3_Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 1,
+        "ByteOffset": 5392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%d %d %d \\n\", Vec_IntSize(p.vCiObjs), Vec_IntSize(p.vFosPre), Vec_IntSize(p.vFosAbs) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 221,
+        "Column": 19,
+        "ByteOffset": 8105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Pdr_SetPrint( stdout, pCube, Gia_ManRegNum(p.pGia), nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 9166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 64,
+        "ByteOffset": 9697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var iVar int32  = Pdr_ObjSatVar( p.pMan, k, 3, pObj ); assert( iVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 9726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 9846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Clause with %d lits on lev %d\\n\", pCube ? pCube.nLits : 0, k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 10734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == l_False );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 11554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 11896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 9,
+        "ByteOffset": 12610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 12856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Txs3_ManStart",
+      "Start": 2120,
+      "End": 3353,
+      "BodyStart": 2204,
+      "Original": "Txs3_Man_t * Txs3_ManStart( Pdr_Man_t * pMan, Aig_Man_t * pAig, Vec_Int_t * vPrio )\n{\n    Txs3_Man_t * p;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert( Vec_IntSize(vPrio) == Aig_ManRegNum(pAig) );\n    p = ABC_CALLOC( Txs3_Man_t, 1 );\n    p-\u003epGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p-\u003evPrio   = vPrio;                // priority of each flop\n    p-\u003evCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p-\u003evFosPre = Vec_IntAlloc( 100 );  // present flop outputs\n    p-\u003evFosAbs = Vec_IntAlloc( 100 );  // absracted flop outputs\n    p-\u003evCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p-\u003evCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p-\u003evCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p-\u003evNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p-\u003evTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p-\u003evPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p-\u003evFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p-\u003epMan    = pMan;                 // calling manager\n    return p;\n}",
+      "Draft": "func Txs3_ManStart(pMan *Pdr_Man_t, pAig *Aig_Man_t, vPrio *Vec_Int_t) *Txs3_Man_t {\n    var p *Txs3_Man_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert(Vec_IntSize(vPrio) == Aig_ManRegNum(pAig), \"Vec_IntSize(vPrio) == Aig_ManRegNum(pAig)\");\n    p = new(Txs3_Man_t);\n    p.pGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p.vPrio   = vPrio;                // priority of each flop\n    p.vCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p.vFosPre = Vec_IntAlloc( 100 );  // present flop outputs\n    p.vFosAbs = Vec_IntAlloc( 100 );  // absracted flop outputs\n    p.vCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p.vCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p.vCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p.vNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p.vFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p.pMan    = pMan;                 // calling manager\n    return p;\n}"
+    },
+    {
+      "Name": "Txs3_ManStop",
+      "Start": 3354,
+      "End": 3747,
+      "BodyStart": 3390,
+      "Original": "void Txs3_ManStop( Txs3_Man_t * p )\n{\n    Gia_ManStop( p-\u003epGia );\n    Vec_IntFree( p-\u003evCiObjs );\n    Vec_IntFree( p-\u003evFosPre );\n    Vec_IntFree( p-\u003evFosAbs );\n    Vec_IntFree( p-\u003evCoObjs );\n    Vec_IntFree( p-\u003evCiVals );\n    Vec_IntFree( p-\u003evCoVals );\n    Vec_IntFree( p-\u003evNodes );\n    Vec_IntFree( p-\u003evTemp );\n    Vec_IntFree( p-\u003evPiLits );\n    Vec_IntFree( p-\u003evFfLits );\n    ABC_FREE( p );\n}",
+      "Draft": "func Txs3_ManStop(p *Txs3_Man_t) {\n    Gia_ManStop( p.pGia );\n    Vec_IntFree( p.vCiObjs );\n    Vec_IntFree( p.vFosPre );\n    Vec_IntFree( p.vFosAbs );\n    Vec_IntFree( p.vCoObjs );\n    Vec_IntFree( p.vCiVals );\n    Vec_IntFree( p.vCoVals );\n    Vec_IntFree( p.vNodes );\n    Vec_IntFree( p.vTemp );\n    Vec_IntFree( p.vPiLits );\n    Vec_IntFree( p.vFfLits );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Txs3_ManCollectCone_rec",
+      "Start": 4099,
+      "End": 4937,
+      "BodyStart": 4164,
+      "Original": "void Txs3_ManCollectCone_rec( Txs3_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( !~pObj-\u003eValue )\n        return;\n    pObj-\u003eValue = ~0;\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        int Entry;\n        if ( Gia_ObjIsPi(p-\u003epGia, pObj) )\n        {\n            Vec_IntPush( p-\u003evCiObjs, Gia_ObjId(p-\u003epGia, pObj) );\n            return;\n        }\n        Entry = Gia_ObjCioId(pObj) - Gia_ManPiNum(p-\u003epGia);\n        if ( Vec_IntEntry(p-\u003evPrio, Entry) ) // present flop\n            Vec_IntPush( p-\u003evFosPre, Gia_ObjId(p-\u003epGia, pObj) );\n        else // asbstracted flop\n            Vec_IntPush( p-\u003evFosAbs, Gia_ObjId(p-\u003epGia, pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin1(pObj) );\n    Vec_IntPush( p-\u003evNodes, Gia_ObjId(p-\u003epGia, pObj) );\n}",
+      "Draft": "func Txs3_ManCollectCone_rec(p *Txs3_Man_t, pObj *Gia_Obj_t) {\n    if !~pObj.Value {\n        return; }\n    pObj.Value = ~0;\n    if Gia_ObjIsCi(pObj) {\n        var Entry int32;\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPush( p.vCiObjs, Gia_ObjId(p.pGia, pObj) );\n            return;\n        }\n        Entry = Gia_ObjCioId(pObj) - Gia_ManPiNum(p.pGia);\n        if Vec_IntEntry(p.vPrio, Entry) { // present flop\n            Vec_IntPush( p.vFosPre, Gia_ObjId(p.pGia, pObj) );\n        } else { // asbstracted flop\n            Vec_IntPush( p.vFosAbs, Gia_ObjId(p.pGia, pObj) ); }\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin1(pObj) );\n    Vec_IntPush( p.vNodes, Gia_ObjId(p.pGia, pObj) );\n}"
+    },
+    {
+      "Name": "Txs3_ManCollectCone",
+      "Start": 4938,
+      "End": 6276,
+      "BodyStart": 4995,
+      "Original": "void Txs3_ManCollectCone( Txs3_Man_t * p, int fVerbose )\n{\n    Gia_Obj_t * pObj; int i, Entry;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( p-\u003evCiObjs );\n    Vec_IntClear( p-\u003evFosPre );\n    Vec_IntClear( p-\u003evFosAbs );\n    Vec_IntClear( p-\u003evNodes );\n    Gia_ManConst0(p-\u003epGia)-\u003eValue = ~0;\n    Gia_ManForEachObjVec( p-\u003evCoObjs, p-\u003epGia, pObj, i )\n        Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\nif ( fVerbose )\nprintf( \"%d %d %d \\n\", Vec_IntSize(p-\u003evCiObjs), Vec_IntSize(p-\u003evFosPre), Vec_IntSize(p-\u003evFosAbs) );\n    p-\u003enPiLits = Vec_IntSize(p-\u003evCiObjs);\n    // sort primary inputs\n    Vec_IntSelectSort( Vec_IntArray(p-\u003evCiObjs), Vec_IntSize(p-\u003evCiObjs) );\n    // sort and add present flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p-\u003evFosPre), Vec_IntSize(p-\u003evFosPre) );\n    Vec_IntForEachEntry( p-\u003evFosPre, Entry, i )\n        Vec_IntPush( p-\u003evCiObjs, Entry );\n    // sort and add absent flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p-\u003evFosAbs), Vec_IntSize(p-\u003evFosAbs) );\n    Vec_IntForEachEntry( p-\u003evFosAbs, Entry, i )\n        Vec_IntPush( p-\u003evCiObjs, Entry );\n    // cleanup\n    Gia_ManForEachObjVec( p-\u003evCiObjs, p-\u003epGia, pObj, i )\n        pObj-\u003eValue = 0;\n    Gia_ManForEachObjVec( p-\u003evNodes, p-\u003epGia, pObj, i )\n        pObj-\u003eValue = 0;\n}",
+      "Draft": "func Txs3_ManCollectCone(p *Txs3_Man_t, fVerbose int32) {\n    var pObj *Gia_Obj_t; var i, Entry int32;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( p.vCiObjs );\n    Vec_IntClear( p.vFosPre );\n    Vec_IntClear( p.vFosAbs );\n    Vec_IntClear( p.vNodes );\n    Gia_ManConst0(p.pGia).Value = ~0;\n    Gia_ManForEachObjVec( p.vCoObjs, p.pGia, pObj, i )\n        Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\nif fVerbose != 0 {\nfmt.Printf(\"%d %d %d \\n\", Vec_IntSize(p.vCiObjs), Vec_IntSize(p.vFosPre), Vec_IntSize(p.vFosAbs)); }\n    p.nPiLits = Vec_IntSize(p.vCiObjs);\n    // sort primary inputs\n    Vec_IntSelectSort( Vec_IntArray(p.vCiObjs), Vec_IntSize(p.vCiObjs) );\n    // sort and add present flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosPre), Vec_IntSize(p.vFosPre) );\n    Vec_IntForEachEntry( p.vFosPre, Entry, i )\n        Vec_IntPush( p.vCiObjs, Entry );\n    // sort and add absent flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosAbs), Vec_IntSize(p.vFosAbs) );\n    Vec_IntForEachEntry( p.vFosAbs, Entry, i )\n        Vec_IntPush( p.vCiObjs, Entry );\n    // cleanup\n    Gia_ManForEachObjVec( p.vCiObjs, p.pGia, pObj, i )\n        pObj.Value = 0;\n    Gia_ManForEachObjVec( p.vNodes, p.pGia, pObj, i )\n        pObj.Value = 0;\n}"
+    },
+    {
+      "Name": "Txs3_ManTernarySim",
+      "Start": 7005,
+      "End": 12923,
+      "BodyStart": 7080,
+      "Original": "Pdr_Set_t * Txs3_ManTernarySim( Txs3_Man_t * p, int k, Pdr_Set_t * pCube )\n{\n//    int fTryNew = 1;\n//    int fUseLit = 1;\n    int fVerbose = 0;\n    sat_solver * pSat;\n    Pdr_Set_t * pRes;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vVar2Ids, * vLits;\n    int i, Lit, LitAux, Var, Value, RetValue, nCoreLits, * pCoreLits;//, nLits;\n//    if ( k == 0 )\n//        fVerbose = 1;\n    // collect CO objects\n    Vec_IntClear( p-\u003evCoObjs );\n    if ( pCube == NULL ) // the target is the property output\n    {\n        pObj = Gia_ManCo(p-\u003epGia, p-\u003epMan-\u003eiOutCur);\n        Vec_IntPush( p-\u003evCoObjs, Gia_ObjId(p-\u003epGia, pObj) );\n    }\n    else // the target is the cube\n    {\n        int i;\n        for ( i = 0; i \u003c pCube-\u003enLits; i++ )\n        {\n            if ( pCube-\u003eLits[i] == -1 )\n                continue;\n            pObj = Gia_ManCo(p-\u003epGia, Gia_ManPoNum(p-\u003epGia) + Abc_Lit2Var(pCube-\u003eLits[i]));\n            Vec_IntPush( p-\u003evCoObjs, Gia_ObjId(p-\u003epGia, pObj) );\n        }\n    }\nif ( 0 )\n{\nAbc_Print( 1, \"Trying to justify cube \" );\nif ( pCube )\n    Pdr_SetPrint( stdout, pCube, Gia_ManRegNum(p-\u003epGia), NULL );\nelse\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" );\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs3_ManCollectCone( p, fVerbose );\n    // collect values\n    Pdr_ManCollectValues( p-\u003epMan, k, p-\u003evCiObjs, p-\u003evCiVals );\n    Pdr_ManCollectValues( p-\u003epMan, k, p-\u003evCoObjs, p-\u003evCoVals );\n\n    // read solver\n    pSat = Pdr_ManFetchSolver( p-\u003epMan, k );\n    LitAux = Abc_Var2Lit( Pdr_ManFreeVar(p-\u003epMan, k), 0 );\n    // add the clause (complemented cube) in terms of next state variables\n    if ( pCube == NULL ) // the target is the property output\n    {\n        vLits = p-\u003epMan-\u003evLits;\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p-\u003epMan, k, 2, Aig_ManCo(p-\u003epMan-\u003epAig, p-\u003epMan-\u003eiOutCur)), 1 ); // neg literal (property holds)\n        Vec_IntFill( vLits, 1, Lit );\n    }\n    else\n        vLits = Pdr_ManCubeToLits( p-\u003epMan, k, pCube, 1, 1 );\n    // add activation literal\n    Vec_IntPush( vLits, LitAux );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert( RetValue == 1 );\n    sat_solver_compress( pSat );\n\n    // collect assumptions \n    Vec_IntClear( p-\u003evTemp );\n    Vec_IntPush( p-\u003evTemp, Abc_LitNot(LitAux) );\n    // iterate through the values of the CI variables\n    Vec_IntForEachEntryTwo( p-\u003evCiObjs, p-\u003evCiVals, Var, Value, i )\n    {\n        Aig_Obj_t * pObj = Aig_ManObj( p-\u003epMan-\u003epAig, Var );\n//        iVar = Pdr_ObjSatVar( p-\u003epMan, k, fNext ? 2 - lit_sign(pCube-\u003eLits[i]) : 3, pObj ); assert( iVar \u003e= 0 );\n        int iVar = Pdr_ObjSatVar( p-\u003epMan, k, 3, pObj ); assert( iVar \u003e= 0 );\n        assert( Aig_ObjIsCi(pObj) );\n        Vec_IntPush( p-\u003evTemp, Abc_Var2Lit(iVar, !Value) );\n    }\n    if ( fVerbose )\n    {\n        printf( \"Clause with %d lits on lev %d\\n\", pCube ? pCube-\u003enLits : 0, k );\n        Vec_IntPrint( p-\u003evTemp );\n    }\n\n/*\n    // solve with assumptions\n//printf( \"%d -\u003e \", Vec_IntSize(p-\u003evTemp) );\n{\nabctime clk = Abc_Clock();\n// assume all except flops\n    Vec_IntForEachEntryStop( p-\u003evTemp, Lit, i, p-\u003enPiLits + 1 )\n        if ( !sat_solver_push(pSat, Lit) )\n        {\n            assert( 0 );\n        }\n    nLits = sat_solver_minimize_assumptions( pSat, Vec_IntArray(p-\u003evTemp) + p-\u003enPiLits + 1, Vec_IntSize(p-\u003evTemp) - p-\u003enPiLits - 1, p-\u003epMan-\u003epPars-\u003enConfLimit );\n    Vec_IntShrink( p-\u003evTemp, p-\u003enPiLits + 1 + nLits );\n\np-\u003epMan-\u003etAbs += Abc_Clock() - clk;\n    for ( i = 0; i \u003c= p-\u003enPiLits; i++ )\n        sat_solver_pop(pSat);\n}\n//printf( \"%d    \", nLits );\n*/\n\n\n    //check one last time\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(p-\u003evTemp), Vec_IntLimit(p-\u003evTemp), 0, 0, 0, 0 );\n    assert( RetValue == l_False );\n\n    // use analyze final\n    nCoreLits = sat_solver_final(pSat, \u0026pCoreLits);\n    //assert( Vec_IntSize(p-\u003evTemp) \u003c= nCoreLits );\n\n    Vec_IntClear( p-\u003evTemp );\n    for ( i = 0; i \u003c nCoreLits; i++ )\n        Vec_IntPush( p-\u003evTemp, Abc_LitNot(pCoreLits[i]) );\n    Vec_IntSelectSort( Vec_IntArray(p-\u003evTemp), Vec_IntSize(p-\u003evTemp) );\n\n    if ( fVerbose )\n        Vec_IntPrint( p-\u003evTemp );\n\n    // collect the resulting sets\n    Vec_IntClear( p-\u003evPiLits );\n    Vec_IntClear( p-\u003evFfLits );\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p-\u003epMan-\u003evVar2Ids, k );\n    Vec_IntForEachEntry( p-\u003evTemp, Lit, i )\n    {\n        if ( Lit != Abc_LitNot(LitAux) )\n        {\n            int Id = Vec_IntEntry( vVar2Ids, Abc_Lit2Var(Lit) );\n            Aig_Obj_t * pObj = Aig_ManObj( p-\u003epMan-\u003epAig, Id );\n            assert( Aig_ObjIsCi(pObj) );\n            if ( Saig_ObjIsPi(p-\u003epMan-\u003epAig, pObj) )\n                Vec_IntPush( p-\u003evPiLits, Abc_Var2Lit(Aig_ObjCioId(pObj), Abc_LitIsCompl(Lit)) );\n            else\n                Vec_IntPush( p-\u003evFfLits, Abc_Var2Lit(Aig_ObjCioId(pObj) - Saig_ManPiNum(p-\u003epMan-\u003epAig), Abc_LitIsCompl(Lit)) );\n        }\n    }\n    assert( Vec_IntSize(p-\u003evTemp) == Vec_IntSize(p-\u003evPiLits) + Vec_IntSize(p-\u003evFfLits) + 1 );\n\n    // move abstracted literals from flops to inputs\n    if ( p-\u003epMan-\u003epPars-\u003efUseAbs \u0026\u0026 p-\u003epMan-\u003evAbsFlops )\n    {\n        int i, iLit, k = 0;\n        Vec_IntForEachEntry( p-\u003evFfLits, iLit, i )\n        {\n            if ( Vec_IntEntry(p-\u003epMan-\u003evAbsFlops, Abc_Lit2Var(iLit)) ) // used flop\n                Vec_IntWriteEntry( p-\u003evFfLits, k++, iLit );\n            else\n                Vec_IntPush( p-\u003evPiLits, 2*Saig_ManPiNum(p-\u003epMan-\u003epAig) + iLit );\n        }\n        Vec_IntShrink( p-\u003evFfLits, k );\n    }\n\n    if ( fVerbose )\n        Vec_IntPrint( p-\u003evPiLits );\n    if ( fVerbose )\n        Vec_IntPrint( p-\u003evFfLits );\n    if ( fVerbose )\n        printf( \"\\n\" );\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p-\u003evFfLits, p-\u003evPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );\n    return pRes;\n}",
+      "Draft": "func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {\n//    int fTryNew = 1;\n//    int fUseLit = 1;\n    var fVerbose int32;\n    var pSat *sat_solver;\n    var pRes *Pdr_Set_t;\n    var pObj *Gia_Obj_t;\n    var vVar2Ids, vLits *Vec_Int_t;\n    var i int32;\n    var Lit int32;\n    var LitAux int32;\n    var Var int32;\n    var Value int32;\n    var RetValue int32;\n    var nCoreLits int32;\n    var pCoreLits *int32;//, nLits;\n//    if ( k == 0 )\n//        fVerbose = 1;\n    // collect CO objects\n    Vec_IntClear( p.vCoObjs );\n    if pCube == nil { // the target is the property output\n    \n        pObj = Gia_ManCo(p.pGia, p.pMan.iOutCur);\n        Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n    \n    } else { // the target is the cube\n    \n        var i int32;\n        for  i = 0; i \u003c pCube.nLits; i++  {\n            if pCube.Lits[i] == -1 {\n                continue; }\n            pObj = Gia_ManCo(p.pGia, Gia_ManPoNum(p.pGia) + Abc_Lit2Var(pCube.Lits[i]));\n            Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\nif false {\nAbc_Print( 1, \"Trying to justify cube \" );\nif pCube != nil {\n    Pdr_SetPrint( os.Stdout, pCube, Gia_ManRegNum(p.pGia), nil );\n} else {\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" ); }\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs3_ManCollectCone( p, fVerbose );\n    // collect values\n    Pdr_ManCollectValues( p.pMan, k, p.vCiObjs, p.vCiVals );\n    Pdr_ManCollectValues( p.pMan, k, p.vCoObjs, p.vCoVals );\n\n    // read solver\n    pSat = Pdr_ManFetchSolver( p.pMan, k );\n    LitAux = Abc_Var2Lit( Pdr_ManFreeVar(p.pMan, k), 0 );\n    // add the clause (complemented cube) in terms of next state variables\n    if pCube == nil { // the target is the property output\n    \n        vLits = p.pMan.vLits;\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p.pMan, k, 2, Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)), 1 ); // neg literal (property holds)\n        Vec_IntFill( vLits, 1, Lit );\n    \n    } else {\n        vLits = Pdr_ManCubeToLits( p.pMan, k, pCube, 1, 1 ); }\n    // add activation literal\n    Vec_IntPush( vLits, LitAux );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert(RetValue == 1, \"RetValue == 1\");\n    sat_solver_compress( pSat );\n\n    // collect assumptions \n    Vec_IntClear( p.vTemp );\n    Vec_IntPush( p.vTemp, Abc_LitNot(LitAux) );\n    // iterate through the values of the CI variables\n    Vec_IntForEachEntryTwo( p.vCiObjs, p.vCiVals, Var, Value, i )\n    {\n        var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Var );\n//        iVar = Pdr_ObjSatVar( p-\u003epMan, k, fNext ? 2 - lit_sign(pCube-\u003eLits[i]) : 3, pObj ); assert( iVar \u003e= 0 );\n        var iVar int32  = Pdr_ObjSatVar( p.pMan, k, 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n        Vec_IntPush( p.vTemp, Abc_Var2Lit(iVar, !Value) );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Clause with %d lits on lev %d\\n\", pCube ? pCube.nLits : 0, k);\n        Vec_IntPrint( p.vTemp );\n    }\n\n/*\n    // solve with assumptions\n//printf( \"%d -\u003e \", Vec_IntSize(p-\u003evTemp) );\n{\nabctime clk = Abc_Clock();\n// assume all except flops\n    Vec_IntForEachEntryStop( p-\u003evTemp, Lit, i, p-\u003enPiLits + 1 )\n        if ( !sat_solver_push(pSat, Lit) )\n        {\n            assert( 0 );\n        }\n    nLits = sat_solver_minimize_assumptions( pSat, Vec_IntArray(p-\u003evTemp) + p-\u003enPiLits + 1, Vec_IntSize(p-\u003evTemp) - p-\u003enPiLits - 1, p-\u003epMan-\u003epPars-\u003enConfLimit );\n    Vec_IntShrink( p-\u003evTemp, p-\u003enPiLits + 1 + nLits );\n\np-\u003epMan-\u003etAbs += Abc_Clock() - clk;\n    for ( i = 0; i \u003c= p-\u003enPiLits; i++ )\n        sat_solver_pop(pSat);\n}\n//printf( \"%d    \", nLits );\n*/\n\n\n    //check one last time\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(p.vTemp), Vec_IntLimit(p.vTemp), 0, 0, 0, 0 );\n    assert(RetValue == l_False, \"RetValue == l_False\");\n\n    // use analyze final\n    nCoreLits = sat_solver_final(pSat, \u0026pCoreLits);\n    //assert( Vec_IntSize(p-\u003evTemp) \u003c= nCoreLits );\n\n    Vec_IntClear( p.vTemp );\n    for  i = 0; i \u003c nCoreLits; i++  {\n        Vec_IntPush( p.vTemp, Abc_LitNot(pCoreLits[i]) );\n    }\n    Vec_IntSelectSort( Vec_IntArray(p.vTemp), Vec_IntSize(p.vTemp) );\n\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vTemp ); }\n\n    // collect the resulting sets\n    Vec_IntClear( p.vPiLits );\n    Vec_IntClear( p.vFfLits );\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p.pMan.vVar2Ids, k );\n    Vec_IntForEachEntry( p.vTemp, Lit, i )\n    {\n        if Lit != Abc_LitNot(LitAux) {\n            var Id int32  = Vec_IntEntry( vVar2Ids, Abc_Lit2Var(Lit) );\n            var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Id );\n            assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n            if Saig_ObjIsPi(p.pMan.pAig, pObj) {\n                Vec_IntPush( p.vPiLits, Abc_Var2Lit(Aig_ObjCioId(pObj), Abc_LitIsCompl(Lit)) );\n            } else {\n                Vec_IntPush( p.vFfLits, Abc_Var2Lit(Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pMan.pAig), Abc_LitIsCompl(Lit)) ); }\n        }\n    }\n    assert(Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1, \"Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1\");\n\n    // move abstracted literals from flops to inputs\n    if p.pMan.pPars.fUseAbs \u0026\u0026 p.pMan.vAbsFlops {\n        var i, iLit, k int32;\n        Vec_IntForEachEntry( p.vFfLits, iLit, i )\n        {\n            if Vec_IntEntry(p.pMan.vAbsFlops, Abc_Lit2Var(iLit)) { // used flop\n                Vec_IntWriteEntry( p.vFfLits, k++, iLit );\n            } else {\n                Vec_IntPush( p.vPiLits, 2*Saig_ManPiNum(p.pMan.pAig) + iLit ); }\n        }\n        Vec_IntShrink( p.vFfLits, k );\n    }\n\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vPiLits ); }\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vFfLits ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p.vFfLits, p.vPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    assert(k == 0 || !Pdr_SetIsInit(pRes, -1), \"k == 0 || !Pdr_SetIsInit(pRes, -1)\");\n    return pRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::struct::Txs3_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Txs3_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 820,
+      "End": 1619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::pointer-cast::11236",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11236,
+      "End": 11249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::Txs3_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Txs3_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2120,
+      "End": 3353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::Txs3_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Txs3_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3354,
+      "End": 3747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::Txs3_ManCollectCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Txs3_ManCollectCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4099,
+      "End": 4937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::Txs3_ManCollectCone",
+      "Category": "semantic-review",
+      "Symbol": "Txs3_ManCollectCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4938,
+      "End": 6276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::ternary::Txs3_ManTernarySim",
+      "Category": "ternary-review",
+      "Symbol": "Txs3_ManTernarySim",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7005,
+      "End": 12923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::Txs3_ManTernarySim",
+      "Category": "semantic-review",
+      "Symbol": "Txs3_ManTernarySim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7005,
+      "End": 12923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::2328",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2328,
+      "End": 2355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::3731",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3731,
+      "End": 3744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::5293",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5293,
+      "End": 5345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::5796",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5796,
+      "End": 5839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::6011",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6011,
+      "End": 6054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::6116",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6116,
+      "End": 6168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::6198",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6198,
+      "End": 6249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::9032",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_addclause",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9032,
+      "End": 9123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::9158",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_compress",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9158,
+      "End": 9185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::9353",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryTwo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9353,
+      "End": 9416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::10616",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_solve",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10616,
+      "End": 10700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::10779",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_final",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10779,
+      "End": 10813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::11295",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11295,
+      "End": 11334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim3.c::macro-inline::12120",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12120,
+      "End": 12162
+    }
+  ],
+  "Draft": "package pdr\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [pdrTsim3.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Improved ternary simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrTsim3.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Txs3_Man_t_ struct {\n    pGia  *Gia_Man_t;      // user's AIG\n    vPrio  *Vec_Int_t;     // priority of each flop\n    vCiObjs  *Vec_Int_t;   // cone leaves (CI obj IDs)\n    vFosPre  *Vec_Int_t;   // cone leaves (CI obj IDs)\n    vFosAbs  *Vec_Int_t;   // cone leaves (CI obj IDs)\n    vCoObjs  *Vec_Int_t;   // cone roots (CO obj IDs)\n    vCiVals  *Vec_Int_t;   // cone leaf values (0/1 CI values)\n    vCoVals  *Vec_Int_t;   // cone root values (0/1 CO values)\n    vNodes  *Vec_Int_t;    // cone nodes (node obj IDs)\n    vTemp  *Vec_Int_t;     // cone nodes (node obj IDs)\n    vPiLits  *Vec_Int_t;   // resulting array of PI literals\n    vFfLits  *Vec_Int_t;   // resulting array of flop literals\n    pMan  *Pdr_Man_t;      // calling manager\n    nPiLits         int32;   // the number of PI literals\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start and stop the ternary simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs3_ManStart(pMan *Pdr_Man_t, pAig *Aig_Man_t, vPrio *Vec_Int_t) *Txs3_Man_t {\n    var p *Txs3_Man_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert(Vec_IntSize(vPrio) == Aig_ManRegNum(pAig), \"Vec_IntSize(vPrio) == Aig_ManRegNum(pAig)\");\n    p = new(Txs3_Man_t);\n    p.pGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p.vPrio   = vPrio;                // priority of each flop\n    p.vCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p.vFosPre = Vec_IntAlloc( 100 );  // present flop outputs\n    p.vFosAbs = Vec_IntAlloc( 100 );  // absracted flop outputs\n    p.vCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p.vCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p.vCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p.vNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p.vFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p.pMan    = pMan;                 // calling manager\n    return p;\n}\nfunc Txs3_ManStop(p *Txs3_Man_t) {\n    Gia_ManStop( p.pGia );\n    Vec_IntFree( p.vCiObjs );\n    Vec_IntFree( p.vFosPre );\n    Vec_IntFree( p.vFosAbs );\n    Vec_IntFree( p.vCoObjs );\n    Vec_IntFree( p.vCiVals );\n    Vec_IntFree( p.vCoVals );\n    Vec_IntFree( p.vNodes );\n    Vec_IntFree( p.vTemp );\n    Vec_IntFree( p.vPiLits );\n    Vec_IntFree( p.vFfLits );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the TFI cone and collects CIs and nodes.]\n\n  Description [For this procedure to work Value should not be ~0 \n  at the beginning.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs3_ManCollectCone_rec(p *Txs3_Man_t, pObj *Gia_Obj_t) {\n    if !~pObj.Value {\n        return; }\n    pObj.Value = ~0;\n    if Gia_ObjIsCi(pObj) {\n        var Entry int32;\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            Vec_IntPush( p.vCiObjs, Gia_ObjId(p.pGia, pObj) );\n            return;\n        }\n        Entry = Gia_ObjCioId(pObj) - Gia_ManPiNum(p.pGia);\n        if Vec_IntEntry(p.vPrio, Entry) { // present flop\n            Vec_IntPush( p.vFosPre, Gia_ObjId(p.pGia, pObj) );\n        } else { // asbstracted flop\n            Vec_IntPush( p.vFosAbs, Gia_ObjId(p.pGia, pObj) ); }\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\n    Txs3_ManCollectCone_rec( p, Gia_ObjFanin1(pObj) );\n    Vec_IntPush( p.vNodes, Gia_ObjId(p.pGia, pObj) );\n}\nfunc Txs3_ManCollectCone(p *Txs3_Man_t, fVerbose int32) {\n    var pObj *Gia_Obj_t; var i, Entry int32;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( p.vCiObjs );\n    Vec_IntClear( p.vFosPre );\n    Vec_IntClear( p.vFosAbs );\n    Vec_IntClear( p.vNodes );\n    Gia_ManConst0(p.pGia).Value = ~0;\n    Gia_ManForEachObjVec( p.vCoObjs, p.pGia, pObj, i )\n        Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );\nif fVerbose != 0 {\nfmt.Printf(\"%d %d %d \\n\", Vec_IntSize(p.vCiObjs), Vec_IntSize(p.vFosPre), Vec_IntSize(p.vFosAbs)); }\n    p.nPiLits = Vec_IntSize(p.vCiObjs);\n    // sort primary inputs\n    Vec_IntSelectSort( Vec_IntArray(p.vCiObjs), Vec_IntSize(p.vCiObjs) );\n    // sort and add present flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosPre), Vec_IntSize(p.vFosPre) );\n    Vec_IntForEachEntry( p.vFosPre, Entry, i )\n        Vec_IntPush( p.vCiObjs, Entry );\n    // sort and add absent flop variables\n    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosAbs), Vec_IntSize(p.vFosAbs) );\n    Vec_IntForEachEntry( p.vFosAbs, Entry, i )\n        Vec_IntPush( p.vCiObjs, Entry );\n    // cleanup\n    Gia_ManForEachObjVec( p.vCiObjs, p.pGia, pObj, i )\n        pObj.Value = 0;\n    Gia_ManForEachObjVec( p.vNodes, p.pGia, pObj, i )\n        pObj.Value = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Shrinks values using ternary simulation.]\n\n  Description [The cube contains the set of flop index literals which,\n  when converted into a clause and applied to the combinational outputs, \n  led to a satisfiable SAT run in frame k (values stored in the SAT solver).\n  If the cube is NULL, it is assumed that the first property output was\n  asserted and failed.\n  The resulting array is a set of flop index literals that asserts the COs.\n  Priority contains 0 for i-th entry if the i-th FF is desirable to remove.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs3_ManTernarySim(p *Txs3_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {\n//    int fTryNew = 1;\n//    int fUseLit = 1;\n    var fVerbose int32;\n    var pSat *sat_solver;\n    var pRes *Pdr_Set_t;\n    var pObj *Gia_Obj_t;\n    var vVar2Ids, vLits *Vec_Int_t;\n    var i int32;\n    var Lit int32;\n    var LitAux int32;\n    var Var int32;\n    var Value int32;\n    var RetValue int32;\n    var nCoreLits int32;\n    var pCoreLits *int32;//, nLits;\n//    if ( k == 0 )\n//        fVerbose = 1;\n    // collect CO objects\n    Vec_IntClear( p.vCoObjs );\n    if pCube == nil { // the target is the property output\n    \n        pObj = Gia_ManCo(p.pGia, p.pMan.iOutCur);\n        Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n    \n    } else { // the target is the cube\n    \n        var i int32;\n        for  i = 0; i \u003c pCube.nLits; i++  {\n            if pCube.Lits[i] == -1 {\n                continue; }\n            pObj = Gia_ManCo(p.pGia, Gia_ManPoNum(p.pGia) + Abc_Lit2Var(pCube.Lits[i]));\n            Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\nif false {\nAbc_Print( 1, \"Trying to justify cube \" );\nif pCube != nil {\n    Pdr_SetPrint( os.Stdout, pCube, Gia_ManRegNum(p.pGia), nil );\n} else {\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" ); }\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs3_ManCollectCone( p, fVerbose );\n    // collect values\n    Pdr_ManCollectValues( p.pMan, k, p.vCiObjs, p.vCiVals );\n    Pdr_ManCollectValues( p.pMan, k, p.vCoObjs, p.vCoVals );\n\n    // read solver\n    pSat = Pdr_ManFetchSolver( p.pMan, k );\n    LitAux = Abc_Var2Lit( Pdr_ManFreeVar(p.pMan, k), 0 );\n    // add the clause (complemented cube) in terms of next state variables\n    if pCube == nil { // the target is the property output\n    \n        vLits = p.pMan.vLits;\n        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p.pMan, k, 2, Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)), 1 ); // neg literal (property holds)\n        Vec_IntFill( vLits, 1, Lit );\n    \n    } else {\n        vLits = Pdr_ManCubeToLits( p.pMan, k, pCube, 1, 1 ); }\n    // add activation literal\n    Vec_IntPush( vLits, LitAux );\n    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n    assert(RetValue == 1, \"RetValue == 1\");\n    sat_solver_compress( pSat );\n\n    // collect assumptions \n    Vec_IntClear( p.vTemp );\n    Vec_IntPush( p.vTemp, Abc_LitNot(LitAux) );\n    // iterate through the values of the CI variables\n    Vec_IntForEachEntryTwo( p.vCiObjs, p.vCiVals, Var, Value, i )\n    {\n        var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Var );\n//        iVar = Pdr_ObjSatVar( p-\u003epMan, k, fNext ? 2 - lit_sign(pCube-\u003eLits[i]) : 3, pObj ); assert( iVar \u003e= 0 );\n        var iVar int32  = Pdr_ObjSatVar( p.pMan, k, 3, pObj ); assert(iVar \u003e= 0, \"iVar \u003e= 0\");\n        assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n        Vec_IntPush( p.vTemp, Abc_Var2Lit(iVar, !Value) );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Clause with %d lits on lev %d\\n\", pCube ? pCube.nLits : 0, k);\n        Vec_IntPrint( p.vTemp );\n    }\n\n/*\n    // solve with assumptions\n//printf( \"%d -\u003e \", Vec_IntSize(p-\u003evTemp) );\n{\nabctime clk = Abc_Clock();\n// assume all except flops\n    Vec_IntForEachEntryStop( p-\u003evTemp, Lit, i, p-\u003enPiLits + 1 )\n        if ( !sat_solver_push(pSat, Lit) )\n        {\n            assert( 0 );\n        }\n    nLits = sat_solver_minimize_assumptions( pSat, Vec_IntArray(p-\u003evTemp) + p-\u003enPiLits + 1, Vec_IntSize(p-\u003evTemp) - p-\u003enPiLits - 1, p-\u003epMan-\u003epPars-\u003enConfLimit );\n    Vec_IntShrink( p-\u003evTemp, p-\u003enPiLits + 1 + nLits );\n\np-\u003epMan-\u003etAbs += Abc_Clock() - clk;\n    for ( i = 0; i \u003c= p-\u003enPiLits; i++ )\n        sat_solver_pop(pSat);\n}\n//printf( \"%d    \", nLits );\n*/\n\n\n    //check one last time\n    RetValue = sat_solver_solve( pSat, Vec_IntArray(p.vTemp), Vec_IntLimit(p.vTemp), 0, 0, 0, 0 );\n    assert(RetValue == l_False, \"RetValue == l_False\");\n\n    // use analyze final\n    nCoreLits = sat_solver_final(pSat, \u0026pCoreLits);\n    //assert( Vec_IntSize(p-\u003evTemp) \u003c= nCoreLits );\n\n    Vec_IntClear( p.vTemp );\n    for  i = 0; i \u003c nCoreLits; i++  {\n        Vec_IntPush( p.vTemp, Abc_LitNot(pCoreLits[i]) );\n    }\n    Vec_IntSelectSort( Vec_IntArray(p.vTemp), Vec_IntSize(p.vTemp) );\n\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vTemp ); }\n\n    // collect the resulting sets\n    Vec_IntClear( p.vPiLits );\n    Vec_IntClear( p.vFfLits );\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p.pMan.vVar2Ids, k );\n    Vec_IntForEachEntry( p.vTemp, Lit, i )\n    {\n        if Lit != Abc_LitNot(LitAux) {\n            var Id int32  = Vec_IntEntry( vVar2Ids, Abc_Lit2Var(Lit) );\n            var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Id );\n            assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n            if Saig_ObjIsPi(p.pMan.pAig, pObj) {\n                Vec_IntPush( p.vPiLits, Abc_Var2Lit(Aig_ObjCioId(pObj), Abc_LitIsCompl(Lit)) );\n            } else {\n                Vec_IntPush( p.vFfLits, Abc_Var2Lit(Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pMan.pAig), Abc_LitIsCompl(Lit)) ); }\n        }\n    }\n    assert(Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1, \"Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1\");\n\n    // move abstracted literals from flops to inputs\n    if p.pMan.pPars.fUseAbs \u0026\u0026 p.pMan.vAbsFlops {\n        var i, iLit, k int32;\n        Vec_IntForEachEntry( p.vFfLits, iLit, i )\n        {\n            if Vec_IntEntry(p.pMan.vAbsFlops, Abc_Lit2Var(iLit)) { // used flop\n                Vec_IntWriteEntry( p.vFfLits, k++, iLit );\n            } else {\n                Vec_IntPush( p.vPiLits, 2*Saig_ManPiNum(p.pMan.pAig) + iLit ); }\n        }\n        Vec_IntShrink( p.vFfLits, k );\n    }\n\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vPiLits ); }\n    if fVerbose != 0 {\n        Vec_IntPrint( p.vFfLits ); }\n    if fVerbose != 0 {\n        fmt.Printf(\"\\n\"); }\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p.vFfLits, p.vPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    assert(k == 0 || !Pdr_SetIsInit(pRes, -1), \"k == 0 || !Pdr_SetIsInit(pRes, -1)\");\n    return pRes;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

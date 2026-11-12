@@ -1,0 +1,453 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c",
+  "SHA256": "f3411c238764b826ad3f43839bd04d037e651986c50692d3b0c728a6542a6707",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 137,
+        "Column": 122,
+        "ByteOffset": 4581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MEM_FREE__*/if p.pCubes { /*__starting_point_inline_macro:ABC_FREE__*/((p.pCubes) ? (free((char *) (p.pCubes)), (p.pCubes) = 0) : 0); p.pCubes = nil; };"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 120,
+        "ByteOffset": 4768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:MEM_FREE__*/if p.pLits { /*__starting_point_inline_macro:ABC_FREE__*/((p.pLits) ? (free((char *) (p.pLits)), (p.pLits) = 0) : 0); p.pLits = nil; };"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 173,
+        "Column": 132,
+        "ByteOffset": 5730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCover.pLits = /*__starting_point_inline_macro:MEM_ALLOC__*/((int *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)((pCover.nBits) * sizeof(int))))); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 190,
+        "Column": 140,
+        "ByteOffset": 6317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:MEM_FREE__*/if pCover.pCubes { /*__starting_point_inline_macro:ABC_FREE__*/((pCover.pCubes) ? (free((char *) (pCover.pCubes)), (pCover.pCubes) = 0) : 0); pCover.pCubes = nil; } };"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 192,
+        "Column": 142,
+        "ByteOffset": 6594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pCover.pCubes = /*__starting_point_inline_macro:MEM_ALLOC__*/((Mvc_Cube_t * *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)((pCover.nCubesAlloc) * sizeof(Mvc_Cube_t *)))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 225,
+        "Column": 134,
+        "ByteOffset": 7486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:MEM_FREE__*/if pCover.pLits { /*__starting_point_inline_macro:ABC_FREE__*/((pCover.pLits) ? (free((char *) (pCover.pLits)), (pCover.pLits) = 0) : 0); pCover.pLits = nil; };"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 49,
+        "Column": 1,
+        "ByteOffset": 1378
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    },
+    {
+      "Location": {
+        "Line": 82,
+        "Column": 1,
+        "ByteOffset": 2314
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    },
+    {
+      "Location": {
+        "Line": 149,
+        "Column": 1,
+        "ByteOffset": 4147
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverAlloc",
+      "Start": 1214,
+      "End": 2002,
+      "BodyStart": 1278,
+      "Original": "Mvc_Cover_t * Mvc_CoverAlloc( Mvc_Manager_t * pMem, int nBits )\n{\n    Mvc_Cover_t * p;\n    int nBitsInUnsigned;\n\n    nBitsInUnsigned  = 8 * sizeof(Mvc_CubeWord_t);\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    p                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    p                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( pMem-\u003epManC );\n#endif\n    p-\u003epMem          = pMem;\n    p-\u003enBits         = nBits;\n    p-\u003enWords        = nBits / nBitsInUnsigned + (int)(nBits % nBitsInUnsigned \u003e 0);\n    p-\u003enUnused       = p-\u003enWords * nBitsInUnsigned - p-\u003enBits;\n    p-\u003elCubes.nItems = 0;\n    p-\u003elCubes.pHead  = NULL;\n    p-\u003elCubes.pTail  = NULL;\n    p-\u003enCubesAlloc   = 0;\n    p-\u003epCubes        = NULL;\n    p-\u003epMask         = NULL;\n    p-\u003epLits         = NULL;\n    return p;\n}",
+      "Draft": "func Mvc_CoverAlloc(pMem *Mvc_Manager_t, nBits int32) *Mvc_Cover_t {\n    var p *Mvc_Cover_t;\n    var nBitsInUnsigned int32;\n\n    nBitsInUnsigned  = 8 * sizeof(Mvc_CubeWord_t);\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    p                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    p                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( pMem-\u003epManC );\n#endif\n    p.pMem          = pMem;\n    p.nBits         = nBits;\n    p.nWords        = nBits / nBitsInUnsigned + int32((nBits % nBitsInUnsigned \u003e 0));\n    p.nUnused       = p.nWords * nBitsInUnsigned - p.nBits;\n    p.lCubes.nItems = 0;\n    p.lCubes.pHead  = nil;\n    p.lCubes.pTail  = nil;\n    p.nCubesAlloc   = 0;\n    p.pCubes        = nil;\n    p.pMask         = nil;\n    p.pLits         = nil;\n    return p;\n}"
+    },
+    {
+      "Name": "Mvc_CoverClone",
+      "Start": 2238,
+      "End": 2938,
+      "BodyStart": 2286,
+      "Original": "Mvc_Cover_t * Mvc_CoverClone( Mvc_Cover_t * p )\n{\n    Mvc_Cover_t * pCover;\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pCover                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    pCover                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( p-\u003epMem-\u003epManC );\n#endif\n    pCover-\u003epMem          = p-\u003epMem;\n    pCover-\u003enBits         = p-\u003enBits;\n    pCover-\u003enWords        = p-\u003enWords;\n    pCover-\u003enUnused       = p-\u003enUnused;\n    pCover-\u003elCubes.nItems = 0;\n    pCover-\u003elCubes.pHead  = NULL;\n    pCover-\u003elCubes.pTail  = NULL;\n    pCover-\u003enCubesAlloc   = 0;\n    pCover-\u003epCubes        = NULL;\n    pCover-\u003epMask         = NULL;\n    pCover-\u003epLits         = NULL;\n    return pCover;\n}",
+      "Draft": "func Mvc_CoverClone(p *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pCover                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    pCover                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( p-\u003epMem-\u003epManC );\n#endif\n    pCover.pMem          = p.pMem;\n    pCover.nBits         = p.nBits;\n    pCover.nWords        = p.nWords;\n    pCover.nUnused       = p.nUnused;\n    pCover.lCubes.nItems = 0;\n    pCover.lCubes.pHead  = nil;\n    pCover.lCubes.pTail  = nil;\n    pCover.nCubesAlloc   = 0;\n    pCover.pCubes        = nil;\n    pCover.pMask         = nil;\n    pCover.pLits         = nil;\n    return pCover;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDup",
+      "Start": 3174,
+      "End": 3533,
+      "BodyStart": 3220,
+      "Original": "Mvc_Cover_t * Mvc_CoverDup( Mvc_Cover_t * p )\n{\n    Mvc_Cover_t * pCover;\n    Mvc_Cube_t * pCube, * pCubeCopy;\n    // clone the cover\n    pCover = Mvc_CoverClone( p );\n    // copy the cube list\n    Mvc_CoverForEachCube( p, pCube )\n    {\n        pCubeCopy = Mvc_CubeDup( p, pCube );\n        Mvc_CoverAddCubeTail( pCover, pCubeCopy );\n    }\n    return pCover;\n}",
+      "Draft": "func Mvc_CoverDup(p *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n    var pCube, pCubeCopy *Mvc_Cube_t;\n    // clone the cover\n    pCover = Mvc_CoverClone( p );\n    // copy the cube list\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (p).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( p, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    return pCover;\n}"
+    },
+    {
+      "Name": "Mvc_CoverFree",
+      "Start": 3769,
+      "End": 4276,
+      "BodyStart": 3807,
+      "Original": "void Mvc_CoverFree( Mvc_Cover_t * p )\n{\n    Mvc_Cube_t * pCube, * pCube2;\n    // recycle cube list\n    Mvc_CoverForEachCubeSafe( p, pCube, pCube2 )\n        Mvc_CubeFree( p, pCube );\n    // recycle other pointers\n    Mvc_CubeFree( p, p-\u003epMask );\n    MEM_FREE( p-\u003epMem, Mvc_Cube_t *, p-\u003enCubesAlloc, p-\u003epCubes );\n    MEM_FREE( p-\u003epMem, int,          p-\u003enBits,       p-\u003epLits  );\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( p );\n#else\n    Extra_MmFixedEntryRecycle( p-\u003epMem-\u003epManC, (char *)p );\n#endif\n}",
+      "Draft": "func Mvc_CoverFree(p *Mvc_Cover_t) {\n    var pCube, pCube2 *Mvc_Cube_t;\n    // recycle cube list\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (p).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        Mvc_CubeFree( p, pCube );\n    }\n    // recycle other pointers\n    Mvc_CubeFree( p, p.pMask );\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if p.pCubes { ((p.pCubes) ? (free((char *) (p.pCubes)), (p.pCubes) = 0) : 0); p.pCubes = nil; };\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if p.pLits { ((p.pLits) ? (free((char *) (p.pLits)), (p.pLits) = 0) : 0); p.pLits = nil; };\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( p );\n#else\n    Extra_MmFixedEntryRecycle( p-\u003epMem-\u003epManC, (char *)p );\n#endif\n}"
+    },
+    {
+      "Name": "Mvc_CoverAllocateMask",
+      "Start": 4513,
+      "End": 4651,
+      "BodyStart": 4565,
+      "Original": "void Mvc_CoverAllocateMask( Mvc_Cover_t * pCover ) \n{ \n    if ( pCover-\u003epMask == NULL )\n        pCover-\u003epMask = Mvc_CubeAlloc( pCover );\n}",
+      "Draft": "func Mvc_CoverAllocateMask(pCover *Mvc_Cover_t) { \n    if pCover.pMask == nil {\n        pCover.pMask = Mvc_CubeAlloc( pCover ); }\n}"
+    },
+    {
+      "Name": "Mvc_CoverAllocateArrayLits",
+      "Start": 4887,
+      "End": 5052,
+      "BodyStart": 4944,
+      "Original": "void Mvc_CoverAllocateArrayLits( Mvc_Cover_t * pCover ) \n{ \n    if ( pCover-\u003epLits == NULL )\n        pCover-\u003epLits = MEM_ALLOC( pCover-\u003epMem, int, pCover-\u003enBits );\n}",
+      "Draft": "func Mvc_CoverAllocateArrayLits(pCover *Mvc_Cover_t) { \n    if pCover.pLits == nil {\n        // inlining of macro MEM_ALLOC\n        // inlining of macro ABC_ALLOC\n        pCover.pLits = ((int *)((char *) malloc(sizeof(char) * (size_t)((pCover.nBits) * sizeof(int))))); }\n}"
+    },
+    {
+      "Name": "Mvc_CoverAllocateArrayCubes",
+      "Start": 5288,
+      "End": 5685,
+      "BodyStart": 5346,
+      "Original": "void Mvc_CoverAllocateArrayCubes( Mvc_Cover_t * pCover ) \n{ \n    if ( pCover-\u003enCubesAlloc \u003c pCover-\u003elCubes.nItems )\n    {\n        if ( pCover-\u003enCubesAlloc \u003e 0 )\n            MEM_FREE( pCover-\u003epMem, Mvc_Cube_t *, pCover-\u003enCubesAlloc, pCover-\u003epCubes );\n        pCover-\u003enCubesAlloc = pCover-\u003elCubes.nItems;\n        pCover-\u003epCubes = MEM_ALLOC( pCover-\u003epMem, Mvc_Cube_t *, pCover-\u003enCubesAlloc );\n    }\n}",
+      "Draft": "func Mvc_CoverAllocateArrayCubes(pCover *Mvc_Cover_t) { \n    if pCover.nCubesAlloc \u003c pCover.lCubes.nItems {\n        if pCover.nCubesAlloc \u003e 0 {\n            // inlining of macro MEM_FREE\n            // inlining of macro ABC_FREE\n            if pCover.pCubes { ((pCover.pCubes) ? (free((char *) (pCover.pCubes)), (pCover.pCubes) = 0) : 0); pCover.pCubes = nil; } };\n        pCover.nCubesAlloc = pCover.lCubes.nItems;\n        // inlining of macro MEM_ALLOC\n        // inlining of macro ABC_ALLOC\n        pCover.pCubes = ((Mvc_Cube_t * *)((char *) malloc(sizeof(char) * (size_t)((pCover.nCubesAlloc) * sizeof(Mvc_Cube_t *)))));\n    }\n}"
+    },
+    {
+      "Name": "Mvc_CoverDeallocateMask",
+      "Start": 5921,
+      "End": 6048,
+      "BodyStart": 5975,
+      "Original": "void Mvc_CoverDeallocateMask( Mvc_Cover_t * pCover ) \n{ \n    Mvc_CubeFree( pCover, pCover-\u003epMask );\n    pCover-\u003epMask = NULL;\n}",
+      "Draft": "func Mvc_CoverDeallocateMask(pCover *Mvc_Cover_t) { \n    Mvc_CubeFree( pCover, pCover.pMask );\n    pCover.pMask = nil;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDeallocateArrayLits",
+      "Start": 6284,
+      "End": 6483,
+      "BodyStart": 6343,
+      "Original": "void Mvc_CoverDeallocateArrayLits( Mvc_Cover_t * pCover ) \n{ \n    if ( pCover-\u003epLits )\n    {\n        MEM_FREE( pCover-\u003epMem, int, pCover-\u003enBits, pCover-\u003epLits );\n        pCover-\u003epLits = NULL;\n    }\n}",
+      "Draft": "func Mvc_CoverDeallocateArrayLits(pCover *Mvc_Cover_t) { \n    if pCover.pLits {\n        // inlining of macro MEM_FREE\n        // inlining of macro ABC_FREE\n        if pCover.pLits { ((pCover.pLits) ? (free((char *) (pCover.pLits)), (pCover.pLits) = 0) : 0); pCover.pLits = nil; };\n        pCover.pLits = nil;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::mechanical::sizeof::1354",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1354,
+      "End": 1360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::mechanical::sizeof::5782",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5004,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::mechanical::sizeof::5824",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5004,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::mechanical::sizeof::6673",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5616,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::mechanical::sizeof::6721",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5616,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::4601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4018,
+      "End": 4018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::4798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4084,
+      "End": 4084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::5713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5004,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::5766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5004,
+      "End": 5004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::6389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5461,
+      "End": 5461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::6595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5616,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::6657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5616,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::6727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5616,
+      "End": 5616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::pointer-cast::7590",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6385,
+      "End": 6385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1214,
+      "End": 2002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverClone",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverClone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2238,
+      "End": 2938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverDup",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3174,
+      "End": 3533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::ternary::Mvc_CoverFree",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3769,
+      "End": 4276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverFree",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3769,
+      "End": 4276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverAllocateMask",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAllocateMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4513,
+      "End": 4651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverAllocateArrayLits",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAllocateArrayLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4887,
+      "End": 5052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::ternary::Mvc_CoverAllocateArrayCubes",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverAllocateArrayCubes",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5288,
+      "End": 5685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverAllocateArrayCubes",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAllocateArrayCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5288,
+      "End": 5685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverDeallocateMask",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDeallocateMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5921,
+      "End": 6048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::ternary::Mvc_CoverDeallocateArrayLits",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverDeallocateArrayLits",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6284,
+      "End": 6483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::Mvc_CoverDeallocateArrayLits",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDeallocateArrayLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6284,
+      "End": 6483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1378,
+      "End": 1582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2314,
+      "End": 2531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCover.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4147,
+      "End": 4274
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcCover.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Basic procedures to manipulate unate cube covers.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcCover.c,v 1.5 2003/04/09 18:02:05 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAlloc(pMem *Mvc_Manager_t, nBits int32) *Mvc_Cover_t {\n    var p *Mvc_Cover_t;\n    var nBitsInUnsigned int32;\n\n    nBitsInUnsigned  = 8 * sizeof(Mvc_CubeWord_t);\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    p                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    p                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( pMem-\u003epManC );\n#endif\n    p.pMem          = pMem;\n    p.nBits         = nBits;\n    p.nWords        = nBits / nBitsInUnsigned + int32((nBits % nBitsInUnsigned \u003e 0));\n    p.nUnused       = p.nWords * nBitsInUnsigned - p.nBits;\n    p.lCubes.nItems = 0;\n    p.lCubes.pHead  = nil;\n    p.lCubes.pTail  = nil;\n    p.nCubesAlloc   = 0;\n    p.pCubes        = nil;\n    p.pMask         = nil;\n    p.pLits         = nil;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverClone(p *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pCover                = (Mvc_Cover_t *)ABC_ALLOC( char, sizeof(Mvc_Cover_t) );\n#else\n    pCover                = (Mvc_Cover_t *)Extra_MmFixedEntryFetch( p-\u003epMem-\u003epManC );\n#endif\n    pCover.pMem          = p.pMem;\n    pCover.nBits         = p.nBits;\n    pCover.nWords        = p.nWords;\n    pCover.nUnused       = p.nUnused;\n    pCover.lCubes.nItems = 0;\n    pCover.lCubes.pHead  = nil;\n    pCover.lCubes.pTail  = nil;\n    pCover.nCubesAlloc   = 0;\n    pCover.pCubes        = nil;\n    pCover.pMask         = nil;\n    pCover.pLits         = nil;\n    return pCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDup(p *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCover *Mvc_Cover_t;\n    var pCube, pCubeCopy *Mvc_Cube_t;\n    // clone the cover\n    pCover = Mvc_CoverClone( p );\n    // copy the cube list\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (p).lCubes.pHead;          pCube;          pCube = pCube.pNext  {\n        pCubeCopy = Mvc_CubeDup( p, pCube );\n        // inlining of macro Mvc_CoverAddCubeTail\n        // inlining of macro Mvc_ListAddCubeTail\n        // inlining of macro Mvc_CubeSetNext\n        {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeCopy; }        else {            ((pList.pTail).pNext = (pCubeCopy)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeCopy;        ((pCubeCopy).pNext = (nil));        pList.nItems++;    };};\n    }\n    return pCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverFree(p *Mvc_Cover_t) {\n    var pCube, pCube2 *Mvc_Cube_t;\n    // recycle cube list\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (p).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          pCube;          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        Mvc_CubeFree( p, pCube );\n    }\n    // recycle other pointers\n    Mvc_CubeFree( p, p.pMask );\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if p.pCubes { ((p.pCubes) ? (free((char *) (p.pCubes)), (p.pCubes) = 0) : 0); p.pCubes = nil; };\n    // inlining of macro MEM_FREE\n    // inlining of macro ABC_FREE\n    if p.pLits { ((p.pLits) ? (free((char *) (p.pLits)), (p.pLits) = 0) : 0); p.pLits = nil; };\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( p );\n#else\n    Extra_MmFixedEntryRecycle( p-\u003epMem-\u003epManC, (char *)p );\n#endif\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAllocateMask(pCover *Mvc_Cover_t) { \n    if pCover.pMask == nil {\n        pCover.pMask = Mvc_CubeAlloc( pCover ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAllocateArrayLits(pCover *Mvc_Cover_t) { \n    if pCover.pLits == nil {\n        // inlining of macro MEM_ALLOC\n        // inlining of macro ABC_ALLOC\n        pCover.pLits = ((int *)((char *) malloc(sizeof(char) * (size_t)((pCover.nBits) * sizeof(int))))); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAllocateArrayCubes(pCover *Mvc_Cover_t) { \n    if pCover.nCubesAlloc \u003c pCover.lCubes.nItems {\n        if pCover.nCubesAlloc \u003e 0 {\n            // inlining of macro MEM_FREE\n            // inlining of macro ABC_FREE\n            if pCover.pCubes { ((pCover.pCubes) ? (free((char *) (pCover.pCubes)), (pCover.pCubes) = 0) : 0); pCover.pCubes = nil; } };\n        pCover.nCubesAlloc = pCover.lCubes.nItems;\n        // inlining of macro MEM_ALLOC\n        // inlining of macro ABC_ALLOC\n        pCover.pCubes = ((Mvc_Cube_t * *)((char *) malloc(sizeof(char) * (size_t)((pCover.nCubesAlloc) * sizeof(Mvc_Cube_t *)))));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDeallocateMask(pCover *Mvc_Cover_t) { \n    Mvc_CubeFree( pCover, pCover.pMask );\n    pCover.pMask = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDeallocateArrayLits(pCover *Mvc_Cover_t) { \n    if pCover.pLits {\n        // inlining of macro MEM_FREE\n        // inlining of macro ABC_FREE\n        if pCover.pLits { ((pCover.pLits) ? (free((char *) (pCover.pLits)), (pCover.pLits) = 0) : 0); pCover.pLits = nil; };\n        pCover.pLits = nil;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

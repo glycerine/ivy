@@ -1,0 +1,130 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c",
+  "SHA256": "ce8a665b3b41c633f2f3e775dda874afddefbe5a19e8a1bf38473ca9d522df0a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_SymmsSimulate",
+      "Start": 1524,
+      "End": 2717,
+      "BodyStart": 1607,
+      "Original": "void Sim_SymmsSimulate( Sym_Man_t * p, unsigned * pPat, Vec_Ptr_t * vMatrsNonSym )\n{\n    Abc_Obj_t * pNode;\n    int i, nPairsTotal, nPairsSym, nPairsNonSym;\n    abctime clk;\n\n    // create the simulation matrix\n    Sim_SymmsCreateSquare( p, pPat );\n    // simulate each node in the DFS order\nclk = Abc_Clock();\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodes, pNode, i )\n    {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Sim_UtilSimulateNodeOne( pNode, p-\u003evSim, p-\u003enSimWords, 0 );\n    }\np-\u003etimeSim += Abc_Clock() - clk;\n    // collect info into the CO matrices\nclk = Abc_Clock();\n    Abc_NtkForEachCo( p-\u003epNtk, pNode, i )\n    {\n        pNode = Abc_ObjFanin0(pNode);\n//        if ( Abc_ObjIsCi(pNode) || Abc_AigNodeIsConst(pNode) )\n//            continue;\n        nPairsTotal  = Vec_IntEntry(p-\u003evPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p-\u003evPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p-\u003evPairsNonSym,i);\n        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); \n        if ( nPairsTotal == nPairsSym + nPairsNonSym )\n            continue;\n        Sim_SymmsDeriveInfo( p, pPat, pNode, vMatrsNonSym, i );\n    }\np-\u003etimeMatr += Abc_Clock() - clk;\n}",
+      "Draft": "func Sim_SymmsSimulate(p *Sym_Man_t, pPat *uint32, vMatrsNonSym *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i, nPairsTotal, nPairsSym, nPairsNonSym int32;\n    var clk abctime;\n\n    // create the simulation matrix\n    Sim_SymmsCreateSquare( p, pPat );\n    // simulate each node in the DFS order\nclk = Abc_Clock();\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Sim_UtilSimulateNodeOne( pNode, p.vSim, p.nSimWords, 0 );\n    }\np.timeSim += Abc_Clock() - clk;\n    // collect info into the CO matrices\nclk = Abc_Clock();\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        pNode = Abc_ObjFanin0(pNode);\n//        if ( Abc_ObjIsCi(pNode) || Abc_AigNodeIsConst(pNode) )\n//            continue;\n        nPairsTotal  = Vec_IntEntry(p.vPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p.vPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p.vPairsNonSym,i);\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        if nPairsTotal == nPairsSym + nPairsNonSym {\n            continue; }\n        Sim_SymmsDeriveInfo( p, pPat, pNode, vMatrsNonSym, i );\n    }\np.timeMatr += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Sim_SymmsCreateSquare",
+      "Start": 2998,
+      "End": 3608,
+      "BodyStart": 3059,
+      "Original": "void Sim_SymmsCreateSquare( Sym_Man_t * p, unsigned * pPat )\n{\n    unsigned * pSimInfo;\n    Abc_Obj_t * pNode;\n    int i, w;\n    // for each PI var copy the pattern\n    Abc_NtkForEachCi( p-\u003epNtk, pNode, i )\n    {\n        pSimInfo = (unsigned *)Vec_PtrEntry( p-\u003evSim, pNode-\u003eId );\n        if ( Sim_HasBit(pPat, i) )\n        {\n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSimInfo[w] = SIM_MASK_FULL;\n        }\n        else\n        {\n            for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n                pSimInfo[w] = 0;\n        }\n        // flip one bit\n        Sim_XorBit( pSimInfo, i );\n    }\n}",
+      "Draft": "func Sim_SymmsCreateSquare(p *Sym_Man_t, pPat *uint32) {\n    var pSimInfo *uint32;\n    var pNode *Abc_Obj_t;\n    var i, w int32;\n    // for each PI var copy the pattern\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry( p.vSim, pNode.Id );\n        // inlining of macro Sim_HasBit\n        if  ((pPat)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSimInfo[w] = SIM_MASK_FULL;\n            }\n        \n        } else {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSimInfo[w] = 0;\n            }\n        }\n        // flip one bit\n        // inlining of macro Sim_XorBit\n        ((pSimInfo)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)));\n    }\n}"
+    },
+    {
+      "Name": "Sim_SymmsDeriveInfo",
+      "Start": 3874,
+      "End": 5527,
+      "BodyStart": 3990,
+      "Original": "void Sim_SymmsDeriveInfo( Sym_Man_t * p, unsigned * pPat, Abc_Obj_t * pNode, Vec_Ptr_t * vMatrsNonSym, int Output )\n{\n    Extra_BitMat_t * pMat;\n    Vec_Int_t * vSupport;\n    unsigned * pSupport;\n    unsigned * pSimInfo;\n    int i, w, Index;\n    // get the matrix, the support, and the simulation info\n    pMat = (Extra_BitMat_t *)Vec_PtrEntry( vMatrsNonSym, Output );\n    vSupport = Vec_VecEntryInt( p-\u003evSupports, Output );\n    pSupport = (unsigned *)Vec_PtrEntry( p-\u003evSuppFun, Output );\n    pSimInfo = (unsigned *)Vec_PtrEntry( p-\u003evSim, pNode-\u003eId );\n    // generate vectors A1 and A2\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n    {\n        p-\u003euPatCol[w] = pSupport[w] \u0026 pPat[w] \u0026  pSimInfo[w];\n        p-\u003euPatRow[w] = pSupport[w] \u0026 pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    Vec_IntForEachEntry( vSupport, i, Index )\n        if ( Sim_HasBit( p-\u003euPatCol, i ) )\n            Extra_BitMatrixOr( pMat, i, p-\u003euPatRow );\n    // add two dimensions\n    Vec_IntForEachEntry( vSupport, i, Index )\n        if ( Sim_HasBit( p-\u003euPatRow, i ) )\n            Extra_BitMatrixOr( pMat, i, p-\u003euPatCol );\n    // generate vectors B1 and B2\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n    {\n        p-\u003euPatCol[w] = pSupport[w] \u0026 ~pPat[w] \u0026  pSimInfo[w];\n        p-\u003euPatRow[w] = pSupport[w] \u0026 ~pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    Vec_IntForEachEntry( vSupport, i, Index )\n        if ( Sim_HasBit( p-\u003euPatCol, i ) )\n            Extra_BitMatrixOr( pMat, i, p-\u003euPatRow );\n    // add two dimensions\n    Vec_IntForEachEntry( vSupport, i, Index )\n        if ( Sim_HasBit( p-\u003euPatRow, i ) )\n            Extra_BitMatrixOr( pMat, i, p-\u003euPatCol );\n}",
+      "Draft": "func Sim_SymmsDeriveInfo(p *Sym_Man_t, pPat *uint32, pNode *Abc_Obj_t, vMatrsNonSym *Vec_Ptr_t, Output int32) {\n    var pMat *Extra_BitMat_t;\n    var vSupport *Vec_Int_t;\n    var pSupport *uint32;\n    var pSimInfo *uint32;\n    var i, w, Index int32;\n    // get the matrix, the support, and the simulation info\n    pMat = (Extra_BitMat_t *)Vec_PtrEntry( vMatrsNonSym, Output );\n    vSupport = Vec_VecEntryInt( p.vSupports, Output );\n    pSupport = (unsigned *)Vec_PtrEntry( p.vSuppFun, Output );\n    pSimInfo = (unsigned *)Vec_PtrEntry( p.vSim, pNode.Id );\n    // generate vectors A1 and A2\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        p.uPatCol[w] = pSupport[w] \u0026 pPat[w] \u0026  pSimInfo[w];\n        p.uPatRow[w] = pSupport[w] \u0026 pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatCol)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatRow ); }\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatRow)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatCol ); }\n    }\n    // generate vectors B1 and B2\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        p.uPatCol[w] = pSupport[w] \u0026 ~pPat[w] \u0026  pSimInfo[w];\n        p.uPatRow[w] = pSupport[w] \u0026 ~pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatCol)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatRow ); }\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatRow)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatCol ); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::pointer-cast::1951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1839,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::pointer-cast::3546",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3230,
+      "End": 3242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::pointer-cast::4631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4187,
+      "End": 4205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::pointer-cast::4758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4314,
+      "End": 4326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::pointer-cast::4822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4378,
+      "End": 4390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::Sim_SymmsSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1524,
+      "End": 2717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::Sim_SymmsCreateSquare",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsCreateSquare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2998,
+      "End": 3608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::Sim_SymmsDeriveInfo",
+      "Category": "semantic-review",
+      "Symbol": "Sim_SymmsDeriveInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3874,
+      "End": 5527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSymSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5774
+    }
+  ],
+  "Draft": "package sim\n\n/**CFile****************************************************************\n\n  FileName    [simSymSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Simulation to determine two-variable symmetries.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simSymSim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Sim_SymmsCreateSquare( Sym_Man_t * p, unsigned * pPat );\n\n// static void Sim_SymmsDeriveInfo( Sym_Man_t * p, unsigned * pPat, Abc_Obj_t * pNode, Vec_Ptr_t * vMatrsNonSym, int Output );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Detects non-symmetric pairs using one pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsSimulate(p *Sym_Man_t, pPat *uint32, vMatrsNonSym *Vec_Ptr_t) {\n    var pNode *Abc_Obj_t;\n    var i, nPairsTotal, nPairsSym, nPairsNonSym int32;\n    var clk abctime;\n\n    // create the simulation matrix\n    Sim_SymmsCreateSquare( p, pPat );\n    // simulate each node in the DFS order\nclk = Abc_Clock();\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Sim_UtilSimulateNodeOne( pNode, p.vSim, p.nSimWords, 0 );\n    }\np.timeSim += Abc_Clock() - clk;\n    // collect info into the CO matrices\nclk = Abc_Clock();\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        pNode = Abc_ObjFanin0(pNode);\n//        if ( Abc_ObjIsCi(pNode) || Abc_AigNodeIsConst(pNode) )\n//            continue;\n        nPairsTotal  = Vec_IntEntry(p.vPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p.vPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p.vPairsNonSym,i);\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        if nPairsTotal == nPairsSym + nPairsNonSym {\n            continue; }\n        Sim_SymmsDeriveInfo( p, pPat, pNode, vMatrsNonSym, i );\n    }\np.timeMatr += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the square matrix of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsCreateSquare(p *Sym_Man_t, pPat *uint32) {\n    var pSimInfo *uint32;\n    var pNode *Abc_Obj_t;\n    var i, w int32;\n    // for each PI var copy the pattern\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(p.pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry( p.vSim, pNode.Id );\n        // inlining of macro Sim_HasBit\n        if  ((pPat)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSimInfo[w] = SIM_MASK_FULL;\n            }\n        \n        } else {\n            for  w = 0; w \u003c p.nSimWords; w++  {\n                pSimInfo[w] = 0;\n            }\n        }\n        // flip one bit\n        // inlining of macro Sim_XorBit\n        ((pSimInfo)[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31)));\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the info to the POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_SymmsDeriveInfo(p *Sym_Man_t, pPat *uint32, pNode *Abc_Obj_t, vMatrsNonSym *Vec_Ptr_t, Output int32) {\n    var pMat *Extra_BitMat_t;\n    var vSupport *Vec_Int_t;\n    var pSupport *uint32;\n    var pSimInfo *uint32;\n    var i, w, Index int32;\n    // get the matrix, the support, and the simulation info\n    pMat = (Extra_BitMat_t *)Vec_PtrEntry( vMatrsNonSym, Output );\n    vSupport = Vec_VecEntryInt( p.vSupports, Output );\n    pSupport = (unsigned *)Vec_PtrEntry( p.vSuppFun, Output );\n    pSimInfo = (unsigned *)Vec_PtrEntry( p.vSim, pNode.Id );\n    // generate vectors A1 and A2\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        p.uPatCol[w] = pSupport[w] \u0026 pPat[w] \u0026  pSimInfo[w];\n        p.uPatRow[w] = pSupport[w] \u0026 pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatCol)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatRow ); }\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatRow)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatCol ); }\n    }\n    // generate vectors B1 and B2\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        p.uPatCol[w] = pSupport[w] \u0026 ~pPat[w] \u0026  pSimInfo[w];\n        p.uPatRow[w] = pSupport[w] \u0026 ~pPat[w] \u0026 ~pSimInfo[w];\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatCol)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatRow ); }\n    }\n    // add two dimensions\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index)), 1); Index++  {\n        // inlining of macro Sim_HasBit\n        if  ((p.uPatRow)[(i)\u003e\u003e5]  \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0 {\n            Extra_BitMatrixOr( pMat, i, p.uPatCol ); }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

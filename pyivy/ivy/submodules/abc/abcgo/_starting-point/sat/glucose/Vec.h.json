@@ -1,0 +1,150 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h",
+  "SHA256": "3a1e18d690bef4ae24c9cc2454284969681be2f3626c18c60a7a673d877eb14c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 43,
+        "ByteOffset": 1892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vec\u003cT\u003e\u0026  operator = (vec\u003cT\u003e\u0026 other) { assert(0); return *this; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 43,
+        "ByteOffset": 1961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "             vec        (vec\u003cT\u003e\u0026 other) { assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 42,
+        "ByteOffset": 2857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void     shrink   (int nelems)     { assert(nelems \u003c= sz); for (int i = 0; i \u003c nelems; i++) sz--, data[sz].~T(); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 42,
+        "ByteOffset": 2976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void     shrink_  (int nelems)     { assert(nelems \u003c= sz); sz -= nelems; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 36,
+        "ByteOffset": 3466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void     push_ (T\u0026 elem)     { assert(sz \u003c cap); data[sz++] = elem; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 42,
+        "ByteOffset": 3546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    void     pop   (void)              { assert(sz \u003e 0); sz--, data[sz].~T(); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 22,
+        "ByteOffset": 5446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (dealloc) free(data), data = NULL, cap = 0; } }"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::mechanical::static::2053",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2053,
+      "End": 2059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::mechanical::sizeof::2117",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2117,
+      "End": 2123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::mechanical::static::2248",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2248,
+      "End": 2254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::mechanical::sizeof::4952",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4952,
+      "End": 4958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::pointer-cast::4917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4917,
+      "End": 4921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Vec.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5735
+    }
+  ],
+  "Draft": "package glucose\n\n/*******************************************************************************************[Vec.h]\nCopyright (c) 2003-2007, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \u003cassert.h\u003e\n//#include \u003cnew\u003e\n\n//#include \"sat/glucose/IntTypes.h\"\n//#include \"sat/glucose/XAlloc.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//=================================================================================================\n// Automatically resizable arrays\n//\n// NOTE! Don't use this vector on datatypes that cannot be re-located in memory (with realloc)\n\ntemplate\u003cclass T\u003e\nclass vec {\n    T*  data;\n    int sz;\n    int cap;\n\n    // Don't allow copying (error prone):\n    vec\u003cT\u003e\u0026  operator = (vec\u003cT\u003e\u0026 other) { assert(false, \"0\"); return *this; }\n             vec        (vec\u003cT\u003e\u0026 other) { assert(false, \"0\"); }\n             \n    // Helpers for calculating next capacity:\n    static inline int  imax   (int x, int y) { int mask = (y-x) \u003e\u003e (sizeof(int)*8-1); return (x\u0026mask) + (y\u0026(~mask)); }\n    //static inline void nextCap(int\u0026 cap){ cap += ((cap \u003e\u003e 1) + 2) \u0026 ~1; }\n    static inline void nextCap(int\u0026 cap){ cap += ((cap \u003e\u003e 1) + 2) \u0026 ~1; }\n\npublic:\n    // Constructors:\n    vec()                       : data(NULL) , sz(0)   , cap(0)    { }\n    explicit vec(int size)      : data(NULL) , sz(0)   , cap(0)    { growTo(size); }\n    vec(int size, T\u0026 pad) : data(NULL) , sz(0)   , cap(0)    { growTo(size, pad); }\n   ~vec()                                                          { clear(true); }\n\n    // Pointer to first element:\n    operator T*       (void)           { return data; }\n\n    // Size operations:\n    int      size     (void) { return sz; }\n    void     shrink   (int nelems)     { assert(nelems \u003c= sz, \"nelems \u003c= sz\"); for (int i = 0; i \u003c nelems; i++) sz--, data[sz].~T(); }\n    void     shrink_  (int nelems)     { assert(nelems \u003c= sz, \"nelems \u003c= sz\"); sz -= nelems; }\n    int      capacity (void) { return cap; }\n    void     capacity (int min_cap);\n    void     growTo   (int size);\n    void     growTo   (int size, T\u0026 pad);\n    void     clear    (bool dealloc = false);\n\n    // Stack interface:\n    void     push  (void)              { if (sz == cap) capacity(sz+1); new (\u0026data[sz]) T(); sz++; }\n    void     push  (T\u0026 elem)     { if (sz == cap) capacity(sz+1); data[sz++] = elem; }\n    void     push_ (T\u0026 elem)     { assert(sz \u003c cap, \"sz \u003c cap\"); data[sz++] = elem; }\n    void     pop   (void)              { assert(sz \u003e 0, \"sz \u003e 0\"); sz--, data[sz].~T(); }\n    // NOTE: it seems possible that overflow can happen in the 'sz+1' expression of 'push()', but\n    // in fact it can not since it requires that 'cap' is equal to INT_MAX. This in turn can not\n    // happen given the way capacities are calculated (below). Essentially, all capacities are\n    // even, but INT_MAX is odd.\n\n    T\u0026 last  (void) { return data[sz-1]; }\n    T\u0026       last  (void)              { return data[sz-1]; }\n\n    // Vector interface:\n    T\u0026 operator [] (int index) { return data[index]; }\n    T\u0026       operator [] (int index)       { return data[index]; }\n\n    // Duplicatation (preferred instead):\n    void copyTo (vec\u003cT\u003e\u0026 copy) { copy.clear(); copy.growTo(sz); for (int i = 0; i \u003c sz; i++) copy[i] = data[i]; }\n    void copyTo_(vec\u003cT\u003e\u0026 copy) { copy.shrink_(copy.size()); copy.growTo(sz); for (int i = 0; i \u003c sz; i++) copy[i] = data[i]; }\n    void moveTo(vec\u003cT\u003e\u0026 dest) { dest.clear(true); dest.data = data; dest.sz = sz; dest.cap = cap; data = NULL; sz = 0; cap = 0; }\n};\n\n\ntemplate\u003cclass T\u003e\nvoid vec\u003cT\u003e::capacity(int min_cap) {\n    if (cap \u003e= min_cap) return;\n    int add = imax((min_cap - cap + 1) \u0026 ~1, ((cap \u003e\u003e 1) + 2) \u0026 ~1);   // NOTE: grow by approximately 3/2\n    if (add \u003e INT_MAX - cap || (((data = (T*)::realloc(data, (cap += add) * sizeof(T))) == NULL) \u0026\u0026 errno == ENOMEM))\n        throw OutOfMemoryException();\n }\n\n\ntemplate\u003cclass T\u003e\nvoid vec\u003cT\u003e::growTo(int size, T\u0026 pad) {\n    if (sz \u003e= size) return;\n    capacity(size);\n    for (int i = sz; i \u003c size; i++) data[i] = pad;\n    sz = size; }\n\n\ntemplate\u003cclass T\u003e\nvoid vec\u003cT\u003e::growTo(int size) {\n    if (sz \u003e= size) return;\n    capacity(size);\n    for (int i = sz; i \u003c size; i++) new (\u0026data[i]) T();\n    sz = size; }\n\n\ntemplate\u003cclass T\u003e\nvoid vec\u003cT\u003e::clear(bool dealloc) {\n    if data != NULL{\n        for (int i = 0; i \u003c sz; i++) data[i].~T();\n        sz = 0;\n        if (dealloc) free(data), data = NULL, cap = 0; } }\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

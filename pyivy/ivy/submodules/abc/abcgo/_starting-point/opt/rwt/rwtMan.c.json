@@ -1,0 +1,882 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c",
+  "SHA256": "e14208f864a29176303166292d6cdaabb4574a2dbc57198b55f961165378afb8",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 72,
+        "Column": 66,
+        "ByteOffset": 1961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_puCanons) ? (free((char *) (s_puCanons)), (s_puCanons) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 65,
+        "ByteOffset": 2078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_pPhases) ? (free((char *) (s_pPhases)), (s_pPhases) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 74,
+        "Column": 64,
+        "ByteOffset": 2192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_pPerms) ? (free((char *) (s_pPerms)), (s_pPerms) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 62,
+        "ByteOffset": 2302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((s_pMap) ? (free((char *) (s_pMap)), (s_pMap) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 93,
+        "Column": 69,
+        "ByteOffset": 2805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Rwt_Man_t *) malloc(sizeof(Rwt_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Rwt_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 79,
+        "ByteOffset": 3267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((Rwt_Node_t * *) malloc(sizeof(Rwt_Node_t *) * (size_t)(p.nFuncs)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTable, 0, sizeof(Rwt_Node_t *) * p.nFuncs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 164,
+        "Column": 65,
+        "ByteOffset": 5511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMapInv) ? (free((char *) (p.pMapInv)), (p.pMapInv) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 64,
+        "ByteOffset": 5625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 166,
+        "Column": 68,
+        "ByteOffset": 5741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPractical) ? (free((char *) (p.pPractical)), (p.pPractical) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 167,
+        "Column": 65,
+        "ByteOffset": 5862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPerms4) ? (free((char *) (p.pPerms4)), (p.pPerms4) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 168,
+        "Column": 57,
+        "ByteOffset": 5969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Rewriting statistics:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total cuts tries  = %8d.\\n\", p.nCutsGood );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Bad cuts found    = %8d.\\n\", p.nCutsBad );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total subgraphs   = %8d.\\n\", p.nSubgraphs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Used NPN classes  = %8d.\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes considered  = %8d.\\n\", p.nNodesConsidered );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes rewritten   = %8d.\\n\", p.nNodesRewritten );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Calculated gain   = %8d.\\n\", p.nNodesGained     );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 197,
+        "Column": 67,
+        "ByteOffset": 7023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStart)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 199,
+        "Column": 65,
+        "ByteOffset": 7194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCut)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 201,
+        "Column": 67,
+        "ByteOffset": 7367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 203,
+        "Column": 65,
+        "ByteOffset": 7538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRes)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 205,
+        "Column": 66,
+        "ByteOffset": 7710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMffc)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 207,
+        "Column": 66,
+        "ByteOffset": 7882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 209,
+        "Column": 68,
+        "ByteOffset": 8056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUpdate)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 211,
+        "Column": 67,
+        "ByteOffset": 8229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 239,
+        "Column": 14,
+        "ByteOffset": 8995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = fopen( \"stats.txt\", \"a+\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%d \", p.nCutsGood );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 9070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%d \", p.nSubgraphs );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 9114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%d \", p.nNodesRewritten );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 9163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%d\", p.nNodesGained );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 9208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 9237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pTable );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwt_ManGlobalStart",
+      "Start": 1460,
+      "End": 1595,
+      "BodyStart": 1486,
+      "Original": "void Rwt_ManGlobalStart()\n{ \n    if ( s_puCanons == NULL )\n        Extra_Truth4VarNPN( \u0026s_puCanons, \u0026s_pPhases, \u0026s_pPerms, \u0026s_pMap );\n}",
+      "Draft": "func Rwt_ManGlobalStart() { \n    if s_puCanons == nil {\n        Extra_Truth4VarNPN( \u0026s_puCanons, \u0026s_pPhases, \u0026s_pPerms, \u0026s_pMap ); }\n}"
+    },
+    {
+      "Name": "Rwt_ManGlobalStop",
+      "Start": 1865,
+      "End": 1999,
+      "BodyStart": 1890,
+      "Original": "void Rwt_ManGlobalStop()\n{ \n    ABC_FREE( s_puCanons );\n    ABC_FREE( s_pPhases );\n    ABC_FREE( s_pPerms );\n    ABC_FREE( s_pMap );\n}",
+      "Draft": "func Rwt_ManGlobalStop() { \n    // inlining of macro ABC_FREE\n    ((s_puCanons) ? (free((char *) (s_puCanons)), (s_puCanons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pPhases) ? (free((char *) (s_pPhases)), (s_pPhases) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pPerms) ? (free((char *) (s_pPerms)), (s_pPerms) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pMap) ? (free((char *) (s_pMap)), (s_pMap) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Rwt_ManStart",
+      "Start": 2261,
+      "End": 3903,
+      "BodyStart": 2305,
+      "Original": "Rwt_Man_t * Rwt_ManStart( int fPrecompute )\n{\n    Rwt_Man_t * p;\n    abctime clk = Abc_Clock();\nclk = Abc_Clock();\n    p = ABC_ALLOC( Rwt_Man_t, 1 );\n    memset( p, 0, sizeof(Rwt_Man_t) );\n    p-\u003enFuncs = (1\u003c\u003c16);\n    // copy the global tables\n    Rwt_ManGlobalStart();\n    p-\u003epuCanons = s_puCanons; \n    p-\u003epPhases  = s_pPhases; \n    p-\u003epPerms   = s_pPerms; \n    p-\u003epMap     = s_pMap; \n    // initialize practical NPN classes\n    p-\u003epPractical  = Rwt_ManGetPractical( p );\n    // create the table\n    p-\u003epTable = ABC_ALLOC( Rwt_Node_t *, p-\u003enFuncs );\n    memset( p-\u003epTable, 0, sizeof(Rwt_Node_t *) * p-\u003enFuncs );\n    // create the elementary nodes\n    p-\u003epMmNode  = Mem_FixedStart( sizeof(Rwt_Node_t) );\n    p-\u003evForest  = Vec_PtrAlloc( 100 );\n    Rwt_ManAddVar( p, 0x0000, fPrecompute ); // constant 0\n    Rwt_ManAddVar( p, 0xAAAA, fPrecompute ); // var A\n    Rwt_ManAddVar( p, 0xCCCC, fPrecompute ); // var B\n    Rwt_ManAddVar( p, 0xF0F0, fPrecompute ); // var C\n    Rwt_ManAddVar( p, 0xFF00, fPrecompute ); // var D\n    p-\u003enClasses = 5;\n    // other stuff\n    p-\u003enTravIds   = 1;\n    p-\u003epPerms4    = Extra_Permutations( 4 );\n    p-\u003evLevNums   = Vec_IntAlloc( 50 );\n    p-\u003evFanins    = Vec_PtrAlloc( 50 );\n    p-\u003evFaninsCur = Vec_PtrAlloc( 50 );\n    p-\u003evNodesTemp = Vec_PtrAlloc( 50 );\n    if ( fPrecompute )\n    {   // precompute subgraphs\n//        Rwt_ManPrecompute( p );\n//        Rwt_ManPrint( p );\n//        Rwt_ManWriteToArray( p );\n    }\n    else\n    {   // load saved subgraphs\n        Rwt_ManLoadFromArray( p, 0 );\n//        Rwt_ManPrint( p );\n        Rwt_ManPreprocess( p );\n    }\np-\u003etimeStart = Abc_Clock() - clk;\n    return p;\n}",
+      "Draft": "func Rwt_ManStart(fPrecompute int32) *Rwt_Man_t {\n    var p *Rwt_Man_t;\n    var clk abctime  = Abc_Clock();\nclk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    p = ((Rwt_Man_t *) malloc(sizeof(Rwt_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwt_Man_t) );\n    p.nFuncs = (1\u003c\u003c16);\n    // copy the global tables\n    Rwt_ManGlobalStart();\n    p.puCanons = s_puCanons; \n    p.pPhases  = s_pPhases; \n    p.pPerms   = s_pPerms; \n    p.pMap     = s_pMap; \n    // initialize practical NPN classes\n    p.pPractical  = Rwt_ManGetPractical( p );\n    // create the table\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Rwt_Node_t * *) malloc(sizeof(Rwt_Node_t *) * (size_t)(p.nFuncs)));\n    memset( p.pTable, 0, sizeof(Rwt_Node_t *) * p.nFuncs );\n    // create the elementary nodes\n    p.pMmNode  = Mem_FixedStart( sizeof(Rwt_Node_t) );\n    p.vForest  = Vec_PtrAlloc( 100 );\n    Rwt_ManAddVar( p, 0x0000, fPrecompute ); // constant 0\n    Rwt_ManAddVar( p, 0xAAAA, fPrecompute ); // var A\n    Rwt_ManAddVar( p, 0xCCCC, fPrecompute ); // var B\n    Rwt_ManAddVar( p, 0xF0F0, fPrecompute ); // var C\n    Rwt_ManAddVar( p, 0xFF00, fPrecompute ); // var D\n    p.nClasses = 5;\n    // other stuff\n    p.nTravIds   = 1;\n    p.pPerms4    = Extra_Permutations( 4 );\n    p.vLevNums   = Vec_IntAlloc( 50 );\n    p.vFanins    = Vec_PtrAlloc( 50 );\n    p.vFaninsCur = Vec_PtrAlloc( 50 );\n    p.vNodesTemp = Vec_PtrAlloc( 50 );\n    if fPrecompute != 0 {   // precompute subgraphs\n//        Rwt_ManPrecompute( p );\n//        Rwt_ManPrint( p );\n//        Rwt_ManWriteToArray( p );\n    \n    } else {   // load saved subgraphs\n        Rwt_ManLoadFromArray( p, 0 );\n//        Rwt_ManPrint( p );\n        Rwt_ManPreprocess( p );\n    }\np.timeStart = Abc_Clock() - clk;\n    return p;\n}"
+    },
+    {
+      "Name": "Rwt_ManStop",
+      "Start": 4163,
+      "End": 4792,
+      "BodyStart": 4197,
+      "Original": "void Rwt_ManStop( Rwt_Man_t * p )\n{\n    if ( p-\u003evClasses )\n    {\n        Rwt_Node_t * pNode;\n        int i, k;\n        Vec_VecForEachEntry( Rwt_Node_t *, p-\u003evClasses, pNode, i, k )\n            Dec_GraphFree( (Dec_Graph_t *)pNode-\u003epNext );\n    }\n    if ( p-\u003evClasses )  Vec_VecFree( p-\u003evClasses );\n    Vec_PtrFree( p-\u003evNodesTemp );\n    Vec_PtrFree( p-\u003evForest );\n    Vec_IntFree( p-\u003evLevNums );\n    Vec_PtrFree( p-\u003evFanins );\n    Vec_PtrFree( p-\u003evFaninsCur );\n    Mem_FixedStop( p-\u003epMmNode, 0 );\n    ABC_FREE( p-\u003epMapInv );\n    ABC_FREE( p-\u003epTable );\n    ABC_FREE( p-\u003epPractical );\n    ABC_FREE( p-\u003epPerms4 );\n    ABC_FREE( p );\n}",
+      "Draft": "func Rwt_ManStop(p *Rwt_Man_t) {\n    if p.vClasses {\n        var pNode *Rwt_Node_t;\n        var i, k int32;\n        // inlining of macro Vec_VecForEachEntry\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; i \u003c Vec_VecSize(p.vClasses); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vClasses, i))) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(Vec_VecEntry(p.vClasses, i), k)), 1); k++  { \n            Dec_GraphFree( (Dec_Graph_t *)pNode.pNext );\n        }\n        }\n    }\n    if p.vClasses {  Vec_VecFree( p.vClasses ); }\n    Vec_PtrFree( p.vNodesTemp );\n    Vec_PtrFree( p.vForest );\n    Vec_IntFree( p.vLevNums );\n    Vec_PtrFree( p.vFanins );\n    Vec_PtrFree( p.vFaninsCur );\n    Mem_FixedStop( p.pMmNode, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pMapInv) ? (free((char *) (p.pMapInv)), (p.pMapInv) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPractical) ? (free((char *) (p.pPractical)), (p.pPractical) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPerms4) ? (free((char *) (p.pPerms4)), (p.pPerms4) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Rwt_ManPrintStats",
+      "Start": 5058,
+      "End": 6413,
+      "BodyStart": 5098,
+      "Original": "void Rwt_ManPrintStats( Rwt_Man_t * p )\n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c 222; i++ )\n        Counter += (p-\u003enScores[i] \u003e 0);\n\n    printf( \"Rewriting statistics:\\n\" );\n    printf( \"Total cuts tries  = %8d.\\n\", p-\u003enCutsGood );\n    printf( \"Bad cuts found    = %8d.\\n\", p-\u003enCutsBad );\n    printf( \"Total subgraphs   = %8d.\\n\", p-\u003enSubgraphs );\n    printf( \"Used NPN classes  = %8d.\\n\", Counter );\n    printf( \"Nodes considered  = %8d.\\n\", p-\u003enNodesConsidered );\n    printf( \"Nodes rewritten   = %8d.\\n\", p-\u003enNodesRewritten );\n    printf( \"Calculated gain   = %8d.\\n\", p-\u003enNodesGained     );\n    ABC_PRT( \"Start       \", p-\u003etimeStart );\n    ABC_PRT( \"Cuts        \", p-\u003etimeCut );\n    ABC_PRT( \"Truth       \", p-\u003etimeTruth );\n    ABC_PRT( \"Resynthesis \", p-\u003etimeRes );\n    ABC_PRT( \"    Mffc    \", p-\u003etimeMffc );\n    ABC_PRT( \"    Eval    \", p-\u003etimeEval );\n    ABC_PRT( \"Update      \", p-\u003etimeUpdate );\n    ABC_PRT( \"TOTAL       \", p-\u003etimeTotal );\n\n/*\n    printf( \"The scores are:\\n\" );\n    for ( i = 0; i \u003c 222; i++ )\n        if ( p-\u003enScores[i] \u003e 0 )\n        {\n            extern void Ivy_TruthDsdComputePrint( unsigned uTruth );\n            printf( \"%3d = %8d  canon = %5d  \", i, p-\u003enScores[i], p-\u003epMapInv[i] );\n            Ivy_TruthDsdComputePrint( (unsigned)p-\u003epMapInv[i] | ((unsigned)p-\u003epMapInv[i] \u003c\u003c 16) );\n        }\n    printf( \"\\n\" );\n*/\n}",
+      "Draft": "func Rwt_ManPrintStats(p *Rwt_Man_t) {\n    var i, Counter int32;\n    for  i = 0; i \u003c 222; i++  {\n        Counter += (p.nScores[i] \u003e 0);\n    }\n\n    fmt.Printf(\"Rewriting statistics:\\n\");\n    fmt.Printf(\"Total cuts tries  = %8d.\\n\", p.nCutsGood);\n    fmt.Printf(\"Bad cuts found    = %8d.\\n\", p.nCutsBad);\n    fmt.Printf(\"Total subgraphs   = %8d.\\n\", p.nSubgraphs);\n    fmt.Printf(\"Used NPN classes  = %8d.\\n\", Counter);\n    fmt.Printf(\"Nodes considered  = %8d.\\n\", p.nNodesConsidered);\n    fmt.Printf(\"Nodes rewritten   = %8d.\\n\", p.nNodesRewritten);\n    fmt.Printf(\"Calculated gain   = %8d.\\n\", p.nNodesGained);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Start       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStart)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts        \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCut)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Resynthesis \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRes)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Mffc    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMffc)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Eval    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Update      \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUpdate)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n\n/*\n    printf( \"The scores are:\\n\" );\n    for ( i = 0; i \u003c 222; i++ )\n        if ( p-\u003enScores[i] \u003e 0 )\n        {\n            extern void Ivy_TruthDsdComputePrint( unsigned uTruth );\n            printf( \"%3d = %8d  canon = %5d  \", i, p-\u003enScores[i], p-\u003epMapInv[i] );\n            Ivy_TruthDsdComputePrint( (unsigned)p-\u003epMapInv[i] | ((unsigned)p-\u003epMapInv[i] \u003c\u003c 16) );\n        }\n    printf( \"\\n\" );\n*/\n}"
+    },
+    {
+      "Name": "Rwt_ManPrintStatsFile",
+      "Start": 6679,
+      "End": 7022,
+      "BodyStart": 6723,
+      "Original": "void Rwt_ManPrintStatsFile( Rwt_Man_t * p )\n{\n    FILE * pTable;\n    pTable = fopen( \"stats.txt\", \"a+\" );\n    fprintf( pTable, \"%d \", p-\u003enCutsGood );\n    fprintf( pTable, \"%d \", p-\u003enSubgraphs );\n    fprintf( pTable, \"%d \", p-\u003enNodesRewritten );\n    fprintf( pTable, \"%d\", p-\u003enNodesGained );\n    fprintf( pTable, \"\\n\" );\n    fclose( pTable );\n}",
+      "Draft": "func Rwt_ManPrintStatsFile(p *Rwt_Man_t) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%d \", p.nCutsGood);\n    fmt.Fprintf(pTable, \"%d \", p.nSubgraphs);\n    fmt.Fprintf(pTable, \"%d \", p.nNodesRewritten);\n    fmt.Fprintf(pTable, \"%d\", p.nNodesGained);\n    fmt.Fprintf(pTable, \"\\n\");\n    _ = (pTable).Close();\n}"
+    },
+    {
+      "Name": "Rwt_ManReadDecs",
+      "Start": 7288,
+      "End": 7353,
+      "BodyStart": 7328,
+      "Original": "void * Rwt_ManReadDecs( Rwt_Man_t * p )\n{\n    return p-\u003epGraph;\n}",
+      "Draft": "func Rwt_ManReadDecs(p *Rwt_Man_t) any {\n    return p.pGraph;\n}"
+    },
+    {
+      "Name": "Rwt_ManReadLeaves",
+      "Start": 7619,
+      "End": 7692,
+      "BodyStart": 7666,
+      "Original": "Vec_Ptr_t * Rwt_ManReadLeaves( Rwt_Man_t * p )\n{\n    return p-\u003evFanins;\n}",
+      "Draft": "func Rwt_ManReadLeaves(p *Rwt_Man_t) *Vec_Ptr_t {\n    return p.vFanins;\n}"
+    },
+    {
+      "Name": "Rwt_ManReadCompl",
+      "Start": 7958,
+      "End": 8021,
+      "BodyStart": 7996,
+      "Original": "int Rwt_ManReadCompl( Rwt_Man_t * p )\n{\n    return p-\u003efCompl;\n}",
+      "Draft": "func Rwt_ManReadCompl(p *Rwt_Man_t) int32 {\n    return p.fCompl;\n}"
+    },
+    {
+      "Name": "Rwt_ManAddTimeCuts",
+      "Start": 8287,
+      "End": 8369,
+      "BodyStart": 8342,
+      "Original": "void Rwt_ManAddTimeCuts( Rwt_Man_t * p, abctime Time )\n{\n    p-\u003etimeCut += Time;\n}",
+      "Draft": "func Rwt_ManAddTimeCuts(p *Rwt_Man_t, Time abctime) {\n    p.timeCut += Time;\n}"
+    },
+    {
+      "Name": "Rwt_ManAddTimeUpdate",
+      "Start": 8635,
+      "End": 8722,
+      "BodyStart": 8692,
+      "Original": "void Rwt_ManAddTimeUpdate( Rwt_Man_t * p, abctime Time )\n{\n    p-\u003etimeUpdate += Time;\n}",
+      "Draft": "func Rwt_ManAddTimeUpdate(p *Rwt_Man_t, Time abctime) {\n    p.timeUpdate += Time;\n}"
+    },
+    {
+      "Name": "Rwt_ManAddTimeTotal",
+      "Start": 8988,
+      "End": 9073,
+      "BodyStart": 9044,
+      "Original": "void Rwt_ManAddTimeTotal( Rwt_Man_t * p, abctime Time )\n{\n    p-\u003etimeTotal += Time;\n}",
+      "Draft": "func Rwt_ManAddTimeTotal(p *Rwt_Man_t, Time abctime) {\n    p.timeTotal += Time;\n}"
+    },
+    {
+      "Name": "Rwt_Precompute",
+      "Start": 9336,
+      "End": 9429,
+      "BodyStart": 9358,
+      "Original": "void Rwt_Precompute()\n{\n    Rwt_Man_t * p;\n    p = Rwt_ManStart( 1 );\n    Rwt_ManStop( p );\n}",
+      "Draft": "func Rwt_Precompute() {\n    var p *Rwt_Man_t;\n    p = Rwt_ManStart( 1 );\n    Rwt_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::mechanical::sizeof::2797",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::mechanical::sizeof::2850",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2429,
+      "End": 2435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::mechanical::sizeof::3266",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2775,
+      "End": 2775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::mechanical::sizeof::3338",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2839,
+      "End": 2845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::mechanical::sizeof::3443",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2944,
+      "End": 2950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::1963",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1897,
+      "End": 1897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::2080",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1925,
+      "End": 1925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::2194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1952,
+      "End": 1952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::2304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1978,
+      "End": 1978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::2776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::3242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2775,
+      "End": 2775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::3272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2775,
+      "End": 2775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::3344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2845,
+      "End": 2859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4282,
+      "End": 4282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4371,
+      "End": 4386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5528",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4662,
+      "End": 4662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4690,
+      "End": 4690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5764",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4717,
+      "End": 4717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4748,
+      "End": 4748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::pointer-cast::5997",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4776,
+      "End": 4776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManGlobalStart",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManGlobalStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1460,
+      "End": 1595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::ternary::Rwt_ManGlobalStop",
+      "Category": "ternary-review",
+      "Symbol": "Rwt_ManGlobalStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1865,
+      "End": 1999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManGlobalStop",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManGlobalStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1865,
+      "End": 1999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2261,
+      "End": 3903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::ternary::Rwt_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Rwt_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4163,
+      "End": 4792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4163,
+      "End": 4792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5058,
+      "End": 6413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManPrintStatsFile",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManPrintStatsFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6679,
+      "End": 7022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::void-pointer::Rwt_ManReadDecs",
+      "Category": "void-pointer-review",
+      "Symbol": "Rwt_ManReadDecs",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7288,
+      "End": 7353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManReadDecs",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManReadDecs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7288,
+      "End": 7353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManReadLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManReadLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7619,
+      "End": 7692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManReadCompl",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManReadCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7958,
+      "End": 8021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManAddTimeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManAddTimeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8287,
+      "End": 8369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManAddTimeUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManAddTimeUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8635,
+      "End": 8722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_ManAddTimeTotal",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_ManAddTimeTotal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8988,
+      "End": 9073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::Rwt_Precompute",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Precompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9336,
+      "End": 9429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwtMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9676
+    }
+  ],
+  "Draft": "package rwt\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [rwtMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [Rewriting manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwtMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwt.h\"\n//#include \"bool/deco/deco.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nstatic unsigned short * s_puCanons = NULL; \nvar s_pPhases string = nil; \nvar s_pPerms string = nil; \nstatic unsigned char *  s_pMap = NULL;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts residual rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManGlobalStart() { \n    if s_puCanons == nil {\n        Extra_Truth4VarNPN( \u0026s_puCanons, \u0026s_pPhases, \u0026s_pPerms, \u0026s_pMap ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts residual rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManGlobalStop() { \n    // inlining of macro ABC_FREE\n    ((s_puCanons) ? (free((char *) (s_puCanons)), (s_puCanons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pPhases) ? (free((char *) (s_pPhases)), (s_pPhases) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pPerms) ? (free((char *) (s_pPerms)), (s_pPerms) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((s_pMap) ? (free((char *) (s_pMap)), (s_pMap) = 0) : 0);\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Starts rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManStart(fPrecompute int32) *Rwt_Man_t {\n    var p *Rwt_Man_t;\n    var clk abctime  = Abc_Clock();\nclk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    p = ((Rwt_Man_t *) malloc(sizeof(Rwt_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwt_Man_t) );\n    p.nFuncs = (1\u003c\u003c16);\n    // copy the global tables\n    Rwt_ManGlobalStart();\n    p.puCanons = s_puCanons; \n    p.pPhases  = s_pPhases; \n    p.pPerms   = s_pPerms; \n    p.pMap     = s_pMap; \n    // initialize practical NPN classes\n    p.pPractical  = Rwt_ManGetPractical( p );\n    // create the table\n    // inlining of macro ABC_ALLOC\n    p.pTable = ((Rwt_Node_t * *) malloc(sizeof(Rwt_Node_t *) * (size_t)(p.nFuncs)));\n    memset( p.pTable, 0, sizeof(Rwt_Node_t *) * p.nFuncs );\n    // create the elementary nodes\n    p.pMmNode  = Mem_FixedStart( sizeof(Rwt_Node_t) );\n    p.vForest  = Vec_PtrAlloc( 100 );\n    Rwt_ManAddVar( p, 0x0000, fPrecompute ); // constant 0\n    Rwt_ManAddVar( p, 0xAAAA, fPrecompute ); // var A\n    Rwt_ManAddVar( p, 0xCCCC, fPrecompute ); // var B\n    Rwt_ManAddVar( p, 0xF0F0, fPrecompute ); // var C\n    Rwt_ManAddVar( p, 0xFF00, fPrecompute ); // var D\n    p.nClasses = 5;\n    // other stuff\n    p.nTravIds   = 1;\n    p.pPerms4    = Extra_Permutations( 4 );\n    p.vLevNums   = Vec_IntAlloc( 50 );\n    p.vFanins    = Vec_PtrAlloc( 50 );\n    p.vFaninsCur = Vec_PtrAlloc( 50 );\n    p.vNodesTemp = Vec_PtrAlloc( 50 );\n    if fPrecompute != 0 {   // precompute subgraphs\n//        Rwt_ManPrecompute( p );\n//        Rwt_ManPrint( p );\n//        Rwt_ManWriteToArray( p );\n    \n    } else {   // load saved subgraphs\n        Rwt_ManLoadFromArray( p, 0 );\n//        Rwt_ManPrint( p );\n        Rwt_ManPreprocess( p );\n    }\np.timeStart = Abc_Clock() - clk;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManStop(p *Rwt_Man_t) {\n    if p.vClasses {\n        var pNode *Rwt_Node_t;\n        var i, k int32;\n        // inlining of macro Vec_VecForEachEntry\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; i \u003c Vec_VecSize(p.vClasses); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(p.vClasses, i))) \u0026\u0026 (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(Vec_VecEntry(p.vClasses, i), k)), 1); k++  { \n            Dec_GraphFree( (Dec_Graph_t *)pNode.pNext );\n        }\n        }\n    }\n    if p.vClasses {  Vec_VecFree( p.vClasses ); }\n    Vec_PtrFree( p.vNodesTemp );\n    Vec_PtrFree( p.vForest );\n    Vec_IntFree( p.vLevNums );\n    Vec_PtrFree( p.vFanins );\n    Vec_PtrFree( p.vFaninsCur );\n    Mem_FixedStop( p.pMmNode, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pMapInv) ? (free((char *) (p.pMapInv)), (p.pMapInv) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPractical) ? (free((char *) (p.pPractical)), (p.pPractical) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPerms4) ? (free((char *) (p.pPerms4)), (p.pPerms4) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManPrintStats(p *Rwt_Man_t) {\n    var i, Counter int32;\n    for  i = 0; i \u003c 222; i++  {\n        Counter += (p.nScores[i] \u003e 0);\n    }\n\n    fmt.Printf(\"Rewriting statistics:\\n\");\n    fmt.Printf(\"Total cuts tries  = %8d.\\n\", p.nCutsGood);\n    fmt.Printf(\"Bad cuts found    = %8d.\\n\", p.nCutsBad);\n    fmt.Printf(\"Total subgraphs   = %8d.\\n\", p.nSubgraphs);\n    fmt.Printf(\"Used NPN classes  = %8d.\\n\", Counter);\n    fmt.Printf(\"Nodes considered  = %8d.\\n\", p.nNodesConsidered);\n    fmt.Printf(\"Nodes rewritten   = %8d.\\n\", p.nNodesRewritten);\n    fmt.Printf(\"Calculated gain   = %8d.\\n\", p.nNodesGained);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Start       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStart)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts        \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCut)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Resynthesis \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRes)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Mffc    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMffc)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Eval    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Update      \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeUpdate)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n\n/*\n    printf( \"The scores are:\\n\" );\n    for ( i = 0; i \u003c 222; i++ )\n        if ( p-\u003enScores[i] \u003e 0 )\n        {\n            extern void Ivy_TruthDsdComputePrint( unsigned uTruth );\n            printf( \"%3d = %8d  canon = %5d  \", i, p-\u003enScores[i], p-\u003epMapInv[i] );\n            Ivy_TruthDsdComputePrint( (unsigned)p-\u003epMapInv[i] | ((unsigned)p-\u003epMapInv[i] \u003c\u003c 16) );\n        }\n    printf( \"\\n\" );\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManPrintStatsFile(p *Rwt_Man_t) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%d \", p.nCutsGood);\n    fmt.Fprintf(pTable, \"%d \", p.nSubgraphs);\n    fmt.Fprintf(pTable, \"%d \", p.nNodesRewritten);\n    fmt.Fprintf(pTable, \"%d\", p.nNodesGained);\n    fmt.Fprintf(pTable, \"\\n\");\n    _ = (pTable).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManReadDecs(p *Rwt_Man_t) any {\n    return p.pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManReadLeaves(p *Rwt_Man_t) *Vec_Ptr_t {\n    return p.vFanins;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManReadCompl(p *Rwt_Man_t) int32 {\n    return p.fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManAddTimeCuts(p *Rwt_Man_t, Time abctime) {\n    p.timeCut += Time;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManAddTimeUpdate(p *Rwt_Man_t, Time abctime) {\n    p.timeUpdate += Time;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_ManAddTimeTotal(p *Rwt_Man_t, Time abctime) {\n    p.timeTotal += Time;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Precomputes AIG subgraphs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Precompute() {\n    var p *Rwt_Man_t;\n    p = Rwt_ManStart( 1 );\n    Rwt_ManStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,358 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c",
+  "SHA256": "d665de33ef819de8737953c15757022e6f443c624b059d600fdff0000ee6d4b2",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 33,
+        "ByteOffset": 8658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    table.interact = interact = ABC_ALLOC(long,uint32(words));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 15,
+        "ByteOffset": 8860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    support = ABC_ALLOC(int,n);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(interact);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(support);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 3631
+      },
+      "Directive": "#if SIZEOF_LONG == 8"
+    },
+    {
+      "Location": {
+        "Line": 110,
+        "Column": 1,
+        "ByteOffset": 4455
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 163,
+        "Column": 1,
+        "ByteOffset": 6373
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 203,
+        "Column": 1,
+        "ByteOffset": 7251
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddSetInteract",
+      "Start": 6282,
+      "End": 6622,
+      "BodyStart": 6345,
+      "Original": "void\ncuddSetInteract(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int posn, word, bit;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table-\u003esize \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    table-\u003einteract[word] |= 1L \u003c\u003c bit;\n\n}",
+      "Draft": "func cuddSetInteract(table *DdManager, x int32, y int32) {\n    var posn, word, bit int32;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table.size \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    table.interact[word] |= int64(1) \u003c\u003c bit;\n\n}"
+    },
+    {
+      "Name": "cuddTestInteract",
+      "Start": 7076,
+      "End": 7530,
+      "BodyStart": 7139,
+      "Original": "int\ncuddTestInteract(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int posn, word, bit, result;\n\n    if (x \u003e y) {\n        int tmp = x;\n        x = y;\n        y = tmp;\n    }\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table-\u003esize \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    result = (table-\u003einteract[word] \u003e\u003e bit) \u0026 1L;\n    return(result);\n\n}",
+      "Draft": "func cuddTestInteract(table *DdManager, x int32, y int32) int32 {\n    var posn, word, bit, result int32;\n\n    if x \u003e y {\n        var tmp int32  = x;\n        x = y;\n        y = tmp;\n    }\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table.size \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    result = (table.interact[word] \u003e\u003e bit) \u0026 int64(1);\n    return(result);\n\n}"
+    },
+    {
+      "Name": "cuddInitInteract",
+      "Start": 8322,
+      "End": 10001,
+      "BodyStart": 8365,
+      "Original": "int\ncuddInitInteract(\n  DdManager * table)\n{\n    int i,j,k;\n    ABC_UINT64_T words;\n    long *interact;\n    int *support;\n    DdNode *f;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n    DdNodePtr *nodelist;\n    int slots;\n    int n = table-\u003esize;\n\n    words = ((n * (n-1)) \u003e\u003e (1 + LOGBPL)) + 1;\n    table-\u003einteract = interact = ABC_ALLOC(long,(unsigned)words);\n    if (interact == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (i = 0; i \u003c words; i++) {\n        interact[i] = 0;\n    }\n\n    support = ABC_ALLOC(int,n);\n    if (support == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(interact);\n        return(0);\n    }\n\n    for (i = 0; i \u003c n; i++) {\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n        for (j = 0; j \u003c slots; j++) {\n            f = nodelist[j];\n            while (f != sentinel) {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                if (!Cudd_IsComplement(f-\u003enext)) {\n                    for (k = 0; k \u003c n; k++) {\n                        support[k] = 0;\n                    }\n                    ddSuppInteract(f,support);\n                    ddClearLocal(f);\n                    ddUpdateInteract(table,support);\n                }\n                f = Cudd_Regular(f-\u003enext);\n            }\n        }\n    }\n    ddClearGlobal(table);\n\n    ABC_FREE(support);\n    return(1);\n\n}",
+      "Draft": "func cuddInitInteract(table *DdManager) int32 {\n    var i, j, k int32;\n    var words ABC_UINT64_T;\n    var interact *long;\n    var support *int32;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var nodelist *DdNodePtr;\n    var slots int32;\n    var n int32  = table.size;\n\n    words = ((n * (n-1)) \u003e\u003e (1 + LOGBPL)) + 1;\n    table.interact = interact = ABC_ALLOC(long,uint32(words));\n    if interact == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c words; i++ {\n        interact[i] = 0;\n    }\n\n    support = ABC_ALLOC(int,n);\n    if support == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(interact);\n        return(0);\n    }\n\n    for i = 0; i \u003c n; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                // inlining of macro Cudd_IsComplement\n                if !((int32( ((ptrint) (f.next) \u0026 01)) != 0)) {\n                    for k = 0; k \u003c n; k++ {\n                        support[k] = 0;\n                    }\n                    ddSuppInteract(f,support);\n                    ddClearLocal(f);\n                    ddUpdateInteract(table,support);\n                }\n                // inlining of macro Cudd_Regular\n                f = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n            }\n        }\n    }\n    ddClearGlobal(table);\n\n    ABC_FREE(support);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddSuppInteract",
+      "Start": 10661,
+      "End": 11044,
+      "BodyStart": 10720,
+      "Original": "static void\nddSuppInteract(\n  DdNode * f,\n  int * support)\n{\n    if (cuddIsConstant(f) || Cudd_IsComplement(cuddT(f))) {\n        return;\n    }\n\n    support[f-\u003eindex] = 1;\n    ddSuppInteract(cuddT(f),support);\n    ddSuppInteract(Cudd_Regular(cuddE(f)),support);\n    /* mark as visited */\n    cuddT(f) = Cudd_Complement(cuddT(f));\n    f-\u003enext = Cudd_Complement(f-\u003enext);\n    return;\n\n}",
+      "Draft": "func ddSuppInteract(f *DdNode, support *int32) {\n    // inlining of macro cuddIsConstant\n    // inlining of macro Cudd_IsComplement\n    // inlining of macro cuddT\n    if ((f).index == CUDD_CONST_INDEX) || (int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) {\n        return;\n    }\n\n    support[f.index] = 1;\n    // inlining of macro cuddT\n    ddSuppInteract(((f).type.kids.T),support);\n    // inlining of macro Cudd_Regular\n    // inlining of macro cuddE\n    ddSuppInteract(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),support);\n    /* mark as visited */\n    // inlining of macro cuddT\n    // inlining of macro Cudd_Complement\n    ((f).type.kids.T) = ((DdNode *)((ptruint)(((f).type.kids.T)) | 01));\n    // inlining of macro Cudd_Complement\n    f.next = ((DdNode *)((ptruint)(f.next) | 01));\n    return;\n\n}"
+    },
+    {
+      "Name": "ddClearLocal",
+      "Start": 11373,
+      "End": 11650,
+      "BodyStart": 11413,
+      "Original": "static void\nddClearLocal(\n  DdNode * f)\n{\n    if (cuddIsConstant(f) || !Cudd_IsComplement(cuddT(f))) {\n        return;\n    }\n    /* clear visited flag */\n    cuddT(f) = Cudd_Regular(cuddT(f));\n    ddClearLocal(cuddT(f));\n    ddClearLocal(Cudd_Regular(cuddE(f)));\n    return;\n\n}",
+      "Draft": "func ddClearLocal(f *DdNode) {\n    // inlining of macro cuddIsConstant\n    // inlining of macro Cudd_IsComplement\n    // inlining of macro cuddT\n    if ((f).index == CUDD_CONST_INDEX) || !(int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) {\n        return;\n    }\n    /* clear visited flag */\n    // inlining of macro cuddT\n    // inlining of macro Cudd_Regular\n    ((f).type.kids.T) = ((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01));\n    // inlining of macro cuddT\n    ddClearLocal(((f).type.kids.T));\n    // inlining of macro Cudd_Regular\n    // inlining of macro cuddE\n    ddClearLocal(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)));\n    return;\n\n}"
+    },
+    {
+      "Name": "ddUpdateInteract",
+      "Start": 12070,
+      "End": 12419,
+      "BodyStart": 12138,
+      "Original": "static void\nddUpdateInteract(\n  DdManager * table,\n  int * support)\n{\n    int i,j;\n    int n = table-\u003esize;\n\n    for (i = 0; i \u003c n-1; i++) {\n        if (support[i] == 1) {\n            for (j = i+1; j \u003c n; j++) {\n                if (support[j] == 1) {\n                    cuddSetInteract(table,i,j);\n                }\n            }\n        }\n    }\n\n}",
+      "Draft": "func ddUpdateInteract(table *DdManager, support *int32) {\n    var i, j int32;\n    var n int32  = table.size;\n\n    for i = 0; i \u003c n-1; i++ {\n        if support[i] == 1 {\n            for j = i+1; j \u003c n; j++ {\n                if support[j] == 1 {\n                    cuddSetInteract(table,i,j);\n                }\n            }\n        }\n    }\n\n}"
+    },
+    {
+      "Name": "ddClearGlobal",
+      "Start": 12911,
+      "End": 13418,
+      "BodyStart": 12959,
+      "Original": "static void\nddClearGlobal(\n  DdManager * table)\n{\n    int i,j;\n    DdNode *f;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n    DdNodePtr *nodelist;\n    int slots;\n\n    for (i = 0; i \u003c table-\u003esize; i++) {\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n        for (j = 0; j \u003c slots; j++) {\n            f = nodelist[j];\n            while (f != sentinel) {\n                f-\u003enext = Cudd_Regular(f-\u003enext);\n                f = f-\u003enext;\n            }\n        }\n    }\n\n}",
+      "Draft": "func ddClearGlobal(table *DdManager) {\n    var i, j int32;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var nodelist *DdNodePtr;\n    var slots int32;\n\n    for i = 0; i \u003c table.size; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                // inlining of macro Cudd_Regular\n                f.next = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n                f = f.next;\n            }\n        }\n    }\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::9896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9881,
+      "End": 9881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::11196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10889,
+      "End": 10889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::11440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10963,
+      "End": 10963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::11596",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11004,
+      "End": 11004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::12422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11542,
+      "End": 11542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::12658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11611,
+      "End": 11611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::pointer-cast::14497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13334,
+      "End": 13334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::cuddSetInteract",
+      "Category": "semantic-review",
+      "Symbol": "cuddSetInteract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6282,
+      "End": 6622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::cuddTestInteract",
+      "Category": "semantic-review",
+      "Symbol": "cuddTestInteract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7076,
+      "End": 7530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::cuddInitInteract",
+      "Category": "semantic-review",
+      "Symbol": "cuddInitInteract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8322,
+      "End": 10001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::ddSuppInteract",
+      "Category": "semantic-review",
+      "Symbol": "ddSuppInteract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10661,
+      "End": 11044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::ddClearLocal",
+      "Category": "semantic-review",
+      "Symbol": "ddClearLocal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11373,
+      "End": 11650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::ddUpdateInteract",
+      "Category": "semantic-review",
+      "Symbol": "ddUpdateInteract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12070,
+      "End": 12419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::ddClearGlobal",
+      "Category": "semantic-review",
+      "Symbol": "ddClearGlobal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12911,
+      "End": 13418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3631,
+      "End": 3728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4455,
+      "End": 4568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6373,
+      "End": 6463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7251,
+      "End": 7341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::macro-inline::8648",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8648,
+      "End": 8679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::macro-inline::8858",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8858,
+      "End": 8874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::macro-inline::8955",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8955,
+      "End": 8973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInteract.c::macro-inline::9965",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9965,
+      "End": 9982
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddInteract.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions to manipulate the variable interaction matrix.]\n\n  Description [Internal procedures included in this file:\n        \u003cul\u003e\n        \u003cli\u003e cuddSetInteract()\n        \u003cli\u003e cuddTestInteract()\n        \u003cli\u003e cuddInitInteract()\n        \u003c/ul\u003e\n  Static procedures included in this file:\n        \u003cul\u003e\n        \u003cli\u003e ddSuppInteract()\n        \u003cli\u003e ddClearLocal()\n        \u003cli\u003e ddUpdateInteract()\n        \u003cli\u003e ddClearGlobal()\n        \u003c/ul\u003e\n  The interaction matrix tells whether two variables are\n  both in the support of some function of the DD. The main use of the\n  interaction matrix is in the in-place swapping. Indeed, if two\n  variables do not interact, there is no arc connecting the two layers;\n  therefore, the swap can be performed in constant time, without\n  scanning the subtables. Another use of the interaction matrix is in\n  the computation of the lower bounds for sifting. Finally, the\n  interaction matrix can be used to speed up aggregation checks in\n  symmetric and group sifting.\u003cp\u003e\n  The computation of the interaction matrix is done with a series of\n  depth-first searches. The searches start from those nodes that have\n  only external references. The matrix is stored as a packed array of bits;\n  since it is symmetric, only the upper triangle is kept in memory.\n  As a final remark, we note that there may be variables that do\n  intercat, but that for a given variable order have no arc connecting\n  their layers when they are adjacent.]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#if SIZEOF_LONG == 8\n#define BPL 64\n#define LOGBPL 6\n#else\n#define BPL 32\n#define LOGBPL 5\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddInteract.c,v 1.12 2004/08/13 18:04:49 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static void ddSuppInteract (DdNode *f, int *support);\n\n// static void ddClearLocal (DdNode *f);\n\n// static void ddUpdateInteract (DdManager *table, int *support);\n\n// static void ddClearGlobal (DdManager *table);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Set interaction matrix entries.]\n\n  Description [Given a pair of variables 0 \u003c= x \u003c y \u003c table-\u003esize,\n  sets the corresponding bit of the interaction matrix to 1.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddSetInteract(table *DdManager, x int32, y int32) {\n    var posn, word, bit int32;\n\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table.size \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    table.interact[word] |= int64(1) \u003c\u003c bit;\n\n} /* end of cuddSetInteract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Test interaction matrix entries.]\n\n  Description [Given a pair of variables 0 \u003c= x \u003c y \u003c table-\u003esize,\n  tests whether the corresponding bit of the interaction matrix is 1.\n  Returns the value of the bit.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddTestInteract(table *DdManager, x int32, y int32) int32 {\n    var posn, word, bit, result int32;\n\n    if x \u003e y {\n        var tmp int32  = x;\n        x = y;\n        y = tmp;\n    }\n#ifdef DD_DEBUG\n    assert(x \u003c y);\n    assert(y \u003c table-\u003esize);\n    assert(x \u003e= 0);\n#endif\n\n    posn = ((((table.size \u003c\u003c 1) - x - 3) * x) \u003e\u003e 1) + y - 1;\n    word = posn \u003e\u003e LOGBPL;\n    bit = posn \u0026 (BPL-1);\n    result = (table.interact[word] \u003e\u003e bit) \u0026 int64(1);\n    return(result);\n\n} /* end of cuddTestInteract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes the interaction matrix.]\n\n  Description [Initializes the interaction matrix. The interaction\n  matrix is implemented as a bit vector storing the upper triangle of\n  the symmetric interaction matrix. The bit vector is kept in an array\n  of long integers. The computation is based on a series of depth-first\n  searches, one for each root of the DAG. Two flags are needed: The\n  local visited flag uses the LSB of the then pointer. The global\n  visited flag uses the LSB of the next pointer.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddInitInteract(table *DdManager) int32 {\n    var i, j, k int32;\n    var words ABC_UINT64_T;\n    var interact *long;\n    var support *int32;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var nodelist *DdNodePtr;\n    var slots int32;\n    var n int32  = table.size;\n\n    words = ((n * (n-1)) \u003e\u003e (1 + LOGBPL)) + 1;\n    table.interact = interact = ABC_ALLOC(long,uint32(words));\n    if interact == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for i = 0; i \u003c words; i++ {\n        interact[i] = 0;\n    }\n\n    support = ABC_ALLOC(int,n);\n    if support == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(interact);\n        return(0);\n    }\n\n    for i = 0; i \u003c n; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                // inlining of macro Cudd_IsComplement\n                if !((int32( ((ptrint) (f.next) \u0026 01)) != 0)) {\n                    for k = 0; k \u003c n; k++ {\n                        support[k] = 0;\n                    }\n                    ddSuppInteract(f,support);\n                    ddClearLocal(f);\n                    ddUpdateInteract(table,support);\n                }\n                // inlining of macro Cudd_Regular\n                f = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n            }\n        }\n    }\n    ddClearGlobal(table);\n\n    ABC_FREE(support);\n    return(1);\n\n} /* end of cuddInitInteract */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Find the support of f.]\n\n  Description [Performs a DFS from f. Uses the LSB of the then pointer\n  as visited flag.]\n\n  SideEffects [Accumulates in support the variables on which f depends.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddSuppInteract(f *DdNode, support *int32) {\n    // inlining of macro cuddIsConstant\n    // inlining of macro Cudd_IsComplement\n    // inlining of macro cuddT\n    if ((f).index == CUDD_CONST_INDEX) || (int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) {\n        return;\n    }\n\n    support[f.index] = 1;\n    // inlining of macro cuddT\n    ddSuppInteract(((f).type.kids.T),support);\n    // inlining of macro Cudd_Regular\n    // inlining of macro cuddE\n    ddSuppInteract(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),support);\n    /* mark as visited */\n    // inlining of macro cuddT\n    // inlining of macro Cudd_Complement\n    ((f).type.kids.T) = ((DdNode *)((ptruint)(((f).type.kids.T)) | 01));\n    // inlining of macro Cudd_Complement\n    f.next = ((DdNode *)((ptruint)(f.next) | 01));\n    return;\n\n} /* end of ddSuppInteract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs a DFS from f, clearing the LSB of the then pointers.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddClearLocal(f *DdNode) {\n    // inlining of macro cuddIsConstant\n    // inlining of macro Cudd_IsComplement\n    // inlining of macro cuddT\n    if ((f).index == CUDD_CONST_INDEX) || !(int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) {\n        return;\n    }\n    /* clear visited flag */\n    // inlining of macro cuddT\n    // inlining of macro Cudd_Regular\n    ((f).type.kids.T) = ((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01));\n    // inlining of macro cuddT\n    ddClearLocal(((f).type.kids.T));\n    // inlining of macro Cudd_Regular\n    // inlining of macro cuddE\n    ddClearLocal(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)));\n    return;\n\n} /* end of ddClearLocal */\n\n\n/**Function********************************************************************\n\n  Synopsis [Marks as interacting all pairs of variables that appear in\n  support.]\n\n  Description [If support[i] == support[j] == 1, sets the (i,j) entry\n  of the interaction matrix to 1.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddUpdateInteract(table *DdManager, support *int32) {\n    var i, j int32;\n    var n int32  = table.size;\n\n    for i = 0; i \u003c n-1; i++ {\n        if support[i] == 1 {\n            for j = i+1; j \u003c n; j++ {\n                if support[j] == 1 {\n                    cuddSetInteract(table,i,j);\n                }\n            }\n        }\n    }\n\n} /* end of ddUpdateInteract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Scans the DD and clears the LSB of the next pointers.]\n\n  Description [The LSB of the next pointers are used as markers to tell\n  whether a node was reached by at least one DFS. Once the interaction\n  matrix is built, these flags are reset.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddClearGlobal(table *DdManager) {\n    var i, j int32;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var nodelist *DdNodePtr;\n    var slots int32;\n\n    for i = 0; i \u003c table.size; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                // inlining of macro Cudd_Regular\n                f.next = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n                f = f.next;\n            }\n        }\n    }\n\n} /* end of ddClearGlobal */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

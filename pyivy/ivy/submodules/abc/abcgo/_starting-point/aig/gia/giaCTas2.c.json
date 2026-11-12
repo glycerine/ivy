@@ -1,0 +1,676 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c",
+  "SHA256": "f4b51136533f75a140ce1cc1dfdd986785560a7fd2a05deedd9ebc3a863b3e22",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 39,
+        "ByteOffset": 4827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarAssign(pVar *Tas_Var_t) { assert(!pVar.fAssign); pVar.fAssign = 1;                 }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 41,
+        "ByteOffset": 4926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarUnassign(pVar *Tas_Var_t) { assert(pVar.fAssign);  pVar.fAssign = 0; pVar.fVal = 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 44,
+        "ByteOffset": 5027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarValue(pVar *Tas_Var_t) int32 { assert(pVar.fAssign);  return pVar.fVal;                 }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 50,
+        "ByteOffset": 5135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarSetValue(pVar *Tas_Var_t, v int32) { assert(pVar.fAssign);  pVar.fVal = v;                    }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 61,
+        "ByteOffset": 5799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarDecLevel(p *Tas_Man_t, pVar *Tas_Var_t) int32 { assert( pVar.Value != ~0 ); return Vec_IntEntry(p.vLevReas, 3*pVar.Value);          }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 65,
+        "ByteOffset": 5949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarReason0(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert( pVar.Value != ~0 ); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+1); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 65,
+        "ByteOffset": 6099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Tas_VarReason1(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert( pVar.Value != ~0 ); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+2); }"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 177,
+        "Column": 39,
+        "ByteOffset": 7726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pVars.pData = ((char *) realloc((char *)(p.pVars.pData), sizeof(char) * (size_t)(p.pVars.nSize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 179,
+        "Column": 39,
+        "ByteOffset": 7856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pVars.pData = ((char *) malloc(sizeof(char) * (size_t)(p.pVars.nSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 8006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pVar, 0, sizeof(Tas_Var_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tas_VarIsAssigned",
+      "Start": 4326,
+      "End": 4459,
+      "BodyStart": 4397,
+      "Original": "static inline int         Tas_VarIsAssigned( Tas_Var_t * pVar )        { return pVar-\u003efAssign;                                      }",
+      "Draft": "func Tas_VarIsAssigned(pVar *Tas_Var_t) int32 { return pVar.fAssign;                                      }"
+    },
+    {
+      "Name": "Tas_VarAssign",
+      "Start": 4460,
+      "End": 4593,
+      "BodyStart": 4531,
+      "Original": "static inline void        Tas_VarAssign( Tas_Var_t * pVar )            { assert(!pVar-\u003efAssign); pVar-\u003efAssign = 1;                 }",
+      "Draft": "func Tas_VarAssign(pVar *Tas_Var_t) { assert(!pVar.fAssign, \"!pVar.fAssign\"); pVar.fAssign = 1;                 }"
+    },
+    {
+      "Name": "Tas_VarUnassign",
+      "Start": 4594,
+      "End": 4727,
+      "BodyStart": 4665,
+      "Original": "static inline void        Tas_VarUnassign( Tas_Var_t * pVar )          { assert(pVar-\u003efAssign);  pVar-\u003efAssign = 0; pVar-\u003efVal = 0; }",
+      "Draft": "func Tas_VarUnassign(pVar *Tas_Var_t) { assert(pVar.fAssign, \"pVar.fAssign\");  pVar.fAssign = 0; pVar.fVal = 0; }"
+    },
+    {
+      "Name": "Tas_VarValue",
+      "Start": 4728,
+      "End": 4861,
+      "BodyStart": 4799,
+      "Original": "static inline int         Tas_VarValue( Tas_Var_t * pVar )             { assert(pVar-\u003efAssign);  return pVar-\u003efVal;                 }",
+      "Draft": "func Tas_VarValue(pVar *Tas_Var_t) int32 { assert(pVar.fAssign, \"pVar.fAssign\");  return pVar.fVal;                 }"
+    },
+    {
+      "Name": "Tas_VarSetValue",
+      "Start": 4862,
+      "End": 4995,
+      "BodyStart": 4933,
+      "Original": "static inline void        Tas_VarSetValue( Tas_Var_t * pVar, int v )   { assert(pVar-\u003efAssign);  pVar-\u003efVal = v;                    }",
+      "Draft": "func Tas_VarSetValue(pVar *Tas_Var_t, v int32) { assert(pVar.fAssign, \"pVar.fAssign\");  pVar.fVal = v;                    }"
+    },
+    {
+      "Name": "Tas_VarIsJust",
+      "Start": 4996,
+      "End": 5183,
+      "BodyStart": 5067,
+      "Original": "static inline int         Tas_VarIsJust( Tas_Var_t * pVar )            { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin1(pVar)); }",
+      "Draft": "func Tas_VarIsJust(pVar *Tas_Var_t) int32 { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin1(pVar)); }"
+    },
+    {
+      "Name": "Tas_VarFanin0Value",
+      "Start": 5185,
+      "End": 5372,
+      "BodyStart": 5256,
+      "Original": "static inline int         Tas_VarFanin0Value( Tas_Var_t * pVar )       { return !Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) ? 2 : (Tas_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar)); }",
+      "Draft": "func Tas_VarFanin0Value(pVar *Tas_Var_t) int32 { if !(Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) != 0) {\n    return 2;\n} else {\n    return (Tas_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar));\n} }"
+    },
+    {
+      "Name": "Tas_VarFanin1Value",
+      "Start": 5373,
+      "End": 5560,
+      "BodyStart": 5444,
+      "Original": "static inline int         Tas_VarFanin1Value( Tas_Var_t * pVar )       { return !Tas_VarIsAssigned(Gia_ObjFanin1(pVar)) ? 2 : (Tas_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar)); }",
+      "Draft": "func Tas_VarFanin1Value(pVar *Tas_Var_t) int32 { if !(Tas_VarIsAssigned(Gia_ObjFanin1(pVar)) != 0) {\n    return 2;\n} else {\n    return (Tas_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar));\n} }"
+    },
+    {
+      "Name": "Tas_VarDecLevel",
+      "Start": 5562,
+      "End": 5730,
+      "BodyStart": 5640,
+      "Original": "static inline int         Tas_VarDecLevel( Tas_Man_t * p, Tas_Var_t * pVar )  { assert( pVar-\u003eValue != ~0 ); return Vec_IntEntry(p-\u003evLevReas, 3*pVar-\u003eValue);          }",
+      "Draft": "func Tas_VarDecLevel(p *Tas_Man_t, pVar *Tas_Var_t) int32 { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return Vec_IntEntry(p.vLevReas, 3*pVar.Value);          }"
+    },
+    {
+      "Name": "Tas_VarReason0",
+      "Start": 5731,
+      "End": 5899,
+      "BodyStart": 5809,
+      "Original": "static inline Tas_Var_t * Tas_VarReason0( Tas_Man_t * p, Tas_Var_t * pVar )   { assert( pVar-\u003eValue != ~0 ); return pVar + Vec_IntEntry(p-\u003evLevReas, 3*pVar-\u003eValue+1); }",
+      "Draft": "func Tas_VarReason0(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+1); }"
+    },
+    {
+      "Name": "Tas_VarReason1",
+      "Start": 5900,
+      "End": 6068,
+      "BodyStart": 5978,
+      "Original": "static inline Tas_Var_t * Tas_VarReason1( Tas_Man_t * p, Tas_Var_t * pVar )   { assert( pVar-\u003eValue != ~0 ); return pVar + Vec_IntEntry(p-\u003evLevReas, 3*pVar-\u003eValue+2); }",
+      "Draft": "func Tas_VarReason1(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+2); }"
+    },
+    {
+      "Name": "Tas_ClauseDecLevel",
+      "Start": 6069,
+      "End": 6237,
+      "BodyStart": 6147,
+      "Original": "static inline int         Tas_ClauseDecLevel( Tas_Man_t * p, int hClause )    { return Tas_VarDecLevel( p, p-\u003epClauses.pData[hClause] );                               }",
+      "Draft": "func Tas_ClauseDecLevel(p *Tas_Man_t, hClause int32) int32 { return Tas_VarDecLevel( p, p.pClauses.pData[hClause] );                               }"
+    },
+    {
+      "Name": "Tas_ManVar",
+      "Start": 6239,
+      "End": 6372,
+      "BodyStart": 6310,
+      "Original": "static inline Tas_Var_t * Tas_ManVar( Tas_Man_t * p, int h )           { return (Tas_Var_t *)(p-\u003epVars-\u003epBuffer + h);               }",
+      "Draft": "func Tas_ManVar(p *Tas_Man_t, h int32) *Tas_Var_t { return (Tas_Var_t *)(p.pVars.pBuffer + h);               }"
+    },
+    {
+      "Name": "Tas_ManClause",
+      "Start": 6373,
+      "End": 6506,
+      "BodyStart": 6444,
+      "Original": "static inline Tas_Cls_t * Tas_ManClause( Tas_Man_t * p, int h )        { return (Tas_Cls_t *)(p-\u003epClauses-\u003epBuffer + h);            }",
+      "Draft": "func Tas_ManClause(p *Tas_Man_t, h int32) *Tas_Cls_t { return (Tas_Cls_t *)(p.pClauses.pBuffer + h);            }"
+    },
+    {
+      "Name": "Tas_ManCreateVar",
+      "Start": 7340,
+      "End": 7798,
+      "BodyStart": 7386,
+      "Original": "Tas_Var_t * Tas_ManCreateVar( Tas_Man_t * p )\n{\n    Tas_Var_t * pVar;\n    if ( p-\u003epVars-\u003eiCur + sizeof(Tas_Var_t) \u003e p-\u003epVars-\u003enSize )\n    {\n        p-\u003epVars-\u003enSize *= 2;\n        p-\u003epVars-\u003epData = ABC_REALLOC( char, p-\u003epVars-\u003epData, p-\u003epVars-\u003enSize ); \n    }\n    pVar = p-\u003epVars-\u003epData + p-\u003epVars-\u003eiCur;\n    p-\u003epVars-\u003eiCur += sizeof(Tas_Var_t);\n    memset( pVar, 0, sizeof(Tas_Var_t) );\n    pVar-\u003eId = pVar - ((Tas_Var_t *)p-\u003epVars-\u003epData);\n    return pVar;\n}",
+      "Draft": "func Tas_ManCreateVar(p *Tas_Man_t) *Tas_Var_t {\n    var pVar *Tas_Var_t;\n    if p.pVars.iCur + sizeof(Tas_Var_t) \u003e p.pVars.nSize {\n        p.pVars.nSize *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pVars.pData {\n            p.pVars.pData = ((char *) realloc((char *)(p.pVars.pData), sizeof(char) * (size_t)(p.pVars.nSize)));\n        } else {\n            p.pVars.pData = ((char *) malloc(sizeof(char) * (size_t)(p.pVars.nSize)));\n        } \n    }\n    pVar = p.pVars.pData + p.pVars.iCur;\n    p.pVars.iCur += sizeof(Tas_Var_t);\n    *pVar = Tas_Var_t{};\n    pVar.Id = pVar - ((Tas_Var_t *)p.pVars.pData);\n    return pVar;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 775,
+      "End": 1210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Sto_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Sto_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1212,
+      "End": 1445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Que_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Que_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1447,
+      "End": 1740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::unsigned      fTerm   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1798,
+      "End": 1830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// terminal node\n    unsigned      fVal    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1830,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// current value\n    unsigned      fValOld :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1879,
+      "End": 1928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// previous value\n    unsigned      fAssign :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1928,
+      "End": 1978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// assigned status\n    unsigned      fJQueue :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1978,
+      "End": 2029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// part of J-frontier\n    unsigned      fCompl0 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2029,
+      "End": 2083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// complemented attribute\n    unsigned      fCompl1 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2083,
+      "End": 2141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// complemented attribute\n    unsigned      fMark0  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2141,
+      "End": 2199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// multi-purpose mark\n    unsigned      fMark1  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2199,
+      "End": 2253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// multi-purpose mark\n    unsigned      fPhase  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2253,
+      "End": 2307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t::// polarity\n    unsigned      Level   : 22;",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2307,
+      "End": 2351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Var_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Var_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1742,
+      "End": 2870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Cls_t::// next clause to watch\n    int           pVars[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Tas_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3010,
+      "End": 3068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Cls_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Cls_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2872,
+      "End": 3095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::struct::Tas_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Tas_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3098,
+      "End": 4324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::mechanical::sizeof::7436",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7436,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::mechanical::sizeof::7649",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7536,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::mechanical::sizeof::7720",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7536,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::mechanical::sizeof::7839",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7665,
+      "End": 7671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::mechanical::sizeof::7879",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7705,
+      "End": 7711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::6319",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6319,
+      "End": 6332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::6453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6453,
+      "End": 6466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::7605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7536,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::7622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7536,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::7704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7536,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::pointer-cast::7923",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7749,
+      "End": 7762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::macro::Tas_ClaForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Tas_ClaForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6508,
+      "End": 6702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::macro::Tas_QueForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Tas_QueForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6704,
+      "End": 6883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarIsAssigned",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarIsAssigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4326,
+      "End": 4459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarAssign",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarAssign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4460,
+      "End": 4593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarUnassign",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarUnassign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4594,
+      "End": 4727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarValue",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4728,
+      "End": 4861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarSetValue",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarSetValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4862,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarIsJust",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarIsJust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4996,
+      "End": 5183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarFanin0Value",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarFanin0Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5185,
+      "End": 5372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarFanin1Value",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarFanin1Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5373,
+      "End": 5560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarDecLevel",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarDecLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5562,
+      "End": 5730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarReason0",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarReason0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5731,
+      "End": 5899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_VarReason1",
+      "Category": "semantic-review",
+      "Symbol": "Tas_VarReason1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5900,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_ClauseDecLevel",
+      "Category": "semantic-review",
+      "Symbol": "Tas_ClauseDecLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6069,
+      "End": 6237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_ManVar",
+      "Category": "semantic-review",
+      "Symbol": "Tas_ManVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6239,
+      "End": 6372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_ManClause",
+      "Category": "semantic-review",
+      "Symbol": "Tas_ManClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6373,
+      "End": 6506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::Tas_ManCreateVar",
+      "Category": "semantic-review",
+      "Symbol": "Tas_ManCreateVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7340,
+      "End": 7798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCTas2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8045
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaCSat2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Circuit-based SAT solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaCSat2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Tas_Par_t struct {\n    // conflict limits\n    nBTLimit           int32;     // limit on the number of conflicts\n    // current parameters\n    nBTThis           int32;      // number of conflicts\n    nBTTotal           int32;     // total number of conflicts\n    // decision heuristics\n    fUseHighest           int32;  // use node with the highest ID\n    // other parameters\n    fVerbose           int32;\n}\n\n   \ntype Tas_Sto_t struct {\n    iCur           int32;         // currently used\n    nSize           int32;        // allocated size\n    pBuffer         string;      // handles of objects stored in the queue\n}\n\n   \ntype Tas_Que_t struct {\n    iHead           int32;        // beginning of the queue\n    iTail           int32;        // end of the queue\n    nSize           int32;        // allocated size\n    pData          *int32;        // handles of objects stored in the queue\n}\n\n   \ntype Tas_Var_t struct {\n    fTerm uint32; /* C bitfield: 1 bits; review packing and truncation */ // terminal node\n    fVal uint32; /* C bitfield: 1 bits; review packing and truncation */ // current value\n    fValOld uint32; /* C bitfield: 1 bits; review packing and truncation */ // previous value\n    fAssign uint32; /* C bitfield: 1 bits; review packing and truncation */ // assigned status\n    fJQueue uint32; /* C bitfield: 1 bits; review packing and truncation */ // part of J-frontier\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */ // complemented attribute\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */ // complemented attribute\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */ // multi-purpose mark\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */ // multi-purpose mark\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */ // polarity\n    Level uint32; /* C bitfield: 22 bits; review packing and truncation */ // decision level \n    Id           int32;           // unique ID of this variable\n    IdAig           int32;        // original ID of this variable\n    Reason0           int32;      // reason of this variable\n    Reason1           int32;      // reason of this variable\n    Diff0           int32;        // difference for the first fanin \n    Diff1           int32;        // difference for the second fanin \n    Watch0           int32;       // handle of first watch\n    Watch1           int32;       // handle of second watch   \n}\n\n   \ntype Tas_Cls_t struct {\n    Watch0           int32;       // next clause to watch\n    Watch1           int32;       // next clause to watch\n    pVars [0]int32;     // variable handles\n}\n \n   \ntype Tas_Man_t struct {\n    // user data\n    pAig    *Gia_Man_t;         // AIG manager\n    Pars     Tas_Par_t;         // parameters\n    // solver data\n    pVars    *Tas_Sto_t;        // variables\n    pClauses    *Tas_Sto_t;     // clauses\n    // state representation\n    pProp     Tas_Que_t;        // propagation queue\n    pJust     Tas_Que_t;        // justification queue\n    vModel    *Vec_Int_t;       // satisfying assignment\n    vTemp    *Vec_Ptr_t;        // temporary storage\n    // SAT calls statistics\n    nSatUnsat           int32;    // the number of proofs\n    nSatSat           int32;      // the number of failure\n    nSatUndec           int32;    // the number of timeouts\n    nSatTotal           int32;    // the number of calls\n    // conflicts\n    nConfUnsat           int32;   // conflicts in unsat problems\n    nConfSat           int32;     // conflicts in sat problems\n    nConfUndec           int32;   // conflicts in undec problems\n    nConfTotal           int32;   // total conflicts\n    // runtime stats\n    timeSatUnsat       int64; // unsat\n    timeSatSat       int64;   // sat\n    timeSatUndec       int64; // undecided\n    timeTotal       int64;    // total runtime\n}\n\nfunc Tas_VarIsAssigned(pVar *Tas_Var_t) int32 { return pVar.fAssign;                                      }\nfunc Tas_VarAssign(pVar *Tas_Var_t) { assert(!pVar.fAssign, \"!pVar.fAssign\"); pVar.fAssign = 1;                 }\nfunc Tas_VarUnassign(pVar *Tas_Var_t) { assert(pVar.fAssign, \"pVar.fAssign\");  pVar.fAssign = 0; pVar.fVal = 0; }\nfunc Tas_VarValue(pVar *Tas_Var_t) int32 { assert(pVar.fAssign, \"pVar.fAssign\");  return pVar.fVal;                 }\nfunc Tas_VarSetValue(pVar *Tas_Var_t, v int32) { assert(pVar.fAssign, \"pVar.fAssign\");  pVar.fVal = v;                    }\nfunc Tas_VarIsJust(pVar *Tas_Var_t) int32 { return Gia_ObjIsAnd(pVar) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) \u0026\u0026 !Tas_VarIsAssigned(Gia_ObjFanin1(pVar)); } \nfunc Tas_VarFanin0Value(pVar *Tas_Var_t) int32 { if !(Tas_VarIsAssigned(Gia_ObjFanin0(pVar)) != 0) {\n    return 2;\n} else {\n    return (Tas_VarValue(Gia_ObjFanin0(pVar)) ^ Gia_ObjFaninC0(pVar));\n} }\nfunc Tas_VarFanin1Value(pVar *Tas_Var_t) int32 { if !(Tas_VarIsAssigned(Gia_ObjFanin1(pVar)) != 0) {\n    return 2;\n} else {\n    return (Tas_VarValue(Gia_ObjFanin1(pVar)) ^ Gia_ObjFaninC1(pVar));\n} }\n\nfunc Tas_VarDecLevel(p *Tas_Man_t, pVar *Tas_Var_t) int32 { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return Vec_IntEntry(p.vLevReas, 3*pVar.Value);          }\nfunc Tas_VarReason0(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+1); }\nfunc Tas_VarReason1(p *Tas_Man_t, pVar *Tas_Var_t) *Tas_Var_t { assert(pVar.Value != ~0, \"pVar.Value != ~0\"); return pVar + Vec_IntEntry(p.vLevReas, 3*pVar.Value+2); }\nfunc Tas_ClauseDecLevel(p *Tas_Man_t, hClause int32) int32 { return Tas_VarDecLevel( p, p.pClauses.pData[hClause] );                               }\n\nfunc Tas_ManVar(p *Tas_Man_t, h int32) *Tas_Var_t { return (Tas_Var_t *)(p.pVars.pBuffer + h);               }\nfunc Tas_ManClause(p *Tas_Man_t, h int32) *Tas_Cls_t { return (Tas_Cls_t *)(p.pClauses.pBuffer + h);            }\n\n// Original macro:\n// #define Tas_ClaForEachVar( p, pClause, pVar, i )          \\\n//     for ( pVar = Tas_ManVar(p, pClause-\u003epVars[(i=0)]); pClause-\u003epVars[i]; pVar = (Tas_Var_t *)(((char *)pVar + pClause-\u003epVars[++i])) )\n\n\n// Original macro:\n// #define Tas_QueForEachVar( p, pQue, pVar, i )             \\\n//     for ( pVar = Tas_ManVar(p, pQue-\u003epVars[(i=pQue-\u003eiHead)]); i \u003c pQue-\u003eiTail; pVar = Tas_ManVar(p, pQue-\u003epVars[i++]) )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tas_ManCreateVar(p *Tas_Man_t) *Tas_Var_t {\n    var pVar *Tas_Var_t;\n    if p.pVars.iCur + sizeof(Tas_Var_t) \u003e p.pVars.nSize {\n        p.pVars.nSize *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pVars.pData {\n            p.pVars.pData = ((char *) realloc((char *)(p.pVars.pData), sizeof(char) * (size_t)(p.pVars.nSize)));\n        } else {\n            p.pVars.pData = ((char *) malloc(sizeof(char) * (size_t)(p.pVars.nSize)));\n        } \n    }\n    pVar = p.pVars.pData + p.pVars.iCur;\n    p.pVars.iCur += sizeof(Tas_Var_t);\n    *pVar = Tas_Var_t{};\n    pVar.Id = pVar - ((Tas_Var_t *)p.pVars.pData);\n    return pVar;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

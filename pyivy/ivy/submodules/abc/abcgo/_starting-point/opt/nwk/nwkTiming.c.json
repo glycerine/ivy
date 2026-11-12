@@ -1,0 +1,879 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c",
+  "SHA256": "686ebb046f9fb7a5d0c5caa47c2611816bbd6390adb760530acbd0d19a908ca4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 3093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 6821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 17,
+        "ByteOffset": 8444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 17,
+        "ByteOffset": 9157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Nwk_ObjFanin(pFanout,iFanin) == pObj );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 10186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 9,
+        "ByteOffset": 12617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 9,
+        "ByteOffset": 15565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( tSlack + 0.01 \u003e 0.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 13,
+        "ByteOffset": 16612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nwk_ManVerifyTiming(): Object %d has different arrival time (%.2f) from computed (%.2f).\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 13,
+        "ByteOffset": 16870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nwk_ManVerifyTiming(): Object %d has different required time (%.2f) from computed (%.2f).\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 17668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 468,
+        "Column": 71,
+        "ByteOffset": 18017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCounters = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 18066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 18687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num \u003e=0 \u0026\u0026 Num \u003c= nSteps );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 18797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, pLutLib? \"LUT library\" : \"unit-delay\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 18997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d %s : %5d  (%6.2f %%)\\n\", pLutLib? 5*(i+1) : i+1, "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 492,
+        "Column": 65,
+        "ByteOffset": 19205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 533,
+        "Column": 13,
+        "ByteOffset": 20689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 13,
+        "ByteOffset": 20774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 557,
+        "Column": 5,
+        "ByteOffset": 21492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 5,
+        "ByteOffset": 21608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), float32(0.01) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 24701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 24848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 718,
+        "Column": 5,
+        "ByteOffset": 28617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 742,
+        "Column": 5,
+        "ByteOffset": 29523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 799,
+        "Column": 9,
+        "ByteOffset": 31862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.MarkA == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 802,
+        "Column": 13,
+        "ByteOffset": 31989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Object %6d: Mismatch betweeh levels: Actual = %d. Correct = %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 822,
+        "Column": 5,
+        "ByteOffset": 32524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pMan == pObjNew.pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 823,
+        "Column": 5,
+        "ByteOffset": 32565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj != pObjNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 824,
+        "Column": 5,
+        "ByteOffset": 32596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjFanoutNum(pObj) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 825,
+        "Column": 5,
+        "ByteOffset": 32638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManCleanTiming",
+      "Start": 1290,
+      "End": 1506,
+      "BodyStart": 1334,
+      "Original": "void Nwk_ManCleanTiming( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pObj;\n    int i;\n    Nwk_ManForEachObj( pNtk, pObj, i )\n    {\n        pObj-\u003etArrival = pObj-\u003etSlack = 0.0;\n        pObj-\u003etRequired = TIM_ETERNITY;\n    }\n}",
+      "Draft": "func Nwk_ManCleanTiming(pNtk *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        pObj.tArrival = pObj.tSlack = 0.0;\n        pObj.tRequired = TIM_ETERNITY;\n    }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManDelayTraceSortPins",
+      "Start": 1791,
+      "End": 2941,
+      "BodyStart": 1879,
+      "Original": "void Nwk_ManDelayTraceSortPins( Nwk_Obj_t * pNode, int * pPinPerm, float * pPinDelays )\n{\n    Nwk_Obj_t * pFanin;\n    int i, j, best_i, temp;\n    // start the trivial permutation and collect pin delays\n    Nwk_ObjForEachFanin( pNode, pFanin, i )\n    {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Nwk_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for ( i = 0; i \u003c Nwk_ObjFaninNum(pNode)-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c Nwk_ObjFaninNum(pNode); j++ )\n            if ( pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] )\n                best_i = j;\n        if ( best_i == i )\n            continue;\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert( Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode) );\n    for ( i = 1; i \u003c Nwk_ObjFaninNum(pNode); i++ )\n    {\n        assert( pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode) );\n        assert( pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]] );\n    }\n}",
+      "Draft": "func Nwk_ManDelayTraceSortPins(pNode *Nwk_Obj_t, pPinPerm *int32, pPinDelays *float32) {\n    var pFanin *Nwk_Obj_t;\n    var i, j, best_i, temp int32;\n    // start the trivial permutation and collect pin delays\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pNode).nFanins)) \u0026\u0026 ((pFanin) = (pNode).pFanio[i]); i++  {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Nwk_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for  i = 0; i \u003c Nwk_ObjFaninNum(pNode)-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c Nwk_ObjFaninNum(pNode); j++  {\n            if pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] {\n                best_i = j; }\n        }\n        if best_i == i {\n            continue; }\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert(Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode), \"Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode)\");\n    for  i = 1; i \u003c Nwk_ObjFaninNum(pNode); i++  {\n        assert(pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode), \"pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode)\");\n        assert(pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]], \"pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]]\");\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManWhereIsPin",
+      "Start": 3226,
+      "End": 3471,
+      "BodyStart": 3307,
+      "Original": "int Nwk_ManWhereIsPin( Nwk_Obj_t * pFanout, Nwk_Obj_t * pFanin, int * pPinPerm )\n{\n    int i;\n    for ( i = 0; i \u003c Nwk_ObjFaninNum(pFanout); i++ )\n        if ( Nwk_ObjFanin(pFanout, pPinPerm[i]) == pFanin )\n            return i;\n    return -1;\n}",
+      "Draft": "func Nwk_ManWhereIsPin(pFanout *Nwk_Obj_t, pFanin *Nwk_Obj_t, pPinPerm *int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c Nwk_ObjFaninNum(pFanout); i++  {\n        if Nwk_ObjFanin(pFanout, pPinPerm[i]) == pFanin {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Nwk_NodeComputeArrival",
+      "Start": 3755,
+      "End": 5478,
+      "BodyStart": 3821,
+      "Original": "float Nwk_NodeComputeArrival( Nwk_Obj_t * pObj, int fUseSorting )\n{\n    If_LibLut_t * pLutLib = pObj-\u003epMan-\u003epLutLib;\n    int pPinPerm[32];\n    float pPinDelays[32];\n    Nwk_Obj_t * pFanin;\n    float tArrival, * pDelays;\n    int k;\n    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj) );\n    if ( Nwk_ObjIsCi(pObj) )\n        return Nwk_ObjArrival(pObj);\n    if ( Nwk_ObjIsCo(pObj) )\n        return Nwk_ObjArrival( Nwk_ObjFanin0(pObj) );\n    tArrival = -TIM_ETERNITY;\n    if ( pLutLib == NULL )\n    {\n        Nwk_ObjForEachFanin( pObj, pFanin, k )\n            if ( tArrival \u003c Nwk_ObjArrival(pFanin) + 1.0 )\n                tArrival = Nwk_ObjArrival(pFanin) + 1.0;\n    }\n    else if ( !pLutLib-\u003efVarPinDelays )\n    {\n        pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pObj)];\n        Nwk_ObjForEachFanin( pObj, pFanin, k )\n            if ( tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[0] )\n                tArrival = Nwk_ObjArrival(pFanin) + pDelays[0];\n    }\n    else\n    {\n        pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pObj)];\n        if ( fUseSorting )\n        {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            Nwk_ObjForEachFanin( pObj, pFanin, k ) \n                if ( tArrival \u003c Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k] )\n                    tArrival = Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k];\n        }\n        else\n        {\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n                if ( tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[k] )\n                    tArrival = Nwk_ObjArrival(pFanin) + pDelays[k];\n        }\n    }\n    if ( Nwk_ObjFaninNum(pObj) == 0 )\n        tArrival = 0.0;\n    return tArrival;\n}",
+      "Draft": "func Nwk_NodeComputeArrival(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanin *Nwk_Obj_t;\n    var tArrival float32;\n    var pDelays *float32;\n    var k int32;\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj)\");\n    if Nwk_ObjIsCi(pObj) {\n        return Nwk_ObjArrival(pObj); }\n    if Nwk_ObjIsCo(pObj) {\n        return Nwk_ObjArrival( Nwk_ObjFanin0(pObj) ); }\n    tArrival = -TIM_ETERNITY;\n    if pLutLib == nil {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if tArrival \u003c Nwk_ObjArrival(pFanin) + 1.0 {\n                tArrival = Nwk_ObjArrival(pFanin) + 1.0; }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[0] {\n                tArrival = Nwk_ObjArrival(pFanin) + pDelays[0]; }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        if fUseSorting != 0 {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  { \n                if tArrival \u003c Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k] {\n                    tArrival = Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k]; }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                if tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[k] {\n                    tArrival = Nwk_ObjArrival(pFanin) + pDelays[k]; }\n            }\n        }\n    }\n    if Nwk_ObjFaninNum(pObj) == 0 {\n        tArrival = 0.0; }\n    return tArrival;\n}"
+    },
+    {
+      "Name": "Nwk_NodeComputeRequired",
+      "Start": 5761,
+      "End": 8044,
+      "BodyStart": 5828,
+      "Original": "float Nwk_NodeComputeRequired( Nwk_Obj_t * pObj, int fUseSorting )\n{\n    If_LibLut_t * pLutLib = pObj-\u003epMan-\u003epLutLib;\n    int pPinPerm[32];\n    float pPinDelays[32];\n    Nwk_Obj_t * pFanout;\n    float tRequired, tDelay, * pDelays;\n    int k, iFanin;\n    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj) );\n    if ( Nwk_ObjIsCo(pObj) )\n        return Nwk_ObjRequired(pObj);\n    tRequired = TIM_ETERNITY;\n    if ( pLutLib == NULL )\n    {\n        Nwk_ObjForEachFanout( pObj, pFanout, k )\n        {\n            tDelay = Nwk_ObjIsCo(pFanout)? 0.0 : 1.0;\n            if ( tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay )\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay;\n        }\n    }\n    else if ( !pLutLib-\u003efVarPinDelays )\n    {\n        Nwk_ObjForEachFanout( pObj, pFanout, k )\n        {\n            pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pFanout)];\n            tDelay = Nwk_ObjIsCo(pFanout)? 0.0 : pDelays[0];\n            if ( tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay )\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay;\n        }\n    }\n    else\n    {\n        if ( fUseSorting )\n        {\n            Nwk_ObjForEachFanout( pObj, pFanout, k ) \n            {\n                pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pFanout)];\n                Nwk_ManDelayTraceSortPins( pFanout, pPinPerm, pPinDelays );\n                iFanin = Nwk_ManWhereIsPin( pFanout, pObj, pPinPerm );\n                assert( Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj );\n                tDelay = Nwk_ObjIsCo(pFanout)? 0.0 : pDelays[iFanin];\n                if ( tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay )\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay;\n            }\n        }\n        else\n        {\n            Nwk_ObjForEachFanout( pObj, pFanout, k )\n            {\n                pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pFanout)];\n                iFanin = Nwk_ObjFindFanin( pFanout, pObj );\n                assert( Nwk_ObjFanin(pFanout,iFanin) == pObj );\n                tDelay = Nwk_ObjIsCo(pFanout)? 0.0 : pDelays[iFanin];\n                if ( tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay )\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay;\n            }\n        }\n    }\n    return tRequired;\n}",
+      "Draft": "func Nwk_NodeComputeRequired(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanout *Nwk_Obj_t;\n    var tRequired float32;\n    var tDelay float32;\n    var pDelays *float32;\n    var k, iFanin int32;\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj)\");\n    if Nwk_ObjIsCo(pObj) {\n        return Nwk_ObjRequired(pObj); }\n    tRequired = TIM_ETERNITY;\n    if pLutLib == nil {\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if Nwk_ObjIsCo(pFanout) {\n                tDelay = 0.0;\n            } else {\n                tDelay = 1.0;\n            }\n            if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n            if Nwk_ObjIsCo(pFanout) {\n                tDelay = 0.0;\n            } else {\n                tDelay = pDelays[0];\n            }\n            if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n        }\n    \n    } else {\n        if fUseSorting != 0 {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n                pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n                Nwk_ManDelayTraceSortPins( pFanout, pPinPerm, pPinDelays );\n                iFanin = Nwk_ManWhereIsPin( pFanout, pObj, pPinPerm );\n                assert(Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj, \"Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj\");\n                if Nwk_ObjIsCo(pFanout) {\n                    tDelay = 0.0;\n                } else {\n                    tDelay = pDelays[iFanin];\n                }\n                if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n                pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n                iFanin = Nwk_ObjFindFanin( pFanout, pObj );\n                assert(Nwk_ObjFanin(pFanout,iFanin) == pObj, \"Nwk_ObjFanin(pFanout,iFanin) == pObj\");\n                if Nwk_ObjIsCo(pFanout) {\n                    tDelay = 0.0;\n                } else {\n                    tDelay = pDelays[iFanin];\n                }\n                if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n            }\n        }\n    }\n    return tRequired;\n}"
+    },
+    {
+      "Name": "Nwk_NodePropagateRequired",
+      "Start": 8333,
+      "End": 10074,
+      "BodyStart": 8402,
+      "Original": "float Nwk_NodePropagateRequired( Nwk_Obj_t * pObj, int fUseSorting )\n{\n    If_LibLut_t * pLutLib = pObj-\u003epMan-\u003epLutLib;\n    int pPinPerm[32];\n    float pPinDelays[32];\n    Nwk_Obj_t * pFanin;\n    float tRequired = 0.0; // Suppress \"might be used uninitialized\"\n    float * pDelays;\n    int k;\n    assert( Nwk_ObjIsNode(pObj) );\n    if ( pLutLib == NULL )\n    {\n        tRequired = Nwk_ObjRequired(pObj) - (float)1.0;\n        Nwk_ObjForEachFanin( pObj, pFanin, k )\n            if ( Nwk_ObjRequired(pFanin) \u003e tRequired )\n                Nwk_ObjSetRequired( pFanin, tRequired );\n    }\n    else if ( !pLutLib-\u003efVarPinDelays )\n    {\n        pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pObj)];\n        tRequired = Nwk_ObjRequired(pObj) - pDelays[0];\n        Nwk_ObjForEachFanin( pObj, pFanin, k )\n            if ( Nwk_ObjRequired(pFanin) \u003e tRequired )\n                Nwk_ObjSetRequired( pFanin, tRequired );\n    }\n    else \n    {\n        pDelays = pLutLib-\u003epLutDelays[Nwk_ObjFaninNum(pObj)];\n        if ( fUseSorting )\n        {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n            {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if ( Nwk_ObjRequired(Nwk_ObjFanin(pObj,pPinPerm[k])) \u003e tRequired )\n                    Nwk_ObjSetRequired( Nwk_ObjFanin(pObj,pPinPerm[k]), tRequired );\n            }\n        }\n        else\n        {\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n            {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if ( Nwk_ObjRequired(pFanin) \u003e tRequired )\n                    Nwk_ObjSetRequired( pFanin, tRequired );\n            }\n        }\n    }\n    return tRequired;\n}",
+      "Draft": "func Nwk_NodePropagateRequired(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanin *Nwk_Obj_t;\n    var tRequired float32  = 0.0; // Suppress \"might be used uninitialized\"\n    var pDelays *float32;\n    var k int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    if pLutLib == nil {\n        tRequired = Nwk_ObjRequired(pObj) - float32(1.0);\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                Nwk_ObjSetRequired( pFanin, tRequired ); }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        tRequired = Nwk_ObjRequired(pObj) - pDelays[0];\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                Nwk_ObjSetRequired( pFanin, tRequired ); }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        if fUseSorting != 0 {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if Nwk_ObjRequired(Nwk_ObjFanin(pObj,pPinPerm[k])) \u003e tRequired {\n                    Nwk_ObjSetRequired( Nwk_ObjFanin(pObj,pPinPerm[k]), tRequired ); }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                    Nwk_ObjSetRequired( pFanin, tRequired ); }\n            }\n        }\n    }\n    return tRequired;\n}"
+    },
+    {
+      "Name": "Nwk_ManDelayTraceLut",
+      "Start": 10356,
+      "End": 13226,
+      "BodyStart": 10403,
+      "Original": "float Nwk_ManDelayTraceLut( Nwk_Man_t * pNtk )\n{\n    Vec_Ptr_t * vObjs;\n    int fUseSorting = 1;\n    If_LibLut_t * pLutLib = pNtk-\u003epLutLib;\n    Vec_Ptr_t * vNodes;\n    Nwk_Obj_t * pObj;\n    float tArrival, tRequired, tSlack;\n    int i;\n\n    // get the library\n    if ( pLutLib \u0026\u0026 pLutLib-\u003eLutMax \u003c Nwk_ManGetFaninMax(pNtk) )\n    {\n        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", \n            pLutLib-\u003eLutMax, Nwk_ManGetFaninMax(pNtk) );\n        return -TIM_ETERNITY;\n    }\n\n    // compute the reverse order of all objects\n    vNodes = Nwk_ManDfsReverse( pNtk );\n\n    // initialize the arrival times\n    Nwk_ManCleanTiming( pNtk );\n\n    // propagate arrival times\n    if ( pNtk-\u003epManTime )\n        Tim_ManIncrementTravId( pNtk-\u003epManTime );\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vObjs, pObj, i )\n    {\n        tArrival = Nwk_NodeComputeArrival( pObj, fUseSorting );\n        if ( Nwk_ObjIsCi(pObj) \u0026\u0026 pNtk-\u003epManTime )\n            tArrival = Tim_ManGetCiArrival( pNtk-\u003epManTime, pObj-\u003ePioId );\n        if ( Nwk_ObjIsCo(pObj) \u0026\u0026 pNtk-\u003epManTime )\n            Tim_ManSetCoArrival( pNtk-\u003epManTime, pObj-\u003ePioId, tArrival );\n        Nwk_ObjSetArrival( pObj, tArrival );\n    }\n    Vec_PtrFree( vObjs );\n\n    // get the latest arrival times\n    tArrival = -TIM_ETERNITY;\n    Nwk_ManForEachPo( pNtk, pObj, i )\n        if ( tArrival \u003c Nwk_ObjArrival(pObj) )\n            tArrival = Nwk_ObjArrival(pObj);\n\n    // initialize the required times\n    if ( pNtk-\u003epManTime )\n    {\n        Tim_ManIncrementTravId( pNtk-\u003epManTime );\n        Tim_ManInitPoRequiredAll( pNtk-\u003epManTime, tArrival );\n    }\n    else\n    {\n        Nwk_ManForEachCo( pNtk, pObj, i )\n            Nwk_ObjSetRequired( pObj, tArrival );\n    }\n\n    // propagate the required times\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n    {\n        if ( Nwk_ObjIsNode(pObj) )\n        {\n            Nwk_NodePropagateRequired( pObj, fUseSorting );\n        }\n        else if ( Nwk_ObjIsCi(pObj) )\n        {\n            if ( pNtk-\u003epManTime )\n                Tim_ManSetCiRequired( pNtk-\u003epManTime, pObj-\u003ePioId, Nwk_ObjRequired(pObj) );\n        }\n        else if ( Nwk_ObjIsCo(pObj) )\n        {\n            if ( pNtk-\u003epManTime )\n            {\n                tRequired = Tim_ManGetCoRequired( pNtk-\u003epManTime, pObj-\u003ePioId );\n                Nwk_ObjSetRequired( pObj, tRequired );\n            }\n            if ( Nwk_ObjRequired(Nwk_ObjFanin0(pObj)) \u003e Nwk_ObjRequired(pObj) )\n                Nwk_ObjSetRequired( Nwk_ObjFanin0(pObj), Nwk_ObjRequired(pObj) );\n        }\n\n        // set slack for this object\n        tSlack = Nwk_ObjRequired(pObj) - Nwk_ObjArrival(pObj);\n        assert( tSlack + 0.01 \u003e 0.0 );\n        Nwk_ObjSetSlack( pObj, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}",
+      "Draft": "func Nwk_ManDelayTraceLut(pNtk *Nwk_Man_t) float32 {\n    var vObjs *Vec_Ptr_t;\n    var fUseSorting int32  = 1;\n    var pLutLib *If_LibLut_t  = pNtk.pLutLib;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var tArrival, tRequired, tSlack float32;\n    var i int32;\n\n    // get the library\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Nwk_ManGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Nwk_ManGetFaninMax(pNtk));\n        return -TIM_ETERNITY;\n    }\n\n    // compute the reverse order of all objects\n    vNodes = Nwk_ManDfsReverse( pNtk );\n\n    // initialize the arrival times\n    Nwk_ManCleanTiming( pNtk );\n\n    // propagate arrival times\n    if pNtk.pManTime {\n        Tim_ManIncrementTravId( pNtk.pManTime ); }\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        tArrival = Nwk_NodeComputeArrival( pObj, fUseSorting );\n        if Nwk_ObjIsCi(pObj) \u0026\u0026 pNtk.pManTime {\n            tArrival = Tim_ManGetCiArrival( pNtk.pManTime, pObj.PioId ); }\n        if Nwk_ObjIsCo(pObj) \u0026\u0026 pNtk.pManTime {\n            Tim_ManSetCoArrival( pNtk.pManTime, pObj.PioId, tArrival ); }\n        Nwk_ObjSetArrival( pObj, tArrival );\n    }\n    Vec_PtrFree( vObjs );\n\n    // get the latest arrival times\n    tArrival = -TIM_ETERNITY;\n    // inlining of macro Nwk_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vCos, i)), 1); i++  {                                        if !Nwk_ObjIsPo(pObj) {} else\n        if tArrival \u003c Nwk_ObjArrival(pObj) {\n            tArrival = Nwk_ObjArrival(pObj); }\n    }\n\n    // initialize the required times\n    if pNtk.pManTime {\n        Tim_ManIncrementTravId( pNtk.pManTime );\n        Tim_ManInitPoRequiredAll( pNtk.pManTime, tArrival );\n    \n    } else {\n        // inlining of macro Nwk_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vCos, i)), 1); i++  {\n            Nwk_ObjSetRequired( pObj, tArrival );\n        }\n    }\n\n    // propagate the required times\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Nwk_ObjIsNode(pObj) {\n            Nwk_NodePropagateRequired( pObj, fUseSorting );\n        \n        } else if Nwk_ObjIsCi(pObj) {\n            if pNtk.pManTime {\n                Tim_ManSetCiRequired( pNtk.pManTime, pObj.PioId, Nwk_ObjRequired(pObj) ); }\n        \n        } else if Nwk_ObjIsCo(pObj) {\n            if pNtk.pManTime {\n                tRequired = Tim_ManGetCoRequired( pNtk.pManTime, pObj.PioId );\n                Nwk_ObjSetRequired( pObj, tRequired );\n            }\n            if Nwk_ObjRequired(Nwk_ObjFanin0(pObj)) \u003e Nwk_ObjRequired(pObj) {\n                Nwk_ObjSetRequired( Nwk_ObjFanin0(pObj), Nwk_ObjRequired(pObj) ); }\n        }\n\n        // set slack for this object\n        tSlack = Nwk_ObjRequired(pObj) - Nwk_ObjArrival(pObj);\n        assert(tSlack + 0.01 \u003e 0.0, \"tSlack + 0.01 \u003e 0.0\");\n        Nwk_ObjSetSlack( pObj, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}"
+    },
+    {
+      "Name": "Nwk_ManVerifyTiming",
+      "Start": 13508,
+      "End": 14396,
+      "BodyStart": 13553,
+      "Original": "int Nwk_ManVerifyTiming(  Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pObj;\n    float tArrival, tRequired;\n    int i;\n    Nwk_ManForEachObj( pNtk, pObj, i )\n    {\n        if ( Nwk_ObjIsCi(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 )\n            continue;\n        tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n        tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n        if ( !Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pObj), (float)0.01 ) )\n            printf( \"Nwk_ManVerifyTiming(): Object %d has different arrival time (%.2f) from computed (%.2f).\\n\", \n                pObj-\u003eId, Nwk_ObjArrival(pObj), tArrival );\n        if ( !Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), (float)0.01 ) )\n            printf( \"Nwk_ManVerifyTiming(): Object %d has different required time (%.2f) from computed (%.2f).\\n\", \n                pObj-\u003eId, Nwk_ObjRequired(pObj), tRequired );\n    }\n    return 1;\n}",
+      "Draft": "func Nwk_ManVerifyTiming(pNtk *Nwk_Man_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var tArrival, tRequired float32;\n    var i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjIsCi(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 {\n            continue; }\n        tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n        tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n        if !Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pObj), float32(0.01) ) {\n            fmt.Printf(\"Nwk_ManVerifyTiming(): Object %d has different arrival time (%.2f) from computed (%.2f).\\n\", pObj.Id, Nwk_ObjArrival(pObj), tArrival); }\n        if !Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) ) {\n            fmt.Printf(\"Nwk_ManVerifyTiming(): Object %d has different required time (%.2f) from computed (%.2f).\\n\", pObj.Id, Nwk_ObjRequired(pObj), tRequired); }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManDelayTracePrint",
+      "Start": 14677,
+      "End": 16169,
+      "BodyStart": 14725,
+      "Original": "void Nwk_ManDelayTracePrint( Nwk_Man_t * pNtk )\n{\n    If_LibLut_t * pLutLib = pNtk-\u003epLutLib;\n    Nwk_Obj_t * pNode;\n    int i, Nodes, * pCounters;\n    float tArrival, tDelta, nSteps, Num;\n    // get the library\n    if ( pLutLib \u0026\u0026 pLutLib-\u003eLutMax \u003c Nwk_ManGetFaninMax(pNtk) )\n    {\n        printf( \"The max LUT size (%d) is less than the max fanin count (%d).\\n\", \n            pLutLib-\u003eLutMax, Nwk_ManGetFaninMax(pNtk) );\n        return;\n    }\n    // decide how many steps\n    nSteps = pLutLib ? 20 : Nwk_ManLevelMax(pNtk);\n    pCounters = ABC_ALLOC( int, nSteps + 1 );\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Nwk_ManDelayTraceLut( pNtk );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if ( Nwk_ObjFaninNum(pNode) == 0 )\n            continue;\n        Num = Nwk_ObjSlack(pNode) / tDelta;\n        if ( Num \u003e nSteps )\n            continue;\n        assert( Num \u003e=0 \u0026\u0026 Num \u003c= nSteps );\n        pCounters[(int)Num]++;\n    }\n    // print the results\n    printf( \"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, pLutLib? \"LUT library\" : \"unit-delay\" );\n    Nodes = 0;\n    for ( i = 0; i \u003c nSteps; i++ )\n    {\n        Nodes += pCounters[i];\n        printf( \"%3d %s : %5d  (%6.2f %%)\\n\", pLutLib? 5*(i+1) : i+1, \n            pLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Nwk_ManNodeNum(pNtk) );\n    }\n    ABC_FREE( pCounters );\n}",
+      "Draft": "func Nwk_ManDelayTracePrint(pNtk *Nwk_Man_t) {\n    var pLutLib *If_LibLut_t  = pNtk.pLutLib;\n    var pNode *Nwk_Obj_t;\n    var i int32;\n    var Nodes int32;\n    var pCounters *int32;\n    var tArrival, tDelta, nSteps, Num float32;\n    // get the library\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Nwk_ManGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Nwk_ManGetFaninMax(pNtk));\n        return;\n    }\n    // decide how many steps\n    if pLutLib != nil {\n        nSteps = 20;\n    } else {\n        nSteps = Nwk_ManLevelMax(pNtk);\n    }\n    // inlining of macro ABC_ALLOC\n    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Nwk_ManDelayTraceLut( pNtk );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pNode) == nil || !Nwk_ObjIsNode(pNode) {} else {\n        if Nwk_ObjFaninNum(pNode) == 0 {\n            continue; }\n        Num = Nwk_ObjSlack(pNode) / tDelta;\n        if Num \u003e nSteps {\n            continue; }\n        assert(Num \u003e=0 \u0026\u0026 Num \u003c= nSteps, \"Num \u003e=0 \u0026\u0026 Num \u003c= nSteps\");\n        pCounters[int32(Num)]++;\n    }\n    }\n    // print the results\n    fmt.Printf(\"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, pLutLib? \"LUT library\" : \"unit-delay\");\n    Nodes = 0;\n    for  i = 0; i \u003c nSteps; i++  {\n        Nodes += pCounters[i];\n        fmt.Printf(\"%3d %s : %5d  (%6.2f %%)\\n\", pLutLib? 5*(i+1) : i+1, pLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Nwk_ManNodeNum(pNtk));\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nwk_NodeUpdateAddToQueue",
+      "Start": 16728,
+      "End": 17777,
+      "BodyStart": 16826,
+      "Original": "void Nwk_NodeUpdateAddToQueue( Vec_Ptr_t * vQueue, Nwk_Obj_t * pObj, int iCurrent, int fArrival )\n{\n    Nwk_Obj_t * pTemp1, * pTemp2;\n    int i;\n    Vec_PtrPush( vQueue, pObj );\n    for ( i = Vec_PtrSize(vQueue) - 1; i \u003e iCurrent + 1; i-- )\n    {\n        pTemp1 = (Nwk_Obj_t *)vQueue-\u003epArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue-\u003epArray[i-1];\n        if ( fArrival )\n        {\n            if ( Nwk_ObjLevel(pTemp2) \u003c= Nwk_ObjLevel(pTemp1) )\n                break;\n        }\n        else\n        {\n            if ( Nwk_ObjLevel(pTemp2) \u003e= Nwk_ObjLevel(pTemp1) )\n                break;\n        }\n        vQueue-\u003epArray[i-1] = pTemp1;\n        vQueue-\u003epArray[i]   = pTemp2;\n    }\n    // verification\n    for ( i = iCurrent + 1; i \u003c Vec_PtrSize(vQueue) - 1; i++ )\n    {\n        pTemp1 = (Nwk_Obj_t *)vQueue-\u003epArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue-\u003epArray[i+1];\n        if ( fArrival )\n            assert( Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2) );\n        else\n            assert( Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2) );\n    }\n}",
+      "Draft": "func Nwk_NodeUpdateAddToQueue(vQueue *Vec_Ptr_t, pObj *Nwk_Obj_t, iCurrent int32, fArrival int32) {\n    var pTemp1, pTemp2 *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrPush( vQueue, pObj );\n    for  i = Vec_PtrSize(vQueue) - 1; i \u003e iCurrent + 1; i--  {\n        pTemp1 = (Nwk_Obj_t *)vQueue.pArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue.pArray[i-1];\n        if fArrival != 0 {\n            if Nwk_ObjLevel(pTemp2) \u003c= Nwk_ObjLevel(pTemp1) {\n                break; }\n        \n        } else {\n            if Nwk_ObjLevel(pTemp2) \u003e= Nwk_ObjLevel(pTemp1) {\n                break; }\n        }\n        vQueue.pArray[i-1] = pTemp1;\n        vQueue.pArray[i]   = pTemp2;\n    }\n    // verification\n    for  i = iCurrent + 1; i \u003c Vec_PtrSize(vQueue) - 1; i++  {\n        pTemp1 = (Nwk_Obj_t *)vQueue.pArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue.pArray[i+1];\n        if fArrival != 0 {\n            assert(Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2), \"Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2)\");\n        } else {\n            assert(Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2), \"Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2)\"); }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_NodeUpdateArrival",
+      "Start": 18111,
+      "End": 20822,
+      "BodyStart": 18158,
+      "Original": "void Nwk_NodeUpdateArrival( Nwk_Obj_t * pObj )\n{\n    Tim_Man_t * pManTime = pObj-\u003epMan-\u003epManTime;\n    Vec_Ptr_t * vQueue = pObj-\u003epMan-\u003evTemp;\n    Nwk_Obj_t * pTemp;\n    Nwk_Obj_t * pNext = NULL; // Suppress \"might be used uninitialized\"\n    float tArrival;\n    int iCur, k, iBox, iTerm1, nTerms;\n    assert( Nwk_ObjIsNode(pObj) );\n    // verify the arrival time\n    tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n    assert( Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), (float)0.01 ) );\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj-\u003eMarkA = 1;\n    // process objects\n    if ( pManTime )\n        Tim_ManIncrementTravId( pManTime );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vQueue, pTemp, iCur )\n    {\n        pTemp-\u003eMarkA = 0;\n        tArrival = Nwk_NodeComputeArrival( pTemp, 1 );\n        if ( Nwk_ObjIsCi(pTemp) \u0026\u0026 pManTime )\n            tArrival = Tim_ManGetCiArrival( pManTime, pTemp-\u003ePioId );\n        if ( Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pTemp), (float)0.01 ) )\n            continue;\n        Nwk_ObjSetArrival( pTemp, tArrival );\n        // add the fanouts to the queue\n        if ( Nwk_ObjIsCo(pTemp) )\n        {\n            if ( pManTime )\n            {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp-\u003ePioId );\n                if ( iBox \u003e= 0 ) // this CO is an input of the box\n                {\n                    // it may happen that a box-input (CO) was already marked as visited\n                    // when some other box-input of the same box was visited - here we undo this\n                    if ( Tim_ManIsCoTravIdCurrent( pManTime, pTemp-\u003ePioId ) )\n                        Tim_ManSetPreviousTravIdBoxInputs( pManTime, iBox );\n                    Tim_ManSetCoArrival( pManTime, pTemp-\u003ePioId, tArrival );\n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for ( k = 0; k \u003c nTerms; k++ )\n                    {\n                        pNext = Nwk_ManCi(pNext-\u003epMan, iTerm1 + k);\n                        if ( pNext-\u003eMarkA )\n                            continue;\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext-\u003eMarkA = 1;\n                    }\n                }\n            }\n        }\n        else\n        {\n            Nwk_ObjForEachFanout( pTemp, pNext, k )\n            {\n                if ( pNext-\u003eMarkA )\n                    continue;\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext-\u003eMarkA = 1;\n            }\n        }\n    }\n}",
+      "Draft": "func Nwk_NodeUpdateArrival(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var tArrival float32;\n    var iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // verify the arrival time\n    tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n    assert(Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), float32(0.01) ), \"Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), float32(0.01) )\");\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj.MarkA = 1;\n    // process objects\n    if pManTime != nil {\n        Tim_ManIncrementTravId( pManTime ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        tArrival = Nwk_NodeComputeArrival( pTemp, 1 );\n        if Nwk_ObjIsCi(pTemp) \u0026\u0026 (pManTime != nil) {\n            tArrival = Tim_ManGetCiArrival( pManTime, pTemp.PioId ); }\n        if Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pTemp), float32(0.01) ) {\n            continue; }\n        Nwk_ObjSetArrival( pTemp, tArrival );\n        // add the fanouts to the queue\n        if Nwk_ObjIsCo(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this CO is an input of the box\n                \n                    // it may happen that a box-input (CO) was already marked as visited\n                    // when some other box-input of the same box was visited - here we undo this\n                    if Tim_ManIsCoTravIdCurrent( pManTime, pTemp.PioId ) {\n                        Tim_ManSetPreviousTravIdBoxInputs( pManTime, iBox ); }\n                    Tim_ManSetCoArrival( pManTime, pTemp.PioId, tArrival );\n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCi(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pTemp).nFanouts)) \u0026\u0026 ((pNext) = (pTemp).pFanio[(pTemp).nFanins+k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_NodeUpdateRequired",
+      "Start": 21157,
+      "End": 24084,
+      "BodyStart": 21205,
+      "Original": "void Nwk_NodeUpdateRequired( Nwk_Obj_t * pObj )\n{\n    Tim_Man_t * pManTime = pObj-\u003epMan-\u003epManTime;\n    Vec_Ptr_t * vQueue = pObj-\u003epMan-\u003evTemp;\n    Nwk_Obj_t * pTemp;\n    Nwk_Obj_t * pNext = NULL; // Suppress \"might be used uninitialized\"\n    float tRequired;\n    int iCur, k, iBox, iTerm1, nTerms;\n    assert( Nwk_ObjIsNode(pObj) );\n    // make sure the node's required time remained the same\n    tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n    assert( Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), (float)0.01 ) );\n    // initialize the queue with the node's faninsa and the old node's fanins\n    Vec_PtrClear( vQueue );\n    Nwk_ObjForEachFanin( pObj, pNext, k )\n    {\n        if ( pNext-\u003eMarkA )\n            continue;\n        Nwk_NodeUpdateAddToQueue( vQueue, pNext, -1, 0 );\n        pNext-\u003eMarkA = 1;\n    }\n    // process objects\n    if ( pManTime )\n        Tim_ManIncrementTravId( pManTime );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vQueue, pTemp, iCur )\n    {\n        pTemp-\u003eMarkA = 0;\n        tRequired = Nwk_NodeComputeRequired( pTemp, 1 );\n        if ( Nwk_ObjIsCo(pTemp) \u0026\u0026 pManTime )\n            tRequired = Tim_ManGetCoRequired( pManTime, pTemp-\u003ePioId );\n        if ( Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pTemp), (float)0.01 ) )\n            continue;\n        Nwk_ObjSetRequired( pTemp, tRequired );\n        // add the fanins to the queue\n        if ( Nwk_ObjIsCi(pTemp) )\n        {\n            if ( pManTime )\n            {\n                iBox = Tim_ManBoxForCi( pManTime, pTemp-\u003ePioId );\n                if ( iBox \u003e= 0 ) // this CI is an output of the box\n                {\n                    // it may happen that a box-output (CI) was already marked as visited\n                    // when some other box-output of the same box was visited - here we undo this\n                    if ( Tim_ManIsCiTravIdCurrent( pManTime, pTemp-\u003ePioId ) )\n                        Tim_ManSetPreviousTravIdBoxOutputs( pManTime, iBox );\n                    Tim_ManSetCiRequired( pManTime, pTemp-\u003ePioId, tRequired );\n                    Tim_ManSetCurrentTravIdBoxOutputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                    for ( k = 0; k \u003c nTerms; k++ )\n                    {\n                        pNext = Nwk_ManCo(pNext-\u003epMan, iTerm1 + k);\n                        if ( pNext-\u003eMarkA )\n                            continue;\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                        pNext-\u003eMarkA = 1;\n                    }\n                }\n            }\n        }\n        else\n        {\n            Nwk_ObjForEachFanin( pTemp, pNext, k )\n            {\n                if ( pNext-\u003eMarkA )\n                    continue;\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                pNext-\u003eMarkA = 1;\n            }\n        }\n    }\n}",
+      "Draft": "func Nwk_NodeUpdateRequired(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var tRequired float32;\n    var iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // make sure the node's required time remained the same\n    tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n    assert(Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) ), \"Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) )\");\n    // initialize the queue with the node's faninsa and the old node's fanins\n    Vec_PtrClear( vQueue );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n        if pNext.MarkA {\n            continue; }\n        Nwk_NodeUpdateAddToQueue( vQueue, pNext, -1, 0 );\n        pNext.MarkA = 1;\n    }\n    // process objects\n    if pManTime != nil {\n        Tim_ManIncrementTravId( pManTime ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        tRequired = Nwk_NodeComputeRequired( pTemp, 1 );\n        if Nwk_ObjIsCo(pTemp) \u0026\u0026 (pManTime != nil) {\n            tRequired = Tim_ManGetCoRequired( pManTime, pTemp.PioId ); }\n        if Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pTemp), float32(0.01) ) {\n            continue; }\n        Nwk_ObjSetRequired( pTemp, tRequired );\n        // add the fanins to the queue\n        if Nwk_ObjIsCi(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCi( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this CI is an output of the box\n                \n                    // it may happen that a box-output (CI) was already marked as visited\n                    // when some other box-output of the same box was visited - here we undo this\n                    if Tim_ManIsCiTravIdCurrent( pManTime, pTemp.PioId ) {\n                        Tim_ManSetPreviousTravIdBoxOutputs( pManTime, iBox ); }\n                    Tim_ManSetCiRequired( pManTime, pTemp.PioId, tRequired );\n                    Tim_ManSetCurrentTravIdBoxOutputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCo(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pTemp).nFanins)) \u0026\u0026 ((pNext) = (pTemp).pFanio[k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ObjLevelNew",
+      "Start": 24374,
+      "End": 25418,
+      "BodyStart": 24414,
+      "Original": "int Nwk_ObjLevelNew( Nwk_Obj_t * pObj )\n{\n    Tim_Man_t * pManTime = pObj-\u003epMan-\u003epManTime;\n    Nwk_Obj_t * pFanin;\n    int i, iBox, iTerm1, nTerms, Level = 0;\n    if ( Nwk_ObjIsCi(pObj) || Nwk_ObjIsLatch(pObj) )\n    {\n        if ( pManTime )\n        {\n            iBox = Tim_ManBoxForCi( pManTime, pObj-\u003ePioId );\n            if ( iBox \u003e= 0 ) // this CI is an output of the box\n            {\n                iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                for ( i = 0; i \u003c nTerms; i++ )\n                {\n                    pFanin = Nwk_ManCo(pObj-\u003epMan, iTerm1 + i);\n                    Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n                }\n                Level++;\n            }\n        }\n        return Level;\n    }\n    assert( Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj) );\n    Nwk_ObjForEachFanin( pObj, pFanin, i )\n        Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n    return Level + (Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFaninNum(pObj) \u003e 0);\n}",
+      "Draft": "func Nwk_ObjLevelNew(pObj *Nwk_Obj_t) int32 {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var pFanin *Nwk_Obj_t;\n    var i, iBox, iTerm1, nTerms, Level int32;\n    if Nwk_ObjIsCi(pObj) || Nwk_ObjIsLatch(pObj) {\n        if pManTime != nil {\n            iBox = Tim_ManBoxForCi( pManTime, pObj.PioId );\n            if iBox \u003e= 0 { // this CI is an output of the box\n            \n                iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                for  i = 0; i \u003c nTerms; i++  {\n                    pFanin = Nwk_ManCo(pObj.pMan, iTerm1 + i);\n                    Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n                }\n                Level++;\n            }\n        }\n        return Level;\n    }\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj)\");\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[i]); i++  {\n        Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n    }\n    return Level + (Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFaninNum(pObj) \u003e 0);\n}"
+    },
+    {
+      "Name": "Nwk_ManUpdateLevel",
+      "Start": 25695,
+      "End": 27581,
+      "BodyStart": 25739,
+      "Original": "void Nwk_ManUpdateLevel( Nwk_Obj_t * pObj )\n{\n    Tim_Man_t * pManTime = pObj-\u003epMan-\u003epManTime;\n    Vec_Ptr_t * vQueue = pObj-\u003epMan-\u003evTemp;\n    Nwk_Obj_t * pTemp;\n    Nwk_Obj_t * pNext = NULL; // Suppress \"might be used uninitialized\"\n    int LevelNew, iCur, k, iBox, iTerm1, nTerms;\n    assert( Nwk_ObjIsNode(pObj) );\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj-\u003eMarkA = 1;\n    // process objects\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vQueue, pTemp, iCur )\n    {\n        pTemp-\u003eMarkA = 0;\n        LevelNew = Nwk_ObjLevelNew( pTemp );\n        if ( LevelNew == Nwk_ObjLevel(pTemp) )\n            continue;\n        Nwk_ObjSetLevel( pTemp, LevelNew );\n        // add the fanouts to the queue\n        if ( Nwk_ObjIsCo(pTemp) )\n        {\n            if ( pManTime )\n            {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp-\u003ePioId );\n                if ( iBox \u003e= 0 ) // this is not a true PO\n                {\n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for ( k = 0; k \u003c nTerms; k++ )\n                    {\n                        pNext = Nwk_ManCi(pNext-\u003epMan, iTerm1 + k);\n                        if ( pNext-\u003eMarkA )\n                            continue;\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext-\u003eMarkA = 1;\n                    }\n                }\n            }\n        }\n        else\n        {\n            Nwk_ObjForEachFanout( pTemp, pNext, k )\n            {\n                if ( pNext-\u003eMarkA )\n                    continue;\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext-\u003eMarkA = 1;\n            }\n        }\n    }\n}",
+      "Draft": "func Nwk_ManUpdateLevel(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var LevelNew, iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj.MarkA = 1;\n    // process objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        LevelNew = Nwk_ObjLevelNew( pTemp );\n        if LevelNew == Nwk_ObjLevel(pTemp) {\n            continue; }\n        Nwk_ObjSetLevel( pTemp, LevelNew );\n        // add the fanouts to the queue\n        if Nwk_ObjIsCo(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this is not a true PO\n                \n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCi(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pTemp).nFanouts)) \u0026\u0026 ((pNext) = (pTemp).pFanio[(pTemp).nFanins+k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManVerifyLevel",
+      "Start": 27871,
+      "End": 28312,
+      "BodyStart": 27914,
+      "Original": "int Nwk_ManVerifyLevel( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pObj;\n    int LevelNew, i;\n    Nwk_ManForEachObj( pNtk, pObj, i )\n    {\n        assert( pObj-\u003eMarkA == 0 );\n        LevelNew = Nwk_ObjLevelNew( pObj );\n        if ( Nwk_ObjLevel(pObj) != LevelNew )\n        {\n            printf( \"Object %6d: Mismatch betweeh levels: Actual = %d. Correct = %d.\\n\", \n                i, Nwk_ObjLevel(pObj), LevelNew );\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Nwk_ManVerifyLevel(pNtk *Nwk_Man_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var LevelNew, i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        assert(pObj.MarkA == 0, \"pObj.MarkA == 0\");\n        LevelNew = Nwk_ObjLevelNew( pObj );\n        if Nwk_ObjLevel(pObj) != LevelNew {\n            fmt.Printf(\"Object %6d: Mismatch betweeh levels: Actual = %d. Correct = %d.\\n\", i, Nwk_ObjLevel(pObj), LevelNew);\n        }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManUpdate",
+      "Start": 28599,
+      "End": 29718,
+      "BodyStart": 28680,
+      "Original": "void Nwk_ManUpdate( Nwk_Obj_t * pObj, Nwk_Obj_t * pObjNew, Vec_Vec_t * vLevels )\n{\n    assert( pObj-\u003epMan == pObjNew-\u003epMan );\n    assert( pObj != pObjNew );\n    assert( Nwk_ObjFanoutNum(pObj) \u003e 0 );\n    assert( Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew) );\n    // transfer fanouts to the old node\n    Nwk_ObjTransferFanout( pObj, pObjNew );\n    // transfer the timing information\n    // (this is needed because updating level happens if the level has changed;\n    // when we set the old level, it will be recomputed by the level updating\n    // procedure, which will update level of other nodes if there is a difference)\n    pObjNew-\u003eLevel = pObj-\u003eLevel;\n    pObjNew-\u003etArrival = pObj-\u003etArrival;\n    pObjNew-\u003etRequired = pObj-\u003etRequired;\n    // update required times of the old fanins\n    pObj-\u003etRequired = TIM_ETERNITY;\n    Nwk_NodeUpdateRequired( pObj );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pObj );\n    // update the information of the new node\n    Nwk_ManUpdateLevel( pObjNew );\n    Nwk_NodeUpdateArrival( pObjNew );\n    Nwk_NodeUpdateRequired( pObjNew );\n//Nwk_ManVerifyTiming( pObjNew-\u003epMan );\n}",
+      "Draft": "func Nwk_ManUpdate(pObj *Nwk_Obj_t, pObjNew *Nwk_Obj_t, vLevels *Vec_Vec_t) {\n    assert(pObj.pMan == pObjNew.pMan, \"pObj.pMan == pObjNew.pMan\");\n    assert(pObj != pObjNew, \"pObj != pObjNew\");\n    assert(Nwk_ObjFanoutNum(pObj) \u003e 0, \"Nwk_ObjFanoutNum(pObj) \u003e 0\");\n    assert(Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew), \"Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew)\");\n    // transfer fanouts to the old node\n    Nwk_ObjTransferFanout( pObj, pObjNew );\n    // transfer the timing information\n    // (this is needed because updating level happens if the level has changed;\n    // when we set the old level, it will be recomputed by the level updating\n    // procedure, which will update level of other nodes if there is a difference)\n    pObjNew.Level = pObj.Level;\n    pObjNew.tArrival = pObj.tArrival;\n    pObjNew.tRequired = pObj.tRequired;\n    // update required times of the old fanins\n    pObj.tRequired = TIM_ETERNITY;\n    Nwk_NodeUpdateRequired( pObj );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pObj );\n    // update the information of the new node\n    Nwk_ManUpdateLevel( pObjNew );\n    Nwk_NodeUpdateArrival( pObjNew );\n    Nwk_NodeUpdateRequired( pObjNew );\n//Nwk_ManVerifyTiming( pObjNew-\u003epMan );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::mechanical::sizeof::17588",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15217,
+      "End": 15217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::mechanical::sizeof::17652",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15273,
+      "End": 15279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::1484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1373,
+      "End": 1373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::12809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11206,
+      "End": 11206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::13490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11726,
+      "End": 11726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::14083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12063,
+      "End": 12063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::14341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12194,
+      "End": 12194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::15878",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13623,
+      "End": 13623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::17573",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15217,
+      "End": 15217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::17971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15479,
+      "End": 15479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::18783",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16145,
+      "End": 16145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::19653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16992,
+      "End": 17005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::19702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17041,
+      "End": 17054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::20175",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17514,
+      "End": 17527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::20224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17563,
+      "End": 17576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::21593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18817,
+      "End": 18817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::25171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22068,
+      "End": 22068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::29576",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26164,
+      "End": 26164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::pointer-cast::31601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27963,
+      "End": 27963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManCleanTiming",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCleanTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1290,
+      "End": 1506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManDelayTraceSortPins",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDelayTraceSortPins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1791,
+      "End": 2941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManWhereIsPin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManWhereIsPin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3226,
+      "End": 3471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodeComputeArrival",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeComputeArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3755,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodeComputeRequired",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeComputeRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5761,
+      "End": 8044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodePropagateRequired",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodePropagateRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8333,
+      "End": 10074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::ternary::Nwk_ManDelayTraceLut",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManDelayTraceLut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10356,
+      "End": 13226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManDelayTraceLut",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDelayTraceLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10356,
+      "End": 13226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManVerifyTiming",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManVerifyTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13508,
+      "End": 14396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::ternary::Nwk_ManDelayTracePrint",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManDelayTracePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14677,
+      "End": 16169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManDelayTracePrint",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDelayTracePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14677,
+      "End": 16169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodeUpdateAddToQueue",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeUpdateAddToQueue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16728,
+      "End": 17777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodeUpdateArrival",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeUpdateArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18111,
+      "End": 20822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_NodeUpdateRequired",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeUpdateRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21157,
+      "End": 24084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ObjLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24374,
+      "End": 25418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManUpdateLevel",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManUpdateLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25695,
+      "End": 27581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManVerifyLevel",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManVerifyLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27871,
+      "End": 28312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::Nwk_ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28599,
+      "End": 29718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkTiming.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29966
+    }
+  ],
+  "Draft": "package nwk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkTiming.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Manipulation of timing information.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkTiming.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans timing information for all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCleanTiming(pNtk *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        pObj.tArrival = pObj.tSlack = 0.0;\n        pObj.tRequired = TIM_ETERNITY;\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the pins in the decreasing order of delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDelayTraceSortPins(pNode *Nwk_Obj_t, pPinPerm *int32, pPinDelays *float32) {\n    var pFanin *Nwk_Obj_t;\n    var i, j, best_i, temp int32;\n    // start the trivial permutation and collect pin delays\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pNode).nFanins)) \u0026\u0026 ((pFanin) = (pNode).pFanio[i]); i++  {\n        pPinPerm[i] = i;\n        pPinDelays[i] = Nwk_ObjArrival(pFanin);\n    }\n    // selection sort the pins in the decreasible order of delays\n    // this order will match the increasing order of LUT input pins\n    for  i = 0; i \u003c Nwk_ObjFaninNum(pNode)-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c Nwk_ObjFaninNum(pNode); j++  {\n            if pPinDelays[pPinPerm[j]] \u003e pPinDelays[pPinPerm[best_i]] {\n                best_i = j; }\n        }\n        if best_i == i {\n            continue; }\n        temp = pPinPerm[i]; \n        pPinPerm[i] = pPinPerm[best_i]; \n        pPinPerm[best_i] = temp;\n    }\n    // verify\n    assert(Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode), \"Nwk_ObjFaninNum(pNode) == 0 || pPinPerm[0] \u003c Nwk_ObjFaninNum(pNode)\");\n    for  i = 1; i \u003c Nwk_ObjFaninNum(pNode); i++  {\n        assert(pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode), \"pPinPerm[i] \u003c Nwk_ObjFaninNum(pNode)\");\n        assert(pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]], \"pPinDelays[pPinPerm[i-1]] \u003e= pPinDelays[pPinPerm[i]]\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the pins in the decreasing order of delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManWhereIsPin(pFanout *Nwk_Obj_t, pFanin *Nwk_Obj_t, pPinPerm *int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c Nwk_ObjFaninNum(pFanout); i++  {\n        if Nwk_ObjFanin(pFanout, pPinPerm[i]) == pFanin {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the arrival times for the given object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeComputeArrival(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanin *Nwk_Obj_t;\n    var tArrival float32;\n    var pDelays *float32;\n    var k int32;\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj)\");\n    if Nwk_ObjIsCi(pObj) {\n        return Nwk_ObjArrival(pObj); }\n    if Nwk_ObjIsCo(pObj) {\n        return Nwk_ObjArrival( Nwk_ObjFanin0(pObj) ); }\n    tArrival = -TIM_ETERNITY;\n    if pLutLib == nil {\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if tArrival \u003c Nwk_ObjArrival(pFanin) + 1.0 {\n                tArrival = Nwk_ObjArrival(pFanin) + 1.0; }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[0] {\n                tArrival = Nwk_ObjArrival(pFanin) + pDelays[0]; }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        if fUseSorting != 0 {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  { \n                if tArrival \u003c Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k] {\n                    tArrival = Nwk_ObjArrival(Nwk_ObjFanin(pObj,pPinPerm[k])) + pDelays[k]; }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                if tArrival \u003c Nwk_ObjArrival(pFanin) + pDelays[k] {\n                    tArrival = Nwk_ObjArrival(pFanin) + pDelays[k]; }\n            }\n        }\n    }\n    if Nwk_ObjFaninNum(pObj) == 0 {\n        tArrival = 0.0; }\n    return tArrival;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the required times for the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeComputeRequired(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanout *Nwk_Obj_t;\n    var tRequired float32;\n    var tDelay float32;\n    var pDelays *float32;\n    var k, iFanin int32;\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCi(pObj) || Nwk_ObjIsCo(pObj)\");\n    if Nwk_ObjIsCo(pObj) {\n        return Nwk_ObjRequired(pObj); }\n    tRequired = TIM_ETERNITY;\n    if pLutLib == nil {\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            if Nwk_ObjIsCo(pFanout) {\n                tDelay = 0.0;\n            } else {\n                tDelay = 1.0;\n            }\n            if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        // inlining of macro Nwk_ObjForEachFanout\n        for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n            pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n            if Nwk_ObjIsCo(pFanout) {\n                tDelay = 0.0;\n            } else {\n                tDelay = pDelays[0];\n            }\n            if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n        }\n    \n    } else {\n        if fUseSorting != 0 {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n                pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n                Nwk_ManDelayTraceSortPins( pFanout, pPinPerm, pPinDelays );\n                iFanin = Nwk_ManWhereIsPin( pFanout, pObj, pPinPerm );\n                assert(Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj, \"Nwk_ObjFanin(pFanout,pPinPerm[iFanin]) == pObj\");\n                if Nwk_ObjIsCo(pFanout) {\n                    tDelay = 0.0;\n                } else {\n                    tDelay = pDelays[iFanin];\n                }\n                if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pFanout) = (pObj).pFanio[(pObj).nFanins+k]); k++  {\n                pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pFanout)];\n                iFanin = Nwk_ObjFindFanin( pFanout, pObj );\n                assert(Nwk_ObjFanin(pFanout,iFanin) == pObj, \"Nwk_ObjFanin(pFanout,iFanin) == pObj\");\n                if Nwk_ObjIsCo(pFanout) {\n                    tDelay = 0.0;\n                } else {\n                    tDelay = pDelays[iFanin];\n                }\n                if tRequired \u003e Nwk_ObjRequired(pFanout) - tDelay {\n                    tRequired = Nwk_ObjRequired(pFanout) - tDelay; }\n            }\n        }\n    }\n    return tRequired;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagates the required times through the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodePropagateRequired(pObj *Nwk_Obj_t, fUseSorting int32) float32 {\n    var pLutLib *If_LibLut_t  = pObj.pMan.pLutLib;\n    var pPinPerm [32]int32;\n    var pPinDelays [32]float32;\n    var pFanin *Nwk_Obj_t;\n    var tRequired float32  = 0.0; // Suppress \"might be used uninitialized\"\n    var pDelays *float32;\n    var k int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    if pLutLib == nil {\n        tRequired = Nwk_ObjRequired(pObj) - float32(1.0);\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                Nwk_ObjSetRequired( pFanin, tRequired ); }\n        }\n    \n    } else if !pLutLib.fVarPinDelays {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        tRequired = Nwk_ObjRequired(pObj) - pDelays[0];\n        // inlining of macro Nwk_ObjForEachFanin\n        for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n            if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                Nwk_ObjSetRequired( pFanin, tRequired ); }\n        }\n    \n    } else {\n        pDelays = pLutLib.pLutDelays[Nwk_ObjFaninNum(pObj)];\n        if fUseSorting != 0 {\n            Nwk_ManDelayTraceSortPins( pObj, pPinPerm, pPinDelays );\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if Nwk_ObjRequired(Nwk_ObjFanin(pObj,pPinPerm[k])) \u003e tRequired {\n                    Nwk_ObjSetRequired( Nwk_ObjFanin(pObj,pPinPerm[k]), tRequired ); }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[k]); k++  {\n                tRequired = Nwk_ObjRequired(pObj) - pDelays[k];\n                if Nwk_ObjRequired(pFanin) \u003e tRequired {\n                    Nwk_ObjSetRequired( pFanin, tRequired ); }\n            }\n        }\n    }\n    return tRequired;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the delay trace of the given network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDelayTraceLut(pNtk *Nwk_Man_t) float32 {\n    var vObjs *Vec_Ptr_t;\n    var fUseSorting int32  = 1;\n    var pLutLib *If_LibLut_t  = pNtk.pLutLib;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var tArrival, tRequired, tSlack float32;\n    var i int32;\n\n    // get the library\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Nwk_ManGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Nwk_ManGetFaninMax(pNtk));\n        return -TIM_ETERNITY;\n    }\n\n    // compute the reverse order of all objects\n    vNodes = Nwk_ManDfsReverse( pNtk );\n\n    // initialize the arrival times\n    Nwk_ManCleanTiming( pNtk );\n\n    // propagate arrival times\n    if pNtk.pManTime {\n        Tim_ManIncrementTravId( pNtk.pManTime ); }\n//    Nwk_ManForEachObj( pNtk, pObj, i )\n    vObjs = Nwk_ManDfs( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vObjs, i)), 1); i++  {\n        tArrival = Nwk_NodeComputeArrival( pObj, fUseSorting );\n        if Nwk_ObjIsCi(pObj) \u0026\u0026 pNtk.pManTime {\n            tArrival = Tim_ManGetCiArrival( pNtk.pManTime, pObj.PioId ); }\n        if Nwk_ObjIsCo(pObj) \u0026\u0026 pNtk.pManTime {\n            Tim_ManSetCoArrival( pNtk.pManTime, pObj.PioId, tArrival ); }\n        Nwk_ObjSetArrival( pObj, tArrival );\n    }\n    Vec_PtrFree( vObjs );\n\n    // get the latest arrival times\n    tArrival = -TIM_ETERNITY;\n    // inlining of macro Nwk_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vCos, i)), 1); i++  {                                        if !Nwk_ObjIsPo(pObj) {} else\n        if tArrival \u003c Nwk_ObjArrival(pObj) {\n            tArrival = Nwk_ObjArrival(pObj); }\n    }\n\n    // initialize the required times\n    if pNtk.pManTime {\n        Tim_ManIncrementTravId( pNtk.pManTime );\n        Tim_ManInitPoRequiredAll( pNtk.pManTime, tArrival );\n    \n    } else {\n        // inlining of macro Nwk_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vCos, i)), 1); i++  {\n            Nwk_ObjSetRequired( pObj, tArrival );\n        }\n    }\n\n    // propagate the required times\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Nwk_ObjIsNode(pObj) {\n            Nwk_NodePropagateRequired( pObj, fUseSorting );\n        \n        } else if Nwk_ObjIsCi(pObj) {\n            if pNtk.pManTime {\n                Tim_ManSetCiRequired( pNtk.pManTime, pObj.PioId, Nwk_ObjRequired(pObj) ); }\n        \n        } else if Nwk_ObjIsCo(pObj) {\n            if pNtk.pManTime {\n                tRequired = Tim_ManGetCoRequired( pNtk.pManTime, pObj.PioId );\n                Nwk_ObjSetRequired( pObj, tRequired );\n            }\n            if Nwk_ObjRequired(Nwk_ObjFanin0(pObj)) \u003e Nwk_ObjRequired(pObj) {\n                Nwk_ObjSetRequired( Nwk_ObjFanin0(pObj), Nwk_ObjRequired(pObj) ); }\n        }\n\n        // set slack for this object\n        tSlack = Nwk_ObjRequired(pObj) - Nwk_ObjArrival(pObj);\n        assert(tSlack + 0.01 \u003e 0.0, \"tSlack + 0.01 \u003e 0.0\");\n        Nwk_ObjSetSlack( pObj, tSlack \u003c 0.0 ? 0.0 : tSlack );\n    }\n    Vec_PtrFree( vNodes );\n    return tArrival;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the arrival times for the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManVerifyTiming(pNtk *Nwk_Man_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var tArrival, tRequired float32;\n    var i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjIsCi(pObj) \u0026\u0026 Nwk_ObjFanoutNum(pObj) == 0 {\n            continue; }\n        tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n        tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n        if !Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pObj), float32(0.01) ) {\n            fmt.Printf(\"Nwk_ManVerifyTiming(): Object %d has different arrival time (%.2f) from computed (%.2f).\\n\", pObj.Id, Nwk_ObjArrival(pObj), tArrival); }\n        if !Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) ) {\n            fmt.Printf(\"Nwk_ManVerifyTiming(): Object %d has different required time (%.2f) from computed (%.2f).\\n\", pObj.Id, Nwk_ObjRequired(pObj), tRequired); }\n    }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the delay trace for the given network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDelayTracePrint(pNtk *Nwk_Man_t) {\n    var pLutLib *If_LibLut_t  = pNtk.pLutLib;\n    var pNode *Nwk_Obj_t;\n    var i int32;\n    var Nodes int32;\n    var pCounters *int32;\n    var tArrival, tDelta, nSteps, Num float32;\n    // get the library\n    if (pLutLib != nil) \u0026\u0026 pLutLib.LutMax \u003c Nwk_ManGetFaninMax(pNtk) {\n        fmt.Printf(\"The max LUT size (%d) is less than the max fanin count (%d).\\n\", pLutLib.LutMax, Nwk_ManGetFaninMax(pNtk));\n        return;\n    }\n    // decide how many steps\n    if pLutLib != nil {\n        nSteps = 20;\n    } else {\n        nSteps = Nwk_ManLevelMax(pNtk);\n    }\n    // inlining of macro ABC_ALLOC\n    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));\n    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );\n    // perform delay trace\n    tArrival = Nwk_ManDelayTraceLut( pNtk );\n    tDelta = tArrival / nSteps;\n    // count how many nodes have slack in the corresponding intervals\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pNode) == nil || !Nwk_ObjIsNode(pNode) {} else {\n        if Nwk_ObjFaninNum(pNode) == 0 {\n            continue; }\n        Num = Nwk_ObjSlack(pNode) / tDelta;\n        if Num \u003e nSteps {\n            continue; }\n        assert(Num \u003e=0 \u0026\u0026 Num \u003c= nSteps, \"Num \u003e=0 \u0026\u0026 Num \u003c= nSteps\");\n        pCounters[int32(Num)]++;\n    }\n    }\n    // print the results\n    fmt.Printf(\"Max delay = %6.2f. Delay trace using %s model:\\n\", tArrival, pLutLib? \"LUT library\" : \"unit-delay\");\n    Nodes = 0;\n    for  i = 0; i \u003c nSteps; i++  {\n        Nodes += pCounters[i];\n        fmt.Printf(\"%3d %s : %5d  (%6.2f %%)\\n\", pLutLib? 5*(i+1) : i+1, pLutLib? \"%\":\"lev\", Nodes, 100.0*Nodes/Nwk_ManNodeNum(pNtk));\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts node into the queue of nodes sorted by level.]\n\n  Description [The inserted node should not go before the current position \n  given by iCurrent. If the arrival times are computed, the nodes are sorted\n  in the increasing order of levels. If the required times are computed, \n  the nodes are sorted in the decreasing order of levels.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeUpdateAddToQueue(vQueue *Vec_Ptr_t, pObj *Nwk_Obj_t, iCurrent int32, fArrival int32) {\n    var pTemp1, pTemp2 *Nwk_Obj_t;\n    var i int32;\n    Vec_PtrPush( vQueue, pObj );\n    for  i = Vec_PtrSize(vQueue) - 1; i \u003e iCurrent + 1; i--  {\n        pTemp1 = (Nwk_Obj_t *)vQueue.pArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue.pArray[i-1];\n        if fArrival != 0 {\n            if Nwk_ObjLevel(pTemp2) \u003c= Nwk_ObjLevel(pTemp1) {\n                break; }\n        \n        } else {\n            if Nwk_ObjLevel(pTemp2) \u003e= Nwk_ObjLevel(pTemp1) {\n                break; }\n        }\n        vQueue.pArray[i-1] = pTemp1;\n        vQueue.pArray[i]   = pTemp2;\n    }\n    // verification\n    for  i = iCurrent + 1; i \u003c Vec_PtrSize(vQueue) - 1; i++  {\n        pTemp1 = (Nwk_Obj_t *)vQueue.pArray[i];\n        pTemp2 = (Nwk_Obj_t *)vQueue.pArray[i+1];\n        if fArrival != 0 {\n            assert(Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2), \"Nwk_ObjLevel(pTemp1) \u003c= Nwk_ObjLevel(pTemp2)\");\n        } else {\n            assert(Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2), \"Nwk_ObjLevel(pTemp1) \u003e= Nwk_ObjLevel(pTemp2)\"); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates arrival times of the node.]\n\n  Description [Supports variable-pin delay model and white-boxes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeUpdateArrival(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var tArrival float32;\n    var iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // verify the arrival time\n    tArrival = Nwk_NodeComputeArrival( pObj, 1 );\n    assert(Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), float32(0.01) ), \"Nwk_ManTimeLess( tArrival, Nwk_ObjRequired(pObj), float32(0.01) )\");\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj.MarkA = 1;\n    // process objects\n    if pManTime != nil {\n        Tim_ManIncrementTravId( pManTime ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        tArrival = Nwk_NodeComputeArrival( pTemp, 1 );\n        if Nwk_ObjIsCi(pTemp) \u0026\u0026 (pManTime != nil) {\n            tArrival = Tim_ManGetCiArrival( pManTime, pTemp.PioId ); }\n        if Nwk_ManTimeEqual( tArrival, Nwk_ObjArrival(pTemp), float32(0.01) ) {\n            continue; }\n        Nwk_ObjSetArrival( pTemp, tArrival );\n        // add the fanouts to the queue\n        if Nwk_ObjIsCo(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this CO is an input of the box\n                \n                    // it may happen that a box-input (CO) was already marked as visited\n                    // when some other box-input of the same box was visited - here we undo this\n                    if Tim_ManIsCoTravIdCurrent( pManTime, pTemp.PioId ) {\n                        Tim_ManSetPreviousTravIdBoxInputs( pManTime, iBox ); }\n                    Tim_ManSetCoArrival( pManTime, pTemp.PioId, tArrival );\n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCi(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pTemp).nFanouts)) \u0026\u0026 ((pNext) = (pTemp).pFanio[(pTemp).nFanins+k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates required times of the node.]\n\n  Description [Supports variable-pin delay model and white-boxes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeUpdateRequired(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var tRequired float32;\n    var iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // make sure the node's required time remained the same\n    tRequired = Nwk_NodeComputeRequired( pObj, 1 );\n    assert(Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) ), \"Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pObj), float32(0.01) )\");\n    // initialize the queue with the node's faninsa and the old node's fanins\n    Vec_PtrClear( vQueue );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  k = 0; (k \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[k]); k++  {\n        if pNext.MarkA {\n            continue; }\n        Nwk_NodeUpdateAddToQueue( vQueue, pNext, -1, 0 );\n        pNext.MarkA = 1;\n    }\n    // process objects\n    if pManTime != nil {\n        Tim_ManIncrementTravId( pManTime ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        tRequired = Nwk_NodeComputeRequired( pTemp, 1 );\n        if Nwk_ObjIsCo(pTemp) \u0026\u0026 (pManTime != nil) {\n            tRequired = Tim_ManGetCoRequired( pManTime, pTemp.PioId ); }\n        if Nwk_ManTimeEqual( tRequired, Nwk_ObjRequired(pTemp), float32(0.01) ) {\n            continue; }\n        Nwk_ObjSetRequired( pTemp, tRequired );\n        // add the fanins to the queue\n        if Nwk_ObjIsCi(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCi( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this CI is an output of the box\n                \n                    // it may happen that a box-output (CI) was already marked as visited\n                    // when some other box-output of the same box was visited - here we undo this\n                    if Tim_ManIsCiTravIdCurrent( pManTime, pTemp.PioId ) {\n                        Tim_ManSetPreviousTravIdBoxOutputs( pManTime, iBox ); }\n                    Tim_ManSetCiRequired( pManTime, pTemp.PioId, tRequired );\n                    Tim_ManSetCurrentTravIdBoxOutputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCo(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanin\n            for  k = 0; (k \u003c int32((pTemp).nFanins)) \u0026\u0026 ((pNext) = (pTemp).pFanio[k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 0 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the level of the node using its fanin levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjLevelNew(pObj *Nwk_Obj_t) int32 {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var pFanin *Nwk_Obj_t;\n    var i, iBox, iTerm1, nTerms, Level int32;\n    if Nwk_ObjIsCi(pObj) || Nwk_ObjIsLatch(pObj) {\n        if pManTime != nil {\n            iBox = Tim_ManBoxForCi( pManTime, pObj.PioId );\n            if iBox \u003e= 0 { // this CI is an output of the box\n            \n                iTerm1 = Tim_ManBoxInputFirst( pManTime, iBox );\n                nTerms = Tim_ManBoxInputNum( pManTime, iBox );\n                for  i = 0; i \u003c nTerms; i++  {\n                    pFanin = Nwk_ManCo(pObj.pMan, iTerm1 + i);\n                    Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n                }\n                Level++;\n            }\n        }\n        return Level;\n    }\n    assert(Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj), \"Nwk_ObjIsNode(pObj) || Nwk_ObjIsCo(pObj)\");\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pFanin) = (pObj).pFanio[i]); i++  {\n        Level = Abc_MaxInt( Level, Nwk_ObjLevel(pFanin) );\n    }\n    return Level + (Nwk_ObjIsNode(pObj) \u0026\u0026 Nwk_ObjFaninNum(pObj) \u003e 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Incrementally updates level of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManUpdateLevel(pObj *Nwk_Obj_t) {\n    var pManTime *Tim_Man_t  = pObj.pMan.pManTime;\n    var vQueue *Vec_Ptr_t  = pObj.pMan.vTemp;\n    var pTemp *Nwk_Obj_t;\n    var pNext *Nwk_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var LevelNew, iCur, k, iBox, iTerm1, nTerms int32;\n    assert(Nwk_ObjIsNode(pObj), \"Nwk_ObjIsNode(pObj)\");\n    // initialize the queue with the node\n    Vec_PtrClear( vQueue );\n    Vec_PtrPush( vQueue, pObj );\n    pObj.MarkA = 1;\n    // process objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  iCur = 0; (iCur \u003c Vec_PtrSize(vQueue)) \u0026\u0026 (((pTemp) = (Nwk_Obj_t *)Vec_PtrEntry(vQueue, iCur)), 1); iCur++  {\n        pTemp.MarkA = 0;\n        LevelNew = Nwk_ObjLevelNew( pTemp );\n        if LevelNew == Nwk_ObjLevel(pTemp) {\n            continue; }\n        Nwk_ObjSetLevel( pTemp, LevelNew );\n        // add the fanouts to the queue\n        if Nwk_ObjIsCo(pTemp) {\n            if pManTime != nil {\n                iBox = Tim_ManBoxForCo( pManTime, pTemp.PioId );\n                if iBox \u003e= 0 { // this is not a true PO\n                \n                    Tim_ManSetCurrentTravIdBoxInputs( pManTime, iBox );\n                    iTerm1 = Tim_ManBoxOutputFirst( pManTime, iBox );\n                    nTerms = Tim_ManBoxOutputNum( pManTime, iBox );\n                    for  k = 0; k \u003c nTerms; k++  {\n                        pNext = Nwk_ManCi(pNext.pMan, iTerm1 + k);\n                        if pNext.MarkA {\n                            continue; }\n                        Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                        pNext.MarkA = 1;\n                    }\n                }\n            }\n        \n        } else {\n            // inlining of macro Nwk_ObjForEachFanout\n            for  k = 0; (k \u003c int32((pTemp).nFanouts)) \u0026\u0026 ((pNext) = (pTemp).pFanio[(pTemp).nFanins+k]); k++  {\n                if pNext.MarkA {\n                    continue; }\n                Nwk_NodeUpdateAddToQueue( vQueue, pNext, iCur, 1 );\n                pNext.MarkA = 1;\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the level of the node using its fanin levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManVerifyLevel(pNtk *Nwk_Man_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var LevelNew, i int32;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        assert(pObj.MarkA == 0, \"pObj.MarkA == 0\");\n        LevelNew = Nwk_ObjLevelNew( pObj );\n        if Nwk_ObjLevel(pObj) != LevelNew {\n            fmt.Printf(\"Object %6d: Mismatch betweeh levels: Actual = %d. Correct = %d.\\n\", i, Nwk_ObjLevel(pObj), LevelNew);\n        }\n    }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the node and incrementally updates levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManUpdate(pObj *Nwk_Obj_t, pObjNew *Nwk_Obj_t, vLevels *Vec_Vec_t) {\n    assert(pObj.pMan == pObjNew.pMan, \"pObj.pMan == pObjNew.pMan\");\n    assert(pObj != pObjNew, \"pObj != pObjNew\");\n    assert(Nwk_ObjFanoutNum(pObj) \u003e 0, \"Nwk_ObjFanoutNum(pObj) \u003e 0\");\n    assert(Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew), \"Nwk_ObjIsNode(pObj) \u0026\u0026 !Nwk_ObjIsCo(pObjNew)\");\n    // transfer fanouts to the old node\n    Nwk_ObjTransferFanout( pObj, pObjNew );\n    // transfer the timing information\n    // (this is needed because updating level happens if the level has changed;\n    // when we set the old level, it will be recomputed by the level updating\n    // procedure, which will update level of other nodes if there is a difference)\n    pObjNew.Level = pObj.Level;\n    pObjNew.tArrival = pObj.tArrival;\n    pObjNew.tRequired = pObj.tRequired;\n    // update required times of the old fanins\n    pObj.tRequired = TIM_ETERNITY;\n    Nwk_NodeUpdateRequired( pObj );\n    // remove the old node\n    Nwk_ManDeleteNode_rec( pObj );\n    // update the information of the new node\n    Nwk_ManUpdateLevel( pObjNew );\n    Nwk_NodeUpdateArrival( pObjNew );\n    Nwk_NodeUpdateRequired( pObjNew );\n//Nwk_ManVerifyTiming( pObjNew-\u003epMan );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,780 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c",
+  "SHA256": "2de0512da3f7bdd04b1e282fe52cbeaa349ac0fcd624294234027d2613dd8c94",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 66,
+        "ByteOffset": 3215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(pAig.pFanData), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 70,
+        "ByteOffset": 4511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(pAig.pFanData), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vFanout) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 7620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObjLo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 8074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 10173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 17866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pFrame) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 18838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 19864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vGates) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 21548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 13,
+        "ByteOffset": 22355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !(pObj.fMarkA \u0026\u0026 pObj.fMarkB) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cgt_ManDetectCandidates_rec",
+      "Start": 1283,
+      "End": 1890,
+      "BodyStart": 1410,
+      "Original": "void Cgt_ManDetectCandidates_rec( Aig_Man_t * pAig, Vec_Int_t * vUseful, Aig_Obj_t * pObj, int nLevelMax, Vec_Ptr_t * vCands )\n{\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if ( Aig_ObjIsNode(pObj) )\n    {\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin0(pObj), nLevelMax, vCands );\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin1(pObj), nLevelMax, vCands );\n    }\n    if ( Aig_ObjLevel(pObj) \u003c= nLevelMax \u0026\u0026 (vUseful == NULL || Vec_IntEntry(vUseful, Aig_ObjId(pObj))) )\n        Vec_PtrPush( vCands, pObj );\n}",
+      "Draft": "func Cgt_ManDetectCandidates_rec(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsNode(pObj) {\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin0(pObj), nLevelMax, vCands );\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin1(pObj), nLevelMax, vCands );\n    }\n    if Aig_ObjLevel(pObj) \u003c= nLevelMax \u0026\u0026 (vUseful == nil || Vec_IntEntry(vUseful, Aig_ObjId(pObj))) {\n        Vec_PtrPush( vCands, pObj ); }\n}"
+    },
+    {
+      "Name": "Cgt_ManDetectCandidates",
+      "Start": 2170,
+      "End": 2483,
+      "BodyStart": 2293,
+      "Original": "void Cgt_ManDetectCandidates( Aig_Man_t * pAig, Vec_Int_t * vUseful, Aig_Obj_t * pObj, int nLevelMax, Vec_Ptr_t * vCands )\n{\n    Vec_PtrClear( vCands );\n    if ( !Aig_ObjIsNode(pObj) )\n        return;\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectCandidates_rec( pAig, vUseful, pObj, nLevelMax, vCands );\n}",
+      "Draft": "func Cgt_ManDetectCandidates(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {\n    Vec_PtrClear( vCands );\n    if !Aig_ObjIsNode(pObj) {\n        return; }\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectCandidates_rec( pAig, vUseful, pObj, nLevelMax, vCands );\n}"
+    },
+    {
+      "Name": "Cgt_ManDetectFanout_rec",
+      "Start": 2763,
+      "End": 3259,
+      "BodyStart": 2864,
+      "Original": "void Cgt_ManDetectFanout_rec( Aig_Man_t * pAig, Aig_Obj_t * pObj, int nOdcMax, Vec_Ptr_t * vFanout )\n{\n    Aig_Obj_t * pFanout;\n    int f, iFanout = -1;\n    if ( Aig_ObjIsCo(pObj) || Aig_ObjLevel(pObj) \u003e nOdcMax )\n        return;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    Vec_PtrPush( vFanout, pObj );\n    Aig_ObjForEachFanout( pAig, pObj, pFanout, iFanout, f )\n        Cgt_ManDetectFanout_rec( pAig, pFanout, nOdcMax, vFanout );\n}",
+      "Draft": "func Cgt_ManDetectFanout_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var f int32;\n    var iFanout int32 = -1;\n    if Aig_ObjIsCo(pObj) || Aig_ObjLevel(pObj) \u003e nOdcMax {\n        return; }\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    Vec_PtrPush( vFanout, pObj );\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n        Cgt_ManDetectFanout_rec( pAig, pFanout, nOdcMax, vFanout );\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ManDetectFanout",
+      "Start": 3539,
+      "End": 4452,
+      "BodyStart": 3636,
+      "Original": "void Cgt_ManDetectFanout( Aig_Man_t * pAig, Aig_Obj_t * pObj, int nOdcMax, Vec_Ptr_t * vFanout )\n{\n    Aig_Obj_t * pFanout;\n    int i, k, f, iFanout = -1;\n    // collect visited nodes\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectFanout_rec( pAig, pObj, nOdcMax, vFanout );\n    // remove those nodes whose fanout is included\n    k = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vFanout, pObj, i )\n    {\n        // go through the fanouts of this node\n        Aig_ObjForEachFanout( pAig, pObj, pFanout, iFanout, f )\n            if ( !Aig_ObjIsTravIdCurrent(pAig, pFanout) )\n                break;\n        if ( f == Aig_ObjRefs(pObj) ) // all fanouts are included\n            continue;\n        Vec_PtrWriteEntry( vFanout, k++, pObj );\n    }\n    Vec_PtrShrink( vFanout, k );\n    Vec_PtrSort( vFanout, (int (*)(void))Aig_ObjCompareIdIncrease );\n    assert( Vec_PtrSize(vFanout) \u003e 0 );\n}",
+      "Draft": "func Cgt_ManDetectFanout(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var f int32;\n    var iFanout int32 = -1;\n    // collect visited nodes\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectFanout_rec( pAig, pObj, nOdcMax, vFanout );\n    // remove those nodes whose fanout is included\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        // go through the fanouts of this node\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n            if !Aig_ObjIsTravIdCurrent(pAig, pFanout) {\n                break; }\n        }\n        if f == Aig_ObjRefs(pObj) { // all fanouts are included\n            continue; }\n        Vec_PtrWriteEntry( vFanout, k++, pObj );\n    }\n    Vec_PtrShrink( vFanout, k );\n    Vec_PtrSort( vFanout, (int (*)(void))Aig_ObjCompareIdIncrease );\n    assert(Vec_PtrSize(vFanout) \u003e 0, \"Vec_PtrSize(vFanout) \u003e 0\");\n}"
+    },
+    {
+      "Name": "Cgt_ManCollectVisited_rec",
+      "Start": 4736,
+      "End": 5188,
+      "BodyStart": 4827,
+      "Original": "void Cgt_ManCollectVisited_rec( Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Ptr_t * vVisited )\n{\n    if ( Aig_ObjIsCi(pObj) )\n        return;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    assert( Aig_ObjIsNode(pObj) );\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin0(pObj), vVisited );\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n}",
+      "Draft": "func Cgt_ManCollectVisited_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vVisited *Vec_Ptr_t) {\n    if Aig_ObjIsCi(pObj) {\n        return; }\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin0(pObj), vVisited );\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n}"
+    },
+    {
+      "Name": "Cgt_ManCollectVisited",
+      "Start": 5472,
+      "End": 5780,
+      "BodyStart": 5562,
+      "Original": "void Cgt_ManCollectVisited( Aig_Man_t * pAig, Vec_Ptr_t * vFanout, Vec_Ptr_t * vVisited )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrClear( vVisited );\n    Aig_ManIncrementTravId( pAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vFanout, pObj, i )\n        Cgt_ManCollectVisited_rec( pAig, pObj, vVisited );\n}",
+      "Draft": "func Cgt_ManCollectVisited(pAig *Aig_Man_t, vFanout *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vVisited );\n    Aig_ManIncrementTravId( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        Cgt_ManCollectVisited_rec( pAig, pObj, vVisited );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjChild0CopyVec",
+      "Start": 6016,
+      "End": 6208,
+      "BodyStart": 6105,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild0CopyVec( Vec_Ptr_t * vCopy, Aig_Obj_t * pObj )  \n{ return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId0(pObj)), Aig_ObjFaninC0(pObj));  }",
+      "Draft": "func Aig_ObjChild0CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId0(pObj)), Aig_ObjFaninC0(pObj));  }"
+    },
+    {
+      "Name": "Aig_ObjChild1CopyVec",
+      "Start": 6209,
+      "End": 6401,
+      "BodyStart": 6298,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild1CopyVec( Vec_Ptr_t * vCopy, Aig_Obj_t * pObj )  \n{ return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId1(pObj)), Aig_ObjFaninC1(pObj));  }",
+      "Draft": "func Aig_ObjChild1CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId1(pObj)), Aig_ObjFaninC1(pObj));  }"
+    },
+    {
+      "Name": "Cgt_ManConstructCareCondition",
+      "Start": 6668,
+      "End": 8686,
+      "BodyStart": 6805,
+      "Original": "Aig_Obj_t * Cgt_ManConstructCareCondition( Cgt_Man_t * p, Aig_Man_t * pNew, Aig_Obj_t * pObjLo, Vec_Ptr_t * vCopy0, Vec_Ptr_t * vCopy1 )\n{\n    Aig_Obj_t * pMiter, * pObj, * pTemp;\n    int i;\n    assert( Aig_ObjIsCi(pObjLo) );\n    // detect nodes and their cone\n    Cgt_ManDetectFanout( p-\u003epAig, pObjLo, p-\u003epPars-\u003enOdcMax, p-\u003evFanout );\n    Cgt_ManCollectVisited( p-\u003epAig, p-\u003evFanout, p-\u003evVisited );\n    // add new variables if the observability condition depends on PI variables\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evVisited, pObj, i )\n    {\n        assert( Aig_ObjIsNode(pObj) );\n        if ( Saig_ObjIsPi(p-\u003epAig, Aig_ObjFanin0(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId0(pObj)) == NULL )\n        {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId0(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId0(pObj), pTemp );\n        }\n        if ( Saig_ObjIsPi(p-\u003epAig, Aig_ObjFanin1(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId1(pObj)) == NULL )\n        {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId1(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId1(pObj), pTemp );\n        }\n    }\n    // construct AIGs for the nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evVisited, pObj, i )\n    {\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy0, pObj), Aig_ObjChild1CopyVec(vCopy0, pObj) );\n        Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObj), pTemp );\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy1, pObj), Aig_ObjChild1CopyVec(vCopy1, pObj) );\n        Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObj), pTemp );\n    }\n    // construct the care miter\n    pMiter = Aig_ManConst0( pNew );\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evFanout, pObj, i )\n    {\n        pTemp = Aig_Exor( pNew, (Aig_Obj_t *)Vec_PtrEntry(vCopy0, Aig_ObjId(pObj)), (Aig_Obj_t *)Vec_PtrEntry(vCopy1, Aig_ObjId(pObj)) );\n        pMiter = Aig_Or( pNew, pMiter, pTemp );\n    }\n    return pMiter;\n}",
+      "Draft": "func Cgt_ManConstructCareCondition(p *Cgt_Man_t, pNew *Aig_Man_t, pObjLo *Aig_Obj_t, vCopy0 *Vec_Ptr_t, vCopy1 *Vec_Ptr_t) *Aig_Obj_t {\n    var pMiter, pObj, pTemp *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ObjIsCi(pObjLo), \"Aig_ObjIsCi(pObjLo)\");\n    // detect nodes and their cone\n    Cgt_ManDetectFanout( p.pAig, pObjLo, p.pPars.nOdcMax, p.vFanout );\n    Cgt_ManCollectVisited( p.pAig, p.vFanout, p.vVisited );\n    // add new variables if the observability condition depends on PI variables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vVisited)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin0(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId0(pObj)) == nil {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId0(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId0(pObj), pTemp );\n        }\n        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin1(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId1(pObj)) == nil {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId1(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId1(pObj), pTemp );\n        }\n    }\n    // construct AIGs for the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vVisited)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy0, pObj), Aig_ObjChild1CopyVec(vCopy0, pObj) );\n        Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObj), pTemp );\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy1, pObj), Aig_ObjChild1CopyVec(vCopy1, pObj) );\n        Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObj), pTemp );\n    }\n    // construct the care miter\n    pMiter = Aig_ManConst0( pNew );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanout, i)), 1); i++  {\n        pTemp = Aig_Exor( pNew, (Aig_Obj_t *)Vec_PtrEntry(vCopy0, Aig_ObjId(pObj)), (Aig_Obj_t *)Vec_PtrEntry(vCopy1, Aig_ObjId(pObj)) );\n        pMiter = Aig_Or( pNew, pMiter, pTemp );\n    }\n    return pMiter;\n}"
+    },
+    {
+      "Name": "Cgt_ManDeriveAigForGating",
+      "Start": 8951,
+      "End": 11574,
+      "BodyStart": 9006,
+      "Original": "Aig_Man_t * Cgt_ManDeriveAigForGating( Cgt_Man_t * p )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo, * pCare, * pMiter;\n    Vec_Ptr_t * vCopy0, * vCopy1;\n    int i;\n    assert( Aig_ManRegNum(p-\u003epAig) );\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p-\u003epAig) );\n    pNew-\u003epName = Abc_UtilStrsav( \"CG_miter\" );\n    // build the first frame\n    Aig_ManConst1(p-\u003epAig)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n//    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n//        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    if ( p-\u003epPars-\u003enOdcMax \u003e 0 )\n    {\n        // create storage for observability conditions\n        vCopy0 = Vec_PtrStart( Aig_ManObjNumMax(p-\u003epAig) );\n        vCopy1 = Vec_PtrStart( Aig_ManObjNumMax(p-\u003epAig) );\n        // initialize register outputs\n        Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n        {\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n        }\n        // compute observability condition for each latch output\n        Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n        {\n            // set the constants\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ManConst0(pNew) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ManConst1(pNew) );\n            // compute condition\n            pCare = Cgt_ManConstructCareCondition( p, pNew, pObjLo, vCopy0, vCopy1 );\n            // restore the values\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            // compute the miter\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo-\u003epData, Aig_ObjChild0Copy(pObjLi) );\n            pMiter = Aig_And( pNew, pMiter, pCare );\n            pObjLi-\u003epData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n        Vec_PtrFree( vCopy0 );\n        Vec_PtrFree( vCopy1 );\n    }\n    else\n    {\n        // construct clock-gating miters for each register input\n        Saig_ManForEachLiLo( p-\u003epAig, pObjLi, pObjLo, i )\n        {\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo-\u003epData, Aig_ObjChild0Copy(pObjLi) );\n            pObjLi-\u003epData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetCioIds( pNew );\n    return pNew;\n}",
+      "Draft": "func Cgt_ManDeriveAigForGating(p *Cgt_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pCare, pMiter *Aig_Obj_t;\n    var vCopy0, vCopy1 *Vec_Ptr_t;\n    var i int32;\n    assert(Aig_ManRegNum(p.pAig), \"Aig_ManRegNum(p.pAig)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p.pAig) );\n    pNew.pName = Abc_UtilStrsav( \"CG_miter\" );\n    // build the first frame\n    Aig_ManConst1(p.pAig).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n//    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n//        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    if p.pPars.nOdcMax \u003e 0 {\n        // create storage for observability conditions\n        vCopy0 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n        vCopy1 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n        // initialize register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n        }\n        // compute observability condition for each latch output\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            // set the constants\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ManConst0(pNew) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ManConst1(pNew) );\n            // compute condition\n            pCare = Cgt_ManConstructCareCondition( p, pNew, pObjLo, vCopy0, vCopy1 );\n            // restore the values\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            // compute the miter\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n            pMiter = Aig_And( pNew, pMiter, pCare );\n            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n        Vec_PtrFree( vCopy0 );\n        Vec_PtrFree( vCopy1 );\n    \n    } else {\n        // construct clock-gating miters for each register input\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetCioIds( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Cgt_ManConstructCare_rec",
+      "Start": 11836,
+      "End": 12659,
+      "BodyStart": 11930,
+      "Original": "Aig_Obj_t * Cgt_ManConstructCare_rec( Aig_Man_t * pCare, Aig_Obj_t * pObj, Aig_Man_t * pNew )\n{\n    Aig_Obj_t * pObj0, * pObj1;\n    if ( Aig_ObjIsTravIdCurrent( pCare, pObj ) )\n        return (Aig_Obj_t *)pObj-\u003epData;\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if ( Aig_ObjIsCi(pObj) )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj0 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pNew );\n    if ( pObj0 == NULL )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj1 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pNew );\n    if ( pObj1 == NULL )\n        return (Aig_Obj_t *)(pObj-\u003epData = NULL);\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj-\u003epData = Aig_And( pNew, pObj0, pObj1 ));\n}",
+      "Draft": "func Cgt_ManConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pNew *Aig_Man_t) *Aig_Obj_t {\n    var pObj0, pObj1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pNew );\n    if pObj0 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj1 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pNew );\n    if pObj1 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, pObj0, pObj1 ));\n}"
+    },
+    {
+      "Name": "Cgt_ManConstructCare",
+      "Start": 12947,
+      "End": 14246,
+      "BodyStart": 13056,
+      "Original": "void Cgt_ManConstructCare( Aig_Man_t * pNew, Aig_Man_t * pCare, Vec_Vec_t * vSuppsInv, Vec_Ptr_t * vLeaves )\n{\n    Vec_Int_t * vOuts;\n    Aig_Obj_t * pLeaf, * pPi, * pPo, * pObjAig;\n    int i, k, iOut;\n    // go through the PIs of the partition\n    // label the corresponding PIs of the care set\n    Aig_ManIncrementTravId( pCare );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pLeaf, i )\n    {\n        pPi = Aig_ManCi( pCare, Aig_ObjCioId(pLeaf) );\n        Aig_ObjSetTravIdCurrent( pCare, pPi );\n        pPi-\u003epData = pLeaf-\u003epData;\n    }\n    // construct the constraints\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pLeaf, i )\n    {\n        vOuts = Vec_VecEntryInt( vSuppsInv, Aig_ObjCioId(pLeaf) );\n        Vec_IntForEachEntry( vOuts, iOut, k )\n        {\n            pPo = Aig_ManCo( pCare, iOut );\n            if ( Aig_ObjIsTravIdCurrent( pCare, pPo ) )\n                continue;\n            Aig_ObjSetTravIdCurrent( pCare, pPo );\n            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(pCare) )\n                continue;\n            pObjAig = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pPo), pNew );\n            if ( pObjAig == NULL )\n                continue;\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pNew, pObjAig );\n        }\n    }\n}",
+      "Draft": "func Cgt_ManConstructCare(pNew *Aig_Man_t, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, vLeaves *Vec_Ptr_t) {\n    var vOuts *Vec_Int_t;\n    var pLeaf, pPi, pPo, pObjAig *Aig_Obj_t;\n    var i, k, iOut int32;\n    // go through the PIs of the partition\n    // label the corresponding PIs of the care set\n    Aig_ManIncrementTravId( pCare );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pPi = Aig_ManCi( pCare, Aig_ObjCioId(pLeaf) );\n        Aig_ObjSetTravIdCurrent( pCare, pPi );\n        pPi.pData = pLeaf.pData;\n    }\n    // construct the constraints\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        vOuts = Vec_VecEntryInt( vSuppsInv, Aig_ObjCioId(pLeaf) );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n            pPo = Aig_ManCo( pCare, iOut );\n            if Aig_ObjIsTravIdCurrent( pCare, pPo ) {\n                continue; }\n            Aig_ObjSetTravIdCurrent( pCare, pPo );\n            if Aig_ObjFanin0(pPo) == Aig_ManConst1(pCare) {\n                continue; }\n            pObjAig = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pPo), pNew );\n            if pObjAig == nil {\n                continue; }\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pNew, pObjAig );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cgt_ManDupPartition_rec",
+      "Start": 14513,
+      "End": 15177,
+      "BodyStart": 14626,
+      "Original": "Aig_Obj_t * Cgt_ManDupPartition_rec( Aig_Man_t * pNew, Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Ptr_t * vLeaves )\n{\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return (Aig_Obj_t *)pObj-\u003epData;\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n        Vec_PtrPush( vLeaves, pObj );\n        return (Aig_Obj_t *)pObj-\u003epData;\n    }\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin0(pObj), vLeaves );\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin1(pObj), vLeaves );\n    return (Aig_Obj_t *)(pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}",
+      "Draft": "func Cgt_ManDupPartition_rec(pNew *Aig_Man_t, pAig *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t) *Aig_Obj_t {\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsCi(pObj) {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n        Vec_PtrPush( vLeaves, pObj );\n        return (Aig_Obj_t *)pObj.pData;\n    }\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin0(pObj), vLeaves );\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin1(pObj), vLeaves );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}"
+    },
+    {
+      "Name": "Cgt_ManDupPartition",
+      "Start": 15469,
+      "End": 17239,
+      "BodyStart": 15623,
+      "Original": "Aig_Man_t * Cgt_ManDupPartition( Aig_Man_t * pFrame, int nVarsMin, int nFlopsMin, int iStart, Aig_Man_t * pCare, Vec_Vec_t * vSuppsInv, int * pnOutputs )\n{\n    Vec_Ptr_t * vRoots, * vLeaves, * vPos;\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManRegNum(pFrame) == 0 );\n    vRoots = Vec_PtrAlloc( 100 );\n    vLeaves = Vec_PtrAlloc( 100 ); \n    vPos = Vec_PtrAlloc( 100 );\n    pNew = Aig_ManStart( nVarsMin );\n    pNew-\u003epName = Abc_UtilStrsav( \"partition\" );\n    Aig_ManIncrementTravId( pFrame );\n    Aig_ManConst1(pFrame)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ObjSetTravIdCurrent( pFrame, Aig_ManConst1(pFrame) );\n    for ( i = iStart; i \u003c iStart + nFlopsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++ )\n    {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    for ( ; Aig_ManObjNum(pNew) \u003c nVarsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++ )\n    {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    assert( nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin );\n    // create constaints\n    if ( pCare )\n        Cgt_ManConstructCare( pNew, pCare, vSuppsInv, vLeaves );\n    // create POs\n    Vec_PtrForEachEntry( Aig_Obj_t *, vPos, pObj, i )\n        pObj-\u003epData = (Aig_Obj_t *)Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vRoots, i) );\n    if ( pnOutputs != NULL )\n        *pnOutputs = Vec_PtrSize( vPos );\n    Vec_PtrFree( vRoots );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vPos );\n    return pNew;\n}",
+      "Draft": "func Cgt_ManDupPartition(pFrame *Aig_Man_t, nVarsMin int32, nFlopsMin int32, iStart int32, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, pnOutputs *int32) *Aig_Man_t {\n    var vRoots, vLeaves, vPos *Vec_Ptr_t;\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(pFrame) == 0, \"Aig_ManRegNum(pFrame) == 0\");\n    vRoots = Vec_PtrAlloc( 100 );\n    vLeaves = Vec_PtrAlloc( 100 ); \n    vPos = Vec_PtrAlloc( 100 );\n    pNew = Aig_ManStart( nVarsMin );\n    pNew.pName = Abc_UtilStrsav( \"partition\" );\n    Aig_ManIncrementTravId( pFrame );\n    Aig_ManConst1(pFrame).pData = Aig_ManConst1(pNew);\n    Aig_ObjSetTravIdCurrent( pFrame, Aig_ManConst1(pFrame) );\n    for  i = iStart; i \u003c iStart + nFlopsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++  {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    for  ; Aig_ManObjNum(pNew) \u003c nVarsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++  {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    assert(nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin, \"nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin\");\n    // create constaints\n    if pCare != nil {\n        Cgt_ManConstructCare( pNew, pCare, vSuppsInv, vLeaves ); }\n    // create POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPos, i)), 1); i++  {\n        pObj.pData = (Aig_Obj_t *)Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vRoots, i) );\n    }\n    if pnOutputs != nil {\n        *pnOutputs = Vec_PtrSize( vPos ); }\n    Vec_PtrFree( vRoots );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vPos );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Cgt_ManBuildClockGate",
+      "Start": 17501,
+      "End": 18072,
+      "BodyStart": 17575,
+      "Original": "Aig_Obj_t * Cgt_ManBuildClockGate( Aig_Man_t * pNew, Vec_Ptr_t * vGates )\n{\n    Aig_Obj_t * pGate, * pTotal;\n    int i;\n    assert( Vec_PtrSize(vGates) \u003e 0 );\n    pTotal = Aig_ManConst0(pNew);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vGates, pGate, i )\n    {\n        if ( Aig_Regular(pGate)-\u003epNext )\n            pGate = Aig_NotCond( Aig_Regular(pGate)-\u003epNext, Aig_IsComplement(pGate) );\n        else\n            pGate = Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pGate)-\u003epData, Aig_IsComplement(pGate) );\n        pTotal = Aig_Or( pNew, pTotal, pGate );\n    }\n    return pTotal;\n}",
+      "Draft": "func Cgt_ManBuildClockGate(pNew *Aig_Man_t, vGates *Vec_Ptr_t) *Aig_Obj_t {\n    var pGate, pTotal *Aig_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(vGates) \u003e 0, \"Vec_PtrSize(vGates) \u003e 0\");\n    pTotal = Aig_ManConst0(pNew);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGates)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vGates, i)), 1); i++  {\n        if Aig_Regular(pGate).pNext {\n            pGate = Aig_NotCond( Aig_Regular(pGate).pNext, Aig_IsComplement(pGate) );\n        } else {\n            pGate = Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pGate).pData, Aig_IsComplement(pGate) ); }\n        pTotal = Aig_Or( pNew, pTotal, pGate );\n    }\n    return pTotal;\n}"
+    },
+    {
+      "Name": "Cgt_ManDeriveGatedAig",
+      "Start": 18394,
+      "End": 20872,
+      "BodyStart": 18500,
+      "Original": "Aig_Man_t * Cgt_ManDeriveGatedAig( Aig_Man_t * pAig, Vec_Vec_t * vGates, int fReduce, int * pnUsedNodes )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj, * pObjNew, * pObjLi, * pObjLo, * pGateNew;\n    Vec_Ptr_t * vOne;\n    int i, k;\n    Aig_ManCleanNext( pAig );\n    // label nodes\n    Vec_VecForEachEntry( Aig_Obj_t *, vGates, pObj, i, k )\n    {\n        if ( Aig_IsComplement(pObj) )\n            Aig_Regular(pObj)-\u003efMarkB = 1;\n        else\n            Aig_Regular(pObj)-\u003efMarkA = 1;\n    }\n    // construct AIG\n    assert( Aig_ManRegNum(pAig) );\n    pNew = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pAig-\u003epSpec );\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    if ( fReduce )\n    {\n        Aig_ManForEachNode( pAig, pObj, i )\n        {\n            assert( !(pObj-\u003efMarkA \u0026\u0026 pObj-\u003efMarkB) );\n            pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            if ( pObj-\u003efMarkA )\n            {\n                pObj-\u003epNext = (Aig_Obj_t *)pObj-\u003epData;\n                pObj-\u003epData = Aig_ManConst0(pNew);\n            }\n            else if ( pObj-\u003efMarkB )\n            {\n                pObj-\u003epNext = (Aig_Obj_t *)pObj-\u003epData;\n                pObj-\u003epData = Aig_ManConst1(pNew);\n            }\n        }\n    }\n    else\n    {\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    if ( pnUsedNodes != NULL )\n        *pnUsedNodes = Aig_ManNodeNum(pNew);\n    Saig_ManForEachPo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        vOne = Vec_VecEntry( vGates, i );\n        if ( Vec_PtrSize(vOne) == 0 )\n            pObjNew = Aig_ObjChild0Copy(pObjLi);\n        else\n        {\n//            pGateNew = Aig_NotCond( Aig_Regular(pGate)-\u003epData, Aig_IsComplement(pGate) );\n            pGateNew = Cgt_ManBuildClockGate( pNew, vOne );\n            pObjNew = Aig_Mux( pNew, pGateNew, (Aig_Obj_t *)pObjLo-\u003epData, Aig_ObjChild0Copy(pObjLi) );\n        }\n        pObjLi-\u003epData = Aig_ObjCreateCo( pNew, pObjNew );\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) );\n    // unlabel nodes\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManCleanNext( pAig );\n    return pNew;\n}",
+      "Draft": "func Cgt_ManDeriveGatedAig(pAig *Aig_Man_t, vGates *Vec_Vec_t, fReduce int32, pnUsedNodes *int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjNew, pObjLi, pObjLo, pGateNew *Aig_Obj_t;\n    var vOne *Vec_Ptr_t;\n    var i, k int32;\n    Aig_ManCleanNext( pAig );\n    // label nodes\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGates); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGates, i))) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGates, i), k)), 1); k++  {\n        if Aig_IsComplement(pObj) {\n            Aig_Regular(pObj).fMarkB = 1;\n        } else {\n            Aig_Regular(pObj).fMarkA = 1; }\n    }\n    }\n    // construct AIG\n    assert(Aig_ManRegNum(pAig), \"Aig_ManRegNum(pAig)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNew.pName = Abc_UtilStrsav( pAig.pName );\n    pNew.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    if fReduce != 0 {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            assert(!(pObj.fMarkA \u0026\u0026 pObj.fMarkB), \"!(pObj.fMarkA \u0026\u0026 pObj.fMarkB)\");\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            if pObj.fMarkA {\n                pObj.pNext = (Aig_Obj_t *)pObj.pData;\n                pObj.pData = Aig_ManConst0(pNew);\n            \n            } else if pObj.fMarkB {\n                pObj.pNext = (Aig_Obj_t *)pObj.pData;\n                pObj.pData = Aig_ManConst1(pNew);\n            }\n        }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n    }\n    if pnUsedNodes != nil {\n        *pnUsedNodes = Aig_ManNodeNum(pNew); }\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        vOne = Vec_VecEntry( vGates, i );\n        if Vec_PtrSize(vOne) == 0 {\n            pObjNew = Aig_ObjChild0Copy(pObjLi);\n        } else {\n//            pGateNew = Aig_NotCond( Aig_Regular(pGate)-\u003epData, Aig_IsComplement(pGate) );\n            pGateNew = Cgt_ManBuildClockGate( pNew, vOne );\n            pObjNew = Aig_Mux( pNew, pGateNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n        }\n        pObjLi.pData = Aig_ObjCreateCo( pNew, pObjNew );\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) );\n    // unlabel nodes\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManCleanNext( pAig );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::4272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3915,
+      "End": 3915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::6378",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5667,
+      "End": 5667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::6834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6126,
+      "End": 6139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::7027",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6319,
+      "End": 6332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::7972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7151,
+      "End": 7151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::8870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7939,
+      "End": 7939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::9452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8412,
+      "End": 8412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::9543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8506,
+      "End": 8519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::9595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8558,
+      "End": 8571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::10570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9366,
+      "End": 9366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::10847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9454,
+      "End": 9454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::12699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10930,
+      "End": 10943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::13285",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11364,
+      "End": 11377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::13949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12028,
+      "End": 12041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::14063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12142,
+      "End": 12155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::14212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12291,
+      "End": 12304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::14361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12440,
+      "End": 12453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::14519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12598,
+      "End": 12611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::15315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13284,
+      "End": 13284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::15661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13524,
+      "End": 13524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::16926",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14689,
+      "End": 14702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::17128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14891,
+      "End": 14904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::17317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15080,
+      "End": 15093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::19265",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16922,
+      "End": 16922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::19334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16994,
+      "End": 17007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::19370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::20147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17698,
+      "End": 17698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::20376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17931,
+      "End": 17944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::21402",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18678,
+      "End": 18678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::22045",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19145,
+      "End": 19145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::22345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19259,
+      "End": 19259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::22687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19529,
+      "End": 19542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::22859",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19701,
+      "End": 19714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::23156",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19831,
+      "End": 19831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::23608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20046,
+      "End": 20046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::pointer-cast::24287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20561,
+      "End": 20574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDetectCandidates_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDetectCandidates_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1283,
+      "End": 1890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDetectCandidates",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDetectCandidates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2170,
+      "End": 2483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::ternary::Cgt_ManDetectFanout_rec",
+      "Category": "ternary-review",
+      "Symbol": "Cgt_ManDetectFanout_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2763,
+      "End": 3259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDetectFanout_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDetectFanout_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2763,
+      "End": 3259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::ternary::Cgt_ManDetectFanout",
+      "Category": "ternary-review",
+      "Symbol": "Cgt_ManDetectFanout",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3539,
+      "End": 4452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDetectFanout",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDetectFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3539,
+      "End": 4452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManCollectVisited_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCollectVisited_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4736,
+      "End": 5188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManCollectVisited",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManCollectVisited",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5472,
+      "End": 5780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Aig_ObjChild0CopyVec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0CopyVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6016,
+      "End": 6208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Aig_ObjChild1CopyVec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1CopyVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6209,
+      "End": 6401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManConstructCareCondition",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManConstructCareCondition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6668,
+      "End": 8686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDeriveAigForGating",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDeriveAigForGating",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8951,
+      "End": 11574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManConstructCare_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManConstructCare_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11836,
+      "End": 12659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManConstructCare",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManConstructCare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12947,
+      "End": 14246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDupPartition_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDupPartition_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14513,
+      "End": 15177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDupPartition",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDupPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15469,
+      "End": 17239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManBuildClockGate",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManBuildClockGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17501,
+      "End": 18072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::Cgt_ManDeriveGatedAig",
+      "Category": "semantic-review",
+      "Symbol": "Cgt_ManDeriveGatedAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18394,
+      "End": 20872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cgt/cgtAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21119
+    }
+  ],
+  "Draft": "package cgt\n\n/**CFile****************************************************************\n\n  FileName    [cgtAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Clock gating package.]\n\n  Synopsis    [Creates AIG to compute clock-gating.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cgtAig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cgtInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes transitive fanout cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDetectCandidates_rec(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsNode(pObj) {\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin0(pObj), nLevelMax, vCands );\n        Cgt_ManDetectCandidates_rec( pAig, vUseful, Aig_ObjFanin1(pObj), nLevelMax, vCands );\n    }\n    if Aig_ObjLevel(pObj) \u003c= nLevelMax \u0026\u0026 (vUseful == nil || Vec_IntEntry(vUseful, Aig_ObjId(pObj))) {\n        Vec_PtrPush( vCands, pObj ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes transitive fanout cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDetectCandidates(pAig *Aig_Man_t, vUseful *Vec_Int_t, pObj *Aig_Obj_t, nLevelMax int32, vCands *Vec_Ptr_t) {\n    Vec_PtrClear( vCands );\n    if !Aig_ObjIsNode(pObj) {\n        return; }\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectCandidates_rec( pAig, vUseful, pObj, nLevelMax, vCands );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes transitive fanout cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDetectFanout_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var f int32;\n    var iFanout int32 = -1;\n    if Aig_ObjIsCo(pObj) || Aig_ObjLevel(pObj) \u003e nOdcMax {\n        return; }\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    Vec_PtrPush( vFanout, pObj );\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n        Cgt_ManDetectFanout_rec( pAig, pFanout, nOdcMax, vFanout );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes transitive fanout cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDetectFanout(pAig *Aig_Man_t, pObj *Aig_Obj_t, nOdcMax int32, vFanout *Vec_Ptr_t) {\n    var pFanout *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var f int32;\n    var iFanout int32 = -1;\n    // collect visited nodes\n    Vec_PtrClear( vFanout );\n    Aig_ManIncrementTravId( pAig );\n    Cgt_ManDetectFanout_rec( pAig, pObj, nOdcMax, vFanout );\n    // remove those nodes whose fanout is included\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        // go through the fanouts of this node\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(pAig.pFanData, \"pAig.pFanData\"), f = 0; (f \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = f? Aig_ObjFanoutNext(pAig, iFanout) : Aig_ObjFanout0Int(pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pAig, iFanout\u003e\u003e1)), 1); f++  {\n            if !Aig_ObjIsTravIdCurrent(pAig, pFanout) {\n                break; }\n        }\n        if f == Aig_ObjRefs(pObj) { // all fanouts are included\n            continue; }\n        Vec_PtrWriteEntry( vFanout, k++, pObj );\n    }\n    Vec_PtrShrink( vFanout, k );\n    Vec_PtrSort( vFanout, (int (*)(void))Aig_ObjCompareIdIncrease );\n    assert(Vec_PtrSize(vFanout) \u003e 0, \"Vec_PtrSize(vFanout) \u003e 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes visited nodes in the topological order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCollectVisited_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vVisited *Vec_Ptr_t) {\n    if Aig_ObjIsCi(pObj) {\n        return; }\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin0(pObj), vVisited );\n    Cgt_ManCollectVisited_rec( pAig, Aig_ObjFanin1(pObj), vVisited );\n    Vec_PtrPush( vVisited, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes visited nodes in the topological order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManCollectVisited(pAig *Aig_Man_t, vFanout *Vec_Ptr_t, vVisited *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( vVisited );\n    Aig_ManIncrementTravId( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        Cgt_ManCollectVisited_rec( pAig, pObj, vVisited );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjChild0CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId0(pObj)), Aig_ObjFaninC0(pObj));  }\nfunc Aig_ObjChild1CopyVec(vCopy *Vec_Ptr_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Vec_PtrEntry(vCopy, Aig_ObjFaninId1(pObj)), Aig_ObjFaninC1(pObj));  }\n\n/**Function*************************************************************\n\n  Synopsis    [Derives miter for clock-gating.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManConstructCareCondition(p *Cgt_Man_t, pNew *Aig_Man_t, pObjLo *Aig_Obj_t, vCopy0 *Vec_Ptr_t, vCopy1 *Vec_Ptr_t) *Aig_Obj_t {\n    var pMiter, pObj, pTemp *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ObjIsCi(pObjLo), \"Aig_ObjIsCi(pObjLo)\");\n    // detect nodes and their cone\n    Cgt_ManDetectFanout( p.pAig, pObjLo, p.pPars.nOdcMax, p.vFanout );\n    Cgt_ManCollectVisited( p.pAig, p.vFanout, p.vVisited );\n    // add new variables if the observability condition depends on PI variables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vVisited)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {\n        assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin0(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId0(pObj)) == nil {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId0(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId0(pObj), pTemp );\n        }\n        if Saig_ObjIsPi(p.pAig, Aig_ObjFanin1(pObj)) \u0026\u0026 Vec_PtrEntry(vCopy0, Aig_ObjFaninId1(pObj)) == nil {\n            pTemp = Aig_ObjCreateCi( pNew );\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjFaninId1(pObj), pTemp );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjFaninId1(pObj), pTemp );\n        }\n    }\n    // construct AIGs for the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vVisited)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVisited, i)), 1); i++  {\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy0, pObj), Aig_ObjChild1CopyVec(vCopy0, pObj) );\n        Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObj), pTemp );\n        pTemp = Aig_And( pNew, Aig_ObjChild0CopyVec(vCopy1, pObj), Aig_ObjChild1CopyVec(vCopy1, pObj) );\n        Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObj), pTemp );\n    }\n    // construct the care miter\n    pMiter = Aig_ManConst0( pNew );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vFanout)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanout, i)), 1); i++  {\n        pTemp = Aig_Exor( pNew, (Aig_Obj_t *)Vec_PtrEntry(vCopy0, Aig_ObjId(pObj)), (Aig_Obj_t *)Vec_PtrEntry(vCopy1, Aig_ObjId(pObj)) );\n        pMiter = Aig_Or( pNew, pMiter, pTemp );\n    }\n    return pMiter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG for clock-gating.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDeriveAigForGating(p *Cgt_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjLi, pObjLo, pCare, pMiter *Aig_Obj_t;\n    var vCopy0, vCopy1 *Vec_Ptr_t;\n    var i int32;\n    assert(Aig_ManRegNum(p.pAig), \"Aig_ManRegNum(p.pAig)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p.pAig) );\n    pNew.pName = Abc_UtilStrsav( \"CG_miter\" );\n    // build the first frame\n    Aig_ManConst1(p.pAig).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n//    Saig_ManForEachPo( p-\u003epAig, pObj, i )\n//        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    if p.pPars.nOdcMax \u003e 0 {\n        // create storage for observability conditions\n        vCopy0 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n        vCopy1 = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );\n        // initialize register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n        }\n        // compute observability condition for each latch output\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            // set the constants\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ManConst0(pNew) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ManConst1(pNew) );\n            // compute condition\n            pCare = Cgt_ManConstructCareCondition( p, pNew, pObjLo, vCopy0, vCopy1 );\n            // restore the values\n            Vec_PtrWriteEntry( vCopy0, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            Vec_PtrWriteEntry( vCopy1, Aig_ObjId(pObjLo), Aig_ObjChild0Copy(pObjLi) );\n            // compute the miter\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n            pMiter = Aig_And( pNew, pMiter, pCare );\n            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n        Vec_PtrFree( vCopy0 );\n        Vec_PtrFree( vCopy1 );\n    \n    } else {\n        // construct clock-gating miters for each register input\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {\n            pMiter = Aig_Exor( pNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n            pObjLi.pData = Aig_ObjCreateCo( pNew, pMiter );\n        }\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetCioIds( pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds relevant constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pNew *Aig_Man_t) *Aig_Obj_t {\n    var pObj0, pObj1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent( pCare, pObj );\n    if Aig_ObjIsCi(pObj) {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pNew );\n    if pObj0 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj1 = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pNew );\n    if pObj1 == nil {\n        return (Aig_Obj_t *)(pObj.pData = nil); }\n    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );\n    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, pObj0, pObj1 ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Builds constraints belonging to the given partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManConstructCare(pNew *Aig_Man_t, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, vLeaves *Vec_Ptr_t) {\n    var vOuts *Vec_Int_t;\n    var pLeaf, pPi, pPo, pObjAig *Aig_Obj_t;\n    var i, k, iOut int32;\n    // go through the PIs of the partition\n    // label the corresponding PIs of the care set\n    Aig_ManIncrementTravId( pCare );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pPi = Aig_ManCi( pCare, Aig_ObjCioId(pLeaf) );\n        Aig_ObjSetTravIdCurrent( pCare, pPi );\n        pPi.pData = pLeaf.pData;\n    }\n    // construct the constraints\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pLeaf) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        vOuts = Vec_VecEntryInt( vSuppsInv, Aig_ObjCioId(pLeaf) );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {\n            pPo = Aig_ManCo( pCare, iOut );\n            if Aig_ObjIsTravIdCurrent( pCare, pPo ) {\n                continue; }\n            Aig_ObjSetTravIdCurrent( pCare, pPo );\n            if Aig_ObjFanin0(pPo) == Aig_ManConst1(pCare) {\n                continue; }\n            pObjAig = Cgt_ManConstructCare_rec( pCare, Aig_ObjFanin0(pPo), pNew );\n            if pObjAig == nil {\n                continue; }\n            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );\n            Aig_ObjCreateCo( pNew, pObjAig );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG recursively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDupPartition_rec(pNew *Aig_Man_t, pAig *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t) *Aig_Obj_t {\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return (Aig_Obj_t *)pObj.pData; }\n    Aig_ObjSetTravIdCurrent(pAig, pObj);\n    if Aig_ObjIsCi(pObj) {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n        Vec_PtrPush( vLeaves, pObj );\n        return (Aig_Obj_t *)pObj.pData;\n    }\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin0(pObj), vLeaves );\n    Cgt_ManDupPartition_rec( pNew, pAig, Aig_ObjFanin1(pObj), vLeaves );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates register outputs starting from the given one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDupPartition(pFrame *Aig_Man_t, nVarsMin int32, nFlopsMin int32, iStart int32, pCare *Aig_Man_t, vSuppsInv *Vec_Vec_t, pnOutputs *int32) *Aig_Man_t {\n    var vRoots, vLeaves, vPos *Vec_Ptr_t;\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManRegNum(pFrame) == 0, \"Aig_ManRegNum(pFrame) == 0\");\n    vRoots = Vec_PtrAlloc( 100 );\n    vLeaves = Vec_PtrAlloc( 100 ); \n    vPos = Vec_PtrAlloc( 100 );\n    pNew = Aig_ManStart( nVarsMin );\n    pNew.pName = Abc_UtilStrsav( \"partition\" );\n    Aig_ManIncrementTravId( pFrame );\n    Aig_ManConst1(pFrame).pData = Aig_ManConst1(pNew);\n    Aig_ObjSetTravIdCurrent( pFrame, Aig_ManConst1(pFrame) );\n    for  i = iStart; i \u003c iStart + nFlopsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++  {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    for  ; Aig_ManObjNum(pNew) \u003c nVarsMin \u0026\u0026 i \u003c Aig_ManCoNum(pFrame); i++  {\n        pObj = Aig_ManCo( pFrame, i );\n        Cgt_ManDupPartition_rec( pNew, pFrame, Aig_ObjFanin0(pObj), vLeaves );\n        Vec_PtrPush( vRoots, Aig_ObjChild0Copy(pObj) );\n        Vec_PtrPush( vPos, pObj );\n    }\n    assert(nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin, \"nFlopsMin \u003e= Vec_PtrSize(vRoots) || Vec_PtrSize(vRoots) \u003e= nFlopsMin\");\n    // create constaints\n    if pCare != nil {\n        Cgt_ManConstructCare( pNew, pCare, vSuppsInv, vLeaves ); }\n    // create POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPos, i)), 1); i++  {\n        pObj.pData = (Aig_Obj_t *)Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vRoots, i) );\n    }\n    if pnOutputs != nil {\n        *pnOutputs = Vec_PtrSize( vPos ); }\n    Vec_PtrFree( vRoots );\n    Vec_PtrFree( vLeaves );\n    Vec_PtrFree( vPos );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements one clock-gate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManBuildClockGate(pNew *Aig_Man_t, vGates *Vec_Ptr_t) *Aig_Obj_t {\n    var pGate, pTotal *Aig_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(vGates) \u003e 0, \"Vec_PtrSize(vGates) \u003e 0\");\n    pTotal = Aig_ManConst0(pNew);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGates)) \u0026\u0026 (((pGate) = (Aig_Obj_t *)Vec_PtrEntry(vGates, i)), 1); i++  {\n        if Aig_Regular(pGate).pNext {\n            pGate = Aig_NotCond( Aig_Regular(pGate).pNext, Aig_IsComplement(pGate) );\n        } else {\n            pGate = Aig_NotCond( (Aig_Obj_t *)Aig_Regular(pGate).pData, Aig_IsComplement(pGate) ); }\n        pTotal = Aig_Or( pNew, pTotal, pGate );\n    }\n    return pTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIG after clock-gating.]\n\n  Description [The array contains, for each flop, its gate if present.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cgt_ManDeriveGatedAig(pAig *Aig_Man_t, vGates *Vec_Vec_t, fReduce int32, pnUsedNodes *int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjNew, pObjLi, pObjLo, pGateNew *Aig_Obj_t;\n    var vOne *Vec_Ptr_t;\n    var i, k int32;\n    Aig_ManCleanNext( pAig );\n    // label nodes\n    // inlining of macro Vec_VecForEachEntry\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; i \u003c Vec_VecSize(vGates); i++  {                                                        for  k = 0; (k \u003c Vec_PtrSize(Vec_VecEntry(vGates, i))) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vGates, i), k)), 1); k++  {\n        if Aig_IsComplement(pObj) {\n            Aig_Regular(pObj).fMarkB = 1;\n        } else {\n            Aig_Regular(pObj).fMarkA = 1; }\n    }\n    }\n    // construct AIG\n    assert(Aig_ManRegNum(pAig), \"Aig_ManRegNum(pAig)\");\n    pNew = Aig_ManStart( Aig_ManObjNumMax(pAig) );\n    pNew.pName = Abc_UtilStrsav( pAig.pName );\n    pNew.pSpec = Abc_UtilStrsav( pAig.pSpec );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    if fReduce != 0 {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            assert(!(pObj.fMarkA \u0026\u0026 pObj.fMarkB), \"!(pObj.fMarkA \u0026\u0026 pObj.fMarkB)\");\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n            if pObj.fMarkA {\n                pObj.pNext = (Aig_Obj_t *)pObj.pData;\n                pObj.pData = Aig_ManConst0(pNew);\n            \n            } else if pObj.fMarkB {\n                pObj.pNext = (Aig_Obj_t *)pObj.pData;\n                pObj.pData = Aig_ManConst1(pNew);\n            }\n        }\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n    }\n    if pnUsedNodes != nil {\n        *pnUsedNodes = Aig_ManNodeNum(pNew); }\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        vOne = Vec_VecEntry( vGates, i );\n        if Vec_PtrSize(vOne) == 0 {\n            pObjNew = Aig_ObjChild0Copy(pObjLi);\n        } else {\n//            pGateNew = Aig_NotCond( Aig_Regular(pGate)-\u003epData, Aig_IsComplement(pGate) );\n            pGateNew = Cgt_ManBuildClockGate( pNew, vOne );\n            pObjNew = Aig_Mux( pNew, pGateNew, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );\n        }\n        pObjLi.pData = Aig_ObjCreateCo( pNew, pObjNew );\n    }\n    Aig_ManCleanup( pNew );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pAig) );\n    // unlabel nodes\n    Aig_ManCleanMarkAB( pAig );\n    Aig_ManCleanNext( pAig );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,680 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h",
+  "SHA256": "4dc8d95239feb5599887cf64eae0c2340ba989d5b07459f8a3f75db4c9925dfe",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 57,
+        "ByteOffset": 3539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 4098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iClause - p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 5198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iClause - p.iFirst \u003c Prf_ManSize(p) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 9,
+        "ByteOffset": 5717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.iFirst2 == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 6145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry - p.iFirst \u003e= 0 \u0026\u0026 Entry - p.iFirst \u003c nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 6921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 13,
+        "ByteOffset": 7120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( clause_id(c) - p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 13,
+        "ByteOffset": 7172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( clause_id(c) - p.iFirst \u003c Prf_ManSize(p) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 17,
+        "ByteOffset": 7745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Entry \u003c 64 * p.nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 7926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 8052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 8242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 8642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFirst \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 8671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pInfo == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 8701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Prf_ManSize(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 9254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Entry \u003c 64 * p.nWords );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Prf_BitWordNum",
+      "Start": 2272,
+      "End": 2410,
+      "BodyStart": 2337,
+      "Original": "static inline int    Prf_BitWordNum( int nWidth )                { return (nWidth \u003e\u003e 6) + ((nWidth \u0026 63) \u003e 0);                           }",
+      "Draft": "func Prf_BitWordNum(nWidth int32) int32 { return (nWidth \u003e\u003e 6) + ((nWidth \u0026 63) \u003e 0);                           }"
+    },
+    {
+      "Name": "Prf_ManSize",
+      "Start": 2411,
+      "End": 2549,
+      "BodyStart": 2476,
+      "Original": "static inline int    Prf_ManSize( Prf_Man_t * p )                { return Vec_WrdSize( p-\u003evInfo ) / p-\u003enWords;                           }",
+      "Draft": "func Prf_ManSize(p *Prf_Man_t) int32 { return Vec_WrdSize( p.vInfo ) / p.nWords;                           }"
+    },
+    {
+      "Name": "Prf_ManClearNewInfo",
+      "Start": 2550,
+      "End": 2688,
+      "BodyStart": 2615,
+      "Original": "static inline void   Prf_ManClearNewInfo( Prf_Man_t * p )        { int w; for ( w = 0; w \u003c p-\u003enWords; w++ ) Vec_WrdPush( p-\u003evInfo, 0 );  }",
+      "Draft": "func Prf_ManClearNewInfo(p *Prf_Man_t) { var w int32; for  w = 0; w \u003c p.nWords; w++  { Vec_WrdPush( p.vInfo, 0 ); }  }"
+    },
+    {
+      "Name": "Prf_ManClauseInfo",
+      "Start": 2689,
+      "End": 2827,
+      "BodyStart": 2754,
+      "Original": "static inline word * Prf_ManClauseInfo( Prf_Man_t * p, int Id )  { return Vec_WrdEntryP( p-\u003evInfo, Id * p-\u003enWords );                     }",
+      "Draft": "func Prf_ManClauseInfo(p *Prf_Man_t, Id int32) *word { return Vec_WrdEntryP( p.vInfo, Id * p.nWords );                     }"
+    },
+    {
+      "Name": "Prf_ManAlloc",
+      "Start": 3284,
+      "End": 3517,
+      "BodyStart": 3325,
+      "Original": "static inline Prf_Man_t * Prf_ManAlloc()\n{\n    Prf_Man_t * p;\n    p = ABC_CALLOC( Prf_Man_t, 1 );\n    p-\u003eiFirst  = -1;\n    p-\u003eiFirst2 = -1;\n    p-\u003evInfo   = Vec_WrdAlloc( 1000 );\n    p-\u003evSaved  = Vec_IntAlloc( 1000 );\n    return p;\n}",
+      "Draft": "func Prf_ManAlloc() *Prf_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Prf_Man_t{};\n    p.iFirst  = -1;\n    p.iFirst2 = -1;\n    p.vInfo   = Vec_WrdAlloc( 1000 );\n    p.vSaved  = Vec_IntAlloc( 1000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Prf_ManStop",
+      "Start": 3518,
+      "End": 3684,
+      "BodyStart": 3566,
+      "Original": "static inline void Prf_ManStop( Prf_Man_t * p )\n{\n    if ( p == NULL )\n        return;\n    Vec_IntFree( p-\u003evSaved );\n    Vec_WrdFree( p-\u003evInfo );\n    ABC_FREE( p );\n}",
+      "Draft": "func Prf_ManStop(p *Prf_Man_t) {\n    if p == nil {\n        return; }\n    Vec_IntFree( p.vSaved );\n    Vec_WrdFree( p.vInfo );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Prf_ManStopP",
+      "Start": 3685,
+      "End": 3776,
+      "BodyStart": 3735,
+      "Original": "static inline void Prf_ManStopP( Prf_Man_t ** p )\n{\n    Prf_ManStop( *p );\n    *p = NULL;\n}",
+      "Draft": "func Prf_ManStopP(p **Prf_Man_t) {\n    Prf_ManStop( *p );\n    *p = nil;\n}"
+    },
+    {
+      "Name": "Prf_ManMemory",
+      "Start": 3777,
+      "End": 3915,
+      "BodyStart": 3829,
+      "Original": "static inline double Prf_ManMemory( Prf_Man_t * p )\n{\n    return Vec_WrdMemory(p-\u003evInfo) + Vec_IntMemory(p-\u003evSaved) + sizeof(Prf_Man_t);\n}",
+      "Draft": "func Prf_ManMemory(p *Prf_Man_t) float64 {\n    return Vec_WrdMemory(p.vInfo) + Vec_IntMemory(p.vSaved) + sizeof(Prf_Man_t);\n}"
+    },
+    {
+      "Name": "Prf_ManRestart",
+      "Start": 4151,
+      "End": 4422,
+      "BodyStart": 4246,
+      "Original": "static inline void Prf_ManRestart( Prf_Man_t * p, Vec_Int_t * vId2Pr, int iFirst, int nWidth )\n{\n    assert( p-\u003eiFirst == -1 );\n    p-\u003eiFirst = iFirst;\n    p-\u003enWords = Prf_BitWordNum( nWidth );\n    p-\u003evId2Pr = vId2Pr;\n    p-\u003epInfo  = NULL;\n    Vec_WrdClear( p-\u003evInfo );\n}",
+      "Draft": "func Prf_ManRestart(p *Prf_Man_t, vId2Pr *Vec_Int_t, iFirst int32, nWidth int32) {\n    assert(p.iFirst == -1, \"p.iFirst == -1\");\n    p.iFirst = iFirst;\n    p.nWords = Prf_BitWordNum( nWidth );\n    p.vId2Pr = vId2Pr;\n    p.pInfo  = nil;\n    Vec_WrdClear( p.vInfo );\n}"
+    },
+    {
+      "Name": "Prf_ManGrow",
+      "Start": 4423,
+      "End": 5241,
+      "BodyStart": 4483,
+      "Original": "static inline void Prf_ManGrow( Prf_Man_t * p, int nWidth )\n{\n    Vec_Wrd_t * vInfoNew;\n    int i, w, nSize, nWordsNew;\n    assert( p-\u003eiFirst \u003e= 0 );\n    assert( p-\u003epInfo == NULL );\n    if ( nWidth \u003c 64 * p-\u003enWords )\n        return;\n    // get word count after resizing\n    nWordsNew = Abc_MaxInt( Prf_BitWordNum(nWidth), 2 * p-\u003enWords );\n    // remap the entries\n    nSize = Prf_ManSize( p );\n    vInfoNew = Vec_WrdAlloc( (nSize + 1000) * nWordsNew );\n    for ( i = 0; i \u003c nSize; i++ )\n    {\n        p-\u003epInfo = Prf_ManClauseInfo( p, i );\n        for ( w = 0; w \u003c p-\u003enWords; w++ )\n            Vec_WrdPush( vInfoNew, p-\u003epInfo[w] );\n        for ( ; w \u003c nWordsNew; w++ )\n            Vec_WrdPush( vInfoNew, 0 );\n    }\n    Vec_WrdFree( p-\u003evInfo );\n    p-\u003evInfo = vInfoNew;\n    p-\u003enWords = nWordsNew;\n    p-\u003epInfo = NULL;\n\n}",
+      "Draft": "func Prf_ManGrow(p *Prf_Man_t, nWidth int32) {\n    var vInfoNew *Vec_Wrd_t;\n    var i, w, nSize, nWordsNew int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    if nWidth \u003c 64 * p.nWords {\n        return; }\n    // get word count after resizing\n    nWordsNew = Abc_MaxInt( Prf_BitWordNum(nWidth), 2 * p.nWords );\n    // remap the entries\n    nSize = Prf_ManSize( p );\n    vInfoNew = Vec_WrdAlloc( (nSize + 1000) * nWordsNew );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pInfo = Prf_ManClauseInfo( p, i );\n        for  w = 0; w \u003c p.nWords; w++  {\n            Vec_WrdPush( vInfoNew, p.pInfo[w] );\n        }\n        for  ; w \u003c nWordsNew; w++  {\n            Vec_WrdPush( vInfoNew, 0 );\n        }\n    }\n    Vec_WrdFree( p.vInfo );\n    p.vInfo = vInfoNew;\n    p.nWords = nWordsNew;\n    p.pInfo = nil;\n\n}"
+    },
+    {
+      "Name": "Prf_ManShrink",
+      "Start": 5242,
+      "End": 5497,
+      "BodyStart": 5305,
+      "Original": "static inline void Prf_ManShrink( Prf_Man_t * p, int iClause )\n{\n    assert( p-\u003eiFirst \u003e= 0 );\n    assert( iClause - p-\u003eiFirst \u003e= 0 );\n    assert( iClause - p-\u003eiFirst \u003c Prf_ManSize(p) ); \n    Vec_WrdShrink( p-\u003evInfo, (iClause - p-\u003eiFirst) * p-\u003enWords );\n}",
+      "Draft": "func Prf_ManShrink(p *Prf_Man_t, iClause int32) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(iClause - p.iFirst \u003e= 0, \"iClause - p.iFirst \u003e= 0\");\n    assert(iClause - p.iFirst \u003c Prf_ManSize(p), \"iClause - p.iFirst \u003c Prf_ManSize(p)\"); \n    Vec_WrdShrink( p.vInfo, (iClause - p.iFirst) * p.nWords );\n}"
+    },
+    {
+      "Name": "Prf_ManAddSaved",
+      "Start": 5733,
+      "End": 6023,
+      "BodyStart": 5802,
+      "Original": "static inline void Prf_ManAddSaved( Prf_Man_t * p, int i, int iNew )\n{\n    assert( p-\u003eiFirst \u003e= 0 );\n    if ( i \u003c p-\u003eiFirst )\n        return;\n    if ( Vec_IntSize(p-\u003evSaved) == 0 )\n    {\n        assert( p-\u003eiFirst2 == -1 );\n        p-\u003eiFirst2 = iNew;\n    }\n    Vec_IntPush( p-\u003evSaved, i );\n}",
+      "Draft": "func Prf_ManAddSaved(p *Prf_Man_t, i int32, iNew int32) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    if i \u003c p.iFirst {\n        return; }\n    if Vec_IntSize(p.vSaved) == 0 {\n        assert(p.iFirst2 == -1, \"p.iFirst2 == -1\");\n        p.iFirst2 = iNew;\n    }\n    Vec_IntPush( p.vSaved, i );\n}"
+    },
+    {
+      "Name": "Prf_ManCompact",
+      "Start": 6024,
+      "End": 6732,
+      "BodyStart": 6085,
+      "Original": "static inline void Prf_ManCompact( Prf_Man_t * p, int iNew )\n{\n    int i, w, k = 0, Entry, nSize;\n    assert( p-\u003eiFirst \u003e= 0 );\n    assert( p-\u003epInfo == NULL );\n    nSize = Prf_ManSize( p );\n    Vec_IntForEachEntry( p-\u003evSaved, Entry, i )\n    {\n        assert( Entry - p-\u003eiFirst \u003e= 0 \u0026\u0026 Entry - p-\u003eiFirst \u003c nSize );\n        p-\u003epInfo = Prf_ManClauseInfo( p, Entry - p-\u003eiFirst );\n        for ( w = 0; w \u003c p-\u003enWords; w++ )\n            Vec_WrdWriteEntry( p-\u003evInfo, k++, p-\u003epInfo[w] );\n    }\n    Vec_WrdShrink( p-\u003evInfo, k );\n    Vec_IntClear( p-\u003evSaved );\n    p-\u003epInfo = NULL;\n    // update first\n    if ( p-\u003eiFirst2 == -1 )\n        p-\u003eiFirst = iNew;\n    else\n        p-\u003eiFirst = p-\u003eiFirst2;\n    p-\u003eiFirst2 = -1;\n}",
+      "Draft": "func Prf_ManCompact(p *Prf_Man_t, iNew int32) {\n    var i, w, k, Entry, nSize int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    nSize = Prf_ManSize( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vSaved)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vSaved, i)), 1); i++  {\n        assert(Entry - p.iFirst \u003e= 0 \u0026\u0026 Entry - p.iFirst \u003c nSize, \"Entry - p.iFirst \u003e= 0 \u0026\u0026 Entry - p.iFirst \u003c nSize\");\n        p.pInfo = Prf_ManClauseInfo( p, Entry - p.iFirst );\n        for  w = 0; w \u003c p.nWords; w++  {\n            Vec_WrdWriteEntry( p.vInfo, k++, p.pInfo[w] );\n        }\n    }\n    Vec_WrdShrink( p.vInfo, k );\n    Vec_IntClear( p.vSaved );\n    p.pInfo = nil;\n    // update first\n    if p.iFirst2 == -1 {\n        p.iFirst = iNew;\n    } else {\n        p.iFirst = p.iFirst2; }\n    p.iFirst2 = -1;\n}"
+    },
+    {
+      "Name": "Prf_ManChainResolve",
+      "Start": 6968,
+      "End": 8035,
+      "BodyStart": 7036,
+      "Original": "static inline void Prf_ManChainResolve( Prf_Man_t * p, clause * c )\n{\n    assert( p-\u003eiFirst \u003e= 0 );\n    assert( p-\u003epInfo != NULL );\n    // add to proof info\n    if ( c-\u003elrn ) // learned clause\n    {\n        if ( clause_id(c) \u003e= p-\u003eiFirst )\n        {\n            word * pProofStart;\n            int w;\n            assert( clause_id(c) - p-\u003eiFirst \u003e= 0 );\n            assert( clause_id(c) - p-\u003eiFirst \u003c Prf_ManSize(p) ); \n            pProofStart = Prf_ManClauseInfo( p, clause_id(c) - p-\u003eiFirst );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                p-\u003epInfo[w] |= pProofStart[w];\n        }\n    }\n    else // problem clause\n    {  \n        if ( clause_id(c) \u003e= 0 ) // has proof ID\n        {\n            int Entry;\n            if ( p-\u003evId2Pr == NULL )\n                Entry = clause_id(c);\n            else\n                Entry = Vec_IntEntry( p-\u003evId2Pr, clause_id(c) );\n            if ( Entry \u003e= 0 )\n            {\n                assert( Entry \u003c 64 * p-\u003enWords );\n                Abc_InfoSetBit( (unsigned *)p-\u003epInfo, Entry );\n            }\n        }\n    }\n}",
+      "Draft": "func Prf_ManChainResolve(p *Prf_Man_t, c *clause) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo != nil, \"p.pInfo != nil\");\n    // add to proof info\n    if c.lrn { // learned clause\n    \n        if clause_id(c) \u003e= p.iFirst {\n            var pProofStart *word;\n            var w int32;\n            assert(clause_id(c) - p.iFirst \u003e= 0, \"clause_id(c) - p.iFirst \u003e= 0\");\n            assert(clause_id(c) - p.iFirst \u003c Prf_ManSize(p), \"clause_id(c) - p.iFirst \u003c Prf_ManSize(p)\"); \n            pProofStart = Prf_ManClauseInfo( p, clause_id(c) - p.iFirst );\n            for  w = 0; w \u003c p.nWords; w++  {\n                p.pInfo[w] |= pProofStart[w];\n            }\n        }\n    \n    } else { // problem clause\n      \n        if clause_id(c) \u003e= 0 { // has proof ID\n        \n            var Entry int32;\n            if p.vId2Pr == nil {\n                Entry = clause_id(c);\n            } else {\n                Entry = Vec_IntEntry( p.vId2Pr, clause_id(c) ); }\n            if Entry \u003e= 0 {\n                assert(Entry \u003c 64 * p.nWords, \"Entry \u003c 64 * p.nWords\");\n                Abc_InfoSetBit( (unsigned *)p.pInfo, Entry );\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Prf_ManChainStart",
+      "Start": 8036,
+      "End": 8379,
+      "BodyStart": 8102,
+      "Original": "static inline void Prf_ManChainStart( Prf_Man_t * p, clause * c )\n{\n    assert( p-\u003eiFirst \u003e= 0 );\n    // prepare info for new clause\n    Prf_ManClearNewInfo( p );\n    // get pointer to the proof\n    assert( p-\u003epInfo == NULL );\n    p-\u003epInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    // add to proof info\n    Prf_ManChainResolve( p, c );\n}",
+      "Draft": "func Prf_ManChainStart(p *Prf_Man_t, c *clause) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    // prepare info for new clause\n    Prf_ManClearNewInfo( p );\n    // get pointer to the proof\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    // add to proof info\n    Prf_ManChainResolve( p, c );\n}"
+    },
+    {
+      "Name": "Prf_ManChainStop",
+      "Start": 8380,
+      "End": 8502,
+      "BodyStart": 8432,
+      "Original": "static inline int Prf_ManChainStop( Prf_Man_t * p )\n{\n    assert( p-\u003epInfo != NULL );\n    p-\u003epInfo = NULL;\n    return 0;\n}",
+      "Draft": "func Prf_ManChainStop(p *Prf_Man_t) int32 {\n    assert(p.pInfo != nil, \"p.pInfo != nil\");\n    p.pInfo = nil;\n    return 0;\n}"
+    },
+    {
+      "Name": "Prf_ManUnsatCore",
+      "Start": 8739,
+      "End": 9597,
+      "BodyStart": 8799,
+      "Original": "static inline Vec_Int_t * Prf_ManUnsatCore( Prf_Man_t * p )\n{\n    Vec_Int_t * vCore;\n    int i, Entry;\n    assert( p-\u003eiFirst \u003e= 0 );\n    assert( p-\u003epInfo == NULL );\n    assert( Prf_ManSize(p) \u003e 0 );\n    vCore = Vec_IntAlloc( 64 * p-\u003enWords );\n    p-\u003epInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    if ( p-\u003evId2Pr == NULL )\n    {\n        for ( i = 0; i \u003c 64 * p-\u003enWords; i++ )\n            if ( Abc_InfoHasBit( (unsigned *)p-\u003epInfo, i ) )\n                Vec_IntPush( vCore, i );\n    }\n    else\n    {\n        Vec_IntForEachEntry( p-\u003evId2Pr, Entry, i )\n        {\n            if ( Entry \u003c 0 )\n                continue;\n            assert( Entry \u003c 64 * p-\u003enWords );\n            if ( Abc_InfoHasBit( (unsigned *)p-\u003epInfo, Entry ) )\n                Vec_IntPush( vCore, i );\n        }\n    }\n    p-\u003epInfo = NULL;\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}",
+      "Draft": "func Prf_ManUnsatCore(p *Prf_Man_t) *Vec_Int_t {\n    var vCore *Vec_Int_t;\n    var i, Entry int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    assert(Prf_ManSize(p) \u003e 0, \"Prf_ManSize(p) \u003e 0\");\n    vCore = Vec_IntAlloc( 64 * p.nWords );\n    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    if p.vId2Pr == nil {\n        for  i = 0; i \u003c 64 * p.nWords; i++  {\n            if Abc_InfoHasBit( (unsigned *)p.pInfo, i ) {\n                Vec_IntPush( vCore, i ); }\n        }\n    \n    } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vId2Pr)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vId2Pr, i)), 1); i++  {\n            if Entry \u003c 0 {\n                continue; }\n            assert(Entry \u003c 64 * p.nWords, \"Entry \u003c 64 * p.nWords\");\n            if Abc_InfoHasBit( (unsigned *)p.pInfo, Entry ) {\n                Vec_IntPush( vCore, i ); }\n        }\n    }\n    p.pInfo = nil;\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::struct::Prf_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Prf_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1307,
+      "End": 1830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::mechanical::sizeof::3435",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3354,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::mechanical::sizeof::4041",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3895,
+      "End": 3901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::pointer-cast::3401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3354,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::pointer-cast::3799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3668,
+      "End": 3668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::pointer-cast::8227",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7973,
+      "End": 7985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::pointer-cast::9408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9154,
+      "End": 9166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::pointer-cast::9801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9439,
+      "End": 9451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_BitWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Prf_BitWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2272,
+      "End": 2410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManSize",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2411,
+      "End": 2549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManClearNewInfo",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManClearNewInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2550,
+      "End": 2688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManClauseInfo",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManClauseInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2689,
+      "End": 2827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3284,
+      "End": 3517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::ternary::Prf_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Prf_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3518,
+      "End": 3684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3518,
+      "End": 3684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManStopP",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManStopP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3685,
+      "End": 3776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManMemory",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3777,
+      "End": 3915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManRestart",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4151,
+      "End": 4422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManGrow",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4423,
+      "End": 5241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManShrink",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5242,
+      "End": 5497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManAddSaved",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManAddSaved",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5733,
+      "End": 6023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManCompact",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManCompact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6024,
+      "End": 6732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManChainResolve",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManChainResolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6968,
+      "End": 8035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManChainStart",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManChainStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8036,
+      "End": 8379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManChainStop",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManChainStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8380,
+      "End": 8502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::Prf_ManUnsatCore",
+      "Category": "semantic-review",
+      "Symbol": "Prf_ManUnsatCore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8739,
+      "End": 9597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satProof2.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9855
+    }
+  ],
+  "Draft": "package bsat\n\n/**CFile****************************************************************\n\n  FileName    [satProof2.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver.]\n\n  Synopsis    [Proof logging.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: satProof2.h,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Prf_Man_t struct {\n    iFirst             int32;    // first learned clause with proof\n    iFirst2             int32;   // first learned clause with proof\n    nWords             int32;    // the number of proof words\n    pInfo           *word;     // pointer to the current proof\n    vInfo      *Vec_Wrd_t;     // proof information\n    vSaved      *Vec_Int_t;    // IDs of saved clauses\n    vId2Pr      *Vec_Int_t;    // mapping proof IDs of problem clauses into bitshifts (user's array)\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Prf_BitWordNum(nWidth int32) int32 { return (nWidth \u003e\u003e 6) + ((nWidth \u0026 63) \u003e 0);                           }\nfunc Prf_ManSize(p *Prf_Man_t) int32 { return Vec_WrdSize( p.vInfo ) / p.nWords;                           }\nfunc Prf_ManClearNewInfo(p *Prf_Man_t) { var w int32; for  w = 0; w \u003c p.nWords; w++  { Vec_WrdPush( p.vInfo, 0 ); }  }\nfunc Prf_ManClauseInfo(p *Prf_Man_t, Id int32) *word { return Vec_WrdEntryP( p.vInfo, Id * p.nWords );                     }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prf_ManAlloc() *Prf_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Prf_Man_t{};\n    p.iFirst  = -1;\n    p.iFirst2 = -1;\n    p.vInfo   = Vec_WrdAlloc( 1000 );\n    p.vSaved  = Vec_IntAlloc( 1000 );\n    return p;\n}\nfunc Prf_ManStop(p *Prf_Man_t) {\n    if p == nil {\n        return; }\n    Vec_IntFree( p.vSaved );\n    Vec_WrdFree( p.vInfo );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Prf_ManStopP(p **Prf_Man_t) {\n    Prf_ManStop( *p );\n    *p = nil;\n}\nfunc Prf_ManMemory(p *Prf_Man_t) float64 {\n    return Vec_WrdMemory(p.vInfo) + Vec_IntMemory(p.vSaved) + sizeof(Prf_Man_t);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prf_ManRestart(p *Prf_Man_t, vId2Pr *Vec_Int_t, iFirst int32, nWidth int32) {\n    assert(p.iFirst == -1, \"p.iFirst == -1\");\n    p.iFirst = iFirst;\n    p.nWords = Prf_BitWordNum( nWidth );\n    p.vId2Pr = vId2Pr;\n    p.pInfo  = nil;\n    Vec_WrdClear( p.vInfo );\n}\nfunc Prf_ManGrow(p *Prf_Man_t, nWidth int32) {\n    var vInfoNew *Vec_Wrd_t;\n    var i, w, nSize, nWordsNew int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    if nWidth \u003c 64 * p.nWords {\n        return; }\n    // get word count after resizing\n    nWordsNew = Abc_MaxInt( Prf_BitWordNum(nWidth), 2 * p.nWords );\n    // remap the entries\n    nSize = Prf_ManSize( p );\n    vInfoNew = Vec_WrdAlloc( (nSize + 1000) * nWordsNew );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pInfo = Prf_ManClauseInfo( p, i );\n        for  w = 0; w \u003c p.nWords; w++  {\n            Vec_WrdPush( vInfoNew, p.pInfo[w] );\n        }\n        for  ; w \u003c nWordsNew; w++  {\n            Vec_WrdPush( vInfoNew, 0 );\n        }\n    }\n    Vec_WrdFree( p.vInfo );\n    p.vInfo = vInfoNew;\n    p.nWords = nWordsNew;\n    p.pInfo = nil;\n\n}\nfunc Prf_ManShrink(p *Prf_Man_t, iClause int32) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(iClause - p.iFirst \u003e= 0, \"iClause - p.iFirst \u003e= 0\");\n    assert(iClause - p.iFirst \u003c Prf_ManSize(p), \"iClause - p.iFirst \u003c Prf_ManSize(p)\"); \n    Vec_WrdShrink( p.vInfo, (iClause - p.iFirst) * p.nWords );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prf_ManAddSaved(p *Prf_Man_t, i int32, iNew int32) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    if i \u003c p.iFirst {\n        return; }\n    if Vec_IntSize(p.vSaved) == 0 {\n        assert(p.iFirst2 == -1, \"p.iFirst2 == -1\");\n        p.iFirst2 = iNew;\n    }\n    Vec_IntPush( p.vSaved, i );\n}\nfunc Prf_ManCompact(p *Prf_Man_t, iNew int32) {\n    var i, w, k, Entry, nSize int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    nSize = Prf_ManSize( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vSaved)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vSaved, i)), 1); i++  {\n        assert(Entry - p.iFirst \u003e= 0 \u0026\u0026 Entry - p.iFirst \u003c nSize, \"Entry - p.iFirst \u003e= 0 \u0026\u0026 Entry - p.iFirst \u003c nSize\");\n        p.pInfo = Prf_ManClauseInfo( p, Entry - p.iFirst );\n        for  w = 0; w \u003c p.nWords; w++  {\n            Vec_WrdWriteEntry( p.vInfo, k++, p.pInfo[w] );\n        }\n    }\n    Vec_WrdShrink( p.vInfo, k );\n    Vec_IntClear( p.vSaved );\n    p.pInfo = nil;\n    // update first\n    if p.iFirst2 == -1 {\n        p.iFirst = iNew;\n    } else {\n        p.iFirst = p.iFirst2; }\n    p.iFirst2 = -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prf_ManChainResolve(p *Prf_Man_t, c *clause) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo != nil, \"p.pInfo != nil\");\n    // add to proof info\n    if c.lrn { // learned clause\n    \n        if clause_id(c) \u003e= p.iFirst {\n            var pProofStart *word;\n            var w int32;\n            assert(clause_id(c) - p.iFirst \u003e= 0, \"clause_id(c) - p.iFirst \u003e= 0\");\n            assert(clause_id(c) - p.iFirst \u003c Prf_ManSize(p), \"clause_id(c) - p.iFirst \u003c Prf_ManSize(p)\"); \n            pProofStart = Prf_ManClauseInfo( p, clause_id(c) - p.iFirst );\n            for  w = 0; w \u003c p.nWords; w++  {\n                p.pInfo[w] |= pProofStart[w];\n            }\n        }\n    \n    } else { // problem clause\n      \n        if clause_id(c) \u003e= 0 { // has proof ID\n        \n            var Entry int32;\n            if p.vId2Pr == nil {\n                Entry = clause_id(c);\n            } else {\n                Entry = Vec_IntEntry( p.vId2Pr, clause_id(c) ); }\n            if Entry \u003e= 0 {\n                assert(Entry \u003c 64 * p.nWords, \"Entry \u003c 64 * p.nWords\");\n                Abc_InfoSetBit( (unsigned *)p.pInfo, Entry );\n            }\n        }\n    }\n}\nfunc Prf_ManChainStart(p *Prf_Man_t, c *clause) {\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    // prepare info for new clause\n    Prf_ManClearNewInfo( p );\n    // get pointer to the proof\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    // add to proof info\n    Prf_ManChainResolve( p, c );\n}\nfunc Prf_ManChainStop(p *Prf_Man_t) int32 {\n    assert(p.pInfo != nil, \"p.pInfo != nil\");\n    p.pInfo = nil;\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prf_ManUnsatCore(p *Prf_Man_t) *Vec_Int_t {\n    var vCore *Vec_Int_t;\n    var i, Entry int32;\n    assert(p.iFirst \u003e= 0, \"p.iFirst \u003e= 0\");\n    assert(p.pInfo == nil, \"p.pInfo == nil\");\n    assert(Prf_ManSize(p) \u003e 0, \"Prf_ManSize(p) \u003e 0\");\n    vCore = Vec_IntAlloc( 64 * p.nWords );\n    p.pInfo = Prf_ManClauseInfo( p, Prf_ManSize(p)-1 );\n    if p.vId2Pr == nil {\n        for  i = 0; i \u003c 64 * p.nWords; i++  {\n            if Abc_InfoHasBit( (unsigned *)p.pInfo, i ) {\n                Vec_IntPush( vCore, i ); }\n        }\n    \n    } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vId2Pr)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vId2Pr, i)), 1); i++  {\n            if Entry \u003c 0 {\n                continue; }\n            assert(Entry \u003c 64 * p.nWords, \"Entry \u003c 64 * p.nWords\");\n            if Abc_InfoHasBit( (unsigned *)p.pInfo, Entry ) {\n                Vec_IntPush( vCore, i ); }\n        }\n    }\n    p.pInfo = nil;\n    Vec_IntSort( vCore, 1 );\n    return vCore;\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

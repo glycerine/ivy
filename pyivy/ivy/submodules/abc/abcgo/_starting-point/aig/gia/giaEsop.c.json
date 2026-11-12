@@ -1,0 +1,530 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c",
+  "SHA256": "3a35af9d368616e932357b46688ad47171df3a2fef00cf56632fe5231059ffe1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 58,
+        "ByteOffset": 1434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Eso_ManCube(p *Eso_Man_t, iCube int32) *Vec_Int_t { assert( iCube \u003e= 0 ); return Hsh_VecReadEntry(p.pHash, iCube); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 94,
+        "Column": 57,
+        "ByteOffset": 3169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Const 0\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vEsop) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 13,
+        "ByteOffset": 4129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s\", Vec_StrArray(vStr) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 13,
+        "ByteOffset": 4503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s\", Vec_StrArray(vStr) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 9731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 11712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 17,
+        "ByteOffset": 13500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_IntSize(Eso_ManCube(p, Cube)) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 14697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCube.nSize \u003c= vCube.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 14738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCube.nSize \u003e= vCube1.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 5,
+        "ByteOffset": 14781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vCube.nSize \u003e= vCube2.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 513,
+        "Column": 13,
+        "ByteOffset": 18891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Output %3d:  ESOP has %5d cubes\\n\", i, Vec_IntSize(vEsop1) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 520,
+        "Column": 9,
+        "ByteOffset": 19162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. \", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Eso_ManCube",
+      "Start": 1380,
+      "End": 1513,
+      "BodyStart": 1446,
+      "Original": "static inline Vec_Int_t * Eso_ManCube( Eso_Man_t * p, int iCube ) { assert( iCube \u003e= 0 ); return Hsh_VecReadEntry(p-\u003epHash, iCube); }",
+      "Draft": "func Eso_ManCube(p *Eso_Man_t, iCube int32) *Vec_Int_t { assert(iCube \u003e= 0, \"iCube \u003e= 0\"); return Hsh_VecReadEntry(p.pHash, iCube); }"
+    },
+    {
+      "Name": "Eso_ManAlloc",
+      "Start": 1993,
+      "End": 2788,
+      "BodyStart": 2038,
+      "Original": "Eso_Man_t * Eso_ManAlloc( Gia_Man_t * pGia )\n{\n    int i, n, Id;\n    Eso_Man_t * p = ABC_CALLOC( Eso_Man_t, 1 );\n    p-\u003epGia   = pGia;\n    p-\u003enVars  = Gia_ManCiNum(pGia);\n    p-\u003eCube1  = ABC_INFINITY;\n    p-\u003evEsops = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p-\u003epHash  = Hsh_VecManStart( 1000 );\n    p-\u003evCubes = Vec_WecStart(Gia_ManCiNum(pGia)+1);\n    p-\u003evCube1 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p-\u003evCube2 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p-\u003evCube  = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    Gia_ManForEachCiId( pGia, Id, i )\n    {\n        for ( n = 0; n \u003c 2; n++ )\n        {\n            Vec_IntFill( p-\u003evCube, 1, Abc_Var2Lit(i, n) );\n            Hsh_VecManAdd( p-\u003epHash, p-\u003evCube );\n        }\n        Vec_IntPush( Vec_WecEntry(p-\u003evEsops, Id), Abc_Var2Lit(i, 0) );\n    }\n    return p;\n}",
+      "Draft": "func Eso_ManAlloc(pGia *Gia_Man_t) *Eso_Man_t {\n    var i, n, Id int32;\n    // inlining of macro ABC_CALLOC\n    var p *Eso_Man_t  = \u0026Eso_Man_t{};\n    p.pGia   = pGia;\n    p.nVars  = Gia_ManCiNum(pGia);\n    p.Cube1  = ABC_INFINITY;\n    p.vEsops = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p.pHash  = Hsh_VecManStart( 1000 );\n    p.vCubes = Vec_WecStart(Gia_ManCiNum(pGia)+1);\n    p.vCube1 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p.vCube2 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p.vCube  = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pGia, Gia_ManCi(pGia, i))); i++  {\n        for  n = 0; n \u003c 2; n++  {\n            Vec_IntFill( p.vCube, 1, Abc_Var2Lit(i, n) );\n            Hsh_VecManAdd( p.pHash, p.vCube );\n        }\n        Vec_IntPush( Vec_WecEntry(p.vEsops, Id), Abc_Var2Lit(i, 0) );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Eso_ManStop",
+      "Start": 2789,
+      "End": 3026,
+      "BodyStart": 2823,
+      "Original": "void Eso_ManStop( Eso_Man_t * p )\n{\n    Vec_WecFree( p-\u003evEsops );\n    Hsh_VecManStop( p-\u003epHash );\n    Vec_WecFree( p-\u003evCubes );\n    Vec_IntFree( p-\u003evCube1 );\n    Vec_IntFree( p-\u003evCube2 );\n    Vec_IntFree( p-\u003evCube );\n    ABC_FREE( p );\n}",
+      "Draft": "func Eso_ManStop(p *Eso_Man_t) {\n    Vec_WecFree( p.vEsops );\n    Hsh_VecManStop( p.pHash );\n    Vec_WecFree( p.vCubes );\n    Vec_IntFree( p.vCube1 );\n    Vec_IntFree( p.vCube2 );\n    Vec_IntFree( p.vCube );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Eso_ManCoverPrint",
+      "Start": 3299,
+      "End": 4333,
+      "BodyStart": 3358,
+      "Original": "void Eso_ManCoverPrint( Eso_Man_t * p, Vec_Int_t * vEsop )\n{\n    Vec_Str_t * vStr;\n    Vec_Int_t * vCube;\n    int i, k, Lit, Cube;\n    if ( Vec_IntSize(vEsop) == 0 )\n    {\n        printf( \"Const 0\\n\" );\n        return;\n    }\n    vStr = Vec_StrAlloc( p-\u003enVars + 4 );\n    Vec_StrFill( vStr, p-\u003enVars, '-' );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    Vec_StrPush( vStr, '\\0' );\n    assert( Vec_IntSize(vEsop) \u003e 0 );\n    Vec_IntForEachEntry( vEsop, Cube, i )\n    {\n        if ( Cube == p-\u003eCube1 )\n            printf( \"%s\", Vec_StrArray(vStr) );\n        else \n        {\n            vCube = Eso_ManCube( p, Cube );\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), (char)(Abc_LitIsCompl(Lit)?'0':'1') );\n            printf( \"%s\", Vec_StrArray(vStr) );\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), '-' );\n        }\n    }\n    printf( \"\\n\" );\n    Vec_StrFree( vStr );\n}",
+      "Draft": "func Eso_ManCoverPrint(p *Eso_Man_t, vEsop *Vec_Int_t) {\n    var vStr *Vec_Str_t;\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Cube int32;\n    if Vec_IntSize(vEsop) == 0 {\n        fmt.Printf(\"Const 0\\n\");\n        return;\n    }\n    vStr = Vec_StrAlloc( p.nVars + 4 );\n    Vec_StrFill( vStr, p.nVars, '-' );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    Vec_StrPush( vStr, '\\0' );\n    assert(Vec_IntSize(vEsop) \u003e 0, \"Vec_IntSize(vEsop) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, i)), 1); i++  {\n        if Cube == p.Cube1 {\n            fmt.Printf(\"%s\", Vec_StrArray(vStr));\n        } else {\n            vCube = Eso_ManCube( p, Cube );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit)?'0':'1')) );\n            }\n            fmt.Printf(\"%s\", Vec_StrArray(vStr));\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), '-' );\n            }\n        }\n    }\n    fmt.Printf(\"\\n\");\n    Vec_StrFree( vStr );\n}"
+    },
+    {
+      "Name": "Eso_ManCoverDerive",
+      "Start": 4334,
+      "End": 5227,
+      "BodyStart": 4402,
+      "Original": "Vec_Wec_t * Eso_ManCoverDerive( Eso_Man_t * p, Vec_Ptr_t * vCover )\n{\n    Vec_Wec_t * vRes;\n    Vec_Int_t * vEsop, * vLevel;  int i;\n    vRes = Vec_WecAlloc( Vec_VecSizeSize((Vec_Vec_t *)vCover) );\n    Vec_PtrForEachEntry( Vec_Int_t *, vCover, vEsop, i )\n    {\n        if ( Vec_IntSize(vEsop) \u003e 0 )\n        {\n            int c, Cube;\n            Vec_IntForEachEntry( vEsop, Cube, c )\n            {\n                vLevel = Vec_WecPushLevel( vRes );\n                if ( Cube != p-\u003eCube1 )\n                {\n                    int k, Lit;\n                    Vec_Int_t * vCube = Eso_ManCube( p, Cube );\n                    Vec_IntForEachEntry( vCube, Lit, k )\n                        Vec_IntPush( vLevel, Lit );\n                }\n                Vec_IntPush( vLevel, -i-1 );\n            }\n        }\n    }\n    //assert( Abc_MaxInt(Vec_WecSize(vRes), 8) == Vec_WecCap(vRes) );\n    return vRes;\n}",
+      "Draft": "func Eso_ManCoverDerive(p *Eso_Man_t, vCover *Vec_Ptr_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t;\n    var vEsop, vLevel *Vec_Int_t;  var i int32;\n    vRes = Vec_WecAlloc( Vec_VecSizeSize((Vec_Vec_t *)vCover) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCover)) \u0026\u0026 (((vEsop) = (Vec_Int_t *)Vec_PtrEntry(vCover, i)), 1); i++  {\n        if Vec_IntSize(vEsop) \u003e 0 {\n            var c, Cube int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  c = 0; (c \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, c)), 1); c++  {\n                vLevel = Vec_WecPushLevel( vRes );\n                if Cube != p.Cube1 {\n                    var k, Lit int32;\n                    var vCube *Vec_Int_t  = Eso_ManCube( p, Cube );\n                    // inlining of macro Vec_IntForEachEntry\n                    for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                        Vec_IntPush( vLevel, Lit );\n                    }\n                }\n                Vec_IntPush( vLevel, -i-1 );\n            }\n        }\n    }\n    //assert( Abc_MaxInt(Vec_WecSize(vRes), 8) == Vec_WecCap(vRes) );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Eso_ManCoverConvert",
+      "Start": 5228,
+      "End": 6499,
+      "BodyStart": 5297,
+      "Original": "Gia_Man_t * Eso_ManCoverConvert( Eso_Man_t * p, Vec_Ptr_t * vCover )\n{\n    Vec_Int_t * vEsop;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;  int i;\n    pNew = Gia_ManStart( Gia_ManObjNum(p-\u003epGia) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epGia-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epGia-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p-\u003epGia)-\u003eValue = 0;\n    Gia_ManForEachCi( p-\u003epGia, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Vec_PtrForEachEntry( Vec_Int_t *, vCover, vEsop, i )\n    {\n        if ( Vec_IntSize(vEsop) \u003e 0 )\n        {\n            int c, Cube, iRoot = 0;\n            Vec_IntForEachEntry( vEsop, Cube, c )\n            {\n                int k, Lit, iAnd = 1;\n                if ( Cube != p-\u003eCube1 )\n                {\n                    Vec_Int_t * vCube = Eso_ManCube( p, Cube );\n                    Vec_IntForEachEntry( vCube, Lit, k )\n                        iAnd = Gia_ManHashAnd( pNew, iAnd, Lit + 2 );\n                }\n                iRoot = Gia_ManHashXor( pNew, iRoot, iAnd );\n            }\n            Gia_ManAppendCo( pNew, iRoot );\n        }\n        else\n            Gia_ManAppendCo( pNew, 0 );\n    }\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Eso_ManCoverConvert(p *Eso_Man_t, vCover *Vec_Ptr_t) *Gia_Man_t {\n    var vEsop *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;  var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p.pGia) );\n    pNew.pName = Abc_UtilStrsav( p.pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p.pGia).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCover)) \u0026\u0026 (((vEsop) = (Vec_Int_t *)Vec_PtrEntry(vCover, i)), 1); i++  {\n        if Vec_IntSize(vEsop) \u003e 0 {\n            var c, Cube, iRoot int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  c = 0; (c \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, c)), 1); c++  {\n                var k int32;\n                var Lit int32;\n                var iAnd int32 = 1;\n                if Cube != p.Cube1 {\n                    var vCube *Vec_Int_t  = Eso_ManCube( p, Cube );\n                    // inlining of macro Vec_IntForEachEntry\n                    for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                        iAnd = Gia_ManHashAnd( pNew, iAnd, Lit + 2 );\n                    }\n                }\n                iRoot = Gia_ManHashXor( pNew, iRoot, iAnd );\n            }\n            Gia_ManAppendCo( pNew, iRoot );\n        \n        } else {\n            Gia_ManAppendCo( pNew, 0 ); }\n    }\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Eso_ManFindDistOneLitEqual",
+      "Start": 6748,
+      "End": 7169,
+      "BodyStart": 6857,
+      "Original": "int Eso_ManFindDistOneLitEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 and pCube2 both have nLits\n{\n    int i, iDiff = -1;\n    for ( i = 0; i \u003c nLits; i++ )\n        if ( pCube1[i] != pCube2[i] )\n        {\n            if ( iDiff != -1 )\n                return -1;\n            if ( Abc_Lit2Var(pCube1[i]) != Abc_Lit2Var(pCube2[i]) )\n                return -1;\n            iDiff = i;\n        }\n    return iDiff;\n}",
+      "Draft": "int Eso_ManFindDistOneLitEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 and pCube2 both have nLits\n{\n    var i int32;\n    var iDiff int32 = -1;\n    for  i = 0; i \u003c nLits; i++  {\n        if pCube1[i] != pCube2[i] {\n            if iDiff != -1 {\n                return -1; }\n            if Abc_Lit2Var(pCube1[i]) != Abc_Lit2Var(pCube2[i]) {\n                return -1; }\n            iDiff = i;\n        }\n    }\n    return iDiff;\n}"
+    },
+    {
+      "Name": "Eso_ManFindDistOneLitNotEqual",
+      "Start": 7170,
+      "End": 7579,
+      "BodyStart": 7287,
+      "Original": "int Eso_ManFindDistOneLitNotEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 has nLits; pCube2 has nLits + 1\n{\n    int i, k, iDiff = -1;\n    for ( i = k = 0; i \u003c nLits; i++, k++ )\n        if ( pCube1[i] != pCube2[k] )\n        {\n            if ( iDiff != -1 )\n                return -1;\n            iDiff = i;\n            i--;\n        }\n    if ( iDiff == -1 )\n        iDiff = nLits;\n    return iDiff;\n}",
+      "Draft": "int Eso_ManFindDistOneLitNotEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 has nLits; pCube2 has nLits + 1\n{\n    var i int32;\n    var k int32;\n    var iDiff int32 = -1;\n    for  i = k = 0; i \u003c nLits; i, k = i+1, k+1  {\n        if pCube1[i] != pCube2[k] {\n            if iDiff != -1 {\n                return -1; }\n            iDiff = i;\n            i--;\n        }\n    }\n    if iDiff == -1 {\n        iDiff = nLits; }\n    return iDiff;\n}"
+    },
+    {
+      "Name": "Eso_ManMinimizeAdd",
+      "Start": 7580,
+      "End": 11109,
+      "BodyStart": 7631,
+      "Original": "void Eso_ManMinimizeAdd( Eso_Man_t * p, int Cube )\n{\n    int fMimimize = 1;\n    Vec_Int_t * vCube      = (Cube == p-\u003eCube1) ? NULL : Eso_ManCube(p, Cube); \n    int * pCube2, * pCube  = (Cube == p-\u003eCube1) ? NULL : Vec_IntArray(vCube); \n    int Cube2, nLits       = (Cube == p-\u003eCube1) ? 0 : Vec_IntSize(vCube);\n    Vec_Int_t * vLevel     = Vec_WecEntry( p-\u003evCubes, nLits );\n    int c, k, iLit, iPlace = Vec_IntFind( vLevel, Cube );\n    if ( iPlace \u003e= 0 ) // identical found\n    {\n        Vec_IntDrop( vLevel, iPlace );\n        return;\n    }\n    if ( Cube == p-\u003eCube1 ) // simple case\n    {\n        assert( Vec_IntSize(vLevel) == 0 );\n        Vec_IntPush( vLevel, Cube );\n        return;\n    }\n    // look for distance-1 in next bin\n    if ( fMimimize \u0026\u0026 nLits \u003c p-\u003enVars - 1 )\n    {\n        Vec_Int_t * vLevel = Vec_WecEntry( p-\u003evCubes, nLits+1 );\n        Vec_IntForEachEntry( vLevel, Cube2, c )\n        {\n            pCube2 = Hsh_VecReadArray( p-\u003epHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube, pCube2, nLits );\n            if ( iLit == -1 )\n                continue;\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p-\u003evCube );\n            for ( k = 0; k \u003c= nLits; k++ )\n                Vec_IntPush( p-\u003evCube, Abc_LitNotCond(pCube2[k], k == iLit) );\n            Cube = Hsh_VecManAdd( p-\u003epHash, p-\u003evCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    // look for distance-1 in the same bin\n    if ( fMimimize )\n    {\n        Vec_IntForEachEntry( vLevel, Cube2, c )\n        {\n            pCube2 = Hsh_VecReadArray( p-\u003epHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitEqual( pCube2, pCube, nLits );\n            if ( iLit == -1 )\n                continue;\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p-\u003evCube );\n            for ( k = 0; k \u003c nLits; k++ )\n                if ( k != iLit )\n                    Vec_IntPush( p-\u003evCube, pCube[k] );\n            if ( Vec_IntSize(p-\u003evCube) == 0 )\n                Cube = p-\u003eCube1;\n            else\n                Cube = Hsh_VecManAdd( p-\u003epHash, p-\u003evCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    assert( nLits \u003e 0 );\n    if ( fMimimize \u0026\u0026 nLits \u003e 0 )\n    {\n        // look for distance-1 in the previous bin\n        Vec_Int_t * vLevel = Vec_WecEntry( p-\u003evCubes, nLits-1 );\n        // check for the case of one-literal cube\n        if ( nLits == 1 \u0026\u0026 Vec_IntSize(vLevel) == 1 )\n        {\n            Vec_IntDrop( vLevel, 0 );\n            Cube = Abc_LitNot( Cube );\n        }\n        else\n        Vec_IntForEachEntry( vLevel, Cube2, c )\n        {\n            pCube2 = Hsh_VecReadArray( p-\u003epHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube2, pCube, nLits-1 );\n            if ( iLit == -1 )\n                continue;\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p-\u003evCube );\n            for ( k = 0; k \u003c nLits; k++ )\n                Vec_IntPush( p-\u003evCube, Abc_LitNotCond(pCube[k], k == iLit) );\n            Cube = Hsh_VecManAdd( p-\u003epHash, p-\u003evCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    // could not find - simply add this cube\n    Vec_IntPush( vLevel, Cube );\n}",
+      "Draft": "func Eso_ManMinimizeAdd(p *Eso_Man_t, Cube int32) {\n    var fMimimize int32  = 1;\n    var vCube *Vec_Int_t;\n    if Cube == p.Cube1 {\n        vCube = nil;\n    } else {\n        vCube = Eso_ManCube(p, Cube);\n    } \n    var pCube2 *int32;\n    var pCube *int32;\n    if Cube == p.Cube1 {\n        pCube = nil;\n    } else {\n        pCube = Vec_IntArray(vCube);\n    } \n    var Cube2 int32;\n    var nLits int32;\n    if Cube == p.Cube1 {\n        nLits = 0;\n    } else {\n        nLits = Vec_IntSize(vCube);\n    }\n    var vLevel *Vec_Int_t      = Vec_WecEntry( p.vCubes, nLits );\n    var c int32;\n    var k int32;\n    var iLit int32;\n    var iPlace int32 = Vec_IntFind( vLevel, Cube );\n    if iPlace \u003e= 0 { // identical found\n    \n        Vec_IntDrop( vLevel, iPlace );\n        return;\n    }\n    if Cube == p.Cube1 { // simple case\n    \n        assert(Vec_IntSize(vLevel) == 0, \"Vec_IntSize(vLevel) == 0\");\n        Vec_IntPush( vLevel, Cube );\n        return;\n    }\n    // look for distance-1 in next bin\n    if (fMimimize != 0) \u0026\u0026 nLits \u003c p.nVars - 1 {\n        var vLevel *Vec_Int_t  = Vec_WecEntry( p.vCubes, nLits+1 );\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube, pCube2, nLits );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c= nLits; k++  {\n                Vec_IntPush( p.vCube, Abc_LitNotCond(pCube2[k], k == iLit) );\n            }\n            Cube = Hsh_VecManAdd( p.pHash, p.vCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    // look for distance-1 in the same bin\n    if fMimimize != 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitEqual( pCube2, pCube, nLits );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c nLits; k++  {\n                if k != iLit {\n                    Vec_IntPush( p.vCube, pCube[k] ); }\n            }\n            if Vec_IntSize(p.vCube) == 0 {\n                Cube = p.Cube1;\n            } else {\n                Cube = Hsh_VecManAdd( p.pHash, p.vCube ); }\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    assert(nLits \u003e 0, \"nLits \u003e 0\");\n    if (fMimimize != 0) \u0026\u0026 nLits \u003e 0 {\n        // look for distance-1 in the previous bin\n        var vLevel *Vec_Int_t  = Vec_WecEntry( p.vCubes, nLits-1 );\n        // check for the case of one-literal cube\n        if nLits == 1 \u0026\u0026 Vec_IntSize(vLevel) == 1 {\n            Vec_IntDrop( vLevel, 0 );\n            Cube = Abc_LitNot( Cube );\n        \n        } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube2, pCube, nLits-1 );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c nLits; k++  {\n                Vec_IntPush( p.vCube, Abc_LitNotCond(pCube[k], k == iLit) );\n            }\n            Cube = Hsh_VecManAdd( p.pHash, p.vCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        } }\n    }\n    // could not find - simply add this cube\n    Vec_IntPush( vLevel, Cube );\n}"
+    },
+    {
+      "Name": "Eso_ManMinimizeCopy",
+      "Start": 11111,
+      "End": 11552,
+      "BodyStart": 11172,
+      "Original": "void Eso_ManMinimizeCopy( Eso_Man_t * p, Vec_Int_t * vEsop )\n{\n    Vec_Int_t * vLevel;\n    int i;\n    Vec_IntClear( vEsop );\n    Vec_WecForEachLevel( p-\u003evCubes, vLevel, i )\n    {\n        Vec_IntAppend( vEsop, vLevel );\n        if ( i \u003e 0 )\n        {\n            int k, Cube;\n            Vec_IntForEachEntry( vLevel, Cube, k )\n                assert( Vec_IntSize(Eso_ManCube(p, Cube)) == i );\n        }\n        Vec_IntClear( vLevel );\n    }\n}",
+      "Draft": "func Eso_ManMinimizeCopy(p *Eso_Man_t, vEsop *Vec_Int_t) {\n    var vLevel *Vec_Int_t;\n    var i int32;\n    Vec_IntClear( vEsop );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Vec_IntAppend( vEsop, vLevel );\n        if i \u003e 0 {\n            var k, Cube int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube) = Vec_IntEntry(vLevel, k)), 1); k++  {\n                assert(Vec_IntSize(Eso_ManCube(p, Cube)) == i, \"Vec_IntSize(Eso_ManCube(p, Cube)) == i\");\n            }\n        }\n        Vec_IntClear( vLevel );\n    }\n}"
+    },
+    {
+      "Name": "Eso_ManComputeAnd",
+      "Start": 11822,
+      "End": 12785,
+      "BodyStart": 11920,
+      "Original": "int Eso_ManComputeAnd( Eso_Man_t * p, Vec_Int_t * vCube1, Vec_Int_t * vCube2, Vec_Int_t * vCube )\n{\n    int * pBeg  = vCube-\u003epArray;\n    int * pBeg1 = vCube1-\u003epArray;\n    int * pBeg2 = vCube2-\u003epArray;\n    int * pEnd1 = vCube1-\u003epArray + vCube1-\u003enSize;\n    int * pEnd2 = vCube2-\u003epArray + vCube2-\u003enSize;\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        if ( *pBeg1 == *pBeg2 )\n            *pBeg++ = *pBeg1++, pBeg2++;\n        else if ( Abc_Lit2Var(*pBeg1) == Abc_Lit2Var(*pBeg2) )\n            return -1;\n        else if ( *pBeg1 \u003c *pBeg2 )\n            *pBeg++ = *pBeg1++;\n        else \n            *pBeg++ = *pBeg2++;\n    }\n    while ( pBeg1 \u003c pEnd1 )\n        *pBeg++ = *pBeg1++;\n    while ( pBeg2 \u003c pEnd2 )\n        *pBeg++ = *pBeg2++;\n    vCube-\u003enSize = pBeg - vCube-\u003epArray;\n    assert( vCube-\u003enSize \u003c= vCube-\u003enCap );\n    assert( vCube-\u003enSize \u003e= vCube1-\u003enSize );\n    assert( vCube-\u003enSize \u003e= vCube2-\u003enSize );\n    return Hsh_VecManAdd( p-\u003epHash, vCube );\n}",
+      "Draft": "func Eso_ManComputeAnd(p *Eso_Man_t, vCube1 *Vec_Int_t, vCube2 *Vec_Int_t, vCube *Vec_Int_t) int32 {\n    var pBeg *int32   = vCube.pArray;\n    var pBeg1 *int32  = vCube1.pArray;\n    var pBeg2 *int32  = vCube2.pArray;\n    var pEnd1 *int32  = vCube1.pArray + vCube1.nSize;\n    var pEnd2 *int32  = vCube2.pArray + vCube2.nSize;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            *pBeg++ = *pBeg1++, pBeg2++;\n        } else if Abc_Lit2Var(*pBeg1) == Abc_Lit2Var(*pBeg2) {\n            return -1;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg++ = *pBeg1++;\n        } else { \n            *pBeg++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg++ = *pBeg2++;\n    }\n    vCube.nSize = pBeg - vCube.pArray;\n    assert(vCube.nSize \u003c= vCube.nCap, \"vCube.nSize \u003c= vCube.nCap\");\n    assert(vCube.nSize \u003e= vCube1.nSize, \"vCube.nSize \u003e= vCube1.nSize\");\n    assert(vCube.nSize \u003e= vCube2.nSize, \"vCube.nSize \u003e= vCube2.nSize\");\n    return Hsh_VecManAdd( p.pHash, vCube );\n}"
+    },
+    {
+      "Name": "Eso_ManComputeOne",
+      "Start": 12786,
+      "End": 13873,
+      "BodyStart": 12885,
+      "Original": "void Eso_ManComputeOne( Eso_Man_t * p, Vec_Int_t * vEsop1, Vec_Int_t * vEsop2, Vec_Int_t * vEsop )\n{\n    Vec_Int_t vCube1, vCube2;\n    int i, k, Cube1, Cube2, Cube;\n    Vec_IntClear( vEsop );\n    if ( Vec_IntSize(vEsop1) == 0 || Vec_IntSize(vEsop2) == 0 )\n        return;\n    Cube1 = Vec_IntEntry(vEsop1, 0);\n    Cube2 = Vec_IntEntry(vEsop2, 0);\n    Vec_IntForEachEntry( vEsop1, Cube1, i )\n    {\n        if ( Cube1 == p-\u003eCube1 )\n        {\n            Vec_IntForEachEntry( vEsop2, Cube2, k )\n                Eso_ManMinimizeAdd( p, Cube2 );\n            continue;\n        }\n        Vec_IntForEachEntry( vEsop2, Cube2, k )\n        {\n            if ( Cube2 == p-\u003eCube1 )\n            {\n                Eso_ManMinimizeAdd( p, Cube1 );\n                continue;\n            }\n            vCube1 = *Hsh_VecReadEntry( p-\u003epHash, Cube1 );\n            vCube2 = *Hsh_VecReadEntry( p-\u003epHash, Cube2 );\n            Cube = Eso_ManComputeAnd( p, \u0026vCube1, \u0026vCube2, p-\u003evCube );\n            if ( Cube \u003e= 0 )\n                Eso_ManMinimizeAdd( p, Cube );\n        }\n    }\n    Eso_ManMinimizeCopy( p, vEsop );\n}",
+      "Draft": "func Eso_ManComputeOne(p *Eso_Man_t, vEsop1 *Vec_Int_t, vEsop2 *Vec_Int_t, vEsop *Vec_Int_t) {\n    var vCube1, vCube2 Vec_Int_t;\n    var i, k, Cube1, Cube2, Cube int32;\n    Vec_IntClear( vEsop );\n    if Vec_IntSize(vEsop1) == 0 || Vec_IntSize(vEsop2) == 0 {\n        return; }\n    Cube1 = Vec_IntEntry(vEsop1, 0);\n    Cube2 = Vec_IntEntry(vEsop2, 0);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vEsop1)) \u0026\u0026 (((Cube1) = Vec_IntEntry(vEsop1, i)), 1); i++  {\n        if Cube1 == p.Cube1 {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vEsop2)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vEsop2, k)), 1); k++  {\n                Eso_ManMinimizeAdd( p, Cube2 );\n            }\n            continue;\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vEsop2)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vEsop2, k)), 1); k++  {\n            if Cube2 == p.Cube1 {\n                Eso_ManMinimizeAdd( p, Cube1 );\n                continue;\n            }\n            vCube1 = *Hsh_VecReadEntry( p.pHash, Cube1 );\n            vCube2 = *Hsh_VecReadEntry( p.pHash, Cube2 );\n            Cube = Eso_ManComputeAnd( p, \u0026vCube1, \u0026vCube2, p.vCube );\n            if Cube \u003e= 0 {\n                Eso_ManMinimizeAdd( p, Cube ); }\n        }\n    }\n    Eso_ManMinimizeCopy( p, vEsop );\n}"
+    },
+    {
+      "Name": "Eso_ManTransformOne",
+      "Start": 14158,
+      "End": 14844,
+      "BodyStart": 14256,
+      "Original": "Vec_Int_t * Eso_ManTransformOne( Eso_Man_t * p, Vec_Int_t * vEsop, int fCompl, Vec_Int_t * vRes )\n{\n    int i, Cube, Start = 0;\n    Vec_IntClear( vRes );\n    if ( fCompl )\n    {\n        if ( Vec_IntSize(vEsop) == 0 )\n            Vec_IntPush( vRes, p-\u003eCube1 );\n        else\n        {\n            Cube = Vec_IntEntry(vEsop, 0);\n            if ( Cube == p-\u003eCube1 )\n                Start = 1;\n            else if ( Cube \u003c 2 * p-\u003enVars )\n                Vec_IntPush( vRes, Abc_LitNot(Cube) ), Start = 1;\n            else\n                Vec_IntPush( vRes, p-\u003eCube1 );\n        }\n    }\n    Vec_IntForEachEntryStart( vEsop, Cube, i, Start )\n        Vec_IntPush( vRes, Cube );\n    return vRes;\n}",
+      "Draft": "func Eso_ManTransformOne(p *Eso_Man_t, vEsop *Vec_Int_t, fCompl int32, vRes *Vec_Int_t) *Vec_Int_t {\n    var i, Cube, Start int32;\n    Vec_IntClear( vRes );\n    if fCompl != 0 {\n        if Vec_IntSize(vEsop) == 0 {\n            Vec_IntPush( vRes, p.Cube1 );\n        } else {\n            Cube = Vec_IntEntry(vEsop, 0);\n            if Cube == p.Cube1 {\n                Start = 1;\n            } else if Cube \u003c 2 * p.nVars {\n                Vec_IntPush( vRes, Abc_LitNot(Cube) );\nStart = 1;\n            } else {\n                Vec_IntPush( vRes, p.Cube1 ); }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = Start; (i \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, i)), 1); i++  {\n        Vec_IntPush( vRes, Cube );\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Eso_ManCompute",
+      "Start": 15103,
+      "End": 16887,
+      "BodyStart": 15184,
+      "Original": "Gia_Man_t * Eso_ManCompute( Gia_Man_t * pGia, int fVerbose, Vec_Wec_t ** pvRes )\n{\n    abctime clk = Abc_Clock();\n    Vec_Ptr_t * vCover;\n    Gia_Man_t * pNew = NULL;\n    Gia_Obj_t * pObj; \n    int i, nCubes = 0, nCubesUsed = 0;\n    Vec_Int_t * vEsop1, * vEsop2, * vEsop;\n    Eso_Man_t * p = Eso_ManAlloc( pGia ); \n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        vEsop1 = Vec_WecEntry( p-\u003evEsops, Gia_ObjFaninId0(pObj, i) );\n        vEsop2 = Vec_WecEntry( p-\u003evEsops, Gia_ObjFaninId1(pObj, i) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p-\u003evCube1 );\n        vEsop2 = Eso_ManTransformOne( p, vEsop2, Gia_ObjFaninC1(pObj), p-\u003evCube2 );\n        vEsop  = Vec_WecEntry( p-\u003evEsops, i );\n        Eso_ManComputeOne( p, vEsop1, vEsop2, vEsop );\n        nCubes += Vec_IntSize(vEsop);\n    }\n    vCover = Vec_PtrAlloc( Gia_ManCoNum(pGia) );\n    Gia_ManForEachCo( pGia, pObj, i )\n    {\n        vEsop1 = Vec_WecEntry( p-\u003evEsops, Gia_ObjFaninId0p(pGia, pObj) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p-\u003evCube1 );\n        if ( fVerbose )\n            printf( \"Output %3d:  ESOP has %5d cubes\\n\", i, Vec_IntSize(vEsop1) );\n//        if ( fVerbose )\n//            Eso_ManCoverPrint( p, vEsop1 );\n        Vec_PtrPush( vCover, Vec_IntDup(vEsop1) );\n        nCubesUsed += Vec_IntSize(vEsop1);\n    }\n    if ( fVerbose )\n    {\n        printf( \"Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. \", \n            Gia_ManCoNum(pGia), nCubes, nCubesUsed, Hsh_VecSize(p-\u003epHash) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if ( pvRes )\n        *pvRes = Eso_ManCoverDerive( p, vCover );\n    else\n        pNew = Eso_ManCoverConvert( p, vCover );\n    Vec_VecFree( (Vec_Vec_t *)vCover );\n    Eso_ManStop( p );\n    return pNew;\n}",
+      "Draft": "func Eso_ManCompute(pGia *Gia_Man_t, fVerbose int32, pvRes **Vec_Wec_t) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var vCover *Vec_Ptr_t;\n    var pNew *Gia_Man_t  = nil;\n    var pObj *Gia_Obj_t; \n    var i, nCubes, nCubesUsed int32;\n    var vEsop1, vEsop2, vEsop *Vec_Int_t;\n    var p *Eso_Man_t  = Eso_ManAlloc( pGia ); \n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        vEsop1 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId0(pObj, i) );\n        vEsop2 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId1(pObj, i) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p.vCube1 );\n        vEsop2 = Eso_ManTransformOne( p, vEsop2, Gia_ObjFaninC1(pObj), p.vCube2 );\n        vEsop  = Vec_WecEntry( p.vEsops, i );\n        Eso_ManComputeOne( p, vEsop1, vEsop2, vEsop );\n        nCubes += Vec_IntSize(vEsop);\n    }\n    }\n    vCover = Vec_PtrAlloc( Gia_ManCoNum(pGia) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        vEsop1 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId0p(pGia, pObj) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p.vCube1 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Output %3d:  ESOP has %5d cubes\\n\", i, Vec_IntSize(vEsop1)); }\n//        if ( fVerbose )\n//            Eso_ManCoverPrint( p, vEsop1 );\n        Vec_PtrPush( vCover, Vec_IntDup(vEsop1) );\n        nCubesUsed += Vec_IntSize(vEsop1);\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. \", Gia_ManCoNum(pGia), nCubes, nCubesUsed, Hsh_VecSize(p.pHash));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if pvRes {\n        *pvRes = Eso_ManCoverDerive( p, vCover );\n    } else {\n        pNew = Eso_ManCoverConvert( p, vCover ); }\n    Vec_VecFree( (Vec_Vec_t *)vCover );\n    Eso_ManStop( p );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::struct::Eso_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Eso_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 853,
+      "End": 1378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::mechanical::sizeof::2159",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2078,
+      "End": 2078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::2125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2078,
+      "End": 2078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::3259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3010,
+      "End": 3010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::5084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4508,
+      "End": 4521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::5221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4536,
+      "End": 4536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::6799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5697,
+      "End": 5697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::pointer-cast::19305",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16824,
+      "End": 16837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManCube",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1380,
+      "End": 1513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1993,
+      "End": 2788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::ternary::Eso_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Eso_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2789,
+      "End": 3026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2789,
+      "End": 3026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::ternary::Eso_ManCoverPrint",
+      "Category": "ternary-review",
+      "Symbol": "Eso_ManCoverPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3299,
+      "End": 4333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManCoverPrint",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManCoverPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3299,
+      "End": 4333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManCoverDerive",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManCoverDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4334,
+      "End": 5227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManCoverConvert",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManCoverConvert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5228,
+      "End": 6499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManFindDistOneLitEqual",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManFindDistOneLitEqual",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6748,
+      "End": 7169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManFindDistOneLitNotEqual",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManFindDistOneLitNotEqual",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7170,
+      "End": 7579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManMinimizeAdd",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManMinimizeAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7580,
+      "End": 11109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManMinimizeCopy",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManMinimizeCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11111,
+      "End": 11552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManComputeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManComputeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11822,
+      "End": 12785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManComputeOne",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManComputeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12786,
+      "End": 13873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManTransformOne",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManTransformOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14158,
+      "End": 14844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::Eso_ManCompute",
+      "Category": "semantic-review",
+      "Symbol": "Eso_ManCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15103,
+      "End": 16887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEsop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17134
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaEsop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [ESOP computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaEsop.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"misc/vec/vecWec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Eso_Man_t struct {\n    pGia      *Gia_Man_t;     // user's AIG\n    nVars             int32;    // number of variables\n    Cube1             int32;    // ID of const1 cube\n    vEsops      *Vec_Wec_t;   // ESOP for each node\n    pHash   *Hsh_VecMan_t;    // hash table for cubes\n    vCubes      *Vec_Wec_t;   // cover during minimization\n    // internal\n    vCube1      *Vec_Int_t;   // first cube\n    vCube2      *Vec_Int_t;   // second cube\n    vCube      *Vec_Int_t;    // resulting cube\n}\n\nfunc Eso_ManCube(p *Eso_Man_t, iCube int32) *Vec_Int_t { assert(iCube \u003e= 0, \"iCube \u003e= 0\"); return Hsh_VecReadEntry(p.pHash, iCube); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n    \n/**Function*************************************************************\n\n  Synopsis    [Computation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Eso_ManAlloc(pGia *Gia_Man_t) *Eso_Man_t {\n    var i, n, Id int32;\n    // inlining of macro ABC_CALLOC\n    var p *Eso_Man_t  = \u0026Eso_Man_t{};\n    p.pGia   = pGia;\n    p.nVars  = Gia_ManCiNum(pGia);\n    p.Cube1  = ABC_INFINITY;\n    p.vEsops = Vec_WecStart( Gia_ManObjNum(pGia) );\n    p.pHash  = Hsh_VecManStart( 1000 );\n    p.vCubes = Vec_WecStart(Gia_ManCiNum(pGia)+1);\n    p.vCube1 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p.vCube2 = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    p.vCube  = Vec_IntAlloc(Gia_ManCiNum(pGia));\n    // inlining of macro Gia_ManForEachCiId\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pGia, Gia_ManCi(pGia, i))); i++  {\n        for  n = 0; n \u003c 2; n++  {\n            Vec_IntFill( p.vCube, 1, Abc_Var2Lit(i, n) );\n            Hsh_VecManAdd( p.pHash, p.vCube );\n        }\n        Vec_IntPush( Vec_WecEntry(p.vEsops, Id), Abc_Var2Lit(i, 0) );\n    }\n    return p;\n}\nfunc Eso_ManStop(p *Eso_Man_t) {\n    Vec_WecFree( p.vEsops );\n    Hsh_VecManStop( p.pHash );\n    Vec_WecFree( p.vCubes );\n    Vec_IntFree( p.vCube1 );\n    Vec_IntFree( p.vCube2 );\n    Vec_IntFree( p.vCube );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n    \n\n/**Function*************************************************************\n\n  Synopsis    [Printing/transforming the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Eso_ManCoverPrint(p *Eso_Man_t, vEsop *Vec_Int_t) {\n    var vStr *Vec_Str_t;\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Cube int32;\n    if Vec_IntSize(vEsop) == 0 {\n        fmt.Printf(\"Const 0\\n\");\n        return;\n    }\n    vStr = Vec_StrAlloc( p.nVars + 4 );\n    Vec_StrFill( vStr, p.nVars, '-' );\n    Vec_StrPush( vStr, ' ' );\n    Vec_StrPush( vStr, '1' );\n    Vec_StrPush( vStr, '\\n' );\n    Vec_StrPush( vStr, '\\0' );\n    assert(Vec_IntSize(vEsop) \u003e 0, \"Vec_IntSize(vEsop) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, i)), 1); i++  {\n        if Cube == p.Cube1 {\n            fmt.Printf(\"%s\", Vec_StrArray(vStr));\n        } else {\n            vCube = Eso_ManCube( p, Cube );\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit)?'0':'1')) );\n            }\n            fmt.Printf(\"%s\", Vec_StrArray(vStr));\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), '-' );\n            }\n        }\n    }\n    fmt.Printf(\"\\n\");\n    Vec_StrFree( vStr );\n}\nfunc Eso_ManCoverDerive(p *Eso_Man_t, vCover *Vec_Ptr_t) *Vec_Wec_t {\n    var vRes *Vec_Wec_t;\n    var vEsop, vLevel *Vec_Int_t;  var i int32;\n    vRes = Vec_WecAlloc( Vec_VecSizeSize((Vec_Vec_t *)vCover) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCover)) \u0026\u0026 (((vEsop) = (Vec_Int_t *)Vec_PtrEntry(vCover, i)), 1); i++  {\n        if Vec_IntSize(vEsop) \u003e 0 {\n            var c, Cube int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  c = 0; (c \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, c)), 1); c++  {\n                vLevel = Vec_WecPushLevel( vRes );\n                if Cube != p.Cube1 {\n                    var k, Lit int32;\n                    var vCube *Vec_Int_t  = Eso_ManCube( p, Cube );\n                    // inlining of macro Vec_IntForEachEntry\n                    for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                        Vec_IntPush( vLevel, Lit );\n                    }\n                }\n                Vec_IntPush( vLevel, -i-1 );\n            }\n        }\n    }\n    //assert( Abc_MaxInt(Vec_WecSize(vRes), 8) == Vec_WecCap(vRes) );\n    return vRes;\n}\nfunc Eso_ManCoverConvert(p *Eso_Man_t, vCover *Vec_Ptr_t) *Gia_Man_t {\n    var vEsop *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;  var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p.pGia) );\n    pNew.pName = Abc_UtilStrsav( p.pGia.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pGia.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p.pGia).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCover)) \u0026\u0026 (((vEsop) = (Vec_Int_t *)Vec_PtrEntry(vCover, i)), 1); i++  {\n        if Vec_IntSize(vEsop) \u003e 0 {\n            var c, Cube, iRoot int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  c = 0; (c \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, c)), 1); c++  {\n                var k int32;\n                var Lit int32;\n                var iAnd int32 = 1;\n                if Cube != p.Cube1 {\n                    var vCube *Vec_Int_t  = Eso_ManCube( p, Cube );\n                    // inlining of macro Vec_IntForEachEntry\n                    for  k = 0; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n                        iAnd = Gia_ManHashAnd( pNew, iAnd, Lit + 2 );\n                    }\n                }\n                iRoot = Gia_ManHashXor( pNew, iRoot, iAnd );\n            }\n            Gia_ManAppendCo( pNew, iRoot );\n        \n        } else {\n            Gia_ManAppendCo( pNew, 0 ); }\n    }\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Eso_ManFindDistOneLitEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 and pCube2 both have nLits\n{\n    var i int32;\n    var iDiff int32 = -1;\n    for  i = 0; i \u003c nLits; i++  {\n        if pCube1[i] != pCube2[i] {\n            if iDiff != -1 {\n                return -1; }\n            if Abc_Lit2Var(pCube1[i]) != Abc_Lit2Var(pCube2[i]) {\n                return -1; }\n            iDiff = i;\n        }\n    }\n    return iDiff;\n}\nint Eso_ManFindDistOneLitNotEqual( int * pCube1, int * pCube2, int nLits ) // pCube1 has nLits; pCube2 has nLits + 1\n{\n    var i int32;\n    var k int32;\n    var iDiff int32 = -1;\n    for  i = k = 0; i \u003c nLits; i, k = i+1, k+1  {\n        if pCube1[i] != pCube2[k] {\n            if iDiff != -1 {\n                return -1; }\n            iDiff = i;\n            i--;\n        }\n    }\n    if iDiff == -1 {\n        iDiff = nLits; }\n    return iDiff;\n}\nfunc Eso_ManMinimizeAdd(p *Eso_Man_t, Cube int32) {\n    var fMimimize int32  = 1;\n    var vCube *Vec_Int_t;\n    if Cube == p.Cube1 {\n        vCube = nil;\n    } else {\n        vCube = Eso_ManCube(p, Cube);\n    } \n    var pCube2 *int32;\n    var pCube *int32;\n    if Cube == p.Cube1 {\n        pCube = nil;\n    } else {\n        pCube = Vec_IntArray(vCube);\n    } \n    var Cube2 int32;\n    var nLits int32;\n    if Cube == p.Cube1 {\n        nLits = 0;\n    } else {\n        nLits = Vec_IntSize(vCube);\n    }\n    var vLevel *Vec_Int_t      = Vec_WecEntry( p.vCubes, nLits );\n    var c int32;\n    var k int32;\n    var iLit int32;\n    var iPlace int32 = Vec_IntFind( vLevel, Cube );\n    if iPlace \u003e= 0 { // identical found\n    \n        Vec_IntDrop( vLevel, iPlace );\n        return;\n    }\n    if Cube == p.Cube1 { // simple case\n    \n        assert(Vec_IntSize(vLevel) == 0, \"Vec_IntSize(vLevel) == 0\");\n        Vec_IntPush( vLevel, Cube );\n        return;\n    }\n    // look for distance-1 in next bin\n    if (fMimimize != 0) \u0026\u0026 nLits \u003c p.nVars - 1 {\n        var vLevel *Vec_Int_t  = Vec_WecEntry( p.vCubes, nLits+1 );\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube, pCube2, nLits );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c= nLits; k++  {\n                Vec_IntPush( p.vCube, Abc_LitNotCond(pCube2[k], k == iLit) );\n            }\n            Cube = Hsh_VecManAdd( p.pHash, p.vCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    // look for distance-1 in the same bin\n    if fMimimize != 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitEqual( pCube2, pCube, nLits );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c nLits; k++  {\n                if k != iLit {\n                    Vec_IntPush( p.vCube, pCube[k] ); }\n            }\n            if Vec_IntSize(p.vCube) == 0 {\n                Cube = p.Cube1;\n            } else {\n                Cube = Hsh_VecManAdd( p.pHash, p.vCube ); }\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        }\n    }\n    assert(nLits \u003e 0, \"nLits \u003e 0\");\n    if (fMimimize != 0) \u0026\u0026 nLits \u003e 0 {\n        // look for distance-1 in the previous bin\n        var vLevel *Vec_Int_t  = Vec_WecEntry( p.vCubes, nLits-1 );\n        // check for the case of one-literal cube\n        if nLits == 1 \u0026\u0026 Vec_IntSize(vLevel) == 1 {\n            Vec_IntDrop( vLevel, 0 );\n            Cube = Abc_LitNot( Cube );\n        \n        } else {\n        // inlining of macro Vec_IntForEachEntry\n        for  c = 0; (c \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vLevel, c)), 1); c++  {\n            pCube2 = Hsh_VecReadArray( p.pHash, Cube2 ); \n            iLit = Eso_ManFindDistOneLitNotEqual( pCube2, pCube, nLits-1 );\n            if iLit == -1 {\n                continue; }\n            // remove this cube\n            Vec_IntDrop( vLevel, c );\n            // create new cube\n            Vec_IntClear( p.vCube );\n            for  k = 0; k \u003c nLits; k++  {\n                Vec_IntPush( p.vCube, Abc_LitNotCond(pCube[k], k == iLit) );\n            }\n            Cube = Hsh_VecManAdd( p.pHash, p.vCube );\n            // try to add new cube\n            Eso_ManMinimizeAdd( p, Cube );\n            return;\n        } }\n    }\n    // could not find - simply add this cube\n    Vec_IntPush( vLevel, Cube );\n}\n\nfunc Eso_ManMinimizeCopy(p *Eso_Man_t, vEsop *Vec_Int_t) {\n    var vLevel *Vec_Int_t;\n    var i int32;\n    Vec_IntClear( vEsop );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(p.vCubes)) \u0026\u0026 (((vLevel) = Vec_WecEntry(p.vCubes, i)), 1); i++  {\n        Vec_IntAppend( vEsop, vLevel );\n        if i \u003e 0 {\n            var k, Cube int32;\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Cube) = Vec_IntEntry(vLevel, k)), 1); k++  {\n                assert(Vec_IntSize(Eso_ManCube(p, Cube)) == i, \"Vec_IntSize(Eso_ManCube(p, Cube)) == i\");\n            }\n        }\n        Vec_IntClear( vLevel );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the produce of two covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Eso_ManComputeAnd(p *Eso_Man_t, vCube1 *Vec_Int_t, vCube2 *Vec_Int_t, vCube *Vec_Int_t) int32 {\n    var pBeg *int32   = vCube.pArray;\n    var pBeg1 *int32  = vCube1.pArray;\n    var pBeg2 *int32  = vCube2.pArray;\n    var pEnd1 *int32  = vCube1.pArray + vCube1.nSize;\n    var pEnd2 *int32  = vCube2.pArray + vCube2.nSize;\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if *pBeg1 == *pBeg2 {\n            *pBeg++ = *pBeg1++, pBeg2++;\n        } else if Abc_Lit2Var(*pBeg1) == Abc_Lit2Var(*pBeg2) {\n            return -1;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg++ = *pBeg1++;\n        } else { \n            *pBeg++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg++ = *pBeg2++;\n    }\n    vCube.nSize = pBeg - vCube.pArray;\n    assert(vCube.nSize \u003c= vCube.nCap, \"vCube.nSize \u003c= vCube.nCap\");\n    assert(vCube.nSize \u003e= vCube1.nSize, \"vCube.nSize \u003e= vCube1.nSize\");\n    assert(vCube.nSize \u003e= vCube2.nSize, \"vCube.nSize \u003e= vCube2.nSize\");\n    return Hsh_VecManAdd( p.pHash, vCube );\n}\nfunc Eso_ManComputeOne(p *Eso_Man_t, vEsop1 *Vec_Int_t, vEsop2 *Vec_Int_t, vEsop *Vec_Int_t) {\n    var vCube1, vCube2 Vec_Int_t;\n    var i, k, Cube1, Cube2, Cube int32;\n    Vec_IntClear( vEsop );\n    if Vec_IntSize(vEsop1) == 0 || Vec_IntSize(vEsop2) == 0 {\n        return; }\n    Cube1 = Vec_IntEntry(vEsop1, 0);\n    Cube2 = Vec_IntEntry(vEsop2, 0);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vEsop1)) \u0026\u0026 (((Cube1) = Vec_IntEntry(vEsop1, i)), 1); i++  {\n        if Cube1 == p.Cube1 {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vEsop2)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vEsop2, k)), 1); k++  {\n                Eso_ManMinimizeAdd( p, Cube2 );\n            }\n            continue;\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vEsop2)) \u0026\u0026 (((Cube2) = Vec_IntEntry(vEsop2, k)), 1); k++  {\n            if Cube2 == p.Cube1 {\n                Eso_ManMinimizeAdd( p, Cube1 );\n                continue;\n            }\n            vCube1 = *Hsh_VecReadEntry( p.pHash, Cube1 );\n            vCube2 = *Hsh_VecReadEntry( p.pHash, Cube2 );\n            Cube = Eso_ManComputeAnd( p, \u0026vCube1, \u0026vCube2, p.vCube );\n            if Cube \u003e= 0 {\n                Eso_ManMinimizeAdd( p, Cube ); }\n        }\n    }\n    Eso_ManMinimizeCopy( p, vEsop );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Complements the cover if needed, or just copy it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Eso_ManTransformOne(p *Eso_Man_t, vEsop *Vec_Int_t, fCompl int32, vRes *Vec_Int_t) *Vec_Int_t {\n    var i, Cube, Start int32;\n    Vec_IntClear( vRes );\n    if fCompl != 0 {\n        if Vec_IntSize(vEsop) == 0 {\n            Vec_IntPush( vRes, p.Cube1 );\n        } else {\n            Cube = Vec_IntEntry(vEsop, 0);\n            if Cube == p.Cube1 {\n                Start = 1;\n            } else if Cube \u003c 2 * p.nVars {\n                Vec_IntPush( vRes, Abc_LitNot(Cube) );\nStart = 1;\n            } else {\n                Vec_IntPush( vRes, p.Cube1 ); }\n        }\n    }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = Start; (i \u003c Vec_IntSize(vEsop)) \u0026\u0026 (((Cube) = Vec_IntEntry(vEsop, i)), 1); i++  {\n        Vec_IntPush( vRes, Cube );\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes ESOP from AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Eso_ManCompute(pGia *Gia_Man_t, fVerbose int32, pvRes **Vec_Wec_t) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var vCover *Vec_Ptr_t;\n    var pNew *Gia_Man_t  = nil;\n    var pObj *Gia_Obj_t; \n    var i, nCubes, nCubesUsed int32;\n    var vEsop1, vEsop2, vEsop *Vec_Int_t;\n    var p *Eso_Man_t  = Eso_ManAlloc( pGia ); \n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        vEsop1 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId0(pObj, i) );\n        vEsop2 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId1(pObj, i) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p.vCube1 );\n        vEsop2 = Eso_ManTransformOne( p, vEsop2, Gia_ObjFaninC1(pObj), p.vCube2 );\n        vEsop  = Vec_WecEntry( p.vEsops, i );\n        Eso_ManComputeOne( p, vEsop1, vEsop2, vEsop );\n        nCubes += Vec_IntSize(vEsop);\n    }\n    }\n    vCover = Vec_PtrAlloc( Gia_ManCoNum(pGia) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n        vEsop1 = Vec_WecEntry( p.vEsops, Gia_ObjFaninId0p(pGia, pObj) );\n        vEsop1 = Eso_ManTransformOne( p, vEsop1, Gia_ObjFaninC0(pObj), p.vCube1 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Output %3d:  ESOP has %5d cubes\\n\", i, Vec_IntSize(vEsop1)); }\n//        if ( fVerbose )\n//            Eso_ManCoverPrint( p, vEsop1 );\n        Vec_PtrPush( vCover, Vec_IntDup(vEsop1) );\n        nCubesUsed += Vec_IntSize(vEsop1);\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. \", Gia_ManCoNum(pGia), nCubes, nCubesUsed, Hsh_VecSize(p.pHash));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    if pvRes {\n        *pvRes = Eso_ManCoverDerive( p, vCover );\n    } else {\n        pNew = Eso_ManCoverConvert( p, vCover ); }\n    Vec_VecFree( (Vec_Vec_t *)vCover );\n    Eso_ManStop( p );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

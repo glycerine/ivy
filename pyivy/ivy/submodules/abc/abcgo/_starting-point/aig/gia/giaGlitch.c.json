@@ -1,0 +1,1571 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c",
+  "SHA256": "37f9e7bb2c1946d303152bed0e629d3b475e5f6e08ba717144dfd13216b8f664",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 52,
+        "ByteOffset": 4039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gli_ManPi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert( v \u003c Gli_ManPiNum(p) );  return Gli_ManCi( p, v );            }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 52,
+        "ByteOffset": 4161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gli_ManPo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert( v \u003c Gli_ManPoNum(p) );  return Gli_ManCo( p, v );            }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 52,
+        "ByteOffset": 4283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gli_ManRo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert( v \u003c Gli_ManRegNum(p) ); return Gli_ManCi( p, Gli_ManRegNum(p)+v );      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 52,
+        "ByteOffset": 4416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gli_ManRi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert( v \u003c Gli_ManRegNum(p) ); return Gli_ManCo( p, Gli_ManRegNum(p)+v );      }"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 170,
+        "Column": 77,
+        "ByteOffset": 8460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Gli_Man_t *)/*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)((sizeof(Gli_Man_t) / 4) + (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 199,
+        "Column": 70,
+        "ByteOffset": 9410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSimInfoPrev) ? (free((char *) (p.pSimInfoPrev)), (p.pSimInfoPrev) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 200,
+        "Column": 57,
+        "ByteOffset": 9527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 10062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %d \\n\", pObj.Handle );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 10107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanins: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 13,
+        "ByteOffset": 10284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", pNext.Handle );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 10333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 10357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanouts: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 10538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", pNext.Handle );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 10587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 10950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iObjData == p.nObjData );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 11135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iFanin == int32(pObj.nFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 11189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.iFanout == int32(pObj.nFanouts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 11621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.iFanin \u003c int32(pObj.nFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 11670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.iFanout \u003c int32(pFanin.nFanouts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 14838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vFanins) \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 16468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 21009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fPhase == pObj.fPhase2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 570,
+        "Column": 9,
+        "ByteOffset": 21056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nGlitches \u003e= pObj.nSwitches );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 5,
+        "ByteOffset": 21590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins \u003c= 16 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 669,
+        "Column": 85,
+        "ByteOffset": 24770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSimInfoPrev = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(Gli_ManCiNum(p)))); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 712,
+        "Column": 5,
+        "ByteOffset": 26350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 779,
+        "Column": 9,
+        "ByteOffset": 28728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Simulated %d patterns.  Input transition probability %.2f.  \", nPatterns, PiTransProb );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 783,
+        "Column": 73,
+        "ByteOffset": 29139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gli_ManCiNum",
+      "Start": 2647,
+      "End": 2786,
+      "BodyStart": 2714,
+      "Original": "static inline int         Gli_ManCiNum( Gli_Man_t * p )            { return Vec_IntSize(p-\u003evCis);                                         }",
+      "Draft": "func Gli_ManCiNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCis);                                         }"
+    },
+    {
+      "Name": "Gli_ManCoNum",
+      "Start": 2787,
+      "End": 2926,
+      "BodyStart": 2854,
+      "Original": "static inline int         Gli_ManCoNum( Gli_Man_t * p )            { return Vec_IntSize(p-\u003evCos);                                         }",
+      "Draft": "func Gli_ManCoNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCos);                                         }"
+    },
+    {
+      "Name": "Gli_ManPiNum",
+      "Start": 2927,
+      "End": 3066,
+      "BodyStart": 2994,
+      "Original": "static inline int         Gli_ManPiNum( Gli_Man_t * p )            { return Vec_IntSize(p-\u003evCis) - p-\u003enRegs;                              }",
+      "Draft": "func Gli_ManPiNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCis) - p.nRegs;                              }"
+    },
+    {
+      "Name": "Gli_ManPoNum",
+      "Start": 3067,
+      "End": 3206,
+      "BodyStart": 3134,
+      "Original": "static inline int         Gli_ManPoNum( Gli_Man_t * p )            { return Vec_IntSize(p-\u003evCos) - p-\u003enRegs;                              }",
+      "Draft": "func Gli_ManPoNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCos) - p.nRegs;                              }"
+    },
+    {
+      "Name": "Gli_ManRegNum",
+      "Start": 3207,
+      "End": 3346,
+      "BodyStart": 3274,
+      "Original": "static inline int         Gli_ManRegNum( Gli_Man_t * p )           { return p-\u003enRegs;                                                     }",
+      "Draft": "func Gli_ManRegNum(p *Gli_Man_t) int32 { return p.nRegs;                                                     }"
+    },
+    {
+      "Name": "Gli_ManObjNum",
+      "Start": 3347,
+      "End": 3486,
+      "BodyStart": 3414,
+      "Original": "static inline int         Gli_ManObjNum( Gli_Man_t * p )           { return p-\u003enObjs;                                                     }",
+      "Draft": "func Gli_ManObjNum(p *Gli_Man_t) int32 { return p.nObjs;                                                     }"
+    },
+    {
+      "Name": "Gli_ManNodeNum",
+      "Start": 3488,
+      "End": 3627,
+      "BodyStart": 3555,
+      "Original": "static inline int         Gli_ManNodeNum( Gli_Man_t * p )          { return p-\u003enObjs - Vec_IntSize(p-\u003evCis) - Vec_IntSize(p-\u003evCos);       }",
+      "Draft": "func Gli_ManNodeNum(p *Gli_Man_t) int32 { return p.nObjs - Vec_IntSize(p.vCis) - Vec_IntSize(p.vCos);       }"
+    },
+    {
+      "Name": "Gli_ManObj",
+      "Start": 3630,
+      "End": 3769,
+      "BodyStart": 3697,
+      "Original": "static inline Gli_Obj_t * Gli_ManObj( Gli_Man_t * p, int v )       { return (Gli_Obj_t *)(p-\u003epObjData + v);                               }",
+      "Draft": "func Gli_ManObj(p *Gli_Man_t, v int32) *Gli_Obj_t { return (Gli_Obj_t *)(p.pObjData + v);                               }"
+    },
+    {
+      "Name": "Gli_ManCi",
+      "Start": 3771,
+      "End": 3910,
+      "BodyStart": 3838,
+      "Original": "static inline Gli_Obj_t * Gli_ManCi( Gli_Man_t * p, int v )        { return Gli_ManObj( p, Vec_IntEntry(p-\u003evCis,v) );                     }",
+      "Draft": "func Gli_ManCi(p *Gli_Man_t, v int32) *Gli_Obj_t { return Gli_ManObj( p, Vec_IntEntry(p.vCis,v) );                     }"
+    },
+    {
+      "Name": "Gli_ManCo",
+      "Start": 3911,
+      "End": 4050,
+      "BodyStart": 3978,
+      "Original": "static inline Gli_Obj_t * Gli_ManCo( Gli_Man_t * p, int v )        { return Gli_ManObj( p, Vec_IntEntry(p-\u003evCos,v) );                     }",
+      "Draft": "func Gli_ManCo(p *Gli_Man_t, v int32) *Gli_Obj_t { return Gli_ManObj( p, Vec_IntEntry(p.vCos,v) );                     }"
+    },
+    {
+      "Name": "Gli_ManPi",
+      "Start": 4051,
+      "End": 4190,
+      "BodyStart": 4118,
+      "Original": "static inline Gli_Obj_t * Gli_ManPi( Gli_Man_t * p, int v )        { assert( v \u003c Gli_ManPiNum(p) );  return Gli_ManCi( p, v );            }",
+      "Draft": "func Gli_ManPi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManPiNum(p), \"v \u003c Gli_ManPiNum(p)\");  return Gli_ManCi( p, v );            }"
+    },
+    {
+      "Name": "Gli_ManPo",
+      "Start": 4191,
+      "End": 4330,
+      "BodyStart": 4258,
+      "Original": "static inline Gli_Obj_t * Gli_ManPo( Gli_Man_t * p, int v )        { assert( v \u003c Gli_ManPoNum(p) );  return Gli_ManCo( p, v );            }",
+      "Draft": "func Gli_ManPo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManPoNum(p), \"v \u003c Gli_ManPoNum(p)\");  return Gli_ManCo( p, v );            }"
+    },
+    {
+      "Name": "Gli_ManRo",
+      "Start": 4331,
+      "End": 4481,
+      "BodyStart": 4398,
+      "Original": "static inline Gli_Obj_t * Gli_ManRo( Gli_Man_t * p, int v )        { assert( v \u003c Gli_ManRegNum(p) ); return Gli_ManCi( p, Gli_ManRegNum(p)+v );      }",
+      "Draft": "func Gli_ManRo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManRegNum(p), \"v \u003c Gli_ManRegNum(p)\"); return Gli_ManCi( p, Gli_ManRegNum(p)+v );      }"
+    },
+    {
+      "Name": "Gli_ManRi",
+      "Start": 4482,
+      "End": 4632,
+      "BodyStart": 4549,
+      "Original": "static inline Gli_Obj_t * Gli_ManRi( Gli_Man_t * p, int v )        { assert( v \u003c Gli_ManRegNum(p) ); return Gli_ManCo( p, Gli_ManRegNum(p)+v );      }",
+      "Draft": "func Gli_ManRi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManRegNum(p), \"v \u003c Gli_ManRegNum(p)\"); return Gli_ManCo( p, Gli_ManRegNum(p)+v );      }"
+    },
+    {
+      "Name": "Gli_ObjIsTerm",
+      "Start": 4634,
+      "End": 4773,
+      "BodyStart": 4701,
+      "Original": "static inline int         Gli_ObjIsTerm( Gli_Obj_t * pObj )        { return pObj-\u003efTerm;                                                  }",
+      "Draft": "func Gli_ObjIsTerm(pObj *Gli_Obj_t) int32 { return pObj.fTerm;                                                  }"
+    },
+    {
+      "Name": "Gli_ObjIsCi",
+      "Start": 4775,
+      "End": 4914,
+      "BodyStart": 4842,
+      "Original": "static inline int         Gli_ObjIsCi( Gli_Obj_t * pObj )          { return pObj-\u003efTerm \u0026\u0026 pObj-\u003enFanins == 0;                            }",
+      "Draft": "func Gli_ObjIsCi(pObj *Gli_Obj_t) int32 { return pObj.fTerm \u0026\u0026 pObj.nFanins == 0;                            }"
+    },
+    {
+      "Name": "Gli_ObjIsCo",
+      "Start": 4916,
+      "End": 5055,
+      "BodyStart": 4983,
+      "Original": "static inline int         Gli_ObjIsCo( Gli_Obj_t * pObj )          { return pObj-\u003efTerm \u0026\u0026 pObj-\u003enFanins == 1;                            }",
+      "Draft": "func Gli_ObjIsCo(pObj *Gli_Obj_t) int32 { return pObj.fTerm \u0026\u0026 pObj.nFanins == 1;                            }"
+    },
+    {
+      "Name": "Gli_ObjIsNode",
+      "Start": 5057,
+      "End": 5196,
+      "BodyStart": 5124,
+      "Original": "static inline int         Gli_ObjIsNode( Gli_Obj_t * pObj )        { return!pObj-\u003efTerm;                                                  }",
+      "Draft": "func Gli_ObjIsNode(pObj *Gli_Obj_t) int32 { return!pObj.fTerm;                                                  }"
+    },
+    {
+      "Name": "Gli_ObjFaninNum",
+      "Start": 5199,
+      "End": 5338,
+      "BodyStart": 5266,
+      "Original": "static inline int         Gli_ObjFaninNum( Gli_Obj_t * pObj )      { return pObj-\u003enFanins;                                                }",
+      "Draft": "func Gli_ObjFaninNum(pObj *Gli_Obj_t) int32 { return pObj.nFanins;                                                }"
+    },
+    {
+      "Name": "Gli_ObjFanoutNum",
+      "Start": 5340,
+      "End": 5479,
+      "BodyStart": 5407,
+      "Original": "static inline int         Gli_ObjFanoutNum( Gli_Obj_t * pObj )     { return pObj-\u003enFanouts;                                               }",
+      "Draft": "func Gli_ObjFanoutNum(pObj *Gli_Obj_t) int32 { return pObj.nFanouts;                                               }"
+    },
+    {
+      "Name": "Gli_ObjSize",
+      "Start": 5481,
+      "End": 5620,
+      "BodyStart": 5548,
+      "Original": "static inline int         Gli_ObjSize( Gli_Obj_t * pObj )          { return sizeof(Gli_Obj_t) / 4 + pObj-\u003enFanins + pObj-\u003enFanouts;       }",
+      "Draft": "func Gli_ObjSize(pObj *Gli_Obj_t) int32 { return sizeof(Gli_Obj_t) / 4 + pObj.nFanins + pObj.nFanouts;       }"
+    },
+    {
+      "Name": "Gli_ObjFanin",
+      "Start": 5623,
+      "End": 5762,
+      "BodyStart": 5690,
+      "Original": "static inline Gli_Obj_t * Gli_ObjFanin( Gli_Obj_t * pObj, int i )  { return (Gli_Obj_t *)(((int *)pObj) - pObj-\u003eFanios[i]);               }",
+      "Draft": "func Gli_ObjFanin(pObj *Gli_Obj_t, i int32) *Gli_Obj_t { return (Gli_Obj_t *)(((int *)pObj) - pObj.Fanios[i]);               }"
+    },
+    {
+      "Name": "Gli_ObjFanout",
+      "Start": 5764,
+      "End": 5903,
+      "BodyStart": 5831,
+      "Original": "static inline Gli_Obj_t * Gli_ObjFanout( Gli_Obj_t * pObj, int i ) { return (Gli_Obj_t *)(((int *)pObj) + pObj-\u003eFanios[pObj-\u003enFanins+i]); }",
+      "Draft": "func Gli_ObjFanout(pObj *Gli_Obj_t, i int32) *Gli_Obj_t { return (Gli_Obj_t *)(((int *)pObj) + pObj.Fanios[pObj.nFanins+i]); }"
+    },
+    {
+      "Name": "Gli_ManAlloc",
+      "Start": 8321,
+      "End": 8862,
+      "BodyStart": 8387,
+      "Original": "Gli_Man_t * Gli_ManAlloc( int nObjs, int nRegs, int nFanioPairs )\n{\n    Gli_Man_t * p;\n    p = (Gli_Man_t *)ABC_CALLOC( int, (sizeof(Gli_Man_t) / 4) + (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs );\n    p-\u003enRegs = nRegs;\n    p-\u003evCis = Vec_IntAlloc( 1000 );\n    p-\u003evCos = Vec_IntAlloc( 1000 );\n    p-\u003evCisChanged = Vec_IntAlloc( 1000 );\n    p-\u003evAffected = Vec_IntAlloc( 1000 );\n    p-\u003evFrontier = Vec_IntAlloc( 1000 );\n    p-\u003enObjData = (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs;\n    p-\u003epObjData = (int *)(p + 1);\n    return p;\n}",
+      "Draft": "func Gli_ManAlloc(nObjs int32, nRegs int32, nFanioPairs int32) *Gli_Man_t {\n    var p *Gli_Man_t;\n    // inlining of macro ABC_CALLOC\n    p = (Gli_Man_t *)((int *) calloc((size_t)((sizeof(Gli_Man_t) / 4) + (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs), sizeof(int)));\n    p.nRegs = nRegs;\n    p.vCis = Vec_IntAlloc( 1000 );\n    p.vCos = Vec_IntAlloc( 1000 );\n    p.vCisChanged = Vec_IntAlloc( 1000 );\n    p.vAffected = Vec_IntAlloc( 1000 );\n    p.vFrontier = Vec_IntAlloc( 1000 );\n    p.nObjData = (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs;\n    p.pObjData = (int *)(p + 1);\n    return p;\n}"
+    },
+    {
+      "Name": "Gli_ManStop",
+      "Start": 9120,
+      "End": 9366,
+      "BodyStart": 9154,
+      "Original": "void Gli_ManStop( Gli_Man_t * p )\n{\n    Vec_IntFree( p-\u003evCis );\n    Vec_IntFree( p-\u003evCos );\n    Vec_IntFree( p-\u003evCisChanged );\n    Vec_IntFree( p-\u003evAffected );\n    Vec_IntFree( p-\u003evFrontier );\n    ABC_FREE( p-\u003epSimInfoPrev );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gli_ManStop(p *Gli_Man_t) {\n    Vec_IntFree( p.vCis );\n    Vec_IntFree( p.vCos );\n    Vec_IntFree( p.vCisChanged );\n    Vec_IntFree( p.vAffected );\n    Vec_IntFree( p.vFrontier );\n    // inlining of macro ABC_FREE\n    ((p.pSimInfoPrev) ? (free((char *) (p.pSimInfoPrev)), (p.pSimInfoPrev) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gli_ManPrintObjects",
+      "Start": 9623,
+      "End": 10097,
+      "BodyStart": 9665,
+      "Original": "void Gli_ManPrintObjects( Gli_Man_t * p )\n{\n    Gli_Obj_t * pObj, * pNext;\n    int i, k;\n    Gli_ManForEachObj( p, pObj, i )\n    {\n        printf( \"Node %d \\n\", pObj-\u003eHandle );\n        printf( \"Fanins: \" );\n        Gli_ObjForEachFanin( pObj, pNext, k )\n            printf( \"%d \", pNext-\u003eHandle );\n        printf( \"\\n\" );\n        printf( \"Fanouts: \" );\n        Gli_ObjForEachFanout( pObj, pNext, k )\n            printf( \"%d \", pNext-\u003eHandle );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Gli_ManPrintObjects(p *Gli_Man_t) {\n    var pObj, pNext *Gli_Obj_t;\n    var i, k int32;\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        fmt.Printf(\"Node %d \\n\", pObj.Handle);\n        fmt.Printf(\"Fanins: \");\n        // inlining of macro Gli_ObjForEachFanin\n        for  k = 0; (k \u003c int32(pObj.nFanins)) \u0026\u0026 (pNext = Gli_ObjFanin(pObj,k)); k++  {\n            fmt.Printf(\"%d \", pNext.Handle);\n        }\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Fanouts: \");\n        // inlining of macro Gli_ObjForEachFanout\n        for  k = 0; (k \u003c int32(pObj.nFanouts)) \u0026\u0026 (pNext = Gli_ObjFanout(pObj,k)); k++  {\n            fmt.Printf(\"%d \", pNext.Handle);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManFinalize",
+      "Start": 10354,
+      "End": 10681,
+      "BodyStart": 10392,
+      "Original": "void Gli_ManFinalize( Gli_Man_t * p )\n{\n    Gli_Obj_t * pObj;\n    int i;\n    assert( p-\u003eiObjData == p-\u003enObjData );\n    Gli_ManForEachObj( p, pObj, i )\n    {\n        assert( pObj-\u003eiFanin == (int)pObj-\u003enFanins );\n        assert( pObj-\u003eiFanout == (int)pObj-\u003enFanouts );\n        pObj-\u003eiFanin = 0;\n        pObj-\u003eiFanout = 0;\n    }\n}",
+      "Draft": "func Gli_ManFinalize(p *Gli_Man_t) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    assert(p.iObjData == p.nObjData, \"p.iObjData == p.nObjData\");\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        assert(pObj.iFanin == int32(pObj.nFanins), \"pObj.iFanin == int32(pObj.nFanins)\");\n        assert(pObj.iFanout == int32(pObj.nFanouts), \"pObj.iFanout == int32(pObj.nFanouts)\");\n        pObj.iFanin = 0;\n        pObj.iFanout = 0;\n    }\n}"
+    },
+    {
+      "Name": "Gli_ObjAddFanin",
+      "Start": 10943,
+      "End": 11237,
+      "BodyStart": 11004,
+      "Original": "void Gli_ObjAddFanin( Gli_Obj_t * pObj, Gli_Obj_t * pFanin )\n{ \n    assert( pObj-\u003eiFanin \u003c (int)pObj-\u003enFanins );\n    assert( pFanin-\u003eiFanout \u003c (int)pFanin-\u003enFanouts );\n    pFanin-\u003eFanios[pFanin-\u003enFanins + pFanin-\u003eiFanout++] = \n    pObj-\u003eFanios[pObj-\u003eiFanin++] = pObj-\u003eHandle - pFanin-\u003eHandle;\n}",
+      "Draft": "func Gli_ObjAddFanin(pObj *Gli_Obj_t, pFanin *Gli_Obj_t) { \n    assert(pObj.iFanin \u003c int32(pObj.nFanins), \"pObj.iFanin \u003c int32(pObj.nFanins)\");\n    assert(pFanin.iFanout \u003c int32(pFanin.nFanouts), \"pFanin.iFanout \u003c int32(pFanin.nFanouts)\");\n    pFanin.Fanios[pFanin.nFanins + pFanin.iFanout++] = \n    pObj.Fanios[pObj.iFanin++] = pObj.Handle - pFanin.Handle;\n}"
+    },
+    {
+      "Name": "Gli_ObjAlloc",
+      "Start": 11491,
+      "End": 11794,
+      "BodyStart": 11560,
+      "Original": "Gli_Obj_t * Gli_ObjAlloc( Gli_Man_t * p, int nFanins, int nFanouts )\n{\n    Gli_Obj_t * pObj;\n    pObj = Gli_ManObj( p, p-\u003eiObjData );\n    pObj-\u003eHandle   = p-\u003eiObjData;\n    pObj-\u003enFanins  = nFanins;\n    pObj-\u003enFanouts = nFanouts;\n    p-\u003eiObjData += Gli_ObjSize( pObj );\n    p-\u003enObjs++;\n    return pObj;\n}",
+      "Draft": "func Gli_ObjAlloc(p *Gli_Man_t, nFanins int32, nFanouts int32) *Gli_Obj_t {\n    var pObj *Gli_Obj_t;\n    pObj = Gli_ManObj( p, p.iObjData );\n    pObj.Handle   = p.iObjData;\n    pObj.nFanins  = nFanins;\n    pObj.nFanouts = nFanouts;\n    p.iObjData += Gli_ObjSize( pObj );\n    p.nObjs++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Gli_ManCreateCi",
+      "Start": 12041,
+      "End": 12248,
+      "BodyStart": 12092,
+      "Original": "int Gli_ManCreateCi( Gli_Man_t * p, int nFanouts )\n{\n    Gli_Obj_t * pObj;\n    pObj = Gli_ObjAlloc( p, 0, nFanouts );\n    pObj-\u003efTerm = 1;\n    Vec_IntPush( p-\u003evCis, pObj-\u003eHandle );\n    return pObj-\u003eHandle;\n}",
+      "Draft": "func Gli_ManCreateCi(p *Gli_Man_t, nFanouts int32) int32 {\n    var pObj *Gli_Obj_t;\n    pObj = Gli_ObjAlloc( p, 0, nFanouts );\n    pObj.fTerm = 1;\n    Vec_IntPush( p.vCis, pObj.Handle );\n    return pObj.Handle;\n}"
+    },
+    {
+      "Name": "Gli_ManCreateCo",
+      "Start": 12495,
+      "End": 12829,
+      "BodyStart": 12544,
+      "Original": "int Gli_ManCreateCo( Gli_Man_t * p, int iFanin )\n{\n    Gli_Obj_t * pObj, * pFanin;\n    pObj = Gli_ObjAlloc( p, 1, 0 );\n    pObj-\u003efTerm = 1;\n    pFanin = Gli_ManObj( p, iFanin );\n    Gli_ObjAddFanin( pObj, pFanin );\n    pObj-\u003efPhase = pObj-\u003efPhase2 = pFanin-\u003efPhase;\n    Vec_IntPush( p-\u003evCos, pObj-\u003eHandle );\n    return pObj-\u003eHandle;\n}",
+      "Draft": "func Gli_ManCreateCo(p *Gli_Man_t, iFanin int32) int32 {\n    var pObj, pFanin *Gli_Obj_t;\n    pObj = Gli_ObjAlloc( p, 1, 0 );\n    pObj.fTerm = 1;\n    pFanin = Gli_ManObj( p, iFanin );\n    Gli_ObjAddFanin( pObj, pFanin );\n    pObj.fPhase = pObj.fPhase2 = pFanin.fPhase;\n    Vec_IntPush( p.vCos, pObj.Handle );\n    return pObj.Handle;\n}"
+    },
+    {
+      "Name": "Gli_NodeComputeValue",
+      "Start": 13078,
+      "End": 13330,
+      "BodyStart": 13138,
+      "Original": "static inline int Gli_NodeComputeValue( Gli_Obj_t * pNode )\n{\n    int i, Phase = 0;\n    for ( i = 0; i \u003c (int)pNode-\u003enFanins; i++ )\n        Phase |= (Gli_ObjFanin(pNode, i)-\u003efPhase \u003c\u003c i);\n    return Abc_InfoHasBit( (unsigned *)pNode-\u003epTruth, Phase );\n}",
+      "Draft": "func Gli_NodeComputeValue(pNode *Gli_Obj_t) int32 {\n    var i, Phase int32;\n    for  i = 0; i \u003c int32(pNode.nFanins); i++  {\n        Phase |= (Gli_ObjFanin(pNode, i).fPhase \u003c\u003c i);\n    }\n    return Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase );\n}"
+    },
+    {
+      "Name": "Gli_NodeComputeValue2",
+      "Start": 13579,
+      "End": 13833,
+      "BodyStart": 13640,
+      "Original": "static inline int Gli_NodeComputeValue2( Gli_Obj_t * pNode )\n{\n    int i, Phase = 0;\n    for ( i = 0; i \u003c (int)pNode-\u003enFanins; i++ )\n        Phase |= (Gli_ObjFanin(pNode, i)-\u003efPhase2 \u003c\u003c i);\n    return Abc_InfoHasBit( (unsigned *)pNode-\u003epTruth, Phase );\n}",
+      "Draft": "func Gli_NodeComputeValue2(pNode *Gli_Obj_t) int32 {\n    var i, Phase int32;\n    for  i = 0; i \u003c int32(pNode.nFanins); i++  {\n        Phase |= (Gli_ObjFanin(pNode, i).fPhase2 \u003c\u003c i);\n    }\n    return Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase );\n}"
+    },
+    {
+      "Name": "Gli_ManCreateNode",
+      "Start": 14082,
+      "End": 14536,
+      "BodyStart": 14175,
+      "Original": "int Gli_ManCreateNode( Gli_Man_t * p, Vec_Int_t * vFanins, int nFanouts, word * pGateTruth )\n{\n    Gli_Obj_t * pObj, * pFanin;\n    int i;\n    assert( Vec_IntSize(vFanins) \u003c= 16 );\n    pObj = Gli_ObjAlloc( p, Vec_IntSize(vFanins), nFanouts );\n    Gli_ManForEachEntry( vFanins, p, pFanin, i )\n        Gli_ObjAddFanin( pObj, pFanin );\n    pObj-\u003epTruth = pGateTruth;\n    pObj-\u003efPhase = pObj-\u003efPhase2 = Gli_NodeComputeValue( pObj );\n    return pObj-\u003eHandle;\n}",
+      "Draft": "func Gli_ManCreateNode(p *Gli_Man_t, vFanins *Vec_Int_t, nFanouts int32, pGateTruth *word) int32 {\n    var pObj, pFanin *Gli_Obj_t;\n    var i int32;\n    assert(Vec_IntSize(vFanins) \u003c= 16, \"Vec_IntSize(vFanins) \u003c= 16\");\n    pObj = Gli_ObjAlloc( p, Vec_IntSize(vFanins), nFanouts );\n    // inlining of macro Gli_ManForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (pFanin = Gli_ManObj(p,Vec_IntEntry(vFanins,i))); i++  {\n        Gli_ObjAddFanin( pObj, pFanin );\n    }\n    pObj.pTruth = pGateTruth;\n    pObj.fPhase = pObj.fPhase2 = Gli_NodeComputeValue( pObj );\n    return pObj.Handle;\n}"
+    },
+    {
+      "Name": "Gli_ObjNumSwitches",
+      "Start": 14815,
+      "End": 14915,
+      "BodyStart": 14866,
+      "Original": "int Gli_ObjNumSwitches( Gli_Man_t * p, int iNode )\n{\n    return Gli_ManObj( p, iNode )-\u003enSwitches;\n}",
+      "Draft": "func Gli_ObjNumSwitches(p *Gli_Man_t, iNode int32) int32 {\n    return Gli_ManObj( p, iNode ).nSwitches;\n}"
+    },
+    {
+      "Name": "Gli_ObjNumGlitches",
+      "Start": 15194,
+      "End": 15294,
+      "BodyStart": 15245,
+      "Original": "int Gli_ObjNumGlitches( Gli_Man_t * p, int iNode )\n{\n    return Gli_ManObj( p, iNode )-\u003enGlitches;\n}",
+      "Draft": "func Gli_ObjNumGlitches(p *Gli_Man_t, iNode int32) int32 {\n    return Gli_ManObj( p, iNode ).nGlitches;\n}"
+    },
+    {
+      "Name": "Gli_ManSetPiRandom",
+      "Start": 15584,
+      "End": 16108,
+      "BodyStart": 15644,
+      "Original": "void Gli_ManSetPiRandom( Gli_Man_t * p, float PiTransProb )\n{\n    Gli_Obj_t * pObj;\n    float Multi = 1.0 / (1 \u003c\u003c 16);\n    int i;\n    assert( 0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0 );\n    Vec_IntClear( p-\u003evCisChanged );\n    Gli_ManForEachCi( p, pObj, i )\n        if ( Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb )\n        {\n            Vec_IntPush( p-\u003evCisChanged, pObj-\u003eHandle );\n            pObj-\u003efPhase  ^= 1;\n            pObj-\u003efPhase2 ^= 1;\n            pObj-\u003enSwitches++;\n            pObj-\u003enGlitches++;\n        }\n}",
+      "Draft": "func Gli_ManSetPiRandom(p *Gli_Man_t, PiTransProb float32) {\n    var pObj *Gli_Obj_t;\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    assert(0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0, \"0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0\");\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManSetPiFromSaved",
+      "Start": 16397,
+      "End": 16828,
+      "BodyStart": 16451,
+      "Original": "void Gli_ManSetPiFromSaved( Gli_Man_t * p, int iBit )\n{\n    Gli_Obj_t * pObj;\n    int i;\n    Vec_IntClear( p-\u003evCisChanged );\n    Gli_ManForEachCi( p, pObj, i )\n        if ( (p-\u003epSimInfoPrev[i] ^ pObj-\u003euSimInfo) \u0026 (1 \u003c\u003c iBit) )\n        {\n            Vec_IntPush( p-\u003evCisChanged, pObj-\u003eHandle );\n            pObj-\u003efPhase  ^= 1;\n            pObj-\u003efPhase2 ^= 1;\n            pObj-\u003enSwitches++;\n            pObj-\u003enGlitches++;\n        }\n}",
+      "Draft": "func Gli_ManSetPiFromSaved(p *Gli_Man_t, iBit int32) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        if (p.pSimInfoPrev[i] ^ pObj.uSimInfo) \u0026 (1 \u003c\u003c iBit) {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManSwitching",
+      "Start": 17105,
+      "End": 17376,
+      "BodyStart": 17144,
+      "Original": "void Gli_ManSwitching( Gli_Man_t * p )\n{\n    Gli_Obj_t * pThis;\n    int i;\n    Gli_ManForEachNode( p, pThis, i )\n    {\n        if ( ((int)pThis-\u003efPhase) == Gli_NodeComputeValue(pThis) )\n            continue;\n        pThis-\u003efPhase ^= 1;\n        pThis-\u003enSwitches++;\n    }\n}",
+      "Draft": "func Gli_ManSwitching(p *Gli_Man_t) {\n    var pThis *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachNode\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Gli_ManObj(p,i)); i += Gli_ObjSize(pThis)  { if Gli_ObjIsTerm(pThis) != 0 {} else {\n        if (int32(pThis.fPhase)) == Gli_NodeComputeValue(pThis) {\n            continue; }\n        pThis.fPhase ^= 1;\n        pThis.nSwitches++;\n    }\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManGlitching",
+      "Start": 17653,
+      "End": 19004,
+      "BodyStart": 17692,
+      "Original": "void Gli_ManGlitching( Gli_Man_t * p )\n{\n    Gli_Obj_t * pThis, * pFanout;//, * pOther = Gli_ManObj(p, 41);\n    int i, k, Handle;\n//    Gli_ManForEachObj( p, pThis, i )\n//        assert( pThis-\u003efMark == 0 );\n    // start the array of affected nodes\n    Vec_IntClear( p-\u003evAffected );\n    Vec_IntForEachEntry( p-\u003evCisChanged, Handle, i )\n        Vec_IntPush( p-\u003evAffected, Handle );\n    // iteration propagation\n    while ( Vec_IntSize(p-\u003evAffected) \u003e 0 )\n    {\n        // compute the frontier\n        Vec_IntClear( p-\u003evFrontier );\n        Gli_ManForEachEntry( p-\u003evAffected, p, pThis, i )\n        {\n            Gli_ObjForEachFanout( pThis, pFanout, k )\n            {\n                if ( Gli_ObjIsCo(pFanout) )\n                    continue;\n                if ( pFanout-\u003efMark )\n                    continue;\n                pFanout-\u003efMark = 1;\n                Vec_IntPush( p-\u003evFrontier, pFanout-\u003eHandle );\n            }\n        }\n        // compute the next set of affected nodes\n        Vec_IntClear( p-\u003evAffected );\n        Gli_ManForEachEntry( p-\u003evFrontier, p, pThis, i )\n        {\n            pThis-\u003efMark = 0;\n            if ( ((int)pThis-\u003efPhase2) == Gli_NodeComputeValue2(pThis) )\n                continue;\n            pThis-\u003efPhase2 ^= 1;\n            pThis-\u003enGlitches++;\n            Vec_IntPush( p-\u003evAffected, pThis-\u003eHandle );\n        }\n    }\n}",
+      "Draft": "func Gli_ManGlitching(p *Gli_Man_t) {\n    var pThis, pFanout *Gli_Obj_t;//, * pOther = Gli_ManObj(p, 41);\n    var i, k, Handle int32;\n//    Gli_ManForEachObj( p, pThis, i )\n//        assert( pThis-\u003efMark == 0 );\n    // start the array of affected nodes\n    Vec_IntClear( p.vAffected );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCisChanged)) \u0026\u0026 (((Handle) = Vec_IntEntry(p.vCisChanged, i)), 1); i++  {\n        Vec_IntPush( p.vAffected, Handle );\n    }\n    // iteration propagation\n    for  Vec_IntSize(p.vAffected) \u003e 0  {\n        // compute the frontier\n        Vec_IntClear( p.vFrontier );\n        // inlining of macro Gli_ManForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vAffected)) \u0026\u0026 (pThis = Gli_ManObj(p,Vec_IntEntry(p.vAffected,i))); i++  {\n            // inlining of macro Gli_ObjForEachFanout\n            for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pFanout = Gli_ObjFanout(pThis,k)); k++  {\n                if Gli_ObjIsCo(pFanout) != 0 {\n                    continue; }\n                if pFanout.fMark {\n                    continue; }\n                pFanout.fMark = 1;\n                Vec_IntPush( p.vFrontier, pFanout.Handle );\n            }\n        }\n        // compute the next set of affected nodes\n        Vec_IntClear( p.vAffected );\n        // inlining of macro Gli_ManForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vFrontier)) \u0026\u0026 (pThis = Gli_ManObj(p,Vec_IntEntry(p.vFrontier,i))); i++  {\n            pThis.fMark = 0;\n            if (int32(pThis.fPhase2)) == Gli_NodeComputeValue2(pThis) {\n                continue; }\n            pThis.fPhase2 ^= 1;\n            pThis.nGlitches++;\n            Vec_IntPush( p.vAffected, pThis.Handle );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManVerify",
+      "Start": 19286,
+      "End": 19509,
+      "BodyStart": 19322,
+      "Original": "void Gli_ManVerify( Gli_Man_t * p )\n{\n    Gli_Obj_t * pObj;\n    int i;\n    Gli_ManForEachObj( p, pObj, i )\n    {\n        assert( pObj-\u003efPhase == pObj-\u003efPhase2 );\n        assert( pObj-\u003enGlitches \u003e= pObj-\u003enSwitches );\n    }\n}",
+      "Draft": "func Gli_ManVerify(p *Gli_Man_t) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        assert(pObj.fPhase == pObj.fPhase2, \"pObj.fPhase == pObj.fPhase2\");\n        assert(pObj.nGlitches \u003e= pObj.nSwitches, \"pObj.nGlitches \u003e= pObj.nSwitches\");\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManSimulateSeqNode",
+      "Start": 19764,
+      "End": 20372,
+      "BodyStart": 19832,
+      "Original": "unsigned Gli_ManSimulateSeqNode( Gli_Man_t * p, Gli_Obj_t * pNode )\n{\n    unsigned pSimInfos[6], Result = 0;\n    int nFanins = Gli_ObjFaninNum(pNode);\n    int i, k, Phase;\n    Gli_Obj_t * pFanin;\n    assert( nFanins \u003c= 16 );\n    Gli_ObjForEachFanin( pNode, pFanin, i )\n        pSimInfos[i] = pFanin-\u003euSimInfo;\n    for ( i = 0; i \u003c 32; i++ )\n    {\n        Phase = 0;\n        for ( k = 0; k \u003c nFanins; k++ )\n            if ( (pSimInfos[k] \u003e\u003e i) \u0026 1 )\n                Phase |= (1 \u003c\u003c k);\n        if ( Abc_InfoHasBit( (unsigned *)pNode-\u003epTruth, Phase ) )\n            Result |= (1 \u003c\u003c i);\n    }\n    return Result;\n}",
+      "Draft": "func Gli_ManSimulateSeqNode(p *Gli_Man_t, pNode *Gli_Obj_t) uint32 {\n    var pSimInfos [6]uint32;\n    var Result uint32;\n    var nFanins int32  = Gli_ObjFaninNum(pNode);\n    var i, k, Phase int32;\n    var pFanin *Gli_Obj_t;\n    assert(nFanins \u003c= 16, \"nFanins \u003c= 16\");\n    // inlining of macro Gli_ObjForEachFanin\n    for  i = 0; (i \u003c int32(pNode.nFanins)) \u0026\u0026 (pFanin = Gli_ObjFanin(pNode,i)); i++  {\n        pSimInfos[i] = pFanin.uSimInfo;\n    }\n    for  i = 0; i \u003c 32; i++  {\n        Phase = 0;\n        for  k = 0; k \u003c nFanins; k++  {\n            if (pSimInfos[k] \u003e\u003e i) \u0026 1 {\n                Phase |= (1 \u003c\u003c k); }\n        }\n        if Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase ) {\n            Result |= (1 \u003c\u003c i); }\n    }\n    return Result;\n}"
+    },
+    {
+      "Name": "Gli_ManUpdateRandomInput",
+      "Start": 20627,
+      "End": 20969,
+      "BodyStart": 20712,
+      "Original": "static inline unsigned Gli_ManUpdateRandomInput( unsigned uInfo, float PiTransProb )\n{\n    float Multi = 1.0 / (1 \u003c\u003c 16);\n    int i;\n    if ( PiTransProb == 0.5 )\n        return Gia_ManRandom(0);\n    for ( i = 0; i \u003c 32; i++ )\n        if ( Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb )\n            uInfo ^= (1 \u003c\u003c i);\n    return uInfo;\n}",
+      "Draft": "func Gli_ManUpdateRandomInput(uInfo uint32, PiTransProb float32) uint32 {\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    if PiTransProb == 0.5 {\n        return Gia_ManRandom(0); }\n    for  i = 0; i \u003c 32; i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            uInfo ^= (1 \u003c\u003c i); }\n    }\n    return uInfo;\n}"
+    },
+    {
+      "Name": "Gli_ManSimulateSeqPref",
+      "Start": 21274,
+      "End": 22363,
+      "BodyStart": 21330,
+      "Original": "void Gli_ManSimulateSeqPref( Gli_Man_t * p, int nPref )\n{\n    Gli_Obj_t * pObj, * pObjRi, * pObjRo;\n    int i, f;\n    // initialize simulation data\n    Gli_ManForEachPi( p, pObj, i )\n        pObj-\u003euSimInfo = Gli_ManUpdateRandomInput( pObj-\u003euSimInfo, 0.5 );\n    Gli_ManForEachRo( p, pObj, i )\n        pObj-\u003euSimInfo = 0;\n    for ( f = 0; f \u003c nPref; f++ )\n    {\n        // simulate one frame\n        Gli_ManForEachNode( p, pObj, i )\n            pObj-\u003euSimInfo = Gli_ManSimulateSeqNode( p, pObj );\n        Gli_ManForEachRi( p, pObj, i )\n            pObj-\u003euSimInfo = Gli_ObjFanin(pObj, 0)-\u003euSimInfo;\n        // initialize the next frame\n        Gli_ManForEachPi( p, pObj, i )\n            pObj-\u003euSimInfo = Gli_ManUpdateRandomInput( pObj-\u003euSimInfo, 0.5 );\n        Gli_ManForEachRiRo( p, pObjRi, pObjRo, i )\n            pObjRo-\u003euSimInfo = pObjRi-\u003euSimInfo;\n    }\n    // save simulation data after nPref timeframes\n    if ( p-\u003epSimInfoPrev == NULL )\n        p-\u003epSimInfoPrev = ABC_ALLOC( unsigned, Gli_ManCiNum(p) );\n    Gli_ManForEachCi( p, pObj, i )\n        p-\u003epSimInfoPrev[i] = pObj-\u003euSimInfo;\n}",
+      "Draft": "func Gli_ManSimulateSeqPref(p *Gli_Man_t, nPref int32) {\n    var pObj, pObjRi, pObjRo *Gli_Obj_t;\n    var i, f int32;\n    // initialize simulation data\n    // inlining of macro Gli_ManForEachPi\n    for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n        pObj.uSimInfo = Gli_ManUpdateRandomInput( pObj.uSimInfo, 0.5 );\n    }\n    // inlining of macro Gli_ManForEachRo\n    for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n        pObj.uSimInfo = 0;\n    }\n    for  f = 0; f \u003c nPref; f++  {\n        // simulate one frame\n        // inlining of macro Gli_ManForEachNode\n        for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  { if Gli_ObjIsTerm(pObj) != 0 {} else {\n            pObj.uSimInfo = Gli_ManSimulateSeqNode( p, pObj ); }\n        }\n        // inlining of macro Gli_ManForEachRi\n        for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCo(p, Gli_ManPoNum(p)+i)); i++  {\n            pObj.uSimInfo = Gli_ObjFanin(pObj, 0).uSimInfo;\n        }\n        // initialize the next frame\n        // inlining of macro Gli_ManForEachPi\n        for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n            pObj.uSimInfo = Gli_ManUpdateRandomInput( pObj.uSimInfo, 0.5 );\n        }\n        // inlining of macro Gli_ManForEachRiRo\n        for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gli_ManCo(p, Gli_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n            pObjRo.uSimInfo = pObjRi.uSimInfo;\n        }\n    }\n    // save simulation data after nPref timeframes\n    if p.pSimInfoPrev == nil {\n        // inlining of macro ABC_ALLOC\n        p.pSimInfoPrev = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Gli_ManCiNum(p)))); }\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        p.pSimInfoPrev[i] = pObj.uSimInfo;\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManSetDataSaved",
+      "Start": 22661,
+      "End": 22965,
+      "BodyStart": 22713,
+      "Original": "void Gli_ManSetDataSaved( Gli_Man_t * p, int iBit )\n{\n    Gli_Obj_t * pObj;\n    int i;\n    Gli_ManForEachCi( p, pObj, i )\n        pObj-\u003efPhase = pObj-\u003efPhase2 = ((p-\u003epSimInfoPrev[i] \u003e\u003e iBit) \u0026 1);\n    Gli_ManForEachNode( p, pObj, i )\n        pObj-\u003efPhase = pObj-\u003efPhase2 = Gli_NodeComputeValue( pObj );\n}",
+      "Draft": "func Gli_ManSetDataSaved(p *Gli_Man_t, iBit int32) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        pObj.fPhase = pObj.fPhase2 = ((p.pSimInfoPrev[i] \u003e\u003e iBit) \u0026 1);\n    }\n    // inlining of macro Gli_ManForEachNode\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  { if Gli_ObjIsTerm(pObj) != 0 {} else {\n        pObj.fPhase = pObj.fPhase2 = Gli_NodeComputeValue( pObj ); }\n    }\n}"
+    },
+    {
+      "Name": "Gli_ManSetPiRandomSeq",
+      "Start": 23254,
+      "End": 24269,
+      "BodyStart": 23317,
+      "Original": "void Gli_ManSetPiRandomSeq( Gli_Man_t * p, float PiTransProb )\n{\n    Gli_Obj_t * pObj, * pObjRi;\n    float Multi = 1.0 / (1 \u003c\u003c 16);\n    int i;\n    assert( 0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0 );\n    // transfer data to the COs\n    Gli_ManForEachCo( p, pObj, i )\n        pObj-\u003efPhase = pObj-\u003efPhase2 = Gli_ObjFanin(pObj, 0)-\u003efPhase;\n    // set changed PIs\n    Vec_IntClear( p-\u003evCisChanged );\n    Gli_ManForEachPi( p, pObj, i )\n        if ( Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb )\n        {\n            Vec_IntPush( p-\u003evCisChanged, pObj-\u003eHandle );\n            pObj-\u003efPhase  ^= 1;\n            pObj-\u003efPhase2 ^= 1;\n            pObj-\u003enSwitches++;\n            pObj-\u003enGlitches++;\n        }\n    // set changed ROs\n    Gli_ManForEachRiRo( p, pObjRi, pObj, i )\n        if ( pObjRi-\u003efPhase != pObj-\u003efPhase )\n        {\n            Vec_IntPush( p-\u003evCisChanged, pObj-\u003eHandle );\n            pObj-\u003efPhase  ^= 1;\n            pObj-\u003efPhase2 ^= 1;\n            pObj-\u003enSwitches++;\n            pObj-\u003enGlitches++;\n        }\n\n}",
+      "Draft": "func Gli_ManSetPiRandomSeq(p *Gli_Man_t, PiTransProb float32) {\n    var pObj, pObjRi *Gli_Obj_t;\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    assert(0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0, \"0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0\");\n    // transfer data to the COs\n    // inlining of macro Gli_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCos,i))); i++  {\n        pObj.fPhase = pObj.fPhase2 = Gli_ObjFanin(pObj, 0).fPhase;\n    }\n    // set changed PIs\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachPi\n    for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n    // set changed ROs\n    // inlining of macro Gli_ManForEachRiRo\n    for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gli_ManCo(p, Gli_ManPoNum(p)+i)) \u0026\u0026 ((pObj) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n        if pObjRi.fPhase != pObj.fPhase {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n\n}"
+    },
+    {
+      "Name": "Gli_ManSwitchesAndGlitches",
+      "Start": 24546,
+      "End": 25674,
+      "BodyStart": 24643,
+      "Original": "void Gli_ManSwitchesAndGlitches( Gli_Man_t * p, int nPatterns, float PiTransProb, int fVerbose )\n{\n    int i, k;\n    abctime clk = Abc_Clock();\n    Gia_ManRandom( 1 );\n    Gli_ManFinalize( p );\n    if ( p-\u003enRegs == 0 )\n    {\n        for ( i = 0; i \u003c nPatterns; i++ )\n        {\n            Gli_ManSetPiRandom( p, PiTransProb );\n            Gli_ManSwitching( p );\n            Gli_ManGlitching( p );\n//            Gli_ManVerify( p );\n        }\n    }\n    else \n    {\n        int nIters = Abc_BitWordNum(nPatterns);\n        Gli_ManSimulateSeqPref( p, 16 );\n        for ( i = 0; i \u003c 32; i++ )\n        {\n            Gli_ManSetDataSaved( p, i );\n            for ( k = 0; k \u003c nIters; k++ )\n            {\n                Gli_ManSetPiRandomSeq( p, PiTransProb );\n                Gli_ManSwitching( p );\n                Gli_ManGlitching( p );\n//                Gli_ManVerify( p );\n            }\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"Simulated %d patterns.  Input transition probability %.2f.  \", nPatterns, PiTransProb );\n        ABC_PRMn( \"Memory\", 4*p-\u003enObjData );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n}",
+      "Draft": "func Gli_ManSwitchesAndGlitches(p *Gli_Man_t, nPatterns int32, PiTransProb float32, fVerbose int32) {\n    var i, k int32;\n    var clk abctime  = Abc_Clock();\n    Gia_ManRandom( 1 );\n    Gli_ManFinalize( p );\n    if p.nRegs == 0 {\n        for  i = 0; i \u003c nPatterns; i++  {\n            Gli_ManSetPiRandom( p, PiTransProb );\n            Gli_ManSwitching( p );\n            Gli_ManGlitching( p );\n//            Gli_ManVerify( p );\n        }\n    \n    } else {\n        var nIters int32  = Abc_BitWordNum(nPatterns);\n        Gli_ManSimulateSeqPref( p, 16 );\n        for  i = 0; i \u003c 32; i++  {\n            Gli_ManSetDataSaved( p, i );\n            for  k = 0; k \u003c nIters; k++  {\n                Gli_ManSetPiRandomSeq( p, PiTransProb );\n                Gli_ManSwitching( p );\n                Gli_ManGlitching( p );\n//                Gli_ManVerify( p );\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Simulated %d patterns.  Input transition probability %.2f.  \", nPatterns, PiTransProb);\n        // inlining of macro ABC_PRMn\n        Abc_Print(1, \"%s =\", (\"Memory\"));\nAbc_Print(1, \"%10.3f MB  \",    1.0*(float64((4*p.nObjData)))/(1\u003c\u003c20));;\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::unsigned       fTerm    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 826,
+      "End": 860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// terminal node\n    unsigned       fPhase   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 860,
+      "End": 914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// value under 000 pattern\n    unsigned       fPhase2  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 914,
+      "End": 978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// value under 000 pattern\n    unsigned       fMark    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 978,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// user-controlled mark\n    unsigned       nFanins  :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1042,
+      "End": 1103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// the number of fanins\n    unsigned       nFanouts : 25;",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1103,
+      "End": 1164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::// simulation info of the node\n    union \n    {\n        int        iFanin;           // the number of fanins added\n        int        nSwitches;        // the number of switches\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1342,
+      "End": 1535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::union \n    {\n        int        iFanout;          // the number of fanouts added\n        int        nGlitches;        // the number of glitches ( nGlitches \u003e= nSwitches )\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1535,
+      "End": 1717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t::int            Fanios[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1717,
+      "End": 1747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Gli_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 770,
+      "End": 1788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::struct::Gli_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Gli_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1790,
+      "End": 2644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::union::1386",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1386,
+      "End": 1391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::union::1540",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1540,
+      "End": 1545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::5557",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5557,
+      "End": 5563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::8501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8429,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::8527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8429,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::8578",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8429,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::8831",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8763,
+      "End": 8769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::mechanical::sizeof::24782",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22242,
+      "End": 22242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::3706",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3706,
+      "End": 3719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::5699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5699,
+      "End": 5712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::5714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5714,
+      "End": 5721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::5840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5840,
+      "End": 5853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::5855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5855,
+      "End": 5862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::8416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8416,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::8476",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8429,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::8899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8831,
+      "End": 8838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::9456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9317,
+      "End": 9317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::9575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9350,
+      "End": 9350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::13939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13293,
+      "End": 13305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::14442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13796,
+      "End": 13808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::22054",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20277,
+      "End": 20289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::pointer-cast::24762",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22242,
+      "End": 22242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5906,
+      "End": 6052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6053,
+      "End": 6234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6236,
+      "End": 6388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6389,
+      "End": 6547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6548,
+      "End": 6706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6708,
+      "End": 6857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6858,
+      "End": 7007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachRo",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachRo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7008,
+      "End": 7174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachRi",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachRi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7175,
+      "End": 7341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ManForEachRiRo",
+      "Category": "macro-review",
+      "Symbol": "Gli_ManForEachRiRo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7342,
+      "End": 7558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Gli_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7560,
+      "End": 7700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::macro::Gli_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Gli_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7701,
+      "End": 7843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2647,
+      "End": 2786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2787,
+      "End": 2926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2927,
+      "End": 3066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3067,
+      "End": 3206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3207,
+      "End": 3346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3347,
+      "End": 3486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3488,
+      "End": 3627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3630,
+      "End": 3769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3771,
+      "End": 3910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3911,
+      "End": 4050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManPi",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4051,
+      "End": 4190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManPo",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4191,
+      "End": 4330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManRo",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManRo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4331,
+      "End": 4481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManRi",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManRi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4482,
+      "End": 4632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4634,
+      "End": 4773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4775,
+      "End": 4914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4916,
+      "End": 5055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5057,
+      "End": 5196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5199,
+      "End": 5338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjFanoutNum",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjFanoutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5340,
+      "End": 5479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjSize",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5481,
+      "End": 5620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5623,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjFanout",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5764,
+      "End": 5903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8321,
+      "End": 8862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::ternary::Gli_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Gli_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9120,
+      "End": 9366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9120,
+      "End": 9366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManPrintObjects",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManPrintObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9623,
+      "End": 10097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManFinalize",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManFinalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10354,
+      "End": 10681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjAddFanin",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjAddFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10943,
+      "End": 11237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11491,
+      "End": 11794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCreateCi",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCreateCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12041,
+      "End": 12248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCreateCo",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCreateCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12495,
+      "End": 12829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_NodeComputeValue",
+      "Category": "semantic-review",
+      "Symbol": "Gli_NodeComputeValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13078,
+      "End": 13330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_NodeComputeValue2",
+      "Category": "semantic-review",
+      "Symbol": "Gli_NodeComputeValue2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13579,
+      "End": 13833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManCreateNode",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManCreateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14082,
+      "End": 14536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjNumSwitches",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjNumSwitches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14815,
+      "End": 14915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ObjNumGlitches",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ObjNumGlitches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15194,
+      "End": 15294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSetPiRandom",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSetPiRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15584,
+      "End": 16108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSetPiFromSaved",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSetPiFromSaved",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16397,
+      "End": 16828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17105,
+      "End": 17376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManGlitching",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManGlitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17653,
+      "End": 19004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManVerify",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19286,
+      "End": 19509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSimulateSeqNode",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSimulateSeqNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19764,
+      "End": 20372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManUpdateRandomInput",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManUpdateRandomInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20627,
+      "End": 20969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSimulateSeqPref",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSimulateSeqPref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21274,
+      "End": 22363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSetDataSaved",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSetDataSaved",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22661,
+      "End": 22965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSetPiRandomSeq",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSetPiRandomSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23254,
+      "End": 24269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::Gli_ManSwitchesAndGlitches",
+      "Category": "semantic-review",
+      "Symbol": "Gli_ManSwitchesAndGlitches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24546,
+      "End": 25674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGlitch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25921
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaGlitch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Glitch simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaGlitch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Gli_Obj_t struct {\n    fTerm uint32; /* C bitfield: 1 bits; review packing and truncation */    // terminal node\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */    // value under 000 pattern\n    fPhase2 uint32; /* C bitfield: 1 bits; review packing and truncation */    // value under 000 pattern\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */    // user-controlled mark\n    nFanins uint32; /* C bitfield: 3 bits; review packing and truncation */    // the number of fanins\n    nFanouts uint32; /* C bitfield: 25 bits; review packing and truncation */    // total number of fanouts\n    Handle       uint32;           // ID of the node\n    pTruth          *word;           // truth table of the node\n    uSimInfo       uint32;         // simulation info of the node\n    union \n    {\n        int        iFanin;           // the number of fanins added\n        int        nSwitches;        // the number of switches\n    };\n    union \n    {\n        int        iFanout;          // the number of fanouts added\n        int        nGlitches;        // the number of glitches ( nGlitches \u003e= nSwitches )\n    };\n    Fanios [0]int32;        // the array of fanins/fanouts\n}\n\n   \ntype Gli_Man_t struct {\n    vCis     *Vec_Int_t;             // the vector of CIs (PIs + LOs)\n    vCos     *Vec_Int_t;             // the vector of COs (POs + LIs)\n    vCisChanged     *Vec_Int_t;      // the changed CIs\n    vAffected     *Vec_Int_t;        // the affected nodes\n    vFrontier     *Vec_Int_t;        // the fanouts of these nodes\n    nObjs            int32;            // the number of objects\n    nRegs            int32;            // the number of registers\n    nTravIds            int32;         // traversal ID of the network\n    iObjData            int32;         // pointer to the current data\n    nObjData            int32;         // the size of array to store the logic network\n    pObjData           *int32;         // the internal nodes\n    pSimInfoPrev      *uint32;     // previous values of the CIs\n}\n\n\nfunc Gli_ManCiNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCis);                                         }\nfunc Gli_ManCoNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCos);                                         }\nfunc Gli_ManPiNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCis) - p.nRegs;                              }\nfunc Gli_ManPoNum(p *Gli_Man_t) int32 { return Vec_IntSize(p.vCos) - p.nRegs;                              }\nfunc Gli_ManRegNum(p *Gli_Man_t) int32 { return p.nRegs;                                                     }\nfunc Gli_ManObjNum(p *Gli_Man_t) int32 { return p.nObjs;                                                     } \nfunc Gli_ManNodeNum(p *Gli_Man_t) int32 { return p.nObjs - Vec_IntSize(p.vCis) - Vec_IntSize(p.vCos);       } \n\nfunc Gli_ManObj(p *Gli_Man_t, v int32) *Gli_Obj_t { return (Gli_Obj_t *)(p.pObjData + v);                               } \nfunc Gli_ManCi(p *Gli_Man_t, v int32) *Gli_Obj_t { return Gli_ManObj( p, Vec_IntEntry(p.vCis,v) );                     }\nfunc Gli_ManCo(p *Gli_Man_t, v int32) *Gli_Obj_t { return Gli_ManObj( p, Vec_IntEntry(p.vCos,v) );                     }\nfunc Gli_ManPi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManPiNum(p), \"v \u003c Gli_ManPiNum(p)\");  return Gli_ManCi( p, v );            }\nfunc Gli_ManPo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManPoNum(p), \"v \u003c Gli_ManPoNum(p)\");  return Gli_ManCo( p, v );            }\nfunc Gli_ManRo(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManRegNum(p), \"v \u003c Gli_ManRegNum(p)\"); return Gli_ManCi( p, Gli_ManRegNum(p)+v );      }\nfunc Gli_ManRi(p *Gli_Man_t, v int32) *Gli_Obj_t { assert(v \u003c Gli_ManRegNum(p), \"v \u003c Gli_ManRegNum(p)\"); return Gli_ManCo( p, Gli_ManRegNum(p)+v );      }\n\nfunc Gli_ObjIsTerm(pObj *Gli_Obj_t) int32 { return pObj.fTerm;                                                  } \nfunc Gli_ObjIsCi(pObj *Gli_Obj_t) int32 { return pObj.fTerm \u0026\u0026 pObj.nFanins == 0;                            } \nfunc Gli_ObjIsCo(pObj *Gli_Obj_t) int32 { return pObj.fTerm \u0026\u0026 pObj.nFanins == 1;                            } \nfunc Gli_ObjIsNode(pObj *Gli_Obj_t) int32 { return!pObj.fTerm;                                                  } \n\nfunc Gli_ObjFaninNum(pObj *Gli_Obj_t) int32 { return pObj.nFanins;                                                } \nfunc Gli_ObjFanoutNum(pObj *Gli_Obj_t) int32 { return pObj.nFanouts;                                               } \nfunc Gli_ObjSize(pObj *Gli_Obj_t) int32 { return sizeof(Gli_Obj_t) / 4 + pObj.nFanins + pObj.nFanouts;       } \n\nfunc Gli_ObjFanin(pObj *Gli_Obj_t, i int32) *Gli_Obj_t { return (Gli_Obj_t *)(((int *)pObj) - pObj.Fanios[i]);               } \nfunc Gli_ObjFanout(pObj *Gli_Obj_t, i int32) *Gli_Obj_t { return (Gli_Obj_t *)(((int *)pObj) + pObj.Fanios[pObj.nFanins+i]); } \n\n// Original macro:\n// #define Gli_ManForEachObj( p, pObj, i )                 \\\n//     for ( i = 0; (i \u003c p-\u003enObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj) )\n\n// Original macro:\n// #define Gli_ManForEachNode( p, pObj, i )                \\\n//     for ( i = 0; (i \u003c p-\u003enObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj) ) if ( Gli_ObjIsTerm(pObj) ) {} else\n\n\n// Original macro:\n// #define Gli_ManForEachEntry( vVec, p, pObj, i )         \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(vVec,i))); i++ )\n\n// Original macro:\n// #define Gli_ManForEachCi( p, pObj, i )                  \\\n//     for ( i = 0; (i \u003c Vec_IntSize(p-\u003evCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p-\u003evCis,i))); i++ )\n\n// Original macro:\n// #define Gli_ManForEachCo( p, pObj, i )                  \\\n//     for ( i = 0; (i \u003c Vec_IntSize(p-\u003evCos)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p-\u003evCos,i))); i++ )\n\n\n// Original macro:\n// #define Gli_ManForEachPi( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++ )\n\n// Original macro:\n// #define Gli_ManForEachPo( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c Gli_ManPoNum(p)) \u0026\u0026 ((pObj) = Gli_ManCo(p, i)); i++ )\n\n// Original macro:\n// #define Gli_ManForEachRo( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++ )\n\n// Original macro:\n// #define Gli_ManForEachRi( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCo(p, Gli_ManPoNum(p)+i)); i++ )\n\n// Original macro:\n// #define Gli_ManForEachRiRo( p, pObjRi, pObjRo, i )                      \\\n//     for ( i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gli_ManCo(p, Gli_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++ )\n\n\n// Original macro:\n// #define Gli_ObjForEachFanin( pObj, pNext, i )           \\\n//     for ( i = 0; (i \u003c (int)pObj-\u003enFanins) \u0026\u0026 (pNext = Gli_ObjFanin(pObj,i)); i++ )\n\n// Original macro:\n// #define Gli_ObjForEachFanout( pObj, pNext, i )          \\\n//     for ( i = 0; (i \u003c (int)pObj-\u003enFanouts) \u0026\u0026 (pNext = Gli_ObjFanout(pObj,i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates logic network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManAlloc(nObjs int32, nRegs int32, nFanioPairs int32) *Gli_Man_t {\n    var p *Gli_Man_t;\n    // inlining of macro ABC_CALLOC\n    p = (Gli_Man_t *)((int *) calloc((size_t)((sizeof(Gli_Man_t) / 4) + (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs), sizeof(int)));\n    p.nRegs = nRegs;\n    p.vCis = Vec_IntAlloc( 1000 );\n    p.vCos = Vec_IntAlloc( 1000 );\n    p.vCisChanged = Vec_IntAlloc( 1000 );\n    p.vAffected = Vec_IntAlloc( 1000 );\n    p.vFrontier = Vec_IntAlloc( 1000 );\n    p.nObjData = (sizeof(Gli_Obj_t) / 4) * nObjs + 2 * nFanioPairs;\n    p.pObjData = (int *)(p + 1);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes logic network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManStop(p *Gli_Man_t) {\n    Vec_IntFree( p.vCis );\n    Vec_IntFree( p.vCos );\n    Vec_IntFree( p.vCisChanged );\n    Vec_IntFree( p.vAffected );\n    Vec_IntFree( p.vFrontier );\n    // inlining of macro ABC_FREE\n    ((p.pSimInfoPrev) ? (free((char *) (p.pSimInfoPrev)), (p.pSimInfoPrev) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks logic network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManPrintObjects(p *Gli_Man_t) {\n    var pObj, pNext *Gli_Obj_t;\n    var i, k int32;\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        fmt.Printf(\"Node %d \\n\", pObj.Handle);\n        fmt.Printf(\"Fanins: \");\n        // inlining of macro Gli_ObjForEachFanin\n        for  k = 0; (k \u003c int32(pObj.nFanins)) \u0026\u0026 (pNext = Gli_ObjFanin(pObj,k)); k++  {\n            fmt.Printf(\"%d \", pNext.Handle);\n        }\n        fmt.Printf(\"\\n\");\n        fmt.Printf(\"Fanouts: \");\n        // inlining of macro Gli_ObjForEachFanout\n        for  k = 0; (k \u003c int32(pObj.nFanouts)) \u0026\u0026 (pNext = Gli_ObjFanout(pObj,k)); k++  {\n            fmt.Printf(\"%d \", pNext.Handle);\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks logic network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManFinalize(p *Gli_Man_t) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    assert(p.iObjData == p.nObjData, \"p.iObjData == p.nObjData\");\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        assert(pObj.iFanin == int32(pObj.nFanins), \"pObj.iFanin == int32(pObj.nFanins)\");\n        assert(pObj.iFanout == int32(pObj.nFanouts), \"pObj.iFanout == int32(pObj.nFanouts)\");\n        pObj.iFanin = 0;\n        pObj.iFanout = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fanin/fanout pair.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ObjAddFanin(pObj *Gli_Obj_t, pFanin *Gli_Obj_t) { \n    assert(pObj.iFanin \u003c int32(pObj.nFanins), \"pObj.iFanin \u003c int32(pObj.nFanins)\");\n    assert(pFanin.iFanout \u003c int32(pFanin.nFanouts), \"pFanin.iFanout \u003c int32(pFanin.nFanouts)\");\n    pFanin.Fanios[pFanin.nFanins + pFanin.iFanout++] = \n    pObj.Fanios[pObj.iFanin++] = pObj.Handle - pFanin.Handle;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Allocates object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ObjAlloc(p *Gli_Man_t, nFanins int32, nFanouts int32) *Gli_Obj_t {\n    var pObj *Gli_Obj_t;\n    pObj = Gli_ManObj( p, p.iObjData );\n    pObj.Handle   = p.iObjData;\n    pObj.nFanins  = nFanins;\n    pObj.nFanouts = nFanouts;\n    p.iObjData += Gli_ObjSize( pObj );\n    p.nObjs++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates CI.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManCreateCi(p *Gli_Man_t, nFanouts int32) int32 {\n    var pObj *Gli_Obj_t;\n    pObj = Gli_ObjAlloc( p, 0, nFanouts );\n    pObj.fTerm = 1;\n    Vec_IntPush( p.vCis, pObj.Handle );\n    return pObj.Handle;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates CO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManCreateCo(p *Gli_Man_t, iFanin int32) int32 {\n    var pObj, pFanin *Gli_Obj_t;\n    pObj = Gli_ObjAlloc( p, 1, 0 );\n    pObj.fTerm = 1;\n    pFanin = Gli_ManObj( p, iFanin );\n    Gli_ObjAddFanin( pObj, pFanin );\n    pObj.fPhase = pObj.fPhase2 = pFanin.fPhase;\n    Vec_IntPush( p.vCos, pObj.Handle );\n    return pObj.Handle;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_NodeComputeValue(pNode *Gli_Obj_t) int32 {\n    var i, Phase int32;\n    for  i = 0; i \u003c int32(pNode.nFanins); i++  {\n        Phase |= (Gli_ObjFanin(pNode, i).fPhase \u003c\u003c i);\n    }\n    return Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_NodeComputeValue2(pNode *Gli_Obj_t) int32 {\n    var i, Phase int32;\n    for  i = 0; i \u003c int32(pNode.nFanins); i++  {\n        Phase |= (Gli_ObjFanin(pNode, i).fPhase2 \u003c\u003c i);\n    }\n    return Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManCreateNode(p *Gli_Man_t, vFanins *Vec_Int_t, nFanouts int32, pGateTruth *word) int32 {\n    var pObj, pFanin *Gli_Obj_t;\n    var i int32;\n    assert(Vec_IntSize(vFanins) \u003c= 16, \"Vec_IntSize(vFanins) \u003c= 16\");\n    pObj = Gli_ObjAlloc( p, Vec_IntSize(vFanins), nFanouts );\n    // inlining of macro Gli_ManForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vFanins)) \u0026\u0026 (pFanin = Gli_ManObj(p,Vec_IntEntry(vFanins,i))); i++  {\n        Gli_ObjAddFanin( pObj, pFanin );\n    }\n    pObj.pTruth = pGateTruth;\n    pObj.fPhase = pObj.fPhase2 = Gli_NodeComputeValue( pObj );\n    return pObj.Handle;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of switches of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ObjNumSwitches(p *Gli_Man_t, iNode int32) int32 {\n    return Gli_ManObj( p, iNode ).nSwitches;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of glitches of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ObjNumGlitches(p *Gli_Man_t, iNode int32) int32 {\n    return Gli_ManObj( p, iNode ).nGlitches;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets random info at the PIs and collects changed PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSetPiRandom(p *Gli_Man_t, PiTransProb float32) {\n    var pObj *Gli_Obj_t;\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    assert(0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0, \"0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0\");\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets random info at the PIs and collects changed PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSetPiFromSaved(p *Gli_Man_t, iBit int32) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        if (p.pSimInfoPrev[i] ^ pObj.uSimInfo) \u0026 (1 \u003c\u003c iBit) {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes switching activity of each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSwitching(p *Gli_Man_t) {\n    var pThis *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachNode\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pThis = Gli_ManObj(p,i)); i += Gli_ObjSize(pThis)  { if Gli_ObjIsTerm(pThis) != 0 {} else {\n        if (int32(pThis.fPhase)) == Gli_NodeComputeValue(pThis) {\n            continue; }\n        pThis.fPhase ^= 1;\n        pThis.nSwitches++;\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes glitching activity of each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManGlitching(p *Gli_Man_t) {\n    var pThis, pFanout *Gli_Obj_t;//, * pOther = Gli_ManObj(p, 41);\n    var i, k, Handle int32;\n//    Gli_ManForEachObj( p, pThis, i )\n//        assert( pThis-\u003efMark == 0 );\n    // start the array of affected nodes\n    Vec_IntClear( p.vAffected );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCisChanged)) \u0026\u0026 (((Handle) = Vec_IntEntry(p.vCisChanged, i)), 1); i++  {\n        Vec_IntPush( p.vAffected, Handle );\n    }\n    // iteration propagation\n    for  Vec_IntSize(p.vAffected) \u003e 0  {\n        // compute the frontier\n        Vec_IntClear( p.vFrontier );\n        // inlining of macro Gli_ManForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vAffected)) \u0026\u0026 (pThis = Gli_ManObj(p,Vec_IntEntry(p.vAffected,i))); i++  {\n            // inlining of macro Gli_ObjForEachFanout\n            for  k = 0; (k \u003c int32(pThis.nFanouts)) \u0026\u0026 (pFanout = Gli_ObjFanout(pThis,k)); k++  {\n                if Gli_ObjIsCo(pFanout) != 0 {\n                    continue; }\n                if pFanout.fMark {\n                    continue; }\n                pFanout.fMark = 1;\n                Vec_IntPush( p.vFrontier, pFanout.Handle );\n            }\n        }\n        // compute the next set of affected nodes\n        Vec_IntClear( p.vAffected );\n        // inlining of macro Gli_ManForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vFrontier)) \u0026\u0026 (pThis = Gli_ManObj(p,Vec_IntEntry(p.vFrontier,i))); i++  {\n            pThis.fMark = 0;\n            if (int32(pThis.fPhase2)) == Gli_NodeComputeValue2(pThis) {\n                continue; }\n            pThis.fPhase2 ^= 1;\n            pThis.nGlitches++;\n            Vec_IntPush( p.vAffected, pThis.Handle );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that the resulting values are the same.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManVerify(p *Gli_Man_t) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachObj\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  {\n        assert(pObj.fPhase == pObj.fPhase2, \"pObj.fPhase == pObj.fPhase2\");\n        assert(pObj.nGlitches \u003e= pObj.nSwitches, \"pObj.nGlitches \u003e= pObj.nSwitches\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSimulateSeqNode(p *Gli_Man_t, pNode *Gli_Obj_t) uint32 {\n    var pSimInfos [6]uint32;\n    var Result uint32;\n    var nFanins int32  = Gli_ObjFaninNum(pNode);\n    var i, k, Phase int32;\n    var pFanin *Gli_Obj_t;\n    assert(nFanins \u003c= 16, \"nFanins \u003c= 16\");\n    // inlining of macro Gli_ObjForEachFanin\n    for  i = 0; (i \u003c int32(pNode.nFanins)) \u0026\u0026 (pFanin = Gli_ObjFanin(pNode,i)); i++  {\n        pSimInfos[i] = pFanin.uSimInfo;\n    }\n    for  i = 0; i \u003c 32; i++  {\n        Phase = 0;\n        for  k = 0; k \u003c nFanins; k++  {\n            if (pSimInfos[k] \u003e\u003e i) \u0026 1 {\n                Phase |= (1 \u003c\u003c k); }\n        }\n        if Abc_InfoHasBit( (unsigned *)pNode.pTruth, Phase ) {\n            Result |= (1 \u003c\u003c i); }\n    }\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManUpdateRandomInput(uInfo uint32, PiTransProb float32) uint32 {\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    if PiTransProb == 0.5 {\n        return Gia_ManRandom(0); }\n    for  i = 0; i \u003c 32; i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            uInfo ^= (1 \u003c\u003c i); }\n    }\n    return uInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates sequential network randomly for the given number of frames.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSimulateSeqPref(p *Gli_Man_t, nPref int32) {\n    var pObj, pObjRi, pObjRo *Gli_Obj_t;\n    var i, f int32;\n    // initialize simulation data\n    // inlining of macro Gli_ManForEachPi\n    for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n        pObj.uSimInfo = Gli_ManUpdateRandomInput( pObj.uSimInfo, 0.5 );\n    }\n    // inlining of macro Gli_ManForEachRo\n    for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n        pObj.uSimInfo = 0;\n    }\n    for  f = 0; f \u003c nPref; f++  {\n        // simulate one frame\n        // inlining of macro Gli_ManForEachNode\n        for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  { if Gli_ObjIsTerm(pObj) != 0 {} else {\n            pObj.uSimInfo = Gli_ManSimulateSeqNode( p, pObj ); }\n        }\n        // inlining of macro Gli_ManForEachRi\n        for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObj) = Gli_ManCo(p, Gli_ManPoNum(p)+i)); i++  {\n            pObj.uSimInfo = Gli_ObjFanin(pObj, 0).uSimInfo;\n        }\n        // initialize the next frame\n        // inlining of macro Gli_ManForEachPi\n        for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n            pObj.uSimInfo = Gli_ManUpdateRandomInput( pObj.uSimInfo, 0.5 );\n        }\n        // inlining of macro Gli_ManForEachRiRo\n        for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gli_ManCo(p, Gli_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n            pObjRo.uSimInfo = pObjRi.uSimInfo;\n        }\n    }\n    // save simulation data after nPref timeframes\n    if p.pSimInfoPrev == nil {\n        // inlining of macro ABC_ALLOC\n        p.pSimInfoPrev = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Gli_ManCiNum(p)))); }\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        p.pSimInfoPrev[i] = pObj.uSimInfo;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initialized object values to be one pattern in the saved data.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSetDataSaved(p *Gli_Man_t, iBit int32) {\n    var pObj *Gli_Obj_t;\n    var i int32;\n    // inlining of macro Gli_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCis,i))); i++  {\n        pObj.fPhase = pObj.fPhase2 = ((p.pSimInfoPrev[i] \u003e\u003e iBit) \u0026 1);\n    }\n    // inlining of macro Gli_ManForEachNode\n    for  i = 0; (i \u003c p.nObjData) \u0026\u0026 (pObj = Gli_ManObj(p,i)); i += Gli_ObjSize(pObj)  { if Gli_ObjIsTerm(pObj) != 0 {} else {\n        pObj.fPhase = pObj.fPhase2 = Gli_NodeComputeValue( pObj ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets random info at the PIs and collects changed PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSetPiRandomSeq(p *Gli_Man_t, PiTransProb float32) {\n    var pObj, pObjRi *Gli_Obj_t;\n    var Multi float32  = 1.0 / (1 \u003c\u003c 16);\n    var i int32;\n    assert(0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0, \"0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0\");\n    // transfer data to the COs\n    // inlining of macro Gli_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (pObj = Gli_ManObj(p,Vec_IntEntry(p.vCos,i))); i++  {\n        pObj.fPhase = pObj.fPhase2 = Gli_ObjFanin(pObj, 0).fPhase;\n    }\n    // set changed PIs\n    Vec_IntClear( p.vCisChanged );\n    // inlining of macro Gli_ManForEachPi\n    for  i = 0; (i \u003c Gli_ManPiNum(p)) \u0026\u0026 ((pObj) = Gli_ManCi(p, i)); i++  {\n        if Multi * (Gia_ManRandom(0) \u0026 0xffff) \u003c PiTransProb {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n    // set changed ROs\n    // inlining of macro Gli_ManForEachRiRo\n    for  i = 0; (i \u003c Gli_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gli_ManCo(p, Gli_ManPoNum(p)+i)) \u0026\u0026 ((pObj) = Gli_ManCi(p, Gli_ManPiNum(p)+i)); i++  {\n        if pObjRi.fPhase != pObj.fPhase {\n            Vec_IntPush( p.vCisChanged, pObj.Handle );\n            pObj.fPhase  ^= 1;\n            pObj.fPhase2 ^= 1;\n            pObj.nSwitches++;\n            pObj.nGlitches++;\n        }\n    }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes glitching activity of each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gli_ManSwitchesAndGlitches(p *Gli_Man_t, nPatterns int32, PiTransProb float32, fVerbose int32) {\n    var i, k int32;\n    var clk abctime  = Abc_Clock();\n    Gia_ManRandom( 1 );\n    Gli_ManFinalize( p );\n    if p.nRegs == 0 {\n        for  i = 0; i \u003c nPatterns; i++  {\n            Gli_ManSetPiRandom( p, PiTransProb );\n            Gli_ManSwitching( p );\n            Gli_ManGlitching( p );\n//            Gli_ManVerify( p );\n        }\n    \n    } else {\n        var nIters int32  = Abc_BitWordNum(nPatterns);\n        Gli_ManSimulateSeqPref( p, 16 );\n        for  i = 0; i \u003c 32; i++  {\n            Gli_ManSetDataSaved( p, i );\n            for  k = 0; k \u003c nIters; k++  {\n                Gli_ManSetPiRandomSeq( p, PiTransProb );\n                Gli_ManSwitching( p );\n                Gli_ManGlitching( p );\n//                Gli_ManVerify( p );\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Simulated %d patterns.  Input transition probability %.2f.  \", nPatterns, PiTransProb);\n        // inlining of macro ABC_PRMn\n        Abc_Print(1, \"%s =\", (\"Memory\"));\nAbc_Print(1, \"%10.3f MB  \",    1.0*(float64((4*p.nObjData)))/(1\u003c\u003c20));;\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

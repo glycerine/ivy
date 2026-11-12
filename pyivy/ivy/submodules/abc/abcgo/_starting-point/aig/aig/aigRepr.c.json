@@ -1,0 +1,1195 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c",
+  "SHA256": "fd36cf2a706605be42dae87eb65f78baf102e4cd4cc912714243d872cba305b3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManBufNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 51,
+        "Column": 78,
+        "ByteOffset": 1501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pReprs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nReprsAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pReprs, 0, sizeof(Aig_Obj_t *) * p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 64,
+        "ByteOffset": 2023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode2.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1.Id \u003c pNode2.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode1.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode2.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 3725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 3796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 4336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.Id \u003c p.nReprsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 6187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.pReprs != nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 215,
+        "Column": 44,
+        "ByteOffset": 6490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pNew.pReprs = ((Aig_Obj_t * *) realloc((char *)(pNew.pReprs), sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 217,
+        "Column": 44,
+        "ByteOffset": 6631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 6706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pNew.pReprs + pNew.nReprsAlloc, 0, sizeof(Aig_Obj_t *) * (nReprsAllocNew-pNew.nReprsAlloc) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 10724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManDupRepr: Check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 11215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 9,
+        "ByteOffset": 12609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRepr.Id \u003c pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 14908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 14947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 452,
+        "Column": 5,
+        "ByteOffset": 15491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 5,
+        "ByteOffset": 16297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 16374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pEquivs == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 480,
+        "Column": 79,
+        "ByteOffset": 16480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pEquivs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 16546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 503,
+        "Column": 9,
+        "ByteOffset": 17543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nRefs == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManReprStart",
+      "Start": 1259,
+      "End": 1536,
+      "BodyStart": 1310,
+      "Original": "void Aig_ManReprStart( Aig_Man_t * p, int nIdMax )\n{\n    assert( Aig_ManBufNum(p) == 0 );\n    assert( p-\u003epReprs == NULL );\n    p-\u003enReprsAlloc = nIdMax;\n    p-\u003epReprs = ABC_ALLOC( Aig_Obj_t *, p-\u003enReprsAlloc );\n    memset( p-\u003epReprs, 0, sizeof(Aig_Obj_t *) * p-\u003enReprsAlloc );\n}",
+      "Draft": "func Aig_ManReprStart(p *Aig_Man_t, nIdMax int32) {\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    assert(p.pReprs == nil, \"p.pReprs == nil\");\n    p.nReprsAlloc = nIdMax;\n    // inlining of macro ABC_ALLOC\n    p.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nReprsAlloc)));\n    memset( p.pReprs, 0, sizeof(Aig_Obj_t *) * p.nReprsAlloc );\n}"
+    },
+    {
+      "Name": "Aig_ManReprStop",
+      "Start": 1806,
+      "End": 1935,
+      "BodyStart": 1844,
+      "Original": "void Aig_ManReprStop( Aig_Man_t * p )\n{\n    assert( p-\u003epReprs != NULL );\n    ABC_FREE( p-\u003epReprs );\n    p-\u003enReprsAlloc = 0;    \n}",
+      "Draft": "func Aig_ManReprStop(p *Aig_Man_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n    p.nReprsAlloc = 0;    \n}"
+    },
+    {
+      "Name": "Aig_ObjCreateRepr",
+      "Start": 2194,
+      "End": 2553,
+      "BodyStart": 2274,
+      "Original": "void Aig_ObjCreateRepr( Aig_Man_t * p, Aig_Obj_t * pNode1, Aig_Obj_t * pNode2 )\n{\n    assert( p-\u003epReprs != NULL );\n    assert( !Aig_IsComplement(pNode1) );\n    assert( !Aig_IsComplement(pNode2) );\n    assert( pNode1-\u003eId \u003c p-\u003enReprsAlloc );\n    assert( pNode2-\u003eId \u003c p-\u003enReprsAlloc );\n    assert( pNode1-\u003eId \u003c pNode2-\u003eId );\n    p-\u003epReprs[pNode2-\u003eId] = pNode1;\n}",
+      "Draft": "func Aig_ObjCreateRepr(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode1), \"!Aig_IsComplement(pNode1)\");\n    assert(!Aig_IsComplement(pNode2), \"!Aig_IsComplement(pNode2)\");\n    assert(pNode1.Id \u003c p.nReprsAlloc, \"pNode1.Id \u003c p.nReprsAlloc\");\n    assert(pNode2.Id \u003c p.nReprsAlloc, \"pNode2.Id \u003c p.nReprsAlloc\");\n    assert(pNode1.Id \u003c pNode2.Id, \"pNode1.Id \u003c pNode2.Id\");\n    p.pReprs[pNode2.Id] = pNode1;\n}"
+    },
+    {
+      "Name": "Aig_ObjSetRepr_",
+      "Start": 2812,
+      "End": 3276,
+      "BodyStart": 2904,
+      "Original": "static inline void Aig_ObjSetRepr_( Aig_Man_t * p, Aig_Obj_t * pNode1, Aig_Obj_t * pNode2 )\n{\n    assert( p-\u003epReprs != NULL );\n    assert( !Aig_IsComplement(pNode1) );\n    assert( !Aig_IsComplement(pNode2) );\n    assert( pNode1-\u003eId \u003c p-\u003enReprsAlloc );\n    assert( pNode2-\u003eId \u003c p-\u003enReprsAlloc );\n    if ( pNode1 == pNode2 )\n        return;\n    if ( pNode1-\u003eId \u003c pNode2-\u003eId )\n        p-\u003epReprs[pNode2-\u003eId] = pNode1;\n    else\n        p-\u003epReprs[pNode1-\u003eId] = pNode2;\n}",
+      "Draft": "func Aig_ObjSetRepr_(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode1), \"!Aig_IsComplement(pNode1)\");\n    assert(!Aig_IsComplement(pNode2), \"!Aig_IsComplement(pNode2)\");\n    assert(pNode1.Id \u003c p.nReprsAlloc, \"pNode1.Id \u003c p.nReprsAlloc\");\n    assert(pNode2.Id \u003c p.nReprsAlloc, \"pNode2.Id \u003c p.nReprsAlloc\");\n    if pNode1 == pNode2 {\n        return; }\n    if pNode1.Id \u003c pNode2.Id {\n        p.pReprs[pNode2.Id] = pNode1;\n    } else {\n        p.pReprs[pNode1.Id] = pNode2; }\n}"
+    },
+    {
+      "Name": "Aig_ObjFindRepr",
+      "Start": 3532,
+      "End": 3840,
+      "BodyStart": 3610,
+      "Original": "static inline Aig_Obj_t * Aig_ObjFindRepr( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    assert( p-\u003epReprs != NULL );\n    assert( !Aig_IsComplement(pNode) );\n    assert( pNode-\u003eId \u003c p-\u003enReprsAlloc );\n//    assert( !p-\u003epReprs[pNode-\u003eId] || p-\u003epReprs[pNode-\u003eId]-\u003eId \u003c pNode-\u003eId );\n    return p-\u003epReprs[pNode-\u003eId];\n}",
+      "Draft": "func Aig_ObjFindRepr(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(pNode.Id \u003c p.nReprsAlloc, \"pNode.Id \u003c p.nReprsAlloc\");\n//    assert( !p-\u003epReprs[pNode-\u003eId] || p-\u003epReprs[pNode-\u003eId]-\u003eId \u003c pNode-\u003eId );\n    return p.pReprs[pNode.Id];\n}"
+    },
+    {
+      "Name": "Aig_ObjClearRepr",
+      "Start": 4102,
+      "End": 4325,
+      "BodyStart": 4174,
+      "Original": "static inline void Aig_ObjClearRepr( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    assert( p-\u003epReprs != NULL );\n    assert( !Aig_IsComplement(pNode) );\n    assert( pNode-\u003eId \u003c p-\u003enReprsAlloc );\n    p-\u003epReprs[pNode-\u003eId] = NULL;\n}",
+      "Draft": "func Aig_ObjClearRepr(p *Aig_Man_t, pNode *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(pNode.Id \u003c p.nReprsAlloc, \"pNode.Id \u003c p.nReprsAlloc\");\n    p.pReprs[pNode.Id] = nil;\n}"
+    },
+    {
+      "Name": "Aig_ObjFindReprTransitive",
+      "Start": 4594,
+      "End": 4863,
+      "BodyStart": 4682,
+      "Original": "static inline Aig_Obj_t * Aig_ObjFindReprTransitive( Aig_Man_t * p, Aig_Obj_t * pNode )\n{\n    Aig_Obj_t * pNext, * pRepr;\n    if ( (pRepr = Aig_ObjFindRepr(p, pNode)) )\n        while ( (pNext = Aig_ObjFindRepr(p, pRepr)) )\n            pRepr = pNext;\n    return pRepr;\n}",
+      "Draft": "func Aig_ObjFindReprTransitive(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    var pNext, pRepr *Aig_Obj_t;\n    if pRepr = Aig_ObjFindRepr(p, pNode) {\n        for  pNext = Aig_ObjFindRepr(p, pRepr)  {\n            pRepr = pNext;\n        } }\n    return pRepr;\n}"
+    },
+    {
+      "Name": "Aig_ObjGetRepr",
+      "Start": 5157,
+      "End": 5429,
+      "BodyStart": 5233,
+      "Original": "static inline Aig_Obj_t * Aig_ObjGetRepr( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pRepr;\n    if ( (pRepr = Aig_ObjFindRepr(p, pObj)) )\n        return Aig_NotCond( (Aig_Obj_t *)pRepr-\u003epData, pObj-\u003efPhase ^ pRepr-\u003efPhase );\n    return (Aig_Obj_t *)pObj-\u003epData;\n}",
+      "Draft": "func Aig_ObjGetRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    var pRepr *Aig_Obj_t;\n    if pRepr = Aig_ObjFindRepr(p, pObj) {\n        return Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pObj.fPhase ^ pRepr.fPhase ); }\n    return (Aig_Obj_t *)pObj.pData;\n}"
+    },
+    {
+      "Name": "Aig_ObjChild0Repr",
+      "Start": 5430,
+      "End": 5596,
+      "BodyStart": 5509,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild0Repr( Aig_Man_t * p, Aig_Obj_t * pObj ) { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) ); }",
+      "Draft": "func Aig_ObjChild0Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) ); }"
+    },
+    {
+      "Name": "Aig_ObjChild1Repr",
+      "Start": 5597,
+      "End": 5763,
+      "BodyStart": 5676,
+      "Original": "static inline Aig_Obj_t * Aig_ObjChild1Repr( Aig_Man_t * p, Aig_Obj_t * pObj ) { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) ); }",
+      "Draft": "func Aig_ObjChild1Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) ); }"
+    },
+    {
+      "Name": "Aig_ManTransferRepr",
+      "Start": 6049,
+      "End": 6852,
+      "BodyStart": 6112,
+      "Original": "void Aig_ManTransferRepr( Aig_Man_t * pNew, Aig_Man_t * pOld )\n{\n    Aig_Obj_t * pObj, * pRepr;\n    int k;\n    assert( pNew-\u003epReprs != NULL );\n    // extend storage to fix pNew\n    if ( pNew-\u003enReprsAlloc \u003c Aig_ManObjNumMax(pNew) )\n    {\n        int nReprsAllocNew = 2 * Aig_ManObjNumMax(pNew);\n        pNew-\u003epReprs = ABC_REALLOC( Aig_Obj_t *, pNew-\u003epReprs, nReprsAllocNew );\n        memset( pNew-\u003epReprs + pNew-\u003enReprsAlloc, 0, sizeof(Aig_Obj_t *) * (nReprsAllocNew-pNew-\u003enReprsAlloc) );\n        pNew-\u003enReprsAlloc = nReprsAllocNew;\n    }\n    // go through the nodes which have representatives\n    Aig_ManForEachObj( pOld, pObj, k )\n        if ( (pRepr = Aig_ObjFindRepr(pOld, pObj)) )\n            Aig_ObjSetRepr_( pNew, Aig_Regular((Aig_Obj_t *)pRepr-\u003epData), Aig_Regular((Aig_Obj_t *)pObj-\u003epData) ); \n}",
+      "Draft": "func Aig_ManTransferRepr(pNew *Aig_Man_t, pOld *Aig_Man_t) {\n    var pObj, pRepr *Aig_Obj_t;\n    var k int32;\n    assert(pNew.pReprs != nil, \"pNew.pReprs != nil\");\n    // extend storage to fix pNew\n    if pNew.nReprsAlloc \u003c Aig_ManObjNumMax(pNew) {\n        var nReprsAllocNew int32  = 2 * Aig_ManObjNumMax(pNew);\n        // inlining of macro ABC_REALLOC\n        \n        if pNew.pReprs {\n            pNew.pReprs = ((Aig_Obj_t * *) realloc((char *)(pNew.pReprs), sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));\n        } else {\n            pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));\n        }\n        memset( pNew.pReprs + pNew.nReprsAlloc, 0, sizeof(Aig_Obj_t *) * (nReprsAllocNew-pNew.nReprsAlloc) );\n        pNew.nReprsAlloc = nReprsAllocNew;\n    }\n    // go through the nodes which have representatives\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(pOld.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vObjs, k)), 1); k++  { if (pObj) == nil {} else\n        if pRepr = Aig_ObjFindRepr(pOld, pObj) {\n            Aig_ObjSetRepr_( pNew, Aig_Regular((Aig_Obj_t *)pRepr.pData), Aig_Regular((Aig_Obj_t *)pObj.pData) ); }\n    } \n}"
+    },
+    {
+      "Name": "Aig_ManDupRepr_rec",
+      "Start": 7127,
+      "End": 7746,
+      "BodyStart": 7211,
+      "Original": "Aig_Obj_t * Aig_ManDupRepr_rec( Aig_Man_t * pNew, Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pRepr;\n    if ( pObj-\u003epData )\n        return (Aig_Obj_t *)pObj-\u003epData;\n    if ( (pRepr = Aig_ObjFindRepr(p, pObj)) )\n    {\n        Aig_ManDupRepr_rec( pNew, p, pRepr );\n        return (Aig_Obj_t *)(pObj-\u003epData = Aig_NotCond( (Aig_Obj_t *)pRepr-\u003epData, pRepr-\u003efPhase ^ pObj-\u003efPhase ));\n    }\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ));\n}",
+      "Draft": "func Aig_ManDupRepr_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    var pRepr *Aig_Obj_t;\n    if pObj.pData {\n        return (Aig_Obj_t *)pObj.pData; }\n    if pRepr = Aig_ObjFindRepr(p, pObj) {\n        Aig_ManDupRepr_rec( pNew, p, pRepr );\n        return (Aig_Obj_t *)(pObj.pData = Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pRepr.fPhase ^ pObj.fPhase ));\n    }\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ));\n}"
+    },
+    {
+      "Name": "Aig_ManDupRepr",
+      "Start": 8032,
+      "End": 9539,
+      "BodyStart": 8090,
+      "Original": "Aig_Man_t * Aig_ManDupRepr( Aig_Man_t * p, int fOrdered )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    // start the HOP package\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003enConstrs = p-\u003enConstrs;\n    pNew-\u003enBarBufs = p-\u003enBarBufs;\n    if ( p-\u003evFlopNums )\n        pNew-\u003evFlopNums = Vec_IntDup( p-\u003evFlopNums );\n    // map the const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n//    Aig_ManForEachCi( p, pObj, i )\n//        pObj-\u003epData = Aig_ObjGetRepr( p, pObj );\n    // map the internal nodes\n    if ( fOrdered )\n    {\n        Aig_ManForEachNode( p, pObj, i )\n            pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) );\n    }\n    else\n    {\n//        Aig_ManForEachObj( p, pObj, i )\n//            if ( p-\u003epReprs[i] )\n//                printf( \"Substituting %d for %d.\\n\", p-\u003epReprs[i]-\u003eId, pObj-\u003eId );\n\n        Aig_ManForEachCo( p, pObj, i )\n            Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n    }\n    // transfer the POs\n    Aig_ManForEachCo( p, pObj, i )\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Repr(p, pObj) );\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    // check the new manager\n    if ( !Aig_ManCheck(pNew) )\n        printf( \"Aig_ManDupRepr: Check has failed.\\n\" );\n    return pNew;\n}",
+      "Draft": "func Aig_ManDupRepr(p *Aig_Man_t, fOrdered int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // start the HOP package\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.nConstrs = p.nConstrs;\n    pNew.nBarBufs = p.nBarBufs;\n    if p.vFlopNums {\n        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }\n    // map the const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi(pNew);\n    }\n//    Aig_ManForEachCi( p, pObj, i )\n//        pObj-\u003epData = Aig_ObjGetRepr( p, pObj );\n    // map the internal nodes\n    if fOrdered != 0 {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ); }\n        }\n    \n    } else {\n//        Aig_ManForEachObj( p, pObj, i )\n//            if ( p-\u003epReprs[i] )\n//                printf( \"Substituting %d for %d.\\n\", p-\u003epReprs[i]-\u003eId, pObj-\u003eId );\n\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n        }\n    }\n    // transfer the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Repr(p, pObj) );\n    }\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    // check the new manager\n    if !Aig_ManCheck(pNew) {\n        fmt.Printf(\"Aig_ManDupRepr: Check has failed.\\n\"); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Aig_ManDupReprBasic",
+      "Start": 9838,
+      "End": 10351,
+      "BodyStart": 9887,
+      "Original": "Aig_Man_t * Aig_ManDupReprBasic( Aig_Man_t * p )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( p-\u003epReprs != NULL );\n    // reconstruct AIG with representatives\n    pNew = Aig_ManDupRepr( p, 0 );\n    // perfrom sequential cleanup but do not remove registers\n    Aig_ManSeqCleanupBasic( pNew );\n    // remove pointers to the dead nodes\n    Aig_ManForEachObj( p, pObj, i )\n        if ( pObj-\u003epData \u0026\u0026 Aig_ObjIsNone((Aig_Obj_t *)pObj-\u003epData) )\n            pObj-\u003epData = NULL;\n    return pNew;\n}",
+      "Draft": "func Aig_ManDupReprBasic(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // reconstruct AIG with representatives\n    pNew = Aig_ManDupRepr( p, 0 );\n    // perfrom sequential cleanup but do not remove registers\n    Aig_ManSeqCleanupBasic( pNew );\n    // remove pointers to the dead nodes\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pObj.pData \u0026\u0026 Aig_ObjIsNone((Aig_Obj_t *)pObj.pData) {\n            pObj.pData = nil; }\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Aig_ManRemapRepr",
+      "Start": 10654,
+      "End": 11048,
+      "BodyStart": 10692,
+      "Original": "int Aig_ManRemapRepr( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pRepr;\n    int i, nFanouts = 0;\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        pRepr = Aig_ObjFindReprTransitive( p, pObj );\n        if ( pRepr == NULL )\n            continue;\n        assert( pRepr-\u003eId \u003c pObj-\u003eId );\n        Aig_ObjSetRepr_( p, pObj, pRepr );\n        nFanouts += (pObj-\u003enRefs \u003e 0);\n    }\n    return nFanouts;\n}",
+      "Draft": "func Aig_ManRemapRepr(p *Aig_Man_t) int32 {\n    var pObj, pRepr *Aig_Obj_t;\n    var i, nFanouts int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pRepr = Aig_ObjFindReprTransitive( p, pObj );\n        if pRepr == nil {\n            continue; }\n        assert(pRepr.Id \u003c pObj.Id, \"pRepr.Id \u003c pObj.Id\");\n        Aig_ObjSetRepr_( p, pObj, pRepr );\n        nFanouts += (pObj.nRefs \u003e 0);\n    }\n    }\n    return nFanouts;\n}"
+    },
+    {
+      "Name": "Aig_ManCountReprs",
+      "Start": 11351,
+      "End": 11585,
+      "BodyStart": 11390,
+      "Original": "int Aig_ManCountReprs( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    if ( p-\u003epReprs == NULL )\n        return 0;\n    Aig_ManForEachObj( p, pObj, i )\n        Counter += (p-\u003epReprs[i] != NULL);\n    return Counter;\n}",
+      "Draft": "func Aig_ManCountReprs(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    if p.pReprs == nil {\n        return 0; }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Counter += (p.pReprs[i] != nil); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_ObjCheckTfi_rec",
+      "Start": 11861,
+      "End": 12624,
+      "BodyStart": 11939,
+      "Original": "int Aig_ObjCheckTfi_rec( Aig_Man_t * p, Aig_Obj_t * pNode, Aig_Obj_t * pOld )\n{\n    // check the trivial cases\n    if ( pNode == NULL )\n        return 0;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if ( pNode == pOld )\n        return 1;\n    // skip the visited node\n    if ( Aig_ObjIsTravIdCurrent( p, pNode ) )\n        return 0;\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // check the children\n    if ( Aig_ObjCheckTfi_rec( p, Aig_ObjFanin0(pNode), pOld ) )\n        return 1;\n    if ( Aig_ObjCheckTfi_rec( p, Aig_ObjFanin1(pNode), pOld ) )\n        return 1;\n    // check equivalent nodes\n    return Aig_ObjCheckTfi_rec( p, Aig_ObjEquiv(p, pNode), pOld );\n}",
+      "Draft": "func Aig_ObjCheckTfi_rec(p *Aig_Man_t, pNode *Aig_Obj_t, pOld *Aig_Obj_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // check the children\n    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Aig_ObjCheckTfi_rec( p, Aig_ObjEquiv(p, pNode), pOld );\n}"
+    },
+    {
+      "Name": "Aig_ObjCheckTfi",
+      "Start": 12900,
+      "End": 13136,
+      "BodyStart": 12973,
+      "Original": "int Aig_ObjCheckTfi( Aig_Man_t * p, Aig_Obj_t * pNew, Aig_Obj_t * pOld )\n{\n    assert( !Aig_IsComplement(pNew) );\n    assert( !Aig_IsComplement(pOld) );\n    Aig_ManIncrementTravId( p );\n    return Aig_ObjCheckTfi_rec( p, pNew, pOld );\n}",
+      "Draft": "func Aig_ObjCheckTfi(p *Aig_Man_t, pNew *Aig_Obj_t, pOld *Aig_Obj_t) int32 {\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    Aig_ManIncrementTravId( p );\n    return Aig_ObjCheckTfi_rec( p, pNew, pOld );\n}"
+    },
+    {
+      "Name": "Aig_ManRehash",
+      "Start": 13459,
+      "End": 13933,
+      "BodyStart": 13502,
+      "Original": "Aig_Man_t * Aig_ManRehash( Aig_Man_t * p )\n{\n    Aig_Man_t * pTemp;\n    int i, nFanouts;\n    assert( p-\u003epReprs != NULL );\n    for ( i = 0; (nFanouts = Aig_ManRemapRepr( p )); i++ )\n    {\n//        printf( \"Iter = %3d. Fanouts = %6d. Nodes = %7d.\\n\", i+1, nFanouts, Aig_ManNodeNum(p) );\n        p = Aig_ManDupRepr( pTemp = p, 1 );\n        Aig_ManReprStart( p, Aig_ManObjNumMax(p) );\n        Aig_ManTransferRepr( p, pTemp );\n        Aig_ManStop( pTemp );\n    }\n    return p;\n}",
+      "Draft": "func Aig_ManRehash(p *Aig_Man_t) *Aig_Man_t {\n    var pTemp *Aig_Man_t;\n    var i, nFanouts int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    for  i = 0; (nFanouts = Aig_ManRemapRepr( p )); i++  {\n//        printf( \"Iter = %3d. Fanouts = %6d. Nodes = %7d.\\n\", i+1, nFanouts, Aig_ManNodeNum(p) );\n        p = Aig_ManDupRepr( pTemp = p, 1 );\n        Aig_ManReprStart( p, Aig_ManObjNumMax(p) );\n        Aig_ManTransferRepr( p, pTemp );\n        Aig_ManStop( pTemp );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Aig_ManMarkValidChoices",
+      "Start": 14268,
+      "End": 15477,
+      "BodyStart": 14314,
+      "Original": "void Aig_ManMarkValidChoices( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pRepr;\n    int i;\n    assert( p-\u003epReprs != NULL );\n    // create equivalent nodes in the manager\n    assert( p-\u003epEquivs == NULL );\n    p-\u003epEquivs = ABC_ALLOC( Aig_Obj_t *, Aig_ManObjNumMax(p) );\n    memset( p-\u003epEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );\n    // make the choice nodes\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        pRepr = Aig_ObjFindRepr( p, pObj );\n        if ( pRepr == NULL )\n            continue;\n        // skip constant and PI classes\n        if ( !Aig_ObjIsNode(pRepr) )\n        {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        // skip choices with combinatinal loops\n        if ( Aig_ObjCheckTfi( p, pObj, pRepr ) )\n        {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n//printf( \"Node %d is represented by node %d.\\n\", pObj-\u003eId, pRepr-\u003eId );\n        // add choice to the choice node\n        if ( pObj-\u003enRefs \u003e 0 )\n        {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        assert( pObj-\u003enRefs == 0 );\n        p-\u003epEquivs[pObj-\u003eId] = p-\u003epEquivs[pRepr-\u003eId];\n        p-\u003epEquivs[pRepr-\u003eId] = pObj;\n    }\n}",
+      "Draft": "func Aig_ManMarkValidChoices(p *Aig_Man_t) {\n    var pObj, pRepr *Aig_Obj_t;\n    var i int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // create equivalent nodes in the manager\n    assert(p.pEquivs == nil, \"p.pEquivs == nil\");\n    // inlining of macro ABC_ALLOC\n    p.pEquivs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));\n    memset( p.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );\n    // make the choice nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pRepr = Aig_ObjFindRepr( p, pObj );\n        if pRepr == nil {\n            continue; }\n        // skip constant and PI classes\n        if !Aig_ObjIsNode(pRepr) {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        // skip choices with combinatinal loops\n        if Aig_ObjCheckTfi( p, pObj, pRepr ) != 0 {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n//printf( \"Node %d is represented by node %d.\\n\", pObj-\u003eId, pRepr-\u003eId );\n        // add choice to the choice node\n        if pObj.nRefs \u003e 0 {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        assert(pObj.nRefs == 0, \"pObj.nRefs == 0\");\n        p.pEquivs[pObj.Id] = p.pEquivs[pRepr.Id];\n        p.pEquivs[pRepr.Id] = pObj;\n    }\n    }\n}"
+    },
+    {
+      "Name": "Aig_TransferMappedClasses",
+      "Start": 15736,
+      "End": 16250,
+      "BodyStart": 15821,
+      "Original": "int Aig_TransferMappedClasses( Aig_Man_t * pAig, Aig_Man_t * pPart, int * pMapBack )\n{\n    Aig_Obj_t * pObj;\n    int nClasses, k;\n    nClasses = 0;\n    if ( pPart-\u003epReprs ) {\n      Aig_ManForEachObj( pPart, pObj, k )\n      {\n          if ( pPart-\u003epReprs[pObj-\u003eId] == NULL )\n              continue;\n          nClasses++;\n          Aig_ObjSetRepr_( pAig,\n              Aig_ManObj(pAig, pMapBack[pObj-\u003eId]),\n              Aig_ManObj(pAig, pMapBack[pPart-\u003epReprs[pObj-\u003eId]-\u003eId]) );\n      }\n    }\n    return nClasses;\n}",
+      "Draft": "func Aig_TransferMappedClasses(pAig *Aig_Man_t, pPart *Aig_Man_t, pMapBack *int32) int32 {\n    var pObj *Aig_Obj_t;\n    var nClasses, k int32;\n    nClasses = 0;\n    if pPart.pReprs {\n      // inlining of macro Aig_ManForEachObj\n      // inlining of macro Vec_PtrForEachEntry\n      for  k = 0; (k \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, k)), 1); k++  { if (pObj) == nil {} else {\n          if pPart.pReprs[pObj.Id] == nil {\n              continue; }\n          nClasses++;\n          Aig_ObjSetRepr_( pAig,\n              Aig_ManObj(pAig, pMapBack[pObj.Id]),\n              Aig_ManObj(pAig, pMapBack[pPart.pReprs[pObj.Id].Id]) );\n      }\n      }\n    }\n    return nClasses;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::1496",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1427,
+      "End": 1427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::1572",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1495,
+      "End": 1501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::6645",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::6729",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::6833",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6477,
+      "End": 6483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::16564",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14488,
+      "End": 14488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::mechanical::sizeof::16646",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14562,
+      "End": 14568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::1473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1427,
+      "End": 1427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::1502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1427,
+      "End": 1427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::1578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1501,
+      "End": 1514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::2025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1883,
+      "End": 1883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::5497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5332,
+      "End": 5345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::5567",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5402,
+      "End": 5415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6706",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6366,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::6839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6483,
+      "End": 6496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::7168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6646,
+      "End": 6646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::7352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6781,
+      "End": 6794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::7392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6821,
+      "End": 6834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::7845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7274,
+      "End": 7287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::7984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7413,
+      "End": 7426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::8025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7454,
+      "End": 7467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::8214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7643,
+      "End": 7656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::9316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8584,
+      "End": 8584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::9727",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8812,
+      "End": 8812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::10283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9135,
+      "End": 9135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::10592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9264,
+      "End": 9264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::11709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10199,
+      "End": 10199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::11832",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10273,
+      "End": 10286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::12477",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10754,
+      "End": 10754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::13447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11489,
+      "End": 11489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::16541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14488,
+      "End": 14488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::16570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14488,
+      "End": 14488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::16652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14568,
+      "End": 14581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::16888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14640,
+      "End": 14640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::pointer-cast::18404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15917,
+      "End": 15917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManReprStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManReprStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1259,
+      "End": 1536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::ternary::Aig_ManReprStop",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManReprStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1806,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManReprStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManReprStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1806,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjCreateRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCreateRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2194,
+      "End": 2553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjSetRepr_",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetRepr_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2812,
+      "End": 3276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjFindRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFindRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3532,
+      "End": 3840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjClearRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjClearRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4102,
+      "End": 4325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjFindReprTransitive",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFindReprTransitive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4594,
+      "End": 4863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjGetRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjGetRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5157,
+      "End": 5429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjChild0Repr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Repr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5430,
+      "End": 5596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjChild1Repr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Repr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5597,
+      "End": 5763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManTransferRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManTransferRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6049,
+      "End": 6852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManDupRepr_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDupRepr_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7127,
+      "End": 7746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManDupRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDupRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8032,
+      "End": 9539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManDupReprBasic",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDupReprBasic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9838,
+      "End": 10351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManRemapRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRemapRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10654,
+      "End": 11048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManCountReprs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCountReprs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11351,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjCheckTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCheckTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11861,
+      "End": 12624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ObjCheckTfi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCheckTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12900,
+      "End": 13136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManRehash",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRehash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13459,
+      "End": 13933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_ManMarkValidChoices",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManMarkValidChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14268,
+      "End": 15477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::Aig_TransferMappedClasses",
+      "Category": "semantic-review",
+      "Symbol": "Aig_TransferMappedClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15736,
+      "End": 16250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigRepr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16498
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigRepr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Handing node representatives.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigRepr.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the array of representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManReprStart(p *Aig_Man_t, nIdMax int32) {\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    assert(p.pReprs == nil, \"p.pReprs == nil\");\n    p.nReprsAlloc = nIdMax;\n    // inlining of macro ABC_ALLOC\n    p.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nReprsAlloc)));\n    memset( p.pReprs, 0, sizeof(Aig_Obj_t *) * p.nReprsAlloc );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stop the array of representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManReprStop(p *Aig_Man_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n    p.nReprsAlloc = 0;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Set the representative.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCreateRepr(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode1), \"!Aig_IsComplement(pNode1)\");\n    assert(!Aig_IsComplement(pNode2), \"!Aig_IsComplement(pNode2)\");\n    assert(pNode1.Id \u003c p.nReprsAlloc, \"pNode1.Id \u003c p.nReprsAlloc\");\n    assert(pNode2.Id \u003c p.nReprsAlloc, \"pNode2.Id \u003c p.nReprsAlloc\");\n    assert(pNode1.Id \u003c pNode2.Id, \"pNode1.Id \u003c pNode2.Id\");\n    p.pReprs[pNode2.Id] = pNode1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Set the representative.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjSetRepr_(p *Aig_Man_t, pNode1 *Aig_Obj_t, pNode2 *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode1), \"!Aig_IsComplement(pNode1)\");\n    assert(!Aig_IsComplement(pNode2), \"!Aig_IsComplement(pNode2)\");\n    assert(pNode1.Id \u003c p.nReprsAlloc, \"pNode1.Id \u003c p.nReprsAlloc\");\n    assert(pNode2.Id \u003c p.nReprsAlloc, \"pNode2.Id \u003c p.nReprsAlloc\");\n    if pNode1 == pNode2 {\n        return; }\n    if pNode1.Id \u003c pNode2.Id {\n        p.pReprs[pNode2.Id] = pNode1;\n    } else {\n        p.pReprs[pNode1.Id] = pNode2; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find representative.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjFindRepr(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(pNode.Id \u003c p.nReprsAlloc, \"pNode.Id \u003c p.nReprsAlloc\");\n//    assert( !p-\u003epReprs[pNode-\u003eId] || p-\u003epReprs[pNode-\u003eId]-\u003eId \u003c pNode-\u003eId );\n    return p.pReprs[pNode.Id];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clears the representative.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjClearRepr(p *Aig_Man_t, pNode *Aig_Obj_t) {\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(pNode.Id \u003c p.nReprsAlloc, \"pNode.Id \u003c p.nReprsAlloc\");\n    p.pReprs[pNode.Id] = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find representative transitively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjFindReprTransitive(p *Aig_Man_t, pNode *Aig_Obj_t) *Aig_Obj_t {\n    var pNext, pRepr *Aig_Obj_t;\n    if pRepr = Aig_ObjFindRepr(p, pNode) {\n        for  pNext = Aig_ObjFindRepr(p, pRepr)  {\n            pRepr = pNext;\n        } }\n    return pRepr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns representatives of fanin in approapriate polarity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjGetRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    var pRepr *Aig_Obj_t;\n    if pRepr = Aig_ObjFindRepr(p, pObj) {\n        return Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pObj.fPhase ^ pRepr.fPhase ); }\n    return (Aig_Obj_t *)pObj.pData;\n}\nfunc Aig_ObjChild0Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) ); }\nfunc Aig_ObjChild1Repr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond( Aig_ObjGetRepr(p, Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) ); }\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG while substituting representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManTransferRepr(pNew *Aig_Man_t, pOld *Aig_Man_t) {\n    var pObj, pRepr *Aig_Obj_t;\n    var k int32;\n    assert(pNew.pReprs != nil, \"pNew.pReprs != nil\");\n    // extend storage to fix pNew\n    if pNew.nReprsAlloc \u003c Aig_ManObjNumMax(pNew) {\n        var nReprsAllocNew int32  = 2 * Aig_ManObjNumMax(pNew);\n        // inlining of macro ABC_REALLOC\n        \n        if pNew.pReprs {\n            pNew.pReprs = ((Aig_Obj_t * *) realloc((char *)(pNew.pReprs), sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));\n        } else {\n            pNew.pReprs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nReprsAllocNew)));\n        }\n        memset( pNew.pReprs + pNew.nReprsAlloc, 0, sizeof(Aig_Obj_t *) * (nReprsAllocNew-pNew.nReprsAlloc) );\n        pNew.nReprsAlloc = nReprsAllocNew;\n    }\n    // go through the nodes which have representatives\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(pOld.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vObjs, k)), 1); k++  { if (pObj) == nil {} else\n        if pRepr = Aig_ObjFindRepr(pOld, pObj) {\n            Aig_ObjSetRepr_( pNew, Aig_Regular((Aig_Obj_t *)pRepr.pData), Aig_Regular((Aig_Obj_t *)pObj.pData) ); }\n    } \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG manager recursively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDupRepr_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {\n    var pRepr *Aig_Obj_t;\n    if pObj.pData {\n        return (Aig_Obj_t *)pObj.pData; }\n    if pRepr = Aig_ObjFindRepr(p, pObj) {\n        Aig_ManDupRepr_rec( pNew, p, pRepr );\n        return (Aig_Obj_t *)(pObj.pData = Aig_NotCond( (Aig_Obj_t *)pRepr.pData, pRepr.fPhase ^ pObj.fPhase ));\n    }\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n    Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin1(pObj) );\n    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG while substituting representatives.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDupRepr(p *Aig_Man_t, fOrdered int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // start the HOP package\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    pNew.nConstrs = p.nConstrs;\n    pNew.nBarBufs = p.nBarBufs;\n    if p.vFlopNums {\n        pNew.vFlopNums = Vec_IntDup( p.vFlopNums ); }\n    // map the const and primary inputs\n    Aig_ManCleanData( p );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi(pNew);\n    }\n//    Aig_ManForEachCi( p, pObj, i )\n//        pObj-\u003epData = Aig_ObjGetRepr( p, pObj );\n    // map the internal nodes\n    if fOrdered != 0 {\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pNew, Aig_ObjChild0Repr(p, pObj), Aig_ObjChild1Repr(p, pObj) ); }\n        }\n    \n    } else {\n//        Aig_ManForEachObj( p, pObj, i )\n//            if ( p-\u003epReprs[i] )\n//                printf( \"Substituting %d for %d.\\n\", p-\u003epReprs[i]-\u003eId, pObj-\u003eId );\n\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n            Aig_ManDupRepr_rec( pNew, p, Aig_ObjFanin0(pObj) );\n        }\n    }\n    // transfer the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Repr(p, pObj) );\n    }\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );\n    // check the new manager\n    if !Aig_ManCheck(pNew) {\n        fmt.Printf(\"Aig_ManDupRepr: Check has failed.\\n\"); }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG with representatives without removing registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDupReprBasic(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // reconstruct AIG with representatives\n    pNew = Aig_ManDupRepr( p, 0 );\n    // perfrom sequential cleanup but do not remove registers\n    Aig_ManSeqCleanupBasic( pNew );\n    // remove pointers to the dead nodes\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else\n        if pObj.pData \u0026\u0026 Aig_ObjIsNone((Aig_Obj_t *)pObj.pData) {\n            pObj.pData = nil; }\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer representatives and return the number of critical fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRemapRepr(p *Aig_Man_t) int32 {\n    var pObj, pRepr *Aig_Obj_t;\n    var i, nFanouts int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pRepr = Aig_ObjFindReprTransitive( p, pObj );\n        if pRepr == nil {\n            continue; }\n        assert(pRepr.Id \u003c pObj.Id, \"pRepr.Id \u003c pObj.Id\");\n        Aig_ObjSetRepr_( p, pObj, pRepr );\n        nFanouts += (pObj.nRefs \u003e 0);\n    }\n    }\n    return nFanouts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer representatives and return the number of critical fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCountReprs(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    if p.pReprs == nil {\n        return 0; }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        Counter += (p.pReprs[i] != nil); }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCheckTfi_rec(p *Aig_Man_t, pNode *Aig_Obj_t, pOld *Aig_Obj_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if Aig_ObjIsTravIdCurrent( p, pNode ) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // check the children\n    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin0(pNode), pOld ) != 0 {\n        return 1; }\n    if Aig_ObjCheckTfi_rec( p, Aig_ObjFanin1(pNode), pOld ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Aig_ObjCheckTfi_rec( p, Aig_ObjEquiv(p, pNode), pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjCheckTfi(p *Aig_Man_t, pNew *Aig_Obj_t, pOld *Aig_Obj_t) int32 {\n    assert(!Aig_IsComplement(pNew), \"!Aig_IsComplement(pNew)\");\n    assert(!Aig_IsComplement(pOld), \"!Aig_IsComplement(pOld)\");\n    Aig_ManIncrementTravId( p );\n    return Aig_ObjCheckTfi_rec( p, pNew, pOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Iteratively rehashes the AIG.]\n\n  Description [The input AIG is assumed to have representatives assigned.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRehash(p *Aig_Man_t) *Aig_Man_t {\n    var pTemp *Aig_Man_t;\n    var i, nFanouts int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    for  i = 0; (nFanouts = Aig_ManRemapRepr( p )); i++  {\n//        printf( \"Iter = %3d. Fanouts = %6d. Nodes = %7d.\\n\", i+1, nFanouts, Aig_ManNodeNum(p) );\n        p = Aig_ManDupRepr( pTemp = p, 1 );\n        Aig_ManReprStart( p, Aig_ManObjNumMax(p) );\n        Aig_ManTransferRepr( p, pTemp );\n        Aig_ManStop( pTemp );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the nodes that are Creates choices.]\n\n  Description [The input AIG is assumed to have representatives assigned.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManMarkValidChoices(p *Aig_Man_t) {\n    var pObj, pRepr *Aig_Obj_t;\n    var i int32;\n    assert(p.pReprs != nil, \"p.pReprs != nil\");\n    // create equivalent nodes in the manager\n    assert(p.pEquivs == nil, \"p.pEquivs == nil\");\n    // inlining of macro ABC_ALLOC\n    p.pEquivs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManObjNumMax(p))));\n    memset( p.pEquivs, 0, sizeof(Aig_Obj_t *) * Aig_ManObjNumMax(p) );\n    // make the choice nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pRepr = Aig_ObjFindRepr( p, pObj );\n        if pRepr == nil {\n            continue; }\n        // skip constant and PI classes\n        if !Aig_ObjIsNode(pRepr) {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        // skip choices with combinatinal loops\n        if Aig_ObjCheckTfi( p, pObj, pRepr ) != 0 {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n//printf( \"Node %d is represented by node %d.\\n\", pObj-\u003eId, pRepr-\u003eId );\n        // add choice to the choice node\n        if pObj.nRefs \u003e 0 {\n            Aig_ObjClearRepr( p, pObj );\n            continue;\n        }\n        assert(pObj.nRefs == 0, \"pObj.nRefs == 0\");\n        p.pEquivs[pObj.Id] = p.pEquivs[pRepr.Id];\n        p.pEquivs[pRepr.Id] = pObj;\n    }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_TransferMappedClasses(pAig *Aig_Man_t, pPart *Aig_Man_t, pMapBack *int32) int32 {\n    var pObj *Aig_Obj_t;\n    var nClasses, k int32;\n    nClasses = 0;\n    if pPart.pReprs {\n      // inlining of macro Aig_ManForEachObj\n      // inlining of macro Vec_PtrForEachEntry\n      for  k = 0; (k \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, k)), 1); k++  { if (pObj) == nil {} else {\n          if pPart.pReprs[pObj.Id] == nil {\n              continue; }\n          nClasses++;\n          Aig_ObjSetRepr_( pAig,\n              Aig_ManObj(pAig, pMapBack[pObj.Id]),\n              Aig_ManObj(pAig, pMapBack[pPart.pReprs[pObj.Id].Id]) );\n      }\n      }\n    }\n    return nClasses;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

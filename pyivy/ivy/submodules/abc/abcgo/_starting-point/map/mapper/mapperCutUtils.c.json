@@ -1,0 +1,316 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c",
+  "SHA256": "df86824d905304f7ff3f0edf21ba066d08b14aaf4d1ad29f0d3ae03d0201c60b",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCut, 0, sizeof(Map_Cut_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CUT:  Delay = (%4.2f, %4.2f). Area = %4.2f. Nodes = %d -\u003e {\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 2937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pCut.ppLeaves[i].Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" } \\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.M[fPhase].pSuperBest );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.M[fPhase].pSuperBest );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.pCutBest[fPhase].M[fPhase].pSuperBest );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 5074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPrev.pNext == nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_CutAlloc",
+      "Start": 1231,
+      "End": 1975,
+      "BodyStart": 1273,
+      "Original": "Map_Cut_t * Map_CutAlloc( Map_Man_t * p )\n{\n    Map_Cut_t * pCut;\n    Map_Match_t * pMatch;\n    pCut = (Map_Cut_t *)Extra_MmFixedEntryFetch( p-\u003emmCuts );\n    memset( pCut, 0, sizeof(Map_Cut_t) );\n\n    pMatch = pCut-\u003eM;\n    pMatch-\u003eAreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n\n    pMatch = pCut-\u003eM + 1;\n    pMatch-\u003eAreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch-\u003etArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n    return pCut;\n}",
+      "Draft": "func Map_CutAlloc(p *Map_Man_t) *Map_Cut_t {\n    var pCut *Map_Cut_t;\n    var pMatch *Map_Match_t;\n    pCut = (Map_Cut_t *)Extra_MmFixedEntryFetch( p.mmCuts );\n    memset( pCut, 0, sizeof(Map_Cut_t) );\n\n    pMatch = pCut.M;\n    pMatch.AreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n\n    pMatch = pCut.M + 1;\n    pMatch.AreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n    return pCut;\n}"
+    },
+    {
+      "Name": "Map_CutFree",
+      "Start": 2231,
+      "End": 2360,
+      "BodyStart": 2283,
+      "Original": "void Map_CutFree( Map_Man_t * p, Map_Cut_t * pCut )\n{\n    if ( pCut )\n    Extra_MmFixedEntryRecycle( p-\u003emmCuts, (char *)pCut );\n}",
+      "Draft": "func Map_CutFree(p *Map_Man_t, pCut *Map_Cut_t) {\n    if pCut != nil {\n    Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pCut ); }\n}"
+    },
+    {
+      "Name": "Map_CutPrint",
+      "Start": 2596,
+      "End": 2993,
+      "BodyStart": 2681,
+      "Original": "void Map_CutPrint( Map_Man_t * p, Map_Node_t * pRoot, Map_Cut_t * pCut, int fPhase )\n{\n    int i;\n    printf( \"CUT:  Delay = (%4.2f, %4.2f). Area = %4.2f. Nodes = %d -\u003e {\", \n        pCut-\u003eM[fPhase].tArrive.Rise, pCut-\u003eM[fPhase].tArrive.Fall, pCut-\u003eM[fPhase].AreaFlow, pRoot-\u003eNum );\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        printf( \" %d\", pCut-\u003eppLeaves[i]-\u003eNum );\n    printf( \" } \\n\" );\n}",
+      "Draft": "func Map_CutPrint(p *Map_Man_t, pRoot *Map_Node_t, pCut *Map_Cut_t, fPhase int32) {\n    var i int32;\n    fmt.Printf(\"CUT:  Delay = (%4.2f, %4.2f). Area = %4.2f. Nodes = %d -\u003e {\", pCut.M[fPhase].tArrive.Rise, pCut.M[fPhase].tArrive.Fall, pCut.M[fPhase].AreaFlow, pRoot.Num);\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fmt.Printf(\" %d\", pCut.ppLeaves[i].Num);\n    }\n    fmt.Printf(\" } \\n\");\n}"
+    },
+    {
+      "Name": "Map_CutGetRootArea",
+      "Start": 3278,
+      "End": 3425,
+      "BodyStart": 3335,
+      "Original": "float Map_CutGetRootArea( Map_Cut_t * pCut, int fPhase )\n{\n    assert( pCut-\u003eM[fPhase].pSuperBest );\n    return pCut-\u003eM[fPhase].pSuperBest-\u003eArea;\n}",
+      "Draft": "func Map_CutGetRootArea(pCut *Map_Cut_t, fPhase int32) float32 {\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    return pCut.M[fPhase].pSuperBest.Area;\n}"
+    },
+    {
+      "Name": "Map_CutGetLeafPhase",
+      "Start": 3709,
+      "End": 3884,
+      "BodyStart": 3776,
+      "Original": "int Map_CutGetLeafPhase( Map_Cut_t * pCut, int fPhase, int iLeaf )\n{\n    assert( pCut-\u003eM[fPhase].pSuperBest );\n    return (( pCut-\u003eM[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}",
+      "Draft": "func Map_CutGetLeafPhase(pCut *Map_Cut_t, fPhase int32, iLeaf int32) int32 {\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    return (( pCut.M[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}"
+    },
+    {
+      "Name": "Map_NodeGetLeafPhase",
+      "Start": 4168,
+      "End": 4384,
+      "BodyStart": 4238,
+      "Original": "int Map_NodeGetLeafPhase( Map_Node_t * pNode, int fPhase, int iLeaf )\n{\n    assert( pNode-\u003epCutBest[fPhase]-\u003eM[fPhase].pSuperBest );\n    return (( pNode-\u003epCutBest[fPhase]-\u003eM[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}",
+      "Draft": "func Map_NodeGetLeafPhase(pNode *Map_Node_t, fPhase int32, iLeaf int32) int32 {\n    assert(pNode.pCutBest[fPhase].M[fPhase].pSuperBest, \"pNode.pCutBest[fPhase].M[fPhase].pSuperBest\");\n    return (( pNode.pCutBest[fPhase].M[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}"
+    },
+    {
+      "Name": "Map_CutListAppend",
+      "Start": 4620,
+      "End": 5118,
+      "BodyStart": 4692,
+      "Original": "Map_Cut_t * Map_CutListAppend( Map_Cut_t * pSetAll, Map_Cut_t * pSets )\n{\n    Map_Cut_t * pPrev = NULL; // Suppress \"might be used uninitialized\"\n    Map_Cut_t * pTemp;\n    if ( pSetAll == NULL )\n        return pSets;\n    if ( pSets == NULL )\n        return pSetAll;\n    // find the last one\n    for ( pTemp = pSets; pTemp; pTemp = pTemp-\u003epNext )\n        pPrev = pTemp;\n    // append all the end of the current set\n    assert( pPrev-\u003epNext == NULL );\n    pPrev-\u003epNext = pSetAll;\n    return pSets;\n}",
+      "Draft": "func Map_CutListAppend(pSetAll *Map_Cut_t, pSets *Map_Cut_t) *Map_Cut_t {\n    var pPrev *Map_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Map_Cut_t;\n    if pSetAll == nil {\n        return pSets; }\n    if pSets == nil {\n        return pSetAll; }\n    // find the last one\n    for  pTemp = pSets; (pTemp != nil); pTemp = pTemp.pNext  {\n        pPrev = pTemp;\n    }\n    // append all the end of the current set\n    assert(pPrev.pNext == nil, \"pPrev.pNext == nil\");\n    pPrev.pNext = pSetAll;\n    return pSets;\n}"
+    },
+    {
+      "Name": "Map_CutListRecycle",
+      "Start": 5354,
+      "End": 5713,
+      "BodyStart": 5436,
+      "Original": "void Map_CutListRecycle( Map_Man_t * p, Map_Cut_t * pSetList, Map_Cut_t * pSave )\n{\n    Map_Cut_t * pNext, * pTemp;\n    for ( pTemp = pSetList, pNext = pTemp? pTemp-\u003epNext : NULL; \n          pTemp; \n          pTemp = pNext, pNext = pNext? pNext-\u003epNext : NULL )\n        if ( pTemp != pSave )\n            Extra_MmFixedEntryRecycle( p-\u003emmCuts, (char *)pTemp );\n}",
+      "Draft": "func Map_CutListRecycle(p *Map_Man_t, pSetList *Map_Cut_t, pSave *Map_Cut_t) {\n    var pNext, pTemp *Map_Cut_t;\n    for  pTemp = pSetList, pNext = pTemp? pTemp.pNext : nil; \n          (pTemp != nil); \n          pTemp = pNext, pNext = pNext? pNext.pNext : nil  {\n        if pTemp != pSave {\n            Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pTemp ); }\n    }\n}"
+    },
+    {
+      "Name": "Map_CutListCount",
+      "Start": 5949,
+      "End": 6110,
+      "BodyStart": 5991,
+      "Original": "int Map_CutListCount( Map_Cut_t * pSets )\n{\n    Map_Cut_t * pTemp;\n    int i;\n    for ( i = 0, pTemp = pSets; pTemp; pTemp = pTemp-\u003epNext, i++ );\n    return i;\n}",
+      "Draft": "func Map_CutListCount(pSets *Map_Cut_t) int32 {\n    var pTemp *Map_Cut_t;\n    var i int32;\n    for  i, pTemp = 0, pSets; (pTemp != nil); pTemp, i = pTemp.pNext, i+1  {}\n    return i;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::mechanical::sizeof::1406",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1406,
+      "End": 1412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::pointer-cast::1334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1334,
+      "End": 1347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::pointer-cast::2343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2343,
+      "End": 2351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::pointer-cast::5695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5695,
+      "End": 5703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1231,
+      "End": 1975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutFree",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2231,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2596,
+      "End": 2993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutGetRootArea",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutGetRootArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3278,
+      "End": 3425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutGetLeafPhase",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutGetLeafPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3709,
+      "End": 3884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_NodeGetLeafPhase",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeGetLeafPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4168,
+      "End": 4384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutListAppend",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutListAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4620,
+      "End": 5118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::ternary::Map_CutListRecycle",
+      "Category": "ternary-review",
+      "Symbol": "Map_CutListRecycle",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5354,
+      "End": 5713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutListRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutListRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5354,
+      "End": 5713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::Map_CutListCount",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutListCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5949,
+      "End": 6110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCutUtils.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7620
+    }
+  ],
+  "Draft": "package mapper\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [mapperCutUtils.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperCutUtils.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutAlloc(p *Map_Man_t) *Map_Cut_t {\n    var pCut *Map_Cut_t;\n    var pMatch *Map_Match_t;\n    pCut = (Map_Cut_t *)Extra_MmFixedEntryFetch( p.mmCuts );\n    memset( pCut, 0, sizeof(Map_Cut_t) );\n\n    pMatch = pCut.M;\n    pMatch.AreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n\n    pMatch = pCut.M + 1;\n    pMatch.AreaFlow       = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Rise   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Fall   = MAP_FLOAT_LARGE; // unassigned\n    pMatch.tArrive.Worst  = MAP_FLOAT_LARGE; // unassigned\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutFree(p *Map_Man_t, pCut *Map_Cut_t) {\n    if pCut != nil {\n    Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pCut ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutPrint(p *Map_Man_t, pRoot *Map_Node_t, pCut *Map_Cut_t, fPhase int32) {\n    var i int32;\n    fmt.Printf(\"CUT:  Delay = (%4.2f, %4.2f). Area = %4.2f. Nodes = %d -\u003e {\", pCut.M[fPhase].tArrive.Rise, pCut.M[fPhase].tArrive.Fall, pCut.M[fPhase].AreaFlow, pRoot.Num);\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fmt.Printf(\" %d\", pCut.ppLeaves[i].Num);\n    }\n    fmt.Printf(\" } \\n\");\n}\n\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutGetRootArea(pCut *Map_Cut_t, fPhase int32) float32 {\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    return pCut.M[fPhase].pSuperBest.Area;\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_CutGetLeafPhase(pCut *Map_Cut_t, fPhase int32, iLeaf int32) int32 {\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    return (( pCut.M[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_NodeGetLeafPhase(pNode *Map_Node_t, fPhase int32, iLeaf int32) int32 {\n    assert(pNode.pCutBest[fPhase].M[fPhase].pSuperBest, \"pNode.pCutBest[fPhase].M[fPhase].pSuperBest\");\n    return (( pNode.pCutBest[fPhase].M[fPhase].uPhaseBest \u0026 (1\u003c\u003ciLeaf) ) == 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutListAppend(pSetAll *Map_Cut_t, pSets *Map_Cut_t) *Map_Cut_t {\n    var pPrev *Map_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Map_Cut_t;\n    if pSetAll == nil {\n        return pSets; }\n    if pSets == nil {\n        return pSetAll; }\n    // find the last one\n    for  pTemp = pSets; (pTemp != nil); pTemp = pTemp.pNext  {\n        pPrev = pTemp;\n    }\n    // append all the end of the current set\n    assert(pPrev.pNext == nil, \"pPrev.pNext == nil\");\n    pPrev.pNext = pSetAll;\n    return pSets;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutListRecycle(p *Map_Man_t, pSetList *Map_Cut_t, pSave *Map_Cut_t) {\n    var pNext, pTemp *Map_Cut_t;\n    for  pTemp = pSetList, pNext = pTemp? pTemp.pNext : nil; \n          (pTemp != nil); \n          pTemp = pNext, pNext = pNext? pNext.pNext : nil  {\n        if pTemp != pSave {\n            Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pTemp ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutListCount(pSets *Map_Cut_t) int32 {\n    var pTemp *Map_Cut_t;\n    var i int32;\n    for  i, pTemp = 0, pSets; (pTemp != nil); pTemp, i = pTemp.pNext, i+1  {}\n    return i;\n}\n\n     \n\n                                                                        \n\n                                               \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                             \n \n                             \n             \n                                         \n     \n                                               \n                                               \n                                               \n                      \n                                       \n                                             \n                                                        \n                          \n     \n \n\n                                                                        \n\n                                               \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                             \n \n          \n                                         \n                                                              \n \n\n      \n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1458 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c",
+  "SHA256": "cc4bcb087906fb944f37adb3422e5751fbd2cfd5dab8fcdf744616c7ca3a2b54",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 6255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 14,
+        "ByteOffset": 7116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 7193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vSuper) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 8653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 295,
+        "Column": 5,
+        "ByteOffset": 11037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 12478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSuper) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 12954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 12988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsBuf(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 14172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vStore) == iEnd );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 394,
+        "Column": 79,
+        "ByteOffset": 14819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew.pMuxes = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 16907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fStrict || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 513,
+        "Column": 57,
+        "ByteOffset": 19015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 574,
+        "Column": 68,
+        "ByteOffset": 21284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pGia.pRefs) ? (free((char *) (p.pGia.pRefs)), (p.pGia.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 611,
+        "Column": 17,
+        "ByteOffset": 22850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( !Abc_LitIsCompl(pSet[k]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 618,
+        "Column": 18,
+        "ByteOffset": 23158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 664,
+        "Column": 18,
+        "ByteOffset": 24792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 710,
+        "Column": 9,
+        "ByteOffset": 27114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num == Hash_IntManEntryNum(p.vHash) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 9,
+        "ByteOffset": 27169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num == Vec_FltSize(p.vCounts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 715,
+        "Column": 9,
+        "ByteOffset": 27434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num == Vec_IntSize(p.vDiv2Nod) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 722,
+        "Column": 5,
+        "ByteOffset": 27736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_FltSize(p.vCounts) == Hash_IntManEntryNum(p.vHash)+1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 723,
+        "Column": 5,
+        "ByteOffset": 27808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDiv2Nod) == nDivsUsed+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 749,
+        "Column": 5,
+        "ByteOffset": 28742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pairs:\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 750,
+        "Column": 5,
+        "ByteOffset": 28766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Total =%9d (%6.2f %%)\", nPairsAll,   100.0 * nPairsAll   / Abc_MaxInt(nPairsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 751,
+        "Column": 5,
+        "ByteOffset": 28868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Tried =%9d (%6.2f %%)\", nPairsTried, 100.0 * nPairsTried / Abc_MaxInt(nPairsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 5,
+        "ByteOffset": 28970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Used =%9d (%6.2f %%)\",  nPairsUsed,  100.0 * nPairsUsed  / Abc_MaxInt(nPairsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 5,
+        "ByteOffset": 29072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Xor =%9d (%6.2f %%)\",   nPairsXor,   100.0 * nPairsXor   / Abc_MaxInt(nPairsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 754,
+        "Column": 5,
+        "ByteOffset": 29174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 755,
+        "Column": 5,
+        "ByteOffset": 29194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Div:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 5,
+        "ByteOffset": 29218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Total =%9d (%6.2f %%)\", nDivsAll,    100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 5,
+        "ByteOffset": 29319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Tried =%9d (%6.2f %%)\", nDivsAll,    100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 5,
+        "ByteOffset": 29420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Used =%9d (%6.2f %%)\",  nDivsUsed,   100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 759,
+        "Column": 5,
+        "ByteOffset": 29521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  Xor =%9d (%6.2f %%)\",   nDivsXor,    100.0 * nDivsXor    / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 760,
+        "Column": 5,
+        "ByteOffset": 29622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 779,
+        "Column": 5,
+        "ByteOffset": 30064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 795,
+        "Column": 5,
+        "ByteOffset": 30914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 814,
+        "Column": 79,
+        "ByteOffset": 31750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew.pMuxes = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 857,
+        "Column": 9,
+        "ByteOffset": 33588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Final statistics after extracting %6d divisors:          \", p.nDivs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 862,
+        "Column": 9,
+        "ByteOffset": 33841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Div%5d : \",  p.nDivs+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 863,
+        "Column": 9,
+        "ByteOffset": 33884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"D%-8d = \",   iDiv );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 864,
+        "Column": 9,
+        "ByteOffset": 33922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"%c%d\", Abc_LitIsCompl(iData0)? '!':' ', Abc_Lit2Var(iData0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 865,
+        "Column": 9,
+        "ByteOffset": 34011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%8s \",   Buffer );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 866,
+        "Column": 9,
+        "ByteOffset": 34047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c  \",     (iData0 \u003c iData1) ? '*' : '+' );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 867,
+        "Column": 9,
+        "ByteOffset": 34108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"%c%d\", Abc_LitIsCompl(iData1)? '!':' ', Abc_Lit2Var(iData1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 868,
+        "Column": 9,
+        "ByteOffset": 34197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%8s   \", Buffer );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 869,
+        "Column": 9,
+        "ByteOffset": 34233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Weight %9.2f  \", Vec_FltEntry(p.vCounts, iDiv) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 871,
+        "Column": 5,
+        "ByteOffset": 34302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs =%8d  \",  Hash_IntManEntryNum(p.vHash) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 872,
+        "Column": 5,
+        "ByteOffset": 34362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Ands =%8d  \",  p.nAnds - p.nGain );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 877,
+        "Column": 5,
+        "ByteOffset": 34522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divisor queue: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 881,
+        "Column": 9,
+        "ByteOffset": 34733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Div %7d : \",     i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 882,
+        "Column": 9,
+        "ByteOffset": 34772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Weight %9.2f  \", Vec_FltEntry(p.vCounts, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 883,
+        "Column": 9,
+        "ByteOffset": 34836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"F = %c%c \",      Abc_LitIsCompl(iLit0) ? '!': ' ', 'a' + Abc_Lit2Var(iLit0)-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 884,
+        "Column": 9,
+        "ByteOffset": 34934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c \",            (Hash_IntObjData0(p.vHash, i) \u003c Hash_IntObjData1(p.vHash, i)) ? '*':'+' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 885,
+        "Column": 9,
+        "ByteOffset": 35043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c%c   \",        Abc_LitIsCompl(iLit1) ? '!': ' ', 'a' + Abc_Lit2Var(iLit1)-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 886,
+        "Column": 9,
+        "ByteOffset": 35141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 969,
+        "Column": 5,
+        "ByteOffset": 38074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNods[0] \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1008,
+        "Column": 13,
+        "ByteOffset": 39731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Dam_DivSet(p, i)[0] == Hash_IntObjData2(p.vHash, i) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1049,
+        "Column": 9,
+        "ByteOffset": 41143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Div:  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1050,
+        "Column": 9,
+        "ByteOffset": 41171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Total =%9d (%6.2f %%) \",   nDivsAll,   100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1051,
+        "Column": 9,
+        "ByteOffset": 41278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Used =%9d (%6.2f %%)\",     nDivsUsed,  100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1052,
+        "Column": 9,
+        "ByteOffset": 41385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Gain =%6d (%6.2f %%)\",     p.nGain,   100.0 * p.nGain / Abc_MaxInt(p.nAnds, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1053,
+        "Column": 9,
+        "ByteOffset": 41486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  GainX = %d  \",             p.nGainX  );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dam_ObjHand",
+      "Start": 1857,
+      "End": 2014,
+      "BodyStart": 1918,
+      "Original": "static inline int    Dam_ObjHand( Dam_Man_t * p, int i )     { return i \u003c Vec_IntSize(p-\u003evNod2Set) ? Vec_IntEntry(p-\u003evNod2Set, i) : 0;                      }",
+      "Draft": "func Dam_ObjHand(p *Dam_Man_t, i int32) int32 { if i \u003c Vec_IntSize(p.vNod2Set) {\n    return Vec_IntEntry(p.vNod2Set, i);\n} else {\n    return 0;\n}                      }"
+    },
+    {
+      "Name": "Dam_ObjSet",
+      "Start": 2015,
+      "End": 2172,
+      "BodyStart": 2076,
+      "Original": "static inline int *  Dam_ObjSet( Dam_Man_t * p, int i )      { int h = Dam_ObjHand(p, i); if ( h == 0 ) return NULL; return Vec_IntEntryP(p-\u003evSetStore, h); }",
+      "Draft": "func Dam_ObjSet(p *Dam_Man_t, i int32) *int32 { var h int32  = Dam_ObjHand(p, i); if h == 0 { return nil; }\n return Vec_IntEntryP(p.vSetStore, h); }"
+    },
+    {
+      "Name": "Dam_DivHand",
+      "Start": 2174,
+      "End": 2331,
+      "BodyStart": 2235,
+      "Original": "static inline int    Dam_DivHand( Dam_Man_t * p, int d )     { return d \u003c Vec_IntSize(p-\u003evDiv2Nod) ? Vec_IntEntry(p-\u003evDiv2Nod, d) : 0;                      }",
+      "Draft": "func Dam_DivHand(p *Dam_Man_t, d int32) int32 { if d \u003c Vec_IntSize(p.vDiv2Nod) {\n    return Vec_IntEntry(p.vDiv2Nod, d);\n} else {\n    return 0;\n}                      }"
+    },
+    {
+      "Name": "Dam_DivSet",
+      "Start": 2332,
+      "End": 2489,
+      "BodyStart": 2393,
+      "Original": "static inline int *  Dam_DivSet( Dam_Man_t * p, int d )      { int h = Dam_DivHand(p, d); if ( h == 0 ) return NULL; return Vec_IntEntryP(p-\u003evNodStore, h); }",
+      "Draft": "func Dam_DivSet(p *Dam_Man_t, d int32) *int32 { var h int32  = Dam_DivHand(p, d); if h == 0 { return nil; }\n return Vec_IntEntryP(p.vNodStore, h); }"
+    },
+    {
+      "Name": "Gia_ManSimplifyXor",
+      "Start": 2975,
+      "End": 3572,
+      "BodyStart": 3021,
+      "Original": "void Gia_ManSimplifyXor( Vec_Int_t * vSuper )\n{\n    int i, k = 0, Prev = -1, This, fCompl = 0;\n    Vec_IntForEachEntry( vSuper, This, i )\n    {\n        if ( This == 0 )\n            continue;\n        if ( This == 1 )\n            fCompl ^= 1; \n        else if ( Prev != This )\n            Vec_IntWriteEntry( vSuper, k++, This ), Prev = This;\n        else\n            Prev = -1, k--;\n    }\n    Vec_IntShrink( vSuper, k );\n    if ( Vec_IntSize( vSuper ) == 0 )\n        Vec_IntPush( vSuper, fCompl );\n    else if ( fCompl )\n        Vec_IntWriteEntry( vSuper, 0, Abc_LitNot(Vec_IntEntry(vSuper, 0)) );\n}",
+      "Draft": "func Gia_ManSimplifyXor(vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Prev int32 = -1;\n    var This int32;\n    var fCompl int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        if This == 0 {\n            continue; }\n        if This == 1 {\n            fCompl ^= 1; \n        } else if Prev != This {\n            Vec_IntWriteEntry( vSuper, k++, This );\nPrev = This;\n        } else {\n            Prev = -1;\nk--; }\n    }\n    Vec_IntShrink( vSuper, k );\n    if Vec_IntSize( vSuper ) == 0 {\n        Vec_IntPush( vSuper, fCompl );\n    } else if fCompl != 0 {\n        Vec_IntWriteEntry( vSuper, 0, Abc_LitNot(Vec_IntEntry(vSuper, 0)) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManSimplifyAnd",
+      "Start": 3573,
+      "End": 4156,
+      "BodyStart": 3619,
+      "Original": "void Gia_ManSimplifyAnd( Vec_Int_t * vSuper )\n{\n    int i, k = 0, Prev = -1, This;\n    Vec_IntForEachEntry( vSuper, This, i )\n    {\n        if ( This == 0 )\n            { Vec_IntFill(vSuper, 1, 0); return; }\n        if ( This == 1 )\n            continue;\n        if ( Prev == -1 || Abc_Lit2Var(Prev) != Abc_Lit2Var(This) )\n            Vec_IntWriteEntry( vSuper, k++, This ), Prev = This;\n        else if ( Prev != This )\n            { Vec_IntFill(vSuper, 1, 0); return; }\n    }\n    Vec_IntShrink( vSuper, k );\n    if ( Vec_IntSize( vSuper ) == 0 )\n        Vec_IntPush( vSuper, 1 );\n}",
+      "Draft": "func Gia_ManSimplifyAnd(vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Prev int32 = -1;\n    var This int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        if This == 0 { Vec_IntFill(vSuper, 1, 0); return; }\n        if This == 1 {\n            continue; }\n        if Prev == -1 || Abc_Lit2Var(Prev) != Abc_Lit2Var(This) {\n            Vec_IntWriteEntry( vSuper, k++, This );\nPrev = This;\n        } else if Prev != This { Vec_IntFill(vSuper, 1, 0); return; }\n    }\n    Vec_IntShrink( vSuper, k );\n    if Vec_IntSize( vSuper ) == 0 {\n        Vec_IntPush( vSuper, 1 ); }\n}"
+    },
+    {
+      "Name": "Gia_ManSuperCollectXor_rec",
+      "Start": 4420,
+      "End": 5125,
+      "BodyStart": 4500,
+      "Original": "void Gia_ManSuperCollectXor_rec( Gia_Man_t * p, Gia_Obj_t * pObj, int fStrict )\n{\n    assert( !Gia_IsComplement(pObj) );\n    if ( !Gia_ObjIsXor(pObj) ||     \n        (fStrict \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p-\u003evSuper) \u003e 50 )\n    {\n        Vec_IntPush( p-\u003evSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    assert( !Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) );\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n}",
+      "Draft": "func Gia_ManSuperCollectXor_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    if !Gia_ObjIsXor(pObj) ||     \n        ((fStrict != 0) \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p.vSuper) \u003e 50 {\n        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    assert(!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj), \"!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj)\");\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n}"
+    },
+    {
+      "Name": "Gia_ManSuperCollectAnd_rec",
+      "Start": 5126,
+      "End": 5768,
+      "BodyStart": 5206,
+      "Original": "void Gia_ManSuperCollectAnd_rec( Gia_Man_t * p, Gia_Obj_t * pObj, int fStrict )\n{\n    if ( Gia_IsComplement(pObj) || \n        !Gia_ObjIsAndReal(p, pObj) || \n        (fStrict \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p-\u003evSuper) \u003e 50 )\n    {\n        Vec_IntPush( p-\u003evSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n}",
+      "Draft": "func Gia_ManSuperCollectAnd_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    if Gia_IsComplement(pObj) || \n        !Gia_ObjIsAndReal(p, pObj) || \n        ((fStrict != 0) \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p.vSuper) \u003e 50 {\n        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n}"
+    },
+    {
+      "Name": "Gia_ManSuperCollect",
+      "Start": 5769,
+      "End": 7003,
+      "BodyStart": 5842,
+      "Original": "void Gia_ManSuperCollect( Gia_Man_t * p, Gia_Obj_t * pObj, int fStrict )\n{\n//    int nSize;\n    if ( p-\u003evSuper == NULL )\n        p-\u003evSuper = Vec_IntAlloc( 1000 );\n    else\n        Vec_IntClear( p-\u003evSuper );\n    if ( Gia_ObjIsXor(pObj) )\n    {\n        assert( !Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) );\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p-\u003evSuper, 0 );\n        Gia_ManSimplifyXor( p-\u003evSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"X %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    }\n    else if ( Gia_ObjIsAndReal(p, pObj) )\n    {\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p-\u003evSuper, 0 );\n        Gia_ManSimplifyAnd( p-\u003evSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"A %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    }\n    else assert( 0 );\n//    if ( nSize \u003e 10 )\n//        printf( \"%d \", nSize );\n    assert( Vec_IntSize(p-\u003evSuper) \u003e 0 );\n}",
+      "Draft": "func Gia_ManSuperCollect(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n//    int nSize;\n    if p.vSuper == nil {\n        p.vSuper = Vec_IntAlloc( 1000 );\n    } else {\n        Vec_IntClear( p.vSuper ); }\n    if Gia_ObjIsXor(pObj) {\n        assert(!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj), \"!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj)\");\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p.vSuper, 0 );\n        Gia_ManSimplifyXor( p.vSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"X %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    \n    } else if Gia_ObjIsAndReal(p, pObj) {\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p.vSuper, 0 );\n        Gia_ManSimplifyAnd( p.vSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"A %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    \n    } else { assert(false, \"0\"); }\n//    if ( nSize \u003e 10 )\n//        printf( \"%d \", nSize );\n    assert(Vec_IntSize(p.vSuper) \u003e 0, \"Vec_IntSize(p.vSuper) \u003e 0\");\n}"
+    },
+    {
+      "Name": "Gia_ManFindSharedNode",
+      "Start": 7239,
+      "End": 8091,
+      "BodyStart": 7316,
+      "Original": "int Gia_ManFindSharedNode( Gia_Man_t * pNew, Vec_Int_t * vSuper, int iLit0 )\n{\n    int i, iLit1 = Vec_IntEntryLast(vSuper);\n    // iterate through the nodes whose level is equal to that of the last one\n    int iLit1Level = Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1));\n    for ( i = Vec_IntSize(vSuper)-1; i \u003e= 0; i-- )\n    {\n        int iLit2 = Vec_IntEntry(vSuper, i);\n        if ( iLit1Level != Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) )\n            break;\n        if ( Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, iLit0, iLit2) ) // new node\n            continue;\n        // swap iLit2 and iLit1\n        if ( iLit2 != iLit1 )\n        {\n            Vec_IntWriteEntry( vSuper, i, iLit1 );\n            Vec_IntWriteEntry( vSuper, Vec_IntSize(vSuper)-1, iLit2 );\n        }\n        break;\n    }\n    return Vec_IntPop(vSuper);    \n}",
+      "Draft": "func Gia_ManFindSharedNode(pNew *Gia_Man_t, vSuper *Vec_Int_t, iLit0 int32) int32 {\n    var i int32;\n    var iLit1 int32 = Vec_IntEntryLast(vSuper);\n    // iterate through the nodes whose level is equal to that of the last one\n    var iLit1Level int32  = Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1));\n    for  i = Vec_IntSize(vSuper)-1; i \u003e= 0; i--  {\n        var iLit2 int32  = Vec_IntEntry(vSuper, i);\n        if iLit1Level != Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) {\n            break; }\n        if Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, iLit0, iLit2) { // new node\n            continue; }\n        // swap iLit2 and iLit1\n        if iLit2 != iLit1 {\n            Vec_IntWriteEntry( vSuper, i, iLit1 );\n            Vec_IntWriteEntry( vSuper, Vec_IntSize(vSuper)-1, iLit2 );\n        }\n        break;\n    }\n    return Vec_IntPop(vSuper);    \n}"
+    },
+    {
+      "Name": "Gia_ManPrepareLastTwo",
+      "Start": 8092,
+      "End": 9415,
+      "BodyStart": 8159,
+      "Original": "void Gia_ManPrepareLastTwo( Gia_Man_t * pNew, Vec_Int_t * vSuper )\n{\n    int i, k, Stop, Lit1, Lit2, Level1, Level2, * pArray;\n    int nSize = Vec_IntSize(vSuper);\n    if ( nSize == 2 )\n        return;\n    assert( nSize \u003e 2 );\n    Level1 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, nSize-2)) );\n    // find the first one with Level1\n    for ( Stop = nSize-3; Stop \u003e= 0; Stop-- )\n    {\n        Level2 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, Stop)) );\n        if ( Level1 != Level2 )\n            break;\n    }\n    if ( Stop == nSize-3 )\n        return;\n    // avoid worst-case quadratic behavior by looking at the last 8 nodes\n    Stop = Abc_MaxInt( Stop, nSize - 9 );\n    for ( i = nSize - 1; i \u003e Stop; i-- )\n        for ( k = i - 1; k \u003e Stop; k-- )\n        {\n            Lit1 = Vec_IntEntry(vSuper, i);\n            Lit2 = Vec_IntEntry(vSuper, k);\n            if ( Abc_Lit2Var(Lit1) != Abc_Lit2Var(Lit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, Lit1, Lit2) ) // new node\n                continue;\n            // move Lit1 to be last and Lit2 to be the one before\n            pArray = Vec_IntArray( vSuper );\n            if ( i != nSize-1 )\n                ABC_SWAP( int, pArray[i], pArray[nSize-1] );\n            if ( k != nSize-2 )\n                ABC_SWAP( int, pArray[k], pArray[nSize-2] );\n        }\n}",
+      "Draft": "func Gia_ManPrepareLastTwo(pNew *Gia_Man_t, vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Stop int32;\n    var Lit1 int32;\n    var Lit2 int32;\n    var Level1 int32;\n    var Level2 int32;\n    var pArray *int32;\n    var nSize int32  = Vec_IntSize(vSuper);\n    if nSize == 2 {\n        return; }\n    assert(nSize \u003e 2, \"nSize \u003e 2\");\n    Level1 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, nSize-2)) );\n    // find the first one with Level1\n    for  Stop = nSize-3; Stop \u003e= 0; Stop--  {\n        Level2 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, Stop)) );\n        if Level1 != Level2 {\n            break; }\n    }\n    if Stop == nSize-3 {\n        return; }\n    // avoid worst-case quadratic behavior by looking at the last 8 nodes\n    Stop = Abc_MaxInt( Stop, nSize - 9 );\n    for  i = nSize - 1; i \u003e Stop; i--  {\n        for  k = i - 1; k \u003e Stop; k--  {\n            Lit1 = Vec_IntEntry(vSuper, i);\n            Lit2 = Vec_IntEntry(vSuper, k);\n            if Abc_Lit2Var(Lit1) != Abc_Lit2Var(Lit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, Lit1, Lit2) { // new node\n                continue; }\n            // move Lit1 to be last and Lit2 to be the one before\n            pArray = Vec_IntArray( vSuper );\n            if i != nSize-1 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = pArray[i]; pArray[i] = pArray[nSize-1]; pArray[nSize-1] = t; };\n            if k != nSize-2 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = pArray[k]; pArray[k] = pArray[nSize-2]; pArray[nSize-2] = t; };\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManCreateGate",
+      "Start": 9416,
+      "End": 10395,
+      "BodyStart": 9497,
+      "Original": "void Gia_ManCreateGate( Gia_Man_t * pNew, Gia_Obj_t * pObj, Vec_Int_t * vSuper )\n{\n    int iLit0 = Vec_IntPop(vSuper);\n    int iLit1 = Vec_IntPop(vSuper);\n//    int iLit1 = Gia_ManFindSharedNode(pNew, vSuper, iLit0);\n    int iLit, i;\n    if ( !Gia_ObjIsXor(pObj) )\n        iLit = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    else if ( pNew-\u003epMuxes )\n        iLit = Gia_ManHashXorReal( pNew, iLit0, iLit1 );\n    else \n        iLit = Gia_ManHashXor( pNew, iLit0, iLit1 );\n    Vec_IntPush( vSuper, iLit );\n    Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit)) );\n    // shift to the corrent location\n    for ( i = Vec_IntSize(vSuper)-1; i \u003e 0; i-- )\n    {\n        int iLit1 = Vec_IntEntry(vSuper, i);\n        int iLit2 = Vec_IntEntry(vSuper, i-1);\n        if ( Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1)) \u003c= Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) )\n            break;\n        Vec_IntWriteEntry( vSuper, i,   iLit2 );\n        Vec_IntWriteEntry( vSuper, i-1, iLit1 );\n    }\n}",
+      "Draft": "func Gia_ManCreateGate(pNew *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    var iLit0 int32  = Vec_IntPop(vSuper);\n    var iLit1 int32  = Vec_IntPop(vSuper);\n//    int iLit1 = Gia_ManFindSharedNode(pNew, vSuper, iLit0);\n    var iLit, i int32;\n    if !Gia_ObjIsXor(pObj) {\n        iLit = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    } else if pNew.pMuxes {\n        iLit = Gia_ManHashXorReal( pNew, iLit0, iLit1 );\n    } else { \n        iLit = Gia_ManHashXor( pNew, iLit0, iLit1 ); }\n    Vec_IntPush( vSuper, iLit );\n    Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit)) );\n    // shift to the corrent location\n    for  i = Vec_IntSize(vSuper)-1; i \u003e 0; i--  {\n        var iLit1 int32  = Vec_IntEntry(vSuper, i);\n        var iLit2 int32  = Vec_IntEntry(vSuper, i-1);\n        if Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1)) \u003c= Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) {\n            break; }\n        Vec_IntWriteEntry( vSuper, i,   iLit2 );\n        Vec_IntWriteEntry( vSuper, i-1, iLit1 );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManBalanceGate",
+      "Start": 10396,
+      "End": 11988,
+      "BodyStart": 10501,
+      "Original": "int Gia_ManBalanceGate( Gia_Man_t * pNew, Gia_Obj_t * pObj, Vec_Int_t * vSuper, int * pLits, int nLits )\n{\n    assert( !Gia_ObjIsBuf(pObj) );\n    Vec_IntClear( vSuper );\n    if ( nLits == 1 )\n        Vec_IntPush( vSuper, pLits[0] );\n    else if ( nLits == 2 )\n    {\n        Vec_IntPush( vSuper, pLits[0] );\n        Vec_IntPush( vSuper, pLits[1] );\n        Gia_ManCreateGate( pNew, pObj, vSuper );\n    }\n    else if ( nLits \u003e 2 )\n    {\n        // collect levels\n        int i, * pArray, * pPerm; //int iLit;\n        for ( i = 0; i \u003c nLits; i++ )\n            Vec_IntPush( vSuper, Gia_ObjLevelId(pNew, Abc_Lit2Var(pLits[i])) );\n        // sort by level\n        Vec_IntGrow( vSuper, 4 * nLits );        \n        pArray = Vec_IntArray( vSuper );\n        pPerm = pArray + nLits;\n        Abc_QuickSortCostData( pArray, nLits, 1, (word *)(pArray + 2 * nLits), pPerm );\n        // collect in the increasing order of level\n        for ( i = 0; i \u003c nLits; i++ )\n            Vec_IntWriteEntry( vSuper, i, pLits[pPerm[i]] );\n        Vec_IntShrink( vSuper, nLits );\n/*            \n        Vec_IntForEachEntry( vSuper, iLit, i )\n            printf( \"%d \", Gia_ObjLevel(pNew, Gia_ManObj( pNew, Abc_Lit2Var(iLit) )) );\n        printf( \"\\n\" );\n*/\n        // perform incremental extraction\n        while ( Vec_IntSize(vSuper) \u003e 1 )\n        {\n            if ( !Gia_ObjIsXor(pObj) )\n                Gia_ManPrepareLastTwo( pNew, vSuper );\n            Gia_ManCreateGate( pNew, pObj, vSuper );\n        }\n    }\n    // consider trivial case\n    assert( Vec_IntSize(vSuper) == 1 );\n    return Vec_IntEntry(vSuper, 0);\n}",
+      "Draft": "func Gia_ManBalanceGate(pNew *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, pLits *int32, nLits int32) int32 {\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    Vec_IntClear( vSuper );\n    if nLits == 1 {\n        Vec_IntPush( vSuper, pLits[0] );\n    } else if nLits == 2 {\n        Vec_IntPush( vSuper, pLits[0] );\n        Vec_IntPush( vSuper, pLits[1] );\n        Gia_ManCreateGate( pNew, pObj, vSuper );\n    \n    } else if nLits \u003e 2 {\n        // collect levels\n        var i int32;\n        var pArray *int32;\n        var pPerm *int32; //int iLit;\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntPush( vSuper, Gia_ObjLevelId(pNew, Abc_Lit2Var(pLits[i])) );\n        }\n        // sort by level\n        Vec_IntGrow( vSuper, 4 * nLits );        \n        pArray = Vec_IntArray( vSuper );\n        pPerm = pArray + nLits;\n        Abc_QuickSortCostData( pArray, nLits, 1, (word *)(pArray + 2 * nLits), pPerm );\n        // collect in the increasing order of level\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntWriteEntry( vSuper, i, pLits[pPerm[i]] );\n        }\n        Vec_IntShrink( vSuper, nLits );\n/*            \n        Vec_IntForEachEntry( vSuper, iLit, i )\n            printf( \"%d \", Gia_ObjLevel(pNew, Gia_ManObj( pNew, Abc_Lit2Var(iLit) )) );\n        printf( \"\\n\" );\n*/\n        // perform incremental extraction\n        for  Vec_IntSize(vSuper) \u003e 1  {\n            if !Gia_ObjIsXor(pObj) {\n                Gia_ManPrepareLastTwo( pNew, vSuper ); }\n            Gia_ManCreateGate( pNew, pObj, vSuper );\n        }\n    }\n    // consider trivial case\n    assert(Vec_IntSize(vSuper) == 1, \"Vec_IntSize(vSuper) == 1\");\n    return Vec_IntEntry(vSuper, 0);\n}"
+    },
+    {
+      "Name": "Gia_ManBalance_rec",
+      "Start": 12224,
+      "End": 13764,
+      "BodyStart": 12314,
+      "Original": "void Gia_ManBalance_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj, int fStrict )\n{\n    int i, iLit, iBeg, iEnd;\n    if ( ~pObj-\u003eValue )\n        return;\n    assert( Gia_ObjIsAnd(pObj) );\n    assert( !Gia_ObjIsBuf(pObj) );\n    // handle MUX\n    if ( Gia_ObjIsMux(p, pObj) )\n    {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin1(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin2(p, pObj), fStrict );\n        pObj-\u003eValue = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj-\u003eValue)) );\n        return;\n    }\n    // find supergate\n    Gia_ManSuperCollect( p, pObj, fStrict );\n    // save entries\n    if ( p-\u003evStore == NULL )\n        p-\u003evStore = Vec_IntAlloc( 1000 );\n    iBeg = Vec_IntSize( p-\u003evStore );\n    Vec_IntAppend( p-\u003evStore, p-\u003evSuper );\n    iEnd = Vec_IntSize( p-\u003evStore );\n    // call recursively\n    Vec_IntForEachEntryStartStop( p-\u003evStore, iLit, i, iBeg, iEnd )\n    {\n        Gia_Obj_t * pTemp = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        Gia_ManBalance_rec( pNew, p, pTemp, fStrict );\n        Vec_IntWriteEntry( p-\u003evStore, i, Abc_LitNotCond(pTemp-\u003eValue, Abc_LitIsCompl(iLit)) );\n    }\n    assert( Vec_IntSize(p-\u003evStore) == iEnd );\n    // consider general case\n    pObj-\u003eValue = Gia_ManBalanceGate( pNew, pObj, p-\u003evSuper, Vec_IntEntryP(p-\u003evStore, iBeg), iEnd-iBeg );\n    Vec_IntShrink( p-\u003evStore, iBeg );\n}",
+      "Draft": "func Gia_ManBalance_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    var i, iLit, iBeg, iEnd int32;\n    if ~pObj.Value {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    // handle MUX\n    if Gia_ObjIsMux(p, pObj) {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin1(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin2(p, pObj), fStrict );\n        pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n        return;\n    }\n    // find supergate\n    Gia_ManSuperCollect( p, pObj, fStrict );\n    // save entries\n    if p.vStore == nil {\n        p.vStore = Vec_IntAlloc( 1000 ); }\n    iBeg = Vec_IntSize( p.vStore );\n    Vec_IntAppend( p.vStore, p.vSuper );\n    iEnd = Vec_IntSize( p.vStore );\n    // call recursively\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iBeg; (i \u003c iEnd) \u0026\u0026 (((iLit) = Vec_IntEntry(p.vStore, i)), 1); i++  {\n        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        Gia_ManBalance_rec( pNew, p, pTemp, fStrict );\n        Vec_IntWriteEntry( p.vStore, i, Abc_LitNotCond(pTemp.Value, Abc_LitIsCompl(iLit)) );\n    }\n    assert(Vec_IntSize(p.vStore) == iEnd, \"Vec_IntSize(p.vStore) == iEnd\");\n    // consider general case\n    pObj.Value = Gia_ManBalanceGate( pNew, pObj, p.vSuper, Vec_IntEntryP(p.vStore, iBeg), iEnd-iBeg );\n    Vec_IntShrink( p.vStore, iBeg );\n}"
+    },
+    {
+      "Name": "Gia_ManBalanceInt",
+      "Start": 13765,
+      "End": 15671,
+      "BodyStart": 13825,
+      "Original": "Gia_Man_t * Gia_ManBalanceInt( Gia_Man_t * p, int fStrict )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManFillValue( p );\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003epMuxes = ABC_CALLOC( unsigned, pNew-\u003enObjsAlloc );\n    pNew-\u003evLevels = Vec_IntStart( pNew-\u003enObjsAlloc );\n    // create constant and inputs\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    // set arrival times for the input of the new AIG\n    if ( p-\u003evCiArrs )\n    {\n        int Id, And2Delay = p-\u003eAnd2Delay ? p-\u003eAnd2Delay : 1;\n        Gia_ManForEachCiId( pNew, Id, i )\n            Vec_IntWriteEntry( pNew-\u003evLevels, Id, Vec_IntEntry(p-\u003evCiArrs, i)/And2Delay );\n    }\n    else if ( p-\u003evInArrs )\n    {\n        int Id, And2Delay = p-\u003eAnd2Delay ? p-\u003eAnd2Delay : 1;\n        Gia_ManForEachCiId( pNew, Id, i )\n            Vec_IntWriteEntry( pNew-\u003evLevels, Id, (int)(Vec_FltEntry(p-\u003evInArrs, i)/And2Delay) );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    Gia_ManForEachBuf( p, pObj, i )\n    {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj-\u003eValue)) );\n    }\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    assert( !fStrict || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManBalanceInt(p *Gia_Man_t, fStrict int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( p );\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    pNew.vLevels = Vec_IntStart( pNew.nObjsAlloc );\n    // create constant and inputs\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // set arrival times for the input of the new AIG\n    if p.vCiArrs {\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pNew, Gia_ManCi(pNew, i))); i++  {\n            Vec_IntWriteEntry( pNew.vLevels, Id, Vec_IntEntry(p.vCiArrs, i)/And2Delay );\n        }\n    \n    } else if p.vInArrs {\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pNew, Gia_ManCi(pNew, i))); i++  {\n            Vec_IntWriteEntry( pNew.vLevels, Id, int32((Vec_FltEntry(p.vInArrs, i)/And2Delay)) );\n        }\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    assert(!(fStrict != 0) || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p), \"!fStrict || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p)\");\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManBalance",
+      "Start": 15907,
+      "End": 16618,
+      "BodyStart": 15994,
+      "Original": "Gia_Man_t * Gia_ManBalance( Gia_Man_t * p, int fSimpleAnd, int fStrict, int fVerbose )\n{\n    Gia_Man_t * pNew, * pNew1, * pNew2;\n    if ( fVerbose )      Gia_ManPrintStats( p, NULL );\n    pNew = fSimpleAnd ? Gia_ManDup( p ) : Gia_ManDupMuxes( p, 2 );\n    Gia_ManTransferTiming( pNew, p );\n    if ( fVerbose )      Gia_ManPrintStats( pNew, NULL );\n    pNew1 = Gia_ManBalanceInt( pNew, fStrict );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if ( fVerbose )      Gia_ManPrintStats( pNew1, NULL );\n    Gia_ManStop( pNew );\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if ( fVerbose )      Gia_ManPrintStats( pNew2, NULL );\n    Gia_ManStop( pNew1 );\n    return pNew2;\n}",
+      "Draft": "func Gia_ManBalance(p *Gia_Man_t, fSimpleAnd int32, fStrict int32, fVerbose int32) *Gia_Man_t {\n    var pNew, pNew1, pNew2 *Gia_Man_t;\n    if fVerbose != 0 {      Gia_ManPrintStats( p, nil ); }\n    if fSimpleAnd != 0 {\n        pNew = Gia_ManDup( p );\n    } else {\n        pNew = Gia_ManDupMuxes( p, 2 );\n    }\n    Gia_ManTransferTiming( pNew, p );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew, nil ); }\n    pNew1 = Gia_ManBalanceInt( pNew, fStrict );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew1, nil ); }\n    Gia_ManStop( pNew );\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew2, nil ); }\n    Gia_ManStop( pNew1 );\n    return pNew2;\n}"
+    },
+    {
+      "Name": "Dam_ManAlloc",
+      "Start": 16843,
+      "End": 17049,
+      "BodyStart": 16888,
+      "Original": "Dam_Man_t * Dam_ManAlloc( Gia_Man_t * pGia )\n{\n    Dam_Man_t * p;\n    p = ABC_CALLOC( Dam_Man_t, 1 );\n    p-\u003eclkStart = Abc_Clock();\n    p-\u003evVisit = Vec_IntAlloc( 1000 );\n    p-\u003epGia = pGia;\n    return p;\n}",
+      "Draft": "func Dam_ManAlloc(pGia *Gia_Man_t) *Dam_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Dam_Man_t{};\n    p.clkStart = Abc_Clock();\n    p.vVisit = Vec_IntAlloc( 1000 );\n    p.pGia = pGia;\n    return p;\n}"
+    },
+    {
+      "Name": "Dam_ManFree",
+      "Start": 17050,
+      "End": 17443,
+      "BodyStart": 17084,
+      "Original": "void Dam_ManFree( Dam_Man_t * p )\n{   \n    Vec_IntFreeP( \u0026p-\u003evVisit );\n    Vec_IntFreeP( \u0026p-\u003evDivLevR );\n    Vec_IntFreeP( \u0026p-\u003evNodLevR );\n    Vec_IntFreeP( \u0026p-\u003evNod2Set );\n    Vec_IntFreeP( \u0026p-\u003evDiv2Nod );\n    Vec_IntFreeP( \u0026p-\u003evSetStore );\n    Vec_IntFreeP( \u0026p-\u003evNodStore );\n    Vec_FltFreeP( \u0026p-\u003evCounts );\n    Vec_QueFreeP( \u0026p-\u003evQue );\n    Hash_IntManStop( p-\u003evHash );\n    ABC_FREE( p );\n}",
+      "Draft": "func Dam_ManFree(p *Dam_Man_t) {   \n    Vec_IntFreeP( \u0026p.vVisit );\n    Vec_IntFreeP( \u0026p.vDivLevR );\n    Vec_IntFreeP( \u0026p.vNodLevR );\n    Vec_IntFreeP( \u0026p.vNod2Set );\n    Vec_IntFreeP( \u0026p.vDiv2Nod );\n    Vec_IntFreeP( \u0026p.vSetStore );\n    Vec_IntFreeP( \u0026p.vNodStore );\n    Vec_FltFreeP( \u0026p.vCounts );\n    Vec_QueFreeP( \u0026p.vQue );\n    Hash_IntManStop( p.vHash );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Dam_ManCollectSets_rec",
+      "Start": 17713,
+      "End": 19039,
+      "BodyStart": 17766,
+      "Original": "void Dam_ManCollectSets_rec( Dam_Man_t * p, int Id )\n{\n    Gia_Obj_t * pObj;\n    int i, iBeg, iEnd, iLit;\n    if ( Dam_ObjHand(p, Id) || Id == 0 )\n        return;\n    pObj = Gia_ManObj(p-\u003epGia, Id);\n    if ( Gia_ObjIsCi(pObj) )\n        return;\n    if ( Gia_ObjIsBuf(pObj) )\n    {\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        return;\n    }\n    if ( Gia_ObjIsMux(p-\u003epGia, pObj) )\n    {\n        if ( pObj-\u003efMark0 )\n            return;\n        pObj-\u003efMark0 = 1;\n        Vec_IntPush( p-\u003evVisit, Id );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId1(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId2(p-\u003epGia, Id) );\n        p-\u003enAnds += 3;\n        return;\n    }\n    Gia_ManSuperCollect( p-\u003epGia, pObj, 0 );\n    Vec_IntWriteEntry( p-\u003evNod2Set, Id, Vec_IntSize(p-\u003evSetStore) );\n    Vec_IntPush( p-\u003evSetStore, Vec_IntSize(p-\u003epGia-\u003evSuper) );\n    p-\u003enAnds += (1 + 2 * Gia_ObjIsXor(pObj)) * (Vec_IntSize(p-\u003epGia-\u003evSuper) - 1);\n    // save entries\n    iBeg = Vec_IntSize( p-\u003evSetStore );\n    Vec_IntAppend( p-\u003evSetStore, p-\u003epGia-\u003evSuper );\n    iEnd = Vec_IntSize( p-\u003evSetStore );\n    // call recursively\n    Vec_IntForEachEntryStartStop( p-\u003evSetStore, iLit, i, iBeg, iEnd )\n        Dam_ManCollectSets_rec( p, Abc_Lit2Var(iLit) );\n}",
+      "Draft": "func Dam_ManCollectSets_rec(p *Dam_Man_t, Id int32) {\n    var pObj *Gia_Obj_t;\n    var i, iBeg, iEnd, iLit int32;\n    if (Dam_ObjHand(p, Id) != 0) || Id == 0 {\n        return; }\n    pObj = Gia_ManObj(p.pGia, Id);\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    if Gia_ObjIsBuf(pObj) {\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        return;\n    }\n    if Gia_ObjIsMux(p.pGia, pObj) {\n        if pObj.fMark0 {\n            return; }\n        pObj.fMark0 = 1;\n        Vec_IntPush( p.vVisit, Id );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId1(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId2(p.pGia, Id) );\n        p.nAnds += 3;\n        return;\n    }\n    Gia_ManSuperCollect( p.pGia, pObj, 0 );\n    Vec_IntWriteEntry( p.vNod2Set, Id, Vec_IntSize(p.vSetStore) );\n    Vec_IntPush( p.vSetStore, Vec_IntSize(p.pGia.vSuper) );\n    p.nAnds += (1 + 2 * Gia_ObjIsXor(pObj)) * (Vec_IntSize(p.pGia.vSuper) - 1);\n    // save entries\n    iBeg = Vec_IntSize( p.vSetStore );\n    Vec_IntAppend( p.vSetStore, p.pGia.vSuper );\n    iEnd = Vec_IntSize( p.vSetStore );\n    // call recursively\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iBeg; (i \u003c iEnd) \u0026\u0026 (((iLit) = Vec_IntEntry(p.vSetStore, i)), 1); i++  {\n        Dam_ManCollectSets_rec( p, Abc_Lit2Var(iLit) );\n    }\n}"
+    },
+    {
+      "Name": "Dam_ManCollectSets",
+      "Start": 19040,
+      "End": 19562,
+      "BodyStart": 19081,
+      "Original": "void Dam_ManCollectSets( Dam_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    Gia_ManCreateRefs( p-\u003epGia );\n    p-\u003evNod2Set  = Vec_IntStart( Gia_ManObjNum(p-\u003epGia) );\n    p-\u003evSetStore = Vec_IntAlloc( Gia_ManObjNum(p-\u003epGia) );\n    Vec_IntPush( p-\u003evSetStore, -1 );\n    Vec_IntClear( p-\u003evVisit );\n    Gia_ManForEachCo( p-\u003epGia, pObj, i )\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj) );\n    ABC_FREE( p-\u003epGia-\u003epRefs );\n    Gia_ManForEachObjVec( p-\u003evVisit, p-\u003epGia, pObj, i )\n        pObj-\u003efMark0 = 0;\n}",
+      "Draft": "func Dam_ManCollectSets(p *Dam_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManCreateRefs( p.pGia );\n    p.vNod2Set  = Vec_IntStart( Gia_ManObjNum(p.pGia) );\n    p.vSetStore = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    Vec_IntPush( p.vSetStore, -1 );\n    Vec_IntClear( p.vVisit );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0p(p.pGia, pObj) );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pGia.pRefs) ? (free((char *) (p.pGia.pRefs)), (p.pGia.pRefs) = 0) : 0);\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vVisit)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vVisit,i))); i++  {\n        pObj.fMark0 = 0;\n    }\n}"
+    },
+    {
+      "Name": "Dam_ManDivSlack",
+      "Start": 19814,
+      "End": 20170,
+      "BodyStart": 19883,
+      "Original": "int Dam_ManDivSlack( Dam_Man_t * p, int iLit0, int iLit1, int LevR )\n{\n    int Lev0 = Gia_ObjLevel(p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLit0)));\n    int Lev1 = Gia_ObjLevel(p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLit1)));\n    int Slack = p-\u003enLevelMax - LevR - Abc_MaxInt(Lev0, Lev1) - 1 - (int)(iLit0 \u003e iLit1);\n    return Abc_MinInt( Slack, 100 );\n}",
+      "Draft": "func Dam_ManDivSlack(p *Dam_Man_t, iLit0 int32, iLit1 int32, LevR int32) int32 {\n    var Lev0 int32  = Gia_ObjLevel(p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLit0)));\n    var Lev1 int32  = Gia_ObjLevel(p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLit1)));\n    var Slack int32  = p.nLevelMax - LevR - Abc_MaxInt(Lev0, Lev1) - 1 - int32((iLit0 \u003e iLit1));\n    return Abc_MinInt( Slack, 100 );\n}"
+    },
+    {
+      "Name": "Dam_ManCreateMultiRefs",
+      "Start": 20171,
+      "End": 21075,
+      "BodyStart": 20266,
+      "Original": "void Dam_ManCreateMultiRefs( Dam_Man_t * p, Vec_Int_t ** pvRefsAnd, Vec_Int_t ** pvRefsXor )  \n{\n    Vec_Int_t * vRefsAnd, * vRefsXor;\n    Gia_Obj_t * pObj;\n    int i, k, * pSet;\n    vRefsAnd = Vec_IntStart( 2 * Gia_ManObjNum(p-\u003epGia) );\n    vRefsXor = Vec_IntStart( Gia_ManObjNum(p-\u003epGia) );\n    Gia_ManForEachAnd( p-\u003epGia, pObj, i )\n    {\n        if ( !Dam_ObjHand(p, i) )\n            continue;\n        pSet = Dam_ObjSet(p, i);\n        if ( Gia_ObjIsXor(pObj) )\n            for ( k = 1; k \u003c= pSet[0]; k++ )\n            {\n                assert( !Abc_LitIsCompl(pSet[k]) );\n                Vec_IntAddToEntry( vRefsXor, Abc_Lit2Var(pSet[k]), 1 );\n            }\n        else if ( Gia_ObjIsAndReal(p-\u003epGia, pObj) )\n            for ( k = 1; k \u003c= pSet[0]; k++ )\n                Vec_IntAddToEntry( vRefsAnd, pSet[k], 1 );\n        else assert( 0 );\n    }\n    *pvRefsAnd = vRefsAnd;\n    *pvRefsXor = vRefsXor;\n}",
+      "Draft": "func Dam_ManCreateMultiRefs(p *Dam_Man_t, pvRefsAnd **Vec_Int_t, pvRefsXor **Vec_Int_t) {\n    var vRefsAnd, vRefsXor *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var pSet *int32;\n    vRefsAnd = Vec_IntStart( 2 * Gia_ManObjNum(p.pGia) );\n    vRefsXor = Vec_IntStart( Gia_ManObjNum(p.pGia) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !(Dam_ObjHand(p, i) != 0) {\n            continue; }\n        pSet = Dam_ObjSet(p, i);\n        if Gia_ObjIsXor(pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                assert(!Abc_LitIsCompl(pSet[k]), \"!Abc_LitIsCompl(pSet[k])\");\n                Vec_IntAddToEntry( vRefsXor, Abc_Lit2Var(pSet[k]), 1 );\n            }\n        } else if Gia_ObjIsAndReal(p.pGia, pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                Vec_IntAddToEntry( vRefsAnd, pSet[k], 1 );\n            }\n        } else { assert(false, \"0\"); }\n    }\n    }\n    *pvRefsAnd = vRefsAnd;\n    *pvRefsXor = vRefsXor;\n}"
+    },
+    {
+      "Name": "Dam_ManCreatePairs",
+      "Start": 21076,
+      "End": 26981,
+      "BodyStart": 21131,
+      "Original": "void Dam_ManCreatePairs( Dam_Man_t * p, int fVerbose )\n{\n    Gia_Obj_t * pObj;\n    Hash_IntMan_t * vHash;\n    Vec_Int_t * vRefsAnd, * vRefsXor, * vSuper, * vDivs, * vRemap, * vLevRMax;\n    int i, j, k, Num, FanK, FanJ, nRefs, iNode, iDiv, * pSet;\n    int nPairsAll = 0, nPairsTried = 0, nPairsUsed = 0, nPairsXor = 0;\n    int nDivsAll = 0, nDivsUsed = 0, nDivsXor = 0;\n    Dam_ManCollectSets( p );\n    vSuper = p-\u003epGia-\u003evSuper;\n    vDivs  = Vec_IntAlloc( Gia_ManObjNum(p-\u003epGia) );\n    vHash  = Hash_IntManStart( Gia_ManObjNum(p-\u003epGia)/2 );\n    vLevRMax = Vec_IntStart( 1000 );\n    Dam_ManCreateMultiRefs( p, \u0026vRefsAnd, \u0026vRefsXor );\n    Gia_ManForEachAnd( p-\u003epGia, pObj, i )\n    {\n        if ( !Dam_ObjHand(p, i) )\n            continue;\n        pSet = Dam_ObjSet(p, i);\n        nPairsAll += pSet[0] * (pSet[0] - 1) / 2;\n        Vec_IntClear(vSuper);\n        if ( Gia_ObjIsXor(pObj) )\n        {\n            for ( k = 1; k \u003c= pSet[0]; k++ )\n                if ( Vec_IntEntry(vRefsXor, Abc_Lit2Var(pSet[k])) \u003e 1 )\n                    Vec_IntPush( vSuper, pSet[k] );\n        }\n        else if ( Gia_ObjIsAndReal(p-\u003epGia, pObj) )\n        {\n            for ( k = 1; k \u003c= pSet[0]; k++ )\n                if ( Vec_IntEntry(vRefsAnd, pSet[k]) \u003e 1 )\n                    Vec_IntPush( vSuper, pSet[k] );\n        }\n        else assert( 0 );\n        if ( Vec_IntSize(vSuper) \u003c 2 )\n            continue;\n        // enumerate pairs\n        nPairsTried += Vec_IntSize(vSuper) * (Vec_IntSize(vSuper) - 1) / 2;\n        Vec_IntPush( vDivs, -i ); // remember node\n        Vec_IntForEachEntry( vSuper, FanK, k )\n        Vec_IntForEachEntryStart( vSuper, FanJ, j, k+1 )\n        {\n            if ( (FanK \u003e FanJ) ^ Gia_ObjIsXor(pObj) )\n                Num = Hash_Int2ManInsert( vHash, FanJ, FanK, 0 );\n            else\n                Num = Hash_Int2ManInsert( vHash, FanK, FanJ, 0 );\n            if ( Hash_Int2ObjInc( vHash, Num ) == 1 )\n            {\n                nDivsUsed++;\n                nDivsXor += Gia_ObjIsXor(pObj);\n            }\n            Vec_IntPush( vDivs, Num ); // remember devisor\n            // update reverse level\n            if ( Num \u003e= Vec_IntSize(vLevRMax) )\n                Vec_IntFillExtra( vLevRMax, 3 * Vec_IntSize(vLevRMax) / 2, 0 );\n            Vec_IntUpdateEntry( vLevRMax, Num, Vec_IntEntry(p-\u003evNodLevR, i) );\n        }\n    }\n    Vec_IntFree( vRefsAnd );\n    Vec_IntFree( vRefsXor );\n//    Hash_IntManProfile( vHash );\n    // remove entries that appear only once\n    p-\u003evHash     = Hash_IntManStart( 3 * nDivsUsed /2 );\n    p-\u003evCounts   = Vec_FltAlloc( 2 * nDivsUsed );           Vec_FltPush( p-\u003evCounts, ABC_INFINITY );\n    p-\u003evQue      = Vec_QueAlloc( Vec_FltCap(p-\u003evCounts) );\n    Vec_QueSetPriority( p-\u003evQue, Vec_FltArrayP(p-\u003evCounts) );\n    // mapping div to node\n    p-\u003evDiv2Nod  = Vec_IntAlloc( 2 * nDivsUsed );           Vec_IntPush( p-\u003evDiv2Nod, ABC_INFINITY );\n    p-\u003evNodStore = Vec_IntAlloc( Gia_ManObjNum(p-\u003epGia) );  Vec_IntPush( p-\u003evNodStore, -1 );\n    nDivsAll     = Hash_IntManEntryNum(vHash);\n    vRemap       = Vec_IntStartFull( nDivsAll+1 );\n    for ( i = 1; i \u003c= nDivsAll; i++ )\n    {\n        nRefs = Hash_IntObjData2(vHash, i);\n        if ( nRefs \u003c 2 )\n            continue;\n        nPairsUsed += nRefs;\n        if ( Hash_IntObjData0(vHash, i) \u003e Hash_IntObjData1(vHash, i) )\n            nPairsXor += nRefs; \n        Num = Hash_Int2ManInsert( p-\u003evHash, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), 0 );\n        assert( Num == Hash_IntManEntryNum(p-\u003evHash) );\n        assert( Num == Vec_FltSize(p-\u003evCounts) );\n        Vec_FltPush( p-\u003evCounts, nRefs + 0.005*Dam_ManDivSlack(p, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), Vec_IntEntry(vLevRMax, i)) );\n        Vec_QuePush( p-\u003evQue, Num );\n        // remember divisors\n        assert( Num == Vec_IntSize(p-\u003evDiv2Nod) );\n        Vec_IntPush( p-\u003evDiv2Nod, Vec_IntSize(p-\u003evNodStore) );\n        Vec_IntPush( p-\u003evNodStore, 0 );\n        Vec_IntFillExtra( p-\u003evNodStore, Vec_IntSize(p-\u003evNodStore) + nRefs, -1 );\n        // remember entry\n        Vec_IntWriteEntry( vRemap, i, Num );\n    }\n    assert( Vec_FltSize(p-\u003evCounts) == Hash_IntManEntryNum(p-\u003evHash)+1 );\n    assert( Vec_IntSize(p-\u003evDiv2Nod) == nDivsUsed+1 );\n    Hash_IntManStop( vHash );\n    Vec_IntFree( vLevRMax );\n    // fill in the divisors\n    iNode = -1;\n    Vec_IntForEachEntry( vDivs, iDiv, i )\n    {\n        if ( iDiv \u003c 0 )\n        {\n            iNode = -iDiv;\n            continue;\n        }\n        Num = Vec_IntEntry( vRemap, iDiv );\n        if ( Num == -1 )\n            continue;\n        pSet = Dam_DivSet( p, Num );\n        pSet[++pSet[0]] = iNode;\n    }\n    Vec_IntFree( vRemap );\n    Vec_IntFree( vDivs );\n    // create storage for reverse level of divisor during update\n    p-\u003evDivLevR = Vec_IntStart( 2 * nDivsUsed );\n    // make sure divisors are added correctly\n//    for ( i = 1; i \u003c= nDivsUsed; i++ )\n//        assert( Dam_DivSet(p, i)[0] == Vec_FltEntry(p-\u003evCounts, i)+1 );\n    if ( !fVerbose )\n        return;\n    // print stats\n    printf( \"Pairs:\" );\n    printf( \"  Total =%9d (%6.2f %%)\", nPairsAll,   100.0 * nPairsAll   / Abc_MaxInt(nPairsAll, 1) );\n    printf( \"  Tried =%9d (%6.2f %%)\", nPairsTried, 100.0 * nPairsTried / Abc_MaxInt(nPairsAll, 1) );\n    printf( \"  Used =%9d (%6.2f %%)\",  nPairsUsed,  100.0 * nPairsUsed  / Abc_MaxInt(nPairsAll, 1) );\n    printf( \"  Xor =%9d (%6.2f %%)\",   nPairsXor,   100.0 * nPairsXor   / Abc_MaxInt(nPairsAll, 1) );\n    printf( \"\\n\" );\n    printf( \"Div:  \" );\n    printf( \"  Total =%9d (%6.2f %%)\", nDivsAll,    100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );\n    printf( \"  Tried =%9d (%6.2f %%)\", nDivsAll,    100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );\n    printf( \"  Used =%9d (%6.2f %%)\",  nDivsUsed,   100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1) );\n    printf( \"  Xor =%9d (%6.2f %%)\",   nDivsXor,    100.0 * nDivsXor    / Abc_MaxInt(nDivsAll, 1) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Dam_ManCreatePairs(p *Dam_Man_t, fVerbose int32) {\n    var pObj *Gia_Obj_t;\n    var vHash *Hash_IntMan_t;\n    var vRefsAnd, vRefsXor, vSuper, vDivs, vRemap, vLevRMax *Vec_Int_t;\n    var i int32;\n    var j int32;\n    var k int32;\n    var Num int32;\n    var FanK int32;\n    var FanJ int32;\n    var nRefs int32;\n    var iNode int32;\n    var iDiv int32;\n    var pSet *int32;\n    var nPairsAll, nPairsTried, nPairsUsed, nPairsXor int32;\n    var nDivsAll, nDivsUsed, nDivsXor int32;\n    Dam_ManCollectSets( p );\n    vSuper = p.pGia.vSuper;\n    vDivs  = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    vHash  = Hash_IntManStart( Gia_ManObjNum(p.pGia)/2 );\n    vLevRMax = Vec_IntStart( 1000 );\n    Dam_ManCreateMultiRefs( p, \u0026vRefsAnd, \u0026vRefsXor );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !(Dam_ObjHand(p, i) != 0) {\n            continue; }\n        pSet = Dam_ObjSet(p, i);\n        nPairsAll += pSet[0] * (pSet[0] - 1) / 2;\n        Vec_IntClear(vSuper);\n        if Gia_ObjIsXor(pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                if Vec_IntEntry(vRefsXor, Abc_Lit2Var(pSet[k])) \u003e 1 {\n                    Vec_IntPush( vSuper, pSet[k] ); }\n            }\n        \n        } else if Gia_ObjIsAndReal(p.pGia, pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                if Vec_IntEntry(vRefsAnd, pSet[k]) \u003e 1 {\n                    Vec_IntPush( vSuper, pSet[k] ); }\n            }\n        \n        } else { assert(false, \"0\"); }\n        if Vec_IntSize(vSuper) \u003c 2 {\n            continue; }\n        // enumerate pairs\n        nPairsTried += Vec_IntSize(vSuper) * (Vec_IntSize(vSuper) - 1) / 2;\n        Vec_IntPush( vDivs, -i ); // remember node\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((FanK) = Vec_IntEntry(vSuper, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((FanJ) = Vec_IntEntry(vSuper, j)), 1); j++  {\n            if (FanK \u003e FanJ) ^ Gia_ObjIsXor(pObj) {\n                Num = Hash_Int2ManInsert( vHash, FanJ, FanK, 0 );\n            } else {\n                Num = Hash_Int2ManInsert( vHash, FanK, FanJ, 0 ); }\n            if Hash_Int2ObjInc( vHash, Num ) == 1 {\n                nDivsUsed++;\n                nDivsXor += Gia_ObjIsXor(pObj);\n            }\n            Vec_IntPush( vDivs, Num ); // remember devisor\n            // update reverse level\n            if Num \u003e= Vec_IntSize(vLevRMax) {\n                Vec_IntFillExtra( vLevRMax, 3 * Vec_IntSize(vLevRMax) / 2, 0 ); }\n            Vec_IntUpdateEntry( vLevRMax, Num, Vec_IntEntry(p.vNodLevR, i) );\n        }\n        }\n    }\n    }\n    Vec_IntFree( vRefsAnd );\n    Vec_IntFree( vRefsXor );\n//    Hash_IntManProfile( vHash );\n    // remove entries that appear only once\n    p.vHash     = Hash_IntManStart( 3 * nDivsUsed /2 );\n    p.vCounts   = Vec_FltAlloc( 2 * nDivsUsed );           Vec_FltPush( p.vCounts, ABC_INFINITY );\n    p.vQue      = Vec_QueAlloc( Vec_FltCap(p.vCounts) );\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // mapping div to node\n    p.vDiv2Nod  = Vec_IntAlloc( 2 * nDivsUsed );           Vec_IntPush( p.vDiv2Nod, ABC_INFINITY );\n    p.vNodStore = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );  Vec_IntPush( p.vNodStore, -1 );\n    nDivsAll     = Hash_IntManEntryNum(vHash);\n    vRemap       = Vec_IntStartFull( nDivsAll+1 );\n    for  i = 1; i \u003c= nDivsAll; i++  {\n        nRefs = Hash_IntObjData2(vHash, i);\n        if nRefs \u003c 2 {\n            continue; }\n        nPairsUsed += nRefs;\n        if Hash_IntObjData0(vHash, i) \u003e Hash_IntObjData1(vHash, i) {\n            nPairsXor += nRefs; } \n        Num = Hash_Int2ManInsert( p.vHash, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), 0 );\n        assert(Num == Hash_IntManEntryNum(p.vHash), \"Num == Hash_IntManEntryNum(p.vHash)\");\n        assert(Num == Vec_FltSize(p.vCounts), \"Num == Vec_FltSize(p.vCounts)\");\n        Vec_FltPush( p.vCounts, nRefs + 0.005*Dam_ManDivSlack(p, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), Vec_IntEntry(vLevRMax, i)) );\n        Vec_QuePush( p.vQue, Num );\n        // remember divisors\n        assert(Num == Vec_IntSize(p.vDiv2Nod), \"Num == Vec_IntSize(p.vDiv2Nod)\");\n        Vec_IntPush( p.vDiv2Nod, Vec_IntSize(p.vNodStore) );\n        Vec_IntPush( p.vNodStore, 0 );\n        Vec_IntFillExtra( p.vNodStore, Vec_IntSize(p.vNodStore) + nRefs, -1 );\n        // remember entry\n        Vec_IntWriteEntry( vRemap, i, Num );\n    }\n    assert(Vec_FltSize(p.vCounts) == Hash_IntManEntryNum(p.vHash)+1, \"Vec_FltSize(p.vCounts) == Hash_IntManEntryNum(p.vHash)+1\");\n    assert(Vec_IntSize(p.vDiv2Nod) == nDivsUsed+1, \"Vec_IntSize(p.vDiv2Nod) == nDivsUsed+1\");\n    Hash_IntManStop( vHash );\n    Vec_IntFree( vLevRMax );\n    // fill in the divisors\n    iNode = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        if iDiv \u003c 0 {\n            iNode = -iDiv;\n            continue;\n        }\n        Num = Vec_IntEntry( vRemap, iDiv );\n        if Num == -1 {\n            continue; }\n        pSet = Dam_DivSet( p, Num );\n        pSet[++pSet[0]] = iNode;\n    }\n    Vec_IntFree( vRemap );\n    Vec_IntFree( vDivs );\n    // create storage for reverse level of divisor during update\n    p.vDivLevR = Vec_IntStart( 2 * nDivsUsed );\n    // make sure divisors are added correctly\n//    for ( i = 1; i \u003c= nDivsUsed; i++ )\n//        assert( Dam_DivSet(p, i)[0] == Vec_FltEntry(p-\u003evCounts, i)+1 );\n    if !(fVerbose != 0) {\n        return; }\n    // print stats\n    fmt.Printf(\"Pairs:\");\n    fmt.Printf(\"  Total =%9d (%6.2f %%)\", nPairsAll, 100.0 * nPairsAll   / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Tried =%9d (%6.2f %%)\", nPairsTried, 100.0 * nPairsTried / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Used =%9d (%6.2f %%)\", nPairsUsed, 100.0 * nPairsUsed  / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Xor =%9d (%6.2f %%)\", nPairsXor, 100.0 * nPairsXor   / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Div:  \");\n    fmt.Printf(\"  Total =%9d (%6.2f %%)\", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Tried =%9d (%6.2f %%)\", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Used =%9d (%6.2f %%)\", nDivsUsed, 100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Xor =%9d (%6.2f %%)\", nDivsXor, 100.0 * nDivsXor    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Dam_ManMultiAig_rec",
+      "Start": 27233,
+      "End": 28702,
+      "BodyStart": 27329,
+      "Original": "void Dam_ManMultiAig_rec( Dam_Man_t * pMan, Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int i, * pSet;\n    if ( ~pObj-\u003eValue )\n        return;\n    assert( Gia_ObjIsAnd(pObj) );\n    pSet = Dam_ObjSet(pMan, Gia_ObjId(p, pObj));\n    if ( pSet == NULL )\n    {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin1(pObj) );\n        if ( Gia_ObjIsMux(p, pObj) )\n        {\n            Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin2(p, pObj) );\n            pObj-\u003eValue = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        }\n        else if ( Gia_ObjIsXor(pObj) )\n            pObj-\u003eValue = Gia_ManHashXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else \n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj-\u003eValue)) );\n        return;\n    }\n    assert( Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj) );\n    // call recursively\n    for ( i = 1; i \u003c= pSet[0]; i++ )\n    {\n        Gia_Obj_t * pTemp = Gia_ManObj( p, Abc_Lit2Var(pSet[i]) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, pTemp );\n        pSet[i] = Abc_LitNotCond( pTemp-\u003eValue, Abc_LitIsCompl(pSet[i]) );\n    }\n    // create balanced gate\n    pObj-\u003eValue = Gia_ManBalanceGate( pNew, pObj, p-\u003evSuper, pSet + 1, pSet[0] );\n}",
+      "Draft": "func Dam_ManMultiAig_rec(pMan *Dam_Man_t, pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var i int32;\n    var pSet *int32;\n    if ~pObj.Value {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pSet = Dam_ObjSet(pMan, Gia_ObjId(p, pObj));\n    if pSet == nil {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin1(pObj) );\n        if Gia_ObjIsMux(p, pObj) {\n            Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin2(p, pObj) );\n            pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsXor(pObj) {\n            pObj.Value = Gia_ManHashXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else { \n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n        return;\n    }\n    assert(Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj), \"Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj)\");\n    // call recursively\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(pSet[i]) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, pTemp );\n        pSet[i] = Abc_LitNotCond( pTemp.Value, Abc_LitIsCompl(pSet[i]) );\n    }\n    // create balanced gate\n    pObj.Value = Gia_ManBalanceGate( pNew, pObj, p.vSuper, pSet + 1, pSet[0] );\n}"
+    },
+    {
+      "Name": "Dam_ManMultiAig",
+      "Start": 28703,
+      "End": 30171,
+      "BodyStart": 28751,
+      "Original": "Gia_Man_t * Dam_ManMultiAig( Dam_Man_t * pMan )\n{\n    Gia_Man_t * p = pMan-\u003epGia;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    // start the new manager\n    pNew = Gia_ManStart( 2*Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003epMuxes = ABC_CALLOC( unsigned, pNew-\u003enObjsAlloc );\n    pNew-\u003evLevels = Vec_IntStart( pNew-\u003enObjsAlloc );\n    // create constant and inputs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n    {\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        Vec_IntWriteEntry( pNew-\u003evLevels, Abc_Lit2Var(pObj-\u003eValue), Gia_ObjLevel(p, pObj) );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    Gia_ManForEachBuf( p, pObj, i )\n    {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj-\u003eValue = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj-\u003eValue)) );\n    }\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n//    assert( Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Dam_ManMultiAig(pMan *Dam_Man_t) *Gia_Man_t {\n    var p *Gia_Man_t  = pMan.pGia;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // start the new manager\n    pNew = Gia_ManStart( 2*Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    pNew.vLevels = Vec_IntStart( pNew.nObjsAlloc );\n    // create constant and inputs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n        Vec_IntWriteEntry( pNew.vLevels, Abc_Lit2Var(pObj.Value), Gia_ObjLevel(p, pObj) );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n//    assert( Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Dam_PrintDiv",
+      "Start": 30463,
+      "End": 31410,
+      "BodyStart": 30508,
+      "Original": "void Dam_PrintDiv( Dam_Man_t * p, int iDiv )\n{\n    if ( iDiv == 0 )\n        printf( \"Final statistics after extracting %6d divisors:          \", p-\u003enDivs );\n    else\n    {\n        char Buffer[100];\n        int iData0 = Hash_IntObjData0(p-\u003evHash, iDiv);\n        int iData1 = Hash_IntObjData1(p-\u003evHash, iDiv);\n        printf( \"Div%5d : \",  p-\u003enDivs+1 );\n        printf( \"D%-8d = \",   iDiv );\n        sprintf( Buffer, \"%c%d\", Abc_LitIsCompl(iData0)? '!':' ', Abc_Lit2Var(iData0) );\n        printf( \"%8s \",   Buffer );\n        printf( \"%c  \",     (iData0 \u003c iData1) ? '*' : '+' );\n        sprintf( Buffer, \"%c%d\", Abc_LitIsCompl(iData1)? '!':' ', Abc_Lit2Var(iData1) );\n        printf( \"%8s   \", Buffer );\n        printf( \"Weight %9.2f  \", Vec_FltEntry(p-\u003evCounts, iDiv) );\n    }\n    printf( \"Divs =%8d  \",  Hash_IntManEntryNum(p-\u003evHash) );\n    printf( \"Ands =%8d  \",  p-\u003enAnds - p-\u003enGain );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003eclkStart );\n}",
+      "Draft": "func Dam_PrintDiv(p *Dam_Man_t, iDiv int32) {\n    if iDiv == 0 {\n        fmt.Printf(\"Final statistics after extracting %6d divisors:          \", p.nDivs);\n    } else {\n        var Buffer string // was [100]byte in C\n\n        var iData0 int32  = Hash_IntObjData0(p.vHash, iDiv);\n        var iData1 int32  = Hash_IntObjData1(p.vHash, iDiv);\n        fmt.Printf(\"Div%5d : \", p.nDivs+1);\n        fmt.Printf(\"D%-8d = \", iDiv);\n        Buffer = fmt.Sprintf(\"%c%d\", Abc_LitIsCompl(iData0)? '!':' ', Abc_Lit2Var(iData0));\n        printf( \"%8s \",   Buffer );\n        fmt.Printf(\"%c  \", (iData0 \u003c iData1) ? '*' : '+');\n        Buffer = fmt.Sprintf(\"%c%d\", Abc_LitIsCompl(iData1)? '!':' ', Abc_Lit2Var(iData1));\n        printf( \"%8s   \", Buffer );\n        fmt.Printf(\"Weight %9.2f  \", Vec_FltEntry(p.vCounts, iDiv));\n    }\n    fmt.Printf(\"Divs =%8d  \", Hash_IntManEntryNum(p.vHash));\n    fmt.Printf(\"Ands =%8d  \", p.nAnds - p.nGain);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n}"
+    },
+    {
+      "Name": "Dam_PrintQue",
+      "Start": 31411,
+      "End": 32103,
+      "BodyStart": 31446,
+      "Original": "void Dam_PrintQue( Dam_Man_t * p )\n{\n    int i;\n    printf( \"Divisor queue: \\n\" );\n    for ( i = 1; i \u003c= Hash_IntManEntryNum(p-\u003evHash); i++ )\n    {\n        int iLit0 = Hash_IntObjData0(p-\u003evHash, i);\n        int iLit1 = Hash_IntObjData1(p-\u003evHash, i);\n        printf( \"Div %7d : \",     i );\n        printf( \"Weight %9.2f  \", Vec_FltEntry(p-\u003evCounts, i) );\n        printf( \"F = %c%c \",      Abc_LitIsCompl(iLit0) ? '!': ' ', 'a' + Abc_Lit2Var(iLit0)-1 );\n        printf( \"%c \",            (Hash_IntObjData0(p-\u003evHash, i) \u003c Hash_IntObjData1(p-\u003evHash, i)) ? '*':'+' );\n        printf( \"%c%c   \",        Abc_LitIsCompl(iLit1) ? '!': ' ', 'a' + Abc_Lit2Var(iLit1)-1 );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Dam_PrintQue(p *Dam_Man_t) {\n    var i int32;\n    fmt.Printf(\"Divisor queue: \\n\");\n    for  i = 1; i \u003c= Hash_IntManEntryNum(p.vHash); i++  {\n        var iLit0 int32  = Hash_IntObjData0(p.vHash, i);\n        var iLit1 int32  = Hash_IntObjData1(p.vHash, i);\n        fmt.Printf(\"Div %7d : \", i);\n        fmt.Printf(\"Weight %9.2f  \", Vec_FltEntry(p.vCounts, i));\n        fmt.Printf(\"F = %c%c \", Abc_LitIsCompl(iLit0) ? '!': ' ', 'a' + Abc_Lit2Var(iLit0)-1);\n        fmt.Printf(\"%c \", (Hash_IntObjData0(p.vHash, i) \u003c Hash_IntObjData1(p.vHash, i)) ? '*':'+');\n        fmt.Printf(\"%c%c   \", Abc_LitIsCompl(iLit1) ? '!': ' ', 'a' + Abc_Lit2Var(iLit1)-1);\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Dam_ManUpdateNode",
+      "Start": 32104,
+      "End": 34115,
+      "BodyStart": 32207,
+      "Original": "int Dam_ManUpdateNode( Dam_Man_t * p, int iObj, int iLit0, int iLit1, int iLitNew, Vec_Int_t * vDivs )\n{\n    int * pSet = Dam_ObjSet( p, iObj );\n    int i, k, c, Num, iLit, iLit2, fPres;\n    // check if literal can be found\n    for ( i = 1; i \u003c= pSet[0]; i++ )\n        if ( pSet[i] == iLit0 )\n            break;\n    if ( i \u003e pSet[0] )\n        return 0;\n    // check if literal can be found\n    for ( i = 1; i \u003c= pSet[0]; i++ )\n        if ( pSet[i] == iLit1 )\n            break;\n    if ( i \u003e pSet[0] )\n        return 0;\n    // compact literals\n    Vec_IntPush( vDivs, -iObj );\n    for ( k = i = 1; i \u003c= pSet[0]; i++ )\n    {\n        if ( iLit0 == pSet[i] || iLit1 == pSet[i] )\n            continue;\n        pSet[k++] = iLit = pSet[i];\n        // reduce weights of the divisors\n        fPres = 0;\n        for ( c = 0; c \u003c 2; c++ )\n        {\n            iLit2 = c ? iLit1 : iLit0;\n            if ( (iLit \u003e iLit2) ^ (iLit0 \u003e iLit1) )\n                Num = *Hash_Int2ManLookup( p-\u003evHash, iLit2, iLit );\n            else\n                Num = *Hash_Int2ManLookup( p-\u003evHash, iLit, iLit2 );\n            if ( Num \u003e 0 )\n            {\n                Vec_FltAddToEntry( p-\u003evCounts, Num, -1 );\n                if ( Vec_QueIsMember(p-\u003evQue, Num) )\n                {\n                    Vec_QueUpdate( p-\u003evQue, Num );\n                    fPres |= (1 \u003c\u003c c);\n                }\n            }\n        }\n        if ( fPres != 3 )\n            continue;\n        if ( (iLit \u003e iLitNew) ^ (iLit0 \u003e iLit1) )\n            Num = Hash_Int2ManInsert( p-\u003evHash, iLitNew, iLit, 0 );\n        else\n            Num = Hash_Int2ManInsert( p-\u003evHash, iLit, iLitNew, 0 );\n        Hash_Int2ObjInc( p-\u003evHash, Num );\n        Vec_IntPush( vDivs, Num );\n        // update reverse level\n        if ( Num \u003e= Vec_IntSize(p-\u003evDivLevR) )\n            Vec_IntFillExtra( p-\u003evDivLevR, 3 * Vec_IntSize(p-\u003evDivLevR) / 2, 0 );\n        Vec_IntUpdateEntry( p-\u003evDivLevR, Num, Vec_IntEntry(p-\u003evNodLevR, iObj) );\n    }\n    pSet[k] = iLitNew;\n    pSet[0] = k;\n    return 1;\n}",
+      "Draft": "func Dam_ManUpdateNode(p *Dam_Man_t, iObj int32, iLit0 int32, iLit1 int32, iLitNew int32, vDivs *Vec_Int_t) int32 {\n    var pSet *int32  = Dam_ObjSet( p, iObj );\n    var i, k, c, Num, iLit, iLit2, fPres int32;\n    // check if literal can be found\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        if pSet[i] == iLit0 {\n            break; }\n    }\n    if i \u003e pSet[0] {\n        return 0; }\n    // check if literal can be found\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        if pSet[i] == iLit1 {\n            break; }\n    }\n    if i \u003e pSet[0] {\n        return 0; }\n    // compact literals\n    Vec_IntPush( vDivs, -iObj );\n    for  k = i = 1; i \u003c= pSet[0]; i++  {\n        if iLit0 == pSet[i] || iLit1 == pSet[i] {\n            continue; }\n        pSet[k++] = iLit = pSet[i];\n        // reduce weights of the divisors\n        fPres = 0;\n        for  c = 0; c \u003c 2; c++  {\n            if c {\n                iLit2 = iLit1;\n            } else {\n                iLit2 = iLit0;\n            }\n            if (iLit \u003e iLit2) ^ (iLit0 \u003e iLit1) {\n                Num = *Hash_Int2ManLookup( p.vHash, iLit2, iLit );\n            } else {\n                Num = *Hash_Int2ManLookup( p.vHash, iLit, iLit2 ); }\n            if Num \u003e 0 {\n                Vec_FltAddToEntry( p.vCounts, Num, -1 );\n                if Vec_QueIsMember(p.vQue, Num) {\n                    Vec_QueUpdate( p.vQue, Num );\n                    fPres |= (1 \u003c\u003c c);\n                }\n            }\n        }\n        if fPres != 3 {\n            continue; }\n        if (iLit \u003e iLitNew) ^ (iLit0 \u003e iLit1) {\n            Num = Hash_Int2ManInsert( p.vHash, iLitNew, iLit, 0 );\n        } else {\n            Num = Hash_Int2ManInsert( p.vHash, iLit, iLitNew, 0 ); }\n        Hash_Int2ObjInc( p.vHash, Num );\n        Vec_IntPush( vDivs, Num );\n        // update reverse level\n        if Num \u003e= Vec_IntSize(p.vDivLevR) {\n            Vec_IntFillExtra( p.vDivLevR, 3 * Vec_IntSize(p.vDivLevR) / 2, 0 ); }\n        Vec_IntUpdateEntry( p.vDivLevR, Num, Vec_IntEntry(p.vNodLevR, iObj) );\n    }\n    pSet[k] = iLitNew;\n    pSet[0] = k;\n    return 1;\n}"
+    },
+    {
+      "Name": "Dam_ManUpdate",
+      "Start": 34116,
+      "End": 36705,
+      "BodyStart": 34162,
+      "Original": "void Dam_ManUpdate( Dam_Man_t * p, int iDiv )\n{\n    Vec_Int_t * vDivs = p-\u003epGia-\u003evSuper;\n    int iLit0 = Hash_IntObjData0(p-\u003evHash, iDiv);\n    int iLit1 = Hash_IntObjData1(p-\u003evHash, iDiv);\n    int i, iLitNew, * pSet, * pNods = Dam_DivSet( p, iDiv );\n    int nPresent = 0, nPairsStart, nPairsStop, pPairsNew, nRefs;\n    int fThisIsXor = (iLit0 \u003e iLit1), iDivTemp, iNode;\n//    Dam_PrintQue( p );\n    if ( fThisIsXor )\n        iLitNew = Gia_ManAppendXorReal( p-\u003epGia, iLit0, iLit1 );\n    else\n        iLitNew = Gia_ManAppendAnd( p-\u003epGia, iLit0, iLit1 );\n    Gia_ObjSetGateLevel( p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLitNew)) );\n//    printf( \"%d \", Gia_ObjLevel(p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLitNew))) );\n    // replace entries\n    assert( pNods[0] \u003e= 2 );\n    nPairsStart = Hash_IntManEntryNum(p-\u003evHash) + 1;\n    Vec_IntClear( vDivs );\n    for ( i = 1; i \u003c= pNods[0]; i++ )\n        nPresent += Dam_ManUpdateNode( p, pNods[i], iLit0, iLit1, iLitNew, vDivs );\n    nPairsStop = Hash_IntManEntryNum(p-\u003evHash) + 1;\n    // extend arrayvs\n    pPairsNew = 0;\n    Vec_FltFillExtra( p-\u003evCounts, nPairsStop, 0 );\n    Vec_IntFillExtra( p-\u003evDiv2Nod, nPairsStop, -1 );\n    for ( i = nPairsStart; i \u003c nPairsStop; i++ )\n    {\n        nRefs = Hash_IntObjData2(p-\u003evHash, i);\n        if ( nRefs \u003c 2 )\n            continue;\n        Vec_FltWriteEntry( p-\u003evCounts, i, nRefs + 0.001*Dam_ManDivSlack(p, Hash_IntObjData0(p-\u003evHash, i), Hash_IntObjData1(p-\u003evHash, i), Vec_IntEntry(p-\u003evDivLevR, i)) );\n        Vec_QuePush( p-\u003evQue, i );\n        // remember divisors\n        Vec_IntWriteEntry( p-\u003evDiv2Nod, i, Vec_IntSize(p-\u003evNodStore) );\n        Vec_IntPush( p-\u003evNodStore, 0 );\n        Vec_IntFillExtra( p-\u003evNodStore, Vec_IntSize(p-\u003evNodStore) + nRefs, -1 );\n        pPairsNew++;\n    }\n//    printf( \"Added %d new pairs\\n\", pPairsNew );\n    // fill in the divisors\n    iNode = -1;\n    Vec_IntForEachEntry( vDivs, iDivTemp, i )\n    {\n        if ( iDivTemp \u003c 0 )\n        {\n            iNode = -iDivTemp;\n            continue;\n        }\n        if ( Vec_IntEntry(p-\u003evDiv2Nod, iDivTemp) == -1 )\n            continue;\n        pSet = Dam_DivSet( p, iDivTemp );\n        pSet[++pSet[0]] = iNode;\n    }\n    // make sure divisors are added correctly\n    for ( i = nPairsStart; i \u003c nPairsStop; i++ )\n        if ( Vec_IntEntry(p-\u003evDiv2Nod, i) \u003e 0 )\n            assert( Dam_DivSet(p, i)[0] == Hash_IntObjData2(p-\u003evHash, i) );\n    // update costs\n    Vec_FltWriteEntry( p-\u003evCounts, iDiv, 0 );\n    p-\u003enGain += (1 + 2 * fThisIsXor) * (nPresent - 1);\n    p-\u003enGainX += 3 * fThisIsXor * (nPresent - 1);\n    p-\u003enDivs++;\n}",
+      "Draft": "func Dam_ManUpdate(p *Dam_Man_t, iDiv int32) {\n    var vDivs *Vec_Int_t  = p.pGia.vSuper;\n    var iLit0 int32  = Hash_IntObjData0(p.vHash, iDiv);\n    var iLit1 int32  = Hash_IntObjData1(p.vHash, iDiv);\n    var i int32;\n    var iLitNew int32;\n    var pSet *int32;\n    var pNods *int32 = Dam_DivSet( p, iDiv );\n    var nPresent, nPairsStart, nPairsStop, pPairsNew, nRefs int32;\n    var fThisIsXor int32 = (iLit0 \u003e iLit1);\n    var iDivTemp int32;\n    var iNode int32;\n//    Dam_PrintQue( p );\n    if fThisIsXor != 0 {\n        iLitNew = Gia_ManAppendXorReal( p.pGia, iLit0, iLit1 );\n    } else {\n        iLitNew = Gia_ManAppendAnd( p.pGia, iLit0, iLit1 ); }\n    Gia_ObjSetGateLevel( p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLitNew)) );\n//    printf( \"%d \", Gia_ObjLevel(p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLitNew))) );\n    // replace entries\n    assert(pNods[0] \u003e= 2, \"pNods[0] \u003e= 2\");\n    nPairsStart = Hash_IntManEntryNum(p.vHash) + 1;\n    Vec_IntClear( vDivs );\n    for  i = 1; i \u003c= pNods[0]; i++  {\n        nPresent += Dam_ManUpdateNode( p, pNods[i], iLit0, iLit1, iLitNew, vDivs );\n    }\n    nPairsStop = Hash_IntManEntryNum(p.vHash) + 1;\n    // extend arrayvs\n    pPairsNew = 0;\n    Vec_FltFillExtra( p.vCounts, nPairsStop, 0 );\n    Vec_IntFillExtra( p.vDiv2Nod, nPairsStop, -1 );\n    for  i = nPairsStart; i \u003c nPairsStop; i++  {\n        nRefs = Hash_IntObjData2(p.vHash, i);\n        if nRefs \u003c 2 {\n            continue; }\n        Vec_FltWriteEntry( p.vCounts, i, nRefs + 0.001*Dam_ManDivSlack(p, Hash_IntObjData0(p.vHash, i), Hash_IntObjData1(p.vHash, i), Vec_IntEntry(p.vDivLevR, i)) );\n        Vec_QuePush( p.vQue, i );\n        // remember divisors\n        Vec_IntWriteEntry( p.vDiv2Nod, i, Vec_IntSize(p.vNodStore) );\n        Vec_IntPush( p.vNodStore, 0 );\n        Vec_IntFillExtra( p.vNodStore, Vec_IntSize(p.vNodStore) + nRefs, -1 );\n        pPairsNew++;\n    }\n//    printf( \"Added %d new pairs\\n\", pPairsNew );\n    // fill in the divisors\n    iNode = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDivTemp) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        if iDivTemp \u003c 0 {\n            iNode = -iDivTemp;\n            continue;\n        }\n        if Vec_IntEntry(p.vDiv2Nod, iDivTemp) == -1 {\n            continue; }\n        pSet = Dam_DivSet( p, iDivTemp );\n        pSet[++pSet[0]] = iNode;\n    }\n    // make sure divisors are added correctly\n    for  i = nPairsStart; i \u003c nPairsStop; i++  {\n        if Vec_IntEntry(p.vDiv2Nod, i) \u003e 0 {\n            assert(Dam_DivSet(p, i)[0] == Hash_IntObjData2(p.vHash, i), \"Dam_DivSet(p, i)[0] == Hash_IntObjData2(p.vHash, i)\"); }\n    }\n    // update costs\n    Vec_FltWriteEntry( p.vCounts, iDiv, 0 );\n    p.nGain += (1 + 2 * fThisIsXor) * (nPresent - 1);\n    p.nGainX += 3 * fThisIsXor * (nPresent - 1);\n    p.nDivs++;\n}"
+    },
+    {
+      "Name": "Dam_ManAreaBalanceInt",
+      "Start": 36984,
+      "End": 38362,
+      "BodyStart": 37111,
+      "Original": "Gia_Man_t * Dam_ManAreaBalanceInt( Gia_Man_t * pGia, Vec_Int_t * vCiLevels, int nNewNodesMax, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew;\n    Dam_Man_t * p;\n    int i, iDiv;\n    p = Dam_ManAlloc( pGia );\n    p-\u003enLevelMax = Gia_ManSetLevels( p-\u003epGia, vCiLevels );\n    p-\u003evNodLevR = Gia_ManReverseLevel( p-\u003epGia );\n    Vec_IntFillExtra( p-\u003epGia-\u003evLevels, 3*Gia_ManObjNum(p-\u003epGia)/2, 0 );\n    Dam_ManCreatePairs( p, fVerbose );\n    for ( i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p-\u003evQue) \u003e= 2; i++ )\n    {\n        iDiv = Vec_QuePop(p-\u003evQue);\n        if ( fVeryVerbose )\n            Dam_PrintDiv( p, iDiv );\n        Dam_ManUpdate( p, iDiv );\n    }\n    if ( fVeryVerbose )\n        Dam_PrintDiv( p, 0 );\n    pNew = Dam_ManMultiAig( p );\n    if ( fVerbose )\n    {\n        int nDivsAll = Hash_IntManEntryNum(p-\u003evHash);\n        int nDivsUsed = p-\u003enDivs;\n        printf( \"Div:  \" );\n        printf( \"  Total =%9d (%6.2f %%) \",   nDivsAll,   100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1) );\n        printf( \"  Used =%9d (%6.2f %%)\",     nDivsUsed,  100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1) );\n        printf( \"  Gain =%6d (%6.2f %%)\",     p-\u003enGain,   100.0 * p-\u003enGain / Abc_MaxInt(p-\u003enAnds, 1) );\n        printf( \"  GainX = %d  \",             p-\u003enGainX  );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p-\u003eclkStart );\n    }\n    Dam_ManFree( p );\n    return pNew;\n}",
+      "Draft": "func Dam_ManAreaBalanceInt(pGia *Gia_Man_t, vCiLevels *Vec_Int_t, nNewNodesMax int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var p *Dam_Man_t;\n    var i, iDiv int32;\n    p = Dam_ManAlloc( pGia );\n    p.nLevelMax = Gia_ManSetLevels( p.pGia, vCiLevels );\n    p.vNodLevR = Gia_ManReverseLevel( p.pGia );\n    Vec_IntFillExtra( p.pGia.vLevels, 3*Gia_ManObjNum(p.pGia)/2, 0 );\n    Dam_ManCreatePairs( p, fVerbose );\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vQue) \u003e= 2; i++  {\n        iDiv = Vec_QuePop(p.vQue);\n        if fVeryVerbose != 0 {\n            Dam_PrintDiv( p, iDiv ); }\n        Dam_ManUpdate( p, iDiv );\n    }\n    if fVeryVerbose != 0 {\n        Dam_PrintDiv( p, 0 ); }\n    pNew = Dam_ManMultiAig( p );\n    if fVerbose != 0 {\n        var nDivsAll int32  = Hash_IntManEntryNum(p.vHash);\n        var nDivsUsed int32  = p.nDivs;\n        fmt.Printf(\"Div:  \");\n        fmt.Printf(\"  Total =%9d (%6.2f %%) \", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n        fmt.Printf(\"  Used =%9d (%6.2f %%)\", nDivsUsed, 100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1));\n        fmt.Printf(\"  Gain =%6d (%6.2f %%)\", p.nGain, 100.0 * p.nGain / Abc_MaxInt(p.nAnds, 1));\n        fmt.Printf(\"  GainX = %d  \", p.nGainX);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Dam_ManFree( p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManAreaBalance",
+      "Start": 38363,
+      "End": 40529,
+      "BodyStart": 38477,
+      "Original": "Gia_Man_t * Gia_ManAreaBalance( Gia_Man_t * p, int fSimpleAnd, int nNewNodesMax, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew0, * pNew, * pNew1, * pNew2;\n    Vec_Int_t * vCiLevels;\n    // set arrival times for the input of the new AIG\n    if ( p-\u003evCiArrs )\n    {\n        int i, Id, And2Delay = p-\u003eAnd2Delay ? p-\u003eAnd2Delay : 1;\n        Vec_IntFreeP( \u0026p-\u003evLevels );\n        p-\u003evLevels = Vec_IntStart( Gia_ManObjNum(p) );\n        Gia_ManForEachCiId( p, Id, i )\n            Vec_IntWriteEntry( p-\u003evLevels, Id, Vec_IntEntry(p-\u003evCiArrs, i)/And2Delay );\n    }\n    else if ( p-\u003evInArrs )\n    {\n        int i, Id, And2Delay = p-\u003eAnd2Delay ? p-\u003eAnd2Delay : 1;\n        Gia_ManForEachCiId( p, Id, i )\n            Vec_IntWriteEntry( p-\u003evLevels, Id, (int)(Vec_FltEntry(p-\u003evInArrs, i)/And2Delay) );\n    }\n    // determine CI levels\n    if ( p-\u003epManTime \u0026\u0026 p-\u003evLevels == NULL )\n        Gia_ManLevelWithBoxes( p );\n    vCiLevels = Gia_ManGetCiLevels( p );\n    // get the starting manager\n    pNew0 = Gia_ManHasMapping(p) ? (Gia_Man_t *)Dsm_ManDeriveGia(p, 0) : Gia_ManDup(p);\n    Gia_ManTransferTiming( pNew0, p );\n    if ( fVerbose )     Gia_ManPrintStats( pNew0, NULL );\n    // derive internal manager\n    pNew = fSimpleAnd ? Gia_ManDup( pNew0 ) : Gia_ManDupMuxes( pNew0, 2 );\n    Gia_ManTransferTiming( pNew, pNew0 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew, NULL );\n    if ( pNew0 != p ) Gia_ManStop( pNew0 );\n    // perform the operation\n    pNew1 = Dam_ManAreaBalanceInt( pNew, vCiLevels, nNewNodesMax, fVerbose, fVeryVerbose );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if ( fVerbose )     Gia_ManPrintStats( pNew1, NULL );\n    Gia_ManStop( pNew );\n    Vec_IntFreeP( \u0026vCiLevels );\n    // derive the final result\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if ( fVerbose )     Gia_ManPrintStats( pNew2, NULL );\n    Gia_ManStop( pNew1 );\n    // normalize if needed\n    if ( !Gia_ManIsNormalized(pNew2) )\n    {\n        pNew2 = Gia_ManDupNormalize( pNew1 = pNew2, 0 );\n        Gia_ManTransferTiming( pNew2, pNew1 );\n        Gia_ManStop( pNew1 );\n    }\n    //Gia_ManTransferTiming( pNew2, p );\n    return pNew2;\n}",
+      "Draft": "func Gia_ManAreaBalance(p *Gia_Man_t, fSimpleAnd int32, nNewNodesMax int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew0, pNew, pNew1, pNew2 *Gia_Man_t;\n    var vCiLevels *Vec_Int_t;\n    // set arrival times for the input of the new AIG\n    if p.vCiArrs {\n        var i int32;\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        Vec_IntFreeP( \u0026p.vLevels );\n        p.vLevels = Vec_IntStart( Gia_ManObjNum(p) );\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_IntWriteEntry( p.vLevels, Id, Vec_IntEntry(p.vCiArrs, i)/And2Delay );\n        }\n    \n    } else if p.vInArrs {\n        var i int32;\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_IntWriteEntry( p.vLevels, Id, int32((Vec_FltEntry(p.vInArrs, i)/And2Delay)) );\n        }\n    }\n    // determine CI levels\n    if p.pManTime \u0026\u0026 p.vLevels == nil {\n        Gia_ManLevelWithBoxes( p ); }\n    vCiLevels = Gia_ManGetCiLevels( p );\n    // get the starting manager\n    if Gia_ManHasMapping(p) {\n        pNew0 = (Gia_Man_t *)Dsm_ManDeriveGia(p, 0);\n    } else {\n        pNew0 = Gia_ManDup(p);\n    }\n    Gia_ManTransferTiming( pNew0, p );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew0, nil ); }\n    // derive internal manager\n    if fSimpleAnd != 0 {\n        pNew = Gia_ManDup( pNew0 );\n    } else {\n        pNew = Gia_ManDupMuxes( pNew0, 2 );\n    }\n    Gia_ManTransferTiming( pNew, pNew0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    if pNew0 != p { Gia_ManStop( pNew0 ); }\n    // perform the operation\n    pNew1 = Dam_ManAreaBalanceInt( pNew, vCiLevels, nNewNodesMax, fVerbose, fVeryVerbose );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew1, nil ); }\n    Gia_ManStop( pNew );\n    Vec_IntFreeP( \u0026vCiLevels );\n    // derive the final result\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew2, nil ); }\n    Gia_ManStop( pNew1 );\n    // normalize if needed\n    if !Gia_ManIsNormalized(pNew2) {\n        pNew2 = Gia_ManDupNormalize( pNew1 = pNew2, 0 );\n        Gia_ManTransferTiming( pNew2, pNew1 );\n        Gia_ManStop( pNew1 );\n    }\n    //Gia_ManTransferTiming( pNew2, p );\n    return pNew2;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::struct::Dam_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Dam_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 873,
+      "End": 1855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::mechanical::sizeof::14664",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14132,
+      "End": 14132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::mechanical::sizeof::18097",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16917,
+      "End": 16917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::mechanical::sizeof::31350",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29036,
+      "End": 29036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::11574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11218,
+      "End": 11226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::14616",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14132,
+      "End": 14132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::18063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16917,
+      "End": 16917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::18657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17427,
+      "End": 17427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::20951",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19451,
+      "End": 19451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::31302",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29036,
+      "End": 29036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::pointer-cast::42352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 39379,
+      "End": 39392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ObjHand",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ObjHand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1857,
+      "End": 2014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ObjSet",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ObjSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2015,
+      "End": 2172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_DivHand",
+      "Category": "semantic-review",
+      "Symbol": "Dam_DivHand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2174,
+      "End": 2331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_DivSet",
+      "Category": "semantic-review",
+      "Symbol": "Dam_DivSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2332,
+      "End": 2489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManSimplifyXor",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSimplifyXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2975,
+      "End": 3572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManSimplifyAnd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSimplifyAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3573,
+      "End": 4156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManSuperCollectXor_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSuperCollectXor_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4420,
+      "End": 5125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManSuperCollectAnd_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSuperCollectAnd_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5126,
+      "End": 5768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManSuperCollect",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSuperCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5769,
+      "End": 7003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManFindSharedNode",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFindSharedNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7239,
+      "End": 8091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManPrepareLastTwo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrepareLastTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8092,
+      "End": 9415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManCreateGate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCreateGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9416,
+      "End": 10395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManBalanceGate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBalanceGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10396,
+      "End": 11988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManBalance_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBalance_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12224,
+      "End": 13764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Gia_ManBalanceInt",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManBalanceInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13765,
+      "End": 15671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManBalanceInt",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBalanceInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13765,
+      "End": 15671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManBalance",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBalance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15907,
+      "End": 16618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16843,
+      "End": 17049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Dam_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Dam_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17050,
+      "End": 17443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17050,
+      "End": 17443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManCollectSets_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManCollectSets_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17713,
+      "End": 19039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Dam_ManCollectSets",
+      "Category": "ternary-review",
+      "Symbol": "Dam_ManCollectSets",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19040,
+      "End": 19562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManCollectSets",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManCollectSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19040,
+      "End": 19562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManDivSlack",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManDivSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19814,
+      "End": 20170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManCreateMultiRefs",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManCreateMultiRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20171,
+      "End": 21075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManCreatePairs",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManCreatePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21076,
+      "End": 26981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManMultiAig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManMultiAig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27233,
+      "End": 28702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Dam_ManMultiAig",
+      "Category": "ternary-review",
+      "Symbol": "Dam_ManMultiAig",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 28703,
+      "End": 30171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManMultiAig",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManMultiAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28703,
+      "End": 30171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Dam_PrintDiv",
+      "Category": "ternary-review",
+      "Symbol": "Dam_PrintDiv",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 30463,
+      "End": 31410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_PrintDiv",
+      "Category": "semantic-review",
+      "Symbol": "Dam_PrintDiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30463,
+      "End": 31410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::ternary::Dam_PrintQue",
+      "Category": "ternary-review",
+      "Symbol": "Dam_PrintQue",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31411,
+      "End": 32103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_PrintQue",
+      "Category": "semantic-review",
+      "Symbol": "Dam_PrintQue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31411,
+      "End": 32103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManUpdateNode",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManUpdateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32104,
+      "End": 34115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34116,
+      "End": 36705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Dam_ManAreaBalanceInt",
+      "Category": "semantic-review",
+      "Symbol": "Dam_ManAreaBalanceInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36984,
+      "End": 38362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::Gia_ManAreaBalance",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAreaBalance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38363,
+      "End": 40529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaBalAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 40776
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaBalance.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [AIG balancing.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaBalance.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/vec/vecHash.h\"\n//#include \"misc/vec/vecQue.h\"\n//#include \"opt/dau/dau.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// operation manager\n   \ntype Dam_Man_t struct {\n    pGia       *Gia_Man_t;      // user's AIG\n    vNod2Set       *Vec_Int_t;  // node ID into fanin set\n    vDiv2Nod       *Vec_Int_t;  // div ID into root node set\n    vSetStore       *Vec_Int_t; // fanin set storage\n    vNodStore       *Vec_Int_t; // root node set storage\n    vCounts       *Vec_Flt_t;   // occur counts\n    vNodLevR       *Vec_Int_t;  // node reverse level\n    vDivLevR       *Vec_Int_t;  // divisor reverse level\n    vVisit       *Vec_Int_t;    // visited MUXes\n    vQue       *Vec_Que_t;      // pairs by their weight\n    vHash   *Hash_IntMan_t;     // pair hash table\n    clkStart          abctime;  // starting the clock\n    nLevelMax              int32; // maximum level\n    nDivs              int32;     // extracted divisor count\n    nAnds              int32;     // total AND node count\n    nGain              int32;     // total gain in AND nodes\n    nGainX              int32;    // gain from XOR nodes\n}\n\nfunc Dam_ObjHand(p *Dam_Man_t, i int32) int32 { if i \u003c Vec_IntSize(p.vNod2Set) {\n    return Vec_IntEntry(p.vNod2Set, i);\n} else {\n    return 0;\n}                      }\nfunc Dam_ObjSet(p *Dam_Man_t, i int32) *int32 { var h int32  = Dam_ObjHand(p, i); if h == 0 { return nil; }\n return Vec_IntEntryP(p.vSetStore, h); }\n\nfunc Dam_DivHand(p *Dam_Man_t, d int32) int32 { if d \u003c Vec_IntSize(p.vDiv2Nod) {\n    return Vec_IntEntry(p.vDiv2Nod, d);\n} else {\n    return 0;\n}                      }\nfunc Dam_DivSet(p *Dam_Man_t, d int32) *int32 { var h int32  = Dam_DivHand(p, d); if h == 0 { return nil; }\n return Vec_IntEntryP(p.vNodStore, h); }\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Simplify multi-input AND/XOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSimplifyXor(vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Prev int32 = -1;\n    var This int32;\n    var fCompl int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        if This == 0 {\n            continue; }\n        if This == 1 {\n            fCompl ^= 1; \n        } else if Prev != This {\n            Vec_IntWriteEntry( vSuper, k++, This );\nPrev = This;\n        } else {\n            Prev = -1;\nk--; }\n    }\n    Vec_IntShrink( vSuper, k );\n    if Vec_IntSize( vSuper ) == 0 {\n        Vec_IntPush( vSuper, fCompl );\n    } else if fCompl != 0 {\n        Vec_IntWriteEntry( vSuper, 0, Abc_LitNot(Vec_IntEntry(vSuper, 0)) ); }\n}\nfunc Gia_ManSimplifyAnd(vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Prev int32 = -1;\n    var This int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {\n        if This == 0 { Vec_IntFill(vSuper, 1, 0); return; }\n        if This == 1 {\n            continue; }\n        if Prev == -1 || Abc_Lit2Var(Prev) != Abc_Lit2Var(This) {\n            Vec_IntWriteEntry( vSuper, k++, This );\nPrev = This;\n        } else if Prev != This { Vec_IntFill(vSuper, 1, 0); return; }\n    }\n    Vec_IntShrink( vSuper, k );\n    if Vec_IntSize( vSuper ) == 0 {\n        Vec_IntPush( vSuper, 1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect multi-input AND/XOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSuperCollectXor_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    if !Gia_ObjIsXor(pObj) ||     \n        ((fStrict != 0) \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p.vSuper) \u003e 50 {\n        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    assert(!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj), \"!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj)\");\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n}\nfunc Gia_ManSuperCollectAnd_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    if Gia_IsComplement(pObj) || \n        !Gia_ObjIsAndReal(p, pObj) || \n        ((fStrict != 0) \u0026\u0026 Gia_ObjRefNum(p, pObj) \u003e 1) || \n        Gia_ObjRefNum(p, pObj) \u003e 2 || \n        (Gia_ObjRefNum(p, pObj) == 2 \u0026\u0026 (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || \n        Vec_IntSize(p.vSuper) \u003e 50 {\n        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );\n        return;\n    }\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n}\nfunc Gia_ManSuperCollect(p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n//    int nSize;\n    if p.vSuper == nil {\n        p.vSuper = Vec_IntAlloc( 1000 );\n    } else {\n        Vec_IntClear( p.vSuper ); }\n    if Gia_ObjIsXor(pObj) {\n        assert(!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj), \"!Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj)\");\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p.vSuper, 0 );\n        Gia_ManSimplifyXor( p.vSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"X %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    \n    } else if Gia_ObjIsAndReal(p, pObj) {\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj), fStrict );\n        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj), fStrict );\n//        nSize = Vec_IntSize(vSuper);\n        Vec_IntSort( p.vSuper, 0 );\n        Gia_ManSimplifyAnd( p.vSuper );\n//        if ( nSize != Vec_IntSize(vSuper) )\n//            printf( \"A %d-\u003e%d  \", nSize, Vec_IntSize(vSuper) );\n    \n    } else { assert(false, \"0\"); }\n//    if ( nSize \u003e 10 )\n//        printf( \"%d \", nSize );\n    assert(Vec_IntSize(p.vSuper) \u003e 0, \"Vec_IntSize(p.vSuper) \u003e 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFindSharedNode(pNew *Gia_Man_t, vSuper *Vec_Int_t, iLit0 int32) int32 {\n    var i int32;\n    var iLit1 int32 = Vec_IntEntryLast(vSuper);\n    // iterate through the nodes whose level is equal to that of the last one\n    var iLit1Level int32  = Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1));\n    for  i = Vec_IntSize(vSuper)-1; i \u003e= 0; i--  {\n        var iLit2 int32  = Vec_IntEntry(vSuper, i);\n        if iLit1Level != Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) {\n            break; }\n        if Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, iLit0, iLit2) { // new node\n            continue; }\n        // swap iLit2 and iLit1\n        if iLit2 != iLit1 {\n            Vec_IntWriteEntry( vSuper, i, iLit1 );\n            Vec_IntWriteEntry( vSuper, Vec_IntSize(vSuper)-1, iLit2 );\n        }\n        break;\n    }\n    return Vec_IntPop(vSuper);    \n}\nfunc Gia_ManPrepareLastTwo(pNew *Gia_Man_t, vSuper *Vec_Int_t) {\n    var i int32;\n    var k int32;\n    var Stop int32;\n    var Lit1 int32;\n    var Lit2 int32;\n    var Level1 int32;\n    var Level2 int32;\n    var pArray *int32;\n    var nSize int32  = Vec_IntSize(vSuper);\n    if nSize == 2 {\n        return; }\n    assert(nSize \u003e 2, \"nSize \u003e 2\");\n    Level1 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, nSize-2)) );\n    // find the first one with Level1\n    for  Stop = nSize-3; Stop \u003e= 0; Stop--  {\n        Level2 = Gia_ObjLevelId( pNew, Abc_Lit2Var(Vec_IntEntry(vSuper, Stop)) );\n        if Level1 != Level2 {\n            break; }\n    }\n    if Stop == nSize-3 {\n        return; }\n    // avoid worst-case quadratic behavior by looking at the last 8 nodes\n    Stop = Abc_MaxInt( Stop, nSize - 9 );\n    for  i = nSize - 1; i \u003e Stop; i--  {\n        for  k = i - 1; k \u003e Stop; k--  {\n            Lit1 = Vec_IntEntry(vSuper, i);\n            Lit2 = Vec_IntEntry(vSuper, k);\n            if Abc_Lit2Var(Lit1) != Abc_Lit2Var(Lit2) \u0026\u0026 !Gia_ManHashLookupInt(pNew, Lit1, Lit2) { // new node\n                continue; }\n            // move Lit1 to be last and Lit2 to be the one before\n            pArray = Vec_IntArray( vSuper );\n            if i != nSize-1 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = pArray[i]; pArray[i] = pArray[nSize-1]; pArray[nSize-1] = t; };\n            if k != nSize-2 {\n                // inlining of macro ABC_SWAP\n                 var t int32  = pArray[k]; pArray[k] = pArray[nSize-2]; pArray[nSize-2] = t; };\n        }\n    }\n}\nfunc Gia_ManCreateGate(pNew *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    var iLit0 int32  = Vec_IntPop(vSuper);\n    var iLit1 int32  = Vec_IntPop(vSuper);\n//    int iLit1 = Gia_ManFindSharedNode(pNew, vSuper, iLit0);\n    var iLit, i int32;\n    if !Gia_ObjIsXor(pObj) {\n        iLit = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    } else if pNew.pMuxes {\n        iLit = Gia_ManHashXorReal( pNew, iLit0, iLit1 );\n    } else { \n        iLit = Gia_ManHashXor( pNew, iLit0, iLit1 ); }\n    Vec_IntPush( vSuper, iLit );\n    Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit)) );\n    // shift to the corrent location\n    for  i = Vec_IntSize(vSuper)-1; i \u003e 0; i--  {\n        var iLit1 int32  = Vec_IntEntry(vSuper, i);\n        var iLit2 int32  = Vec_IntEntry(vSuper, i-1);\n        if Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit1)) \u003c= Gia_ObjLevelId(pNew, Abc_Lit2Var(iLit2)) {\n            break; }\n        Vec_IntWriteEntry( vSuper, i,   iLit2 );\n        Vec_IntWriteEntry( vSuper, i-1, iLit1 );\n    }\n}\nfunc Gia_ManBalanceGate(pNew *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t, pLits *int32, nLits int32) int32 {\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    Vec_IntClear( vSuper );\n    if nLits == 1 {\n        Vec_IntPush( vSuper, pLits[0] );\n    } else if nLits == 2 {\n        Vec_IntPush( vSuper, pLits[0] );\n        Vec_IntPush( vSuper, pLits[1] );\n        Gia_ManCreateGate( pNew, pObj, vSuper );\n    \n    } else if nLits \u003e 2 {\n        // collect levels\n        var i int32;\n        var pArray *int32;\n        var pPerm *int32; //int iLit;\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntPush( vSuper, Gia_ObjLevelId(pNew, Abc_Lit2Var(pLits[i])) );\n        }\n        // sort by level\n        Vec_IntGrow( vSuper, 4 * nLits );        \n        pArray = Vec_IntArray( vSuper );\n        pPerm = pArray + nLits;\n        Abc_QuickSortCostData( pArray, nLits, 1, (word *)(pArray + 2 * nLits), pPerm );\n        // collect in the increasing order of level\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntWriteEntry( vSuper, i, pLits[pPerm[i]] );\n        }\n        Vec_IntShrink( vSuper, nLits );\n/*            \n        Vec_IntForEachEntry( vSuper, iLit, i )\n            printf( \"%d \", Gia_ObjLevel(pNew, Gia_ManObj( pNew, Abc_Lit2Var(iLit) )) );\n        printf( \"\\n\" );\n*/\n        // perform incremental extraction\n        for  Vec_IntSize(vSuper) \u003e 1  {\n            if !Gia_ObjIsXor(pObj) {\n                Gia_ManPrepareLastTwo( pNew, vSuper ); }\n            Gia_ManCreateGate( pNew, pObj, vSuper );\n        }\n    }\n    // consider trivial case\n    assert(Vec_IntSize(vSuper) == 1, \"Vec_IntSize(vSuper) == 1\");\n    return Vec_IntEntry(vSuper, 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManBalance_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, fStrict int32) {\n    var i, iLit, iBeg, iEnd int32;\n    if ~pObj.Value {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsBuf(pObj), \"!Gia_ObjIsBuf(pObj)\");\n    // handle MUX\n    if Gia_ObjIsMux(p, pObj) {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin1(pObj), fStrict );\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin2(p, pObj), fStrict );\n        pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n        return;\n    }\n    // find supergate\n    Gia_ManSuperCollect( p, pObj, fStrict );\n    // save entries\n    if p.vStore == nil {\n        p.vStore = Vec_IntAlloc( 1000 ); }\n    iBeg = Vec_IntSize( p.vStore );\n    Vec_IntAppend( p.vStore, p.vSuper );\n    iEnd = Vec_IntSize( p.vStore );\n    // call recursively\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iBeg; (i \u003c iEnd) \u0026\u0026 (((iLit) = Vec_IntEntry(p.vStore, i)), 1); i++  {\n        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        Gia_ManBalance_rec( pNew, p, pTemp, fStrict );\n        Vec_IntWriteEntry( p.vStore, i, Abc_LitNotCond(pTemp.Value, Abc_LitIsCompl(iLit)) );\n    }\n    assert(Vec_IntSize(p.vStore) == iEnd, \"Vec_IntSize(p.vStore) == iEnd\");\n    // consider general case\n    pObj.Value = Gia_ManBalanceGate( pNew, pObj, p.vSuper, Vec_IntEntryP(p.vStore, iBeg), iEnd-iBeg );\n    Vec_IntShrink( p.vStore, iBeg );\n}\nfunc Gia_ManBalanceInt(p *Gia_Man_t, fStrict int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManFillValue( p );\n    Gia_ManCreateRefs( p ); \n    // start the new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    pNew.vLevels = Vec_IntStart( pNew.nObjsAlloc );\n    // create constant and inputs\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // set arrival times for the input of the new AIG\n    if p.vCiArrs {\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pNew, Gia_ManCi(pNew, i))); i++  {\n            Vec_IntWriteEntry( pNew.vLevels, Id, Vec_IntEntry(p.vCiArrs, i)/And2Delay );\n        }\n    \n    } else if p.vInArrs {\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(pNew, Gia_ManCi(pNew, i))); i++  {\n            Vec_IntWriteEntry( pNew.vLevels, Id, int32((Vec_FltEntry(p.vInArrs, i)/And2Delay)) );\n        }\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManBalance_rec( pNew, p, Gia_ObjFanin0(pObj), fStrict );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    assert(!(fStrict != 0) || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p), \"!fStrict || Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p)\");\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManBalance(p *Gia_Man_t, fSimpleAnd int32, fStrict int32, fVerbose int32) *Gia_Man_t {\n    var pNew, pNew1, pNew2 *Gia_Man_t;\n    if fVerbose != 0 {      Gia_ManPrintStats( p, nil ); }\n    if fSimpleAnd != 0 {\n        pNew = Gia_ManDup( p );\n    } else {\n        pNew = Gia_ManDupMuxes( p, 2 );\n    }\n    Gia_ManTransferTiming( pNew, p );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew, nil ); }\n    pNew1 = Gia_ManBalanceInt( pNew, fStrict );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew1, nil ); }\n    Gia_ManStop( pNew );\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if fVerbose != 0 {      Gia_ManPrintStats( pNew2, nil ); }\n    Gia_ManStop( pNew1 );\n    return pNew2;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_ManAlloc(pGia *Gia_Man_t) *Dam_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Dam_Man_t{};\n    p.clkStart = Abc_Clock();\n    p.vVisit = Vec_IntAlloc( 1000 );\n    p.pGia = pGia;\n    return p;\n}\nfunc Dam_ManFree(p *Dam_Man_t) {   \n    Vec_IntFreeP( \u0026p.vVisit );\n    Vec_IntFreeP( \u0026p.vDivLevR );\n    Vec_IntFreeP( \u0026p.vNodLevR );\n    Vec_IntFreeP( \u0026p.vNod2Set );\n    Vec_IntFreeP( \u0026p.vDiv2Nod );\n    Vec_IntFreeP( \u0026p.vSetStore );\n    Vec_IntFreeP( \u0026p.vNodStore );\n    Vec_FltFreeP( \u0026p.vCounts );\n    Vec_QueFreeP( \u0026p.vQue );\n    Hash_IntManStop( p.vHash );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect initial multi-input gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_ManCollectSets_rec(p *Dam_Man_t, Id int32) {\n    var pObj *Gia_Obj_t;\n    var i, iBeg, iEnd, iLit int32;\n    if (Dam_ObjHand(p, Id) != 0) || Id == 0 {\n        return; }\n    pObj = Gia_ManObj(p.pGia, Id);\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    if Gia_ObjIsBuf(pObj) {\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        return;\n    }\n    if Gia_ObjIsMux(p.pGia, pObj) {\n        if pObj.fMark0 {\n            return; }\n        pObj.fMark0 = 1;\n        Vec_IntPush( p.vVisit, Id );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId1(pObj, Id) );\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId2(p.pGia, Id) );\n        p.nAnds += 3;\n        return;\n    }\n    Gia_ManSuperCollect( p.pGia, pObj, 0 );\n    Vec_IntWriteEntry( p.vNod2Set, Id, Vec_IntSize(p.vSetStore) );\n    Vec_IntPush( p.vSetStore, Vec_IntSize(p.pGia.vSuper) );\n    p.nAnds += (1 + 2 * Gia_ObjIsXor(pObj)) * (Vec_IntSize(p.pGia.vSuper) - 1);\n    // save entries\n    iBeg = Vec_IntSize( p.vSetStore );\n    Vec_IntAppend( p.vSetStore, p.pGia.vSuper );\n    iEnd = Vec_IntSize( p.vSetStore );\n    // call recursively\n    // inlining of macro Vec_IntForEachEntryStartStop\n    for  i = iBeg; (i \u003c iEnd) \u0026\u0026 (((iLit) = Vec_IntEntry(p.vSetStore, i)), 1); i++  {\n        Dam_ManCollectSets_rec( p, Abc_Lit2Var(iLit) );\n    }\n}\nfunc Dam_ManCollectSets(p *Dam_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    Gia_ManCreateRefs( p.pGia );\n    p.vNod2Set  = Vec_IntStart( Gia_ManObjNum(p.pGia) );\n    p.vSetStore = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    Vec_IntPush( p.vSetStore, -1 );\n    Vec_IntClear( p.vVisit );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Dam_ManCollectSets_rec( p, Gia_ObjFaninId0p(p.pGia, pObj) );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pGia.pRefs) ? (free((char *) (p.pGia.pRefs)), (p.pGia.pRefs) = 0) : 0);\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vVisit)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vVisit,i))); i++  {\n        pObj.fMark0 = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create divisors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_ManDivSlack(p *Dam_Man_t, iLit0 int32, iLit1 int32, LevR int32) int32 {\n    var Lev0 int32  = Gia_ObjLevel(p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLit0)));\n    var Lev1 int32  = Gia_ObjLevel(p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLit1)));\n    var Slack int32  = p.nLevelMax - LevR - Abc_MaxInt(Lev0, Lev1) - 1 - int32((iLit0 \u003e iLit1));\n    return Abc_MinInt( Slack, 100 );\n}\nfunc Dam_ManCreateMultiRefs(p *Dam_Man_t, pvRefsAnd **Vec_Int_t, pvRefsXor **Vec_Int_t) {\n    var vRefsAnd, vRefsXor *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var pSet *int32;\n    vRefsAnd = Vec_IntStart( 2 * Gia_ManObjNum(p.pGia) );\n    vRefsXor = Vec_IntStart( Gia_ManObjNum(p.pGia) );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !(Dam_ObjHand(p, i) != 0) {\n            continue; }\n        pSet = Dam_ObjSet(p, i);\n        if Gia_ObjIsXor(pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                assert(!Abc_LitIsCompl(pSet[k]), \"!Abc_LitIsCompl(pSet[k])\");\n                Vec_IntAddToEntry( vRefsXor, Abc_Lit2Var(pSet[k]), 1 );\n            }\n        } else if Gia_ObjIsAndReal(p.pGia, pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                Vec_IntAddToEntry( vRefsAnd, pSet[k], 1 );\n            }\n        } else { assert(false, \"0\"); }\n    }\n    }\n    *pvRefsAnd = vRefsAnd;\n    *pvRefsXor = vRefsXor;\n}\nfunc Dam_ManCreatePairs(p *Dam_Man_t, fVerbose int32) {\n    var pObj *Gia_Obj_t;\n    var vHash *Hash_IntMan_t;\n    var vRefsAnd, vRefsXor, vSuper, vDivs, vRemap, vLevRMax *Vec_Int_t;\n    var i int32;\n    var j int32;\n    var k int32;\n    var Num int32;\n    var FanK int32;\n    var FanJ int32;\n    var nRefs int32;\n    var iNode int32;\n    var iDiv int32;\n    var pSet *int32;\n    var nPairsAll, nPairsTried, nPairsUsed, nPairsXor int32;\n    var nDivsAll, nDivsUsed, nDivsXor int32;\n    Dam_ManCollectSets( p );\n    vSuper = p.pGia.vSuper;\n    vDivs  = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    vHash  = Hash_IntManStart( Gia_ManObjNum(p.pGia)/2 );\n    vLevRMax = Vec_IntStart( 1000 );\n    Dam_ManCreateMultiRefs( p, \u0026vRefsAnd, \u0026vRefsXor );\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if !(Dam_ObjHand(p, i) != 0) {\n            continue; }\n        pSet = Dam_ObjSet(p, i);\n        nPairsAll += pSet[0] * (pSet[0] - 1) / 2;\n        Vec_IntClear(vSuper);\n        if Gia_ObjIsXor(pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                if Vec_IntEntry(vRefsXor, Abc_Lit2Var(pSet[k])) \u003e 1 {\n                    Vec_IntPush( vSuper, pSet[k] ); }\n            }\n        \n        } else if Gia_ObjIsAndReal(p.pGia, pObj) {\n            for  k = 1; k \u003c= pSet[0]; k++  {\n                if Vec_IntEntry(vRefsAnd, pSet[k]) \u003e 1 {\n                    Vec_IntPush( vSuper, pSet[k] ); }\n            }\n        \n        } else { assert(false, \"0\"); }\n        if Vec_IntSize(vSuper) \u003c 2 {\n            continue; }\n        // enumerate pairs\n        nPairsTried += Vec_IntSize(vSuper) * (Vec_IntSize(vSuper) - 1) / 2;\n        Vec_IntPush( vDivs, -i ); // remember node\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((FanK) = Vec_IntEntry(vSuper, k)), 1); k++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  j = k+1; (j \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((FanJ) = Vec_IntEntry(vSuper, j)), 1); j++  {\n            if (FanK \u003e FanJ) ^ Gia_ObjIsXor(pObj) {\n                Num = Hash_Int2ManInsert( vHash, FanJ, FanK, 0 );\n            } else {\n                Num = Hash_Int2ManInsert( vHash, FanK, FanJ, 0 ); }\n            if Hash_Int2ObjInc( vHash, Num ) == 1 {\n                nDivsUsed++;\n                nDivsXor += Gia_ObjIsXor(pObj);\n            }\n            Vec_IntPush( vDivs, Num ); // remember devisor\n            // update reverse level\n            if Num \u003e= Vec_IntSize(vLevRMax) {\n                Vec_IntFillExtra( vLevRMax, 3 * Vec_IntSize(vLevRMax) / 2, 0 ); }\n            Vec_IntUpdateEntry( vLevRMax, Num, Vec_IntEntry(p.vNodLevR, i) );\n        }\n        }\n    }\n    }\n    Vec_IntFree( vRefsAnd );\n    Vec_IntFree( vRefsXor );\n//    Hash_IntManProfile( vHash );\n    // remove entries that appear only once\n    p.vHash     = Hash_IntManStart( 3 * nDivsUsed /2 );\n    p.vCounts   = Vec_FltAlloc( 2 * nDivsUsed );           Vec_FltPush( p.vCounts, ABC_INFINITY );\n    p.vQue      = Vec_QueAlloc( Vec_FltCap(p.vCounts) );\n    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );\n    // mapping div to node\n    p.vDiv2Nod  = Vec_IntAlloc( 2 * nDivsUsed );           Vec_IntPush( p.vDiv2Nod, ABC_INFINITY );\n    p.vNodStore = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );  Vec_IntPush( p.vNodStore, -1 );\n    nDivsAll     = Hash_IntManEntryNum(vHash);\n    vRemap       = Vec_IntStartFull( nDivsAll+1 );\n    for  i = 1; i \u003c= nDivsAll; i++  {\n        nRefs = Hash_IntObjData2(vHash, i);\n        if nRefs \u003c 2 {\n            continue; }\n        nPairsUsed += nRefs;\n        if Hash_IntObjData0(vHash, i) \u003e Hash_IntObjData1(vHash, i) {\n            nPairsXor += nRefs; } \n        Num = Hash_Int2ManInsert( p.vHash, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), 0 );\n        assert(Num == Hash_IntManEntryNum(p.vHash), \"Num == Hash_IntManEntryNum(p.vHash)\");\n        assert(Num == Vec_FltSize(p.vCounts), \"Num == Vec_FltSize(p.vCounts)\");\n        Vec_FltPush( p.vCounts, nRefs + 0.005*Dam_ManDivSlack(p, Hash_IntObjData0(vHash, i), Hash_IntObjData1(vHash, i), Vec_IntEntry(vLevRMax, i)) );\n        Vec_QuePush( p.vQue, Num );\n        // remember divisors\n        assert(Num == Vec_IntSize(p.vDiv2Nod), \"Num == Vec_IntSize(p.vDiv2Nod)\");\n        Vec_IntPush( p.vDiv2Nod, Vec_IntSize(p.vNodStore) );\n        Vec_IntPush( p.vNodStore, 0 );\n        Vec_IntFillExtra( p.vNodStore, Vec_IntSize(p.vNodStore) + nRefs, -1 );\n        // remember entry\n        Vec_IntWriteEntry( vRemap, i, Num );\n    }\n    assert(Vec_FltSize(p.vCounts) == Hash_IntManEntryNum(p.vHash)+1, \"Vec_FltSize(p.vCounts) == Hash_IntManEntryNum(p.vHash)+1\");\n    assert(Vec_IntSize(p.vDiv2Nod) == nDivsUsed+1, \"Vec_IntSize(p.vDiv2Nod) == nDivsUsed+1\");\n    Hash_IntManStop( vHash );\n    Vec_IntFree( vLevRMax );\n    // fill in the divisors\n    iNode = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        if iDiv \u003c 0 {\n            iNode = -iDiv;\n            continue;\n        }\n        Num = Vec_IntEntry( vRemap, iDiv );\n        if Num == -1 {\n            continue; }\n        pSet = Dam_DivSet( p, Num );\n        pSet[++pSet[0]] = iNode;\n    }\n    Vec_IntFree( vRemap );\n    Vec_IntFree( vDivs );\n    // create storage for reverse level of divisor during update\n    p.vDivLevR = Vec_IntStart( 2 * nDivsUsed );\n    // make sure divisors are added correctly\n//    for ( i = 1; i \u003c= nDivsUsed; i++ )\n//        assert( Dam_DivSet(p, i)[0] == Vec_FltEntry(p-\u003evCounts, i)+1 );\n    if !(fVerbose != 0) {\n        return; }\n    // print stats\n    fmt.Printf(\"Pairs:\");\n    fmt.Printf(\"  Total =%9d (%6.2f %%)\", nPairsAll, 100.0 * nPairsAll   / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Tried =%9d (%6.2f %%)\", nPairsTried, 100.0 * nPairsTried / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Used =%9d (%6.2f %%)\", nPairsUsed, 100.0 * nPairsUsed  / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"  Xor =%9d (%6.2f %%)\", nPairsXor, 100.0 * nPairsXor   / Abc_MaxInt(nPairsAll, 1));\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"Div:  \");\n    fmt.Printf(\"  Total =%9d (%6.2f %%)\", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Tried =%9d (%6.2f %%)\", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Used =%9d (%6.2f %%)\", nDivsUsed, 100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"  Xor =%9d (%6.2f %%)\", nDivsXor, 100.0 * nDivsXor    / Abc_MaxInt(nDivsAll, 1));\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives new AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_ManMultiAig_rec(pMan *Dam_Man_t, pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var i int32;\n    var pSet *int32;\n    if ~pObj.Value {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pSet = Dam_ObjSet(pMan, Gia_ObjId(p, pObj));\n    if pSet == nil {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin1(pObj) );\n        if Gia_ObjIsMux(p, pObj) {\n            Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin2(p, pObj) );\n            pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsXor(pObj) {\n            pObj.Value = Gia_ManHashXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else { \n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n        return;\n    }\n    assert(Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj), \"Gia_ObjIsXor(pObj) || Gia_ObjIsAndReal(p, pObj)\");\n    // call recursively\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(pSet[i]) );\n        Dam_ManMultiAig_rec( pMan, pNew, p, pTemp );\n        pSet[i] = Abc_LitNotCond( pTemp.Value, Abc_LitIsCompl(pSet[i]) );\n    }\n    // create balanced gate\n    pObj.Value = Gia_ManBalanceGate( pNew, pObj, p.vSuper, pSet + 1, pSet[0] );\n}\nfunc Dam_ManMultiAig(pMan *Dam_Man_t) *Gia_Man_t {\n    var p *Gia_Man_t  = pMan.pGia;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // start the new manager\n    pNew = Gia_ManStart( 2*Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));\n    pNew.vLevels = Vec_IntStart( pNew.nObjsAlloc );\n    // create constant and inputs\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n        Vec_IntWriteEntry( pNew.vLevels, Abc_Lit2Var(pObj.Value), Gia_ObjLevel(p, pObj) );\n    }\n    // create internal nodes\n    Gia_ManHashStart( pNew );\n    // inlining of macro Gia_ManForEachBuf\n    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );\n        Gia_ObjSetGateLevel( pNew, Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)) );\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Dam_ManMultiAig_rec( pMan, pNew, p, Gia_ObjFanin0(pObj) );\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n//    assert( Gia_ManObjNum(pNew) \u003c= Gia_ManObjNum(p) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    // perform cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the data-structure after extracting one divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_PrintDiv(p *Dam_Man_t, iDiv int32) {\n    if iDiv == 0 {\n        fmt.Printf(\"Final statistics after extracting %6d divisors:          \", p.nDivs);\n    } else {\n        var Buffer string // was [100]byte in C\n\n        var iData0 int32  = Hash_IntObjData0(p.vHash, iDiv);\n        var iData1 int32  = Hash_IntObjData1(p.vHash, iDiv);\n        fmt.Printf(\"Div%5d : \", p.nDivs+1);\n        fmt.Printf(\"D%-8d = \", iDiv);\n        Buffer = fmt.Sprintf(\"%c%d\", Abc_LitIsCompl(iData0)? '!':' ', Abc_Lit2Var(iData0));\n        printf( \"%8s \",   Buffer );\n        fmt.Printf(\"%c  \", (iData0 \u003c iData1) ? '*' : '+');\n        Buffer = fmt.Sprintf(\"%c%d\", Abc_LitIsCompl(iData1)? '!':' ', Abc_Lit2Var(iData1));\n        printf( \"%8s   \", Buffer );\n        fmt.Printf(\"Weight %9.2f  \", Vec_FltEntry(p.vCounts, iDiv));\n    }\n    fmt.Printf(\"Divs =%8d  \", Hash_IntManEntryNum(p.vHash));\n    fmt.Printf(\"Ands =%8d  \", p.nAnds - p.nGain);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n}\nfunc Dam_PrintQue(p *Dam_Man_t) {\n    var i int32;\n    fmt.Printf(\"Divisor queue: \\n\");\n    for  i = 1; i \u003c= Hash_IntManEntryNum(p.vHash); i++  {\n        var iLit0 int32  = Hash_IntObjData0(p.vHash, i);\n        var iLit1 int32  = Hash_IntObjData1(p.vHash, i);\n        fmt.Printf(\"Div %7d : \", i);\n        fmt.Printf(\"Weight %9.2f  \", Vec_FltEntry(p.vCounts, i));\n        fmt.Printf(\"F = %c%c \", Abc_LitIsCompl(iLit0) ? '!': ' ', 'a' + Abc_Lit2Var(iLit0)-1);\n        fmt.Printf(\"%c \", (Hash_IntObjData0(p.vHash, i) \u003c Hash_IntObjData1(p.vHash, i)) ? '*':'+');\n        fmt.Printf(\"%c%c   \", Abc_LitIsCompl(iLit1) ? '!': ' ', 'a' + Abc_Lit2Var(iLit1)-1);\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Dam_ManUpdateNode(p *Dam_Man_t, iObj int32, iLit0 int32, iLit1 int32, iLitNew int32, vDivs *Vec_Int_t) int32 {\n    var pSet *int32  = Dam_ObjSet( p, iObj );\n    var i, k, c, Num, iLit, iLit2, fPres int32;\n    // check if literal can be found\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        if pSet[i] == iLit0 {\n            break; }\n    }\n    if i \u003e pSet[0] {\n        return 0; }\n    // check if literal can be found\n    for  i = 1; i \u003c= pSet[0]; i++  {\n        if pSet[i] == iLit1 {\n            break; }\n    }\n    if i \u003e pSet[0] {\n        return 0; }\n    // compact literals\n    Vec_IntPush( vDivs, -iObj );\n    for  k = i = 1; i \u003c= pSet[0]; i++  {\n        if iLit0 == pSet[i] || iLit1 == pSet[i] {\n            continue; }\n        pSet[k++] = iLit = pSet[i];\n        // reduce weights of the divisors\n        fPres = 0;\n        for  c = 0; c \u003c 2; c++  {\n            if c {\n                iLit2 = iLit1;\n            } else {\n                iLit2 = iLit0;\n            }\n            if (iLit \u003e iLit2) ^ (iLit0 \u003e iLit1) {\n                Num = *Hash_Int2ManLookup( p.vHash, iLit2, iLit );\n            } else {\n                Num = *Hash_Int2ManLookup( p.vHash, iLit, iLit2 ); }\n            if Num \u003e 0 {\n                Vec_FltAddToEntry( p.vCounts, Num, -1 );\n                if Vec_QueIsMember(p.vQue, Num) {\n                    Vec_QueUpdate( p.vQue, Num );\n                    fPres |= (1 \u003c\u003c c);\n                }\n            }\n        }\n        if fPres != 3 {\n            continue; }\n        if (iLit \u003e iLitNew) ^ (iLit0 \u003e iLit1) {\n            Num = Hash_Int2ManInsert( p.vHash, iLitNew, iLit, 0 );\n        } else {\n            Num = Hash_Int2ManInsert( p.vHash, iLit, iLitNew, 0 ); }\n        Hash_Int2ObjInc( p.vHash, Num );\n        Vec_IntPush( vDivs, Num );\n        // update reverse level\n        if Num \u003e= Vec_IntSize(p.vDivLevR) {\n            Vec_IntFillExtra( p.vDivLevR, 3 * Vec_IntSize(p.vDivLevR) / 2, 0 ); }\n        Vec_IntUpdateEntry( p.vDivLevR, Num, Vec_IntEntry(p.vNodLevR, iObj) );\n    }\n    pSet[k] = iLitNew;\n    pSet[0] = k;\n    return 1;\n}\nfunc Dam_ManUpdate(p *Dam_Man_t, iDiv int32) {\n    var vDivs *Vec_Int_t  = p.pGia.vSuper;\n    var iLit0 int32  = Hash_IntObjData0(p.vHash, iDiv);\n    var iLit1 int32  = Hash_IntObjData1(p.vHash, iDiv);\n    var i int32;\n    var iLitNew int32;\n    var pSet *int32;\n    var pNods *int32 = Dam_DivSet( p, iDiv );\n    var nPresent, nPairsStart, nPairsStop, pPairsNew, nRefs int32;\n    var fThisIsXor int32 = (iLit0 \u003e iLit1);\n    var iDivTemp int32;\n    var iNode int32;\n//    Dam_PrintQue( p );\n    if fThisIsXor != 0 {\n        iLitNew = Gia_ManAppendXorReal( p.pGia, iLit0, iLit1 );\n    } else {\n        iLitNew = Gia_ManAppendAnd( p.pGia, iLit0, iLit1 ); }\n    Gia_ObjSetGateLevel( p.pGia, Gia_ManObj(p.pGia, Abc_Lit2Var(iLitNew)) );\n//    printf( \"%d \", Gia_ObjLevel(p-\u003epGia, Gia_ManObj(p-\u003epGia, Abc_Lit2Var(iLitNew))) );\n    // replace entries\n    assert(pNods[0] \u003e= 2, \"pNods[0] \u003e= 2\");\n    nPairsStart = Hash_IntManEntryNum(p.vHash) + 1;\n    Vec_IntClear( vDivs );\n    for  i = 1; i \u003c= pNods[0]; i++  {\n        nPresent += Dam_ManUpdateNode( p, pNods[i], iLit0, iLit1, iLitNew, vDivs );\n    }\n    nPairsStop = Hash_IntManEntryNum(p.vHash) + 1;\n    // extend arrayvs\n    pPairsNew = 0;\n    Vec_FltFillExtra( p.vCounts, nPairsStop, 0 );\n    Vec_IntFillExtra( p.vDiv2Nod, nPairsStop, -1 );\n    for  i = nPairsStart; i \u003c nPairsStop; i++  {\n        nRefs = Hash_IntObjData2(p.vHash, i);\n        if nRefs \u003c 2 {\n            continue; }\n        Vec_FltWriteEntry( p.vCounts, i, nRefs + 0.001*Dam_ManDivSlack(p, Hash_IntObjData0(p.vHash, i), Hash_IntObjData1(p.vHash, i), Vec_IntEntry(p.vDivLevR, i)) );\n        Vec_QuePush( p.vQue, i );\n        // remember divisors\n        Vec_IntWriteEntry( p.vDiv2Nod, i, Vec_IntSize(p.vNodStore) );\n        Vec_IntPush( p.vNodStore, 0 );\n        Vec_IntFillExtra( p.vNodStore, Vec_IntSize(p.vNodStore) + nRefs, -1 );\n        pPairsNew++;\n    }\n//    printf( \"Added %d new pairs\\n\", pPairsNew );\n    // fill in the divisors\n    iNode = -1;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDivTemp) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        if iDivTemp \u003c 0 {\n            iNode = -iDivTemp;\n            continue;\n        }\n        if Vec_IntEntry(p.vDiv2Nod, iDivTemp) == -1 {\n            continue; }\n        pSet = Dam_DivSet( p, iDivTemp );\n        pSet[++pSet[0]] = iNode;\n    }\n    // make sure divisors are added correctly\n    for  i = nPairsStart; i \u003c nPairsStop; i++  {\n        if Vec_IntEntry(p.vDiv2Nod, i) \u003e 0 {\n            assert(Dam_DivSet(p, i)[0] == Hash_IntObjData2(p.vHash, i), \"Dam_DivSet(p, i)[0] == Hash_IntObjData2(p.vHash, i)\"); }\n    }\n    // update costs\n    Vec_FltWriteEntry( p.vCounts, iDiv, 0 );\n    p.nGain += (1 + 2 * fThisIsXor) * (nPresent - 1);\n    p.nGainX += 3 * fThisIsXor * (nPresent - 1);\n    p.nDivs++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform extraction for multi-input AND/XOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dam_ManAreaBalanceInt(pGia *Gia_Man_t, vCiLevels *Vec_Int_t, nNewNodesMax int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var p *Dam_Man_t;\n    var i, iDiv int32;\n    p = Dam_ManAlloc( pGia );\n    p.nLevelMax = Gia_ManSetLevels( p.pGia, vCiLevels );\n    p.vNodLevR = Gia_ManReverseLevel( p.pGia );\n    Vec_IntFillExtra( p.pGia.vLevels, 3*Gia_ManObjNum(p.pGia)/2, 0 );\n    Dam_ManCreatePairs( p, fVerbose );\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vQue) \u003e= 2; i++  {\n        iDiv = Vec_QuePop(p.vQue);\n        if fVeryVerbose != 0 {\n            Dam_PrintDiv( p, iDiv ); }\n        Dam_ManUpdate( p, iDiv );\n    }\n    if fVeryVerbose != 0 {\n        Dam_PrintDiv( p, 0 ); }\n    pNew = Dam_ManMultiAig( p );\n    if fVerbose != 0 {\n        var nDivsAll int32  = Hash_IntManEntryNum(p.vHash);\n        var nDivsUsed int32  = p.nDivs;\n        fmt.Printf(\"Div:  \");\n        fmt.Printf(\"  Total =%9d (%6.2f %%) \", nDivsAll, 100.0 * nDivsAll    / Abc_MaxInt(nDivsAll, 1));\n        fmt.Printf(\"  Used =%9d (%6.2f %%)\", nDivsUsed, 100.0 * nDivsUsed   / Abc_MaxInt(nDivsAll, 1));\n        fmt.Printf(\"  Gain =%6d (%6.2f %%)\", p.nGain, 100.0 * p.nGain / Abc_MaxInt(p.nAnds, 1));\n        fmt.Printf(\"  GainX = %d  \", p.nGainX);\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - p.clkStart );\n    }\n    Dam_ManFree( p );\n    return pNew;\n}\nfunc Gia_ManAreaBalance(p *Gia_Man_t, fSimpleAnd int32, nNewNodesMax int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew0, pNew, pNew1, pNew2 *Gia_Man_t;\n    var vCiLevels *Vec_Int_t;\n    // set arrival times for the input of the new AIG\n    if p.vCiArrs {\n        var i int32;\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        Vec_IntFreeP( \u0026p.vLevels );\n        p.vLevels = Vec_IntStart( Gia_ManObjNum(p) );\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_IntWriteEntry( p.vLevels, Id, Vec_IntEntry(p.vCiArrs, i)/And2Delay );\n        }\n    \n    } else if p.vInArrs {\n        var i int32;\n        var Id int32;\n        var And2Delay int32;\n        if p.And2Delay {\n            And2Delay = p.And2Delay;\n        } else {\n            And2Delay = 1;\n        }\n        // inlining of macro Gia_ManForEachCiId\n        for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {\n            Vec_IntWriteEntry( p.vLevels, Id, int32((Vec_FltEntry(p.vInArrs, i)/And2Delay)) );\n        }\n    }\n    // determine CI levels\n    if p.pManTime \u0026\u0026 p.vLevels == nil {\n        Gia_ManLevelWithBoxes( p ); }\n    vCiLevels = Gia_ManGetCiLevels( p );\n    // get the starting manager\n    if Gia_ManHasMapping(p) {\n        pNew0 = (Gia_Man_t *)Dsm_ManDeriveGia(p, 0);\n    } else {\n        pNew0 = Gia_ManDup(p);\n    }\n    Gia_ManTransferTiming( pNew0, p );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew0, nil ); }\n    // derive internal manager\n    if fSimpleAnd != 0 {\n        pNew = Gia_ManDup( pNew0 );\n    } else {\n        pNew = Gia_ManDupMuxes( pNew0, 2 );\n    }\n    Gia_ManTransferTiming( pNew, pNew0 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew, nil ); }\n    if pNew0 != p { Gia_ManStop( pNew0 ); }\n    // perform the operation\n    pNew1 = Dam_ManAreaBalanceInt( pNew, vCiLevels, nNewNodesMax, fVerbose, fVeryVerbose );\n    Gia_ManTransferTiming( pNew1, pNew );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew1, nil ); }\n    Gia_ManStop( pNew );\n    Vec_IntFreeP( \u0026vCiLevels );\n    // derive the final result\n    pNew2 = Gia_ManDupNoMuxes( pNew1, 0 );\n    Gia_ManTransferTiming( pNew2, pNew1 );\n    if fVerbose != 0 {     Gia_ManPrintStats( pNew2, nil ); }\n    Gia_ManStop( pNew1 );\n    // normalize if needed\n    if !Gia_ManIsNormalized(pNew2) {\n        pNew2 = Gia_ManDupNormalize( pNew1 = pNew2, 0 );\n        Gia_ManTransferTiming( pNew2, pNew1 );\n        Gia_ManStop( pNew1 );\n    }\n    //Gia_ManTransferTiming( pNew2, p );\n    return pNew2;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}
